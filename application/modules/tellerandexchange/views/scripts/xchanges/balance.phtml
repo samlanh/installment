@@ -1,0 +1,267 @@
+<?php
+	$this->headTitle('Currency Smart | Current Balance page'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$session_user=new Zend_Session_Namespace('auth');
+?>	
+<style>
+<!--
+	.tbtable{		
+		font-weight: bolder;
+		line-height: 40px;
+		text-align: center;
+	}
+	.tbtable .tbheader{
+		#background-color: #012a15;
+		text-align: left;
+		color: #000;
+	}
+	.tbtable .first{
+		background-color: #016315;
+		color: #fff;
+	}
+	.tbtable .first td{
+		width: 33.33%
+	}
+	.tbtable .second{
+		background-color: #fff; 
+		color: black;
+	}
+	.nevg-value{
+		color: RED;
+	}
+	.tbtable .second .input-inner {
+		margin: 0px;
+		padding: 0px;
+		width: 99%;	
+		border: none;
+	}
+	
+	#dollar.dijitInputInner, #bath.dijitInputInner, #rail.dijitInputInner{
+		text-align: center;		
+		background-color: #FFFFFF !important;
+	}
+	
+	.bg-white{
+		background-color: #FFFFFF !important;		
+	}
+	fieldset table,fieldset tr,fieldset td{
+		text-align: center;
+	}
+}
+-->
+</style>
+<?php if($session_user->level == 1): //Admin View Only?>
+<form id='frm_search_capital' action="<?php echo $this->url(array('module'=>'capital','controller'=>'index','action'=>'balance')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<select style="text-align: left;" onchange="dijit.byId('frm_search_capital').submit();" name="user_id" id="select_user_id" dojoType="dijit.form.FilteringSelect" required="true"> 
+		<?php foreach ($this->users as $key => $u) : ?>
+			<option value="<?php echo $u['id'];?>" <?php echo ($u['id'] == $this->user_id)?"selected":"";?>><?php echo  $u['name'];?></option>
+		<?php endforeach;?> 
+	</select> 
+	<input type="hidden" name="actions" value="search">
+</form>
+<?php endif;?>
+
+<form id='frm_add_capital' action="<?php echo $this->url(array('module'=>'capital','controller'=>'index','action'=>'balance')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				if(dijit.byId('doloar').get('value') == 0 && dijit.byId('bath').get('value') == 0 && dijit.byId('rail').get('value') == 0){
+					dijit.byId('doloar').focus();
+					return false;
+				}
+
+				return true;
+			} else {
+				return false;
+			}
+	</script>	 
+	
+	<table class="tbtable" style="margin:10px auto; width:100%;">
+		<tr>
+			<td width="49%" valign="top" align="center">		
+				<fieldset class="panel">
+					<legend><strong>ដើមទុនបច្ចុប្បន្ន</strong></legend>	
+					<table cellspacing='0' border="1" style="margin:0px auto 20px auto; width: 99%;">									
+						<tr class="first">
+							<td>ដុល្លា $</td>
+							<td>បាត ฿</td>
+							<td>រៀល ៛</td>
+						</tr>
+						<tr class="second">
+							<td <?php echo ($this->balance['dollar'] <0)?"class='nevg-value'":"";?>>
+								<?php echo number_format($this->balance['dollar'], (strpos($this->balance['dollar'], "."))?2:0);?>
+							</td>
+							<td <?php echo ($this->balance['bath'] <0)?"class='nevg-value'":"";?>>
+								<?php echo number_format($this->balance['bath'], (strpos($this->balance['bath'], "."))?2:0);?>
+							</td>
+							<td <?php echo ($this->balance['rail'] <0)?"class='nevg-value'":"";?>>
+								<?php echo number_format($this->balance['rail'], (strpos($this->balance['rail'], "."))?2:0);?>
+							</td>
+						</tr>									
+					</table>	
+				</fieldset>
+			</td>
+			<td width="1%" ></td>
+			<td width="49%" valign="top" align="center">	
+				<fieldset class="panel">
+					<legend><strong>ដើមទុននៅសល់</strong></legend>	
+					<table cellspacing='0' border="1" style="margin:0px auto 20px auto; width: 99%;">									
+						<tr class="first">
+							<td>ដុល្លា $</td>
+							<td>បាត ฿</td>
+							<td>រៀល ៛</td>
+						</tr>
+						<tr class="second">
+							<td <?php echo ($this->total_balance['dollar'] <0)?"class='nevg-value'":"";?>>
+								<?php echo number_format($this->total_balance['dollar'], (strpos($this->total_balance['dollar'], "."))?2:0);?>
+								
+								&nbsp;<span style="position: relative; top: 6px;">
+									<?php 
+										if($this->img['dollar']['amount']!=0){
+											echo "<img style='cursor: pointer;' onClick='culbalance(".$this->img['dollar']['amount'].",&quot;$&quot;)' src='".$base_url."images/icon/".$this->img['dollar']['img'].".png' alt='ចុចដើម្បីមើលដែលបានប្រើប្រាស់!' title='ចុចដើម្បីមើលដែលបានប្រើប្រាស់!' />";
+										}
+									?>
+									</span>
+							</td>
+							<td <?php echo ($this->total_balance['baht'] <0)?"class='nevg-value'":"";?>>
+								<?php echo number_format($this->total_balance['baht'], (strpos($this->total_balance['baht'], "."))?2:0);?>
+							
+								&nbsp;<span style="position: relative; top: 6px;">
+									<?php 
+										if($this->img['baht']['amount']!=0){
+											echo "<img style='cursor: pointer;' onClick='culbalance(".$this->img['baht']['amount'].",&quot;฿&quot;)' src='".$base_url."images/icon/".$this->img['baht']['img'].".png' alt='ចុចដើម្បីមើលដែលបានប្រើប្រាស់!' title='ចុចដើម្បីមើលដែលបានប្រើប្រាស់!' />";
+										}
+									?>
+									</span>
+							</td>
+							<td <?php echo ($this->total_balance['riel'] <0)?"class='nevg-value'":"";?>>
+								<?php echo number_format($this->total_balance['riel'], (strpos($this->total_balance['riel'], "."))?2:0);?>
+							
+								&nbsp;<span style="position: relative; top: 6px;">
+									<?php 
+										if($this->img['riel']['amount']!=0){
+											echo "<img style='cursor: pointer;' onClick='culbalance(".$this->img['riel']['amount'].",&quot;៛&quot;)' src='".$base_url."images/icon/".$this->img['riel']['img'].".png' alt='ចុចដើម្បីមើលដែលបានប្រើប្រាស់!' title='ចុចដើម្បីមើលដែលបានប្រើប្រាស់!' />";
+										}
+									?>
+									</span>
+							</td>
+						</tr>									
+					</table>	
+				</fieldset>
+			</td>
+		</tr>
+		<?php if($session_user->level == 1): //Admin Upadte Only?>
+		<tr class="tbheader">
+			<td colspan="3">&nbsp;បន្ថែមដើមទុន</td>
+		</tr>
+		<tr>
+			<td colspan="3">	
+				<table cellspacing='0' border="1" style="width: 100%;">									
+					<tr class="first">
+						<td>ដុល្លា $</td>
+						<td>បាត ฿</td>
+						<td>រៀល ៛</td>
+					</tr>
+					<tr class="second bg-white">
+						<td>
+							<input type="text" name="dollar" id="dolar"  data-dojo-type="dijit.form.NumberTextBox"
+									data-dojo-props="required:true,																		
+									name:'dollar',
+									id:'dollar',	
+									class:'input-inner',								
+									value:0,
+									constraints:{pattern:'#,###.##'},
+									missingMessage:'អ្នក​ភ្លេច​បំពេញ​ ចំនួន​ទឹក​ប្រាក់!',
+									invalidMessage:'ចំនួន​ទឹក​ប្រាក់​ មិន​ត្រឹម​ត្រូវ!'">
+						</td>
+						<td>
+							<input type="text" name="bath" id="bath"  data-dojo-type="dijit.form.NumberTextBox"
+									data-dojo-props="required:true,																		
+									name:'bath',
+									id:'bath',									
+									value:0,
+									class:'input-inner',
+									constraints:{pattern:'#,###.##'},
+									missingMessage:'អ្នក​ភ្លេច​បំពេញ​ ចំនួន​ទឹក​ប្រាក់!',
+									invalidMessage:'ចំនួន​ទឹក​ប្រាក់​ មិន​ត្រឹម​ត្រូវ!'">
+						</td>
+						<td>
+							<input type="text" name="rail" id="rail"  data-dojo-type="dijit.form.NumberTextBox"
+									data-dojo-props="required:true,																		
+									name:'rail',
+									id:'rail',									
+									value:0,
+									class:'input-inner',
+									constraints:{pattern:'#,###.##'},
+									missingMessage:'អ្នក​ភ្លេច​បំពេញ​ ចំនួន​ទឹក​ប្រាក់!',
+									invalidMessage:'ចំនួន​ទឹក​ប្រាក់​ មិន​ត្រឹម​ត្រូវ!'">
+						</td>
+					</tr>									
+				</table>	
+			</td>
+		</tr>
+		<tr>
+			<td align="right">  
+				<input type="reset" value="សំអាត" label="សំអាត" id="busyButton" dojoType="dijit.form.Button"/>
+				<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button" />				 
+			</td>
+		</tr>
+		<?php endif;?>
+	</table>
+	<input type="hidden" name="user_id" value="<?php echo $this->user_id;?>">
+	<input type="hidden" name="actions" value="add_capital">
+</form>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:7cm;" data-dojo-props="title:'ទឹកប្រាក់ក្នុងប្រតិបត្តិការណ៍'" id="terms" >
+		<div id="divdialog" style="width: 7cm; padding: 0px; margin: 0px;">
+			<style>
+				.fonttel{
+					font-size: 18px;	
+					color: #016315;
+				}
+			</style>	
+			<table style="width: 7cm; font-size: 8pt; padding: 0px; margin: 0px; line-height: 17px;">
+				   <tr>
+					   	<td align="center">	
+				            <strong class="fonttel"><u><span id="used_balance"></span></u></strong>		
+			            </td>	   	        
+				   </tr> 
+				   <tr>
+						<td align="center">
+						<br/>
+							<input type="button" value="យល់ព្រម" label="យល់ព្រម" id="submitButton" dojoType="dijit.form.Button" onclick="hideDialog();" iconClass="dijitEditorIcon dijitEditorIconDelete"/>
+						</td>
+				   </tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require('dijit.form.Form');
+	dojo.require('dijit.form.FilteringSelect');	
+	dojo.require('dijit.form.Button');
+	dojo.require('dijit.form.NumberTextBox');	
+	
+	dojo.require("dojo.store.Memory");
+	dojo.require("dojo.data.ObjectStore");
+	dojo.require("dijit.form.CheckBox");     
+	dojo.require("dojo.number");
+	dojo.require('dojox.form.BusyButton');
+	dojo.require("dijit.Dialog");
+	
+	var balance = <?php echo $this->total_balance;?>;
+	var total_balance = <?php echo $this->total_balance;?>;
+	function culbalance(amount,cur){
+		dojo.byId("used_balance").innerHTML = dojo.number.format(amount.toFixed(2))+" "+cur;
+		dijit.byId("terms").show();
+	}
+	// Hide the dialog
+	function hideDialog() {		
+		dijit.byId("terms").hide();
+	}
+
+</script>
+
+

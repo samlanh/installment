@@ -1,0 +1,87 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('EDIT_HOLIDAY'));
+?>	
+<script>
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit/form/NumberTextBox");
+</script>
+<?php  $holiday= $this->frm_holiday;?>
+<form  id='add_techer' action="<?php echo $this->url(array('module'=>'other','controller'=>'holiday','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+ <script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+</script>
+<table cellspacing="10" width="45%" style="margin: 0 auto;">
+	<tr>
+		<td>
+		<fieldset>
+					<legend align="center" ><strong><?php echo $tr->translate("EDIT_HOLIDAY");?></strong></legend>
+					
+					<table style="margin: 0 auto; width: 95%;" cellspacing="10">
+						<tr>
+							<td><?php echo $tr->translate("HOLIDAY_NAME")?></td>
+							<td><?php  echo $holiday->getElement('holiday_name');?>
+							<?php  echo $holiday->getElement('id');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("START_DATE")?></td>
+							<td><?php  echo $holiday->getElement('start_date');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("AMOUNT_DAY")?></td>
+							<td><?php  echo $holiday->getElement('amount_day');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("END_DATE")?></td>
+							<td><?php  echo $holiday->getElement('end_date');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("NOTE")?></td>
+							<td><?php  echo $holiday->getElement('note');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php  echo $holiday->getElement('status');?></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+							<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" id="" dojoType="dijit.form.Button"
+				                 iconClass="dijitIconClear" />
+							<input type="submit" value="កែប្រែទិន្នន័យ" label="<?php echo $tr->translate('SAVE');?>" id="submitButton" dojoType="dijit.form.Button" 
+								 iconClass=""/>
+							</td>
+						</tr>
+					</table>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>
+<script>
+function CalculateDate(){
+	pay_type = dijit.byId('start_date').value;
+	amount_day = dijit.byId('amount_day').get('value');
+	
+	if(isNaN(amount_day)){
+		dijit.byId('amount_day').focus();
+	}else{
+		start_date = dijit.byId("start_date").value;
+		var a = new Date(start_date);
+		var mm = a.getMonth() + 1;
+		var dd = a.getDate()+parseInt(amount_day)-1;
+		 if(dd<10){
+			 dd = "0"+dd;
+		}
+		 if(mm<10){
+			 mm = "0"+mm;
+		}
+		var y = a.getFullYear();
+		var epx_date = y + '-'+ mm + '-'+dd ;
+		dijit.byId('end_date').attr('value',epx_date);
+}
+	}
+</script>

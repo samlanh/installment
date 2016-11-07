@@ -1,0 +1,45 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('UPDATE_STAFF_POSITION'));
+?>	
+<?php  $techer= $this->frm_position;?>
+<form  id='add_techer' action="<?php echo $this->url(array('module'=>'group','controller'=>'position','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				/*if(dijit.byId('province').get('value')==''){
+					alert('Province required');
+					return false;
+			    }*/
+				return true;
+			} else {
+				return false;
+			}
+</script>
+<table cellspacing="10" width="90%" style="margin: 0 auto;">
+	<tr>
+		<td>
+		<fieldset>
+					<legend><strong><?php echo $tr->translate("POSITION_INFO");?></strong></legend>
+					
+					<table style="margin: 0 auto; width: 95%;" cellspacing="10">
+						<tr>
+							<td><?php echo $tr->translate("POSITION_KH")?><?php echo $techer->getElement('id');?></td>
+							<td><?php  echo $techer->getElement('position_kh');?></td>
+							<td><?php echo $tr->translate("POSITION_EN")?></td>
+							<td><?php  echo $techer->getElement('position_en');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("DISPLAY_BY")?></td>
+							<td><?php  echo $techer->getElement('display');?></td>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php  echo $techer->getElement('status');?></td>
+						</tr>
+					</table>	
+					<div style="text-align: center; margin: 10px 0px;">
+						<input type="submit" value="រក្សាទុក" label="រក្សាទុក" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+					</div>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>

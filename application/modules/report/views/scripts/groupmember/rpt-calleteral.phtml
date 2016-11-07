@@ -1,0 +1,144 @@
+<?php 
+	$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm=$this->frm_callteral;
+	$calleteralurl=$this->url(array('module'=>'report','controller'=>'groupmember','action'=>'calleteral-letter'));
+	
+?>
+<meta charset="utf-8">
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<title><?php echo $tr->translate("LIST REPORT CALLETERAL");?></title>
+<form method="post">
+<table style="font-family: 'Khmer OS Content';width:25.5cm;margin: 0 auto;"  >
+	<tr>
+			<td><?php echo $frm->getElement('adv_search');?></td>
+			<td><?php echo $frm->getElement('branch_id');?></td>
+			<td><?php echo $frm->getElement('start_date');?></td>
+			<td><?php echo $frm->getElement('end_date');?></td>
+			<td><?php echo $frm->getElement('status_search');?></td>
+			<td><?php echo $frm->getElement('btn_search');?></td>
+		</tr>
+</table>
+</form>
+<div style=" width:25cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+<div id="divPrint" style="width: 100%;">
+<style>
+.style{
+	line-height: 20px;font-size: 11px !important;
+	font-family: 'Khmer OS Battambang';
+}
+th{padding: 5px;}
+</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;">
+	<tr>
+    	<td align="center">
+        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+            	<tr>
+                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+                	<td width="60%" valign="top">
+                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><label></label></h2>
+                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><?php echo $tr->translate("REPORT_CALLETERAL");?></h2>
+                	<h2 style="text-align:center; font-size:13px;"><?php echo date("d-M-Y",strtotime($this->result['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->result['end_date']));?></h2></td>
+                    <td width="20%"></td>
+                </tr> 
+                <tr>
+                	<td colspan="3">
+                		<table width="100%">
+                			<tr >
+                				<td  style="font-size: 10px;">
+                					<?php echo $tr->translate("ADDRESS_COMPANY");?>
+									<br /><?php echo $tr->translate("TEL_COMPANY");?>
+                				<td width="65%"></td>
+                			</tr>
+		                </table>
+		              </td>
+		           </tr>   
+            </table>
+        </td>
+    </tr>
+    <tr>
+    	<td>
+            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+                <?php if(empty($this->calleteral_list)){?>
+                <tr class="style">
+                	<td colspan="6">&nbsp;<span><?php echo $tr->translate("CUSTOMER_NAME");?> </span></td>
+                </tr>
+            	<tr bgcolor="#ccc" class="style" align="center" style="floafont-weight:bold; line-height: 20px; font-size:12px; padding:5px 0px; ">
+                    <th><?php echo $tr->translate("NUM");?> </th>
+                    <th><?php echo $tr->translate("BRANCH_NAME");?> </th>
+                    <th><?php echo $tr->translate("COLLTERAL_CODE");?> </th>
+                    <th><?php echo $tr->translate("STAFF_NAME");?> </th>
+                    <th><?php echo $tr->translate("SPOUSE_NAME");?> </th>                    
+                    <th><?php echo $tr->translate("COLETERAL_TYPE");?> </th>
+                    <th><?php echo $tr->translate("OWNER_NAME");?> </th>
+                    <th><?php echo $tr->translate("NUMBER_COLLTERAL");?> </th>
+                    <th><?php echo $tr->translate("DATE");?> </th>
+                    <th><?php echo $tr->translate("NOTE");?> </th>
+                </tr>
+            	<?php }?>
+                   <?php  
+                    $id='';
+	               if(!empty($this->calleteral_list)) foreach($this->calleteral_list as $key =>$row){
+	              
+               ?>
+                <?php 
+                if($id!=$row['client_id']){
+                	
+                ?>
+                <?php if($key>0){?>
+                <br />
+                <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+                <?php } ?>
+             <?php ?>
+                <tr class="style">
+                	<td colspan="11" style="background:rgb(237, 237, 237) none repeat scroll 0% 0%"><a style="color:#000;" title="បង្កាន់ដៃតម្កល់ទ្រព្យដាក់ធានា" target="_blank" href="<?php echo $calleteralurl."/id/".$row['client_id'];?>">&nbsp;<span style="text-align:center; font-size:12px; font-family:'Khmer MEF2'"><?php echo $tr->translate("CUSTOMER_NAME");?> </span><?php  echo $row['client_code'].' , '.$row['name_kh'].' - '.$row['client_name']; ?></a></td>
+                </tr>
+                 <tr class="style" align="center" style="font-weight:bold; line-height: 20px; font-size:9px; padding:5px 0px; ">
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("NUM");?> </td>
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRANCH_NAME");?> </td>
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("COLLTERAL_CODE");?> </td>
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("STAFF_NAME");?> </td>
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("OWNER_NAME");?> </td>                    
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("COLETERAL_TYPE");?> </td>
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("NUMBER_COLLTERAL");?> </td>
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("SIGN_DATE");?></td>
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("DATE");?> </td>
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("STATUS");?> </td>
+                    <td style="text-align:center; font-size:11px; font-family:'Khmer MEF2'"><?php echo $tr->translate("NOTE");?> </td>
+                </tr>
+                <?php }
+                $id = $row['client_id'];
+                ?>
+					<tr align="center"  <?php if($row['is_return']==1)echo'style="background:#ccc;"';?> >
+						<td>&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['collecteral_code']; ?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['co_id']; ?>&nbsp;</td>						
+						<td style="white-space:nowrap;">&nbsp;<?php echo $row['collecteral_type']; ?>&nbsp;</td>
+						<td style="white-space:nowrap; text-align: left;">&nbsp;<?php echo $row['collecteral_title_en']." -  ".$row['collecteral_owner']; ?>&nbsp;</td>
+						<td style="white-space:nowrap;" >&nbsp;<?php echo $row['number_collecteral']; ?>&nbsp;</td>
+						<td style="white-space:nowrap;" >&nbsp;<?php echo date("d-M-Y",strtotime($row['issue_date'])); ?>&nbsp;</td>
+						<td>&nbsp;<?php echo date('d-M-Y',strtotime($row['date']));?>&nbsp;</td>
+						<td>&nbsp;<?php echo ($row['is_return']==1)?"Returned":"Keeping";?>&nbsp;</td>
+						<td style="white-space:nowrap;" >&nbsp;<?php echo $row['note']; ?>&nbsp;</td>
+					</tr>
+				<?php }?>
+            <br />
+              </table>
+              <br />
+              <table align="center" width="100%">
+				   <tr style="font-size: 12px;">
+				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+				   </tr>
+			</table>
+    	</td>
+    </tr>
+</table>
+</div>
+</div>

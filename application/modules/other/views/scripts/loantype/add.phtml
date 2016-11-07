@@ -1,0 +1,52 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->Form_Frmcallecterall;
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<title> <?php echo $tr->translate("LOAN_TYPE")?></title>
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'other','controller'=>'loantype','action'=>'add')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong><?php echo $tr->translate("LOAN_TYPE")?></strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+							<td><?php echo $tr->translate("NAME_KH")?></td>
+							<td><?php echo $frm->getElement('title_kh')?></td>			
+							<td><?php echo $tr->translate("NAME_ENG")?></td>
+							<td><?php echo $frm->getElement('title_en')?></td>	
+							<td><?php echo $tr->translate("DISPLAY_BY")?></td>
+							<td><?php echo $frm->getElement('display_by')?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("TYPE")?></td>
+							<td><?php echo $frm->getElement('type')?></td>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php echo $frm->getElement('status')?></td>
+					   </tr>
+					</table>
+					</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="reset" iconClass="dijitIconClear" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button"/>
+			<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
+				iconClass="dijitEditorIcon dijitEditorIconSave" />
+			<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
+				iconClass="dijitEditorIcon dijitEditorIconSave" />
+		</td>
+	</tr>	
+</table>
+</form>

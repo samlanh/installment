@@ -1,0 +1,71 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_expense;
+?>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+</style>
+ <script>
+		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox"]);
+ </script>
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'expense','action'=>'add')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside' >
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong>ចំណាយ</strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+						    <td><?php //echo $tr->translate("BRANCH_NAME")?></td>
+							<td><?php //echo $frm->getElement('branch_id');?></td>
+							<td><?php echo $tr->translate("TITLE")?></td>
+							<td><?php echo $frm->getElement('account_id');?></td>
+							<td><?php //echo $tr->translate("CURRENCY")?></td>
+							<td><?php //echo $frm->getElement('currency_type');//echo $frm->getElement('for_date');?></td>
+						</tr>
+						<tr>
+						   <td><?php echo $tr->translate("Invoice")?></td>
+							<td><?php echo $frm->getElement('invoice');?></td>
+							<td><?php echo $tr->translate("Total amount")?></td>
+							<td><?php echo $frm->getElement('total_amount');?></td>
+						    <td><?php echo $tr->translate("Description")?></td>
+							<td><?php echo $frm->getElement('Description');?></td>
+							
+						</tr>
+						<tr>
+						    <td><?php echo $tr->translate("Date")?></td>
+							<td><?php echo $frm->getElement('Date');?></td>
+							<td><?php echo $tr->translate("Stutas")?></td>
+							<td><?php echo $frm->getElement('Stutas');?></td>
+						</tr>
+					</table>
+				</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+		<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button"
+				 iconClass="dijitIconClear"/>
+			<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button"
+				 iconClass="dijitIconDelete"/>
+			<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button"
+				 iconClass="dijitIconNewTask"/>
+		</td>
+	</tr>	
+</table>
+</form>
+
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+</script>

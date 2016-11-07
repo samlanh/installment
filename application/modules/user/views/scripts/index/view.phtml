@@ -1,0 +1,69 @@
+<?php
+$this->headTitle('SRMS | User view page'); 
+echo $this->headTitle();
+?>
+
+<script type="text/javascript">
+	dojo.require('dijit.form.Button');
+</script>
+<table cellspacing="20" style="margin: 0 auto; width: 450px">
+	<tr>
+		<td>
+			<fieldset>
+				<legend><strong>ព៌ត័មាន ទំនាក់ទំនង របស់​ អ្នក​គ្រប់​គ្រង</strong></legend>
+				<table cellspacing="20" width="100%">
+					<tr>
+						<td align="center" valign="top">
+							<table width="80%">
+								<tr>
+									<td>First Name</td>
+									<td>
+										<?php echo $this->user_view['first_name'];?>
+									</td>
+								</tr>
+								<tr>
+									<td>Last Name</td>
+									<td>
+										<?php echo $this->user_view['last_name'];?>
+									</td>
+								</tr>
+								<tr>
+									<td>User Name</td>
+									<td>
+										<?php echo $this->user_view['user_name'];?>
+									</td>
+								</tr>
+								<tr>
+									<td>Password</td>							
+									<td>
+										<strong>***********</strong>
+									</td>
+								</tr>
+								<tr>
+									<td>Status</td>
+									<td>
+										<?php echo ($this->user_view['active'] == 1)? 'ប្រើ​ប្រាស់':'មិនប្រើ​ប្រាស់';?> 
+									</td>
+								</tr>
+								<tr>
+									<td>User Type</td>
+									<td>
+										<?php echo ($this->user_view['user_type'] == 1)? 'អ្នក​គ្រប់​គ្រង':'ភ្នាក់ងារ';?>
+									</td>
+								</tr>
+								<?php if($this->user_view['user_type'] == 0):?>
+								<tr>
+									<td>Agent</td>
+									<td>
+										<?php echo $this->user_view['agent_name'];?>
+									</td>
+								</tr>
+								<?php endif;?>
+							</table>
+						</td>							
+					</tr>
+				</table>	
+			</fieldset>
+		</td>			
+	</tr>
+</table>

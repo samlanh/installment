@@ -1,0 +1,158 @@
+<?php
+	$this->headTitle('Add Teller'); 
+	echo $this->headTitle();
+	$frm = $this->frmteller;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+?>
+<style>	
+	.dojoxGridSortNode{
+		text-align: center;	
+		height: 30px;		
+	}
+</style>
+
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'add')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong>ព៌ត័មាន បង់ប្រាក់</strong></legend>
+					<table class="center" cellspacing="10">
+						<tr>
+							<td width="13%"><?php echo $tr->translate("សាខា")?></td>
+							<td width="21%"><?php echo $frm->getElement('bran');?></td>
+							<td width="12%"><?php echo $tr->translate(" ")?></td>
+							<td width="21%"><?php echo $frm->getElement('');?></td>
+							<td><?php echo $tr->translate("")?></td>
+							<td width="21%"><?php  echo $frm->getElement('');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("លេខគណនី")?></td>
+							<td><?php  echo $frm->getElement('account_number');?></td>
+							<td><?php echo $tr->translate("ឈ្មោះប្រធានក្រុម")?></td>
+							<td><?php echo $frm->getElement('group_id');?></td>
+							<td><?php echo $tr->translate("ឈ្មោះ  អ្នកទទូលប្រាក់")?></td>
+							<td><?php echo $frm->getElement('co_id');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("ថ្ងៃបង់ប្រាក់")?></td>
+							<td><?php  echo $frm->getElement('collect_date');?></td>
+							<td><?php echo $tr->translate("ថ្ងៃបានបង់")?></td>
+							<td><?php  echo $frm->getElement('date_payment');?></td>
+							<td><?php echo $tr->translate("លេខវិក្កយបត្រ")?></td>
+							<td><?php  echo $frm->getElement('invoice_number');?></td>
+						</tr>
+					</table>
+					<fieldset>
+						<legend><strong>ច៉នួនទឹកប្រាក់ដែលត្រូវបង់</strong></legend>
+							<table class="center" cellspacing="10">
+							<tr>
+								<td><?php echo $tr->translate("ប្រាក់ដើមនៅសល់")?></td>
+								<td align="left"><?php echo $frm->getElement('priciple_amount');?></td>
+								<td><?php echo $tr->translate("ប្រាក់ដើមត្រូវសង")?></td>
+								<td><?php echo $frm->getElement('os_amount');?></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("អាត្រាការប្រាក់")?></td>
+								<td><?php echo $frm->getElement('total_interest');?></td>
+								<td><?php echo $tr->translate("ប្រាក់ផាកពិន័យ")?></td>
+								<td><?php echo $frm->getElement('penalize_amount');?></td>
+								<td><?php echo $tr->translate("ប្រាក់ត្រូវបង់សរុប")?></td>
+								<td><?php echo $frm->getElement('total_payment');?></td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("ប្រាក់ទទួលបាន")?></td>
+								<td><?php echo $frm->getElement('cash_got');?></td>
+								<td><?php echo $tr->translate("ប្រាក់អាប់")?></td>
+								<td><?php echo $frm->getElement('cash_return');?></td>
+								<td><?php echo $tr->translate("កំណត់សម្គាល់")?></td>
+								<td><?php echo $frm->getElement('note');?></td>
+							</tr>
+							</table>
+						</fieldset>	
+				</fieldset>
+		   </td>
+		</tr>
+		<tr>
+			<td align="center">
+			   <input type="su" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"
+			   iconClass="dijitEditorIcon dijitEditorIconSave" onclick="submitData();"/>
+			   <input type="button" value="រក្សាទុក & បោះពុម្ព" label="រក្សាទុក & បោះពុម្ព" id="saveprint" dojoType="dijit.form.Button" 
+			   iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="addDatatogrid();"/>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<fieldset>
+					<legend><strong>ប្រវត្តិនៃការបង់ប្រាក់</strong></legend>
+					<?php echo $this->list;?>
+				</fieldset>
+		 </td>
+	</tr>		
+</table>
+</form>
+<script type="text/javascript">	
+	function hideDialog() {		
+		dijit.byId("recript_dialog").hide();
+		saveTrans(); 
+	}
+	// Force them to provide an answer
+	function doPrint() {
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+	    window.frames["print_frame"].window.focus();
+	    window.frames["print_frame"].window.print();
+	    hideDialog();
+	}
+	
+</script>
+<script type="text/javascript">
+dojo.require("dojo.data.ItemFileWriteStore"); 
+dojo.require("dijit.form.Textarea");
+    var tran_store  = getDataStorefromJSON('','name',null);
+	var tran_status = {};
+</script>
+<script type="text/javascript">
+dojo.ready(function(){
+function submitData(){
+	var json_data_t = itemToJSON(dijit.byId('tran_list'));
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'addloan')); ?>';
+		dojo.xhrPost({
+		    url: url_submit,	
+			form: dojo.byId("frm_add_tran"),		    
+			load: function(data) {	
+				alert('ប្រាក់ឥណទានត្រូវបានបញ្ចូលដោយជោគជ័យ !');
+				//alert(data);
+				
+			},
+			error: function(e) {
+				alert("Your message could not be sent, please try again!.");
+			}
+		});
+}
+function clearTextBox(){
+	dijit.byId('member').set('value','');
+	dijit.byId('total_amount').set('value',0);
+}
+
+var url_submitco = '<?php echo $this->url(array('module'=>'other','controller'=>'co','action'=>'add-newco')); ?>';
+function AddNewCo(){
+		dojo.xhrPost({
+	    url: url_submitco,	
+		form: dojo.byId("form_co"),		    
+		handleAs:"json",
+		load: function(data) {	
+			dojo.byId('form_co').reset(); 
+			dijit.byId('frm_co').hide();
+		},
+		error: function(err) {
+			alert(err);
+		alert("Your message could not be sent, please try again!.");
+				        
+		}
+	});
+}

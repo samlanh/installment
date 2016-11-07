@@ -1,0 +1,173 @@
+<?php
+$this->headTitle('Sale Realty Management System | log in page'); 
+echo $this->headTitle();
+$base_url = Application_Form_FrmMessage::getUrl("/");
+?>
+<!DOCTYPE HTML> 
+<html>
+<head>
+<?php /*
+*/?>
+<script src="<?php echo $base_url;?>js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
+<script>dojoConfig = {parseOnLoad: true}</script>
+<link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>js/dojo-1.6.1/dijit/themes/tundra/tundra.css"/>
+	
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+	.btn{
+		height: 40px;
+		min-width: 100px;	
+	}
+	.f_style{
+		font-family:'NiDA Khmer Empire';
+	    font-size:14px;
+		text-shadow: 1px 1px 1px #0B404A;
+	}
+	.t_shadow{ text-shadow: 1px 1px 1px #0B404A;}
+</style>
+<link rel="stylesheet" href="css/stylelogin.css"/>
+<link rel="shortcut icon" href="images/icon.ico" type="image/x-icon"/>
+<script>	
+	require(["dojo/parser", "dijit/form/Form", "dijit/form/Button", "dijit/form/ValidationTextBox"]);
+</script>
+</head>
+<body class="tundra" style="overflow: hidden;background: white;" id="body" >
+<div id="header" style="position:absolute;left: 0;top: 0;">
+	<table>
+		<tr align="center">
+			<td class="title" style="padding-left: 7px; text-align: center;font-size:20px;text-align:center; font-family:'Khmer MEF2'"><?php echo $this->data["system_name"];?></td>
+		</tr>
+		<tr>
+			<td class="textblue" align="center"></td>
+		</tr>
+	</table>
+</div>
+<div style="height:60px;">
+</div>
+<div id="content">
+	<div id='marquee'>
+		<marquee behavior="scroll" direction="left" onmouseout="this.start()" onmouseover="this.stop()" scrollamount="5"><?php echo $this->data["label_animation"];?></marquee>
+	</div>
+	<table cellpadding="0" cellspacing="0" id="main">
+		<tr>
+			<td style="width: 472px;padding-left:50px;" >				
+				<img style="border:1px solid #eee;" alt="<?php ?>" src="<?php echo $base_url.$this->data['logo-path-name']?>">
+			</td>
+			<td valign="top" style="width: 120px">
+				<label class="lblheader"></label>
+			</td>
+			<td>
+				<div id="login">
+					<form id="frmLogin" dojoType="dijit.form.Form" method="post" action="">
+						<script type="dojo/method" event="onSubmit">				
+								if(this.validate()) {						
+									return true;
+								}
+								return false;
+						</script>
+						<table id="login">		
+						<tr>
+							<td colspan="2" align="center" class="lblheader textwithe">
+								<label style="font: bold 20px 'Khmer MEF2'; text-shadow: 1px 1px 1px #0B404A;"><small>ប្រព័ន្ធសុវត្ថិភាព ​</small></label>
+							</td>				
+						</tr>	
+						<tr>
+							<td colspan="2" align="center" style="color: red; padding-bottom: 10px;">
+								<?php echo $this->msg;?>
+							</td>				
+						</tr>			
+						<tr>
+							<td id="field"><label class="f_style" >អ៊ីម៉ែលអ្នកប្រើប្រាស់</label></td>
+							<td class="add-edit">
+								<input type="text" required="true" name="txt_user_name" id="txt_user_name" placeholder="ឈ្មោះអ្នកប្រើប្រាស់​" 
+								data-dojo-type="dijit/form/ValidationTextBox" missingMessage="សូមបំពេញឈ្មោះអ្នកប្រើប្រាស់! " style="width: 100%;"/>
+							</td>
+						</tr>
+						<tr>
+							<td id="field"><label class="f_style">លេខសំងាត់</label></td>
+							<td class="add-edit">
+								<input type="password" required="true" name="txt_password" id="txt_password" placeholder="លេខសំងាត់" 
+								data-dojo-type="dijit/form/ValidationTextBox" missingMessage="សូមបំពេញលេខសំងាត់!" style="width: 100%;"/>
+							</td>
+						</tr>
+						<tr>
+							<td id="field"><label class="f_style">ភាសា</label></td>
+							<td class="add-edit">
+								<select name="lang" id="lang" style=" height: 30px; width:170px " > 
+									<option value="1">ខ្មែរ</option> 
+									<option value="2">អង់គ្លេស</option> 
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="right">
+								<input class="f_styles" style="color: #1C90C3; font: 13px 'Khmer MEF2';" type="submit" value="ចូលប្រើប្រាស់" label="ចូលប្រើប្រាស់" data-dojo-type="dijit/form/Button" />
+								<input class="f_styles" style="color: #1C90C3; font: 13px 'Khmer MEF2';" type="reset" value="សំអាត" id="clear_login" data-dojo-type="dijit/form/Button" label="សំអាត" /> 								
+							</td>				
+						</tr>
+					</table>
+					</form>
+				</div>
+			</td>
+		</tr>
+	</table>	
+	<br>
+</div>
+<div id="footer" style="position:absolute;left: 0;bottom: 0;">
+	<table id="main">
+		<tr>
+			<td>
+				<label class="textgreen footertitle f_style">អាសយដ្ឋាន​ ៖</label>
+				<dl>
+				   <lable class="f_style"><b><?php echo $this->data['branch-add-client']?></b></lable><br />
+				  	<?php						
+						$tels = explode("," , $this->data['tel-client']);						
+						foreach ($tels AS $i =>$tel){
+							echo "<span class='t_shadow' style='font-weight:bold;font-size:20px;'>".$tel."<span><br />";
+						}
+					?>	
+					<lable class='t_shadow' style='font-weight:bold; font-size:21px;'><?php echo $this->data['client_website']?></lable><br />
+					<lable class='t_shadow' style='font-weight:bold; font-size:20px;'><?php echo $this->data['email_client']?></lable><br />		   
+				</dl>
+				<label class="textgreen footertitle f_style">ប្រើប្រាស់ដោយ៖</label>
+				<a  style="font-weight:bold;" href="#" target="_blank"><label class="textyellow footertitle">
+					<b><?php echo $this->data['client_company_name']?></b>
+				</label>				
+			</td>
+			<td class="textgreenlight" valign="top" >
+				<label class="textgreen footertitle f_style">អាសយដ្ឋាន​ ៖</label>
+				<dl>
+				   <lable class="f_style"><b><?php echo $this->data['branch_add']?></b></lable><br />
+				  	<?php						
+						$tels = explode("," , $this->data['branch-tel']);						
+						foreach ($tels AS $i =>$tel){
+							echo "<span class='t_shadow' style='font-weight:bold;font-size:20px;'>".$tel."<span><br />";
+						}
+					?>	
+					<lable class='t_shadow' style='font-weight:bold; font-size:21px;'><?php echo $this->data['website']?></lable><br />
+					<lable class='t_shadow' style='font-weight:bold; font-size:20px;'><?php echo $this->data['branch_email']?></lable><br />		   
+				</dl>
+				<label class="textgreen footertitle f_style">&copy រក្សាសិទ្ធិគ្រប់យ៉ាង</label>
+				<a  style="font-weight:bold;" href="http://<?php echo $this->data['website']?>" target="_blank"><label class="textyellow footertitle">
+					<b><?php echo $this->data['power_by']?></b></a>
+				</label>	
+				<br />
+			</td>
+		</tr>
+	</table>
+</div>
+<div style="clear: both;"></div>
+</body>
+</html>
+<style>
+</style>
+<script type="text/javascript">
+/*var elem = document.getElementById("body");
+elem.onclick = function() {
+    req = elem.requestFullScreen || elem.webkitRequestFullScreen || elem.mozRequestFullScreen;
+    req.call(elem);
+}*/
+</script>
+	
+</script>
+		

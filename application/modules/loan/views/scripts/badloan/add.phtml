@@ -1,0 +1,168 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate('BAD_LOAN'));
+$frm = $this->frm_loan;
+?>
+
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+</style>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.NumberTextBox");
+</script>
+<form id="add_province" action="<?php echo $this->url(array('module'=>'loan','controller'=>'badloan','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	 <script type="dojo/method" event="onSubmit">			
+	if(this.validate()) {
+    	if(dijit.byId('branch').get('value')==''){
+     		alert('Please Select Branch');
+     		dijit.byId('branch').focus();
+     		return false;
+   		}
+		if(dijit.byId('client_nameadd').get('value')==''){
+     		alert('Please Select Client Name');
+     		dijit.byId('client_codeadd').focus();
+     		return false;
+   		}
+		if(dijit.byId('client_codeadd').get('value')==0){
+     		alert('សូមមេតាជ្រើសរើសប្រភេទកូដ CO');
+     		dijit.byId('client_nameadd').focus();
+     		return false;
+   		}
+    	return true;
+   		}else {
+    	return false;
+   	}
+	</script>
+<table cellspacing="10" class='fullside' >
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong><?php echo $tr->translate('BAD_LOAN');?></strong></legend>
+					<table cellspacing="10"  width="100%">
+					   <tr>
+							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
+							<td><?php echo $frm->getElement('branch');?></td>
+							<td><?php echo $tr->translate("CUSTOMER_CODE")?></td>
+							<td><?php echo $frm->getElement('client_codeadd');?></td>
+							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
+							<td><?php echo $frm->getElement('client_nameadd')?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("LOAN_NO")?></td>
+							<td><?php echo $frm->getElement('loannumber');?></td>
+							<td><?php echo $tr->translate("LOAN_LEVEL")?></td>
+							<td><?php  echo $frm->getElement('load_level');?></td>	
+							<td><?php echo $tr->translate("LOAN_AMOUNT")?></td>
+							<td><?php echo $frm->getElement('total_amount_loan')?></td>						
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("INTEREST")?></td>
+							<td><?php echo $frm->getElement('interest_rate');?></td>
+							<td><?php echo $tr->translate("TERM_BORROW")?></td>
+							<td><?php  echo $frm->getElement('loan_period');?></td>	
+							<td><?php echo $tr->translate("TERM_INSTALL")?></td>
+							<td><?php echo $frm->getElement('payment_term')?></td>						
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("RELEASE_DATE")?></td>
+							<td><?php echo $frm->getElement('release_date');?></td>
+							<td><?php echo $tr->translate("LIFE_LOAN")?></td>
+							<td><?php  echo $frm->getElement('end_date');?></td>	
+							<td><?php //echo $tr->translate("other")?></td>
+							<td><?php //echo $frm->getElement('other')?></td>						
+						</tr>
+						<tr>
+							<td colspan="6" style="border-bottom:1px solid #ccc;"><strong>ព៌ត័មាន កម្ចីខូច</strong></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("OS")?></td>
+							<td><?php echo $frm->getElement('Total_amount');?></td>
+							<td><?php echo $tr->translate("CURRENCY")?></td>
+							<td><?php  echo $frm->getElement('cash_type');?></td>	
+							<td><?php echo $tr->translate("LOSS_DATE")?></td>
+							<td><?php echo $frm->getElement('date_loss')?></td>						
+						</tr>
+						<tr>							
+							<td><?php echo $tr->translate("TERM")?></td>
+							<td><?php  echo $frm->getElement('Term');?></td>
+							<td><?php echo $tr->translate("NOTE")?></td>
+							<td><?php  echo $frm->getElement('Note');?></td>
+							<td><?php echo $tr->translate("DATE")?></td>
+							<td><?php echo $frm->getElement('Date');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php echo $frm->getElement('status');?></td>
+						</tr>
+						<tr>
+							<td align="center" colspan="6">
+								<input type="submit" name="save" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="submitButton" dojoType="dijit.form.Button"
+				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
+				 				<input type="submit" name="save_close"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('SAVECLOSE')?>" id="submitBtn" dojoType="dijit.form.Button"
+				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
+				 					
+				 					
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+		</td>
+	</tr>		
+	<tr>
+	</tr>	
+</table>
+</form>
+		
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+
+var url_submiinfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'badloan','action'=>'getloaninfo')); ?>';
+function getClientInfo(type){
+    
+	if(type==1){
+		values = dijit.byId("client_nameadd").get('value');
+	}else if(type==2){
+		values = dijit.byId("client_codeadd").get('value');
+	}else{
+		values = dijit.byId("client_codeadd").get('value');
+	} 
+	dijit.byId('Total_amount').attr('value',0);
+	//dijit.byId('Interest_amount').attr('value',0);
+	//dijit.byId("cash_type").set('readOnly',false);
+	//values=dijit.byId("client_code").get('value');
+	dojo.xhrPost({
+	    url: url_submiinfo,	
+	    content : { 
+		    'loan_id':values,
+		  //  'type':type,
+		},	
+		handleAs:"json",
+		load: function(data) {
+			//alert(data);
+			dijit.byId('Total_amount').attr('value',data.total_principal);
+			dijit.byId('loannumber').attr('value',data.loan_number);
+			dijit.byId('load_level').attr('value',data.level);
+			dijit.byId('interest_rate').attr('value',data.interest_rate);
+			dijit.byId('payment_term').attr('value',data.pay_term);
+			dijit.byId('loan_period').attr('value',data.total_duration);
+		    dijit.byId('release_date').attr('value',data.date_release);
+		    dijit.byId('end_date').attr('value',data.date_line);
+			dijit.byId('total_amount_loan').attr('value',data.total_capital);
+			dijit.byId('date_loss').attr('value',data.date_payment);
+			dijit.byId('cash_type').attr('value',data.currency_type);
+			dijit.byId("cash_type").set('readOnly',true);
+			dijit.byId("client_nameadd").attr('value',values);
+		},
+		error: function(err) {
+			alert(err);
+		
+				        
+		}
+	});
+	
+}
+</script>

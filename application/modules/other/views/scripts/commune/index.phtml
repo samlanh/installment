@@ -1,0 +1,15 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("COMMUNE_LIST"));
+$frm = $this->frm_district;
+?>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'other','controller'=>'commune','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+   <table>
+   		<tr>
+		   <td><?php echo $frm->getElement("adv_search");?></td>
+		   <td><?php echo $frm->getElement('search_status');?></td>
+		   <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+		</tr>
+	</table>
+</form>
+<?php echo $this->list;?>

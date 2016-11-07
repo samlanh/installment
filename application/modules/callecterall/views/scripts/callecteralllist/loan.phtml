@@ -1,0 +1,56 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_loan;
+?>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+</style>
+<form id="add_province" action="<?php echo $this->url(array('module'=>'callteral','controller'=>'badloan','action'=>'loan')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	 <script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+	</script>
+<table cellspacing="10" class='fullside' >
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong>Bad Loan</strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+							<td><?php echo $tr->translate("Client Name")?></td>
+							<td><?php echo $frm->getElement('client_name');?></td>
+							<td><?php echo $tr->translate("Total amount")?></td>
+							<td><?php echo $frm->getElement('Total_amount');?></td>
+							<td><?php echo $tr->translate("Interest amount")?></td>
+							<td><?php echo $frm->getElement('Interest_amount')?></td>
+						</tr>
+						<tr>
+							
+							<td><?php echo $tr->translate("Date")?></td>
+							<td><?php echo $frm->getElement('Date');?></td>
+							<td><?php echo $tr->translate("Term")?></td>
+							<td><?php echo $frm->getElement('Term');?></td>
+							<td><?php echo $tr->translate("Note")?></td>
+							<td><?php  echo $frm->getElement('Note');?></td>
+						</tr>
+					</table>
+				</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"
+				 iconClass="dijitEditorIcon dijitEditorIconSave"/>
+		</td>
+	</tr>	
+</table>
+</form>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+</script>

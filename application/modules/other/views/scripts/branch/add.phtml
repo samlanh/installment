@@ -1,0 +1,70 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('ADD_BRANCH')); 
+?>
+<?php  $frm = $this->frm_branch;?>
+<form action="<?php echo $this->url(array('module'=>'other','controller'=>'branch','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	 <script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+	</script>
+	<table cellspacing="10" style="margin: 0 auto; width:100%">
+		<tr>
+			<td>
+				<fieldset>
+					<legend align="center"><strong><?php echo $tr->translate("ADD_BRANCH");?></strong></legend>
+					<table cellspacing="20" width="100%" >
+						<tr>
+							<td align="center" valign="top">
+								<table width="100%" cellspacing="10">
+									<tr>
+										<td><?php echo $tr->translate("BRANCH_CODE")?></td>
+										<td><?php echo $frm->getElement("branch_code");?></td>
+										<td><?php echo $tr->translate("BRANCH_NAMEKH")?></td>
+										<td><?php echo $frm->getElement("branch_namekh");?></td>
+										<td><?php echo $tr->translate("BRANCH_NAMEEN")?></td>
+										<td><?php echo $frm->getElement("branch_nameen");?></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("PREFIX_CODE");?></td>
+									    <td><?php echo $frm->getElement("prefix_code");?></td>
+										<td><?php echo $tr->translate("BRANCH_ADDRESS")?></td>
+										<td><?php echo $frm->getElement("br_address");?></td>
+										<td><?php echo $tr->translate("PHONE")?></td>
+										<td><?php echo $frm->getElement("branch_tel");?></td>
+									</tr>
+									<tr>		
+										<td><?php echo $tr->translate("BRNACH_FAX")?></td>
+										<td><?php echo $frm->getElement("fax");?></td>								
+										<td><?php echo $tr->translate("BRANCH_NOTE")?></td>
+										<td><?php echo $frm->getElement("branch_note");?></td>
+										<td><?php echo $tr->translate("BRANCH_STATUS")?></td>
+										<td><?php echo $frm->getElement("branch_status");?></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("BRANCH_DISPLAY")?></td>
+										<td><?php echo $frm->getElement("branch_display");?></td>
+										<td colspan="4"></td>
+									</tr>
+									<tr>
+										<td colspan="6" align="center">
+											<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear" />
+											<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
+												iconClass="dijitEditorIcon dijitEditorIconSave" />
+											<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
+												iconClass="dijitEditorIcon dijitEditorIconSave" />
+										</td>
+									</tr>					
+								</table>
+							</td>							
+						</tr>
+					</table>	
+				</fieldset>
+			</td>			
+		</tr>
+		
+	</table>	
+</form>

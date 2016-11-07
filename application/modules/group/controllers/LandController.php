@@ -1,0 +1,243 @@
+<?php
+class Group_LandController extends Zend_Controller_Action {
+	const REDIRECT_URL = '/group/index';
+	public function init()
+	{
+		header('content-type: text/html; charset=utf8');
+		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
+	}
+	public function indexAction(){
+		try{
+			$db = new Group_Model_DbTable_DbLand();
+			if($this->getRequest()->isPost()){
+				$formdata=$this->getRequest()->getPost();
+				$search = array(
+						'adv_search' => $formdata['adv_search'],
+						'status'=>$formdata['status'],
+						'start_date'=> $formdata['start_date'],
+						'end_date'=>$formdata['end_date']
+						);
+			}
+			else{
+				$search = array(
+						'adv_search' => '',
+						'status' => -1,
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'));
+			}
+			$rs_rows= $db->getAllLandInfo($search);
+			$glClass = new Application_Model_GlobalClass();
+			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
+			$list = new Application_Form_Frmtable();
+			$collumns = array("Land Code","TITLE","Price","Width","Height","Total Size","Heard Title","DATE","BY_USER","STATUS");
+			$link=array(
+					'module'=>'group','controller'=>'land','action'=>'edit',
+			);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('land_code'=>$link,'land_address'=>$link,'price'=>$link,
+					'width'=>$link));
+		}catch (Exception $e){
+			Application_Form_FrmMessage::message("Application Error");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+	
+		$frm = new Application_Form_FrmAdvanceSearch();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		$this->view->result=$search;	
+	}
+	public function addAction(){
+		if($this->getRequest()->isPost()){
+				$data = $this->getRequest()->getPost();
+				$db = new Group_Model_DbTable_DbLand();
+				try{
+				 if(isset($data['save_new'])){
+					$id= $db->addLandinfo($data);
+					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+				}
+				else if (isset($data['save_close'])){
+					$id= $db->addLandinfo($data);
+					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+					Application_Form_FrmMessage::redirectUrl("/land/index");
+				}
+			}catch (Exception $e){
+				Application_Form_FrmMessage::message("Application Error");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+		$db = new Application_Model_DbTable_DbGlobal();
+		
+		$fm = new Group_Form_FrmClient();
+		$frm = $fm->FrmLandInfo();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_client = $frm;
+	}
+	public function editAction(){
+		$db = new Group_Model_DbTable_DbLand();
+		if($this->getRequest()->isPost()){
+			try{
+				$data = $this->getRequest()->getPost();
+				$id= $db->addLandinfo($data);
+				Application_Form_FrmMessage::Sucessfull('EDIT_SUCCESS',"/group/land");
+			}catch (Exception $e){
+				Application_Form_FrmMessage::message("EDIT_FAILE");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+		$id = $this->getRequest()->getParam("id");
+		$row = $db->getClientById($id);
+	        $this->view->row=$row;
+		if(empty($row)){
+			$this->_redirect("/group/land");
+		}
+		$fm = new Group_Form_FrmClient();
+		$frm = $fm->FrmLandInfo($row);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_client = $frm;
+		
+	}
+	function viewAction(){
+		$id = $this->getRequest()->getParam("id");
+		$db = new Group_Model_DbTable_DbClient();
+		$this->view->client_list = $db->getClientDetailInfo($id);
+	}
+	public function addNewclientAction(){//ajax
+		if($this->getRequest()->isPost()){
+			$db = new Group_Model_DbTable_DbClient();
+			$data = $this->getRequest()->getPost();
+			$_data['status']=1;
+			$id = $db->addClient($data);
+			print_r(Zend_Json::encode($id));
+			exit();
+		}
+	}
+	function getlandinfoAction(){
+		if($this->getRequest()->isPost()){
+			$db = new Group_Model_DbTable_DbClient();
+			$data = $this->getRequest()->getPost();
+			$code = $db->getGroupCodeBYId($data);
+			print_r(Zend_Json::encode($code));
+			exit();
+		}
+	}
+	function getclientcodeAction(){
+		if($this->getRequest()->isPost()){
+			$db = new Group_Model_DbTable_DbClient();
+			$data = $this->getRequest()->getPost();
+			$code = $db->getClientCode($data['branch_id']);
+			print_r(Zend_Json::encode($code));
+			exit();
+		}
+	}
+	function getclientinfoAction(){//At callecteral when click client
+		if($this->getRequest()->isPost()){
+			$db = new Group_Model_DbTable_DbClient();
+			$data = $this->getRequest()->getPost();
+			$code = $db->getClientDetailInfo($data);
+			print_r(Zend_Json::encode($code));
+			exit();
+		}
+	}
+	function getclientcollateralAction(){//At callecteral when click client
+		if($this->getRequest()->isPost()){
+			$db = new Group_Model_DbTable_DbClient();
+			$data = $this->getRequest()->getPost();
+			$code = $db->getClientCallateralBYId($data['client_id']);
+			print_r(Zend_Json::encode($code));
+			exit();
+		}
+	}
+	function insertDistrictAction(){//At callecteral when click client
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db_district = new Other_Model_DbTable_DbDistrict();
+			$district=$db_district->addDistrictByAjax($data);
+			print_r(Zend_Json::encode($district));
+			exit();
+		}
+	}
+	function insertcommuneAction(){//At callecteral when click client
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db_commune = new Other_Model_DbTable_DbCommune();
+			$commune=$db_commune->addCommunebyAJAX($data);
+			print_r(Zend_Json::encode($commune));
+			exit();
+		}
+	}
+	function addVillageAction(){//At callecteral when click client
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db_village = new Other_Model_DbTable_DbVillage();
+			$village=$db_village->addVillage($data);
+			print_r(Zend_Json::encode($village));
+			exit();
+		}
+	}
+	function insertDocumentTypeAction(){//At callecteral when click client
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$data['status']=1;
+			$data['display_by']=1;
+			//$data['type']=24;
+			
+			$db = new Other_Model_DbTable_DbLoanType();
+			$id = $db->addViewType($data);
+			print_r(Zend_Json::encode($id));
+			exit();
+		}
+	}
+	function insertClientAction(){//At callecteral when click client
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db=new Group_Model_DbTable_DbClient();
+			$row=$db->addIndividaulClient($data);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	
+	}
+	function getclientnumberbybranchAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobal();
+			$dataclient=$db->getAllClientNumber($data['branch_id']);
+			//array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
+			print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	}
+	function getclientbybranchAction(){//At callecteral when click client
+		if($this->getRequest()->isPost()){
+			 $data = $this->getRequest()->getPost();
+			 $db = new Application_Model_DbTable_DbGlobal();
+             $dataclient=$db->getAllClient($data['branch_id']);
+             array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
+			 print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	
+	}
+	function getGroupclientbybranchAction(){//At callecteral when click client
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobal();
+			$dataclient=$db->getAllClientGroup($data['branch_id']);
+			array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
+			print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	}
+	function getGoupCodebybranchAction(){//At callecteral when click client
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobal();
+			$dataclient=$db->getAllClientGroupCode($data['branch_id']);
+			array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
+			print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	}
+	
+}
+

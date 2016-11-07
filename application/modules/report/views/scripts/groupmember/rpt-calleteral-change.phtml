@@ -1,0 +1,154 @@
+<?php 
+	$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm=$this->frm_changeCollteral;
+?>
+<meta charset="utf-8">
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<title><?php echo $tr->translate("LIST_REPORT_CHANGE_CALLETERAL");?></title>
+<form method="post">
+<table style="font-family: 'Khmer OS Content';width:27.2cm; margin: 0 auto;"  >
+	<tr>
+			<td><?php echo $frm->getElement('adv_search');?></td>
+			<td><?php echo $frm->getElement('branch_id');?></td>
+			<td><?php echo $frm->getElement('status_search');?></td>
+			<td><?php echo $frm->getElement('start_date');?></td>
+		</tr>
+		<tr>
+			<td><?php echo $frm->getElement('end_date');?></td>
+			<td><?php echo $frm->getElement('btn_search');?></td>
+			<td></td>
+			<td><?php //echo $frm->getElement('client_name');?></td>
+		</tr>
+</table>
+</form>
+<div style=" width:26cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
+<div id="divPrint" style="width: 100%;">
+<style>
+.style{
+	line-height: 20px;font-size: 11px !important;
+	font-family: 'Khmer OS Battambang';
+}
+th{padding: 5px;}
+</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;" >
+	<tr>
+    	<td align="center">
+        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+            	<tr>
+                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+                	<td width="60%" valign="top">
+                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><label></label></h2>
+                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><?php echo $tr->translate("REPORT_CHANGE_CALLETERAL");?></h2>
+                	<h2 style="text-align:center; font-size:13px;"><?php echo date("d-M-Y",strtotime($this->result['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->result['end_date']));?></h2></td>
+                    <td width="20%"></td>
+                </tr> 
+                <tr>
+                	<td colspan="3">
+                		<table width="100%">
+                			<tr class='style'>
+                				<td class="style" style="font-size: 10px;">
+                					<?php echo $tr->translate("ADDRESS_COMPANY");?>
+									<br /><?php echo $tr->translate("TEL_COMPANY");?>
+                				</td>
+                				<td width="65%"></td>
+                			</tr>
+		                </table>
+		              </td>
+		           </tr>   
+            </table>
+        </td>
+    </tr>
+    <tr >
+    	<td>
+            <table  id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px;" width="100%" cellspacing="0">
+                <?php if(empty($this->calleteral_list)){?>
+                <tr>
+                	<td colspan="6">&nbsp;<span class="style"><?php echo $tr->translate("CUSTOMER_NAME");?> </span></td>
+                </tr>
+            	<tr bgcolor="#ccc" class="style" align="center" style="font-weight:bold; line-height: 14px; font-size:11px; padding:5px 0px; ">
+                    <th ><?php echo $tr->translate("NUM");?> </th>
+                    <th ><?php echo $tr->translate("BRANCH_NAME");?> </th>
+                    <th ><?php echo $tr->translate("COLLTERAL_CODE");?> </th>
+                    <th ><?php echo $tr->translate("COLETERAL_TYPE_ODL");?> </th>                   
+                    <th ><?php echo $tr->translate("COLETERAL_TYPE_NEW");?> </th>
+                    <th ><?php echo $tr->translate("OWNER_NAME");?> </td>
+                    <th ><?php echo $tr->translate("NUMBER_COLLTERAL");?> </th>
+                    <th ><?php echo $tr->translate("SIGN_DATE");?> </th>
+                    <th ><?php echo $tr->translate("DATE");?> </th>
+                    <th ><?php echo $tr->translate("NOTE");?> </th>
+                </tr>
+            	<?php }?>
+                   <?php  
+                    $id='';
+	               if(!empty($this->calleteral_list)) foreach($this->calleteral_list as $key =>$row){
+               ?>
+                <?php 
+                if($id!=$row['client_id']){
+                ?>
+                <?php if($key>0){?>
+                <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px;" width="100%" cellspacing="0">
+                <?php } ?>
+             <?php ?>
+             	<tr>
+             		<td colspan="13">&nbsp;<span class="style"><?php echo $tr->translate("CUSTOMER_NAME");?> </span><?php  echo $row['client_name']; ?></td>
+             	</tr>
+                <tr>
+                	<td colspan="6" align="center" bgcolor="#ccc">&nbsp;<span class="style"><?php  echo $tr->translate("FROM_COLL"); ?></td>
+                	<td colspan="7" align="center" bgcolor="#ccc" style="border-left:3px double #000; ">&nbsp;<span class="style"><?php echo $tr->translate("TO_COLL");?> </span></td>
+                </tr>
+                 <tr bgcolor="#ccc" class="style"  align="center" style="font-weight:bold; line-height: 18px; ">
+                    <td><?php echo $tr->translate("NUM");?> </td>
+                    <td><?php echo $tr->translate("BRANCH_NAME");?> </td>
+                    <td><?php echo $tr->translate("COLLTERAL_CODE");?> </td>
+                    <td><?php echo $tr->translate("COLETERAL_TYPE_ODL");?> </td>
+                    <td><?php echo $tr->translate("OWNER_NAME");?> </td>
+                    <td style="border-right:3px double #000; "><?php echo $tr->translate("NUMBER_COLLTERAL");?> </td>   
+                   	<td><?php echo $tr->translate("COLLTERAL_CODE");?> </td>
+                    <td><?php echo $tr->translate("COLETERAL_TYPE_NEW");?> </td>
+                    <td><?php echo $tr->translate("OWNER_NAME");?> </td>
+                    <td><?php echo $tr->translate("NUMBER_COLLTERAL");?> </td>
+                    <th ><?php echo $tr->translate("SIGN_DATE");?> </th>
+                    <td><?php echo $tr->translate("DATE");?> </td>
+                    <th ><?php echo $tr->translate("NOTE");?> </th>
+                </tr>
+                <?php }
+                ?>
+					<tr class="style" >
+						<td>&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['from_collcode']//echo $row['collecteral_code']; ?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['collecteral_title_old']." - ".$row['collecteral_owner'];?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['from_owner_name'];?>&nbsp;</td>
+						<td style="border-right:3px double #000; ">&nbsp;<?php echo $row['from_number_collateral'];?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['to_collcode']//echo $row['collecteral_code']; ?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['collecteral_title_en']." - ".$row['collecteral_owner'];?>&nbsp;</td>
+						<td style="white-space:nowrap;" >&nbsp;<?php echo $row['toowner_name']; ?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['number_collateral']?>&nbsp;</td>
+						<td>&nbsp;<?php echo date("d/m/Y",strtotime($row['issue_date']))?>&nbsp;</td>
+						<td>&nbsp;<?php echo date("d/m/Y",strtotime($row['date']))?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['note']?>&nbsp;</td>
+					</tr>
+				<?php 
+				$id = $row['client_id'];
+}?>
+            
+            <br />
+              </table>
+              <br />
+             <table align="center" width="100%">
+				   <tr style="font-size: 12px;">
+				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+				   </tr>
+			</table>
+    	</td>
+    </tr>
+</table>
+</div>
+</div>

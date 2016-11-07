@@ -1,0 +1,109 @@
+<?php
+	$this->headTitle('SYSTEM_SETTING'); 
+	echo $this->headTitle();
+	$data =$this->data;
+?>
+ <script>
+	 dojo.require("dijit/form/CheckBox");
+	 dojo.require("dijit/form/NumberTextBox");
+ </script>
+	<table cellspacing="20" width="100%">
+		<tr>
+			<td>
+			<form action="<?php echo $this->url(array('module'=>'setting','controller'=>'setting','action'=>'')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+				<script type="dojo/method" event="onSubmit">				
+				if(this.validate()) {
+					return true;
+				}
+
+				return false;
+			</script>
+				<fieldset>
+					<legend><strong>System Setting</strong></legend>
+					<table cellspacing="20" width="400px">
+						<tr>
+							<td align="center" valign="top">
+								<table cellspacing="10" cellpadding="10">
+									<tr>
+										<td>Saturday Working</td>
+										<td><input type="radio" <?php if($data['work_saturday']==1)echo'checked="checked"'; ?> data-dojo-type="dijit/form/RadioButton" name="work_saturday" id="radioOne" value="1"/> <label for="radioOne" style="padding-right:40px;">Work</label>
+ 											<input type="radio" <?php if($data['work_saturday']==0)echo'checked="checked"'; ?>  data-dojo-type="dijit/form/RadioButton" name="work_saturday" id="radioTwo" value="0"/> <label for="radioTwo">Not Work</label></td>
+									</tr>
+									<tr>
+										<td>Suday Working</td>
+										<td><input type="radio" <?php if($data['work_sunday']==1)echo'checked="checked"'; ?> data-dojo-type="dijit/form/RadioButton" name="work_sunday" id="saturday_work1" value="1"/> <label for="saturday_work1" style="padding-right:40px;">Work</label>
+ 											<input type="radio" <?php if($data['work_sunday']==0)echo'checked="checked"'; ?> data-dojo-type="dijit/form/RadioButton" name="work_sunday" id="saturday_work2" value="0"/> <label for="saturday_work2">Not Work</label></td>
+									</tr>
+									<tr>
+										<td>Admin Fee (%)</td>
+										<td>
+											<input type="text" required="true" name="adminfee"​ placeholder="adminfee" 
+											dojoType="dijit.form.NumberTextBox" require="true" value="<?php echo $this->data['adminfee'];?>"
+											class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Penal Multiplier</td>
+										<td>
+											<input type="text" required="true" name="interest_late"​ placeholder="interest_late" 
+											dojoType="dijit.form.NumberTextBox" value="<?php echo $this->data['interest_late'];?>"
+											require="true" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Graice Pariod Late</td>
+										<td>
+											<input type="text" name="graice pariod_late" placeholder="លេខសម្ងាត់  Database" 
+											dojoType="dijit.form.NumberTextBox" value="<?php echo $this->data['graice_pariod_late'];?>"
+											require="true" class='fullside'/>
+										</td>
+										
+									</tr>
+									<tr>
+										<td>Reschedule Postfix Label(eg.PPL00004R)</td>
+										<td>
+											<input type="text" name="reschedule_postfix" 
+											dojoType="dijit.form.TextBox" value="<?php echo $this->data['reschedule_postfix'];?>"
+											require="true" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Prefix CO Staff(eg.ST-001)</td>
+										<td>
+											<input type="text" name="co_prefix" 
+											dojoType="dijit.form.TextBox" value="<?php echo $this->data['co_prefix'];?>"
+											require="true" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											Theme Style
+										</td>
+										<td>
+										<select id="theme_setting" name="theme_setting" dojoType="dijit.form.FilteringSelect" class='fullside'>
+											<option value="1" <?php if($this->data['theme_setting']==1){echo "selected='selected'";} ?>><?php echo $this->data['claro']; ?></option>
+											<option value="2" <?php if($this->data['theme_setting']==2){echo "selected='selected'";}?>><?php echo $this->data['nihilo']; ?></option>
+											<option value="3" <?php if($this->data['theme_setting']==3){echo "selected='selected'";}?>><?php echo $this->data['soria']; ?></option>
+											<option value="4" <?php if($this->data['theme_setting']==4){echo "selected='selected'";}?>><?php echo $this->data['tundra']; ?></option>
+										</select>
+											
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2" align="center">
+											<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>	
+				</fieldset>
+				</form>
+			</td>			
+		</tr>
+		
+	</table>
+	
+
+

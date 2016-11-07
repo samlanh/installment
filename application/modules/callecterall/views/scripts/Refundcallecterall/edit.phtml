@@ -1,0 +1,46 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->Form_Frmcallecterall;
+?>
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'callecterall','controller'=>'Callecterall','action'=>'edit')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				//return false;
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside'>
+	<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong>Callecterall Type</strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+						        <?php echo $frm->getElement('id');?>
+							<td><?php echo $tr->translate("name_en")?></td>
+							<td><?php echo $frm->getElement('name_en')?></td>	
+							<td><?php echo $tr->translate("name_kh")?></td>
+							<td><?php echo $frm->getElement('name_kh')?></td>	
+							 <td><?php echo $tr->translate("key_code")?></td>
+							<td><?php echo $frm->getElement('key_code')?></td>
+					   </tr>
+					</table>
+				</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"
+				 iconClass="dijitEditorIcon dijitEditorIconSave"/>
+		</td>
+	</tr>	
+</table>
+</form>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.NumberTextBox");
+</script>

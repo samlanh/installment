@@ -1,0 +1,236 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('ADD_VILLAGE'));
+?>	
+<?php  $commune = $this->frm_village;?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.Dialog");
+</script>
+<script type="text/javascript">
+
+var district_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var commune_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+
+dojo.ready(function(){
+	
+	new dijit.form.FilteringSelect({
+	store: district_store,
+	autoComplete: true,
+	          
+	required: false,		           
+	name: "district_name",
+	id: "district_name",
+	searchAttr: "name",
+	class: 'fullside',
+	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+		onChange: function() {
+			district = dijit.byId('district_name').get('value');
+			if(district==-1){
+				showPopupdistrict();
+			}else{ filterCommune();
+			}
+	    }
+	}, "district_name");
+
+	 
+	new dijit.form.FilteringSelect({
+	store:commune_store,
+	autoComplete: true,           
+	required: false,		           
+	name: "commune_name",
+	id: "commune_name",
+	searchAttr: "name",
+	class: 'fullside',
+	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+		onChange: function() {
+			commune = dijit.byId('commune_name').get('value');
+			if(commune==-1){
+				showPopupCommune();
+			}
+  }
+	}, "commune_name");
+
+	
+});
+
+url_getdistrict = '<?php echo $this->url(array('module'=>'other','controller'=>'district','action'=>'get-district'));?>';
+function filterDistrict(){
+	pro_id = dijit.byId('province_name').get('value');
+	if(pro_id==0){
+		return false;}
+	dojo.xhrPost({
+		url:url_getdistrict,	
+		content:{ 
+			'pro_id': pro_id
+		},
+		handleAs:"json",
+		load: function(data) {	
+			district_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('district_name').set('store', district_store);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});	
+}
+url_getcommune = '<?php echo $this->url(array('module'=>'other','controller'=>'commune','action'=>'get-commune'));?>';
+function filterCommune(){
+	distict_id = dijit.byId('district_name').get('value');
+	if(distict_id==0){
+		return false;}
+	dojo.xhrPost({
+		url:url_getcommune,	
+		content:{ 
+			'district_id': distict_id
+		},
+		handleAs:"json",
+		load: function(data) {	
+			commune_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('commune_name').set('store', commune_store);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+</script>
+<form  id='add_techer' action="<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+ <script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+</script>
+<table cellspacing="10" width="45%" style="margin: 0 auto;">
+	<tr>
+		<td>
+		<fieldset>
+					<legend align="center" ><strong><?php echo $tr->translate("ADD_VILLAGE");?></strong></legend>
+					
+					<table style="margin: 0 auto; width: 95%;" cellspacing="10">
+						<tr>
+							<td><?php echo $tr->translate("VILLAGE_CODE")?></td>
+							<td><?php  echo $commune->getElement('code');?></td>
+						</tr>
+					    <tr>
+							<td><?php echo $tr->translate("VILLAGE_KH")?></td>
+							<td><?php  echo $commune->getElement('village_namekh');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("VILLAGE_NAME")?></td>
+							<td><?php  echo $commune->getElement('village_name'); ?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("DISPLAY_BY")?></td>
+							<td><?php  echo $commune->getElement('display');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("PROVINCE_NAME")?></td>
+							<td><?php  echo $commune->getElement('province_name');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("DISTRICT_NAME")?></td>
+							<td><?php  //echo $commune->getElement('district_name');?>
+								<input id="district_name" >
+							</td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("COMMUNE_NAME")?></td>
+							<td><input id="commune_name" ><?php  //echo $commune->getElement('commune_name');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php  echo $commune->getElement('status');?></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+											<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+											<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
+												iconClass="dijitEditorIcon dijitEditorIconSave" />
+											<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
+												iconClass="dijitEditorIcon dijitEditorIconSave" />
+							</td>
+						</tr>
+					</table>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>
+<?php 
+echo $this->frm_popup_district;
+echo $this->frm_popup_comm;
+?>
+<script>
+function showPopupdistrict(){
+	province_id = dijit.byId('province_name').get('value');
+	if(province_id!=0){
+		dijit.byId('province_names').attr('value',province_id);
+		dijit.byId('province_names').set('readOnly',true);
+		dijit.byId('frm_district').show();
+	}else{
+		alert('please select province first');
+		dijit.byId('province_name').focus();
+	}
+}
+var district_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insert-district'));?>';
+function addNewDistrict(){
+	if(dijit.byId('frm_district').validate()) {
+		dojo.xhrPost({
+			url:district_url,	
+			form:dojo.byId('form_district'),
+			handleAs:"json",
+			load: function(data) {	
+				var myNewItem1 = {					
+						id: data,
+						name: dijit.byId('pop_district_name').get('value')+' - '+dijit.byId('pop_district_namekh').get('value'),
+				};			
+				addDataToSelectbox(dijit.byId('district_name'), district_store, myNewItem1, data);	
+				dijit.byId('frm_district').reset();
+				dijit.byId('frm_district').hide();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});	
+	}
+}
+var commune_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insertcommune'));?>';
+function addNewCommune(){
+	if(dijit.byId('frm_commune').validate()) {
+		dojo.xhrPost({
+			url:commune_url,	
+			form:dojo.byId('form_commune'),
+			handleAs:"json",
+			load: function(data) {	
+				communeen = dijit.byId('commune_nameen').get('value');
+				communekh = dijit.byId('commune_namekh').get('value');
+				var Itemcommune = {					
+						id: data,
+						name: communeen+' - '+communekh,
+				};			
+				addDataToSelectbox(dijit.byId('commune_name'), commune_store, Itemcommune, data);
+				dijit.byId('frm_commune').reset();
+				dijit.byId('frm_commune').hide();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+}
+function showPopupCommune(){
+	district = dijit.byId('district_name').get('value');
+	if(district!=-1){
+		dijit.byId('district_nameen').attr('value',district);
+		dijit.byId('district_nameen').set('readOnly',true);
+		dijit.byId('frm_commune').show();
+	}else{
+		alert('please select district first');
+		dijit.byId('district_name').focus();
+	}
+}
+</script>

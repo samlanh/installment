@@ -1,0 +1,47 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('SRMS System | User page'); 
+	echo $this->headTitle();
+	$url = Application_Form_FrmMessage::getUrl("/user/index/edited?us_id=");
+?>	
+
+<style>
+	#grid{
+		margin: 0 auto;
+	}
+	.dojoxGridSortNode{
+		text-align: center;	
+		height: 30px;		
+	}
+</style>
+<form name="frmlist_users" action="<?php echo $this->url(array('module'=>'user','controller'=>'index','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+<table class="full">	  	
+	  <tr>
+	    <td>
+	    	<input type="text" name="txtsearch" id="txtsearch" placeholder="តាម (នាម​ត្រកូល , នាម​ខ្លួន  និង អ្នក​ប្រើ​ប្រាស់)"  dojoType="dijit.form.TextBox"
+			 style="width: 320px;  height: 30px;" value='<?php echo $this->txtsearch;?>'/>
+			 <button dojoType="dijit.form.Button" showLabel="true" type="submit">ស្វែង​រក</button>
+		</td>
+	    <td align="right">
+	    	<select name="user_type" id="user_type"  onChange="document.frmlist_agent.submit();" style=" height: 30px;" dojoType="dijit.form.FilteringSelect"> 
+				<option value="-1" <?php if($this->user_type == -1) echo 'selected="selected"';?> >ជ្រើសរើស ប្រភេទ​អ្នក​ប្រើ​ប្រាស់</option> 
+				<?php foreach ($this->user_typelist as $key => $ut) : ?>
+					<option value="<?php echo $key;?>" <?php if($key == $this->user_type) echo 'selected'?>><?php echo $ut;?></option>
+				<?php endforeach;?>	 
+			</select>
+	    	<select name="active" id="active"  onChange="document.frmlist_agent.submit();" style=" height: 30px;" dojoType="dijit.form.FilteringSelect"> 
+				<option value="-1" <?php if($this->active == -1) echo 'selected="selected"';?> >ជ្រើសរើស ស្ថានការណ៍</option> 
+				<?php foreach ($this->activelist as $key => $at) : ?>
+					<option value="<?php echo $key;?>" <?php if($key == $this->active) echo 'selected'?>><?php echo $at;?></option>
+				<?php endforeach;?>	 
+			</select>
+		</td>			
+	  </tr>	
+	  	<td colspan="2" align="center">
+	  		<div id="navigetion" style="margin: 0 auto;"><?php echo $this->list;?></div>
+	  	</td>
+	  </tr>	  
+</table>
+</form>
+
+

@@ -1,0 +1,152 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('UPDAPE_STAFF'));
+?>	
+
+<?php  $techer= $this->frm_co;?>
+<script>
+	dojo.require("dijit/form/DateTextBox");
+	dojo.require("dijit/form/NumberTextBox");
+</script>
+<form  id='add_techer' action="<?php echo $this->url(array('module'=>'payroll','controller'=>'co','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				/*if(dijit.byId('province').get('value')==''){
+					alert('Province required');
+					return false;
+			    }*/
+				return true;
+			} else {
+				return false;
+			}
+</script>
+<table width="100%" style="margin: 0 auto;">
+	<tr>
+		<td>
+		<fieldset style="margin-top: -10px;">
+					<legend><strong><?php echo $tr->translate("INFO_STAFF");?></strong></legend>
+					
+					<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+						<tr>
+							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
+							<td><?php  echo $techer->getElement('branch_id');?></td>
+							<td><?php echo $tr->translate("CODE_NUMBER")?></td>
+							<td><?php  echo $techer->getElement('co_id'); echo $techer->getElement('id');?></td>
+							<td><?php echo $tr->translate("NAME_EN")?></td>
+							<td><?php  echo $techer->getElement('first_name');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("NAME_EN")?></td>
+							<td><?php  echo $techer->getElement('name_kh');?></td>
+							<td><?php echo $tr->translate("DISPLAY_BY")?></td>
+							<td><?php  echo $techer->getElement('display');?></td>
+							<td><?php echo $tr->translate("POSITION")?></td>
+							<td><?php  echo $techer->getElement('position');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("SEX")?></td>
+							<td><?php  echo $techer->getElement('co_sex');?></td>
+							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
+							<td><?php  echo $techer->getElement('national_id');?></td>
+							<td><?php echo $tr->translate("POB")?></td>
+							<td><?php  echo $techer->getElement('pob');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
+							<td><?php  echo $techer->getElement('address');?></td>
+							<td><?php echo $tr->translate("DEGREE")?></td>
+							<td><?php  echo $techer->getElement('degree');?></td>
+							<td><?php echo $tr->translate("PHONE")?></td>
+							<td><?php  echo $techer->getElement('tel');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("EMAIL")?></td>
+							<td><?php  echo $techer->getElement('email');?></td>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php  echo $techer->getElement('status');?></td>
+							<td><?php echo $tr->translate("PICTURE")?></td>
+							<td><?php  echo $techer->getElement('photo');?>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top"><?php echo $tr->translate("DEPARTMENT")?></td>
+							<td valign="top"><?php  echo $techer->getElement('department_id');?></td>
+							<td valign="top"><?php echo $tr->translate("FINGER_PRINT")?></td>
+							<td valign="top"><?php  echo $techer->getElement('figer_print_id');?></td>
+							<td></td>
+							<td> <img height="60px" src="<?php echo $this->baseUrl().'/images/'.$this->photo;?>" />
+							</td>
+						</tr>
+					</table>
+					<fieldset>
+						<legend><strong><?php echo $tr->translate("SALARY_INFO");?></strong></legend>
+							<table style="margin: 0 auto; width: 95%;" cellspacing="10">
+								<tr>
+									<td><?php echo $tr->translate("BASIC_SALARY")?></td>
+									<td><?php  echo $techer->getElement('basic_salary');?></td>
+									<td><?php echo $tr->translate("DATE_START_WORK")?></td>
+									<td><?php  echo $techer->getElement('start_date');?></td>
+									<td><?php echo $tr->translate("DATE_END_CONTRACT")?></td>
+									<td><?php  echo $techer->getElement('end_date');?></td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate("CONTRACT_NO")?></td>
+									<td><?php  echo $techer->getElement('contract_no');?></td>
+									<td><?php echo $tr->translate("NOTE")?></td>
+									<td><?php  echo $techer->getElement('note');?></td>
+									<td><?php echo $tr->translate("SHIFT")?></td>
+									<td><?php  echo $techer->getElement('shift');?></td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate("WORKING_TIME")?></td>
+									<td><?php  echo $techer->getElement('workingtime');?></td>
+									<td><?php echo $tr->translate("ANNUAL_LIVES")?></td>
+									<td><?php  echo $techer->getElement('annual_lives');?></td>
+								</tr>
+								<tr>
+									<td colspan="4" align="center">
+										<input type="submit" value="រក្សាទុក" label="រក្សាទុក" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+									</td>
+								</tr>
+							</table>
+					</fieldset>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>
+<script type="text/javascript">
+	function calculateDay(){
+		start_date = dijit.byId("start_date").get('value');
+		var a=new Date(start_date);
+		m=a.getMonth()+1;
+		d=a.getDate();
+		if(d<15){
+			m=m-1;
+		}
+		t_day=18*(12-m)/12;
+		dijit.byId('annual_lives').attr('value',t_day);
+	}
+	var url_staffcode = '<?php echo $this->url(array('module'=>'payroll','controller'=>'co','action'=>'getstaffcode')); ?>';
+	function getStaffCode(){
+		branch_id = dijit.byId('branch_id').get('value');
+		dijit.byId('co_id').attr('value','');
+		if(branch_id==''){
+			alert('Please Select Branch');
+			dijit.byId('branch_id').focus();
+			return false;
+		}
+		dojo.xhrPost({
+			url:url_staffcode,	
+			content:{ 
+			    'branch_id':branch_id,
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				dijit.byId('co_id').attr('value',data);
+			},
+			error: function(err) {
+			}
+		});
+	}
+</script>

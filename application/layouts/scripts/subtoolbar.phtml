@@ -1,0 +1,105 @@
+<span class="" dojoattachevent="ondijitclick:_onButtonClick">
+<?php    
+	$request=Zend_Controller_Front::getInstance()->getRequest();
+	$action=$request->getActionName();
+	$controller=$request->getControllerName();
+	$module=$request->getModuleName();	
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    //user level    	
+	$sess=new Zend_Session_Namespace('auth');		
+	$user_level=$sess->level;
+	
+	if($module == 'registrar'){
+?>
+		<input  type="button" id="wu-register"  value="<?php echo $tr->translate("ចុះឈ្មោះបង់លុយ");?>" label="<?php echo $tr->translate("ចុះឈ្មោះបង់លុយ");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"Register",'action'=>'wu-register'),null,true); ?>';"/><br />
+		<input  type="button"​ id="wu-request" value="<?php echo $tr->translate("ពាក្យស្នើររបស់និស្សិត");?>" label="<?php echo $tr->translate("ពាក្យស្នើររបស់និស្សិត");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"Wurequest",'action'=>'wu-request'),null,true); ?>';"/><br />
+		<input  type="button" id="wu-receipt" value="<?php echo $tr->translate("ចុះឈ្មោះបង់លុយ(TC)");?>" label="<?php echo $tr->translate("ចុះឈ្មោះបង់លុយ(TC)");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"Gepregister",'action'=>'register'),null,true); ?>';"/><br />
+		<input  type="button" id="calculator" value="<?php echo $tr->translate("បញ្ជីរាប់ទឹកប្រាក់");?>" label="<?php echo $tr->translate("បញ្ជីរាប់ទឹកប្រាក់");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'global','controller'=>"index",'action'=>'calculator'),null,true); ?>';"/><br />
+		<input  type="button" id="allreport" value="របាយការណ៏ទាំងអស់" label="របាយការណ៏ទាំងអស់" onclick="window.location = '<?php echo $this->baseUrl()."/allreport";?>'"
+											dojoType="dijit.form.Button" /> 
+<?php
+	}
+	if($module == 'foundation'){
+?>
+		<input  type="button" id="newstudent"  value="<?php echo $tr->translate("តារាងនិសិ្សតថ្មី");?>" label="<?php echo $tr->translate("តារាងនិសិ្សតថ្មី");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"newstudent",'action'=>'index'),null,true); ?>';"/><br />
+		<input  type="button" id="student"  value="<?php echo $tr->translate("តារាងនិសិ្សត");?>" label="<?php echo $tr->translate("តារាងនិសិ្សត");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"student",'action'=>'index'),null,true); ?>';"/> <br />
+		<input  type="button" id="attendent"  value="<?php echo $tr->translate("អវត្តមាននិសិ្សត");?>" label="<?php echo $tr->translate("អវត្តមាននិសិ្សត");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"attendent",'action'=>'index'),null,true); ?>';"/><br />
+		<input  type="button" id="score"  value="<?php echo $tr->translate("តារាងពិន្ទុ");?>" label="<?php echo $tr->translate("តារាងពិន្ទុ");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"score",'action'=>'index'),null,true); ?>';"/><br />
+		<input  type="button" id="result"  value="<?php echo $tr->translate("លទ្ធផលប្រលង");?>" label="<?php echo $tr->translate("លទ្ធផលប្រលង");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"result",'action'=>'index'),null,true); ?>';"/><br />
+		<input  type="button" id="certificate"  value="<?php echo $tr->translate("និស្សិតទទួលសញ្ញាបត្រ");?>" label="<?php echo $tr->translate("និស្សិតទទួលសញ្ញាបត្រ");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"certificate",'action'=>'index'),null,true); ?>';"/><br />
+		<input  type="button" id="allreport" value="របាយការណ៏ទាំងអស់" label="របាយការណ៏ទាំងអស់" onclick="window.location = '<?php echo $this->baseUrl()."/allreport";?>'"
+											dojoType="dijit.form.Button" /> 
+<?php
+	}
+	if($module == 'accounting'){
+?>
+											 
+<?php }
+	if($module == 'global'){
+	?>	
+		<!--<input iconClass="dijitIconTable" type="button"​ id="dept-list" value="<?php echo $tr->translate("FACULTIES");?>" label="<?php echo $tr->translate("FACULTIES");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"index",'action'=>'dept-list'),null,true); ?>';"/><br />
+		<input iconClass="dijitIconTable" type="button" id="major-list"  value="<?php echo $tr->translate("MAJORS");?>" label="<?php echo $tr->translate("MAJORS");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"index",'action'=>'major-list'),null,true); ?>';"/><br />
+		<input iconClass="dijitIconTable" type="button" id="teacher-list" value="<?php echo $tr->translate("LACTURER");?>" label="<?php echo $tr->translate("LACTURER");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"index",'action'=>'teacher-list'),null,true); ?>';"/><br />
+		<input iconClass="dijitIconTable" type="button" id="room-list" value="<?php echo $tr->translate("ROOM_NAME");?>" label="<?php echo $tr->translate("ROOM_NAME");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"index",'action'=>'room-list'),null,true); ?>';"/><br />
+		<input iconClass="dijitIconTask" type="button" id="subject-list" value="<?php echo $tr->translate("SUBJECT_EXAM");?>" label="<?php echo $tr->translate("SUBJECT_EXAM");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"index",'action'=>'subject-list'),null,true); ?>';"/><br />
+		<input iconClass="dijitIconTable" type="button" id="province-list" value="<?php echo $tr->translate("CITY_PROVINCE");?>" label="<?php echo $tr->translate("CITY_PROVINCE");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"index",'action'=>'province-list'),null,true); ?>';"/><br />
+		<input iconClass="dijitIconFunction" type="button" id="setting" value="<?php echo $tr->translate("SETTING");?>" label="<?php echo $tr->translate("SETTING");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"index",'action'=>'setting'),null,true); ?>';"/><br />
+		<input  type="button" id="rpt-student" value="<?php echo $tr->translate("Icons");?>" label="<?php echo $tr->translate("Icons");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>$module,'controller'=>"index",'action'=>'icon'),null,true); ?>';"/><br /> -->
+<?php 	
+	}
+	if($module == 'allreport'){
+		?>
+			<input  type="button"​ id="rpt-certificate" value="<?php echo $tr->translate("បោះពុម្ភសញ្ញាប័ត្រ");?>" label="<?php echo $tr->translate("បោះពុម្ភសញ្ញាប័ត្រ");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"certificate",'action'=>'print-certificate'),null,true); ?>';"/>
+			<input  type="button" id="rpt-drop-out"  value="<?php echo $tr->translate("បោះបង់ការសិក្សា");?>" label="<?php echo $tr->translate("បោះបង់ការសិក្សា");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"report",'action'=>'rpt-drop-out'),null,true); ?>';"/>
+			<input  type="button" id="rpt-exam-degree" value="<?php echo $tr->translate("និស្សិតចូលរៀន");?>" label="<?php echo $tr->translate("និស្សិតចូលរៀន");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"report",'action'=>'rpt-exam-degree'),null,true); ?>';"/>
+			<input  type="button" id="rpt-foundation" value="<?php echo $tr->translate("និស្សិតចូលប្រលង");?>" label="<?php echo $tr->translate("និស្សិតចូលប្រលង");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"report",'action'=>'rpt-foundation'),null,true); ?>';"/>
+			<input  type="button" id="rpt-final-exams" value="<?php echo $tr->translate("និស្សិតជាប់ស្ថាពរ");?>" label="<?php echo $tr->translate("និស្សិតជាប់ស្ថាពរ");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"report",'action'=>'rpt-final-exams'),null,true); ?>';"/>
+			<input  type="button" id="rpt-scorelist" value="<?php echo $tr->translate("ពិន្ទុនិស្សិត");?>" label="<?php echo $tr->translate("ពិន្ទុនិស្សិត");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"report",'action'=>'rpt-scorelist'),null,true); ?>';"/>
+			<input  type="button" id="rpt-amount-student" value="<?php echo $tr->translate("និស្សិតសរុប");?>" label="<?php echo $tr->translate("និស្សិតសរុប");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"report",'action'=>'rpt-amount-student'),null,true); ?>';"/>
+			<input  type="button" id="rpt-student-attendance" value="<?php echo $tr->translate("អវត្តមាននិស្សិត");?>" label="<?php echo $tr->translate("អវត្តមាននិស្សិត");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"report",'action'=>'rpt-student-attendance'),null,true); ?>';"/>
+			<input  type="button" id="rpt-total-attendance" value="<?php echo $tr->translate("អវត្តមាននិស្សិតសរុប");?>" label="<?php echo $tr->translate("អវត្តមាននិស្សិតសរុប");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"report",'action'=>'rpt-total-attendance'),null,true); ?>';"/>
+			<input  type="button" id="rpt-stuid" value="<?php echo $tr->translate("កាតនិស្សិត");?>" label="<?php echo $tr->translate("កាតនិស្សិត");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"report",'action'=>'rpt-stuid'),null,true); ?>';"/>
+			<input  type="button" id="rpt-allresult" value="<?php echo $tr->translate("លទ្ធផលប្រលងសរុប");?>" label="<?php echo $tr->translate("លទ្ធផលប្រលងសរុប");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"result",'action'=>'rpt-allresult'),null,true); ?>';"/>
+			<input  type="button" id="full-result" value="<?php echo $tr->translate("លទ្ធផលប្រលងសរុប");?>" label="<?php echo $tr->translate("លទ្ធផលប្រលងសរុប");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"score",'action'=>'full-result'),null,true); ?>';"/>
+			<input  type="button" id="rpt-student" value="<?php echo $tr->translate("និសិ្សតនិស្សិតសរុប");?>" label="<?php echo $tr->translate("និសិ្សតនិស្សិតសរុប");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"student",'action'=>'rpt-student-list'),null,true); ?>';"/>	
+	<?php 	
+		}
+?>
+</span>
+	<?php
+		$arr_param_menu=array( 
+				'user'=>array(
+						'index'=>'<li><a href="">'.$tr->translate("MAJORS").'</a></li>'),
+				'global'=>array(
+						'index/dept-list'=>'<li><a href="">'.$tr->translate("FACULTIES").'</a></li>',
+						'index/major-list'=>'<li><a href="">'.$tr->translate("MAJORS").'</a></li>',
+						'index/room-list'=>'<li><a href="">'.$tr->translate("ROOM_NAME").'</a></li>',
+						'index/teacher-list'=>'<li><a href="">'.$tr->translate("LACTURER").'</a></li>',
+						'index/subject-list'=>'<li><a href="">'.$tr->translate("SUBJECT_EXAM").'</a></li>',
+						'index/province-list'=>'<li><a href="">'.$tr->translate("CITY_PROVINCE").'</a></li>',
+						'index/setting'=>'<li><a href="">'.$tr->translate("SETTING").'</a></li>',
+						'index/icon'=>'<li><a href="">'.$tr->translate("icon").'</a></li>'),
+				'accounting'=>array(
+						'fee'=>'<li><a href="">'.$tr->translate("TUITION_FEE").'</a></li>',
+						'services'=>'<li><a href="">'.$tr->translate("SERVICE_PROGRAMER_CATE").'</a></li>',
+						'program'=>'<li><a href="">'.$tr->translate("SRMS_SERVICE_PROGRAM").'</a></li>',
+						'ProgramCharge'=>'<li><a href="">'.$tr->translate("GEPPROGRAM_FEE").'</a></li>',
+						'ServiceCharge'=>'<li><a href="">'.$tr->translate("SERVICE_FEE").'</a></li>',
+						),
+				'registrar'=>array(
+						'registrar'=>'<li><a href="">'.$tr->translate("TUITION_FEE").'</a></li>'),
+				'foundation'=>array(
+						'registrar'=>'<li><a href="">'.$tr->translate("TUITION_FEE").'</a></li>'),
+				); 
+	?>
+	<div id="header-left">
+	<ul>
+			<?php 
+				$request=Zend_Controller_Front::getInstance()->getRequest();
+				$dc=new Application_Model_Decorator();					
+				$class="current-left";					
+				$menu=$dc->getMenuLeft($arr_param_menu[$request->getModuleName()],$request->getControllerName(),$request->getModuleName());
+				if($menu) echo $menu;					
+			?>
+	</ul>																
+	</div>

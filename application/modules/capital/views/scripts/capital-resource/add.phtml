@@ -1,0 +1,110 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm;
+?>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+.td{width:128px !important;} 
+.tds{width:114px !important;}
+</style>
+<form id='frm_add' action="<?php echo $this->url(array('module'=>'capital','controller'=>'capital-resource','action'=>'add')); ?>" 
+				dojoType="dijit.form.Form" method="POST" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong>Form Add Capital</strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+							<td><?php echo $tr->translate("សាខា")?></td>
+							<td><?php echo $frm->getElement('brance')?></td>
+							<td class="tds">ប្រាក់ដុល្លា បច្ចុប្បន្ន</td>
+							<td><?php echo $frm->getElement('dollar_current')?></td>
+							<td class="tds">ប្រាក់បាត បច្ចុប្បន្ន</td>	
+							<td><?php echo $frm->getElement('bath_current')?></td>
+							<td class="tds">ប្រាក់រៀល បច្ចុប្បន្ន</td>
+							<td><?php echo $frm->getElement('reil_current')?></td>
+							
+						</tr>
+						<tr>
+							<td>Date</td>	
+							<td><?php echo $frm->getElement('date')?></td>
+							<td>ប្រាក់ដុល្លា បន្ថែម</td>
+							<td><?php echo $frm->getElement('usa')?></td>
+							<td>ប្រាក់បាត បន្ថែម</td>	
+							<td><?php echo $frm->getElement('bath')?></td>
+							<td>ប្រាក់រៀល បន្ថែម</td>
+							<td><?php echo $frm->getElement('reil')?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("Stutas")?></td>
+							<td><?php echo $frm->getElement('status')?></td>
+							<td>Note</td>
+							<td colspan="3"><?php echo $frm->getElement('note');?></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+				</fieldset>
+				
+		</td>
+	</tr>		
+	<tr>
+			<td align="center"><input type="submit" value="រក្សាទុកថ្មី" label="រក្សាទុកថ្មី" name="save" id="save" dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconSave"/>
+			<input type="submit" value="បិទ" label="រក្សាទុកបិទ" name="save_close" id="save_close" dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconSave"/>
+			<input type="submit" value="បោះបង់" label="បោះបង់" name="cancel" id="cancel" dojoType="dijit.form.Button" iconClass="dijitIconDelete"/></td>
+	</tr>	
+</table>
+</form>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.TextBox");
+dojo.require("dijit.form.FilteringSelect");
+dojo.require("dijit.form.DateTextBox");
+
+dojo.ready(function(){
+	dijit.byId('dollar_current').set('readOnly',true);
+	dijit.byId('bath_current').set('readOnly',true);
+	dijit.byId('reil_current').set('readOnly',true);
+});
+
+var getAmount ='<?php echo $this->url(array('module'=>'capital','controller'=>'capital-transfer','action'=>'getamountbybranceid'));?>'; 
+function getAmounts(){
+	var brance_id = dijit.byId('brance').get('value');
+	dojo.xhrPost({
+	    url: getAmount,	
+	    content : { 
+		    'brance_id':dijit.byId('brance').get('value'),
+		},	
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('dollar_current').attr('value',data.amount_dollar);
+			dijit.byId('bath_current').attr('value',data.amount_bath);
+			dijit.byId('reil_current').attr('value',data.amount_riel);
+		},
+		error: function(err) {
+			alert(err);
+		alert("Your message could not be sent, please try again!.");	        
+		}
+	});
+}
+
+function statusCheck(){
+	var status = dijit.byId('status').get('value');
+	if(status == -1){
+		alert("សូមមេត្តាជ្រើសរើសស្ថានភាពយ៉ាងហោចមួយ!!");
+	}
+}
+
+</script>

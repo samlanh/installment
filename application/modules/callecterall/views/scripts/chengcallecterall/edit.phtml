@@ -1,0 +1,170 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_changeCollteral;
+echo $this->headTitle($tr->translate("UPDATE_CHANGE_COLLTERAL"));
+?>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+.collteral{
+	color:blue;
+}
+</style>
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'callecterall','controller'=>'chengcallecterall','action'=>'edit')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				//return false;
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong><?php echo $tr->translate("CHANGE_COLLTERAL_INFO");?></strong></legend>
+					<table cellspacing="10"  width="100%"> 
+						<tr>
+							<td width="16%"><?php echo $tr->translate("BRANCH "); echo $frm->getElement('id');?></td>
+							<td><?php echo $frm->getElement('branch_id');?></td>
+							<td><?php echo $tr->translate("OWNER_CODE")?></td>
+							<td><?php echo $frm->getElement('client_code');?></td>
+							<td width="16%"><?php echo $tr->translate("OWNER_NAME")?></td>
+							<td><?php echo $frm->getElement('client_name');?></td>
+						</tr>
+						<tr>
+							<td colspan="4"  style="border: 1px solid #ccc;width:65%;font-size: 12px;padding: 2px 5px;"><span id="display_info"></span></td>
+							<td><?php echo $tr->translate("FROM")?></td>
+						    <td><?php echo $frm->getElement('from')?></td>
+						</tr>
+						<tr>	
+								<td><?php echo $tr->translate("TO")?></td>
+								<td><?php echo $frm->getElement('to')?></td>
+								<td><?php echo $tr->translate('COLLTERAL_TYPE')?></td>
+								<td><?php echo $frm->getElement("collteral_type")?></td>
+								<td><?php echo $tr->translate("NUMBER_CODE")?></td>
+								<td><?php echo $frm->getElement('number_code')?></td>
+							</tr>
+						
+							<tr>
+								<td><?php echo $tr->translate("OWNER")?></td>
+								<td><?php echo $frm->getElement('owner_name')?></td>
+								<td><?php echo $tr->translate("DATE ")?></td>
+								<td><?php echo $frm->getElement('date')?></td>
+								<td><?php echo $tr->translate("NOTE ")?></td>
+								<td><?php echo $frm->getElement('note')?></td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("STATUS ")?></td>
+								<td><?php echo $frm->getElement('Stutas')?></td>
+								<td><?php echo $tr->translate("")?></td>
+								<td><?php echo $frm->getElement('')?></td>
+								<td><?php echo $tr->translate(" ")?></td>
+								<td><?php echo $frm->getElement('')?></td>
+							</tr>
+					</table>
+					<fieldset>
+						<legend><strong>RETURN_COLLTERAL_INFO</strong></legend>
+						<table width="100%" cellspacing="10">
+						<tr>
+							<td><?php echo $tr->translate("GIVER_NAME")?></td>
+							<td><?php echo $frm->getElement('giver_name');?></td>
+							<td><?php echo $tr->translate("RECEIVER_NAME")?></td>
+							<td><?php echo $frm->getElement('receiver_name')?></td>
+							<td><?php echo $tr->translate("NOTE")?></td>
+							<td><?php echo $frm->getElement('_note')?></td>
+						</tr>
+						</table>
+					</fieldset>
+				</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="submit" value="save_close" name="save_close" label="កែប្រែ+បិត" dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />
+			<input type="submit" value="save_new" name="save_new" label="កែប្រែ+ថ្មី" dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />
+		</td>
+	</tr>	
+</table>
+</form>
+<?php 
+echo $this->frmpupopclient;
+echo $this->frmPopupCO;
+?>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.NumberTextBox");
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 getOwnerInfo();
+	  });
+	});
+
+var url_submitco = '<?php echo $this->url(array('module'=>'other','controller'=>'co','action'=>'add-newco')); ?>';
+function AddNewCo(){
+		dojo.xhrPost({
+	    url: url_submitco,	
+		form: dojo.byId("form_co"),		    
+		handleAs:"json",
+		load: function(data) {	
+			dojo.byId('form_co').reset(); 
+			dijit.byId('frm_co').hide();
+		},
+		error: function(err) {
+			alert(err);
+		alert("Your message could not be sent, please try again!.");
+				        
+		}
+	});
+}
+
+function popupCheckCO(){
+	if(dijit.byId('co_name').get('value')==-1){
+		 dijit.byId('frm_co').show();
+	}
+}
+
+function checkClientCode(){
+	client_name= dijit.byId('client_name').get('value');
+	dijit.byId('client_code').attr('value',client_name);
+}
+
+function getClient(){
+	client_name= dijit.byId('client_code').get('value');
+	dijit.byId('client_name').attr('value',client_name);
+}
+
+var url_submiinfo = '<?php echo $this->url(array('module'=>'callecterall','controller'=>'chengcallecterall','action'=>'get-ownerinfo')); ?>';
+function getOwnerInfo(){
+	client_code= dijit.byId('client_code').get('value');
+	dijit.byId('client_name').attr('value',client_code);
+	dojo.xhrPost({
+	url: url_submiinfo,	
+	   content : { 
+		    'owner_id':client_code,
+		},
+		handleAs:"json",
+		load: function(data) {
+			dojo.byId('display_info').innerHTML="<span class='collteral'>ឈ្មោះម្ចាស់កម្មសិទ្ធ​ ​:  </span>"+data.owner+",<span class='collteral'>ប្រភេទទ្រព្យបញ្ចាំ  : </span>"+data.collteral_type+", <span class='collteral'>លេខកូដសម្គាល់ :  </span>"+data.number_collteral;
+			dijit.byId('from').attr('value',data.callate_type);
+			dijit.byId('from').set('readOnly',true);
+			dijit.byId('owner_name').attr('value',data.owner);
+			dijit.byId('giver_name').attr('value',data.owner);
+		},
+		error: function(err) {
+			alert(err);
+		alert("Your message could not be sent, please try again!.");
+		}
+	});
+}
+</script>
+
+</script>

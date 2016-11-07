@@ -1,0 +1,145 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_fixedasset;
+// echo date("Y-m-d","+1 month", strtotime(date("Y-m-d")));
+
+
+?>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+</style>
+<form id='frm_add' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'fixedasset','action'=>'add')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong><?php echo $tr->translate("NEW ABOUT CALLECTERALL")?></strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+						    
+							<td><?php echo $tr->translate("BRANCH")?></td>
+							<td><?php echo $frm->getElement('branch')?></td>
+							<td><?php echo $tr->translate("ASSET_CODE")?></td>
+							<td><?php echo $frm->getElement('asset_code')?></td>
+							<td><?php echo $tr->translate("ASSET_NAME")?></td>
+							<td><?php echo $frm->getElement('asset_name');?></td>	
+							
+						</tr>
+						   
+						<tr>
+							<td><?php echo $tr->translate("ASSET_TYPE")?></td>
+							<td><?php echo $frm->getElement('asset_type');?></td>
+							<td><?php echo $tr->translate("PAID_TYPE")?></td>
+							<td><?php echo $frm->getElement('paid_type')?></td>
+							<td><?php echo $tr->translate("SOME_PAYAMOUNT")?></td>
+							<td><?php echo $frm->getElement('some_payamount')?></td>	
+							
+						</tr>
+						<tr>
+						    <td><?php echo $tr->translate("CURRENCY_TYPE")?></td>
+							<td><?php echo $frm->getElement('current_type')?></td>
+						    <td><?php echo $tr->translate("ASSET_COST")?></td>
+							<td><?php echo $frm->getElement('asset_cost')?></td>
+							<td><?php echo $tr->translate("USEFULL_lIFE")?></td>
+							<td><?php echo $frm->getElement('usefull_life');?></td>
+						
+						</tr>
+						
+						<tr>
+						    <td><?php echo $tr->translate("TEM_TYPE")?></td>
+							<td><?php echo $frm->getElement('tem_type')?></td>
+							<td><?php echo $tr->translate("SALVAGE_VALUE")?></td>
+							<td><?php echo $frm->getElement('salvage_value')?></td>
+							<td><?php echo $tr->translate("AUTO_POST_ACC")?></td>
+							<td><?php echo $frm->getElement('journal');?></td>	
+						</tr>
+						<tr>
+							
+							<td><?php echo $tr->translate("PAYMENT_METHOD")?></td>
+							<td><?php echo $frm->getElement('payment_method')?></td>
+							<td><?php echo $tr->translate("TOTAL_DEPRECIATION")?></td>
+							<td><?php echo $frm->getElement('amount')?></td>						
+						    <td><?php echo $tr->translate("DEPRECIATION START DATE")?></td>
+							<td><?php echo $frm->getElement('start_date')?></td>		
+						</tr>	
+						
+						<tr>
+						    <td><?php echo $tr->translate("DATE")?></td>
+							<td><?php echo $frm->getElement('date')?></td>	
+						   	<td><?php echo $tr->translate("NOTE")?></td>
+							<td><?php echo $frm->getElement('note')?></td>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php echo $frm->getElement('status')?></td>	
+						</tr>
+					</table>
+			</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<div style="text-align: center; margin: 10px 0px;"> 
+						<input type="hidden" name="exchangefrom" value="2" />
+						<input type="hidden" name="inv_no" value="<?php echo $this->inv_no;?>">
+						<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button"/>
+						<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+						<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVEEDIT');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+			</div>	`
+		</td>
+	</tr>	
+</table>
+
+</form>
+
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.NumberTextBox");
+dojo.ready(function(){	
+	var a = dojo.byId("date").get('value');
+	dijit.byId("test").attr('value',a);
+});
+function getAssetInfo(type){
+	if(type==1){
+		asset_id = dijit.byId('asset_name').get('value');
+		dijit.byId("asset_code").attr('value',asset_id);
+	}else{
+		asset_id = dijit.byId('asset_code').get('value');
+		dijit.byId("asset_name").attr('value',asset_id);
+	}	
+} 
+function checkasset(){
+	asset_id=dijit.byId("paid_type").get('value');
+	if(asset_id==1){
+		dijit.byId("some_payamount").set('readOnly',true);
+	}
+	else if(asset_id==2){
+		dijit.byId("some_payamount").set('readOnly',true);
+	}
+	else{
+		dijit.byId("some_payamount").set('readOnly',false);
+	}
+}
+function calculateDepreciation(){
+	asset_cost=dijit.byId("asset_cost").get('value');
+	salvage_value=dijit.byId("salvage_value").get('value');
+	usefull_life=dijit.byId("usefull_life").get('value');
+	total_depreciation=(asset_cost-salvage_value)/usefull_life;
+	dijit.byId("amount").attr('value',total_depreciation);
+}
+
+</script>
+
+
+

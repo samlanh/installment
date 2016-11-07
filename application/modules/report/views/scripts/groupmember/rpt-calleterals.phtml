@@ -1,0 +1,118 @@
+<title>Report Calleteral</title>
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<?php 
+	$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm=$this->frm_callteral;
+?>
+<style>
+<!--
+dt{display: none;}
+-->
+</style>
+<table style="font-family: 'Khmer OS Content';float: right;"  >
+	<tr>
+			<td><?php echo $frm->getElement('adv_search');?></td>
+			<td><?php echo $frm->getElement('branch_id');?></td>
+			<td><?php echo $frm->getElement('client_code');?></td>
+			<td><?php echo $frm->getElement('co_name');?></td>
+			
+	</tr>
+	<tr>		
+			<td><?php echo $frm->getElement('collteral_type');?></td>	
+			<td><?php echo $frm->getElement('start_date');?></td>
+			<td><?php echo $frm->getElement('end_date');?></td>
+			<td><?php echo $frm->getElement('status_search');?></td>
+			<td><?php echo $frm->getElement('btn_search');?></td>
+			<td></td>
+	</tr>
+</table>
+<div style="clear: both;"></div>
+<div style=" width="100%"  margin:0 auto;">
+<div style=" width:22cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
+
+<div id="divPrint">
+<style>
+.style{
+	line-height: 20px;font-size: 11px !important;
+	font-family: 'Khmer OS Battambang';
+}
+th{padding: 5px;}
+</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;">
+	<tr>
+    	<td align="center">
+        	<table width="100%" style="font-family:khmer;" style="margin:0; padding:0;border:none;" >
+            	<tr>
+                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="70px"></td>
+                	<td width="60%" valign="top">
+                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><label><?php echo $this->data['brand_title'];?></label></h2>
+                	<!--  <h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><label>(សាខា ទី ២)</label></h2>-->
+                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><?php echo $this->data['brand_callecteral'];?></h2></td>
+                    <td width="20%"></td>
+                </tr> 
+                <tr>
+                	<td colspan="3">
+                		<table width="100%">
+                			<tr >
+                				<td  style="font-size: 11px;">
+                					<?php echo $tr->translate("ADDRESS_COMPANY");?>
+									<br /><?php echo $tr->translate("TEL_COMPANY");?>
+                				</td>
+                				<td width="65%"></td>
+                				
+                			</tr>
+		                </table>
+		              </td>
+		           </tr>   
+            </table>
+   <table id="exportExcel"  width="100%" border="1" style="border-collapse:collapse;font-size: 12px;" bordercolor="black">
+    
+    	<tr bgcolor="#ccc" class="style" align="center" style="floafont-weight:bold; line-height: 14px; font-size:12px; padding:5px 0px; ">
+        	<th><?php echo $tr->translate("NUM");?></th>
+            <th><?php echo $tr->translate("BRANCH_NAME");?> </th>
+            <th><?php echo $tr->translate("COLLTERAL_CODE");?></th>
+            <th style="white-space: pre;"><?php echo $tr->translate("STAFF_NAME");?></th>
+            <th><?php echo $tr->translate("CLIENT_NO");?></th>
+            <th><?php echo $tr->translate("CUSTOMER_NAME");?></th>
+            <th><?php echo $tr->translate("OWNER_NAME");?></th>
+            <th><?php echo $tr->translate("COLETERAL_TYPE");?></th>
+            <th><?php echo $tr->translate("NUMBER_COLLTERAL");?></th>            
+            <th><?php echo $tr->translate("DATE");?></th>
+            <th><?php echo $tr->translate("NOTE");?></th>
+           </tr>
+           <?php if(!empty($this->calleteral_list)) foreach($this->calleteral_list as $key =>$row){?>
+			<tr>
+		     <td>&nbsp;<?php echo $key+1;?></td>
+		     <td>&nbsp;<?php echo $row['branch_id']?></td>
+			 <td style="text-align: center;">&nbsp;<?php echo $row['']?></td>
+		     <td style="white-space: pre;">&nbsp;<?php echo $row['']?></td>
+			 <td style="text-align: center;">&nbsp;<?php echo $row['']?></td>
+			 <td>&nbsp;<?php echo $row['co_id']?></td>
+			 <td style="white-space: pre;">&nbsp;<?php echo $row['owner']?></td>
+			 <td>&nbsp;<?php echo $row['collteral_type']?></td>
+			 <td>&nbsp;<?php echo $row['number_collteral']?></td>
+			 <td>&nbsp;<?php echo $row['date_registration']?></td>
+			 <td>&nbsp;<?php echo $row['note']?></td>
+
+        </tr>
+			 <?php }?>
+			 
+      </table>
+     </td>
+   </tr>   
+</table>
+<br />
+		    <table align="center" width="100%">
+				    <tr >
+				        <th style="width:20%;">Approved By</th>
+				        <th></th>
+				        <th style="width:20%;">Verifyed By</th>
+				        <th></th>
+				        <th style="width:20%;">Prepare By</th>
+				   </tr>
+			</table>
+</div>
+</div>
+</div>

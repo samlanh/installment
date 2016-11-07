@@ -1,0 +1,98 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_fixedasset;
+?>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+</style>
+<form id='frm_add' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'fixedasset','action'=>'edit')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong>ពត័មានទ្រព្យសកម្ម</strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+						 	<?php echo $frm->getElement('id');?>
+						<td><?php echo $tr->translate("BRANCH")?></td>
+							<td><?php echo $frm->getElement('branch')?></td>
+							<td><?php echo $tr->translate("ASSET_CODE")?></td>
+							<td><?php echo $frm->getElement('asset_code')?></td>
+							<td><?php echo $tr->translate("ASSET_NAME")?></td>
+							<td><?php echo $frm->getElement('asset_name');?></td>	
+							
+						</tr>
+						   
+						<tr>
+							<td><?php echo $tr->translate("ASSET_TYPE")?></td>
+							<td><?php echo $frm->getElement('asset_type');?></td>
+							<td><?php echo $tr->translate("PAID_TYPE")?></td>
+							<td><?php echo $frm->getElement('paid_type')?></td>
+							 <td><?php echo $tr->translate("SOME_PAYAMOUNT")?></td>
+							<td><?php echo $frm->getElement('some_payamount')?></td>	
+							
+						</tr>
+						<tr>
+						    <td><?php echo $tr->translate("CURRENCY_TYPE")?></td>
+							<td><?php echo $frm->getElement('current_type')?></td>
+						    <td><?php echo $tr->translate("ASSET_COST")?></td>
+							<td><?php echo $frm->getElement('asset_cost')?></td>
+							<td><?php echo $tr->translate("USEFULL_lIFE")?></td>
+							<td><?php echo $frm->getElement('usefull_life');?></td>
+						
+						</tr>
+						
+						<tr>
+						    <td><?php echo $tr->translate("TEM_TYPE")?></td>
+							<td><?php echo $frm->getElement('tem_type')?></td>
+							<td><?php echo $tr->translate("SALVAGE_VALUE")?></td>
+							<td><?php echo $frm->getElement('salvage_value')?></td>
+							<td><?php echo $tr->translate("AUTO_POST_ACC")?></td>
+							<td><?php echo $frm->getElement('journal');?></td>	
+						</tr>
+						<tr>
+							
+							<td><?php echo $tr->translate("PAYMENT_METHOD")?></td>
+							<td><?php echo $frm->getElement('payment_method')?></td>
+							<td><?php echo $tr->translate("TOTAL_DEPRECIATION")?></td>
+							<td><?php echo $frm->getElement('amount')?></td>						
+						    <td><?php echo $tr->translate("DEPRECIATION START DATE")?></td>
+							<td><?php echo $frm->getElement('start_date')?></td>		
+						</tr>	
+						
+						<tr>
+						    <td><?php echo $tr->translate("DATE")?></td>
+							<td><?php echo $frm->getElement('date')?></td>	
+						   	<td><?php echo $tr->translate("NOTE")?></td>
+							<td><?php echo $frm->getElement('note')?></td>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php echo $frm->getElement('status')?></td>	
+						</tr>
+					</table>
+					</fieldset>
+				</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE');?>" id="submitButton" dojoType="dijit.form.Button"
+				 iconClass="dijitEditorIcon dijitEditorIconSave"/>
+		</td>
+	</tr>	
+</table>
+</form>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.NumberTextBox");
+</script>

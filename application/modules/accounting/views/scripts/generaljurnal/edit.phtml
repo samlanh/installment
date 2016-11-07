@@ -1,0 +1,305 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_fixedasset;
+?>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+</style>
+<title>Edit General Jurnal Entry</title>
+<?php $baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();?>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+  <script>
+		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox"]);
+		dojo.require("dojo.html");
+		dojo.require("dojo.data.ItemFileWriteStore"); 
+		dojo.require("dojo.NodeList-manipulate");
+   </script>
+<form id='frm_add' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'generaljurnal','action'=>'edit')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+             branch_id = dijit.byId('branch_id').get('value');
+             record_row = dijit.byId('record_row').get('value');
+             total_debit = dijit.byId('debit').get('value');
+             total_credit = dijit.byId('credit').get('value');
+
+		    if (branch_id=='' || branch_id==-1){
+		  	   alert('Please Select Branch Name!');
+			   dijit.byId('branch_id').focus();
+			   return false;
+		    }if(record_row==''){
+				alert('Journal must have record !');
+				return false;
+			}
+            if(total_debit!=total_credit){
+				alert('Journal must equal value Debit and Credit !');
+				return false;
+			}
+
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table class='fullside'>
+	<tr>
+		<td>
+			<fieldset style="margin-top: -10px;" >
+				<legend><strong>Edit General Jurnal Entry</strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+							<td>សាខា</td>
+							<td><?php echo $frm->getElement('id')?><?php echo $frm->getElement('branch_id')?></td>
+							<td>Entry Code</td>
+							<td><?php echo $frm->getElement('journal_code')?></td>
+							<td>Invoice/Receipt</td>
+							<td><?php echo $frm->getElement('invoice')?></td>
+						</tr>
+						<tr>
+							<td>CURRENCY_TYPE</td>
+							<td><?php echo $frm->getElement('currency_type')?></td>
+							<td>Note</td>
+							<td><?php echo $frm->getElement('note');?></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Entry Date</td>
+							<td><?php echo $frm->getElement('add_date')?><table id="mytable"></table></td>	
+							<td>Debit</td>
+							<td><?php echo $frm->getElement('debit')?></td>
+							<td>Cradit</td>
+							<td><?php echo $frm->getElement('credit');?></td>
+						</tr>
+						<tr>
+							<td align="center" colspan="6">
+									<input type="hidden" dojoType="dijit.form.TextBox" id="record_row" name="record_row" />
+									<div  id="test"></div>
+									<input iconClass="dijitIconClear" type="button" onClick="addCollecteral();" label="<?php echo $tr->translate('ADD');?>" dojoType="dijit.form.Button"/></td>
+						<tr>
+						
+				</table>
+		</fieldset>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button"
+				 iconClass="dijitIconClear"/>
+			<input type="submit" label="<?php echo $tr->translate("GO_EDIT")?>" name='savenew' value='savenew' dojoType="dijit.form.Button"
+				 iconClass="dijitIconNewTask"/>
+		</td>
+	</tr>	
+</table>
+</form>
+<script type="text/javascript">
+var account_store  = getDataStorefromJSON('id','name',[]);
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 initilize();
+		// getClientInfo();
+	  });
+
+	});
+function getClientInfo(){
+		dojo.query("#test").append('');
+		tmp='<table id="t_amountmoneytype" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
+		tmp+='<tr style="background:#eee; font-size: 14px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+		tmp+='</table>';
+		dojo.query("#test").append(tmp);
+		thead='<th><?php echo $tr->translate("DEL");?></th>';
+		thead+='<th><?php echo $tr->translate("គណនីមេ");?></th>';
+		thead+='<th><?php echo $tr->translate("ឈ្មោះគណនី");?></th>';
+		thead+='<th><?php echo $tr->translate("Note");?></th>';
+		thead+='<th><?php echo $tr->translate("Debit");?></th>';
+		thead+='<th><?php echo $tr->translate("Credit");?></th>';
+		fund_title=1;
+		
+		dojo.query("#head_title").append(thead);	
+		dijit.byId('record_row').attr('value','');
+		addCollecteral();
+}
+temp='';
+fund_title=0;
+r = 0;
+option_account = '<?php echo $this->row_parents;?>';
+option_accountname = '<?php echo $this->row_accountname;?>';
+owner_option = '';
+
+function initilize(){
+	<?php if(!empty($this->jdetail)) {?>
+		tmp='<table id="t_amountmoneytype" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
+		tmp+='<tr style="background:#eee; font-size: 14px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+		tmp+='</table>';
+		dojo.query("#test").append(tmp);
+	
+		thead='<th><?php echo $tr->translate("DEL");?></th>';
+		thead+='<th><?php echo $tr->translate("គណនីមេ");?></th>';
+		thead+='<th><?php echo $tr->translate("ឈ្មោះគណនី");?></th>';
+		thead+='<th><?php echo $tr->translate("Note");?></th>';
+		thead+='<th><?php echo $tr->translate("Debit");?></th>';
+		thead+='<th><?php echo $tr->translate("Credit");?></th>';
+		fund_title=1;
+		dojo.query("#head_title").append(thead);	
+		dijit.byId('record_row').attr('value','');
+		
+	<?php foreach($this->jdetail AS $i=>$rs){?>
+	r++;
+	temp='<td style="width:30px !important;text-align:center;" ><img style="cursor:pointer" onclick="deleteRecord('+r+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+	temp+='<td width="300px"><select style=" width:98%;background:#fff; padding-left:5px;" id="parrent_'+r+'" name="parrent_'+r+'" dojoType="dijit.form.FilteringSelect" onchange="getAllAccount('+r+')"  >'+option_account+'</select></td>';
+    temp+='<td width="300px"><lable id="acc_label'+r+'"><select style="background:#fff; padding-left:5px;" id="account_id'+r+'" name="account_id'+r+'" dojoType="dijit.form.FilteringSelect" onchange="setParentIdByAccount('+r+')">'+option_accountname+'</select></lable></td>';
+    temp+='<td><input type="text" name="note'+r+'" id="note'+r+'" dojoType="dijit.form.TextBox" /></td>';
+	temp+='<td width="200px"><input style=" width:98%;" type="text" required="true" onkeyup="calCulateAccount('+r+')" name="debit_'+r+'" id="debit_'+r+'" value="0" dojoType="dijit.form.NumberTextBox"/></td>';
+	temp+='<td width="200px"><input style=" width:90%;" type="text" required="true" onkeyup="calCulateAccount('+r+')" name="credit_'+r+'" id="credit_'+r+'" value="0" dojoType="dijit.form.NumberTextBox"/></td>';
+	tmp='<tr style="border:1px solid #ccc;" id="row_capital'+r+'">'
+
+	tmp+="</tr>";
+	tmp+="</tr>";
+	dojo.query("#t_amountmoneytype").append(tmp);
+	
+	dojo.html.set(dojo.byId("row_capital"+r),temp, {
+	    parseContent: true,
+	     
+	});
+		
+	if(dijit.byId("record_row").get('value')!="") {
+		var ids = dijit.byId("record_row").value;
+		dijit.byId("record_row").attr('value',ids+','+r);
+	} else { dijit.byId("record_row").attr('value',r);}
+	dijit.byId('account_id'+r).attr('value','<?php echo $rs['account_id']?>');
+	dijit.byId('note'+r).attr('value','<?php echo $rs['note']?>');
+	dijit.byId('debit_'+r).attr('value','<?php echo $rs['debit']?>');
+	dijit.byId('credit_'+r).attr('value','<?php echo $rs['credit']?>');
+	
+	<?php } }?>
+}
+function addCollecteral(){
+		r++;
+		tmp='<tr style="border:1px solid #ccc; font-size:14px;" id="row_capital'+r+'">'
+		tmp+="</tr>";
+			dojo.query("#t_amountmoneytype").append(tmp);
+			
+		temp='<td style="width:30px !important;text-align:center;" ><img style="cursor:pointer" onclick="deleteRecord('+r+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		temp+='<td width="300px"><select style=" width:98%;background:#fff; padding-left:5px;" id="parrent_'+r+'" name="parrent_'+r+'" dojoType="dijit.form.FilteringSelect" onchange="getAllAccount('+r+')"  >'+option_account+'</select></td>';
+	    temp+='<td width="300px"><lable id="acc_label'+r+'"><select style="background:#fff; padding-left:5px;" id="account_id'+r+'" name="account_id'+r+'" dojoType="dijit.form.FilteringSelect" onchange="setParentIdByAccount('+r+')">'+option_accountname+'</select></lable></td>';
+	    temp+='<td><input type="text" name="note'+r+'" id="note'+r+'" dojoType="dijit.form.TextBox" /></td>';
+		temp+='<td width="200px"><input style=" width:98%;" type="text" required="true" onkeyup="calCulateAccount('+r+')" name="debit_'+r+'" id="debit_'+r+'" value="0" dojoType="dijit.form.NumberTextBox"/></td>';
+		temp+='<td width="200px"><input style=" width:90%;" type="text" required="true" onkeyup="calCulateAccount('+r+')" name="credit_'+r+'" id="credit_'+r+'" value="0" dojoType="dijit.form.NumberTextBox"/></td>';
+		
+			dojo.html.set(dojo.byId("row_capital"+r),temp, {
+		    parseContent: true,
+		     
+		});
+		if(dijit.byId("record_row").get('value')!="") {
+			var ids = dijit.byId("record_row").value;
+			dijit.byId("record_row").attr('value',ids+','+r);
+		} else { dijit.byId("record_row").attr('value',r);}
+		
+}
+function deleteRecord(index){
+	var ids =dijit.byId('record_row').value;
+	if(ids.length=='' || ids.length==null){
+		dijit.byId('record_row').attr('value','');
+		dojo.query("#row_capital"+ids).remove();
+	}else{
+		var arrays = ids.split(',');
+		for(var i=0;i<arrays.length;i++) {
+			if(arrays[i] == index) arrays.splice(i,1);
+		}
+		var strings = arrays.join(',');
+		dijit.byId('record_row').attr('value',strings);
+		dojo.query("#row_capital"+index).remove();
+	}
+}
+function calCulateAccount(type){
+	var ids =dijit.byId('record_row').get('value');
+		var arrays = ids.split(',');
+		t_debit=0;
+		t_credit=0;
+		for(var i=0;i<arrays.length;i++) {
+			debit = (isNaN(dijit.byId('debit_'+arrays[i]).get('value'))?0:dijit.byId('debit_'+arrays[i]).get('value'));
+			credit = (isNaN(dijit.byId('credit_'+arrays[i]).get('value'))?0:dijit.byId('credit_'+arrays[i]).get('value'));
+			if(debit!=0 && credit!=0){
+				alert("Can not input two value into debit and credit account!");
+				dijit.byId('credit_'+arrays[i]).attr('value',0);
+			}
+			t_debit = t_debit+debit;
+			t_credit = t_credit+credit;
+		}
+		dijit.byId('debit').attr('value',t_debit);
+		dijit.byId('credit').attr('value',t_credit);
+}
+var url_getjcode = '<?php echo $this->url(array('module'=>'accounting','controller'=>'generaljurnal','action'=>'get-jcode')); ?>';
+function getJurnalcode(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==''){
+			alert('Please Select Branch');
+			dijit.byId('branch_id').focus();
+			return false;
+		}
+		dojo.xhrPost({
+			url:url_getjcode,	
+			content:{ 
+			    'branch_id':branch_id,
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				dijit.byId('journal_code').attr('value',data);
+			},
+			error: function(err) {
+				
+			}
+		});
+}
+var url_accountbyid = '<?php echo $this->url(array('module'=>'accounting','controller'=>'generaljurnal','action'=>'get-parentption')); ?>';
+function getAllAccount(index){
+	parent_id = dijit.byId('parrent_'+index).get('value');
+	dojo.xhrPost({
+		url:url_accountbyid,	
+		content:{ 
+		    'parent':parent_id
+		},	    
+		handleAs:"json",
+		load: function(option) {
+			 dojo.html.set(dojo.byId("acc_label"+index), '<select Onchange="getParentByAccount('+r+')" name="account_id'+index+'" dojoType="dijit.form.FilteringSelect" >'
+					    +option+'</select>', {
+					      parseContent: true,
+					      onBegin: function() {
+					        //dojo.require('dijit.form.FilteringSelect');
+					        //this.inherited("onBegin", arguments);
+					      }
+					  });
+		
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+var url_parent = '<?php echo $this->url(array('module'=>'accounting','controller'=>'generaljurnal','action'=>'get-parentid')); ?>';
+function setParentIdByAccount(index){
+	account_id = dijit.byId('account_id'+index).get('value');
+	dojo.xhrPost({
+		url:url_parent,	
+		content:{ 
+		    'acccount_id':account_id
+		},	    
+		handleAs:"json",
+		load: function(parent_id) {
+			dijit.byId('parrent_'+index).attr('value',parent_id);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+	
+}
+function getParentByAccount(key){
+	var limit = $('select[name=account_id1');
+	var arr = Object.keys(limit).map(function (key) {
+		alert(limit[key]);
+	});
+}
+</script>

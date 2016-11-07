@@ -1,0 +1,228 @@
+<script type="text/javascript">
+dojo.require("dojo.data.ObjectStore");
+dojo.require("dijit.form.DateTextBox");
+dojo.ready(function(){
+	dijit.byId('province').attr('value',<?php echo $this->result['province'];?>);	
+	var district_data = new dojo.store.Memory({
+	       data: <?php print_r(Zend_Json::encode($this->district));?>
+	});
+	 
+	new dijit.form.FilteringSelect({
+	store: dojo.data.ObjectStore({objectStore: district_data}),
+	autoComplete: true,
+	query: {
+		pro_id:"<?php echo $this->result['province'];?>"
+	},            
+	required: false,		           
+	name: "district",
+	id: "district",
+	searchAttr: "name",
+	value: "<?php echo $this->result['district'];?>",
+	class: 'fullside',
+	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+		onChange: function() {
+				filterCommune();
+	    }
+	}, "district");
+	
+
+	var commune_data = new dojo.store.Memory({
+	       data: <?php print_r(Zend_Json::encode($this->commune));?>
+	});
+	 
+	new dijit.form.FilteringSelect({
+	store: dojo.data.ObjectStore({objectStore: commune_data}),
+	autoComplete: true,
+	query: {
+		//district_id: "-1"
+		district_id: "<?php echo $this->result['district'];?>"
+	},            
+	required: false,		           
+	name: "commune",
+	id: "commune",
+	searchAttr: "name",
+	value: "<?php echo $this->result['commune'];?>",
+	class: 'fullside',
+	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+		onChange: function() {
+			filterVillage();
+  }
+	}, "commune");
+
+	var village_data = new dojo.store.Memory({
+	       data: <?php print_r(Zend_Json::encode($this->village));?>
+	});
+	 
+	new dijit.form.FilteringSelect({
+	store: dojo.data.ObjectStore({objectStore: village_data}),
+	autoComplete: true,
+	query: {
+		commune_id:"<?php echo $this->result['commune'];?>"
+	},            
+	required: false,		           
+	name: "village",
+	id: "village",
+	searchAttr: "name",
+	value: "<?php echo $this->result['village'];?>",
+	class: 'fullside',
+	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+		onChange: function() {
+}
+	}, "village");
+
+	
+	
+});
+function filterDistrict(){
+	dijit.byId('district').query.pro_id = dijit.byId('province').get('value');
+}
+function filterCommune(){
+	dijit.byId('commune').query.district_id = dijit.byId('district').get('value');
+}
+function filterVillage(){
+	id =dijit.byId('commune').get('value');
+	dijit.byId('village').query.commune_id = dijit.byId('commune').get('value');
+}
+
+</script>
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+//echo $this->headTitle($tr->translate("VILLAGE_LIST"));
+$frm = $this->frm_village;
+?>
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_search;
+$frms=$this->frm_client;
+?>
+<meta charset="utf-8">
+<title><?php echo $tr->translate("REPORT_CLIENT");?></title>
+<form method="post">
+<table style="font-family: 'Khmer OS Content';margin:0 auto ; width:28.5cm; " >
+	<tr>  
+      <td><?php echo $frm->getElement("adv_search");?></td>
+      <td><?php echo $frm->getElement('branch_id');?></td>
+      <td><?php echo $frms->getElement('province');?></td>
+      <td><input id="district" ></td>
+      <td><input id="commune" ></td>
+    </tr>
+	<tr>
+      <td><input id="village" ></td>	
+      <td><?php echo $frm->getElement('status');?></td>
+      <td><?php echo $frm->getElement('start_date');?></td>
+      <td><?php echo $frm->getElement('end_date');?></td>
+      <td><?php echo $frm->getElement("btn_search");?></td>
+	</tr>
+</table>
+</form>
+<div style="clear: both;"></div>
+<div style=" width:98%; margin:0 auto; ">
+<br />
+<div style=" width:28cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+<div id="divPrint">
+<style>
+.style{
+	line-height: 20px;font-size: 9px !important;
+	font-family: 'Khmer OS Battambang';
+}
+th{padding: 3px 5px;}
+</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+	<tr>
+    	<td align="center">
+        	<table width="100%" style="font-family:khmer;" style="margin:0; padding:0;border:none;" >
+            	<tr>
+                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="70px"></td>
+                	<td width="60%" valign="top">
+                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><?php echo $tr->translate("REPORT_CLIENT");?></h2>
+                	<h2 style="text-align:center; font-size:13px;"><?php echo date("d-M-Y",strtotime($this->result['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->result['end_date']));?></h2>
+                	</td>
+                    <td width="20%"></td>
+                </tr> 
+                <tr>
+                	<td colspan="3">
+                		<table width="100%">
+                			<tr >
+                				<td width="45%" style="font-size: 10px;">
+                					<?php echo $tr->translate("ADDRESS_COMPANY");?>
+									<br /><?php echo $tr->translate("TEL_COMPANY");?>
+                				</td>
+                				<td></td>
+                				
+                				<td></td>
+                			</tr>
+			               
+		                </table>
+		              </td>
+		        </tr>   
+            </table>
+</td>
+</tr>
+</table>
+<body>
+	<table id="exportExcel"  width="100%" border="1" style="border-collapse:collapse;font-size: 10px;" bordercolor="black">   
+    	<tr bgcolor="#ccc">
+    		<th colspan="12"><?php echo $tr->translate("CLIENT_INFO");?></th>
+    		<th colspan="3"><?php echo $tr->translate("Join Account Info");?></th>
+    		<th rowspan="2"><?php echo $tr->translate("DATE");?></th>
+    	</tr>
+    	<tr bgcolor="#ccc" class="style" align="center" style="floafont-weight:bold; line-height: 14px; font-size:12px; padding:5px 0px; ">
+	       <th><?php echo $tr->translate("NUM");?></th>
+	       <th><?php echo $tr->translate("BRANCH_NAME");?></th>
+	       <th><?php echo $tr->translate("CLIENT_NUM");?></th>
+	       <th><?php echo $tr->translate("CUSTOMER_NAME");?></th>
+	       <th><?php echo $tr->translate("SEX");?></th>
+	       <th><?php echo $tr->translate("DATOFBIRTH");?></th>
+	       <th><?php echo $tr->translate("SITU_STATUS");?></th>
+	       <th><?php echo $tr->translate("NATIONAL_ID");?></th>
+           <th><?php echo $tr->translate("NUMBER");?></th>
+           <th><?php echo $tr->translate("JOB_TYPE");?></th>
+	       <th><?php echo $tr->translate("PHONE");?></th>
+	       <th width="150px;"><?php echo $tr->translate("ADDRESS");?></th>
+	       <th><?php echo $tr->translate("JOIN_WITH");?></th>
+	       <th><?php echo $tr->translate("NATIONAL_ID");?></th>
+	       <th><?php echo $tr->translate("NUMBER");?></th>
+	       
+          </tr>
+          <?php if(!empty($this->client_list)) foreach($this->client_list as $key =>$row){?>
+          <a href="" title="ចុចទីនេះដើម្បីបោះពុម្ពបង្កានដៃតម្កល់ទ្រព្យធធានា">
+		   <tr style="font-size: 9px;line-height: 14px;" align="center">
+		   
+			   <td><?php echo $key+1; ?></td>
+		       <td ><?php echo $row['branch_name']?></td>
+		       <td style="white-space: nowrap;" ><?php echo $row['client_number']?></td>
+			   <td align="left"><?php echo $row['client_name'];?></td>
+			   <td ><?php echo $row['sex']?></td>
+			   <td>&nbsp;<?php echo date("d/m/Y",strtotime($row['dob']));?></td>
+			   <td>&nbsp;<?php echo $row['situation']?></td>
+	           <td>&nbsp;<?php echo $row['doc_name']?></td>
+	           <td>&nbsp;<?php echo $row['id_number']?></td>
+	           <td>&nbsp;<?php echo $row['job']?></td>
+			   <td><?php echo $row['phone']?></td>
+			   <td style="line-height:15px;text-align: left">&nbsp;<?php echo "#".$row['house'].",St".$row['street'].", ".$row['village_name'].", ".$row['com_name'].", ".$row['dis_name'].", ".$row['pro_name']?></td>
+			   <td><?php echo empty($row['join_with'])?"-":$row['join_with']?></td>
+			   <td><?php echo empty($row['joint_doc_type'])?"-":$row['joint_doc_type']?></td>
+			   <td><?php echo empty($row['join_nation_id'])?"-":$row['join_nation_id']?></td>
+			   <td><?php echo date("d/m/Y",strtotime($row['create_date']))?></td>
+			  
+		   </tr>
+		   </a>
+		  <?php }?>
+
+    </table>
+    <br />
+		   <table align="center" width="100%">
+				   <tr style="font-size: 12px;">
+				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+				   </tr>
+			</table>	
+</body>
+</div>
+</div>
+</div>
+</html>

@@ -1,0 +1,112 @@
+<?php 
+	$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+	$rows=$this->calleteral_list;
+?>
+<meta charset="utf-8">
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<title><?php echo $tr->translate("បង្កាន់ដៃតម្កល់ទ្រព្យដាក់ធានា");?></title>
+<form method="post">
+</form>
+<div style=" width:25cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+<div id="divPrint" style="width: 100%;">
+<style>
+.style{
+	line-height: 20px;font-size: 11px !important;
+	font-family: 'Khmer OS Battambang';
+}
+p{ line-height: 10px;}
+th{padding: 5px;}
+ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold; list-style-type: none;}
+td ul li{list-style: none; }
+</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;">
+	<tr>
+    	<td align="center">
+        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+            	<tr>
+                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="70px"></td>
+                	<td width="60%" valign="top">
+                	    <ul>
+                			<li style="list-style:none; text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+                			<li style="list-style:none;text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("បង្កាន់ដៃតម្កល់ទ្រព្យដាក់ធានា");?></li>
+                			<li style="list-style:none;text-align:center; font-size:13px;"></li>
+                		</ul>
+                	</td>
+                    <td width="20%"></td>
+                </tr> 
+                <tr>
+                	<td colspan="3">
+                		<table width="100%">
+                			<tr >
+                				<td>
+                				<p style="font:12px 'Khmer MEF2';line-height: 15px;">លេខកូដអតិថិជនៈ...<?php echo $rows[0]['client_code'];?>...</p>
+                					<?php //echo $tr->translate("ADDRESS_COMPANY");?>
+									<?php //echo $tr->translate("TEL_COMPANY");?>
+								</td>
+                				<td align="right"><p style="font:12px 'Khmer MEF2';line-height: 15px;">កិច្ចសន្យាដាក់បញ្ចាំ.....CL-<?php echo $rows[0]['client_code'];?>.....</p></td>
+                			</tr>
+		                </table>
+		              </td>
+		           </tr>   
+            </table>
+        </td>
+    </tr>
+    <tr>
+    	<td>
+            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+                <?php //if(empty($this->calleteral_list)){?>
+                 <tr align="center" style="font-weight:bold; line-height: 20px; font-size:9px; padding:5px 0px; ">
+                    <td colspan="2" style="font-family:'Khmer MEF2';text-align: left; border:1px solid #fff; border-bottom: 1px solid #000;" valign="top">
+					     <p style="font:12px 'Khmer MEF2';line-height: 15px;">ក. អត្តសញ្ញាណ</p>
+						 <p style="font:12px 'Khmer OS Content';line-height: 18px;">1. អតិថិជនឈ្មោះ........<strong style="font-weight: bold;font:12px 'Khmer MEF2'"><?php echo $rows[0]['name_kh']?></strong>..........និងឈ្មោះ............<strong style="font-weight: bold;font:12px 'Khmer MEF2'"><?php echo $rows[0]['join_with'];?></strong>.................ត្រូវជា..............<strong style="font-weight: bold;font:12px 'Khmer MEF2';"><?php echo $rows[0]['relative'];?></strong>.......។</p>
+						 <p style="font:12px 'Khmer OS Content';line-height: 18px;">2. អ្នកដាក់ធានាជំនួសឈ្មោះ...........<strong style="font-weight: bold;"><?php //echo $rows[0]['spouse_name']?></strong>..........................	និងឈ្មោះ.....................................ត្រូវជា...........................។</p>
+						 <p style="font:12px 'Khmer OS Content';line-height: 18px;">បានដាក់ទ្រព្យធានាលើប្រាក់កម្ចី <span style="padding:0px 10px;margin-left:15px;width:20px; height: 15px; border:1px solid #000;">&nbsp;</span> ផ្ទាល់ខ្លួន 	<span style="padding:0px 10px;margin-left:15px;width:20px; height: 15px; border:1px solid #000;">&nbsp;</span> អ្នកធានាជំនួស  មានញ្ជាក់ដូចខាងក្រោម៖</p> 
+						 <p style="font:12px 'Khmer MEF2';line-height: 15px;">ខ. ប្រភេទលិខិតសម្គាល់ទ្រព្យតម្កល់ធានា</p>
+						 <?php if(!empty($rows))foreach ($rows as $key =>$row){?>
+						 	<p style="font:12px 'Khmer OS Content';line-height: 18px;"><?php echo $key+1;?> .<?php echo $row['collecteral_title_kh'];?>លេខៈ...<?php echo $row['number_collecteral'];?>...ចុះថ្ងៃទី..<?php echo date("d",strtotime($row['issue_date']));?>..ខែ..<?php echo date("m",strtotime($row['issue_date']));?>..ឆ្នាំ..<?php echo date("Y",strtotime($row['issue_date']));?>..ម្ចាស់កម្មសិទ្ធឈ្មោះ...<strong style="font-weight: bold;font:12px 'Khmer MEF2'"><?php echo $row['owner_name'];?></strong>...។</p>
+						 <?php }?>
+                    </td>
+                </tr>
+                 <tr>
+                	<td align="center" valign="top" width="50%">
+                	    <p style="font:12px 'Khmer OS Content';line-height: 18px;">ថ្ងៃទី .....<?php echo date("d/m/Y");?>.....</p> 
+                		<p style="font:12px 'Khmer MEF2';line-height: 18px;">តំណាង អង្គការ ឥណទានអភិវឌ្ឍន៏សហគមន៏</p>
+						<p style="font:12px 'Khmer MEF2';line-height: 18px;">ហត្ថលេខានិងត្រា</p> 
+						<p style="height:100px;"></p>
+						<p style="font:12px 'Khmer MEF2';line-height: 18px;"><?php echo $rows[0]['co_id'];?></p>
+                	</td>
+                	<td align="center" valign="top">
+                	     <p style="font:12px 'Khmer OS Content';line-height: 18px;">ថ្ងៃទី .....<?php echo date("d/m/Y");?>.....</p> 
+                	     <p style="font:12px 'Khmer MEF2';line-height: 18px;">ស្នាមមេដៃស្តាំអ្នកប្រគល់</p>
+						 <p style="height:120px;"></p>
+						 <p style="font:12px 'Khmer MEF2';line-height: 18px;"><?php echo $rows[0]['name_kh'];?></p>
+                	</td>
+                </tr>
+                <tr>
+                	<td colspan="2" align="center" valign="top" style="border-right: 1px solid #fff;border-left: 1px solid #fff;"><p style="font:12px 'Khmer OS Content';">ខាងក្រោមនេះសម្រាប់ប្រើប្រាស់នៅពេលដែលអតិថិជនសងបំណុលរួច ហើយដកយក​​​​​​​​​​​​​​​ឯកសារ បញ្ជាក់កម្មសិទ្ធរបស់ខ្លួនទៅវិញ</p></td>
+                </tr>
+                <tr>
+                	<td align="center" valign="top">
+                	    <p style="font:12px 'Khmer OS Content';line-height: 18px;">ថ្ងៃទី..............................</p> 
+                		<p style="font:12px 'Khmer MEF2';line-height: 18px;">តំណាង អង្គការ ឥណទានអភិវឌ្ឍន៏សហគមន៏</p>
+						<p style="font:12px 'Khmer MEF2';line-height: 18px;">ហត្ថលេខានិងត្រាអ្នកប្រគល់</p> 
+						<p style="height:100px;"></p>
+                	</td>
+                	<td align="center" valign="top">
+                	     <p style="font:12px 'Khmer OS Content';line-height: 18px;">ថ្ងៃទី..............................</p> 
+                	     <p style="font:12px 'Khmer MEF2';line-height: 18px;">ស្នាមមេដៃស្តាំអ្នកទទួល</p>
+						 <p style="height:100px;"></p>
+						 <p style="font:12px 'Khmer MEF2';line-height: 18px;"><?php echo $rows[0]['name_kh'];?></p>
+                	</td>
+                </tr>
+                <tr>
+                	<td colspan="2" style="font:12px 'Khmer OS Content'; line-height: 18px;border: 1px solid #fff;border-top: 1px solid #000;" valign="top">សេចក្តីបញ្ជាក់៖ ម្ចាស់កម្មសិទិ្ធត្រូវតែរក្សាបង្កាន់ដៃនេះ   ដើម្បីដកយកឯកសារទ្រព្យ ដាក់ធានាត្រលប់ទៅវិញ ។មានតែអ្នកដែលផ្តិតមេដៃតម្កល់ទេ ទើបមានសិទ្ធដកយកឯកសារបញ្ជាក់កម្មសិទ្ទទៅវិញបាន។ ក្នុងករណីបាត់បង្កាន់ដៃនេះ   អង្គការតម្រូវអាយម្ចាស់កម្មសិទ្ធស្របច្បាប់ធ្វើលិខិតបញ្ចាក់ពីអាជ្ញាធរ ភូមិ ឃុំ/សង្កាត់ មកអោយអង្គការ ទើបអាចដកបាន។ </td>
+                </tr>
+              </table>
+    	</td>
+    </tr>
+</table>
+</div>
+</div>

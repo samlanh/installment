@@ -1,0 +1,328 @@
+<?php
+	$this->headTitle('Currency Smart | Exchange add page'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+?>	
+<script type="text/javascript">
+dojo.require('dijit.form.Form');
+dojo.require('dijit.form.Button');
+dojo.require('dijit.form.NumberTextBox');
+dojo.require("dijit.Dialog");
+</script>
+<style>
+<!--
+	.tbtable{		
+		text-align: center;
+		font-size: 2em;	
+		color: #fff;
+		line-height: 40px;
+		font-weight: bolder;
+	}
+	.tbtable td{
+		vertical-align: middle;
+	}
+	.tbtable .tbheader{
+		background-color: #dddddd;
+		color: #000;
+	}
+	.tbtable .first{
+		background-color: #012a15; 
+	}
+	
+	.tbtable .second{
+		background-color: #016315; 
+	}
+	
+	.tbtable .input-inner {
+		margin: 0px;
+		padding: 0px;
+		width: 99%;	
+		border: none;
+	}
+	
+	#DB.dijitInputInner, #BD.dijitInputInner, #BR.dijitInputInner,#RB.dijitInputInner{
+		text-align: center;		
+		background-color: #012a15 !important;
+	}
+	
+	#DR.dijitInputInner, #RD.dijitInputInner{
+		text-align: center;		
+		background-color: #016315 !important;
+	}
+	
+	.col-symbol{
+		width: 20%;
+	}
+	.col-input{
+		width: 40%;
+	}
+-->
+</style>
+<form id='frm_add_exch' action="<?php echo $this->url(array('module'=>'exchange','controller'=>'index','action'=>'rate')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+	</script>	 
+	
+	<table cellspacing="20" width="100%"  >
+		<tr>
+			<td width="100%" valign="top">	
+				<fieldset class="panel">
+					<legend><strong>ព៌ត័មាន ទាក់​ទង នឹង​ អត្រាប្តូរប្រាក់</strong></legend>			
+					<table class="tbtable" style="margin:10px auto; width: 90%;" cellspacing='0' border="1">									
+						<tr class="tbheader">
+							<th class="col-symbol">និមិត្តសញ្ញា</th>
+							<th class="col-input">អត្រា​ទិញចូល</th>
+							<th class="col-input">អត្រា​លក់ចេញ</th>
+						</tr>
+						<tr class="first">
+							<td>$ - ฿</td>
+							<td>
+								<input type="text" name="DB" id="DB"  data-dojo-type="dijit.form.NumberTextBox"
+									data-dojo-props="required:true,																		
+									name:'DB',
+									id:'DB',	
+									class:'input-inner',								
+									value:<?php echo $this->ratelist['DB']?>,
+									constraints:{pattern:'#,###.##'},
+									missingMessage:'អ្នក​ភ្លេច​បំពេញ​ ចំនួន​ទឹក​ប្រាក់!',
+									invalidMessage:'ចំនួន​ទឹក​ប្រាក់​ មិន​ត្រឹម​ត្រូវ!'">
+							</td>
+							<td>
+								<input type="text" name="BD" id="BD"  data-dojo-type="dijit.form.NumberTextBox"
+									data-dojo-props="required:true,																		
+									name:'BD',
+									id:'BD',	
+									class:'input-inner',								
+									value:<?php echo $this->ratelist['BD']?>,
+									constraints:{pattern:'#,###.##'},
+									missingMessage:'អ្នក​ភ្លេច​បំពេញ​ ចំនួន​ទឹក​ប្រាក់!',
+									invalidMessage:'ចំនួន​ទឹក​ប្រាក់​ មិន​ត្រឹម​ត្រូវ!'">
+							</td>
+						</tr>
+						<tr class="second">
+							<td>$ - ៛</td>
+							<td>
+								<input type="text" name="DR" id="DR"  data-dojo-type="dijit.form.NumberTextBox"
+									data-dojo-props="required:true,																		
+									name:'DR',
+									id:'DR',	
+									class:'input-inner',								
+									value:<?php echo $this->ratelist['DR']?>,
+									constraints:{pattern:'#,###.##'},
+									missingMessage:'អ្នក​ភ្លេច​បំពេញ​ ចំនួន​ទឹក​ប្រាក់!',
+									invalidMessage:'ចំនួន​ទឹក​ប្រាក់​ មិន​ត្រឹម​ត្រូវ!'">
+							</td>
+							<td>
+								<input type="text" name="RD" id="RD"  data-dojo-type="dijit.form.NumberTextBox"
+									data-dojo-props="required:true,																		
+									name:'RD',
+									id:'RD',	
+									class:'input-inner',								
+									value:<?php echo $this->ratelist['RD']?>,
+									constraints:{pattern:'#,###.##'},
+									missingMessage:'អ្នក​ភ្លេច​បំពេញ​ ចំនួន​ទឹក​ប្រាក់!',
+									invalidMessage:'ចំនួន​ទឹក​ប្រាក់​ មិន​ត្រឹម​ត្រូវ!'">
+							</td>
+						</tr>
+						<tr class="first">
+							<td>฿ - ៛</td>
+							<td>
+								<input type="text" name="BR" id="BR"  data-dojo-type="dijit.form.NumberTextBox"
+									data-dojo-props="required:true,																		
+									name:'BR',
+									id:'BR',	
+									class:'input-inner',								
+									value:<?php echo $this->ratelist['BR']?>,
+									constraints:{pattern:'#,###.##'},
+									missingMessage:'អ្នក​ភ្លេច​បំពេញ​ ចំនួន​ទឹក​ប្រាក់!',
+									invalidMessage:'ចំនួន​ទឹក​ប្រាក់​ មិន​ត្រឹម​ត្រូវ!'">
+							</td>
+							<td>
+								<input type="text" name="RB" id="RB"  data-dojo-type="dijit.form.NumberTextBox"
+									data-dojo-props="required:true,																		
+									name:'RB',
+									id:'RB',	
+									class:'input-inner',								
+									value:<?php echo $this->ratelist['RB']?>,
+									constraints:{pattern:'#,###.##'},
+									missingMessage:'អ្នក​ភ្លេច​បំពេញ​ ចំនួន​ទឹក​ប្រាក់!',
+									invalidMessage:'ចំនួន​ទឹក​ប្រាក់​ មិន​ត្រឹម​ត្រូវ!'">
+							</td>
+						</tr>
+					</table>
+					<div style="text-align: center; margin: 10px 0px;">
+						<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="busyButton" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="showDialog();"/> 
+						<input type="button" value="សំអាត" label="សំអាត" id="clearButton" onclick="clearText();" dojoType="dijit.form.Button"/>
+						<input type="reset" value="សាដើម" label="សាដើម" id="resetButton" dojoType="dijit.form.Button"/>
+						<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"  />	
+					</div>	
+				</fieldset>
+			</td>
+						
+		</tr>		
+	</table>
+</form>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:7cm;" data-dojo-props="title:'អត្រាប្តូរប្រាក់', onCancel:hideDialog" id="terms" >
+		<div id="divPrint" style="width: 7cm; padding: 0px; margin: 0px;">
+			<style>
+				.fontbig{
+					font-size: 12px;	
+				}
+				.fonttel{
+					font-size: 11px;
+				}
+				.pleft{
+					width: 110px;	
+				}
+			</style>	
+			<table style="width: 7cm; font-size: 8pt; padding: 0px; margin: 0px; line-height: 15px;">
+				 <tr>
+					   	<td align="center" colspan="3">	
+					   	<table  width="100%" cellspacing="0" cellpadding="0">
+					   		<tr style="line-height:10px;">
+					   			<td width="36%" rowspan="2" style="valign:top;"><img style="margin-top: 1px;" src="<?php echo $base_url;?>images/logobrand.jpg" height="34px;"/></td>
+						   		<td width="35%" align="center"><strong style="font-size:16px;font-family:'KH Koulen';text-align:center"><?php echo $this->keycode['rpt-transfer-title-kh'];?></strong></td>
+								<td width="32%" rowspan="2" style="valign:top;"><img style="align:top; float:right;" src="<?php echo $base_url;?>images/logo-right.png" height="34px;"/></td>
+							</tr>
+							<tr>
+								<td align="center" style="font-family:'KH Koulen';white-space: nowrap;font-size:11px;font-weight:bold; text-align:center;"><b><?php echo $this->keycode['rpt-transfer-title-eng'];?></td>
+					   		</tr>
+					   	</table>
+			            </td>	   	        
+				   </tr> 
+					<tr>
+					   	<td align="center" colspan="3" style="font-family:'KH Koulen';"><?php echo $this->keycode['rpt-transfer-business-meaning-kh'];?></td>	   	        
+					</tr>            
+				   <tr>
+						<td align="center" colspan="3" style="font-size: 8pt;">
+							<?php echo $this->keycode['rpt-transfer-business-meaning-eng'];?><br/>
+							<?php echo $this->keycode['rpt-transfer-location-adr-kh'];?><br/>
+							<strong class="fontbig"><?php echo $this->keycode['rpt-transfer-tel-eng'];?></strong>
+						</td>
+				   </tr>
+				   <tr style="border-bottom:1px solid #000; font-size:8px;">
+						<td class="pleft" style="border-bottom:1px solid #000;">
+							<strong class="fonttel" style="font-size:10px;"><label id="lblinvioice">អត្រាប្តូរប្រាក់</label></strong>
+						</td>
+						<td align="right" colspan="2" style="border-bottom:1px solid #000;">
+							ឈ្មោះបុគ្គលិក៖ <?php print($this->user_name);?>
+						</td>
+				   </tr>
+				   <tr>
+				   	<td>និមិត្តសញ្ញា</td>
+				   	<td>​ទិញចូល</td>
+				   	<td align="right">លក់ចេញ</td>
+				   </tr>
+				   <tr>
+						<td  style="font-family:'KH Koulen';">
+							ដុល្លា-បាត<strong>($-B) :</strong>
+						</td>
+						<td><strong ><label id="lbl_dollar_bath_in"></label></strong></td>
+						<td align="right">
+							<strong ><label id="lbl_dollar_bath_out"></label></strong>
+						</td>
+				   </tr>
+				   <tr>
+						<td  style="font-family:'KH Koulen';">
+								ដុល្លា-រៀល<strong>($-R)&nbsp;:</strong>
+						</td>
+						<td>
+							<strong ><label id="lbl_dollar_riel_in"></label></strong>
+						</td>
+						<td align="right">
+							<strong ><label id="lbl_dollar_riel_out"></label></strong>
+						</td>
+				   </tr>
+				   <tr>
+						<td  style="font-family:'KH Koulen';">
+							បាត-រៀល<strong>(B-R) : </strong>
+						</td>
+						<td>
+							<strong style="font-size:10px;"><label id="lbl_bath_riel_in"></label></strong>
+						</td>
+						<td align="right">
+							<strong style="font-size:10px;"><label id="lbl_bath_riel_out"></label></strong>
+						</td>
+				   </tr>
+				   <tr>
+						<td colspan="3" align="center" style="border-top:1px solid #000;">
+							<label>
+								<?php echo $this->keycode['rpt-transfer-warnning-kh'];?>
+							</label>
+						</td>			
+				   </tr>
+				   <tr style="border:1px solid #000;">
+						<td colspan="3" align="center" style="border-top: 2px dashed #000;padding-top:5px;">
+								<?php echo $this->keycode['comment'];?>
+						</td>			
+				   </tr>
+				   <tr>
+						<td colspan="3">
+							<hr style="background: transparent;border-bottom: 2px dashed #000;" />
+						</td>			
+				   </tr>
+				   <tr>
+						<td>
+							<img src="<?php echo $base_url.$this->keycode['imgPath'];?>" width="50%"/>
+						</td>	
+						<td align='right'  valign="top" colspan="2">
+							<strong><?php echo date("d/m/Y H:i:s");?></strong>
+						</td>
+				   </tr>
+			</table>
+			
+		</div>
+		<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>	
+		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
+				showLabel="false" type="button" onclick="doPrint();">Print</button>
+		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconCancel"
+				showLabel="false" type="button" onclick="hideDialog();">Cancel</button>
+			
+
+	</div>
+</div>
+<script type="text/javascript">
+function hideDialog() {		
+	dijit.byId("terms").hide();
+}
+	function clearText(){
+		dojo.byId("DB").value = 0;
+		dojo.byId("BD").value = 0;
+		dojo.byId("DR").value = 0;
+		dojo.byId("RD").value = 0;
+		dojo.byId("BR").value = 0;
+		dojo.byId("RB").value = 0;		
+	}
+	function printSave(){		
+		if(dijit.byId('frm_add_exch').validate()) {
+				return false;
+		}
+		showDialog();	
+		
+	}
+	function showDialog() {		
+		dojo.byId('lbl_dollar_bath_in').innerHTML=dijit.byId('DB').get('value');
+		dojo.byId('lbl_dollar_bath_out').innerHTML=dijit.byId('BD').get('value');
+		
+		dojo.byId('lbl_dollar_riel_in').innerHTML=dijit.byId('DR').get('value');
+		dojo.byId('lbl_dollar_riel_out').innerHTML=dijit.byId('RD').get('value');
+		
+		dojo.byId('lbl_bath_riel_in').innerHTML=dijit.byId('BR').get('value');
+		dojo.byId('lbl_bath_riel_out').innerHTML=dijit.byId('RB').get('value');
+
+		
+		dijit.byId("terms").show();
+	}
+	function doPrint() {
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+	    window.frames["print_frame"].window.focus();
+	    window.frames["print_frame"].window.print();
+	    hideDialog();
+	}
+</script>

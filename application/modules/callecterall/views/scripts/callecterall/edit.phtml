@@ -1,0 +1,56 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->Form_Frmcallecterall;
+?>
+<title> <?php echo $tr->translate("CALLECTERALL_TYPE")?></title>
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'callecterall','controller'=>'Callecterall','action'=>'edit')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				//return false;
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong><?php echo $tr->translate("CALLECTERALL_TYPE")?></strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+							<?php echo $frm->getElement('id')?>
+							<td><?php echo $tr->translate("NAME_EN")?></td>
+							<td><?php echo $frm->getElement('title_en')?></td>	
+							<td><?php echo $tr->translate("NAME_KH")?></td>
+							<td><?php echo $frm->getElement('title_kh')?></td>								
+							<td><?php echo $tr->translate("DISPLAY_BY")?></td>
+							<td><?php echo $frm->getElement('display_by')?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("DATE")?></td>
+							<td><?php echo $frm->getElement('date')?></td>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php echo $frm->getElement('status')?></td>
+					   </tr>
+					</table>
+					</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="submit" value="កែប្រៃ" name="btn_save" label="កែប្រៃ" id="submitButton" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+			<input type="submit" value="កែប្រៃ & ចាកចេញ" name="btn_save_close" label="កែប្រៃ & ចាកចេញ" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+			<?php $url_close = $this->url(array('module'=>'callecterall','controller'=>'callecterall','action'=>''),null,true); ?>
+			<a href="<?php echo $url_close ?>">
+				<input type="button" value="ចាកចេញ" name="btn_close" label="ចាកចេញ" id="submitButton_Close" dojoType="dijit.form.Button"  iconClass=" dijitIconDelete"/>							
+			</a>
+		</td>
+	</tr>	
+</table>
+</form>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.NumberTextBox");
+</script>

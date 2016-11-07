@@ -1,0 +1,46 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('EDIT_ZONE_AREA'));
+?>	
+<?php  $frm = $this->frm_zone;?>
+<form action="<?php echo $this->url(array('module'=>'other','controller'=>'zone','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+ <script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+</script>
+<table cellspacing="10" width="45%" style="margin: 0 auto;">
+	<tr>
+		<td>
+		<fieldset>
+					<legend align="center" ><strong><?php echo $tr->translate("EDIT_ZONE_AREA");?></strong></legend>
+					<table style="margin: 0 auto; width: 95%;" cellspacing="10">
+						<tr>
+							<td><?php echo $tr->translate("ZONE_NAME");echo $frm->getElement('id');?></td>
+							<td><?php  echo $frm->getElement('zone_name');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("ZONE_NUMBER")?></td>
+							<td><?php  echo $frm->getElement('zone_number');?></td>
+						</tr>
+						
+						<tr>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php  echo $frm->getElement('status');?></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+							  <input type="reset" label="<?php echo $tr->translate('CLEAR');?>" id="" dojoType="dijit.form.Button"
+				                 iconClass="dijitIconClear" />
+							<input type="submit" value="កែប្រែទិន្នន័យ" label="<?php echo $tr->translate('SAVE');?>" id="submitButton" dojoType="dijit.form.Button" 
+								 iconClass=""/>
+							</td>
+						</tr>
+					</table>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>

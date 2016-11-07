@@ -1,0 +1,121 @@
+<?php 
+	  $tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	  $home=$this->url(array('module'=>'home','controller'=>'index','action'=>'index'), null, true);
+	  $group=$this->url(array('module'=>'group','controller'=>'index','action'=>'index'), null, true);
+	  $other=$this->url(array('module'=>'other','controller'=>'index','action'=>'index'), null, true);
+	  $old_report=$this->url(array('module'=>'allreport','controller'=>'index','action'=>'index'), null, true);
+	  $report=$this->url(array('module'=>'report','controller'=>'index','action'=>'index'), null, true);
+	  $loan_view=$this->url(array('module'=>'loan','controller'=>'index','action'=>'index'), null, true);
+	  $accounting_view=$this->url(array('module'=>'accounting','controller'=>'index','action'=>'index'), null, true);
+	  $teller=$this->url(array('module'=>'tellerandexchange','controller'=>'xchanges','action'=>'index'), null, true);
+	  $payroll_view=$this->url(array('module'=>'payroll','controller'=>'index','action'=>'index'), null, true);
+	  $callecterall=$this->url(array('module'=>'callecterall','controller'=>'index','action'=>'index'), null, true);
+	  $capital=$this->url(array('module'=>'capital','controller'=>'index','action'=>'index'), null, true);
+	  $backup=$this->url(array('module'=>'backup','controller'=>'index','action'=>'index'), null, true);
+      $user=$this->url(array('module'=>'user','controller'=>'index','action'=>'index'), null, true);
+      $acl=$this->url(array('module'=>'rsvacl','controller'=>'index','action'=>'index'), null, true);
+      $setting=$this->url(array('module'=>'setting','controller'=>'index','action'=>'index'), null, true);
+	  $module=Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+	  $item_arr=array(
+		'home'=>'<li class="link">
+							<a title="ទំព័រដើម" href="'.$home.'">
+								<span>'.$tr->translate("HOME_PAGE").'</span>
+							</a>
+						</li>',
+	  	'other'=>'<li class="link">
+			  		<a title="Parameter" href="'.$other.'">
+			  		<span>'.$tr->translate("Parameter").'</span>
+			  		</a>
+			  		</li>',
+	  	'group'=>'<li class="link">
+						<a title="ព័ត៏មានរបស់អតិថិជន" href="'.$group.'">
+							<span>'.$tr->translate("Group_Member").'</span>
+						</a>
+					</li>',
+	    'loan'=>'<li class="link">
+						<a title="ព័ត៏មានប្រាក់កម្ចី" href="'.$loan_view.'">
+							<span>'.$tr->translate("Loan_View").'</span>
+						</a>
+					</li>',	 
+	  	/*'tellerandexchange'=>'<li class="link">
+			  		<a title="" href="'.$teller.'">
+			  			<span>'.$tr->translate("TELLER_Module").'</span>
+			  		</a>
+	    </li>',
+	  	'accounting'=>'<li class="link">
+			  		<a title="ព័ត៏មានចំណាយផ្សេងៗ" href="'.$accounting_view.'">
+			  			<span>'.$tr->translate("Accounting").'</span>
+			  		</a>
+	  			</li>',*/
+	  	'report'=>'<li class="link">
+			  		<a title="Report" href="'.$report.'">
+			  			<span>'.$tr->translate("Reports").'</span>
+			  		</a>
+			  		</li>',
+	  	'rsvacl'=>'<li class="link">
+			  		<a title="acl" href="'.$acl.'">
+			  			<span>'.$tr->translate("Module_Mg").'</span>
+			  		</a>
+			  		</li>',  
+	  'setting'=>'<li class="link">
+	  		<a title="USER" href="'.$setting.'">
+	  		<span>'.$tr->translate("SETTING").'</span>
+	  </a>
+	  		</li>',
+	  );
+?>  
+<div id="menu">
+	<ul>
+		<?php
+// 		$access=0;
+// 		if($access!=''){
+// 			echo 1;
+// 		}else{
+// 			echo 0;
+// 		}
+// 		exit();
+		
+		$session_user=new Zend_Session_Namespace('auth');
+		$modules_access = $session_user->arr_module;
+// 		print_r($modules_access);exit();
+			foreach($item_arr as $key=>$value){
+// echo $key;exit();
+				$access = array_search($key,$modules_access);
+// 				echo $access;exit();
+				if($access!='' OR $access>=0){
+					if($module==$key){
+						echo str_replace('class="link"', 'class="current"', $value);
+					}
+					else{
+						echo $value;
+					}
+				}
+			} 
+		?>
+		<li style="float: right;">
+			<a href="" class="langiconen" onclick="changeLange(2);"></a>
+		</li>
+		<li style="float: right;  border-left: 1px solid #fff; border-right: 1px solid #fff;">
+		<a href="" class="langiconkh" onclick="changeLange(1);"></a>
+		</li>
+	</ul>
+</div>
+<script>
+		
+var url_changelang = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'changelange'));?> ';
+function changeLange(lang){
+	dojo.xhrPost({
+		url: url_changelang,
+	    content :{ 
+			    'lange':lang,
+		},	
+		handleAs:"json",
+		load: function(data) {
+			location.reload();
+		},
+		error: function(err) {
+			
+		}
+	});
+}
+	</script>

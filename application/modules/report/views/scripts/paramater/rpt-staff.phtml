@@ -1,0 +1,112 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_staff;
+?>
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<meta charset="utf-8">
+<title><?php echo $tr->translate("REPORT STAFF");?></title>
+<form name="frm_rptstaff" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-staff')); ?>" dojoType="dijit.form.Form" method="post">
+	<table style="width:28cm; margin: 0 auto;">
+		 <tr> 
+			   <td><?php echo $frm->getElement("adv_search");?></td>
+			   <td><?php echo $frm->getElement("co_khname");?></td>
+			   <td><?php echo $frm->getElement('search_status');?></td>
+		</tr>
+		<tr>   <td><?php echo $frm->getElement("start_date");?></td>	   
+	           <td><?php echo $frm->getElement("end_date");?></td>
+			   <td>
+			   <button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
+			   </td>
+	   	  </tr>
+	</table>
+ </form> 
+<div style=" width:28cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
+<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+	<tr>
+    	<td align="center">
+    	 <div id="divPrint">
+    	 	<style>
+					.style{
+						line-height: 20px;font-size: 11px !important;
+						font-family: 'Khmer OS Battambang';
+						}
+						th{padding: 5px;}
+					</style>
+        	<table width="100%" style="font-family:khmer;" style="margin:0; padding:0;border:none;" >
+            	<tr>
+                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+                	<td width="60%" valign="top">
+                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_II");?></label></h2>
+                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_STAFF");?></h2></td>
+                    <td width="20%"></td>
+                </tr> 
+                <tr>
+                	<td colspan="3">
+                		<table width="100%">
+                			<tr >
+                				<td width="45%">
+                					<?php echo $tr->translate("ADDRESS_COMPANY");?>
+									<br /><?php echo $tr->translate("TEL_COMPANY");?>
+                				</td>
+                			</tr>
+			              </table>
+		              </td>
+		           </tr>   
+            </table>
+			<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 12px;" bordercolor="black">  
+		    	<tr bgcolor="#ccc" class="style" align="center" style="floafont-weight:bold; line-height: 14px; font-size:12px; padding:5px 0px; " >
+		        	<th ><?php echo $tr->translate("NUM");?></th>
+		            <th><?php echo $tr->translate("BRANCH_NAME");?></th>
+		            <th ><?php echo $tr->translate("STAFF_ID");?></th>
+		            <th ><?php echo $tr->translate("CO_NAME");?></th>
+		            <th​​ ><?php //echo $tr->translate("STAFF_NAME");?></th>
+		            <th ><?php echo $tr->translate("SEX");?></th>
+		            <th  ><?php echo $tr->translate("PHONE");?></th>
+		            <th ><?php echo $tr->translate("NATIONAL_ID");?></th>
+		            <th ><?php echo $tr->translate("ADDRESS");?></th>
+		           
+		            <th ><?php echo $tr->translate("EMAIL");?></th>
+		            <th ><?php echo $tr->translate("SALARY");?></th>
+		            <th ><?php echo $tr->translate("START_DATE");?></th>
+		            <th ><?php echo $tr->translate("END_DATE");?></th>
+		            <th ><?php echo $tr->translate("POSITION");?></th>
+		           <th ><?php echo $tr->translate("NOTE");?></th>
+		         </tr>
+		       <?php if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){?>
+				   <tr style="font-size: 10px;" align="left">
+				     <td>&nbsp;<?php echo $key+1; ?></td>
+				     <td>&nbsp;<?php echo $row['branch_name']?></td>
+				     <td>&nbsp;<?php echo $row['co_code']?></td>
+					 <td>&nbsp;<?php echo $row['co_khname'] ." - ".$row['co_firstname']?></td>
+					 
+					 <td>&nbsp;<?php echo $row['sex']?></td>
+					 <td>&nbsp;<?php echo $row['tel']?></td>
+					 <td>&nbsp;<?php echo $row['national_id']?></td>
+					 <td style="white-space: pre;">&nbsp;<?php echo $row['address']?></td>
+					 <td>&nbsp;<?php echo $row['email']?></td>
+					 <td>&nbsp;<?php echo $row['basic_salary']?></td>
+					 <td><?php echo date('d/m/Y',strtotime($row['start_date']));?></td>
+					  <td><?php echo date('d/m/Y',strtotime($row['end_date']));?></td>
+					 <td>&nbsp;<?php echo $row['position']?></td>
+					 <td>&nbsp;<?php echo $row['note']?></td>
+					</tr>
+				<?php }?>
+				
+		    </table>
+    	</td>
+    </tr>
+</table>
+		<br />
+		   <table align="center" width="100%">
+				   <tr style="font-size: 12px;">
+				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+				   </tr>
+			</table>
+</div>

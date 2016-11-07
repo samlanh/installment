@@ -1,0 +1,59 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('ADD_PROVINCE')); 
+?>
+<?php  $province= $this->frm_province;?>
+<form id="add_province" action="<?php echo $this->url(array('module'=>'other','controller'=>'province','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	 <script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+	</script>
+	<table cellspacing="20" style="margin: 0 auto; width: 600px">
+		<tr>
+			<td>
+				<fieldset>
+					<legend align="center"><strong><?php echo $tr->translate("ADD_PROVINCE");?></strong></legend>
+					<table cellspacing="20" width="100%" >
+						<tr>
+							<td align="center" valign="top">
+								<table style="margin: 0 auto; width:100%;" cellspacing="10">
+									<tr>
+										<td><?php echo $tr->translate("PROVINCE_CODE")?></td>
+										<td><?php echo $province->getElement("code");?></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("KH_PROVINCE")?></td>
+										<td><?php echo $province->getElement("kh_province");?></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("EN_PROVINCE")?></td>
+										<td><?php echo $province->getElement("en_province");?></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("DISPLAY_BY")?></td>
+										<td><?php  echo $province->getElement('display');?></td>
+									<tr>
+										<td><?php echo $tr->translate("STATUS")?></td>
+										<td><?php echo $province->getElement("status");?></td>
+									</tr>
+									<tr>
+										<td colspan="2" align="center">
+											<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+											<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
+												iconClass="dijitEditorIcon dijitEditorIconSave" />
+											<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
+												iconClass="dijitEditorIcon dijitEditorIconSave" />
+										</td>
+									</tr>					
+								</table>
+							</td>							
+						</tr>
+					</table>	
+				</fieldset>
+			</td>			
+		</tr>
+	</table>	
+</form>

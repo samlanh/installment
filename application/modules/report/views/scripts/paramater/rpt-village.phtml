@@ -1,0 +1,191 @@
+<?php $this->result['province_name'];?>
+<script type="text/javascript">  
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dojo.data.ObjectStore");
+var district_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var commune_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+dojo.ready(function(){
+	dijit.byId('province_name').attr('value',<?php echo $this->result['province_name'];?>);
+	
+	new dijit.form.FilteringSelect({
+	store: district_store,
+	autoComplete: true,
+	required: false,		           
+	name: "district_name",
+	id: "district_name",
+	searchAttr: "name",
+	class: 'fullside',
+	value:"<?php echo $this->result['district_name'];?>",
+		onChange: function() {
+				filterCommune();
+	    }
+	}, "district_name");
+
+	
+	 
+	new dijit.form.FilteringSelect({
+	store:commune_store,
+	autoComplete: true,
+	query: {
+		district_id: "<?php echo $this->result['district_name'];?>"
+	},            
+	required: false,		           
+	name: "commune_name",
+	id: "commune_name",
+	searchAttr: "name",
+	class: 'fullside',
+	value:"<?php echo $this->result['commune_name'];?>",
+	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+		onChange: function() {
+  }
+	}, "commune_name");
+
+	
+});
+/*
+url_getdistrict = '<?php //echo $this->url(array('module'=>'other','controller'=>'district','action'=>'get-district'));?>';
+function filterDistrict(){
+	pro_id = dijit.byId('province_name').get('value');
+	if(pro_id==0){
+		return false;}
+	dojo.xhrPost({
+		url:url_getdistrict,	
+		content:{ 
+			'pro_id': pro_id
+		},
+		handleAs:"json",
+		load: function(data) {	
+			district_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('district_name').set('store', district_store);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});	
+}
+url_getcommune = '<?php //echo $this->url(array('module'=>'other','controller'=>'commune','action'=>'get-commune'));?>';
+function filterCommune(){
+	distict_id = dijit.byId('district_name').get('value');
+	if(distict_id==0){
+		return false;}
+	dojo.xhrPost({
+		url:url_getcommune,	
+		content:{ 
+			'district_id': distict_id
+		},
+		handleAs:"json",
+		load: function(data) {	
+			commune_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('commune_name').set('store', commune_store);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}*/
+</script>
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("VILLAGE_LIST"));
+$frm = $this->frm_village;
+?>
+<title><?php echo $tr->translate("RPT_VILLAGE");?></title>
+<form name="frm_rptholiday" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-village')); ?>" dojoType="dijit.form.Form" method="post">
+<table style="float: left;">
+	<tr>
+		   
+	</tr>
+	<tr>
+		   		<td><?php echo $frm->getElement("adv_search");?></td>
+		   
+		   	<td><?php  echo $frm->getElement('province_name');?></td>
+		   		<td><?php echo $frm->getElement("from_date");?></td>	   
+           	<td><?php echo $frm->getElement("to_date");?></td>
+		    <td><?php echo $frm->getElement('search_status');?></td>
+		    <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button></td>
+   	   </tr>
+</table>
+</form>
+<div style="clear: both;"></div>
+<div style=" width:80%; margin:0 auto;">
+
+<div style=" width:22cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
+
+<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+
+	<tr>
+    	<td align="center">
+    	<div id="divPrint">
+    	<style>
+.style{
+	line-height: 20px;font-size: 11px !important;
+	font-family: 'Khmer OS Battambang';
+}
+th{padding: 5px;}
+</style>
+        	<table width="100%" style="font-family:khmer;" style="margin:0; padding:0;border:none;" >
+            	<tr>
+                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+                	<td width="60%" valign="top">
+                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_VILLAGE");?><?php //echo $this->data['village'];?></h2></td>
+                    <td width="20%"></td>
+                </tr> 
+                <tr>
+                	<td colspan="3">
+                		<table width="100%">
+                			<tr >
+                				<td width="45%" style="font-size: 10px;">
+                					<?php echo $tr->translate("ADDRESS_COMPANY");?>
+									<br /><?php echo $tr->translate("TEL_COMPANY");?>
+                				</td>
+                				<td></td>
+                				
+                				<td></td>
+                			</tr>
+			               
+		                </table>
+		              </td>
+		           </tr>   
+            </table>
+        	<table id="exportExcel" align="center" border="1" width="100%" style="border-collapse:collapse;font-size: 12px;" bordercolor="black" >
+				    <tr bgcolor="#ccc" class="style" align="center" style="floafont-weight:bold; line-height: 14px; font-size:12px; padding:5px 0px; ">
+				        <th ><?php echo $tr->translate("NUM");?></th>
+				        <th ><?php echo $tr->translate("VILLAGE_NAME");?></th>
+				        <th ><?php echo $tr->translate("VILLAGE_NAME");?></th>
+				        <th ><?php echo $tr->translate("COMMUNE");?></th>
+				        <th ><?php echo $tr->translate("DISTRICT_NAME");?></th>
+				        <th ><?php echo $tr->translate("PROVINCE_NAME");?></th>
+				        <th ><?php echo $tr->translate("DATE");?></th>
+				        
+				    </tr>
+					<?php 
+					 if(!empty($this->village_list))foreach($this->village_list as $key =>$row){
+					 	?>
+					     <tr style="text-align:left; font-size:10px;">
+					        <td><?php echo $key+1; ?></td>
+					        <td>&nbsp;<?php echo $row['village_namekh']?>&nbsp;</td>
+					        <td>&nbsp;<?php echo $row['village_name']?>&nbsp;</td>
+					        <td><?php echo $row['commune_name']?></td>
+					        <td><?php echo $row['district_name']?></td>
+					        <td><?php echo $row['province_en_name']?></td>
+					        <td><?php echo date('d/m/Y',strtotime($row['modify_date']));?></td>
+					    </tr>
+					    <?php }?>
+				   </table>
+			</div>
+			</td>
+		</tr>
+</table>
+		<br />
+		  <table align="center" width="100%">
+				   <tr style="font-size: 12px;">
+				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+				   </tr>
+			</table>
+ </div>
+ </div>

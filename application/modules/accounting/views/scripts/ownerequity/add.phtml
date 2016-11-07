@@ -1,0 +1,67 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_fixedasset;
+?>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+</style>
+<form id='frm_add' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'Ownerequity','action'=>'add')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong>Form Owner equity</strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+							<td>Balan Sheet</td>
+							<td>Date</td>	
+							<td><?php echo $frm->getElement('dates')?></td>
+						
+						</tr>
+						<tr>
+							<td>Begining balanc</td>
+							<td>For Date</td>	
+							<td><?php echo $frm->getElement('for_dates')?></td>
+							
+						</tr>
+						<tr>
+							<td>Net Income</td>
+							<td>Balanc</td>
+							<td><?php echo $frm->getElement('brancs')?></td>	
+							
+						</tr>
+						<tr>
+							<td>Cash Withdrawal</td>
+							<td></td>	
+							<td></td>
+							
+						</tr>
+						
+					</table>
+					</fieldset>
+				</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE');?>" id="submitButton" dojoType="dijit.form.Button"
+				 iconClass="dijitEditorIcon dijitEditorIconSave"/>
+		</td>
+	</tr>	
+</table>
+</form>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.NumberTextBox");
+</script>

@@ -1,0 +1,59 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->Form_Frmcallecterall;
+?>
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'callecterall','controller'=>'salecallecterall','action'=>'add')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				//return false;
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong>Salecallecterall</strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+							<td><?php echo $tr->translate("Branch")?></td>
+							<td><?php echo $frm->getElement('branch')?></td>	
+							<td><?php echo $tr->translate("Callelecterall Code")?></td>
+							<td><?php echo $frm->getElement('callecterall_code')?></td>	
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("Client Id")?></td>
+							<td><?php echo $frm->getElement('client_id')?></td>	
+							<td><?php echo $tr->translate("Calletecrall Type")?></td>
+							<td><?php echo $frm->getElement('callecterall_type')?></td>	
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("Sale Amount")?></td>
+							<td><?php echo $frm->getElement('sale_amount')?></td>	
+							<td><?php echo $tr->translate("Date")?></td>
+							<td><?php echo $frm->getElement('date')?></td>	
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("Note")?></td>
+							<td><?php echo $frm->getElement('note')?></td>	
+							
+						</tr>
+					</table>
+					</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"
+				 iconClass="dijitEditorIcon dijitEditorIconSave"/>
+		</td>
+	</tr>	
+</table>
+</form>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.NumberTextBox");
+</script>

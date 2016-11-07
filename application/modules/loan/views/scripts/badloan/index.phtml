@@ -1,0 +1,29 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate('BAD_LOAN'));
+ $frm = $this->frm_loan;
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'loan','controller'=>'badloan','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">	<table>
+	<table>	
+		<tr>
+			<td><?php echo $frm->getElement('adv_search');?></td>
+			<td><?php echo $frm->getElement('branch');?></td>
+			<td><?php echo $frm->getElement('client_name');?></td>
+			<td><?php echo $frm->getElement('client_code');?></td>
+			<td><?php echo $frm->getElement('Term');?></td>
+		</tr>
+		<tr>
+		 
+			<td><?php echo $frm->getElement('cash_type');?></td>
+			<td><?php echo $frm->getElement('start_date');?></td>
+			<td><?php echo $frm->getElement('end_date');?></td>
+			<td><?php echo $frm->getElement('status');?></td>
+			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+			<td></td>
+		</tr>
+	</table>
+</form>
+<?php echo $this->list;?>

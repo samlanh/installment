@@ -1,0 +1,1109 @@
+﻿<?php
+	$this->headTitle('Currency Smart | Add Money Stock'); 
+	echo $this->headTitle();
+	$session_user=new Zend_Session_Namespace('auth');
+	$form = $this->frm;
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+?>	
+<style>
+	.tbtable{		
+		font-weight: bolder;
+		line-height: 40px;
+		text-align: center;
+	}
+	.tbtable .tbheader{
+		background-color: #012a15;
+		text-align: left;
+		color: #fff;
+	}
+	.tbtable .first{
+		background-color: #016315;
+		color: #fff;
+	}
+	.tbtable .first td{
+		width: 33.33%
+	}
+	.tbtable .second{
+		background-color: #fff; 
+		color: black;
+	}
+	.nevg-value{
+		color: RED;
+	}
+	.tbtable .second .input-inner {
+		margin: 0px;
+		padding: 0px;
+		width: 99%;	
+		border: none;
+	}
+	
+	#dollar.dijitInputInner, #bath.dijitInputInner, #rail.dijitInputInner{
+		text-align: center;		
+		background-color: #FFFFFF !important;
+	}
+	
+	.bg-white{
+		background-color: #FFFFFF !important;		
+	}
+table tr.head-title{ background: none repeat scroll 0% 0% rgba(213, 249, 244, 1); padding:2px;}
+}
+.smallsize{ width:20% !important;}
+</style>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<form action="<?php echo $this->url(array('module'=>'tellerandexchange','controller'=>'xchange','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<script type="dojo/method" event="onSubmit">				
+			if(this.validate()) {
+				return true;
+			}
+			return false;
+	</script>
+<table  cellspacing="10" width="100%">
+		<tr>
+			<td><fieldset>
+					<legend ><strong>អាត្រាប្តូបាក់</strong></legend>
+						<table cellspacing="5" cellpadding="0" width="100%">
+							<tr>
+								<td>សាខា</td>
+								<td><?php echo $form->getElement('branch_id');?></td>
+								<td>លេខកូដ</td>
+								<td><?php echo $form->getElement('number_code');?></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>ប្រភេទត្រូវប្តូប្រាក់</td>
+								<td><?php echo $form->getElement('onetomany');?></td>
+								<td>Date</td>
+								<td><?php echo $form->getElement('date');?></td>
+								<td>Customer</td>
+								<td><?php echo $form->getElement('customer');?></td>
+							</tr>
+								<input type="hidden" dojoType="dijit.form.TextBox" id="record_row" name="record_row" />
+					</table>
+					
+				<fieldset>
+					<legend ><strong></strong></legend>
+						<table cellspacing="5" cellpadding="0" width="100%" >
+							<tr>
+								<td valign="top">
+									 <table id="t_amountmoneytype" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">
+											<tr id="head_title" class="head-title" align="center"></tr>
+									</table>
+								</td>
+							</tr>
+							<tr style="border:1px solid #ccc !important;">
+								<td align="left" valign="top">
+									<input id="add-append"  label="បន្ថែម" dojoType="dijit.form.Button" iconClass="dijitIconApplication" Onclick="addAmountTypeMoney();" />
+								</td>
+							</tr>
+					</table>
+				</fieldset>
+				<fieldset>
+					<legend><strong>ប្រាក់ទិញចូល/លក់ចេញ</strong></legend>
+					<table>
+						<tr>
+							<td><b>លក់ចេញ</b></td>
+							<td>ដុល្លា($)</td>
+							<td><?php echo $form->getElement('sell_dollar');?></td>
+							<td>រៀល(៛)</td>
+							<td><?php echo $form->getElement('sell_riel');?></td>
+							<td>បាត(B)</td>
+							<td><?php echo $form->getElement('sell_bath');?></td>
+						</tr>
+						<tr>
+							<td colspan="7" style="border-bottom: 2px solid blue;padding-bottom: 4px;"></td>
+						</tr>
+						<tr>
+							<td><b>ទិញចូល</b></td>
+							<td>ដុល្លា($)</td>
+							<td><?php echo $form->getElement('payusa');?></td>
+							<td>រៀល(៛)</td>
+							<td><?php echo $form->getElement('payr');?></td>
+							<td>បាត(B)</td>
+							<td><?php echo $form->getElement('payb');?></td>
+						</tr>
+					</table>
+				</fieldset>
+				<fieldset>
+					<legend><strong>ប្រាក់បង់/ប្រាក់អាប់</strong></legend>
+					<table>
+						<tr>
+							<td><b style="color:blue;">ប្រាក់ទទួលបាន</b></td>
+							<td>ដុល្លា</td>
+							<td><?php echo $form->getElement('getusa');?></td>
+							<td>រៀល</td>
+							<td><?php echo $form->getElement('getr');?></td>
+							<td>បាត</td>
+							<td><?php echo $form->getElement('getb');?></td>
+						</tr>
+						<tr>
+							<td colspan="7" style="border-bottom: 2px solid blue;padding-bottom: 4px;"></td>
+						</tr>
+						<tr>
+							<td><b style="color:blue;">ប្រាក់អាប់</b></td>
+							<td>ដុល្លា</td>
+							<td><?php echo $form->getElement('returnusa');?></td>
+							<td>រៀល</td>
+							<td><?php echo $form->getElement('returnr');?></td>
+							<td>បាត</td>
+							<td><?php echo $form->getElement('returnb');?></td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>			
+		</tr>
+		<tr>
+			<td align="center">
+				<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+					<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="busyButton" dojoType="dijit.form.Button" 
+															iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="printSave();"/> 
+													
+			</td>
+		</tr>
+	</table>		
+</form>
+<form id='frm_add_capital' action="<?php echo $this->url(array('module'=>'capital','controller'=>'stock','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				/*if(dijit.byId('doloar').get('value') == 0 && dijit.byId('bath').get('value') == 0 && dijit.byId('rail').get('value') == 0){
+					dijit.byId('doloar').focus();
+					return false;
+				}*/
+
+				return true;
+			} else {
+				return false;
+			}
+	</script>	 
+	
+	<table class="tbtable" style="margin:10px auto; width:100%; border-collapse: collapse; border:1px solid #ccc;" >
+		<tr>
+			<td width="50%" valign="top">
+			 	<table id="t_amountmoneytype" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">
+					<tr id="head_title" class="head-title" align="center"></tr>
+				</table>
+			</td>
+		</tr>
+		<tr style="border:1px solid #ccc !important;">
+		</tr>
+	</table>
+</form>
+<?php $baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();?>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<script type="text/javascript">
+	dojo.require("dojo.NodeList-manipulate");
+	dojo.require("dojo.html");
+	dojo.ready(function(){
+		addAmountTypeMoney();		
+	});  
+	    
+</script>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog"  data-dojo-props="title:'របាយការណ៍ ប្តូរ', onCancel:hideDialog" id="terms" >
+		<?php $url_barcode = $this->url(array("module"=>"loan","controller"=>"IlPayment","action"=>"generate-barcodevss"),null,true);
+		?>
+		<div id="divPrint"  padding: 0px; margin: 0px;">
+			<style>
+				.fontbig{
+					font-size: 12px;	
+				}
+				.fonttel{
+					font-size: 11px;
+				}
+				.pleft{
+						
+				}
+				.fontkh{
+				font-family: 'Khmer OS Battambang'
+				}
+			</style>	
+			<table style=" font-size: 8pt; padding: 0px; margin: 0px; line-height: 15px;" >
+				 <tr>
+					   	<td align="center" colspan="3">	
+					   <table  width="100%" cellspacing="0" cellpadding="0">
+					   		<tr style="line-height:10px;">
+					   			<td width="25%" rowspan="2" style="valign:top;"><img style="margin-top: 1px;" src="<?php echo $base_url;?>images/logobrand.jpg" height="34px;"/></td>
+						   		<td colspan="2" align="right"><strong style="font-size:14px;font-family:'KH Koulen';text-align:center"><?php echo $this->keycode['rpt-transfer-title-kh'];?></strong></td>
+							</tr>
+					   	</table>
+			            </td>	   	        
+				   </tr> 
+				   <tr>
+					   	<td align="center" colspan="3" style="font-family:'KH Koulen';"><?php echo $this->keycode['exchange_reciept'];?></td>	   	        
+					</tr> 
+				   <tr>
+						<td align="right" colspan="3" style="font-size: 8pt;" >
+							កាលបរិច្ឆេទ <?php echo date('d-m-Y H:i:s');?><br/>
+						</td>
+				   </tr>
+				   <tr style="border-bottom:1px solid #000; font-size:8px;">
+						<td class="pleft" style="border-bottom:1px solid #000;">
+							<strong class="fonttel" style="font-size:10px;"><label id="lblinvioice">ឈ្មោះបុគ្គលិក: <?php print($this->user_name);?></label></strong>
+						</td>
+						<td align="right" colspan="2" style="border-bottom:1px solid #000;">
+								<strong class="fonttel" style="font-size:10px;"><label id="lblinvioice">លេខវិក្កយបត្រ:  <?php echo $this->inv_no;?></label></strong>
+						</td>
+				   </tr>
+				   <tr>
+						<td style="font-family: 'Khmer OS Battambang'">
+							ចំនួនទិញចូល
+						</td>
+						<td>:</td>
+						<td align="right">
+							<strong ><label id="rpt_from_amount"></label></strong>
+						</td>
+				   </tr>
+				   <tr>
+						<td class="fontkh">
+							អត្រាប្តូរប្រាក់
+						</td>
+						<td>:</td>
+						<td align="right">
+							<strong ><label id="rpt_rate"></label></strong>
+						</td>
+				   </tr>
+				   <tr>
+						<td class="fontkh">
+							ចំនួន​ទឹក​លក់ចេញ
+						</td>
+						<td>:</td>
+						<td align="right">
+							<strong style="font-size:10px;"><label id="rpt_to_amount"></label></strong>
+						</td>
+				   </tr>
+				   <tr>
+						<td class="fontkh">
+							ចំនួន​ទឹក​ប្រាក់ទទួល
+						</td>
+						<td>:</td>
+						<td align="right">
+							<strong style="font-size:10px;"><label id="rpt_recieve"></label></strong>
+						</td>
+				   </tr>
+				   <tr>
+						<td class="fontkh">
+							ចំនួន​ទឹក​ប្រាក់អាប់
+						</td>
+						<td>:</td>
+						<td align="right">
+							<strong style="font-size:10px;"><label id="rpt_return"></label></strong>
+						</td>
+				   </tr>
+				   <tr>
+						<td colspan="3" align="center" style="border-top:1px solid #000;">
+							<label>
+								<?php //echo $this->keycode['rpt-transfer-warnning-kh'];?>
+							</label>
+						</td>			
+				   </tr>
+				   <tr style="border:1px solid #000;">
+						<td colspan="3" align="center" style="padding-top:5px; font-family: 'Khmer OS Battambang';">
+								<?php echo $this->keycode['comment'];?>
+						</td>			
+				   </tr>
+				   <tr>
+						<td colspan="3" align="center">
+							<img src="<?php echo $url_barcode; //echo $base_url.$this->keycode['imgPath'];?>" width="50%" height="30px"/>
+						</td>			
+				   </tr>
+			</table>
+		</div>
+		<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>	
+		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
+				showLabel="false" type="button" onclick="doPrint();">Print</button>
+		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconCancel"
+				showLabel="false" type="button" onclick="hideDialog();">Cancel</button>
+			
+
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	 var calcSysble = "";
+	 var lblrateid = "";
+	
+	
+	 function SubmitDataByForm(curr_type){
+			if(curr_type==2){
+			 		str_frm = 'frm_add_exch_dollar';
+			}if(curr_type==3){
+				    str_frm = 'frm_add_exch_bath';
+			}else if(3){
+				   str_frm = 'frm_add_exch_r';
+			}
+			 dijit.byId(str_frm).submit();
+	}
+	function CalculateExchange(curr_type,val){
+		if(curr_type==2){
+			old_money = dijit.byId('from_amount_dollar').get('value');
+			if(isNaN(old_money)){
+				old_money=0;
+			}
+			new_amount = old_money+val;
+			 dijit.byId('from_amount_dollar').attr('value',new_amount);
+			// totalExchange();
+			// return_money();
+		}else if(curr_type==3){
+			old_money_bath = dijit.byId('from_amount_bath').get('value');
+			if(isNaN(old_money_bath)){
+				old_money_bath=0;
+			}
+			new_amount_bath = old_money_bath+val;
+			 dijit.byId('from_amount_bath').attr('value',new_amount_bath);
+			// totalExchange();
+			 //return_money();
+		}else if(curr_type==1){
+			old_money_riel = dijit.byId('from_amount_riel').get('value');
+			if(isNaN(old_money_riel)){
+				old_money_riel=0;
+			}
+			new_amount_riel = old_money_riel+val;
+			 dijit.byId('from_amount_riel').attr('value',new_amount_riel);
+		}
+
+		totalExchange(curr_type);//
+	    return_money(curr_type);
+		
+		
+	}
+
+	function clearText(exp){
+		if(exp !== true){
+			dojo.byId('to_amount_type').value="";
+		}
+        dojo.byId('rate').value="";
+        dojo.byId('to_amount').value="";
+        dojo.byId('from_amount').value="";
+        dojo.byId('recieve_money').value="";
+        dojo.byId('return_money').value=0;
+        dijit.byId("special_cus").attr("checked", false);
+        dojo.byId("lbl_to_amount").innerHTML = "";
+        changRateTextbox();
+	}
+	
+	function checkRate(){
+		url = "<?php echo BASE_URL;?>/tellerandexchange/xchange/check-rate";
+		dojo.xhrPost({
+		      url: url,
+		      load: function(data){
+		    	  tmp = dojo.fromJson(data);		    	  
+		    	  for(var i=0; i< tmp.length; i++){
+			    	  var lblid1="";
+			    	  var lblid2="";
+			    	  if(tmp[i].in_cur_id === "2" && tmp[i].out_cur_id === "3"){
+			    		  lblid1="DB";
+				    	  lblid2="BD";
+				      }
+			    	  else if(tmp[i].in_cur_id === "1" && tmp[i].out_cur_id === "2"){
+			    		  lblid1="DR";
+				    	  lblid2="RD";
+
+				      }
+			    	  else if(tmp[i].in_cur_id === "3" && tmp[i].out_cur_id === "1"){
+			    		  lblid1="BR";
+				    	  lblid2="RB";
+				      }
+			    	  dojo.byId(lblid1).innerHTML = dojo.number.format(tmp[i].rate_in);
+			    	  dojo.byId(lblid2).innerHTML = dojo.number.format(tmp[i].rate_out);
+		    	  }
+		    	  
+		      },
+		      error: function(error){	 
+			      alert(error);       
+		        ///alert("Error, please reload page, Try it again.");
+		      }
+	    });
+	}
+	function checkRateDollar(){//for tab dollar
+		url = "<?php echo BASE_URL;?>/tellerandexchange/xchange/check-rate";
+		dojo.xhrPost({
+		      url: url,
+		      load: function(data){
+		    	  tmp = dojo.fromJson(data);		    	  
+		    	  for(var i=0; i< tmp.length; i++){
+			    	
+			    	  var exchangetobath = dijit.byId("exchangetobath");
+			    	  var exchangetoriel = dijit.byId("exchangetoriel");
+		    		  if(exchangetobath.checked){
+		    			  calcSysble = "*";
+		    			  dijit.byId('rate_dollar').attr('value',tmp[1].rate_in);
+		    			  totalExchange(2);
+					   }else if(exchangetoriel.checked){
+						  dijit.byId('rate_dollar').attr('value',tmp[0].rate_in);
+						  calcSysble = "*";
+						  totalExchange(2);
+					   }
+		    	  }
+		    	  
+		      },
+		      error: function(error){
+			      alert(error);	        
+		       // alert("Error, please reload page, Try it again.");
+		      }
+	    });
+	}
+	function checkRateBath(){// for tab bath
+		url = "<?php echo BASE_URL;?>/tellerandexchange/xchange/check-rate";
+		dojo.xhrPost({
+		      url: url,
+		      load: function(data){
+		    	  tmp = dojo.fromJson(data);		    	  
+		    	  for(var i=0; i< tmp.length; i++){
+			    	  var exchangetodollar = dijit.byId("exchangebathtodollar");
+			    	  var exchangetokhmer = dijit.byId("exchangedollartoriel");
+		    		  if(exchangetodollar.checked){
+		    			  calcSysble = "/";
+		    			  dijit.byId('rate_bath').attr('value',tmp[1].rate_out);
+		    			 totalExchange(3);
+					   }else if(exchangetokhmer.checked){
+						  dijit.byId('rate_bath').attr('value',tmp[2].rate_in);
+						  calcSysble = "*";
+						 totalExchange(3);
+					   }
+		    	  }
+		    	  
+		      },
+		      error: function(error){	        
+		        alert("Error, please reload page, Try it again.");
+		      }
+	    });
+	}
+
+	function checkRateRiel(){// for tab riel
+		url = "<?php echo BASE_URL;?>/tellerandexchange/xchange/check-rate";
+		dojo.xhrPost({
+		      url: url,
+		      load: function(data){
+		    	  tmp = dojo.fromJson(data);		    	  
+		    	  for(var i=0; i< tmp.length; i++){
+			    	  var exchangereiltodollar = dijit.byId("exchangerieltodollar");
+			    	  var exchangerieltobath = dijit.byId("exchangerieltobath");
+		    		  if(exchangereiltodollar.checked){
+		    			 calcSysble = "/";
+		    			 dijit.byId('rate_riel').attr('value',tmp[0].rate_out);
+		    			 totalExchange(1);
+					   }else if(exchangerieltobath.checked){
+						  dijit.byId('rate_riel').attr('value',tmp[2].rate_out);
+						  calcSysble = "/";
+						 totalExchange(1);
+					   }
+		    	  }
+		    	  
+		      },
+		      error: function(err){	        
+		        alert("Error, please reload page, Try it again.");
+		      }
+	    });
+	}
+
+	function return_money(curr_type =1){
+		if(curr_type==2){
+			var r_m=0;
+			if (calcSysble === "/"){		
+				amount = dijit.byId('from_amount_dollar').get('value');
+				rate = dijit.byId('rate').get('value');
+				tt = amount / rate;	
+				var lbl = '';	
+				var from_type = dijit.byId('from_amount_type').item.id;
+				var to_type = dijit.byId('to_amount_type').item.id;
+				if(from_type == 3 && to_type == 2){
+					lbl = "DB";
+				}
+				else if(from_type == 1){
+					if(to_type == 3){
+						lbl = "DR";
+					}
+					else if(to_type == 3){
+						lbl = "BR";
+					}
+				}
+				var r_rate = dojo.number.parse(dojo.byId(lbl).innerHTML);
+				r_m =parseFloat((tt - parseFloat(tt)) * r_rate);
+			}
+			rm = parseFloat(dijit.byId('recieve_money').get('value')) - parseFloat(dijit.byId('from_amount_dollar').get('value')) ;
+			dojo.byId("return_money").value = dojo.number.format(dojo.number.round(rm,2));
+		}
+		else if(curr_type==3){
+			var r_m=0;
+			if (calcSysble === "/"){		
+				amount = dijit.byId('from_amount_dollar').get('value');
+				rate = dijit.byId('rate').get('value');
+				tt = amount / rate;	
+				var lbl = '';	
+				var from_type = dijit.byId('from_amount_type').item.id;
+				var to_type = dijit.byId('to_amount_type').item.id;
+				if(from_type == 3 && to_type == 2){
+					lbl = "DB";
+				}
+				else if(from_type == 1){
+					if(to_type == 2){
+						lbl = "DR";
+					}
+					else if(to_type == 3){
+						lbl = "BR";
+					}
+				}
+				var r_rate = dojo.number.parse(dojo.byId(lbl).innerHTML);
+				r_m =parseFloat((tt - parseFloat(tt)) * r_rate);
+			}
+			
+			rm = parseFloat(dijit.byId('recieve_money').get('value')) - parseFloat(dijit.byId('from_amount_dollar').get('value')) ;
+			dojo.byId("return_money").value = dojo.number.format(dojo.number.round(rm,2));
+		}
+		else if(curr_type==1){
+			var r_m=0;
+			if (calcSysble === "/"){		
+				amount = dijit.byId('from_amount_dollar').get('value');
+				rate = dijit.byId('rate').get('value');
+				tt = amount / rate;	
+				var lbl = '';	
+				var from_type = dijit.byId('from_amount_type').item.id;
+				var to_type = dijit.byId('to_amount_type').item.id;
+				if(from_type == 3 && to_type == 2){
+					lbl = "DB";
+				}
+				else if(from_type == 1){
+					if(to_type == 2){
+						lbl = "DR";
+					}
+					else if(to_type == 3){
+						lbl = "BR";
+					}
+				}
+				var r_rate = dojo.number.parse(dojo.byId(lbl).innerHTML);
+				r_m =parseFloat((tt - parseFloat(tt)) * r_rate);
+			}
+
+			rm = parseFloat(dijit.byId('recieve_money_riel').get('value')) - parseFloat(dijit.byId('from_amount_dollar').get('value')) ;
+			dojo.byId("return_money").value = dojo.number.format(dojo.number.round(rm,2));
+		}
+	}
+		
+	function total(curr_type=2){//for all
+		tt=0;
+		r_money=0;
+		if(curr_type==2){
+			amount = dijit.byId('to_amount_dollar').get('value');
+			rate = dijit.byId('rate_dollar').get('value');
+			if(isNaN(rate)){
+				rate = 0;
+			}
+			//alert(calcSysble);
+			if (calcSysble === "*"){
+				tt = amount * rate;
+			}
+			else{
+				tt = amount / rate;			
+			}
+			tt = amount / rate;	
+			dojo.byId("from_amount_dollar").value = dojo.number.format(dojo.number.round(tt,2));
+			dojo.byId("recieve_money").value = dojo.number.format(dojo.number.round(tt,2));
+		}else if(curr_type==3){
+			amount = dijit.byId('to_amount_bath').get('value');
+			rate = dijit.byId('rate_bath').get('value');
+			if(isNaN(rate)){
+				rate = 0;
+			}
+			//alert(calcSysble);
+			if (calcSysble === "*"){
+				tt = amount * rate;
+			}
+			else{
+				tt = amount / rate;			
+			}
+			//tt = amount / rate;	
+			dojo.byId("from_amount_bath").value = dojo.number.format(dojo.number.round(tt,2));
+			dojo.byId("recieve_money_bath").value = dojo.number.format(dojo.number.round(tt,2));
+		}else if(curr_type==1){
+			amount = dijit.byId('to_amount_riel').get('value');
+			rate = dijit.byId('rate_riel').get('value');
+			if(isNaN(rate)){
+				rate = 0;
+			}
+			//alert(calcSysble);
+			if (calcSysble === "*"){
+				tt = amount * rate;
+			}
+			else{
+				tt = amount / rate;			
+			}
+			tt = amount * rate;	
+			dojo.byId("from_amount_riel").value = dojo.number.format(dojo.number.round(tt,2));
+			dojo.byId("recieve_money_riel").value = dojo.number.format(dojo.number.round(tt,2));
+		}
+		
+		//dojo.byId("recieve_money").value = dojo.number.format(dojo.number.round(amount,2));
+		return_money(curr_type);
+	}
+	
+	function totalExchange(curr_type=2){//for exchange dollar tab
+		tt=0;
+		r_money=0;
+		if(curr_type==2){
+			amount = dijit.byId('from_amount_dollar').get('value');
+			rate = dijit.byId('rate_dollar').get('value');
+			if(isNaN(rate)){
+				rate = 0;
+			}
+			if (calcSysble === "*"){
+				tt = amount * rate;
+			}
+			else{
+				tt = amount / rate;			
+			}
+			
+			dijit.byId("to_amount_dollar").attr('value',tt);
+			dojo.byId("recieve_money").value = dojo.number.format(dojo.number.round(amount,2));
+
+		}else if(curr_type==3){
+			amount = dijit.byId('from_amount_bath').get('value');
+			rate = dijit.byId('rate_bath').get('value');
+			if(isNaN(rate)){
+				rate = 0;
+			}
+			if (calcSysble === "*"){
+				tt = amount * rate;
+			}
+			else{
+				tt = amount / rate;			
+			}
+			
+			dijit.byId("to_amount_bath").attr('value',tt);
+			dojo.byId("recieve_money_bath").value = dojo.number.format(dojo.number.round(amount,2));
+			
+		}else if(curr_type==1){
+			amount = dijit.byId('from_amount_riel').get('value');
+			rate = dijit.byId('rate_riel').get('value');
+			if(isNaN(rate)){
+				rate = 0;
+			}
+			if (calcSysble === "*"){
+				tt = amount * rate;
+			}
+			else{
+				tt = amount / rate;			
+			}
+			tt = amount / rate;
+			dijit.byId("to_amount_riel").attr('value',tt);
+			dojo.byId("recieve_money_riel").value = dojo.number.format(dojo.number.round(amount,2));
+		}
+		//return_money();
+	}
+	
+   function printSave(curr_type){	
+		if(curr_type==2){
+			 if(dijit.byId("exchangetobath").checked=='' && dijit.byId("exchangetoriel").checked==""){
+					alert("សូមជ្រើសរើសប្រភេទប្រាក់ដែលចង់ប្តូរ ជាបាត រឺ រៀល !");
+					return false;
+			 }
+		}else if(curr_type=3){
+			if(dijit.byId("exchangebathtodollar").checked=='' && dijit.byId("exchangedollartoriel").checked==""){
+				alert("សូមជ្រើសរើសប្រភេទប្រាក់ដែលចង់ប្តូរ ជាដុល្លា រឺ រៀល !");
+				return false;
+			 }
+		}else if(curr_type==1){
+			if(dijit.byId("exchangerieltodollar").checked=='' && dijit.byId("exchangerieltobath").checked==""){
+				alert("សូមជ្រើសរើសប្រភេទប្រាក់ដែលចង់ប្តូរ ជាដុល្លា រឺបាត !");
+				return false;
+			}
+		}
+			showDialog(curr_type);			
+		//}
+		
+	}
+	
+	function showDialog(curr_type) {		
+		if(curr_type==2){
+			if(dijit.byId('exchangetobath').checked){
+				 str_cur = ' បាត';
+			}else{
+				 str_cur = ' រៀល';
+				}
+			from_amount = dijit.byId('from_amount_dollar').get('value')+' ដុល្លា';
+			exchange_rate = dijit.byId('rate_dollar').get('value');
+			amount_fromexchange = dijit.byId('to_amount_dollar').get('value')+str_cur;
+			recieve_amount = dijit.byId('recieve_money').get('value')+' ដុល្លា';
+			return_amount = dijit.byId('return_money').get('value')+' ដុល្លា';
+		}else if(curr_type==3){
+			if(dijit.byId('exchangebathtodollar').checked){
+				 str_cur = ' ដុល្លា';
+			}else{
+				 str_cur = ' រៀល';
+			}
+			from_amount = dijit.byId('from_amount_bath').get('value')+' បាត';
+			exchange_rate = dijit.byId('rate_bath').get('value');
+			amount_fromexchange = dijit.byId('to_amount_bath').get('value');
+			recieve_amount = dijit.byId('recieve_money_bath').get('value')+' បាត';
+			return_amount = dijit.byId('return_money_bath').get('value')+' បាត';
+		}else if(curr_type==1){
+			if(dijit.byId('exchangerieltodollar').checked){
+				str_cur = ' ដុល្លា';
+			}else{
+				 str_cur = ' បាត';
+			}
+			from_amount = dijit.byId('from_amount_riel').get('value')+' រៀល';
+			exchange_rate = dijit.byId('rate_riel').get('value');
+			amount_fromexchange = dijit.byId('to_amount_riel').get('value');
+			recieve_amount = dijit.byId('recieve_money_riel').get('value')+' រៀល';
+			return_amount = dijit.byId('return_money_riel').get('value')+' រៀល';
+		}
+		var css_s = "<label class='fonttel'>";
+		var css_e = "</label>"
+		dojo.byId("rpt_from_amount").innerHTML = from_amount;
+		dojo.byId("rpt_rate").innerHTML = exchange_rate;
+		dojo.byId("rpt_to_amount").innerHTML = amount_fromexchange;
+		dojo.byId("rpt_recieve").innerHTML = recieve_amount;
+		dojo.byId("rpt_change").innerHTML = return_amount;
+		curr_type = curr_type;
+		doPrint();
+		//dijit.byId("terms").show();//popup
+	}
+	
+	// Hide the dialog
+	function hideDialog(curr_type=2) {		
+		dijit.byId("terms").hide();
+		dijit.byId('frm_add_exch').submit();
+	}
+	// Force them to provide an answer
+	function doPrint() {
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+	    window.frames["print_frame"].window.focus();
+	    window.frames["print_frame"].window.print();
+	    hideDialog();
+	}
+	from=0;to=0;
+	function deleteRecord(index){
+		var ids =dijit.byId('record_row').value;
+		if(ids.length=='' || ids.length==null){
+			dijit.byId('record_row').attr('value','');
+			dojo.query("#row_capital"+ids).remove();
+		}else{
+			var arrays = ids.split(',');
+			for(var i=0;i<arrays.length;i++) {
+				if(arrays[i] == index) arrays.splice(i,1);
+			}
+			var strings = arrays.join(',');
+			dijit.byId('record_row').attr('value',strings);
+			dojo.query("#row_capital"+index).remove();
+		}
+		netTotal();
+	}
+	function checkSelectOption(type,record){
+		from =dijit.byId('from_type'+record).get('value'); //dijit.byId('from_type'+record).attr("disabled", true);
+		to =dijit.byId('to_type'+record).get('value');
+		//calCulateExchange(record);
+		checkRateDollar(from,to,record);
+	}
+	function printSave(){	
+		//dijit.byId("terms").show();
+		showDialog();		
+	}
+	function showDialog() {
+		buy_dollar = dijit.byId('payusa').get('value');
+		buy_riel = dijit.byId('payr').get('value');
+		buy_bath = dijit.byId('payb').get('value');
+
+		sell_dollar = dijit.byId('sell_dollar').get('value');
+		sell_bath = dijit.byId('sell_bath').get('value');
+		sell_riel = dijit.byId('sell_riel').get('value');
+
+		buy_amount='';
+		if(buy_dollar!=0){
+			buy_amount = buy_dollar+" $ និង";
+		}if(buy_riel!=0){
+			buy_amount = buy_amount+''+buy_riel+" ៛ និង";
+		}if(buy_bath!=0){
+			buy_amount = buy_amount+''+buy_bath+" B";
+		}
+
+		sell_dollar = dijit.byId('sell_dollar').get('value');
+		sell_bath = dijit.byId('sell_bath').get('value');
+		sell_riel = dijit.byId('sell_riel').get('value');
+
+		sell_amount='';
+		if(sell_dollar!=0){
+			sell_amount = sell_dollar+" $ និង";
+		}if(sell_riel!=0){
+			sell_amount = sell_amount+''+sell_riel+" ៛ និង";
+		}if(sell_bath!=0){
+			sell_amount = sell_amount+''+sell_bath+" B";
+		}
+
+		receive_dollar = dijit.byId('getusa').get('value');
+		receive_bath = dijit.byId('getb').get('value');
+		receive_riel = dijit.byId('getr').get('value');
+
+		receive_amount='';
+		if(receive_dollar!=0){
+			receive_amount = receive_dollar+" $ និង";
+		}if(receive_riel!=0){
+			receive_amount = receive_amount+''+receive_riel+" ៛ និង";
+		}if(receive_bath!=0){
+			receive_amount = receive_amount+''+receive_bath+" B";
+		}
+
+		return_dollar = dijit.byId('returnusa').get('value');
+		return_riel = dijit.byId('returnr').get('value');
+		return_bath = dijit.byId('returnb').get('value');
+		
+		return_amount='';
+		if(return_dollar!=0){
+			return_amount = return_dollar+" $ និង";
+		}if(return_riel!=0){
+			return_amount = return_amount+''+return_riel+" ៛ និង";
+		}if(return_bath!=0){
+			return_amount = return_amount+''+return_bath+" B";
+		}
+		if(return_amount==''){
+			return_amount =0;
+		}
+
+		dojo.byId('rpt_from_amount').innerHTML=buy_amount;
+		dojo.byId('rpt_to_amount').innerHTML=sell_amount;
+		dojo.byId('rpt_recieve').innerHTML=receive_amount;
+		dojo.byId('rpt_return').innerHTML=return_amount;
+		
+		/*
+		if(curr_type==2){
+			if(dijit.byId('exchangetobath').checked){
+				 str_cur = ' បាត';
+			}else{
+				 str_cur = ' រៀល';
+				}
+			from_amount = dijit.byId('from_amount_dollar').get('value')+' ដុល្លា';
+			exchange_rate = dijit.byId('rate_dollar').get('value');
+			amount_fromexchange = dijit.byId('to_amount_dollar').get('value')+str_cur;
+			recieve_amount = dijit.byId('recieve_money').get('value')+' ដុល្លា';
+			return_amount = dijit.byId('return_money').get('value')+' ដុល្លា';
+		}else if(curr_type==3){
+			if(dijit.byId('exchangebathtodollar').checked){
+				 str_cur = ' ដុល្លា';
+			}else{
+				 str_cur = ' រៀល';
+			}
+			from_amount = dijit.byId('from_amount_bath').get('value')+' បាត';
+			exchange_rate = dijit.byId('rate_bath').get('value');
+			amount_fromexchange = dijit.byId('to_amount_bath').get('value');
+			recieve_amount = dijit.byId('recieve_money_bath').get('value')+' បាត';
+			return_amount = dijit.byId('return_money_bath').get('value')+' បាត';
+		}else if(curr_type==1){
+			if(dijit.byId('exchangerieltodollar').checked){
+				str_cur = ' ដុល្លា';
+			}else{
+				 str_cur = ' បាត';
+			}
+			from_amount = dijit.byId('from_amount_riel').get('value')+' រៀល';
+			exchange_rate = dijit.byId('rate_riel').get('value');
+			amount_fromexchange = dijit.byId('to_amount_riel').get('value');
+			recieve_amount = dijit.byId('recieve_money_riel').get('value')+' រៀល';
+			return_amount = dijit.byId('return_money_riel').get('value')+' រៀល';
+		}
+		var css_s = "<label class='fonttel'>";
+		var css_e = "</label>"
+		dojo.byId("rpt_from_amount").innerHTML = from_amount;
+		dojo.byId("rpt_rate").innerHTML = exchange_rate;
+		dojo.byId("rpt_to_amount").innerHTML = amount_fromexchange;
+		dojo.byId("rpt_recieve").innerHTML = recieve_amount;
+		dojo.byId("rpt_change").innerHTML = return_amount;
+		curr_type = curr_type;*/
+		//doPrint();
+		//popup
+		dijit.byId("terms").show();
+	}
+	function checkRateDollar(from,to,record){//for tab dollar
+		url = "<?php echo BASE_URL;?>/tellerandexchange/xchange/check-rate";
+		dojo.xhrPost({
+		      url: url,
+		      load: function(data){
+				// alert(from);
+				// alert(to);
+					//alert(data);
+		    	  tmp = dojo.fromJson(data);		    	  
+		    	  for(var i=0; i< tmp.length; i++){
+		    		  dijit.byId('exchange_rate'+record).attr('value','');
+		    		  if(from==2 && to==3){//dollar to bath
+						  dijit.byId('exchange_rate'+record).attr('value',tmp[1].rate_in);
+					  }else if(from==3 && to==2){//b - d
+						  dijit.byId('exchange_rate'+record).attr('value',tmp[1].rate_out);
+					  }else if(from==2 && to==1){//dolar to riel
+						  dijit.byId('exchange_rate'+record).attr('value',tmp[0].rate_in); 
+					  }else if(from==1 && to==2){//r-d
+						  dijit.byId('exchange_rate'+record).attr('value',tmp[0].rate_out); 
+					   }else if(from==3 && to==1){
+						  dijit.byId('exchange_rate'+record).attr('value',tmp[2].rate_in); 
+					  }else if(from==1 && to==3 ){
+						  dijit.byId('exchange_rate'+record).attr('value',tmp[2].rate_out); 
+					  }
+		    	  }
+		    	  
+		      },
+		      error: function(error){
+			      alert(error);	        
+		       // alert("Error, please reload page, Try it again.");
+		      }
+	    });
+	}
+	function enableExchangeRate(record){
+		if(dijit.byId('is_spacial'+record).checked){
+			dijit.byId('exchange_rate'+record).set('readOnly',false);
+		}else{
+			checkSelectOption(record,1);
+			dijit.byId('exchange_rate'+record).set('readOnly',true);
+		}
+	}
+	curr_dollar_amountoption = '<?php echo $this->currency_type;?>';
+		temp='';
+		r = 0;
+		fund_title=0;
+	function addAmountTypeMoney(){
+		var rowId = dijit.byId('record_row').get('value');
+		 var rowIDArray = rowId.split(',');
+		  if(rowIDArray.length>=2){
+			  return false;}
+			 
+				r++;
+				if(fund_title!=1){
+					thead='<th>លុប</th>';
+					thead+='<th>ប្តូពី</th>';
+					thead+='<th>មកជា</th>';
+					thead+='<th>អតិថិជនពិសេស</th>';
+					thead+='<th>អាត្រាប្តូប្រាក់</th>';
+					thead+='<th>ចំនួនប្តូរ</th>';
+					thead+='<th>ចំនួនទទួលបាន</th>';
+					thead+='<th>សម្គាល់ </th>';
+					fund_title=1;
+					dojo.query("#head_title").append(thead);
+		        }
+				temp='<td style="width:30px !important;"><img style="cursor:pointer" onclick="deleteRecord('+r+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+				temp+='<td><select style=" width:70%;" id="from_type'+r+'" name="from_type'+r+'" dojoType="dijit.form.FilteringSelect" onchange="checkSelectOption(1,'+r+')"  >'+curr_dollar_amountoption+'</select></td>';
+				temp+='<td><select style=" width:70%;" id="to_type'+r+'" name="to_type'+r+'" dojoType="dijit.form.FilteringSelect" onchange="checkSelectOption(2,'+r+')">'+curr_dollar_amountoption+'</select></td>';
+				temp+='<td><input type="CheckBox" style=" width:15%;" required="true" onclick="enableExchangeRate('+r+')" name="is_spacial'+r+'" id="is_spacial'+r+'" dojoType="dijit.form.CheckBox"/></td>';
+				temp+='<td><input type="text" style=" width:70%;" readonly="true" required="true" name="exchange_rate'+r+'" id="exchange_rate'+r+'" value="" dojoType="dijit.form.NumberTextBox"/></td>';
+				temp+='<td><input type="text" style=" width:70%;" required="true" onkeyup="calCulateExchange('+r+',0);" name="exchange_amount'+r+'" id="exchange_amount'+r+'" value="" dojoType="dijit.form.NumberTextBox"/></td>';
+				temp+='<td><input type="text" style=" width:70%;" required="true" onkeyup="calCulateExchange('+r+',1);"  name="amount_exchanged'+r+'" id="amount_exchanged'+r+'" value="" dojoType="dijit.form.NumberTextBox"/></td>';
+				temp+='<td><input type="text" name="note_'+r+'" id="note_'+r+'" dojoType="dijit.form.TextBox" s/></td>';
+				tmp='<tr style="border:1px solid #ccc;" id="row_capital'+r+'">'
+				tmp+="</tr>";
+					dojo.query("#t_amountmoneytype").append(tmp);
+					dojo.html.set(dojo.byId("row_capital"+r),temp, {
+				    parseContent: true,
+				     
+				});
+				if(dijit.byId("record_row").get('value')!="") {
+					var ids = dijit.byId("record_row").value;
+					dijit.byId("record_row").attr('value',ids+','+r);
+				} else { dijit.byId("record_row").attr('value',r);}
+
+			
+		}	
+		sub_title=0;
+		s=0;
+
+		function calCulateExchange(record,reverse){
+			from =dijit.byId('from_type'+record).get('value'); //dijit.byId('from_type'+record).attr("disabled", true);
+			to =dijit.byId('to_type'+record).get('value');
+			//alert(typeof(from));
+			//alert(to);
+			xchange_rate = dijit.byId('exchange_rate'+record).get('value');
+			//change_amount = dijit.byId('exchange_amount'+record).get('value');
+			if(reverse==1){
+				change_amount=dijit.byId('amount_exchanged'+record).get('value');
+			}else{
+				change_amount=dijit.byId('exchange_amount'+record).get('value');
+			}
+			 if(from==1 || (from ==3 && to ==2)){//dollar to bath
+				if(reverse==1){
+					amount = change_amount*xchange_rate;
+				}else{
+					amount = change_amount/xchange_rate;
+				}
+			  }else if(from==2 || (from==3 && to==1 )){//riel to bath and dollar
+				  if(reverse==1){
+						amount = change_amount/xchange_rate;
+					}else{
+						amount = change_amount*xchange_rate;
+					}
+			  }
+			if(reverse==1){
+				dijit.byId('exchange_amount'+record).attr('value',amount);
+			}else{
+				dijit.byId('amount_exchanged'+record).attr('value',amount);
+			}
+			netTotal();
+			
+		}
+		function netTotal() {
+			 var netTotal=0;
+			 out_riel = 0; out_dollar = 0; out_bath = 0;
+			 in_riel = 0;
+			 in_dollar = 0;
+			 in_bath = 0;
+			 var rowId = dijit.byId('record_row').get('value');
+			 var rowIDArray = rowId.split(',');
+			 for(var n = 0; n < rowIDArray.length; n++) {
+				from_type =  dijit.byId('from_type'+rowIDArray[n]).get('value');
+				to_type =  dijit.byId('to_type'+rowIDArray[n]).get('value');
+				amount = dijit.byId('exchange_amount'+rowIDArray[n]).get('value');
+				out_amount = dijit.byId('amount_exchanged'+rowIDArray[n]).get('value');
+				if(from_type==1){
+					in_riel=in_riel+amount;
+					dijit.byId('payr').attr('style','color:red');
+				}else if(from_type==2){
+					in_dollar=in_dollar+amount;
+					dijit.byId('payusa').attr('style','color:red');
+				}else if(from_type==3){
+					in_bath=in_bath+amount;
+					dijit.byId('payb').attr('style','color:red');
+			   }
+			///for to type
+				if(to_type==1){
+					out_riel=out_riel+out_amount;
+					dijit.byId('sell_riel').attr('style','color:red');
+				}else if(to_type==2){
+					out_dollar=out_dollar+out_amount;
+					dijit.byId('sell_dollar').attr('style','color:red');
+				}else if(to_type==3){
+					 out_bath =out_bath+ out_amount;
+					 dijit.byId('sell_bath').attr('style','color:red');
+			   }
+			 }
+			dijit.byId('sell_dollar').attr('value',out_dollar);
+			dijit.byId('sell_riel').attr('value',out_riel);
+			dijit.byId('sell_bath').attr('value',out_bath);
+			
+			dijit.byId('payusa').attr('value',in_dollar);
+			dijit.byId('payr').attr('value',in_riel);
+			dijit.byId('payb').attr('value',in_bath);
+
+			dijit.byId('getusa').attr('value',in_dollar);
+			dijit.byId('getr').attr('value',in_riel);
+			dijit.byId('getb').attr('value',in_bath);
+			returnMoney(from_type); 
+
+			
+		}
+		function returnMoney(curr_type){
+
+			if(curr_type==1){
+				//alert(curr_type);
+				x_riel=dijit.byId('payr').get('value');
+				reciev_riel =dijit.byId('getr').get('value');
+				return_riel = reciev_riel-x_riel;
+				dijit.byId('returnr').attr('value',return_riel);
+			}else if(curr_type==2){
+				x_dollar=dijit.byId('payusa').get('value');
+				reciev_dollar =dijit.byId('getusa').get('value');
+				return_dollar = reciev_dollar-x_dollar;
+				dijit.byId('returnusa').attr('value',return_dollar);
+			}else if(curr_type==3){
+				x_bath=dijit.byId('payb').get('value');
+				reciev_bath =dijit.byId('getb').get('value');
+				return_bath = reciev_bath-x_bath;
+				dijit.byId('returnb').attr('value',return_bath);
+			}
+		}
+	</script>
+		
+	
+</script>

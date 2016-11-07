@@ -1,0 +1,65 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_income;
+?>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+</style>
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'income','action'=>'edit')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside' >
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong>ចំណូល</strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+						    <?php echo $frm->getElement('id');?>
+							<td><?php echo $tr->translate("សាខា")?></td>
+							<td><?php echo $frm->getElement('branch_id');?></td>
+							<td><?php echo $tr->translate("Income Name")?></td>
+							<td><?php echo $frm->getElement('account_id');?></td>
+							<td><?php echo $tr->translate("Total amount")?></td>
+							<td><?php echo $frm->getElement('total_amount');?></td>
+							
+						</tr>
+						<tr>
+							
+							
+							<td><?php echo $tr->translate("Fordate")?></td>
+							<td><?php echo $frm->getElement('for_date');?></td>
+							<td><?php echo $tr->translate("Description")?></td>
+							<td><?php echo $frm->getElement('Description');?></td>
+							<td><?php echo $tr->translate("Date")?></td>
+							<td><?php echo $frm->getElement('Date');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("Stutas")?></td>
+							<td><?php echo $frm->getElement('Stutas');?></td>
+						</tr>
+					</table>
+				</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"
+				 iconClass="dijitEditorIcon dijitEditorIconSave"/>
+		</td>
+	</tr>	
+</table>
+</form>
+
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+</script>

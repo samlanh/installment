@@ -1,0 +1,32 @@
+<?php 
+   $rows=$this->list;
+   $url=$this->url(array('module'=>'payroll','controller'=>'position','action'=>'add'));
+?>
+<table border="1" width="50%">
+    <tr>  
+         <th>ID</th>
+         <th>POSITION_EN</th>
+         <th>POSITION_KH</th>
+         <th>DATE</th>
+         <th>STATSU</th>
+         <th>USER</th>
+         <th>DISPLAY_BY</th>
+         
+    </tr>
+<?php 
+     foreach ($rows as $key => $row){?>
+     	<tr>
+     	     <td><?php echo $key+1?> </td>
+     	     <td><?php echo $row['position_en'] ?> </td>
+     	     <td><a href="<?php echo $url."/id/".$row['id'];?>"><?php echo $row['position_kh'] ?></a> </td>
+     	     <td><?php echo $row['date'] ?> </td>    
+     	     <td><?php echo $row['status'] ?> </td> 
+     	     <td><?php echo $row['user_id'] ?> </td> 
+       	     <td><?php echo $row['displayby'] ?> </td>
+     	
+     	</tr>
+ <?php } 
+ 
+ ?>   
+
+</table>

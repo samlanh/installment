@@ -1,0 +1,118 @@
+<?php
+	$this->headTitle('EDIT_DATABASE_INFO'); 
+	echo $this->headTitle();
+?>
+
+	<table cellspacing="20" width="100%">
+		<tr>
+			<td>
+			<form action="<?php echo $this->url(array('module'=>'setting','controller'=>'Database','action'=>'')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+				<script type="dojo/method" event="onSubmit">				
+				if(this.validate()) {
+					return true;
+				}
+
+				return false;
+			</script>
+				<fieldset>
+					<legend><strong>ព័ត៌មាន​  Backup Database</strong></legend>
+					<table cellspacing="20" width="100%">
+						<tr>
+							<td align="center" valign="top">
+								<table width="100%" cellspacing="10" cellpadding="10">
+									<tr>
+										<td>Server Name</td>
+										<td>
+											<input type="text" required="true" name="servername"​ placeholder="ឈ្មោះ  Server Name" 
+											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->data['servername'];?>"
+											missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពិស្ដាជាខ្មែរ!" class='fullside'/>
+										</td>
+										<td>Database User</td>							
+										<td>
+											<input type="text" required="true" name="dbuser" placeholder="ឈ្មោះ  Database User" dojoType="dijit.form.ValidationTextBox"
+											value="<?php echo $this->data['dbuser'];?>" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Database Password</td>
+										<td>
+											<input type="text" name="dbpassword" placeholder="លេខសម្ងាត់  Database" 
+											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->data['dbpassword'];?>"
+											missingMessage="អ្នក​ភ្លេច​បំពេញ​ អាសយដ្ឋាន!" class='fullside'/>
+										</td>
+										<td>Database Name</td>
+										<td>
+											<input type="text" name="dbname" placeholder="Database Name" 
+											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->data['dbname'];?>"
+											missingMessage="អ្នក​ភ្លេច​បំពេញ​ លេខទូរស័ព្ទ!" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Part Backup Database</td>
+										<td><input type="text" name="dbname" placeholder="Database Name" 
+											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->data['dbname'];?>"
+											missingMessage="អ្នក​ភ្លេច​បំពេញ​ លេខទូរស័ព្ទ!" class='fullside'/></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td colspan="4" align="center">
+											<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>	
+				</fieldset>
+				</form>
+			</td>			
+		</tr>
+		<tr>
+			<td>
+			<?php 
+				$url_submit_restore =  $this->url(array('module'=>'setting','controller'=>'Database','action'=>'restore'));
+				$url_submit_backup =  $this->url(array('module'=>'setting','controller'=>'Database','action'=>'backup'));
+			?>
+				<fieldset>
+					<legend><strong>Backup Database</strong></legend>
+					<form  action="<?php echo $url_submit_backup; ?>"  enctype="multipart/form-data">
+						<table cellspacing="20" width="100%">
+							<tr>
+								<td align="center">
+									<input type="submit" label="Backup Now" id="busyButton" dojoType="dijit.form.Button" 
+								iconClass="dijitIconSave" /> 
+								</td>
+							</tr>
+						</table>
+					</form>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			
+			<fieldset>
+			<legend><strong>Restore Backup Database</strong></legend>
+			<form  action="<?php echo $url_submit_restore; ?>" method="post" enctype="multipart/form-data">
+				<table cellspacing="20" width="100%">
+					<tr>
+						<td>Choose File (.sql)</td>
+						<td><input type="file" name="fileToUpload" id="fileToUpload" dojoType="dijit.form.Button" label="Choose File" 
+						iconClass="dijitIconFolderOpen" >
+				 		</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type="submit" value="Restore Now" label="Restore Now"  dojoType="dijit.form.Button" 
+							iconClass="dijitIconSave" /> </td>
+					</tr>
+				</table>
+			</form>
+			</fieldset>
+			</td>
+		</tr>
+	</table>
+	
+
+

@@ -1,0 +1,148 @@
+<?php $frm = $this->frm_search;
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<meta charset="utf-8">
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+.hover:hover{background: #ccc;}
+</style>
+<title><?php echo $tr->translate("LOAN_OUTSTADING");?></title>
+ <form method="post">
+<table style="font-family: 'Khmer OS Content'; margin: 0 auto;width:28.6cm;" >
+	<tr>
+   		<td><?php echo $frm->getElement("adv_search");?></td>
+   		<td><?php echo $frm->getElement('member');?></td>
+   		<td><?php echo $frm->getElement('co_id');?></td>
+   	</tr>
+   	<tr>
+   		<td><?php echo $frm->getElement('end_date');?></td>
+   		<td><?php echo $frm->getElement('status');?></td>
+   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+   	</tr>
+</table>
+</form>
+<div style=" width:28cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+<div id="divPrint" style="width: 100%;">
+<style>
+.style{
+	line-height: 20px;font-size: 10px !important;
+	font-family: 'Khmer OS Battambang';
+}
+table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+th{padding: 5px;}
+</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;">
+	<tr>
+    	<td align="center">
+        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+            	<tr>
+                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+                	<td width="60%" valign="top">
+                	    <ul>
+                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+                			<li style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("LOAN_OUTSTADING");?></li>
+                			<li style="text-align:center; font-size:13px;"><?php echo date('D-d-m-Y',strtotime($this->fordate));?></li>
+                		</ul></td>
+                    <td width="20%"></td>
+                </tr> 
+                <tr>
+                	<td colspan="3">
+                		<table width="100%">
+                			<tr class='style'>
+                				<td class="style" style="font-size: 10px;">
+                					<?php echo $tr->translate("ADDRESS_COMPANY");?>
+									<br /><?php echo $tr->translate("TEL_COMPANY");?>
+                				</td>
+                				<td width="65%"></td>
+                				
+                			</tr>
+			               
+		                </table>
+		              </td>
+		           </tr>   
+            </table>
+        </td>
+    </tr>
+    <tr>
+    	<td>
+            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:10px; white-space: nowrap;" width="100%" cellspacing="0">
+                 <tr bgcolor="#ccc" class="style" align="center" style="font-weight:bold; line-height: 14px; padding: 2px 0px;background:#ccc;">
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</th>
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("LOAN_NO");?>&nbsp;</th>
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("LAND_ADDRESS");?>&nbsp;</th>
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("CLIENT_NUM");?>&nbsp;</th>
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("CUSTOMER_NAME");?>&nbsp;</th>
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("CO_NAME");?>&nbsp;</th>
+                    <th style="padding:2px 0px;"> &nbsp;<?php echo $tr->translate("RELEASE_DATE");?>&nbsp;</th>
+                    <th>&nbsp;<?php echo $tr->translate("LIFE_LOAN");?>&nbsp;</th>
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("LOAN_AMOUNT");?>&nbsp;</th>
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("LOAN_PERIOD");?>&nbsp;</th>
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("LOAN_RETURN_TO_CLIENT");?>&nbsp;</th>
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("PERCENTAGE");?>&nbsp;</th>
+                    <th style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("NOT_TO_REPAY");?>&nbsp;</th>
+                </tr>
+               <?php 
+               $db = new Report_Model_DbTable_DbLandreport();
+              
+               $amt_r = 0;$amt_d = 0;$amt_b = 0; $amn_r = 0;$amn_d = 0;$amn_b = 0;$result_b=0;$result_r=0;$result_d=0;
+               if(!empty($this->outstandloan)) foreach($this->outstandloan as $key =>$row){?>
+               <?php 
+               		$total_receive = $db->getAmountReceiveByLoanNumber($row['land_id'],$row['client_id']);
+               		$amt_d = $amt_d+$row['total_capital'];
+               		$amn_d = $amn_d+$total_receive;
+               		$result_d=number_format(($amn_d/$amt_d)*100,2).' %';
+               ?>
+					<tr align="center" class="hover">
+						<td>&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+						<td style="line-height: 12px; white-space: nowrap;">&nbsp;<?php echo $row['land_code']; ?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['land_address'];?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['client_number'];?>&nbsp;</td>
+						<td align="left" style="font-size:9px; line-height: 13px; white-space: nowrap;">&nbsp;<?php echo $row['client_kh']; ?>&nbsp;</td>
+						<td>&nbsp;<?php echo $row['co_name'];?>&nbsp;</td>
+						<td style="white-space: nowrap;">&nbsp;<?php echo date('d-m-Y',strtotime($row['date_release']));?>&nbsp;</td>
+						<td style="white-space: nowrap;">&nbsp;<?php echo date('d-m-Y',strtotime($row['date_line']));?>&nbsp;</td>
+						<td style="white-space:nowrap; text-align: right;">&nbsp;<?php echo number_format($row['total_capital'],2); ?>&nbsp;</td>
+						<td style="white-space: nowrap;">&nbsp;<?php echo number_format($row['total_duration']);?>&nbsp;</td>
+						<td style="white-space:nowrap; text-align: right;">&nbsp;<?php echo number_format($total_receive,2);?>&nbsp;</td>
+						<td>&nbsp;<?php 
+								echo (round(($total_receive/$row['total_capital']),2)*100).' %';
+						?>&nbsp;</td>
+						<td>&nbsp;<?php echo number_format(($row['total_capital']-$total_receive),2);?>&nbsp;</td>
+					</tr>
+				<?php }?>
+            </table>
+            <br />
+             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px;" width="100%" cellspacing="0">
+                 <tr bgcolor="#ccc" class="style" style="font-weight:bold; line-height: 24px; text-align: center; font-size:11px;">
+                    <td style="padding:2px 0px;"><?php echo $tr->translate("CURRENT_TYPE");?></td>
+                    <td style="padding:2px 0px;"><?php echo $tr->translate("LOAN_AMOUNT");?></td>
+                    <td style="padding:2px 0px;"><?php echo $tr->translate("LOAN_RETURN_TO_CLIENT");?></td>
+                    <td style="padding:2px 0px;"><?php echo $tr->translate("PERCENTAGE");?></td>
+                    <td style="padding:2px 0px;"><?php echo $tr->translate("NOT_TO_REPAY");?></td>
+                </tr>
+                 <tr class="style" style=" line-height: 24px; font-size:11px;">
+                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
+                    <td>&nbsp;<?php echo number_format($amt_d,2);?>&nbsp;</td>
+                    <td>&nbsp;<?php echo number_format($amn_d,2);?>&nbsp;</td>
+                    <td>&nbsp;<?php echo $result_d;?>&nbsp;</td>
+                    <td>&nbsp;<?php echo number_format($amt_d-$amn_d,2);?>&nbsp;</td>
+                </tr>
+                 
+              </table>
+              <br />
+              <table align="center" width="100%">
+				   <tr style="font-size: 12px;">
+				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+				        <th></th>
+				        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+				   </tr>
+			</table>
+    	</td>
+    </tr>
+</table>
+</div>
+</div>

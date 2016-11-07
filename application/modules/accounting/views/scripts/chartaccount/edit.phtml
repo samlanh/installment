@@ -1,0 +1,122 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_fixedasset;
+$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+?>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+</style>
+<form id='frm_add' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'chartaccount','action'=>'edit')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+</script>
+<table cellspacing="10" class='fullside'>
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong>Form Chart Account</strong></legend>
+					<table cellspacing="10"  width="100%">
+						<tr>
+						      <?php echo $frm->getElement('id');?>
+							<td>លេខគនេយ្យ</td>
+							<td><?php echo $frm->getElement('account_No')?></td>	
+							<td>ឈ្មោះលេខគនេយ្យ</td>
+							<td><?php echo $frm->getElement('account_Name')?></td>
+							<td>ប្រភេទលេខគនេយ្យជាអង់គ្លេស</td>
+							<td><?php echo $frm->getElement('account_Nameen')?></td>
+						</tr>
+						<tr>
+						    ​​​​​​​<td>ប្រភេទលេខគនេយ្យ</td>
+							<td><?php echo $frm->getElement('account_Type')?></td>
+						    <td>ប្រតិបត្ដិការ</td>
+							<td><?php echo $frm->getElement('none')?></td>
+						    <td>ប្រភេទ</td>
+							<td><?php echo $frm->getElement('category')?></td>	
+						    
+						</tr>
+						<tr>
+						    <td>ប្រភេទមេ</td>
+							<td><input id="parent" /><?php //echo $frm->getElement('parent')?></td>
+						    <td>ជាប្រភេទមេ</td>
+							<td><?php echo $frm->getElement('parents')?></td>
+						</tr>
+						
+						<tr>
+							<td>តុល្យភាព</td>
+							<td><?php echo $frm->getElement('Balance')?></td>	
+							<td>កាលបរិច្ឆេទ</td>
+							<td><?php echo $frm->getElement('date')?></td>
+							<td>ស្ថានភាព</td>
+							<td><?php echo $frm->getElement('status')?></td>
+						</tr>
+						
+					</table>
+					
+				</fieldset>
+		</td>
+	</tr>		
+	<tr>
+		<td align="center">
+			<input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('GO_EDIT');?>" id="submitButton" dojoType="dijit.form.Button"
+				 iconClass="dijitEditorIcon dijitEditorIconSave"/>
+		</td>
+	</tr>	
+</table>
+</form>
+<script type="text/javascript">
+dojo.require("dijit/form/DateTextBox");
+dojo.require("dojo.data.ItemFileWriteStore"); 
+dojo.require("dijit/form/CheckBox");
+dojo.require("dijit/form/NumberTextBox");
+
+var account_store  = getDataStorefromJSON('id','name',[]);
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 getAllParentsAccount();
+		
+	  });
+	new dijit.form.FilteringSelect({
+	store: account_store,
+	autoComplete: true,      
+	required: false,		           
+	name: "parent",
+	id: "parent",
+	searchAttr: "name",
+	class: 'fullside',
+	onChange: function() {
+      }
+	}, "parent");
+
+	});
+var url_getaccount = '<?php echo $this->url(array('module'=>'accounting','controller'=>'chartaccount','action'=>'get-parentaccount')); ?>';
+function getAllParentsAccount(){
+	account_type = dijit.byId('account_Type').get('value');
+	if(account_type==''){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getaccount,	
+		content:{ 
+		    'account_type':account_type
+		},		    
+		handleAs:"json",
+		load: function(data) {
+		   account_store  = getDataStorefromJSON('id','name', data);		
+		   dijit.byId('parent').set('store', account_store);
+		   dijit.byId('parent').attr('value',<?php echo $this->parent_id;?>);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+</script>

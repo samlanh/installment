@@ -1,0 +1,161 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('VIEW_CLIENT'));
+	$rs = $this->client_list;
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+?>	
+<style>
+.border-cover {
+  border: 1px solid #ccc;
+  padding: 0px 4px;
+  background: #E5F2F5;
+}}
+</style>
+<div class="menureport">
+	<ul>
+		<li class="preview"><a title="Preview" href="#" onclick="preview();"></a></li>
+		<li class="print"><a href="#" title="Print" onclick="doPrint();" ></a></li>
+	</ul>
+</div>
+<input type="button"  label="<?php echo $tr->translate("GO_BACK");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'group','controller'=>"index",'action'=>'index'),null,true); ?>';"/>
+<input  type="button" id="wu-register" iconClass="dijitIconEdit" label="<?php echo $tr->translate("GO_EDIT");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'group','controller'=>"index",'action'=>'edit','id'=>$rs['client_id']),null,true); ?>';"/>
+</p>
+
+<table  cellspacing="10" class='fullside' style="font-size:12px;font-family: 'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;">
+	<tr>
+		<td>			<div style="text-align:center !important;"><?php echo $tr->translate("VIEW_CLIENT");?></div>
+					<div style=" width:22cm;min-height:28cm; margin:0 auto;">
+						
+					<div id="divPrint" style="width: 100%;">
+					
+					<table cellspacing="10" class='fullside' style="font-size:12px;font-family: 'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;border: 1px dotted #ccc; padding:0px 0.5cm">
+					<tr><td><img width="80px" src="<?php echo $base_url.'images/'.(empty($rs['photo_name'])?"no-profile.png":$rs['photo_name']);?>" /></td></tr>
+						<tr>
+							
+							<td><?php echo $tr->translate("BRANCH_NAME");?>*</td>
+							<td class="border-cover "><?php echo $rs['branch_name'];?></td>
+							<td><?php echo $tr->translate("IS_GROUP")?></td>
+							<td class="border-cover "><?php if($rs['is_group']==1)echo'as Group';?></td>		
+							<td><?php echo $tr->translate("GROUP_CODE")?></td>
+						   <td class="border-cover "><?php echo $rs['group_code'];?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("GROUP_NAME")?></td>
+							<td class="border-cover "><?php echo $rs['parent'];?></td>
+							<td><?php echo $tr->translate("CLIENT_NO")?></td>
+							<td class="border-cover "><?php echo $rs['client_number'];?></td>
+							<td><?php echo $tr->translate("NAME_KHMER")?>*</td>
+							<td class="border-cover "><?php echo $rs['name_kh'];?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("NAME_ENG")?>*</td>
+							<td class="border-cover "><?php echo $rs['name_en'];?></td>
+							<td><?php echo $tr->translate("SEX")?></td>
+							<td class="border-cover "><?php echo $rs['sex'];?></td>
+							<td><?php echo $tr->translate("SITU_STATUS")?>*</td>
+							<td class="border-cover "><?php  echo $rs['sit_status'];?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
+							<td class="border-cover "><?php echo $rs['client_d_type'];?></td>
+							<td></td>
+							<td class="border-cover "><?php echo $rs['nation_id'];?></td>
+							<td><?php echo $tr->translate("JOB_TYPE")?></td>
+							<td class="border-cover "><?php echo $rs['job'];?></td>
+							
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("PHONE")?></td>
+							<td class="border-cover "><?php echo $rs['phone'];?></td>
+							<td><?php echo $tr->translate("PHOTO")?></td>
+							<td class="border-cover "><?php //echo $frm->getElement('photo');?></td>
+							<td><?php echo $tr->translate("PROVINCE")?>*</td>
+							<td class="border-cover "><?php echo $rs['province_en_name'];?></td>
+							
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("DISTRICT")?></td>
+							<td class="border-cover "><?php echo $rs['district_name'];?></td>
+							<td><?php echo $tr->translate("COMMUNE")?></td>
+							<td class="border-cover "><?php echo $rs['commune_name'];?></td>
+							<td><?php echo $tr->translate("VILLAGE")?></td>
+							<td class="border-cover "><?php echo $rs['village_name'];?></td>							
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("STREET")?></td>
+							<td class="border-cover "><?php echo $rs['street'];?></td>
+							<td><?php echo $tr->translate("HOUSE")?></td>
+							<td class="border-cover "><?php echo $rs['house'];?></td>
+							<td><?php echo $tr->translate("JOIN_WITH")?></td>
+							<td class="border-cover "><?php echo $rs['join_with'];?></td>	
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
+							<td class="border-cover "><?php echo $rs['join_d_type'];?></td>
+							<td></td>
+							<td class="border-cover "><?php echo $rs['join_nation_id'];?></td>
+							<td><?php echo $tr->translate("RELATIVE_WITH")?></td>
+							<td class="border-cover "><?php echo $rs['relate_with'];?></td>														
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("TEL")?></td>
+							<td class="border-cover "><?php echo $rs['join_tel'];?></td>
+							<td><?php echo $tr->translate("SPOUSE_NAME")?></td>
+							<td class="border-cover "><?php echo $rs['spouse_name']; ?></td>
+							<td><?php echo $tr->translate("TEL")?></td>
+							<td class="border-cover "><?php echo $rs['guarantor_tel'];?></td>				
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
+							<td class="border-cover "><?php echo $rs['guarantor_d_type'];?></td>
+							<td></td>
+							<td class="border-cover "><?php echo $rs['spouse_nationid'];?></td>
+							<td><?php echo $tr->translate("RELATIVE_WITH")?></td>
+							<td class="border-cover "><?php echo $rs['guarantor_with'];?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("NOTE")?></td>
+							<td class="border-cover "><?php echo $rs['remark'];?></td>
+							<td valign="top"><?php echo $tr->translate("GUARANTOR_ADDRESS")?></td>
+							<td valign="top" class="border-cover "><?php  echo $rs['guarantor_address'];?></td>
+							<td valign="top"><?php echo $tr->translate("STATUS")?></td>
+							<td valign="top" class="border-cover "><?php  echo ($rs['status']==1)?"Active":"Deactive";?></td>
+						</tr>
+					</table>	
+				</div>
+				</div>
+			
+		</td>
+	</tr>
+</table>	
+</form>
+<table>
+<tr>
+</tr>
+</table>
+<iframe style="font-size: 10px; !important;" name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+<script>
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1100, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+
+</script>

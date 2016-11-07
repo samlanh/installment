@@ -1,0 +1,38 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("LOAN_DISBURSE"));
+$frm = $this->frm_search;
+?>
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'paymentschedule-list')); ?>" dojoType="dijit.form.Form" method="post">
+  	 <table width="95%">
+   		<tr>
+   			<td><?php echo $frm->getElement("adv_search");?></td>
+   			<td><?php echo $frm->getElement("customer_code");?></td>
+   			<td><?php echo $frm->getElement("member");?></td>
+   			<td><?php echo $frm->getElement("repayment_method");?></td>
+   			<td> <?php echo $frm->getElement('branch_id');?></td>
+   			
+   		</tr>
+   		<tr>
+   			<td><?php echo $frm->getElement('status');?></td>
+   			<td><?php echo $frm->getElement('co_id');?></td>
+   			<td><?php echo $frm->getElement('currency_type');?></td>
+   			<td><?php echo $frm->getElement('pay_every');?></td>
+   			<td><?php echo $frm->getElement('start_date');?></td>
+   			
+   		</tr>
+   		<tr>
+   			<td><?php echo $frm->getElement('end_date');?></td>
+   			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+   			<td colspan="3"></td>
+   			
+   		</tr>
+   </table>
+   <div id="divPrint"​​ >
+   <?php echo $this->list;?>
+   </div>
+</form>
+

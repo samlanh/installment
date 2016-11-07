@@ -1,0 +1,94 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('Add Client '));
+?>	
+<?php  $frm = $this->frm_client;?>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+</script>
+<form id='add_client' action="<?php echo $this->url(array('module'=>'group','controller'=>'client','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				if(dijit.byId('province').get('value')==''){
+					alert('Province required');
+					return false;
+			    }
+				return true;
+			} else {
+				return false;
+			}
+</script>
+<table cellspacing="10" width="100%" style="margin: 0 auto;">
+	<tr>
+		<td>
+		<fieldset>
+					<legend align="center" ><strong><?php echo $tr->translate("Add Client");?></strong></legend>
+					<table style="margin: 0 auto; width:100%;" cellspacing="10">
+						<tr>
+							<td><?php echo $tr->translate("ជាក្រុម")?></td>
+							<td><?php echo $frm->getElement('is_group');?></td>
+							<td><?php echo $tr->translate("លេខអតិជន")?><sup>o</sup></td>
+							<td><?php echo $frm->getElement('client_no');?></td>
+							<td><?php echo $tr->translate("ឈ្មោះជាខ្មែ")?></td>
+							<td><?php  echo $frm->getElement('name_kh');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("ឈ្មោះជាអង់គ្គេស")?></td>
+							<td><?php  echo $frm->getElement('name_en');?></td>
+							<td><?php echo $tr->translate("ភេទ")?></td>
+							<td><?php  echo $frm->getElement('sex');?></td>
+							<td><?php echo $tr->translate("ស្ថានភាព")?></td>
+							<td><?php  echo $frm->getElement('situ_status');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("ខេត្ត/រាជធានី")?></td>
+							<td><?php  echo $frm->getElement('province');?></td>
+							<td><?php echo $tr->translate("ស្រុក/ខណ្ឌ")?></td>
+							<td><?php  echo $frm->getElement('district');?></td>
+							<td><?php echo $tr->translate("ឃុំ/សង្កាត់")?></td>
+							<td><?php  echo $frm->getElement('commune');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("ភូមិ")?></td>
+							<td><?php  echo $frm->getElement('village');?></td>
+							<td><?php echo $tr->translate("ផ្លូវលេខ")?></td>
+							<td><?php  echo $frm->getElement('street');?></td>
+							<td><?php echo $tr->translate("ផ្ទះលេខ")?></td>
+							<td><?php  echo $frm->getElement('house');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("ប្រភេទឯកសារ")?></td>
+							<td><?php  echo $frm->getElement('id_type');?></td>
+							<td><?php echo $tr->translate("លេខសំគាល់ឯកសារ")?></td>
+							<td><?php  echo $frm->getElement('id_no');?></td>
+							<td><?php echo $tr->translate("លេខទូរស័ព្ទ")?></td>
+							<td><?php  echo $frm->getElement('phone');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("ឈ្មោះអ្នកធានា")?></td>
+							<td><?php  echo $frm->getElement('spouse');?></td>
+							<td><?php echo $tr->translate("ស្ថានភាព")?></td>
+							<td><?php  echo $frm->getElement('status');?></td>
+							<td><?php echo $tr->translate("សំគាល់")?></td>
+							<td><?php  echo $frm->getElement('desc');?></td>
+						</tr>
+						<tr>
+						<tr>
+							<td colspan="6" align="center">
+							<input type="submit" value="GO_SAVE" label="<?php echo $tr->translate('GO_SAVE');?>" id="submitButton" dojoType="dijit.form.Button" 
+								 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="dijit.byId('add_client').submit();"/>
+							</td>
+						</tr>
+					</table>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>
+<table>
+<tr>
+</tr>
+</table>
+<?php
+	echo Application_Form_FrmQuery::setFilter(array('province','fundname'),'ln_province');
+?>

@@ -1,0 +1,62 @@
+
+ <?php 
+   $rows=$this->list;
+//    print_r($rows);
+ ?>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Client Info</title>
+</head>
+
+<body>
+	<h2 align="center">Client Information</h2>
+	<p>02.05.2014+All element->Application that</p>
+	<div id="divPrint">
+	<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size:12px;" bordercolor="black">
+    
+    	<tr bgcolor="#BBBBBB">
+        	<th>ID</th>
+        	<th>Client N.</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Type</th>
+            <th>Personal Phone</th>
+            <th>Personal Place</th>
+            <th>District</th>
+            <th>Village</th>
+            
+            <th>Activity</th>
+        </tr>
+<?php 
+    if(!empty($rows))  foreach ($rows as $key => $row){?>
+     	<tr >
+     	     <td style="padding-left: 10px;"><?php echo $key+1?> </td>
+     	     <td style="padding-left: 10px;"><?php echo $row['client_number']?></td>
+     	     <td style="padding-left: 10px;"><?php echo $row['name_kh']?></td>
+     	     <td style="padding-left: 10px;"><?php echo $row['name_en']?> </td>
+     	     <td>&nbsp;&nbsp;<?php echo $row['sex']?> </td>
+     	     <td>&nbsp;&nbsp;<?php echo $row['phone']?> </td>
+     	     <td>&nbsp;&nbsp;<?php echo $row['house']?> </td>
+     	    <td>&nbsp;&nbsp;<?php echo $row['street']?> </td>
+     	    <td>&nbsp;&nbsp;<?php echo $row['village_id']?> </td>
+     	   
+     	    <td>&nbsp;&nbsp;<?php echo $row['remark']?> </td>
+     	</tr>
+ <?php } 
+ 
+ ?>   
+        <tr align="center">
+        	<td>12</td>
+        	<td colspan="4">TOTAL</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+  	</div>
+</body>
+</html>

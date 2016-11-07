@@ -1,0 +1,22 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("FixedAsset"));
+$frm = $this->frm_search;
+$frms = $this->frm_fixedasset;
+?>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'accounting','controller'=>'fixedAsset','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+   <div dojoType="dijit.layout.AccordionPane">
+   <table  width=100%>
+   <tr>
+   <td width="10%"><?php echo $frms->getElement("adv_search");?></td>
+   <td width="30%"><?php echo $frm->getElement('branch_id');?></td>
+   <td width="30%"><?php echo $frms->getElement('asset_type');?></td>
+   <td width="30%"><?php echo $frms->getElement('payment_method');?></td>
+   <td><?php echo $frm->getElement('status');?></td>
+   <td width="40%"><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+   </tr>
+   </table>
+   </div>
+    <?php echo $this->list;?>
+ </form>
+
