@@ -1,0 +1,66 @@
+<title>SRMS System | Add User Type</title>
+<?php 
+	$cancel_url=$this->url(array(
+			'module'=>'rsvacl',
+			'controller'=>'usertype',
+			'action'=>'index',
+		));
+?>
+<form action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<script type="dojo/method" event="onSubmit">										
+			if(this.validate()) {								
+				return true;
+			}
+			return false;
+	</script>	
+	<table cellspacing="20" style="margin: 0 auto; widht:100%;">
+		<tr>
+			<td>
+				<fieldset>
+					<legend><strong>User type information</strong></legend>
+					<table cellspacing="20">
+						<tr>
+							<td align="center" valign="top">
+								<table cellspacing="15">
+									<tr>
+										<td>User Type</td>
+										<td width="400px">
+											<input type="text" required="true" name="user_type" id="user_type" placeholder="User Type" 
+											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->usertype['user_type'];?>"
+											missingMessage="Invalid User type!" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Parent Name</td>
+										<td>
+											<select onchange="disabledAgent(this.value);" class='fullside' name="parent_id" required="true" id="parent_id" 
+											 missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"> 
+											 	<?php foreach ($this->usertype_list as $key => $ust) : ?>
+													<option value="<?php echo $key;?>"  <?php if($this->usertype['parent_id'] == $key) echo 'selected';?> ><?php echo $ust;?></option>
+												<?php endforeach;?>																																
+											</select> 
+										</td>
+									</tr>	
+									<tr>
+										<td colspan="2" align="center">
+										<br />
+											<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+										</td>
+									</tr>								
+								</table>
+							</td>							
+						</tr>
+					</table>
+						
+				</fieldset>
+			</td>			
+		</tr>
+	</table>
+</form>
+
+<script type="text/javascript">	
+	dojo.require("dijit.form.ValidationTextBox");
+	dojo.require('dijit.form.Form');
+	dojo.require('dijit.form.FilteringSelect');	
+	dojo.require('dijit.form.Button');
+</script>

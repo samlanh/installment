@@ -1,0 +1,112 @@
+<title>User Access</title>
+<style>
+fieldset.fifthy {	
+	border-right: 0px;
+	width: 30%;
+}
+fieldset.fifthy table{
+	padding-right: 1px;
+}
+table.user td{
+	vertical-align: top;   
+}
+</style>       
+
+<?php $rs=$this->rs;
+	
+	  $acl=($this->acl=='')? array():$this->acl;
+	  $acl_name=($this->acl_name=='')? array(): $this->acl_name;
+	  $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	  $df=$this->data;
+?>
+<table style="margin: 0 auto; width: 100%">
+	<tr>
+		<td>
+			<fieldset>
+				<legend>Module Assignment</legend>
+				<table cellspacing="20" align="center">
+					<tr>
+						<td>User type</td>
+						<td class="add-edit">
+							<input type="text" required="true" name="user_type" id="user_type" placeholder="User Type" 
+										dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->rs[0]['user_type'];?>"
+										missingMessage="Invalid User type!" class='fullside' disabled/>
+						</td>				
+					</tr>			
+				</table>
+			</fieldset>	
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<fieldset>
+				<legend>Search option</legend>
+				<form name="frmsearch" action="" method="post">
+				<table cellspacing="20" style="margin: 0 auto; width: 100%">
+					<tr>
+						<td>Module</td>
+						<td><select name="fmod" id="fmod" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"><?php echo $this->optoin_mod;?></select></td>	
+						<td>Controller</td>
+						<td><select name="fcon" id="fcon" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"><?php echo $this->optoin_con;?></select></td>				
+					</tr>	
+					<tr>
+						<td>Action</td>
+						<td><select name="fact" id="fact" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"><?php echo $this->optoin_act;?></select></td>	
+						<td>Status</td>
+						<td><select name="fstatus" id="fstatus" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"><?php echo $this->optoin_status;?></select></td>				
+					</tr>	
+					<tr>
+						<td class="btn" colspan="4" align="center">
+							<input type="submit" value="Search" name="btsave" label="Search" title="Search" dojoType="dijit.form.Button"/>
+						</td>
+					</tr>		
+				</table>
+				</form>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<fieldset >		
+				<legend>Module/Controller/Action Assignment</legend>
+				<form name="frmlist" action="" dojoType="dijit.form.Form" method="post">
+					<?php echo $this->list;?>
+				</form>
+			</fieldset>			
+		</td>
+	</tr>
+</table>
+		
+<style>
+	.pointer{
+		cursor: pointer;	
+	}
+</style>
+<script>
+$(function(){		
+	$('#fmod').val('<?php echo $df['fmod']?>');
+	$('#fcon').val('<?php echo $df['fcon']?>');
+	$('#fact').val('<?php echo $df['fact']?>');
+	$('#fstatus').val('<?php echo $df['fstatus']?>');
+});
+	function changeStatus(id, user_type){
+		url = "<?php echo BASE_URL;?>/rsvacl/useraccess/update-status";
+		status = "no";
+		none_src = "<?php echo BASE_URL?>/images/icon/none.png";
+		tick_src = "<?php echo BASE_URL?>/images/icon/tick.png";
+
+		if( $("#img_" + id).attr("src") == tick_src){
+			status = "yes";
+		}
+		
+		$.post( url, { 'acl_id': id, 'status': status, 'user_type_id':user_type},
+	      function( data ) {
+			 img_src = none_src;
+	         if(data == "yes"){
+				img_src = tick_src;
+	         }	         
+	         $("#img_" + id).attr("src", img_src);
+	      }
+	    );
+	}
+</script>

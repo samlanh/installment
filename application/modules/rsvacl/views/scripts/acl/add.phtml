@@ -1,0 +1,83 @@
+<title>loan System | Add URL</title>
+<?php 
+	$cancel_url=$this->url(array(
+		'module'=>'rsvacl',
+		'controller'=>'acl',
+		'action'=>'index',
+	));
+
+?>
+
+<div class="btn" align="right">
+	<input  type="button" value="ត្រលប់​ក្រោយ" label="ត្រលប់​ក្រោយ" id="btadd" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $cancel_url; ?>';"/>
+</div>
+<form action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<script type="dojo/method" event="onSubmit">										
+			if(this.validate()) {								
+				return true;
+			}
+			return false;
+	</script>
+	<table cellspacing="20" style="margin: 0 auto; width: 450px">
+		<tr>
+			<td>
+				<fieldset>
+					<legend><strong>Module/Controller/Action</strong></legend>
+					<table width="100%" cellspacing="10">
+						<tr>
+							<td align="center" valign="top">
+								<table width="100%" cellspacing="10" >
+									<tr>
+										<td>Label</td>
+										<td width="300px">
+											<input type="text" required="true" name="label" id="label" placeholder="label" 
+											dojoType="dijit.form.ValidationTextBox" value=""
+											missingMessage="Label" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Module</td>
+										<td width="300px">
+											<input type="text" required="true" name="module" id="module" placeholder="Module" 
+											dojoType="dijit.form.ValidationTextBox" value=""
+											missingMessage="Invalid Module!" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Contoller</td>
+										<td width="200px">
+											<input type="text" required="true" name="controller" id="controller" placeholder="Controller" 
+											dojoType="dijit.form.ValidationTextBox" value=""
+											missingMessage="Invalid Controller!" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Action</td>
+										<td width="200px">
+											<input type="text" required="true" name="action" id="action" placeholder="Action" 
+											dojoType="dijit.form.ValidationTextBox" value=""
+											missingMessage="Invalid Action!" class='fullside'/>
+										</td>
+									</tr>						
+								</table>
+							</td>							
+						</tr>
+					</table>	
+				</fieldset>
+			</td>			
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<input type="submit" value="រក្សាទុក" label="រក្សាទុក" id="submitButton" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+			</td>
+		</tr>
+	</table>	
+	<input type="hidden" name="user_type_id" value="<?php echo $this->user_edit['id'];?>" />
+</form>
+
+<script type="text/javascript">	
+	dojo.require("dijit.form.ValidationTextBox");
+	dojo.require('dijit.form.Form');
+	dojo.require('dijit.form.FilteringSelect');	
+	dojo.require('dijit.form.Button');
+</script>

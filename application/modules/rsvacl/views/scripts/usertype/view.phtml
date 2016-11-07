@@ -1,0 +1,47 @@
+<title>SRMS System | View User Type</title>
+<?php $rs=$this->rs;
+
+$edit_url=$this->url(array(
+		'module'=>'rsvacl',
+		'controller'=>'usertype',
+		'action'=>'edit',
+		'id'=>$rs['user_type_id'],
+	));
+$cancel_url=$this->url(array(
+		'module'=>'rsvacl',
+		'controller'=>'usertype',
+		'action'=>'index',
+	));
+
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<br/>
+<div class="btn" align="right">
+	<input  type="button" value="ត្រលប់​ក្រោយ" label="ត្រលប់​ក្រោយ" id="btadd" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $cancel_url; ?>';"/>
+</div>
+
+<table style="margin: 0 auto; width: 450px">
+	<tr>
+		<td>
+			<fieldset>
+				<legend><strong><?php echo $tr->translate('USER_TYPE');?></strong></legend>
+				<table cellspacing="20" width="100%">
+					<tr>
+						<td align="center" valign="top">
+							<table width="80%">
+								<tr>
+									<td class="field"><?php echo $tr->translate('USER_TYPE');?></td>
+									<td class="value"><?php echo $rs['user_type'];?></td>	
+								</tr>								
+							</table>
+						</td>							
+					</tr>
+				</table>	
+			</fieldset>
+		</td>			
+	</tr>
+</table>
+
+<script type="text/javascript">
+	dojo.require('dijit.form.Button');
+</script>

@@ -1,0 +1,111 @@
+<?php
+$this->headTitle('SRMS | User edit page'); 
+echo $this->headTitle();
+?>
+<script type="text/javascript">	
+	dojo.require("dijit.form.ValidationTextBox");
+	dojo.require('dijit.form.Form');
+	dojo.require('dijit.form.FilteringSelect');	
+	dojo.require('dijit.form.Button');
+</script>
+
+<form action="<?php echo $this->url(array('module'=>'user','controller'=>'index','action'=>'edited')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<script type="dojo/method" event="onSubmit">										
+			if(this.validate()) {
+				if(dojo.byId('password').value != dojo.byId('con_password').value ){
+					alert('សូម​ពិនិត្រ ពាក្យ​​សំងាត់​ទាំង​ 2 របស់​អ្នក មិន​ដូច​គ្នា​ទេ, សូម​បញ្ចូល ​ម្តង​ទៀត..');
+					dojo.byId('password').value = '';
+					dojo.byId('con_password').value = '';
+					dijit.byId('password').focus();
+					return false;
+				}				
+				return true;
+			}
+
+			return false;
+	</script>
+		
+	<table cellspacing="20" style="margin: 0 auto; width: 450px">
+		<tr>
+			<td>
+				<fieldset>
+					<legend><strong>ព៌ត័មាន ទំនាក់ទំនង របស់​ អ្នក​គ្រប់​គ្រង</strong></legend>
+					<table cellspacing="20" width="100%">
+						<tr>
+							<td align="center" valign="top">
+								<table>
+									<tr>
+										<td>First Name</td>
+										<td width="200px">
+											<input type="text" required="true" name="first_name" id="first_name" placeholder="នាមខ្លួន" 
+											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->user_edit['first_name'];?>"
+											missingMessage="អ្នក​ភ្លេច​បំពេញ​ នាមខ្លួន!" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Last Name</td>
+										<td>
+											<input type="text" required="true" name="last_name" id="last_name" placeholder="នាម​ត្រកូល" 
+											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->user_edit['last_name'];?>"
+											missingMessage="អ្នក​ភ្លេច​បំពេញ​ នាម​ត្រកូល!" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>User Name</td>
+										<td>
+											<input type="text" required="true" name="user_name" id="user_name" placeholder="ឈ្នោះ​អ្នក​ប្រើ​ប្រាស់" 
+											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->user_edit['user_name'];?>" 
+											missingMessage="អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ​អ្នក​ប្រើ​ប្រាស់!" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Password</td>							
+										<td>
+											<input type="password" required="true" name="password" id="password" placeholder="ពាក្យ​​សំងាត់" 
+											regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
+											dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពាក្យ​​សំងាត់!" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Confirm Password</td>							
+										<td>
+											<input type="password" required="true" name="con_password" id="con_password" placeholder="បញ្ជាក់ពាក្យ​​សំងាត់" 
+											regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
+											dojoType="dijit.form.ValidationTextBox"  missingMessage="អ្នក​ភ្លេច​បំពេញ​ បញ្ជាក់ ពាក្យ​​សំងាត់!" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Status</td>
+										<td>
+											<select name="active" required="true" id="active" class='fullside' dojoType="dijit.form.FilteringSelect"  missingMessage="អ្នក​ភ្លេច​បំពេញ​  ស្ថាន​ភាព!"> 
+												<option value="1" <?php if($this->user_edit['active'] == 1) echo 'selected';?> >ប្រើ​ប្រាស់</option>
+												<option value="0" <?php if($this->user_edit['active'] == 0) echo 'selected';?> >មិនប្រើ​ប្រាស់</option>																					
+											</select> 
+										</td>
+									</tr>
+									<tr>
+										<td>User Type</td>
+										<td>
+											<select onchange="disabledAgent(this.value);" class='fullside' name="user_type" required="true" id="user_type" 
+											 missingMessage="អ្នក​ភ្លេច​បំពេញ​  តំណែង!" dojoType="dijit.form.FilteringSelect"> 
+											 	<?php foreach ($this->user_typelist as $key => $ust) : ?>
+													<option value="<?php echo $key;?>"  <?php if($this->user_edit['user_type'] == $key) echo 'selected';?> ><?php echo $ust;?></option>
+												<?php endforeach;?>																																
+											</select> 
+										</td>
+									</tr>									
+								</table>
+							</td>							
+						</tr>
+					</table>	
+				</fieldset>
+			</td>			
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<input type="submit" value="Save" label="Save" id="submitButton" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+			</td>
+		</tr>
+	</table>	
+	<input type="hidden" name="id" value="<?php echo $this->user_edit['id'];?>" />
+</form>

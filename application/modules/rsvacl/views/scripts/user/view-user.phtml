@@ -1,0 +1,58 @@
+<title>SRMS System | View User</title>
+<style>
+fieldset.fifthy {	
+	border-right: 0px;
+	width: 30%;
+}
+fieldset.fifthy table{
+	padding-right: 1px;
+}
+table.user td{
+	vertical-align: top;   
+}
+</style>       
+
+<?php $rs=$this->rs;
+
+$edit_url=$this->url(array(
+		'module'=>'rsvacl',
+		'controller'=>'user',
+		'action'=>'edit-user',
+		'id'=>$rs['user_id'],
+	));
+$cancel_url=$this->url(array(
+		'module'=>'rsvAcl',
+		'controller'=>'user',
+		'action'=>'index',
+	));
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+
+?>
+<br/>
+<div class="btn" align="right">
+		    <a class="negative" href="<?php echo $edit_url;?>">
+		        <img alt="" src="<?php echo BASE_URL?>/images/icon/edit.png">
+		        <?php echo $tr->translate('EDIT');?>
+		    </a>												   						
+		    <a class="negative" href="<?php echo $cancel_url;?>">
+		        <img alt="" src="<?php echo BASE_URL?>/images/icon/cross.png">
+		        <?php echo $tr->translate('CANCEL');?>
+		    </a>
+</div>
+<fieldset>
+		<legend><?php echo $tr->translate('AUTHENTICATION');?></legend>
+		<table>
+			<tr>
+				<td class="field"><?php echo $tr->translate('USERNAME');?></td>
+				<td class="value"><?php echo $rs['username'];?></td>				
+			</tr>
+			<tr>
+				<td class="field"><?php echo $tr->translate('EMAIL');?></td>
+				<td class="value"><?php echo $rs['email'];?></td>				
+			</tr>			
+			<tr>
+				<td class="field"><?php echo $tr->translate('PASSWORD');?></td>
+				<td class="value">**************</td>				
+			</tr>			
+		</table>
+</fieldset>	
