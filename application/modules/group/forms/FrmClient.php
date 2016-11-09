@@ -14,12 +14,28 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$clienttype_namekh->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside'
 		));
 		$_dob= new Zend_Dojo_Form_Element_DateTextBox('dob_client');
-		$_dob->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside',
+		$_dob->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",
 		));
 		
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$db = new Application_Model_DbTable_DbGlobal();
-	
+		
+		
+		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
+		$branch_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true',
+				'onchange'=>'getClientNo();'
+		));
+		$rows_branch = $db->getAllBranchName();
+		//=array(''=>"---Select Branch---");
+		if(!empty($rows_branch))foreach($rows_branch AS $row){
+			$options_branch[$row['br_id']]=$row['project_name'];
+		}
+		$branch_id->setMultiOptions($options_branch);
+		$branch_id->setValue($request->getParam("branch_id"));
+		
 		$_member = new Zend_Dojo_Form_Element_FilteringSelect('group_id');
 		$_member->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -209,7 +225,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$_cprovince->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'onchange'=>'filterDistrict();',
+				'onchange'=>'dfilterDistrict();',
 		));
 		
 		$rows =  $db->getAllProvince();
@@ -300,6 +316,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'required' =>'true'
 		));
 		if($data!=null){
+			$branch_id->setValue($data['branch_id']);
+			$branch_id->setAttribs(array("readonly"=>true));
 			$_namekh->setValue($data['name_kh']);
 			$_nameen->setValue($data['name_en']);
 			$_sex->setValue($data['sex']);
@@ -320,10 +338,22 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$national_id->setValue($data['nation_id']);
             $client_d_type->setValue($data['client_d_type']);
 			$_dob->setValue($data['dob']);
+			$_hnamekh->setValue($data['hname_kh']);
+			$_bnamekh->setValue($data['bname_kh']);
+			$_ghouse->setValue($data['ghouse']);
+			$_lphone->setValue($data['lphone']);
+			$_dstreet->setValue($data['dstreet']);
+			$_rid_no->setValue($data['rid_no']);
+			$_arid_no->setValue($data['arid_no']);
+			$_edesc->setValue($data['edesc']);
+			$_ksex->setValue($data['ksex']);
+			$_cprovince->setValue($data['cprovince']);
+			$_adistrict->setValue($data['adistrict']);
+			$_dcommune->setValue($data['dcommune']);
 		}
 		$this->addElements(array($_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_qvillage,$_dcommune,$_adistrict,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
 				$_join_with,$_id,$photo,$job,$national_id,$_member,$_namekh,$_nameen,$_sex,
-				$_province,$_district,$_commune,$_village,$_house,$_street,$_id_no,
+				$_province,$_district,$_commune,$_village,$_house,$_street,$_id_no,$branch_id,
 				$_phone,$_desc,$_status,$_clientno,$_dob,$clienttype_namekh,$clienttype_nameen));
 		return $this;
 		
@@ -344,6 +374,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$_landcode->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
+				'readonly'=>'readonly',
 				'required' =>'true'
 		));
 	
@@ -404,9 +435,24 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'style'=>'width:96%;min-height:50px;'));
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
-		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
-		$propertiestype_opt = $db->getVewOptoinTypeByType(7,1,11);
+		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside','onChange'=>'showPopupForm();'));
+		$propertiestype_opt = $db->getPropertyType();
 		$propertiestype->setMultiOptions($propertiestype_opt);
+		
+		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
+		$branch_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true',
+				'onchange'=>'getPropertyNo();'
+		));
+		$rows_branch = $db->getAllBranchName();
+		//=array(''=>"---Select Branch---");
+		if(!empty($rows_branch))foreach($rows_branch AS $row){
+			$options_branch[$row['br_id']]=$row['project_name'];
+		}
+		$branch_id->setMultiOptions($options_branch);
+		$branch_id->setValue($request->getParam("branch_id"));
 		
 		$floor = new Zend_Dojo_Form_Element_TextBox('floor');
 		$floor->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside',));
@@ -434,6 +480,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		));		
 		
 		if($data!=null){
+			$branch_id->setValue($data['branch_id']);
+			$branch_id->setAttribs(array("readonly"=>true));
 			$_id_no->setValue($data['id']);
 			$_desc->setValue($data['note']);
 			$_status->setValue($data['status']);
@@ -453,7 +501,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$propertiestype->setValue($data['property_type']);
 			$floor->setValue($data['floor']);
 		}
-		$this->addElements(array($photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
+		$this->addElements(array($branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
 		return $this;
 	
 	}

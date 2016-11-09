@@ -3,7 +3,7 @@
 class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'ln_landinfo';
+    protected $_name = 'ln_properties';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace('auth');
     	return $session_user->user_id;
@@ -11,8 +11,17 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     }
 	public function addLandinfo($_data){
 		try{
+			if(!empty($_data['id'])){
+				$oldCode = $this->getClientById($_data['id']);
+				$land_code = $oldCode['land_code'];
+			}else{
+				$db = new Application_Model_DbTable_DbGlobal();
+				$land_code = $db->getNewLandByBranch($_data['branch_id']);
+			}
+			
 		    $_arr=array(
-				'land_code'	  => $_data['landcode'],
+		    	'branch_id'	  => $_data['branch_id'],
+				'land_code'	  => $land_code,
 				'land_address'	  => $_data['land_address'],
 				'price'	      => $_data['price'],
 				'land_size'			=>$_data['size'],
@@ -31,7 +40,7 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		    	'dinnerroom'	  => $_data['dinnerroom'],
 		    	'buidingyear'	  => $_data['buidingyear'],
 		    	'parkingspace'	  => $_data['parkingspace'],
-		    	'photo'	  => ''//$_data['parkingspace'],	
+		    	//'photo'	  => ''//$_data['parkingspace'],	
 				
 		);
 		if(!empty($_data['id'])){

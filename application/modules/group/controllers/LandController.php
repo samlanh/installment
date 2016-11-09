@@ -58,7 +58,7 @@ class Group_LandController extends Zend_Controller_Action {
 				else if (isset($data['save_close'])){
 					$id= $db->addLandinfo($data);
 					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
-					Application_Form_FrmMessage::redirectUrl("/land/index");
+					Application_Form_FrmMessage::redirectUrl("/group/land/index");
 				}
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
@@ -71,20 +71,25 @@ class Group_LandController extends Zend_Controller_Action {
 		$frm = $fm->FrmLandInfo();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_client = $frm;
+		
+		$dbpop = new Application_Form_FrmPopupGlobal();
+		$this->view->frmPopupPropertyType = $dbpop->frmPopupPropertyType();
 	}
 	public function editAction(){
+		$id = $this->getRequest()->getParam("id");
 		$db = new Group_Model_DbTable_DbLand();
 		if($this->getRequest()->isPost()){
 			try{
 				$data = $this->getRequest()->getPost();
-				$id= $db->addLandinfo($data);
+				$data['id']=$id;
+				$db->addLandinfo($data);
 				Application_Form_FrmMessage::Sucessfull('EDIT_SUCCESS',"/group/land");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("EDIT_FAILE");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		$id = $this->getRequest()->getParam("id");
+		
 		$row = $db->getClientById($id);
 	        $this->view->row=$row;
 		if(empty($row)){
@@ -94,6 +99,9 @@ class Group_LandController extends Zend_Controller_Action {
 		$frm = $fm->FrmLandInfo($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_client = $frm;
+		
+		$dbpop = new Application_Form_FrmPopupGlobal();
+		$this->view->frmPopupPropertyType = $dbpop->frmPopupPropertyType();
 		
 	}
 	function viewAction(){
@@ -234,6 +242,15 @@ class Group_LandController extends Zend_Controller_Action {
 			$db = new Application_Model_DbTable_DbGlobal();
 			$dataclient=$db->getAllClientGroupCode($data['branch_id']);
 			array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
+			print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	}
+	function getPropertyNoAction(){// by vandy get property code
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobal();
+			$dataclient=$db->getNewLandByBranch($data['branch_id']);
 			print_r(Zend_Json::encode($dataclient));
 			exit();
 		}

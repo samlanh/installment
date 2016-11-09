@@ -12,6 +12,7 @@ class Group_indexController extends Zend_Controller_Action {
 			if($this->getRequest()->isPost()){
 				$formdata=$this->getRequest()->getPost();
 				$search = array(
+						'branch_id'=>$formdata['branch_id'],
 						'adv_search' => $formdata['adv_search'],
 						'province_id'=>$formdata['province'],
 						'comm_id'=>$formdata['commune'],
@@ -24,6 +25,7 @@ class Group_indexController extends Zend_Controller_Action {
 			}
 			else{
 				$search = array(
+						'branch_id'=>-1,
 						'adv_search' => '',
 						'status' => -1,
 						'province_id'=>0,
@@ -38,7 +40,7 @@ class Group_indexController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CUSTOMER_CODE","CLIENTNAME_KH","CLIENTNAME_EN","SEX","PHONE","HOUSE","STREET","VILLAGE",
+			$collumns = array("BRANCH_NAME","CUSTOMER_CODE","CLIENTNAME_KH","CLIENTNAME_EN","SEX","PHONE","HOUSE","STREET","VILLAGE",
 					"DATE","BY_USER","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'index','action'=>'edit',
@@ -61,6 +63,7 @@ class Group_indexController extends Zend_Controller_Action {
 		$frm = $fm->FrmAddClient();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_client = $frm;
+		
 		$db= new Application_Model_DbTable_DbGlobal();
 		$this->view->district = $db->getAllDistricts();
 		$this->view->commune_name = $db->getCommune();
@@ -112,10 +115,12 @@ class Group_indexController extends Zend_Controller_Action {
 	}
 	public function editAction(){
 		$db = new Group_Model_DbTable_DbClient();
+		$id = $this->getRequest()->getParam("id");
 		if($this->getRequest()->isPost()){
 			try{
 				$data = $this->getRequest()->getPost();
-				$id= $db->addClient($data);
+				$data['id'] = $id;
+				$db->addClient($data);
 				Application_Form_FrmMessage::Sucessfull('EDIT_SUCCESS',"/group/index");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("EDIT_FAILE");
@@ -287,6 +292,15 @@ class Group_indexController extends Zend_Controller_Action {
 			$db = new Application_Model_DbTable_DbGlobal();
 			$dataclient=$db->getAllClientGroupCode($data['branch_id']);
 			array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
+			print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	}
+	function getClientNoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobal();
+			$dataclient=$db->getNewClientIdByBranch($data['branch_id']);
 			print_r(Zend_Json::encode($dataclient));
 			exit();
 		}

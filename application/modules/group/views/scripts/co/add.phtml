@@ -6,6 +6,9 @@
 <script>
 	dojo.require("dijit/form/DateTextBox");
 	dojo.require("dijit/form/NumberTextBox");
+	dojo.ready(function(){
+		getStaffCode();
+		});
 </script>
 <form  id='add_techer' action="<?php echo $this->url(array('module'=>'group','controller'=>'co','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
 <script type="dojo/method" event="onSubmit">			
@@ -27,15 +30,16 @@
 					
 					<table style="margin: 0 auto; width: 100%;" cellspacing="10">
 						<tr>
+							<td><?php echo $tr->translate("BRANCH")?></td>
+							<td><?php  echo $techer->getElement('branch_id');?></td>
 							<td><?php echo $tr->translate("STAFF_CODE")?></td>
 							<td><?php  echo $techer->getElement('co_id'); echo $techer->getElement('id');?></td>
 							<td><?php echo $tr->translate("NAME_EN")?></td>
-							<td><?php  echo $techer->getElement('first_name');?></td>
-							<td><?php echo $tr->translate("NAME_KH")?></td>
-							<td><?php  echo $techer->getElement('name_kh');?></td>
+							<td><?php  echo $techer->getElement('name_en');?></td>
 						</tr>
 						<tr>
-							
+							<td><?php echo $tr->translate("NAME_KH")?></td>
+							<td><?php  echo $techer->getElement('name_kh');?></td>
 							<td><?php echo $tr->translate("DISPLAY_BY")?></td>
 							<td><?php  echo $techer->getElement('display');?></td>
 							<td><?php echo $tr->translate("POSITION")?></td>
@@ -193,7 +197,7 @@ dojo.require("dojo.html");
 				}
 			});
 	}
-var url_staffcode = '<?php echo $this->url(array('module'=>'payroll','controller'=>'co','action'=>'getstaffcode')); ?>';
+var url_staffcode = '<?php echo $this->url(array('module'=>'group','controller'=>'co','action'=>'getstaffcode')); ?>';
 	function getStaffCode(){
 		branch_id = dijit.byId('branch_id').get('value');
 		dijit.byId('co_id').attr('value','');

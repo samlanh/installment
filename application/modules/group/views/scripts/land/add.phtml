@@ -5,8 +5,10 @@
 <?php  $frm = $this->frm_client;?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <script>
+dojo.require("dojo.data.ItemFileWriteStore");  
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.Dialog");
 </script>
 <form id='add_client' action="<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'add')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 <script type="dojo/method" event="onSubmit">			
@@ -23,52 +25,54 @@ dojo.require("dijit.form.NumberTextBox");
 					<legend ><strong><?php echo $tr->translate("Add Property");?></strong></legend>
 					<table style="margin: 0 auto; width:100%;" cellspacing="10">
 						<tr>
-							<td><?php echo $tr->translate("Property Code")?></td>
+							<td><?php echo $tr->translate("BRANCH")?></td>
+							<td><?php echo $frm->getElement('branch_id');?></td>
+							<td><?php echo $tr->translate("PROPERTY_CODE")?></td>
 							<td><?php echo $frm->getElement('landcode');?></td>
 							<td><?php echo $tr->translate("TITLE")?>*</td>
 							<td><?php  echo $frm->getElement('land_address');?></td>
-							<td><?php echo $tr->translate("Price")?>*</td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("PRICE")?>*</td>
 							<td><?php  echo $frm->getElement('price');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("Size")?></td>
+							<td><?php echo $tr->translate("SIZE")?></td>
 							<td><?php  echo $frm->getElement('size');?></td>
-							<td><?php echo $tr->translate("Width")?></td>
+							<td><?php echo $tr->translate("WIDTH")?></td>
 							<td><?php  echo $frm->getElement('width');?></td>
-							<td>Height</td>
-							<td><?php  echo $frm->getElement('height');?></td>
 						</tr>
 						<tr>
-						    <td valign="top"><?php echo $tr->translate("Head Title No.")?></td>
+							<td><?php echo $tr->translate("HEIGHT")?></td>
+							<td><?php  echo $frm->getElement('height');?></td>
+						    <td valign="top"><?php echo $tr->translate("HEAD_TITLE_NO")?></td>
 							<td valign="top"><?php  echo $frm->getElement('hardtitle');?></td>
 							<td valign="top"><?php echo $tr->translate("NOTE")?></td>
 							<td><?php  echo $frm->getElement('desc');?></td>
-							<td valign="top"><?php echo $tr->translate("STATUS")?></td>
-							<td valign="top"><?php  echo $frm->getElement('status');?></td>
 						</tr>
 						<tr>
-						    <td valign="top"><?php echo $tr->translate("Property Type")?></td>
+						    <td valign="top"><?php echo $tr->translate("PROPERTY_TYPE")?></td>
 							<td valign="top"><?php  echo $frm->getElement('property_type');?></td>
-							<td valign="top"><?php echo $tr->translate("Floor")?></td>
+							<td valign="top"><?php echo $tr->translate("FLOOR")?></td>
 							<td><?php  echo $frm->getElement('floor');?></td>
-							<td valign="top"><?php echo $tr->translate("Bedroom")?></td>
+							<td valign="top"><?php echo $tr->translate("BEDROOM")?></td>
 							<td valign="top"><?php  echo $frm->getElement('bedroom');?></td>
 						</tr>
 						<tr>
-						    <td valign="top"><?php echo $tr->translate("Living")?></td>
+						    <td valign="top"><?php echo $tr->translate("LIVING")?></td>
 							<td valign="top"><?php  echo $frm->getElement('living');?></td>
-							<td valign="top"><?php echo $tr->translate("Dinner Room")?></td>
+							<td valign="top"><?php echo $tr->translate("DINNER_ROOM")?></td>
 							<td><?php  echo $frm->getElement('dinnerroom');?></td>
-							<td valign="top"><?php echo $tr->translate("Buiding Year")?></td>
+							<td valign="top"><?php echo $tr->translate("BUIDING_YEAR")?></td>
 							<td valign="top"><?php  echo $frm->getElement('buidingyear');?></td>
 						</tr>
 						<tr>
-						    <td valign="top"><?php echo $tr->translate("Parking Space")?></td>
+						    <td valign="top"><?php echo $tr->translate("PARKING_SPACE")?></td>
 							<td valign="top"><?php echo $frm->getElement('parkingspace');?></td>
-							<td valign="top"><?php echo $tr->translate("Photo")?></td>
-							<td><?php echo $frm->getElement('photo');?></td>
+							<td valign="top"><?php echo $tr->translate("STATUS")?></td>
+							<td valign="top"><?php  echo $frm->getElement('status');?></td>
+							<!-- <td valign="top"><?php //echo $tr->translate("Photo")?></td>
+							<td><?php //echo $frm->getElement('photo');?></td>
 							<td valign="top"><?php //echo $tr->translate("bedroom")?></td>
-							<td valign="top"><?php  //echo $frm->getElement('bedroom');?></td>
+							<td valign="top"><?php  //echo $frm->getElement('bedroom');?></td> -->
 						</tr>
 						<tr>
 							<td colspan="6" align="center">
@@ -90,13 +94,66 @@ dojo.require("dijit.form.NumberTextBox");
 <tr>
 </tr>
 </table>
+<?php echo $this->frmPopupPropertyType;?>
 <script type="text/javascript">
 
 dojo.ready(function(){
 	
 	try{
-	
+		getPropertyNo();
 	}catch(e){
 	}
 });
+function showPopupForm(){
+	property_type = dijit.byId('property_type').get('value');
+	if(property_type==''){
+		alert('Please Select Property Type');
+		dijit.byId('property_type').focus();
+		return false;
+	}else if(property_type==-1){
+		dijit.byId('frm_propertytype').show();
+	}
+}
+var propertyType_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+url_property = '<?php echo $this->url(array('module'=>'group','controller'=>'propertiestype','action'=>'add-propertytype'));?>';
+function addNewPropertytype(){
+	if(dijit.byId('frm_propertytype').validate()) {
+		dojo.xhrPost({
+			url:url_property,	
+			form:dojo.byId('form_propertytype'),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = {					
+						id: data,
+					    name: dijit.byId('type_nameen').get('value')
+				};		
+				addDataToSelectbox(dijit.byId('property_type'), propertyType_store, Itemmake, data);	
+				dijit.byId('frm_propertytype').reset();
+				dijit.byId('frm_propertytype').hide();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+}
+url_getPropertyNo = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'get-property-no'));?>';
+function getPropertyNo(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0){
+		return false;}
+	dojo.xhrPost({
+		url:url_getPropertyNo,	
+		content:{ 
+			'branch_id': branch_id
+		},
+		handleAs:"json",
+		load: function(data) {	
+		    dijit.byId('landcode').attr('value',data);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
 </script>

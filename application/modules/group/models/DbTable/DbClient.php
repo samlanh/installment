@@ -24,7 +24,18 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		}
 		
 		try{
-			$client_code = $this->getClientCode();
+			if(!empty($_data['id'])){
+				$oldClient_Code = $this->getClientById($_data['id']);
+				$client_code = $oldClient_Code['client_number'];
+			}else{
+				$db = new Application_Model_DbTable_DbGlobal();
+				$client_code = $db->getNewClientIdByBranch($_data['branch_id']);
+			}
+			if (empty($_data['photo'])){
+				$photo = $_data['old_photo'];
+			}else{
+				$photo = $_data['photo'];
+			}
 		    $_arr=array(
 				'client_number'=> $client_code,//$_data['client_no'],
 				'name_kh'	  => $_data['name_kh'],
@@ -37,7 +48,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				'village_id'  => $_data['village'],
 				'street'	  => $_data['street'],
 				'house'	      => $_data['house'],
-				'photo_name'  =>$_data['photo'],
+				'photo_name'  =>$photo,
 				'nation_id'=>$_data['national_id'],
 				'phone'	      => $_data['phone'],
 				'create_date' => date("Y-m-d"), 
@@ -58,8 +69,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    	'rid_no'      => $_data['rid_no'],
 		    	'arid_no'      => $_data['arid_no'],
 		    	'edesc'      => $_data['edesc'],
-		    	
-				
+		    	'branch_id'      => $_data['branch_id'],
 		);
 		if(!empty($_data['id'])){
 			$where = 'client_id = '.$_data['id'];
@@ -121,6 +131,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		$where = " WHERE (name_kh!='' AND  name_en!='') AND ".$from_date." AND ".$to_date;		
 		$sql = "
 		SELECT client_id,
+		(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
 		client_number,name_kh,name_en,
 		(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND sex=key_code LIMIT 1) AS sex
 		,phone,house,street,
@@ -131,7 +142,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		if(!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = addslashes(trim($search['adv_search']));
-			$s_where[] = "client_number LIKE '%{$s_search}%'";
+			$s_where[] = " client_number LIKE '%{$s_search}%'";
 			$s_where[] = " name_en LIKE '%{$s_search}%'";
 			$s_where[] = " name_kh LIKE '%{$s_search}%'";
 			$s_where[] = " phone LIKE '%{$s_search}%'";
@@ -141,6 +152,9 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		}
 		if($search['status']>-1){
 			$where.= " AND status = ".$search['status'];
+		}
+		if($search['branch_id']>-1){
+			$where.= " AND branch_id = ".$search['branch_id'];
 		}
 		if($search['province_id']>0){
 			$where.=" AND pro_id= ".$search['province_id'];
@@ -159,7 +173,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 	}
 	public function getGroupCodeBYId($data){
 		$db = $this->getAdapter();
-			$sql = " SELECT * FROM `ln_landinfo`
+			$sql = " SELECT * FROM `ln_properties`
 			WHERE id = ".$data['land_id'] ;
 			 $rs = $db->fetchRow($sql);
 			if(empty($rs)){return ''; }else{

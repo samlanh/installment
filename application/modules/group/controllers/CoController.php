@@ -17,18 +17,21 @@ class Group_CoController extends Zend_Controller_Action {
 			else{
 				$search = array(
 						'adv_search' => '',
-						'status_search' => -1);
+						'status_search' => -1,
+						'branch_id' => '',
+						'position' => '',
+						'degree' => '');
 			}
 			$rs_rows= $db->getAllCreditOfficer($search);
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CODE","NAME_KH","NAME_EN","NATIONAL_ID","ADDRESS","PHONE",
+			$collumns = array("BRANCH_NAME","STAFF_CODE","NAME_KH","NAME_EN","NATIONAL_ID","ADDRESS","PHONE",
 					"EMAIL","DEGREE","DEPARTMENT","ANNUAL_LIVES","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'co','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('co_code'=>$link,'co_khname'=>$link,'co_engname'=>$link));
+			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'co_code'=>$link,'co_khname'=>$link,'co_engname'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			echo $e->getMessage();
