@@ -179,7 +179,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	return $rows;
    }
    public function getAllCOName($option=null){
-   	$this->_name='ln_co';
+   	$this->_name='ln_staff';
    	$sql = " call stGetAllCOName();";
    	$db = $this->getAdapter();
    	$rows =  $db->fetchAll($sql);
@@ -194,7 +194,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    public function getAllCoNameOnly(){
    	$db= $this->getAdapter();
    	$sql = " SELECT co_id AS id, CONCAT(co_firstname,' - ',co_khname,' - ',co_code) AS name
-   	  FROM ln_co WHERE STATUS=1 AND co_khname!='' AND `position_id`=1 ";
+   	  FROM ln_staff WHERE STATUS=1 AND co_khname!='' AND `position_id`=1 ";
    	return $db->fetchAll($sql);
    }
    public function getAllCurrency($id,$opt = null){
@@ -298,7 +298,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	return $db->fetchOne($sql);
    }
    public function getStaffNumberByBranch($branch_id){
-   	$this->_name='ln_co';
+   	$this->_name='ln_staff';
    	$db = $this->getAdapter();
    		$sql = "SELECT COUNT(co_id)FROM $this->_name WHERE branch_id=".$branch_id." LIMIT 1 ";
    		$pre = $this->getPrefixCode($branch_id)."ST-";
@@ -445,8 +445,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   public function getClientByMemberId($id){
   	$sql="SELECT p.first_datepay,
   		 p.payment_type,p.amount_month,p.first_datepay,p.date_buy,
-  		(SELECT co_khname FROM `ln_co` WHERE co_id =p.staff_id LIMIT 1) AS co_khname,
-  		(SELECT co_firstname FROM `ln_co` WHERE co_id =p.staff_id LIMIT 1) AS co_enname,
+  		(SELECT co_khname FROM `ln_staff` WHERE co_id =p.staff_id LIMIT 1) AS co_khname,
+  		(SELECT co_firstname FROM `ln_staff` WHERE co_id =p.staff_id LIMIT 1) AS co_enname,
   		(SELECT client_number FROM `ln_client` WHERE client_id = p.client_id LIMIT 1) AS client_number,
   		(SELECT name_kh FROM `ln_client` WHERE client_id = p.client_id LIMIT 1) AS client_name_kh,
   		(SELECT name_en FROM `ln_client` WHERE client_id = p.client_id LIMIT 1) AS client_name_en,
@@ -469,10 +469,10 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	lg.pay_term,lg.payment_method,
   	lg.loan_type,
   	(SELECT project_name FROM `ln_project` WHERE br_id =lg.branch_id LIMIT 1) as branch_name,
-  	(SELECT co_khname FROM `ln_co` WHERE co_id =lg.co_id LIMIT 1) AS co_khname,
-  	(SELECT co_firstname FROM `ln_co` WHERE co_id =lg.co_id LIMIT 1) AS co_enname,
-  	(SELECT displayby FROM `ln_co` WHERE co_id =lg.co_id LIMIT 1) AS displayby,
-  	(SELECT tel FROM `ln_co` WHERE co_id =lg.co_id LIMIT 1) AS tel,
+  	(SELECT co_khname FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS co_khname,
+  	(SELECT co_firstname FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS co_enname,
+  	(SELECT displayby FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS displayby,
+  	(SELECT tel FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS tel,
   	(SELECT client_number FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_number,
   	(SELECT name_kh FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_kh,
   	(SELECT name_en FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_en,
@@ -1066,7 +1066,51 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	return $opt;
 
   }
-  
+  public function getNewClientIdByBranch($branch_id){// by vandy get new client no by branch
+  	$this->_name='ln_client';
+  	$db = $this->getAdapter();
+  	$sql=" SELECT client_id ,client_number FROM $this->_name ORDER BY client_id DESC LIMIT 1 ";
+  	$acc_no = $db->fetchOne($sql);
+  	
+  	$new_acc_no= (int)$acc_no+1;
+  	$acc_no= strlen((int)$acc_no+1);
+  	$prefix = $this->getPrefix($branch_id);
+  	$pre= "";
+  	for($i = $acc_no;$i<6;$i++){
+  		$pre.='0';
+  	}
+  	return $prefix.$pre.$new_acc_no;
+  }
+  public function getNewLandByBranch($branch_id){// by vandy get new client no by branch
+  	$this->_name='ln_properties';
+  	$db = $this->getAdapter();
+  	$sql=" SELECT id  FROM $this->_name ORDER BY id DESC LIMIT 1 ";
+  	$acc_no = $db->fetchOne($sql);
+  	 
+  	$new_acc_no= (int)$acc_no+1;
+  	$acc_no= strlen((int)$acc_no+1);
+  	$prefix = $this->getPrefix($branch_id);
+  	$pre= "P";
+  	for($i = $acc_no;$i<6;$i++){
+  		$pre.='0';
+  	}
+  	return $prefix.$pre.$new_acc_no;
+  }
+  public function getPrefix($branch_id){// by vandy get prefix by branch
+  	$db = $this->getAdapter();
+  	 $sql="SELECT p.prefix FROM `ln_project` AS p WHERE p.br_id=".$branch_id;
+  	return $db->fetchOne($sql);
+  }
+  public function getPropertyType(){
+  	$db= $this->getAdapter();
+  	$sql="SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
+  	$rows =  $db->fetchAll($sql);
+  	$options=array(''=>"-----ជ្រើសរើស-----",-1=>"Add New",);
+  	if(!empty($rows))foreach($rows AS $row){
+  		$options[$row['id']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
+  	}
+  	return $options;
+  }
   
   
 }
