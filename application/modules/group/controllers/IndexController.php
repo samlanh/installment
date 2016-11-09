@@ -259,7 +259,7 @@ class Group_indexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Application_Model_DbTable_DbGlobal();
-			$dataclient=$db->getAllClientNumber();
+			$dataclient=$db->getAllClientNumber($data['branch_id']);
 			//array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
 			print_r(Zend_Json::encode($dataclient));
 			exit();
@@ -269,21 +269,29 @@ class Group_indexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			 $data = $this->getRequest()->getPost();
 			 $db = new Application_Model_DbTable_DbGlobal();
-             $dataclient=$db->getAllClient();
+             $dataclient=$db->getAllClient($data['branch_id']);
              array_unshift($dataclient, array('id' => "-1",'name'=>'---Add New Client---') );
 			 print_r(Zend_Json::encode($dataclient));
 			exit();
 		}
+		
 	
 	}
 	function getGroupclientbybranchAction(){//At callecteral when click client
 		if($this->getRequest()->isPost()){
+// 			$data = $this->getRequest()->getPost();
+// 			$db = new Application_Model_DbTable_DbGlobal();
+// 			$dataclient=$db->getAllClientGroup($data['branch_id']);
+// 			array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
+// 			print_r(Zend_Json::encode($dataclient));
+// 			exit();
 			$data = $this->getRequest()->getPost();
 			$db = new Application_Model_DbTable_DbGlobal();
-			$dataclient=$db->getAllClientGroup($data['branch_id']);
-			array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
-			print_r(Zend_Json::encode($dataclient));
+			$dataclient=$db->getAllClient($data['branch_id']);
+			//array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
+			echo (Zend_Json::encode($data['branch_id']));
 			exit();
+			
 		}
 	}
 	function getGoupCodebybranchAction(){//At callecteral when click client

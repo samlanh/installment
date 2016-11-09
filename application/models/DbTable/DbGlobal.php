@@ -269,24 +269,13 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	return $pre.$new_acc_no;
    }
    public function getLoanNumber($data=array('branch_id'=>1,'is_group'=>0)){
-   	$this->_name='ln_loan_member';
+   	$this->_name='ln_sale';
    	$db = $this->getAdapter();
-   	if(empty($data['is_group'])){
-   		$data['is_group']=0;
-   	}
-   	if(($data['is_group'])!=0){
-   		$sql = "SELECT COUNT(g_id)  FROM `ln_loan_group` WHERE  loan_type=2 LIMIT 1 ";
-   		$pre = "";
-   	}else{
-   		$sql=" SELECT COUNT(member_id)  FROM $this->_name WHERE 1 LIMIT 1 ";
-   		$pre ="";
-   	}
-   
-   	$acc_no = $db->fetchOne($sql);
-   	
+   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." LIMIT 1 ";
+   		$pre = $this->getPrefixCode($data['branch_id'])."S";
+	   	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+1;
    	$acc_no= strlen((int)$acc_no+1);
-   	
    	for($i = $acc_no;$i<5;$i++){
    		$pre.='0';
    	}
@@ -412,15 +401,22 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	if($id==null)return $opt_degree;
    	else return $opt_degree[$id]; 
   }
-  public function getAllBranchName($branch_id=null){
+  public function getAllBranchName($branch_id=null,$opt=null){
   	$db = $this->getAdapter();
-  	$sql= "SELECT br_id,project_name,
+  	$sql= " SELECT br_id,project_name,
   	project_type,br_address,branch_code,branch_tel,displayby
-  	FROM `ln_project` WHERE (project_name !='') ";
+  	FROM `ln_project` WHERE project_name !='' ";
   	if($branch_id!=null){
   		$sql.=" AND br_id=$branch_id LIMIT 1";
   	}
-  	return $db->fetchAll($sql);
+  	$row = $db->fetchAll($sql);
+  	if($opt==null){
+  		return $row;
+  	}else{
+  		$options=array(0=>"Select Project");
+  		if(!empty($row)) foreach($row as $read) $options[$read['br_id']]=$read['project_name'];
+  		return $options;
+  	}
   }
   function countDaysByDate($start,$end){
   	$first_date = strtotime($start);
@@ -555,7 +551,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getVewOptoinTypeByType($type=null,$option = null,$limit =null,$first_option =null){
   	$db = $this->getAdapter();
-  	$sql="SELECT id,key_code,CONCAT(name_kh,'-',name_en) AS name_en ,displayby FROM `ln_view` WHERE status =1 ";//just concate
+  	$sql="SELECT id,key_code,CONCAT(name_en) AS name_en ,displayby FROM `ln_view` WHERE status =1 ";//just concate
   	if($type!=null){
   		$sql.=" AND type = $type ";
   	}
@@ -576,17 +572,21 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		return $rows;
   	}
   }
-  public function getAllLandInfo(){
+  public function getAllLandInfo($branch_id=null,$option=null){
   	   $db = $this->getAdapter();
-  	   $sql="SELECT `id`,`land_code` FROM `ln_landinfo` WHERE STATUS=1 AND `land_code`!='' ";//just concate
+  	   $sql="SELECT `id`,`land_code` AS name FROM `ln_properties` WHERE status=1 AND `land_code`!='' ";//just concate
   	   $request=Zend_Controller_Front::getInstance()->getRequest();
   	   if($request->getActionName()=='add'){
-  	   	$sql.=" AND `is_buy`=0  ";
+  	   	$sql.=" AND `is_lock`=0  ";
+  	   }
+  	   if($branch_id!=null){
+  	   	$sql.=" AND `branch_id`=$branch_id ";
   	   }
   	    $rows = $db->fetchAll($sql);
+  	    if($option!=null){ return $rows;}
   		$options=array(''=>"-----ជ្រើសរើស-----");
   		if(!empty($rows))foreach($rows AS $row){
-  			$options[$row['id']]=$row['land_code'];
+  			$options[$row['id']]=$row['name'];
   		}
   		return $options;
   }
@@ -710,7 +710,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getNextPayment($str_next,$next_payment,$amount_amount,$holiday_status=null,$first_payment=null){//code make slow
   	
-  	$default_day = Date("d",strtotime($first_payment));
+ $default_day = Date("d",strtotime($first_payment));
   	
  for($i=0;$i<$amount_amount;$i++){
 		if($default_day>28){
@@ -982,17 +982,25 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$sql.=" ORDER BY id DESC";
   	return $db->fetchAll($sql);
   }
-  function getAllClientNumber(){
+  function getAllClientNumber($branch_id=null){
   	$db = $this->getAdapter();
   	$sql = " SELECT c.`client_id` AS id  ,c.client_number AS name
-  	FROM `ln_client` AS c WHERE c.`name_en`!='' AND c.client_number !='' AND c.status=1 ORDER BY client_id DESC " ;
+  	FROM `ln_client` AS c WHERE c.`name_en`!='' AND c.client_number !='' AND c.status=1  " ;
+  	if($branch_id!=null){
+  		$sql.=" AND c.`branch_id`= $branch_id ";
+  	}
+  	$sql.=" ORDER BY c.`client_id` DESC";
   	return $db->fetchAll($sql);
   }
   function getAllClient($branch_id=null){
   	$db = $this->getAdapter();
-  	$sql = " SELECT c.`client_id` AS id ,
+  	$sql=" SELECT c.`client_id` AS id  ,c.`branch_id`,
   	CONCAT(c.`name_en`,'-',c.`name_kh`) AS name , client_number
-  	FROM `ln_client` AS c WHERE c.`name_en`!='' AND c.status=1  ORDER BY client_id DESC " ;
+  	FROM `ln_client` AS c WHERE c.`name_en`!='' AND c.status=1  " ;
+  	if($branch_id!=null){
+  		$sql.=" AND c.`branch_id`= $branch_id ";
+  	}
+  	 $sql.=" ORDER BY c.`client_id` DESC";
   	return $db->fetchAll($sql);
   }
   function getClientIdBYMemberId($member_id){
@@ -1064,8 +1072,9 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   		$opt[$row['key_code']]=$row['name_en'];
   	}
   	return $opt;
-
   }
+
+
   public function getNewClientIdByBranch($branch_id){// by vandy get new client no by branch
   	$this->_name='ln_client';
   	$db = $this->getAdapter();

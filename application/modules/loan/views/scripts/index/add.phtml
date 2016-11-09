@@ -4,9 +4,9 @@
 	$frm = $this->frm_loan;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
-	echo $this->frmPopupClient;
-	echo $this->frmpupopinfoclient;
-	echo $this->frmPopupCO;	
+// 	echo $this->frmPopupClient;
+// 	echo $this->frmpupopinfoclient;
+// 	echo $this->frmPopupCO;	
 ?>
 <div class="overlay">
 	<div class="overlay-load">
@@ -45,38 +45,57 @@
 					<legend><strong><?php echo $tr->translate("INFO_INDILOAN")?></strong></legend>
 					<table cellspacing="10"  width="100%" style="margin-top: -10px;">
 						<tr>
+							
+							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
+							<td><?php echo $frm->getElement('branch_id');?></td>
 							<td><?php echo $tr->translate("LOAN_NO")?></td>
-							<td><?php echo $frm->getElement('loan_code');?></td>
+							<td><?php echo $frm->getElement('sale_code');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_CODE")?></td>
 							<td><input id="customer_code" /></td>
+							</tr>
+						<tr>
+							<td><?php echo $tr->translate("date_buy")?></td>
+							<td><?php echo $frm->getElement('date_buy');?></td>
+							<td><?php //echo $tr->translate("CUSTOMER_CODE")?></td>
+							<td><!-- <input id="customer_code" /> --></td>
 							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 							<td><input id="member" /> <?php //echo $frm->getElement('member');?></td>
 						</tr>
 						<tr>
 							<td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("Land Information")?></strong></td>
 						</tr>
-						<tr>
+						<tr height="40px">
 							<td><?php echo $tr->translate("Land Code")?></td>
-							<td><?php echo $frm->getElement('land_code');?></td>
-							<td><?php echo $tr->translate("Address")?></td>
-							<td><?php echo $frm->getElement("land_address")?></td>
-							<td><?php echo $tr->translate("Size")?></td>
-							<td><?php echo $frm->getElement('land_size');?></td>
+							<td><input id="land_code" /><?php //echo $frm->getElement('');?></td>
+							<td><?php echo $tr->translate("DESCRIPTION")?></td>
+							<td style="height: 50px; border:1px solid #ccc; widht:100%;" colspan="4"><?php //echo $tr->translate("Address")?></td>
+							<!-- <td><?php //echo $frm->getElement("land_address")?></td>
+							<td><?php //echo $tr->translate("Size")?></td>
+							<td><?php //echo $frm->getElement('land_size');?></td> -->
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("LAND_PRICE")?></td>
+							<td><?php echo $frm->getElement('land_price');?></td>
+							<td><?php echo $tr->translate("HOUSE_PRICE")?></td>
+							<td><?php echo $frm->getElement('house_price');?></td>
+							<td><?php echo $tr->translate("TOTAL_SOLD")?></td>
+							<td><?php echo $frm->getElement('total_sold');?></td>
 						</tr>
 						<tr>
 							<td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("Payment Information")?></strong></td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("Price Before")?></td>
-							<td><?php echo $frm->getElement('land_price');?></td>
-							<td><?php echo $tr->translate("Payment Type")?></td>
-							<td><?php echo $frm->getElement('schedule_opt');?></td>
 							<td><?php echo $tr->translate("Discount")?>%</td>
 							<td><?php echo $frm->getElement('discount');?></td>
+							<td><?php echo $tr->translate("Land Price")?></td>
+							<td><?php echo $frm->getElement('sold_price');?></td>
+							<td><?php echo $tr->translate("OTHER_FEE")?></td>
+							<td><?php echo $frm->getElement('other_fee');?></td>
 						</tr>
 						<tr>
-						    <td><?php echo $tr->translate("Land Price")?></td>
-							<td><?php echo $frm->getElement('sold_price');?></td>
+						    
+							<td><?php echo $tr->translate("Payment Type")?></td>
+							<td><?php echo $frm->getElement('schedule_opt');?></td>
 							<td><?php echo $tr->translate("Paid")?></td>
 							<td><?php echo $frm->getElement('deposit');?></td>
 							<td><?php echo $tr->translate("Balance")?></td>
@@ -88,11 +107,11 @@
 							<td><?php echo $frm->getElement('period');?></td>
 							<td><?php echo $tr->translate("INTEREST_RATE")?></td>
 							<td><?php echo $frm->getElement('interest_rate');?></td>
-							<td><?php echo $tr->translate("PENAL_AMOUNT")?>$/Day</td>
-							<td><?php echo $frm->getElement('pay_late');?></td>
+							<td><label id="lbl_payment"><?php echo $tr->translate("AMOUNT_FUND_GRAICE_PARIOD")?></label></td>
+							<td><?php echo $frm->getElement('fixed_payment');?></td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("LOAN_RELEASE")?></td>
+							<td><label id="lbl_release"><?php echo $tr->translate("LOAN_RELEASE")?></label></td>
 							<td><?php echo $frm->getElement('release_date');?></td>
 							<td><?php echo $tr->translate("FIRST_PAYMENT")?></td>
 							<td><?php echo $frm->getElement('first_payment');?></td>
@@ -104,9 +123,11 @@
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("CO_NAME")?></td>
-							<td><input id="co_id" /></td>
+							<td><?php echo $frm->getElement('staff_id');?><!--<input id="staff_id" /> --></td>
 							<td><?php echo $tr->translate("Commission")?></td>
 							<td><?php echo $frm->getElement('commission');?></td>
+							<td><?php echo $tr->translate("NOTE")?></td>
+							<td><?php echo $frm->getElement('note')?></td>
 						</tr>
 					</table>
 				</fieldset>
@@ -138,34 +159,191 @@
 </div>
 </div>
 </form>
-<?php echo $this->frmpupoploantype;?>
+<?php //echo $this->frmpupoploantype;?>
 <script type="text/javascript">	
-    function checkScheduleOption(){
-    	dijit.byId('deposit').attr('value',0);
-    	dijit.byId("sold_price").attr('value',0);
-		type = dijit.byId('schedule_opt').get('value');
-		dijit.byId('discount').attr('value',0);
-		if(type==1){
-			dijit.byId('period').set('readOnly',false);
-			dijit.byId('interest_rate').set('readOnly',false);
-			dijit.byId('period').attr('value',24);
-			dijit.byId('interest_rate').attr('value',1.6);
-		}else{
-			if(type==2){
-				dijit.byId('discount').attr('value',5);
-			}if(type==3){
-				dijit.byId('discount').attr('value',3);
-			}else{//full payment
-				dijit.byId('discount').attr('value',5);
-			}
-		    dijit.byId('period').set('readOnly',true);
-		    dijit.byId('period').attr('value',0);
-		    dijit.byId('interest_rate').attr('value',0);
-			dijit.byId('interest_rate').set('readOnly',true);
+function checkScheduleOption(){
+	dijit.byId('first_payment').set("readOnly",false);
+	dijit.byId('period').set("readOnly",false);
+	dijit.byId('interest_rate').set("readOnly",false);
+	dijit.byId('release_date').set("readOnly",false);
+	
+	
+	
+	method_id = dijit.byId('schedule_opt').get('value');
+	amount_principal = dijit.byId('balance').get('value');
+	debt_amount = dijit.byId('period').get('value');
+	if(method_id==4){
+		//dijit.byId('fixed_payment').attr('value',1);
+		dijit.byId('fixed_payment').set('readOnly',false);
+		dojo.byId('lbl_payment').innerHTML="<?php echo $tr->translate("AMOUNT_GRAICE_PARIOD")?>";
+		debt_term=30;
+		collect_term = 1;//dijit.byId('collect_termtype').get('value');
+		collect_amount = 1;//dijit.byId('amount_collect').get('value');
+		collect_term=30;
+		
+		term = (debt_term*debt_amount)/(collect_term*collect_amount);
+		
+		interest_rate=dijit.byId('interest_rate').get('value')/12/(100);//(100/30day)
+	
+		top_pow = Math.pow((1+interest_rate),term);
+		bellow = Math.pow((1+interest_rate),(term))-1;
+		
+		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
+		
+		dijit.byId('fixed_payment').attr('value',amount_payment);
+		//dijit.byId('fixed_payment').focus();
+	}else {
+		dijit.byId('fixed_payment').attr('value',0);
+		dijit.byId('fixed_payment').set("readOnly",true);
+		if(method_id==1){//booking
+			dojo.byId('lbl_release').innerHTML="<?php echo $tr->translate("EXPIRED_DATE")?>";
+			dijit.byId('first_payment').set("readOnly",true);
+			dijit.byId('period').set("readOnly",true);
+			dijit.byId('interest_rate').set("readOnly",true);
+		}else if(method_id==2){//payoff
+			dijit.byId('release_date').set("readOnly",true);
+			dijit.byId('first_payment').set("readOnly",true);
+			dijit.byId('interest_rate').set("readOnly",true);
+			dijit.byId('period').set("readOnly",true);
 			
+		}else if(method_id==3){//times
+			dojo.byId('lbl_release').innerHTML="<?php echo $tr->translate("START_DATE")?>";
+			total_collect = amount_principal/debt_amount;
+			dijit.byId('fixed_payment').attr("value",total_collect);
+		}else if(method_id==5){//times
+			dijit.byId('release_date').set("readOnly",true);
+			dijit.byId('first_payment').set("readOnly",true);
+			dijit.byId('interest_rate').set("readOnly",true);
+			dijit.byId('period').set("readOnly",true);
 		}
-		CompareGraicePariod();
-    }
+	}
+	//checkScheduleOption();
+}
+function calculateDiscount(){
+	dijit.byId('deposit').attr('value',0);
+	dijit.byId("sold_price").attr('value',0);
+	type = dijit.byId('schedule_opt').get('value');
+	dijit.byId('discount').attr('value',0);
+	if(type==1){
+		dijit.byId('period').set('readOnly',false);
+		dijit.byId('interest_rate').set('readOnly',false);
+		dijit.byId('period').attr('value',24);
+		dijit.byId('interest_rate').attr('value',1.6);
+	}else{
+		if(type==2){
+			dijit.byId('discount').attr('value',5);
+		}if(type==3){
+			dijit.byId('discount').attr('value',3);
+		}else{//full payment
+			dijit.byId('discount').attr('value',5);
+		}
+	    dijit.byId('period').set('readOnly',true);
+	    dijit.byId('period').attr('value',0);
+	    dijit.byId('interest_rate').attr('value',0);
+		dijit.byId('interest_rate').set('readOnly',true);	
+  }
+	Balance();
+	
+}
+function Balance(){
+	price = dijit.byId('sold_price').get('value');
+	deposit =dijit.byId('deposit').get('value');
+	if(isNaN(deposit)){
+		deposit=0;
+	}
+	if(deposit>price){
+		alert("Deposit can not biger than price ");
+		dijit.byId('deposit').focus();
+		dijit.byId('deposit').attr('value',price)
+	}
+	   dijit.byId('balance').attr('value',price-deposit);
+	   checkScheduleOption();
+}
+function filterClient(){
+	branch_id = dijit.byId('branch_id').get('value');
+	//dijit.byId('member').query.branch_id = branch_id;
+	//dijit.byId('customer_code').query.branch_id = branch_id;
+	//dijit.byId('customer_code').reset();
+	getAllPropertyBranch(branch_id);
+	getLoanByBranch();
+	getAllClientByBranch(branch_id);
+	getAllClientNumberByBranch(branch_id);
+}
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getAllPropertyBranch(branch_id){
+	//alert("alert branch"+branch_id);
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_code').set('store', property_store);
+		},
+		error: function(err) {
+		}
+	});
+}
+ 
+var url_getclient = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclientbybranch')); ?>';
+function getAllClientByBranch(branch_id){
+	dojo.xhrPost({
+		url:url_getclient,	
+		content:{ 
+		    'branch_id':branch_id
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			client_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('member').set('store', client_store);
+		},
+		error: function(err) {
+		}
+	});
+}
+var url_getclientnum = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclientnumberbybranch')); ?>';
+function getAllClientNumberByBranch(branch_id){
+	dojo.xhrPost({
+		url:url_getclientnum,	
+		content:{ 
+		    'branch_id':branch_id
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			client_number_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('customer_code').set('store', client_number_store);
+		},
+		error: function(err) {
+		}
+	});
+}
+var url_getloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloannumber')); ?>';
+function getLoanByBranch(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==''){
+		alert('Please Select Branch');
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getloan,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'is_group':0
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			//alert(data);	
+			dijit.byId('sale_code').attr('value',data);
+		},
+		error: function(err) {
+			//alert(err);
+		}
+	});
+}
+/*
     function CompareGraicePariod(){
         price = dijit.byId('land_price').get('value');
         discount = dijit.byId('discount').get('value');
@@ -178,7 +356,7 @@
 		}
 		
     	Balance();
-    }
+    }*/
     function calCulatorBalance(){
     	price = dijit.byId('land_price').get('value');
     	deposit =dijit.byId('deposit').get('value');
@@ -194,19 +372,7 @@
         checkScheduleOption();
     	
     }
-    function Balance(){
-    	price = dijit.byId('sold_price').get('value');
-    	deposit =dijit.byId('deposit').get('value');
-    	if(isNaN(deposit)){
-    		deposit=0;
-    	}
-    	if(deposit>price){
-    		alert("Deposit can not biger than price ");
-    		dijit.byId('deposit').focus();
-    		dijit.byId('deposit').attr('value',price)
-    	}
-   	   dijit.byId('balance').attr('value',price-deposit);
-    }
+    
     function checkValidateDate(){
 		return true;
      }
@@ -223,7 +389,7 @@
     		debt_term=30;
     	}
     	
-    	collect_term = dijit.byId('collect_termtype').get('value');
+    	//collect_term = dijit.byId('collect_termtype').get('value');
 		collect_amount = 1;
 		if(collect_term==1){
 			collect_term=1;
@@ -242,7 +408,7 @@
 		bellow = Math.pow((1+interest_rate),(term))-1;
 		
 		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
-		dijit.byId('amount_collect_pricipal').attr('value',amount_payment);
+		//dijit.byId('amount_collect_pricipal').attr('value',amount_payment);
 		}
 	function hideDialog() {		
 		dijit.byId("recript_dialog").hide();
@@ -264,11 +430,33 @@ dojo.require("dojo.html");
 var client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_name));?> );
 var client_number_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_code));?> );
 var co_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->co_name));?> );
+var property_store  = getDataStorefromJSON('id','name', null );
 
 require(["dojo/ready"], function(ready){
 	 ready(function(){
 		setFirstPaymentAndDateLine(3,<?php echo date('d-m-Y');?>,1);
+		checkScheduleOption();
 	  });
+	 
+	 
+	new dijit.form.FilteringSelect({
+			store: property_store,//dojo.data.ObjectStore({objectStore: client_data}),
+			autoComplete: true,
+			required: false,		           
+			name: "land_code",
+			id: "land_code",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+				/*member = dijit.byId('member').get('value');
+				if(member==-1){
+					showPopupclient();
+				}else{
+					dijit.byId('customer_code').attr('value',member);
+				}*/
+		}
+			}, "land_code");
+	 
 	new dijit.form.FilteringSelect({
 	store: client_store,//dojo.data.ObjectStore({objectStore: client_data}),
 	autoComplete: true,
@@ -497,9 +685,9 @@ function CalculateDate(){
 function checkReleaseDate(){
 	CalculateDate();
 }
-function calCulatePeriod(){
+/*function calCulatePeriod(){
 	CalculateDate();
-}
+}*/
 function getFirstPayment(){
 	calCulateFirstPayment();
 }
