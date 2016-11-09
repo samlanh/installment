@@ -42,7 +42,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		
 		$employee = new Zend_Dojo_Form_Element_FilteringSelect('employee');
 		$rows = $db ->getAllCOName();
-		$options=array(''=>"---ស្វែងរកតាមរយៈឈ្មោះ---");
+		$options=array(''=>"---ážŸáŸ’ážœáŸ‚áž„ážšáž€áž�áž¶áž˜ážšáž™áŸˆážˆáŸ’áž˜áŸ„áŸ‡---");
 		if(!empty($rows))foreach($rows AS $row) $options[$row['co_id']]=$row['co_khname'];
 		$employee->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -67,16 +67,16 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 				'required' =>'true'
 		));
 		$rows = $db->getAllBranchName();
-		$options_branch=array(''=>"---ស្វែងរកតាមរយៈសាខា---");
+		$options_branch=array('-1'=>"---Select Branch---");
 		if(!empty($rows))foreach($rows AS $row){
-			$options_branch[$row['br_id']]=$row['branch_namekh'];
+			$options_branch[$row['br_id']]=$row['project_name'];
 		}
 		$branch_id->setMultiOptions($options_branch);
 		$branch_id->setValue($request->getParam("branch_id"));
 		
 		$approve_by = new Zend_Dojo_Form_Element_FilteringSelect('approve_by');
 		$rows = $db ->getAllCOName();
-		$options_approve=array(''=>"---ស្វែងរកអ្នកយល់ព្រម---");
+		$options_approve=array(''=>"---ážŸáŸ’ážœáŸ‚áž„ážšáž€áž¢áŸ’áž“áž€áž™áž›áŸ‹áž–áŸ’ážšáž˜---");
 		if(!empty($rows))foreach($rows AS $row) $options_approve[$row['co_id']]=$row['co_khname'];
 		$approve_by->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -119,17 +119,20 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$from_date->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
 				//'required'=>'true',
 				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'onchange'=>'CalculateDate();'));
 		$_date = $request->getParam("start_date");
 		
 		if(empty($_date)){
-			$_date = date('Y-m-d');
+			$_date = date("Y-m-d");
 		}
 		$from_date->setValue($_date);
 		
 		
 		$to_date = new Zend_Dojo_Form_Element_DateTextBox('end_date');
-		$to_date->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','required'=>'true','class'=>'fullside',
+		$to_date->setAttribs(array(
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				'dojoType'=>'dijit.form.DateTextBox','required'=>'true','class'=>'fullside',
 		));
 		$_date = $request->getParam("end_date");
 		
