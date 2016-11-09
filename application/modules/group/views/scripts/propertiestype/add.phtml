@@ -1,0 +1,64 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('ADD_PROPERTY_TYPE'));
+?>	
+<?php  $property= $this->frm_property_type;?>
+<script>
+	dojo.require("dijit/form/DateTextBox");
+	dojo.require("dijit/form/NumberTextBox");
+	dojo.ready(function(){
+		//getStaffCode();
+		});
+</script>
+<form  id='add_techer' action="<?php echo $this->url(array('module'=>'group','controller'=>'propertiestype','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				/*if(dijit.byId('province').get('value')==''){
+					alert('Province required');
+					return false;
+			    }*/
+				return true;
+			} else {
+				return false;
+			}
+</script>
+<table width="50%" style="margin: 0 auto;">
+	<tr>
+		<td>
+		<fieldset style="margin-top: -10px;">
+					<legend><strong><?php echo $tr->translate("PROPERTY_TYPE");?></strong></legend>
+					
+					<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+						<tr>
+							<td><?php echo $tr->translate("TITLE_EN")?></td>
+							<td><?php  echo $property->getElement('type_nameen');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("TITLE_KH")?></td>
+							<td><?php  echo $property->getElement('type_namekh');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("NOTE")?></td>
+							<td><?php  echo $property->getElement('note');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php  echo $property->getElement('status');?></td>
+						</tr>
+								
+				</table>
+							<div style="text-align: center; margin: 10px 0px;">
+									<input type="hidden" name="exchangefrom" value="2" />
+									<input type="reset" value="សំអាត" label="សំអាត"dojoType="dijit.form.Button"/>
+									<input type="submit" value="save_close" name="save_close" label="រក្សាទុក+បិត" dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />
+									<input type="submit" value="save_new" name="save_new" label="រក្សាទុក+ថ្មី" dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />
+							</div>
+					</fieldset>	
+		</fieldset>		
+		
+		</td>
+	</tr>
+</table>	
+</form>
