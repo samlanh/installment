@@ -1,144 +1,231 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('VIEW_CLIENT'));
-	$rs = $this->client_list;
-	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$this->headTitle($tr->translate('CLIENT_PROFILE')); 
+	echo $this->headTitle(''); 
 ?>	
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script type="dojo/method" event="onSubmit">			
+	if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+</script>
 <style>
-.border-cover {
-  border: 1px solid #ccc;
-  padding: 0px 4px;
-  background: #E5F2F5;
-}}
+.b{ font-weight: bold; }
 </style>
-<div class="menureport">
-	<ul>
-		<li class="preview"><a title="Preview" href="#" onclick="preview();"></a></li>
-		<li class="print"><a href="#" title="Print" onclick="doPrint();" ></a></li>
-	</ul>
-</div>
-<input type="button"  label="<?php echo $tr->translate("GO_BACK");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'group','controller'=>"index",'action'=>'index'),null,true); ?>';"/>
-<input  type="button" id="wu-register" iconClass="dijitIconEdit" label="<?php echo $tr->translate("GO_EDIT");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'group','controller'=>"index",'action'=>'edit','id'=>$rs['client_id']),null,true); ?>';"/>
-</p>
-
-<table  cellspacing="10" class='fullside' style="font-size:12px;font-family: 'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;">
-	<tr>
-		<td>			<div style="text-align:center !important;"><?php echo $tr->translate("VIEW_CLIENT");?></div>
-					<div style=" width:22cm;min-height:28cm; margin:0 auto;">
-						
-					<div id="divPrint" style="width: 100%;">
-					
-					<table cellspacing="10" class='fullside' style="font-size:12px;font-family: 'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;border: 1px dotted #ccc; padding:0px 0.5cm">
-					<tr><td><img width="80px" src="<?php echo $base_url.'images/'.(empty($rs['photo_name'])?"no-profile.png":$rs['photo_name']);?>" /></td></tr>
-						<tr>
-							
-							<td><?php echo $tr->translate("BRANCH_NAME");?>*</td>
-							<td class="border-cover "><?php echo $rs['branch_name'];?></td>
-							<td><?php echo $tr->translate("IS_GROUP")?></td>
-							<td class="border-cover "><?php if($rs['is_group']==1)echo'as Group';?></td>		
-							<td><?php echo $tr->translate("GROUP_CODE")?></td>
-						   <td class="border-cover "><?php echo $rs['group_code'];?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("GROUP_NAME")?></td>
-							<td class="border-cover "><?php echo $rs['parent'];?></td>
-							<td><?php echo $tr->translate("CLIENT_NO")?></td>
-							<td class="border-cover "><?php echo $rs['client_number'];?></td>
-							<td><?php echo $tr->translate("NAME_KHMER")?>*</td>
-							<td class="border-cover "><?php echo $rs['name_kh'];?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NAME_ENG")?>*</td>
-							<td class="border-cover "><?php echo $rs['name_en'];?></td>
-							<td><?php echo $tr->translate("SEX")?></td>
-							<td class="border-cover "><?php echo $rs['sex'];?></td>
-							<td><?php echo $tr->translate("SITU_STATUS")?>*</td>
-							<td class="border-cover "><?php  echo $rs['sit_status'];?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-							<td class="border-cover "><?php echo $rs['client_d_type'];?></td>
-							<td></td>
-							<td class="border-cover "><?php echo $rs['nation_id'];?></td>
-							<td><?php echo $tr->translate("JOB_TYPE")?></td>
-							<td class="border-cover "><?php echo $rs['job'];?></td>
-							
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("PHONE")?></td>
-							<td class="border-cover "><?php echo $rs['phone'];?></td>
-							<td><?php echo $tr->translate("PHOTO")?></td>
-							<td class="border-cover "><?php //echo $frm->getElement('photo');?></td>
-							<td><?php echo $tr->translate("PROVINCE")?>*</td>
-							<td class="border-cover "><?php echo $rs['province_en_name'];?></td>
-							
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("DISTRICT")?></td>
-							<td class="border-cover "><?php echo $rs['district_name'];?></td>
-							<td><?php echo $tr->translate("COMMUNE")?></td>
-							<td class="border-cover "><?php echo $rs['commune_name'];?></td>
-							<td><?php echo $tr->translate("VILLAGE")?></td>
-							<td class="border-cover "><?php echo $rs['village_name'];?></td>							
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("STREET")?></td>
-							<td class="border-cover "><?php echo $rs['street'];?></td>
-							<td><?php echo $tr->translate("HOUSE")?></td>
-							<td class="border-cover "><?php echo $rs['house'];?></td>
-							<td><?php echo $tr->translate("JOIN_WITH")?></td>
-							<td class="border-cover "><?php echo $rs['join_with'];?></td>	
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-							<td class="border-cover "><?php echo $rs['join_d_type'];?></td>
-							<td></td>
-							<td class="border-cover "><?php echo $rs['join_nation_id'];?></td>
-							<td><?php echo $tr->translate("RELATIVE_WITH")?></td>
-							<td class="border-cover "><?php echo $rs['relate_with'];?></td>														
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("TEL")?></td>
-							<td class="border-cover "><?php echo $rs['join_tel'];?></td>
-							<td><?php echo $tr->translate("SPOUSE_NAME")?></td>
-							<td class="border-cover "><?php echo $rs['spouse_name']; ?></td>
-							<td><?php echo $tr->translate("TEL")?></td>
-							<td class="border-cover "><?php echo $rs['guarantor_tel'];?></td>				
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-							<td class="border-cover "><?php echo $rs['guarantor_d_type'];?></td>
-							<td></td>
-							<td class="border-cover "><?php echo $rs['spouse_nationid'];?></td>
-							<td><?php echo $tr->translate("RELATIVE_WITH")?></td>
-							<td class="border-cover "><?php echo $rs['guarantor_with'];?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NOTE")?></td>
-							<td class="border-cover "><?php echo $rs['remark'];?></td>
-							<td valign="top"><?php echo $tr->translate("GUARANTOR_ADDRESS")?></td>
-							<td valign="top" class="border-cover "><?php  echo $rs['guarantor_address'];?></td>
-							<td valign="top"><?php echo $tr->translate("STATUS")?></td>
-							<td valign="top" class="border-cover "><?php  echo ($rs['status']==1)?"Active":"Deactive";?></td>
-						</tr>
-					</table>	
-				</div>
-				</div>
+<script type="text/javascript">
+dojo.require("dijit.form.NumberTextBox");
+dojo.ready(function(){
+	 
+}); 
+ 
+</script>
+ 
+		<table width="100%">
+		      <tr>
+		           <td></td>
+			       <td>
+						<div class="menureport">
+							<ul>
+								<li class="preview"><a title="Preview" href="#" onclick="preview();"></a></li>
+								<li class="print"><a href="#" title="Print" onclick="doPrint();" ></a></li>
+								<li class="excel"><a href="#"  title="Export"  onclick="exportExcel();"></a></li>
+							</ul>
+						</div>
+			      </td>
+			</tr>
+		   </table>
+		<div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
 			
-		</td>
-	</tr>
-</table>	
-</form>
-<table>
-<tr>
-</tr>
-</table>
-<iframe style="font-size: 10px; !important;" name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
-<script>
+			<div id="divPrint">
+				<style>
+		   			tr.header-line{
+		   				font-size: 16px;
+					}
+		   		</style>
+				<table width="100%" style="font-size:12px;font-family:Tahoma,'Khmer OS Battambang';"> 
+					<tr>
+						<td>
+						   <table width="100%" >
+						   			<tr>
+										<td width="28%" align="left">
+											<img style="width:70%;" src="<?php echo $this->baseUrl().'/images/BPPT_logo.png'?>"><br /><br >
+										</td>
+										<td align="center" width="44%"  >
+											<strong style="font-weight:bold;color:#000; font-size: 18px;font-family:Tahoma,'Khmer MEF2';"><?php echo $tr->translate("CLIENT_PROFILE"); ?></strong><br />
+											<span style="font-weight: bold;font-size: 12px;">&nbsp; For Date &nbsp; <?php echo date("d-M-Y");?></span><br /><br />
+										</td>
+										<td width="28%" align="right">
+										</td>
+									</tr>
+						   </table>
+						   <?php $sex='';
+									      if($this->client_list['sex']==1){
+									      	$sex=$tr->translate("MALE");
+										  }else{
+										  	$sex=$tr->translate("FEMALE");
+										  }
+									?>
+					      	<table  cellspacing="5"  style="background:#fff;margin: 0 auto;width: 100%;font-size:12px;font-family:Tahoma,'Khmer OS Battambang';" >
+					      		<tr class="header-line">
+					     	         <td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("CLIENT_INFO");?></strong></td>
+					     	    </tr>
+					      		<tr  >
+					      		    <td rowspan="3">
+										 <div style="width:160px; height:140px;padding:3px;"><img src="<?php echo $this->baseUrl();?>/images/<?php echo $this->client_list['photo_name'];?>" style="width:120px;height:140px;"/></div>
+					      		    </td>
+					      		      <td style="width:80%; vertical-align: top;" colspan="4">
+					      		      
+					      		         <table width="100%" style="font-size:12px;font-family: 'Khmer OS Battambang';">
+					      		               <tr>
+					      		                   <td><?php echo $tr->translate("NAME_KH");?>:</td>
+					      		                   <td><label><?php echo $this->client_list['name_kh'];?></label></td>
+					      		                   <td><?php echo $tr->translate("NAME_EN");?>:</td>
+					      		                   <td><label><?php echo $this->client_list['name_en'];?></label> </td>
+					      		               </tr>
+					      		               <tr>
+					      		               	   <td><?php echo $tr->translate("NATIONALITY");?>:</td>
+					      		                   <td><label><?php echo $this->client_list['nationality'];?></label></td>
+					      		                   <td> <?php echo $tr->translate("SEX");?>:&nbsp;</td>
+					      		                   <td><label><?php echo $sex?></label></td>
+					      		               </tr>
+					      		               <tr>
+					      		               	  <td><?php echo $tr->translate("NATIONAL_ID");?>:</td>
+					      		                  <td><label><?php echo $this->client_list['nation_id'];?></label></td>
+					      		               	  <td> <?php echo $tr->translate("DOB");?>:&nbsp; </td>
+					      		                  <td><label><?php echo date("d-M-Y",strtotime($this->client_list['dob']));?></label></td>
+					      		                  
+					      		               </tr>
+					      		               <tr>
+					      		               		<td><?php echo $tr->translate("PHONE");?>:&nbsp;</td>
+					      		                  	<td><label><?php echo $this->client_list['phone'];?></label></td>
+					      		                   	<td><?php echo $tr->translate("EMAIL_ADDRESS");?>:&nbsp; </td>
+					      		               		<td><label><?php echo $this->client_list['email'];?></label></td>
+					      		               </tr>
+					      		         </table>
+									</td>
+					      		</tr>
+					      		<tr >  </tr>
+					      		<tr> </tr>
+					      		
+					      	</table>
+					      
+					     	<table width="100%" style="margin:0 auto;font-size:12px;font-family: 'Khmer OS Battambang';" cellspacing="5">
+					      		<tr class="header-line">
+					      			<td colspan="6"​ style="border-bottom:1px solid #ddd;" class="b"><strong><?php echo $tr->translate("CURRENT_ADDRESS");?></strong></td>
+					      		</tr>
+					      		<tr>
+					      			<td><?php echo $tr->translate("HOME");?>:</td>
+									<td><label><?php echo $this->client_list['house'];?></label>  </td>
+									<td><?php echo $tr->translate("STREET");?>:</td>
+									<td><label><?php echo $this->client_list['street'];?></label> </td>
+									<td><?php echo $tr->translate("VILLAGE");?>:</td>
+									<td><label><?php echo $this->client_list['village_name'];?></label></td>
+									
+								</tr>
+								<tr>								
+									<td><?php echo $tr->translate("COMMUNE");?>:</td>
+									<td><?php echo $this->client_list['commune_name'];?> </td>
+									<td><?php echo $tr->translate("DISTRICT");?>:</td>
+									<td><label><?php echo $this->client_list['district_name'];?></label> </td>
+									<td><?php echo $tr->translate("PROVINCE");?>:</td>
+									<td><label><?php echo $this->client_list['province_en_name'];?></label>
+									</td>
+								</tr>
+					      		<tr class="header-line">
+					      			<td colspan="6"​ style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("PLOT_HOLDER_INFO");?></strong></td>
+					      		</tr>
+					      		<?php $plot_sex='';
+									      if($this->client_list['ksex']==1){
+									      	$plot_sex=$tr->translate("MALE");
+										  }else{
+										  	$plot_sex=$tr->translate("FEMALE");
+										  }
+									?>
+					      		<tr>
+					      			<td><?php echo $tr->translate("NAME_KH");?>:</td>
+									<td><label><?php echo $this->client_list['hname_kh'];?></label> </td>
+									<td><?php echo $tr->translate("NAME_EN");?>:</td>
+									<td><label><?php echo $this->client_list['bname_kh'];?></label> </td>
+									<td><?php echo $tr->translate("SEX");?>:</td>
+									<td><label><?php echo $plot_sex; ?></label></td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate("NATIONALITY");?>:</td>
+									<td><label><?php echo $this->client_list['p_nationality'];?></label> </td>
+									<td><?php echo $tr->translate("NATIONAL_ID");?>:</td>
+									<td><label><?php echo $this->client_list['rid_no'];?></label> </td>
+									<td><?php echo $tr->translate("PHONE");?>:</td>
+									<td><label><?php echo $this->client_list['lphone'];?></label> </td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate("REFFERENCE");?>:</td>
+									<td><label><?php echo $this->client_list['arid_no'];?></label> </td>
+								</tr>
+					      		<tr class="header-line">
+									<td colspan="6" style="border-bottom:1px solid #ccc;" class="b"><strong><?php echo $tr->translate("PLOT_ADDRESS");?></strong></td>
+								</tr>
+					      		<tr>
+					      			<td><?php echo $tr->translate("HOME");?>:</td>
+									<td><label><?php echo $this->client_list['ghouse'];?></label>  </td>
+									<td><?php echo $tr->translate("STREET");?>:</td>
+									<td><label><?php echo $this->client_list['dstreet'];?></label> </td>
+									<td><?php echo $tr->translate("VILLAGE");?>:</td>
+									<td><label><?php echo $this->client_list['p_village_name'];?></label></td>
+									
+								</tr>
+								<tr>								
+									<td><?php echo $tr->translate("COMMUNE");?>:</td>
+									<td><?php echo $this->client_list['p_commune_name'];?> </td>
+									<td><?php echo $tr->translate("DISTRICT");?>:</td>
+									<td><label><?php echo $this->client_list['p_district_name'];?></label> </td>
+									<td><?php echo $tr->translate("PROVINCE");?>:</td>
+									<td><label><?php echo $this->client_list['p_province_en_name'];?></label>
+									 
+									</td>
+									
+								</tr>
+							</table>
+		 
+					   </td>
+					</tr>
+					<tr>
+						<td align="center">
+							<table width="100%">
+								<tr>
+									<td colspan="3">&nbsp;</td>
+								</tr>
+								
+								<tr >
+									<td align="center" width="25%">
+										<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+									</td>
+									<td  width="50%">
+										&nbsp;
+									</td>
+									<td align="center"  width="25%">
+										<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+									</td>
+								</tr>
+							</table>
+							
+					   	</td>
+					  </tr>
+	   </table>
+	   </div>
+	 </div>
+<script type="text/javascript">
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
 function preview()
 { 
   var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
-      disp_setting+="scrollbars=no,width=1100, height=700, left=100, top=25"; 
+      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
   var content_vlue = document.getElementById("divPrint").innerHTML; 
   
   var docprint=window.open("","",disp_setting); 
@@ -150,12 +237,8 @@ function preview()
    docprint.document.close(); 
    docprint.focus(); 
 }
-
-function doPrint() {
-	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
-    window.frames["print_frame"].window.focus();
-    window.frames["print_frame"].window.print();
-    hideDialog();
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
 }
-
 </script>
+

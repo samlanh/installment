@@ -84,6 +84,20 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 		
+		$_nationality = new Zend_Dojo_Form_Element_TextBox('nationality');
+		$_nationality->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		$_nationality->setValue("ខ្មែរ");
+		
+		$p_nationality = new Zend_Dojo_Form_Element_TextBox('p_nationality');
+		$p_nationality->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		$p_nationality->setValue("ខ្មែរ");
+		
 		$_sex = new Zend_Dojo_Form_Element_FilteringSelect('sex');
 		$_sex->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -99,6 +113,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 		));
+		
 		
 		$_province = new Zend_Dojo_Form_Element_FilteringSelect('province');
 		$_province->setAttribs(array(
@@ -161,6 +176,11 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		
 		$_phone = new Zend_Dojo_Form_Element_TextBox('phone');
 		$_phone->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		$_email = new Zend_Dojo_Form_Element_TextBox('email');
+		$_email->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
@@ -329,12 +349,14 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$_street->setValue($data['street']);
 			$_id_no->setValue($data['id_number']);
 			$_phone->setValue($data['phone']);
+			$_email->setValue($data['email']);
 			$_desc->setValue($data['remark']);
 			$_status->setValue($data['status']);
 			$_clientno->setValue($data['client_number']);	
 			$photo->setValue($data['photo_name']);
 			$_id->setValue($data['client_id']);
 			$job->setValue($data['job']);
+			$_nationality->setValue($data['nationality']);
 			$national_id->setValue($data['nation_id']);
             $client_d_type->setValue($data['client_d_type']);
 			$_dob->setValue($data['dob']);
@@ -347,13 +369,14 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$_arid_no->setValue($data['arid_no']);
 			$_edesc->setValue($data['edesc']);
 			$_ksex->setValue($data['ksex']);
+			$p_nationality->setValue($data['p_nationality']);
 			$_cprovince->setValue($data['cprovince']);
 			$_adistrict->setValue($data['adistrict']);
 			$_dcommune->setValue($data['dcommune']);
 		}
-		$this->addElements(array($_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_qvillage,$_dcommune,$_adistrict,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
+		$this->addElements(array($p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_qvillage,$_dcommune,$_adistrict,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
 				$_join_with,$_id,$photo,$job,$national_id,$_member,$_namekh,$_nameen,$_sex,
-				$_province,$_district,$_commune,$_village,$_house,$_street,$_id_no,$branch_id,
+				$_province,$_district,$_commune,$_village,$_house,$_street,$_id_no,$branch_id,$_email,
 				$_phone,$_desc,$_status,$_clientno,$_dob,$clienttype_namekh,$clienttype_nameen));
 		return $this;
 		
@@ -384,11 +407,26 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 	
+		$land_price = new Zend_Dojo_Form_Element_NumberTextBox('land_price');
+		$land_price->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$house_price = new Zend_Dojo_Form_Element_NumberTextBox('house_price');
+		$house_price->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'required' =>'true',
+				'onKeyup'=>'CalculatePrice();'
+		));
+		
 		$_price = new Zend_Dojo_Form_Element_NumberTextBox('price');
 		$_price->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
-				'required' =>'true'
+				'required' =>'true',
+				'readonly'=>'readonly'
 		));
 		
 		$_size = new Zend_Dojo_Form_Element_TextBox('size');
@@ -488,6 +526,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$_landcode->setValue($data['land_code']);
 			$landaddress->setValue($data['land_address']);
 			$_price->setValue($data['price']);
+			$land_price->setValue($data['land_price']);
+			$house_price->setValue($data['house_price']);
 			$_size->setValue($data['land_size']);
 			$width->setValue($data['width']);
 			$height->setValue($data['height']);
@@ -501,7 +541,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$propertiestype->setValue($data['property_type']);
 			$floor->setValue($data['floor']);
 		}
-		$this->addElements(array($branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
+		$this->addElements(array($land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
 		return $this;
 	
 	}

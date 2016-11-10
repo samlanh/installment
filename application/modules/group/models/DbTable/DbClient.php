@@ -50,7 +50,9 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				'house'	      => $_data['house'],
 				'photo_name'  =>$photo,
 				'nation_id'=>$_data['national_id'],
+		    	'nationality'=>$_data['nationality'],
 				'phone'	      => $_data['phone'],
+		    	'email'	      => $_data['email'],
 				'create_date' => date("Y-m-d"), 
 				'remark'	  => $_data['desc'],
 				'status'      => $_data['status'],
@@ -58,6 +60,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				'user_id'	  => $this->getUserId(),
 		    	'hname_kh'      => $_data['hname_kh'],
 		    	'bname_kh'      => $_data['bname_kh'],
+		    	'p_nationality'      => $_data['p_nationality'],
 		    	'ghouse'      => $_data['ghouse'],
 		    	'ksex'      => $_data['ksex'],
 		    	'adistrict'      => $_data['adistrict'],
@@ -92,21 +95,21 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 	}
 	public function getClientDetailInfo($id){
 		$db = $this->getAdapter();
-		$sql = "SELECT c.client_id ,c.is_group,group_code, c.client_number ,c.name_kh ,c.name_en,c.join_with ,c.join_nation_id,c.relate_with, 
-		c.join_tel, c.guarantor_with ,c.guarantor_tel ,nation_id,
-		c.position_id ,(SELECT commune_name FROM `ln_commune` WHERE com_id = c.com_id   LIMIT 1) AS commune_name
+		$sql = "SELECT c.client_id , c.client_number ,c.`name_en`,c.`name_kh`,c.`sex`,
+		c.`id_number`,c.`id_type`,c.`acc_number`,c.`phone`,c.`dob`,c.`pob`,c.`tel`,c.`email`,c.`street`,c.`house`,
+		(SELECT commune_name FROM `ln_commune` WHERE com_id = c.com_id   LIMIT 1) AS commune_name
 		,(SELECT district_name FROM `ln_district` AS ds WHERE dis_id = c.dis_id  LIMIT 1) AS district_name
 		,(SELECT province_en_name FROM `ln_province` WHERE province_id= c.pro_id  LIMIT 1) AS province_en_name
-		,(SELECT village_name FROM `ln_village` WHERE vill_id = c.village_id  LIMIT 1) AS village_name ,c.street,c.house ,
-		c.id_type ,c.id_number, c.phone,c.job , c.spouse_name , c.spouse_nationid ,c.remark ,c.status , c.user_id ,
-		(SELECT name_en FROM `ln_view` WHERE TYPE = 5 AND key_code = c.sit_status) AS sit_status , 
-		(SELECT branch_nameen FROM `ln_branch` WHERE br_id =c.branch_id LIMIT 1) AS branch_name ,
-		(SELECT name_en FROM `ln_client` WHERE client_id =c.parent_id ) AS parent , 
-		(SELECT name_en FROM `ln_view` WHERE TYPE = 11 AND key_code =c.sex) AS sex ,
-		(SELECT name_en FROM `ln_view` WHERE TYPE = 23 AND key_code =c.`client_d_type`) AS client_d_type ,
-		(SELECT name_en FROM `ln_view` WHERE TYPE = 23 AND key_code =c.`join_d_type`) AS join_d_type ,  
-		(SELECT name_en FROM `ln_view` WHERE TYPE = 23 AND key_code =c.`guarantor_d_type`) AS guarantor_d_type ,`guarantor_address`,      
-		 photo_name FROM `ln_client` AS c WHERE client_id =  ".$db->quote($id);
+		,(SELECT village_name FROM `ln_village` WHERE vill_id = c.village_id  LIMIT 1) AS village_name , 
+		(SELECT project_name FROM `ln_project` WHERE br_id =c.branch_id LIMIT 1) AS project_name ,
+		 c.`remark`,c.`status`,
+		 c.bname_kh,c.`hname_kh`,c.`lphone`,c.`ksex`,
+		 (SELECT commune_name FROM `ln_commune` WHERE com_id = c.dcommune   LIMIT 1) AS p_commune_name
+		,(SELECT district_name FROM `ln_district` AS ds WHERE dis_id = c.adistrict  LIMIT 1) AS p_district_name
+		,(SELECT province_en_name FROM `ln_province` WHERE province_id= c.cprovince  LIMIT 1) AS p_province_en_name
+		,(SELECT village_name FROM `ln_village` WHERE vill_id = c.qvillage  LIMIT 1) AS p_village_name ,
+		c.`dstreet`,c.`ghouse`,c.`nationality`,c.`nation_id`,c.`p_nationality`,c.`rid_no`,c.`arid_no`,
+		 c.photo_name FROM `ln_client` AS c WHERE client_id =  ".$db->quote($id);
 		$sql.=" LIMIT 1 ";
 		$row=$db->fetchRow($sql);
 		return $row;

@@ -24,6 +24,8 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				'land_code'	  => $land_code,
 				'land_address'	  => $_data['land_address'],
 				'price'	      => $_data['price'],
+		    	'land_price'	      => $_data['land_price'],
+		    	'house_price'	      => $_data['house_price'],
 				'land_size'			=>$_data['size'],
 				'width'      => $_data['width'],
 				'height'      => $_data['height'],

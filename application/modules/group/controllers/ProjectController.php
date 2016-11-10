@@ -28,7 +28,7 @@ class Group_ProjectController extends Zend_Controller_Action {
 			$link=array(
 					      'module'=>'group','controller'=>'project','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rowshow,array('project_name'=>$link,'project_type'=>$link));
+			$this->view->list=$list->getCheckList(2, $collumns, $rs_rowshow,array('project_name'=>$link,'project_type'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message($this->tr->translate("APPLICATION_ERROR"));
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -85,6 +85,33 @@ class Group_ProjectController extends Zend_Controller_Action {
 		$update=$frm->FrmBranch($row);
 		$this->view->frm_branch=$update;
 		Application_Model_Decorator::removeAllDecorator($update);
+	}
+	function copyAction()
+	{
+		$id=$this->getRequest()->getParam("id");
+		if($this->getRequest()->isPost()){//check condition return true click submit button
+			$_data = $this->getRequest()->getPost();
+			$_dbmodel = new Group_Model_DbTable_DbProject();
+			try {
+				$_dbmodel->addbranch($_data);
+				if(!empty($_data['save_new'])){
+					Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCESS"));
+				}else{
+					Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL . "/project/index");
+				}
+			}catch (Exception $e) {
+				Application_Form_FrmMessage::message($this->tr->translate("INSERT_FAIL"));
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+		$db=new Group_Model_DbTable_DbProject();
+		$row=$db->getBranchById($id);
+		
+		$fm = new Group_Form_Frmbranch();
+		$frm = $fm->Frmbranch($row,"1");
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_branch = $frm;
 	}
 }
 

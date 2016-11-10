@@ -48,7 +48,7 @@ class Group_indexController extends Zend_Controller_Action {
 			$link1=array(
 					'module'=>'group','controller'=>'index','action'=>'view',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link1,'client_number'=>$link,'name_kh'=>$link,'name_en'=>$link));
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link1,'client_number'=>$link,'name_kh'=>$link,'name_en'=>$link1));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

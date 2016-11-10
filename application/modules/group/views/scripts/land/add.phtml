@@ -22,7 +22,7 @@ dojo.require("dijit.Dialog");
 	<tr>
 		<td>
 		<fieldset>
-					<legend ><strong><?php echo $tr->translate("Add Property");?></strong></legend>
+					<legend ><strong><?php echo $tr->translate("ADD_PROPERTY");?></strong></legend>
 					<table style="margin: 0 auto; width:100%;" cellspacing="10">
 						<tr>
 							<td><?php echo $tr->translate("BRANCH")?></td>
@@ -31,6 +31,14 @@ dojo.require("dijit.Dialog");
 							<td><?php echo $frm->getElement('landcode');?></td>
 							<td><?php echo $tr->translate("TITLE")?>*</td>
 							<td><?php  echo $frm->getElement('land_address');?></td>
+						</tr>
+						<tr>
+							 <td valign="top"><?php echo $tr->translate("PROPERTY_TYPE")?></td>
+							<td valign="top"><?php  echo $frm->getElement('property_type');?></td>
+							<td><?php echo $tr->translate("LAND_PRICE")?>*</td>
+							<td><?php  echo $frm->getElement('land_price');?></td>
+							<td><?php echo $tr->translate("HOUSE_PRICE")?>*</td>
+							<td><?php  echo $frm->getElement('house_price');?></td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("PRICE")?>*</td>
@@ -43,28 +51,22 @@ dojo.require("dijit.Dialog");
 						<tr>
 							<td><?php echo $tr->translate("HEIGHT")?></td>
 							<td><?php  echo $frm->getElement('height');?></td>
-						    <td valign="top"><?php echo $tr->translate("HEAD_TITLE_NO")?></td>
+						   <td valign="top"><?php echo $tr->translate("HEAD_TITLE_NO")?></td>
 							<td valign="top"><?php  echo $frm->getElement('hardtitle');?></td>
-							<td valign="top"><?php echo $tr->translate("NOTE")?></td>
-							<td><?php  echo $frm->getElement('desc');?></td>
-						</tr>
-						<tr>
-						    <td valign="top"><?php echo $tr->translate("PROPERTY_TYPE")?></td>
-							<td valign="top"><?php  echo $frm->getElement('property_type');?></td>
 							<td valign="top"><?php echo $tr->translate("FLOOR")?></td>
 							<td><?php  echo $frm->getElement('floor');?></td>
-							<td valign="top"><?php echo $tr->translate("BEDROOM")?></td>
-							<td valign="top"><?php  echo $frm->getElement('bedroom');?></td>
 						</tr>
 						<tr>
+							<td valign="top"><?php echo $tr->translate("BEDROOM")?></td>
+							<td valign="top"><?php  echo $frm->getElement('bedroom');?></td>
 						    <td valign="top"><?php echo $tr->translate("LIVING")?></td>
 							<td valign="top"><?php  echo $frm->getElement('living');?></td>
 							<td valign="top"><?php echo $tr->translate("DINNER_ROOM")?></td>
 							<td><?php  echo $frm->getElement('dinnerroom');?></td>
-							<td valign="top"><?php echo $tr->translate("BUIDING_YEAR")?></td>
-							<td valign="top"><?php  echo $frm->getElement('buidingyear');?></td>
 						</tr>
 						<tr>
+							<td valign="top"><?php echo $tr->translate("BUIDING_YEAR")?></td>
+							<td valign="top"><?php  echo $frm->getElement('buidingyear');?></td>
 						    <td valign="top"><?php echo $tr->translate("PARKING_SPACE")?></td>
 							<td valign="top"><?php echo $frm->getElement('parkingspace');?></td>
 							<td valign="top"><?php echo $tr->translate("STATUS")?></td>
@@ -73,6 +75,10 @@ dojo.require("dijit.Dialog");
 							<td><?php //echo $frm->getElement('photo');?></td>
 							<td valign="top"><?php //echo $tr->translate("bedroom")?></td>
 							<td valign="top"><?php  //echo $frm->getElement('bedroom');?></td> -->
+						</tr>
+						<tr>
+							<td valign="top"><?php echo $tr->translate("NOTE")?></td>
+							<td><?php  echo $frm->getElement('desc');?></td>
 						</tr>
 						<tr>
 							<td colspan="6" align="center">
@@ -155,5 +161,11 @@ function getPropertyNo(){
 			alert(err);
 		}
 	});
+}
+function CalculatePrice(){
+	house_price = dijit.byId('house_price').get('value');
+	land_price = dijit.byId('land_price').get('value');
+	var price = Number(house_price + land_price);
+	dijit.byId('price').attr('value',price);
 }
 </script>

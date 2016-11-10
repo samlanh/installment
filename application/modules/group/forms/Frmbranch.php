@@ -14,7 +14,7 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 		$this->text = 'dijit.form.TextBox';
 		$this->tarea = 'dijit.form.SimpleTextarea';
 	}
-	public function Frmbranch($data=null){
+	public function Frmbranch($data=null,$copy=null){
 		
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		
@@ -163,7 +163,9 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 			
 			$br_address->setValue($data['br_address']);
 			$branch_tel->setValue($data['branch_tel']);
-			$branch_code->setValue($data['branch_code']);
+			if (empty($copy)){
+				$branch_code->setValue($data['branch_code']);
+			}
 			$_fax->setValue($data['fax']);
 			$branch_note->setValue($data['other']);
 			$branch_status->setValue($data['status']);
