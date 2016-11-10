@@ -3,14 +3,14 @@
 class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'ln_co';
+    protected $_name = 'ln_staff';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace('auth');
     	return $session_user->user_id;
     	 
     }
 	public function addCreditOfficer($_data){
-		$photoname = str_replace(" ", "_", $_data['first_name']) . '.jpg';
+		$photoname = str_replace(" ", "_", $_data['name_en']) . '.jpg';
 		$upload = new Zend_File_Transfer();
 		$upload->addFilter('Rename',
 				array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
@@ -24,10 +24,18 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 			$_data['photo']="";
 		}
 		unset($_data['MAX_FILE_SIZE']);
+		if(!empty($_data['id'])){
+			$oldCode = $this->getCOById($_data['id']);
+			$staff_id = $oldCode['co_code'];
+		}else{
+			$db = new Application_Model_DbTable_DbGlobal();
+			$staff_id = $db->getStaffNumberByBranch($_data['branch_id']);
+		}
 		$_arr=array(
-				'co_code'	  => $_data['co_id'],
+				'branch_id'	  => $_data['branch_id'],
+				'co_code'	  => $staff_id,
 				'co_khname'	  => $_data['name_kh'],
-				'co_firstname'=> $_data['first_name'],
+				'co_firstname'=> $_data['name_en'],
 				'co_lastname' => '',//$_data['last_name'],
 				'displayby'	  => $_data['display'],
 				'position_id' =>$_data['position'],
@@ -38,7 +46,7 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 				'degree'	      => $_data['degree'],
 				'tel'	  	  => $_data['tel'],
 				'email'	      => $_data['email'],
-				'create_date' => Zend_Date::now(),
+				'create_date' => date("Y-m-d"),
 				'status'      => $_data['status'],
 				'user_id'	  => $this->getUserId(),
 				'basic_salary'=> $_data['basic_salary'],
@@ -90,7 +98,9 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 	}
 	function getAllCreditOfficer($search=null){
 		$db = $this->getAdapter();
-		$sql = "SELECT co_id,co_code,co_khname,CONCAT(co_firstname,co_lastname) AS co_engname,national_id,address,
+		$sql = "SELECT co_id,
+		(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
+		co_code,co_khname,CONCAT(co_firstname,co_lastname) AS co_engname,national_id,address,
 					tel,email,address,(SELECT name_kh FROM ln_view WHERE type=20 AND key_code=degree) AS degree,
 					(SELECT department_kh FROM ln_department WHERE id=department_id) AS department_id,
 					annual_lives,status FROM $this->_name WHERE 1";
@@ -103,6 +113,12 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 		}
 		if(!empty($search['degree'])){
 			$where.=" AND degree = ".$search['degree'];
+		}
+		if(!empty($search['branch_id'])){
+			$where.=" AND branch_id = ".$search['branch_id'];
+		}
+		if(!empty($search['position'])){
+			$where.=" AND position_id = ".$search['position'];
 		}
 		if(!empty($search['adv_search'])){
 			$s_where = array();
