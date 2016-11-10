@@ -242,8 +242,10 @@ class Application_Form_Frmtable
 		  				if($read==null) $read='&nbsp';
 		  				if($i==0) {
 		  					$temp=$read;
-		  					if($delete==1){
-				    			$row_str .= '<td><input type="checkbox" name="del[]" id="del[]" value="'.$temp.'" /></td>';
+		  					if($delete==2){
+				    			$row_str .= '<td><input type="radio" onclick="setValue('.$temp.')" name="copy" id="copy" value="'.$temp.'" /></td>';
+		  					}else if($delete==1){
+		  						$row_str .= '<td><input type="checkbox" name="del[]" id="del[]" value="'.$temp.'" /></td>';
 		  					}
 		  					$row_str.='<td class="items-no">'.$r.'</td>';
 		  				} else {
