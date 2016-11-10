@@ -129,6 +129,19 @@ class Application_Form_Frmtable
     /* @ Desc: show add button
      * @param $url_new
      * */
+    
+    public function showCopyBuntton($url_copy) {
+    	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    
+    	$copyButton = '&nbsp;<a href="#" class="btn-action" onClick="copyRecord(\''.$url_copy.'\')">'
+    	.'<img alt="" src="'.BASE_URL.'/images/icon/copy.png"><b>'
+    	.$tr->translate("COPY")
+    	.'</b></a>';
+    	return $copyButton;
+    }
+    
+    
     public function showAddBuntton($url_new) {
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
