@@ -37,7 +37,8 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 		$_btn_search = new Zend_Dojo_Form_Element_SubmitButton('btn_search');
 		$_btn_search->setAttribs(array(
 				'dojoType'=>'dijit.form.Button',
-				'iconclass'=>'dijitIconSearch'
+				'iconclass'=>'dijitIconSearch',
+				'values'=>'Search',
 		));
 		$db = new Application_Model_DbTable_DbGlobal();
 		$_co_id = new Zend_Dojo_Form_Element_TextBox('co_id');
@@ -54,7 +55,7 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 		));
 		
 		$rows = $db->getAllBranchName();
-		$options=array(''=>'---Select Branch---');
+		$options=array(''=>'---SELECT_BRANCH---');
 		if(!empty($rows))foreach($rows AS $row){
 			$options[$row['br_id']]=$row['project_name'];
 		}
@@ -67,7 +68,7 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				));
 		
-		$_enname = new Zend_Dojo_Form_Element_TextBox('first_name');
+		$_enname = new Zend_Dojo_Form_Element_TextBox('name_en');
 		$_enname->setAttribs(array('dojoType'=>$this->tvalidate,'required'=>'true','class'=>'fullside',));
 		
 		$_lname = new Zend_Dojo_Form_Element_TextBox('last_name');
@@ -202,6 +203,7 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 		$_id = new Zend_Form_Element_Hidden('id');
 		
 		if(!empty($_data)){
+			$_branch_id->setValue($_data['branch_id']);
 			$_co_id->setValue($_data['co_code']);
 			$_name_kh->setValue($_data['co_khname']);
 			$_enname->setValue($_data['co_firstname']);
