@@ -224,7 +224,10 @@ class Application_Form_Frmtable
     	$col_str .='<thead><tr>';
     	if($delete== 1) {
     		$col_str .= '<th class="tdheader tdcheck"></td>';
+    	}elseif($delete==2){
+    		$col_str .= '<th class="tdheader tdcheck"></td>';
     	}
+    	
     	$col_str .= '<th class="tdheader">'.$tr->translate("NUM").'</th>';
     	//add columns
     	foreach($columns as $column){
