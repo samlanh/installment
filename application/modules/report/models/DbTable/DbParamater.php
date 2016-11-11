@@ -141,8 +141,11 @@ function getAllBranch($search=null){
 				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`
 				 FROM `ln_properties` AS p WHERE p.`status`=1";
     		$where='';
-    		if($search['property_type']>-1){
+    		if(!empty($search['property_type'])){
     			$where.= " AND p.`property_type` = ".$search['property_type'];
+    		}
+    		if($search['type_property_sale']>-1){
+    			$where.= " AND p.`is_lock` = ".$search['type_property_sale'];
     		}
     		if(!empty($search['adv_search'])){
     			$s_where=array();
@@ -157,6 +160,7 @@ function getAllBranch($search=null){
     			$s_where[]=" p.`house_price` LIKE '%{$s_search}%'";
     			$where.=' AND ('.implode(' OR ',$s_where).')';
     		}
+    		//echo $sql.$where;exit();
     		return $db->fetchAll($sql.$where);
     	}
 }
