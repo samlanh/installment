@@ -169,7 +169,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	}else{
   		$search = array(
   				'adv_search'=>'',
-  				'property_type'=>-1,
+  				'property_type'=>'',
+  				'type_property_sale'=>-1,
   				);
   	}
   	$db  = new Report_Model_DbTable_DbParamater();
