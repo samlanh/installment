@@ -8,6 +8,7 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	private $sex=array(1=>'M',2=>'F');
+	
 	public function indexAction(){
 		try{
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
@@ -59,6 +60,9 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
   	$db_global = new Application_Model_DbTable_DbGlobal();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
+			
+// 			print_r($_data);exit();
+			
 			$identify = $_data["identity"];
 			try {
 				if($identify==""){
@@ -96,10 +100,74 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		
 		$session_user=new Zend_Session_Namespace('auth');
 		$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
-		$this->view->loan_number = $db_global->getLoanNumberByBranch(1);
+		$test = $this->view->loan_number = $db_global->getSaleNumberByBranch();
+		//print_r($test);
 	}	
 	
-	function editAction()
+	
+	function editAction(){
+		
+		$id = $this->getRequest()->getParam("id");
+		
+		$db = new Loan_Model_DbTable_DbLoanILPayment();
+		$db_global = new Application_Model_DbTable_DbGlobal();
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+				
+			// 			print_r($_data);exit();
+				
+			//$identify = $_data["identity"];
+			try {
+// 				if($identify==""){
+// 					//Application_Form_FrmMessage::Sucessfull("Client no laon to pay!","/loan/ilpayment/");
+// 				}else {
+					$db->updateIlPayment($_data,$id);
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
+// 				}
+			}catch (Exception $e) {
+				//echo $e->getMessage();
+				//exit();
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+		
+		$payment_il = $db->getIlPaymentByID($id);
+		$this->view->ilPaymentById= $payment_il;
+		
+		//print_r($payment_il);
+		$receipt_money_detail = $db->getAllReceiptMoneyDetail($id);
+		$this->view->receipt_money_detail= $receipt_money_detail;
+// 		print_r($receipt_money_detail);exit();
+		
+		$frm = new Loan_Form_FrmIlPayment();
+		$frm_loan=$frm->FrmAddIlPayment($payment_il);
+		Application_Model_Decorator::removeAllDecorator($frm_loan);
+		$this->view->frm_ilpayment = $frm_loan;
+		
+		$list = new Application_Form_Frmtable();
+		$collumns = array("ឈ្មោះមន្ត្រីឥណទាន","ថ្ងៃបង់ប្រាក់","ប្រាក់ត្រូវបង់","ប្រាក់ដើមត្រូវបង់","អាត្រាការប្រាក់","ប្រាក់ផាកពិន័យ","ប្រាក់បានបង់សរុប","សមតុល្យ","កំណត់សម្គាល់");
+		$link=array(
+				'module'=>'group','controller'=>'Client','action'=>'edit',
+		);
+		$this->view->list=$list->getCheckList(0, $collumns, array(),array('client_number'=>$link,'name_kh'=>$link,'name_en'=>$link));
+		
+		$db_keycode = new Application_Model_DbTable_DbKeycode();
+		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
+		
+		$this->view->graiceperiod = $db_keycode->getSystemSetting(9);
+		$this->view->client = $db->getAllClient();
+		$this->view->clientCode = $db->getAllClientCode();
+		
+		$session_user=new Zend_Session_Namespace('auth');
+		$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
+		$test = $this->view->loan_number = $db_global->getSaleNumberByBranch();
+	}
+	
+	
+	
+	function editoldAction()
 	{
 		$id = $this->getRequest()->getParam("id");
 		$db_global = new Application_Model_DbTable_DbGlobal();
@@ -269,6 +337,17 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	
+	function getIlloandetailEditAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$row = $db->getLoanPaymentByLoanNumberEdit($data);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
+	
 	function getAllIlLoanDetailAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -289,5 +368,37 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	
+	function getSaleNumberAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$row = $db->getAllLoanNumberByBranch($data["branch_id"]);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
+	
+	function getSaleNumberEditAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$row = $db->getAllLoanNumberByBranchEdit($data["branch_id"]);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
+	
+	function getLaneInfoAction(){
+		if($this->getRequest()->isPost()){
+// 			$data = $this->getRequest()->getPost();
+// 			$db = new Loan_Model_DbTable_DbLoanILPayment();
+// 			$row = $db->getAllLoanNumberByBranch($data["branch_id"]);
+// 			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
+	
+	
 }
 

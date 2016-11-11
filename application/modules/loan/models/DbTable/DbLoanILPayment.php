@@ -15,7 +15,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	
     	$db = $this->getAdapter();
     	$sql = "SELECT lcrm.`id`,
-    	(SELECT land_code FROM `ln_landinfo` WHERE id=lcrm.land_id limit 1) AS land_id,
+    	(SELECT land_code FROM `ln_properties` WHERE id=lcrm.land_id limit 1) AS land_id,
 					(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lcrm.`client_id`) AS team_group ,
 					lcrm.`receipt_no`,
 					lcrm.`total_principal_permonth`,
@@ -110,22 +110,12 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	function getIlPaymentByID($id){
 		$db = $this->getAdapter();
 		$sql="SELECT 
-				(SELECT d.`date_payment` FROM `ln_client_receipt_money_detail` AS d WHERE d.`loan_number`=(SELECT c.loan_number FROM ln_loan_member AS c WHERE c.member_id=(SELECT g.member_id FROM ln_loanmember_funddetail AS g WHERE g.id = d.lfd_id) LIMIT 1) AND d.crm_id NOT IN($id) ORDER BY d.`date_payment` DESC LIMIT 1) AS installment_date ,
-				(SELECT lcrm.`date_input` FROM `ln_client_receipt_money` AS lcrm,`ln_client_receipt_money_detail` AS lcrmd WHERE lcrm.`id`!=$id AND lcrmd.`crm_id`=lcrm.`id` AND lcrm.`loan_number`=(SELECT `loan_number` FROM `ln_client_receipt_money_detail` WHERE `crm_id`=$id LIMIT 1) ORDER BY lcrm.`date_input` DESC LIMIT 1) AS last_pay_date,
-				  (SELECT crmd.`loan_number` FROM `ln_client_receipt_money_detail` AS crmd WHERE crm.`id`=crmd.`crm_id` LIMIT 1) AS loan_numbers,
-				  crm.*,
-				  (SELECT lm.amount_collect_principal FROM `ln_loan_member` AS lm WHERE lm.`loan_number`=(SELECT `loan_number` FROM `ln_client_receipt_money_detail` WHERE `crm_id`=$id LIMIT 1) LIMIT 1) AS amount_term,
-				  (SELECT lm.`collect_typeterm` FROM `ln_loan_member` AS lm WHERE lm.`loan_number`=(SELECT `loan_number` FROM `ln_client_receipt_money_detail` WHERE `crm_id`=$id LIMIT 1) LIMIT 1) AS collect_typeterm,
-				  (SELECT lm.`interest_rate` FROM `ln_loan_member` AS lm WHERE lm.`loan_number`=(SELECT `loan_number` FROM `ln_client_receipt_money_detail` WHERE `crm_id`=$id LIMIT 1) LIMIT 1) AS `interest_rate`,
-				  (SELECT lm.`total_capital` FROM `ln_loan_member` AS lm WHERE lm.`loan_number`=(SELECT `loan_number` FROM `ln_client_receipt_money_detail` WHERE `crm_id`=$id LIMIT 1) LIMIT 1) AS `total_capital`,
-				  (SELECT g.`date_release` FROM `ln_loan_group` AS g,`ln_loan_member` AS lm WHERE g.`g_id`=lm.`group_id` AND lm.`loan_number` = (SELECT `loan_number` FROM `ln_client_receipt_money_detail` WHERE `crm_id`=$id LIMIT 1) LIMIT 1) AS date_release,
-				  (SELECT g.`level` FROM `ln_loan_group` AS g,`ln_loan_member` AS lm WHERE g.`g_id`=lm.`group_id` AND lm.`loan_number` = (SELECT `loan_number` FROM `ln_client_receipt_money_detail` WHERE `crm_id`=$id LIMIT 1) LIMIT 1) AS level,
-				  (SELECT g.`total_duration` FROM `ln_loan_group` AS g,`ln_loan_member` AS lm WHERE g.`g_id`=lm.`group_id` AND lm.`loan_number` = (SELECT `loan_number` FROM `ln_client_receipt_money_detail` WHERE `crm_id`=$id LIMIT 1) LIMIT 1) AS total_duration,
-				  (SELECT g.`payment_method` FROM `ln_loan_group` AS g,`ln_loan_member` AS lm WHERE g.`g_id`=lm.`group_id` AND lm.`loan_number` = (SELECT `loan_number` FROM `ln_client_receipt_money_detail` WHERE `crm_id`=$id LIMIT 1) LIMIT 1) AS payment_method
+				  *
 				FROM
-				  `ln_client_receipt_money` AS crm
-				  
-				WHERE crm.id =$id";
+				  `ln_client_receipt_money` AS rm ,
+				  `ln_client_receipt_money_detail` AS rmd
+				WHERE rm.id = $id
+				AND rm.id=rmd.`crm_id`";
 		//echo $sql;
 		return $db->fetchRow($sql);
 	}
@@ -190,7 +180,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     public function getIlPaymentNumber(){
     	$this->_name='ln_client_receipt_money';
     	$db = $this->getAdapter();
-    	$sql=" SELECT id  FROM $this->_name ORDER BY id DESC LIMIT 1 ";
+    	$sql=" SELECT id  FROM $this->_name  ORDER BY id DESC LIMIT 1 ";
     	$acc_no = $db->fetchOne($sql);
     	$new_acc_no= (int)$acc_no+1;
     	$acc_no= strlen((int)$acc_no+1);
@@ -202,6 +192,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	return $pre_fix.$pre.$new_acc_no;
     }
 public function addILPayment($data){
+	//print_r($data);exit();
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	$session_user=new Zend_Session_Namespace('auth');
@@ -217,6 +208,9 @@ public function addILPayment($data){
     	}
     	
     	$loan_number = $data['loan_number'];
+    	
+    	//echo $loan_number;exit();
+    	
     	$amount_receive = $data["amount_receive"];
     	$total_payment = $data["total_payment"];
     	$return = $data["amount_return"];
@@ -247,6 +241,7 @@ public function addILPayment($data){
     	$recieve = $data["amount_receive"]-$data["amount_return"];
     	
     	$new_service = $recieve-$service_charge;
+    	
     	if($new_service>=0){
     		$service = $service_charge;
     		$new_penelize = $new_service - $penelize;
@@ -281,7 +276,7 @@ public function addILPayment($data){
     	$service_charge= $data["service_charge"];
     	$penalize = $data["penalize_amount"];
     		$arr_client_pay = array(
-    			'group_id'						=>	$data["client_id"],
+    			'branch_id'						=>	$data["branch_id"],
     			'receipt_no'					=>	$reciept_no,
     			'date_pay'					    =>	$data['collect_date'],
     			'date_input'					=>	date("Y-m-d"),
@@ -298,6 +293,7 @@ public function addILPayment($data){
     			'total_interest_permonthpaid'	=>	$interest_amount,//ok ការប្រាក់បានបង
     			'penalize_amountpaid'			=>	$penelize_amount,// ok បានបង
     			'service_chargepaid'			=>	$service,// okបានបង
+    			'balance'						=>	$data["remain"],
     			
     			'total_payment'					=>	$data["total_payment"],//ប្រាក់ត្រូវបង់ok
     			'recieve_amount'				=>	$amount_receive,//ok
@@ -320,6 +316,9 @@ public function addILPayment($data){
     		$date_collect = $data["collect_date"];
     	    $identify = explode(',',$data['identity']);
     		foreach($identify as $i){
+    			
+    			//echo $data["mfdid_".$i];exit();
+    			
     			if($option_pay==1){//normal
     				$total_recieve = $data["amount_receive"];
     				if($total_recieve>=$data["total_payment"]){
@@ -357,9 +356,15 @@ public function addILPayment($data){
     						'service_charge'		=>		$data['service_'.$i],
     						'penelize_new'			=>		$data['penelize_'.$i]-$data['old_penelize_'.$i],
     						'service_charge_new'	=>		$data["service_charge"]-$data['service_'.$i],
-    						'old_penelize'			=>		$data['old_penelize_'.$i],
-    						'old_service_charge'	=>		$data['service_'.$i],
+    						
+    		           		'old_penelize'			=>		$data['old_penelize_'.$i],
+    						'old_service_charge'	=>		$data['old_service_'.$i],
     						'old_interest'			=>		$data["old_interest_".$i],
+    		           		'old_principal_permonth'=>		$data['old_principal_permonth_'.$i],
+    		           		'old_total_payment'		=>		$data['old_payment_'.$i],
+    		           		'old_total_priciple'	=>		$data["old_total_priciple_".$i],
+    		           		'last_pay_date'			=>		$data["last_date_payment_".$i],
+    		           		
     						'is_completed'			=>		$is_compleated,
     						'status'				=>		1
     				);
@@ -368,12 +373,34 @@ public function addILPayment($data){
 //     				print_r($arr_money_detail);exit();
     				if($option_pay==1){//normal
 	    				if($sub_recieve_amount>=$total_payment){//normall and paid
-		    				$arr_update_fun_detail = array(
+		    				$arr_update_saleschedule = array(
 		    					'is_completed'		=> 	1,
+		    					'payment_option'	=>	$data["option_pay"],
+		    					'paid_date'			=> 	$data['collect_date'],  // to know the last paid date
 		    				);
-		    				$this->_name="ln_paymentschedule_detail";
+		    				$this->_name="ln_saleschedule";
 		    				$where = $db->quoteInto("id=?", $data["mfdid_".$i]);
-		    				$this->update($arr_update_fun_detail, $where);
+		    				$this->update($arr_update_saleschedule, $where);
+		    				
+		    				
+		    		// get amount record if paid all update tb_sale to complete
+		    				
+		    				$sql1= "select * from  ln_saleschedule where is_completed=0 and  sale_id=$loan_number";
+		    				$record_remain = $db->fetchAll($sql1);
+		    				
+// 		    				print_r($record_remain);exit();
+		    				
+		    				if(!empty($record_remain)){
+		    					
+		    				}else{
+		    					$this->_name="ln_sale";
+		    					$update_sale = array(
+		    							'is_completed'=>1,
+		    					);
+		    					$where=" id = $loan_number ";
+		    					$this->update($update_sale, $where);
+		    				}
+		    				
 	    				}else{
 			   					$new_sub_interest_amount = $data["interest_".$i];
 			   					$new_sub_penelize = $data["penalize_amount"];
@@ -391,6 +418,9 @@ public function addILPayment($data){
 				   							if($new_amount_after_interest>=0){
 				   								$new_sub_interest_amount = 0;
 				   								$principle_after = $principle_after - $new_amount_after_interest;
+				   								
+				   								$begining_balance_after = $data['priciple_amount'] + $principle_after;
+				   								
 				   							}else{
 				   								$new_sub_interest_amount = abs($new_amount_after_interest);
 				   							}
@@ -404,41 +434,51 @@ public function addILPayment($data){
 				   				
 				   				$arr_update_fun_detail = array(
 				   						'is_completed'			=> 	0,
+				   						'principal_permonthafter'=>	$principle_after,
+				   						'begining_balance_after'=>	$begining_balance_after,
 				   						'total_interest_after'	=>  $new_sub_interest_amount,
 				   						'total_payment_after'	=>	$pyament_after,
 				   						'penelize'				=>	$new_sub_penelize,
-				   						'principal_after'		=>	$principle_after,
 				   						'service_charge'		=>	$new_sub_service_charge,
 				   						'payment_option'		=>	1,
+				   						'paid_date'				=> 	$data['collect_date'],  // to know the last paid date
 				   				);
-				   				$this->_name="ln_paymentschedule_detail";
+				   				$this->_name="ln_saleschedule";
 				   				$where = $db->quoteInto("id=?", $data["mfdid_".$i]);
 				   				$this->update($arr_update_fun_detail, $where);
 			   				}
     					}else{//pay off
-    						$sql_loan_fun = "SELECT pd.id,pd.outstanding,pd.principal_after,
-	    						pd.total_interest_after,pd.total_payment,pd.penelize,
-	    						pd.total_payment_after FROM ln_paymentschedule AS p,`ln_paymentschedule_detail` as pd
-    						 WHERE  p.id=pd.paymentid AND p.land_id = $loan_number ";
-    						$row_fun = $db->fetchAll($sql_loan_fun);
-    						$is_set=0;
-    						foreach ($row_fun as $rs_fun){
-    							if($is_set!=1){
-    								$penelize=$data["penelize_".$i];
-    								$is_set=1;
-    							}else{
-    								$penelize = $rs_fun['penelize'];
-    							}
-    							$total_pay=$rs_fun["principal_after"]+$rs_fun["total_interest_after"]+$penelize; 
+    						
+    					// get all record id to update to complete all
+    					
+    						$sql_loan_fun = "SELECT id FROM `ln_saleschedule` WHERE sale_id = $loan_number ";
+    						$row_schedule = $db->fetchAll($sql_loan_fun);
+    						//$is_set=0;
+    						foreach ($row_schedule as $rs_schedule){
+//     							if($is_set!=1){
+//     								$penelize=$data["penelize_".$i];
+//     								$is_set=1;
+//     							}else{
+//     								$penelize = $rs_fun['penelize'];
+//     							}
+//     							$total_pay=$rs_fun["principal_after"]+$rs_fun["total_interest_after"]+$penelize; 
     							
     							$arr_update_fun_detail = array(
     									'is_completed'			=> 	1,
     									'payment_option'		=>	$data["option_pay"]
     							);
-    							$this->_name="ln_paymentschedule_detail";
-    							$where = $db->quoteInto("id=?", $rs_fun['id']);
+    							$this->_name="ln_saleschedule";
+    							$where = $db->quoteInto("id=?", $rs_schedule['id']);
     							$this->update($arr_update_fun_detail, $where);
     						}
+    					// update tbl_sale to complete when pay off
+    						$this->_name="ln_sale";
+    						$update_sale = array(
+    										'is_completed'=>1,
+    										);
+    						$where=" id = $loan_number ";
+    						$this->update($update_sale, $where);
+    						
     					}
     				
     		}
@@ -449,7 +489,391 @@ public function addILPayment($data){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     }
-    function updateIlPayment($data){
+    
+    
+    
+    function updateIlPayment($data,$id){
+    	
+    	//print_r($data);exit();
+    	
+    	$db = $this->getAdapter();
+    	
+    	$db->beginTransaction();
+    	
+    	$is_set = 0;
+    	
+    	try{
+    		if($data['status']==0){
+    			if($data['option_pay']==4){
+    				
+    				$sql1="select land_id as sale_id ,lfd_id as saleschedule_id from ln_client_receipt_money_detail where crm_id=$id";
+    				$result = $db->fetchAll($sql1);
+    				if(!empty($result)){
+    					foreach ($result as $_data){
+    						
+    						$array = array(
+    								'is_completed'=>0,
+    								);
+    						$where=" id = ".$_data['saleschedule_id']." and sale_id = ".$_data['sale_id'];
+    						$this->_name="ln_saleschedule";
+    						$this->update($array, $where);
+    						
+    						$this->_name="ln_sale";
+    						$where1=" id = ".$_data['sale_id'];
+    						$this->update($array, $where1);
+    						
+    					}
+    				}
+    				
+    				$arr = array(
+    						'status'=>0,
+    						);
+    				$where = " id = $id";
+    				$this->_name="ln_client_receipt_money";
+    				$this->update($arr, $where);
+    				
+    				$where1 = " crm_id = $id";
+    				$this->_name="ln_client_receipt_money_detail";
+    				$this->update($arr, $where1);
+    				
+    			}else{
+    				
+    				$sql1="select land_id as sale_id ,lfd_id as saleschedule_id from ln_client_receipt_money_detail where crm_id=$id";
+    				$result = $db->fetchRow($sql1);
+    				
+    				$sql2="select * from ln_saleschedule where id = ".$result['saleschedule_id'];
+    				$result1 = $db->fetchRow($sql2);
+    				print_r($result1);exit();
+    				
+    			}
+    			
+    		}else{			
+    			$sql="select lfd_id as saleschedule from ln_client_receipt_money_detail where id=$id ";
+    			$result = $db->fetchAll($sql);
+    			
+    			
+	    		$id= $data["id"];
+	    		$loan_number = $data['loan_number'];
+	    		$amount_receive = $data["amount_receive"];
+	    		$total_payment = $data["total_payment"];
+	    		$return = $data["amount_return"];
+	    		$option_pay = $data["option_pay"];
+	    
+	    		if($amount_receive>$total_payment){
+	    			$amount_payment = $amount_receive - $return;
+	    			$total_pay = $amount_receive - $data["total_payment"];
+	    			$is_completed = 1;
+	    		}elseif($amount_receive<$total_payment){
+	    			$amount_payment = $amount_receive;
+	    			$total_pay = $data["total_payment"]-$amount_receive;
+	    			$is_completed = 0;
+	    		}else{
+	    			$amount_payment = $total_payment;
+	    			$is_completed = 1;
+	    		}
+	    
+	    		$service_charge= $data["service_charge"];
+	    		$penalize = $data["penalize_amount"];
+	    
+	    		$arr_client_pay = array(
+    				'co_id'							=>		$data['co_id'],
+    				'group_id'						=>		$data["client_id"],
+    				'receiver_id'					=>		$data['reciever'],
+    				'branch_id'						=>		$data['branch_id'],
+    				'date_input'					=>		$data['collect_date'],
+    				'principal_amount'				=>		$data["priciple_amount"],
+    				'total_principal_permonth'		=>		$data["os_amount"],
+    				'total_payment'					=>		$data["total_payment"],
+    				'total_interest'				=>		$data["total_interest"],
+    				'recieve_amount'				=>		$data["amount_receive"],
+    				'penalize_amount'				=>		$data['penalize_amount'],
+    				'return_amount'					=>		$return,
+    				'service_charge'				=>		$data["service_charge"],
+    				'note'							=>		$data['note'],
+    				'user_id'						=>		$user_id,
+    				'is_group'						=>		0,
+    				'payment_option'				=>		$data["option_pay"],
+    				'currency_type'					=>		$data["currency_type"],
+    				'status'						=>		1,
+    				'amount_payment'				=>		$amount_payment,
+    				'is_completed'					=>		$is_completed
+    		);
+    		$this->_name = "ln_client_receipt_money";
+    		$where = $db->quoteInto("id=?", $data["id"]);
+    		$client_pay = $this->update($arr_client_pay, $where);
+    
+    		// Update Loan Fund detail to ild before
+    		$recipt_money = $db_loan->getReceiptMoneyById($id);
+    		$recipt_money_detail = $db_loan->getReceiptMoneyDetailByID($id);
+    		foreach ($recipt_money_detail as $row_recipt_detail){
+    			$fun_id = $row_recipt_detail["lfd_id"];
+    			if($is_set!=1){
+    				$loan_number = $row_recipt_detail["loan_number"];
+    				$rs_fun = $db_group->getFunDetailByLoanNumber($loan_number);
+    				$rs_group = "SELECT m.group_id FROM ln_loan_member AS m WHERE m.loan_number = '$loan_number' GROUP BY m.loan_number";
+    				$group_id = $db->fetchOne($rs_group);
+    				if(empty($rs_fun) or $rs_fun=="" or $rs_fun==null){
+    					$arr_member = array(
+    							'is_completed'	=>	0,
+    					);
+    					$this->_name = "ln_loan_member";
+    					$where = $db->quoteInto("loan_number=?", $loan_number);
+    					$this->update($arr_member, $where);
+    
+    					$arr_group = array(
+    							'status'	=>	1,
+    					);
+    					$this->_name = "ln_loan_group";
+    					$where = $db->quoteInto("g_id=?", $group_id);
+    					$this->update($arr_group, $where);
+    				}
+    				$is_set=1;
+    			}
+    			if($recipt_money["payment_option"]==1){
+    				$is_completed = $db_loan->getFunDetailById($fun_id);
+    				if($is_completed==1){
+    					$arr_update = array(
+    							'is_completed' =>	0,
+    					);
+    					$this->_name = "ln_loanmember_funddetail";
+    					$where = $db->quoteInto("id=?", $fun_id);
+    
+    					$db->getProfiler()->setEnabled(true);
+    					$this->update($arr_update, $where);
+    
+    					Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
+    					Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
+    					$db->getProfiler()->setEnabled(false);
+    				}else{
+    					$arr_update = array(
+    							'principle_after'		=> 	$row_recipt_detail["principal_permonth"],
+    							'total_interest_after'	=>	$row_recipt_detail["total_interest"],
+    							'penelize'				=>	$row_recipt_detail["old_penelize"],
+    							'service_charge'		=>	$row_recipt_detail["old_service_charge"],
+    							'total_payment_after'	=>	$row_recipt_detail["principal_permonth"]+$row_recipt_detail["total_interest"]+$row_recipt_detail["old_penelize"]+$row_recipt_detail["old_service_charge"],
+    							'is_completed' 			=>	0,
+    					);
+    					$this->_name = "ln_loanmember_funddetail";
+    					$where = $db->quoteInto("id=?", $fun_id);
+    
+    					// 						$db->getProfiler()->setEnabled(true);
+    					$this->update($arr_update, $where);
+    					// 						Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
+    					// 						Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
+    					// 						$db->getProfiler()->setEnabled(false);
+    				}
+    			}else{
+    				$arr_update = array(
+    						'is_completed' =>	0,
+    				);
+    				$this->_name = "ln_loanmember_funddetail";
+    				$where = $db->quoteInto("id=?", $fun_id);
+    					
+    				// 					$db->getProfiler()->setEnabled(true);
+    				$this->update($arr_update, $where);
+    				// 					Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
+    				// 					Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
+    				// 					$db->getProfiler()->setEnabled(false);
+    			}
+    		}
+    		//End of Update to old value
+    		//Delete Reciept money detail before insert new record
+    		$sql_cmd = "DELETE FROM `ln_client_receipt_money_detail` WHERE `crm_id` = $id";
+    		$db->query($sql_cmd);
+    		//End of delete record before insert new record
+    		//insert new record for reciept money
+    
+    		$identify = explode(',',$data['identity']);
+    		foreach($identify as $i){
+    			if($option_pay==1){
+    				$total_recieve = $data["amount_receive"];
+    			}else{
+    				$total_recieve=$data["payment_".$i];
+    			}
+    			$client_detail = $data["mfdid_".$i];
+    			$sub_recieve_amount = $data["amount_receive"];
+    			$sub_service_charge = $data["service_".$i];
+    			$sub_peneline_amount = $data["penelize_".$i];
+    			$sub_interest_amount = $data["interest_".$i];
+    			$sub_principle= $data["principal_permonth_".$i];
+    			$sub_total_payment = $data["payment_".$i];
+    			$date_payment = $data["date_payment_".$i];
+    			if($client_detail!=""){
+    				$arr_money_detail = array(
+    						'crm_id'				=>		$id,
+    						'loan_number'			=>		$data['loan_number'],
+    						'lfd_id'				=>		$data["mfdid_".$i],
+    						'client_id'				=>		$data["client_id_".$i],
+    						'date_payment'			=>		$data["date_payment_".$i],
+    						'capital'				=>		$data["total_priciple_".$i],
+    						'remain_capital'		=>		$data["total_priciple_".$i] - $data["principal_permonth_".$i],
+    						'principal_permonth'	=>		$data["principal_permonth_".$i],
+    						'total_interest'		=>		$data["interest_".$i],
+    						'total_payment'			=>		$data["payment_".$i],
+    						'total_recieve'			=>		$total_recieve,
+    						'currency_id'			=>		$data["currency_type"],
+    						'pay_after'				=>		$data['multiplier_'.$i],
+    						'penelize_amount'		=>		$data['penalize_amount'],
+    						'service_charge'		=>		$data['service_charge'],
+    						'old_penelize'			=>		$data['old_penelize_'.$i],
+    						'old_service_charge'	=>		$data['service_'.$i],
+    						'is_completed'			=>		1,
+    						'is_verify'				=>		0,
+    						'verify_by'				=>		0,
+    						'is_closingentry'		=>		0,
+    						'status'				=>		1
+    				);
+    
+    				//     				$db->getProfiler()->setEnabled(true);
+    				$db->insert("ln_client_receipt_money_detail", $arr_money_detail);
+    
+    				//     				Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
+    				//     				Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
+    				//     				$db->getProfiler()->setEnabled(false);
+    
+    				//update loan fund detail for is_completed =1  if reciept amount is more than total payment and calculate amount if if reciept amount is less than total payment
+    				if($option_pay==1){
+    					if($sub_recieve_amount>=$total_payment){
+    						 
+    						$arr_update_fun_detail = array(
+    								'is_completed'		=> 	1,
+    						);
+    						$this->_name="ln_loanmember_funddetail";
+    						$where = $db->quoteInto("id=?", $data["mfdid_".$i]);
+    
+    						// 		    				$db->getProfiler()->setEnabled(true);
+    						$this->update($arr_update_fun_detail, $where);
+    
+    						// 		    				Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
+    						// 		    				Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
+    						// 		    				$db->getProfiler()->setEnabled(false);
+    					}else{
+    						$new_sub_interest_amount = $data["interest_".$i];
+    						$new_sub_penelize = $data["penelize_".$i];
+    						$new_sub_service_charge = $data["service_".$i];
+    						$principle_after = $data["principal_permonth_".$i];
+    						$pyament_after = $total_payment-$amount_receive;
+    						if($sub_recieve_amount>0){
+    							$new_amount_after_service = $sub_recieve_amount-$new_sub_service_charge;
+    							if($new_amount_after_service>=0){
+    								$new_sub_service_charge = 0;
+    								$new_amount_after_penelize = $new_amount_after_service - $new_sub_penelize;
+    								if($new_amount_after_penelize>=0){
+    									$new_sub_penelize = 0;
+    									$new_amount_after_interest = $new_amount_after_penelize - $sub_interest_amount;
+    									if($new_amount_after_interest>=0){
+    										$new_sub_interest_amount = 0;
+    										$principle_after = $principle_after - $new_amount_after_interest;
+    									}else{
+    										$new_sub_interest_amount = abs($new_amount_after_interest);
+    									}
+    								}else{
+    									$new_sub_penelize = abs($new_amount_after_penelize);
+    								}
+    							}else{
+    								$new_sub_service_charge = abs($new_amount_after_service);
+    							}
+    						}
+    						 
+    						$arr_update_fun_detail = array(
+    								'is_completed'			=> 	0,
+    								'total_interest_after'	=>  $new_sub_interest_amount,
+    								'total_payment_after'	=>	$pyament_after,
+    								'penelize'				=>	$new_sub_penelize,
+    								'principle_after'		=>	$principle_after,
+    								'service_charge'		=>	$new_sub_service_charge,
+    								'payment_option'		=>	1
+    						);
+    						$this->_name="ln_loanmember_funddetail";
+    						$where = $db->quoteInto("id=?", $data["mfdid_".$i]);
+    						// 				   				$db->getProfiler()->setEnabled(true);
+    						$this->update($arr_update_fun_detail, $where);
+    						// 				   				Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
+    						// 				   				Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
+    						// 				   				$db->getProfiler()->setEnabled(false);
+    					}
+    				}else{
+    
+    					$sql_loan_fun = "SELECT
+    					lf.`id` ,
+    					lf.`total_principal`,
+    					lf.`principle_after`,
+    					lf.`total_interest_after`,
+    					lf.`service_charge`,
+    					lf.`penelize`
+    					FROM
+    					`ln_loanmember_funddetail` AS lf,
+    					`ln_loan_member` AS lm
+    					WHERE lf.`member_id` = lm.`member_id`
+    					AND lm.`loan_number` = '$loan_number'
+    					AND lf.`date_payment` = '$date_payment'";
+    					$row_fun = $db->fetchAll($sql_loan_fun);
+    							$is_set=0;
+    							foreach ($row_fun as $rs_fun){
+    					if($is_set!=1){
+    					$penelize=$data["penelize_".$i];
+    					$is_set=1;
+    				}else{
+    				$penelize = $rs_fun['penelize'];
+    				}
+    					$total_pay=$rs_fun["principle_after"]+$rs_fun["total_interest_after"]+$penelize;
+    							
+    						$arr_update_fun_detail = array(
+    						'is_completed'			=> 	1,
+    						'payment_option'		=>	$data["option_pay"]
+    						);
+    						$this->_name="ln_loanmember_funddetail";
+    						$where = $db->quoteInto("id=?", $rs_fun['id']);
+    							
+    						//     							$db->getProfiler()->setEnabled(true);
+    						$this->update($arr_update_fun_detail, $where);
+    						//     							Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
+    						//     							Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
+    						//     							$db->getProfiler()->setEnabled(false);
+    				}
+    				}
+    						// end of update is_completed in loan fund detail
+    						// update loan member and loan group
+    						$sql_payment ="SELECT
+    						l.*
+    						FROM
+    						`ln_loanmember_funddetail` AS l,
+    						`ln_loan_member` AS m
+    						WHERE l.`member_id` = m.`member_id`
+    						AND m.`loan_number` = '$loan_number'
+    						AND l.`is_completed` = 0 ";
+    						$rs_payment = $db->fetchRow($sql_payment);
+    						$group_id = $data["client_code"];
+    						if(empty($rs_payment)){
+    						$sql ="UPDATE
+    						`ln_loan_group` AS l
+    						SET l.`status` = 2
+    						WHERE l.`g_id`= (SELECT m.`group_id` FROM `ln_loan_member` AS m WHERE m.`loan_number`='$loan_number' LIMIT 1)
+    						AND l.`group_id`= $group_id AND l.`loan_type`=2";
+    						$db->query($sql);
+    
+    						$sql_loan_memeber ="UPDATE `ln_loan_member` AS m SET m.`is_completed`=1 WHERE m.`loan_number`= '$loan_number'";
+    
+    						// 			   				$db->getProfiler()->setEnabled(true);
+    								$db->query($sql_loan_memeber);
+    								// 			   				Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
+    								// 			   				Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
+    						// 			   				$db->getProfiler()->setEnabled(false);
+    			}
+    			}
+    			}
+    			//     		exit();
+    		}
+    			$db->commit();
+    	}catch (Exception $e){
+    		$db->rollBack();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    	}
+    }
+    
+    
+    
+    function updateIlPaymentold($data){
     	$db = $this->getAdapter();
     	$session_user=new Zend_Session_Namespace('auth');
     	$user_id = $session_user->user_id;
@@ -784,13 +1208,21 @@ public function addILPayment($data){
 
    function getLoanPaymentByLoanNumber($data){
     	$db = $this->getAdapter();
-    	if($data['type']==1){
-    		$sql ="SELECT p.*,pd.* FROM 
-    		`ln_paymentschedule` AS p ,`ln_paymentschedule_detail` AS pd  WHERE 
-				p.id=pd.paymentid AND pd.status=1 AND pd.is_completed=0 AND p.id= ".$data['loan_number'];
-    	}elseif($data['type']==1){
-//     		$where = 'lm.`loan_number`='."'".$loan_number."'";
-//     		$sql ="SELECT 
+    		if($data['type']==1){
+	    		$sql ="SELECT 
+						  s.*,
+						  ss.* 
+						FROM
+						  `ln_sale` AS s,
+						  `ln_saleschedule` AS ss 
+						WHERE s.id = ss.`sale_id`
+						  AND s.status = 1 
+						  AND ss.is_completed = 0 
+						  AND s.id = ".$data['loan_number'];
+    		}
+    		//elseif($data['type']==1){
+	//     		$where = 'lm.`loan_number`='."'".$loan_number."'";
+	//     		$sql ="SELECT 
 //     					(SELECT d.`date_payment` FROM `ln_client_receipt_money_detail` AS d WHERE d.`loan_number`='$loan_number' ORDER BY d.`date_payment` DESC LIMIT 1) AS installment_date ,
 //     				  (SELECT crm.`date_input` FROM `ln_client_receipt_money` AS crm , `ln_client_receipt_money_detail` AS crmd WHERE crm.`id`=crmd.`crm_id` AND crmd.`lfd_id`=lf.`id` AND crmd.`loan_number`=lm.`loan_number` ORDER BY `crm`.`date_input` DESC LIMIT 1) AS last_pay_date,
 // 					  lc.`client_id`,
@@ -827,10 +1259,27 @@ public function addILPayment($data){
 //     				AND lf.`is_completed`=0
 //     				 AND lf.`status`=1";
     				
- 	}
- 		//return $sql;
- 		//return $sql;
+//  			}
     	return $db->fetchAll($sql);
+   }
+   
+   
+   function getLoanPaymentByLoanNumberEdit($data){
+   	$db = $this->getAdapter();
+	   	if($data['type']==1){
+	   		$sql ="SELECT
+	   		s.*,
+	   		ss.*
+	   		FROM
+	   		`ln_sale` AS s,
+	   		`ln_saleschedule` AS ss
+	   		WHERE s.id = ss.`sale_id`
+	   		AND s.status = 1
+	   		AND s.id = ".$data['loan_number']." 
+	   		AND (ss.is_completed = 0 or ss.id=".$data['edit_record'].")";
+	   		
+	   	}
+   	return $db->fetchAll($sql);
    }
    
    function getAllLoanPaymentByLoanNumber($data){
@@ -2105,15 +2554,33 @@ public function cancelIlPayment($data){
    	$sql = "SELECT lf.`is_completed` FROM `ln_loanmember_funddetail` AS lf WHERE lf.id =$id";
    	return $db->fetchOne($sql);
    }
-	public function getAllLoanNumberByBranch($type){
+	public function getAllLoanNumberByBranch($branch_id){
 		$db = $this->getAdapter();
-		if($type==1){
-			$sql="SELECT m.`loan_number` AS id,m.`loan_number` AS `name`,g.`branch_id` FROM `ln_loan_member` AS m,`ln_loan_group` AS g WHERE m.`group_id`= g.`g_id` AND g.`loan_type`=1 AND m.status=1 AND m.is_reschedule!=1 ";
-			return $db->fetchAll($sql);
-		}else{
-			$sql="SELECT m.`loan_number` AS id,m.`loan_number` AS `name`,g.`branch_id` FROM `ln_loan_member` AS m,`ln_loan_group` AS g WHERE m.`group_id`= g.`g_id` AND g.`loan_type`=2 AND m.status=1 AND m.is_reschedule!=1 GROUP BY m.`loan_number` ";
-			return $db->fetchAll($sql);
-		}
+// 		if($type==1){
+// 			$sql="SELECT m.`loan_number` AS id,m.`loan_number` AS `name`,g.`branch_id` FROM `ln_loan_member` AS m,`ln_loan_group` AS g WHERE m.`group_id`= g.`g_id` AND g.`loan_type`=1 AND m.status=1 AND m.is_reschedule!=1 ";
+// 			return $db->fetchAll($sql);
+// 		}else{
+// 			$sql="SELECT m.`loan_number` AS id,m.`loan_number` AS `name`,g.`branch_id` FROM `ln_loan_member` AS m,`ln_loan_group` AS g WHERE m.`group_id`= g.`g_id` AND g.`loan_type`=2 AND m.status=1 AND m.is_reschedule!=1 GROUP BY m.`loan_number` ";
+// 			return $db->fetchAll($sql);
+// 		}
+
+		$sql="select id,sale_number as name	from `ln_sale` where status=1 and is_completed=0 and branch_id=$branch_id";
+		return $db->fetchAll($sql);
+		
 	}
+	public function getAllLoanNumberByBranchEdit($branch_id){
+		$db = $this->getAdapter();
+		
+		$sql="select id,sale_number as name	from `ln_sale` where status=1  and branch_id=$branch_id";
+		return $db->fetchAll($sql);
+	
+	}
+	
+	function getAllReceiptMoneyDetail($id){
+		$db = $this->getAdapter();
+		$sql = "select * from ln_client_receipt_money_detail where crm_id = $id ";
+		return $db->fetchAll($sql);
+	}
+	
 }
 

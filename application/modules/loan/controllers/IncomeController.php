@@ -1,8 +1,8 @@
 <?php
 
-class Loan_ExpenseController extends Zend_Controller_Action
+class Loan_IncomeController extends Zend_Controller_Action
 {
-	const REDIRECT_URL = '/registrar/expense';
+	//const REDIRECT_URL = '/loan/expense';
 	
     public function init()
     {
@@ -13,12 +13,12 @@ class Loan_ExpenseController extends Zend_Controller_Action
     public function indexAction()
     {
     	try{
-    		$db = new Loan_Model_DbTable_DbExpense();
+    		$db = new Loan_Model_DbTable_DbIncome();
     		if($this->getRequest()->isPost()){
-    			$formdata=$this->getRequest()->getPost();
+    			$search=$this->getRequest()->getPost();
     		}
     		else{
-    			$formdata = array(
+    			$search = array(
     					"adv_search"=>'',
     					"currency_type"=>-1,
     					"status"=>-1,
@@ -27,27 +27,24 @@ class Loan_ExpenseController extends Zend_Controller_Action
     			);
     		}
     		
+    		$this->view->adv_search = $search;
     		
-    		
-    		
-    		$this->view->adv_search = $formdata;
-    		
-			$rs_rows= $db->getAllExpense($formdata);//call frome model
+			$rs_rows= $db->getAllIncome($search);//call frome model
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","EXPENSE_TITLE","RECEIPT_NO","CURRENCY","TOTAL_EXPENSE","NOTE","DATE","STATUS");
+    		$collumns = array("BRANCH_NAME","INCOME_TITLE","RECEIPT_NO","CURRENCY","TOTAL_INCOME","NOTE","DATE","STATUS");
     		$link=array(
-    				'module'=>'loan','controller'=>'expense','action'=>'edit',
+    				'module'=>'loan','controller'=>'income','action'=>'edit',
     		);
     		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'title'=>$link,'invoice'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
-    		echo $e->getMessage();
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		echo $e->getMessage();
     	}
-		$frm = new Loan_Form_Frmexpense();
-//     	/$frm = $frm->AdvanceSearch();
+    	$frm = new Loan_Form_Frmexpense();
+    	//$frm = $frm->AdvanceSearch();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
     }
@@ -55,19 +52,18 @@ class Loan_ExpenseController extends Zend_Controller_Action
     {
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
-			$db = new Loan_Model_DbTable_DbExpense();	
-			$test = $db->getBranchId();
-			echo 11;exit();
+			$db = new Loan_Model_DbTable_DbIncome();				
 			try {
-				$db->addExpense($data);
+				$db->addIncome($data);
 				if(!empty($data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/expense");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/income");
 				}else{
 					Application_Form_FrmMessage::message("INSERT_SUCCESS");
 				}				
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+				echo $e->getMessage();
 			}
 		}
     	$pructis=new Loan_Form_Frmexpense();
@@ -78,20 +74,18 @@ class Loan_ExpenseController extends Zend_Controller_Action
  
     public function editAction()
     {
-    	$id = $this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
-			$data['id'] = $id;
-			$db = new Loan_Model_DbTable_DbExpense();				
+			$db = new Loan_Model_DbTable_DbIncome();				
 			try {
-				$db->updatExpense($data);				
-				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);		
+				$db->updateIncome($data);				
+				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', "/loan/income");		
 			} catch (Exception $e) {
 				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
 			}
 		}
 		$id = $this->getRequest()->getParam('id');
-		$db = new Loan_Model_DbTable_DbExpense();
+		$db = new Loan_Model_DbTable_DbIncome();
 		$row  = $db->getexpensebyid($id);
 		$this->view->row = $row;
 		
@@ -102,6 +96,21 @@ class Loan_ExpenseController extends Zend_Controller_Action
 		
     	
     }
+    
+    function getRateAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+	    	$db = new Loan_Model_DbTable_DbIncome();
+	    	$ex_rate = $db->getExchangeRate();
+	    	//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
+	    	print_r(Zend_Json::encode($ex_rate));
+	    	exit();
+    	}
+    }
+    
+    
+    
+    
 
 }
 

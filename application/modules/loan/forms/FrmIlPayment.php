@@ -52,7 +52,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$sold_price->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
-				'required' =>'true',
+				//'required' =>'true',
 				'onkeyup'=>'Balance();'
 		));
 		
@@ -141,10 +141,10 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 // 				//'onKeyUp'=>'getLaonPayment(1);getAllLaonPayment(1);'
 // 				'required'=>true
 // 		));
-		$row_loan_number = $db->getAllLoanNumber(1);
+		$row_loan_number = $db->getAllLoanNumber();
 		$options=array(''=>'');
 		if(!empty($row_loan_number))foreach($row_loan_number AS $row){
-			$options[$row['loan_number']]=$row['loan_number'];
+			$options[$row['sale_number']]=$row['sale_number'];
 		}
 		$_loan_number = new Zend_Dojo_Form_Element_FilteringSelect('loan_number');
 		$_loan_number->setAttribs(array(
@@ -197,6 +197,19 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		));
 		$_service_charge->setValue(0);
 		
+		
+		
+		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
+		$rows = $db ->getAllBranchByUser();
+		//print_r($rows);exit();
+		$options=array('');
+		if(!empty($rows)){foreach($rows AS $row) $options[$row['id']]=$row['name'];}
+		$branch_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>'getAllSaleNumber();'
+		));
+		$branch_id->setMultiOptions($options);
 		
 		
 		
@@ -398,30 +411,30 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 // 			$_loan_number->setValue($data["loan_number"]);
 // 			$_branch_id->setValue($data["branch_id"]);
 // 			$_client_code->setValue($data["group_id"]);
-// 			$reciept_no->setValue($data["receipt_no"]);
-// 			$_coid->setValue($data["co_id"]);
-// 			$option_pay->setValue($data["status"]);
-// 			$_amount_receive->setValue($data["recieve_amount"]);
-// 			$_amount_return->setValue($data["return_amount"]);
-// 			$_penalize_amount->setValue($data["penalize_amount"]);
-// 			$_total_payment->setValue($data["total_payment"]);
-// 			$_priciple_amount->setValue($data["principal_amount"]);
-// 			$_os_amount->setValue($data["total_principal_permonth"]);
+			$reciept_no->setValue($data["receipt_no"]);
+			$remain->setValue($data["balance"]);
+			$option_pay->setValue($data["payment_option"]);
+			$_amount_receive->setValue($data["recieve_amount"]);
+			$_amount_return->setValue($data["return_amount"]);
+			$_penalize_amount->setValue($data["penalize_amount"]);
+			$_total_payment->setValue($data["total_payment"]);
+			$_priciple_amount->setValue($data["principal_amount"]);
+			$_os_amount->setValue($data["total_principal_permonth"]);
 // // 			$discount->setValue($data["total_discount"]);
-// 			$_rate->setValue($data["total_interest"]);
-// 			$_note->setValue($data["note"]);
+			$_rate->setValue($data["total_interest_permonth"]);
+			$_note->setValue($data["note"]);
 // 			$date_input->setValue($data["date_input"]);
 // 			$_collect_date->setValue(date("y-m-d"));
-// 			$_service_charge->setValue($data["service_charge"]);
+			$_service_charge->setValue($data["service_charge"]);
 // 			$reciever->setValue($data["receiver_id"]);
 // 			$_currency_type->setValue($data["currency_type"]);
 // 			$amount_payment_term->setValue($data["amount_term"]);
 // 			$_interest_rate->setValue($data["interest_rate"]);
 // 			$_payterm->setValue($data["collect_typeterm"]);
-// 			$_collect_date->setValue($data["date_pay"]);
+			$_collect_date->setValue($data["date_pay"]);
 // 			$old_tota_pay->setValue($data["total_payment"]-$data["service_charge"]);
 		}
-		$this->addElements(array($_pay_late,$sold_price,$_graice_pariod,$commission,$schedule_opt,$_landsize,$_loan_codes,$_loan_codes,$old_amount_receive,$old_loan_number,$old_release_date,$old_service_charge,$old_penelize,$_cocode,$_last_payment_date,$using_date,$total_amount_loan,$loan_period,$candition_payment,$payment_method,$release_date,$loan_level,$remain,$old_tota_pay,$installment_date,$amount_payment_term,$_interest_rate,$_payterm,$_currency_type,$id,$option_pay,$date_input,$reciept_no,$reciever,$discount,$id,$_groupid,$_coid,$_priciple_amount,$_loan_fee,$_os_amount,$_rate,
+		$this->addElements(array($_pay_late,$branch_id,$sold_price,$_graice_pariod,$commission,$schedule_opt,$_landsize,$_loan_codes,$_loan_codes,$old_amount_receive,$old_loan_number,$old_release_date,$old_service_charge,$old_penelize,$_cocode,$_last_payment_date,$using_date,$total_amount_loan,$loan_period,$candition_payment,$payment_method,$release_date,$loan_level,$remain,$old_tota_pay,$installment_date,$amount_payment_term,$_interest_rate,$_payterm,$_currency_type,$id,$option_pay,$date_input,$reciept_no,$reciever,$discount,$id,$_groupid,$_coid,$_priciple_amount,$_loan_fee,$_os_amount,$_rate,
 				$_penalize_amount,$_collect_date,$_total_payment,$_note,$_service_charge,$_amount_return,
 				$_amount_receive,$_client_code,$_loan_number,$_hide_total_payment));
 		return $this;
@@ -437,7 +450,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required' =>'true',
-				'OnChange'	=> 'filterCo();'
+				'OnChange'	=> ''
 		));
 		
 		$rows = $db->getAllBranchName();
@@ -617,7 +630,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$id = new Zend_Form_Element_Hidden("id");
 		$id->setAttribs(array('dojoType'=>'dijit.form.TextBox'));
 		
-		$this->addElements(array($id,$reciever,$_currency_type,$date_input,$_note,$_amount_receive,$_rate,$_amount_return,$_service_charge,$branch_id,$_cocode,$_coid,$_collect_date,$_os_amount,$_penalize_amount,$_priciple_amount,$_total_payment));
+		$this->addElements(array($id,$branch_id,$reciever,$_currency_type,$date_input,$_note,$_amount_receive,$_rate,$_amount_return,$_service_charge,$branch_id,$_cocode,$_coid,$_collect_date,$_os_amount,$_penalize_amount,$_priciple_amount,$_total_payment));
 		return $this;
 	}
 }

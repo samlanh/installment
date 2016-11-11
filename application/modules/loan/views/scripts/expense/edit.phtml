@@ -2,6 +2,7 @@
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm_expense;
 ?>
+<title>Edit Other Expense</title>
 <style>	
 .fullside {
 	width: 100%;
@@ -27,27 +28,26 @@ $frm = $this->frm_expense;
 					<legend><strong>ចំណាយ</strong></legend>
 					<table cellspacing="10"  width="100%">
 						<tr>
-						     <?php echo $frm->getElement('id');?>
-						    <td><?php //echo $tr->translate("សាខា")?></td>
-							<td><?php //echo $frm->getElement('branch_id');?></td>
-							<td><?php echo $tr->translate("Expense Name")?></td>
-							<td><?php echo $frm->getElement('account_id');?></td>
-							<td><?php //echo $tr->translate("CURRENCY")?></td>
-							<td><?php //echo $frm->getElement('currency_type');//echo $frm->getElement('for_date');?></td>
+						    <td><?php echo $tr->translate("BRANCH_NAME")?></td>
+							<td><?php echo $frm->getElement('branch_id');?></td>
+							<td><?php echo $tr->translate("EXPENSE_TITLE")?></td>
+							<td><?php echo $frm->getElement('title');?></td>
+							<td><?php echo $tr->translate("CURRENCY")?></td>
+							<td><?php echo $frm->getElement('currency_type');//echo $frm->getElement('for_date');?></td>
 						</tr>
 						<tr>
-						   <td><?php echo $tr->translate("Invoice")?></td>
+						   <td><?php echo $tr->translate("RECEIPT_NO")?></td>
 							<td><?php echo $frm->getElement('invoice');?></td>
-							<td><?php echo $tr->translate("Total amount")?></td>
+							<td><?php echo $tr->translate("TOTAL_EXPENSE")?></td>
 							<td><?php echo $frm->getElement('total_amount');?></td>
-						    <td><?php echo $tr->translate("Description")?></td>
+							<td><?php echo $tr->translate("NOTE")?></td>
 							<td><?php echo $frm->getElement('Description');?></td>
-							
 						</tr>
 						<tr>
-						    <td><?php echo $tr->translate("Date")?></td>
+							
+						    <td><?php echo $tr->translate("DATE")?></td>
 							<td><?php echo $frm->getElement('Date');?></td>
-							<td><?php echo $tr->translate("Stutas")?></td>
+							<td><?php echo $tr->translate("STATUS")?></td>
 							<td><?php echo $frm->getElement('Stutas');?></td>
 						</tr>
 					</table>
@@ -66,5 +66,53 @@ $frm = $this->frm_expense;
 </form>
 
 <script type="text/javascript">
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dojo.NodeList-manipulate");
+dojo.require("dojo.data.ObjectStore");
+dojo.require("dojo.store.Memory");
 dojo.require("dijit.form.Textarea");
+
+dojo.ready(function(){
+	
+});
+
+var url_get_rate = "<?php echo $this->url(array('module'=>'registrar','controller'=>'Income','action'=>'get-rate')); ?>";
+	function convertToDollar(){
+
+		currency_type = dijit.byId('currency_type').get('value');
+		
+		if(currency_type==1){
+			document.getElementById('label').style.display="none";
+			document.getElementById('convert').style.display="none";
+		}else{
+			document.getElementById('label').style.display="block";
+			document.getElementById('convert').style.display="block";
+		
+
+			dojo.xhrPost({
+				url:url_get_rate,
+				content:{
+					'currency_type':currency_type
+					},
+				handleAs:"json",
+				load: function(data) {
+					  amount_in_kh = dijit.byId('total_amount').get('value');  
+					  //alert(amount);
+					  //amount=isNaN(amount)?0:amount;
+					  if(isNaN(amount_in_kh || amount_in_kh==0)){
+						  
+					  }else{ 
+					  	rate = data.reil;
+					  	amount_in_dollar = amount_in_kh / rate ; 
+					  	dijit.byId('convert_to_dollar').attr('value',amount_in_dollar);
+					  }
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+		
+	}
+	
 </script>
