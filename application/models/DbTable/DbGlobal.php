@@ -8,8 +8,30 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	public static function getUserId(){
 		$session_user=new Zend_Session_Namespace('auth');
 		return $session_user->user_id;
-	
 	}
+	
+	function  getAllBranchByUser(){
+		$db = $this->getAdapter();
+		$sql = 'select br_id as id,project_name as name from ln_project where 1 ';
+		//$sql .= $this->getAccessPermission('br_id');
+		//echo $sql;exit();
+		return $db->fetchAll($sql);
+	}
+	
+	public function getAccessPermission($branch_str='branch_id'){
+		$session_user=new Zend_Session_Namespace('auth');
+		$branch_id = $session_user->branch_id;
+		$level = $session_user->level;
+		if($level==1 OR $level==2){
+			$result = "";
+			return '';
+		}
+		else{
+			$result = " AND $branch_str =".$branch_id;
+			return '';
+		}
+	}
+	
 	public function init()
 	{
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -24,17 +46,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$sql="SELECT crm.`date_input` FROM `ln_client_receipt_money` AS crm,`ln_client_receipt_money_detail` AS crmd WHERE crm.`id`!=$id AND crm.`id`=(SELECT crl.`crm_id` FROM `ln_client_receipt_money_detail` AS crl WHERE crl.`crm_id`=crm.`id` AND crl.`loan_number`=(SELECT c.loan_number FROM `ln_client_receipt_money_detail` AS c WHERE c.`crm_id`=crmd.id AND c.`crm_id`=$id LIMIT 1) LIMIT 1)  ORDER BY crm.`date_input` DESC LIMIT 1 ";
 		return $db->fetchOne($sql);
 	}
-	public function getLoanNumberByBranch($type){
+	public function getSaleNumberByBranch(){
 		$db = $this->getAdapter();
-		if($type==1){
-			$sql="select id,
-					(select land_code from `ln_landinfo` where id=land_id limit 1) AS name
-					 from `ln_paymentschedule` where status=1 and is_completed=0 ";
-			return $db->fetchAll($sql);
-		}else{
-			$sql="SELECT m.`loan_number` AS id,m.`loan_number` AS `name`,g.`branch_id` FROM `ln_loan_member` AS m,`ln_loan_group` AS g WHERE m.`group_id`= g.`g_id` AND m.`is_completed`=0 AND g.`loan_type`=2 AND m.status=1 AND g.status=1 AND m.is_reschedule!=1 GROUP BY m.`loan_number` ";
-			return $db->fetchAll($sql);
-		}
+		$sql="select id,
+			sale_number as name
+			from `ln_sale` where status=1 and is_completed=0 ";
+		return $db->fetchAll($sql);
 	}
 	public function getGlobalDb($sql)
   	{
@@ -1033,22 +1050,16 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	return $db->fetchRow($sql);
   }
 
-  function getAllLoanNumber($type){//type ==1 is ilPayment, type==2 is group payment
+  function getAllLoanNumber(){//type ==1 is ilPayment, type==2 is group payment
   	$db = $this->getAdapter();
   	$sql ="SELECT 
-			  lm.`loan_number` 
+			 sale_number
 			FROM
-			  `ln_loan_member` AS lm,
-			  `ln_loan_group` AS lg 
-			WHERE lm.`is_completed` = 0 
-			  AND lm.`group_id` = lg.`g_id`
-  			  AND lg.`is_reschedule`!=1
+			  ln_sale
+			WHERE `is_completed` = 0 
+  			  AND `is_reschedule`!=1
   			";
-  	if($type==1){
-  		$sql.=" AND lg.`loan_type` = 1";
-  	}else{
-  		$sql.=" AND lg.`loan_type` =2";
-  	}
+  	
   	return $db->fetchAll($sql);
   }
   
@@ -1094,7 +1105,9 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   		$opt[$row['key_code']]=$row['name_en'];
   	}
   	return $opt;
+
   }
+
 
 
   public function getNewClientIdByBranch($branch_id){// by vandy get new client no by branch
