@@ -439,24 +439,46 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	  }
   }
   public function getClientByMemberId($id){
-  	$sql="SELECT p.first_datepay,
-  		 p.payment_type,p.amount_month,p.first_datepay,p.date_buy,
-  		(SELECT co_khname FROM `ln_staff` WHERE co_id =p.staff_id LIMIT 1) AS co_khname,
-  		(SELECT co_firstname FROM `ln_staff` WHERE co_id =p.staff_id LIMIT 1) AS co_enname,
-  		(SELECT client_number FROM `ln_client` WHERE client_id = p.client_id LIMIT 1) AS client_number,
-  		(SELECT name_kh FROM `ln_client` WHERE client_id = p.client_id LIMIT 1) AS client_name_kh,
-  		(SELECT name_en FROM `ln_client` WHERE client_id = p.client_id LIMIT 1) AS client_name_en,
-  		(SELECT tel FROM `ln_client` WHERE client_id = p.client_id LIMIT 1) AS tel,
-  		(SELECT displayby FROM `ln_client` WHERE client_id = p.client_id LIMIT 1) AS displayclient,
-  		(SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = p.user_id LIMIT 1) AS user_name,
-  		p.client_id,p.price,p.deposit,
-  		p.discount,p.amount_month,p.interest_rate,
-  		`l`.`land_code`     AS `land_code`,
-		  `l`.`land_address`  AS `land_address`,
-		  `l`.`land_size`     AS `land_size`
+  	$sql="SELECT 
+		  `s`.`branch_id`       AS `branch_id`,
+		  `s`.`client_id`       AS `client_id`,
+		  `s`.`house_id`        AS `house_id`,
+		  `s`.`price_before`    AS `price_before`,
+		  `s`.`price_sold`      AS `price_sold`,
+		  `s`.`discount_amount` AS `discount_amount`,
+		  `s`.`admin_fee`       AS `admin_fee`,
+		  `s`.`other_fee`       AS `other_fee`,
+		  `s`.`paid_amount`     AS `paid_amount`,
+		  `s`.`balance`         AS `balance`,
+		  `s`.`create_date`     AS `create_date`,
+		  `s`.`buy_date`        AS `buy_date`,
+		  `s`.`startcal_date`   AS `startcal_date`,
+		  `s`.`first_payment`   AS `first_payment`,
+		  `s`.`validate_date`   AS `validate_date`,
+		  `s`.`end_line`        AS `end_line`,
+		  `s`.`interest_rate`   AS `interest_rate`,
+		  `s`.`total_duration`  AS `total_duration`,
+		  `s`.`payment_id`      AS `payment_id`,
+		  `s`.`staff_id`        AS `staff_id`,
+		  `s`.`comission`       AS `comission`,
+		  `s`.`receipt_no`      AS `receipt_no`,
+  		(SELECT client_number FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_number,
+  		(SELECT name_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_kh,
+  		(SELECT name_en FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_en,
+  		(SELECT tel FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS tel,
+  		(SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = s.user_id LIMIT 1) AS user_name,
+	  	  `p`.`land_code`       AS `land_code`,
+		  `p`.`land_address`    AS `land_address`,
+		  `p`.`land_size`       AS `land_size`,
+		  `p`.`stree`           AS `stree`,
+	  (SELECT
+	     `ln_properties_type`.`type_nameen`
+	   FROM `ln_properties_type`
+	   WHERE (`ln_properties_type`.`id` = `p`.`property_type`)
+	   LIMIT 1) AS `propertype`
   		FROM 
-  	   `ln_paymentschedule` AS p,ln_landinfo AS l
-  	 WHERE `l`.`id` = `p`.`land_id` AND p.id=$id LIMIT 1 ";
+  	   `ln_sale` AS s,`ln_properties` AS p
+  	 WHERE `p`.`id` = `s`.`house_id`   AND s.id=$id LIMIT 1 ";
   	$db=$this->getAdapter();
   	return $db->fetchRow($sql);
   }

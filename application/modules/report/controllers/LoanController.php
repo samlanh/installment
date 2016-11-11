@@ -682,6 +682,10 @@ public function exportFileToExcel($table,$data,$thead){
  	}
  	else{
  		$search = array(
+ 				'adv_search'=>'',
+ 				'branch_id'=>-1,
+ 				'schedule_opt'=>-1,
+ 				'property_type'=>0,
  				'client_name'=>'',
  				'staff_id'=>'',
  				'start_date'=> date('Y-m-d'),
@@ -702,13 +706,12 @@ public function exportFileToExcel($table,$data,$thead){
  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
  	$id =$this->getRequest()->getParam('id');
  	$row = $db->getPaymentSchedule($id);
- 	
  	$this->view->tran_schedule=$row;
  	if(empty($row) or $row==''){
  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold');
  	}
  	$db = new Application_Model_DbTable_DbGlobal();
- 	$rs = $db->getClientByMemberId(@$row[0]['paymentid']);
+ 	$rs = $db->getClientByMemberId(@$row[0]['id']);
  
  	$this->view->client =$rs;
  	$frm = new Application_Form_FrmSearchGlobal();

@@ -54,16 +54,16 @@ td p{ margin-top:0px !important;}
 				                	</td>
 				                    <td valign="top" style="" width="33%">
 				                    	<p><?php echo $tr->translate("LOAN_NO");?> : <b><?php echo $client['land_code'];?></b></p>
-				                        <p><?php echo $tr->translate("LOAN_AMOUNT");?>  : <?php echo number_format($client['price'],2);?> $</p>
-				                    	<p><?php echo $tr->translate("Paid");?>  : <?php echo number_format($client['deposit'],2);?></p>
-				                    	<p><?php echo $tr->translate("Balance");?>  : <?php echo number_format($client['price']-$client['deposit'],2);?></p>
-				                    	<p><?php echo $tr->translate("Discount");?> : <b><?php echo $client['discount'];?> %</b></p>
+				                        <p><?php echo $tr->translate("LOAN_AMOUNT");?>  : <?php //echo number_format($client['price'],2);?> $</p>
+				                    	<p><?php echo $tr->translate("Paid");?>  : <?php //echo number_format($client['deposit'],2);?></p>
+				                    	<p><?php echo $tr->translate("Balance");?>  : <?php //echo number_format($client['price']-$client['deposit'],2);?></p>
+				                    	<p><?php echo $tr->translate("Discount");?> : <b><?php //echo $client['discount'];?> %</b></p>
 				                    </td>
 				                    <td valign="top">
-				     	             <p><?php echo $tr->translate("INTEREST");?> : <?php echo $client['interest_rate'];?>&nbsp;%</p>
-				     	             <p><?php echo $tr->translate("TERM_BORROW");?> : <?php echo count($tran);?>&nbsp;ខែ</p>
-				                     <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-m-Y',strtotime($client['date_buy']));?> </p>
-				                      <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-m-Y',strtotime($client['first_datepay'])); ?></p>
+				     	             <p><?php echo $tr->translate("INTEREST");?> : <?php //echo $client['interest_rate'];?>&nbsp;%</p>
+				     	             <p><?php echo $tr->translate("TERM_BORROW");?> : <?php //echo count($tran);?>&nbsp;ខែ</p>
+				                     <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php //echo date('d-m-Y',strtotime($client['date_buy']));?> </p>
+				                      <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php //echo date('d-m-Y',strtotime($client['first_datepay'])); ?></p>
 				                    </td>
 				                </tr>
 			                </table>
@@ -93,18 +93,16 @@ td p{ margin-top:0px !important;}
 	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style">
 	                    <td ><?php echo ($key+1<10)?"0":"";echo $key+1;?></td>
 	                    <?php $str_day = date('D',strtotime($row['date_payment']));
-	                    
 	                    	$day_as_khmer = $dayin_khmer[$str_day];
 	                    ?>
 	                    <td align="right">&nbsp;<?php echo $day_as_khmer.'-'.$str_day; ?>&nbsp;&nbsp;&nbsp;</td>
-	                    <td align="center"><?php echo date('d-m-Y',strtotime($row['date_payment']));//echo$row['date_payment']?></td>
-	                   <!--  <td><?php //echo $row['is_completed']?></td> -->
-	                    <td><?php echo str_replace('.00', '', number_format($row['outstanding'],2));?></td>
+	                    <td align="center"><?php echo date('d-m-Y',strtotime($row['date_payment']));?></td>
+	                    <td><?php echo str_replace('.00', '', number_format($row['begining_balance'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['principal_permonth'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['total_interest'],2));?></td>
 	                    <td ><?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></td>
 	                    <?php 
-	                    $remain = $row['outstanding']-$row['principal_permonth']
+	                   		$remain = $row['ending_balance'];
 	                    ?>
 	                    <td><?php echo number_format($remain,(!strrpos($remain,"."))? 0 : 2);?></td>
 	                </tr>
@@ -134,7 +132,7 @@ td p{ margin-top:0px !important;}
 	            		<td align="center"  valign="bottom">
 	            			<?php //echo ($client['displayby']==1)?$client['co_khname']:$client['co_enname'] ;?></td>
 	            		<td align="center" height="75px" valign="bottom">
-	            			<?php echo ($client['displayclient']==1)? $client['client_name_kh']: $client['client_name_en'] ;?></td>
+	            			<?php //echo ($client['displayclient']==1)? $client['client_name_kh']: $client['client_name_en'] ;?></td>
 	            	</tr>
 	            </table>
 	    	</td>

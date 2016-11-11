@@ -180,8 +180,10 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 	}
 	public function getGroupCodeBYId($data){
 		$db = $this->getAdapter();
-			$sql = " SELECT * FROM `ln_properties`
-			WHERE id = ".$data['land_id'] ;
+			$sql = " SELECT *,
+				(SELECT t.type_nameen FROM `ln_properties_type` as t WHERE t.id=property_type) As property_type
+				FROM `ln_properties` 
+			WHERE id = ".$data['land_id']." LIMIT 1" ;
 			 $rs = $db->fetchRow($sql);
 			if(empty($rs)){return ''; }else{
 				return $rs;

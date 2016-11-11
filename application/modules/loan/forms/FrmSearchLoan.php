@@ -88,6 +88,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 // 		array_unshift($opt, array(1=>'ជ្រើសរើសប្រភេទបង់ប្រាក់') );
 // 		print_r($opt);exit();
 		$schedule_opt->setMultiOptions($options);
+		$schedule_opt->setValue($request->getParam("schedule_opt"));
 		
 		
 		$_coid = new Zend_Dojo_Form_Element_FilteringSelect('co_id');
@@ -103,6 +104,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		$_releasedate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
 		$_releasedate->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'onchange'=>'CalculateDate();'));
 		$_date = $request->getParam("start_date");
 		
@@ -113,7 +115,9 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		
 		
 		$_dateline = new Zend_Dojo_Form_Element_DateTextBox('end_date');
-		$_dateline->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','required'=>'true','class'=>'fullside',
+		$_dateline->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','required'=>'true',
+				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 		));
 		$_date = $request->getParam("end_date");
 		
@@ -139,17 +143,14 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		));
 		
 		$options = $db->getAllBranchName(null,1);
-// 		$options=array(-1=>'---Select Branch---');
-// 		if(!empty($rows))foreach($rows AS $row){
-// 			$options[$row['br_id']]=$row['branch_namekh'];
-// 		}
 		$_branch_id->setMultiOptions($options);
 		$_branch_id->setValue($request->getParam("branch_id"));
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
-		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
-		$propertiestype_opt = $db->getVewOptoinTypeByType(7,1,11);
+		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside','onChange'=>'showPopupForm();'));
+		$propertiestype_opt = $db->getPropertyType();
 		$propertiestype->setMultiOptions($propertiestype_opt);
+		$propertiestype->setValue($request->getParam("property_type"));
 		
 		
 		if($data!=null){

@@ -16,19 +16,32 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 if(!empty($search['adv_search'])){
       	 	$s_where = array();
       	 	$s_search = addslashes(trim($search['adv_search']));
+      	 	$s_where[] = " receipt_no LIKE '%{$s_search}%'";
       	 	$s_where[] = " land_code LIKE '%{$s_search}%'";
       	 	$s_where[] = " land_address LIKE '%{$s_search}%'";
       	 	$s_where[] = " client_number LIKE '%{$s_search}%'";
       	 	$s_where[] = " name_en LIKE '%{$s_search}%'";
       	 	$s_where[] = " name_kh LIKE '%{$s_search}%'";
       	 	$s_where[] = " staff_name LIKE '%{$s_search}%'";
-      	 	$s_where[] = " price LIKE '%{$s_search}%'";
-      	 	$s_where[] = " commission LIKE '%{$s_search}%'";
-      	 	$s_where[] = " amount_month LIKE '%{$s_search}%'";
+      	 	$s_where[] = " price_sold LIKE '%{$s_search}%'";
+      	 	$s_where[] = " comission LIKE '%{$s_search}%'";
+      	 	$s_where[] = " total_duration LIKE '%{$s_search}%'";
       	 	$where .=' AND ( '.implode(' OR ',$s_where).')';
-      	 	
+      	 }
+      	 if($search['branch_id']>0){
+      	 	$where.=" AND branch_id = ".$search['branch_id'];
+      	 }
+      	 if($search['property_type']>0 AND $search['property_type']>0){
+      	 	$where.=" AND v_soldreport.property_type = ".$search['property_type'];
+      	 }
+      	 if($search['client_name']!='' AND $search['client_name']>0){
+      	 	$where.=" AND client_id = ".$search['client_name'];
+      	 }
+      	 if($search['schedule_opt']>0){
+      	 	$where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
       	 }
       	 $order = " ORDER BY id DESC ";
+//       	 echo $sql.$where.$order;
       	 return $db->fetchAll($sql.$where.$order);
       }
       public function getAllLoanCo($search = null){//rpt-loan-released
