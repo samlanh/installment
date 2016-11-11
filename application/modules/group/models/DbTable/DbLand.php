@@ -23,6 +23,7 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		    	'branch_id'	  => $_data['branch_id'],
 				'land_code'	  => $land_code,
 				'land_address'	  => $_data['land_address'],
+		    	'street'	  => $_data['street'],
 				'price'	      => $_data['price'],
 		    	'land_price'	      => $_data['land_price'],
 		    	'house_price'	      => $_data['house_price'],
@@ -218,6 +219,11 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				$this->_name = "ln_client";
 				$id =$this->insert($_arr);
 				return array('id'=>$id,'client_code'=>$client_code);
+	}
+	public function CheckTitle($data){
+		$db =$this->getAdapter();
+		$sql = "SELECT  * FROM `ln_properties` AS p WHERE p.`land_address` = '".$data['land_address']."' AND p.`branch_id` = ".$data['branch_id'];
+		return $db->fetchRow($sql);
 	}
 }
 

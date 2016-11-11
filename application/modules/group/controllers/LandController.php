@@ -25,7 +25,8 @@ class Group_LandController extends Zend_Controller_Action {
 						'status' => -1,
 						'property_type_search'=>-1,
 						'start_date'=> date('Y-m-d'),
-						'end_date'=>date('Y-m-d'));
+						'end_date'=>date('Y-m-d')
+						);
 			}
 			$rs_rows= $db->getAllLandInfo($search);
 			$glClass = new Application_Model_GlobalClass();
@@ -258,6 +259,15 @@ class Group_LandController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			$db = new Application_Model_DbTable_DbGlobal();
 			$dataclient=$db->getNewLandByBranch($data['branch_id']);
+			print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	}
+	function checkTitleAction(){// by vandy get property code
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Group_Model_DbTable_DbLand();
+			$dataclient=$db->CheckTitle($data);
 			print_r(Zend_Json::encode($dataclient));
 			exit();
 		}

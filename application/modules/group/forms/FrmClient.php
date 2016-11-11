@@ -412,6 +412,13 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$landaddress->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
+				'onKeyup'=>'checkTitle();',
+		));
+		
+		$street = new Zend_Dojo_Form_Element_TextBox('street');
+		$street->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
 		));
 	
 		$land_price = new Zend_Dojo_Form_Element_NumberTextBox('land_price');
@@ -543,6 +550,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$_size->setValue($data['land_size']);
 			$width->setValue($data['width']);
 			$height->setValue($data['height']);
+			$street->setValue($data['street']);
 			$hardtitle->setValue($data['hardtitle']);
 			
 			$BuidingYear->setValue($data['buidingyear']);
@@ -553,7 +561,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$propertiestype->setValue($data['property_type']);
 			$floor->setValue($data['floor']);
 		}
-		$this->addElements(array($propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
+		$this->addElements(array($street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
 		return $this;
 	
 	}
