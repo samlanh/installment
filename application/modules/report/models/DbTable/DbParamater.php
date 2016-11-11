@@ -50,7 +50,7 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     	$sql="SELECT co_id,co_code,co_khname,co_firstname,(SELECT name_kh FROM ln_view WHERE TYPE = 11 AND key_code=sex ) AS sex
     	,email,basic_salary,start_date,end_date,contract_no,shift,workingtime,(SELECT position_kh FROM ln_position WHERE id=position_id) As position,
     	tel,basic_salary,national_id,address,degree,
-    	(SELECT branch_namekh FROM ln_branch WHERE br_id = branch_id limit 1) AS branch_name,note FROM ln_co WHERE 1";
+    	(SELECT project_name FROM ln_project WHERE br_id = branch_id limit 1) AS branch_name,note FROM ln_staff WHERE 1";
     	$Other =" ORDER BY co_id DESC ";
     	//$where = '';
     	//echo $search['txtsearch'];
@@ -133,6 +133,31 @@ function getAllBranch($search=null){
     	$order=' ORDER BY b.br_id DESC';
    //echo $sql.$where;
    return $db->fetchAll($sql.$where.$order);
+    	}
+    function getAllProperties($search=null){
+    		$db = $this->getAdapter();
+    		$sql = "SELECT p.`id`,p.`branch_id`,p.`land_code`,p.`land_address`,p.`property_type`,
+				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type`) AS pro_type,
+				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`
+				 FROM `ln_properties` AS p WHERE p.`status`=1";
+    		$where='';
+    		if($search['property_type']>-1){
+    			$where.= " AND p.`property_type` = ".$search['property_type'];
+    		}
+    		if(!empty($search['adv_search'])){
+    			$s_where=array();
+    			$s_search=$search['adv_search'];
+    			$s_where[]=" p.`land_code` LIKE '%{$s_search}%'";
+    			$s_where[]=" p.`land_address` LIKE '%{$s_search}%'";
+    			$s_where[]=" p.`land_size` LIKE '%{$s_search}%'";
+    			$s_where[]=" p.`height` LIKE '%{$s_search}%'";
+    			$s_where[]=" p.width LIKE '%{$s_search}%'";
+    			$s_where[]=" p.`price` LIKE '%{$s_search}%'";
+    			$s_where[]=" p.`land_price` LIKE '%{$s_search}%'";
+    			$s_where[]=" p.`house_price` LIKE '%{$s_search}%'";
+    			$where.=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		return $db->fetchAll($sql.$where);
     	}
 }
 
