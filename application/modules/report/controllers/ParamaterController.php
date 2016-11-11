@@ -162,5 +162,23 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		}
   	}else $data = array('adv_search' => '');
   }
+  function rptPropertiesAction(){ // by Vandy
+  	
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+  				'adv_search'=>'',
+  				'property_type'=>-1,
+  				);
+  	}
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->row = $db->getAllProperties($search);
+  	
+  	$frm=new Other_Form_FrmProperty();
+  	$row=$frm->FrmFrmProperty();
+  	Application_Model_Decorator::removeAllDecorator($row);
+  	$this->view->frm_property=$row;
+  }
 }
 
