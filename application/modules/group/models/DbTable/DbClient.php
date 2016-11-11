@@ -73,6 +73,8 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    	'arid_no'      => $_data['arid_no'],
 		    	'edesc'      => $_data['edesc'],
 		    	'branch_id'      => $_data['branch_id'],
+		    	'joint_doc_type'      => $_data['join_d_type'],
+		    	'refe_nation_id'      => $_data['reference_national_id'],
 		);
 		if(!empty($_data['id'])){
 			$where = 'client_id = '.$_data['id'];
@@ -97,6 +99,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql = "SELECT c.client_id , c.client_number ,c.`name_en`,c.`name_kh`,c.`sex`,
 		c.`id_number`,c.`id_type`,c.`acc_number`,c.`phone`,c.`dob`,c.`pob`,c.`tel`,c.`email`,c.`street`,c.`house`,
+		(SELECT v.name_en FROM `ln_view` AS v WHERE v.type=23 AND v.key_code = c.`client_d_type`) AS doc_name,
 		(SELECT commune_name FROM `ln_commune` WHERE com_id = c.com_id   LIMIT 1) AS commune_name
 		,(SELECT district_name FROM `ln_district` AS ds WHERE dis_id = c.dis_id  LIMIT 1) AS district_name
 		,(SELECT province_en_name FROM `ln_province` WHERE province_id= c.pro_id  LIMIT 1) AS province_en_name
@@ -108,7 +111,8 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		,(SELECT district_name FROM `ln_district` AS ds WHERE dis_id = c.adistrict  LIMIT 1) AS p_district_name
 		,(SELECT province_en_name FROM `ln_province` WHERE province_id= c.cprovince  LIMIT 1) AS p_province_en_name
 		,(SELECT village_name FROM `ln_village` WHERE vill_id = c.qvillage  LIMIT 1) AS p_village_name ,
-		c.`dstreet`,c.`ghouse`,c.`nationality`,c.`nation_id`,c.`p_nationality`,c.`rid_no`,c.`arid_no`,
+		c.`dstreet`,c.`ghouse`,c.`nationality`,c.`nation_id`,c.`p_nationality`,c.`rid_no`,c.`arid_no`,c.refe_nation_id,
+		(SELECT v.name_en FROM `ln_view` AS v WHERE v.type=23 AND v.key_code = c.`joint_doc_type`) AS join_doc_name,
 		 c.photo_name FROM `ln_client` AS c WHERE client_id =  ".$db->quote($id);
 		$sql.=" LIMIT 1 ";
 		$row=$db->fetchRow($sql);

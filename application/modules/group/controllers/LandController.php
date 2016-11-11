@@ -15,13 +15,15 @@ class Group_LandController extends Zend_Controller_Action {
 						'adv_search' => $formdata['adv_search'],
 						'status'=>$formdata['status'],
 						'start_date'=> $formdata['start_date'],
-						'end_date'=>$formdata['end_date']
+						'end_date'=>$formdata['end_date'],
+						'property_type_search'=>$formdata['property_type_search'],
 						);
 			}
 			else{
 				$search = array(
 						'adv_search' => '',
 						'status' => -1,
+						'property_type_search'=>-1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'));
 			}
@@ -29,12 +31,12 @@ class Group_LandController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("Land Code","TITLE","Price","Width","Height","Total Size","Heard Title","DATE","BY_USER","STATUS");
+			$collumns = array("PROPERTY_ID","TITLE","PROPERY_TYPE","PRICE","WIDTH","HEIGHT","SIZE","HEARD_TITLE","DATE","BY_USER","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'land','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('land_code'=>$link,'land_address'=>$link,'price'=>$link,
-					'width'=>$link));
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('land_code'=>$link,'land_address'=>$link,'pro_type'=>$link,
+					'price'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -45,6 +47,11 @@ class Group_LandController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
 		$this->view->result=$search;	
+		
+		$fm = new Group_Form_FrmClient();
+		$frmserch = $fm->FrmLandInfo();
+		Application_Model_Decorator::removeAllDecorator($frmserch);
+		$this->view->frm_land = $frmserch;
 	}
 	public function addAction(){
 		if($this->getRequest()->isPost()){

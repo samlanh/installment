@@ -198,6 +198,12 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 				));
+	
+		$referecce_national_id=new Zend_Dojo_Form_Element_TextBox('reference_national_id');
+		$referecce_national_id->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
 		
 		$_id = new Zend_Form_Element_Hidden("id");
 		$_desc = new Zend_Dojo_Form_Element_TextBox('desc');
@@ -373,8 +379,9 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$_cprovince->setValue($data['cprovince']);
 			$_adistrict->setValue($data['adistrict']);
 			$_dcommune->setValue($data['dcommune']);
+			$referecce_national_id->setValue($data['refe_nation_id']);
 		}
-		$this->addElements(array($p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_qvillage,$_dcommune,$_adistrict,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
+		$this->addElements(array($referecce_national_id,$p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_qvillage,$_dcommune,$_adistrict,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
 				$_join_with,$_id,$photo,$job,$national_id,$_member,$_namekh,$_nameen,$_sex,
 				$_province,$_district,$_commune,$_village,$_house,$_street,$_id_no,$branch_id,$_email,
 				$_phone,$_desc,$_status,$_clientno,$_dob,$clienttype_namekh,$clienttype_nameen));
@@ -477,6 +484,11 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$propertiestype_opt = $db->getPropertyType();
 		$propertiestype->setMultiOptions($propertiestype_opt);
 		
+		$propertiestype_search = new Zend_Dojo_Form_Element_FilteringSelect('property_type_search');
+		$propertiestype_search->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside'));
+		$propertiestype_search_opt = $db->getPropertyTypeForsearch();
+		$propertiestype_search->setMultiOptions($propertiestype_search_opt);
+		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -541,7 +553,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$propertiestype->setValue($data['property_type']);
 			$floor->setValue($data['floor']);
 		}
-		$this->addElements(array($land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
+		$this->addElements(array($propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
 		return $this;
 	
 	}

@@ -70,9 +70,9 @@ dojo.require("dijit.Dialog");
 							<td><input id="village" ><?php  //echo $frm->getElement('village');?></td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("STREET")?></td>
+							<td><?php echo $tr->translate("STREET_NO")?></td>
 							<td><?php  echo $frm->getElement('street');?></td>
-							<td><?php echo $tr->translate("HOUSE")?></td>
+							<td><?php echo $tr->translate("HOUSE_NO")?></td>
 							<td><?php  echo $frm->getElement('house');?></td>
 							<td valign="top"><?php echo $tr->translate("STATUS")?></td>
 							<td valign="top"><?php  echo $frm->getElement('status');?></td>
@@ -88,47 +88,53 @@ dojo.require("dijit.Dialog");
 							<td valign="top"></td>
 						</tr>
 						<tr>
-							<td colspan="6">Plot Holder Information</td>
+							<td colspan="6"><?php echo $tr->translate("PLOT_HODER_INFO")?></td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("ឈ្មោះជាខ្មែរ")?></td>
+							<td><?php echo $tr->translate("NAME_KH")?></td>
 							<td><?php echo $frm->getElement('hname_kh');?></td>
-							<td><?php echo $tr->translate("ឈ្មោះអង់គ្លេស")?></td>
+							<td><?php echo $tr->translate("NAME_EN")?></td>
 							<td><?php  echo $frm->getElement('bname_kh');?></td>
-							<td><?php echo $tr->translate("ភេទ")?></td>
+							<td><?php echo $tr->translate("SEX")?></td>
 							<td><?php  echo $frm->getElement('ksex');?></td>
 							
 						</tr>
 						<tr>
+							<td><?php 	echo $tr->translate("DOUCMENT_TYPE")?></td>
+							<td><input id="join_d_type"/></td> 
 							<td><?php 	echo $tr->translate("NATIONALITY")?></td>
-							<td><?php   echo $frm->getElement('p_nationality');?></td> 
+							<td><?php   echo $frm->getElement('p_nationality');?></td>
 							<td><?php 	echo $tr->translate("NATIONAL_ID")?></td>
 							<td><?php   echo $frm->getElement('rid_no');?></td> 
-							<td><?php 	echo $tr->translate("លេខទូរស័ព្ទ")?></td>
+						</tr>
+						<tr>
+							<td><?php 	echo $tr->translate("PHONE")?></td>
 							<td><?php  	echo $frm->getElement('lphone');?></td>
-						</tr>
-						<tr>
-							<td><?php 	echo $tr->translate("ខេត្ត/រាជធានី")?></td>
+							<td><?php 	echo $tr->translate("CITY_PROVINCE")?></td>
 							<td><?php  	echo $frm->getElement('cprovince');?></td>
-							<td><?php 	echo $tr->translate("ស្រុក/ខណ្ឌ")?></td>
+							<td><?php 	echo $tr->translate("DISTRICT")?></td>
 							<td><input id="adistrict" required="true" ><?php //echo $frm->getElement('adistrict');?></td>		
-							<td><?php 	echo $tr->translate("ឃុំ/សង្កាត់")?></td>
+						</tr>
+						<tr>
+							<td><?php 	echo $tr->translate("COMMUNE")?></td>
 							<td><input id="dcommune" ><?php //echo $frm->getElement('dcommune');?></td>
-						</tr>
-						<tr>
-							<td><?php 	echo $tr->translate("ភូមិ")?></td>
+							<td><?php 	echo $tr->translate("VILLAGE")?></td>
 							<td><input id="qvillage" ><?php //echo $frm->getElement('qvillage');?></td>
-							<td><?php 	echo $tr->translate("ផ្លូវលេខ")?></td>
+							<td><?php 	echo $tr->translate("STREET_NO")?></td>
 							<td><?php  	echo $frm->getElement('dstreet');?></td>
-							<td><?php 	echo $tr->translate("ផ្ទះលេខ")?></td>
-							<td><?php  	echo $frm->getElement('ghouse');?></td>
 						</tr>
 						<tr>
-							<td><?php 	echo $tr->translate("ឈ្មោះអ្នកធានា")?></td>
+							<td><?php 	echo $tr->translate("HOUSE_NO")?></td>
+							<td><?php  	echo $frm->getElement('ghouse');?></td>
+							<td><?php 	echo $tr->translate("RFERENCE_NAME")?></td>
 							<td><?php  	echo $frm->getElement('arid_no');?></td>
-							<td><?php 	echo $tr->translate("ស្ថានភាព")?></td>
+							<td><?php 	echo $tr->translate("REFERENCE_NATION_ID")?></td>
+							<td><?php  	echo $frm->getElement('reference_national_id');?></td>
+						</tr>
+						<tr>
+							<td><?php 	echo $tr->translate("STATUS")?></td>
 							<td><?php  	echo $frm->getElement('istatus');?></td>
-							<td><?php 	echo $tr->translate("សំគាល់")?></td>
+							<td><?php 	echo $tr->translate("NOTE")?></td>
 							<td><?php 	echo $frm->getElement('edesc');?></td>
 						</tr>
 						<tr>
@@ -159,6 +165,7 @@ echo $this->frm_popup_comm;
 <script type="text/javascript">
 
 var d_datastore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->clienttype));?> );
+var joint_doc_type_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->clienttype));?> );
 var district_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var commune_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var village_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
@@ -244,6 +251,24 @@ dojo.ready(function(){
 				}
 			}
 		}, "client_d_type");
+
+	new dijit.form.FilteringSelect({
+		store: joint_doc_type_store,//dojo.data.ObjectStore({objectStore: d_data}),
+		autoComplete: true,          
+		required: false,		           
+		name: "join_d_type",
+		id: "join_d_type",
+		searchAttr: "name",
+		class: 'fullside',
+		missingMessage:"អ្នក​ភ្លេច​​ បំពេញប្រភេទឯកសារ !",	
+			//onChange: function() {
+				//client_d_type = dijit.byId('join_d_type').get('value');
+				//if(client_d_type==-1){
+					//doc_type=1;
+					//showPopupclientdtype();
+				//}
+			//}
+		}, "join_d_type");
 
 
 	new dijit.form.FilteringSelect({

@@ -104,7 +104,9 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;		
 		$sql = "SELECT id,
-				land_code,land_address,price,
+				land_code,land_address,
+				(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type) AS  pro_type,
+				price,
 				land_size,width,height,hardtitle,create_date,
 		    (SELECT  CONCAT(first_name,' ', last_name) FROM rms_users WHERE id=user_id ) AS user_name,
 			status FROM $this->_name ";
@@ -121,6 +123,9 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		}
 		if($search['status']>-1){
 			$where.= " AND status = ".$search['status'];
+		}
+		if(!empty($search['property_type_search'])){
+			$where.= " AND property_type = ".$search['property_type_search'];
 		}
 		$order=" ORDER BY id DESC ";
 		return $db->fetchAll($sql.$where.$order);	
