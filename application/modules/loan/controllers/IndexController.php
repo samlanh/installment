@@ -202,8 +202,9 @@ class Loan_IndexController extends Zend_Controller_Action {
 	function addschedultestAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-				$_dbmodel = new Loan_Model_DbTable_DbLoanILtest();
-				$rows_return=$_dbmodel->addNewLoanILTest($_data);
+// 				$_dbmodel = new Loan_Model_DbTable_DbLoanILtest();
+				$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
+				$rows_return=$_dbmodel->addScheduleTestPayment($_data);
 				print_r(Zend_Json::encode($rows_return));
 				exit();
 		}

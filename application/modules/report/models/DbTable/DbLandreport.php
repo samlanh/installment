@@ -3,14 +3,14 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 {
       public function getAllLoan($search = null){//rpt-loan-released/
       	 $db = $this->getAdapter();
-      	 $sql = "SELECT * ,
-      	 (SELECT name_en FROM `ln_view` WHERE key_code =v_soldreport.payment_type AND TYPE = 25) AS paymenttype
+      	 $sql = " SELECT * ,
+      	 (SELECT name_en FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25) AS paymenttype
       	 FROM v_soldreport WHERE 1 ";
       	 
       	 $where ='';
       
-	    $from_date =(empty($search['start_date']))? '1': " date_buy >= '".$search['start_date']." 00:00:00'";
-	    $to_date = (empty($search['end_date']))? '1': " date_buy <= '".$search['end_date']." 23:59:59'";
+	    $from_date =(empty($search['start_date']))? '1': " buy_date >= '".$search['start_date']." 00:00:00'";
+	    $to_date = (empty($search['end_date']))? '1': " buy_date <= '".$search['end_date']." 23:59:59'";
 	    $where.= " AND ".$from_date." AND ".$to_date;
 
       	 if(!empty($search['adv_search'])){
@@ -26,6 +26,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 	$s_where[] = " commission LIKE '%{$s_search}%'";
       	 	$s_where[] = " amount_month LIKE '%{$s_search}%'";
       	 	$where .=' AND ( '.implode(' OR ',$s_where).')';
+      	 	
       	 }
       	 $order = " ORDER BY id DESC ";
       	 return $db->fetchAll($sql.$where.$order);

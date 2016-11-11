@@ -40,12 +40,13 @@ public function init()
 				'readonly'=>true,
 				'class'=>'fullside',
 		));
-		$_house_price->setValue(5000);
+		//$_house_price->setValue(5000);
 		
 		$other_fee = new Zend_Dojo_Form_Element_NumberTextBox('other_fee');
 		$other_fee->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				//'readonly'=>true,
+		       'onkeyup'=>'calculateDiscount();',
 				'class'=>'fullside',
 		));
 
@@ -55,7 +56,7 @@ public function init()
 				'class'=>'fullside',
 				'readonly'=>true,
 		));
-		$_total_sold->setValue(10000);
+		//$_total_sold->setValue(10000);
 		
 		$schedule_opt = new Zend_Dojo_Form_Element_FilteringSelect('schedule_opt');
 		$schedule_opt->setAttribs(array(
@@ -79,7 +80,8 @@ public function init()
 		$_customer_codes->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
-				'onkeyup'=>'Balance();'
+				'onkeyup'=>'Balance();',
+				'required'=>true,
 		));		
 		
 		$_members = new Zend_Dojo_Form_Element_NumberTextBox('balance');
@@ -110,7 +112,7 @@ public function init()
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 		));
-		$commission->setValue(3);
+		$commission->setValue(0);
 		
 // 		$_loan_type = new Zend_Dojo_Form_Element_FilteringSelect('land_code');
 // 		$_loan_type->setAttribs(array(
@@ -145,14 +147,16 @@ public function init()
 						'required' =>'true',
 						'readOnly'=>true,
 		));
-		$_amount->setValue(5000);
+// 		$_amount->setValue(5000);
 		
 		$sold_price = new Zend_Dojo_Form_Element_NumberTextBox('sold_price');
 		$sold_price->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'required' =>'true',
-				'onkeyup'=>'Balance();'
+				'onkeyup'=>'Balance();',
+				'style'=>'color:red;',
+				'readonly'=>true
 		));
 		$sold_price->setValue(5000);
 		
@@ -229,9 +233,9 @@ public function init()
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
 		));
 		
-		$_graice_pariod = new Zend_Dojo_Form_Element_TextBox('discount');
+		$_graice_pariod = new Zend_Dojo_Form_Element_NumberTextBox('discount');
 		$_graice_pariod->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.NumberTextBox',
 				'required'=>'true',
 				'class'=>'fullside',
 				'onKeyup'=>'calculateDiscount();'

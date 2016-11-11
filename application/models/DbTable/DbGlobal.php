@@ -576,9 +576,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	   $db = $this->getAdapter();
   	   $sql="SELECT `id`,`land_code` AS name FROM `ln_properties` WHERE status=1 AND `land_code`!='' ";//just concate
   	   $request=Zend_Controller_Front::getInstance()->getRequest();
-  	   if($request->getActionName()=='add'){
+  	   //if($request->getActionName()=='add'){
   	   	$sql.=" AND `is_lock`=0  ";
-  	   }
+  	   //}
   	   if($branch_id!=null){
   	   	$sql.=" AND `branch_id`=$branch_id ";
   	   }
