@@ -545,7 +545,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public  function getclientdtype(){
   	$db = $this->getAdapter();
-  	$sql="SELECT id,key_code,CONCAT(name_kh,'-',name_en) AS name ,displayby FROM `ln_view` WHERE name_en!='' AND status =1 AND type=23";
+  	$sql="SELECT key_code as id,CONCAT(name_kh,'-',name_en) AS name ,displayby FROM `ln_view` WHERE name_en!='' AND status =1 AND type=23";
   	$rows = $db->fetchAll($sql);
   	return $rows;
   }
@@ -1078,7 +1078,7 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   public function getNewClientIdByBranch($branch_id){// by vandy get new client no by branch
   	$this->_name='ln_client';
   	$db = $this->getAdapter();
-  	$sql=" SELECT client_id ,client_number FROM $this->_name ORDER BY client_id DESC LIMIT 1 ";
+  	$sql=" SELECT count(client_id)  FROM $this->_name WHERE branch_id = $branch_id LIMIT 1 ";
   	$acc_no = $db->fetchOne($sql);
   	
   	$new_acc_no= (int)$acc_no+1;
@@ -1093,7 +1093,7 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   public function getNewLandByBranch($branch_id){// by vandy get new client no by branch
   	$this->_name='ln_properties';
   	$db = $this->getAdapter();
-  	$sql=" SELECT id  FROM $this->_name ORDER BY id DESC LIMIT 1 ";
+  	$sql=" SELECT count(id) FROM $this->_name WHERE branch_id = $branch_id LIMIT 1 ";
   	$acc_no = $db->fetchOne($sql);
   	 
   	$new_acc_no= (int)$acc_no+1;
@@ -1120,6 +1120,18 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	}
   	return $options;
   }
+  public function getPropertyTypeForsearch(){
+  	$db= $this->getAdapter();
+  	$sql="SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
+  	$rows =  $db->fetchAll($sql);
+  	$options=array(''=>"-----ជ្រើសរើស-----");
+  	if(!empty($rows))foreach($rows AS $row){
+  		$options[$row['id']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
+  	}
+  	return $options;
+  }
+  
+  
   
   
 }
