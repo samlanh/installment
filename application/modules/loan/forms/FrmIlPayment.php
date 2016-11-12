@@ -142,6 +142,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 // 				'required'=>true
 // 		));
 		$row_loan_number = $db->getAllLoanNumber();
+		//print_r($row_loan_number);exit();
 		$options=array(''=>'');
 		if(!empty($row_loan_number))foreach($row_loan_number AS $row){
 			$options[$row['sale_number']]=$row['sale_number'];

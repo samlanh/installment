@@ -173,7 +173,7 @@
 			<td align="center">
 			  <input type="button" value="រក្សាទុក & បិទ" label="<?php echo $tr->translate('SAVECLOSE');?>" id="submit_close" dojoType="dijit.form.Button"
 			   iconClass="dijitEditorIcon dijitEditorIconSave"  OnClick="submitDataClose();" />
-			   <input type="submit" value="រក្សាទុក & បោះពុម្ព" label="<?php echo $tr->translate('SAVEPRINT');?>" id="saveprint" dojoType="dijit.form.Button" 
+			   <input type="button" value="រក្សាទុក & បោះពុម្ព" label="<?php echo $tr->translate('SAVEPRINT');?>" id="saveprint" dojoType="dijit.form.Button" 
 			   iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="showReciept();"/>
 			    <input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('SAVENEW');?>" id="submitButton" dojoType="dijit.form.Button"
 			   iconClass="dijitEditorIcon dijitEditorIconSave" />
@@ -196,8 +196,8 @@
 	</tr>		
 </table>
 
-<input type="hidden" dojoType="dijit.form.TextBox" name="identity" id="identity">
-<input type="hidden" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
+<input type="text" dojoType="dijit.form.TextBox" name="identity" id="identity">
+<input type="text" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
 <input type="hidden" dojoType="dijit.form.TextBox" name="curr" id="curr">
 <?php  echo $frm->getElement('reciever');?>
 </form>
@@ -213,9 +213,12 @@
 			padding:0;
 			margin:0;
 		}
-         table table tr td ul li{text-align: center;list-style: none;line-height: 20px; font-weight: bold;}
+        table table tr td ul li{text-align: center;list-style: none;line-height: 20px; font-weight: bold;}
+		
+		.border{border:1px solid #000;}
+		
 	</style>
-		<table cellpadding="0" cellspacing="0" style="width:25cm;max-height:14.85cm; white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 10px;margin:-8px -20px -8px -8px;">
+		<table cellpadding="0" cellspacing="0" style="width:21cm;max-height:14.85cm; white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 10px;margin:-8px -20px -8px -8px;">
 				 <tr valign="top">
 					<td align="center" colspan="6" valign="top" height="80">	
 						   <table  cellpadding="0" cellspacing="0" style="font-family: 'Khmer OS Battambang';padding:0; width:100%;background:rgb(85, 85, 174) none repeat scroll 0% 0% ;white-space:nowrap;">
@@ -241,73 +244,57 @@
 		    </tr> 
 		    <tr>
 		    		<td align="center" colspan="6" valign="top" height="80">	
-					   <table  cellpadding="0" cellspacing="0" style="font-family: 'Khmer OS Battambang' ;font-size:12px !important;white-space:nowrap; width:24cm; margin: 0 auto;">
-							<tr class="fontsize">
+					   <table width="100%" cellpadding="0" class="" cellspacing="10px" style="font-family: 'Khmer OS Battambang' ;font-size:13px !important;white-space:nowrap; width:21cm; margin: 0 auto;">
+							<tr class="fontsize" style="border:1px solid #000;">
 									<td class="fontsize" valign="top"></td>
-									<td width="17%"></td>
+									<td ></td>
 									<td></td>
-									<td width="17%"></td>
-									<td><span style="font-family:'Khmer MEF2'">កាលបរិច្ឆេទ</span><div class="height">Date</div></td>
-									<td class="border" width="17%"><strong class="fonttel" style="font-size:12px;"><?php echo date('d/m/Y H:i:s');?></strong></td>
-							</tr>
-							<tr class="fontsize">
-									<td class="fontsize" valign="top" width="17%"></td>
+									<td ></td>
 									<td></td>
-									<td></td>
-									<td></td>
-									<td><span style="font-family:'Khmer MEF2'">បង្កាន់ដៃលេខ</span><div class="height">Receipt N<super>o</super></div></td>
-									<td class="border"><strong class="fonttel" style="font-size:12px;"><label style="color:rgb(89, 89, 167)" id="lbl_reciept_no"></label></strong></td>
+									<td align="right"><strong>No : <label id="lbl_reciept_no" class="value"></label></strong></td>
+							</tr>
+							<tr class="fontsize" style="border:1px solid #000;">
+									<td style="width:10%;"  >លេខកូដ</td>
+									<td style="width:40%;border:1px solid #000;"><strong><label id="lbl_loan_number" class="value"></label></strong></td>
+									<td style="width:5%;">បង់សំរាប់</td>
+									<td style="width:20%;border:1px solid #000;"><strong><label id="lbl_pay_type" class="value"></label></strong></td>
+									<td style="width:5%;">ថ្ងៃត្រូវបង់<div class="height"></div></td>
+									<td style="width:20%;border:1px solid #000;"><strong><label id="" class="value"></label></strong></td>
+							</tr>
+							<tr class="fontsize" style="border:1px solid #000;">
+									<td >ឈ្មោះ</td>
+									<td style="border:1px solid #000;"><strong><label id="lbl_client_id" class="value"></label></strong></td>
+									<td  >ប្រាក់ត្រូវបង់</td>
+									<td colspan="3" style="border:1px solid #000;"><strong><label id="lbl_total_payment" class="value"></label></strong></td>
 							</tr>
 							<tr class="fontsize">
-									<td class="fontsize" valign="top" width="17%">សាខា <div class="height">Branch Name</div></td>
-									<td class="border"><label id="lbl_branch_id"></label></td>
-									<td>លេខឥណទាន<div class="height">Loan Number</div></td>
-									<td class="border">
-										<strong class="fonttel" style="font-size:12px;"><label style="color:rgb(89, 89, 167)" id="lbl_loan_number"></label></strong>
-									</td>
-									<td>ឈ្មោះអតិថិជន<div class="height">Client's Name</div></td>
-									<td class="border"><label id="lbl_group_member"></label></td>
+									<td >ផ្ទះលេខ</td>
+									<td style="border:1px solid #000;"><strong><label id="lbl_loan_number" class="value"></label></strong></td>
+									<td >ប្រាក់ទទួល</td>
+									<td style="border:1px solid #000;"><strong><label id="lbl_total_receive" class="value"></label></strong></td>
+									<td><span style="">ប្រាក់ពិន័យ</span><div class="height"></div></td>
+									<td style="border:1px solid #000;"><strong><label id="lbl_penalize" class="value"></label></strong></td>
 							</tr>
 							<tr class="fontsize">
-									<td>ប្រាក់ដើមគ្រានៅសល់ <div class="height">Principal​ Remain</div></td>
-									<td class="border"><label style="color:red" id="lbl_priciple_amount"></label></td>
-									<td>ប្រាក់ដើម ត្រូវបង់<div class="height">Principal​ Amount</div></td>
-									<td class="border"><label style="color:red" id="lbl_os_amount"></label></td>
-									<td>ការប្រាក់<div class="height">Interest Amount</div></td>
-									<td class="border"><label id="lbl_total_interest"></label></td>
+									<td  >តំលៃផ្ទះ</td>
+									<td style="border:1px solid #000;"><strong><label id="lbl_loan_number" class="value"></label></strong></td>
+									<td>ទទួលសរុប</td>
+									<td style="border:1px solid #000;" colspan="3"><strong><label id="lbl_pay_type" class="value"></label></strong></td>
 							</tr>
 							<tr class="fontsize">
-									<td>ប្រាក់ផាកពិន័យ <div class="height">Penalty</div></td>
-									<td class="border"><label style="color:red" id="lbl_penalize_amount"></label></td>
-									<td>ថ្លៃសេវា<div class="height">Service Charge</div></td>
-									<td class="border"><label style="color:red" id="lbl_service_charge"></label></td>
-									<td>ចំនួនប្រាក់ត្រូវបង់សរុប<div class="height">Payment Amount</div></td>
-									<td class="border"><label style="color:red" id="lbl_total_payment"></label></td>
+									<td >ប្រាក់បានបង់</td>
+									<td style="border:1px solid #000;" ><strong><label id="lbl_loan_number" class="value"></label></strong></td>
+									<td>ថ្ងៃទទួល</td>
+									<td style="border:1px solid #000;" colspan="3" style="width:35%;"><strong><label id="lbl_pay_type" class="value"></label></strong></td>
 							</tr>
 							<tr class="fontsize">
-									<td>ថ្ងៃបានបង់ប្រាក់<div class="height">Payment Date</div></td>
-									<td class="border"><label style="color:red" id="lbl_collect_date"></label></td>					
-									<td>ប្រាក់បានទទួល<div class="height">Receive Amount</div></td>
-									<td class="border"><label style="color:red" id="lbl_amount_receive"></label></td>
-									<td>ប្រាក់អាប់<div class="height">Return Amount</div> </td>
-									<td class="border"><label style="color:red" id="lbl_amount_return"></label></td>
+									<td  >ប្រាក់នៅសល់</td>
+									<td style="border:1px solid #000;"><strong><label id="lbl_loan_number" class="value"></label></strong></td>
+									<td>សែក</td>
+									<td style="border:1px solid #000;" colspan="3" style="width:35%;"><strong><label id="lbl_pay_type" class="value"></label></strong></td>
 							</tr>
-							<tr class="fontsize">
-									<td>ឈ្មោះមន្រ្តីឥណទាន<div class="height">CO Name</div></td>
-									<td class="border"><label id="lbl_co_id"></label></td>
-									<td>សំគាល់<div class="height">Note</div></td>
-									<td colspan="3"><label id="lbl_note"></label></td>
-							</tr >
-							<tr class="fontsize">
-									<td colspan="3" align="center" style="padding-top:25px;font-family:'Khmer MEF2'">បេឡាករ<div class="height">Cashier</div></td>
-									<td colspan="3" align="center" style="padding-top:25px;font-family:'Khmer MEF2'">ហត្ថលេខា និងឈ្មោះអតិថិជន<div class="height">Customer's signature& full name</div></td>
-							</tr>
-							<tr class="fontsize" style="margin-top:20px;line-height: 20px">
-									<td colspan="3" align="center">
-										<strong class="fonttel" style="font-size:10px;"><?php //print($this->user_name);?></strong>
-									</td>
-									<td colspan="3" align="center"></td>
-							</tr>
+							
+							
 						</table>
 					</td>
 				</tr>
@@ -356,40 +343,51 @@ function submitData(){
 		});
 }
 function showReciept(){
+	//alert(1);
 	var client_id = dijit.byId('client_id').get('value');
 	if(client_id==""){
 		alert("No Result To Show! Please Choose Client and Try again");
 	}else{
 // 		var client_name = dijit.byId('client_id').attr('displayedValue');
 // 		var arrays = client_name.split(',');
-		
+		// identity = dijit.byId('identity').get('value');
+		// var arrays = identity.split(',');
+		// for(var i=0;i<arrays.length;i++) {
+			// date_payment = dijit.byId('date_payment_'+i).attr('displayedValue')
+		// }
+		// alert(date_payment);
 // 		for(var i=0;i<1;i++){
 // 			document.getElementById('lbl_group_member').innerHTML = arrays[0];
 // 		}
-		curr_type = dijit.byId('currency_type').get('value');
-		if(curr_type==1){
-			symbal =" ៛";
-		}else if(curr_type==2){
+		//curr_type = dijit.byId('currency_type').get('value');
+		//if(curr_type==1){
+			//symbal =" ៛";
+		//}else if(curr_type==2){
 			symbal =" $";
-		}else{
-			symbal =" B";
-		}
-		document.getElementById('lbl_group_member').innerHTML = dijit.byId('client_id').attr('displayedValue');
+		//}else{
+		//	symbal =" B";
+		//}
+		
+		//document.getElementById('lbl_branch_id').innerHTML = dijit.byId('branch_id').attr('displayedValue');
+		document.getElementById('lbl_client_id').innerHTML = dijit.byId('client_id').attr('displayedValue');
 		document.getElementById('lbl_reciept_no').innerHTML = dijit.byId('reciept_no').attr('displayedValue');
- 		document.getElementById('lbl_group_code').innerHTML = dijit.byId('client_code').attr('displayedValue');
+ 		//document.getElementById('lbl_client_code').innerHTML = dijit.byId('client_code').attr('displayedValue');
 		document.getElementById('lbl_loan_number').innerHTML = dijit.byId('loan_number').attr('displayedValue');
-		document.getElementById('lbl_co_id').innerHTML = dijit.byId('co_id').attr('displayedValue');
-		document.getElementById('lbl_collect_date').innerHTML = dijit.byId('collect_date').attr('displayedValue');
-		document.getElementById('lbl_priciple_amount').innerHTML = dijit.byId('priciple_amount').attr('displayedValue')+symbal;
-		document.getElementById('lbl_os_amount').innerHTML = dijit.byId('os_amount').attr('displayedValue')+symbal;
-		document.getElementById('lbl_total_interest').innerHTML = dijit.byId('total_interest').attr('displayedValue')+symbal;
-	 	document.getElementById('lbl_penalize_amount').innerHTML = dijit.byId('penalize_amount').attr('displayedValue')+symbal;
-	 	document.getElementById('lbl_total_payment').innerHTML = dijit.byId('total_payment').attr('displayedValue')+symbal;
-	 	document.getElementById('lbl_note').innerHTML = dijit.byId('note').attr('displayedValue');
-	 	document.getElementById('lbl_service_charge').innerHTML = dijit.byId('service_charge').attr('displayedValue')+symbal;
-	 	document.getElementById('lbl_amount_receive').innerHTML = dijit.byId('amount_receive').attr('displayedValue')+symbal;
-	 	document.getElementById('lbl_amount_return').innerHTML = dijit.byId('amount_return').attr('displayedValue')+symbal;
-		dijit.byId('frm_client').show();
+		document.getElementById('lbl_pay_type').innerHTML = dijit.byId('schedule_opt').attr('displayedValue');
+		//document.getElementById('lbl_date_payment').innerHTML = dijit.byId('date_payment_1').attr('displayedValue');
+		
+		document.getElementById('lbl_total_payment').innerHTML = dijit.byId('total_payment').get('value');
+		document.getElementById('lbl_total_receive').innerHTML = dijit.byId('amount_receive').get('value');
+		document.getElementById('lbl_penalize').innerHTML = dijit.byId('penalize_amount').get('value')+symbal;
+		// document.getElementById('lbl_os_amount').innerHTML = dijit.byId('os_amount').attr('displayedValue')+symbal;
+		// document.getElementById('lbl_total_interest').innerHTML = dijit.byId('total_interest').attr('displayedValue')+symbal;
+	 	// document.getElementById('lbl_penalize_amount').innerHTML = dijit.byId('penalize_amount').attr('displayedValue')+symbal;
+	 	// document.getElementById('lbl_total_payment').innerHTML = dijit.byId('total_payment').attr('displayedValue')+symbal;
+	 	// document.getElementById('lbl_note').innerHTML = dijit.byId('note').attr('displayedValue');
+	 	// document.getElementById('lbl_service_charge').innerHTML = dijit.byId('service_charge').attr('displayedValue')+symbal;
+	 	// document.getElementById('lbl_amount_receive').innerHTML = dijit.byId('amount_receive').attr('displayedValue')+symbal;
+	 	// document.getElementById('lbl_amount_return').innerHTML = dijit.byId('amount_return').attr('displayedValue')+symbal;
+		 dijit.byId('frm_client').show();
 		//submitData();
 	}
 }
@@ -688,13 +686,13 @@ function getLaonPayment(type){
 							dijit.byId('schedule_opt').set("readOnly",true);
 							dijit.byId('discount').attr('value',respone[i].discount_amount);
 							dijit.byId('discount').set("readOnly",true);
-							dijit.byId('sold_price').attr('value',respone[i].price);
+							dijit.byId('sold_price').attr('value',respone[i].price_sold);
 							dijit.byId('sold_price').set("readOnly",true);
 							dijit.byId('loan_period').attr('value',respone[i].total_duration);
 							dijit.byId('loan_period').set("readOnly",true);
 							dijit.byId('interest_rate').attr('value',respone[i].interest_rate);
 							dijit.byId('interest_rate').set("readOnly",true);
-							//dijit.byId('pay_late').attr('value',respone[i].multypanelty);
+							dijit.byId('total_amount_loan').attr('value',respone[i].price_before);
 							//dijit.byId('pay_late').set("readOnly",true);
 							dijit.byId('loan_period').attr('value',respone[i].amount_month);
 							dijit.byId('loan_period').set("readOnly",true);
