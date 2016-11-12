@@ -16,13 +16,10 @@ class Loan_IndexController extends Zend_Controller_Action {
 			else{
 				$search = array(
 						'txt_search'=>'',
-						'customer_code'=> -1,
-						'repayment_method' => -1,
+						'client_name'=> -1,
+						'schedule_opt' => -1,
 						'branch_id' => -1,
-						'co_id' => -1,
 						'status' => -1,
-						'currency_type'=>-1,
-						'pay_every'=>-1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						 );
@@ -32,10 +29,10 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("LOAN_NO","LAND_ADD","CUSTOMER_NAME","COMUNE_NAME_EN","LOAN_AMOUNT","PAID","BALANCE","DISCOUNT","TERM_BORROW","INTEREST_RATE","DATE_BUY",
+			$collumns = array("BRANCH_NAME","SALE_NO","CLIENT_NO","CUSTOMER_NAME","COMUNE_NAME_EN","LOAN_NO","PROPERTY_NAME","STREET","ប្រភេទបង់","LOAN_AMOUNT","DISCOUNT","PAID","BALANCE","DATE_BUY",
 				"STATUS");
 			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('land_code'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'price'=>$link_info,'total_capital'=>$link_info),0);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('land_code'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

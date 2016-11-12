@@ -21,17 +21,20 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	if($search['client_name']>0){
     		$where.=" AND client_id = ".$search['client_name'];
     	}
-    	if($search['co_id']>0){
-    		$where.=" AND staff_id = ".$search['co_id'];
+    	if($search['branch_id']>0){
+    		$where.=" AND branch_id = ".$search['branch_id'];
     	}
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = trim(addslashes($search['adv_search']));
-//     		$s_where[] = " co_name LIKE '%{$s_search}%'";
+    		$s_where[] = " sale_number LIKE '%{$s_search}%'";
+    		$s_where[] = " client_number LIKE '%{$s_search}%'";
+    		$s_where[] = " phone_number LIKE '%{$s_search}%'";
     		$s_where[] = " client_name LIKE '%{$s_search}%'";
-    		$s_where[] = " price LIKE '%{$s_search}%'";
-    		$s_where[] = " principal_permonth LIKE '%{$s_search}%'";
-    		$s_where[] = " total_interest LIKE '%{$s_search}%'";
+    		
+    		$s_where[] = " land_code LIKE '%{$s_search}%'";
+    		$s_where[] = " land_address LIKE '%{$s_search}%'";
+    		$s_where[] = " street LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	$order=" ORDER BY date_payment DESC";

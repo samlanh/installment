@@ -49,7 +49,6 @@ class Report_LoanController extends Zend_Controller_Action {
   		$search = array(
   				'branch_id'=>'',
   				'client_name'=>'',
-  				'co_id'=>'',
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   				'status' => -1,);
@@ -711,7 +710,7 @@ public function exportFileToExcel($table,$data,$thead){
  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold');
  	}
  	$db = new Application_Model_DbTable_DbGlobal();
- 	$rs = $db->getClientByMemberId(@$row[0]['id']);
+ 	$rs = $db->getClientByMemberId($id);
  
  	$this->view->client =$rs;
  	$frm = new Application_Form_FrmSearchGlobal();

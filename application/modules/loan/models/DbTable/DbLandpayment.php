@@ -31,54 +31,64 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 //     	return $options;
 //     }
     public function getAllIndividuleLoan($search,$reschedule =null){
-    	$from_date =(empty($search['start_date']))? '1': " p.date_buy >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " p.date_buy <= '".$search['end_date']." 23:59:59'";
+    	$from_date =(empty($search['start_date']))? '1': " s.buy_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
     	$sql=" 
-    	SELECT
-			  `p`.`id`            AS `id`,
-			  `l`.`land_code`     AS `land_code`,
-			  `l`.`land_address`     AS `land_address`,
-			  `c`.`client_number` AS `client_number`,
-			  `c`.`name_en` AS `name_en`,
-			  `p`.`price`         AS `price`,
-			  `p`.`deposit`       AS `deposit`,
-			  `p`.`balance`       AS `balance`,
-			  `p`.`discount`      AS `discount`,
-			  `p`.`amount_month`  AS `amount_month`,
-			  `p`.`interest_rate` AS `interest_rate`,
-			  `p`.`date_buy`      AS `date_buy`,
-			  `p`.`status`        AS `status`
-			 
-FROM ((`ln_paymentschedule` `p`
-    JOIN `ln_client` `c`)
-   JOIN `ln_landinfo` `l`)
-WHERE ((`c`.`client_id` = `p`.`client_id`)
-       AND (`l`.`id` = `p`.`land_id`))
-    	";
+    	SELECT `s`.`id` AS `id`,
+    	(SELECT
+		     `ln_project`.`project_name`
+		   FROM `ln_project`
+		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+		   LIMIT 1) AS `branch_name`,
+    	s.sale_number,
+    	`c`.`client_number`   AS `client_number`,
+	    `c`.`name_kh`         AS `name_kh`,
+	    `c`.`name_en`         AS `name_en`,
+	    `p`.`land_code`       AS `land_code`,
+	    `p`.`land_address`    AS `land_address`,
+	    `p`.`street`          AS `street`,
+	    (SELECT name_en FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
+  		`s`.`price_before`    AS `price_before`,
+        `s`.`discount_amount` AS `discount_amount`,
+        `s`.`paid_amount`     AS `paid_amount`,
+        `s`.`balance`         AS `balance`,
+        `s`.`buy_date`        AS `buy_date`,
+         s.status
+		FROM ((`ln_sale` `s`
+		    JOIN `ln_client` `c`)
+		   JOIN `ln_properties` `p`)
+		WHERE ((`c`.`client_id` = `s`.`client_id`)
+       AND (`p`.`id` = `s`.`house_id`)) ";
     	
     	$db = $this->getAdapter();
     	
-//     	if(!empty($search['adv_search'])){
-//     		$s_where = array();
-//     		$s_search = $search['adv_search'];
-//     		$s_where[] = "lm.loan_number LIKE '%{$s_search}%'";
-//     		$s_where[] = " lm.total_capital LIKE '%{$s_search}%'";
-//     		$s_where[] = " lm.interest_rate LIKE '%{$s_search}%'";
-//     		$where .=' AND ('.implode(' OR ',$s_where).')';
-//     	}
-//     	if($search['status']>1){
-//     		$where.= " lm.status = ".$search['status'];
-//     	}
-//     	if(($search['customer_code'])>0){
-//     		$where.= " AND lm.client_id=".$search['customer_code'];
-//     	}
-//     	if(($search['repayment_method'])>0){
-//     		$where.= " AND lm.payment_method = ".$search['repayment_method'];
-//     	}
-//     	if(($search['branch_id'])>0){
-//     		$where.= " AND lg.branch_id = ".$search['branch_id'];
-//     	}
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['adv_search']));
+      	 	$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
+      	 	$s_where[] = " p.land_code LIKE '%{$s_search}%'";
+      	 	$s_where[] = " p.land_address LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.client_number LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.name_en LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.price_sold LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.comission LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
+      	 	$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	if($search['status']>-1){
+    		$where.= " AND s.status = ".$search['status'];
+    	}
+    	if(($search['client_name'])>0){
+    		$where.= " AND `s`.`client_id`=".$search['client_name'];
+    	}
+    	if(($search['branch_id'])>0){
+    		$where.= " AND s.branch_id = ".$search['branch_id'];
+    	}
+    	if(($search['schedule_opt'])>0){
+    		$where.= " AND s.payment_id = ".$search['schedule_opt'];
+    	}
 //     	if(($search['co_id'])>0){
 //     		$where.= " AND lg.co_id=".$search['co_id'];
 //     	}
@@ -94,7 +104,7 @@ WHERE ((`c`.`client_id` = `p`.`client_id`)
 //     		$where.= ' AND lg.is_reschedule !=2 ';
 //     	}
     		
-    	$order = " ORDER BY id DESC";
+    	$order = " ORDER BY s.id DESC";
     	$db = $this->getAdapter();    
 //      	echo $sql.$where.$order;	
     	return $db->fetchAll($sql.$where.$order);

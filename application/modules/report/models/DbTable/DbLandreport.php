@@ -4,7 +4,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       public function getAllLoan($search = null){//rpt-loan-released/
       	 $db = $this->getAdapter();
       	 $sql = " SELECT * ,
-      	 (SELECT name_en FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25) AS paymenttype
+      	 (SELECT name_en FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
       	 FROM v_soldreport WHERE 1 ";
       	 
       	 $where ='';

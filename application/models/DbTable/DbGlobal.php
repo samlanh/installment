@@ -487,7 +487,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	  	  `p`.`land_code`       AS `land_code`,
 		  `p`.`land_address`    AS `land_address`,
 		  `p`.`land_size`       AS `land_size`,
-		  `p`.`stree`           AS `stree`,
+		  `p`.`street`           AS `stree`,
 	  (SELECT
 	     `ln_properties_type`.`type_nameen`
 	   FROM `ln_properties_type`
@@ -495,7 +495,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	   LIMIT 1) AS `propertype`
   		FROM 
   	   `ln_sale` AS s,`ln_properties` AS p
-  	 WHERE `p`.`id` = `s`.`house_id`   AND s.id=$id LIMIT 1 ";
+  	 WHERE `p`.`id` = `s`.`house_id` AND s.id=$id LIMIT 1 ";
   	$db=$this->getAdapter();
   	return $db->fetchRow($sql);
   }
