@@ -1052,12 +1052,12 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
 
   function getAllLoanNumber(){//type ==1 is ilPayment, type==2 is group payment
   	$db = $this->getAdapter();
-  	$sql ="SELECT 
-			 sale_number
+  	$sql ="SELECT id,
+			  CONCAT((SELECT CONCAT(name_kh,'-',name_en) FROM ln_client WHERE ln_client.client_id=ln_sale.`client_id` ),' - ',sale_number) AS sale_number
 			FROM
-			  ln_sale
+			  ln_sale 
 			WHERE `is_completed` = 0 
-  			  AND `is_reschedule`!=1
+			  AND `is_reschedule` != 1 
   			";
   	
   	return $db->fetchAll($sql);
