@@ -12,7 +12,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	
 	function  getAllBranchByUser(){
 		$db = $this->getAdapter();
-		$sql = 'select br_id as id,project_name as name from ln_project where 1 ';
+		$sql = 'select br_id as id,project_name as name from ln_project where 1 and project_name!="" ';
 		//$sql .= $this->getAccessPermission('br_id');
 		//echo $sql;exit();
 		return $db->fetchAll($sql);

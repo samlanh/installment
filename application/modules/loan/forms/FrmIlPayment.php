@@ -204,6 +204,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$rows = $db ->getAllBranchByUser();
 		//print_r($rows);exit();
 		$options=array('');
+		
 		if(!empty($rows)){foreach($rows AS $row) $options[$row['id']]=$row['name'];}
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -212,7 +213,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		));
 		$branch_id->setMultiOptions($options);
 		
-		
+// 		print_r($options);exit();
 		
 		//$_coid = new Zend_Dojo_Form_Element_FilteringSelect('co_id');
 		$_coid = new Zend_Dojo_Form_Element_FilteringSelect('co_id');
