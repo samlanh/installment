@@ -1,0 +1,193 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate('BAD_LOAN'));
+$frm = $this->frm_loan;
+?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.Dialog");
+</script>
+<form id="add_province" action="<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	 <script type="dojo/method" event="onSubmit">			
+	if(this.validate()) {
+    	return true;
+   		}else {
+    	return false;
+   	}
+	</script>
+<table cellspacing="10" class='fullside' >
+	<tr>
+		<td>
+				<fieldset>
+					<legend><strong><?php echo $tr->translate('BAD_LOAN');?></strong></legend>
+					<table cellspacing="10"  width="100%">
+					   <tr>
+							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
+							<td><?php echo $frm->getElement('branch_id');?></td>
+							<td><?php echo $tr->translate("CANCEL_CODE")?></td>
+							<td><?php echo $frm->getElement('cancel_code');?></td>
+							<td><?php echo $tr->translate("SALE_NO")?></td>
+							<td><input id="sale_no" ><?php echo $frm->getElement('property_id')?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("CUSTOMER_INFO")?></td>
+							<td style="height: 50px; border:1px solid #aac4e6; widht:100%;" colspan="6"><label id="cus_information"></label></td>						
+						</tr>
+						<tr>
+							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("Land Information")?></strong></td>
+						</tr>
+						<tr height="40px">
+							<td><?php echo $tr->translate("DESCRIPTION")?></td>
+							<td style="height: 50px; border:1px solid #aac4e6; widht:100%;" colspan="5"><label id="land_information"></label><?php //echo $tr->translate("Address")?></td>
+						</tr>
+						<tr>
+							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("PAYMENT_INFO")?></strong></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("PRICE_SOLD")?></td>
+							<td><?php echo $frm->getElement('price_sold');?></td>
+							<td><?php echo $tr->translate("DISCOUNT")?></td>
+							<td><?php echo $frm->getElement('discount');?></td>
+							<td><?php echo $tr->translate("ORTHER_FEE")?></td>
+							<td><?php echo $frm->getElement('other_fee');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("PAYMENT_TERM")?></td>
+							<td><?php  echo $frm->getElement('schedule_opt');?></td>	
+							<td><?php echo $tr->translate("PAID_AMOUNT")?></td>
+							<td><?php  echo $frm->getElement('paid_amount');?></td>	
+							<td><?php echo $tr->translate("BALANCE")?></td>
+							<td><?php echo $frm->getElement('balance')?></td>						
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("DURATION")?></td>
+							<td><?php echo $frm->getElement('period');?></td>
+							<td><?php echo $tr->translate("BUY_DATE")?></td>
+							<td><?php echo $frm->getElement('buy_date');?></td>
+							<td><?php echo $tr->translate("END_DATE")?></td>
+							<td><?php  echo $frm->getElement('end_date');?></td>	
+						</tr>
+						<tr>
+							<td align="center" colspan="6">
+								<input type="submit" name="save" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="submitButton" dojoType="dijit.form.Button"
+				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
+				 				<input type="submit" name="save_close"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('SAVECLOSE')?>" id="submitBtn" dojoType="dijit.form.Button"
+				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
+				 					
+				 					
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+		</td>
+	</tr>		
+	<tr>
+	</tr>	
+</table>
+</form>
+<table>
+<tr>
+</tr>
+</table>
+<script type="text/javascript">
+
+var sale_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+dojo.ready(function(){
+	try{
+		
+		new dijit.form.FilteringSelect({
+		store: sale_store,
+		autoComplete: true,
+		required: false,		           
+		name: "sale_no",
+		id: "sale_no",
+		searchAttr: "name",
+		class: 'fullside',
+		//missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ ស្រុក/ខ័ណ្ឌ!",	
+			onChange: function() {
+				getLandAndClientDetail();
+			}
+		}, "sale_no");
+		getCancelNo();
+		getSaleNo();
+
+		}catch(e){
+			alert(e);
+		}
+});
+
+var	url_getCancelNo = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-cancel-no'));?>';
+	function getCancelNo(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==0){
+			return false;}
+		dojo.xhrPost({
+			url:url_getCancelNo,	
+			content:{ 
+				'branch_id': branch_id
+			},
+			handleAs:"json",
+			load: function(data) {	
+			    dijit.byId('cancel_code').attr('value',data);
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-sale'));?>';
+	function getSaleNo(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==0){
+			return false;}
+		dojo.xhrPost({
+			url:url_getSaleNo,	
+			content:{ 
+				'branch_id': branch_id
+			},
+			handleAs:"json",
+			load: function(data) {	
+				sale_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('sale_no').set('store', sale_store);
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+	var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
+	function getLandAndClientDetail(){
+		sale_id = dijit.byId('sale_no').get('value');
+		dojo.xhrPost({
+			url:url_land,	
+			content:{ 
+			    'sale_id':sale_id
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				//alert(data.payment_id);
+				dijit.byId('price_sold').attr('value',data.price_sold);
+				dijit.byId('paid_amount').attr('value',data.paid_amount);
+				dijit.byId('balance').attr('value',data.balance);
+				dijit.byId('period').attr('value',data.total_duration);
+				dijit.byId('buy_date').attr('value',data.buy_date);
+				dijit.byId('end_date').attr('value',data.end_line);
+				dijit.byId('discount').attr('value',data.discount_amount);
+				dijit.byId('other_fee').attr('value',data.other_fee);
+				dijit.byId('schedule_opt').attr('value',data.payment_id);
+				dojo.byId("property_id").value = data.property_id;
+				
+				dojo.byId('cus_information').innerHTML ="លេខកូដអតិថិជន  : "+data.client_number+", ឈ្មោះជាភាសាខ្មែរ : "+data.name_kh+", ឈ្មោះជាភាសាអង់គ្លេស  : "+data.name_en;
+				dojo.byId('land_information').innerHTML ="លេខសម្គាល់  : "+data.land_code+", ឈ្មោះ  :  "+data.land_address+", ផ្លូវ : "+data.street+", ប្រភេទ   : "+data.pro_type+", ទំហំ  : "+data.land_size+", បណ្តោយ :  "+data.height+",ទទឹង  :  "+data.width;
+				
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+</script>
