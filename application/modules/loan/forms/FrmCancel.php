@@ -25,12 +25,30 @@ public function init()
 		));
 		//$_title->setValue($request->getParam("adv_search"));
 		
+		$start_date_search = new Zend_Dojo_Form_Element_DateTextBox('from_date_search');
+		$start_date_search->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
+				//'required'=>'true',
+				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				));
+		
+		$_date = date("Y-m-d");
+		$start_date_search->setValue($_date);
+		
+		
+		$to_date_search = new Zend_Dojo_Form_Element_DateTextBox('to_date_search');
+		$to_date_search->setAttribs(array(
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				'dojoType'=>'dijit.form.DateTextBox','class'=>'fullside',
+		));
+		$to_date_search->setValue($_date);
+		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required' =>'true',
-				'onchange'=>'getCancelNo(),getSaleNo();'
+				'onchange'=>'getSaleNo();'
 		));
 		$rows_branch = $db->getAllBranchName();
 		if(!empty($rows_branch))foreach($rows_branch AS $row){
@@ -38,6 +56,19 @@ public function init()
 		}
 		$branch_id->setMultiOptions($options_branch);
 		//$branch_id->setValue($request->getParam("branch_id"));
+		
+		$branch_id_search = new Zend_Dojo_Form_Element_FilteringSelect('branch_id_search');
+		$branch_id_search->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true',
+		));
+		$options_branch_search=array("-1"=>"Select Project");
+		$rows_branch_saerch = $db->getAllBranchName();
+		if(!empty($rows_branch))foreach($rows_branch_saerch AS $row){
+			$options_branch_search[$row['br_id']]=$row['project_name'];
+		}
+		$branch_id_search->setMultiOptions($options_branch_search);
 		
 		$_cancel_code = new Zend_Dojo_Form_Element_TextBox('cancel_code');
 		$_cancel_code->setAttribs(array(
@@ -97,6 +128,15 @@ public function init()
 		$s_date = date('Y-m-d');
 		$end_date->setValue($s_date);
 		
+		$sold_date = new Zend_Dojo_Form_Element_DateTextBox('sold_date');
+		$sold_date->setAttribs(array(
+				'dojoType'=>'dijit.form.DateTextBox',
+				'required' =>'true',
+				'class'=>'fullside',
+				'readonly'=>true,
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+		));
+		
 		$_price_sold = new Zend_Dojo_Form_Element_NumberTextBox('price_sold');
 		$_price_sold->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
@@ -118,7 +158,12 @@ public function init()
 				'readonly'=>true,
 				
 		));
-		
+		$_commision = new Zend_Dojo_Form_Element_NumberTextBox('commision');
+		$_commision->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'readonly'=>true,
+		));
 		$_coid = new Zend_Dojo_Form_Element_FilteringSelect('co_id');
 		$_coid->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -314,12 +359,20 @@ public function init()
 		$_id = new Zend_Form_Element_Hidden('id');
 		
 		$_property_id = new Zend_Form_Element_Hidden("property_id");
+		$_old_sale_id = new Zend_Form_Element_Hidden("old_sale_id");
+		$_old_property_id = new Zend_Form_Element_Hidden("old_property_id");
 		if($data!=null){
-
+			$branch_id->setValue($data['branch_id']);
+			//$branch_id->setAttribs(array("readonly"=>true));
+			$_cancel_code->setValue($data['cancel_code']);
+			$_old_sale_id->setValue($data['sale_id']);
+			$_old_property_id->setValue($data['property_id']);
+			$_status->setValue($data['status']);
 			
 		}
 		$this->addElements(array($branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
-				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,
+				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
+				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$_old_property_id,
 				$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$penalize,$_service_charge,
 				$_coids,$_loan_type,
 				$_time_collect,$_paybefore,
