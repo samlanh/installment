@@ -181,5 +181,93 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_property=$row;
   }
+  function rptCancelSaleAction(){ // by Vandy
+  	 
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+  				'adv_search'=>'',
+  				'branch_id_search' => -1,
+  				'from_date_search'=> date('Y-m-d'),
+  				'to_date_search'=>date('Y-m-d'));
+  	}
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->row = $db->getCancelSale($search);
+  	 
+  	$fm = new Loan_Form_FrmCancel();
+  	$frm = $fm->FrmAddFrmCancel();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_cancel = $frm;
+  	//$this->view->frm_property=$row;
+  }
+  function rptIncomeAction(){ // by Vandy
+  	 
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}
+  	else{
+  		$search = array(
+  				"adv_search"=>'',
+  				"branch_id"=>-1,
+  				"status"=>-1,
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  		);
+  	}
+  	$this->view->list_end_date=$search;
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->row = $db->getAllIncome($search);
+  	 
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  }
+  function rptExpenseAction(){ // by Vandy
+  
+ 	 if($this->getRequest()->isPost()){
+    			$search=$this->getRequest()->getPost();
+   	}else{
+    		$search = array(
+    		"adv_search"=>'',
+    		"branch_id"=>-1,
+    		'start_date'=> date('Y-m-d'),
+    		'end_date'=>date('Y-m-d'),
+    	);
+    }
+    $this->view->list_end_date=$search;
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->row = $db->getAllExpense($search);
+  
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  }
+  function rptDailyCashAction(){ // by Vandy
+  
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}
+  	else{
+  		$search = array(
+  				"adv_search"=>'',
+  				"branch_id"=>-1,
+  				"status"=>-1,
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  		);
+  	}
+  	$this->view->list_end_date=$search;
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->row = $db->getAllIncome($search);
+  	$this->view->rowExpense = $db->getAllExpense($search);
+  
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  }
 }
 

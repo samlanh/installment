@@ -163,5 +163,94 @@ function getAllBranch($search=null){
     		//echo $sql.$where;exit();
     		return $db->fetchAll($sql.$where);
     	}
+    	function getCancelSale($search=null){
+    		$db = $this->getAdapter();
+    		$from_date =(empty($search['from_date_search']))? '1': "c.`create_date` >= '".$search['from_date_search']." 00:00:00'";
+    		$to_date = (empty($search['to_date_search']))? '1': "c.`create_date` <= '".$search['to_date_search']." 23:59:59'";
+    		$where = " AND ".$from_date." AND ".$to_date;
+    		$sql='SELECT c.`id`,
+				s.`sale_number`,
+				clie.`client_number`,
+				CONCAT(clie.`name_kh`," ",clie.`name_en`) AS client_name,
+				p.`project_name`,pro.`land_code`,c.`create_date`,
+				(SELECT pt.`type_nameen` FROM `ln_properties_type` AS pt WHERE pt.`id` = pro.`property_type`) AS type_name,
+				pro.`property_type`
+				FROM `ln_sale_cancel` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
+				`ln_client` AS clie
+				WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = c.`property_id` AND
+				clie.`client_id` = s.`client_id`';
+    		if($search['branch_id_search']>-1){
+    			$where.= " AND c.branch_id = ".$search['branch_id_search'];
+    		}
+    		if(!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = addslashes(trim($search['adv_search']));
+    			$s_where[] = " clie.`client_number` LIKE '%{$s_search}%'";
+    			$s_where[] = " s.`sale_number` LIKE '%{$s_search}%'";
+    			$s_where[] = " p.`project_name` LIKE '%{$s_search}%'";
+    			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
+    			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		return $db->fetchAll($sql.$where);
+    		
+    	}
+    	function getAllIncome($search=null){
+    		$db = $this->getAdapter();
+    		$session_user=new Zend_Session_Namespace('auth');
+    		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+    		$where = " WHERE ".$from_date." AND ".$to_date;
+    	
+    		$sql=" SELECT id,
+    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+    		title, invoice,branch_id,
+    		(SELECT name_en FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
+    		total_amount,description,date,status FROM ln_income ";
+    	
+    		if (!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = trim(addslashes($search['adv_search']));
+    			$s_where[] = " description LIKE '%{$s_search}%'";
+    			$s_where[] = " title LIKE '%{$s_search}%'";
+    			$s_where[] = " total_amount LIKE '%{$s_search}%'";
+    			$s_where[] = " invoice LIKE '%{$s_search}%'";
+    			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		if($search['branch_id']>-1){
+    			$where.= " AND branch_id = ".$search['branch_id'];
+    		}
+    		$order=" order by id desc ";
+    		return $db->fetchAll($sql.$where.$order);
+    	}
+    	function getAllExpense($search=null){
+    		$db = $this->getAdapter();
+    		$session_user=new Zend_Session_Namespace('auth');
+    		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+    		$where = " WHERE ".$from_date." AND ".$to_date;
+    	
+    		$sql=" SELECT id,
+    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+    		title,invoice,
+    	
+    		(SELECT name_en FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
+    		total_amount,description,date,status FROM ln_expense ";
+    	
+    		if (!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = trim(addslashes($search['adv_search']));
+    			$s_where[] = " description LIKE '%{$s_search}%'";
+    			$s_where[] = " title LIKE '%{$s_search}%'";
+    			$s_where[] = " total_amount LIKE '%{$s_search}%'";
+    			$s_where[] = " invoice LIKE '%{$s_search}%'";
+    			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    	
+    		if($search['branch_id']>0){
+    			$where.= " AND branch_id = ".$search['branch_id'];
+    		}
+    		$order=" order by id desc ";
+    		return $db->fetchAll($sql.$where.$order);
+    	}
 }
 
