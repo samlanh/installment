@@ -21,11 +21,11 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
-		$_title->setAttribs(array('dojoType'=>$this->tvalidate,
+		$_title->setAttribs(array('dojoType'=>$this->text,
 				'onkeyup'=>'this.submit()',
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 				));
-		$_title->setValue($request->getParam("adv_search"));
+		//$_title->setValue($request->getParam("adv_search"));
 		
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
