@@ -47,7 +47,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	}
   	else{
   		$search = array(
-  				'branch_id'=>'',
+  				'branch_id'=>-1,
   				'client_name'=>'',
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
@@ -60,7 +60,6 @@ class Report_LoanController extends Zend_Controller_Action {
   	$this->view->list_end_date=$search;
   	$row = $dbs->getAllLnClient($search);
   	$this->view->tran_schedule=$row;
-  	
   	
   	$this->view->loanlate_list = $db->getALLLoanlate($search);
   	$key = new Application_Model_DbTable_DbKeycode();
@@ -96,13 +95,14 @@ class Report_LoanController extends Zend_Controller_Action {
 				'status_search' => -1,
 				'status' => -1,
 				'client_name' => "",
-// 				'co_id' => "",
+				'branch_id' => -2,
 				'start_date'=> date('Y-m-d'),
 	  			'end_date'=>date('Y-m-d')
 		);
 	}
 	$this->view->loantotalcollect_list =$rs=$db->getALLLoanPayment($search);
-	$this->view->list_end_date = $search;
+	$this->view->list_end_date = $search;	
+	
 	$frm = new Loan_Form_FrmSearchLoan();
 	$frm = $frm->AdvanceSearch();
 	Application_Model_Decorator::removeAllDecorator($frm);
@@ -496,25 +496,30 @@ public function exportFileToExcel($table,$data,$thead){
  	}else{
  		$search = array(
  				'adv_search' => '',
- 				'client_name' => -1,
+//  				'client_name' => -1,
  				'start_date'=> date('Y-m-d'),
  				'end_date'=>date('Y-m-d'),
  				'branch_id'		=>	-1,
- 				'co_id'		=> -1,
- 				'paymnet_type'	=> -1,
+//  				'co_id'		=> -1,
+//  				'paymnet_type'	=> -1,
  				'status'=>"",);
  	}
  	$this->view->list_end_date=$search;
  	$db  = new Report_Model_DbTable_DbLandreport();
  	$this->view->LoanCollectionco_list =$db->getALLLoanExpectIncome($search);
  	
- 	$frm = new Loan_Form_FrmSearchGroupPayment();
- 	$fm = $frm->AdvanceSearch();
- 	Application_Model_Decorator::removeAllDecorator($fm);
- 	$this->view->frm_search = $fm;
+//  	$frm = new Loan_Form_FrmSearchGroupPayment();
+//  	$fm = $frm->AdvanceSearch();
+//  	Application_Model_Decorator::removeAllDecorator($fm);
+//  	$this->view->frm_search = $fm;
  	
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+ 	$frm = new Loan_Form_FrmSearchLoan();
+ 	$frm = $frm->AdvanceSearch();
+ 	Application_Model_Decorator::removeAllDecorator($frm);
+ 	$this->view->frm_search = $frm;
+ 	
+//  	$key = new Application_Model_DbTable_DbKeycode();
+//  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  }
  function rptBadloanAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();

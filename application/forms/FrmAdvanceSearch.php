@@ -42,7 +42,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		
 		$employee = new Zend_Dojo_Form_Element_FilteringSelect('employee');
 		$rows = $db ->getAllCOName();
-		$options=array(''=>"---ážŸáŸ’ážœáŸ‚áž„ážšáž€áž�áž¶áž˜ážšáž™áŸˆážˆáŸ’áž˜áŸ„áŸ‡---");
+		$options=array(''=>"---select---");
 		if(!empty($rows))foreach($rows AS $row) $options[$row['co_id']]=$row['co_khname'];
 		$employee->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',

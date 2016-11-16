@@ -11,6 +11,7 @@ $opt = array(1=>"បង់ធម្មតា",2=>"បង់មុន",3=>"បង
 <table style="font-family: 'Khmer OS Content'; margin: 0 auto;width:28.6cm;" >
 	<tr>
    			<td><?php echo $frm->getElement("adv_search");?></td>
+   			<td><?php echo $frm->getElement('branch_id');?></td>
    			<td><?php echo $frm->getElement('client_name');?></td>
    			<td><?php echo $frm->getElement('start_date');?></td>
    			<td><?php echo $frm->getElement('end_date');?></td>
@@ -49,8 +50,8 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
                 		<table width="100%" cellpadding="0" cellspacing="0">
                 			<tr class='style'>
                 				<td class="style" style="font-size: 7px;">
-                					<?php echo $tr->translate("ADDRESS_COMPANY");?>
-									<br /><?php echo $tr->translate("TEL_COMPANY");?>
+                					<?php //echo $tr->translate("ADDRESS_COMPANY");?>
+									<br /><?php //echo $tr->translate("TEL_COMPANY");?>
                 				</td>
                 				<td width="65%"></td>
                 			</tr>
@@ -63,12 +64,15 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
     <tr>
     	<td id="exportExcel">
             <table width="100%" border="1" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
-	                <tr bgcolor="#ccc" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+	                <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
 	                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
-	                    <td rowspan="2"><?php echo $tr->translate("LOAN_NO");?></td>	
-	                    <td rowspan="2"><?php echo $tr->translate("LOAN_ADDRESS");?></td>  
+	                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("SALE_NO");?></td>	
 	                    <td rowspan="2"><?php echo $tr->translate("CLIENT_NUM");?></td>                  
 	                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("LOAN_NO");?></td>	
+	                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_NAME");?></td>  
+	                    <td rowspan="2"><?php echo $tr->translate("STREET");?></td>	
 	                    <td colspan="5"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>    
 	                    <td rowspan="2" style="white-space:nowrap; border-right:3px double black; "><?php echo $tr->translate("PAY_DATE");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
@@ -102,26 +106,29 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
                ?>
                 <tr class="style style1" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
                		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+               		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+               		<td>&nbsp;<?php echo $rs["sale_number"];?>&nbsp;</td>
+               		<td>&nbsp;<?php echo $rs["client_number"];?>&nbsp;</td>
+               		<td>&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
                		<td>&nbsp;<?php echo $rs["land_code"];?>&nbsp;</td>
                		<td>&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
-               		<td>&nbsp;<?php echo $rs["client_number"];?>&nbsp;</td>                 		
-               		<td>&nbsp;<?php echo $rs["client_name"];?>&nbsp;</td>
+               		<td>&nbsp;<?php echo $rs["street"];?>&nbsp;</td>
                		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['total_principal_permonthpaid'],2);?>&nbsp;</td>               		
                		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['total_interest_permonthpaid'],2);?>&nbsp;</td>
                		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['penalize_amountpaid'],2);?>&nbsp;</td>
                		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['service_chargepaid'],2);?>&nbsp;</td>
                		<td style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['amount_payment'],2);?>&nbsp;</td>
-               		<td style="white-space:nowrap; border-right:3px double black; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date_payment"]));?>&nbsp;</td>
-               		<td style="white-space:nowrap; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
+               		<td style="white-space:nowrap; border-right:3px double black; ">&nbsp;<?php //echo date("d-M-Y",strtotime($rs["date_payment"]));?>&nbsp;</td>
+               		<td style="white-space:nowrap; ">&nbsp;<?php echo date("d-m-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
                		<td>&nbsp;<?php echo $rs["receipt_no"];?>&nbsp;</td>
-               		<td style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;<?php echo @$opt[$rs["payment_option"]];?>&nbsp;</td>
+               		<td style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;<?php echo $rs["paymentoption"];?>&nbsp;</td>
                		<!--<td style="font:bolder 11px Arial;">&nbsp;<?php //$balance=($rs["recieve_amount"]-$rs["recieve_amount"])-$rs["total_payment"]; if($balance<0){echo '('.abs($balance).')';}else {echo $balance=0;};echo $rs['currency_typeshow'];?>&nbsp;</td>-->
                 </tr>
                 <?php }?>
             </table>
             <br />
              <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
-                 <tr bgcolor="#ccc" class="style" style="font-weight:bold; line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
+                 <tr bgcolor="#c1d0f3" class="style" style="font-weight:bold; line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
                     <td><?php echo $tr->translate("CURRENT_TYPE");?></td>
                     <td><?php echo $tr->translate("PRINCIPAL");?></td>                    
                     <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>

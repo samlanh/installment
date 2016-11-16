@@ -186,63 +186,82 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       public function getALLLoanlate($search = null){
    		$end_date = $search['end_date'];
       	$db = $this->getAdapter();
-		$sql="SELECT 
+		$sql=" SELECT 
 				  c.`client_number`,
 				  c.`name_kh`,
 				  c.`phone`,
-				  l.land_code,
-				  l.land_address,
-				  p.`price`,
-				  p.`interest_rate`,
-				  p.`date_buy`,
-				  p.`end_date`,
-				  p.`amount_month`,
-				  p.multypanelty,
-				  (pd.`outstanding`) AS outstanding,
-				  (pd.`principal_after`) AS principal_after,
-				  (pd.`total_interest_after`) AS total_interest_after,
-				  (pd.`total_payment_after`) AS total_payment_after,
-				  (pd.`penelize`) AS penelize,
-				  (pd.`service_charge`) AS service_charge,
-				  pd.`date_payment` ,
-				   (SELECT `crm`.`date_input` FROM (`ln_client_receipt_money` `crm` JOIN `ln_client_receipt_money_detail` `crmd`) WHERE (
-								          (`crm`.`id` = `crmd`.`crm_id`) AND (`crmd`.`lfd_id` = pd.`id`)) ORDER BY `crm`.`date_input` DESC LIMIT 1) AS `last_pay_date`
-				FROM
-				 `ln_paymentschedule` AS p,
-				 `ln_paymentschedule_detail` AS pd,
-				 ln_landinfo as l,
+				  (SELECT project_name FROM `ln_project` WHERE br_id=s.branch_id LIMIT 1 ) As branch_name ,
+				  `l`.`land_code`               AS `land_code`,
+				  `l`.`land_address`             AS `land_address`,
+				  `l`.`street`                   AS `street`,
+				  `s`.`sale_number`              AS `sale_number`,
+				  `s`.`client_id`                AS `client_id`,
+				  `s`.`price_before`             AS `price_before`,
+				  `s`.`price_sold`               AS `price_sold`,
+				  `s`.`discount_amount`          AS `discount_amount`,
+				  `s`.`other_fee`                AS `other_fee`,
+				  `s`.`paid_amount`              AS `paid_amount`,
+				  `s`.`balance`                  AS `balance`,
+				  `s`.`buy_date`                 AS `buy_date`,
+				  `s`.`startcal_date`            AS `startcal_date`,
+				  `s`.`first_payment`            AS `first_payment`,
+				  `s`.`validate_date`            AS `validate_date`,
+				  `s`.`end_line`                 AS `end_line`,
+				  `s`.`interest_rate`            AS `interest_rate`,
+				  `s`.`total_duration`           AS `total_duration`,
+				  `s`.`payment_id`               AS `payment_id`,
+				  `sd`.`id`                      AS `id`,
+				  `sd`.`penelize`                AS `penelize`,
+				  `sd`.`date_payment`            AS `date_payment`,
+				  `sd`.`amount_day`              AS `amount_day`,
+				  `sd`.`status`                  AS `status`,
+				  `sd`.`is_completed`            AS `is_completed`,
+				  `sd`.`begining_balance`        AS `begining_balance`,
+				  `sd`.`principal_permonthafter` AS `principal_permonthafter`,
+				  `sd`.`total_interest_after`    AS `total_interest_after`,
+				  `sd`.`total_payment_after`     AS `total_payment_after`,
+				  `sd`.`ending_balance`          AS `ending_balance`,
+				  `sd`.`service_charge`          AS `service_charge`,
+				  (SELECT date_input FROM `ln_client_receipt_money` WHERE land_id=1 ORDER BY date_input DESC LIMIT 1) 
+				  	As last_pay_date
+				  FROM
+				 `ln_sale` AS s,
+				 `ln_saleschedule` AS sd,
+				`ln_properties` AS l,
 				 `ln_client` AS c 
 				WHERE 
-				  p.`id` = pd.`paymentid` AND
-				  l.id=p.land_id AND
-				  p.`status` = 1 AND
-				  pd.`is_completed` = 0 AND
-				  pd.`status` = 1 AND
-				  c.`client_id` = p.`client_id` 
-				  AND p.is_reschedule!=1 ";
+				  s.`id` = sd.`sale_id` 
+				  AND l.id=s.house_id 
+				  AND s.`status` = 1 
+				  AND sd.`is_completed` = 0 
+				  AND sd.`status` = 1 
+				  AND c.`client_id` = s.`client_id` 
+				  AND s.is_reschedule!=1 ";
       	$where='';
       	if(!empty($search['adv_search'])){
-      		$s_search = addslashes(trim($search['adv_search']));
-      		$s_where[] = " l.land_code LIKE '%{$s_search}%'";
-      		$s_where[] = " l.land_address LIKE '%{$s_search}%'";
-      		$s_where[] = " c.client_number LIKE '%{$s_search}%'";
-      		$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
-      		$s_where[] = " pd.principal_after LIKE '%{$s_search}%'";
-      		$s_where[] = " pd.principal_permonth LIKE '%{$s_search}%'";
-      		$s_where[] = " pd.total_interest_after LIKE '%{$s_search}%'";
-      		$s_where[] = " pd.total_payment_after LIKE '%{$s_search}%'";
+      		$s_where = array();
+      		$s_search = trim(addslashes($search['adv_search']));
+      		$s_where[] = " `l`.`land_code` LIKE '%{$s_search}%'";
+      		$s_where[] = " `l`.`street` LIKE '%{$s_search}%'";
+      		$s_where[] = " `l`.`land_code` LIKE '%{$s_search}%'";
+      		$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
+      		$s_where[] = " c.`client_number` LIKE '%{$s_search}%'";
+      		$s_where[] = " c.`name_kh`  LIKE '%{$s_search}%'";
+      		$s_where[] = " c.`phone` LIKE '%{$s_search}%'";
       		$where .=' AND ('.implode(' OR ',$s_where).')';
       	}
-  	 
+      	if(($search['branch_id']>0)){
+      		$where.=" AND s.branch_id =".$search['branch_id'];
+      	}
       	if(!empty($search['end_date'])){
-			$where.=" AND pd.date_payment < '$end_date'";
+			$where.=" AND sd.date_payment < '$end_date'";
 		}
 		if($search['client_name']>0){
-			$where.=" AND p.`client_id` =".$search['client_name'];
+			$where.=" AND s.`client_id` =".$search['client_name'];
 		}
-      	//$order = " ORDER BY currency_type ,date_payment ASC ";
-        $group_by = " GROUP BY pd.`date_payment` ORDER BY pd.`date_payment` ASC";
-//         echo $sql.$where.$group_by;
+		
+        $group_by = " GROUP BY sd.`date_payment` ORDER BY sd.`date_payment` ASC";
+//         echo $sql.$where.$group_by;exit();
       	return $db->fetchAll($sql.$where.$group_by);
       }
       public function getALLLoandateline(){
@@ -309,19 +328,20 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	if($search['client_name']>0){
       		$where.=" AND client_id = ".$search['client_name'];
       	} 
-// 		if($search['co_id']>0){
-// 		        $where.=" AND co_id = ".$search['co_id'];
-// 		}
+		if($search['branch_id']>0){
+		        $where.=" AND branch_id = ".$search['branch_id'];
+		}
       	if(!empty($search['adv_search'])){
       		$s_where = array();
       		$s_search = addslashes(trim($search['adv_search']));
+      		$s_where[] = " sale_number LIKE '%{$s_search}%'";
       		$s_where[] = " land_code LIKE '%{$s_search}%'";
       		$s_where[] = " land_address LIKE '%{$s_search}%'";
       		$s_where[] = " client_number LIKE '%{$s_search}%'";
       		$s_where[] = " client_name LIKE '%{$s_search}%'";
       		$s_where[] = " total_principal_permonthpaid LIKE '%{$s_search}%'";
       		$s_where[] = " total_interest_permonthpaid LIKE '%{$s_search}%'";
-      		$s_where[] = " penalize_amount LIKE '%{$s_search}%'";
+//       		$s_where[] = " penalize_amount LIKE '%{$s_search}%'";
       		$s_where[] = " penalize_amountpaid LIKE '%{$s_search}%'";  
       		$s_where[] = " service_chargepaid LIKE '%{$s_search}%'";
       		$s_where[] = " amount_payment LIKE '%{$s_search}%'";
@@ -565,30 +585,31 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	$where= " AND ".$from_date." AND ".$to_date;
       	
       	$db = $this->getAdapter();
-      	$sql = "SELECT *,SUM(price) AS total_capital ,
-      					SUM(principle_permonth) AS principle_permonth
-      	 			   ,SUM(total_interest) AS total_interest  
-      	                FROM `v_getexpectincome` WHERE 1 ";
-      	if(!empty($search['advance_search'])){
-      		$s_where = array();
-      		$s_search = addslashes(trim($search['advance_search']));
-      		$s_where[] = " land_code LIKE '%{$s_search}%'";
-      		$s_where[] = " client_number LIKE '%{$s_search}%'";
-      		$s_where[] = " client_number LIKE '%{$s_search}%'";
-      		$s_where[] = " client_name LIKE '%{$s_search}%'";
-      		$s_where[] = " outstanding LIKE '%{$s_search}%'";
-      		$s_where[] = " interest_rate LIKE '%{$s_search}%'";
-      		$s_where[] = " amount_month LIKE '%{$s_search}%'";
-      		$s_where[] = " principle_permonth LIKE '%{$s_search}%'";
-      		$s_where[] = " total_interest LIKE '%{$s_search}%'";
-      		
-      		$where .=' AND ( '.implode(' OR ',$s_where).')';
+      	$sql = "SELECT * FROM `v_getexpectincome` WHERE 1 ";
+      	
+      	if(!empty($search['adv_search'])){
+			$s_search = addslashes(trim($search['adv_search']));
+      	 	$s_where[] = " sale_number LIKE '%{$s_search}%'";
+      	 	$s_where[] = " land_code LIKE '%{$s_search}%'";
+      	 	$s_where[] = " land_address LIKE '%{$s_search}%'";
+      	 	$s_where[] = " street LIKE '%{$s_search}%'";
+      	 	$s_where[] = " client_number LIKE '%{$s_search}%'";
+      	 	$s_where[] = " phone LIKE '%{$s_search}%'";
+      	 	$s_where[] = " name_kh LIKE '%{$s_search}%'";
+      	 	$s_where[] = " price_sold LIKE '%{$s_search}%'";
+      	 	$s_where[] = " total_duration LIKE '%{$s_search}%'";
+      	 	$where .=' AND ( '.implode(' OR ',$s_where).')';
       	}
-      	if($search['status']!=""){
+      	if($search['status']>-1){
+      		$where.= " AND status = ".$search['status'];
+      	}
+      	if($search['branch_id']>0){
       		$where.= " AND status = ".$search['status'];
       	}
       	$group_by = " GROUP BY id,date_payment ORDER BY date_payment DESC ";
-      	return $db->fetchAll($sql.$where.$group_by);
+      	echo $sql.$where.$group_by;
+        $row = $db->fetchAll($sql.$where.$group_by);
+        return $row;
       }
       public function getALLBadloan($search=null){
       	$start_date = $search['start_date'];

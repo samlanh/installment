@@ -1063,10 +1063,12 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	return $db->fetchAll($sql);
   }
   
-  function getAllViewType($opt=null){
+  function getAllViewType($opt=null,$filter=null){
   		$db = $this->getAdapter();
   	$sql ="SELECT * FROM `ln_view_type`";
-  	
+  	if($filter!=null){
+  		$sql.=" WHERE id=12 OR id=13";
+  	}
   	$result = $db->fetchAll($sql);
   	$options=array('-1'=>"------Select View Type------");
   	if($opt!=null){

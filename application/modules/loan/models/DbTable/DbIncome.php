@@ -20,7 +20,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 					'title'=>$data['title'],
 					'total_amount'=>$data['total_amount'],
 					'invoice'=>$data['invoice'],
-					'curr_type'=>$data['currency_type'],
+					'category_id'=>$data['category_id'],
 					'description'=>$data['Description'],
 					'date'=>$data['Date'],
 					'status'=>$data['Stutas'],
@@ -44,7 +44,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 					'title'=>$data['title'],
 					'total_amount'=>$data['total_amount'],
 					'invoice'=>$data['invoice'],
-					'curr_type'=>$data['currency_type'],
+					'category_id'=>$data['category_id'],
 					'description'=>$data['Description'],
 					'date'=>$data['Date'],
 					'status'=>$data['Stutas'],
@@ -69,13 +69,13 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		$sql=" SELECT id,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
 		title, invoice,
-		(SELECT curr_nameen FROM `ln_currency` WHERE ln_currency.id =curr_type) AS currency_type,
+		(SELECT name_en FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
 		total_amount,description,date,status FROM ln_income ";
 		
 		if (!empty($search['adv_search'])){
 				$s_where = array();
 				$s_search = trim(addslashes($search['adv_search']));
-				//$s_where[] = " account_id LIKE '%{$s_search}%'";
+				$s_where[] = " description LIKE '%{$s_search}%'";
 				$s_where[] = " title LIKE '%{$s_search}%'";
 				$s_where[] = " total_amount LIKE '%{$s_search}%'";
 				$s_where[] = " invoice LIKE '%{$s_search}%'";
@@ -84,9 +84,9 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 // 			if($search['status']>-1){
 // 				$where.= " AND status = ".$search['status'];
 // 			}
-// 			if($search['currency_type']>-1){
-// 				$where.= " AND curr_type = ".$search['currency_type'];
-// 			}
+			if($search['branch_id']>-1){
+				$where.= " AND branch_id = ".$search['branch_id'];
+			}
 	       $order=" order by id desc ";
 			return $db->fetchAll($sql.$where.$order);
 	}

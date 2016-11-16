@@ -40,13 +40,8 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		));
 		
 		$db = new Application_Model_DbTable_DbGlobal();
-		//$rows = $db->getAllBranch();
-		$options=array();
-		if(!empty($rows))foreach($rows AS $row){
-			//$options[$row['br_id']]=$row['branch_namekh'];
-		}
+		$options = $db->getAllBranchName(null,1);
 		$_branch_id->setMultiOptions($options);
-		
 		
 		$_stutas = new Zend_Dojo_Form_Element_FilteringSelect('Stutas');
 		$_stutas ->setAttribs(array(
@@ -83,35 +78,27 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
-		//$db = new Registrar_Model_DbTable_DbIncome();
-		//$invoice_no = $db->getInvoiceNo();
 		
 		$id = new Zend_Form_Element_Hidden("id");
-		
-		$_currency_type = new Zend_Dojo_Form_Element_FilteringSelect('currency_type');
+		$_currency_type = new Zend_Dojo_Form_Element_FilteringSelect('category_id');
 		$_currency_type->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				//'onchange'=>'convertToDollar();',
 		));
-		//$opt = $db->getViewById(8,1);
-		//$_currency_type->setMultiOptions($opt);
-		
-		
+		$opt= $db->getVewOptoinTypeByType(12,1,null,1);
+		$_currency_type->setMultiOptions($opt);
 	
 		if($data!=null){
-			$_currency_type->setValue($data['curr_type']);
+			$_currency_type->setValue($data['category_id']);
 			$_branch_id->setValue($data['branch_id']);
 			$title->setValue($data['title']);
 			$total_amount->setValue($data['total_amount']);
-			//$convert_to_dollar->setValue($data['amount_in_dollar']);
 			$_Description->setValue($data['description']);
 			$_Date->setValue($data['date']);
 			$_stutas->setValue($data['status']);
 			$invoice->setValue($data['invoice']);
 			$id->setValue($data['id']);
 		}
-		
 		$this->addElements(array($invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,));
 		return $this;

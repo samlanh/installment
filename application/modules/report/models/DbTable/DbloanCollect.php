@@ -31,14 +31,12 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     		$s_where[] = " client_number LIKE '%{$s_search}%'";
     		$s_where[] = " phone_number LIKE '%{$s_search}%'";
     		$s_where[] = " client_name LIKE '%{$s_search}%'";
-    		
     		$s_where[] = " land_code LIKE '%{$s_search}%'";
     		$s_where[] = " land_address LIKE '%{$s_search}%'";
     		$s_where[] = " street LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	$order=" ORDER BY date_payment DESC";
-//     	echo $sql.$where.$order;exit();
     	return $db->fetchAll($sql.$where.$order);
     	
     }

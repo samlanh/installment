@@ -20,23 +20,18 @@ class Loan_ExpenseController extends Zend_Controller_Action
     		else{
     			$formdata = array(
     					"adv_search"=>'',
-    					"currency_type"=>-1,
-    					"status"=>-1,
+    					"branch_id"=>-1,
+//     					"status"=>-1,
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
     			);
     		}
-    		
-    		
-    		
-    		
     		$this->view->adv_search = $formdata;
-    		
 			$rs_rows= $db->getAllExpense($formdata);//call frome model
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","EXPENSE_TITLE","RECEIPT_NO","CURRENCY","TOTAL_EXPENSE","NOTE","DATE","STATUS");
+    		$collumns = array("BRANCH_NAME","EXPENSE_TITLE","RECEIPT_NO","CATEGORY","TOTAL_EXPENSE","NOTE","DATE","STATUS");
     		$link=array(
     				'module'=>'loan','controller'=>'expense','action'=>'edit',
     		);
@@ -46,8 +41,8 @@ class Loan_ExpenseController extends Zend_Controller_Action
     		echo $e->getMessage();
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
-		$frm = new Loan_Form_Frmexpense();
-//     	/$frm = $frm->AdvanceSearch();
+    	$frm = new Loan_Form_FrmSearchLoan();
+    	$frm = $frm->AdvanceSearch();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
     }
@@ -57,7 +52,6 @@ class Loan_ExpenseController extends Zend_Controller_Action
 			$data=$this->getRequest()->getPost();	
 			$db = new Loan_Model_DbTable_DbExpense();	
 			$test = $db->getBranchId();
-			echo 11;exit();
 			try {
 				$db->addExpense($data);
 				if(!empty($data['saveclose'])){

@@ -9,7 +9,6 @@ class Loan_IncomeController extends Zend_Controller_Action
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     }
-
     public function indexAction()
     {
     	try{
@@ -20,20 +19,18 @@ class Loan_IncomeController extends Zend_Controller_Action
     		else{
     			$search = array(
     					"adv_search"=>'',
-    					"currency_type"=>-1,
+    					"branch_id"=>-1,
     					"status"=>-1,
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
     			);
     		}
-    		
     		$this->view->adv_search = $search;
-    		
 			$rs_rows= $db->getAllIncome($search);//call frome model
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","INCOME_TITLE","RECEIPT_NO","CURRENCY","TOTAL_INCOME","NOTE","DATE","STATUS");
+    		$collumns = array("BRANCH_NAME","INCOME_TITLE","RECEIPT_NO","CATEGORY","TOTAL_INCOME","NOTE","DATE","STATUS");
     		$link=array(
     				'module'=>'loan','controller'=>'income','action'=>'edit',
     		);
@@ -43,8 +40,12 @@ class Loan_IncomeController extends Zend_Controller_Action
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		echo $e->getMessage();
     	}
-    	$frm = new Loan_Form_Frmexpense();
-    	//$frm = $frm->AdvanceSearch();
+//     	$frm = new Loan_Form_Frmexpense();
+//     	Application_Model_Decorator::removeAllDecorator($frm);
+//     	$this->view->frm_search = $frm;
+    	
+    	$frm = new Loan_Form_FrmSearchLoan();
+    	$frm = $frm->AdvanceSearch();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
     }
