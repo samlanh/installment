@@ -1167,7 +1167,29 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	}
   	return $options;
   }
+  public function getNewCacelCodeByBranch($branch_id){// by vandy get new client no by branch
+  	$this->_name='ln_sale_cancel';
+  	$db = $this->getAdapter();
+  	$sql=" SELECT count(id) FROM $this->_name WHERE branch_id = $branch_id LIMIT 1 ";
+  	$acc_no = $db->fetchOne($sql);
   
+  	$new_acc_no= (int)$acc_no+1;
+  	$acc_no= strlen((int)$acc_no+1);
+  	$prefix = $this->getPrefix($branch_id);
+  	$pre= "C";
+  	for($i = $acc_no;$i<6;$i++){
+  		$pre.='0';
+  	}
+  	return $prefix.$pre.$new_acc_no;
+  }
+  public function getSaleNoByProject($branch_id){
+  	$db = $this->getAdapter();
+  	$sql="SELECT s.`id`,CONCAT((SELECT c.client_number FROM `ln_client` AS c WHERE c.client_id = s.`client_id` LIMIT 1),' (',
+	s.`sale_number`,')' ) AS `name`
+  	FROM `ln_sale` AS s 
+ 	WHERE s.`branch_id` =".$branch_id;
+  	return $db->fetchAll($sql);
+  }
   
   
   
