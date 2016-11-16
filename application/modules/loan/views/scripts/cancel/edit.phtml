@@ -11,7 +11,7 @@ dojo.require("dijit.form.NumberTextBox");
 dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.Dialog");
 </script>
-<form id="add_province" action="<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<form id="add_province" action="<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	 <script type="dojo/method" event="onSubmit">			
 	if(this.validate()) {
     	return true;
@@ -23,15 +23,15 @@ dojo.require("dijit.Dialog");
 	<tr>
 		<td>
 				<fieldset>
-					<legend><strong><?php echo $tr->translate('SALE_CANCEL');?></strong></legend>
+					<legend><strong><?php echo $tr->translate('EDIT_CANCEL');?></strong></legend>
 					<table cellspacing="10"  width="100%">
 					   <tr>
 							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
-							<td><?php echo $frm->getElement('branch_id');?></td>
+							<td><?php echo $frm->getElement('branch_id');?><?php echo $frm->getElement('old_property_id');?></td>
 							<!-- <td><?php //echo $tr->translate("CANCEL_CODE")?></td>
 							<td><?php //echo $frm->getElement('cancel_code');?></td> -->
-							<td><?php echo $tr->translate("SALE_NO")?></td>
-							<td><input id="sale_no" ><?php echo $frm->getElement('property_id')?></td>
+							<td><?php echo $tr->translate("SALE_NO")?><?php echo $frm->getElement('old_sale_id');?></td>
+							<td><input id="sale_no" ><?php echo $frm->getElement('property_id');?></td>
 						</tr>
 						<tr>
 							<td colspan="3"><?php echo $tr->translate("CUSTOMER_INFO")?></td>
@@ -73,6 +73,8 @@ dojo.require("dijit.Dialog");
 							<td><?php  echo $frm->getElement('sold_date');?></td>
 							<td><?php echo $tr->translate("COMMISSION")?></td>
 							<td><?php  echo $frm->getElement('commision');?></td>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php  echo $frm->getElement('status_using');?></td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("SOLD_NOTE")?></td>
@@ -112,6 +114,7 @@ dojo.ready(function(){
 		required: false,		           
 		name: "sale_no",
 		id: "sale_no",
+		value: "<?php echo $this->row['sale_id'];?>",
 		searchAttr: "name",
 		class: 'fullside',
 		//missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ ស្រុក/ខ័ណ្ឌ!",	
@@ -146,6 +149,8 @@ dojo.ready(function(){
 //			}
 //		});
 //	}
+var oldbranch='<?php echo $this->row['branch_id'];?>';
+var oldsale='<?php echo $this->row['sale_id'];?>';
 var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-sale'));?>';
 	function getSaleNo(){
 		branch_id = dijit.byId('branch_id').get('value');
@@ -160,6 +165,9 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 			load: function(data) {	
 				sale_store  = getDataStorefromJSON('id','name', data);		
 			    dijit.byId('sale_no').set('store', sale_store);
+			    if(oldbranch==branch_id){
+			    dijit.byId('sale_no').attr('value',oldsale);
+			    }
 			},
 			error: function(err) {
 				alert(err);
