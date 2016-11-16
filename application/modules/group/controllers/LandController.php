@@ -263,7 +263,7 @@ class Group_LandController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	function checkTitleAction(){// by vandy get property code
+	function checkTitleAction(){// by vandy check tilte property 
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Group_Model_DbTable_DbLand();
