@@ -12,30 +12,25 @@ class Loan_CancelController extends Zend_Controller_Action {
 	{
 		try{
 			$db = new Loan_Model_DbTable_DbCancel();
-// 			if($this->getRequest()->isPost()){
-// 				$search=$this->getRequest()->getPost();
-// 			}
-// 			else{
-// 				$search = array(
-// 					    'adv_search'=>'',
-// 						'branch' => '',
-// 						'client_name' =>'',
-// 						'client_code'=>'',
-// 						'Term'=>'',
-// 						'status' =>'',
-// 						'cash_type'=>'',
-// 						'start_date'=> date('Y-m-01'),
-// 						'end_date'=>date('Y-m-d'));
-// 			}
-			$rs_rows= $db->getCancelSale();//call frome model
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}
+			else{
+				$search = array(
+					    'adv_search'=>'',
+						'branch_id_search' => -1,
+						'from_date_search'=> date('Y-m-d'),
+						'to_date_search'=>date('Y-m-d'));
+			}
+			$rs_rows= $db->getCancelSale($search);//call frome model
 // 			$glClass = new Application_Model_GlobalClass();
 // 			$rs_row = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CANCEL_CODE","SALE_NO","CLIENT_NO","CLIENT_NAME","PROJECT_NAME","PROPERY_CODE","DATE");
+			$collumns = array("SALE_NO","CLIENT_NO","CLIENT_NAME","PROJECT_NAME","PROPERY_CODE","DATE");
 			$link=array(
-					'module'=>'loan','controller'=>'badloan','action'=>'edit',
+					'module'=>'loan','controller'=>'cancel','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('cancel_code'=>$link,'sale_number'=>$link));
+			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('sale_number'=>$link,'client_number'=>$link,));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			echo $e->getMessage();
@@ -71,41 +66,30 @@ class Loan_CancelController extends Zend_Controller_Action {
 	}
 	public function editAction()
 	{
-		// action body
+	$id = $this->getRequest()->getParam('id');
+	$_dbmodel = new Loan_Model_DbTable_DbCancel();
 	if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
+			$_data['id']=$id;
 			try {
 				//print_r($_data);exit();
-				$_dbmodel = new Loan_Model_DbTable_DbBadloan();
 				if(isset($_data['save'])){
-					if($this->getRequest()->getParam('id')==$_data['client_name']){
-						$_dbmodel->updatebadloan($_data);
-					}else{
-						$_dbmodel->updatebadloan_bad($_data);
+						$_dbmodel->editCancelSale($_data);
 						
-					}
 				}elseif(isset($_data['save_close'])){
-					if($this->getRequest()->getParam('id')==$_data['client_name']){
-						$_dbmodel->updatebadloan_bad($_data);
-					}else{
-						$_dbmodel->updatebadloan_bad($_data);
-					}
+						$_dbmodel->editCancelSale($_data);
 				}
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/badloan");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 	      }
-		$id = $this->getRequest()->getParam('id');
-		// 		if(empty($id)){
-		// 			Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);
-		// 		}
-		$db = new Loan_Model_DbTable_DbBadloan();
-		$row  = $db->getbadloanbyid($id);
-		$fm = new Loan_Form_Frmbadloan();
-		$frm = $fm->FrmBadLoan($row);
+	    $row  = $_dbmodel->getCancelById($id);
+	    $this->view->row = $row;
+		$fm = new Loan_Form_FrmCancel();
+		$frm = $fm->FrmAddFrmCancel($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
 	
