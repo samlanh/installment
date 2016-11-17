@@ -216,7 +216,7 @@ function getAllBranch($search=null){
     			$s_where[] = " invoice LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
-    		if($search['branch_id']>-1){
+    		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
     		}
     		$order=" order by id desc ";
@@ -252,5 +252,54 @@ function getAllBranch($search=null){
     		$order=" order by id desc ";
     		return $db->fetchAll($sql.$where.$order);
     	}
+    	function getSoldIncome($search=null){
+    		$db= $this->getAdapter();
+    		$where='';
+    		$sql = "SELECT * FROM v_soldreport WHERE 1";
+    		$from_date =(empty($search['start_date']))? '1': " buy_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " buy_date <= '".$search['end_date']." 23:59:59'";
+    		$where.= " AND ".$from_date." AND ".$to_date;
+    		if($search['branch_id']>0){
+    			$where.= " AND branch_id = ".$search['branch_id'];
+    		}
+    		if (!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = trim(addslashes($search['adv_search']));
+    			$s_where[] = " sale_number LIKE '%{$s_search}%'";
+    			$s_where[] = " price_before LIKE '%{$s_search}%'";
+    			$s_where[] = " name_kh LIKE '%{$s_search}%'";
+    			$s_where[] = " name_en LIKE '%{$s_search}%'";
+    			$s_where[] = " client_number LIKE '%{$s_search}%'";
+    			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		return $db->fetchAll($sql.$where);
+    	}
+    	function getCollectPayment($search=null){
+    		$db= $this->getAdapter();
+    		//$where='';
+    		$sql = "SELECT * FROM v_getcollectmoney WHERE 1";
+    		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
+	      	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
+	      	$where = " AND ".$from_date." AND ".$to_date;
+	      	if($search['branch_id']>0){
+	      		$where.= " AND branch_id = ".$search['branch_id'];
+	      	}
+	      	if (!empty($search['adv_search'])){
+	      		$s_where = array();
+	      		$s_search = trim(addslashes($search['adv_search']));
+	      		$s_where[] = " client_number LIKE '%{$s_search}%'";
+	      		$s_where[] = " name_kh LIKE '%{$s_search}%'";
+	      		$s_where[] = " client_name LIKE '%{$s_search}%'";
+	      		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
+	      		$where .=' AND ('.implode(' OR ',$s_where).')';
+	      	}
+    		return $db->fetchAll($sql.$where);
+    	}
+    	function getTermCodiction(){
+    		$db =$this->getAdapter();
+    		$sql="SELECT * FROM `ln_termcondiction` AS t WHERE t.`status`=1 LIMIT 1";
+    		return $db->fetchRow($sql);
+    	}
+    	
 }
 
