@@ -271,7 +271,7 @@ public function addILPayment($data){
     			'branch_id'						=>	$data["branch_id"],
     			'receipt_no'					=>	$reciept_no,
     			'date_pay'					    =>	$data['collect_date'],
-    			//'date_input'					=>	date("Y-m-d"),
+    			'date_input'					=>	date("Y-m-d"),
     			'client_id'                     =>	$data['client_id'],
     			'land_id'						=>	$data['loan_number'],
     			'outstanding'                   =>	$data['priciple_amount']+$principle_amount,//ប្រាក់ដើមមុនបង់
@@ -293,6 +293,7 @@ public function addILPayment($data){
     			'return_amount'					=>	$return,//ok
     			
     			'note'							=>	$data['note'],
+    			'cheque'						=>	$data['cheque'],
     			'user_id'						=>	$user_id,
     			'payment_option'				=>	$data["option_pay"],
     			'status'						=>	1,
@@ -335,7 +336,7 @@ public function addILPayment($data){
     						'crm_id'				=>		$client_pay,
     						'land_id'			    =>		$data['loan_number'],//ok
     						'lfd_id'				=>		$data["mfdid_".$i],//ok
-    						'date_payment'			=>	    $data["date_payment_".$i],
+    						'date_payment'			=>	    $data["date_payment_".$i], // ថ្ងៃដែលត្រូវបង់
     						'capital'				=>		$data["total_priciple_".$i],
     						'remain_capital'		=>		$data["total_priciple_".$i] - $data["principal_permonth_".$i],
     						'principal_permonth'	=>		$data["principal_permonth_".$i],
@@ -1153,12 +1154,15 @@ public function addILPayment($data){
     	$db = $this->getAdapter();
     		if($data['type']==1){
 	    		$sql ="SELECT 
+						(SELECT ln_properties.land_address  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_address,
 						  s.*,
-						  ss.* 
+						  ss.*,
+						  DATE_FORMAT(ss.date_payment, '%d-%m-%Y') AS date_payments
+						  
 						FROM
 						  `ln_sale` AS s,
 						  `ln_saleschedule` AS ss 
-						WHERE s.id = ss.`sale_id`
+						WHERE s.id = ss.`sale_id` 
 						  AND s.status = 1 
 						  AND ss.is_completed = 0 
 						  AND s.id = ".$data['loan_number'];
@@ -2533,6 +2537,19 @@ public function cancelIlPayment($data){
 		$sql = "select * from ln_client_receipt_money_detail where crm_id = $id ";
 		return $db->fetchAll($sql);
 	}
+	function getPropertyInfo($property_id){
+		$db = $this->getAdapter();
+		$sql = "select * from ln_client_receipt_money_detail where crm_id = $property_id ";
+		return $db->fetchAll($sql);
+	}
+	
+	function getLastDatePayment($loan_number){
+		$db = $this->getAdapter();
+		$sql = "select date_pay from ln_client_receipt_money where land_id = $loan_number ";
+		$order = " order by id DESC ";
+		return $db->fetchOne($sql.$order);
+	}
+	
 	
 }
 

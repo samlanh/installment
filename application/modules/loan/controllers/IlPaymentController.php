@@ -389,15 +389,27 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		}
 	}
 	
-	function getLaneInfoAction(){
+	function getPropertyinfoAction(){
 		if($this->getRequest()->isPost()){
-// 			$data = $this->getRequest()->getPost();
-// 			$db = new Loan_Model_DbTable_DbLoanILPayment();
-// 			$row = $db->getAllLoanNumberByBranch($data["branch_id"]);
-// 			print_r(Zend_Json::encode($row));
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$row = $db->getPropertyInfo($data["property_id"]);
+			print_r(Zend_Json::encode($row));
 			exit();
 		}
 	}
+	
+	function getLastdatepaymentAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$row = $db->getLastDatePayment($data["loan_number"]);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
+	
+	
 	
 	
 }

@@ -304,12 +304,20 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				//'required' =>'true'
 		));
 		
+		$_cheque = new Zend_Dojo_Form_Element_TextBox('cheque');
+		$_cheque->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				//'required' =>'true'
+		));
+		
 		$_collect_date = new Zend_Dojo_Form_Element_DateTextBox('collect_date');
 		$_collect_date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
 				'required' =>'true',
-				'Onchange'	=>	'calculateTotal();'
+				'Onchange'	=>'calculateTotal();',
+				'constraints'=>'{datePattern:"dd-MM-yyyy"}'
 		));
 		$c_date = date('Y-m-d');
 		$_collect_date->setValue($c_date);
@@ -425,6 +433,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 // // 			$discount->setValue($data["total_discount"]);
 			$_rate->setValue($data["total_interest_permonth"]);
 			$_note->setValue($data["note"]);
+			$_cheque->setValue($data["cheque"]);
 // 			$date_input->setValue($data["date_input"]);
 // 			$_collect_date->setValue(date("y-m-d"));
 			$_service_charge->setValue($data["service_charge"]);
@@ -436,7 +445,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 			$_collect_date->setValue($data["date_pay"]);
 // 			$old_tota_pay->setValue($data["total_payment"]-$data["service_charge"]);
 		}
-		$this->addElements(array($_pay_late,$branch_id,$sold_price,$_graice_pariod,$commission,$schedule_opt,$_landsize,$_loan_codes,$_loan_codes,$old_amount_receive,$old_loan_number,$old_release_date,$old_service_charge,$old_penelize,$_cocode,$_last_payment_date,$using_date,$total_amount_loan,$loan_period,$candition_payment,$payment_method,$release_date,$loan_level,$remain,$old_tota_pay,$installment_date,$amount_payment_term,$_interest_rate,$_payterm,$_currency_type,$id,$option_pay,$date_input,$reciept_no,$reciever,$discount,$id,$_groupid,$_coid,$_priciple_amount,$_loan_fee,$_os_amount,$_rate,
+		$this->addElements(array($_cheque,$_pay_late,$branch_id,$sold_price,$_graice_pariod,$commission,$schedule_opt,$_landsize,$_loan_codes,$_loan_codes,$old_amount_receive,$old_loan_number,$old_release_date,$old_service_charge,$old_penelize,$_cocode,$_last_payment_date,$using_date,$total_amount_loan,$loan_period,$candition_payment,$payment_method,$release_date,$loan_level,$remain,$old_tota_pay,$installment_date,$amount_payment_term,$_interest_rate,$_payterm,$_currency_type,$id,$option_pay,$date_input,$reciept_no,$reciever,$discount,$id,$_groupid,$_coid,$_priciple_amount,$_loan_fee,$_os_amount,$_rate,
 				$_penalize_amount,$_collect_date,$_total_payment,$_note,$_service_charge,$_amount_return,
 				$_amount_receive,$_client_code,$_loan_number,$_hide_total_payment));
 		return $this;
@@ -545,6 +554,13 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		
 		$_note = new Zend_Dojo_Form_Element_TextBox('note');
 		$_note->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				//'required' =>'true'
+		));
+		
+		$_cheque = new Zend_Dojo_Form_Element_TextBox('cheque');
+		$_cheque->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 				//'required' =>'true'
