@@ -17,6 +17,8 @@ class Other_CommuneController extends Zend_Controller_Action {
 			else{
 				$search = array(
 						'adv_search' => '',
+						'province_name' => '',
+						'district_name' => '',
 						'search_status' => -1);
 			}
 			$rs_rows= $db->getAllCommune($search);

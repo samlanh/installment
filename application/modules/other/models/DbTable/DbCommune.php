@@ -51,28 +51,31 @@ class Other_Model_DbTable_DbCommune extends Zend_Db_Table_Abstract
 	}
 	function getAllCommune($search=null){
 		$db = $this->getAdapter();
-// 		$sql = " SELECT com_id,code,
-// 					commune_namekh,commune_name,
-// 					(SELECT district_name FROM `ln_district` WHERE district_id = dis_id) AS district_name,
-// 					modify_date,(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = status LIMIT 1) AS status_name,
-//        				(SELECT first_name FROM rms_users WHERE id=user_id LIMIT 1) AS user_name
-// 				FROM $this->_name ";
-		$sql = " SELECT * FROM v_getallcommune ";
+		$sql = " SELECT com.com_id,com.code,com.commune_namekh,com.commune_name,com.district_name, 
+			com.modify_date,com.status_name,com.user_name
+			FROM v_getallcommune AS com";
+		//$sql = " SELECT * FROM v_getallcommune ";
 		
 		$where = ' WHERE 1 ';
 		if(!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = addslashes(trim($search['adv_search']));
-			$s_where[] = " district_name LIKE '%{$s_search}%'";
-			$s_where[] = " code LIKE '%{$s_search}%'";
-			$s_where[] = " commune_name LIKE '%{$s_search}%'";
-			$s_where[]=" commune_namekh LIKE '%{$s_search}%'";
+			$s_where[] = " com.district_name LIKE '%{$s_search}%'";
+			$s_where[] = " com.code LIKE '%{$s_search}%'";
+			$s_where[] = " com.commune_name LIKE '%{$s_search}%'";
+			$s_where[]=" com.commune_namekh LIKE '%{$s_search}%'";
 			$where .=' AND '.implode(' OR ',$s_where);
 		}
-		if($search['search_status']>-1){
-			$where.=" AND status=".$search['search_status'];
+		if(!empty($search['province_name'])){
+			$where.=" AND com.province_id=".$search['province_name'];
 		}
-		$order = " ORDER BY com_id DESC ";
+		if(!empty($search['district_name'])){
+			$where.=" AND com.district_id=".$search['district_name'];
+		}
+		if($search['search_status']>-1){
+			$where.=" AND com.status=".$search['search_status'];
+		}
+		$order = " ORDER BY com.com_id DESC ";
 // 		echo $sql.$where.$order;
 		return $db->fetchAll($sql.$where.$order);	
 	}
