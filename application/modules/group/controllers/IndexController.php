@@ -64,10 +64,10 @@ class Group_indexController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_client = $frm;
 		
-		$db= new Application_Model_DbTable_DbGlobal();
-		$this->view->district = $db->getAllDistricts();
-		$this->view->commune_name = $db->getCommune();
-		$this->view->village_name = $db->getVillage();
+		//$db= new Application_Model_DbTable_DbGlobal();
+// 		$this->view->district = $db->getAllDistricts();
+// 		$this->view->commune_name = $db->getCommune();
+// 		$this->view->village_name = $db->getVillage();
 		
 		$this->view->result=$search;	
 	}
