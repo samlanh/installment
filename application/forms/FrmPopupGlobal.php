@@ -533,12 +533,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			<form id="form_propertytype" >';
 			$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
 						<tr>
-							<td>Title English</td>
+							<td>Title</td>
 							<td>'.'<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="type_nameen" name="type_nameen" value="" type="text">'.'</td>
-							</tr>
-							<tr>
-							<td>Title Khmer</td>
-							<td>'.'<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="type_namekh" name="type_namekh" value="" type="text">'.'</td>
 							</tr>
 							<tr>
 							<td colspan="2" align="center">
