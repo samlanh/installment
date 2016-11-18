@@ -75,6 +75,7 @@ class Group_indexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
 				//print_r($data);exit();
+				$data['old_photo']=null;
 				$db = new Group_Model_DbTable_DbClient();
 				try{
 				 if(isset($data['save_new'])){
