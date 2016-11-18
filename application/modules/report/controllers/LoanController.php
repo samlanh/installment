@@ -117,10 +117,10 @@ class Report_LoanController extends Zend_Controller_Action {
   				'adv_search'		=>	"",
   				'end_date' => date('Y-m-d'),
   				'status' => -1,
+  				'branch_id'=>-1,
   				'client_name'=>0
   		);
   	}
-  	
   	$db  = new Report_Model_DbTable_DbLandreport();
   	$this->view->loanlate_list =$db->getALLLoanlate($search);
   	$key = new Application_Model_DbTable_DbKeycode();

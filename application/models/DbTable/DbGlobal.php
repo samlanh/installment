@@ -231,19 +231,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	   	}
    	
    }
-   public function getNewReceiptId(){
-   	$this->_name='ln_callecteralllist';
-   	$db = $this->getAdapter();
-   	$sql=" SELECT id ,code_call FROM $this->_name ORDER BY id DESC LIMIT 1 ";
-   	$acc_no = $db->fetchOne($sql);
-   	$new_acc_no= (int)$acc_no+1;
-   	$acc_no= strlen((int)$acc_no+1);
-   	$pre = "";
-   	for($i = $acc_no;$i<5;$i++){
-   		$pre.='0';
-   	}
-   	return $pre.$new_acc_no;
-   }
    
    public function getCodecallId(){
    	$this->_name='ln_callecteralllist';
@@ -611,13 +598,13 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		return $rows;
   	}
   }
-  public function getAllLandInfo($branch_id=null,$option=null){
+  public function getAllLandInfo($branch_id=null,$option=null,$action=null){
   	   $db = $this->getAdapter();
   	   $sql="SELECT `id`,`land_code` AS name FROM `ln_properties` WHERE status=1 AND `land_code`!='' ";//just concate
   	   $request=Zend_Controller_Front::getInstance()->getRequest();
-  	   //if($request->getActionName()=='add'){
+  	   if($action==null){
   	   	$sql.=" AND `is_lock`=0  ";
-  	   //}
+  	   }
   	   if($branch_id!=null){
   	   	$sql.=" AND `branch_id`=$branch_id ";
   	   }

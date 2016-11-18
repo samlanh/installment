@@ -111,11 +111,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	//`stGetAllIndividuleLoan`(IN txt_search VARCHAR(30),IN client_id INT,IN method INT,IN branch INT,IN co INT,IN s_status INT,IN from_d VARCHAR(70),IN to_d VARCHAR(70))
     }
     function getTranLoanByIdWithBranch($id,$is_newschedule=null){//group id
-    	$sql = " SELECT * FROM `ln_paymentschedule` AS p
-			WHERE p.id = $id ";
+    	$sql = " SELECT * FROM `ln_sale` AS s
+			WHERE s.id = $id ";
     	$where="";
     	if($is_newschedule!=null){
-    		$where.=" AND p.is_reschedule = 2 ";
+    		$where.=" AND s.is_reschedule = 2 ";
     	}
     	
     	$where.=" LIMIT 1 ";
@@ -254,7 +254,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
     				$total_day = $amount_day;
     				$interest_paymonth = 0;
-    				$pri_permonth = $data['balance']/$borrow_term;
+    				$pri_permonth = round($data['balance']/$borrow_term,2);
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
     				}
@@ -270,10 +270,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    		}
 			    		$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
 			    		$total_day = $amount_day;
-// 			    		if($data['collect_termtype']==1){
-// 			    			$amount_day=$data['amount_collect'];
-// 			    		}
-// 			    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100/$borrow_term)*$amount_day;
 			    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
 			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
 // 			    		if($data['collect_termtype']==1){
@@ -295,6 +291,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    			        	'branch_id'=>$data['branch_id'],
 			    			        	'sale_id'=>$id,//good
 			    			        	'begining_balance'=> $old_remain_principal,//good
+			    			        	'begining_balance_after'=> $old_remain_principal,//good
 			    			        	'principal_permonth'=> $old_pri_permonth,//good
 			    			        	'principal_permonthafter'=>$old_pri_permonth,//good
 			    			        	'total_interest'=>$old_interest_paymonth,//good
@@ -739,9 +736,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     
     		$str_next = '+1 month';
     		for($i=1;$i<=$loop_payment;$i++){
-    			if($payment_method==1){
+    			if($payment_method==1){//booking
     				
-    			}elseif($payment_method==2){
+    			}elseif($payment_method==2){//payoff
     				
     			}elseif($payment_method==3){//pay by times//check date payment
     				if($i!=1){
@@ -755,7 +752,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
     				$total_day = $amount_day;
     				$interest_paymonth = 0;
-    				$pri_permonth = $data['balance']/$borrow_term;
+    				$pri_permonth = round($data['balance']/$borrow_term,2);
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
     				}

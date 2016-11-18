@@ -76,33 +76,33 @@ public function init()
 // 		$group_opt = $db->getGroupCodeById(1,0,1);//code,individual,option
 // 		$_customer_code->setMultiOptions($group_opt);
 		
-		$_customer_codes = new Zend_Dojo_Form_Element_NumberTextBox('deposit');
-		$_customer_codes->setAttribs(array(
+		$paid = new Zend_Dojo_Form_Element_NumberTextBox('deposit');
+		$paid->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'onkeyup'=>'Balance();',
 				'required'=>true,
 		));		
 		
-		$_members = new Zend_Dojo_Form_Element_NumberTextBox('balance');
-		$_members->setAttribs(array(
+		$balance = new Zend_Dojo_Form_Element_NumberTextBox('balance');
+		$balance->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'readonly'=>true,
 				
 		));
 		
-		$_coid = new Zend_Dojo_Form_Element_FilteringSelect('staff_id');
-		$_coid->setAttribs(array(
+		$staff_id = new Zend_Dojo_Form_Element_FilteringSelect('staff_id');
+		$staff_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'onchange'=>'popupCheckCO();'
 		));
 		$options = $db->getAllCOName(1);
-		$_coid->setMultiOptions($options);
+		$staff_id->setMultiOptions($options);
 		
-// 		$_coids = new Zend_Dojo_Form_Element_TextBox('gender');
-// 		$_coids->setAttribs(array(
+// 		$staff_ids = new Zend_Dojo_Form_Element_TextBox('gender');
+// 		$staff_ids->setAttribs(array(
 // 				'dojoType'=>'dijit.form.TextBox',
 // 				'class'=>'fullside',
 // 		));
@@ -233,14 +233,14 @@ public function init()
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
 		));
 		
-		$_graice_pariod = new Zend_Dojo_Form_Element_NumberTextBox('discount');
-		$_graice_pariod->setAttribs(array(
+		$discount = new Zend_Dojo_Form_Element_NumberTextBox('discount');
+		$discount->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'required'=>'true',
 				'class'=>'fullside',
 				'onKeyup'=>'calculateDiscount();'
 		));
-		$_graice_pariod->setValue(0);
+		$discount->setValue(0);
 		
 // 		$_collect_term = new Zend_Dojo_Form_Element_FilteringSelect('collect_termtype');
 //  		$_collect_term->setAttribs(array(
@@ -355,30 +355,35 @@ public function init()
 		$_old_payterm = new Zend_Form_Element_Hidden("old_payterm");
 		$_id = new Zend_Form_Element_Hidden('id');
 		if($data!=null){
-// 			$_customer_code->setValue($data['client_id']);
-			$_coid->setValue($data['staff_id']);
-			$_releasedate->setValue($data['date_buy']);
-			$_period->setValue($data['amount_month']);
-			$_first_payment->setValue($data['first_datepay']);
+			print_r($data);
+			$_branch_id->setValue($data['branch_id']);
+			$discount->setValue($data['discount_amount']);
+			
+			$_date_buy->setValue($data['buy_date']);
+			$schedule_opt->setValue($data['payment_id']);
+			$paid->setValue($data["paid_amount"]);
+			$balance->setValue($data['balance']);
+			
+			$_period->setValue($data['total_duration']);
+			$_first_payment->setValue($data['first_payment']);
 			$_rate->setValue($data['interest_rate']);//
-// 			$_rate->setAttribs(array(
-// 					'data-dojo-props'=>"
-// 					'value':'".$data['interest_rate']."'"));
-			$_amount->setValue($data['price']);
-			$_dateline->setValue($data['end_date']);
+			$_releasedate->setValue($data['startcal_date']);
+			$other_fee->setValue($data['other_fee']);
+			//$_dateline->setValue(date("d/m/Y",strtotime($data['end_line'])));
 			$_id->setValue($data['id']);
 			$_status->setValue($data['status']);
 			//$_loan_type->setValue($data['land_id']);
-// 			$_pay_late->setValue($data['multypanelty']);
-			$commission->setValue($data['commission']);
-			$schedule_opt->setValue($data['payment_type']);
+			$note->setValue($data['note']);
+			$commission->setValue($data['comission']);
+			$staff_id->setValue($data['staff_id']);
+			
 			
 		}
 		$this->addElements(array($fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$_service_charge,$schedule_opt
-				,$_total_sold,$_house_price,$_members,$_customer_codes,//$_loan_type,
-// 				$_client_code,$_time_collect,$_paybefore,$_coids,$_pay_late,$_payterm,$_every_payamount,
+				,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
+// 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,
-				$_coid,$commission,$_amount,$_rate,$_releasedate,$_status,$_graice_pariod,$_period,
+				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,
 				$_first_payment,$_loan_code,$_dateline,$_id));
 		return $this;
 		
