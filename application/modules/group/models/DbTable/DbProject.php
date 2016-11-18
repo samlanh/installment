@@ -7,7 +7,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     function addbranch($_data){
     	$_arr = array(
     			'project_name'=>$_data['branch_namekh'],
-    			'project_type'=>$_data['project_type'],
+    			//'project_type'=>$_data['project_type'],
     			'prefix'=>$_data['prefix_code'],
     			'br_address'=>$_data['br_address'],
     			'branch_code'=>$_data['branch_code'],
@@ -24,7 +24,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     public function updateBranch($_data,$id){
     	$_arr = array(
     			'project_name'=>$_data['branch_namekh'],
-    			'project_type'=>$_data['project_type'],
+    			//'project_type'=>$_data['project_type'],
     			'prefix'      =>      $_data['prefix_code'],
     			'br_address'=>$_data['br_address'],
     			'branch_code'=>$_data['branch_code'],
@@ -41,7 +41,6 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     function getAllBranch($search=null){
     	$db = $this->getAdapter();
     	$sql = "SELECT b.br_id,b.project_name,
-		(SELECT name_en FROM `ln_view` WHERE TYPE=7 AND key_code=b.project_type LIMIT 1) project_type,
 		b.prefix,b.branch_code,b.br_address,b.branch_tel,b.fax,
 (SELECT v.name_en FROM `ln_view` AS v WHERE v.`type` = 4 AND v.key_code = b.displayby)AS displayby,b.other,b.`status` FROM $this->_name AS b  ";
     	$where = ' WHERE b.project_name !="" ';

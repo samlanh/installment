@@ -23,11 +23,11 @@ class Group_propertiestypeController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("TITLE_EN","TITLE_KH","NOTE","USER_NAME","STATUS");
+			$collumns = array("TITLE","NOTE","USER_NAME","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'propertiestype','action'=>'edit',
 			);
- 			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('type_nameen'=>$link,'type_namekh'=>$link));
+ 			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('type_nameen'=>$link,'note'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			echo $e->getMessage();

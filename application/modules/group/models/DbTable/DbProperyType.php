@@ -15,7 +15,7 @@ class Group_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
     	try{
 	    	$arr = array(
 	    			'type_nameen'=>$data['type_nameen'],
-	    			'type_namekh'=>$data['type_namekh'],
+	    			//'type_namekh'=>$data['type_namekh'],
 					'status'=>$data['status'],
 	    			'user_id'=>$this->getUserId(),
 	    			'date'=>date("Y-m-d"),
@@ -39,7 +39,7 @@ class Group_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 	function geteAllPropertyType($search=null){
 		$db = $this->getAdapter();
 
-		$sql='SELECT t.`id`,t.`type_nameen`,t.`type_namekh`,t.`note`,
+		$sql='SELECT t.`id`,t.`type_nameen`,t.`note`,
 (SELECT CONCAT(u.first_name," ",u.last_name) FROM `rms_users` AS u WHERE u.id = t.`user_id`) AS user_name,
 t.`status` FROM `ln_properties_type` AS t where 1 ';
 		$where="";
@@ -51,7 +51,7 @@ t.`status` FROM `ln_properties_type` AS t where 1 ';
 			$s_search=$search['adv_search'];
 			
 			$s_where[]="t.`type_nameen` LIKE'%{$s_search}%'";
-			$s_where[]="t.`type_namekh` LIKE'%{$s_search}%'";
+			//$s_where[]="t.`type_namekh` LIKE'%{$s_search}%'";
 			$s_where[]="t.`note` LIKE'%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}

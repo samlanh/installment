@@ -24,7 +24,7 @@ class Group_ProjectController extends Zend_Controller_Action {
            $glClass = new Application_Model_GlobalClass();
 			$rs_rowshow = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","PROJECT_TYPE","PREFIX_CODE","CODE","ADDRESS","TEL","FAX","DISPLAY","OTHER","STATUS");
+			$collumns = array("PROJECT_NAME","PREFIX_CODE","CODE","ADDRESS","TEL","FAX","DISPLAY","OTHER","STATUS");
 			$link=array(
 					      'module'=>'group','controller'=>'project','action'=>'edit',
 			);

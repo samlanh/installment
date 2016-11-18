@@ -32,7 +32,7 @@ class Group_LandController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","PROPERTY_ID","TITLE","PROPERY_TYPE","PRICE","WIDTH","HEIGHT","SIZE","HEARD_TITLE","DATE","BY_USER","STATUS");
+			$collumns = array("BRANCH_NAME","PROPERTY_CODE","TITLE","PROPERTY_TYPE","PRICE","WIDTH","HEIGHT","SIZE","HEAD_TITLE_NO","DATE","BY_USER","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'land','action'=>'edit',
 			);
