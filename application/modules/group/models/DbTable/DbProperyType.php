@@ -68,7 +68,6 @@ t.`status` FROM `ln_properties_type` AS t where 1 ';
 		$db = $this->getAdapter();
 		$arr = array(
 				'type_nameen'=>$data['type_nameen'],
-	    		'type_namekh'=>$data['type_namekh'],
 				'status'=>1
 		);
 		return $this->insert($arr);

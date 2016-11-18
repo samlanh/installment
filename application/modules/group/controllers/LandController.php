@@ -32,11 +32,11 @@ class Group_LandController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROPERTY_ID","TITLE","PROPERY_TYPE","PRICE","WIDTH","HEIGHT","SIZE","HEARD_TITLE","DATE","BY_USER","STATUS");
+			$collumns = array("BRANCH_NAME","PROPERTY_ID","TITLE","PROPERY_TYPE","PRICE","WIDTH","HEIGHT","SIZE","HEARD_TITLE","DATE","BY_USER","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'land','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('land_code'=>$link,'land_address'=>$link,'pro_type'=>$link,
+			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('branch_name'=>$link,'land_code'=>$link,'land_address'=>$link,'pro_type'=>$link,
 					'price'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
@@ -55,9 +55,9 @@ class Group_LandController extends Zend_Controller_Action {
 		$this->view->frm_land = $frmserch;
 	}
 	public function addAction(){
+		$db = new Group_Model_DbTable_DbLand();
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
-				$db = new Group_Model_DbTable_DbLand();
 				try{
 				 if(isset($data['save_new'])){
 					$id= $db->addLandinfo($data);
@@ -73,8 +73,9 @@ class Group_LandController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		$db = new Application_Model_DbTable_DbGlobal();
-		
+		$property_type = $db->getPropertyType();
+		array_unshift($property_type, array('id'=>'','name' => "-----ជ្រើសរើស-----"), array('id'=>'-1', 'name'=>'Add New Property Type'));
+		$this->view->pro_type = $property_type;
 		$fm = new Group_Form_FrmClient();
 		$frm = $fm->FrmLandInfo();
 		Application_Model_Decorator::removeAllDecorator($frm);
@@ -97,6 +98,9 @@ class Group_LandController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
+		$property_type = $db->getPropertyType();
+		array_unshift($property_type, array('id'=>'','name' => "-----ជ្រើសរើស-----"), array('id'=>'-1', 'name'=>'Add New Property Type'));
+		$this->view->pro_type = $property_type;
 		
 		$row = $db->getClientById($id);
 	        $this->view->row=$row;
@@ -271,6 +275,44 @@ class Group_LandController extends Zend_Controller_Action {
 			print_r(Zend_Json::encode($dataclient));
 			exit();
 		}
+	}
+	function copyAction()
+	{
+		$id=$this->getRequest()->getParam("id");
+		$db = new Group_Model_DbTable_DbLand();
+		if($this->getRequest()->isPost()){
+				$data = $this->getRequest()->getPost();
+				try{
+				 if(isset($data['save_new'])){
+					$id= $db->addLandinfo($data);
+					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+				}
+				else if (isset($data['save_close'])){
+					$id= $db->addLandinfo($data);
+					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+					Application_Form_FrmMessage::redirectUrl("/group/land/index");
+				}
+			}catch (Exception $e){
+				Application_Form_FrmMessage::message("Application Error");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+		$row = $db->getClientById($id);
+		$this->view->row=$row;
+		if(empty($row)){
+			$this->_redirect("/group/land");
+		}
+		
+		$property_type = $db->getPropertyType();
+		array_unshift($property_type, array('id'=>'','name' => "-----ជ្រើសរើស-----"), array('id'=>'-1', 'name'=>'Add New Property Type'));
+		$this->view->pro_type = $property_type;
+		$fm = new Group_Form_FrmClient();
+		$frm = $fm->FrmLandInfo($row);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_client = $frm;
+		
+		$dbpop = new Application_Form_FrmPopupGlobal();
+		$this->view->frmPopupPropertyType = $dbpop->frmPopupPropertyType();
 	}
 	
 }

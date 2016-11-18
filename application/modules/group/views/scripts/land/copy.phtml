@@ -10,7 +10,7 @@ dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.NumberTextBox");
 dojo.require("dijit.Dialog");
 </script>
-<form id='add_client' action="<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'add')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+<form id='add_client' action="<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'copy')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 <script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
 				return true;
@@ -86,8 +86,6 @@ dojo.require("dijit.Dialog");
 								 iconClass="dijitIconClear" /> 
 							 <input type="submit" value="SAVE_CLOSE" tabindex="2" label="<?php echo $tr->translate('SAVECLOSE');?>" id="save_close" dojoType="dijit.form.Button" name="save_close"
 								 iconClass="dijitEditorIcon dijitEditorIconSave" /> 
-							<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
-								 iconClass="dijitEditorIcon dijitEditorIconSave"/> 
 							</td>
 						</tr>
 					</table>	
@@ -112,6 +110,7 @@ dojo.ready(function(){
 			required: true,		           
 			name: "property_type",
 			id: "property_type",
+			value: "<?php echo $this->row['property_type'];?>",
 			searchAttr: "name",
 			class: 'fullside',
 				onChange: function() {

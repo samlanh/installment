@@ -105,6 +105,7 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;		
 		$sql = "SELECT id,
+				(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
 				land_code,land_address,
 				(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type) AS  pro_type,
 				price,
@@ -224,6 +225,11 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		$db =$this->getAdapter();
 		$sql = "SELECT  * FROM `ln_properties` AS p WHERE p.`land_address` = '".$data['land_address']."' AND p.`branch_id` = ".$data['branch_id'];
 		return $db->fetchRow($sql);
+	}
+	public function getPropertyType(){
+		$db = $this->getAdapter();
+		$sql= "SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
+		return $db->fetchAll($sql);
 	}
 }
 

@@ -488,8 +488,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
 		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside','onChange'=>'showPopupForm();'));
-		$propertiestype_opt = $db->getPropertyType();
-		$propertiestype->setMultiOptions($propertiestype_opt);
+		//$propertiestype_opt = $db->getPropertyType();
+		//$propertiestype->setMultiOptions($propertiestype_opt);
 		
 		$propertiestype_search = new Zend_Dojo_Form_Element_FilteringSelect('property_type_search');
 		$propertiestype_search->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside'));

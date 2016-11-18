@@ -3,26 +3,48 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 echo $this->headTitle($tr->translate("Land Information"));
 $frm = $this->frm_search;
 $frms=$this->frm_land;
+$url_copy =$this->url(array('module'=>'group','controller'=>'land','action'=>'copy'));
+$formList = new Application_Form_Frmtable();
 ?>
 <form id="list" name="list" action="<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
 <table>
    <tr>  
+   	  <td style="width: 95px;"><?php echo $formList->showCopyBuntton($url_copy);?></td>
       <td><?php echo $frm->getElement("adv_search");?></td>
       <td><?php echo $frms->getElement("property_type_search");?></td>
       <td><?php echo $frm->getElement('status');?></td>
-       <td><?php echo $frm->getElement('start_date');?></td>
-      <td><?php echo $frm->getElement('end_date');?></td>
       <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+   <input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" />
+   </tr>
+   <tr>
+   	<td></td>
+   	  <td><?php echo $frm->getElement('start_date');?></td>
+      <td><?php echo $frm->getElement('end_date');?></td>
    </tr>
 </table>  
 <?php echo $this->list;?> 
 </form>
+<style>
+		.btn-action{
+			background: rgba(165, 188, 193, 0.36);
+			padding: 3px 10px;
+   			border-radius: 5px;
+		}
+	
+	</style>
 <script type="text/javascript">
-dojo.require("dojo.data.ObjectStore");
+dojo.require("dijit.form.CheckBox"); 
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
 dojo.require("dijit.form.DateTextBox");
 
-dojo.ready(function(){
-	
-});
+	function copyRecord(url){
+		 id = dijit.byId('recordcopy').get('value');
+		 window.location.href = url+'/id/'+id;
+	}
 
+	function setValue(index){
+		var recordcopy = $('input[name=copy]:checked').val();
+		dijit.byId('recordcopy').attr('value',recordcopy);
+	}
 </script>

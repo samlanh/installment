@@ -30,7 +30,7 @@ dojo.require("dijit.Dialog");
 							<td><?php echo $tr->translate("PROPERTY_CODE")?></td>
 							<td><?php echo $frm->getElement('landcode');?></td>
 							<td valign="top"><?php echo $tr->translate("PROPERTY_TYPE")?></td>
-							<td valign="top"><?php  echo $frm->getElement('property_type');?></td>
+							<td valign="top"><input id="property_type" /><?php  //echo $frm->getElement('property_type');?></td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("TITLE")?>*</td>
@@ -100,11 +100,24 @@ dojo.require("dijit.Dialog");
 </table>
 <?php echo $this->frmPopupPropertyType;?>
 <script type="text/javascript">
-
+var propertyType_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->pro_type));?> );
 dojo.ready(function(){
 	
 	try{
-	
+		new dijit.form.FilteringSelect({
+			store: propertyType_store,
+			autoComplete: true,
+			required: true,		           
+			name: "property_type",
+			id: "property_type",
+			value: "<?php echo $this->row['property_type'];?>",
+			searchAttr: "name",
+			class: 'fullside',
+				onChange: function() {
+					//district = dijit.byId('property_type').get('value');
+					showPopupForm();
+				}  
+			}, "property_type");
 	}catch(e){
 	}
 });
@@ -119,7 +132,6 @@ function showPopupForm(){
 		dijit.byId('frm_propertytype').show();
 	}
 }
-var propertyType_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 url_property = '<?php echo $this->url(array('module'=>'group','controller'=>'propertiestype','action'=>'add-propertytype'));?>';
 function addNewPropertytype(){
 	if(dijit.byId('frm_propertytype').validate()) {
@@ -132,7 +144,8 @@ function addNewPropertytype(){
 						id: data,
 					    name: dijit.byId('type_nameen').get('value')
 				};		
-				addDataToSelectbox(dijit.byId('property_type'), propertyType_store, Itemmake, data);	
+				addDataToSelectbox(dijit.byId('property_type'), propertyType_store, Itemmake, data);
+				dijit.byId('property_type').attr('value',data);	
 				dijit.byId('frm_propertytype').reset();
 				dijit.byId('frm_propertytype').hide();
 			},
