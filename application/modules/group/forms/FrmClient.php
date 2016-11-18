@@ -221,14 +221,14 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$_hnamekh->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				'required' =>'true'
+				//'required' =>'true'
 		));
 		
 		$_bnamekh = new Zend_Dojo_Form_Element_TextBox('bname_kh');
 		$_bnamekh->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				'required' =>'true'
+				//'required' =>'true'
 		));
 		
 		$_ksex = new Zend_Dojo_Form_Element_FilteringSelect('ksex');
@@ -332,14 +332,14 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$_rid_no->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				'required' =>'true'
+				//'required' =>'true'
 		));
 		
 		$_arid_no = new Zend_Dojo_Form_Element_TextBox('arid_no');
 		$_arid_no->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				'required' =>'true'
+				//'required' =>'true'
 		));
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
