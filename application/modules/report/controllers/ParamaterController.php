@@ -275,5 +275,26 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->termcodiction = $db->getTermCodiction();
   }
+  function rptSaleHistoryAction(){
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}
+  	else{
+  		$search = array(
+  				"adv_search"=>'',
+  				"branch_id"=>-1,
+  				"status"=>-1,
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  		);
+  	}
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->row = $db->getSaelHistory($search);
+  	
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  }
 }
 

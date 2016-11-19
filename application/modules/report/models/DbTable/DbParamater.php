@@ -179,6 +179,7 @@ function getAllBranch($search=null){
 				`ln_client` AS clie
 				WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = c.`property_id` AND
 				clie.`client_id` = s.`client_id`';
+    		$order = " ORDER BY c.`branch_id` DESC";
     		if($search['branch_id_search']>-1){
     			$where.= " AND c.branch_id = ".$search['branch_id_search'];
     		}
@@ -191,7 +192,7 @@ function getAllBranch($search=null){
     			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
-    		return $db->fetchAll($sql.$where);
+    		return $db->fetchAll($sql.$where.$order);
     		
     	}
     	function getAllIncome($search=null){
@@ -299,6 +300,29 @@ function getAllBranch($search=null){
     		$db =$this->getAdapter();
     		$sql="SELECT * FROM `ln_termcondiction` AS t WHERE t.`status`=1 LIMIT 1";
     		return $db->fetchRow($sql);
+    	}
+    	function getSaelHistory($search=null){
+    		$db= $this->getAdapter();
+    		$sql="SELECT * FROM `v_getsalehistory` WHERE 1 ";
+    		$order =' ORDER BY house_id DESC';
+    		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
+    		$where = " AND ".$from_date." AND ".$to_date;
+    		
+    		if($search['branch_id']>0){
+    			$where.= " AND branch_id = ".$search['branch_id'];
+    		}
+    		if (!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = trim(addslashes($search['adv_search']));
+    			$s_where[] = " sale_number LIKE '%{$s_search}%'";
+    			$s_where[] = " project_name LIKE '%{$s_search}%'";
+    			$s_where[] = " client_code LIKE '%{$s_search}%'";
+    			$s_where[] = " client_name_kh LIKE '%{$s_search}%'";
+    			$s_where[] = " client_name_en LIKE '%{$s_search}%'";
+    			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		return $db->fetchAll($sql.$where.$order);
     	}
     	
 }
