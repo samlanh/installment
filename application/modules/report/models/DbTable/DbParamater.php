@@ -136,11 +136,13 @@ function getAllBranch($search=null){
     	}
     function getAllProperties($search=null){
     		$db = $this->getAdapter();
+    		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
+    		$where = " AND ".$from_date." AND ".$to_date;
     		$sql = "SELECT p.`id`,p.`branch_id`,p.`land_code`,p.`land_address`,p.`property_type`,
 				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type`) AS pro_type,
 				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`
 				 FROM `ln_properties` AS p WHERE p.`status`=1";
-    		$where='';
     		if(!empty($search['property_type'])){
     			$where.= " AND p.`property_type` = ".$search['property_type'];
     		}

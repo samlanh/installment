@@ -171,6 +171,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'adv_search'=>'',
   				'property_type'=>'',
   				'type_property_sale'=>-1,
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d')
   				);
   	}
   	$db  = new Report_Model_DbTable_DbParamater();
