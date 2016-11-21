@@ -374,6 +374,7 @@ function filterClient(){
 	//dijit.byId('customer_code').reset();
 	getAllPropertyBranch(branch_id);
 	getLoanByBranch();
+	getReceiptByBranch();
 	getAllClientByBranch(branch_id);
 	getAllClientNumberByBranch(branch_id);
 }
@@ -442,6 +443,30 @@ function getLoanByBranch(){
 		handleAs:"json",
 		load: function(data) {
 			dijit.byId('sale_code').attr('value',data);
+		},
+		error: function(err) {
+			//alert(err);
+		}
+	});
+}
+
+var url_getreceipt = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'get-receipt-number')); ?>';
+function getReceiptByBranch(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==''){
+		alert('Please Select Branch');
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getreceipt,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'is_group':0
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('receipt').attr('value',data);
 		},
 		error: function(err) {
 			//alert(err);

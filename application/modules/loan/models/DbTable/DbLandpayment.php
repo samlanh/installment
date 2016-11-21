@@ -142,11 +142,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	try{
     		$dbtable = new Application_Model_DbTable_DbGlobal();
     		$loan_number = $dbtable->getLoanNumber($data);
+    		$receipt = $dbtable->getReceiptByBranch($data);
     			   $arr = array(
     				'branch_id'=>$data['branch_id'],
-    			   	'receipt_no'=>$data['receipt'],
+    			   	'receipt_no'=>$receipt,
+    				'sale_number'=>$loan_number,
     			   	'house_id'=>$data["land_code"],
-    				'sale_number'=>$data['sale_code'],
     			   	'payment_id'=>$data["schedule_opt"],
     				'client_id'=>$data['member'],
     				'price_before'=>$data['total_sold'],

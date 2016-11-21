@@ -177,19 +177,30 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 // 			WHERE lg.g_id = lm.group_id AND lg.g_id = $id LIMIT 1 ";
 //     	return $this->getAdapter()->fetchRow($sql);
     }
-    public function getIlPaymentNumber(){
+    
+    function getPrefixCode($branch_id){
+    	$db  = $this->getAdapter();
+    	$sql = " SELECT prefix FROM `ln_project` WHERE br_id = $branch_id  LIMIT 1";
+    	return $db->fetchOne($sql);
+    }
+    
+    public function getIlPaymentNumber($branch_id=1){
     	$this->_name='ln_client_receipt_money';
     	$db = $this->getAdapter();
-    	$sql=" SELECT id  FROM $this->_name  ORDER BY id DESC LIMIT 1 ";
+    	$sql=" SELECT id  FROM $this->_name WHERE branch_id = $branch_id  ORDER BY id DESC LIMIT 1 ";
+    	
+    	$pre = "";
+    	$pre = $this->getPrefixCode($branch_id)."-P";
+    	
     	$acc_no = $db->fetchOne($sql);
     	$new_acc_no= (int)$acc_no+1;
     	$acc_no= strlen((int)$acc_no+1);
-    	$pre = "";
-    	$pre_fix="PM-";
+    	//$pre = "";
+    	//$pre_fix="PM-";
     	for($i = $acc_no;$i<5;$i++){
     		$pre.='0';
     	}
-    	return $pre_fix.$pre.$new_acc_no;
+    	return $pre.$new_acc_no;
     }
 public function addILPayment($data){
 	//print_r($data);exit();
@@ -202,7 +213,7 @@ public function addILPayment($data){
     	$sql="SELECT id  FROM ln_client_receipt_money WHERE receipt_no='$reciept_no' ORDER BY id DESC LIMIT 1 ";
     	$acc_no = $db->fetchOne($sql);
     	if($acc_no){
-    		$reciept_no=$this->getIlPaymentNumber();
+    		$reciept_no=$this->getIlPaymentNumber($data["branch_id"]);
     	}else{
     		$reciept_no = $data['reciept_no'];
     	}
@@ -364,8 +375,13 @@ public function addILPayment($data){
     				
     				$db->insert("ln_client_receipt_money_detail", $arr_money_detail);
 //     				print_r($arr_money_detail);exit();
+
+    				
+    				
     				if($option_pay==1){//normal
+    					
 	    				if($sub_recieve_amount>=$total_payment){//normall and paid
+	    					
 		    				$arr_update_saleschedule = array(
 		    					'is_completed'		=> 	1,
 		    					'payment_option'	=>	$data["option_pay"],
@@ -396,32 +412,44 @@ public function addILPayment($data){
 		    				
 	    				}else{
 			   					$new_sub_interest_amount = $data["interest_".$i];
-			   					$new_sub_penelize = $data["penalize_amount"];
-			   					$new_sub_service_charge = $data["service_".$i]+$data["service_charge"];
+			   					$new_sub_penelize = $data["penelize_".$i];
+			   					$new_sub_service_charge = $data["service_".$i];
 			   					$principle_after = $data["principal_permonth_".$i];
 			   					$pyament_after = $total_payment-$amount_receive;
+			   					
 				   				if($sub_recieve_amount>0){//if received >0
+				   					
 				   					$new_amount_after_service = $sub_recieve_amount-$new_sub_service_charge;
+				   					
 				   					if($new_amount_after_service>=0){
+				   						
 				   						$new_sub_service_charge = 0;
 				   						$new_amount_after_penelize = $new_amount_after_service - $new_sub_penelize;
+				   						
 				   						if($new_amount_after_penelize>=0){
+				   							
 				   							$new_sub_penelize = 0;
-				   							$new_amount_after_interest = $new_amount_after_penelize - $sub_interest_amount;
+				   							$new_amount_after_interest = $new_amount_after_penelize - $new_sub_interest_amount;
+				   							
 				   							if($new_amount_after_interest>=0){
+				   								
 				   								$new_sub_interest_amount = 0;
+				   								
 				   								$principle_after = $principle_after - $new_amount_after_interest;
 				   								
-				   								$begining_balance_after = $data['priciple_amount'] + $principle_after;
+				   								$begining_balance_after = $data['total_priciple_'.$i] - $new_amount_after_interest;
 				   								
 				   							}else{
 				   								$new_sub_interest_amount = abs($new_amount_after_interest);
+				   								$begining_balance_after = $data['total_priciple_'.$i] ;
 				   							}
 				   						}else{
 				   							$new_sub_penelize = abs($new_amount_after_penelize);
+				   							$begining_balance_after = $data['total_priciple_'.$i] ;
 				   						}
 				   					}else{
 				   						$new_sub_service_charge = abs($new_amount_after_service);
+				   						$begining_balance_after = $data['total_priciple_'.$i] ;
 				   					}
 				   				}
 				   				
@@ -2545,9 +2573,15 @@ public function cancelIlPayment($data){
 	
 	function getLastDatePayment($loan_number){
 		$db = $this->getAdapter();
-		$sql = "select date_pay from ln_client_receipt_money where land_id = $loan_number ";
-		$order = " order by id DESC ";
-		return $db->fetchOne($sql.$order);
+		$sql = "SELECT 
+				  date_pay ,
+				  (SELECT date_payment FROM ln_saleschedule,ln_sale WHERE ln_saleschedule.`sale_id` = `ln_sale`.`id` AND `ln_sale`.id = $loan_number ORDER BY `ln_saleschedule`.id DESC LIMIT 1) AS datepaymentlastrecord
+				FROM
+				  ln_client_receipt_money 
+				WHERE land_id = $loan_number 
+				ORDER BY id DESC LIMIT 1";
+		//$order = " order by id DESC ";
+		return $db->fetchRow($sql);
 	}
 	
 	

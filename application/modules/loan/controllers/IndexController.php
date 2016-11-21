@@ -36,9 +36,10 @@ class Loan_IndexController extends Zend_Controller_Action {
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
 		}	
-		$frm = new Loan_Form_FrmSearchLoan();
-		$frm = $frm->AdvanceSearch();
+		$frm_search = new Loan_Form_FrmSearchLoan();
+		$frm = $frm_search->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
   }
@@ -184,6 +185,15 @@ class Loan_IndexController extends Zend_Controller_Action {
     				print_r(Zend_Json::encode($loan_number));
     				exit();
     			}
+    }
+    function getReceiptNumberAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$db = new Application_Model_DbTable_DbGlobal();
+    		$loan_number = $db->getReceiptByBranch($data);
+    		print_r(Zend_Json::encode($loan_number));
+    		exit();
+    	}
     }
 	function addschedultestAction(){
 		if($this->getRequest()->isPost()){

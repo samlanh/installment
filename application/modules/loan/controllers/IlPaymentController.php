@@ -399,7 +399,7 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		}
 	}
 	
-	function getLastdatepaymentAction(){
+	function getLastpaiddateAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
@@ -409,7 +409,15 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		}
 	}
 	
-	
+	function getReceiptNumberAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$row = $db->getIlPaymentNumber($data["branch_id"]);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
 	
 	
 }

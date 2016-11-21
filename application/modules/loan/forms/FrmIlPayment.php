@@ -209,7 +209,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'onchange'=>'getAllSaleNumber();'
+				'onchange'=>'getAllSaleNumber();getReceiptNumber("");'
 		));
 		$branch_id->setMultiOptions($options);
 		
