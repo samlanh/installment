@@ -276,6 +276,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   function rptAgreementAction(){
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->termcodiction = $db->getTermCodiction();
+  	$this->view->agreement = $db->getAgreementBySaleID();
   }
   function rptSaleHistoryAction(){
   	if($this->getRequest()->isPost()){

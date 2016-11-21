@@ -326,6 +326,12 @@ function getAllBranch($search=null){
     		}
     		return $db->fetchAll($sql.$where.$order);
     	}
+    	function getAgreementBySaleID($id=null){
+    		$id=1;
+    		$db = $this->getAdapter();
+    		$sql="SELECT * FROM `v_agreement` WHERE id = ".$id;
+    		return $db->fetchRow($sql);
+    	}
     	
 }
 
