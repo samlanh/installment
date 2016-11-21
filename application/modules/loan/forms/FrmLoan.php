@@ -28,12 +28,17 @@ public function init()
 		$loan_number = $db->getLoanNumber();
 		$_loan_code->setValue($loan_number);
 		
-// 		$_client_code = new Zend_Dojo_Form_Element_TextBox('client_code');
-// 		$_client_code->setAttribs(array(
-// 				'dojoType'=>'dijit.form.TextBox',
-// 				'class'=>'fullside',
-				
-// 		));
+		$receipt = new Zend_Dojo_Form_Element_TextBox('receipt');
+		$receipt->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'readonly'=>true,
+				'class'=>'fullside',
+				'style'=>'color:red; font-weight: bold;'
+		));
+		
+		$receipt_no = $db->getReceiptByBranch();
+		$receipt->setValue($receipt_no);
+		
 		$_house_price = new Zend_Dojo_Form_Element_NumberTextBox('house_price');
 		$_house_price->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
@@ -355,7 +360,8 @@ public function init()
 		$_old_payterm = new Zend_Form_Element_Hidden("old_payterm");
 		$_id = new Zend_Form_Element_Hidden('id');
 		if($data!=null){
-			print_r($data);
+			$_loan_code->setValue($data['sale_number']);
+			$receipt->setValue($data['receipt_no']);
 			$_branch_id->setValue($data['branch_id']);
 			$discount->setValue($data['discount_amount']);
 			
@@ -379,7 +385,7 @@ public function init()
 			
 			
 		}
-		$this->addElements(array($fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$_service_charge,$schedule_opt
+		$this->addElements(array($receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$_service_charge,$schedule_opt
 				,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

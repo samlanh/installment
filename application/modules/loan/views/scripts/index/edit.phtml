@@ -1,5 +1,5 @@
 <?php	
-	$this->headTitle('Add Sell'); 
+	$this->headTitle('Edit Sell'); 
 	echo $this->headTitle();
 	$frm = $this->frm_loan;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -57,8 +57,8 @@
 						<tr>
 							<td><?php echo $tr->translate("DATE_BUY")?></td>
 							<td><?php echo $frm->getElement('date_buy');?></td>
-							<td><?php //echo $tr->translate("CUSTOMER_CODE")?></td>
-							<td><!-- <input id="customer_code" /> --></td>
+							<td><?php echo $tr->translate("RECEIPT_NO")?></td>
+							<td><?php echo $frm->getElement('receipt');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 							<td><input id="member" /> <?php //echo $frm->getElement('member');?></td>
 						</tr>
@@ -125,6 +125,12 @@
 							<td><?php echo $tr->translate("NOTE")?></td>
 							<td><?php echo $frm->getElement('note')?></td>
 						</tr>
+						<tr>
+							<td colspan="4"><?php echo $tr->translate("CO_NAME")?></td>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td><?php echo $frm->getElement('status_using')?></td>
+						</tr>
+						
 					</table>
 				</fieldset>
 		</td>
@@ -183,24 +189,24 @@
 						line-height: 25px;}
 				.h{}
 .print tr td{
-	padding:5px 2px; 
+	padding:2px 2px; 
 }
 			   .khmerbold{font:bold 12px 'Khmer OS Battambang';}
 			   .khmer{font:12px 'Khmer OS Battambang';}
 			   .one{white-space:nowrap;}
 			   .h{ margin-top: -10px;/*margin-left:4px;*/}
 			</style>	
-			<table style="white-space: nowrap;font-size:12px; color:rgba(14, 0, 107, 1); padding:10px 10px 0px 5px; margin: 0px;" class="print" bgcolor="fef7e4" cellspacing="0"  cellpadding="10" >
+			<table style="white-space: nowrap;font-size:12px; color:rgba(14, 0, 107, 1); padding:-5px 10px 0px 5px; margin: 0px;" class="print" bgcolor="fef7e4" cellspacing="0"  cellpadding="5" >
 				<tr>
 				    <td colspan="7"  style="font:bold 18px 'Kh Muol';" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
-				        <div style="line-height:5px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
+				        <div style="line-height:10px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 				    </td>
 				</tr>
-				<tr> <td colspan="7" height="10px"></td></tr>
+				<tr> <td colspan="7" height="5px"></td></tr>
 				<tr style="white-space: nowrap;">
 				    <td colspan="5"></td>
 				    <td class="one khmerbold" style="width:10%;">&nbsp;លេខបង្កាន់ដៃ</td>
-				    <td style="width:35%;"><strong><label id="lb_buydate" class="value"></label></strong></td>
+				    <td style="width:35%;"><strong><label id="lb_receipt" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td style="width:10%;" class="one khmerbold" >លេខកូដលក់</td>
@@ -253,11 +259,14 @@
 				</tr>
 				
 				<tr style="white-space: nowrap;">
-				    <td class="khmerbold" style="line-height: 14px;"colspan="5"  align="center" >&nbsp;&nbsp;ស្នាមមេដៃអ្នកប្រគល់</td>
-				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" >ស្នាមមេដៃអ្នកទទួល</td>
+				    <td class="khmerbold" style="line-height: 14px;"colspan="5"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">ស្នាមមេដៃអ្នកប្រគល់</strong></td>
+				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">ស្នាមមេដៃអ្នកទទួល</strong></td>
 				</tr>
-				<tr style="white-space: nowrap;" height="90px;">
+				<tr style="white-space: nowrap;" height="75px;">
 					<td class="one khmerbold" colspan="5" align="center" valign="bottom">
+						<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+							<lable id="lbl_customer"></lable>
+						</h4>
 					</td>
 				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
 				  			<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
@@ -303,13 +312,15 @@ function checkScheduleOption(){
 		bellow = Math.pow((1+interest_rate),(term))-1;
 		
 		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
+
+		amount_payment = amount_payment.toFixed(2);
 		
 		dijit.byId('fixed_payment').attr('value',amount_payment);
 	}else {
 		dijit.byId('fixed_payment').attr('value',0);
 		dijit.byId('fixed_payment').set("readOnly",true);
 		if(method_id==1){//booking
-			//dojo.byId('lbl_release').innerHTML="<?php //echo $tr->translate("EXPIRED_DATE")?>";
+			
 			dijit.byId('release_date').set("readOnly",true);
 			dijit.byId('first_payment').set("readOnly",true);
 			dijit.byId('date_line').set("readOnly",false);
@@ -326,6 +337,7 @@ function checkScheduleOption(){
 		}else if(method_id==3){//times
 			dojo.byId('lbl_release').innerHTML="<?php echo $tr->translate("START_DATE")?>";
 			total_collect = amount_principal/debt_amount;
+			total_collect = total_collect.toFixed(2);
 			dijit.byId('fixed_payment').attr("value",total_collect);
 		}else if(method_id==5){//times
 			dijit.byId('release_date').set("readOnly",true);
@@ -368,7 +380,12 @@ function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');
 	//dijit.byId('customer_code').reset();
 	getAllPropertyBranch(branch_id);
-	getLoanByBranch();
+	
+	oldbranch_id = '<?php echo $this->datarow['branch_id'];?>';
+	if(branch_id==oldbranch_id){
+	}else{
+		getLoanByBranch();
+	}
 	getAllClientByBranch(branch_id);
 	getAllClientNumberByBranch(branch_id);
 }
@@ -625,7 +642,7 @@ function getlandinfo(){
 			
 		},
 		error: function(err) {
-			alert(err);
+			//alert(err);
 		}
 	});
 }
@@ -765,66 +782,27 @@ function calCulateFirstPayment(){
 }
 function printSave(new_stu_id,new_receipt_no){		
 	dijit.byId("lbl_schedule").hide();
+	dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get('value');
 	dojo.byId("lb_student_id").innerHTML = dijit.byId("sale_code").get("value");
 	dojo.byId("lb_paymentid").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
 	dojo.byId("lb_buydate").innerHTML = dijit.byId("date_buy").attr('displayedValue');
 	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue');
-	dojo.byId("lb_price").innerHTML = dojo.number.format(dijit.byId("total_sold").get('value'),2);
+	dojo.byId("lb_price").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),2);
 	dojo.byId("lb_discount").innerHTML = dijit.byId("discount").get('value');
-	dojo.byId("lb_otherfee").innerHTML = "$ "+dojo.number.format(dijit.byId("other_fee").get('value'),2);
+	other_fee = dijit.byId("other_fee").get('value');
+	if(isNaN(other_fee)){other_fee=0;}
+	dojo.byId("lb_otherfee").innerHTML = "$ "+dojo.number.format(other_fee,2);
 	dojo.byId("lb_amount").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),2);
 	dojo.byId("lb_paid").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),2);
 	dojo.byId("lb_balance").innerHTML = "$ "+dojo.number.format(dijit.byId("balance").get('value'),2);
 	dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
 	schedule_opt = dijit.byId("schedule_opt").get("value");
+	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	if(schedule_opt==1){
 		//EXPIRED_DATE
 	}
-	/*if(dijit.byId('office_receipt').validate() ) {
-		if(dijit.byId('study_year').get('value')==-1){
-           dijit.byId("study_year").focus();
-           return false;
-		}
-		dojo.byId("lb_term").innerHTML = dijit.byId("payment_term").attr('displayedValue');
-		
-			 var d=dijit.byId('start_date').get('value');
-			 var day = d.getDate();
-			 var x = d.toDateString().substr(4,3);
-			 var year = d.getFullYear();
-			 dojo.byId("lb_term_start").innerHTML = day+'-'+x+'-'+year;
-			 var d=dijit.byId('end_date').get('value');
-			 var day = d.getDate();
-			 var x = d.toDateString().substr(4,3);
-			 var year = d.getFullYear();
-			 dojo.byId("lb_term_end").innerHTML = day+'-'+x+'-'+year;
-		
-	 dojo.byId("lb_student").innerHTML =dijit.byId("kh_name").get('value')+" - "+ dijit.byId("en_name").get('value');
-	 degree = dijit.byId('dept').get('value');
-	 if(new_stu_id==''){
-		 getStudentNo(degree,1);
-	 }else{
-		 dojo.byId("lb_student_id").innerHTML = new_stu_id;			
-		 dojo.byId("lb_enroll_id").innerHTML = new_receipt_no;
-	 }
-	 dojo.byId("lb_level").innerHTML = dijit.byId("grade").attr('displayedValue');
-	 dojo.byId("lb_session").innerHTML = dijit.byId("session").attr('displayedValue');
-	 dojo.byId("lb_study_time").innerHTML =dijit.byId("study_time").get('value');
-	 dojo.byId("lb_note").innerHTML = dijit.byId("not").get('value');
-	 dojo.byId("lb_course_cost").innerHTML ="$ "+dijit.byId("tuitionfee").get('value').toFixed(2);
-	 
-	 var discount = dijit.byId("discount").get('value');
-	 if(discount == 0){
-		discount = '';
-	 }else{
-		 discount = discount+" %";
-	 }
-	 dojo.byId("lb_discount").innerHTML = discount;
-	 dojo.byId("lb_total").innerHTML ="$ "+dijit.byId("total").get('value');
-	 dojo.byId("lb_adminfee").innerHTML ="$ "+dijit.byId("addmin_fee").get('value');
-	 dojo.byId("lb_remark").innerHTML ="$ "+dijit.byId("remark").get('value');
-	 dojo.byId("lb_book").innerHTML ="$ "+dijit.byId("books").get('value').toFixed(2);
-	 dojo.byId("lb_balance").innerHTML ="$ "+dijit.byId("remaining").get('value');*/
+	
 	 dijit.byId("terms").show();	
 	}
 var url_previewloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'addschedultest')); ?>';

@@ -290,6 +290,19 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	$sql = " SELECT prefix FROM `ln_project` WHERE br_id = $branch_id  LIMIT 1";
    	return $db->fetchOne($sql);
    }
+   public function getReceiptByBranch($data=array('branch_id'=>1,'is_group'=>0)){
+   	$this->_name='ln_sale';
+   	$db = $this->getAdapter();
+   	$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." LIMIT 1 ";
+   	$pre = $this->getPrefixCode($data['branch_id'])."R";
+   	$acc_no = $db->fetchOne($sql);
+   	$new_acc_no= (int)$acc_no+1;
+   	$acc_no= strlen((int)$acc_no+1);
+   	for($i = $acc_no;$i<4;$i++){
+   		$pre.='0';
+   	}
+   	return $pre.$new_acc_no;
+   }
    public function getStaffNumberByBranch($branch_id){
    	$this->_name='ln_staff';
    	$db = $this->getAdapter();
@@ -1021,7 +1034,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   function getAllClient($branch_id=null){
   	$db = $this->getAdapter();
   	$sql=" SELECT c.`client_id` AS id  ,c.`branch_id`,
-  	CONCAT(c.`name_en`,'-',c.`name_kh`) AS name , client_number
+  	c.`name_kh` AS name , client_number
   	FROM `ln_client` AS c WHERE c.`name_en`!='' AND c.status=1  " ;
   	if($branch_id!=null){
   		$sql.=" AND c.`branch_id`= $branch_id ";

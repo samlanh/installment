@@ -65,12 +65,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
-		//$this->view->frmpupopinfoclient = $frmpopup->frmPopupindividualclient();
-		//$this->view->frmPopupCO = $frmpopup->frmPopupCO();
-		
-// 		$db = new Setting_Model_DbTable_DbLabel();
-// 		$this->view->setting=$db->getAllSystemSetting();
-		
+
 		$db = new Application_Model_DbTable_DbGlobal();
 		$co_name = $db->getAllCoNameOnly();
 		array_unshift($co_name,array(
@@ -78,13 +73,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 		        'name' => '---Add New ---',
 		) );
 	    $this->view->co_name=$co_name;
-// 	    $db = new Application_Model_DbTable_DbGlobal();
-// 	    $dataclient = $db->getAllClientNumber();
-// 	    $this->view->client_code=$dataclient;
-	    
-// 	    $dataclient=$db->getAllClient();
-// 	    array_unshift($dataclient, array('id' => "-1",'name'=>'---Add New Client---') );
-// 	    $this->view->client_name=$dataclient;
 	}	
 	public function editAction(){
 		if($this->getRequest()->isPost()){
@@ -92,7 +80,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 			try{
 				$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
 				$_dbmodel->updateLoanById($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/index/index");
+				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/loan/index/index");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($err =$e->getMessage());
