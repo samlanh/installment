@@ -177,7 +177,7 @@
 			  <input type="button" value="រក្សាទុក & បិទ" label="<?php echo $tr->translate('SAVECLOSE');?>" id="submit_close" dojoType="dijit.form.Button"
 			   iconClass="dijitEditorIcon dijitEditorIconSave"  OnClick="submitDataClose();" />
 			   <input type="button" value="រក្សាទុក & បោះពុម្ព" label="<?php echo $tr->translate('SAVEPRINT');?>" id="saveprint" dojoType="dijit.form.Button" 
-			   iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="showReciept('');"/>
+			   iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="showReciept('');displayNone();"/>
 			    <input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('SAVENEW');?>" id="submitButton" dojoType="dijit.form.Button"
 			   iconClass="dijitEditorIcon dijitEditorIconSave" />
 			</td>
@@ -206,164 +206,388 @@
 
 <?php  echo $frm->getElement('reciever');?>
 </form>
-<div class="dijitHidden">
-	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'បោះពុម្ភ វិក័យបត្រ', onCancel:hideDialog" id="frm_client" style="width:21.3cm">
-	<div id="rpt_print" class="print" style="padding: 0; width:25cm;background:red;">
-	<style type="text/css">
-		td.border {
-			border-bottom: 1px dotted #1D1D1D;
-			border-top: none;
-			border-left: none;
-			border-right: none;
-			padding:0;
-			margin:0;
-		}
-        table table tr td ul li{text-align: center;list-style: none;line-height: 20px; font-weight: bold;}
-		
-		.border{border:1px solid #000;}
-		.padding{padding:0px 10px;}
-	</style>
-		<table cellpadding="0" cellspacing="0" style="width:21cm; white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 10px;margin:-8px -20px -8px -8px;">
-				 <tr valign="top">
+
+
+
+
+
+<div class="dijitHidden" style="width: 25cm !important; height: 12cm ; padding: 0px; margin: 0px;">
+	<div data-dojo-type="dijit.Dialog" style="text-align:center;" data-dojo-props="title:'បោះពុម្ភ វិក័យបត្រ', onCancel:hideDialog" id="frm_client">
+		 
+		<div id="rpt_print" >
+			<table cellpadding="0" cellspacing="0" style=" width:21cm; white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 10px;">
+			
+				<tr valign="top" >
 					<td align="center" colspan="6" valign="top" >	
-						   <table  cellpadding="0" cellspacing="0" style="font-family: 'Khmer OS Battambang';padding:0; width:100%;white-space:nowrap;">
-						   		<tr style="line-height:10px;">
-						   			<td width="28%"></td>
-						   			<td valign="top" style="color: #000;">
-							   			<ul style="padding-top: 5px;">
-				                			<li style="text-align:center; font-size:14px !important; font-family:'Khmer MEF2'"><?php echo $tr->translate("PAYMENT_RECEIPT");?></li>
-				                			<li style="text-align:center; font-size:12px !important;font-family:sans-serif; font-weight: bold;">PAYMENT RECEIPT</li>
-				                		</ul>
-					                </td>
-					                <td width="28%">
-					                </td>
-					               <td>
-					               </td>
-								</tr>
-								
-					</table>
-				</td>
-		    </tr> 
-		    <tr>
-		    		<td align="center" colspan="6" valign="top" >	
-					   <table width="100%" cellpadding="0" class="" cellspacing="5px" style="font-family: 'Khmer OS Battambang' ;font-size:13px !important;white-space:nowrap; width:21cm; margin: 0 auto;">
-							<tr class="fontsize" style="border:1px solid #000;">
-									<td class="fontsize" valign="top"></td>
-									<td ></td>
-									<td></td>
-									<td ></td>
-									<td></td>
-									<td align="right"><strong>No. : <label id="lbl_reciept_no" class="value"></label></strong></td>
-							</tr>
-							<tr class="fontsize" style="border:1px solid #000;">
-									<td style="width:10%;"  >លេខកូដ</td>
-									<td style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_loan_number" class="value"></label></strong></td>
-									<td  style="width:10%;" class="padding">ប្រាកដើមត្រូវបង់</td>
-									<td colspan="3" style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_principle_amount" class="value"></label></strong></td>
-							</tr>
-							<tr class="fontsize" style="border:1px solid #000;">
-									<td >ឈ្មោះ</td>
-									<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_client_id" class="value"></label></strong></td>
-									<td  class="padding">ប្រាក់ការ</td>
-									<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_total_interest" class="value"></label></strong></td>
-									<td  >ប្រាក់ពិន័យ</td>
-									<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_penalize" class="value"></label></strong></td>
-							</tr>
-							<tr class="fontsize">
-									<td >ផ្ទះលេខ</td>
-									<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_address" class="value"></label></strong></td>
-									<td class="padding">ប្រាក់ត្រូវបង់សរុប</td>
-									<td colspan="3" style="border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_total_payment" class="value"></label></strong></td>
-							</tr>
-							<tr class="fontsize">
-									<td  >តំលៃផ្ទះ</td>
-									<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_price" class="value"></label></strong></td>
-									<td class="padding">ប្រាក់បានបង់សរុប</td>
-									<td colspan="3" style="border:1px solid #000;" colspan="3">&nbsp;&nbsp;<strong><label id="lbl_total_receive" class="value"></label></strong></td>
-							</tr>
-							<tr class="fontsize">
-									<td >ប្រាក់ដើមជំពាក់ពីមុន</td>
-									<td style="border:1px solid #000;" ><strong>&nbsp;&nbsp;<label id="lbl_begining_balance" class="value"></label></strong></td>
-									<td class="padding">ប្រាក់អាប់</td>
-									<td style="border:1px solid #000;" colspan="3" style=""><strong>&nbsp;&nbsp;<label id="lbl_return" class="value"></label></strong></td>
-							</tr>
-							<tr class="fontsize">
-									<td  >ប្រាក់នៅសល់</td>
-									<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_ending_balance" class="value"></label></strong></td>
+						<table  cellpadding="0" cellspacing="0" style="font-family: 'Khmer OS Battambang';padding:0; width:100%;white-space:nowrap;">
+									<tr style="line-height:20px;">
+										<td valign="top" width="25%" align="left" style="color: #000;">
+											<img style="width:100%;height:61px;margin-bottom: -25px;margin-top: -10px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+										</td>
+										<td width="50%" valign="top" align="center" style="color: #000;">
+											<span style="text-align:center; font-size:14px !important; font-family:'Khmer MEF2';text-decoration:none;"><?php echo $tr->translate("PAYMENT_RECEIPT");?></span><br />
+											<span style="text-align:center; font-size:12px !important;font-family:sans-serif; font-weight: bold;text-decoration:none;">PAYMENT RECEIPT</span>
+										</td>
+										
+										<td width="25%"  style="color: #000;">
+											&nbsp;
+										</td>
+									</tr>
 									
-									<td class="padding">ថ្ងៃត្រូវបង់</td>
-									<td style="border:1px solid #000;" ><strong>&nbsp;<label id="lbl_date_payment" class="value"></label></strong></td>
-									<td>ថ្ងៃទទួល</td>
-									<td style="border:1px solid #000;" ><strong>&nbsp;<label id="lbl_paid_date" class="value"></label></strong></td>
-							</tr>
-							<tr class="fontsize">			
-									<td  >សំគាល់</td>
-									<td  style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_note" class="value"></label></strong></td>
-									<td class="padding">សែក</td>
-									<td style="border:1px solid #000;" colspan="3" style="width:35%;"><strong>&nbsp;&nbsp;<label id="lbl_cheque" class="value"></label></strong></td>
-							</tr>
-							<tr>
-								<td colspan="6">
-									<table width="100%" border="0">
-										<tr>
-											<td width="30%">
-												&nbsp;
-											</td>
-											
-											<td align="center" width="40%">
-												ស្នាមមេដៃអ្នកប្រគល់
-											</td>
-												
-											<td align="center" width="30%">
-												ស្នាមមេដៃអ្នកទទួល
-											</td>
-										</tr>
-										<tr>
-											<td colspan="3">
-												&nbsp;
-											</td>
-										</tr>
-										<tr>
-											<td colspan="3">
-												&nbsp;
-											</td>
-										</tr>
-										<tr>
-											<td width="30%">
-												&nbsp;
-											</td>
-											
-											<td align="center" width="40%">
-												<strong><label id="lbl_client_name" class="value"></label></strong>
-											</td>
-												
-											<td align="center" width="30%">
-												<strong>
-													<?php 
-													   $session_user=new Zend_Session_Namespace('auth');
-													   $last_name=$session_user->last_name;
-													   $username = $session_user->first_name;
-													   echo $last_name." ".$username;
-													?>
-												</strong>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
 						</table>
 					</td>
-			</tr>
-		</table>
-	</div>
-				<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="print" dojoType="dijit.form.Button" 
-					iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="print();"/>
-				<input type="button" value="បិទ" label="បិទ" id="close" dojoType="dijit.form.Button" 
-					iconClass="dijitEditorIcon dijitEditorIconCancel" onclick="hideDialog();"/>
+				</tr> 
+				<tr>
+						<td align="center" colspan="6" valign="top" >	
+							<table width="100%" cellpadding="0" cellspacing="5px" style="font-family: 'Khmer OS Battambang' ;font-size:12px !important;white-space:nowrap; width:21cm; margin-top: -15px;">
+								<tr class="fontsize" style="border:1px solid #000;">
+										<td class="fontsize" valign="top"></td>
+										<td ></td>
+										<td></td>
+										<td ></td>
+										<td></td>
+										<td align="right"><strong>No. : <label id="lbl_reciept_no" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize" style="border:1px solid #000;">
+										<td style="width:10%;"  >លេខកូដ</td>
+										<td style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_loan_number" class="value"></label></strong></td>
+										<td  style="width:10%;" class="padding">ប្រាកដើមត្រូវបង់</td>
+										<td colspan="3" style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_principle_amount" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize" style="border:1px solid #000;">
+										<td >ឈ្មោះ</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_client_id" class="value"></label></strong></td>
+										<td  class="padding">ប្រាក់ការ</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_total_interest" class="value"></label></strong></td>
+										<td  >ប្រាក់ពិន័យ</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_penalize" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize">
+										<td >ផ្ទះលេខ</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_address" class="value"></label></strong></td>
+										<td class="padding">ប្រាក់ត្រូវបង់សរុប</td>
+										<td colspan="3" style="border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_total_payment" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize">
+										<td  >តំលៃផ្ទះ</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_price" class="value"></label></strong></td>
+										<td class="padding">ប្រាក់បានបង់សរុប</td>
+										<td colspan="3" style="border:1px solid #000;" colspan="3">&nbsp;&nbsp;<strong><label id="lbl_total_receive" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize">
+										<td >ប្រាក់ដើមពីមុន</td>
+										<td style="border:1px solid #000;" ><strong>&nbsp;&nbsp;<label id="lbl_begining_balance" class="value"></label></strong></td>
+										<td class="padding">ប្រាក់អាប់</td>
+										<td style="border:1px solid #000;" colspan="3" style=""><strong>&nbsp;&nbsp;<label id="lbl_return" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize">
+										<td  >ប្រាក់នៅសល់</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_ending_balance" class="value"></label></strong></td>
+										
+										<td class="padding">ថ្ងៃត្រូវបង់</td>
+										<td style="border:1px solid #000;" ><strong>&nbsp;<label id="lbl_date_payment" class="value"></label></strong></td>
+										<td>ថ្ងៃទទួល</td>
+										<td style="border:1px solid #000;" ><strong>&nbsp;<label id="lbl_paid_date" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize">			
+										<td  >សំគាល់</td>
+										<td  style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_note" class="value"></label></strong></td>
+										<td class="padding">សែក</td>
+										<td style="border:1px solid #000;" colspan="3" style="width:35%;"><strong>&nbsp;&nbsp;<label id="lbl_cheque" class="value"></label></strong></td>
+								</tr>
+								<tr>
+									<td colspan="6">
+										<table width="100%" border="0" style="font-size:12px;line-height: 18px;">
+											<tr>
+												<td width="30%">
+													&nbsp;
+												</td>
+												
+												<td align="center" width="40%">
+													ស្នាមមេដៃអ្នកប្រគល់
+												</td>
+													
+												<td align="center" width="30%">
+													ស្នាមមេដៃអ្នកទទួល
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">
+													&nbsp;
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">
+													&nbsp;
+												</td>
+											</tr>
+											<tr>
+												<td width="30%">
+													&nbsp;
+												</td>
+												
+												<td align="center" width="40%">
+													<strong><label id="lbl_client_name" class="value"></label></strong>
+												</td>
+													
+												<td align="center" width="30%">
+													<strong>
+														<?php 
+														   $session_user=new Zend_Session_Namespace('auth');
+														   $last_name=$session_user->last_name;
+														   $username = $session_user->first_name;
+														   echo $last_name." ".$username;
+														?>
+													</strong>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr style="line-height: 15px;font-size: 10px;">
+									<td valign="top" >
+										<span style="text-decoration:underline;font-size: 11px;">សំគាល់ ៖</span>
+									</td>
+									<td colspan="5">
+										<span >*</span>&nbsp;&nbsp;<span> ក្នុងករណីបង់ប្រាក់ពុំទៀងទាត់នឺងត្រូវផាកពិន័យដូចចែងក្នុងកិច្ចសន្យា</span><br />
+										<span>*</span>&nbsp;&nbsp;<span> រាល់ការបង់ប្រាក់ជាមូលប្បទានប័ត្រ នឺងអាចមានសុពលភាពលុះត្រាតែទឺកប្រាក់នៅក្នុងមូលប្បទានប័ត្រ</span><br />
+										<span> &nbsp;&nbsp;&nbsp;&nbsp;ត្រូវបានដាក់បញ្ចូលក្នុងគណនេយ្យរបស់ក្រុមហ៊ុនរួចរាល់។ </span><br />
+									</td>
+								</tr>
+								<tr style="line-height: 15px;font-size: 10px;">
+									<td colspan="6" style="border: 1px solid rgba(255, 235, 59, 0.88)">
+										
+									</td>
+								</tr>
+								
+								<tr style="line-height: 15px;font-size: 10px;">
+									<td colspan="6" >
+										<table width="100%" style="font-size:11px;line-height: 12px;margin-top: -5px;"> 
+											<tr>
+												<td width="22%">
+													<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
+												</td>
+												<td width="40%">
+													វេបសាយ :  <span style="font-size:13px;">www.boreyphnompenhthmey.com</span>
+												</td>
+												<td width="40%" align="right">
+													អ៊ីម៉ែល : <span style="font-size:13px;">info@boreyphnompenhthmey.com</span>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="2">
+													ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
+												</td>
+												<td width="40%" align="right">
+													<span style="font-weight:bold;">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="6">&nbsp;</td>
+								</tr>
+								<tr>
+									<td colspan="6" style="border:1px dashed #000;" >
+										
+									</td>
+								</tr>
+							</table>
+						</td>
+				</tr>
+			
+			</table>
+		</div>
+		
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+						<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="print" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="print();"/>
+						<input type="button" value="បិទ" label="បិទ" id="close" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconCancel" onclick="hideDialog();"/>
+				
+					<td>
+				<tr>
+			</table>
+		
+		<div id="rpt_print1" >
+			<table cellpadding="0" cellspacing="0" style=" width:21cm; white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 10px;margin-top: 60px;">
+			
+				<tr valign="top" >
+					<td align="center" colspan="6" valign="top" >	
+						<table  cellpadding="0" cellspacing="0" style="font-family: 'Khmer OS Battambang';padding:0; width:100%;white-space:nowrap;">
+									<tr style="line-height:20px;">
+										<td valign="top" width="25%" align="left" style="color: #000;">
+											<img style="width:100%;height:61px;margin-bottom: -25px;margin-top: -10px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+										</td>
+										<td width="50%" valign="top" align="center" style="color: #000;">
+											<span style="text-align:center; font-size:14px !important; font-family:'Khmer MEF2';text-decoration:none;"><?php echo $tr->translate("PAYMENT_RECEIPT");?></span><br />
+											<span style="text-align:center; font-size:12px !important;font-family:sans-serif; font-weight: bold;text-decoration:none;">PAYMENT RECEIPT</span>
+										</td>
+										
+										<td width="25%"  style="color: #000;">
+											&nbsp;
+										</td>
+									</tr>
+									
+						</table>
+					</td>
+				</tr> 
+				<tr>
+						<td align="center" colspan="6" valign="top" >	
+							<table width="100%" cellpadding="0" cellspacing="5px" style="font-family: 'Khmer OS Battambang' ;font-size:13px !important;white-space:nowrap; width:21cm;margin-top: -15px;">
+								<tr class="fontsize" style="border:1px solid #000;">
+										<td class="fontsize" valign="top"></td>
+										<td ></td>
+										<td></td>
+										<td ></td>
+										<td></td>
+										<td align="right"><strong>No. : <label id="lbl_reciept_no1" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize" style="border:1px solid #000;">
+										<td style="width:10%;"  >លេខកូដ</td>
+										<td style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_loan_number1" class="value"></label></strong></td>
+										<td  style="width:10%;" class="padding">ប្រាកដើមត្រូវបង់</td>
+										<td colspan="3" style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_principle_amount1" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize" style="border:1px solid #000;">
+										<td >ឈ្មោះ</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_client_id1" class="value"></label></strong></td>
+										<td  class="padding">ប្រាក់ការ</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_total_interest1" class="value"></label></strong></td>
+										<td  >ប្រាក់ពិន័យ</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_penalize1" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize">
+										<td >ផ្ទះលេខ</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_address1" class="value"></label></strong></td>
+										<td class="padding">ប្រាក់ត្រូវបង់សរុប</td>
+										<td colspan="3" style="border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_total_payment1" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize">
+										<td  >តំលៃផ្ទះ</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_price1" class="value"></label></strong></td>
+										<td class="padding">ប្រាក់បានបង់សរុប</td>
+										<td colspan="3" style="border:1px solid #000;" colspan="3">&nbsp;&nbsp;<strong><label id="lbl_total_receive1" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize">
+										<td >ប្រាក់ដើមពីមុន</td>
+										<td style="border:1px solid #000;" ><strong>&nbsp;&nbsp;<label id="lbl_begining_balance1" class="value"></label></strong></td>
+										<td class="padding">ប្រាក់អាប់</td>
+										<td style="border:1px solid #000;" colspan="3" style=""><strong>&nbsp;&nbsp;<label id="lbl_return1" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize">
+										<td  >ប្រាក់នៅសល់</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_ending_balance1" class="value"></label></strong></td>
+										
+										<td class="padding">ថ្ងៃត្រូវបង់</td>
+										<td style="border:1px solid #000;" ><strong>&nbsp;<label id="lbl_date_payment1" class="value"></label></strong></td>
+										<td>ថ្ងៃទទួល</td>
+										<td style="border:1px solid #000;" ><strong>&nbsp;<label id="lbl_paid_date1" class="value"></label></strong></td>
+								</tr>
+								<tr class="fontsize">			
+										<td  >សំគាល់</td>
+										<td  style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_note1" class="value"></label></strong></td>
+										<td class="padding">សែក</td>
+										<td style="border:1px solid #000;" colspan="3" style="width:35%;"><strong>&nbsp;&nbsp;<label id="lbl_cheque1" class="value"></label></strong></td>
+								</tr>
+								<tr>
+									<td colspan="6">
+										<table width="100%" border="0" style="font-size: 12px;line-height: 18px;">
+											<tr>
+												<td width="30%">
+													&nbsp;
+												</td>
+												<td align="center" width="40%">
+													ស្នាមមេដៃអ្នកប្រគល់
+												</td>
+												<td align="center" width="30%">
+													ស្នាមមេដៃអ្នកទទួល
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">
+													&nbsp;
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">
+													&nbsp;
+												</td>
+											</tr>
+											<tr>
+												<td width="30%">
+													&nbsp;
+												</td>
+												<td align="center" width="40%">
+													<strong><label id="lbl_client_name1" class="value"></label></strong>
+												</td>
+												<td align="center" width="30%">
+													<strong>
+														<?php 
+														   $session_user=new Zend_Session_Namespace('auth');
+														   $last_name=$session_user->last_name;
+														   $username = $session_user->first_name;
+														   echo $last_name." ".$username;
+														?>
+													</strong>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								
+								<tr style="line-height: 15px;font-size: 10px;">
+									<td valign="top" >
+										<span style="text-decoration:underline;font-size: 11px;">សំគាល់ ៖</span>
+									</td>
+									<td colspan="5">
+										<span >*</span>&nbsp;&nbsp;<span> ក្នុងករណីបង់ប្រាក់ពុំទៀងទាត់នឺងត្រូវផាកពិន័យដូចចែងក្នុងកិច្ចសន្យា</span><br />
+										<span>*</span>&nbsp;&nbsp;<span> រាល់ការបង់ប្រាក់ជាមូលប្បទានប័ត្រ នឺងអាចមានសុពលភាពលុះត្រាតែទឺកប្រាក់នៅក្នុងមូលប្បទានប័ត្រ</span><br />
+										<span> &nbsp;&nbsp;&nbsp;&nbsp;ត្រូវបានដាក់បញ្ចូលក្នុងគណនេយ្យរបស់ក្រុមហ៊ុនរួចរាល់។ </span><br />
+									</td>
+								</tr>
+								<tr style="line-height: 15px;font-size: 10px;">
+									<td colspan="6" style="border: 1px solid rgba(255, 235, 59, 0.88)">
+										
+									</td>
+								</tr>
+								<tr style="line-height: 15px;font-size: 10px;">
+									<td colspan="6" >
+										<table width="100%" style="font-size:11px;line-height: 12px;margin-top: -5px;"> 
+											<tr>
+												<td width="22%">
+													<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
+												</td>
+												<td width="40%">
+													វេបសាយ :  <span style="font-size:13px;">www.boreyphnompenhthmey.com</span>
+												</td>
+												<td width="40%" align="right">
+													អ៊ីម៉ែល : <span style="font-size:13px;">info@boreyphnompenhthmey.com</span>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="2">
+													ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
+												</td>
+												<td width="40%" align="right">
+													<strong>ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </strong>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+				</tr>
+			</table>
+		</div>	
 		
 	</div>
 </div>
-<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
 
 <?php $baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();?>
 <script type="text/javascript">
@@ -423,6 +647,14 @@ function submitData(){
 			}
 		});
 }
+
+function displayNone(){
+	alert(1);
+	document.getElementById('rpt_print1').style.display="none";
+	//document.getElementById('id_stu').style.display="none";
+	
+}
+
 function showReciept(receipt_number){
 	//alert(1);
 	
@@ -449,27 +681,9 @@ function showReciept(receipt_number){
 	if(client_id==""){
 		alert("No Result To Show! Please Choose Client and Try again");
 	}else{
-// 		var client_name = dijit.byId('client_id').attr('displayedValue');
-// 		var arrays = client_name.split(',');
-		// identity = dijit.byId('identity').get('value');
-		// var arrays = identity.split(',');
-		// for(var i=0;i<arrays.length;i++) {
-			// date_payment = dijit.byId('date_payment_'+i).attr('displayedValue')
-		// }
-		// alert(date_payment);
-// 		for(var i=0;i<1;i++){
-// 			document.getElementById('lbl_group_member').innerHTML = arrays[0];
-// 		}
-		//curr_type = dijit.byId('currency_type').get('value');
-		//if(curr_type==1){
-			//symbal =" ៛";
-		//}else if(curr_type==2){
-			symbal =" $";
-		//}else{
-		//	symbal =" B";
-		//}
+
+		symbal = " $";
 		
-		//begining_balance = parseFloat(dijit.byId('priciple_amount').get('value')) + parseFloat(dijit.byId('os_amount').get('value'))
 		option_pay = dijit.byId('option_pay').get('value');
 		if(option_pay==1){
 			date_payment = $('#date_payment_1').val();
@@ -517,7 +731,6 @@ function showReciept(receipt_number){
 			date_payment = day+'-'+month+'-'+year;
 			
 		}
-		//alert(begining_balance);
 		begining_balance = $('#total_priciple_1').val();
 		
 		document.getElementById('lbl_principle_amount').innerHTML = dijit.byId('os_amount').attr('displayedValue')+symbal;
@@ -532,19 +745,14 @@ function showReciept(receipt_number){
 		}
 		document.getElementById('lbl_reciept_no').innerHTML = receipt_number;
 
-
- 		//document.getElementById('lbl_client_code').innerHTML = dijit.byId('client_code').attr('displayedValue');
 		document.getElementById('lbl_loan_number').innerHTML = dijit.byId('loan_number').attr('displayedValue');
-		//document.getElementById('lbl_pay_type').innerHTML = dijit.byId('schedule_opt').attr('displayedValue');
 		document.getElementById('lbl_paid_date').innerHTML = dijit.byId('collect_date').attr('displayedValue');
-		//document.getElementById('lbl_date_payment').innerHTML = dijit.byId('date_payment_1').attr('displayedValue');
 		
 		document.getElementById('lbl_total_payment').innerHTML = dijit.byId('total_payment').get('value')+symbal;				
 		document.getElementById('lbl_total_receive').innerHTML = dijit.byId('amount_receive').get('value')+symbal;
 		document.getElementById('lbl_penalize').innerHTML = dijit.byId('penalize_amount').get('value')+symbal;
 		document.getElementById('lbl_property_price').innerHTML = dijit.byId('sold_price').attr('displayedValue')+symbal;
 		document.getElementById('lbl_property_address').innerHTML = dijit.byId('land_address').attr('displayedValue');
-		
 		
 		document.getElementById('lbl_begining_balance').innerHTML = begining_balance+symbal;
 		
@@ -554,16 +762,44 @@ function showReciept(receipt_number){
 		
 		document.getElementById('lbl_date_payment').innerHTML = date_payment;
 		
-		
 		document.getElementById('lbl_note').innerHTML = dijit.byId('note').get('value');
 	 	document.getElementById('lbl_cheque').innerHTML = dijit.byId('cheque').get('value');
-	 	// document.getElementById('lbl_total_payment').innerHTML = dijit.byId('total_payment').attr('displayedValue')+symbal;
-	 	// document.getElementById('lbl_note').innerHTML = dijit.byId('note').attr('displayedValue');
-	 	// document.getElementById('lbl_service_charge').innerHTML = dijit.byId('service_charge').attr('displayedValue')+symbal;
-	 	// document.getElementById('lbl_amount_receive').innerHTML = dijit.byId('amount_receive').attr('displayedValue')+symbal;
-	 	// document.getElementById('lbl_amount_return').innerHTML = dijit.byId('amount_return').attr('displayedValue')+symbal;
-		 dijit.byId('frm_client').show();
-		//submitData();
+		
+		//////////////////////////////////////////////////////////////////////////////////////
+		
+		
+		document.getElementById('lbl_principle_amount1').innerHTML = dijit.byId('os_amount').attr('displayedValue')+symbal;
+		document.getElementById('lbl_total_interest1').innerHTML = dijit.byId('total_interest').attr('displayedValue')+symbal;
+		
+		
+		document.getElementById('lbl_client_id1').innerHTML = dijit.byId('client_id').attr('displayedValue');
+		document.getElementById('lbl_client_name1').innerHTML = dijit.byId('client_id').attr('displayedValue');
+
+		
+		document.getElementById('lbl_reciept_no1').innerHTML = receipt_number;
+
+		document.getElementById('lbl_loan_number1').innerHTML = dijit.byId('loan_number').attr('displayedValue');
+		document.getElementById('lbl_paid_date1').innerHTML = dijit.byId('collect_date').attr('displayedValue');
+		
+		document.getElementById('lbl_total_payment1').innerHTML = dijit.byId('total_payment').get('value')+symbal;				
+		document.getElementById('lbl_total_receive1').innerHTML = dijit.byId('amount_receive').get('value')+symbal;
+		document.getElementById('lbl_penalize1').innerHTML = dijit.byId('penalize_amount').get('value')+symbal;
+		document.getElementById('lbl_property_price1').innerHTML = dijit.byId('sold_price').attr('displayedValue')+symbal;
+		document.getElementById('lbl_property_address1').innerHTML = dijit.byId('land_address').attr('displayedValue');
+		
+		document.getElementById('lbl_begining_balance1').innerHTML = begining_balance+symbal;
+		
+		document.getElementById('lbl_ending_balance1').innerHTML = ending_balance+symbal;
+		
+		document.getElementById('lbl_return1').innerHTML = dijit.byId('amount_return').get('value')+symbal;	
+		
+		document.getElementById('lbl_date_payment1').innerHTML = date_payment;
+		
+		document.getElementById('lbl_note1').innerHTML = dijit.byId('note').get('value');
+	 	document.getElementById('lbl_cheque1').innerHTML = dijit.byId('cheque').get('value');
+		
+		
+		dijit.byId('frm_client').show();
 	}
 }
 dojo.ready(function(){	
@@ -729,11 +965,11 @@ function filterClient(){
     var tran_store  = getDataStorefromJSON('','name',null);
 	var tran_status = {};
 	function print(){
-		window.frames["print_frame"].document.body.innerHTML=dojo.byId('rpt_print').innerHTML;
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('rpt_print').innerHTML + dojo.byId('rpt_print1').innerHTML;
 	    window.frames["print_frame"].window.focus();
 	    window.frames["print_frame"].window.print();
 		//dijit.byId("frm_add_group_pay").submit();
-		submitData();
+		//submitData();
 	   // hideDialog();
 	}
 	function hideDialog() {		
@@ -743,7 +979,7 @@ function filterClient(){
 	}
 	// Force them to provide an answer
 	function doPrint() {
-		window.frames["print_frame"].document.body.innerHTML=dojo.byId('frm_client').innerHTML;
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('rpt_print').innerHTML;
 	    window.frames["print_frame"].window.focus();
 	    window.frames["print_frame"].window.print();
 	   // hideDialog();
@@ -1784,8 +2020,8 @@ function getReceiptNumber(condition){
 
 </script>
 <style>
-.overlay {display: none;position: absolute;width: 100%;top: 0px;left: 0px;background: #FCFCFC;z-index: 1001;opacity: .95;}
-.overlay-load {width: 350px;margin: auto;top: 0px;bottom: 0px;position: absolute;left: 0px;right: 0px;
+.overlay {display: none;position: absolute;width: 100%;height: 100%;top: 0px;left: 0px;background: #FCFCFC;z-index: 1001;opacity: .95;}
+.overlay-load {width: 350px;height: 100px;margin: auto;top: 0px;bottom: 0px;position: absolute;left: 0px;right: 0px;
            border: solid 1px #060522;text-align: center;
            background: #fff url("<?php echo $this->baseUrl()?>/images/loading.gif") 50% 25%;
            background-repeat: no-repeat;          
