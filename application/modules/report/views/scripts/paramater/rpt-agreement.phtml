@@ -1,5 +1,15 @@
 <?php 
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$day = array(
+		"Mon" =>'ច័ន្ច',
+		"Tue" =>'អង្គារ',
+		"Wed" =>'ពុធ',
+		"Thu" =>'ព្រហស្បតិ័',
+		"Fri" =>'សុក្រ',
+		"Sat" =>'សៅរ៍',
+		"Sun" =>'អាទិត្យ',
+		);
+$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មិនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កញ្ញា","08"=>"កក្កដា","09"=>"សីហា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -22,6 +32,7 @@ dojo.require("dijit.form.DateTextBox");
 						}
 						th{padding: 5px;}
 						span.value{ display: inline-block; border-bottom: 1px #000 dotted;text-align: center;}
+						span.child {display:block; margin-left:25px;}
 					</style>
         	<table width="100%" style="font-family:khmer;" style="margin:0; padding:0;border:none;" >
         	<tr>
@@ -29,52 +40,58 @@ dojo.require("dijit.form.DateTextBox");
                 <td width="60%" valign="top">
                 <h2 style="text-align:center; line-height:18px; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("ព្រះរាជាណាចក្រកម្ពុជា");?></label></h2>
                 <h2 style="text-align:center; line-height:18px; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></label></h2>
-                <h2 style="text-align:center; line-height:18px; font-size:16px; font-family:'Tacteing'"><label>rrrsss</label></h2>
+                <h2 style="text-align:center; line-height:18px; font-size:16px; font-family: 'Tacteing';"><label>rrrsss</label></h2>
                 <h2 style="text-align:center; line-height:18px; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("កិច្ចព្រមព្រៀងទិញនិងលក់ផ្ទះ");?></label></h2>
                 <td width="20%"></td>
              </tr> 
              <tr>
              	<td colspan="3">
              		<pre style="font-family: 'Khmer OS Battambang'; white-space: pre-line; text-align:justify; line-height:24px; font-size:14px;">
-             			<span style=" font-family:'Khmer MEF2';font-weight:700;">កិច្ចព្រមព្រៀងទិញនិងលក់ផ្ទះ</span> នេះ (កិច្ចព្រមព្រៀង) ត្រូវបានធ្វើឡើងនៅភ្នំពេញថ្ងៃទី ខែ ឆ្នាំ រវាង :
-             			<span style=" font-family:'Khmer MEF2'; font-weight:700;">អ្នកលក់ ប៊ុន ហៃ</span> ជនជាតិខ្មែរ កាន់អត្តសញ្ញាណប័ណ្ណលេខ:<span style=" font-family:'Khmer MEF2'; font-weight:700;">010145254</span> លោកស្រី <span style=" font-family:'Khmer MEF2';font-weight:700;">ចេង សុភា</span> កាន់អត្តសញ្ញាណប័ណ្ណ
-             			លេខ<span style=" font-family:'Khmer MEF2'; font-weight:700;">010145254</span> មានអស័យដ្ធាននៅផ្ទះលេខ: 06 ផ្លូវលេខ: 318 សង្កាត់ ទួលស្វាយព្រៃ1 ខណ្ឌចំការមន រាជធានីភ្នំពេញ។
-             			ចាប់ពីពេលនេះតទៅហៅថា  <span style=" font-family:'Khmer MEF2'; font-weight:700;">(អ្នកលក់)</span> និង
-             			
+             			<span style=" font-family:'Khmer MEF2';font-weight:700;">កិច្ចព្រមព្រៀងទិញនិងលក់ផ្ទះ</span> នេះ (កិច្ចព្រមព្រៀង) ត្រូវបានធ្វើឡើងនៅភ្នំពេញថ្ងៃទី <?php echo date("d",strtotime($this->agreement['buy_date']));?> ខែ <?php echo date("m",strtotime($this->agreement['buy_date']));?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['buy_date']));?> រវាង :
+             			<span style=" font-family:'Khmer MEF2'; font-weight:700;">អ្នកលក់ <?php echo $this->party_a['party_a'];?></span> ជនជាតិខ្មែរ កាន់អត្តសញ្ញាណប័ណ្ណលេខ:<span style=" font-family:'Khmer MEF2'; font-weight:700;"><?php echo $this->party_a['party_a_nation_id'];?></span> លោកស្រី <span style=" font-family:'Khmer MEF2';font-weight:700;"><?php echo $this->party_a['party_b'];?></span> កាន់អត្តសញ្ញាណប័ណ្ណ
+             			លេខ<span style=" font-family:'Khmer MEF2'; font-weight:700;"><?php echo $this->party_a['party_b_nation_id'];?></span> មានអស័យដ្ធាននៅ<?php echo $this->party_a['party_address'];?>។
+             			ចាប់ពីពេលនេះតទៅហៅថា  <span style=" font-family:'Khmer MEF2'; font-weight:700;">(អ្នកលក់)</span> និង             			
              			<span style=" font-family:'Khmer MEF2'; font-weight:700;">លោក-លោកស្រី</span> <span class="value" style="width:250px;"><?php echo $this->agreement['client_namekh'];?></span>ជាជនជាតិ <span class="value" style="width:30px;"><?php echo $this->agreement['client_nationality'];?></span> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="width:80px;"><?php echo $this->agreement['client_nation_id'];?></span>
              			មានអស័យដ្ធានផ្ទះលេខ: <span class="value" style="width:55px;"><?php echo $this->agreement['client_house_no'];?></span> ផ្លូវលេខ  <span class="value" style="width:55px;"><?php echo $this->agreement['client_street'];?></span> សង្កាត់  <span class="value" style="width:150px;"><?php echo $this->agreement['client_commune_kh'];?></span> ខណ្ឌ <span class="value" style="width:150px;"><?php echo $this->agreement['client_districtkh'];?></span>
              			ខេត្ត-ក្រុង <span class="value" style="width:100px;"><?php echo $this->agreement['client_province_kh'];?></span>។ ចាប់ពិពេលនេះតទៅហៅថា   <span style=" font-family:'Khmer MEF2'; font-weight:700;">(អ្នកទិញ)</span>​។
-             			<span style="font-family:'Khmer MEF2'; font-weight:700;"><u>កិច្ចព្រមព្រៀង</u></span>
+             			<span style="font-family:'Khmer MEF2'; font-weight:700;">កិច្ចព្រមព្រៀង</span>
              			<span style=" font-family:'Khmer MEF2'; font-weight:700;">១. ការទិញនិងលក់ផ្ទះ ៖ </span>អ្នកទិញយល់ព្រមទិញពិអ្នកលក់ហើយអ្នកល់ក៏យល់ព្រមលក់និងផ្ទេរកម្មសិទ្ធិជូនអ្នកទិញនូវ:
-             			ប្រភេទផ្ទះ...........................................ដែលមានទទឺងផ្ទះ.....................មែត្រ,បណ្ដោយផ្ទះ................មែត្រ,ផ្ទះលេខ.........................
-             			ផ្ទះលេខ:.................................នៅបុរីភ្នំពេញថ្មី () ។
+             			ប្រភេទផ្ទះ  <span class="value" style="width:100px;"><?php echo $this->agreement['property_type_en'];?></span> ដែលមានទទឺងផ្ទះ <span class="value" style="width:75px;"><?php echo $this->agreement['property_width'];?></span> មែត្រ,បណ្ដោយផ្ទះ <span class="value" style="width:75px;"><?php echo $this->agreement['property_height'];?></span> មែត្រ,ផ្ទះលេខ <span class="value" style="width:70px;"><?php echo $this->agreement['property_title'];?></span> 
+             			ផ្លូវលេខ: <span class="value" style="width:100px;"><?php echo $this->agreement['property_street'];?></span> នៅបុរីភ្នំពេញថ្មី () ។
              			(ពីពេលនេះតទៅហៅថា <span style=" font-family:'Khmer MEF2'; font-weight:700;">អចលនវត្ថុ</span>)។
              			<span style=" font-family:'Khmer MEF2'; font-weight:700;">២.ការធានានិងការរ៉ាប់រងរបស់អ្នកលក់ ៖ អ្នកលក់ធានា និង សន្យាថានៅថ្ងៃចុះកិច្ចព្រមព្រៀងនេះ </span>
-             			<?php echo $this->termcodiction['con_khmer'];?>
-             			<span style=" font-family:'Khmer MEF2'; font-weight:700;">
-             			៣.តំលៃទិញ និង ការផ្ទេរសិទ្ធិ ៖ </span>
-             			តំលៃទិញអចលនវត្ថុគឺUSD.....................................................(ដុល្លាអាមេរិក)។
+             			<span class="child"><?php echo $this->termcodiction['con_khmer'];?></span><span style=" font-family:'Khmer MEF2'; font-weight:700; display: initial;">៣.តំលៃទិញ និង ការផ្ទេរសិទ្ធិ ៖ </span>
+             			តំលៃទិញអចលនវត្ថុគឺUSD <span class="value" style="width:420px;"><?php echo number_format($this->agreement['price_sold'],2);?></span> (ដុល្លាអាមេរិក)។
              			អ្នកទិញត្រូវប្រគល់ប្រាក់ថ្លៃទិញជូនទៅ អ្នកលក់ តាមដំណាក់កាលដូចខាងក្រោមៈ
-             				១. ប្រាក់កក់ដំបូងចំនួនUSD................................(ដុល្លាអាមេរិក)
-             				អ្នកទិញបានបង់នៅថ្ងៃ 01/March/2016
-             				២. ទឺកប្រាក់ចំនួនUSD.........................................(ដុល្លាអាមេរិក)
-             				អ្នកទិញត្រូវបង់នៅ  01/March/2016
-             				៣. ទឺកប្រាក់ចំនួនUSD.........................................(ដុល្លាអាមេរិក)
-             				អ្នកទិញត្រូវបង់នៅ  01/March/2016
+             				<span class="child"><?php if (!empty($this->sale_schedule)) $i=0; foreach ($this->sale_schedule as $row){$i++; echo $i; ?>. ប្រាក់កក់ដំបូងចំនួនUSD <span class="value" style="width:420px;"><?php echo number_format($row['begining_balance'],2);?></span> (ដុល្លាអាមេរិក)
+             				អ្នកទិញបានបង់នៅថ្ងៃ <?php echo $day[date("D",strtotime($row['date_payment']))]." ខែ ".$month[date("m",strtotime($row['date_payment']))]." ឆ្នាំ ".date("Y",strtotime($row['date_payment'])); ?>
+             				
+             				<?php }?>
+             				<?php echo $i+1;?>. ការបង់រំលស់ៈ អ្នកទិញស្នើរសុំបង់រំលស់ ហើយអ្នកលក់ក៏យល់ព្រមអោយអ្នកទិញបង់រំលស់នូវទឹកប្រាក់ចំនួន
+             				USD <span class="value" style="width:550px;"><?php echo number_format($this->agreement['price_sold'],2);?></span> (ដុល្លាអាមេរិក)
+             				សំរាប់រយៈពេល<span class="value" style="width:250px;">&nbsp;<?php echo ($this->agreement['total_duration']/12);?>&nbsp;</span>ឆ្នាំ(12ខែ)ជារៀងរាល់ខែគិតចាប់ពី ដូចបានចែងលំអិតក្នុង  
+	             			ល័ក្ខខណ្ឌនៃការរំរលស់មានភ្ជាប់មកជាមួយកិច្ចព្រមព្រៀងនេះ។ ក្រោយពីការបង់ប្រាក់គ្រប់ចំនួន 
+	             			ទើបអ្នកលក់ រៀបចំបែបបទផ្ទេរសិទ្ធិ កាន់កាប់វិញ្ញាបនប័ត្រសម្គាល់ម្ចាស់អចលនវិត្ថុ ជូនអ្នកទិញ នៅត្រឹមអាជ្ញាធរខណ្ឌ
+	             			ដោយសោហ៊ុយចំណាយ ជាបន្ទុកអ្នកលក់។
+             				</span>
+             			<span style=" font-family:'Khmer MEF2'; font-weight:700; display: initial;">៤ .ការបំពានកាតព្វកិច្ចរបស់អ្នកទិញ ៖   </span>ក្នុងករណីដែរអ្នកទិញ មិនបានបង់ប្រាក់ តាមការកំណត់ដូចបានចែងក្នុង
+             			ប្រការ៣ខាងលើនោះអ្នកទិញនឹងត្រូវបង់ប្រាក់ពិន័យចំនួន<?php echo $this->penaly_percent['penaly_percent'];?> ក្នុងមួយខែនៃចំនួនទឹកប្រាក់ដែលត្រូវបង់។
+             			ប្រសិនបើអ្នកទិញ ខកខានមិនបានបង់ប្រាក់លើសពី ៣០ ថ្ងៃ នោះទឹកប្រាក់ដែលអ្នកទិញបានបង់ទាំងអស់ និងត្រូវបានមកអ្នកលក់
+             			ហើយកិច្ចព្រមព្រៀងនេះ នឹងត្រូវចាត់ទុកជាមោឃៈដោយស្វ័យប្រវត្តិ ដោយអ្នកទិញគ្មានសិទិ្ធតវ៉ាអ្វីឡើយ។ ក្នុងករណីនេះអ្នកលក់
+             			មានសិទ្ធិលក់ផ្ទះនេះអោយអ្នកដទៃបានគ្រប់ពេលវេលា។
+             			-	ករណីដែលភាគីអ្នកលក់កែប្រែមិនលក់វិញនោះនឹងត្រូវបង់ពិន័យទៅអោយភាគីអ្នកទិញស្មើនឹងប្រាក់ដែលបានបង់គុណនឹងពីរ។
+             			<span style=" font-family:'Khmer MEF2'; font-weight:700; display: initial;">៥.ការស្នងបន្ត  ៖   </span>រាល់សិទ្ធិ និងកាតព្វកិច្ចទាំងអស់ របស់អ្នកទិញដែលមាន ក្រោមកិច្ចព្រមព្រៀងនេះ ត្រូវមានប្រសិទ្ធិភាពផងដែល
+             			ចំពោះទាយាទអ្នកស្នងបន្ត និង អ្នកទទួលសិទ្ធិរបស់អ្នកទិញ តាមរយៈលិខិតជាលាយលក្ខអក្សរដោយមានសាក្សី ដឹងឮ និងមេធាវី។
+             			ដោយឡែកចំពោះអ្នកលក់ ប្រសិនបើមានហេតុការណ៍អាក្រក់ណាមួយ កើតឡើងចំពោះអ្នកលក់ហើយបណ្ដាលអោយអ្នក់លក់បាត់បង់
+             			នូវសមត្ថភាព កាយសម្បទាវិកលចរឹក ឬ រហូតដល់បាត់បង់ជីវិត នោះសិទ្ធិ និងកាតព្វកិច្ចទាំងអស់របស់អ្នកលក់នឹងត្រូវបានទៅលើ
+             			<span style=" font-family:'Khmer MEF2';font-weight:700;">លោកស្រី  <?php echo $this->party_a['party_b'];?></span> កាន់អត្តសញ្ញាណប័ណ្ណលេខៈ <span style=" font-family:'Khmer MEF2'; font-weight:700;"><?php echo $this->party_a['party_b_nation_id'];?></span> ដែលត្រូវជាភរិយាស្របច្បាប់របស់អ្នកលក់។
              		</pre>
              	</td>
              </tr>
              <tr>
              	<td colspan="3">
              		<pre style="font-family: 'Khmer OS Battambang'; white-space: pre-line; text-align:justify; line-height:24px; font-size:14px;">
-             				៤. ទឺកប្រាក់ចំនួនUSD.........................................(ដុល្លាអាមេរិក)
-             				អ្នកទិញត្រូវបង់នៅ  01/March/2016
-             				៥. ការបង់រំលស់ៈ អ្នកទិញស្នើរសុំបង់រំលស់ ហើយអ្នកលក់ក៏យល់ព្រមអោយអ្នកទិញបង់រំលស់នូវទឹកប្រាក់ចំនួន
-             				USD  ........................................(ដុល្លាអាមេរិក)
-	             			សំរាប់រយៈពេល.................ឆ្នាំ(12ខែ)ជារៀងរាល់ខែគិតចាប់ពី ដូចបានចែងលំអិតក្នុង  
-	             			ល័ក្ខខណ្ឌនៃការរំរលស់មានភ្ជាប់មកជាមួយកិច្ចព្រមព្រៀងនេះ។ ក្រោយពីការបង់ប្រាក់គ្រប់ចំនួន 
-	             			ទើបអ្នកលក់ រៀបចំបែបបទផ្ទេរសិទ្ធិ កាន់កាប់វិញ្ញាបនប័ត្រសម្គាល់ម្ចាស់អចលនវិត្ថុ ជូនអ្នកទិញ នៅត្រឹមអាជ្ញាធរខណ្ឌ
-	             			ដោយសោហ៊ុយចំណាយ ជាបន្ទុកអ្នកលក់។
+	             			
              		</pre>
              	</td>
              </tr>		

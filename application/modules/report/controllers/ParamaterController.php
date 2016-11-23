@@ -277,6 +277,15 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->termcodiction = $db->getTermCodiction();
   	$this->view->agreement = $db->getAgreementBySaleID();
+  	$this->view->sale_schedule = $db->getScheduleBySaleID();
+  	
+  	$db_keycode = new Application_Model_DbTable_DbKeycode();
+  	$this->view->party_a = $db_keycode->getKeyCodeMiniInv('party_a');
+  	$this->view->party_b = $db_keycode->getKeyCodeMiniInv('party_b');
+  	$this->view->party_a_nation_id = $db_keycode->getKeyCodeMiniInv('party_a_nation_id');
+  	$this->view->party_b_nation_id = $db_keycode->getKeyCodeMiniInv('party_b_nation_id');
+  	$this->view->party_address = $db_keycode->getKeyCodeMiniInv('party_address');
+  	$this->view->penaly_percent = $db_keycode->getKeyCodeMiniInv('penaly_percent');
   }
   function rptSaleHistoryAction(){
   	if($this->getRequest()->isPost()){
