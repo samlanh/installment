@@ -88,8 +88,17 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		$opt= $db->getVewOptoinTypeByType(12,1,null,1);
 		$_currency_type->setMultiOptions($opt);
 	
+		$category_id_expense = new Zend_Dojo_Form_Element_FilteringSelect('category_id_expense');
+		$category_id_expense->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$opt1= $db->getVewOptoinTypeByType(13,1,null,1);
+		$category_id_expense->setMultiOptions($opt1);
+		
 		if($data!=null){
 			$_currency_type->setValue($data['category_id']);
+			$category_id_expense->setValue($data['category_id']);
 			$_branch_id->setValue($data['branch_id']);
 			$title->setValue($data['title']);
 			$total_amount->setValue($data['total_amount']);
@@ -100,6 +109,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 			$id->setValue($data['id']);
 		}
 		$this->addElements(array($invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
+				$category_id_expense,
 				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,));
 		return $this;
 		

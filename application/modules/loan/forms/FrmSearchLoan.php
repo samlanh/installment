@@ -152,6 +152,21 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		$propertiestype->setMultiOptions($propertiestype_opt);
 		$propertiestype->setValue($request->getParam("property_type"));
 		
+		$_category = new Zend_Dojo_Form_Element_FilteringSelect('category_id');
+		$_category->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$opt= $db->getVewOptoinTypeByType(12,1,null,null);
+		$_category->setMultiOptions($opt);
+		
+		$category_id_expense = new Zend_Dojo_Form_Element_FilteringSelect('category_id_expense');
+		$category_id_expense->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$opt1= $db->getVewOptoinTypeByType(13,1,null,null);
+		$category_id_expense->setMultiOptions($opt1);
 		
 		if($data!=null){
 // 			$_member->setValue($data['client_id']);
@@ -160,7 +175,8 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 			$client_name->setValue($data['client_name']);
 		}
 		$this->addElements(array($propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
-// 				$_groupid,$_member,$_group_code,$_customer_code,
+				$_category,$category_id_expense,
+		// 				$_groupid,$_member,$_group_code,$_customer_code,
 				$_dateline,$_status,$_btn_search));
 		return $this;
 		
