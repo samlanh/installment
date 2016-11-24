@@ -148,7 +148,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
 		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside','onChange'=>'showPopupForm();'));
-		$propertiestype_opt = $db->getPropertyType();
+		$propertiestype_opt = $db->getPropertyTypeForsearch();
 		$propertiestype->setMultiOptions($propertiestype_opt);
 		$propertiestype->setValue($request->getParam("property_type"));
 		
