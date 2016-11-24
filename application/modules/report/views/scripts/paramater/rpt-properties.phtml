@@ -11,6 +11,7 @@ dojo.require("dijit.form.DateTextBox");
 	<table style="width:28cm; margin: 0 auto;">
 		 <tr> 
 			   <td><?php echo $frm->getElement("adv_search");?></td>
+			   <td><?php echo $frm->getElement("branch_id");?></td>
 			   <td><?php echo $frm->getElement("property_type");?></td>
 			   <td><?php echo $frm->getElement("type_property_sale");?></td>
 				<td>
@@ -46,20 +47,28 @@ dojo.require("dijit.form.DateTextBox");
             	<td colspan="3">
             		<table id="exportExcel" width="100%" style="border-collapse:collapse;font-size: 14px;" >  
 				    	
-				       <?php $property_type=''; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
+				       <?php $total_land_pric=0; $total_house_price = 0; $property_type=''; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
 				      	<?php  
 						if($row['property_type']!=$property_type){	
 							if($key>0 ){
 						?>
+						<tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;"><td colspan="11">&nbsp;</td></tr>
 							<tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;">
 								<td colspan="11">
-									<table align="right" style="margin-right: 6px;">
-										  <tr style="font-size:10px; color:#000; height: 18px;"​ align="center">
-												<td style="  width:146px; font-weight:bold; font-size: 12px;">&nbsp;<?php echo $tr->translate('GRAND_TOTAL');?>&nbsp;</td>
-												<td style=" background: rgba(249, 225, 11, 0.7);  color:#000; font-weight:bold; width:112px; font-size: 12px;"><?php echo $i;?></td>
-												<td style="background: rgba(249, 225, 11, 0.7); color:#000; font-weight:bold; width:112px; font-size: 12px;">$ <?php echo number_format($total,2);?></td>
-										  </tr>
-									</table>
+									<table border="1"​ style="border-collapse:collapse; border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+						                 <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+						                 	<td>&nbsp;<?php echo $tr->translate("TOTAL_PROPERTY");?>&nbsp;</td>
+						                 	<td>&nbsp;<?php echo $tr->translate("TOTAL_LAND_PRICE");?>&nbsp;</td>
+						                 	<td>&nbsp;<?php echo $tr->translate("TOTAL_HOUSE_PRICE");?>&nbsp;</td>
+						                 	<td>&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+						                 </tr>
+						                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
+						                  	<td align="center">&nbsp;<?php echo $i;?></td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($total_land_pric,2);?>&nbsp;</td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($total_house_price,2);?>&nbsp;</td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($total,2);?>&nbsp;</td>
+						                </tr>
+						              </table>
 								</td>
 							</tr>
 							
@@ -76,7 +85,7 @@ dojo.require("dijit.form.DateTextBox");
 								<tr style=" border-top: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;">
 									<td colspan="7"><strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2'; padding:5px;" ><?php echo $row['pro_type']; ?></strong></td>
 								</tr>
-								<tr bgcolor="#ccc" class="style" align="center" style="floafont-weight:bold; line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
+								<tr bgcolor="#c1d0f3" class="style" align="center" style="floafont-weight:bold; line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
 									<th ><?php echo $tr->translate("NUM");?></th>
 									      <th><?php echo $tr->translate("PROPERTY_CODE");?></th>
 									      <th><?php echo $tr->translate("HOUSE_NO");?></th>
@@ -94,7 +103,7 @@ dojo.require("dijit.form.DateTextBox");
 						     <td align="center">&nbsp;<?php echo $i; ?></td>
 						     <td align="center">&nbsp;<?php echo $row['land_code'];?></td>
 						     <td align="center">&nbsp;<?php echo $row['land_address'];?></td>
-							 <td align="center">&nbsp;<?php echo $row['land_address'];?></td>
+							 <td align="center">&nbsp;<?php echo $row['street'];?></td>
 							 <td>&nbsp;<?php echo $row['pro_type'];?></td>
 							 <td align="center">&nbsp;<?php echo $row['land_size'];?></td>
 							 <td align="center">&nbsp;<?php echo $row['width'];?></td>
@@ -104,19 +113,29 @@ dojo.require("dijit.form.DateTextBox");
 							 <td align="right">&nbsp;<?php echo number_format($row['price'],2);?></td>
 							</tr>
 							<?php $total = $total + $row['price'];
+							$total_land_pric= $total_land_pric +$row['land_price'];
+							$total_house_price= $total_house_price +$row['house_price'];
 							$property_type = $row['property_type'];
 							?>
 						<?php }?>
+						<tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;"><td colspan="11">&nbsp;</td></tr>
 						<?php if(!empty($this->row)){?>
-						<tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;">
+						<tr style="border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;"">
 							<td colspan="11">
-							<table align="right" style="margin-right: 6px;">
-								  <tr style="font-size:18px; color:#000; height: 18px;"​ align="center">
-										<td style="   width:146px; font-weight:bold; font-size: 12px;">&nbsp;<?php echo $tr->translate('GRAND_TOTAL');?>&nbsp;</td>
-										<td style="  background: rgba(249, 225, 11, 0.7);  color:#000;  font-weight:bold; width:112px; font-size: 12px;"><?php echo $i;?></td>
-										<td style=" background: rgba(249, 225, 11, 0.7);  color:#000;  font-weight:bold; width:112px; font-size: 12px;">$ <?php echo number_format($total,2);?></td>
-								  </tr>
-							</table>
+								<table border="1"​ style="border-collapse:collapse; border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+					                 <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+					                 	<td>&nbsp;<?php echo $tr->translate("TOTAL_PROPERTY");?>&nbsp;</td>
+					                 	<td>&nbsp;<?php echo $tr->translate("TOTAL_LAND_PRICE");?>&nbsp;</td>
+					                 	<td>&nbsp;<?php echo $tr->translate("TOTAL_HOUSE_PRICE");?>&nbsp;</td>
+					                 	<td>&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+					                 </tr>
+					                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
+					                  	<td align="center">&nbsp;<?php echo $i;?></td>
+					                    <td>&nbsp;&nbsp;<?php echo number_format($total_land_pric,2);?>&nbsp;</td>
+					                    <td>&nbsp;&nbsp;<?php echo number_format($total_house_price,2);?>&nbsp;</td>
+					                    <td>&nbsp;&nbsp;<?php echo number_format($total,2);?>&nbsp;</td>
+					                </tr>
+					              </table>
 							</td>
 						</tr>
 						<?php }?>

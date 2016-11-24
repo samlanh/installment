@@ -170,6 +170,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		$search = array(
   				'adv_search'=>'',
   				'property_type'=>'',
+  				"branch_id"=> -1,
   				'type_property_sale'=>-1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d')
@@ -295,6 +296,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"adv_search"=>'',
   				"branch_id"=>-1,
   				"status"=>-1,
+  				"property_type"=>'',
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   		);

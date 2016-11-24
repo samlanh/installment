@@ -139,7 +139,7 @@ function getAllBranch($search=null){
     		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
-    		$sql = "SELECT p.`id`,p.`branch_id`,p.`land_code`,p.`land_address`,p.`property_type`,
+    		$sql = "SELECT p.`id`,p.`branch_id`,p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,
 				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type`) AS pro_type,
 				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`
 				 FROM `ln_properties` AS p WHERE p.`status`=1";
@@ -148,6 +148,9 @@ function getAllBranch($search=null){
     		}
     		if($search['type_property_sale']>-1){
     			$where.= " AND p.`is_lock` = ".$search['type_property_sale'];
+    		}
+    		if($search['branch_id']>0){
+    			$where.= " AND p.`branch_id` = ".$search['branch_id'];
     		}
     		if(!empty($search['adv_search'])){
     			$s_where=array();
@@ -162,7 +165,7 @@ function getAllBranch($search=null){
     			$s_where[]=" p.`house_price` LIKE '%{$s_search}%'";
     			$where.=' AND ('.implode(' OR ',$s_where).')';
     		}
-    		//echo $sql.$where;exit();
+    		//echo $sql.$where;
     		return $db->fetchAll($sql.$where);
     	}
     	function getCancelSale($search=null){
@@ -176,7 +179,7 @@ function getAllBranch($search=null){
 				CONCAT(clie.`name_kh`," ",clie.`name_en`) AS client_name,
 				p.`project_name`,pro.`land_code`,c.`create_date`,
 				(SELECT pt.`type_nameen` FROM `ln_properties_type` AS pt WHERE pt.`id` = pro.`property_type`) AS type_name,
-				pro.`property_type`
+				pro.`property_type`,pro.`land_address`,pro.`street`
 				FROM `ln_sale_cancel` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
 				`ln_client` AS clie
 				WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = c.`property_id` AND
@@ -323,6 +326,9 @@ function getAllBranch($search=null){
     			$s_where[] = " client_name_kh LIKE '%{$s_search}%'";
     			$s_where[] = " client_name_en LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		if(!empty($search['property_type'])){
+    			$where.= " AND property_type_id = ".$search['property_type'];
     		}
     		return $db->fetchAll($sql.$where.$order);
     	}
