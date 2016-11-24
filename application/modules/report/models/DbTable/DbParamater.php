@@ -228,6 +228,9 @@ function getAllBranch($search=null){
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
     		}
+    		if($search['category_id']>-1 || !empty($search['category_id'])){
+    			$where.= " AND category_id = ".$search['category_id'];
+    		}
     		$order=" order by id desc ";
     		return $db->fetchAll($sql.$where.$order);
     	}
@@ -242,7 +245,7 @@ function getAllBranch($search=null){
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		title,invoice,
     	
-    		(SELECT name_en FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
+    		(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
     		total_amount,description,date,status FROM ln_expense ";
     	
     		if (!empty($search['adv_search'])){
@@ -254,7 +257,9 @@ function getAllBranch($search=null){
     			$s_where[] = " invoice LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
-    	
+    		if($search['category_id_expense']>-1 || !empty($search['category_id_expense'])){
+    			$where.= " AND category_id = ".$search['category_id_expense'];
+    		}
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
     		}

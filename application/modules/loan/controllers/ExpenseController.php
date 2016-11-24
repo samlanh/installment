@@ -2,7 +2,7 @@
 
 class Loan_ExpenseController extends Zend_Controller_Action
 {
-	const REDIRECT_URL = '/registrar/expense';
+	const REDIRECT_URL = '/loan/expense';
 	
     public function init()
     {

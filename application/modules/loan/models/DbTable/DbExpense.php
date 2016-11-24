@@ -25,7 +25,7 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 					'title'=>$data['title'],
 					'total_amount'=>$data['total_amount'],
 					'invoice'=>$data['invoice'],
-					'category_id'=>$data['category_id'],
+					'category_id'=>$data['category_id_expense'],
 					'description'=>$data['Description'],
 					'date'=>$data['Date'],
 					'status'=>$data['Stutas'],
@@ -51,7 +51,7 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 					'title'=>$data['title'],
 					'total_amount'=>$data['total_amount'],
 					'invoice'=>$data['invoice'],
-					'category_id'=>$data['category_id'],
+					'category_id'=>$data['category_id_expense'],
 					'description'=>$data['Description'],
 					'date'=>$data['Date'],
 					'status'=>$data['Stutas'],
@@ -78,7 +78,7 @@ function getAllExpense($search=null){
 	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
 	title,invoice,
 	
-	(SELECT name_en FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
+	(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
 	total_amount,description,date,status FROM ln_expense ";
 	
 	if (!empty($search['adv_search'])){

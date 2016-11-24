@@ -176,6 +176,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'end_date'=>date('Y-m-d')
   				);
   	}
+  	$this->view->list_end_date = $search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllProperties($search);
   	
@@ -215,6 +216,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"adv_search"=>'',
   				"branch_id"=>-1,
   				"status"=>-1,
+  				"category_id"=>-1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   		);
@@ -236,6 +238,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
     		$search = array(
     		"adv_search"=>'',
     		"branch_id"=>-1,
+    		"category_id_expense","-1",
     		'start_date'=> date('Y-m-d'),
     		'end_date'=>date('Y-m-d'),
     	);
