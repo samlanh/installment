@@ -1186,8 +1186,8 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	$db = $this->getAdapter();
   	$sql="SELECT s.`id`,CONCAT((SELECT c.client_number FROM `ln_client` AS c WHERE c.client_id = s.`client_id` LIMIT 1),' (',
 	s.`sale_number`,')' ) AS `name`
-  	FROM `ln_sale` AS s 
- 	WHERE s.`branch_id` =".$branch_id;
+  	FROM `ln_sale` AS s  
+ 	WHERE s.`is_completed` =0 AND s.`branch_id` =".$branch_id;
   	return $db->fetchAll($sql);
   }
   
