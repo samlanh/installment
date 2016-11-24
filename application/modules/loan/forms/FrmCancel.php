@@ -17,6 +17,16 @@ public function init()
 		$loan_number = $db->getLoanNumber();
 		$_loan_code->setValue($loan_number);
 		
+		$rows=$db->getPropertyTypeForsearch();
+		$opt_co = array(''=>$this->tr->translate("SELECT_PROPERTY_TYPE"));
+		$opt_co = $rows;
+		$property = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
+		$property->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'class'=>'fullside',
+		));
+		$property->setMultiOptions($opt_co);
 		
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
 		$_title->setAttribs(array('dojoType'=>$this->tvalidate,
@@ -372,7 +382,7 @@ public function init()
 		}
 		$this->addElements(array($branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
-				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$_old_property_id,
+				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$_old_property_id,$property,
 				$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$penalize,$_service_charge,
 				$_coids,$_loan_type,
 				$_time_collect,$_paybefore,
