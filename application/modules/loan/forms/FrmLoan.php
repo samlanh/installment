@@ -70,6 +70,10 @@ public function init()
 				'onchange'=>'checkScheduleOption();'
 		));
 		$opt = $db->getVewOptoinTypeByType(25,1,null,1);
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		if($request->getControllerName()=='repaymentschedule'){
+			unset($opt[1]);
+		}
 		$schedule_opt->setMultiOptions($opt);
 		
 // 		$_customer_code = new Zend_Dojo_Form_Element_FilteringSelect('customer_code');
@@ -163,7 +167,6 @@ public function init()
 				'style'=>'color:red;',
 				'readonly'=>true
 		));
-		$sold_price->setValue(5000);
 		
 		$_rate =  new Zend_Dojo_Form_Element_NumberTextBox("interest_rate");
 		$_rate->setAttribs(array(
@@ -317,6 +320,16 @@ public function init()
 // 		));
 // 		$options = $db->getAllPaymentMethod(null,1);
 // 		$_repayment_method->setMultiOptions($options);
+
+// 		$get_laonnumber = new Zend_Dojo_Form_Element_FilteringSelect('get_laonnumber');
+// 		$get_laonnumber->setAttribs(array(
+// 				'dojoType'=>'dijit.form.FilteringSelect',
+// 				'class'=>'fullside',
+// 				'onchange'=>'getInfoByLoanNumber();getLoanInfoByLoanNumber();'
+// 		));
+// 		$group_opt = $db->getLoanAllLoanNumber(1,1);
+// 		$get_laonnumber->setMultiOptions($group_opt);
+		
 		
 		$_status = new Zend_Dojo_Form_Element_FilteringSelect('status_using');
 		$_status->setAttribs(array(
@@ -354,6 +367,20 @@ public function init()
 				'required' =>'true'
 		));
 		
+		$paid_before = new Zend_Dojo_Form_Element_NumberTextBox('paid_before');
+		$paid_before->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				
+		));
+		
+		$balance_before = new Zend_Dojo_Form_Element_NumberTextBox('balance_before');
+		$balance_before->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				
+		));
+		
 		$_instalment_date = new Zend_Form_Element_Hidden("instalment_date");
 		$_release_date = new Zend_Form_Element_Hidden("old_release_date");
 		$_interest_rate = new Zend_Form_Element_Hidden("old_rate");
@@ -385,7 +412,7 @@ public function init()
 			
 			
 		}
-		$this->addElements(array($receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$_service_charge,$schedule_opt
+		$this->addElements(array($paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$_service_charge,$schedule_opt
 				,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

@@ -14,6 +14,7 @@ class Group_LandController extends Zend_Controller_Action {
 				$search = array(
 						'adv_search' => $formdata['adv_search'],
 						'status'=>$formdata['status'],
+						'branch_id'=>$formdata['branch_id'],
 						'start_date'=> $formdata['start_date'],
 						'end_date'=>$formdata['end_date'],
 						'property_type_search'=>$formdata['property_type_search'],
@@ -23,6 +24,7 @@ class Group_LandController extends Zend_Controller_Action {
 				$search = array(
 						'adv_search' => '',
 						'status' => -1,
+						'branch_id' => -1,
 						'property_type_search'=>-1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d')
@@ -32,7 +34,7 @@ class Group_LandController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","PROPERTY_CODE","TITLE","PROPERTY_TYPE","PRICE","WIDTH","HEIGHT","SIZE","HEAD_TITLE_NO","DATE","BY_USER","STATUS");
+			$collumns = array("BRANCH_NAME","PROPERTY_CODE","TITLE","STREET","PROPERTY_TYPE","PRICE","WIDTH","HEIGHT","SIZE","HEAD_TITLE_NO","DATE","BY_USER","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'land','action'=>'edit',
 			);
@@ -42,7 +44,6 @@ class Group_LandController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
-	
 		$frm = new Application_Form_FrmAdvanceSearch();
 		$frm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);

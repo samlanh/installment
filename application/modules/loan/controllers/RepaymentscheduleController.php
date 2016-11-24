@@ -16,7 +16,7 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
  			}else{
 				$search = array(
 						'txt_search'=>'',
-						'customer_code'=> -1,
+						'client_name'=> -1,
 						'repayment_method' => -1,
 						'branch_id' => -1,
 						'co_id' => -1,
@@ -28,13 +28,13 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 						 );
 			}
 // 			print_r($search);
-			$db = new Loan_Model_DbTable_DbLoanIL();
+			$db = new Loan_Model_DbTable_DbLandpayment();
 			$rs_rows= $db->getAllIndividuleLoan($search,1);
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("LOAN_NO","CUSTOMER_NAME","COMUNE_NAME_EN","LOAN_AMOUNT","INTEREST_RATE","REPAYMENT_TYPE","TERM_BORROW","ZONE_NAME","CO_NAME",
-				"BRANCH_NAME","STATUS");
+			$collumns = array("BRANCH_NAME","SALE_NO","CLIENT_NO","CUSTOMER_NAME","COMUNE_NAME_EN","LOAN_NO","PROPERTY_NAME","STREET","ប្រភេទបង់","LOAN_AMOUNT","DISCOUNT","PAID","BALANCE","DATE_BUY",
+				"STATUS");
 			$link=array(
 					'module'=>'loan','controller'=>'repaymentschedule','action'=>'view',
 			);

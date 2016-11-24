@@ -162,7 +162,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();
 			$db=new Loan_Model_DbTable_DbRepaymentSchedule();
-			$row=$db->getLoanInfoBymemberId($data['member_id']);
+			$row=$db->getLoanInfoById($data['sale_id']);
 			print_r(Zend_Json::encode($row));
 			exit();
 		}

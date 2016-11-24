@@ -498,7 +498,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$arr = array(
     				'branch_id'=>$data['branch_id'],
 //     				'house_id'=>$data["land_code"],
-    				'sale_number'=>$data['sale_code'],
+//     				'sale_number'=>$data['sale_code'],
     				'payment_id'=>$data["schedule_opt"],
     				'client_id'=>$data['member'],
     				'price_before'=>$data['total_sold'],
@@ -515,8 +515,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'validate_date'=>$data['first_payment'],
     				'payment_method'=>1,//$data['loan_type'],
     				'note'=>$data['note'],
-    				'staff_id'=>$data['staff_id'],
-    				'comission'=>$data['commission'],
+//     				'staff_id'=>$data['staff_id'],
+//     				'comission'=>$data['commission'],
     				'create_date'=>date("Y-m-d"),
     				'user_id'=>$this->getUserId()
     		);

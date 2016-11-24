@@ -608,7 +608,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       		$where.= " AND status = ".$search['status'];
       	}
       	$group_by = " GROUP BY id,date_payment ORDER BY date_payment DESC ";
-      	echo $sql.$where.$group_by;
+//       	echo $sql.$where.$group_by;exit();
         $row = $db->fetchAll($sql.$where.$group_by);
         return $row;
       }

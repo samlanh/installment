@@ -488,15 +488,12 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	 FROM `ln_loan_member` AS l WHERE l.client_id=$id AND status=1 AND l.is_completed=0 ";
     	return $db->fetchRow($sql);
     }
-    public function getLoanInfoBymemberId($id){
+    public function getLoanInfoById($id){
     	$db=$this->getAdapter();
     	$sql=" SELECT
-    	(SELECT lf.total_principal FROM `ln_loanmember_funddetail` AS lf WHERE lf. member_id= l.member_id AND status=1 AND lf.is_completed=0 LIMIT 1)  AS total_principal
-    	,l.client_id,l.currency_type ,l.interest_rate , l.loan_number,l.payment_method, l.group_id,l.branch_id,
-    	(SELECT co_id FROM `ln_loan_group` WHERE g_id  = l.group_id LIMIT 1 ) AS co_id ,
-    	(SELECT zone_id FROM `ln_loan_group` WHERE g_id  = l.group_id LIMIT 1) AS zone_id,
-    	(SELECT level FROM `ln_loan_group` WHERE g_id  = l.group_id LIMIT 1) AS level
-    	FROM `ln_loan_member` AS l WHERE l.member_id=$id AND status=1 AND l.is_completed=0 ";
+    	(SELECT begining_balance_after FROM `ln_saleschedule` WHERE STATUS=1 AND is_completed=0 AND sale_id=$id ORDER BY id ASC LIMIT 1) AS total_principal,
+    	s.*
+    	FROM `ln_sale` AS s WHERE s.id=$id AND status=1 AND s.is_completed=0 ";
     	return $db->fetchRow($sql);
     }
     

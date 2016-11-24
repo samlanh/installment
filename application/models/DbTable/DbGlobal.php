@@ -613,7 +613,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getAllLandInfo($branch_id=null,$option=null,$action=null){
   	   $db = $this->getAdapter();
-  	   $sql="SELECT `id`,`land_code` AS name FROM `ln_properties` WHERE status=1 AND `land_code`!='' ";//just concate
+  	   $sql="SELECT `id`,`land_address` AS name FROM `ln_properties` WHERE status=1 AND `land_code`!='' ";//just concate
   	   $request=Zend_Controller_Front::getInstance()->getRequest();
   	   if($action==null){
   	   	$sql.=" AND `is_lock`=0  ";

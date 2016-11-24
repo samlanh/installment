@@ -502,7 +502,7 @@ public function exportFileToExcel($table,$data,$thead){
  				'branch_id'		=>	-1,
 //  				'co_id'		=> -1,
 //  				'paymnet_type'	=> -1,
- 				'status'=>"",);
+ 				'status'=>-1,);
  	}
  	$this->view->list_end_date=$search;
  	$db  = new Report_Model_DbTable_DbLandreport();

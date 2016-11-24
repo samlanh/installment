@@ -63,7 +63,7 @@
 							<td><input id="member" /> <?php //echo $frm->getElement('member');?></td>
 						</tr>
 						<tr>
-							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("Land Information")?></strong></td>
+							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></td>
 						</tr>
 						<tr height="40px">
 							<td><?php echo $tr->translate("LAND_CODE")?></td>
@@ -99,7 +99,7 @@
 							<td><?php echo $frm->getElement('balance');?></td>
 						</tr>
 						<tr>
-						    <td><?php echo $tr->translate("TERM_BORROW")?>(Months)</td>
+						    <td><lable id='lbl_period'><?php echo $tr->translate("TERM_BORROW")?></lable>(Months)</td>
 							<td><?php echo $frm->getElement('period');?></td>
 							<td><?php echo $tr->translate("INTEREST_RATE")?></td>
 							<td><?php echo $frm->getElement('interest_rate');?></td>
@@ -115,7 +115,7 @@
 							<td><?php echo $frm->getElement('date_line');?></td>
 						</tr>
 						<tr>
-							<td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("Agent Information")?></strong></td>
+							<td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("AGENT_INFORMATION")?></strong></td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("CO_NAME")?></td>
@@ -290,6 +290,7 @@ function checkScheduleOption(){
 
 	amount_principal = dijit.byId('balance').get('value');	
 	debt_amount = dijit.byId('period').get('value');
+	dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TERM_BORROW")?>";
 	if(method_id==4){
 		dijit.byId('fixed_payment').set('readOnly',false);
 		dojo.byId('lbl_payment').innerHTML="<?php echo $tr->translate("AMOUNT_GRAICE_PARIOD")?>";
@@ -326,6 +327,9 @@ function checkScheduleOption(){
 			dijit.byId('deposit').attr("value",amount_principal);
 			
 		}else if(method_id==3){//times
+			
+			dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TOTAL_INSTALLMENT")?>";
+			
 			dojo.byId('lbl_release').innerHTML="<?php echo $tr->translate("START_DATE")?>";
 			total_collect = amount_principal/debt_amount;
 			total_collect = total_collect.toFixed(2);

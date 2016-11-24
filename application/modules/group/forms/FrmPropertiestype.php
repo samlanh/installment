@@ -24,12 +24,13 @@ Class Group_Form_FrmPropertiestype extends Zend_Dojo_Form {
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
 		$_title->setAttribs(array('dojoType'=>$this->tvalidate,
 				'onkeyup'=>'this.submit()',
+				'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 		));
 		$_title->setValue($request->getParam("adv_search"));
 		
 		$_status_search=  new Zend_Dojo_Form_Element_FilteringSelect('status_search');
-		$_status_search->setAttribs(array('dojoType'=>$this->filter));
+		$_status_search->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
@@ -40,7 +41,8 @@ Class Group_Form_FrmPropertiestype extends Zend_Dojo_Form {
 		$_btn_search = new Zend_Dojo_Form_Element_SubmitButton('btn_search');
 		$_btn_search->setAttribs(array(
 				'dojoType'=>'dijit.form.Button',
-				'iconclass'=>'dijitIconSearch'
+				'iconclass'=>'dijitIconSearch',
+				'class'=>'fullside',
 		));
 		$label=$this->tr->translate("SEARCH");
 		$_btn_search->setLabel("SEARCh");

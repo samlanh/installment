@@ -23,9 +23,10 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
 		$_title->setAttribs(array('dojoType'=>$this->text,
 				'onkeyup'=>'this.submit()',
+				'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 				));
-		//$_title->setValue($request->getParam("adv_search"));
+		$_title->setValue($request->getParam("adv_search"));
 		
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
@@ -76,7 +77,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		
 		$approve_by = new Zend_Dojo_Form_Element_FilteringSelect('approve_by');
 		$rows = $db ->getAllCOName();
-		$options_approve=array(''=>"---ážŸáŸ’ážœáŸ‚áž„ážšáž€áž¢áŸ’áž“áž€áž™áž›áŸ‹áž–áŸ’ážšáž˜---");
+		$options_approve=array(''=>"---ជ្រើសរើស---");
 		if(!empty($rows))foreach($rows AS $row) $options_approve[$row['co_id']]=$row['co_khname'];
 		$approve_by->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
