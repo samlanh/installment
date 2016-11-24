@@ -60,6 +60,14 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'onchange'=>'CalculateDate();'));
 		$_date = $request->getParam("start_date");
+		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
+		$_branch_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$options = $_db->getAllBranchName(null,1);
+		$_branch_id->setMultiOptions($options);
+		$_branch_id->setValue($request->getParam("branch_id"));
 		
 		if(empty($_date)){
 			$_date = date("Y-m-d");
@@ -86,7 +94,7 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		if(!empty($_data)){
 			//$_co->setValue($_data['co_name']);
 		}
-		$this->addElements(array($_btn_search,$_status_search,$_title,$_id,$property,$_type_of_property,$from_date,$to_date));
+		$this->addElements(array($_branch_id,$_btn_search,$_status_search,$_title,$_id,$property,$_type_of_property,$from_date,$to_date));
 		return $this;
 	}
 	
