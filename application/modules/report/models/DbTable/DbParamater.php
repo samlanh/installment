@@ -314,7 +314,7 @@ function getAllBranch($search=null){
     		$sql="SELECT * FROM `ln_termcondiction` AS t WHERE t.`status`=1 LIMIT 1";
     		return $db->fetchRow($sql);
     	}
-    	function getSaelHistory($search=null){
+    	function getSaleHistory($search=null){
     		$db= $this->getAdapter();
     		$sql="SELECT * FROM `v_getsalehistory` WHERE 1 ";
     		$order =' ORDER BY house_id DESC';

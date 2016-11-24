@@ -306,7 +306,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		);
   	}
   	$db  = new Report_Model_DbTable_DbParamater();
-  	$this->view->row = $db->getSaelHistory($search);
+  	$this->view->row = $db->getSaleHistory($search);
   	
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
