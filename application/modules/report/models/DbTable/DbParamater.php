@@ -327,13 +327,11 @@ function getAllBranch($search=null){
     		return $db->fetchAll($sql.$where.$order);
     	}
     	function getAgreementBySaleID($id=null){
-    		$id=8;
     		$db = $this->getAdapter();
     		$sql="SELECT * FROM `v_agreement` WHERE id = ".$id;
     		return $db->fetchRow($sql);
     	}
     	function getScheduleBySaleID($id=null){
-    		$id=8;
     		$db = $this->getAdapter();
     		$sql=" SELECT * FROM `ln_saleschedule` AS sc WHERE sc.`sale_id`= ".$id;
     		$order = ' ORDER BY sc.`date_payment` ASC';
