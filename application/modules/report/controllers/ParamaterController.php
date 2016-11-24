@@ -191,6 +191,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	}else{
   		$search = array(
   				'adv_search'=>'',
+  				'property_type'=>'',
   				'branch_id_search' => -1,
   				'from_date_search'=> date('Y-m-d'),
   				'to_date_search'=>date('Y-m-d'));

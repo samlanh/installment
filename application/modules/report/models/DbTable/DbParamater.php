@@ -188,6 +188,9 @@ function getAllBranch($search=null){
     		if($search['branch_id_search']>-1){
     			$where.= " AND c.branch_id = ".$search['branch_id_search'];
     		}
+    		if(!empty($search['property_type'])){
+    			$where.= " AND pro.`property_type` = ".$search['property_type'];
+    		}
     		if(!empty($search['adv_search'])){
     			$s_where = array();
     			$s_search = addslashes(trim($search['adv_search']));
