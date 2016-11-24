@@ -31,7 +31,9 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			s.`sale_number`,
 			clie.`client_number`,
 			CONCAT(clie.`name_kh`," ",clie.`name_en`) AS client_name,
-			p.`project_name`,pro.`land_code`,pro.`land_address`,pro.`street`,c.`create_date`
+			p.`project_name`,
+			(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
+			pro.`land_code`,pro.`land_address`,pro.`street`,c.`create_date`
 			FROM `ln_sale_cancel` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = c.`property_id` AND
