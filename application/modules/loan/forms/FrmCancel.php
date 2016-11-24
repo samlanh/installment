@@ -58,7 +58,7 @@ public function init()
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required' =>'true',
-				'onchange'=>'getSaleNo();'
+				'onchange'=>'getSaleNo(), getSaleClie();'
 		));
 		$rows_branch = $db->getAllBranchName();
 		if(!empty($rows_branch))foreach($rows_branch AS $row){

@@ -32,6 +32,8 @@ dojo.require("dijit.Dialog");
 							<td><?php //echo $frm->getElement('cancel_code');?></td> -->
 							<td><?php echo $tr->translate("SALE_NO")?><?php echo $frm->getElement('old_sale_id');?></td>
 							<td><input id="sale_no" ><?php echo $frm->getElement('property_id');?></td>
+							<td><?php echo $tr->translate("CLIENT")?></td>
+							<td><input id="sale_client" /></td>
 						</tr>
 						<tr>
 							<td colspan="3"><?php echo $tr->translate("CUSTOMER_INFO")?></td>
@@ -78,7 +80,9 @@ dojo.require("dijit.Dialog");
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("SOLD_NOTE")?></td>
-							<td style="height: 70px; border:1px solid #aac4e6; widht:100%;" colspan="3"><label id="sale_note"></label></td>	
+							<td style="height: 70px; border:1px solid #aac4e6; widht:100%;" colspan="2"><label id="sale_note"></label></td>	
+							<td><?php echo $tr->translate("REASON")?></td>
+							<td  colspan="2"><textarea class="fullside" style="height: 70px;" id="reason" name="reason"><?php echo $this->row['reason'];?></textarea></td>
 						</tr>
 						<tr>
 							<td align="center" colspan="6">
@@ -105,6 +109,7 @@ dojo.require("dijit.Dialog");
 <script type="text/javascript">
 
 var sale_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 dojo.ready(function(){
 	try{
 		
@@ -122,7 +127,22 @@ dojo.ready(function(){
 				getLandAndClientDetail();
 			}
 		}, "sale_no");
+		new dijit.form.FilteringSelect({
+			store: sale_client_store,
+			autoComplete: true,
+			required: false,		           
+			name: "sale_client",
+			id: "sale_client",
+			value: "<?php echo $this->row['sale_id'];?>",
+			searchAttr: "name",
+			class: 'fullside',
+			//missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ ស្រុក/ខ័ណ្ឌ!",	
+				onChange: function() {
+					getLandAndClientDetail("2");
+				}
+			}, "sale_client");
 		//getCancelNo();
+		getSaleClie();
 		getSaleNo();
 
 		}catch(e){
@@ -174,9 +194,35 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 			}
 		});
 	}
+	var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
+	function getSaleClie(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==0){
+			return false;}
+		dojo.xhrPost({
+			url:url_getSaleClien,	
+			content:{ 
+				'branch_id': branch_id
+			},
+			handleAs:"json",
+			load: function(data) {	
+				sale_client_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('sale_client').set('store', sale_client_store);
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
 	var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
-	function getLandAndClientDetail(){
-		sale_id = dijit.byId('sale_no').get('value');
+	function getLandAndClientDetail(inds){
+		if(inds == "2"){
+			sale_id = dijit.byId('sale_client').get('value');
+			dijit.byId('sale_no').set("value",sale_id)
+		}else{
+			sale_id = dijit.byId('sale_no').get('value');
+			dijit.byId('sale_client').set("value",sale_id);
+		}
 		dojo.xhrPost({
 			url:url_land,	
 			content:{ 

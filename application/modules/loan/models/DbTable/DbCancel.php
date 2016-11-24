@@ -61,6 +61,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'create_date'=>date("Y-m-d"),
 					'user_id'=>$this->getUserId(),
 					'status'=>1,
+					'reason'=>$data['reason'],
 					);
 			$this->_name="ln_sale_cancel";
 			 $this->insert($arr);
@@ -123,6 +124,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'sale_id'=>$data['sale_no'],
 						'property_id'=>$data['property_id'],
 						'create_date'=>date("Y-m-d"),
+						'reason'=>$data['reason'],
 						'user_id'=>$this->getUserId(),
 						'status'=>$data['status_using'],
 				);
@@ -183,6 +185,15 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql= "SELECT * FROM `ln_sale_cancel` AS c WHERE c.`id`=".$id;
 		return $db->fetchRow($sql);
+	}
+	
+	public function getSaleNoByProject($branch_id){
+		$db = $this->getAdapter();
+		$sql="SELECT s.`id`,CONCAT((SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = s.`client_id` LIMIT 1),' (',
+		s.`sale_number`,')' ) AS `name`
+		FROM `ln_sale` AS s
+		WHERE s.`is_completed` =0 AND s.`branch_id` =".$branch_id;
+		return $db->fetchAll($sql);
 	}
 }
 

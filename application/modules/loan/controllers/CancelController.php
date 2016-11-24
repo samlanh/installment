@@ -113,6 +113,15 @@ class Loan_CancelController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	function getSaleclieAction(){// by vandy get property code
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbCancel();
+			$dataclient=$db->getSaleNoByProject($data['branch_id']);
+			print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	}
 	function getInfoAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
