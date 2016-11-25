@@ -158,6 +158,9 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 		$opt= $db->getVewOptoinTypeByType(12,1,null,null);
+		if($request->getActionName()!='add' OR $request->getActionName()!='edit'){
+			unset($opt[-1]);
+		}
 		$_category->setMultiOptions($opt);
 		
 		$category_id_expense = new Zend_Dojo_Form_Element_FilteringSelect('category_id_expense');
@@ -166,6 +169,9 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 		$opt1= $db->getVewOptoinTypeByType(13,1,null,null);
+		if($request->getActionName()!='add' OR $request->getActionName()!='edit'){
+			unset($opt1[-1]);
+		}
 		$category_id_expense->setMultiOptions($opt1);
 		
 		if($data!=null){

@@ -485,10 +485,15 @@ public function exportFileToExcel($table,$data,$thead){
  	}
  	$this->view->LoanCollectionco_list =$db->getALLLoanPayoff($search);
  	$this->view->list_end_date=$search;
- 	$frm = new Loan_Form_FrmSearchGroupPayment();
- 	$fm = $frm->AdvanceSearch();
- 	Application_Model_Decorator::removeAllDecorator($fm);
- 	$this->view->frm_search = $fm;
+//  	$frm = new Loan_Form_FrmSearchGroupPayment();
+//  	$fm = $frm->AdvanceSearch();
+//  	Application_Model_Decorator::removeAllDecorator($fm);
+//  	$this->view->frm_search = $fm;
+ 	
+ 	$frm = new Loan_Form_FrmSearchLoan();
+ 	$frm = $frm->AdvanceSearch();
+ 	Application_Model_Decorator::removeAllDecorator($frm);
+ 	$this->view->frm_search = $frm;
  }
  function rptLoanExpectIncomeAction(){
  	if($this->getRequest()->isPost()){

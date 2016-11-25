@@ -57,9 +57,12 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     	if(!empty($search['co_khname'])){
     		$where.= " AND co_id = ".$search['co_khname'];
     	}
+    	if($search['branch_id']>-1){
+    		$where.= " AND co_id = ".$search['branch_id'];
+    	}
     	if(!empty($search['adv_search'])){
     		$s_where = array();
-    		$s_search = $search['adv_search'];
+    		$s_search = addslashes(trim($search['adv_search']));
     		$s_where[] =" co_code LIKE '%{$s_search}%'";
     		$s_where[]=" co_khname LIKE '%{$s_search}%'";
     		$s_where[]=" co_firstname LIKE '%{$s_search}%'";
@@ -69,7 +72,7 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     		$s_where[]=" national_id LIKE '%{$s_search}%'";
     		$where .=' AND '.implode(' OR ',$s_where). '';
     	}
-    	//echo  $sql.$where.$Other;
+    	echo  $sql.$where.$Other;
     	return $db->fetchAll($sql.$where.$Other);
     }
     public function getAllVillage($search= null){
@@ -228,10 +231,11 @@ function getAllBranch($search=null){
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
     		}
-    		if($search['category_id']>-1 || !empty($search['category_id'])){
+    		if($search['category_id']>-1 AND !empty($search['category_id'])){
     			$where.= " AND category_id = ".$search['category_id'];
     		}
     		$order=" order by id desc ";
+//     		echo $sql.$where.$order;exit();
     		return $db->fetchAll($sql.$where.$order);
     	}
     	function getAllExpense($search=null){
@@ -257,7 +261,7 @@ function getAllBranch($search=null){
     			$s_where[] = " invoice LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
-    		if($search['category_id_expense']>-1 || !empty($search['category_id_expense'])){
+    		if($search['category_id_expense']>-1 AND !empty($search['category_id_expense'])){
     			$where.= " AND category_id = ".$search['category_id_expense'];
     		}
     		if($search['branch_id']>0){

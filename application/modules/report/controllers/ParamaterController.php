@@ -15,22 +15,17 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   	if($this->getRequest()->isPost()){
-  		$data = $this->getRequest()->getPost();
-  		//print_r($db->getAllstaff($data));
-  		if(isset($data['btn_search'])){
-  			//print_r($data);exit();
-  			$this->view->staff_list = $db->getAllstaff($data);
-  			
-  		}else{
-  		$collumn = array("CO_CODE","CO_KHNAME","CO_FIRSTNAME","SEX","EMAIL","BASIC_SALARY",
-  				"start_date","end_date","contract_no","shift","workingtime","position","tel",
-  				"basic_salary","national_id","address","degree","branch_name","note");
-  		$this->exportFileToExcel('ln_staff',$db->getAllstaff(),$collumn);
-  		}
+  		$search = $this->getRequest()->getPost();
   	}else{
-  		$search = array('txtsearch' => '');
-  		$this->view->staff_list = $db->getAllstaff();
+  		$search = array(
+  				'start_date'  => date('Y-m-d'),
+	 			'end_date'    => date('Y-m-d'),
+  				'txtsearch' => '',
+  				'branch_id'=>-1,
+  				'co_khname'=>-1,
+  				'search_status'=>-1);
   	}
+  	$this->view->staff_list = $db->getAllstaff($search);
   	$frm=new Other_Form_FrmStaff();
   	$row=$frm->FrmAddStaff();
   	Application_Model_Decorator::removeAllDecorator($row);

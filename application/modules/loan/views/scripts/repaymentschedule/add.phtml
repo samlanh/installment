@@ -63,7 +63,7 @@
 							<td><input id="member" /> <?php //echo $frm->getElement('member');?></td>
 						</tr>
 						<tr>
-							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("Land Information")?></strong></td>
+							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></td>
 						</tr>
 						<tr height="40px">
 							<td><?php echo $tr->translate("LAND_CODE")?></td>
@@ -954,9 +954,12 @@ function printSave(new_stu_id,new_receipt_no){
 	}
 var url_previewloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'addschedultest')); ?>';
 function addPreviewLoan(){
+	deposit= dijit.byId('deposit').get('value');
+	if(deposit!=0){
+         return true;
+	}
 	r=0;
 	if(dijit.byId('frm_add_tran').validate()){
-		//co_id = dijit.byId('co_id').get('value');
 		client = dijit.byId('member').get('value');
 		if (client=='' || client==-1){
 			alert('Please Select Client Name !');
@@ -970,10 +973,8 @@ function addPreviewLoan(){
 			handleAs:"json", 
 			load: function(data) {
 				if(data.row_id=='row_id'){//return 1;
-					alert("1 row");
 					printSave();
 					}else{
-						alert("more then 1 row");
 						  document.getElementsByClassName("overlay")[0].style.display="none";
 						  temp='';	
 						  fund_title=0;thead='';fund_title=0;

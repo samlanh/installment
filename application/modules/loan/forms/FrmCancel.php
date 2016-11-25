@@ -29,8 +29,7 @@ public function init()
 		$property->setMultiOptions($opt_co);
 		
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
-		$_title->setAttribs(array('dojoType'=>$this->tvalidate,
-				'onkeyup'=>'this.submit()',
+		$_title->setAttribs(array('dojoType'=>'dijit.form.TextBox',
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 		));
 		//$_title->setValue($request->getParam("adv_search"));

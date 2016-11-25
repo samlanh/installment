@@ -20,16 +20,26 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 	public function FrmAddStaff($_data=null){
 	
 		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$_db = new Application_Model_DbTable_DbGlobal();
+		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
+		$_branch_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		
+		$options = $_db->getAllBranchName(null,1);
+		$_branch_id->setMultiOptions($options);
+		$_branch_id->setValue($request->getParam("branch_id"));
 		
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
-		$_title->setAttribs(array('dojoType'=>$this->tvalidate,
+		$_title->setAttribs(array('dojoType'=>$this->tvalidate,'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 		));
 		$_title->setValue($request->getParam("adv_search"));
 		
 		
 		$_status_search=  new Zend_Dojo_Form_Element_FilteringSelect('search_status');
-		$_status_search->setAttribs(array('dojoType'=>$this->filter));
+		$_status_search->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
@@ -41,15 +51,15 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 		$_btn_search->setAttribs(array(
 				'dojoType'=>'dijit.form.Button',
 				'iconclass'=>'dijitIconSearch',
-		
+				'class'=>'fullside',
 		));
-		$_db = new Application_Model_DbTable_DbGlobal();
+		
 		$rows=$_db->getAllCOName();
 		//print_r($rows);exit();
 		$opt_co = array(''=>$this->tr->translate("SELECT_CO_NAME"));
 		if(!empty($rows))foreach($rows AS $row) $opt_co[$row['co_id']]=$row['co_khname'];
 		$_co = new Zend_Dojo_Form_Element_FilteringSelect('co_khname');
-		$_co->setAttribs(array('dojoType'=>$this->filter,
+		$_co->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',
 				//'class'=>'fullside',
 		));
 		
@@ -57,7 +67,7 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 		$_co->setValue($request->getParam('co_khname'));
 		
 		$_startdate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
-		$_startdate->setAttribs(array('dojoType'=>$this->date,
+		$_startdate->setAttribs(array('dojoType'=>$this->date,'class'=>'fullside',
 				//'class'=>'fullside',
 				'onchange'=>'CalculateDate();'));
 		$_date = $request->getParam("start_date");
@@ -68,7 +78,7 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 		
 		$_startdate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
 		$_startdate->setAttribs(array('dojoType'=>$this->date,
-				//'class'=>'fullside',
+				'class'=>'fullside',
 				'onchange'=>'CalculateDate();'));
 		$_date = $request->getParam("start_date");
 
@@ -80,7 +90,7 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 		
 		$_enddate = new Zend_Dojo_Form_Element_DateTextBox('end_date');
 		$_enddate->setAttribs(array('dojoType'=>$this->date,'required'=>'true',
-				//'class'=>'fullside',
+				'class'=>'fullside',
 				));
 		$_date = $request->getParam("end_date");
 		
@@ -116,7 +126,7 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 			$_id->setValue($_data['id']);
 			$_note->setValue($_data['note']);
 		}
-		$this->addElements(array($_salary,$_staff_id,$_btn_search,$_status_search,$_title,$_id,$_co,$_note,$_startdate,$_enddate,$_amount_day,$_status));
+		$this->addElements(array($_branch_id,$_salary,$_staff_id,$_btn_search,$_status_search,$_title,$_id,$_co,$_note,$_startdate,$_enddate,$_amount_day,$_status));
 		return $this;
 	}
 	
