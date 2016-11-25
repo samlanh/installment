@@ -36,6 +36,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$commission->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
+				'readonly'=>'true',
 		));
 		$commission->setValue(3);
 		
@@ -340,7 +341,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$discount->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside'));
 		
 		$reciept_no = new Zend_Dojo_Form_Element_TextBox("reciept_no");
-		$reciept_no->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside',
+		$reciept_no->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside','readonly'=>'true',
 				'style'=>'color:red; font-weight: bold;'));
 		$db_loan = new Loan_Model_DbTable_DbLoanILPayment();
 		$loan_number = $db_loan->getIlPaymentNumber();
@@ -426,8 +427,8 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 			$option_pay->setValue($data["payment_option"]);
 			$_amount_receive->setValue($data["recieve_amount"]);
 			$_amount_return->setValue($data["return_amount"]);
-			$_penalize_amount->setValue($data["penalize_amount"]);
-			$_total_payment->setValue($data["total_payment"]);
+			$_penalize_amount->setValue($data["penalize_amount_parent"]);
+			$_total_payment->setValue($data["total_payment_parent"]);
 			$_priciple_amount->setValue($data["principal_amount"]);
 			$_os_amount->setValue($data["total_principal_permonth"]);
 // // 			$discount->setValue($data["total_discount"]);
@@ -436,7 +437,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 			$_cheque->setValue($data["cheque"]);
 // 			$date_input->setValue($data["date_input"]);
 // 			$_collect_date->setValue(date("y-m-d"));
-			$_service_charge->setValue($data["service_charge"]);
+			$_service_charge->setValue($data["service_charge_parent"]);
 // 			$reciever->setValue($data["receiver_id"]);
 // 			$_currency_type->setValue($data["currency_type"]);
 // 			$amount_payment_term->setValue($data["amount_term"]);
