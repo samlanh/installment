@@ -597,25 +597,22 @@ function submitDataClose(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add')); ?>';
 	
 	
-				service_charge = dijit.byId('service_charge').get('value');
-				receive_amount = dijit.byId('amount_receive').get('value');
-				option_pay = dijit.byId('option_pay').get('value');
-				total_payments = dijit.byId('total_payment').get('value');
-				if(option_pay==2 || option_pay==3 || option_pay==4){
-					if(receive_amount<total_payments){
-						alert('You Can not pay in this option! Please Input Recieve Amount more than or equal Total Payment!');
-						dijit.byId('amount_receive').focus();
-						return false;
-					}
-				}
-				if(receive_amount<0){
-					alert('Please fill Recieve Amount');
-					dijit.byId('amount_receive').focus();
-					return false;
-				}
-	
-	
-	
+	service_charge = dijit.byId('service_charge').get('value');
+	receive_amount = dijit.byId('amount_receive').get('value');
+	option_pay = dijit.byId('option_pay').get('value');
+	total_payments = dijit.byId('total_payment').get('value');
+	if(option_pay==2 || option_pay==3 || option_pay==4){
+		if(receive_amount<total_payments){
+			alert('You Can not pay in this option! Please Input Recieve Amount more than or equal Total Payment!');
+			dijit.byId('amount_receive').focus();
+			return false;
+		}
+	}
+	if(receive_amount<0){
+		alert('Please fill Recieve Amount');
+		dijit.byId('amount_receive').focus();
+		return false;
+	}
 	
 		loading();
 		dojo.xhrPost({
@@ -633,6 +630,24 @@ function submitDataClose(){
 }
 function submitData(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add')); ?>';
+	
+	service_charge = dijit.byId('service_charge').get('value');
+	receive_amount = dijit.byId('amount_receive').get('value');
+	option_pay = dijit.byId('option_pay').get('value');
+	total_payments = dijit.byId('total_payment').get('value');
+	if(option_pay==2 || option_pay==3 || option_pay==4){
+		if(receive_amount<total_payments){
+			alert('You Can not pay in this option! Please Input Recieve Amount more than or equal Total Payment!');
+			dijit.byId('amount_receive').focus();
+			return false;
+		}
+	}
+	if(receive_amount<0){
+		alert('Please fill Recieve Amount');
+		dijit.byId('amount_receive').focus();
+		return false;
+	}
+	
 	loading();
 	dojo.xhrPost({
 		    url: url_submit,	

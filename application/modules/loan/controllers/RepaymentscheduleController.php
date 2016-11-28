@@ -28,8 +28,8 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 						 );
 			}
 // 			print_r($search);
-			$db = new Loan_Model_DbTable_DbLandpayment();
-			$rs_rows= $db->getAllIndividuleLoan($search,1);
+			$db = new Loan_Model_DbTable_DbRepaymentSchedule();
+			$rs_rows= $db->getAllReschedule($search,1);
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
@@ -39,7 +39,7 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 					'module'=>'loan','controller'=>'repaymentschedule','action'=>'view',
 			);
 			$link_info=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('loan_number'=>$link,'payment_method'=>$link_info,'client_name_kh'=>$link_info,'client_name_en'=>$link_info,'total_capital'=>$link_info),0);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_id'=>$link,'sale_id'=>$link_info,'client_name_kh'=>$link_info,'client_name_en'=>$link_info,'total_capital'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -123,25 +123,38 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 		}
 		
 		$id = $this->getRequest()->getParam('id');
-		$db_g = new Application_Model_DbTable_DbGlobal();
-		$rs = $db_g->getLoanFundExist($id);
-		if($rs==true){
-			Application_Form_FrmMessage::Sucessfull("LOAN_FUND_EXIST","/loan/repaymentschedule/index");
-		}
+		$_db = new Loan_Model_DbTable_DbRepaymentSchedule();
+		$data_row = $_db->getRescheduleById($id); 
 		
-		$db = new Loan_Model_DbTable_DbLoanIL();
-		$row = $db->getTranLoanByIdWithBranch($id,1,1);
-		if(empty($row)){ Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST","/loan/repaymentschedule/index"); }
+		$this->view->row = $data_row;
+// 		$rs = $db_g->getLoanFundExist($id);
+// 		if($rs==true){
+// 			Application_Form_FrmMessage::Sucessfull("LOAN_FUND_EXIST","/loan/repaymentschedule/index");
+// 		}
+		
+// 		$db = new Loan_Model_DbTable_DbLoanIL();
+// 		$row = $db->getTranLoanByIdWithBranch($id,1,1);
+// 		if(empty($row)){ Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST","/loan/repaymentschedule/index"); }
+		
 		
 		$frm = new Loan_Form_FrmLoan();
-		$frm_loan=$frm->FrmAddLoan($row);
+		$frm_loan=$frm->FrmAddLoan($data_row);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
-		
-		$db = new Application_Model_DbTable_DbGlobal();
-		$this->view->allclient = $db->getAllClient();
-		$this->view->allclient_number = $db->getAllClientNumber();
-		$this->view->datarow = $row;
+        $db = new Application_Model_DbTable_DbGlobal();
+        $this->view->allclient = $db->getAllClient();
+        $this->view->allclient_number = $db->getAllClientNumber();
+        $frmpopup = new Application_Form_FrmPopupGlobal();
+        $this->view->frmpupoploantype = $frmpopup->frmPopupLoanTye();
+        $this->view->frmPopupZone = $frmpopup->frmPopupZone();
+        
+        $db_keycode = new Application_Model_DbTable_DbKeycode();
+        $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
+        
+        $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
+        
+		$db = new Setting_Model_DbTable_DbLabel();
+		$this->view->setting=$db->getAllSystemSetting();
 	}
 	
 	function getloanRescheduleAction(){

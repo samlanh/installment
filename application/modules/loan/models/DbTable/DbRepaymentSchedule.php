@@ -9,6 +9,13 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	return $session_user->user_id;
     	 
     }
+    
+    function getAllReschedule(){
+    	$db = $this->getAdapter();
+    	$sql = 'select * from ln_reschedule ';
+    	return $db->fetchAll($sql);
+    }
+    
     function calCulateIRR($total_loan_amount,$loan_amount,$term,$curr){
     	$array =array();//array(-1000,107,103,103,103,103,103,103,103,103,103,103,103);
     	for($j=0; $j<= $term;$j++){
@@ -44,12 +51,126 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		return round($value,2);
     	}
     }
+    
+    function getSaleInfo($sale_id){
+    	$db = $this->getAdapter();
+    	$sql="select * from ln_sale where id = $sale_id";
+    	return $db->fetchRow($sql);
+    }
+    
     public function addRepayMentSchedule($data){
     $db = $this->getAdapter();
     	$db->beginTransaction();
     	
     	try{
     		$dbtable = new Application_Model_DbTable_DbGlobal();
+    		
+    		$sale = $this->getSaleInfo($data['loan_number']);
+    		
+    		$array = array(
+    				'branch_id'				=>$data['branch_id'],
+    				'sale_id'				=>$data['loan_number'],
+    				'client_id'				=>$data['customer_code'],
+    				'reschedule_date'		=>$data['date_buy'],
+    				'receipt_no'			=>$data['receipt'],
+    				
+    				'amount_before'			=>$data['total_sold'],
+    				'paid_before'			=>$data['paid_before'],
+    				'balance_before'		=>$data['balance_before'],
+    				'interestrate_before'	=>$sale['interest_rate'],
+    				'payment_method_before'	=>$sale['payment_method'],
+    				'period_before'			=>$sale['total_duration'],
+    				'cal_startdate'			=>$sale['startcal_date'],
+    				'first_paymentbefore'	=>$sale['first_payment'],
+    				'end_datebefore'		=>$sale['end_line'],
+    				
+    				'discount_after'		=>$data['discount'],
+    				'total_payment'			=>$data['sold_price'],
+    				'other_fee'				=>$data['other_fee'],
+    				'payment_method_after'	=>$data['schedule_opt'],
+    				'paid_amount_after'		=>$data['deposit'],
+    				'balance_after'			=>$data['balance'],
+    				
+    				'period_after'			=>$data['period'],
+    				'interest_after'		=>$data['interest_rate'],			
+    				'fixed_payment_after'	=>$data['fixed_payment'],
+    				
+    				'start_date_after'		=>$data['release_date'],
+    				'first_payment_after'	=>$data['first_payment'],
+    				'end_date_after'		=>$data['date_line'],
+    				
+    				'status'				=>1,
+    				'note'					=>$data['note'],
+    				'user_id'				=>$this->getUserId(),
+    				
+    				);
+    		$this->_name='ln_reschedule';
+    		$this->insert($array);
+    		
+    		if($data['deposit']>0){
+    			
+    			if($data['schedule_opt']==2){
+    				$is_complete = 1;
+    			}else{
+    				$is_complete = 0;
+    			}
+    			
+	    		$this->_name='ln_client_receipt_money';
+	    		$array = array(
+	    				'branch_id'				=>$data['branch_id'],
+	    				'client_id'				=>$data['customer_code'],
+	    				'receipt_no'			=>$data['receipt'],
+	    				'date_pay'				=>$data['date_buy'],
+	    				'land_id'				=>$data['loan_number'],
+	    				'date_input'			=>date('Y-m-d'),
+	    				'outstanding'			=>$data['sold_price'],
+	    				'principal_amount'		=>$data['balance'],
+	    				
+	    				'total_principal_permonth'		=>$data['deposit'],
+	    				'total_principal_permonthpaid'	=>$data['deposit'],
+	    				'total_interest_permonth'		=>0,
+	    				'total_interest_permonthpaid'	=>0,
+	    				'penalize_amount'				=>0,
+	    				'penalize_amountpaid'			=>0,
+	    				
+	    				'service_charge'				=>$data['other_fee'],
+	    				'service_chargepaid'			=>$data['other_fee'],
+	    				'total_payment'					=>$data['sold_price'],
+	    				'amount_payment'				=>$data['deposit'],
+	    				'recieve_amount'				=>$data['deposit'],
+	    				'balance'						=>$data['balance'],
+	    				'payment_option'				=>$data['schedule_opt'],
+	    				
+	    				'is_completed'					=>$is_complete,
+	    				'status'						=>1,
+	    				'note'							=>$data['note'],
+	    				'user_id'						=>$this->getUserId(),
+	    				);
+	    		$crm_id = $this->insert($array);
+	    		
+	    		$this->_name='ln_client_receipt_money_detail';
+	    		$array = array(
+	    				'crm_id'				=>$crm_id,
+	    				'land_id'				=>$data['loan_number'],
+	    				'date_payment'			=>$data['date_buy'],
+	    				
+	    				'capital'				=>$data['sold_price'],
+	    				'remain_capital'		=>$data['balance'],
+	    				'principal_permonth'	=>$data['deposit'],
+	    				'total_interest'		=>0,
+	    				 
+	    				'total_payment'			=>$data['sold_price'],
+	    				'total_recieve'			=>$data['deposit'],
+	    				'service_charge'		=>$data['other_fee'],
+	    				'penelize_amount'		=>0,
+	    				
+	    				'is_completed'			=>$is_complete,
+	    				'status'				=>1,
+	    		);
+	    		$this->insert($array);
+	    		
+    		}
+    		
 //     		$loan_number = $dbtable->getLoanNumber($data);
 //     		$receipt = $dbtable->getReceiptByBranch($data);
     			   $arr = array(
@@ -76,9 +197,10 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 //     				'payment_method'=>1,//$data['loan_type'],
 //     				'note'=>$data['note'],
     				'is_reschedule'=>1,
+    			   	'create_date'=>date("Y-m-d"),
 //     				'staff_id'=>$data['staff_id'],
 //     				'comission'=>$data['commission'],
-//     				'create_date'=>date("Y-m-d"),
+    				
 //     				'user_id'=>$this->getUserId()
     				);
     			   $this->_name='ln_sale';
@@ -210,7 +332,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    			        	'amount_day'=>$old_amount_day,
 			    			        	'is_completed'=>0,
 			    			        	'date_payment'=>$next_payment,
-			    			        	'is_rescheule'=>1,
+			    			        	'is_reschedule'=>1,
 	// 		    			        	'payment_option'=>$cum_interest,
 	// 		    			        	'penelize'=>,
 	// 		    			        	'service_charge'=>,
@@ -743,6 +865,12 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    	(SELECT LEVEL FROM `ln_loan_group` WHERE g_id  = l.group_id LIMIT 1) AS LEVEL
 			    FROM `ln_loan_member` AS l,`ln_loanmember_funddetail` AS lf WHERE lf.`member_id`=l.`member_id` AND lf.`is_completed`=0 AND l.member_id=$member_id AND l.`status`=1 AND l.is_completed=0";
     	return $db->fetchAll($sql);
+    }
+    
+    function  getRescheduleById($id){
+    	$db = $this->getAdapter();
+    	$sql = "SELECT * FROM `ln_reschedule` where id = $id";
+    	return $db->fetchRow($sql);
     }
     
 }
