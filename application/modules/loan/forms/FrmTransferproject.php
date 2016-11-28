@@ -1,18 +1,18 @@
 <?php 
-Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
+Class Loan_Form_FrmTransferproject extends Zend_Dojo_Form {
 	protected $tr;
 public function init()
 	{
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
-	public function FrmAddLoan($data=null){
+	public function FrmTransferProject($data=null){
 		$db = new Application_Model_DbTable_DbGlobal();
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$_branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
-				'onchange'=>'filterClient();'
+				'onchange'=>'filterClient();setBranchID();'
 		));
 		$options = $db->getAllBranchName(null,1);
 		$_branch_id->setMultiOptions($options);	
