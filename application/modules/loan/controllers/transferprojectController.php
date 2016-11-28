@@ -55,8 +55,7 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {
 				$_dbmodel = new Loan_Model_DbTable_DbTransferProject();
-				
-				$_dbmodel->addRepayMentSchedule($_data);
+				$_dbmodel->addChangeProject($_data);
 				if(!empty($_data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/transferproject");
 				}else{
@@ -73,41 +72,21 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
-        $this->view->allclient = $db->getAllClient();
-        $this->view->allclient_number = $db->getAllClientNumber();
-        $frmpopup = new Application_Form_FrmPopupGlobal();
-        $this->view->frmpupoploantype = $frmpopup->frmPopupLoanTye();
-        $this->view->frmPopupZone = $frmpopup->frmPopupZone();
+        
+//      $this->view->allclient = $db->getAllClient();
+//      $this->view->allclient_number = $db->getAllClientNumber();
+//      $frmpopup = new Application_Form_FrmPopupGlobal();
         
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
         
-        $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
+//      $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
         
-		$db = new Setting_Model_DbTable_DbLabel();
-		$this->view->setting=$db->getAllSystemSetting();
+// 		$db = new Setting_Model_DbTable_DbLabel();
+// 		$this->view->setting=$db->getAllSystemSetting();
 	}	
-// 	public function addloanAction(){
-// 		if($this->getRequest()->isPost()){
-// 			$data=$this->getRequest()->getPost();
-// 			$db = new Loan_Model_DbTable_DbRepaymentSchedule();
-// 			$id = $db->addNewLoanGroup($data);
-// 			$suc = array('sms'=>'ប្រាក់ឥណទានត្រូវបានបញ្ចូលដោយជោគជ័យ !');
-// 			print_r(Zend_Json::encode($suc));
-// 			exit();
-// 		}
-// 	}
-	public function viewAction(){
-		// 		$this->_helper->layout()->disableLayout();
-		$id = $this->getRequest()->getParam('id');
-		$db_g = new Application_Model_DbTable_DbGlobal();
-		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOT_FUND","/loan/index/index");
-		}
-		$db = new Loan_Model_DbTable_DbLoanIL();
-		$row = $db->getLoanviewById($id);
-		$this->view->tran_rs = $row;
-	}
+
+	
 	
 	public function editAction(){
 		if($this->getRequest()->isPost()){
@@ -144,45 +123,12 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 		$this->view->datarow = $row;
 	}
 	
-	function getloanRescheduleAction(){
-		if($this->getRequest()->isPost()){
-			$data=$this->getRequest()->getPost();
-			$db=new Loan_Model_DbTable_DbTransferProject();
-			$row=$db->getLaoForRepaymentSchedule($data['member_id']);
-			print_r(Zend_Json::encode($row));
-			exit();
-		}
-	}
-	
 	function getalllandAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Application_Model_DbTable_DbGlobal();
 			$action = (!empty($data['action'])?$data['action']:null);
 			$row = $db->getAllLandInfo($data['branch_id'],1,$action);
-			print_r(Zend_Json::encode($row));
-			exit();
-		}
-	}
-	
-	function getAllLandTransferAction(){
-		if($this->getRequest()->isPost()){
-			$data = $this->getRequest()->getPost();
-			$db = new Loan_Model_DbTable_DbTransferProject();
-			//$action = (!empty($data['action'])?$data['action']:null);
-			$row = $db->getAllLandInfo($data['to_branch_id']);
-			print_r(Zend_Json::encode($row));
-			exit();
-		}
-	}
-	
-	
-	function getLandInfoTransferAction(){
-		if($this->getRequest()->isPost()){
-			$data = $this->getRequest()->getPost();
-			$db = new Loan_Model_DbTable_DbTransferProject();
-			//$action = (!empty($data['action'])?$data['action']:null);
-			$row = $db->getLandInfoTransfer($data['land_id']);
 			print_r(Zend_Json::encode($row));
 			exit();
 		}
