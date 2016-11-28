@@ -17,10 +17,10 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 				$search = array(
 						'txt_search'=>'',
 						'client_name'=> -1,
-						'repayment_method' => -1,
 						'branch_id' => -1,
 						'co_id' => -1,
 						'status' => -1,
+						'schedule_opt'=>-1,
 						'currency_type'=>-1,
 						'pay_every'=>-1,
 						'start_date'=> date('Y-m-01'),

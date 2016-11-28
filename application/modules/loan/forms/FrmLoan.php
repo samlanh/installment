@@ -209,7 +209,7 @@ public function init()
 				'onkeyup'=>'checkScheduleOption();'
 				//'onkeyup'=>'calCulatePeriod();'
 		));
-		$_period->setValue(24);
+		$_period->setValue(60);
 		
 		$_releasedate = new Zend_Dojo_Form_Element_DateTextBox('release_date');
 		$_releasedate->setAttribs(array(

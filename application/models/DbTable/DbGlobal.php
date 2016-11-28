@@ -17,6 +17,20 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		//echo $sql;exit();
 		return $db->fetchAll($sql);
 	}
+	public function getReceiptnumber($branch_id=1){
+		$this->_name='ln_client_receipt_money';
+		$db = $this->getAdapter();
+		$sql=" SELECT id  FROM $this->_name WHERE branch_id = $branch_id  ORDER BY id DESC LIMIT 1 ";
+		$pre = "";
+		$pre = $this->getPrefixCode($branch_id)."-P";
+		$acc_no = $db->fetchOne($sql);
+		$new_acc_no= (int)$acc_no+1;
+		$acc_no= strlen((int)$acc_no+1);
+		for($i = $acc_no;$i<5;$i++){
+			$pre.='0';
+		}
+		return $pre.$new_acc_no;
+	}
 	
 	public function getAccessPermission($branch_str='branch_id'){
 		$session_user=new Zend_Session_Namespace('auth');
@@ -613,7 +627,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getAllLandInfo($branch_id=null,$option=null,$action=null){
   	   $db = $this->getAdapter();
-  	   $sql="SELECT `id`,`land_address` AS name FROM `ln_properties` WHERE status=1 AND `land_code`!='' ";//just concate
+  	   $sql="SELECT `id`,`land_address` AS name FROM `ln_properties` WHERE status=1 AND `land_address`!='' ";//just concate
   	   $request=Zend_Controller_Front::getInstance()->getRequest();
   	   if($action==null){
   	   	$sql.=" AND `is_lock`=0  ";
