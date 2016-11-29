@@ -148,9 +148,9 @@
 	<div id="rpt_print" class="print" style="text-align: center;">
 		<div id="t_amountmoneytype" name="t_amountmoneytype">
 		</div>
-		<input style="text-align: center;" type="button" onclick="printSave();" label="<?php echo $tr->translate("បោះពុម្ភបង្កាន់ដៃ")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
+		<input style="text-align: center;" type="button" onclick="printSave('','');" label="<?php echo $tr->translate("បោះពុម្ភបង្កាន់ដៃ")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 	</div>
-</div>
+	</div>
 </div>
 <div class="dijitHidden" style="width: 22cm !important; height: 11cm ; padding: 0px; margin: 0px;">
 	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="terms" >
@@ -287,7 +287,7 @@
 						           $last_name=$session_user->last_name;
 						           $username = $session_user->first_name;
 						           echo $last_name." ".$username;?></h4>  
-				  </td>
+					</td>
 				</tr>
 				
 				<tr style="line-height: 15px;font-size: 10px;">
@@ -634,8 +634,8 @@ function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');
 	//dijit.byId('customer_code').reset();
 	getAllPropertyBranch(branch_id);
-	getLoanByBranch();
-	getReceiptByBranch();
+	getLoanByBranch('');
+	getReceiptByBranch('');
 	getAllClientByBranch(branch_id);
 	getAllClientNumberByBranch(branch_id);
 }
@@ -688,7 +688,7 @@ function getAllClientNumberByBranch(branch_id){
 	});
 }
 var url_getloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloannumber')); ?>';
-function getLoanByBranch(){
+function getLoanByBranch(condition){
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==''){
 		alert('Please Select Branch');
@@ -704,6 +704,11 @@ function getLoanByBranch(){
 		handleAs:"json",
 		load: function(data) {
 			dijit.byId('sale_code').attr('value',data);
+			
+			if(condition==1){
+				getReceiptByBranch(data);
+			}
+			
 		},
 		error: function(err) {
 			//alert(err);
@@ -712,7 +717,7 @@ function getLoanByBranch(){
 }
 
 var url_getreceipt = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'get-receipt-number')); ?>';
-function getReceiptByBranch(){
+function getReceiptByBranch(new_sale_id){
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==''){
 		alert('Please Select Branch');
@@ -728,6 +733,9 @@ function getReceiptByBranch(){
 		handleAs:"json",
 		load: function(data) {
 			dijit.byId('receipt').attr('value',data);
+			if(new_sale_id!=''){
+				printSave(new_sale_id,data);
+			}
 		},
 		error: function(err) {
 			//alert(err);
@@ -1045,11 +1053,23 @@ function calCulateFirstPayment(){
 	var epx_date = y + '-'+ mm + '-'+dd ;
 	dijit.byId('first_payment').attr('value',epx_date);
 }
-function printSave(new_stu_id,new_receipt_no){		
+
+function printSave(new_stu_id,new_receipt_no){
+
+	if(new_stu_id=='' && new_receipt_no==''){
+		getLoanByBranch(1);
+	}else{
+		dojo.byId("lb_student_id").innerHTML = new_stu_id;
+		dojo.byId("lb_receipt").innerHTML = new_receipt_no;
+		
+		dojo.byId("lb_student_id1").innerHTML = new_stu_id;
+		dojo.byId("lb_receipt1").innerHTML = new_receipt_no;
+	}
+	
 	dijit.byId("lbl_schedule").hide();
-	dojo.byId("lb_student_id").innerHTML = dijit.byId("sale_code").get("value");
+	
 	dojo.byId("lb_paymentid").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
-	dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get('value');
+	
 	dojo.byId("lb_buydate").innerHTML = dijit.byId("date_buy").attr('displayedValue');
 	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue');
@@ -1065,9 +1085,7 @@ function printSave(new_stu_id,new_receipt_no){
 	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	
 	
-	dojo.byId("lb_student_id1").innerHTML = dijit.byId("sale_code").get("value");
 	dojo.byId("lb_paymentid1").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
-	dojo.byId("lb_receipt1").innerHTML = dijit.byId("receipt").get('value');
 	dojo.byId("lb_buydate1").innerHTML = dijit.byId("date_buy").attr('displayedValue');
 	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
 	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue');
@@ -1109,7 +1127,7 @@ function addPreviewLoan(){
 			load: function(data) {
 				 document.getElementsByClassName("overlay")[0].style.display="none";
 				if(data.row_id=='row_id'){//return 1;
-					printSave();
+					printSave('','');
 					}else{
 						 
 						  temp='';	
