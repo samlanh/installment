@@ -42,7 +42,7 @@ dojo.require("dijit.form.DateTextBox");
              <tr>
             	<td colspan="3">
             		<table id="exportExcel" width="100%" style="border-collapse:collapse;font-size: 14px;" >  
-				       <?php $property_id=0; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
+				       <?php $property_id=0; $is_cancel=""; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
 				      	<?php  
 						if($row['house_id']!=$property_id){	
 							if($key>0 ){
@@ -77,6 +77,7 @@ dojo.require("dijit.form.DateTextBox");
 				                    <td colspan="6"><?php echo $tr->translate("PAYMENT_INFO");?></td>    
 				                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
 				                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
+				                     <td rowspan="2"><?php echo $tr->translate("STATUS");?></td>
 				                </tr>
 				                <tr class="style" style="white-space: nowrap;text-align: center;">
 				                	<td><?php echo $tr->translate("PRINCIPLE_PICE");?></td>                   
@@ -89,21 +90,22 @@ dojo.require("dijit.form.DateTextBox");
 						<?php }?>
 						   <tr style="font-size: 12px;" align="left">
 						     <td align="center">&nbsp;<?php echo $i; ?></td>
-						     <td align="center">&nbsp;<?php echo $row['project_name'];?></td>
-						     <td align="center">&nbsp;<?php echo $row['sale_number'];?></td>
-						     <td align="center">&nbsp;<?php echo $row['client_code'];?></td>
-							 <td align="center">&nbsp;<?php echo $row['client_name_kh'];?></td>
-							 <td>&nbsp;<?php echo $row['property_code'];?></td>
-							 <td align="center">&nbsp;<?php echo $row['property_name'];?></td>
-							 <td align="center">&nbsp;<?php echo $row['street'];?></td>
-							 <td align="center">&nbsp;<?php echo number_format($row['price_before'],2);?></td>
-							  <td align="center">&nbsp;<?php echo number_format($row['price_sold'],2);?></td>
-							 <td align="center">&nbsp;<?php echo number_format($row['discount_amount'],2);?></td>
-							 <td align="center">&nbsp;<?php echo number_format($row['other_fee'],2);?></td>
-							 <td align="center">&nbsp;<?php echo number_format($row['paid_amount'],2);?></td>
-							 <td align="center">&nbsp;<?php echo number_format($row['balance'],2);?></td>
-							 <td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($row['create_date']));?></td>
+						     <td align="center">&nbsp;<?php echo $row['project_name'];?>&nbsp;</td>
+						     <td align="center">&nbsp;<?php echo $row['sale_number'];?>&nbsp;</td>
+						     <td align="center">&nbsp;<?php echo $row['client_code'];?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo $row['client_name_kh'];?>&nbsp;</td>
+							 <td>&nbsp;<?php echo $row['property_code'];?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo $row['property_name'];?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo $row['street'];?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo number_format($row['price_before'],2);?>&nbsp;</td>
+							  <td align="center">&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo number_format($row['discount_amount'],2);?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo number_format($row['other_fee'],2);?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo number_format($row['paid_amount'],2);?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo number_format($row['balance'],2);?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($row['create_date']));?>&nbsp;</td>
 							 <td align="center">&nbsp;<?php echo $row['paymenttype'];?></td>
+							 <td align="center">&nbsp;<?php if ($row['is_cancel']==1){ echo $tr->translate("CANCELED");}else{ echo $tr->translate(""); }?></td>
 							</tr>
 							<?php 
 							$property_id = $row['house_id'];

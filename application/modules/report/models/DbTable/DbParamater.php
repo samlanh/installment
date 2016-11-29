@@ -144,7 +144,7 @@ function getAllBranch($search=null){
     		$where = " AND ".$from_date." AND ".$to_date;
     		$sql = "SELECT p.`id`,p.`branch_id`,p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,
 				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type`) AS pro_type,
-				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`
+				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`
 				 FROM `ln_properties` AS p WHERE p.`status`=1";
     		if(!empty($search['property_type'])){
     			$where.= " AND p.`property_type` = ".$search['property_type'];
@@ -321,7 +321,7 @@ function getAllBranch($search=null){
     	function getSaleHistory($search=null){
     		$db= $this->getAdapter();
     		$sql="SELECT * FROM `v_getsalehistory` WHERE 1 ";
-    		$order =' ORDER BY house_id DESC';
+    		$order =' ORDER BY house_id,is_cancel ASC';
     		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;

@@ -60,7 +60,7 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
 						?>
 						<tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;"><td colspan="11">&nbsp;</td></tr>
 							<tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;">
-								<td colspan="11">
+								<td colspan="12">
 									<table border="1"​ style="border-collapse:collapse; border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
 						                 <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
 						                 	<td>&nbsp;<?php echo $tr->translate("TOTAL_PROPERTY");?>&nbsp;</td>
@@ -103,20 +103,22 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
 									      <th><?php echo $tr->translate("LAND_PRICE");?></th>
 									      <th><?php echo $tr->translate("HOUSE_PRICE");?></th>
 									      <th><?php echo $tr->translate("PRICE");?></th>
+									      <th><?php echo $tr->translate("STATUS");?></th>
 									</tr>
 						<?php }?>
 						   <tr style="font-size: 12px;" align="left">
 						     <td align="center">&nbsp;<?php echo $i; ?></td>
-						     <td align="center">&nbsp;<?php echo $row['land_code'];?></td>
-						     <td align="center">&nbsp;<?php echo $row['land_address'];?></td>
-							 <td align="center">&nbsp;<?php echo $row['street'];?></td>
+						     <td align="center">&nbsp;<?php echo $row['land_code'];?>&nbsp;</td>
+						     <td align="center">&nbsp;<?php echo $row['land_address'];?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo $row['street'];?>&nbsp;</td>
 							 <td>&nbsp;<?php echo $row['pro_type'];?></td>
-							 <td align="center">&nbsp;<?php echo $row['land_size'];?></td>
-							 <td align="center">&nbsp;<?php echo $row['width'];?></td>
-							 <td align="center">&nbsp;<?php echo $row['height'];?></td>
-							 <td align="right">&nbsp;<?php echo number_format($row['land_price'],2);?></td>
-							 <td align="right">&nbsp;<?php echo number_format($row['house_price'],2);?></td>
-							 <td align="right">&nbsp;<?php echo number_format($row['price'],2);?></td>
+							 <td align="center">&nbsp;<?php echo $row['land_size'];?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo $row['width'];?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo $row['height'];?>&nbsp;</td>
+							 <td align="right">&nbsp;<?php echo number_format($row['land_price'],2);?>&nbsp;</td>
+							 <td align="right">&nbsp;<?php echo number_format($row['house_price'],2);?>&nbsp;</td>
+							 <td align="right">&nbsp;<?php echo number_format($row['price'],2);?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php if ($row['is_lock']==1){ echo $tr->translate("SOLD_OUT");}else{ echo $tr->translate("NOT_YET_SALE"); }?>&nbsp;</td>
 							</tr>
 							<?php $total = $total + $row['price'];
 							$total_land_pric= $total_land_pric +$row['land_price'];
@@ -127,7 +129,7 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
 						<tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;"><td colspan="11">&nbsp;</td></tr>
 						<?php if(!empty($this->row)){?>
 						<tr style="border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;"">
-							<td colspan="11">
+							<td colspan="12">
 								<table border="1"​ style="border-collapse:collapse; border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
 					                 <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
 					                 	<td>&nbsp;<?php echo $tr->translate("TOTAL_PROPERTY");?>&nbsp;</td>
