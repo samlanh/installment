@@ -635,6 +635,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	   if($branch_id!=null){
   	   	$sql.=" AND `branch_id`=$branch_id ";
   	   }
+  	   $sql.=" ORDER BY id DESC";
   	    $rows = $db->fetchAll($sql);
   	    if($option!=null){ return $rows;}
   		$options=array(''=>"-----ជ្រើសរើស-----");

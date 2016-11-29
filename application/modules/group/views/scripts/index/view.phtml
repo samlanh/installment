@@ -54,7 +54,6 @@ dojo.ready(function(){
 										</td>
 										<td align="center" width="44%"  >
 											<strong style="font-weight:bold;color:#000; font-size: 18px;font-family:Tahoma,'Khmer MEF2';"><?php echo $tr->translate("CLIENT_PROFILE"); ?></strong><br />
-											<span style="font-weight: bold;font-size: 12px;">&nbsp; For Date &nbsp; <?php echo date("d-M-Y");?></span><br /><br />
 										</td>
 										<td width="28%" align="right">
 										</td>
@@ -73,7 +72,9 @@ dojo.ready(function(){
 					     	    </tr>
 					      		<tr  >
 					      		    <td rowspan="3">
-										 <div style="width:160px; height:140px;padding:3px;"><img src="<?php echo $this->baseUrl();?>/images/<?php echo $this->client_list['photo_name'];?>" style="width:120px;height:140px;"/></div>
+					      		    <?php $image = 'wedding_sister.jpg';
+					      		      if(!empty($this->client_list['photo_name'])){$image = $this->client_list['photo_name'];}?>
+										 <div style="width:160px; height:140px;padding:3px;"><img style="border:1px solid #ccc;" src="<?php echo $this->baseUrl();?>/images/<?php echo $image;?>" style="width:120px;height:140px;"/></div>
 					      		    </td>
 					      		      <td style="width:80%; vertical-align: top;" colspan="4">
 					      		      
@@ -91,10 +92,10 @@ dojo.ready(function(){
 					      		                   <td><label><?php echo $sex?></label></td>
 					      		               </tr>
 					      		               <tr>
-					      		               	  <td><?php echo $tr->translate("NATIONAL_ID");?>:</td>
-					      		                  <td><label><?php echo $this->client_list['nation_id'];?></label></td>
-					      		                  <td><?php echo $tr->translate("DOCUMENT_TYPE");?>:</td>
+					      		                  <td><?php echo $tr->translate("DOCMENT_TYPE");?>:</td>
 					      		                  <td><label><?php echo $this->client_list['doc_name'];?></label></td>
+					      		                  <td><?php echo $tr->translate("NATIONAL_ID");?>:</td>
+					      		                  <td><label><?php echo $this->client_list['nation_id'];?></label></td>
 					      		               </tr>
 					      		               <tr>
 					      		               		<td> <?php echo $tr->translate("DOB");?>:&nbsp; </td>
@@ -103,7 +104,7 @@ dojo.ready(function(){
 					      		                  	<td><label><?php echo $this->client_list['phone'];?></label></td>
 					      		               </tr>
 					      		               <tr>
-					      		               		<td><?php echo $tr->translate("EMAIL_ADDRESS");?>:&nbsp; </td>
+					      		               		<td><?php echo $tr->translate("EMAIL");?>:&nbsp; </td>
 					      		               		<td><label><?php echo $this->client_list['email'];?></label></td>
 					      		               </tr>
 					      		         </table>
@@ -119,7 +120,7 @@ dojo.ready(function(){
 					      			<td colspan="6"​ style="border-bottom:1px solid #ddd;" class="b"><strong><?php echo $tr->translate("CURRENT_ADDRESS");?></strong></td>
 					      		</tr>
 					      		<tr>
-					      			<td><?php echo $tr->translate("HOME");?>:</td>
+					      			<td><?php echo $tr->translate("HOUSE");?>:</td>
 									<td><label><?php echo $this->client_list['house'];?></label>  </td>
 									<td><?php echo $tr->translate("STREET");?>:</td>
 									<td><label><?php echo $this->client_list['street'];?></label> </td>
@@ -137,7 +138,7 @@ dojo.ready(function(){
 									</td>
 								</tr>
 					      		<tr class="header-line">
-					      			<td colspan="6"​ style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("PLOT_HOLDER_INFO");?></strong></td>
+					      			<td colspan="6"​ style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("RELEVANT_STAKEHOLDER");?></strong></td>
 					      		</tr>
 					      		<?php $plot_sex='';
 									      if($this->client_list['ksex']==1){
@@ -157,27 +158,27 @@ dojo.ready(function(){
 								<tr>
 									<td><?php echo $tr->translate("NATIONALITY");?>:</td>
 									<td><label><?php echo $this->client_list['p_nationality'];?></label> </td>
+									<td><?php echo $tr->translate("DOCMENT_TYPE");?>:</td>
+									<td><label><?php echo $this->client_list['join_doc_name'];?></label> </td>
 									<td><?php echo $tr->translate("NATIONAL_ID");?>:</td>
 									<td><label><?php echo $this->client_list['rid_no'];?></label> </td>
-									<td><?php echo $tr->translate("DOCUMENT_TYPE");?>:</td>
-									<td><label><?php echo $this->client_list['join_doc_name'];?></label> </td>
 								</tr>
 								<tr>
 									<td><?php echo $tr->translate("PHONE");?>:</td>
 									<td><label><?php echo $this->client_list['lphone'];?></label> </td>
 								</tr>
 								<tr>
-									<td><?php echo $tr->translate("RFERENCE_NAME");?>:</td>
+									<td><?php echo $tr->translate("SPOUSE_NAME");?>:</td>
 									<td><label><?php echo $this->client_list['arid_no'];?></label> </td>
 									<td><?php echo $tr->translate("NATIONAL_ID");?>:</td>
 									<td><label><?php echo $this->client_list['refe_nation_id'];?></label> </td>
 								</tr>
 								<tr><td></td></tr>
 					      		<tr class="header-line">
-									<td colspan="6" style="border-bottom:1px solid #ccc;" class="b"><strong><?php echo $tr->translate("PLOT_ADDRESS");?></strong></td>
+									<td colspan="6" style="border-bottom:1px solid #ccc;" class="b"><strong><?php echo $tr->translate("CURRENT_ADDRESS");?></strong></td>
 								</tr>
 					      		<tr>
-					      			<td><?php echo $tr->translate("HOME");?>:</td>
+					      			<td><?php echo $tr->translate("HOUSE");?>:</td>
 									<td><label><?php echo $this->client_list['ghouse'];?></label>  </td>
 									<td><?php echo $tr->translate("STREET");?>:</td>
 									<td><label><?php echo $this->client_list['dstreet'];?></label> </td>
@@ -206,13 +207,13 @@ dojo.ready(function(){
 								
 								<tr >
 									<td align="center" width="25%">
-										<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+										<strong style="font-weight:bold;color:#000; font-size: 12px;font-family:Tahoma,'Khmer MEF2';"><?php echo $tr->translate("VERIFIED_BY"); ?></strong>
 									</td>
 									<td  width="50%">
 										&nbsp;
 									</td>
 									<td align="center"  width="25%">
-										<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+										<strong style="font-weight:bold;color:#000; font-size: 12px;font-family:Tahoma,'Khmer MEF2';text-align:right;"><?php echo $tr->translate("PREPARED_BY"); ?></strong>
 									</td>
 								</tr>
 							</table>

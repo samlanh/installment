@@ -1,7 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate('EDIT_CLIENT'));
-	
 ?>	
 <?php  $frm = $this->frm_client;?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
@@ -32,14 +31,14 @@ dojo.require("dijit.Dialog");
 					<table style="margin: 0 auto; width:100%;" cellspacing="10">
 						<tr>
 							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
-							<td><?php echo $frm->getElement('branch_id');?></td>
+							<td width="20%"><?php echo $frm->getElement('branch_id');?></td>
 							<td><?php echo $tr->translate("CLIENT_NO")?></td>
-							<td><?php echo $frm->getElement('client_no');?></td>
+							<td width="20%"><?php echo $frm->getElement('client_no');?></td>
 							<td><?php echo $tr->translate("NAME_KHMER")?>*</td>
-							<td><?php  echo $frm->getElement('name_kh');?></td>
+							<td width="20%"><?php  echo $frm->getElement('name_kh');?></td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("NAME_ENG")?>*</td>
+							<td><?php echo $tr->translate("NAME_ENG")?></td>
 							<td><?php  echo $frm->getElement('name_en');?></td>
 							<td><?php echo $tr->translate("SEX")?></td>
 							<td><?php  echo $frm->getElement('sex');?></td>
@@ -88,11 +87,7 @@ dojo.require("dijit.Dialog");
 								<input type="hidden" id="old_photo" name="old_photo" value="<?php echo $this->photo;?>" />
 							</td>
 						</tr>
-						<tr>
-							<td valign="top"></td>
-							<td valign="top"></td>
-						</tr>
-						<tr>
+						<tr style="background: #edf7f8">
 							<td colspan="6"><?php echo $tr->translate("RELEVANT_STAKEHOLDER")?></td>
 						</tr>
 						<tr>
@@ -107,10 +102,10 @@ dojo.require("dijit.Dialog");
 						<tr>
 							<td><?php 	echo $tr->translate("DOCMENT_TYPE")?></td>
 							<td><input id="join_d_type"/></td> 
-							<td><?php 	echo $tr->translate("NATIONALITY")?></td>
-							<td><?php   echo $frm->getElement('p_nationality');?></td>
 							<td><?php 	echo $tr->translate("NATIONAL_ID")?></td>
 							<td><?php   echo $frm->getElement('rid_no');?></td> 
+							<td><?php 	echo $tr->translate("NATIONALITY")?></td>
+							<td><?php   echo $frm->getElement('p_nationality');?></td>
 						</tr>
 						<tr>
 							<td><?php 	echo $tr->translate("PHONE")?></td>
@@ -321,7 +316,7 @@ dojo.ready(function(){
 		required: false,		           
 		name: "dcommune",
 		id: "dcommune",
-		//value: "<?php //echo $this->row['adistrict'];?>",
+		value: "<?php echo $this->row['dcommune'];?>",
 		searchAttr: "name",
 		class: 'fullside',
 		missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឃុំ/សង្កាត់",	
@@ -477,9 +472,10 @@ function dfilterCommune(){
 			//dijit.byId('adistrict').reset('value');
 			dcommune_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('dcommune').set('store', dcommune_store);
-		    if(cpro_id=='<?php echo $this->row['adistrict'];?>'){
+		    dcommune = dijit.byId('dcommune').get('value');
+		    //if(dcommune=='<?php //echo $this->row['dcommune'];?>'){
 		    	dijit.byId('dcommune').attr('value','<?php echo $this->row['dcommune'];?>');
-		    }
+		    //}
 		},
 		error: function(err) {
 			alert(err);

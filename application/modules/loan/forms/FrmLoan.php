@@ -409,24 +409,24 @@ public function init()
 		if($data!=null){
 			$_branch_id->setValue($data['branch_id']);
 			$receipt->setValue($data['receipt_no']);
-			//$discount->setValue($data['discount_amount']);
-			$_date_buy->setValue($data['reschedule_date']);
-// 			$schedule_opt->setValue($data['payment_id']);
-// 			$paid->setValue($data["paid_amount"]);
-// 			$balance->setValue($data['balance']);
+			$discount->setValue($data['discount_amount']);
+			$_loan_code->setValue($data['sale_number']);
+			$schedule_opt->setValue($data['payment_id']);
+			$paid->setValue($data["paid_amount"]);
+			$balance->setValue($data['balance']);
 			
-// 			$_period->setValue($data['total_duration']);
-// 			$_first_payment->setValue($data['first_payment']);
-// 			$_rate->setValue($data['interest_rate']);//
-// 			$_releasedate->setValue($data['startcal_date']);
-// 			$other_fee->setValue($data['other_fee']);
-// 			//$_dateline->setValue(date("d/m/Y",strtotime($data['end_line'])));
-// 			$_id->setValue($data['id']);
-// 			$_status->setValue($data['status']);
-// 			//$_loan_type->setValue($data['land_id']);
-// 			$note->setValue($data['note']);
-// 			$commission->setValue($data['comission']);
-// 			$staff_id->setValue($data['staff_id']);
+			$_period->setValue($data['total_duration']);
+			$_first_payment->setValue($data['first_payment']);
+			$_rate->setValue($data['interest_rate']);//
+			$_releasedate->setValue($data['startcal_date']);
+			$other_fee->setValue($data['other_fee']);
+			$_dateline->setValue(date("d/m/Y",strtotime($data['end_line'])));
+			$_id->setValue($data['id']);
+			$_status->setValue($data['status']);
+// 			$_loan_type->setValue($data['land_id']);
+			$note->setValue($data['note']);
+			$commission->setValue($data['comission']);
+			$staff_id->setValue($data['staff_id']);
 			
 			
 		}

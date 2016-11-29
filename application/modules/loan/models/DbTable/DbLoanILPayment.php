@@ -15,8 +15,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	
     	$db = $this->getAdapter();
     	$sql = "SELECT lcrm.`id`,
-    	(SELECT land_code FROM `ln_properties` WHERE id=lcrm.land_id limit 1) AS land_id,
-					(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lcrm.`client_id`) AS team_group ,
+    	(SELECT project_name FROM `ln_project` WHERE br_id=lcrm.branch_id LIMIT 1) AS branch_name,
+    	           (SELECT land_code FROM `ln_properties` WHERE id=lcrm.land_id limit 1) AS land_id,
+					(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lcrm.`client_id` limit 1) AS team_group ,
 					lcrm.`receipt_no`,
 					lcrm.`total_principal_permonth`,
 					lcrm.`total_interest_permonth`,
@@ -289,6 +290,7 @@ public function addILPayment($data){
     			'date_pay'					    =>	$data['collect_date'],
     			'date_input'					=>	date("Y-m-d"),
     			'client_id'                     =>	$data['client_id'],
+    			'sale_id'						=>	$data['loan_number'],
     			'land_id'						=>	$data['loan_number'],
     			'outstanding'                   =>	$data['priciple_amount']+$principle_amount,//ប្រាក់ដើមមុនបង់
     			'total_principal_permonth'		=>	$data["os_amount"],//ប្រាក់ដើមត្រូវបង់

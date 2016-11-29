@@ -65,11 +65,10 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		));
  		$_clientno->setValue($id_client);
 	
-		$_nameen = new Zend_Dojo_Form_Element_ValidationTextBox('name_en');
+		$_nameen = new Zend_Dojo_Form_Element_TextBox('name_en');
 		$_nameen->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'required' =>'true'
 				));
 		
 		$_join_with = new Zend_Dojo_Form_Element_TextBox('join_with');
@@ -443,22 +442,24 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'readonly'=>'readonly'
 		));
 		
-		$_size = new Zend_Dojo_Form_Element_TextBox('size');
+		$_size = new Zend_Dojo_Form_Element_NumberTextBox('size');
 		$_size->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 		));
 		
-		$width = new Zend_Dojo_Form_Element_TextBox('width');
+		$width = new Zend_Dojo_Form_Element_NumberTextBox('width');
 		$width->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
+				'onkeyup'=>'calCulateSize();'
 		));
 		
-		$height = new Zend_Dojo_Form_Element_TextBox('height');
+		$height = new Zend_Dojo_Form_Element_NumberTextBox('height');
 		$height->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
+				'onkeyup'=>'calCulateSize();'
 		));
 		
 		$hardtitle = new Zend_Dojo_Form_Element_TextBox('hardtitle');
@@ -488,6 +489,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
 		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside','onChange'=>'showPopupForm();'));
+		
 		//$propertiestype_opt = $db->getPropertyType();
 		//$propertiestype->setMultiOptions($propertiestype_opt);
 		
@@ -495,6 +497,10 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$propertiestype_search->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside'));
 		$propertiestype_search_opt = $db->getPropertyTypeForsearch();
 		$propertiestype_search->setMultiOptions($propertiestype_search_opt);
+		
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$value = $request->getParam("property_type_search");
+		$propertiestype_search->setValue($value);
 		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(

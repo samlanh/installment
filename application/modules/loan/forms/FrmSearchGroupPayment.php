@@ -9,13 +9,28 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$db = new Loan_Model_DbTable_DbGroupPayment();
 		
+		$dbs = new Application_Model_DbTable_DbGlobal();
+		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
+		$rows = $dbs ->getAllBranchByUser();
+		$options=array('');
+		
+		if(!empty($rows)){
+			foreach($rows AS $row) $options[$row['id']]=$row['name'];
+		}
+		$branch_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$branch_id->setMultiOptions($options);
+		$branch_id->setValue($request->getParam("branch_id"));
+		
 		$payment_type = new Zend_Dojo_Form_Element_FilteringSelect("paymnet_type");
 		$payment_type->setAttribs(array('class'=>'fullside','dojoType'=>'dijit.form.FilteringSelect'));
 		$options= array(''=>'ប្រភេទបង់ប្រាក់',1=>'បង់ធម្មតា',4=>'បង់ផ្តាច់');
 		$payment_type->setMultiOptions($options);
 		$payment_type->setValue($request->getParam("paymnet_type"));
 		
-		$dbs = new Application_Model_DbTable_DbGlobal();
+		
 		
 		
 		$advnceSearch = new Zend_Dojo_Form_Element_TextBox("advance_search");
@@ -92,7 +107,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 			$status->setValue($request->getParam("status"));
 			
 		}
-		$this->addElements(array($g_client_name,$payment_type,$_coid,$submit,$advnceSearch,$client_name,$start_date,$end_date,$status));
+		$this->addElements(array($branch_id,$g_client_name,$payment_type,$_coid,$submit,$advnceSearch,$client_name,$start_date,$end_date,$status));
 		return $this;
 		
 	}	

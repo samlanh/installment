@@ -42,7 +42,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql = "SELECT b.br_id,b.project_name,
 		b.prefix,b.branch_code,b.br_address,b.branch_tel,b.fax,
-(SELECT v.name_en FROM `ln_view` AS v WHERE v.`type` = 4 AND v.key_code = b.displayby)AS displayby,b.other,b.`status` FROM $this->_name AS b  ";
+		(SELECT v.name_en FROM `ln_view` AS v WHERE v.`type` = 4 AND v.key_code = b.displayby)AS displayby,b.other,b.`status` FROM $this->_name AS b  ";
     	$where = ' WHERE b.project_name !="" ';
     	
     	if($search['status_search']>-1){

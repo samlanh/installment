@@ -326,7 +326,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		  		'branch_id'=>$data['branch_id'],
     		  		'receipt_no'=>$data['receipt'],
     		  		'house_id'=>$data["land_code"],
-    		  		'sale_number'=>$data['sale_code'],
+//     		  		'sale_number'=>$data['sale_code'],
     		  		'payment_id'=>$data["schedule_opt"],
     		  		'client_id'=>$data['member'],
     		  		'price_before'=>$data['total_sold'],
@@ -344,7 +344,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		  		'validate_date'=>$data['first_payment'],
     		  		'payment_method'=>1,//$data['loan_type'],
     		  		'note'=>$data['note'],
-    		  		//     				'payment_number'=>$data['loan_type'],
+    		  		//'payment_number'=>$data['loan_type'],
     		  		//'graice_period'=>$data['pay_every'],
     		  		//'amount_collect'=>$data['repayment_method'],
     		  		'status'=>1,
@@ -395,6 +395,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$payment_method = $data["schedule_opt"];
     		
     		$str_next = '+1 month';
+    		$dbtable = new Application_Model_DbTable_DbGlobal();
     		//     		$str_next = $dbtable->getNextDateById($data['collect_termtype'],$data['amount_collect']);//for next,day,week,month;
     		for($i=1;$i<=$loop_payment;$i++){
     			if($payment_method==1){
@@ -470,7 +471,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				);
     				 
     				$this->insert($datapayment);
-    				// 		    		$amount_collect=0;
     				$old_remain_principal = 0;
     				$old_pri_permonth = 0;
     				$old_interest_paymonth = 0;
@@ -478,8 +478,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				$from_date=$next_payment;
     			}
     		}
-    		
-    		
 	        $db->commit();
 	        return 1;
     	}catch (Exception $e){

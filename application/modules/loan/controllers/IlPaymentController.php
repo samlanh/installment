@@ -16,11 +16,11 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 				$formdata=$this->getRequest()->getPost();
 				$search = array(
 						'advance_search' => $formdata['advance_search'],
+						'branch_id'		=>$formdata['branch_id'],
 						'client_name'=>$formdata['client_name'],
 						'start_date'=>$formdata['start_date'],
 						'end_date'=>$formdata['end_date'],
 						'status'=>$formdata['status'],
-						'co_id'		=>	$formdata['co_id'],
 						'paymnet_type'	=> $formdata["paymnet_type"],
 						);
 			}
@@ -31,19 +31,18 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						'branch_id'		=>	-1,
-						'co_id'		=> -1,
 						'paymnet_type'	=> -1,
 						'status'=>"",);
 			}
 			$rs_rows= $db->getAllIndividuleLoan($search);
 			$result = array();
 			$list = new Application_Form_Frmtable();
-			$collumns = array("LOAN_NO","CUSTOMER_NAME","RECIEPT_NO","TOTAL_PRINCEPLE","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT","PAY_DATE","DATE",
+			$collumns = array("BRANCH_NAME","LOAN_NO","CUSTOMER_NAME","RECIEPT_NO","TOTAL_PRINCEPLE","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT","PAY_DATE","DATE",
 				);
 			$link=array(
 					'module'=>'loan','controller'=>'ilpayment','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('land_id'=>$link,'loan_number'=>$link,'client_name'=>$link,'receipt_no'=>$link,'branch'=>$link));
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link,'land_id'=>$link,'loan_number'=>$link,'client_name'=>$link,'receipt_no'=>$link,'branch'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			echo $e->getMessage();
@@ -60,13 +59,8 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
   	$db_global = new Application_Model_DbTable_DbGlobal();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			
-// 			print_r($_data);exit();
-			
-// 			//$identify = $_data["identity"];
 			try {
 				$db->addILPayment($_data);
-				
 				if(isset($_data['submit_close'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
 				}else {

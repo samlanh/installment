@@ -49,7 +49,7 @@
 						<tr>
 							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
 							<td><?php echo $frm->getElement('branch_id');?></td>
-							<td><?php echo $tr->translate("LOAN_NO")?></td>
+							<td><?php echo $tr->translate("SALE_NO")?></td>
 							<td><?php echo $frm->getElement('sale_code');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_CODE")?></td>
 							<td><input id="customer_code" /></td>
@@ -62,7 +62,7 @@
 							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 							<td><input id="member" /> <?php //echo $frm->getElement('member');?></td>
 						</tr>
-						<tr>
+						<tr style="background: #edf7f8;">
 							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></td>
 						</tr>
 						<tr height="40px">
@@ -79,7 +79,7 @@
 							<td><?php echo $tr->translate("TOTAL_SOLD")?></td>
 							<td><?php echo $frm->getElement('total_sold');?></td>
 						</tr>
-						<tr>
+						<tr style="background: #edf7f8;">
 							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("PAYMENT_INFORMATION")?></strong></td>
 						</tr>
 						<tr>
@@ -99,7 +99,7 @@
 							<td><?php echo $frm->getElement('balance');?></td>
 						</tr>
 						<tr>
-						    <td><?php echo $tr->translate("TERM_BORROW")?>(Months)</td>
+						    <td><lable id='lbl_period'><?php echo $tr->translate("TERM_BORROW")?></lable>(Months)</td>
 							<td><?php echo $frm->getElement('period');?></td>
 							<td><?php echo $tr->translate("INTEREST_RATE")?></td>
 							<td><?php echo $frm->getElement('interest_rate');?></td>
@@ -119,14 +119,14 @@
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("CO_NAME")?></td>
-							<td><?php echo $frm->getElement('staff_id');?><!--<input id="staff_id" /> --></td>
+							<td><?php echo $frm->getElement('staff_id');?></td>
 							<td><?php echo $tr->translate("COMISSION")?></td>
 							<td><?php echo $frm->getElement('commission');?></td>
 							<td><?php echo $tr->translate("NOTE")?></td>
 							<td><?php echo $frm->getElement('note')?></td>
 						</tr>
 						<tr>
-							<td colspan="4"><?php echo $tr->translate("CO_NAME")?></td>
+							<td colspan="4"></td>
 							<td><?php echo $tr->translate("STATUS")?></td>
 							<td><?php echo $frm->getElement('status_using')?></td>
 						</tr>
@@ -296,6 +296,7 @@ function checkScheduleOption(){
 
 	amount_principal = dijit.byId('balance').get('value');	
 	debt_amount = dijit.byId('period').get('value');
+	dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TERM_BORROW")?>";
 	if(method_id==4){
 		dijit.byId('fixed_payment').set('readOnly',false);
 		dojo.byId('lbl_payment').innerHTML="<?php echo $tr->translate("AMOUNT_GRAICE_PARIOD")?>";
@@ -335,6 +336,7 @@ function checkScheduleOption(){
 			dijit.byId('deposit').attr("value",amount_principal);
 			
 		}else if(method_id==3){//times
+			dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TOTAL_INSTALLMENT")?>";
 			dojo.byId('lbl_release').innerHTML="<?php echo $tr->translate("START_DATE")?>";
 			total_collect = amount_principal/debt_amount;
 			total_collect = total_collect.toFixed(2);
@@ -816,7 +818,7 @@ function addPreviewLoan(){
 			dijit.byId('customer_code').focus();
 			return false;
 		}
-
+		loading();
 		dojo.xhrPost({
 		    url: url_previewloan,	
 			form: dojo.byId("frm_add_tran"),		    

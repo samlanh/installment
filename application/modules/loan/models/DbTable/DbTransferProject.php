@@ -106,10 +106,11 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
 		    		$this->_name="ln_expense";
 		    		$data = array(
 		    				'branch_id'=>$data['branch_id'],
-	// 	    				'title'=>$data['title'],
+		    				'title'=>'Expense for change house to other project',//$data['title'],
+    // 	    				'invoice'=>$data['invoice'],
+	//$data['category_id_expense'],expense exchange project
 		    				'total_amount'=>$data['paid_before']+$data['deposit'],
-	// 	    				'invoice'=>$data['invoice'],
-		    				'category_id'=>3,//$data['category_id_expense'],expense exchange project
+		    				'category_id'=>3,
 		    				'description'=>'Expense for transfer to other project',
 		    				'date'=>$data['date_buy'],
 		    				'status'=>1,
@@ -118,6 +119,39 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
 		    		);
 		    		$this->insert($data);
 	    		}
+	    		
+	    		$this->_name='ln_client_receipt_money';
+	    		$array = array(
+	    				'branch_id'				=>$data['branch_id'],
+	    				'client_id'				=>$data['member'],
+	    				'receipt_no'			=>$data['receipt'],
+	    				'date_pay'				=>$data['date_buy'],
+	    				'land_id'				=>$data['loan_number'],
+	    				'date_input'			=>date('Y-m-d'),
+	    				'outstanding'			=>$data['sold_price'],
+	    				'principal_amount'		=>$data['balance'],
+	    				 
+	    				'total_principal_permonth'		=>$data['deposit'],
+	    				'total_principal_permonthpaid'	=>$data['deposit'],
+	    				'total_interest_permonth'		=>0,
+	    				'total_interest_permonthpaid'	=>0,
+	    				'penalize_amount'				=>0,
+	    				'penalize_amountpaid'			=>0,
+	    				 
+	    				'service_charge'				=>$data['other_fee'],
+	    				'service_chargepaid'			=>$data['other_fee'],
+	    				'total_payment'					=>$data['sold_price'],
+	    				'amount_payment'				=>$data['deposit'],
+	    				'recieve_amount'				=>$data['deposit'],
+	    				'balance'						=>$data['balance'],
+	    				'payment_option'				=>$data['schedule_opt'],
+	    				 
+	    				'is_completed'					=>$is_complete,
+	    				'status'						=>1,
+	    				'note'							=>$data['note'],
+	    				'user_id'						=>$this->getUserId(),
+	    		);
+	    		$crm_id = $this->insert($array);
 	    		
     			$db->commit();
     			return 1;

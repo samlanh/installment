@@ -108,8 +108,7 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
 				land_code,land_address,street,
 				(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type limit 1) AS  pro_type,
-				price,
-				land_size,width,height,hardtitle,create_date,
+				price,width,height,land_size,hardtitle,create_date,
 		    (SELECT  CONCAT(first_name,' ', last_name) FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
 			status FROM $this->_name ";
 		if(!empty($search['adv_search'])){
@@ -130,7 +129,7 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		if($search['branch_id']>-1){
 			$where.= " AND branch_id = ".$search['branch_id'];
 		}
-		if(!empty($search['property_type_search'])){
+		if(($search['property_type_search'])>0){
 			$where.= " AND property_type = ".$search['property_type_search'];
 		}
 		
