@@ -194,6 +194,7 @@
 		 </td>
 	</tr>		
 </table>
+<input type="text" dojoType="dijit.form.TextBox" name="property_id" id="property_id">
 <input type="hidden" dojoType="dijit.form.TextBox" name="datepaymentlastrecord" id="datepaymentlastrecord">
 <input type="hidden" dojoType="dijit.form.TextBox" name="lastpaiddate" id="lastpaiddate">
 <input type="hidden" dojoType="dijit.form.TextBox" name="identity" id="identity">
@@ -926,10 +927,14 @@ function getlandinfo(){
 		},		    
 		handleAs:"json",
 		load: function(data) {
-			dijit.byId('land_address').attr('value',data.land_address);
+			alert(data.property_code);
+			dijit.byId('land_address').attr('value',data.property_code +' : '+ data.land_address);
 			dijit.byId('land_size').attr('value',data.land_size);
 			dijit.byId('total_amount_loan').attr('value',data.price);
 			dijit.byId('sold_price').attr('value',data.price);
+			
+			dijit.byId('property_code').attr('value',data.property_code);
+			
 			//dijit.byId('balance').attr('value',data.price);
 			//dijit.byId('deposit').attr('value',0);
 		},
@@ -1139,7 +1144,10 @@ function getLaonPayment(type){
 							dijit.byId('client_id').set("readOnly",true);
 							dijit.byId('client_code').attr('value',client_id);
 							dijit.byId('client_code').set("readOnly",true);
-							dijit.byId('land_address').attr('value',respone[i].property_address);
+							dijit.byId('land_address').attr('value',respone[i].property_code +' : '+respone[i].property_address);
+							
+							dijit.byId('property_id').attr('value',respone[i].house_id);
+							
 							dijit.byId('schedule_opt').attr('value',respone[i].payment_type);
 							dijit.byId('schedule_opt').set("readOnly",true);
 							dijit.byId('discount').attr('value',respone[i].discount_amount);

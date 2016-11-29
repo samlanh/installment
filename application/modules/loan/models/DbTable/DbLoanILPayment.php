@@ -16,7 +16,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql = "SELECT lcrm.`id`,
     	(SELECT project_name FROM `ln_project` WHERE br_id=lcrm.branch_id LIMIT 1) AS branch_name,
-    	           (SELECT land_code FROM `ln_properties` WHERE id=lcrm.land_id limit 1) AS land_id,
+    	           (SELECT land_code FROM `ln_properties` WHERE id=lcrm.sale_id limit 1) AS land_id,
 					(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lcrm.`client_id` limit 1) AS team_group ,
 					lcrm.`receipt_no`,
 					lcrm.`total_principal_permonth`,
@@ -290,7 +290,7 @@ public function addILPayment($data){
     			'date_pay'					    =>	$data['collect_date'],
     			'date_input'					=>	date("Y-m-d"),
     			'client_id'                     =>	$data['client_id'],
-    			'sale_id'						=>	$data['loan_number'],
+    			'sale_id'						=>	$data['property_id'],
     			'land_id'						=>	$data['loan_number'],
     			'outstanding'                   =>	$data['priciple_amount']+$principle_amount,//ប្រាក់ដើមមុនបង់
     			'total_principal_permonth'		=>	$data["os_amount"],//ប្រាក់ដើមត្រូវបង់
@@ -1216,7 +1216,8 @@ public function addILPayment($data){
     	$db = $this->getAdapter();
     		if($data['type']==1){
 	    		$sql ="SELECT 
-						(SELECT ln_properties.land_address  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_address,
+						 (SELECT ln_properties.land_address  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_address,
+						 (SELECT ln_properties.land_code  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_code,
 						  s.*,
 						  ss.*,
 						  DATE_FORMAT(ss.date_payment, '%d-%m-%Y') AS date_payments
@@ -2608,7 +2609,13 @@ public function cancelIlPayment($data){
 	}
 	function getPropertyInfo($property_id){
 		$db = $this->getAdapter();
-		$sql = "select s.*,(select p.land_address from ln_properties as p where p.id = s.house_id limit 1) as property_address from ln_sale as s where id = $property_id ";
+		$sql = "SELECT 
+				  s.*,
+				 (SELECT p.land_address FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1) AS property_address ,
+				 (SELECT p.land_code FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1) AS property_code
+				FROM
+				  ln_sale AS s 
+				WHERE id = $property_id  ";
 		return $db->fetchRow($sql);
 	}
 	
