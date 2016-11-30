@@ -36,7 +36,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
-				'onchange'=>'filterClient();'
+				'onchange'=>'getallCustomer();'
 		));
 		
 		$db = new Application_Model_DbTable_DbGlobal();
@@ -56,8 +56,14 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		$_Description ->setAttribs(array(
 				'dojoType'=>'dijit.form.SimpleTextarea',
 				'class'=>'fullside',
-				'style'=>'width:98%',
 		));
+		
+		$_cheque = new Zend_Dojo_Form_Element_TextBox('cheque');
+		$_cheque ->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
 		$total_amount=new Zend_Dojo_Form_Element_NumberTextBox('total_amount');
 		$total_amount->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
@@ -77,6 +83,8 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		$invoice->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
+				'readOnly'=>'true',
+				'style'=>'color:red',
 		));
 		
 		$id = new Zend_Form_Element_Hidden("id");
@@ -107,8 +115,9 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 			$_stutas->setValue($data['status']);
 			$invoice->setValue($data['invoice']);
 			$id->setValue($data['id']);
+			$_cheque->setValue($data['cheque']);
 		}
-		$this->addElements(array($invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
+		$this->addElements(array($_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
 				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,));
 		return $this;

@@ -17,10 +17,12 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 // 		}
 		$array = array(
 					'branch_id'=>$data['branch_id'],
+					'client_id'=>$data['customer'],
 					'title'=>$data['title'],
 					'total_amount'=>$data['total_amount'],
 					'invoice'=>$data['invoice'],
-					'category_id'=>$data['category_id'],
+					'category_id'=>$data['income_category'],
+					'cheque'=>$data['cheque'],
 					'description'=>$data['Description'],
 					'date'=>$data['Date'],
 					'status'=>$data['Stutas'],
@@ -29,29 +31,24 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 				);
 		$this->insert($array);
  }
-	 function updateIncome($data){
-	 	
-	//  	if($data['currency_type']==1){
-	//  		$amount_in_reil = 0 ;
-	//  		$amount_in_dollar = $data['total_amount'];
-	//  	}else{
-	//  		$amount_in_reil = $data['total_amount'] ;
-	//  		$amount_in_dollar = $data['convert_to_dollar'];
-	//  	}
+	 function updateIncome($data,$id){
 	 	
 		$arr = array(
 					'branch_id'=>$data['branch_id'],
+					'client_id'=>$data['customer'],
 					'title'=>$data['title'],
 					'total_amount'=>$data['total_amount'],
 					'invoice'=>$data['invoice'],
-					'category_id'=>$data['category_id'],
+					'category_id'=>$data['income_category'],
+					'cheque'=>$data['cheque'],
 					'description'=>$data['Description'],
 					'date'=>$data['Date'],
 					'status'=>$data['Stutas'],
-					'user_id'=>$this->getUserId()
+					'user_id'=>$this->getUserId(),
 				);
-		$where=" id = ".$data['id'];
+		$where=" id =  $id " ;
 		$this->update($arr, $where);
+		
 	}
 	function getexpensebyid($id){
 		$db = $this->getAdapter();
@@ -68,6 +65,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		
 		$sql=" SELECT id,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+		(SELECT name_en FROM `ln_client` WHERE ln_client.client_id =ln_income.client_id LIMIT 1) AS client_name,
 		title, invoice,
 		(SELECT name_en FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
 		total_amount,description,date,status FROM ln_income ";
@@ -130,20 +128,68 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		return $db->fetchRow($sql);
 	}
 
-	function getInvoiceNo(){
+	function getPrefixCodeByBranch($branch_id){
+		
 		$db = $this->getAdapter();
-		$sql = " select count(id) from ln_income ";
+		$sql="select prefix from ln_project where status = 1 and br_id = $branch_id limit 1";
+		return $db->fetchOne($sql);
+		
+	}
+	
+	function getInvoiceNo($branch_id){
+		$db = $this->getAdapter();
+		
+		$prefix = $this->getPrefixCodeByBranch($branch_id);
+		
+		$sql = " select count(id) from ln_income where branch_id = $branch_id";
 		$amount = $db->fetchOne($sql);
-		
-		
-		//return 
+		$pre = '-I';
+		$result = $amount + 1;
+		$length = strlen((int)$result);
+		for($i = $length;$i < 5 ; $i++){
+			$pre.='0';
+		}
+		return $prefix.$pre.$result;
 	}
 
+	function getAllIncomeCategory(){
+		
+		$db = $this->getAdapter();
+		$sql = " select key_code as id,name_en as name from ln_view where type=12 ";
+		return $db->fetchAll($sql);
+		
+	}
 	
+	function getNewKeyCode(){
+		$db = $this->getAdapter();
+		$sql="SELECT key_code FROM ln_view WHERE TYPE = 12 ORDER BY key_code DESC LIMIT 1";
+		$result = $db->fetchOne($sql);
+		$key_code = $result + 1;
+		return $key_code;
+	}
 	
+	function AddNewCategory($data){
+		$db = $this->getAdapter();
+		
+		$key_code = $this->getNewKeyCode();
+		
+		$this->_name = "ln_view" ;
+		$array = array(
+				'name_en'	=>$data['cate_enname'],
+				'name_kh'	=>$data['cate_name'],
+				'type'		=>12,
+				'key_code'	=>$key_code,
+				'status'	=>$data['status_j'],
+				);
+		return $this->insert($array);
+		
+	}
 	
-	
-	
+	function getAllCustomer($branch_id){
+		$db = $this->getAdapter();
+		$sql="SELECT client_id as id,name_en as name FROM ln_client WHERE status = 1 and branch_id = $branch_id";
+		return $db->fetchAll($sql);
+	}
 	
 	
 }

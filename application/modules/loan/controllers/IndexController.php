@@ -206,8 +206,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 		}
 		
 	}
-function addNewloantypeAction(){
-	if($this->getRequest()->isPost()){
+	function addNewloantypeAction(){
+		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$data['status']=1;
 			$data['display_by']=1;
@@ -217,6 +217,13 @@ function addNewloantypeAction(){
 			exit();
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
 	
 }
 
