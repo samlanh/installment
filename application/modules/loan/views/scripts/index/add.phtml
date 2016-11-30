@@ -52,8 +52,8 @@
 							<td><?php echo $tr->translate("SALE_NO")?></td>
 							<td><?php echo $frm->getElement('sale_code');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_CODE")?></td>
-							<td><input id="customer_code" /></td>
-							</tr>
+							<td><input id="customer_code" /><input type="hidden" name="identity" id="identity"  value="" ></td>
+						</tr>
 						<tr>
 							<td><?php echo $tr->translate("DATE_BUY")?></td>
 							<td><?php echo $frm->getElement('date_buy');?></td>
@@ -125,6 +125,15 @@
 							<td><?php echo $tr->translate("NOTE")?></td>
 							<td><?php echo $frm->getElement('note')?></td>
 						</tr>
+						<tr style="max-height: 300px;">
+								<td colspan="6">
+									<table id="table_row" border="1px" style="border-collapse: collapse; border:1px solid #ccc;">
+										<tr id="head-title" class="head-td" align="right"></tr>
+									</table>
+									<input type="button" label="<?php echo $tr->translate('ADD_INSTALLMENT');?>" dojoType="dijit.form.Button" 
+								 		iconClass="dijitIconEditProperty" onclick="addRow();" />
+								</td>
+							</tr>
 					</table>
 				</fieldset>
 		</td>
@@ -818,6 +827,7 @@ require(["dojo/ready"], function(ready){
 	 ready(function(){
 		setFirstPaymentAndDateLine(3,<?php echo date('d-m-Y');?>,1);
 		checkScheduleOption();
+		addRow();
 	  });
 	 
 	new dijit.form.FilteringSelect({
@@ -981,7 +991,52 @@ function addNewVillage(){
 	});
 }
 </script>
+
 <script>
+col=0;no=0;title=0;temp='';
+function addRow() { 
+	col++;no++;
+	template='';
+	if(title!=1){    
+		temp+='<th><?php echo $tr->translate("DEL");?></th>';
+		temp+='<th><?php echo $tr->translate("N_O");?></th>';
+		temp+='<th><?php echo $tr->translate("DATE_PAYMENT");?></th>';
+		temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
+		temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("AMOUNT_PAYMENT");?></th>';
+		
+		temp+='<th><?php echo $tr->translate("REMARK");?></th>';
+		dojo.query("#head-title").append(temp);
+		title=1;
+	}
+		template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		template+='<td width="2%" align="center">'+no+'</td>';
+		template+="<td><select class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' id='date_payment"+col+"' name='date_payment"+col+"'></select></td>";
+		template+='<td><select class="fullside" type="text" required="true" dojoType="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'"></select></td>';			
+		template+='<td><input class="fullside" type="text" required="true" dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
+		template+='<td <input class="fullside" type="text"  name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"/><label id="subsub"></label></td>';
+	tmp='<tr id="row'+col+'">';
+	tmp+="</tr>";
+	dojo.query("#table_row").append(tmp);
+
+	if($("#identity").val()!="") {
+		var identity = $("#identity").val();
+		$("#identity").val(identity+','+col);
+	} else {$("#identity").val(col);}
+	dojo.html.set(dojo.byId("row"+col),template , {
+	     parseContent: true,
+	});
+}
+function deleteRecord(index) {
+	var identity = $('#identity').val();
+	var arrays = identity.split(',');
+	for(var i=0;i<arrays.length;i++) {
+	if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity').val(strings);
+	dojo.query("#row"+index).remove();
+}
+
 function setFirstPaymentAndDateLine(pay_term,date_release,amount_date){
 	var a = new Date(date_release);
 		mm = a.getMonth()+amount_date+1;

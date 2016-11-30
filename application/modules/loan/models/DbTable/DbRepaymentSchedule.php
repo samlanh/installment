@@ -114,61 +114,60 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			}else{
     				$is_complete = 0;
     			}
-    			
-	    		$this->_name='ln_client_receipt_money';
-	    		$array = array(
-	    				'branch_id'				=>$data['branch_id'],
-	    				'client_id'				=>$data['customer_code'],
-	    				'receipt_no'			=>$data['receipt'],
-	    				'date_pay'				=>$data['date_buy'],
-	    				'land_id'				=>$data['loan_number'],
-	    				'date_input'			=>date('Y-m-d'),
-	    				'outstanding'			=>$data['sold_price'],
-	    				'principal_amount'		=>$data['balance'],
-	    				
-	    				'total_principal_permonth'		=>$data['deposit'],
-	    				'total_principal_permonthpaid'	=>$data['deposit'],
-	    				'total_interest_permonth'		=>0,
-	    				'total_interest_permonthpaid'	=>0,
-	    				'penalize_amount'				=>0,
-	    				'penalize_amountpaid'			=>0,
-	    				
-	    				'service_charge'				=>$data['other_fee'],
-	    				'service_chargepaid'			=>$data['other_fee'],
-	    				'total_payment'					=>$data['sold_price'],
-	    				'amount_payment'				=>$data['deposit'],
-	    				'recieve_amount'				=>$data['deposit'],
-	    				'balance'						=>$data['balance'],
-	    				'payment_option'				=>$data['schedule_opt'],
-	    				
-	    				'is_completed'					=>$is_complete,
-	    				'status'						=>1,
-	    				'note'							=>$data['note'],
-	    				'user_id'						=>$this->getUserId(),
-	    				);
-	    		$crm_id = $this->insert($array);
-	    		
-	    		$this->_name='ln_client_receipt_money_detail';
-	    		$array = array(
-	    				'crm_id'				=>$crm_id,
-	    				'land_id'				=>$data['loan_number'],
-	    				'date_payment'			=>$data['date_buy'],
-	    				
-	    				'capital'				=>$data['sold_price'],
-	    				'remain_capital'		=>$data['balance'],
-	    				'principal_permonth'	=>$data['deposit'],
-	    				'total_interest'		=>0,
-	    				 
-	    				'total_payment'			=>$data['sold_price'],
-	    				'total_recieve'			=>$data['deposit'],
-	    				'service_charge'		=>$data['other_fee'],
-	    				'penelize_amount'		=>0,
-	    				
-	    				'is_completed'			=>$is_complete,
-	    				'status'				=>1,
-	    		);
-	    		$this->insert($array);
-	    		
+    			if($data['deposit']>0){
+		    		$this->_name='ln_client_receipt_money';
+		    		$array = array(
+		    				'branch_id'				=>$data['branch_id'],
+		    				'client_id'				=>$data['customer_code'],
+		    				'receipt_no'			=>$data['receipt'],
+		    				'date_pay'				=>$data['date_buy'],
+		    				'land_id'				=>$data['loan_number'],
+		    				'date_input'			=>date('Y-m-d'),
+		    				'outstanding'			=>$data['sold_price'],
+		    				'principal_amount'		=>$data['balance'],
+		    				
+		    				'total_principal_permonth'		=>$data['deposit'],
+		    				'total_principal_permonthpaid'	=>$data['deposit'],
+		    				'total_interest_permonth'		=>0,
+		    				'total_interest_permonthpaid'	=>0,
+		    				'penalize_amount'				=>0,
+		    				'penalize_amountpaid'			=>0,
+		    				
+		    				'service_charge'				=>$data['other_fee'],
+		    				'service_chargepaid'			=>$data['other_fee'],
+		    				'total_payment'					=>$data['sold_price'],
+		    				'amount_payment'				=>$data['deposit'],
+		    				'recieve_amount'				=>$data['deposit'],
+		    				'balance'						=>$data['balance'],
+		    				'payment_option'				=>($data['schedule_opt']==2)?4:1,
+		    				'is_completed'					=>$is_complete,
+		    				'status'						=>1,
+		    				'note'							=>$data['note'],
+		    				'user_id'						=>$this->getUserId(),
+		    				);
+		    		$crm_id = $this->insert($array);
+		    		
+		    		$this->_name='ln_client_receipt_money_detail';
+		    		$array = array(
+		    				'crm_id'				=>$crm_id,
+		    				'land_id'				=>$data['loan_number'],
+		    				'date_payment'			=>$data['date_buy'],
+		    				
+		    				'capital'				=>$data['sold_price'],
+		    				'remain_capital'		=>$data['balance'],
+		    				'principal_permonth'	=>$data['deposit'],
+		    				'total_interest'		=>0,
+		    				 
+		    				'total_payment'			=>$data['sold_price'],
+		    				'total_recieve'			=>$data['deposit'],
+		    				'service_charge'		=>$data['other_fee'],
+		    				'penelize_amount'		=>0,
+		    				
+		    				'is_completed'			=>$is_complete,
+		    				'status'				=>1,
+		    		);
+		    		$this->insert($array);
+    			}
     		}
     		
 //     		$loan_number = $dbtable->getLoanNumber($data);

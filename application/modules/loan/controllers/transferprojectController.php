@@ -17,29 +17,25 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 				$search = array(
 						'txt_search'=>'',
 						'client_name'=> -1,
-						'repayment_method' => -1,
 						'branch_id' => -1,
-						'co_id' => -1,
 						'status' => -1,
-						'currency_type'=>-1,
-						'pay_every'=>-1,
-						'start_date'=> date('Y-m-01'),
+						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						 );
 			}
 // 			print_r($search);
-			$db = new Loan_Model_DbTable_DbLandpayment();
-			$rs_rows= $db->getAllIndividuleLoan($search,1);
+			$db = new Loan_Model_DbTable_DbTransferProject();
+			$rs_rows= $db->getAllChangeProject($search,1);
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","SALE_NO","CLIENT_NO","CUSTOMER_NAME","COMUNE_NAME_EN","LOAN_NO","PROPERTY_NAME","STREET","ប្រភេទបង់","LOAN_AMOUNT","DISCOUNT","PAID","BALANCE","DATE_BUY",
+			$collumns = array("BRANCH_NAME","SALE_NO","CLIENT_NO","CUSTOMER_NAME","PROPERTY_NAME","PRICE","BRANCH_NAME","PROPERTY_NAME","PRICE","PAID","BALANCE","CHANGE_DATE",
 				"STATUS");
 			$link=array(
-					'module'=>'loan','controller'=>'repaymentschedule','action'=>'view',
+					'module'=>'loan','controller'=>'transferproject','action'=>'view',
 			);
 			$link_info=array('module'=>'loan','controller'=>'transferproject','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('loan_number'=>$link,'payment_method'=>$link_info,'client_name_kh'=>$link_info,'client_name_en'=>$link_info,'total_capital'=>$link_info),0);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('from_branch'=>$link,'sale_number'=>$link_info,'client_number'=>$link_info,'name_kh'=>$link_info,'from_property'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -73,54 +69,41 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
         
-//      $this->view->allclient = $db->getAllClient();
-//      $this->view->allclient_number = $db->getAllClientNumber();
-//      $frmpopup = new Application_Form_FrmPopupGlobal();
+        $db_keycode = new Application_Model_DbTable_DbKeycode();
+        $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
+	}	
+	
+	public function editAction(){
+		$_dbmodel = new Loan_Model_DbTable_DbTransferProject();
+		
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			try {
+				$_dbmodel->addChangeProject($_data);
+				if(!empty($_data['saveclose'])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/transferproject");
+				}else{
+					Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				}
+			}catch (Exception $e) {
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+		$id = $this->getRequest()->getParam('id');
+		$rs = $_dbmodel->getTransferProject($id);
+		$this->view->rs = $rs;
+		
+		
+		$frm = new Loan_Form_FrmTransferproject();
+		$frm_loan=$frm->FrmTransferProject($rs);
+		Application_Model_Decorator::removeAllDecorator($frm_loan);
+		$this->view->frm_loan = $frm_loan;
+        $db = new Application_Model_DbTable_DbGlobal();
         
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-        
-//      $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
-        
-// 		$db = new Setting_Model_DbTable_DbLabel();
-// 		$this->view->setting=$db->getAllSystemSetting();
-	}	
-
-	
-	
-	public function editAction(){
-		if($this->getRequest()->isPost()){
-			$_data = $this->getRequest()->getPost();
-			try{
-				$_dbmodel = new Loan_Model_DbTable_DbTransferProject();
-				$_dbmodel->updateRepaymentSchedule($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/repaymentschedule/index");
-			}catch (Exception $e) {
-				Application_Form_FrmMessage::message("INSERT_FAIL");
-				Application_Model_DbTable_DbUserLog::writeMessageError($err =$e->getMessage());
-			}
-		}
-		
-		$id = $this->getRequest()->getParam('id');
-		$db_g = new Application_Model_DbTable_DbGlobal();
-		$rs = $db_g->getLoanFundExist($id);
-		if($rs==true){
-			Application_Form_FrmMessage::Sucessfull("LOAN_FUND_EXIST","/loan/repaymentschedule/index");
-		}
-		
-		$db = new Loan_Model_DbTable_DbLoanIL();
-		$row = $db->getTranLoanByIdWithBranch($id,1,1);
-		if(empty($row)){ Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST","/loan/repaymentschedule/index"); }
-		
-		$frm = new Loan_Form_FrmLoan();
-		$frm_loan=$frm->FrmAddLoan($row);
-		Application_Model_Decorator::removeAllDecorator($frm_loan);
-		$this->view->frm_loan = $frm_loan;
-		
-		$db = new Application_Model_DbTable_DbGlobal();
-		$this->view->allclient = $db->getAllClient();
-		$this->view->allclient_number = $db->getAllClientNumber();
-		$this->view->datarow = $row;
 	}
 	
 	function getalllandAction(){

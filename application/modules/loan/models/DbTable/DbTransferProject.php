@@ -9,25 +9,53 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
     	return $session_user->user_id;
     	 
     }
-    function calCulateIRR($total_loan_amount,$loan_amount,$term,$curr){
-    	$array =array();//array(-1000,107,103,103,103,103,103,103,103,103,103,103,103);
-    	for($j=0; $j<= $term;$j++){
-    		if($j==0){
-    			$array[]=-$loan_amount;
-    		}elseif($j==1){
-    			$fixed_principal = round($total_loan_amount/$term,0, PHP_ROUND_HALF_DOWN);
-    			$post_fiexed = $total_loan_amount/$term-$fixed_principal;
-    			$total_add_first = $this->round_up_currency($curr,$post_fiexed*$term);
+   function getAllChangeProject($search){
+   	$from_date =(empty($search['start_date']))? '1': " s.change_date >= '".$search['start_date']." 00:00:00'";
+   	$to_date = (empty($search['end_date']))? '1': " s.change_date <= '".$search['end_date']." 23:59:59'";
+   	$where = " AND ".$from_date." AND ".$to_date;
+   	$sql="SELECT cp.id,
+   	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.from_branchid LIMIT 1) AS from_branch,
+	(SELECT sale_number FROM `ln_sale` WHERE id=cp.sale_id LIMIT 1) AS sale_number,
+	c.client_number,c.name_kh,
+	(SELECT land_address FROM `ln_properties` WHERE ln_properties.id=cp.from_houseid LIMIT 1) from_property,
+	cp.house_price,
+	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.to_branchid LIMIT 1) AS to_branch,
+	(SELECT land_address FROM `ln_properties` WHERE ln_properties.id=cp.to_houseid LIMIT 1) to_propertype,
+	cp.amount_before,cp.paid_before,cp.balance_before,cp.change_date,cp.status
+	FROM `ln_change_project` AS cp,`ln_client` c WHERE c.client_id=cp.client_id ";
+   	
+   	$from_date =(empty($search['start_date']))? '1': " cp.change_date >= '".$search['start_date']." 00:00:00'";
+   	$to_date = (empty($search['end_date']))? '1': " cp.change_date <= '".$search['end_date']." 23:59:59'";
+   	$where = " AND ".$from_date." AND ".$to_date;
+   	if(!empty($search['adv_search'])){
+   		$s_where = array();
+//    		$s_search = addslashes(trim($search['adv_search']));
+//    		$s_where[] = " cp.receipt_no LIKE '%{$s_search}%'";
+//    		$s_where[] = " p.land_code LIKE '%{$s_search}%'";
+//    		$s_where[] = " p.land_address LIKE '%{$s_search}%'";
+//    		$s_where[] = " c.client_number LIKE '%{$s_search}%'";
+//    		$s_where[] = " c.name_en LIKE '%{$s_search}%'";
+//    		$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
+//    		$s_where[] = " s.price_sold LIKE '%{$s_search}%'";
+//    		$s_where[] = " s.comission LIKE '%{$s_search}%'";
+//    		$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
+//    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+   	}
+   	if($search['status']>-1){
+   		$where.= " AND cp.status = ".$search['status'];
+   	}
+   	if(($search['client_name'])>0){
+   		$where.= " AND `cp`.`client_id`=".$search['client_name'];
+   	}
+   	if(($search['branch_id'])>0){
+   		$where.= " AND ( cp.from_branchid = ".$search['branch_id']." OR cp.to_branchid = ".$search['branch_id']." )";
+   	}
+   	
+   	$order = " ORDER BY s.id DESC";
+   	$db = $this->getAdapter();
+   	return $db->fetchAll($sql.$where);
+   }
     
-    			$array[]=($total_add_first+$fixed_principal);
-    		}else{
-    			$array[]=round($total_loan_amount/$term,0, PHP_ROUND_HALF_DOWN);
-    		}
-    
-    	}
-    	$array = array_values($array);
-    	return Loan_Model_DbTable_DbIRRFunction::IRR($array);
-    }
     function round_up($value, $places)
     {
     	$mult = pow(10, abs($places));
@@ -47,7 +75,7 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
     public function addChangeProject($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
-    	try{
+    	try{//need add schedule
     		$dbs = new Loan_Model_DbTable_DbLandpayment();
     		$id = $data['loan_number'];
     		$rows = $dbs->getTranLoanByIdWithBranch($id);
@@ -71,6 +99,7 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
     				
     				'to_branchid'=>$data['to_branch_id'],
     				'to_houseid'=>$data['to_land_code'],
+    				'house_price'=>$data['to_total_sold'],
     				'discount_after'=>$data['discount'],
     				'other_fee'=>$data['other_fee'],
     				'total_payment'=>$data['sold_price'],
@@ -87,7 +116,7 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
     				'user_id'=>$this->getUserId()
     				);
 	    		$this->_name="ln_change_project";
-	    		$this->insert($arr);
+	    		$changeid = $this->insert($arr);
 	    		
 	    		$this->_name="ln_properties";
 	    		$where=" id=".$rows['house_id'];
@@ -119,48 +148,74 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
 		    		);
 		    		$this->insert($data);
 	    		}
+	    		if($data['schedule_opt']==2){
+	    			$is_complete = 1;
+	    		}else{
+	    			$is_complete = 0;
+	    		}
+	    		if($data['deposit']>0){
+		    		$array = array(
+		    				'group_id'=>$changeid,
+		    				'branch_id'			=>$data['branch_id'],
+		    				'client_id'			=>$data['member'],
+		    				'receipt_no'		=>$data['receipt'],
+		    				'date_pay'			=>$data['date_buy'],
+		    				'land_id'			=>$data['loan_number'],
+		    				'date_input'		=>date('Y-m-d'),
+		    				'outstanding'		=>$data['sold_price'],
+		    				'principal_amount'	=>$data['balance'],
+		    				'total_principal_permonth'	=>$data['deposit'],
+		    				'total_principal_permonthpaid'=>$data['deposit'],
+		    				'total_interest_permonth'	=>0,
+		    				'total_interest_permonthpaid'=>0,
+		    				'penalize_amount'			=>0,
+		    				'penalize_amountpaid'		=>0,	    				 
+		    				'service_charge'	=>$data['other_fee'],
+		    				'service_chargepaid'=>$data['other_fee'],
+		    				'total_payment'		=>$data['sold_price'],
+		    				'amount_payment'	=>$data['deposit'],
+		    				'recieve_amount'	=>$data['deposit'],
+		    				'balance'			=>$data['balance'],
+		    				'payment_option'	=>($data['schedule_opt']==2)?4:1,
+		    				'is_completed'		=>$is_complete,
+		    				'status'			=>1,
+		    				'note'				=>$data['note'],
+		    				'user_id'			=>$this->getUserId(),
+		    		);
+		    		$this->_name='ln_client_receipt_money';
+		    		$crm_id = $this->insert($array);
 	    		
-	    		$this->_name='ln_client_receipt_money';
-	    		$array = array(
-	    				'branch_id'				=>$data['branch_id'],
-	    				'client_id'				=>$data['member'],
-	    				'receipt_no'			=>$data['receipt'],
-	    				'date_pay'				=>$data['date_buy'],
-	    				'land_id'				=>$data['loan_number'],
-	    				'date_input'			=>date('Y-m-d'),
-	    				'outstanding'			=>$data['sold_price'],
-	    				'principal_amount'		=>$data['balance'],
-	    				 
-	    				'total_principal_permonth'		=>$data['deposit'],
-	    				'total_principal_permonthpaid'	=>$data['deposit'],
-	    				'total_interest_permonth'		=>0,
-	    				'total_interest_permonthpaid'	=>0,
-	    				'penalize_amount'				=>0,
-	    				'penalize_amountpaid'			=>0,
-	    				 
-	    				'service_charge'				=>$data['other_fee'],
-	    				'service_chargepaid'			=>$data['other_fee'],
-	    				'total_payment'					=>$data['sold_price'],
-	    				'amount_payment'				=>$data['deposit'],
-	    				'recieve_amount'				=>$data['deposit'],
-	    				'balance'						=>$data['balance'],
-	    				'payment_option'				=>$data['schedule_opt'],
-	    				 
-	    				'is_completed'					=>$is_complete,
-	    				'status'						=>1,
-	    				'note'							=>$data['note'],
-	    				'user_id'						=>$this->getUserId(),
-	    		);
-	    		$crm_id = $this->insert($array);
+		    		$this->_name='ln_client_receipt_money_detail';
+		    		$array = array(
+		    				'crm_id'				=>$crm_id,
+		    				'land_id'				=>$data['loan_number'],
+		    				'date_payment'			=>$data['date_buy'],
+		    				'capital'				=>$data['sold_price'],
+		    				'remain_capital'		=>$data['balance'],
+		    				'principal_permonth'	=>$data['deposit'],
+		    				'total_interest'		=>0,
+		    				'total_payment'			=>$data['sold_price'],
+		    				'total_recieve'			=>$data['deposit'],
+		    				'service_charge'		=>$data['other_fee'],
+		    				'penelize_amount'		=>0,
+		    				'is_completed'			=>$is_complete,
+		    				'status'				=>1,
+		    		);
+		    		$this->insert($array);
+	    		}
 	    		
     			$db->commit();
     			return 1;
     		}catch (Exception $e){
     			$db->rollBack();
     			$err =$e->getMessage();
-    			echo $err;exit();
     			Application_Model_DbTable_DbUserLog::writeMessageError($err);
     		}
+    }
+    function getTransferProject($id){
+    	$sql=" select * from ln_change_project where id= $id limit 1";
+    	$db = $this->getAdapter();
+    	return $db->fetchRow($sql);
     }
 
 }

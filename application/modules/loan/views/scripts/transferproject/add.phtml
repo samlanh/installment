@@ -66,7 +66,7 @@
 							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 							<td><input id="member" /> <?php //echo $frm->getElement('member');?></td>
 						</tr>
-						<tr>
+						<tr style="background: #edf7f8;">
 							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></td>
 						</tr>
 						<tr height="40px">
@@ -87,12 +87,12 @@
 							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("TRANSFER_PROPERTY_INFORMATION")?></strong></td>
 						</tr>
 						<tr height="40px">
-							<td><?php echo $tr->translate("TO_BRANCH_ID")?></td>
+							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
 							<td><?php echo $frm->getElement('to_branch_id');?></td>
 							<td><?php echo $tr->translate("TO_LAND_CODE")?></td>
 							<td><input id="to_land_code" /><?php //echo $frm->getElement('');?></td>
 							<td><?php echo $tr->translate("DESCRIPTION")?></td>
-							<td style="height: 50px; border:1px solid #aac4e6; widht:100%;" colspan="2"><label id="to_land_information"></label><?php //echo $tr->translate("Address")?></td>
+							<td style="height: 50px; border:1px solid #aac4e6; widht:200px; font-size: 12px;" colspan="2"><label id="to_land_information"></label><?php //echo $tr->translate("Address")?></td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("LAND_PRICE")?></td>
@@ -102,7 +102,7 @@
 							<td><?php echo $tr->translate("TOTAL_SOLD")?></td>
 							<td><?php echo $frm->getElement('to_total_sold');?></td>
 						</tr>
-						<tr>
+						<tr style="background: #edf7f8;">
 							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("PAYMENT_INFORMATION")?></strong></td>
 						</tr>
 						<tr>
@@ -874,8 +874,6 @@ function getlandinfo(){
 
 var url_getlandinfotransferdetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfotransfer(){
-	//dijit.byId('total_sold').attr('value',0);
-	//dijit.byId('sold_price').attr('value',0);
 	dojo.xhrPost({
 		url:url_getlandinfotransferdetail,	
 		content:{ 
@@ -883,19 +881,20 @@ function getlandinfotransfer(){
 		},		    
 		handleAs:"json",
 		load: function(data) {
-			//dijit.byId('land_code').set('readOnly',true);
-			//dijit.byId('paid_before').set('readOnly',true);
-			//dijit.byId('balance_before').set('readOnly',true);
-			//alert(data);
 			
-			dojo.byId('to_land_information').innerHTML ="លេខសម្គាល់ "+data.land_code+", ឈ្មោះ  "+data.land_address+", ប្រភេទ  "+data.property_type_transfer+", ទំហំ "+data.land_size+", បណ្តោយ "+data.height+",ទទឹង  "+data.width;
+			dojo.byId('to_land_information').innerHTML ="លេខ "+data.land_code+", ឈ្មោះ  "+data.land_address+", ទំហំ "+data.land_size+", បណ្តោយ "+data.height+",ទទឹង  "+data.width;
 			
 			dijit.byId('land_price').attr('value',data.land_price);
 			dijit.byId('house_price').attr('value',data.house_price);
 			dijit.byId('to_total_sold').attr('value',data.price);
-			
-			dijit.byId('sold_price').attr('value',data.price);
-			dijit.byId('deposit').attr('value',dijit.byId('paid_before').get('value'));
+            tohouseprice = dijit.byId('to_total_sold').get('value');
+            if(isNaN(tohouseprice)){tohouseprice=0;}
+                
+            paid_before = dijit.byId('paid_before').get('value');
+            if(isNaN(tohouseprice)){paid_before=0;}
+            balance_price = parseFloat(tohouseprice)-parseFloat(paid_before);
+			dijit.byId('sold_price').attr('value',balance_price);
+			dijit.byId('deposit').attr('value',0);
 			
 			//checkScheduleOption();
 			Balance();
