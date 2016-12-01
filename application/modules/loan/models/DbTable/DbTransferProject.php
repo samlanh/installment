@@ -137,7 +137,7 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
 		    				'branch_id'=>$data['branch_id'],
 		    				'title'=>'Expense for change house to other project',//$data['title'],
     // 	    				'invoice'=>$data['invoice'],
-	//$data['category_id_expense'],expense exchange project
+	//						$data['category_id_expense'],expense exchange project
 		    				'total_amount'=>$data['paid_before']+$data['deposit'],
 		    				'category_id'=>3,
 		    				'description'=>'Expense for transfer to other project',

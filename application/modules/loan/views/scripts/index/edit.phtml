@@ -980,7 +980,6 @@ var url_previewloan = '<?php echo $this->url(array('module'=>'loan','controller'
 function addPreviewLoan(){
 	r=0;
 	if(dijit.byId('frm_add_tran').validate()){
-		//co_id = dijit.byId('co_id').get('value');
 		client = dijit.byId('member').get('value');
 		if (client=='' || client==-1){
 			alert('Please Select Client Name !');
@@ -993,10 +992,10 @@ function addPreviewLoan(){
 			form: dojo.byId("frm_add_tran"),		    
 			handleAs:"json", 
 			load: function(data) {
+				 document.getElementsByClassName("overlay")[0].style.display="none";
 				if(data.row_id=='row_id'){//return 1;
 					printSave();
 					}else{
-						  document.getElementsByClassName("overlay")[0].style.display="none";
 						  temp='';	
 						  fund_title=0;thead='';fund_title=0;
 						  temp='<table class="collape tablesorter" style="font-size:13px; width:1000px !important; " id="table">'
@@ -1032,7 +1031,6 @@ function addPreviewLoan(){
 						dojo.byId('t_amountmoneytype').innerHTML = temp;
 						dijit.byId("lbl_schedule").show();
 					}
-				
 			},
 			error: function(response, ioArgs) {
 				alert("Failed while doing the operation: " + ioArgs.xhr.response);
