@@ -1148,7 +1148,7 @@ function getLaonPayment(type){
 							
 							dijit.byId('property_id').attr('value',respone[i].house_id);
 							
-							dijit.byId('schedule_opt').attr('value',respone[i].payment_type);
+							dijit.byId('schedule_opt').attr('value',respone[i].payment_id);
 							dijit.byId('schedule_opt').set("readOnly",true);
 							dijit.byId('discount').attr('value',respone[i].discount_amount);
 							dijit.byId('discount').set("readOnly",true);
@@ -1340,7 +1340,7 @@ function calculateTotal(index){
 		
 	   var arrays = ids.split(',');
 	   graice_period = '<?php echo $graiceperiod["value"]?>';
-	  //alert(arrays.length);
+	   var ps ='<?php echo $this->interest["value"]?>';
 		if(arrays!=""){
 			is_set = 0;
 			for(var i=0;i<arrays.length;i++) {
@@ -1348,7 +1348,7 @@ function calculateTotal(index){
 				var oneDay = 24*60*60*1000;
 				if($('#mfdid_'+arrays[i]).attr('checked')){
 					
-					var ps = $('#multiplier_'+arrays[i]).val();
+					
 		          	var os_amount = os_amount+parseFloat($('#principal_permonth_'+arrays[i]).val());
 		          	var priciple_amount = parseFloat($('#total_priciple_'+arrays[i]).val()) - parseFloat($('#principal_permonth_'+arrays[i]).val());
 		          	var totalPayment = parseFloat($('#payment_'+arrays[i]).val());
@@ -1414,7 +1414,11 @@ function calculateTotal(index){
 						if(payment_term==3){
 							//alert(total_late_day+'test');
 							if(payOption==1){
-								total_penelize_peryear = roundhundred((parseFloat(totalPay)*(parseFloat(ps*(interest_rate/100))/30/12)*parseFloat(total_late_day))+parseFloat(penelize));
+								alert('total'+totalPay);
+								acc = (ps);
+								alert('ps'+acc);
+								alert('total_late_day'+total_late_day);
+								total_penelize_peryear = roundhundred((parseFloat(totalPay)*(parseFloat(ps/100)/30)*parseFloat(total_late_day))+parseFloat(penelize));
 								//alert(total_penelize_peryear);
 								///*******************
 								 total_interest_late = total_interest_late + roundhundred(parseFloat(total_penelize_peryear));

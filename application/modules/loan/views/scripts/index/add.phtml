@@ -119,7 +119,7 @@
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("CO_NAME")?></td>
-							<td><?php echo $frm->getElement('staff_id');?><!--<input id="staff_id" /> --></td>
+							<td><input id="staff_id" /> </td>
 							<td><?php echo $tr->translate("COMISSION")?></td>
 							<td><?php echo $frm->getElement('commission');?></td>
 							<td><?php echo $tr->translate("NOTE")?></td>
@@ -539,6 +539,34 @@
 </form>
 <script type="text/javascript">	
 
+dojo.require("dojo.data.ItemFileWriteStore");  
+						           
+var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->co_name));?> );
+new dijit.form.FilteringSelect({
+	store: staff_store,
+	autoComplete: true,                        
+    id: "staff_id",
+    name: "staff_id",  
+   // tabindex: "17",    
+    class: 'fullside',  
+    placeHolder:"Selected Agent", 
+    onChange: function() {        
+    	branch_id = dijit.byId('branch_id').get('value');
+    	staff_id = dijit.byId('staff_id').get('value');
+    	if(branch_id==0){
+    		if(staff_id==-1){
+    			alert('Please select branch');
+    			dijit.byId('branch_id').focus();
+    			return false;
+        	}
+    	}else{
+		    if(staff_id==-1){
+		    	dijit.byId('branch_id_pop').attr('value',branch_id);
+		   		dijit.byId("popup_staff").show();
+		    }
+    	}
+    } 
+}, "staff_id");
 function displayNone(){
 	//alert(1);
 	document.getElementById('divPrint1').style.display="none";
@@ -1349,6 +1377,31 @@ function printSubmit(){
 function loading(){
     document.getElementsByClassName("overlay")[0].style.display="block";
 }
+
+var url_add_category = '<?php echo $this->url(array("module"=>"loan","controller"=>"index","action"=>"add-staff")); ?>';
+function addStaff(){
+	dojo.xhrPost({
+		url:url_add_category,
+		form: dojo.byId("frm_staff"),
+		handleAs:"json",
+		load: function(data) {
+			//alert(data.name_code);
+			var Itemmake = { 
+	    	  	id: data,
+		        name: dijit.byId('kh_name').get('value')
+		    };
+	 		addDataToSelectbox(dijit.byId('staff_id'), staff_store, Itemmake, data);
+		    dijit.byId('frm_staff').reset();
+		    dijit.byId("popup_staff").hide();
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+function hideDialog1(){
+	 dijit.byId("popup_staff").hide();
+}
 </script>
 <style>
 						           .hover:hover{background: #eee;}
@@ -1360,3 +1413,71 @@ function loading(){
 }
 .overlay-msg{margin-bottom: 10px;bottom: 0px;position: absolute;font-style: italic;color: rgb(19, 19, 19);} 
 </style>
+
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_staff" >
+		<form style="background-color: buttonface; width:100%;" id='frm_staff' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<fieldset style="background-color: buttonface;">
+						<legend align="center" ><?php echo $tr->translate('ADD_STAFF');?></legend>
+							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+								<tr>
+									<td><?php echo $tr->translate('NAME_KH');?></td>
+									<td>
+										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="kh_name" name="kh_name" value="" type="text">
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate('SEX');?></td>
+									<td>
+										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="sex" name="sex" value="" type="text">
+											<option value="1">Male</option>
+											<option value="2">Female</option>
+										</select>
+									</td>
+								</tr>
+								<input type="text" name="branch_id_pop" id="branch_id_pop" dojoType="dijit.form.TextBox" />
+								<tr>
+									<td><?php echo $tr->translate('PHONE');?></td>
+									<td>
+										<input type="text" name="phone" id="phone" class="fullside" dojoType="dijit.form.TextBox" />
+									</td>
+									
+								</tr>
+								
+								<tr>
+									<td><?php echo $tr->translate('NOTE');?></td>
+									<td>
+										<input type="text" name="note_pop" id="note_pop" class="fullside" dojoType="dijit.form.TextBox" />
+									</td>
+									
+								</tr>
+								
+								<tr>
+									<td colspan="4" align="center">
+										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addStaff();"/>
+									</td>
+								</tr>
+								
+							</table>
+					</fieldset>
+					</td>
+				</tr>
+			</table>
+
+		</form>
+	</div>
+</div>
+
+
+
+
+
+
+

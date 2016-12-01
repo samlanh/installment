@@ -166,7 +166,6 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	
 	function AddNewCategory($data,$type){ // type=1 => income , type=2 => expense
 		$db = $this->getAdapter();
-		
 		if($type==1){
 			$type=12;
 		}else{

@@ -776,5 +776,36 @@ function getLoanLevelByClient($client_id,$type){
     	//return $sql;
     	return $db->fetchOne($sql);
     }
+    
+    public function addStaff($data){
+    	
+    	$db = $this->getAdapter();
+   
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$staff_id = $_db->getStaffNumberByBranch($data['branch_id_pop']);  // get new staff code by branch
+    	
+    	$this->_name="ln_staff";
+    	$array = array(
+    			'branch_id'		=>$data['branch_id_pop'],		
+    			'position_id'	=>1, // 1 => sale agent
+    			'co_code'		=>$staff_id,
+    			'co_khname'		=>$data['kh_name'],
+    			'sex'			=>$data['sex'],
+    			'tel'			=>$data['phone'],
+    			'note'			=>$data['note_pop'],
+    			'create_date'	=>date('Y-m-d'),
+    			
+    			);
+    	return $this->insert($array);
+    	
+//     	$sql = "select co_id as id , CONCAT(co_khname,' - ',co_code) as name_code from ln_staff where co_id = $id limit 1";
+//     	return  $db->fetchRow($sql);
+    	
+    }
+    
+    
   
 }
+
+
+
