@@ -39,6 +39,7 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
 		}	
 		$frm = new Loan_Form_FrmSearchLoan();
 		$frm = $frm->AdvanceSearch();
