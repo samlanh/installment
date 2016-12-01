@@ -21,15 +21,15 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
 		   LIMIT 1) AS `branch_name`,
     	s.sale_number,
-    	`c`.`client_number`   AS `client_number`,
 	    `c`.`name_kh`         AS `name_kh`,
 	    `c`.`name_en`         AS `name_en`,
-	    `p`.`land_code`       AS `land_code`,
+
 	    `p`.`land_address`    AS `land_address`,
 	    `p`.`street`          AS `street`,
 	    (SELECT name_en FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
   		`s`.`price_before`    AS `price_before`,
         `s`.`discount_amount` AS `discount_amount`,
+         `s`.`other_fee`     AS `other_fee`,
         `s`.`paid_amount`     AS `paid_amount`,
         `s`.`balance`         AS `balance`,
         `s`.`buy_date`        AS `buy_date`,
@@ -83,6 +83,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	
     	$where.=" LIMIT 1 ";
     	return $this->getAdapter()->fetchRow($sql.$where);
+    }
+    function getSaleScheduleById($id){
+    	$sql=" SELECT * FROM ln_saleschedule WHERE sale_id =$id  AND status=1 ";
+    	$db = $this->getAdapter();
+    	return $db->fetchAll($sql);
     }
     public function getLoanviewById($id){
     	$sql = "SELECT
