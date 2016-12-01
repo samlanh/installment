@@ -68,6 +68,11 @@ class Loan_ExpenseController extends Zend_Controller_Action
     	$frm = $pructis->FrmAddExpense();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
+    	
+    	$db = new Loan_Model_DbTable_DbExpense();
+    	$result = $db->getAllExpenseCategory();
+    	array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+    	$this->view->all_category = $result;
     }
  
     public function editAction()
@@ -94,9 +99,52 @@ class Loan_ExpenseController extends Zend_Controller_Action
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
 		
-    	
+    	$db = new Loan_Model_DbTable_DbExpense();
+    	$result = $db->getAllExpenseCategory();
+    	array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+    	$this->view->all_category = $result;
     }
 
+    
+    function addCategoryAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$db = new Loan_Model_DbTable_DbIncome();
+    		$ex_rate = $db->AddNewCategory($data,2);
+    		//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
+    		print_r(Zend_Json::encode($ex_rate));
+    		exit();
+    	}
+    }
+    
+//     function getAllCustomerAction(){
+//     	if($this->getRequest()->isPost()){
+//     		$data = $this->getRequest()->getPost();
+//     		$db = new Loan_Model_DbTable_DbIncome();
+//     		$result = $db->getAllCustomer($data['branch_id']);
+//     		array_unshift($result, array ( 'id' => -1, 'name' => 'Select Customer') );
+//     		print_r(Zend_Json::encode($result));
+//     		exit();
+//     	}
+//     }		Loan_Model_DbTable_DbExpense
+    
+    function getInvoiceNoAction(){
+    	 
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$_db = new Loan_Model_DbTable_DbExpense();
+    		$result = $_db->getInvoiceNo($data['branch_id']);
+    		//array_unshift($result, array ( 'id' => -1, 'name' => 'Select Customer') );
+    		print_r(Zend_Json::encode($result));
+    		exit();
+    	}
+    	 
+    }
+    
+    
+    
+    
+    
 }
 
 

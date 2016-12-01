@@ -126,7 +126,7 @@ class Loan_IncomeController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
     		$data = $this->getRequest()->getPost();
     		$db = new Loan_Model_DbTable_DbIncome();
-    		$ex_rate = $db->AddNewCategory($data);
+    		$ex_rate = $db->AddNewCategory($data,1);
     		//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
     		print_r(Zend_Json::encode($ex_rate));
     		exit();

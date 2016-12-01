@@ -36,7 +36,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
-				'onchange'=>'getallCustomer();'
+				'onchange'=>'getInvoiceNo("");getallCustomer();'
 		));
 		
 		$db = new Application_Model_DbTable_DbGlobal();

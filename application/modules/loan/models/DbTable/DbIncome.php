@@ -8,27 +8,23 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	
 	}
 	function addIncome($data){
-// 		if($data['currency_type']==1){
-// 			$amount_in_reil = 0 ;
-// 			$amount_in_dollar = $data['total_amount'];
-// 		}else{
-// 			$amount_in_reil = $data['total_amount'] ;
-// 			$amount_in_dollar = $data['convert_to_dollar'];
-// 		}
+		
+		$invoice = $this->getInvoiceNo($data['branch_id']);
+		
 		$array = array(
-					'branch_id'=>$data['branch_id'],
-					'client_id'=>$data['customer'],
-					'title'=>$data['title'],
-					'total_amount'=>$data['total_amount'],
-					'invoice'=>$data['invoice'],
-					'category_id'=>$data['income_category'],
-					'cheque'=>$data['cheque'],
-					'description'=>$data['Description'],
-					'date'=>$data['Date'],
-					'status'=>$data['Stutas'],
-					'user_id'=>$this->getUserId(),
-					'create_date'=>date('Y-m-d'),
-				);
+			'branch_id'		=>$data['branch_id'],
+			'client_id'		=>$data['customer'],
+			'title'			=>$data['title'],
+			'total_amount'	=>$data['total_amount'],
+			'invoice'		=>$invoice,
+			'category_id'	=>$data['income_category'],
+			'cheque'		=>$data['cheque'],
+			'description'	=>$data['Description'],
+			'date'			=>$data['Date'],
+			'status'		=>$data['Stutas'],
+			'user_id'		=>$this->getUserId(),
+			'create_date'	=>date('Y-m-d'),
+		);
 		$this->insert($array);
  }
 	 function updateIncome($data,$id){
@@ -160,29 +156,34 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		
 	}
 	
-	function getNewKeyCode(){
+	function getNewKeyCode($type){
 		$db = $this->getAdapter();
-		$sql="SELECT key_code FROM ln_view WHERE TYPE = 12 ORDER BY key_code DESC LIMIT 1";
+		$sql="SELECT key_code FROM ln_view WHERE TYPE = $type ORDER BY key_code DESC LIMIT 1";
 		$result = $db->fetchOne($sql);
 		$key_code = $result + 1;
 		return $key_code;
 	}
 	
-	function AddNewCategory($data){
+	function AddNewCategory($data,$type){ // type=1 => income , type=2 => expense
 		$db = $this->getAdapter();
 		
-		$key_code = $this->getNewKeyCode();
+		if($type==1){
+			$type=12;
+		}else{
+			$type=13;
+		}
+		$key_code = $this->getNewKeyCode($type);
 		
 		$this->_name = "ln_view" ;
 		$array = array(
 				'name_en'	=>$data['cate_enname'],
 				'name_kh'	=>$data['cate_name'],
-				'type'		=>12,
+				'type'		=>$type,
 				'key_code'	=>$key_code,
 				'status'	=>$data['status_j'],
 				);
-		return $this->insert($array);
-		
+		$this->insert($array);
+		return $key_code; // to set key_code value to added new field
 	}
 	
 	function getAllCustomer($branch_id){
