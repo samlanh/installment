@@ -211,13 +211,14 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    }
    public function getAllCOName($option=null){
    	$this->_name='ln_staff';
-   	$sql = " call stGetAllCOName();";
+   	$sql = " SELECT co_id AS id, co_firstname AS name ,co_id ,co_firstname,co_khname,co_code FROM 
+   	        ln_staff WHERE status=1 AND co_khname!='' AND `position_id`=1 ";
    	$db = $this->getAdapter();
    	$rows =  $db->fetchAll($sql);
    	$options = array(''=>'----Select Staff ----');
    	if($option!=null){
    		if(!empty($rows))foreach($rows as $rs){
-   				$options[$rs['co_id']]=$rs['co_firstname']." - ".$rs['co_khname'];}
+   				$options[$rs['co_id']]=$rs['co_khname'];}
    				return $options;
    	}
    	return $rows;

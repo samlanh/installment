@@ -194,11 +194,9 @@ public function init()
 				'data-dojo-props'=>"
 				'required':true,
 				'name':'interest_rate',
-				'value':12,
 				'class':'fullside',
 				'onkeyup':'checkScheduleOption();',
 				'invalidMessage':'អាចបញ្ជូលពី 1 ដល់'
-				 
 				"));
 				
 		$_period = new Zend_Dojo_Form_Element_NumberTextBox('period');
@@ -206,7 +204,7 @@ public function init()
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'required' =>'true',
 				'class'=>'fullside',
-				'onkeyup'=>'checkScheduleOption();'
+				'onkeyup'=>'checkScheduleOption();CalculateDate();'
 				//'onkeyup'=>'calCulatePeriod();'
 		));
 		$_period->setValue(60);
