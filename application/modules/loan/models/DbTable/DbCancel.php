@@ -13,7 +13,10 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		$sql="SELECT s.`id`,s.`sale_number` AS `name`,
 			c.`client_number`,c.`name_en`,c.`name_kh`,
 			s.`price_before`,s.`price_sold`,
-            s.`paid_amount`,s.`balance`,s.`discount_amount`,s.`other_fee`,s.`payment_id`,s.`graice_period`,s.`total_duration`,s.`buy_date`,s.`end_line`,
+            s.`paid_amount`,
+            (SELECT SUM(total_principal_permonthpaid) FROM `ln_client_receipt_money` WHERE land_id=$sale_id AND status=1 LIMIT 1) AS total_principal,
+            (SELECT COUNT(id) FROM `ln_client_receipt_money` WHERE status=1 AND is_completed=1 AND land_id=$sale_id LIMIT 1) as installment_paid, 
+            s.`balance`,s.`discount_amount`,s.`other_fee`,s.`payment_id`,s.`graice_period`,s.`total_duration`,s.`buy_date`,s.`end_line`,
 			s.`client_id`,
 			s.`house_id`,p.`id` as property_id,p.`land_code`,p.`land_address`,p.`land_size`,p.`width`,p.`height`,p.`street`,p.`land_price`,p.`house_price`
 			,p.`street`,(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
@@ -28,12 +31,13 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		$to_date = (empty($search['to_date_search']))? '1': "c.`create_date` <= '".$search['to_date_search']." 23:59:59'";
 		$where = " AND ".$from_date." AND ".$to_date;
 		$sql ='SELECT c.`id`,
+		    p.`project_name`,
 			s.`sale_number`,
 			clie.`client_number`,
-			CONCAT(clie.`name_kh`," ",clie.`name_en`) AS client_name,
-			p.`project_name`,
+			clie.`name_kh` AS client_name,
 			(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
-			pro.`land_code`,pro.`land_address`,pro.`street`,c.`create_date`
+			pro.`land_code`,pro.`land_address`,pro.`street`,
+			s.price_sold,c.installment_paid,c.paid_amount,c.`create_date`
 			FROM `ln_sale_cancel` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = c.`property_id` AND
@@ -45,7 +49,10 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$s_where = array();
 			$s_search = addslashes(trim($search['adv_search']));
 			$s_where[] = " clie.`client_number` LIKE '%{$s_search}%'";
+			$s_where[] = " clie.`name_kh` LIKE '%{$s_search}%'";
 			$s_where[] = " s.`sale_number` LIKE '%{$s_search}%'";
+			$s_where[] = " c.`installment_paid` LIKE '%{$s_search}%'";
+			$s_where[] = " c.`installment_paid` LIKE '%{$s_search}%'";
 			$s_where[] = " p.`project_name` LIKE '%{$s_search}%'";
 			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
@@ -64,6 +71,8 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'user_id'=>$this->getUserId(),
 					'status'=>1,
 					'reason'=>$data['reason'],
+					'paid_amount'=>$data['paid_amount'],
+					'installment_paid'=>$data['installment_paid']
 					);
 			$this->_name="ln_sale_cancel";
 			 $this->insert($arr);
@@ -121,7 +130,6 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					$this->update($arr_, $where);
 				}
 				$arr = array(
-						//'cancel_code'=>$data['cancel_code'],
 						'branch_id'=>$data['branch_id'],
 						'sale_id'=>$data['sale_no'],
 						'property_id'=>$data['property_id'],
@@ -129,6 +137,8 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'reason'=>$data['reason'],
 						'user_id'=>$this->getUserId(),
 						'status'=>$data['status_using'],
+						'paid_amount'=>$data['paid_amount'],
+						'installment_paid'=>$data['installment_paid']
 				);
 				$this->_name="ln_sale_cancel";
 				$where ="id = ".$data['id'];
@@ -156,6 +166,8 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'create_date'=>date("Y-m-d"),
 						'user_id'=>$this->getUserId(),
 						'status'=>$data['status_using'],
+						'paid_amount'=>$data['paid_amount'],
+						'installment_paid'=>$data['installment_paid']
 				);
 				$this->_name="ln_sale_cancel";
 				$where ="id = ".$data['id'];
@@ -176,9 +188,6 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				$this->update($arr_old, $where);
 			}
 			
-			
-	
-	
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}

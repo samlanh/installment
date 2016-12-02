@@ -28,12 +28,10 @@ dojo.require("dijit.Dialog");
 					   <tr>
 							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
 							<td><?php echo $frm->getElement('branch_id');?><?php echo $frm->getElement('old_property_id');?></td>
-							<!-- <td><?php //echo $tr->translate("CANCEL_CODE")?></td>
-							<td><?php //echo $frm->getElement('cancel_code');?></td> -->
+							<td><?php echo $tr->translate("CLIENT_NAME")?></td>
+							<td><input id="sale_client" /></td>
 							<td><?php echo $tr->translate("SALE_NO")?><?php echo $frm->getElement('old_sale_id');?></td>
 							<td><input id="sale_no" ><?php echo $frm->getElement('property_id');?></td>
-							<td><?php echo $tr->translate("CLIENT")?></td>
-							<td><input id="sale_client" /></td>
 						</tr>
 						<tr>
 							<td colspan="3"><?php echo $tr->translate("CUSTOMER_INFO")?></td>
@@ -46,6 +44,7 @@ dojo.require("dijit.Dialog");
 						<tr>
 							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("PAYMENT_INFO")?></strong></td>
 						</tr>
+						
 						<tr>
 							<td><?php echo $tr->translate("PRICE_SOLD")?></td>
 							<td><?php echo $frm->getElement('price_sold');?></td>
@@ -57,38 +56,40 @@ dojo.require("dijit.Dialog");
 						<tr>
 							<td><?php echo $tr->translate("PAYMENT_TERM")?></td>
 							<td><?php  echo $frm->getElement('schedule_opt');?></td>	
-							<td><?php echo $tr->translate("PAID_AMOUNT")?></td>
-							<td><?php  echo $frm->getElement('paid_amount');?></td>	
-							<td><?php echo $tr->translate("BALANCE")?></td>
-							<td><?php echo $frm->getElement('balance')?></td>						
-						</tr>
-						<tr>
 							<td><?php echo $tr->translate("DURATION")?></td>
 							<td><?php echo $frm->getElement('period');?></td>
 							<td><?php echo $tr->translate("BUY_DATE")?></td>
 							<td><?php echo $frm->getElement('buy_date');?></td>
-							<td><?php echo $tr->translate("END_DATE")?></td>
-							<td><?php  echo $frm->getElement('end_date');?></td>	
 						</tr>
 						<tr>
+							<td><?php echo $tr->translate("END_DATE")?></td>
+							<td><?php  echo $frm->getElement('end_date');?></td>
 							<td><?php echo $tr->translate("SOLD_DATE")?></td>
 							<td><?php  echo $frm->getElement('sold_date');?></td>
 							<td><?php echo $tr->translate("COMMISION")?></td>
-							<td><?php  echo $frm->getElement('commision');?></td>
-							<td><?php echo $tr->translate("STATUS")?></td>
-							<td><?php  echo $frm->getElement('status_using');?></td>
+							<td><?php  echo $frm->getElement('commision');?></td>	
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("SOLD_NOTE")?></td>
-							<td style="height: 70px; border:1px solid #aac4e6; widht:100%;" colspan="2"><label id="sale_note"></label></td>	
-							<td><?php echo $tr->translate("REASON")?></td>
-							<td  colspan="2"><textarea class="fullside" style="height: 70px;" id="reason" name="reason"><?php echo $this->row['reason'];?></textarea></td>
+							<td><?php echo $tr->translate("INSTALLMENT_PAID")?></td>
+							<td><?php  echo $frm->getElement('installment_paid');?></td>	
+							<td><?php echo $tr->translate("PAID_AMOUNT")?></td>
+							<td><?php  echo $frm->getElement('paid_amount');?></td>	
+							<td><?php echo $tr->translate("BALANCE")?></td>
+							<td><?php echo $frm->getElement('balance')?></td>	
+						</tr>
+						<tr>
+							<td colspan="3"><?php echo $tr->translate("SOLD_NOTE")?></td>
+							<td colspan="3"><?php echo $tr->translate("REASON")?></td>
+						</tr>
+						<tr>
+							<td style="height: 70px; border:1px solid #aac4e6; widht:100%;" colspan="3"><label id="sale_note"></label></td>	
+							<td colspan="3"><textarea class="fullside" style="height: 60px;" id="reason" name="reason"><?php echo $this->row['reason'];?></textarea></td>
 						</tr>
 						<tr>
 							<td align="center" colspan="6">
 								<input type="submit" name="save" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="submitButton" dojoType="dijit.form.Button"
 				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
-				 				<input type="submit" name="save_close"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('SAVECLOSE')?>" id="submitBtn" dojoType="dijit.form.Button"
+				 				<input type="submit" name="save_close"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('GO_EDIT')?>" id="submitBtn" dojoType="dijit.form.Button"
 				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
 				 					
 				 					
@@ -149,26 +150,6 @@ dojo.ready(function(){
 			alert(e);
 		}
 });
-
-//var	url_getCancelNo = '<?php //echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-cancel-no'));?>';
-//	function getCancelNo(){
-//		branch_id = dijit.byId('branch_id').get('value');
-//		if(branch_id==0){
-//			return false;}
-//		dojo.xhrPost({
-//			url:url_getCancelNo,	
-//			content:{ 
-//				'branch_id': branch_id
-//			},
-//			handleAs:"json",
-//			load: function(data) {	
-//			    dijit.byId('cancel_code').attr('value',data);
-//			},
-//			error: function(err) {
-//				alert(err);
-//			}
-//		});
-//	}
 var oldbranch='<?php echo $this->row['branch_id'];?>';
 var oldsale='<?php echo $this->row['sale_id'];?>';
 var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-sale'));?>';
@@ -230,10 +211,23 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 			},		    
 			handleAs:"json",
 			load: function(data) {
-				//alert(data.payment_id);
+
+				
+				dijit.byId('installment_paid').attr('value',data.installment_paid);
+				
+				total_principal= data.total_principal;
+				if(isNaN(total_principal) || total_principal==null){total_principal=0;}
+			    paid_amount = data.paid_amount;
+				if(isNaN(paid_amount) || paid_amount==null){paid_amount=0;}
+				total_principal = parseFloat(paid_amount)+parseFloat(total_principal);
+				
+				
+				dijit.byId('paid_amount').attr('value',total_principal);
+				balance = data.price_sold-total_principal;
+				dijit.byId('balance').attr('value',balance);
+				
+				
 				dijit.byId('price_sold').attr('value',data.price_sold);
-				dijit.byId('paid_amount').attr('value',data.paid_amount);
-				dijit.byId('balance').attr('value',data.balance);
 				dijit.byId('period').attr('value',data.total_duration);
 				dijit.byId('buy_date').attr('value',data.buy_date);
 				dijit.byId('end_date').attr('value',data.end_line);

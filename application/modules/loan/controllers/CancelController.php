@@ -23,10 +23,8 @@ class Loan_CancelController extends Zend_Controller_Action {
 						'to_date_search'=>date('Y-m-d'));
 			}
 			$rs_rows= $db->getCancelSale($search);//call frome model
-// 			$glClass = new Application_Model_GlobalClass();
-// 			$rs_row = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("SALE_NO","CLIENT_NO","CLIENT_NAME","PROJECT_NAME","PROPERTY_TYPE","PROPERTY_CODE","PROPERTY_NAME","STREET","DATE");
+			$collumns = array("PROJECT_NAME","SALE_NO","CLIENT_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","PROPERTY_NAME","STREET","PRICE_SOLD","INSTALLMENT_PAID","PAID_AMOUNT","DATE");
 			$link=array(
 					'module'=>'loan','controller'=>'cancel','action'=>'edit',
 			);

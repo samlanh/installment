@@ -236,8 +236,8 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 				  AND s.`status` = 1 
 				  AND sd.`is_completed` = 0 
 				  AND sd.`status` = 1 
-				  AND c.`client_id` = s.`client_id` 
-				  AND s.is_reschedule!=1 ";
+				  AND (`s`.`is_cancel` = 0)
+				  AND c.`client_id` = s.`client_id` ";
       	$where='';
       	if(!empty($search['adv_search'])){
       		$s_where = array();

@@ -84,7 +84,13 @@ public function init()
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
 				'readonly'=>'readonly',
-				
+		));
+		
+		$installment_paid = new Zend_Dojo_Form_Element_TextBox('installment_paid');
+		$installment_paid->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'readonly'=>'readonly',
 		));
 		
 		$_sale_no = new Zend_Dojo_Form_Element_FilteringSelect('sale_no');
@@ -94,14 +100,12 @@ public function init()
 				'onchange'=>'checkScheduleOption();'
 		));
 		$opt = array("","SELECT_SALE_NO");
-		//$opt = $db->getVewOptoinTypeByType(25,1,null,1);
 		$_sale_no->setMultiOptions($opt);
 		
 		$_customer_code = new Zend_Dojo_Form_Element_FilteringSelect('customer');
 		$_customer_code->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				//'onchange'=>'showPopupclient;'
 		));
 		$group_opt = $db->getGroupCodeById(1,0,1);//code,individual,option
 		$_customer_code->setMultiOptions($group_opt);
@@ -110,7 +114,6 @@ public function init()
 		$_property->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				//'onchange'=>'showPopupclient;'
 		));
 		$property_opt = array("","PROPERTY");
 		$_property->setMultiOptions($property_opt);
@@ -372,14 +375,15 @@ public function init()
 		$_old_property_id = new Zend_Form_Element_Hidden("old_property_id");
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
-			//$branch_id->setAttribs(array("readonly"=>true));
 			$_cancel_code->setValue($data['cancel_code']);
 			$_old_sale_id->setValue($data['sale_id']);
 			$_old_property_id->setValue($data['property_id']);
 			$_status->setValue($data['status']);
-			
+
+			$installment_paid->setValue($data['installment_paid']);
+			$paid_amount->setValue($data['paid_amount']);
 		}
-		$this->addElements(array($branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
+		$this->addElements(array($installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
 				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$_old_property_id,$property,
 				$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$penalize,$_service_charge,
