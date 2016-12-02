@@ -113,6 +113,7 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
     				'first_payment_after'=>$data['first_payment'],
     				'end_date_after'=>$data['date_line'],
     				'noted'=>$data['note'],
+    				'cheque'=>$data['cheque'],
     				'user_id'=>$this->getUserId()
     				);
 	    		$this->_name="ln_change_project";

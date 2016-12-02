@@ -239,6 +239,12 @@ public function init()
 				'class'=>'fullside',
 		));
 		
+		$cheque = new Zend_Dojo_Form_Element_TextBox("cheque");
+		$cheque->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
 		$_service_charge = new Zend_Dojo_Form_Element_TextBox("service_charge");
 		$_service_charge->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
@@ -289,7 +295,7 @@ public function init()
 			
 			
 		}
-		$this->addElements(array($paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id));
