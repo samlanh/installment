@@ -209,15 +209,16 @@ function getAllBranch($search=null){
     	function getAllIncome($search=null){
     		$db = $this->getAdapter();
     		$session_user=new Zend_Session_Namespace('auth');
-    		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
-    		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+    		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
     		$where = " WHERE ".$from_date." AND ".$to_date;
     	
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		title, invoice,branch_id,
     		(SELECT name_en FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
-    		total_amount,description,date,status FROM ln_income ";
+    		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
+    		cheque,total_amount,description,date,status FROM ln_income ";
     	
     		if (!empty($search['adv_search'])){
     			$s_where = array();
@@ -241,8 +242,8 @@ function getAllBranch($search=null){
     	function getAllExpense($search=null){
     		$db = $this->getAdapter();
     		$session_user=new Zend_Session_Namespace('auth');
-    		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
-    		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+    		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
     		$where = " WHERE ".$from_date." AND ".$to_date;
     	
     		$sql=" SELECT id,
@@ -250,7 +251,7 @@ function getAllBranch($search=null){
     		title,invoice,
     	
     		(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
-    		total_amount,description,date,status FROM ln_expense ";
+    		cheque,total_amount,description,date,status FROM ln_expense ";
     	
     		if (!empty($search['adv_search'])){
     			$s_where = array();
