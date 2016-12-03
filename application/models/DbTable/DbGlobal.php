@@ -225,7 +225,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    }
    public function getAllCoNameOnly(){
    	$db= $this->getAdapter();
-   	$sql = " SELECT co_id AS id, CONCAT(co_firstname,' - ',co_khname,' - ',co_code) AS name
+   	$sql = " SELECT co_id AS id, CONCAT(co_khname,' - ',co_code) AS name
    	  FROM ln_staff WHERE STATUS=1 AND co_khname!='' AND `position_id`=1 ";
    	return $db->fetchAll($sql);
    }
@@ -269,7 +269,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	$new_acc_no= (int)$acc_no+1;
    	$acc_no= strlen((int)$acc_no+1);
    	$pre = "";
-   	for($i = $acc_no;$i<6;$i++){
+   	for($i = $acc_no;$i<3;$i++){
    		$pre.='0';
    	}
    	return $pre.$new_acc_no;
@@ -295,7 +295,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	   	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+1;
    	$acc_no= strlen((int)$acc_no+1);
-   	for($i = $acc_no;$i<5;$i++){
+   	for($i = $acc_no;$i<3;$i++){
    		$pre.='0';
    	}
    	return $pre.$new_acc_no;
@@ -313,7 +313,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+1;
    	$acc_no= strlen((int)$acc_no+1);
-   	for($i = $acc_no;$i<4;$i++){
+   	for($i = $acc_no;$i<3;$i++){
    		$pre.='0';
    	}
    	return $pre.$new_acc_no;
@@ -445,7 +445,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	if($opt==null){
   		return $row;
   	}else{
-  		$options=array(0=>"Select Project");
+  		$options=array(0=>"Select Branch");
   		if(!empty($row)) foreach($row as $read) $options[$read['br_id']]=$read['project_name'];
   		return $options;
   	}
@@ -1137,8 +1137,8 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	$new_acc_no= (int)$acc_no+1;
   	$acc_no= strlen((int)$acc_no+1);
   	$prefix = $this->getPrefix($branch_id);
-  	$pre= "";
-  	for($i = $acc_no;$i<6;$i++){
+  	$pre= "-";
+  	for($i = $acc_no;$i<3;$i++){
   		$pre.='0';
   	}
   	return $prefix.$pre.$new_acc_no;
@@ -1152,8 +1152,8 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	$new_acc_no= (int)$acc_no+1;
   	$acc_no= strlen((int)$acc_no+1);
   	$prefix = $this->getPrefix($branch_id);
-  	$pre= "P";
-  	for($i = $acc_no;$i<6;$i++){
+  	$pre= "-P";
+  	for($i = $acc_no;$i<3;$i++){
   		$pre.='0';
   	}
   	return $prefix.$pre.$new_acc_no;
