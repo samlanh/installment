@@ -119,8 +119,8 @@ class Group_LandController extends Zend_Controller_Action {
 	}
 	function viewAction(){
 		$id = $this->getRequest()->getParam("id");
-		$db = new Group_Model_DbTable_DbClient();
-		$this->view->client_list = $db->getClientDetailInfo($id);
+		$db = new Group_Model_DbTable_DbLand();
+		$this->view->propertyinfor = $db->getPropertyInfor($id);
 	}
 	public function addNewclientAction(){//ajax
 		if($this->getRequest()->isPost()){

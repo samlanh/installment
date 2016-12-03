@@ -16,6 +16,10 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'other'=>$_data['branch_note'],
     			'status'=>$_data['branch_status'],
     			'displayby'=>$_data['branch_display'],
+    			'p_manager_namekh'=>$_data['project_manager_namekh'],
+    			'p_manager_nationality'=>$_data['project_manager_nationality'],
+    			'p_manager_nation_id'=>$_data['project_manager_nation_id'],
+    			'p_current_address'=>$_data['current_address'],
     			);
     	$this->insert($_arr);//insert data
 //     	$where = 'id = 1';
@@ -33,6 +37,10 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'other'=>$_data['branch_note'],
     			'status'=>$_data['branch_status'],
     			'displayby'=>$_data['branch_display'],
+    			'p_manager_namekh'=>$_data['project_manager_namekh'],
+    			'p_manager_nationality'=>$_data['project_manager_nationality'],
+    			'p_manager_nation_id'=>$_data['project_manager_nation_id'],
+    			'p_current_address'=>$_data['current_address'],
     			);
     	$where=$this->getAdapter()->quoteInto("br_id=?", $id);
     	$this->update($_arr, $where);
@@ -69,7 +77,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     
  function getBranchById($id){
     	$db = $this->getAdapter();
-    	$sql = "SELECT br_id,prefix,project_name,project_type,br_address,branch_code,branch_tel,fax,displayby,other,status FROM
+    	$sql = "SELECT * FROM
     	$this->_name ";
     	$where = " WHERE `br_id`= $id" ;
    		return $db->fetchRow($sql.$where);

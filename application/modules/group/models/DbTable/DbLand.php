@@ -235,5 +235,14 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		$sql= "SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
 		return $db->fetchAll($sql);
 	}
+	public function getPropertyInfor($id){
+		$db = $this->getAdapter();
+		$sql="SELECT *,
+		(SELECT project.project_name FROM `ln_project` AS project WHERE project.br_id=pro.`branch_id` LIMIT 1) AS project_name,
+		(SELECT project.br_address FROM `ln_project` AS project WHERE project.br_id=pro.`branch_id` LIMIT 1) AS br_address,
+		(SELECT p_type.type_nameen FROM `ln_properties_type` AS p_type WHERE p_type.id = pro.property_type) AS pro_type
+		 FROM `ln_properties` AS  pro WHERE pro.`id`=".$id;
+		return $db->fetchRow($sql);
+	}
 }
 
