@@ -43,9 +43,9 @@ alert(branch_id);
 					<tr>
 					    <td><?php echo $tr->translate("BRANCH_NAME")?></td>
 						<td><?php echo $frm->getElement('branch_id');?></td>
-						<td><?php echo $tr->translate("CUSTOMER")?></td>
+						<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 						<td><input id="customer" /></td>
-						<td><?php echo $tr->translate("Inc.")?></td>
+						<td><?php echo $tr->translate("RECEIPT_NO")?></td>
 						<td><?php echo $frm->getElement('invoice');?></td>
 					</tr>
 					<tr>
@@ -188,7 +188,7 @@ function addCategory(){
 		load: function(data) {
 			var Itemmake = { 
 	    		id: data,
-		        name: dijit.byId('cate_enname').get('value')
+		        name: dijit.byId('cate_name').get('value')
 		    };
 	 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
 		    dijit.byId('frm_category').reset();
@@ -243,6 +243,10 @@ function doPrint() {
 function printSubmit(){
 	 $('#frm_add_tran').submit();
 }
+
+function hideDialog1(){
+	dijit.byId('popup_category').hide();
+}
 </script>
 
 <div class="dijitHidden">
@@ -258,12 +262,6 @@ function printSubmit(){
 									<td><?php echo $tr->translate('NAME_KH');?></td>
 									<td>
 										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="cate_name" name="cate_name" value="" type="text">
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('NAME_EN');?></td>
-									<td>
-										<input dojoType="dijit.form.ValidationTextBox"  class="fullside" id="cate_enname" name="cate_enname" value="" type="text">
 									</td>
 								</tr>
 								<tr>

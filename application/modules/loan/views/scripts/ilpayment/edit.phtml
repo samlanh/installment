@@ -152,6 +152,17 @@
 							<td style="font-weight: bold;"><?php echo $frm->getElement('amount_receive');?></td>
 						</tr>
 						<tr>
+							<td><?php echo $tr->translate("AMOUNT_LATE");?></td>
+							<td>
+								<?php  echo $frm->getElement('late_day');?>
+							</td>
+							<td><?php echo $tr->translate("RETURN_AMOUNT")?></td>
+							<td><?php  echo $frm->getElement('amount_return');?></td>
+							<td><?php echo $tr->translate("REMAIN")?></td>
+							<td><?php echo $frm->getElement('remain');?></td>
+						</tr>
+						<?php echo $frm->getElement('last_payment_date'); ?>
+						<tr>
 							<td><?php echo $tr->translate("STATUS");?></td>
 							<td>
 								<select name="status" id="status" dojoType="dijit.form.FilteringSelect"  class="fullside">
@@ -159,14 +170,6 @@
 									<option value='0' <?php if($this->ilPaymentById['status_parent']==0){echo "selected='selected'";}?>>Deactive</option>
 								</select>
 							</td>
-							<td><?php echo $tr->translate("RETURN_AMOUNT")?></td>
-							<td><?php  echo $frm->getElement('amount_return');?></td>
-							<td><?php echo $tr->translate("REMAIN")?></td>
-							<td><?php echo $frm->getElement('remain');?></td>
-						</tr>
-						<tr>
-							<td><?php //echo $tr->translate("ថ្ងៃទទួលប្រាក់");?></td>
-							<td><?php echo $frm->getElement('last_payment_date'); ?></td>
 							
 							<td><?php echo $tr->translate("CHEQUE");?></td>
 							<td><?php echo $frm->getElement('cheque');?></td>
@@ -911,7 +914,7 @@ function getPayment(){//jhvjhvj
 			+'<th class="tdheader"><?php echo $tr->translate('PENALIZE');?></th>'
 			+'<th class="tdheader"><?php echo $tr->translate('SERVICE_CHARGE');?></th>'
 			+'<th class="tdheader"><?php echo $tr->translate('AMOUNT_PAYMENT');?></th>'
-			+'<th class="tdheader"><?php echo $tr->translate('PAY_AFTER');?></th>'
+			//+'<th class="tdheader"><?php echo $tr->translate('PAY_AFTER');?></th>'
 			+'<th class="tdheader"><?php echo $tr->translate('STATUS');?></th>'
 			+'<th class="tdheader"><?php echo $tr->translate('NOTE');?></th></tr>'
 		+'</thead>';
@@ -937,7 +940,7 @@ function getPayment(){//jhvjhvj
 		tem += '<td>&nbsp;<label id="lb_penelize_'+<?php echo $inx;?>+'">'+<?php echo $r["penelize_amount"];?>+'</label>&nbsp;<input type="hidden" name="penelize_'+<?php echo $inx;?>+'" id="penelize_'+<?php echo $inx;?>+'" value="'+<?php echo $r["penelize_amount"];?>+'" /><input type="hidden" name="old_penelize_'+<?php echo $inx;?>+'" id="old_penelize_'+<?php echo $inx;?>+'" value="<?php echo $r["old_penelize"];?>" /></td>';
 		tem += '<td>&nbsp;'+<?php echo $r["service_charge"];?>+'&nbsp;<input type="hidden" name="service_'+<?php echo $inx;?>+'" id="service_'+<?php echo $inx;?>+'" value="'+<?php echo $r["service_charge"];?>+'" /><input type="hidden" name="old_service_'+<?php echo $inx;?>+'" id="old_service_'+<?php echo $inx;?>+'" value="<?php echo $r["old_service_charge"];?>" /></td>';
 		tem += '<td>&nbsp;<label id="lb_payment_'+<?php echo $inx;?>+'">'+<?php echo $r["total_payment"];?>+'</label>&nbsp;<input type="hidden" name="payment_'+<?php echo $inx;?>+'" id="payment_'+<?php echo $inx;?>+'" value="'+<?php echo $r["total_payment"];?>+'" /><input type="hidden" name="old_payment_'+<?php echo $inx;?>+'" id="old_payment_'+<?php echo $inx;?>+'" value="<?php echo $r["old_total_payment"];?>" /></td>';
-		tem += '<td>&nbsp;<?php echo $r["pay_after"];?><input type="hidden" name="multiplier_'+<?php echo $inx;?>+'" id="multiplier_'+<?php echo $inx;?>+'" value="<?php echo $r["pay_after"];?>" /></td>';
+		//tem += '<td>&nbsp;<?php echo $r["pay_after"];?><input type="hidden" name="multiplier_'+<?php echo $inx;?>+'" id="multiplier_'+<?php echo $inx;?>+'" value="<?php echo $r["pay_after"];?>" /></td>';
 		
 		if(<?php echo $r["is_completed"];?> == 1){
 			status = '<label style="color:blue;">បង់រួច</label>';
@@ -977,7 +980,7 @@ function getPayment(){//jhvjhvj
 
 
 function calculateTotal(index){
-	//alert('test');
+	alert('1');
 	try{
 		var total_payment = 0;
 		var os_amount = 0;
@@ -1022,6 +1025,7 @@ function calculateTotal(index){
 		
 	   var arrays = ids.split(',');
 	   graice_period = '<?php echo $graiceperiod["value"]?>';
+	   var ps ='<?php echo $this->interest["value"]?>';
 	  //alert(arrays.length);
 		if(arrays!=""){
 			is_set = 0;
@@ -1030,7 +1034,7 @@ function calculateTotal(index){
 				var oneDay = 24*60*60*1000;
 				if($('#mfdid_'+arrays[i]).attr('checked')){
 					
-					var ps = $('#multiplier_'+arrays[i]).val();
+					//var ps = $('#multiplier_'+arrays[i]).val();
 		          	var os_amount = os_amount+parseFloat($('#principal_permonth_'+arrays[i]).val());
 		          	var priciple_amount = parseFloat($('#total_priciple_'+arrays[i]).val()) - parseFloat($('#principal_permonth_'+arrays[i]).val());
 		          	var totalPayment = parseFloat($('#payment_'+arrays[i]).val());
@@ -1091,10 +1095,14 @@ function calculateTotal(index){
 					//alert(totalPay);
 					//alert(total_late_day);
 					if(total_late_day>0){  
+					
+						dijit.byId('late_day').attr('value',total_late_day + " Days");
+					
 						if(payment_term==3){
 							//alert(total_late_day+'test');
 							if(payOption==1){
-								total_penelize_peryear = roundhundred((parseFloat(totalPay)*(parseFloat(ps*(interest_rate/100))/30/12)*parseFloat(total_late_day))+parseFloat(penelize));
+								//total_penelize_peryear = roundhundred((parseFloat(totalPay)*(parseFloat(ps*(interest_rate/100))/30/12)*parseFloat(total_late_day))+parseFloat(penelize));
+								total_penelize_peryear = roundhundred((parseFloat(totalPay)*(parseFloat(ps/100)/30)*parseFloat(total_late_day))+parseFloat(penelize));
 								//alert(total_penelize_peryear);
 								///*******************
 								 total_interest_late = total_interest_late + roundhundred(parseFloat(total_penelize_peryear));
@@ -1143,6 +1151,9 @@ function calculateTotal(index){
 							// alert(total_interest);
 						}
 					}else if(total_late_day==0){
+						
+						dijit.byId('late_day').attr('value',0 + " Days");
+						
 						//alert('total_late_day=0');
 						if(payOption==1){
 							total_penelize_peryear =0+parseFloat(penelize);
@@ -1170,6 +1181,8 @@ function calculateTotal(index){
 						}
 						
 					}else{//total_late_day<0
+						
+						dijit.byId('late_day').attr('value',0 + " Days");
 						
 						dijit.byId('option_pay').attr('readOnly',false);
 				  				if(payOption==1){//pay normall

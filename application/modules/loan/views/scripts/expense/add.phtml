@@ -43,7 +43,7 @@ alert(branch_id);
 					<tr>
 					    <td><?php echo $tr->translate("BRANCH_NAME")?></td>
 						<td><?php echo $frm->getElement('branch_id');?></td>
-						<td><?php echo $tr->translate("Inc.")?></td>
+						<td><?php echo $tr->translate("RECEIPT_NO")?></td>
 						<td><?php echo $frm->getElement('invoice');?></td>
 						 <td><?php echo $tr->translate("EXPENSE_TITLE")?></td>
 						<td><?php echo $frm->getElement('title');?></td>
@@ -165,7 +165,7 @@ function addCategory(){
 		load: function(data) {
 			var Itemmake = { 
 	    		id: data,
-		        name: dijit.byId('cate_enname').get('value')
+		        name: dijit.byId('cate_name').get('value')
 		    };
 	 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
 		    dijit.byId('frm_category').reset();
@@ -190,7 +190,7 @@ function printSave(new_invoice_no){
 	//dojo.byId("lb_customer").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_income_category").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title").innerHTML = dijit.byId("title").get('value');
-	dojo.byId("lb_total_amount").innerHTML = dijit.byId("total_amount").get('value');
+	dojo.byId("lb_total_amount").innerHTML = "$ " + dojo.number.format(dijit.byId("total_amount").get('value'),2);
 	dojo.byId("lb_date").innerHTML = dijit.byId("Date").attr('displayedValue');
 	dojo.byId("lb_description").innerHTML = dijit.byId("Description").attr('displayedValue');
 	//dojo.byId("lb_customer_name").innerHTML = dijit.byId("customer").attr('displayedValue');
@@ -201,7 +201,7 @@ function printSave(new_invoice_no){
 	//dojo.byId("lb_customer1").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_income_category1").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title1").innerHTML = dijit.byId("title").get('value');
-	dojo.byId("lb_total_amount1").innerHTML = dijit.byId("total_amount").get('value');
+	dojo.byId("lb_total_amount1").innerHTML = "$" + dijit.byId("total_amount").get('value');
 	dojo.byId("lb_date1").innerHTML = dijit.byId("Date").attr('displayedValue');
 	dojo.byId("lb_description1").innerHTML = dijit.byId("Description").attr('displayedValue');
 	//dojo.byId("lb_customer_name1").innerHTML = dijit.byId("customer").attr('displayedValue');
@@ -220,6 +220,10 @@ function doPrint() {
 function printSubmit(){
 	 $('#frm_add_tran').submit();
 }
+
+function hideDialog1(){
+	dijit.byId('popup_category').hide();
+}
 </script>
 
 <div class="dijitHidden">
@@ -235,12 +239,6 @@ function printSubmit(){
 									<td><?php echo $tr->translate('NAME_KH');?></td>
 									<td>
 										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="cate_name" name="cate_name" value="" type="text">
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('NAME_EN');?></td>
-									<td>
-										<input dojoType="dijit.form.ValidationTextBox"  class="fullside" id="cate_enname" name="cate_enname" value="" type="text">
 									</td>
 								</tr>
 								<tr>
