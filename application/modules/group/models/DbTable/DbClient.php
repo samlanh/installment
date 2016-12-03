@@ -39,7 +39,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    $_arr=array(
 				'client_number'=> $client_code,//$_data['client_no'],
 				'name_kh'	  => $_data['name_kh'],
-				'name_en'	  => $_data['name_en'],
+				//'name_en'	  => $_data['name_en'],
 				'sex'	      => $_data['sex'],
 				'dob'			=>$_data['dob_client'],
 				'pro_id'      => $_data['province'],
@@ -59,7 +59,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				'client_d_type'      => $_data['client_d_type'],
 				'user_id'	  => $this->getUserId(),
 		    	'hname_kh'      => $_data['hname_kh'],
-		    	'bname_kh'      => $_data['bname_kh'],
+		    	//'bname_kh'      => $_data['bname_kh'],
 		    	'p_nationality'      => $_data['p_nationality'],
 		    	'ghouse'      => $_data['ghouse'],
 		    	'ksex'      => $_data['ksex'],
@@ -132,51 +132,55 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
     	return $row;
     }
 	function getAllClients($search = null){		
-		$db = $this->getAdapter();
-		$from_date =(empty($search['start_date']))? '1': "create_date >= '".$search['start_date']." 00:00:00'";
-		$to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 23:59:59'";
-		$where = " WHERE (name_kh!='' AND  name_en!='') AND ".$from_date." AND ".$to_date;		
-		$sql = "
-		SELECT client_id,
-		(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
-		client_number,name_kh,name_en,
-		(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND sex=key_code LIMIT 1) AS sex
-		,phone,house,street,
-			(SELECT village_name FROM `ln_village` WHERE vill_id= village_id) AS village_name,
-		    create_date,
-		    (SELECT  CONCAT(first_name,' ', last_name) FROM rms_users WHERE id=user_id ) AS user_name,
-			status FROM $this->_name ";
-		if(!empty($search['adv_search'])){
-			$s_where = array();
-			$s_search = addslashes(trim($search['adv_search']));
-			$s_where[] = " client_number LIKE '%{$s_search}%'";
-			$s_where[] = " name_en LIKE '%{$s_search}%'";
-			$s_where[] = " name_kh LIKE '%{$s_search}%'";
-			$s_where[] = " phone LIKE '%{$s_search}%'";
-			$s_where[] = " house LIKE '%{$s_search}%'";
-			$s_where[] = " street LIKE '%{$s_search}%'";
-			$where .=' AND ('.implode(' OR ',$s_where).')';
-		}
-		if($search['status']>-1){
-			$where.= " AND status = ".$search['status'];
-		}
-		if($search['branch_id']>-1){
-			$where.= " AND branch_id = ".$search['branch_id'];
-		}
-		if($search['province_id']>0){
-			$where.=" AND pro_id= ".$search['province_id'];
-		}
-		if(!empty($search['district_id'])){
-			$where.=" AND dis_id= ".$search['district_id'];
-		}
-		if(!empty($search['comm_id'])){
-			$where.=" AND com_id= ".$search['comm_id'];
-		}
-		if(!empty($search['village'])){
-			$where.=" AND village_id= ".$search['village'];
-		}
-		$order=" ORDER BY client_id DESC ";
-		return $db->fetchAll($sql.$where.$order);	
+		try{	
+			$db = $this->getAdapter();
+			$from_date =(empty($search['start_date']))? '1': "create_date >= '".$search['start_date']." 00:00:00'";
+			$to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 23:59:59'";
+			$where = " WHERE  ".$from_date." AND ".$to_date;		
+			$sql = "
+			SELECT client_id,
+			(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
+			client_number,name_kh,
+			(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND sex=key_code LIMIT 1) AS sex
+			,phone,house,street,
+				(SELECT village_name FROM `ln_village` WHERE vill_id= village_id) AS village_name,
+			    create_date,
+			    (SELECT  CONCAT(first_name,' ', last_name) FROM rms_users WHERE id=user_id ) AS user_name,
+				status FROM $this->_name ";
+			if(!empty($search['adv_search'])){
+				$s_where = array();
+				$s_search = addslashes(trim($search['adv_search']));
+				$s_where[] = " client_number LIKE '%{$s_search}%'";
+				//$s_where[] = " name_en LIKE '%{$s_search}%'";
+				$s_where[] = " name_kh LIKE '%{$s_search}%'";
+				$s_where[] = " phone LIKE '%{$s_search}%'";
+				$s_where[] = " house LIKE '%{$s_search}%'";
+				$s_where[] = " street LIKE '%{$s_search}%'";
+				$where .=' AND ('.implode(' OR ',$s_where).')';
+			}
+			if($search['status']>-1){
+				$where.= " AND status = ".$search['status'];
+			}
+			if($search['branch_id']>-1){
+				$where.= " AND branch_id = ".$search['branch_id'];
+			}
+			if($search['province_id']>0){
+				$where.=" AND pro_id= ".$search['province_id'];
+			}
+			if(!empty($search['district_id'])){
+				$where.=" AND dis_id= ".$search['district_id'];
+			}
+			if(!empty($search['comm_id'])){
+				$where.=" AND com_id= ".$search['comm_id'];
+			}
+			if(!empty($search['village'])){
+				$where.=" AND village_id= ".$search['village'];
+			}
+			$order=" ORDER BY client_id DESC ";
+			return $db->fetchAll($sql.$where.$order);
+		}catch (Exception $e){
+			echo $e->getMessage();
+		}	
 	}
 	public function getGroupCodeBYId($data){
 		$db = $this->getAdapter();

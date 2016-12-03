@@ -38,7 +38,10 @@ class Group_LandController extends Zend_Controller_Action {
 			$link=array(
 					'module'=>'group','controller'=>'land','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('branch_name'=>$link,'land_code'=>$link,'land_address'=>$link,'pro_type'=>$link,
+			$link1=array(
+					'module'=>'group','controller'=>'land','action'=>'view',
+			);
+			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('branch_name'=>$link1,'land_code'=>$link,'land_address'=>$link,'pro_type'=>$link,
 					'price'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");

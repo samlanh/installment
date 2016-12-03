@@ -407,17 +407,19 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'required' =>'true'
 		));
 	
-		$landaddress = new Zend_Dojo_Form_Element_TextBox('land_address');
+		$landaddress = new Zend_Dojo_Form_Element_ValidationTextBox('land_address');
 		$landaddress->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
+				'required' =>'true',
 				'onKeyup'=>'checkTitle();',
 		));
 		
 		$street = new Zend_Dojo_Form_Element_TextBox('street');
 		$street->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
+				'required' =>'true',
 		));
 	
 		$land_price = new Zend_Dojo_Form_Element_NumberTextBox('land_price');
