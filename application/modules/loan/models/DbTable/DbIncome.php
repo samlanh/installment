@@ -139,10 +139,10 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		
 		$sql = " select count(id) from ln_income where branch_id = $branch_id";
 		$amount = $db->fetchOne($sql);
-		$pre = '-I';
+		$pre = '-Inc.';
 		$result = $amount + 1;
 		$length = strlen((int)$result);
-		for($i = $length;$i < 5 ; $i++){
+		for($i = $length;$i < 3 ; $i++){
 			$pre.='0';
 		}
 		return $prefix.$pre.$result;
@@ -151,7 +151,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	function getAllIncomeCategory(){
 		
 		$db = $this->getAdapter();
-		$sql = " select key_code as id,name_en as name from ln_view where type=12 ";
+		$sql = " select key_code as id,name_kh as name from ln_view where type=12 ";
 		return $db->fetchAll($sql);
 		
 	}
@@ -175,7 +175,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		
 		$this->_name = "ln_view" ;
 		$array = array(
-				'name_en'	=>$data['cate_enname'],
+				//'name_en'	=>$data['cate_enname'],
 				'name_kh'	=>$data['cate_name'],
 				'type'		=>$type,
 				'key_code'	=>$key_code,
@@ -187,7 +187,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	
 	function getAllCustomer($branch_id){
 		$db = $this->getAdapter();
-		$sql="SELECT client_id as id,name_en as name FROM ln_client WHERE status = 1 and branch_id = $branch_id";
+		$sql="SELECT client_id as id,name_kh as name FROM ln_client WHERE status = 1 and branch_id = $branch_id";
 		return $db->fetchAll($sql);
 	}
 	

@@ -203,7 +203,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$acc_no= strlen((int)$acc_no+1);
     	//$pre = "";
     	//$pre_fix="PM-";
-    	for($i = $acc_no;$i<5;$i++){
+    	for($i = $acc_no;$i<3;$i++){
     		$pre.='0';
     	}
     	return $pre.$new_acc_no;

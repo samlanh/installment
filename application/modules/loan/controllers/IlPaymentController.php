@@ -153,6 +153,7 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
 		
 		$this->view->graiceperiod = $db_keycode->getSystemSetting(9);
+		$this->view->interest = $db_keycode->getSystemSetting(8);
 		$this->view->client = $db->getAllClient();
 		$this->view->clientCode = $db->getAllClientCode();
 		
