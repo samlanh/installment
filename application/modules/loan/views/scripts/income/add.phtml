@@ -22,13 +22,6 @@ $frm = $this->frm_expense;
 	
 <script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
-               branch_id = dijit.ById('branch_id').get('value');
-alert(branch_id);
-			  // if(branch_id==null || branch_id==0){
-				//alert("Please Select Project");
-				//dijit.byId("branch_id").focus();
-				//return false;
-         	 // }
 				return true;
 			}else {
 				return false;
@@ -202,36 +195,74 @@ function addCategory(){
 
 
 function printSave(new_invoice_no){
+	
+/////////////////// check Validate /////////////////////////////////////////
+
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0){
+		alert('Select branch');
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	
+	cate = dijit.byId('income_category').get('value');
+	if(cate=='' ||cate==-1){
+		alert('Select Category');
+		dijit.byId('income_category').focus();
+		return false;
+	}
+	
+	total_amount = dijit.byId('total_amount').get('value');
+	if(isNaN(total_amount)){
+		alert('Income can not be null');
+		dijit.byId('total_amount').focus();
+		return false;
+	}
+	
+//////////////////////////////////////////////////////////////////	
+	
 	if(new_invoice_no==''){
 		getInvoiceNo(1);
 	}else{
 		dojo.byId("lb_invoice").innerHTML = new_invoice_no;
 		dojo.byId("lb_invoice1").innerHTML = new_invoice_no;
 	}
+
+	cus_id = dijit.byId('customer').get('value');
+	if(cus_id==-1){
+		customer_name = '';
+	}else{
+		customer_name = dijit.byId("customer").attr('displayedValue');
+	}
 	
 	dojo.byId("lb_branch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
-	dojo.byId("lb_customer").innerHTML = dijit.byId("customer").attr('displayedValue');
+	dojo.byId("lb_customer").innerHTML = customer_name ;
 	dojo.byId("lb_income_category").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title").innerHTML = dijit.byId("title").get('value');
-	dojo.byId("lb_total_amount").innerHTML = dijit.byId("total_amount").get('value');
+	dojo.byId("lb_total_amount").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
 	dojo.byId("lb_date").innerHTML = dijit.byId("Date").attr('displayedValue');
 	dojo.byId("lb_description").innerHTML = dijit.byId("Description").attr('displayedValue');
-	dojo.byId("lb_customer_name").innerHTML = dijit.byId("customer").attr('displayedValue');
+	dojo.byId("lb_customer_name").innerHTML = customer_name ;
 	dojo.byId("lb_cheque").innerHTML = dijit.byId("cheque").attr('displayedValue');
 
 
 	dojo.byId("lb_branch1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
-	dojo.byId("lb_customer1").innerHTML = dijit.byId("customer").attr('displayedValue');
+	dojo.byId("lb_customer1").innerHTML = customer_name;
 	dojo.byId("lb_income_category1").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title1").innerHTML = dijit.byId("title").get('value');
-	dojo.byId("lb_total_amount1").innerHTML = dijit.byId("total_amount").get('value');
+	dojo.byId("lb_total_amount1").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
 	dojo.byId("lb_date1").innerHTML = dijit.byId("Date").attr('displayedValue');
 	dojo.byId("lb_description1").innerHTML = dijit.byId("Description").attr('displayedValue');
-	dojo.byId("lb_customer_name1").innerHTML = dijit.byId("customer").attr('displayedValue');
+	dojo.byId("lb_customer_name1").innerHTML = customer_name;
 	dojo.byId("lb_cheque1").innerHTML = dijit.byId("cheque").attr('displayedValue');
 	
 	dijit.byId("print_income").show();
 }
+
+function currencyFormat (num) {
+    return "$ " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+}
+
 
 function doPrint() {
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML + dojo.byId('divPrint1').innerHTML;;
@@ -349,14 +380,13 @@ function hideDialog1(){
 					<td width="18%" ></td>
 				</tr>
 				
-				
 				<tr style="white-space: nowrap;">
 				
 					<td class="one khmerbold">សាខា</td>
                     <td><strong><label id="lb_branch" class="value"></label></strong></td>
 					
 					
-				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;INC.</td>
+				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
                     <td colspan="3"><strong><label id="lb_invoice" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
@@ -369,7 +399,7 @@ function hideDialog1(){
 				</tr>
 
 				<tr>
-					<td class="one khmerbold">ចំណងជើង</td>
+					<td class="one khmerbold">ពណ៌នាចំនូល</td>
 					<td ><strong><label id="lb_income_title" class="value"></label></strong></td>
 					
 					
@@ -378,16 +408,16 @@ function hideDialog1(){
 					
 				</tr>
 				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">សម្គាល់</td>
+					<td class="one khmerbold">សែក</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"></label></strong></td>
 					
-					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃធ្វើ</td>
+					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃទទួល</td>
 				    <td colspan="3"><strong><label id="lb_date" class="value"></label></strong></td>
 				</tr>
 				
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">សម្គាល់</td>
-				    <td colspan="1" align="left"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: left; " id="lb_description" class="value"></label></strong></td>
+				    <td colspan="1"><strong><label style="white-space: nowrap;text-align: center; " id="lb_description" class="value"></label></strong></td>
 				</tr>
 				
 				<tr style="white-space: nowrap;">
@@ -508,7 +538,7 @@ function hideDialog1(){
                     <td><strong><label id="lb_branch1" class="value"></label></strong></td>
 					
 					
-				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;INC.</td>
+				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
                     <td colspan="3"><strong><label id="lb_invoice1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
@@ -521,7 +551,7 @@ function hideDialog1(){
 				</tr>
 
 				<tr>
-					<td class="one khmerbold">ចំណងជើង</td>
+					<td class="one khmerbold">ពណ៌នាចំនូល</td>
 					<td ><strong><label id="lb_income_title1" class="value"></label></strong></td>
 					
 					
@@ -533,13 +563,13 @@ function hideDialog1(){
 					<td class="one khmerbold">សែក</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque1" class="value"></label></strong></td>
 					
-					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃធ្វើ</td>
+					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃទទួល</td>
 				    <td colspan="3"><strong><label id="lb_date1" class="value"></label></strong></td>
 				</tr>
 				
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">សម្គាល់</td>
-				    <td colspan="1"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: left; padding-left: 10px;" id="lb_description1" class="value"></label></strong></td>
+				    <td colspan="1"><strong><label style="white-space: nowrap;text-align: center; padding-left: 10px;" id="lb_description1" class="value"></label></strong></td>
 				</tr>
 				
 				<tr style="white-space: nowrap;">

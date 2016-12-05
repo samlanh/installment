@@ -3,7 +3,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm_expense;
 // print_r($this->all_category);
 ?>
-<title>Add Other Income</title>
+<title>Edit Other Income</title>
 <style>	
 .fullside {
 	width: 100%;
@@ -43,9 +43,9 @@ alert(branch_id);
 					<tr>
 					    <td><?php echo $tr->translate("BRANCH_NAME")?></td>
 						<td><?php echo $frm->getElement('branch_id');?></td>
-						<td><?php echo $tr->translate("CUSTOMER")?></td>
+						<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 						<td><input id="customer" /></td>
-						<td><?php echo $tr->translate("Inc.")?></td>
+						<td><?php echo $tr->translate("RECEIPT_NO")?></td>
 						<td><?php echo $frm->getElement('invoice');?></td>
 					</tr>
 					<tr>
@@ -176,32 +176,75 @@ function addCategory(){
 		}
 	});
 }
-
+function getInvoiceNo(condition){
+	
+}
 
 function printSave(new_invoice_no){
+
+/////////////////// check Validate /////////////////////////////////////////
+
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0){
+		alert('Select branch');
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	
+	cate = dijit.byId('income_category').get('value');
+	if(cate=='' ||cate==-1){
+		alert('Select Category');
+		dijit.byId('income_category').focus();
+		return false;
+	}
+	
+	total_amount = dijit.byId('total_amount').get('value');
+	if(isNaN(total_amount)){
+		alert('Income can not be null');
+		dijit.byId('total_amount').focus();
+		return false;
+	}
+	
+//////////////////////////////////////////////////////////////////	
+
+	
 	dojo.byId("lb_invoice").innerHTML = dijit.byId("invoice").attr('displayedValue');
 	dojo.byId("lb_invoice1").innerHTML = dijit.byId("invoice").attr('displayedValue');
+
+	cus_id = dijit.byId('customer').get('value');
+	if(cus_id==-1){
+		customer_name = '';
+	}else{
+		customer_name = dijit.byId("customer").attr('displayedValue');
+	}
+
 	
 	dojo.byId("lb_branch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
-	dojo.byId("lb_customer").innerHTML = dijit.byId("customer").attr('displayedValue');
+	dojo.byId("lb_customer").innerHTML = customer_name;
 	dojo.byId("lb_income_category").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title").innerHTML = dijit.byId("title").get('value');
-	dojo.byId("lb_total_amount").innerHTML = dijit.byId("total_amount").get('value');
+	dojo.byId("lb_total_amount").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
 	dojo.byId("lb_date").innerHTML = dijit.byId("Date").attr('displayedValue');
 	dojo.byId("lb_description").innerHTML = dijit.byId("Description").attr('displayedValue');
-	dojo.byId("lb_customer_name").innerHTML = dijit.byId("customer").attr('displayedValue');
+	dojo.byId("lb_customer_name").innerHTML = customer_name;
+	dojo.byId("lb_cheque").innerHTML = dijit.byId("cheque").attr('displayedValue');
 
 
 	dojo.byId("lb_branch1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
-	dojo.byId("lb_customer1").innerHTML = dijit.byId("customer").attr('displayedValue');
+	dojo.byId("lb_customer1").innerHTML = customer_name;
 	dojo.byId("lb_income_category1").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title1").innerHTML = dijit.byId("title").get('value');
-	dojo.byId("lb_total_amount1").innerHTML = dijit.byId("total_amount").get('value');
+	dojo.byId("lb_total_amount1").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
 	dojo.byId("lb_date1").innerHTML = dijit.byId("Date").attr('displayedValue');
 	dojo.byId("lb_description1").innerHTML = dijit.byId("Description").attr('displayedValue');
-	dojo.byId("lb_customer_name1").innerHTML = dijit.byId("customer").attr('displayedValue');
+	dojo.byId("lb_customer_name1").innerHTML = customer_name;
+	dojo.byId("lb_cheque1").innerHTML = dijit.byId("cheque").attr('displayedValue');
 	
 	dijit.byId("print_income").show();
+}
+
+function currencyFormat (num) {
+    return "$ " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 }
 
 function doPrint() {
@@ -223,18 +266,12 @@ function printSubmit(){
 				<tr>
 					<td>
 						<fieldset style="background-color: buttonface;">
-						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend><br />
+						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend>
 							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
 								<tr>
 									<td><?php echo $tr->translate('NAME_KH');?></td>
 									<td>
 										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="cate_name" name="cate_name" value="" type="text">
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('NAME_EN');?></td>
-									<td>
-										<input dojoType="dijit.form.ValidationTextBox"  class="fullside" id="cate_enname" name="cate_enname" value="" type="text">
 									</td>
 								</tr>
 								<tr>
@@ -315,7 +352,7 @@ function printSubmit(){
 					</td>
 				</tr>
 			</table>
-			<table width="100%" style="white-space: nowrap;font-size:12px;" class="print" cellspacing="7px"  cellpadding="0">
+			<table width="100%" style="white-space: nowrap;font-size:12px; margin-top: -15px;" class="print" cellspacing="7px"  cellpadding="0">
 				<tr>
 					<td width="10%" ></td>
 					<td width="30%" ></td>
@@ -332,7 +369,7 @@ function printSubmit(){
                     <td><strong><label id="lb_branch" class="value"></label></strong></td>
 					
 					
-				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;INC.</td>
+				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
                     <td colspan="3"><strong><label id="lb_invoice" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
@@ -345,7 +382,7 @@ function printSubmit(){
 				</tr>
 
 				<tr>
-					<td class="one khmerbold">ចំណងជើង</td>
+					<td class="one khmerbold">ពណ៌នាចំនូល</td>
 					<td ><strong><label id="lb_income_title" class="value"></label></strong></td>
 					
 					
@@ -354,11 +391,16 @@ function printSubmit(){
 					
 				</tr>
 				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">សែក</td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"></label></strong></td>
+					
+					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃទទួល</td>
+				    <td colspan="3"><strong><label id="lb_date" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">សម្គាល់</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_description" class="value"></label></strong></td>
 					
-					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃលក់</td>
-				    <td colspan="3"><strong><label id="lb_date" class="value"></label></strong></td>
 				</tr>
 				
 				<tr style="white-space: nowrap;">
@@ -413,7 +455,7 @@ function printSubmit(){
 									វេបសាយ :  <span style="font-size:13px;">www.boreyphnompenhthmey.com</span>
 								</td>
 								<td width="40%" align="right">
-									អ៊ីម៉ែល : <span style="font-size:13px;">info@boreyphnompenhthmey.com</span>
+									អ៊ីម៉ែល : <span style="font-size:13px;">boreyphnompenhthmey@gmail.com</span>
 								</td>
 							</tr>
 							<tr>
@@ -426,9 +468,6 @@ function printSubmit(){
 							</tr>
 						</table>
 					</td>
-				</tr>
-				<tr>
-					<td colspan="6">&nbsp;</td>
 				</tr>
 				<tr>
 					<td colspan="6" style="border-top:1px dashed #000;" >
@@ -462,7 +501,7 @@ function printSubmit(){
 					</td>
 				</tr>
 			</table>
-			<table width="100%" style="white-space: nowrap;font-size:12px;" class="print" cellspacing="7px"  cellpadding="0">
+			<table width="100%" style="white-space: nowrap;font-size:12px;margin-top: -15px;" class="print" cellspacing="7px"  cellpadding="0">
 				<tr>
 					<td width="10%" ></td>
 					<td width="30%" ></td>
@@ -479,7 +518,7 @@ function printSubmit(){
                     <td><strong><label id="lb_branch1" class="value"></label></strong></td>
 					
 					
-				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;INC.</td>
+				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
                     <td colspan="3"><strong><label id="lb_invoice1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
@@ -492,7 +531,7 @@ function printSubmit(){
 				</tr>
 
 				<tr>
-					<td class="one khmerbold">ចំណងជើង</td>
+					<td class="one khmerbold">ពណ៌នាចំនូល</td>
 					<td ><strong><label id="lb_income_title1" class="value"></label></strong></td>
 					
 					
@@ -501,11 +540,16 @@ function printSubmit(){
 					
 				</tr>
 				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">សែក</td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque1" class="value"></label></strong></td>
+					
+					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃទទួល</td>
+				    <td colspan="3"><strong><label id="lb_date1" class="value"></label></strong></td>
+				</tr>
+				
+				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">សម្គាល់</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_description1" class="value"></label></strong></td>
-					
-					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃលក់</td>
-				    <td colspan="3"><strong><label id="lb_date1" class="value"></label></strong></td>
 				</tr>
 				
 				<tr style="white-space: nowrap;">
@@ -560,7 +604,7 @@ function printSubmit(){
 									វេបសាយ :  <span style="font-size:13px;">www.boreyphnompenhthmey.com</span>
 								</td>
 								<td width="40%" align="right">
-									អ៊ីម៉ែល : <span style="font-size:13px;">info@boreyphnompenhthmey.com</span>
+									អ៊ីម៉ែល : <span style="font-size:13px;">boreyphnompenhthmey@gmail.com</span>
 								</td>
 							</tr>
 							<tr>

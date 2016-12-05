@@ -145,7 +145,6 @@ new dijit.form.FilteringSelect({
 	autoComplete: true,                        
     id: "income_category",
     name: "income_category",  
-   // tabindex: "17",    
     class: 'fullside',  
     placeHolder:"Selected Category", 
     onChange: function() {          
@@ -179,6 +178,33 @@ function addCategory(){
 
 
 function printSave(new_invoice_no){
+	
+/////////////////// check Validate /////////////////////////////////////////
+
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0){
+		alert('Select branch');
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	
+	cate = dijit.byId('income_category').get('value');
+	if(cate=='' ||cate==-1){
+		alert('Select Category');
+		dijit.byId('income_category').focus();
+		return false;
+	}
+	
+	total_amount = dijit.byId('total_amount').get('value');
+	if(isNaN(total_amount)){
+		alert('Income can not be null');
+		dijit.byId('total_amount').focus();
+		return false;
+	}
+	
+//////////////////////////////////////////////////////////////////		
+
+	
 	if(new_invoice_no==''){
 		getInvoiceNo(1);
 	}else{
@@ -190,7 +216,7 @@ function printSave(new_invoice_no){
 	//dojo.byId("lb_customer").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_income_category").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title").innerHTML = dijit.byId("title").get('value');
-	dojo.byId("lb_total_amount").innerHTML = "$ " + dojo.number.format(dijit.byId("total_amount").get('value'),2);
+	dojo.byId("lb_total_amount").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
 	dojo.byId("lb_date").innerHTML = dijit.byId("Date").attr('displayedValue');
 	dojo.byId("lb_description").innerHTML = dijit.byId("Description").attr('displayedValue');
 	//dojo.byId("lb_customer_name").innerHTML = dijit.byId("customer").attr('displayedValue');
@@ -201,13 +227,17 @@ function printSave(new_invoice_no){
 	//dojo.byId("lb_customer1").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_income_category1").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title1").innerHTML = dijit.byId("title").get('value');
-	dojo.byId("lb_total_amount1").innerHTML = "$" + dijit.byId("total_amount").get('value');
+	dojo.byId("lb_total_amount1").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
 	dojo.byId("lb_date1").innerHTML = dijit.byId("Date").attr('displayedValue');
 	dojo.byId("lb_description1").innerHTML = dijit.byId("Description").attr('displayedValue');
 	//dojo.byId("lb_customer_name1").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_cheque1").innerHTML = dijit.byId("cheque").attr('displayedValue');
 	
-	dijit.byId("print_income").show();
+	dijit.byId("print_expense").show();
+}
+
+function currencyFormat(num) {
+    return "$ " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 }
 
 function doPrint() {
@@ -233,7 +263,7 @@ function hideDialog1(){
 				<tr>
 					<td>
 						<fieldset style="background-color: buttonface;">
-						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend><br />
+						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend>
 							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
 								<tr>
 									<td><?php echo $tr->translate('NAME_KH');?></td>
@@ -272,7 +302,7 @@ function hideDialog1(){
 
 
 <div class="dijitHidden" style="width: 22cm !important; height: 11cm ; padding: 0px; margin: 0px;">
-	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_income" >
+	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_expense" >
 		<div id="divPrint" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
 			<style>
 				.fontbig{
@@ -306,7 +336,7 @@ function hideDialog1(){
 								<td width="25%">
 									<img style="width:100%;height:61px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
-								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
+								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃចំណាយ</strong></b></u>
 									<div style="line-height:10px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 								</td>
 								<td width="25%">
@@ -333,24 +363,24 @@ function hideDialog1(){
                     <td><strong><label id="lb_branch" class="value"></label></strong></td>
 					
 					
-				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;INC.</td>
+				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
                     <td colspan="3"><strong><label id="lb_invoice" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				
-					<td class="one khmerbold">ចំណងជើង</td>
-					<td ><strong><label id="lb_income_title" class="value"></label></strong></td>
+					<td class="one khmerbold">ប្រភេទចំណាយ</td>
+					<td ><strong><label id="lb_income_category" class="value"></label></strong></td>
 					
-					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ប្រភេទចំណាយ</td>
-				    <td colspan="3"><strong><label id="lb_income_category" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ពណ៌នាចំនាយ</td>
+				    <td colspan="3"><strong><label id="lb_income_title" class="value"></label></strong></td>
 				</tr>
 
 				<tr>
-					<td class="one khmerbold">ចំណាយសរុប</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_total_amount" class="value"></label></strong></td>
+					<td class="one khmerbold">សែក</td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"></label></strong></td>
 					
-					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;សែក</td>
-					<td colspan="3"><strong><label id="lb_cheque" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ចំណាយសរុប</td>
+					<td colspan="3"><strong><label id="lb_total_amount" class="value"></label></strong></td>
 					
 				</tr>
 				<tr style="white-space: nowrap;">
@@ -358,7 +388,7 @@ function hideDialog1(){
 				    <td colspan="1" align="center"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: center; " id="lb_description" class="value"></label></strong></td>
 				
 					
-					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ថ្ងៃធ្វើ</td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ថ្ងៃចំណាយ</td>
 				    <td colspan="3"><strong><label id="lb_date" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
@@ -410,15 +440,21 @@ function hideDialog1(){
 									វេបសាយ :  <span style="font-size:13px;">www.boreyphnompenhthmey.com</span>
 								</td>
 								<td width="40%" align="right">
-									អ៊ីម៉ែល : <span style="font-size:13px;">info@boreyphnompenhthmey.com</span>
+									អ៊ីម៉ែល : <span style="font-size:13px;">boreyphnompenhthmey@gmail.com</span>
 								</td>
 							</tr>
-							<tr>
-								<td colspan="2">
-									ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
-								</td>
-								<td width="40%" align="right">
-									<span style="font-weight:bold;">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
+							<tr >
+								<td colspan="3">
+									<table width="100%" style="white-space:nowrap;font-size:11px;font-family: 'Khmer OS Battambang';">
+										<tr>
+											<td width="70%" >
+												ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
+											</td>
+											<td width="30%" align="right">
+												<span style="font-weight:bold;">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
+											</td>
+										</tr>
+									</table>
 								</td>
 							</tr>
 						</table>
@@ -449,7 +485,7 @@ function hideDialog1(){
 								<td width="25%">
 									<img style="width:100%;height:61px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
-								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
+								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃចំណាយ</strong></b></u>
 									<div style="line-height:10px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 								</td>
 								<td width="25%">
@@ -476,24 +512,24 @@ function hideDialog1(){
                     <td><strong><label id="lb_branch1" class="value"></label></strong></td>
 					
 					
-				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;INC.</td>
+				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
                     <td colspan="3"><strong><label id="lb_invoice1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				
-					<td class="one khmerbold">ចំណងជើង</td>
-					<td ><strong><label id="lb_income_title1" class="value"></label></strong></td>
+					<td class="one khmerbold">ប្រភេទចំណាយ</td>
+					<td ><strong><label id="lb_income_category1" class="value"></label></strong></td>
 					
-					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ប្រភេទចំណាយ</td>
-				    <td colspan="3"><strong><label id="lb_income_category1" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ពណ៌នាចំនាយ</td>
+				    <td colspan="3"><strong><label id="lb_income_title1" class="value"></label></strong></td>
 				</tr>
 
 				<tr>
-					<td class="one khmerbold">ចំណាយសរុប</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_total_amount1" class="value"></label></strong></td>
+					<td class="one khmerbold">សែក</td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque1" class="value"></label></strong></td>
 					
-					<td class="one khmerbold">&nbsp;&nbsp;សែក</td>
-					<td colspan="3"><strong><label id="lb_cheque1" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;ចំណាយសរុប</td>
+					<td colspan="3"><strong><label id="lb_total_amount1" class="value"></label></strong></td>
 					
 				</tr>
 				<tr style="white-space: nowrap;">
@@ -501,7 +537,7 @@ function hideDialog1(){
 				    <td colspan="1" align="center"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: center; " id="lb_description1" class="value"></label></strong></td>
 				
 					
-					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃធ្វើ</td>
+					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃចំណាយ</td>
 				    <td colspan="3"><strong><label id="lb_date1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
@@ -553,15 +589,21 @@ function hideDialog1(){
 									វេបសាយ :  <span style="font-size:13px;">www.boreyphnompenhthmey.com</span>
 								</td>
 								<td width="40%" align="right">
-									អ៊ីម៉ែល : <span style="font-size:13px;">info@boreyphnompenhthmey.com</span>
+									អ៊ីម៉ែល : <span style="font-size:13px;">boreyphnompenhthmey@gmail.com</span>
 								</td>
 							</tr>
-							<tr>
-								<td colspan="2">
-									ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
-								</td>
-								<td width="40%" align="right">
-									<span style="font-weight:bold;">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
+							<tr >
+								<td colspan="3">
+									<table width="100%" style="white-space:nowrap;font-size:11px;font-family: 'Khmer OS Battambang';">
+										<tr>
+											<td width="70%" >
+												ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
+											</td>
+											<td width="30%" align="right">
+												<span style="font-weight:bold;">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
+											</td>
+										</tr>
+									</table>
 								</td>
 							</tr>
 						</table>
