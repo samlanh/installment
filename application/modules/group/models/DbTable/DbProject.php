@@ -45,6 +45,21 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	$where=$this->getAdapter()->quoteInto("br_id=?", $id);
     	$this->update($_arr, $where);
     }
+    function addbranchajax($_data){
+    	$_arr = array(
+    			'project_name'=>$_data['branch_namekh'],
+    			'prefix'=>$_data['prefix_code'],
+    			'br_address'=>$_data['br_address'],
+    			'branch_tel'=>$_data['branch_tel'],
+    			'status'=>1,
+    			'displayby'=>1,
+    			'p_manager_namekh'=>$_data['project_manager_namekh'],
+    			'p_manager_nationality'=>$_data['project_manager_nationality'],
+    			'p_manager_nation_id'=>$_data['project_manager_nation_id'],
+    			'p_current_address'=>$_data['current_address'],
+    	);
+    	return $this->insert($_arr);//insert data
+    }
     	
     function getAllBranch($search=null){
     	$db = $this->getAdapter();

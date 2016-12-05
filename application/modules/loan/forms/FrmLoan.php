@@ -261,10 +261,13 @@ public function init()
 		
 		$discount = new Zend_Dojo_Form_Element_NumberTextBox('discount');
 		$discount->setAttribs(array(
-				'dojoType'=>'dijit.form.NumberTextBox',
-				'required'=>'true',
-				'class'=>'fullside',
-				'onKeyup'=>'calculateDiscount();'
+				
+				'data-dojo-Type'=>'dijit.form.NumberTextBox',
+				'data-dojo-props'=>"regExp:'[0-9]{1,2}','required':true,
+				'name':'discount',
+				'onKeyup':'calculateDiscount();',
+				'class':'fullside',
+				'invalidMessage':'អាចបញ្ជូលពី 1 ដល់ 99'"			
 		));
 		$discount->setValue(0);
 		

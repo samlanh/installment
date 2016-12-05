@@ -87,6 +87,16 @@ class Group_LandController extends Zend_Controller_Action {
 		
 		$dbpop = new Application_Form_FrmPopupGlobal();
 		$this->view->frmPopupPropertyType = $dbpop->frmPopupPropertyType();
+		
+		$fm = new Group_Form_Frmbranch();
+		$frm = $fm->Frmbranch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_branch = $frm;
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$branch_opt = $db->getAllBranchByUser();
+		array_unshift($branch_opt, array('id'=>'-1', 'name'=>'បន្ថែមគម្រោងថ្មី'));
+		$this->view->branch_opt = $branch_opt;
 	}
 	public function editAction(){
 		$id = $this->getRequest()->getParam("id");

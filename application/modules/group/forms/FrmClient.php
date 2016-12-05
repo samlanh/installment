@@ -162,7 +162,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		
 		$_street = new Zend_Dojo_Form_Element_TextBox('street');
 		$_street->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
 		
@@ -292,7 +292,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		
 		$_dstreet = new Zend_Dojo_Form_Element_TextBox('dstreet');
 		$_dstreet->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
 		$_ghouse = new Zend_Dojo_Form_Element_TextBox('ghouse');
@@ -417,16 +417,16 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		
 		$street = new Zend_Dojo_Form_Element_TextBox('street');
 		$street->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'required' =>'true',
 		));
 	
 		$land_price = new Zend_Dojo_Form_Element_NumberTextBox('land_price');
 		$land_price->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
-				'required' =>'true'
+				'required' =>'true',
+				'onKeyup'=>'CalculatePrice();'
 		));
 		$house_price = new Zend_Dojo_Form_Element_NumberTextBox('house_price');
 		$house_price->setAttribs(array(
@@ -490,10 +490,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'style'=>'width:96%;min-height:50px;'));
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
-		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside','onChange'=>'showPopupForm();'));
-		
-		//$propertiestype_opt = $db->getPropertyType();
-		//$propertiestype->setMultiOptions($propertiestype_opt);
+		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','required'=>false,
+				'class'=>'fullside','onChange'=>'showPopupForm();'));
 		
 		$propertiestype_search = new Zend_Dojo_Form_Element_FilteringSelect('property_type_search');
 		$propertiestype_search->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside'));
@@ -511,11 +509,10 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'required' =>'true',
 				'onchange'=>'getPropertyNo();'
 		));
-		$rows_branch = $db->getAllBranchName();
-		//=array(''=>"---Select Branch---");
-		if(!empty($rows_branch))foreach($rows_branch AS $row){
-			$options_branch[$row['br_id']]=$row['project_name'];
-		}
+		$options_branch = $db->getAllBranchName(null,1);
+// 		if(!empty($rows_branch))foreach($rows_branch AS $row){
+// 			$options_branch[$row['br_id']]=$row['project_name'];
+// 		}
 		$branch_id->setMultiOptions($options_branch);
 		$branch_id->setValue($request->getParam("branch_id"));
 		

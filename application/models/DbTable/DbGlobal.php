@@ -12,9 +12,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	
 	function  getAllBranchByUser(){
 		$db = $this->getAdapter();
-		$sql = 'select br_id as id,project_name as name from ln_project where 1 and project_name!="" ';
-		//$sql .= $this->getAccessPermission('br_id');
-		//echo $sql;exit();
+		$sql = 'select br_id as id,project_name as name from ln_project where 1 and project_name!="" ORDER BY br_id DESC ';
 		return $db->fetchAll($sql);
 	}
 	public function getReceiptnumber($branch_id=1){
@@ -161,7 +159,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 //    }
    public function getAllProvince(){
    	$this->_name='ln_province';
-   	$sql = " SELECT province_id,CONCAT(province_en_name,'-',province_kh_name) province_en_name FROM $this->_name WHERE status=1 AND province_en_name!='' ORDER BY province_id DESC";
+   	$sql = " SELECT province_id,(province_kh_name) province_en_name FROM $this->_name WHERE status=1 AND province_en_name!='' ORDER BY province_id DESC";
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql);
    }
@@ -225,7 +223,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    }
    public function getAllCoNameOnly(){
    	$db= $this->getAdapter();
-   	$sql = " SELECT co_id AS id, CONCAT(co_khname,' - ',co_code) AS name
+   	$sql = " SELECT co_id AS id, co_khname AS name
    	  FROM ln_staff WHERE STATUS=1 AND co_khname!='' AND `position_id`=1 ";
    	return $db->fetchAll($sql);
    }
@@ -437,10 +435,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db = $this->getAdapter();
   	$sql= " SELECT br_id,project_name,
   	project_type,br_address,branch_code,branch_tel,displayby
-  	FROM `ln_project` WHERE project_name !='' ";
+  	FROM `ln_project` WHERE project_name !=''  ";
   	if($branch_id!=null){
   		$sql.=" AND br_id=$branch_id LIMIT 1";
   	}
+  	$sql.=" ORDER BY br_id DESC";
   	$row = $db->fetchAll($sql);
   	if($opt==null){
   		return $row;
@@ -605,7 +604,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getVewOptoinTypeByType($type=null,$option = null,$limit =null,$first_option =null){
   	$db = $this->getAdapter();
-  	$sql="SELECT id,key_code,CONCAT(name_en) AS name_en ,displayby FROM `ln_view` WHERE status =1 ";//just concate
+  	$sql="SELECT id,key_code,CONCAT(name_en) AS name_en ,displayby FROM `ln_view` WHERE status =1 AND name_en!='' ";//just concate
   	if($type!=null){
   		$sql.=" AND type = $type ";
   	}
@@ -628,7 +627,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getAllLandInfo($branch_id=null,$option=null,$action=null){
   	   $db = $this->getAdapter();
-  	   $sql="SELECT `id`,`land_address` AS name FROM `ln_properties` WHERE status=1 AND `land_address`!='' ";//just concate
+  	   $sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE status=1 AND `land_address`!='' ";//just concate
   	   $request=Zend_Controller_Front::getInstance()->getRequest();
   	   if($action==null){
   	   	$sql.=" AND `is_lock`=0  ";
@@ -1040,7 +1039,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   function getAllClientNumber($branch_id=null){
   	$db = $this->getAdapter();
   	$sql = " SELECT c.`client_id` AS id  ,c.client_number AS name
-  	FROM `ln_client` AS c WHERE c.`name_en`!='' AND c.client_number !='' AND c.status=1  " ;
+  	FROM `ln_client` AS c WHERE c.`name_kh`!='' AND c.client_number !='' AND c.status=1  " ;
   	if($branch_id!=null){
   		$sql.=" AND c.`branch_id`= $branch_id ";
   	}
@@ -1051,7 +1050,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db = $this->getAdapter();
   	$sql=" SELECT c.`client_id` AS id  ,c.`branch_id`,
   	c.`name_kh` AS name , client_number
-  	FROM `ln_client` AS c WHERE c.`name_en`!='' AND c.status=1  " ;
+  	FROM `ln_client` AS c WHERE c.`name_kh`!='' AND c.status=1  " ;
   	if($branch_id!=null){
   		$sql.=" AND c.`branch_id`= $branch_id ";
   	}

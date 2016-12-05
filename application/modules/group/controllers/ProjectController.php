@@ -86,6 +86,15 @@ class Group_ProjectController extends Zend_Controller_Action {
 		$this->view->frm_branch=$update;
 		Application_Model_Decorator::removeAllDecorator($update);
 	}
+	public function addbranchajaxAction(){//ajax
+		if($this->getRequest()->isPost()){
+			$db = new Group_Model_DbTable_DbProject();
+			$data = $this->getRequest()->getPost();
+			$id = $db->addbranchajax($data);
+			print_r(Zend_Json::encode($id));
+			exit();
+		}
+	}
 	function copyAction()
 	{
 		$id=$this->getRequest()->getParam("id");

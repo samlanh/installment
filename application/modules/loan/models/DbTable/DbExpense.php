@@ -125,7 +125,7 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 	function getAllExpenseCategory(){
 	
 		$db = $this->getAdapter();
-		$sql = " select key_code as id,name_kh as name from ln_view where type=13 ";
+		$sql = " select key_code as id,name_kh as name from ln_view where type=13 AND name_kh!='' ";
 		return $db->fetchAll($sql);
 	
 	}

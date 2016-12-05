@@ -41,7 +41,7 @@ Class Other_Form_FrmVeiwType extends Zend_Dojo_Form {
 		
 		$name_en = new Zend_Dojo_Form_Element_TextBox('title_en');
 		$name_en->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 				'required'=>true
 		));

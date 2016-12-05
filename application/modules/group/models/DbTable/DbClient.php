@@ -10,18 +10,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
     	 
     }
 	public function addClient($_data){
-		$photoname = str_replace(" ", "_", $_data['name_en']) . '.jpg';
-		$upload = new Zend_File_Transfer();
-		$upload->addFilter('Rename',
-				array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
-		$receive = $upload->receive();
-		if($receive)
-		{
-			$_data['photo'] = $photoname;
-		}
-		else{
-			$_data['photo']="";
-		}
+		
 		
 		try{
 			if(!empty($_data['id'])){
@@ -31,11 +20,25 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				$db = new Application_Model_DbTable_DbGlobal();
 				$client_code = $db->getNewClientIdByBranch($_data['branch_id']);
 			}
+			
+			$photoname = str_replace(" ", "_", $client_code) . '.jpg';
+			$upload = new Zend_File_Transfer();
+			$upload->addFilter('Rename',
+					array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
+			$receive = $upload->receive();
+			if($receive)
+			{
+				$_data['photo'] = $photoname;
+			}
+			else{
+				$_data['photo']="";
+			}
 			if (empty($_data['photo'])){
 				$photo = $_data['old_photo'];
 			}else{
 				$photo = $_data['photo'];
 			}
+			
 		    $_arr=array(
 				'client_number'=> $client_code,//$_data['client_no'],
 				'name_kh'	  => $_data['name_kh'],

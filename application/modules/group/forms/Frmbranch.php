@@ -62,9 +62,9 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 				));
 		$project_manager_namekh = new Zend_Dojo_Form_Element_ValidationTextBox('project_manager_namekh');
 		$project_manager_namekh->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'required'=>true,
+// 				'required'=>true,
 // 				'onkeyup'=>'Calfifty()'
 		));
 		$project_manager_nameen = new Zend_Dojo_Form_Element_ValidationTextBox('project_manager_nameen');
@@ -73,11 +73,11 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'required'=>true,
 		));
-		$project_manager_nation_id = new Zend_Dojo_Form_Element_ValidationTextBox('project_manager_nation_id');
+		$project_manager_nation_id = new Zend_Dojo_Form_Element_TextBox('project_manager_nation_id');
 		$project_manager_nation_id->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'required'=>true,
+// 				'required'=>true,
 		));
 		
 		$project_manager_nationality = new Zend_Dojo_Form_Element_ValidationTextBox('project_manager_nationality');
@@ -115,9 +115,9 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 				'required'=>true,
 		));
 		$sc_project_manager_nationality->setValue("ខ្មែរ");
-		$current_addres = new Zend_Dojo_Form_Element_TextBox('current_address');
+		$current_addres = new Zend_Dojo_Form_Element_Textarea('current_address');
 		$current_addres->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
 // 				'readOnly'=>'readOnly',
 				'style'=>'width:100%;min-height:60px;'
