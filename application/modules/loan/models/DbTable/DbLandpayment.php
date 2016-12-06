@@ -837,6 +837,31 @@ function getLoanLevelByClient($client_id,$type){
     	
     }
     
+    public function addClient($data){
+    	 
+    	$db = $this->getAdapter();
+    	 
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$client_code=$_db->getNewClientIdByBranch($data['client_branch_id']);
+    	
+    	$this->_name="ln_client";
+    	$array = array(
+    			'branch_id'		=>$data['client_branch_id'],
+    			'client_number'	=>$client_code,
+    			'name_kh'		=>$data['client_name'],
+    			'sex'			=>$data['client_sex'],
+    			'phone'			=>$data['client_phone'],
+    			'remark'		=>$data['client_note'],
+    			'create_date'	=>date('Y-m-d'),
+    			 
+    	);
+    	return $this->insert($array);
+
+//     	$sql = "select * from ln_client where client_id = $id limit 1";
+//     	return $db->fetchRow($sql);
+       
+    }
+    
     
   
 }

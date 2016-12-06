@@ -175,7 +175,6 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		
 		$this->_name = "ln_view" ;
 		$array = array(
-				//'name_en'	=>$data['cate_enname'],
 				'name_kh'	=>$data['cate_name'],
 				'type'		=>$type,
 				'key_code'	=>$key_code,

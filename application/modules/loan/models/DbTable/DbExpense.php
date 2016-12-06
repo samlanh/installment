@@ -18,16 +18,17 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		$invoice = $this->getInvoiceNo($data['branch_id']);
 		
 		$data = array(
-					'branch_id'=>$data['branch_id'],
-					'title'=>$data['title'],
-					'total_amount'=>$data['total_amount'],
-					'invoice'=>$invoice,
-					'category_id'=>$data['income_category'],
-					'description'=>$data['Description'],
-					'date'=>$data['Date'],
-					'status'=>$data['Stutas'],
-					'user_id'=>$this->getUserId(),
-					'create_date'=>date('Y-m-d'),
+					'branch_id'		=>$data['branch_id'],
+					'title'			=>$data['title'],
+					'total_amount'	=>$data['total_amount'],
+					'invoice'		=>$invoice,
+					'cheque'		=>$data['cheque'],
+					'category_id'	=>$data['income_category'],
+					'description'	=>$data['Description'],
+					'date'			=>$data['Date'],
+					'status'		=>$data['Stutas'],
+					'user_id'		=>$this->getUserId(),
+					'create_date'	=>date('Y-m-d'),
 				);
 		$this->insert($data);
  	}
@@ -35,15 +36,16 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
  	function updatExpense($data){
  	
 		$arr = array(
-			'branch_id'=>$data['branch_id'],
-			'title'=>$data['title'],
-			'total_amount'=>$data['total_amount'],
+			'branch_id'		=>$data['branch_id'],
+			'title'			=>$data['title'],
+			'total_amount'	=>$data['total_amount'],
 			//'invoice'=>$invoice,
-			'category_id'=>$data['income_category'],
-			'description'=>$data['Description'],
-			'date'=>$data['Date'],
-			'status'=>$data['Stutas'],
-			'user_id'=>$this->getUserId(),
+			'cheque'		=>$data['cheque'],
+			'category_id'	=>$data['income_category'],
+			'description'	=>$data['Description'],
+			'date'			=>$data['Date'],
+			'status'		=>$data['Stutas'],
+			'user_id'		=>$this->getUserId(),
 
 		);
 		$where=" id = ".$data['id'];

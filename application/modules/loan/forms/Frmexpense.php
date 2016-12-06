@@ -68,7 +68,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		$total_amount->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
-				'required'=>true,
+				'required'=>'true',
 				'onkeyup'=>'convertToDollar();',
 		));
 		
@@ -92,6 +92,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		$_currency_type->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'required'=>'true',
 		));
 		$opt= $db->getVewOptoinTypeByType(12,1,null,1);
 		$_currency_type->setMultiOptions($opt);

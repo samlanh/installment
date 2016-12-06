@@ -1230,46 +1230,6 @@ public function addILPayment($data){
 						  AND ss.is_completed = 0 
 						  AND s.id = ".$data['loan_number'];
     		}
-    		//elseif($data['type']==1){
-	//     		$where = 'lm.`loan_number`='."'".$loan_number."'";
-	//     		$sql ="SELECT 
-//     					(SELECT d.`date_payment` FROM `ln_client_receipt_money_detail` AS d WHERE d.`loan_number`='$loan_number' ORDER BY d.`date_payment` DESC LIMIT 1) AS installment_date ,
-//     				  (SELECT crm.`date_input` FROM `ln_client_receipt_money` AS crm , `ln_client_receipt_money_detail` AS crmd WHERE crm.`id`=crmd.`crm_id` AND crmd.`lfd_id`=lf.`id` AND crmd.`loan_number`=lm.`loan_number` ORDER BY `crm`.`date_input` DESC LIMIT 1) AS last_pay_date,
-// 					  lc.`client_id`,
-// 					  lc.`client_number`,
-// 					  lc.`name_kh`,
-// 					  lm.`total_capital`,
-// 					  lm.`loan_number`,
-// 					  lm.`currency_type`,
-// 					  lm.`pay_before`,
-// 					  lm.`pay_after`,
-// 					  lm.`branch_id`,
-// 					  lm.`interest_rate`,
-// 			   		  lm.`collect_typeterm`,
-// 			   		  lm.`amount_collect_principal`,
-// 					  lg.`co_id`,
-// 					  lg.`total_duration`,
-// 					  lg.`payment_method`,
-// 					  lg.`payment_method`,
-// 					  DATE_FORMAT(lg.`date_release`, '%d-%m-%Y') AS `date_release`,
-// 					  lg.`level`, 
-// 					  lg.`date_release` AS release_date,
-// 					  lf.*,
-// 					  DATE_FORMAT(lf.date_payment, '%d-%m-%Y') AS `date_payments`
-// 					FROM
-// 					  `ln_client` AS lc,
-// 					  `ln_loan_member` AS lm ,
-// 					  `ln_loan_group` AS lg,
-// 					  `ln_loanmember_funddetail` AS lf
-// 					WHERE lg.`g_id`=lm.`group_id`
-// 					  AND lf.`member_id`=lm.`member_id`
-// 					  AND lm.`client_id`=lc.`client_id`
-// 					  AND lg.`loan_type`=1
-// 					  AND $where
-//     				AND lf.`is_completed`=0
-//     				 AND lf.`status`=1";
-    				
-//  			}
     	return $db->fetchAll($sql);
    }
    
@@ -1293,65 +1253,9 @@ public function addILPayment($data){
    }
    
    function getAllLoanPaymentByLoanNumber($data){
-   	$db = $this->getAdapter();
-   	$loan_number= $data['loan_number'];
-//    	if($data['types']!=1){
-//    		$where =($data['types']==2 AND $data["type"]==3)?'lc.client_id = '.$loan_number:'lc.client_id='.$loan_number;
-//    		$sql ="SELECT
-// 			   		lc.`client_id`,
-// 			   		lc.`client_number`,
-// 			   		lc.`name_kh`,
-// 			   		lm.`loan_number`,
-// 			   		lm.`currency_type`,
-// 			   		lm.`pay_before`,
-// 			   		lm.`pay_after`,
-// 			   		lm.`branch_id`,
-// 			   		lm.`collect_typeterm`,
-// 			   		lg.`co_id`,
-// 			   		lg.`payment_method`,
-// 			   		lf.*,
-// 			   		DATE_FORMAT(lf.date_payment, '%d-%m-%Y') AS `date_payments`
-// 			   		FROM
-// 			   		`ln_client` AS lc,
-// 			   		`ln_loan_member` AS lm ,
-// 			   		`ln_loan_group` AS lg,
-// 			   		`ln_loanmember_funddetail` AS lf
-// 			   		WHERE lg.`g_id`=lm.`group_id`
-// 			   		AND lf.`member_id`=lm.`member_id`
-// 			   		AND lm.`client_id`=lc.`client_id`
-// 			   		AND lg.`loan_type`=1
-// 			   		 AND lf.`status`=1
-// 			   		AND $where
-// 			   		";
-
-   		
-//    	}elseif($data['types']==1){
-   		
-//    	$where = ' p.`land_id`='."'".$loan_number."'";
-//    	$sql =" SELECT
-			   
-// 			   	p.`land_id`,
-				
-//    				p.`staff_id`,
-//    				p.`payment_type`,
-//    			    pd.*,
-//    				DATE_FORMAT(pd.date_payment, '%d-%m-%Y') AS `date_payments`
-//    				FROM
-//    					  `ln_paymentschedule` AS p,
-//    					  `ln_paymentschedule_detail` AS pd
-//    					  WHERE 
-//    					   p.`id`=pd.`paymentid`
-//    					   AND pd.`status`=1
-//    					   AND p.`status`=1
-//    					   AND p.is_reschedule !=1
-//    					  AND $where";
-   
-//    		}
-//    		//return $sql ;
-
-
-   	      $sql = "select * from ln_sale as s ,ln_saleschedule as scd where s.id=scd.sale_id and sale_id = $loan_number ";
-   	
+	   	$db = $this->getAdapter();
+	   	$loan_number= $data['loan_number'];
+	   	$sql = "select * from ln_sale as s ,ln_saleschedule as scd where s.id=scd.sale_id and sale_id = $loan_number ";
    		return $db->fetchAll($sql);
    	}
 

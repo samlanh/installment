@@ -230,7 +230,15 @@ class Loan_IndexController extends Zend_Controller_Action {
 	}
 	
 	
-	
+	function addClientAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbLandpayment();
+			$id = $db->addClient($data);
+			print_r(Zend_Json::encode($id));
+			exit();
+		}
+	}
 	
 	
 	
