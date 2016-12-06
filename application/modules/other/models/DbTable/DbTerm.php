@@ -11,10 +11,11 @@ class Other_Model_DbTable_DbTerm extends Zend_Db_Table_Abstract
 	public function addTermcondiction($_data){
 		try {
 		$_arr=array(
-				'con_khmer'	  => trim($_data['con_khmer']),
-				'con_english'	  => trim($_data['con_english']),
-				'status'	  => $_data['status'],
-				'user_id'	  => $this->getUserId()
+				'con_khmer'	  	=> trim($_data['con_khmer']),		
+				'con_english'	=> trim($_data['con_english']),
+				'payment_type'	=> $_data['payment_type'],
+				'status'	  	=> $_data['status'],
+				'user_id'	 	=> $this->getUserId(),
 		);
 			$where = 'id = 1';
 			return  $this->update($_arr, $where);

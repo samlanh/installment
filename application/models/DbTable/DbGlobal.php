@@ -598,7 +598,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public  function getclientdtype(){
   	$db = $this->getAdapter();
-  	$sql="SELECT key_code as id,CONCAT(name_kh,'-',name_en) AS name ,displayby FROM `ln_view` WHERE name_en!='' AND status =1 AND type=23";
+  	$sql="SELECT key_code as id, name_kh AS name ,displayby FROM `ln_view` WHERE status =1 AND type=23";
   	$rows = $db->fetchAll($sql);
   	return $rows;
   }
