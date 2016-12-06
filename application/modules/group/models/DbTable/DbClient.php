@@ -265,5 +265,44 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				$id =$this->insert($_arr);
 				return array('id'=>$id,'client_code'=>$client_code);
 	}
+	
+	function addViewType($data){
+		try{
+			$db = $this->getAdapter();
+			$data['type'] = 23;
+			$key_code = $this->getLastKeycodeByType($data['type']);
+			$arr = array(
+				'name_kh'		=>$data['doc_name'],
+				'status'		=>1,
+				'displayby'		=>1,
+				'key_code'		=>$key_code,
+				'type'			=>$data['type'],
+			);
+			$this->_name = "ln_view";
+			return $this->insert($arr);
+		}catch (Exception $e){
+			echo '<script>alert('."$e".');</script>';
+		}
+	}
+	
+	function getLastKeycodeByType($type){
+		$db =$this->getAdapter();
+		$sql = "SELECT key_code FROM `ln_view` WHERE type=$type ORDER BY key_code DESC LIMIT 1 ";
+		$number = $db->fetchOne($sql);
+		return $number+1;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 

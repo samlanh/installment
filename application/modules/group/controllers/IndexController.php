@@ -93,10 +93,8 @@ class Group_indexController extends Zend_Controller_Action {
 		}
 		$db = new Application_Model_DbTable_DbGlobal();
 		$client_type = $db->getclientdtype();
-		array_unshift($client_type,array(
-		'id' => -1,
-		'name' => '---Add New ---',
-		 ) );
+		array_unshift($client_type,array('id' => -1,'name' => '--- បន្ថែមថ្មី ---',));
+		array_unshift($client_type,array('id' => 0,'name' => '---Please Select ---',));
 		$this->view->clienttype = $client_type;
 		
 		$fm = new Group_Form_FrmClient();
@@ -234,11 +232,7 @@ class Group_indexController extends Zend_Controller_Action {
 	function insertDocumentTypeAction(){//At callecteral when click client
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
-			$data['status']=1;
-			$data['display_by']=1;
-			//$data['type']=24;
-			
-			$db = new Other_Model_DbTable_DbLoanType();
+			$db = new Group_Model_DbTable_DbClient();
 			$id = $db->addViewType($data);
 			print_r(Zend_Json::encode($id));
 			exit();

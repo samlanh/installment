@@ -993,6 +993,8 @@ function getLoanLevelByClient($client_id,$type){
     			'client_number'	=>$client_code,
     			'name_kh'		=>$data['client_name'],
     			'sex'			=>$data['client_sex'],
+    			'client_d_type'	=>$data['client_doc_type'],
+    			'nation_id'		=>$data['national_id'],
     			'phone'			=>$data['client_phone'],
     			'remark'		=>$data['client_note'],
     			'create_date'	=>date('Y-m-d'),

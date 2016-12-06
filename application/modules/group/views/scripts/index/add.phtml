@@ -245,7 +245,11 @@ dojo.ready(function(){
 				showPopupVillage();
 			}
 		}
+
 	}, "village");
+
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	new dijit.form.FilteringSelect({
 		store: d_datastore,//dojo.data.ObjectStore({objectStore: d_data}),
@@ -254,52 +258,55 @@ dojo.ready(function(){
 		name: "client_d_type",
 		id: "client_d_type",
 		searchAttr: "name",
+		value: "0",
 		class: 'fullside',
 		missingMessage:"អ្នក​ភ្លេច​​ បំពេញប្រភេទឯកសារ !",	
 			onChange: function() {
 				client_d_type = dijit.byId('client_d_type').get('value');
 				if(client_d_type==-1){
-					doc_type=1;
+					dijit.byId('type').attr('value',1);
 					showPopupclientdtype();
 				}
 			}
 		}, "client_d_type");
 
 	new dijit.form.FilteringSelect({
-		store: joint_doc_type_store,//dojo.data.ObjectStore({objectStore: d_data}),
-		autoComplete: true,          
-		required: false,		           
-		name: "join_d_type",
-		id: "join_d_type",
-		searchAttr: "name",
-		class: 'fullside',
-		missingMessage:"អ្នក​ភ្លេច​​ បំពេញប្រភេទឯកសារ !",	
-			//onChange: function() {
-				//client_d_type = dijit.byId('join_d_type').get('value');
-				//if(client_d_type==-1){
-					//doc_type=1;
-					//showPopupclientdtype();
-				//}
-			//}
-		}, "join_d_type");
-
-
-	new dijit.form.FilteringSelect({
-		store: d_datastore,//dojo.data.ObjectStore({objectStore: d_data}),
-		autoComplete: true,
-		required: false,		           
-		name: "guarantor_d_type",
-		id: "guarantor_d_type",
-		searchAttr: "name",
-		class: 'fullside',
+			store: joint_doc_type_store,//dojo.data.ObjectStore({objectStore: d_data}),
+			autoComplete: true,          
+			required: false,		           
+			name: "join_d_type",
+			id: "join_d_type",
+			searchAttr: "name",
+			value: "0",
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​​ បំពេញប្រភេទឯកសារ !",	
 			onChange: function() {
-				client_d_type = dijit.byId('guarantor_d_type').get('value');
+				client_d_type = dijit.byId('join_d_type').get('value');
 				if(client_d_type==-1){
-					doc_type=3;
+					dijit.byId('type').attr('value',2);
 					showPopupclientdtype();
 				}
 			}
-		}, "guarantor_d_type");
+		}, "join_d_type");
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// new dijit.form.FilteringSelect({
+		// store: d_datastore,//dojo.data.ObjectStore({objectStore: d_data}),
+		// autoComplete: true,
+		// required: false,		           
+		// name: "guarantor_d_type",
+		// id: "guarantor_d_type",
+		// searchAttr: "name",
+		// class: 'fullside',
+			// onChange: function() {
+				// client_d_type = dijit.byId('guarantor_d_type').get('value');
+				// if(client_d_type==-1){
+					// doc_type=3;
+					// showPopupclientdtype();
+				// }
+			// }
+		// }, "guarantor_d_type");
 
 	new dijit.form.FilteringSelect({
 		store: adistrict_store,
@@ -636,34 +643,32 @@ function addNewCommune(){
 }
 var document_type_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insert-document-type'));?>';
 function addNewDocumentType(){
+	//alert(1);
+	type = dijit.byId('type').get('value');
+	old_client_doc = dijit.byId('client_d_type').get('value');
+	old_join_doc = dijit.byId('join_d_type').get('value');
+	
 	dojo.xhrPost({
+		
 		url:document_type_url,	
-		content:{ 
-		    'title_en':dijit.byId('clienttype_nameen').get('value'),
-		    'title_kh':dijit.byId('clienttype_namekh').get('value'),
-		    'type':23,
-		},
+		form:dojo.byId('frm_client_doc_type'),
 		handleAs:"json",
 		load: function(data) {	
-			clienttypeen = dijit.byId('clienttype_nameen').get('value');
-			clienttypekh = dijit.byId('clienttype_namekh').get('value');
-			if(doc_type==1){
-				document_type = dijit.byId('client_d_type');
-				
-			}else if(doc_type==2){
-				document_type = dijit.byId('join_d_type');
-			}else{
-				document_type = dijit.byId('guarantor_d_type');
-			}
-
-			 var myNewItem1 = {					
-						id: data,
-						name: clienttypekh+'-'+clienttypeen
-				};			
-				addDataToSelectbox(document_type, d_datastore, myNewItem1, data);		
+		
+			var myNewItem = {					
+				id: data,
+				name: dijit.byId('doc_name').get('value')
+			};			
+			addDataToSelectbox(dijit.byId('client_d_type'), d_datastore, myNewItem, data);	
+			addDataToSelectbox(dijit.byId('join_d_type'), joint_doc_type_store, myNewItem, data);				
 				 
-			dijit.byId('frm_clienttype').reset();
-			dijit.byId('frm_clienttype').hide();
+			dijit.byId('frm_client_doc_type').reset();
+			dijit.byId('popup_doc_type').hide();
+			if(type == 2){
+				dijit.byId('client_d_type').attr('value',old_client_doc);
+			}else{
+				dijit.byId('join_d_type').attr('value',old_join_doc);
+			}
 	
 		},
 		error: function(err) {
@@ -672,7 +677,7 @@ function addNewDocumentType(){
 	});	
 }
 function showPopupclientdtype(){
-	dijit.byId('frm_clienttype').show();
+	dijit.byId('popup_doc_type').show();
 }
 url_getClientNo = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'get-client-no'));?>';
 function getClientNo(){
@@ -693,4 +698,52 @@ function getClientNo(){
 		}
 	});
 }
+function hideDialog1(){
+	dijit.byId('popup_doc_type').hide();
+}
 </script>
+
+
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_doc_type" >
+		<form style="background-color: buttonface; width:100%;" id='frm_client_doc_type' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<fieldset style="background-color: buttonface;">
+						<legend align="center" ><?php echo $tr->translate('ADD_DOC_TYPE');?></legend>
+							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+								<tr>
+									<td><?php echo $tr->translate('NAME');?></td>
+									<td>
+										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="doc_name" name="doc_name" value="" type="text">
+									</td>
+								</tr>
+								
+								<input type="hidden" name="type"	id="type" dojoType="dijit.form.TextBox" />
+								
+								<tr>
+									<td colspan="4" align="center">
+										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewDocumentType();"/>
+									</td>
+								</tr>
+								
+							</table>
+					</fieldset>
+					</td>
+				</tr>
+			</table>
+
+		</form>
+	</div>
+</div>
+
+
+
+
+
+

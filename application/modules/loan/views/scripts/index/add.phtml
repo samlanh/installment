@@ -52,6 +52,7 @@
 							<td><?php echo $tr->translate("SALE_NO")?></td>
 							<td><?php echo $frm->getElement('sale_code');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_CODE")?></td>
+
 							<td><input id="customer_code" /><input type="hidden" name="identity" id="identity"  value="" >
 							<input type="hidden" dojoType="dijit.form.TextBox" name="total_installamount" id="total_installamount"  value="" ></td>
 						</tr>
@@ -1615,7 +1616,7 @@ function addNewClient(){
 
 
 <div class="dijitHidden">
-	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_client" >
+	<div data-dojo-type="dijit.Dialog" style="width:35%;" id="popup_client" >
 		<form style="background-color: buttonface; width:100%;" id='frmpop_client' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<table cellspacing="10" width="100%" style="margin: 0 auto;">
 				<tr>
@@ -1624,7 +1625,7 @@ function addNewClient(){
 						<legend align="center" ><?php echo $tr->translate('ADD_CLIENT');?></legend>
 							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
 								<tr>
-									<td><?php echo $tr->translate('NAME');?></td>
+									<td><?php echo $tr->translate('CUSTOMER_NAME');?></td>
 									<td>
 										<input dojoType="dijit.form.ValidationTextBox"  class="fullside" id="client_name" name="client_name" value="" type="text">
 									</td>
@@ -1632,13 +1633,31 @@ function addNewClient(){
 								<tr>
 									<td><?php echo $tr->translate('SEX');?></td>
 									<td>
-										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="client_sex" name="client_sex" value="" type="text">
+										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="client_sex" name="client_sex" value="1" type="text">
 											<option value="1">Male</option>
 											<option value="2">Female</option>
 										</select>
 									</td>
 								</tr>
-								<input type="text" name="client_branch_id" id="client_branch_id" dojoType="dijit.form.TextBox" />
+								
+								<tr>
+									<td><?php echo $tr->translate('DOCUMENT_TYPE');?></td>
+									<td>
+										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="client_doc_type" name="client_doc_type" value="2" type="text">
+											<?php if(!empty($this->client_doc_type)){foreach($this->client_doc_type as $row){?>
+												<option value="<?php echo $row['id']?>"><?php echo $row['name']?></option>
+											<?php }}?>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate('NATIONAL_ID');?></td>
+									<td>
+										<input type="text" name="national_id" id="national_id" class="fullside" dojoType="dijit.form.TextBox" />
+									</td>
+									
+								</tr>
+								<input type="hidden" name="client_branch_id" id="client_branch_id" dojoType="dijit.form.TextBox" />
 								<tr>
 									<td><?php echo $tr->translate('PHONE');?></td>
 									<td>

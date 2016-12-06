@@ -74,6 +74,11 @@ class Loan_IndexController extends Zend_Controller_Action {
 		        'name' => '---Add New ---',
 		) );
 	    $this->view->co_name=$co_name;
+	    
+	    
+	    $db = new Application_Model_DbTable_DbGlobal();
+	    $this->view->client_doc_type = $db->getclientdtype();
+	    
 	}	
 	public function editAction(){
 		if($this->getRequest()->isPost()){
