@@ -169,7 +169,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				'class'		=>	'fullside',
 				'onKeyup'	=>	'totalReturn();',
 				'style'		=>	'color:red;',
-				//'required'	=>	true,
+				'required'	=>	true,
 				
 		));
 		

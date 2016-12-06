@@ -403,10 +403,10 @@
 				<tr>
 					<td align="center">
 						<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
-						<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="print" dojoType="dijit.form.Button" 
-							iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="print();"/>
 						<input type="button" value="បិទ" label="បិទ" id="close" dojoType="dijit.form.Button" 
 							iconClass="dijitEditorIcon dijitEditorIconCancel" onclick="hideDialog();"/>
+						<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="print" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="print();"/>
 				
 					<td>
 				<tr>
@@ -670,6 +670,7 @@ function displayNone(){
 }
 
 function showReciept(receipt_number){
+	if(dijit.byId('frm_add_group_pay').validate()){
 	//alert(1);
 	
 	            service_charge = dijit.byId('service_charge').get('value');
@@ -816,6 +817,7 @@ function showReciept(receipt_number){
 		dijit.byId('frm_client').show();
 	}
 }
+}
 dojo.ready(function(){	
 		
 		new dijit.form.FilteringSelect({
@@ -947,7 +949,7 @@ function getlandinfo(){
 }
 
 var sale_number_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
-var url_getsalenumber = "<?php echo $this->url(array('module'=>'loan','controller'=>'IlPayment','action'=>'get-sale-number')); ?>";
+var url_getsalenumber = "<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-sale-number')); ?>";
 function getAllSaleNumber(){
 	//alert(1);
 	dojo.xhrPost({

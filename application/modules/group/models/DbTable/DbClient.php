@@ -34,7 +34,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				$_data['photo']="";
 			}
 			if (empty($_data['photo'])){
-				$photo = $_data['old_photo'];
+				$photo = @$_data['old_photo'];
 			}else{
 				$photo = $_data['photo'];
 			}
@@ -78,6 +78,8 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    	'branch_id'      => $_data['branch_id'],
 		    	'joint_doc_type'      => $_data['join_d_type'],
 		    	'refe_nation_id'      => $_data['reference_national_id'],
+		    	'join_type'      => $_data['join_type'],
+		    		
 		);
 		if(!empty($_data['id'])){
 			$where = 'client_id = '.$_data['id'];

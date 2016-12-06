@@ -6,6 +6,7 @@ public function init()
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
 	public function FrmAddFrmCancel($data=null){
+		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$_loan_code = new Zend_Dojo_Form_Element_TextBox('loan_code');
 		$_loan_code->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
@@ -32,7 +33,7 @@ public function init()
 		$_title->setAttribs(array('dojoType'=>'dijit.form.TextBox',
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 		));
-		//$_title->setValue($request->getParam("adv_search"));
+		$_title->setValue($request->getParam("adv_search"));
 		
 		$start_date_search = new Zend_Dojo_Form_Element_DateTextBox('from_date_search');
 		$start_date_search->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
@@ -43,6 +44,7 @@ public function init()
 		
 		$_date = date("Y-m-d");
 		$start_date_search->setValue($_date);
+		if(!empty($request->getParam("to_date_search")))$start_date_search->setValue($request->getParam("from_date_search"));
 		
 		
 		$to_date_search = new Zend_Dojo_Form_Element_DateTextBox('to_date_search');
@@ -51,6 +53,8 @@ public function init()
 				'dojoType'=>'dijit.form.DateTextBox','class'=>'fullside',
 		));
 		$to_date_search->setValue($_date);
+		if(!empty($request->getParam("to_date_search")))$to_date_search->setValue($request->getParam("to_date_search"));
+		
 		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
@@ -64,7 +68,7 @@ public function init()
 			$options_branch[$row['br_id']]=$row['project_name'];
 		}
 		$branch_id->setMultiOptions($options_branch);
-		//$branch_id->setValue($request->getParam("branch_id"));
+		
 		
 		$branch_id_search = new Zend_Dojo_Form_Element_FilteringSelect('branch_id_search');
 		$branch_id_search->setAttribs(array(
@@ -78,6 +82,7 @@ public function init()
 			$options_branch_search[$row['br_id']]=$row['project_name'];
 		}
 		$branch_id_search->setMultiOptions($options_branch_search);
+		$branch_id_search->setValue($request->getParam("branch_id_search"));
 		
 		$_cancel_code = new Zend_Dojo_Form_Element_TextBox('cancel_code');
 		$_cancel_code->setAttribs(array(

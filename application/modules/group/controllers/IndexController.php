@@ -74,7 +74,6 @@ class Group_indexController extends Zend_Controller_Action {
 	public function addAction(){
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
-				//print_r($data);exit();
 				$data['old_photo']=null;
 				$db = new Group_Model_DbTable_DbClient();
 				try{
@@ -93,7 +92,6 @@ class Group_indexController extends Zend_Controller_Action {
 			}
 		}
 		$db = new Application_Model_DbTable_DbGlobal();
-		
 		$client_type = $db->getclientdtype();
 		array_unshift($client_type,array(
 		'id' => -1,

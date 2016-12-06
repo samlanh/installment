@@ -2488,7 +2488,7 @@ public function cancelIlPayment($data){
 		//$sql="select id,sale_number as name	from `ln_sale` where status=1 and is_completed=0 and branch_id=$branch_id";
 		
 		$sql= "SELECT id,
-				  CONCAT((SELECT CONCAT(name_kh,'-',name_en) FROM ln_client WHERE ln_client.client_id=ln_sale.`client_id` ),' - ',sale_number) AS name
+				  CONCAT((SELECT name_kh FROM ln_client WHERE ln_client.client_id=ln_sale.`client_id` LIMIT 1),' - ',sale_number) AS name
 				FROM
 				  ln_sale 
 				WHERE `is_completed` = 0 

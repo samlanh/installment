@@ -20,7 +20,6 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$db = new Application_Model_DbTable_DbGlobal();
 		
-		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -112,7 +111,6 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 		));
-		
 		
 		$_province = new Zend_Dojo_Form_Element_FilteringSelect('province');
 		$_province->setAttribs(array(
@@ -215,6 +213,9 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				1=>$this->tr->translate("ACTIVE"),
 				0=>$this->tr->translate("DACTIVE"));
 		$_status->setMultiOptions($_status_opt);
+		
+		$_join_type =  new Zend_Dojo_Form_Element_TextBox('join_type');
+		$_join_type->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside',));
 		
 		$_hnamekh = new Zend_Dojo_Form_Element_TextBox('hname_kh');
 		$_hnamekh->setAttribs(array(
@@ -378,9 +379,10 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$_cprovince->setValue($data['cprovince']);
 // 			$_adistrict->setValue($data['adistrict']);
 // 			$_dcommune->setValue($data['dcommune']);
+			$_join_type->setValue($data['join_type']);
 			$referecce_national_id->setValue($data['refe_nation_id']);
 		}
-		$this->addElements(array($referecce_national_id,$p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
+		$this->addElements(array($_join_type,$referecce_national_id,$p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
 				$_join_with,$_id,$photo,$job,$national_id,$_member,$_namekh,$_nameen,$_sex,
 				$_province,$_house,$_street,$_id_no,$branch_id,$_email,
 				$_phone,$_desc,$_status,$_clientno,$_dob,$clienttype_namekh,$clienttype_nameen));
