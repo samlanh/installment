@@ -15,15 +15,12 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
  				
  			}else{
 				$search = array(
-						'txt_search'=>'',
+					    'txt_search'=>'',
 						'client_name'=> -1,
+						'schedule_opt' => -1,
 						'branch_id' => -1,
-						'co_id' => -1,
 						'status' => -1,
-						'schedule_opt'=>-1,
-						'currency_type'=>-1,
-						'pay_every'=>-1,
-						'start_date'=> date('Y-m-01'),
+						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						 );
 			}
@@ -33,15 +30,16 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","SALE_NO","CLIENT_NO","CUSTOMER_NAME","LOAN_NO","PROPERTY_NAME","ប្រភេទបង់","LOAN_AMOUNT","DISCOUNT","PAID","BALANCE","DATE_BUY",
+			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_NAME","ប្រភេទបង់","BALANCE","ប្រភេទបង់","BALANCE","DATE_BUY",
 				"STATUS");
 			$link=array(
 					'module'=>'loan','controller'=>'repaymentschedule','action'=>'view',
 			);
 			$link_info=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_id'=>$link,'sale_id'=>$link_info,'client_name_kh'=>$link_info,'client_name_en'=>$link_info,'total_capital'=>$link_info),0);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link,'sale_number'=>$link_info,'name_kh'=>$link_info,'land_address'=>$link_info,'total_capital'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
+			echo $e->getMessage();exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
 		$frm = new Loan_Form_FrmSearchLoan();
@@ -55,7 +53,6 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {
 				$_dbmodel = new Loan_Model_DbTable_DbRepaymentSchedule();
-				
 				$_dbmodel->addRepayMentSchedule($_data);
 				if(!empty($_data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/repaymentschedule");

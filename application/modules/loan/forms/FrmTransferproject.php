@@ -85,7 +85,7 @@ public function init()
 		));
 		$opt = $db->getVewOptoinTypeByType(25,1,null,1);
 		$request=Zend_Controller_Front::getInstance()->getRequest();
-		if($request->getControllerName()=='repaymentschedule'){
+		if($request->getControllerName()=='transferproject'){
 			unset($opt[1]);
 		}
 		$schedule_opt->setMultiOptions($opt);
@@ -203,10 +203,23 @@ public function init()
 		$discount->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'required'=>'true',
-				'class'=>'fullside',
+				'class'=>'fullside fullside50',
 				'onKeyup'=>'calculateDiscount();'
 		));
 		$discount->setValue(0);
+		
+		$discount_percent = new Zend_Dojo_Form_Element_NumberTextBox('discount_percent');
+		$discount_percent->setAttribs(array(
+				'data-dojo-Type'=>'dijit.form.NumberTextBox',
+				'data-dojo-props'=>"regExp:'[0-9]{1,2}',
+				'name':'discount_percent',
+				'id':'discount_percent',
+				'onKeyup':'calculateDiscount();',
+				'class':'fullside fullside50',
+				'placeHolder':'ភាគរយ%',
+				'invalidMessage':'អាចបញ្ជូលពី 1 ដល់ 99'"
+		));
+		
 		
 		$term_opt = $db->getVewOptoinTypeByType(14,1,3,1);
 		
@@ -295,7 +308,7 @@ public function init()
 			
 			
 		}
-		$this->addElements(array($cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id));

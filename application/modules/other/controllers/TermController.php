@@ -28,7 +28,9 @@ class Other_TermController extends Zend_Controller_Action {
 		$frm = $fm->Frmterm($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_term = $frm;
-		
+	}
+	function addAction(){
+		$this->_redirect("/other/term");
 	}
    
 }

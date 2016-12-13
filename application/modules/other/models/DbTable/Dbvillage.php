@@ -91,7 +91,7 @@ class Other_Model_DbTable_DbVillage extends Zend_Db_Table_Abstract
 	}
        public function getAllvillagebyCommune($village_id){
 		$db = $this->getAdapter();
-		$sql = "SELECT vill_id AS id,village_name AS name FROM $this->_name WHERE village_name!='' AND status=1 AND commune_id=".$db->quote($village_id);
+		$sql = "SELECT vill_id AS id,village_namekh AS name FROM $this->_name WHERE village_name!='' AND status=1 AND commune_id=".$db->quote($village_id);
 		$rows=$db->fetchAll($sql);
 		return $rows;
 	}	

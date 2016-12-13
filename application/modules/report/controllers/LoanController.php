@@ -10,7 +10,6 @@ class Report_LoanController extends Zend_Controller_Action {
   function indexAction(){
   	
   }
-   
   function rptLoanDisburseCoAction(){//realease by co
 	  $db  = new Report_Model_DbTable_DbLandreport();
 	  if($this->getRequest()->isPost()){

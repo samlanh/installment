@@ -1221,7 +1221,6 @@ public function addILPayment($data){
 						  s.*,
 						  ss.*,
 						  DATE_FORMAT(ss.date_payment, '%d-%m-%Y') AS date_payments
-						  
 						FROM
 						  `ln_sale` AS s,
 						  `ln_saleschedule` AS ss 
@@ -1267,13 +1266,13 @@ public function addILPayment($data){
    }
    function getAllClient(){
    	$db = $this->getAdapter();
-   	$sql = "SELECT c.`client_id` AS id ,c.`name_en` AS name FROM `ln_client` AS c WHERE c.`name_en`!='' " ;
+   	$sql = "SELECT c.`client_id` AS id ,c.`name_kh` AS name FROM `ln_client` AS c WHERE c.`name_kh`!='' " ;
    	return $db->fetchAll($sql);
    }
    
    function getAllClientCode(){
    	$db = $this->getAdapter();
-   	$sql = "SELECT c.`client_id` AS id ,c.`client_number` AS name FROM `ln_client` AS c WHERE c.`name_en`!='' " ;
+   	$sql = "SELECT c.`client_id` AS id ,c.`client_number` AS name FROM `ln_client` AS c WHERE c.`name_kh`!='' " ;
    	return $db->fetchAll($sql);
    }
    
@@ -2493,7 +2492,7 @@ public function cancelIlPayment($data){
 				  ln_sale 
 				WHERE `is_completed` = 0 
 				  and  status=1 
-				  AND `is_reschedule` != 1 and branch_id=$branch_id ";
+				  AND branch_id=$branch_id ";
 		
 		return $db->fetchAll($sql);
 		

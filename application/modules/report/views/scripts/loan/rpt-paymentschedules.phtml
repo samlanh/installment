@@ -54,7 +54,7 @@ td p{ margin-top:0px !important;}
 				                	</td>
 				                    <td valign="top" style="" width="33%">
 				                        <p><?php echo $tr->translate("LOAN_AMOUNT");?>  : <?php echo number_format($client['price_sold']-$client['other_fee'],2);?> $</p>
-				                    	<p><?php echo $tr->translate("Discount");?> : <b><?php echo $client['discount_amount'];?> %</b></p>
+				                    	<p><?php echo $tr->translate("Discount");?> : <b><?php echo $client['discount_percent']."% +".number_format($client['discount_amount'],2);?> $</b></p>
 				                    	<p><?php echo $tr->translate("OTHER_FEE");?>  : <?php echo number_format($client['other_fee'],2);?></p>
 				                    	<p><?php echo $tr->translate("TOTAL_AMOUNT");?>  : <?php echo number_format($client['price_sold'],2);?></p>
 				                    	<p><?php echo $tr->translate("PAID");?>  : <?php echo number_format($client['paid_amount'],2);?></p>
@@ -94,7 +94,12 @@ td p{ margin-top:0px !important;}
 	                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
 	                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 	                </tr>
-	               <?php if(!empty($tran)) foreach($tran as $key =>$row){?>
+	               <?php $set=1; if(!empty($tran)) foreach($tran as $key =>$row){?>
+	               	<?php if($set==1 AND $row['is_rescheule']==1){?>
+	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style">
+	               		<td colspan="9" style="background: #d3d3ff">ចេញតារាងកាលវិភាគថ្មី</td>
+	               	</tr>
+	               	<?php $set=0; } ?>
 	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style">
 	                    <td ><?php echo ($key+1<10)?"0":"";echo $key+1;?></td>
 	                    <?php $str_day = date('D',strtotime($row['date_payment']));

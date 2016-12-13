@@ -3,7 +3,6 @@
 class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'ln_loan_group';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace('auth');
     	return $session_user->user_id;
@@ -16,12 +15,12 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
    	$sql="SELECT cp.id,
    	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.from_branchid LIMIT 1) AS from_branch,
 	(SELECT sale_number FROM `ln_sale` WHERE id=cp.sale_id LIMIT 1) AS sale_number,
-	c.client_number,c.name_kh,
+	c.name_kh,
 	(SELECT land_address FROM `ln_properties` WHERE ln_properties.id=cp.from_houseid LIMIT 1) from_property,
-	cp.house_price,
+	cp.amount_before,cp.paid_before,
 	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.to_branchid LIMIT 1) AS to_branch,
 	(SELECT land_address FROM `ln_properties` WHERE ln_properties.id=cp.to_houseid LIMIT 1) to_propertype,
-	cp.amount_before,cp.paid_before,cp.balance_before,cp.change_date,cp.status
+	cp.house_price,cp.paid_amount_after,cp.balance_after,cp.change_date,cp.status
 	FROM `ln_change_project` AS cp,`ln_client` c WHERE c.client_id=cp.client_id ";
    	
    	$from_date =(empty($search['start_date']))? '1': " cp.change_date >= '".$search['start_date']." 00:00:00'";
@@ -79,13 +78,11 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
     		$dbs = new Loan_Model_DbTable_DbLandpayment();
     		$id = $data['loan_number'];
     		$rows = $dbs->getTranLoanByIdWithBranch($id);
-    		
     		$arr = array(
     				'from_branchid'=>$data['branch_id'],
     				'from_houseid'=>$rows['house_id'],
     				'sale_id'=>$id,
     				'client_id'=>$data['member'],
-
     				'change_date'=>$data['date_buy'],
     				'payment_method_before'=>$rows['payment_method'],
     				'interestrate_before'=>$rows['interest_rate'],
@@ -154,12 +151,15 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
 	    		}else{
 	    			$is_complete = 0;
 	    		}
+	    		$dbtable = new Application_Model_DbTable_DbGlobal();
+	    		$receipt = $dbtable->getReceiptByBranch($data);
+	    		
 	    		if($data['deposit']>0){
 		    		$array = array(
 		    				'group_id'=>$changeid,
 		    				'branch_id'			=>$data['branch_id'],
 		    				'client_id'			=>$data['member'],
-		    				'receipt_no'		=>$data['receipt'],
+		    				'receipt_no'		=>$receipt,
 		    				'date_pay'			=>$data['date_buy'],
 		    				'land_id'			=>$data['loan_number'],
 		    				'date_input'		=>date('Y-m-d'),
@@ -210,6 +210,7 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
     		}catch (Exception $e){
     			$db->rollBack();
     			$err =$e->getMessage();
+    			echo $err;exit();
     			Application_Model_DbTable_DbUserLog::writeMessageError($err);
     		}
     }

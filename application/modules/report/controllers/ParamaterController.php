@@ -233,7 +233,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
     		$search = array(
     		"adv_search"=>'',
     		"branch_id"=>-1,
-    		"category_id_expense","-1",
+    		"category_id_expense"=>-1,
     		'start_date'=> date('Y-m-d'),
     		'end_date'=>date('Y-m-d'),
     	);
@@ -278,8 +278,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$id = $this->getRequest()->getParam("id");
   	if(!empty($id)){
 	  	$this->view->termcodiction = $db->getTermCodiction();
-	  	$this->view->agreement = $db->getAgreementBySaleID($id);
-	  	$this->view->sale_schedule = $db->getScheduleBySaleID($id);
+	  	$rsagreement = $db->getAgreementBySaleID($id);
+	  	$this->view->agreement = $rsagreement;
+	  	$this->view->sale_schedule = $db->getScheduleBySaleID($id,$rsagreement['payment_id']);
 	  	$db_keycode = new Application_Model_DbTable_DbKeycode();
 	  	$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
   	}else{

@@ -3,6 +3,9 @@
 	echo $this->headTitle($tr->translate('ADD_BRANCH')); 
 ?>
 <?php  $frm = $this->frm_term;?>
+<script>
+dojo.require("dijit.form.Textarea");
+</script>
 <form action="<?php echo $this->url(array('module'=>'other','controller'=>'term','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	 <script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
@@ -11,7 +14,7 @@
 				return false;
 			}
 	</script>
-	<table cellspacing="10" style="margin: 0 auto; width:80%">
+	<table cellspacing="10" style="margin: 0 auto; width:100%">
 		<tr>
 			<td>
 				<fieldset>
@@ -20,33 +23,21 @@
 						<tr>
 							<td align="center" valign="top">
 								<table width="100%" cellspacing="10"  > 
-								<tr>
-										<td width="10%"><?php echo $tr->translate("CONDICTION_KH")?></td>
-										<td width="90%">
-											<textarea class="fullside" style=" width:100%; height:180px;" tabindex="" class="fullside" id="con_khmer" name="con_khmer"><?php echo $this->term['con_khmer'];?></textarea>
+									<tr>
+										<td style="white-space: nowrap;"><?php echo $tr->translate("CONDICTION_STEP")?></td>
+										<td><textarea class="fullside"  dojoType="dijit.form.Textarea" class="fullside" style="width:100%;min-height:60px;max-height:300px; font-size:14px; font-family:'Kh Battambang'"   tabindex="" class="fullside" id="con_step" name="con_step"><?php echo $this->term['con_step'];?></textarea>
 										</td>
 									</tr>
 									<tr>
-									
-										<td><?php echo $tr->translate("CONDICTION_EN")?></td>
+										<td width="12%" style="white-space: nowrap;"><?php echo $tr->translate("CONDICTION_INSTALLMENT")?></td>
+										<td width="90%"><textarea dojoType="dijit.form.Textarea" class="fullside" style="width:100%;min-height:60px;max-height:300px; font-size:14px; font-family:'Kh Battambang'" tabindex="" class="fullside" id="con_khmer" name="con_khmer"><?php echo $this->term['con_khmer'];?></textarea>
+										</td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("CONDICTION_PAYOFF")?></td>
 										<td>
-											<textarea class="fullside" style=" width:100%; height:180px;  tabindex="" class="fullside" id="con_english" name="con_english"><?php echo $this->term['con_english'];?></textarea>
+											<textarea class="fullside"  dojoType="dijit.form.Textarea" class="fullside" style="width:100%;min-height:60px;max-height:300px; font-size:14px; font-family:'Kh Battambang'"   tabindex="" class="fullside" id="con_payoff" name="con_payoff"><?php echo $this->term['con_payoff'];?></textarea>
 										</td>
-									</tr>
-									<tr>
-										<td><?php echo $tr->translate("PAYMENT_TYPE")?></td>
-										<td>
-											<select name="payment_type" id="payment_type" dojoType="dijit.form.FilteringSelect" class="fullside" >
-												<option value="0" > Select </option>
-												<option value="1" <?php if($this->term['payment_type']==1){echo 'selected="selected"';}?> >បង់រំលោះ</option>
-												<option value="2" <?php if($this->term['payment_type']==2){echo 'selected="selected"';}?> >បង់ដំណាក់កាល</option>
-												<option value="3" <?php if($this->term['payment_type']==3){echo 'selected="selected"';}?> >បង់ផ្តាច់</option>
-											</select>
-										</td>
-									</tr>
-									<tr>
-										<td><?php echo $tr->translate("STATUS")?></td>
-										<td><?php echo $frm->getElement("status");?></td>
 									</tr>
 									<tr>
 										<td colspan="6" align="center">

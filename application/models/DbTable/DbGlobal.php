@@ -304,9 +304,10 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	return $db->fetchOne($sql);
    }
    public function getReceiptByBranch($data=array('branch_id'=>1,'is_group'=>0)){
-   	$this->_name='ln_sale';
+   	$this->_name='ln_client_receipt_money';
    	$db = $this->getAdapter();
-   	$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." LIMIT 1 ";
+   	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 ";
+//    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." LIMIT 1 ";
    	$pre = $this->getPrefixCode($data['branch_id'])."-R";
    	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+1;
@@ -477,6 +478,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`price_before`    AS `price_before`,
 		  `s`.`price_sold`      AS `price_sold`,
 		  `s`.`discount_amount` AS `discount_amount`,
+		  s.discount_percent,
 		  `s`.`admin_fee`       AS `admin_fee`,
 		  `s`.`other_fee`       AS `other_fee`,
 		  `s`.`paid_amount`     AS `paid_amount`,

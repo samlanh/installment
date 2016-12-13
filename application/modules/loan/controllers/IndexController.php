@@ -29,7 +29,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","COMUNE_NAME_EN","PROPERTY_NAME","STREET","ប្រភេទបង់","LOAN_AMOUNT","DISCOUNT","OTHER_FEE","PAID","BALANCE","DATE_BUY",
+			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_NAME","STREET","ប្រភេទបង់","LOAN_AMOUNT","DISCOUNT","OTHER_FEE","PAID","BALANCE","DATE_BUY",
 				"STATUS");
 			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('name_kh'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
@@ -104,15 +104,16 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$rs = array();
 		if($row['payment_id']==6 OR $row['payment_id']==4){
 			$rs = $db->getSaleScheduleById($id,$row['payment_id']);
-			
 		}
-		
 		$this->view->rs = $rs;
 		$frm = new Loan_Form_FrmLoan();
 		$frm_loan=$frm->FrmAddLoan($row);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
 		$this->view->datarow = $row;
+		$this->view->amount_price = $row['balance']+$row['paid_amount']-$row['other_fee'];
+		//echo $row['balance']+$row['paid_amount']-$row['other_fee'];
+		//echo $row['price_sold']-($row['price_sold']*$row['discount_percent'])-$row['discount_amount'];
 	
 		$db = new Application_Model_DbTable_DbGlobal();
 		$this->view->client_code=array();//$dataclient;
@@ -144,7 +145,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		if(empty($id)){
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOT_FUND","/loan/index/index");
 		}
-		$db = new Loan_Model_DbTable_DbLoanIL();
+		$db = new Loan_Model_DbTable_DbLandpayment();
 		$row = $db->getLoanviewById($id);
 		$this->view->tran_rs = $row;
 	}

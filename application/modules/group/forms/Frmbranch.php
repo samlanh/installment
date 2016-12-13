@@ -97,22 +97,19 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 		));
 		$sc_project_manager_nameen = new Zend_Dojo_Form_Element_ValidationTextBox('sc_project_manager_nameen');
 		$sc_project_manager_nameen->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'required'=>true,
 		));
-		$sc_project_manager_nation_id = new Zend_Dojo_Form_Element_ValidationTextBox('sc_project_manager_nation_id');
+		$sc_project_manager_nation_id = new Zend_Dojo_Form_Element_TextBox('sc_project_manager_nation_id');
 		$sc_project_manager_nation_id->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'required'=>true,
 		));
 		
-		$sc_project_manager_nationality = new Zend_Dojo_Form_Element_ValidationTextBox('sc_project_manager_nationality');
+		$sc_project_manager_nationality = new Zend_Dojo_Form_Element_TextBox('sc_project_manager_nationality');
 		$sc_project_manager_nationality->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'required'=>true,
 		));
 		$sc_project_manager_nationality->setValue("ខ្មែរ");
 		$current_addres = new Zend_Dojo_Form_Element_Textarea('current_address');
@@ -120,7 +117,7 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
 // 				'readOnly'=>'readOnly',
-				'style'=>'width:100%;min-height:60px;'
+				'style'=>'width:100%;min-height:60px; font-size:18px; font-family:"Kh Battambang"'
 		));
 		$branch_nameen = new Zend_Dojo_Form_Element_FilteringSelect('project_type');
 		$branch_nameen->setAttribs(array(
@@ -235,6 +232,11 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 			$project_manager_namekh->setValue($data['p_manager_namekh']);
 			$project_manager_nation_id->setValue($data['p_manager_nation_id']);
 			$project_manager_nationality->setValue($data['p_manager_nationality']);
+			
+			$sc_project_manager_nameen->setValue($data['w_manager_namekh']);
+			$sc_project_manager_nationality->setValue($data['w_manager_nationality']);
+			$sc_project_manager_nation_id->setValue($data['w_manager_nation_id']);
+			
 		}
 		
 		$this->addElements(array($prefix_code,$_btn_search,$_title,$_status,$br_id,$branch_namekh,

@@ -256,20 +256,33 @@ public function init()
 				'class'=>'fullside',
 				'required' =>'true',
 				'readonly'=>true,
-				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 		));
 		
 		$discount = new Zend_Dojo_Form_Element_NumberTextBox('discount');
 		$discount->setAttribs(array(
-				
-				'data-dojo-Type'=>'dijit.form.NumberTextBox',
-				'data-dojo-props'=>"regExp:'[0-9]{1,2}','required':true,
-				'name':'discount',
-				'onKeyup':'calculateDiscount();',
-				'class':'fullside',
-				'invalidMessage':'អាចបញ្ជូលពី 1 ដល់ 99'"			
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'onKeyup'=>'calculateDiscount();',
+				'class'=>'fullside50 fullside',
+				'placeHolder'=>'ជាតម្លៃ',
+				'invalidMessage'=>'អាចបញ្ជូលពី 1 ដល់ 99'		
 		));
-		$discount->setValue(0);
+// 		$discount->setValue(0);
+// 		$discount->pl("ភាគរយ");
+// 		$discount->setValue(0);
+		
+		$discount_percent = new Zend_Dojo_Form_Element_NumberTextBox('discount_percent');
+		$discount_percent->setAttribs(array(
+				'data-dojo-Type'=>'dijit.form.NumberTextBox',
+				'data-dojo-props'=>"regExp:'[0-9]{1,2}',
+				'name':'discount_percent',
+				'id':'discount_percent',
+				'onKeyup':'calculateDiscount();',
+				'class':'fullside fullside50',
+				'placeHolder':'ភាគរយ%',
+				'invalidMessage':'អាចបញ្ជូលពី 1 ដល់ 99'"
+		));
+		
 		
 // 		$_collect_term = new Zend_Dojo_Form_Element_FilteringSelect('collect_termtype');
 //  		$_collect_term->setAttribs(array(
@@ -417,6 +430,7 @@ public function init()
 			$_branch_id->setValue($data['branch_id']);
 			$receipt->setValue($data['receipt_no']);
 			$discount->setValue($data['discount_amount']);
+			$discount_percent->setValue($data['discount_percent']);
 			$_loan_code->setValue($data['sale_number']);
 			$schedule_opt->setValue($data['payment_id']);
 			$paid->setValue($data["paid_amount"]);
@@ -430,14 +444,15 @@ public function init()
 			$_dateline->setValue(date("d/m/Y",strtotime($data['end_line'])));
 			$_id->setValue($data['id']);
 			$_status->setValue($data['status']);
-// 			$_loan_type->setValue($data['land_id']);
+			$sold_price->setValue($data['price_sold']);
+// 			echo $data['price_sold'];
 			$note->setValue($data['note']);
 			$commission->setValue($data['comission']);
 			$staff_id->setValue($data['staff_id']);
 			
 			
 		}
-		$this->addElements(array($cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

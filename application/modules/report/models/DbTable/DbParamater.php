@@ -176,16 +176,22 @@ function getAllBranch($search=null){
     		$from_date =(empty($search['from_date_search']))? '1': "c.`create_date` >= '".$search['from_date_search']." 00:00:00'";
     		$to_date = (empty($search['to_date_search']))? '1': "c.`create_date` <= '".$search['to_date_search']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
-    		$sql='SELECT c.`id`,
+    		$sql='SELECT 
+    		    c.`id`,
+    		    (SELECT project_name FROM `ln_project` WHERE br_id=c.`branch_id` LIMIT 1) AS `project_name`,
+    		    c.paid_amount,c.installment_paid,c.reason,c.`create_date`,
 				s.`sale_number`,
+				s.price_sold,s.other_fee,
 				clie.`client_number`,
-				CONCAT(clie.`name_kh`," ",clie.`name_en`) AS client_name,
-				p.`project_name`,pro.`land_code`,c.`create_date`,
-				(SELECT pt.`type_nameen` FROM `ln_properties_type` AS pt WHERE pt.`id` = pro.`property_type`) AS type_name,
+				(clie.`name_kh`) AS client_name,
+				pro.`land_code`,
+				(SELECT pt.`type_nameen` FROM `ln_properties_type` AS pt WHERE pt.`id` = pro.`property_type` LIMIT 1) AS type_name,
 				pro.`property_type`,pro.`land_address`,pro.`street`
-				FROM `ln_sale_cancel` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
+				FROM `ln_sale_cancel` AS c , 
+				`ln_sale` AS s, 
+				`ln_properties` AS pro,
 				`ln_client` AS clie
-				WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = c.`property_id` AND
+				WHERE s.`id` = c.`sale_id` AND pro.`id` = c.`property_id` AND
 				clie.`client_id` = s.`client_id`';
     		$order = " ORDER BY c.`branch_id` DESC";
     		if($search['branch_id_search']>-1){
@@ -350,9 +356,12 @@ function getAllBranch($search=null){
     		$sql="SELECT * FROM `v_agreement` WHERE id = ".$id;
     		return $db->fetchRow($sql);
     	}
-    	function getScheduleBySaleID($id=null){
+    	function getScheduleBySaleID($id=null,$payment_id){
     		$db = $this->getAdapter();
     		$sql=" SELECT * FROM `ln_saleschedule` AS sc WHERE sc.`sale_id`= ".$id;
+    		if($payment_id==4){
+    			$sql.=" AND sc.is_installment=1 ";
+    		}
     		$order = ' ORDER BY sc.`date_payment` ASC';
     		return $db->fetchAll($sql.$order);
     	}

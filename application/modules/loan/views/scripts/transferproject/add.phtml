@@ -5,6 +5,9 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 ?>
+<style>
+.fullside50{ width:48%;}
+</style>
 <div class="overlay">
 	<div class="overlay-load">
 		<div class="overlay-msg">
@@ -51,17 +54,18 @@
 					<legend><strong><?php echo $tr->translate("INFO_INDILOAN")?></strong></legend>
 					<table cellspacing="10"  width="100%" style="margin-top: -10px;">
 						<tr>
-							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
-							<td><?php echo $frm->getElement('branch_id');?></td>
+							<td width="13%"><?php echo $tr->translate("BRANCH_NAME")?></td>
+							<td width="25%"><?php echo $frm->getElement('branch_id');?></td>
 							<td><?php echo $tr->translate("LOAN_NO")?></td>
 							<td><input id='loan_number' /></td>
 							<td><?php echo $tr->translate("CUSTOMER_CODE")?></td>
-							<td><input id="customer_code" /></td>
+							<td><input id="customer_code" /><input type="hidden" name="identity" id="identity"  value="" >
+							<input type="hidden" dojoType="dijit.form.TextBox" name="total_installamount" id="total_installamount"  value="" ></td>
 							</tr>
 						<tr>
 							<td><?php echo $tr->translate("DATE_BUY")?></td>
 							<td><?php echo $frm->getElement('date_buy');?></td>
-							<td><?php echo $tr->translate("RECEIPT_NO")?></td>
+							<td style="white-space: nowrap;"><?php echo $tr->translate("RECEIPT_NO")?></td>
 							<td><?php echo $frm->getElement('receipt');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 							<td><input id="member" /> <?php //echo $frm->getElement('member');?></td>
@@ -73,7 +77,7 @@
 							<td><?php echo $tr->translate("LAND_CODE")?></td>
 							<td><input id="land_code" /><?php //echo $frm->getElement('');?></td>
 							<td><?php echo $tr->translate("DESCRIPTION")?></td>
-							<td style="height: 50px; border:1px solid #aac4e6; widht:100%;" colspan="4"><label id="land_information"></label><?php //echo $tr->translate("Address")?></td>
+							<td style="height: 50px; border:1px solid #aac4e6; widht:100%; font-size: 13px; color:blue;padding:5px;" colspan="4"><label id="land_information"></label><?php //echo $tr->translate("Address")?></td>
 						</tr>
 						<tr>
 						    <td><?php echo $tr->translate("TOTAL_SOLD")?></td>
@@ -107,7 +111,7 @@
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("Discount")?></td>
-							<td><?php echo $frm->getElement('discount');?></td>
+							<td><?php echo $frm->getElement('discount_percent');?><?php echo $frm->getElement('discount');?></td>
 							<td><?php echo $tr->translate("TOTAL_PAYMENT")?></td>
 							<td><?php echo $frm->getElement('sold_price');?></td>
 							<td><?php echo $tr->translate("OTHER_FEE")?></td>
@@ -122,7 +126,7 @@
 							<td><?php echo $frm->getElement('balance');?></td>
 						</tr>
 						<tr>
-						    <td><lable id='lbl_period'><?php echo $tr->translate("TERM_BORROW")?></lable>(Months)</td>
+						    <td><lable id='lbl_period'><?php echo $tr->translate("TERM_BORROW")?></lable><?php echo $tr->translate("MONTH")?></td>
 							<td><?php echo $frm->getElement('period');?></td>
 							<td><?php echo $tr->translate("INTEREST_RATE")?></td>
 							<td><?php echo $frm->getElement('interest_rate');?></td>
@@ -143,6 +147,13 @@
 							
 							<td><?php echo $tr->translate("NOTE")?></td>
 							<td><?php echo $frm->getElement('note')?></td>
+						</tr>
+						<tr style="max-height: 300px;">
+								<td colspan="6">
+									<div  id="showrecord"></div>
+									<input type="button" label="<?php echo $tr->translate('ADD_INSTALLMENT');?>" dojoType="dijit.form.Button" 
+								 		iconClass="dijitIconEditProperty" onclick="addRow();" />
+								</td>
 						</tr>
 					</table>
 				</fieldset>
@@ -581,11 +592,8 @@ function getLaonPayment(){
 }
 
 function setBranchID(){
-	
-	dijit.byId('to_branch_id').attr('value',dijit.byId('branch_id').get('value'));
-	
+	dijit.byId('to_branch_id').attr('value',dijit.byId('branch_id').get('value'));	
 }
-
 function checkScheduleOption(){
 	dijit.byId('first_payment').set("readOnly",false);
 	dijit.byId('period').set("readOnly",false);
@@ -596,38 +604,33 @@ function checkScheduleOption(){
 
 	amount_principal = dijit.byId('balance').get('value');	
 	debt_amount = dijit.byId('period').get('value');
+	dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TERM_BORROW")?>";
+
+	dojo.query("#table_row").append('');
+	$('#identity').val('');
+	dojo.query("#showrecord").append('');
+	title=0;
+	no=0;
 	
 	if(method_id==4){
-		dijit.byId('fixed_payment').set('readOnly',false);
-		dojo.byId('lbl_payment').innerHTML="<?php echo $tr->translate("AMOUNT_GRAICE_PARIOD")?>";
-		debt_term=30;
-		collect_term = 1;//dijit.byId('collect_termtype').get('value');
-		collect_amount = 1;//dijit.byId('amount_collect').get('value');
-		collect_term=30;
-		
-		term = (debt_term*debt_amount)/(collect_term*collect_amount);
-		
-		interest_rate=dijit.byId('interest_rate').get('value')/12/(100);//(100/30day)
-	
-		top_pow = Math.pow((1+interest_rate),term);
-		bellow = Math.pow((1+interest_rate),(term))-1;
-		
-		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
-		amount_payment = amount_payment.toFixed(2);
-		dijit.byId('fixed_payment').attr('value',amount_payment);
-	}else {
-		dijit.byId('fixed_payment').attr('value',0);
-		dijit.byId('fixed_payment').set("readOnly",true);
+		calCulateFixedPeriod();		
+		}else {
+			dijit.byId('fixed_payment').attr('value',0);
+			dijit.byId('fixed_payment').set("readOnly",true);
 		if(method_id==1){//booking
+			dijit.byId('date_line').attr('value','<?php echo date("Y-m-d");?>');
 			dijit.byId('release_date').set("readOnly",true);
 			dijit.byId('first_payment').set("readOnly",true);
 			dijit.byId('date_line').set("readOnly",false);
 			dijit.byId('period').set("readOnly",true);
+			dijit.byId('period').attr("value",0);
+			dijit.byId('interest_rate').attr("value",0);
 			dijit.byId('interest_rate').set("readOnly",true);
 		}else if(method_id==2){//payoff
 			dijit.byId('release_date').set("readOnly",true);
 			dijit.byId('first_payment').set("readOnly",true);
 			dijit.byId('interest_rate').set("readOnly",true);
+			dijit.byId('interest_rate').attr("value",0);
 			dijit.byId('period').set("readOnly",true);
 			amount_principal = dijit.byId("sold_price").get("value");
 			dijit.byId('deposit').attr("value",amount_principal);
@@ -635,36 +638,87 @@ function checkScheduleOption(){
 		}else if(method_id==3){//times
 			dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TOTAL_INSTALLMENT")?>";
 			dojo.byId('lbl_release').innerHTML="<?php echo $tr->translate("START_DATE")?>";
+			if(isNaN(amount_principal)){amount_principal=0;}if(isNaN(debt_amount)){debt_amount=0;}
 			total_collect = amount_principal/debt_amount;
 			total_collect = total_collect.toFixed(2);
-			dijit.byId('fixed_payment').attr("value",total_collect);
-			dijit.byId('interest_rate').attr("value",1.5);
-			dijit.byId('interest_rate').set("readOnly",true);
+			if(debt_amount!=0){
+				dijit.byId('fixed_payment').attr("value",total_collect);
+			}
+			if(dijit.byId('interest_rate').get('value')==0){
+				dijit.byId('interest_rate').attr("value",0);}
+			dijit.byId('interest_rate').set("readOnly",false);
+			
 		}else if(method_id==5){//times
 			dijit.byId('release_date').set("readOnly",true);
 			dijit.byId('first_payment').set("readOnly",true);
+			if(dijit.byId('interest_rate').get('value')==0 ){
+				dijit.byId('interest_rate').attr("value",0);
+			}
 			dijit.byId('interest_rate').set("readOnly",true);
 			dijit.byId('period').set("readOnly",true);
 		}
+		else if(method_id==6){//times
+			
+			if(dijit.byId('period').get('value')==12){
+				dijit.byId('period').attr('value',12);
+			}
+			$('#identity').val('');
+			
+			dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TOTAL_INSTALLMENT")?>";
+			dojo.byId('lbl_release').innerHTML="<?php echo $tr->translate("START_DATE")?>";
+			if(isNaN(amount_principal)){amount_principal=0;}if(isNaN(debt_amount)){debt_amount=0;}
+			
+			total_collect = amount_principal/debt_amount;
+			total_collect = total_collect.toFixed(2);
+			if(isNaN(total_collect)){
+				total_collect=0;
+			}
+			dijit.byId('fixed_payment').attr("value",total_collect);
+			if(dijit.byId('interest_rate').get('value')==0){
+			dijit.byId('interest_rate').attr("value",0);}
+			dijit.byId('interest_rate').set("readOnly",false);
+		}
 	}
 }
+function calCulateFixedPeriod(){
+	amount_principal = dijit.byId('balance').get('value')-dijit.byId('total_installamount').get('value');
+	dijit.byId('fixed_payment').set('readOnly',false);
+	dojo.byId('lbl_payment').innerHTML="<?php echo $tr->translate("AMOUNT_GRAICE_PARIOD")?>";
+	debt_term=30;
+	collect_term = 1;
+	collect_amount = 1;
+	collect_term=30;
+	debt_amount = dijit.byId('period').get('value');
+	
+	term = (debt_term*debt_amount)/(collect_term*collect_amount);
+	interest_rate=dijit.byId('interest_rate').get('value')/12/(100);//(100/30day)
+
+	top_pow = Math.pow((1+interest_rate),term);
+	bellow = Math.pow((1+interest_rate),(term))-1;
+	
+	amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
+	amount_payment = amount_payment.toFixed(2);
+	if(isNaN(amount_payment)){amount_payment=0;
+	}
+	dijit.byId('fixed_payment').attr('value',amount_payment);
+}
 function calculateDiscount(){
-	
-	total_sold = dijit.byId('to_total_sold').get('value');
-	paid_before = dijit.byId('paid_before').get('value');
-	
+	total_sold = dijit.byId('total_sold').get('value');
 	discount = dijit.byId('discount').get('value');
+	discount_percent = dijit.byId('discount_percent').get('value');
 	other_fee = dijit.byId('other_fee').get('value');
-	
 	if(isNaN(other_fee)){
 		other_fee=0;
 	}if(isNaN(discount)){
 		discount=0;
 	}
-	
-	total_sold = total_sold-paid_before-discount+other_fee;
+	if(isNaN(discount_percent)){
+		discount_percent=0;
+	}
+	discount_percent = total_sold*discount_percent/100;
+	paid_before = dijit.byId('paid_before').get('value');
+	total_sold = (total_sold-discount_percent-discount+other_fee)-paid_before;
 	dijit.byId('sold_price').attr('value',total_sold);
-	
 	Balance();
 }
 function Balance(){
@@ -675,13 +729,13 @@ function Balance(){
 	}
 	if(deposit>price){
 		alert("Deposit can not biger than price ");
-		dijit.byId('deposit').focus();
-		dijit.byId('deposit').attr('value',price)
-		dijit.byId('balance').attr('value',0)
+		//dijit.byId('deposit').focus();
+		//dijit.byId('deposit').attr('value',price)
+		//dijit.byId('balance').attr('value',0)
 	}else{
 	   dijit.byId('balance').attr('value',price-deposit);
 	   checkScheduleOption();
-	}
+	   }
 }
 function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');
@@ -815,9 +869,9 @@ function getReceiptByBranch(){
     		deposit=0;
     	}
     	if(deposit>price){
-    		alert("Deposit can not biger than price ");
-    		dijit.byId('deposit').focus();
-    		dijit.byId('deposit').attr('value',price)
+    		//alert("Deposit can not biger than price ");
+    		//dijit.byId('deposit').focus();
+    		//dijit.byId('deposit').attr('value',price)
     	}
         dijit.byId('balance').attr('value',price-deposit);
         checkScheduleOption();
@@ -1079,7 +1133,7 @@ function getlandinfo(){
 			dijit.byId('balance_before').set('readOnly',true);
 
 			dijit.byId('total_sold').attr('value',data.price);
-			dojo.byId('land_information').innerHTML ="លេខសម្គាល់ "+data.land_code+", ឈ្មោះ  "+data.land_address+", ប្រភេទ  "+data.property_type+", ទំហំ "+data.land_size+", បណ្តោយ "+data.height+",ទទឹង  "+data.width;
+			dojo.byId('land_information').innerHTML ="លេខសម្គាល់ "+data.land_code+", លេខផ្ទះ/ឡូតិ៏  "+data.land_address+", លេខផ្លូវ  "+data.street+", ប្រភេទ  "+data.property_type+", ទំហំ "+data.land_size+" ម៉ែត្រការ៉េ, បណ្តោយ "+data.height+" ម៉ែត្រ, ទទឹង  "+data.width+" ម៉ែត្រ";
 			paid_before = dijit.byId('paid_before').get('value');
 			dijit.byId('balance_before').attr('value',data.price-paid_before);
 			
@@ -1191,9 +1245,193 @@ function addNewVillage(){
 }
 </script>
 <script>
+function checkFirstRecord(){
+	var rowId = $('#identity').val();
+	if(rowId!=''){
+		var rowIDArray = rowId.split(',');
+		for(var n = 0; n < rowIDArray.length; n++) {
+			total_amountpayment = (dijit.byId('total_payment'+rowIDArray[n]).get('value'));
+			if(n==0){ 
+				paid = dijit.byId('deposit').get('value');
+				if(total_amountpayment<paid){alert("សូមបញ្ជូលប្រាក់ត្រូវបង់ ធំជាងប្រាក់ដែលទទួលបាន! ");dijit.byId('percent'+rowIDArray[n]).focus();return false;}
+			}
+		}
+  }
+}
+col=0;no=0;title=0;temp='';
+function addRow(){
+	result = checkFirstRecord();
+	if(result==false){return false;}
+	payment_method = dijit.byId('schedule_opt').get('value');
+	if(payment_method==4){addInstallment();}
+	if(payment_method!=6){return false;}
+	period = dijit.byId('period').get('value');
+	if(period==0){alert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
+
+	no=0;title=0;temp='';$('#identity').val('');
+	dojo.byId("showrecord").innerHTML = '';
+	tmp='<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
+	tmp+='<tr id="head-title" class="head-td" style="background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+	tmp+='</table>';
+	dojo.query("#showrecord").append(tmp);
+	
+	for(i=1;i<=period;i++){
+		if(payment_method==6){
+			col++;no++;
+			template='';
+			if(title!=1){    
+				temp+='<th><?php echo $tr->translate("DEL");?></th>';
+				temp+='<th><?php echo $tr->translate("NUM");?></th>';
+				temp+='<th><?php echo $tr->translate("DATE_PAYMENT");?></th>';
+				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
+				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("OS_AMOUNT");?></th>';
+				temp+='<th><?php echo $tr->translate("REMARK");?></th>';
+				dojo.query("#head-title").append(temp);
+				title=1;
+			}
+			
+			prev_date = dijit.byId("first_payment").get('value');
+			amount_date = 1;
+			var a = new Date(prev_date);
+				mm = a.getMonth()+amount_date+i-1;
+			var dd = a.getDate();
+			 if(dd<10){
+				 dd = "0"+dd;
+			}
+			 if(mm<10){
+				 mm = "0"+mm;
+			}
+			var y = a.getFullYear();
+			var epx_date = y + '-'+ mm + '-'+dd ;
+				template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+				template+='<td width="2%" align="center">'+no+'</td>';
+				template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
+				template+='<td><input type="text" onkeyup="calCulateAmount('+col+')" class="fullside" required="true" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='+'regExp:"[0-9]{1,2}"'+' id="percent'+col+'" name="percent'+col+'" /></td>';			
+				template+='<td><input readonly class="fullside" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
+				template+='<td <input class="fullside" type="text"  name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"/><label id="subsub"></label></td>';
+			tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
+			tmp+="</tr>";
+			dojo.query("#table_row").append(tmp);
+		
+			if($("#identity").val()!="") {
+				var identity = $("#identity").val();
+				$("#identity").val(identity+','+col);
+			} else {$("#identity").val(col);}
+			dojo.html.set(dojo.byId("row"+col),template , {
+			     parseContent: true,
+			});
+		}
+	}
+}
+function addInstallment(){
+	result = checkFirstRecord();
+	if(result==false){return false;}
+	payment_method = dijit.byId('schedule_opt').get('value');
+	
+	period = dijit.byId('period').get('value');
+	if(period==0){alert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
+	temp='';
+
+	result = checkFirstRecord();
+	if(result==false){return false;}
+	
+		if(payment_method==4){
+			col++;no++;
+			template='';
+			if(title!=1){    
+				tmp='<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
+				tmp+='<tr id="head-title" class="head-td" style="background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+				tmp+='</table>';
+				dojo.query("#showrecord").append(tmp);
+				
+				temp+='<th><?php echo $tr->translate("DEL");?></th>';
+				temp+='<th><?php echo $tr->translate("NUM");?></th>';
+				temp+='<th><?php echo $tr->translate("DATE_PAYMENT");?></th>';
+				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
+				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("OS_AMOUNT");?></th>';
+				temp+='<th><?php echo $tr->translate("REMARK");?></th>';
+				dojo.query("#head-title").append(temp);
+				title=1;
+			}
+			prev_date = dijit.byId("first_payment").get('value');
+			amount_date = 1;
+			var a = new Date(prev_date);
+				mm = a.getMonth()+amount_date+col-1;
+			var dd = a.getDate();
+			 if(dd<10){
+				 dd = "0"+dd;
+			}
+			 if(mm<10){
+				 mm = "0"+mm;
+			}
+			var y = a.getFullYear();
+			var epx_date = y + '-'+ mm + '-'+dd ;
+				template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+				template+='<td width="2%" align="center">'+no+'</td>';
+				template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
+				template+='<td><input onkeyup="calCulateAmount('+col+')" class="fullside" type="text" required="true" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='+'regExp:"[0-9]{1,2}"'+' id="percent'+col+'" name="percent'+col+'" /></td>';			
+				template+='<td><input readonly class="fullside" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
+				template+='<td <input class="fullside" type="text"  name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"/><label id="subsub"></label></td>';
+			tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
+			tmp+="</tr>";
+			dojo.query("#table_row").append(tmp);
+		
+			if($("#identity").val()!="") {
+				var identity = $("#identity").val();
+				$("#identity").val(identity+','+col);
+			} else {$("#identity").val(col);}
+			dojo.html.set(dojo.byId("row"+col),template , {
+			     parseContent: true,
+			});
+		}
+}
+
+function calCulateAmount(index){
+    percent = dijit.byId('percent'+index).get('value');
+    //balance = dijit.byId('balance').get('value');
+    balance = dijit.byId('sold_price').get('value');
+    amount_payment = balance*percent/100;
+    dijit.byId('total_payment'+index).attr('value',amount_payment);
+    calCulateSchedulePayment();
+}
+function calCulateSchedulePayment(){
+	var total_amount=0;
+	var rowId = $('#identity').val();
+	var rowIDArray = rowId.split(',');
+	for(var n = 0; n < rowIDArray.length; n++) {
+		total_amountpayment = (dijit.byId('total_payment'+rowIDArray[n]).get('value'));
+		if(n==0){ 
+			//paid = dijit.byId('deposit').get('value');
+			//if(total_amountpayment<paid){alert("សូមបញ្ជូលភាគរយត្រូវបង់ ធំជាងប្រាក់ដែលទទួលបាន! ");dijit.byId('percent'+rowIDArray[n]).focus();return false;}
+		}
+		if(isNaN(total_amountpayment)){
+			total_amountpayment = 0;
+		}
+		total_amount = total_amount+ total_amountpayment;
+	}
+	
+	dijit.byId('total_installamount').attr('value',total_amount);
+	calCulateFixedPeriod();
+	//dijit.byId('total_amount').attr('value',netTotal_d);
+	
+}
+function deleteRecord(index) {
+	var identity = $('#identity').val();
+	var arrays = identity.split(',');
+	for(var i=0;i<arrays.length;i++) {
+	if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity').val(strings);
+	dojo.query("#row"+index).remove();
+	if(arrays.length==0){ dijit.byId('total_installamount').attr('value','');}
+	calCulateSchedulePayment();
+}
+
 function setFirstPaymentAndDateLine(pay_term,date_release,amount_date){
 	var a = new Date(date_release);
-		mm = a.getMonth()+amount_date+1;
+	mm = a.getMonth()+amount_date+1;
+   
 	 var dd = a.getDate();
 	 if(dd<10){
 		 dd = "0"+dd;
@@ -1201,11 +1439,10 @@ function setFirstPaymentAndDateLine(pay_term,date_release,amount_date){
 	 if(mm<10){
 		 mm = "0"+mm;
 	}
-	
-	var y = a.getFullYear();
+	var y = a.getFullYear()+1;
+
 	var epx_date = y + '-'+ mm + '-'+dd ;
-	
-	dijit.byId('date_line').attr('value',epx_date);
+	calCulateEndDate();
 	calCulateFirstPayment();
 }
 function calCulateEndDate(){
@@ -1214,7 +1451,9 @@ function calCulateEndDate(){
 	if(isNaN(amount_date)){
 	}else{
 		var a = new Date(release_date);
-		mm = a.getMonth()+amount_date+1;
+		month = a.getMonth()+amount_date;
+		mm = month%12;
+		year = parseInt(month/12);
 		 var dd = a.getDate();
 		 if(dd<10){
 			 dd = "0"+dd;
@@ -1222,7 +1461,7 @@ function calCulateEndDate(){
 		 if(mm<10){
 			 mm = "0"+mm;
 		}
-		var y = a.getFullYear();
+		var y = a.getFullYear()+year;
 		var epx_date = y + '-'+ mm + '-'+dd ;
 		dijit.byId('date_line').attr('value',epx_date);	
     }

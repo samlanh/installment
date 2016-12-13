@@ -46,14 +46,14 @@ dojo.require("dijit.Dialog");
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("PRICE_SOLD")?></td>
-							<td><?php echo $frm->getElement('price_sold');?></td>
+							<td width="25%"><?php echo $frm->getElement('price_sold');?></td>
 							<td><?php echo $tr->translate("DISCOUNT")?></td>
 							<td><?php echo $frm->getElement('discount');?></td>
 							<td><?php echo $tr->translate("OTHER_FEE")?></td>
 							<td><?php echo $frm->getElement('other_fee');?></td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("PAYMENT_TERM")?></td>
+							<td style="white-space: nowrap;"><?php echo $tr->translate("PAYMENT_TERM")?></td>
 							<td><?php  echo $frm->getElement('schedule_opt');?></td>	
 							<td><?php echo $tr->translate("DURATION")?></td>
 							<td><?php echo $frm->getElement('period');?></td>
@@ -69,7 +69,7 @@ dojo.require("dijit.Dialog");
 							<td><?php  echo $frm->getElement('commision');?></td>	
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("INSTALLMENT_PAID")?></td>
+							<td style="white-space: nowrap;"><?php echo $tr->translate("INSTALLMENT_PAID")?></td>
 							<td><?php  echo $frm->getElement('installment_paid');?></td>	
 							<td><?php echo $tr->translate("PAID_AMOUNT")?></td>
 							<td><?php  echo $frm->getElement('paid_amount');?></td>	
@@ -90,8 +90,6 @@ dojo.require("dijit.Dialog");
 				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
 				 				<input type="submit" name="save_close"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('SAVECLOSE')?>" id="submitBtn" dojoType="dijit.form.Button"
 				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
-				 					
-				 					
 							</td>
 						</tr>
 					</table>
@@ -211,7 +209,7 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 				if(isNaN(total_principal) || total_principal==null){total_principal=0;}
 			    paid_amount = data.paid_amount;
 				if(isNaN(paid_amount) || paid_amount==null){paid_amount=0;}
-				total_principal = parseFloat(paid_amount)+parseFloat(total_principal);
+				total_principal = parseFloat(total_principal);
 				
 				//dijit.byId('paid_before').attr('value',total_principal);
 				
@@ -228,7 +226,7 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 				dijit.byId('sold_date').attr('value',data.create_date);
 				dijit.byId('commision').attr('value',data.comission);
 				
-				dojo.byId('cus_information').innerHTML ="លេខកូដអតិថិជន  : "+data.client_number+", ឈ្មោះជាភាសាខ្មែរ : "+data.name_kh+", ឈ្មោះជាភាសាអង់គ្លេស  : "+data.name_en;
+				dojo.byId('cus_information').innerHTML ="លេខកូដអតិថិជន  : "+data.client_number+", ឈ្មោះជាភាសាខ្មែរ : "+data.name_kh;
 				dojo.byId('land_information').innerHTML ="លេខសម្គាល់  : "+data.land_code+", ឈ្មោះ  :  "+data.land_address+", ផ្លូវ : "+data.street+", ប្រភេទ   : "+data.pro_type+", ទំហំ  : "+data.land_size+", បណ្តោយ :  "+data.height+",ទទឹង  :  "+data.width;
 				dojo.byId('sale_note').innerHTML = data.sale_note;
 			},
