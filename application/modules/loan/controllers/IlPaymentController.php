@@ -95,9 +95,11 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		$this->view->clientCode = $db->getAllClientCode();
 		
 		$session_user=new Zend_Session_Namespace('auth');
-		$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
-		$test = $this->view->loan_number = $db_global->getSaleNumberByBranch();
-		//print_r($test);
+		$this->view->user_name = $session_user->first_name .' '.$session_user->last_name;
+		$this->view->loan_number = $db_global->getSaleNumberByBranch();
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}	
 	
 	
@@ -110,19 +112,10 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 				
-			// 			print_r($_data);exit();
-				
-			//$identify = $_data["identity"];
 			try {
-// 				if($identify==""){
-// 					//Application_Form_FrmMessage::Sucessfull("Client no laon to pay!","/loan/ilpayment/");
-// 				}else {
 					$db->updateIlPayment($_data,$id);
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
-// 				}
 			}catch (Exception $e) {
-				//echo $e->getMessage();
-				//exit();
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
@@ -132,10 +125,8 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		$payment_il = $db->getIlPaymentByID($id);
 		$this->view->ilPaymentById= $payment_il;
 		
-		//print_r($payment_il);
 		$receipt_money_detail = $db->getAllReceiptMoneyDetail($id);
 		$this->view->receipt_money_detail= $receipt_money_detail;
-// 		print_r($receipt_money_detail);exit();
 		
 		$frm = new Loan_Form_FrmIlPayment();
 		$frm_loan=$frm->FrmAddIlPayment($payment_il);
@@ -158,11 +149,12 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		$this->view->clientCode = $db->getAllClientCode();
 		
 		$session_user=new Zend_Session_Namespace('auth');
-		$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
+		$this->view->user_name = $session_user->first_name .' '.$session_user->last_name;
 		$test = $this->view->loan_number = $db_global->getSaleNumberByBranch();
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
-	
-	
 	
 	function editoldAction()
 	{
@@ -410,7 +402,9 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
-			$row = $db->getIlPaymentNumber($data["branch_id"]);
+// 			$row = $db->getIlPaymentNumber($data["branch_id"]);
+			$db = new Application_Model_DbTable_DbGlobal();
+			$row = $db->getReceiptByBranch(array("branch_id"=>$data["branch_id"]));
 			print_r(Zend_Json::encode($row));
 			exit();
 		}

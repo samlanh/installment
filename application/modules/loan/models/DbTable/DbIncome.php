@@ -61,9 +61,9 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		
 		$sql=" SELECT id,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
-		(SELECT name_en FROM `ln_client` WHERE ln_client.client_id =ln_income.client_id LIMIT 1) AS client_name,
+		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_income.client_id LIMIT 1) AS client_name,
 		title, invoice,
-		(SELECT name_en FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
+		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
 		total_amount,description,date,status FROM ln_income ";
 		
 		if (!empty($search['adv_search'])){
@@ -135,11 +135,11 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	function getInvoiceNo($branch_id){
 		$db = $this->getAdapter();
 		
-		$prefix = $this->getPrefixCodeByBranch($branch_id);
+		$prefix ="";// $this->getPrefixCodeByBranch($branch_id);
 		
 		$sql = " select count(id) from ln_income where branch_id = $branch_id";
 		$amount = $db->fetchOne($sql);
-		$pre = '-Inc.';
+		$pre = 'inc1';
 		$result = $amount + 1;
 		$length = strlen((int)$result);
 		for($i = $length;$i < 3 ; $i++){

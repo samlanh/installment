@@ -26,8 +26,8 @@ class Group_CoController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","STAFF_CODE","NAME_KH","NAME_EN","NATIONAL_ID","ADDRESS","PHONE",
-					"EMAIL","DEGREE","DEPARTMENT","ANNUAL_LIVES","STATUS");
+			$collumns = array("BRANCH_NAME","STAFF_CODE","NAME_KH","SEX","NATIONAL_ID","ADDRESS","PHONE",
+					"EMAIL","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'co','action'=>'edit',
 			);

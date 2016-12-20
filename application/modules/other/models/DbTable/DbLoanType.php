@@ -48,7 +48,7 @@ class Other_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql=" SELECT v.id,v.name_en,v.name_kh,
     	(SELECT t.name FROM `ln_view_type` AS t WHERE t.id =v.type LIMIT 1) ,
-    	v.status FROM $this->_name AS v WHERE 1 name_en!='' ";
+    	v.status FROM $this->_name AS v WHERE 1 AND name_en!='' ";
     	if($type!=null){
     		$sql.=" AND type = $type";
     		

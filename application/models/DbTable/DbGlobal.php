@@ -308,13 +308,15 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	$db = $this->getAdapter();
    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 ";
 //    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." LIMIT 1 ";
-   	$pre = $this->getPrefixCode($data['branch_id'])."-R";
+//    	$pre = $this->getPrefixCode($data['branch_id'])."-R";
+   	$pre="N1";
    	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+1;
    	$acc_no= strlen((int)$acc_no+1);
    	for($i = $acc_no;$i<3;$i++){
    		$pre.='0';
    	}
+//    	return $pre.$new_acc_no;
    	return $pre.$new_acc_no;
    }
    public function getStaffNumberByBranch($branch_id){
@@ -1042,9 +1044,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db = $this->getAdapter();
   	$sql = " SELECT c.`client_id` AS id  ,c.client_number AS name
   	FROM `ln_client` AS c WHERE c.`name_kh`!='' AND c.client_number !='' AND c.status=1  " ;
-  	if($branch_id!=null){
-  		$sql.=" AND c.`branch_id`= $branch_id ";
-  	}
+//   	if($branch_id!=null){
+//   		$sql.=" AND c.`branch_id`= $branch_id ";
+//   	}
   	$sql.=" ORDER BY c.`client_id` DESC";
   	return $db->fetchAll($sql);
   }

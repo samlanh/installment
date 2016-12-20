@@ -5,38 +5,7 @@ class Report_Model_DbTable_DbLnClient extends Zend_Db_Table_Abstract
        protected  $db_name='ln_client';
 
     public function getAllLnClient($search = null){
-    	 $db = $this->getAdapter();
-    	 
-//     	 $db=$this->getAdapter();
-    	  
-//     	 $from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
-//     	 $to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
-//     	 $where = " AND ".$from_date." AND ".$to_date;
-    	  
-//     	 $sql = " SELECT * FROM v_getclientblacklist WHERE 1";
-//     	 if(!empty($search['adv_search'])){
-//     	 	$s_where = array();
-//     	 	$s_search = trim($search['adv_search']);
-//     	 	$s_where[] = "branch_name LIKE '%{$s_search}%'";
-//     	 	$s_where[] = "client_number LIKE '%{$s_search}%'";
-//     	 	$s_where[] = "client_name LIKE '%{$s_search}%'";
-//     	 	$s_where[] = "sex LIKE '%{$s_search}%'";
-//     	 	$s_where[] = " situation LIKE '%{$s_search}%'";
-//     	 	$s_where[] = " doc_name LIKE '%{$s_search}%'";
-//     	 	$s_where[] = " id_number LIKE '%{$s_search}%'";
-//     	 	$s_where[] = " street LIKE '%{$s_search}%'";
-//     	 	$s_where[] = " house LIKE '%{$s_search}%'";
-//     	 	$s_where[] = " village_name LIKE '%{$s_search}%'";
-//     	 	$s_where[] = " commune_name LIKE '%{$s_search}%'";
-//     	 	$s_where[] = " district_name LIKE '%{$s_search}%'";
-//     	 	$s_where[] = " province_name LIKE '%{$s_search}%'";
-//     	 	$where .=' AND ('.implode(' OR ',$s_where).')';
-//     	 }
-//     	 if(!empty($search['branch_id'])){
-//     	 	$where.= " AND branch_id = ".$search['branch_id'];
-//     	 }
-//     	 $order = " ORDER BY id DESC ";
-//     	 return $db->fetchAll($sql.$where.$order);
+    	  $db = $this->getAdapter();
 
     	 $from_date =(empty($search['start_date']))? '1': "create_date >= '".$search['start_date']." 00:00:00'";
     	 $to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 23:59:59'";
@@ -44,14 +13,11 @@ class Report_Model_DbTable_DbLnClient extends Zend_Db_Table_Abstract
           $sql=" SELECT * FROM v_getallclient WHERE 1";
           if(!empty($search['adv_search'])){
 			$s_where = array();
-			$s_search = $search['adv_search'];
+			$s_search = trim(addslashes($search['adv_search']));
 			$s_where[] = " branch_name LIKE '%{$s_search}%'";
 			$s_where[] = " client_number LIKE '%{$s_search}%'";
 			$s_where[] = " client_name LIKE '%{$s_search}%'";
-			$s_where[] = " situation LIKE '%{$s_search}%'";
 			$s_where[] = " doc_name LIKE '%{$s_search}%'";
-			$s_where[] = " id_number LIKE '%{$s_search}%'";
-			$s_where[] = " job LIKE '%{$s_search}%'";
 			
 			$s_where[] = " phone LIKE '%{$s_search}%'";
 			$s_where[] = " house LIKE '%{$s_search}%'";
@@ -61,7 +27,11 @@ class Report_Model_DbTable_DbLnClient extends Zend_Db_Table_Abstract
 			
 			$s_where[] = " pro_name LIKE '%{$s_search}%'";
 			$s_where[] = " joint_doc_type LIKE '%{$s_search}%'";
-			$s_where[] = " join_nation_id LIKE '%{$s_search}%'";
+			
+			$s_where[] = " hname_kh LIKE '%{$s_search}%'";
+			$s_where[] = " lphone LIKE '%{$s_search}%'";
+			$s_where[] = " joindoc_name LIKE '%{$s_search}%'";
+			$s_where[] = " rid_no LIKE '%{$s_search}%'";
 			
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 			}
@@ -84,7 +54,6 @@ class Report_Model_DbTable_DbLnClient extends Zend_Db_Table_Abstract
 				$where.=" AND branch_id= ".$search['branch_id'];
 			}
 			$order=" ORDER BY client_id DESC";
-// 			echo $sql.$where.$order;
 	          return $db->fetchAll($sql.$where.$order);
     } 
     public function getAllGroup(){

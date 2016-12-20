@@ -10,7 +10,7 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
     	 
     }
 	public function addCreditOfficer($_data){
-		$photoname = str_replace(" ", "_", $_data['name_en']) . '.jpg';
+		$photoname = str_replace(" ", "_", $_data['co_id']) . '.jpg';
 		$upload = new Zend_File_Transfer();
 		$upload->addFilter('Rename',
 				array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
@@ -31,35 +31,38 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 			$db = new Application_Model_DbTable_DbGlobal();
 			$staff_id = $db->getStaffNumberByBranch($_data['branch_id']);
 		}
+		
 		$_arr=array(
 				'branch_id'	  => $_data['branch_id'],
 				'co_code'	  => $staff_id,
 				'co_khname'	  => $_data['name_kh'],
-				'co_firstname'=> $_data['name_en'],
-				'co_lastname' => '',//$_data['last_name'],
-				'displayby'	  => $_data['display'],
-				'position_id' =>$_data['position'],
+				//'co_lastname' => '',//$_data['last_name'],
 				'sex'		  => $_data['co_sex'],
 				'national_id'	  => $_data['national_id'],
 				'address'	  => $_data['address'],
 				'pob'	      => $_data['pob'],
-				'degree'	      => $_data['degree'],
+// 				'degree'	      => $_data['degree'],
 				'tel'	  	  => $_data['tel'],
 				'email'	      => $_data['email'],
 				'create_date' => date("Y-m-d"),
 				'status'      => $_data['status'],
 				'user_id'	  => $this->getUserId(),
-				'basic_salary'=> $_data['basic_salary'],
-				'start_date'  => $_data['start_date'],
-				'end_date'	  => $_data['end_date'],
-				'contract_no' => $_data['contract_no'],
 				'note'		  => $_data['note'],
-				'shift'		  => $_data['shift'],
-				'workingtime' => $_data['workingtime'],
-				'annual_lives'=>$_data['annual_lives'],
+				//'contract_no' => $_data['contract_no'],
+				
+// 				'shift'		  => $_data['shift'],
+// 				'workingtime' => $_data['workingtime'],
+// 				'annual_lives'=>$_data['annual_lives'],
+//				'department_id'=>$_data['department_id'],
+//				'figer_print_id'=>$_data['figer_print_id'],
+// 				'basic_salary'=> $_data['basic_salary'],
+// 				'start_date'  => $_data['start_date'],
+// 				'end_date'	  => $_data['end_date'],
+// 				'co_firstname'=> $_data['name_en'],
+// 				'displayby'	  => $_data['display'],
+				'position_id' =>1,
 				'photo'=>$_data['photo'],
-				'department_id'=>$_data['department_id'],
-				'figer_print_id'=>$_data['figer_print_id'],
+
 		);
 		if(!empty($_data['id'])){
 			$where = 'co_id = '.$_data['id'];
@@ -100,10 +103,8 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql = "SELECT co_id,
 		(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
-		co_code,co_khname,CONCAT(co_firstname,co_lastname) AS co_engname,national_id,address,
-					tel,email,address,(SELECT name_kh FROM ln_view WHERE type=20 AND key_code=degree) AS degree,
-					(SELECT department_kh FROM ln_department WHERE id=department_id) AS department_id,
-					annual_lives,status FROM $this->_name WHERE 1";
+		co_code,co_khname,(select name_kh FROM `ln_view` WHERE type=11 and key_code =sex LIMIT 1) as gender,national_id,address,
+					tel,email,status FROM $this->_name WHERE 1";
 // 		(SELECT first_name FROM rms_users WHERE id=user_id) As user_name
 		$order=" ORDER BY co_id DESC";
 		$where = '';
@@ -111,26 +112,28 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 		if($search['status_search']>-1){
 			$where.= " AND status = ".$search['status_search'];
 		}
-		if(!empty($search['degree'])){
-			$where.=" AND degree = ".$search['degree'];
-		}
+// 		if(!empty($search['degree'])){
+// 			$where.=" AND degree = ".$search['degree'];
+// 		}
 		if(!empty($search['branch_id'])){
 			$where.=" AND branch_id = ".$search['branch_id'];
 		}
-		if(!empty($search['position'])){
-			$where.=" AND position_id = ".$search['position'];
-		}
+// 		if(!empty($search['position'])){
+// 			$where.=" AND position_id = ".$search['position'];
+// 		}
 		if(!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = ($search['adv_search']);
-			$s_where[] = "co_khname LIKE '%{$s_search}%'";
-			$s_where[] = "co_firstname LIKE '%{$s_search}%'";
-			$s_where[] = "co_lastname LIKE '%{$s_search}%'";
-			$s_where[]= "national_id LIKE '%{$s_search}%'";
-			$s_where[] = " tel LIKE '%{$s_search}%'";
-			$s_where[] = "email LIKE '%{$s_search}%'";
-			$s_where[] = "address LIKE '%{$s_search}%'";
-			$s_where[]="annual_lives LIKE '%{$s_search}%'";
+			$s_where[] = " co_khname LIKE '%{$s_search}%'";
+			$s_where[] = " co_firstname LIKE '%{$s_search}%'";
+			$s_where[] = " co_lastname LIKE '%{$s_search}%'";
+			$s_where[] = " co_code LIKE '%{$s_search}%'";
+			
+			$s_where[]= " national_id LIKE '%{$s_search}%'";
+			$s_where[] =" tel LIKE '%{$s_search}%'";
+			$s_where[] =" email LIKE '%{$s_search}%'";
+			$s_where[] =" address LIKE '%{$s_search}%'";
+// 			$s_where[]="annual_lives LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		return $db->fetchAll($sql.$where.$order);	

@@ -158,7 +158,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	}else $data = array('adv_search' => '');
   }
   function rptPropertiesAction(){ // by Vandy
-  	
   	if($this->getRequest()->isPost()){
   		$search = $this->getRequest()->getPost();
   	}else{

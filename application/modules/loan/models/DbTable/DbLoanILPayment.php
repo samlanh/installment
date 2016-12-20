@@ -1216,7 +1216,7 @@ public function addILPayment($data){
     	$db = $this->getAdapter();
     		if($data['type']==1){
 	    		$sql ="SELECT 
-						 (SELECT ln_properties.land_address  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_address,
+						 (SELECT CONCAT(ln_properties.land_address,',',ln_properties.street) AS land_address  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_address,
 						 (SELECT ln_properties.land_code  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_code,
 						  s.*,
 						  ss.*,

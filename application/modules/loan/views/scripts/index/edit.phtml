@@ -777,7 +777,7 @@ function checkScheduleOption(){
 	}
 }
 function calCulateFixedPeriod(){
-	amount_principal = dijit.byId('balance').get('value')-dijit.byId('total_installamount').get('value');
+	amount_principal = dijit.byId('sold_price').get('value')-dijit.byId('total_installamount').get('value');
 	dijit.byId('fixed_payment').set('readOnly',false);
 	dojo.byId('lbl_payment').innerHTML="<?php echo $tr->translate("AMOUNT_GRAICE_PARIOD")?>";
 	debt_term=30;
@@ -789,14 +789,18 @@ function calCulateFixedPeriod(){
 	term = (debt_term*debt_amount)/(collect_term*collect_amount);
 	interest_rate=dijit.byId('interest_rate').get('value')/12/(100);//(100/30day)
 
-	top_pow = Math.pow((1+interest_rate),term);
-	bellow = Math.pow((1+interest_rate),(term))-1;
-	
-	amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
-	amount_payment = amount_payment.toFixed(2);
-	if(debt_amount!=0){
-		dijit.byId('fixed_payment').attr('value',amount_payment);
+	if(interest_rate==0){
+		amount_payment = amount_principal/debt_amount;
+		}else{
+		top_pow = Math.pow((1+interest_rate),term);
+		bellow = Math.pow((1+interest_rate),(term))-1;
+		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
+		
+		amount_payment = amount_payment.toFixed(2);
+		if(isNaN(amount_payment)){amount_payment=0;
+		}
 	}
+	dijit.byId('fixed_payment').attr('value',amount_payment);
 }
 function calculateDiscount(){
 	total_sold = dijit.byId('total_sold').get('value');
