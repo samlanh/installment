@@ -72,6 +72,9 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
         
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
+        
+        $key = new Application_Model_DbTable_DbKeycode();
+        $this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}	
 	
 	public function editAction(){

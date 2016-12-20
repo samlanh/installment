@@ -83,6 +83,9 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
         
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}	
 // 	public function addloanAction(){
 // 		if($this->getRequest()->isPost()){

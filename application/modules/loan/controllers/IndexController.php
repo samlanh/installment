@@ -79,6 +79,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 	    $db = new Application_Model_DbTable_DbGlobal();
 	    $this->view->client_doc_type = $db->getclientdtype();
 	    
+	    $key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}	
 	public function editAction(){
 		if($this->getRequest()->isPost()){
