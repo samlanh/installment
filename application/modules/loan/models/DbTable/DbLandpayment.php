@@ -199,7 +199,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'date_pay'			=>$data['date_buy'],
     					'land_id'			=>$id,
     					'date_input'		=>date('Y-m-d'),
-    					'outstanding'		=>$data['balance'],
+    					'outstanding'		=>$data['sold_price'],
     					'principal_amount'	=>$data['balance'],
     					'total_principal_permonth'	=>$data['deposit'],
     					'total_principal_permonthpaid'=>$data['deposit'],
