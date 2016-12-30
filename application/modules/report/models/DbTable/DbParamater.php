@@ -350,9 +350,127 @@ function getAllBranch($search=null){
     		}
     		return $db->fetchAll($sql.$where.$order);
     	}
-    	function getAgreementBySaleID($id=null){
+   function getAgreementBySaleID($id=null){
     		$db = $this->getAdapter();
-    		$sql="SELECT * FROM `v_agreement` WHERE id = ".$id;
+    		$sql="
+    		SELECT
+				  `s`.`id`              AS `id`,
+				  `s`.`sale_number`     AS `sale_number`,
+				  `s`.`payment_id`      AS `payment_id`,
+				  `s`.`branch_id`       AS `branch_id`,
+				  `s`.`client_id`       AS `client_id`,
+				  `s`.`price_before`    AS `price_before`,
+				  `s`.`discount_amount` AS `discount_amount`,
+				  `s`.`price_sold`      AS `price_sold`,
+				  `s`.`other_fee`       AS `other_fee`,
+				  `s`.`admin_fee`       AS `admin_fee`,
+				  `s`.`paid_amount`     AS `paid_amount`,
+				  `s`.`balance`         AS `balance`,
+				  `s`.`amount_collect`  AS `amount_collect`,
+				  `s`.`interest_rate`   AS `interest_rate`,
+				  `s`.`total_duration`  AS `total_duration`,
+				  s.land_price,
+				   s.buy_date,
+			      `p`.`project_name`,
+			      `p`.`br_address` AS `project_location`,
+			      `p`.`p_manager_namekh` AS `project_manager_namekh`,
+			      `p`.`p_manager_nationality` AS `project_manager_nationality`,
+				  `p`.`p_manager_nation_id` AS `project_manager_nation_id`,
+                  `p`.`p_current_address` AS `project_manager_p_current_address`,
+                   p.w_manager_namekh ,
+                   p.w_manager_nation_id,
+                  `c`.`client_number` AS `client_code`,
+     			  `c`.`name_kh` AS `client_namekh`,
+     			  `c`.`name_en` AS `client_nameen`,
+  				  `c`.`nationality` AS `client_nationality`,
+     			  `c`.`nation_id` AS `client_nation_id`,
+                  `c`.`phone` AS `client_phone`,
+  				  `c`.`house` AS `client_house_no`,
+                  `c`.`street` AS `client_street`,
+				  (SELECT
+				     `village`.`village_name`
+				   FROM `ln_village` `village`
+				   WHERE (`village`.`vill_id` = `c`.`village_id`)
+				   LIMIT 1) AS `client_village_en`,
+					  (SELECT
+					     `village`.`village_namekh`
+					   FROM `ln_village` `village`
+					   WHERE (`village`.`vill_id` = `c`.`village_id`
+					                                 )
+					   LIMIT 1) AS `client_village_kh`,
+				  (SELECT
+				     `comm`.`commune_name` FROM `ln_commune` `comm`
+				   WHERE (`comm`.`com_id` = `c`.`com_id`)
+				   LIMIT 1) AS `client_commune_en`,
+				   
+				   (SELECT
+				     `comm`.`commune_namekh` FROM `ln_commune` `comm`
+				   WHERE (`comm`.`com_id` = `c`.`com_id`)
+				   LIMIT 1) AS `client_commune_kh`,
+				  (SELECT
+				     `dist`.`district_name`
+				   FROM `ln_district` `dist`
+				   WHERE (`dist`.`dis_id` = `c`.`dis_id`) LIMIT 1) AS `client_district`,
+				  (SELECT
+				     `dist`.`district_namekh`
+				   FROM `ln_district` `dist`
+				   WHERE (`dist`.`dis_id` = `c`.`dis_id`)
+				   LIMIT 1) AS `client_districtkh`,
+				  (SELECT
+				     `provi`.`province_en_name`
+				   FROM `ln_province` `provi`
+				   WHERE (`provi`.`province_id` = `c`.`pro_id`) LIMIT 1) AS `client_province_en`,
+				  (SELECT
+				     `provi`.`province_kh_name`
+				   FROM `ln_province` `provi`
+				   WHERE (`provi`.`province_id` = `c`.`pro_id`)
+				   LIMIT 1) AS `client_province_kh`,
+				  (SELECT `property`.`land_code`
+					   FROM `ln_properties` `property`
+					   WHERE (`property`.`id` = `s`.`house_id`)
+					   LIMIT 1) AS `property_code`,
+				  (SELECT
+						     `property`.`land_address`
+						   FROM `ln_properties` `property`
+						   WHERE (`property`.`id` = `s`.`house_id`)
+						   LIMIT 1) AS `property_title`,
+				  (SELECT
+				     `prope_type`.`type_nameen`
+				   FROM `ln_properties_type` `prope_type`
+				   WHERE (`prope_type`.`id` = (SELECT
+				                                 `property`.`property_type`
+				                               FROM `ln_properties` `property`
+				                               WHERE (`property`.`id` = `s`.`house_id`)
+				                               LIMIT 1))
+				   LIMIT 1) AS `property_type_en`,
+				  (SELECT
+				     `prope_type`.`type_namekh`
+				   FROM `ln_properties_type` `prope_type`
+				   WHERE (`prope_type`.`id` = (SELECT
+				                                 `property`.`property_type`
+				                               FROM `ln_properties` `property`
+				                               WHERE (`property`.`id` = `s`.`house_id`)
+				                               LIMIT 1))
+				   LIMIT 1) AS `property_type_kh`,
+			  (SELECT
+			     `property`.`width`
+			   FROM `ln_properties` `property`
+			   WHERE (`property`.`id` = `s`.`house_id`)
+			   LIMIT 1) AS `property_width`,
+			  (SELECT
+			     `property`.`height`
+			   FROM `ln_properties` `property`
+			   WHERE (`property`.`id` = `s`.`house_id`)
+			   LIMIT 1) AS `property_height`,
+  (SELECT
+     `property`.`street`
+   FROM `ln_properties` `property`
+   WHERE (`property`.`id` = `s`.`house_id`)
+   LIMIT 1) AS `property_street`
+		FROM `ln_sale` AS `s`,ln_project AS p ,`ln_client` AS c
+			WHERE `p`.`br_id` = `s`.`branch_id` 
+			AND `c`.`client_id` = `s`.`client_id`
+			AND s.id=".$id;
     		return $db->fetchRow($sql);
     	}
     	function getScheduleBySaleID($id=null,$payment_id){

@@ -13,7 +13,7 @@ dojo.require("dijit.form.DateTextBox");
 </script>
 <title><?php echo $tr->translate("LOAN_DISBURSE");?></title>
 <form method="post">
-	<table style="width:32cm; margin: 0 auto;">
+	<table style="width:34cm; margin: 0 auto;">
 		<tr>
 			<td><?php echo $filter->getElement('adv_search');?></td>
 			<td><?php echo $filter->getElement('branch_id');?></td>
@@ -28,13 +28,17 @@ dojo.require("dijit.form.DateTextBox");
 		</tr>
 	</table>
 	</form>
-<div style=" width:32cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+<div style=" width:33.5cm;min-height:26cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+<style>
+.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
+</style>
 <div id="divPrint" style="width: 100%;">
 <style>
 .style{
-	line-height: 20px;font-size: 9px !important;
+	line-height: 20px;font-size: 12px !important;
 	font-family: 'Khmer OS Battambang';
 }
+.hideblog{display: none;}
 table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
 th{padding: 5px;}
 </style>
@@ -58,21 +62,21 @@ th{padding: 5px;}
     </tr>
     <tr>
     	<td id="exportExcel">
-            <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:10px;" width="100%" cellspacing="0">
-                 <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 20px; font-size:12px; padding:1px 0px; white-space: nowrap;height: 22px; ">
+            <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%" cellspacing="0">
+                 <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 25px; font-size:12px; padding:1px 0px; white-space: nowrap;height: 22px; ">
                     <td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
                     <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-                    <td colspan="2"><?php echo $tr->translate("CLIENT_INFO");?></td>
-                    <td colspan="4"><?php echo $tr->translate("PROPERTY_INFO");?></td>
+                    <td><?php echo $tr->translate("CLIENT_INFO");?></td>
+                    <td colspan="3"><?php echo $tr->translate("PROPERTY_INFO");?></td>
                     <td colspan="3"><?php echo $tr->translate("INFO_INDILOAN");?></td>
-                    <td colspan="12"><?php echo $tr->translate("PAYMENT_INFO");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("AGREEMENT");?></td>
+                    <td colspan="11"><?php echo $tr->translate("PAYMENT_INFO");?></td>
+                    <td class="hideblog"><?php echo $tr->translate("AGREEMENT");?></td>
                 </tr>
-                <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 20px; font-size:12px; padding:1px 0px; white-space: nowrap;height: 22px; ">
-                	<td><?php echo $tr->translate("CUSTOMER_CODE");?></td>
+                <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 25px; font-size:12px; padding:1px 0px; white-space: nowrap;height: 22px; ">
+                	<!--<td><?php //echo $tr->translate("CUSTOMER_CODE");?></td> -->
                     <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
                     <td><?php echo $tr->translate("TYPE");?></td>
-                    <td><?php echo $tr->translate("PROPERTY_NAME");?></td>
+                    <!--<td><?php //echo $tr->translate("PROPERTY_NAME");?></td> -->
                     <td><?php echo $tr->translate("HOUSE");?></td>
                     <td><?php echo $tr->translate("STREET");?></td>
                     <td><?php echo $tr->translate("PROPERTY_PRICE");?></td>
@@ -87,9 +91,10 @@ th{padding: 5px;}
                     <td><?php echo $tr->translate("PERIIOD");?></td>
                     <td><?php echo $tr->translate("INTEREST");?></td>
                     <td><?php echo $tr->translate("BUY_DATE");?></td>
-                    <td><?php echo $tr->translate("START_PAYMENT");?></td>
+                    <!--<td><?php //echo $tr->translate("START_PAYMENT");?></td> -->
                     <td><?php echo $tr->translate("FIRST_PAYMENT");?></td>
                     <td><?php echo $tr->translate("END_DATE");?></td>
+                    <td class="hideblog"></td>
                 </tr>
                <?php 
                $total_paid = 0;$total=0;$balance=0;
@@ -136,12 +141,12 @@ th{padding: 5px;}
               ?>
 					<tr align="center" style="line-height: 18px; white-space: nowrap;" class="hover">
 					<td>&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-					<td>&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['branch_name']; ?></a>&nbsp;</td>
-					<td>&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['client_number']; ?></a>&nbsp;</td>
+					<td >&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['branch_name']; ?></a>&nbsp;</td>
+					<!--<td >&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php //echo $link;?>"><?php //echo $row['client_number']; ?></a>&nbsp;</td> -->
 					<td>&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['name_kh'];?>&nbsp;</a></td>
 					<td>&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>">&nbsp;<?php echo $row['propertype']; ?></a>&nbsp;</td>
-					<td>&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>">&nbsp;<?php echo $row['land_code']; ?></a>&nbsp;</td>
-					<td align="left">&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>">&nbsp;<?php echo $row['land_address']; ?></a>&nbsp;</td>	
+					<!--<td>&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>">&nbsp;<?php echo $row['land_code']; ?></a>&nbsp;</td> -->	
+					<td align="left">&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>">&nbsp;<?php echo $row['land_address']; ?></a>&nbsp;</td>
 					<td>&nbsp;<?php echo $row['street'];?>&nbsp;</td>
 					<td align="left"><span style="line-height:15px;">&nbsp;<?php echo number_format($row['price_before'],2); ?></span>&nbsp;</td>
 					<td style="white-space:nowrap;">&nbsp;<?php echo number_format($row['discount_percent'],2); ?>&nbsp;</td>	
@@ -151,15 +156,14 @@ th{padding: 5px;}
 					<td style="white-space:nowrap; text-align: right;">&nbsp;<?php echo number_format($row['price_sold'],2); ?>&nbsp;</td>
 					<td style="white-space:nowrap; text-align: right;">&nbsp;<?php echo number_format($row['paid_amount'],2); ?>&nbsp;</td>
 					<td style="white-space:nowrap;">&nbsp;<?php echo number_format($row['balance'],2); ?>&nbsp;</td>
-					<td style="white-space:nowrap;">&nbsp;<?php echo $row['paymenttype']; ?>&nbsp;</td>
+					<td style="white-space:nowrap; font-size:10px;text-align: left;">&nbsp;<?php echo $row['paymenttype']; ?>&nbsp;</td>
 					<td style="white-space:nowrap;">&nbsp;<?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['total_duration']; }?>&nbsp;</td>
 					<td style="white-space:nowrap;">&nbsp;<?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['interest_rate']; }?>&nbsp;</td>
-					<td style="white-space:nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['buy_date'])); ?>&nbsp;</td>
-					<td>&nbsp;<?php if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-M-Y",strtotime($row['startcal_date']));}?>&nbsp;</td>
-					<td>&nbsp;<?php if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-M-Y",strtotime($row['first_payment'])); }?>&nbsp;</td>
-					<td style="white-space:nowrap;" >&nbsp;<?php echo date("d-M-Y",strtotime($row['end_line']));?>&nbsp;</td>
-					<td style="white-space:nowrap;">&nbsp;<a href="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement'))."/id/".$row['id'];?>"><?php echo $tr->translate("AGREEMENT");?></a>&nbsp;</td>
-					
+					<td style="white-space:nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['buy_date'])); ?>&nbsp;</td>
+					<!--<td>&nbsp;<?php //if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['startcal_date']));}?>&nbsp;</td> -->
+					<td>&nbsp;<?php if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['first_payment'])); }?>&nbsp;</td>
+					<td style="white-space:nowrap;" >&nbsp;<?php echo date("d-m-Y",strtotime($row['end_line']));?>&nbsp;</td>
+					<td style="white-space:nowrap;" class="hideblog">&nbsp;<a href="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement'))."/id/".$row['id'];?>"><?php echo $tr->translate("AGREEMENT");?></a>&nbsp;</td>
 					</tr>
 				<?php }?>
             </table>
@@ -184,7 +188,7 @@ th{padding: 5px;}
                     <td align="center">&nbsp;<?php echo $payment_1+$payment_2+$payment_3+$payment_4+$payment_5;?>&nbsp;</td>
                  </tr>
                   <tr class="style hover" style=" line-height: 24px; font-size:11px;">
-                     <td align="left">&nbsp;តម្លៃបានលក់សរុប&nbsp;</td>
+                     <td align="left">&nbsp;សរុបជាសាច់ប្រាក់&nbsp;</td>
                     <td align="center">&nbsp;<?php echo number_format($sold_price1,2);?>&nbsp;</td>
                     <td align="center">&nbsp;<?php echo number_format($sold_price2,2);?>&nbsp;</td>
                     <td align="center">&nbsp;<?php echo number_format($sold_price3,2);?>&nbsp;</td>
@@ -202,7 +206,7 @@ th{padding: 5px;}
                     <td align="center">&nbsp;<?php echo number_format($paid_price1+$paid_price2+$paid_price3+$paid_price4+$paid_price5,2);?>&nbsp;</td>
                  </tr>
                   <tr class="style hover" style=" line-height: 24px; font-size:11px;">
-                    <td align="left">&nbsp;ប្រាក់នៅសល់សរុប&nbsp;</td>
+                    <td align="left">&nbsp;ប្រាក់មិនទាន់បង់សរុប&nbsp;</td>
                     <td align="center">&nbsp;<?php echo number_format($balace_price1,2);?>&nbsp;</td>
                     <td align="center">&nbsp;<?php echo number_format($balace_price2,2);?>&nbsp;</td>
                     <td align="center">&nbsp;<?php echo number_format($balace_price3,2);?>&nbsp;</td>

@@ -414,7 +414,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
 				'required' =>'true',
-				'onKeyup'=>'checkTitle();',
+				'onblur'=>'checkTitle();',
 		));
 		
 		$street = new Zend_Dojo_Form_Element_TextBox('street');

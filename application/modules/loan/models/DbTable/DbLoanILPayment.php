@@ -16,8 +16,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql = "SELECT lcrm.`id`,
     	(SELECT project_name FROM `ln_project` WHERE br_id=lcrm.branch_id LIMIT 1) AS branch_name,
-    	           (SELECT land_code FROM `ln_properties` WHERE id=lcrm.sale_id limit 1) AS land_id,
 					(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lcrm.`client_id` limit 1) AS team_group ,
+					(SELECT land_address FROM `ln_properties` WHERE id=lcrm.land_id limit 1) AS land_id,
 					lcrm.`receipt_no`,
 					lcrm.`total_principal_permonth`,
 					lcrm.`total_interest_permonth`,
@@ -209,7 +209,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	return $pre.$new_acc_no;
     }
 public function addILPayment($data){
-	//print_r($data);exit();
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	$session_user=new Zend_Session_Namespace('auth');
@@ -349,7 +348,6 @@ public function addILPayment($data){
     			$sub_total_payment = $data["payment_".$i];
     			$loan_number = $data["loan_number"];
     			$date_payment = $data["date_payment_".$i];
-    			
     		           $arr_money_detail = array(
     						'crm_id'				=>		$client_pay,
     						'land_id'			    =>		$data['loan_number'],//ok
@@ -367,7 +365,6 @@ public function addILPayment($data){
     						'service_charge'		=>		$data['service_'.$i],
     						'penelize_new'			=>		$data['penelize_'.$i]-$data['old_penelize_'.$i],
     						'service_charge_new'	=>		$data["service_charge"]-$data['service_'.$i],
-    						
     		           		'old_penelize'			=>		$data['old_penelize_'.$i],
     						'old_service_charge'	=>		$data['old_service_'.$i],
     						'old_interest'			=>		$data["old_interest_".$i],
@@ -375,7 +372,6 @@ public function addILPayment($data){
     		           		'old_total_payment'		=>		$data['old_payment_'.$i],
     		           		'old_total_priciple'	=>		$data["old_total_priciple_".$i],
     		           		'last_pay_date'			=>		$data["last_date_payment_".$i],
-    		           		
     						'is_completed'			=>		$is_compleated,
     						'status'				=>		1
     				);
@@ -1323,6 +1319,7 @@ public function addILPayment($data){
 			  crm.outstanding,
 			  crm.`principal_amount`,
 			  crm.`total_principal_permonth`,
+			  SUM(total_principal_permonthpaid) AS total_principal_permonthpaid,
 			  crm.`total_payment`,
 			  crm.`total_interest_permonth`,
 			  crm.`amount_payment`,
@@ -1331,8 +1328,7 @@ public function addILPayment($data){
 			  crm.`service_charge`,
 			  crm.`penalize_amount`,
 			  crm.`group_id`,
-			   crm.`is_completed`,
-			 
+			  crm.`is_completed`,
 			  crmd.`capital`,
 			  crmd.`total_payment`,
 			  DATE_FORMAT(crmd.date_payment, '%d-%m-%Y') AS `date_payment`
@@ -1341,7 +1337,7 @@ public function addILPayment($data){
 			  `ln_client_receipt_money_detail` AS crmd 
 			WHERE crm.`id` = crmd.`crm_id` 
 			  AND crm.status=1
-			  AND crmd.`land_id` = '$loan_number' ORDER BY crmd.`crm_id` DESC ";
+			  AND crmd.`land_id` = '$loan_number' GROUP BY crm.`id` ORDER BY crmd.`crm_id` DESC ";
    	return $db->fetchAll($sql);
    }
    

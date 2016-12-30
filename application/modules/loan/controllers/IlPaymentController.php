@@ -37,12 +37,11 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 			$rs_rows= $db->getAllIndividuleLoan($search);
 			$result = array();
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","LOAN_NO","CUSTOMER_NAME","RECIEPT_NO","TOTAL_PRINCEPLE","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT","PAY_DATE","DATE",
-				);
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","HOUSE_NO","RECIEPT_NO","TOTAL_PRINCEPLE","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT","PAY_DATE","DATE",);
 			$link=array(
 					'module'=>'loan','controller'=>'ilpayment','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link,'land_id'=>$link,'loan_number'=>$link,'client_name'=>$link,'receipt_no'=>$link,'branch'=>$link));
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link,'land_id'=>$link,'team_group'=>$link,'client_name'=>$link,'receipt_no'=>$link,'branch'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			echo $e->getMessage();
@@ -67,8 +66,6 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/add");
 				}
 			}catch (Exception $e) {
-				//echo $e->getMessage();
-				//exit();
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
@@ -100,28 +97,28 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		
+        $id = $this->getRequest()->getParam('id');
+		if(!empty($id)){
+		$db = new Loan_Model_DbTable_DbLandpayment();
+		$this->view->rsresult =  $db->getTranLoanByIdWithBranch($id,null);
+		}
 	}	
-	
-	
-	function editAction(){
-		
+function editAction(){
 		$id = $this->getRequest()->getParam("id");
-		
 		$db = new Loan_Model_DbTable_DbLoanILPayment();
 		$db_global = new Application_Model_DbTable_DbGlobal();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-				
 			try {
-					$db->updateIlPayment($_data,$id);
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
+				$db->updateIlPayment($_data,$id);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		
 		$payment_il = $db->getIlPaymentByID($id);
 		$this->view->ilPaymentById= $payment_il;
 		
@@ -155,7 +152,6 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
-	
 	function editoldAction()
 	{
 		$id = $this->getRequest()->getParam("id");
@@ -347,7 +343,7 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		}
 	}
 	
-	function getLoanHasPayByLoanNumberAction(){
+	function getLoanHasPayByLoanNumberAction(){//បង្ហាញប្រវត្តប្រាក់បានបងសរុប
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbLoanILPayment();

@@ -29,14 +29,16 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_NAME","STREET","ប្រភេទបង់","LOAN_AMOUNT","DISCOUNT","OTHER_FEE","PAID","BALANCE","DATE_BUY",
-				"STATUS");
+			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_NAME","STREET","ប្រភេទបង់","LOAN_AMOUNT","DISCOUNT_PERCENT","DISCOUNT","OTHER_FEE","PAID","BALANCE","DATE_BUY",
+				"STATUS","បង់ប្រាក់","ចេញតារាងថ្មី","កិច្ចសន្យា");
 			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('name_kh'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
+			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);
+			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);
+			$payment=array('module'=>'loan','controller'=>'ilpayment','action'=>'add',);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('បង់ប្រាក់'=>$payment,'ចេញតារាងថ្មី'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-			echo $e->getMessage();
 		}	
 		$frm_search = new Loan_Form_FrmSearchLoan();
 		$frm = $frm_search->AdvanceSearch();

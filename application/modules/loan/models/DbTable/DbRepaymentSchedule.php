@@ -272,8 +272,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$next_payment = $data['first_payment'];
     		$from_date =  $data['release_date'];
     		$curr_type = 2;//$data['currency_type'];
-    		$loop_payment = $data['period'];
-    		$borrow_term = $data['period'];
+    		$loop_payment = $data['period']*12;
+    		$borrow_term = $data['period']*12;
     		$payment_method = $data["schedule_opt"];
     		$j=0;
     		$pri_permonth=0;
@@ -628,7 +628,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	
     		//for IRR method
     		if($data['repayment_method']==6){
-	    		$term_install = $data['period'];
+	    		$term_install = $data['period']*12;
 	    		$loan_amount = $data['total_amount'];
 	    		$total_loan_amount = $loan_amount+($loan_amount*$data['interest_rate']/100*$term_install);
 	    		$irr_interest = $this->calCulateIRR($total_loan_amount,$loan_amount,$term_install,$curr_type);
@@ -638,7 +638,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$this->_name='ln_loanmember_funddetail';
     		$dbtable = new Application_Model_DbTable_DbGlobal();
     		$borrow_term = $dbtable->getSubDaysByPaymentTerm($data['pay_every'],null);//return amount day for payterm
-    		$amount_borrow_term = $borrow_term*$data['period'];//amount of borrow
+    		$amount_borrow_term = $borrow_term*$data['period']*12;//amount of borrow
     		 
     		$fund_term = $dbtable->getSubDaysByPaymentTerm($data['collect_termtype'],null);//return amount day for payterm
     		$amount_fund_term = $fund_term*$data['amount_collect'];
@@ -749,12 +749,12 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     					$is_subremain++;
     					$pri_permonth=0;
     					if(($is_subremain-1)==$data['amount_collect_pricipal']){
-    						$pri_permonth = ($data['total_amount']/$data['period'])*$data['amount_collect_pricipal'];
+    						$pri_permonth = ($data['total_amount']/$data['period']*12)*$data['amount_collect_pricipal'];
     						$pri_permonth = $this->round_up_currency($curr_type, $pri_permonth);
     						$is_subremain=1;
     					}
     					if(($ispay_principal-1)==$data['amount_collect_pricipal']+1){
-    						$remain_principal = $remain_principal-($data['total_amount']/$data['period'])*$data['amount_collect_pricipal'];
+    						$remain_principal = $remain_principal-($data['total_amount']/$data['period']*12)*$data['amount_collect_pricipal'];
     						$ispay_principal=2;
     					}
     					if($i==$loop_payment){//check condition here//for end of record only

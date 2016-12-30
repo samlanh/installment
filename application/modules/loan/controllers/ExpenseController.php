@@ -73,6 +73,9 @@ class Loan_ExpenseController extends Zend_Controller_Action
     	$result = $db->getAllExpenseCategory();
     	array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
     	$this->view->all_category = $result;
+    	
+    	$key = new Application_Model_DbTable_DbKeycode();
+    	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
  
     public function editAction()
@@ -103,6 +106,9 @@ class Loan_ExpenseController extends Zend_Controller_Action
     	$result = $db->getAllExpenseCategory();
     	array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
     	$this->view->all_category = $result;
+    	
+    	$key = new Application_Model_DbTable_DbKeycode();
+    	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
 
     

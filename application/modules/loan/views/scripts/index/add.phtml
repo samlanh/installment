@@ -55,8 +55,7 @@
 							<td><?php echo $tr->translate("SALE_NO")?></td>
 							<td><?php echo $frm->getElement('sale_code');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_CODE")?></td>
-							<td><input id="customer_code" /><input type="hidden" name="identity" id="identity"  value="" >
-							<input type="hidden" dojoType="dijit.form.TextBox" name="total_installamount" id="total_installamount"  value="" ></td>
+							<td><input id="customer_code" /><input type="hidden" name="identity" id="identity"  value="" ></td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("DATE_BUY")?></td>
@@ -100,10 +99,20 @@
 							<td><?php echo $tr->translate("Paid")?></td>
 							<td><?php echo $frm->getElement('deposit');?></td>
 							<td><?php echo $tr->translate("Balance")?></td>
-							<td><?php echo $frm->getElement('balance');?></td>
+							<td width="250px">
+								<table width="100%" >	
+									<tr>
+									<td width="35%"><?php echo $frm->getElement('balance');?></td>
+									<td width="30%" style="color:red;">ប្រាក់រំលស់</td>
+									<td width="35%">
+									<input readonly type="text" class="fullside" dojoType="dijit.form.TextBox" name="for_installamount" id="for_installamount"  value="" >
+									<input type="hidden" class="fullside" dojoType="dijit.form.TextBox" name="total_installamount" id="total_installamount"  value="" ></td>
+								   </tr>
+								</table>
+							</td>
 						</tr>
 						<tr>
-						    <td><lable id='lbl_period'><?php echo $tr->translate("TERM_BORROW")?></lable><?php echo $tr->translate("MONTH")?></td>
+						    <td style="white-space: nowrap;"><lable id='lbl_period'><?php echo $tr->translate("TERM_BORROW")?></lable><?php echo $tr->translate("YEAR")?></td>
 							<td><?php echo $frm->getElement('period');?></td>
 							<td><?php echo $tr->translate("INTEREST_RATE")?></td>
 							<td><?php echo $frm->getElement('interest_rate');?></td>
@@ -112,7 +121,9 @@
 						</tr>
 						<tr>
 							<td><label id="lbl_release"><?php echo $tr->translate("LOAN_RELEASE")?></label></td>
-							<td><?php echo $frm->getElement('release_date');?></td>
+							<td><?php echo $frm->getElement('release_date');?>
+							<!--<input type="text" dojoType="dijit.form.TextBox" required="true" class="fullside" constraints="{datePattern:'dd/MM/yyyy'}" id="release_date" name="release_date" value="<?php //echo date("Y-m-d")?>" /> -->
+							</td>
 							<td><?php echo $tr->translate("FIRST_PAYMENT")?></td>
 							<td><?php echo $frm->getElement('first_payment');?></td>
 							<td><?php echo $tr->translate("LIFE_LOAN")?></td>
@@ -155,18 +166,17 @@
 		padding:5px 2px; 
 	}
 	</style>
-	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'កាលវិភាគត្រូវបង់ប្រាក់'" id="lbl_schedule" style="width:1000px">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'កាលវិភាគត្រូវបង់ប្រាក់'" id="lbl_schedule" style="width: 25cm !important;">
 		<div id="rpt_print" class="print" style="text-align: center;">
+			<input style="text-align: center;" type="button" onclick="printSave('','');" label="<?php echo $tr->translate("បោះពុម្ភបង្កាន់ដៃ")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 			<div id="t_amountmoneytype" name="t_amountmoneytype">
 			</div>
-			<input style="text-align: center;" type="button" onclick="printSave('','');" label="<?php echo $tr->translate("បោះពុម្ភបង្កាន់ដៃ")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 		</div>
 	</div>
 </div>
-<div class="dijitHidden" style="width: 21cm !important; height: 11cm ; padding: 0px; margin: 0px;">
-	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="terms" >
-		
-		<div id="divPrint" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
+<div class="dijitHidden" style="width:25cm !important; height: 11cm ; padding: 0px; margin: 0px;">
+	<div data-dojo-type="dijit.Dialog" style="width:24cm !important;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="terms" >
+		<div id="divPrint" style="height: 13cm ; padding: 0px; margin: 0px;font-family:'Khmer OS Battambang';">
 			<style>
 				.fontbig{
 					font-size: 15px;	
@@ -178,23 +188,23 @@
 					width: 110px;	
 				}
 
-				.label{ font-weight: bold;font-size: 22px;}
-				.value{ font:bold 12px 'Khmer OS Battambang';border: 1px solid rgba(14, 0, 107, 1); height: 25px; padding: 0 2px;width: 100%;margin-right:5px; display: block;
-						line-height: 25px;
+				.label{ font-size: 22px;}
+				.value{ font:16px 'Khmer OS Battambang';border: 1px solid #000; height: 30px; padding: 0 2px;width: 100%;margin-right:5px; display: block;
+						line-height: 30px;
 					    text-align: center;
 						}
-				.values{ border: 1px solid rgba(14, 0, 107, 1);; height: 25px; padding: 0 10px;display: block;
-						line-height: 25px;}
+				.values{ border: 1px solid #000; height: 30px; padding: 0 10px;display: block;
+						line-height: 30px;}
 				.h{}
 				.print tr td{
 					padding:2px 2px; 
 				}
-			   .khmerbold{font:bold 12px 'Khmer OS Battambang';}
-			   .khmer{font:12px 'Khmer OS Battambang';}
+			   .khmerbold{font:14px 'Khmer OS Battambang';}
+			   .khmer{font:14px 'Khmer OS Battambang';}
 			   .one{white-space:nowrap;}
-			   .h{ margin-top: -10px;/*margin-left:4px;*/}
+			   .h{ margin-top: -10px;}
 			</style>	
-			<table width="100%" style="white-space: nowrap;font-size:12px;  padding:-5px 10px 0px 5px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
+			<table style="width:21cm !important; white-space: nowrap;font-size:14px;  padding:-5px 10px 0px 5px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
@@ -202,8 +212,8 @@
 								<td width="25%">
 									<img style="width:100%;height:61px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
-								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
-									<div style="line-height:10px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
+								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
+									<div style="line-height:35px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 								</td>
 								<td width="25%">
 								</td>
@@ -212,7 +222,7 @@
 					</td>
 				</tr>
 			</table>
-			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: -35px;font-family: Battambang;" class="print" cellspacing="3px"  cellpadding="0">
+			<table style="width:22cm !important;white-space: nowrap;margin-top: -20px;font-family:'Khmer OS Battambang';font-size: 16px;" class="print" cellspacing="3px"  cellpadding="0">
 				<tr>
 					<td width="10%" ></td>
 					<td width="30%" ></td>
@@ -221,12 +231,10 @@
 					<td width="10%" ></td>
 					<td width="18%" ></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;">
 				    <td colspan="5"></td>
-					<td align="right"><strong>No. : <label id="lb_receipt" ></label></strong></td>
+					<td align="right"><strong><label id="lb_receipt" ></label></strong></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;">
 				    <td>លេខកូដលក់</td>
 				    <td><strong><label id="lb_student_id" class="value">3</label></strong></td>
@@ -236,53 +244,37 @@
 				</tr>
 				
 				<tr style="white-space: nowrap;">
-				
 				    <td>ឈ្មោះ​អតិថិជន </td>
 				    <td><strong><label id="lb_customer" class="value"></label></strong></td>
-					
 					<td>​&nbsp;&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
 				    <td><strong><label id="lb_discount" class="value"></label></strong></td>
-				    
 					<td>&nbsp;&nbsp;តម្លៃផ្សេងៗ</td>
 				    <td><strong><label id="lb_otherfee" class="value"></label></strong></td>
-                    
                 </tr>
 				<tr style="white-space: nowrap;">
-				
 					<td>លេខផ្ទះ</td>
                     <td><strong><label id="lb_hourseno" class="value"></label></strong></td>
-					
-					
 				    <td>&nbsp;&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
                     <td colspan="3"><strong><label id="lb_amount" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				
 					<td width="10%">ប្រភេទបង់</td>
 				    <td width="40%"><strong><label id="lb_paymentid" class="value"></label></strong></td>
-					
 					<td>&nbsp;&nbsp;&nbsp;ប្រាក់បានបង់</td>
 				    <td colspan="3"><strong><label id="lb_paid" class="value"></label></strong></td>
 				</tr>
-
 				<tr>
 					<td>សែក</td>
 					<td><strong><label id="lb_moneynote" class="value"></label></strong></td>
-					
-					
 					<td>&nbsp;&nbsp;&nbsp;ប្រាក់នៅសល់</td>
 					<td colspan="3"><strong><label id="lb_balance" class="value"></label></strong></td>
-					
 				</tr>
 				<tr style="white-space: nowrap;">
-				
 					<td>សម្គាល់</td>
 				    <td><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted" class="value"></label></strong></td>
-					
 					<td>&nbsp;&nbsp;&nbsp;ថ្ងៃលក់</td>
 				    <td colspan="3"><strong><label id="lb_buydate" class="value"></label></strong></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;" height="60px;">
 					<td colspan="6">
 						<table width="100%" border="0" style="font-size:14px;line-height: 18px;">
@@ -290,11 +282,9 @@
 								<td width="30%">
 									&nbsp;
 								</td>
-								
 								<td align="center" width="40%">
 									ស្នាមមេដៃអ្នកប្រគល់
 								</td>
-									
 								<td align="center" width="30%">
 									ស្នាមមេដៃអ្នកទទួល
 								</td>
@@ -313,11 +303,9 @@
 								<td width="30%">
 									&nbsp;
 								</td>
-								
 								<td align="center" width="40%">
 									<strong><label id="lbl_customer" ></label></strong>
 								</td>
-									
 								<td align="center" width="30%">
 									<strong>
 										<?php 
@@ -332,7 +320,6 @@
 						</table>
 					</td>
 				</tr>
-				
 				<tr style="line-height: 20px;font-size: 11px;">
 					<td valign="top" >
 						<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
@@ -344,13 +331,11 @@
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
-						
 					</td>
 				</tr>
-				
 				<tr style="line-height: 15px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
@@ -359,7 +344,7 @@
 									វេបសាយ :  <span style="font-size:16px;">www.boreyphnompenhthmey.com</span>
 								</td>
 								<td width="40%" align="right">
-									អ៊ីម៉ែល : <span style="font-size:16px;">boreyphnompenhthmey@gmail.com</span>
+									<span style="font-family: 'Khmer OS Battambang';">អ៊ីម៉ែល</span> : <span style="font-size:16px;">boreyphnompenhthmey@gmail.com</span>
 								</td>
 							</tr>
 							<tr style="white-space:nowrap;">
@@ -374,23 +359,19 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="6" style="border-top:1px dashed #000;" >
+					<td colspan="6" style="border-top:2px dashed #000;" >
 						
 					</td>
 				</tr>
 			</table>
 		</div>
-		
-		
 		<table>
 			<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
 			<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
 				type="button" onclick="doPrint();">បោះពុម្ភ/Print</button>
 		</table>
-		
-		
 		<div id="divPrint1" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
-			<table width="100%" style="white-space: nowrap;font-size:12px;  padding:-5px 10px 0px 5px;margin-top: 15px;" class="print" cellspacing="0"  cellpadding="0" >
+			<table width="100%" style="white-space: nowrap;font-size:14px;  padding:15px 10px 0px 5px;margin-top: 15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
@@ -398,8 +379,8 @@
 								<td width="25%">
 									<img style="width:100%;height:61px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
-								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
-									<div style="line-height:10px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
+								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
+									<div style="line-height:35px;"><strong style="font-size: 18px;">OFFICIAL RECEIPT</strong></div>
 								</td>
 								<td width="25%">
 								</td>
@@ -408,7 +389,7 @@
 					</td>
 				</tr>
 			</table>
-			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: -35px;font-family: 'Battambang';" class="print" cellspacing="3px"  cellpadding="0">
+			<table width="100%" style="white-space: nowrap;font-size:16px;margin-top:-20px;font-family: 'Khmer OS Battambang';" class="print" cellspacing="3px"  cellpadding="0">
 				<tr>
 					<td width="10%" ></td>
 					<td width="30%" ></td>
@@ -420,7 +401,7 @@
 				
 				<tr style="white-space: nowrap;">
 				    <td colspan="5"></td>
-					<td align="right"><strong>No. : <label id="lb_receipt1" ></label></strong></td>
+					<td align="right"><strong><label id="lb_receipt1" ></label></strong></td>
 				</tr>
 				
 				<tr style="white-space: nowrap;">
@@ -548,7 +529,7 @@
 				
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
@@ -557,7 +538,7 @@
 									វេបសាយ :  <span style="font-size:16px;">www.boreyphnompenhthmey.com</span>
 								</td>
 								<td width="40%" align="right">
-									អ៊ីម៉ែល : <span style="font-size:16px;">boreyphnompenhthmey@gmail.com</span>
+									<span style="font-family: 'Khmer OS Battambang';">អ៊ីម៉ែល</span> : <span style="font-size:16px;">boreyphnompenhthmey@gmail.com</span>
 								</td>
 							</tr>
 							<tr style="white-space:nowrap;">
@@ -571,10 +552,8 @@
 						</table>
 					</td>
 				</tr>
-				
 			</table>
 		</div>
-		
 	</div>
 </div>
 </form>
@@ -623,9 +602,9 @@ function checkScheduleOption(){
 	dijit.byId('release_date').set("readOnly",false);
 	dijit.byId('date_line').set("readOnly",true);
 	method_id = dijit.byId('schedule_opt').get('value');
-
+    //dijit.byId('deposit').attr("value","");
 	amount_principal = dijit.byId('balance').get('value');	
-	debt_amount = dijit.byId('period').get('value');
+	debt_amount = dijit.byId('period').get('value')*12;
 	dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TERM_BORROW")?>";
 
 	dojo.query("#table_row").append('');
@@ -635,7 +614,7 @@ function checkScheduleOption(){
 	no=0;
 	
 	if(method_id==4){
-		calCulateFixedPeriod();		
+		calCulateFixedPeriod();	
 		}else {
 			dijit.byId('fixed_payment').attr('value',0);
 			dijit.byId('fixed_payment').set("readOnly",true);
@@ -679,8 +658,7 @@ function checkScheduleOption(){
 			dijit.byId('interest_rate').set("readOnly",true);
 			dijit.byId('period').set("readOnly",true);
 		}
-		else if(method_id==6){//times
-			
+		else if(method_id==6){//times			
 			if(dijit.byId('period').get('value')==12){
 				dijit.byId('period').attr('value',12);
 			}
@@ -703,21 +681,28 @@ function checkScheduleOption(){
 	}
 }
 function calCulateFixedPeriod(){
-	amount_principal = dijit.byId('sold_price').get('value')-dijit.byId('total_installamount').get('value');
+	var total_paid_install = dijit.byId('total_installamount').get('value');
+	if(total_paid_install == 0){
+		amount_principal = dijit.byId('sold_price').get('value')-dijit.byId('deposit').get('value');
+	}else{
+		amount_principal = dijit.byId('sold_price').get('value')-dijit.byId('total_installamount').get('value');
+	}		
+	
 	dijit.byId('fixed_payment').set('readOnly',false);
 	dojo.byId('lbl_payment').innerHTML="<?php echo $tr->translate("AMOUNT_GRAICE_PARIOD")?>";
 	debt_term=30;
 	collect_term = 1;
 	collect_amount = 1;
 	collect_term=30;
-	debt_amount = dijit.byId('period').get('value');
+	debt_amount = dijit.byId('period').get('value')*12;
 	
 	term = (debt_term*debt_amount)/(collect_term*collect_amount);
 	interest_rate=dijit.byId('interest_rate').get('value')/12/(100);//(100/30day)
-
 	if(interest_rate==0){
-		amount_payment = amount_principal/debt_amount;
-		}else{
+		amount_payment = parseFloat(amount_principal/debt_amount);
+		amount_payment = amount_payment.toFixed(2);
+		if(amount_payment=='Infinity' || amount_payment=='NaN'){amount_payment=0;}
+	}else{
 		top_pow = Math.pow((1+interest_rate),term);
 		bellow = Math.pow((1+interest_rate),(term))-1;
 		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
@@ -725,8 +710,9 @@ function calCulateFixedPeriod(){
 		amount_payment = amount_payment.toFixed(2);
 		if(isNaN(amount_payment)){amount_payment=0;
 		}
-	}
+	}	
 	dijit.byId('fixed_payment').attr('value',amount_payment);
+	dijit.byId('for_installamount').attr('value',amount_principal);
 }
 function calculateDiscount(){
 	total_sold = dijit.byId('total_sold').get('value');
@@ -758,7 +744,6 @@ function Balance(){
 		dijit.byId('deposit').attr('value',price)
 		dijit.byId('balance').attr('value',0)
 	}else{ 
-		//alert('test');
 		schedule_opt = dijit.byId('schedule_opt').get('value');
 		if(schedule_opt==2){
 			dijit.byId('balance').attr('value',0);
@@ -904,7 +889,7 @@ function getReceiptByBranch(new_sale_id){
     function setDefaultPaymentAmount(){
     	amount_principal = dijit.byId('land_price').get('value');
     	debt_term = dijit.byId('pay_every').get('value');
-    	debt_amount = dijit.byId('period').get('value');
+    	debt_amount = dijit.byId('period').get('value')*12;
     	if(debt_term==1){
     		debt_term=1;
     	}else if(debt_term==2){
@@ -1152,7 +1137,7 @@ function addRow(){
 	payment_method = dijit.byId('schedule_opt').get('value');
 	if(payment_method==4){addInstallment();}
 	if(payment_method!=6){return false;}
-	period = dijit.byId('period').get('value');
+	period = dijit.byId('period').get('value')*12;
 	if(period==0){alert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
 
 	no=0;title=0;temp='';$('#identity').val('');
@@ -1175,21 +1160,8 @@ function addRow(){
 				temp+='<th><?php echo $tr->translate("REMARK");?></th>';
 				dojo.query("#head-title").append(temp);
 				title=1;
+				epx_date ='<?php echo date('Y-m-d');?>';
 			}
-			
-			prev_date = dijit.byId("first_payment").get('value');
-			amount_date = 1;
-			var a = new Date(prev_date);
-				mm = a.getMonth()+amount_date+i-1;
-			var dd = a.getDate();
-			 if(dd<10){
-				 dd = "0"+dd;
-			}
-			 if(mm<10){
-				 mm = "0"+mm;
-			}
-			var y = a.getFullYear();
-			var epx_date = y + '-'+ mm + '-'+dd ;
 				template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td width="2%" align="center">'+no+'</td>';
 				template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
@@ -1215,7 +1187,7 @@ function addInstallment(){
 	if(result==false){return false;}
 	payment_method = dijit.byId('schedule_opt').get('value');
 	
-	period = dijit.byId('period').get('value');
+	period = dijit.byId('period').get('value')*12;
 	if(period==0){alert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
 	temp='';
 
@@ -1239,20 +1211,31 @@ function addInstallment(){
 				temp+='<th><?php echo $tr->translate("REMARK");?></th>';
 				dojo.query("#head-title").append(temp);
 				title=1;
+				epx_date ='<?php echo date('Y-m-d');?>';
+			}else{
+				indexs = col-1;
+				epx_date = dijit.byId("date_payment"+indexs).get("value");
+				var a = new Date(epx_date);
+				mm = a.getMonth()+2;
+				var dd = a.getDate();
+				 if(dd<10){
+					 dd = "0"+dd;
+				}
+				if(mm<10){
+					 mm = "0"+mm;
+				}
+				var y = a.getFullYear();
+				var epx_date = y+'-'+ mm + '-'+dd ;
+
+				mm_nextmonth = a.getMonth()+3;
+				if(mm_nextmonth<10){
+					mm_nextmonth = "0"+mm_nextmonth;
+				}
+				
+				var start_date = y + '-'+ mm_nextmonth + '-'+dd ;
+				dijit.byId("first_payment").attr('value',start_date);
 			}
-			prev_date = dijit.byId("first_payment").get('value');
-			amount_date = 1;
-			var a = new Date(prev_date);
-				mm = a.getMonth()+amount_date+col-1;
-			var dd = a.getDate();
-			 if(dd<10){
-				 dd = "0"+dd;
-			}
-			 if(mm<10){
-				 mm = "0"+mm;
-			}
-			var y = a.getFullYear();
-			var epx_date = y + '-'+ mm + '-'+dd ;
+			    dijit.byId("release_date").attr('value',epx_date);
 				template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td width="2%" align="center">'+no+'</td>';
 				template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
@@ -1285,22 +1268,19 @@ function calCulateSchedulePayment(){
 	var total_amount=0;
 	var rowId = $('#identity').val();
 	var rowIDArray = rowId.split(',');
+	if(rowId!=''){
 	for(var n = 0; n < rowIDArray.length; n++) {
-		total_amountpayment = (dijit.byId('total_payment'+rowIDArray[n]).get('value'));
-		if(n==0){ 
-			//paid = dijit.byId('deposit').get('value');
-			//if(total_amountpayment<paid){alert("សូមបញ្ជូលភាគរយត្រូវបង់ ធំជាងប្រាក់ដែលទទួលបាន! ");dijit.byId('percent'+rowIDArray[n]).focus();return false;}
+			total_amountpayment = (dijit.byId('total_payment'+rowIDArray[n]).get('value'));
+			if(n==0){ 
+			}
+			if(isNaN(total_amountpayment)){
+				total_amountpayment = 0;
+			}
+			total_amount = total_amount+ total_amountpayment;
 		}
-		if(isNaN(total_amountpayment)){
-			total_amountpayment = 0;
-		}
-		total_amount = total_amount+ total_amountpayment;
 	}
-	
 	dijit.byId('total_installamount').attr('value',total_amount);
 	calCulateFixedPeriod();
-	//dijit.byId('total_amount').attr('value',netTotal_d);
-	
 }
 function deleteRecord(index) {
 	var identity = $('#identity').val();
@@ -1333,7 +1313,7 @@ function setFirstPaymentAndDateLine(pay_term,date_release,amount_date){
 	calCulateFirstPayment();
 }
 function calCulateEndDate(){
-	amount_date = dijit.byId('period').get('value');
+	amount_date = dijit.byId('period').get('value')*12;
 	release_date = dijit.byId("first_payment").get('value');//just update follow by first payment
 	if(isNaN(amount_date)){
 	}else{
@@ -1355,7 +1335,7 @@ function calCulateEndDate(){
 }
 function CalculateDate(){
 	pay_term = 1;
-	amount_date = dijit.byId('period').get('value');
+	amount_date = dijit.byId('period').get('value')*12;
 	release_date = dijit.byId("first_payment").get('value');//just update follow by first payment
 	if(isNaN(amount_date)){
 	}else{
@@ -1365,9 +1345,6 @@ function CalculateDate(){
 function checkReleaseDate(){
 	CalculateDate();
 }
-/*function calCulatePeriod(){
-	CalculateDate();
-}*/
 function getFirstPayment(){
 	calCulateFirstPayment();
 }
@@ -1390,7 +1367,6 @@ function calCulateFirstPayment(){
 }
 
 function printSave(new_stu_id,new_receipt_no){
-
 	if(new_stu_id=='' && new_receipt_no==''){
 		getLoanByBranch(1);
 	}else{
@@ -1402,46 +1378,56 @@ function printSave(new_stu_id,new_receipt_no){
 	}
 	
 	dijit.byId("lbl_schedule").hide();
-	
 	dojo.byId("lb_paymentid").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
+
+	date_payment = dijit.byId("date_buy").get('value');
+	var a = new Date(date_payment);
+	mm = a.getMonth()+1;
+	var dd = a.getDate();
+	 if(dd<10){
+		 dd = "0"+dd;
+	}
+	month = returnMOnth(mm);
+	var y = a.getFullYear();
+	var date_payment = dd +'-'+month+'-'+y ;
 	
-	dojo.byId("lb_buydate").innerHTML = dijit.byId("date_buy").attr('displayedValue');
+	dojo.byId("lb_buydate").innerHTML = date_payment; //dijit.byId("date_buy").attr('displayedValue');
 	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue');
-	dojo.byId("lb_price").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),2);
+	dojo.byId("lb_price").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 
 	dis_percent = dijit.byId("discount_percent").get('value');
 	if(isNaN(dis_percent)){dis_percent='';}else{dis_percent=dis_percent+" %+";}
 
 	discount = dijit.byId("discount").get('value');
-	if(isNaN(discount)){discount=' $ 0';}else{discount = "$ "+dojo.number.format(discount,2);};
+	if(isNaN(discount)){discount=' $ 0';}else{discount = "$ "+dojo.number.format(discount,{places:2});};
 	
 	dojo.byId("lb_discount").innerHTML = dis_percent+discount;
 	other_fee = dijit.byId("other_fee").get('value');
 	if(isNaN(other_fee)){other_fee=0;}
-	dojo.byId("lb_otherfee").innerHTML = "$ "+dojo.number.format(other_fee,2);
-	dojo.byId("lb_amount").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),2);
-	dojo.byId("lb_paid").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),2);
+	dojo.byId("lb_otherfee").innerHTML = "$ "+dojo.number.format(other_fee,{places:2});
+	dojo.byId("lb_amount").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),{places:2});
+	dojo.byId("lb_paid").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
 	
 	balance = dijit.byId("balance").get('value');
 	if(isNaN(balance)){balance=0;}
-	dojo.byId("lb_balance").innerHTML = "$ "+dojo.number.format(balance,2);
+	dojo.byId("lb_balance").innerHTML = "$ "+dojo.number.format(balance,{places:2});
 	
 	dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
 	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	
 	dojo.byId("lb_paymentid1").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
-	dojo.byId("lb_buydate1").innerHTML = dijit.byId("date_buy").attr('displayedValue');
+	dojo.byId("lb_buydate1").innerHTML = date_payment;//dijit.byId("date_buy").attr('displayedValue');
 	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
 	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue');
-	dojo.byId("lb_price1").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),2);
+	dojo.byId("lb_price1").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 	dojo.byId("lb_discount1").innerHTML = dis_percent+discount;//dijit.byId("discount").get('value');
 	other_fee = dijit.byId("other_fee").get('value');
 	if(isNaN(other_fee)){other_fee=0;}
-	dojo.byId("lb_otherfee1").innerHTML = "$ "+dojo.number.format(other_fee,2);
-	dojo.byId("lb_amount1").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),2);
-	dojo.byId("lb_paid1").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),2);
-	dojo.byId("lb_balance1").innerHTML = "$ "+dojo.number.format(balance,2);
+	dojo.byId("lb_otherfee1").innerHTML = "$ "+dojo.number.format(other_fee,{places:2});
+	dojo.byId("lb_amount1").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),{places:2});
+	dojo.byId("lb_paid1").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
+	dojo.byId("lb_balance1").innerHTML = "$ "+dojo.number.format(balance,{places:2});
 	dojo.byId("lb_noted1").innerHTML =dijit.byId("note").get('value');
 	dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
 	
@@ -1449,9 +1435,8 @@ function printSave(new_stu_id,new_receipt_no){
 	if(schedule_opt==1){
 		//EXPIRED_DATE
 	}
-	
 	 dijit.byId("terms").show();	
-	}
+}
 var url_previewloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'addschedultest')); ?>';
 function addPreviewLoan(){
 	r=0;
@@ -1546,7 +1531,6 @@ function addStaff(){
 		form: dojo.byId("frm_staff"),
 		handleAs:"json",
 		load: function(data) {
-			//alert(data.name_code);
 			var Itemmake = { 
 	    	  	id: data,
 		        name: dijit.byId('kh_name').get('value')
@@ -1753,6 +1737,21 @@ function addNewClient(){
 		</form>
 	</div>
 </div>
-
-
-
+<script>
+function returnMOnth(monthnum){
+	var month = new Array();
+	month[1] = "Jan";
+	month[2] = "Feb";
+	month[3] = "Mar";
+	month[4] = "Apr";
+	month[5] = "May";
+	month[6] = "Jun";
+	month[7] = "Jul";
+	month[8] = "Aug";
+	month[8] = "Sep";
+	month[10] = "Oct";
+	month[11] = "Nov";
+	month[12] = "Dec";
+	return month[monthnum];
+}
+</script>

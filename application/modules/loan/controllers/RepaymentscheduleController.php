@@ -86,6 +86,12 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		
+		$id = $this->getRequest()->getParam('id');
+		if(!empty($id)){
+		$db = new Loan_Model_DbTable_DbLandpayment();
+		$this->view->rsresult =  $db->getTranLoanByIdWithBranch($id,null);
+		}
 	}	
 // 	public function addloanAction(){
 // 		if($this->getRequest()->isPost()){

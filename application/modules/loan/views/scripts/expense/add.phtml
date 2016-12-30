@@ -12,7 +12,6 @@ $frm = $this->frm_expense;
 </style>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
  <script>
-		//require(["dijit/form/DateTextBox","dijit/form/NumberTextBox"]);
 		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
  </script>
  
@@ -217,7 +216,19 @@ function printSave(new_invoice_no){
 	dojo.byId("lb_income_category").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title").innerHTML = dijit.byId("title").get('value');
 	dojo.byId("lb_total_amount").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
-	dojo.byId("lb_date").innerHTML = dijit.byId("Date").attr('displayedValue');
+
+	date_payment = dijit.byId("Date").get('value');
+	var a = new Date(date_payment);
+	mm = a.getMonth()+1;
+	var dd = a.getDate();
+	 if(dd<10){
+		 dd = "0"+dd;
+	}
+	month = returnMOnth(mm);
+	var y = a.getFullYear();
+	var date_payment = dd +'-'+month+'-'+y ;
+	
+	dojo.byId("lb_date").innerHTML = date_payment;
 	dojo.byId("lb_description").innerHTML = dijit.byId("Description").attr('displayedValue');
 	//dojo.byId("lb_customer_name").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_cheque").innerHTML = dijit.byId("cheque").attr('displayedValue');
@@ -228,7 +239,7 @@ function printSave(new_invoice_no){
 	dojo.byId("lb_income_category1").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title1").innerHTML = dijit.byId("title").get('value');
 	dojo.byId("lb_total_amount1").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
-	dojo.byId("lb_date1").innerHTML = dijit.byId("Date").attr('displayedValue');
+	dojo.byId("lb_date1").innerHTML = date_payment;//dijit.byId("Date").attr('displayedValue');
 	dojo.byId("lb_description1").innerHTML = dijit.byId("Description").attr('displayedValue');
 	//dojo.byId("lb_customer_name1").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_cheque1").innerHTML = dijit.byId("cheque").attr('displayedValue');
@@ -316,19 +327,19 @@ function hideDialog1(){
 				}
 
 				.label{ font-weight: bold;font-size: 22px;}
-				.value{ font:bold 12px 'Khmer OS Battambang';border: 1px solid rgba(14, 0, 107, 1); height: 24px; width: 100%;margin-right:5px; display: block;
-						line-height: 25px;
+				.value{ font:14px 'Khmer OS Battambang';border: 1px solid #000; height: 28px; width: 100%;margin-right:5px; display: block;
+						line-height: 28px;
 					    text-align: center;
 						}
 				.print tr td{
 					padding:2px 2px; 
 				}
-			   .khmerbold{font:bold 12px 'Khmer OS Battambang';}
-			   .khmer{font:12px 'Khmer OS Battambang';}
+			   .khmerbold{font:16px 'Khmer OS Battambang';}
+			   .khmer{font:16px 'Khmer OS Battambang';}
 			   .one{white-space:nowrap;}
 			   .h{ margin-top: -10px;/*margin-left:4px;*/}
 			</style>	
-			<table width="100%" style="white-space: nowrap;font-size:12px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
+			<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: 10px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
@@ -346,7 +357,7 @@ function hideDialog1(){
 					</td>
 				</tr>
 			</table>
-			<table width="100%" style="white-space: nowrap;font-size:12px;margin-top: -20px;" class="print" cellspacing="8px"  cellpadding="0">
+			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 0px;" class="print" cellspacing="3px"  cellpadding="0">
 				<tr>
 					<td width="10%" ></td>
 					<td width="37%" ></td>
@@ -355,26 +366,18 @@ function hideDialog1(){
 					<td width="10%" ></td>
 					<td width="20%" ></td>
 				</tr>
-				
-				
 				<tr style="white-space: nowrap;">
-				
 					<td class="one khmerbold">គម្រោង</td>
                     <td><strong><label id="lb_branch" class="value"></label></strong></td>
-					
-					
 				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
                     <td colspan="3"><strong><label id="lb_invoice" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				
 					<td class="one khmerbold">ប្រភេទចំណាយ</td>
 					<td ><strong><label id="lb_income_category" class="value"></label></strong></td>
-					
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ពណ៌នាចំនាយ</td>
 				    <td colspan="3"><strong><label id="lb_income_title" class="value"></label></strong></td>
 				</tr>
-
 				<tr>
 					<td class="one khmerbold">សែក</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"></label></strong></td>
@@ -412,15 +415,13 @@ function hideDialog1(){
 						
 					</td>
 				</tr>
-				
-				<tr style="line-height: 15px;font-size: 10px;font-family:'Khmer OS Battambang';">
+				<tr style="line-height: 20px;font-size: 12px;font-family:'Khmer OS Battambang';">
 					<td valign="top" >
-						<span style="text-decoration:underline;font-size: 11px;">សំគាល់ ៖</span>
+						<span style="text-decoration:underline;font-size: 12px;">សំគាល់ ៖</span>
 					</td>
 					<td colspan="5">
-						<span >*</span>&nbsp;&nbsp;<span> ក្នុងករណីបង់ប្រាក់ពុំទៀងទាត់នឺងត្រូវផាកពិន័យដូចចែងក្នុងកិច្ចសន្យា</span><br />
-						<span>*</span>&nbsp;&nbsp;<span> រាល់ការបង់ប្រាក់ជាមូលប្បទានប័ត្រ នឺងអាចមានសុពលភាពលុះត្រាតែទឺកប្រាក់នៅក្នុងមូលប្បទានប័ត្រ</span><br />
-						<span> &nbsp;&nbsp;&nbsp;&nbsp;ត្រូវបានដាក់បញ្ចូលក្នុងគណនេយ្យរបស់ក្រុមហ៊ុនរួចរាល់។ </span><br />
+						<span style="font-size: 12px;"><?php echo $this->data['comment'];?></span><br />
+						<span style="white-space: pre-line;font-size: 12px;"><?php echo $this->data['comment1'];?></span><br />
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
@@ -429,9 +430,9 @@ function hideDialog1(){
 					</td>
 				</tr>
 				
-				<tr style="line-height: 15px;font-size: 10px;">
+				<tr style="line-height: 20px;font-size: 10px;">
 					<td colspan="6" >
-						<table width="100%" style="font-size:11px;line-height: 12px;margin-top: -5px;font-family: 'Khmer OS Battambang';"> 
+						<table width="100%" style="font-size:12px;line-height: 12px;margin-top: -5px;font-family: 'Khmer OS Battambang';"> 
 							<tr>
 								<td width="22%">
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
@@ -477,7 +478,7 @@ function hideDialog1(){
 		</table>
 		
 		<div id="divPrint1" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
-			<table width="100%" style="white-space: nowrap;font-size:12px;margin-top: 10px;" class="print" cellspacing="0"  cellpadding="0" >
+			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 10px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
@@ -495,7 +496,7 @@ function hideDialog1(){
 					</td>
 				</tr>
 			</table>
-			<table width="100%" style="white-space: nowrap;font-size:12px;margin-top: -20px;" class="print" cellspacing="8px"  cellpadding="0">
+			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 0px;" class="print" cellspacing="3px"  cellpadding="0">
 				<tr>
 					<td width="10%" ></td>
 					<td width="37%" ></td>
@@ -505,21 +506,15 @@ function hideDialog1(){
 					<td width="20%" ></td>
 				</tr>
 				
-				
 				<tr style="white-space: nowrap;">
-				
 					<td class="one khmerbold">សាខា</td>
                     <td><strong><label id="lb_branch1" class="value"></label></strong></td>
-					
-					
 				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
                     <td colspan="3"><strong><label id="lb_invoice1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				
 					<td class="one khmerbold">ប្រភេទចំណាយ</td>
 					<td ><strong><label id="lb_income_category1" class="value"></label></strong></td>
-					
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ពណ៌នាចំនាយ</td>
 				    <td colspan="3"><strong><label id="lb_income_title1" class="value"></label></strong></td>
 				</tr>
@@ -535,8 +530,6 @@ function hideDialog1(){
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">សម្គាល់</td>
 				    <td colspan="1" align="center"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: center; " id="lb_description1" class="value"></label></strong></td>
-				
-					
 					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃចំណាយ</td>
 				    <td colspan="3"><strong><label id="lb_date1" class="value"></label></strong></td>
 				</tr>
@@ -562,19 +555,17 @@ function hideDialog1(){
 					</td>
 				</tr>
 				
-				<tr style="line-height: 15px;font-size: 10px;font-family:'Khmer OS Battambang';">
+				<tr style="line-height: 20px;font-size: 12px;font-family:'Khmer OS Battambang';">
 					<td valign="top" >
-						<span style="text-decoration:underline;font-size: 11px;">សំគាល់ ៖</span>
+						<span style="text-decoration:underline;font-size: 12px;">សំគាល់ ៖</span>
 					</td>
 					<td colspan="5">
-						<span >*</span>&nbsp;&nbsp;<span> ក្នុងករណីបង់ប្រាក់ពុំទៀងទាត់នឺងត្រូវផាកពិន័យដូចចែងក្នុងកិច្ចសន្យា</span><br />
-						<span>*</span>&nbsp;&nbsp;<span> រាល់ការបង់ប្រាក់ជាមូលប្បទានប័ត្រ នឺងអាចមានសុពលភាពលុះត្រាតែទឺកប្រាក់នៅក្នុងមូលប្បទានប័ត្រ</span><br />
-						<span> &nbsp;&nbsp;&nbsp;&nbsp;ត្រូវបានដាក់បញ្ចូលក្នុងគណនេយ្យរបស់ក្រុមហ៊ុនរួចរាល់។ </span><br />
+						<span style="font-size: 12px;"><?php echo $this->data['comment'];?></span><br />
+						<span style="white-space: pre-line;font-size: 12px;"><?php echo $this->data['comment1'];?></span><br />
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
-						
 					</td>
 				</tr>
 				
@@ -617,6 +608,24 @@ function hideDialog1(){
 		
 	</div>
 </div>
+<script>
+function returnMOnth(monthnum){
+	var month = new Array();
+	month[1] = "Jan";
+	month[2] = "Feb";
+	month[3] = "Mar";
+	month[4] = "Apr";
+	month[5] = "May";
+	month[6] = "Jun";
+	month[7] = "Jul";
+	month[8] = "Aug";
+	month[8] = "Sep";
+	month[10] = "Oct";
+	month[11] = "Nov";
+	month[12] = "Dec";
+	return month[monthnum];
+}
+</script>
 
 
 

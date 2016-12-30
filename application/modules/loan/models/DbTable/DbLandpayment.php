@@ -26,13 +26,16 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    `p`.`street`          AS `street`,
 	    (SELECT name_en FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
   		`s`.`price_before`    AS `price_before`,
-        `s`.`discount_amount` AS `discount_amount`,
+ 		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
         `s`.`discount_amount` AS `discount_amount`,
          `s`.`other_fee`     AS `other_fee`,
         `s`.`paid_amount`     AS `paid_amount`,
         `s`.`balance`         AS `balance`,
         `s`.`buy_date`        AS `buy_date`,
-         s.status
+         s.status,
+         'បង់ប្រាក់',
+         'ចេញតារាងថ្មី',
+         'កិច្ចសន្យា'
 		FROM ((`ln_sale` `s`
 		    JOIN `ln_client` `c`)
 		   JOIN `ln_properties` `p`)
@@ -171,6 +174,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			   	'validate_date'=>$data['first_payment'],
     				'payment_method'=>1,//$data['loan_type'],
     				'note'=>$data['note'],
+    			   	'land_price'=>$data['land_price'],
+    			   	'total_installamount'=>$data['total_installamount'],
 //     				'payment_number'=>$data['loan_type'],
     				//'graice_period'=>$data['pay_every'],
     				//'amount_collect'=>$data['repayment_method'],
@@ -197,7 +202,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'client_id'			=>$data['member'],
     					'receipt_no'		=>$receipt,
     					'date_pay'			=>$data['date_buy'],
-    					'land_id'			=>$id,
+    					'land_id'			=>$data['land_code'],
+    					'sale_id'			=>$id,
     					'date_input'		=>date('Y-m-d'),
     					'outstanding'		=>$data['sold_price'],
     					'principal_amount'	=>$data['balance'],
@@ -253,8 +259,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$next_payment = $data['first_payment'];
     		$from_date =  $data['release_date'];
     		$curr_type = 2;//$data['currency_type'];
-    		$loop_payment = $data['period'];
-    		$borrow_term = $data['period'];
+    		$loop_payment = $data['period']*12;
+    		$borrow_term = $data['period']*12;
     		$payment_method = $data["schedule_opt"];
     		$j=0;
     		$pri_permonth=0;
@@ -313,7 +319,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     									'sale_id'=>$id,//good
     									'begining_balance'=> $old_remain_principal,//good
     									'begining_balance_after'=> $old_remain_principal,//good
-    									'principal_permonth'=> $old_pri_permonth,//good
+    									'principal_permonth'=> $data['total_payment'.$j],//good
     									'principal_permonthafter'=>$old_pri_permonth,//good
     									'total_interest'=>$old_interest_paymonth,//good
     									'total_interest_after'=>$old_interest_paymonth,//good
@@ -375,7 +381,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			   	 			'sale_id'=>$id,//good
     			   	 			'begining_balance'=> $old_remain_principal,//good
     			   	 			'begining_balance_after'=> $old_remain_principal,//good
-    			   	 			'principal_permonth'=> $old_pri_permonth,//good
+    			   	 			'principal_permonth'=> $data['total_payment'.$i],//good
     			   	 			'principal_permonthafter'=>$old_pri_permonth,//good
     			   	 			'total_interest'=>$old_interest_paymonth,//good
     			   	 			'total_interest_after'=>$old_interest_paymonth,//good
@@ -419,7 +425,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    			        	'amount_day'=>$old_amount_day,
 			    			        	'is_completed'=>0,
 			    			        	'date_payment'=>$next_payment,
-			    			        	'no_installment'=>$i+1+$j,
+			    			        	'no_installment'=>$i+$j,
 	// 		    			        	'collect_by'=>1,
 	// 		    			        	'payment_option'=>$cum_interest,
 	// 		    			        	'penelize'=>,
@@ -536,8 +542,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$next_payment = $data['first_payment'];
     		$from_date =  $data['release_date'];
     		$curr_type = 2;//$data['currency_type'];
-    		$loop_payment = $data['period'];
-    		$borrow_term = $data['period'];
+    		$loop_payment = $data['period']*12;
+    		$borrow_term = $data['period']*12;
     		$payment_method = $data["schedule_opt"];
     		
     		$str_next = '+1 month';
@@ -779,8 +785,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$next_payment = $data['first_payment'];
     		$from_date =  $data['release_date'];
     		$curr_type = 2;//$data['currency_type'];
-    		$loop_payment = $data['period'];
-    		$borrow_term = $data['period'];
+    		$loop_payment = $data['period']*12;
+    		$borrow_term = $data['period']*12;
     		$payment_method = $data["schedule_opt"];
     
     		$str_next = '+1 month';

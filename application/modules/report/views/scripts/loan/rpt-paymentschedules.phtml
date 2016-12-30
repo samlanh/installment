@@ -50,24 +50,26 @@ td p{ margin-top:0px !important;}
 				                	    <p><b><?php echo $tr->translate('CUSTOMER_NAME');?></b>: <?php echo $client['client_name_kh']." - ".$client['client_name_en'] ;?> </p>
 				                	    <p> <?php echo "<strong>". $tr->translate('CLIENT_NO')."</strong> : ".$client['client_number']?></p>
 				                		<p><b><?php echo $tr->translate("ADDRESS");?></b>:<?php echo $row['village_name'];?> ,<?php echo $row['commune_name'];?> <br /><?php echo $row['district_name'];?> ,  <?php echo $row['province_en_name'];?>
-				                		<p><?php echo $tr->translate("TEL");?>  : <?php echo $client['tel'];?></p>   
-				                	</td>
+				                		<p><?php echo $tr->translate("TEL");?>  : <?php echo $client['tel'];?></p>  
+				                		</td>
 				                    <td valign="top" style="" width="33%">
-				                        <p><?php echo $tr->translate("LOAN_AMOUNT");?>  : <?php echo number_format($client['price_sold']-$client['other_fee'],2);?> $</p>
-				                    	<p><?php echo $tr->translate("Discount");?> : <b><?php echo $client['discount_percent']."% +".number_format($client['discount_amount'],2);?> $</b></p>
-				                    	<p><?php echo $tr->translate("OTHER_FEE");?>  : <?php echo number_format($client['other_fee'],2);?></p>
-				                    	<p><?php echo $tr->translate("TOTAL_AMOUNT");?>  : <?php echo number_format($client['price_sold'],2);?></p>
-				                    	<p><?php echo $tr->translate("PAID");?>  : <?php echo number_format($client['paid_amount'],2);?></p>
-				                    	<p><?php echo $tr->translate("BALANCE");?>  : <strong><?php echo number_format($client['balance'],2);?></strong></p>
-				                    	
+				                        <!--<p><?php //echo $tr->translate("LOAN_AMOUNT");?>  : <?php //echo number_format($client['price_sold']-$client['other_fee'],2);?> $</p>
+				                    	<p><?php //echo $tr->translate("Discount");?> : <b><?php //echo $client['discount_percent']."% +".number_format($client['discount_amount'],2);?> $</b></p>
+				                    	<p><?php //echo $tr->translate("OTHER_FEE");?>  : <?php //echo number_format($client['other_fee'],2);?></p>
+				                    	<p><?php //echo $tr->translate("TOTAL_AMOUNT");?>  : <?php //echo number_format($client['price_sold'],2);?></p>
+				                    	<p><?php //echo $tr->translate("PAID");?>  : <?php //echo number_format($client['paid_amount'],2);?></p>
+				                    	<p><?php //echo $tr->translate("BALANCE");?>  : <strong><?php //echo number_format($client['balance'],2);?></strong></p> -->
+				                     <p><?php echo $tr->translate("HOUSE");?> : <b><?php echo $client['land_address'].",".$client['stree'];?></b></p>
+				                	 <p><?php echo $tr->translate("ចំនួនប្រាក់ត្រូវរំលស់");?>  : <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?> $</p>
+				                     <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php echo $client['interest_rate'];?>&nbsp;%</p>
+									 <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo ($client['total_duration']);?>&nbsp;ឆ្នាំ</p>
+				     	             <!-- <p><?php //echo $tr->translate("TERM_BORROW");?> : <?php //echo $client['total_duration']*12;?>&nbsp;ខែ</p> -->
+				                     
 				                    </td>
 				                     <td valign="top">
-				                     <p><?php echo $tr->translate("HOUSE");?> : <b><?php echo $client['land_address'];?></b></p>
-				     	             <p><?php echo $tr->translate("INTEREST");?> : <?php echo $client['interest_rate'];?>&nbsp;%</p>
-									 <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo number_format($client['total_duration']/12,2);?>&nbsp;ឆ្នាំ</p>
-				     	             <p><?php echo $tr->translate("TERM_BORROW");?> : <?php echo $client['total_duration'];?>&nbsp;ខែ</p>
-				                     <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-M-Y',strtotime($client['startcal_date']));?> </p>
-				                     <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-M-Y',strtotime($client['first_payment'])); ?></p>
+				                     <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-M-Y',strtotime($client['buy_date']));?> </p>
+				                     <p><?php echo $tr->translate("ថ្ងៃបង់រំលស់ដំបូង");?> : <?php echo date('d-M-Y',strtotime($client['first_payment'])); ?></p>
+				                     <p><?php echo $tr->translate("ថ្ងៃបញ្ចប់");?> : <?php echo date('d-M-Y',strtotime($client['end_line'])); ?></p>
 				                    </td>
 				                </tr>
 			                </table>
@@ -81,9 +83,10 @@ td p{ margin-top:0px !important;}
 	            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%">
 	                 <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
 	                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
-	                    <td rowspan="2" colspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
 	                    <!-- <td>ចំនួនថ្ងៃ</td> -->
 	                    <td rowspan="2"><?php echo $tr->translate("PRINCIPLE");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("ប្រាក់បង់បន្ថែម");?></td>
 	                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("Cumulative Interest");?></td>
@@ -105,9 +108,10 @@ td p{ margin-top:0px !important;}
 	                    <?php $str_day = date('D',strtotime($row['date_payment']));
 	                    	$day_as_khmer = $dayin_khmer[$str_day];
 	                    ?>
-	                    <td align="right">&nbsp;<?php echo $day_as_khmer.'-'.$str_day; ?>&nbsp;&nbsp;&nbsp;</td>
+	                    <!--<td align="right">&nbsp;<?php //echo $day_as_khmer.'-'.$str_day; ?>&nbsp;&nbsp;&nbsp;</td> -->
 	                    <td align="center"><?php echo date('d-M-Y',strtotime($row['date_payment']));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['begining_balance'],2));?></td>
+	                    <td align="center">&nbsp;-<?php  ?>&nbsp;&nbsp;&nbsp;</td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['principal_permonth'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['total_interest'],2));?></td>
 	                    <td ><?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></td>

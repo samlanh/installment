@@ -181,13 +181,12 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		
 		));
 		
-		$_amount_return = new Zend_Dojo_Form_Element_NumberTextBox('amount_return');
+		$_amount_return = new Zend_Dojo_Form_Element_NumberTextBox('extrapayment');
 		$_amount_return->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'style'=>'color:red;',
-				//'required'=>true,
-				'readonly'=>true
+				'onkeyup'	=>	'doTotalByServ();'
 		));
 		
 		$_service_charge = new Zend_Dojo_Form_Element_NumberTextBox('service_charge');

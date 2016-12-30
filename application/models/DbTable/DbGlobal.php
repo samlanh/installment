@@ -309,7 +309,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 ";
 //    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." LIMIT 1 ";
 //    	$pre = $this->getPrefixCode($data['branch_id'])."-R";
-   	$pre="N1";
+   	$pre="N1:";
    	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+1;
    	$acc_no= strlen((int)$acc_no+1);
@@ -497,6 +497,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`staff_id`        AS `staff_id`,
 		  `s`.`comission`       AS `comission`,
 		  `s`.`receipt_no`      AS `receipt_no`,
+		  s.total_installamount,
   		(SELECT client_number FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_number,
   		(SELECT name_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_kh,
   		(SELECT name_en FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_en,

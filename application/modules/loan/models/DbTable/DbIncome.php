@@ -139,7 +139,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		
 		$sql = " select count(id) from ln_income where branch_id = $branch_id";
 		$amount = $db->fetchOne($sql);
-		$pre = 'inc1';
+		$pre = 'inc1:';
 		$result = $amount + 1;
 		$length = strlen((int)$result);
 		for($i = $length;$i < 3 ; $i++){
