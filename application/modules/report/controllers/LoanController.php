@@ -787,5 +787,18 @@ public function exportFileToExcel($table,$data,$thead){
  	Application_Model_Decorator::removeAllDecorator($fm);
  	$this->view->frm_search = $fm;
  }
+  function receiptAction(){
+	 $key = new Application_Model_DbTable_DbKeycode();
+	 $this->view->data=$key->getKeyCodeMiniInv(TRUE);
+	 $db  = new Report_Model_DbTable_DbLandreport();
+	 $id = $this->getRequest()->getParam('id');
+	 if(!empty($id)){
+		 $receipt = $db->getReceiptByID($id);
+			$this->view->rs = $receipt;
+	 }else{
+  		$this->_redirect("/report/paramater");
+  	}
+  }
+ 
 }
 

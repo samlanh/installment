@@ -976,5 +976,15 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	}
       	return $x;
       }
+	  function getReceiptByID($id){
+		  $db = $this->getAdapter();
+		  $sql="SELECT *,
+			(SELECT p.land_address  FROM `ln_properties` AS p WHERE p.id  = crm.`sale_id` LIMIT 1) AS land_address,
+			(SELECT p.street  FROM `ln_properties` AS p WHERE p.id  = crm.`sale_id` LIMIT 1) AS street,
+			(SELECT s.sale_number FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS sale_number,
+			(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS name_kh
+			 FROM `ln_client_receipt_money` AS crm WHERE crm.`id`=".$id;
+		  return $db->fetchRow($sql);
+	  }
  }
 
