@@ -188,6 +188,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				'style'=>'color:red;',
 				'onkeyup'	=>	'doTotalByServ();'
 		));
+		$_amount_return->setValue(0);
 		
 		$_service_charge = new Zend_Dojo_Form_Element_NumberTextBox('service_charge');
 		$_service_charge->setAttribs(array(
@@ -278,7 +279,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'required'=>true,
-				'onKeyup'=>'doTotalBypene();'
+				'onKeyup'=>'doTotalByServ();'
 		));
 		$_penalize_amount->setValue(0);
 		
