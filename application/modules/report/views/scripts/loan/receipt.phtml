@@ -7,6 +7,7 @@ dojo.require("dijit.form.DateTextBox");
 </script>
 <style>
 .hover:hover{background: #ccc;}
+img.view{height: 85px !important;}
 </style>
 <title><?php echo $tr->translate("RECEIPT");?></title>
  <form method="post">
@@ -40,13 +41,13 @@ dojo.require("dijit.form.DateTextBox");
 			   .h{ margin-top: -10px;}
 			</style>
 			<?php for($i=0; $i<2; $i++){ ?>			
-			<table width="100%" style="white-space: nowrap;font-size:14px;  padding:15px 10px 0px 5px;margin-top: 15px;" class="print" cellspacing="0"  cellpadding="0" >
+			<table width="100%" style="white-space: nowrap;font-size:14px;  padding:15px 10px 0px 5px;margin-top: 5px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 							<tr>
 								<td width="25%">
-									<img style="width:100%;height:61px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+									<img class="view" style="width:100%;height:61px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
 								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
 									<div style="line-height:35px;"><strong style="font-size: 18px;">OFFICIAL RECEIPT</strong></div>
@@ -58,7 +59,7 @@ dojo.require("dijit.form.DateTextBox");
 					</td>
 				</tr>
 			</table>
-			<table width="100%" style="white-space: nowrap;font-size:16px;margin-top:-20px;font-family: 'Khmer OS Battambang';" class="print" cellspacing="3px"  cellpadding="0">
+			<table width="100%" style="white-space: nowrap;font-size:16px;margin-top:-40px;font-family: 'Time News Roman','Khmer OS Battambang';" class="print" cellspacing="3px"  cellpadding="0">
 				<tr>
 					<td width="10%" ></td>
 					<td width="30%" ></td>
@@ -68,14 +69,14 @@ dojo.require("dijit.form.DateTextBox");
 					<td width="18%" ></td>
 				</tr>
 				
-				<tr style="white-space: nowrap;">
+				<!--  <tr style="white-space: nowrap;">
 				    <td colspan="5"></td>
 					<td align="right"><strong><label id="lb_receipt1" ></label></strong></td>
 				</tr>
 				
 				<tr style="white-space: nowrap;">
 				    <td   >លេខកូដលក់</td>
-				    <td  ><strong><label id="lb_student_id1" class="value"><?php echo $this->rs['sale_number'];?></label></strong></td>
+				    <td  ><strong><label id="lb_student_id1" class="value"><?php //echo $this->rs['sale_number'];?></label></strong></td>
 				  
 					<td   >&nbsp;&nbsp;&nbsp;តម្លៃលក់</td>
                     <td colspan="3" ><strong><label id="lb_price1" class="value"></label></strong></td>
@@ -84,7 +85,7 @@ dojo.require("dijit.form.DateTextBox");
 				<tr style="white-space: nowrap;">
 				
 				    <td  >ឈ្មោះ​អតិថិជន </td>
-				    <td ><strong><label id="lb_customer1" class="value"><?php echo $this->rs['name_kh'];?></label></strong></td>
+				    <td ><strong><label id="lb_customer1" class="value"><?php //echo $this->rs['name_kh'];?></label></strong></td>
 					
 					<td  >​&nbsp;&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
 				    <td><strong><label id="lb_discount1" class="value"></label></strong></td>
@@ -96,7 +97,7 @@ dojo.require("dijit.form.DateTextBox");
 				<tr style="white-space: nowrap;">
 				
 					<td  >លេខផ្ទះ</td>
-                    <td><strong><label id="lb_hourseno1" class="value"><?php echo $this->rs['land_address'].' , '.$this->rs['street'];?></label></strong></td>
+                    <td><strong><label id="lb_hourseno1" class="value"><?php //echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; }?></label></strong></td>
 					
 					
 				    <td  >&nbsp;&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
@@ -127,8 +128,57 @@ dojo.require("dijit.form.DateTextBox");
 					
 					<td  >&nbsp;&nbsp;&nbsp;ថ្ងៃលក់</td>
 				    <td colspan="3"><strong><label id="lb_buydate1" class="value"></label></strong></td>
+				</tr>-->
+				
+				<tr style="white-space: nowrap;font-size: 14px;">
+				    <td colspan="5"></td>
+					<td align="right"><strong>No. : <label><?php echo $this->rs['receipt_no'];?></label></strong></td>
 				</tr>
 				
+				<tr style="white-space: nowrap;">
+				    <td  >លេខកូដលក់</td>
+				    <td  ><strong><label class="value"><?php echo $this->rs['sale_number'];?></label></strong></td>
+					<td  >&nbsp;&nbsp;ប្រាក់ដើមត្រូវបង់</td>
+                    <td colspan="3" ><strong><label  class="value"><?php echo  number_format($this->rs['total_principal_permonth'],2)." $";?></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+				    <td >ឈ្មោះ​អតិថិជន </td>
+				    <td ><strong><label class="value"><?php echo $this->rs['name_kh'];?></label></strong></td>
+					<td >​&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
+				    <td colspan="3"><strong><label id="lb_discount1" class="value"></label></strong></td>
+                </tr>
+				<tr style="white-space: nowrap;">
+					<td >លេខផ្ទះ</td>
+                    <td><strong><label class="value"><?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; }?></label></strong></td>
+				   <td >&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
+					<td colspan="3"><strong><label  class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td  width="10%">តំលៃផ្ទះ</td>
+				    <td width="40%"><strong><label id="lblpropertyprice1" class="value"><?php echo  number_format($this->rs['price_sold'],2)." $";?></label></strong></td>
+					<td >&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
+                    <td colspan="3"><strong><label id="lbl_total_payment1" class="value"><?php echo  number_format($this->rs['total_principal_permonth'],2)." $";?></label></strong></td>
+				</tr>
+				<tr>
+					<td >ប្រាក់បានបង់សរុប</td>
+					<td ><strong><label id="lbl_total_paid1" class="value"><?php echo  number_format(($this->rs['price_sold']-($this->rs['outstanding']-$this->rs['recieve_amount'])),2)." $";?></label></strong></td>
+					<td>&nbsp;&nbsp;ប្រាក់បានបង់</td>
+				    <td colspan="3"><strong><label  class="value"><?php echo number_format($this->rs['recieve_amount'],2)." $";?></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td >ប្រាក់នៅសល់</td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" class="value"><?php echo  number_format(($this->rs['outstanding']-$this->rs['recieve_amount']),2)." $";?></label></strong></td>
+					<td >&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
+				    <td><strong><label id="lb_buydate1" class="value"><?php echo date("d-M-Y",strtotime($this->rs['date_pay']));?></label></strong></td>
+					<td>&nbsp;ថ្ងៃទទួល</td>
+					<td><strong><label id="lbl_paid_date1" class="value"><?php echo date("d-M-Y",strtotime($this->rs['date_input']));?></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td >សម្គាល់</td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"></label></strong></td>
+					<td >&nbsp;&nbsp;សែក</td>
+					<td colspan="3"><strong><label id="lb_cheque1" class="value"></label></strong></td>
+				</tr>
 				
 				<tr style="white-space: nowrap;" height="60px;">
 					<td colspan="6">
@@ -162,7 +212,7 @@ dojo.require("dijit.form.DateTextBox");
 								</td>
 								
 								<td align="center" width="40%">
-									<strong><label id="lbl_customer1"></label></strong>
+									<strong><label id="lbl_customer1"><?php echo $this->rs['name_kh'];?></label></strong>
 								</td>
 									
 								<td align="center" width="30%">
