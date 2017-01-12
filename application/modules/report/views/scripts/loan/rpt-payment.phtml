@@ -2,6 +2,7 @@
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm_search;
 $opt = array(1=>"បង់ធម្មតា",2=>"បង់មុន",3=>"បង់រំលោះប្រាក់ដើម",4=>"បង់ផ្តាច់");
+$url_receipt = $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt'));
 ?>
 <title><?php echo $tr->translate("RPT_CLIENT_PAYMENT");?></title>
 <script>
@@ -121,7 +122,10 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
                		<td style="white-space:nowrap; border-right:3px double black; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date_payment"]));?>&nbsp;</td>
                		<td style="white-space:nowrap; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
                		<td>&nbsp;<?php echo $rs["receipt_no"];?>&nbsp;</td>
-               		<td style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;<?php echo $rs["paymentoption"];?>&nbsp;</td>
+               		<td style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;
+					<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
+					<?php echo $rs["paymentoption"];?></a>
+					&nbsp;</td>
                		<!--<td style="font:bolder 11px Arial;">&nbsp;<?php //$balance=($rs["recieve_amount"]-$rs["recieve_amount"])-$rs["total_payment"]; if($balance<0){echo '('.abs($balance).')';}else {echo $balance=0;};echo $rs['currency_typeshow'];?>&nbsp;</td>-->
                 </tr>
                 <?php }?>
