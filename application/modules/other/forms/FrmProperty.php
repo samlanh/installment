@@ -70,7 +70,8 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		$_branch_id->setValue($request->getParam("branch_id"));
 		
 		if(empty($_date)){
-			$_date = date("Y-m-d");
+			//$_date = date("Y-m-d");
+			$_date = '';
 		}
 		$from_date->setValue($_date);
 		

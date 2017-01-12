@@ -79,11 +79,13 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 		$_startdate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
 		$_startdate->setAttribs(array('dojoType'=>$this->date,
 				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'onchange'=>'CalculateDate();'));
 		$_date = $request->getParam("start_date");
 
 		if(empty($_date)){
-			$_date = date('Y-m-01');
+			//$_date = date('Y-m-01');
+			$_date='';
 		}
 		$_startdate->setValue($_date);
 		
@@ -91,6 +93,7 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 		$_enddate = new Zend_Dojo_Form_Element_DateTextBox('end_date');
 		$_enddate->setAttribs(array('dojoType'=>$this->date,'required'=>'true',
 				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				));
 		$_date = $request->getParam("end_date");
 		
@@ -117,6 +120,16 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 				0=>$this->tr->translate("DACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		$_id = new Zend_Form_Element_Hidden('id');
+		
+		$_sex = new Zend_Dojo_Form_Element_FilteringSelect('co_sex');
+		$_sex->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$opt = array(-1=>$this->tr->translate('SELECT_GENDER'),1=>"Male",2=>"Female");
+		$_sex->setMultiOptions($opt);
+		$_sex->setValue($request->getParam("co_sex"));
+		
 		if(!empty($_data)){
 			$_co->setValue($_data['co_name']);
 			$_startdate->setValue($_data['start_date']);
@@ -126,7 +139,7 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 			$_id->setValue($_data['id']);
 			$_note->setValue($_data['note']);
 		}
-		$this->addElements(array($_branch_id,$_salary,$_staff_id,$_btn_search,$_status_search,$_title,$_id,$_co,$_note,$_startdate,$_enddate,$_amount_day,$_status));
+		$this->addElements(array($_sex,$_branch_id,$_salary,$_staff_id,$_btn_search,$_status_search,$_title,$_id,$_co,$_note,$_startdate,$_enddate,$_amount_day,$_status));
 		return $this;
 	}
 	

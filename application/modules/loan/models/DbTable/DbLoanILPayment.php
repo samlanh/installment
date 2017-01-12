@@ -280,7 +280,6 @@ public function addILPayment($data){
     		$principle_amount=0;
     	}
     	
-    	
     	$service_charge= $data["service_charge"];
     	$penalize = $data["penalize_amount"];
     		$arr_client_pay = array(
@@ -289,8 +288,8 @@ public function addILPayment($data){
     			'date_pay'					    =>	$data['collect_date'],
     			'date_input'					=>	date("Y-m-d"),
     			'client_id'                     =>	$data['client_id'],
-    			'sale_id'						=>	$data['property_id'],
-    			'land_id'						=>	$data['loan_number'],
+    			'sale_id'						=>	$data['loan_number'],
+    			'land_id'						=>	$data['property_id'],
     			'outstanding'                   =>	$data['priciple_amount']+$principle_amount,//ប្រាក់ដើមមុនបង់
     			'total_principal_permonth'		=>	$data["os_amount"],//ប្រាក់ដើមត្រូវបង់
     			'total_interest_permonth'		=>	$data["total_interest"],
@@ -350,7 +349,7 @@ public function addILPayment($data){
     			$date_payment = $data["date_payment_".$i];
     		           $arr_money_detail = array(
     						'crm_id'				=>		$client_pay,
-    						'land_id'			    =>		$data['loan_number'],//ok
+    						'land_id'			    =>		$data['property_id'],//ok
     						'lfd_id'				=>		$data["mfdid_".$i],//ok
     						'date_payment'			=>	    $data["date_payment_".$i], // ថ្ងៃដែលត្រូវបង់
     						'capital'				=>		$data["total_priciple_".$i],
@@ -1337,7 +1336,7 @@ public function addILPayment($data){
 			  `ln_client_receipt_money_detail` AS crmd 
 			WHERE crm.`id` = crmd.`crm_id` 
 			  AND crm.status=1
-			  AND crmd.`land_id` = '$loan_number' GROUP BY crm.`id` ORDER BY crmd.`crm_id` DESC ";
+			  AND crm.`sale_id` = '$loan_number' GROUP BY crm.`id` ORDER BY crmd.`crm_id` DESC ";
    	return $db->fetchAll($sql);
    }
    

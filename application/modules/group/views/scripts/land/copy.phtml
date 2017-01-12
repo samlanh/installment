@@ -29,34 +29,34 @@ dojo.require("dijit.Dialog");
 							<td><?php echo $frm->getElement('branch_id');?></td>
 							<td><?php echo $tr->translate("PROPERTY_CODE")?></td>
 							<td><?php echo $frm->getElement('landcode');?></td>
+							<td valign="top"><?php echo $tr->translate("HEAD_TITLE_NO")?></td>
+							<td valign="top"><?php  echo $frm->getElement('hardtitle');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("HOUSE_TITLE")?>*</td>
+							<td><label id="message" style="color: red;"></label>
+							<?php  echo $frm->getElement('land_address');?>
+							</td>
+							<td><?php echo $tr->translate("STREET")?></td>
+							<td><?php  echo $frm->getElement('street');?></td>
 							<td valign="top"><?php echo $tr->translate("PROPERTY_TYPE")?></td>
 							<td valign="top"><input id="property_type" /><?php  //echo $frm->getElement('property_type');?></td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("TITLE")?>*</td>
-							<td><label id="message" style="color: red;"></label>
-							<?php  echo $frm->getElement('land_address');?>
-							</td>
-							<td><?php echo $tr->translate("STREET")?>*</td>
-							<td><?php  echo $frm->getElement('street');?></td>
 							<td><?php echo $tr->translate("LAND_PRICE")?>*</td>
 							<td><?php  echo $frm->getElement('land_price');?></td>
-						</tr>
-						<tr>
 							<td><?php echo $tr->translate("HOUSE_PRICE")?>*</td>
 							<td><?php  echo $frm->getElement('house_price');?></td>
 							<td><?php echo $tr->translate("PRICE")?>*</td>
 							<td><?php  echo $frm->getElement('price');?></td>
-							<td><?php echo $tr->translate("SIZE")?></td>
-							<td><?php  echo $frm->getElement('size');?></td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("WIDTH")?></td>
 							<td><?php  echo $frm->getElement('width');?></td>
 							<td><?php echo $tr->translate("HEIGHT")?></td>
 							<td><?php  echo $frm->getElement('height');?></td>
-						   <td valign="top"><?php echo $tr->translate("HEAD_TITLE_NO")?></td>
-							<td valign="top"><?php  echo $frm->getElement('hardtitle');?></td>
+							<td><?php echo $tr->translate("SIZE")?></td>
+							<td><?php  echo $frm->getElement('size');?></td>
 						</tr>
 						<tr>
 							<td valign="top"><?php echo $tr->translate("FLOOR")?></td>
@@ -180,6 +180,12 @@ function CalculatePrice(){
 	var price = Number(house_price + land_price);
 	dijit.byId('price').attr('value',price);
 }
+function calCulateSize(){
+	width = dijit.byId("width").get('value');
+	height = dijit.byId("height").get('value');
+	totalsize = width*height;
+	dijit.byId("size").attr('value',totalsize);
+	}
 url_CheckTitle = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'check-title'));?>';
 function checkTitle(){
 	title = dijit.byId('land_address').get('value');

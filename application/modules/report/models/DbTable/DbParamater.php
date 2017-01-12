@@ -55,6 +55,9 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     	if($search['co_khname']>0){
     		$where.= " AND co_id = ".$search['co_khname'];
     	}
+		if($search['co_sex']>-1){
+    		$where.= " AND sex = ".$search['co_sex'];
+    	}
     	if($search['branch_id']>0){
     		$where.= " AND branch_id = ".$search['branch_id'];
     	}
@@ -144,7 +147,7 @@ function getAllBranch($search=null){
     		    p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,p.note,
 				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type`) AS pro_type,
 				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`
-				 FROM `ln_properties` AS p WHERE p.`status`=1";
+				 FROM `ln_properties` AS p WHERE p.`status`=1 ";
     		if(!empty($search['property_type'])){
     			$where.= " AND p.`property_type` = ".$search['property_type'];
     		}
@@ -156,10 +159,11 @@ function getAllBranch($search=null){
     		}
     		if(!empty($search['adv_search'])){
     			$s_where=array();
-    			$s_search=$search['adv_search'];
+    			$s_search= addslashes(trim($search['adv_search']));
     			$s_where[]=" p.`land_code` LIKE '%{$s_search}%'";
     			$s_where[]=" p.`land_address` LIKE '%{$s_search}%'";
     			$s_where[]=" p.`land_size` LIKE '%{$s_search}%'";
+				$s_where[]=" p.street LIKE '%{$s_search}%'";
     			$s_where[]=" p.`height` LIKE '%{$s_search}%'";
     			$s_where[]=" p.width LIKE '%{$s_search}%'";
     			$s_where[]=" p.`price` LIKE '%{$s_search}%'";
@@ -167,7 +171,7 @@ function getAllBranch($search=null){
     			$s_where[]=" p.`house_price` LIKE '%{$s_search}%'";
     			$where.=' AND ('.implode(' OR ',$s_where).')';
     		}
-    		//echo $sql.$where;
+    		$where.=" ORDER BY p.`property_type` "; 
     		return $db->fetchAll($sql.$where);
     	}
     	function getCancelSale($search=null){
@@ -237,7 +241,7 @@ function getAllBranch($search=null){
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
     		}
-    		if($search['category_id']>-1 AND !empty($search['category_id'])){
+    		if(@$search['category_id']>-1 AND !@empty($search['category_id'])){
     			$where.= " AND category_id = ".$search['category_id'];
     		}
     		$order=" order by id desc ";
@@ -267,7 +271,7 @@ function getAllBranch($search=null){
     			$s_where[] = " invoice LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
-    		if($search['category_id_expense']>-1 AND !empty($search['category_id_expense'])){
+    		if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){
     			$where.= " AND category_id = ".$search['category_id_expense'];
     		}
     		if($search['branch_id']>0){
@@ -371,6 +375,7 @@ function getAllBranch($search=null){
 				  `s`.`total_duration`  AS `total_duration`,
 				  s.land_price,
 				   s.buy_date,
+				   s.agreement_date,
 			      `p`.`project_name`,
 			      `p`.`br_address` AS `project_location`,
 			      `p`.`p_manager_namekh` AS `project_manager_namekh`,
@@ -382,11 +387,13 @@ function getAllBranch($search=null){
                   `c`.`client_number` AS `client_code`,
      			  `c`.`name_kh` AS `client_namekh`,
      			  `c`.`name_en` AS `client_nameen`,
+     			  c.hname_kh,
   				  `c`.`nationality` AS `client_nationality`,
      			  `c`.`nation_id` AS `client_nation_id`,
                   `c`.`phone` AS `client_phone`,
   				  `c`.`house` AS `client_house_no`,
                   `c`.`street` AS `client_street`,
+                  c.phone,
 				  (SELECT
 				     `village`.`village_name`
 				   FROM `ln_village` `village`
@@ -483,5 +490,39 @@ function getAllBranch($search=null){
     		return $db->fetchAll($sql.$order);
     	}
     	
+		public function getALLCommissionStaff($search = null){
+    	$db = $this->getAdapter();
+    	$where="";
+    	$sql="SELECT *,
+			st.`branch_id`,(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = st.`branch_id`) AS project_name
+			,st.`co_khname`,st.`co_lastname`,st.`co_code`,st.`sex`
+			 FROM ln_sale AS s , `ln_staff` AS st WHERE s.`comission` !=0 AND st.`co_id` = s.`staff_id`";
+    	$Other =" ORDER BY s.`id` DESC ";
+		$from_date =(empty($search['start_date']))? '1': " s.`buy_date` >= '".$search['start_date']." 00:00:00'";
+	    $to_date = (empty($search['end_date']))? '1': " s.`buy_date` <= '".$search['end_date']." 23:59:59'";
+	    $where.= " AND ".$from_date." AND ".$to_date;
+    	if($search['co_khname']>0){
+    		$where.= " AND s.`staff_id` = ".$search['co_khname'];
+    	}
+		if($search['co_sex']>-1){
+    		$where.= " AND st.`sex` = ".$search['co_sex'];
+    	}
+    	if($search['branch_id']>0){
+    		$where.= " AND st.`branch_id` = ".$search['branch_id'];
+    	}
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['adv_search']));
+    		$s_where[] =" s.`sale_number` LIKE '%{$s_search}%'";
+    		$s_where[]=" s.`receipt_no` LIKE '%{$s_search}%'";
+    		$s_where[]=" st.`co_khname` LIKE '%{$s_search}%'";
+    		$s_where[]=" st.`co_code` LIKE '%{$s_search}%'";
+    		//$s_where[]=" tel LIKE '%{$s_search}%'";
+    		//$s_where[]=" address LIKE '%{$s_search}%'";
+    		//$s_where[]=" national_id LIKE '%{$s_search}%'";
+    		$where .=' AND '.implode(' OR ',$s_where). '';
+    	}
+    	return $db->fetchAll($sql.$where.$Other);
+    }
 }
 

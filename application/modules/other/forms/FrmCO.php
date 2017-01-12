@@ -80,7 +80,7 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 		));
-		$opt = array(1=>"Male",2=>"Femail");
+		$opt = array(1=>"Male",2=>"Female");
 		$_sex->setMultiOptions($opt);
 		
 		$_tel = new Zend_Dojo_Form_Element_TextBox('tel');

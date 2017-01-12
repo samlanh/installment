@@ -41,52 +41,6 @@ dojo.require("dijit.form.DateTextBox");
                 </td>
                 <td width="20%"></td>
              </tr>
-             <tr>
-             	<td colspan="3">
-	             	<h2 style="text-align:left; font-size:14px; font-family:'Khmer MEF2'">
-	             	<label><?php echo $tr->translate("SOLD_INCOME");?></label>
-	             	</h2>
-             	</td>
-             </tr>
-            <tr>
-            	<td colspan="3">
-            		<table id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 20px; font-size: 12px; border:solid 1px #000;" >  
-				    	<tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
-							<th ><?php echo $tr->translate("NUM");?></th>
-						    <th><?php echo $tr->translate("BRANCH_NAME");?></th>
-						    <th><?php echo $tr->translate("SALE_NO");?></th>
-						    <th><?php echo $tr->translate("CLIENT_NO");?></th>
-						    <th><?php echo $tr->translate("CUSTOMER_NAME");?></th>
-						    <th><?php echo $tr->translate("PROPERTY_TYPE");?></th>
-						    <th><?php echo $tr->translate("LOAN_NO");?></th>
-						    <th><?php echo $tr->translate("PROPERTY_NAME");?></th>
-						    <th><?php echo $tr->translate("STREET");?></th>
-						    <th><?php echo $tr->translate("PROPERTY_PRICE");?></th>
-						    <th><?php echo $tr->translate("DISCOUNT_AMOUNT");?></th>
-						    <th><?php echo $tr->translate("SOLD_PRICE");?></th>
-						    <th><?php echo $tr->translate("TOTAL_PRICE");?></th>
-						</tr>
-				       <?php $branch_id=''; $i=0; $total_sold_income=0; if(!empty($this->rowSoldIncome))foreach($this->rowSoldIncome as $key =>$row){ $i++;?>
-						<tr style="font-size: 12px; line-height:20px; white-space: nowrap;" align="left">
-						   <td align="center">&nbsp;<?php echo $i; ?></td>
-						    <td align="center">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
-						   <td align="center">&nbsp;<?php echo $row['sale_number'];?>&nbsp;</td>
-						   <td align="center">&nbsp;<?php echo $row['client_number'];?>&nbsp;</td>
-						   <td align="center">&nbsp;<?php echo $row['name_kh']." ".$row['name_en'];?>&nbsp;</td>
-						   <td>&nbsp;<?php echo $row['propertype'];?>&nbsp;</td>
-						   <td>&nbsp;<?php echo $row['land_code'];?>&nbsp;</td>
-						   <td align="center">&nbsp;<?php echo $row['land_address'];?>&nbsp;</td>
-						   <td align="center">&nbsp;<?php echo $row['street'];?>&nbsp;</td>
-						   <td align="center">&nbsp;<?php echo number_format($row['price_before'],2);?>&nbsp;</td>
-						   <td align="center">&nbsp;<?php echo number_format($row['discount_amount'],2);?>&nbsp;</td>
-						   <td align="center">&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
-						   <td align="center">&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
-						</tr>
-							<?php $total_sold_income = $total_sold_income +$row['price_sold'];?>
-						<?php }?>
-				    </table>
-            	</td>
-            </tr>
             <tr><td>&nbsp;</td></tr> 
             <tr>
              	<td colspan="3">
@@ -96,7 +50,10 @@ dojo.require("dijit.form.DateTextBox");
              	</td>
              </tr>
             <tr>
-            	<td colspan="3">
+            <?php 
+            $total_sold_income=0; $category_id=0; $category_id_expense=0; $total_sold_income=0;
+            ?>
+            	<td colspan="3" id="exportExcel">
             			<table width="100%" border="1" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
 			                <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
 			                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>

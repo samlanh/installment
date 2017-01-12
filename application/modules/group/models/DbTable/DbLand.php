@@ -109,7 +109,7 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				land_code,land_address,street,
 				(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type limit 1) AS  pro_type,
 				price,width,height,land_size,hardtitle,create_date,
-		    (SELECT  CONCAT(first_name,' ', last_name) FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
+		    (SELECT  CONCAT(last_name,' ', first_name) FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
 			status FROM $this->_name ";
 		if(!empty($search['adv_search'])){
 			$s_where = array();
@@ -125,6 +125,9 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		}
 		if($search['status']>-1){
 			$where.= " AND status = ".$search['status'];
+		}
+		if(!empty($search['streetlist'])){
+			$where.= " AND street ='".$search['streetlist']."'";
 		}
 		if($search['branch_id']>-1){
 			$where.= " AND branch_id = ".$search['branch_id'];

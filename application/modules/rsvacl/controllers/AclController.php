@@ -14,8 +14,16 @@ class RsvAcl_AclController extends Zend_Controller_Action
     public function indexAction()
     {
         try {
+        	if($this->getRequest()->isPost()){
+        		$post = $this->getRequest()->getPost();
+        	}else{
+        		$post = array(
+        				"fmod"=>'');
+        	}
+        	$this->view->data = $post;
+        	
           $db = new RsvAcl_Model_DbTable_DbAcl();
-          $rs_rows = $db->getAllAclList();
+          $rs_rows = $db->getAllAclList($post);
           if(!empty($rs_rows)){
           	$glClass = new Application_Model_GlobalClass();
           	$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
@@ -35,6 +43,10 @@ class RsvAcl_AclController extends Zend_Controller_Action
         } catch (Exception $e) {
         	$result = Application_Model_DbTable_DbUserLog::writeMessageError('');
         }
+        $gc = new Application_Model_GlobalClass();
+        // For list all module
+        $sql = "SELECT DISTINCT acl.`module` FROM `rms_acl_acl` AS acl ";
+        $this->view->optoin_mod =  $gc->getOptonsHtml($sql, "module", "module");
     }
     
     public function viewAclAction()

@@ -378,6 +378,17 @@ public function init()
 		$_property_id = new Zend_Form_Element_Hidden("property_id");
 		$_old_sale_id = new Zend_Form_Element_Hidden("old_sale_id");
 		$_old_property_id = new Zend_Form_Element_Hidden("old_property_id");
+		
+		$return_back = new Zend_Dojo_Form_Element_NumberTextBox('return_back');// amount money return when cancel
+		$return_back->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'required' =>'true',
+				'onkeyup'=>'checkreturnAmount();'
+				//'readonly'=>true,
+		));
+		$return_back->setValue(0);
+		
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
 			$_cancel_code->setValue($data['cancel_code']);
@@ -387,6 +398,7 @@ public function init()
 
 			$installment_paid->setValue($data['installment_paid']);
 			$paid_amount->setValue($data['paid_amount']);
+			$return_back->setValue($data['return_back']);
 		}
 		$this->addElements(array($installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
@@ -397,7 +409,9 @@ public function init()
 				$_pay_late,$_coid,$commission,$_amount,
 				$_every_payamount,$_time,$_time_collect_pri,$_status,$_period,
 				$_repayment_method,$_pay_every,$_loan_code,$_collect_term,
-				$_customer_code,$_id));
+				$_customer_code,$_id,
+				$return_back
+				));
 		return $this;
 		
 	}	

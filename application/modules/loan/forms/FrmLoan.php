@@ -207,7 +207,16 @@ public function init()
 				'onkeyup'=>'checkScheduleOption();CalculateDate();'
 				//'onkeyup'=>'calCulatePeriod();'
 		));
-		$_period->setValue(60);
+// 		$_period->setValue(60);
+		
+		$agreementdate = new Zend_Dojo_Form_Element_DateTextBox('agreement_date');
+		$agreementdate->setAttribs(array(
+				'dojoType'=>'dijit.form.DateTextBox',
+				'required' =>'true',
+				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+		));
+		$agreementdate->setValue(date("Y-m-d"));
 		
 		$_releasedate = new Zend_Dojo_Form_Element_DateTextBox('release_date');
 		$_releasedate->setAttribs(array(
@@ -452,7 +461,7 @@ public function init()
 			
 			
 		}
-		$this->addElements(array($discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

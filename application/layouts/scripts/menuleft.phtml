@@ -1,48 +1,86 @@
 	<?php
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
 	$request=Zend_Controller_Front::getInstance()->getRequest();
 	$action = $request->getActionName();
 	$baseurl  = $this->baseUrl();
-		/*--------------------URLs link display--------------------------*/
-		  $tr=Application_Form_FrmLanguages::getCurrentlanguage();
-		$arr_param_menu=array( 
+	$session_user=new Zend_Session_Namespace('auth');
+	$arr_module = $session_user->arr_acl;
+	$menu = array();
+// 	print_r($arr_module);
+$module = '';
+$controller=array();
+$newarray=array();
+	if(!empty($arr_module)){
+		foreach ($arr_module as $key => $rs){
+			$lblcontroller = $rs['controller'];
+			if($rs['controller']=='index' AND $rs['module']=='group' ){
+				$lblcontroller='CLIENT_INFO';
+			}
+			if($rs['controller']=='index' AND $rs['module']=='loan' ){
+				$lblcontroller='IL_DISBURSE';
+			}
+			if($rs['controller']=='index' AND $rs['module']=='other' ){
+				$lblcontroller='province';
+			}
+			
+			if($module!=$rs['module']){
+				$newarray= array($rs['controller']=>'<li><a href="">'.$tr->translate(strtoupper($lblcontroller)).'</a></li>');
+				$menu[$rs['module']]= $newarray;
+				$old_module=$rs['module'];
+			}else{
+				$newarray= array_merge($newarray,array($rs['controller']=>'<li><a href="">'.$tr->translate(strtoupper($lblcontroller)).'</a></li>'));
+			    $menu[$rs['module']] = $newarray;
+			}
+			$module=$rs['module'];
+		}
+	}
+		 
+	$arr_param_menu = $menu;
+		$arr_param_menus=array( 
 			'home'=>array(
 						'index'=>'<li><a href="">'.$tr->translate("HOME").'</a></li>',
 			),
 			'other'=>array(
-						//'branch'=>'<li><a href="">'.$tr->translate("BRANCH_LIST").'</a></li>',
+						'branch'=>'<li><a href="">'.$tr->translate("BRANCH_LIST").'</a></li>',
 						'province'=>'<li><a href="">'.$tr->translate("PROVINCE").'</a></li>',
 						'district'=>'<li><a href="">'.$tr->translate("DISTRICT").'</a></li>',
 						'commune'=>'<li><a href="">'.$tr->translate("COMMUNE").'</a></li>',
 						'village'=>'<li><a href="">'.$tr->translate("VILLAGE").'</a></li>',
-						//'zone'=>'<li><a href="">'.$tr->translate("ZONE_AREA").'</a></li>',
+						'zone'=>'<li><a href="">'.$tr->translate("ZONE_AREA").'</a></li>',
 						'holiday'=>'<li><a href="">'.$tr->translate("HOLIDAY_NAME").'</a></li>',
-					   // 'callecteralltype'=>'<li><a href="">'.$tr->translate("COLLATERAL_TYPE").'</a></li>',
-						'term'=>'<li><a href="">'.$tr->translate("TERMCONDICTION").'</a></li>' ,
+					    'callecteralltype'=>'<li><a href="">'.$tr->translate("COLLATERAL_TYPE").'</a></li>',
 						'loantype'=>'<li><a href="">'.$tr->translate("OTHER").'</a></li>' ,
 			),
 			'group'=>array(
 					    'index'=>'<li><a href="">'.$tr->translate("CLIENT_INFO").'</a></li>',
-					    'land'=>'<li><a href="">'.$tr->translate("PROPERTIES").'</a></li>',
-						'propertiestype'=>'<li><a href="">'.$tr->translate("PROPERTY_TYPE").'</a></li>',
-					    'project'=>'<li><a href="">'.$tr->translate("តារាងគំរោង").'</a></li>',
-						'co'=>'<li><a href="">'.$tr->translate("AGENTCY").'</a></li>',
-						//'position'=>'<li><a href="">'.$tr->translate("Staff Position").'</a></li>',
-						//'changecollteral'=>'<li><a href="">'.$tr->translate("CHANGE_COLLETERAL").'</a></li>',
-						//'returncollteral'=>'<li><a href="">'.$tr->translate("RETURN_COLLETERAL").'</a></li>',
+						/*'client'=>'<li><a href="">'.$tr->translate("CLIENT_LIST").'</a></li>',
+					    'agreement'=>'<li><a href="">'.$tr->translate("Client Agreement").'</a></li>',*/
+						'callteral'=>'<li><a href="">'.$tr->translate("CLIENT_COLLETERAL").'</a></li>',
+						'changecollteral'=>'<li><a href="">'.$tr->translate("CHANGE_COLLETERAL").'</a></li>',
+						'returncollteral'=>'<li><a href="">'.$tr->translate("RETURN_COLLETERAL").'</a></li>',
 						//'clientblacklist'=>'<li><a href="">'.$tr->translate("CLIENT_BLACKLIST").'</a></li>',
-						//'callteral'=>'<li><a href="">'.$tr->translate("COLLETERAL").'</a></li>',
+						'callteral'=>'<li><a href="">'.$tr->translate("COLLETERAL").'</a></li>',
+						
+						
 				),
 			'loan'=>array(
 						'index'=>'<li><a href="" title="">'.$tr->translate("IL_DISBURSE").'</a></li>',
-						//'groupdisburse'=>'<li><a href="" title="">'.$tr->translate("GROUP_DISBURS").'</a></li>',
+// 						'groupdisburse'=>'<li><a href="" title="">'.$tr->translate("GROUP_DISBURS").'</a></li>',
 						'ilpayment'=>'<li><a href="" title="">'.$tr->translate("IL_PAYMENT").'</a></li>',
-						'repaymentschedule'=>'<li><a href="" title="">'.$tr->translate("RESCHEDULE").'</a></li>',
-						'income'=>'<li><a href="" title="">'.$tr->translate("INCOME").'</a></li>',
-						'expense'=>'<li><a href="" title="">'.$tr->translate("EXPENSE").'</a></li>',
-						'loantype'=>'<li><a href="">'.$tr->translate("ប្រភេទចំណូល /ចំណាយ").'</a></li>' ,
-						'cancel'=>'<li><a href="">'.$tr->translate("CANCEL_SALE").'</a></li>' ,
-						//'buyhouse'=>'<li><a href="" title="">'.$tr->translate("ទិញចូលវិញ").'</a></li>',
-					    'transferproject'=>'<li><a href="" title="">'.$tr->translate("ផ្លាស់ប្តូគំរោង").'</a></li>',
+// 						'ilquickpayment'=>'<li><a href="" title="">'.$tr->translate("QUICK_PAYMENT").'</a></li>',
+// 						'grouppayment'=>'<li><a href="" title="">'.$tr->translate("GROUP_PAYMENT").'</a></li>',
+						'repaymentschedule'=>'<li><a href="" title="">'.$tr->translate("LOAN_RESCHEDULE").'</a></li>',
+						'badloan'=>'<li><a href="" title="">'.$tr->translate("LOANWRITE_OFF").'</a></li>',
+					   'transferco'=>'<li><a href="" title="">'.$tr->translate("TRANSFER_CO_CO").'</a></li>',
+					   'transfercoclient'=>'<li><a href="" title="">'.$tr->translate("TRANSFER_CLIENT_CO").'</a></li>',
+					   'transfercoloand'=>'<li><a href="" title="">'.$tr->translate("TRANSFER_CO").'</a></li>',
+					   'transferzone'=>'<li><a href="" title="">'.$tr->translate("TRANSFER_ZONE").'</a></li>',
+					  // 'cashout'=>'<li><a href="" title="">'.$tr->translate("Client Disburse Receipt").'</a></li>'
+				),
+				'saving'=>array(
+						'index'=>'<li><a href="" title="">'.$tr->translate("Saving Account").'</a></li>',
+						'withdraw'=>'<li><a href="" title="">'.$tr->translate("Withdrawal").'</a></li>',
+						'customer'=>'<li><a href="" title="">'.$tr->translate("Customer").'</a></li>',
 				),
 			'callecterall'=>array(
 						'callecterall'=>'<li><a href="">'.$tr->translate("CALLECTERALL").'</a></li>',
@@ -61,17 +99,24 @@
 		   				//'setting'=>'<li><a href="">'.$tr->translate("SETTING").'</a></li>',
 				),
 			'tellerandexchange'=>array(
-						//'teller'=>'<li><a href="">'.$tr->translate("កន្លែងបង់ប្រាក់").'</a></li>',
-						'xchanges'=>'<li><a href="">'.$tr->translate("សេវាប្តូរប្រាក់").'</a></li>',
+						//'transfer'=>'<li><a href="">'.$tr->translate("សេវាវេរប្រាក់").'</a></li>',
+						//'xchanges'=>'<li><a href="">'.$tr->translate("សេវាប្តូរប្រាក់").'</a></li>',
+						//'salecard'=>'<li><a href="">'.$tr->translate("សេវាលក់កាតទូរសព្ទ").'</a></li>',
 						//'xchange'=>'<li><a href="">'.$tr->translate("សេវាប្តូរប្រាក់").'</a></li>',
-						'showrate'=>'<li><a href="">'.$tr->translate("ពិនិត្យអាត្រាប្តូរប្រាក់").'</a></li>',
-						'spread'=>'<li><a href="">'.$tr->translate("កំណត់អាត្រាប្តូរប្រាក់").'</a></li>',
+						//'showrate'=>'<li><a href="">'.$tr->translate("ពិនិត្យអាត្រាប្តូរប្រាក់").'</a></li>',
+						//'spread'=>'<li><a href="">'.$tr->translate("កំណត់អាត្រាប្តូរប្រាក់").'</a></li>',
+						'expense'=>'<li><a href="">'.$tr->translate("ចំណាយផ្សេងៗ").'</a></li>',
+						'income'=>'<li><a href="">'.$tr->translate("ចំណូលផ្សេងៗ").'</a></li>',
+						'sender'=>'<li><a href="">'.$tr->translate("គ្រប់គ្រងប្រាក់ផ្ញើ").'</a></li>',
 				),
 				
 			'capital'=>array(
-						'capital'=>'<li><a href="">'.$tr->translate("BRANCH_CAPITAL").'</a></li>',
-						'capital-transfer'=>'<li><a href="">'.$tr->translate("CAPITAL_TRANSFER").'</a></li>',
-						'capital-resource'=>'<li><a href="">'.$tr->translate("CAPITAL_RESOURCE").'</a></li>',
+						'capital'=>'<li><a href="">'.$tr->translate("ដើមទុនដំបូង").'</a></li>',
+					    'capitalresource'=>'<li><a href="">'.$tr->translate("តារាងបន្ថែមដើមទុន").'</a></li>',
+						//'capitaltransfer'=>'<li><a href="">'.$tr->translate("CAPITAL_TRANSFER").'</a></li>',
+					    //'index'=>'<li><a href="">'.$tr->translate("index").'</a></li>',
+						//'capitals'=>'<li><a href="">'.$tr->translate("capitals").'</a></li>',
+						'interest'=>'<li><a href="">'.$tr->translate("តារាងអាត្រាការប្រាក់").'</a></li>',
 		    ),
 			'accounting'=>array(
 					    'chartaccount'=>'<li><a href="">'.$tr->translate("តារាងនៃគណនី").'</a></li>',
@@ -90,8 +135,25 @@
 				),
 			'report'=>array(
 						'paramater'=>'<li><a href="" title="">'.$tr->translate("PARAMATER").'</a></li>',
+						'groupmember'=>'<li><a href="" title="">'.$tr->translate("GROUP_MENBER").'</a></li>',
 						'loan'=>'<li><a href="" title="">'.$tr->translate("LOAN_VIEW").'</a></li>',
+						//'exchanges'=>'<li><a href="" title="">'.$tr->translate("EXCHANGES").'</a></li>',
+						/*'accounting'=>'<li><a href="" title="">'.$tr->translate("ACCOUNTING").'</a></li>',
+						'payroll'=>'<li><a href="" title="">'.$tr->translate("PAYROLL").'</a></li>',
+						'teller'=>'<li><a href="" title="">'.$tr->translate("TELLER MODULE").'</a></li>',*/
 				),
+				
+				
+				//'exchanges'=>array(
+						//'paramater'=>'<li><a href="" title="">'.$tr->translate("PARAMATER").'</a></li>',
+						//'groupmember'=>'<li><a href="" title="">'.$tr->translate("GROUP_MENBER").'</a></li>',
+						//'loan'=>'<li><a href="" title="">'.$tr->translate("LOAN_VIEW").'</a></li>',
+						//'exchanges'=>'<li><a href="" title="">'.$tr->translate("EXCHANGES").'</a></li>',
+						/*'accounting'=>'<li><a href="" title="">'.$tr->translate("ACCOUNTING").'</a></li>',
+						 'payroll'=>'<li><a href="" title="">'.$tr->translate("PAYROLL").'</a></li>',
+				'teller'=>'<li><a href="" title="">'.$tr->translate("TELLER MODULE").'</a></li>',*/
+				//),
+				
 			'user'=>array(
 				'index'=>'<li><a href="">'.$tr->translate("USER").'</a></li>',
 			),	

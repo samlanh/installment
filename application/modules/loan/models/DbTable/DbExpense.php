@@ -16,7 +16,6 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 	function addExpense($data){
 		
 		$invoice = $this->getInvoiceNo($data['branch_id']);
-		
 		$data = array(
 					'branch_id'		=>$data['branch_id'],
 					'title'			=>$data['title'],

@@ -23,8 +23,10 @@ class Loan_CancelController extends Zend_Controller_Action {
 						'to_date_search'=>date('Y-m-d'));
 			}
 			$rs_rows= $db->getCancelSale($search);//call frome model
+			$glClass = new Application_Model_GlobalClass();
+			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","SALE_NO","CLIENT_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","PROPERTY_NAME","STREET","PRICE_SOLD","INSTALLMENT_PAID","PAID_AMOUNT","DATE");
+			$collumns = array("PROJECT_NAME","SALE_NO","CLIENT_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","PROPERTY_NAME","STREET","PRICE_SOLD","INSTALLMENT_PAID","PAID_AMOUNT","DATE","STATUS");
 			$link=array(
 					'module'=>'loan','controller'=>'cancel','action'=>'edit',
 			);
@@ -48,6 +50,9 @@ class Loan_CancelController extends Zend_Controller_Action {
 					$_dbmodel->addCancelSale($_data);
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel/add");
 				}elseif(isset($_data['save_close'])){
+					$_dbmodel->addCancelSale($_data);
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel");
+				}else{
 					$_dbmodel->addCancelSale($_data);
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel");
 				}				
@@ -76,6 +81,8 @@ class Loan_CancelController extends Zend_Controller_Action {
 						
 				}elseif(isset($_data['save_close'])){
 						$_dbmodel->editCancelSale($_data);
+				}else{
+					$_dbmodel->editCancelSale($_data);
 				}
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel");
 			}catch (Exception $e) {
@@ -115,7 +122,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbCancel();
-			$dataclient=$db->getSaleNoByProject($data['branch_id']);
+			$dataclient=$db->getSaleNoByProject($data['branch_id'],$data['sale_id']);
 			print_r(Zend_Json::encode($dataclient));
 			exit();
 		}

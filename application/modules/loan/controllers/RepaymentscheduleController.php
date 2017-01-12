@@ -12,7 +12,6 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 		try{
 		    if($this->getRequest()->isPost()){
  				$search = $this->getRequest()->getPost();
- 				
  			}else{
 				$search = array(
 					    'txt_search'=>'',
@@ -24,7 +23,6 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 						'end_date'=>date('Y-m-d'),
 						 );
 			}
-// 			print_r($search);
 			$db = new Loan_Model_DbTable_DbRepaymentSchedule();
 			$rs_rows= $db->getAllReschedule($search,1);
 			$glClass = new Application_Model_GlobalClass();
@@ -73,13 +71,13 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
         $this->view->allclient = $db->getAllClient();
         $this->view->allclient_number = $db->getAllClientNumber();
         $frmpopup = new Application_Form_FrmPopupGlobal();
-        $this->view->frmpupoploantype = $frmpopup->frmPopupLoanTye();
-        $this->view->frmPopupZone = $frmpopup->frmPopupZone();
+//         $this->view->frmpupoploantype = $frmpopup->frmPopupLoanTye();
+//         $this->view->frmPopupZone = $frmpopup->frmPopupZone();
         
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
         
-        $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
+//         $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
         
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
@@ -92,6 +90,7 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 		$db = new Loan_Model_DbTable_DbLandpayment();
 		$this->view->rsresult =  $db->getTranLoanByIdWithBranch($id,null);
 		}
+		$this->view->id = $id;
 	}	
 // 	public function addloanAction(){
 // 		if($this->getRequest()->isPost()){

@@ -17,6 +17,7 @@ class Group_LandController extends Zend_Controller_Action {
 						'branch_id'=>$formdata['branch_id'],
 						'start_date'=> $formdata['start_date'],
 						'end_date'=>$formdata['end_date'],
+						'streetlist'=>$formdata['streetlist'],
 						'property_type_search'=>$formdata['property_type_search'],
 						);
 			}
@@ -27,7 +28,8 @@ class Group_LandController extends Zend_Controller_Action {
 						'branch_id' => -1,
 						'property_type_search'=>-1,
 						'start_date'=> date('Y-m-d'),
-						'end_date'=>date('Y-m-d')
+						'end_date'=>date('Y-m-d'),
+						'streetlist'=>''			
 						);
 			}
 			$rs_rows= $db->getAllLandInfo($search);

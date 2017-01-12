@@ -16,8 +16,28 @@
       $acl=$this->url(array('module'=>'rsvacl','controller'=>'index','action'=>'index'), null, true);
       $setting=$this->url(array('module'=>'setting','controller'=>'index','action'=>'index'), null, true);
       $sale = $this->url(array('module'=>'loan','controller'=>'index','action'=>'add'), null, true);
+	  
 	  $module=Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
-	  $item_arr=array(
+      $session_user=new Zend_Session_Namespace('auth');
+      $arr_module = $session_user->arr_module;
+      $menuleft=array();
+      $class='link';
+      if(!empty($arr_module)){
+      	foreach ($arr_module as $rs){
+      		if($rs==$module){$class='current';}else{$class='link';}
+      		if($rs=='loan'){
+//       			$old_module = $rs;
+//       			$rs="dd";
+//       			$menuleft[$rs]="<li class='$class'><a href='$url'><span>".$tr->translate(strtoupper("SALE_PROPERTY"))."</span></a></li>";
+//       			$rs=$old_module;
+      		}
+      		 
+      		$url =$this->url(array('module'=>$rs,'controller'=>'index','action'=>'index'), null, true); ;
+      		$menuleft[$rs]="<li class='$class'><a href='$url'><span>".$tr->translate(strtoupper($rs))."</span></a></li>";
+      	}
+      }
+	  
+	  $arr_module=array(
 		'home'=>'<li class="link">
 							<a title="ទំព័រដើម" href="'.$home.'">
 								<span>'.$tr->translate("HOME_PAGE").'</span>
@@ -75,18 +95,18 @@
 <div id="menu">
 	<ul>
 		<?php
-		$session_user=new Zend_Session_Namespace('auth');
+	$session_user=new Zend_Session_Namespace('auth');
 		$modules_access = $session_user->arr_module;
-			foreach($item_arr as $key=>$value){
+			foreach($menuleft as $key=>$value){
 				$access = array_search($key,$modules_access);
-				if($access!='' OR $access>=0){
-					if($module==$key){
-						echo str_replace('class="link"', 'class="current"', $value);
+				//if($access!='' OR $access>=0){
+					if($module==$value){
+						echo str_replace('link', 'current',$value);
 					}
 					else{
 						echo $value;
 					}
-				}
+				//}
 			} 
 		?>
 		<li style="float: right;">

@@ -26,6 +26,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 	$s_where[] = " price_sold LIKE '%{$s_search}%'";
       	 	$s_where[] = " comission LIKE '%{$s_search}%'";
       	 	$s_where[] = " total_duration LIKE '%{$s_search}%'";
+			$s_where[] = " street LIKE '%{$s_search}%'";
       	 	$where .=' AND ( '.implode(' OR ',$s_where).')';
       	 }
       	 if($search['branch_id']>0){

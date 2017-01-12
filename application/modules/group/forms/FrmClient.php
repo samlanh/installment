@@ -409,6 +409,15 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'required' =>'true'
 		));
 	
+		$streetlist = new Zend_Dojo_Form_Element_FilteringSelect('streetlist');
+		$streetlist->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$streetopt = $db->getAllStreet();
+		$streetlist->setMultiOptions($streetopt);
+		$streetlist->setValue($request->getParam("streetlist"));
+		
 		$landaddress = new Zend_Dojo_Form_Element_ValidationTextBox('land_address');
 		$landaddress->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
@@ -568,7 +577,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$propertiestype->setValue($data['property_type']);
 			$floor->setValue($data['floor']);
 		}
-		$this->addElements(array($street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
+		$this->addElements(array($streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
 		return $this;
 	
 	}

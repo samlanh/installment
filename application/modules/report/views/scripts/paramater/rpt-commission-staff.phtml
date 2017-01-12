@@ -6,14 +6,16 @@ $frm = $this->frm_staff;
 dojo.require("dijit.form.DateTextBox");
 </script>
 <meta charset="utf-8">
-<title><?php echo $tr->translate("REPORT STAFF");?></title>
-<form name="frm_rptstaff" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-staff')); ?>" dojoType="dijit.form.Form" method="post">
+<title><?php echo $tr->translate("REPORT_COMISSION");?></title>
+<form name="frm_rptstaff" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-commission-staff')); ?>" dojoType="dijit.form.Form" method="post">
 	<table style="width:28cm; margin: 0 auto;">
 		 <tr> 
 			   <td><?php echo $frm->getElement("adv_search");?></td>
 			   <td><?php echo $frm->getElement("branch_id");?></td>
 			   <td><?php echo $frm->getElement("co_khname");?></td>
 			   <td><?php echo $frm->getElement("co_sex");?></td>
+			   <td><?php echo $frm->getElement("start_date");?></td>
+			   <td><?php echo $frm->getElement("end_date");?></td>
 			   <td><?php echo $frm->getElement('search_status');?></td>
 			   <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
 			   </td>
@@ -39,7 +41,7 @@ dojo.require("dijit.form.DateTextBox");
                 	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
                 	<td width="60%" valign="top">
                 	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
-                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_STAFF");?></h2></td>
+                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_COMISSION");?></h2></td>
                     <td width="20%"></td>
                 </tr> 
             </table>
@@ -50,30 +52,32 @@ dojo.require("dijit.form.DateTextBox");
 		            <td><?php echo $tr->translate("STAFF_ID");?></td>
 		            <td><?php echo $tr->translate("CO_NAME");?></td>
 		            <td><?php echo $tr->translate("SEX");?></td>
-		            <td><?php echo $tr->translate("PHONE");?></td>
-		            <td><?php echo $tr->translate("លេខអត្ត.ប័ណ្ណ");?></td>
-		            <td><?php echo $tr->translate("EMAIL");?></td>
-		            <td><?php echo $tr->translate("POB");?></td>
-		            <td><?php echo $tr->translate("ADDRESS");?></td>
-		            <td><?php echo $tr->translate("NOTE");?></td>
+		            <td><?php echo $tr->translate("SALE_NO");?></td>
+		            <td><?php echo $tr->translate("COMISSION");?></td>
+		            <td><?php echo $tr->translate("BUY_DATE");?></td>
 		         </tr>
-		       <?php if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){?>
+		       <?php $total = 0; if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){
+				   $total = $total +$row['comission'];
+				   ?>
 				   <tr style="font-size: 10px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
-				     <td>&nbsp;<?php echo $key+1; ?></td>
-				     <td>&nbsp;<?php echo $row['branch_name']?></td>
-				     <td>&nbsp;<?php echo $row['co_code']?></td>
-					 <td>&nbsp;<?php echo $row['co_khname'];?></td>
-					 <td>&nbsp;<?php echo $row['sex']?></td>
-					 <td>&nbsp;<?php echo $row['tel']?></td>
-					 <td>&nbsp;<?php echo $row['national_id']?></td>
-					 <td>&nbsp;<?php echo $row['email']?></td>
-					 <td style="white-space: pre;">&nbsp;<?php echo $row['pob']?></td>
-					 <td style="white-space: pre;">&nbsp;<?php echo $row['address']?></td>
-					 <td>&nbsp;<?php echo $row['note']?></td>
+				     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+				     <td align="center">&nbsp;<?php echo $row['project_name']?>&nbsp;</td>
+				     <td>&nbsp;<?php echo $row['co_code']?>&nbsp;</td>
+					 <td>&nbsp;<?php echo $row['co_khname'];?>&nbsp;</td>
+					 <td align="center">&nbsp;<?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
+					 <td>&nbsp;<?php echo $row['sale_number']?>&nbsp;</td>
+					 <td align="right">&nbsp;<?php echo '$ '.number_format($row['comission'],2);?>&nbsp;</td>
+					 <td>&nbsp;<?php echo date("d-M-Y",strtotime($row['buy_date']));?>&nbsp;</td>
 					</tr>
 				<?php }?>
-				
 		    </table>
+			<br>
+			<table width="50%" border="1" style="float: left; border-collapse:collapse;font-size: 12px;" bordercolor="black">
+				<tr class="style" align="center" style="floafont-weight:bold; line-height: 30px; font-size:12px; padding:5px 0px; " >
+		        	<td bgcolor="#ccc" ><?php echo $tr->translate("TOTAL");?></td>
+		            <td ><?php echo '$ '.number_format($total,2);?></td>
+		         </tr>
+			</table>
     	</td>
     </tr>
 </table>

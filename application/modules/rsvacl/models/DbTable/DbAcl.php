@@ -118,9 +118,14 @@ class RsvAcl_Model_DbTable_DbAcl extends Zend_Db_Table_Abstract
     	$where=$this->getAdapter()->quoteInto('acl_id=?',$acl_id);
 		$this->update($data,$where); 
 	}
-	public function getAllAclList(){
+	public function getAllAclList($search){
 		$db = $this->getAdapter();
-		$sql = " SELECT `acl_id`,label,`module`,`controller`,`action`,`status` FROM rms_acl_acl ORDER BY `acl_id` DESC ";
+		$sql = " SELECT `acl_id`,label,`module`,`controller`,`action`,`status` FROM rms_acl_acl ";
+		if(!empty($search['fmod'])){
+			$sql.=" WHERE `module` ='".trim(addslashes($search['fmod']))."'";
+		}
+// 		echo $sql;exit();
+		$sql.=" ORDER BY `acl_id` DESC";
 		return $db->fetchAll($sql);
 	}
 	

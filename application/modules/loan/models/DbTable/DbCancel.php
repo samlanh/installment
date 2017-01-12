@@ -37,7 +37,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			clie.`name_kh` AS client_name,
 			(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
 			pro.`land_code`,pro.`land_address`,pro.`street`,
-			s.price_sold,c.installment_paid,c.paid_amount,c.`create_date`
+			s.price_sold,c.installment_paid,c.paid_amount,c.`create_date`,c.`status`
 			FROM `ln_sale_cancel` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = c.`property_id` AND
@@ -62,6 +62,29 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 	public function addCancelSale($data){
 		try{
 			$db= $this->getAdapter();
+			$expenid='';
+			if($data['return_back']>0){
+				$dbexpense = new Loan_Model_DbTable_DbExpense();
+				$invoice = $dbexpense->getInvoiceNo($data['branch_id']);
+				$dbsale = new Loan_Model_DbTable_DbLandpayment();
+				$row = $dbsale->getTranLoanByIdWithBranch($data['sale_no'],null);
+				$title=" Return Money  Back";
+				$arr1 = array(
+					'branch_id'		=>$data['branch_id'],
+					'title'			=>$row['sale_number'].$title,
+					'total_amount'	=>$data['return_back'],
+					'invoice'		=>$invoice,
+					'category_id'	=>0,
+					'date'			=>date('Y-m-d'),
+					'status'		=>1,
+					'description'	=>$data['reason'],
+					'user_id'		=>$this->getUserId(),
+					'create_date'	=>date('Y-m-d'),
+						);
+				$this->_name="ln_expense";
+				$expenid = $this->insert($arr1);
+			}
+			
 			$arr = array(
 					//'cancel_code'=>$data['cancel_code'],
 					'branch_id'=>$data['branch_id'],
@@ -72,7 +95,9 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'status'=>1,
 					'reason'=>$data['reason'],
 					'paid_amount'=>$data['paid_amount'],
-					'installment_paid'=>$data['installment_paid']
+					'installment_paid'=>$data['installment_paid'],
+					'return_back'=>$data['return_back'],
+					'expense_id'=>$expenid,
 					);
 			$this->_name="ln_sale_cancel";
 			 $this->insert($arr);
@@ -99,6 +124,49 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 	public function editCancelSale($data){
 		try{
 			$db= $this->getAdapter();
+			
+			$result = $this->getCancelById($data['id']);
+			$dbsale = new Loan_Model_DbTable_DbLandpayment();
+			$row = $dbsale->getTranLoanByIdWithBranch($data['sale_no'],null);
+			$title=" Return Money  Back";
+			$expenid='';
+			if(!empty($result['expense_id'])){
+				$arr1 = array(
+					'branch_id'		=>$data['branch_id'],
+					'title'			=>$row['sale_number'].$title,
+					'total_amount'	=>$data['return_back'],
+					'category_id'	=>0,
+					'date'			=>date('Y-m-d'),
+					'status'		=>$data['status_using'],
+					'description'	=>$data['reason'],
+					'user_id'		=>$this->getUserId(),
+					'create_date'	=>date('Y-m-d'),
+						);
+				$this->_name="ln_expense";
+				$where = 'id = '.$result['expense_id'];
+				$this->update($arr1,$where);
+				$expenid = $result['expense_id'];
+			}else{
+				if($data['return_back']>0){
+					$dbexpense = new Loan_Model_DbTable_DbExpense();
+					$invoice = $dbexpense->getInvoiceNo($data['branch_id']);
+					$arr1 = array(
+						'branch_id'		=>$data['branch_id'],
+						'title'			=>$row['sale_number'].$title,
+						'total_amount'	=>$data['return_back'],
+						'invoice'		=>$invoice,
+						'category_id'	=>0,
+						'date'			=>date('Y-m-d'),
+						'status'		=>$data['status_using'],
+						'description'	=>$data['reason'],
+						'user_id'		=>$this->getUserId(),
+						'create_date'	=>date('Y-m-d'),
+							);
+					$this->_name="ln_expense";
+					$expenid = $this->insert($arr1);
+				}
+			}
+			
 			if ($data['sale_no']==$data['old_sale_id']){
 				if ($data['status_using']==0){
 					$arr_1 = array(
@@ -138,7 +206,9 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'user_id'=>$this->getUserId(),
 						'status'=>$data['status_using'],
 						'paid_amount'=>$data['paid_amount'],
-						'installment_paid'=>$data['installment_paid']
+						'installment_paid'=>$data['installment_paid'],
+						'return_back'=>$data['return_back'],
+						'expense_id'=>$expenid,
 				);
 				$this->_name="ln_sale_cancel";
 				$where ="id = ".$data['id'];
@@ -167,7 +237,9 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'user_id'=>$this->getUserId(),
 						'status'=>$data['status_using'],
 						'paid_amount'=>$data['paid_amount'],
-						'installment_paid'=>$data['installment_paid']
+						'installment_paid'=>$data['installment_paid'],
+						'return_back'=>$data['return_back'],
+						'expense_id'=>$expenid,
 				);
 				$this->_name="ln_sale_cancel";
 				$where ="id = ".$data['id'];
@@ -188,22 +260,28 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				$this->update($arr_old, $where);
 			}
 			
+			
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}
 	public function getCancelById($id){
 		$db = $this->getAdapter();
-		$sql= "SELECT * FROM `ln_sale_cancel` AS c WHERE c.`id`=".$id;
+		$sql= "SELECT *,
+		(SELECT e.invoice FROM `ln_expense` AS e WHERE e.id = c.expense_id) AS reciept FROM `ln_sale_cancel` AS c WHERE c.`id`=".$id;
 		return $db->fetchRow($sql);
 	}
 	
-	public function getSaleNoByProject($branch_id){
+	public function getSaleNoByProject($branch_id,$sale_id){
 		$db = $this->getAdapter();
+		$sale='';
+		if(!empty($sale_id)){
+			$sale=' OR s.`id`= '.$sale_id;
+		}
 		$sql="SELECT s.`id`,CONCAT((SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = s.`client_id` LIMIT 1),' (',
 		s.`sale_number`,')' ) AS `name`
 		FROM `ln_sale` AS s
-		WHERE s.`is_completed` =0 AND s.`branch_id` =".$branch_id;
+		WHERE s.`is_completed` =0 AND (s.`is_cancel` =0 ".$sale." ) AND s.`branch_id` =".$branch_id;
 		return $db->fetchAll($sql);
 	}
 }

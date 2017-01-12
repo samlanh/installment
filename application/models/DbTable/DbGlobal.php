@@ -435,6 +435,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	else return $opt_degree[$id]; 
   }
   public function getAllBranchName($branch_id=null,$opt=null){
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	$db = $this->getAdapter();
   	$sql= " SELECT br_id,project_name,
   	project_type,br_address,branch_code,branch_tel,displayby
@@ -447,7 +448,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	if($opt==null){
   		return $row;
   	}else{
-  		$options=array(0=>"Select Branch");
+  		$options=array(0=> $tr->translate("SELECT_PROJECT"));
   		if(!empty($row)) foreach($row as $read) $options[$read['br_id']]=$read['project_name'];
   		return $options;
   	}
@@ -643,7 +644,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	   $sql.=" ORDER BY id DESC";
   	    $rows = $db->fetchAll($sql);
   	    if($option!=null){ return $rows;}
-  		$options=array(''=>"-----ជ្រើសរើស-----");
+  		$options=array(''=>"---ជ្រើសរើសដី/ផ្ទះ---");
   		if(!empty($rows))foreach($rows AS $row){
   			$options[$row['id']]=$row['name'];
   		}
@@ -1181,7 +1182,7 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	$db= $this->getAdapter();
   	$sql="SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
   	$rows =  $db->fetchAll($sql);
-  	$options=array(''=>"-----ជ្រើសរើស-----");
+  	$options=array(''=>"ជ្រើសរើសប្រភេទផ្ទ/ដី");
   	if(!empty($rows))foreach($rows AS $row){
   		$options[$row['id']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
   	}
@@ -1209,6 +1210,16 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	FROM `ln_sale` AS s  
  	WHERE s.`is_completed` =0 AND s.`branch_id` =".$branch_id;
   	return $db->fetchAll($sql);
+  }
+  function  getAllStreet(){
+  	$db = $this->getAdapter();
+  	$sql = 'SELECT DISTINCT street FROM `ln_properties` WHERE street!="" ORDER BY street ASC ';
+  	$rows =  $db->fetchAll($sql);
+  	$options=array(''=>"-----ជ្រើសរើសផ្លូវ-----");
+  	if(!empty($rows))foreach($rows AS $row){
+  		$options[$row['street']]=$row['street'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
+  	}
+  	return $options;
   }
   
   

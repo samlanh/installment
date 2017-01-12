@@ -63,14 +63,14 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 // 		$_member->setMultiOptions($options);
 // 		$_member->setValue($request->getParam("member"));
 		
-// 		$_groupid = new Zend_Dojo_Form_Element_FilteringSelect('group_id');
-// 		$_groupid->setAttribs(array(
-// 				'dojoType'=>'dijit.form.FilteringSelect',
-//  				'onchange'=>'popupCheckClient();'
-// 				));
-// 		$options = $db ->getGroupCodeById(2,1,1);//show name,show group,show option
-// 		$_groupid->setMultiOptions($options);
-// 		$_groupid->setValue($request->getParam("group_id"));
+		$land_id = new Zend_Dojo_Form_Element_FilteringSelect('land_id');
+		$land_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				));
+		$options = $db ->getAllLandInfo(null,null,1);//show name,show group,show option
+		$land_id->setMultiOptions($options);
+		$land_id->setValue($request->getParam("land_id"));
 
 		$schedule_opt = new Zend_Dojo_Form_Element_FilteringSelect('schedule_opt');
 		$schedule_opt->setAttribs(array(
@@ -109,7 +109,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		$_date = $request->getParam("start_date");
 		
 		if(empty($_date)){
-			$_date = date('Y-m-d');
+			//$_date = date('Y-m-d');
 		}
 		$_releasedate->setValue($_date);
 		
@@ -180,7 +180,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 			$_releasedate->setValue($data['date_release']);
 			$client_name->setValue($data['client_name']);
 		}
-		$this->addElements(array($propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
+		$this->addElements(array($land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
 				$_category,$category_id_expense,
 		// 				$_groupid,$_member,$_group_code,$_customer_code,
 				$_dateline,$_status,$_btn_search));

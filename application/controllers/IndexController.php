@@ -66,12 +66,6 @@ class IndexController extends Zend_Controller_Action
 					$arr_actin = array();	
 					for($i=0; $i<count($arr_acl);$i++){
 						$arr_module[$i]=$arr_acl[$i]['module'];
-						if($arr_acl[$i]['module'] == 'exchange'){
-							if($arr_acl[$i]['action'] == "index" || $arr_acl[$i]['action'] == "add" || $arr_acl[$i]['action'] == "edited" ) {
-								continue;
-							}
-							$arr_actin[$a_i++] = $arr_acl[$i]['action'];
-						}
 					}
 						
 
@@ -121,7 +115,7 @@ class IndexController extends Zend_Controller_Action
     }
     
     protected function sortMenu($menus){
-    	$menus_order = Array ( 'home','other','group','loan','tellerandexchange','accounting','report','setting','rsvacl');
+    	$menus_order = Array ( 'home','other','group','loan','loand','report','rsvacl','setting');
     	$temp_menu = Array();
     	$menus=array_unique($menus);
     	foreach ($menus_order as $i => $val){

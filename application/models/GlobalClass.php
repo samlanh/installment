@@ -25,7 +25,16 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
    	$myopt .= '<option value="No">No</option>';
    	return $myopt;
    
-   }	
+   }
+public function getOptonsHtmlTranslate($sql, $display, $value){
+   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+   	$db = $this->getAdapter();
+   	$option = '<option value="">--- Select ---</option>';
+   	foreach($db->fetchAll($sql) as $r){
+   		$option .= '<option value="'.$r[$value].'">'.htmlspecialchars($tr->translate(strtoupper($r[$display])), ENT_QUOTES).'</option>';
+   	}
+   	return $option;
+   }   
    public function getImgAttachStatus($rows,$base_url, $case=''){
 		if($rows){			
 			$imgattach='<img src="'.$base_url.'/images/icon/attachment.png"/>';
