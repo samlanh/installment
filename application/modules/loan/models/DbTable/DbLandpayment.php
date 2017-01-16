@@ -403,8 +403,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    		if($data['deposit']>0){//insert payment
 	    			$this->addPaymenttoSale($data);
 	    		}
-    		
-	            $db->commit();
+	           $db->commit();
 	        return 1;
 	        }catch (Exception $e){
 	            	$db->rollBack();
@@ -469,7 +468,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					$statuscomplete=1;
     					$remain_principal=0;
     				}else{
-    					$principal_paid = $row['principal_permonthafter']+$paid_amount;
+    					$principal_paid = abs($paid_amount);
     					$remain_principal=$principal_paid;
     					$statuscomplete=0;
     				}
@@ -477,7 +476,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				$remain_principal = 0;
     				$statuscomplete=0;
     				$principal_paid = $principal_paid=0;
-    				$total_interestpaid=$row['principal_permonthafter']+$paid_amount;
+    				$total_interestpaid=abs($paid_amount);
     				$total_interestafter=$total_interestpaid;
     			}
     			$total_interest=$total_interest+$total_interestpaid;//ok
@@ -514,40 +513,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'penelize_amount'		=>0,
     					'is_completed'			=>$statuscomplete,
     					'status'				=>1,
-//     					''=>''
     					 'old_interest'			 =>$row["total_interest_after"],
     					 'old_principal_permonth'=>$row["principal_permonthafter"],
     					 'old_total_payment'	 =>$row["total_payment_after"],
     					//     					'old_total_priciple'	=>		$data["old_total_priciple_".$i],
     			);
     			$this->insert($array);
-//     			$arr_money_detail = array(
-//     					'crm_id'				=>		$client_pay,ok
-//     					'land_id'			    =>		$data['property_id'],//ok
-//     					'lfd_id'				=>		$data["mfdid_".$i],//ok
-//     					'date_payment'			=>	    $data["date_payment_".$i], // ថ្ងៃដែលត្រូវបង់
-//     					'capital'				=>		$data["total_priciple_".$i],
-//     					'remain_capital'		=>		$data["priciple_amount"], // remain balance after paid
-//     					'principal_permonth'	=>		$data["principal_permonth_".$i],
-//     					'total_interest'		=>		$data["interest_".$i],
-//     					'total_payment'			=>		$data["payment_".$i],
-//     					'total_recieve'			=>		$total_recieve,
-//     					//     						'currency_id'			=>		$data["currency_type"],
-//     					'pay_after'				=>		$data['multiplier_'.$i],
-//     					'penelize_amount'		=>		$data['penelize_'.$i],
-//     					'service_charge'		=>		$data['service_'.$i],
-//     					'penelize_new'			=>		$data['penelize_'.$i]-$data['old_penelize_'.$i],
-//     					'service_charge_new'	=>		$data["service_charge"]-$data['service_'.$i],
-//     					'old_penelize'			=>		$data['old_penelize_'.$i],
-//     					'old_service_charge'	=>		$data['old_service_'.$i],
-//     					'old_interest'			=>		$data["old_interest_".$i],
-//     					'old_principal_permonth'=>		$data['old_principal_permonth_'.$i],
-//     					'old_total_payment'		=>		$data['old_payment_'.$i],
-//     					'old_total_priciple'	=>		$data["old_total_priciple_".$i],
-//     					'last_pay_date'			=>		$data["last_date_payment_".$i],
-//     					'is_completed'			=>		$is_compleated,
-//     					'status'				=>		1
-//     			);
     			if($paid_amount<=0){
     				break;
     			}
@@ -563,7 +534,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$where="id = ".$crm_id;
     		$crm_id = $this->update($arr, $where);
     	}else{
-    		if($data["schedule_opt"]==1 OR $data["schedule_opt"]==5){
+    		if($data["schedule_opt"]==1 OR $data["schedule_opt"]==2 OR $data["schedule_opt"]==5){
 	    		$this->_name='ln_client_receipt_money_detail';
 	    		$array = array(
 	    				'crm_id'				=>$crm_id,

@@ -1213,6 +1213,7 @@ public function addILPayment($data){
 	    		$sql ="SELECT 
 						 (SELECT CONCAT(ln_properties.land_address,',',ln_properties.street) AS land_address  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_address,
 						 (SELECT ln_properties.land_code  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_code,
+						 (SELECT t.type_nameen FROM `ln_properties_type` as t WHERE t.id=(SELECT p.property_type FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1)) As property_type,
 						  s.*,
 						  ss.*,
 						  DATE_FORMAT(ss.date_payment, '%d-%m-%Y') AS date_payments
@@ -2509,12 +2510,15 @@ public function cancelIlPayment($data){
 		$db = $this->getAdapter();
 		$sql = "SELECT 
 				  s.*,
+				 (SELECT t.type_nameen FROM `ln_properties_type` as t WHERE t.id=(SELECT p.property_type FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1)) As property_type,
 				 (SELECT p.land_address FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1) AS property_address ,
 				 (SELECT p.land_code FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1) AS property_code
 				FROM
 				  ln_sale AS s 
 				WHERE id = $property_id  ";
-		return $db->fetchRow($sql);
+		$rs = $db->fetchRow($sql);
+		$rs['house_type']=ltrim(strstr($rs['property_type'], '('), '.');
+		return $rs;
 	}
 	
 	function getLastDatePayment($loan_number){

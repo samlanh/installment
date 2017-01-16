@@ -129,6 +129,9 @@ class Loan_IndexController extends Zend_Controller_Action {
 				'name' => '---Add New ---',
 		) );
 		$this->view->co_name=$co_name;
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
 	public function addloanAction(){
 		if($this->getRequest()->isPost()){

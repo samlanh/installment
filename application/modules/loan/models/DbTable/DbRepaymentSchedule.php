@@ -174,7 +174,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     						'user_id'=>$this->getUserId(),
     						'other_fee'=>$data['other_fee'],
     						'agreement_date'=>$data['agreement_date']
-    						
     				);
     				$where= " id = ".$data['id'];
     				$this->update($arr, $where);

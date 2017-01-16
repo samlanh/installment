@@ -45,7 +45,7 @@ Class Other_Form_FrmVillage extends Zend_Dojo_Form {
 		
 		$village_name = new Zend_Dojo_Form_Element_ValidationTextBox('village_name');
 		$village_name->setAttribs(array('dojoType'=>'dijit.form.ValidationTextBox',
-				'required'=>'true','missingMessage'=>'Invalid Module!','class'=>'fullside'
+				'missingMessage'=>'Invalid Module!','class'=>'fullside'
 		));
 		$village_namekh = new Zend_Dojo_Form_Element_ValidationTextBox('village_namekh');
 		$village_namekh->setAttribs(array('dojoType'=>'dijit.form.ValidationTextBox',

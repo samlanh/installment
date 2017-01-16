@@ -44,7 +44,7 @@ Class Other_Form_FrmDistrict extends Zend_Dojo_Form {
 		
 		$district_name = new Zend_Dojo_Form_Element_TextBox('district_name');
 		$district_name->setAttribs(array('dojoType'=>'dijit.form.ValidationTextBox',
-				'required'=>'true','missingMessage'=>'Invalid Module!','class'=>'fullside'
+				'missingMessage'=>'Invalid Module!','class'=>'fullside'
 				));
 		
 		$district_namekh = new Zend_Dojo_Form_Element_TextBox('district_namekh');
@@ -54,7 +54,7 @@ Class Other_Form_FrmDistrict extends Zend_Dojo_Form {
 		
 		$code = new Zend_Dojo_Form_Element_TextBox('code');
 		$code->setAttribs(array('dojoType'=>'dijit.form.ValidationTextBox',
-				'required'=>'true','missingMessage'=>'Invalid Module!','class'=>'fullside'
+				'missingMessage'=>'Invalid Module!','class'=>'fullside'
 		));
 		
 		$popupdistrict_name = new Zend_Dojo_Form_Element_TextBox('pop_district_name');

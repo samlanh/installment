@@ -35,17 +35,24 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$branch_id->setMultiOptions($options_branch);
 		$branch_id->setValue($request->getParam("branch_id"));
 		
-		$_member = new Zend_Dojo_Form_Element_FilteringSelect('group_id');
+		$_member = new Zend_Dojo_Form_Element_FilteringSelect('customer_id');
 		$_member->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'onchange'=>'getGroupCode();'
 		));
 		$db = new Application_Model_DbTable_DbGlobal();
-		$rows = $db->getClientByType();
-		$options=array(''=>"---Select Group Name---");
-		if(!empty($rows))foreach($rows AS $row) $options[$row['client_id']]=$row['name_en'];
-		$_member->setMultiOptions($options);
+// 		$rows = $db->getClientByType();
+		$opt_client=array(-1=>"ជ្រើសរើសអតិថិជន");
+// 		if(!empty($rows))foreach($rows AS $row) $options[$row['client_id']]=$row['name_en'];
+// 		$_member->setMultiOptions($options);
+		
+		$rows = $db->getAllClient();
+		if(!empty($rows))foreach($rows AS $row){
+			$opt_client[$row['id']]=$row['name'];
+		}
+		$_member->setMultiOptions($opt_client);
+		$_member->setValue($request->getParam("customer_id"));
 		
 		$_namekh = new Zend_Dojo_Form_Element_TextBox('name_kh');
 		$_namekh->setAttribs(array(

@@ -156,6 +156,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			$s_where = array();
 			foreach($fields as $field)
 			{
+				$search['txtsearch']=trim(addslashes($search['txtsearch']));
 				$s_where[] = $field." LIKE '%{$search['txtsearch']}%'";
 			}
 			$where .= ' AND ('.implode(' OR ',$s_where).')';
@@ -277,8 +278,11 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	 * @param string $user_type_id
 	 */
 	public function getArrAcl($user_type_id){
-		$db = $this->getAdapter();
-		$sql = "SELECT aa.module, aa.controller, aa.action FROM rms_acl_user_access AS ua  INNER JOIN rms_acl_acl AS aa ON (ua.acl_id=aa.acl_id) WHERE ua.user_type_id='".$user_type_id."'";
+				$db = $this->getAdapter();
+		$sql = "SELECT aa.module, aa.controller, aa.action FROM rms_acl_user_access AS ua  INNER JOIN rms_acl_acl AS aa 
+		ON (ua.acl_id=aa.acl_id) WHERE aa.status=1 AND ua.user_type_id='".$user_type_id."' 
+		GROUP BY  aa.module ,aa.controller,aa.action 
+		ORDER BY aa.module ,aa.rank ASC ";
 		$rows = $db->fetchAll($sql);
 		return $rows;
 	}

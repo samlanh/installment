@@ -44,12 +44,12 @@ Class Other_Form_FrmCommune extends Zend_Dojo_Form {
 		
 		$commune = new Zend_Dojo_Form_Element_TextBox('commune_name');
 		$commune->setAttribs(array('dojoType'=>'dijit.form.ValidationTextBox',
-				'required'=>'true','missingMessage'=>'Invalid Module!','class'=>'fullside'
+				'missingMessage'=>'Invalid Module!','class'=>'fullside'
 		));
 		
 		$commune_en = new Zend_Dojo_Form_Element_TextBox('commune_nameen');
 		$commune_en->setAttribs(array('dojoType'=>'dijit.form.ValidationTextBox',
-				'required'=>'true','missingMessage'=>'Invalid Module!','class'=>'fullside'
+				'missingMessage'=>'Invalid Module!','class'=>'fullside'
 		));
 		
 		$code = new Zend_Dojo_Form_Element_TextBox('code');

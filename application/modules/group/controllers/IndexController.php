@@ -20,7 +20,8 @@ class Group_indexController extends Zend_Controller_Action {
 						'village'=>$formdata['village'],
 						'status'=>$formdata['status'],
 						'start_date'=> $formdata['start_date'],
-						'end_date'=>$formdata['end_date']
+						'end_date'=>$formdata['end_date'],
+						'customer_id'=>$formdata['customer_id']
 						);
 			}
 			else{
@@ -33,6 +34,7 @@ class Group_indexController extends Zend_Controller_Action {
 						'comm_id'=>'',
 						'village'=>'',
 						'start_date'=> date('Y-m-d'),
+						'customer_id'=>-1,
 						'end_date'=>date('Y-m-d'));
 			}
 			

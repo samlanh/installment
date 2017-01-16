@@ -75,7 +75,9 @@
 						</tr>
 						<tr height="40px">
 							<td><?php echo $tr->translate("LAND_CODE")?></td>
-							<td><input id="land_code" /><?php //echo $frm->getElement('');?></td>
+							<td><input id="land_code" /><?php //echo $frm->getElement('');?>
+							<input dojoType="dijit.form.TextBox"  id="propertype" name="propertype" type="hidden">
+							</td>
 							<td><?php echo $tr->translate("DESCRIPTION")?></td>
 							<td style="height: 50px; border:1px solid #aac4e6; widht:100%; font-size: 13px; color:#284db7;padding:5px;" colspan="4"><label id="land_information"></label><?php //echo $tr->translate("Address")?></td>
 						</tr>
@@ -351,25 +353,25 @@
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
 						<table width="100%" style="font-family: 'Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;"> 
-											<tr>
-												<td width="22%">
-													<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
-												</td>
-												<td width="40%">
-													វេបសាយ :  <span style="font-size:16px;">www.boreyphnompenhthmey.com</span>
-												</td>
-												<td width="40%" align="right">
-													<span style="font-family: 'Khmer OS Battambang';">អ៊ីម៉ែល :</span> <span style="font-size:16px;">boreyphnompenhthmey@gmail.com</span>
-												</td>
-											</tr>
-											<tr style="white-space:nowrap;">
-												<td colspan="2">
-													ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
-												</td>
-												<td width="40%" align="right">
-													<span style="">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
-												</td>
-											</tr>
+								<tr>
+									<td width="22%">
+										<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
+									</td>
+									<td width="40%">
+										<span style=""><?php echo $this->data['website'];?></span>
+									</td>
+									<td width="40%" align="right">
+										<span style="font-family: 'Khmer OS Battambang';"><?php echo $this->data['email_client'];?></span>
+									</td>
+								</tr>
+								<tr style="white-space:nowrap;">
+									<td colspan="2">
+										<?php echo $this->data['footer_branch'];?>
+									</td>
+									<td width="40%" align="right">
+										<span style=""><?php echo $this->data['tel-client'];?></span>
+									</td>
+								</tr>
 							</table>
 					</td>
 				</tr>
@@ -541,18 +543,19 @@
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
 								</td>
 								<td width="40%">
-									វេបសាយ :  <span style="font-size:16px;">www.boreyphnompenhthmey.com</span>
+									<span style=""><?php echo $this->data['website'];?></span>
 								</td>
 								<td width="40%" align="right">
-									អ៊ីម៉ែល : <span style="font-size:16px;">boreyphnompenhthmey@gmail.com</span>
+									<span style="font-family: 'Khmer OS Battambang';"><?php echo $this->data['email_client'];?></span>
 								</td>
 							</tr>
 							<tr style="white-space:nowrap;">
 								<td colspan="2">
-									ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
+
+									<?php echo $this->data['footer_branch'];?>
 								</td>
 								<td width="40%" align="right">
-									<span style="">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
+									<span style=""><?php echo $this->data['tel-client'];?></span>
 								</td>
 							</tr>
 						</table>
@@ -643,10 +646,7 @@ function checkScheduleOption(){
 			dijit.byId('deposit').attr("value",amount_principal);
 			dijit.byId('period').attr("value",0);
 			dijit.byId('date_line').attr('value','<?php echo date("Y-m-d");?>');
-			dijit.byId('first_payment').attr('value','<?php echo date("Y-m-d");?>');
-			
-			
-			
+			dijit.byId('first_payment').attr('value','<?php echo date("Y-m-d");?>');			
 		}else if(method_id==3){//times
 			dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TOTAL_INSTALLMENT")?>";
 			dojo.byId('lbl_release').innerHTML="<?php echo $tr->translate("START_DATE")?>";
@@ -677,7 +677,7 @@ function checkScheduleOption(){
 				dijit.byId('period').attr('value',12);
 			}
 			$('#identity').val('');
-			
+			dijit.byId('first_payment').attr("value",'<?php echo date("Y-m-d");?>');
 			dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TOTAL_INSTALLMENT")?>";
 			dojo.byId('lbl_release').innerHTML="<?php echo $tr->translate("START_DATE")?>";
 			if(isNaN(amount_principal)){amount_principal=0;}if(isNaN(debt_amount)){debt_amount=0;}
@@ -737,7 +737,6 @@ function calCulateFixedPeriod(){
 }
 function calculateDiscount(){
 	total_sold = dijit.byId('total_sold').get('value');
-	
 	discount_percent = dijit.byId('discount_percent').get('value');
 	bdiscount_percent = dijit.byId('bdiscount_percent').get('value');
 	if(isNaN(discount_percent)){
@@ -1113,7 +1112,7 @@ function getInfoByLoanNumber(){
 			
 			dijit.byId('balance_before').attr('value',balance_before);
 			if(data.payment_id==1){
-				dijit.byId('sold_price').attr('value',data.price_before);
+				dijit.byId('sold_price').attr('value',data.price_sold);//ok
 			}else{
 				dijit.byId('sold_price').attr('value',data.price_sold-data.paid_amount);
 			}
@@ -1164,7 +1163,7 @@ function getlandinfo(){
 			dijit.byId('total_sold').attr('value',data.price);
 			dojo.byId('land_information').innerHTML ="លេខសម្គាល់ "+data.land_code+", លេខផ្ទះ/ឡូតិ៏  "+data.land_address+", លេខផ្លូវ  "+data.street+", ប្រភេទ  "+data.property_type+", ទំហំ "+data.land_size+" ម៉ែត្រការ៉េ, បណ្តោយ "+data.height+" ម៉ែត្រ, ទទឹង  "+data.width+" ម៉ែត្រ";
 			paid_before = dijit.byId('paid_before').get('value');
-			
+			dijit.byId('propertype').attr('value',data.house_type);
 			//dijit.byId('balance_before').attr('value',data.price-paid_before);
 			//dijit.byId('sold_price').attr('value',data.price-paid_before);
 			
@@ -1282,7 +1281,21 @@ function addRow(){
 				dojo.query("#head-title").append(temp);
 				title=1;
 				epx_date ='<?php echo date('Y-m-d');?>';
-			}
+			}else{
+				indexs = col-1;
+				epx_date = dijit.byId("date_payment"+indexs).get("value");
+				var a = new Date(epx_date);
+				mm = a.getMonth()+2;
+				var dd = a.getDate();
+				 if(dd<10){
+					 dd = "0"+dd;
+				}
+				if(mm<10){
+					 mm = "0"+mm;
+				}
+				var y = a.getFullYear();
+				var epx_date = y+'-'+ mm + '-'+dd ;
+				}
 				template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td width="2%" align="center">'+no+'</td>';
 				template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
@@ -1302,6 +1315,7 @@ function addRow(){
 			});
 		}
 	}
+	dijit.byId("date_line").attr('value',epx_date);
 }
 function addInstallment(){
 	result = checkFirstRecord();
@@ -1447,6 +1461,7 @@ function calCulateEndDate(){
 	amount_date = dijit.byId('period').get('value')*12;
 	release_date = dijit.byId("first_payment").get('value');//just update follow by first payment
 	if(isNaN(amount_date)){
+		dijit.byId('date_line').attr('value','<?php echo date("Y-m-d");?>');
 	}else{
 		var a = new Date(release_date);
 		month = a.getMonth()+amount_date;
@@ -1510,7 +1525,7 @@ function printSave(new_receipt_no){
 	dojo.byId("lb_sale_code").innerHTML = dijit.byId("sale_code").attr('displayedValue');
 	dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get('value');
 	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
-	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue');
+	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	deposit = dijit.byId("deposit").get("value");
 	paid_before = dijit.byId("paid_before").get("value");
 	total_paid = deposit+paid_before;
@@ -1568,7 +1583,7 @@ function printSave(new_receipt_no){
 	dojo.byId("lb_receipt1").innerHTML = dijit.byId("receipt").get('value');
 	dojo.byId("lb_buydate1").innerHTML = dijit.byId("date_buy").attr('displayedValue');
 	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
-	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue');
+	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	dojo.byId("lblpropertyprice1").innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),2)+" "+symbal;//dijit.byId("schedule_opt").attr('displayedValue');
 	dojo.byId("lbl_total_paid1").innerHTML = dojo.number.format(total_paid)+" "+symbal;
 	//dojo.byId("lbl_ending_balance1").innerHTML = dojo.number.format(total_paidamount)+" "+symbal;

@@ -9,11 +9,11 @@ Class Other_Form_FrmProvince extends Zend_Dojo_Form {
 		
 		$_en_province = new Zend_Dojo_Form_Element_TextBox('en_province');
 		$_en_province->setAttribs(array('dojoType'=>'dijit.form.ValidationTextBox',
-				'required'=>'true','missingMessage'=>'Invalid Module!','class'=>'fullside'
+				'missingMessage'=>'Invalid Module!','class'=>'fullside'
 				));
 		
-		$_kh_province = new Zend_Dojo_Form_Element_TextBox('kh_province');
-		$_kh_province->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside'
+		$_kh_province = new Zend_Dojo_Form_Element_ValidationTextBox('kh_province');
+		$_kh_province->setAttribs(array('dojoType'=>'dijit.form.ValidationTextBox','class'=>'fullside','required'=>'true',
 		));
 		
 		$_code= new Zend_Dojo_Form_Element_TextBox('code');

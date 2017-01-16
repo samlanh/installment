@@ -79,7 +79,9 @@
 						</tr>
 						<tr height="40px">
 							<td><?php echo $tr->translate("PROPERY_CODE")?></td>
-							<td><input id="land_code" /><?php //echo $frm->getElement('');?></td>
+							<td><input id="land_code" /><?php //echo $frm->getElement('');?>
+								<input dojoType="dijit.form.TextBox"  id="propertype" name="propertype" type="hidden">
+							</td>
 							<td><?php echo $tr->translate("DESCRIPTION")?></td>
 							<td style="height: 50px; border:1px solid #aac4e6; widht:100%; font-size: 13px; color:#284db7;padding:5px;" colspan="4"><label id="land_information" style="max-width:100%;"></label><?php //echo $tr->translate("Address")?></td>
 						</tr>
@@ -270,7 +272,7 @@
 					<td width="10%">ប្រភេទបង់</td>
 				    <td width="40%"><strong><label id="lb_paymentid" class="value"></label></strong></td>
 					<td>&nbsp;&nbsp;&nbsp;ប្រាក់បានបង់</td>
-				    <td colspan="3"><strong><label id="lb_paid" class="value"></label></strong></td>
+				    <td colspan="3"><strong><label id="lb_paid" class="value" style="font-weight: bold; font-family:Arial;"></label></strong></td>
 				</tr>
 				<tr>
 					<td>សែក</td>
@@ -350,18 +352,18 @@
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
 								</td>
 								<td width="40%">
-									វេបសាយ :  <span style="font-size:16px;">www.boreyphnompenhthmey.com</span>
+									<span style=""><?php echo $this->data['website'];?></span>
 								</td>
 								<td width="40%" align="right">
-									<span style="font-family: 'Khmer OS Battambang';">អ៊ីម៉ែល</span> : <span style="font-size:16px;">boreyphnompenhthmey@gmail.com</span>
+									<span style="font-family: 'Khmer OS Battambang'; "><?php echo $this->data['email_client'];?></span>
 								</td>
 							</tr>
 							<tr style="white-space:nowrap;">
 								<td colspan="2">
-									ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
+									<?php echo $this->data['footer_branch'];?>
 								</td>
 								<td width="40%" align="right">
-									<span style="">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
+									<span style=""><?php echo $this->data['tel-client'];?> </span>
 								</td>
 							</tr>
 						</table>
@@ -448,7 +450,7 @@
 				    <td width="40%"><strong><label id="lb_paymentid1" class="value"></label></strong></td>
 					
 					<td  >&nbsp;&nbsp;&nbsp;ប្រាក់បានបង់</td>
-				    <td colspan="3"><strong><label id="lb_paid1" class="value"></label></strong></td>
+				    <td colspan="3"><strong><label id="lb_paid1" class="value" style="font-weight: bold; font-family:Arial;"></label></strong></td>
 				</tr>
 
 				<tr>
@@ -544,18 +546,18 @@
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
 								</td>
 								<td width="40%">
-									វេបសាយ :  <span style="font-size:16px;">www.boreyphnompenhthmey.com</span>
+									<span style=""><?php echo $this->data['website'];?></span>
 								</td>
 								<td width="40%" align="right">
-									<span style="font-family: 'Khmer OS Battambang';">អ៊ីម៉ែល</span> : <span style="font-size:16px;">boreyphnompenhthmey@gmail.com</span>
+									<span style="font-family: 'Khmer OS Battambang';"><?php echo $this->data['email_client'];?></span>
 								</td>
 							</tr>
 							<tr style="white-space:nowrap;">
 								<td colspan="2">
-									ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
+									<?php echo $this->data['footer_branch'];?>
 								</td>
 								<td width="40%" align="right">
-									<span style="">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
+									<span style=""><?php echo $this->data['tel-client'];?></span>
 								</td>
 							</tr>
 						</table>
@@ -680,7 +682,7 @@ function checkScheduleOption(){
 				dijit.byId('period').attr('value',12);
 			}
 			$('#identity').val('');
-			
+			dijit.byId('first_payment').attr("value",'<?php echo date("Y-m-d");?>');
 			dojo.byId('lbl_period').innerHTML="<?php echo $tr->translate("TOTAL_INSTALLMENT")?>";
 			dojo.byId('lbl_year').innerHTML='<?php echo $tr->translate("MONTH")?>';
 			dojo.byId('lbl_release').innerHTML="<?php echo $tr->translate("START_DATE")?>";
@@ -1069,6 +1071,7 @@ function getlandinfo(){
 			dijit.byId('total_sold').attr('value',data.price);
 			dijit.byId('sold_price').attr('value',data.price);
 			dojo.byId('land_information').innerHTML ="លេខសម្គាល់ "+data.land_code+", លេខផ្ទះ/ឡូតិ៏  "+data.land_address+", លេខផ្លូវ  "+data.street+", ប្រភេទ  "+data.property_type+", ទំហំ "+data.land_size+" ម៉ែត្រការ៉េ, បណ្តោយ "+data.height+" ម៉ែត្រ, ទទឹង  "+data.width+" ម៉ែត្រ";
+			dijit.byId('propertype').attr('value',data.house_type);
 		},
 		error: function(err) {
 			alert(err);
@@ -1220,6 +1223,7 @@ function addRow(){
 			});
 		}
 	}
+	dijit.byId("date_line").attr('value',epx_date);
 }
 function addInstallment(){
 	result = checkFirstRecord();
@@ -1450,7 +1454,7 @@ function printSave(new_stu_id,new_receipt_no){
 	
 	dojo.byId("lb_buydate").innerHTML = date_payment; //dijit.byId("date_buy").attr('displayedValue');
 	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
-	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue');
+	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	dojo.byId("lb_price").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 
 	/*dis_percent = dijit.byId("discount_percent").get('value');
@@ -1489,7 +1493,7 @@ function printSave(new_stu_id,new_receipt_no){
 	dojo.byId("lb_paymentid1").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
 	dojo.byId("lb_buydate1").innerHTML = date_payment;//dijit.byId("date_buy").attr('displayedValue');
 	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
-	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue');
+	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	dojo.byId("lb_price1").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 	dojo.byId("lb_discount1").innerHTML = symbal+" "+dojo.number.format(total_discount,2);//dis_percent+discount;//dijit.byId("discount").get('value');
 	other_fee = dijit.byId("other_fee").get('value');

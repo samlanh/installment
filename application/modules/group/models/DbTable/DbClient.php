@@ -175,6 +175,10 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			if(!empty($search['district_id'])){
 				$where.=" AND dis_id= ".$search['district_id'];
 			}
+			if($search['customer_id']>0){
+				$where.=" AND client_id= ".$search['customer_id'];
+			}
+			
 			if(!empty($search['comm_id'])){
 				$where.=" AND com_id= ".$search['comm_id'];
 			}
@@ -194,6 +198,8 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				FROM `ln_properties` 
 			WHERE id = ".$data['land_id']." LIMIT 1" ;
 			 $rs = $db->fetchRow($sql);
+			 $rs['house_type']=ltrim(strstr($rs['property_type'], '('), '.');
+			 
 			if(empty($rs)){return ''; }else{
 				return $rs;
 			}

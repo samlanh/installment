@@ -75,10 +75,8 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 //         $this->view->frmPopupZone = $frmpopup->frmPopupZone();
         
         $db_keycode = new Application_Model_DbTable_DbKeycode();
-        $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-        
+        $this->view->keycode = $db_keycode->getKeyCodeMiniInv();        
 //         $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
-        
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
 		
