@@ -124,18 +124,15 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				'cal_startdate'			=>$sale['startcal_date'],
     				'first_paymentbefore'	=>$sale['first_payment'],
     				'end_datebefore'		=>$sale['end_line'],
-    				
     				'discount_after'		=>$data['discount'],
     				'total_payment'			=>$data['sold_price'],
     				'other_fee'				=>$data['other_fee'],
     				'payment_method_after'	=>$data['schedule_opt'],
     				'paid_amount_after'		=>$data['deposit'],
     				'balance_after'			=>$data['balance'],
-    				
     				'period_after'			=>$data['period'],
     				'interest_after'		=>$data['interest_rate'],			
     				'fixed_payment_after'	=>$data['fixed_payment'],
-    				
     				'start_date_after'		=>$data['release_date'],
     				'first_payment_after'	=>$data['first_payment'],
     				'end_date_after'		=>$data['date_line'],
@@ -268,12 +265,12 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			$remain_principal = $data['sold_price'];
     		}else{
     			
-    			if($data["schedule_opt"]==4 AND $data['deposit']==0){
+    			if($data["schedule_opt"]==4 AND $data['deposit']==0){//check later if deposit> or =0
     				$data['sold_price']= $data['sold_price'];
     				$remain_principal = $data['sold_price'];
     			}else{
-    				$remain_principal = $data['sold_price']-$data['paid_before'];
-    				$data['sold_price']= $data['sold_price']-$data['paid_before'];
+    				$remain_principal = $data['sold_price'];//-$data['paid_before'];
+    				$data['sold_price']= $data['sold_price'];//-$data['paid_before'];
     			}
     		}
     		$next_payment = $data['first_payment'];
@@ -474,7 +471,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		if($data['deposit']>0){//insert payment
     			
     		}else{//input information
-    			$data['sold_price']=$data['balance'];
+    			//$data['sold_price']=$data['balance'];
     		}
     		  $data['deposit'] = $data['deposit']+$data['paid_before'];
     		  $data['sale_id']=$data['loan_number'];

@@ -176,9 +176,9 @@
 </style>
 	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'កាលវិភាគត្រូវបង់ប្រាក់'" id="lbl_schedule" style="width:1000px">
 	<div id="rpt_print" class="print" style="text-align: center;">
+		<input style="text-align: center;" type="button" onclick="printSave();" label="<?php echo $tr->translate("បោះពុម្ភបង្កាន់ដៃ")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 		<div id="t_amountmoneytype" name="t_amountmoneytype">
 		</div>
-		<input style="text-align: center;" type="button" onclick="printSave();" label="<?php echo $tr->translate("បោះពុម្ភបង្កាន់ដៃ")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 	</div>
 </div>
 </div>
@@ -219,7 +219,7 @@
 									<img style="width:100%;height:55px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
 								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
-									<div style="line-height:10px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
+									<div style="line-height:15px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 								</td>
 								<td width="25%">
 								</td>
@@ -392,7 +392,7 @@
 			</tr>
 	</table>
 		<div id="divPrint1" style="width: 21cm !important; height: 13.4cm ; padding: 0px; margin: 0px;">
-			<table width="100%" style="white-space: nowrap;font-size:16px;  padding:-5px 10px 0px 5px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
+			<table width="100%" style="white-space: nowrap;font-size:16px;  padding:5px 10px 0px 5px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;margin-top: 0px;">
@@ -401,7 +401,7 @@
 									<img style="width:100%;height:55px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
 								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
-									<div style="line-height:10px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
+									<div style="line-height:15px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 								</td>
 								<td width="25%">
 								</td>
@@ -457,7 +457,7 @@
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td >ប្រាក់នៅសល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lbl_ending_balance" class="value"></label></strong></td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lbl_ending_balance1" class="value"></label></strong></td>
 					<td >&nbsp;ថ្ងៃត្រូវបង់</td>
 				    <td><strong><label id="lb_buydate1" class="value"></label></strong></td>
 					<td>&nbsp;ថ្ងៃទទួល</td>
@@ -1046,22 +1046,6 @@ require(["dojo/ready"], function(ready){
 		}
     }
 	}, "customer_code");*/
-	new dijit.form.FilteringSelect({
-		store: co_store,//dojo.data.ObjectStore({objectStore: client_number}),
-		autoComplete: true,            
-		required: false,		           
-		name: "co_id",
-		id: "co_id",
-		searchAttr: "name",
-		class: 'fullside',
-		onChange: function() {
-			co_id = dijit.byId('co_id').get('value');
-			if(co_id==-1){
-				popupcreditofficer();
-			}else{
-			}
-	    }
-		}, "co_id");
 
 	new dijit.form.FilteringSelect({
 		store: co_store,//dojo.data.ObjectStore({objectStore: client_number}),
@@ -1567,6 +1551,7 @@ function printSave(new_receipt_no){
 	dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
 	schedule_opt = dijit.byId("schedule_opt").get("value");
 	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue');
+	dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
 
 	date_payment = dijit.byId('date_buy').get('value');
 	var format_date_payment = new Date(date_payment);
@@ -1586,7 +1571,7 @@ function printSave(new_receipt_no){
 	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	dojo.byId("lblpropertyprice1").innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),2)+" "+symbal;//dijit.byId("schedule_opt").attr('displayedValue');
 	dojo.byId("lbl_total_paid1").innerHTML = dojo.number.format(total_paid)+" "+symbal;
-	//dojo.byId("lbl_ending_balance1").innerHTML = dojo.number.format(total_paidamount)+" "+symbal;
+	dojo.byId("lbl_ending_balance1").innerHTML = dojo.number.format(total_paidamount)+" "+symbal;
 	dojo.byId("lb_discount1").innerHTML = discount;
 	dojo.byId("lbl_principle_amount1").innerHTML = dojo.number.format(deposit,2)+" "+symbal;
 	dojo.byId("lb_discount1").innerHTML = dojo.number.format(total_discount,2)+" "+symbal;
@@ -1684,6 +1669,7 @@ function addPreviewLoan(){
 			},
 			error: function(response, ioArgs) {
 				alert("មិនអាចមើលតារាងបាន");
+				document.getElementsByClassName("overlay")[0].style.display="none";
 				//alert("Failed while doing the operation: " + ioArgs.xhr.response);
 			}
 	   });

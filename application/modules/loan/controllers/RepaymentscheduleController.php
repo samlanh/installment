@@ -124,38 +124,31 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err =$e->getMessage());
 			}
 		}
-		
 		$id = $this->getRequest()->getParam('id');
 		$_db = new Loan_Model_DbTable_DbRepaymentSchedule();
 		$data_row = $_db->getRescheduleById($id); 
-		
-		$this->view->row = $data_row;
+		$this->view->rsresult = $data_row;
 // 		$rs = $db_g->getLoanFundExist($id);
 // 		if($rs==true){
 // 			Application_Form_FrmMessage::Sucessfull("LOAN_FUND_EXIST","/loan/repaymentschedule/index");
 // 		}
-		
 // 		$db = new Loan_Model_DbTable_DbLoanIL();
 // 		$row = $db->getTranLoanByIdWithBranch($id,1,1);
 // 		if(empty($row)){ Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST","/loan/repaymentschedule/index"); }
-		
-		
-		$frm = new Loan_Form_FrmLoan();
+		print_r($data_row);
+		$frm = new Loan_Form_FrmRepaymentSchedule();
 		$frm_loan=$frm->FrmAddLoan($data_row);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
-        $this->view->allclient = $db->getAllClient();
-        $this->view->allclient_number = $db->getAllClientNumber();
-        $frmpopup = new Application_Form_FrmPopupGlobal();
-        $this->view->frmpupoploantype = $frmpopup->frmPopupLoanTye();
-        $this->view->frmPopupZone = $frmpopup->frmPopupZone();
-        
+//      $this->view->allclient = $db->getAllClient();
+//      $this->view->allclient_number = $db->getAllClientNumber();
+//         $frmpopup = new Application_Form_FrmPopupGlobal();
+//      $this->view->frmpupoploantype = $frmpopup->frmPopupLoanTye();
+//      $this->view->frmPopupZone = $frmpopup->frmPopupZone();
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-        
-        $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
-        
+//         $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
 	}

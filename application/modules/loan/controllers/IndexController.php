@@ -29,13 +29,13 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_NAME","STREET","ប្រភេទបង់","LOAN_AMOUNT","DISCOUNT_PERCENT","DISCOUNT","OTHER_FEE","PAID","BALANCE","DATE_BUY",
+			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_NAME","STREET","ប្រភេទបង់","TOTAL_SOLD","DISCOUNT_PERCENT","DISCOUNT","OTHER_FEE","PAID","BALANCE","DATE_BUY",
 				"STATUS","បង់ប្រាក់","ចេញតារាងថ្មី","កិច្ចសន្យា");
 			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
 			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);
 			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);
 			$payment=array('module'=>'loan','controller'=>'ilpayment','action'=>'add',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('បង់ប្រាក់'=>$payment,'ចេញតារាងថ្មី'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('បង់ប្រាក់'=>$payment,'ចេញតារាង'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -88,6 +88,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try{
 				$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
+// 				print_r($_dbmodel);exit();
 				$_dbmodel->updateLoanById($_data);
 				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/loan/index/index");
 			}catch (Exception $e) {
@@ -99,7 +100,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$db_g = new Application_Model_DbTable_DbGlobal();
 		$rs = $db_g->getLoanFundExist($id);
 		if($rs==true){
-			Application_Form_FrmMessage::Sucessfull("LOAN_FUND_EXIST","/loan/index/index");
+			//Application_Form_FrmMessage::Sucessfull("LOAN_FUND_EXIST","/loan/index/index");
 		}
 		$db = new Loan_Model_DbTable_DbLandpayment();
 		$row = $db->getTranLoanByIdWithBranch($id,null);
@@ -143,7 +144,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	
 	public function viewAction(){
 // 		$this->_helper->layout()->disableLayout();
 		$id = $this->getRequest()->getParam('id');
@@ -163,7 +163,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 				print_r(Zend_Json::encode($row));
 			    exit();
 		}
-		
 	}
 	public function getLoaninfoAction(){//from repayment schedule
 		if($this->getRequest()->isPost()){
@@ -241,7 +240,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	
 	function addStaffAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -251,8 +249,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	
-	
 	function addClientAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -262,8 +258,5 @@ class Loan_IndexController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	
-	
-	
 }
 
