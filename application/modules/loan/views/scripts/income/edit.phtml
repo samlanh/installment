@@ -1,7 +1,6 @@
 <?php
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm_expense;
-// print_r($this->all_category);
 ?>
 <title>Edit Other Income</title>
 <style>	
@@ -14,21 +13,13 @@ $frm = $this->frm_expense;
  <script>
 		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
  </script>
- 
- 
 <form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'income','action'=>'edit')); ?>" 
 	dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	
 <script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
                branch_id = dijit.ById('branch_id').get('value');
-alert(branch_id);
-			  // if(branch_id==null || branch_id==0){
-				//alert("Please Select Project");
-				//dijit.byId("branch_id").focus();
-				//return false;
-         	 // }
-				return true;
+			   return true;
 			}else {
 				return false;
 			}
@@ -95,9 +86,7 @@ dojo.require("dijit.form.CheckBox");
 function displayNone(){
 	document.getElementById('divPrint1').style.display="none";
 }
-
 dojo.ready(function(){
-	
 	new dijit.form.FilteringSelect({
 	    autoComplete: true,                        
 	    id: "customer",
@@ -106,7 +95,6 @@ dojo.ready(function(){
 	    class: 'fullside',  
 	    placeHolder:"Selected Customer",          
 	    onChange: function() {  
-	    	//make_id = dijit.byId('grade').get('value');
 	    }
 	}, "customer");
 	getallCustomer();

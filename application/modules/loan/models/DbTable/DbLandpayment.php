@@ -448,7 +448,16 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			'user_id'			=>$this->getUserId(),
     	);
     	$this->_name='ln_client_receipt_money';
-    	$crm_id = $this->insert($array);
+    	
+    	if($edit!=null){//edit
+    		$crm_id = $this->insert($array);
+    	}else{
+    		$where = ' status = 1 AND land_id ='.$data["old_landid"].'sale_id = '.$data['id'];
+    		$this->update($array, $where);
+    	}
+    	
+    	
+    	
     	
     	$rows = $this->getSaleScheduleById($data['sale_id'], 1);
     	$paid_amount = $data['deposit'];
@@ -1026,7 +1035,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		}
     			if($data['deposit']>0){//insert payment
     				$data['sale_id']=$id;
-    				$this->addPaymenttoSale($data);
+    				$this->addPaymenttoSale($data,1);
     		   }
 	        $db->commit();
 	        return 1;

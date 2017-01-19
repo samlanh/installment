@@ -78,7 +78,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 // 			if($search['status']>-1){
 // 				$where.= " AND status = ".$search['status'];
 // 			}
-			if($search['branch_id']>-1){
+			if($search['branch_id']>-0){
 				$where.= " AND branch_id = ".$search['branch_id'];
 			}
 	       $order=" order by id desc ";
