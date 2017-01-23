@@ -72,7 +72,9 @@
 							<td style="white-space: nowrap;">ថ្ងៃចេញកិច្ចសន្យា</td>
 							<td><?php echo $frm->getElement('agreement_date');?></td>
 							<td style="white-space: nowrap;"><?php echo $tr->translate("CUSTOMER_NAME")?></td>
-							<td><input id="member" /> <?php //echo $frm->getElement('member');?></td>
+							<td><input id="member" /> <?php //echo $frm->getElement('member');?>
+								<input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with"  type="text">
+							</td>
 						</tr>
 						<tr style="background: #edf7f8;">
 							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong style="color:#284db7;"><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></td>
@@ -1029,6 +1031,7 @@ require(["dojo/ready"], function(ready){
 			showPopupclient();
 		}else{
 			dijit.byId('customer_code').attr('value',member);
+			getcustomerinfo(member);
 		}
 }
 	}, "member");
@@ -1208,7 +1211,22 @@ function initailizeinstallment(){
 function showPopupclient(){
 	dijit.byId("popup_client").show();
 }
-
+var url_getcustomer = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclient')); ?>';
+function getcustomerinfo(client_id){
+	dojo.xhrPost({
+		url:url_getcustomer,	
+		content:{ 
+		    'client_id':client_id
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('joint_with').attr('value',data.hname_kh);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
 var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfo(){
 	dijit.byId('land_price').attr('value',0);
@@ -1746,7 +1764,6 @@ function printSave(new_stu_id,new_receipt_no){
 	var date_payment = dd +'-'+month+'-'+y ;
 	
 	dojo.byId("lb_buydate").innerHTML = date_payment; //dijit.byId("date_buy").attr('displayedValue');
-	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	dojo.byId("lb_price").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 
@@ -1781,11 +1798,10 @@ function printSave(new_stu_id,new_receipt_no){
 	dojo.byId("lb_balance").innerHTML = "$ "+dojo.number.format(balance,{places:2});
 	
 	dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
-	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	
 	dojo.byId("lb_paymentid1").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
 	dojo.byId("lb_buydate1").innerHTML = date_payment;//dijit.byId("date_buy").attr('displayedValue');
-	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
+	
 	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	dojo.byId("lb_price1").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 	dojo.byId("lb_discount1").innerHTML = symbal+" "+dojo.number.format(total_discount,2);//dis_percent+discount;//dijit.byId("discount").get('value');
@@ -1796,7 +1812,12 @@ function printSave(new_stu_id,new_receipt_no){
 	dojo.byId("lb_paid1").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
 	dojo.byId("lb_balance1").innerHTML = "$ "+dojo.number.format(balance,{places:2});
 	dojo.byId("lb_noted1").innerHTML =dijit.byId("note").get('value');
-	dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
+	joint_with = dijit.byId("joint_with").attr('displayedValue');
+	if(joint_with!=''){joint_with = "/"+joint_with}
+	dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
+	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
+	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
+	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
 	
 	schedule_opt = dijit.byId("schedule_opt").get("value");
 	if(schedule_opt==1){

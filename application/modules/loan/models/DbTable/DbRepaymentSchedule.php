@@ -473,7 +473,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		}else{//input information
     			//$data['sold_price']=$data['balance'];
     		}
+    		  $data['new_deposit'] = $data['deposit'];
     		  $data['deposit'] = $data['deposit']+$data['paid_before'];
+    		 
     		  $data['sale_id']=$data['loan_number'];
     		  if(($payment_method!=2)){
     		  	$this->addPaymenttoSale($data);
@@ -526,8 +528,10 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'note'				=>$data['note'],
     			'user_id'			=>$this->getUserId(),
     	);
-    	$this->_name='ln_client_receipt_money';
-    	$crm_id = $this->insert($array);
+    	if($data['new_deposit']>0){
+	    	$this->_name='ln_client_receipt_money';
+	    	$crm_id = $this->insert($array);
+    	}
     	 
     	$rows = $this->getSaleScheduleById($data['sale_id'],1);
     	$paid_amount = $data['deposit'];
@@ -573,7 +577,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     					'is_completed'			=>$statuscomplete,
     					'status'				=>1,
     			);
-    			$this->insert($array);
+    			if($data['new_deposit']>0){
+    				$this->insert($array);
+    			}
     			if($paid_amount<=0){
     				break;
     			}
@@ -598,7 +604,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				'is_completed'			=>($data['schedule_opt']==2)?1:0,
     				'status'				=>1,
     		);
-    		$this->insert($array);
+    		if($data['new_deposit']>0){
+    			$this->insert($array);
+    		}
     	}
     }
     public function getNextDateById($pay_term){

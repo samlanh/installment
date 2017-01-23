@@ -83,6 +83,18 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		));
 		$to_date->setValue(date("Y-m-d"));
 		
+		$streetlist = new Zend_Dojo_Form_Element_FilteringSelect('streetlist');
+		$streetlist->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$streetopt = $db->getAllStreet();
+		$streetlist->setMultiOptions($streetopt);
+		$streetlist->setValue($request->getParam("streetlist"));
+		
+		
 		$_type_of_property=  new Zend_Dojo_Form_Element_FilteringSelect('type_property_sale');
 		$_type_of_property->setAttribs(array('dojoType'=>$this->filter,	'class'=>'fullside',));
 		$_type_of = array(
@@ -95,7 +107,7 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		if(!empty($_data)){
 			//$_co->setValue($_data['co_name']);
 		}
-		$this->addElements(array($_branch_id,$_btn_search,$_status_search,$_title,$_id,$property,$_type_of_property,$from_date,$to_date));
+		$this->addElements(array($streetlist,$_branch_id,$_btn_search,$_status_search,$_title,$_id,$property,$_type_of_property,$from_date,$to_date));
 		return $this;
 	}
 	

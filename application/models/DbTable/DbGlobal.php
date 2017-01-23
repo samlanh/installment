@@ -482,6 +482,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`price_sold`      AS `price_sold`,
 		  `s`.`discount_amount` AS `discount_amount`,
 		  s.discount_percent,
+		  s.agreement_date,
 		  `s`.`admin_fee`       AS `admin_fee`,
 		  `s`.`other_fee`       AS `other_fee`,
 		  `s`.`paid_amount`     AS `paid_amount`,
@@ -1052,6 +1053,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$sql.=" ORDER BY c.`client_id` DESC";
   	return $db->fetchAll($sql);
   }
+  
   function getAllClient($branch_id=null){
   	$db = $this->getAdapter();
   	$sql=" SELECT c.`client_id` AS id  ,c.`branch_id`,

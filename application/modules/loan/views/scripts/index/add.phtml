@@ -4,7 +4,6 @@
 	$frm = $this->frm_loan;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
-//echo printf("%06s\n",$number); // zero-padding works on strings too
 
 ?>
 	
@@ -75,7 +74,9 @@
 							<td style="white-space: nowrap;">ថ្ងៃចេញកិច្ចសន្យា</td>
 							<td><?php echo $frm->getElement('agreement_date');?></td>
 							<td style="white-space: nowrap;"><?php echo $tr->translate("CUSTOMER_NAME")?></td>
-							<td><input id="member" /> <?php //echo $frm->getElement('member');?></td>
+							<td><input id="member" /> <?php //echo $frm->getElement('member');?>
+								<input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with"  type="hidden">
+							</td>
 						</tr>
 						<tr style="background: #edf7f8;">
 							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong style="color:#284db7;"><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></td>
@@ -662,7 +663,7 @@ function checkScheduleOption(){
 			if(isNaN(amount_principal)){amount_principal=0;}if(isNaN(debt_amount)){debt_amount=0;}
 			amount_principal=dijit.byId('sold_price').get('value');
 			total_collect = amount_principal/debt_amount;
-			total_collect = total_collect.toFixed(2);
+			total_collect = total_collect.toFixed(0);
 			if(debt_amount!=0){
 				dijit.byId('fixed_payment').attr("value",total_collect);
 			}
@@ -723,19 +724,21 @@ function calCulateFixedPeriod(){
 	interest_rate=dijit.byId('interest_rate').get('value')/12/(100);//(100/30day)
 	if(interest_rate==0){
 		amount_payment = parseFloat(amount_principal/debt_amount);
-		amount_payment = amount_payment.toFixed(2);
+		amount_payment = amount_payment.toFixed(0);
 		if(amount_payment=='Infinity' || amount_payment=='NaN'){amount_payment=0;}
 	}else{
 		top_pow = Math.pow((1+interest_rate),term);
 		bellow = Math.pow((1+interest_rate),(term))-1;
 		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
 		
-		amount_payment = amount_payment.toFixed(2);
+		amount_payment = amount_payment.toFixed(0);
 		if(isNaN(amount_payment)){amount_payment=0;
 		}
 	}	
+	
 	dijit.byId('fixed_payment').attr('value',amount_payment);
 	dijit.byId('for_installamount').attr('value',amount_principal);
+	
 }
 function calculateDiscount(){
 	total_sold = dijit.byId('total_sold').get('value');
@@ -1008,6 +1011,7 @@ require(["dojo/ready"], function(ready){
 			showPopupclient();
 		}else{
 			dijit.byId('customer_code').attr('value',member);
+			getcustomerinfo(member);
 		}
 }
 	}, "member");
@@ -1054,6 +1058,22 @@ require(["dojo/ready"], function(ready){
 
 function showPopupclient(){
 	dijit.byId("popup_client").show();
+}
+var url_getcustomer = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclient')); ?>';
+function getcustomerinfo(client_id){
+	dojo.xhrPost({
+		url:url_getcustomer,	
+		content:{ 
+		    'client_id':client_id
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('joint_with').attr('value',data.hname_kh);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
 }
 
 var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
@@ -1431,6 +1451,13 @@ function calCulateFirstPayment(){
 }
 
 function printSave(new_stu_id,new_receipt_no){
+	deposit = dijit.byId('deposit').get('value');
+	if (deposit=='' || deposit==-1){
+		alert('សូមបញ្ចូលប្រាក់ត្រូវបង់ ទើបបោះពុម្ភបង្កាន់ដៃបង់ប្រាក់បាន!');
+		dijit.byId('deposit').focus();
+		return false;
+	}
+	
 	symbal=" $";
 	if(new_stu_id=='' && new_receipt_no==''){
 		getLoanByBranch(1);
@@ -1456,7 +1483,7 @@ function printSave(new_stu_id,new_receipt_no){
 	var date_payment = dd +'-'+month+'-'+y ;
 	
 	dojo.byId("lb_buydate").innerHTML = date_payment; //dijit.byId("date_buy").attr('displayedValue');
-	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
+	
 	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	dojo.byId("lb_price").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 
@@ -1491,11 +1518,9 @@ function printSave(new_stu_id,new_receipt_no){
 	dojo.byId("lb_balance").innerHTML = "$ "+dojo.number.format(balance,{places:2});
 	
 	dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
-	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	
 	dojo.byId("lb_paymentid1").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
 	dojo.byId("lb_buydate1").innerHTML = date_payment;//dijit.byId("date_buy").attr('displayedValue');
-	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
 	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	dojo.byId("lb_price1").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 	dojo.byId("lb_discount1").innerHTML = symbal+" "+dojo.number.format(total_discount,2);//dis_percent+discount;//dijit.byId("discount").get('value');
@@ -1506,7 +1531,13 @@ function printSave(new_stu_id,new_receipt_no){
 	dojo.byId("lb_paid1").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
 	dojo.byId("lb_balance1").innerHTML = "$ "+dojo.number.format(balance,{places:2});
 	dojo.byId("lb_noted1").innerHTML =dijit.byId("note").get('value');
-	dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
+	joint_with = dijit.byId("joint_with").attr('displayedValue');
+	if(joint_with!=''){joint_with = "/"+joint_with}
+	
+	dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
+	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
+	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
+	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	
 	schedule_opt = dijit.byId("schedule_opt").get("value");
 	if(schedule_opt==1){
@@ -1830,5 +1861,25 @@ function returnMOnth(monthnum){
 	month[11] = "Nov";
 	month[12] = "Dec";
 	return month[monthnum];
+}
+function calculateDuration(type=null){
+	if(type==1){
+		var total_paid_install = dijit.byId('total_installamount').get('value');
+		if(total_paid_install == 0){
+			sold_price = dijit.byId('sold_price').get('value');
+		}else{
+			sold_price = dijit.byId('sold_price').get('value')-dijit.byId('total_installamount').get('value');
+		}
+		
+		interest_rate= dijit.byId('interest_rate').get('value')/12/(100);//(100/30day)
+		fixed_payment = dijit.byId('fixed_payment').get('value');
+		if(isNaN(interest_rate)){interest_rate=0;}
+		pi = (parseFloat(fixed_payment)-(parseFloat(sold_price)*parseFloat(interest_rate)));
+		s = parseFloat(fixed_payment);
+		top_ii = Math.log(s/pi);
+		var duration =  Math.ceil(top_ii / Math.log(1+ parseFloat(interest_rate)));// ROUND UP
+		duration = duration/12;
+		dijit.byId('period').attr('value',duration);
+	}
 }
 </script>

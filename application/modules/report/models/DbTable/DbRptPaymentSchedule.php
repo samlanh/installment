@@ -9,7 +9,7 @@ class Report_Model_DbTable_DbRptPaymentSchedule extends Zend_Db_Table_Abstract
     }
     public function getPaymentSchedule($id){
     	$db=$this->getAdapter();
-    	$sql = "SELECT * FROM `ln_saleschedule` WHERE sale_id= $id AND status=1";
+    	$sql = "SELECT * FROM `ln_saleschedule` WHERE sale_id= $id AND status=1 ";
     	return $db->fetchAll($sql);
     }
     public function getPaymentScheduleGroupById($id){//for group member total pay per month

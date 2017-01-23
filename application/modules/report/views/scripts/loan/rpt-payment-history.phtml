@@ -72,10 +72,13 @@ th{padding: 5px;}
     		<table width="100%" border="1" style="border-collapse:collapse; border: 1px solid #000;" cellspacing="0">
             	<?php if(!empty($this->loantotalcollect_list)) {
 	              	foreach ($this->loantotalcollect_list as $index => $rs){?>
-	              	<tr style="background:#c1d0f3"><td colspan="17" class="style">&nbsp;&nbsp;
-	              		<?php 
-	              			if ($client_id!=$rs["client_id"]) {
-	              				 echo $tr->translate("CUSTOMER_NAME").':'.$rs["client_name"].',';
+	              
+	              			<?php 
+	              				if ($client_id!=$rs["client_id"]) {
+	              			?>
+	              				<tr style="background:#c1d0f3"><td colspan="17" class="style">&nbsp;&nbsp;
+	              			<?php 
+	              				 echo $tr->translate("CUSTOMER_NAME").':'.$rs["name_kh"].',';
 	              				 echo $tr->translate("SEX").':';
 	              					if (!empty($rs['sex']) AND $rs['sex']==1){
 	              					echo "M";
@@ -83,10 +86,11 @@ th{padding: 5px;}
 	              				else {
 	              					echo "F";
 	              				}
+	              				
 	              				$client_id=$rs["client_id"];
 	              			?>
-	              	</td>
-	              	</tr>
+		              			</td>
+		              	</tr>
 	                <tr bgcolor="#ccc" class="style" align="center" style="padding:5px 0;height: 20px; white-space: nowrap;">
 	                    <td><?php echo $tr->translate("NUM");?></td>
 	                    <td><?php echo $tr->translate("BRANCH_NAME");?></td>

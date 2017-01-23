@@ -795,9 +795,47 @@ public function exportFileToExcel($table,$data,$thead){
 	 if(!empty($id)){
 		 $receipt = $db->getReceiptByID($id);
 			$this->view->rs = $receipt;
+			if(empty($receipt['name_kh'])){
+				$this->_redirect("/report/paramater");
+			}
 	 }else{
   		$this->_redirect("/report/paramater");
   	}
+  }
+  function rptUpdatepaymentAction(){
+  	if($this->getRequest()->isPost()){
+  		$_data = $this->getRequest()->getPost();
+  		try {
+  			$_dbmodel = new Report_Model_DbTable_DbLandreport();
+  			$_dbmodel->updatePaymentStatus($_data);
+  			//Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/rpt-sold");
+  		}catch (Exception $e) {
+  			//Application_Form_FrmMessage::message("INSERT_FAIL");
+  			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+  		}
+  	}
+  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
+  	$id =$this->getRequest()->getParam('id');
+  	$row = $db->getPaymentSchedule($id);
+  	$this->view->tran_schedule=$row;
+//   	print_r($row);exit();
+  	
+  	if(empty($row)){
+  		//Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold');
+  	}
+  	$db = new Application_Model_DbTable_DbGlobal();
+  	$rs = $db->getClientByMemberId($row[0]['sale_id']);
+  	
+  	$this->view->client =$rs;
+  	
+  	$day_inkhmer = $db->getDayInkhmerBystr(null);
+  	$this->view->day_inkhmer = $day_inkhmer;
+  
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	$this->view->id = $id;
+  	$this->view->payment_option = $db->getVewOptoinTypeByType(25,null,null,1);
+  
   }
  
 }

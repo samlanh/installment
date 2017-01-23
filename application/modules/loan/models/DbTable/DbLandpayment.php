@@ -400,21 +400,21 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    		$from_date=$next_payment;
     			   }
     		}
-	    		if($data['deposit']>0){//insert payment
-	    			$this->addPaymenttoSale($data);
-	    		}
-	           $db->commit();
+	    	if($data['deposit']>0){//insert payment
+	    		$this->addPaymenttoSale($data,null);
+	    	}
+	        $db->commit();
 	        return 1;
 	        }catch (Exception $e){
-	            	$db->rollBack();
-	            	Application_Form_FrmMessage::message("INSERT_FAIL");
-	            	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+	            $db->rollBack();
+	            Application_Form_FrmMessage::message("INSERT_FAIL");
+// 	            echo $e->getMessage();
+	            Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	        }
     }
-    function addPaymenttoSale($data,$edit=null){
+    function addPaymenttoSale($data,$action=null){
     	$dbtable = new Application_Model_DbTable_DbGlobal();
-    	
-    	if($edit!=null){//edit
+    	if($action==null){//edit
     		$receipt=$data['receipt'];
     	}else{
     		$receipt = $dbtable->getReceiptByBranch($data);
@@ -446,19 +446,15 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			'status'			=>1,
     			'note'				=>$data['note'],
     			'user_id'			=>$this->getUserId(),
+    			'field3'			=>1
     	);
     	$this->_name='ln_client_receipt_money';
-    	
-    	if($edit!=null){//edit
+    	if($action==null){//edit
     		$crm_id = $this->insert($array);
     	}else{
     		$where = ' status = 1 AND land_id ='.$data["old_landid"].'sale_id = '.$data['id'];
     		$this->update($array, $where);
     	}
-    	
-    	
-    	
-    	
     	$rows = $this->getSaleScheduleById($data['sale_id'], 1);
     	$paid_amount = $data['deposit'];
     	$remain_principal=0;

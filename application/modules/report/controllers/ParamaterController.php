@@ -168,7 +168,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"branch_id"=> -1,
   				'type_property_sale'=>-1,
   				'start_date'=> date('Y-m-d'),
-  				'end_date'=>date('Y-m-d')
+  				'end_date'=>date('Y-m-d'),
+  				'streetlist'=>''
   				);
   	}
   	$this->view->list_end_date = $search;
@@ -248,7 +249,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->frm_search = $frm;
   }
   function rptDailyCashAction(){ // by Vandy
-  
   	if($this->getRequest()->isPost()){
   		$search=$this->getRequest()->getPost();
   	}

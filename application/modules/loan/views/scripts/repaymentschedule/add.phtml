@@ -68,7 +68,9 @@
 							<td style="white-space: nowrap;"><?php echo $tr->translate("ថ្ងៃចេញកិច្ចសន្យា")?></td>
 							<td><?php echo $frm->getElement('agreement_date');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
-							<td><input id="member" /> <?php //echo $frm->getElement('member');?></td>
+							<td><input id="member" /> <?php //echo $frm->getElement('member');?>
+								<input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with"  type="hidden">
+							</td>
 						</tr>
 						<tr style="background: #edf7f8;">
 							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong style="color:#284db7;"><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></td>
@@ -94,10 +96,19 @@
 								   </tr>
 								</table>
 							</td>
-							<td align="center"><?php echo $tr->translate("PAID")?></td>
-							<td><?php echo $frm->getElement('paid_before');?></td>
-							<td><?php echo $tr->translate("Balance")?></td>
-							<td><?php echo $frm->getElement('balance_before');?></td>
+							<td align="center"><?php echo $tr->translate("SOLD_PRICE")?></td>
+							<td><?php echo $frm->getElement('house_price');?></td>
+							<td><?php echo $tr->translate("PAID")?></td>
+							<td colspan="2">
+								<table width="100%" >	
+									<tr>
+									<td width="35%"><?php echo $frm->getElement('paid_before');?></td>
+									<td width="30%" style="color:red; white-space: nowrap;"><?php echo $tr->translate("Balance")?></td>
+									<td width="35%"><?php echo $frm->getElement('balance_before');?></td>
+								   </tr>
+								</table>
+							</td>
+							
 						</tr>
 						<tr style="background: #edf7f8;">
 							<td colspan="6" style="border-bottom:1px solid #aac4e6;"><strong style="color:#284db7;"><?php echo $tr->translate("PAYMENT_INFORMATION")?></strong></td>
@@ -199,7 +210,7 @@
 				.label{ font-size: 22px;}
 				.value{ border: 1px solid #000; height: 30px; padding: 0 2px;width: 100%;margin-right:5px; display: block;
 						line-height: 32px;}
-				.values{ border: 1px solid rgba(14, 0, 107, 1);; height: 25px; padding: 0 10px;display: block;
+				.values{ border: 1px solid #000; height: 25px; padding: 0 10px;display: block;
 						line-height: 25px;}
 				.h{}
 				.print tr td{
@@ -228,7 +239,7 @@
 					</td>
 				</tr>
 			</table>
-			<table style="width:23cm;white-space: nowrap;font-size:16px;padding:-10px 10px 0px 5px; margin-top: -35px;margin-bottom:10px;font-family: 'Battambang';" class="print" cellspacing="3px"  cellpadding="0" >
+			<table style="width:23cm;white-space: nowrap;font-size:16px;padding:-10px 10px 0px 5px; margin-top: -35px;margin-bottom:10px;font-family: 'Khmer OS Battambang';" class="print" cellspacing="3px"  cellpadding="0" >
 				<tr>
 					<td width="10%" ></td>
 					<td width="30%" ></td>
@@ -282,7 +293,7 @@
 				<tr style="white-space: nowrap;">
 					<td >សម្គាល់</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted" class="value"></label></strong></td>
-					<td >សែក</td>
+					<td >&nbsp;សែក</td>
 					<td colspan="3"><strong><label id="lb_cheque" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="65px;">
@@ -337,7 +348,7 @@
 				<tr style="line-height: 0px;">
 					<td>&nbsp;</td>
 				</tr>
-				<tr style="line-height: 20px;font-size: 13px;font-family:'Battambang';">
+				<tr style="line-height: 20px;font-size: 13px;font-family:'Khmer OS Battambang';">
 					<td valign="top" >
 						<span style="text-decoration:underline;font-size: 14px;">&nbsp;សំគាល់ ៖</span>
 					</td>
@@ -352,7 +363,7 @@
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;"> 
 								<tr>
 									<td width="22%">
 										<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
@@ -410,7 +421,7 @@
 					</td>
 				</tr>
 			</table>
-			<table  style="white-space: nowrap;font-size:16px;padding:-10px 10px 0px 5px; margin-top: -35px;font-family: 'Battambang';" class="print" cellspacing="3px"  cellpadding="0" >
+			<table  style="white-space: nowrap;font-size:16px;padding:-10px 10px 0px 5px; margin-top: -35px;font-family: 'Khmer OS Battambang';" class="print" cellspacing="3px"  cellpadding="0" >
 				<tr>
 					<td width="10%" ></td>
 					<td width="30%" ></td>
@@ -419,12 +430,10 @@
 					<td width="10%" ></td>
 					<td width="18%" ></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;font-size: 14px;">
 				    <td colspan="5"></td>
 					<td align="right"><strong>No. : <label id="lb_receipt1" ></label></strong></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;">
 				    <td  >លេខកូដលក់</td>
 				    <td  ><strong><label id="lb_sale_code1" class="value"></label></strong></td>
@@ -466,10 +475,9 @@
 				<tr style="white-space: nowrap;">
 					<td >សម្គាល់</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"></label></strong></td>
-					<td >សែក</td>
+					<td >&nbsp;សែក</td>
 					<td colspan="3"><strong><label id="lb_cheque1" class="value"></label></strong></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;" height="65px;">
 					<td colspan="6">
 						<table width="100%" border="0" style="font-size:14px;line-height: 18px;">
@@ -477,11 +485,9 @@
 								<td width="30%">
 									&nbsp;
 								</td>
-								
 								<td align="center" width="40%">
 									ស្នាមមេដៃអ្នកប្រគល់
 								</td>
-									
 								<td align="center" width="30%">
 									ស្នាមមេដៃអ្នកទទួល
 								</td>
@@ -500,11 +506,9 @@
 								<td width="30%">
 									&nbsp;
 								</td>
-								
 								<td align="center" width="40%">
 									<strong><label id="lbl_customer1"></label></strong>
 								</td>
-									
 								<td align="center" width="30%">
 									<strong>
 										<?php 
@@ -519,8 +523,7 @@
 						</table>
 					</td>
 				</tr>
-				
-				<tr style="line-height: 20px;font-size: 13px;font-family:'Battambang';">
+				<tr style="line-height: 20px;font-size: 13px;font-family:'Khmer OS Battambang';">
 					<td valign="top" >
 						<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
 					</td>
@@ -529,15 +532,13 @@
 						<span style="white-space: pre-line;font-size: 14px;"><?php echo $this->data['comment1'];?></span><br />
 					</td>
 				</tr>
-				
 				<tr style="line-height: 15px;font-size: 10px;">
 					 <td colspan="6" style="border-bottom: 2px solid rgba(255, 235, 59, 0.88)">
 					 </td>
 				</tr>
-				
 				<tr style="line-height: 15px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
@@ -561,13 +562,8 @@
 						</table>
 					</td>
 				</tr>
-				
 			</table>
 		</div>
-		
-		
-		
-			
 	</div>
 </div>
 </form>
@@ -654,7 +650,7 @@ function checkScheduleOption(){
 			if(dijit.byId("old_paymentmethod").get("value")==1){amount_principal = dijit.byId("sold_price").get('value');}
 			if(isNaN(amount_principal)){amount_principal=0;}if(isNaN(debt_amount)){debt_amount=0;}
 			total_collect = amount_principal/debt_amount;
-			total_collect = total_collect.toFixed(2);
+			total_collect = total_collect.toFixed(0);
 			if(debt_amount!=0){
 				dijit.byId('fixed_payment').attr("value",total_collect);
 			}
@@ -728,7 +724,7 @@ function calCulateFixedPeriod(){
 		bellow = Math.pow((1+interest_rate),(term))-1;
 		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
 		
-		amount_payment = amount_payment.toFixed(2);
+		amount_payment = amount_payment.toFixed(0);
 		if(isNaN(amount_payment)){amount_payment=0;
 		}
 	}	
@@ -894,7 +890,6 @@ function getReceiptByBranch(condition){
 		load: function(data) {
 			dijit.byId('receipt').attr('value',data);
 			if(condition==1){
-				
 			}
 		},
 		error: function(err) {
@@ -1025,6 +1020,7 @@ require(["dojo/ready"], function(ready){
 			showPopupclient();
 		}else{
 			//dijit.byId('customer_code').attr('value',member);
+			getcustomerinfo(member);
 		}
 }
 	}, "member");
@@ -1063,6 +1059,22 @@ require(["dojo/ready"], function(ready){
 	});
 </script>
 <script type="text/javascript">
+var url_getcustomer = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclient')); ?>';
+function getcustomerinfo(client_id){
+	dojo.xhrPost({
+		url:url_getcustomer,	
+		content:{ 
+		    'client_id':client_id
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('joint_with').attr('value',data.hname_kh);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
 var url_submiinfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloan-bymemberid')); ?>';
 function getInfoByLoanNumber(){
 	loan_id = dijit.byId('loan_number').get('value');
@@ -1080,9 +1092,10 @@ function getInfoByLoanNumber(){
 			total_principal = parseFloat(total_principal);
 			
 			dijit.byId('sale_code').attr('value',data.sale_number);
-			dijit.byId('paid_before').attr('value',total_principal);
+			
+			//dijit.byId('paid_before').attr('value',total_principal);
 			dijit.byId("member").attr('value',data.client_id);
-			//dijit.byId('customer_code').set('readOnly',true);
+			
 			dijit.byId('land_code').attr('value',data.house_id);
 			dijit.byId('member').set('readOnly',true);
 			dijit.byId('bdiscount_percent').attr('value',data.discount_percent);
@@ -1101,6 +1114,8 @@ function getInfoByLoanNumber(){
 				dijit.byId('sold_price').attr('value',data.price_sold-data.paid_amount);
 			}
 			dijit.byId('old_paymentmethod').attr('value',data.payment_id);
+			
+			dijit.byId('house_price').attr('value',parseFloat(data.paid_amount)+parseFloat(balance_before));
 			
 		},
 		error: function(err) {
@@ -1508,7 +1523,7 @@ function printSave(new_receipt_no){
 	symbal = " $";
 	dojo.byId("lb_sale_code").innerHTML = dijit.byId("sale_code").attr('displayedValue');
 	dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get('value');
-	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
+	
 	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	deposit = dijit.byId("deposit").get("value");
 	paid_before = dijit.byId("paid_before").get("value");
@@ -1550,8 +1565,6 @@ function printSave(new_receipt_no){
 	dojo.byId("lb_cheque").innerHTML =dijit.byId("cheque").get('value');
 	dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
 	schedule_opt = dijit.byId("schedule_opt").get("value");
-	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue');
-	dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
 
 	date_payment = dijit.byId('date_buy').get('value');
 	var format_date_payment = new Date(date_payment);
@@ -1563,11 +1576,10 @@ function printSave(new_receipt_no){
 	dojo.byId("lbl_paid_date").innerHTML = collect_payment;
 	dojo.byId("lb_buydate").innerHTML = collect_payment;
 	
-	
 	dojo.byId("lb_sale_code1").innerHTML = dijit.byId("sale_code").attr('displayedValue');
 	dojo.byId("lb_receipt1").innerHTML = dijit.byId("receipt").get('value');
 	dojo.byId("lb_buydate1").innerHTML = dijit.byId("date_buy").attr('displayedValue');
-	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
+	
 	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	dojo.byId("lblpropertyprice1").innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),2)+" "+symbal;//dijit.byId("schedule_opt").attr('displayedValue');
 	dojo.byId("lbl_total_paid1").innerHTML = dojo.number.format(total_paid)+" "+symbal;
@@ -1581,11 +1593,18 @@ function printSave(new_receipt_no){
 	dojo.byId("lb_noted1").innerHTML =dijit.byId("note").get('value');
 	dojo.byId("lbl_paid_date1").innerHTML = collect_payment;
 	dojo.byId("lb_buydate1").innerHTML = collect_payment;
+
+	joint_with = dijit.byId("joint_with").attr('displayedValue');
+	if(joint_with!=''){joint_with = "/"+joint_with}
+	
+	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
+	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
+	dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
+	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	 
 	if(schedule_opt==1){
 		//EXPIRED_DATE
 	}
-	
 	 dijit.byId("terms").show();	
 	}
 function returnMOnth(monthnum){

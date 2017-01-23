@@ -4,7 +4,7 @@ $day = array(
 		"Mon" =>'ច័ន្ទ',
 		"Tue" =>'អង្គារ',
 		"Wed" =>'ពុធ',
-		"Thu" =>'ព្រហស្បតិ័',
+		"Thu" =>'ព្រហស្បតិ៍',
 		"Fri" =>'សុក្រ',
 		"Sat" =>'សៅរ៍',
 		"Sun" =>'អាទិត្យ',
@@ -85,22 +85,47 @@ dojo.require("dijit.form.DateTextBox");
              			$rowpaid = $dbs->getPaymentPayoff($this->agreement['id']);
              			$paid_payoff = $rowpaid['outstanding'];
              			?>
-             			<span class="child" >-	ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:160px;font-family:Arial;font-weight: bold;"><?php echo number_format($paid_amount,2);?></span> 
-             			<span class="value" style="min-width:260px;"><label id="lable_depositkhmer"></label>(ដុល្លាអាមេរិក)</span>។
-             			<!--  --><script>
-								a ='<?php //echo ($this->agreement['paid_amount']) ?>';
+             			<?php if($paid_amount>0){?>
+             			<span class="child" >-	ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:260px;font-family:Arial;font-weight: bold;">
+             			<?php echo number_format($paid_amount,2);?><label style="font-family: 'Times New Roman','Khmer OS Battambang';" id="lable_depositkhmer" ></label><span style="font-family: 'Times New Roman','Khmer OS Battambang';">(ដុល្លាអាមេរិក)។</span></span> 
+             			    <script>
+								a ='<?php echo ($paid_amount) ?>';
 								money_khmer=read_money_in_khmer(a);
+								decimalmoney_khmer='<?php echo substr(number_format($paid_amount,2),-2);?>';
+								str_cent = 'សេន';
+								if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent='';}
+								
+								last_number='<?php echo substr(number_format($paid_amount,2),-2);?>';
+								
+								if(last_number<=0){last_number='';}
+								money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
 								dojo.byId('lable_depositkhmer').innerHTML=money_khmer;
 							</script></span>
              				<span class="child" >អ្នកទិញបានបង់នៅថ្ងៃ <?php echo $day[date("D",strtotime($this->agreement['buy_date']))]." ទី ".date("d",strtotime($this->agreement['buy_date']))." ខែ ".$month[date("m",strtotime($this->agreement['buy_date']))]." ឆ្នាំ ".date("Y",strtotime($this->agreement['buy_date'])); ?> ។
              				<span id="lbl_remain"></span>
              				</span> 
-             			<?php
+             				
+             			<?php }
              			$numrow = 0;
              			if (empty($this->sale_schedule)){//payoff
              			?>
-             			<span class="child" style="white-space: nowrap;" >ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:380px;font-family:Arial;font-weight: bold;"><?php echo @number_format($paid_payoff,2);?>
-             			<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer"></label><span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)</span></span>។</span>
+             			<span class="child" style="white-space: nowrap;" >ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:380px;font-family:Arial;font-weight: bold;"><?php echo @number_format($paid_payoff,2);
+             			?>
+             			<label style="font-family:'Khmer OS Battambang'" id="lable_payoffkhmer"></label><span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)</span></span>។</span>
+             			
+             			<script>
+								a ='<?php echo ($paid_payoff) ?>';
+								money_khmer=read_money_in_khmer(a);
+								decimalmoney_khmer='<?php echo substr(number_format($paid_payoff,2),-2);?>';
+								str_cent = 'សេន';
+								if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent='';}
+								
+								last_number='<?php echo substr(number_format($paid_payoff,2),-2);?>';
+								
+								if(last_number<=0){last_number='';}
+								money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+								dojo.byId('lable_payoffkhmer').innerHTML=money_khmer;
+							</script>
              			<span class="child" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;អ្នកទិញត្រូវបង់នៅថ្ងៃ <?php echo $day[date("D",strtotime($rowpaid['date_pay']))]." ទី ".date("d",strtotime($rowpaid['date_pay']))." ខែ ".$month[date("m",strtotime($rowpaid['date_pay']))]." ឆ្នាំ ".date("Y",strtotime($rowpaid['date_pay'])); ?>។</span>
              			<?php
              			}
@@ -150,12 +175,15 @@ dojo.require("dijit.form.DateTextBox");
 	             				 <?php $remain = $this->agreement['price_sold']-$paid;?>
 								a ='<?php echo $remain; ?>';
 								money_khmer=read_money_in_khmer(a);
-								decimalmoney_khmer='<?php echo substr($remain,-2);?>';
-								if(decimalmoney_khmer>0){string='ក្បៀស';}else{string="";}
+								decimalmoney_khmer='<?php echo substr(number_format($remain,2),-2);?>';
+								str_cent = 'សេន';
+							
+								if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent=""}
 								
-								last_number='<?php echo substr($remain,-1);?>';
+								last_number='<?php echo substr(number_format($remain,2),-1);?>';
+								
 								if(last_number<=0){last_number='';}
-								money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number);;
+								money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
 								dojo.byId('lable_remainkhmer').innerHTML=money_khmer;
 							</script>
 	             				<span style="width: 100%; display: block;"><span class="child" >សំរាប់រយៈពេល<span class="value" style="min-width:50px;font-family:Arial;font-weight: bold;">&nbsp;<?php echo ($this->agreement['total_duration']);?>&nbsp;</span>ឆ្នាំ(<?php echo ($this->agreement['total_duration']*12);?>ខែ)ជារៀងរាល់ខែគិតចាប់ពី ដូចបានចែងលំអិតក្នុង  

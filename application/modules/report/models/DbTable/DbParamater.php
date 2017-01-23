@@ -171,6 +171,9 @@ function getAllBranch($search=null){
     			$s_where[]=" p.`house_price` LIKE '%{$s_search}%'";
     			$where.=' AND ('.implode(' OR ',$s_where).')';
     		}
+    		if(!empty($search['streetlist'])){
+    			$where.= " AND street ='".$search['streetlist']."'";
+    		}
     		$where.=" ORDER BY p.`property_type` "; 
     		return $db->fetchAll($sql.$where);
     	}
@@ -218,16 +221,16 @@ function getAllBranch($search=null){
     	function getAllIncome($search=null){
     		$db = $this->getAdapter();
     		$session_user=new Zend_Session_Namespace('auth');
-    		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
-    		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
-    		$where = " WHERE ".$from_date." AND ".$to_date;
+    		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+    		$where = " AND ".$from_date." AND ".$to_date;
     	
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		title, invoice,branch_id,
     		(SELECT name_en FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
-    		cheque,total_amount,description,date,status FROM ln_income ";
+    		cheque,total_amount,description,date,status FROM ln_income WHERE status=1 ";
     	
     		if (!empty($search['adv_search'])){
     			$s_where = array();
@@ -251,16 +254,16 @@ function getAllBranch($search=null){
     	function getAllExpense($search=null){
     		$db = $this->getAdapter();
     		$session_user=new Zend_Session_Namespace('auth');
-    		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
-    		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
-    		$where = " WHERE ".$from_date." AND ".$to_date;
+    		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+    		$where = " AND ".$from_date." AND ".$to_date;
     	
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		title,invoice,
     	
     		(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
-    		cheque,total_amount,description,date,status FROM ln_expense ";
+    		cheque,total_amount,description,date,status FROM ln_expense WHERE status=1 ";
     	
     		if (!empty($search['adv_search'])){
     			$s_where = array();
