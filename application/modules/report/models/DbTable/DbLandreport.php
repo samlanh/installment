@@ -1094,10 +1094,10 @@ function updatePaymentStatus($data){
 		  					'client_id'         =>$row['client_id'],
 		  					'branch_id'         =>$row['branch_id'],
 		  					'receipt_no'		=>$data['receipt_'.$i],
-		  					'date_pay'			=>$data['paid_date_'.$i],
 		  					'land_id'			=>$row['house_id'],
 		  					'sale_id'			=>$data['id'],
 		  					'date_input'		=>$data['paid_date_'.$i],
+		  					'date_pay'			=>$data['paid_date_'.$i],
 		  					'outstanding'		=> $begining,
 		  					'principal_amount'	=> $begining-$data['paid_principal'.$i],
 		  					'total_principal_permonth'=>$data['principal_permonth_'.$i],
@@ -1133,7 +1133,7 @@ function updatePaymentStatus($data){
 		  					'capital'				=>$begining,
 		  					'remain_capital'		=>$begining-$data['paid_principal'.$i],
 		  					'principal_permonth'	=>$data['total_payment_'.$i],
-		  					'total_interest'		=>0,
+		  					'total_interest'		=>$data['interest_paid'.$i],
 		  					'total_payment'			=>$data['total_payment_'.$i],
 		  					'total_recieve'			=>$data['paid_amount_'.$i],
 		  					'service_charge'		=>0,
@@ -1152,7 +1152,6 @@ function updatePaymentStatus($data){
 	  		return 1;
 	  	}catch (Exception $e){
 	  		$db->rollBack();
-	  		echo $e->getMessage();exit();
 	  		Application_Form_FrmMessage::message("INSERT_FAIL");
 	  		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	  	}

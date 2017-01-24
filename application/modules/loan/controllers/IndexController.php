@@ -87,7 +87,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try{
 				$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
-// 				print_r($_dbmodel);exit();
 				$_dbmodel->updateLoanById($_data);
 				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/loan/index/index");
 			}catch (Exception $e) {

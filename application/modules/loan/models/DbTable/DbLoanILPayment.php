@@ -295,39 +295,33 @@ public function addILPayment($data){
     			'total_interest_permonth'		=>	$data["total_interest"],
     			'penalize_amount'				=>	$penalize,
     			'service_charge'				=>	$data["service_charge"],
-    				
     			'principal_amount'				=>	$data['priciple_amount'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
     			'total_principal_permonthpaid'	=>	$principle_amount,//ok ប្រាក់ដើមបានបង
     			'total_interest_permonthpaid'	=>	$interest_amount,//ok ការប្រាក់បានបង
     			'penalize_amountpaid'			=>	$penelize_amount,// ok បានបង
     			'service_chargepaid'			=>	$service,// okបានបង
     			'balance'						=>	$data["remain"],
-    			
     			'total_payment'					=>	$data["total_payment"],//ប្រាក់ត្រូវបង់ok
     			'recieve_amount'				=>	$amount_receive,//ok
     			'amount_payment'				=>	$amount_payment,//brak ban borng
     			'return_amount'					=>	$return,//ok
-    			
     			'note'							=>	$data['note'],
     			'cheque'						=>	$data['cheque'],
     			'user_id'						=>	$user_id,
     			'payment_option'				=>	$data["option_pay"],
     			'status'						=>	1,
-    			
-    			'is_completed'					=>	$is_compleated
+    			'is_completed'					=>	$is_compleated,
+    		    'field3'			=>3,
+    			'extra_payment' =>$data["extrapayment"],
     		);
 //     		print_r($arr_client_pay);exit();
 			$this->_name = "ln_client_receipt_money";
 // 			print_r($arr_client_pay);exit();
     		$client_pay = $this->insert($arr_client_pay);
     		
-    		
     		$date_collect = $data["collect_date"];
     	    $identify = explode(',',$data['identity']);
     		foreach($identify as $i){
-    			
-    			//echo $data["mfdid_".$i];exit();
-    			
     			if($option_pay==1){//normal
     				$total_recieve = $data["amount_receive"];
     				if($total_recieve>=$data["total_payment"]){
@@ -376,12 +370,8 @@ public function addILPayment($data){
     				);
     				
     				$db->insert("ln_client_receipt_money_detail", $arr_money_detail);
-//     				print_r($arr_money_detail);exit();
-
-    				
     				
     				if($option_pay==1){//normal
-    					
 	    				if($sub_recieve_amount>=$total_payment){//normall and paid
 	    					
 		    				$arr_update_saleschedule = array(
@@ -393,13 +383,9 @@ public function addILPayment($data){
 		    				$where = $db->quoteInto("id=?", $data["mfdid_".$i]);
 		    				$this->update($arr_update_saleschedule, $where);
 		    				
-		    				
 		    		// get amount record if paid all update tb_sale to complete
-		    				
 		    				$sql1= "select * from  ln_saleschedule where is_completed=0 and  sale_id=$loan_number";
 		    				$record_remain = $db->fetchAll($sql1);
-		    				
-// 		    				print_r($record_remain);exit();
 		    				
 		    				if(!empty($record_remain)){
 		    					
@@ -411,7 +397,6 @@ public function addILPayment($data){
 		    					$where=" id = $loan_number ";
 		    					$this->update($update_sale, $where);
 		    				}
-		    				
 	    				}else{
 			   					$new_sub_interest_amount = $data["interest_".$i];
 			   					$new_sub_penelize = $data["penalize_amount"];
@@ -454,7 +439,7 @@ public function addILPayment($data){
 				   						$begining_balance_after = $data['total_priciple_'.$i] ;
 				   					}
 				   				}
-				   				
+				   				///please check more 
 				   				$arr_update_fun_detail = array(
 				   						'is_completed'			=> 	0,
 				   						'principal_permonthafter'=>	$principle_after,
@@ -471,29 +456,13 @@ public function addILPayment($data){
 				   				$this->update($arr_update_fun_detail, $where);
 			   				}
     					}else{//pay off
-    						
-    					// get all record id to update to complete all
-    					
-    						$sql_loan_fun = "SELECT id FROM `ln_saleschedule` WHERE sale_id = $loan_number ";
-    						$row_schedule = $db->fetchAll($sql_loan_fun);
-    						//$is_set=0;
-    						foreach ($row_schedule as $rs_schedule){
-//     							if($is_set!=1){
-//     								$penelize=$data["penelize_".$i];
-//     								$is_set=1;
-//     							}else{
-//     								$penelize = $rs_fun['penelize'];
-//     							}
-//     							$total_pay=$rs_fun["principal_after"]+$rs_fun["total_interest_after"]+$penelize; 
-    							
-    							$arr_update_fun_detail = array(
-    									'is_completed'			=> 	1,
-    									'payment_option'		=>	$data["option_pay"]
-    							);
-    							$this->_name="ln_saleschedule";
-    							$where = $db->quoteInto("id=?", $rs_schedule['id']);
-    							$this->update($arr_update_fun_detail, $where);
-    						}
+    						$arr_update_fun_detail = array(
+    								'is_completed'			=> 	1,
+    								'payment_option'		=>	$data["option_pay"]
+    						);
+    						$this->_name="ln_saleschedule";
+    						$where = " is_completed = 0 AND sale_id=".$loan_number;
+    						$this->update($arr_update_fun_detail, $where);
     					// update tbl_sale to complete when pay off
     						$this->_name="ln_sale";
     						$update_sale = array(
@@ -501,9 +470,45 @@ public function addILPayment($data){
     										);
     						$where=" id = $loan_number ";
     						$this->update($update_sale, $where);
-    						
     					}
+    		}
+    		if($data['extrapayment']>0){
+    			$extrapayment = $data['extrapayment'];
+    			$rs = $this->getSaleScheduleById($loan_number,2);
+    			if(!empty($rs)){
+    				foreach ($rs as $row){
+    						$total_interestafter=0;
+    						$extrapayment = $extrapayment-$row['principal_permonthafter'];
+    						if($extrapayment>=0){
+    							$principal_paid = $row['principal_permonthafter'];
+    							$statuscomplete=1;
+    							$remain_principal=0;
+    						}else{
+    							$principal_paid = abs($extrapayment);
+    							$remain_principal=$principal_paid;
+    							$statuscomplete=0;
+    						}
     				
+    					$total_principal = $total_principal+$principal_paid;
+    					 
+    					$pyament_after = $row['total_payment_after']-($principal_paid);//ប្រាក់ត្រូវបង់លើកក្រោយសំរាប់ installmet 1 1
+    					$arra = array(
+    							"principal_permonthafter"=>$remain_principal,
+    							'total_interest_after'=>$total_interestafter,
+    							'begining_balance_after'=>$row['begining_balance_after']-$principal_paid,
+    							'is_completed'=>$statuscomplete,
+    							'paid_date'			=> 	$data['date_buy'],
+    							'total_payment_after'	=>	$pyament_after,
+    					);
+    					$where = " id = ".$row['id'];
+    					$this->_name="ln_saleschedule";
+    					$this->update($arra, $where);
+    					if($extrapayment<=0){
+    						break;
+    					}
+    				}
+    				
+    			}
     		}
     		$db->commit();
     	}catch (Exception $e){
@@ -512,8 +517,16 @@ public function addILPayment($data){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     }
-    
-    
+    function getSaleScheduleById($loan_number,$orderby=1){
+    	$db = $this->getAdapter();
+    	$sql="select * from  ln_saleschedule where is_completed=0 and  sale_id=$loan_number ";
+    	if($orderby==1){
+    		$sql.=" ORDER BY id ASC ";
+    	}else{
+    		$sql.=" ORDER BY id DESC ";
+    	}
+		return $db->fetchAll($sql); 
+    }
     
     function updateIlPayment($data,$id){
     	
@@ -1331,6 +1344,7 @@ public function addILPayment($data){
 			  crm.`is_completed`,
 			  crmd.`capital`,
 			  crmd.`total_payment`,
+			  (SELECT ln_sale.price_sold FROM `ln_sale` WHERE ln_sale.id=crm.sale_id) AS price_sold,
 			  DATE_FORMAT(crmd.date_payment, '%d-%m-%Y') AS `date_payment`
 			FROM
 			  `ln_client_receipt_money` AS crm,

@@ -38,6 +38,9 @@
 			if(rs==false){
               return false;			
             }
+              payment_id =dijit.byId("schedule_opt").get("value");
+              paid_amount =dijit.byId("deposit").get("value");
+              if(payment_id==1 && paid_amount<=0){ alert("សូមបញ្ចូលចំនួនទឹកប្រាក់ត្រូវបង់");dijit.byId("deposit").focus();return false;}
 				return true;
 			}else {
 				return false;
@@ -73,7 +76,7 @@
 							<td><?php echo $frm->getElement('agreement_date');?></td>
 							<td style="white-space: nowrap;"><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 							<td><input id="member" /> <?php //echo $frm->getElement('member');?>
-								<input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with"  type="text">
+								<input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with"  type="hidden">
 							</td>
 						</tr>
 						<tr style="background: #edf7f8;">
@@ -668,7 +671,7 @@ function checkScheduleOption(){
 			if(isNaN(amount_principal)){amount_principal=0;}if(isNaN(debt_amount)){debt_amount=0;}
 			amount_principal=dijit.byId('sold_price').get('value');
 			total_collect = amount_principal/debt_amount;
-			total_collect = total_collect.toFixed(2);
+			total_collect = total_collect.toFixed(0);
 			if(debt_amount!=0){
 				dijit.byId('fixed_payment').attr("value",total_collect);
 			}
@@ -729,14 +732,14 @@ function calCulateFixedPeriod(){
 	interest_rate=dijit.byId('interest_rate').get('value')/12/(100);//(100/30day)
 	if(interest_rate==0){
 		amount_payment = parseFloat(amount_principal/debt_amount);
-		amount_payment = amount_payment.toFixed(2);
+		amount_payment = amount_payment.toFixed(0);
 		if(amount_payment=='Infinity' || amount_payment=='NaN'){amount_payment=0;}
 	}else{
 		top_pow = Math.pow((1+interest_rate),term);
 		bellow = Math.pow((1+interest_rate),(term))-1;
 		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
 		
-		amount_payment = amount_payment.toFixed(2);
+		amount_payment = amount_payment.toFixed(0);
 		if(isNaN(amount_payment)){amount_payment=0;
 		}
 	}	
@@ -1675,7 +1678,9 @@ function setFirstPaymentAndDateLine(pay_term,date_release,amount_date){
 	calCulateFirstPayment();
 }
 function calCulateEndDate(){
-	amount_date = dijit.byId('period').get('value')*12;
+	amount_period = 1;
+	if(dijit.byId("schedule_opt").get('value')==4){amount_period=12;}
+	amount_date = dijit.byId('period').get('value')*amount_period;
 	release_date = dijit.byId("first_payment").get('value');//just update follow by first payment
 	if(isNaN(amount_date)){
 	}else{

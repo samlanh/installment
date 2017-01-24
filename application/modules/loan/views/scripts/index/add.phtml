@@ -40,6 +40,9 @@
 			if(rs==false){
               return false;			
             }
+              payment_id =dijit.byId("schedule_opt").get("value");
+              paid_amount =dijit.byId("deposit").get("value");
+              if(payment_id==1 && paid_amount<=0){ alert("សូមបញ្ចូលចំនួនទឹកប្រាក់ត្រូវបង់");dijit.byId("deposit").focus();return false;}
 				return true;
 			}else {
 				return false;
@@ -1387,7 +1390,9 @@ function setFirstPaymentAndDateLine(pay_term,date_release,amount_date){
 	calCulateFirstPayment();
 }
 function calCulateEndDate(){
-	amount_date = dijit.byId('period').get('value')*12;
+	amount_period = 1;
+	if(dijit.byId("schedule_opt").get('value')==4){amount_period=12;}
+	amount_date = dijit.byId('period').get('value')*amount_period;
 	release_date = dijit.byId("first_payment").get('value');//just update follow by first payment
 	if(isNaN(amount_date)){
 	}else{
@@ -1414,7 +1419,10 @@ function calCulateEndDate(){
 }
 function CalculateDate(){
 	pay_term = 1;
-	amount_date = dijit.byId('period').get('value')*12;
+	amount_period = 1;
+	if(dijit.byId("schedule_opt").get('value')==4){amount_period=12;}
+	amount_date = dijit.byId('period').get('value')*amount_period;
+	
 	release_date = dijit.byId("first_payment").get('value');//just update follow by first payment
 	if(isNaN(amount_date)){
 	}else{

@@ -808,7 +808,7 @@ public function exportFileToExcel($table,$data,$thead){
   		try {
   			$_dbmodel = new Report_Model_DbTable_DbLandreport();
   			$_dbmodel->updatePaymentStatus($_data);
-  			//Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/rpt-sold");
+  			Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/rpt-sold");
   		}catch (Exception $e) {
   			//Application_Form_FrmMessage::message("INSERT_FAIL");
   			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -818,7 +818,6 @@ public function exportFileToExcel($table,$data,$thead){
   	$id =$this->getRequest()->getParam('id');
   	$row = $db->getPaymentSchedule($id);
   	$this->view->tran_schedule=$row;
-//   	print_r($row);exit();
   	
   	if(empty($row)){
   		//Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold');

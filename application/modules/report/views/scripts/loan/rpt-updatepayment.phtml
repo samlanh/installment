@@ -1,0 +1,305 @@
+<?php 
+	$tran = $this->tran_schedule;
+	$client = $this->client;
+	$dayin_khmer = $this->day_inkhmer;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	//print_r($client);
+?>
+<title><?php echo $tr->translate('REPORT WEEK');?></title>
+<style>
+td p{ margin-top:0px !important;}
+</style>
+<script>
+require(["dijit/form/NumberTextBox"]);
+</script>
+<div style=" width:2៨cm; margin:0 auto; border: 1px dotted #ccc; padding: 0 40px;">
+	<div id="divPrint">
+	<style type="text/css">
+	.style{
+		line-height: 20px;font-size: 14px;
+		font-family: 'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;
+	}
+	.font_bold{
+		font-family:'Khmer MEF2';
+		font-size: 12px;
+	}
+	td p{ margin-top:-12px;}
+	</style>
+	<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-updatepayment')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<table style="font-family:'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	        	<table width="100%" style="font-family:'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;margin:0 auto;padding:0px; border:none;">
+	            	<?php // if($client['pay_term']==2){ ?>
+					<?php //}else{?>
+					<tr>
+	                	  <td width="30%" style=""><!-- <img src="<?php //echo $this->baseUrl();?>/images/logo.jpg" height="85px">  -->
+	                		<p style="font-family: 'Khmer OS Battambang'; font-size:9px;margin-top:4px; line-height:15px;"><?php //echo $client['branch_name'];?> 	<?php //echo $this->data['brand_adress'];?>
+								<br /><?php //echo $this->data['phone_brand'];?></p>
+	                	</td>
+	                	<td width="47%" valign="top">
+	                	<h2 style="text-align:center; font-size:18px; font-family:'Khmer OS Muol'"><label><?php echo $tr->translate("BRAND_TITLE");?><?php //echo $this->data['brand_title'];?></label></h2>
+	                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><label><?php //echo $client['branch_name'];?></label></h2>
+	                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><?php //echo $tr->translate('rpt-paymentschedule');?> <?php echo $tr->translate('តារាងកាលវិភាគបង់ប្រាក់');?></h2></td>
+	                    <td ></td>
+	                </tr>
+					<?php //}?>
+	                <?php $db = new Application_Model_DbTable_DbGlobal();
+	                	  $row = $db->getClientByType(null,$client['client_id'],1);
+	                ?> 
+	                <tr>
+	                	<td colspan="3">
+	                		<table width="100%" style="margin-top:10px; font-size: 14px !important;">
+			                	<tr class='style'>
+				                   <td width="35%">
+				                   		<p> <?php echo $tr->translate('CLIENT_NO')." : ".$client['client_number']?></p>
+				                	    <p><?php echo $tr->translate('CUSTOMER_NAME');?></b>: <?php  echo $client['client_name_kh'];?> </p>
+				                		<p><?php echo $tr->translate("TEL");?> : <?php echo $client['tel'];?></p>
+				                		<p><?php echo $tr->translate("ADDRESS");?>:<?php echo $row['village_name'];?> ,<?php echo $row['commune_name'];?> <br /><?php echo $row['district_name'];?> ,  <?php echo $row['province_en_name'];?>
+				                	</td>
+				                    <td valign="top" style="" width="33%">
+				                    	<table width="100%" style="font-size: 14px;">
+				                    		<tr>
+					                    		<td><?php echo $tr->translate("តម្លៃមុនលក់");?></td>
+					                    		<td><input onkeyup="calculateDiscount();" dojoType="dijit.form.NumberTextBox" style="width:90px" type="text" name="price_before" id="price_before" value="<?php echo $client['price_before'];?>" /></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("បញ្ចុះតម្លៃ $");?></td>
+					                    		<td><input  onkeyup="calculateDiscount();" dojoType="dijit.form.NumberTextBox" style="width:90px" type="text" name="discount_amount" id="discount_amount" value="<?php echo $client['discount_amount'];?>" /></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("បញ្ចុះតម្លៃ %");?></td>
+					                    		<td><input  onkeyup="calculateDiscount();" dojoType="dijit.form.NumberTextBox" style="width:90px" type="text" name="discount_percent" id="discount_percent" value="<?php echo $client['discount_percent'];?>" /></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("តម្លៃលក់");?></td>
+					                    		<td><input readonly onkeyup="calculateDiscount();" dojoType="dijit.form.NumberTextBox" style="width:90px" type="text" name="price_sold" id="price_sold" value="<?php echo $client['price_sold'];?>" /></td>
+					                    	</tr>
+				                    	</table>
+				                    </td>
+				                    <td valign="top">
+				                    	<table width="100%" style="font-size: 14px;">
+				                    		<tr>
+					                    		<td><?php echo $tr->translate("BUY_DATE");?></td>
+					                    		<td><input style="width:150px;" class="fullside" type="text" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" name="date_buy" id="date_buy" value="<?php echo $client['buy_date'];?>" /></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("ថ្ងៃចេញកិច្ចសន្យា");?></td>
+					                    		<td><input style="width:150px;" class="fullside" type="text" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" name="dateagreement" id="dateagreement" value="<?php echo $client['agreement_date'];?>" /></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("លេខដី/ផ្ទះ");?></td>
+					                    		<td><?php echo $client['land_address'].",".$client['stree'];?></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("TYPE");?></td>
+					                    		<td><?php echo $client['propertype'];?>
+					                    		<input type="hidden" name="id" id="id" value="<?php echo $this->id;?>" />
+					                    		<input type="hidden" name="client_id" id="client_id" value="<?php echo $client['client_id'];?>" />
+					                    		
+					                    		</td>
+					                    	</tr>
+				                    	</table>
+				                    </td>
+				                </tr>
+			                </table>
+			              </td>
+			           </tr>   
+	            </table>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td>
+	    	<table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;font-family:'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif" width="100%">
+	                 <tr class="style" align="center" style="line-height: 20px; height: 30px; white-space: nowrap;">
+	                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+	                    <!-- <td>ចំនួនថ្ងៃ</td> -->
+	                    <td>ប្រាក់ដើមត្រូវបង់</td>
+	                    <td rowspan="2"><?php echo $tr->translate("គិតជា%");?></td>
+	                    <td>ការប្រាក់ត្រូវបង់</td>
+	                    <td rowspan="2"><?php echo $tr->translate("ត្រូវបង់សរុប");?></td>
+						<td style="border-left:2px solid #000;"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+	                    <td>ប្រាក់ដើមបានបង់</td>
+	                    <td>ការប្រាក់បានបង់</td>
+	                     <td>បានបង់សរុប</td>
+	                    <td>ថ្ងៃបានបង់</td>
+	                    <td>លេខបង្កាន់ដៃបង់</td>
+	                    <td>ស្ថានការបង់</td>
+	                </tr>
+	                <tr class="style" align="center" style="line-height: 20px;">
+	                    <!--<td>ចំនួនថ្ងៃ</td>-->
+	                    <!--  <td>ប្រាក់ដើម</td>-->
+	                    <!-- <td><?php //echo $tr->translate("TOTAL_INTEREST");?></td> -->
+	                    <!-- <td><?php //echo $tr->translate("AMOUNT_PAYMENT");?></td> -->
+	                </tr>
+	               <?php
+//print_r($tran);
+				   $indentity = "";
+	               $str = ''; if(!empty($tran)) foreach($tran as $key =>$row){?>
+	               	<tr align="center" style="height: 20px;" class="style">
+	               	<?php if($key==0){
+	               		$str=$key+1;
+	               	}else{
+	               		$str.=",".($key+1);
+	               	}?>
+	                    <td ><?php echo ($key+1<10)?"0":""; echo $key+1;?>
+	                        <input style="border:1px solid #fff;width:100px;"  type="hidden" name="saving_amount<?php echo $key+1;?>" id="interest" value="<?php //echo $row['saving_amount'];?>" />
+	                        <input style="border:1px solid #fff;width:100px;"  type="hidden" name="interest_<?php echo $key+1;?>" id="interest" value="<?php //echo $row['total_interest'];?>" />
+	                        <input type="hidden" style="border:1px solid #fff;width:150px;"  type="text" name="fundid_<?php echo $key+1;?>" id="fundid_<?php echo $key+1;?>" value="<?php echo $row['id'];?>" />
+	                    </td>
+	                    <td><input onkeyup="calculatePayment(<?php echo $key+1;?>);" style="border:1px solid #fff; width:80px;"  dojoType="dijit.form.NumberTextBox" type="text" name="principal_permonth_<?php echo $key+1;?>" id="principal_permonth_<?php echo $key+1;?>" value="<?php echo $row['principal_permonth']; ?>" /></td>
+	                    <td ><input onkeyup="calculatePayment(<?php echo $key+1;?>,2);"style="border:1px solid #fff; width:60px;"  dojoType="dijit.form.NumberTextBox" type="text" name="principal_percent_<?php echo $key+1;?>" id="principal_percent_<?php echo $key+1;?>" value="" /></td>
+	                    <td ><input onkeyup="calculatePayment(<?php echo $key+1;?>);" style="border:1px solid #fff; width:80px;"  dojoType="dijit.form.NumberTextBox" type="text" name="total_interest_<?php echo $key+1;?>" id="total_interest_<?php echo $key+1;?>" value="<?php echo $row['total_interest']; ?>" /></td>
+	                    <td align="center" style="white-space: nowrap; width:80px;"><input readonly style="border:1px solid #fff; width:100px;"  dojoType="dijit.form.NumberTextBox" type="text" name="total_payment_<?php echo $key+1;?>" id="total_payment_<?php echo $key+1;?>" value="<?php echo $row['principal_permonth']+$row['total_interest']; ?>" /></td>
+	                    <td style="border-left:2px solid #000;"><input  style=" width:100px;border:1px solid #fff;" class="fullside" type="text" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" name="datepayment_<?php echo $key+1;?>" id="datepayment_<?php echo $key+1;?>" value="<?php echo $row['date_payment'];?>" /></td>
+	                    <td><input style="border:1px solid #fff;width:100px;" type="hidden" name="principal_<?php echo $key+1;?>" id="principal" value="<?php echo $row['principal_permonthafter'];?>" />
+	                    <input style="border:1px solid #fff;width:100px;" type="text" onkeyup="calculatePaid(<?php echo $key+1;?>)" name="paid_principal<?php echo $key+1;?>" dojoType="dijit.form.NumberTextBox" id="paid_principal<?php echo $key+1;?>" value="<?php echo $row['total_interest_after'];?>" /></td>
+	                    <td><input style="border:1px solid #fff;width:100px;"  type="text" onkeyup="calculatePaid(<?php echo $key+1;?>)" dojoType="dijit.form.NumberTextBox" name="interest_paid<?php echo $key+1;?>" id="interest_paid<?php echo $key+1;?>" value="<?php //echo $row['total_interest_after'];?>" /></td>
+	                    <td><input readonly style="border:1px solid #fff;" class="fullside" type="text" dojoType="dijit.form.NumberTextBox" name="paid_amount_<?php echo $key+1;?>" id="paid_amount_<?php echo $key+1;?>"  /></td>
+	                    <td style="width:100px;"><input style="border:1px solid #fff;" class="fullside" type="text" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" name="paid_date_<?php echo $key+1;?>" id="paid_date_<?php echo $key+1;?>" value="<?php echo $row['date_payment'];?>" />
+	                    <td><input style="border:1px solid #fff;" class="fullside" type="text" dojoType="dijit.form.TextBox" name="receipt_<?php echo $key+1;?>" id="receipt_<?php echo $key+1;?>" value="<?php //echo $row['date_payment'];?>" />
+	                    <td><select dojoType="dijit.form.FilteringSelect"  style="width:120px;border:1px solid #fff;height: 30px;"  name="payment_option<?php echo $key+1;?>" id="payment_option<?php echo $key+1;?>">
+	                    <option value="0" <?php if($row['is_completed']==0){ echo "selected='selected'"; }?>>មិនទាន់គ្រប់</option>
+	                    <option value="1" <?php if($row['is_completed']==1){ echo "selected='selected'"; }?>>បង់ដាច់</option></select></td>
+	                </tr>
+	               <?php }
+	               	if(!empty($record))for($record = $key;$record<11;$record++){
+	               ?>
+	               		<tr>
+	               			<td>&nbsp;</td>
+	               			<td></td>
+	               			<td></td>
+	               			<td></td>
+	               			<td></td>
+	               			<td></td>
+	               			<td></td>
+	               			<td></td>
+	               		</tr>
+	               <?php }?>
+	            </table>
+	            
+	    	</td>
+	    </tr>
+	    <tr>
+	          <td>
+	                		<table width="100%" style="margin-top:10px; font-size: 14px !important;">
+			                	<tr class='style'>
+				                   <td width="35%">
+				                	</td>
+				                    <td valign="top" style="" width="33%">
+				                    	<table width="100%" style="font-size: 14px;    background: #d2e9f7; padding: 10px;">
+				                    		<tr>
+					                    		<td><?php echo $tr->translate("ប្រាក់នៅសល់");// print_r($client);
+					                    		if($client['payment_id']==4){ $balance = $client['price_sold']-$client['total_installamount'];}else{$balance=0;}
+					                    		?></td>
+					                    		
+					                    		<td><input  dojoType="dijit.form.NumberTextBox"  type="text" name="total_remain" id="total_remain" value="<?php echo $balance;?>"  /></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("ប្រភេទបង់ ");?></td>
+					                    		<td>
+					                    			<select   dojoType="dijit.form.FilteringSelect" name="payment_id" id="payment_id" >
+						                    			<?php if(!empty($this->payment_option)){ //echo 333;exit();
+						                    			foreach($this->payment_option as $rs){  ?>
+						                    				<option value="<?php echo $rs['key_code'];?>" <?php if($client['payment_id']==$rs['key_code']){echo"selected";}?>><?php echo $rs['name_en'];?></option>
+						                    			<?php }
+						                    			}?>
+					                    			</select>
+					                    		</td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("អាត្រាការប្រាក់");?></td>
+					                    		<td><input  dojoType="dijit.form.NumberTextBox"  type="text" name="interest_rate" id="interest_rate" value="<?php echo $client['interest_rate']; ?>" /></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("រយៈពេលបង់");?></td>
+					                    		<td><input  dojoType="dijit.form.NumberTextBox" type="text" name="total_duration" id="total_duration" value="<?php echo $client['total_duration']; ?>" /></td>
+					                    	</tr>
+				                    	</table>
+				                    </td>
+				                    <td valign="top">
+				                     <td valign="top" style="" width="33%">
+				                    	<table width="100%" style="font-size: 14px; background: #d2e9f7; padding: 10px;">
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("ទឹកប្រាក់ត្រូវបង់ថេរ");?></td>
+					                    		<td><input  dojoType="dijit.form.NumberTextBox" type="text" name="fixed_payment" id="fixed_payment"  /></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("ថ្ងៃរំលស់ដំបូង ");?></td>
+					                    		<td><input   dojoType="dijit.form.DateTextBox" type="text" name="first_payment" id="first_payment" value="<?php echo $client['first_payment'];?>" /></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("ថ្ងៃបញ្ចប់	");?></td>
+					                    		<td><input  dojoType="dijit.form.DateTextBox" type="text" name="end_date" id="end_date"  value="<?php echo $client['validate_date'];?>" /></td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td align="center" colspan="2"> 
+					                    		<input type="hidden" name="id" id="id" value="<?php echo $this->id;?>" />
+					                    		<input type="hidden" name="indentity" id="indentity" value="<?php echo $str;?>" />
+		               			<input type="button"  name="btn_save" label="<?php echo $tr->translate('GO_BACK');?>" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon"/>
+		               			<input type="submit" value="រក្សាទុក & ចាកចេញ" name="btn_save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+		               	
+					                    		</td>
+					                    	</tr>
+				                    	</table>
+				                   	 </td>
+				                </tr>
+			                </table>
+			              </td>
+			           </tr>
+			          <tr>
+			          	<td>
+				          	    </td>
+			          </tr>
+	</table>
+	</form>
+	
+	
+	</div>
+</div>
+<script>
+dojo.require("dijit.form.DateTextBox");
+function calculatePaid(key){
+	principal_permonth= dijit.byId("paid_principal"+key).get("value");
+	principal_permonth = isNaN(principal_permonth)?0:principal_permonth;
+	interest_paid= dijit.byId("interest_paid"+key).get("value");
+	interest_paid = isNaN(interest_paid)?0:interest_paid;
+	
+	paid_amount = interest_paid+principal_permonth;
+	dijit.byId("paid_amount_"+key).attr("value",paid_amount);
+	
+}
+function calculatePayment(key,reverse=1){
+	principal_permonth= dijit.byId("principal_permonth_"+key).get("value");
+	
+	sold_price= dijit.byId("price_sold").get("value");
+	if(reverse==2){
+		principal_percent= dijit.byId("principal_percent_"+key).get("value");
+		principal_permonth = parseFloat(sold_price)*parseFloat(principal_percent)/100;
+		dijit.byId("principal_permonth_"+key).attr("value",principal_permonth);
+	}else{
+		principal_percent = sold_price/principal_permonth;
+		dijit.byId("principal_percent_"+key).attr("value",principal_percent);
+	}
+	
+	total_interest= dijit.byId("total_interest_"+key).get("value");
+	total_interest = isNaN(total_interest)?0:total_interest;
+	total_payment = principal_permonth+total_interest;
+	dijit.byId("total_payment_"+key).attr("value",total_payment);
+}
+function calculateDiscount(){
+	total_sold = dijit.byId('price_before').get('value');
+	discount = dijit.byId('discount_amount').get('value');
+	discount_percent = dijit.byId('discount_percent').get('value');
+	if(isNaN(discount)){
+		discount=0;
+	}
+	if(isNaN(discount_percent)){
+		discount_percent=0;
+	}
+	discount_percent = total_sold*discount_percent/100;
+	total_sold = total_sold-discount_percent-discount;
+	dijit.byId('price_sold').attr('value',total_sold);
+}
+</script>
