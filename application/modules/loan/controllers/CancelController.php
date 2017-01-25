@@ -66,6 +66,11 @@ class Loan_CancelController extends Zend_Controller_Action {
 		$frm = $fm->FrmAddFrmCancel();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
+		
+		$db = new Loan_Model_DbTable_DbExpense();
+		$result = $db->getAllExpenseCategory();
+		array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$this->view->all_category = $result;
 	}
 	public function editAction()
 	{

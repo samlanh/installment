@@ -14,8 +14,8 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			c.`client_number`,c.`name_en`,c.`name_kh`,
 			s.`price_before`,s.`price_sold`,
             s.`paid_amount`,
-            (SELECT SUM(total_principal_permonthpaid) FROM `ln_client_receipt_money` WHERE land_id=$sale_id AND status=1 LIMIT 1) AS total_principal,
-            (SELECT COUNT(id) FROM `ln_client_receipt_money` WHERE status=1 AND is_completed=1 AND land_id=$sale_id LIMIT 1) as installment_paid, 
+            (SELECT SUM(total_principal_permonthpaid) FROM `ln_client_receipt_money` WHERE sale_id=$sale_id AND status=1 LIMIT 1) AS total_principal,
+            (SELECT COUNT(id) FROM `ln_client_receipt_money` WHERE status=1 AND is_completed=1 AND sale_id=$sale_id LIMIT 1) as installment_paid, 
             s.`balance`,s.`discount_amount`,s.`other_fee`,s.`payment_id`,s.`graice_period`,s.`total_duration`,s.`buy_date`,s.`end_line`,
 			s.`client_id`,
 			s.`house_id`,p.`id` as property_id,p.`land_code`,p.`land_address`,p.`land_size`,p.`width`,p.`height`,p.`street`,p.`land_price`,p.`house_price`
@@ -74,7 +74,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'title'			=>$row['sale_number'].$title,
 					'total_amount'	=>$data['return_back'],
 					'invoice'		=>$invoice,
-					'category_id'	=>0,
+					'category_id'	=>$data['income_category'],
 					'date'			=>date('Y-m-d'),
 					'status'		=>1,
 					'description'	=>$data['reason'],
@@ -116,8 +116,8 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			 $where =" id = ".$data['sale_no'];
 			 $this->update($arr_, $where);
 			 
-			 
 		}catch(Exception $e){
+			echo $e->getMessage();exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}

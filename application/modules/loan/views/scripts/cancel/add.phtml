@@ -79,6 +79,8 @@ dojo.require("dijit.Dialog");
 						<tr>
 							<td><?php echo $tr->translate("RETURN_MONEY_BACK")?></td>
 							<td><?php echo $frm->getElement('return_back')?></td>	
+							<td><?php echo $tr->translate("CATEGORY")?></td>
+						<td><input id="income_category" /></td>
 						</tr>
 						<tr>
 							<td colspan="3"><?php echo $tr->translate("SOLD_NOTE")?></td>
@@ -86,7 +88,7 @@ dojo.require("dijit.Dialog");
 						</tr>
 						<tr>
 							<td style="height: 70px; border:1px solid #aac4e6; widht:100%;" colspan="3"><label id="sale_note"></label></td>	
-							<td colspan="3"><textarea class="fullside" style="height: 60px;" id="reason" name="reason"></textarea></td>
+							<td colspan="3"><textarea class="fullside" style="height: 60px;font-family:'Khmer OS Battambang';font-size: 17px" id="reason" name="reason"></textarea></td>
 						</tr>
 						<tr>
 							<td align="center" colspan="6">
@@ -110,7 +112,49 @@ dojo.require("dijit.Dialog");
 <tr>
 </tr>
 </table>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_category" >
+		<form style="background-color: buttonface; width:100%;" id='frm_category' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<fieldset style="background-color: buttonface;">
+						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend>
+							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+								<tr>
+									<td><?php echo $tr->translate('NAME_KH');?></td>
+									<td>
+										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="cate_name" name="cate_name" value="" type="text">
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate('STATUS');?></td>
+									<td>
+										<select name="status_j" id="status_j" dojoType="dijit.form.FilteringSelect"   class="fullside">
+		    								<option value="1" label="active">Active</option>
+		    								<option value="0" label="deactive">Deactive</option>
+										</select>
+									</td>
+									
+								</tr>
+								<tr>
+									<td colspan="4" align="center">
+										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
+									</td>
+								</tr>
+								
+							</table>
+					</fieldset>
+					</td>
+				</tr>
+			</table>
 
+		</form>
+	</div>
+</div>
 <div class="dijitHidden" style="width: 22cm !important; height: 11cm ; padding: 0px; margin: 0px;">
 	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_expense" >
 		<div id="divPrint" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
@@ -409,6 +453,51 @@ dojo.require("dijit.Dialog");
 </div>
 <script type="text/javascript">
 
+function printSubmit(){
+	 $('#frm_add_tran').submit();
+}
+
+function hideDialog1(){
+	dijit.byId('popup_category').hide();
+}
+
+var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->all_category));?> );
+new dijit.form.FilteringSelect({
+	store: income_category_store,
+	autoComplete: true,                        
+    id: "income_category",
+    name: "income_category",  
+    class: 'fullside',  
+    placeHolder:"Selected Category", 
+    onChange: function() {          
+	   	fa_job = dijit.byId('income_category').get('value');
+	    if(fa_job==-1){
+	   	 dijit.byId("popup_category").show();
+	    }
+    } 
+}, "income_category");
+
+var url_add_category = '<?php echo $this->url(array("module"=>"loan","controller"=>"expense","action"=>"add-category")); ?>';
+function addCategory(){
+	dojo.xhrPost({
+		url:url_add_category,
+		form: dojo.byId("frm_category"),
+		handleAs:"json",
+		load: function(data) {
+			var Itemmake = { 
+	    		id: data,
+		        name: dijit.byId('cate_name').get('value')
+		    };
+	 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
+		    dijit.byId('frm_category').reset();
+		    dijit.byId("popup_category").hide();
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+
 var sale_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 dojo.ready(function(){
@@ -580,8 +669,8 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 		
 		dojo.byId("lb_branch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
 		//dojo.byId("lb_customer").innerHTML = dijit.byId("customer").attr('displayedValue');
-		dojo.byId("lb_income_category").innerHTML = 'Return Money Back';
-		dojo.byId("lb_income_title").innerHTML = dijit.byId("sale_no").attr('displayedValue')+' Return Money Back';
+		dojo.byId("lb_income_category").innerHTML = dijit.byId("income_category").attr('displayedValue');
+		dojo.byId("lb_income_title").innerHTML = dijit.byId("sale_client").attr('displayedValue');
 		dojo.byId("lb_total_amount").innerHTML = currencyFormat(dijit.byId("return_back").get('value'));
 		
 		date_payment = '<?php echo date("Y-m-d");?>';
@@ -601,8 +690,8 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 		
 		
 		dojo.byId("lb_branch1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
-		dojo.byId("lb_income_category1").innerHTML = 'Return Money Back';
-		dojo.byId("lb_income_title1").innerHTML = dijit.byId("sale_no").attr('displayedValue')+' Return Money Back';
+		dojo.byId("lb_income_category1").innerHTML =dijit.byId("income_category").attr('displayedValue');
+		dojo.byId("lb_income_title1").innerHTML = dijit.byId("sale_client").attr('displayedValue');
 		dojo.byId("lb_total_amount1").innerHTML = currencyFormat(dijit.byId("return_back").get('value'));
 		dojo.byId("lb_date1").innerHTML = date_payment;
 		dojo.byId("lb_description1").innerHTML = $("#reason").val();
