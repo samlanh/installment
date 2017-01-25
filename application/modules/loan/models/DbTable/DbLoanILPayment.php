@@ -1263,7 +1263,7 @@ public function addILPayment($data){
    function getAllLoanPaymentByLoanNumber($data){
 	   	$db = $this->getAdapter();
 	   	$loan_number= $data['loan_number'];
-	   	$sql = "select * from ln_sale as s ,ln_saleschedule as scd where s.id=scd.sale_id and sale_id = $loan_number ";
+	   	$sql = "select * from ln_sale as s ,ln_saleschedule as scd where s.id=scd.sale_id and sale_id = $loan_number ORDER BY no_installment ASC";
    		return $db->fetchAll($sql);
    	}
 

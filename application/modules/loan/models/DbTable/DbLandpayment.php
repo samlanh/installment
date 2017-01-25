@@ -468,29 +468,33 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$total_principal=0;
     	$total_interestpaid =0;
     	$remain_principal=0;
+    	$old_paid=0;
+    	$old_interest = 0;
     	$total_interestafter=0;
     	if(!empty($rows)){
     		foreach ($rows as $row){
+    			$old_interest=$paid_amount;
     			$paid_amount = $paid_amount-$row['total_interest_after'];
     			if($paid_amount>=0){
     				$total_interestafter=0;
     				$total_interestpaid=$row['total_interest_after'];
-    				
+    				$old_paid = $paid_amount;
     				$paid_amount = $paid_amount-$row['principal_permonthafter'];
+    				
     				if($paid_amount>=0){
     					$principal_paid = $row['principal_permonthafter'];
     					$statuscomplete=1;
     					$remain_principal=0;
     				}else{
-    					$principal_paid = abs($paid_amount);
-    					$remain_principal=$principal_paid;
+    					$principal_paid = ($old_paid);
+    					$remain_principal=abs($paid_amount);
     					$statuscomplete=0;
     				}
     			}else{
     				$remain_principal = 0;
     				$statuscomplete=0;
     				$principal_paid = $principal_paid=0;
-    				$total_interestpaid=abs($paid_amount);
+    				$total_interestpaid=($old_interest);
     				$total_interestafter=$total_interestpaid;
     			}
     			$total_interest=$total_interest+$total_interestpaid;//ok
@@ -500,7 +504,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			$arra = array(
     					"principal_permonthafter"=>$remain_principal,
     					'total_interest_after'=>$total_interestafter,
-    					'begining_balance_after'=>$row['begining_balance_after']-$data['deposit'],
+    					'begining_balance_after'=>$row['begining_balance_after']-($data['deposit']-$total_interest),
+    					'ending_balance'=>$row['begining_balance_after']-($data['deposit']-$total_interest)-$remain_principal,//check again
     					'is_completed'=>$statuscomplete,
     					'paid_date'			=> 	$data['date_buy'],
     					'total_payment_after'	=>	$pyament_after,
@@ -544,7 +549,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    		'total_principal_permonth'	=>$total_principal,
 	    		'total_principal_permonthpaid'=>$total_principal,
 	    		'total_interest_permonth'	=>$total_interest,
-	    		'total_interest_permonthpaid'=>$total_interest);
+	    		'total_interest_permonthpaid'=>$total_interest
+    			);
+    		//need balance
+    		
     		$this->_name='ln_client_receipt_money';
     		$where="id = ".$crm_id;
     		$crm_id = $this->update($arr, $where);
@@ -644,14 +652,14 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$this->_name="ln_properties";
     		$where = "id =".$data["old_landid"];
     		$arr = array(
-    				"is_lock"=>1
+    				"is_lock"=>0
     		);
     		$this->update($arr, $where);
     		
     		$this->_name="ln_properties";
     		$where = "id =".$data["land_code"];
     		$arr = array(
-    				"is_lock"=>0
+    				"is_lock"=>1
     		);
     		$this->update($arr, $where);
     		

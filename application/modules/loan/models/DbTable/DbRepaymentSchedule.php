@@ -546,7 +546,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				$statuscomplete=1;
     				$principal_paid = $row['principal_permonthafter'];
     			}else{
-    				$remain_principal = $row['principal_permonthafter']+$paid_amount;
+    				$remain_principal = abs($paid_amount);
     				$statuscomplete=0;
     				$principal_paid = $remain_principal;
     			}
