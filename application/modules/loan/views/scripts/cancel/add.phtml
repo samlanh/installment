@@ -53,7 +53,7 @@ dojo.require("dijit.Dialog");
 							<td><?php echo $frm->getElement('other_fee');?></td>
 						</tr>
 						<tr>
-							<td style="white-space: nowrap;"><?php echo $tr->translate("PAYMENT_TERM")?></td>
+							<td style="white-space: nowrap;"><?php echo $tr->translate("PAYMENT_TYPE")?></td>
 							<td><?php  echo $frm->getElement('schedule_opt');?></td>	
 							<td><?php echo $tr->translate("DURATION")?></td>
 							<td><?php echo $frm->getElement('period');?></td>
@@ -63,7 +63,7 @@ dojo.require("dijit.Dialog");
 						<tr>
 							<td><?php echo $tr->translate("END_DATE")?></td>
 							<td><?php  echo $frm->getElement('end_date');?></td>
-							<td><?php echo $tr->translate("SOLD_DATE")?></td>
+							<td><?php echo $tr->translate("BUY_DATE")?></td>
 							<td><?php  echo $frm->getElement('sold_date');?></td>
 							<td><?php echo $tr->translate("COMMISION")?></td>
 							<td><?php  echo $frm->getElement('commision');?></td>	
@@ -80,10 +80,10 @@ dojo.require("dijit.Dialog");
 							<td><?php echo $tr->translate("RETURN_MONEY_BACK")?></td>
 							<td><?php echo $frm->getElement('return_back')?></td>	
 							<td><?php echo $tr->translate("CATEGORY")?></td>
-						<td><input id="income_category" /></td>
+							<td><input id="income_category" /></td>
 						</tr>
 						<tr>
-							<td colspan="3"><?php echo $tr->translate("SOLD_NOTE")?></td>
+							<td colspan="3"><?php echo $tr->translate("NOTE")?></td>
 							<td colspan="3"><?php echo $tr->translate("REASON")?></td>
 						</tr>
 						<tr>
@@ -96,7 +96,7 @@ dojo.require("dijit.Dialog");
 				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
 				 				<input type="submit" name="save_close"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('SAVECLOSE')?>" id="submitBtn" dojoType="dijit.form.Button"
 				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
-				 						<input type="button" label="<?php echo $tr->translate("PRINT_SAVE")?>" name='print' value=''print'' dojoType="dijit.form.Button"
+				 						<input type="button" label="<?php echo $tr->translate("PREVIEW")?>" name='print' value=''print'' dojoType="dijit.form.Button"
 				 iconClass="dijitIconNewTask" onClick="printSave('');displayNone();" />
 							</td>
 						</tr>
@@ -156,7 +156,7 @@ dojo.require("dijit.Dialog");
 	</div>
 </div>
 <div class="dijitHidden" style="width: 22cm !important; height: 11cm ; padding: 0px; margin: 0px;">
-	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_expense" >
+	<div data-dojo-type="dijit.Dialog" style="width:22cm; font-family:Khmer OS Battambang;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_expense" >
 		<div id="divPrint" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
 			<style>
 				.fontbig{
@@ -252,53 +252,39 @@ dojo.require("dijit.Dialog");
 						           echo $last_name." ".$username;?></h4>  
 					</td>
 				</tr>
-				
-				<tr style="line-height: 15px;font-size: 10px;">
-					<td colspan="6" valign="top" >
-						
-					</td>
-				</tr>
-				<tr style="line-height: 20px;font-size: 12px;font-family:'Khmer OS Battambang';">
+				<tr style="line-height: 20px;font-size: 11px;">
 					<td valign="top" >
-						<span style="text-decoration:underline;font-size: 12px;">សំគាល់ ៖</span>
+						<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
 					</td>
-					<td colspan="5">
-						<span style="font-size: 12px;"><?php echo $this->data['comment'];?></span><br />
-						<span style="white-space: pre-line;font-size: 12px;"><?php echo $this->data['comment1'];?></span><br />
+					<td colspan="5" style="font-family:'Khmer OS Battambang';">
+						<span style="font-size: 13px;"><?php echo $this->data['comment'];?></span><br />
+						<span style="white-space: pre-line;font-size: 13px;"><?php echo $this->data['comment1'];?></span><br />
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
-						
 					</td>
 				</tr>
-				
-				<tr style="line-height: 20px;font-size: 10px;">
+				<tr style="line-height: 15px;">
 					<td colspan="6" >
-						<table width="100%" style="font-size:12px;line-height: 12px;margin-top: -5px;font-family: 'Khmer OS Battambang';"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
 								</td>
 								<td width="40%">
-									វេបសាយ :  <span style="font-size:13px;">www.boreyphnompenhthmey.com</span>
+									<span style=""><?php echo $this->data['website'];?></span>
 								</td>
 								<td width="40%" align="right">
-									អ៊ីម៉ែល : <span style="font-size:13px;">boreyphnompenhthmey@gmail.com</span>
+									<span style="font-family: 'Khmer OS Battambang'; "><?php echo $this->data['email_client'];?></span>
 								</td>
 							</tr>
-							<tr >
-								<td colspan="3">
-									<table width="100%" style="white-space:nowrap;font-size:11px;font-family: 'Khmer OS Battambang';">
-										<tr>
-											<td width="70%" >
-												ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
-											</td>
-											<td width="30%" align="right">
-												<span style="font-weight:bold;">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
-											</td>
-										</tr>
-									</table>
+							<tr style="white-space:nowrap;">
+								<td colspan="2">
+									<?php echo $this->data['footer_branch'];?>
+								</td>
+								<td width="40%" align="right">
+									<span style=""><?php echo $this->data['tel-client'];?> </span>
 								</td>
 							</tr>
 						</table>
@@ -309,7 +295,6 @@ dojo.require("dijit.Dialog");
 				</tr>
 				<tr>
 					<td colspan="6" style="border-top:1px dashed #000;" >
-						
 					</td>
 				</tr>
 			</table>
@@ -319,7 +304,6 @@ dojo.require("dijit.Dialog");
 			<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
 				type="button" onclick="doPrint();">បោះពុម្ភ/Print</button>
 		</table>
-		
 		<div id="divPrint1" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
 			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 10px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
@@ -348,7 +332,6 @@ dojo.require("dijit.Dialog");
 					<td width="10%" ></td>
 					<td width="20%" ></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">សាខា</td>
                     <td><strong><label id="lb_branch1" class="value"></label></strong></td>
@@ -361,14 +344,11 @@ dojo.require("dijit.Dialog");
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ពណ៌នាចំនាយ</td>
 				    <td colspan="3"><strong><label id="lb_income_title1" class="value"></label></strong></td>
 				</tr>
-
 				<tr>
 					<td class="one khmerbold">សែក</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque1" class="value"></label></strong></td>
-					
 					<td class="one khmerbold">&nbsp;&nbsp;ចំណាយសរុប</td>
 					<td colspan="3"><strong><label id="lb_total_amount1" class="value"></label></strong></td>
-					
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">សម្គាល់</td>
@@ -391,53 +371,43 @@ dojo.require("dijit.Dialog");
 						           echo $last_name." ".$username;?></h4>  
 					</td>
 				</tr>
-				
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" valign="top" >
-						
 					</td>
 				</tr>
-				
-				<tr style="line-height: 20px;font-size: 12px;font-family:'Khmer OS Battambang';">
+				<tr style="line-height: 20px;font-size: 11px;">
 					<td valign="top" >
-						<span style="text-decoration:underline;font-size: 12px;">សំគាល់ ៖</span>
+						<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
 					</td>
-					<td colspan="5">
-						<span style="font-size: 12px;"><?php echo $this->data['comment'];?></span><br />
-						<span style="white-space: pre-line;font-size: 12px;"><?php echo $this->data['comment1'];?></span><br />
+					<td colspan="5" style="font-family:'Khmer OS Battambang';">
+						<span style="font-size: 13px;"><?php echo $this->data['comment'];?></span><br />
+						<span style="white-space: pre-line;font-size: 13px;"><?php echo $this->data['comment1'];?></span><br />
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
 					</td>
 				</tr>
-				
-				<tr style="line-height: 15px;font-size: 10px;">
+				<tr style="line-height: 15px;">
 					<td colspan="6" >
-						<table width="100%" style="font-size:11px;line-height: 12px;margin-top: -5px;font-family: 'Khmer OS Battambang';"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
 								</td>
 								<td width="40%">
-									វេបសាយ :  <span style="font-size:13px;">www.boreyphnompenhthmey.com</span>
+									<span style=""><?php echo $this->data['website'];?></span>
 								</td>
 								<td width="40%" align="right">
-									អ៊ីម៉ែល : <span style="font-size:13px;">boreyphnompenhthmey@gmail.com</span>
+									<span style="font-family: 'Khmer OS Battambang'; "><?php echo $this->data['email_client'];?></span>
 								</td>
 							</tr>
-							<tr >
-								<td colspan="3">
-									<table width="100%" style="white-space:nowrap;font-size:11px;font-family: 'Khmer OS Battambang';">
-										<tr>
-											<td width="70%" >
-												ការិយាល័យ :  បុរី ភ្នំពេញថ្មី  ,  ផ្លូវលេខ 1986  ,   សង្កាត់  ភ្នំពេញថ្មី  ,  ខ័ណ្ឌ  សែនសុខ  ,   រាជធានីភ្នំពេញ
-											</td>
-											<td width="30%" align="right">
-												<span style="font-weight:bold;">ទូរស័ព្ទ : 012 933 666 , 097 815 7777 </span>
-											</td>
-										</tr>
-									</table>
+							<tr style="white-space:nowrap;">
+								<td colspan="2">
+									<?php echo $this->data['footer_branch'];?>
+								</td>
+								<td width="40%" align="right">
+									<span style=""><?php echo $this->data['tel-client'];?> </span>
 								</td>
 							</tr>
 						</table>

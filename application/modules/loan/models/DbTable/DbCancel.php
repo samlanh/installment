@@ -135,11 +135,12 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'branch_id'		=>$data['branch_id'],
 					'title'			=>$row['sale_number'].$title,
 					'total_amount'	=>$data['return_back'],
-					'category_id'	=>0,
+					'category_id'	=>$data['income_category'],
 					'date'			=>date('Y-m-d'),
 					'status'		=>$data['status_using'],
 					'description'	=>$data['reason'],
 					'user_id'		=>$this->getUserId(),
+					'paid_amount'=>$data['paid_amount'],
 					'create_date'	=>date('Y-m-d'),
 						);
 				$this->_name="ln_expense";
@@ -155,9 +156,11 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'title'			=>$row['sale_number'].$title,
 						'total_amount'	=>$data['return_back'],
 						'invoice'		=>$invoice,
-						'category_id'	=>0,
+						'category_id'	=>$data['income_category'],
+						'paid_amount'=>$data['paid_amount'],
 						'date'			=>date('Y-m-d'),
 						'status'		=>$data['status_using'],
+							
 						'description'	=>$data['reason'],
 						'user_id'		=>$this->getUserId(),
 						'create_date'	=>date('Y-m-d'),

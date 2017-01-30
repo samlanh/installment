@@ -2509,7 +2509,6 @@ public function cancelIlPayment($data){
 	}
 	public function getAllLoanNumberByBranchEdit($branch_id){
 		$db = $this->getAdapter();
-		
 		$sql="select id,sale_number as name	from `ln_sale` where status=1  and branch_id=$branch_id";
 		return $db->fetchAll($sql);
 	

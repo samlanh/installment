@@ -280,7 +280,7 @@
 					<td >ប្រាក់បានបង់សរុប</td>
 					<td ><strong><label id="lbl_total_paid" class="value"></label></strong></td>
 					<td>&nbsp;ប្រាក់បានបង់</td>
-				    <td colspan="3"><strong><label id="lb_paid" class="value"></label></strong></td>
+				    <td colspan="3"><strong><label id="lb_paid" class="value" style="font-weight: bold; font-family:Arial;"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td >ប្រាក់នៅសល់</td>
@@ -462,7 +462,7 @@
 					<td >ប្រាក់បានបង់សរុប</td>
 					<td ><strong><label id="lbl_total_paid1" class="value"></label></strong></td>
 					<td>&nbsp;ប្រាក់បានបង់</td>
-				    <td colspan="3"><strong><label id="lb_paid1" class="value"></label></strong></td>
+				    <td colspan="3"><strong><label id="lb_paid1" class="value" style="font-weight: bold; font-family:Arial;"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td >ប្រាក់នៅសល់</td>
@@ -1518,7 +1518,13 @@ function calCulateFirstPayment(){
 	var epx_date = y + '-'+ mm + '-'+dd ;
 	dijit.byId('first_payment').attr('value',epx_date);
 }
-function printSave(new_receipt_no){		
+function printSave(new_receipt_no){	
+	deposit = dijit.byId('deposit').get('value');
+	if (deposit=='' || deposit==-1){
+		alert('សូមបញ្ចូលប្រាក់ត្រូវបង់ ទើបបោះពុម្ភបង្កាន់ដៃបង់ប្រាក់បាន!');
+		dijit.byId('deposit').focus();
+		return false;
+	}
 	dijit.byId("lbl_schedule").hide();		
 	symbal = " $";
 	dojo.byId("lb_sale_code").innerHTML = dijit.byId("sale_code").attr('displayedValue');
@@ -1528,14 +1534,14 @@ function printSave(new_receipt_no){
 	deposit = dijit.byId("deposit").get("value");
 	paid_before = dijit.byId("paid_before").get("value");
 	total_paid = deposit+paid_before;
-	dojo.byId("lbl_total_paid").innerHTML = dojo.number.format(total_paid)+" "+symbal;
-	dojo.byId("lblpropertyprice").innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),2)+" "+symbal;//dijit.byId("schedule_opt").attr('displayedValue');
+	dojo.byId("lbl_total_paid").innerHTML = dojo.number.format(total_paid,{places:2})+" "+symbal;
+	dojo.byId("lblpropertyprice").innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),{places:2})+" "+symbal;//dijit.byId("schedule_opt").attr('displayedValue');
 	begining_balance = dijit.byId('sold_price').get('value')
     total_paidamount =begining_balance-total_paid;
-	dojo.byId("lbl_ending_balance").innerHTML = dojo.number.format(total_paidamount)+" "+symbal;
+	dojo.byId("lbl_ending_balance").innerHTML = dojo.number.format(total_paidamount,{places:2})+" "+symbal;
 	
 	//dojo.byId("lb_discount").innerHTML = discount;
-	dojo.byId("lbl_principle_amount").innerHTML = dojo.number.format(deposit,2)+" "+symbal;
+	dojo.byId("lbl_principle_amount").innerHTML = dojo.number.format(deposit,{places:2})+" "+symbal;
 	total_sold = dijit.byId('total_sold').get('value');
 	discount_percent = dijit.byId('discount_percent').get('value');
 	bdiscount_percent = dijit.byId('bdiscount_percent').get('value');
@@ -1559,9 +1565,9 @@ function printSave(new_receipt_no){
 	discount_percent = total_sold*discount_percent/100;
 	total_discount = discount_percent+discount;
 
-	dojo.byId("lb_discount").innerHTML = dojo.number.format(total_discount,2)+" "+symbal;
-	dojo.byId("lbl_total_payment").innerHTML =dojo.number.format(deposit,2)+" "+symbal;
-	dojo.byId("lb_paid").innerHTML = dojo.number.format(deposit,2)+" "+symbal;
+	dojo.byId("lb_discount").innerHTML = dojo.number.format(total_discount,{places:2})+" "+symbal;
+	dojo.byId("lbl_total_payment").innerHTML =dojo.number.format(deposit,{places:2})+" "+symbal;
+	dojo.byId("lb_paid").innerHTML = dojo.number.format(deposit,{places:2})+" "+symbal;
 	dojo.byId("lb_cheque").innerHTML =dijit.byId("cheque").get('value');
 	dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
 	schedule_opt = dijit.byId("schedule_opt").get("value");
@@ -1581,14 +1587,14 @@ function printSave(new_receipt_no){
 	dojo.byId("lb_buydate1").innerHTML = dijit.byId("date_buy").attr('displayedValue');
 	
 	dojo.byId("lb_hourseno1").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
-	dojo.byId("lblpropertyprice1").innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),2)+" "+symbal;//dijit.byId("schedule_opt").attr('displayedValue');
-	dojo.byId("lbl_total_paid1").innerHTML = dojo.number.format(total_paid)+" "+symbal;
-	dojo.byId("lbl_ending_balance1").innerHTML = dojo.number.format(total_paidamount)+" "+symbal;
+	dojo.byId("lblpropertyprice1").innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),{places:2})+" "+symbal;//dijit.byId("schedule_opt").attr('displayedValue');
+	dojo.byId("lbl_total_paid1").innerHTML = dojo.number.format(total_paid,{places:2})+" "+symbal;
+	dojo.byId("lbl_ending_balance1").innerHTML = dojo.number.format(total_paidamount,{places:2})+" "+symbal;
 	dojo.byId("lb_discount1").innerHTML = discount;
-	dojo.byId("lbl_principle_amount1").innerHTML = dojo.number.format(deposit,2)+" "+symbal;
-	dojo.byId("lb_discount1").innerHTML = dojo.number.format(total_discount,2)+" "+symbal;
-	dojo.byId("lbl_total_payment1").innerHTML =dojo.number.format(deposit,2)+" "+symbal;
-	dojo.byId("lb_paid1").innerHTML = dojo.number.format(deposit,2)+" "+symbal;
+	dojo.byId("lbl_principle_amount1").innerHTML = dojo.number.format(deposit,{places:2})+" "+symbal;
+	dojo.byId("lb_discount1").innerHTML = dojo.number.format(total_discount,{places:2})+" "+symbal;
+	dojo.byId("lbl_total_payment1").innerHTML =dojo.number.format(deposit,{places:2})+" "+symbal;
+	dojo.byId("lb_paid1").innerHTML = dojo.number.format(deposit,{places:2})+" "+symbal;
 	dojo.byId("lb_cheque1").innerHTML =dijit.byId("cheque").get('value');
 	dojo.byId("lb_noted1").innerHTML =dijit.byId("note").get('value');
 	dojo.byId("lbl_paid_date1").innerHTML = collect_payment;

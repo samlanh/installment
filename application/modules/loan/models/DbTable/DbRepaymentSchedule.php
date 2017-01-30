@@ -528,6 +528,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'note'				=>$data['note'],
     			'user_id'			=>$this->getUserId(),
     	);
+    	$crm_id=0;
     	if($data['new_deposit']>0){
 	    	$this->_name='ln_client_receipt_money';
 	    	$crm_id = $this->insert($array);
@@ -584,10 +585,11 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				break;
     			}
     		}
+    		
     	}else{
-    		if($data["schedule_opt"]==1 OR $data["schedule_opt"]==1 OR $data["schedule_opt"]==5)
+    		if($data["schedule_opt"]==1 OR $data["schedule_opt"]==5){
     			$this->_name='ln_client_receipt_money_detail';
-    		$array = array(
+    			$array = array(
     				'crm_id'				=>$crm_id,
     				'client_id'				=>$data['member'],
     				'land_id'				=>$data['land_code'],
@@ -603,11 +605,13 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				'penelize_amount'		=>0,
     				'is_completed'			=>($data['schedule_opt']==2)?1:0,
     				'status'				=>1,
-    		);
-    		if($data['new_deposit']>0){
-    			$this->insert($array);
-    		}
+    		      );
+	    		if($data['new_deposit']>0){
+	    			$this->insert($array);
+	    		}
+    	   }
     	}
+    	
     }
     public function getNextDateById($pay_term){
     	if($pay_term==3){

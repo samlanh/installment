@@ -71,12 +71,14 @@ class Loan_CancelController extends Zend_Controller_Action {
 		$result = $db->getAllExpenseCategory();
 		array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
 		$this->view->all_category = $result;
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
-	public function editAction()
-	{
-	$id = $this->getRequest()->getParam('id');
-	$_dbmodel = new Loan_Model_DbTable_DbCancel();
-	if($this->getRequest()->isPost()){//check condition return true click submit button
+	public function editAction(){
+		$id = $this->getRequest()->getParam('id');
+		$_dbmodel = new Loan_Model_DbTable_DbCancel();
+		if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
 			$_data['id']=$id;
 			try {
@@ -103,7 +105,13 @@ class Loan_CancelController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
 	
-		 
+		$db = new Loan_Model_DbTable_DbExpense();
+		$result = $db->getAllExpenseCategory();
+		array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$this->view->all_category = $result;
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
     function getCancelNoAction(){// by vandy get property code
 		if($this->getRequest()->isPost()){

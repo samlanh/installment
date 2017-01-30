@@ -114,10 +114,18 @@
 							</div>
 							<div style="clear:both;"></div>
 							<?php }?>
-            			<?php echo $this->layout()->content; ?>
-            			<?php //echo $this->layout()->content; 
+            			<?php 
+	            			$db = new Application_Model_DbTable_DbUsers();
+	            			$rs = $db->getAccessUrl($module,$controller,$action);
+	            			if(!empty($rs)){
+	            				echo $this->layout()->content;
+	            			}else{
+	            				echo $this->render('pagenotfund.phtml');
+	            			}
+            			 ?>
+            			<?php
 			               	if($module=='report' AND $action!='rpt-paymentschedules'){
-			                ?>
+			            ?>
 		                <?php }?>
             		</td>
             	</tr>

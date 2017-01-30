@@ -67,34 +67,40 @@
 	<tr>
 		<td>
 				<fieldset style="margin-top:-10px">
-					<legend><strong>ព៌ត័មាន បង់ប្រាក់ឥណទានទោល</strong></legend>
+					<legend><strong style="color:#284db7;"><?php echo $tr->translate("INFO_INDILOAN")?></strong></legend>
 					<table class="center" cellspacing="10" >
-						<tr>
-							<td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("Land Information")?></strong></td>
-						</tr>
 						<tr>
 							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
 							<td><?php echo $frm->getElement("branch_id")?></td>
 						
 							<td><?php echo $tr->translate("LOAN_NO")?></td>
 							<td><input id="loan_number" /> </td>
-							<td><?php echo $tr->translate("Address")?></td>
+							<td><?php echo $tr->translate("ADDRESS")?></td>
 							<td><?php echo $frm->getElement("land_address")?></td>
 						</tr>
 						<tr>
-						    <td><?php echo $tr->translate("Price Before")?></td>
-							<td><?php echo $frm->getElement('total_amount_loan');?></td>
+							<td><?php echo $tr->translate("PAYMENT_TYPE")?></td>
+							<td><?php echo $frm->getElement('schedule_opt');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 							<td><input id="client_id"></td>
 							<td><?php echo $tr->translate("CLIENT_NUM")?></td>
 							<td><input id="client_code"></td>
 						</tr>
 						<tr>
-						    <td><?php echo $tr->translate("Payment Type")?></td>
-							<td><?php echo $frm->getElement('schedule_opt');?></td>
+						    <td><?php echo $tr->translate("COST")?></td>
+							<td><?php echo $frm->getElement('total_amount_loan');?></td>
 							<td><?php echo $tr->translate("Discount")?>%</td>
-							<td><?php echo $frm->getElement('discount');?></td>
-							<td><?php echo $tr->translate("Land Price")?></td>
+							<td width="23%">
+								<table width="100%">
+									<tr>
+										<td width="55%"><?php echo $frm->getElement('discount_percent');?></td>
+										<td width="10px">$</td>
+										<td width="55%" style="white-space: nowrap;"><?php echo $frm->getElement('discount');?></td>
+									</tr>
+								</table>
+								
+							</td>
+							<td><?php echo $tr->translate("TOTAL_SOLD")?></td>
 							<td><?php echo $frm->getElement('sold_price');?></td>
 						</tr>
 						<tr>
@@ -108,34 +114,31 @@
 							<td><?php echo $frm->getElement('release_date');echo $frm->getElement('old_release_date');?></td>
 							<td><?php echo $tr->translate("CO")?></td>
 							<td><?php echo $frm->getElement('co_id');?></td>
-							<td><?php echo $tr->translate("Commission")?></td>
+							<td><?php echo $tr->translate("COMMISSION")?></td>
 							<td><?php echo $frm->getElement('commission');?></td>
 						</tr>
-						<tr>
-							<td colspan="6" style="border-bottom:1px solid #ccc; text-align:left;"><strong><?php echo $tr->translate("AMOUNT BEFORE CACULATE")?></strong></td>
+						<tr style="background: #edf7f8;">
+							<td colspan="6" style="border-bottom:1px solid #aac4e6;color:#284db7;"><strong><?php echo $tr->translate("PAYMENT_INFORMATION")?></strong></td>
 						</tr>
 						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
 							<td><?php echo $tr->translate("RECIEPT_NO")?></td>
 							<td><?php echo $frm->getElement('reciept_no');?></td>
-						</tr>
-						<tr>
-							
 							<td><?php echo $tr->translate("ប្រាក់ដើមនៅសល់បន្ទាប់ពីបង់")?></td>
 							<td align="left"><?php echo $frm->getElement('priciple_amount');?></td>
+						</tr>
+						<tr>
 							<td><?php echo $tr->translate("ប្រាក់ដើមត្រូវបង់")?></td>
 							<td><?php echo $frm->getElement('os_amount');?></td>
 							<td><?php echo $tr->translate("TOTAL_INTEREST")?></td>
 							<td><?php echo $frm->getElement('total_interest');?></td>
-						</tr>
-						<tr>
 							<td><?php echo $tr->translate("PAYMENT_OPTION")?></td>
 							<td><?php  echo $frm->getElement('option_pay');?></td>
+						</tr>
+						<tr>
 							<td><?php echo $tr->translate("TOTAL_SERVICE_CHARGE")?></td>
 							<td><?php echo $frm->getElement('service_charge');echo $frm->getElement('old_service_charge');?></td>
+							<td><?php echo $tr->translate("ប្រាក់បង់បន្ថែម")?></td>
+							<td><?php  echo $frm->getElement('extrapayment');?></td>
 							<td><?php echo $tr->translate("TOTAL_PENELIZE")?></td>
 							<td><?php echo $frm->getElement('penalize_amount');?><?php echo $frm->getElement('old_penelize');?><input type="hidden" name="new_penelize" id="new_penelize"></td>
 						</tr>
@@ -149,16 +152,9 @@
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("AMOUNT_LATE");?></td>
-							<td>
-								<?php  echo $frm->getElement('late_day');?>
-							</td>
-							<td><?php echo $tr->translate("RETURN_AMOUNT")?></td>
-							<td><?php  echo $frm->getElement('amount_return');?></td>
+							<td><?php  echo $frm->getElement('late_day');?></td>
 							<td><?php echo $tr->translate("REMAIN")?></td>
 							<td><?php echo $frm->getElement('remain');?></td>
-						</tr>
-						<?php echo $frm->getElement('last_payment_date'); ?>
-						<tr>
 							<td><?php echo $tr->translate("STATUS");?></td>
 							<td>
 								<select name="status" id="status" dojoType="dijit.form.FilteringSelect"  class="fullside">
@@ -166,10 +162,11 @@
 									<option value='0' <?php if($this->ilPaymentById['status_parent']==0){echo "selected='selected'";}?>>Deactive</option>
 								</select>
 							</td>
-							
+						</tr>
+						<?php echo $frm->getElement('last_payment_date'); ?>
+						<tr>
 							<td><?php echo $tr->translate("CHEQUE");?></td>
 							<td><?php echo $frm->getElement('cheque');?></td>
-							
 							<td><?php echo $tr->translate("NOTE")?></td>
 							<td><?php echo $frm->getElement('note');?></td>
 						</tr>
@@ -488,16 +485,15 @@ var url_getpropertyinfo = "<?php echo $this->url(array('module'=>'loan','control
 function getPropertyInfo(){
 	property_id = dijit.byId('loan_number').get('value');
 	//alert(property_id);
-	
 	dojo.xhrPost({
 		url:url_getpropertyinfo,	
 		content:{ 
-		    'property_id':property_id,
+		    'property_id':dijit.byId('loan_number').get('value'),
 		},		    
 		handleAs:"json",
 		load: function(data) {
 			
-			dijit.byId('land_address').attr('value',data.property_address);
+			/*dijit.byId('land_address').attr('value',data.property_address);
 			dijit.byId('total_amount_loan').attr('value',data.price_before);
 			dijit.byId('client_id').attr('value',data.client_id);
 			dijit.byId('client_code').attr('value',data.client_id);
@@ -509,7 +505,13 @@ function getPropertyInfo(){
 			dijit.byId('interest_rate').attr('value',data.interest_rate);
 			dijit.byId('release_date').attr('value',data.buy_date);
 			dijit.byId('co_id').attr('value',data.staff_id);
-			dijit.byId('release_date').attr('value',data.discount_amount);
+			dijit.byId('release_date').attr('value',data.discount_amount);*/
+			dijit.byId('land_address').attr('value',data.property_code +' : '+ data.land_address);
+			//dijit.byId('land_size').attr('value',data.land_size);
+			dijit.byId('total_amount_loan').attr('value',data.price);
+			dijit.byId('sold_price').attr('value',data.price);
+			
+			//dijit.byId('property_code').attr('value',data.property_code);
 			
 			setReadOnly();
 		},
@@ -522,10 +524,10 @@ function getPropertyInfo(){
 function setReadOnly(){
 	
 	dijit.byId('branch_id').set("readOnly",true);
-	dijit.byId('loan_number').set("readOnly",true);
+	//dijit.byId('loan_number').set("readOnly",true);
 	dijit.byId('client_id').set("readOnly",true);
 	dijit.byId('client_code').set("readOnly",true);
-	dijit.byId('schedule_opt').set("readOnly",true);
+	//dijit.byId('schedule_opt').set("readOnly",true);
 	dijit.byId('discount').set("readOnly",true);
 	dijit.byId('sold_price').set("readOnly",true);
 	dijit.byId('interest_rate').set("readOnly",true);
@@ -534,11 +536,11 @@ function setReadOnly(){
 	dijit.byId('option_pay').set("readOnly",true);
 	
 	
-	dijit.byId('collect_date').set("readOnly",true);
-	dijit.byId('service_charge').set("readOnly",true);
-	dijit.byId('penalize_amount').set("readOnly",true);
+	//dijit.byId('collect_date').set("readOnly",true);
+	//dijit.byId('service_charge').set("readOnly",true);
+	//dijit.byId('penalize_amount').set("readOnly",true);
 	
-	dijit.byId('total_interest').set("readOnly",true);
+	//dijit.byId('total_interest').set("readOnly",true);
 	dijit.byId('commission').set("readOnly",true);
 	
 	//setControlReadOnly();
@@ -548,7 +550,7 @@ function setReadOnly(){
 
 
 var sale_number_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
-var url_getsalenumber = "<?php echo $this->url(array('module'=>'loan','controller'=>'IlPayment','action'=>'get-sale-number-edit')); ?>";
+var url_getsalenumber = "<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-sale-number-edit')); ?>";
 function getAllSaleNumber(){
 	//alert(1);
 	dojo.xhrPost({
@@ -562,8 +564,8 @@ function getAllSaleNumber(){
 			//alert(data);
 			sale_number_store  = getDataStorefromJSON('id','name', data);
 		    dijit.byId('loan_number').set('store',sale_number_store); 
-		    dijit.byId('loan_number').attr('value','<?php echo $this->ilPaymentById['land_id'];?>');
-			
+		    dijit.byId('loan_number').attr('value','<?php echo $this->ilPaymentById['sale_id'];?>');
+		  
 			getPropertyInfo();
 			
 		},
