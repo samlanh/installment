@@ -74,11 +74,11 @@
 		
 				<fieldset style="margin-top:-10px">
 					<legend><strong style="color:#284db7;"><?php echo $tr->translate("INFO_INDILOAN")?></strong></legend>
-					<table class="center" cellspacing="10" >
+					<table class="center" cellspacing="5" >
 						<tr>
 							<td><?php echo $tr->translate("BRANCH_NAME")?></td>
 							<td><?php echo $frm->getElement("branch_id")?></td>
-							<td><?php echo $tr->translate("LOAN_NO")?></td>
+							<td><?php echo $tr->translate("SALE_NO")?></td>
 							<td><input id="loan_number" /> </td>
 							<td><?php echo $tr->translate("ADDRESS")?></td>
 							<td><?php echo $frm->getElement("land_address")?>
@@ -805,7 +805,7 @@ function showReciept(receipt_number){
 		
 		dijit.byId('frm_client').show();
 	}
-}
+ }
 }
 function returnMOnth(monthnum){
 	var month = new Array();
@@ -840,7 +840,6 @@ dojo.ready(function(){
 				
 				getLastPaidDate();
 				getLaonPayment(1);//
-				
 				
 				getAllLaonPayment();
 				dijit.byId("amount_receive").focus();
@@ -1859,7 +1858,6 @@ function doTotalByServ(){
 }
 
 function totalReturn(){
-	
 	service_charge = dijit.byId('service_charge').get('value');
 	receive_amount = dijit.byId('amount_receive').get('value');
 	total_payment = dijit.byId('oldTotalPay').get('value');
@@ -1879,37 +1877,27 @@ function totalReturn(){
 	}else{
 		dijit.byId('remain').attr('value',0);
 	}
-	
 	if(option_pay==1){
 		if(receive_amount<total_payments){
-			
 			begining_balance = $('#total_priciple_1').val();	
 			//alert(begining_balance);
 			service_charge = dijit.byId('service_charge').get('value');
 			penelize = dijit.byId('penalize_amount').get('value');
 			interest = dijit.byId('total_interest').get('value');
-			
 			os_amount = receive_amount - service_charge - penelize - interest;
 			if(os_amount>0){
 				ending_balance = begining_balance - os_amount;
 			}else{
 				ending_balance = begining_balance;
 			}
-			
 			dijit.byId('priciple_amount').attr('value',ending_balance);
-			
 		}else{
 			begining_balance = $('#total_priciple_1').val();
 			os_amount = dijit.byId('os_amount').get('value');
-			
-			
 			dijit.byId('priciple_amount').attr('value',begining_balance-os_amount);
-			
-			
 		}
 	}else{
 	}
-	
 }
 
 function loading(){
@@ -1942,7 +1930,6 @@ function getReceiptNumber(condition){
 	});
 }
 function getAllLaonPayment(){//get schedule
-	
 	var url_submits = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-all-il-loan-Detail')); ?>';
 		loan_number = dijit.byId('loan_number').get('value');
 		dojo.xhrPost({

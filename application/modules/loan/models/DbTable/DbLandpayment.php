@@ -493,7 +493,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			}else{
     				$remain_principal = 0;
     				$statuscomplete=0;
-    				$principal_paid = $principal_paid=0;
+    				 $principal_paid=0;
     				$total_interestpaid=($old_interest);
     				$total_interestafter=$total_interestpaid;
     			}

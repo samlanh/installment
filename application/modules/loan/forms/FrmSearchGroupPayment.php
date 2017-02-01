@@ -30,9 +30,6 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		$payment_type->setMultiOptions($options);
 		$payment_type->setValue($request->getParam("paymnet_type"));
 		
-		
-		
-		
 		$advnceSearch = new Zend_Dojo_Form_Element_TextBox("advance_search");
 		$advnceSearch->setAttribs(array('class'=>'fullside'
 				,'dojoType'=>'dijit.form.TextBox'
@@ -71,7 +68,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		$start_date->setAttribs(array('class'=>'fullside','dojoType'=>'dijit.form.DateTextBox','placeholder'=>$this->tr->translate("ចាប់ពីថ្ងៃ")));
 		$_date = $request->getParam("start_date");
 		if(empty($_date)){
-			$_date = date('Y-m-d');
+// 			$_date = date('Y-m-d');
 		}
 		$start_date->setValue($_date);
 		
@@ -98,6 +95,15 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		$client_name->setValue($request->getParam("client_name"));
 		$status->setValue($request->getParam("status"));
 		
+		$land_id = new Zend_Dojo_Form_Element_FilteringSelect('land_id');
+		$land_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$db = new Application_Model_DbTable_DbGlobal();
+		$options = $db ->getAllLandInfo(null,null,1);//show name,show group,show option
+		$land_id->setMultiOptions($options);
+		$land_id->setValue($request->getParam("land_id"));
 		
 		if($data!=null){
 			$advnceSearch->setValue($request->getParam("advance_search"));
@@ -107,7 +113,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 			$status->setValue($request->getParam("status"));
 			
 		}
-		$this->addElements(array($branch_id,$g_client_name,$payment_type,$_coid,$submit,$advnceSearch,$client_name,$start_date,$end_date,$status));
+		$this->addElements(array($land_id,$branch_id,$g_client_name,$payment_type,$_coid,$submit,$advnceSearch,$client_name,$start_date,$end_date,$status));
 		return $this;
 		
 	}	

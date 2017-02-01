@@ -22,6 +22,7 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 						'end_date'=>$formdata['end_date'],
 						'status'=>$formdata['status'],
 						'paymnet_type'	=> $formdata["paymnet_type"],
+						'land_id'=> $formdata["land_id"],
 						);
 			}
 			else{
@@ -32,16 +33,18 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 						'end_date'=>date('Y-m-d'),
 						'branch_id'		=>	-1,
 						'paymnet_type'	=> -1,
+						'land_id'=>-1,
 						'status'=>"",);
 			}
 			$rs_rows= $db->getAllIndividuleLoan($search);
 			$result = array();
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","HOUSE_NO","RECIEPT_NO","TOTAL_PRINCEPLE","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT","PAY_DATE","DATE",);
-			$link=array(
-					'module'=>'loan','controller'=>'ilpayment','action'=>'edit',
-			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link,'land_id'=>$link,'team_group'=>$link,'client_name'=>$link,'receipt_no'=>$link,'branch'=>$link));
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","HOUSE_NO","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
+					"PAY_DATE","DATE","STATUS",'បោះពុម្ភ');
+			$link=array('module'=>'loan','controller'=>'ilpayment','action'=>'edit',);
+			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link,'land_id'=>$link,'team_group'=>$link,
+					'client_name'=>$link,'receipt_no'=>$link,'branch'=>$link,'street'=>$link,'បោះពុម្ភ'=>$linkprint));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			echo $e->getMessage();
@@ -51,6 +54,10 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		$fm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($fm);
 		$this->view->frm_search = $fm;
+		
+		$data= array('loan_number'=>2,'type'=>1,'crm_id'=>4);
+		$db = new Loan_Model_DbTable_DbLoanILPayment();
+		$row = $db->getLoanPaymentschedulehistory($data);
   }
   function addAction()
   {
@@ -76,12 +83,12 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_ilpayment = $frm_loan;
 		
-		$list = new Application_Form_Frmtable();
-		$collumns = array("ឈ្មោះមន្ត្រីឥណទាន","ថ្ងៃបង់ប្រាក់","ប្រាក់ត្រូវបង់","ប្រាក់ដើមត្រូវបង់","អាត្រាការប្រាក់","ប្រាក់ផាកពិន័យ","ប្រាក់បានបង់សរុប","សមតុល្យ","កំណត់សម្គាល់");
-		$link=array(
-				'module'=>'group','controller'=>'Client','action'=>'edit',
-		);
-		$this->view->list=$list->getCheckList(0, $collumns, array(),array('client_number'=>$link,'name_kh'=>$link,'name_en'=>$link));
+// 		$list = new Application_Form_Frmtable();
+// 		$collumns = array("ឈ្មោះមន្ត្រីឥណទាន","ថ្ងៃបង់ប្រាក់","ប្រាក់ត្រូវបង់","ប្រាក់ដើមត្រូវបង់","អាត្រាការប្រាក់","ប្រាក់ផាកពិន័យ","ប្រាក់បានបង់សរុប","សមតុល្យ","កំណត់សម្គាល់");
+// 		$link=array(
+// 				'module'=>'group','controller'=>'Client','action'=>'edit',
+// 		);
+// 		$this->view->list=$list->getCheckList(0, $collumns, array(),array('client_number'=>$link,'name_kh'=>$link,'name_en'=>$link));
 		
 		$db_keycode = new Application_Model_DbTable_DbKeycode();
 		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
@@ -104,14 +111,16 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		$this->view->rsresult =  $db->getTranLoanByIdWithBranch($id,null);
 		}
 	}	
-function editAction(){
+	function editAction(){
 		$id = $this->getRequest()->getParam("id");
 		$db = new Loan_Model_DbTable_DbLoanILPayment();
 		$db_global = new Application_Model_DbTable_DbGlobal();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				$db->updateIlPayment($_data,$id);
+// 				print_r($_data);exit();
+				$db->updateIlPayment($_data,$_data['id']);
+				
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -129,13 +138,6 @@ function editAction(){
 		$frm_loan=$frm->FrmAddIlPayment($payment_il);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_ilpayment = $frm_loan;
-		
-		$list = new Application_Form_Frmtable();
-		$collumns = array("ឈ្មោះមន្ត្រីឥណទាន","ថ្ងៃបង់ប្រាក់","ប្រាក់ត្រូវបង់","ប្រាក់ដើមត្រូវបង់","អាត្រាការប្រាក់","ប្រាក់ផាកពិន័យ","ប្រាក់បានបង់សរុប","សមតុល្យ","កំណត់សម្គាល់");
-		$link=array(
-				'module'=>'group','controller'=>'Client','action'=>'edit',
-		);
-		$this->view->list=$list->getCheckList(0, $collumns, array(),array('client_number'=>$link,'name_kh'=>$link,'name_en'=>$link));
 		
 		$db_keycode = new Application_Model_DbTable_DbKeycode();
 		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
@@ -322,7 +324,15 @@ function editAction(){
 			exit();
 		}
 	}
-	
+	function getLoanpaymentschedulehistoryAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$row = $db->getLoanPaymentschedulehistory($data);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
 	function getIlloandetailEditAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -353,7 +363,6 @@ function editAction(){
 			exit();
 		}
 	}
-	
 	function getSaleNumberAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -363,7 +372,6 @@ function editAction(){
 			exit();
 		}
 	}
-	
 	function getSaleNumberEditAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -373,7 +381,6 @@ function editAction(){
 			exit();
 		}
 	}
-	
 	function getPropertyinfoAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -383,7 +390,6 @@ function editAction(){
 			exit();
 		}
 	}
-	
 	function getLastpaiddateAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -393,7 +399,6 @@ function editAction(){
 			exit();
 		}
 	}
-	
 	function getReceiptNumberAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -405,7 +410,4 @@ function editAction(){
 			exit();
 		}
 	}
-	
-	
 }
-
