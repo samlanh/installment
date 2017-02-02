@@ -201,13 +201,13 @@
 	</tr>		
 </table>
 <input type="hidden" name="sale_number"  dojoType="dijit.form.TextBox"  id="sale_number">
-<input type="text" dojoType="dijit.form.TextBox" name="property_id" id="property_id">
+<input type="hidden" dojoType="dijit.form.TextBox" name="property_id" id="property_id">
 <input type="hidden" dojoType="dijit.form.TextBox" name="datepaymentlastrecord" id="datepaymentlastrecord">
 <input type="hidden" dojoType="dijit.form.TextBox" name="lastpaiddate" id="lastpaiddate">
 <input type="hidden" dojoType="dijit.form.TextBox" name="identity" id="identity">
 <input type="hidden" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
 <input type="hidden" dojoType="dijit.form.TextBox" name="curr" id="curr">
-<input type="text" dojoType="dijit.form.TextBox" name="id" id="id" value="<?php echo $rspayment['paymentid'];?>">
+<input type="hidden" dojoType="dijit.form.TextBox" name="id" id="id" value="<?php echo $rspayment['paymentid'];?>">
 <?php  echo $frm->getElement('reciever');?>
 </form>
 <div class="dijitHidden" style="width: 25cm !important; height: 12cm ; padding: 0px; margin: 0px;">
@@ -579,7 +579,7 @@
 var graice_period = <?php echo $graiceperiod["value"] ?>;
 
 function submitDataClose(){
-	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add')); ?>';
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'edit')); ?>';
 	service_charge = dijit.byId('service_charge').get('value');
 	receive_amount = dijit.byId('amount_receive').get('value');
 	option_pay = dijit.byId('option_pay').get('value');
@@ -961,7 +961,7 @@ function setReadOnly(){
 	dijit.byId('sold_price').set("readOnly",true);
 	dijit.byId('interest_rate').set("readOnly",true);
 	dijit.byId('co_id').set("readOnly",true);
-	dijit.byId('reciept_no').set("readOnly",true);
+	//dijit.byId('reciept_no').set("readOnly",true);
 	//dijit.byId('option_pay').set("readOnly",true);
 	//dijit.byId('collect_date').set("readOnly",true);
 	//dijit.byId('service_charge').set("readOnly",true);
@@ -1516,7 +1516,6 @@ function getPayment(){//jhvjhvj
 function calculateTotal(index){
 	try{
 dijit.byId("priciple_amount").attr("value",<?php echo $rspayment['principal_amount']?>);
-alert(555);
 return false;
 		
 		var penelize = 0;

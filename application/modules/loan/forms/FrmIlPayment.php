@@ -350,11 +350,15 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$discount->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside'));
 		
 		$reciept_no = new Zend_Dojo_Form_Element_TextBox("reciept_no");
-		$reciept_no->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside','readonly'=>'true',
+		$reciept_no->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside',
 				'style'=>'color:red; font-weight: bold;'));
 		$db_loan = new Loan_Model_DbTable_DbLoanILPayment();
 		$loan_number = $db->getReceiptByBranch(array("branch_id"=>1));
-// 		$loan_number = $db_loan->getIlPaymentNumber();
+		
+		$session_user=new Zend_Session_Namespace('auth');
+		if($session_user->level!=1){
+			//$reciept_no->setAttribs(array('readonly'=>'true',));
+		}
 		$reciept_no->setValue($loan_number);
 		
 		

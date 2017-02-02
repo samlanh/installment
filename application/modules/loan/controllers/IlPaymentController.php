@@ -55,9 +55,9 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($fm);
 		$this->view->frm_search = $fm;
 		
-		$data= array('loan_number'=>2,'type'=>1,'crm_id'=>4);
-		$db = new Loan_Model_DbTable_DbLoanILPayment();
-		$row = $db->getLoanPaymentschedulehistory($data);
+//  		$data= array('loan_number'=>1,'type'=>1,'crm_id'=>1);
+//  		$db = new Loan_Model_DbTable_DbLoanILPayment();
+//  		$row = $db->getLoanPaymentschedulehistory($data);
   }
   function addAction()
   {

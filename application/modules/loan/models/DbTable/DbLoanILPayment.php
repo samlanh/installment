@@ -407,9 +407,10 @@ public function addILPayment($data){
 		    					foreach ($rows as $row){
 		    						$old_interest=$paid_amount;
 		    						$paid_amountbefore = $paid_amount;
+		    						
 		    						$paid_amount = $paid_amount-$row['total_interest_after'];
 		    						if($paid_amount>=0){
-		    					
+// 		    					echo $paid_amount;exit();
 		    							$total_interestafter=0;
 		    							$total_interestpaid=$row['total_interest_after'];
 		    							$old_paid = $paid_amount;
@@ -425,6 +426,7 @@ public function addILPayment($data){
 		    								$statuscomplete=0;
 		    							}
 		    						}else{
+		    							echo 333;exit();
 		    							$remain_principal = 0;
 		    							$statuscomplete=0;
 		    							$principal_paid=0;
@@ -442,26 +444,29 @@ public function addILPayment($data){
 		    								'begining_balance_after'=>$row['begining_balance_after']-($principal_paid),
 		    								'ending_balance'=>$row['begining_balance_after']-($principal_paid+$remain_principal),
 		    								'is_completed'=>$statuscomplete,
-		    								'paid_date'			=> 	$data['collect_date'],
-		    								'total_payment_after'	=>	$remain_principal+($row['total_interest_after']-$total_interestpaid),
+		    								'paid_date'	=>	$data['collect_date'],
+		    								'total_payment_after'=>	$remain_principal+($row['total_interest_after']-$total_interestpaid),
 		    								'payment_option'	=>	$data["option_pay"],
 		    								'paid_date'			=> 	$data['collect_date'],
 		    								);
 		    						$where = " id = ".$row['id'];
 		    						$this->_name="ln_saleschedule";
 		    						$this->update($arra, $where);
+		    						if($paid_amount<=0){
+		    							break;
+		    						}
 // 		    						print_r($arra);exit();
 		    					}//end foreach 
 		    				}else{
-		    					$this->_name="ln_sale";
-		    					$update_sale = array(
-		    							'is_completed'=>1,
-		    					);
-		    					$where=" id = $loan_number ";
-		    					$this->update($update_sale, $where);
+// 		    					$this->_name="ln_sale";
+// 		    					$update_sale = array(
+// 		    							'is_completed'=>1,
+// 		    					);
+// 		    					$where=" id = $loan_number ";
+// 		    					$this->update($update_sale, $where);
 		    					
 		    				}
-	    				}else{
+	    				}else{ //ករណីបង់មិនគ្រប់
 			   					$new_sub_interest_amount = $data["interest_".$i];
 			   					$new_sub_penelize = $data["penalize_amount"];
 			   					$new_sub_service_charge = $data["service_charge"];
@@ -598,7 +603,7 @@ public function addILPayment($data){
     	try{
     		if($data['status']==0){
     			if($data['option_pay']==4){//payoff update  ទៅជាOld History សិនទើប update  ក្រោយ Check it again 
-    				$sql1="select land_id as sale_id ,lfd_id as saleschedule_id from ln_client_receipt_money_detail where crm_id=$id";
+    				$sql1="select sale_id as sale_id ,lfd_id as saleschedule_id from ln_client_receipt_money_detail where crm_id=$id";
     				$result = $db->fetchAll($sql1);
     				if(!empty($result)){
     					foreach ($result as $_data){
@@ -1673,7 +1678,7 @@ function getLoanPaymentschedulehistory($data){//used page edit il payment
    		AND (ss.is_completed = 0 OR $where)
    		AND s.id = ".$data['loan_number'];
    	}
-   //	echo $sql;
+
    	return $db->fetchAll($sql);
 }   
 function getLoanPaymentByLoanNumberEdit($data){
