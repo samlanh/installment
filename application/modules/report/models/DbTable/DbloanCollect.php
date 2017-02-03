@@ -40,6 +40,19 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql.$where.$order);
     	
     }
+    function getCustomerNearlyPayment(){
+    	$db=$this->getAdapter();
+    	$search['start_date'] = date('Y-m-d');
+    	$search['end_date']= date('Y-m-d');
+    	$sql = "SELECT * FROM v_newloancolect WHERE 1  ";
+    	$where ='';
+    	$from_date =(empty($search['start_date']))? '1': " date_payment <= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
+    	$where= " AND ".$from_date." AND ".$to_date;
+    	$order=" ORDER BY date_payment DESC";
+//     	echo $sql.$where.$order;
+    	return $db->fetchAll($sql.$where.$order);
+    }
 	public function latepayment($search=null){
 		$db=$this->getAdapter();
 		$pay_date = $search['payment_date'];

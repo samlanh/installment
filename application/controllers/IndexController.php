@@ -51,8 +51,7 @@ class IndexController extends Zend_Controller_Action
 					$user_info = $db_user->getUserInfo($user_id);
 					
 					$arr_acl=$db_user->getArrAcl($user_info['user_type']);
-					
-					
+					$session_user->url_report=$db_user->getArrAclReport($user_info['user_type']);
 					$session_user->user_id=$user_id;
 					$session_user->user_name=$user_name;
 					$session_user->pwd=$password;		
@@ -61,14 +60,12 @@ class IndexController extends Zend_Controller_Action
 					$session_user->first_name= $user_info['first_name'];
 					$session_user->theme_style=$db_user->getThemeByUserId($user_id);
 					
-					
 					$a_i = 0;
 					$arr_actin = array();	
 					for($i=0; $i<count($arr_acl);$i++){
 						$arr_module[$i]=$arr_acl[$i]['module'];
 					}
 						
-
 					$arr_module=(array_unique($arr_module));
 					$arr_actin=(array_unique($arr_actin));
 					$arr_module=$this->sortMenu($arr_module);

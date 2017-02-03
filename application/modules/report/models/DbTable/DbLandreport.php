@@ -77,19 +77,24 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 //       	echo $sql.$where.$order;
       	return $db->fetchAll($sql.$where.$order);
       }
-      public function getAllOutstadingLoan($search=null){
+public function getAllOutstadingLoan($search=null){
       	$db = $this->getAdapter();
       	$where="";
       	$to_date = (empty($search['end_date']))? '1': " date_release <= '".$search['end_date']." 23:59:59'";
       	$where.= "  AND ".$to_date;
       	$sql="SELECT * FROM v_loanoutstanding WHERE 1 ";//IF BAD LOAN STILL GET IT
       	
-      	if($search['member']>0){
-           		$where.=" AND client_id = ".$search['member'];
+      	if($search['client_name']>0){
+           		$where.=" AND client_id = ".$search['client_name'];
       	}
-      	if($search['co_id']>0){
-      		$where.=" AND co_id = ".$search['co_id'];
+      	if($search['land_id']>0){
+      		$where.=" AND house_id = ".$search['land_id'];
       	}
+      	if($search['schedule_opt']>0){
+      		$where.=" AND payment_id = ".$search['schedule_opt'];
+      	}
+      	
+      	
       	if(!empty($search['adv_search'])){
       		$s_where = array();
       		$s_search = addslashes(trim($search['adv_search']));
@@ -103,14 +108,14 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	   $where .=' AND ('.implode(' OR ',$s_where).')';
       	}
       	return $db->fetchAll($sql.$where);
-      }
+}
       function getAmountReceiveByLoanNumber($land_id,$client_id){
       	 $db = $this->getAdapter();
       	 $sql="
       	     SELECT 
 				SUM(`crm`.`total_principal_permonthpaid`)
 				 FROM  `ln_client_receipt_money` AS crm
-      	 	WHERE crm.`client_id`=$client_id AND  crm.`land_id`='".$land_id."' GROUP BY crm.land_id ,crm.client_id ";
+      	 	WHERE crm.`client_id`=$client_id AND  crm.`land_id`='".$land_id."' AND crm.status=1 GROUP BY crm.land_id ,crm.client_id LIMIT 1 ";
       	 $row =  $db->fetchOne($sql);
       	 if(!empty($row)){
       	 	$alltotal =  $db->fetchOne($sql);

@@ -511,10 +511,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'total_payment_after'	=>	$pyament_after,
 //     					'total_interest_after'	=>  $new_sub_interest_amount,
     			);
-    			$where = " id = ".$row['id'];
+    		//	echo $row['id'];exit();
+    		
     			$this->_name="ln_saleschedule";
+    			$where="id = ".$row['id'];
     			$this->update($arra, $where);
-    			
     			$this->_name='ln_client_receipt_money_detail';
     			$array = array(
     					'crm_id'				=>$crm_id,

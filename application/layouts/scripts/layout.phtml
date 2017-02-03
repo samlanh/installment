@@ -53,6 +53,9 @@
 			height: 40px;
 			min-width: 100px;	
 		}
+.soria .dijitButtonText {
+    line-height: 30px;
+}
 		.add-link{  
 				    background-color: rgb(90, 138, 237);
 			  width: 90px;
@@ -63,8 +66,8 @@
 			  font-weight: 600;}
 		.fullside{ width:98%; height: 28px;}
 		.full{ width:100%;}
-		body, html {font-size:96%; 
-		font-family: 'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;
+		body, html {font-size:98%; 
+		font-family: Helvetica,sans-serif,'Kh Battambang','Khmer Battambang';
 		/*font-family:Arial,serif !important;*/ /*font-family:'Khmer OS Battambang'*/}
 		.normal,.alternate{ font-size:90% !important;}
         /*body, html { font-family:helvetica,arial,sans-serif; font-size:95%; }*/
@@ -72,6 +75,8 @@
 		fieldset{ font-family: inherit;}
 		.border{ border: 1px solid #ccc; height: 100%; margin: 5px; padding: 5px;}
         .border1{ border: 1px solid #ccc; height: 100%; margin: 5px; margin-left:0px; padding: 5px;}
+		.hover:hover{background: #eee;}
+		.odd{background-color: #f9f9f9;}
 		
 	</style>	
 	
@@ -101,7 +106,8 @@
             		<td valign="top" <?php if($module!='home') echo'width="40px"';  ?> >
             			 <?php if($module!='home'){?>
             			<?php echo $this->render('menuleft.phtml')?>
-            			<?php }?>
+            			
+   <?php }?>
             		</td>
             		<td valign="top">
             			<?php if($module=='report' AND $action!='index'){?>
@@ -117,7 +123,7 @@
             			<?php 
 	            			$db = new Application_Model_DbTable_DbUsers();
 	            			$rs = $db->getAccessUrl($module,$controller,$action);
-	            			if(!empty($rs)){
+	            			if(!empty($rs) OR $action=='changepassword'){
 	            				echo $this->layout()->content;
 	            			}else{
 	            				echo $this->render('pagenotfund.phtml');
@@ -149,7 +155,6 @@ function preview()
   var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
       disp_setting+="scrollbars=no,width=1100, height=700, left=100, top=25"; 
   var content_vlue = document.getElementById("divPrint").innerHTML; 
-  
   var docprint=window.open("","",disp_setting); 
    docprint.document.open(); 
    docprint.document.write('<html><head>'); 

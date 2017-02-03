@@ -63,9 +63,16 @@
   </style>
   <div style="background:#ccc; width: 100%;">
   	<ul class="link-rpt">
-   	    <!-- <li><a href="<?php //echo $this->url(array('module'=>'report','controller'=>'Paramater','action'=>'rpt-holiday')); ?>"><?php echo $tr->translate('LIST_HOLIDAY');?></a></li>
-  		 <li><a href="<?php //echo $this->url(array('module'=>'report','controller'=>'Paramater','action'=>'rpt-village')); ?>"><?php echo $tr->translate('LIST_VILLAGE');?></a></li>
-  		-->
+   	   <?php
+   	   $session_user=new Zend_Session_Namespace('auth');
+   	   $report_url = $session_user->url_report;
+   	   if(!empty($report_url)){
+   	   foreach($report_url as $url){?>
+   	   	<li><a href="<?php echo $this->url(array('module'=>$url['module'],'controller'=>$url['controller'],'action'=>$url['action'])); ?>">
+   	   	<?php echo $tr->translate($url['label']);?></a></li>
+   	   <?php }
+   	   }?>
+   	   <!-- 
   		<li><a href="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-staff')); ?>"><?php echo $tr->translate('LIST_STAFF');?></a></li>
   		<li><a href="<?php echo $rpt_client;?>"><?php echo $tr->translate('LIST_OF_CLIENT');?></a></li>
   		<li><a href="<?php echo $rpt_property;?>"><?php echo $tr->translate('LIST_PROPERTY');?></a></li>
@@ -80,13 +87,14 @@
   		<li><a href="<?php echo $rpt_expense;?>"><?php echo $tr->translate('REPORT_EXPENSE');?></a></li>
   		<li><a href="<?php echo $rpt_writoff;?>"><?php echo $tr->translate('REPORT_LOAN_WRITE_OFF');?></a></li>
   		<li><a href="<?php echo $rpt_loanincome;?>"><?php echo $tr->translate('PROFIT');?></a></li> -->
-  		<li><a href="<?php echo $rpt_dailypayment;?>"><?php echo $tr->translate('RPT_CLIENT_PAYMENT');?></a></li>
+  		<!-- <li><a href="<?php echo $rpt_dailypayment;?>"><?php echo $tr->translate('RPT_CLIENT_PAYMENT');?></a></li>
   		<li><a href="<?php echo $rpt_paymenthistory;?>"><?php echo $tr->translate('REPORT_LOAN_PAYMENT');?></a></li>
   		<li><a href="<?php echo $rpt_income;?>"><?php echo $tr->translate('REPORT_INCOME');?></a></li>
   		<li><a href="<?php echo $rpt_expense;?>"><?php echo $tr->translate('REPORT_EXPENSE');?></a></li>
   		<li><a href="<?php echo $rpt_daily_cash;?>"><?php echo $tr->translate('REPORT_DAILY_CASH');?></a></li>
   		<li><a href="<?php echo $rpt_expectincome;?>"><?php echo $tr->translate('REPORT_EXPECT_INCOME');?></a></li>
   		<li><a href="<?php echo $rpt_loanoustading;?>"><?php echo $tr->translate('LOAN_OUTSTADING');?></a></li>
+  	 -->
   	</ul>
   </div>
   <div style="clear: both;"></div>

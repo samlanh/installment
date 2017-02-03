@@ -112,6 +112,8 @@ class Loan_CancelController extends Zend_Controller_Action {
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		
+		$this->view->expense_id = $row['expense_id'];
 	}
     function getCancelNoAction(){// by vandy get property code
 		if($this->getRequest()->isPost()){

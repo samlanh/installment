@@ -38,7 +38,6 @@ class Report_LoanController extends Zend_Controller_Action {
   	 
   }
   function rptLoancollectAction(){//list payment that collect from client
-
   	$dbs = new Report_Model_DbTable_DbloanCollect();
   	$frm = new Application_Form_FrmSearchGlobal();
   	if($this->getRequest()->isPost()){
@@ -50,10 +49,8 @@ class Report_LoanController extends Zend_Controller_Action {
   				'client_name'=>'',
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
-  				'status' => -1,);
-  		 
+  				'status' => -1,);  		 
   	}
-  	
   	$db  = new Report_Model_DbTable_DbLandreport();
   	$this->view->date_show=$search['end_date'];
   	$this->view->list_end_date=$search;
@@ -68,8 +65,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
-  	$this->view->frm_search = $frm;
-  	
+  	$this->view->frm_search = $frm;  	
   }
   function rptGroupmemberAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -168,9 +164,10 @@ class Report_LoanController extends Zend_Controller_Action {
 	  				'adv_search' => "",
 	  				'end_date' => date('Y-m-d'),
 	  				'status' => "",
-	  				'co_id' => "",
+	  				'land_id' => "",
 	  				'branch_id'		=>"",
-	  				'member'=>-1
+	  				'schedule_opt'=>-1,
+	  				'client_name'=>-1
 	  		);
 	  	}
 	  	$this->view->fordate = $search['end_date'];

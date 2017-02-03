@@ -43,14 +43,14 @@ class Group_indexController extends Zend_Controller_Action {
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_CODE","CUSTOMER_NAME","SEX","PHONE","HOUSE","STREET","VILLAGE",
-					"DATE","BY_USER","STATUS");
+					"DATE","BY_USER","STATUS","VIEW");
 			$link=array(
 					'module'=>'group','controller'=>'index','action'=>'edit',
 			);
 			$link1=array(
 					'module'=>'group','controller'=>'index','action'=>'view',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link1,'client_number'=>$link,'name_kh'=>$link,'name_en'=>$link1));
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('View'=>$link1,'branch_name'=>$link1,'client_number'=>$link,'name_kh'=>$link,'name_en'=>$link1));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

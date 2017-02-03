@@ -130,6 +130,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$row = $dbsale->getTranLoanByIdWithBranch($data['sale_no'],null);
 			$title=" Return Money  Back";
 			$expenid='';
+			
 			if(!empty($result['expense_id'])){
 				$arr1 = array(
 					'branch_id'		=>$data['branch_id'],
@@ -141,6 +142,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'description'	=>$data['reason'],
 					'user_id'		=>$this->getUserId(),
 					'paid_amount'=>$data['paid_amount'],
+					'category_id'	=>$data['income_category'],
 					'create_date'	=>date('Y-m-d'),
 						);
 				$this->_name="ln_expense";
@@ -262,7 +264,6 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				$where =" id = ".$data['old_sale_id'];
 				$this->update($arr_old, $where);
 			}
-			
 			
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
