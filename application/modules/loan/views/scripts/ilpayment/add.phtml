@@ -89,7 +89,7 @@
 							<td><?php echo $tr->translate("PAYMENT_TYPE")?></td>
 							<td><?php echo $frm->getElement('schedule_opt');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
-							<td><input id="client_id"></td>
+							<td><input id="client_id"><input type="hidden" name="buy_with"  dojoType="dijit.form.TextBox"  id="buy_with"></td>
 							<td><?php echo $tr->translate("CLIENT_NUM")?></td>
 							<td><input id="client_code"></td>
 						</tr>
@@ -732,9 +732,10 @@ function showReciept(receipt_number){
 		document.getElementById('lbl_principle_amount').innerHTML = dojo.number.format(dijit.byId('os_amount').get('value'),{places:2})+symbal;
 		document.getElementById('lbl_total_interest').innerHTML = dojo.number.format(dijit.byId('total_interest').get('value'),{places:2})+symbal;
 		
-		
-		document.getElementById('lbl_client_id').innerHTML = dijit.byId('client_id').attr('displayedValue');
-		document.getElementById('lbl_client_name').innerHTML = dijit.byId('client_id').attr('displayedValue');
+		buy_with = dijit.byId('buy_with').get('value');
+		if(buy_with!=''){buy_with="/"+buy_with;}
+		document.getElementById('lbl_client_id').innerHTML = dijit.byId('client_id').attr('displayedValue')+buy_with;
+		document.getElementById('lbl_client_name').innerHTML = dijit.byId('client_id').attr('displayedValue')+buy_with;
 
 		if(receipt_number==''){
 			getReceiptNumber(1);
@@ -774,8 +775,8 @@ function showReciept(receipt_number){
 		document.getElementById('lbl_total_interest1').innerHTML = dojo.number.format(dijit.byId('total_interest').get('value'),{places:2})+symbal;
 		
 		
-		document.getElementById('lbl_client_id1').innerHTML = dijit.byId('client_id').attr('displayedValue');
-		document.getElementById('lbl_client_name1').innerHTML = dijit.byId('client_id').attr('displayedValue');
+		document.getElementById('lbl_client_id1').innerHTML = dijit.byId('client_id').attr('displayedValue')+buy_with;
+		document.getElementById('lbl_client_name1').innerHTML = dijit.byId('client_id').attr('displayedValue')+buy_with;
 
 		
 		document.getElementById('lbl_reciept_no1').innerHTML = receipt_number;
@@ -1152,7 +1153,7 @@ function getLaonPayment(type){
 						
 						if(i==0){
 							clearhistory();
-							//alert(respone[i].house_type);
+							dijit.byId('buy_with').attr('value',respone[i].buy_with);	
 							dijit.byId('client_id').attr('value',client_id);					//penalize_amount
 							dijit.byId('client_id').set("readOnly",true);
 							dijit.byId('client_code').attr('value',client_id);
@@ -1398,11 +1399,10 @@ function calculateTotal(index){
 						total_late_day = late_day;
 					}
 					totalPay =  parseFloat(principlePerMonth) + parseFloat(interest);
-					if(total_late_day>0){  
-						
+					if(total_late_day>0){ //have late 
 						dijit.byId('late_day').attr('value',total_late_day + " Days");
-						if(payment_term==3){
-							if(payOption==1){
+						if(payment_term==3){//for month
+							if(payOption==1){//បង់ធម្មតា
 								 total_penelize_peryear = roundhundred((parseFloat(totalPay)*(parseFloat(ps/100)/30)*parseFloat(total_late_day))+parseFloat(penelize));
 								 total_interest_late = total_interest_late + roundhundred(parseFloat(total_penelize_peryear));
 								 total_penelize = total_penelize+parseFloat(total_penelize_peryear);
@@ -1414,7 +1414,7 @@ function calculateTotal(index){
 								 $('#payment_'+arrays[i]).val(roundhundred(total_payment_permonth));
 								 var total_interest = total_interest+parseFloat($('#interest_'+arrays[i]).val());
 								 
-							}else{
+							}else{//បង់ផ្តាច់
 								dijit.byId('priciple_amount').attr('value',0);
 								total_priciple_amount = $('#total_priciple_1').val();
 								
@@ -1582,6 +1582,7 @@ function calculateTotal(index){
 		dijit.byId('oldTotalPay').attr('value',(totalAmount));
 		dijit.byId('amount_receive').attr('value',(totalAmount));
 		//dijit.byId('amount_return').attr('value',0);
+		//alert(total_penelize);
 		dijit.byId('penalize_amount').attr('value',(total_penelize));
 		dijit.byId('old_penelize').attr('value',(total_penelize));
 		$('#new_penelize').val((total_interest_late));

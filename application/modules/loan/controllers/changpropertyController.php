@@ -1,5 +1,5 @@
 <?php
-class Loan_TransferprojectController extends Zend_Controller_Action {
+class Loan_ChangpropertyController extends Zend_Controller_Action {
 	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
@@ -23,19 +23,15 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 						'end_date'=>date('Y-m-d'),
 						 );
 			}
-// 			print_r($search);
-			$db = new Loan_Model_DbTable_DbTransferProject();
-			$rs_rows= $db->getAllChangeProject($search,1);
+			$db = new Loan_Model_DbTable_Dbchangehouse();
+			$rs_rows= $db->getAllChangeHouse($search,1);
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_NAME","PRICE","PAID_BEFORE","BRANCH_NAME","PROPERTY_NAME","PRICE","PAID","BALANCE","CHANGE_DATE",
+			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_NAME","BRANCH_NAME","PROPERTY_NAME","CHANGE_DATE",
 				"STATUS");
-			$link=array(
-					'module'=>'loan','controller'=>'transferproject','action'=>'view',
-			);
-			$link_info=array('module'=>'loan','controller'=>'transferproject','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('from_branch'=>$link,'sale_number'=>$link_info,'client_number'=>$link_info,'name_kh'=>$link_info,'from_property'=>$link_info),0);
+			$link_info=array('module'=>'loan','controller'=>'changproperty','action'=>'edit',);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('sale_number'=>$link_info,'client_number'=>$link_info,'name_kh'=>$link_info,'from_property'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -51,10 +47,10 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				$_dbmodel = new Loan_Model_DbTable_DbTransferProject();
-				$_dbmodel->addChangeProject($_data);
+				$_dbmodel = new Loan_Model_DbTable_Dbchangehouse();
+				$_dbmodel->addChangeHouse($_data);
 				if(!empty($_data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/transferproject");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/changproperty");
 				}else{
 					Application_Form_FrmMessage::message("INSERT_SUCCESS");
 				}
@@ -70,24 +66,18 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
         
-        $db_keycode = new Application_Model_DbTable_DbKeycode();
-        $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-        
-        $key = new Application_Model_DbTable_DbKeycode();
-        $this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}	
-	
 	public function editAction(){
-		$_dbmodel = new Loan_Model_DbTable_DbTransferProject();
+		$_dbmodel = new Loan_Model_DbTable_Dbchangehouse();
 		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				$_dbmodel->addChangeProject($_data);
+				$_dbmodel->UpdateChangeHouse($_data);
 				if(!empty($_data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/transferproject");
+					Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/loan/changproperty");
 				}else{
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
+					Application_Form_FrmMessage::message("INSERT_FAIL");
 				}
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -99,27 +89,14 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 		$rs = $_dbmodel->getTransferProject($id);
 		$this->view->rs = $rs;
 		
-		
 		$frm = new Loan_Form_FrmTransferproject();
-		$frm_loan=$frm->FrmTransferProject($rs);
+		$frm_loan=$frm->FrmTransferProject();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
         
-        $db_keycode = new Application_Model_DbTable_DbKeycode();
-        $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
 	}
-	function addschedultestAction(){
-		if($this->getRequest()->isPost()){
-			$_data = $this->getRequest()->getPost();
-			$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
-			//$data['sold_price']=$_data['balance'];
-			$_data['sold_price']=$_data['balance'];
-			$rows_return=$_dbmodel->addScheduleTestPayment($_data);
-			print_r(Zend_Json::encode($rows_return));
-			exit();
-		}
-	}
+	
 	function getalllandAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();

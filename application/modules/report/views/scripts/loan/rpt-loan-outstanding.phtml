@@ -62,7 +62,7 @@ th{padding: 5px;}
                     <td style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
 	                <td><?php echo $tr->translate("BRANCH_NAME");?></td>
 	                <td><?php echo $tr->translate("SALE_NO");?></td>	
-                    <td style="">&nbsp;<?php echo $tr->translate("CLIENT_NUM");?>&nbsp;</td>
+                    <!-- <td style="">&nbsp;<?php //echo $tr->translate("CLIENT_NUM");?>&nbsp;</td> -->
                     <td style="">&nbsp;<?php echo $tr->translate("CUSTOMER_NAME");?>&nbsp;</td>
                     <td style="">&nbsp;<?php echo $tr->translate("TEL");?>&nbsp;</td>
                     <td><?php echo $tr->translate("PROPERTY_NAME");?></td>  
@@ -86,7 +86,7 @@ th{padding: 5px;}
                $amt_r = 0;$amt_d = 0;$amt_b = 0; $amn_r = 0;$amn_d = 0;$amn_b = 0;$result_b=0;$result_r=0;$result_d=0;
                if(!empty($this->outstandloan)) foreach($this->outstandloan as $key =>$row){?>
                <?php 
-               		$total_receive = $db->getAmountReceiveByLoanNumber($row['house_id'],$row['client_id']);
+               		$total_receive = $db->getAmountReceiveByLoanNumber($row['id'],$row['client_id']);
                		$amt_d = $amt_d+$row['price_sold'];
                		$amn_d = $amn_d+$total_receive;
                		$result_d=number_format(($amn_d/$amt_d)*100,2).' %';
@@ -95,9 +95,9 @@ th{padding: 5px;}
 						<td>&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 						<td>&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
 						<td>&nbsp;<?php echo $row['sale_number'];?>&nbsp;</td>
-						<td style="line-height: 12px; white-space: nowrap;">&nbsp;<?php echo $row['client_number']; ?>&nbsp;</td>
-						<td align="left" style="font-size:9px; line-height: 13px; white-space: nowrap;">&nbsp;<?php echo $row['client_kh']; ?>&nbsp;</td>
-						<td style="line-height: 12px; white-space: nowrap;">&nbsp;<?php echo $row['phone']; ?>&nbsp;</td>
+						<!-- <td style="line-height: 12px; white-space: nowrap;">&nbsp;<?php //echo $row['client_number']; ?>&nbsp;</td> -->
+						<td align="left" style="font-size:11px; line-height: 13px; white-space: nowrap;">&nbsp;<?php echo $row['client_kh']; ?>&nbsp;</td>
+						<td style="line-height: 12px; white-space: nowrap;"><?php echo $row['phone']; ?></td>
 						<td>&nbsp;<?php echo $row['land_address'];?>&nbsp;</td>
 						<td>&nbsp;<?php echo $row['street'];?>&nbsp;</td>
 						<td>&nbsp;<?php echo number_format($row['price_before'],2);?>&nbsp;</td>
@@ -111,7 +111,7 @@ th{padding: 5px;}
 						<td>&nbsp;<?php echo $row['paymenttype'];?>&nbsp;</td>
 						<td style="white-space:nowrap; text-align: right;">&nbsp;<?php echo number_format($total_receive,2);?>&nbsp;</td>
 						<td>&nbsp;<?php 
-								echo (round(($total_receive/$row['price_sold']),2)*100).' %';
+								echo number_format($total_receive/$row['price_sold']*100,2).' %';
 						?>&nbsp;</td>
 						<td>&nbsp;<?php echo number_format(($row['price_sold']-$total_receive),2);?>&nbsp;</td>
 					</tr>
@@ -119,14 +119,14 @@ th{padding: 5px;}
             </table>
             <br />
              <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px;" width="100%" cellspacing="0">
-                 <tr bgcolor="#ccc" class="style" style="font-weight:bold; line-height: 24px; text-align: center; font-size:11px;">
+                <tr bgcolor="#ccc" class="style" style="font-weight:bold; line-height: 24px; text-align: center; font-size:11px;">
                     <td style="padding:2px 0px;"><?php echo $tr->translate("CURRENT_TYPE");?></td>
                     <td style="padding:2px 0px;"><?php echo $tr->translate("TOTAL");?></td>
                     <td style="padding:2px 0px;"><?php echo $tr->translate("LOAN_RETURN_TO_CLIENT");?></td>
                     <td style="padding:2px 0px;"><?php echo $tr->translate("PERCENTAGE");?></td>
                     <td style="padding:2px 0px;"><?php echo $tr->translate("NOT_TO_REPAY");?></td>
                 </tr>
-                 <tr class="style" style=" line-height: 24px; font-size:11px;">
+                <tr class="style" style=" line-height: 24px; font-size:11px;">
                     <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
                     <td>&nbsp;<?php echo number_format($amt_d,2);?>&nbsp;</td>
                     <td>&nbsp;<?php echo number_format($amn_d,2);?>&nbsp;</td>

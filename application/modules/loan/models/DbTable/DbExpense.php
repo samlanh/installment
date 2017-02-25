@@ -22,6 +22,7 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 					'total_amount'	=>$data['total_amount'],
 					'invoice'		=>$invoice,
 					'cheque'		=>$data['cheque'],
+		            'payment_id'=>$data['payment_type'],
 					'category_id'	=>$data['income_category'],
 					'description'	=>$data['Description'],
 					'date'			=>$data['Date'],
@@ -38,7 +39,7 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			'branch_id'		=>$data['branch_id'],
 			'title'			=>$data['title'],
 			'total_amount'	=>$data['total_amount'],
-			//'invoice'=>$invoice,
+			'payment_id'=>$data['payment_type'],
 			'cheque'		=>$data['cheque'],
 			'category_id'	=>$data['income_category'],
 			'description'	=>$data['Description'],
@@ -67,7 +68,7 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		$sql=" SELECT id,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
 		title,invoice,
-		
+		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
 		(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
 		total_amount,description,date,status FROM ln_expense ";
 		
@@ -83,6 +84,12 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 	
 			if($search['branch_id']>0){
 				$where.= " AND branch_id = ".$search['branch_id'];
+			}
+			if($search['category_id_expense']>0){
+				$where.= " AND category_id = ".$search['category_id_expense'];
+			}
+			if($search['payment_type']>0){
+				$where.= " AND payment_id = ".$search['payment_type'];
 			}
 	       $order=" order by id desc ";
 			return $db->fetchAll($sql.$where.$order);

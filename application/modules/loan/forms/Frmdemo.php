@@ -1,5 +1,5 @@
 <?php 
-Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
+Class Loan_Form_Frmdemo extends Zend_Dojo_Form {
 	protected $tr;
 public function init()
 	{
@@ -71,7 +71,7 @@ public function init()
 		$_total_sold->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
-				'readonly'=>true,
+				'onkeyup'=>'InputSoldPrice();'
 		));
 		//$_total_sold->setValue(10000);
 		
@@ -91,9 +91,11 @@ public function init()
 		));
 		$opt = $db->getVewOptoinTypeByType(25,1,null,1);
 		$request=Zend_Controller_Front::getInstance()->getRequest();
-		if($request->getControllerName()=='repaymentschedule'){
-			//unset($opt[1]);
-		}
+		//if($request->getControllerName()=='repaymentschedule'){
+			unset($opt[1]);
+			unset($opt[2]);
+			unset($opt[5]);
+		//}//
 		$schedule_opt->setMultiOptions($opt);
 		
 // 		$_customer_code = new Zend_Dojo_Form_Element_FilteringSelect('customer_code');
@@ -130,13 +132,11 @@ public function init()
 		$options = $db->getAllCOName(1);
 		$staff_id->setMultiOptions($options);
 		
-		$receivedopt = array(0=>"បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ",1=>"យកតាមកាលបរិច្ឆេទបង់");
-		$paid_receivehouse = new Zend_Dojo_Form_Element_FilteringSelect('paid_receivehouse');
-		$paid_receivehouse->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-		));
-		$paid_receivehouse->setMultiOptions($receivedopt);
+// 		$staff_ids = new Zend_Dojo_Form_Element_TextBox('gender');
+// 		$staff_ids->setAttribs(array(
+// 				'dojoType'=>'dijit.form.TextBox',
+// 				'class'=>'fullside',
+// 		));
 		
 		$commission = new Zend_Dojo_Form_Element_NumberTextBox('commission');
 		$commission->setAttribs(array(
@@ -175,8 +175,7 @@ public function init()
 		$_amount->setAttribs(array(
 						'dojoType'=>'dijit.form.NumberTextBox',
 						'class'=>'fullside',
-						'required' =>'true',
-						'readOnly'=>true,
+				        'readOnly'=>true,
 		));
 // 		$_amount->setValue(5000);
 		
@@ -187,7 +186,6 @@ public function init()
 				'required' =>'true',
 				'onkeyup'=>'Balance();',
 				'style'=>'color:red;',
-				'readonly'=>true
 		));
 		
 		$_rate =  new Zend_Dojo_Form_Element_NumberTextBox("interest_rate");
@@ -397,14 +395,14 @@ public function init()
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'required' =>'true',
+				'style'=>'color:red;'
 				//'onkeyup'=>'calculateDuration(1)'
 		));
 		
-		$note = new Zend_Dojo_Form_Element_Textarea("note");
+		$note = new Zend_Dojo_Form_Element_TextBox("note");
 		$note->setAttribs(array(
-				'dojoType'=>'dijit.form.Textarea',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'style'=>'width:100%;min-height:60px; font-size:18px; font-family:Kh Battambang'
 		));
 		
 		$cheque = new Zend_Dojo_Form_Element_TextBox("cheque");
@@ -465,7 +463,7 @@ public function init()
 			
 			
 		}
-		$this->addElements(array($paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

@@ -1,5 +1,5 @@
 <?php
-class Loan_TransferprojectController extends Zend_Controller_Action {
+class Loan_BuyController extends Zend_Controller_Action {
 	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
@@ -64,7 +64,7 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		$frm = new Loan_Form_FrmTransferproject();
+		$frm = new Loan_Form_FrmBuy();
 		$frm_loan=$frm->FrmTransferProject();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
@@ -99,8 +99,7 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 		$rs = $_dbmodel->getTransferProject($id);
 		$this->view->rs = $rs;
 		
-		
-		$frm = new Loan_Form_FrmTransferproject();
+		$frm = new Loan_Form_FrmBuy();
 		$frm_loan=$frm->FrmTransferProject($rs);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
@@ -108,17 +107,6 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
         
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-	}
-	function addschedultestAction(){
-		if($this->getRequest()->isPost()){
-			$_data = $this->getRequest()->getPost();
-			$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
-			//$data['sold_price']=$_data['balance'];
-			$_data['sold_price']=$_data['balance'];
-			$rows_return=$_dbmodel->addScheduleTestPayment($_data);
-			print_r(Zend_Json::encode($rows_return));
-			exit();
-		}
 	}
 	function getalllandAction(){
 		if($this->getRequest()->isPost()){

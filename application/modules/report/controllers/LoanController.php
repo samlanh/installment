@@ -497,30 +497,21 @@ public function exportFileToExcel($table,$data,$thead){
  	}else{
  		$search = array(
  				'adv_search' => '',
-//  				'client_name' => -1,
+ 				'client_name' => -1,
  				'start_date'=> date('Y-m-d'),
  				'end_date'=>date('Y-m-d'),
  				'branch_id'		=>	-1,
-//  				'co_id'		=> -1,
-//  				'paymnet_type'	=> -1,
+ 				'schedule_opt'	=> -1,
  				'status'=>-1,);
  	}
  	$this->view->list_end_date=$search;
  	$db  = new Report_Model_DbTable_DbLandreport();
  	$this->view->LoanCollectionco_list =$db->getALLLoanExpectIncome($search);
  	
-//  	$frm = new Loan_Form_FrmSearchGroupPayment();
-//  	$fm = $frm->AdvanceSearch();
-//  	Application_Model_Decorator::removeAllDecorator($fm);
-//  	$this->view->frm_search = $fm;
- 	
  	$frm = new Loan_Form_FrmSearchLoan();
  	$frm = $frm->AdvanceSearch();
  	Application_Model_Decorator::removeAllDecorator($frm);
  	$this->view->frm_search = $frm;
- 	
-//  	$key = new Application_Model_DbTable_DbKeycode();
-//  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  }
  function rptBadloanAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
@@ -611,7 +602,7 @@ public function exportFileToExcel($table,$data,$thead){
  				'status_search' => -1,
  				'status' => -1,
  				'branch_id' => "",
- 				'client_name' => "",
+ 				'client_name' => -1,
  				'co_id' => "",
  				'start_date' =>date('Y-m-d'),
  				'end_date' => date('Y-m-d'),
@@ -626,8 +617,6 @@ public function exportFileToExcel($table,$data,$thead){
  	
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- 	
-//  	print_r($db->getALLLoanPayment($search));
  }
  function rptLoanTrasferAction(){//release all loan
  	$db  = new Report_Model_DbTable_DbLandreport();
@@ -692,12 +681,13 @@ public function exportFileToExcel($table,$data,$thead){
  				'schedule_opt'=>-1,
  				'property_type'=>0,
  				'client_name'=>'',
- 				'staff_id'=>'',
+ 				'buy_type'=>-1,
  				'start_date'=> date('Y-m-d'),
  				'end_date'=>date('Y-m-d'));
  	}
  	$this->view->loanrelease_list=$db->getAllLoan($search);
  	$this->view->list_end_date=$search;
+ 	$this->view->branch_id = $search['branch_id'];
  	 
  	$frm = new Loan_Form_FrmSearchLoan();
  	$frm = $frm->AdvanceSearch();
@@ -811,26 +801,30 @@ public function exportFileToExcel($table,$data,$thead){
   			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
   		}
   	}
-  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
-  	$id =$this->getRequest()->getParam('id');
-  	$row = $db->getPaymentSchedule($id);
-  	$this->view->tran_schedule=$row;
   	
+  	$id =$this->getRequest()->getParam('id');
+  	
+  	$db = new Application_Model_DbTable_DbGlobal();
+  	$rs = $db->getClientByMemberId($id);
+  	$this->view->client =$rs;
+  	
+  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
+  	$row = $db->getPaymentSchedule($id,$rs['payment_id']);
+  	$this->view->tran_schedule=$row;
   	if(empty($row)){
   		//Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold');
   	}
+  	
+//   	$day_inkhmer = $db->getDayInkhmerBystr(null);
+  	//$this->view->day_inkhmer = $day_inkhmer;
   	$db = new Application_Model_DbTable_DbGlobal();
-  	$rs = $db->getClientByMemberId($row[0]['sale_id']);
-  	
-  	$this->view->client =$rs;
-  	
-  	$day_inkhmer = $db->getDayInkhmerBystr(null);
-  	$this->view->day_inkhmer = $day_inkhmer;
-  
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   	$this->view->id = $id;
   	$this->view->payment_option = $db->getVewOptoinTypeByType(25,null,null,1);
+  	
+  	$db = new Loan_Model_DbTable_DbGroupPayment();
+  	$this->view->customer =  $db->getIndividuleClient();
   
   }
  

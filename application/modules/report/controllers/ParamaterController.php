@@ -59,23 +59,14 @@ class Report_ParamaterController extends Zend_Controller_Action {
   }
   function rptZoneAction(){
   	$db  = new Report_Model_DbTable_DbParamater();
-  	$this->view->zone_list = $db->getAllZone();
+  	$this->view->zone_list = $db->getALLzone();
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   	$frm = new Other_Form_FrmZone();
   	$frm_co=$frm->FrmAddZone();
   	Application_Model_Decorator::removeAllDecorator($frm_co);
   	$this->view->frm_zone = $frm_co;
-  	if($this->getRequest()->isPost()){
-  		$data = $this->getRequest()->getPost();
-  		//print_r($data);exit();
-  		if(isset($data['btn_search'])){
-  			$this->view->zone_list = $db->getAllZone($data);
-  		}else{
-  		$collumn = array("zone_id","zone_num","modify_date","status");
-  		$this->exportFileToExcel('ln_zone',$db->getAllZone(),$collumn);
-  		}
-  	}else $search = array('txtsearch' => '');
+ 
   }
   function rptHolidayAction(){
   	$db  = new Report_Model_DbTable_DbParamater();
@@ -189,6 +180,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		$search = array(
   				'adv_search'=>'',
   				'property_type'=>'',
+  				'client_name'=>-1,
   				'branch_id_search' => -1,
   				'from_date_search'=> date('Y-m-d'),
   				'to_date_search'=>date('Y-m-d'));
@@ -235,6 +227,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
     		"adv_search"=>'',
     		"branch_id"=>-1,
     		"category_id_expense"=>-1,
+    		'payment_type'=>-1,
     		'start_date'=> date('Y-m-d'),
     		'end_date'=>date('Y-m-d'),
     	);
@@ -257,6 +250,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"adv_search"=>'',
   				"branch_id"=>-1,
   				"status"=>-1,
+  				'client_name' => -1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   		);
@@ -265,7 +259,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllIncome($search);
   	$this->view->rowExpense = $db->getAllExpense($search);
-  	$this->view->rowSoldIncome = $db->getSoldIncome($search);
+  	//$this->view->rowSoldIncome = $db->getSoldIncome($search);
   	$this->view->collectMoney = $db->getCollectPayment($search);
   
   	$frm = new Loan_Form_FrmSearchLoan();
@@ -295,8 +289,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		$search = array(
   				"adv_search"=>'',
   				"branch_id"=>-1,
-  				"status"=>-1,
-  				"property_type"=>'',
+  				"client_name"=>-1,
+  				"land_id"=>'',
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   		);
@@ -322,7 +316,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'txtsearch' => '',
   				'branch_id'=>-1,
   				'co_khname'=>-1,
-				'co_sex'=>-1,
   				'search_status'=>-1);
   	}
   	$this->view->staff_list = $db->getALLCommissionStaff($search);

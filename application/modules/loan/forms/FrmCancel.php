@@ -389,6 +389,24 @@ public function init()
 		));
 		$return_back->setValue(0);
 		
+		$client_name = new Zend_Dojo_Form_Element_FilteringSelect("client_name");
+		$opt_client = array(''=>'ជ្រើសរើស ឈ្មោះអតិថិជន');
+		$rows = $db->getAllClient();
+		if(!empty($rows))foreach($rows AS $row){
+			$opt_client[$row['id']]=$row['name'];
+		}
+		$client_name->setMultiOptions($opt_client);
+		$client_name->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
+		$client_name->setValue($request->getParam("client_name"));
+		
+		$client_name->setValue($request->getParam('client_name'));
+		
+		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
+		$_branch_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
 			$_cancel_code->setValue($data['cancel_code']);
@@ -400,7 +418,7 @@ public function init()
 			$paid_amount->setValue($data['paid_amount']);
 			$return_back->setValue($data['return_back']);
 		}
-		$this->addElements(array($installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
+		$this->addElements(array($client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
 				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$_old_property_id,$property,
 				$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$penalize,$_service_charge,

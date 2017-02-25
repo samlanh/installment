@@ -25,20 +25,23 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     }
     public function getALLzone($search = null){
     	$db = $this->getAdapter();
-    	$sql="SELECT zone_id,zone_name,zone_num,modify_date,status FROM ln_zone WHERE 1";
-    	$Other =" ORDER BY zone_id DESC ";
+//     	$sql="SELECT sale_id,(SELECT ln_sale.price_sold FROM `ln_sale` WHERE ln_sale.id=sale_id ) AS sold_price,
+//     		begining_balance FROM `ln_saleschedule` GROUP BY sale_id ";
+$sql=" SELECT s.id,price_sold,SUM(sl.`principal_permonth`) AS principal_permonth FROM `ln_sale` AS s,`ln_saleschedule` AS sl WHERE s.id=sl.sale_id 
+GROUP BY sl.sale_id ";
+    	$Other =" ";
     	$where = '';
-    	if($search['search_status']>-1){
-    		$where.= " AND status = ".$search['search_status'];
-    	}
-    	if(!empty($search['adv_search'])){
-    		$s_where = array();
-    		$s_search = $search['adv_search'];
-    		$s_where[] = " zone_name LIKE '%{$s_search}%'";
-    		$s_where[]=" zone_num LIKE '%{$s_search}%'";
-    		$s_where[]=" modify_date LIKE '%{$s_search}%'";
-    		$where .=' AND '.implode(' OR ',$s_where).'';
-    	}
+//     	if($search['search_status']>-1){
+//     		$where.= " AND status = ".$search['search_status'];
+//     	}
+//     	if(!empty($search['adv_search'])){
+//     		$s_where = array();
+//     		$s_search = $search['adv_search'];
+//     		$s_where[] = " zone_name LIKE '%{$s_search}%'";
+//     		$s_where[]=" zone_num LIKE '%{$s_search}%'";
+//     		$s_where[]=" modify_date LIKE '%{$s_search}%'";
+//     		$where .=' AND '.implode(' OR ',$s_where).'';
+//     	}
     	//echo $sql.$where.$Other;
     	return $db->fetchAll($sql.$where.$Other);
     }
@@ -183,7 +186,7 @@ function getAllBranch($search=null){
     		$to_date = (empty($search['to_date_search']))? '1': "c.`create_date` <= '".$search['to_date_search']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
     		$sql='SELECT 
-    		    c.`id`,
+    		    c.`id`,c.return_back,
     		    (SELECT project_name FROM `ln_project` WHERE br_id=c.`branch_id` LIMIT 1) AS `project_name`,
     		    c.paid_amount,c.installment_paid,c.reason,c.`create_date`,
 				s.`sale_number`,
@@ -206,6 +209,9 @@ function getAllBranch($search=null){
     		if(!empty($search['property_type'])){
     			$where.= " AND pro.`property_type` = ".$search['property_type'];
     		}
+    		if($search['client_name']>0){
+    			$where.= " AND s.`client_id` = ".$search['client_name'];
+    		}
     		if(!empty($search['adv_search'])){
     			$s_where = array();
     			$s_search = addslashes(trim($search['adv_search']));
@@ -215,6 +221,7 @@ function getAllBranch($search=null){
     			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
+    		echo $sql.$where.$order;
     		return $db->fetchAll($sql.$where.$order);
     		
     	}
@@ -228,7 +235,7 @@ function getAllBranch($search=null){
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		title, invoice,branch_id,
-    		(SELECT name_en FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
+    		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
     		cheque,total_amount,description,date,status FROM ln_income WHERE status=1 ";
     	
@@ -260,9 +267,10 @@ function getAllBranch($search=null){
     	
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+    		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
     		title,invoice,
     	
-    		(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
+    		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
     		cheque,total_amount,description,date,status FROM ln_expense WHERE status=1 ";
     	
     		if (!empty($search['adv_search'])){
@@ -279,6 +287,9 @@ function getAllBranch($search=null){
     		}
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
+    		}
+    		if($search['payment_type']>0){
+    			$where.= " AND payment_id = ".$search['payment_type'];
     		}
     		$order=" order by id desc ";
     		return $db->fetchAll($sql.$where.$order);
@@ -315,6 +326,10 @@ function getAllBranch($search=null){
 	      	if($search['branch_id']>0){
 	      		$where.= " AND branch_id = ".$search['branch_id'];
 	      	}
+	      	if($search['client_name']>0){
+	      		$where.=" AND client_id = ".$search['client_name'];
+	      	}
+	      	
 	      	if (!empty($search['adv_search'])){
 	      		$s_where = array();
 	      		$s_search = trim(addslashes($search['adv_search']));
@@ -352,9 +367,13 @@ function getAllBranch($search=null){
     			$s_where[] = " client_name_en LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
-    		if(!empty($search['property_type'])){
-    			$where.= " AND property_type_id = ".$search['property_type'];
+    		if(!empty($search['land_id'])){
+    			$where.= " AND house_id = ".$search['land_id'];
     		}
+    		if(!empty($search['client_name'])){
+    			$where.= " AND client_id = ".$search['client_name'];
+    		}
+    		
     		return $db->fetchAll($sql.$where.$order);
     	}
    function getAgreementBySaleID($id=null){
@@ -376,6 +395,7 @@ function getAllBranch($search=null){
 				  `s`.`amount_collect`  AS `amount_collect`,
 				  `s`.`interest_rate`   AS `interest_rate`,
 				  `s`.`total_duration`  AS `total_duration`,
+				  s.is_reschedule,
 				  s.land_price,
 				   s.buy_date,
 				   s.agreement_date,
@@ -489,7 +509,7 @@ function getAllBranch($search=null){
     		if($payment_id==4){
     			$sql.=" AND sc.is_installment=1 ";
     		}
-    		$order = ' ORDER BY sc.`date_payment` ASC';
+    		$order = ' AND is_rescheule=0 ORDER BY sc.`date_payment` ASC';
     		return $db->fetchAll($sql.$order);
     	}
     	
@@ -497,6 +517,8 @@ function getAllBranch($search=null){
     	$db = $this->getAdapter();
     	$where="";
     	$sql="SELECT *,
+    		(SELECT land_address FROM `ln_properties` WHERE id=s.house_id) AS land_name,
+    		(SELECT street FROM `ln_properties` WHERE id=s.house_id) AS street,
 			st.`branch_id`,(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = st.`branch_id`) AS project_name
 			,st.`co_khname`,st.`co_lastname`,st.`co_code`,st.`sex`
 			 FROM ln_sale AS s , `ln_staff` AS st WHERE s.`comission` !=0 AND st.`co_id` = s.`staff_id`";
@@ -506,9 +528,6 @@ function getAllBranch($search=null){
 	    $where.= " AND ".$from_date." AND ".$to_date;
     	if($search['co_khname']>0){
     		$where.= " AND s.`staff_id` = ".$search['co_khname'];
-    	}
-		if($search['co_sex']>-1){
-    		$where.= " AND st.`sex` = ".$search['co_sex'];
     	}
     	if($search['branch_id']>0){
     		$where.= " AND st.`branch_id` = ".$search['branch_id'];

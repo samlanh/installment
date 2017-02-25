@@ -55,11 +55,11 @@
 							<td><?php echo $tr->translate("LOAN_NO")?></td>
 							<td><input id='loan_number' /></td>
 							<td style="white-space: nowrap;"><?php echo $tr->translate("RECEIPT_NO")?></td>
-							<td><?php echo $frm->getElement('receipt');?></td>
-								<input type="hidden" name="sale_code" id="sale_code" dojoType="dijit.form.TextBox" value="" >
-								<input type="hidden" name="id" id="id" dojoType="dijit.form.TextBox" value="<?php echo $this->id;?>" >
-								<input type="hidden" name="identity" id="identity"  value="" >
-								<input type="hidden" name="old_paymentmethod" id=old_paymentmethod dojoType="dijit.form.TextBox" value="" >
+							<td><?php echo $frm->getElement('receipt');?>
+								<input type="hidden" name="sale_code" id="sale_code" dojoType="dijit.form.TextBox" value="" />
+								<input type="hidden" name="id" id="id" dojoType="dijit.form.TextBox" value="<?php echo $this->id;?>" />
+								<input type="hidden" name="identity" id="identity"  value="" />
+								<input type="hidden" name="old_paymentmethod" id=old_paymentmethod dojoType="dijit.form.TextBox" value="" />
 							</td>
 							</tr>
 						<tr>
@@ -69,7 +69,7 @@
 							<td><?php echo $frm->getElement('agreement_date');?></td>
 							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 							<td><input id="member" /> <?php //echo $frm->getElement('member');?>
-								<input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with"  type="hidden">
+								<input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with" type="hidden">
 							</td>
 						</tr>
 						<tr style="background: #edf7f8;">
@@ -154,6 +154,8 @@
 							<td><?php echo $frm->getElement('date_line');?></td>
 						</tr>
 						<tr>
+							<td><?php echo $tr->translate("paid_receivehouse")?></td>
+							<td><?php echo $frm->getElement('paid_receivehouse')?></td>
 							<td><?php echo $tr->translate("NOTE")?></td>
 							<td><?php echo $frm->getElement('note')?></td>
 							<td><?php echo $tr->translate("CHEQUE")?></td>
@@ -970,6 +972,8 @@ function getReceiptByBranch(condition){
 dojo.require("dojo.data.ItemFileWriteStore"); 
 dojo.require("dojo.NodeList-manipulate");
 dojo.require("dojo.html");
+dojo.require("dijit.form.Textarea");
+
 
 var client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_name));?> );
 var client_number_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_code));?> );
@@ -1114,6 +1118,7 @@ function getInfoByLoanNumber(){
 				dijit.byId('sold_price').attr('value',data.price_sold-data.paid_amount);
 			}
 			dijit.byId('old_paymentmethod').attr('value',data.payment_id);
+			//alert(data.payment_id);
 			
 			dijit.byId('house_price').attr('value',parseFloat(data.paid_amount)+parseFloat(balance_before));
 			
@@ -1603,10 +1608,10 @@ function printSave(new_receipt_no){
 	joint_with = dijit.byId("joint_with").attr('displayedValue');
 	if(joint_with!=''){joint_with = "/"+joint_with}
 	
-	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
+	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
 	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
 	dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
-	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
+	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
 	 
 	if(schedule_opt==1){
 		//EXPIRED_DATE

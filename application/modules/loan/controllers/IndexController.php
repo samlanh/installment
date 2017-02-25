@@ -29,8 +29,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","HOUSE_NO","STREET","ប្រភេទបង់","TOTAL_SOLD","DISCOUNT_PERCENT","DISCOUNT","OTHER_FEE","PAID","BALANCE","DATE_BUY",
-				"STATUS","បង់ប្រាក់","ចេញតារាងថ្មី","កិច្ចសន្យា");
+			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","HOUSE_NO","STREET","ប្រភេទបង់","TOTAL_SOLD","DISCOUNT_PERCENT","DISCOUNT","PAID","BALANCE","DATE_BUY",
+				"STATUS","បង់ប្រាក់","ចេញតារាង","កិច្ចសន្យា");
 			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
 			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);
 			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);
@@ -44,6 +44,9 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$frm = $frm_search->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
+		
+		//$db = new Loan_Model_DbTable_DbLandpayment();
+		//$db->updateEnddateSale();
   }
   function addAction()
   {
@@ -95,12 +98,13 @@ class Loan_IndexController extends Zend_Controller_Action {
 			}
 		}
 		$id = $this->getRequest()->getParam('id');
-		$db_g = new Application_Model_DbTable_DbGlobal();
-		$rs = $db_g->getLoanFundExist($id);
-		if($rs==true){
-			//Application_Form_FrmMessage::Sucessfull("LOAN_FUND_EXIST","/loan/index/index");
-		}
 		$db = new Loan_Model_DbTable_DbLandpayment();
+		$rs = $db->getSalePaidExist($id,null);
+
+		if(count($rs)>=2){
+			Application_Form_FrmMessage::Sucessfull("ទិន្នន័យនេះមានប្រវត្តបង់ច្រើនដងរួចហើយ មិនអាចកែប្រែបានទេ","/loan/index/index");
+		}
+		
 		$row = $db->getTranLoanByIdWithBranch($id,null);
 		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");}
 		$rs = array();
@@ -180,6 +184,15 @@ class Loan_IndexController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	function getsaleinfoAction(){
+		if($this->getRequest()->isPost()){
+			$data=$this->getRequest()->getPost();
+			$db=new Loan_Model_DbTable_DbRepaymentSchedule();
+			$row=$db->getSaleInfoById($data['sale_id']);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
 	function getalllandAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -217,6 +230,16 @@ class Loan_IndexController extends Zend_Controller_Action {
 				exit();
 		}
 	}
+	function demoscheduleAction(){
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
+			$rows_return=$_dbmodel->demoSchedule($_data);
+			print_r(Zend_Json::encode($rows_return));
+			exit();
+		}
+	}
+	 
 	function previewreschedulAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();

@@ -162,6 +162,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 			unset($opt[-1]);
 		}
 		$_category->setMultiOptions($opt);
+		$_category->setValue($request->getParam("category_id"));
 		
 		$category_id_expense = new Zend_Dojo_Form_Element_FilteringSelect('category_id_expense');
 		$category_id_expense->setAttribs(array(
@@ -173,6 +174,25 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 			unset($opt1[-1]);
 		}
 		$category_id_expense->setMultiOptions($opt1);
+		$category_id_expense->setValue($request->getParam("category_id_expense"));
+		
+		$payment_type = new Zend_Dojo_Form_Element_FilteringSelect('payment_type');
+		$payment_type->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside'
+		));
+		$options= array(-1=>"ជ្រើសរើសចំណាយជា",1=>"សាច់ប្រាក់",2=>"សែក");
+		$payment_type->setMultiOptions($options);
+		$payment_type->setValue($request->getParam("payment_type"));
+		
+		$buy_type = new Zend_Dojo_Form_Element_FilteringSelect('buy_type');
+		$buy_type->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside'
+		));
+		$options= array(-1=>"ជ្រើសរើសការលក់",1=>"ធ្វើកិច្ចសន្យា",2=>"ប្រាក់កក់");
+		$buy_type->setMultiOptions($options);
+		$buy_type->setValue($request->getParam("buy_type"));
 		
 		if($data!=null){
 // 			$_member->setValue($data['client_id']);
@@ -180,7 +200,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 			$_releasedate->setValue($data['date_release']);
 			$client_name->setValue($data['client_name']);
 		}
-		$this->addElements(array($land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
+		$this->addElements(array($buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
 				$_category,$category_id_expense,
 		// 				$_groupid,$_member,$_group_code,$_customer_code,
 				$_dateline,$_status,$_btn_search));

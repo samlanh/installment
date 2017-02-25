@@ -22,6 +22,14 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		$options= array(1=>"1",2=>"2",3=>"3",4=>"4",5=>"5",6=>"6",7=>"7",8=>"8",9=>"9",10=>"10",11=>"11",12=>"12");
 		$for_date->setMultiOptions($options);
 		
+		$payment_type = new Zend_Dojo_Form_Element_FilteringSelect('payment_type');
+		$payment_type->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside'
+		));
+		$options= array(1=>"សាច់ប្រាក់",2=>"សែក");
+		$payment_type->setMultiOptions($options);
+		
 		$_Date = new Zend_Dojo_Form_Element_DateTextBox('Date');
 		$_Date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
@@ -117,8 +125,9 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 			$invoice->setValue($data['invoice']);
 			$id->setValue($data['id']);
 			$_cheque->setValue($data['cheque']);
+			$payment_type->setValue($data['payment_id']);
 		}
-		$this->addElements(array($_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
+		$this->addElements(array($payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
 				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,));
 		return $this;

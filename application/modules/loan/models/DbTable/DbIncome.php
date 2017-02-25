@@ -43,6 +43,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 					'user_id'=>$this->getUserId(),
 				);
 		$where=" id =  $id " ;
+		//echo $id;exit();
 		$this->update($arr, $where);
 		
 	}

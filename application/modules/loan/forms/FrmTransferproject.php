@@ -56,10 +56,10 @@ public function init()
 				'class'=>'fullside',
 		));
 		
-		$other_fee = new Zend_Dojo_Form_Element_NumberTextBox('other_fee');
+		$other_fee = new Zend_Form_Element_Hidden('other_fee');
 		$other_fee->setAttribs(array(
-				'dojoType'=>'dijit.form.NumberTextBox',
-		       'onkeyup'=>'calculateDiscount();',
+				'dojoType'=>'dijit.form.TextBox',
+		       //'onkeyup'=>'calculateDiscount();',
 				'class'=>'fullside',
 		));
 
@@ -87,6 +87,7 @@ public function init()
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		if($request->getControllerName()=='transferproject'){
 			unset($opt[1]);
+			unset($opt[2]);
 		}
 		$schedule_opt->setMultiOptions($opt);
 		
@@ -96,6 +97,7 @@ public function init()
 				'class'=>'fullside',
 				'onkeyup'=>'Balance();',
 				'required'=>true,
+				'style'=>'visibility:hidden'
 		));		
 		
 		$balance = new Zend_Dojo_Form_Element_NumberTextBox('balance');
@@ -145,7 +147,6 @@ public function init()
 				'data-dojo-props'=>"
 				'required':true,
 				'name':'interest_rate',
-				'value':12,
 				'class':'fullside',
 				'onkeyup':'checkScheduleOption();',
 				'invalidMessage':'អាចបញ្ជូលពី 1 ដល់'"));
@@ -155,9 +156,9 @@ public function init()
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'required' =>'true',
 				'class'=>'fullside',
-				'onkeyup'=>'checkScheduleOption();'
+				'onkeyup'=>'checkScheduleOption();CalculateDate();'
 		));
-		$_period->setValue(24);
+// 		$_period->setValue(24);
 		
 		$_releasedate = new Zend_Dojo_Form_Element_DateTextBox('release_date');
 		$_releasedate->setAttribs(array(
@@ -202,11 +203,10 @@ public function init()
 		$discount = new Zend_Dojo_Form_Element_NumberTextBox('discount');
 		$discount->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
-				'required'=>'true',
 				'class'=>'fullside fullside50',
 				'onKeyup'=>'calculateDiscount();'
 		));
-		$discount->setValue(0);
+		//$discount->setValue(0);
 		
 		$discount_percent = new Zend_Dojo_Form_Element_NumberTextBox('discount_percent');
 		$discount_percent->setAttribs(array(
@@ -277,6 +277,21 @@ public function init()
 				'class'=>'fullside',
 		));
 		
+		$agreementdate = new Zend_Dojo_Form_Element_DateTextBox('agreement_date');
+		$agreementdate->setAttribs(array(
+				'dojoType'=>'dijit.form.DateTextBox',
+				'required' =>'true',
+				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+		));
+		$agreementdate->setValue(date("Y-m-d"));
+		
+		$total_installamount = new Zend_Dojo_Form_Element_NumberTextBox('total_installamount');
+		$total_installamount->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+		));
+		
 		$_instalment_date = new Zend_Form_Element_Hidden("instalment_date");
 		$_release_date = new Zend_Form_Element_Hidden("old_release_date");
 		$_interest_rate = new Zend_Form_Element_Hidden("old_rate");
@@ -308,7 +323,7 @@ public function init()
 			
 			
 		}
-		$this->addElements(array($discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($total_installamount,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id));

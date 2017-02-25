@@ -15,6 +15,7 @@
 	</div>
 </div>	
 	<script src="<?php echo $baseurl;?>/js/help.js"></script>
+	<script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.7.2.min.js"></script>
    <script>
 		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
    </script>
@@ -153,8 +154,12 @@
 							<td><input id="staff_id" /> </td>
 							<td><?php echo $tr->translate("COMISSION")?></td>
 							<td><?php echo $frm->getElement('commission');?></td>
+							<td><?php echo $tr->translate("paid_receivehouse")?></td>
+							<td><?php echo $frm->getElement('paid_receivehouse')?></td>
+						</tr>
+						<tr>
 							<td><?php echo $tr->translate("NOTE")?></td>
-							<td><?php echo $frm->getElement('note')?></td>
+							<td><?php echo $frm->getElement('note')?></td>	
 						</tr>
 						<tr style="max-height: 300px;">
 								<td colspan="6">
@@ -574,8 +579,8 @@
 </div>
 </form>
 <script type="text/javascript">	
-
 dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.Textarea");
 						           
 var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->co_name));?> );
 new dijit.form.FilteringSelect({

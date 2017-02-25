@@ -7,9 +7,18 @@ class Report_Model_DbTable_DbRptPaymentSchedule extends Zend_Db_Table_Abstract
     	$session_user=new Zend_Session_Namespace('auth');
     	return $session_user->user_id;
     }
-    public function getPaymentSchedule($id){
+    public function getPaymentSchedule($id,$payment_id=null){
     	$db=$this->getAdapter();
-    	$sql = "SELECT * FROM `ln_saleschedule` WHERE sale_id= $id AND status=1 ";
+    	$sql = "SELECT *,
+		(SELECT (paid_date) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as paid_date,
+		(SELECT SUM(total_recieve) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as total_recieve,
+		(SELECT SUM(total_interest) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as total_interestpaid,
+		(SELECT SUM(principal_permonth) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as principal_paid
+    	FROM `ln_saleschedule` WHERE sale_id= $id AND status=1 ";
+    	
+    	if($payment_id==4){
+    		$sql.=" AND is_installment=1 ";
+    	};
     	return $db->fetchAll($sql);
     }
     public function getPaymentScheduleGroupById($id){//for group member total pay per month

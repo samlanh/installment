@@ -81,31 +81,66 @@ dojo.require("dijit.form.DateTextBox");
 							</script>
              			អ្នកទិញត្រូវប្រគល់ប្រាក់ថ្លៃទិញជូនទៅ អ្នកលក់ តាមដំណាក់កាលដូចខាងក្រោមៈ
              			<?php $dbs = new Loan_Model_DbTable_DbLandpayment();
-             			$paid_amount = $dbs->getDepositFirstPayment($this->agreement['id']);
+//              			$paid_amount = $dbs->getDepositFirstPayment($this->agreement['id']);
+             			$resultdeposit = $dbs->getDepositFirstPaymentMoney($this->agreement['id']);
+             			$start_id=0;
+             			$paid_amount=0;
              			$rowpaid = $dbs->getPaymentPayoff($this->agreement['id']);
              			$paid_payoff = $rowpaid['outstanding'];
              			?>
-             			<?php if($paid_amount>0){?>
-             			<span class="child" >-	ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:260px;font-family:Arial;font-weight: bold;">
-             			<?php echo number_format($paid_amount,2);?><label style="font-family: 'Times New Roman','Khmer OS Battambang';" id="lable_depositkhmer" ></label><span style="font-family: 'Times New Roman','Khmer OS Battambang';">(ដុល្លាអាមេរិក)។</span></span> 
-             			    <script>
-								a ='<?php echo ($paid_amount) ?>';
+             			<?php if(!empty($resultdeposit) AND $this->agreement['is_reschedule']==1){?><!-- ប្រាក់កក់ -->
+             			<?php foreach($resultdeposit as $keydeposite =>$rsdeposite){?>
+	             			
+	             			<span class="child" style="white-space: nowrap;" > - ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:380px;font-family:Arial;font-weight: bold;"><?php echo @number_format($rsdeposite['total_principal_permonthpaid'],2);?>
+             				<label style="font-family:'Khmer OS Battambang'" id="lable_depositpaid<?php echo $keydeposite+1;?>"></label><span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)។</span></span></span>
+             				 <script>
+								a ='<?php echo ($rsdeposite['total_principal_permonthpaid']) ?>';
 								money_khmer=read_money_in_khmer(a);
-								decimalmoney_khmer='<?php echo substr(number_format($paid_amount,2),-2);?>';
+								decimalmoney_khmer='<?php echo substr(number_format($rsdeposite['total_principal_permonthpaid'],2),-2);?>';
 								str_cent = 'សេន';
 								if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent='';}
 								
-								last_number='<?php echo substr(number_format($paid_amount,2),-2);?>';
+								last_number='<?php echo substr(number_format($rsdeposite['total_principal_permonthpaid'],2),-2);?>';
 								
 								if(last_number<=0){last_number='';}
 								money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
-								dojo.byId('lable_depositkhmer').innerHTML=money_khmer;
-							</script></span>
-             				<span class="child" >អ្នកទិញបានបង់នៅថ្ងៃ <?php echo $day[date("D",strtotime($this->agreement['buy_date']))]." ទី ".date("d",strtotime($this->agreement['buy_date']))." ខែ ".$month[date("m",strtotime($this->agreement['buy_date']))]." ឆ្នាំ ".date("Y",strtotime($this->agreement['buy_date'])); ?> ។
-             				<span id="lbl_remain"></span>
-             				</span> 
-             				
+								dojo.byId('lable_depositpaid<?php echo $keydeposite+1;?>').innerHTML=money_khmer;
+							</script>
+							<span class="child" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;អ្នកទិញបានបង់នៅថ្ងៃ <?php echo $day[date("D",strtotime($rsdeposite['date_input']))]." ទី ".date("d",strtotime($rsdeposite['date_input']))." ខែ ".$month[date("m",strtotime($rsdeposite['date_input']))]." ឆ្នាំ ".date("Y",strtotime($rsdeposite['date_input'])); ?></span>  
+							
+							<?php 
+							$paid_amount = $paid_amount+$rsdeposite['total_principal_permonthpaid'];
+             				}?>
              			<?php }
+
+             			if($this->agreement['is_reschedule']==2 AND $this->agreement['paid_amount']>0){//បើចេញតារាងថ្មីប្រាប់ថាប្រាក់បានបង់ពីមុនសរុប
+             				$rowspaid = $dbs->getReceiptMoneyPaid($this->agreement['id']);
+             				if(!empty($rowspaid)){
+             					foreach($rowspaid as $keypaid=> $rspaid){
+             						$start_id=$start_id+1;
+             			?>
+							<span class="child" style="white-space: nowrap;" ><?php echo @$start_id;?>. ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:380px;font-family:Arial;font-weight: bold;"><?php echo @number_format($rspaid['total_principal_permonthpaid'],2);?>
+             				<label style="font-family:'Khmer OS Battambang'" id="lable_paid<?php echo $start_id;?>"></label><span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)។</span></span></span>
+             				 <script>
+								a ='<?php echo ($rspaid['total_principal_permonthpaid']) ?>';
+								money_khmer=read_money_in_khmer(a);
+								decimalmoney_khmer='<?php echo substr(number_format($rspaid['total_principal_permonthpaid'],2),-2);?>';
+								str_cent = 'សេន';
+								if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent='';}
+								
+								last_number='<?php echo substr(number_format($rspaid['total_principal_permonthpaid'],2),-2);?>';
+								
+								if(last_number<=0){last_number='';}
+								money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+								dojo.byId('lable_paid<?php echo $keypaid;?>').innerHTML=money_khmer;
+							</script>
+							<span class="child" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;អ្នកទិញបានបង់នៅថ្ងៃ <?php echo $day[date("D",strtotime($rspaid['date_input']))]." ទី ".date("d",strtotime($rspaid['date_input']))." ខែ ".$month[date("m",strtotime($rspaid['date_input']))]." ឆ្នាំ ".date("Y",strtotime($rspaid['date_input'])); ?></span>  
+             			<?php 
+             					}
+             				}
+             			}
+             			
+             			
              			$numrow = 0;
              			if (empty($this->sale_schedule)){//payoff
              			?>
@@ -129,25 +164,26 @@ dojo.require("dijit.form.DateTextBox");
              			<span class="child" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;អ្នកទិញត្រូវបង់នៅថ្ងៃ <?php echo $day[date("D",strtotime($rowpaid['date_pay']))]." ទី ".date("d",strtotime($rowpaid['date_pay']))." ខែ ".$month[date("m",strtotime($rowpaid['date_pay']))]." ឆ្នាំ ".date("Y",strtotime($rowpaid['date_pay'])); ?>។</span>
              			<?php
              			}
-             			$paid = 0;$i=0; if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++;  ?>
-             			<?php $paid = $paid+$row['principal_permonth'];?>
              			
+             			
+             			$paid = 0;$i=0; if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++;  ?>
+             			<?php $paid = $paid+$row['principal_permonth'];?>             	
              			<?php //if($this->agreement['buy_date']==$row['date_payment']){?>
              			<?php if($key==0){?>
-	             			<?php
+	             		<?php
 	             			if($row['date_payment']==$this->agreement['buy_date'] AND $paid_amount==$row['principal_permonth'] ){
 	             				continue;
 	             			}
              			$paidbefore = $row['principal_permonth']-$paid_amount;
-             			if(strlen($paidbefore)<=3){$row['principal_permonth']=number_format($paidbefore,2);}
-             			else{
-             				$row['principal_permonth'] = ($paidbefore);
-             			}
-             			//echo $row['principal_permonth'];exit();
-             			 }?>
+             				if(strlen($paidbefore)<=3){$row['principal_permonth']=number_format($paidbefore,2);}
+             				else{
+             					$row['principal_permonth'] = ($paidbefore);
+             				}
+             			 
+             			}?>
              			<?php //} 
              			$numrow=$numrow+1;?>
-             				<span class="child" style="white-space: nowrap;" ><?php echo @$numrow;?>. ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:380px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>
+             				<span class="child" style="white-space: nowrap;" ><?php echo @$numrow+$start_id;?>. ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:380px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>
              				<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label><span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)។</span></span></span>
              				 <script>
 								a ='<?php echo ($row['principal_permonth']) ?>';
@@ -162,7 +198,7 @@ dojo.require("dijit.form.DateTextBox");
 								money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
 								dojo.byId('lable_depositkhmer<?php echo $i;?>').innerHTML=money_khmer;
 							</script>
-             				<?php if($key+1==count($this->sale_schedule) AND ($this->agreement['payment_id']==3 OR $this->agreement['payment_id']==6)){//end record?>
+             				<?php if($key+1==count($this->sale_schedule) AND ($this->agreement['payment_id']==3 OR $this->agreement['payment_id']==6) AND $row['last_optiontype']==0){//end record?>
              				    <span class="child" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;បង់នៅពេលប្រគល់ផ្ទះ ។<?php //echo $day[date("D",strtotime($row['date_payment']))]." ទី ".date("d",strtotime($row['date_payment']))." ខែ ".$month[date("m",strtotime($row['date_payment']))]." ឆ្នាំ ".date("Y",strtotime($row['date_payment'])); ?></span>
              				<?php }else{?>
              					<span class="child" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;អ្នកទិញត្រូវបង់នៅថ្ងៃ <?php echo $day[date("D",strtotime($row['date_payment']))]." ទី ".date("d",strtotime($row['date_payment']))." ខែ ".$month[date("m",strtotime($row['date_payment']))]." ឆ្នាំ ".date("Y",strtotime($row['date_payment'])); ?></span>

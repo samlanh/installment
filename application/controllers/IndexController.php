@@ -15,7 +15,6 @@ class IndexController extends Zend_Controller_Action
     public function indexAction()
     {
         // action body
-    	$this->_helper->layout()->disableLayout();
     	
         /* set this to login page to change the character charset of browsers to Utf-8  ...*/    	  	
 		
@@ -176,8 +175,18 @@ class IndexController extends Zend_Controller_Action
         // action body
         
     }
-    public function  dashboardAction(){
+    public function  demoAction(){
     	$this->_helper->layout()->disableLayout();
+    	
+    	
+    	$frm = new Loan_Form_Frmdemo();
+    	$frm_loan=$frm->FrmAddLoan();
+    	Application_Model_Decorator::removeAllDecorator($frm_loan);
+    	$this->view->frm_loan = $frm_loan;
+    	
+    	$frmpopup = new Application_Form_FrmPopupGlobal();
+    	$db = new Application_Model_DbTable_DbGlobal();
+    	$this->view->client_doc_type = $db->getclientdtype();
     }
     public static function start(){
     	return ($this->getRequest()->getParam('limit_satrt',0));

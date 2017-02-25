@@ -13,7 +13,6 @@ dojo.require("dijit.form.DateTextBox");
 			   <td><?php echo $frm->getElement("adv_search");?></td>
 			   <td><?php echo $frm->getElement("branch_id");?></td>
 			   <td><?php echo $frm->getElement("co_khname");?></td>
-			   <td><?php echo $frm->getElement("co_sex");?></td>
 			   <td><?php echo $frm->getElement("start_date");?></td>
 			   <td><?php echo $frm->getElement("end_date");?></td>
 			   <td><?php echo $frm->getElement('search_status');?></td>
@@ -30,7 +29,7 @@ dojo.require("dijit.form.DateTextBox");
     	 
     	 	<style>
 					.style{
-						line-height: 20px;font-size: 11px !important;
+						line-height: 20px;font-size: 14px !important;
 						font-family: 'Khmer OS Battambang';
 						}
 						th{padding: 5px;}
@@ -40,12 +39,12 @@ dojo.require("dijit.form.DateTextBox");
             	<tr>
                 	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
                 	<td width="60%" valign="top">
-                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
-                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_COMISSION");?></h2></td>
+                	<h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_COMISSION");?></h2></td>
                     <td width="20%"></td>
                 </tr> 
             </table>
-			<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 12px;" bordercolor="black">  
+			<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 14px;" bordercolor="black">  
 		    	<tr bgcolor="#ccc" class="style" align="center" style="floafont-weight:bold; line-height: 30px; font-size:12px; padding:5px 0px; " >
 		        	<td><?php echo $tr->translate("NUM");?></td>
 		            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
@@ -53,19 +52,21 @@ dojo.require("dijit.form.DateTextBox");
 		            <td><?php echo $tr->translate("CO_NAME");?></td>
 		            <td><?php echo $tr->translate("SEX");?></td>
 		            <td><?php echo $tr->translate("SALE_NO");?></td>
+		            <td><?php echo $tr->translate("PROPERTY_NAME");?></td>
 		            <td><?php echo $tr->translate("COMISSION");?></td>
 		            <td><?php echo $tr->translate("BUY_DATE");?></td>
 		         </tr>
 		       <?php $total = 0; if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){
 				   $total = $total +$row['comission'];
 				   ?>
-				   <tr style="font-size: 10px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
+				   <tr style="font-size: 12px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
 				     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 				     <td align="center">&nbsp;<?php echo $row['project_name']?>&nbsp;</td>
 				     <td>&nbsp;<?php echo $row['co_code']?>&nbsp;</td>
 					 <td>&nbsp;<?php echo $row['co_khname'];?>&nbsp;</td>
 					 <td align="center">&nbsp;<?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
-					 <td>&nbsp;<?php echo $row['sale_number']?>&nbsp;</td>
+					 <td>&nbsp;<?php echo $row['sale_number'];?>&nbsp;</td>
+					 <td>&nbsp;<?php echo $row['land_name'].', '.$row['street'];?>&nbsp;</td>
 					 <td align="right">&nbsp;<?php echo '$ '.number_format($row['comission'],2);?>&nbsp;</td>
 					 <td>&nbsp;<?php echo date("d-M-Y",strtotime($row['buy_date']));?>&nbsp;</td>
 					</tr>
@@ -83,7 +84,7 @@ dojo.require("dijit.form.DateTextBox");
 </table>
 		<br />
 		   <table align="center" width="100%">
-				   <tr style="font-size: 12px;">
+				   <tr style="font-size: 14px;">
 				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
 				        <th></th>
 				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>

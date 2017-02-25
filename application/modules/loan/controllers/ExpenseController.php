@@ -21,7 +21,8 @@ class Loan_ExpenseController extends Zend_Controller_Action
     			$formdata = array(
     					"adv_search"=>'',
     					"branch_id"=>-1,
-//     					"status"=>-1,
+     					"category_id_expense"=>-1,
+    					'payment_type'=>-1,
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
     			);
@@ -31,7 +32,7 @@ class Loan_ExpenseController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","EXPENSE_TITLE","RECEIPT_NO","CATEGORY","TOTAL_EXPENSE","NOTE","DATE","STATUS");
+    		$collumns = array("BRANCH_NAME","EXPENSE_TITLE","RECEIPT_NO","ចំណាយជា","CATEGORY","TOTAL_EXPENSE","NOTE","DATE","STATUS");
     		$link=array(
     				'module'=>'loan','controller'=>'expense','action'=>'edit',
     		);

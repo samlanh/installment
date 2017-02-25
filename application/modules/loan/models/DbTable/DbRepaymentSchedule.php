@@ -144,9 +144,43 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				);
     		$this->_name='ln_reschedule';
     		$id = $this->insert($array);
+    		
+    		if($data['schedule_opt']==1){//កក់បន្ថែម
+//     			$this->_name='ln_sale';
+//     			$dbp = new Loan_Model_DbTable_DbLandpayment();
+//     			$row = $dbp->getTranLoanByIdWithBranch($data['id'],null);
+//     			$arr = array(
+//     					'paid_amount'=>$row['paid_amount']+$data['deposit'],
+//     					'balance'=>$data['sold_price']-($data['deposit']+$data['paid_before']),
+//     					'payment_id'=>$data["schedule_opt"],
+//     					//     						'price_before'=>$data['total_sold'],
+//     					'discount_amount'=>$data['discount']+$data['bdiscount_fixed'],
+//     					'discount_percent'=>$data['discount_percent']+$data['bdiscount_percent'],
+//     					'interest_rate'=>$data['interest_rate'],
+//     					'total_duration'=>$data['period'],
+//     					'startcal_date'=>$data['release_date'],
+//     					'first_payment'=>$data['first_payment'],
+//     					'validate_date'=>$data['first_payment'],
+//     					'end_line'=>$data['date_line'],
+//     					'payment_method'=>1,//$data['loan_type'],
+//     					'price_sold'=>$data['sold_price'],
+//     					'note'=>$data['note'],
+//     					'total_installamount'=>$data['total_installamount'],
+//     					'user_id'=>$this->getUserId(),
+//     					'other_fee'=>$data['other_fee'],
+//     					'agreement_date'=>$data['agreement_date']
+//     			);
+//     			$where= " id = ".$data['id'];
+//     			$this->update($arr, $where);
+    		}
     	   
     		//if($data['deposit']>0){
     		   //if($data['old_paymentmethod']==1 AND $data['deposit']>0){
+    		$is_schedule=0;
+    		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==4 OR $data["schedule_opt"]==6){//
+    			$is_schedule=1;
+    		}
+    		
     			if($data['old_paymentmethod']==1){
     				$this->_name='ln_sale';
     				$dbp = new Loan_Model_DbTable_DbLandpayment();
@@ -170,7 +204,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     						'total_installamount'=>$data['total_installamount'],
     						'user_id'=>$this->getUserId(),
     						'other_fee'=>$data['other_fee'],
-    						'agreement_date'=>$data['agreement_date']
+    						'agreement_date'=>$data['agreement_date'],
+    						'is_reschedule'=>$is_schedule,
     				);
     				$where= " id = ".$data['id'];
     				$this->update($arr, $where);
@@ -181,7 +216,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			}else{
     				$is_complete = 0;
     			}
-    			if($data['schedule_opt']==2 AND $data['deposit']>0){
+    			if($data['schedule_opt']==2 AND $data['deposit']>0){//ករណីបង់ផ្តាច់
 		    		$this->_name='ln_client_receipt_money';
 		    		$dbtable = new Application_Model_DbTable_DbGlobal();
 		    		$loan_number = $dbtable->getLoanNumber($data);
@@ -248,10 +283,10 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$id = $this->update($arr, $where);//add group loan
     		unset($datagroup);
     		
-    		$where = " is_completed=0 AND sale_id=".$data['loan_number'];
-    		
+    		$where = " principal_permonth=principal_permonthafter AND is_completed=0 AND sale_id=".$data['loan_number'];
     		$this->_name="ln_saleschedule";
     		$this->delete($where);
+    		
     		$id  =$data['loan_number'];
     		$total_day=0;
     		$old_remain_principal = 0;
@@ -477,7 +512,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		  $data['deposit'] = $data['deposit']+$data['paid_before'];
     		 
     		  $data['sale_id']=$data['loan_number'];
-    		  if(($payment_method!=2)){
+    		  if(($payment_method!=2)){//ខុសពីផ្តាច់
     		  	$this->addPaymenttoSale($data);
     		  }
 	            $db->commit();
@@ -500,6 +535,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     function addPaymenttoSale($data){
     	$dbtable = new Application_Model_DbTable_DbGlobal();
     	$receipt = $dbtable->getReceiptByBranch($data);
+    	$is_deposit='';
+    	if($data['schedule_opt']==1){$is_deposit=1;}//បញ្ចាក់ថាប្រាក់កក
     	$array = array(
     			'branch_id'			=>$data['branch_id'],
     			'client_id'			=>$data['member'],
@@ -527,6 +564,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'status'			=>1,
     			'note'				=>$data['note'],
     			'user_id'			=>$this->getUserId(),
+    			'field3'			=>$is_deposit,
     	);
     	$crm_id=0;
     	if($data['new_deposit']>0){
@@ -655,8 +693,15 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     public function getLoanInfoById($id){
     	$db=$this->getAdapter();
     	$sql=" SELECT
-    	(SELECT SUM(total_principal_permonthpaid) FROM `ln_client_receipt_money` WHERE land_id=$id AND status=1 LIMIT 1) AS total_principal,
+    	(SELECT SUM(total_principal_permonthpaid) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) AS total_principal,
     	s.* FROM `ln_sale` AS s WHERE s.id=$id AND status=1 AND s.is_completed=0 ";
+    	return $db->fetchRow($sql);
+    }
+    public function getSaleInfoById($id){
+    	$db=$this->getAdapter();
+    	$sql=" SELECT
+    	(SELECT SUM(total_principal_permonthpaid) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) AS total_principal,
+    	s.* FROM `ln_sale` AS s WHERE s.id=$id AND status=1  ";
     	return $db->fetchRow($sql);
     }
     
