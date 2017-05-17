@@ -1,0 +1,61 @@
+<?php
+ //$url_save = $this->url(array('module'=>'product','controller'=>'brand','action'=>'add'));
+ //$url_delete = $this->url(array('module'=>'product','controller'=>'brand','action'=>'delete'));
+$url_edit = $this->url(array('module'=>'dailywork','controller'=>'project','action'=>'edit'));
+$row_rs = $this->row_rs;
+?>
+<?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$status = $request->getParam('search_status');
+		if(empty($status) AND $status==0) $status=-1;
+?>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.NumberTextBox");
+</script>
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("ADDRESS_LIST"));
+?>	
+<?php $frm =  $this->frm_search;?>
+<meta charset="utf-8" />
+<div class="row">
+	<div class="col-md-12">
+		<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-globe"></i><?php echo $tr->translate("CONTACT_PERSON");?>
+				</div>
+				<div class="caption pull-right">
+					<a href="<?php echo $this->url(array('module'=>'dailywork','controller'=>'address','action'=>'add')); ?>" class="btn btn-sm green  pull-right">
+						<i class="fa fa-plus"></i>&nbsp;<?php echo $tr->translate("ADD_NEW");?>
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+			   <form method="post" action="">
+					<div class="form-group" style="padding-top: 6px;">
+						<label class="control-label col-md-3"><input dojoType="dijit.form.TextBox" class="fullside" id="adv_search" name="adv_search" value="<?php echo $this->row['adv_search']?>" placeholder="<?php echo $this->translate("Search");?>" type="text" ></label>
+						<label class="control-label col-md-3"> 
+							<select name="category" id="category" dojoType="dijit.form.FilteringSelect" class="fullside" style="width: 200px;">
+				        	<option value="">Please select Category</option>
+		            		<?php foreach ($this->rs As $rs){?>
+		            		<option value="<?php echo $rs['id']?>" <?php if($this->row['category']==$rs['id']) echo "selected='selected'";?>><?php echo $rs['name']?></option>
+		            		<?php }?>
+						</select>
+						</label>
+						<label class="control-label col-md-2"><div class="input-icon right"><i class="fa fa-calendar"></i><input class="form-control form-control-inline date-picker" id="start_date" name="start_date" value="<?php //echo date("m/d/Y",strtotime($this->row['start_date']));?>" type="text" ></div></label>
+						<label class="control-label col-md-2"><div class="input-icon right"><i class="fa fa-calendar"></i><input class="form-control form-control-inline date-picker" id="end_date" name="end_date" value="<?php //echo $this->row['end_date'];?>" type="text"></div></label>
+						<label class="control-label col-md-2">
+							<button class="btn btn-primary col-md-12" value="" ><i class="fa fa-save"></i>&nbsp;<?php echo $tr->translate("REFRESH");?></button>
+						</label>
+					</div>		
+				</form> 
+				<div class="contain_form" style="clear:both;">
+					<?php echo $this->list; ?>
+				</div>
+		   </div>
+		</div>
+	</div>
+</div>

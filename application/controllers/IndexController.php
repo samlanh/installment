@@ -3,7 +3,7 @@
 class IndexController extends Zend_Controller_Action
 {
 
-	const REDIRECT_URL = '/transfer';
+	const REDIRECT_URL = '/home';
 	
     public function init()
     {

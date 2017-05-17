@@ -13,7 +13,6 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
    		$end_date = $search['end_date'];
     	$sql = "SELECT * FROM v_newloancolect WHERE 1 ";
     	$where ='';
-    	
     	$from_date =(empty($search['start_date']))? '1': " date_payment >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
     	$where= " AND ".$from_date." AND ".$to_date;
@@ -36,9 +35,8 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     		$s_where[] = " street LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	$order=" ORDER BY date_payment DESC";
+    	$order=" ORDER BY date_payment DESC ";
     	return $db->fetchAll($sql.$where.$order);
-    	
     }
     function getCustomerNearlyPayment(){
     	$db=$this->getAdapter();

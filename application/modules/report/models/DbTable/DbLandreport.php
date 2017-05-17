@@ -52,8 +52,47 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 if($search['schedule_opt']>0){
       	 	$where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
       	 }
-      	 $order = " ORDER BY payment_id DESC ";
+      	 $order = " ORDER BY is_cancel ASC,payment_id DESC ";
       	 return $db->fetchAll($sql.$where.$order);
+      }
+      public function getAlertDeposit($search = null){//rpt-loan-released/
+      	$db = $this->getAdapter();
+      	$sql = " SELECT * ,
+	      	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id ) AS times,
+	      	(SELECT name_en FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
+	      	FROM v_soldreport WHERE payment_id=1 AND is_cancel=0 ";
+      	$where ='';
+ 
+      	$from_date =(empty($search['start_date']))? '1': " validate_date >= '".$search['start_date']." 00:00:00'";
+      	$to_date = (empty($search['end_date']))? '1': " validate_date <= '".$search['end_date']." 23:59:59'";
+      	$where.= " AND ".$from_date." AND ".$to_date;
+      	if(!empty($search['adv_search'])){
+      		$s_where = array();
+      		$s_search = addslashes(trim($search['adv_search']));
+      		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
+      		$s_where[] = " land_code LIKE '%{$s_search}%'";
+      		$s_where[] = " land_address LIKE '%{$s_search}%'";
+      		$s_where[] = " client_number LIKE '%{$s_search}%'";
+      		$s_where[] = " name_en LIKE '%{$s_search}%'";
+      		$s_where[] = " name_kh LIKE '%{$s_search}%'";
+      		$s_where[] = " staff_name LIKE '%{$s_search}%'";
+      		$s_where[] = " price_sold LIKE '%{$s_search}%'";
+      		$s_where[] = " comission LIKE '%{$s_search}%'";
+      		$s_where[] = " total_duration LIKE '%{$s_search}%'";
+      		$s_where[] = " street LIKE '%{$s_search}%'";
+      		$where .=' AND ( '.implode(' OR ',$s_where).')';
+      	}
+      	if($search['branch_id']>0){
+      		$where.=" AND branch_id = ".$search['branch_id'];
+      	}
+      	if($search['property_type']>0 AND $search['property_type']>0){
+      		$where.=" AND v_soldreport.property_type = ".$search['property_type'];
+      	}
+      	if($search['client_name']!='' AND $search['client_name']>0){
+      		$where.=" AND client_id = ".$search['client_name'];
+      	}
+      	$order = " ORDER BY payment_id DESC ";
+      	return $db->fetchAll($sql.$where.$order);
       }
       public function getAllLoanCo($search = null){//rpt-loan-released
       	$db = $this->getAdapter();
@@ -347,6 +386,9 @@ public function getAllOutstadingLoan($search=null){
       	} 
 		if($search['branch_id']>0){
 		        $where.=" AND branch_id = ".$search['branch_id'];
+		}
+		if(!empty($search['land_id']) AND $search['land_id']>0){
+			$where.=" AND hous_id = ".$search['land_id'];
 		}
       	if(!empty($search['adv_search'])){
       		$s_where = array();
@@ -1033,6 +1075,90 @@ function round_up_currency($curr_id, $value,$places=-2){
 		return round($value,2);
 	}
 }
+function updateReceipt($data){
+	$db= $this->getAdapter();
+	$db->beginTransaction();
+	try{
+	$session_user=new Zend_Session_Namespace('auth');
+	$user_id = $session_user->user_id;
+	
+	$arr_client_pay = array(
+			'receipt_no'					=>	$data['receipt_no'],
+			'date_pay'					    =>	$data['date_pay'],
+			'date_input'					=>	$data['date_input'],
+			'client_id'                     =>	$data['customer_id'],
+			'outstanding'                   =>	$data['balance']+$data['total_principal_permonth'],//ប្រាក់ដើមមុនបង់
+			'total_principal_permonth'		=>	$data["total_principal_permonth"],//ប្រាក់ដើមត្រូវបង់
+			'total_interest_permonth'		=>	$data["total_interest_permonthpaid"],
+			'penalize_amount'				=>	$data["penalize_amountpaid"],
+			'principal_amount'				=>	$data['balance'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
+			'total_principal_permonthpaid'	=>	$data['total_principal_permonth'],//ok ប្រាក់ដើមបានបង
+			'total_interest_permonthpaid'	=>	$data["total_interest_permonthpaid"],//ok ការប្រាក់បានបង
+			'penalize_amountpaid'			=>	$data["penalize_amountpaid"],// ok បានបង
+			'balance'						=>	0,
+			'total_payment'					=>	$data["total_payment"],//ប្រាក់ត្រូវបង់ok
+			'recieve_amount'				=>	$data["recieve_amount"],//ok
+			'amount_payment'				=>	$data["recieve_amount"],//brak ban borng
+			'return_amount'					=>	0,//ok
+			'note'							=>	$data['note'],
+			'cheque'						=>	$data['cheque'],
+			'user_id'						=>	$user_id,
+			'status'						=>	1,
+// 			'is_completed'					=>	$is_compleated,
+// 			'field3'						=>3,
+// 			'payment_option'				=>	1,
+// 			'sale_id'						=>	$data['loan_number'],
+// 			'land_id'						=>	$data['property_id'],
+// 			'branch_id'						=>	$data["branch_id"],
+// 			'service_charge'				=>	$data["service_charge"],
+// 			'service_chargepaid'			=>	$service,// okបានបង
+			'extra_payment' 				=> $data["extra_payment"],
+			'payment_times'					=>$data['paid_times']
+	);
+	if($data['pay_type']==1){
+		$arr_client_pay['field2']=1;
+		$arr_client_pay['field3']='';
+	}elseif($data['pay_type']==3){
+		$arr_client_pay['field3']=3;
+		$arr_client_pay['field2']='';
+	}
+	$where = " id = ".$data['id'];
+    $this->_name="ln_client_receipt_money";
+    $this->update($arr_client_pay, $where);
+    
+    $array = array(
+    		'client_id'				=> $data['customer_id'],
+    		'paid_date'             => $data['date_input'],
+    		'capital'				=> $data['balance']+$data['total_principal_permonth'],
+    		'remain_capital'		=>$data['balance'],
+    		'principal_permonth'	=>$data['total_principal_permonth'],
+    		'total_interest'		=>$data["total_interest_permonthpaid"],
+    		'total_payment'			=>$data["total_payment"],
+    		'total_recieve'			=>$data["recieve_amount"],
+    		'penelize_amount'		=>$data["penalize_amountpaid"],
+    		'old_interest'			 =>$data["total_interest_permonthpaid"],
+    		'old_principal_permonth'=>$data["total_principal_permonth"],
+    		'last_pay_date'=>$data["date_input"],
+//     		'crm_id'				=>$id,
+//     		'lfd_id'				=>$row['id'],
+//     		'service_charge'		=>0,
+//     		'old_total_payment'	 =>$row["total_payment_after"],
+//     	    'is_completed'			=>$statuscomplete,
+//     	    'status'				=>1,
+//     		'land_id'				=>$data['loan_number'],
+//     		'date_payment'			=>$row['date_payment'],
+    );
+	$where = " crm_id = ".$data['id'];
+    $this->_name="ln_client_receipt_money_detail";
+    $this->update($array, $where);
+    $db->commit();
+	}catch (Exception $e){
+		$db->rollBack();
+		Application_Form_FrmMessage::message("INSERT_FAIL");
+		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+	}
+	
+}
 function updatePaymentStatus($data){
 	  	$db = $this->getAdapter();
 	  	$db->beginTransaction();
@@ -1076,10 +1202,15 @@ function updatePaymentStatus($data){
 	  		$this->_name="ln_sale";
 	  		$where = " id = ".$data['id'];
 	  		$this->update($arr, $where);
-	  		
+
 	  		$this->_name="ln_saleschedule";
 	  		$where = " principal_permonth=principal_permonthafter AND is_completed=0 AND sale_id = ".$data['id'];
 	  		$this->delete($where);
+	  		
+	  		if($data['payment_id']==1){//កកក់
+	  			$db->commit();
+	  			return 1;
+	  		}
 	  		
 	  		$total_day=0;
 	  		$old_remain_principal = 0;
@@ -1088,7 +1219,7 @@ function updatePaymentStatus($data){
 	  		$old_amount_day = 0;
 	  		$cum_interest=0;
 	  		$amount_collect = 1;
-	  		//     		$remain_principal = $data['balance'];
+
 	  		$data['sold_price']=$data['price_sold'];
 	  		$remain_principal = $data['sold_price'];
 	  		$next_payment = $data['first_payment'];
@@ -1107,12 +1238,9 @@ function updatePaymentStatus($data){
 	  		$pri_permonth=0;
 	  		
 	  		$str_next = '+1 month';
-	  		
-	  		//     		$str_next = $dbtable->getNextDateById($data['collect_termtype'],$data['amount_collect']);//for next,day,week,month;
-// 	  		echo $loop_payment;exit();
 	  		$ids =explode(',', $data['identity']);
-	  		//foreach($ids as $i){
 	  		for($i=1;$i<=$loop_payment;$i++){
+	  			$paid_receivehouse=1;
 	  			if($payment_method==1){
 	  				break;
 	  			}elseif($payment_method==2){
@@ -1121,18 +1249,19 @@ function updatePaymentStatus($data){
 	  				if($i!=1){
 	  					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
 	  					$start_date = $next_payment;
-	  					//$next_payment = $data['date_payment'.$i];
-	  					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+	  					$next_payment = $data['date_payment'.$i];
+	  					//$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
 	  				}else{
-	  					$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
 	  					//$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
+	  					$next_payment = $data['date_payment'.$i];
 	  				}
 	  				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
 	  				$total_day = $amount_day;
-	  				$interest_paymonth = 0;
-	  				$pri_permonth = round($data['price_sold']/$borrow_term,0);
+	  				$interest_paymonth = $data['total_interest_'.$i];;
+	  				$pri_permonth =$data['principal_permonth_'.$i]; //round($data['price_sold']/$borrow_term,0);
 	  				if($i==$loop_payment){//for end of record only
 	  					$pri_permonth = $remain_principal;
+	  					$paid_receivehouse = $data['paid_receivehouse'];
 	  				}
 	  			}elseif($payment_method==4){//បង់រំលស់
 	  				if($i!=1){
@@ -1145,7 +1274,6 @@ function updatePaymentStatus($data){
 	  						$ids = explode(',', $data['identity']);
 	  						$key = 1;
 	  						$installment_paid = 0;
-// 	  						print_r($ids);exit();
 	  						foreach ($ids as $j){
 	  							if($key==1){
 	  								$old_remain_principal = $data['price_sold'];
@@ -1162,7 +1290,7 @@ function updatePaymentStatus($data){
 	  							$this->_name="ln_saleschedule";
 	  							$datapayment = array(
 	  									'branch_id'=>$data['branch_id'],
-	  									'id'=>$data['fundid_'.$j],//good
+// 	  									'id'=>$data['fundid_'.$j],//good
 	  									'sale_id'=>$data['id'],//good
 	  									'begining_balance'=> $old_remain_principal,//good
 	  									'begining_balance_after'=> $old_remain_principal,//good
@@ -1181,21 +1309,62 @@ function updatePaymentStatus($data){
 // 	  									'note'=>$data['remark'.$j],
 	  									'is_installment'=>1,
 	  									'no_installment'=>$key,
+	  									'last_optiontype'=>$paid_receivehouse,
 	  							);
 	  							$key = $key+1;
 	  							$installment_paid = $installment_paid+$data['principal_permonth_'.$j];
 	  							if($data['payment_option'.$j]==1 OR !empty($data['paid_amount_'.$j])){
+	  								$is_completed = 0;
+	  								if($data['payment_option'.$j]==1){$is_completed=1;}
 	  								$datapayment = array(
+	  										'sale_id'=>$data['id'],
 	  										'branch_id'=>$data['branch_id'],
-	  										'id'=>$data['fundid_'.$j],//good
+	  										'begining_balance'=> $old_remain_principal,//good
+	  										'begining_balance_after'=> $old_remain_principal,//good
+	  										'principal_permonth'=> $data['principal_permonth_'.$j],//good
+	  										'principal_permonthafter'=>$old_pri_permonth-$data['paid_principal'.$j],//good
+	  										'total_interest'=>$old_interest_paymonth,//good
+	  										'total_interest_after'=>$old_interest_paymonth,//good
+// 	  										'total_payment'=>$old_interest_paymonth+$old_pri_permonth-$data['paid_amount_'.$j],//good
+	  										'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth-$data['paid_amount_'.$j],//good
+	  										'ending_balance'=>$old_remain_principal-$old_pri_permonth,
+// 	  										'is_completed'=>$is_completed,//good
 	  										'is_installment'=>1,
 	  										'no_installment'=>$key,
+	  										'date_payment'=>$data['date_payment'.$j],
 	  								);
-	  								$where=" id = ".$data['fundid_'.$j];
-	  								$this->update($datapayment, $where);
-	  								continue;
+	  								$sql = "SELECT id FROM ln_saleschedule WHERE id =".$data['fundid_'.$j]." AND sale_id=".$data['id']." LIMIT 1";
+	  								$rsschedule = $db->fetchRow($sql);
+	  								$datapayment['is_completed']=$data['payment_option'.$j];
+	  								$datapayment['date_payment']=$data['date_payment'.$j];
+	  								if(!empty($rsschedule)){
+	  									$datapayment['branch_id']=$data['branch_id'];
+	  									$where=" id = ".$data['fundid_'.$j];
+	  									$this->update($datapayment, $where);
+	  									
+	  								}else{
+	  									$this->insert($datapayment);
+	  								}
+// 	  								continue;
 	  							}else{
-	  								$this->insert($datapayment);
+	  								if(!empty($data['fundid_'.$j])){
+	  									$datapayment['is_installment']=1;
+	  									$datapayment['branch_id']=$data['branch_id'];
+	  									$datapayment['is_completed']=$data['payment_option'.$j];
+	  									$where=" id = ".$data['fundid_'.$j];
+	  								
+	  									$sql = "SELECT id FROM ln_saleschedule WHERE id =".$data['fundid_'.$j]." AND sale_id=".$data['id']." LIMIT 1";
+	  									$rsschedule = $db->fetchRow($sql);
+	  									if(!empty($rsschedule)){
+	  										$where=" id = ".$data['fundid_'.$j];
+	  										$this->update($datapayment, $where);
+	  									}else{
+	  										$this->insert($datapayment);
+	  											
+	  									}
+	  								}else{
+	  									$idsaleid = $this->insert($datapayment);
+	  								}
 	  							}
 	  							$from_date = $data['date_payment'.$j];
 	  						}
@@ -1218,7 +1387,6 @@ function updatePaymentStatus($data){
 	  					$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
 	  				}
 	  				
-	  				
 	  				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
 	  				$total_day = $amount_day;
 	  				$interest_paymonth =$remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
@@ -1227,6 +1395,7 @@ function updatePaymentStatus($data){
 // 	  				echo $pri_permonth;exit();
 	  				if($i==$loop_payment){//for end of record only
 	  					$pri_permonth = $remain_principal;
+	  					$paid_receivehouse = $data['paid_receivehouse'];
 	  				}
 // 	  				echo $j;exit();
 	  			}elseif($payment_method==6){
@@ -1240,7 +1409,9 @@ function updatePaymentStatus($data){
 	  					}else{
 	  						$old_remain_principal = $old_remain_principal-$old_pri_permonth;
 	  					}
-	  		
+	  					if(end($ids)==$i){
+	  						$paid_receivehouse = $data['paid_receivehouse'];
+	  					}
 	  					$old_interest_paymonth = ($data['interest_rate']==0)?0:$this->round_up_currency(1,($old_remain_principal*$data['interest_rate']/12/100));
 	  		
 	  					$cum_interest = $cum_interest+$old_interest_paymonth;
@@ -1267,25 +1438,52 @@ function updatePaymentStatus($data){
 	  							'percent'=>$data['percent'.$i],
 	  							'is_installment'=>1,
 	  							'no_installment'=>$key,
+	  							'last_optiontype'=>$paid_receivehouse,
 	  					);
 	  					$from_date = $data['date_payment'.$i];
 	  					$key = $key+1;
 	  					if($data['payment_option'.$i]==1 OR !empty($data['paid_amount_'.$i])){
-	  						$datapayment = array(
-	  								'branch_id'=>$data['branch_id'],
-	  								'id'=>$data['fundid_'.$j],//good
-	  								'is_installment'=>1,
-	  								'no_installment'=>$key,
-	  						);
-	  						$where=" id = ".$data['fundid_'.$j];
-	  						$this->update($datapayment, $where);
-	  						continue;
+// 	  						$datapayment = array(
+// 	  								'branch_id'=>$data['branch_id'],
+// 	  								'id'=>$data['fundid_'.$i],//good
+// 	  								'is_installment'=>1,
+// 	  								'no_installment'=>$key,
+// 	  						);
+// 	  						$where=" id = ".$data['fundid_'.$i];
+// 	  						$this->update($datapayment, $where);
+// 	  						continue;
+	  						$datapayment['is_installment']=1;
+	  						$datapayment['branch_id']=$data['branch_id'];
+	  						$datapayment['is_completed']=$data['payment_option'.$i];
+	  						$datapayment['date_payment']=$data['date_payment'.$i];
+	  						$sql = "SELECT id FROM ln_saleschedule WHERE id =".$data['fundid_'.$i]." AND sale_id=".$data['id']." LIMIT 1";
+	  						$rsschedule = $db->fetchRow($sql);
+	  							
+	  						if(!empty($rsschedule)){
+	  							$where=" id = ".$data['fundid_'.$i];
+	  							$this->update($datapayment, $where);
+	  						}else{
+	  							$this->insert($datapayment);
+	  						}
 	  					}else{
-	  						$this->insert($datapayment);
+	  						if(!empty($data['fundid_'.$i])){
+	  							$sql = "SELECT id FROM ln_saleschedule WHERE id =".$data['fundid_'.$i]." AND sale_id=".$data['id']." LIMIT 1";
+	  							$rsschedule = $db->fetchRow($sql);
+	  							if(!empty($rsschedule)){
+	  								$datapayment['is_installment']=1;
+	  								$datapayment['branch_id']=$data['branch_id'];
+	  								$datapayment['is_completed']=$data['payment_option'.$i];
+	  								$datapayment['date_payment']=$data['date_payment'.$i];
+	  								$where=" id = ".$data['fundid_'.$i];
+	  								$this->update($datapayment, $where);
+	  							}else{
+	  								$this->insert($datapayment);
+	  							}
+	  						}else{
+	  							$this->insert($datapayment);
+	  						}
+	  						
 	  					}
-	  					
-	  					//$sale_currid = $this->insert($datapayment);
-	  					
 	  				}
 	  				break;
 	  			}
@@ -1314,14 +1512,74 @@ function updatePaymentStatus($data){
 	  						'is_completed'=>0,
 	  						'date_payment'=>$next_payment,
 	  						'no_installment'=>$i+$j,
+	  						'last_optiontype'=>$paid_receivehouse,
 	  						// 		    			        	'collect_by'=>1,
 	  						// 		    			        	'payment_option'=>$cum_interest,
 	  						// 		    			        	'penelize'=>,
 	  						// 		    			        	'service_charge'=>,
 	  						// 		    			        	'status'=>,
 	  				);
-	  				 
-	  				$idsaleid = $this->insert($datapayment);
+	  				if($payment_method==3){
+	  					if($data['payment_option'.$i]==1 OR !empty($data['paid_amount_'.$i])){//ផ្តាច់
+	  						$datapayment['is_installment']=1;
+	  						$datapayment['branch_id']=$data['branch_id'];
+	  						$datapayment['is_completed']=$data['payment_option'.$i];
+	  						$datapayment['date_payment']=$data['date_payment'.$i];
+// 	  						$datapayment = array(
+// 	  								'branch_id'=>$data['branch_id'],
+// // 	  								'id'=>$data['fundid_'.$i],//good
+// 	  								'is_installment'=>1,
+// 	  								'no_installment'=>$i+$j,
+// 	  						);
+							$sql = "SELECT id FROM ln_saleschedule WHERE id =".$data['fundid_'.$i]." AND sale_id=".$data['id']." LIMIT 1";
+	  						$rsschedule = $db->fetchRow($sql);
+	  						
+	  						if(!empty($rsschedule)){
+	  							$where=" id = ".$data['fundid_'.$i];
+	  							$this->update($datapayment, $where);
+	  						}else{
+	  							$this->insert($datapayment);
+// 	  							 exit();
+	  						}
+	  						//continue;
+	  					}else{
+	  						if(!empty($data['fundid_'.$i])){
+	  							$datapayment['is_installment']=1;
+	  							$datapayment['branch_id']=$data['branch_id'];
+	  							$datapayment['is_completed']=$data['payment_option'.$i];
+	  							$where=" id = ".$data['fundid_'.$i];
+	  							
+	  							$sql = "SELECT id FROM ln_saleschedule WHERE id =".$data['fundid_'.$i]." AND sale_id=".$data['id']." LIMIT 1";
+	  							$rsschedule = $db->fetchRow($sql);
+	  							if(!empty($rsschedule)){
+	  								$where=" id = ".$data['fundid_'.$i];
+	  								$this->update($datapayment, $where);
+	  							}else{
+	  								$this->insert($datapayment);
+	  								
+	  							}
+	  							//$this->update($datapayment, $where);
+	  						}else{
+	  							$idsaleid = $this->insert($datapayment);
+	  						}
+	  					}
+	  				}else{
+// 	  					$sql = "SELECT id FROM ln_saleschedule WHERE id =".$data['fundid_'.$i]." AND sale_id=".$data['id']." LIMIT 1";
+// 	  					$rsschedule = $db->fetchRow($sql);
+// 	  					if(!empty($rsschedule)){
+// 	  						$datapayment['is_installment']=1;
+// 	  						$datapayment['branch_id']=$data['branch_id'];
+// 	  						$datapayment['is_completed']=$data['payment_option'.$i];
+// 	  						$datapayment['date_payment']=$data['date_payment'.$i];
+	  						
+// 	  						$where=" id = ".$data['fundid_'.$i];
+// 	  						$this->update($datapayment, $where);
+// 	  					}else{
+	  						$idsaleid = $this->insert($datapayment);
+	  							
+// 	  					}
+	  					
+	  				}
 	  				// 		    		$amount_collect=0;
 	  				$old_remain_principal = 0;
 	  				$old_pri_permonth = 0;
@@ -1439,11 +1697,12 @@ function updatePaymentStatus($data){
 // 		  			$this->insert($array);
 // 	  		  }
 // 	  		}
+	  		$dbtable = new Application_Model_DbTable_DbGlobal();
+	  		$dbtable->updateLateRecordSaleschedule($data['id']);
 	  		$db->commit();
 	  		return 1;
 	  	}catch (Exception $e){
 	  		$db->rollBack();
-	  		echo $e->getMessage();exit();
 	  		Application_Form_FrmMessage::message("INSERT_FAIL");
 	  		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	  	}

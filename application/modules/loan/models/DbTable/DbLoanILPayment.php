@@ -299,7 +299,7 @@ public function addILPayment($data){
     			'sale_id'						=>	$data['loan_number'],
     			'land_id'						=>	$data['property_id'],
     			'outstanding'                   =>	$data['priciple_amount']+$principle_amount,//ប្រាក់ដើមមុនបង់
-    			'total_principal_permonth'		=>	$data["os_amount"],//ប្រាក់ដើមត្រូវបង់
+    			'total_principal_permonth'		=>	$data["os_amount"]+$data["extra_payment"],//ប្រាក់ដើមត្រូវបង់
     			'total_interest_permonth'		=>	$data["total_interest"],
     			'penalize_amount'				=>	$penalize,
     			'service_charge'				=>	$data["service_charge"],
@@ -321,6 +321,7 @@ public function addILPayment($data){
     			'is_completed'					=>	$is_compleated,
     		    'field3'			=>3,
     			'extra_payment' =>$data["extrapayment"],
+    			'payment_times'=>$data['paid_times']
     		);
 			$this->_name = "ln_client_receipt_money";
     		$client_pay = $this->insert($arr_client_pay);
@@ -382,7 +383,7 @@ public function addILPayment($data){
 		    		// get amount record if paid all update tb_sale to complete
 		    				$rows = $this->getSaleScheduleById($loan_number, 1);
 		    				if(!empty($rows)){
-		    					$paid_amount = $data['amount_receive']-$data['extrapayment'];
+		    					$paid_amount = $data['amount_receive']-$data['extrapayment']-$data['penalize_amount'];
 		    					$remain_principal=0;
 		    					$statuscomplete=0;
 		    					$principal_paid = 0;
@@ -416,7 +417,6 @@ public function addILPayment($data){
 		    								$statuscomplete=0;
 		    							}
 		    						}else{
-		    							echo 333;exit();
 		    							$remain_principal = 0;
 		    							$statuscomplete=0;
 		    							$principal_paid=0;
@@ -527,23 +527,58 @@ public function addILPayment($data){
     		}
     		if($data['extrapayment']>0){
     			$extrapayment = $data['extrapayment'];
-    			$rs = $this->getSaleScheduleById($loan_number,2);
+    			$rs = $this->getSaleScheduleById($loan_number,1);
     			if(!empty($rs)){
     				foreach ($rs as $row){
     						$total_interestafter=0;
-    						$extrapayment = $extrapayment-$row['principal_permonthafter'];
-    						if($extrapayment>=0){
-    							$principal_paid = $row['principal_permonthafter'];
-    							$statuscomplete=1;
-    							$remain_principal=0;
-    						}else{
-    							$principal_paid = abs($extrapayment);
-    							$remain_principal=$principal_paid;
-    							$statuscomplete=0;
-    						}
-    				
-    					$total_principal = $total_principal+$principal_paid;
+//     						$extrapayment = $extrapayment-$row['principal_permonthafter'];
+//     						if($extrapayment>=0){
+//     							$principal_paid = $row['principal_permonthafter'];
+//     							$statuscomplete=1;
+//     							$remain_principal=0;
+//     						}else{
+//     							$principal_paid = abs($extrapayment);
+//     							$remain_principal=$principal_paid;
+//     							$statuscomplete=0;
+//     						}    				
+//     					$total_principal = $total_principal+$principal_paid;
     					 
+    					$pyament_after = $row['total_payment_after']-($principal_paid);//ប្រាក់ត្រូវបង់លើកក្រោយសំរាប់ installmet 1 1
+    					$arra = array(
+    							'ending_balance'=>$row['begining_balance_after']-$extrapayment,
+    							'begining_balance_after'=>$row['begining_balance_after']-$extrapayment,
+//     							'is_completed'=>$statuscomplete,
+//     							'paid_date'			=> 	$data['date_buy'],
+//     							'total_payment_after'	=>	$pyament_after,
+//     							"principal_permonthafter"=>$remain_principal,
+    					);
+    					$where = " id = ".$row['id'];
+    					$this->_name="ln_saleschedule";
+    					$this->update($arra, $where);
+//     					if($extrapayment<=0){
+//     						break;
+//     					}
+    				}
+    				
+    			}
+    			////update outstanding
+    			$rs = $this->getSaleScheduleById($loan_number,2);
+    			if(!empty($rs)){
+    				foreach ($rs as $row){
+    					$total_interestafter=0;
+    					$extrapayment = $extrapayment-$row['principal_permonthafter'];
+    					if($extrapayment>=0){
+    						$principal_paid = $row['principal_permonthafter'];
+    						$statuscomplete=1;
+    						$remain_principal=0;
+    					}else{
+    						$principal_paid = abs($extrapayment);
+    						$remain_principal=$principal_paid;
+    						$statuscomplete=0;
+    					}
+    			
+    					$total_principal = $total_principal+$principal_paid;
+    			
     					$pyament_after = $row['total_payment_after']-($principal_paid);//ប្រាក់ត្រូវបង់លើកក្រោយសំរាប់ installmet 1 1
     					$arra = array(
     							"principal_permonthafter"=>$remain_principal,
@@ -560,13 +595,11 @@ public function addILPayment($data){
     						break;
     					}
     				}
-    				
     			}
     		}
     		$db->commit();
     	}catch (Exception $e){
     		$db->rollBack();
-    		echo $e->getMessage();exit();
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     }
@@ -1746,16 +1779,46 @@ function getLoanPaymentByLoanNumberEdit($data){
    }
    public function getLaonHasPayByLoanNumber($loan_number){
    	$db= $this->getAdapter();
+//    	$sql=" SELECT
+//    	(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=crmd.`client_id`) AS client_name,
+//    	(SELECT c.`client_number` FROM `ln_client` AS c WHERE c.`client_id`=crmd.`client_id`) AS client_code,
+//    	crm.`receipt_no`,
+//    	crm.`land_id`,
+//    	DATE_FORMAT(crm.date_input, '%d-%m-%Y') AS `date_input`,
+//    	crm.outstanding,
+//    	crm.`principal_amount`,
+//    	crm.`total_principal_permonth`,
+//    	SUM(total_principal_permonthpaid) AS total_principal_permonthpaid,
+//    	crm.`total_payment`,
+//    	crm.`total_interest_permonth`,
+//    	crm.`amount_payment`,
+//    	crm.`recieve_amount`,
+//    	crm.`return_amount`,
+//    	crm.`service_charge`,
+//    	crm.`penalize_amount`,
+//    	crm.`group_id`,
+//    	crm.`is_completed`,
+//    	crmd.`capital`,
+//    	crmd.`total_payment`,
+//    	(SELECT ln_sale.price_sold FROM `ln_sale` WHERE ln_sale.id=crm.sale_id) AS price_sold,
+//    	DATE_FORMAT(crmd.date_payment, '%d-%m-%Y') AS `date_payment`
+//    	FROM
+//    	`ln_client_receipt_money` AS crm,
+//    	`ln_client_receipt_money_detail` AS crmd
+//    	WHERE crm.`id` = crmd.`crm_id`
+//    	AND crm.status=1
+//    	AND crm.`sale_id` = '$loan_number' GROUP BY crm.`id` ORDER BY crmd.`crm_id` DESC ";
+   	
    	$sql=" SELECT 
-			  (SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=crmd.`client_id`) AS client_name,
-			  (SELECT c.`client_number` FROM `ln_client` AS c WHERE c.`client_id`=crmd.`client_id`) AS client_code,
+			  (SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=crm.`client_id` LIMIT 1) AS client_name,
+			  (SELECT c.`client_number` FROM `ln_client` AS c WHERE c.`client_id`=crm.`client_id` LIMIT 1) AS client_code,
 			  crm.`receipt_no`,
 			  crm.`land_id`,
 			  DATE_FORMAT(crm.date_input, '%d-%m-%Y') AS `date_input`,
 			  crm.outstanding,
 			  crm.`principal_amount`,
 			  crm.`total_principal_permonth`,
-			  SUM(total_principal_permonthpaid) AS total_principal_permonthpaid,
+			  (total_principal_permonthpaid) AS total_principal_permonthpaid,
 			  crm.`total_payment`,
 			  crm.`total_interest_permonth`,
 			  crm.`amount_payment`,
@@ -1765,16 +1828,13 @@ function getLoanPaymentByLoanNumberEdit($data){
 			  crm.`penalize_amount`,
 			  crm.`group_id`,
 			  crm.`is_completed`,
-			  crmd.`capital`,
-			  crmd.`total_payment`,
-			  (SELECT ln_sale.price_sold FROM `ln_sale` WHERE ln_sale.id=crm.sale_id) AS price_sold,
-			  DATE_FORMAT(crmd.date_payment, '%d-%m-%Y') AS `date_payment`
+			  (SELECT ln_sale.price_sold FROM `ln_sale` WHERE ln_sale.id=crm.sale_id LIMIT 1) AS price_sold,
+			  (SELECT DATE_FORMAT(crmd.date_payment, '%d-%m-%Y') FROM `ln_client_receipt_money_detail` AS crmd WHERE crm.`id` = crmd.`crm_id` limit 1) AS `date_payment`
 			FROM
-			  `ln_client_receipt_money` AS crm,
-			  `ln_client_receipt_money_detail` AS crmd 
-			WHERE crm.`id` = crmd.`crm_id` 
-			  AND crm.status=1
-			  AND crm.`sale_id` = '$loan_number' GROUP BY crm.`id` ORDER BY crmd.`crm_id` DESC ";
+			  `ln_client_receipt_money` AS crm
+			WHERE 
+			 crm.status=1
+			  AND crm.`sale_id` = '$loan_number' ORDER BY crm.`id` DESC ";
    	return $db->fetchAll($sql);
    }
    
@@ -2183,7 +2243,8 @@ public function cancelIlPayment($data){
 		//$sql="select id,sale_number as name	from `ln_sale` where status=1 and is_completed=0 and branch_id=$branch_id";
 		
 		$sql= "SELECT id,
-				  CONCAT((SELECT name_kh FROM ln_client WHERE ln_client.client_id=ln_sale.`client_id` LIMIT 1),' - ',sale_number) AS name
+				  CONCAT((SELECT name_kh FROM ln_client WHERE ln_client.client_id=ln_sale.`client_id` LIMIT 1),'-',
+				  (SELECT CONCAT(p.land_address,',',p.street) FROM ln_properties AS p WHERE p.id = ln_sale.house_id LIMIT 1)) AS name
 				FROM
 				  ln_sale 
 				WHERE status=1 

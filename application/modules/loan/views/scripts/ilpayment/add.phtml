@@ -105,7 +105,6 @@
 										<td width="55%" style="white-space: nowrap;"><?php echo $frm->getElement('discount');?></td>
 									</tr>
 								</table>
-								
 							</td>
 							<td><?php echo $tr->translate("TOTAL_SOLD")?></td>
 							<td><?php echo $frm->getElement('sold_price');?></td>
@@ -132,7 +131,8 @@
 							<td><?php echo $frm->getElement('reciept_no');?></td>
 							<td><?php echo $tr->translate("ប្រាក់ដើមនៅសល់បន្ទាប់ពីបង់")?></td>
 							<td align="left"><?php echo $frm->getElement('priciple_amount');?></td>
-							
+							<td><?php echo $tr->translate("បង់លើក")?></td>
+							<td align="left"><?php echo $frm->getElement('paid_times');?></td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("ប្រាក់ដើមត្រូវបង់")?></td>
@@ -166,8 +166,9 @@
 							<td><?php echo $frm->getElement('remain');?></td>
 						</tr>
 						<tr>
-							<td><?php //echo $tr->translate("ថ្ងៃទទួលប្រាក់");?></td>
-							<td><?php echo $frm->getElement('last_payment_date'); ?></td>
+							<td><?php echo $tr->translate("ប្រាក់បង់ពីមុនសរុប");?></td>
+							<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="total_pricipalpaid" name="total_pricipalpaid" readonly  type="text">
+							<?php echo $frm->getElement('last_payment_date'); ?></td>
 							<td><?php echo $tr->translate("CHEQUE");?></td>
 							<td><?php echo $frm->getElement('cheque');?></td>
 							<td><?php echo $tr->translate("NOTE")?></td>
@@ -188,19 +189,22 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="overflow: scroll;width: 100%;">
-				<div id="mainTabContainer"  dojoType="dijit.layout.TabContainer"  style="height: 394px;max-width: 1600px;" region="left"  >
-						<div class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate('SCHEDULE_PAYMENTUNPAID');?>" selected="true">
-							<div id='data_table' name='data_table'></div>
-						</div>
-						<div class="tabContentSection" dojoType="dijit.layout.ContentPane"  title="<?php echo $tr->translate('SCHEDULE_PAYMENT');?>" selected="false">
-							 <div id='data_table1' name='data_table1'></div>
-						</div>
-						<div class="tabContentSection" dojoType="dijit.layout.ContentPane"  title="<?php echo $tr->translate('HISTORY_SCHEDULE_PAYMENTED');?>" selected="false">
-							 <div id='data_table_loan_haspay' name='data_table_loan_haspay'></div>
-						</div>
-				 </div>
-		 </td>
+			<td  style="overflow:hidden;max-width:1200;">
+				<style>
+			.dijitTabPaneWrapper , .dijitContentPane,.dijitTabListContainer-top{max-width: 99% !important;}
+			</style>
+					<div id="mainTabContainer"  dojoType="dijit.layout.TabContainer"  style="height: 394px;" region="left"  >
+							<div style="width:100%;" class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate('SCHEDULE_PAYMENTUNPAID');?>" selected="true">
+								<div id='data_table' name='data_table'></div>
+							</div>
+							<div class="tabContentSection" dojoType="dijit.layout.ContentPane"  title="<?php echo $tr->translate('SCHEDULE_PAYMENT');?>" selected="false">
+								 <div id='data_table1' name='data_table1'></div>
+							</div>
+							<div class="tabContentSection" dojoType="dijit.layout.ContentPane"  title="<?php echo $tr->translate('HISTORY_SCHEDULE_PAYMENTED');?>" selected="false">
+								 <div id='data_table_loan_haspay' name='data_table_loan_haspay'></div>
+							</div>
+					 </div>
+			 </td>
 	</tr>		
 </table>
 </form>
@@ -241,7 +245,9 @@
 										<td style="width:10%;"  >លេខកូដលក់</td>
 										<td style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_loan_number" class="value"></label></strong></td>
 										<td  style="width:10%;" class="padding">ប្រាក់ដើមត្រូវបង់</td>
-										<td colspan="3" style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_principle_amount" class="value"></label></strong></td>
+										<td style="border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_principle_amount" class="value"></label></strong></td>
+										<td  >បង់លើកទី</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_paidtimes" class="value"></label></strong></td>
 								</tr>
 								<tr class="fontsize" style="border:1px solid #000;">
 										<td >ឈ្មោះ​អតិថិជន</td>
@@ -255,8 +261,8 @@
 										<td >ផ្ទះលេខ</td>
 										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_address" class="value"></label></strong></td>
 										<td class="padding">ប្រាក់បង់បន្ថែម</td>
-										<td style="border:1px solid #000;" colspan="3" style=""><strong>&nbsp;&nbsp;<label id="lbl_extrapayment" class="value"></label></strong></td>
-							    </tr>
+							    		<td colspan="3" style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_extrapayment" class="value"></label></strong></td>
+								</tr>
 								<tr class="fontsize">
 										<td  >តំលៃផ្ទះ</td>
 										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_price" class="value"></label></strong></td>
@@ -291,13 +297,11 @@
 												<td width="30%">
 													&nbsp;
 												</td>
-												
 												<td align="center" width="40%">
-													ស្នាមមេដៃអ្នកប្រគល់
+													<?php echo $this->data['customer_sign'];?>
 												</td>
-													
 												<td align="center" width="30%">
-													ស្នាមមេដៃអ្នកទទួល
+													<?php echo $this->data['teller_sign'];?>
 												</td>
 											</tr>
 											<tr>
@@ -429,7 +433,10 @@
 										<td style="width:10%;"  >លេខកូដលក់</td>
 										<td style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_loan_number1" class="value"></label></strong></td>
 										<td  style="width:10%;" class="padding">ប្រាក់ដើមត្រូវបង់</td>
-										<td colspan="3" style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_principle_amount1" class="value"></label></strong></td>
+										<td style="border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_principle_amount1" class="value"></label></strong></td>
+										<td  >បង់លើកទី</td>
+										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_paidtimes1" class="value"></label></strong></td>
+								
 								</tr>
 								<tr class="fontsize" style="border:1px solid #000;">
 										<td >ឈ្មោះ​អតិថិជន</td>
@@ -443,7 +450,7 @@
 										<td >ផ្ទះលេខ</td>
 										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_address1" class="value"></label></strong></td>
 										<td class="padding">ប្រាក់បង់បន្ថែម</td>
-										<td style="border:1px solid #000;" colspan="3" style=""><strong>&nbsp;&nbsp;<label id="lbl_extrapayment1" class="value"></label></strong></td>
+										<td colspan="3" style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_extrapayment1" class="value"></label></strong></td>
 								</tr>
 								<tr class="fontsize">
 										<td>តំលៃផ្ទះ</td>
@@ -481,10 +488,10 @@
 													&nbsp;
 												</td>
 												<td align="center" width="40%">
-													ស្នាមមេដៃអ្នកប្រគល់
+													<?php echo $this->data['customer_sign'];?>
 												</td>
 												<td align="center" width="30%">
-													ស្នាមមេដៃអ្នកទទួល
+													<?php echo $this->data['teller_sign'];?>
 												</td>
 											</tr>
 											<tr>
@@ -712,10 +719,8 @@ function showReciept(receipt_number){
 			}else{
 				ending_balance = dijit.byId('priciple_amount').get('value');
 			}
-			
 		}else{
 			ending_balance = 0;
-			
 			date_payment = dijit.byId("datepaymentlastrecord").get('value');
 			var format_date_payment = new Date(date_payment);
 			month = format_date_payment.getMonth() + 1;
@@ -758,10 +763,11 @@ function showReciept(receipt_number){
 		extra_payment = isNaN(extra_payment)?0:extra_payment;
 		
 		total_paid = parseFloat(dijit.byId('sold_price').get('value')) - parseFloat(ending_balance)+parseFloat(extra_payment);
-		
 		document.getElementById('lbl_total_paid').innerHTML = dojo.number.format(total_paid,{places:2}) + symbal;
 		document.getElementById('lbl_ending_balance').innerHTML = dojo.number.format(ending_balance-extra_payment,{places:2})+symbal;
-		document.getElementById('lbl_extrapayment').innerHTML = dojo.number.format(extra_payment,{places:2})+symbal;	
+		document.getElementById('lbl_extrapayment').innerHTML = dojo.number.format(extra_payment,{places:2})+symbal;
+		document.getElementById('lbl_paidtimes').innerHTML = dijit.byId("paid_times").get("value");
+		document.getElementById('lbl_paidtimes1').innerHTML = dijit.byId("paid_times").get("value");
 		
 		document.getElementById('lbl_date_payment').innerHTML = date_payment;
 		
@@ -1189,11 +1195,14 @@ function getLaonPayment(type){
 						}
 						pay_option = dijit.byId('option_pay').get('value');
 							if(pay_option==1){
+								
 								if(inx==1){
+									dijit.byId("paid_times").attr("value",respone[i].no_installment);
 									tem+= '<tr id=tr_'+inx+' style="background-color:none">';
 									tem += '<td>&nbsp;'+num+'</td>';
 									tem += '<td>&nbsp;<input type="checkbox" class="checkbox" name="mfdid_'+inx+'" id="mfdid_'+inx+'" value="'+id+'" OnChange="calculateTotal('+inx+')" checked="checked"/></td>';
 								}else{
+									
 									tem+= '<tr id=tr_'+inx+' style="background-color:#eee">';
 									tem += '<td>&nbsp;'+num+'</td>';
 									tem += '<td>&nbsp;<input type="checkbox" class="checkbox" name="mfdid_'+inx+'" id="mfdid_'+inx+'" value="'+id+'" OnChange="calculateTotal('+inx+')" onclick="return false" onkeydown="return false" /></td>';
@@ -1846,6 +1855,7 @@ function adminfee(){
 function doTotalByServ(){
 	    //total_payment_before = dijit.byId('oldTotalPay').get('value');
 	    total_payment_before = dijit.byId('os_amount').get('value');
+	    total_interest=dijit.byId('total_interest').get('value');
 		service_charge = dijit.byId('service_charge').get('value');
 		service_charge=isNaN(service_charge)?0:service_charge;
 		penelize = dijit.byId('penalize_amount').get('value');
@@ -1853,7 +1863,7 @@ function doTotalByServ(){
 		service_charge=isNaN(service_charge)?0:service_charge;
 		penelize=isNaN(penelize)?0:penelize;
 		extrapayment=isNaN(extrapayment)?0:extrapayment;
-		total_pay = parseFloat(total_payment_before)+ parseFloat(service_charge)+parseFloat(extrapayment)+parseFloat(penelize);
+		total_pay = parseFloat(total_payment_before)+parseFloat(total_interest)+parseFloat(service_charge)+parseFloat(extrapayment)+parseFloat(penelize);
 		dijit.byId('total_payment').attr('value',total_pay.toFixed(2));
 		dijit.byId('amount_receive').attr('value',total_pay.toFixed(2));
 }
@@ -1989,8 +1999,9 @@ function getAllLaonPayment(){//get schedule
 		});
 }
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-function getLaonHasPayByLoanNumber(){
+function getLaonHasPayByLoanNumber(){//ប្រវត្តបានបង់ប្រាក់
 	try{
+		principal_paid = 0;
 		var loan_number = dijit.byId('loan_number').get('value');
 		var url_submits = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-loan-has-pay-by-loan-number')); ?>';
 			dojo.xhrPost({
@@ -2044,8 +2055,9 @@ function getLaonHasPayByLoanNumber(){
 								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].amount_payment)+'&nbsp;</td>';
 								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].price_sold-(data_loan[k].outstanding-data_loan[k].recieve_amount))+'&nbsp;</td>';
 								//temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].total_principal_permonthpaid)+'&nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].outstanding-data_loan[k].recieve_amount)+'&nbsp;</td>';
-								//temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].outstanding-data_loan[k].total_principal_permonthpaid)+'&nbsp;</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].outstanding-data_loan[k].recieve_amount)+'&nbsp;</td>';//used before
+								principal_paid = principal_paid+parseFloat(data_loan[k].total_principal_permonthpaid);
+								//temp += '<td>&nbsp;'+dojo.number.format(principal_paid)+'&nbsp;</td>';
 								
 								if(data_loan[k].is_completed==1){
 									statuss = '<label style="color:blue;"><?php echo $tr->translate('COMPLETED');?></label>';
@@ -2055,9 +2067,11 @@ function getLaonHasPayByLoanNumber(){
 								}
 							temp+= '</tr>';
 						}
+						dijit.byId('total_pricipalpaid').attr("value",principal_paid);
 					}
 					temp+='</table>';
 					dojo.byId('data_table_loan_haspay').innerHTML = temp;
+					
 				},
 				error: function(e) {
 					alert(e);

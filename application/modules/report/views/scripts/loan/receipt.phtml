@@ -42,7 +42,7 @@ img.view{height: 85px !important;}
 			   .h{ margin-top: -10px;}
 			</style>
 			<?php for($i=0; $i<2; $i++){ ?>			
-			<table width="100%" style="white-space: nowrap;font-size:14px;  padding:10px 10px 0px 5px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
+			<table width="100%" style="white-space: nowrap;font-size:14px;  padding:5px 10px 0px 5px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
@@ -69,67 +69,6 @@ img.view{height: 85px !important;}
 					<td width="10%" ></td>
 					<td width="18%" ></td>
 				</tr>
-				<!-- <tr style="white-space: nowrap;">
-				    <td colspan="5"></td>
-					<td align="right"><strong><label id="lb_receipt1" ></label></strong></td>
-				</tr>
-				
-				<tr style="white-space: nowrap;">
-				    <td   >លេខកូដលក់</td>
-				    <td  ><strong><label id="lb_student_id1" class="value"><?php //echo $this->rs['sale_number'];?></label></strong></td>
-				  
-					<td   >&nbsp;&nbsp;&nbsp;តម្លៃលក់</td>
-                    <td colspan="3" ><strong><label id="lb_price1" class="value"></label></strong></td>
-				</tr>
-				
-				<tr style="white-space: nowrap;">
-				
-				    <td  >ឈ្មោះ​អតិថិជន </td>
-				    <td ><strong><label id="lb_customer1" class="value"><?php //echo $this->rs['name_kh'];?></label></strong></td>
-					
-					<td  >​&nbsp;&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
-				    <td><strong><label id="lb_discount1" class="value"></label></strong></td>
-				    
-					<td  >&nbsp;&nbsp;តម្លៃផ្សេងៗ</td>
-				    <td><strong><label id="lb_otherfee1" class="value"></label></strong></td>
-                    
-                </tr>
-				<tr style="white-space: nowrap;">
-				
-					<td  >លេខផ្ទះ</td>
-                    <td><strong><label id="lb_hourseno1" class="value"><?php //echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; }?></label></strong></td>
-					
-					
-				    <td  >&nbsp;&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
-                    <td colspan="3"><strong><label id="lb_amount1" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-				
-					<td   width="10%">ប្រភេទបង់</td>
-				    <td width="40%"><strong><label id="lb_paymentid1" class="value"></label></strong></td>
-					
-					<td  >&nbsp;&nbsp;&nbsp;ប្រាក់បានបង់</td>
-				    <td colspan="3"><strong><label id="lb_paid1" class="value"></label></strong></td>
-				</tr>
-
-				<tr>
-					<td  >សែក</td>
-					<td ><strong><label id="lb_moneynote1" class="value"></label></strong></td>
-					
-					
-					<td  >&nbsp;&nbsp;&nbsp;ប្រាក់នៅសល់</td>
-					<td colspan="3"><strong><label id="lb_balance1" class="value"></label></strong></td>
-					
-				</tr>
-				<tr style="white-space: nowrap;">
-				
-					<td  >សម្គាល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"></label></strong></td>
-					
-					<td  >&nbsp;&nbsp;&nbsp;ថ្ងៃលក់</td>
-				    <td colspan="3"><strong><label id="lb_buydate1" class="value"></label></strong></td>
-				</tr>-->
-				
 				<tr style="white-space: nowrap;font-size: 14px;margin-top: -10px;" >
 				    <td colspan="5"></td>
 					<td align="right"><strong><label><?php echo $this->rs['receipt_no'];?></label></strong></td>
@@ -140,36 +79,38 @@ img.view{height: 85px !important;}
 					<td  >&nbsp;&nbsp;ប្រាក់ដើមត្រូវបង់</td>
                     <td  ><strong><label  class="value"><?php echo  number_format($this->rs['total_principal_permonth'],2)." $";?></label></strong></td>
 					<td>&nbsp;បង់លើកទី</td>
-					<td><strong><label id="lbl_paid_date1" class="value"><?php //echo date("d-M-Y",strtotime($this->rs['date_input']));?></label></strong></td>
+					<td><strong><label id="lbl_paid_date1" class="value"><?php echo $this->rs['payment_times'];?></label></strong></td>
 				
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td >ឈ្មោះ​អតិថិជន </td>
 				    <td ><strong><label class="value"><?php echo $this->rs['name_kh'];echo !empty($this->rs['hname_kh'])?" /".$this->rs['hname_kh']:"";?></label></strong></td>
-					<td >​&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
-				    <td colspan="3"><strong><label id="lb_discount1" class="value"><?php echo number_format($this->rs['total_discount'],2)." $";?></label></strong></td>
+					<td  >&nbsp;&nbsp; ប្រាក់ការ</td>
+                    <td  ><strong><label  class="value"><?php echo  number_format($this->rs['total_interest_permonthpaid'],2)." $";?></label></strong></td>
+					<td>&nbsp; ប្រាក់ពិន័យ</td>
+					<td><strong><label id="lbl_paid_date1" class="value"><?php echo number_format($this->rs['penalize_amountpaid'],2);?></label></strong></td>
                 </tr>
 				<tr style="white-space: nowrap;">
 					<td >លេខផ្ទះ</td>
                     <td><strong><label class="value"><?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; } echo ' '.$this->rs['property_type'];?></label></strong></td>
 				   <td >&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
-					<td colspan="3"><strong><label  class="value"></label></strong></td>
+					<td colspan="3"><strong><label  class="value"><?php echo number_format($this->rs['extra_payment'],2)." $";?></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td  width="10%">តំលៃផ្ទះ</td>
 				    <td width="40%"><strong><label id="lblpropertyprice1" class="value"><?php echo  number_format($this->rs['price_sold'],2)." $";?></label></strong></td>
 					<td >&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
-                    <td colspan="3"><strong><label id="lbl_total_payment1" class="value"><?php echo  number_format($this->rs['total_principal_permonth'],2)." $";?></label></strong></td>
+                    <td colspan="3"><strong><label id="lbl_total_payment1" class="value"><?php echo  number_format($this->rs['total_payment'],2)." $";//total_principal_permonth?></label></strong></td>
 				</tr>
 				<tr>
 					<td >ប្រាក់បានបង់សរុប</td>
-					<td ><strong><label id="lbl_total_paid1" class="value"><?php echo  number_format(($this->rs['price_sold']-($this->rs['outstanding']-$this->rs['recieve_amount'])),2)." $";?></label></strong></td>
+					<td ><strong><label id="lbl_total_paid1" class="value"><?php echo  number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2)." $";?></label></strong></td>
 					<td>&nbsp;&nbsp;ប្រាក់បានបង់</td>
 				    <td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;"><?php echo number_format($this->rs['recieve_amount'],2)." $";?></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td >ប្រាក់នៅសល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" class="value"><?php echo  number_format(($this->rs['outstanding']-$this->rs['recieve_amount']),2)." $";?></label></strong></td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" class="value"><?php echo  number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2)." $";?></label></strong></td>
 					<td >&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
 				    <td><strong><label id="lb_buydate1" class="value"><?php echo date("d-M-Y",strtotime($this->rs['date_pay']));?></label></strong></td>
 					<td>&nbsp;ថ្ងៃទទួល</td>
@@ -177,9 +118,9 @@ img.view{height: 85px !important;}
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td >សម្គាល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"></label></strong></td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"><?php echo $this->rs['note'];?></label></strong></td>
 					<td >&nbsp;&nbsp;សែក</td>
-					<td colspan="3"><strong><label id="lb_cheque1" class="value"></label></strong></td>
+					<td colspan="3"><strong><label id="lb_cheque1" class="value"><?php echo $this->rs['cheque'];?></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="35px;">
 					<td colspan="6">
@@ -249,7 +190,7 @@ img.view{height: 85px !important;}
 				
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 10px;margin-top: -10px; margin-bottom:10px;white-space:nowrap;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 10px;margin-top: -15px; margin-bottom:10px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">

@@ -1,0 +1,99 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('DAILY_PLANNING')); 
+?>
+<?php  $dailywork= $this->frm_dailywork;?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.Textarea");	
+</script>
+<form id="add_province" action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	 <script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+	</script>
+	<table cellspacing="20" style="margin: 0 auto; width: 600px">
+		<tr>
+			<td>
+				<fieldset>
+					<legend align="center"><strong><?php echo $tr->translate("To_DO_TASK");?></strong></legend>
+					<table cellspacing="20" width="100%" >
+						<tr>
+							<td align="center" valign="top">
+								<table style="margin: 0 auto; width:100%;" cellspacing="10">
+									<tr>
+										<td><?php echo $tr->translate("To_DO_TASK")?></td>
+										<td><?php echo $dailywork->getElement("work");?></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("WORK_TYPE")?></td>
+										<td><?php echo $dailywork->getElement("projectname");?></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("BY_USER")?></td>
+										<td><?php echo $dailywork->getElement("user");?></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("DATE")?></td>
+										<td><?php echo $dailywork->getElement("start_date");?></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("STATUS")?></td>
+										<td><?php echo $dailywork->getElement("status");?></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("NOTE")?></td>
+										<td><?php echo $dailywork->getElement("description");?></td>
+									</tr>
+									<tr>
+										<td colspan="2" align="center">
+											<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+											<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('GO_EDIT');?>" dojoType="dijit.form.Button" 
+												iconClass="dijitEditorIcon dijitEditorIconSave" />
+										</td>
+									</tr>					
+								</table>
+							</td>							
+						</tr>
+					</table>	
+				</fieldset>
+			</td>			
+		</tr>
+	</table>	
+</form>
+ <script>
+ function getCustomerInfo(){
+	customer_id = $("#customer_id").val();
+	if(customer_id==-1){
+		$('#customerpopup').modal('show');
+	}
+}
+<?php $url_add_customer =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'add-customer')); ?>
+function addNewCustomer(){
+	var customer_name  = $("#txt_name").val();
+	$.ajax({
+        url: "<?php echo $url_add_customer;?>",
+        type: "post",
+        data: $('#frmcustomer').serialize(),
+        success: function(data){
+            rs = $.parseJSON(data);
+             $('#customer_id').append($("<option></option>").attr("value",rs['cus_id']).attr("selected",true).text(customer_name));                       
+             $("#customer_id").select2();
+			$('#customerpopup').modal('hide');
+        },
+        error:function(err){
+            alert("faile insert");
+        }
+    });
+}
+function viewCustomer(){
+	id = $("#customer_id").val();
+	
+	if(id!=-1 && id!='' && id!=0){
+		window.open('<?php echo $this->url(array('module'=>'sales','controller'=>'customer','action'=>'edit')); ?>'+'/id/'+id, '_blank');
+	}
+}
+</script>	

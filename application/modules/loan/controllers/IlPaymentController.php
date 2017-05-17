@@ -43,7 +43,7 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 					"PAY_DATE","DATE","STATUS",'បោះពុម្ភ');
 			$link=array('module'=>'loan','controller'=>'ilpayment','action'=>'edit',);
 			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link,'land_id'=>$link,'team_group'=>$link,
+			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('branch_name'=>$link,'land_id'=>$link,'team_group'=>$link,
 					'client_name'=>$link,'receipt_no'=>$link,'branch'=>$link,'street'=>$link,'បោះពុម្ភ'=>$linkprint));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
@@ -78,6 +78,17 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
+		
+		$id = $this->getRequest()->getParam('id');
+		if(!empty($id)){
+			$dbp = new Loan_Model_DbTable_DbLandpayment();
+			$rs = $dbp->getTranLoanByIdWithBranch($id,null);
+			$this->view->rsresult =  $rs;
+			if($rs['payment_id']==1){
+				Application_Form_FrmMessage::Sucessfull("មិនមានទិន្នន័យសម្រាប់បង់ប្រាក់ទេ!","/loan");
+			}
+		}
+		
 		$frm = new Loan_Form_FrmIlPayment();
 		$frm_loan=$frm->FrmAddIlPayment();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
@@ -105,11 +116,6 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		
-        $id = $this->getRequest()->getParam('id');
-		if(!empty($id)){
-		$db = new Loan_Model_DbTable_DbLandpayment();
-		$this->view->rsresult =  $db->getTranLoanByIdWithBranch($id,null);
-		}
 	}	
 	function editAction(){
 		$id = $this->getRequest()->getParam("id");

@@ -345,17 +345,18 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    $this->_name='ln_client';
    $where='';
    	$sql = " SELECT client_id,name_en,client_number,
-   				(SELECT `ln_village`.`village_name` FROM `ln_village` WHERE (`ln_village`.`vill_id` = `ln_client`.`village_id`)) AS `village_name`,
-				(SELECT `c`.`commune_name` FROM `ln_commune` `c` WHERE (`c`.`com_id` = `ln_client`.`com_id`) LIMIT 1) AS `commune_name`,
-				(SELECT `d`.`district_name` FROM `ln_district` `d` WHERE (`d`.`dis_id` = `ln_client`.`dis_id`) LIMIT 1) AS `district_name`,
-				(SELECT province_en_name FROM `ln_province` WHERE province_id= ln_client.pro_id  LIMIT 1) AS province_en_name
+   				(SELECT `ln_village`.`village_namekh` FROM `ln_village` WHERE (`ln_village`.`vill_id` = `ln_client`.`village_id`)) AS `village_name`,
+				(SELECT `c`.`commune_namekh` FROM `ln_commune` `c` WHERE (`c`.`com_id` = `ln_client`.`com_id`) LIMIT 1) AS `commune_name`,
+				(SELECT `d`.`district_namekh` FROM `ln_district` `d` WHERE (`d`.`dis_id` = `ln_client`.`dis_id`) LIMIT 1) AS `district_name`,
+				(SELECT province_kh_name FROM `ln_province` WHERE province_id= ln_client.pro_id  LIMIT 1) AS province_en_name
 
-   	FROM $this->_name WHERE status=1 AND name_en!='' ";
+   	FROM $this->_name WHERE status=1  ";
    	$db = $this->getAdapter();
    	if($row!=null){
    		if($client_id!=null){ $where.=" AND client_id  =".$client_id ." LIMIT 1";}
    		return $db->fetchRow($sql.$where);
    	}
+//    	echo $sql.$where;exit();
    	return $db->fetchAll($sql.$where);
    }
    
@@ -776,13 +777,43 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	return $amount_days;//;*$amount_collect;//return all next day collect laon form customer
   }
   public function getNextPayment($str_next,$next_payment,$amount_amount,$holiday_status=null,$first_payment=null){//code make slow
-  	
- $default_day = Date("d",strtotime($first_payment));
-  	
+	 $default_day = Date("d",strtotime($first_payment));
+	 $prev_month=$next_payment;
+	 if($str_next=='+1 month'){
+	 	if($default_day>28){
+		 	if($default_day==31){
+		 		$next_payment = date("Y-m-t", strtotime("$next_payment +1 day"));
+		 		return $next_payment;
+		 	}elseif($default_day==30 OR $default_day==29){
+		 		$prev_month = 
+		 		$pre_month = date("m", strtotime($prev_month));
+		 		if($pre_month=='01'){
+		 			$next_payment =  date("Y", strtotime($next_payment))."-02-20";
+		 			$next_payment = date("Y-m-t", strtotime("$next_payment"));}//for Feb
+		 		else{
+		 			$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
+		 		}
+		 	}else{//for 29
+		 		
+		 	}
+	 	}else{
+	 		if($str_next!='+1 month'){
+	 			$default_day='d';
+	 		}
+	 		$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
+	 	}
+ }
+ return $next_payment;
+ 
  for($i=0;$i<$amount_amount;$i++){
 		if($default_day>28){
 			$next_payment = date("Y-m-d", strtotime("$next_payment $str_next"));
-		   if($str_next!='+1 month'){
+		  		 if($str_next!='+1 month'){
+				   	if($default_day==31){
+		   			$next_payment = date("Y-m-t", strtotime("$next_payment $str_next"));
+				   	return $next_payment;
+				   	break;
+				 }
 				$default_day='d';
 				$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
 			}else{
@@ -795,7 +826,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	  		$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
 		}
   	}
-  	
+  	return $next_payment;
   	if($holiday_status==3){
   		return $next_payment;//if normal day
   	}else{//check for sat and sunday
@@ -1099,7 +1130,7 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   		$sql.=" WHERE id=12 OR id=13";
   	}
   	$result = $db->fetchAll($sql);
-  	$options=array('-1'=>"------Select View Type------");
+  	$options=array('-1'=>"ជ្រើសរើសប្រភេទ");
   	if($opt!=null){
   		if(!empty($result))foreach($result AS $row){
   			    $options[$row['id']]=$row['name'];
@@ -1229,8 +1260,18 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	}
   	return $options;
   }
-  
-  
-  
+  function updateLateRecordSaleschedule($sale_id){
+  	$db = $this->getAdapter();
+  	$sql = "SELECT * FROM ln_saleschedule WHERE sale_id = $sale_id ORDER BY id DESC limit 1 ";
+  	$rs = $db->fetchRow($sql);
+  	if(!empty($rs)){
+  		$this->_name="ln_sale";
+  		$arr = array(
+  				'end_line'=>$rs['date_payment']
+  		);
+  		$where=" id = ".$sale_id;
+  		$this->update($arr, $where);
+  	}
+  }
 }
 ?>

@@ -1,0 +1,30 @@
+<?php
+$url_edit = $this->url(array('module'=>'dailywork','controller'=>'project','action'=>'edit'));
+$row_rs = $this->row_rs;
+?>
+<?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$status = $request->getParam('search_status');
+		if(empty($status) AND $status==0) $status=-1;
+?>
+<?php $frm =  $this->frm_search;?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
+   <table>
+   		<tr>
+		   	<td><input dojoType="dijit.form.TextBox" class="form-control" id="adv_search" name="adv_search" value="<?php echo $this->row['adv_search']?>" placeholder="<?php echo $this->translate("Search");?>" type="text" ></td>
+		   	<td><select dojoType="dijit.form.FilteringSelect" name="projectname" id="projectname" class="form-control" >
+					        	<option value="">Please Select Project</option>
+			            		<?php foreach ($this->rst As $rst){?>
+			            		<option value="<?php echo $rst['id']?>"<?php if ($rst['id']==$this->row['projectname']) echo 'selected="selected"';?>><?php echo $rst['projectname']?></option>
+			            		<?php }?>
+							</select></td>
+		   	<td><input dojoType="dijit.form.DateTextBox" class="" id="start_date" name="start_date" value="<?php echo date("Y-m-d",strtotime($this->row['start_date']));?>"  type="text" ></td>
+		    <td><input dojoType="dijit.form.DateTextBox" class="" id="end_date" name="end_date" value="<?php echo date("Y-m-d",strtotime($this->row['end_date']));?>" type="text"></div></td>
+		    <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+   	   </tr>
+   </table>
+</form>
+<?php echo $this->list; ?>

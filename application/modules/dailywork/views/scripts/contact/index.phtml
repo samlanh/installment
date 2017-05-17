@@ -1,0 +1,36 @@
+<?php
+$row_rs = $this->row_rs;
+?>
+<?php 
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$status = $request->getParam('search_status');
+		if(empty($status) AND $status==0) $status=-1;
+?>
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>	
+<?php $frm =  $this->frm_search;?>
+<?php $tr = Application_Form_FrmLanguages::getCurrentlanguage(); ?>
+<?php $formFilter =  $this->frm_search;?>
+<meta charset="utf-8" />
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
+   <table>
+   		<tr>
+		   	<td><input dojoType="dijit.form.TextBox" class="form-control" id="adv_search" name="adv_search" value="<?php echo $this->row['adv_search']?>" placeholder="<?php echo $this->translate("Search");?>" type="text" ></td>
+		   	<td><select dojoType="dijit.form.FilteringSelect" name="category" id="category" class="form-control">
+				        	<option value="">Please selectcategory</option>
+		            		<?php foreach ($this->cat As $rs){?>
+		            		<option value="<?php echo $rs['id']?>"  <?php if($this->row['category']==$rs['id']) echo "selected='selected'";?>><?php echo $rs['name']?></option>
+		            		<?php }?>
+						</select></td>
+		   	<td><input dojoType="dijit.form.DateTextBox" class="" id="start_date" name="start_date" value="<?php echo date("m/d/Y",strtotime($this->row['start_date']));?>" type="text" ></td>
+		    <td><input dojoType="dijit.form.DateTextBox" class="" id="end_date" name="end_date" value="<?php echo $this->row['end_date'];?>" type="text"></div></td>
+		    <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+   	   </tr>
+   </table>
+</form>
+<?php echo $this->list; ?>

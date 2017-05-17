@@ -20,15 +20,15 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 		   FROM `ln_project`
 		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
 		   LIMIT 1) AS `branch_name`,
-    	s.sale_number,
 	    `c`.`name_kh`         AS `name_kh`,
+	    `c`.`phone`         AS `phone`,
 	    `p`.`land_address`    AS `land_address`,
 	    `p`.`street`          AS `street`,
 	    (SELECT name_en FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
   		`s`.`price_before`    AS `price_before`,
  		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
         `s`.`discount_amount` AS `discount_amount`,
-
+ 		`s`.`price_sold`     AS `price_sold`,
         `s`.`paid_amount`     AS `paid_amount`,
         `s`.`balance`         AS `balance`,
         `s`.`buy_date`        AS `buy_date`,
@@ -48,11 +48,13 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$s_where = array();
     		$s_search = addslashes(trim($search['adv_search']));
       	 	$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
       	 	$s_where[] = " p.land_code LIKE '%{$s_search}%'";
       	 	$s_where[] = " p.land_address LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.client_number LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.name_en LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.phone LIKE '%{$s_search}%'";
       	 	$s_where[] = " s.price_sold LIKE '%{$s_search}%'";
       	 	$s_where[] = " s.comission LIKE '%{$s_search}%'";
       	 	$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
@@ -157,7 +159,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try{
     		$is_schedule = 0;
-    		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==4 OR $data["schedule_opt"]==6){//
+    		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==4 OR $data["schedule_opt"]==5 OR $data["schedule_opt"]==6){//
     			$is_schedule=1;
     		}
     		$dbtable = new Application_Model_DbTable_DbGlobal();
@@ -223,7 +225,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$from_date =  $data['release_date'];
     		$curr_type = 2;//$data['currency_type'];
     		$term_types = 12;
-    		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6){
+    		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6 OR $data["schedule_opt"]==5){
     			$term_types=1;
     		}
     		$loop_payment = $data['period']*$term_types;
@@ -247,7 +249,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
     				}else{
     					$next_payment = $data['first_payment'];
-    					$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
+    					//$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
     				}
     				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
     				$total_day = $amount_day;
@@ -329,7 +331,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    			$pri_permonth = $remain_principal;
 			    			$paid_receivehouse = $data['paid_receivehouse'];
 			    		}
-    			   }elseif($payment_method==6){//បង់មិនថេរ
+    			   }elseif($payment_method==6 OR $payment_method==5){//បង់មិនថេរ
 	    			   	$ids = explode(',', $data['identity']);
 	    			   	$key = 1;
 	    			   	foreach ($ids as $i){
@@ -349,6 +351,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   			
 	    			   		$cum_interest = $cum_interest+$old_interest_paymonth;
 	    			   		$amount_day = $dbtable->CountDayByDate($from_date,$data['date_payment'.$i]);
+	    			   		
 	    			   	
 	    			   		$this->_name="ln_saleschedule";
 	    			   		$datapayment = array(
@@ -373,9 +376,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   				'no_installment'=>$key,
 	    			   				'last_optiontype'=>$paid_receivehouse,
 	    			   		);
+	    			   		if($payment_method==5){//with bank
+	    			   			$datapayment['ispay_bank']= $data['pay_with'.$i];
+	    			   		}
 	    			   		$sale_currid = $this->insert($datapayment);
 	    			   		$from_date = $data['date_payment'.$i];
-	    			   			
 	    			   		$key = $key+1;
 	    			   	}
 	    			   	break;
@@ -467,6 +472,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			'user_id'			=>$this->getUserId(),
     			'field3'			=>1,// ជាប្រាក់កក់
     			'field2'=>1,
+    			'payment_times'=>1,
     	);
     	$this->_name='ln_client_receipt_money';
     	if($action==null){//edit
@@ -992,12 +998,13 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
     				}else{
     					$next_payment = $data['first_payment'];
-    					$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
+    					
+    					//$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
     				}
     				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
     				$total_day = $amount_day;
     				$interest_paymonth = 0;
-    				$pri_permonth = round($data['sold_price']/$borrow_term,2);
+    				$pri_permonth = round($data['sold_price']/$borrow_term,0);
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
     				}
@@ -1381,7 +1388,7 @@ function getLoanLevelByClient($client_id,$type){
   				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
   				$total_day = $amount_day;
   				$interest_paymonth = 0;
-  				$pri_permonth = round($data['sold_price']/$borrow_term,2);
+  				$pri_permonth = round($data['sold_price']/$borrow_term,0);
   				if($i==$loop_payment){//for end of record only
   					$pri_permonth = $remain_principal;
   				}

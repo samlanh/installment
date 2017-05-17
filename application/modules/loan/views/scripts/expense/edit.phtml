@@ -77,7 +77,7 @@ $frm = $this->frm_expense;
 				 iconClass="dijitIconClear"/>
 			<input type="submit" label="<?php echo $tr->translate("GO_EDIT");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button"
 				 iconClass="dijitIconDelete"/>
-			<input type="button" label="<?php echo $tr->translate("PRINT_SAVE")?>" name='print' value=''print'' dojoType="dijit.form.Button"
+			<input type="button" label="<?php echo $tr->translate("SAVEPRINT")?>" name='print' value=''print'' dojoType="dijit.form.Button"
 				 iconClass="dijitIconNewTask" onClick="printSave('');displayNone();" />
 		</td>
 	</tr>	
@@ -231,8 +231,6 @@ function printSubmit(){
 		</form>
 	</div>
 </div>
-
-
 <div class="dijitHidden" style="width: 22cm !important; height: 11cm ; padding: 0px; margin: 0px;">
 	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_income" >
 		<div id="divPrint" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
@@ -248,19 +246,19 @@ function printSubmit(){
 				}
 
 				.label{ font-weight: bold;font-size: 22px;}
-				.value{ font:bold 12px 'Khmer OS Battambang';border: 1px solid rgba(14, 0, 107, 1); height: 24px; width: 100%;margin-right:5px; display: block;
-						line-height: 25px;
+				.value{ font:14px 'Khmer OS Battambang';border: 1px solid #000; height: 28px; width: 100%;margin-right:5px; display: block;
+						line-height: 28px;
 					    text-align: center;
 						}
 				.print tr td{
 					padding:2px 2px; 
 				}
-			   .khmerbold{font:bold 12px 'Khmer OS Battambang';}
-			   .khmer{font:12px 'Khmer OS Battambang';}
+			   .khmerbold{font:16px 'Khmer OS Battambang';}
+			   .khmer{font:16px 'Khmer OS Battambang';}
 			   .one{white-space:nowrap;}
 			   .h{ margin-top: -10px;/*margin-left:4px;*/}
-			</style>	
-			<table width="100%" style="white-space: nowrap;font-size:12px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
+			</style>
+			<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
@@ -278,7 +276,7 @@ function printSubmit(){
 					</td>
 				</tr>
 			</table>
-			<table width="100%" style="white-space: nowrap;font-size:12px;margin-top: -20px;" class="print" cellspacing="8px"  cellpadding="0">
+			<table width="100%" style="white-space: nowrap;font-size:15px;margin-top: -20px;" class="print" cellspacing="8px"  cellpadding="0">
 				<tr>
 					<td width="10%" ></td>
 					<td width="37%" ></td>
@@ -287,22 +285,15 @@ function printSubmit(){
 					<td width="10%" ></td>
 					<td width="20%" ></td>
 				</tr>
-				
-				
 				<tr style="white-space: nowrap;">
-				
 					<td class="one khmerbold">គម្រោង</td>
                     <td><strong><label id="lb_branch" class="value"></label></strong></td>
-					
-					
 				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
                     <td colspan="3"><strong><label id="lb_invoice" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				
 					<td class="one khmerbold">ពណ៌នាចំនាយ</td>
 					<td ><strong><label id="lb_income_title" class="value"></label></strong></td>
-					
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ប្រភេទចំណាយ</td>
 				    <td colspan="3"><strong><label id="lb_income_category" class="value"></label></strong></td>
 				</tr>
@@ -310,22 +301,18 @@ function printSubmit(){
 				<tr>
 					<td class="one khmerbold">សែក</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"></label></strong></td>
-					
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ចំណាយសរុប</td>
 					<td colspan="3"><strong><label id="lb_total_amount" class="value"></label></strong></td>
-					
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">សម្គាល់</td>
 				    <td colspan="1" align="center"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: center; " id="lb_description" class="value"></label></strong></td>
-				
-					
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ថ្ងៃចំណាយ</td>
 				    <td colspan="3"><strong><label id="lb_date" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"></strong></td>
-				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">ស្នាមមេដៃអ្នកទទួល</strong></td>
+				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['customer_sign'];?></strong></td>
+				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['teller_sign'];?></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="60px;">
 					<td class="one khmerbold" colspan="4" align="center" valign="bottom">
@@ -338,19 +325,14 @@ function printSubmit(){
 						           echo $last_name." ".$username;?></h4>  
 					</td>
 				</tr>
-				
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" valign="top" >
-						
 					</td>
 				</tr>
-				
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
-						
 					</td>
 				</tr>
-				
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
 						<table width="100%" style="font-size:11px;line-height: 12px;margin-top: -5px;font-family: 'Khmer OS Battambang';"> 
@@ -426,45 +408,33 @@ function printSubmit(){
 					<td width="10%" ></td>
 					<td width="20%" ></td>
 				</tr>
-				
-				
 				<tr style="white-space: nowrap;">
-				
 					<td class="one khmerbold">សាខា</td>
                     <td><strong><label id="lb_branch1" class="value"></label></strong></td>
-					
-					
 				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
                     <td colspan="3"><strong><label id="lb_invoice1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				
 					<td class="one khmerbold">ពណ៌នាចំនាយ</td>
 					<td ><strong><label id="lb_income_title1" class="value"></label></strong></td>
-					
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ប្រភេទចំណាយ</td>
 				    <td colspan="3"><strong><label id="lb_income_category1" class="value"></label></strong></td>
 				</tr>
-
 				<tr>
 					<td class="one khmerbold">សែក</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque1" class="value"></label></strong></td>
-					
 					<td class="one khmerbold">&nbsp;&nbsp;ចំណាយសរុប</td>
 					<td colspan="3"><strong><label id="lb_total_amount1" class="value"></label></strong></td>
-					
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">សម្គាល់</td>
 				    <td colspan="1" align="center"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: center; " id="lb_description1" class="value"></label></strong></td>
-				
-					
 					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃចំណាយ</td>
 				    <td colspan="3"><strong><label id="lb_date1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"></strong></td>
-				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">ស្នាមមេដៃអ្នកទទួល</strong></td>
+				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['customer_sign'];?></strong></td>
+				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['teller_sign'];?></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="60px;">
 					<td class="one khmerbold" colspan="4" align="center" valign="bottom">

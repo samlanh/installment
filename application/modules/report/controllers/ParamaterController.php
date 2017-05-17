@@ -253,6 +253,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'client_name' => -1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
+  				'payment_type'=>-1,
   		);
   	}
   	$this->view->list_end_date=$search;
@@ -323,6 +324,32 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$row=$frm->FrmAddStaff();
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_staff=$row;
+  }
+  function rptRevenueExpenseAction(){
+  
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}
+  	else{
+  		$search = array(
+  		//      "adv_search"=>'',
+  		//      "branch_id"=>-1,
+  		//      "status"=>-1,
+  		//      "category_id"=>-1,
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  		);
+  	}
+  	$this->view->list_end_date=$search;
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->income = $db->getIncomeCategory($search);
+  	$this->view->expense = $db->getExpenseCategory($search);
+  	$this->view->saleicome = $db->geIncomeFromSale($search);
+  
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
   }
 }
 

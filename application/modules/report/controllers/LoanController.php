@@ -91,6 +91,7 @@ class Report_LoanController extends Zend_Controller_Action {
 				'status' => -1,
 				'client_name' => "",
 				'branch_id' => -2,
+				'land_id'=>-1,
 				'start_date'=> date('Y-m-d'),
 	  			'end_date'=>date('Y-m-d')
 		);
@@ -604,6 +605,7 @@ public function exportFileToExcel($table,$data,$thead){
  				'branch_id' => "",
  				'client_name' => -1,
  				'co_id' => "",
+ 				'land_id'=>-1,
  				'start_date' =>date('Y-m-d'),
  				'end_date' => date('Y-m-d'),
  		);
@@ -697,6 +699,34 @@ public function exportFileToExcel($table,$data,$thead){
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  }
+ function rptDepositalertAction(){
+ 	$db  = new Report_Model_DbTable_DbLandreport();
+ 	if($this->getRequest()->isPost()){
+ 		$search = $this->getRequest()->getPost();
+ 	}
+ 	else{
+ 		$search = array(
+ 				'adv_search'=>'',
+ 				'branch_id'=>-1,
+ 				'schedule_opt'=>-1,
+ 				'property_type'=>0,
+ 				'client_name'=>'',
+ 				'buy_type'=>-1,
+ 				'start_date'=> date('Y-m-d'),
+ 				'end_date'=>date('Y-m-d'));
+ 	}
+ 	$this->view->loanrelease_list=$db->getAlertDeposit($search);
+ 	$this->view->list_end_date=$search;
+ 	$this->view->branch_id = $search['branch_id'];
+ 		
+ 	$frm = new Loan_Form_FrmSearchLoan();
+ 	$frm = $frm->AdvanceSearch();
+ 	Application_Model_Decorator::removeAllDecorator($frm);
+ 	$this->view->frm_search = $frm;
+ 		
+ 	$key = new Application_Model_DbTable_DbKeycode();
+ 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+ }
  function rptPaymentschedulesAction(){
  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
  	$id =$this->getRequest()->getParam('id');
@@ -756,6 +786,7 @@ public function exportFileToExcel($table,$data,$thead){
  				'start_date'=> date('Y-m-d'),
  				'end_date'=>date('Y-m-d'),
  				'branch_id'		=>	-1,
+ 				'land_id'=>-1,
  				'status'=>"",
  				"currency_type"=>-1,
  		);
@@ -788,6 +819,35 @@ public function exportFileToExcel($table,$data,$thead){
 	 }else{
   		$this->_redirect("/report/paramater");
   	}
+  }
+  function updatereceiptAction(){
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	if($this->getRequest()->isPost()){
+  		$_data = $this->getRequest()->getPost();
+  		try {
+  			$_dbmodel = new Report_Model_DbTable_DbLandreport();
+  			$_dbmodel->updateReceipt($_data);
+  			Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/receipt/id/".$_data['id']);
+  		}catch (Exception $e) {
+  			Application_Form_FrmMessage::message("INSERT_FAIL");
+  			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+  		}
+  	}
+  	
+  	$id = $this->getRequest()->getParam('id');
+  	if(!empty($id)){
+  		$receipt = $db->getReceiptByID($id);
+  		$this->view->rs = $receipt;
+  		if(empty($receipt['name_kh'])){
+  			$this->_redirect("/report/paramater");
+  		}
+  	}else{
+  		$this->_redirect("/report/paramater");
+  	}
+  	$db = new Loan_Model_DbTable_DbGroupPayment();
+  	$this->view->customer =  $db->getIndividuleClient();
   }
   function rptUpdatepaymentAction(){
   	if($this->getRequest()->isPost()){

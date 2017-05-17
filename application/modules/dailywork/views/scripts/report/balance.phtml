@@ -1,0 +1,144 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("LIST_LOAN_INCOME"));
+$frm = $this->frm_search;
+$opt = array(1=>"áž”áž„áŸ‹áž’áž˜áŸ’áž˜áž�áž¶",2=>"áž”áž„áŸ‹áž˜áž»áž“",3=>"áž”áž„áŸ‹ážšáŸ†áž›áŸ„áŸ‡áž”áŸ’ážšáž¶áž€áŸ‹ážŠáž¾áž˜",4=>"áž”áž„áŸ‹áž•áŸ’áž�áž¶áž…áŸ‹");
+?>
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'dailywork','controller'=>'report','action'=>'balance')); ?>" dojoType="dijit.form.Form" method="post">
+  <table style=" width:28.5cm;margin:0 auto; padding:0px">
+   <tr>  
+        <td><?php //echo $frm->getElement("adv_search");?></td>
+        <td><?php //echo $frm->getElement('status');?></td>
+   		<td><?php //echo $frm->getElement('currency_type');?></td>
+   </tr>
+   <tr>
+   		<td><?php //echo $frm->getElement('start_date');?></td>
+   		<td><?php //echo $frm->getElement('end_date');?></td>
+   		
+   </tr>
+</table>
+</form>
+
+<div style=" width:28cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+<div id="divPrint" style="width: 100%;">
+<style>
+.style{
+	line-height: 20px;font-size: 10px !important;
+	font-family: 'Khmer OS Battambang';
+	
+	
+}
+#exportExcel table tr td {
+	border:1px solid #000;
+}
+.noborder{
+	border:0 !important;
+}
+.styleover:hover{ background: #ccc; }
+table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+th{padding: 5px;}
+</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;">
+	<tr>
+    	<td align="center">
+        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+            	<tr>
+                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/ibp.png" style="height:70px;" width="170px;"></td>
+                	<td width="60%" valign="top">
+                		<ul>
+                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("របាយការណ៏សមតុល្យសំរាប់ខែកញ្ញា ២០១៦");?></li>
+                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("ផ្នែក ទឺក");?></li>
+                		</ul>
+                </td>
+                    <td width="20%"></td>
+                </tr> 
+                
+            </table>
+        </td>
+    </tr>
+    <tr>
+    	<td id="exportExcel">
+            <table  style="border-collapse:collapse; font-size:10px; white-space: nowrap;" width="100%" cellspacing="0">
+            	<tr>
+            		<td class="noborder" style="padding:5px 0px;"><?php echo $tr->translate("");?></td>
+                    <td class="noborder" style="padding:5px 0px;"><?php echo $tr->translate("");?></td>
+                    <td class="noborder" style="padding:5px 0px;"><?php echo $tr->translate("");?></td>
+                    <td class="noborder" style="padding:5px 0px;"><?php echo $tr->translate("Total")?></td>
+					<td class="noborder" style="padding:5px 0px;"><?php echo $tr->translate("");?></td>
+                    <td class="noborder" style="padding:5px 0px;"></td>
+                    <td class="noborder" style="padding:5px 0px;">49.00</td>
+                    <td class="noborder" style="padding:5px 0px;">58.00</td>
+                    <td class="noborder" style="padding:5px 0px;">65.00</td>
+                    <td class="noborder" style="padding:5px 0px;"><?php echo $tr->translate("");?></td>
+                    <td class="noborder" style="padding:5px 0px;">42.00</td>
+                    <td class="noborder" style="padding:5px 0px;">$1,163.84</td>
+                     <td class="noborder" style="padding:5px 0px;">$ 2400</td>
+            	</tr>
+                 <tr bgcolor="#ccc" class="style" align="center" style="font-weight:bold; line-height: 20px; font-size:10px; padding:5px 0px; ">
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("Code");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("Item Name");?></td>
+					<td style="padding:5px 0px;"><?php echo $tr->translate("Packing");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("U/Price");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("B/B");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("Purch.");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("Issue");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("Return");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("E/B");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("Amount");?></td>
+                    <td style="padding:5px 0px;"><?php echo $tr->translate("UPD Price");?></td>
+                     
+                </tr>
+               <?php for($i=0;$i<10;$i++){ $num = $i+1;?> 
+               	<tr class="style" align="center" style="font-weight:bold; line-height: 20px; font-size:10px; padding:5px 0px; ">
+                    <td style="padding:15px 15px;"></td>
+                    <td style="padding:15px 15px;"></td>
+                    <td style="padding:5px 0px;"><?php echo "Item".$num;?></td>
+                    <td style="padding:5px 0px;"><?php echo "10".$num;?></td>
+					<td style="padding:5px 0px;"><?php echo "Fruit".$num;?></td>
+                    <td style="padding:5px 0px;"><?php echo "$0.44".$num;?></td>
+                    <td style="padding:5px 0px;"><?php echo "$4.40".$num;?></td>
+                    <td style="padding:5px 0px;"><?php echo "23101".$num;?></td>
+                    <td style="padding:5px 0px;"><?php echo "23101".$num;?></td>
+                    <td style="padding:5px 0px;"><?php echo "name".$num;?></td>
+                    <td style="padding:5px 0px;"><?php echo "name".$num;?></td>
+                    <td style="padding:5px 0px;"><?php echo "name".$num;?></td>
+                    <td style="padding:5px 0px;"><?php echo "name".$num;?></td>
+                     
+                </tr>
+               <?php }?>
+              
+            </table><br/>
+           
+                		<ul>
+                			
+                			<li style="text-align:right; font-size:14px; font-family:'Khmer OS Contant;'"><?php echo $tr->translate("DIBP,ថ្ងៃ ទី ២៦ ខែ កញ្ញា ឆ្នាំ ២០១៦");?></li>
+                			
+                		</ul>
+                </td>
+            <br />
+			<table align="center" width="100%">
+				   <tr style="font-size: 12px;">
+				        <th style="width:50%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('ប្រធានឃ្លាំង');?></th>
+				        <th></th>
+				        <th style="width:40%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('ពិនិត្យដោយ');?></th>
+				        <th></th>
+				        <th style="width:30%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('អ្នកធ្វើរបាយការណ៍');?></th>
+				   </tr>
+			</table>
+    	</td>
+    </tr>
+</table>
+<br />
+ 
+</div>
+</div>
+</div>

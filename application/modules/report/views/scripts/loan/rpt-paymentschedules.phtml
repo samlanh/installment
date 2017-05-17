@@ -22,6 +22,12 @@ td p{ margin-top:0px !important;}
 		
 	}
 	td p{ margin-top:-12px;}
+table { page-break-inside:auto }
+  tr{ page-break-inside:avoid; page-break-after:auto; }
+#header {
+  display: table-header-group;
+  page-break-inside:avoid; page-break-after:auto;
+}
 	</style>
 	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
 		<tr>
@@ -81,22 +87,24 @@ td p{ margin-top:0px !important;}
 	    <tr>
 	    	<td>
 	            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%">
-	                 <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
-	                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
-	                    <td rowspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
-	                    <!-- <td>ចំនួនថ្ងៃ</td> -->
-	                    <td rowspan="2"><?php echo $tr->translate("PRINCIPLE");?></td>
-	                    <td rowspan="2"><?php echo $tr->translate("ប្រាក់បង់បន្ថែម");?></td>
-	                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
-	                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
-	                    <td rowspan="2"><?php echo $tr->translate("Cumulative Interest");?></td>
-	                </tr>
+	                 <thead>
+		                 <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
+		                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+		                    <!-- <td>ចំនួនថ្ងៃ</td> -->
+		                    <td rowspan="2"><?php echo $tr->translate("PRINCIPLE");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("ប្រាក់បង់បន្ថែម");?></td>
+		                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("Cumulative Interest");?></td>
+		                </tr>
 	                <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
 	                    <!--<td>ចំនួនថ្ងៃ</td>-->
 	                    <td>ប្រាក់ដើម</td>
 	                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
 	                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 	                </tr>
+	                </thead>
 	               <?php $set=1; if(!empty($tran)) foreach($tran as $key =>$row){?>
 	               	<?php if($set==1 AND $row['is_rescheule']==1){?>
 	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style">

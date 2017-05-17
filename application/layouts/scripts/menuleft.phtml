@@ -14,23 +14,22 @@
 			if($rs['module']=='report' AND $rs['controller']!='loan'){
 				continue;
 			}
-			$lblcontroller = $rs['controller'];
-			if($rs['controller']=='index' AND $rs['module']=='group' ){
-				$lblcontroller='CLIENT_INFO';
-			}
-			if($rs['controller']=='index' AND $rs['module']=='loan' ){
-				$lblcontroller='IL_DISBURSE';
-			}
-			if($rs['controller']=='index' AND $rs['module']=='other' ){
-				$lblcontroller='province';
-			}
-			if($rs['controller']=='loantype' AND $rs['module']=='other' ){
-				$lblcontroller='OTHER';
-			}
-			if($rs['controller']=='term' AND $rs['module']=='other' ){
-				$lblcontroller='termcondition';
-			}
-			
+			$lblcontroller = $rs['label'];
+// 			if($rs['controller']=='index' AND $rs['module']=='group' ){
+// 				$lblcontroller='CLIENT_INFO';
+// 			}
+// 			if($rs['controller']=='index' AND $rs['module']=='loan' ){
+// 				$lblcontroller='IL_DISBURSE';
+// 			}
+// 			if($rs['controller']=='index' AND $rs['module']=='other' ){
+// 				$lblcontroller='province';
+// 			}
+// 			if($rs['controller']=='loantype' AND $rs['module']=='other' ){
+// 				$lblcontroller='OTHER';
+// 			}
+// 			if($rs['controller']=='term' AND $rs['module']=='other' ){
+// 				$lblcontroller='termcondition';
+// 			}
 			if($module!=$rs['module']){
 				$newarray= array($rs['controller']=>'<a href="">'.$tr->translate(strtoupper($lblcontroller)).'</a>');
 				$menu[$rs['module']]= $newarray;
@@ -48,12 +47,14 @@
 	<div id="mySidenav" class="sidenav" style=" width:185px;">
 	<span href="javascript:void(0)"  class="closebtn"  onclick="closeNav()">Hide Left</span>
 		<?php 
+		if($request->getModuleName()!='report'){
 				if($request->getModuleName()!='default' AND $action!='changepassword' ){
 				$dc=new Application_Model_Decorator();					
 				$class="current-left";					
 				$menu=$dc->getMenuLeft($arr_param_menu[$request->getModuleName()],$request->getControllerName(),$request->getModuleName());
 				if($menu) echo $menu;	
-}				
+		 }		
+		}		
 			?>
 			
 			 <div  style="background: #fff;padding: 2px;max-width: 180px;min-height:70px;max-height: 500px;overflow: scroll;" >

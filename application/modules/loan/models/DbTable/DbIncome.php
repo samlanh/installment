@@ -24,6 +24,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			'status'		=>$data['Stutas'],
 			'user_id'		=>$this->getUserId(),
 			'create_date'	=>date('Y-m-d'),
+			'is_beginning'=>$data['is_beginning'],
 		);
 		$this->insert($array);
  }
@@ -40,6 +41,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 					'description'=>$data['Description'],
 					'date'=>$data['Date'],
 					'status'=>$data['Stutas'],
+				   'is_beginning'=>$data['is_beginning'],
 					'user_id'=>$this->getUserId(),
 				);
 		$where=" id =  $id " ;

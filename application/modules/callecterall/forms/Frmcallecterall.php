@@ -81,6 +81,18 @@ Class Callecterall_Form_Frmcallecterall extends Zend_Dojo_Form {
 		));
 		$date_call->setValue(date('Y-m-d'));
 	  $_id = new Zend_Form_Element_Hidden('id');
+	  
+	  $_type = new Zend_Dojo_Form_Element_FilteringSelect("type");
+	  $_type->setMultiOptions($_arr);
+	  $_type->setAttribs(array(
+	  		'dojoType'=>'dijit.form.FilteringSelect',
+	  		'required'=>'true',
+	  		'missingMessage'=>'Invalid Module!',
+	  		'class'=>'fullside'));
+	  $db = new  Application_Model_DbTable_DbGlobal();
+	  $opt= $db->getAllViewType(1,1);
+	  $_type->setMultiOptions($opt);
+	  $_type->setValue($request->getParam("type"));
 		
 		if($data!=null){
 			$name_en->setValue($data['title_en']);
@@ -92,7 +104,7 @@ Class Callecterall_Form_Frmcallecterall extends Zend_Dojo_Form {
 		    $_id->setValue($data['id']);
 			
 		}
-		$this->addElements(array($status_search,$_title,$_btn_search,$name_en,$name_kh,$key_code,$_id,$_display,$_status,$date_call));
+		$this->addElements(array($_type,$status_search,$_title,$_btn_search,$name_en,$name_kh,$key_code,$_id,$_display,$_status,$date_call));
 		return $this;
 		
 	}	

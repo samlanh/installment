@@ -307,10 +307,10 @@
 									&nbsp;
 								</td>
 								<td align="center" width="40%">
-									ស្នាមមេដៃអ្នកប្រគល់
+									<?php echo $this->data['customer_sign'];?>
 								</td>
 								<td align="center" width="30%">
-									ស្នាមមេដៃអ្នកទទួល
+									<?php echo $this->data['teller_sign'];?>
 								</td>
 							</tr>
 							<tr>
@@ -492,13 +492,11 @@
 								<td width="30%">
 									&nbsp;
 								</td>
-								
 								<td align="center" width="40%">
-									ស្នាមមេដៃអ្នកប្រគល់
+									<?php echo $this->data['customer_sign'];?>
 								</td>
-									
 								<td align="center" width="30%">
-									ស្នាមមេដៃអ្នកទទួល
+									<?php echo $this->data['teller_sign'];?>
 								</td>
 							</tr>
 							<tr>
@@ -760,7 +758,7 @@ function calculateDiscount(){
 	if(isNaN(discount_percent)){
 		discount_percent=0;
 	}
-	discount_percent = total_sold*discount_percent/100;
+	discount_percent = parseInt(total_sold*discount_percent/100);
 	total_sold = total_sold-discount_percent-discount+other_fee;
 	dijit.byId('sold_price').attr('value',total_sold);
 	Balance();
@@ -1726,7 +1724,7 @@ function calCulateFirstPayment(){
 	amount_date = 1;
 	method_id = dijit.byId('schedule_opt').get('value');
 	addamount=1;
-	if(method_id==3 || method_id==4 || schedule_opt==6){
+	if(method_id==3 || schedule_opt==6){
 		addamount=0;
 	}
 	release_date = dijit.byId("release_date").get('value');

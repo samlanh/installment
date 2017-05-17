@@ -51,7 +51,7 @@ public function addAction()
     		//Add filter search
     		$gc = new Application_Model_GlobalClass();
     		// For list all module
-    		$sql = "SELECT DISTINCT acl.`module` FROM `rms_acl_acl` AS acl";
+    		$sql = "SELECT DISTINCT acl.`module` FROM `rms_acl_acl` AS acl where acl.`module`!='' ";
     		$this->view->optoin_mod =  $gc->getOptonsHtmlTranslate($sql, "module", "module");
     		// For list all controller
     		$sql = "SELECT DISTINCT acl.`controller` FROM `rms_acl_acl` AS acl WHERE acl.`status` = 1";
@@ -163,9 +163,9 @@ public function addAction()
     				if($tmp_status !== $status) continue;
     			}
     			
-    			$lbl_controller = $tr->translate(strtoupper($com['controller']));
+    			$lbl_controller = $tr->translate(strtoupper($com['label']));
     			if($com['action']!='index'){
-    			  $lbl_controller=$tr->translate(strtoupper($com['action'])).$lbl_controller;
+    			  $lbl_controller=$tr->translate(strtoupper($com['label']));
     			}
     			$rows[] = array($com['acl_id'],$lbl_controller, $com['user_access'], $img) ;
     		}

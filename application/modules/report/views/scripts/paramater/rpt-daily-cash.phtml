@@ -33,6 +33,12 @@ dojo.require("dijit.form.DateTextBox");
 						font-family: 'Khmer OS Battambang';
 						}
 						th{padding: 5px;}
+						table { page-break-inside:auto }
+						tr{ page-break-inside:avoid; page-break-after:auto; }
+						#header {
+						  display: table-header-group;
+						  page-break-inside:avoid; page-break-after:auto;
+						}
 					</style>
         	<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
         	<tr>
@@ -58,28 +64,30 @@ dojo.require("dijit.form.DateTextBox");
             ?>
             	<td colspan="3" id="exportExcel">
             			<table width="100%" border="1" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
-			                <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
-			                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("SALE_NO");?></td>	
-			                    <!-- <td rowspan="2"><?php //echo $tr->translate("CLIENT_NUM");?></td>     -->              
-			                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("LOAN_NO");?></td>	
-			                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_NAME");?></td>
-			                     <td rowspan="2"><?php echo $tr->translate("STREET");?></td>   
-			                    <td colspan="4"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>    
-			                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("RECIEPT_NO");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
-			                    <!-- <th rowspan="2"><?php //echo $tr->translate("BALANCE");?></th>-->
-			                </tr>
-			                <tr class="style" style="white-space: nowrap;text-align: center;">
-			                	<td><?php echo $tr->translate("PRINCIPLE");?></td>                   
-			                    <td><?php echo $tr->translate("INTEREST");?></td>
-			                    <td><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
-			                    <!-- <td><?php //echo $tr->translate("SERVICE CHARGE");?></td>	  -->                   
-			                    <td><?php echo $tr->translate("TOTAL");?></td>
-			                </tr>
+			                <thead>
+				                <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+				                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("SALE_NO");?></td>	
+				                    <!-- <td rowspan="2"><?php //echo $tr->translate("CLIENT_NUM");?></td>     -->              
+				                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("LOAN_NO");?></td>	
+				                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_NAME");?></td>
+				                     <td rowspan="2"><?php echo $tr->translate("STREET");?></td>   
+				                    <td colspan="4"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>    
+				                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("RECIEPT_NO");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
+				                    <!-- <th rowspan="2"><?php //echo $tr->translate("BALANCE");?></th>-->
+				                </tr>
+				                <tr class="style" style="white-space: nowrap;text-align: center;">
+				                	<td><?php echo $tr->translate("PRINCIPLE");?></td>                   
+				                    <td><?php echo $tr->translate("INTEREST");?></td>
+				                    <td><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+				                    <!-- <td><?php //echo $tr->translate("SERVICE CHARGE");?></td>	  -->                   
+				                    <td><?php echo $tr->translate("TOTAL");?></td>
+				                </tr>
+			                </thead>
 		                <?php $amt_r1 = 0; $amn_r2 = 0; $amn_r3 = 0;$amt_r4 = 0;$amn_r5 = 0;
 		                	  $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;$amt_d5 = 0;
 		                	 $amn_b1 = 0; $amn_b2 = 0; $amn_b3 = 0; $amn_b4 = 0;$amn_b5 = 0;
@@ -88,8 +96,8 @@ dojo.require("dijit.form.DateTextBox");
 		                	 $total_d=0;$total_b=0;$total_r=0;
 		                ?>
 		                <?php $is_set =0; if(!empty($this->collectMoney)) foreach ($this->collectMoney as $index => $rs){ ?>
-		                <?php 
-		                ?>
+		               <?php 
+               		    ?>
 		               <?php 
 								$amt_d1 = $amt_d1+$rs['total_principal_permonthpaid'];
 								$amt_d2 = $amt_d2+$rs['total_interest_permonthpaid'];
@@ -131,6 +139,7 @@ dojo.require("dijit.form.DateTextBox");
             <tr>
             	<td colspan="3">
             		<table id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 20px; font-size: 12px; border:solid 1px #000;" >  
+				    	<thead>
 				    	<tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
 							<th ><?php echo $tr->translate("NUM");?></th>
 						    <th><?php echo $tr->translate("BRANCH_NAME");?></th>
@@ -141,6 +150,7 @@ dojo.require("dijit.form.DateTextBox");
 						    <th><?php echo $tr->translate("NOTE");?></th>
 						    <th><?php echo $tr->translate("DATE");?></th>
 						</tr>
+						</thead>
 				       <?php $branch_id=''; $i=0; $total_other_income=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
 						<tr style="font-size: 12px; line-height:20px; white-space: nowrap;" align="left">
 						   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
@@ -168,17 +178,22 @@ dojo.require("dijit.form.DateTextBox");
              <tr>
             	<td colspan="3">
             		<table id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 20px; font-size: 12px; border:solid 1px #000;" >  
-				    	<tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
-							<th ><?php echo $tr->translate("NUM");?></th>
-						    <th><?php echo $tr->translate("BRANCH_NAME");?></th>
-						    <th><?php echo $tr->translate("EXPENSE_TITLE");?></th>
-						    <th><?php echo $tr->translate("RECEIPT_NO");?></th>
-						    <th><?php echo $tr->translate("CATEGORY");?></th>
-						    <th><?php echo $tr->translate("TOTAL_EXPENSE");?></th>
-						    <th><?php echo $tr->translate("NOTE");?></th>
-						    <th><?php echo $tr->translate("DATE");?></th>
-						</tr>
-				       <?php $branch_id=''; $i=0; $total_expese=0; if(!empty($this->rowExpense))foreach($this->rowExpense as $key =>$rows){ $i++;?>
+				    	<thead>
+					    	<tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+								<th ><?php echo $tr->translate("NUM");?></th>
+							    <th><?php echo $tr->translate("BRANCH_NAME");?></th>
+							    <th><?php echo $tr->translate("EXPENSE_TITLE");?></th>
+							    <th><?php echo $tr->translate("RECEIPT_NO");?></th>
+							    <th><?php echo $tr->translate("CATEGORY");?></th>
+							    <th><?php echo $tr->translate("TOTAL_EXPENSE");?></th>
+							    <th><?php echo $tr->translate("NOTE");?></th>
+							    <th><?php echo $tr->translate("DATE");?></th>
+							</tr>
+						<thead>
+				       <?php $branch_id=''; $i=0; $total_expese=0; 
+				       
+				       if(!empty($this->rowExpense))foreach($this->rowExpense as $key =>$rows){ $i++;
+				       ?>
 						<tr style="font-size: 12px; line-height:20px; white-space: nowrap;" align="left">
 						   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
 						   <td align="center">&nbsp;<?php echo $rows['branch_name'];?>&nbsp;</td>

@@ -250,6 +250,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    				'is_completed'		=>($data['schedule_opt']==2)?1:0,
 		    				'status'			=>1,
 		    				'note'				=>$data['note'],
+		    				'payment_times'=>$data['paid_times'],
 		    				'user_id'			=>$this->getUserId(),
 		    		);
 		    		$crm_id = $this->insert($array);
@@ -417,7 +418,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    			$pri_permonth = $remain_principal;
 			    		}
     			   }
-    			   elseif($payment_method==6){
+    			   elseif($payment_method==6 OR $payment_method==5){
     			   	$ids = explode(',', $data['identity']);
     			   	$key = 1;
     			   	foreach ($ids as $i){
@@ -456,6 +457,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			   				'is_installment'=>1,
     			   				'no_installment'=>$key,
     			   		);
+    			   		if($payment_method==5){//with bank
+    			   			$datapayment['ispay_bank']= $data['pay_with'.$i];
+    			   		}
     			   		$sale_currid = $this->insert($datapayment);
     			   		$from_date = $data['date_payment'.$i];
     			   			
@@ -515,8 +519,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		  if(($payment_method!=2)){//ខុសពីផ្តាច់
     		  	$this->addPaymenttoSale($data);
     		  }
-	            $db->commit();
-	        	return 1;
+    		  if(!empty($data['id'])){$dbtable->updateLateRecordSaleschedule($data['id']);}
+    		  $db->commit();
+	          return 1;
 	        }catch (Exception $e){
 	            	$db->rollBack();
 	            	echo $e->getMessage();exit();
@@ -533,6 +538,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql);
     }
     function addPaymenttoSale($data){
+    	
     	$dbtable = new Application_Model_DbTable_DbGlobal();
     	$receipt = $dbtable->getReceiptByBranch($data);
     	$is_deposit='';
@@ -565,6 +571,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'note'				=>$data['note'],
     			'user_id'			=>$this->getUserId(),
     			'field3'			=>$is_deposit,
+    			'payment_times'=>$data['paid_times'],
     	);
     	$crm_id=0;
     	if($data['new_deposit']>0){

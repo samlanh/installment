@@ -63,6 +63,7 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
+		
 		$frm = new Loan_Form_FrmLoan();
 		$frm_loan=$frm->FrmAddLoan();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
@@ -85,10 +86,15 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 		
 		$id = $this->getRequest()->getParam('id');
 		if(!empty($id)){
-		$db = new Loan_Model_DbTable_DbLandpayment();
-		$this->view->rsresult =  $db->getTranLoanByIdWithBranch($id,null);
+			$db = new Loan_Model_DbTable_DbLandpayment();
+			$rs = $db->getTranLoanByIdWithBranch($id,null);
+			$this->view->rsresult =  $rs;
+			if($rs['payment_id']!=1){
+				Application_Form_FrmMessage::Sucessfull("RESCHEDULE_EXIST","/loan");
+			}
 		}
 		$this->view->id = $id;
+		
 	}	
 // 	public function addloanAction(){
 // 		if($this->getRequest()->isPost()){

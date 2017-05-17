@@ -292,6 +292,14 @@ public function init()
 				'class'=>'fullside',
 		));
 		
+		$receivedopt = array(0=>"បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ",1=>"យកតាមកាលបរិច្ឆេទបង់");
+		$paid_receivehouse = new Zend_Dojo_Form_Element_FilteringSelect('paid_receivehouse');
+		$paid_receivehouse->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$paid_receivehouse->setMultiOptions($receivedopt);
+		
 		$_instalment_date = new Zend_Form_Element_Hidden("instalment_date");
 		$_release_date = new Zend_Form_Element_Hidden("old_release_date");
 		$_interest_rate = new Zend_Form_Element_Hidden("old_rate");
@@ -323,7 +331,7 @@ public function init()
 			
 			
 		}
-		$this->addElements(array($total_installamount,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($paid_receivehouse,$total_installamount,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id));

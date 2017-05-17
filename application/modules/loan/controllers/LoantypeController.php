@@ -46,6 +46,7 @@ public function init()
     		else{
     			$search = array(
     					'adv_search' => '',
+    					'type'=>-1,
     					'status_search' => -1);
     		}
     		$rs_rows= $db->getAllviewBYType($search);//call frome model

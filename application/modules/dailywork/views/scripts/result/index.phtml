@@ -1,0 +1,51 @@
+<?php
+$url_edit = $this->url(array('module'=>'dailywork','controller'=>'result','action'=>'edit'));
+$row_rs = $this->row_rs;
+
+?>
+<?php $frm =  $this->frm_search;?>
+<?php $tr = Application_Form_FrmLanguages::getCurrentlanguage(); ?>
+<meta charset="utf-8" />
+<div class="row">
+	<div class="col-md-12">
+		<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-globe"></i><?php echo $tr->translate("DAILY_WORK");?>
+				</div>
+				<div class="caption pull-right">
+					<a href="<?php echo $this->url(array('module'=>'dailywork','controller'=>'result','action'=>'add')); ?>" class="btn btn-sm green  pull-right">
+						<i class="fa fa-plus"></i>&nbsp;<?php echo $tr->translate("ADD_NEW");?>
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+			   <form method="post" action="">
+					<div class="form-group" style="padding-top: 6px;">
+						<label class="control-label col-md-2"><input dojoType="dijit.form.TextBox" class="fullside" id="adv_search" name="adv_search" value="<?php echo $this->row['adv_search']?>" placeholder="<?php echo $this->translate("Search");?>" type="text" ></label>
+						<label class="control-label col-md-2"> 
+							<select name="name" id="name" dojoType="dijit.form.FilteringSelect" class="fullside">
+				        	<option value="">Please selectcategory</option>
+		            		<?php foreach ($this->rst As $rst){?>
+		            		<option value="<?php echo $rst['id']?>"<?php if ($rst['id']==$this->row['name']) echo 'selected="selected"';?>><?php echo $rst['name']?></option>
+		            		<?php }?>
+					
+						</select>
+						</label>
+						<label class="control-label col-md-2">
+						</label>
+						<label class="control-label col-md-2"><div class="input-icon right"><i class="fa fa-calendar"></i><input class="form-control form-control-inline date-picker" id="start_date" name="start_date" value="<?php echo date("m/d/Y",strtotime($this->row['start_date']));?>" type="text" ></div></label>
+						<label class="control-label col-md-2"><div class="input-icon right"><i class="fa fa-calendar"></i><input class="form-control form-control-inline date-picker" id="end_date" name="end_date" value="<?php echo date("m/d/Y",strtotime($this->row['end_date']));?>" type="text" ></div></label>
+						<label class="control-label col-md-2">
+							<button class="btn btn-primary col-md-12" value="" ><i class="fa fa-save"></i>&nbsp;<?php echo $tr->translate("REFRESH");?></button>
+						</label>
+					</div>		
+				</form> 
+				<div class="contain_form" style="clear:both;">
+					<?php echo $this->list; ?>
+				</div>
+		   </div>
+		</div>
+	</div>
+</div>
+<?php $frm =  $this->frm_search;?>

@@ -48,7 +48,7 @@ class Loan_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql=" SELECT v.id,v.name_en,v.name_kh,
     	(SELECT t.name FROM `ln_view_type` AS t WHERE t.id =v.type LIMIT 1) ,
-    	v.status FROM $this->_name AS v WHERE v.type=12 OR v.type=13 ";
+    	v.status FROM $this->_name AS v WHERE (v.type=12 OR v.type=13) ";
     	if($type!=null){
     		$sql.=" AND type = $type";
     		
@@ -62,6 +62,9 @@ class Loan_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     		$s_where[] = " v.name_kh LIKE '%{$s_search}%'";
     		$s_where[]=" v.name_en LIKE '%{$s_search}%'";
     		$where .=' AND ('.implode(' OR ',$s_where).')';
+    	}
+    	if($search['type']>-1){
+    		$where.= " AND v.type = ".$search['type'];
     	}
     	if($search['status_search']>-1){
     		$where.= " AND v.status = ".$search['status_search'];

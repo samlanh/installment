@@ -1,0 +1,23 @@
+<?php
+$row_rs = $this->row_rs;
+?>
+<?php $tr = Application_Form_FrmLanguages::getCurrentlanguage(); ?>
+<?php $formFilter =  $this->frm_search;?>
+<meta charset="utf-8" />
+<script>
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.TextBox");
+</script>
+<form id="list" name="list" action="" method="post">
+   <table>
+   		<tr>
+		   	<td><input dojoType="dijit.form.TextBox" id="adv_search" name="adv_search" value="<?php echo $this->row['adv_search']?>" type="text" /></td>
+		   	<td><?php echo $formFilter->getElement("user");?></td>
+		   	<td><?php echo $formFilter->getElement("projectname");?></td>
+		    <td><input dojoType="dijit.form.DateTextBox" class="form-control form-control-inline date-picker" id="start_date" name="start_date" value="<?php echo date("m/d/Y",strtotime($this->row['start_date']));?>" type="text" ></td>
+		    <td><input dojoType="dijit.form.DateTextBox" class="form-control form-control-inline date-picker" id="end_date" name="end_date" value="<?php echo date("m/d/Y",strtotime($this->row['end_date']));?>" type="text" ></td>
+		    <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+   	   </tr>
+   </table>
+</form>
+<?php echo $this->list; ?>

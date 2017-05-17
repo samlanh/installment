@@ -163,15 +163,15 @@ function getAllBranch($search=null){
     		if(!empty($search['adv_search'])){
     			$s_where=array();
     			$s_search= addslashes(trim($search['adv_search']));
-    			$s_where[]=" p.`land_code` LIKE '%{$s_search}%'";
+//     			$s_where[]=" p.`land_code` LIKE '%{$s_search}%'";
     			$s_where[]=" p.`land_address` LIKE '%{$s_search}%'";
-    			$s_where[]=" p.`land_size` LIKE '%{$s_search}%'";
+//     			$s_where[]=" p.`land_size` LIKE '%{$s_search}%'";
 				$s_where[]=" p.street LIKE '%{$s_search}%'";
-    			$s_where[]=" p.`height` LIKE '%{$s_search}%'";
-    			$s_where[]=" p.width LIKE '%{$s_search}%'";
-    			$s_where[]=" p.`price` LIKE '%{$s_search}%'";
-    			$s_where[]=" p.`land_price` LIKE '%{$s_search}%'";
-    			$s_where[]=" p.`house_price` LIKE '%{$s_search}%'";
+//     			$s_where[]=" p.`height` LIKE '%{$s_search}%'";
+//     			$s_where[]=" p.width LIKE '%{$s_search}%'";
+//     			$s_where[]=" p.`price` LIKE '%{$s_search}%'";
+//     			$s_where[]=" p.`land_price` LIKE '%{$s_search}%'";
+//     			$s_where[]=" p.`house_price` LIKE '%{$s_search}%'";
     			$where.=' AND ('.implode(' OR ',$s_where).')';
     		}
     		if(!empty($search['streetlist'])){
@@ -288,7 +288,7 @@ function getAllBranch($search=null){
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
     		}
-    		if($search['payment_type']>0){
+    		if(@$search['payment_type']>0){
     			$where.= " AND payment_id = ".$search['payment_type'];
     		}
     		$order=" order by id desc ";
@@ -395,6 +395,7 @@ function getAllBranch($search=null){
 				  `s`.`amount_collect`  AS `amount_collect`,
 				  `s`.`interest_rate`   AS `interest_rate`,
 				  `s`.`total_duration`  AS `total_duration`,
+				  `s`.`first_payment`  AS `first_payment`,
 				  s.is_reschedule,
 				  s.land_price,
 				   s.buy_date,
@@ -503,7 +504,7 @@ function getAllBranch($search=null){
 			AND s.id=".$id;
     		return $db->fetchRow($sql);
     	}
-    	function getScheduleBySaleID($id=null,$payment_id){
+    function getScheduleBySaleID($id=null,$payment_id){
     		$db = $this->getAdapter();
     		$sql=" SELECT * FROM `ln_saleschedule` AS sc WHERE sc.`sale_id`= ".$id;
     		if($payment_id==4){
@@ -511,8 +512,7 @@ function getAllBranch($search=null){
     		}
     		$order = ' AND is_rescheule=0 ORDER BY sc.`date_payment` ASC';
     		return $db->fetchAll($sql.$order);
-    	}
-    	
+    }
 		public function getALLCommissionStaff($search = null){
     	$db = $this->getAdapter();
     	$where="";
@@ -546,5 +546,52 @@ function getAllBranch($search=null){
     	}
     	return $db->fetchAll($sql.$where.$Other);
     }
+    function getIncomeCategory($search){
+    	$db = $this->getAdapter();
+    	$sql="SELECT ic.`category_id`,
+    	SUM(ic.`total_amount`) AS total_amount,ic.is_beginning,
+    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) AS category_name,
+    	ic.`date` FROM `ln_income` AS ic WHERE 1 ";
+    	$order =" GROUP BY ic.`category_id` ,ic.is_beginning  ORDER BY ic.`category_id` ASC";
+    	$where="";
+    	$from_date =(empty($search['start_date']))? '1': " ic.`date` >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " ic.`date` <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	return $db->fetchAll($sql.$where.$order);
+    }
+    function getExpenseCategory($search){
+    	$db = $this->getAdapter();
+    	$sql="SELECT ex.`category_id`,
+    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) AS category_name,
+    	ex.`date` FROM `ln_expense` AS ex WHERE 1
+    	";
+    	$order =" GROUP BY ex.`category_id` ORDER BY ex.`category_id` ASC";
+    	$where="";
+    	$from_date =(empty($search['start_date']))? '1': " ex.`date` >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " ex.`date` <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	return $db->fetchAll($sql.$where.$order);
+    }
+    function geIncomeFromSale($search){
+    	$db = $this->getAdapter();
+    	$sql="SELECT SUM(crm.`recieve_amount`) AS recieve_amount FROM `ln_client_receipt_money` AS crm WHERE 1 ";
+    	$where="";
+    	$from_date =(empty($search['start_date']))? '1': " crm.`date_pay` >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " crm.`date_pay` <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	return $db->fetchRow($sql.$where);
+    }
+    function geOtherIncome($cate_id){
+    	$db = $this->getAdapter();
+    	$sql="SELECT
+    	SUM(ic.`total_amount`) AS total_amount
+    	FROM `ln_income` AS ic WHERE ic.`category_id`=$cate_id";
+    	return $db->fetchOne($sql);
+    }
+    	function geOtherExpense($cate_id){
+    	$db = $this->getAdapter();
+    	$sql="SELECT SUM(ex.`total_amount`) AS `total_amount` FROM `ln_expense` AS ex WHERE  ex.`category_id`=$cate_id";
+    	return $db->fetchOne($sql);
+    	}
 }
 

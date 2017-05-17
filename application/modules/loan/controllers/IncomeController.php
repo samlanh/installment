@@ -97,6 +97,7 @@ class Loan_IncomeController extends Zend_Controller_Action
 		
 		$db = new Loan_Model_DbTable_DbIncome();
 		$row  = $db->getexpensebyid($id);
+		$row['payment_id']=0;
 		$this->view->row = $row;
 		//print_r($row);
 		
