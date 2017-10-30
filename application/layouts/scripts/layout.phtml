@@ -14,6 +14,8 @@
 <html>
 <head>
 	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<link rel="stylesheet" href="<?php echo $base_url;?>css/font-awesome.min.css"/>
+	<link href="<?php echo $this->baseUrl()?>/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
 <?php if($module!='home'){?>
 	<script src="<?php echo $base_url;?>js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
 	<script>dojoConfig = {parseOnLoad: true}</script>
@@ -67,6 +69,7 @@
 		.fullside{ width:98%; height: 28px;}
 		.full{ width:100%;}
 		body, html {font-size:98%; 
+		background: linear-gradient(to right, #f7f7ff, #adc9ff);
 		font-family: Helvetica,sans-serif,'Kh Battambang','Khmer Battambang';
 		/*font-family:Arial,serif !important;*/ /*font-family:'Khmer OS Battambang'*/}
 		.normal,.alternate{ font-size:90% !important;}
@@ -86,7 +89,7 @@
              <!-- <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'"> -->
             <table width="100%">
                 <tr>
-                	<td colspan="2" valign="top" style="position: fixed;width: 100%; z-index: 1;top: 0;background:rgb(243, 241, 241) none repeat scroll 0% 0%" >
+                	<td colspan="2" valign="top" style="position: fixed;width: 100%; z-index: 1;top: 0;" >
                 		 <?php echo $this->render('header.phtml')?>
 			                <p style="font-size:13px !important; ">
 						              <span style="padding-left: 3px;padding-right: 3px;float: left; font-weight:600;"><?php echo $tr->translate("USING_BY");?><a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'changepassword')); ?>"><?php echo $username;?></a></span>  
@@ -100,7 +103,7 @@
                 	</td>
                 </tr>
                 <tr>
-                	<td colspan="2" height="70px;"></td>
+                	<td colspan="2" height="90px;"></td>
                 </tr>
             	<tr>
             		<td valign="top" <?php if($module!='home') echo'width="40px"';  ?> >
@@ -108,8 +111,12 @@
             			<?php echo $this->render('menuleft.phtml')?>            			
    <?php }?>
             		</td>
-            		<td valign="top">
-            			<?php if($module=='report' AND $action!='index'){?>
+            		<?php
+            		$background='';
+            		if($module=='report'){ $background="style='background:#fff;'";}?>
+            		<td valign="top" <?php echo $background?> >
+            			<?php 
+            			if($module=='report' AND $action!='index'){?>
 							<div class="menureport">
 								<ul>
 									<li class="preview"><a title="Preview" href="#" onclick="preview();"></a></li>
@@ -122,10 +129,11 @@
             			<?php 
 							$db = new Application_Model_DbTable_DbUsers();
 	            			$rs = $db->getAccessUrl($module,$controller,$action);
+	            			echo $this->layout()->content;
 	            			if(!empty($rs) OR $action=='changepassword'){
-	            				echo $this->layout()->content;
+	            				//echo $this->layout()->content;
 	            			}else{
-	            				echo $this->render('pagenotfund.phtml');
+	            				//echo $this->render('pagenotfund.phtml');
 	            			}
             			 ?>
             			<?php

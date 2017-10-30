@@ -105,6 +105,17 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		$land_id->setMultiOptions($options);
 		$land_id->setValue($request->getParam("land_id"));
 		
+		$payment_method = new Zend_Dojo_Form_Element_FilteringSelect('payment_method');
+		$payment_method->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>'enablePayment();'
+		));
+		$opt = $db->getVewOptoinTypeByType(2,1,3);
+		unset($opt[-1]);
+		$payment_method->setMultiOptions($opt);
+		$payment_method->setValue($request->getParam("payment_method"));
+		
 		if($data!=null){
 			$advnceSearch->setValue($request->getParam("advance_search"));
 			$client_name->setValue($request->getParam("client_name"));
@@ -113,7 +124,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 			$status->setValue($request->getParam("status"));
 			
 		}
-		$this->addElements(array($land_id,$branch_id,$g_client_name,$payment_type,$_coid,$submit,$advnceSearch,$client_name,$start_date,$end_date,$status));
+		$this->addElements(array($payment_method,$land_id,$branch_id,$g_client_name,$payment_type,$_coid,$submit,$advnceSearch,$client_name,$start_date,$end_date,$status));
 		return $this;
 		
 	}	

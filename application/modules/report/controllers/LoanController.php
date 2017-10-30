@@ -93,9 +93,11 @@ class Report_LoanController extends Zend_Controller_Action {
 				'branch_id' => -2,
 				'land_id'=>-1,
 				'start_date'=> date('Y-m-d'),
-	  			'end_date'=>date('Y-m-d')
+	  			'end_date'=>date('Y-m-d'),
+				'payment_method'=>-1,
 		);
 	}
+	$this->view->rssearch = $search;
 	$this->view->loantotalcollect_list =$rs=$db->getALLLoanPayment($search);
 	$this->view->list_end_date = $search;	
 	
@@ -463,8 +465,6 @@ public function exportFileToExcel($table,$data,$thead){
  }
  function rptLoanPayoffAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
- 	//
- 	 
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  	if($this->getRequest()->isPost()){
@@ -472,21 +472,16 @@ public function exportFileToExcel($table,$data,$thead){
  	}else{
 	 	$search = array(
 	 	'advance_search'  => '',
-	 	'client_name' => -1,
+	 	'client_name' => 0,
 	 	'start_date'  => date('Y-m-d'),
 	 	'end_date'    => date('Y-m-d'),
-	 	'branch_id'	  =>	-1,
-		'co_id'		  => -1,
-		'paymnet_type'=> -1,
+	 	'branch_id'	  =>0,
+		'land_id'	  => 0,
+		'paymnet_type'=> 0,
 	 	'status'      => "",);
  	}
  	$this->view->LoanCollectionco_list =$db->getALLLoanPayoff($search);
  	$this->view->list_end_date=$search;
-//  	$frm = new Loan_Form_FrmSearchGroupPayment();
-//  	$fm = $frm->AdvanceSearch();
-//  	Application_Model_Decorator::removeAllDecorator($fm);
-//  	$this->view->frm_search = $fm;
- 	
  	$frm = new Loan_Form_FrmSearchLoan();
  	$frm = $frm->AdvanceSearch();
  	Application_Model_Decorator::removeAllDecorator($frm);
@@ -684,6 +679,8 @@ public function exportFileToExcel($table,$data,$thead){
  				'property_type'=>0,
  				'client_name'=>'',
  				'buy_type'=>-1,
+ 				'land_id'=>-1,
+ 				'co_id'=>-1,
  				'start_date'=> date('Y-m-d'),
  				'end_date'=>date('Y-m-d'));
  	}
@@ -743,13 +740,10 @@ public function exportFileToExcel($table,$data,$thead){
  	$form = $frm->FrmSearchLoadSchedule();
  	Application_Model_Decorator::removeAllDecorator($form);
  	$this->view->form_filter = $form;
- 	// 	$db= new Application_Model_DbTable_DbGlobal();
  	$day_inkhmer = $db->getDayInkhmerBystr(null);
  	$this->view->day_inkhmer = $day_inkhmer;
- 
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- 
  }
  function rptExpenseAction(){
  	$db = new Accounting_Model_DbTable_DbExpense();
@@ -857,24 +851,19 @@ public function exportFileToExcel($table,$data,$thead){
   			$_dbmodel->updatePaymentStatus($_data);
   			Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/rpt-sold");
   		}catch (Exception $e) {
-  			//Application_Form_FrmMessage::message("INSERT_FAIL");
   			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
   		}
   	}
-  	
   	$id =$this->getRequest()->getParam('id');
-  	
   	$db = new Application_Model_DbTable_DbGlobal();
   	$rs = $db->getClientByMemberId($id);
   	$this->view->client =$rs;
-  	
   	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
   	$row = $db->getPaymentSchedule($id,$rs['payment_id']);
   	$this->view->tran_schedule=$row;
   	if(empty($row)){
   		//Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold');
   	}
-  	
 //   	$day_inkhmer = $db->getDayInkhmerBystr(null);
   	//$this->view->day_inkhmer = $day_inkhmer;
   	$db = new Application_Model_DbTable_DbGlobal();
@@ -882,10 +871,94 @@ public function exportFileToExcel($table,$data,$thead){
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   	$this->view->id = $id;
   	$this->view->payment_option = $db->getVewOptoinTypeByType(25,null,null,1);
-  	
   	$db = new Loan_Model_DbTable_DbGroupPayment();
   	$this->view->customer =  $db->getIndividuleClient();
+  }
+  function rptUpdatestatusAction(){
+  	if($this->getRequest()->isPost()){
+  		$_data = $this->getRequest()->getPost();
+  		try {
+  			$_dbmodel = new Report_Model_DbTable_DbLandreport();
+  			$_dbmodel->updateScheculeStatus($_data);
+  			Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/rpt-sold");
+  		}catch (Exception $e) {
+  			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+  		}
+  	}
+  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
+  	$id =$this->getRequest()->getParam('id');
+  	$row = $db->getPaymentScheduleById($id);
+  	$this->view->tran_schedule=$row;
+  	if(empty($row) or $row==''){
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold');
+  	}
+  	$db = new Application_Model_DbTable_DbGlobal();
+  	$rs = $db->getClientByMemberId($id);
   
+  	$this->view->client =$rs;
+  	$frm = new Application_Form_FrmSearchGlobal();
+  	$form = $frm->FrmSearchLoadSchedule();
+  
+  	$day_inkhmer = $db->getDayInkhmerBystr(null);
+  	$this->view->day_inkhmer = $day_inkhmer;
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	$this->view->id=$id;
+  }
+  function addschedultestAction(){
+  	if($this->getRequest()->isPost()){
+  		$_data = $this->getRequest()->getPost();
+  		$_dbmodel = new Report_Model_DbTable_DbLandreport();
+  		$rows_return=$_dbmodel->getPreviewSchedule($_data);
+  		print_r(Zend_Json::encode($rows_return));
+  		exit();
+  	}
+  }
+  function rptReceiveplongAction(){
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+			    'adv_search'=>'',
+				'branch_id_search' => -1,
+				'land_id'=> -1,
+				'client_name'=> -1,
+				'from_date_search'=> date('Y-m-d'),
+				'to_date_search'=>date('Y-m-d'));
+  	}
+  	$db  = new Loan_Model_DbTable_DdReceived();
+  	$this->view->row = $db->getCustomerReceivedPlong($search);
+  	
+  	$fm = new Loan_Form_FrmCancel();
+  	$frm = $fm->FrmAddFrmCancel();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_cancel = $frm;
+  }
+  function bugAction(){
+  		$db = new Report_Model_DbTable_Dbbug();
+  		if($this->getRequest()->isPost()){
+  			$formdata=$this->getRequest()->getPost();
+  		}
+  		else{
+  			$formdata = array(
+  					"adv_search"=>'',
+  					"currency_type"=>-1,
+  					"status"=>-1,
+  					'start_date'=> date('Y-m-d'),
+  					'end_date'=>date('Y-m-d'),
+  			);
+  		}
+  		$this->view->rs_sold= $db->getRealDatescheduleandSoldprice($formdata);//call frome model
+  		$this->view->rs_paid = $db->getRealPaid($formdata);
+  		$this->view->rs_schedule = $db->getScheduleCompletednotUpdate($formdata);
+  		$this->view->rs_begining = $db->getBeginingBalance($formdata);
+  		
+  		
+  			
+//   		$frm = new Loan_Form_FrmSearchLoan();
+//   		$frm = $frm->AdvanceSearch();
+//   		Application_Model_Decorator::removeAllDecorator($frm);
+//   		$this->view->frm_search = $frm;
   }
  
 }

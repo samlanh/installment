@@ -36,29 +36,32 @@ $frm = $this->frm_expense;
 					<tr>
 					    <td><?php echo $tr->translate("BRANCH_NAME")?></td>
 						<td><?php echo $frm->getElement('branch_id');?></td>
+						<td><?php echo $tr->translate("ជ្រើសរើសដី/ផ្ទះ")?></td>
+						<td><input id="sale_client" /></td>
 						<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
-						<td><input id="customer" /></td>
-						<td><?php echo $tr->translate("RECEIPT_NO")?></td>
-						<td><?php echo $frm->getElement('invoice');?></td>
+						<td><input id="customer" />
+							<input type="hidden" id="house_id" name="house_id" dojoType="dijit.form.TextBox"/>
+						</td>
 					</tr>
 					<tr>
+						<td><?php echo $tr->translate("RECEIPT_NO")?></td>
+						<td><?php echo $frm->getElement('invoice');?></td>
 						<td><?php echo $tr->translate("CATEGORY")?></td>
 						<td><input id="income_category" /></td>
 					    <td><?php echo $tr->translate("INCOME_TITLE")?></td>
 						<td><?php echo $frm->getElement('title');?></td>
-						<td><?php echo $tr->translate("TOTAL_INCOME")?></td>
-						<td><?php echo $frm->getElement('total_amount');?></td>
 					</tr>
 					<tr>
+						<td><?php echo $tr->translate("TOTAL_INCOME")?></td>
+						<td><?php echo $frm->getElement('total_amount');?></td>
 					    <td><?php echo $tr->translate("DATE")?></td>
 						<td><?php echo $frm->getElement('Date');?></td>
 						<td><?php echo $tr->translate("CHEQUE")?></td>
 						<td><?php echo $frm->getElement('cheque');?></td>
-						<td><?php echo $tr->translate("NOTE")?></td>
-						<td><?php echo $frm->getElement('Description');?></td>
 					</tr>
 					<tr>
-						
+						<td><?php echo $tr->translate("NOTE")?></td>
+						<td><?php echo $frm->getElement('Description');?></td>
 						<td><?php echo $tr->translate("STATUS")?></td>
 						<td><?php echo $frm->getElement('Stutas');?></td>
 						<td><?php echo $tr->translate("ប្រភេទប្រាក់")?></td>
@@ -135,6 +138,7 @@ var url_customer = '<?php echo $this->url(array('module'=>'loan','controller'=>'
 	}
 var url_get_invoice = '<?php echo $this->url(array('module'=>'loan','controller'=>'income','action'=>'get-invoice-no')); ?>';
 function getInvoiceNo(condition){
+	getSaleClie();
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
 		branch_id=1;
@@ -176,6 +180,60 @@ new dijit.form.FilteringSelect({
     } 
 }, "income_category");
 
+new dijit.form.FilteringSelect({
+	store: sale_client_store,
+	autoComplete: true,
+	required: false,		           
+	name: "sale_client",
+	id: "sale_client",
+	searchAttr: "name",
+	class: 'fullside',
+		onChange: function() {
+			getLandAndClientDetail();
+		}
+	}, "sale_client");
+	
+
+var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
+function getSaleClie(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0){
+		return false;}
+	dojo.xhrPost({
+		url:url_getSaleClien,	
+		content:{ 
+			'branch_id': branch_id, 'sale_id':'',
+		},
+		handleAs:"json",
+		load: function(data) {	
+			sale_client_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('sale_client').set('store', sale_client_store);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
+function getLandAndClientDetail(){
+		sale_id = dijit.byId('sale_client').get('value');
+	dojo.xhrPost({
+		url:url_land,	
+		content:{ 
+		    'sale_id':sale_id
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId("customer").attr("value",data.client_id);
+			dijit.byId("house_id").attr("value",data.house_id);
+			
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var url_add_category = '<?php echo $this->url(array("module"=>"loan","controller"=>"income","action"=>"add-category")); ?>';
 function addCategory(){
 	dojo.xhrPost({
@@ -236,7 +294,8 @@ function printSave(new_invoice_no){
 	if(cus_id==-1){
 		customer_name = '';
 	}else{
-		customer_name = dijit.byId("customer").attr('displayedValue');
+		//customer_name = dijit.byId("customer").attr('displayedValue');
+		customer_name = dijit.byId("sale_client").attr('displayedValue');
 	}
 	
 	dojo.byId("lb_branch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
@@ -649,7 +708,7 @@ function returnMOnth(monthnum){
 	month[6] = "Jun";
 	month[7] = "Jul";
 	month[8] = "Aug";
-	month[8] = "Sep";
+	month[9] = "Sep";
 	month[10] = "Oct";
 	month[11] = "Nov";
 	month[12] = "Dec";

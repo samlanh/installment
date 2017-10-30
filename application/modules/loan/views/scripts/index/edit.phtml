@@ -41,7 +41,10 @@
               payment_id =dijit.byId("schedule_opt").get("value");
               paid_amount =dijit.byId("deposit").get("value");
               if(payment_id==1 && paid_amount<=0){ alert("សូមបញ្ចូលចំនួនទឹកប្រាក់ត្រូវបង់");dijit.byId("deposit").focus();return false;}
-				return true;
+			dijit.byId('saveclose').set('disabled',true);	
+			dijit.byId('savenew').set('disabled',true);
+			return true;
+
 			}else {
 				return false;
 			}
@@ -110,7 +113,12 @@
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("PAYMENT_TYPE")?></td>
-							<td><?php echo $frm->getElement('schedule_opt');?></td>
+							<td><?php echo $frm->getElement('schedule_opt');?>
+								<select class="fullside50" dojoType="dijit.form.FilteringSelect" name="install_type" id="install_type">
+									<option value="1">រំលស់ថេរ</option>
+									<option value="2">រំលស់ថយ</option>
+								</select>
+							</td>
 							<td><?php echo $tr->translate("Paid")?></td>
 							<td><?php echo $frm->getElement('deposit');?></td>
 							<td><?php echo $tr->translate("Balance")?></td>
@@ -178,8 +186,8 @@
 	<tr>
 		<td align="center">
 			<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
-			<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconDelete"/>
-			<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+			<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id="saveclose" name='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconDelete"/>
+			<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
 			<input type="button" onclick="addPreviewLoan();displayNone();" label="<?php echo $tr->translate("PREVIEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 		</td>
 	</tr>	
@@ -589,6 +597,7 @@ new dijit.form.FilteringSelect({
 	autoComplete: true,                        
     id: "staff_id",
     name: "staff_id",  
+    value:<?php echo $this->datarow['staff_id'];?>, 
    // tabindex: "17",    
     class: 'fullside',  
     required:false,
@@ -618,6 +627,7 @@ function displayNone(){
 }
 
 function checkScheduleOption(){
+	dijit.byId("install_type").set("readOnly",true);
 	dijit.byId('first_payment').set("readOnly",false);
 	dijit.byId('period').set("readOnly",false);
 	dijit.byId('interest_rate').set("readOnly",false);
@@ -640,6 +650,7 @@ function checkScheduleOption(){
 	no=0;
 	
 	if(method_id==4){
+		dijit.byId("install_type").set("readOnly",false);
 		calCulateFixedPeriod();	
 		}else {
 			dijit.byId('fixed_payment').attr('value',0);
@@ -834,7 +845,8 @@ function getAllClientByBranch(branch_id){
 		load: function(data) {
 			client_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('member').set('store', client_store);
-		    dijit.byId('member').attr("value",customer_id)	 
+		    dijit.byId('member').attr("value",customer_id); 
+		    dijit.byId('customer_code').attr("value",customer_id); 
 		},
 		error: function(err) {
 		}
@@ -850,7 +862,6 @@ function getAllClientNumberByBranch(branch_id){
 		handleAs:"json",
 		load: function(data) {
 			client_number_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('customer_code').set('store', client_number_store);
 		    dijit.byId('customer_code').set('store', client_number_store);
 		},
 		error: function(err) {
@@ -874,7 +885,6 @@ function getLoanByBranch(condition){
 		handleAs:"json",
 		load: function(data) {
 			dijit.byId('sale_code').attr('value',data);
-			
 			if(condition==1){
 				getReceiptByBranch(data);
 			}
@@ -902,7 +912,6 @@ function getReceiptByBranch(new_sale_id){
 		},		    
 		handleAs:"json",
 		load: function(data) {
-			//dijit.byId('receipt').attr('value',data);
 			data = dijit.byId('receipt').get('value');
 			if(new_sale_id!=''){
 				printSave(new_sale_id,data);
@@ -1744,15 +1753,13 @@ function calCulateFirstPayment(){
 
 function printSave(new_stu_id,new_receipt_no){
 	symbal=" $";
-	if(new_stu_id=='' && new_receipt_no==''){
-		getLoanByBranch(1);
-	}else{
-		dojo.byId("lb_student_id").innerHTML = new_stu_id;
-		dojo.byId("lb_receipt").innerHTML = new_receipt_no;
-		
-		dojo.byId("lb_student_id1").innerHTML = new_stu_id;
-		dojo.byId("lb_receipt1").innerHTML = new_receipt_no;
-	}
+
+	dojo.byId("lb_student_id").innerHTML = dijit.byId("sale_code").get("value");
+	dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get("value");;
+	
+	dojo.byId("lb_student_id1").innerHTML = dijit.byId("sale_code").get("value");
+	dojo.byId("lb_receipt1").innerHTML = dijit.byId("receipt").get("value");;
+	
 	dijit.byId("lbl_schedule").hide();
 	dojo.byId("lb_paymentid").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
 
@@ -1771,11 +1778,6 @@ function printSave(new_stu_id,new_receipt_no){
 	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	dojo.byId("lb_price").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 
-	/*dis_percent = dijit.byId("discount_percent").get('value');
-	if(isNaN(dis_percent)){dis_percent='';}else{dis_percent=dis_percent+" %+";}
-	discount = dijit.byId("discount").get('value');
-	if(isNaN(discount)){discount=' $ 0';}else{discount = "$ "+dojo.number.format(discount,{places:2});};
-	*/
 	total_sold = dijit.byId('total_sold').get('value');
 	discount_percent = dijit.byId('discount_percent').get('value');
 	if(isNaN(discount_percent)){
@@ -1787,10 +1789,9 @@ function printSave(new_stu_id,new_receipt_no){
 	}
 	
 	discount_percent = total_sold*discount_percent/100;
-	total_discount = parseFloat(discount_percent)+parseFloat(discount);
+	total_discount = parseInt(discount_percent)+parseFloat(discount);
 	
 	dojo.byId("lb_discount").innerHTML = symbal+" "+dojo.number.format(total_discount,2);
-	//dojo.byId("lb_discount").innerHTML = dis_percent+discount;
 	other_fee = dijit.byId("other_fee").get('value');
 	if(isNaN(other_fee)){other_fee=0;}
 	dojo.byId("lb_otherfee").innerHTML = "$ "+dojo.number.format(other_fee,{places:2});
@@ -2140,7 +2141,7 @@ function returnMOnth(monthnum){
 	month[6] = "Jun";
 	month[7] = "Jul";
 	month[8] = "Aug";
-	month[8] = "Sep";
+	month[9] = "Sep";
 	month[10] = "Oct";
 	month[11] = "Nov";
 	month[12] = "Dec";

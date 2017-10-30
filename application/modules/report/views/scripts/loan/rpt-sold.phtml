@@ -17,9 +17,14 @@ dojo.require("dijit.form.DateTextBox");
 			<td><?php echo $filter->getElement('adv_search');?></td>
 			<td><?php echo $filter->getElement('branch_id');?></td>
 			<td><?php echo $filter->getElement('client_name');?></td>
+			<td><?php //echo $filter->getElement('land_id');?>
+				<input id="land_id" />
+			</td>
 			<td><?php echo $filter->getElement('schedule_opt');?></td>
+			
 		</tr>
 		<tr>
+			<td><?php echo $filter->getElement('co_id');?></td>
 			<td><?php echo $filter->getElement('buy_type');?></td>
 			<td><?php echo $filter->getElement('property_type');?></td>
 			<td><?php echo $filter->getElement('start_date');?></td>
@@ -107,6 +112,7 @@ th{padding: 5px;}
                 </tr>
                 </thead>
                <?php 
+               $link="#";
                $total_paid = 0;$total=0;$balance=0;$set_cancel=0;
                $payment_0=0;$sold_price0=0;$paid_price0=0;$balace_price0=0;
                $payment_1=0;$payment_2=0;$payment_3=0;$payment_4=0;$payment_5=0;$payment_6=0;
@@ -153,7 +159,7 @@ th{padding: 5px;}
               $total=$total+$row['paid_amount'];
               $total_paid=$total_paid+$row['paid_amount'];
               $balance=$balance+($row['price_sold']-$row['paid_amount']);
-              $link="#";
+              
               if($row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==6){
               	$link = $url_client."/id/".$row['id'];
               }
@@ -196,11 +202,12 @@ th{padding: 5px;}
 					<td style="white-space:nowrap;"><?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['interest_rate']; }?>&nbsp;</td>
 					<td style="white-space:nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date'])); ?>&nbsp;</td>
 					<!--<td>&nbsp;<?php //if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['startcal_date']));}?>&nbsp;</td> -->
-					<td><?php if($row['payment_id']==1){echo "<span style='word-wrap: break-word;font-size:10px;'>".$row['note']."</span>"; } if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['first_payment'])); }?>&nbsp;</td>
+					<td style="max-width:100px;"><?php if($row['payment_id']==1){echo "<span style='font-size:10px;'>".$row['note']."</span>"; } if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['first_payment'])); }?>&nbsp;</td>
 					<td style="white-space:nowrap;" ><?php echo date("d-m-Y",strtotime($row['end_line']));?>&nbsp;</td>
 					<td style="white-space:nowrap;" class="hideblog">
 						<a target="_blank" href="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement'))."/id/".$row['id'];?>"><?php echo $tr->translate("AGREEMENT");?></a>&nbsp;|
-						<a target="_blank" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-updatepayment'))."/id/".$row['id'];?>"><?php echo $tr->translate("កែប្រែ");?></a>&nbsp;
+						<a target="_blank" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-updatepayment'))."/id/".$row['id'];?>"><?php echo $tr->translate("កែប្រែ");?></a>&nbsp;|
+						<a target="_blank" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-updatestatus'))."/id/".$row['id'];?>"><span style="font-size:10px;"><?php echo $tr->translate("កែស្ថានការណ៍");?></span></a>&nbsp;
 						</td>
 					</tr>
 				<?php }?>
@@ -278,3 +285,56 @@ th{padding: 5px;}
 </table>
 </div>
 </div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getAllPropertyBranch();
+	});
+	new dijit.form.FilteringSelect({
+		store: property_store,
+		required: false,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		name: "land_id",
+		id: "land_id",
+		value:-1,
+		searchAttr: "name",
+		class: 'fullside fullside50',
+		onChange: function() {
+			//dijit.byId('land_id').attr('value','');
+			land_id=-1;
+	}
+		}, "land_id");
+	
+	 
+});
+land_id = '<?php echo $this->rssearch['land_id']?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getAllPropertyBranch(branch_id){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id<0){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'action':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_id').set('store', property_store);
+		    
+		    if(land_id>0){
+		    	dijit.byId('land_id').attr('value',land_id);
+			 }
+		},
+		error: function(err) {
+		}
+	});
+} 
+</script>

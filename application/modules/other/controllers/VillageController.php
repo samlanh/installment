@@ -121,7 +121,7 @@ class Other_VillageController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			$db = new Other_Model_DbTable_Dbvillage();
 			$rows = $db->getAllvillagebyCommune($data['commune_id']);
-			array_unshift($rows, array ( 'id' => -1, 'name' => 'បន្ថែម​អ្នក​ទទួល​ថ្មី') );
+			array_unshift($rows, array ( 'id' => -1, 'name' => 'បន្ថែម​ថ្មី') );
 			print_r(Zend_Json::encode($rows));
 			exit();
 		}

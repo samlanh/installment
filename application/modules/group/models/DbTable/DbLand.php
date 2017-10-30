@@ -7,7 +7,6 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace('auth');
     	return $session_user->user_id;
-    	 
     }
 	public function addLandinfo($_data){
 		try{
@@ -18,7 +17,6 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				$db = new Application_Model_DbTable_DbGlobal();
 				$land_code = $db->getNewLandByBranch($_data['branch_id']);
 			}
-			
 		    $_arr=array(
 		    	'branch_id'	  => $_data['branch_id'],
 				'land_code'	  => $land_code,
@@ -32,26 +30,34 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				'height'      => $_data['height'],
 				'hardtitle'      => $_data['hardtitle'],
 				'note'       => $_data['desc'],
-		        'create_date'=>date("Y-m-d"),
+// 		        'create_date'=>date("Y-m-d"),
 				'status'	  => $_data['status'],
 				'user_id'	  => $this->getUserId(),
-		    		
 		    	'property_type'	  => $_data['property_type'],
-		    	'floor'	  => $_data['floor'],
-		    	'living'	  => $_data['living'],
-		    	'bedroom'	  => $_data['bedroom'],
-		    	'dinnerroom'	  => $_data['dinnerroom'],
-		    	'buidingyear'	  => $_data['buidingyear'],
-		    	'parkingspace'	  => $_data['parkingspace'],
-		    	//'photo'	  => ''//$_data['parkingspace'],	
-				
+	    		'south'	  => $_data['south'],
+	    		'north'	  => $_data['north'],
+	    		'west'	  => $_data['west'],
+	    		'east'	  => $_data['east'],
 		);
+	    $key = new Application_Model_DbTable_DbKeycode();
+	    $setting=$key->getKeyCodeMiniInv(TRUE);
+	    $show_house = $setting['showhouseinfo'];
+	    if($show_house==1){
+	    	$_arr['floor']	=$_data['floor'];
+	    	$_arr['living']	 = $_data['living'];
+	    	$_arr['bedroom']  = $_data['bedroom'];
+	    	$_arr['dinnerroom']= $_data['dinnerroom'];
+	    	$_arr['buidingyear']= $_data['buidingyear'];
+	    	$_arr['parkingspace'] = $_data['parkingspace'];
+	    }
+		    
 		if(!empty($_data['id'])){
 			$where = 'id = '.$_data['id'];
 			$this->update($_arr, $where);
 			return $_data['id'];
 			 
 		}else{
+			$_arr['create_date']=date('Y-m-d');
 			return  $this->insert($_arr);
 		}
 		}catch(Exception $e){
@@ -220,17 +226,14 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 					'dob'			=>$_data['dob_client'],	
 					'pro_id'      => $_data['province'],
 					'com_id'      => $_data['commune'],
-					
-			
 			);
-			
-				$this->_name = "ln_client";
-				$id =$this->insert($_arr);
-				return array('id'=>$id,'client_code'=>$client_code);
+			$this->_name = "ln_client";
+			$id =$this->insert($_arr);
+			return array('id'=>$id,'client_code'=>$client_code);
 	}
 	public function CheckTitle($data){
 		$db =$this->getAdapter();
-		$sql = "SELECT  * FROM `ln_properties` AS p WHERE p.`land_address` = '".$data['land_address']."' AND p.`branch_id` = ".$data['branch_id'];
+		$sql = "SELECT  * FROM `ln_properties` AS p WHERE p.`land_address` = '".$data['land_address']."' AND p.`branch_id` = ".$data['branch_id']." AND p.`street` = '".$data['street']."'" ;
 		return $db->fetchRow($sql);
 	}
 	public function getPropertyType(){
@@ -248,4 +251,3 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		return $db->fetchRow($sql);
 	}
 }
-

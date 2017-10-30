@@ -3,7 +3,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
-     /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
@@ -20,6 +19,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 						'schedule_opt' => -1,
 						'branch_id' => -1,
 						'status' => -1,
+						'co_id' => -1,
+						'land_id'=>-1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						 );
@@ -35,7 +36,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);
 			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);
 			$payment=array('module'=>'loan','controller'=>'ilpayment','action'=>'add',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('បង់ប្រាក់'=>$payment,'ចេញតារាង'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
+			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('បង់ប្រាក់'=>$payment,'ចេញតារាង'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -44,9 +45,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$frm = $frm_search->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
-		
-		//$db = new Loan_Model_DbTable_DbLandpayment();
-		//$db->updateEnddateSale();
+		$this->view->rssearch = $search;
   }
   function addAction()
   {
@@ -84,6 +83,43 @@ class Loan_IndexController extends Zend_Controller_Action {
 	    
 	    $key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+	}
+	function addsoldAction()
+	{
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			try {
+				$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
+				$_dbmodel->addSchedulePayment($_data);
+				if(!empty($_data['saveclose'])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan");
+				}else{
+					Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				}
+			}catch (Exception $e) {
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+		$frm = new Loan_Form_FrmLoan();
+		$frm_loan=$frm->FrmAddLoan();
+		Application_Model_Decorator::removeAllDecorator($frm_loan);
+		$this->view->frm_loan = $frm_loan;
+	
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$db = new Application_Model_DbTable_DbGlobal();
+		$co_name = $db->getAllCoNameOnly();
+		array_unshift($co_name,array(
+				'id' => -1,
+				'name' => '---Add New ---',
+		) );
+		$this->view->co_name=$co_name;
+		 
+		$db = new Application_Model_DbTable_DbGlobal();
+		$this->view->client_doc_type = $db->getclientdtype();
+		 
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}	
 	public function editAction(){
 		if($this->getRequest()->isPost()){
@@ -100,11 +136,9 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$db = new Loan_Model_DbTable_DbLandpayment();
 		$rs = $db->getSalePaidExist($id,null);
-
 		if(count($rs)>=2){
-			Application_Form_FrmMessage::Sucessfull("ទិន្នន័យនេះមានប្រវត្តបង់ច្រើនដងរួចហើយ មិនអាចកែប្រែបានទេ","/loan/index/index");
+			Application_Form_FrmMessage::Sucessfull("ទិន្នន័យនេះមានប្រវត្តិបង់ប្រាក់ច្រើនជាង១ដងរួចហើយ មិនអាចកែប្រែបានទេ","/loan/index/index");
 		}
-		
 		$row = $db->getTranLoanByIdWithBranch($id,null);
 		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");}
 		$rs = array();
@@ -118,12 +152,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
 		$this->view->datarow = $row;
 		$this->view->amount_price = $row['balance']+$row['paid_amount']-$row['other_fee'];
-		//echo $row['balance']+$row['paid_amount']-$row['other_fee'];
-		//echo $row['price_sold']-($row['price_sold']*$row['discount_percent'])-$row['discount_amount'];
-	
 		$db = new Application_Model_DbTable_DbGlobal();
 		$this->view->client_code=array();//$dataclient;
-			
 		$this->view->client_name=array();
 		
 		$co_name = $db->getAllCoNameOnly();

@@ -80,7 +80,6 @@ class RsvAcl_Model_DbTable_DbUserType extends Zend_Db_Table_Abstract
 		$data['user_type']=$arr['user_type'];  
 		$data['parent_id']=$arr['parent_id'];  	
      	$data['status']='1';
-     	//print_r($data);exit;
     	return $this->insert($data); 
 	}	
 	//update user

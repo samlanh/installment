@@ -21,26 +21,41 @@
       $session_user=new Zend_Session_Namespace('auth');
       $arr_module = $session_user->arr_module;
       $menuleft=array();
+      $icon = array(
+      		'home'=>'<i class="fa fa-home" aria-hidden="true"></i>',
+      		'registrar'=>'<i class="fa fa-graduation-cap" aria-hidden="true"></i>',
+      		'group'=>'<i class="fa fa-users" aria-hidden="true"></i>',
+      		'loan'=>'<i class="fa fa-money" aria-hidden="true"></i>',
+      		'accounting'=>'<i class="fa fa-money" aria-hidden="true"></i>',
+      		'other'=>'<i class="fa fa-book" aria-hidden="true"></i>',
+      		'report'=>'<i class="fa  fa-file-text" aria-hidden="true"></i>',
+      		'rsvacl'=>'<i class="fa  fa-cog" aria-hidden="true"></i>',
+      		'setting'=>'<i class="fa  fa-cogs" aria-hidden="true"></i>',
+      );
+      
       $class='link';
       if(!empty($arr_module)){
       	foreach ($arr_module as $rs){
       		if($rs==$module){$class='current';}else{$class='link';}
       		if($rs=='loan'){
       			$old_module = $rs;
-      			$rs="dd";
-      			$menuleft[$rs]="<li ><a href='$sale'><span>".$tr->translate(strtoupper("SALE_PROPERTY"))."</span></a></li>";
+      			$rs="";
+      			$menuleft[$rs]="<li ><a href='$sale'><span class='icon_menu'><i class='fa fa-money' aria-hidden='true'></i>$rs</span><br />".$tr->translate(strtoupper("SALE_PROPERTY"))."</a></li>";
       			$rs=$old_module;
       		}
       		$controller = 'index';
       		if($rs=='rsvacl'){$controller='user';}
-      		 
       		$url =$this->url(array('module'=>$rs,'controller'=>$controller,'action'=>'index'), null, true); ;
-      		$menuleft[$rs]="<li class='$class'><a href='$url'><span>".$tr->translate(strtoupper($rs))."</span></a></li>";
+      		$menuleft[$rs]="<li class='$class'><a href='$url'><span class='icon_menu'>$icon[$rs]</span><br />".$tr->translate(strtoupper($rs))."</a></li>";
       	}
       }
+      $url_logo = $this->baseUrl()."/images/cam-app-logo.png";
 ?>  
 <div id="menu">
 	<ul>
+		<li >
+			<a ><img src="<?php echo $url_logo;?>" style="max-height:45px"  /></a>
+		</li>
 		<?php
 	$session_user=new Zend_Session_Namespace('auth');
 		$modules_access = $session_user->arr_module;
@@ -65,7 +80,6 @@
 	</ul>
 </div>
 <script>
-		
 var url_changelang = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'changelange'));?> ';
 function changeLange(lang){
 	dojo.xhrPost({

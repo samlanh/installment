@@ -235,6 +235,7 @@ function getAllBranch($search=null){
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		title, invoice,branch_id,
+    		(SELECT CONCAT(land_address,',',street)FROM `ln_properties` WHERE id =ln_income.house_id) as house_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
     		cheque,total_amount,description,date,status FROM ln_income WHERE status=1 ";
@@ -329,6 +330,9 @@ function getAllBranch($search=null){
 	      	if($search['client_name']>0){
 	      		$where.=" AND client_id = ".$search['client_name'];
 	      	}
+	      	if($search['payment_method']>0){
+	      		$where.=" AND payment_methodid = ".$search['payment_method'];
+	      	}
 	      	
 	      	if (!empty($search['adv_search'])){
 	      		$s_where = array();
@@ -387,6 +391,7 @@ function getAllBranch($search=null){
 				  `s`.`client_id`       AS `client_id`,
 				  `s`.`price_before`    AS `price_before`,
 				  `s`.`discount_amount` AS `discount_amount`,
+				  s.discount_percent,
 				  `s`.`price_sold`      AS `price_sold`,
 				  `s`.`other_fee`       AS `other_fee`,
 				  `s`.`admin_fee`       AS `admin_fee`,
@@ -510,7 +515,7 @@ function getAllBranch($search=null){
     		if($payment_id==4){
     			$sql.=" AND sc.is_installment=1 ";
     		}
-    		$order = ' AND is_rescheule=0 ORDER BY sc.`date_payment` ASC';
+    		$order = ' AND is_rescheule=0 ORDER BY sc.no_installment ASC, sc.`date_payment` ASC ';
     		return $db->fetchAll($sql.$order);
     }
 		public function getALLCommissionStaff($search = null){
@@ -532,6 +537,9 @@ function getAllBranch($search=null){
     	if($search['branch_id']>0){
     		$where.= " AND st.`branch_id` = ".$search['branch_id'];
     	}
+    	if($search['land_id']>0){
+    		$where.= " AND s.house_id = ".$search['land_id'];
+    	}
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = addslashes(trim($search['adv_search']));
@@ -539,10 +547,7 @@ function getAllBranch($search=null){
     		$s_where[]=" s.`receipt_no` LIKE '%{$s_search}%'";
     		$s_where[]=" st.`co_khname` LIKE '%{$s_search}%'";
     		$s_where[]=" st.`co_code` LIKE '%{$s_search}%'";
-    		//$s_where[]=" tel LIKE '%{$s_search}%'";
-    		//$s_where[]=" address LIKE '%{$s_search}%'";
-    		//$s_where[]=" national_id LIKE '%{$s_search}%'";
-    		$where .=' AND '.implode(' OR ',$s_where). '';
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	return $db->fetchAll($sql.$where.$Other);
     }

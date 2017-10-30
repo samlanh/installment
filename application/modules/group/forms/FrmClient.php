@@ -25,6 +25,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required' =>'true',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'getClientNo();'
 		));
 		$rows_branch = $db->getAllBranchName();
@@ -39,6 +41,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$_member->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'getGroupCode();'
 		));
 		$db = new Application_Model_DbTable_DbGlobal();
@@ -107,6 +111,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$_sex->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$opt_status = $db->getVewOptoinTypeByType(11,1);
 		unset($opt_status[-1]);
@@ -117,12 +123,16 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$client_d_type->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		
 		$_province = new Zend_Dojo_Form_Element_FilteringSelect('province');
 		$_province->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'filterDistrict();',
 		));
 		
@@ -215,7 +225,10 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'style'=>'width:96%;min-height:50px;'));
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
-		$_status->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
+		$_status->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside',));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
 				0=>$this->tr->translate("DACTIVE"));
@@ -242,6 +255,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$_ksex->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$opt_kstatus= $db->getVewOptoinTypeByType(11,1);
 		unset($opt_kstatus['-1']);
@@ -259,6 +274,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'onchange'=>'dfilterDistrict();',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		
 		$rows =  $db->getAllProvince();
@@ -333,7 +350,10 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$_bmember->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'onchange'=>'getGroupCode();'
+				'onchange'=>'getGroupCode();',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				
 		));
 		$_rid_no = new Zend_Dojo_Form_Element_TextBox('rid_no');
 		$_rid_no->setAttribs(array(
@@ -350,7 +370,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		));
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
-			$branch_id->setAttribs(array("readonly"=>true));
+			//$branch_id->setAttribs(array("readonly"=>true));
 			$_namekh->setValue($data['name_kh']);
 			$_nameen->setValue($data['name_en']);
 			$_sex->setValue($data['sex']);
@@ -420,6 +440,9 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$streetlist->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				
 		));
 		$streetopt = $db->getAllStreet();
 		$streetlist->setMultiOptions($streetopt);
@@ -437,6 +460,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$street->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
+				'onkeyup'=>'checkTitle();',
 		));
 	
 		$land_price = new Zend_Dojo_Form_Element_NumberTextBox('land_price');
@@ -497,7 +521,10 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		));
 	
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
-		$_status->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
+		$_status->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect'
+				,'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
 				0=>$this->tr->translate("DACTIVE"));
@@ -508,11 +535,17 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'style'=>'width:96%;min-height:50px;'));
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
-		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','required'=>false,
+		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'class'=>'fullside','onChange'=>'showPopupForm();'));
 		
 		$propertiestype_search = new Zend_Dojo_Form_Element_FilteringSelect('property_type_search');
-		$propertiestype_search->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside'));
+		$propertiestype_search->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*'));
 		$propertiestype_search_opt = $db->getPropertyTypeForsearch();
 		$propertiestype_search->setMultiOptions($propertiestype_search_opt);
 		
@@ -525,7 +558,9 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required' =>'true',
-				'onchange'=>'getPropertyNo();'
+				'onchange'=>'getPropertyNo();',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$options_branch = $db->getAllBranchName(null,1);
 // 		if(!empty($rows_branch))foreach($rows_branch AS $row){
@@ -559,7 +594,30 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$photo->setAttribs(array(
 		));		
 		
+		$north = new Zend_Dojo_Form_Element_TextBox('north');
+		$north->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside'));
+		$east = new Zend_Dojo_Form_Element_TextBox('east');
+		$east->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside'));
+		$west = new Zend_Dojo_Form_Element_TextBox('west');
+		$west->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside'));
+		$south = new Zend_Dojo_Form_Element_TextBox('south');
+		$south->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside'));
+		
 		if($data!=null){
+			
+			$north->setValue($data['north']);
+			$east->setValue($data['east']);
+			$south->setValue($data['south']);
+			$west->setValue($data['west']);
+			
 			$branch_id->setValue($data['branch_id']);
 			$branch_id->setAttribs(array("readonly"=>true));
 			$_id_no->setValue($data['id']);
@@ -584,8 +642,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$propertiestype->setValue($data['property_type']);
 			$floor->setValue($data['floor']);
 		}
-		$this->addElements(array($streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
+		$this->addElements(array($north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
 		return $this;
-	
 	}
 }

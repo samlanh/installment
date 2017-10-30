@@ -11,11 +11,12 @@ dojo.require("dijit.form.DateTextBox");
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT_DAILY_CASH");?></title>
 <form name="frm_rptstaff" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-daily-cash')); ?>" dojoType="dijit.form.Form" method="post">
-	<table style="width:28cm; margin: 0 auto;">
+	<table style="width:29cm; margin: 0 auto;">
 		<tr>  
 	        <td><?php echo $frm->getElement("adv_search");?></td>
 	        <td><?php echo $frm->getElement('branch_id');?></td>
 	   		<td><?php echo $frm->getElement('client_name');?></td>
+	   		<td><?php echo $frm->getElement('payment_method');?></td>
 	   		<td><?php echo $frm->getElement('start_date');?></td>
 	   		<td><?php echo $frm->getElement('end_date');?></td>
 	   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
@@ -73,7 +74,7 @@ dojo.require("dijit.form.DateTextBox");
 				                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 				                    <td rowspan="2"><?php echo $tr->translate("LOAN_NO");?></td>	
 				                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_NAME");?></td>
-				                     <td rowspan="2"><?php echo $tr->translate("STREET");?></td>   
+				                     <td rowspan="2"><?php echo $tr->translate("បង់ជា");?></td>   
 				                    <td colspan="4"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>    
 				                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
 				                    <td rowspan="2"><?php echo $tr->translate("RECIEPT_NO");?></td>
@@ -94,6 +95,7 @@ dojo.require("dijit.form.DateTextBox");
 		                	 $i=1;$oldloan_number='';
 		                	 //$total_penilize_amount_r=0;$total_penilize_amount_d=0;$total_penilize_amount_b=0;
 		                	 $total_d=0;$total_b=0;$total_r=0;
+		                	 $total_cash = 0;$total_cheque = 0;$total_bank = 0;
 		                ?>
 		                <?php $is_set =0; if(!empty($this->collectMoney)) foreach ($this->collectMoney as $index => $rs){ ?>
 		               <?php 
@@ -104,6 +106,14 @@ dojo.require("dijit.form.DateTextBox");
 								$amt_d3 = $amt_d3+$rs['penalize_amountpaid'];
 								$amt_d5 = $amt_d5+$rs['service_chargepaid'];
 								$total_d=$amt_d1+$amt_d2+$amt_d3+$amt_d5;
+								
+								if($rs['payment_methodid']==1){
+									$total_cash = $total_cash + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+								}elseif($rs['payment_methodid']==2){
+									$total_cheque = $total_cheque + + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+								}else{
+									$total_bank = $total_bank + + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+								}
 		               ?>
 		                <tr class="hover style style1" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
 		               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
@@ -112,8 +122,8 @@ dojo.require("dijit.form.DateTextBox");
 		               		<td>&nbsp;<?php echo $rs["client_number"];?>&nbsp;</td>
 		               		<td>&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
 		               		<td>&nbsp;<?php echo $rs["land_code"];?>&nbsp;</td>
-		               		<td>&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
-		               		<td>&nbsp;<?php echo $rs["street"];?>&nbsp;</td>
+		               		<td>&nbsp;<?php echo $rs["land_address"].",".$rs["street"];?>&nbsp;</td>
+		               		<td>&nbsp;<?php echo $rs["payment_method"];?>&nbsp;</td>
 		               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['total_principal_permonthpaid'],2);?>&nbsp;</td>               		
 		               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['total_interest_permonthpaid'],2);?>&nbsp;</td>
 		               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['penalize_amountpaid'],2);?>&nbsp;</td>
@@ -144,6 +154,8 @@ dojo.require("dijit.form.DateTextBox");
 							<th ><?php echo $tr->translate("NUM");?></th>
 						    <th><?php echo $tr->translate("BRANCH_NAME");?></th>
 						    <th><?php echo $tr->translate("INCOME_TITLE");?></th>
+						    <th><?php echo $tr->translate("CLIENT_NAME");?></th>
+						    <th><?php echo $tr->translate("LAND_CODE");?></th>
 						    <th><?php echo $tr->translate("RECEIPT_NO");?></th>
 						    <th><?php echo $tr->translate("CATEGORY");?></th>
 						    <th><?php echo $tr->translate("TOTAL_INCOME");?></th>
@@ -156,6 +168,8 @@ dojo.require("dijit.form.DateTextBox");
 						   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
 						   <td align="center">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
 						   <td align="center">&nbsp;<?php echo $row['title'];?>&nbsp;</td>
+						   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_name'];?></td>
+						   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['house_name'];?></td>
 						   <td align="center">&nbsp;<?php echo $row['invoice'];?>&nbsp;</td>
 						   <td>&nbsp;<?php echo $row['category_name'];?>&nbsp;</td>
 						   <td align="center">&nbsp;<?php echo number_format($row['total_amount'],2);?>&nbsp;</td>
@@ -225,7 +239,6 @@ dojo.require("dijit.form.DateTextBox");
 	                    <td><?php echo $tr->translate("PRINCIPAL");?></td>                    
 	                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
 	                    <td><?php echo $tr->translate("TOTAL_PENILIZE_AMOUNT");?></td>
-	                    <!-- <td><?php //echo $tr->translate("TOTAL_SERVICE_CHARGE");?></td> -->
 	                    <td><?php echo $tr->translate("TOTAL");?></td>
 	                </tr>
 	                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
@@ -233,11 +246,25 @@ dojo.require("dijit.form.DateTextBox");
 	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
 	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
 	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>
-	                    <!--<td>&nbsp;&nbsp;<?php //echo number_format($amt_d5,2);?>&nbsp;</td> -->
 	                    <td>&nbsp;&nbsp;<?php echo number_format($total_d,2);?>&nbsp;</td>
 	                    <td>&nbsp;<?php echo number_format($total_other_income,2);?></td>
 	                    <td>&nbsp;<?php echo number_format($total_expese,2);?></td>
 	                    <td>&nbsp;<?php echo number_format($total,2);?></td>
+	                </tr>
+	              </table>
+	              <table border="1"​ style="margin-top:5px;;border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+	                 <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+	                 	<td colspan="3">&nbsp;<?php echo $tr->translate("ចំនូលតាមប្រភេទ");?>&nbsp;</td>
+	                 </tr>
+	                 <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+	                    <td>&nbsp;<?php echo $tr->translate("សាច់ប្រាក់");?>&nbsp;</td>
+	                 	<td>&nbsp;<?php echo $tr->translate("សែក");?>&nbsp;</td>
+	                 	<td>&nbsp;<?php echo $tr->translate("ធនាគារ");?>&nbsp;</td>
+	                </tr>
+	                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
+	                    <td>&nbsp;&nbsp;<?php echo number_format($total_cash,2);?>&nbsp;</td>
+	                    <td>&nbsp;&nbsp;<?php echo number_format($total_cheque,2);?>&nbsp;</td>
+	                    <td>&nbsp;&nbsp;<?php echo number_format($total_bank,2);?>&nbsp;</td>
 	                </tr>
 	              </table>
             	</td>

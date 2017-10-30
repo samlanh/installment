@@ -13,6 +13,8 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		
 		$array = array(
 			'branch_id'		=>$data['branch_id'],
+			'sale_id'		=>$data['sale_client'],
+			'house_id'		=>$data['house_id'],
 			'client_id'		=>$data['customer'],
 			'title'			=>$data['title'],
 			'total_amount'	=>$data['total_amount'],
@@ -25,12 +27,14 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			'user_id'		=>$this->getUserId(),
 			'create_date'	=>date('Y-m-d'),
 			'is_beginning'=>$data['is_beginning'],
+				
 		);
 		$this->insert($array);
  }
 	 function updateIncome($data,$id){
-	 	
 		$arr = array(
+					'sale_id'		=>$data['sale_client'],
+					'house_id'		=>$data['house_id'],
 					'branch_id'=>$data['branch_id'],
 					'client_id'=>$data['customer'],
 					'title'=>$data['title'],
@@ -45,9 +49,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 					'user_id'=>$this->getUserId(),
 				);
 		$where=" id =  $id " ;
-		//echo $id;exit();
 		$this->update($arr, $where);
-		
 	}
 	function getexpensebyid($id){
 		$db = $this->getAdapter();

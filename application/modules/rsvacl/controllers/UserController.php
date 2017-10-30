@@ -14,17 +14,16 @@ class RsvAcl_UserController extends Zend_Controller_Action
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     	
     	$db=new Application_Model_DbTable_DbGlobal();
-    	$sql = "SELECT u.user_type_id,u.user_type FROM `rms_acl_user_type` u where u.`status`=1";
-    	$results = $db->getGlobalDb($sql);
-		foreach ($results as $key => $r){
-			$this->user_typelist[$r['user_type_id']] = $r['user_type'];    
-		}		
+    	$sql = "SELECT u.user_type_id as id,u.user_type as name FROM `rms_acl_user_type` u where u.`status`=1";
+    	$this->user_typelist = $db->getGlobalDb($sql);
+// 		foreach ($results as $key => $r){
+// 			$this->user_typelist[$r['user_type_id']] = $r['user_type'];    
+// 		}		
     }
 
     public function indexAction()
     {
 		$db_user=new Application_Model_DbTable_DbUsers();
-                
         $this->view->activelist =$this->activelist;       
         $this->view->user_typelist =$this->user_typelist;   
         $this->view->active =-1;
@@ -44,7 +43,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
         	'id'=>$rs['id'],
         	'name'=>$rs['last_name'].' '.$rs['name'],
         	'user_name'=>$rs['user_name'],
-        	'user_type'=>$this->user_typelist[$rs['user_type']],
+        	'user_type'=>$rs['users_type'],
         	'status'=>$rs['status']);
         }
         $list = new Application_Form_Frmtable();
@@ -106,12 +105,9 @@ class RsvAcl_UserController extends Zend_Controller_Action
 			if ($db_user->getMaxUser() > self::MAX_USER) {
 				Application_Form_FrmMessage::Sucessfull('អ្នក​ប្រើ​ប្រាស់​របស់​អ្នក​បាន​ត្រឹម​តែ '.self::MAX_USER.' នាក់ ទេ!', self::REDIRECT_URL);
 			}
-			 
 			$this->view->user_typelist =$this->user_typelist;
-		
 			if($this->getRequest()->isPost()){
 				$userdata=$this->getRequest()->getPost();
-					
 				try {
 					$db = $db_user->insertUser($userdata);
 					Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);
@@ -119,6 +115,13 @@ class RsvAcl_UserController extends Zend_Controller_Action
 					$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
 				}
 			}
+			$db  = new Application_Model_DbTable_DbGlobal();
+// 			$this->view->rs_branch = $db->getAllBranch();
+			$user_type = $this->user_typelist;
+			$this->view->user_typelist =$user_type;
+				
+			array_unshift($user_type, array('id'=>-1,'name'=>'Add New'));
+			$this->view->user_type = $user_type;
 	}
 	public function editAction()
 	    {
@@ -141,6 +144,11 @@ class RsvAcl_UserController extends Zend_Controller_Action
 					$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
 				}
 			}
+			$db  = new Application_Model_DbTable_DbGlobal();
+		$user_type = $this->user_typelist;
+		$this->view->user_typelist =$user_type;
+		array_unshift($user_type, array('id'=>-1,'name'=>'Add New'));
+		$this->view->user_type = $user_type;
     }
     
  

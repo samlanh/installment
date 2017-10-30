@@ -14,8 +14,10 @@ td p{ margin-top:0px !important;}
 		require(["dojo/ready"], function(ready){
 			 ready(function(){
 				checkScheduleOption();
+				calCulateSchedulePayment();
+				calCulateEndDate();
 			  });
-			});
+		});
    </script>
 <div style=" width:2៨cm; margin:0 auto; border: 1px dotted #ccc; padding: 0 40px;">
 	<div id="divPrint">
@@ -29,11 +31,33 @@ td p{ margin-top:0px !important;}
 		font-size: 12px;
 	}
 	td p{ margin-top:-12px;}
+	.fullside50{ width:48%;}
 	</style>
-	<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-updatepayment')); ?>" 
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-updatepayment')); ?>" 
 				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-				<script type="dojo/method" event="onSubmit">			
+<script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
+           schedule_opt = dijit.byId('payment_id').get('value');
+           total_remain = dijit.byId('total_remain').get('value');
+           total_duration = dijit.byId('total_duration').get('value');
+           var rowId = $('#identity').val();
+		   var rowIDArray = rowId.split(',');
+		   record_no = rowIDArray.length;
+           if((schedule_opt==3 || schedule_opt==6) && rowId==''){
+				alert("សូមបញ្ចូលប្រាក់ដែលអតិថិជនត្រូវបង់ក្នុងតារាងបង់");
+                addRow();
+                return false;
+		   }else if((schedule_opt==3 || schedule_opt==6) && total_remain!=0){
+          		alert("សូមបញ្ចូលប្រាក់ដែលនៅសល់ ដាក់ក្នុងតារាងបង់អោយអស់!");
+				dijit.byId('total_remain').focus()
+                return false;
+          }else if((schedule_opt==3 || schedule_opt==6) && record_no!=total_duration){
+				alert("រយះពេលបង់នឹងតារាងត្រូវបង់ មិនត្រឹមត្រូវទេ!");
+                dijit.byId('total_duration').attr('value',record_no)
+				dijit.byId('total_duration').focus();
+				return false;
+			}
+            dijit.byId('btn_save_close').set('disabled',true);
 				return true;
 			}else {
 				return false;
@@ -123,7 +147,12 @@ td p{ margin-top:0px !important;}
 					                    		<td><?php echo $client['propertype'];?>
 					                    		<input type="hidden" name="id" id="id" value="<?php echo $this->id;?>" />
 					                    		<input type="hidden" name="client_id" id="client_id" value="<?php echo $client['client_id'];?>" />
-					                    		
+					                    		<input type="hidden" name="house_id" id="house_id" value="<?php echo $client['house_id'];?>" />
+					                    		</td>
+					                    	</tr>
+					                    	<tr>
+					                    		<td><?php echo $tr->translate("តម្លៃដី");?></td>
+					                    		<td><input type="text" style="width:150px;" name="land_price" id="land_price" dojoType="dijit.form.NumberTextBox" value="<?php echo $client['land_price'];?>" />
 					                    		</td>
 					                    	</tr>
 				                    	</table>
@@ -180,7 +209,7 @@ td p{ margin-top:0px !important;}
 	                    <td style="width:60px;"><input onkeyup="calculatePayment(<?php echo $key+1;?>,2);"style="width:60px;border:1px solid #fff;"  dojoType="dijit.form.NumberTextBox" type="text" name="percent<?php echo $key+1;?>" id="percent<?php echo $key+1;?>" value="" /></td>
 	                    <td style="width:80px;"><input onkeyup="calculatePayment(<?php echo $key+1;?>);" style="width:80px;border:1px solid #fff;"  dojoType="dijit.form.NumberTextBox" type="text" name="total_interest_<?php echo $key+1;?>" id="total_interest_<?php echo $key+1;?>" value="<?php echo $row['total_interest']; ?>" /></td>
 	                    <td align="center" style="white-space: nowrap; width:80px;"><input readonly style="width:80px;border:1px solid #fff;"  dojoType="dijit.form.NumberTextBox" type="text" name="total_payment<?php echo $key+1;?>" id="total_payment<?php echo $key+1;?>" value="<?php echo $row['principal_permonth']+$row['total_interest']; ?>" /></td>
-	                    <td style="border-left:2px solid #000; width:100px;"><input  style="width:100px;border:1px solid #fff;" class="fullside" type="text" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" name="date_payment<?php echo $key+1;?>" id="date_payment<?php echo $key+1;?>" value="<?php echo $row['date_payment'];?>" /></td>
+	                    <td style="border-left:2px solid #000; width:100px;"><input onchange="setFirstPayment(<?php echo $key+1;?>);" style="width:100px;border:1px solid #fff;" class="fullside" type="text" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" name="date_payment<?php echo $key+1;?>" id="date_payment<?php echo $key+1;?>" value="<?php echo $row['date_payment'];?>" /></td>
 	                    <td style="width:100px;"><input style="width:100px;border:1px solid #fff;" type="hidden" name="principal_<?php echo $key+1;?>" id="principal" value="<?php echo $row['principal_permonthafter'];?>" />
 	                   	 	<input style="width:100px;border:1px solid #fff;" type="text" onkeyup="calculatePaid(<?php echo $key+1;?>)" name="paid_principal<?php echo $key+1;?>" dojoType="dijit.form.NumberTextBox"  id="paid_principal<?php echo $key+1;?>" value="<?php echo $row['principal_paid'];?>" /></td>
 	                    <td style="width:100px;"><input style="width:100px;border:1px solid #fff;"  type="text" onkeyup="calculatePaid(<?php echo $key+1;?>)" dojoType="dijit.form.NumberTextBox" name="interest_paid<?php echo $key+1;?>" id="interest_paid<?php echo $key+1;?>" value="<?php echo $row['total_interestpaid'];?>" /></td>
@@ -238,32 +267,36 @@ td p{ margin-top:0px !important;}
 					                    		}else{$balance=0;
 					                    		}
 					                    		?></td>
-					                    		<td><input readOnly style="color:red; font-weight: bold;" dojoType="dijit.form.NumberTextBox" type="text" name="total_installamount" id="total_installamount" value="<?php echo $client['price_sold']-$balance;?>" /></td>
+					                    		<td><input class="fullside" readOnly style="color:red; font-weight: bold;" dojoType="dijit.form.NumberTextBox" type="text" name="total_installamount" id="total_installamount" value="<?php echo $client['price_sold']-$balance;?>" /></td>
 					                    	</tr>
 				                    		<tr>
 					                    		<td width="40%"><?php echo $tr->translate("ប្រាក់នៅសល់");// print_r($client);
 					                    		?></td>
-					                    		<td><input  dojoType="dijit.form.NumberTextBox" onkeyup="checkScheduleOption();"  type="text" name="total_remain" id="total_remain" value="<?php echo $client['price_sold']-$total_pricipale;?>"  /></td>
+					                    		<td><input class="fullside" dojoType="dijit.form.NumberTextBox" onkeyup="checkScheduleOption();"  type="text" name="total_remain" id="total_remain" value="<?php echo $client['price_sold']-$total_pricipale;?>"  /></td>
 					                    	</tr>
 					                    	<tr>
 					                    		<td><?php echo $tr->translate("ប្រភេទបង់ ");?></td>
 					                    		<td>
-					                    			<select  onchange="checkScheduleOption();"  dojoType="dijit.form.FilteringSelect" name="payment_id" id="payment_id" >
+					                    			<select class="fullside50" onchange="checkScheduleOption();"  dojoType="dijit.form.FilteringSelect" name="payment_id" id="payment_id" >
 						                    			<?php if(!empty($this->payment_option)){ //echo 333;exit();
 						                    			foreach($this->payment_option as $rs){  ?>
 						                    				<option value="<?php echo $rs['key_code'];?>" <?php if($client['payment_id']==$rs['key_code']){echo"selected";}?>><?php echo $rs['name_en'];?></option>
 						                    			<?php }
 						                    			}?>
 					                    			</select>
+					                    			<select class="fullside50" dojoType="dijit.form.FilteringSelect" name="install_type" id="install_type">
+														<option value="1">រំលស់ថេរ</option>
+														<option value="2">រំលស់ថយ</option>
+													</select>
 					                    		</td>
 					                    	</tr>
 					                    	<tr>
 					                    		<td><?php echo $tr->translate("អាត្រាការប្រាក់");?></td>
-					                    		<td><input  dojoType="dijit.form.NumberTextBox" onkeyup="checkScheduleOption();" type="text" name="interest_rate" id="interest_rate" value="<?php echo $client['interest_rate']; ?>" /></td>
+					                    		<td><input class="fullside" dojoType="dijit.form.NumberTextBox" onkeyup="checkScheduleOption();" type="text" name="interest_rate" id="interest_rate" value="<?php echo $client['interest_rate']; ?>" /></td>
 					                    	</tr>
 					                    	<tr>
 					                    		<td><?php echo $tr->translate("រយៈពេលបង់");?></td>
-					                    		<td><input  dojoType="dijit.form.NumberTextBox" onkeyup="checkScheduleOption();" type="text" name="total_duration" id="total_duration" value="<?php echo $client['total_duration']; ?>" />
+					                    		<td><input class="fullside" dojoType="dijit.form.NumberTextBox" onkeyup="checkScheduleOption();" type="text" name="total_duration" id="total_duration" value="<?php echo $client['total_duration']; ?>" />
 					                    		</td>
 					                    	</tr>
 				                    	</table>
@@ -283,7 +316,7 @@ td p{ margin-top:0px !important;}
 					                    		<td><input constraints="{datePattern:'dd/MM/yyyy'}"  dojoType="dijit.form.DateTextBox" type="text" name="end_date" id="end_date"  value="<?php //echo $client['validate_date'];?>" /></td>
 					                    	</tr>
 					                    	<tr>
-					                    		<td><?php echo $tr->translate("បង់ចុងក្រោយ	");?></td>
+					                    		<td><?php echo $tr->translate("បង់ចុងក្រោយ");?></td>
 					                    		<td>
 					                    			<select name="paid_receivehouse" id="paid_receivehouse" dojoType="dijit.form.FilteringSelect">
 													    <option value="0" label="បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ">បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ</option>
@@ -293,11 +326,12 @@ td p{ margin-top:0px !important;}
 					                    	</tr>
 					                    	<tr>
 					                    		<td align="center" colspan="2"> 
-					                    		<input type="hidden" name="id" id="id" value="<?php echo $this->id;?>" />
-					                    		<input type="hidden" name="identity" id="identity" value="<?php echo $str;?>" />
+					                    			<input type="hidden" name="id" id="id" value="<?php echo $this->id;?>" />
+					                    	        <input type="hidden" name="identity" id="identity" value="<?php echo $str;?>" />
 							               			<input type="button"  name="btn_save" label="<?php echo $tr->translate('GO_BACK');?>" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon"/>
-							               			<input type="submit" value="រក្សាទុក & ចាកចេញ" name="btn_save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
-					                    		</td>
+							               			<input type="button" onclick="addPreviewLoan();" value="បោះពុម្ពតារាង" name="preview_submit" label="<?php echo $tr->translate('PREVIEW SCHEDULE');?>" id="preview_submit" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+							               			<input type="submit" value="រក្សាទុក & ចាកចេញ"  id="btn_save_close" name="btn_save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+							               		</td>
 					                    	</tr>
 				                    	</table>
 				                   	 </td>
@@ -307,12 +341,23 @@ td p{ margin-top:0px !important;}
 			           </tr>
 			          <tr>
 			          	<td>
-				          	    </td>
+				        </td>
 			          </tr>
 	</table>
 	</form>
-	
-	
+	</div>
+</div>
+<div class="dijitHidden">
+	<style>
+	.print tr td{
+		padding:5px 2px; 
+	}
+	</style>
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'កាលវិភាគត្រូវបង់ប្រាក់'" id="lbl_schedule" style="width: 28cm !important;">
+		<div id="rpt_print" class="print" style="text-align: center;">
+			<div id="t_amountmoneytype" name="t_amountmoneytype">
+			</div>
+		</div>
 	</div>
 </div>
 <script>
@@ -320,6 +365,84 @@ dojo.require("dijit.form.DateTextBox");
 dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dojo.NodeList-manipulate");
 dojo.require("dojo.html");
+dojo.require("dijit.Dialog");
+dojo.require("dojo.number");
+
+url_previewloan = '<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'addschedultest')); ?>';
+function addPreviewLoan(){
+	r=0;
+	if(dijit.byId('frm_add_tran').validate()){
+		/*client = dijit.byId('member').get('value');
+		if (client=='' || client==-1){
+			alert('Please Select Client Name !');
+			dijit.byId('customer_code').focus();
+			return false;
+		}*/
+		//schedule_opt = dijit.byId("schedule_opt").get("value");
+		//if(schedule_opt==6){ 
+			//identity = $("#identity").val(); if(identity==''){ alert("សូមបញ្ចូលប្រាក់ដែលអតិថិជននឹងត្រូវបង់!");addRow(); return false;}}
+		
+		//if(result==false){return false;}
+		//loading();
+		dojo.xhrPost({
+		    url: url_previewloan,	
+			form: dojo.byId("frm_add_tran"),		    
+			handleAs:"json", 
+			load: function(data) {
+				 //document.getElementsByClassName("overlay")[0].style.display="none";
+						  temp='';	
+						  fund_title=0;thead='';fund_title=0;
+						  temp='<table class="collape tablesorter" style="font-size:13px; width:1000px !important; " id="table">'
+						  temp+='<tr style="background:#ccc;"><th><?php echo $tr->translate("NUM");?></th>';
+						  temp+='<th><?php echo $tr->translate("ថ្ងៃបង់ប្រាក់");?></th>';
+						  temp+='<th><?php echo $tr->translate("ប្រាក់ដើមគ្រា");?></th>';
+						  temp+='<th><?php echo $tr->translate("ប្រាក់ដើម");?></th>';
+						  temp+='<th><?php echo $tr->translate("ប្រាក់ការ");?></th>';
+						  temp+='<th><?php echo $tr->translate("សរុប");?></th>';
+						  temp+='<th><?php echo $tr->translate("ប្រាក់ដើមនៅសល់");?></th>';
+						  principal_permonth=0;total_interest=0;total_payment_after=0;
+						for(i=0;i<data.length;i++){
+							principal_permonth=principal_permonth+parseFloat(data[i].principal_permonth);
+							total_interest=total_interest+parseFloat(data[i].total_interest);
+							total_payment_after=total_payment_after+parseFloat(data[i].total_payment_after);
+					      r++;
+						  temp+='<tr><td align="center">'+r+'</td>';
+						  var myDate = new Date(data[i].date_payment);
+						  d = new Date(data[i].date_name);
+						  temp+='<td>'+getDayName(d.getDay())+'-'+data[i].date_payments+'</td>';
+						  temp+='<td>'+dojo.number.format(data[i].begining_balance,2)+'</td>';
+						  temp+='<td>'+dojo.number.format(data[i].principal_permonth,2)+'</td>';
+						  temp+='<td>'+dojo.number.format(data[i].total_interest,2)+'</td>';
+						  temp+='<td><b>'+dojo.number.format(data[i].total_payment_after,2)+'<b></td>';
+						  temp+='<td><b>'+dojo.number.format((data[i].ending_balance),2)+'<b></td>';
+						 }
+						  temp+='<tr><td align="right" colspan="3" style="border-left:1px solid #fff;border-bottom:1px solid #fff;">&nbsp;សរុប -Total</td>';
+						  temp+='<td>'+dojo.number.format(principal_permonth,2)+'</td>';
+						  temp+='<td>'+dojo.number.format(total_interest,2)+'</td>';
+						  temp+='<td><b>'+dojo.number.format(total_payment_after,2)+'<b></td>';
+						  temp+='<td></td>';
+						temp+='</table>';
+						dojo.byId('t_amountmoneytype').innerHTML = temp;
+						dijit.byId("lbl_schedule").show();
+			},
+			error: function(response, ioArgs) {
+				 //document.getElementsByClassName("overlay")[0].style.display="none";
+				alert("Failed while doing the operation: " + ioArgs.xhr.response);
+			}
+	   });
+	}
+}
+function getDayName(day){
+	 var weekday = new Array(7);
+	    weekday[0] = "អាទិត្យ";
+	    weekday[1] = "ច័ន្ទ";
+	    weekday[2] = "អង្គារ";
+	    weekday[3] = "ពុធ";
+	    weekday[4] = "ព្រហ";
+	    weekday[5] = "សុក្រ";
+	    weekday[6] = "សៅរ៍";
+	    return weekday[day];
+}
 function calCulateEndDate(){
 	amount_period = 1;
 	if(dijit.byId("payment_id").get('value')==4){amount_period=12;}
@@ -388,7 +511,6 @@ function addRow(){
 			}else{
 				epx_date = dijit.byId("date_payment"+indexs).get("value");
 			}
-			
 			var a = new Date(epx_date);
 			mm = a.getMonth()+2;
 			mmm = a.getMonth()+3;
@@ -402,14 +524,13 @@ function addRow(){
 			var y = a.getFullYear();
 			var epx_date = y+'-'+ mm + '-'+dd ;
 			var first_date = y+'-'+ mmm + '-'+dd ;
-		
 				template+='<td style="width:25px;" align="center"><span style="width:26px !important;display: block;"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></span></td>';
 				template+='<td style="width:26px;" align="center"><span style="width:26px !important;display: block;">'+col+'</span></td>';
 				template+="<td style='width:88px;'><input style='width:88px;' required='1' onkeyup='calculatePayment("+col+",1)' class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.NumberTextBox' id='principal_permonth_"+col+"' name='principal_permonth_"+col+"' /></td>";
 				template+='<td style="width:62px;"><input style="width:62px;" onkeyup="calculatePayment('+col+',2)" class="fullside" type="text" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
 				template+='<td style="width:85px;"><input style="width:85px;" class="fullside" type="text"  data-dojo-type="dijit.form.NumberTextBox" id="total_interest_'+col+'" name="total_interest_'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
 				template+='<td style="width:78px;"><input style="width:78px;" readOnly  class="fullside" type="text"  data-dojo-type="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
-				template+='<td style="width:100px;"><input style="width:100px;" class="fullside" type="text"  constraints='+'{datePattern:"dd/MM/yyyy"}'+' required="1" value="'+epx_date+'" data-dojo-type="dijit.form.DateTextBox" id="date_payment'+col+'" name="date_payment'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
+				template+='<td style="width:100px;"><input onchange="setFirstPayment('+col+');" style="width:100px;" class="fullside" type="text"  constraints='+'{datePattern:"dd/MM/yyyy"}'+' required="1" value="'+epx_date+'" data-dojo-type="dijit.form.DateTextBox" id="date_payment'+col+'" name="date_payment'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
 				template+='<td style="width:100px;"><input style="width:100px;" class="fullside" type="text" data-dojo-type="dijit.form.NumberTextBox" id="paid_principal'+col+'" name="paid_principal'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
 				template+='<td style="width:103px;"><input style="width:103px;" class="fullside" type="text"  data-dojo-type="dijit.form.NumberTextBox" id="interest_paid'+col+'" name="interest_paid'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
 				
@@ -419,7 +540,6 @@ function addRow(){
 			tmp='<tr class="hover" style="border-bottom:1px solid #ccc;font-size: 14px; width:100%;" id="row'+col+'">';
 			tmp+="</tr>";
 			dojo.query("#table_row").append(tmp);
-			//dojo.byId('#table_row').innerHTML=tmp;
 		
 			if($("#identity").val()!="") {
 				var identity = $("#identity").val();
@@ -434,7 +554,6 @@ function addRow(){
 }
 function calculatePayment(key,reverse=1){
 	principal_permonth= dijit.byId("principal_permonth_"+key).get("value");
-	
 	sold_price= dijit.byId("price_sold").get("value");
 	if(reverse==2){
 		principal_percent= dijit.byId("percent"+key).get("value");
@@ -504,6 +623,7 @@ function checkScheduleOption(){
 	//dijit.byId('interest_rate').set("readOnly",false);
 	//dijit.byId('release_date').set("readOnly",false);
 	//dijit.byId('date_line').set("readOnly",true);
+	dijit.byId("install_type").set("readOnly",true);
 	method_id = dijit.byId('payment_id').get('value');
 
 	amount_principal = dijit.byId('price_sold').get('value');	
@@ -521,6 +641,7 @@ function checkScheduleOption(){
 	//no=0;
 	
 	if(method_id==4){
+		dijit.byId("install_type").set("readOnly",false);
 		calCulateFixedPeriod();	
 		}else {
 			dijit.byId('fixed_payment').attr('value',0);
@@ -606,6 +727,9 @@ function calCulateSchedulePayment(){
 				total_amountpayment = 0;
 			}
 			total_amount = total_amount+ total_amountpayment;
+			if(n+1==rowIDArray.length){
+				setFirstPayment(n+1);
+			}
 		}
 	}
 	dijit.byId('total_installamount').attr('value',total_amount);
@@ -613,6 +737,29 @@ function calCulateSchedulePayment(){
 		dijit.byId("total_duration").attr("value",rowIDArray.length);
 	}
 	calCulateFixedPeriod();
+}
+function setFirstPayment(index){
+	var rowId = $('#identity').val();
+	var rowIDArray = rowId.split(',');
+	if(rowId!=''){
+		for(var n = 0; n < rowIDArray.length; n++) {
+			if(n+1==rowIDArray.length){
+				end_payment = dijit.byId("date_payment"+rowIDArray[n]).get("value");
+				var a = new Date(end_payment);
+				mm = a.getMonth()+2;
+				var dd = a.getDate();
+				 if(dd<10){
+					 dd = "0"+dd;
+				}
+				if(mm<10){
+					 mm = "0"+mm;
+				}
+				var y = a.getFullYear();
+				var first_date = y+'-'+ mm + '-'+dd ;
+				dijit.byId("first_payment").attr("value",first_date);
+			}
+		}
+	}
 }
 function calCulateFixedPeriod(){
 	var total_paid_install = dijit.byId('total_installamount').get('value');

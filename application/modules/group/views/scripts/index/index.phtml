@@ -30,8 +30,8 @@ $frms=$this->frm_client;
 dojo.require("dojo.data.ObjectStore");
 dojo.require("dojo.data.ItemFileWriteStore");  
 dojo.require("dijit.form.DateTextBox");
-dojo.require("dijit.form.CheckBox");
-dojo.require("dijit.Dialog");
+//dojo.require("dijit.form.CheckBox");
+//dojo.require("dijit.Dialog");
 
 var district_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var commune_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
@@ -40,7 +40,8 @@ var village_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::
 dojo.ready(function(){
 	new dijit.form.FilteringSelect({
 		store: district_store,
-		autoComplete: true,
+		autoComplete:false,
+		queryExpr:'*${0}*',
 		required: false,		           
 		name: "district",
 		id: "district",
@@ -58,7 +59,8 @@ dojo.ready(function(){
 		 
 		new dijit.form.FilteringSelect({
 		store: commune,
-		autoComplete: true,
+		autoComplete:false,
+		queryExpr:'*${0}*',
 		required: false,		           
 		name: "commune",
 		id: "commune",
@@ -79,7 +81,8 @@ dojo.ready(function(){
 		 
 		new dijit.form.FilteringSelect({
 		store: village_store,
-		autoComplete: true,
+		autoComplete:false,
+		queryExpr:'*${0}*',
 		required: false,		           
 		name: "village",
 		id: "village",

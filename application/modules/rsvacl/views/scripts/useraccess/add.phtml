@@ -18,19 +18,33 @@ table.user td{
 	  $acl_name=($this->acl_name=='')? array(): $this->acl_name;
 	  $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	  $df=$this->data;
+	  $module_str = array(
+	  		'home'=>'HOME_PAGE',
+	  		'rsvacl'=>'ACL',
+	  		'setting'=>'SETTING',
+	  		'accounting'=>'ACCOUNTING',
+	  		'loan'=>'ADMINISTRATION',
+	  		'other'=>'OTHER_INFOMATION',
+	  		'group'=>'REGISTRAR',
+	  		'report'=>'ALL_REPORT',
+	  		'Newschedule'=>'LIBRARY',
+	  		'backup'=>'BACKUP',
+	  		'dailywork'=>'dailywork',
+	  		'default'=>'default'
+	  		);
 ?>
 <table style="margin: 0 auto; width: 100%">
 	<tr>
 		<td>
 			<fieldset>
-				<legend>Module Assignment</legend>
+				<legend><?php echo $tr->translate("USER_ACCESS_EDIT");?></legend>
 				<table cellspacing="20" align="center">
 					<tr>
 						<td><?php echo $tr->translate("USER_TYPE");?></td>
 						<td class="add-edit">
 							<input type="text" required="true" name="user_type" id="user_type" placeholder="User Type" 
-										dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->rs[0]['user_type'];?>"
-										missingMessage="Invalid User type!" class='fullside' disabled/>
+								dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->rs[0]['user_type'];?>"
+								missingMessage="Invalid User type!" class='fullside' disabled/>
 						</td>				
 					</tr>			
 				</table>
@@ -40,39 +54,132 @@ table.user td{
 	<tr>
 		<td>
 			<fieldset>
-				<legend>Search option</legend>
+				<legend><?php echo $tr->translate("SEARCH");?></legend>
 				<form name="frmsearch" action="" method="post">
-				<table cellspacing="20" style="margin: 0 auto; width: 100%">
-					<tr>
-						<td><?php echo $tr->translate("MODULE");?></td>
-						<td><select name="fmod" id="fmod" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"><?php echo $this->optoin_mod;?></select></td>	
-						<td><?php echo $tr->translate("CONTROLLER");?></td>
-						<td><select name="fcon" id="fcon" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"><?php echo $this->optoin_con;?></select></td>				
-					</tr>	
-					<tr>
-						<td><?php echo $tr->translate("ACTION");?></td>
-						<td><select name="fact" id="fact" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"><?php echo $this->optoin_act;?></select></td>	
-						<td>Status</td>
-						<td><select name="fstatus" id="fstatus" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"><?php echo $this->optoin_status;?></select></td>				
-					</tr>	
-					<tr>
-						<td class="btn" colspan="4" align="center">
-							<input type="submit" value="Search" name="btsave" label="Search" title="Search" dojoType="dijit.form.Button"/>
-						</td>
-					</tr>		
-				</table>
+					<table cellspacing="20" style="margin: 0 auto; width: 100%">
+						<tr>
+							<td>Module</td>
+							<td>
+								<select name="fmod" id="fmod" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
+									<?php echo $this->optoin_mod;?>
+								</select>
+							</td>	
+							<td>Controller</td>
+							<td>
+								<select name="fcon" id="fcon" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
+									<?php echo $this->optoin_con;?>
+								</select>
+							</td>
+							<td>Action</td>
+							<td>
+								<select name="fact" id="fact" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
+									<?php echo $this->optoin_act;?>
+								</select>
+							</td>	
+							<td>Status</td>
+							<td>
+								<select name="fstatus" id="fstatus" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
+									<?php echo $this->optoin_status;?>
+								</select>
+							</td>
+							<td class="btn" align="center">
+								<input type="submit" value="Search" name="btsave" label="<?php echo $tr->translate("SEARCH");?>" title="Search" dojoType="dijit.form.Button"/>
+						    </td>					
+						</tr>	
+					</table>
 				</form>
 			</fieldset>
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<fieldset >		
-				<legend>Module/Controller/Action Assignment</legend>
-				<form name="frmlist" action="" dojoType="dijit.form.Form" method="post">
-					<?php echo $this->list;?>
-				</form>
-			</fieldset>			
+			<?php 
+				
+			?>
+			<!-- <div dojoType="dijit.layout.TabContainer" style="width: 98%; height: 400px;" tabPosition="left-h" tabStrip="true">
+				<div dojoType="dijit/layout/ContentPane" title="ddd" >
+				asdfgbn
+				</div>	
+			 	<div dojoType="dijit/layout/ContentPane" title="ddd //echo $tr->translate($module_str[$rs['module']]);?>" >
+			 		sdfghj
+			 	</div>
+			</div> -->
+			
+			<div dojoType="dijit.layout.TabContainer" style="width: 98%; height: 400px;" tabPosition="left-h" tabStrip="true">
+				
+				<?php 
+				$old_module = "";
+				if(!empty($this->rows)){foreach ($this->rows as $key=>$rs){ ?>
+					<?php 
+					if($old_module != $rs['module']){
+					   if($key==0){
+					?>
+						<div dojoType="dijit/layout/ContentPane" title="<?php echo $tr->translate(strtoupper($rs['module']));?>" >
+							<table width="100%" border="1" style="white-space: nowrap;border: 1px solid #ccc;border-collapse: collapse;">
+								<tr align="center" style="background: #bcd5f0;">
+									<td width="45%">
+										<?php echo $tr->translate("USER_ACCESS");?>
+									</td>
+									<td width="45%">
+										<?php echo $tr->translate("URL");?>
+									</td>
+									<td width="10%">
+										<?php echo $tr->translate("STATUS");?>
+									</td>
+								</tr>
+							
+						<?php }?>
+					<?php  if($key>0){?>
+							</table>
+					 	</div>
+					 	<div dojoType="dijit/layout/ContentPane" title="<?php echo $tr->translate(strtoupper($rs['module']));?>" >
+					 	<table width="100%" border="1" style="white-space: nowrap;border: 1px solid #ccc;border-collapse: collapse;">
+					 		<tr align="center" style="background: #bcd5f0;">
+								<td width="45%">
+									<?php echo $tr->translate("LABEL");?>
+								</td>
+								<td width="45%">
+									<?php echo $tr->translate("URL");?>
+								</td>
+								<td width="10%">
+									<?php echo $tr->translate("STATUS");?>
+								</td>
+							</tr>
+					<?php }}?>
+							
+							<?php if($rs['is_menu'] == 1){
+										$space="";
+										$style="style='font-weight:bold;'";
+									}else{
+										$space="&nbsp;&nbsp;&nbsp;";
+										$style="";
+									}
+							?>
+							<style>
+								.hover:hover{background: #ccc;}
+							</style>
+							<tr class="hover">
+								<td <?php echo $style;?>>
+									&nbsp;&nbsp; <?php echo $space.$tr->translate($rs['label']);?>
+								</td>
+								<td>
+									&nbsp;&nbsp; <?php echo $rs['url']?>
+								</td>
+								<td align="center">
+									<?php echo $rs['img']?>
+								</td>
+							</tr>
+						
+					<?php 
+						
+						//echo $rs['url'].$rs['img']."<br />";
+						$old_module = $rs['module'];
+					?>
+				<?php }}?>
+					</table>
+				</div>
+			</div>
+			
 		</td>
 	</tr>
 </table>
@@ -83,12 +190,21 @@ table.user td{
 	}
 </style>
 <script>
-$(function(){		
-	$('#fmod').val('<?php echo $df['fmod']?>');
-	$('#fcon').val('<?php echo $df['fcon']?>');
-	$('#fact').val('<?php echo $df['fact']?>');
-	$('#fstatus').val('<?php echo $df['fstatus']?>');
-});
+dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.layout.BorderContainer");
+dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.layout.AccordionContainer");
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dojo.parser");
+					
+					
+	$(function(){		
+		$('#fmod').val('<?php echo $df['fmod']?>');
+		$('#fcon').val('<?php echo $df['fcon']?>');
+		$('#fact').val('<?php echo $df['fact']?>');
+		$('#fstatus').val('<?php echo $df['fstatus']?>');
+	});
+	
 	function changeStatus(id, user_type){
 		url = "<?php echo BASE_URL;?>/rsvacl/useraccess/update-status";
 		status = "no";

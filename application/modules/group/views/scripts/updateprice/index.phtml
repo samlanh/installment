@@ -1,0 +1,51 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("Land Information"));
+$frm = $this->frm_search;
+$frms=$this->frm_land;
+$url_copy =$this->url(array('module'=>'group','controller'=>'land','action'=>'copy'));
+$formList = new Application_Form_Frmtable();
+?>
+<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
+<table width="50%">
+   <tr>
+      <td><?php echo $frm->getElement("adv_search");?></td>
+      <td><?php echo $frm->getElement("branch_id");?></td>
+      <td><?php echo $frms->getElement("streetlist");?></td>
+      <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+     <td><input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" /></td>
+   </tr>
+</table>  
+<?php echo $this->list;?> 
+</form>
+<style>
+		.btn-action{
+			padding: 3px 10px;
+   			    background: #3a3a5d;
+			    border: none;
+			    font-size: 10pt;
+			    float: left;
+			    color: #fff;
+			    padding-left: 15px;
+			    -webkit-border-radius: 5px;
+			    -moz-border-radius: 5px;
+			    border-radius: 5px;
+		}
+	
+	</style>
+<script type="text/javascript">
+dojo.require("dijit.form.CheckBox"); 
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+
+	function copyRecord(url){
+		 id = dijit.byId('recordcopy').get('value');
+		 window.location.href = url+'/id/'+id;
+	}
+
+	function setValue(index){
+		var recordcopy = $('input[name=copy]:checked').val();
+		dijit.byId('recordcopy').attr('value',recordcopy);
+	}
+</script>

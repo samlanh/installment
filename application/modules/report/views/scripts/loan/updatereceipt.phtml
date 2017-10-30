@@ -14,8 +14,33 @@ img.view{height: 85px !important;}
 <title><?php echo $tr->translate("RECEIPT");?></title>
  <form dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded" >
  <script type="dojo/method" event="onSubmit">			
-			if(this.validate()) {
-				return true;
+if(this.validate()) {
+			    printcipal = dijit.byId('total_principal_permonth').get("value");
+				total_interest_permonthpaid = dijit.byId('total_interest_permonthpaid').get("value");
+				penalize_amountpaid	 = dijit.byId('penalize_amountpaid').get("value");
+				extra_payment = dijit.byId('extra_payment').get("value");
+all_total = parseFloat(printcipal)+parseFloat(total_interest_permonthpaid)+parseFloat(penalize_amountpaid)+parseFloat(extra_payment);
+total_payment = dijit.byId('total_payment').get("value");
+if(all_total!=total_payment){
+	alert("ប្រាក់ត្រូវបង់សរុបមិនត្រឹមត្រូវទេ !សូមត្រួតពិនិត្យឡើងវិញ");
+	dijit.byId('total_payment').focus();
+    return false;
+}
+
+all_paid = dijit.byId('all_paid').get('value');
+if(all_paid<0){
+	alert("ប្រាក់បានបង់សរុបមិនអាចតូចជាង សូន្យបានទេ !សូមត្រួតពិនិត្យឡើងវិញ");
+	dijit.byId('all_paid').focus();
+    return false;
+}
+balance = dijit.byId('balance').get("value");
+if(balance<0){
+	alert("ប្រាក់នៅសល់មិនអាចតូចជាង សូន្យបានទេ !សូមត្រួតពិនិត្យឡើងវិញ");
+	dijit.byId('balance').focus();
+    return false;
+}
+	dijit.byId('btn_save_close').set('disabled',true);
+	return true;
 			}else {
 				return false;
 			}
@@ -130,22 +155,29 @@ img.view{height: 85px !important;}
 					<td >ប្រាក់នៅសល់</td>
 				    <td ><strong style="white-space: nowrap;"><input dojoType="dijit.form.NumberTextBox" required="1" class="fullside" id="balance" name="balance" value="<?php echo $this->rs['outstanding']-$this->rs['recieve_amount'];?>" type="text"></strong></td>
 					<td >&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
-				    <td><strong><input dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="date_pay" name="date_pay" value="<?php echo $this->rs['date_pay'];?>" type="text"></strong></td>
+				    <td><strong><input constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="date_pay" name="date_pay" value="<?php echo $this->rs['date_payment'];?>" type="text"></strong></td>
 					<td>&nbsp;ថ្ងៃទទួល</td>
-					<td><strong><input dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="date_input" name="date_input" value="<?php echo $this->rs['date_input'];?>" type="text"></strong></td>
+					<td><strong><input constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="date_input" name="date_input" value="<?php echo $this->rs['date_pay'];?>" type="text"></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td >សម្គាល់</td>
 				    <td ><input dojoType="dijit.form.TextBox"  class="fullside" id="note" name="note" value="<?php echo $this->rs['note'];?>" type="text"/></td>
-					<td >&nbsp;&nbsp;សែក</td>
-					<td colspan="3"><input dojoType="dijit.form.TextBox" class="fullside" id="cheque" name="cheque" value="<?php echo $this->rs['cheque'];?>" type="text"></td>
+					<td >&nbsp;&nbsp;បង់ជា</td>
+					<td colspan="3">
+						<select name="payment_method" id="payment_method" class="fullside" dojoType="dijit.form.FilteringSelect" >
+						<option value="1" <?php if($this->rs['payment_methodid']==1){ echo"selected";}?>>សាច់ប្រាក់</option>
+				    	<option value="3" <?php if($this->rs['payment_methodid']==3){ echo"selected";}?>>សែក</option>
+				    	<option value="2" <?php if($this->rs['payment_methodid']==2){ echo"selected";}?>>ធនាគារ</option>
+				    </select>
+					</td>	
 				</tr>
 				<tr>
 					<td >ប្រភេទបង់</td>
 				    <td ><select name="pay_type" id="pay_type" class="fullside" dojoType="dijit.form.FilteringSelect" ><option value="3" <?php if($this->rs['field3']==3){ echo"selected";}?>>បង់ធម្មតា</option>
 				    <option value="1" <?php if($this->rs['field2']==1){ echo"selected";}?>>ដាក់ប្រាក់កក់</option></select></td>
-					<td colspan="4">
-					</td>
+					<td >&nbsp;&nbsp;លេខ</td>
+					<td colspan="3"><input dojoType="dijit.form.TextBox" class="fullside" id="cheque" name="cheque" value="<?php echo $this->rs['cheque'];?>" type="text"></td>
+				
 				</tr>
 				<tr>
 					<td colspan="6" style="border-top:2px dashed #000;" >
@@ -153,7 +185,7 @@ img.view{height: 85px !important;}
 				</tr>
 				<tr style="white-space: nowrap;" height="35px;">
 					<td colspan="6" align="center">
-						<input type="submit" value="រក្សាទុក & ចាកចេញ" name="btn_save_close" label="<?php echo $tr->translate('GO_EDIT');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+						<input type="submit" value="រក្សាទុក & ចាកចេញ" name="btn_save_close" id="btn_save_close" label="<?php echo $tr->translate('GO_EDIT');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
 					</td>
 				</tr>
 			</table>

@@ -130,6 +130,16 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 		$_sex->setMultiOptions($opt);
 		$_sex->setValue($request->getParam("co_sex"));
 		
+		$land_id = new Zend_Dojo_Form_Element_FilteringSelect('land_id');
+		$land_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$db = new Application_Model_DbTable_DbGlobal();
+		$options = $db ->getAllLandInfo(null,null,1);//show name,show group,show option
+		$land_id->setMultiOptions($options);
+		$land_id->setValue($request->getParam("land_id"));
+		
 		if(!empty($_data)){
 			$_co->setValue($_data['co_name']);
 			$_startdate->setValue($_data['start_date']);
@@ -139,7 +149,7 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 			$_id->setValue($_data['id']);
 			$_note->setValue($_data['note']);
 		}
-		$this->addElements(array($_sex,$_branch_id,$_salary,$_staff_id,$_btn_search,$_status_search,$_title,$_id,$_co,$_note,$_startdate,$_enddate,$_amount_day,$_status));
+		$this->addElements(array($land_id,$_sex,$_branch_id,$_salary,$_staff_id,$_btn_search,$_status_search,$_title,$_id,$_co,$_note,$_startdate,$_enddate,$_amount_day,$_status));
 		return $this;
 	}
 	

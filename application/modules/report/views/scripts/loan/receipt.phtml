@@ -12,7 +12,7 @@ img.view{height: 85px !important;}
 </style>
 <title><?php echo $tr->translate("RECEIPT");?></title>
  <form method="post">
-<div style=" width:29cm;min-height:23cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+<div style=" width:29cm;min-height:23cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm;background: #fff;">
 	<div id="divPrint" style="width: 100%;">
 			<style>
 				.fontbig{
@@ -119,8 +119,10 @@ img.view{height: 85px !important;}
 				<tr style="white-space: nowrap;">
 					<td >សម្គាល់</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"><?php echo $this->rs['note'];?></label></strong></td>
-					<td >&nbsp;&nbsp;សែក</td>
-					<td colspan="3"><strong><label id="lb_cheque1" class="value"><?php echo $this->rs['cheque'];?></label></strong></td>
+					<td>&nbsp;បង់ជា</td>
+					<td><strong><label id="lbl_paid_date1" class="value"><?php echo $this->rs['payment_method'];?></label></strong></td>
+					<td>&nbsp;&nbsp;លេខ</td>
+					<td><strong><label id="lb_cheque1" class="value"><?php echo $this->rs['cheque'];?></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="35px;">
 					<td colspan="6">
@@ -129,11 +131,9 @@ img.view{height: 85px !important;}
 								<td width="30%">
 									&nbsp;
 								</td>
-								
 								<td align="center" width="40%">
 									ស្នាមមេដៃអ្នកប្រគល់
 								</td>
-									
 								<td align="center" width="30%">
 									ស្នាមមេដៃអ្នកទទួល
 								</td>
@@ -152,7 +152,6 @@ img.view{height: 85px !important;}
 								<td width="30%">
 									&nbsp;
 								</td>
-								
 								<td align="center" width="40%">
 									<strong><label id="lbl_customer1"><?php echo $this->rs['name_kh'];echo (empty($this->rs['hname_kh'])?"":"/".$this->rs['hname_kh']); ?></label></strong>
 								</td>
@@ -160,10 +159,11 @@ img.view{height: 85px !important;}
 								<td align="center" width="30%">
 									<strong>
 										<?php 
-										   $session_user=new Zend_Session_Namespace('auth');
-										   $last_name=$session_user->last_name;
-										   $username = $session_user->first_name;
-										   echo $last_name." ".$username;
+// 										   $session_user=new Zend_Session_Namespace('auth');
+// 										   $last_name=$session_user->last_name;
+// 										   $username = $session_user->first_name;
+// 										   echo $last_name." ".$username;
+											echo $this->rs['by_user'];
 										?>
 									</strong>
 								</td>
@@ -171,7 +171,6 @@ img.view{height: 85px !important;}
 						</table>
 					</td>
 				</tr>
-				
 				<tr style="line-height: 20px;font-size: 11px;">
 					<td valign="top" >
 						<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
@@ -181,16 +180,13 @@ img.view{height: 85px !important;}
 						<span style="white-space: pre-line;font-size: 13px;"><?php echo $this->data['comment1'];?></span><br />
 					</td>
 				</tr>
-				
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
-						
 					</td>
 				</tr>
-				
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 10px;margin-top: -15px; margin-bottom:10px;white-space:nowrap;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 10px;margin-top: -10px; margin-bottom:10px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">

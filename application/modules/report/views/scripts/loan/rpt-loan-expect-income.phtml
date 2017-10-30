@@ -68,18 +68,18 @@ th{padding: 5px;}
                 <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 24px; font-size:12px; padding:10px 0px; ">
                     <td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
                     <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-                    <td rowspan="2" style="font-size: 12px;"><?php echo $tr->translate("SALE_NO");?></td>
-                    <td colspan="3"><?php echo $tr->translate("CLIENT_INFO");?></td>
-                    <td colspan="2"><?php echo $tr->translate("PROPERTY_INFO");?></td>
+                    <!--<td rowspan="2" style="font-size: 12px;"><?php //echo $tr->translate("SALE_NO");?></td> -->
+                    <td colspan="2"><?php echo $tr->translate("CLIENT_INFO");?></td>
+                    <td ><?php echo $tr->translate("PROPERTY_INFO");?></td>
                     <td colspan="5"><?php echo $tr->translate("PAYMENT_INFO");?></td>
                     <td colspan="4"><?php echo $tr->translate("PAID_INFO");?></td>
+                    <td colspan="3"><?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?></td>
                 </tr>
                 <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 24px; font-size:12px; padding:10px 0px; ">
-                    <td style="font-size: 12px;"><?php echo $tr->translate("CLIENT_NUM");?></td> 
+                    <!-- <td style="font-size: 12px;"><?php //echo $tr->translate("CLIENT_NUM");?></td>  -->
                     <td style="font-size: 12px;"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
                     <td style="font-size: 12px;"><?php echo $tr->translate("TEL");?></td>
-                    <td style="font-size: 12px;"><?php echo $tr->translate("PROPERTY_NAME");?></td> 
-                    <td style="font-size: 12px;"><?php echo $tr->translate("STREET");?></td> 
+                    <td style="font-size: 12px;"><?php echo $tr->translate("LAND_CODE");?></td> 
                     <td style="font-size: 12px;"><?php echo $tr->translate("LOAN_AMOUNT");?></td> 
                     <td style="font-size: 12px;">&nbsp;<?php echo $tr->translate("BUY_DATE");?>&nbsp;</td>
                     <td style="font-size: 12px;">&nbsp;<?php echo $tr->translate("LIFE_LOAN");?>&nbsp;</td>
@@ -89,51 +89,69 @@ th{padding: 5px;}
                     <td style="font-size: 12px;"><?php echo $tr->translate("INTEREST");?></td>
                     <td style="font-size: 12px;"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
                     <td style="font-size: 12px;"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+                    <td style="font-size: 12px;"><?php echo $tr->translate("PRINCIPAL");?></td> 
+                    <td style="font-size: 12px;"><?php echo $tr->translate("INTEREST");?></td>
+                    <td style="font-size: 12px;"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
                 </tr>
-                <?php $amt_r1 = 0;
-                	  $amt_d1 = 0;
+                <?php 
+                	 $amt_d1 = 0;
                 	 $amn_b1 = 0; 
-                	 $p_r = 0;
                 	 $p_d = 0;
                 	 $p_b = 0;
+                	 $principal=0;
+                	 $interest=0;
                 ?>
                 <?php if(!empty($this->LoanCollectionco_list)) foreach ($this->LoanCollectionco_list as $key => $rs){ ?>
                 <?php 
 		             $p_d = $p_d+$rs['principal_permonthafter'];
 					 $amt_d1 = $amt_d1+$rs['total_interest_after'];
+					 
+					 $principal = $principal+$rs['principal_permonth'];
+					 $interest = $interest+$rs['total_interest'];
                ?>
                 <tr class="style" style="font-family: 'Khmer OS Content';">
                		<td style="font-size: 12px; text-align: center;">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
                		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["branch_name"];?></td>
-               		<td style="font-size: 12px; text-align: center;">&nbsp;<?php echo $rs["sale_number"]; ?>&nbsp;</td>
-               		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["client_number"];?></td>
+               		<!-- <td style="font-size: 12px; text-align: center;">&nbsp;<?php //echo $rs["sale_number"]; ?>&nbsp;</td> 
+               		<td style="font-size: 12px;">&nbsp;&nbsp;<?php //echo $rs["client_number"];?></td>-->
                		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["name_kh"];?></td>
                		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["phone"];?></td>
                		<!-- <td style="font-size: 11px;">&nbsp;&nbsp;<?php ///echo $rs["land_code"];?></td> -->
-               		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["land_address"];?></td>
-               		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["street"];?></td>
+               		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["land_address"].','.$rs["street"];?></td>
                		<td style="font-size: 12px;text-align: center;">&nbsp;&nbsp;<?php echo number_format($rs["price_sold"]-$rs["other_fee"],2);?></td>
                		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo date("d-m-Y",strtotime($rs["first_payment"]));?>&nbsp;</td>
                		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo date("d-m-Y",strtotime($rs["end_line"]));?>&nbsp;</td>
                		<td style="font-size: 12px;text-align: center;">&nbsp;&nbsp;<?php echo $rs["interest_rate"];?>&nbsp;%</td>
                		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo $rs['total_duration'];//$rs['pay_term'];?>&nbsp;</td>
-               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?></td>
+               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonth"],2);?></td>
+               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["total_interest"],2);?></td>
+               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonth"]+$rs["total_interest"],2);?></td>
+               		<td style="font-size: 12px;text-align: center;"><?php echo date("d-m-Y",strtotime($rs["date_payment"]));?></td>
+                	<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?></td>
                		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["total_interest_after"],2);?></td>
                		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonthafter"]+$rs["total_interest_after"],2);?></td>
-               		<td style="font-size: 12px;text-align: center;"><?php echo date("d-m-Y",strtotime($rs["date_payment"]));?></td>
+                
                 </tr>
                 <?php }?>
             </table>
             <br />
              <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px;" width="100%" cellspacing="0">
                  <tr bgcolor="#c1d0f3" class="style" style="font-weight:bold; line-height: 25px; text-align: left; font-size:12px;font-family: 'Khmer OS Content';">
-                    <td>&nbsp;<?php echo $tr->translate("CURRENT_TYPE");?>&nbsp;</td>                 
+                    <td colspan="3" align="center">&nbsp;<?php echo $tr->translate("PAID_INFO");?>&nbsp;</td>
+                    <td colspan="3" align="center">&nbsp;<?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?>&nbsp;</td>
+                </tr>
+                 <tr  class="style" style="font-weight:bold; line-height: 25px; text-align: left; font-size:12px;font-family: 'Khmer OS Content';">
+                    <td>&nbsp;<?php echo $tr->translate("TOTAL_PRINCIPLE");?>&nbsp;</td>
+                    <td>&nbsp;<?php echo $tr->translate("TOTAL_INTEREST");?>&nbsp;</td>
+                    <td>&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
                     <td>&nbsp;<?php echo $tr->translate("TOTAL_PRINCIPLE");?>&nbsp;</td>
                     <td>&nbsp;<?php echo $tr->translate("TOTAL_INTEREST");?>&nbsp;</td>
                     <td>&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
                 </tr>
                  <tr class="style" style=" line-height: 24px; font-size:11px;font-family: 'Khmer OS Content';">
-                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?>&nbsp;</td>
+                    <td>&nbsp;<?php echo number_format($principal,2);?>$&nbsp;</td>
+                    <td>&nbsp;<?php echo number_format($interest,2);?>$&nbsp;</td>
+                    <td>&nbsp;<?php echo number_format($principal+$interest,2);?>$&nbsp;</td>
                     <td>&nbsp;<?php echo number_format($p_d,2);?>$&nbsp;</td>
                     <td>&nbsp;<?php echo number_format($amt_d1,2);?>$&nbsp;</td>
                     <td>&nbsp;<?php echo number_format($amt_d1+$p_d,2);?>$&nbsp;</td>

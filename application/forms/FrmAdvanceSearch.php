@@ -48,7 +48,9 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$employee->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'onchange'=>'popupCheckCO();'
+				'onchange'=>'popupCheckCO();',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$employee->setMultiOptions($options);
 		$employee->setValue($request->getParam('employee'));
@@ -65,7 +67,9 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'required' =>'true'
+				'required' =>'true',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$rows = $db->getAllBranchName();
 		$options_branch=array('-1'=>"---Select Branch---");
@@ -92,7 +96,9 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$type->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required'=>true,
-				'class'=>'fullside'
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$type->setMultiOptions($opt_type);
 		$type->setValue($request->getParam("type"));

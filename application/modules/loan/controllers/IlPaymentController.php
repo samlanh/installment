@@ -23,6 +23,7 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 						'status'=>$formdata['status'],
 						'paymnet_type'	=> $formdata["paymnet_type"],
 						'land_id'=> $formdata["land_id"],
+						'payment_method'=> $formdata["payment_method"],
 						);
 			}
 			else{
@@ -34,7 +35,8 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 						'branch_id'		=>	-1,
 						'paymnet_type'	=> -1,
 						'land_id'=>-1,
-						'status'=>"",);
+						'status'=>"",
+						'payment_method'=>-1,);
 			}
 			$rs_rows= $db->getAllIndividuleLoan($search);
 			$result = array();

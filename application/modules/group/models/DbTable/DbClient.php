@@ -159,6 +159,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				//$s_where[] = " name_en LIKE '%{$s_search}%'";
 				$s_where[] = " name_kh LIKE '%{$s_search}%'";
 				$s_where[] = " phone LIKE '%{$s_search}%'";
+				$s_where[] = " tel LIKE '%{$s_search}%'";
 				$s_where[] = " house LIKE '%{$s_search}%'";
 				$s_where[] = " street LIKE '%{$s_search}%'";
 				$where .=' AND ('.implode(' OR ',$s_where).')';

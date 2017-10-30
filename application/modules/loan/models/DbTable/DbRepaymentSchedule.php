@@ -36,9 +36,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
       	 	$s_where[] = " c.client_number LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.name_en LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
-      	 	$s_where[] = " s.price_sold LIKE '%{$s_search}%'";
-      	 	$s_where[] = " s.comission LIKE '%{$s_search}%'";
-      	 	$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
       	 	$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	if($search['status']>-1){
@@ -93,7 +90,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		return $this->round_up($value, $places);
     	}
     	else{
-    		return round($value,2);
+    		return round($value,0);
     	}
     }
     
@@ -180,7 +177,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==4 OR $data["schedule_opt"]==6){//
     			$is_schedule=1;
     		}
-    		
     			if($data['old_paymentmethod']==1){
     				$this->_name='ln_sale';
     				$dbp = new Loan_Model_DbTable_DbLandpayment();
@@ -235,7 +231,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    				'outstanding'		=>$data['sold_price']-$data['paid_before'],
 		    				'principal_amount'	=>$data['sold_price']-($data['paid_before']+$data['deposit']),
 		    				'total_principal_permonth'	=>$data['sold_price']-($data['paid_before']),
-		    				'total_principal_permonthpaid'=>($data['paid_before']+$data['deposit']),
+		    				'total_principal_permonthpaid'=>($data['deposit']),
 		    				'total_interest_permonth'	=>0,
 		    				'total_interest_permonthpaid'=>0,
 		    				'penalize_amount'			=>0,
@@ -251,6 +247,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    				'status'			=>1,
 		    				'note'				=>$data['note'],
 		    				'payment_times'=>$data['paid_times'],
+		    				'is_payoff'=>1,
 		    				'user_id'			=>$this->getUserId(),
 		    		);
 		    		$crm_id = $this->insert($array);
@@ -274,12 +271,11 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    		$this->insert($array);
     			}
     		//}
-    		
-    			   $arr = array(
+    			$arr = array(
     				'is_reschedule'=>1,
     			   	'create_date'=>date("Y-m-d"),
     				);
-    			   $this->_name='ln_sale';
+    			 $this->_name='ln_sale';
     	    $where = "id =".$data["loan_number"];
     		$id = $this->update($arr, $where);//add group loan
     		unset($datagroup);
@@ -300,7 +296,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		if($data["old_paymentmethod"]==1 AND $data['deposit']>0){
     			$remain_principal = $data['sold_price'];
     		}else{
-    			
     			if($data["schedule_opt"]==4 AND $data['deposit']==0){//check later if deposit> or =0
     				$data['sold_price']= $data['sold_price'];
     				$remain_principal = $data['sold_price'];
@@ -405,7 +400,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    			if(!empty($data['identity'])){
 			    				$remain_principal = $data['sold_price']-$data['total_installamount'];//check here 
 			    			}
-			    			
 			    			$next_payment = $data['first_payment'];
 			    			$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
 			    		}
@@ -413,9 +407,15 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    		$total_day = $amount_day;
 			    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
 			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
-			    		$pri_permonth = $data['fixed_payment']-$interest_paymonth;
+			    		if($data['install_type']==2){
+			    			$pri_permonth=$data['for_installamount']/($data['period']*12);
+			    			$pri_permonth =$this->round_up_currency(2, $pri_permonth);
+			    		}else{
+			    			$pri_permonth = $data['fixed_payment']-$interest_paymonth;
+			    		}
 			    		if($i==$loop_payment){//for end of record only
 			    			$pri_permonth = $remain_principal;
+			    			$paid_receivehouse = $data['paid_receivehouse'];
 			    		}
     			   }
     			   elseif($payment_method==6 OR $payment_method==5){
@@ -524,7 +524,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	          return 1;
 	        }catch (Exception $e){
 	            	$db->rollBack();
-	            	echo $e->getMessage();exit();
 	            	Application_Form_FrmMessage::message("INSERT_FAIL");
 	            	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	        }
@@ -700,7 +699,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     public function getLoanInfoById($id){
     	$db=$this->getAdapter();
     	$sql=" SELECT
-    	(SELECT SUM(total_principal_permonthpaid) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) AS total_principal,
+    	(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) AS total_principal,
+    	(SELECT extra_payment FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 ORDER BY date_input DESC LIMIT 1) AS extra_payment,
+    	(SELECT date_input FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 ORDER BY date_input DESC LIMIT 1) AS date_input,
     	s.* FROM `ln_sale` AS s WHERE s.id=$id AND status=1 AND s.is_completed=0 ";
     	return $db->fetchRow($sql);
     }

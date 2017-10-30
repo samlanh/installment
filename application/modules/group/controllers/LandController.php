@@ -65,15 +65,15 @@ class Group_LandController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
 				try{
-				 if(isset($data['save_new'])){
+				// if(isset($data['save_new'])){
 					$id= $db->addLandinfo($data);
 					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
-				}
-				else if (isset($data['save_close'])){
-					$id= $db->addLandinfo($data);
-					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
-					Application_Form_FrmMessage::redirectUrl("/group/land/index");
-				}
+// 				}
+// 				else if (isset($data['save_close'])){
+// 					$id= $db->addLandinfo($data);
+// 					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+// 					Application_Form_FrmMessage::redirectUrl("/group/land/index");
+// 				}
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -99,6 +99,9 @@ class Group_LandController extends Zend_Controller_Action {
 		$branch_opt = $db->getAllBranchByUser();
 		array_unshift($branch_opt, array('id'=>'-1', 'name'=>'បន្ថែមគម្រោងថ្មី'));
 		$this->view->branch_opt = $branch_opt;
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
 	public function editAction(){
 		$id = $this->getRequest()->getParam("id");
@@ -130,6 +133,9 @@ class Group_LandController extends Zend_Controller_Action {
 		
 		$dbpop = new Application_Form_FrmPopupGlobal();
 		$this->view->frmPopupPropertyType = $dbpop->frmPopupPropertyType();
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		
 	}
 	function viewAction(){
@@ -299,15 +305,16 @@ class Group_LandController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
 				try{
-				 if(isset($data['save_new'])){
-					$id= $db->addLandinfo($data);
-					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
-				}
-				else if (isset($data['save_close'])){
+				// if(isset($data['save_new'])){
 					$id= $db->addLandinfo($data);
 					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
 					Application_Form_FrmMessage::redirectUrl("/group/land/index");
-				}
+				//}
+// 				else if (isset($data['save_close'])){
+// 					$id= $db->addLandinfo($data);
+// 					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+// 					
+// 				}
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -329,7 +336,8 @@ class Group_LandController extends Zend_Controller_Action {
 		
 		$dbpop = new Application_Form_FrmPopupGlobal();
 		$this->view->frmPopupPropertyType = $dbpop->frmPopupPropertyType();
-	}
-	
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+	}	
 }
-

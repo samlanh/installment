@@ -15,7 +15,12 @@ $url_receiptupdate = $this->url(array('module'=>'report','controller'=>'loan','a
    			<td><?php echo $frm->getElement("adv_search");?></td>
    			<td><?php echo $frm->getElement('branch_id');?></td>
    			<td><?php echo $frm->getElement('client_name');?></td>
-   			<td><?php echo $frm->getElement('land_id');?></td>
+   			<td><?php //echo $frm->getElement('land_id');?>
+   				<input id="land_id" />
+   			</td>
+   	<tr>
+   	</tr>
+   			<td><?php echo $frm->getElement('payment_method');?></td>
    			<td><?php echo $frm->getElement('start_date');?></td>
    			<td><?php echo $frm->getElement('end_date');?></td>
    			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
@@ -23,7 +28,7 @@ $url_receiptupdate = $this->url(array('module'=>'report','controller'=>'loan','a
 </table>
 </form>
 <div style="width:100%; margin:0 auto;">
-<div style=" width:28.5cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+<div style=" width:30cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
 <style>
 .hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
 .hiddenblog{display: block !important;}
@@ -83,17 +88,17 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
 	                <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
 	                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-	                    <td rowspan="2"><?php echo $tr->translate("SALE_NO");?></td>	
+	                    <!-- <td rowspan="2"><?php //echo $tr->translate("SALE_NO");?></td> -->	
 	                    <td rowspan="2"><?php echo $tr->translate("CLIENT_NUM");?></td>                  
 	                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_NAME");?></td>  
-	                    <td rowspan="2"><?php echo $tr->translate("STREET");?></td>	
+	                    <td rowspan="2"><?php echo $tr->translate("បង់ជា");?></td>	
 	                    <td colspan="5"><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>    
 	                    <td rowspan="2" style="white-space:nowrap; border-right:3px double black; "><?php echo $tr->translate("PAY_DATE");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("RECIEPT_NO");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
-	                     <!-- <td rowspan="2"><?php //echo $tr->translate("PRINT");?></td>-->
+	                    <td rowspan="2" class=""><?php echo $tr->translate("BY_USER");?></td>
 	                </tr>
 	                <tr class="style" style="white-space: nowrap;text-align: center;">
 	                	<td><?php echo $tr->translate("PRINCIPAL");?></td>                   
@@ -103,7 +108,9 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
 	                    <td><?php echo $tr->translate("TOTAL");?></td>
 	                </tr>
 	                </thead>
-                <?php $amt_r1 = 0; $amn_r2 = 0; $amn_r3 = 0;$amt_r4 = 0;$amn_r5 = 0;
+                <?php 
+                	$total_cash = 0;$total_cheque = 0;$total_bank = 0;
+                	$amt_r1 = 0; $amn_r2 = 0; $amn_r3 = 0;$amt_r4 = 0;$amn_r5 = 0;
                 	  $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;$amt_d5 = 0;
                 	 $amn_b1 = 0; $amn_b2 = 0; $amn_b3 = 0; $amn_b4 = 0;$amn_b5 = 0;
                 	 $i=1;$oldloan_number='';
@@ -119,15 +126,22 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
 						$amt_d3 = $amt_d3+$rs['penalize_amountpaid'];
 						$amt_d5 = $amt_d5+$rs['extra_payment'];
 						$total_d=$amt_d1+$amt_d2+$amt_d3+$amt_d5;
+						if($rs['payment_methodid']==1){
+							$total_cash = $total_cash + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+						}elseif($rs['payment_methodid']==2){
+							$total_cheque = $total_cheque + + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+						}else{
+							$total_bank = $total_bank + + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+						}
                ?>
                 <tr class="style style1" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
                		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
                		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-               		<td>&nbsp;<?php echo $rs["sale_number"];?>&nbsp;</td>
+               		<!-- <td>&nbsp;<?php //echo $rs["sale_number"];?>&nbsp;</td> -->
                		<td>&nbsp;<?php echo $rs["client_number"];?>&nbsp;</td>
                		<td>&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
-               		<td>&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
-               		<td>&nbsp;<?php echo $rs["street"];?>&nbsp;</td>
+               		<td>&nbsp;<?php echo $rs["land_address"].",".$rs["street"];?>&nbsp;</td>
+               		<td>&nbsp;<?php echo $rs["payment_method"];?>&nbsp;</td>
                		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['total_principal_permonthpaid'],2);?>&nbsp;</td>               		
                		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['total_interest_permonthpaid'],2);?>&nbsp;</td>
                		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['penalize_amountpaid'],2);?>&nbsp;</td>
@@ -141,13 +155,12 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
 					<?php echo $rs["paymentoption"];?></a>
 						<span class="" ><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receiptupdate.'/id/'.$rs["id"];?>">|កែប្រែ</a></span>
 					</td>
-               		<!-- <td class="hideblog" style="font:bolder 11px 'Khmer OS Battambang',Arial;text-align: center;">&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
-					<?php //echo $tr->translate("PRINT");?></a>&nbsp;</td> -->
+               		<td class="" style="font:bolder 11px 'Khmer OS Battambang',Arial;text-align: center;"><?php echo $rs['user_name']?></td>
                 </tr>
                 <?php }?>
             </table>
             <br />
-             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="80%" cellspacing="0">
+             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
                  <tr bgcolor="#c1d0f3" class="style" style="font-weight:bold; line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
                     <td><?php echo $tr->translate("CURRENT_TYPE");?></td>
                     <td><?php echo $tr->translate("PRINCIPAL");?></td>                    
@@ -155,6 +168,10 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
                     <td><?php echo $tr->translate("TOTAL_PENILIZE_AMOUNT");?></td>
                     <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
                     <td><?php echo $tr->translate("TOTAL");?></td>
+                    <td rowspan="2">ចំណូលតាមប្រភេទ</td>
+                    <td><?php echo $tr->translate("សាច់ប្រាក់សរុប");?></td>
+                    <td><?php echo $tr->translate("សែកសរុប");?></td>
+                    <td><?php echo $tr->translate("តាមធនាគារ");?></td>
                 </tr>
                  <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
                     <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
@@ -163,6 +180,9 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
                     <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>
                     <td>&nbsp;&nbsp;<?php echo number_format($amt_d5,2);?>&nbsp;</td>
                     <td>&nbsp;&nbsp;<?php echo number_format($total_d,2);?>&nbsp;</td>
+                    <td>&nbsp;&nbsp;<?php echo number_format($total_cash,2);?>&nbsp;</td>
+                    <td>&nbsp;&nbsp;<?php echo number_format($total_cheque,2);?>&nbsp;</td>
+                    <td>&nbsp;&nbsp;<?php echo number_format($total_bank,2);?>&nbsp;</td>
                 </tr>
               </table>
               <br />
@@ -181,3 +201,52 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
 </div>
 </div>
 </div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getAllPropertyBranch();
+	});
+	new dijit.form.FilteringSelect({
+		store: property_store,
+		required: false,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		name: "land_id",
+		id: "land_id",
+		value:-1,
+		searchAttr: "name",
+		class: 'fullside fullside50',
+		onChange: function() {
+			land_id=-1;
+	}
+		}, "land_id");
+});
+land_id = '<?php echo $this->rssearch['land_id']?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getAllPropertyBranch(branch_id){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id<0){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'action':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_id').set('store', property_store);
+		    if(land_id>0){
+		    	dijit.byId('land_id').attr('value',land_id);
+			 }
+		},
+		error: function(err) {
+		}
+	});
+}
+</script>

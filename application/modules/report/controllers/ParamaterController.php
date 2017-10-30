@@ -254,6 +254,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   				'payment_type'=>-1,
+  				'payment_method'=>-1,
   		);
   	}
   	$this->view->list_end_date=$search;
@@ -312,6 +313,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		$search = $this->getRequest()->getPost();
   	}else{
   		$search = array(
+  				'land_id'=>0,
   				'start_date'  => date('Y-m-d'),
 	 			'end_date'    => date('Y-m-d'),
   				'txtsearch' => '',

@@ -71,9 +71,13 @@ dojo.require("dijit.form.DateTextBox");
              			</span>
              			<span style="width: 100%; display: block;"><span style=" font-family:'Khmer OS Muol Light';font-weight:200;">៣.តំលៃទិញ និង ការផ្ទេរសិទ្ធិ ៖ </span></span>
              			<span style="width: 100%; display: block;">តំលៃទិញអចលនវត្ថុគឺUSD <span class="value" style="min-width:160px;font-family:Arial;font-weight: bold;"><?php echo number_format($this->agreement['price_sold'],2);?></span>។
-             			តំលៃផ្ទះ USD &nbsp;<span class="value" style="min-width:80px;font-family:Arial;font-weight: bold;"> <?php echo number_format($this->agreement['land_price'],2) ?> 
-             			</span><span>តំលៃដីUSD&nbsp;<span class="value" style="min-width:80px;font-family:Arial;font-weight: bold;"><?php echo number_format($this->agreement['price_sold']-$this->agreement['land_price'],2);?></span>
+             			<?php if($this->keyValue['show_propertyprice']==1){?>
+             			តំលៃផ្ទះ USD &nbsp;
+             			<span class="value" style="min-width:80px;font-family:Arial;font-weight: bold;"> <?php echo number_format($this->agreement['land_price'],2) ?> 
+             			</span>
+             			<span>តំលៃដីUSD&nbsp;<span class="value" style="min-width:80px;font-family:Arial;font-weight: bold;"><?php echo number_format($this->agreement['price_sold']-$this->agreement['land_price'],2);?></span>
              			<label id="lable_pricekhmer"></label></span>។
+             			<?php }?>
              			</span>
              				<script>
 								a ='<?php echo ($this->agreement['price_sold']) ?>';
@@ -115,11 +119,10 @@ dojo.require("dijit.form.DateTextBox");
              			<?php }
 
              			if($this->agreement['is_reschedule']==3 AND $this->agreement['paid_amount']>0){//បើចេញតារាងថ្មីប្រាប់ថាប្រាក់បានបង់ពីមុនសរុប
-             				
+             				//$paid = $paid+$rsdeposite['total_principal_permonthpaid'];
 							$rowspaid = $dbs->getReceiptMoneyPaid($this->agreement['id']);
 							if(!empty($rowspaid)){
              					foreach($rowspaid as $keypaid=> $rspaid){
-									
              						$start_id=$start_id+1;
              						$paid = $paid+$rspaid['total_principal_permonthpaid'];
              			?>
@@ -143,8 +146,6 @@ dojo.require("dijit.form.DateTextBox");
              					}
              				}
              			}
-             			
-             			
              			$numrow = 0;
              			if (empty($this->sale_schedule)){//payoff
              			?>
@@ -170,9 +171,9 @@ dojo.require("dijit.form.DateTextBox");
              			}
              			
              			$i=0; if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++;  ?>
-             			
-             			
-             			<?php $paid = $paid+$row['principal_permonth'];?>             	
+             			<?php 
+             			if($row['is_completed']==1 AND $this->agreement['is_reschedule']==3){continue;}
+             			$paid = $paid+$row['principal_permonth'];?>             	
              			<?php if($key==0){?>
 	             		<?php
 	             			if($row['date_payment']==$this->agreement['buy_date'] AND $paid_amount==$row['principal_permonth'] ){

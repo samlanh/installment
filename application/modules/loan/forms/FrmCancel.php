@@ -44,8 +44,8 @@ public function init()
 		
 		$_date = date("Y-m-d");
 		$start_date_search->setValue($_date);
-		if(!empty($request->getParam("to_date_search")))$start_date_search->setValue($request->getParam("from_date_search"));
-		
+		$search = $request->getParam("to_date_search");
+		if(!empty($search))$start_date_search->setValue($request->getParam("from_date_search"));
 		
 		$to_date_search = new Zend_Dojo_Form_Element_DateTextBox('to_date_search');
 		$to_date_search->setAttribs(array(
@@ -53,7 +53,8 @@ public function init()
 				'dojoType'=>'dijit.form.DateTextBox','class'=>'fullside',
 		));
 		$to_date_search->setValue($_date);
-		if(!empty($request->getParam("to_date_search")))$to_date_search->setValue($request->getParam("to_date_search"));
+		$to_searhcdate = $request->getParam("to_date_search");
+		if(!empty($to_searhcdate))$to_date_search->setValue($request->getParam("to_date_search"));
 		
 		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
@@ -407,6 +408,25 @@ public function init()
 				'class'=>'fullside',
 		));
 		
+		$land_id = new Zend_Dojo_Form_Element_FilteringSelect('land_id');
+		$land_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$options = $db ->getAllLandInfo(null,null,1);//show name,show group,show option
+		$land_id->setMultiOptions($options);
+		$land_id->setValue($request->getParam("land_id"));
+		
+		$client_name = new Zend_Dojo_Form_Element_FilteringSelect("client_name");
+		$opt_client = array(''=>'ជ្រើសរើស ឈ្មោះអតិថិជន');
+		$rows = $db->getAllClient();
+		if(!empty($rows))foreach($rows AS $row){
+			$opt_client[$row['id']]=$row['name'];
+		}
+		$client_name->setMultiOptions($opt_client);
+		$client_name->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
+		$client_name->setValue($request->getParam("client_name"));
+		
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
 			$_cancel_code->setValue($data['cancel_code']);
@@ -418,7 +438,7 @@ public function init()
 			$paid_amount->setValue($data['paid_amount']);
 			$return_back->setValue($data['return_back']);
 		}
-		$this->addElements(array($client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
+		$this->addElements(array($client_name,$land_id,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
 				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$_old_property_id,$property,
 				$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$penalize,$_service_charge,

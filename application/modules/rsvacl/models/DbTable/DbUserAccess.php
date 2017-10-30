@@ -125,10 +125,14 @@ class RsvAcl_Model_DbTable_DbUserAccess extends Zend_Db_Table_Abstract
     
     protected function checkExistAcl($data){
     	$sql = "SELECT id FROM ". $this->_name . " WHERE user_type_id='".$data['user_type_id']."' AND acl_id='". $data['acl_id'] . "'";
-    	
     	$row=$this->getAdapter()->fetchOne($sql);
     	if(!empty($row)) return true;
     	return false;
+    }
+    function getAllModule(){
+    	$db=$this->getAdapter();
+    	$sql="select module from rms_acl_acl WHERE status=1  group by module ";
+    	return $db->fetchAll($sql);
     }
 }
 ?>

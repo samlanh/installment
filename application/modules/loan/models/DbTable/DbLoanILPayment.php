@@ -43,7 +43,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	if($search['status']!=""){
     		$where.= " AND status = ".$search['status'];
     	}
-    	
     	if(!empty($search['start_date']) or !empty($search['end_date'])){
     		$where.=" AND lcrm.`date_input` BETWEEN '$start_date' AND '$end_date'";
     	}
@@ -55,6 +54,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	}
     	if($search['land_id']>0){
     		$where.=" AND lcrm.`land_id`= ".$search['land_id'];
+    	}
+    	if($search['payment_method']>0){
+    		$where.=" AND lcrm.`payment_method`= ".$search['payment_method'];
     	}
     	
     	$order = " ORDER BY id DESC";
@@ -290,6 +292,10 @@ public function addILPayment($data){
     	
     	$service_charge= $data["service_charge"];
     	$penalize = $data["penalize_amount"];
+    	$pay_off = 0;
+    	if($data["option_pay"]==4){
+    		$pay_off = 1;
+    	}
     		$arr_client_pay = array(
     			'branch_id'						=>	$data["branch_id"],
     			'receipt_no'					=>	$reciept_no,
@@ -299,7 +305,7 @@ public function addILPayment($data){
     			'sale_id'						=>	$data['loan_number'],
     			'land_id'						=>	$data['property_id'],
     			'outstanding'                   =>	$data['priciple_amount']+$principle_amount,//ប្រាក់ដើមមុនបង់
-    			'total_principal_permonth'		=>	$data["os_amount"]+$data["extra_payment"],//ប្រាក់ដើមត្រូវបង់
+    			'total_principal_permonth'		=>	$data["os_amount"]+$data["extrapayment"],//ប្រាក់ដើមត្រូវបង់
     			'total_interest_permonth'		=>	$data["total_interest"],
     			'penalize_amount'				=>	$penalize,
     			'service_charge'				=>	$data["service_charge"],
@@ -320,8 +326,10 @@ public function addILPayment($data){
     			'status'						=>	1,
     			'is_completed'					=>	$is_compleated,
     		    'field3'			=>3,
+    			'is_payoff'=>$pay_off,
     			'extra_payment' =>$data["extrapayment"],
-    			'payment_times'=>$data['paid_times']
+    			'payment_times'=>$data['paid_times'],
+    			'payment_method'=>$data['payment_method'],
     		);
 			$this->_name = "ln_client_receipt_money";
     		$client_pay = $this->insert($arr_client_pay);
@@ -529,7 +537,7 @@ public function addILPayment($data){
     			$extrapayment = $data['extrapayment'];
     			$rs = $this->getSaleScheduleById($loan_number,1);
     			if(!empty($rs)){
-    				foreach ($rs as $row){
+    				foreach ($rs as $row){//ដក Begining after ដើម្បីអោយបង្កាន់ដៃបង់លើកក្រោយចេញត្រូវនឹងប្រាក់ដែលធ្លាប់បានបង់
     						$total_interestafter=0;
 //     						$extrapayment = $extrapayment-$row['principal_permonthafter'];
 //     						if($extrapayment>=0){
@@ -542,11 +550,20 @@ public function addILPayment($data){
 //     							$statuscomplete=0;
 //     						}    				
 //     					$total_principal = $total_principal+$principal_paid;
-    					 
+    					
     					$pyament_after = $row['total_payment_after']-($principal_paid);//ប្រាក់ត្រូវបង់លើកក្រោយសំរាប់ installmet 1 1
+    					
+    					if($row['begining_balance_after']-$extrapayment<0){
+    						$begining_balance=0;
+    					}else{
+    						$begining_balance=$row['begining_balance']-$extrapayment;
+    					}
+    					$ending_balance=(($row['ending_balance']-$extrapayment)<0)?0:$row['ending_balance']-$extrapayment;
+    					
     					$arra = array(
-    							'ending_balance'=>$row['begining_balance_after']-$extrapayment,
-    							'begining_balance_after'=>$row['begining_balance_after']-$extrapayment,
+    							'ending_balance'=>$begining_balance,//$row['begining_balance']-$extrapayment,
+    							'begining_balance'=>$begining_balance,//$row['begining_balance']-$extrapayment,
+    							'begining_balance_after'=>$begining_balance,//$row['begining_balance_after']-$extrapayment,
 //     							'is_completed'=>$statuscomplete,
 //     							'paid_date'			=> 	$data['date_buy'],
 //     							'total_payment_after'	=>	$pyament_after,
@@ -563,7 +580,7 @@ public function addILPayment($data){
     			}
     			////update outstanding
     			$rs = $this->getSaleScheduleById($loan_number,2);
-    			if(!empty($rs)){
+    			if(!empty($rs)){//ដកប្រាក់នឹងរយះពេលពីក្រោមទៅខាងលើ
     				foreach ($rs as $row){
     					$total_interestafter=0;
     					$extrapayment = $extrapayment-$row['principal_permonthafter'];
@@ -576,16 +593,25 @@ public function addILPayment($data){
     						$remain_principal=$principal_paid;
     						$statuscomplete=0;
     					}
-    			
     					$total_principal = $total_principal+$principal_paid;
     			
     					$pyament_after = $row['total_payment_after']-($principal_paid);//ប្រាក់ត្រូវបង់លើកក្រោយសំរាប់ installmet 1 1
+    				    $beginig_balance = (($row['begining_balance']-$principal_paid)<0)?0:$row['begining_balance']-$principal_paid;
+    				    $beginig_balance_after = (($row['begining_balance_after']-$principal_paid)<0)?0:$row['begining_balance_after']-$principal_paid;
+    				    $end_balance = (($row['ending_balance']-$principal_paid)<0)?0:$row['ending_balance']-$principal_paid;	
     					$arra = array(
-    							"principal_permonthafter"=>$remain_principal,
-    							'total_interest_after'=>$total_interestafter,
-    							'begining_balance_after'=>$row['begining_balance_after']-$principal_paid,
+    							"principal_permonthafter"=>$remain_principal,//ok
+    							'total_interest_after'=>$total_interestafter,//ok
+    							'total_interest'=>$total_interestafter,
+    							'begining_balance'=>$beginig_balance,//$row['begining_balance']-$principal_paid,//ok
+    							'begining_balance_after'=>$beginig_balance_after,//$row['begining_balance_after']-$principal_paid,//ok
+    							'ending_balance'=>$end_balance,//$row['ending_balance']-$principal_paid,
+    							'principal_permonth'=>$row['principal_permonth']-$principal_paid,//ok
+    							'principal_permonthafter'=>$row['principal_permonthafter']-$principal_paid,//ok
+    							'total_payment'=>$row['total_payment']-$principal_paid-$row['total_interest_after'],
+    							'total_payment_after'=>$row['total_payment']-$principal_paid-$row['total_interest_after'],
     							'is_completed'=>$statuscomplete,
-    							'paid_date'			=> 	$data['date_buy'],
+//     							'paid_date'			=> 	$data['date_buy'],
     							'total_payment_after'	=>	$pyament_after,
     					);
     					$where = " id = ".$row['id'];
@@ -597,11 +623,24 @@ public function addILPayment($data){
     				}
     			}
     		}
+    		$rows = $this->getSaleScheduleById($loan_number, 1);
+    		if(empty($rows)){
+    			$this->updatePayoff($data['loan_number'],$client_pay);
+    		}else{
+    		}
     		$db->commit();
     	}catch (Exception $e){
     		$db->rollBack();
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
+    }
+    function updatePayoff($sale_id,$receipt_id){
+    	$this->_name='ln_client_receipt_money';
+    	$where = " id =".$receipt_id;
+    	$data= array(
+    			"is_payoff"=>1
+    	);
+    	$this->update($data, $where);
     }
     function getSaleScheduleById($loan_number,$orderby=1){
     	$db = $this->getAdapter();
@@ -1719,7 +1758,10 @@ function getLoanPaymentByLoanNumberEdit($data){
    function getAllLoanPaymentByLoanNumber($data){
 	   	$db = $this->getAdapter();
 	   	$loan_number= $data['loan_number'];
-	   	$sql = "select * from ln_sale as s ,ln_saleschedule as scd where s.id=scd.sale_id and sale_id = $loan_number ORDER BY no_installment ASC";
+	   	$sql = "select *,
+			DATE_FORMAT(scd.date_payment, '%d-%m-%Y') AS `date_payment`
+
+	   	from ln_sale as s ,ln_saleschedule as scd where s.id=scd.sale_id and sale_id = $loan_number ORDER BY no_installment ASC";
    		return $db->fetchAll($sql);
    	}
 
@@ -1818,7 +1860,8 @@ function getLoanPaymentByLoanNumberEdit($data){
 			  crm.outstanding,
 			  crm.`principal_amount`,
 			  crm.`total_principal_permonth`,
-			  (total_principal_permonthpaid) AS total_principal_permonthpaid,
+			  (total_principal_permonthpaid+extra_payment) AS total_principal_permonthpaid,
+			  extra_payment,
 			  crm.`total_payment`,
 			  crm.`total_interest_permonth`,
 			  crm.`amount_payment`,

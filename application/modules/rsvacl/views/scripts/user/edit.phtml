@@ -3,11 +3,12 @@ $this->headTitle('កែប្រែអ្នកប្រើប្រាស់')
 echo $this->headTitle();
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <script type="text/javascript">	
 	dojo.require("dijit.form.ValidationTextBox");
-	dojo.require('dijit.form.Form');
-	dojo.require('dijit.form.FilteringSelect');	
+	dojo.require('dijit.form.Form');	
 	dojo.require('dijit.form.Button');
+	dojo.require('dijit.form.FilteringSelect');
 </script>
 
 <form action="<?php echo $this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -85,14 +86,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 									</tr>
 									<tr>
 										<td><?php echo $tr->translate("USER_TYPE");?></td>
-										<td>
-											<select onchange="disabledAgent(this.value);" class='fullside' name="user_type" required="true" id="user_type" 
-											 missingMessage="អ្នក​ភ្លេច​បំពេញ​  តំណែង!" dojoType="dijit.form.FilteringSelect"> 
-											 	<?php foreach ($this->user_typelist as $key => $ust) : ?>
-													<option value="<?php echo $key;?>"  <?php if($this->user_edit['user_type'] == $key) echo 'selected';?> ><?php echo $ust;?></option>
-												<?php endforeach;?>																																
-											</select> 
-										</td>
+										<td><input id="user_type" /></td>
 									</tr>									
 								</table>
 							</td>							
@@ -111,3 +105,86 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	</table>	
 	<input type="hidden" name="id" value="<?php echo $this->user_edit['id'];?>" />
 </form>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:500px;overflow-y:scroll;" id="popup_usertype" >
+		<form  id='frm_usertype' name='frm_usertype' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="15">
+				<tr>
+					<td>User Type</td>
+					<td width="300px">
+						<input type="text" required="true" name="user_typename" id="user_typename" placeholder="User Type" 
+						dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->usertype['user_type'];?>"
+						missingMessage="Invalid User type!" class='fullside'/>
+					</td>
+				</tr>
+				<tr>
+					<td>Parent Name</td>
+					<td>
+						<select class='fullside' id="parent_id"  name="parent_id" required="true" 
+						 missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"> 
+						 	<?php foreach ($this->user_typelist as $key => $ust) : ?>
+								<option value="<?php echo $ust['id'];?>"><?php echo $ust['name'];?></option>
+							<?php endforeach;?>																															
+						</select> 
+					</td>
+				</tr>	
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" onclick="addUsrType();" value="រក្សាទុក" label="រក្សាទុក" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+					</td>
+				</tr>								
+			</table>
+		</form>
+	</div>
+</div>
+<script>
+dojo.require("dojo.data.ObjectStore");
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.Dialog");
+var usertype_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->user_type));?> );
+dojo.ready(function(){
+	new dijit.form.FilteringSelect({
+		store: usertype_store,
+		autoComplete: true,                        
+		id: "user_type",
+		name: "user_type",
+		class: "fullside", 		
+		placeHolder:"Select User Type",          
+		onChange: function() {  
+			user_type = dijit.byId('user_type').get('value');
+			if(user_type==-1){
+				dijit.byId("popup_usertype").show();
+			}
+		}
+	}, "user_type");
+});
+function getpopupUsertype(){
+	user_type = dijit.byId("user_type").get("value");
+	if(user_type==-1){
+		dijit.byId("popup_usertype").show();
+	}
+}
+var url_addusertype = '<?php echo $this->url(array("module"=>"rsvacl","controller"=>"usertype","action"=>"addusertype")); ?>';
+function addUsrType(){
+	if(dijit.byId('frm_usertype').validate()){
+		dojo.xhrPost({
+			url:url_addusertype,
+			form: dojo.byId("frm_usertype"),
+			handleAs:"json",
+			load: function(data) {
+				var myNewItem = {					
+						id: data,
+						name: dijit.byId('user_typename').get('value')
+				};			
+				addDataToSelectbox(dijit.byId('user_type'), usertype_store, myNewItem, data);
+				dijit.byId("frm_usertype").reset();
+				dijit.byId("popup_usertype").hide();
+				
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+   }
+}
+</script>

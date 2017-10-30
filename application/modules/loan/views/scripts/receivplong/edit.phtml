@@ -1,0 +1,127 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate('ទទួលប្លង់កម្មសិទ្ទ'));
+$frm = $this->frm_loan;
+?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.Textarea");
+</script>
+	<form id="add_cancel" action="<?php echo $this->url(array('module'=>'loan','controller'=>'receivplong','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<script type="dojo/method" event="onSubmit">			
+	if(this.validate()) {
+    	return true;
+   		}else {
+    	return false;
+   	}
+	</script>
+		<table cellspacing="10" style="width:700px;margin: 0 auto;" >
+			<tr>
+				<td>
+					<fieldset>
+						<legend><strong><?php echo $tr->translate('ទទួលប្លង់កម្មសិទ្ទ');?></strong></legend>
+						<table cellspacing="10"  width="100%">
+						   <tr>
+								<td width="120px"><?php echo $tr->translate("BRANCH_NAME")?></td>
+								<td><?php echo $frm->getElement('branch_id');?>
+									<input type="hidden" name="customer_id" id="customer_id" dojoType="dijit.form.TextBox"/>
+									<input type="hidden" name="house_id" id="house_id" dojoType="dijit.form.TextBox"/>
+									<?php echo $frm->getElement('id');?>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("CLIENT_NAME")?></td>
+								<td><input id="sale_client" /></td>
+							</tr>
+							<tr>
+								<td valign="top"><?php echo $tr->translate("LAND_INFO")?></td>
+								<td style="height: 70px; border:1px solid #aac4e6" ><label id="land_information" class="fullside"></label></td>					
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("NOTE")?></td>	
+								<td><textarea class="fullside" dojoType="dijit.form.Textarea" style="height: 60px;font-family:'Khmer OS Battambang';font-size: 17px" id="reason" name="reason"><?php echo $this->row['note'];?></textarea></td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("ថ្ងៃទទួល")?></td>	
+								<td><?php echo $frm->getElement('date');?></td>
+							</tr>
+							<tr>
+								<td align="center" colspan="2">
+									<input type="submit" name="save" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="submitButton" dojoType="dijit.form.Button"
+					 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
+					 				<input type="submit" name="save_close"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('SAVECLOSE')?>" id="submitBtn" dojoType="dijit.form.Button"
+					 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>		
+		</table>
+	</form>
+<script type="text/javascript">
+var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+dojo.ready(function(){
+	try{
+		new dijit.form.FilteringSelect({
+			store: sale_client_store,
+			autoComplete: true,
+			required: false,		           
+			name: "sale_client",
+			id: "sale_client",
+			searchAttr: "name",
+			value: "<?php echo $this->row['sale_id'];?>",
+			class: 'fullside',
+				onChange: function() {
+					getLandAndClientDetail("2");
+				}
+			}, "sale_client");
+		getSaleClie();
+
+		}catch(e){
+			alert(e);
+		}
+});
+	var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
+	function getSaleClie(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==0){
+			return false;}
+		dojo.xhrPost({
+			url:url_getSaleClien,	
+			content:{ 
+				'branch_id': branch_id, 'sale_id':'',
+			},
+			handleAs:"json",
+			load: function(data) {	
+				sale_client_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('sale_client').set('store', sale_client_store);
+			    dijit.byId('sale_client').attr('value',   <?php echo $this->row['sale_id'];?>);
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+	var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
+	function getLandAndClientDetail(inds){
+			sale_id = dijit.byId('sale_client').get('value');
+		dojo.xhrPost({
+			url:url_land,	
+			content:{ 
+			    'sale_id':sale_id
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				dijit.byId("customer_id").attr("value",data.client_id);
+				dijit.byId("house_id").attr("value",data.house_id);
+				dojo.byId('land_information').innerHTML ="លេខសម្គាល់  : "+data.land_code+", ឈ្មោះ  :  "+data.land_address+", ផ្លូវ : "+data.street+", ប្រភេទ   : "+data.pro_type+", ទំហំ  : "+data.land_size+", បណ្តោយ :  "+data.height+",ទទឹង  :  "+data.width;
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+</script>

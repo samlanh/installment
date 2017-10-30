@@ -43,7 +43,7 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 		$_btn_search->setLabel("Search");
 		$db = new Application_Model_DbTable_DbGlobal();
 		$_co_id = new Zend_Dojo_Form_Element_TextBox('co_id');
-		$_co_id->setAttribs(array('dojoType'=>$this->tvalidate,'required'=>'true','class'=>'fullside','readOnly'=>true));
+		$_co_id->setAttribs(array('dojoType'=>$this->tvalidate,'required'=>'true','class'=>'fullside'));
 		$_co_id->setValue($db->getStaffNumberByBranch(1));
 		
 		

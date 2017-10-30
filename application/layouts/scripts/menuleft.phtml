@@ -45,7 +45,7 @@
 	?>
 	<span id ="mynavclose" style="font-size: 22px;cursor: pointer;display: none;background: #000088;text-align: center;color: #fff;border-radius: 4px;" onclick="openNav()">&#9776;</span>
 	<div id="mySidenav" class="sidenav" style=" width:185px;">
-	<span href="javascript:void(0)"  class="closebtn"  onclick="closeNav()">Hide Left</span>
+	<span href="javascript:void(0)"  class="closebtn"  onclick="closeNav()"><?php echo $tr->translate("MENU_LEFT");?></span>
 		<?php 
 		if($request->getModuleName()!='report'){
 				if($request->getModuleName()!='default' AND $action!='changepassword' ){
@@ -61,7 +61,7 @@
 	   			<div class="portlet box green" style="">
 						<div class="portlet-body flip-scroll">
 							<table cellpadding="2" cellpadding="2" border="1" 
-							style="border-collapse:collapse;border: 1px solid #ddd;color:#888888;font-size:13px;font-family:'Kh Battambang','Khmer Battambang' !important;" class="table table-bordered table-striped table-condensed flip-content">
+								style="border-collapse:collapse;border: 1px solid #ddd;color:#888888;font-size:13px;font-family:'Kh Battambang','Khmer Battambang' !important;" class="table table-bordered table-striped table-condensed flip-content">
 							<thead class="flip-content" style="background:#3598dc;color: #eee;">
 							<tr height="30px;" style="font-family:'Khmer MEF2'; color: #100505; background: #e6e6e6; font-size: 14px;"><td colspan="9">តារាងអតិថិជនត្រូវបង់</td></tr>
 							<tr style="white-space: nowrap;">
@@ -96,13 +96,62 @@
 									<td class="numeric"><a href="<?php echo $url;?>"><?php echo number_format($result['begining_balance_after'],2);?></a></td>
 									<td class="numeric"><a href="<?php echo $url;?>"><?php echo date("d/m/Y",strtotime($result['date_payment']));?></a></td>
 									<?php 
-									$datetime1 = new DateTime(date("Y-m-d"));
-									$datetime2 = new DateTime(date("Y-m-d",strtotime($result['date_payment'])));
-									$interval = $datetime2->diff($datetime1);
+									$end_dat=date("Y-m-d");
+// 									$datetime1 = new DateTime(date("Y-m-d"));
+// 									$datetime2 = new DateTime(date("Y-m-d",strtotime($result['date_payment'])));
+// 									$interval = $datetime2->diff($datetime1);
+									$total_day=strtotime($end_dat)-strtotime($result['date_payment']);
+									$total_late_day=$total_day/(60*60*24);
 								    ?>
-									<td class="numeric"><a href="<?php echo $url;?>" style='color:red;'><?php echo @abs($interval->format('%R%a'))."ថ្ងៃ"; ?></a></td>
+									<td class="numeric"><a href="<?php echo $url;?>" style='color:red;'><?php echo $total_late_day."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?></a></td>
 									<td class="numeric" align="center"><a href="<?php echo $url;?>"><?php echo $result['no_installment'];?></a></td>
 									<td class="numeric"><a href="<?php echo $url;?>"><?php echo number_format($total_payment,2);?></a></td>
+								</tr>
+							<?php }
+							}?>
+							<tr><td colspan="9">សរុបទាំងអស់:<span style="color:red;"><?php echo count($rs);?> នាក់</span></td></tr>
+						</table>
+						<table cellpadding="2" cellpadding="2" border="1" 
+							style="border-collapse:collapse;border: 1px solid #ddd;color:#888888;font-size:13px;font-family:'Kh Battambang','Khmer Battambang' !important;" class="table table-bordered table-striped table-condensed flip-content">
+							<thead class="flip-content" style="background:#3598dc;color: #eee;">
+							<tr height="30px;" style="font-family:'Khmer MEF2'; color: #100505; background: #ffbfbf; font-size: 14px;"><td colspan="9">អតិថិជនត្រូវមកធ្វើកិច្ចសន្យា</td></tr>
+							<tr style="white-space: nowrap;">
+								<th> លរ</th>
+								<th> ឈ្មោះអតិថិជន</th>
+								<th> លេខទូរសព្ទ</th>
+								<th> លេខផ្ទះ</th>
+								<th class="numeric">តម្លៃលក់</th>
+								<th class="numeric">បានបង់</th>
+								<th class="numeric">ថ្ងៃលក់</th>
+								<th class="numeric">ថ្ងៃត្រូវមកធ្វើកិច្ចសន្យា</th>
+								<th class="numeric">យឺត</th>
+							</tr>
+							</thead>
+							<?php 
+								$rs = $db->getCustomerNearAgreement();
+								$num=0;
+								$class='';
+								if(!empty($rs)){
+							?>
+							<?php foreach($rs as $key=> $result){
+								if($class==''){$class='odd';}else{$class='';}
+								?>
+								<tr class="hover <?php echo $class;?>" style="white-space: nowrap;">
+								<?php $url = $this->url(array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add'), null, true)."/id/".$result['id'];?>
+									<td align="center"><?php echo $key+1;?></td>
+									<td style="white-space: nowrap;"><a href="<?php echo $url;?>"><?php echo $result['name_kh'];?></a></td>
+									<td class="numeric"><a href="<?php echo $url;?>"><?php echo $result['phone'];?></a></td>
+									<td class="numeric"><a href="<?php echo $url;?>"><?php echo $result['land_address'].' '.$result['street'];?></a></td>
+									<td class="numeric"><a href="<?php echo $url;?>"><?php echo number_format($result['price_sold'],2);?></a></td>
+									<td class="numeric"><a href="<?php echo $url;?>"><?php echo number_format($result['paid_amount'],2);?></a></td>
+									<td class="numeric" align="center"><?php echo date("d/m/Y",strtotime($result['buy_date']));?></td>
+									<?php 
+										$end_dat=date("Y-m-d");
+										$total_day=strtotime($end_dat)-strtotime($result['end_line']);
+										$total_late_day=$total_day/(60*60*24);
+								    ?>
+									<td class="numeric" align="center"><?php echo date("d/m/Y",strtotime($result['end_line']));?></td>
+									<td class="numeric"><a href="<?php echo $url;?>"><?php echo $total_late_day;?></a></td>
 								</tr>
 							<?php }
 							}?>

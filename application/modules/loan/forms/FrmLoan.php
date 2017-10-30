@@ -12,6 +12,8 @@ public function init()
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'filterClient();'
 		));
 		$options = $db->getAllBranchName(null,1);
@@ -86,13 +88,13 @@ public function init()
 		$schedule_opt = new Zend_Dojo_Form_Element_FilteringSelect('schedule_opt');
 		$schedule_opt->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
+				'class'=>'fullside fullside50',
 				'onchange'=>'checkScheduleOption();'
 		));
 		$opt = $db->getVewOptoinTypeByType(25,1,null,1);
 		$request=Zend_Controller_Front::getInstance()->getRequest();
-		if($request->getControllerName()=='repaymentschedule'){
-			//unset($opt[1]);
+		if($request->getControllerName()=='newschedule'){
+			unset($opt[1]);unset($opt[2]);
 		}
 		$schedule_opt->setMultiOptions($opt);
 		
@@ -125,6 +127,8 @@ public function init()
 		$staff_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'autoComplete'=>false,
+				'queryExpr'=>'*${0}*', 
 				'onchange'=>'popupCheckCO();'
 		));
 		$options = $db->getAllCOName(1);
@@ -440,6 +444,7 @@ public function init()
 		$_old_payterm = new Zend_Form_Element_Hidden("old_payterm");
 		$_id = new Zend_Form_Element_Hidden('id');
 		if($data!=null){
+			$agreementdate->setValue($data['agreement_date']);
 			$_branch_id->setValue($data['branch_id']);
 			$receipt->setValue($data['receipt_no']);
 			$discount->setValue($data['discount_amount']);

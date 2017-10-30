@@ -488,6 +488,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`price_before`    AS `price_before`,
 		  `s`.`price_sold`      AS `price_sold`,
 		  `s`.`discount_amount` AS `discount_amount`,
+		  s.land_price ,
 		  s.discount_percent,
 		  s.agreement_date,
 		  `s`.`admin_fee`       AS `admin_fee`,
@@ -510,7 +511,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		(SELECT client_number FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_number,
   		(SELECT name_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_kh,
   		(SELECT name_en FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_en,
-  		(SELECT tel FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS tel,
+  		(SELECT phone FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS tel,
   		(SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = s.user_id LIMIT 1) AS user_name,
 	  	  `p`.`land_code`       AS `land_code`,
 		  `p`.`land_address`    AS `land_address`,
@@ -618,7 +619,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getVewOptoinTypeByType($type=null,$option = null,$limit =null,$first_option =null){
   	$db = $this->getAdapter();
-  	$sql="SELECT id,key_code,CONCAT(name_en) AS name_en ,displayby FROM `ln_view` WHERE status =1 AND name_en!='' ";//just concate
+  	$sql="SELECT id,key_code,CONCAT(name_kh) AS name_en ,displayby FROM `ln_view` WHERE status =1 AND name_en!='' ";//just concate
   	if($type!=null){
   		$sql.=" AND type = $type ";
   	}
@@ -777,21 +778,39 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	return $amount_days;//;*$amount_collect;//return all next day collect laon form customer
   }
   public function getNextPayment($str_next,$next_payment,$amount_amount,$holiday_status=null,$first_payment=null){//code make slow
-	 $default_day = Date("d",strtotime($first_payment));
+	 $default_day = 3;//Date("d",strtotime($first_payment));
 	 $prev_month=$next_payment;
 	 if($str_next=='+1 month'){
 	 	if($default_day>28){
 		 	if($default_day==31){
-		 		$next_payment = date("Y-m-t", strtotime("$next_payment +1 day"));
+// 		 		$next_payment = date("Y-m-t", strtotime("$next_payment +1 day"));//if many hear not work
+		 		$date= new DateTime($next_payment);
+		 		$date->modify('+1 day');
+		 		$next_payment = $date->format("Y-m-t");
 		 		return $next_payment;
 		 	}elseif($default_day==30 OR $default_day==29){
-		 		$prev_month = 
-		 		$pre_month = date("m", strtotime($prev_month));
+// 		 		$pre_month = date("m", strtotime($prev_month));
+// 		 		$prev_month = $pre_month;
+		 		
+		 		$date= new DateTime($prev_month);
+		 		$pre_month = $date->format("m");
+		 		$prev_month = $pre_month;
+		 		
 		 		if($pre_month=='01'){
-		 			$next_payment =  date("Y", strtotime($next_payment))."-02-20";
-		 			$next_payment = date("Y-m-t", strtotime("$next_payment"));}//for Feb
+// 		 			$next_payment =  date("Y", strtotime($next_payment))."-02-20";
+// 		 			$next_payment = date("Y-m-t", strtotime("$next_payment"));
+		 			
+		 			$date= new DateTime($next_payment);
+		 			$next_payment = $date->format("Y-02-20");
+		 			$date= new DateTime($next_payment);
+		 			$next_payment = $date->format("Y-m-t");
+		 		}//for Feb
 		 		else{
-		 			$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
+		 			//$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
+		 			
+		 			$date= new DateTime($next_payment);
+		 			$date->modify('+1 month');
+		 			$next_payment = $date->format("Y-m-$default_day");
 		 		}
 		 	}else{//for 29
 		 		
@@ -800,7 +819,10 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	 		if($str_next!='+1 month'){
 	 			$default_day='d';
 	 		}
-	 		$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
+// 	 		$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
+	 		$date= new DateTime($next_payment);
+	 		$date->modify('+1 month');
+	 		$next_payment = $date->format("Y-m-$default_day");
 	 	}
  }
  return $next_payment;

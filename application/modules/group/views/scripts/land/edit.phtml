@@ -13,6 +13,7 @@ dojo.require("dijit.Dialog");
 <form id='add_client' action="<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'edit')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 <script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
+				dijit.byId('save_close').set('disabled',true);	
 				return true;
 			} else {
 				return false;
@@ -57,8 +58,12 @@ dojo.require("dijit.Dialog");
 							<td><?php  echo $frm->getElement('height');?></td>
 							<td><?php echo $tr->translate("SIZE")?></td>
 							<td><?php  echo $frm->getElement('size');?></td>
-						  
 						</tr>
+						<tr style="background: #edf7f8;">
+							<td colspan="6">លក្ខណៈ ដី/ផ្ទះ</td>
+						</tr>
+						<?php $is_show =$this->data['showhouseinfo']; 
+						if($is_show==1){?>
 						<tr>
 							<td valign="top"><?php echo $tr->translate("FLOOR")?></td>
 							<td><?php  echo $frm->getElement('floor');?></td>
@@ -74,6 +79,26 @@ dojo.require("dijit.Dialog");
 							<td valign="top"><?php  echo $frm->getElement('buidingyear');?></td>
 						    <td valign="top"><?php echo $tr->translate("PARKING_SPACE")?></td>
 							<td valign="top"><?php echo $frm->getElement('parkingspace');?></td>
+						</tr>
+						<?php }?>
+						<tr style="background: #edf7f8;">
+							<td colspan="6">ព្រំប្រទល់ ដី/ផ្ទះ</td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("ខាងត្បូងជាប់")?></td>
+							<td><?php echo $frm->getElement('south');?></td>
+							<td><?php echo $tr->translate("ខាងជើងជាប់")?></td>
+							<td><?php echo $frm->getElement('north');?></td>
+							<td><?php //echo $tr->translate("SIZE")?></td>
+							<td><?php  //echo $frm->getElement('size');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("ខាងលិចជាប់")?></td>
+							<td><?php echo $frm->getElement('west');?></td>
+							<td><?php echo $tr->translate("ខាងកើតជាប់")?></td>
+							<td><?php  echo $frm->getElement('east');?></td>
+							<td><?php //echo $tr->translate("SIZE")?></td>
+							<td><?php  //echo $frm->getElement('size');?></td>
 						</tr>
 						<tr>
 							<td valign="top"><?php echo $tr->translate("STATUS")?></td>
@@ -167,22 +192,20 @@ url_CheckTitle = '<?php echo $this->url(array('module'=>'group','controller'=>'l
 function checkTitle(){
 	title = dijit.byId('land_address').get('value');
 	branch_id = dijit.byId('branch_id').get('value');
+	street = dijit.byId('street').get('value');
+	if(title=='' || street=='' || title==old_title){ document.getElementById('message').innerHTML ='';return false;}
 	dojo.xhrPost({
 		url:url_CheckTitle,	
 		content:{ 
-			'branch_id': branch_id , 'land_address': title
+			'branch_id': branch_id , 'land_address': title,'street': street
 		},
 		handleAs:"json",
 		load: function(data) {	
-			if(title == old_title){
-				document.getElementById('message').innerHTML ='';
+			if(data !== false ){
+		   		document.getElementById('message').innerHTML ='លេខផ្ទះ/ឡូតិ៍នេះមានរួចរាល់ហើយ';
+		   		dijit.byId('land_address').focus();
 			}else{
-				if(data !== false ){
-			   		document.getElementById('message').innerHTML ='This title has been used ready.';
-			   		dijit.byId('land_address').focus();
-				}else{
-					document.getElementById('message').innerHTML ='';
-				}
+				document.getElementById('message').innerHTML ='';
 			}
 		},
 		error: function(err) {

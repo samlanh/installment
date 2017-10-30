@@ -131,9 +131,17 @@ class RsvAcl_UserTypeController extends Zend_Controller_Action
 			}
 		}
     }
-    
-   
-
+    function addusertypeAction(){
+    	if($this->getRequest()->isPost()){
+    		$_data = $this->getRequest()->getPost();
+    		$_dbmodel = new RsvAcl_Model_DbTable_DbUserType();
+    		$_data['user_type']=$_data['user_typename'];
+    		$_data['parent_id']=$_data['parent_id'];
+    		$u_typeid = $_dbmodel->insertUserType($_data);
+    		print_r(Zend_Json::encode($u_typeid));
+    		exit();
+    	}
+    }
 
 }
 
