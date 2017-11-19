@@ -54,10 +54,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		
     	$order = " ORDER BY s.id DESC";
     	$db = $this->getAdapter();    
-//      	echo $sql.$where.$order;	exit();
     	return $db->fetchAll($sql.$where.$order);
-    }
-    
+    }    
     function calCulateIRR($total_loan_amount,$loan_amount,$term,$curr){
     	$array =array();//array(-1000,107,103,103,103,103,103,103,103,103,103,103,103);
     	for($j=0; $j<= $term;$j++){
@@ -238,7 +236,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    				'penalize_amountpaid'		=>0,
 		    				'service_charge'	=>$data['other_fee'],
 		    				'service_chargepaid'=>$data['other_fee'],
-		    				'total_payment'		=>$data['sold_price'],
+		    				'total_payment'		=>$data['deposit'],//$data['sold_price'],
 		    				'amount_payment'	=>$data['deposit'],
 		    				'recieve_amount'	=>$data['deposit'],
 		    				'balance'			=>0,//
@@ -308,7 +306,11 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$from_date =  $data['release_date'];
     		
     		$curr_type = 2;//$data['currency_type'];
-    		$term_types = 12;
+    		//$term_types = 12;
+    		$key = new Application_Model_DbTable_DbKeycode();
+    		$key = $key->getKeyCodeMiniInv(TRUE);
+    		$term_types=$key['install_by'];
+    		
     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6){
     			$term_types=1;
     		}
@@ -338,7 +340,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
     				$total_day = $amount_day;
     				$interest_paymonth = 0;
-    				//$pri_permonth = round($data['balance']/$borrow_term,2);
     				$pri_permonth = round($data['sold_price']/$borrow_term,0);
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
@@ -700,8 +701,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	$db=$this->getAdapter();
     	$sql=" SELECT
     	(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) AS total_principal,
-    	(SELECT extra_payment FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 ORDER BY date_input DESC LIMIT 1) AS extra_payment,
+    	(SELECT (total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 ORDER BY date_input DESC,id DESC  LIMIT 1) AS extra_payment,
     	(SELECT date_input FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 ORDER BY date_input DESC LIMIT 1) AS date_input,
+    	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=$id AND STATUS=1 AND is_completed=0 LIMIT 1) as intallment,
     	s.* FROM `ln_sale` AS s WHERE s.id=$id AND status=1 AND s.is_completed=0 ";
     	return $db->fetchRow($sql);
     }

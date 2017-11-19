@@ -130,33 +130,19 @@ class Report_LoanController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
   }
-  function rptLoanNplAction(){
-  	$db  = new Report_Model_DbTable_DbLandreport();
+  function receiptOtherincomeAction(){
+  	$id =$this->getRequest()->getParam('id');
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->rsincome =$db->getIncomeById($id);
+//   	$fm = new Loan_Form_Frmbadloan();
+//   	$frm = $fm->FrmBadLoan();
+//   	Application_Model_Decorator::removeAllDecorator($frm);
+//   	$this->view->frm_loan = $frm;
+  	
+//   	$db = new Application_Model_DbTable_DbGlobal();
+//   	$this->view->classified_loan = $db->ClassifiedLoan();
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	if($this->getRequest()->isPost()){
-  		$search = $this->getRequest()->getPost();
-  		$search['branch_id']=$search['branch'];
-  	}else{
-  		$search = array(
-  				'adv_search'=>'',
-  				'branch_id' => '',
-  				'client_name' =>'',
-  				'client_code'=>'',
-  				'Term'=>'',
-  				'status' =>'',
-  				'cash_type'=>'',
-  				'end_date'=>date('Y-m-d'));
-  	}
-  	$this->view->LoanCollectionco_list =$db->getALLNPLLoan($search);
-  	$this->view->list_end_date=$search;
-  	$fm = new Loan_Form_Frmbadloan();
-  	$frm = $fm->FrmBadLoan();
-  	Application_Model_Decorator::removeAllDecorator($frm);
-  	$this->view->frm_loan = $frm;
-  	
-  	$db = new Application_Model_DbTable_DbGlobal();
-  	$this->view->classified_loan = $db->ClassifiedLoan();
   }
   function rptLoanOutstandingAction(){//loand out standing with /collection
 	    $db  = new Report_Model_DbTable_DbLandreport();
@@ -390,52 +376,51 @@ public function exportFileToExcel($table,$data,$thead){
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  
  }
- function rptGroupschedulesAction(){//for schedule member
- 	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
- 	$id =$this->getRequest()->getParam('id');
- 	$row = $db->getPaymentScheduleGroupById($id);
- 	$this->view->tran_schedule=$row;
- 	if(empty($row)){
- 		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/paymentschedule-list');
- 	}
- 	$db = new Application_Model_DbTable_DbGlobal();
- 	$rs = $db->getClientGroupByMemberId(@$row[0]['member_id']);
- 	$this->view->client =$rs;
- 	$frm = new Application_Form_FrmSearchGlobal();
- 	$form = $frm->FrmSearchLoadSchedule();
- 	Application_Model_Decorator::removeAllDecorator($form);
- 	$this->view->form_filter = $form;
- 	$db= new Application_Model_DbTable_DbGlobal();
- 	$day_inkhmer = $db->getDayInkhmerBystr(null);
- 	$this->view->day_inkhmer = $day_inkhmer;
+//  function rptGroupschedulesAction(){//for schedule member
+//  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
+//  	$id =$this->getRequest()->getParam('id');
+//  	$row = $db->getPaymentScheduleGroupById($id);
+//  	$this->view->tran_schedule=$row;
+//  	if(empty($row)){
+//  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/paymentschedule-list');
+//  	}
+//  	$db = new Application_Model_DbTable_DbGlobal();
+//  	$rs = $db->getClientGroupByMemberId(@$row[0]['member_id']);
+//  	$this->view->client =$rs;
+//  	$frm = new Application_Form_FrmSearchGlobal();
+//  	$form = $frm->FrmSearchLoadSchedule();
+//  	Application_Model_Decorator::removeAllDecorator($form);
+//  	$this->view->form_filter = $form;
+//  	$db= new Application_Model_DbTable_DbGlobal();
+//  	$day_inkhmer = $db->getDayInkhmerBystr(null);
+//  	$this->view->day_inkhmer = $day_inkhmer;
  
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+//  	$key = new Application_Model_DbTable_DbKeycode();
+//  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  
- }
- function rptGroupchedulesAction(){//for schedule member
- 	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
- 	$id =$this->getRequest()->getParam('id');
- 	$row = $db->getPaymentSchedule($id);
- 	$this->view->tran_schedule=$row;
- 	if(empty($row)){
- 		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/paymentschedule-list');
- 	}
- 	$db = new Application_Model_DbTable_DbGlobal();
- 	$rs = $db->getClientByMemberId(@$row[0]['member_id']);
- 	$this->view->client =$rs;
- 	$frm = new Application_Form_FrmSearchGlobal();
- 	$form = $frm->FrmSearchLoadSchedule();
- 	Application_Model_Decorator::removeAllDecorator($form);
- 	$this->view->form_filter = $form;
- 	$db= new Application_Model_DbTable_DbGlobal();
- 	$day_inkhmer = $db->getDayInkhmerBystr(null);
- 	$this->view->day_inkhmer = $day_inkhmer;
+//  }
+//  function rptGroupchedulesAction(){//for schedule member
+//  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
+//  	$id =$this->getRequest()->getParam('id');
+//  	$row = $db->getPaymentSchedule($id);
+//  	$this->view->tran_schedule=$row;
+//  	if(empty($row)){
+//  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/paymentschedule-list');
+//  	}
+//  	$db = new Application_Model_DbTable_DbGlobal();
+//  	$rs = $db->getClientByMemberId(@$row[0]['member_id']);
+//  	$this->view->client =$rs;
+//  	$frm = new Application_Form_FrmSearchGlobal();
+//  	$form = $frm->FrmSearchLoadSchedule();
+//  	Application_Model_Decorator::removeAllDecorator($form);
+//  	$this->view->form_filter = $form;
+//  	$db= new Application_Model_DbTable_DbGlobal();
+//  	$day_inkhmer = $db->getDayInkhmerBystr(null);
+//  	$this->view->day_inkhmer = $day_inkhmer;
  
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- 
- }
+//  	$key = new Application_Model_DbTable_DbKeycode();
+//  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+//  }
  function rptLoanIncomeAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
  	 

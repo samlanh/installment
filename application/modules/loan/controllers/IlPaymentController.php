@@ -22,7 +22,7 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 						'end_date'=>$formdata['end_date'],
 						'status'=>$formdata['status'],
 						'paymnet_type'	=> $formdata["paymnet_type"],
-						'land_id'=> $formdata["land_id"],
+						'land_id'=>$formdata["land_id"],
 						'payment_method'=> $formdata["payment_method"],
 						);
 			}

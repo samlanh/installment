@@ -370,7 +370,6 @@ public function getAllOutstadingLoan($search=null){
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		$order=" ORDER BY currency_type DESC ";
-		//echo $sql.$where;
 		return $db->fetchAll($sql.$where.$order);
       }
       public function getALLLoanPayment($search=null){
@@ -392,7 +391,7 @@ public function getAllOutstadingLoan($search=null){
 		if(!empty($search['land_id']) AND $search['land_id']>0){
 			$where.=" AND hous_id = ".$search['land_id'];
 		}
-		if($search['payment_method']>0){
+		if(@$search['payment_method']>0){
 			$where.=" AND payment_methodid = ".$search['payment_method'];
 		}
 		
@@ -733,37 +732,37 @@ public function getAllOutstadingLoan($search=null){
 //echo $sql.$where;
       	return $db->fetchAll($sql.$where);
       }
-      public function getALLNPLLoan($search=null){
-      	    $db = $this->getAdapter();
-      		$end_date =(empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
-      	    $db = $this->getAdapter();
+//       public function getALLNPLLoan($search=null){
+//       	    $db = $this->getAdapter();
+//       		$end_date =(empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
+//       	    $db = $this->getAdapter();
 
-      		$sql="SELECT * FROM v_getnplloan ";
-      		$where=" WHERE ".$end_date;
-      		if(!empty($search['adv_search'])){
+//       		$sql="SELECT * FROM v_getnplloan ";
+//       		$where=" WHERE ".$end_date;
+//       		if(!empty($search['adv_search'])){
       			
-      			$s_where = array();
-      			$s_search = addslashes(trim($search['adv_search']));
-      			$s_where[] = " branch_name LIKE '%{$s_search}%'";
-      			$s_where[] = " `loan_number` LIKE '%{$s_search}%'";
-      			$s_where[] = " `client_number` LIKE '%{$s_search}%'";
-      			$s_where[] = " `name_kh` LIKE '%{$s_search}%'";
-      			$s_where[] = " `total_capital` LIKE '%{$s_search}%'";
-      			$s_where[] = " `interest_rate` LIKE '%{$s_search}%'";
-      			$s_where[] = " `total_duration` LIKE '%{$s_search}%'";
-      			$s_where[] = " `term_borrow` LIKE '%{$s_search}%'";
-      			$s_where[] = " `total_principal` LIKE '%{$s_search}%'";
+//       			$s_where = array();
+//       			$s_search = addslashes(trim($search['adv_search']));
+//       			$s_where[] = " branch_name LIKE '%{$s_search}%'";
+//       			$s_where[] = " `loan_number` LIKE '%{$s_search}%'";
+//       			$s_where[] = " `client_number` LIKE '%{$s_search}%'";
+//       			$s_where[] = " `name_kh` LIKE '%{$s_search}%'";
+//       			$s_where[] = " `total_capital` LIKE '%{$s_search}%'";
+//       			$s_where[] = " `interest_rate` LIKE '%{$s_search}%'";
+//       			$s_where[] = " `total_duration` LIKE '%{$s_search}%'";
+//       			$s_where[] = " `term_borrow` LIKE '%{$s_search}%'";
+//       			$s_where[] = " `total_principal` LIKE '%{$s_search}%'";
       			
-      			$where .=' AND ('.implode(' OR ',$s_where).')';
-      		}
-      		if($search['branch_id']>0){
-      			$where.=" AND `branch_id` = ".$search['branch_id'];
-      		}
-      		if(!empty($search['cash_type'])){
-      			$where.=" AND `curr_type` = ".$search['cash_type'];
-      		}
-      		return $db->fetchAll($sql.$where);
-      }
+//       			$where .=' AND ('.implode(' OR ',$s_where).')';
+//       		}
+//       		if($search['branch_id']>0){
+//       			$where.=" AND `branch_id` = ".$search['branch_id'];
+//       		}
+//       		if(!empty($search['cash_type'])){
+//       			$where.=" AND `curr_type` = ".$search['cash_type'];
+//       		}
+//       		return $db->fetchAll($sql.$where);
+//       }
       public function getAllxchange($search = null){
       	$db = $this->getAdapter();
       	$sql = "SELECT * FROM `v_xchange` WHERE 1";
@@ -997,7 +996,7 @@ public function getAllOutstadingLoan($search=null){
       	}
       	return $x;
       }
-	  function getReceiptByID($id){
+	  function getReceiptByID($id){//total_principal_permonth
 		  $db = $this->getAdapter();
 		  $sql="SELECT *,
 				(SELECT p.land_address  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS land_address,
@@ -1008,11 +1007,11 @@ public function getAllOutstadingLoan($search=null){
 				(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS price_sold,
 				(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS name_kh,
 				(SELECT
-     `d`.`date_payment`
-   FROM `ln_client_receipt_money_detail` `d`
-   WHERE (`crm`.`id` = `d`.`crm_id`)
-   ORDER BY `d`.`date_payment` DESC
-   LIMIT 1) AS `date_payment`,crm.payment_method as payment_methodid,
+			     `d`.`date_payment`
+			   FROM `ln_client_receipt_money_detail` `d`
+			   WHERE (`crm`.`id` = `d`.`crm_id`)
+			   ORDER BY `d`.`date_payment` DESC
+			   LIMIT 1) AS `date_payment`,crm.payment_method as payment_methodid,
 				(SELECT `ln_view`.`name_kh` FROM `ln_view` WHERE ((`ln_view`.`key_code` = `crm`.`payment_method`)
          		 AND (`ln_view`.`type` = 2))LIMIT 1) AS `payment_method`,
 				(SELECT c.hname_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS hname_kh,
@@ -1184,7 +1183,11 @@ function updatePaymentStatus($data){
 	  		$next_payment = $data['first_payment'];
 	  		$from_date =  $data['date_buy'];
 	  		$curr_type = 2;//$data['currency_type'];
-	  		$term_types = 12;
+	  		
+	  		$key = new Application_Model_DbTable_DbKeycode();
+	  		$key=$key->getKeyCodeMiniInv(TRUE);
+	  		$term_types = $key['install_by'];
+	  		
 	  		$data["schedule_opt"]=$data["payment_id"];
 	  		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6){
 	  			$term_types=1;
@@ -1558,7 +1561,11 @@ function updatePaymentStatus($data){
 	  		$next_payment = $data['first_payment'];
 	  		$from_date =  $data['date_buy'];
 	  		$curr_type = 2;//$data['currency_type'];
-	  		$term_types = 12;
+	  		
+	  		$key = new Application_Model_DbTable_DbKeycode();
+	  		$key=$key->getKeyCodeMiniInv(TRUE);
+	  		$term_types = $key['install_by'];
+	  		
 	  		$data["schedule_opt"]=$data["payment_id"];
 	  		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6){
 	  			$term_types=1;

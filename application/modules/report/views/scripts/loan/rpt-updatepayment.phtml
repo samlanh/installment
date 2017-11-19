@@ -3,6 +3,7 @@
 	$client = $this->client;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+	$install_month = $this->data['install_by'];
 ?>
 <title><?php echo $tr->translate('REPORT WEEK');?></title>
 <style>
@@ -445,7 +446,7 @@ function getDayName(day){
 }
 function calCulateEndDate(){
 	amount_period = 1;
-	if(dijit.byId("payment_id").get('value')==4){amount_period=12;}
+	if(dijit.byId("payment_id").get('value')==4){amount_period=<?php echo $install_month;?>;}
 	amount_date = dijit.byId('total_duration').get('value')*amount_period;
 	release_date = dijit.byId("first_payment").get('value');//just update follow by first payment
 	if(isNaN(amount_date)){
@@ -627,7 +628,7 @@ function checkScheduleOption(){
 	method_id = dijit.byId('payment_id').get('value');
 
 	amount_principal = dijit.byId('price_sold').get('value');	
-	debt_amount = dijit.byId('total_duration').get('value')*12;
+	debt_amount = dijit.byId('total_duration').get('value')*<?php echo $install_month;?>;
 	if(method_id==3 || method_id==6){
 		debt_amount = dijit.byId('total_duration').get('value');
 	}
@@ -776,10 +777,10 @@ function calCulateFixedPeriod(){
 	collect_term = 1;
 	collect_amount = 1;
 	collect_term=30;
-	debt_amount = dijit.byId('total_duration').get('value')*12;
+	debt_amount = dijit.byId('total_duration').get('value')*<?php echo $install_month;?>;
 	
 	term = (debt_term*debt_amount)/(collect_term*collect_amount);
-	interest_rate=dijit.byId('interest_rate').get('value')/12/(100);//(100/30day)
+	interest_rate=dijit.byId('interest_rate').get('value')/<?php echo $install_month;?>/(100);//(100/30day)
 	if(interest_rate==0){
 		amount_payment = parseFloat(amount_principal/debt_amount);
 		amount_payment = amount_payment.toFixed(0);

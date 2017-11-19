@@ -27,12 +27,19 @@
 </table>
 </form>
 <br/>
-<div style=" width:28.2cm; margin:0 auto; border: 1px dotted #ccc; padding: 0 0.2cm;">
+<div style=" min-width:28.2cm; margin:0 auto; border: 1px dotted #ccc; padding: 0 0.2cm;">
 <div id="divPrint">
 <style>
 .style{
-	line-height: 20px;font-size: 10px !important;
+	line-height: 20px;font-size:12px !important;
 	font-family: 'Khmer OS Battambang';
+}
+table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+table { page-break-inside:auto }
+tr{ page-break-inside:avoid; page-break-after:auto; }
+#header {
+  display: table-header-group;
+  page-break-inside:avoid; page-break-after:auto;
 }
 table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
 th{padding: 5px;}
@@ -76,32 +83,31 @@ $free_day=$key_code['value'];
     </tr>
     <tr>
     	<td id="exportExcel" >
-            <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
-                 <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 24px;font-size:9px; font-family: 'Khmer OS Content';white-space: nowrap;">
-                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("SALE_NO");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("CLIENT_NUM");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("LOAN_NO");?></td>	
-	                <td rowspan="2"><?php echo $tr->translate("PROPERTY_NAME");?></td>  
-	                <td rowspan="2"><?php echo $tr->translate("STREET");?></td>
-	                <td rowspan="2"><?php echo $tr->translate("SOLD_PRICE");?></td>	
-                    <td rowspan="2"><?php echo $tr->translate("INTEREST RATE");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("LOAN_PERIOD");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
-                    <td colspan="5"><?php echo $tr->translate("PAYMENT_INFO");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("LATE_DAY");?></td>
-                    <td rowspan="2"><?php echo $tr->translate("PAY_DATE");?></td>
-                </tr>
-                <tr bgcolor="#c1d0f3" >
-                	<td align="center"><?php echo $tr->translate("PRINCIPAL");?></td>
-                    <td align="center"><?php echo $tr->translate("INTEREST");?></td>
-                    <td align="center"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
-                    <td align="center"><?php echo $tr->translate("SERVICE_CHARGE");?></td>
-                    <td align="center"><?php echo $tr->translate("PAYMENT");?></td>
-                </tr>
+            <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%" cellspacing="0">
+                  <thead>
+	                 <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 24px;font-size:12px; font-family: 'Khmer OS Content';white-space: nowrap;">
+	                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
+		                <td rowspan="2"><?php echo $tr->translate("PROPERTY_NAME");?></td>  
+		                <td rowspan="2"><?php echo $tr->translate("STREET");?></td>
+		                <td rowspan="2"><?php echo $tr->translate("SOLD_PRICE");?></td>	
+	                    <td rowspan="2"><?php echo $tr->translate("INTEREST RATE");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("LOAN_PERIOD");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
+	                    <td colspan="5"><?php echo $tr->translate("PAYMENT_INFO");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("LATE_DAY");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("PAY_DATE");?></td>
+	                </tr>
+	                <tr bgcolor="#c1d0f3" >
+	                	<td align="center"><?php echo $tr->translate("PRINCIPAL");?></td>
+	                    <td align="center"><?php echo $tr->translate("INTEREST");?></td>
+	                    <td align="center"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+	                    <td align="center"><?php echo $tr->translate("SERVICE_CHARGE");?></td>
+	                    <td align="center"><?php echo $tr->translate("PAYMENT");?></td>
+	                </tr>
+                </thead>
                 <?php 
                     $amt_r1 = 0;$amt_r2 = 0;$amt_r3 = 0;$amt_r4 = 0;
                 	$amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;
@@ -112,14 +118,11 @@ $free_day=$key_code['value'];
                 <?php $i=1;?>
                <?php if(!empty($this->loanlate_list))foreach ($this->loanlate_list as $index => $rs){ 
                	?>
-                <tr class="style1" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content'; white-space: nowrap;">
+                <tr class="style1" style=" line-height: 24px; font-size:12px; font-family: 'Khmer OS Content'; white-space: nowrap;">
                		<td style="text-align: center;"><?php echo $i++;?></td>
                		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-               		<td>&nbsp;<?php echo $rs["sale_number"];?>&nbsp;</td>
-               		<td>&nbsp;<?php echo $rs["client_number"];?>&nbsp;</td>
                		<td style="white-space: nowrap;">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>
                		<td style="white-space: nowrap;">&nbsp;<?php echo $rs["phone"];?>&nbsp;</td>
-               		<td align="left">&nbsp;<?php echo $rs['land_code'];?>&nbsp;</td>
 	                <td align="left">&nbsp;<?php echo $rs['land_address'];?>&nbsp;</td>
 	                <td align="left">&nbsp;<?php echo $rs['street'];?>&nbsp;</td>
 	                <td align="left">&nbsp;$ <?php echo number_format($rs['price_sold']-$rs['other_fee'],2);?>&nbsp;</td>
@@ -159,7 +162,19 @@ $free_day=$key_code['value'];
                		</td>
                		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["service_charge"],2);?>&nbsp;</td>
                		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($total_payment,2);?>&nbsp;</td>
-               		<td align="center" style="background: rgba(255, 0, 0, 0.65);">&nbsp;&nbsp;<?php echo $total_late_day." Days";?> &nbsp;</td>
+               		<td align="center" 
+               		<?php 
+               		$color='';
+               		if ($total_late_day<=13){
+               			$color="style='background-color:blue;'";
+               		}else if($total_late_day<=29){
+               			$color="style='background-color: green;'";
+               		}else{
+               			$color="style='background-color:red;'";
+               		}
+               		echo $color;
+               		?>
+               		>&nbsp;&nbsp;<?php echo $total_late_day." Days";?> &nbsp;</td>
                		<td align="center">&nbsp;&nbsp;<?php echo date_format(date_create($rs["date_payment"]),'d-m-Y');?>&nbsp;</td>
                 </tr>
                 <?php 

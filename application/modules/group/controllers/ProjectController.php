@@ -24,7 +24,7 @@ class Group_ProjectController extends Zend_Controller_Action {
            $glClass = new Application_Model_GlobalClass();
 			$rs_rowshow = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","PREFIX_CODE","CODE","ADDRESS","TEL","FAX","DISPLAY","OTHER","STATUS");
+			$collumns = array("PROJECT_NAME","PREFIX_CODE","CODE","ADDRESS","TEL","FAX","OTHER","SELLER_NAME","SELLER_NAME_WITH","STATUS");
 			$link=array(
 					      'module'=>'group','controller'=>'project','action'=>'edit',
 			);
@@ -102,12 +102,7 @@ class Group_ProjectController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			$_dbmodel = new Group_Model_DbTable_DbProject();
 			try {
-				$_dbmodel->addbranch($_data);
-				if(!empty($_data['save_new'])){
-					Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCESS"));
-				}else{
-					Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL . "/project/index");
-				}
+				Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL . "/project/index");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message($this->tr->translate("INSERT_FAIL"));
 				$err =$e->getMessage();

@@ -2,7 +2,6 @@
 
 class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 {
-
 	protected $tr;
 	protected $tvalidate =null;//text validate
 	protected $filter=null;

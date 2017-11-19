@@ -24,7 +24,7 @@ class Other_VillageController extends Zend_Controller_Action {
 			}
 			$rs_rows= $db->getAllVillage($search);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("VILLAGENAME_KH","VILLAGE_NAME","DISPLAY_BY","COMMNUE_NAME","DISTRICT_NAME","PROVINCE_NAME","DATE","STATUS","BY");
+			$collumns = array("VILLAGENAME_KH","VILLAGE_NAME","COMMNUE_NAME","DISTRICT_NAME","PROVINCE_NAME","DATE","STATUS","BY");
 			$link=array(
 					'module'=>'other','controller'=>'village','action'=>'edit',
 			);

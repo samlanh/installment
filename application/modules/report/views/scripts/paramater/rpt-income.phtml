@@ -57,6 +57,7 @@ dojo.require("dijit.form.DateTextBox");
 						    <td><?php echo $tr->translate("CHEQUE");?></td>
 						    <td><?php echo $tr->translate("NOTE");?></td>
 						    <td><?php echo $tr->translate("DATE");?></td>
+						    <td><?php echo $tr->translate("PRINT");?></td>
 						</tr>
 				       <?php $branch_id=''; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
 						<tr style="font-size: 14px; line-height:25px;" align="left">
@@ -71,6 +72,7 @@ dojo.require("dijit.form.DateTextBox");
 						   <td align="center">&nbsp;<?php echo $row['cheque'];?></td>
 						   <td align="center">&nbsp;<?php echo $row['description'];?></td>
 						   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['date']));?></td>
+						   <td align="center" style="white-space: nowrap;">&nbsp;<a target="_blank" style="color:#000;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$row['id']));?>"><?php echo $tr->translate("PRINT");?></a></td>
 						</tr>
 							<?php $total = $total +$row['total_amount'];?>
 						<?php }?>

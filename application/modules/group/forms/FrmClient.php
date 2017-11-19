@@ -14,8 +14,10 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$clienttype_namekh->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside'
 		));
 		$_dob= new Zend_Dojo_Form_Element_DateTextBox('dob_client');
-		$_dob->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",
-		));
+		$_dob->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",));
+		
+		$dob_buywith= new Zend_Dojo_Form_Element_DateTextBox('dob_buywith');
+		$dob_buywith->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",));
 		
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$db = new Application_Model_DbTable_DbGlobal();
@@ -47,7 +49,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		));
 		$db = new Application_Model_DbTable_DbGlobal();
 // 		$rows = $db->getClientByType();
-		$opt_client=array(-1=>"ជ្រើសរើសអតិថិជន");
+		$opt_client=array(-1=>$this->tr->translate("CHOOSE_CUSTOEMR"));
 // 		if(!empty($rows))foreach($rows AS $row) $options[$row['client_id']]=$row['name_en'];
 // 		$_member->setMultiOptions($options);
 		
@@ -375,7 +377,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$_nameen->setValue($data['name_en']);
 			$_sex->setValue($data['sex']);
 			$_province->setValue($data['pro_id']);
-// 			$_district->setValue($data['dis_id']);
+			$dob_buywith->setValue($data['dob_buywith']);
 // 			$_commune->setValue($data['com_id']);
 // 			$_village->setValue($data['village_id']);
 			$_house->setValue($data['house']);
@@ -409,7 +411,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$_join_type->setValue($data['join_type']);
 			$referecce_national_id->setValue($data['refe_nation_id']);
 		}
-		$this->addElements(array($_join_type,$referecce_national_id,$p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
+		$this->addElements(array($dob_buywith,$_join_type,$referecce_national_id,$p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
 				$_join_with,$_id,$photo,$job,$national_id,$_member,$_namekh,$_nameen,$_sex,
 				$_province,$_house,$_street,$_id_no,$branch_id,$_email,
 				$_phone,$_desc,$_status,$_clientno,$_dob,$clienttype_namekh,$clienttype_nameen));

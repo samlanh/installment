@@ -15,7 +15,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'fax'=>$_data['fax'],
     			'other'=>$_data['branch_note'],
     			'status'=>$_data['branch_status'],
-    			'displayby'=>$_data['branch_display'],
+    			//'displayby'=>$_data['branch_display'],
     			'p_manager_namekh'=>$_data['project_manager_namekh'],
     			'p_manager_nationality'=>$_data['project_manager_nationality'],
     			'p_manager_nation_id'=>$_data['project_manager_nation_id'],
@@ -39,7 +39,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'fax'=>$_data['fax'],
     			'other'=>$_data['branch_note'],
     			'status'=>$_data['branch_status'],
-    			'displayby'=>$_data['branch_display'],
+    			//'displayby'=>$_data['branch_display'],
     			'p_manager_namekh'=>$_data['project_manager_namekh'],
     			'p_manager_nationality'=>$_data['project_manager_nationality'],
     			'p_manager_nation_id'=>$_data['project_manager_nation_id'],
@@ -71,7 +71,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql = "SELECT b.br_id,b.project_name,
 		b.prefix,b.branch_code,b.br_address,b.branch_tel,b.fax,
-		(SELECT v.name_en FROM `ln_view` AS v WHERE v.`type` = 4 AND v.key_code = b.displayby)AS displayby,b.other,b.`status` FROM $this->_name AS b  ";
+		b.other,p_manager_namekh,w_manager_namekh,b.`status` FROM $this->_name AS b  ";
     	$where = ' WHERE b.project_name !="" ';
     	
     	if($search['status_search']>-1){

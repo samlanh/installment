@@ -15,7 +15,7 @@ class Other_Model_DbTable_DbCommune extends Zend_Db_Table_Abstract
 				'district_id' => $_data['district_name'],
 				'commune_namekh'=> $_data['commune_namekh'],
 				'commune_name'=> $_data['commune_name'],
-				'displayby'=> $_data['display'],
+				//'displayby'=> $_data['display'],
 				'status'	  => $_data['status'],
 				'modify_date' => Zend_Date::now(),
 				'user_id'	  => $this->getUserId()

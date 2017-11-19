@@ -14,7 +14,7 @@ class Other_Model_DbTable_DbProvince extends Zend_Db_Table_Abstract
     			'code' 			   => $_data['code'],
     			'province_en_name' => $_data['en_province'],
     			'province_kh_name' => $_data['kh_province'],
-    			'displayby'	       => $_data['display'],
+    			//'displayby'	       => $_data['display'],
     			'modify_date'      => Zend_Date::now(),
     			'status'           => $_data['status'],
     			'user_id'	       => $this->getUserId()
@@ -34,7 +34,7 @@ class Other_Model_DbTable_DbProvince extends Zend_Db_Table_Abstract
     			'code' 			   => $_data['code'],
     			'province_en_name' => $_data['en_province'],
     			'province_kh_name' => $_data['kh_province'],
-    			'displayby'	       => $_data['display'],
+    			//'displayby'	       => $_data['display'],
     			'modify_date'      => Zend_Date::now(),
     			'status'           => $_data['status'],
     			'user_id'	       => $this->getUserId()
@@ -44,8 +44,7 @@ class Other_Model_DbTable_DbProvince extends Zend_Db_Table_Abstract
     }
     function getAllProvince($search=null){
     	$db = $this->getAdapter();
-    	$sql = " SELECT province_id AS id,code,province_en_name,province_kh_name,
-    	(SELECT name_en FROM ln_view WHERE TYPE=4 AND key_code = displayby LIMIT 1) AS displayby,
+    	$sql = " SELECT province_id AS id,code,province_en_name,province_kh_name,    	
     	modify_date,
     	     (SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = status LIMIT 1) AS status_name,
     	(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE id=user_id )AS user_name

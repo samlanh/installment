@@ -12,8 +12,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		$dbs = new Application_Model_DbTable_DbGlobal();
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$rows = $dbs ->getAllBranchByUser();
-		$options=array('');
-		
+		$options=array('');		
 		if(!empty($rows)){
 			foreach($rows AS $row) $options[$row['id']]=$row['name'];
 		}
@@ -26,7 +25,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		
 		$payment_type = new Zend_Dojo_Form_Element_FilteringSelect("paymnet_type");
 		$payment_type->setAttribs(array('class'=>'fullside','dojoType'=>'dijit.form.FilteringSelect'));
-		$options= array(''=>'ប្រភេទបង់ប្រាក់',1=>'បង់ធម្មតា',4=>'បង់ផ្តាច់');
+		$options= array(''=>'ប្រភេទបង់ប្រាក់',1=>'បង់ធម្មតា',3=>'រំលោះដើម',4=>'បង់ផ្តាច់');
 		$payment_type->setMultiOptions($options);
 		$payment_type->setValue($request->getParam("paymnet_type"));
 		

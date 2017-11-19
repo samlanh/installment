@@ -70,18 +70,30 @@ dojo.require("dijit.form.DateTextBox");
              			<?php }?>
              			</span>
              			<span style="width: 100%; display: block;"><span style=" font-family:'Khmer OS Muol Light';font-weight:200;">៣.តំលៃទិញ និង ការផ្ទេរសិទ្ធិ ៖ </span></span>
-             			<span style="width: 100%; display: block;">តំលៃទិញអចលនវត្ថុគឺUSD <span class="value" style="min-width:160px;font-family:Arial;font-weight: bold;"><?php echo number_format($this->agreement['price_sold'],2);?></span>។
+             			<span style="width: 100%; display: block;">តំលៃទិញអចលនវត្ថុគឺUSD <span class="value" style="min-width:160px;font-family:Arial;font-weight: bold;"><?php echo number_format($this->agreement['price_sold'],2);?>
+             			<label id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></label>
+             			</span>។
              			<?php if($this->keyValue['show_propertyprice']==1){?>
              			តំលៃផ្ទះ USD &nbsp;
              			<span class="value" style="min-width:80px;font-family:Arial;font-weight: bold;"> <?php echo number_format($this->agreement['land_price'],2) ?> 
              			</span>
              			<span>តំលៃដីUSD&nbsp;<span class="value" style="min-width:80px;font-family:Arial;font-weight: bold;"><?php echo number_format($this->agreement['price_sold']-$this->agreement['land_price'],2);?></span>
-             			<label id="lable_pricekhmer"></label></span>។
+             			</span>។
              			<?php }?>
              			</span>
              				<script>
-								a ='<?php echo ($this->agreement['price_sold']) ?>';
-								money_khmer=read_money_in_khmer(a);
+								a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
+								money_khmersold=read_money_in_khmer(a_sold);
+								
+								decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
+								str_centsold = 'សេន';
+								if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
+								last_number_sold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
+								
+								if(last_number_sold<=0){last_number_sold='';}
+								money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+								dojo.byId('lable_pricekhmer').innerHTML=money_khmersold+" (ដុល្លាអាមេរិក)";
+								
 							</script>
              			អ្នកទិញត្រូវប្រគល់ប្រាក់ថ្លៃទិញជូនទៅ អ្នកលក់ តាមដំណាក់កាលដូចខាងក្រោមៈ
              			<?php $dbs = new Loan_Model_DbTable_DbLandpayment();
@@ -254,7 +266,7 @@ dojo.require("dijit.form.DateTextBox");
 	             		<span style="width: 100%; display: block;line-height: 32px;">
 		             		<span style="font-family:'Khmer OS Muol Light';font-weight:200;">៥.ការស្នងបន្ត  ៖   </span>រាល់សិទ្ធិ និងកាតព្វកិច្ចទាំងអស់ របស់អ្នកទិញដែលមាន ក្រោមកិច្ចព្រមព្រៀងនេះ ត្រូវមានប្រសិទ្ធិភាពផងដែរ
 	             			ចំពោះទាយាទអ្នកស្នងបន្ត និង អ្នកទទួលសិទ្ធិរបស់អ្នកទិញ តាមរយៈលិខិតជាលាយលក្ខអក្សរដោយមានសាក្សី ដឹងឮ និងមេធាវី។
-	             			ដោយឡែកចំពោះអ្នកលក់ប្រសិនបើមានហេតុការណ៍អាក្រក់ណាមួយកើតឡើងចំពោះអ្នកលក់ហើយបណ្ដាលអោយអ្នក់លក់
+	             			ដោយឡែកចំពោះអ្នកលក់ប្រសិនបើមានហេតុការណ៍អាក្រក់ណាមួយកើតឡើងចំពោះអ្នកលក់ហើយបណ្ដាលអោយអ្នកលក់
 	             			បាត់បង់នូវសមត្ថភាព កាយសម្បទាវិកលចរឹក ឬ រហូតដល់បាត់បង់ជីវិត នោះសិទ្ធិ និងកាតព្វកិច្ចទាំងអស់របស់អ្នកលក់នឹងត្រូវបាន
 	             			ទៅលើ <span style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['w_manager_namekh'];?></span> កាន់អត្តសញ្ញាណប័ណ្ណលេខៈ <span style="font-weight:700;"><?php echo $this->agreement['w_manager_nation_id']?></span> ដែលត្រូវជាភរិយាស្របច្បាប់របស់អ្នកលក់។
 	             			ហើយករណីដូចគ្នាផងដែរ ប្រសិនបើមានហេតុការណ៍អាក្រក់ណាមួយ កើតឡើងចំពោះ <span style="font-family:'Khmer OS Muol Light';font-weight:200;"> <?php echo $this->agreement['w_manager_namekh'];?></span> នោះសិទ្ធិ និង
@@ -272,7 +284,7 @@ dojo.require("dijit.form.DateTextBox");
 	             			មានប្រសិទ្ធិភាពឡើយ លើកលែងតែធ្វើឡើងជាលាយលក្ខអក្សរ ហើយចុះហត្ថលេខាដោយភាគីទាំងពីរ។
 	             		</span>
 	             		<span style="width: 100%; display: block;line-height: 32px;">
-		             		<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ជាសក្ខីភាពនៃសេចក្ដីខាងលើ </span> អ្នកលក់និង អ្នកទិញ ព្រមចុះហត្ថលេខានិងផ្ដិតមេដៃស្ដាំខាងក្រោមនេះដើម្បីទទួលស្គាល់និង
+		             		<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ជាសក្ខីភាពនៃសេចក្ដីខាងលើ </span> អ្នកលក់និង អ្នកទិញ ព្រមចុះហត្ថលេខាឫផ្ដិតមេដៃស្ដាំខាងក្រោមនេះដើម្បីទទួលស្គាល់និង
 	             			អនុវត្តន៍តាមបទបញ្ញត្តិ ទាំងឡាយនៃកិច្ចព្រមព្រៀងនេះ នូវកាលបរិច្ឆេទដែល បានសរសេរដំបូងខាងលើ។
 	             		</span>
              		</p>

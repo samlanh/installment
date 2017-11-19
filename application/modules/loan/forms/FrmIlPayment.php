@@ -20,7 +20,6 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$_landsize->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-		
 		));
 		
 		$schedule_opt = new Zend_Dojo_Form_Element_FilteringSelect('schedule_opt');
@@ -209,11 +208,8 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		));
 		$_service_charge->setValue(0);
 		
-		
-		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$rows = $db ->getAllBranchByUser();
-		//print_r($rows);exit();
 		$options=array('');
 		
 		if(!empty($rows)){foreach($rows AS $row) $options[$row['id']]=$row['name'];}
@@ -224,9 +220,20 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		));
 		$branch_id->setMultiOptions($options);
 		
-// 		print_r($options);exit();
+		$to_branch_id= new Zend_Dojo_Form_Element_FilteringSelect('to_branch_id');
+		$rows = $db ->getAllBranchByUser();
+		$options=array('');
 		
-		//$_coid = new Zend_Dojo_Form_Element_FilteringSelect('co_id');
+		if(!empty($rows)){
+			foreach($rows AS $row) $options[$row['id']]=$row['name'];
+		}
+		$to_branch_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>''
+		));
+		$to_branch_id->setMultiOptions($options);
+		
 		$_coid = new Zend_Dojo_Form_Element_FilteringSelect('co_id');
 		$rows = $db ->getAllCOName();
 		$options=array(0=>"------Select------",-1=>"Add New");
@@ -376,7 +383,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				'OnChange'=>'payOption();'
 		));
 		//$option_status = array(1=>'បង់ធម្មតា',2=>'បង់មុន',3=>'បង់រំលោះប្រាក់ដើម',4=>'បង់ផ្តាច់');
-		$option_status = array(1=>'បង់ធម្មតា',4=>'បង់ផ្តាច់');
+		$option_status = array(1=>'បង់ធម្មតា',3=>'បង់រំលោះប្រាក់ដើម',4=>'បង់ផ្តាច់');
 		$option_pay->setMultiOptions($option_status);
 		
 		$amount_payment_term = new Zend_Form_Element_Hidden("amount_payment_term");
@@ -478,7 +485,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 			$_collect_date->setValue($data["date_pay"]);
 // 			$old_tota_pay->setValue($data["total_payment"]-$data["service_charge"]);
 		}
-		$this->addElements(array($paid_times,$discount_percent,$late_day,$_cheque,$_pay_late,$branch_id,$sold_price,$_graice_pariod,$commission,$schedule_opt,$_landsize,$_loan_codes,$_loan_codes,$old_amount_receive,$old_loan_number,$old_release_date,$old_service_charge,$old_penelize,$_cocode,$_last_payment_date,$using_date,$total_amount_loan,$loan_period,$candition_payment,$payment_method,$release_date,$loan_level,$remain,$old_tota_pay,$installment_date,$amount_payment_term,$_interest_rate,$_payterm,$payment_method,$id,$option_pay,$date_input,$reciept_no,$reciever,$discount,$id,$_groupid,$_coid,$_priciple_amount,$_loan_fee,$_os_amount,$_rate,
+		$this->addElements(array($to_branch_id,$paid_times,$discount_percent,$late_day,$_cheque,$_pay_late,$branch_id,$sold_price,$_graice_pariod,$commission,$schedule_opt,$_landsize,$_loan_codes,$_loan_codes,$old_amount_receive,$old_loan_number,$old_release_date,$old_service_charge,$old_penelize,$_cocode,$_last_payment_date,$using_date,$total_amount_loan,$loan_period,$candition_payment,$payment_method,$release_date,$loan_level,$remain,$old_tota_pay,$installment_date,$amount_payment_term,$_interest_rate,$_payterm,$payment_method,$id,$option_pay,$date_input,$reciept_no,$reciever,$discount,$id,$_groupid,$_coid,$_priciple_amount,$_loan_fee,$_os_amount,$_rate,
 				$_penalize_amount,$_collect_date,$_total_payment,$_note,$_service_charge,$_amount_return,
 				$_amount_receive,$_client_code,$_loan_number,$_hide_total_payment));
 		return $this;

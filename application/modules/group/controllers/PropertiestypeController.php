@@ -49,17 +49,16 @@ class Group_propertiestypeController extends Zend_Controller_Action {
    		try{
    			$db->addPropery($_data);
    				if(!empty($_data['save_new'])){
-					Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
+					Application_Form_FrmMessage::message('INSERT_SUCCESS');
 				}else{
-					Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL . '/propertiestype/index');
+					Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL . '/propertiestype/index');
 				}
    		}catch(Exception $e){
-   			Application_Form_FrmMessage::message("ការ​បញ្ចូល​មិន​ជោគ​ជ័យ");
+   			Application_Form_FrmMessage::message("INSERT_FAIL");
    			$err =$e->getMessage();
    			Application_Model_DbTable_DbUserLog::writeMessageError($err);
    		}
-   	}
-   	
+   	} 	
    	$frm = new Group_Form_FrmPropertiestype();
    	$frm_pro=$frm->FrmPropertiesType();
    	Application_Model_Decorator::removeAllDecorator($frm_pro);

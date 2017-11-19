@@ -31,103 +31,104 @@ function filterDistrict(){
 	getAllDistrict(district_id);
 }
 </script>
-
 <?php  $commune = $this->frm_commune;?>
 <form  id='add_techer' action="<?php echo $this->url(array('module'=>'other','controller'=>'Commune','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
  <script type="dojo/method" event="onSubmit">			
-			if(this.validate()) {
-               if(dijit.byId('province_name').get('value')==0){
-				 alert('Please Select Province !');
-                 return false;
-                }
-             if(dijit.byId('district_name').get('value')==''){
-                 alert('Please Select District !');
-                 return false;
-              }
-				return true;
-			} else {
-				return false;
-			}
+	if(this.validate()) {
+      if(dijit.byId('province_name').get('value')==0){
+		alert('Please Select Province !');
+        return false;
+     }
+     if(dijit.byId('district_name').get('value')==''){
+       	alert('Please Select District !');
+        return false;
+     }
+		return true;
+	} else {
+		return false;
+	}
 </script>
 <table cellspacing="10" width="45%" style="margin: 0 auto;">
 	<tr>
 		<td>
 		<fieldset>
-					<legend align="center" ><strong><?php echo $tr->translate("ADD_COMMUNE");?></strong></legend>
-					
-					<table style="margin: 0 auto; width: 95%;" cellspacing="10">
-						<tr>
-							<td><?php echo $tr->translate("COMMUNE_CODE")?></td>
-							<td><?php  echo $commune->getElement('code');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("COMMUNE_NAME_KH")?></td>
-							<td><?php  echo $commune->getElement('commune_namekh');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("COMMUNE_NAME")?></td>
-							<td><?php  echo $commune->getElement('commune_name');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("DISPLAY_BY")?></td>
-							<td><?php  echo $commune->getElement('display');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("PROVINCE_NAME")?></td>
-							<td><?php  echo $commune->getElement('province_name');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("DISTRICT_NAME")?></td>
-							<td><input id="district_name" ><?php  //echo $commune->getElement('district_name');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("STATUS")?></td>
-							<td><?php  echo $commune->getElement('status');?></td>
-						</tr>
-						<tr>
-							<td colspan="2" align="center">
-											<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
-											<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
-												iconClass="dijitEditorIcon dijitEditorIconSave" />
-											<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
-												iconClass="dijitEditorIcon dijitEditorIconSave" />
-							</td>
-						</tr>
-					</table>	
+			<legend align="center" ><strong><?php echo $tr->translate("ADD_COMMUNE");?></strong></legend>
+			<table style="margin: 0 auto; width: 95%;" cellspacing="10">
+				<tr>
+					<td><?php echo $tr->translate("COMMUNE_CODE")?></td>
+					<td><?php  echo $commune->getElement('code');?></td>
+				</tr>
+				<tr>
+					<td><?php echo $tr->translate("COMMUNE_NAME_KH")?></td>
+					<td><?php  echo $commune->getElement('commune_namekh');?></td>
+				</tr>
+				<tr>
+					<td><?php echo $tr->translate("COMMUNE_NAME")?></td>
+					<td><?php  echo $commune->getElement('commune_name');?></td>
+				</tr>
+				<!--<tr>
+					<td><?php //echo $tr->translate("DISPLAY_BY")?></td>
+					<td><?php //echo $frm->getElement('display');?></td>
+				</tr>-->
+				<tr>
+					<td><?php echo $tr->translate("PROVINCE_NAME")?></td>
+					<td><?php  echo $commune->getElement('province_name');?></td>
+				</tr>
+				<tr>
+					<td><?php echo $tr->translate("DISTRICT_NAME")?></td>
+					<td><input id="district_name" ><?php  //echo $commune->getElement('district_name');?></td>
+				</tr>
+				<tr>
+					<td><?php echo $tr->translate("STATUS")?></td>
+					<td><?php  echo $commune->getElement('status');?></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+						<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+						<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+					</td>
+				</tr>
+			</table>	
 		</fieldset>		
 		</td>
 	</tr>
 </table>	
 </form>
 <div class="dijitHidden">
-				<div data-dojo-type="dijit.Dialog"  id="frm_distict" >
-			<form id="form_distict" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-				<script type="dojo/method" event="onSubmit">
+	<div data-dojo-type="dijit.Dialog"  id="frm_distict" >
+		<form id="form_distict" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<script type="dojo/method" event="onSubmit">
 					if(this.validate()) {
 						return true;
 					}else {
 						return false;
 					}
-		       </script><table style="margin: 0 auto; width:500px;" cellspacing="7">
-					<tr>
-						<td><input dojoType="dijit.form.TextBox" id="province_names" name="province_names" value="" type="hidden" /><?php echo $tr->translate("PROVINCE_NAME")?></td>
-						<td><input dojoType="dijit.form.TextBox" readonly="readonly" class="fullside" id="txt_province" name="txt_province" value="" type="text"></td>
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("DISTRICT_KH")?></td>
-						<td><input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="pop_district_namekh" name="pop_district_namekh" value="" type="text"></td>
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("DISTRICT_EN")?></td>
-						<td><input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="pop_district_name" name="pop_district_name" value="" type="text"></td>
-					</tr>
-					<tr>
-						<td colspan="4" align="center">
-						<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
-						iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addDistrict();"/>
-						</td>
-					</tr>
-				</table></form>		</div>
+		     </script>
+		     <table style="margin: 0 auto; width:500px;" cellspacing="7">
+				<tr>
+					<td><input dojoType="dijit.form.TextBox" id="province_names" name="province_names" value="" type="hidden" /><?php echo $tr->translate("PROVINCE_NAME")?></td>
+					<td><input dojoType="dijit.form.TextBox" readonly="readonly" class="fullside" id="txt_province" name="txt_province" value="" type="text"></td>
+				</tr>
+				<tr>
+					<td><?php echo $tr->translate("DISTRICT_KH")?></td>
+					<td><input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="pop_district_namekh" name="pop_district_namekh" value="" type="text"></td>
+				</tr>
+				<tr>
+					<td><?php echo $tr->translate("DISTRICT_EN")?></td>
+					<td><input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="pop_district_name" name="pop_district_name" value="" type="text"></td>
+				</tr>
+				<tr>
+					<td colspan="4" align="center">
+					<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
+					iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addDistrict();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
 </div>
 <script>
 var district_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );

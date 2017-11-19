@@ -21,7 +21,7 @@ class Other_DistrictController extends Zend_Controller_Action {
 			}
 			$rs_rows= $db->getAllDistrict($search);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("DISTRICT_CODE","DISTRICT_KH","DISTRICT_ENG","DISPLAY_BY","PROVINCE","DATE","STATUS","BY");
+			$collumns = array("DISTRICT_CODE","DISTRICT_KH","DISTRICT_ENG","PROVINCE","DATE","STATUS","BY");
 			$link=array(
 					'module'=>'other','controller'=>'district','action'=>'edit',
 			);

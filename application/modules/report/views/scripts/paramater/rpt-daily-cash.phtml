@@ -7,6 +7,7 @@ dojo.require("dijit.form.DateTextBox");
 </script>
 <style>
 .hover:hover{background: #ccc;}
+
 </style>
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT_DAILY_CASH");?></title>
@@ -23,7 +24,7 @@ dojo.require("dijit.form.DateTextBox");
 	   </tr>
 	</table>
  </form> 
-<div style=" width:28cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
+<div style="min-width:28cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
 <table style="font-family: 'Khmer OS Content'; width:100%;"  >
 	<tr>
     	<td align="center">
@@ -40,32 +41,53 @@ dojo.require("dijit.form.DateTextBox");
 						  display: table-header-group;
 						  page-break-inside:avoid; page-break-after:auto;
 						}
+						.hide{visibility: hidden;}
+						@media print {
+						  div.divFooter {
+						    position: fixed;
+						    top: 0;
+						  	width: 100%;
+						  	height: 100px;
+						  	bottom:0px;
+							margin:0;
+						  }
+						.hide{visibility: visible; height: 110px;}
+						}
 					</style>
-        	<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
-        	<tr>
-                <td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
-                <td width="60%" valign="top">
-                <h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
-                <h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("REPORT_DAILY_CASH");?></label></h2>
-                <p style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->list_end_date['end_date']));?></p>
-                </td>
-                <td width="20%"></td>
-             </tr>
-            <tr><td>&nbsp;</td></tr> 
-            <tr>
-             	<td colspan="3">
-             		<h2 style="text-align:left; font-size:14px; font-family:'Khmer MEF2'">
-	             	<label><?php echo $tr->translate("COLLECT_MONEY_INCOME");?></label>
-	             	</h2>
-             	</td>
-             </tr>
-            <tr>
-            <?php 
-            $total_sold_income=0; $category_id=0; $category_id_expense=0; $total_sold_income=0;
-            ?>
+		        	<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
+		        	<tr>
+		        		<td colspan="3" style="border:1px solid #fff;">
+			        		<div class="divFooter">
+				        		<table  width="100%" style="font-family:'Khmer OS Battambang';margin:0; padding:0;border:none;" >
+					                <td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+					                <td width="60%" valign="top">
+						                <h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+						                <h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("REPORT_DAILY_CASH");?></label></h2>
+						                <p style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->list_end_date['end_date']));?></p>
+					                </td>
+				                	<td width="20%"></td>
+				               </table>
+			               </div>
+		               </td>
+		             </tr>
+		            
+		            <tr>
+		        <?php 
+		            $total_sold_income=0; $category_id=0; $category_id_expense=0; $total_sold_income=0;
+		        ?>
             	<td colspan="3" id="exportExcel">
             			<table width="100%" border="1" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
 			                <thead>
+			                	<tr class="hide" >
+			                		<td colspan="14" style="border:1px solid #fff"></td>
+			                	</tr>
+			                	<tr  style="border:1px solid #000;">
+					                <td colspan="14" style="border:1px solid #fff;border-bottom:1px solid #000;">
+					                	<h2 style="text-align:left; font-size:14px; font-family:'Khmer MEF2'">
+							             	<label><?php echo $tr->translate("COLLECT_MONEY_INCOME");?></label>
+							             </h2>
+					                </td>
+					             </tr>
 				                <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
 				                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 				                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
@@ -101,19 +123,19 @@ dojo.require("dijit.form.DateTextBox");
 		               <?php 
                		    ?>
 		               <?php 
-								$amt_d1 = $amt_d1+$rs['total_principal_permonthpaid'];
-								$amt_d2 = $amt_d2+$rs['total_interest_permonthpaid'];
-								$amt_d3 = $amt_d3+$rs['penalize_amountpaid'];
-								$amt_d5 = $amt_d5+$rs['service_chargepaid'];
-								$total_d=$amt_d1+$amt_d2+$amt_d3+$amt_d5;
-								
-								if($rs['payment_methodid']==1){
-									$total_cash = $total_cash + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
-								}elseif($rs['payment_methodid']==2){
-									$total_cheque = $total_cheque + + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
-								}else{
-									$total_bank = $total_bank + + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
-								}
+							$amt_d1 = $amt_d1+$rs['total_principal_permonthpaid'];
+							$amt_d2 = $amt_d2+$rs['total_interest_permonthpaid'];
+							$amt_d3 = $amt_d3+$rs['penalize_amountpaid'];
+							$amt_d5 = $amt_d5+$rs['service_chargepaid'];
+							$total_d=$amt_d1+$amt_d2+$amt_d3+$amt_d5;
+							
+							if($rs['payment_methodid']==1){
+								$total_cash = $total_cash + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+							}elseif($rs['payment_methodid']==2){
+								$total_cheque = $total_cheque + + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+							}else{
+								$total_bank = $total_bank + + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+							}
 		               ?>
 		                <tr class="hover style style1" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
 		               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
@@ -140,16 +162,19 @@ dojo.require("dijit.form.DateTextBox");
             </tr>
             <tr><td>&nbsp;</td></tr> 
             <tr>
-             	<td colspan="3">
-             		<h2 style="text-align:left; font-size:14px; font-family:'Khmer MEF2'">
-	             	<label><?php echo $tr->translate("OTHER_INCOME");?></label>
-	             	</h2>
-             	</td>
-             </tr>
-            <tr>
             	<td colspan="3">
             		<table id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 20px; font-size: 12px; border:solid 1px #000;" >  
 				    	<thead>
+				    	<tr class="hide" >
+			                <td colspan="10" style="border:1px solid #fff"></td>
+			            </tr>
+	                	<tr  style="border:1px solid #000;">
+			                <td colspan="10" style="border:1px solid #fff;border-bottom:1px solid #000;">
+			                	<h2 style="text-align:left; font-size:14px; font-family:'Khmer MEF2'">
+					             	<label><?php echo $tr->translate("OTHER_INCOME");?></label>
+					             </h2>
+			                </td>
+			             </tr>
 				    	<tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
 							<th ><?php echo $tr->translate("NUM");?></th>
 						    <th><?php echo $tr->translate("BRANCH_NAME");?></th>
@@ -181,19 +206,18 @@ dojo.require("dijit.form.DateTextBox");
 				    </table>
             	</td>
             </tr>
-            <tr><td>&nbsp;</td></tr>
-			<tr>
-             	<td colspan="3">
-             	<h2 style="text-align:left; font-size:14px; font-family:'Khmer MEF2'">
-	             	<label><?php echo $tr->translate("OTHER_EXPENSE");?></label>
-	             	</h2>
-             	</td>
-             </tr>
              <tr>
             	<td colspan="3">
             		<table id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 20px; font-size: 12px; border:solid 1px #000;" >  
 				    	<thead>
-					    	<tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+					       <tr class="hide" >
+				                <td colspan="10" style="border:1px solid #fff"></td>
+				           </tr>
+				           <tr  >
+				                <td colspan="10" style="border:1px solid #fff;border-bottom:1px solid #000;font-size:14px; font-family:'Khmer MEF2'">
+				                <?php echo $tr->translate("OTHER_EXPENSE");?></td>
+				           </tr>
+					    	<tr bgcolor="#c1d0f3" class="style" align="center" style="border-top:1px solid #000;padding:0px 2px;white-space: nowrap;">
 								<th ><?php echo $tr->translate("NUM");?></th>
 							    <th><?php echo $tr->translate("BRANCH_NAME");?></th>
 							    <th><?php echo $tr->translate("EXPENSE_TITLE");?></th>
@@ -227,7 +251,10 @@ dojo.require("dijit.form.DateTextBox");
             	<?php $total = ($total_sold_income + $total_d + $total_other_income) - $total_expese ;?>
             <tr>
             	<td colspan="3">
-            		<table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+            		<br /><table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+	                 <tr>
+	                 	<td class="hide" colspan="8" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+	                 </tr>
 	                 <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
 	                 	<td rowspan="2">&nbsp;<?php echo $tr->translate("SOLD_INCOME");?>&nbsp;</td>
 	                 	<td colspan="4">&nbsp;<?php echo $tr->translate("COLLECT_MONEY_INCOME");?>&nbsp;</td>
@@ -242,7 +269,7 @@ dojo.require("dijit.form.DateTextBox");
 	                    <td><?php echo $tr->translate("TOTAL");?></td>
 	                </tr>
 	                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
-	                  	 <td>&nbsp;<?php echo number_format($total_sold_income,2);?></td>
+	                  	<td>&nbsp;<?php echo number_format($total_sold_income,2);?></td>
 	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
 	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
 	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>

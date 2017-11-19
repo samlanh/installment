@@ -3,6 +3,8 @@
 	$filter = $this->form_filter;
 	$dayin_khmer = $this->day_inkhmer;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$key = new Application_Model_DbTable_DbKeycode();
+	$dataterm = $key->getKeyCodeMiniInv(TRUE);
 ?>
 <title><?php echo $tr->translate('REPORT WEEK');?></title>
 <style>
@@ -27,6 +29,7 @@ table { page-break-inside:auto }
   display: table-header-group;
   page-break-inside:avoid; page-break-after:auto;
 }
+.hover:hover{background: #ccc;}
 	</style>
 	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
 		<tr>
@@ -34,7 +37,7 @@ table { page-break-inside:auto }
 	        	<table width="100%" style="font-family:khmer;margin:0 auto;padding:0px; border:none;">
 	            	<tr>
 	                	<td width="30%" style="border-bottom: 1px solid #000;"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px">
-	                		<p style="font-family: 'Khmer OS Battambang'; font-size:9px;margin-top:4px; line-height:15px;"><?php //echo $client['branch_name'];?> 	<?php echo $this->data['brand_adress'];?>
+	                		<p style="font-family: 'Khmer OS Battambang'; font-size:9px;margin-top:4px; line-height:15px;"><?php //echo $client['branch_name'];?> 	<?php echo $tr->translate("ADDRESS_COMPANY");?>
 								<br /><?php //echo $this->data['phone_brand'];?></p>
 	                	</td>
 	                	<td width="47%" valign="top">
@@ -52,7 +55,7 @@ table { page-break-inside:auto }
 	                		<table width="100%" style="margin-top:10px;">
 			                	<tr class='style'>
 				                   <td width="35%">
-				                	    <p><b><?php echo $tr->translate('CUSTOMER_NAME');?></b>: <?php echo $client['client_name_kh'] ;?> </p>
+				                	    <p><b><?php echo $tr->translate('CUSTOMER_NAME');?></b>: <?php echo $client['client_name_kh'];echo !empty($client['hname_kh'])?"/".$client['hname_kh']:"";?> </p>
 				                	    <p> <?php echo "<strong>". $tr->translate('CLIENT_NO')."</strong> : ".$client['client_number']?></p>
 				                		<p><b><?php echo $tr->translate("ADDRESS");?></b>:<?php echo $row['village_name'];?> ,<?php echo $row['commune_name'];?> <br /><?php echo $row['district_name'];?> ,  <?php echo $row['province_en_name'];?>
 				                		<p><?php echo $tr->translate("TEL");?>  : <?php echo $client['tel'];?></p>  
@@ -65,15 +68,15 @@ table { page-break-inside:auto }
 				                      <p><?php //echo $tr->translate("PAID");?>  : <?php //echo number_format($client['paid_amount'],2);?></p>
 				                      <p><?php //echo $tr->translate("BALANCE");?>  : <strong><?php //echo number_format($client['balance'],2);?></strong></p> -->
 				                     <p><?php echo $tr->translate("HOUSE");?> : <b><?php echo $client['land_address'].",".$client['stree'];?></b></p>
-				                	 <p><?php echo $tr->translate("ចំនួនប្រាក់ត្រូវរំលស់");?>  : <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?> $</p>
+				                	 <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?> $</p>
 				                     <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php echo $client['interest_rate'];?>&nbsp;%</p>
-									 <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo ($client['total_duration']);?>&nbsp;ឆ្នាំ</p>
+									 <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo ($client['total_duration']);?>&nbsp;<?php echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH")?></p>
 				     	             <!-- <p><?php //echo $tr->translate("TERM_BORROW");?> : <?php //echo $client['total_duration']*12;?>&nbsp;ខែ</p> -->
 				                     </td>
 				                     <td valign="top">
 				                     <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-M-Y',strtotime($client['buy_date']));?> </p>
-				                     <p><?php echo $tr->translate("ថ្ងៃបង់រំលស់ដំបូង");?> : <?php echo date('d-M-Y',strtotime($client['first_payment'])); ?></p>
-				                     <p><?php echo $tr->translate("ថ្ងៃបញ្ចប់");?> : <?php echo date('d-M-Y',strtotime($client['end_line'])); ?></p>
+				                     <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-M-Y',strtotime($client['first_payment'])); ?></p>
+				                     <p><?php echo $tr->translate("LIFE_LOAN");?> : <?php echo date('d-M-Y',strtotime($client['end_line'])); ?></p>
 				                    </td>
 				                </tr>
 			                </table>
@@ -91,29 +94,32 @@ table { page-break-inside:auto }
 		                    <td rowspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
 		                    <!-- <td>ចំនួនថ្ងៃ</td> -->
 		                    <td rowspan="2"><?php echo $tr->translate("PRINCIPLE");?></td>
-		                    <td rowspan="2"><?php echo $tr->translate("ប្រាក់បង់បន្ថែម");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
 		                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("Cumulative Interest");?></td>
-		                    <td rowspan="2"><?php echo $tr->translate("ផ្សេងៗ");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("OTHER");?></td>
 		                </tr>
 	                <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
 	                    <!--<td>ចំនួនថ្ងៃ</td>-->
-	                    <td>ប្រាក់ដើម</td>
+	                    <td><?php echo $tr->translate("PRINCIPAL");?></td>
 	                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
 	                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 	                </tr>
 	                </thead>
-	               <?php $set=1; if(!empty($tran)) foreach($tran as $key =>$row){
+	               <?php $set=1; 
+	               $i=0;
+	               if(!empty($tran)) foreach($tran as $key =>$row){
 // 	               	$row['is_rescheule']=1;
 	               	?>
 	               	<?php if($row['status']==0 AND $row['collect_by']==2){?>
 	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style">
 	               		<td colspan="10" style="background: #d3d3ff;"><strong style="font-family:'Khmer OS Muol'">បានរំលស់ប្រាក់ដើម ចំនួន</strong><strong style="font-family:Arail;font-size:16px;font-weight: bolder;"> $ <?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></strong><strong style="font-family:'Khmer OS Muol'"> នៅថ្ងៃទី  <?php echo date('d-M-Y',strtotime($row['date_payment']));?></strong></td>
 	               	</tr>
-	               	<?php } ?>
-	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style">
-	                    <td ><?php echo ($key+1<10)?"0":"";echo $key+1;?></td>
+	               	<?php continue;}
+	               	$i++; ?>
+	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style hover" >
+	                    <td ><?php echo ($key+1<10)?"0":"";echo $i;?></td>
 	                    <?php $str_day = date('D',strtotime($row['date_payment']));
 	                    	$day_as_khmer = $dayin_khmer[$str_day];
 	                    ?>
@@ -132,7 +138,7 @@ table { page-break-inside:auto }
 	                    ?>
 	                    <td><?php echo number_format($remain,(!strrpos($remain,"."))? 0 : 2);?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['cum_interest'],2)); ?></td>
-	                    <td><?php echo ($row['is_completed']==1)?"បង់ដាច់":""; ?></td>
+	                    <td><?php echo ($row['is_completed']==1)?$tr->translate("COMPLETED"):""; ?></td>
 	                </tr>
 	               <?php }
 	               	if(!empty($record))for($record = $key;$record<11;$record++){

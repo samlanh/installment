@@ -9,6 +9,23 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$session_user=new Zend_Session_Namespace('auth');
 		return $session_user->user_id;
 	}
+	function currentlang(){
+		$session_lang=new Zend_Session_Namespace('lang');
+		return $session_lang->lang_id;
+	}
+// 	public function getAllDegree($id=null){//use for staff education
+// 		$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+// 		$opt_degree = array(
+// 				''=>$this->tr->translate("----ជ្រើសរើស----"),
+// 				1=>$this->tr->translate("Diploma"),
+// 				2=>$this->tr->translate("Associate"),
+// 				3=>$this->tr->translate("Bechelor"),
+// 				4=>$this->tr->translate("Master"),
+// 				5=>$this->tr->translate("PhD")
+// 		);
+// 		if($id==null)return $opt_degree;
+// 		else return $opt_degree[$id];
+// 	}
 	
 	function  getAllBranchByUser(){
 		$db = $this->getAdapter();
@@ -343,12 +360,24 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
  
    public function getClientByType($type=null,$client_id=null ,$row=null){
    $this->_name='ln_client';
+   $session_lang=new Zend_Session_Namespace('lang');
+   $lang_id=$session_lang->lang_id;
+   $prvoince_str='province_kh_name';
+   $district_str='district_namekh';
+   $commune_str ='commune_namekh';
+   $village_str='village_namekh';
+   if($lang_id!=1){
+   	$prvoince_str='province_en_name';
+   	$district_str='district_name';
+   	$commune_str ='commune_name';
+   	$village_str='village_name';
+   }
    $where='';
    	$sql = " SELECT client_id,name_en,client_number,
-   				(SELECT `ln_village`.`village_namekh` FROM `ln_village` WHERE (`ln_village`.`vill_id` = `ln_client`.`village_id`)) AS `village_name`,
-				(SELECT `c`.`commune_namekh` FROM `ln_commune` `c` WHERE (`c`.`com_id` = `ln_client`.`com_id`) LIMIT 1) AS `commune_name`,
-				(SELECT `d`.`district_namekh` FROM `ln_district` `d` WHERE (`d`.`dis_id` = `ln_client`.`dis_id`) LIMIT 1) AS `district_name`,
-				(SELECT province_kh_name FROM `ln_province` WHERE province_id= ln_client.pro_id  LIMIT 1) AS province_en_name
+   				(SELECT `ln_village`.$village_str FROM `ln_village` WHERE (`ln_village`.`vill_id` = `ln_client`.`village_id`)) AS `village_name`,
+				(SELECT `c`.$commune_str FROM `ln_commune` `c` WHERE (`c`.`com_id` = `ln_client`.`com_id`) LIMIT 1) AS `commune_name`,
+				(SELECT `d`.$district_str FROM `ln_district` `d` WHERE (`d`.`dis_id` = `ln_client`.`dis_id`) LIMIT 1) AS `district_name`,
+				(SELECT $prvoince_str FROM `ln_province` WHERE province_id= ln_client.pro_id  LIMIT 1) AS province_en_name
 
    	FROM $this->_name WHERE status=1  ";
    	$db = $this->getAdapter();
@@ -356,7 +385,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    		if($client_id!=null){ $where.=" AND client_id  =".$client_id ." LIMIT 1";}
    		return $db->fetchRow($sql.$where);
    	}
-//    	echo $sql.$where;exit();
    	return $db->fetchAll($sql.$where);
    }
    
@@ -428,19 +456,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	if($id==null)return $_status;
    	else return $_status[$id];
    }
-   public function getAllDegree($id=null){
-   	$tr= Application_Form_FrmLanguages::getCurrentlanguage();
-   	$opt_degree = array(
-   			''=>$this->tr->translate("----ជ្រើសរើស----"),
-   			1=>$this->tr->translate("Diploma"),
-   			2=>$this->tr->translate("Associate"),
-   			3=>$this->tr->translate("Bechelor"),
-   			4=>$this->tr->translate("Master"),
-   			5=>$this->tr->translate("PhD")
-   	);
-   	if($id==null)return $opt_degree;
-   	else return $opt_degree[$id]; 
-  }
+  
   public function getAllBranchName($branch_id=null,$opt=null){
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	$db = $this->getAdapter();
@@ -510,6 +526,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  s.total_installamount,
   		(SELECT client_number FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_number,
   		(SELECT name_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_kh,
+  		(SELECT hname_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS hname_kh,
   		(SELECT name_en FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_en,
   		(SELECT phone FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS tel,
   		(SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = s.user_id LIMIT 1) AS user_name,
@@ -528,34 +545,34 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db=$this->getAdapter();
   	return $db->fetchRow($sql);
   }
-  public function getClientGroupByMemberId($group_id){
-  	$sql="SELECT lg.level,lg.date_release,lg.total_duration,lg.first_payment,
-  	lg.pay_term,lg.payment_method,
-  	lg.loan_type,
-  	(SELECT project_name FROM `ln_project` WHERE br_id =lg.branch_id LIMIT 1) as branch_name,
-  	(SELECT co_khname FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS co_khname,
-  	(SELECT co_firstname FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS co_enname,
-  	(SELECT displayby FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS displayby,
-  	(SELECT tel FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS tel,
-  	(SELECT client_number FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_number,
-  	(SELECT name_kh FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_kh,
-  	(SELECT name_en FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_en,
-  	(SELECT displayby FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS displayclient,
-  	lm.client_id,
-  	(SELECT curr_namekh FROM `ln_currency` WHERE id = lm.currency_type limit 1) AS currency_type
-  	,SUM(lm.total_capital) AS total_capital,lm.loan_number,
-  	lm.interest_rate,lm.branch_id,
-  	(SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = lg.user_id LIMIT 1) AS user_name
-  	FROM
-  	`ln_loan_group` AS lg,`ln_loan_member` AS lm WHERE
-  	lg.g_id =lm.group_id  ";
-  	if(!empty($group_id)){
-  		$sql.=" AND lm.group_id = $group_id";
-  	}
-  	$sql.=" GROUP BY lm.group_id";
-  	$db=$this->getAdapter();
-  	return $db->fetchRow($sql);
-  }
+//   public function getClientGroupByMemberId($group_id){
+//   	$sql="SELECT lg.level,lg.date_release,lg.total_duration,lg.first_payment,
+//   	lg.pay_term,lg.payment_method,
+//   	lg.loan_type,
+//   	(SELECT project_name FROM `ln_project` WHERE br_id =lg.branch_id LIMIT 1) as branch_name,
+//   	(SELECT co_khname FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS co_khname,
+//   	(SELECT co_firstname FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS co_enname,
+//   	(SELECT displayby FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS displayby,
+//   	(SELECT tel FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS tel,
+//   	(SELECT client_number FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_number,
+//   	(SELECT name_kh FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_kh,
+//   	(SELECT name_en FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_en,
+//   	(SELECT displayby FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS displayclient,
+//   	lm.client_id,
+//   	(SELECT curr_namekh FROM `ln_currency` WHERE id = lm.currency_type limit 1) AS currency_type
+//   	,SUM(lm.total_capital) AS total_capital,lm.loan_number,
+//   	lm.interest_rate,lm.branch_id,
+//   	(SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = lg.user_id LIMIT 1) AS user_name
+//   	FROM
+//   	`ln_loan_group` AS lg,`ln_loan_member` AS lm WHERE
+//   	lg.g_id =lm.group_id  ";
+//   	if(!empty($group_id)){
+//   		$sql.=" AND lm.group_id = $group_id";
+//   	}
+//   	$sql.=" GROUP BY lm.group_id";
+//   	$db=$this->getAdapter();
+//   	return $db->fetchRow($sql);
+//   }
   function getAllPaymentMethod($payment_id=null,$option = null){
   	$sql = "SELECT * FROM ln_payment_method WHERE status = 1 ";
   	if($payment_id!=null){
@@ -613,13 +630,24 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public  function getclientdtype(){
   	$db = $this->getAdapter();
-  	$sql="SELECT key_code as id, name_kh AS name ,displayby FROM `ln_view` WHERE status =1 AND type=23";
+  	$string = "name_kh";
+  	if($this->currentlang()==2){
+  		$string = "name_en";
+  	}
+  	 
+  	$sql="SELECT key_code as id, $string AS name ,displayby FROM `ln_view` WHERE status =1 AND type=23";
   	$rows = $db->fetchAll($sql);
   	return $rows;
   }
   public function getVewOptoinTypeByType($type=null,$option = null,$limit =null,$first_option =null){
   	$db = $this->getAdapter();
-  	$sql="SELECT id,key_code,CONCAT(name_kh) AS name_en ,displayby FROM `ln_view` WHERE status =1 AND name_en!='' ";//just concate
+  	//$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+  	$string = "name_kh";
+  	if($this->currentlang()==2){
+  		$string = "name_en";
+  	}
+  	
+  	$sql="SELECT id,key_code, $string AS name_en ,displayby FROM `ln_view` WHERE status =1 AND name_en!='' ";//just concate
   	if($type!=null){
   		$sql.=" AND type = $type ";
   	}
@@ -642,7 +670,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getAllLandInfo($branch_id=null,$option=null,$action=null){
   	   $db = $this->getAdapter();
-  	   $sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE status=1 AND `land_address`!='' ";//just concate
+  	   $sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE status!=0 AND `land_address`!='' ";//just concate
   	   $request=Zend_Controller_Front::getInstance()->getRequest();
   	   if($action==null){
   	   	$sql.=" AND `is_lock`=0  ";
@@ -778,7 +806,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	return $amount_days;//;*$amount_collect;//return all next day collect laon form customer
   }
   public function getNextPayment($str_next,$next_payment,$amount_amount,$holiday_status=null,$first_payment=null){//code make slow
-	 $default_day = 3;//Date("d",strtotime($first_payment));
+	 $default_day = Date("d",strtotime($first_payment));
 	 $prev_month=$next_payment;
 	 if($str_next=='+1 month'){
 	 	if($default_day>28){
@@ -1177,20 +1205,20 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   		return $result;
   	}
   }
-  public function ClassifiedLoan($type=26){
-  	$db = $this->getAdapter();
-  	$sql="SELECT id,key_code,name_en FROM `ln_view` WHERE status =1 ";//just concate
-  	if($type!=null){
-  		$sql.=" AND type = $type ";
-  	}
-  	 $rows = $db->fetchAll($sql);
-  	$opt = array();
-  	if(!empty($rows))foreach($rows AS $row){
-  		$opt[$row['key_code']]=$row['name_en'];
-  	}
-  	return $opt;
+//   public function ClassifiedLoan($type=26){
+//   	$db = $this->getAdapter();
+//   	$sql="SELECT id,key_code,name_en FROM `ln_view` WHERE status =1 ";//just concate
+//   	if($type!=null){
+//   		$sql.=" AND type = $type ";
+//   	}
+//   	 $rows = $db->fetchAll($sql);
+//   	$opt = array();
+//   	if(!empty($rows))foreach($rows AS $row){
+//   		$opt[$row['key_code']]=$row['name_en'];
+//   	}
+//   	return $opt;
 
-  }
+//   }
 
 
 
@@ -1243,7 +1271,7 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	$db= $this->getAdapter();
   	$sql="SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
   	$rows =  $db->fetchAll($sql);
-  	$options=array(''=>"ជ្រើសរើសប្រភេទផ្ទ/ដី");
+  	$options=array(''=>$this->tr->translate("PROPERTY_TYPE"));
   	if(!empty($rows))foreach($rows AS $row){
   		$options[$row['id']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
   	}
@@ -1276,7 +1304,7 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	$db = $this->getAdapter();
   	$sql = 'SELECT DISTINCT street FROM `ln_properties` WHERE street!="" ORDER BY street ASC ';
   	$rows =  $db->fetchAll($sql);
-  	$options=array(''=>"-----ជ្រើសរើសផ្លូវ-----");
+  	$options=array(''=>$this->tr->translate("CHOOSE_STREET"));
   	if(!empty($rows))foreach($rows AS $row){
   		$options[$row['street']]=$row['street'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
   	}

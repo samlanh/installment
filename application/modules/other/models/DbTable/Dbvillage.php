@@ -15,7 +15,7 @@ class Other_Model_DbTable_DbVillage extends Zend_Db_Table_Abstract
 				'commune_id'	  => $_data['commune_name'],
 				'village_name'	  => $_data['village_name'],
 				'village_namekh'	  => $_data['village_namekh'],
-				'displayby'	  => $_data['display'],
+				//'displayby'	  => $_data['display'],
 				'status'	  => $_data['status'],
 				'modify_date' => Zend_Date::now(),
 				'user_id'	  => $this->getUserId()
@@ -36,7 +36,7 @@ class Other_Model_DbTable_DbVillage extends Zend_Db_Table_Abstract
 				'commune_id'	  => $_data['commune_name'],
 				'village_name'	  => $_data['village_name'],
 				'village_namekh'	  => $_data['village_namekh'],
-				'displayby'	  => $_data['display'],
+				//'displayby'	  => $_data['display'],
 				'status'	  => $_data['status'],
 				'modify_date' => Zend_Date::now(),
 				'user_id'	  => $this->getUserId()
@@ -58,7 +58,7 @@ class Other_Model_DbTable_DbVillage extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 // 		$sql =" CALL st_getAllVillage('',1) ";
 		$sql =" SELECT
-				v.vill_id,v.village_namekh,v.village_name,v.displayby,
+				v.vill_id,v.village_namekh,v.village_name,
 				(SELECT commune_name FROM ln_commune WHERE v.commune_id=com_id LIMIT 1) AS commune_name,
 				d.district_name,p.province_en_name,
 				v.modify_date,(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code=v.status LIMIT 1) AS status, 

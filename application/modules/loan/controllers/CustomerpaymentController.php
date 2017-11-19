@@ -3,15 +3,13 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
-     /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	private $sex=array(1=>'M',2=>'F');
-	
 	public function indexAction(){
 		try{
-			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$db = new Loan_Model_DbTable_DbCustomerPayment();
 		if($this->getRequest()->isPost()){
 				$formdata=$this->getRequest()->getPost();
 				$search = array(
@@ -39,7 +37,7 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 			$rs_rows= $db->getAllIndividuleLoan($search);
 			$result = array();
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","HOUSE_NO","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
 					"PAY_DATE","DATE","STATUS",'បោះពុម្ភ');
 			$link=array('module'=>'loan','controller'=>'ilpayment','action'=>'edit',);
 			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);
@@ -50,6 +48,11 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 			echo $e->getMessage();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
+// 		$frm = new Loan_Form_FrmSearchLoan();
+// 		$fm = $frm->AdvanceSearch();
+// 		Application_Model_Decorator::removeAllDecorator($fm);
+// 		$this->view->frm_search = $fm;
+
 		$frm = new Loan_Form_FrmSearchGroupPayment();
 		$fm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($fm);
@@ -61,16 +64,17 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
   }
   function addAction()
   {
-  	$db = new Loan_Model_DbTable_DbLoanILPayment();
+  	$db = new Loan_Model_DbTable_DbCustomerPayment();
   	$db_global = new Application_Model_DbTable_DbGlobal();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				$db->addILPayment($_data);
+// 				print_r($_data);exit();/
+				$db->addPaymentByCustomer($_data);
 				if(isset($_data['submit_close'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/customerpayment/");
 				}else {
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/add");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/customerpayment/add");
 				}
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -321,10 +325,10 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 		
 		}
 	
-	function getIlloandetailAction(){
+	function getpaymentbycustomerAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
-			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$db = new Loan_Model_DbTable_DbCustomerPayment();
 			$row = $db->getLoanPaymentByLoanNumber($data);
 			print_r(Zend_Json::encode($row));
 			exit();

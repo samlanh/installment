@@ -19,6 +19,7 @@ class Report_Model_DbTable_DbRptPaymentSchedule extends Zend_Db_Table_Abstract
     	if($payment_id==4){
     		$sql.=" AND is_installment=1 ";
     	};
+    	$sql.=" ORDER BY date_payment ASC,status DESC ";
     	return $db->fetchAll($sql);
     }
     public function getPaymentScheduleById($id){

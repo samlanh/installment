@@ -22,8 +22,9 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 		  s.client_id,s.price_sold,s.house_id,
 	     (SELECT  CONCAT(`land_address`,',',`street`) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
 	     (SELECT SUM(`cr`.`total_principal_permonthpaid`+`cr`.`extra_payment`) FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`)) AS `paid_amount`,
+	     (SELECT SUM(`cr`.`extra_payment`) FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`)) AS `extra_payment`,
 	     (SELECT `cr`.`id` FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`) ORDER BY `cr`.`id` DESC LIMIT 1) AS `crm_id`,	     
-	     (SELECT SUM(ss.principal_permonth) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND STATUS=1 LIMIT 1) AS realpaid,
+	     (SELECT SUM(ss.principal_permonth) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND ss.status=1  LIMIT 1) AS realpaid,
 	     (SELECT COUNT(ss.id) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND STATUS=1 LIMIT 1) AS countpaid
 	  	FROM `ln_sale` AS s WHERE is_completed=0 AND STATUS=1 AND is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2 ";
       	return $db->fetchAll($sql);
@@ -36,8 +37,17 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 				s.house_id,
 				ss.id AS schedule_id,
 				s.price_sold
-			      	 FROM `ln_sale` AS s,`ln_saleschedule` AS ss WHERE s.status =1 AND s.is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2
-			      	 AND ss.principal_permonth<=0 AND ss.total_payment_after=0 AND ss.is_completed=0 group by ss.id";
+			      	 FROM 
+			      	 `ln_sale` AS s,`ln_saleschedule` AS ss 
+			      	 WHERE 
+			      	 s.status =1 
+			      	 AND s.is_cancel=0 
+			      	 AND s.payment_id!=1 
+			      	 AND s.payment_id!=2
+			      	 AND ss.principal_permonth<=0 
+      				 AND ss.total_payment_after=0 
+      				 AND ss.is_completed=0 
+      				group by ss.id";
       	return $db->fetchAll($sql);
       }
       function getBeginingBalance(){

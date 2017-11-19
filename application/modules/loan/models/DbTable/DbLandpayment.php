@@ -29,7 +29,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
  		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
         `s`.`discount_amount` AS `discount_amount`,
  		`s`.`price_sold`     AS `price_sold`,
-        `s`.`paid_amount`     AS `paid_amount`,
+ 		(SELECT
+	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
+	   FROM `ln_client_receipt_money` `cr`
+	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
         `s`.`balance`         AS `balance`,
         `s`.`buy_date`        AS `buy_date`,
          s.status,
@@ -41,7 +44,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 		   JOIN `ln_properties` `p`)
 		WHERE ((`c`.`client_id` = `s`.`client_id`)
        AND (`p`.`id` = `s`.`house_id`)) ";
-    	//         `s`.`other_fee`     AS `other_fee`,
     	
     	$db = $this->getAdapter();
     	if(!empty($search['adv_search'])){
@@ -157,11 +159,86 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		return round($value,0);
     	}
     }
-   
+    function getProperty($id){
+    	$db = $this->getAdapter();
+    	$sql="SELECT * FROM `ln_properties` AS p WHERE p.`id`=".$id;
+    	return $db->fetchRow($sql);
+    }
     public function addSchedulePayment($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
+    		if ($data['typesale']==2){
+    			$ids_land = explode(',', $data['identity_land']);
+    			$size = 0; $width=''; $height='';
+    			$land_address='';
+    			$land_code='';
+    			$price = 0;
+    			$land_price=0;
+    			$house_price=0;
+    			$property_type='';
+    			foreach ($ids_land as $key => $i){
+    				$this->_name="ln_properties";
+    				$where = "id =".$ids_land[$key];
+    				$arr = array(
+    						"is_lock"=>1,
+    				);
+    				$this->update($arr, $where);
+    				$newpro = $this->getProperty($ids_land[$key]);
+    				$size = $size + $newpro['land_size'];
+    		
+    				$width = $width+$newpro['width'];
+    		
+    				$height = $height+$newpro['height'];
+    		
+    				$price = $price + $newpro['price'];
+    				$land_price = $land_price+$newpro['land_price'];
+    				$house_price = $house_price+$newpro['house_price'];
+    				
+    				if(!empty($land_address)){
+    					$land_address= $land_address.'/'.$newpro['land_address'];
+    				}else{ 
+    					$land_address =$newpro['land_address'];
+    				}
+    				if(!empty($land_code)){
+    					$land_code=$land_code.','.$newpro['land_code'];
+    				}else{ $land_code =$newpro['land_code'];
+    				}
+    				
+    				$property_type = $newpro['property_type'];
+    			}//end loop
+//     			echo $land_address;exit();
+    			$newproperty = array(
+    					'branch_id'=>$data['branch_id'],
+    					'land_code'=>$land_code,
+    					'land_address'=>$land_address,
+    					'street'=>$newpro['street'],
+    					'price'=>$price,
+    					'land_price'=>$land_price,
+    					'house_price'=>$house_price,
+    					'property_type'=>$property_type,
+    					'width'=>$width,
+    					'height'=>$height,
+    					'land_size'=>$size,
+    					"is_lock"=>1,
+    					"status"=>-2,
+    					"create_date"=>date("Y-m-d"),
+    					"user_id"=>$this->getUserId(),
+    					"old_land_id"=>$data['identity_land']
+    			);
+    			$this->_name="ln_properties";
+    			$land_id = $this->insert($newproperty);
+    			$data['land_code']=$land_id;
+    		}else{
+    			
+    			$this->_name="ln_properties";
+    			$where = "id =".$data["land_code"];
+    			$arr = array(
+    					"is_lock"=>1
+    			);
+    			$this->update($arr, $where);
+    			unset($datagroup);
+    		}
     		$is_schedule = 0;
     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==4 OR $data["schedule_opt"]==5 OR $data["schedule_opt"]==6){//
     			$is_schedule=1;
@@ -204,17 +281,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'create_date'=>date("Y-m-d"),
     				'user_id'=>$this->getUserId()
     				);
-    		
+    		$this->_name='ln_sale';
     		$id = $this->insert($arr);//add group loan
     		$data['sale_id']=$id;
-    		
-    		$this->_name="ln_properties";
-    		$where = "id =".$data["land_code"];
-    		$arr = array(
-    				"is_lock"=>1
-    				);
-    		$this->update($arr, $where);
-    		unset($datagroup);
     		
     		$total_day=0;
     		$old_remain_principal = 0;
@@ -228,7 +297,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$next_payment = $data['first_payment'];
     		$from_date =  $data['release_date'];
     		$curr_type = 2;//$data['currency_type'];
-    		$term_types = 12;
+    		//$term_types = 12;
+    		
+    		$key = new Application_Model_DbTable_DbKeycode();
+    		$key = $key->getKeyCodeMiniInv(TRUE);
+    		$term_types=$key['install_by'];
+    		
     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6 OR $data["schedule_opt"]==5){
     			$term_types=1;
     		}
@@ -343,24 +417,21 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   	$ids = explode(',', $data['identity']);
 	    			   	$key = 1;
 	    			   	foreach ($ids as $i){
-	    			   		$old_pri_permonth = $data['total_payment'.$i];
+	    			   		
 	    			   		if($key==1){
 	    			   			$old_remain_principal = $data['sold_price'];
-	    			   		
 	    			   		}else{
 	    			   			$old_remain_principal = $old_remain_principal-$old_pri_permonth;
 	    			   		}
+	    			   		$old_pri_permonth = $data['total_payment'.$i];
 	    			   		if(end($ids)==$i){
 	    			   			$paid_receivehouse = $data['paid_receivehouse'];
 	    			   		}
-	    			   				
 	    			   			
 	    			   		$old_interest_paymonth = ($data['interest_rate']==0)?0:$this->round_up_currency(1,($old_remain_principal*$data['interest_rate']/12/100));
-	    			   			
 	    			   		$cum_interest = $cum_interest+$old_interest_paymonth;
 	    			   		$amount_day = $dbtable->CountDayByDate($from_date,$data['date_payment'.$i]);
 	    			   		
-	    			   	
 	    			   		$this->_name="ln_saleschedule";
 	    			   		$datapayment = array(
 	    			   				'branch_id'=>$data['branch_id'],
@@ -736,7 +807,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$next_payment = $data['first_payment'];
     		$from_date =  $data['release_date'];
     		$curr_type = 2;//$data['currency_type'];
-    		$term_types = 12;
+//     		$term_types = 12;
+    		$key = new Application_Model_DbTable_DbKeycode();
+    		$key = $key->getKeyCodeMiniInv(TRUE);
+    		$term_types=$key['install_by'];
     		
     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6 OR $data["schedule_opt"]==5){
     			$term_types=1;
@@ -969,7 +1043,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'other_fee'=>$data['other_fee'],
     				//'paid_amount'=>$data['deposit'],
     				'balance'=>$data['balance'],
-    				'buy_date'=>$data['date_buy'],
+    			  //'buy_date'=>$data['date_buy'],
     				'end_line'=>$data['date_line'],
     				'interest_rate'=>$data['interest_rate'],
     				'total_duration'=>$data['period'],
@@ -997,7 +1071,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$next_payment = $data['first_payment'];
     		$from_date =  $data['release_date'];
     		$curr_type = 2;//$data['currency_type'];
-    		$term_types = 12;
+    		//$term_types = 12;
+    		$key = new Application_Model_DbTable_DbKeycode();
+    		//$key = $key->getKeyCodeMiniInv(TRUE);
+    		//$term_types=$key['install_by'];
+    		$term_types=12;
     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6){
     			$term_types=1;
     		}
@@ -1185,12 +1263,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$db->commit();
     		return $rows;
     	}catch (Exception $e){
+    		echo $e->getMessage();exit();
     		$db->rollBack();
     		Application_Form_FrmMessage::message("INSERT_FAIL");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
-    
-    
     }
 function getLoanPaymentByLoanNumber($data){
     	$db = $this->getAdapter();
@@ -1386,7 +1463,11 @@ function getLoanLevelByClient($client_id,$type){
   		$next_payment = $data['first_payment'];
   		$from_date =  $data['release_date'];
   		$curr_type = 2;//$data['currency_type'];
-  		$term_types = 12;
+  		//$term_types = 12;
+  		$key = new Application_Model_DbTable_DbKeycode();
+  		$key = $key->getKeyCodeMiniInv(TRUE);
+  		$term_types=$key['install_by'];
+  		
   		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6){
   			$term_types=1;
   		}

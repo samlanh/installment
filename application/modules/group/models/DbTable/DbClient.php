@@ -10,8 +10,6 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
     	 
     }
 	public function addClient($_data){
-		
-		
 		try{
 			if(!empty($_data['id'])){
 				$oldClient_Code = $this->getClientById($_data['id']);
@@ -62,7 +60,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				'client_d_type'      => $_data['client_d_type'],
 				'user_id'	  => $this->getUserId(),
 		    	'hname_kh'      => $_data['hname_kh'],
-		    	//'bname_kh'      => $_data['bname_kh'],
+		    	'dob_buywith'      => $_data['dob_buywith'],
 		    	'p_nationality'      => $_data['p_nationality'],
 		    	'ghouse'      => $_data['ghouse'],
 		    	'ksex'      => $_data['ksex'],

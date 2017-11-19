@@ -66,7 +66,7 @@ Class Group_Form_FrmPropertiestype extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				));
-		$options= array(1=>"ប្រើប្រាស់",0=>"មិនប្រើប្រាស់");
+		$options= array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DACTIVE"));
 		$status->setMultiOptions($options);
 		
 		$property_type_nameen=new Zend_Dojo_Form_Element_ValidationTextBox('type_nameen');

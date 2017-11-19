@@ -42,9 +42,22 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
 #header {
   display: table-header-group;
   page-break-inside:avoid; page-break-after:auto;
-}					
+}
+.hide{visibility: hidden;}
+@media print {
+  div.divFooter {
+    position: fixed;
+    top: 0;
+  	width: 100%;
+  	height: 100px;
+  	bottom:0px;
+	margin:0;
+  }
+.hide{visibility: visible; height: 110px;}
+}				
  </style>
-        	<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
+        	<div class="divFooter">
+	        	<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
         		<tr>
                     <td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
                 	<td width="60%" valign="top">
@@ -52,14 +65,14 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
                 			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_TITLE");?></li>
                 			<li style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("TABLE_PROPERTY");?></li>
                 			<li style="text-align:center; font-size:13px;"><?php echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));?></li>
-                		</ul>
-                	</td>
-                    <td width="20%"></td>
-            	</tr> 
-            </table>
+	                		</ul>
+	                	</td>
+	                    <td width="20%"></td>
+	            	</tr> 
+	            </table>
+            </div>
             <table id="exportExcel" width="100%" style="font-family:'Khmer OS Battambang';margin:0; padding:0; border:1px solid #000; border-collapse: collapse;" >
-				    
-				       <?php
+			<?php
 					    $all_totalland = 0;$all_totalhouse =0;$all_total=0;$all_propertype=0;
 				       $total_land_pric=0; $total_house_price = 0; $property_type=0; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){?>
 				      	<?php  
@@ -87,26 +100,28 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
 						    <td colspan="2" style="border:1px solid #000;">&nbsp;&nbsp;<?php echo number_format($total,2);?>&nbsp;</td>
 						    <td colspan="4" style="border:1px solid #fff;"></td>
 						</tr>
-						<tr height="10px"><td colspan="13" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 						</tr>
 							<?php $i=0; $total_land_pric=0;$total_house_price=0;$total_house_price=0;$total=0;}?>
 					     <thead>
-					     	<tr bgcolor="#c1d0f3" class="style hover" align="center" style="floafont-weight:bold; line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px;border:1px solid #000;white-space: nowrap; " >
-									<td style="border:1px solid #000;"><?php echo $tr->translate("NUM");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("BRANCH_NAME");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("STREET");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("PROPERTY_TYPE");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("SIZE");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("WIDTH");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("HEIGHT");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("LAND_PRICE");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("HOUSE_PRICE");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("PRICE");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("NOTE");?></td>
-									<td style="border:1px solid #000;"><?php echo $tr->translate("STATUS");?></td>
-								</tr>
-								</thead>
+					     	<tr class="hide" >
+			                	<td colspan="13" style="border-top:1px solid #fff;border-right:1px solid #fff;border-left:1px solid #fff;border-botom:1px solid #000;"></td>
+			             	</tr>
+					     	<tr bgcolor="#c1d0f3" class="style hover" align="center" style="font-weight:bold; line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px;border:1px solid #000;white-space: nowrap; " >
+								<td style="border:1px solid #000;"><?php echo $tr->translate("NUM");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("BRANCH_NAME");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("STREET");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("PROPERTY_TYPE");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("SIZE");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("WIDTH");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("HEIGHT");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("LAND_PRICE");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("HOUSE_PRICE");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("PRICE");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("NOTE");?></td>
+								<td style="border:1px solid #000;"><?php echo $tr->translate("STATUS");?></td>
+							</tr>
+						</thead>
 						<?php }  $i++;?>
 						   <tr class="hover" style="font-size: 12px;border:1px solid #000; white-space: nowrap;" align="left">
 						     <td align="center" style="border:1px solid #000;">&nbsp;<?php echo $i; ?></td>

@@ -69,7 +69,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_income.client_id LIMIT 1) AS client_name,
 		title, invoice,
 		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
-		total_amount,description,date,status FROM ln_income ";
+		total_amount,description,date,status,'បោះពុម្ភ' FROM ln_income ";
 		
 		if (!empty($search['adv_search'])){
 				$s_where = array();

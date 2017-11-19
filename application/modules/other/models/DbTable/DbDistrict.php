@@ -15,7 +15,7 @@ class Other_Model_DbTable_DbDistrict extends Zend_Db_Table_Abstract
 				'pro_id'	  => $_data['province_name'],
 				'district_name'	  => $_data['district_name'],
 				'district_namekh'	  => $_data['district_namekh'],
-				'displayby'	  => $_data['display'],
+				//'displayby'	  => $_data['display'],
 				'status'	  => $_data['status'],
 				'modify_date' => Zend_Date::now(),
 				'user_id'	  => $this->getUserId()
@@ -52,7 +52,7 @@ class Other_Model_DbTable_DbDistrict extends Zend_Db_Table_Abstract
 		$sql = "SELECT
 					dis_id,code,
 					district_namekh,district_name,
-					(SELECT name_en FROM ln_view WHERE TYPE=4 AND key_code = displayby LIMIT 1) AS displayby,
+					
 				    (SELECT province_en_name FROM ln_province WHERE province_id=pro_id limit 1) As province_name
 					,modify_date,
 					(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = status LIMIT 1) AS status_name,

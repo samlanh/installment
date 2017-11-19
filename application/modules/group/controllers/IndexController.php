@@ -12,30 +12,29 @@ class Group_indexController extends Zend_Controller_Action {
 			if($this->getRequest()->isPost()){
 				$formdata=$this->getRequest()->getPost();
 				$search = array(
-						'branch_id'=>$formdata['branch_id'],
-						'adv_search' => $formdata['adv_search'],
-						'province_id'=>$formdata['province'],
-						'comm_id'=>$formdata['commune'],
-						'district_id'=>$formdata['district'],
-						'village'=>$formdata['village'],
-						'status'=>$formdata['status'],
-						'start_date'=> $formdata['start_date'],
-						'end_date'=>$formdata['end_date'],
-						'customer_id'=>$formdata['customer_id']
-						);
+					'branch_id'=>$formdata['branch_id'],
+					'adv_search' => $formdata['adv_search'],
+					'province_id'=>$formdata['province'],
+					'comm_id'=>$formdata['commune'],
+					'district_id'=>$formdata['district'],
+					'village'=>$formdata['village'],
+					'status'=>$formdata['status'],
+					'start_date'=> $formdata['start_date'],
+					'end_date'=>$formdata['end_date'],
+					'customer_id'=>$formdata['customer_id']);
 			}
 			else{
 				$search = array(
-						'branch_id'=>-1,
-						'adv_search' => '',
-						'status' => -1,
-						'province_id'=>0,
-						'district_id'=>'',
-						'comm_id'=>'',
-						'village'=>'',
-						'start_date'=> date('Y-m-d'),
-						'customer_id'=>-1,
-						'end_date'=>date('Y-m-d'));
+					'branch_id'=>-1,
+					'adv_search' => '',
+					'status' => -1,
+					'province_id'=>0,
+					'district_id'=>'',
+					'comm_id'=>'',
+					'village'=>'',
+					'start_date'=> date('Y-m-d'),
+					'customer_id'=>-1,
+					'end_date'=>date('Y-m-d'));
 			}
 			
 			$rs_rows= $db->getAllClients($search);
@@ -45,11 +44,9 @@ class Group_indexController extends Zend_Controller_Action {
 			$collumns = array("BRANCH_NAME","CUSTOMER_CODE","CUSTOMER_NAME","SEX","PHONE","HOUSE","STREET","VILLAGE",
 					"DATE","BY_USER","STATUS","VIEW");
 			$link=array(
-					'module'=>'group','controller'=>'index','action'=>'edit',
-			);
+					'module'=>'group','controller'=>'index','action'=>'edit',);
 			$link1=array(
-					'module'=>'group','controller'=>'index','action'=>'view',
-			);
+					'module'=>'group','controller'=>'index','action'=>'view',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('View'=>$link1,'branch_name'=>$link1,'client_number'=>$link,'name_kh'=>$link,'name_en'=>$link1));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
@@ -64,13 +61,7 @@ class Group_indexController extends Zend_Controller_Action {
 		$fm = new Group_Form_FrmClient();
 		$frm = $fm->FrmAddClient();
 		Application_Model_Decorator::removeAllDecorator($frm);
-		$this->view->frm_client = $frm;
-		
-		//$db= new Application_Model_DbTable_DbGlobal();
-// 		$this->view->district = $db->getAllDistricts();
-// 		$this->view->commune_name = $db->getCommune();
-// 		$this->view->village_name = $db->getVillage();
-		
+		$this->view->frm_client = $frm;		
 		$this->view->result=$search;	
 	}
 	public function addAction(){
@@ -81,11 +72,11 @@ class Group_indexController extends Zend_Controller_Action {
 				try{
 				 if(isset($data['save_new'])){
 					$id= $db->addClient($data);
-					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+					Application_Form_FrmMessage::message("INSERT_SUCESS");
 				}
 				else if (isset($data['save_close'])){
 					$id= $db->addClient($data);
-					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+					Application_Form_FrmMessage::message("INSERT_SUCESS");
 					Application_Form_FrmMessage::redirectUrl("/group/index");
 				}
 			}catch (Exception $e){

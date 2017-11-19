@@ -29,7 +29,7 @@ class Other_ProvinceController extends Zend_Controller_Action {
 			$rs_rows= $db->getAllProvince($search);
 		
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROVINCE_CODE","EN_PROVINCE","KH_PROVINCE","DISPLAY_BY","MODIFY_DATE","STATUS","BY_USER");
+			$collumns = array("PROVINCE_CODE","EN_PROVINCE","KH_PROVINCE","MODIFY_DATE","STATUS","BY_USER");
 			$link=array(
 					'module'=>'other','controller'=>'province','action'=>'edit',
 			);

@@ -135,5 +135,14 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	function previewreschedulAction(){//use only  new schedule only
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			$_dbmodel = new Loan_Model_DbTable_DbNewSchedule();
+			$rows_return=$_dbmodel->addScheduleTestPayment($_data);
+			print_r(Zend_Json::encode($rows_return));
+			exit();
+		}
+	}
 }
 
