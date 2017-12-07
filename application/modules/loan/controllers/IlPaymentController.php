@@ -42,7 +42,7 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 			$result = array();
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","HOUSE_NO","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
-					"PAY_DATE","DATE","STATUS",'បោះពុម្ភ');
+					"PAY_DATE","DATE","STATUS",'PRINT');
 			$link=array('module'=>'loan','controller'=>'ilpayment','action'=>'edit',);
 			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);
 			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('branch_name'=>$link,'land_id'=>$link,'team_group'=>$link,
@@ -80,7 +80,6 @@ class Loan_IlPaymentController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		
 		$id = $this->getRequest()->getParam('id');
 		if(!empty($id)){
 			$dbp = new Loan_Model_DbTable_DbLandpayment();

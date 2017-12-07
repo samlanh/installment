@@ -20,9 +20,11 @@ class Loan_IncomeController extends Zend_Controller_Action
     			$search = array(
     					"adv_search"=>'',
     					"branch_id"=>-1,
-    					"status"=>-1,
+//     					"status"=>-1,
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
+    					'land_id'=>-1,
+    					'client_name'=>-1,
     			);
     		}
     		$this->view->adv_search = $search;
@@ -30,7 +32,7 @@ class Loan_IncomeController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","INCOME_TITLE","RECEIPT_NO","CATEGORY","TOTAL_INCOME","NOTE","DATE","STATUS",'PRINT');
+    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","INCOME_TITLE","RECEIPT_NO","CATEGORY","TOTAL_INCOME","NOTE","DATE","STATUS",'PRINT');
     		$link=array('module'=>'loan','controller'=>'income','action'=>'edit');
     		$link1=array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome');
     		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('បោះពុម្ភ'=>$link1,'branch_name'=>$link,'client_name'=>$link,'title'=>$link,'invoice'=>$link));
@@ -47,6 +49,7 @@ class Loan_IncomeController extends Zend_Controller_Action
     	$frm = $frm->AdvanceSearch();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
+    	$this->view->rssearch = $search;
     }
     public function addAction()
     {

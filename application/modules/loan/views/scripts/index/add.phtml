@@ -122,10 +122,7 @@
 						<tr height="40px">
 							<td style="font-weight: bold;"><?php echo $tr->translate("PROPERY_CODE")?></td>
 							<td>
-								<select onchange="resetSale();" id="typesale" name="typesale" dojoType="dijit.form.FilteringSelect" class="fullside50">
-									<option value="1">លក់តែមួយ</option>
-									<option value="2">លក់ម្តងច្រើន</option>
-								</select>
+								<?php echo $frm->getElement('typesale');?>
 								<input id="land_code" /><input dojoType="dijit.form.TextBox"  id="propertype" name="propertype" type="hidden">
 							</td>
 						</tr>
@@ -162,19 +159,19 @@
 	    </td>
 		<td valign="top">
 			<fieldset>
-				<legend><strong style="color:#284db7;"><?php echo $tr->translate("ព៌ត័មាន ការរំលស់របស់អតិថិជន")?></strong></legend>
+				<legend><strong style="color:#284db7;"><?php echo $tr->translate("INSTALLMENT_INFO")?></strong></legend>
 					<table  width="100%" class="padding7">
 						<tr>
 							<td><?php echo $tr->translate("PAYMENT_TYPE")?></td>
 							<td><?php echo $frm->getElement('schedule_opt');?>
 								<select class="fullside50" dojoType="dijit.form.FilteringSelect" name="install_type" id="install_type">
-									<option value="1">រំលស់ថេរ</option>
-									<option value="2">រំលស់ថយ</option>
+									<option value="1"><?php echo $tr->translate("FIXED_PAYMENT");?></option>
+									<option value="2"><?php echo $tr->translate("DECLINE");?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("ប្រាក់រំលស់")?></td>
+							<td><?php echo $tr->translate("TOTAL_FORINTALLMENT")?></td>
 							<td><input readonly type="text" class="fullside" dojoType="dijit.form.TextBox" name="for_installamount" id="for_installamount"  value="" >
 								<input type="hidden" class="fullside" dojoType="dijit.form.TextBox" name="total_installamount" id="total_installamount"  value="" ></td>
 						</tr>
@@ -183,7 +180,7 @@
 							<td><?php echo $frm->getElement('period');?></td>
 						</tr>
 						<tr>
-							<td  style="font-weight:bold;white-space: nowrap;">ប្រាក់សម្រាប់រំលស់</td>
+							<td  style="font-weight:bold;white-space: nowrap;"><?php echo $tr->translate("TOTAL_FORINTALLMENT");?></td>
 							<td ><input style="color:red" readonly="readonly" type="text" class="fullside" dojoType="dijit.form.NumberTextBox" name="remain_balance" id="remain_balance"  value="" ></td>
 						</tr>					
 						<tr>		
@@ -218,7 +215,7 @@
 		<td colspan="2" style="background: #fff;border: 2px solid #92b0ea;" valign="top">
 			<table width="100%">
 				<tr style="background: #edf7f8;">
-					<td colspan="2" style="border-bottom:1px solid #aac4e6;"><strong style="color:#284db7;"><?php echo $tr->translate("តារាងរំលស់")?></strong></td>
+					<td colspan="2" style="border-bottom:1px solid #aac4e6;"><strong style="color:#284db7;"><?php echo $tr->translate("SCHEDULE_INSTALLMENT")?></strong></td>
 				</tr>
 				<tr >
 					<td colspan="2">
@@ -260,8 +257,8 @@
 	<tr>
 		<td align="center" colspan="3">
 			<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
-			<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconDelete"/>
-			<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+			<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconDelete"/>
+			<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
 			<input type="button" onclick="addPreviewLoan();displayNone();" label="<?php echo $tr->translate("PREVIEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 		</td>
 	</tr>	
@@ -1620,7 +1617,7 @@ function printSave(new_stu_id,new_receipt_no){
 	//alert("new_receipt_no"+new_receipt_no);
 	//alert("new_stu_id"+new_stu_id);
 	if(schedule_opt==1 && new_receipt_no!=''){
-		var r = confirm("សូមត្រួតពិនិត្យ ថ្ងៃមកធ្វើកិច្ចសន្យា អោយបានត្រឹមត្រូវ !\nតើលោកអ្នកពិតជាចង់រក្សាទុកទិន្នន័យនេះមែនឫទេ?");
+		var r = confirm("<?php echo $tr->translate("ALERT_DEPOSIT_WARNING");?>"+"\n"+"<?php echo $tr->translate("ALERT_BEFORE_SAVE");?>");
 		if (r == true) {
 			
 		} else {

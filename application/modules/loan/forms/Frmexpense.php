@@ -27,7 +27,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside'
 		));
-		$options= array(1=>"សាច់ប្រាក់",2=>"សែក");
+		$options= array(1=>$this->tr->translate("CASH"),2=>$this->tr->translate("CHEQUE"));
 		$payment_type->setMultiOptions($options);
 		
 		$_Date = new Zend_Dojo_Form_Element_DateTextBox('Date');
@@ -57,7 +57,9 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'class'=>'fullside',
 			
 		));
-		$options= array(1=>"ប្រើប្រាស់",2=>"មិនប្រើប្រាស់");
+		$options= array(
+				1=>$this->tr->translate("ACTIVE"),
+				0=>$this->tr->translate("DACTIVE"));
 		$_stutas->setMultiOptions($options);
 		
 		$_Description = new Zend_Dojo_Form_Element_Textarea('Description');
@@ -113,6 +115,16 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		$opt1= $db->getVewOptoinTypeByType(13,1,null,1);
 		$category_id_expense->setMultiOptions($opt1);
 		
+		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('is_beginning');
+		$_status->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside'));
+		$_status_opt = array(
+				0=>$this->tr->translate("INCOME_TYPE"),
+				1=>$this->tr->translate("BEGENING_TYPE"));
+		$_status->setMultiOptions($_status_opt);
+		
 		if($data!=null){
 			$_currency_type->setValue($data['category_id']);
 			$category_id_expense->setValue($data['category_id']);
@@ -126,8 +138,13 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 			$id->setValue($data['id']);
 			$_cheque->setValue($data['cheque']);
 			$payment_type->setValue($data['payment_id']);
+			$request=Zend_Controller_Front::getInstance()->getRequest();
+			if($request->getControllerName()=='income'){
+				$_status->setValue($data['is_beginning']);
+			}
+			
 		}
-		$this->addElements(array($payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
+		$this->addElements(array($_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
 				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,));
 		return $this;

@@ -30,8 +30,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","HOUSE_NO","STREET","ប្រភេទបង់","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","TOTAL_SOLD","PAID","BALANCE","DATE_BUY",
-				"STATUS","បង់ប្រាក់","ចេញតារាង","កិច្ចសន្យា");
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","HOUSE_NO","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","TOTAL_SOLD","PAID","BALANCE","DATE_BUY",
+				"STATUS","RECEIVED_MONEY","ISSUE_SCHEDULE","AGREEMENT");
 			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
 			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);
 			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);

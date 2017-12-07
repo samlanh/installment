@@ -12,8 +12,11 @@ dojo.require("dijit.form.DateTextBox");
 		<tr>  
 	        <td><?php echo $frm->getElement("adv_search");?></td>
 	        <td><?php echo $frm->getElement('branch_id');?></td>
+	        <td><?php echo $frm->getElement("client_name");?></td>
+        	<td><input id="land_id" /></td>
+        </tr>
+		<tr>
 	        <td><?php echo $frm->getElement('category_id');?></td>
-	   		<td><?php echo $frm->getElement('currency_type');?></td>
 	   		<td><?php echo $frm->getElement('start_date');?></td>
 	   		<td><?php echo $frm->getElement('end_date');?></td>
 	   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
@@ -95,14 +98,63 @@ dojo.require("dijit.form.DateTextBox");
     	</td>
     </tr>
 </table>
-		<br />
-		   <table align="center" width="100%">
-				   <tr style="font-size: 14px;">
-				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
-				        <th></th>
-				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
-				        <th></th>
-				        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
-				   </tr>
-			</table>
+	<br />
+   <table align="center" width="100%">
+		   <tr style="font-size: 14px;">
+		        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+		        <th></th>
+		        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+		        <th></th>
+		        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+		   </tr>
+	</table>
 </div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+ <script>
+ dojo.require("dojo.data.ItemFileWriteStore"); 
+ var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+ require(["dojo/ready"], function(ready){
+ 	ready(function(){
+ 		 getAllPropertyBranch();
+ 	});
+ 	new dijit.form.FilteringSelect({
+ 		store: property_store,
+ 		required: false,
+ 		autoComplete: false,
+ 		queryExpr: "*${0}*",
+ 		name: "land_id",
+ 		id: "land_id",
+ 		value:-1,
+ 		searchAttr: "name",
+ 		class: 'fullside fullside50',
+ 		onChange: function() {
+ 			land_id=-1;
+ 	}
+ 		}, "land_id");
+ });
+ land_id = '<?php echo $this->rssearch['land_id']?>';
+ var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+ function getAllPropertyBranch(branch_id){
+ 	branch_id = dijit.byId('branch_id').get('value');
+ 	if(branch_id<0){
+ 		return false;
+ 	}
+ 	dojo.xhrPost({
+ 		url:url_getland,	
+ 		content:{ 
+ 		    'branch_id':branch_id,
+ 		    'action':1
+ 		},		    
+ 		handleAs:"json",
+ 		load: function(data) {
+ 			property_store  = getDataStorefromJSON('id','name', data);		
+ 		    dijit.byId('land_id').set('store', property_store);
+ 		    if(land_id>0){
+ 		    	dijit.byId('land_id').attr('value',land_id);
+ 			 }
+ 		},
+ 		error: function(err) {
+ 		}
+ 	});
+ } 
+ </script>

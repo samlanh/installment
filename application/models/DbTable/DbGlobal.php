@@ -641,7 +641,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getVewOptoinTypeByType($type=null,$option = null,$limit =null,$first_option =null){
   	$db = $this->getAdapter();
-  	//$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+  	$tr= Application_Form_FrmLanguages::getCurrentlanguage();
   	$string = "name_kh";
   	if($this->currentlang()==2){
   		$string = "name_en";
@@ -658,7 +658,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	if($option!=null){
   		$options=array();
   		if($first_option==null){//if don't want to get first select
-  			$options=array(''=>"-----ជ្រើសរើស-----",-1=>"Add New",);
+  			$options=array(''=>$tr->translate("SELCT_TYPE"),-1=>"Add New",);
   		}
   		if(!empty($rows))foreach($rows AS $row){
   			$options[$row['key_code']]=$row['name_en'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
@@ -670,6 +670,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getAllLandInfo($branch_id=null,$option=null,$action=null){
   	   $db = $this->getAdapter();
+  	   $tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	   $sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE status!=0 AND `land_address`!='' ";//just concate
   	   $request=Zend_Controller_Front::getInstance()->getRequest();
   	   if($action==null){
@@ -681,7 +682,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	   $sql.=" ORDER BY id DESC";
   	    $rows = $db->fetchAll($sql);
   	    if($option!=null){ return $rows;}
-  		$options=array(''=>"---ជ្រើសរើសដី/ផ្ទះ---");
+  		$options=array(''=>$tr->translate("SELECT_PROPERTY"));
   		if(!empty($rows))foreach($rows AS $row){
   			$options[$row['id']]=$row['name'];
   		}
@@ -1323,5 +1324,6 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   		$this->update($arr, $where);
   	}
   }
+ 
 }
 ?>

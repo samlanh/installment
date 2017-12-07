@@ -6,6 +6,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
 	public function AdvanceSearch ($data=null){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$db = new Loan_Model_DbTable_DbGroupPayment();
 		
@@ -25,7 +26,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		
 		$payment_type = new Zend_Dojo_Form_Element_FilteringSelect("paymnet_type");
 		$payment_type->setAttribs(array('class'=>'fullside','dojoType'=>'dijit.form.FilteringSelect'));
-		$options= array(''=>'ប្រភេទបង់ប្រាក់',1=>'បង់ធម្មតា',3=>'រំលោះដើម',4=>'បង់ផ្តាច់');
+		$options= array(''=>$tr->translate("REPAYMENT_TYPE"),1=>$tr->translate("NORMAL_PAID"),3=>$tr->translate("PRINCIPAL_PAID"),4=>$tr->translate("PAYOFF_PAID"));
 		$payment_type->setMultiOptions($options);
 		$payment_type->setValue($request->getParam("paymnet_type"));
 		
@@ -35,7 +36,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 				,'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")));
 		
 		$client_name = new Zend_Dojo_Form_Element_FilteringSelect("client_name");
-		$opt_client = array(''=>'ជ្រើសរើស ឈ្មោះអតិថិជន');
+		$opt_client = array(''=>$this->tr->translate("CHOOSE_CUSTOEMR"));
 		$rows = $db->getIndividuleClient();
 		if(!empty($rows))foreach($rows AS $row){
 			$opt_client[$row['id']]=$row['name'];
@@ -83,8 +84,12 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		
 		$status = new Zend_Dojo_Form_Element_FilteringSelect("status");
 		$status->setAttribs(array('class'=>'fullside','dojoType'=>'dijit.form.FilteringSelect','placeholder'=>$this->tr->translate("ស្ថានការ")));
-		$opt_status = array(''=>'ជ្រើសរើស ស្ថានការ','1'=>'ដំណើការ','2'=>'មិនដំណើការ');
-		$status->setMultiOptions($opt_status);
+		$_status_opt = array(
+				-1=>$this->tr->translate("ALL"),
+				1=>$this->tr->translate("ACTIVE"),
+				0=>$this->tr->translate("DACTIVE"));
+		$status->setMultiOptions($_status_opt);
+		$status->setValue($request->getParam("status"));
 		
 		$submit = new Zend_Dojo_Form_Element_SubmitButton("btn_submit");
 		$submit->setAttribs(array('dojoType'=>'dijit.form.Button',

@@ -383,7 +383,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				'OnChange'=>'payOption();'
 		));
 		//$option_status = array(1=>'បង់ធម្មតា',2=>'បង់មុន',3=>'បង់រំលោះប្រាក់ដើម',4=>'បង់ផ្តាច់');
-		$option_status = array(1=>'បង់ធម្មតា',3=>'បង់រំលោះប្រាក់ដើម',4=>'បង់ផ្តាច់');
+		$option_status = array(1=>$this->tr->translate("NORMAL_PAID"),3=>$this->tr->translate("PRINCIPAL_PAID"),4=>$this->tr->translate("PAYOFF_PAID"));
 		$option_pay->setMultiOptions($option_status);
 		
 		$amount_payment_term = new Zend_Form_Element_Hidden("amount_payment_term");

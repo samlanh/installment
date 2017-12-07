@@ -249,6 +249,12 @@ function getAllBranch($search=null){
     			$s_where[] = " invoice LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
+    		if($search['client_name']>0){
+    			$where.= " AND ln_income.client_id = ".$search['client_name'];
+    		}
+    		if($search['land_id']>0){
+    			$where.= " AND ln_income.house_id = ".$search['land_id'];
+    		}
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
     		}

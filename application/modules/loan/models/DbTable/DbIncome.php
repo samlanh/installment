@@ -67,6 +67,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		$sql=" SELECT id,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_income.client_id LIMIT 1) AS client_name,
+		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) as house_no,
 		title, invoice,
 		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
 		total_amount,description,date,status,'បោះពុម្ភ' FROM ln_income ";
@@ -80,9 +81,15 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 				$s_where[] = " invoice LIKE '%{$s_search}%'";
 				$where .=' AND ('.implode(' OR ',$s_where).')';
 			}
-// 			if($search['status']>-1){
-// 				$where.= " AND status = ".$search['status'];
-// 			}
+			if($search['client_name']>0){
+				$where.= " AND ln_income.client_id = ".$search['client_name'];
+			}
+			if($search['land_id']>0){
+				$where.= " AND ln_income.house_id = ".$search['land_id'];
+			}
+			//if($search['status']>-1){
+				//$where.= " AND status = ".$search['status'];
+			//}
 			if($search['branch_id']>-0){
 				$where.= " AND branch_id = ".$search['branch_id'];
 			}

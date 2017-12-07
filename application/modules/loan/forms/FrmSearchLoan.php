@@ -86,7 +86,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				'onchange'=>'checkScheduleOption();'
 		));
 		$rows = $db->getVewOptoinTypeByType(25,null,null,1);
-		$options = array(-1=>"ជ្រើសរើសប្រភេទបង់ប្រាក់");
+		$options = array(-1=>$this->tr->translate("REPAYMENT_TYPE"));
 	    if(!empty($rows))foreach($rows AS $row){
   			$options[$row['key_code']]=$row['name_en'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
   		}
@@ -136,7 +136,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		$_dateline->setValue($_date);
 		
 		$client_name = new Zend_Dojo_Form_Element_FilteringSelect("client_name");
-		$opt_client = array(''=>'ជ្រើសរើស ឈ្មោះអតិថិជន');
+		$opt_client = array(''=>$this->tr->translate("CHOOSE_CUSTOEMR"));
 		$rows = $db->getAllClient();
 		if(!empty($rows))foreach($rows AS $row){
 			$opt_client[$row['id']]=$row['name'];
@@ -205,7 +205,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 		));
-		$options= array(-1=>"ជ្រើសរើសចំណាយជា",1=>"សាច់ប្រាក់",2=>"សែក");
+		$options= array(-1=>$this->tr->translate("SELCT_TYPE"),1=>$this->tr->translate("CASH"),2=>$this->tr->translate("CHEQUE"));
 		$payment_type->setMultiOptions($options);
 		$payment_type->setValue($request->getParam("payment_type"));
 		

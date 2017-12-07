@@ -189,7 +189,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		
     				$width = $width+$newpro['width'];
     		
-    				$height = $height+$newpro['height'];
+    				$height =$newpro['height'];
     		
     				$price = $price + $newpro['price'];
     				$land_price = $land_price+$newpro['land_price'];
@@ -1073,9 +1073,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$curr_type = 2;//$data['currency_type'];
     		//$term_types = 12;
     		$key = new Application_Model_DbTable_DbKeycode();
-    		//$key = $key->getKeyCodeMiniInv(TRUE);
-    		//$term_types=$key['install_by'];
-    		$term_types=12;
+    		$key = $key->getKeyCodeMiniInv(TRUE);
+    		$term_types=$key['install_by'];
+    		//$term_types=12;
     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6){
     			$term_types=1;
     		}

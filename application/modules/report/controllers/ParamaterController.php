@@ -195,7 +195,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	//$this->view->frm_property=$row;
   }
   function rptIncomeAction(){ // by Vandy
-  	 
   	if($this->getRequest()->isPost()){
   		$search=$this->getRequest()->getPost();
   	}
@@ -217,6 +216,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
+  	$this->view->rssearch = $search;
   }
   function rptExpenseAction(){ // by Vandy
   

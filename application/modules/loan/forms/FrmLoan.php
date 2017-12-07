@@ -134,7 +134,7 @@ public function init()
 		$options = $db->getAllCOName(1);
 		$staff_id->setMultiOptions($options);
 		
-		$receivedopt = array(0=>"បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ",1=>"យកតាមកាលបរិច្ឆេទបង់");
+		$receivedopt = array(0=>$this->tr->translate("RECEIVED_PROPERTY"),1=>$this->tr->translate("BY_SCHEDULE_DATE"));
 		$paid_receivehouse = new Zend_Dojo_Form_Element_FilteringSelect('paid_receivehouse');
 		$paid_receivehouse->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -438,6 +438,15 @@ public function init()
 				
 		));
 		
+		$typesale = new Zend_Dojo_Form_Element_FilteringSelect('typesale');
+		$typesale->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside50',
+				'onchange'=>'resetSale();'
+		));
+		$options= array(1=>$this->tr->translate("NORMAL_SALE"),2=>$this->tr->translate("MULTY_SALE"));
+		$typesale->setMultiOptions($options);
+		
 		$_instalment_date = new Zend_Form_Element_Hidden("instalment_date");
 		$_release_date = new Zend_Form_Element_Hidden("old_release_date");
 		$_interest_rate = new Zend_Form_Element_Hidden("old_rate");
@@ -470,7 +479,7 @@ public function init()
 			
 			
 		}
-		$this->addElements(array($paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

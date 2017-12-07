@@ -268,6 +268,7 @@ public function addILPayment($data){
     				$interest_amount = $interest;
     				$new_printciple = $new_interest - $principle;
     				if($new_printciple>=0){
+    					
     					$principle_amount = $principle;
     				}else{
     					$principle_amount = abs($new_interest);
@@ -391,7 +392,7 @@ public function addILPayment($data){
 		    				if(!empty($rows)){
 		    					$paid_amount = $data['amount_receive']-$data['extrapayment']-$data['penalize_amount'];
 		    					$remain_principal=0;
-		    					$statuscomplete=0;
+		    					
 		    					$principal_paid = 0;
 		    					$total_interest = 0;
 		    					$total_principal=0;
@@ -402,6 +403,7 @@ public function addILPayment($data){
 		    					$total_interestafter=0;
 		    					
 		    					foreach ($rows as $row){
+		    						$statuscomplete=0;
 		    						$old_interest=$paid_amount;
 		    						$paid_amountbefore = $paid_amount;
 
@@ -450,10 +452,8 @@ public function addILPayment($data){
 		    						if($paid_amount<=0){
 		    							break;
 		    						}
-// 		    						print_r($arra);exit();
+// 		    						
 		    					}//end foreach 
-		    				}else{
-		    					
 		    				}
 	    				}else{ //ករណីបង់មិនគ្រប់
 			   					$new_sub_interest_amount = $data["interest_".$i];
@@ -477,6 +477,7 @@ public function addILPayment($data){
 				   								$new_sub_interest_amount = 0;
 				   								$principle_after = $principle_after - $new_amount_after_interest;
 				   								$begining_balance_after = $data['total_priciple_'.$i] - $new_amount_after_interest;
+				   								$statuscomplete=1;
 				   								
 				   							}else{
 				   								$new_sub_interest_amount = abs($new_amount_after_interest);
@@ -1826,9 +1827,9 @@ function getLoanPaymentByLoanNumberEdit($data){
 	   		ln_sale as s ,ln_saleschedule as scd 
 	   		WHERE 
 	   	scd.status=1 
-	   	s.id=scd.sale_id 
+	   	AND s.id=scd.sale_id 
 	   	AND sale_id = $loan_number 
-	   	ORDER BY no_installment ASC";
+	   	ORDER BY no_installment ASC ";
    		return $db->fetchAll($sql);
    	}
 
