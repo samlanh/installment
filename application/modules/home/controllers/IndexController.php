@@ -1,5 +1,5 @@
 <?php
-class Home_indexController extends Zend_Controller_Action {
+class Home_IndexController extends Zend_Controller_Action {
 	
 	
 public function init()

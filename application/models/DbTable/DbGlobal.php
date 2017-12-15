@@ -1324,6 +1324,87 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   		$this->update($arr, $where);
   	}
   }
- 
+  /**from bng realestate**/
+  public function getBuylandNo(){
+  	$this->_name='ln_buy_land';
+  	$db = $this->getAdapter();
+  	$sql=" SELECT id FROM $this->_name ORDER BY id DESC LIMIT 1 ";
+  	$acc_no = $db->fetchOne($sql);
+  	$new_acc_no= (int)$acc_no+1;
+  	$acc_no= strlen((int)$acc_no+1);
+  	$pre = "";
+  	for($i = $acc_no;$i<6;$i++){
+  		$pre.='0';
+  	}
+  	return $pre.$new_acc_no;
+  }
+  public function getBuyLand($action=null, $land_id=null){
+  	$db = $this->getAdapter();
+  	$sql='SELECT bl.id,CONCAT(bl.title," - ",bl.`buy_no`) AS `name` FROM `ln_buy_land` AS bl WHERE bl.status = 1 ';
+  	$where='';
+  	$land='';
+  	if (!empty($land_id)){
+  		$land  = ' OR bl.`id`='.$land_id;
+  	}else{ $land=null;
+  	}
+  	if (!empty($action)){
+  		$where.= ' AND (bl.`is_lock`=0 '.$land.')';
+  	}
+  	$order = 'ORDER BY bl.`id` DESC';
+  	return $db->fetchAll($sql.$where.$order);
+  }
+  public function getNewClientIdTypeTwo(){
+  	$this->_name='ln_client';
+  	$db = $this->getAdapter();
+  	$sql=" SELECT count(client_id) ,client_number FROM $this->_name where type=2 ORDER BY client_id DESC LIMIT 1 ";
+  	$acc_no = $db->fetchOne($sql);
+  	$new_acc_no= (int)$acc_no+1;
+  	$acc_no= strlen((int)$acc_no+1);
+  	$pre = "";
+  	for($i = $acc_no;$i<6;$i++){
+  		$pre.='0';
+  	}
+  	return $pre.$new_acc_no;
+  }
+  function getAllseller(){
+  	$db = $this->getAdapter();
+  	$sql = "SELECT DISTINCT(l.`buyer_name`) as name FROM `ln_buy_land`  AS l WHERE l.`status`=1" ;
+  	$sql.=" ORDER BY l.`buyer_name`";
+  	return $db->fetchAll($sql);
+  }
+  public function getSalePropertyNo(){
+  	$this->_name='ln_sale_property';
+  	$db = $this->getAdapter();
+  	$sql=" SELECT COUNT(id) FROM $this->_name  LIMIT 1 ";
+  	$pre = "PS";
+  	$acc_no = $db->fetchOne($sql);
+  	$new_acc_no= (int)$acc_no+1;
+  	$acc_no= strlen((int)$acc_no+1);
+  	for($i = $acc_no;$i<5;$i++){
+  		$pre.='0';
+  	}
+  	return $pre.$new_acc_no;
+  }
+  function getAllClientname(){
+  	$db = $this->getAdapter();
+  	$sql = " SELECT c.`client_id` AS id,
+  	CONCAT(c.name_kh ,' , ',c.`hname_kh`) AS name , client_number
+  	FROM `ln_client` AS c WHERE c.`name_kh`!='' AND c.status=1 AND c.type=2" ;
+  	$sql.=" ORDER BY id DESC";
+  	return $db->fetchAll($sql);
+  }
+  public function getRentPropertyNo(){
+  	$this->_name='ln_rent';
+  	$db = $this->getAdapter();
+  	$sql=" SELECT COUNT(id) FROM $this->_name  LIMIT 1 ";
+  	$pre = "RN";
+  	$acc_no = $db->fetchOne($sql);
+  	$new_acc_no= (int)$acc_no+1;
+  	$acc_no= strlen((int)$acc_no+1);
+  	for($i = $acc_no;$i<5;$i++){
+  		$pre.='0';
+  	}
+  	return $pre.$new_acc_no;
+  }
 }
 ?>

@@ -8,7 +8,7 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 				(SELECT  CONCAT(`land_address`,',',`street`) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
 				s.house_id,
 				s.price_sold,
-				(SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id ) AS
+				(SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id) AS
 				 sold_schedule
       	 FROM `ln_sale`  AS s WHERE s.status =1 AND s.is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2";
       	 return $db->fetchAll($sql);

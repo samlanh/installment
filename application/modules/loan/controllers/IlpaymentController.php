@@ -1,5 +1,5 @@
 <?php
-class Loan_IlPaymentController extends Zend_Controller_Action {
+class Loan_IlpaymentController extends Zend_Controller_Action {
 	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	

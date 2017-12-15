@@ -515,7 +515,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		));
 		
 	
-		$_id_no = new Zend_Form_Element_hidden('id');
+		$_id_no = new Zend_Form_Element_Hidden('id');
 		$_id_no->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',

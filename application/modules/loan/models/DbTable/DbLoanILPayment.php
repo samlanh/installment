@@ -567,8 +567,8 @@ public function addILPayment($data){
     						'sale_id'=>$data['loan_number'],//good
     						'begining_balance'=> $data['priciple_amount']+$principle_amount,//good
     						'begining_balance_after'=> $data['priciple_amount']+$principle_amount,//good
-    						'principal_permonth'=> $data['priciple_amount']+$principle_amount,//good
-    						'principal_permonthafter'=> $data['priciple_amount']+$principle_amount,//good
+    						'principal_permonth'=> $data['extrapayment'],//good
+    						'principal_permonthafter'=> $data['extrapayment'],//good
     						'total_interest'=>0,//good
     						'total_interest_after'=>0,//good
     						'total_payment'=> $data['extrapayment'],//good
