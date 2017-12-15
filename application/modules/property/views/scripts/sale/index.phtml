@@ -1,0 +1,160 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate('SELL_INFO'));
+ $frm = $this->frm_search;
+ $frmbuy = $this->frm_buy;
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.Dialog");
+</script>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'property','controller'=>'sale','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">	<table>
+	<table>	
+		<tr>
+			<td><?php echo $frm->getElement('adv_search');?> <input type="hidden" name="recorddelete" id="recorddelete" dojoType="dijit.form.TextBox" /></td>
+			<td><?php echo $frmbuy->getElement('land_blog');?></td>
+			<td><?php echo $frm->getElement('start_date');?></td>
+			<td><?php echo $frm->getElement('end_date');?></td>
+			<td><?php echo $frm->getElement('status');?></td>
+			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+			<td><input type="submit" onClick="resetForm();" value="show_all" label="<?php echo $tr->translate('SHOW_ALL');?>" id="show_all" dojoType="dijit.form.Button" name="show_all" /></td>
+		</tr>
+	</table>
+</form>
+<script>
+	function  resetForm(){
+	var datenow = '<?php echo date("Y-m-d");?>';
+	dijit.byId('adv_search').attr('value','');
+	//dijit.byId('start_date').attr('value','');
+	dijit.byId('end_date').attr('value',datenow);
+	//dijit.byId('property_type_search').set('value','0');
+	dijit.byId('status').set('value','-1');
+}
+</script>
+<?php //echo $this->list;?>
+<?php 
+$stringPagination = '<script type="text/javascript">
+$(document).ready(function(){
+$("#exportExcel").tablesorter();
+	
+$("#exportExcel").tablesorter().tablesorterPager({container: $("#pagination_exportExcel"),size: 50});
+$("input:.pagedisplay").focus(function(){ this.blur(); });
+	
+function changeColor(){
+alert("change color on mouse over");
+}
+});
+</script>
+<div id="pagination_exportExcel" class="pager" >
+<form >
+<table  style="width: 200px;"><tr>
+<td><img src="'.BASE_URL.'/images/first.gif" class="first"/></td>
+<td><img src="'.BASE_URL.'/images/previous.gif" class="prev"/></td>
+<td><input type="text" class="pagedisplay"/></td>
+<td><img src="'.BASE_URL.'/images/next.gif" class="next"/></td>
+<td><img src="'.BASE_URL.'/images/last.gif" class="last"/></td>
+<td><select class="pagesize" >
+<option value="10">10</option>
+<option value="20">20</option>
+<option value="30">30</option>
+<option value="40">40</option>
+<option selected="selected" value="50">50</option>
+<option value="60">60</option>
+<option value="70">70</option>
+<option value="80">80</option>
+<option value="90">90</option>
+<option value="100">100</option>
+</select>
+</td>
+</tr>
+</table>
+</form>
+</div>	';
+$imgnone='<img src="'.$this->baseurl().'/images/icon/cross.png"/>';
+$imgtick='<img src="'.$this->baseurl().'/images/icon/apply2.png"/>';
+?>
+<form name="list">
+	<div >
+		<table class="collape tablesorter" id="exportExcel" width="100%">
+			<thead>
+				<tr>
+				<th class="tdheader"><?php echo $tr->translate("NUM")?></th>
+				<th class="tdheader"><?php echo $tr->translate("SALE_NO")?></th>
+				<th class="tdheader"><?php echo $tr->translate("CUSTOMER_NAME")?></th>
+				<th class="tdheader"><?php echo $tr->translate("LAND_BLOG")?></th>
+				<th class="tdheader"><?php echo $tr->translate("PROPERTY")?></th>
+				<th class="tdheader"><?php echo $tr->translate("LAND_PRICE")?></th>
+				<th class="tdheader"><?php echo $tr->translate("SOLD_PRICE")?></th>
+				<th class="tdheader"><?php echo $tr->translate("PAID")?></th>
+				<th class="tdheader"><?php echo $tr->translate("BALANCE")?></th>
+				<th class="tdheader"><?php echo $tr->translate("BUY_DATE")?></th>
+				<th class="tdheader"><?php echo $tr->translate("STATUS")?></th>
+			  	</tr>
+			  </thead>
+			  <tbody>
+			  <?php $r=0; $total = 0; $total_land_price = 0; $total_sold_price=0;
+			   if (!empty($this->row)){ foreach($this->row as $row){
+			  	if($r%2==0)$attb='normal';
+			  	else $attb='alternate';
+			  	$r++;
+			  	if($row['status']==1){
+				  	$total_land_price = $total_land_price + $row['price_before'];
+				  	$total_sold_price = $total_sold_price + $row['price_sold'];
+			  	}
+			  	$db = new Property_Model_DbTable_DbSale();
+			  	if (!empty($row['land_name'])){$land_name = $row['land_name'];}else{
+			  		$row_detail = $db->getSalePropertyDetail($row['id']);
+			  		$land_name='';
+			  		foreach ($row_detail  as $rs){
+			  		if (!empty($land_name)){
+							$land_name = $land_name." , (".$rs['sale_name_before']." , ".$rs['sale_relevent_name'].")";
+						}else{
+							$land_name = '('.$rs['sale_name_before'].' , '.$rs['sale_relevent_name'].')';
+						}
+			  		}
+			  	}
+			  	?>
+			  	<tr class="<?php echo $attb; ?>">
+			  		<td class="items-no"><?php echo $r;?></td>
+			  		<td class="items"><a href="<?php echo $this->url(array('controller'=>'sale','action'=>'edit','id'=>$row['id']));?>"><?php echo $row['sale_number'];?></a></td>
+			  		<td class="items"><a href="<?php echo $this->url(array('controller'=>'sale','action'=>'edit','id'=>$row['id']));?>"><?php echo $row['customer_name'];?></a></td>
+			  		 <td class="items" style="white-space: nowrap; text-align: center;"><?php echo $row['land_blog'];?></td>
+			  		<td class="items" style="white-space: nowrap;"><?php echo $land_name;?></td>
+			  		<td class="items" ><?php echo number_format($row['price_before'],2);?></td>
+			  		<td class="items"><?php echo number_format($row['price_sold'],2);?></td>
+			  		<td class="items"><?php echo number_format($row['paid_amount'],2);?></td>
+			  		<td class="items" style="white-space: nowrap;"><?php echo number_format($row['balance'],2)?> </td>
+			  		<td class="items"><?php echo date("d-M-Y",strtotime($row['buy_date']));?></td>
+			  		<td class="items"><?php if($row['status']==1){echo  $imgtick;} else{echo $imgnone;};?></td>
+			  	</tr>
+			  	<?php }
+			  	$total = $total_sold_price - $total_land_price;
+			  	?>
+			  	
+			  </tbody>
+			  </table>
+			  <br />
+			  <table class="collape tablesorter"  width="70%">
+			  <thead>
+				<tr>
+                    <th class="tdheader"><?php echo $tr->translate("CURRENT_TYPE");?></th>
+                    <th class="tdheader"><?php echo $tr->translate("TOTAL")." ".$tr->translate("LAND_PRICE");?></th>                    
+                    <th class="tdheader"><?php echo $tr->translate("TOTAL")." ".$tr->translate("SOLD_PRICE");?></th>
+                    <th class="tdheader"><?php echo $tr->translate("TOTAL");?></th>
+                </tr>
+              </thead>
+			  <tbody>
+                 <tr class="normal" style="padding-top:5px; padding-bottom:5px;">
+                    <td class="items" style="padding-top:5px; padding-bottom:5px;">&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
+                    <td class="items" style="padding-top:5px; padding-bottom:5px;">&nbsp;&nbsp;<?php echo number_format($total_land_price,2);?>&nbsp;</td>
+                    <td class="items" style="padding-top:5px; padding-bottom:5px;">&nbsp;&nbsp;<?php echo number_format($total_sold_price,2);?>&nbsp;</td>
+                    <td class="items" style="padding-top:5px; padding-bottom:5px;">&nbsp;&nbsp;<?php echo number_format($total,2);?>&nbsp;</td>
+                </tr>
+                </tbody>
+              </table>
+			</div>
+		</form>
+		<div class="footer_list"><?php echo $stringPagination; ?><span class="row_num"><?php echo $tr->translate('NUM-RECORD')." ".count($this->row)?></span></div>
+				<?php }else{?>
+				</table></div><center style="font-size:18pt;"><label id="data_table">No record</label></center></form>
+				<?php }?>

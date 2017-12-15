@@ -1,0 +1,483 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('RENT_INFO'));
+?>	
+<?php  $frm = $this->frm_rent;?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"
+	type="text/javascript"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.Dialog");
+require(["dijit/form/CheckBox","dijit/Dialog","dijit/layout/TabContainer"]);
+</script>
+<style>
+.fullside50{ width:48%;}
+table th.tdheader {
+  	font-family: 'Times New Roman','Khmer OS Battambang';
+}
+</style>
+<form id='buy_land'	action="<?php echo $this->url(array('module'=>'property','controller'=>'rent','action'=>'add')); ?>"
+	enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+	<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				client = dijit.byId('customer').get('value');
+				if (client=='' || client==-1){
+					alert('សូមជ្រើសរើសអតិថិជនជាមុនសិន!');
+					dijit.byId('customer').focus();
+				return false;
+				}
+				identity = $("#identity").val();
+				if (identity==''){
+					alert('សូមជ្រើសរើសអចលទ្រព្យ!');
+					dijit.byId('land_blog').focus();
+				return false;
+				}
+				return true;
+			} else {
+				return false;
+			}
+</script>
+	<table width="100%" style="margin-top:0px;">
+		<tr>
+			<td>
+			<fieldset>
+				<legend><strong><?php echo $tr->translate("RENT_INFO")?></strong></legend>
+				<table style="margin: 0 auto; width: 100%;" cellspacing="10" style="margin-top: -10px;">
+					<tr>
+						<td><?php echo $tr->translate("RENT_CODE")?></td>
+						<td><?php echo $frm->getElement('rent_code');?></td>
+						<td><?php echo $tr->translate("SELLER");?></td>
+						<td><?php  echo $frm->getElement('seller');?></td>
+						<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
+						<td><?php echo $frm->getElement('customer');?></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("DATE_RENT");?></td>
+						<td><?php  echo $frm->getElement('date_rent');?></td>
+						<td><?php echo $tr->translate("LAND_BLOG")?>
+							<input type="hidden" name="identity" id="identity"  value="" >
+							<input type="hidden" name="old_identity" id="old_identity"  value="" >
+						</td>
+						<td><input id="land_blog" /><?php //echo $frm->getElement('land_blog');?></td>
+					</tr>
+					<tr style="background: #edf7f8;">
+							<td colspan="6" style="border-bottom:1px solid #aac4e6; color: #008;"><strong><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></td>
+					</tr>
+					<tr>
+						<td colspan="6">
+							<div id='data_table' name='data_table'></div>
+						</td>
+					</tr>
+					<!-- <tr>
+						<td><?php //echo $tr->translate("LAND_CODE")?></td>
+						<td><input id='land' /><?php //echo $frm->getElement('land');?></td>
+						<td><?php //echo $tr->translate("DESCRIPTION")?></td>
+						<td style="height: 50px; border:1px solid #aac4e6; widht:100%; font-size: 13px; color:#5286c7; font-weight:bold; padding:5px;" colspan="4"><label id="land_information" style="max-width:100%;"></label></td>
+					</tr> -->
+					<tr style="background: #edf7f8;">
+						<td colspan="3" style="border-bottom:1px solid #aac4e6; color: #008;"><strong><?php echo $tr->translate("NEW_BORDER")?></strong></td>
+						<td colspan="3" style="border-bottom:1px solid #aac4e6; color: #008;"><strong><?php echo $tr->translate("NEW_PROPERTY_INFO")?></strong></td>
+					</tr>
+					<tr>
+						<td colspan="3"><?php echo $frm->getElement('north');?><?php echo $frm->getElement('south');?></td>
+						<td colspan="3"><?php echo $frm->getElement('width');?><?php echo $frm->getElement('height');?></td>
+					</tr>
+					<tr>
+						<td colspan="3"><?php echo $frm->getElement('west');?><?php echo $frm->getElement('east');?></td>
+						<td colspan="3"><?php echo $frm->getElement('size');?><?php //echo $frm->getElement('price_per_square');?></td>
+					</tr>
+					<tr style="background: #edf7f8;">
+							<td colspan="6" style="border-bottom:1px solid #aac4e6; color: #008;"><strong><?php echo $tr->translate("RENT_INFO")?></strong></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("RENT_DURATION_M")?></td>
+						<td><?php echo $frm->getElement('period');?></td>
+						<td><?php echo $tr->translate("START_DATE")?></td>
+						<td><?php echo $frm->getElement('start_date');?></td>
+						<td><?php echo $tr->translate("END_DATE")?></td>
+						<td><?php echo $frm->getElement('end_date');?></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("RENT_PRICE_PER_MONTH")?></td>
+						<td><?php echo $frm->getElement('rent_price_permonth');?></td>
+						<td><?php echo $tr->translate("TOTAL_RENT_PRICE")?></td>
+						<td><?php echo $frm->getElement('total_rent');?></td>
+						<td><?php echo $tr->translate("PAY_FIRST")?></td>
+						<td><?php echo $frm->getElement('deposit');?></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("REMAIN")?></td>
+						<td><?php echo $frm->getElement('balance');?></td>
+					</tr>
+					<!-- <tr>
+						<td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("AGENT_INFORMATION")?></strong></td>
+					</tr>
+					<tr>
+						<td><?php //echo $tr->translate("CO_NAME")?></td>
+						<td><input id="staff_id" /> </td>
+						<td><?php //echo $tr->translate("COMISSION")?></td>
+						<td><?php //echo $frm->getElement('commission');?></td>
+					</tr> -->
+					<tr style="background: #edf7f8;">
+							<td colspan="6" style="border-bottom:1px solid #aac4e6; color: #008;"><strong><?php echo $tr->translate("NOTE")?></strong></td>
+					</tr>
+					<tr>
+						<td colspan="6"><?php  	echo $frm->getElement('note');?></td>
+					</tr>
+					<tr>
+						<td colspan="6" align="center"><input type="reset"
+							label="<?php echo $tr->translate('CLEAR');?>"
+							dojoType="dijit.form.Button" iconClass="dijitIconClear" /> <input
+							type="submit" value="SAVE_CLOSE" tabindex="2"
+							label="<?php echo $tr->translate('SAVECLOSE');?>"
+							id="save_close" dojoType="dijit.form.Button" name="save_close"
+							iconClass="dijitEditorIcon dijitEditorIconSave" /> <input
+							type="submit" value="SAVE_NEW" tabindex="1"
+							label="<?php echo $tr->translate('SAVENEW');?>" id="save_new"
+							dojoType="dijit.form.Button" name="save_new"
+							iconClass="dijitEditorIcon dijitEditorIconSave" /></td>
+					</tr>
+				</table>
+				</fieldset>
+			</td>
+		</tr>
+	</table>
+</form>
+<table>
+	<tr>
+	</tr>
+</table>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_staff" >
+		<form style="background-color: buttonface; width:100%;" id='frm_staff' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<fieldset style="background-color: buttonface;">
+						<legend align="center" ><?php echo $tr->translate('ADD_STAFF');?></legend>
+							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+								<tr>
+									<td><?php echo $tr->translate('NAME_KH');?></td>
+									<td>
+										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="kh_name" name="kh_name" value="" type="text">
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate('SEX');?></td>
+									<td>
+										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="sex" name="sex" value="" type="text">
+											<option value="1">Male</option>
+											<option value="2">Female</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate('PHONE');?></td>
+									<td>
+									<input type="hidden" name="branch_id_pop" id="branch_id_pop" dojoType="dijit.form.TextBox" value="1"/>
+										<input type="text" name="phone" id="phone" class="fullside" dojoType="dijit.form.TextBox" />
+									</td>
+									
+								</tr>
+								
+								<tr>
+									<td><?php echo $tr->translate('NOTE');?></td>
+									<td>
+										<input type="text" name="note_pop" id="note_pop" class="fullside" dojoType="dijit.form.TextBox" />
+									</td>
+									
+								</tr>
+								
+								<tr>
+									<td colspan="4" align="center">
+										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addStaff();"/>
+									</td>
+								</tr>
+								
+							</table>
+					</fieldset>
+					</td>
+				</tr>
+			</table>
+
+		</form>
+	</div>
+</div>
+<?php echo $this->formcustomer;?>
+<script type="text/javascript">
+var land_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->co_name));?> );
+var land_blog_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+var customer_store = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->customer));?> );
+
+new dijit.form.FilteringSelect({
+	store: land_blog_store,
+	autoComplete: true,                        
+    id: "land_blog",
+    name: "land_blog",  
+   // tabindex: "17",    
+    class: 'fullside',  
+    required:false,
+    placeHolder:"ជ្រើសរើសប្លុកទីតាំងដី", 
+    onChange: function() {    
+    	getAllLand();    
+    	}
+}, "land_blog");
+
+new dijit.form.FilteringSelect({
+	store: staff_store,
+	autoComplete: true,                        
+    id: "staff_id",
+    name: "staff_id",  
+   // tabindex: "17",    
+    class: 'fullside',  
+    required:false,
+    placeHolder:"Selected Agent", 
+    onChange: function() {        
+    	staff_id = dijit.byId('staff_id').get('value');
+		if(staff_id==-1){
+			dijit.byId("popup_staff").show();
+		 }
+    	}
+}, "staff_id");
+new dijit.form.FilteringSelect({
+	store: land_store,
+	autoComplete: true,                        
+    id: "land",
+    name: "land",  
+   // tabindex: "17",    
+    class: 'fullside',  
+    required:false,
+    placeHolder:"Selected land", 
+    onChange: function() {     
+    	getlandinfo(2);   
+    	}
+}, "land");
+
+function showPopupFormCustomer(){
+	customer = dijit.byId('customer').get('value');
+	if(customer==''){
+		alert('សូមជ្រើសរើសប្លុកទីតាំងដី');
+		dijit.byId('customer').focus();
+		return false;
+	}else if(customer==-1){
+		dijit.byId('frm_customer').show();
+	}
+}
+url_landblog = '<?php echo $this->url(array('module'=>'property','controller'=>'customers','action'=>'add-newclient'));?>';
+function addNewCustomer(){
+	if(dijit.byId('frm_customer').validate()) {
+		dojo.xhrPost({
+			url:url_landblog,	
+			form:dojo.byId('form_customer'),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = {					
+						id: data,
+					    name: dijit.byId('name_kh').get('value')+' , '+dijit.byId('hname_kh').get('value')
+				};		
+				addDataToSelectbox(dijit.byId('customer'), customer_store, Itemmake, data);	
+				dijit.byId('customer').attr('value',data);
+				dijit.byId('frm_customer').reset();
+				dijit.byId('frm_customer').hide();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+}
+
+var url_get_land_blog='<?php echo $this->url(array("module"=>"property","controller"=>"rent","action"=>"getlandblog")); ?>';
+function getLandBlog(){
+	//var identity='';
+	dijit.byId('land_blog').reset();
+	var seller = dijit.byId('seller').get('value');
+	if (seller==''){
+		alert('សូមជ្រើសរើសអ្នកលក់!');
+		dijit.byId('seller').focus();
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_get_land_blog,
+		content:{ 
+		    'seller':seller
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			land_blog_store  = getDataStorefromJSON('id','name', data);	
+		    dijit.byId('land_blog').set('store', land_blog_store);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+
+var url_getLand = '<?php echo $this->url(array("module"=>"property","controller"=>"rent","action"=>"getallland")); ?>';
+function getAllLand(){
+	var identity='';
+	var land_blog = dijit.byId('land_blog').get('value');
+	if (land_blog=='' || land_blog==null){
+		alert('Please select blog land');
+		dijit.byId('land_blog').focus();
+		dojo.byId('data_table').innerHTML = '';
+		dijit.byId('total_sold').attr('value', 0);
+		dijit.byId('sold_price').attr('value', 0);
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getLand,
+		content:{ 
+		    'land_blog':land_blog
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			//alert(data.identity);
+			tem='<div style=" height: 200px; overflow: auto;overflow-x: hidden; border-bottom: solid 1px #ccc; padding: 5px 0;">'
+				+'<span style="vertical-align: top; font-weight: bold;">ជ្រើសរើសអចលទ្រព្យ</span>&nbsp;&nbsp;&nbsp;&nbsp;'
+				+'<input type="checkbox" class="checkbox" name="check_all" id="check_all" value="all" OnChange="calculateTotal(0)" checked="checked"/>&nbsp;<span style="vertical-align: top;"><?php echo $tr->translate('ALL');?></span>'
+				+'<table class="collape tablesorter" style="font-size:12px;" id="table" width="100%">'
+				+'<thead><tr><th class="tdheader"><?php echo $tr->translate('NUM');?></th>'
+				+'<th class="tdheader"><?php echo $tr->translate('PROPERTY_NAME');?></th>'
+				+'<th class="tdheader"><?php echo $tr->translate('SIZE');?></th>'
+				+'<th class="tdheader"><?php echo $tr->translate('BUY_DATE');?></th>'
+			+'</thead>';
+				tem+=data.table;
+			tem+='</table></div>';
+			$("#identity").val(data.identity);
+			$("#old_identity").val(data.identity);
+			dijit.byId('size').attr('value', data.size);
+			dojo.byId('data_table').innerHTML = tem;
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+function calculateTotal(index){
+	var total_size=0;
+	var old_identity = $("#old_identity").val();
+	if(index==0){
+			if($('#check_all').is(":checked")){
+				$('.checkbox').each(function() { //loop through each checkbox
+		            this.checked = true;  
+				});
+				$("#identity").val(old_identity);
+				var arrays = old_identity.split(',');
+			     if(arrays!=""){
+			    	 for(var i=0;i< arrays.length;i++) {
+			    		 total_size = total_size+parseFloat($('#size'+arrays[i]).val());
+			    	}
+				}
+			}else{
+				$('.checkbox').each(function() { //loop through each checkbox
+		            this.checked = false;  
+				});
+				$("#identity").val('');
+			}
+	}else{
+		 $('#check_all').attr('checked', false); // Unchecks it
+		var a = $("input:checked").val();
+		 var identity = [];
+	     $(':checkbox:checked').each(function(i){
+	    	 identity[i] = $(this).val();
+	     });
+	     $("#identity").val(identity);
+
+		 var newIdentity = $("#identity").val();
+	     var arrays = newIdentity.split(',');
+	     if(arrays!=""){
+	    	 for(var i=0;i< arrays.length;i++) {
+	    		 total_size = total_size+parseFloat($('#size'+arrays[i]).val());
+	    	}
+		}
+			if(old_identity == newIdentity ){
+				$('#check_all').attr('checked', true); // checks it
+			}
+	}
+	dijit.byId('size').attr('value', total_size);
+}
+var url_add_staff = '<?php echo $this->url(array("module"=>"property","controller"=>"rent","action"=>"add-staff")); ?>';
+function addStaff(){
+	dojo.xhrPost({
+		url:url_add_staff,
+		form: dojo.byId("frm_staff"),
+		handleAs:"json",
+		load: function(data) {
+			//alert(data.name_code);
+			var Itemmake = { 
+	    	  	id: data,
+		        name: dijit.byId('kh_name').get('value')
+		    };
+	 		addDataToSelectbox(dijit.byId('staff_id'), staff_store, Itemmake, data);
+		    dijit.byId('frm_staff').reset();
+		    dijit.byId("popup_staff").hide();
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+
+function calCulateEndDate(){
+	amount_date = dijit.byId('period').get('value');
+	release_date = dijit.byId("start_date").get('value');//just update follow by first payment
+	if(isNaN(amount_date)){
+	}else{
+		var a = new Date(release_date);
+		month = a.getMonth()+amount_date+1;
+		mm = month%12;
+		year = parseInt(month/12);
+		 var dd = a.getDate();
+		 if(dd<10){
+			 dd = "0"+dd;
+		}
+		 if(mm<10){
+			 mm = "0"+mm;
+		}
+		var y = a.getFullYear()+year;
+		var epx_date = y + '-'+ mm + '-'+dd ;
+		dijit.byId('end_date').attr('value',epx_date);	
+    }
+}
+function calCulateTotalRent(){
+	amount_date = dijit.byId('period').get('value');
+	price_permonth = dijit.byId("rent_price_permonth").get('value');
+	var total = 0;
+	if(isNaN(amount_date)){
+		dijit.byId("total_rent").attr('value',0);
+	}else{
+		if(isNaN(price_permonth)){
+			dijit.byId("total_rent").attr('value',0);
+		}else{
+			total = parseFloat(amount_date)* parseFloat(price_permonth);
+			dijit.byId("total_rent").attr('value',total);
+		}
+	}
+}
+function calCulateBalance(){
+	total_rent = dijit.byId('total_rent').get('value');
+	deposite = dijit.byId("deposit").get('value');
+	var total = 0;
+	if(isNaN(total_rent)){
+		dijit.byId("balance").attr('value',0);
+	}else{
+		if(deposite>total_rent){
+			alert('ប្រាក់បង់មិនអាចធំជាងប្រាក់សរុបបានទេ!');
+			dijit.byId("deposit").attr('value',total_rent);
+		}else{
+			total = parseFloat(total_rent)- parseFloat(deposite);
+			dijit.byId("balance").attr('value',total);
+		}
+	}
+}
+
+</script>
