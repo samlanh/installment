@@ -8,6 +8,11 @@
 ?>
 <style>
 .fullside50{ width:48%;}
+.agreement{
+	border: 1px solid #92b0ea;
+    background: #cbdcff;
+    font-weight: bold;
+    text-align: center;}
 </style>
 <div class="overlay">
 	<div class="overlay-load">
@@ -75,14 +80,6 @@
 		    			<td><?php echo $tr->translate("LAND_CODE")?></td>
 						<td><input id='loan_number' /></td>
 		    	    </tr>
-		    	    <tr>
-	    				<td><?php echo $tr->translate("ថ្ងៃចេញតារាងថ្មី")?></td>
-						<td><?php echo $frm->getElement('date_buy');?></td>
-					</tr>
-					<tr>
-						<td style="white-space: nowrap;font-weight: bold;"><?php echo $tr->translate("ថ្ងៃចេញកិច្ចសន្យា")?></td>
-						<td><?php echo $frm->getElement('agreement_date');?></td>
-					</tr>
 		    	    <tr>	
 						<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
 						<td><input id="member" /> <?php //echo $frm->getElement('member');?>
@@ -92,6 +89,25 @@
 		    		<tr>
 						<td><?php echo $tr->translate("DESCRIPTION")?></td>
 						<td style="height: 50px; border:1px solid #aac4e6;font-size: 13px; color:#284db7;padding:5px;"><label id="land_information"></label></td>
+					</tr>
+					<tr>
+	    				<td><?php echo $tr->translate("RESCHEDULE_DATE")?></td>
+						<td><?php echo $frm->getElement('date_buy');?></td>
+					</tr>
+					<tr>
+						<td class="agreement" colspan="2"><?php echo $tr->translate("AGREEMENT")?></td>
+					</tr>
+					<tr>
+						<td style="white-space: nowrap;font-weight: bold;"><?php echo $tr->translate("ថ្ងៃចេញកិច្ចសន្យា")?></td>
+						<td><?php echo $frm->getElement('agreement_date');?></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("BUILD_PERIOD")?></td>
+						<td><?php echo $frm->getElement('amount_build');?></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("BUILD_START")?></td>
+						<td><?php echo $frm->getElement('start_building');?></td>
 					</tr>
 		    	</table>
 		    </fieldset>
@@ -230,6 +246,10 @@
 						<td><?php echo $frm->getElement('receipt');?>
 					</tr>
 					<tr>
+						<td style="white-space: nowrap;"><?php echo $tr->translate("DAY_PAYMENT")?></td>
+						<td><input constraints="{datePattern:'dd/MM/yyyy'}" type="text" class="fullside" dojoType="dijit.form.DateTextBox" name="paid_date" id="paid_date"  value="<?php echo date("Y-m-d");?>" ></td>
+					</tr>
+					<tr>
 						<td>បង់លើកទី</td>
 						<td><input readonly type="text" class="fullside" dojoType="dijit.form.TextBox" name="paid_times" id="paid_times"  value="1" >
 				   </tr>
@@ -316,7 +336,7 @@
 						<table style="width:23cm;font-family:'Khmer MEF2';white-space:nowrap;margin-top: -5px;">
 							<tr>
 								<td width="25%">
-									<img style="width:100%;height:55px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
 								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
 									<div style="line-height:15px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
@@ -499,7 +519,7 @@
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;margin-top: 0px;">
 							<tr>
 								<td width="25%">
-									<img style="width:100%;height:55px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
 								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
 									<div style="line-height:15px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
@@ -1204,8 +1224,8 @@ function getInfoByLoanNumber(){
 			
 			dijit.byId('sale_code').attr('value',data.sale_number);
 			
-			//dijit.byId('paid_before').attr('value',total_principal);
-			
+			dijit.byId('amount_build').attr('value',data.amount_build);
+			dijit.byId("start_building").attr('value',data.build_start);
 			dijit.byId("agreement_date").attr('value',data.agreement_date);
 			dijit.byId("member").attr('value',data.client_id);
 			
@@ -1276,7 +1296,7 @@ function getlandinfo(){
 			dijit.byId('paid_before').set('readOnly',true);
 			dijit.byId('balance_before').set('readOnly',true);
 			dijit.byId('total_sold').attr('value',data.price);
-			dojo.byId('land_information').innerHTML ="លេខសម្គាល់ "+data.land_code+", លេខផ្ទះ/ឡូតិ៏  "+data.land_address+", លេខផ្លូវ  "+data.street+", ប្រភេទ  "+data.property_type+", ទំហំ "+data.land_size+" ម៉ែត្រការ៉េ, បណ្តោយ "+data.height+" ម៉ែត្រ, ទទឹង  "+data.width+" ម៉ែត្រ";
+			dojo.byId('land_information').innerHTML ="លេខផ្ទះ/ឡូតិ៏  "+data.land_address+", លេខផ្លូវ  "+data.street+", ប្រភេទ  "+data.property_type+", ទំហំ "+data.land_size+" ម៉ែត្រការ៉េ, បណ្តោយ "+data.height+" ម៉ែត្រ, ទទឹង  "+data.width+" ម៉ែត្រ";
 			paid_before = dijit.byId('paid_before').get('value');
 			dijit.byId('propertype').attr('value',data.house_type);
 			//dijit.byId('balance_before').attr('value',data.price-paid_before);
@@ -1370,11 +1390,12 @@ function addRow(){
 	result = checkFirstRecord();
 	if(result==false){return false;}
 	payment_method = dijit.byId('schedule_opt').get('value');
-	if(payment_method==4){addInstallment();}
+	if(payment_method==4){addInstallment();}//រំលស់
 	if(payment_method ==4 || payment_method==3 || payment_method==2 || payment_method==1){return false;}
 	
 	//if(payment_method!=6){return false;}
 	period = dijit.byId('period').get('value');
+	
 	if(period==0 || isNaN(period)){alert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
 
 	no=0;title=0;temp='';$('#identity').val('');
@@ -1445,8 +1466,10 @@ function addInstallment(){
 	if(result==false){return false;}
 	payment_method = dijit.byId('schedule_opt').get('value');
 	
-	period = dijit.byId('period').get('value')*<?php echo $install_month;?>;
+	period = dijit.byId('period').get('value');
+	
 	if(period==0){alert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
+	period = dijit.byId('period').get('value')*<?php echo $install_month;?>;
 	temp='';
 
 	result = checkFirstRecord();

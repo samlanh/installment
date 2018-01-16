@@ -2,14 +2,11 @@
 class Report_ParamaterController extends Zend_Controller_Action {
     public function init()
     {    	
-     /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
   function indexAction(){
-  	
   }
-  
   function  rptStaffAction(){
   	$db  = new Report_Model_DbTable_DbParamater();
   	$key = new Application_Model_DbTable_DbKeycode();
@@ -340,6 +337,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$row=$frm->FrmAddStaff();
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_staff=$row;
+  	
+  	$this->view->rscomisison = $db->getAllCommission($search);
   }
   function rptRevenueExpenseAction(){
   

@@ -47,11 +47,7 @@ class Group_ProjectController extends Zend_Controller_Action {
 			$_dbmodel = new Group_Model_DbTable_DbProject();
 			try {
 				$_dbmodel->addbranch($_data);
-				if(!empty($_data['save_new'])){
-					Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCESS"));
-				}else{
-					Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL . "/project/index");
-				}
+				Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCESS"));
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message($this->tr->translate("INSERT_FAIL"));
 				$err =$e->getMessage();

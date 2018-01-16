@@ -9,6 +9,7 @@ dojo.require("dijit.form.Textarea");
 <form action="<?php echo $this->url(array('module'=>'group','controller'=>'project','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	 <script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
+                dijit.byId('save_new').set('disabled',true);
 				return true;
 			} else {
 				return false;
@@ -107,9 +108,8 @@ dojo.require("dijit.form.Textarea");
 		<tr>
 			<td colspan="3" align="center">
 				<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear" />
-				<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
-					iconClass="dijitEditorIcon dijitEditorIconSave" />
-				<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
+				
+				<input type="submit" value="save_new" id="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
 					iconClass="dijitEditorIcon dijitEditorIconSave" />
 			</td>	
 		</tr>

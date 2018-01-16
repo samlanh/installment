@@ -204,7 +204,8 @@ public function init()
 		$discount->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside fullside50',
-				'onKeyup'=>'calculateDiscount();'
+				'style'=>'width:50%',
+				'onKeyu'=>'calculateDiscount();'
 		));
 		//$discount->setValue(0);
 		
@@ -214,6 +215,7 @@ public function init()
 				'data-dojo-props'=>"regExp:'[0-9]{1,2}',
 				'name':'discount_percent',
 				'id':'discount_percent',
+				'style':'width:45%',
 				'onKeyup':'calculateDiscount();',
 				'class':'fullside fullside50',
 				'placeHolder':'ភាគរយ%',

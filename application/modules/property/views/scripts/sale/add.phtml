@@ -1,6 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('SELL_INFO'));
+	echo $this->headTitle($tr->translate('Sell Land'));
 ?>	
 <?php  $frm = $this->frm_sale;?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"
@@ -42,109 +42,156 @@ table th.tdheader {
 				return false;
 			}
 </script>
-	<table width="100%" style="margin-top:0px;">
+	<table width="100%" style="margin-top:-5px;" cellspacing="10">
 		<tr>
-			<td>
-			<fieldset>
-				<legend><strong><?php echo $tr->translate("SELL_INFO")?></strong></legend>
-				<table style="margin: 0 auto; width: 100%;" cellspacing="10" style="margin-top: -10px;">
-					<tr>
-						<td><?php echo $tr->translate("SALE_NO")?></td>
-						<td><?php echo $frm->getElement('sale_code');?></td>
-						<td><?php echo $tr->translate("SELLER");?></td>
-						<td><?php  echo $frm->getElement('seller');?></td>
-						<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
-						<td><?php echo $frm->getElement('customer');?></td>
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("DATE_SALE");?></td>
-						<td><?php  echo $frm->getElement('date_buy');?></td>
-						<td><?php echo $tr->translate("LAND_BLOG")?>
-						<input type="hidden" name="identity" id="identity"  value="" >
-						<input type="hidden" name="old_identity" id="old_identity"  value="" >
-						</td>
-						<td><input id="land_blog" /><?php //echo $frm->getElement('land_blog');?></td>
-					</tr>
-					<tr style="background: #edf7f8;">
-							<td colspan="6" style="border-bottom:1px solid #aac4e6; color: #008;"><strong><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></td>
-					</tr>
-					<tr>
-						<td colspan="6">
-							<div id='data_table' name='data_table'></div>
-						</td>
-					</tr>
-					<!-- <tr>
-						<td><?php //echo $tr->translate("LAND_CODE")?></td>
-						<td><input id='land' /><?php //echo $frm->getElement('land');?></td>
-						<td><?php //echo $tr->translate("DESCRIPTION")?></td>
-						<td style="height: 50px; border:1px solid #aac4e6; widht:100%; font-size: 13px; color:#5286c7; font-weight:bold; padding:5px;" colspan="4"><label id="land_information" style="max-width:100%;"></label></td>
-					</tr> -->
-					<tr>
-						<td><?php echo $tr->translate("LAND_PRICE")?></td>
-						<td><?php echo $frm->getElement('total_sold');?></td>
-						<!-- <td><?php //echo $tr->translate("SOLD_PRICE")?></td>
-						<td><?php //echo $frm->getElement('total_sold_after');?></td> -->
-					</tr>
-					<tr style="background: #edf7f8;">
-							<td colspan="6" style="border-bottom:1px solid #aac4e6; color: #008;"><strong><?php echo $tr->translate("PAYMENT_INFORMATION")?></strong></td>
-					</tr>
-					<tr>
-						<!-- <td><?php //echo $tr->translate("Discount")?></td>
-						<td><?php //echo $frm->getElement('discount_percent');?><?php //echo $frm->getElement('discount');?></td>-->
-						<td><?php echo $tr->translate("SOLD_PRICE")?></td>
-						<td><?php echo $frm->getElement('sold_price');?></td>
-						<!-- <td><?php //echo $tr->translate("OTHER_FEE")?></td>
-						<td><?php //echo $frm->getElement('other_fee');?></td>-->
-						<td><?php echo $tr->translate("Paid")?></td>
-						<td><?php echo $frm->getElement('deposit');?></td>
-						<td><?php echo $tr->translate("Balance")?></td>
-						<td><?php echo $frm->getElement('balance');?></td>
-					</tr>
-					<tr style="background: #edf7f8;">
-						<td colspan="3" style="border-bottom:1px solid #aac4e6; "><strong><?php echo $tr->translate("NEW_BORDER")?></strong></td>
-						<td colspan="3" style="border-bottom:1px solid #aac4e6; "><strong><?php echo $tr->translate("NEW_PROPERTY_INFO")?></strong></td>
-					</tr>
-					<tr>
-						<td colspan="3"><?php echo $frm->getElement('north');?><?php echo $frm->getElement('south');?></td>
-						<td colspan="3"><?php echo $frm->getElement('width');?><?php echo $frm->getElement('height');?></td>
-					</tr>
-					<tr>
-						<td colspan="3"><?php echo $frm->getElement('west');?><?php echo $frm->getElement('east');?></td>
-						<td colspan="3"><?php echo $frm->getElement('size');?><?php echo $frm->getElement('price_per_square');?></td>
-					</tr>
-					<tr style="background: #edf7f8;">
-						<td colspan="6" style="border-bottom:1px solid #ccc; color: #008;"><strong><?php echo $tr->translate("AGENT_INFORMATION")?></strong></td>
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("CO_NAME")?></td>
-						<td><?php echo $frm->getElement('agency');?> </td>
-						<td><?php echo $tr->translate("COMISSION")?></td>
-						<td><?php echo $frm->getElement('commission');?></td>
-					</tr>
-					<tr style="background: #edf7f8;">
-							<td colspan="6" style="border-bottom:1px solid #aac4e6; color: #008;"><strong><?php echo $tr->translate("NOTE")?></strong></td>
-					</tr>
-					<tr>
-						<td colspan="6"><?php  	echo $frm->getElement('note');?></td>
-					</tr>
-					<tr>
-						<td colspan="6" align="center">
-							<!-- <input type="reset"
-							label="<?php //echo $tr->translate('CLEAR');?>"
-							dojoType="dijit.form.Button" iconClass="dijitIconClear" /> -->
-							 <input	type="submit" value="SAVE_CLOSE" tabindex="2"
-							label="<?php echo $tr->translate('SAVECLOSE');?>"
-							id="save_close" dojoType="dijit.form.Button" name="save_close" value="save_close"
-							iconClass="dijitEditorIcon dijitEditorIconSave" />
-							<input type="submit" value="SAVE_NEW" tabindex="1"
-							label="<?php echo $tr->translate('SAVENEW');?>" id="save_new"
-							dojoType="dijit.form.Button" name="save_new"
-							iconClass="dijitEditorIcon dijitEditorIconSave" /></td>
-					</tr>
-				</table>
+			<td width="33%" valign="top">
+				<fieldset style="min-height: 210px; background: #fff;">
+				<legend><strong style="color:#284db7;"><?php echo $tr->translate("INFO_INDILOAN")?></strong></legend>
+					<table width="100%" class="padding7" >
+						<tr>
+							<td><?php echo $tr->translate("SALE_NO")?></td>
+							<td><?php echo $frm->getElement('sale_code');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("SELLER")?></td>
+							<td><?php echo $frm->getElement('seller');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
+							<td><?php echo $frm->getElement('customer');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("DATE_BUY")?></td>
+							<td><?php echo $frm->getElement('date_buy');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("LAND_BLOG")?></td>
+							<td>
+								<input id="land_blog" />
+								<input type="hidden" name="identity" id="identity"  value="" >
+								<input type="hidden" name="old_identity" id="old_identity"  value="" >
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+			<td width="33%" valign="top">
+				<fieldset style="min-height: 210px; background: #fff;">
+					<legend><strong style="color:#284db7;"><?php echo $tr->translate("PAYMENT_INFORMATION")?></strong></legend>
+					<table width="100%" class="padding7" >
+						<tr>
+							<td><?php echo $tr->translate("LAND_PRICE")?></td>
+							<td><?php echo $frm->getElement('total_sold');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("SOLD_PRICE")?></td>
+							<td><?php echo $frm->getElement('sold_price');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("Paid")?></td>
+							<td><?php echo $frm->getElement('deposit');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("Balance")?></td>
+							<td><?php echo $frm->getElement('balance');?></td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+			<td width="33%" valign="top" rowspan="2">
+				<fieldset style=" background: #fff;">
+					<legend><strong style="color:#284db7;"><?php echo $tr->translate("NEW_PROPERTY_INFO")?></strong></legend>
+					<table width="100%" class="padding7" >
+						<tr>
+							<td colspan="2" style="font-weight:bold;"><?php echo $tr->translate("NEW_BORDER")?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("BORDER_NORTH")?></td>
+							<td><?php echo $frm->getElement('north');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("BORDER_SOUTH")?></td>
+							<td><?php echo $frm->getElement('south');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("BORDER_WEST")?></td>
+							<td><?php echo $frm->getElement('west');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("BORDER_EAST")?></td>
+							<td><?php echo $frm->getElement('east');?></td>
+						</tr>
+						<tr>
+							<td colspan="2" style="font-weight:bold;"><?php echo $tr->translate("NEW_PROPERTY_INFO")?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("WIDTH")."(".$tr->translate("HEAD").")";?></td>
+							<td><?php echo $frm->getElement('width');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("HEIGHT")?></td>
+							<td><?php echo $frm->getElement('height');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("SIZE")?></td>
+							<td><?php echo $frm->getElement('size');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("SQURE_PRICE")?></td>
+							<td><?php echo $frm->getElement('price_per_square');?></td>
+						</tr>
+					</table>
+				</fieldset>
+				<fieldset style=" background: #fff;">
+					<legend><strong style="color:#284db7;"><?php echo $tr->translate("AGENT_INFORMATION")?></strong></legend>
+					<table width="100%" class="padding7" >
+						<tr>
+							<td><?php echo $tr->translate("CO_NAME")?></td>
+							<td><?php echo $frm->getElement('agency');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("COMISSION")?></td>
+							<td><?php echo $frm->getElement('commission');?></td>
+						</tr>
+					</table>
 				</fieldset>
 			</td>
 		</tr>
+		<tr>
+			<td colspan="2" valign="top">
+				<fieldset style="min-height: 260px; background: #fff;">
+					<legend><strong style="color:#284db7;"><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></legend>
+					<table width="100%" class="padding7" >
+						<tr>
+							<td>
+								<div id='data_table' name='data_table'></div>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" valign="top">
+				<fieldset style=" background: #fff;">
+					<legend><strong style="color:#284db7;"><?php echo $tr->translate("NOTE")?></strong></legend>
+					<table width="100%" class="padding7" >
+						<tr>
+							<td><?php echo $frm->getElement('note');?></td>
+						</tr>
+						<tr>
+							
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>	
+		<tr>
+			<td colspan="3"  valign="top" align="center">
+				<input	type="submit" value="SAVE_CLOSE" tabindex="2"	label="<?php echo $tr->translate('SAVECLOSE');?>" id="save_close" dojoType="dijit.form.Button" name="save_close" value="save_close" iconClass="dijitEditorIcon dijitEditorIconSave" />
+				<input type="submit" value="SAVE_NEW" tabindex="1"	label="<?php echo $tr->translate('SAVENEW');?>" id="save_new"	dojoType="dijit.form.Button" name="save_new" iconClass="dijitEditorIcon dijitEditorIconSave" />
+			</td>
+		</tr>	
 	</table>
 </form>
 <table>

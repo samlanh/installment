@@ -26,7 +26,7 @@ Class Property_Form_FrmRent extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'onChange'=>'showPopupFormCustomer()'
 		));
-		$opt_cus= array(''=>$this->tr->translate("SELECT_CLIENT"),'-1'=>$this->tr->translate("ADD_NEW"),);
+		$opt_cus= array(''=>$this->tr->translate("CHOOSE_CUSTOEMR"),'-1'=>$this->tr->translate("ADD_NEW"),);
 		$row_customer = $db->getAllClientname();
 		if(!empty($row_customer))foreach($row_customer AS $row){
 			$opt_cus[$row['id']]=$row['name'];
@@ -180,7 +180,7 @@ Class Property_Form_FrmRent extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'onChange'=>'getLandBlog();'
 		));
-		$opt_seller= array(''=>"ជ្រើសរើសអ្នកលក់");
+		$opt_seller= array(''=>$this->tr->translate("CHOOSE_SELLER"));
 		$row_seller = $db->getAllseller();
 		if(!empty($row_seller))foreach($row_seller AS $row){
 			$opt_seller[$row['name']]=$row['name'];
@@ -189,56 +189,44 @@ Class Property_Form_FrmRent extends Zend_Dojo_Form {
 		
 		$north = new Zend_Dojo_Form_Element_TextBox('north');
 		$north->setAttribs(array('dojoType'=>'dijit.form.TextBox',
-				'data-dojo-props'=>"
-				'class':'fullside fullside50',
-				'title':'ព្រំប្រទល់ខាងជើង	',
-				'placeHolder':'ព្រំប្រទល់ខាងជើង	'",
+				'class'=>'fullside',
+				'placeHolder'=>$this->tr->translate("BORDER_NORTH")
+				
 		));
 		$south = new Zend_Dojo_Form_Element_TextBox('south');
 		$south->setAttribs(array('dojoType'=>'dijit.form.TextBox',
-				'data-dojo-props'=>"
-				'class':'fullside fullside50',
-				'title':'ព្រំប្រទល់ខាងត្បូង',
-				'placeHolder':'ព្រំប្រទល់ខាងត្បូង'",
+				'class'=>'fullside',
+				'placeHolder'=>$this->tr->translate("BORDER_SOUTH")
 		));
 		$west = new Zend_Dojo_Form_Element_TextBox('west');
 		$west->setAttribs(array('dojoType'=>'dijit.form.TextBox',
-				'data-dojo-props'=>"
-				'class':'fullside fullside50',
-				'title':'ព្រំប្រទល់ខាងលិច',
-				'placeHolder':'ព្រំប្រទល់ខាងលិច'",
+				'class'=>'fullside',
+				'placeHolder'=>$this->tr->translate("BORDER_WEST")
 		));
 		$east = new Zend_Dojo_Form_Element_TextBox('east');
 		$east->setAttribs(array('dojoType'=>'dijit.form.TextBox',
-				'data-dojo-props'=>"
-				'class':'fullside fullside50',
-				'title':'ព្រំប្រទល់ខាងកើត',
-				'placeHolder':'ព្រំប្រទល់ខាងកើត'",
+				'class'=>'fullside',
+				'placeHolder'=>$this->tr->translate("BORDER_EAST")
 		));
 		
 		$width = new Zend_Dojo_Form_Element_NumberTextBox('width');
 		$width->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
-				'data-dojo-props'=>"
-				'class':'fullside fullside50',
-				'title':'ទទឹង (ក្បាល)',
-				'placeHolder':'ទទឹង (ក្បាល)'",
+				'class'=>'fullside',
+				'placeHolder'=>$this->tr->translate("WIDTH")."(".$this->tr->translate("HEAD").")"
+				
 		));
 		$height = new Zend_Dojo_Form_Element_NumberTextBox('height');
 		$height->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
-				'data-dojo-props'=>"
-				'class':'fullside fullside50',
-				'title':'បណ្ដោយ',
-				'placeHolder':'បណ្ដោយ'",
+				'class'=>'fullside',
+				'placeHolder'=>$this->tr->translate("HEIGHT")
 		));
 		$size = new Zend_Dojo_Form_Element_NumberTextBox('size');
 		$size->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
-				'data-dojo-props'=>"
-				'class':'fullside fullside50',
-				'title':'ទំហំ',
-				'placeHolder':'ទំហំ'",
+				'class'=>'fullside',
+				'placeHolder'=>$this->tr->translate("SIZE"),
 				'onKeyup'=>'calculateSqure(1)'
 		));
 		if($data!=null){

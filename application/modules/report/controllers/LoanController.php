@@ -680,6 +680,7 @@ public function exportFileToExcel($table,$data,$thead){
  	 
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+ 	//$db->updatePaid();
  }
  function rptDepositalertAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
@@ -937,13 +938,6 @@ public function exportFileToExcel($table,$data,$thead){
   		$this->view->rs_paid = $db->getRealPaid($formdata);
   		$this->view->rs_schedule = $db->getScheduleCompletednotUpdate($formdata);
   		$this->view->rs_begining = $db->getBeginingBalance($formdata);
-  		
-  		
-  			
-//   		$frm = new Loan_Form_FrmSearchLoan();
-//   		$frm = $frm->AdvanceSearch();
-//   		Application_Model_Decorator::removeAllDecorator($frm);
-//   		$this->view->frm_search = $frm;
   }
  
 }

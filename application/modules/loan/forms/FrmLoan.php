@@ -158,29 +158,29 @@ public function init()
 // 		$opt = $db->getAllLandInfo();
 // 		$_loan_type->setMultiOptions($opt);
 		
-// 		$_time_collect = new Zend_Dojo_Form_Element_NumberTextBox('amount_collect');
-// 		$_time_collect->setAttribs(array(
-// 				'dojoType'=>'dijit.form.NumberTextBox',
-// 				'class'=>'fullside',
-// 				'onkeyup'=>'getFirstPayment();'
-// 		));
-//  		$_time_collect->setValue(1);
- 		
-//  		$_time_collect_pri = new Zend_Dojo_Form_Element_NumberTextBox('amount_collect_pricipal');
-//  		$_time_collect_pri->setAttribs(array(
-//  				'dojoType'=>'dijit.form.NumberTextBox',
-//  				'class'=>'fullside',
-//  				'readonly'=>true,
-//  				'required'=>true
-//  		));
-//  		$_time_collect_pri->setValue(0);
+		$amount_build = new Zend_Dojo_Form_Element_NumberTextBox('amount_build');
+		$amount_build->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'onkeyup'=>'getFirstPayment();'
+		));
+		$amount_build->setValue(24);
+		
+ 		$start_building = new Zend_Dojo_Form_Element_DateTextBox('start_building');
+ 		$start_building->setAttribs(array(
+ 				'dojoType'=>'dijit.form.DateTextBox',
+ 				'class'=>'fullside',
+ 				'required'=>true,
+ 				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+ 		));
+ 		$start_building->setValue(date("Y-m-d"));
  		
 		$_amount = new Zend_Dojo_Form_Element_NumberTextBox('land_price');
 		$_amount->setAttribs(array(
 						'dojoType'=>'dijit.form.NumberTextBox',
 						'class'=>'fullside',
 						'required' =>'true',
-						'readOnly'=>true,
+						
 		));
 // 		$_amount->setValue(5000);
 		
@@ -477,9 +477,11 @@ public function init()
 			$commission->setValue($data['comission']);
 			$staff_id->setValue($data['staff_id']);
 			
+			$start_building->setValue(date("d/m/Y",strtotime($data['start_building'])));
+			$amount_build->setValue($data['amount_build']);
 			
 		}
-		$this->addElements(array($typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

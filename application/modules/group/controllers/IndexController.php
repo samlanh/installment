@@ -69,16 +69,9 @@ class Group_indexController extends Zend_Controller_Action {
 				$data = $this->getRequest()->getPost();
 				$data['old_photo']=null;
 				$db = new Group_Model_DbTable_DbClient();
+				$id= $db->addClient($data);
 				try{
-				 if(isset($data['save_new'])){
-					$id= $db->addClient($data);
-					Application_Form_FrmMessage::message("INSERT_SUCESS");
-				}
-				else if (isset($data['save_close'])){
-					$id= $db->addClient($data);
-					Application_Form_FrmMessage::message("INSERT_SUCESS");
-					Application_Form_FrmMessage::redirectUrl("/group/index");
-				}
+				Application_Form_FrmMessage::message("INSERT_SUCESS");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -246,7 +239,7 @@ class Group_indexController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			$db = new Application_Model_DbTable_DbGlobal();
 			$dataclient=$db->getAllClientNumber($data['branch_id']);
-			array_unshift($dataclient, array('id' => "-1",'name'=>'---Add New Client---') );
+			array_unshift($dataclient, array('id' => "-1",'name'=>'Add New Client') );
 			print_r(Zend_Json::encode($dataclient));
 			exit();
 		}
@@ -255,10 +248,9 @@ class Group_indexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			 $data = $this->getRequest()->getPost();
 			 $db = new Application_Model_DbTable_DbGlobal();
-// 			 $data['branch_id']
 			 $data['branch_id']=null;
              $dataclient=$db->getAllClient($data['branch_id']);
-             array_unshift($dataclient, array('id' => "-1",'name'=>'---Add New Client---') );
+             array_unshift($dataclient, array('id' => "-1",'name'=>'Add New Client') );
 			 print_r(Zend_Json::encode($dataclient));
 			exit();
 		}

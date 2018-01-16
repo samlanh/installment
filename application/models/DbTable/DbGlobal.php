@@ -524,6 +524,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`comission`       AS `comission`,
 		  `s`.`receipt_no`      AS `receipt_no`,
 		  s.total_installamount,
+		 (SELECT project_name FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS branch_name,
   		(SELECT client_number FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_number,
   		(SELECT name_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_kh,
   		(SELECT hname_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS hname_kh,
@@ -812,43 +813,32 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	 if($str_next=='+1 month'){
 	 	if($default_day>28){
 		 	if($default_day==31){
-// 		 		$next_payment = date("Y-m-t", strtotime("$next_payment +1 day"));//if many hear not work
 		 		$date= new DateTime($next_payment);
 		 		$date->modify('+1 day');
 		 		$next_payment = $date->format("Y-m-t");
 		 		return $next_payment;
 		 	}elseif($default_day==30 OR $default_day==29){
-// 		 		$pre_month = date("m", strtotime($prev_month));
-// 		 		$prev_month = $pre_month;
 		 		
 		 		$date= new DateTime($prev_month);
 		 		$pre_month = $date->format("m");
 		 		$prev_month = $pre_month;
 		 		
 		 		if($pre_month=='01'){
-// 		 			$next_payment =  date("Y", strtotime($next_payment))."-02-20";
-// 		 			$next_payment = date("Y-m-t", strtotime("$next_payment"));
-		 			
 		 			$date= new DateTime($next_payment);
 		 			$next_payment = $date->format("Y-02-20");
 		 			$date= new DateTime($next_payment);
 		 			$next_payment = $date->format("Y-m-t");
 		 		}//for Feb
 		 		else{
-		 			//$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
-		 			
 		 			$date= new DateTime($next_payment);
 		 			$date->modify('+1 month');
 		 			$next_payment = $date->format("Y-m-$default_day");
 		 		}
-		 	}else{//for 29
-		 		
 		 	}
 	 	}else{
 	 		if($str_next!='+1 month'){
 	 			$default_day='d';
 	 		}
-// 	 		$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
 	 		$date= new DateTime($next_payment);
 	 		$date->modify('+1 month');
 	 		$next_payment = $date->format("Y-m-$default_day");
@@ -1354,9 +1344,11 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   	return $db->fetchAll($sql.$where.$order);
   }
   public function getNewClientIdTypeTwo(){
-  	$this->_name='ln_client';
+  //	$this->_name='ln_client
+	$this->_name='ln_client_property';
   	$db = $this->getAdapter();
-  	$sql=" SELECT count(client_id) ,client_number FROM $this->_name where type=2 ORDER BY client_id DESC LIMIT 1 ";
+  	//$sql=" SELECT count(client_id) ,client_number FROM $this->_name where type=2 ORDER BY client_id DESC LIMIT 1 ";
+	$sql=" SELECT count(client_id) ,client_number FROM $this->_name where 1 ORDER BY client_id DESC LIMIT 1 ";
   	$acc_no = $db->fetchOne($sql);
   	$new_acc_no= (int)$acc_no+1;
   	$acc_no= strlen((int)$acc_no+1);
@@ -1387,9 +1379,11 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   }
   function getAllClientname(){
   	$db = $this->getAdapter();
+	 //	$this->_name='ln_client
+	$this->_name='ln_client_property';
   	$sql = " SELECT c.`client_id` AS id,
   	CONCAT(c.name_kh ,' , ',c.`hname_kh`) AS name , client_number
-  	FROM `ln_client` AS c WHERE c.`name_kh`!='' AND c.status=1 AND c.type=2" ;
+  	FROM $this->_name AS c WHERE c.`name_kh`!='' AND c.status=1" ;
   	$sql.=" ORDER BY id DESC";
   	return $db->fetchAll($sql);
   }

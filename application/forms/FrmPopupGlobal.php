@@ -245,12 +245,12 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<form id="form_district" >';
 		$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
 					<tr>
-						<td>District Name English</td>
-						<td>'.$frm->getElement('pop_district_name').'</td>
-					</tr>
-								<tr>
-						<td>Province Name English</td>
+						<td>District In Khmer</td>
 						<td>'.$frm->getElement('pop_district_namekh').'</td>
+					</tr>
+					<tr>
+						<td>District In English</td>
+						<td>'.$frm->getElement('pop_district_name').'</td>
 					</tr>
 					<tr>
 						<td>District Name Khmer</td>
@@ -274,13 +274,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<div data-dojo-type="dijit.Dialog"  id="frm_commune" >
 					<form id="form_commune" >';
 			$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
-					<tr>
-						<td>Commune Name EN</td>
-						<td>'.'<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="commune_nameen" name="commune_nameen" value="" type="text">'.'</td>
-					</tr>
+					
 					<tr>
 						<td>Commune KH</td>
 						<td>'.'<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="commune_namekh" name="commune_namekh" value="" type="text">'.'</td>
+					</tr>
+					<tr>
+						<td>Commune Name EN</td>
+						<td>'.'<input dojoType="dijit.form.ValidationTextBox" class="fullside" id="commune_nameen" name="commune_nameen" value="" type="text">'.'</td>
 					</tr>
 					<tr>
 						<td></td>
@@ -317,7 +318,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						</tr>
 						<tr>
 							<td>'.$tr->translate("VILLAGE_NAME").'</td>
-							<td>'.'<input dojoType="dijit.form.ValidationTextBox" required="true" missingMessage="Invalid Module!" class="fullside" id="village_name" name="village_name" value="" type="text">'.'</td>
+							<td>'.'<input dojoType="dijit.form.ValidationTextBox" missingMessage="Invalid Module!" class="fullside" id="village_name" name="village_name" value="" type="text">'.'</td>
 						</tr>
 						<tr>
 							<td>'. $tr->translate("DISPLAY_BY").'</td>
@@ -543,6 +544,173 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 							</td>
 						</tr>
 			</table>';
+		$str.='</form></div>
+		</div>';
+		return $str;
+	}
+	public function frmPopupLandblog(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$str='<div class="dijitHidden">
+		<div data-dojo-type="dijit.Dialog"  id="frm_landblog" >
+		<form id="form_landblog" >';
+		$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+		<tr>
+		<td>Title</td>
+		<td>'.'<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="title_kh" name="title_kh" value="" type="text">'.'</td>
+		</tr>
+		<tr>
+		<td colspan="2" align="center">
+		<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
+		iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewLandBlog();"/>
+		</td>
+		</tr>
+		</table>';
+		$str.='</form></div>
+		</div>';
+		return $str;
+	}
+	public function frmPopupCustomer(){
+		$fm = new Property_Form_FrmClient();
+		$frm = $fm->FrmAddClient();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$db = new Application_Model_DbTable_DbGlobal();
+		$client_type = $db->getclientdtype();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$str='<div class="dijitHidden">
+		<div data-dojo-type="dijit.Dialog"  id="frm_customer" style="width:1100px;">
+		<form id="form_customer" >
+		<script type="dojo/method" event="onSubmit">
+		if(this.validate()) {
+		  return true;
+	    } else {
+	    return false;
+	    }
+	   </script>
+		';
+		$str.='
+		<table width="100%" style="margin-top: -5px;">
+			<tr>
+				<td style="overflow: scroll;overflow-y:hidden; width:1100px">
+					<style>
+					.dojoxGridSortNode{
+						text-align: center;	
+						height: 30px;		
+					}
+					.dijitTabPaneWrapper , .dijitContentPane,.dijitTabListContainer-top{max-width: 99% !important;}
+				</style>
+				<div id="mainTabContainer" style="max-width:100%; height: 500px;overflow-y:hidden;" dojoType="dijit.layout.TabContainer" region="center"  >
+						<div style="width:100%;overflow-x:hidden;overflow-y:hidden;" dojoType="dijit.layout.ContentPane" title="'.$tr->translate('ADD_CLIENT').'" selected="true">
+							<fieldset>	
+							<legend><strong>'.$tr->translate("ADD_CLIENT").'</strong></legend>
+							<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+								<tr>
+									<td>'.$tr->translate("CLIENT_NO").'</td>
+									<td>'.$frm->getElement('client_no').'</td>
+									<td>'.$tr->translate("AGE").'</td>
+									<td>'.$frm->getElement('age').'</td>
+									<td>'.$tr->translate("DOCMENT_TYPE").'</td>
+									<td>
+										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="client_d_type" name="client_d_type"  type="text">';
+											if(!empty($client_type)){foreach($client_type as $row){
+												$str.='<option value="'.$row['id'].'">'.$row['name'].'</option>';
+											}}
+									$str.='</select>
+									</td>
+								</tr>
+								<tr>
+									<td>'.$tr->translate("CUSTOMER_NAME").'*</td>
+									<td>'.$frm->getElement('name_kh').'</td>
+									<td>'.$tr->translate("NATIONALITY").'</td>
+									<td>'.$frm->getElement('nationality').'</td>
+									<td>'.$tr->translate("NATIONAL_ID").'</td>
+									<td>'.$frm->getElement('national_id').'</td>
+								</tr>
+								<tr>
+									<td>'.$tr->translate("SEX").'</td>
+									<td>'.$frm->getElement('customer_sex').'</td>
+									<td>'.$tr->translate("PHONE").'</td>
+									<td>'.$frm->getElement('cus_phone').'</td>
+									<td>'.$tr->translate("Issue Date").'</td>
+									<td>'.$frm->getElement('national_id_issue_date').'</td>
+									
+								</tr>
+								<tr>
+									
+									<td>'.$tr->translate("EMAIL").'</td>
+									<td>'.$frm->getElement('email').'</td>
+									
+								</tr>
+								<tr>
+									<td colspan="6" style="border-bottom: solid 1px #ccc;">'.$tr->translate("Current Address").'</td>
+								</tr>
+								<tr>
+									<td colspan="6">'.$frm->getElement('current_address').'</td>
+								</tr>
+								<tr>
+									<td colspan="6" style="border-bottom: solid 1px #ccc;">'.$tr->translate("NOTE").'</td>
+								</tr>
+								<tr>
+									<td colspan="6">'.$frm->getElement('desc').'</td>
+								</tr>
+							</table>
+						</fieldset>
+					</div>
+					<div  dojoType="dijit.layout.ContentPane" style="overflow-x:hidden;overflow-y:hidden;" title="'.$tr->translate('RELEVANT_STAKEHOLDER').'" selected="false">
+						<fieldset>
+							<legend><strong>'.$tr->translate("RELEVANT_STAKEHOLDER").'</strong></legend>
+								<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+									<tr>
+										<td>'.$tr->translate("JOIN_NAME").'</td>
+										<td>'.$frm->getElement('hname_kh').'</td>
+										<td>'.$tr->translate("NATIONALITY").'</td>
+										<td>'.$frm->getElement('p_nationality').'</td>
+										<td>'.$tr->translate("DOCMENT_TYPE").'</td>
+										<td>
+										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="join_d_type" name="join_d_type"  type="text">';
+											if(!empty($client_type)){foreach($client_type as $row){
+												$str.='<option value="'.$row['id'].'">'.$row['name'].'</option>';
+											}}
+									$str.='</select>
+										</td> 
+									</tr>
+									<tr>
+										<td>'.$tr->translate("SEX").'</td>
+										<td>'.$frm->getElement('ksex').'</td>
+										<td>'.$tr->translate("PHONE").'</td>
+										<td>'.$frm->getElement('lphone').'</td>
+										<td>'.$tr->translate("NATIONAL_ID").'</td>
+										<td>'.$frm->getElement('rid_no').'</td>
+										
+										
+									</tr>
+									<tr>
+										<td>'.$tr->translate("AGE").'</td>
+										<td>'.$frm->getElement('p_age').'</td>
+										
+										<td>'.$tr->translate("JOIN_TYPE").'</td>
+										<td>'.$frm->getElement('is_type_of_relevant').'</td>
+										<td>'.$tr->translate("Issue Date").'</td>
+										<td>'.$frm->getElement('p_national_id_issue_date').'</td>
+									</tr>
+									<tr>
+										<td>'.$tr->translate("SPOUSE_NAME").'</td>
+										<td>'.$frm->getElement('arid_no').'</td>
+										<td>'.$tr->translate("SPOUSE_NATION_ID").'</td>
+										<td>'.$frm->getElement('reference_national_id').'</td>
+									</tr>
+								</table>
+						</fieldset>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td  align="center">
+				<input type="button" value="Save" label="'.$tr->translate("SAVE").'" dojoType="dijit.form.Button"
+				iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewCustomer();"/>
+			</td>
+		</tr>
+		';
 		$str.='</form></div>
 		</div>';
 		return $str;

@@ -290,7 +290,8 @@ Class Property_Form_FrmClient extends Zend_Dojo_Form {
 			$p_nationality->setValue($data['p_nationality']);
 			$_age->setValue($data['age']);
 			$p_age->setValue($data['p_age']);
-			$_p_nation_issue_date->setValue($data['p_nation_issue_date']);
+			$_nation_issue_date->setValue(date("Y-m-d",strtotime($data['nation_id_issue_date'])));
+			$_p_nation_issue_date->setValue(date("Y-m-d",strtotime($data['p_nation_issue_date'])));
 			$current_address->setValue($data['current_address']);
 			$_is_type_of_relevant->setValue($data['is_relevant_type']);
 			$referecce_national_id->setValue($data['refe_nation_id']);

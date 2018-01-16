@@ -33,8 +33,8 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
  }
 	 function updateIncome($data,$id){
 		$arr = array(
-					'sale_id'		=>$data['sale_client'],
-					'house_id'		=>$data['house_id'],
+					'sale_id'	=>$data['sale_client'],
+					'house_id'	=>$data['house_id'],
 					'branch_id'=>$data['branch_id'],
 					'client_id'=>$data['customer'],
 					'title'=>$data['title'],

@@ -28,6 +28,8 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				'land_size'			=>$_data['size'],
 				'width'      => $_data['width'],
 				'height'      => $_data['height'],
+	    		//'land_width'      => $_data['width_land'],
+	    		//'land_height'      => $_data['height_land'],
 				'hardtitle'      => $_data['hardtitle'],
 				'note'       => $_data['desc'],
 // 		        'create_date'=>date("Y-m-d"),

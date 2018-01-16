@@ -81,6 +81,12 @@ class Property_indexController extends Zend_Controller_Action {
 		$landblog = $db_landblog->getLandBlog();
 		array_unshift($landblog, array('id'=>'','name' => "-----ជ្រើសរើស-----"), array('id'=>'-1', 'name'=>'បន្ថែមថ្មី'));
 		$this->view->land_blog = $landblog;
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$client_type = $db->getclientdtype();
+		array_unshift($client_type,array('id' => -1,'name' => '--- បន្ថែមថ្មី ---',));
+		array_unshift($client_type,array('id' => 0,'name' => '---Please Select ---',));
+		$this->view->clienttype = $client_type;
 
 	}	
 	public function editAction(){
@@ -88,7 +94,7 @@ class Property_indexController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			$_data['id'] = $id;
+			//$_data['id'] = $id;
 			try{
 				$_db->updateBuyLand($_data);
 				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/property/index");
@@ -104,6 +110,7 @@ class Property_indexController extends Zend_Controller_Action {
 		
 		$rs = $_db->getBuyLandById($id);
 		$this->view->rs = $rs;
+		$this->view->id = $id;
 		$frm = new Property_Form_FrmBuyland();
 		$frm_buy=$frm->FrmBuyLand($rs);
 		Application_Model_Decorator::removeAllDecorator($frm_buy);
@@ -117,6 +124,12 @@ class Property_indexController extends Zend_Controller_Action {
 		$landblog = $db_landblog->getLandBlog();
 		array_unshift($landblog, array('id'=>'','name' => "-----ជ្រើសរើស-----"), array('id'=>'-1', 'name'=>'បន្ថែមថ្មី'));
 		$this->view->land_blog = $landblog;
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$client_type = $db->getclientdtype();
+		array_unshift($client_type,array('id' => -1,'name' => '--- បន្ថែមថ្មី ---',));
+		array_unshift($client_type,array('id' => 0,'name' => '---Please Select ---',));
+		$this->view->clienttype = $client_type;
 	
 	}	
 	function deleteAction(){

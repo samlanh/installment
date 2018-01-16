@@ -11,8 +11,11 @@
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');    // 0 or 1 set 1 if unable to download database it will show all possible errors
 	ini_set('max_execution_time', 0);  // setting 0 for no time limit
-	define('BACKUP_DIR', $this->baseUrl()."/myBackups") ;
+	//define('BACKUP_DIR', $this->baseUrl()."/myBackups") ;
+	define('BACKUP_DIR', './myBackups' ) ;
 	define('URL_PART',$this->baseUrl());
+	define('URL_DOWNLOAD',$this->baseUrl().'/myBackups');
+	
 	$username='root';
 	$password='';
 ?>
@@ -185,6 +188,8 @@ if(isset($_REQUEST['submit'])){
 	If you plan to upload the  file to Amazon's S3 service , use only lower-case letters
 	*/
 	$fileName = 'mybackup--' . date('d-m-Y') . '@'.date('h.i.s').'.sql' ;
+// 	echo $fileName;exit();
+// echo BACKUP_DIR;exit();
 	// Set execution time limit
 	if(function_exists('max_execution_time')) {
 		if( ini_get('max_execution_time') > 0 ) 	set_time_limit(0) ;
@@ -287,7 +292,7 @@ function display_download($BACKUP_DIR){
 	if(count($downloads)>0)
 		foreach ($downloads as $k => $v) {
 		$msg.= '<tr><td>'.$v['name'].'</td><td>'.$v['size'].'</td><td>
-		<a class="tooltips" href="'.URL_PART.BACKUP_DIR."/". $v['name'] .'" target="_blank"><span>Click to download</span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAtElEQVR42mNgQAMGBgb+xsbGH42MjP7BMJC/X09PT4yBEAAq9Abi/+gYaIjPqGYokJGR4QRKbgIqOgykr+DQfBUkD8RbgJgLxQBDQ8NYoIIv2DQiGfAFqC4OqwuAcZwAVPANh8ZvQJyI18/AxOCLQ7MvNtus0YQYoQZ8h2r8DnSqH0gcW+h+wOYCfX39RKBtd0A0jlj5j1MzEVEK1vwRaHo6CfqYgN7IBGsGOm0uvujBE20NAHg8npa1TPgkAAAAAElFTkSuQmCC"/></a>
+		<a class="tooltips" href="'.URL_DOWNLOAD."/". $v['name'] .'" target="_blank"><span>Click to download</span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAtElEQVR42mNgQAMGBgb+xsbGH42MjP7BMJC/X09PT4yBEAAq9Abi/+gYaIjPqGYokJGR4QRKbgIqOgykr+DQfBUkD8RbgJgLxQBDQ8NYoIIv2DQiGfAFqC4OqwuAcZwAVPANh8ZvQJyI18/AxOCLQ7MvNtus0YQYoQZ8h2r8DnSqH0gcW+h+wOYCfX39RKBtd0A0jlj5j1MzEVEK1vwRaHo6CfqYgN7IBGsGOm0uvujBE20NAHg8npa1TPgkAAAAAElFTkSuQmCC"/></a>
 		&nbsp;|&nbsp;<a onclick="return confirm(\'Are you sure want to remove this file ?\')" class="tooltips" href="?task=clear&file='.$v['name'].'"><span>Click to Remove</span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAp0lEQVR42rWSWwoDIQxFXUUX0H+V6B6m/3YJ3eY8dtMNTH9mSh/3QoSBQnUsFS4xISfRqBGRSwjhCj1rFGO8w/beezEEEXjtFbjRaLUW+NEMUx8wZjDhPgnxWTvM9Bkvwkw0WLAn+Cut+qkIa6eOgHPuoGCXT/IVVq0ZpEXOUnVn+LfmzhjMeQMsuRD26b/T3vXO/Ku//LC+ER44GOGGlWo7Mt9ae3wDSJ1BX+TxzPsAAAAASUVORK5CYII="/></a>
 		</td></tr>';
 	}

@@ -421,10 +421,13 @@ function getAllBranch($search=null){
 				  `s`.`interest_rate`   AS `interest_rate`,
 				  `s`.`total_duration`  AS `total_duration`,
 				  `s`.`first_payment`  AS `first_payment`,
-				  s.is_reschedule,
-				  s.land_price,
+				   s.is_reschedule,
+				   s.land_price,
+				   s.amount_build,
+				   s.build_start,
 				   s.buy_date,
 				   s.agreement_date,
+				   (SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.payment_id limit 1) AS payment_type,
 			      `p`.`project_name`,
 			      `p`.`br_address` AS `project_location`,
 			      `p`.`p_manager_namekh` AS `project_manager_namekh`,
@@ -436,7 +439,11 @@ function getAllBranch($search=null){
                   `c`.`client_number` AS `client_code`,
      			  `c`.`name_kh` AS `client_namekh`,
      			  `c`.`name_en` AS `client_nameen`,
-     			  c.hname_kh,
+     			   c.dob,
+     			   c.hname_kh,
+     			   c.dob_buywith,
+     			   c.rid_no,
+     			   c.p_nationality,
   				  `c`.`nationality` AS `client_nationality`,
      			  `c`.`nation_id` AS `client_nation_id`,
                   `c`.`phone` AS `client_phone`,
@@ -481,51 +488,32 @@ function getAllBranch($search=null){
 				   FROM `ln_province` `provi`
 				   WHERE (`provi`.`province_id` = `c`.`pro_id`)
 				   LIMIT 1) AS `client_province_kh`,
-				  (SELECT `property`.`land_code`
-					   FROM `ln_properties` `property`
-					   WHERE (`property`.`id` = `s`.`house_id`)
-					   LIMIT 1) AS `property_code`,
-				  (SELECT
-						     `property`.`land_address`
-						   FROM `ln_properties` `property`
-						   WHERE (`property`.`id` = `s`.`house_id`)
-						   LIMIT 1) AS `property_title`,
-				  (SELECT
+				  
+			(SELECT
 				     `prope_type`.`type_nameen`
 				   FROM `ln_properties_type` `prope_type`
-				   WHERE (`prope_type`.`id` = (SELECT
-				                                 `property`.`property_type`
-				                               FROM `ln_properties` `property`
-				                               WHERE (`property`.`id` = `s`.`house_id`)
-				                               LIMIT 1))
+				   WHERE (`prope_type`.`id` =`pp`.`property_type`)
 				   LIMIT 1) AS `property_type_en`,
-				  (SELECT
+			(SELECT
 				     `prope_type`.`type_namekh`
 				   FROM `ln_properties_type` `prope_type`
-				   WHERE (`prope_type`.`id` = (SELECT
-				                                 `property`.`property_type`
-				                               FROM `ln_properties` `property`
-				                               WHERE (`property`.`id` = `s`.`house_id`)
-				                               LIMIT 1))
-				   LIMIT 1) AS `property_type_kh`,
-			  (SELECT
-			     `property`.`width`
-			   FROM `ln_properties` `property`
-			   WHERE (`property`.`id` = `s`.`house_id`)
-			   LIMIT 1) AS `property_width`,
-			  (SELECT
-			     `property`.`height`
-			   FROM `ln_properties` `property`
-			   WHERE (`property`.`id` = `s`.`house_id`)
-			   LIMIT 1) AS `property_height`,
-  (SELECT
-     `property`.`street`
-   FROM `ln_properties` `property`
-   WHERE (`property`.`id` = `s`.`house_id`)
-   LIMIT 1) AS `property_street`
-		FROM `ln_sale` AS `s`,ln_project AS p ,`ln_client` AS c
-			WHERE `p`.`br_id` = `s`.`branch_id` 
+				   WHERE `prope_type`.`id` = `pp`.`property_type` LIMIT 1) AS `property_type_kh`,
+			`pp`.`width` AS `property_width`,
+		    `pp`.`height` AS `property_height`,
+		    `pp`.`land_code` AS `property_code`,
+		    `pp`.`land_address` AS `property_title`,
+ 			 pp.`street` AS `property_street`,
+ 			 pp.land_width,
+ 			 pp.land_height
+		FROM 
+			`ln_sale` AS `s`,
+			ln_project AS p ,
+			`ln_client` AS c,
+			ln_properties as pp
+			WHERE 
+			`p`.`br_id` = `s`.`branch_id` 
 			AND `c`.`client_id` = `s`.`client_id`
+			AND `pp`.`id` = `s`.`house_id`
 			AND s.id=".$id;
     		return $db->fetchRow($sql);
     }
@@ -758,10 +746,52 @@ function getAllBranch($search=null){
     	FROM `ln_income` AS ic WHERE ic.`category_id`=$cate_id";
     	return $db->fetchOne($sql);
     }
-    	function geOtherExpense($cate_id){
+    function geOtherExpense($cate_id){
     	$db = $this->getAdapter();
     	$sql="SELECT SUM(ex.`total_amount`) AS `total_amount` FROM `ln_expense` AS ex WHERE  ex.`category_id`=$cate_id";
     	return $db->fetchOne($sql);
-    	}
+    }
+    function getAllCommission($search){
+    		$db = $this->getAdapter();
+    		$from_date =(empty($search['start_date']))? '1': "c.`for_date` >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': "c.`for_date` <= '".$search['end_date']." 23:59:59'";
+    		$where = " AND ".$from_date." AND ".$to_date;
+    		$sql ='SELECT c.`id`,
+    		p.`project_name`,
+    		s.`sale_number`,
+    		clie.`name_kh` AS client_name,
+    		(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
+    		pro.`land_address`,pro.`street`,
+    		s.price_sold,
+    		(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name,
+    		(SELECT co_code FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS co_code,
+    		(SELECT sex FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS sex,
+    		(SELECT tel FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS tel,
+    		c.total_amount,
+    		for_date AS `create_date`, c.`status`
+    		FROM `ln_comission` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
+    		`ln_client` AS clie
+    		WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
+    		clie.`client_id` = s.`client_id` ';
+    		if($search['branch_id']>0){
+    			$where.= " AND c.branch_id = ".$search['branch_id'];
+    		}
+    		if($search['co_khname']>0){
+    			$where.= " AND c.staff_id = ".$search['co_khname'];
+    		}
+    		if(!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = addslashes(trim($search['adv_search']));
+    			$s_where[] = " clie.`client_number` LIKE '%{$s_search}%'";
+    			$s_where[] = " clie.`name_kh` LIKE '%{$s_search}%'";
+    			$s_where[] = " c.`description` LIKE '%{$s_search}%'";
+    			$s_where[] = " s.`sale_number` LIKE '%{$s_search}%'";
+    			$s_where[] = " pro.`land_address` LIKE '%{$s_search}%'";
+    			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
+    			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
+    			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		return $db->fetchAll($sql.$where);
+    }
 }
 

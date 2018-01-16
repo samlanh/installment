@@ -52,11 +52,11 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			try {
 				$_dbmodel = new Loan_Model_DbTable_DbRepaymentSchedule();
 				$_dbmodel->addRepayMentSchedule($_data);
-				if(!empty($_data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/repaymentschedule");
-				}else{
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
-				}
+				//if(!empty($_data['saveclose'])){
+				//	Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/repaymentschedule");
+				//}else{
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				//}
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
@@ -72,12 +72,9 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
         $this->view->allclient = $db->getAllClient();
         $this->view->allclient_number = $db->getAllClientNumber();
         $frmpopup = new Application_Form_FrmPopupGlobal();
-//         $this->view->frmpupoploantype = $frmpopup->frmPopupLoanTye();
-//         $this->view->frmPopupZone = $frmpopup->frmPopupZone();
         
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();        
-//         $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
 		

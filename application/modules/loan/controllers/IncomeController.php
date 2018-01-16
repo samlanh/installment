@@ -101,13 +101,11 @@ class Loan_IncomeController extends Zend_Controller_Action
 		$row  = $db->getexpensebyid($id);
 		$row['payment_id']=0;
 		$this->view->row = $row;
-		//print_r($row);
 		
     	$pructis=new Loan_Form_Frmexpense();
     	$frm = $pructis->FrmAddExpense($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
-		
     	
     	$db = new Loan_Model_DbTable_DbIncome();
     	$result = $db->getAllIncomeCategory();

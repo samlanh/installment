@@ -131,12 +131,18 @@ class Property_Model_DbTable_DbBuyland extends Zend_Db_Table_Abstract
     				'note'=>$data['note'],
     				'status'=>$data['status'],
     				'user_id'=>$this->getUserId(),
-    				'create_date'=>date("Y-m-d"),
+    				'create_date'=>date("Y-m-d H:i:s"),
+					'modify_date'=>date("Y-m-d H:i:s"),
     				
     				'land_photo1'=>$land_photo1,
     				'land_photo2'=>$land_photo2,
     				'sale_photo1'=>$sale_photo1,
     				'sale_photo2'=>$sale_photo2,
+					
+					'sale_d_type'=>$data['sale_d_type'],
+					'sale_relevent_d_type'=>$data['sale_relevent_d_type'],
+					'buyer_d_type'=>$data['buyer_d_type'],
+					'buyer_relevent_d_type'=>$data['buyer_relevent_d_type'],
     				);
     		$this->insert($arr);
     	}catch(Exception $e){
@@ -244,7 +250,14 @@ class Property_Model_DbTable_DbBuyland extends Zend_Db_Table_Abstract
     				'land_photo2'=>$land_photo2,
     				'sale_photo1'=>$sale_photo1,
     				'sale_photo2'=>$sale_photo2,
+					
+					'sale_d_type'=>$data['sale_d_type'],
+					'sale_relevent_d_type'=>$data['sale_relevent_d_type'],
+					'buyer_d_type'=>$data['buyer_d_type'],
+					'buyer_relevent_d_type'=>$data['buyer_relevent_d_type'],
+					'modify_date'=>date("Y-m-d H:i:s"),
 //     				'create_date'=>date("Y-m-d"),
+
     		);
     		$where = 'id = '.$data['id'];
     		$this->update($arr, $where);

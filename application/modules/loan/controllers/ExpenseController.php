@@ -78,7 +78,6 @@ class Loan_ExpenseController extends Zend_Controller_Action
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
- 
     public function editAction()
     {
     	$id = $this->getRequest()->getParam('id');
@@ -88,7 +87,7 @@ class Loan_ExpenseController extends Zend_Controller_Action
 			$db = new Loan_Model_DbTable_DbExpense();				
 			try {
 				$db->updatExpense($data);				
-				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);		
+				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', self::REDIRECT_URL);		
 			} catch (Exception $e) {
 				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
 			}

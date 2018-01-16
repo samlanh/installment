@@ -9,6 +9,8 @@
 <title><?php echo $tr->translate('REPORT WEEK');?></title>
 <style>
 td p{ margin-top:0px !important;}
+#printfooter{display: none !important;}
+h2{line-height: 25px !important;}
 </style>
 <div style=" width:21cm; margin:0 auto; border: 1px dotted #ccc; padding: 0 40px;">
 	<div id="divPrint">
@@ -30,22 +32,29 @@ table { page-break-inside:auto }
   page-break-inside:avoid; page-break-after:auto;
 }
 .hover:hover{background: #ccc;}
+#printfooter {
+	    position: absolute;
+	    bottom: 0;
+	    position: fixed;
+	    display: block ;
+	}
+	h2{line-height: 10px;}
 	</style>
 	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
 		<tr>
 	    	<td align="center">
 	        	<table width="100%" style="font-family:khmer;margin:0 auto;padding:0px; border:none;">
 	            	<tr>
-	                	<td width="30%" style="border-bottom: 1px solid #000;"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px">
-	                		<p style="font-family: 'Khmer OS Battambang'; font-size:9px;margin-top:4px; line-height:15px;"><?php //echo $client['branch_name'];?> 	<?php echo $tr->translate("ADDRESS_COMPANY");?>
-								<br /><?php //echo $this->data['phone_brand'];?></p>
+	                	<td width="30%" style=""><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px">
+	                		<p style="font-family: 'Khmer OS Battambang'; font-size:9px;margin-top:4px; line-height:15px;">
+						    </p>
 	                	</td>
 	                	<td width="47%" valign="top">
-	                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><label><?php echo $tr->translate("BRAND_TITLE");?><?php //echo $this->data['brand_title'];?></label></h2>
-	                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><?php //echo $tr->translate('rpt-paymentschedule');?> <?php //echo ($client['loan_type']==1)?$tr->translate('RPT_ILLOAN'):$tr->translate('RPT_GROULOAN') ;?></h2>
-	                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"> <?php echo $tr->translate('RPT_ILLOAN');?></h2>
+		                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><label><?php echo $tr->translate("BRAND_TITLE");?><?php //echo $this->data['brand_title'];?></label></h2>
+		                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><?php echo $tr->translate("BRANCH_NAME");?> : <?php echo  $client['branch_name']; ;?></h2>
+		                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"> <?php echo $tr->translate('RPT_ILLOAN');?></h2>
 	                	</td>
-	                    <td ></td>
+	                    <td ><h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"> <?php echo $tr->translate('ARTICLE_1');?></h2></td>
 	                </tr>
 	                <?php $db = new Application_Model_DbTable_DbGlobal();
 	                	  $row = $db->getClientByType(null,$client['client_id'],1);
@@ -66,11 +75,17 @@ table { page-break-inside:auto }
 				                      <p><?php //echo $tr->translate("OTHER_FEE");?>  : <?php //echo number_format($client['other_fee'],2);?></p>
 				                      <p><?php //echo $tr->translate("TOTAL_AMOUNT");?>  : <?php //echo number_format($client['price_sold'],2);?></p>
 				                      <p><?php //echo $tr->translate("PAID");?>  : <?php //echo number_format($client['paid_amount'],2);?></p>
-				                      <p><?php //echo $tr->translate("BALANCE");?>  : <strong><?php //echo number_format($client['balance'],2);?></strong></p> -->
+				                     <p><?php //echo $tr->translate("BALANCE");?>  : <strong><?php //echo number_format($client['balance'],2);?></strong></p> -->
 				                     <p><?php echo $tr->translate("HOUSE");?> : <b><?php echo $client['land_address'].",".$client['stree'];?></b></p>
-				                	 <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?> $</p>
+				                     <p><?php echo $tr->translate("SOLD_PRICE");?>  : $ <strong><?php echo number_format($client['price_sold'],2);?></strong></p>
+				                	 <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : $ <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?></p>
 				                     <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php echo $client['interest_rate'];?>&nbsp;%</p>
-									 <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo ($client['total_duration']);?>&nbsp;<?php echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH")?></p>
+									 <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo ($client['total_duration']);?>&nbsp;
+										<?php if($client['payment_id']!=4){
+											echo $tr->translate("MONTH");
+										}else{
+											echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
+										}?></p>
 				     	             <!-- <p><?php //echo $tr->translate("TERM_BORROW");?> : <?php //echo $client['total_duration']*12;?>&nbsp;ខែ</p> -->
 				                     </td>
 				                     <td valign="top">
@@ -109,9 +124,8 @@ table { page-break-inside:auto }
 	                </thead>
 	               <?php $set=1; 
 	               $i=0;
-	               if(!empty($tran)) foreach($tran as $key =>$row){
-// 	               	$row['is_rescheule']=1;
-	               	?>
+	             
+	               if(!empty($tran)) foreach($tran as $key =>$row){ ?>
 	               	<?php if($row['status']==0 AND $row['collect_by']==2){?>
 	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style">
 	               		<td colspan="10" style="background: #d3d3ff;"><strong style="font-family:'Khmer OS Muol'">បានរំលស់ប្រាក់ដើម ចំនួន</strong><strong style="font-family:Arail;font-size:16px;font-weight: bolder;"> $ <?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></strong><strong style="font-family:'Khmer OS Muol'"> នៅថ្ងៃទី  <?php echo date('d-M-Y',strtotime($row['date_payment']));?></strong></td>
@@ -163,16 +177,32 @@ table { page-break-inside:auto }
 	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol'"><?php echo $tr->translate('BORROWER');?></td>
 	            	</tr>
 	            	<tr class="font_bold">
-	            		<td align="center" height="80px" valign="bottom"><?php echo $client['user_name'];?></td>
-	            		<td align="center"  valign="bottom">
-	            			<?php //echo ($client['displayby']==1)?$client['co_khname']:$client['co_enname'] ;?></td>
-	            		<td align="center" height="75px" valign="bottom">
-	            		<?php echo $client['client_name_kh'] ;?>
-	            			<?php //echo ($client['displayclient']==1)? $client['client_name_kh']: $client['client_name_en'] ;?></td>
+	            		<td align="center" height="120px" valign="bottom"><?php echo $client['user_name'];?></td>
+	            		<td align="center"  valign="bottom"></td>
+	            		<td align="center" valign="bottom"><?php echo $client['client_name_kh'];echo !empty($client['hname_kh'])?"/".$client['hname_kh']:"";?></td>
 	            	</tr>
 	            </table>
 	    	</td>
 	    </tr>
+	    <tfoot>
+        <tr height="30px">
+		    <td ><div id="printfooter">
+        		<table width="100%" style="background: #fff;border-top: 2px solid #000;font-family: 'Khmer OS Battambang'; font-size:10px;line-height: 15px;white-space:nowrap;"> 
+				<tbody>
+					<tr style="white-space:nowrap;line-height: 15px;">
+						<td width="40%"><?php echo $this->data['website'];?></td>
+						<td width="40%" align="right"><?php echo $this->data['email_client'];?></td>
+					</tr>
+					<tr style="white-space:nowrap;line-height: 15px;">
+						<td><?php echo $this->data['footer_branch'];?></td>
+						<td width="40%" align="right"><?php echo $this->data['tel-client'];?></td>
+						</tr>
+					</tbody>
+				</table>
+        	</div> </td>
+		</tr>
+	     </tfoot>
+           
 	</table>
 	</div>
 </div>

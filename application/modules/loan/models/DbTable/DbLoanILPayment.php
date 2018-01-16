@@ -435,6 +435,10 @@ public function addILPayment($data){
 		    						$total_principal = $total_principal+$principal_paid;
 		    					
 		    						$pyament_after = $row['total_payment_after']-($principal_paid);//ប្រាក់ត្រូវបង់លើកក្រោយសំរាប់ installmet 1 1
+		    						if($remain_principal==0){
+		    							$statuscomplete=1;
+		    						}
+		    						
 		    						$arra = array(
 		    								"principal_permonthafter"=>$remain_principal,
 		    								'total_interest_after'=>$row['total_interest_after']-$total_interestpaid,
@@ -461,7 +465,7 @@ public function addILPayment($data){
 			   					$new_sub_service_charge = $data["service_charge"];
 			   					$principle_after = $data["principal_permonth_".$i];
 			   					$pyament_after = $total_payment-$amount_receive;
-			   					
+			   					$statuscomplete=0;
 				   				if($sub_recieve_amount>0){//if received >0
 				   					$new_amount_after_service = $sub_recieve_amount-$new_sub_service_charge;
 				   					if($new_amount_after_service>=0){
@@ -494,6 +498,9 @@ public function addILPayment($data){
 				   				}
 				   				
 				   				///please check more 
+				   				if($principle_after==0){
+				   					$statuscomplete=1;
+				   				}
 				   				$arr_update_fun_detail = array(
 				   						'is_completed'			=> 	0,
 				   						'principal_permonthafter'=>	$principle_after,
@@ -504,7 +511,8 @@ public function addILPayment($data){
 				   						'service_charge'		=>	$new_sub_service_charge,
 				   						'payment_option'		=>	1,
 				   						'paid_date'				=> 	$data['collect_date'],  // to know the last paid date
-				   				);
+				   						'is_completed'=>$statuscomplete,
+				   						);
 				   				$this->_name="ln_saleschedule";
 				   				$where = $db->quoteInto("id=?", $data["mfdid_".$i]);
 				   				

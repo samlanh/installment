@@ -46,38 +46,54 @@ dojo.require("dijit.form.DateTextBox");
                 </tr> 
             </table>
 			<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 14px;" bordercolor="black">  
-		    	<tr bgcolor="#ccc" class="style" align="center" style="floafont-weight:bold; line-height: 30px; font-size:12px; padding:5px 0px; " >
+		    	<tr class="style" align="center" style="background:#b2ccff !important;font-weight:bold; line-height: 28px; font-size:12px; padding:5px 0px; " >
 		        	<td><?php echo $tr->translate("NUM");?></td>
-		            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-		            <td><?php echo $tr->translate("STAFF_ID");?></td>
-		            <td><?php echo $tr->translate("CO_NAME");?></td>
-		            <td><?php echo $tr->translate("SEX");?></td>
-		            <td><?php echo $tr->translate("SALE_NO");?></td>
-		            <td><?php echo $tr->translate("PROPERTY_NAME");?></td>
-		            <td><?php echo $tr->translate("COMISSION");?></td>
-		            <td><?php echo $tr->translate("BUY_DATE");?></td>
+			            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+			            <td><?php echo $tr->translate("STAFF_ID");?></td>
+			            <td><?php echo $tr->translate("TEL");?></td>
+			            <td><?php echo $tr->translate("SEX");?></td>
+			            <td><?php echo $tr->translate("PROPERTY_NAME");?></td>
+			            <td><?php echo $tr->translate("COMISSION");?></td>
+			            <td><?php echo $tr->translate("DATE");?></td>
 		         </tr>
-		       <?php $total = 0; if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){
-				   $total = $total +$row['comission'];
-				   ?>
+		       <?php  $total = 0;
+		       		 $key=0; 
+		       	   if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){
+				   $total = $total +$row['comission'];				   ?>
 				   <tr style="font-size: 12px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
 				     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 				     <td align="center">&nbsp;<?php echo $row['project_name']?>&nbsp;</td>
-				     <td>&nbsp;<?php echo $row['co_code']?>&nbsp;</td>
 					 <td>&nbsp;<?php echo $row['co_khname'];?>&nbsp;</td>
-					 <td align="center">&nbsp;<?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
-					 <td>&nbsp;<?php echo $row['sale_number'];?>&nbsp;</td>
-					 <td>&nbsp;<?php echo $row['land_name'].', '.$row['street'];?>&nbsp;</td>
+					 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['tel'];?>&nbsp;</td>
+					 <td align="center" style="white-space: nowrap;">&nbsp;<?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
+					 <td style="white-space: nowrap;">&nbsp;<?php echo $row['land_name'].', '.$row['street'];?>&nbsp;</td>
 					 <td align="right">&nbsp;<?php echo '$ '.number_format($row['comission'],2);?>&nbsp;</td>
-					 <td>&nbsp;<?php echo date("d-M-Y",strtotime($row['buy_date']));?>&nbsp;</td>
+					 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['buy_date']));?>&nbsp;</td>
 					</tr>
 				<?php }?>
+				<?php 
+				 $record = $key+1;
+				if(!empty($this->rscomisison))foreach($this->rscomisison as $key => $rscom){?>
+				<?php 
+					$total = $total +$rscom['total_amount'];
+				?>
+				 <tr style="font-size: 12px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
+				     <td align="center">&nbsp;<?php echo $key+1+$record; ?>&nbsp;</td>
+				     <td align="center">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
+					 <td>&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
+					 <td align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
+					 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
+					 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
+					 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
+					 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
+				</tr>
+				<?php } ?>
 		    </table>
 			<br>
-			<table width="50%" border="1" style="float: left; border-collapse:collapse;font-size: 12px;" bordercolor="black">
-				<tr class="style" align="center" style="floafont-weight:bold; line-height: 30px; font-size:12px; padding:5px 0px; " >
+			<table width="50%" border="1" style="float: right; border-collapse:collapse;font-size: 12px;" bordercolor="black">
+				<tr class="style" align="center" style="floafont-weight:bold; line-height:25px; font-size:12px; padding:5px 0px; " >
 		        	<td bgcolor="#ccc" ><?php echo $tr->translate("TOTAL");?></td>
-		            <td ><?php echo '$ '.number_format($total,2);?></td>
+		            <td><strong><?php echo '$ '.number_format($total,2);?></strong></td>
 		         </tr>
 			</table>
     	</td>

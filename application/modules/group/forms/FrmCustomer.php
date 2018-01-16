@@ -7,11 +7,11 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 	}
 	public function FrmAddCustomer($data=null){		
 		
-
 		$_name = new Zend_Dojo_Form_Element_TextBox('name');
 		$_name->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
+			    'required'=>true,
 		));
 		
 		$_phone = new Zend_Dojo_Form_Element_TextBox('phone');
@@ -24,7 +24,9 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 		$_date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
 		));
+		$_date->setValue(date("Y-m-d"));
 
 		$_from_price = new Zend_Dojo_Form_Element_NumberTextBox('from_price');
 		$_from_price->setAttribs(array(

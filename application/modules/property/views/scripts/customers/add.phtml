@@ -10,6 +10,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.Dialog");
+dojo.require("dijit.layout.TabContainer");
 </script>
 <form id='add_client'
 	action="<?php echo $this->url(array('module'=>'property','controller'=>'customers','action'=>'add')); ?>"
@@ -23,130 +24,252 @@ dojo.require("dijit.Dialog");
 </script>
 	<table width="100%" style="margin-top: -5px;">
 		<tr>
-			<td>
-				<fieldset>
-					<legend>
-						<strong><?php echo $tr->translate("ADD_CLIENT");?></strong>
-					</legend>
-					<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-						<tr>
-							<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("CLIENT")?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("CLIENT_NO")?></td>
-							<td><?php echo $frm->getElement('client_no');?></td>
-							<td><?php echo $tr->translate("NAME_KHMER")?>*</td>
-							<td><?php  echo $frm->getElement('name_kh');?></td>
-							<td><?php echo $tr->translate("SEX")?></td>
-							<td><?php  echo $frm->getElement('sex');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONALITY")?></td>
-							<td><?php  echo $frm->getElement('nationality');?></td>
-							<td><?php echo $tr->translate("AGE")?></td>
-							<td><?php  echo $frm->getElement('age');?></td>
-							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-							<td><?php  echo $frm->getElement('national_id');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("DATE_IN")?></td>
-							<td><?php  echo $frm->getElement('national_id_issue_date');?></td>
-							<td><?php echo $tr->translate("PHONE")?></td>
-							<td><?php  echo $frm->getElement('phone');?></td>
-							<td><?php echo $tr->translate("EMAIL")?></td>
-							<td><?php  echo $frm->getElement('email');?></td>
-						</tr>
-						<tr>
-							<td valign="top"><?php echo $tr->translate("STATUS")?></td>
-							<td valign="top"><?php  echo $frm->getElement('status');?></td>
-							<td><?php echo $tr->translate("PHOTO")?></td>
-							<td><?php echo $frm->getElement('photo');?></td>
-						</tr>
-						<tr>
-							<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("RELEVANT_STAKEHOLDER")?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NAME_KH")?></td>
-							<td><?php echo $frm->getElement('hname_kh');?></td>
-							<td><?php echo $tr->translate("SEX")?></td>
-							<td><?php  echo $frm->getElement('ksex');?></td>
-							<td><?php 	echo $tr->translate("NATIONALITY")?></td>
-							<td><?php   echo $frm->getElement('p_nationality');?></td>
-						</tr>
-						<tr>
-							<td><?php 	echo $tr->translate("NATIONAL_ID")?></td>
-							<td><?php   echo $frm->getElement('rid_no');?></td>
-							<td><?php 	echo $tr->translate("DATE_IN")?></td>
-							<td><?php   echo $frm->getElement('p_national_id_issue_date');?></td>
-							<td><?php echo $tr->translate("AGE")?></td>
-							<td><?php  echo $frm->getElement('p_age');?></td>
-						</tr>
-						<tr>
-							<td><?php 	echo $tr->translate("PHONE")?></td>
-							<td><?php  	echo $frm->getElement('lphone');?></td>
-							<td><?php 	echo $tr->translate("IS")?></td>
-							<td><?php  	echo $frm->getElement('is_type_of_relevant');?></td>
-						</tr>
-						<tr>
-							<td><?php 	echo $tr->translate("WITNESS_NAME")?></td>
-							<td><?php  	echo $frm->getElement('arid_no');?></td>
-							<td><?php 	echo $tr->translate("WITNESS_NATION_ID")?></td>
-							<td><?php  	echo $frm->getElement('reference_national_id');?></td>
-						</tr>
-						<tr>
-							<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
-						</tr>
-						<tr>
-							<td colspan="6"><?php  	echo $frm->getElement('current_address');?></td>
-						</tr>
-						<tr>
-							<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("NOTE")?></td>
-						</tr>
-						<tr>
-							<td colspan="6"><?php  	echo $frm->getElement('desc');?></td>
-						</tr>
-						
-						<tr>
-							<td valign="top"></td>
-							<td valign="top"></td>
-						</tr>
-						<tr>
-						<tr>
-							<td colspan="6" align="center"><input type="reset"
-								label="<?php echo $tr->translate('CLEAR');?>"
-								dojoType="dijit.form.Button" iconClass="dijitIconClear" /> <input
-								type="submit" value="SAVE_CLOSE" tabindex="2"
-								label="<?php echo $tr->translate('SAVECLOSE');?>"
-								id="save_close" dojoType="dijit.form.Button" name="save_close"
-								iconClass="dijitEditorIcon dijitEditorIconSave" /> <input
-								type="submit" value="SAVE_NEW" tabindex="1"
-								label="<?php echo $tr->translate('SAVENEW');?>" id="save_new"
-								dojoType="dijit.form.Button" name="save_new"
-								iconClass="dijitEditorIcon dijitEditorIconSave" /></td>
-						</tr>
-					</table>
-				</fieldset>
+			<td style="overflow: scroll;max-width:1100px;overflow-y:hidden;">
+				<style>
+				.dojoxGridSortNode{
+						text-align: center;	
+						height: 30px;		
+					}
+					.dijitTabPaneWrapper , .dijitContentPane,.dijitTabListContainer-top{max-width: 99% !important;}
+				</style>
+				<div id="mainTabContainer" style="max-width:100%; height: 500px;overflow-y:hidden;" dojoType="dijit.layout.TabContainer" region="center"  >
+					<div style="width:100%;overflow-x:hidden;overflow-y:hidden;" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate('ADD_CLIENT');?>" selected="true">
+						<fieldset>
+							<legend><strong><?php echo $tr->translate("ADD_CLIENT");?></strong></legend>
+							<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+								<tr>
+									<td><?php echo $tr->translate("CLIENT_NO")?></td>
+									<td><?php echo $frm->getElement('client_no');?></td>
+									<td><?php echo $tr->translate("AGE")?></td>
+									<td><?php  echo $frm->getElement('age');?></td>
+									<td><?php echo $tr->translate("DOCMENT_TYPE")?></td>
+									<td><input id="client_d_type" required="true" /></td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate("CUSTOMER_NAME")?>*</td>
+									<td><?php  echo $frm->getElement('name_kh');?></td>
+									<td><?php echo $tr->translate("NATIONALITY")?></td>
+									<td><?php  echo $frm->getElement('nationality');?></td>
+									<td><?php echo $tr->translate("NATIONAL_ID")?></td>
+									<td><?php  echo $frm->getElement('national_id');?></td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate("SEX")?></td>
+									<td><?php  echo $frm->getElement('sex');?></td>
+									<td><?php echo $tr->translate("PHONE")?></td>
+									<td><?php  echo $frm->getElement('phone');?></td>
+									<td><?php echo $tr->translate("Issue Date")?></td>
+									<td><?php  echo $frm->getElement('national_id_issue_date');?></td>
+									
+								</tr>
+								<tr>
+									<td valign="top"><?php echo $tr->translate("STATUS")?></td>
+									<td valign="top"><?php  echo $frm->getElement('status');?></td>
+									<td><?php echo $tr->translate("EMAIL")?></td>
+									<td><?php  echo $frm->getElement('email');?></td>
+									<td><?php echo $tr->translate("PHOTO")?></td>
+									<td><?php echo $frm->getElement('photo');?></td>
+								</tr>
+								<tr>
+									<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("Current Address")?></td>
+								</tr>
+								<tr>
+									<td colspan="6"><?php  	echo $frm->getElement('current_address');?></td>
+								</tr>
+								<tr>
+									<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("NOTE")?></td>
+								</tr>
+								<tr>
+									<td colspan="6"><?php  	echo $frm->getElement('desc');?></td>
+								</tr>
+							</table>
+						</fieldset>
+					</div>
+					<div  dojoType="dijit.layout.ContentPane" style="overflow-x:hidden;overflow-y:hidden;" title="<?php echo $tr->translate('RELEVANT_STAKEHOLDER');?>" selected="false">
+						<fieldset>
+							<legend><strong><?php echo $tr->translate("RELEVANT_STAKEHOLDER");?></strong></legend>
+								<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+									<tr>
+										<td><?php echo $tr->translate("JOIN_NAME")?></td>
+										<td><?php echo $frm->getElement('hname_kh');?></td>
+										<td><?php 	echo $tr->translate("NATIONALITY")?></td>
+										<td><?php   echo $frm->getElement('p_nationality');?></td>
+										<td><?php echo $tr->translate("DOCMENT_TYPE")?></td>
+										<td><input id="join_d_type"/></td> 
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("SEX")?></td>
+										<td><?php  echo $frm->getElement('ksex');?></td>
+										<td><?php 	echo $tr->translate("PHONE")?></td>
+										<td><?php  	echo $frm->getElement('lphone');?></td>
+										<td><?php 	echo $tr->translate("NATIONAL_ID")?></td>
+										<td><?php   echo $frm->getElement('rid_no');?></td>
+										
+										
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("AGE")?></td>
+										<td><?php  echo $frm->getElement('p_age');?></td>
+										
+										<td><?php 	echo $tr->translate("JOIN_TYPE")?></td>
+										<td><?php  	echo $frm->getElement('is_type_of_relevant');?></td>
+										<td><?php 	echo $tr->translate("Issue Date")?></td>
+										<td><?php   echo $frm->getElement('p_national_id_issue_date');?></td>
+									</tr>
+									<tr>
+										<td><?php 	echo $tr->translate("SPOUSE_NAME")?></td>
+										<td><?php  	echo $frm->getElement('arid_no');?></td>
+										<td><?php 	echo $tr->translate("SPOUSE_NATION_ID")?></td>
+										<td><?php  	echo $frm->getElement('reference_national_id');?></td>
+									</tr>
+								</table>
+						</fieldset>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td  align="center">
+				<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear" /> 
+				<input type="submit" value="SAVE_CLOSE" tabindex="2" label="<?php echo $tr->translate('SAVECLOSE');?>" id="save_close" dojoType="dijit.form.Button" name="save_close"
+								iconClass="dijitEditorIcon dijitEditorIconSave" /> 
+				<input	type="submit" value="SAVE_NEW" tabindex="1"	label="<?php echo $tr->translate('SAVENEW');?>" id="save_new"	dojoType="dijit.form.Button" name="save_new"
+								iconClass="dijitEditorIcon dijitEditorIconSave" />
 			</td>
 		</tr>
 	</table>
 </form>
-<table>
-	<tr>
-	</tr>
-</table>
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_doc_type" >
+		<form style="background-color: buttonface; width:100%;" id='frm_client_doc_type' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<fieldset style="background-color: buttonface;">
+						<legend align="center" ><?php echo $tr->translate('ADD_DOC_TYPE');?></legend>
+							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+								<tr>
+									<td><?php echo $tr->translate('NAME');?></td>
+									<td>
+										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="doc_name" name="doc_name" value="" type="text">
+									</td>
+								</tr>
+								
+								<input type="hidden" name="type"	id="type" dojoType="dijit.form.TextBox" />
+								
+								<tr>
+									<td colspan="4" align="center">
+										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewDocumentType();"/>
+									</td>
+								</tr>
+								
+							</table>
+					</fieldset>
+					</td>
+				</tr>
+			</table>
+
+		</form>
+	</div>
+</div>
 <?php 
 echo $this->frm_popup_district;
 echo $this->frm_popup_village;
 echo $this->frm_popup_comm;
 ?>
 <script type="text/javascript">
+var d_datastore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->clienttype));?> );
+var joint_doc_type_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->clienttype));?> );
 dojo.ready(function(){
 	
 	try{
 		//getClientNo();
+		new dijit.form.FilteringSelect({
+		store: d_datastore,//dojo.data.ObjectStore({objectStore: d_data}),
+		autoComplete:false,
+		queryExpr:'*${0}*',         
+		required: false,		           
+		name: "client_d_type",
+		id: "client_d_type",
+		searchAttr: "name",
+		value: "0",
+		class: 'fullside',
+		missingMessage:"អ្នក​ភ្លេច​​ បំពេញប្រភេទឯកសារ !",	
+			onChange: function() {
+				client_d_type = dijit.byId('client_d_type').get('value');
+				if(client_d_type==-1){
+					dijit.byId('type').attr('value',1);
+					showPopupclientdtype();
+				}
+			}
+		}, "client_d_type");
+		
+		new dijit.form.FilteringSelect({
+			store: joint_doc_type_store,//dojo.data.ObjectStore({objectStore: d_data}),
+			autoComplete:false,
+			queryExpr:'*${0}*',       
+			required: false,		           
+			name: "join_d_type",
+			id: "join_d_type",
+			searchAttr: "name",
+			value: "0",
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​​ បំពេញប្រភេទឯកសារ !",	
+			onChange: function() {
+				client_d_type = dijit.byId('join_d_type').get('value');
+				if(client_d_type==-1){
+					dijit.byId('type').attr('value',2);
+					showPopupclientdtype();
+				}
+			}
+		}, "join_d_type");
 	}catch(e){
 		alert(e);
 	}
 });
-
+function showPopupclientdtype(){
+	dijit.byId('popup_doc_type').show();
+}
+function hideDialog1(){
+	dijit.byId('popup_doc_type').hide();
+}
+var document_type_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insert-document-type'));?>';
+function addNewDocumentType(){
+	//alert(1);
+	type = dijit.byId('type').get('value');
+	old_client_doc = dijit.byId('client_d_type').get('value');
+	old_join_doc = dijit.byId('join_d_type').get('value');
+	
+	dojo.xhrPost({
+		
+		url:document_type_url,	
+		form:dojo.byId('frm_client_doc_type'),
+		handleAs:"json",
+		load: function(data) {	
+		
+			var myNewItem = {					
+				id: data,
+				name: dijit.byId('doc_name').get('value')
+			};			
+			addDataToSelectbox(dijit.byId('client_d_type'), d_datastore, myNewItem, data);	
+			addDataToSelectbox(dijit.byId('join_d_type'), joint_doc_type_store, myNewItem, data);				
+				 
+			dijit.byId('frm_client_doc_type').reset();
+			dijit.byId('popup_doc_type').hide();
+			if(type == 2){
+				dijit.byId('client_d_type').attr('value',old_client_doc);
+			}else{
+				dijit.byId('join_d_type').attr('value',old_join_doc);
+			}
+	
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});	
+}
 </script>

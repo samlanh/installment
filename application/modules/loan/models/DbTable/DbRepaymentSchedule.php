@@ -199,6 +199,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     						'user_id'=>$this->getUserId(),
     						'other_fee'=>$data['other_fee'],
     						'agreement_date'=>$data['agreement_date'],
+    						'build_start'=>$data['start_building'],
+    						'amount_build'=>$data['amount_build'],
     						'is_reschedule'=>$is_schedule,
     				);
     				$where= " id = ".$data['id'];
@@ -224,8 +226,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    				'receipt_no'		=>$receipt,
 		    				'sale_id'			=>$data['loan_number'],
 		    				'land_id'			=>$data['land_code'],
-		    				'date_pay'			=>$data['date_buy'],
-		    				'date_input'		=>date('Y-m-d'),
+		    				'date_pay'			=>$data['paid_date'],
+		    				'date_input'		=>$data['paid_date'],
 		    				'outstanding'		=>$data['sold_price']-$data['paid_before'],
 		    				'principal_amount'	=>$data['sold_price']-($data['paid_before']+$data['deposit']),
 		    				'total_principal_permonth'	=>$data['sold_price']-($data['paid_before']),
@@ -423,13 +425,12 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			   	$ids = explode(',', $data['identity']);
     			   	$key = 1;
     			   	foreach ($ids as $i){
-    			   		$old_pri_permonth = $data['total_payment'.$i];
     			   		if($key==1){
     			   			$old_remain_principal = $data['sold_price'];
-    			   		
     			   		}else{
     			   			$old_remain_principal = $old_remain_principal-$old_pri_permonth;
     			   		}
+    			   		$old_pri_permonth = $data['total_payment'.$i];
     			   			
     			   		$old_interest_paymonth = ($data['interest_rate']==0)?0:$this->round_up_currency(1,($old_remain_principal*$data['interest_rate']/12/100));
     			   			
@@ -463,7 +464,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			   		}
     			   		$sale_currid = $this->insert($datapayment);
     			   		$from_date = $data['date_payment'.$i];
-    			   			
     			   		$key = $key+1;
     			   	}
     			   	break;
@@ -547,10 +547,10 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'branch_id'			=>$data['branch_id'],
     			'client_id'			=>$data['member'],
     			'receipt_no'		=>$receipt,
-    			'date_pay'			=>$data['date_buy'],
     			'land_id'			=>$data['land_code'],
     			'sale_id'			=>$data['sale_id'],
-    			'date_input'		=>date('Y-m-d'),
+    			'date_pay'			=>$data['paid_date'],
+    			'date_input'		=>$data['paid_date'],
     			'outstanding'		=> $data['sold_price']-$data['paid_before'],//ok for id=3 បង់ថេ
     			'principal_amount'	=> $data['sold_price']-($data['deposit']),//ok for 3
     			'total_principal_permonth'	=>$data['deposit']-$data['paid_before'],//ok
@@ -585,7 +585,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	$statuscomplete=0;
     	$principal_paid = 0;
     	if(!empty($rows)){
-    		foreach ($rows as $row){
+    		foreach ($rows as $key =>$row){
     			$paid_amount = $paid_amount-$row['principal_permonthafter'];
     			if($paid_amount>=0){
     				$remain_principal=0;
@@ -597,12 +597,33 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				$principal_paid = $remain_principal;
     			}
     			$arra = array(
+    					'begining_balance_after'=>$row['begining_balance_after']-($principal_paid),
+    					'ending_balance'=>$row['ending_balance']-($principal_paid),
     					"principal_permonthafter"=>$remain_principal,
+    					"total_payment_after"=>$remain_principal,
     					'is_completed'=>$statuscomplete
     			);
     			$where = " id = ".$row['id'];
     			$this->_name="ln_saleschedule";
     			$this->update($arra, $where);
+//     			if($key==1){
+//     				print_r($arra);exit();
+//     			}
+    			
+//     			$arra = array(
+//     					"principal_permonthafter"=>$remain_principal,
+//     					'total_interest_after'=>$row['total_interest_after']-$total_interestpaid,
+//     					'begining_balance_after'=>$row['begining_balance_after']-($principal_paid),
+//     					'ending_balance'=>$row['begining_balance_after']-($principal_paid+$remain_principal),
+//     					'is_completed'=>$statuscomplete,
+//     					'paid_date'	=>	$data['collect_date'],
+//     					'total_payment_after'=>	$remain_principal+($row['total_interest_after']-$total_interestpaid),
+//     					'payment_option'	=>	$data["option_pay"],
+//     					'paid_date'			=> 	$data['collect_date'],
+//     			);
+//     			$where = " id = ".$row['id'];
+//     			$this->_name="ln_saleschedule";
+    			
     			 
     			$this->_name='ln_client_receipt_money_detail';
     			$array = array(

@@ -1,6 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('BUY_LAND'));
+	echo $this->headTitle($tr->translate('Edit Buy Land'));
 ?>	
 <?php  $frm = $this->frm_buy;?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"
@@ -14,222 +14,325 @@ dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.Dialog");
 require(["dijit/form/CheckBox","dijit/Dialog","dijit/layout/TabContainer"]);
 </script>
-<form id='buy_land'	action="<?php echo $this->url(array('module'=>'property','controller'=>'index','action'=>'edit')); ?>"
-	enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+<form id='buy_land'	action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 	<script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
-				if(dijit.byId('province').get('value')==0){
-					alert('Province required');
-					dijit.byId('province').focus();
-					return false;
-			    }
 				return true;
 			} else {
 				return false;
 			}
-</script>
-	<table width="100%" style="margin-top: -5px;">
+   </script>  
+
+	<table width="100%" style="">
 		<tr>
-			<td>
-				<div id="mainTabContainer" style=" position:relative; width:1200px; display:block; height: 530px;" dojoType="dijit.layout.TabContainer" region="center" >
+			<td style="overflow: scroll;max-width:1100px;overflow-y:hidden;">
+			<div id="mainTabContainer" style="max-width:100%; height: 530px;overflow-y:hidden;" dojoType="dijit.layout.TabContainer" region="center" >
 				<div class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate("LAND_INFO");?>" selected="true">
-					<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-						<tr>
-							<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("LAND_INFO")?></td>
-						</tr>
-					<tr>
-                        <td width="33%">
-                            <table width="100%">      
-                                <tr>
-                                    <td width="33%"><?php echo $tr->translate("BUY_NO")?></td>          
-                                  <td width="66%"><?php echo $frm->getElement('buy_no');?></td>
-                                </tr>
-                                <tr>
-                                    <td width="33%"><?php echo $tr->translate("TITLE")?>* </td>          
-                                    <td width="66%"><?php echo $frm->getElement('title');?></td>
-                                </tr>
-                                <tr>
-                                    <td width="33%"><?php echo $tr->translate("LAND_BLOG")?>*</td>          
-                                    <td width="66%"><input id="land_blog"></td>
-                                </tr>
-                                <tr>
-                                    <td width="33%"><?php echo $tr->translate("WIDTH")."(".$tr->translate("HEAD").")";?></td>        
-                                    <td width="66%"><?php  echo $frm->getElement('width');?></td>
-                                </tr>
-                                <tr>
-                                    <td width="33%"><?php echo $tr->translate("HEIGHT")?></td>          
-                                    <td width="66%"><?php  echo $frm->getElement('height');?></td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td width="33%">
-                          <table width="100%">
-                                 <tr>
-                                    <td width="33%"><?php echo $tr->translate("SIZE")?></td>          
-                                    <td width="66%"><?php  echo $frm->getElement('size');?></td>
-                                </tr>
-                                <tr>
-                                    <td width="33%"><?php echo $tr->translate("PRICE")?>*</td>          
-                                    <td width="66%"><?php echo $frm->getElement('land_price');?></td>
-                                </tr>				
-                                <tr>
-                                    <td width="33%"><?php echo $tr->translate("THE_CREDENTAIL_NO")?></td>          
-                                    <td width="66%"><?php  echo $frm->getElement('credentail_no');?></td>
-                                </tr>
-                                <tr>
-                                    <td width="33%"><?php echo $tr->translate("ISSUE_DATE")?></td>          
-                                    <td width="66%"><?php  echo $frm->getElement('issue_date');?></td>
-                                </tr>
-                                <tr>			
-                                    <td width="33%"><?php echo $tr->translate("BUY_DATE")?></td>          
-                                    <td width="66%"><?php  echo $frm->getElement('buy_date');?></td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td width="33%">
-                          <table width="100%">			
-                                <tr>
-                                    <td width="33%"><?php echo $tr->translate("BORDER_NORTH")?></td>          
-                                    <td width="66%"><?php  echo $frm->getElement('border_north');?></td>
-                                </tr>
-                                <tr>		
-                                    <td width="33%"><?php echo $tr->translate("BORDER_SOUTH")?></td>          
-                                    <td width="66%"><?php  echo $frm->getElement('border_south');?></td>
-                                </tr>
-                                <tr>				
-                                    <td width="33%"><?php echo $tr->translate("BORDER_WEST")?></td>          
-                                    <td width="66%"><?php  echo $frm->getElement('border_west');?></td>
-                                </tr>
-                                <tr>			
-                                    <td width="33%"><?php echo $tr->translate("BORDER_EAST")?></td>          
-                                    <td width="66%"><?php  echo $frm->getElement('border_east');?></td>
-                                </tr>				
-                                <tr>
-                                    <td width="33%"><?php echo $tr->translate("STATUS")?></td>          
-                                    <td width="66%"><?php  echo $frm->getElement('status');?></td>
-                                </tr>
-                            </table>	
-                        </td>
-                    </tr>	
-                        <tr>
-							<td colspan="6"><?php echo $tr->translate("LOCATION")?></td>
-                       </tr>
-						<tr>							
-							<td colspan="6"><?php  echo $frm->getElement('location');?></td>
-						</tr>
-						<tr>
-							<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("NOTE")?></td>
-						</tr>
-						<tr>
-							<td colspan="6"><?php  	echo $frm->getElement('note');?></td>
-						</tr>
-						<tr>
-							<td colspan="6"><?php echo $frm->getElement('land_img1').$frm->getElement('land_img2');?></td>
-							
-						</tr>
-					</table>
+					<fieldset>
+						<legend><strong><?php echo $tr->translate("LAND_INFO");?></strong></legend>
+						<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+							<tr>
+								<td width="33%">
+									
+									<table width="100%">      
+										<tr>
+											<td width="33%"><?php echo $tr->translate("BUY_NO")?></td>          
+											<td width="66%"><?php echo $frm->getElement('buy_no');?><input type="hidden" name="id" value="<?php echo $this->id;?>"	id="id" dojoType="dijit.form.TextBox" /></td>
+										</tr>
+										<tr>
+											<td width="33%"><?php echo $tr->translate("LAND_BLOG")?>*</td>          
+											<td width="66%"><input id="land_blog"></td>
+										</tr>
+										<tr>
+											<td width="33%"><?php echo $tr->translate("TITLE")?>* </td>          
+											<td width="66%"><?php echo $frm->getElement('title');?></td>
+										</tr>
+										
+										<tr>
+											<td width="33%"><?php echo $tr->translate("THE_CREDENTAIL_NO")?></td>          
+											<td width="66%"><?php  echo $frm->getElement('credentail_no');?></td>
+										</tr>
+										<tr>
+											<td width="33%"><?php echo $tr->translate("Issue Date")?></td>          
+											<td width="66%"><?php  echo $frm->getElement('issue_date');?></td>
+										</tr>
+										<tr>			
+											<td width="33%"><?php echo $tr->translate("BUY_DATE")?></td>          
+											<td width="66%"><?php  echo $frm->getElement('buy_date');?></td>
+										</tr>
+									</table>
+						
+								</td>
+								<td width="33%" style="vertical-align: top;">
+								  <table width="100%">
+										<tr>
+											<td width="33%"><?php echo $tr->translate("WIDTH")."(".$tr->translate("HEAD").")";?></td>        
+											<td width="66%"><?php  echo $frm->getElement('width');?></td>
+										</tr>
+										<tr>
+											<td width="33%"><?php echo $tr->translate("HEIGHT")?></td>          
+											<td width="66%"><?php  echo $frm->getElement('height');?></td>
+										</tr>
+										 <tr>
+											<td width="33%"><?php echo $tr->translate("SIZE")?></td>          
+											<td width="66%"><?php  echo $frm->getElement('size');?></td>
+										</tr>
+										<tr>
+											<td width="33%"><?php echo $tr->translate("PRICE")?>*</td>          
+											<td width="66%"><?php echo $frm->getElement('land_price');?></td>
+										</tr>				
+										<tr>
+											<td width="33%"><?php echo $tr->translate("STATUS")?></td>          
+											<td width="66%"><?php  echo $frm->getElement('status');?></td>
+										</tr>
+									</table>
+								</td>
+								<td width="33%" style="vertical-align: top;">
+								  <table width="100%">			
+										<tr>
+											<td width="33%"><?php echo $tr->translate("BORDER_NORTH")?></td>          
+											<td width="66%"><?php  echo $frm->getElement('border_north');?></td>
+										</tr>
+										<tr>		
+											<td width="33%"><?php echo $tr->translate("BORDER_SOUTH")?></td>          
+											<td width="66%"><?php  echo $frm->getElement('border_south');?></td>
+										</tr>
+										<tr>				
+											<td width="33%"><?php echo $tr->translate("BORDER_WEST")?></td>          
+											<td width="66%"><?php  echo $frm->getElement('border_west');?></td>
+										</tr>
+										<tr>			
+											<td width="33%"><?php echo $tr->translate("BORDER_EAST")?></td>          
+											<td width="66%"><?php  echo $frm->getElement('border_east');?></td>
+										</tr>				
+										
+									</table>	
+								</td>
+							</tr>	
+							<tr>
+									<td style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("LOCATION")?></td>
+									<td style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("NOTE")?></td>
+						   </tr>
+							<tr>							
+								<td><?php  echo $frm->getElement('location');?></td>
+								<td ><?php  echo $frm->getElement('note');?></td>
+							</tr>
+								
+								<tr>
+									<td colspan="3">
+									<?php if (!empty($this->rs['land_photo1'])){?>
+										<img height="60px" src="<?php echo $this->baseUrl().'/images/'.$this->rs['land_photo2'];?>" />
+									<?php }?>
+									<?php echo $frm->getElement('land_img1').$frm->getElement('old_land_img1');?>
+								
+									<?php if (!empty($this->rs['land_photo2'])){?>
+										<img height="60px" src="<?php echo $this->baseUrl().'/images/'.$this->rs['land_photo2'];?>" />
+									<?php }?>
+									<?php echo $frm->getElement('land_img2').$frm->getElement('old_land_img2');?>
+								
+									</td>
+									
+								</tr>
+							</table>
+					</fieldset>
 				</div><!-- end tab 1 -->
 				<div class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate("SELLER_INFO");?>" selected="false">
-					<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-						<tr>
-							<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("SELLER_INFO")?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NAME_KH")?>*</td>
-							<td><?php  echo $frm->getElement('sale_name_kh');?></td>
-							<td><?php echo $tr->translate("SEX")?></td>
-							<td><?php  echo $frm->getElement('sale_sex');?></td>
-							<td><?php echo $tr->translate("AGE")?></td>
-							<td><?php  echo $frm->getElement('sale_age');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONALITY")?></td>
-							<td><?php  echo $frm->getElement('sale_nationality');?></td>
-							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-							<td><?php  echo $frm->getElement('sale_nation_id');?></td>
-							<td><?php echo $tr->translate("PHONE")?></td>
-							<td><?php  echo $frm->getElement('sale_phone');?></td>
-						</tr>
-						<tr>
-							<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("RELEVANT_STAKEHOLDER")?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NAME_KH")?></td>
-							<td><?php  echo $frm->getElement('sale_relevent_name');?></td>
-							<td><?php echo $tr->translate("SEX")?></td>
-							<td><?php  echo $frm->getElement('sale_relevent_sex');?></td>
-							<td><?php echo $tr->translate("AGE")?></td>
-							<td><?php  echo $frm->getElement('sale_relevent_age');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONALITY")?></td>
-							<td><?php  echo $frm->getElement('sale_relevent_nationlity');?></td>
-							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-							<td><?php  echo $frm->getElement('sale_relevent_nationid');?></td>
-							<td><?php echo $tr->translate("IS")?></td>
-							<td><?php  echo $frm->getElement('sale_relevent_is');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
-							<td colspan="5"><?php  echo $frm->getElement('sale_address');?></td>
-						</tr>
-						<tr>
-							<td colspan="6">
-							<?php if (!empty($this->rs['sale_photo1'])){?><img height="60px" src="<?php echo $this->baseUrl().'/images/'.$this->rs['sale_photo1'];?>" /><?php }?>
-							<?php echo $frm->getElement('sale_img1').$frm->getElement('old_sale_img1');?>
-							<?php if (!empty($this->rs['sale_photo2'])){?><img height="60px" src="<?php echo $this->baseUrl().'/images/'.$this->rs['sale_photo2'];?>" /><?php }?>
-							<?php echo $frm->getElement('sale_img2').$frm->getElement('old_sale_img2');?></td>
-						</tr>
-					</table>
+					<fieldset>
+						<legend><strong><?php echo $tr->translate("SELLER_INFO");?></strong></legend>
+						<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+							<tr>
+								<td width="50%" style="vertical-align: top;">
+									<fieldset>
+										<legend><strong><?php echo $tr->translate("SELLER_INFO");?></strong></legend>
+										<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+											<tr>
+												<td><?php echo $tr->translate("SELL_NAME")?>*</td>
+												<td><?php  echo $frm->getElement('sale_name_kh');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("SEX")?></td>
+												<td><?php  echo $frm->getElement('sale_sex');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("AGE")?></td>
+												<td><?php  echo $frm->getElement('sale_age');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("NATIONALITY")?></td>
+												<td><?php  echo $frm->getElement('sale_nationality');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("DOCMENT_TYPE")?></td>
+												<td><input id="sale_d_type" required="true" /></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("NATIONAL_ID")?></td>
+												<td><?php  echo $frm->getElement('sale_nation_id');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("PHONE")?></td>
+												<td><?php  echo $frm->getElement('sale_phone');?></td>
+											</tr>
+											
+										</table>
+									</fieldset>
+								</td>
+								<td width="50%" style="vertical-align: top;">
+									<fieldset>
+										<legend><strong><?php echo $tr->translate("RELEVANT STAKEHOLDER");?></strong></legend>
+										<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+										
+											<tr>
+												<td><?php echo $tr->translate("RELEVANT STAKEHOLDER")?></td>
+												<td><?php  echo $frm->getElement('sale_relevent_name');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("SEX")?></td>
+												<td><?php  echo $frm->getElement('sale_relevent_sex');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("AGE")?></td>
+												<td><?php  echo $frm->getElement('sale_relevent_age');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("NATIONALITY")?></td>
+												<td><?php  echo $frm->getElement('sale_relevent_nationlity');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("DOCMENT_TYPE")?></td>
+												<td><input id="sale_relevent_d_type" required="true" /></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("NATIONAL_ID")?></td>
+												<td><?php  echo $frm->getElement('sale_relevent_nationid');?></td>
+											</tr>
+											<tr>
+												
+												<td><?php echo $tr->translate("JOIN_TYPE")?></td>
+												<td><?php  echo $frm->getElement('sale_relevent_is');?></td>
+											</tr>
+											
+										</table>
+									</fieldset>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2"><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
+							</tr>
+							<tr>
+								<td colspan="2"><?php  echo $frm->getElement('sale_address');?></td>
+							</tr>
+							<tr>
+								<td colspan="2">
+								
+								<?php if (!empty($this->rs['sale_photo1'])){?>
+									<img height="60px" src="<?php echo $this->baseUrl().'/images/'.$this->rs['sale_photo1'];?>" />
+								<?php }?>
+								<?php echo $frm->getElement('sale_img1').$frm->getElement('old_sale_img1');?>
+								
+								<?php if (!empty($this->rs['sale_photo2'])){?>
+									<img height="60px" src="<?php echo $this->baseUrl().'/images/'.$this->rs['sale_photo2'];?>" />
+								<?php }?>
+								<?php echo $frm->getElement('sale_img2').$frm->getElement('old_sale_img2');?>
+							
+								</td>
+								
+							</tr>
+						</table>
+					</fieldset>
 				</div><!-- end tab 2 -->
 				<div class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate("BUYER_INFO");?>" selected="false">
-					<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-						<tr>
-							<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("BUYER_INFO")?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NAME_KH")?>*</td>
-							<td><?php  echo $frm->getElement('buy_name_kh');?></td>
-							<td><?php echo $tr->translate("SEX")?></td>
-							<td><?php  echo $frm->getElement('buy_sex');?></td>
-							<td><?php echo $tr->translate("AGE")?></td>
-							<td><?php  echo $frm->getElement('buy_age');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONALITY")?></td>
-							<td><?php  echo $frm->getElement('buy_nationality');?></td>
-							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-							<td><?php  echo $frm->getElement('buy_nation_id');?></td>
-							<td><?php echo $tr->translate("PHONE")?></td>
-							<td><?php  echo $frm->getElement('buy_phone');?></td>
-						</tr>
-						<tr>
-							<td colspan="6" style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("RELEVANT_STAKEHOLDER")?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NAME_KH")?></td>
-							<td><?php  echo $frm->getElement('buyer_relevent_name');?></td>
-							<td><?php echo $tr->translate("SEX")?></td>
-							<td><?php  echo $frm->getElement('buyer_relevent_sex');?></td>
-							<td><?php echo $tr->translate("AGE")?></td>
-							<td><?php  echo $frm->getElement('buyer_relevent_age');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONALITY")?></td>
-							<td><?php  echo $frm->getElement('buyer_relevent_nationality');?></td>
-							<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-							<td><?php  echo $frm->getElement('buyer_relevent_nationid');?></td>
-							<td><?php echo $tr->translate("IS")?></td>
-							<td><?php  echo $frm->getElement('buyer_relevent_is');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
-							<td colspan="5"><?php  echo $frm->getElement('buy_address');?></td>
-						</tr>
-					</table>
+					<fieldset>
+						<legend><strong><?php echo $tr->translate("BUYER_INFO");?></strong></legend>
+						<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+							<tr>
+								<td width="50%" style="vertical-align: top;">
+									<fieldset>
+										<legend><strong><?php echo $tr->translate("BUYER_INFO");?></strong></legend>
+										<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+											<tr>
+												<td><?php echo $tr->translate("Buyer Name")?>*</td>
+												<td><?php  echo $frm->getElement('buy_name_kh');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("SEX")?></td>
+												<td><?php  echo $frm->getElement('buy_sex');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("AGE")?></td>
+												<td><?php  echo $frm->getElement('buy_age');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("NATIONALITY")?></td>
+												<td><?php  echo $frm->getElement('buy_nationality');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("DOCMENT_TYPE")?></td>
+												<td><input id="buyer_d_type" required="true" /></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("NATIONAL_ID")?></td>
+												<td><?php  echo $frm->getElement('buy_nation_id');?></td>
+											</tr>
+											
+											<tr>
+												<td><?php echo $tr->translate("PHONE")?></td>
+												<td><?php  echo $frm->getElement('buy_phone');?></td>
+											</tr>
+											
+										</table>
+									</fieldset>
+								</td>
+								<td width="50%" style="vertical-align: top;">
+									<fieldset>
+										<legend><strong><?php echo $tr->translate("RELEVANT_STAKEHOLDER");?></strong></legend>
+										<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+											<tr>
+												<td><?php echo $tr->translate("JOIN_NAME")?></td>
+												<td><?php  echo $frm->getElement('buyer_relevent_name');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("SEX")?></td>
+												<td><?php  echo $frm->getElement('buyer_relevent_sex');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("AGE")?></td>
+												<td><?php  echo $frm->getElement('buyer_relevent_age');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("NATIONALITY")?></td>
+												<td><?php  echo $frm->getElement('buyer_relevent_nationality');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("DOCMENT_TYPE")?></td>
+												<td><input id="buyer_relevent_d_type" required="true" /></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("NATIONAL_ID")?></td>
+												<td><?php  echo $frm->getElement('buyer_relevent_nationid');?></td>
+											</tr>
+											
+											<tr>
+												<td><?php echo $tr->translate("JOIN_TYPE")?></td>
+												<td><?php  echo $frm->getElement('buyer_relevent_is');?></td>
+											</tr>
+											
+										</table>
+									</fieldset>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2"><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
+							</tr>
+							<tr>
+								<td colspan="2"><?php  echo $frm->getElement('buy_address');?></td>
+							</tr>
+						</table>
+					</fieldset>
+
 				</div><!-- end tab 3 -->
 			</div>
-			<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+				<table style="margin: 0 auto; width: 100%;" cellspacing="10">
 					<tr>
 						<td colspan="6" align="center"><input type="reset"
 							label="<?php echo $tr->translate('CLEAR');?>"
@@ -237,17 +340,50 @@ require(["dijit/form/CheckBox","dijit/Dialog","dijit/layout/TabContainer"]);
 							type="submit" value="SAVE_CLOSE" tabindex="2"
 							label="<?php echo $tr->translate('SAVECLOSE');?>"
 							id="save_close" dojoType="dijit.form.Button" name="save_close"
-							iconClass="dijitEditorIcon dijitEditorIconSave" />
+							iconClass="dijitEditorIcon dijitEditorIconSave" /> 
+						</td>
 					</tr>
 				</table>
 			</td>
 		</tr>
 	</table>
 </form>
-<table>
-	<tr>
-	</tr>
-</table>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_doc_type" >
+		<form style="background-color: buttonface; width:100%;" id='frm_client_doc_type' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<fieldset style="background-color: buttonface;">
+						<legend align="center" ><?php echo $tr->translate('ADD_DOC_TYPE');?></legend>
+							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+								<tr>
+									<td><?php echo $tr->translate('NAME');?></td>
+									<td>
+										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="doc_name" name="doc_name" value="" type="text">
+									</td>
+								</tr>
+								
+								<input type="hidden" name="type"	id="type" dojoType="dijit.form.TextBox" />
+								
+								<tr>
+									<td colspan="4" align="center">
+										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewDocumentType();"/>
+									</td>
+								</tr>
+								
+							</table>
+					</fieldset>
+					</td>
+				</tr>
+			</table>
+
+		</form>
+	</div>
+</div>
 <?php echo $this->frmPopupPropertyType;
 echo $this->frmPopuplandblog;
 ?>
@@ -255,6 +391,10 @@ echo $this->frmPopuplandblog;
 var propertyType_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->pro_type));?> );
 var landblog_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->land_blog));?> );
 
+var sale_d_type_datastore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->clienttype));?> );
+var sale_relevent_d_type_datastore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->clienttype));?> );
+var buyer_d_type_datastore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->clienttype));?> );
+var buyer_relevent_d_type_datastore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->clienttype));?> );
 dojo.ready(function(){
 	
 	try{
@@ -287,11 +427,144 @@ dojo.ready(function(){
 					showLandBlogPopupForm();
 				}  
 			}, "land_blog");
+			
+			new dijit.form.FilteringSelect({
+			store: sale_d_type_datastore,//dojo.data.ObjectStore({objectStore: d_data}),
+			autoComplete:false,
+			queryExpr:'*${0}*',         
+			required: false,		           
+			name: "sale_d_type",
+			id: "sale_d_type",
+			searchAttr: "name",
+			value:'<?php echo $this->rs['sale_d_type']?>',
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​​ បំពេញប្រភេទឯកសារ !",	
+				onChange: function() {
+					sale_d_type = dijit.byId('sale_d_type').get('value');
+					if(sale_d_type==-1){
+						dijit.byId('type').attr('value',1);
+						showPopupclientdtype();
+					}
+				}
+			}, "sale_d_type");
+			new dijit.form.FilteringSelect({
+			store: sale_relevent_d_type_datastore,//dojo.data.ObjectStore({objectStore: d_data}),
+			autoComplete:false,
+			queryExpr:'*${0}*',         
+			required: false,		           
+			name: "sale_relevent_d_type",
+			id: "sale_relevent_d_type",
+			searchAttr: "name",
+			value:'<?php echo $this->rs['sale_relevent_d_type']?>',
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​​ បំពេញប្រភេទឯកសារ !",	
+				onChange: function() {
+					sale_relevent_d_type = dijit.byId('sale_relevent_d_type').get('value');
+					if(sale_relevent_d_type==-1){
+						dijit.byId('type').attr('value',2);
+						showPopupclientdtype();
+					}
+				}
+			}, "sale_relevent_d_type");
+			new dijit.form.FilteringSelect({
+			store: buyer_d_type_datastore,//dojo.data.ObjectStore({objectStore: d_data}),
+			autoComplete:false,
+			queryExpr:'*${0}*',         
+			required: false,		           
+			name: "buyer_d_type",
+			id: "buyer_d_type",
+			searchAttr: "name",
+			value:'<?php echo $this->rs['buyer_d_type']?>',
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​​ បំពេញប្រភេទឯកសារ !",	
+				onChange: function() {
+					buyer_d_type = dijit.byId('buyer_d_type').get('value');
+					if(buyer_d_type==-1){
+						dijit.byId('type').attr('value',3);
+						showPopupclientdtype();
+					}
+				}
+			}, "buyer_d_type");
+			new dijit.form.FilteringSelect({
+			store: buyer_relevent_d_type_datastore,//dojo.data.ObjectStore({objectStore: d_data}),
+			autoComplete:false,
+			queryExpr:'*${0}*',         
+			required: false,		           
+			name: "buyer_relevent_d_type",
+			id: "buyer_relevent_d_type",
+			searchAttr: "name",
+			value:'<?php echo $this->rs['buyer_relevent_d_type']?>',
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​​ បំពេញប្រភេទឯកសារ !",	
+				onChange: function() {
+					buyer_relevent_d_type = dijit.byId('buyer_relevent_d_type').get('value');
+					if(buyer_relevent_d_type==-1){
+						dijit.byId('type').attr('value',4);
+						showPopupclientdtype();
+					}
+				}
+			}, "buyer_relevent_d_type");
 	}catch(e){
 		alert(e);
 	}
 });
-
+function showPopupclientdtype(){
+	dijit.byId('popup_doc_type').show();
+}
+function hideDialog1(){
+	dijit.byId('popup_doc_type').hide();
+}
+var document_type_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insert-document-type'));?>';
+function addNewDocumentType(){
+	//alert(1);
+	type = dijit.byId('type').get('value');
+	old_sale_d_type = dijit.byId('sale_d_type').get('value');
+	old_sale_relevent_d_type = dijit.byId('sale_relevent_d_type').get('value');
+	old_buyer_d_type = dijit.byId('buyer_d_type').get('value');
+	old_buyer_relevent_d_type = dijit.byId('buyer_relevent_d_type').get('value');
+	dojo.xhrPost({
+		
+		url:document_type_url,	
+		form:dojo.byId('frm_client_doc_type'),
+		handleAs:"json",
+		load: function(data) {	
+		
+			var myNewItem = {					
+				id: data,
+				name: dijit.byId('doc_name').get('value')
+			};			
+			addDataToSelectbox(dijit.byId('sale_d_type'), sale_d_type_datastore, myNewItem, data);	
+			addDataToSelectbox(dijit.byId('sale_relevent_d_type'), sale_relevent_d_type_datastore, myNewItem, data);				
+			addDataToSelectbox(dijit.byId('buyer_d_type'), buyer_d_type_datastore, myNewItem, data);	
+			addDataToSelectbox(dijit.byId('buyer_relevent_d_type'), buyer_relevent_d_type_datastore, myNewItem, data);	 
+			dijit.byId('frm_client_doc_type').reset();
+			dijit.byId('popup_doc_type').hide();
+			if(type == 1){
+				dijit.byId('sale_d_type').attr('value',old_sale_d_type);
+			}else if(type == 2){
+				dijit.byId('sale_relevent_d_type').attr('value',old_sale_relevent_d_type);
+			}else if(type == 3){
+				dijit.byId('buyer_d_type').attr('value',old_buyer_d_type);
+			}else{
+				dijit.byId('buyer_relevent_d_type').attr('value',old_buyer_relevent_d_type);
+			}
+	
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});	
+}
+function showPopupForm(){
+	property_type = dijit.byId('property_type').get('value');
+	if(property_type==''){
+		alert('Please Select Property Type');
+		dijit.byId('property_type').focus();
+		return false;
+	}else if(property_type==-1){
+		dijit.byId('frm_propertytype').show();
+	}
+}
 function showLandBlogPopupForm(){
 	land_blog = dijit.byId('land_blog').get('value');
 	if(land_blog==''){
@@ -323,16 +596,6 @@ function addNewLandBlog(){
 				alert(err);
 			}
 		});
-	}
-}
-function showPopupForm(){
-	property_type = dijit.byId('property_type').get('value');
-	if(property_type==''){
-		alert('Please Select Property Type');
-		dijit.byId('property_type').focus();
-		return false;
-	}else if(property_type==-1){
-		dijit.byId('frm_propertytype').show();
 	}
 }
 url_property = '<?php echo $this->url(array('module'=>'group','controller'=>'propertiestype','action'=>'add-propertytype'));?>';

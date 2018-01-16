@@ -10,6 +10,19 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	 
     }
     public function getAllIndividuleLoan($search,$reschedule =null){
+    	$session_lang=new Zend_Session_Namespace('lang');
+    	$lang = $session_lang->lang_id;
+    	$str = 'name_en';
+    	$str_agree = 'agreement';
+    	$str_schedule = 'issue sch';
+    	$str_collect='Payment';
+    	if($lang==1){
+    		$str = 'name_kh';
+    		$str_agree = 'កិច្ចសន្យា';
+    		$str_schedule='ចេញតារាង';
+    		$str_collect='បង់ប្រាក់';
+    	}
+    	
     	$from_date =(empty($search['start_date']))? '1': " s.buy_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
@@ -24,7 +37,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    `c`.`phone`         AS `phone`,
 	    `p`.`land_address`    AS `land_address`,
 	    `p`.`street`          AS `street`,
-	    (SELECT name_en FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
+	    (SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
   		`s`.`price_before`    AS `price_before`,
  		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
         `s`.`discount_amount` AS `discount_amount`,
@@ -36,9 +49,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
         `s`.`balance`         AS `balance`,
         `s`.`buy_date`        AS `buy_date`,
          s.status,
-         'បង់ប្រាក់',
-         'ចេញតារាង',
-         'កិច្ចសន្យា'
+         '$str_collect',
+         '$str_schedule',
+         '$str_agree'
 		FROM ((`ln_sale` `s`
 		    JOIN `ln_client` `c`)
 		   JOIN `ln_properties` `p`)
@@ -272,8 +285,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			   	'land_price'=>$data['house_price'],
     			   	'total_installamount'=>$data['total_installamount'],
 //     				'payment_number'=>$data['loan_type'],
-    				//'graice_period'=>$data['pay_every'],
-    				//'amount_collect'=>$data['repayment_method'],
+    				'build_start'=>$data['start_building'],
+    				'amount_build'=>$data['amount_build'],
     				'is_reschedule'=>$is_schedule,
     			    'agreement_date'=>$data['agreement_date'],
     				'staff_id'=>$data['staff_id'],
@@ -417,7 +430,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   	$ids = explode(',', $data['identity']);
 	    			   	$key = 1;
 	    			   	foreach ($ids as $i){
-	    			   		
 	    			   		if($key==1){
 	    			   			$old_remain_principal = $data['sold_price'];
 	    			   		}else{
@@ -927,12 +939,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   	$ids = explode(',', $data['identity']);
 	    			   	$key = 1;
 	    			   	foreach ($ids as $i){
-	    			   		$old_pri_permonth = $data['total_payment'.$i];
 	    			   		if($key==1){
 	    			   			$old_remain_principal = $data['sold_price'];
 	    			   		}else{
 	    			   			$old_remain_principal = $old_remain_principal-$old_pri_permonth;
 	    			   		}
+	    			   		$old_pri_permonth = $data['total_payment'.$i];
 	    			   		if(end($ids)==$i){
 	    			   			$paid_receivehouse = $data['paid_receivehouse'];
 	    			   		}
@@ -1184,7 +1196,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			   	 foreach ($ids as $i){
     			   	 	if($key==1){
     			   	 		$old_remain_principal = $data['sold_price'];
-//     			   	 		$old_pri_permonth = $data['total_payment'.$i]-$data['deposit'];
     			   	 		$old_pri_permonth = $data['total_payment'.$i];
     			   	 	}else{
     			   	 		$old_remain_principal = $old_remain_principal-$old_pri_permonth;

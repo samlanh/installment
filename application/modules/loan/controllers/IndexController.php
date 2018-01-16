@@ -36,7 +36,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);
 			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);
 			$payment=array('module'=>'loan','controller'=>'ilpayment','action'=>'add',);
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('បង់ប្រាក់'=>$payment,'ចេញតារាង'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
+			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('agreement'=>$payment,'issue sch'=>$payment,'Payment'=>$payment,'បង់ប្រាក់'=>$payment,'ចេញតារាង'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

@@ -3,6 +3,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 echo $this->headTitle($tr->translate("LOAN_IL"));
 $url_copy =$this->url(array('module'=>'loan','controller'=>'newschedule','action'=>'add'));
 
+$url_agreement =$this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-paymentschedules'));
 $frm = $this->frm_search;
 ?>
 <script>
@@ -25,9 +26,10 @@ $frm = $this->frm_search;
    		<td><?php echo $frm->getElement('end_date');?></td>
    		<td><?php echo $frm->getElement('status');?></td>
    		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
-   		&nbsp;&nbsp;<input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" /><button onclick="copyRecord('<?php echo $url_copy;?>')" iconclass="dijitIconCopy" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("NEW_SCHEDULE");?></button>
+   		&nbsp;<input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" /><button onclick="reschedule('<?php echo $url_copy;?>')" iconclass="dijitIconCopy" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("NEW_SCHEDULE");?></button>
    		</td>
-      
+   		<td><input type="hidden" name="recordcopy" id="recordschedule" dojoType="dijit.form.TextBox" /><button onclick="agreement('<?php echo $url_agreement;?>')" iconclass="dijitIconCopy" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("តារាងបង់");?></button>
+   		</td>
    </tr>
 </table>
 </form>
@@ -83,9 +85,15 @@ function getAllPropertyBranch(branch_id){
 		}
 	});
 } 
-function copyRecord(url){
+function reschedule(url){
 	 id = dijit.byId('recordcopy').get('value');
+	 if(id==''){alert("Please select record first!");return false;}
 	 window.location.href = url+'/id/'+id;
+}
+function agreement(url){
+	 id = dijit.byId('recordcopy').get('value');
+	 if(id==''){alert("Please select record first!");return false;}
+	 window.open(url+'/id/'+id);
 }
 function setValue(index){
 	var recordcopy = $('input[name=copy]:checked').val();

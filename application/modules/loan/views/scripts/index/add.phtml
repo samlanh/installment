@@ -8,6 +8,11 @@
 ?>
 <style>
 .fullside50{ width:48%;}
+.agreement{
+	border: 1px solid #92b0ea;
+    background: #cbdcff;
+    font-weight: bold;
+    text-align: center;}
 </style>
 <div class="overlay">
 	<div class="overlay-load">
@@ -81,7 +86,7 @@
 								<tr>
 									<td><?php echo $frm->getElement('sale_code');?></td>
 									<td></td>
-									</tr>
+								</tr>
 							</table>
 						</td>
 					</tr>
@@ -93,8 +98,20 @@
 						</td>
 					</tr>
 					<tr>
-						<td ><?php echo $tr->translate("CUSTOMER_CODE")?></td>
-						<td><input id="customer_code" /><input type="hidden" name="identity" id="identity"  value="" ></td>
+						<td><?php echo $tr->translate("CUSTOMER_CODE")?></td>
+						<td>
+							<table width="100%">
+								<tr>
+									<td><input id="customer_code" /><input type="hidden" name="identity" id="identity"  value="" ></td>
+									<td width="30%">
+										<input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="filterClient();"/>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr >
+						<td class="agreement" colspan="2"><?php echo $tr->translate("AGREEMENT")?></td>
 					</tr>
 					<tr>
 						<td><?php echo $tr->translate("DATE_BUY")?></td>
@@ -105,12 +122,12 @@
 					    <td><?php echo $frm->getElement('agreement_date');?></td>
 					</tr>
 					<tr>
-						<td style="white-space: nowrap;"><?php echo $tr->translate("CO_NAME")?></td>
-						<td><input id="staff_id" /> </td>
+						<td><?php echo $tr->translate("BUILD_PERIOD")?></td>
+						<td><?php echo $frm->getElement('amount_build');?></td>
 					</tr>
 					<tr>
-						<td><?php echo $tr->translate("COMISSION")?></td>
-						<td><?php echo $frm->getElement('commission');?></td>
+						<td><?php echo $tr->translate("BUILD_START")?></td>
+						<td><?php echo $frm->getElement('start_building');?></td>
 					</tr>
 		    	</table>
 		    </fieldset>
@@ -153,6 +170,14 @@
 						<tr style="font-weight: bold;">
 							<td style="white-space: nowrap;"><?php echo $tr->translate("SOLD_PRICE")?></td>
 							<td><?php echo $frm->getElement('sold_price');?></td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;"><?php echo $tr->translate("CO_NAME")?></td>
+							<td><input id="staff_id" /> </td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("COMISSION")?></td>
+							<td><?php echo $frm->getElement('commission');?></td>
 						</tr>
 			    	</table>
 			    </fieldset>
@@ -313,7 +338,7 @@
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 							<tr>
 								<td width="25%">
-									<img style="width:100%;height:61px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
 								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
 									<div style="line-height:35px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
@@ -480,7 +505,7 @@
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 							<tr>
 								<td width="25%">
-									<img style="width:100%;height:61px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
 								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
 									<div style="line-height:35px;"><strong style="font-size: 18px;">OFFICIAL RECEIPT</strong></div>
@@ -884,7 +909,6 @@ function Balance(){
 			}
 			dijit.byId('balance').attr('value',price-deposit);
 		}
-		//checkScheduleOption();
 	}
 }
 function filterClient(){
@@ -1114,7 +1138,8 @@ require(["dojo/ready"], function(ready){
 	onChange: function() {
 		member = dijit.byId('member').get('value');
 		if(member==-1){
-			showPopupclient();
+			//showPopupclient();
+			window.open('<?php echo $this->url(array('module'=>'loan','controller'=>'newschedule','action'=>'add'))?>');
 		}else{
 			dijit.byId('customer_code').attr('value',member);
 			getcustomerinfo(member);
@@ -1260,52 +1285,7 @@ function getClientInfo(type){
 		dijit.byId('customer_code').attr('value',customer_code);
 	}
 }
-var url_submitdistrict = '<?php echo $this->url(array('module'=>'other','controller'=>'district','action'=>'add-newdistrict')); ?>';
-function addNewDistrict(){
-		dojo.xhrPost({
-	    url: url_submitdistrict,	
-		form: dojo.byId("form_district"),		    
-		handleAs:"json",
-		load: function(data) {	
-			dojo.byId('form_district').reset(); 
-			dijit.byId('frm_district').hide();
-		},
-		error: function(err) {
-			alert("Your message could not be sent, please try again!.");
-		}
-	});
-}
-var url_submitcommune = '<?php echo $this->url(array('module'=>'other','controller'=>'commune','action'=>'add-newcommune')); ?>';
-function addNewCommune(){
-		dojo.xhrPost({
-	    url: url_submitcommune,	
-		form: dojo.byId("form_commune"),		    
-		handleAs:"json",
-		load: function(data) {	
-			dojo.byId('form_commune').reset(); 
-			dijit.byId('frm_commune').hide();
-		},
-		error: function(err) {
-			alert("Your message could not be sent, please try again!.");
-		}
-	});
-}
-var url_submitvillage = '<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'add-newvillage')); ?>';
-function addNewVillage(){
-		dojo.xhrPost({
-	    url: url_submitvillage,	
-		form: dojo.byId("form_village"),		    
-		handleAs:"json",
-		load: function(data) {	
-			dojo.byId('form_village').reset(); 
-			dijit.byId('frm_village').hide();
-		},
-		error: function(err) {
-		alert("Your message could not be sent, please try again!.");
-				        
-		}
-	});
-}
+
 </script>
 
 <script>
@@ -1800,23 +1780,25 @@ function loading(){
 }
 var url_add_staff = '<?php echo $this->url(array("module"=>"loan","controller"=>"index","action"=>"add-staff")); ?>';
 function addStaff(){
-	dojo.xhrPost({
-		url:url_add_staff,
-		form: dojo.byId("frm_staff"),
-		handleAs:"json",
-		load: function(data) {
-			var Itemmake = { 
-	    	  	id: data,
-		        name: dijit.byId('kh_name').get('value')
-		    };
-	 		addDataToSelectbox(dijit.byId('staff_id'), staff_store, Itemmake, data);
-		    dijit.byId('frm_staff').reset();
-		    dijit.byId("popup_staff").hide();
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
+	 if(dijit.byId('frm_staff').validate()){
+		dojo.xhrPost({
+			url:url_add_staff,
+			form: dojo.byId("frm_staff"),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = { 
+		    	  	id: data,
+			        name: dijit.byId('kh_name').get('value')
+			    };
+		 		addDataToSelectbox(dijit.byId('staff_id'), staff_store, Itemmake, data);
+			    dijit.byId('frm_staff').reset();
+			    dijit.byId("popup_staff").hide();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+   }
 }
 function hideDialog1(){
 	 dijit.byId("popup_staff").hide();
@@ -1873,15 +1855,15 @@ function addNewClient(){
 								<tr>
 									<td><?php echo $tr->translate('NAME_KH');?></td>
 									<td>
-										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="kh_name" name="kh_name" value="" type="text">
+										<input dojoType="dijit.form.ValidationTextBox" required="1" class="fullside" id="kh_name" name="kh_name" value="" type="text">
 									</td>
 								</tr>
 								<tr>
 									<td><?php echo $tr->translate('SEX');?></td>
 									<td>
 										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="sex" name="sex" value="" type="text">
-											<option value="1">Male</option>
-											<option value="2">Female</option>
+											<option value="1"><?php echo $tr->translate("MALE");?></option>
+											<option value="2"><?php echo $tr->translate("FEMALE");?></option>
 										</select>
 									</td>
 								</tr>

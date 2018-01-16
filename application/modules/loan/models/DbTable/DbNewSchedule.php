@@ -143,7 +143,6 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				);
     		$this->_name='ln_reschedule';
     		$id = $this->insert($array);
-    	
     	   
     		$is_schedule=0;
     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==4 OR $data["schedule_opt"]==6){//
@@ -196,6 +195,9 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$where = " (principal_permonth=0 OR is_completed=0) AND sale_id=".$data['loan_number'];
     		$this->_name="ln_saleschedule";
     		$this->delete($where);
+    		
+    		$sql="SELECT COUNT(id) FROM ln_saleschedule WHERE status=1 AND sale_id= ".$data['loan_number'];
+    		$start_id = $db->fetchOne($sql);
     		
     		$id  =$data['loan_number'];
     		$total_day=0;
@@ -331,7 +333,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     									'percent'=>$data['percent'.$j],
     									'note'=>$data['remark'.$j],
     									'is_installment'=>1,
-			    						'no_installment'=>$key,
+			    						'no_installment'=>$key+$start_id,
 			    					);
 			    					$key = $key+1;
 			    					$this->insert($datapayment);
@@ -367,14 +369,12 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     			   	$ids = explode(',', $data['identity']);
     			   	$key = 1;
     			   	foreach ($ids as $i){
-    			   		$old_pri_permonth = $data['total_payment'.$i];
     			   		if($key==1){
     			   			$old_remain_principal = $data['sold_price'];
-    			   		
     			   		}else{
     			   			$old_remain_principal = $old_remain_principal-$old_pri_permonth;
     			   		}
-    			   			
+    			   		$old_pri_permonth = $data['total_payment'.$i];
     			   		$old_interest_paymonth = ($data['interest_rate']==0)?0:$this->round_up_currency(1,($old_remain_principal*$data['interest_rate']/12/100));
     			   			
     			   		$cum_interest = $cum_interest+$old_interest_paymonth;
@@ -400,7 +400,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     			   				'note'=>$data['remark'.$i],
     			   				'percent'=>$data['percent'.$i],
     			   				'is_installment'=>1,
-    			   				'no_installment'=>$key,
+    			   				'no_installment'=>$key+$start_id,
     			   		);
     			   		if($payment_method==5){//with bank
     			   			$datapayment['ispay_bank']= $data['pay_with'.$i];
@@ -435,7 +435,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 			    			        	'amount_day'=>$old_amount_day,
 			    			        	'is_completed'=>0,
 			    			        	'date_payment'=>$next_payment,
-			    			        	'no_installment'=>$i+$j,
+			    			        	'no_installment'=>$i+$j+$start_id,
 	// 		    			        	'collect_by'=>1,
 	// 		    			        	'payment_option'=>$cum_interest,
 	// 		    			        	'penelize'=>,

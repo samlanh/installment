@@ -56,7 +56,7 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;		
 		$sql = "SELECT id,name, phone, `date`,from_price,to_price,requirement,type,description,				
-		    (SELECT  CONCAT(last_name,' ', first_name) FROM rms_users WHERE id = user_id limit 1 ) AS user_name,
+		    (SELECT  first_name FROM rms_users WHERE id = user_id limit 1 ) AS user_name,
 			status FROM $this->_name ";
 		if(!empty($search['adv_search'])){
 			$s_where = array();
@@ -65,7 +65,9 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 			$s_where[] = " phone LIKE '%{$s_search}%'";
 			$s_where[] = " requirement LIKE '%{$s_search}%'";
 			$s_where[] = " type LIKE '%{$s_search}%'";
-		
+			$s_where[] = " from_price LIKE '%{$s_search}%'";
+			$s_where[] = " to_price LIKE '%{$s_search}%'";
+			
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		if($search['status']>-1){

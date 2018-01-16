@@ -3,11 +3,17 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 {
       public function getAllLoan($search = null){//rpt-loan-released/
       	 $db = $this->getAdapter();
+      	 $session_lang=new Zend_Session_Namespace('lang');
+      	 $lang = $session_lang->lang_id;
+      	 $str = 'name_en';
+      	 if($lang==1){
+      	 	$str = 'name_kh';
+      	 }
       	 $sql = " SELECT * ,
       	 (SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id ) AS times,
-      	 (SELECT name_en FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
+      	 (SELECT $str FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
       	 FROM v_soldreport WHERE 1 ";
-      	 
+//       	 echo $sql;exit();
       	 $where ='';
       	 $str = 'buy_date'; 
 	    if($search['buy_type']>0 AND $search['buy_type']!=2){
@@ -1972,6 +1978,201 @@ function updatePaymentStatus($data){
       	}      	
       	$order = " ORDER BY id DESC ";
       	return $db->fetchAll($sql.$where.$order);
+      }
+      function updatePaid(){
+      	$db = $this->getAdapter();
+      	$sql=" SELECT s.id,
+      	(SELECT name_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1 )AS client_name,
+      	s.payment_id,
+      	s.client_id,s.price_sold,s.house_id,
+      	(SELECT SUM(`cr`.`total_principal_permonthpaid`) FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`)) AS `paid_amount`,
+      	(SELECT (`cr`.`total_principal_permonthpaid`) FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`) ORDER BY `cr`.`id` DESC LIMIT 1) AS `paid_lastamount`,
+      	(SELECT `cr`.`id` FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`) ORDER BY `cr`.`id` DESC LIMIT 1) AS `crm_id`,
+      	(SELECT SUM(ss.principal_permonth) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND STATUS=1 LIMIT 1) AS realpaid,
+      	(SELECT count(ss.id) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND STATUS=1 LIMIT 1) AS countpaid
+      	FROM `ln_sale` AS s WHERE is_completed=0 AND STATUS=1 AND is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2";
+      	$rs=$db->fetchAll($sql);
+      	if(!empty($rs)){
+      		foreach($rs as $ss){
+      			$ss['paid_amount']=0;
+      			if($ss['realpaid']>$ss['paid_amount']){
+      				$session_user=new Zend_Session_Namespace('auth');
+      				$user_id = $session_user->user_id;
+      				$dbre = new Application_Model_DbTable_DbGlobal();
+      				$receipt = $dbre->getReceiptByBranch(array("branch_id"=>1));
+      					
+      				$total_paid = $ss['realpaid'];//-$ss['paid_amount'];
+      				$outstanding = $ss['price_sold']-$ss['realpaid'];
+      				$arr_client_pay = array(
+      						'sale_id'=>$ss['id'],
+      						'branch_id'=>1,
+      						'land_id'=>$ss['house_id'],
+      						'receipt_no'					=>	$receipt,
+      						'date_pay'					    =>	date("Y-m-d"),
+      						'date_input'					=>	date("Y-m-d"),
+      						'client_id'                     =>	$ss['client_id'],
+      						'outstanding'                   =>	$outstanding,//ប្រាក់ដើមមុនបង់
+      						'total_principal_permonth'		=>	$total_paid,//ប្រាក់ដើមត្រូវបង់
+      						'total_interest_permonth'		=>	0,
+      						'penalize_amount'				=>	0,
+      						'principal_amount'				=>	$outstanding-$total_paid,//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
+      						'total_principal_permonthpaid'	=>	$total_paid,//ok ប្រាក់ដើមបានបង
+      						'total_interest_permonthpaid'	=>	0,//ok ការប្រាក់បានបង
+      						'penalize_amountpaid'			=>	0,// ok បានបង
+      						'balance'						=>	0,
+      						'total_payment'					=>	$total_paid,//ប្រាក់ត្រូវបង់ok
+      						'recieve_amount'				=>	$total_paid,//ok
+      						'amount_payment'				=>	$total_paid,//brak ban borng
+      						'return_amount'					=>	0,//ok
+      						'note'							=>	"ចេញពីSystem",
+      						'cheque'						=>	"",
+      						'user_id'						=>	$user_id,
+      						'status'						=>	1,
+      						'extra_payment' 				=>  0,
+      						'from_system'					=>  1,
+      						'payment_times'					=> $ss['countpaid']+1);
+      				$this->_name="ln_client_receipt_money";
+      				$id = $this->insert($arr_client_pay);
+      					
+      				$array = array(
+      						'crm_id'=>$id,
+      						'client_id'				 =>$ss['client_id'],
+      						'paid_date'              => date("Y-m-d"),
+      						'capital'				 => $outstanding,
+      						'remain_capital'		 => $outstanding-$total_paid,
+      						'principal_permonth'	 => $total_paid,
+      						'total_interest'		 => 0,
+      						'total_payment'			 => $total_paid,
+      						'total_recieve'			 => $total_paid,
+      						'penelize_amount'		 => 0,
+      						'old_interest'			 => 0,
+      						'old_principal_permonth' => 0,
+      						'last_pay_date'          => date("Y-m-d"),
+      				);
+      				$this->_name="ln_client_receipt_money_detail";
+      				$this->insert($array);
+      			}
+      			/*
+      			 if($ss['paid_amount']>$ss['realpaid']){
+      			$rail_amount =$ss['paid_amount']-$ss['realpaid'];
+      			$real_paid = $ss['paid_lastamount']-($ss['paid_amount']-$ss['realpaid']); ;
+      			$session_user=new Zend_Session_Namespace('auth');
+      			$user_id = $session_user->user_id;
+      			$dbre = new Application_Model_DbTable_DbGlobal();
+      			$receipt = $dbre->getReceiptByBranch(array("branch_id"=>1));
+      			//$total_paid = $ss['realpaid']-$ss['paid_amount'];
+      			//$outstanding = $ss['price_sold']-$ss['realpaid'];
+      			$arr_client_pay = array(
+      					//'sale_id'=>$ss['id'],
+      					//'branch_id'=>1,
+      					// 	  						'land_id'=>$ss['house_id'],
+      					// 	  						'receipt_no'					=>	$receipt,
+      					// 	  						'date_pay'					    =>	date("Y-m-d"),
+      					// 	  						'date_input'					=>	date("Y-m-d"),
+      					// 	  						'client_id'                     =>	$ss['client_id'],
+      					// 	  						'outstanding'                   =>	$outstanding,//ប្រាក់ដើមមុនបង់
+      					'total_principal_permonth'		=>	$real_paid,//ប្រាក់ដើមត្រូវបង់
+      					'total_interest_permonth'		=>	0,
+      					'penalize_amount'				=>	0,
+      					// 	  						'principal_amount'				=>	$outstanding-$total_paid,//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
+      					'total_principal_permonthpaid'	=>	$real_paid,//ok ប្រាក់ដើមបានបង
+      					'total_interest_permonthpaid'	=>	0,//ok ការប្រាក់បានបង
+      					'penalize_amountpaid'			=>	0,// ok បានបង
+      					'balance'						=>	0,
+      					'total_payment'					=>	$real_paid,//ប្រាក់ត្រូវបង់ok
+      					'recieve_amount'				=>	$real_paid,//ok
+      					'amount_payment'				=>	$real_paid,//brak ban borng
+      					'return_amount'					=>	0,//ok
+      					'note'							=>	"ពីSystemលើកទី3",
+      					'cheque'						=>	"",
+      					'user_id'						=>	$user_id,
+      					'status'						=>	1,
+      					'extra_payment' 				=>  0,
+      					'from_system'					=>  1,
+      			);
+      			$this->_name="ln_client_receipt_money";
+      			$where=" id = ".$ss['crm_id'];
+      			$this->update($arr_client_pay, $where);
+      
+      			$array = array(
+      					// 	  						'crm_id'=>$id,
+      					// 	  						'client_id'				 =>$ss['client_id'],
+      					// 	  						'paid_date'              => date("Y-m-d"),
+      					// 	  						'capital'				 => $outstanding,
+      					// 	  						'remain_capital'		 => $outstanding-$total_paid,
+      					'principal_permonth'	 => $real_paid,
+      					'total_interest'		 => 0,
+      					'total_payment'			 => $real_paid,
+      					'total_recieve'			 => $real_paid,
+      					'penelize_amount'		 => 0,
+      					'old_interest'			 => 0,
+      					'old_principal_permonth' => 0,
+      					// 	  						'last_pay_date'          => date("Y-m-d"),
+      			);
+      			$this->_name="ln_client_receipt_money_detail";
+      			$where=" crm_id = ".$ss['crm_id'];
+      			$this->update($array, $where);
+      			// 	  				$this->insert($array);
+      			}*/
+      
+      			// 	  			if($ss['realpaid']>$ss['paid_amount']){
+      			// 	  				$session_user=new Zend_Session_Namespace('auth');
+      			// 	  				$user_id = $session_user->user_id;
+      			// 	  				$dbre = new Application_Model_DbTable_DbGlobal();
+      			// 	  				$receipt = $dbre->getReceiptByBranch(array("branch_id"=>1));
+      			// 	  				$total_paid = $ss['realpaid']-$ss['paid_amount'];
+      			// 	  				$outstanding = $ss['price_sold']-$ss['realpaid'];
+      			// 	  				$arr_client_pay = array(
+      					// 	  						'sale_id'=>$ss['id'],
+      					// 	  						'branch_id'=>1,
+      					// 	  						'land_id'=>$ss['house_id'],
+      					// 	  						'receipt_no'					=>	$receipt,
+      					// 	  						'date_pay'					    =>	date("Y-m-d"),
+      					// 	  						'date_input'					=>	date("Y-m-d"),
+      					// 	  						'client_id'                     =>	$ss['client_id'],
+      					// 	  						'outstanding'                   =>	$outstanding,//ប្រាក់ដើមមុនបង់
+      					// 	  						'total_principal_permonth'		=>	$total_paid,//ប្រាក់ដើមត្រូវបង់
+      					// 	  						'total_interest_permonth'		=>	0,
+      					// 	  						'penalize_amount'				=>	0,
+      					// 	  						'principal_amount'				=>	$outstanding-$total_paid,//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
+      					// 	  						'total_principal_permonthpaid'	=>	$total_paid,//ok ប្រាក់ដើមបានបង
+      					// 	  						'total_interest_permonthpaid'	=>	0,//ok ការប្រាក់បានបង
+      					// 	  						'penalize_amountpaid'			=>	0,// ok បានបង
+      					// 	  						'balance'						=>	0,
+      					// 	  						'total_payment'					=>	$total_paid,//ប្រាក់ត្រូវបង់ok
+      					// 	  						'recieve_amount'				=>	$total_paid,//ok
+      					// 	  						'amount_payment'				=>	$total_paid,//brak ban borng
+      					// 	  						'return_amount'					=>	0,//ok
+      					// 	  						'note'							=>	"ពីSystemលើកទី២",
+      					// 	  						'cheque'						=>	"",
+      					// 	  						'user_id'						=>	$user_id,
+      					// 	  						'status'						=>	1,
+      					// 	  						'extra_payment' 				=>  0,
+      					// 	  						'from_system'					=>  1,
+      					// 	  						'payment_times'					=> $ss['countpaid']+1);
+      			// 	  				$this->_name="ln_client_receipt_money";
+      			// 	  				$id = $this->insert($arr_client_pay);
+      	  	
+      			// 	  				$array = array(
+      					// 	  						'crm_id'=>$id,
+      					// 	  						'client_id'				 =>$ss['client_id'],
+      					// 	  						'paid_date'              => date("Y-m-d"),
+      					// 	  						'capital'				 => $outstanding,
+      					// 	  						'remain_capital'		 => $outstanding-$total_paid,
+      					// 	  						'principal_permonth'	 => $total_paid,
+      					// 	  						'total_interest'		 => 0,
+      					// 	  						'total_payment'			 => $total_paid,
+      					// 	  						'total_recieve'			 => $total_paid,
+      					// 	  						'penelize_amount'		 => 0,
+      					// 	  						'old_interest'			 => 0,
+      					// 	  						'old_principal_permonth' => 0,
+      					// 	  						'last_pay_date'          => date("Y-m-d"),
+      					// 	  				);
+      			// 	  				$this->_name="ln_client_receipt_money_detail";
+      			// 	  				$this->insert($array);
+      			// 	  			}
+      		}
+      	}
       }
  }
 

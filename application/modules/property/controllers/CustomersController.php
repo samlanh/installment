@@ -82,13 +82,12 @@ class Property_customersController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		$db = new Application_Model_DbTable_DbGlobal();
+	
 		
+		$db = new Application_Model_DbTable_DbGlobal();
 		$client_type = $db->getclientdtype();
-		array_unshift($client_type,array(
-		'id' => -1,
-		'name' => '---Add New ---',
-		 ) );
+		array_unshift($client_type,array('id' => -1,'name' => '--- បន្ថែមថ្មី ---',));
+		array_unshift($client_type,array('id' => 0,'name' => '---Please Select ---',));
 		$this->view->clienttype = $client_type;
 		
 		$fm = new Property_Form_FrmClient();

@@ -3,7 +3,7 @@
 class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'ln_client';
+    protected $_name = 'ln_client_property';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace('auth');
     	return $session_user->user_id;
@@ -46,6 +46,7 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 	    		'current_address'=>$_data['current_address'],
 	    		'nation_id_issue_date'=>$_data['national_id_issue_date'],
 	    		'p_nation_issue_date'=>$_data['p_national_id_issue_date'],
+				'client_d_type'      => $_data['client_d_type'],
 				'nation_id'=>$_data['national_id'],
 		    	'nationality'=>$_data['nationality'],
 				'phone'	      => $_data['phone'],
@@ -59,10 +60,11 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    	'ksex'      => $_data['ksex'],
 		    	'lphone'      => $_data['lphone'],
 		    	'p_age'      => $_data['p_age'],
+				'joint_doc_type'      => $_data['join_d_type'],
 		    	'rid_no'      => $_data['rid_no'],
 		    	'arid_no'      => $_data['arid_no'],
 		    	'refe_nation_id'      => $_data['reference_national_id'],
-		    	'type'      => 2,
+		    	//'type'      => 2,
 		);
 		if(!empty($_data['id'])){
 			$where = 'client_id = '.$_data['id'];
@@ -92,7 +94,7 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		 c.bname_kh,c.`hname_kh`,c.`lphone`,c.`ksex`,c.`p_age`,
 		c.`nationality`,c.`p_nationality`,c.`p_nation_issue_date`,c.`rid_no`,c.`arid_no`,c.refe_nation_id,
 		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=26 AND v.key_code = c.`is_relevant_type`) AS relevent,
-		 c.photo_name FROM `ln_client` AS c WHERE client_id = ".$db->quote($id);
+		 c.photo_name FROM `ln_client_property` AS c WHERE client_id = ".$db->quote($id);
 		$sql.=" LIMIT 1 ";
 		$row=$db->fetchRow($sql);
 		return $row;
@@ -109,7 +111,7 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    create_date,
 		    (SELECT  CONCAT(first_name,' ', last_name) FROM rms_users WHERE id=user_id ) AS user_name,
 			status, 'ប្រវិត្តិរូប',
-         'កែប្រែ' FROM $this->_name WHERE status > -1 AND type=2";
+         'កែប្រែ' FROM $this->_name WHERE status > -1 ";
 		if(empty($search['show_all'])){
 			$where = " AND  name_kh!=''  AND ".$from_date." AND ".$to_date;
 			if(!empty($search['adv_search'])){
@@ -151,7 +153,7 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 	}	
 	public function getClientCode(){//for get client by branch
 		$db = $this->getAdapter();
-			$sql = "SELECT COUNT(client_id) AS number FROM `ln_client`
+			$sql = "SELECT COUNT(client_id) AS number FROM `ln_client_property`
 			WHERE 1 ";
 		$acc_no = $db->fetchOne($sql);
 		$new_acc_no= (int)$acc_no+1;
@@ -167,7 +169,7 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$arr = array( 'status'=> -1);
 		$where = ' client_id = '.$id;
-		$this->_name = "ln_client";
+		$this->_name = "ln_client_property";
 		$this->update($arr, $where);
 	}
 	public function addClientByAjax($_data){
@@ -178,6 +180,7 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 					'client_number'=> $client_code,//$_data['client_no'],
 					'name_kh'	  => $_data['name_kh'],
 					'sex'	      => $_data['customer_sex'],
+					'client_d_type'      => $_data['client_d_type'],
 					'nation_id'=>$_data['national_id'],
 					'nation_id_issue_date'=>$_data['national_id_issue_date'],
 					'nationality'=>$_data['nationality'],
@@ -191,13 +194,15 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 					'p_age'      => $_data['p_age'],
 					'lphone'      => $_data['lphone'],
 					'rid_no'      => $_data['rid_no'],
+					'joint_doc_type'      => $_data['join_d_type'],
 					'is_relevant_type'=> $_data['is_type_of_relevant'],
 					'p_nation_issue_date'=>$_data['p_national_id_issue_date'],
 					
-					'create_date' => date("Y-m-d"),
+					'create_date' => date("Y-m-d H:i:s"),
 					'user_id'	  => $this->getUserId(),
-					'type'      => 2,
+					//'type'      => 2,
 					'status'      => 1,
+
 			);
 			return  $this->insert($_arr);
 		}catch(Exception $e){

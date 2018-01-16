@@ -15,7 +15,6 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 		$upload->addFilter('Rename',
 				array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
 		$receive = $upload->receive();
-		//echo $receive; exit();
 		if($receive)
 		{
 			$_data['photo'] = $photoname;
