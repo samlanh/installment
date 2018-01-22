@@ -28,7 +28,7 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				'land_size'			=>$_data['size'],
 				'width'      => $_data['width'],
 				'height'      => $_data['height'],
-	    		//'land_width'      => $_data['width_land'],
+	    		'is_lock'      => $_data['buy_status'],
 	    		//'land_height'      => $_data['height_land'],
 				'hardtitle'      => $_data['hardtitle'],
 				'note'       => $_data['desc'],
@@ -54,6 +54,7 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    }
 		    
 		if(!empty($_data['id'])){
+			
 			$where = 'id = '.$_data['id'];
 			$this->update($_arr, $where);
 			return $_data['id'];

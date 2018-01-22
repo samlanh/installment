@@ -625,6 +625,15 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside'));
 		
+		$status_using = new Zend_Dojo_Form_Element_FilteringSelect('buy_status');
+		$status_using->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$options= array(0=>"មិនទាន់លក់",1=>"បានលក់");
+		$status_using->setMultiOptions($options);
+		
 		if($data!=null){
 			
 			$north->setValue($data['north']);
@@ -657,8 +666,9 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$bedroom->setValue($data['bedroom']);
 			$propertiestype->setValue($data['property_type']);
 			$floor->setValue($data['floor']);
+			$status_using->setValue($data['is_lock']);
 		}
-		$this->addElements(array($width_land,$height_land,$north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
+		$this->addElements(array($status_using,$width_land,$height_land,$north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
 		return $this;
 	}
 }

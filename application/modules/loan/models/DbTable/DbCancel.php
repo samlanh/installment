@@ -37,7 +37,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			clie.`name_kh` AS client_name,
 			(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
 			pro.`land_code`,pro.`land_address`,pro.`street`,
-			s.price_sold,c.installment_paid,c.paid_amount,c.`create_date`,c.`status`
+			s.price_sold,c.installment_paid,c.paid_amount,c.return_back,c.`create_date`,c.`status`
 			FROM `ln_sale_cancel` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = c.`property_id` AND
@@ -72,15 +72,15 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				$title="ត្រលប់ប្រាក់ទៅអោយអតិថិជនវិញ";
 				$arr1 = array(
 					'branch_id'		=>$data['branch_id'],
-					'title'			=>$row['sale_number'].$title,
+					'title'			=>$title,
 					'total_amount'	=>$data['return_back'],
 					'invoice'		=>$invoice,
 					'category_id'	=>$data['income_category'],
-					'date'			=>date('Y-m-d'),
+					'date'			=>$data['expense_date'],
 					'status'		=>1,
 					'description'	=>$data['reason'],
 					'user_id'		=>$this->getUserId(),
-					'create_date'	=>date('Y-m-d'),
+					'create_date'	=>$data['expense_date'],
 						);
 				$this->_name="ln_expense";
 				$expenid = $this->insert($arr1);
@@ -136,13 +136,13 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'title'			=>$row['sale_number'].$title,
 					'total_amount'	=>$data['return_back'],
 					'category_id'	=>$data['income_category'],
-					'date'			=>date('Y-m-d'),
+					'date'			=>$data['expense_date'],
 					'status'		=>$data['status_using'],
 					'description'	=>$data['reason'],
 					'user_id'		=>$this->getUserId(),
 					//'paid_amount'=>$data['paid_amount'],
 					'category_id'	=>$data['income_category'],
-					'create_date'	=>date('Y-m-d'),
+					'create_date'	=>$data['expense_date'],
 						);
 				$this->_name="ln_expense";
 				$where = 'id = '.$result['expense_id'];
@@ -160,11 +160,11 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'invoice'		=>$invoice,
 						'category_id'	=>$data['income_category'],
 // 						'paid_amount'=>$data['paid_amount'],
-						'date'			=>date('Y-m-d'),
+						'date'			=>$data['expense_date'],
 						'status'		=>$data['status_using'],
 						'description'	=>$data['reason'],
 						'user_id'		=>$this->getUserId(),
-						'create_date'	=>date('Y-m-d'),
+						'create_date'	=>$data['expense_date'],
 							);
 					$this->_name="ln_expense";
 					$expenid = $this->insert($arr1);
@@ -205,7 +205,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'branch_id'=>$data['branch_id'],
 						'sale_id'=>$data['sale_no'],
 						'property_id'=>$data['property_id'],
-						'create_date'=>date("Y-m-d"),
+						'create_date'=>$data['expense_date'],
 						'reason'=>$data['reason'],
 						'user_id'=>$this->getUserId(),
 						'status'=>$data['status_using'],

@@ -118,12 +118,18 @@ $frms=$this->frm_client;
 <div style="clear: both;"></div>
 <div style=" width:98%; margin:0 auto; ">
 <br />
-<div style=" width:29cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+<div style="min-width:29cm;min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
 <div id="divPrint">
 <style>
 .style{
-	line-height: 20px;font-size: 9px !important;
+	line-height: 20px;font-size: 12px !important;
 	font-family: 'Khmer OS Battambang';
+}
+table { page-break-inside:auto }
+tr{ page-break-inside:avoid; page-break-after:auto; }
+#header {
+  display: table-header-group;
+  page-break-inside:avoid; page-break-after:auto;
 }
 .hover:hover{background: #ccc;}
 th{padding: 3px 5px;}
@@ -159,59 +165,59 @@ th{padding: 3px 5px;}
 </tr>
 </table>
 <body>
-	<table id="exportExcel"  width="100%" border="1" style="border-collapse:collapse;font-size: 10px;" bordercolor="black">   
-    	<tr bgcolor="#ccc" style="font-family: 'Khmer OS Battambang'; text-align: center;">
-    		<td colspan="11"><?php echo $tr->translate("CLIENT_INFO");?></td>
-    		<td colspan="5"><?php echo $tr->translate("RELEVANT_STAKEHOLDER");?></td>
-    		<td rowspan="2"><?php echo $tr->translate("DATE");?></td>
-    	</tr>
-    	<tr bgcolor="#ccc" class="style" align="center" style="font-family: 'Khmer OS Battambang';floafont-weight:bold; line-height: 14px; font-size:12px; padding:5px 0px; ">
-	       <td><?php echo $tr->translate("NUM");?></td>
-	       <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-	       <td><?php echo $tr->translate("CLIENT_NUM");?></td>
-	       <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-	       <td><?php echo $tr->translate("SEX");?></td>
-	       <td><?php echo $tr->translate("PHONE");?></td>
-	       <td><?php echo $tr->translate("DATOFBIRTH");?></td>
-	       <td><?php echo $tr->translate("NATIONALITY");?></td>
-	       <td><?php echo $tr->translate("NATIONAL_ID");?></td>
-           <td><?php echo $tr->translate("NUMBER");?></td>
-	       <td width="150px;"><?php echo $tr->translate("ADDRESS");?></td>
-	       
-	       <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-	       <td><?php echo $tr->translate("SEX");?></td>
-	       <td><?php echo $tr->translate("PHONE");?></td>
-	       <td><?php echo $tr->translate("NATIONAL_ID");?></td>
-	       <td><?php echo $tr->translate("NUMBER");?></td>
-          </tr>
+	<table id="exportExcel"  width="100%" border="1" style="border-collapse:collapse;font-size: 12px;" bordercolor="black">   
+    	<thead>
+	    	<tr bgcolor="#c1d0f3" style="font-weight:bold;font-family: 'Khmer OS Battambang'; text-align: center;">
+	    		<td colspan="11"><?php echo $tr->translate("CLIENT_INFO");?></td>
+	    		<td colspan="5"><?php echo $tr->translate("RELEVANT_STAKEHOLDER");?></td>
+	    		<td rowspan="2"><?php echo $tr->translate("DATE");?></td>
+	    	</tr>
+	    	<tr bgcolor="#c1d0f3" class="style" align="center" style=font-weight:bold;"font-family: 'Khmer OS Battambang';floafont-weight:bold; line-height: 14px; font-size:12px; padding:5px 0px; ">
+		       <td><?php echo $tr->translate("NUM");?></td>
+		       <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+		       <td><?php echo $tr->translate("CLIENT_NUM");?></td>
+		       <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+		       <td><?php echo $tr->translate("SEX");?></td>
+		       <td><?php echo $tr->translate("PHONE");?></td>
+		       <td><?php echo $tr->translate("DATOFBIRTH");?></td>
+		       <td><?php echo $tr->translate("NATIONALITY");?></td>
+		       <td style="white-space: nowrap;"><?php echo $tr->translate("NATIONAL_ID");?></td>
+	           <td><?php echo $tr->translate("NUMBER");?></td>
+		       <td width="150px;"><?php echo $tr->translate("ADDRESS");?></td>
+		       
+		       <td style="white-space: nowrap;"><?php echo $tr->translate("JOIN_NAME");?></td>
+		       <td><?php echo $tr->translate("SEX");?></td>
+		       <td><?php echo $tr->translate("PHONE");?></td>
+		       <td style="white-space: nowrap;"><?php echo $tr->translate("NATIONAL_ID");?></td>
+		       <td><?php echo $tr->translate("NUMBER");?></td>
+	          </tr>
+          </thead>
           <?php if(!empty($this->client_list)) foreach($this->client_list as $key =>$row){?>
-		   <tr style="font-size: 9px;line-height: 14px;font-family: 'Khmer OS Battambang';" align="center" class="hover">
+		   <tr style="font-size: 12px;line-height: 14px;font-family: 'Khmer OS Battambang';" align="center" class="hover">
 			   <td><?php echo $key+1; ?></td>
-		       <td ><?php echo $row['branch_name']?></td>
+		       <td style="white-space: nowrap;"><?php echo $row['branch_name']?></td>
 		       <td style="white-space: nowrap;" ><?php echo $row['client_number']?></td>
-			   <td align="left"><?php echo $row['client_name'];?></td>
+			   <td align="left" style="white-space: nowrap;"><?php echo $row['client_name'];?></td>
 			   <td ><?php echo $row['sex']?></td>
-			   <td><?php echo $row['phone']?></td>
+			   <td style="min-width:75px !important;"><?php echo $row['phone']?></td>
 			   <td>&nbsp;<?php echo date("d/m/Y",strtotime($row['dob']));?></td>
 			   <td>&nbsp;<?php echo $row['nationality']?></td>
-	           <td>&nbsp;<?php echo $row['doc_name']?></td>
+	           <td style="white-space: nowrap;">&nbsp;<?php echo $row['doc_name']?></td>
 	           <td>&nbsp;<?php echo $row['nation_id']?></td>
 			   <td style="line-height:15px;text-align: left">&nbsp;<?php echo "#".$row['house'].",St".$row['street'].", ".$row['village_name'].", ".$row['com_name'].", ".$row['dis_name'].", ".$row['pro_name']?></td>
 			   
 			   <td>&nbsp;<?php echo $row['hname_kh']?></td>
 			   <td style="line-height:15px;text-align: left">&nbsp;<?php echo $row['ksex'];?></td>
 			   <td><?php echo ($row['lphone'])?></td>
-			   <td><?php echo $row['joindoc_name'];?></td>
+			   <td style="white-space: nowrap;"><?php echo $row['joindoc_name'];?></td>
 			   <td><?php echo $row['rid_no'];?></td>
 			   <td><?php echo date("d/M/Y",strtotime($row['create_date']))?></td>
-			  
 		   </tr>
 		  <?php }?>
-
     </table>
     <br />
 		   <table align="center" width="100%">
-				   <tr style="font-size: 12px;">
+				   <tr style="font-size: 14px;">
 				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
 				        <th></th>
 				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>

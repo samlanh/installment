@@ -35,9 +35,9 @@ class Report_Model_DbTable_DbLnClient extends Zend_Db_Table_Abstract
 			
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 			}
-// 			if($search['status']>-1){
-// 				$where.= " AND status = ".$search['status'];
-// 			}
+			if($search['status']>-1){
+				$where.= " AND status = ".$search['status'];
+			}
 			if($search['province']>0){
 				$where.=" AND pro_id= ".$search['province'];
 			}

@@ -477,7 +477,7 @@ public function init()
 			$commission->setValue($data['comission']);
 			$staff_id->setValue($data['staff_id']);
 			
-			$start_building->setValue(date("d/m/Y",strtotime($data['start_building'])));
+			$start_building->setValue(date("d/m/Y",strtotime($data['build_start'])));
 			$amount_build->setValue($data['amount_build']);
 			
 		}

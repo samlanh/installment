@@ -155,6 +155,15 @@ public function init()
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 		));
 		
+		$expense_date = new Zend_Dojo_Form_Element_DateTextBox('expense_date');
+		$expense_date->setAttribs(array(
+				'dojoType'=>'dijit.form.DateTextBox',
+				'required' =>'false',
+				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+		));
+		$expense_date->setValue(date("Y-m-d"));
+		
 		$_price_sold = new Zend_Dojo_Form_Element_NumberTextBox('price_sold');
 		$_price_sold->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
@@ -437,8 +446,10 @@ public function init()
 			$installment_paid->setValue($data['installment_paid']);
 			$paid_amount->setValue($data['paid_amount']);
 			$return_back->setValue($data['return_back']);
+			
+			$expense_date->setValue($data['create_date']);
 		}
-		$this->addElements(array($client_name,$land_id,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
+		$this->addElements(array($expense_date,$client_name,$land_id,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
 				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$_old_property_id,$property,
 				$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$penalize,$_service_charge,

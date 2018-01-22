@@ -26,7 +26,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","SALE_NO","CLIENT_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","PROPERTY_NAME","STREET","PRICE_SOLD","INSTALLMENT_PAID","PAID_AMOUNT","DATE","STATUS");
+			$collumns = array("PROJECT_NAME","SALE_NO","CLIENT_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","PROPERTY_NAME","STREET","PRICE_SOLD","INSTALLMENT_PAID","PAID_AMOUNT","RETURN_MONEY_BACK","DATE","STATUS");
 			$link=array(
 					'module'=>'loan','controller'=>'cancel','action'=>'edit',
 			);
@@ -46,16 +46,8 @@ class Loan_CancelController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {		
 				$_dbmodel = new Loan_Model_DbTable_DbCancel();
-				if(isset($_data['save'])){
-					$_dbmodel->addCancelSale($_data);
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel/add");
-				}elseif(isset($_data['save_close'])){
-					$_dbmodel->addCancelSale($_data);
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel");
-				}else{
-					$_dbmodel->addCancelSale($_data);
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel");
-				}				
+				$_dbmodel->addCancelSale($_data);
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();

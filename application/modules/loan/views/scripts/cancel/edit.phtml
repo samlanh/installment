@@ -14,6 +14,7 @@ dojo.require("dijit.Dialog");
 <form id="add_cancel" action="<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	 <script type="dojo/method" event="onSubmit">			
 	if(this.validate()) {
+		dijit.byId('saveclose').set('disabled',true);
     	return true;
    		}else {
     	return false;
@@ -37,7 +38,7 @@ dojo.require("dijit.Dialog");
                     	<td width="33%">
                     	<table>
                         	<tr>
-                            	<td><?php echo $tr->translate("CLIENT_NAME")?></td>
+                            	<td><strong><?php echo $tr->translate("CLIENT_NAME")?></strong></td>
 								<td> <input id="sale_client" /></td>
                             </tr>
                         </table>
@@ -61,7 +62,7 @@ dojo.require("dijit.Dialog");
 											<td><?php echo $tr->translate("CUSTOMER_INFO")?></td>							
 										</tr>                        
 				                        <tr>
-											<td style="height: 70px; border:1px solid #aac4e6; widht:100%;"><label id="cus_information"></label></td>	
+											<td style="background:#fff;height: 70px; border:1px solid #aac4e6; widht:100%;"><label id="cus_information"></label></td>	
 										</tr>
                                     </table>
                                 </td>
@@ -71,7 +72,7 @@ dojo.require("dijit.Dialog");
                                         	<td colspan="3"><?php echo $tr->translate("LAND_INFO")?></td>
                                         </tr>
                                     	<tr>
-                                        	<td style="height: 70px; border:1px solid #aac4e6; widht:100%;"><label id="land_information"></label></td>
+                                        	<td style="background:#fff;height: 70px; border:1px solid #aac4e6; widht:100%;"><label id="land_information"></label></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -79,12 +80,9 @@ dojo.require("dijit.Dialog");
                          </table>
                     </td>
                   </tr>
-                  <tr>
-                  <td colspan="3" style="border-bottom:1px solid #aac4e6;"><strong><?php echo $tr->translate("PAYMENT_INFO")?></strong></td>
-					</tr>
-                    <tr>
-                    	<td width="33%">
-                        <fieldset>
+                   <tr>
+                    	<td width="33%" valign="top">
+                        <fieldset><legend><strong><?php echo $tr->translate("INFO_INDILOAN")?></strong></legend> 
                         	<table>
                             	<tr>
                                 	<td><?php echo $tr->translate("PRICE_SOLD")?></td>
@@ -109,8 +107,8 @@ dojo.require("dijit.Dialog");
                             </table>                            
                            </fieldset>
                         </td>
-                        <td width="33%">
-                        	<fieldset>
+                        <td width="33%" valign="top">
+                        	<fieldset><legend><strong><?php echo $tr->translate("PAYMENT_INFO")?></strong></legend> 
                              <table>
                             	<tr>
  									 <td><?php echo $tr->translate("BUY_DATE")?></td>
@@ -135,8 +133,8 @@ dojo.require("dijit.Dialog");
                               </table>   
                              </fieldset>           
                         </td>
-                        <td width="33%">
-                        	<fieldset> 
+                        <td width="33%" valign="top">
+                        	<fieldset><legend><strong><?php echo $tr->translate("ADDEXPENSE")?></strong></legend> 
                         	 <table>
                             	<tr>
  									<td><?php echo $tr->translate("PAID_AMOUNT")?></td>
@@ -147,6 +145,10 @@ dojo.require("dijit.Dialog");
                                     <td><?php echo $frm->getElement('balance')?></td>
                                 </tr>
                                 <tr>
+                                   <td><strong><?php echo $tr->translate("EXPENSE_DATE")?></strong></td>
+                                   <td><?php echo $frm->getElement('expense_date')?></td>
+                                </tr>
+                                <tr>
                                     <td><?php echo $tr->translate("RETURN_MONEY_BACK")?></td>
                                     <td><?php echo $frm->getElement('return_back')?></td>
                                 </tr>
@@ -154,10 +156,6 @@ dojo.require("dijit.Dialog");
                                     <td><?php echo $tr->translate("CATEGORY")?></td>
                                     <td><input id="income_category" /></td>
                                	</tr>
-                                <tr>
-                                    <td height="32px"></td>
-                                    <td></td>
-                                </tr>	
                               </table>   
                              </fieldset> 
                         </td>
@@ -172,7 +170,7 @@ dojo.require("dijit.Dialog");
                                             	<td><?php echo $tr->translate("NOTE")?></td>
                                             </tr>
                                             <tr>
-                                            	<td style="height: 70px; border:1px solid #aac4e6; widht:100%;"><label id="sale_note"></label></td>	
+                                            	<td style="background:#fff;height: 70px; border:1px solid #aac4e6; widht:100%;"><label id="sale_note"></label></td>	
                                             </tr>
                                         </table>
                                     </td>
@@ -192,11 +190,9 @@ dojo.require("dijit.Dialog");
                     </tr>	
 						<tr>
 							<td align="center" colspan="3">
-								<input type="submit" name="save" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="submitButton" dojoType="dijit.form.Button"
+				 				<input type="submit" name="saveclose"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('GO_EDIT')?>" id="submitBtn" dojoType="dijit.form.Button"
 				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
-				 				<input type="submit" name="save_close"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('GO_EDIT')?>" id="submitBtn" dojoType="dijit.form.Button"
-				 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
-				 					<input type="button" label="<?php echo $tr->translate("PRINT_SAVE")?>" name='print' value=''print'' dojoType="dijit.form.Button"
+				 					<input type="button" label="<?php echo $tr->translate("PREVIEW")?>" name='print' value=''print'' dojoType="dijit.form.Button"
 				 iconClass="dijitIconNewTask" onClick="printSave('<?php echo $this->row['reciept'];?>');displayNone();" />
 				 					
 							</td>

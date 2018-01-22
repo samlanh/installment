@@ -142,7 +142,12 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$row = $db->getTranLoanByIdWithBranch($id,null);
 		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");}
 		$rs = array();
-		if($row['payment_id']==6 OR $row['payment_id']==4){
+		//if($row['payment_id']==6 OR $row['payment_id']==4){
+		 if($row['payment_id']!=1){
+		 	$this->_redirect("/loan/index");
+		 }
+		
+		if($row['payment_id']!=6 OR $row['payment_id']==4){
 			$rs = $db->getSaleScheduleById($id,$row['payment_id']);
 		}
 		$this->view->rs = $rs;
