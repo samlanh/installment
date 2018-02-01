@@ -173,7 +173,7 @@ public function init()
  				'required'=>true,
  				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
  		));
- 		$start_building->setValue(date("Y-m-d"));
+ 		//$start_building->setValue(date("Y-m-d"));
  		
 		$_amount = new Zend_Dojo_Form_Element_NumberTextBox('land_price');
 		$_amount->setAttribs(array(

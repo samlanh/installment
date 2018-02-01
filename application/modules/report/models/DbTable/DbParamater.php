@@ -400,7 +400,7 @@ function getAllBranch($search=null){
     		
     		return $db->fetchAll($sql.$where.$order);
     	}
-   function getAgreementBySaleID($id=null){
+   function getAgreementBySaleID($id=null){//bppt,natha,longny
     		$db = $this->getAdapter();
     		$sql="
     		SELECT
@@ -502,9 +502,8 @@ function getAllBranch($search=null){
 		    `pp`.`height` AS `property_height`,
 		    `pp`.`land_code` AS `property_code`,
 		    `pp`.`land_address` AS `property_title`,
- 			 pp.`street` AS `property_street`,
- 			 pp.land_width,
- 			 pp.land_height
+ 			 pp.`street` AS `property_street`
+ 			
 		FROM 
 			`ln_sale` AS `s`,
 			ln_project AS p ,
