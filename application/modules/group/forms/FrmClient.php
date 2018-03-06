@@ -32,7 +32,8 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'onchange'=>'getClientNo();'
 		));
 		$rows_branch = $db->getAllBranchName();
-		//=array(''=>"---Select Branch---");
+		$options_branch=array();
+		$options_branch=array();
 		if(!empty($rows_branch))foreach($rows_branch AS $row){
 			$options_branch[$row['br_id']]=$row['project_name'];
 		}

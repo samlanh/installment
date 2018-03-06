@@ -31,12 +31,19 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","HOUSE_NO","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","TOTAL_SOLD","PAID","BALANCE","DATE_BUY",
-				"STATUS","RECEIVED_MONEY","ISSUE_SCHEDULE","AGREEMENT");
+				"STATUS","EDIT","RECEIVED_MONEY","ISSUE_SCHEDULE","AGREEMENT");
 			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
+
+			$link_editsale=array('module'=>'loan','controller'=>'index','action'=>'editsale');
 			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);
 			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);
 			$payment=array('module'=>'loan','controller'=>'ilpayment','action'=>'add',);
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('agreement'=>$payment,'issue sch'=>$payment,'Payment'=>$payment,'បង់ប្រាក់'=>$payment,'ចេញតារាង'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
+			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array(
+						'ការលក់'=>$link_editsale,'Sale'=>$link_editsale,
+						'agreement'=>$payment,
+						'issue sch'=>$reschedule,'Payment'=>$payment,'បង់ប្រាក់'=>$payment,
+						'ចេញតារាង'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,
+						'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -168,6 +175,44 @@ class Loan_IndexController extends Zend_Controller_Action {
 		) );
 		$this->view->co_name=$co_name;
 		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+	}
+	public function editsaleAction(){
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			try{
+				$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
+				$_dbmodel->updateSaleOnlyById($_data);
+				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/loan/index/index");
+			}catch (Exception $e) {
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($err =$e->getMessage());
+			}
+		}
+		$id = $this->getRequest()->getParam('id');
+		$db = new Loan_Model_DbTable_DbLandpayment();
+		$row = $db->getTranLoanByIdWithBranch($id,null);
+		
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+		}
+		$frm = new Loan_Form_FrmLoan();
+		$frm_loan=$frm->FrmAddLoan($row);
+		Application_Model_Decorator::removeAllDecorator($frm_loan);
+		$this->view->frm_loan = $frm_loan;
+		$this->view->datarow = $row;
+		$this->view->amount_price = $row['balance']+$row['paid_amount']-$row['other_fee'];
+		$db = new Application_Model_DbTable_DbGlobal();
+		$this->view->client_code=array();//$dataclient;
+		$this->view->client_name=array();
+	
+		$co_name = $db->getAllCoNameOnly();
+		array_unshift($co_name,array(
+				'id' => -1,
+				'name' => '---Add New ---',
+		) );
+		$this->view->co_name=$co_name;
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}

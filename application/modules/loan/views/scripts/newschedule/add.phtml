@@ -66,7 +66,9 @@
 		    	<table cellspacing="1"  width="100%" style="margin-top: -10px;">
 		    		<tr>
 						<td width="10%"><?php echo $tr->translate("BRANCH_NAME")?></td>
-						<td><?php echo $frm->getElement('branch_id');?></td>
+						<td><?php echo $frm->getElement('branch_id');?>
+							<input type="hidden" value="<?php echo $this->id;?>"name="id" id="id" />
+						</td>
 					</tr>
 					<tr>
 						<td><?php echo $tr->translate("SALE_NO")?></td>
@@ -156,14 +158,22 @@
 							</td>
 						</tr>
 						<tr>
-						<td><?php echo $tr->translate("Balance")?></td>
-						<td><?php echo $frm->getElement('balance');?></td>
-							<input type="hidden" class="fullside" dojoType="dijit.form.TextBox" name="total_installamount" id="total_installamount"  value="" ></td>
-						</td>
+							<td><strong><?php echo $tr->translate("OTHER_FEE")?></strong></td>
+							<td><?php echo $frm->getElement('other_fee');?></td>
+						</tr>
+						<tr>
+							<td><strong><?php echo $tr->translate("NOTE")?></strong></td>
+							<td><?php echo $frm->getElement('other_feenote');?></td>
+						</tr>
+						<tr>
+							<td><strong><?php echo $tr->translate("Balance")?></strong></td>
+							<td><?php echo $frm->getElement('balance');?></td>
+								<input type="hidden" class="fullside" dojoType="dijit.form.TextBox" name="total_installamount" id="total_installamount"  value="" ></td>
+							</td>
 					  </tr>
 					  <tr>
 					  		<td style="color:red;font-weight: bold;">ប្រាក់សម្រាប់រំលស់</td>
-						    <td><input readonly type="text" class="fullside" dojoType="dijit.form.TextBox" name="for_installamount" id="for_installamount"  value="" ></td>
+						    <td><input readonly type="text" class="fullside" dojoType="dijit.form.NumberTextBox" name="for_installamount" id="for_installamount"  value="" ></td>
 					  </tr>
 					  <tr>
 						    <td style="white-space: nowrap;"><lable id='lbl_period'><?php echo $tr->translate("TERM_BORROW")?></lable><lable id='lbl_year'><?php echo $tr->translate("MONTH")?></lable></td>
@@ -177,10 +187,7 @@
 							<td style="white-space: nowrap;"><label id="lbl_property_price"><?php echo $tr->translate("AMOUNT_FUND_GRAICE_PARIOD")?></label></td>
 							<td><?php echo $frm->getElement('fixed_payment');?></td>
 						</tr>
-						<!-- <tr>
-							<td><?php //echo $tr->translate("OTHER_FEE")?></td>
-							<td><?php //echo $frm->getElement('other_fee');?></td>
-						</tr>	 -->	
+						<!-- 	 -->	
 			    	</table>
 			    </fieldset>
 	    </td>
@@ -360,10 +367,14 @@ function checkScheduleOption(){
 function calCulateFixedPeriod(){
 	var total_paid_install = dijit.byId('total_installamount').get('value');
 	var paid_before = dijit.byId('paid_before').get('value');
+	other_fee = dijit.byId('other_fee').get('value');
+	if(isNaN(other_fee)){
+		other_fee=0;
+	}
 	if(total_paid_install == 0){
-		amount_principal = dijit.byId('sold_price').get('value')-paid_before;
+		amount_principal = dijit.byId('sold_price').get('value')+other_fee-paid_before;
 	}else{
-		amount_principal = dijit.byId('sold_price').get('value')-dijit.byId('total_installamount').get('value')-paid_before;
+		amount_principal = dijit.byId('sold_price').get('value')+other_fee-dijit.byId('total_installamount').get('value')-paid_before;
 	}	
 	if(dijit.byId("old_paymentmethod").get("value")==1 && total_paid_install!=0 ){
 		amount_principal = amount_principal;
@@ -428,13 +439,22 @@ function calculateDiscount(){
 	dijit.byId('sold_price').attr('value',total_sold);
 	Balance();
 }
+function calculateTotalremain(){
+	Balance();
+}
 function Balance(){
 	price = dijit.byId('sold_price').get('value');
 	paid_before = dijit.byId('paid_before').get('value');
+	
 	if(isNaN(paid_before)){
 		paid_before=0;
 	}
-	price = price-paid_before;	
+	other_fee = dijit.byId('other_fee').get('value');
+	if(isNaN(other_fee)){
+		other_fee=0;
+	}
+	price = price-paid_before+other_fee;	
+	price = parseInt(price);
 	schedule_opt = dijit.byId('schedule_opt').get('value');
 		if(schedule_opt==2){
 			dijit.byId('balance').attr('value',0);
@@ -953,7 +973,8 @@ function addInstallment(){
 }
 
 function calCulateAmount(index,revers=1){
-	balance = dijit.byId('sold_price').get('value');
+	//balance = dijit.byId('sold_price').get('value');
+	balance = dijit.byId('balance').get('value');
 	if(revers==1){//% to value
 	    percent = dijit.byId('percent'+index).get('value');
 	    old_paymentmethod = dijit.byId("old_paymentmethod").get("value");

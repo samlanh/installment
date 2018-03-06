@@ -80,7 +80,7 @@ public function init()
 		$schedule_opt = new Zend_Dojo_Form_Element_FilteringSelect('schedule_opt');
 		$schedule_opt->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
+				'class'=>'fullside fullside50',
 				'onchange'=>'checkScheduleOption();'
 		));
 		$opt = $db->getVewOptoinTypeByType(25,1,null,1);

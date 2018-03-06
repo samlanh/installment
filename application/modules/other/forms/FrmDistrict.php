@@ -25,7 +25,6 @@ Class Other_Form_FrmDistrict extends Zend_Dojo_Form {
 		));
 		$_title->setValue($request->getParam("adv_search"));
 		
-		
 		$_status_search=  new Zend_Dojo_Form_Element_FilteringSelect('search_status');
 		$_status_search->setAttribs(array('dojoType'=>$this->filter));
 		$_status_opt = array(
@@ -39,7 +38,6 @@ Class Other_Form_FrmDistrict extends Zend_Dojo_Form {
 		$_btn_search->setAttribs(array(
 				'dojoType'=>'dijit.form.Button',
 				'iconclass'=>'dijitIconSearch',
-		
 		));
 		
 		$district_name = new Zend_Dojo_Form_Element_TextBox('district_name');
@@ -82,6 +80,8 @@ Class Other_Form_FrmDistrict extends Zend_Dojo_Form {
 		$_province = new Zend_Dojo_Form_Element_FilteringSelect('province_name');
 		$_province->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>"false",
+				'queryExpr'=>'*${0}*',
 				'class'=>'fullside'
 		));
 		

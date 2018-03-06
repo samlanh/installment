@@ -148,7 +148,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==4 OR $data["schedule_opt"]==6){//
     			$is_schedule=1;
     		}    		
-    			if($data['old_paymentmethod']==1){
+    			if($data['old_paymentmethod']==1 OR $data['other_fee']>0){//total_sold
     				$this->_name='ln_sale';
     				$dbp = new Loan_Model_DbTable_DbLandpayment();
     				$row = $dbp->getTranLoanByIdWithBranch($data['id'],null);
@@ -157,6 +157,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     						'balance'=>$data['sold_price']-($data['deposit']+$data['paid_before']),
     						'payment_id'=>$data["schedule_opt"],
 //     						'price_before'=>$data['total_sold'],
+    				        'price_sold'=>$data['total_sold']+$data['other_fee'],
     						'discount_amount'=>$data['discount']+$data['bdiscount_fixed'],
     						'discount_percent'=>$data['discount_percent']+$data['bdiscount_percent'],
     						'interest_rate'=>$data['interest_rate'],
@@ -196,10 +197,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$this->_name="ln_saleschedule";
     		$this->delete($where);
     		
-    		$sql="SELECT COUNT(id) FROM ln_saleschedule WHERE status=1 AND sale_id= ".$data['loan_number'];
-    		$start_id = $db->fetchOne($sql);
-    		
-    		$id  =$data['loan_number'];
+    		$id = $data['loan_number'];
     		$total_day=0;
     		$old_remain_principal = 0;
     		$old_pri_permonth = 0;
@@ -207,7 +205,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$old_amount_day = 0;
     		$cum_interest=0;
     		$amount_collect = 1;
-    		$remain_principal = $data['balance'];
+    		$remain_principal = $data['balance']+$data['other_fee'];
     		if($data["old_paymentmethod"]==1 AND $data['deposit']>0){//if before new schedule (just deposit)
     			$remain_principal = $data['sold_price'];
     		}else{
@@ -222,7 +220,8 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$next_payment = $data['first_payment'];
     		$from_date =  $data['release_date'];
     		
-    		$curr_type = 2;//$data['currency_type'];
+    		$curr_type = 2;
+    		//$data['currency_type'];
 //     		$key = new Application_Model_DbTable_DbKeycode();
 //     		$key=$key->getKeyCodeMiniInv(TRUE);
     		$term_types = 1;
@@ -240,6 +239,9 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		
     		$str_next = '+1 month';
     		/*សម្រាប់បញ្ចូលថាប្រាក់ដើមប្រានរំលស់*/
+    		$sql="SELECT COUNT(id) FROM ln_saleschedule WHERE status=1 AND sale_id= ".$data['loan_number'];
+    		$start_id = $db->fetchOne($sql);
+    		
     		$this->_name="ln_saleschedule";
     		if($data['principal_paid']>0){
 	    		$datapayment = array(
@@ -259,13 +261,39 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 	    				'is_completed'=>0,
 	    				'date_payment'=>$data['paid_pricipaldate'],
 	    				'percent'=>0,
-	    				'note'=>"",
 	    				'is_installment'=>0,
-	    				'no_installment'=>0,
+	    				'no_installment'=>$start_id,
 	    				'status'=>0,
 	    				'collect_by'=>2,
 	    		);
 	    		$this->insert($datapayment);
+	    		$start_id=$start_id+1;
+    		}
+    		if($data['other_fee']>0){
+    			$datapayment = array(
+    					'branch_id'=>$data['branch_id'],
+    					'sale_id'=>$id,//good
+    					'begining_balance'=> $data['sold_price'],//good
+    					'begining_balance_after'=> $data['sold_price'],//good
+    					'principal_permonth'=> $data['principal_paid'],//good
+    					'principal_permonthafter'=>$data['principal_paid'],//good
+    					'total_interest'=>0,//good
+    					'total_interest_after'=>0,//good
+    					'total_payment'=>$data['other_fee'],//good
+    					'total_payment_after'=>$data['other_fee'],//good
+    					'ending_balance'=>$data['other_fee'],
+    					'cum_interest'=>0,
+    					'amount_day'=>0,
+    					'is_completed'=>0,
+    					'date_payment'=>$data['paid_pricipaldate'],
+    					'percent'=>0,
+    					'note'=>$data['other_feenote'],
+    					'is_installment'=>0,
+    					'no_installment'=>$start_id,
+    					'status'=>0,
+    					'collect_by'=>2,
+    			);
+    			$this->insert($datapayment);
     		}
     		
     		for($i=1;$i<=$loop_payment;$i++){
@@ -285,9 +313,8 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
     				$total_day = $amount_day;
     				$interest_paymonth = 0;
-    				//$pri_permonth = round($data['balance']/$borrow_term,2);
     				$pri_permonth = round($data['sold_price']/$borrow_term,0);
-    				if($i==$loop_payment){//for end of record only
+    				if($i==$loop_payment){ //for end of record only
     					$pri_permonth = $remain_principal;
     				}
     			}elseif($payment_method==4){//រំលស់
@@ -412,7 +439,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     			   	}
     			   	break;
     			   }
-    			   if($payment_method==3 OR $payment_method==4){	
+    			   if($payment_method==3 OR $payment_method==4){//កាលថេរ or រំលស់	
     			   	    $old_remain_principal =$old_remain_principal+$remain_principal;
 			    		$old_pri_permonth = $old_pri_permonth+$pri_permonth;
 			    		$old_interest_paymonth = $this->round_up_currency($curr_type,($old_interest_paymonth+$interest_paymonth));

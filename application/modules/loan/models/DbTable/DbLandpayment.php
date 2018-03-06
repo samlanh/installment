@@ -10,6 +10,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	 
     }
     public function getAllIndividuleLoan($search,$reschedule =null){
+    	
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	$edit_sale = $tr->translate("EDITSALEONLY");
     	$session_lang=new Zend_Session_Namespace('lang');
     	$lang = $session_lang->lang_id;
     	$str = 'name_en';
@@ -49,6 +52,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
         `s`.`balance`         AS `balance`,
         `s`.`buy_date`        AS `buy_date`,
          s.status,
+         '$edit_sale',
          '$str_collect',
          '$str_schedule',
          '$str_agree'
@@ -107,7 +111,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	}
     	
     	$where.=" LIMIT 1 ";
-    	return $this->getAdapter()->fetchRow($sql.$where);
+    	$db = $this->getAdapter();
+    	return $db->fetchRow($sql.$where);
     }
     function getSaleScheduleById($id,$payment_id){
     	$sql=" SELECT * FROM ln_saleschedule WHERE sale_id =$id AND status=1 AND is_completed=0 ";
@@ -181,7 +186,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    		if ($data['typesale']==2){
+    		if ($data['typesale']==2){//លក់ម្តងច្រើន
     			$ids_land = explode(',', $data['identity_land']);
     			$size = 0; $width=''; $height='';
     			$land_address='';
@@ -201,7 +206,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				$size = $size + $newpro['land_size'];
     		
     				$width = $width+$newpro['width'];
-    		
     				$height =$newpro['height'];
     		
     				$price = $price + $newpro['price'];
@@ -217,10 +221,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					$land_code=$land_code.','.$newpro['land_code'];
     				}else{ $land_code =$newpro['land_code'];
     				}
-    				
     				$property_type = $newpro['property_type'];
     			}//end loop
-//     			echo $land_address;exit();
+    			
     			$newproperty = array(
     					'branch_id'=>$data['branch_id'],
     					'land_code'=>$land_code,
@@ -243,7 +246,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			$land_id = $this->insert($newproperty);
     			$data['land_code']=$land_id;
     		}else{
-    			
     			$this->_name="ln_properties";
     			$where = "id =".$data["land_code"];
     			$arr = array(
@@ -650,7 +652,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'date_payment'			=>$row['date_payment'],
     					'paid_date'             =>$data['date_buy'],
     					'last_pay_date'			=>$data['date_buy'],
-    					'capital'				=>$row['begining_balance'],
     					'remain_capital'		=>$row['begining_balance']-$principal_paid,
     					'principal_permonth'	=>$data['deposit'],
     					'total_interest'		=>0,
@@ -660,10 +661,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'penelize_amount'		=>0,
     					'is_completed'			=>$statuscomplete,
     					'status'				=>1,
-    					 'old_interest'			 =>$row["total_interest_after"],
+    					
+    					 'capital'				=>$row['begining_balance'],
     					 'old_principal_permonth'=>$row["principal_permonthafter"],
+    					 'old_interest'			 =>$row["total_interest_after"],
     					 'old_total_payment'	 =>$row["total_payment_after"],
-    					//     					'old_total_priciple'	=>		$data["old_total_priciple_".$i],
     			);
     			if($action==null){//edit
     				$crm_id = $this->insert($array);
@@ -1025,6 +1027,72 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		   }
 	        $db->commit();
 	        return 1;
+    	}catch (Exception $e){
+    		$db->rollBack();
+    		Application_Form_FrmMessage::message("INSERT_FAIL");
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    	}
+    }
+    function updateSaleOnlyById($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try{
+    
+    		$arr = array(
+    				'branch_id'=>$data['branch_id'],
+    				'house_id'=>$data["land_code"],
+    				'payment_id'=>$data["schedule_opt"],
+    				'client_id'=>$data['member'],
+    				'price_before'=>$data['total_sold'],
+    				'discount_amount'=>$data['discount'],
+    				'discount_percent'=>$data['discount_percent'],
+    				'price_sold'=>$data['sold_price'],
+    				'other_fee'=>$data['other_fee'],
+//     				'paid_amount'=>$data['deposit'],
+//     				'balance'=>$data['balance'],
+    				'buy_date'=>$data['date_buy'],
+    				'end_line'=>$data['date_line'],
+    				'interest_rate'=>$data['interest_rate'],
+    				'total_duration'=>$data['period'],
+    				'startcal_date'=>$data['release_date'],
+    				'first_payment'=>$data['first_payment'],
+    				'validate_date'=>$data['first_payment'],
+    				'payment_method'=>1,//$data['loan_type'],
+    				'house_id'=>$data["land_code"],
+    				'build_start'=>$data['start_building'],
+    				'amount_build'=>$data['amount_build'],
+    				'land_price'=>$data['house_price'],
+    				'total_installamount'=>$data['total_installamount'],
+    				'agreement_date'=>$data['agreement_date'],
+    				'staff_id'=>$data['staff_id'],
+    				'comission'=>$data['commission'],
+//     				'create_date'=>date("Y-m-d"),
+    				'user_id'=>$this->getUserId(),
+    				'status'=>$data['status_using']
+    		);
+    
+    		$id = $data['id'];
+    		$this->_name='ln_sale';
+    		$where = $db->quoteInto('id=?', $id);
+    		$this->update($arr, $where);
+			
+    		$this->_name="ln_properties";
+    		$where = "id =".$data["old_landid"];
+    		$arr = array(
+    				"is_lock"=>0
+    		);
+    		$this->update($arr, $where);
+    		
+    		if($data['status_using']>0){
+	    		$this->_name="ln_properties";
+	    		$where = "id =".$data["land_code"];
+	    		$arr = array(
+	    				"is_lock"=>1
+	    		);
+	    		$this->update($arr, $where);
+    		}
+    		$db->commit();
+    		return 1;
     	}catch (Exception $e){
     		$db->rollBack();
     		Application_Form_FrmMessage::message("INSERT_FAIL");

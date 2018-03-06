@@ -633,7 +633,7 @@ public function getAllOutstadingLoan($search=null){
       		$where.= " AND client_id = ".$search['client_name'];
       	}
       	if($search['branch_id']>0){
-      		$where.= " AND status = ".$search['status'];
+      		$where.= " AND branch_id = ".$search['branch_id'];
       	}
       	$group_by = " GROUP BY id,date_payment ORDER BY date_payment DESC ";
         $row = $db->fetchAll($sql.$where.$group_by);

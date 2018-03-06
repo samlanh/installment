@@ -123,6 +123,8 @@ Class Other_Form_FrmVillage extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required'=>'true',
 				'class'=>'fullside',
+				'autoComplete'=>"false",
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'filterDistrict();',
 				'invalidMessage'=>false
 				));

@@ -65,7 +65,13 @@ public function init()
 		$other_fee->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				//'readonly'=>true,
-		       'onkeyup'=>'calculateDiscount();',
+		       'onkeyup'=>'calculateTotalremain();',
+				'class'=>'fullside',
+		));
+		
+		$other_feenote = new Zend_Dojo_Form_Element_TextBox('other_feenote');
+		$other_feenote->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
 
@@ -269,7 +275,7 @@ public function init()
 		$_dateline->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
-				'required' =>'true',
+				'required' =>'false',
 				'readonly'=>true,
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 		));
@@ -465,10 +471,13 @@ public function init()
 			
 			$_period->setValue($data['total_duration']);
 			$_first_payment->setValue($data['first_payment']);
+			//$_dateline->setValue($data['date_line']);
+			
 			$_rate->setValue($data['interest_rate']);//
 			$_releasedate->setValue($data['startcal_date']);
 			$other_fee->setValue($data['other_fee']);
-			$_dateline->setValue(date("d/m/Y",strtotime($data['end_line'])));
+			$_dateline->setValue($data['end_line']);
+// 			echo $data['end_line'];exit();
 			$_id->setValue($data['id']);
 			$_status->setValue($data['status']);
 			$sold_price->setValue($data['price_sold']);
@@ -477,11 +486,11 @@ public function init()
 			$commission->setValue($data['comission']);
 			$staff_id->setValue($data['staff_id']);
 			
-			$start_building->setValue(date("d/m/Y",strtotime($data['build_start'])));
+			$start_building->setValue($data['build_start']);
 			$amount_build->setValue($data['amount_build']);
 			
 		}
-		$this->addElements(array($start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

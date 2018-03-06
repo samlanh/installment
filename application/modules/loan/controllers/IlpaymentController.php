@@ -12,40 +12,41 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 	public function indexAction(){
 		try{
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
-		if($this->getRequest()->isPost()){
-				$formdata=$this->getRequest()->getPost();
-				$search = array(
-						'advance_search' => $formdata['advance_search'],
-						'branch_id'		=>$formdata['branch_id'],
-						'client_name'=>$formdata['client_name'],
-						'start_date'=>$formdata['start_date'],
-						'end_date'=>$formdata['end_date'],
-						'status'=>$formdata['status'],
-						'paymnet_type'	=> $formdata["paymnet_type"],
-						'land_id'=>$formdata["land_id"],
-						'payment_method'=> $formdata["payment_method"],
-						);
-			}
-			else{
-				$search = array(
-						'adv_search' => '',
-						'client_name' => -1,
-						'start_date'=> date('Y-m-d'),
-						'end_date'=>date('Y-m-d'),
-						'branch_id'		=>	-1,
-						'paymnet_type'	=> -1,
-						'land_id'=>-1,
-						'status'=>"",
-						'payment_method'=>-1,);
-			}
+				if($this->getRequest()->isPost()){
+						$formdata=$this->getRequest()->getPost();
+						$search = array(
+								'advance_search' => $formdata['advance_search'],
+								'branch_id'		=>$formdata['branch_id'],
+								'client_name'=>$formdata['client_name'],
+								'start_date'=>$formdata['start_date'],
+								'end_date'=>$formdata['end_date'],
+								'status'=>$formdata['status'],
+								'paymnet_type'	=> $formdata["paymnet_type"],
+								'land_id'=>$formdata["land_id"],
+								'payment_method'=> $formdata["payment_method"],
+								);
+					}
+					else{
+						$search = array(
+								'adv_search' => '',
+								'client_name' => -1,
+								'start_date'=> date('Y-m-d'),
+								'end_date'=>date('Y-m-d'),
+								'branch_id'		=>	-1,
+								'paymnet_type'	=> -1,
+								'land_id'=>-1,
+								'status'=>"",
+								'payment_method'=>-1,);
+					}
 			$rs_rows= $db->getAllIndividuleLoan($search);
 			$result = array();
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","HOUSE_NO","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
-					"PAY_DATE","DATE","STATUS",'PRINT');
+					"PAY_DATE","DATE","STATUS",'PRINT','DELETE');
 			$link=array('module'=>'loan','controller'=>'ilpayment','action'=>'edit',);
 			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('branch_name'=>$link,'land_id'=>$link,'team_group'=>$link,
+			$link_delete=array('module'=>'loan','controller'=>'ilpayment','action'=>'delete',);
+			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('លុប'=>$link_delete,'Delete'=>$link_delete,'branch_name'=>$link,'land_id'=>$link,'team_group'=>$link,
 					'client_name'=>$link,'receipt_no'=>$link,'branch'=>$link,'street'=>$link,'បោះពុម្ភ'=>$linkprint));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
@@ -61,6 +62,42 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 //  		$db = new Loan_Model_DbTable_DbLoanILPayment();
 //  		$row = $db->getLoanPaymentschedulehistory($data);
   }
+  function deleteAction(){
+  		$id = $this->getRequest()->getParam("id");
+  		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  		$delete_sms=$tr->translate('CONFIRM_DELETE');
+		echo "<script language='javascript'>
+		var txt;
+		var r = confirm('$delete_sms');
+		if (r == true) {";
+			echo "window.location ='".Zend_Controller_Front::getInstance()->getBaseUrl()."/loan/ilpayment/deletereceipt/id/".$id."'";
+		echo"}";
+		echo"else {";
+			echo "window.location ='".Zend_Controller_Front::getInstance()->getBaseUrl()."/loan/ilpayment'";
+		echo"}
+		</script>";
+  }
+	 function deletereceiptAction(){
+	 	$request=Zend_Controller_Front::getInstance()->getRequest();
+	 	$action=$request->getActionName();
+	 	$controller=$request->getControllerName();
+	 	$module=$request->getModuleName();
+	 	
+	 	$id = $this->getRequest()->getParam("id");
+	 	$db = new Loan_Model_DbTable_DbLoanILPayment();
+	 	try {
+	 		$dbacc = new Application_Model_DbTable_DbUsers();
+	 		$rs = $dbacc->getAccessUrl($module,$controller,'delete');
+	 		if(!empty($rs)){
+	 			$db->deleteReceipt($id);
+	 			Application_Form_FrmMessage::Sucessfull("DELETE_SUCCESS","/loan/ilpayment");
+	 		}
+	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/loan/ilpayment");
+	 	}catch (Exception $e) {
+	 		Application_Form_FrmMessage::message("INSERT_FAIL");
+	 		echo $e->getMessage();
+	 	}
+	 }
   function addAction()
   {
   	$db = new Loan_Model_DbTable_DbLoanILPayment();
@@ -69,11 +106,12 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {
 				$db->addILPayment($_data);
-				if(isset($_data['submit_close'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
-				}else {
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/add");
-				}
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
+// 				if(isset($_data['submit_close'])){
+					
+// 				}else {
+// 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/add");
+// 				}
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
