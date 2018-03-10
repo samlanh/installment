@@ -9,6 +9,7 @@ public function init()
 	}
 	public function indexAction()
 	{
+		
 // 		$this->_helper->layout()->disableLayout();
 	}
 	

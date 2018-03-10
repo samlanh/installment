@@ -8,6 +8,10 @@
 	
 	$session_user=new Zend_Session_Namespace('auth');
 	$username = $session_user->first_name;
+	$user_id = $session_user->user_id;
+	if(empty($user_id)){
+			Application_Form_FrmMessage::redirectUrl("/");
+	}
 	$them_style = 'soria'; //$session_user->theme_style;
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

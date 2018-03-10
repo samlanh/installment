@@ -1,0 +1,54 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("BRANCH_LIST"));
+	
+	$url_copy =$this->url(array('module'=>'group','controller'=>'project','action'=>'copy'));
+	$formList = new Application_Form_Frmtable();
+?>	
+<?php $frm =  $this->frm_branch;?>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'group','controller'=>'project','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+	<table>
+	  <tr>	
+	  		<td><button onclick="copyRecord('<?php echo $url_copy;?>')" iconclass="dijitIconCopy" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("COPY");?></button></td>
+	  		<td><?php echo $frm->getElement('adv_search') ?></td>
+	  		<td><?php echo $frm->getElement('status_search');?></td>
+	  		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+	  		<input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" />
+	  		</td>
+	  </tr>
+  	</table>
+</form>
+<style>
+		.btn-action{
+			padding: 3px 10px;
+   			    background: #3a3a5d;
+			    border: none;
+			    font-size: 10pt;
+			    float: left;
+			    color: #fff;
+			    padding-left: 15px;
+			    -webkit-border-radius: 5px;
+			    -moz-border-radius: 5px;
+			    border-radius: 5px;
+		}
+	
+	</style>
+<?php echo $this->list;?>
+<script type="text/javascript">
+dojo.require("dijit.form.CheckBox"); 
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+
+	function copyRecord(url){
+		 id = dijit.byId('recordcopy').get('value');
+		 //alert(url);
+		 window.location.href = url+'/id/'+id;
+	}
+
+	function setValue(index){
+		var recordcopy = $('input[name=copy]:checked').val();
+		dijit.byId('recordcopy').attr('value',recordcopy);
+	}
+	
+</script> 

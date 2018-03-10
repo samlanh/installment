@@ -17,7 +17,12 @@ class IndexController extends Zend_Controller_Action
         // action body
     	
         /* set this to login page to change the character charset of browsers to Utf-8  ...*/    	  	
-		
+    	$session_user=new Zend_Session_Namespace('auth');
+    	$username = $session_user->first_name;
+    	$user_id = $session_user->user_id;
+    	if (!empty($user_id)){
+    		$this->_redirect("/home");
+    	}
     	$this->_helper->layout()->disableLayout();
 		$form=new Application_Form_FrmLogin();				
 		$form->setAction('index');		
@@ -128,13 +133,10 @@ class IndexController extends Zend_Controller_Action
 
     public function logoutAction()
     {
-        // action body
-        $this->_redirect("/index");
         if($this->getRequest()->getParam('value')==1){        	
         	$aut=Zend_Auth::getInstance();
         	$aut->clearIdentity();        	
         	$session_user=new Zend_Session_Namespace('auth');
-        	
         	$log=new Application_Model_DbTable_DbUserLog();
 			$log->insertLogout($session_user->user_id);
 			

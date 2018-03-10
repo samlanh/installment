@@ -1,0 +1,139 @@
+<?php
+	$this->headTitle('View Loan IL'); 
+	echo $this->headTitle();
+	$rs = $this->tran_rs;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+?>
+<style>	
+.border-cover{
+	border:1px solid #ccc; padding: 0px 4px; background: #E5F2F5
+}
+</style>
+<p style="float:right;">
+<input type="button"  label="<?php echo $tr->translate("GO_BACK");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'loan','controller'=>"index",'action'=>'index'),null,true); ?>';"/>
+<input  type="button" id="wu-register" iconClass="dijitIconEdit" label="<?php echo $tr->translate("GO_EDIT");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'loan','controller'=>"index",'action'=>'edit','id'=>$rs['g_id']),null,true); ?>';"/>
+<div class="menureport">
+	<ul>
+		<li class="preview"><a title="Preview" href="" onclick="preview();"></a></li>
+		<li class="print"><a href="" title="Print" onclick="doPrint();" ></a></li>
+	</ul>
+</div>
+<div style="clear: both;">
+</div>
+<div id="divPrint" style="font-size: 12px; !importance;">
+<table cellspacing="10" width="100%" style="font-size:12px;font-family: 'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;">
+	<tr>
+		<td>
+			<fieldset style="width: 100%;">
+					<legend><strong><?php echo $tr->translate("INFO_INDILOAN")?></strong></legend>
+					<table cellspacing="10"  width="100%" style="margin-top: -10px; font-family: 'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;" >
+						<tr>
+							<td width="17%" ><?php echo $tr->translate("BRANCH_NAME");?></td>
+							<td class="border-cover" width="17%"><?php echo $rs['branch_name']; ?></td>
+							<td width="17%"><?php echo $tr->translate("LOAN_NO");?></td>
+							<td class="border-cover" width="17%"><?php echo $rs['loan_number'];?></td>
+							<td width="17%"><?php echo $tr->translate("LOAN_LEVEL")?></td>
+							<td class="border-cover"><?php echo $rs['level']?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("CUSTOMER_CODE");?></td>
+							<td class="border-cover"><?php echo $rs['client_number'];?></td>
+							<td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+							<td class="border-cover"><?php echo $rs['client_name_en'];?></td>
+							<td><?php echo $tr->translate("CO_NAME")?></td>
+							<td class="border-cover"><?php echo $rs['co_firstname'];?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("ZONE_NAME")?></td>
+							<td class="border-cover"><?php echo $rs['zone_name'];?></td>
+							<td><?php echo $tr->translate("LOAN_TYPE")?></td>
+							<td class="border-cover"><?php echo $rs['for_loantype'];?></td>
+							<td><?php echo $tr->translate("OTHER_FEE")?></td>
+							<td class="border-cover"><?php echo $rs['other_fee'].' '.$rs['currency_type'];?></td>
+						</tr>
+						<tr>
+							<td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("INFO_ILLOAN")?></strong></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("LOAN_AMOUNT")?></td>
+							<td class="border-cover"><?php echo $rs['total_capital']." ".$rs['currency_type'];?></td>
+							<td><?php echo $tr->translate("CURRENCY")?></td>
+							<td align="left" class="border-cover"><?php echo $rs['currency_type'];?></td>
+						   	<td><?php echo $tr->translate("AMIN_FEE")?></td>
+							<td class="border-cover"><?php echo $rs['admin_fee']." ".$rs['currency_type'];?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("INTEREST_RATE")?></td>
+							<td class="border-cover"><?php echo $rs['interest_rate'];?></td>
+							<td><?php echo $tr->translate("TERM_INSTALL")?></td>
+							<td class="border-cover"><?php echo $rs['pay_term'];?></td>
+							<td><?php echo $tr->translate("TERM_BORROW")?></td>
+							<td class="border-cover"><?php echo $rs['total_duration']." ".$rs['pay_term'];?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("LOAN_RELEASE")?></td>
+							<td class="border-cover"><?php echo date("d-m-Y",strtotime($rs['date_release']));?></td>
+							<td><?php echo $tr->translate("FIRST_PAYMENT")?></td>
+							<td class="border-cover"><?php echo date("d-m-Y",strtotime($rs['first_payment']));?></td>
+							<td><?php echo $tr->translate("LIFE_LOAN")?></td>
+							<td class="border-cover"><?php echo date("d-m-Y",strtotime($rs['date_line']));?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("REPAYMENT_TYPE")?></td>
+							<td class="border-cover"><?php echo $rs['payment_nameen'];?></td>
+							<td><label style="font-size:10px;"><?php echo $tr->translate("TERM_GRAICE_PARIOD")?></label ></td>
+							<td class="border-cover"><?php echo $rs['graice_period']." ".$rs['pay_term'];?></td>
+							<td><label id="lbl_payment"><?php echo ($rs['payment_method']==4)? $tr->translate("AMOUNT_GRAICE_PARIOD"): $tr->translate("AMOUNT_FUND_GRAICE_PARIOD")?></label></td>
+							<td class="border-cover"><?php  echo $rs['semi'];?></td>
+						</tr>
+						<tr>
+							<td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("INFO_FUND")?></strong></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("TIME_COLLECION")?></td>
+							<td class="border-cover"><?php echo $rs['time_collect'];?></td>
+							<td><?php echo $tr->translate("TERM_FUND")?></td>
+							<td class="border-cover"><?php echo $rs['collect_typeterm'];?></td>
+							<td><?php echo $tr->translate("AMOUNT_TERM_FUND")?></td>
+							<td class="border-cover"><?php echo $rs['amount_collect_principal']." ".$rs['collect_typeterm'];?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("HOLIDAY_STATUS")?></td>
+							<td class="border-cover"><?php  echo $rs['holiday'];?></td>
+							<td><?php echo $tr->translate("PENAL_AMOUNT")?></td>
+							<td class="border-cover"><?php echo $rs['pay_after'];?></td>
+							<td></td>
+							<td></td>
+							
+						</tr>
+						
+					</table>
+			</fieldset>
+		</td>
+	</tr>			
+</table>
+</div>
+<iframe style="font-size: 10px; !important;" name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+<script>
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1100, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+</script>
