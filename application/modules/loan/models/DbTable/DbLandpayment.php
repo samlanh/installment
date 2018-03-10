@@ -352,7 +352,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					$pri_permonth = $remain_principal;
     					$paid_receivehouse = $data['paid_receivehouse'];
     				}
-    			}elseif($payment_method==4){
+    			}elseif($payment_method==4){//បង់រំលស់
     				if($i!=1){
 			    			$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
 			    			$start_date = $next_payment;
@@ -418,7 +418,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    		$total_day = $amount_day;
 			    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
 			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
-			    		if($data['install_type']==2){
+			    		if($data['install_type']==2){//គិតជាខែ
 			    			$pri_permonth=$data['for_installamount']/($data['period']*12);
 			    			$pri_permonth =$this->round_up_currency(2, $pri_permonth);
 			    		}else{

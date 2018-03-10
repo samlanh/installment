@@ -117,7 +117,7 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
 // 				'readOnly'=>'readOnly',
-				'style'=>'width:100%;min-height:60px; font-size:13px; font-family:"Kh Battambang"'
+				'style'=>'width:100%;min-height:60px; font-size:18px; font-family:"Kh Battambang"'
 		));
 		$branch_nameen = new Zend_Dojo_Form_Element_FilteringSelect('project_type');
 		$branch_nameen->setAttribs(array(
@@ -211,49 +211,7 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 	
-		$_p_manager_sex = new Zend_Dojo_Form_Element_FilteringSelect('p_manager_sex');
-		$_p_manager_sex->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-				'autoComplete'=>'false',
-				'queryExpr'=>'*${0}*',
-		));
-		$opt_status = $db->getVewOptoinTypeByType(11,1);
-		unset($opt_status[-1]);
-		unset($opt_status['']);
-		$_p_manager_sex->setMultiOptions($opt_status);
 		
-		$_dob_manager= new Zend_Dojo_Form_Element_DateTextBox('dob_manager');
-		$_dob_manager->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",));
-		
-		$date_iss_doc= new Zend_Dojo_Form_Element_DateTextBox('date_iss_doc');
-		$date_iss_doc->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",));
-		
-		$_csp_manager_sex = new Zend_Dojo_Form_Element_FilteringSelect('csp_manager_sex');
-		$_csp_manager_sex->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-				'autoComplete'=>'false',
-				'queryExpr'=>'*${0}*',
-		));
-		$opt_status = $db->getVewOptoinTypeByType(11,1);
-		unset($opt_status[-1]);
-		unset($opt_status['']);
-		$_csp_manager_sex->setMultiOptions($opt_status);
-		
-		$_dob_cs_manager= new Zend_Dojo_Form_Element_DateTextBox('dob_cs_manager');
-		$_dob_cs_manager->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",));
-		
-		$date_iss_doc_cs_manager= new Zend_Dojo_Form_Element_DateTextBox('date_iss_doc_cs_manager');
-		$date_iss_doc_cs_manager->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",));
-		
-		$cs_manager_current_address = new Zend_Dojo_Form_Element_Textarea('cs_manager_current_address');
-		$cs_manager_current_address->setAttribs(array(
-				'dojoType'=>'dijit.form.Textarea',
-				'class'=>'fullside',
-				// 				'readOnly'=>'readOnly',
-				'style'=>'width:100%;min-height:60px; font-size:13px; font-family:"Kh Battambang"'
-		));
 		$_id = new Zend_Form_Element_Hidden('id');
 		if(!empty($data)){
 			$br_id->setValue($data['br_id']);
@@ -279,32 +237,13 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 			$sc_project_manager_nationality->setValue($data['w_manager_nationality']);
 			$sc_project_manager_nation_id->setValue($data['w_manager_nation_id']);
 			
-			
-			$_dob_manager->setValue($data['p_dob']);
-			$date_iss_doc->setValue(date("Y-m-d",strtotime($data['p_nationid_issue'])));
-			$_p_manager_sex->setValue($data['p_sex']);
-			
-			$_csp_manager_sex->setValue($data['w_sex']);
-			$_dob_cs_manager->setValue(date("Y-m-d",strtotime($data['w_dob'])));
-			$date_iss_doc_cs_manager->setValue($data['w_nation_id_issue']);
-			$cs_manager_current_address->setValue($data['w_current_address']);
 		}
-		
 		
 		$this->addElements(array($prefix_code,$_btn_search,$_title,$_status,$br_id,$branch_namekh,
 		$branch_nameen,$br_address,$branch_code,$branch_tel,$_fax ,$branch_note,
 				$current_addres,$project_manager_nameen,$project_manager_namekh,$project_manager_nation_id,$project_manager_nationality,
 				$sc_project_manager_nameen,$sc_project_manager_namekh,$sc_project_manager_nation_id,$sc_project_manager_nationality,
-				$branch_status,$branch_display,
-				
-				$_dob_manager,
-				$date_iss_doc,
-				$_p_manager_sex,
-				$_csp_manager_sex,
-				$_dob_cs_manager,
-				$date_iss_doc_cs_manager,
-				$cs_manager_current_address
-				));
+				$branch_status,$branch_display));
 		
 		return $this;
 		

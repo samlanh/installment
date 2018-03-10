@@ -14,12 +14,13 @@ class Report_Model_DbTable_DbRptPaymentSchedule extends Zend_Db_Table_Abstract
 		(SELECT SUM(total_recieve) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as total_recieve,
 		(SELECT SUM(total_interest) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as total_interestpaid,
 		(SELECT SUM(principal_permonth) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as principal_paid
-    	FROM `ln_saleschedule` WHERE sale_id= $id AND (status=1 OR (status=0 AND collect_by=2)) ";
+    	FROM `ln_saleschedule` 
+    		WHERE sale_id= $id AND (status=1 OR (status=0 AND collect_by=2)) ";
     	
     	if($payment_id==4){
     		$sql.=" AND is_installment=1 ";
     	};
-    	$sql.=" ORDER BY date_payment ASC,status DESC ";
+    	$sql.=" ORDER BY date_payment ASC,no_installment ASC, collect_by ASC, status DESC ";
     	return $db->fetchAll($sql);
     }
     public function getPaymentScheduleById($id){
