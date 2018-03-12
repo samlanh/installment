@@ -4,7 +4,6 @@
 	$frm = $this->frm_loan;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
-// 	$install_month = $this->data['install_by'];
 ?>
 <style>
 .fullside50{ width:48%;}
@@ -25,7 +24,7 @@
    <script>
 		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
    </script>
-<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'add')); ?>" 
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'deposit','action'=>'add')); ?>" 
 	dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 <script type="dojo/method" event="onSubmit">			
 		if(this.validate()) {
@@ -194,7 +193,7 @@
 			<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
 			<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconDelete"/>
 			<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
-			<input type="button" onclick="getReceiptByBranch('');displayNone();" label="<?php echo $tr->translate("PREVIEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
+			<input type="button" onclick="printSave('','');displayNone();" label="<?php echo $tr->translate("PREVIEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 		</td>
 	</tr>	
 </table>
@@ -642,8 +641,6 @@ function Balance(){
 }
 function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');
-	//dijit.byId('client_branch_id').attr('value',branch_id); // set branch id to popup client
-	
 	getAllPropertyBranch(branch_id);
 	getLoanByBranch('');
 	getReceiptByBranch('');
@@ -777,7 +774,6 @@ function getReceiptByBranch(new_sale_id){
 	}
 </script>
 <script type="text/javascript">
-//dojo.require("dojo.data.ItemFileWriteStore"); 
 dojo.require("dojo.html");
 
 var client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_name));?> );
@@ -826,7 +822,7 @@ require(["dojo/ready"], function(ready){
 			dijit.byId('customer_code').attr('value',member);
 			getcustomerinfo(member);
 		}
-}
+   }
 	}, "member");
 	
 	new dijit.form.FilteringSelect({
@@ -846,7 +842,6 @@ require(["dojo/ready"], function(ready){
 		}
     }
 	}, "customer_code");
-
 });
 </script>
 <script type="text/javascript">
@@ -957,7 +952,6 @@ function getClientInfo(type){
 </script>
 <script>
 function printSave(new_stu_id,new_receipt_no){
-	if(dijit.byId('frm_add_tran').validate()){
 	deposit = dijit.byId('deposit').get('value');
 	if (deposit=='' || deposit==-1){
 		alert('សូមបញ្ចូលប្រាក់ត្រូវបង់ ទើបបោះពុម្ភបង្កាន់ដៃបង់ប្រាក់បាន!');
@@ -980,75 +974,70 @@ function printSave(new_stu_id,new_receipt_no){
 	}else{
 		dojo.byId("lb_sale_id").innerHTML = new_stu_id;
 		dojo.byId("lb_receipt").innerHTML = new_receipt_no;
-		
 		dojo.byId("lb_sale_id1").innerHTML = new_stu_id;
 		dojo.byId("lb_receipt1").innerHTML = new_receipt_no;
 	}
-	dijit.byId("lbl_schedule").hide();
-	dojo.byId("lb_paymentid").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
-
-	date_payment = dijit.byId("date_buy").get('value');
-	var a = new Date(date_payment);
-	mm = a.getMonth()+1;
-	var dd = a.getDate();
-	 if(dd<10){
-		 dd = "0"+dd;
-	}
-	month = returnMOnth(mm);
-	var y = a.getFullYear();
-	var date_payment = dd +'-'+month+'-'+y ;
+	if(dijit.byId('frm_add_tran').validate()){
+		dijit.byId("lbl_schedule").hide();
+		dojo.byId("lb_paymentid").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
 	
-	dojo.byId("lb_buydate").innerHTML = date_payment; //dijit.byId("date_buy").attr('displayedValue');
-	lbl_landaddress = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
-	sale_type = dijit.byId("typesale").get('value');
-	if(sale_type==2){
-		lbl_landaddress =  dijit.byId("land_label").get('value');
-	}
-	dojo.byId("lb_hourseno").innerHTML = lbl_landaddress;
-	dojo.byId("lb_price").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
-
-	total_sold = dijit.byId('total_sold').get('value');
-	discount_percent = dijit.byId('discount_percent').get('value');
-	if(isNaN(discount_percent)){
-		discount_percent=0;
-	}
-	discount = dijit.byId('discount').get('value');
-	if(isNaN(discount)){
-		discount=0;
-	}
+		date_payment = dijit.byId("date_buy").get('value');
+		var a = new Date(date_payment);
+		mm = a.getMonth()+1;
+		var dd = a.getDate();
+		 if(dd<10){
+			 dd = "0"+dd;
+		}
+		month = returnMOnth(mm);
+		var y = a.getFullYear();
+		var date_payment = dd +'-'+month+'-'+y ;
+		
+		dojo.byId("lb_buydate").innerHTML = date_payment; //dijit.byId("date_buy").attr('displayedValue');
+		lbl_landaddress = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
+		sale_type = dijit.byId("typesale").get('value');
+		if(sale_type==2){
+			lbl_landaddress =  dijit.byId("land_label").get('value');
+		}
+		dojo.byId("lb_hourseno").innerHTML = lbl_landaddress;
+		dojo.byId("lb_price").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 	
-	discount_percent = total_sold*discount_percent/100;
-	total_discount = parseInt(discount_percent)+parseFloat(discount);
-	
-	dojo.byId("lb_discount").innerHTML = symbal+" "+dojo.number.format(total_discount,2);
-	
-	dojo.byId("lb_amount").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),{places:2});
-	dojo.byId("lb_paid").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
-	
-	balance = dijit.byId("balance").get('value');
-	if(isNaN(balance)){balance=0;}
-	dojo.byId("lb_balance").innerHTML = "$ "+dojo.number.format(balance,{places:2});
-	
-	dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
-	
-	dojo.byId("lb_paymentid1").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
-	dojo.byId("lb_buydate1").innerHTML = date_payment;//dijit.byId("date_buy").attr('displayedValue');
-	dojo.byId("lb_hourseno1").innerHTML = lbl_landaddress;//dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
-	dojo.byId("lb_price1").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
-	dojo.byId("lb_discount1").innerHTML = symbal+" "+dojo.number.format(total_discount,2);//dis_percent+discount;//dijit.byId("discount").get('value');
-	
-	dojo.byId("lb_amount1").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),{places:2});
-	dojo.byId("lb_paid1").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
-	dojo.byId("lb_balance1").innerHTML = "$ "+dojo.number.format(balance,{places:2});
-	dojo.byId("lb_noted1").innerHTML =dijit.byId("note").get('value');
-	joint_with = dijit.byId("joint_with").attr('displayedValue');
-	if(joint_with!=''){joint_with = "/"+joint_with}
-	
-	dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
-	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
-	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
-	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');	
-	dijit.byId("terms").show();	
+		total_sold = dijit.byId('total_sold').get('value');
+		discount_percent = dijit.byId('discount_percent').get('value');
+		if(isNaN(discount_percent)){
+			discount_percent=0;
+		}
+		discount = dijit.byId('discount').get('value');
+		if(isNaN(discount)){
+			discount=0;
+		}
+		
+		discount_percent = total_sold*discount_percent/100;
+		total_discount = parseInt(discount_percent)+parseFloat(discount);
+		dojo.byId("lb_discount").innerHTML = symbal+" "+dojo.number.format(total_discount,2);
+		dojo.byId("lb_amount").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),{places:2});
+		dojo.byId("lb_paid").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
+		balance = dijit.byId("balance").get('value');
+		if(isNaN(balance)){balance=0;}
+		dojo.byId("lb_balance").innerHTML = "$ "+dojo.number.format(balance,{places:2});
+		dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
+		dojo.byId("lb_paymentid1").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
+		dojo.byId("lb_buydate1").innerHTML = date_payment;//dijit.byId("date_buy").attr('displayedValue');
+		dojo.byId("lb_hourseno1").innerHTML = lbl_landaddress;//dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
+		dojo.byId("lb_price1").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
+		dojo.byId("lb_discount1").innerHTML = symbal+" "+dojo.number.format(total_discount,2);//dis_percent+discount;//dijit.byId("discount").get('value');
+		
+		dojo.byId("lb_amount1").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),{places:2});
+		dojo.byId("lb_paid1").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
+		dojo.byId("lb_balance1").innerHTML = "$ "+dojo.number.format(balance,{places:2});
+		dojo.byId("lb_noted1").innerHTML =dijit.byId("note").get('value');
+		joint_with = dijit.byId("joint_with").attr('displayedValue');
+		if(joint_with!=''){joint_with = "/"+joint_with}
+		
+		dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
+		dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
+		dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
+		dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');	
+		dijit.byId("terms").show();	
   }
 }
 function hideDialog() {		
@@ -1074,7 +1063,7 @@ function addStaff(){
 			    dijit.byId("popup_staff").hide();
 			},
 			error: function(err) {
-				alert(err);
+				
 			}
 		});
    }

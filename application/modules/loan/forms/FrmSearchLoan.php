@@ -35,36 +35,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.Button',
 				'iconclass'=>'dijitIconSearch',
 				'class'=>'fullside',
-		
 		));
-		
-// 		$_group_code = new Zend_Dojo_Form_Element_FilteringSelect('group_code');
-// 		$_group_code->setAttribs(array(
-// 				'dojoType'=>'dijit.form.FilteringSelect',
-// // 				'class'=>'fullside',
-// 				'onchange'=>'getmemberIdGroup();'
-// 		));
-// 		$group_opt = $db ->getGroupCodeById(1,1,1);
-// 		$_group_code->setMultiOptions($group_opt);
-// 		$_group_code->setValue($request->getParam("group_code"));
-		
-// 		$_customer_code = new Zend_Dojo_Form_Element_FilteringSelect('customer_code');
-// 		$_customer_code->setAttribs(array(
-// 				'dojoType'=>'dijit.form.FilteringSelect',
-// 				'onchange'=>'getmemberIdGroup();'
-// 		));
-// 		$group_opt = $db ->getGroupCodeById(1,0,1);//code,individual,option
-// 		$_customer_code->setMultiOptions($group_opt);
-// 		$_customer_code->setValue($request->getParam("customer_code"));
-		
-// 		$_member = new Zend_Dojo_Form_Element_FilteringSelect('member');
-// 		$_member->setAttribs(array(
-// 				'dojoType'=>'dijit.form.FilteringSelect',
-// 				'onchange'=>'checkMember()'
-// 		));
-// 		$options = $db->getGroupCodeById(2,0,1);
-// 		$_member->setMultiOptions($options);
-// 		$_member->setValue($request->getParam("member"));
 		
 		$land_id = new Zend_Dojo_Form_Element_FilteringSelect('land_id');
 		$land_id->setAttribs(array(
@@ -90,10 +61,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 	    if(!empty($rows))foreach($rows AS $row){
   			$options[$row['key_code']]=$row['name_en'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
   		}
-// 		print_r($opt);exit();
-// 		៊៊$opt[-1]="ជ្រើសរើសប្រភេទបង់ប្រាក់";
-// 		array_unshift($opt, array(1=>'ជ្រើសរើសប្រភេទបង់ប្រាក់') );
-// 		print_r($opt);exit();
+
 		$schedule_opt->setMultiOptions($options);
 		$schedule_opt->setValue($request->getParam("schedule_opt"));
 		
@@ -145,7 +113,8 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		$client_name->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
-				'class'=>'fullside',));
+				'class'=>'fullside',
+				'required'=>'false'));
 		$client_name->setValue($request->getParam("client_name"));
 		
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');

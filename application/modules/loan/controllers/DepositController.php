@@ -25,25 +25,22 @@ class Loan_DepositController extends Zend_Controller_Action {
 						'end_date'=>date('Y-m-d'),
 						 );
 			}
-			$db = new Loan_Model_DbTable_DbLandpayment();
-			$rs_rows= $db->getAllIndividuleLoan($search);
+			$db = new Loan_Model_DbTable_DbLanddeposit();
+			$rs_rows= $db->getAlldepositLoan($search);
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","HOUSE_NO","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","TOTAL_SOLD","PAID","BALANCE","DATE_BUY",
-				"STATUS","EDIT","RECEIVED_MONEY","ISSUE_SCHEDULE","AGREEMENT");
-			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
+				"STATUS","EDIT","AGREEMENT");
+			$link_info=array('module'=>'loan','controller'=>'deposit','action'=>'edit',);
 
-			$link_editsale=array('module'=>'loan','controller'=>'index','action'=>'editsale');
 			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);
 			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);
 			$payment=array('module'=>'loan','controller'=>'ilpayment','action'=>'add',);
 			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array(
-						'ការលក់'=>$link_editsale,'Sale'=>$link_editsale,
-						'agreement'=>$payment,
-						'issue sch'=>$reschedule,'Payment'=>$payment,'បង់ប្រាក់'=>$payment,
-						'ចេញតារាង'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,
-						'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
+						'ការលក់'=>$link_info,'Sale'=>$link_info,'name_kh'=>$link_info,
+					    'issue sch'=>$reschedule,'ចេញតារាង'=>$reschedule,
+					    'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -57,12 +54,12 @@ class Loan_DepositController extends Zend_Controller_Action {
   function addAction()
   {
 		if($this->getRequest()->isPost()){
-			$_data = $this->getRequest()->getPost();
-			try {
-				$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
-				$_dbmodel->addSchedulePayment($_data);
+		   $_data = $this->getRequest()->getPost();
+		   try {
+				$_dbmodel = new Loan_Model_DbTable_DbLanddeposit();
+				$_dbmodel->addDepositPayment($_data);
 				if(!empty($_data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/deposit");
 				}else{
 					Application_Form_FrmMessage::message("INSERT_SUCCESS");
 				}
@@ -132,9 +129,9 @@ class Loan_DepositController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try{
-				$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
+				$_dbmodel = new Loan_Model_DbTable_DbLanddeposit();
 				$_dbmodel->updateLoanById($_data);
-				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/loan/index/index");
+				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/loan/deposit/index");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($err =$e->getMessage());
@@ -142,22 +139,11 @@ class Loan_DepositController extends Zend_Controller_Action {
 		}
 		$id = $this->getRequest()->getParam('id');
 		$db = new Loan_Model_DbTable_DbLandpayment();
-		$rs = $db->getSalePaidExist($id,null);
-		if(count($rs)>=2){
-			Application_Form_FrmMessage::Sucessfull("ទិន្នន័យនេះមានប្រវត្តិបង់ប្រាក់ច្រើនជាង១ដងរួចហើយ មិនអាចកែប្រែបានទេ","/loan/index/index");
-		}
 		$row = $db->getTranLoanByIdWithBranch($id,null);
-		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");}
-		$rs = array();
-		//if($row['payment_id']==6 OR $row['payment_id']==4){
-		 if($row['payment_id']!=1){
-		 	$this->_redirect("/loan/index");
-		 }
+		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/deposit");}
 		
-		if($row['payment_id']!=6 OR $row['payment_id']==4){
-			$rs = $db->getSaleScheduleById($id,$row['payment_id']);
-		}
-		$this->view->rs = $rs;
+		 if($row['payment_id']!=1 AND $row['payment_id']!=2){
+		 }
 		$frm = new Loan_Form_FrmLoan();
 		$frm_loan=$frm->FrmAddLoan($row);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
