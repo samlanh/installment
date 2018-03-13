@@ -1,6 +1,9 @@
  <?php
 	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate("Dashboard Property Management System"));
+	echo $this->headTitle();
 	
+	$db = new Home_Model_DbTable_DbDashboard();
 	?>
  
  <!--Morris Chart CSS -->
@@ -21,36 +24,38 @@
 			<div class="container">
 				 <div class="row">
 					<div class="col-lg-6">
+						<!-- 
 						<div class="card-box">
 							<div  style="padding-left: 0; margin-left: 0; margin-top: 0;">
 								<ul id="module-image">						
 									<li style="text-align:center;">
-										<a href="<?php echo $this->baseUrl()."/report/loan/rpt-sold"?>">
-											<img title="<?php echo $tr->translate("LOAN_DISBURSE");?>" src="<?php echo $this->baseUrl()."/images/icon/reportIcon.png"?>" alt="Customer">							
-											<span style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #000000"><h5 data-bind="text: lang.lang.accounting" style="margin-top: 5px; display: inline-block;"><?php echo $tr->translate("LOAN_DISBURSE");?></h5></span>
+										<a href="<?php //echo $this->baseUrl()."/report/loan/rpt-sold"?>">
+											<img title="<?php //echo $tr->translate("LOAN_DISBURSE");?>" src="<?php //echo $this->baseUrl()."/images/icon/reportIcon.png"?>" alt="Customer">							
+											<span style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #000000"><h5 data-bind="text: lang.lang.accounting" style="margin-top: 5px; display: inline-block;"><?php //echo $tr->translate("LOAN_DISBURSE");?></h5></span>
 										</a>
 									</li>
 									<li style="text-align:center;">
-										<a href="<?php echo $this->baseUrl()."/report/paramater/rpt-daily-cash"?>">
-											<img title="<?php echo $tr->translate("REPORT_DAILY_CASH");?>" src="<?php echo $this->baseUrl()."/images/icon/reportIncomeIcon.png"?>" alt="Customer">							
-											<span style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #000000"><h5 data-bind="text: lang.lang.accounting" style="margin-top: 5px; display: inline-block;"><?php echo $tr->translate("REPORT_DAILY_CASH");?></h5></span>
+										<a href="<?php //echo $this->baseUrl()."/report/paramater/rpt-daily-cash"?>">
+											<img title="<?php //echo $tr->translate("REPORT_DAILY_CASH");?>" src="<?php //echo $this->baseUrl()."/images/icon/reportIncomeIcon.png"?>" alt="Customer">							
+											<span style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #000000"><h5 data-bind="text: lang.lang.accounting" style="margin-top: 5px; display: inline-block;"><?php //echo $tr->translate("REPORT_DAILY_CASH");?></h5></span>
 										</a>
 									</li>
 									<li style="text-align:center;">
-										<a href="<?php echo $this->baseUrl()."/report/paramater/rpt-cancel-sale"?>">
-											<img title="<?php echo $tr->translate("CANCEL_REPORT");?>" src="<?php echo $this->baseUrl()."/images/icon/reportCancelIcon.png"?>" alt="Customer">							
-											<span style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #000000"><h5 data-bind="text: lang.lang.accounting" style="margin-top: 5px; display: inline-block;"><?php echo $tr->translate("CANCEL_REPORT");?></h5></span>
+										<a href="<?php //echo $this->baseUrl()."/report/paramater/rpt-cancel-sale"?>">
+											<img title="<?php //echo $tr->translate("CANCEL_REPORT");?>" src="<?php //echo $this->baseUrl()."/images/icon/reportCancelIcon.png"?>" alt="Customer">							
+											<span style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #000000"><h5 data-bind="text: lang.lang.accounting" style="margin-top: 5px; display: inline-block;"><?php //echo $tr->translate("CANCEL_REPORT");?></h5></span>
 										</a>
 									</li>
 									<li style="text-align:center;">
-										<a href="<?php echo $this->baseUrl()."/report/loan/rpt-loan-outstanding"?>">
-											<img title="<?php echo $tr->translate("LOAN_OUTSTADING");?>" src="<?php echo $this->baseUrl()."/images/icon/balanceIcon.png"?>" alt="Customer">							
-											<span style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #000000"><h5 data-bind="text: lang.lang.accounting" style="margin-top: 5px; display: inline-block;"><?php echo $tr->translate("LOAN_OUTSTADING");?></h5></span>
+										<a href="<?php //echo $this->baseUrl()."/report/loan/rpt-loan-outstanding"?>">
+											<img title="<?php //echo $tr->translate("LOAN_OUTSTADING");?>" src="<?php //echo $this->baseUrl()."/images/icon/balanceIcon.png"?>" alt="Customer">							
+											<span style="margin-top: 5px; font-size: 14px; font-weight: bold; color: #000000"><h5 data-bind="text: lang.lang.accounting" style="margin-top: 5px; display: inline-block;"><?php //echo $tr->translate("LOAN_OUTSTADING");?></h5></span>
 										</a>
 									</li>
 								</ul>
 							</div>
 						</div>
+						 -->
 						<div class="card-box">
 							<div class="col-lg-12">
 								<div class="accounting-management text-center">
@@ -72,53 +77,32 @@
 							</div>
 						</div>
 						<div class="card-box">
-                        	<div class="col-sm-12">
-                            	 <p class="m-t-0"><?php echo $tr->translate("CUSTOMER_PAYMENTLIST")?></p>
-                                <div class="table-responsive dashboard">
-                                     <table class="table table-hover mails m-0 table table-actions-bar">
-                        	              <thead>
-                                              <tr>
-                                                  <th><?php echo $tr->translate("NUM")?></th>
-                                                  <th><?php echo $tr->translate("CUSTOMER_NAME")?></th>
-                                                  <th><?php echo $tr->translate("TEL")?></th>
-                                                  <th><?php echo $tr->translate("PROPERTY_NAME")?></th>
-                                                  <th><?php echo $tr->translate("BALANCE")?></th>
-                                                  <th><?php echo $tr->translate("DATE_PAYMENT")?></th>
-                                                  <th><?php echo $tr->translate("AMOUNT_LATE")?></th>
-                                                  <th><?php echo $tr->translate("AMOUNT_COLLECT")?></th>
-                                                  <th><?php echo $tr->translate("PAYMENT")?></th>
-                                              </tr>
-                                          </thead>
-                                            <tbody>
-                                            	<?php if (!empty($this->customerNearlyPayment)) foreach ($this->customerNearlyPayment as $key=> $result){
-                                            	
-                                            		$url = $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add'), null, true)."/id/".$result['sale_id'];
-                                            		?>
-                                                <tr>
-                                                    <td align="center"><?php echo $key+1;?></td>
-													<td style="white-space: nowrap;"><a href="<?php echo $url;?>"><?php echo $result['client_name'];?></a></td>
-													<td class="numeric"><a class="text-muted" href="<?php echo $url;?>"><?php echo $result['phone_number'];?></a></td>
-													<td class="numeric"><a class="text-muted" href="<?php echo $url;?>"><?php echo $result['land_address'].' '.$result['street'];?></a></td>
-													<?php  $total_payment = $result['principal_permonthafter']+$result['total_interest_after']+$result['service_charge'];?>
-													<td class="numeric"><a class="text-muted" href="<?php echo $url;?>"><?php echo number_format($result['begining_balance_after'],2);?></a></td>
-													<td class="numeric"><a class="text-muted" href="<?php echo $url;?>"><?php echo date("d/m/Y",strtotime($result['date_payment']));?></a></td>
-													<?php 
-													$end_dat=date("Y-m-d");
-													$total_day=strtotime($end_dat)-strtotime($result['date_payment']);
-													$total_late_day=$total_day/(60*60*24);
-												    ?>
-													<td class="numeric"><a href="<?php echo $url;?>" style='color:red;'><?php echo $total_late_day."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?></a></td>
-													<td class="numeric" align="center"><a href="<?php echo $url;?>"><?php echo $result['no_installment'];?></a></td>
-													<td class="numeric"><a href="<?php echo $url;?>"><?php echo number_format($total_payment,2);?></a></td>
-                                                </tr>
-												<?php }?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                         </div>    
+							<div class="col-lg-6">
+								<h4 class="m-t-0"><?php echo $tr->translate("Monthly Sale")?></h4>
+								<div class="text-center">
+									<ul class="list-inline chart-detail-list">
+										<li>
+											<h5 class="font-normal"><i class="fa fa-circle m-r-10 text-primary"></i><?php echo $tr->translate("Number Of Sale")?></h5>
+										</li>
+									</ul>
+								</div>
+								<div id="dashboard-bar-stacked" style="height: 200px;"></div>
+							</div>
+							<div class="col-lg-6">
+								<h4 class="m-t-0"><?php echo $tr->translate("Monthly Net Income")?></h4>
+								<div class="text-center">
+									<ul class="list-inline chart-detail-list">
+										<li>
+											<h5 class="font-normal"><i class="fa fa-circle m-r-10 text-muted"></i><?php echo $tr->translate("Net Income")?></h5>
+										</li>
+									</ul>
+								</div>
+								<div id="dashboard-bar-income" style="height: 200px;"></div>
+							</div>
+						</div> 
 					</div> <!-- end col -->	  
 					 <div class="col-lg-6">
+					 	
 						<div class="card-box">
 							<div class="col-lg-12">
 								<div class="col-lg-6">
@@ -148,12 +132,12 @@
 									<table class="performance">
 										<tbody>
 											<tr>
-												<td><span data-bind="text: lang.lang.income"><?php echo $tr->translate("Customers")?></span></td>
+												<td><a href="<?php echo $this->baseUrl()."/report/groupmember/rpt-client";?>"><span data-bind="text: lang.lang.income"><?php echo $tr->translate("Customers")?></span></a></td>
 												<td></td>
 												<td align="right"><span data-bind="text: obj.income"><?php echo $this->AllClient;?></span></td>
 											</tr>
 											<tr>
-												<td><span data-bind="text: lang.lang.expense"><?php echo $tr->translate("Agency")?></span></td>
+												<td><a href="<?php echo $this->baseUrl()."/report/paramater/rpt-staff";?>"><span data-bind="text: lang.lang.expense"><?php echo $tr->translate("Agency")?></span></a></td>
 												<td></td>
 												<td align="right"><span data-bind="text: obj.expense"><?php echo $this->CountAllAgency;?></span></td>
 											</tr>
@@ -219,22 +203,25 @@
 								</div>
 							</div>
 						</div>
+						
 						<div class="card-box">
-								<div class="col-lg-12">
-								<h4 class="m-t-0">Total Revenue</h4>
-								<div class="text-center">
-									<ul class="list-inline chart-detail-list">
-										<li>
-											<h5 class="font-normal"><i class="fa fa-circle m-r-10 text-primary"></i>Series A</h5>
-										</li>
-										<li>
-											<h5 class="font-normal"><i class="fa fa-circle m-r-10 text-muted"></i>Series B</h5>
-										</li>
-									</ul>
+							<div class="col-lg-12">
+								<div class="accounting-management text-center">
+									<div class="col-lg-12" style="padding: 0;">
+										<a title="<?php echo $tr->translate("CUSTOMER_PAYMENTLIST")?>" href="<?php echo $this->baseUrl()."/report/loan/rpt-loancollect";?>">
+										<div class="col-lg-6 capital-box" style="background: #0f575b;">
+											<span data-bind="text: currentRatio"><?php echo count($this->customerNearlyPayment);?></span> 
+											<p class="month" data-bind="text: lang.lang.current_ratio"><?php echo $tr->translate("CUSTOMER_PAYMENTLIST")?></p>
+										</div>
+										</a>
+										<div class="col-lg-6 capital-box" style="background: #203864; color: #fff;">
+											<span data-bind="text: quickRatio"><?php echo count($this->customerNearlyAgreement);?></span> 
+											<p class="month" style="color: #fff;" data-bind="text: lang.lang.quick_ratio"><?php echo $tr->translate("MAKE_AGREEMENTLIST")?></p>
+										</div>
+									</div>
 								</div>
-								<div id="dashboard-bar-stacked" style="height: 200px;"></div>
 							</div>
-						</div> 
+						</div>  
 					</div> <!-- end col -->	  
 				</div> <!-- end row -->
 				
@@ -258,9 +245,94 @@
 <script src="<?php echo $this->baseUrl()."/"?>dashboard/plugins/morris/morris.min.js"></script>
 <script src="<?php echo $this->baseUrl()."/"?>dashboard/plugins/raphael/raphael-min.js"></script>
 
- <!-- Dashboard init -->
-<script src="<?php echo $this->baseUrl()."/"?>dashboard/pages/jquery.dashboard.js"></script>
+ <!-- Dashboard init 
+<script src="<?php //echo $this->baseUrl()."/"?>dashboard/pages/jquery.dashboard.js"></script>-->
+<?php 
+   $start_year = date("Y-m-d",strtotime(" -6 month"));
+?>
+<script>
+var $stckedData  = [];
+//creating Stacked chart
+var $stckedData  = [
+    <?php for ($i=0; $i<=6; $i++ ){ 
+    	$year = date("Y-m",strtotime("$start_year+$i month"));
+    	$Sale = $db->countSaleByYearMonth($year);
+    	//$app = $db->getBookingByAppByYear($year);
+    ?>
+    { y: '<?php echo $year;?>', a: <?php echo $Sale;?>},
+    <?php }?>
+];
+var $stckedDataIncmoe  = [];
+var $stckedDataIncmoe  = [
+  <?php for ($i=0; $i<=6; $i++ ){ 
+   $year = date("Y-m",strtotime("$start_year+$i month"));
+   $netIncome = $db->getMonthlyNetIncomeInGrap($year);
+    ?>
+     { y: '<?php echo $year;?>', a: <?php echo $netIncome;?>},
+    <?php }?>
+];
+/**
+* Theme: SimpleAdmin Admin Template
+* Author: Coderthemes
+* Morris Chart
+*/
+!function($) {
+    "use strict";
+    var Dashboard = function() {};
+    //creates Stacked chart
+    Dashboard.prototype.createStackedChart  = function(element, data, xkey, ykeys, labels, lineColors) {
+        Morris.Bar({
+            element: element,
+            data: data,
+            xkey: xkey,
+            ykeys: ykeys,
+            stacked: true,
+            labels: labels,
+            hideHover: 'auto',
+            resize: true, //defaulted to true
+            gridLineColor: '#ccc',
+            barColors: lineColors
+        });
+    },
+    Dashboard.prototype.init = function() {
+        this.createStackedChart('dashboard-bar-stacked', $stckedData, 'y', ['a'], ['<?php echo $tr->translate("Number Of Sale")?>'], ['#458bc4']);
+    },
+    //init
+    $.Dashboard = new Dashboard, $.Dashboard.Constructor = Dashboard
 
+
+    var DashboardII = function() {};
+    //creates Stacked chart
+    DashboardII.prototype.createStackedChart  = function(element, data, xkey, ykeys, labels, lineColors) {
+        Morris.Bar({
+            element: element,
+            data: data,
+            xkey: xkey,
+            ykeys: ykeys,
+            stacked: true,
+            labels: labels,
+            hideHover: 'auto',
+            resize: true, //defaulted to true
+            gridLineColor: '#ccc',
+            barColors: lineColors
+        });
+    },
+    DashboardII.prototype.init = function() {
+        this.createStackedChart('dashboard-bar-income', $stckedDataIncmoe, 'y', ['a'], ['<?php echo $tr->translate("Net Income")?>'], ['#144673']);
+    },
+    //init
+    $.DashboardII = new DashboardII, $.DashboardII.Constructor = DashboardII
+    
+}(window.jQuery),
+
+//initializing
+function($) {
+    "use strict";
+    $.Dashboard.init();
+    $.DashboardII.init();
+}(window.jQuery);
+
+</script>
  <!-- App Js -->
-        <script src="<?php echo $this->baseUrl()."/"?>dashboard/js/jquery.app.js"></script>
+<script src="<?php echo $this->baseUrl()."/"?>dashboard/js/jquery.app.js"></script>
 

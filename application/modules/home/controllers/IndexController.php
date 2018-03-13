@@ -49,6 +49,8 @@ public function init()
 		$db = new Report_Model_DbTable_DbloanCollect();
 		$rs = $db->getCustomerNearlyPayment();
 		$this->view->customerNearlyPayment = $rs;
+		$rsAgree = $db->getCustomerNearAgreement();
+		$this->view->customerNearlyAgreement = $rsAgree;
 	}
 	
 }
