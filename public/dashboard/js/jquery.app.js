@@ -11,20 +11,6 @@
 
     'use strict';
 
-    function initSlimscroll() {
-        $('.slimscroll').slimscroll({
-            height: 'auto',
-            position: 'right',
-            size: "5px",
-            color: '#9ea5ab'
-        });
-    }
-
-    function initMetisMenu() {
-        //metis menu
-        $("#side-menu").metisMenu();
-    }
-
     function initLeftMenuCollapse() {
         // Left menu collapse
         $('.button-menu-mobile').on('click', function (event) {
@@ -55,8 +41,6 @@
     }
 
     function init() {
-        initSlimscroll();
-        initMetisMenu();
         initLeftMenuCollapse();
         initComponents();
         initActiveMenu();
