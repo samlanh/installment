@@ -1,0 +1,184 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$this->headTitle($tr->translate('GENERAL_SETTING')); 
+echo $this->headTitle();
+$frm = $this->frm_general;
+?>
+<style>
+div.cke_contents.cke_reset {
+    height: 200px !important;
+}
+</style>
+<script src="<?php echo $this->baseUrl();?>/ckeditor/ckeditor.js"></script>
+
+<style>
+
+img.image_view {
+    width: 100%;
+	height: 100px;
+}
+img#image_viewbg {
+    height: 50px;
+}
+.button_browse{
+	margin-top:0 !important;
+}
+.button_browse span {
+    padding: 0 5px;
+}
+tr.header {
+    background: #008;
+    color: #fff;
+}
+tr.header td {
+    padding: 5px;
+}
+</style>
+<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data" >
+	<script type="dojo/method" event="onSubmit">				
+			if(this.validate()) {
+				return true;
+			}
+			return false;
+	</script>
+		
+	<table  style="margin: 0 auto; width: 100%">
+				<td>
+					<table width="100%">
+						<tr>
+							<td width="15%" ></td>
+							<td style=" vertical-align:top; margin: 0 auto; width: 70%; padding: 10px;" >
+								<fieldset><legend style=" font-weight: bold;"><?php echo $tr->translate('GENERAL_SETTING')?></legend>
+										<table cellspacing="5" width="100%" style="padding:10px;">
+											<tr>
+												<td class="bold"><?php echo $tr->translate('Branch Address Client')?></td>
+												<td ><?php echo $frm->getElement('branchAddClient')?></td>
+												<td class="bold"><?php echo $tr->translate('Label Animation')?></td>
+												<td ><?php echo $frm->getElement('label_animation')?></td>
+											</tr>
+											<tr>
+												<td class="bold"><?php echo $tr->translate('Client Website')?></td>
+												<td ><?php echo $frm->getElement('client_website')?></td>
+												<td class="bold"><?php echo $tr->translate('SMS Warnning KH')?></td>
+												<td ><?php echo $frm->getElement('smsWarnningKH')?></td>
+											</tr>
+											<tr>
+												<td class="bold"><?php echo $tr->translate('Tel Client')?></td>
+												<td ><?php echo $frm->getElement('telClient')?></td>
+												<td class="bold"><?php echo $tr->translate('Reciept KH')?></td>
+												<td>
+													<?php echo $frm->getElement('reciept_kh')?>
+												</td>
+											</tr>
+											<tr>
+												<td class="bold"><?php echo $tr->translate('Email Client')?></td>
+												<td ><?php echo $frm->getElement('email_client')?></td>
+												<td class="bold"><?php echo $tr->translate('Exchange Reciept')?></td>
+												<td>
+													<?php echo $frm->getElement('exchange_reciept')?>
+												</td>
+											</tr>
+											<tr>
+												<td class="bold"><?php echo $tr->translate('Branch Client')?></td>
+												<td>
+													<?php echo $frm->getElement('brand_client')?>
+												</td>
+												<td class="bold"><?php echo $tr->translate('Exchange Rate Title')?></td>
+												<td>
+													<?php echo $frm->getElement('exchange_ratetitle')?>
+												</td>
+											</tr>
+											<tr>
+												<td class="bold"><?php echo $tr->translate('Branch Holiday')?></td>
+												<td>
+													<?php echo $frm->getElement('brand_holiday')?>
+												</td>
+												<td class="bold"><?php echo $tr->translate('Transfer Title KH')?></td>
+												<td>
+													<?php echo $frm->getElement('rptTransferTitleKh')?>
+												</td>
+											</tr>
+											<tr>
+												<td class="bold"><?php echo $tr->translate('Branch Call')?></td>
+												<td>
+													<?php echo $frm->getElement('brand_call')?>
+												</td>
+												<td class="bold"><?php echo $tr->translate('Power By')?></td>
+												<td>
+													<?php echo $frm->getElement('power_by')?>
+												</td>
+											</tr>
+											<tr>
+												<td class="bold" rowspan="4" valign="top"><?php echo $tr->translate('Comment')?></td>
+												<td rowspan="4" valign="top">
+													<?php echo $frm->getElement('comment')?>
+												</td>
+												<td class="bold"><?php echo $tr->translate('Branch Email')?></td>
+												<td>
+													<?php echo $frm->getElement('branch_email')?>
+												</td>
+											</tr>
+											<tr>
+												<td class="bold"><?php echo $tr->translate('Branch Tel')?></td>
+												<td>
+													<?php echo $frm->getElement('branchTel')?>
+												</td>
+											</tr>
+											<tr>
+												<td class="bold"><?php echo $tr->translate('Branch Address')?></td>
+												<td>
+													<?php echo $frm->getElement('branch_add')?>
+												</td>
+											</tr>
+										</table>
+								</fieldset>
+							</td>
+							<td width="15%" class="blog-right">
+								<!-- 
+								<table cellspacing="5" width="100%">
+									<tr>
+										<td><?php //echo $frm->getElement('product_code');?>
+											<table id="table_parent" class="set-style" style="margin: 0 auto; width: 100%;  " >
+												<thead>
+													<tr>
+														<td colspan="8">
+															<img class="image_view" id="image_view" src="<?php //echo $this->baseUrl().'/images/'.$profile;?>" alt=""  />
+															<div class="button_browse">
+																<span>Change Logo<span><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+																<input class="btn_borwse_image"  type="file" id="photo" name="photo" onchange="loadImage()">
+															</div>
+														</td>
+													</tr>
+												</thead>
+											</table>
+										</td>
+									</tr>
+								</table>
+								 -->
+							</td>								
+						</tr>
+						<tr>
+							<td colspan="3" align="center">
+								<input type="button" value="GO_BACK" label="<?php echo $tr->translate('GO_BACK');?>" id="back" dojoType="dijit.form.Button" 
+								iconClass="dijitIconUndo" onclick="window.history.back();" />
+								<input class="button_success" type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVE');?>" id="save_close" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 	
+							</td>
+						</tr>
+					</table>	
+			</td>			
+		</tr>
+	</table>	
+</form>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.Dialog");
+dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.form.Textarea");
+function loadImage(){
+	 var output = document.getElementById('image_view');
+  output.src = URL.createObjectURL(event.target.files[0]);
+}
+</script>
