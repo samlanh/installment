@@ -43,6 +43,7 @@ class ErrorController extends Zend_Controller_Action
         }
         
         $this->view->request   = $errors->request;
+        $this->_helper->layout()->disableLayout();
     }
 
     public function getLog()
