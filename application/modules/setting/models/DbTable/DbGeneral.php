@@ -24,17 +24,17 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 // 			$where=" keyName= 'sms-warnning-kh'";
 // 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['reciept_kh'],);
-			$where=" keyName= 'reciept_kh'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['reciept_kh'],);
+// 			$where=" keyName= 'reciept_kh'";
+// 			$this->update($arr, $where);
 			
 // 			$arr = array('keyValue'=>$data['exchange_ratetitle'],);
 // 			$where=" keyName= 'exchange_ratetitle'";
 // 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['exchange_reciept'],);
-			$where=" keyName= 'exchange_reciept'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['exchange_reciept'],);
+// 			$where=" keyName= 'exchange_reciept'";
+// 			$this->update($arr, $where);
 			
 			$arr = array('keyValue'=>$data['comment'],);
 			$where=" keyName= 'comment'";
@@ -76,25 +76,25 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 			$where=" keyName= 'email_client'";
 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['power_by'],	);
-			$where=" keyName= 'power_by'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['power_by'],	);
+// 			$where=" keyName= 'power_by'";
+// 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['branchTel'],	);
-			$where=" keyName= 'branch-tel'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['branchTel'],	);
+// 			$where=" keyName= 'branch-tel'";
+// 			$this->update($arr, $where);
 			
 			$arr = array('keyValue'=>$data['website'],	);
 			$where=" keyName= 'website'";
 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['branch_add'],	);
-			$where=" keyName= 'branch_add'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['branch_add'],	);
+// 			$where=" keyName= 'branch_add'";
+// 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['branch_email'],	);
-			$where=" keyName= 'branch_email'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['branch_email'],	);
+// 			$where=" keyName= 'branch_email'";
+// 			$this->update($arr, $where);
 			
 			$arr = array('keyValue'=>$data['customer_sign'],	);
 			$where=" keyName= 'customer_sign'";
