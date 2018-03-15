@@ -8,7 +8,6 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 	public function AdvanceSearch ($data=null){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$request=Zend_Controller_Front::getInstance()->getRequest();
-// 		$db = new Loan_Model_DbTable_DbGroupPayment();
 		
 		$dbs = new Application_Model_DbTable_DbGlobal();
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');

@@ -188,7 +188,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam("id");
 		$db_global = new Application_Model_DbTable_DbGlobal();
 		$db = new Loan_Model_DbTable_DbLoanILPayment();
-		$db1 = new Loan_Model_DbTable_DbGroupPayment();
+		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			$identify = $_data["identity"];
@@ -233,22 +233,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;		
 		$this->view->loan_numbers = $db->getAllLoanNumberByBranch(1);
 	}
-	function cancelIlPayment(){
-// 		$db = new Loan_Model_DbTable_DbLoanILPayment();
-		$db = new Loan_Model_DbTable_DbGroupPayment();
-		if($this->getRequest()->isPost()){
-			$_data = $this->getRequest()->getPost();
-			$identity = $_data["identity"];
-			try {
-				$row = $db->cancelIlPayment($_data);
-				print_r(Zend_Json::encode($row));
-				exit();
-			}catch (Exception $e) {
-				$err =$e->getMessage();
-				Application_Model_DbTable_DbUserLog::writeMessageError($err);
-			}
-		}
-	}	
 	function getLoannumberAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();

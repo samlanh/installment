@@ -169,7 +169,7 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam("id");
 		$db_global = new Application_Model_DbTable_DbGlobal();
 		$db = new Loan_Model_DbTable_DbLoanILPayment();
-		$db1 = new Loan_Model_DbTable_DbGroupPayment();
+		//$db1 = new Loan_Model_DbTable_DbGroupPayment();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			$identify = $_data["identity"];

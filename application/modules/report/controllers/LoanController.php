@@ -826,8 +826,8 @@ public function exportFileToExcel($table,$data,$thead){
   	}else{
   		$this->_redirect("/report/paramater");
   	}
-  	$db = new Loan_Model_DbTable_DbGroupPayment();
-  	$this->view->customer =  $db->getIndividuleClient();
+  	$db = new Application_Model_DbTable_DbGlobal();
+  	$this->view->customer =  $db->getAllClient();
   }
   function rptUpdatepaymentAction(){
   	if($this->getRequest()->isPost()){
@@ -857,8 +857,8 @@ public function exportFileToExcel($table,$data,$thead){
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   	$this->view->id = $id;
   	$this->view->payment_option = $db->getVewOptoinTypeByType(25,null,null,1);
-  	$db = new Loan_Model_DbTable_DbGroupPayment();
-  	$this->view->customer =  $db->getIndividuleClient();
+  	$db = new Application_Model_DbTable_DbGlobal();
+  	$this->view->customer =  $db->getAllClient();
   }
   function rptUpdatestatusAction(){
   	if($this->getRequest()->isPost()){
