@@ -297,7 +297,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		return $rows;
 	}
 	function getAccessUrl($module,$controller,$action){
-		$session_user=new Zend_Session_Namespace('auth');
+		$session_user=new Zend_Session_Namespace('authinstall');
 		$user_typeid = $session_user->level;
 		$db = $this->getAdapter();
 			$sql = "SELECT aa.module, aa.controller, aa.action FROM rms_acl_user_access AS ua  INNER JOIN rms_acl_acl AS aa 

@@ -21,7 +21,7 @@ class Capital_Model_DbTable_DbCapitalResource extends Zend_Db_Table_Abstract
    	Public function addCapitalResource($_data){
    		$db = $this->getAdapter();
    		$db->beginTransaction();
-   		$session_user=new Zend_Session_Namespace('auth');
+   		$session_user=new Zend_Session_Namespace('authinstall');
    		$user_id = $session_user->user_id;
    		$branch = $_data["brance"];
    		try {
@@ -143,7 +143,7 @@ class Capital_Model_DbTable_DbCapitalResource extends Zend_Db_Table_Abstract
     function updateCapitalResource($_data){
     $db = $this->getAdapter();
    		$db->beginTransaction();
-   		$session_user=new Zend_Session_Namespace('auth');
+   		$session_user=new Zend_Session_Namespace('authinstall');
    		$user_id = $session_user->user_id;
    		$branch = $_data["brance"];
    		try {
@@ -249,7 +249,7 @@ class Capital_Model_DbTable_DbCapitalResource extends Zend_Db_Table_Abstract
    	Public function addCapitalResource($_data){
    		$db = $this->getAdapter();
    		$db->beginTransaction();
-   		$session_user=new Zend_Session_Namespace('auth');
+   		$session_user=new Zend_Session_Namespace('authinstall');
    		$user_id = $session_user->user_id;
    		$branch = $_data["brance"];
    		try {
@@ -366,7 +366,7 @@ class Capital_Model_DbTable_DbCapitalResource extends Zend_Db_Table_Abstract
     function updateCapitalResource($_data){
     $db = $this->getAdapter();
    		$db->beginTransaction();
-   		$session_user=new Zend_Session_Namespace('auth');
+   		$session_user=new Zend_Session_Namespace('authinstall');
    		$user_id = $session_user->user_id;
    		$branch = $_data["brance"];
    		try {

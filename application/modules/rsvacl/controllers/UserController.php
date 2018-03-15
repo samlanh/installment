@@ -154,7 +154,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
  
     public function changePasswordAction()
 	{
-		$session_user=new Zend_Session_Namespace('auth');
+		$session_user=new Zend_Session_Namespace('authinstall');
 		
 		if($session_user->user_id==$this->getRequest()->getParam('id') OR $session_user->level == 1){
 			$form = new RsvAcl_Form_FrmChgpwd();	

@@ -4,7 +4,7 @@ class Callecterall_Model_DbTable_DbCallecteralllist extends Zend_Db_Table_Abstra
 {
     protected $_name = 'ln_callecteralllist';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
     }
     function addcallecteralllist($data){

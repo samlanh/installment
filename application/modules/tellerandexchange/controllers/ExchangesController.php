@@ -50,7 +50,7 @@
 
 //     public function addAction()
 //     {
-//         $session_user=new Zend_Session_Namespace('auth');
+//         $session_user=new Zend_Session_Namespace('authinstall');
 //         $this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
         
 //         $db_keycode = new Application_Model_DbTable_DbKeycode();
@@ -79,7 +79,7 @@
 //     }
 //     public function editAction()
 //     {
-//     	$session_user=new Zend_Session_Namespace('auth');
+//     	$session_user=new Zend_Session_Namespace('authinstall');
 //     	$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
     	
 //     	$db_keycode = new Application_Model_DbTable_DbKeycode();
@@ -93,7 +93,7 @@
 //     	//         //Get value from url
 //     	//         $ex_id = $this->getRequest()->getParam('ex_id',0);
     
-//     	//      	$session_user=new Zend_Session_Namespace('auth');
+//     	//      	$session_user=new Zend_Session_Namespace('authinstall');
 //     	//         $this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
     
 //     	//         $db_keycode = new Application_Model_DbTable_DbKeycode();

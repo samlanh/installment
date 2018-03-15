@@ -227,7 +227,7 @@ function getAllBranch($search=null){
     	}
     	function getAllIncome($search=null){
     		$db = $this->getAdapter();
-    		$session_user=new Zend_Session_Namespace('auth');
+    		$session_user=new Zend_Session_Namespace('authinstall');
     		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
@@ -266,7 +266,7 @@ function getAllBranch($search=null){
     	}
     	function getIncomeById($income_id){
     		$db = $this->getAdapter();
-//     		$session_user=new Zend_Session_Namespace('auth');
+//     		$session_user=new Zend_Session_Namespace('authinstall');
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		title, invoice,branch_id,
@@ -281,7 +281,7 @@ function getAllBranch($search=null){
     	}
     	function getAllExpense($search=null){
     		$db = $this->getAdapter();
-    		$session_user=new Zend_Session_Namespace('auth');
+    		$session_user=new Zend_Session_Namespace('authinstall');
     		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;

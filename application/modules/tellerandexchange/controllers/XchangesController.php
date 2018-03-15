@@ -14,7 +14,7 @@ class Tellerandexchange_XchangesController extends Zend_Controller_Action
 			
 			$session_transfer=new Zend_Session_Namespace('search_xhcange');
 			$db = new Tellerandexchange_Model_DbTable_Dbexchange();
-			$session_user=new Zend_Session_Namespace('auth');
+			$session_user=new Zend_Session_Namespace('authinstall');
 			$user_id = $session_user->user_id;
 		
 			
@@ -61,7 +61,7 @@ class Tellerandexchange_XchangesController extends Zend_Controller_Action
 	{
 	  // action body       
         //user name for report
-        $session_user=new Zend_Session_Namespace('auth');
+        $session_user=new Zend_Session_Namespace('authinstall');
         $this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
         
         $db_keycode = new Application_Model_DbTable_DbKeycode();
@@ -103,7 +103,7 @@ class Tellerandexchange_XchangesController extends Zend_Controller_Action
 //  			}
 //  		}
  		
-//  		$session_user=new Zend_Session_Namespace('auth');
+//  		$session_user=new Zend_Session_Namespace('authinstall');
 //  		$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
  			
 //  		$db_keycode = new Application_Model_DbTable_DbKeycode();
@@ -144,7 +144,7 @@ class Tellerandexchange_XchangesController extends Zend_Controller_Action
  	// action body
  	//Get value from url
  	
- 	$session_user=new Zend_Session_Namespace('auth');
+ 	$session_user=new Zend_Session_Namespace('authinstall');
  	$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
  	
  	$db_keycode = new Application_Model_DbTable_DbKeycode();

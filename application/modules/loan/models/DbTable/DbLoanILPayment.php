@@ -5,7 +5,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 
     protected $_name = 'ln_client_receipt_money';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
     	 
     }
@@ -221,7 +221,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    		$session_user=new Zend_Session_Namespace('auth');
+    		$session_user=new Zend_Session_Namespace('authinstall');
     		$user_id = $session_user->user_id;
     		$arr_client_pay = array(
     				'outstanding'                   =>	0,//ប្រាក់ដើមមុនបង់
@@ -325,7 +325,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	public function addILPayment($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	$user_id = $session_user->user_id;
     	try{
     		$reciept_no = $data['reciept_no'];

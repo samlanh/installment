@@ -5,7 +5,7 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 
     protected $_name = 'in_customer';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
     }
 	public function add($_data){

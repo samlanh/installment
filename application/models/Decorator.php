@@ -30,7 +30,7 @@ class Application_Model_Decorator
 	public function getMenuLeft($arr_menu,$controller,$module=null){
 		$menu='';
 		$i=0;
-		$session_user=new Zend_Session_Namespace('auth');
+		$session_user=new Zend_Session_Namespace('authinstall');
 		$arr_actin=$session_user->arr_actin;
 // 		print_r($arr_actin);
 		

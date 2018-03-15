@@ -6,7 +6,7 @@ Class Group_Form_Frmchangecollteral extends Zend_Dojo_Form {
 	protected $text=null;
 	protected $tarea=null;
 	public function getUserName(){
-		$session_user=new Zend_Session_Namespace('auth');
+		$session_user=new Zend_Session_Namespace('authinstall');
 		return $session_user->user_name;
 	}
 	public function init()

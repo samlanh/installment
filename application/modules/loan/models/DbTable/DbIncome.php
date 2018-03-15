@@ -3,7 +3,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 {
 	protected $_name = 'ln_income';
 	public function getUserId(){
-		$session_user=new Zend_Session_Namespace('auth');
+		$session_user=new Zend_Session_Namespace('authinstall');
 		return $session_user->user_id;
 	
 	}
@@ -59,7 +59,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	
 	function getAllIncome($search=null){
 		$db = $this->getAdapter();
-		$session_user=new Zend_Session_Namespace('auth');
+		$session_user=new Zend_Session_Namespace('authinstall');
 		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;
@@ -98,7 +98,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	}
 	function getAllExpenseReport($search=null){
 		$db = $this->getAdapter();
-		$session_user=new Zend_Session_Namespace('auth');
+		$session_user=new Zend_Session_Namespace('authinstall');
 		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;

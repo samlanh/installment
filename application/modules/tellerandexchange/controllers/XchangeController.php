@@ -117,7 +117,7 @@ class Tellerandexchange_XchangeController extends Zend_Controller_Action
 		$db = new Application_Model_DbTable_DbGlobal();
 	    $this->view->currency_type = $db->CurruncyTypeOption();
 	    
-	    $session_user=new Zend_Session_Namespace('auth');
+	    $session_user=new Zend_Session_Namespace('authinstall');
 	    $this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
 	    
 	    $db_keycode = new Application_Model_DbTable_DbKeycode();

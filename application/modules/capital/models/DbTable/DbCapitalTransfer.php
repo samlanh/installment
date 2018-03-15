@@ -12,7 +12,7 @@ class Capital_Model_DbTable_DbCapitalTransfer extends Zend_Db_Table_Abstract
    	Public function addTransfer($_data){
    		$db = $this->getAdapter();
    		$db->beginTransaction();
-   		$session_user=new Zend_Session_Namespace('auth');
+   		$session_user=new Zend_Session_Namespace('authinstall');
    		$user_id = $session_user->user_id;
    		
    		//control declaration 
@@ -184,7 +184,7 @@ class Capital_Model_DbTable_DbCapitalTransfer extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	$id = $_data["id"];
-    	$session_user = new Zend_Session_Namespace('auth');
+    	$session_user = new Zend_Session_Namespace('authinstall');
     	$user_id = $session_user->user_id;
     	 
     	//control declaration

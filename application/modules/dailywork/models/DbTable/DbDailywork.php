@@ -18,7 +18,7 @@ class Dailywork_Model_DbTable_DbDailywork extends Zend_Db_Table_Abstract
 	  return $this->insert($_arr);// insert data into database
  }//add product
 	 public function getUserInfo(){
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	$userName=$session_user->user_name;
     	$GetUserId= $session_user->user_id;
     	$level = $session_user->level;

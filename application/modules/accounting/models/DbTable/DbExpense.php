@@ -43,7 +43,7 @@ function getAllExpense($search=null){
 }
 function getAllExpenseReport($search=null){
 	$db = $this->getAdapter();
-	$session_user=new Zend_Session_Namespace('auth');
+	$session_user=new Zend_Session_Namespace('authinstall');
 	$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 	$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
 	$where = " WHERE ".$from_date." AND ".$to_date;

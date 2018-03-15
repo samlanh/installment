@@ -5,7 +5,7 @@ class Application_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 
     protected $_name = 'rms_major';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
     	 
     }

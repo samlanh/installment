@@ -14,10 +14,7 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
-    	
-        /* set this to login page to change the character charset of browsers to Utf-8  ...*/    	  	
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	$username = $session_user->first_name;
     	$user_id = $session_user->user_id;
     	if (!empty($user_id)){
@@ -50,7 +47,7 @@ class IndexController extends Zend_Controller_Action
 // 					$this->view->msg = 'Authentication Sucessful!';
 // 					$this->view->err="0";
 					
-					$session_user=new Zend_Session_Namespace('auth');
+					$session_user=new Zend_Session_Namespace('authinstall');
 					$user_id=$db_user->getUserID($user_name);
 					$user_info = $db_user->getUserInfo($user_id);
 					
@@ -136,7 +133,7 @@ class IndexController extends Zend_Controller_Action
         if($this->getRequest()->getParam('value')==1){        	
         	$aut=Zend_Auth::getInstance();
         	$aut->clearIdentity();        	
-        	$session_user=new Zend_Session_Namespace('auth');
+        	$session_user=new Zend_Session_Namespace('authinstall');
         	$log=new Application_Model_DbTable_DbUserLog();
 			$log->insertLogout($session_user->user_id);
 			
@@ -151,7 +148,7 @@ class IndexController extends Zend_Controller_Action
     {
         // action body
         if ($this->getRequest()->isPost()){ 
-			$session_user=new Zend_Session_Namespace('auth');    		
+			$session_user=new Zend_Session_Namespace('authinstall');    		
     		$pass_data=$this->getRequest()->getPost();
     		if ($pass_data['password'] == $session_user->pwd){
     			    			 

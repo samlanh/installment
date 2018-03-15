@@ -45,7 +45,7 @@ class RsvAcl_Form_FrmUserAccess extends Zend_Form
 		
 		//Project assignment  
 		//Sophen add here to assign project
-		$user_session_id = new Zend_Session_Namespace('auth');
+		$user_session_id = new Zend_Session_Namespace('authinstall');
 		$id=$user_session_id->user_type_id; 
 		//echo $user_id;exit;
 		$db_user=new Application_Model_DbTable_DbGlobal();

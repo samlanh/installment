@@ -49,7 +49,7 @@ class Application_Model_DbTable_DbCapital extends Zend_Db_Table_Abstract
     public function addMoneyToCapitalDetail($data){//add capital detail
     	$this->_name = 'cs_capital_detail';
     	if(empty($data['user_id'])){
-    		$session_user=new Zend_Session_Namespace('auth');
+    		$session_user=new Zend_Session_Namespace('authinstall');
     		$b = new Application_Model_DbTable_DbCapital();
     		$data['user_id'] =  $session_user->user_id;
     	}
@@ -193,7 +193,7 @@ class Application_Model_DbTable_DbCapital extends Zend_Db_Table_Abstract
     		$current_date  = date('d/m/Y');
     	}
     	if($user_id==null){
-    		$session_user=new Zend_Session_Namespace('auth');
+    		$session_user=new Zend_Session_Namespace('authinstall');
     		$user_id = $session_user->user_id;
     	}
     

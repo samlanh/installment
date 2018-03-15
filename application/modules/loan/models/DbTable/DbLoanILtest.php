@@ -5,7 +5,7 @@ class Loan_Model_DbTable_DbLoanILtest extends Zend_Db_Table_Abstract
 
     protected $_name = 'ln_paymentschedule_test';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
     	 
     }

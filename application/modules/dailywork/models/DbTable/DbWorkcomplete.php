@@ -7,7 +7,7 @@ class Dailywork_Model_DbTable_DbWorkcomplete extends Zend_Db_Table_Abstract
     	$this->_name=$name;
     }
     public function getUserInfo(){
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	$userName=$session_user->user_name;
     	$GetUserId= $session_user->user_id;
     	$level = $session_user->level;

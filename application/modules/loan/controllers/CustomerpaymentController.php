@@ -113,7 +113,7 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 		$this->view->client = $db->getAllClient();
 		$this->view->clientCode = $db->getAllClientCode();
 		
-		$session_user=new Zend_Session_Namespace('auth');
+		$session_user=new Zend_Session_Namespace('authinstall');
 		$this->view->user_name = $session_user->first_name .' '.$session_user->last_name;
 		$this->view->loan_number = $db_global->getSaleNumberByBranch();
 		
@@ -157,7 +157,7 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 		$this->view->client = $db->getAllClient();
 		$this->view->clientCode = $db->getAllClientCode();
 		
-		$session_user=new Zend_Session_Namespace('auth');
+		$session_user=new Zend_Session_Namespace('authinstall');
 		$this->view->user_name = $session_user->first_name .' '.$session_user->last_name;
 		$test = $this->view->loan_number = $db_global->getSaleNumberByBranch();
 		
@@ -210,7 +210,7 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 		
 		$this->view->graiceperiod = $db_keycode->getSystemSetting(9);
 		
-		$session_user=new Zend_Session_Namespace('auth');
+		$session_user=new Zend_Session_Namespace('authinstall');
 		$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
 		
 // 		$this->view->loan_numbers = $db_global->getLoanNumberByBranch(1);

@@ -4,7 +4,7 @@ class Group_Model_DbTable_DbReturnCollteral extends Zend_Db_Table_Abstract
 {
     protected $_name = 'ln_return_collteral';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
     }
     function addReturnCollteral($data){

@@ -11,7 +11,7 @@ class Capital_Model_DbTable_DbCapital extends Zend_Db_Table_Abstract
    	Public function addCapital($_data){
    		$db = $this->getAdapter();
    		$db->beginTransaction();
-   		$session_user=new Zend_Session_Namespace('auth');
+   		$session_user=new Zend_Session_Namespace('authinstall');
    		$user_id = $session_user->user_id;
    		$branch = $_data["brance"];
    		try {
@@ -105,7 +105,7 @@ class Capital_Model_DbTable_DbCapital extends Zend_Db_Table_Abstract
     function updateCapital($_data){
     	$db = $this->getAdapter();
     	$id = $_data["id"];
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	$user_id = $session_user->user_id;
     	try {
 	    	$arr=array(

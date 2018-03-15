@@ -4,7 +4,7 @@ class Property_Model_DbTable_DbSale extends Zend_Db_Table_Abstract
 {
     protected $_name = 'ln_sale_property';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('auth');
+    	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
     
     }

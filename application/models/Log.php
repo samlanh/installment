@@ -13,7 +13,7 @@ class Application_Model_Log
 		$controller=$request->getControllerName();
 		$module=$request->getModuleName();
 						
-		$session = new Zend_Session_Namespace('auth');
+		$session = new Zend_Session_Namespace('authinstall');
 		$user_name = $session->user_name;
 		
 		$file = "../logs/user.log";

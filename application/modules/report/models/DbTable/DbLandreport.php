@@ -1031,7 +1031,7 @@ public function getAllOutstadingLoan($search=null){
 		
 	  }
 public static function getUserId(){
-	  	$session_user=new Zend_Session_Namespace('auth');
+	  	$session_user=new Zend_Session_Namespace('authinstall');
 	  	return $session_user->user_id;
 }
 function round_up($value, $places)
@@ -1054,7 +1054,7 @@ function updateReceipt($data){
 	$db= $this->getAdapter();
 	$db->beginTransaction();
 	try{
-	$session_user=new Zend_Session_Namespace('auth');
+	$session_user=new Zend_Session_Namespace('authinstall');
 	$user_id = $session_user->user_id;
 	
 	$arr_client_pay = array(
@@ -1996,7 +1996,7 @@ function updatePaymentStatus($data){
       		foreach($rs as $ss){
       			$ss['paid_amount']=0;
       			if($ss['realpaid']>$ss['paid_amount']){
-      				$session_user=new Zend_Session_Namespace('auth');
+      				$session_user=new Zend_Session_Namespace('authinstall');
       				$user_id = $session_user->user_id;
       				$dbre = new Application_Model_DbTable_DbGlobal();
       				$receipt = $dbre->getReceiptByBranch(array("branch_id"=>1));
@@ -2056,7 +2056,7 @@ function updatePaymentStatus($data){
       			 if($ss['paid_amount']>$ss['realpaid']){
       			$rail_amount =$ss['paid_amount']-$ss['realpaid'];
       			$real_paid = $ss['paid_lastamount']-($ss['paid_amount']-$ss['realpaid']); ;
-      			$session_user=new Zend_Session_Namespace('auth');
+      			$session_user=new Zend_Session_Namespace('authinstall');
       			$user_id = $session_user->user_id;
       			$dbre = new Application_Model_DbTable_DbGlobal();
       			$receipt = $dbre->getReceiptByBranch(array("branch_id"=>1));
@@ -2116,7 +2116,7 @@ function updatePaymentStatus($data){
       			}*/
       
       			// 	  			if($ss['realpaid']>$ss['paid_amount']){
-      			// 	  				$session_user=new Zend_Session_Namespace('auth');
+      			// 	  				$session_user=new Zend_Session_Namespace('authinstall');
       			// 	  				$user_id = $session_user->user_id;
       			// 	  				$dbre = new Application_Model_DbTable_DbGlobal();
       			// 	  				$receipt = $dbre->getReceiptByBranch(array("branch_id"=>1));
