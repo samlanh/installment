@@ -20,17 +20,17 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 			$where=" keyName= 'label_animation'";
 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['smsWarnningKH'],);
-			$where=" keyName= 'sms-warnning-kh'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['smsWarnningKH'],);
+// 			$where=" keyName= 'sms-warnning-kh'";
+// 			$this->update($arr, $where);
 			
 			$arr = array('keyValue'=>$data['reciept_kh'],);
 			$where=" keyName= 'reciept_kh'";
 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['exchange_ratetitle'],);
-			$where=" keyName= 'exchange_ratetitle'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['exchange_ratetitle'],);
+// 			$where=" keyName= 'exchange_ratetitle'";
+// 			$this->update($arr, $where);
 			
 			$arr = array('keyValue'=>$data['exchange_reciept'],);
 			$where=" keyName= 'exchange_reciept'";
@@ -40,33 +40,37 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 			$where=" keyName= 'comment'";
 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['brand_client'],);
-			$where=" keyName= 'brand_client'";
+			$arr = array('keyValue'=>$data['comment1'],);
+			$where=" keyName= 'comment1'";
 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['brand_holiday'],);
-			$where=" keyName= 'brand_holiday'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['brand_client'],);
+// 			$where=" keyName= 'brand_client'";
+// 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['brand_call'],);
-			$where=" keyName= 'brand_call'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['brand_holiday'],);
+// 			$where=" keyName= 'brand_holiday'";
+// 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['rptTransferTitleKh'],);
-			$where=" keyName= 'rpt-transfer-title-kh'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['brand_call'],);
+// 			$where=" keyName= 'brand_call'";
+// 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['branchAddClient'],);
-			$where=" keyName= 'branch-add-client'";
+// 			$arr = array('keyValue'=>$data['rptTransferTitleKh'],);
+// 			$where=" keyName= 'rpt-transfer-title-kh'";
+// 			$this->update($arr, $where);
+			
+			$arr = array('keyValue'=>$data['footer_branch'],);
+			$where=" keyName= 'footer_branch'";
 			$this->update($arr, $where);
 			
 			$arr = array('keyValue'=>$data['telClient'],);
 			$where=" keyName= 'tel-client'";
 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['client_website'],);
-			$where=" keyName= 'client_website'";
-			$this->update($arr, $where);
+// 			$arr = array('keyValue'=>$data['client_website'],);
+// 			$where=" keyName= 'client_website'";
+// 			$this->update($arr, $where);
 			
 			$arr = array('keyValue'=>$data['email_client'],	);
 			$where=" keyName= 'email_client'";
@@ -80,12 +84,54 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 			$where=" keyName= 'branch-tel'";
 			$this->update($arr, $where);
 			
+			$arr = array('keyValue'=>$data['website'],	);
+			$where=" keyName= 'website'";
+			$this->update($arr, $where);
+			
 			$arr = array('keyValue'=>$data['branch_add'],	);
 			$where=" keyName= 'branch_add'";
 			$this->update($arr, $where);
 			
 			$arr = array('keyValue'=>$data['branch_email'],	);
 			$where=" keyName= 'branch_email'";
+			$this->update($arr, $where);
+			
+			$arr = array('keyValue'=>$data['customer_sign'],	);
+			$where=" keyName= 'customer_sign'";
+			$this->update($arr, $where);
+			
+			$arr = array('keyValue'=>$data['teller_sign'],	);
+			$where=" keyName= 'teller_sign'";
+			$this->update($arr, $where);
+			
+			$arr = array('keyValue'=>$data['customer_sign'],);
+			$where=" keyName= 'customer_sign'";
+			$this->update($arr, $where);
+			
+			$arr = array('keyValue'=>$data['bank_info'],);
+			$where=" keyName= 'bank_info'";
+			$this->update($arr, $where);
+			
+			$arr = array('keyValue'=>$data['show_propertyprice'],);
+			$where=" keyName= 'show_propertyprice'";
+			$this->update($arr, $where);
+			$arr = array('keyValue'=>$data['bank_account1'],);
+			$where=" keyName= 'bank_account1'";
+			$this->update($arr, $where);
+			$arr = array('keyValue'=>$data['bank_account1number'],);
+			$where=" keyName= 'bank_account1number'";
+			$this->update($arr, $where);
+			$arr = array('keyValue'=>$data['bank_account2'],);
+			$where=" keyName= 'bank_account2'";
+			$this->update($arr, $where);
+			$arr = array('keyValue'=>$data['bank_account2number'],);
+			$where=" keyName= 'bank_account2number'";
+			$this->update($arr, $where);
+			$arr = array('keyValue'=>$data['cheque_receiver'],);
+			$where=" keyName= 'cheque_receiver'";
+			$this->update($arr, $where);
+			$arr = array('keyValue'=>$data['showhouseinfo'],);
+			$where=" keyName= 'showhouseinfo'";
 			$this->update($arr, $where);
 			
 		}catch(Exception $e){

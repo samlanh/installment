@@ -29,12 +29,13 @@ public function init()
 		$row['exchange_ratetitle'] = $db_gs->geLabelByKeyName('exchange_ratetitle');
 		$row['exchange_reciept'] = $db_gs->geLabelByKeyName('exchange_reciept');
 		$row['comment'] = $db_gs->geLabelByKeyName('comment');
+		$row['comment1'] = $db_gs->geLabelByKeyName('comment1');
 		$row['brand_client'] = $db_gs->geLabelByKeyName('brand_client');
 		$row['brand_holiday'] = $db_gs->geLabelByKeyName('brand_holiday');
 		$row['brand_call'] = $db_gs->geLabelByKeyName('brand_call');
 		$row['rpt-transfer-title-kh'] = $db_gs->geLabelByKeyName('rpt-transfer-title-kh');
 		
-		$row['branch-add-client'] = $db_gs->geLabelByKeyName('branch-add-client');
+		$row['footer_branch'] = $db_gs->geLabelByKeyName('footer_branch');
 		$row['tel-client'] = $db_gs->geLabelByKeyName('tel-client');
 		$row['client_website'] = $db_gs->geLabelByKeyName('client_website');
 		$row['email_client'] = $db_gs->geLabelByKeyName('email_client');
@@ -43,7 +44,18 @@ public function init()
 		$row['branch-tel'] = $db_gs->geLabelByKeyName('branch-tel');
 		$row['branch_add'] = $db_gs->geLabelByKeyName('branch_add');
 		$row['branch_email'] = $db_gs->geLabelByKeyName('branch_email');
+		$row['website'] = $db_gs->geLabelByKeyName('website');
+		$row['customer_sign'] = $db_gs->geLabelByKeyName('customer_sign');
+		$row['teller_sign'] = $db_gs->geLabelByKeyName('teller_sign');
+		$row['bank_info'] = $db_gs->geLabelByKeyName('bank_info');
 		
+		$row['show_propertyprice'] = $db_gs->geLabelByKeyName('show_propertyprice');
+		$row['bank_account1'] = $db_gs->geLabelByKeyName('bank_account1');
+		$row['bank_account1number'] = $db_gs->geLabelByKeyName('bank_account1number');
+		$row['bank_account2'] = $db_gs->geLabelByKeyName('bank_account2');
+		$row['bank_account2number'] = $db_gs->geLabelByKeyName('bank_account2number');
+		$row['cheque_receiver'] = $db_gs->geLabelByKeyName('cheque_receiver');
+		$row['showhouseinfo'] = $db_gs->geLabelByKeyName('showhouseinfo');
 		$fm = new Setting_Form_FrmGeneral();
 		$frm = $fm->FrmGeneral($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
