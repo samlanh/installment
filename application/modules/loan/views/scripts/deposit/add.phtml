@@ -19,11 +19,11 @@
 	    </div>
 	</div>
 </div>	
-	<script src="<?php echo $baseurl;?>/js/help.js"></script>
-	<script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.7.2.min.js"></script>
-   <script>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.7.2.min.js"></script>
+<script>
 		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
-   </script>
+</script>
 <form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'deposit','action'=>'add')); ?>" 
 	dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 <script type="dojo/method" event="onSubmit">			
@@ -41,15 +41,15 @@
 				return false;
 			}
               payment_id =dijit.byId("schedule_opt").get("value");
-              paid_amount =dijit.byId("deposit").get("value");
-              if(payment_id==1 && paid_amount<=0){ 
-				alert("សូមបញ្ចូលចំនួនទឹកប្រាក់ត្រូវបង់");
-				dijit.byId("deposit").focus();return false;
+              date_agreement = dijit.byId("date_line").get("value");
+            
+              if(payment_id==1 && date_agreement==null){ 
+				alert("សូមបញ្ចូលថ្ងៃត្រូវមកធ្វើកិច្ចសន្យា");
+				dijit.byId("date_line").focus();return false;
               }
-			
-			dijit.byId('saveclose').set('disabled',true);	
-			dijit.byId('savenew').set('disabled',true);
-			return true;
+			   dijit.byId('saveclose').set('disabled',true);	
+			   dijit.byId('savenew').set('disabled',true);
+			   return true;
 			}else {
 				return false;
 			}
@@ -76,7 +76,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $tr->translate("CUSTOMER_CODE")?></td>
+						<td><?php echo $tr->translate("CLIENT_NUM")?></td>
 						<td>
 							<table width="100%">
 								<tr>
@@ -97,13 +97,13 @@
 					    <td><?php echo $frm->getElement('agreement_date');?></td>
 					</tr>
 					<tr>
-							<td style="white-space: nowrap;"><?php echo $tr->translate("CO_NAME")?></td>
-							<td><input id="staff_id" /> </td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("COMISSION")?></td>
-							<td><?php echo $frm->getElement('commission');?></td>
-						</tr>
+						<td style="white-space: nowrap;"><?php echo $tr->translate("CO_NAME")?></td>
+						<td><input id="staff_id" /> </td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("COMISSION")?></td>
+						<td><?php echo $frm->getElement('commission');?></td>
+					</tr>
 		    	</table>
 		    </fieldset>
 	    </td>
@@ -113,8 +113,7 @@
 			    	<table width="100%" class="padding7" >
 						<tr height="40px">
 							<td style="font-weight: bold;white-space: nowrap;"><?php echo $tr->translate("PROPERY_CODE")?></td>
-							<td>
-								<?php echo $frm->getElement('typesale');?>
+							<td><?php echo $frm->getElement('typesale');?>
 								<input id="land_code" /><input dojoType="dijit.form.TextBox"  id="propertype" name="propertype" type="hidden">
 							</td>
 						</tr>
@@ -392,11 +391,9 @@
 				</tr>
 			</table>
 		</div>
-		<table>
-			<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
-			<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
-				type="button" onclick="doPrint();">បោះពុម្ភ/Print</button>
-		</table>
+		<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
+			type="button" onclick="doPrint();">បោះពុម្ភ/Print</button>
 		<div id="divPrint1" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
 			<table width="100%" style="white-space: nowrap;font-size:14px;  padding:-5px 10px 0px 5px;margin-top: 15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
@@ -432,44 +429,39 @@
 				<tr style="white-space: nowrap;">
 				    <td>លេខកូដលក់</td>
 				    <td><strong><label id="lb_sale_id1" class="value">3</label></strong></td>
-				  
 					<td>&nbsp;&nbsp;&nbsp;តម្លៃលក់</td>
                     <td colspan="3" ><strong><label id="lb_price1" class="value"></label></strong></td>
-				</tr>
-				
+				</tr>				
 				<tr style="white-space: nowrap;">
-				
 				    <td>ឈ្មោះ​អតិថិជន </td>
 				    <td><strong><label id="lb_customer1" class="value"></label></strong></td>
-					
 					<td>​&nbsp;&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
 				    <td><strong><label id="lb_discount1" class="value"></label></strong></td>
-				    
 					<td>&nbsp;&nbsp;តម្លៃផ្សេងៗ</td>
 				    <td><strong><label id="lb_otherfee1" class="value"></label></strong></td>
                 </tr>
 				<tr style="white-space: nowrap;">
-					<td  ><?php echo $tr->translate("HOUSE_TITLE");?></td>
+					<td><?php echo $tr->translate("HOUSE_TITLE");?></td>
                     <td><strong><label id="lb_hourseno1" class="value"></label></strong></td>
-				    <td  >&nbsp;&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
+				    <td>&nbsp;&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
                     <td colspan="3"><strong><label id="lb_amount1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-					<td   width="10%">ប្រភេទបង់</td>
+					<td width="10%">ប្រភេទបង់</td>
 				    <td width="40%"><strong><label id="lb_paymentid1" class="value"></label></strong></td>
-					<td  >&nbsp;&nbsp;&nbsp;ប្រាក់បានបង់</td>
+					<td>&nbsp;&nbsp;&nbsp;ប្រាក់បានបង់</td>
 				    <td colspan="3"><strong><label id="lb_paid1" class="value" style="font-weight: bold; font-family:Arial;"></label></strong></td>
 				</tr>
 				<tr>
-					<td  >សែក</td>
-					<td ><strong><label id="lb_moneynote1" class="value"></label></strong></td>
-					<td  >&nbsp;&nbsp;&nbsp;ប្រាក់នៅសល់</td>
+					<td>សែក</td>
+					<td><strong><label id="lb_moneynote1" class="value"></label></strong></td>
+					<td >&nbsp;&nbsp;&nbsp;ប្រាក់នៅសល់</td>
 					<td colspan="3"><strong><label id="lb_balance1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-					<td  >សម្គាល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"></label></strong></td>
-					<td  >&nbsp;&nbsp;&nbsp;ថ្ងៃលក់</td>
+					<td>សម្គាល់</td>
+				    <td><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"></label></strong></td>
+					<td>&nbsp;&nbsp;&nbsp;ថ្ងៃលក់</td>
 				    <td colspan="3"><strong><label id="lb_buydate1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="60px;">
@@ -495,13 +487,10 @@
 							</tr>
 							<tr>
 								<td width="30%">&nbsp;
-									
-								</td>
-								
+								</td>								
 								<td align="center" width="40%">
 									<strong><label id="lbl_customer1"></label></strong>
 								</td>
-									
 								<td align="center" width="30%">
 									<strong>
 										<?php 
@@ -529,7 +518,6 @@
 					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
 					</td>
 				</tr>
-				
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
 						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
@@ -562,8 +550,7 @@
 </form>
 <script type="text/javascript">	
 dojo.require("dojo.data.ItemFileWriteStore");  
-dojo.require("dijit.form.Textarea");
-						           
+dojo.require("dijit.form.Textarea");					           
 var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->co_name));?> );
 new dijit.form.FilteringSelect({
 	store: staff_store,
@@ -585,6 +572,7 @@ new dijit.form.FilteringSelect({
         	}
     	}else{
 		    if(staff_id==-1){
+		    	dijit.byId('branch_id_pop').attr('value',branch_id);
 		   		dijit.byId("popup_staff").show();
 		    }
     	}
@@ -1063,7 +1051,7 @@ function addStaff(){
 			    dijit.byId("popup_staff").hide();
 			},
 			error: function(err) {
-				
+				alert("err"+err);
 			}
 		});
    }
@@ -1099,7 +1087,7 @@ function hideDialog1(){
 								</tr>
 								<tr>
 									<td><?php echo $tr->translate('SEX');?></td>
-									<td>
+									<td><input type="hidden" name="branch_id_pop" id="branch_id_pop" dojoType="dijit.form.TextBox" />
 										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="sex" name="sex" value="" type="text">
 											<option value="1"><?php echo $tr->translate("MALE");?></option>
 											<option value="2"><?php echo $tr->translate("FEMALE");?></option>
@@ -1120,9 +1108,9 @@ function hideDialog1(){
 								</tr>
 								<tr>
 									<td colspan="4" align="center">
-										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button" 
 										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
-										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										<input type="button" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button" 
 										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addStaff();"/>
 									</td>
 								</tr>

@@ -49,7 +49,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
 	   FROM `ln_client_receipt_money` `cr`
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
-        `s`.`balance`         AS `balance`,
+	   
+	   (SELECT
+	     (`s`.`price_sold`-SUM(`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
+	   FROM `ln_client_receipt_money` `cr`
+	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance_remain`,   
         `s`.`buy_date`        AS `buy_date`,
          s.status,
          '$edit_sale',
@@ -103,8 +107,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql.$where.$order);
     }
     function getTranLoanByIdWithBranch($id,$is_newschedule=null){//group id
-    	$sql = " SELECT * FROM `ln_sale` AS s
-			WHERE s.id = ".$id;
+    	$sql = " SELECT s.*,
+    	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id=s.house_id) AS old_land_id 
+    		FROM `ln_sale` AS s
+				WHERE s.id = ".$id;
     	$where="";
     	if($is_newschedule!=null){
     		$where.=" AND s.is_reschedule = 2 ";
@@ -1422,7 +1428,7 @@ function getLoanLevelByClient($client_id,$type){
     	$array = array(
     			'branch_id'		=>$data['branch_id_pop'],		
     			'position_id'	=>1, // 1 => sale agent
-    			'co_code'		=>$staff_id,
+    			//'co_code'		=>$staff_id,
     			'co_khname'		=>$data['kh_name'],
     			'sex'			=>$data['sex'],
     			'tel'			=>$data['phone'],

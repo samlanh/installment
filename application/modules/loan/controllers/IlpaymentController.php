@@ -13,18 +13,18 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		try{
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
 				if($this->getRequest()->isPost()){
-						$formdata=$this->getRequest()->getPost();
-						$search = array(
-								'advance_search' => $formdata['advance_search'],
-								'branch_id'		=>$formdata['branch_id'],
-								'client_name'=>$formdata['client_name'],
-								'start_date'=>$formdata['start_date'],
-								'end_date'=>$formdata['end_date'],
-								'status'=>$formdata['status'],
-								'paymnet_type'	=> $formdata["paymnet_type"],
-								'land_id'=>$formdata["land_id"],
-								'payment_method'=> $formdata["payment_method"],
-								);
+						$search=$this->getRequest()->getPost();
+// 						$search = array(
+// 								'advance_search' => $formdata['advance_search'],
+// 								'branch_id'		=>$formdata['branch_id'],
+// 								'client_name'=>$formdata['client_name'],
+// 								'start_date'=>$formdata['start_date'],
+// 								'end_date'=>$formdata['end_date'],
+// 								'status'=>$formdata['status'],
+// 								'paymnet_type'	=> $formdata["paymnet_type"],
+// 								'land_id'=>$formdata["land_id"],
+// 								'payment_method'=> $formdata["payment_method"],
+// 								);
 					}
 					else{
 						$search = array(
@@ -57,11 +57,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$fm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($fm);
 		$this->view->frm_search = $fm;
-		
-//  		$data= array('loan_number'=>1,'type'=>1,'crm_id'=>1);
-//  		$db = new Loan_Model_DbTable_DbLoanILPayment();
-//  		$row = $db->getLoanPaymentschedulehistory($data);
-  }
+}
   function deleteAction(){
   		$id = $this->getRequest()->getParam("id");
   		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -127,14 +123,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$frm_loan=$frm->FrmAddIlPayment();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_ilpayment = $frm_loan;
-		
-// 		$list = new Application_Form_Frmtable();
-// 		$collumns = array("ឈ្មោះមន្ត្រីឥណទាន","ថ្ងៃបង់ប្រាក់","ប្រាក់ត្រូវបង់","ប្រាក់ដើមត្រូវបង់","អាត្រាការប្រាក់","ប្រាក់ផាកពិន័យ","ប្រាក់បានបង់សរុប","សមតុល្យ","កំណត់សម្គាល់");
-// 		$link=array(
-// 				'module'=>'group','controller'=>'Client','action'=>'edit',
-// 		);
-// 		$this->view->list=$list->getCheckList(0, $collumns, array(),array('client_number'=>$link,'name_kh'=>$link,'name_en'=>$link));
-		
+				
 		$db_keycode = new Application_Model_DbTable_DbKeycode();
 		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
 		
@@ -241,9 +230,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$this->view->graiceperiod = $db_keycode->getSystemSetting(9);
 		
 		$session_user=new Zend_Session_Namespace('auth');
-		$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;
-		
-// 		$this->view->loan_numbers = $db_global->getLoanNumberByBranch(1);
+		$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;		
 		$this->view->loan_numbers = $db->getAllLoanNumberByBranch(1);
 	}
 	function cancelIlPayment(){
@@ -261,36 +248,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-	}
-	function ilQuickPaymentAction(){
-		$db = new Loan_Model_DbTable_DbLoanILPayment();
-		if($this->getRequest()->isPost()){
-			$data = $this->getRequest()->getPost();
-			//print_r($data);
-			$db->quickPayment($data);
-			
-		}
-		$frm = new Loan_Form_FrmIlPayment();
-		$frm_loan=$frm->quickPayment();
-		Application_Model_Decorator::removeAllDecorator($frm_loan);
-		$db_keycode = new Application_Model_DbTable_DbKeycode();
-		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-		
-		$this->view->graiceperiod = $db_keycode->getSystemSetting(9);
-		$this->view->frm_ilpayment = $frm_loan;
-		
-		$this->view->co = $db->getAllCo();
-	}
-	function getAllLoanByCoIdAction(){
-		if($this->getRequest()->isPost()){
-			$data = $this->getRequest()->getPost();
-			
-			$db = new Loan_Model_DbTable_DbLoanILPayment();
-			$row = $db->getAllLoanByCoId($data);
-			print_r(Zend_Json::encode($row));
-			exit();
-		}
-	}
+	}	
 	function getLoannumberAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -300,7 +258,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	
 	function getLastPayDateAction(){// get last payment date in loan fundetail by for caculate interest in payoff for client 
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -318,10 +275,8 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$row = $db->getLastPaymentDate($data);
 			print_r(Zend_Json::encode($row));
 			exit();
-		}
-	
+		}	
 	}
-
 	public function showBarcodesAction(){
 		$this->_helper->layout()->disableLayout();
 		$id = $this->getRequest()->getParam('id');
@@ -330,29 +285,20 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$this->view->pro_id = $ids;
 		}
 		else{
-			//$this->_redirect("/product/index/index");
 		}
 	
 	}
 	public function generateBarcodeAction(){
 			$loan_code = $this->getRequest()->getParam('loan_code');
-	// 		if(!empty($id)){
-	// 			$db = new Application_Model_DbTable_DbGlobal();
-	// 			$sql=" SELECT p_code FROM tb_product WHERE pro_id = ".$id." LIMIT 1 ";
-	// 			$row=$db->getGlobalDbRow($sql);
-	// 			$_itemcode=$row["p_code"];
 				header('Content-type: image/png');
 				
 				$this->_helper->layout()->disableLayout();
-				//$barcodeOptions = array('text' => "$_itemcode",'barHeight' => 30);
 				$barcodeOptions = array('text' => "$loan_code",'barHeight' => 40);
 				//'font' => 4(set size of label),//'barHeight' => 40//set height of img barcode
 				$rendererOptions = array();
 				$renderer = Zend_Barcode::factory(
 						'code128', 'image', $barcodeOptions, $rendererOptions
-				)->render();
-	// 		}
-		
+				)->render();		
 		}
 	
 	function getIlloandetailAction(){
@@ -382,7 +328,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	
 	function getAllIlLoanDetailAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -392,7 +337,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	
 	function getLoanHasPayByLoanNumberAction(){//បង្ហាញប្រវត្តប្រាក់បានបងសរុប
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -443,7 +387,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
-// 			$row = $db->getIlPaymentNumber($data["branch_id"]);
 			$db = new Application_Model_DbTable_DbGlobal();
 			$row = $db->getReceiptByBranch(array("branch_id"=>$data["branch_id"]));
 			print_r(Zend_Json::encode($row));

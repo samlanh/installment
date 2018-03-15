@@ -8,7 +8,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 	public function AdvanceSearch ($data=null){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$request=Zend_Controller_Front::getInstance()->getRequest();
-		$db = new Loan_Model_DbTable_DbGroupPayment();
+// 		$db = new Loan_Model_DbTable_DbGroupPayment();
 		
 		$dbs = new Application_Model_DbTable_DbGlobal();
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
@@ -37,21 +37,21 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		
 		$client_name = new Zend_Dojo_Form_Element_FilteringSelect("client_name");
 		$opt_client = array(''=>$this->tr->translate("CHOOSE_CUSTOEMR"));
-		$rows = $db->getIndividuleClient();
+		$rows = $dbs->getAllClient();
 		if(!empty($rows))foreach($rows AS $row){
 			$opt_client[$row['id']]=$row['name'];
 		}
 		$client_name->setMultiOptions($opt_client);
 		$client_name->setAttribs(array('class'=>'fullside','dojoType'=>'dijit.form.FilteringSelect'));
 		
-		$g_client_name = new Zend_Dojo_Form_Element_FilteringSelect("g_client_name");
-		$opt_client = array(''=>'ជ្រើសរើស ឈ្មោះអតិថិជន');
-		$rows = $db->getAllClient();
-		if(!empty($rows))foreach($rows AS $row){
-			$opt_client[$row['id']]=$row['name'];
-		}
-		$g_client_name->setMultiOptions($opt_client);
-		$g_client_name->setAttribs(array('class'=>'fullside','dojoType'=>'dijit.form.FilteringSelect'));
+// 		$g_client_name = new Zend_Dojo_Form_Element_FilteringSelect("g_client_name");
+// 		$opt_client = array(''=>'ជ្រើសរើស ឈ្មោះអតិថិជន');
+// 		$rows = $db->getAllClient();
+// 		if(!empty($rows))foreach($rows AS $row){
+// 			$opt_client[$row['id']]=$row['name'];
+// 		}
+// 		$g_client_name->setMultiOptions($opt_client);
+// 		$g_client_name->setAttribs(array('class'=>'fullside','dojoType'=>'dijit.form.FilteringSelect'));
 		
 		$_coid = new Zend_Dojo_Form_Element_FilteringSelect('co_id');
 		$_coid->setAttribs(array(
@@ -128,7 +128,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 			$status->setValue($request->getParam("status"));
 			
 		}
-		$this->addElements(array($payment_method,$land_id,$branch_id,$g_client_name,$payment_type,$_coid,$submit,$advnceSearch,$client_name,$start_date,$end_date,$status));
+		$this->addElements(array($payment_method,$land_id,$branch_id,$payment_type,$_coid,$submit,$advnceSearch,$client_name,$start_date,$end_date,$status));
 		return $this;
 		
 	}	

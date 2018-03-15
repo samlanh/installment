@@ -34,6 +34,10 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 					'".$delete."'
 				FROM `ln_client_receipt_money` AS lcrm WHERE 1 ";
     	$where ='';
+    	$from_date =(empty($search['start_date']))? '1': " lcrm.date_input >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " lcrm.date_input <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	
     	if(!empty($search['advance_search'])){
     		$s_where = array();
     		$s_search = addslashes(trim($search['advance_search']));
@@ -44,9 +48,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	}
     	if($search['status']!=""){
     		$where.= " AND status = ".$search['status'];
-    	}
-    	if(!empty($search['start_date']) or !empty($search['end_date'])){
-    		$where.=" AND lcrm.`date_input` BETWEEN '$start_date' AND '$end_date'";
     	}
     	if($search['client_name']>0){
     		$where.=" AND lcrm.`client_id`= ".$search['client_name'];
