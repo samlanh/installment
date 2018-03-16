@@ -272,7 +272,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$id = $this->getRequest()->getParam("id");
   	if(!empty($id)){
 	  	$this->view->termcodiction = $db->getTermCodiction();
-	  	$rsagreement = $db->getAgreementBySaleID($id);
+	  	$rsagreement = $db->getAgreementBNGBySaleID($id);
 	  	$this->view->agreement = $rsagreement;
 	  	$this->view->sale_schedule = $db->getScheduleBySaleID($id,$rsagreement['payment_id']);
 	  	$db_keycode = new Application_Model_DbTable_DbKeycode();
