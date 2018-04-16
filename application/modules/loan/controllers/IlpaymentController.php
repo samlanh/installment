@@ -3,7 +3,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
-     /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
@@ -14,17 +13,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
 				if($this->getRequest()->isPost()){
 						$search=$this->getRequest()->getPost();
-// 						$search = array(
-// 								'advance_search' => $formdata['advance_search'],
-// 								'branch_id'		=>$formdata['branch_id'],
-// 								'client_name'=>$formdata['client_name'],
-// 								'start_date'=>$formdata['start_date'],
-// 								'end_date'=>$formdata['end_date'],
-// 								'status'=>$formdata['status'],
-// 								'paymnet_type'	=> $formdata["paymnet_type"],
-// 								'land_id'=>$formdata["land_id"],
-// 								'payment_method'=> $formdata["payment_method"],
-// 								);
 					}
 					else{
 						$search = array(
@@ -50,7 +38,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 					'client_name'=>$link,'receipt_no'=>$link,'branch'=>$link,'street'=>$link,'បោះពុម្ភ'=>$linkprint));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
-			echo $e->getMessage();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
 		$frm = new Loan_Form_FrmSearchGroupPayment();
@@ -101,7 +88,11 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				$db->addILPayment($_data);
+				$receipt = $db->addILPayment($_data);
+				if($_data['extrapayment']>0){
+					$_data['receipt_id'] =$receipt;
+					$db->addExtrapayment($_data);
+				}
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -114,11 +105,10 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$dbp = new Loan_Model_DbTable_DbLandpayment();
 			$rs = $dbp->getTranLoanByIdWithBranch($id,null);
 			$this->view->rsresult =  $rs;
-			if($rs['payment_id']==1){
+			if($rs['payment_id']==1 || $rs['is_cancel']==1){
 				Application_Form_FrmMessage::Sucessfull("មិនមានទិន្នន័យសម្រាប់បង់ប្រាក់ទេ!","/loan");
 			}
 		}
-		
 		$frm = new Loan_Form_FrmIlPayment();
 		$frm_loan=$frm->FrmAddIlPayment();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
@@ -138,7 +128,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-		
 	}	
 	function editAction(){
 		$id = $this->getRequest()->getParam("id");

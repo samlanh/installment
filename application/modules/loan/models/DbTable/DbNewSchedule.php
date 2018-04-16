@@ -54,7 +54,6 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		
     	$order = " ORDER BY s.id DESC";
     	$db = $this->getAdapter();    
-//      	echo $sql.$where.$order;	exit();
     	return $db->fetchAll($sql.$where.$order);
     }
     
@@ -1268,7 +1267,6 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$db->commit();
     		return $rows;
     	}catch (Exception $e){
-    		echo $e->getMessage();exit();
     		$db->rollBack();
     		Application_Form_FrmMessage::message("INSERT_FAIL");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

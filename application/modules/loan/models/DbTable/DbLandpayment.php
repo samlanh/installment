@@ -319,7 +319,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$next_payment = $data['first_payment'];
     		$from_date =  $data['release_date'];
     		$curr_type = 2;//$data['currency_type'];
-    		//$term_types = 12;
     		
     		$key = new Application_Model_DbTable_DbKeycode();
     		$key = $key->getKeyCodeMiniInv(TRUE);

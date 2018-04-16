@@ -297,7 +297,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     				'service_charge'		=>	0,//$data['service_'.$i],
     				'penelize_new'			=>	0,//$data['penelize_'.$i]-$data['old_penelize_'.$i],
     				'service_charge_new'	=>	0,//$data["service_charge"]-$data['service_'.$i],
-    					
     				'capital'				=>  0,
     				'remain_capital'		=>	0, // remain balance after paid
     				'old_principal_permonth'=>	0,
@@ -306,7 +305,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     				'old_total_payment'		=>	0,
     				'old_penelize'			=>	0,
     				'old_service_charge'	=>	0,
-    		
 //     				'last_pay_date'			=>	$row["date_payment"],//$row["last_date_payment_".$i],
 //     				'paid_date'			=>	$data["collect_date"],//$row["last_date_payment_".$i],
     				'is_completed'			=>	0,//$is_compleated,
@@ -316,7 +314,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$where = " crm_id = ".$receipt_id;
     		$this->_name="ln_client_receipt_money_detail";
     		$this->update($arr_money_detail, $where);
-    		
     		$db->commit();
     	}catch(Exception $e){
     		$db->rollBack();
@@ -394,7 +391,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$interest =0;
     		$principle_amount=0;
     	}
-    	
     	$service_charge= $data["service_charge"];
     	$penalize = $data["penalize_amount"];
     	$pay_off = 0;
@@ -436,12 +432,13 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			'payment_times'=>$data['paid_times'],
     			'payment_method'=>$data['payment_method'],
     		);
+    		
 			$this->_name = "ln_client_receipt_money";
     		$client_pay = $this->insert($arr_client_pay);
     		
     		$sub_recieve_amount = $data["amount_receive"];
     		$date_collect = $data["collect_date"];
-    	    $identify = explode(',',$data['identity']);
+    	    //$identify = explode(',',$data['identity']);
   		    				$rows = $this->getSaleScheduleById($loan_number, 1);
 		    				if(!empty($rows)){
 		    					$remain_money = $data['amount_receive']-$data['extrapayment'];
@@ -454,7 +451,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    								'land_id'			    =>	$data['property_id'],//ok
 		    								'lfd_id'				=>	$row["id"],//ok
 		    								'date_payment'			=>	$row["date_payment"], // ថ្ងៃដែលត្រូវបង់
-		    						
 		    								'principal_permonth'	=>	0,//$principle_amount,
 		    								'total_interest'		=>	0,//$data["interest_".$i],
 		    								'total_payment'			=>	0,//$data["payment_".$i],
@@ -464,7 +460,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    								'service_charge'		=>	0,//$data['service_'.$i],
 		    								'penelize_new'			=>	0,//$data['penelize_'.$i]-$data['old_penelize_'.$i],
 		    								'service_charge_new'	=>	0,//$data["service_charge"]-$data['service_'.$i],
-		    								 
 		    								'capital'				=>  $row["begining_balance_after"],
 		    								'remain_capital'		=>	$row["ending_balance"], // remain balance after paid
 		    								'old_principal_permonth'=>	$row['principal_permonthafter'],
@@ -473,7 +468,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    								'old_total_payment'		=>	$row['total_payment_after'],
 		    								'old_penelize'			=>	$row['penelize'],
 		    								'old_service_charge'	=>	$row['service_charge'],
-		    								
 		    								'last_pay_date'			=>	$row["date_payment"],//$row["last_date_payment_".$i],
 		    								'paid_date'			=>	$data["collect_date"],//$row["last_date_payment_".$i],
 		    								'is_completed'			=>	1,//$is_compleated,
@@ -506,7 +500,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    								$total_interest=0;
 		    							}
 		    						}
-		    						
 		    						if($option_pay==1){
 		    							$total_principal =$after_principal;
 		    						}elseif($option_pay==3){
@@ -525,10 +518,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    								
 		    							if($remain_money>=0){//ដកផាគពិន័យ
 		    								$paid_penalty = $penalize;
-		    								$principle_after=0;
-		    						
+		    								$principle_after=0;		    						
 		    								$remain_money = $remain_money - $total_interest;
-		    									
 		    								if($remain_money>=0){
 		    									$paid_interest = $total_interest;
 		    									$after_interest = 0;
@@ -555,6 +546,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    							$paid_service=$service_charge-abs($remain_money);
 		    							$after_service = abs($remain_money);
 		    						}
+		    						if($after_principal==0){
+		    							$is_compleated_d=1;
+		    						}
     								 $arra = array(
     								 		'begining_balance_after'=>$after_outstanding-$paid_principal,
     								 		'ending_balance'=>$row['ending_balance']-($paid_principal),
@@ -573,14 +567,16 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    }
     		////////////////////////////////////start extra payment///////////////////////////////////////
     		if($data['extrapayment']>0){
-    			$extrapayment = $data['extrapayment'];
-    			$rs = $this->getSaleScheduleById($loan_number,1);
-    			$principal = 0;
-    			$last_record=0;
-    			$ending_balance=0;
-    			if(!empty($rs)){
-    				
-    				/*សម្រាប់បញ្ចូលថាប្រាក់ដើមប្រានរំលស់*/
+//     			$extrapayment = $data['extrapayment'];
+//     			$extrapayment_after=$extrapayment;
+//     			$order=0;
+//     			if($data['schedule_opt']==4){$order=1;}//ករណីរំលស់
+//     			$rs = $this->getSaleScheduleById($loan_number,$order);
+//     			$principal = 0;
+//     			$last_record=0;
+//     			$ending_balance=0;
+//     			if(!empty($rs)){    				
+//     				/*សម្រាប់បញ្ចូលថាប្រាក់ដើមប្រានរំលស់*/
     				$sql="SELECT (no_installment) FROM ln_saleschedule WHERE is_completed=1 AND status=1 AND sale_id=".$loan_number." ORDER BY no_installment DESC ";
     				$start_id = $db->fetchOne($sql);
     				
@@ -591,11 +587,11 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     						'begining_balance'=> $data['priciple_amount']+$principle_amount,//good
     						'begining_balance_after'=> $data['priciple_amount']+$principle_amount,//good
     						'principal_permonth'=> $data['extrapayment'],//good
-    						'principal_permonthafter'=> $data['extrapayment'],//good
+    						'principal_permonthafter'=> 0,//good
     						'total_interest'=>0,//good
     						'total_interest_after'=>0,//good
     						'total_payment'=> $data['extrapayment'],//good
-    						'total_payment_after'=> $data['extrapayment'],//good
+    						'total_payment_after'=>0,//good
     						'ending_balance'=> $data['priciple_amount']+$principle_amount,
     						'cum_interest'=>0,
     						'amount_day'=>0,
@@ -609,80 +605,198 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     						'collect_by'=>2,);
     				$this->insert($datapayment);
     				
-    				$times = count($rs);
-    				foreach ($rs as $index => $row){//ដក Begining after ដើម្បីអោយបង្កាន់ដៃបង់លើកក្រោយចេញត្រូវនឹងប្រាក់ដែលធ្លាប់បានបង់
-    					if($data['schedule_opt']==4){//សម្រាប់រំលស់
-	    					if($index==0){
-	    						$begining_balance = $row['begining_balance_after']-$extrapayment;
-								$interst_rate = ($data['interest_rate']/12/100);
-								if($interst_rate!=0){
-			    					$top = pow(1+$interst_rate,$times);
-			    					$bottom = pow(1+$interst_rate,$times)-1;
-			    					$fixed_payment = ceil($begining_balance*$interst_rate*$top/$bottom);//always round up
-	    					   }else{
-	    					   	$fixed_payment =$row['principal_permonthafter'];
-	    					   }
-	    					}else{
-	    						$begining_balance = $ending_balance;
-	    					}
-	    					
-    					}else{
-    					
-    					}
-    					if($data['schedule_opt']!=4){//ក្រៅរំលស់ គឺការប្រាក់សូន្យទាំងអស់
-    						$interst_rate=0;
-    					}
-    					$total_interestafter=$begining_balance*$interst_rate;
-    					$principal = $fixed_payment-$total_interestafter;
-    					$ending_balance = $begining_balance-$principal;
-    					
-    					if($ending_balance<0){
-    						$last_record = 1;
-    						$principal = $begining_balance;
-    						$fixed_payment = $principal+$interst_rate;
-    						$ending_balance=0;
-    					}
-    					$is_completed=0;
-    					if($principal<=0){
-    						$is_completed=1;
-    					}
-//     					echo $is_completed;exit();
-    					if($last_record<=1){//check it ;
-	    					$arra = array(
-	    							'ending_balance'=>$ending_balance,//$row['begining_balance']-$extrapayment,
-	    							'begining_balance'=>$begining_balance,//$row['begining_balance']-$extrapayment,
-	    							'begining_balance_after'=>$begining_balance,//$row['begining_balance_after']-$extrapayment,
-	    							'principal_permonth'=>$principal,
-	    							'principal_permonthafter'=>$principal,
-	    							'total_interest_after'=>$total_interestafter,//ok
-	    						    'total_interest'=>$total_interestafter,
-	    							'total_payment'=>$fixed_payment,
-	    							'total_payment_after'=>$fixed_payment,//$row['total_payment']-$principal_paid-$row['total_interest_after'],
-								    'is_completed'=>$is_completed			    					
-	    							);
-	    					$where = " id = ".$row['id'];
-	    					$this->_name="ln_saleschedule";
-	    					$this->update($arra, $where);
-	    					if($last_record==1){
-	    						$last_record=2;
-	    					}
-    					}else{
-    						$where = " id = ".$row['id'];
-    						$this->_name="ln_saleschedule";
-    						$this->delete($where);
-    					}
-    				}
-    			}
+//     				$times = count($rs);
+//     				foreach ($rs as $index => $row){//ដក Begining after ដើម្បីអោយបង្កាន់ដៃបង់លើកក្រោយចេញត្រូវនឹងប្រាក់ដែលធ្លាប់បានបង់
+//     					if($data['schedule_opt']==4){//សម្រាប់រំលស់
+// 	    					if($index==0){
+// 	    						$begining_balance = $row['begining_balance_after']-$extrapayment;
+// 								$interst_rate = ($data['interest_rate']/12/100);
+// 								if($interst_rate!=0){
+// 			    					$top = pow(1+$interst_rate,$times);
+// 			    					$bottom = pow(1+$interst_rate,$times)-1;
+// 			    					$fixed_payment = ceil($begining_balance*$interst_rate*$top/$bottom);//always round up
+// 	    					   }else{
+// 	    					   	$fixed_payment =$row['principal_permonthafter'];
+// 	    					   }
+// 	    					}else{
+// 	    						$begining_balance = $ending_balance;
+// 	    					}
+// 	    					$total_interestafter=$begining_balance*$interst_rate;
+// 	    					$principal = $fixed_payment-$total_interestafter;
+// 	    					$ending_balance = $begining_balance-$principal;
+//     					}else{//ក្រៅពីរំលស់ // ត្រូវដក បងបន្ថែមតែម្តងទេ សម្រាប់ប្រាក់ដើមរាល់ខែ
+//     						$total_interestafter=0;
+//     						$begining_balance = $row['begining_balance_after']-$extrapayment;
+//     						$extrapayment_after=$extrapayment_after-$row['principal_permonthafter'];
+//     						if($extrapayment_after>=0){
+//     							$principal=0;
+//     							$begining_balance=0;
+//     							$fixed_payment=0;
+//     						}else{
+//     							$principal=abs($extrapayment_after);
+//     							$extrapayment_after=0;
+//     							$fixed_payment=$principal;
+//     						}
+//     					}
+//     					if($data['schedule_opt']!=4){//ក្រៅរំលស់ គឺការប្រាក់សូន្យទាំងអស់
+//     						$interst_rate=0;
+//     					}
+//     					if($ending_balance<0){
+//     						$last_record = 1;
+//     						$principal = $begining_balance;
+//     						$fixed_payment = $principal+$interst_rate;
+//     						$ending_balance=0;
+//     					}
+//     					$is_completed=0;
+//     					if($principal<=0){
+//     						$is_completed=1;
+//     					}    	
+//     					if($last_record<=1){//check it ;
+// 	    					$arra = array(
+// 	    							'ending_balance'=>$begining_balance-$principal,//$row['begining_balance']-$extrapayment,
+// 	    							'begining_balance'=>$begining_balance,//$row['begining_balance']-$extrapayment,
+// 	    							'begining_balance_after'=>$begining_balance,//$row['begining_balance_after']-$extrapayment,
+// 	    							'principal_permonth'=>$principal,
+// 	    							'principal_permonthafter'=>$principal,
+// 	    							'total_interest_after'=>$total_interestafter,//ok
+// 	    						    'total_interest'=>$total_interestafter,
+// 	    							'total_payment'=>$fixed_payment,
+// 	    							'total_payment_after'=>$fixed_payment,//$row['total_payment']-$principal_paid-$row['total_interest_after'],
+// 								    'is_completed'=>$is_completed			    					
+// 	    							);
+// 	    					$where = "id = ".$row['id'];
+// 	    					$this->_name="ln_saleschedule";
+// 	    					$this->update($arra, $where);
+
+// 	    					if($last_record==1){
+// 	    						$last_record=2;
+// 	    					}
+//     					}else{
+//     						$where ="id = ".$row['id'];
+//     						$this->_name="ln_saleschedule";
+//     						$this->delete($where);
+//     					}
+//     				}
+//     			}
     		}
-    		///////////////////////////////end of extra payment////////////////////////////
+    		////////////////////////// end of extra payment ////////////////////////////
     		$rows = $this->getSaleScheduleById($loan_number, 1);
     		if(empty($rows)){
     			$this->updatePayoff($data['loan_number'],$client_pay);
-    		}else{
     		}
     		$db->commit();
+    		return $client_pay;
     	}catch (Exception $e){
     		$db->rollBack();
+    		echo $e->getMessage();exit();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    	}
+    }
+    function addExtrapayment($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try{
+    	if($data['extrapayment']>0){
+    		$extrapayment = $data['extrapayment'];
+    		$extrapayment_after=$extrapayment;
+    		$order=0;
+    		if($data['schedule_opt']==4){
+    			$order=1;
+    		}//ករណីរំលស់
+    		//     			$db->commit();
+    		$loan_number=$data['loan_number'];
+    		$client_pay = $data['receipt_id'];
+    		$rs = $this->getSaleScheduleById($loan_number,$order);
+    		$principal = 0;
+    		$last_record=0;
+    		$ending_balance=0;
+    		if(!empty($rs)){
+    			/*សម្រាប់បញ្ចូលថាប្រាក់ដើមប្រានរំលស់*/
+    			$times = count($rs);
+    			foreach ($rs as $index => $row){//ដក Begining after ដើម្បីអោយបង្កាន់ដៃបង់លើកក្រោយចេញត្រូវនឹងប្រាក់ដែលធ្លាប់បានបង់
+    				if($data['schedule_opt']==4){//សម្រាប់រំលស់
+    					if($index==0){
+    						$begining_balance = $row['begining_balance_after']-$extrapayment;
+    						$interst_rate = ($data['interest_rate']/12/100);
+    						if($interst_rate!=0){
+    							$top = pow(1+$interst_rate,$times);
+    							$bottom = pow(1+$interst_rate,$times)-1;
+    							$fixed_payment = ceil($begining_balance*$interst_rate*$top/$bottom);//always round up
+    						}else{
+    							$fixed_payment =$row['principal_permonthafter'];
+    						}
+    					}else{
+    						$begining_balance = $ending_balance;
+    					}
+    					
+    					$total_interestafter=$begining_balance*$interst_rate;
+//     					echo $total_interestafter;exit();
+    					$principal = $fixed_payment-$total_interestafter;
+    					$ending_balance = $begining_balance-$principal;
+    				}else{//ក្រៅពីរំលស់ // ត្រូវដក បងបន្ថែមតែម្តងទេ សម្រាប់ប្រាក់ដើមរាល់ខែ
+    					$total_interestafter=0;
+    					$begining_balance = $row['begining_balance_after']-$extrapayment;
+    					$extrapayment_after=$extrapayment_after-$row['principal_permonthafter'];
+    					if($extrapayment_after>=0){
+    						$principal=0;
+    						$begining_balance=0;
+    						$fixed_payment=0;
+    					}else{
+    						$principal=abs($extrapayment_after);
+    						$extrapayment_after=0;
+    						$fixed_payment=$principal;
+    					}
+    				}
+    				if($data['schedule_opt']!=4){//ក្រៅរំលស់ គឺការប្រាក់សូន្យទាំងអស់
+    					$interst_rate=0;
+    				}
+    				if($ending_balance<0){
+    					$last_record = 1;
+    					$principal = $begining_balance;
+    					$fixed_payment = $principal+$interst_rate;
+    					$ending_balance=0;
+    				}
+    				$is_completed=0;
+    				if($principal<=0){
+    					$is_completed=1;
+    				}
+    				if($last_record<=1){//check it ;
+    					$arra = array(
+    							'ending_balance'=>$begining_balance-$principal,//$row['begining_balance']-$extrapayment,
+    							'begining_balance'=>$begining_balance,//$row['begining_balance']-$extrapayment,
+    							'begining_balance_after'=>$begining_balance,//$row['begining_balance_after']-$extrapayment,
+    							'principal_permonth'=>$principal,
+    							'principal_permonthafter'=>$principal,
+    							'total_interest_after'=>$total_interestafter,//ok
+    							'total_interest'=>$total_interestafter,
+    							'total_payment'=>$fixed_payment,
+    							'total_payment_after'=>$fixed_payment,//$row['total_payment']-$principal_paid-$row['total_interest_after'],
+    							'is_completed'=>$is_completed
+    					);
+    					$where = "id = ".$row['id'];
+    					$this->_name="ln_saleschedule";
+    					$this->update($arra, $where);
+    	
+    					if($last_record==1){
+    						$last_record=2;
+    					}
+    				}else{
+    					$where ="id = ".$row['id'];
+    					$this->_name="ln_saleschedule";
+    					$this->delete($where);
+    				}
+    			}
+    		}
+    	}
+    	////////////////////////// end of extra payment ////////////////////////////
+    	$rows = $this->getSaleScheduleById($loan_number, 1);
+    	if(empty($rows)){
+    		$this->updatePayoff($data['loan_number'],$client_pay);
+    	}
+    	$db->commit();
+    	}catch (Exception $e){
+    		$db->rollBack();
+    		echo $e->getMessage();exit();
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     }
@@ -1768,7 +1882,7 @@ function getLoanPaymentByLoanNumberEdit($data){
 				  (SELECT date_payment FROM ln_saleschedule,ln_sale WHERE ln_saleschedule.`sale_id` = `ln_sale`.`id` AND `ln_sale`.id = $loan_number ORDER BY `ln_saleschedule`.id DESC LIMIT 1) AS datepaymentlastrecord
 				FROM
 				  ln_client_receipt_money 
-				WHERE land_id = $loan_number 
+				WHERE sale_id = $loan_number 
 				ORDER BY id DESC LIMIT 1";
 		//$order = " order by id DESC ";
 		return $db->fetchRow($sql);
