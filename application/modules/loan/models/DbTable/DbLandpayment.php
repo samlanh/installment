@@ -306,6 +306,32 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$this->_name='ln_sale';
     		$id = $this->insert($arr);//add group loan
     		$data['sale_id']=$id;
+    		if($data["schedule_opt"]==2){//បង់ផ្តាច់
+    			$this->_name="ln_saleschedule";
+    			$datapayment = array(
+    					'branch_id'=>$data['branch_id'],
+    					'sale_id'=>$id,//good
+    					'begining_balance'=> $data['sold_price'],//good
+    					'begining_balance_after'=>0,//good
+    					'principal_permonth'=>$data['sold_price'],//good
+    					'principal_permonthafter'=>0,//good
+    					'total_interest'=>0,//good
+    					'total_interest_after'=>0,//good
+    					'total_payment'=>$data['sold_price'],//good
+    					'total_payment_after'=>0,//good
+    					'ending_balance'=>0,
+    					'cum_interest'=>0,
+    					'amount_day'=>0,
+    					'is_completed'=>0,
+    					'date_payment'=>$data['paid_date'],
+    					'percent'=>100,
+    					'note'=>'',
+    					'is_completed'=>1,
+    					'is_installment'=>1,
+    					'no_installment'=>1,
+    			);
+    			$recordid = $this->insert($datapayment);
+    		}
     		
     		$total_day=0;
     		$old_remain_principal = 0;
@@ -334,7 +360,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$pri_permonth=0;
     		
     		$str_next = '+1 month';
-//     		$str_next = $dbtable->getNextDateById($data['collect_termtype'],$data['amount_collect']);//for next,day,week,month;
+    		
     		for($i=1;$i<=$loop_payment;$i++){
     			$paid_receivehouse=1;
     			if($payment_method==1){

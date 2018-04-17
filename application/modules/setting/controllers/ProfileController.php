@@ -13,16 +13,16 @@ public function init()
 // 		$data=$key->getKeyCode();
 // 		$this->view->data= $data;
 		 
-// 		if($this->getRequest()->isPost()){
-// 			$post=$this->getRequest()->getPost();
+		if($this->getRequest()->isPost()){
+			$post=$this->getRequest()->getPost();
 			 
-// 			try {
-// 				$db = $key->updateKeyCode($post, $data);
-// 				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);
-// 			} catch (Exception $e) {
-// 				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
-// 			}
-// 		}
+			try {
+				$db = $key->updateKeyCode($post, $data);
+				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);
+			} catch (Exception $e) {
+				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
+			}
+		}
 	}
 	
 }

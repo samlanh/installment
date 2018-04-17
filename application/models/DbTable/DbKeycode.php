@@ -58,4 +58,3 @@ class Application_Model_DbTable_DbKeycode extends Zend_Db_Table_Abstract
 		return $_mkh[$month];
 	}
 }
-

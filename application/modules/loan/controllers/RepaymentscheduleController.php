@@ -87,7 +87,6 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			}
 		}
 		$this->view->id = $id;
-		
 	}	
 // 	public function addloanAction(){
 // 		if($this->getRequest()->isPost()){

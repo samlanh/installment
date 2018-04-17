@@ -74,24 +74,30 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
             <table id="exportExcel" width="100%" style="font-family:'Khmer OS Battambang';margin:0; padding:0; border:1px solid #000; border-collapse: collapse;" >
 			<?php
 					    $all_totalland = 0;$all_totalhouse =0;$all_total=0;$all_propertype=0;
-				       $total_land_pric=0; $total_house_price = 0; $property_type=0; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){?>
+				       $total_land_pric=0; $total_house_price = 0; $property_type=0; $i=0; $total=0;
+				       $is_lock=0; 
+				       if(!empty($this->row))foreach($this->row as $key =>$row){?>
 				      	<?php  
 				      	$all_totalhouse=$all_totalhouse+$row['house_price'];
 				      	$all_total=$all_total+$row['price'];
 				      	$all_propertype = $key+1;
+				      	if($row['is_lock']==1){//ban sell hz
+				      		$is_lock=$is_lock+1;
+				      	}
 				      	
 						if($row['property_type']!=$property_type){	
 							if($key>0 ){
 						?>
-						<tr height="10" style=" border: solid 1px #000;">
-							<td colspan="13"></td>
+						<tr height="10">
+							<td colspan="9" style="border-left: solid 1px #fff;"></td>
+							<td colspan="4" style=""></td>
 						</tr>
 						<tr>
 						    <td colspan="3" style=" border: solid 1px #000;background:#c1d0f3;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL_PROPERTY");?>&nbsp;</td>
 						    <td colspan="2" style=" border: solid 1px #000;background:#c1d0f3;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL_LAND_PRICE");?>&nbsp;</td>
 						    <td colspan="2" style=" border: solid 1px #000;background:#c1d0f3;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL_HOUSE_PRICE");?>&nbsp;</td>
 						    <td colspan="2" style=" border: solid 1px #000;background:#c1d0f3;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
-							<td colspan="4" style="border:1px solid #fff;"></td>
+							<td colspan="4" style="border:1px solid #fff;border-top:1px solid #fff !important;"></td>
 						</tr>
 						 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
 						    <td colspan="3" align="center" style="border:1px solid #000;">&nbsp;<?php echo $i;?></td>
@@ -99,7 +105,6 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
 						    <td colspan="2" style="border:1px solid #000;">&nbsp;&nbsp;<?php echo number_format($total_house_price,2);?>&nbsp;</td>
 						    <td colspan="2" style="border:1px solid #000;">&nbsp;&nbsp;<?php echo number_format($total,2);?>&nbsp;</td>
 						    <td colspan="4" style="border:1px solid #fff;"></td>
-						</tr>
 						</tr>
 							<?php $i=0; $total_land_pric=0;$total_house_price=0;$total_house_price=0;$total=0;}?>
 					     <thead>
@@ -162,20 +167,23 @@ table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-we
 						    <td colspan="4" style="border:1px solid #fff; border-bottom:1px solid #fff;"></td>
 						</tr>
 						<tr>
-						    <td colspan="9" style="border:1px solid #fff; border-bottom:1px solid #000;">សរុបរួម</td>
-						    <td colspan="4" style=" border-bottom: 1px solid #fff;border-right: 1px solid #fff"></td>
+						    <td colspan="13" style="border:1px solid #fff; border-bottom:1px solid #000;"><?php echo $tr->translate("ALL_TOTAL");?></td>
 						<tr>
-						    <td colspan="3" style=" border:solid 1px #000;background:#ccc;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL_PROPERTY");?>&nbsp;</td>
-						    <td colspan="2" style="border: solid 1px #000;background:#ccc;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL_LAND_PRICE");?>&nbsp;</td>
-						    <td colspan="2" style=" border: solid 1px #000;background:#ccc;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL_HOUSE_PRICE");?>&nbsp;</td>
-						    <td colspan="2" style="border: solid 1px #000;background:#ccc;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+						    <td colspan="3" style=" border:solid 1px #000;background:#c1d0f3;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL_PROPERTY");?>&nbsp;</td>
+						    <td colspan="2" style="border: solid 1px #000;background:#c1d0f3;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL_LAND_PRICE");?>&nbsp;</td>
+						    <td colspan="2" style=" border: solid 1px #000;background:#c1d0f3;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL_HOUSE_PRICE");?>&nbsp;</td>
+						    <td colspan="2" style="border: solid 1px #000;background:#c1d0f3;font-size:13px;">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+						    <td colspan="2" style="border: solid 1px #000;background:#c1d0f3;font-size:13px;">&nbsp;<?php echo $tr->translate("PROPERTY").$tr->translate("SOLD_OUT");?>&nbsp;</td>
+						    <td colspan="2" style="border: solid 1px #000;background:#c1d0f3;font-size:13px;">&nbsp;<?php echo $tr->translate("PROPERTY").$tr->translate("NOT_YET_SALE");?>&nbsp;</td>
 							<td colspan="4" style="border-top:1px solid #fff;border-right:1px solid #fff;"></td>
 						</tr>
-						<tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
+						<tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';" align="center">
 						    <td colspan="3" align="center" style="border:1px solid #000;">&nbsp;<?php echo $all_propertype;?></td>
 						    <td colspan="2" style="border-top:1px solid #000;">&nbsp;&nbsp;<?php echo number_format($all_totalland,2);?>&nbsp;</td>
 						    <td colspan="2" style="border:1px solid #000;">&nbsp;&nbsp;<?php echo number_format($all_totalhouse,2);?>&nbsp;</td>
 						    <td colspan="2" style="border:1px solid #000;border-right:1px solid #000;">&nbsp;&nbsp;<?php echo number_format($all_total,2);?>&nbsp;</td>
+						    <td colspan="2" style="border:1px solid #000;border-right:1px solid #000;">&nbsp;&nbsp;<?php echo $is_lock;?>&nbsp;</td>
+						    <td colspan="2" style="border:1px solid #000;border-right:1px solid #000;">&nbsp;&nbsp;<?php echo $all_propertype-$is_lock;?>&nbsp;</td>
 						    <td colspan="4" style="border:1px solid #fff;border-top:1px solid #fff;border-right:1px solid #fff;"></td>
 						</tr>
 						<?php }?>

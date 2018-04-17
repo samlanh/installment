@@ -6,7 +6,6 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
 	public function FrmAddIlPayment($data=null){
-		
 		$db = new Application_Model_DbTable_DbGlobal();
 		
 		$_loan_codes = new Zend_Dojo_Form_Element_TextBox('land_address');

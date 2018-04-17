@@ -453,6 +453,15 @@ public function init()
 		$options= array(1=>$this->tr->translate("NORMAL_SALE"),2=>$this->tr->translate("MULTY_SALE"));
 		$typesale->setMultiOptions($options);
 		
+		$payment_method = new Zend_Dojo_Form_Element_FilteringSelect('payment_method');
+		$payment_method->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>'enablePayment();'
+		));
+		$opt = $db->getVewOptoinTypeByType(2,1,3,1);
+		$payment_method->setMultiOptions($opt);
+		
 		$_instalment_date = new Zend_Form_Element_Hidden("instalment_date");
 		$_release_date = new Zend_Form_Element_Hidden("old_release_date");
 		$_interest_rate = new Zend_Form_Element_Hidden("old_rate");
@@ -490,7 +499,7 @@ public function init()
 			$amount_build->setValue($data['amount_build']);
 			
 		}
-		$this->addElements(array($other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,
