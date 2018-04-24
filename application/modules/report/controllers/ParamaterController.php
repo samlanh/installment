@@ -29,74 +29,11 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_staff=$row;
   }
-  function  rptVillageAction(){
-  	$db  = new Report_Model_DbTable_DbParamater();
-  
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	if($this->getRequest()->isPost()){
-  		$search = $this->getRequest()->getPost();
-  	}else {
-  		$search = array('adv_search' => '',
-  				'search_status' => -1,
-  				'province_name'=>0,
-  				'district_name'=>'',
-  				'commune_name'=>'');
-  	}
-  	$this->view->village_list = $db->getAllVillage($search);
-  	$frm = new Other_Form_FrmVillage();
-  	$frms = $frm->FrmAddVillage();
-  	Application_Model_Decorator::removeAllDecorator($frms);
-  	$this->view->frm_village= $frms;
-  	
-//   	$db= new Application_Model_DbTable_DbGlobal();
-//   	$this->view->district = $db->getAllDistricts();
-//   	$this->view->commune_name = $db->getCommune();
-  	$this->view->result = $search;
-  }
-  function rptZoneAction(){
-  	$db  = new Report_Model_DbTable_DbParamater();
-  	$this->view->zone_list = $db->getALLzone();
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	$frm = new Other_Form_FrmZone();
-  	$frm_co=$frm->FrmAddZone();
-  	Application_Model_Decorator::removeAllDecorator($frm_co);
-  	$this->view->frm_zone = $frm_co;
  
-  }
-  function rptHolidayAction(){
-  	$db  = new Report_Model_DbTable_DbParamater();
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	$frm = new Other_Form_FrmHoliday();
-  	$frm = $frm->FrmAddHoliday();
-  	Application_Model_Decorator::removeAllDecorator($frm);
-  	$this->view->frm_holiday = $frm;
-  	if($this->getRequest()->isPost()){
-  		$data = $this->getRequest()->getPost();
-  		if(isset($data['btn_search'])){
-  			//print_r($data);exit();
-  			$this->view->holiday_list = $db->getAllHoliday($data);
-  			$a = $db->getAllHoliday($data);
-  		}else{
-  		//print_r($data);exit();
-	  		$collumn = array("id","holiday_name","amount_day","start_date","end_date","status","modify_date","note");
-	  		$this->exportFileToExcel('ln_holiday',$db->getAllHoliday(),$collumn);
-  		}
-  	}else {  		
-  		$data = array('adv_search' => '',
-						'search_status' => -1,
-						'start_date'=> date('Y-m-01'),
-						'end_date'=>date('Y-m-d')); 
-  		$this->view->holiday_list = $db->getAllHoliday($data);
-  	}
-  }
   public function exportFileToExcel($table,$data,$thead){
   	$this->_helper->layout->disableLayout();
   	$db = new Report_Model_DbTable_DbExportfile();
   	$finalData = $db->getFileby($table,$data,$thead);
-  	 
   	$filename = APPLICATION_PATH . "/tmp/$table-" . date( "m-d-Y" ) . ".xlsx";
   	$realPath = realpath( $filename );
   	if ( false === $realPath ){
@@ -120,7 +57,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	{
   		fputcsv( $handle,$finalRow, "\t" );
   	}
-  	 
   	fclose( $handle );
   	$this->_helper->viewRenderer->setNoRender();
   	readfile( $filename );//exit();
@@ -170,7 +106,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->frm_property=$row;
   }
   function rptCancelSaleAction(){ // by Vandy
-  	 
   	if($this->getRequest()->isPost()){
   		$search=$this->getRequest()->getPost();
   	}else{
@@ -189,7 +124,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frm = $fm->FrmAddFrmCancel();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_cancel = $frm;
-  	//$this->view->frm_property=$row;
   }
   function rptIncomeAction(){ // by Vandy
   	if($this->getRequest()->isPost()){
@@ -272,7 +206,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$id = $this->getRequest()->getParam("id");
   	if(!empty($id)){
 	  	$this->view->termcodiction = $db->getTermCodiction();
-// 	  	$rsagreement = $db->getAgreementBNGBySaleID($id);
 	  	$rsagreement = $db->getAgreementBySaleID($id);
 	  	$this->view->agreement = $rsagreement;
 	  	$this->view->sale_schedule = $db->getScheduleBySaleID($id,$rsagreement['payment_id']);
@@ -343,16 +276,11 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->rscomisison = $db->getAllCommission($search);
   }
   function rptRevenueExpenseAction(){
-  
   	if($this->getRequest()->isPost()){
   		$search=$this->getRequest()->getPost();
   	}
   	else{
   		$search = array(
-  		//      "adv_search"=>'',
-  		//      "branch_id"=>-1,
-  		//      "status"=>-1,
-  		//      "category_id"=>-1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   		);
@@ -369,4 +297,3 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->frm_search = $frm;
   }
 }
-

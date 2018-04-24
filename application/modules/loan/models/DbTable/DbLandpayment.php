@@ -668,13 +668,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'is_completed'=>$statuscomplete,
     					'paid_date'			=> 	$data['date_buy'],
     					'total_payment_after'	=>	$pyament_after,
-//     					'total_interest_after'	=>  $new_sub_interest_amount,
     			);
-    		//	echo $row['id'];exit();
-    		
     			$this->_name="ln_saleschedule";
     			$where="id = ".$row['id'];
     			$this->update($arra, $where);
+    			
     			$this->_name='ln_client_receipt_money_detail';
     			$array = array(
     					'crm_id'				=>$crm_id,
@@ -692,12 +690,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'service_charge'		=>0,
     					'penelize_amount'		=>0,
     					'is_completed'			=>$statuscomplete,
-    					'status'				=>1,
-    					
-    					 'capital'				=>$row['begining_balance'],
-    					 'old_principal_permonth'=>$row["principal_permonthafter"],
-    					 'old_interest'			 =>$row["total_interest_after"],
-    					 'old_total_payment'	 =>$row["total_payment_after"],
+    					'status'				=>1,    					
+    					'capital'				=>$row['begining_balance'],
+    					'old_principal_permonth'=>$row["principal_permonthafter"],
+    					'old_interest'			 =>$row["total_interest_after"],
+    					'old_total_payment'	 =>$row["total_payment_after"],
     			);
     			if($action==null){//edit
     				$crm_id = $this->insert($array);

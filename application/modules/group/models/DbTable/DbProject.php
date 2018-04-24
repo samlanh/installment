@@ -33,9 +33,26 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_nation_id_issue'=>$_data['date_iss_doc_cs_manager'],
     			'w_current_address'=>$_data['cs_manager_current_address'],
     			);
-    	$this->insert($_arr);//insert data
-//     	$where = 'id = 1';
-//     	$this->delete($where);
+    	$branch_id = $this->insert($_arr);//insert data
+    	$ids = explode(',', $_data['identity']);
+    	$key = 1;
+    	if(!empty($_data['identity'])){
+	    	foreach ($ids as $i){
+	    		$this->_name="ln_sharecapital";
+	    		$datashare = array(
+	    				'branch_id'=>$branch_id,
+	    				'shareholder_name'=>$_data['shareholdername'.$i],
+	    				'gender'=> $_data['gender'.$i],
+	    				'dob'=> $_data['dob'.$i],
+	    				'pob'=>$_data['pob'.$i],
+	    				'nation_id'=>$_data['id_card'.$i],
+	    				'tel'=>$_data['phonenumber'.$i],
+	    				'percentage'=>$_data['percent'.$i],
+	    		);
+	    		$this->insert($datashare);
+	    	}
+    	}
+
     }
     public function updateBranch($_data,$id){
     	$_arr = array(
@@ -68,6 +85,29 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			);
     	$where=$this->getAdapter()->quoteInto("br_id=?", $id);
     	$this->update($_arr, $where);
+    	
+    	
+    	$where="branch_id=".$id;
+    	$this->_name="ln_sharecapital";
+    	$this->delete($where);
+    	
+    	$ids = explode(',', $_data['identity']);
+    	$key = 1;
+    	if(!empty($_data['identity'])){
+    		foreach ($ids as $i){
+    			$datashare = array(
+    					'branch_id'=>$id,
+    					'shareholder_name'=>$_data['shareholdername'.$i],
+    					'gender'=> $_data['gender'.$i],
+    					'dob'=> $_data['dob'.$i],
+    					'pob'=>$_data['pob'.$i],
+    					'nation_id'=>$_data['id_card'.$i],
+    					'tel'=>$_data['phonenumber'.$i],
+    					'percentage'=>$_data['percent'.$i],
+    			);
+    			$this->insert($datashare);
+    		}
+    	}
     }
     function addbranchajax($_data){
     	$_arr = array(
@@ -120,6 +160,12 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	$this->_name ";
     	$where = " WHERE `br_id`= $id" ;
    		return $db->fetchRow($sql.$where);
+    }
+    function getBranchHolderById($id){
+    	$db = $this->getAdapter();
+    	$sql = "SELECT * FROM ln_sharecapital ";
+    	$where = " WHERE `branch_id`= $id" ;
+    	return $db->fetchAll($sql.$where);
     }
     public static function getBranchCode(){
     	$db = new Application_Model_DbTable_DbGlobal();

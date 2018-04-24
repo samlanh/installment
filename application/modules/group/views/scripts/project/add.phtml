@@ -4,8 +4,8 @@
 ?>
 <?php  $frm = $this->frm_branch;?>
 <script>
-dojo.require("dijit.form.Textarea");
-dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.Textarea");
+	dojo.require("dijit.form.DateTextBox");
 </script>
 <form action="<?php echo $this->url(array('module'=>'group','controller'=>'project','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	 <script type="dojo/method" event="onSubmit">			
@@ -24,17 +24,17 @@ dojo.require("dijit.form.DateTextBox");
 					<table cellspacing="5" width="100%" >
 						<tr>
 							<td align="center" valign="top">
-								<table width="100%" cellspacing="10">
+								<table width="100%" cellspacing="5">
 									<tr>
 										<td><?php echo $tr->translate("BRANCH_CODE")?></td>
 										<td><?php echo $frm->getElement("branch_code");?></td>
 									</tr>
 									<tr>
-										<td><?php echo $tr->translate("PROJECT_NAME")?></td>
+										<td><strong><?php echo $tr->translate("PROJECT_NAME")?>*</strong></td>
 										<td><?php echo $frm->getElement("branch_namekh");?></td>
 									</tr>
 									<tr>
-										<td><?php echo $tr->translate("PREFIX_CODE");?></td>
+										<td><strong><?php echo $tr->translate("PREFIX_CODE");?>*</strong></td>
 									    <td><?php echo $frm->getElement("prefix_code");?></td>
 									</tr>
 									<tr>
@@ -134,6 +134,14 @@ dojo.require("dijit.form.DateTextBox");
 				</fieldset>
 			</td>		
 		</tr>
+		<tr style="background: #fff;padding:2px;">
+			<td colspan="3" align="center" style="   border: 1px solid #7296de;";>
+				<div  id="showrecord"></div>
+				<input type="button" label="<?php echo $tr->translate('បន្ថែមម្ចាស់ភាគហ៊ុន');?>" dojoType="dijit.form.Button" 
+			 		iconClass="dijitIconEditProperty" onclick="addRow();" />
+			 		<input type="hidden" name="identity" id="identity"  value="" >
+						
+		</tr>
 		<tr>
 			<td colspan="3" align="center">
 				<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear" />
@@ -143,3 +151,70 @@ dojo.require("dijit.form.DateTextBox");
 		</tr>
 	</table>	
 </form>
+<script>
+dojo.require("dojo.NodeList-manipulate");
+dojo.require("dojo.html");
+dojo.require("dijit.form.NumberTextBox");
+
+col=0;no=0;
+title=0;
+temp='';
+function addRow(){
+	temp='';
+	col++;no++;
+	template='';
+	if(title!=1){    
+		tmp='<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
+		tmp+='<tr id="head-title" class="head-td" style="background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+		tmp+='</table>';
+		dojo.query("#showrecord").append(tmp);
+		
+		temp+='<th><?php echo $tr->translate("DEL");?></th>';
+		temp+='<th><?php echo $tr->translate("NUM");?></th>';
+		temp+='<th><?php echo $tr->translate("ឈ្មោះម្ចាស់ភាគហ៊ុន");?></th>';
+		temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("ភេទ");?></th>';
+		temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("ថ្ងៃខែឆ្នាំកំណើត");?></th>';
+		temp+='<th><?php echo $tr->translate("លេខអត្តសញ្ញាណប័ណ្ណ");?></th>';
+		temp+='<th><?php echo $tr->translate("អាសយដ្ឋាន");?></th>';
+		temp+='<th><?php echo $tr->translate("លេខទូរស័ព្ទ");?></th>';
+		temp+='<th><?php echo $tr->translate("ចំនួនភាគហ៊ុន");?></th>';
+		
+		dojo.query("#head-title").append(temp);
+		title=1;
+		epx_date ='<?php echo date('Y-m-d');?>';
+	}else{
+		//indexs = col-1;
+		epx_date ='<?php echo date('Y-m-d');?>';
+	}
+		template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		template+='<td width="2%" align="center">'+no+'</td>';
+		template+='<td><input class="fullside" type="text" required="true" data-dojo-type="dijit.form.ValidationTextBox" id="shareholdername'+col+'" name="shareholdername'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
+		template+='<td width="50px;"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="gender'+col+'" name="gender'+col+'" > <option value="ប្រុស">ប្រុស</option><option  value="ស្រី">ស្រី</option></select></td>';			
+		template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='dob"+col+"' name='dob"+col+"' /></td>";
+		template+='<td><input class="fullside" type="text"  name="id_card'+col+'" id="id_card'+col+'" dojoType="dijit.form.TextBox" placeholder="លេខអត្តសញ្ញាណប័ណ្ណ"/></td>';
+		template+='<td  width="250px;"><input class="fullside" type="text"  name="pob'+col+'" id="pob'+col+'" dojoType="dijit.form.TextBox" /></td>';
+		template+='<td><input class="fullside" type="text"  name="phonenumber'+col+'" id="phonenumber'+col+'" dojoType="dijit.form.TextBox" /></td>';
+		template+='<td width="80px;"><input class="fullside" type="text" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
+	tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
+	tmp+="</tr>";
+	dojo.query("#table_row").append(tmp);
+
+	if($("#identity").val()!="") {
+		var identity = $("#identity").val();
+		$("#identity").val(identity+','+col);
+	} else {$("#identity").val(col);}
+	dojo.html.set(dojo.byId("row"+col),template , {
+	     parseContent: true,
+	});
+}
+function deleteRecord(index) {
+	var identity = $('#identity').val();
+	var arrays = identity.split(',');
+	for(var i=0;i<arrays.length;i++) {
+	if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity').val(strings);
+	dojo.query("#row"+index).remove();
+}
+</script>

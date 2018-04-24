@@ -91,7 +91,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 				$receipt = $db->addILPayment($_data);
 				if($_data['extrapayment']>0){
 					$_data['receipt_id'] =$receipt;
-					$db->addExtrapayment($_data);
+// 					$db->addExtrapayment($_data);
 				}
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
 			}catch (Exception $e) {

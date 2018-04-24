@@ -437,7 +437,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    		$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
 			    		$total_day = $amount_day;
 			    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
-			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
+			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);//
 			    		if($data['install_type']==2){
 			    			$pri_permonth=$data['for_installamount']/($data['period']*12);
 			    			$pri_permonth =$this->round_up_currency(2, $pri_permonth);
@@ -653,7 +653,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			}
     			$arra = array(
     					'begining_balance_after'=>$row['begining_balance_after']-($principal_paid),
-    					'ending_balance'=>$row['ending_balance']-($principal_paid),
+//     					'ending_balance'=>$row['ending_balance']-($principal_paid),
     					"principal_permonthafter"=>$remain_principal,
     					'total_interest_after'=>$after_interest,
     					"total_payment_after"=>$remain_principal+$after_interest,

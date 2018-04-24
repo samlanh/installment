@@ -81,6 +81,7 @@ class Group_ProjectController extends Zend_Controller_Action {
 		$update=$frm->FrmBranch($row);
 		$this->view->frm_branch=$update;
 		Application_Model_Decorator::removeAllDecorator($update);
+		$this->view->rsshare = $db->getBranchHolderById($id);
 	}
 	public function addbranchajaxAction(){//ajax
 		if($this->getRequest()->isPost()){
@@ -112,6 +113,7 @@ class Group_ProjectController extends Zend_Controller_Action {
 		$frm = $fm->Frmbranch($row,"1");
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_branch = $frm;
+		$this->view->rsshare = $db->getBranchHolderById($id);
 	}
 }
 

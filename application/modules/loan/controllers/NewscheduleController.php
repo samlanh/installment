@@ -31,9 +31,9 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERY_CODE","PAMENT_METHOD","BALANCE","PAMENT_METHOD","BALANCE","DATE_BUY",
 				"STATUS");
 			$link=array(
-					'module'=>'loan','controller'=>'repaymentschedule','action'=>'view',
+					'module'=>'loan','controller'=>'newschedule','action'=>'view',
 			);
-			$link_info=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'edit',);
+			$link_info=array('module'=>'loan','controller'=>'newschedule','action'=>'edit',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link_info,'sale_number'=>$link_info,'name_kh'=>$link_info,'land_address'=>$link_info,'total_capital'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
