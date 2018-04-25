@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>jQuery contextMenu</title>
+		<link href="jquery.contextMenu.css" rel="stylesheet" type="text/css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="jquery.contextMenu.js" type="text/javascript"></script>
+		<script src="jquery.ui.position.min.js" type="text/javascript"></script>
+	</head>
+	<body class="wy-body-for-nav">
+		<div class="wy-grid-for-nav">
+			<section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+		
+				<div class="wy-nav-content">
+					<div class="rst-content">
+						<div role="main" class="document">
+							<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+							<p><span oncontextmenu="setrowdata(1);return false;" class="context-menu-one btn btn-neutral">right click me</span></p>
+							<p><span oncontextmenu="setrowdata(2);return false;" class="context-menu-one btn btn-neutral">right click me</span></p>
+							<script type="text/javascript">
+							var row=0;
+							$(function(){
+								$.contextMenu({
+									selector: '.context-menu-one', 
+									callback: function(key, options) {
+									
+										var m = "clicked: " + key;
+										if(key=="edit"){
+										alert(row);
+										}
+										//window.console && console.log(m) || alert(m); 
+									},
+									items: {
+										"edit": {name: "Edit", icon: "edit", accesskey: "e"},
+										"cut": {name: "Cut", icon: "cut", accesskey: "c"},
+										// first unused character is taken (here: o)
+										"copy": {name: "Copy", icon: "copy", accesskey: "c o p y"},
+										// words are truncated to their first letter (here: p)
+										"paste": {name: "Paste", icon: "paste", accesskey: "cool paste"},
+										"delete": {name: "Delete", icon: "delete"},
+										"sep1": "---------",
+										"quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
+									}
+								});
+							});
+							function setrowdata(index){
+								row = index;
+							}
+							</script>
+
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</body>
+</html>
