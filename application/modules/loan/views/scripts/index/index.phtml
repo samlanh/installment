@@ -5,18 +5,19 @@ $url_copy =$this->url(array('module'=>'loan','controller'=>'newschedule','action
 
 $url_agreement =$this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-paymentschedules'));
 $frm = $this->frm_search;
-$edit_sale = $tr->translate("EDITSALEONLY");
-$aggreeement = $tr->translate("កិច្ចសន្យា");
-$reschedule = $tr->translate("ចេញតារាង");
+$edit_sale = $tr->translate("EDIT");
+$aggreeement = $tr->translate("AGREEMENT");
+$reschedule = $tr->translate("ISSUE_SCHEDULE");
 $scheduleReport = $tr->translate("តារាងបង់");
 $newReschedule=$tr->translate("NEW_SCHEDULE");
-$payment=$tr->translate("បង់ប្រាក់");
+$payment=$tr->translate("RECEIVED_MONEY");
 
 $urlEdit = $this->baseUrl()."/loan/index/editsale/id/";
 $urlPayment = $this->baseUrl()."/loan/ilpayment/add/id/";
 $urlRepaymentschedule = $this->baseUrl()."/loan/repaymentschedule/add/id/";
 $urlAgreement = $this->baseUrl()."/report/paramater/rpt-agreement/id/";
 $urlpaymentschedules = $this->baseUrl()."/report/loan/rpt-paymentschedules/id/";
+$urlNewschedule = $this->baseUrl()."/loan/newschedule/add/id/";
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -36,9 +37,8 @@ $urlpaymentschedules = $this->baseUrl()."/report/loan/rpt-paymentschedules/id/";
    		<td><?php echo $frm->getElement('end_date');?></td>
    		<td><?php echo $frm->getElement('status');?></td>
    		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
-   		&nbsp;<input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" /><button onclick="reschedule('<?php echo $url_copy;?>')" iconclass="dijitIconCopy" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("NEW_SCHEDULE");?></button>
+   		
    		</td>
-   		<td><input type="hidden" name="recordcopy" id="recordschedule" dojoType="dijit.form.TextBox" /><button onclick="agreement('<?php echo $url_agreement;?>')" iconclass="dijitIconCopy" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("តារាងបង់");?></button></td>
    </tr>
 </table>
 </form>
@@ -135,6 +135,8 @@ $(function(){
 				url='<?php echo $urlpaymentschedules;?>';
 			}else if(key=="reschedule"){
 				url='<?php echo $urlRepaymentschedule;?>';
+			}else if(key=="newschedule"){
+				url='<?php echo $urlNewschedule;?>';
 			}
 			gotoAction();
 			//window.console && console.log(m) || alert(m); 
@@ -146,7 +148,8 @@ $(function(){
 			"payment": {name: "<?php echo $payment;?>", icon: "fa-money", accesskey: "c o p y"},
 			// words are truncated to their first letter (here: p)
 			"schedulePay": {name: "<?php echo $scheduleReport;?>", icon: "paste", accesskey: "cool paste"},
-			"reschedule": {name: "<?php echo $newReschedule;?>", icon: "fa-calendar"},
+			"reschedule": {name: "<?php echo $reschedule;?>", icon: "fa-calendar"},
+			"newschedule": {name: "<?php echo $tr->translate("NEW_SCHEDULE");?>", icon: "fa-calendar"},
 		}
 	});
 });

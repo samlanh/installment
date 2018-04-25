@@ -55,11 +55,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	   FROM `ln_client_receipt_money` `cr`
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance_remain`,   
         `s`.`buy_date`        AS `buy_date`,
-         s.status,
-         '$edit_sale',
-         '$str_collect',
-         '$str_schedule',
-         '$str_agree'
+         s.status
 		FROM ((`ln_sale` `s`
 		    JOIN `ln_client` `c`)
 		   JOIN `ln_properties` `p`)
