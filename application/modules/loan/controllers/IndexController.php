@@ -38,7 +38,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);
 			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);
 			$payment=array('module'=>'loan','controller'=>'ilpayment','action'=>'add',);
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array(
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array(
 						'ការលក់'=>$link_editsale,'Sale'=>$link_editsale,
 						'agreement'=>$agreement,
 						'issue sch'=>$reschedule,'Payment'=>$payment,'បង់ប្រាក់'=>$payment,

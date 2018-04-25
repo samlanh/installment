@@ -5,6 +5,18 @@ $url_copy =$this->url(array('module'=>'loan','controller'=>'newschedule','action
 
 $url_agreement =$this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-paymentschedules'));
 $frm = $this->frm_search;
+$edit_sale = $tr->translate("EDITSALEONLY");
+$aggreeement = $tr->translate("កិច្ចសន្យា");
+$reschedule = $tr->translate("ចេញតារាង");
+$scheduleReport = $tr->translate("តារាងបង់");
+$newReschedule=$tr->translate("NEW_SCHEDULE");
+$payment=$tr->translate("បង់ប្រាក់");
+
+$urlEdit = $this->baseUrl()."/loan/index/editsale/id/";
+$urlPayment = $this->baseUrl()."/loan/ilpayment/add/id/";
+$urlRepaymentschedule = $this->baseUrl()."/loan/repaymentschedule/add/id/";
+$urlAgreement = $this->baseUrl()."/report/paramater/rpt-agreement/id/";
+$urlpaymentschedules = $this->baseUrl()."/report/loan/rpt-paymentschedules/id/";
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -101,5 +113,49 @@ function getmemberIdGroup(){
 function checkMember(){
 	customer_code= dijit.byId('member').get('value');
 	dijit.byId('customer_code').attr('value',customer_code);
+}
+
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+		
+			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+				
+			}else if(key=="agreement"){
+				url='<?php echo $urlAgreement;?>';
+			}else if(key=="payment"){
+				url='<?php echo $urlPayment;?>';
+			}else if(key=="schedulePay"){
+				url='<?php echo $urlpaymentschedules;?>';
+			}else if(key=="reschedule"){
+				url='<?php echo $urlRepaymentschedule;?>';
+			}
+			gotoAction();
+			//window.console && console.log(m) || alert(m); 
+		},
+		items: {
+			"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
+			"agreement": {name: "<?php echo $aggreeement;?>", icon: "fa-file-text", accesskey: "c"},
+			// first unused character is taken (here: o)
+			"payment": {name: "<?php echo $payment;?>", icon: "fa-money", accesskey: "c o p y"},
+			// words are truncated to their first letter (here: p)
+			"schedulePay": {name: "<?php echo $scheduleReport;?>", icon: "paste", accesskey: "cool paste"},
+			"reschedule": {name: "<?php echo $newReschedule;?>", icon: "fa-calendar"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
 }
 </script>

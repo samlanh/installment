@@ -20,23 +20,19 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<link rel="stylesheet" href="<?php echo $base_url;?>css/font-awesome.min.css"/>
 	<link href="<?php echo $this->baseUrl()?>/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-<?php if($module!='home'){?>
-	<script src="<?php echo $base_url;?>js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
-	<script>dojoConfig = {parseOnLoad: true}</script>
-	    <script>
-			require(["dijit/form/Form","dijit/form/FilteringSelect","dijit/form/Button"]);
-      </script>
-<?php }?>
+
 	<link rel="stylesheet" href="<?php echo $base_url;?>css/template.css"/>
 	<link href="<?php echo $base_url;?>cssmenu/template.css" media="screen" rel="stylesheet" type="text/css">
 	<!-- table  -->
 	<?php //if($action=='index'){ ?>
 	<?php if($module!='home'){?>
 	    <link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>js/dojo-1.6.1/dijit/themes/<?php echo $them_style."/".$them_style?>.css" />
-        <script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript"  src="https://code.jquery.com/jquery-1.11.2.js"></script>
        <?php //if($action=='index'){?>
-	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/js/jquery.tablesorter.js"> </script>
-	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/js/jquery.tablesorter.pager.js"> </script>
+	<!-- 
+	<script type="text/javascript" src="<?php //echo $this->baseUrl();?>/js/jquery.tablesorter.js"> </script>
+	<script type="text/javascript" src="<?php //echo $this->baseUrl();?>/js/jquery.tablesorter.pager.js"> </script>
+	 -->
        <?php  } ?>
 	<?php //}?>
 	<!-- export library -->
@@ -49,6 +45,30 @@
 	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jspdf/libs/base64.js"></script> 
 
 	<?php } ?>	
+	<?php if ($action=="index"){?>
+	<link href="<?php echo $this->baseUrl()."/contextMenu/"?>jquery.contextMenu.css" rel="stylesheet" type="text/css" />
+	<script src="<?php echo $this->baseUrl()."/contextMenu/"?>jquery.contextMenu.js" type="text/javascript"></script>
+	<script src="<?php echo $this->baseUrl()."/contextMenu/"?>jquery.ui.position.min.js" type="text/javascript"></script>
+	
+	<link href="<?php echo $this->baseUrl()."/datatable/"?>datatables.min.css" rel="stylesheet" type="text/css" />
+    <script src="<?php echo $this->baseUrl()."/datatable/"?>datatables.min.js" type="text/javascript"></script>
+    
+    <script>
+    $(document).ready(function() {
+        $('#datatable-responsive').DataTable( {
+          
+        } );
+    } );
+    </script>
+	<?php }?>
+	
+	<?php if($module!='home'){?>
+	<script src="<?php echo $base_url;?>js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
+	<script>dojoConfig = {parseOnLoad: true}</script>
+	    <script>
+			require(["dijit/form/Form","dijit/form/FilteringSelect","dijit/form/Button"]);
+      </script>
+<?php }?>
 	<!-- end -->
 	<link rel="shortcut icon" href="<?php echo $base_url;?>images/icon.ico" type="image/x-icon"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	
@@ -118,7 +138,7 @@
             		<?php
             		$background='';
             		if($module=='report'){ $background="style='background:#fff;'";}?>
-            		<td valign="top" <?php echo $background?> >
+            		<td valign="top" style="position: relative; max-width: 1000px" <?php echo $background?> >
             			<?php 
             			if($module=='report' AND $action!='index'){?>
 							<div class="menureport">
