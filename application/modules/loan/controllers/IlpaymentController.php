@@ -23,13 +23,13 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 								'branch_id'		=>	-1,
 								'paymnet_type'	=> -1,
 								'land_id'=>-1,
-								'status'=>"",
+								'status'=>-1,
 								'payment_method'=>-1,);
 					}
 			$rs_rows= $db->getAllIndividuleLoan($search);
 			$result = array();
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","HOUSE_NO","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
 					"PAY_DATE","DATE","STATUS",'PRINT','DELETE');
 			$link=array('module'=>'loan','controller'=>'ilpayment','action'=>'edit',);
 			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);

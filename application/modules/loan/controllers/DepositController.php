@@ -30,7 +30,7 @@ class Loan_DepositController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","HOUSE_NO","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","TOTAL_SOLD","PAID","BALANCE","DATE_BUY",
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","TOTAL_SOLD","PAID","BALANCE","DATE_BUY",
 				"STATUS","EDIT","AGREEMENT");
 			$link_info=array('module'=>'loan','controller'=>'deposit','action'=>'edit',);
 
@@ -59,7 +59,7 @@ class Loan_DepositController extends Zend_Controller_Action {
 				$_dbmodel = new Loan_Model_DbTable_DbLanddeposit();
 				$_dbmodel->addDepositPayment($_data);
 				if(!empty($_data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/deposit");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/deposit");
 				}else{
 					Application_Form_FrmMessage::message("INSERT_SUCCESS");
 				}
@@ -82,8 +82,8 @@ class Loan_DepositController extends Zend_Controller_Action {
 		) );
 	    $this->view->co_name=$co_name;
 	    
-	    $db = new Application_Model_DbTable_DbGlobal();
-	    $this->view->client_doc_type = $db->getclientdtype();
+// 	    $db = new Application_Model_DbTable_DbGlobal();
+// 	    $this->view->client_doc_type = $db->getclientdtype();
 	    
 	    $key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);

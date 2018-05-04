@@ -30,7 +30,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","HOUSE_NO","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","TOTAL_SOLD","PAID","BALANCE","DATE_BUY",
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","TOTAL_SOLD","PAID","BALANCE","DATE_BUY",
 				"STATUS");
 			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
 
@@ -79,9 +79,10 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$db = new Application_Model_DbTable_DbGlobal();
 		$co_name = $db->getAllCoNameOnly();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		array_unshift($co_name,array(
 		        'id' => -1,
-		        'name' => '---Add New ---',
+		        'name' =>$tr->translate("ADD_NEW"),
 		) );
 	    $this->view->co_name=$co_name;
 	    

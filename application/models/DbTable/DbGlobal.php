@@ -339,7 +339,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	for($i = $acc_no;$i<3;$i++){
    		$pre.='0';
    	}
-//    	return $pre.$new_acc_no;
    	return $pre.$new_acc_no;
    }
    public function getStaffNumberByBranch($branch_id){

@@ -268,7 +268,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'paid_amount'=>$data['deposit'],
     				'balance'=>$data['balance'],
     				'buy_date'=>$data['date_buy'],
-    				'end_line'=>$data['date_line'],
+    				'end_line'=>($data['schedule_opt']==1)?$data['date_line']:$data['paid_date'],
     				'interest_rate'=>0,
     				'total_duration'=>1,
     			   	'startcal_date'=>$data['date_buy'],
@@ -395,11 +395,11 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    		$db = new Loan_Model_DbTable_DbLandpayment();
-    		$row = $db->getTranLoanByIdWithBranch($data['id'],null);
+    		$dbl = new Loan_Model_DbTable_DbLandpayment();
+    		$row = $dbl->getTranLoanByIdWithBranch($data['id'],null);
     		if(!empty($row)){
     			if($row['typesale']==2){//multi sale
-    				$ids = explode(',', $data['old_land_id']);
+    				$ids = explode(',', $row['old_land_id']);
     				foreach($ids as $land){
     					$this->_name="ln_properties";
     					$arr = array(
@@ -412,6 +412,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		}
     		
     		if($data['status_using']==0){//cancel
+    			$this->_name="ln_sale";
     			$arr_update = array(
     					'status'=>0
     			);
@@ -432,6 +433,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			$this->_name="ln_client_receipt_money";
     			$where = ' status = 1 AND land_id ='.$data["old_landid"].' AND sale_id = '.$data['id'];   		
     			$this->update($arr_update, $where);
+    			 $db->commit();
+    			return true;
     		}
     		
     		$this->_name="ln_properties";//ប្តូរពីទិញច្រើនមកទិញតែមួយ Error

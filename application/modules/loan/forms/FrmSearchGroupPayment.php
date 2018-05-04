@@ -41,7 +41,11 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 			$opt_client[$row['id']]=$row['name'];
 		}
 		$client_name->setMultiOptions($opt_client);
-		$client_name->setAttribs(array('class'=>'fullside','dojoType'=>'dijit.form.FilteringSelect'));
+		$client_name->setAttribs(array('class'=>'fullside','dojoType'
+				=>'dijit.form.FilteringSelect',
+				'autoComplete'=>"false",
+				'queryExpr'=>'*${0}*',
+				));
 		
 // 		$g_client_name = new Zend_Dojo_Form_Element_FilteringSelect("g_client_name");
 // 		$opt_client = array(''=>'ជ្រើសរើស ឈ្មោះអតិថិជន');

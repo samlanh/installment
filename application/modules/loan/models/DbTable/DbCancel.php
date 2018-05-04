@@ -103,6 +103,22 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$this->_name="ln_sale_cancel";
 			 $this->insert($arr);
 			 
+			 $db = new Loan_Model_DbTable_DbLandpayment();
+			 $row = $db->getTranLoanByIdWithBranch($data['sale_no'],null);
+			 if(!empty($row)){
+			 	if($row['typesale']==2){//multi sale
+			 		$ids = explode(',', $row['old_land_id']);
+			 		foreach($ids as $land){
+			 			$this->_name="ln_properties";
+			 			$arr = array(
+			 					"is_lock"=>0
+			 			);
+			 			$where = "id =".$land;
+			 			$this->update($arr, $where);
+			 		}
+			 	}
+			 }
+			 
 			 $arr_1 = array(
 			 		'is_lock'=>0, //property can sell
 			 		);
@@ -116,7 +132,6 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			 $this->_name="ln_sale";
 			 $where =" id = ".$data['sale_no'];
 			 $this->update($arr_, $where);
-			 
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}

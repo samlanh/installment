@@ -283,6 +283,7 @@ public function getAllOutstadingLoan($search=null){
 				  `sd`.`total_payment_after`     AS `total_payment_after`,
 				  `sd`.`ending_balance`          AS `ending_balance`,
 				  `sd`.`service_charge`          AS `service_charge`,
+				  sd.no_installment,
 				  sd.begining_balance_after,
 				  (SELECT date_input FROM `ln_client_receipt_money` WHERE land_id=1 ORDER BY date_input DESC LIMIT 1) 
 				  	As last_pay_date

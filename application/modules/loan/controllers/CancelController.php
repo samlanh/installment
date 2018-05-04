@@ -7,7 +7,6 @@ class Loan_CancelController extends Zend_Controller_Action {
 		header('content-type: text/html; charset=utf8');
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
-	
 	public function indexAction()
 	{
 		try{
@@ -74,10 +73,8 @@ class Loan_CancelController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			$_data['id']=$id;
 			try {
-				//print_r($_data);exit();
 				if(isset($_data['save'])){
 						$_dbmodel->editCancelSale($_data);
-						
 				}elseif(isset($_data['save_close'])){
 						$_dbmodel->editCancelSale($_data);
 				}else{

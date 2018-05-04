@@ -1,10 +1,9 @@
 <?php	
-	$this->headTitle('Add Sell'); 
-	echo $this->headTitle();
 	$frm = $this->frm_loan;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 ?>
+<title><?php echo $tr->translate("SALE_DEPOSIT");?></title>
 <style>
 .fullside50{ width:48%;}
 .agreement{
@@ -47,7 +46,15 @@
 				alert("សូមបញ្ចូលថ្ងៃត្រូវមកធ្វើកិច្ចសន្យា");
 				dijit.byId("date_line").focus();return false;
               }
-			   dijit.byId('saveclose').set('disabled',true);	
+			if(payment_id==2){//បង់ផ្តាច់
+				  sold_price = dijit.byId("sold_price").get("value");
+  				  deposit = dijit.byId("deposit").get("value");
+				  if(sold_price!=deposit){
+					alert("បង់ផ្តាច់ តម្លៃលក់ ត្រូវស្មើរ នឹងប្រាក់ដែលត្រូវទទួល!");
+					dijit.byId("deposit").focus();
+					return false;
+				  }
+			}
 			   dijit.byId('savenew').set('disabled',true);
 			   return true;
 			}else {
@@ -142,7 +149,7 @@
 							<td><?php echo $frm->getElement('sold_price');?></td>
 						</tr>
 						<tr>
-							<td style="white-space: nowrap;"><?php echo $tr->translate("PAYMENT_TYPE")?></td>
+							<td style="white-space: nowrap;"><strong><?php echo $tr->translate("PAYMENT_TYPE")?></strong></td>
 							<td><select name="schedule_opt" id="schedule_opt" dojoType="dijit.form.FilteringSelect" class="fullside" onchange="checkScheduleOption();">
 								    <option value="1" ><?php echo $tr->translate("DEPOSIT");?></option>
 								    <option value="2" ><?php echo $tr->translate("DEPOSITE_PAYOFF");?></option>
@@ -187,7 +194,6 @@
 	<tr>
 		<td align="center" colspan="3">
 			<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
-			<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconDelete"/>
 			<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
 			<input type="button" onclick="printSave('','');displayNone();" label="<?php echo $tr->translate("PREVIEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 		</td>
@@ -280,7 +286,7 @@
 				    <td><strong><label id="lb_otherfee" class="value"></label></strong></td>
                 </tr>
 				<tr style="white-space: nowrap;">
-					<td><?php echo $tr->translate("HOUSE_TITLE");?></td>
+					<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
                     <td><strong><label id="lb_hourseno" class="value"></label></strong></td>
 				    <td>&nbsp;&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
                     <td colspan="3"><strong><label id="lb_amount" class="value"></label></strong></td>
@@ -438,7 +444,7 @@
 				    <td><strong><label id="lb_otherfee1" class="value"></label></strong></td>
                 </tr>
 				<tr style="white-space: nowrap;">
-					<td><?php echo $tr->translate("HOUSE_TITLE");?></td>
+					<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
                     <td><strong><label id="lb_hourseno1" class="value"></label></strong></td>
 				    <td>&nbsp;&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
                     <td colspan="3"><strong><label id="lb_amount1" class="value"></label></strong></td>
@@ -598,6 +604,7 @@ function resetSale(){
 	if(land_id!='' && land_id>0){
 		getlandinfo();
 	}
+	
 }
 function calculateDiscount(){
 	total_sold = dijit.byId('total_sold').get('value');
@@ -920,6 +927,7 @@ function getlandinfo(){
 				dojo.byId('land_information').innerHTML ="លេខសម្គាល់ "+data.land_code+", លេខផ្ទះ/ឡូតិ៏  "+data.land_address+", លេខផ្លូវ  "+data.street+", ប្រភេទ  "+data.property_type+", ទំហំ "+data.land_size+" ម៉ែត្រការ៉េ, បណ្តោយ "+data.height+" ម៉ែត្រ, ទទឹង  "+data.width+" ម៉ែត្រ";
 				dijit.byId('propertype').attr('value',data.house_type);
 			}
+			Balance();
 		},
 		error: function(err) {
 		}
@@ -937,13 +945,24 @@ function getClientInfo(type){
 </script>
 <script>
 function printSave(new_stu_id,new_receipt_no){
+	schedule_opt = dijit.byId("schedule_opt").get("value");
+	if(schedule_opt==2){//បង់ផ្តាច់
+		  sold_price = dijit.byId("sold_price").get("value");
+		  deposit = dijit.byId("deposit").get("value");
+		  if(sold_price!=deposit){
+			alert("បង់ផ្តាច់ តម្លៃលក់ ត្រូវស្មើរ នឹងប្រាក់ដែលត្រូវទទួល!");
+			dijit.byId("deposit").focus();
+			return false;
+		  }
+	}
+	
 	deposit = dijit.byId('deposit').get('value');
 	if (deposit=='' || deposit==-1){
 		alert('សូមបញ្ចូលប្រាក់ត្រូវបង់ ទើបបោះពុម្ភបង្កាន់ដៃបង់ប្រាក់បាន!');
 		dijit.byId('deposit').focus();
 		return false;
 	}
-	schedule_opt = dijit.byId("schedule_opt").get("value");
+	
 	if(schedule_opt==1 && new_receipt_no!=''){
 		var r = confirm("<?php echo $tr->translate("ALERT_DEPOSIT_WARNING");?>"+"\n"+"<?php echo $tr->translate("ALERT_BEFORE_SAVE");?>");
 		if (r == true) {

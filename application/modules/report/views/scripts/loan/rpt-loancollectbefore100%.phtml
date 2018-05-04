@@ -1,0 +1,365 @@
+<?php  $tran = $this->tran_schedule;
+
+	$filter = $this->frm_search;
+	$dayin_khmer = $this->day_inkhmer;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();	
+	$db = new Report_Model_DbTable_DbLandreport();
+
+$tran = $this->tran_schedule;
+$client = $this->client;											
+?>
+<?php  
+	$end_dat=$this->date_show;
+?>
+<?php 
+	$db_keycode = new Application_Model_DbTable_DbKeycode();
+	$key_code= $db_keycode->getSystemSetting(9);
+	$free_day=$key_code['value'];
+	
+// 	$db_keycode = new Application_Model_DbTable_DbKeycode();
+// 	$key_code= $db_keycode->getSystemSetting(22);
+	
+// 	$free_day=$key_code['value'];	
+	$intest_rate = 2;
+?>
+<style>
+.hover:hover{background: #ccc;}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><?php  echo $tr->translate("REPORT_LOAN_COLLECT");?></title>
+<script>
+     dojo.require("dijit.form.DateTextBox");
+</script>
+ <div style="height: auto; width:29cm; margin: 0 auto;">
+ <form method="post">
+	<table width="100%">
+		<tr>
+			<td><?php echo $filter->getElement('adv_search');?></td>
+			<td><?php echo $filter->getElement('branch_id');?></td>
+			<td><?php echo $filter->getElement('client_name');?></td>
+			<td><?php echo $filter->getElement('start_date');?></td>
+			<td><?php echo $filter->getElement('end_date');?></td>
+			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+		</tr>
+	</table>
+	</form>
+ </div>
+<div style="min-width:27cm; min-height:25cm; margin:0 auto; border: 1px dotted #ccc; padding: 0 5px;">
+	<div id="divPrint">
+	<style>
+		.style{
+			line-height: 20px;font-size: 12px !important;
+			font-family: 'Khmer OS Battambang';
+		}
+		  table { page-break-inside:auto }
+		  tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+		th{padding: 5px;}
+		.hover td{padding: 1px;}
+		.hide{visibility: hidden;}
+		@media print {
+		  div.divFooter {
+		    position: fixed;
+		    top: 0;
+		  	width: 100%;
+		  	height: 100px;
+		  	bottom:0px;
+			margin:0;
+		  }
+		.hide{visibility: visible; height: 110px;}
+		}
+</style>
+	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	        	<div class="divFooter">
+	        	<table width="100%" style="font-family:khmer;margin:0 auto;padding:0px; border:none;">
+	            	<tr>
+	                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="70px"></td>
+	                	<td width="60%" valign="top">
+	                	<ul>
+                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+                			<li style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_LOAN_COLLECT");?></li>
+                			<li style="text-align:center; font-size:13px;"><?php echo date("D-d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));?></li>
+                		</ul>
+                    </td>
+	                    <td width="20%"></td>
+	                </tr>
+	            </table>
+	            </div>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td id="exportExcel">
+	            <table  border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%">
+	                <thead>
+		                 <tr class="hide" style="border:1px solid #000;">
+			                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+			             </tr>
+		                 <tr class="style" align="center" bgcolor="#c1d0f3" style="white-space: nowrap;">
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("NUM");?></td>
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>
+		                    <td colspan="2" style="padding:0px 1px;"><?php echo $tr->translate("CLIENT_INFO");?></td>
+		                    <td colspan="3" style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_INFO");?></td>
+		                    <td colspan="4" style="padding:0px 1px;"><?php echo $tr->translate("PAYMENT");?></td>
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("បង់លើក");?></td>
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+		                </tr>
+		                <tr class="style" bgcolor="#c1d0f3" style="white-space: nowrap;">
+	                        <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+	                        <td><?php echo $tr->translate("TEL");?></td>
+		                    <td style="padding:0px 1px;"><?php echo $tr->translate("HOUSE");?></td>
+		                    <td style="padding:0px 1px;"><?php echo $tr->translate("STREET");?></td>
+	                        <td style="padding:0px 1px;"><?php echo $tr->translate("LOAN_AMOUNT");?></td>
+		                    <td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("PRINCIPAL");?></td>
+		                    <td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("INTEREST");?></td>
+		                    <td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+		                 	<td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
+		                </tr>
+	                </thead>
+	                <?php 
+		                 $amt_r1 = 0;$tir = 0;$amt_r3 = 0;$amt_r4 = 0;$amt_r5 = 0;$total_r=0;
+	                	 $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;$amt_d5 = 0;$total_b=0;
+	                	 $amn_b1 = 0; $amn_b2 = 0; $amn_b3 = 0; $amn_b4 = 0;$amn_b5 = 0;$total_d=0;
+	                	 $penelize=0;$total_payment=0;
+		             ?>
+	               <?php if(!empty($tran)){foreach($tran as $key =>$row){
+	               	?>
+	               	<tr align="center" style="font-size:9px; height: 20px; white-space:nowrap;" class="style hover">
+	                    <td ><?php echo ($key+1<10)?"0":"";echo $key+1;?></td>
+	                    <td align="left">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+	                   <!--  <td >&nbsp;<a style="color:#000; text-decoration: none;"><?php //echo $row['client_number']; ?></a>&nbsp;</td>-->
+						<td>&nbsp;<a style="color:#000; text-decoration: none;" ><?php echo $row['client_name'];?>&nbsp;</a></td>
+						<td align="left" style="white-space: nowrap;">&nbsp;<?php echo $row['phone_number'];?>&nbsp;</td>
+						<td>&nbsp;&nbsp;<?php echo $row['land_address']; ?>&nbsp;</td>	
+						<td>&nbsp;<?php echo $row['street'];?>&nbsp;</td>
+	                    <td align="left">&nbsp;<?php echo $row['price_sold'];?>&nbsp;</td>
+	                    <td align="left" style="white-space: nowrap;">&nbsp;<?php echo number_format($row['principal_permonthafter'],2) ;?>&nbsp;</td>
+	                    <?php $str_day = date('D',strtotime($row['date_payment']));
+	                    	$day_as_khmer = $dayin_khmer[$str_day];
+	                    ?>
+	                    <td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($row['total_interest_after'],2));?>&nbsp;</td>
+	                    <td align="center">&nbsp;<?php 
+// 	                    $total_pay=($row['principal_permonthafter']+$row['total_interest_after']);
+// 	                    if ($row['last_pay_date']==null or $row['last_pay_date']==""){
+// 	                    	$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+// 	                    	$amount_lateday=$total_day/(60*60*24)-$free_day;
+// 	                    	$late_day = $total_day/(60*60*24);
+// 	                    }else {
+// // 	                    	echo 2;exit();
+// 	                    	$total_day=strtotime($end_dat)-strtotime($row['last_pay_date']);
+// 	                    	$amount_lateday=$total_day/(60*60*24);
+// 	                    	$late_day = $total_day/(60*60*24);
+// 	                    }
+// 	                    if($amount_lateday<0){
+// 	                    	$amount_lateday=0;
+// 	                    	$result=0;
+// 	                    }
+// 	                    else {
+// 	                    	$total_late=($row['principle_after']+$row['total_interest_after']);
+// 	                        $result=2.5*($amount_lateday);
+// 	                    }
+		                    $penelize = $row['penelize'];
+							echo number_format($row['penelize'],2);
+		                    $total_payment = $row['principal_permonthafter']+$row['total_interest_after']+$penelize+$row['service_charge'];
+	                    ?>&nbsp;
+	                    </td>
+	                   	<td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($row['service_charge'],2));?>&nbsp;</td>
+	                   	<td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($total_payment,2));?>&nbsp;</td>
+	                    <td><?php echo $row['no_installment'];?></td>
+	                   <td align="center" style="white-space: nowrap;"><?php echo date('d-m-Y',strtotime($row['date_payment']));?>&nbsp;</td>
+	                  </tr>
+		               <?php 
+							$amt_d1 = $amt_d1+$row['principal_permonthafter'];
+							$amt_d2 = $amt_d2+$row['total_interest_after'];
+							$amt_d3 = $amt_d3+$penelize;
+							$amt_d4 = $amt_d4+$total_payment;
+							$amt_d5 = $amt_d5+$row['service_charge'];
+							$total_d=$amt_d4;
+		               ?>
+	                <?php }}?>
+	                <tr>
+	                	<td colspan="16" style="border:1px solid #fff;border-top:1px solid #000;">
+	                	    <div style="height:10px;"></div>
+			                <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:10px;" width="100%" cellspacing="0">
+				                 <tr class="style" bgcolor="#c1d0f3" style="font-weight:bold; line-height: 20px; text-align: center; font-size:12px;font-family: 'Khmer OS Content';">
+				                    <td style="font-size: 12px;"></td>
+				                    <td style="font-size: 12px;"><?php echo $tr->translate("OS_AMOUNT");?></td>                    
+				                    <td style="font-size: 12px;"><?php echo $tr->translate("INTEREST");?></td>
+				                    <td style="font-size: 12px;"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+				                    <td style="font-size: 12px;"><?php echo $tr->translate("SERVICE_CHARGE");?></td>
+				                    <td style="font-size: 12px;"><?php echo $tr->translate("TOTAL");?></td>
+				                </tr>
+				                 <tr class="style" style=" line-height: 24px; font-size:11px;font-family: 'Khmer OS Content';">
+				                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
+				                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
+				                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
+				                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>
+				                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d5,2);?>&nbsp;</td>
+				                    <td>&nbsp;&nbsp;<?php echo number_format($total_d,2);?>&nbsp;</td>
+				                </tr>
+				              </table>
+			              </td>
+		              <tr>
+	            </table>
+	           
+              <br />
+				<hr  style="border: 1px dotted #130b0b;"/>
+		<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+	    <tr>
+	    	<td>
+            <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+                 <thead>
+                 <tr class="hide" style="border:1px solid #000;">
+			         <td colspan="19" style="border:1px solid #fff;"></td>
+			     </tr>
+			     <tr class="" >
+			         <td colspan="19" style="text-align:center; font-size:14px; font-family:'Khmer MEF2';border:1px solid #fff;border-bottom:1px solid #000;"><?php echo $tr->translate("REPORT_LOAN_LATE");?></td>
+			     </tr>
+                 <tr class="style" align="center" bgcolor="#c1d0f3" style="white-space: nowrap;">
+	                    <td rowspan="2" style="padding:0px 2px;"><?php echo $tr->translate("NUM");?></td>
+	                    <td rowspan="2" style="padding:0px 2px;"><?php echo $tr->translate("BRANCH_NAME");?></td>
+	                    <td rowspan="2" style="padding:0px 2px;"><?php echo $tr->translate("SALE_NO");?></td>
+	                    <td colspan="3" style="padding:0px 2px;"><?php echo $tr->translate("CLIENT_INFO");?></td>
+	                    <td colspan="3" style="padding:0px 2px;"><?php echo $tr->translate("PROPERTY_INFO");?></td>
+	                    <td colspan="3" style="padding:0px 2px;"><?php echo $tr->translate("INFO_INDILOAN");?></td>
+	                    <td colspan="5" style="padding:0px 2px;"><?php echo $tr->translate("PAYMENT");?></td>
+	                     <td rowspan="2" style="padding:0px 2px;"><?php echo $tr->translate("ចំ.យឺត");?></td>
+	                    <td rowspan="2" style="padding:0px 2px;"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+	                </tr>
+	                <tr class="style" bgcolor="#c1d0f3" style="white-space: nowrap;">
+	                    <td><?php echo $tr->translate("CUSTOMER_CODE");?></td>
+                        <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+                        <td><?php echo $tr->translate("TEL");?></td>
+	                    <td style="padding:0px 2px;"><?php echo $tr->translate("LOAN_NO");?></td>
+	                    <td style="padding:0px 2px;"><?php echo $tr->translate("HOUSE");?></td>
+	                    <td style="padding:0px 2px;"><?php echo $tr->translate("STREET");?></td>
+                        <td style="padding:0px 2px;"><?php echo $tr->translate("LOAN_AMOUNT");?></td>
+	                    <td style="padding:0px 2px;"><?php echo $tr->translate("BUY_DATE");?></td>
+	                    <td style="padding:0px 2px;"><?php echo $tr->translate("LIFE_LOAN");?></td>
+	                    <td style="text-align:center ;padding:0px 2px;"><?php echo $tr->translate("TOTAL_PRINCIPLE");?></td>
+	                    <td style="text-align:center ;padding:0px 2px;"><?php echo $tr->translate("INTEREST");?></td>
+	                    <td  style="text-align:center ;padding:0px 2px;"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+	                    <td  style="text-align:center ;padding:0px 2px;"><?php echo $tr->translate("SERVICE_CHARGE");?></td>
+	                 	<td  style="text-align:center ;padding:0px 2px;"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
+	                </tr>
+	                </thead>
+                <?php $amt_r1 = 0;$amt_r2 = 0;$amt_r3 = 0;$amt_r4 = 0;
+                	  $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;
+                	 $amn_b1 = 0; $amn_b2 = 0; $amn_b3 = 0; $amn_b4 = 0;
+                	 $pene_amr=0; $pene_amb=0;$pene_amd=0;
+                	 $serv_amr=0;$serv_amb=0;$serv_amd=0;
+                ?>
+                <?php $i=1;?>
+               <?php $currentlate=0;
+               $intest_panelty = $this->interest_penalty;
+               if(!empty($this->loanlate_list))foreach ($this->loanlate_list as $index => $row){ ?>
+               		<?php 
+               		        $end_dat = $this->list_end_dates;
+	               			$total_pay=($row['principal_permonthafter']+$row['total_interest_after']);
+	               			if ($row['last_pay_date']==null or $row['last_pay_date']==""){
+	               				$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+	               				$amount_lateday=$total_day/(60*60*24)-$free_day;
+	               				$total_late_day=$total_day/(60*60*24);
+	               			}else {
+	               				$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+	               				$total_late_day=$total_day/(60*60*24)-$free_day;
+	               				$amount_lateday=$total_day/(60*60*24);
+	               			}
+	               			$currentlate =$total_day/(60*60*24);
+	               			if($amount_lateday<0){
+	               				$amount_lateday=0;
+	               				$result=0;
+	               			}
+	               			else {
+	               				$total_late=($row['principal_permonthafter']+$row['total_interest_after']);
+	               				$result=$total_pay*(($intest_rate/100)/30/12)*($amount_lateday);
+	               			}
+	               			$penelize = number_format($row['penelize']+$result,2);
+	               			$total_payment = $penelize+$row['principal_permonthafter']+$row['total_interest_after']+$row['service_charge'];
+               			?>
+               <?php //if($amount_lateday>0){?>
+                <tr align="center" style="font-size:9px; height: 20px; white-space:nowrap;" class="style hover">
+                    <td ><?php echo ($index+1<10)?"0":"";echo $index+1;?></td>
+                    <td align="left">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+                    <td align="left">&nbsp;<?php echo $row['sale_number'];?>&nbsp;</td>
+                    <td >&nbsp;<a style="color:#000; text-decoration: none;"><?php echo $row['client_number']; ?></a>&nbsp;</td>
+					<td>&nbsp;<a style="color:#000; text-decoration: none;" ><?php echo $row['name_kh'];?>&nbsp;</a></td>
+					<td align="left" style="white-space: nowrap;">&nbsp;<?php echo $row['phone'];?>&nbsp;</td>
+                    <td>&nbsp;<?php echo $row['land_code']; ?>&nbsp;</td>
+					<td>&nbsp;&nbsp;<?php echo $row['land_address']; ?>&nbsp;</td>	
+					<td>&nbsp;<?php echo $row['street'];?>&nbsp;</td>
+                    <td align="left">&nbsp;<?php echo $row['price_sold']-$row['discount_amount']-$row['other_fee'];?>&nbsp;</td>
+                    <td align="left">&nbsp;<?php echo date("d-m-Y",strtotime($row['buy_date']));?>&nbsp;</td>
+                    <td align="left" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['end_line']));?>&nbsp;</td>
+                    <td align="left" style="white-space: nowrap;">&nbsp;<?php echo number_format($row['principal_permonthafter'],2) ;?>&nbsp;</td>
+                    <?php $str_day = date('D',strtotime($row['date_payment']));
+                    	$day_as_khmer = $dayin_khmer[$str_day];
+                    ?>
+                    <td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($row['total_interest_after'],2));?>&nbsp;</td>
+                    <td align="center">&nbsp;<?php 
+						echo $penelize;
+	                    $total_payment = $row['principal_permonthafter']+$row['total_interest_after']+$penelize+$row['service_charge'];
+                    ?>&nbsp;
+                    </td>
+                   	<td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($row['service_charge'],2));?>&nbsp;</td>
+                   	<td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($total_payment,2));?>&nbsp;</td>
+                    <td><?php echo $total_late_day;?></td>
+                   <td align="center" style="white-space: nowrap;"><?php echo date('d-m-Y',strtotime($row['date_payment']));?>&nbsp;</td>
+	            </tr>
+                <?php //}?>
+                <?php 
+					$amt_d1 = $amt_d1+$row['begining_balance'];//$rs['total_principal'];
+					$amt_d2 = $amt_d2+$row['principal_permonthafter'];
+					$amt_d3 = $amt_d3+$row['total_interest_after'];
+					$pene_amd=$pene_amd+$penelize;
+					$amt_d4 = $amt_d4+$total_payment;
+					$serv_amd = $serv_amd+$row["service_charge"];
+		            $amount_days = strtotime($this->list_end_dates)-strtotime($row["date_payment"]);
+		            $amount_days =  floor($amount_days/(60*60*24));
+               ?>
+                <?php }?>
+            </table>
+	            <br />
+	             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+	                 <tr bgcolor="#c1d0f3" class="style" style="font-weight:bold; line-height: 15px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
+	                    <td><?php echo $tr->translate('CURRENT_TYPE');?></td>                  
+	                    <th><?php echo $tr->translate("TOTAL_PRINCIPLE");?></th>
+	                    <th><?php echo $tr->translate("TOTAL_INTEREST");?></th>
+	                    <th><?php echo $tr->translate("PENALIZE AMOUNT");?></th>
+	                    <th><?php echo $tr->translate("SERVICE_CHARGE");?></th>
+	                    <th><?php echo $tr->translate("TOTAL_PAYMENT");?></th>
+	                </tr>
+	                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
+	                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
+	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
+	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>
+	                    <td>&nbsp;&nbsp;<?php echo number_format($pene_amd,2);?>&nbsp;</td>
+	                    <td>&nbsp;&nbsp;<?php echo number_format($serv_amd,2);?>&nbsp;</td>
+	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d4,2);?>&nbsp;</td>
+	                </tr>
+	                
+	              </table>
+	              <br />
+	               <table align="center" width="100%">
+					   <tr style="font-size: 12px;">
+					        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+					        <th></th>
+					        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+					        <th></th>
+					        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+					   </tr>
+				</table>
+	    	</td>
+	    	</tr>
+		</table>
+	   </td>
+	  </tr>
+	</table>
+	<!-- Loan late section -->
+</div>
+</div>

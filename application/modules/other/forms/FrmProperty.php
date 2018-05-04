@@ -102,6 +102,7 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 				'1'=>$this->tr->translate("SOLD_OUT"),
 				'0'=>$this->tr->translate("NOT_YET_SALE"));
 		$_type_of_property->setMultiOptions($_type_of);
+		$_type_of_property->setValue($request->getParam("type_property_sale"));
 		
 		$_id = new Zend_Form_Element_Hidden('id');
 		if(!empty($_data)){

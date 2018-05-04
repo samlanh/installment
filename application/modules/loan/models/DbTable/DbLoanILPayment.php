@@ -46,7 +46,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		
     		$where .=' AND ('.implode(' OR ',$s_where).')';
     	}
-    	if($search['status']!=""){
+    	if($search['status']>-1){
     		$where.= " AND status = ".$search['status'];
     	}
     	if($search['client_name']>0){
@@ -63,7 +63,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	}
     	
     	$order = " ORDER BY id DESC";
-//     	echo $sql.$where.$order;
     	return $db->fetchAll($sql.$where.$order);
     }
 //     public function getAllQuickIndividuleLoan($search){

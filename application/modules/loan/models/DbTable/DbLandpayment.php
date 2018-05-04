@@ -750,13 +750,31 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
+    		
+    		$db = new Loan_Model_DbTable_DbLandpayment();
+    		$row = $db->getTranLoanByIdWithBranch($data['id'],null);
+    		if(!empty($row)){
+    			if($row['typesale']==2){//multi sale
+    				$ids = explode(',', $row['old_land_id']);
+    				foreach($ids as $land){
+    					$this->_name="ln_properties";
+    					$arr = array(
+    							"is_lock"=>0
+    					);
+    					$where = "id =".$land;
+    					$this->update($arr, $where);
+    				}
+    			}
+    		}
+    		
     		if($data['status_using']==0){//cancel
+    			$this->_name="ln_sale";
     			$arr_update = array(
     					'status'=>0
     			);
     			$where = ' status = 1 AND id = '.$data['id'];
     			$this->update($arr_update, $where);
-    			 
+    			
     			$this->_name = 'ln_saleschedule';
     			$where = ' is_completed = 0 AND status = 1 AND sale_id = '.$data['id'];
     			$this->delete($where);
