@@ -19,7 +19,6 @@
 <head>
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<link rel="stylesheet" href="<?php echo $base_url;?>css/font-awesome.min.css"/>
-	<link href="<?php echo $this->baseUrl()?>/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
 
 	<link rel="stylesheet" href="<?php echo $base_url;?>css/template.css"/>
 	<link href="<?php echo $base_url;?>cssmenu/template.css" media="screen" rel="stylesheet" type="text/css">
@@ -112,10 +111,10 @@
        <!--  <div data-dojo-type="dijit/layout/BorderContainer" style="width: 100%; height: 100%;"> -->
              <!-- <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'"> -->
             <table width="100%">
-                <tr>
+                <tr >
                 	<td colspan="2" valign="top" style="position: fixed;width: 100%; z-index: 1;top: 0;" >
                 		 <?php echo $this->render('header.phtml')?>
-			                <p style="font-size:13px !important; ">
+			                <p style="font-size:13px !important;background: #fff;">
 						              <span style="padding-left: 3px;padding-right: 3px;float: left; font-weight:600;"><?php echo $tr->translate("USING_BY");?><a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'changepassword')); ?>"><?php echo $username;?></a></span>  
 							<a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'logout','value'=>'1')); ?>"> | <?php echo $tr->translate("SIGN_OUT");?></a>
 			                 <?php if($action=='index' AND $module!='report' AND $module!='home' AND $controller!='updateprice'){?>
@@ -126,7 +125,7 @@
 							</p>
                 	</td>
                 </tr>
-                <tr>
+                <tr style=" background: #fff;">
                 	<td colspan="2" height="90px;"></td>
                 </tr>
             	<tr>
@@ -141,12 +140,32 @@
             		<td valign="top" style="position: relative;<?php echo $background?>"  >
             			<?php 
             			if($module=='report' AND $action!='index'){?>
+							<!-- 
 							<div class="menureport">
 								<ul>
 									<li class="preview"><a title="Preview" href="#" onclick="preview();"></a></li>
 									<li class="print"><a href="#" title="Print" onclick="doPrint();" ></a></li>
 									<li class="excel"><a href="#"  title="Export"  onclick="exportExcel();"></a></li>
 								</ul>
+							</div>
+							 -->
+							<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+								<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+									<i class="fa fa-print"></i>
+								</div>
+								<div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+								<div class="ptss__settings">
+									<div class="ptss__single-setting" id="ptss__layout">
+										<div class="ptss__setting-control">
+											<div class="ptss__layout-wrapper">
+												<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
+												<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+												<a class="qButton excel" href="#"  title="<?php echo $tr->translate("Export");?>"  onclick="exportExcel();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+											</div>
+											
+										</div>
+									</div>
+								</div>
 							</div>
 							<div style="clear:both;"></div>
 							<?php }?>
@@ -198,6 +217,37 @@ function preview()
 function exportExcel(){
 	$('#exportExcel').tableExport({type:'excel',escape:'false'});
 }
+jQuery(function () {
+	'use strict';
+	
+	jQuery(".ptss__toggle-btn").click(function () {	
+		jQuery('.js-ptss-frame').toggleClass('is-opened');
+	});
+	
+	jQuery('.ptss__layout-wrapper > div').click(function(){
+		
+		jQuery(this).closest('.ptss__setting-control').find('.ptss__layout-wrapper').removeClass('is-selected');
+		
+		jQuery(this).parent().addClass('is-selected');
+		
+		if( jQuery(this).hasClass('ptss__layout-box--wide') ) {
+			
+			jQuery('body').removeClass('boxed');
+			jQuery('#ptss__boxed-bg').hide();
+			
+			jQuery('body').removeClass('bg1').removeClass('bg2').removeClass('bg3').removeClass('bg4');
+			
+			jQuery('#ptss__boxed-backgrounds span').removeClass('is-selected');
+			
+		} else {
+			
+			jQuery('body').addClass('boxed');
+			jQuery('#ptss__boxed-bg').show();
+			
+		}
+		
+	});
+})
 </script>
 <?php }?>
 </html>
