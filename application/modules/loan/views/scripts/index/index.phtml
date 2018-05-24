@@ -6,6 +6,7 @@ $url_copy =$this->url(array('module'=>'loan','controller'=>'newschedule','action
 $url_agreement =$this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-paymentschedules'));
 $frm = $this->frm_search;
 $edit_sale = $tr->translate("EDIT");
+$payment_history = $tr->translate("REPORT_LOAN_PAYMENT");
 $aggreeement = $tr->translate("AGREEMENT");
 $reschedule = $tr->translate("ISSUE_SCHEDULE");
 $scheduleReport = $tr->translate("តារាងបង់");
@@ -18,6 +19,7 @@ $urlRepaymentschedule = $this->baseUrl()."/loan/repaymentschedule/add/id/";
 $urlAgreement = $this->baseUrl()."/report/paramater/rpt-agreement/id/";
 $urlpaymentschedules = $this->baseUrl()."/report/loan/rpt-paymentschedules/id/";
 $urlNewschedule = $this->baseUrl()."/loan/newschedule/add/id/";
+$urlpaymenthistory = $this->baseUrl()."/report/loan/paymenthistory/id/";
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -137,18 +139,22 @@ $(function(){
 				url='<?php echo $urlRepaymentschedule;?>';
 			}else if(key=="newschedule"){
 				url='<?php echo $urlNewschedule;?>';
+			}else if(key=="payhistory"){
+				url='<?php echo $urlpaymenthistory;?>';
 			}
+			
 			gotoAction();
 			//window.console && console.log(m) || alert(m); 
 		},
 		items: {
-			"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
-			"agreement": {name: "<?php echo $aggreeement;?>", icon: "fa-file-text", accesskey: "c"},
-			// first unused character is taken (here: o)
 			"payment": {name: "<?php echo $payment;?>", icon: "fa-money", accesskey: "c o p y"},
+			"reschedule": {name: "<?php echo $reschedule;?>", icon: "fa-calendar"},
+			"agreement": {name: "<?php echo $aggreeement;?>", icon: "fa-file-text", accesskey: "c"},
+			"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
+			"payhistory": {name: "<?php echo $payment_history;?>", icon: "fa-dollar", accesskey: "h"},
+			// first unused character is taken (here: o)
 			// words are truncated to their first letter (here: p)
 			"schedulePay": {name: "<?php echo $scheduleReport;?>", icon: "paste", accesskey: "cool paste"},
-			"reschedule": {name: "<?php echo $reschedule;?>", icon: "fa-calendar"},
 			"newschedule": {name: "<?php echo $tr->translate("NEW_SCHEDULE");?>", icon: "fa-calendar"},
 		}
 	});

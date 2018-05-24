@@ -540,7 +540,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	   WHERE (`ln_properties_type`.`id` = `p`.`property_type`)
 	   LIMIT 1) AS `propertype`
   		FROM 
-  	   `ln_sale` AS s,`ln_properties` AS p
+  	   `ln_sale` AS s,
+  	   `ln_properties` AS p
   	 WHERE `p`.`id` = `s`.`house_id` AND s.id=$id LIMIT 1 ";
   	$db=$this->getAdapter();
   	return $db->fetchRow($sql);
@@ -1398,6 +1399,27 @@ $sql = " SELECT g.co_id,m.client_id  FROM  `ln_loan_member` AS m , `ln_loan_grou
   		$pre.='0';
   	}
   	return $pre.$new_acc_no;
+  }
+  function getSscsdssd($salsId,$id){
+  	$db = $this->getAdapter();
+  	$sql="SELECT t1.ending_balance FROM ln_saleschedule AS t1 WHERE $salsId=t1.sale_id AND t1.id< $id ORDER BY t1.id DESC LIMIT 1";
+  	return $db->fetchRow($sql);
+  }
+  function resetBegeningLoan(){
+  	$db = $this->getAdapter();
+  	$sql="SELECT s.* FROM ln_saleschedule AS s WHERE s.is_completed=1 AND s.sale_id NOT IN(SELECT sl.id FROM `ln_sale` sl,`ln_saleschedule` ss WHERE sl.id=ss.sale_id AND ss.status=0 GROUP BY sl.id) AND s.no_installment>1";
+  	$rs = $db->fetchAll($sql);
+  	foreach($rs as $r){
+  		$rse = $this->getSscsdssd($r['sale_id'], $r['id']);
+  		$this->_name="ln_saleschedule";
+  		$arr = array(
+  				'ending_balance'=>$rse['ending_balance']-$r['principal_permonth'],
+  				'begining_balance'=>$rse['ending_balance'],
+  				);
+  		$where ="id = ".$r['id'];
+
+  		$this->update($arr, $where);
+  	}
   }
 }
 ?>

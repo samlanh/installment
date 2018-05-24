@@ -36,7 +36,7 @@
 				return false;
 			}
 		for_installamount =  dijit.byId('total_installamount').get('value');
-		sold_price = dijit.byId("sold_price").get("value");
+		sold_price = dijit.byId("balance").get("value");
 		if(for_installamount!=sold_price && schedule_opt==6 ){
 			alert("សូមបញ្ចូលប្រាក់ដែលត្រូវបង់ក្នុងតារាងខាងក្រោម អោយគ្រប់ចំនួន នៃតម្លៃ ដី/ផ្ទះ!");
 			document.getElementById('table_row').style.background='#ff8a8a';
@@ -95,7 +95,7 @@
 						<td colspan="2" style="border-bottom:1px solid #aac4e6;"><strong style="color:#284db7;"><?php echo $tr->translate("PROPERTY_INFORMATION")?></strong></td>
 					</tr>
 					<tr height="40px">
-						<td><?php echo $tr->translate("PROPERY_CODE")?></td>
+						<td><?php echo $tr->translate("PROPERTY_CODE")?></td>
 						<td><input id="land_code" /><?php //echo $frm->getElement('');?>
 							<input dojoType="dijit.form.TextBox"  id="propertype" name="propertype" type="hidden">
 						</td>
@@ -685,7 +685,7 @@ function getInfoByLoanNumber(){
 		load: function(data) {
 
 			dijit.byId("paid_pricipaldate").attr('value',data.date_input);
-			dijit.byId("principal_paid").attr('value',data.extra_payment);
+			//dijit.byId("principal_paid").attr('value',data.extra_payment);
 			
 			total_principal= data.total_principal;
 			if(isNaN(total_principal) || total_principal==null){total_principal=0;}
@@ -922,8 +922,8 @@ function addInstallment(){
 				temp+='<th><?php echo $tr->translate("DEL");?></th>';
 				temp+='<th><?php echo $tr->translate("NUM");?></th>';
 				temp+='<th><?php echo $tr->translate("DATE_PAYMENT");?></th>';
-				temp+='<th id="lbl_titlemetion" width="90px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
-				temp+='<th id="lbl_titlemetion" width="90px"><?php echo $tr->translate("OS_AMOUNT");?></th>';
+				temp+='<th id="lbl_titlemetion" width="60px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
+				temp+='<th id="lbl_titlemetion" width="60px"><?php echo $tr->translate("OS_AMOUNT");?></th>';
 				temp+='<th><?php echo $tr->translate("REMARK");?></th>';
 				dojo.query("#head-title").append(temp);
 				title=1;
@@ -955,8 +955,8 @@ function addInstallment(){
 				template+='<td width="15px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td width="2%" align="center">'+no+'</td>';
 				template+="<td width='100px'><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
-				template+='<td width="80px"><input onkeyup="calCulateAmount('+col+')" class="fullside" type="text" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
-				template+='<td width="80px"><input onkeyup="calCulateAmount('+col+',2)" class="fullside" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
+				template+='<td width="60px"><input onkeyup="calCulateAmount('+col+')" class="fullside" type="text" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
+				template+='<td width="60px"><input onkeyup="calCulateAmount('+col+',2)" class="fullside" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
 				template+='<td <input class="fullside" type="text"  name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"/><label id="subsub"></label></td>';
 			tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
 			tmp+="</tr>";

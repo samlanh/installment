@@ -420,9 +420,7 @@ public function getAllOutstadingLoan($search=null){
       		$where .=' AND ('.implode(' OR ',$s_where).')';
       	}
       	$order=" ORDER BY id DESC ";
-//       	echo $sql.$where.$order;
       	return $db->fetchAll($sql.$where.$order);
-      	 
       }
       public function getALLLoanIcome($search=null){
 		$start_date = $search['start_date'];
@@ -2174,6 +2172,14 @@ function updatePaymentStatus($data){
       			// 	  			}
       		}
       	}
+      }
+      public function getPaymentSaleid($sale_id){
+      	$db = $this->getAdapter();
+      	$sql="SELECT *,
+      	(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id) AS user_name
+      	FROM v_getcollectmoney WHERE status=1 AND sale_id= ".$sale_id;
+      	$order=" ORDER BY id DESC ";
+      	return $db->fetchAll($sql.$order);
       }
  }
 

@@ -32,7 +32,7 @@
 				total_payments = dijit.byId('total_payment').get('value');
 				if(option_pay==4){
 					if(receive_amount<total_payments){
-						alert('You Can not pay in this option! Please Input Recieve Amount more than or equal Total Payment!');
+						alert('ប្រាក់បានទទួលត្រូវ ស្មើរនឹង  ត្រូវបង់ប្រាក់');
 						dijit.byId('amount_receive').focus();
 						return false;
 					}
@@ -110,7 +110,7 @@
 				<legend class="gold"><?php echo $tr->translate("SOLD_PRICE");?></legend>
 					<table width="100%">
 						<tr>
-							<td><?php echo $tr->translate("HOUSE_TITLE")?></td>
+							<td><?php echo $tr->translate("PROPERTY_CODE")?></td>
 							<td><?php echo $frm->getElement("land_address")?><input type="hidden" name="sale_number"  dojoType="dijit.form.TextBox"  id="sale_number">
 							</td>
 						</tr>
@@ -354,7 +354,7 @@
 										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_penalize" class="value"></label></strong></td>
 								</tr>
 								<tr class="fontsize">
-										<td ><?php echo $tr->translate("HOUSE_TITLE");?></td>
+										<td ><?php echo $tr->translate("PROPERTY_CODE");?></td>
 										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_address" class="value"></label></strong></td>
 										<td class="padding">ប្រាក់បង់បន្ថែម</td>
 							    		<td colspan="3" style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_extrapayment" class="value"></label></strong></td>
@@ -539,7 +539,7 @@
 										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_penalize1" class="value"></label></strong></td>
 								</tr>
 								<tr class="fontsize">
-										<td><?php echo $tr->translate("HOUSE_TITLE");?></td>
+										<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
 										<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_property_address1" class="value"></label></strong></td>
 										<td class="padding">ប្រាក់បង់បន្ថែម</td>
 										<td colspan="3" style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_extrapayment1" class="value"></label></strong></td>
@@ -708,9 +708,9 @@ function submitData(){
 	receive_amount = dijit.byId('amount_receive').get('value');
 	option_pay = dijit.byId('option_pay').get('value');
 	total_payments = dijit.byId('total_payment').get('value');
-	if(option_pay==2 || option_pay==3 || option_pay==4){
+	if(option_pay==3 || option_pay==4){
 		if(receive_amount<total_payments){
-			alert('You Can not pay in this option! Please Input Recieve Amount more than or equal Total Payment!');
+			alert('ប្រាក់បានទទួលត្រូវ ស្មើរនឹង  ត្រូវបង់ប្រាក់');
 			dijit.byId('amount_receive').focus();
 			return false;
 		}
@@ -748,9 +748,9 @@ function showReciept(receipt_number){
 				receive_amount = dijit.byId('amount_receive').get('value');
 				option_pay = dijit.byId('option_pay').get('value');
 				total_payments = dijit.byId('total_payment').get('value');
-				if(option_pay==2 || option_pay==3 || option_pay==4){
+				if(option_pay==3 || option_pay==4){
 					if(receive_amount<total_payments){
-						alert('You Can not pay in this option! Please Input Recieve Amount more than or equal Total Payment!');
+						alert('ប្រាក់បានទទួលត្រូវ ស្មើរនឹង  ត្រូវបង់ប្រាក់');
 						dijit.byId('amount_receive').focus();
 						return false;
 					}
@@ -793,7 +793,7 @@ function showReciept(receipt_number){
 				interest = dijit.byId('total_interest').get('value');
 				begining_balance = $('#total_priciple_1').val();				
 				os_amount = total_received - penelize - service_charge - interest;				
-				ending_balance = begining_balance - os_amount;
+				ending_balance = begining_balance - os_amount;				
 			}else{
 				ending_balance = dijit.byId('priciple_amount').get('value');
 			}
@@ -1236,7 +1236,7 @@ function getLaonPayment(type){//tab ទី១
 						    tem += '&nbsp;<input type="hidden" name="multiplier_'+inx+'" id="multiplier_'+inx+'" value="'+multiplier+'" />';
 							if(respone[i].is_completed==1){
 								status = '<label style="color:blue;"><?php echo $tr->translate('COMPLETED');?></label>';
-								if(respone[i].is_approved==1){is_appr='<label style="color:blue;">Approved</label>';}
+							
 							}else{
 								status='<label style="color:red;"><?php echo $tr->translate('NOT_COMPLETED');?></label>';
 								if(is_set!=1){
@@ -1641,13 +1641,14 @@ function getDayString(num){
 	return days[num];
 }
 function doTotalByServ(){
-	totalReturn();
+	totalReturn();//
 	total_payment = dijit.byId('total_payment').get('value');
 	total_payment=isNaN(total_payment)?0:total_payment;
 	dijit.byId('amount_receive').attr('value',total_payment);
+	totalReturn();//បាន Calling 2ដងព្រោះបើមិនធ្វើចេញពេលបញ្ចូលប្រាក់បង់បន្ថែម=>ប្រាក់បានបង់សរុបខុស
 }
 function totalReturn(){	
-	
+	//alert("total return");
 	total_principal = dijit.byId('os_amount').get('value');
 	total_principal=isNaN(total_principal)?0:total_principal;
 	
@@ -1791,8 +1792,7 @@ function getAllLaonPayment(){//get schedule Tab ទី២
 						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].total_payment)+'&nbsp;</td>';
 							if(data[j].is_completed==1){
 								statuss = '<label style="color:blue;"><?php echo $tr->translate('COMPLETED');?></label>';
-								if(data[j].is_approved==1){
-									is_apprs='<label style="color:blue;">Approved</label>';}
+								
 							}else{
 								is_apprs='';
 							}
@@ -1866,7 +1866,6 @@ function getLaonHasPayByLoanNumber(){//ប្រវត្តបានបង់�
 								
 								if(data_loan[k].is_completed==1){
 									statuss = '<label style="color:blue;"><?php echo $tr->translate('COMPLETED');?></label>';
-									if(data_loan[k].is_approved==1){is_apprs='<label style="color:blue;">Approved</label>';}
 								}else{
 									is_apprs='';
 								}

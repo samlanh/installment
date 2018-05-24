@@ -41,6 +41,17 @@
 				dijit.byId('branch_id').focus();
 				return false;
 			}
+
+   
+	if(schedule_opt==2){
+		balance_before = dijit.byId("balance_before").get("value");
+		if(balance_before!=deposit){
+			alert("បង់ផ្តាច់ ប្រាក់ត្រូវបង់ត្រូវស្មើរនិងប្រាក់នៅជំពាក់");
+			dijit.byId('deposit').focus();
+			return false;
+		}
+	}
+
 		for_installamount =  dijit.byId('total_installamount').get('value');
 		sold_price = dijit.byId("sold_price").get("value");
 		if(for_installamount!=sold_price && schedule_opt==6 ){
@@ -1675,6 +1686,16 @@ function printSave(new_receipt_no){
 		dijit.byId('deposit').focus();
 		return false;
 	}
+	schedule_opt = dijit.byId('schedule_opt').get('value');
+	if(schedule_opt==2){
+		balance_before = dijit.byId("balance_before").get("value");
+		if(balance_before!=deposit){
+			alert("បង់ផ្តាច់ ប្រាក់ត្រូវបង់ត្រូវស្មើរនិងប្រាក់នៅជំពាក់");
+			dijit.byId('deposit').focus();
+			return false;
+		}
+	}
+	
 	dijit.byId("lbl_schedule").hide();		
 	symbal = " $";
 	dojo.byId("lb_sale_code").innerHTML = dijit.byId("sale_code").attr('displayedValue');

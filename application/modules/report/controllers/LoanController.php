@@ -35,7 +35,6 @@ class Report_LoanController extends Zend_Controller_Action {
   	
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	 
   }
   function rptLoancollectAction(){//list payment that collect from client
   	$dbs = new Report_Model_DbTable_DbloanCollect();
@@ -47,6 +46,7 @@ class Report_LoanController extends Zend_Controller_Action {
   		$search = array(
   				'branch_id'=>-1,
   				'client_name'=>'',
+  				'last_optiontype'=>-1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   				'status' => -1,);  		 
@@ -939,6 +939,17 @@ public function exportFileToExcel($table,$data,$thead){
   		$this->view->rs_schedule = $db->getScheduleCompletednotUpdate($formdata);
   		$this->view->rs_begining = $db->getBeginingBalance($formdata);
   }
- 
+  function paymenthistoryAction(){
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	$id = $this->getRequest()->getParam('id');
+  	
+  	$this->view->loantotalcollect_list =$rs=$db->getPaymentSaleid($id);
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  }
 }
 

@@ -37,6 +37,13 @@ $client = $this->client;
 			<td><?php echo $filter->getElement('adv_search');?></td>
 			<td><?php echo $filter->getElement('branch_id');?></td>
 			<td><?php echo $filter->getElement('client_name');?></td>
+			<td>
+				<select class="fullside" id="last_optiontype" name="last_optiontype" dojoType="dijit.form.FilteringSelect">
+					<option value="-1">ទាំងអស់</option>
+					<option value="1">យកតាមកាលបរិច្ឆេទបង់</option>
+					<option value="0">បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ</option>
+				</select>
+			</td>
 			<td><?php echo $filter->getElement('start_date');?></td>
 			<td><?php echo $filter->getElement('end_date');?></td>
 			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
@@ -106,7 +113,7 @@ $client = $this->client;
 		                    <td colspan="2" style="padding:0px 1px;"><?php echo $tr->translate("CLIENT_INFO");?></td>
 		                    <td colspan="3" style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_INFO");?></td>
 		                    <td colspan="4" style="padding:0px 1px;"><?php echo $tr->translate("PAYMENT");?></td>
-		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("បង់លើក");?></td>
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
 		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("DAY_PAYMENT");?></td>
 		                </tr>
 		                <tr class="style" bgcolor="#c1d0f3" style="white-space: nowrap; text-align: center;font-weight: bold;">
@@ -151,8 +158,8 @@ $client = $this->client;
 	                    </td>
 	                   	<td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($total_payment,2));?>&nbsp;</td>
 	                    <td><?php echo $row['no_installment'];?></td>
-	                   <td align="center" style="white-space: nowrap;"><?php echo date('d-m-Y',strtotime($row['date_payment']));?>&nbsp;</td>
-	                  </tr>
+	                   <td align="center" style="white-space: nowrap;"><?php echo ($row['last_optiontype']==1)?date('d-m-Y',strtotime($row['date_payment'])):"បង់ពេលប្រគល់ផ្ទះ";?>&nbsp;</td>
+	                 </tr>
 		               <?php 
 							$amt_d1 = $amt_d1+$row['principal_permonthafter'];
 							$amt_d2 = $amt_d2+$row['total_interest_after'];
@@ -194,5 +201,8 @@ $client = $this->client;
 						        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
 						   </tr>
 						</table>
-</div>
+					</td>
+				</tr>
+		</table>
+	</div>
 </div>

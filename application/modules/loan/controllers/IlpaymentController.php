@@ -72,8 +72,13 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 	 		$dbacc = new Application_Model_DbTable_DbUsers();
 	 		$rs = $dbacc->getAccessUrl($module,$controller,'delete');
 	 		if(!empty($rs)){
-	 			$db->deleteReceipt($id);
-	 			Application_Form_FrmMessage::Sucessfull("DELETE_SUCCESS","/loan/ilpayment");
+	 			$row = $db->checkifExistingDelete($id);
+	 			if(!empty($row)){
+	 				$db->deleteReceipt($id);
+	 				Application_Form_FrmMessage::Sucessfull("DELETE_SUCCESS","/loan/ilpayment");
+	 			}else{
+	 				Application_Form_FrmMessage::Sucessfull("has been delete","/loan/ilpayment");
+	 			}
 	 		}
 	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/loan/ilpayment");
 	 	}catch (Exception $e) {
@@ -89,10 +94,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {
 				$receipt = $db->addILPayment($_data);
-				if($_data['extrapayment']>0){
-					$_data['receipt_id'] =$receipt;
-// 					$db->addExtrapayment($_data);
-				}
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");

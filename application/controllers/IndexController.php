@@ -44,8 +44,6 @@ class IndexController extends Zend_Controller_Action
 				$password=$form->getValue('txt_password');
 				$db_user=new Application_Model_DbTable_DbUsers();
 				if($db_user->userAuthenticate($user_name,$password)){					
-// 					$this->view->msg = 'Authentication Sucessful!';
-// 					$this->view->err="0";
 					
 					$session_user=new Zend_Session_Namespace('authinstall');
 					$user_id=$db_user->getUserID($user_name);
@@ -78,16 +76,7 @@ class IndexController extends Zend_Controller_Action
 					$session_user->lock();
 					
 					$log=new Application_Model_DbTable_DbUserLog();
-					$log->insertLogin($user_id);
-// 					foreach ($arr_module AS $i => $d){
-// 						if($d !== 'user'){
-// 							$url = '/' . @$arr_module[2];
-// 						}
-// 						else{
-// 							$url = self::REDIRECT_URL;
-// 							break;
-// 						}
-// 					}	
+					$log->insertLogin($user_id);	
 					foreach ($arr_module AS $i => $d){
 						if($d !== 'transfer'){
 							$url = '/' . $arr_module[0];
@@ -109,7 +98,9 @@ class IndexController extends Zend_Controller_Action
 			else{				
 				$this->view->msg = 'លោកអ្នកមិនមានសិទ្ធិប្រើប្រាស់ទេ!';
 			}			
-		}		
+		}	
+		$session_lang=new Zend_Session_Namespace('lang');
+		$this->view->rslang = $session_lang->lang_id;
     }
     
     protected function sortMenu($menus){

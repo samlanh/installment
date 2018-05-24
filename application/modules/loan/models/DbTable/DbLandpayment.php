@@ -751,8 +751,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try{
     		
-    		$db = new Loan_Model_DbTable_DbLandpayment();
-    		$row = $db->getTranLoanByIdWithBranch($data['id'],null);
+    		$dbp = new Loan_Model_DbTable_DbLandpayment();
+    		$row = $dbp->getTranLoanByIdWithBranch($data['id'],null);
     		if(!empty($row)){
     			if($row['typesale']==2){//multi sale
     				$ids = explode(',', $row['old_land_id']);
@@ -831,7 +831,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		  
     		$id = $data['id'];
     		$this->_name='ln_sale';
-    		$where = $db->quoteInto('id=?', $id);
+    		$where = 'id='.$id;
     		$this->update($arr, $where);
     		unset($schedule);
     		
@@ -850,7 +850,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$this->update($arr, $where);
     		
     		$this->_name='ln_saleschedule';
-    		$where = $db->quoteInto(' sale_id = ?', $data['id']);
+    		$where = 'sale_id = '.$data['id'];
     		$this->delete($where);
     		
     		$total_day=0;

@@ -1,16 +1,15 @@
 <?php
-$this->headTitle('Sale Realty Management System | log in page'); 
-echo $this->headTitle();
-$base_url = Application_Form_FrmMessage::getUrl("/");
+	$this->headTitle('Installment System'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
 <!DOCTYPE HTML> 
 <html>
 <head>
-<?php /*
-*/?>
-<script src="<?php echo $base_url;?>js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
-<script>dojoConfig = {parseOnLoad: true}</script>
-<link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>js/dojo-1.6.1/dijit/themes/tundra/tundra.css"/>
+	<script src="<?php echo $base_url;?>js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
+	<script>dojoConfig = {parseOnLoad: true}</script>
+	<link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>js/dojo-1.6.1/dijit/themes/tundra/tundra.css"/>
 	
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style type="text/css">
@@ -36,7 +35,10 @@ $base_url = Application_Form_FrmMessage::getUrl("/");
 	<table style=" width: 100%;">
 		<tr >
 			<td width="15%"  align="left" class="textblue" align="center"><img src="<?php echo $this->baseUrl()."/images/cam-app-logo.png";?>" style="max-height:45px;margin: 0;padding-left: 10px;"  /></td>
-			<td width="70%" valign="top"  align="center" class="title" style="padding: 0 10px;font-size:20px;font-family:'Khmer MEF2';line-height: 33px;"><?php echo $this->data["system_name"];?></td>
+			<td width="70%" valign="top"  align="center" class="title" style="padding: 0 10px;font-size:20px;font-family:'Khmer MEF2';line-height: 33px;">
+			<?php echo $this->data["system_name"];?><br />
+				Installment Management System
+			</td>
 			<td width="15%" valign="top">&nbsp;</td>
 		</tr>
 		<tr>
@@ -67,7 +69,7 @@ $base_url = Application_Form_FrmMessage::getUrl("/");
 						<table id="login">		
 						<tr>
 							<td colspan="2" align="center" class="lblheader textwithe">
-								<label style="font: bold 20px 'Khmer MEF2'; text-shadow: 1px 1px 1px #0B404A;"><small>ប្រព័ន្ធសុវត្ថិភាព ​</small></label>
+								<label style="font: bold 20px 'Khmer MEF2'; text-shadow: 1px 1px 1px #0B404A;"><small><?php echo $tr->translate("SECURITY_SYSTEM");?>​ ​</small></label>
 							</td>				
 						</tr>	
 						<tr>
@@ -76,32 +78,32 @@ $base_url = Application_Form_FrmMessage::getUrl("/");
 							</td>				
 						</tr>			
 						<tr>
-							<td id="field"><label class="f_style" >គណនីអ្នកប្រើប្រាស់</label></td>
+							<td id="field"><label class="f_style" ><?php echo $tr->translate("ACCOUNT_NAME");?></label></td>
 							<td class="add-edit">
 								<input type="text" required="true" name="txt_user_name" id="txt_user_name" placeholder="ឈ្មោះអ្នកប្រើប្រាស់​" 
 								data-dojo-type="dijit/form/ValidationTextBox" missingMessage="សូមបំពេញឈ្មោះអ្នកប្រើប្រាស់! " style="width: 100%;"/>
 							</td>
 						</tr>
 						<tr>
-							<td id="field"><label class="f_style">លេខសំងាត់</label></td>
+							<td id="field"><label class="f_style"><?php echo $tr->translate("PASSWORD");?></label></td>
 							<td class="add-edit">
 								<input type="password" required="true" name="txt_password" id="txt_password" placeholder="លេខសំងាត់" 
 								data-dojo-type="dijit/form/ValidationTextBox" missingMessage="សូមបំពេញលេខសំងាត់!" style="width: 100%;"/>
 							</td>
 						</tr>
 						<tr>
-							<td id="field"><label class="f_style">ភាសា</label></td>
+							<td id="field"><label class="f_style"><?php echo $tr->translate("LANGAUGE");?></label></td>
 							<td class="add-edit">
-								<select name="lang" id="lang" style=" height: 30px; width:170px " > 
-									<option value="1">ខ្មែរ</option> 
-									<option value="2">អង់គ្លេស</option> 
+								<select data-dojo-type="dijit/form/FilteringSelect" name="lang" id="lang" style=" height: 30px; width:170px " onchange="changeLange();" > 
+									<option value="1" <?php if($this->rslang==1){echo"selected";}?>>ខ្មែរ</option> 
+									<option value="2" <?php if($this->rslang==2){echo"selected";}?>>English</option> 
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="2" align="right">
-								<input class="f_styles" style="color: #1C90C3; font: 13px 'Khmer MEF2';" type="submit" value="ចូលប្រើប្រាស់" label="ចូលប្រើប្រាស់" data-dojo-type="dijit/form/Button" />
-								<input class="f_styles" style="color: #1C90C3; font: 13px 'Khmer MEF2';" type="reset" value="សំអាត" id="clear_login" data-dojo-type="dijit/form/Button" label="សំអាត" /> 								
+								<input class="f_styles" style="color: #1C90C3; font: 13px 'Khmer MEF2';" type="submit" value="ចូលប្រើប្រាស់" label="<?php echo $tr->translate("LOGIN");?>" data-dojo-type="dijit/form/Button" />
+								<input class="f_styles" style="color: #1C90C3; font: 13px 'Khmer MEF2';" type="reset" value="សំអាត" id="clear_login" data-dojo-type="dijit/form/Button" label="<?php echo $tr->translate("CLEAR");?>" /> 								
 							</td>				
 						</tr>
 					</table>
@@ -118,12 +120,12 @@ $base_url = Application_Form_FrmMessage::getUrl("/");
 			<td>
 				<label class="textgreen footertitle f_style">អាសយដ្ឋាន​ ៖</label>
 				<dl>
-				   <lable class="f_style"><b><?php echo $this->data['footer_branch']?></b></lable><br />
+				   <label class="f_style"><b><?php echo $this->data['footer_branch']?></b></label><br />
 				  	<?php						
 						echo $this->data['tel-client'];
 					?>	
-					&nbsp;<lable class='t_shadow' style='font-weight:bold;'><?php echo $this->data['email_client']?></lable><br />
-					<lable class='t_shadow' style='font-weight:bold;'><?php echo $this->data['website']?></lable><br />
+					&nbsp;<label class='t_shadow' style='font-weight:bold;'><?php echo $this->data['email_client']?></label><br />
+					<label class='t_shadow' style='font-weight:bold;'><?php echo $this->data['website']?></label><br />
 				</dl>
 				<label class="textgreen footertitle f_style">ប្រើប្រាស់ដោយ៖</label>
 				<a  style="font-weight:bold;" href="#" target="_blank"><label class="textyellow footertitle">
@@ -133,9 +135,9 @@ $base_url = Application_Form_FrmMessage::getUrl("/");
 			<td class="textgreenlight" valign="top" >
 				<label class="textgreen footertitle f_style">អាសយដ្ឋាន​ ៖</label>
 				<dl>
-				   <lable class="f_style"><b><?php echo $this->data['branch_add']?></b></lable><br />
+				   <label class="f_style"><b><?php echo $this->data['branch_add']?></b></label><br />
 				  	<?php echo $this->data['branch-tel'];	?><br />
-				  	<lable class='t_shadow' style='font-weight:bold;'><?php echo $this->data['branch_email']?></lable>
+				  	<label class='t_shadow' style='font-weight:bold;'><?php echo $this->data['branch_email']?></label>
 				</dl>
 				<label class="textgreen footertitle f_style">&copy រក្សាសិទ្ធិគ្រប់យ៉ាង</label>
 				<a  style="font-weight:bold;" href="http://<?php echo $this->data['website']?>" target="_blank"><label class="textyellow footertitle">
@@ -149,17 +151,21 @@ $base_url = Application_Form_FrmMessage::getUrl("/");
 <div style="clear: both;"></div>
 </body>
 </html>
-<style>
-</style>
 <script type="text/javascript">
-/*var elem = document.getElementById("body");
-elem.onclick = function() {
-    req = elem.requestFullScreen || elem.webkitRequestFullScreen || elem.mozRequestFullScreen;
-    req.call(elem);
-}*/
+		var url_changelang = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'changelange'));?> ';
+		function changeLange(){
+			lang = dijit.byId("lang").get("value");
+			dojo.xhrPost({
+				url: url_changelang,
+			    content :{ 
+					    'lange':lang,
+				},	
+				handleAs:"json",
+				load: function(data) {
+					location.reload();
+				},
+				error: function(err) {
+				}
+			});
+		}
 </script>
-	
-</script>
-		
-
-		
