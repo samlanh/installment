@@ -179,20 +179,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		//return $sql;
 		return $db->fetchAll($sql);
 	}
-    function getTranLoanByIdWithBranch($id){
-//     	$sql = "SELECT lg.g_id,lg.level,lg.co_id,lg.zone_id,lg.pay_term,lm.payment_method,
-//     		lm.interest_rate,lm.amount_collect_principal,
-//     		lm.client_id,lm.admin_fee,
-// 	    	(SELECT name_kh FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_kh,
-// 	  		(SELECT name_en FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_en,
-// 	  		lm.total_capital,lm.interest_rate,lm.payment_method,
-// 	    	lg.time_collect,
-// 	    	lg.zone_id,
-// 	    	(SELECT co_firstname FROM `ln_co` WHERE co_id =lg.co_id LIMIT 1) AS co_enname,
-// 	    	lg.status AS str ,lg.status FROM `ln_loan_group` AS lg,`ln_loan_member` AS lm
-// 			WHERE lg.g_id = lm.group_id AND lg.g_id = $id LIMIT 1 ";
-//     	return $this->getAdapter()->fetchRow($sql);
-    }
+   
     
     function getPrefixCode($branch_id){
     	$db  = $this->getAdapter();
@@ -583,7 +570,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		}
     		////////////////////////////////////start extra payment///////////////////////////////////////
     		if($data['option_pay']==3){
-    			$data['extrapayment'] = $data['amount_receive'];
+    			$data['extrapayment'] = $data['amount_receive']-$data['penalize_amount'];
     		}
     		if($data['extrapayment']>0){
     			$extrapayment = $data['extrapayment'];

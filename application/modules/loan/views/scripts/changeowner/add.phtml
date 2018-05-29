@@ -42,6 +42,9 @@ ul li{ list-style-type: none;}
 					dijit.byId('to_customer').focus();
 					return false;
 				}
+
+			dijit.byId('saveclose').set('disabled',true);	
+			dijit.byId('savenew').set('disabled',true);
 				return true;
 			}else {
 				return false;
@@ -80,6 +83,10 @@ ul li{ list-style-type: none;}
 								          <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 								          <td><input id="member" /></td>
 							            </tr>
+							             <tr>
+								          <td><?php echo $tr->translate("CHANGE_DATE");?></td>
+								          <td><input dojoType="dijit.form.DateTextBox" required="true" class="fullside" constraints="{datePattern:'dd/MM/yyyy'}" id="change_date" name="change_date" value="<?php echo date("Y-m-d");?>" type="text"></td>
+							            </tr>
 		                            </table>  
 	                            </fieldset>
 	                         </td>
@@ -107,15 +114,19 @@ ul li{ list-style-type: none;}
 			                               <td><strong><?php echo $tr->translate("TO_CUSTOMER");?></strong></td>
 								           <td><input id="to_customer" /></td>
 			                            </tr>	
+			                            <tr>
+								          <td><?php echo $tr->translate("NOTE");?></td>
+								          <td><input dojoType="dijit.form.TextBox" class="fullside" id="note" name="note" type="text"></td>
+							            </tr>
 		                            </table>  
 	                            </fieldset>
 	                         </td>
 	                        <td width="33%" valign="top">
-	                    	   <fieldset style="min-height: 196px;background: #f3feff;">
+	                    	   <fieldset style="min-height: 228px;background: #f3feff;">
 						        <legend style="text-align: center;"><strong><?php echo $tr->translate("NOTE");?></strong></legend>
-						        	<span>&nbsp;រាល់ទិ​ន្នន័យទាំងអស់នឹងត្រូវបានផ្ទេរមក ភាគីថ្មី ៖</span>
+						        	<span>&nbsp;រាល់ទិ​ន្នន័យទាំងអស់នឹងត្រូវបានផ្ទេរមក ភាគីថ្មីដូចជា ៖</span>
 						        	<ul style="padding-left:5px;">
-							        	<li>១. ម្ចាស់កម្មសិទ្ធក្នុង កិច្ចសន្យា</li>
+							        	<li>១. ម្ចាស់កម្មសិទ្ធ និងថ្ងៃចេញកិច្ចសន្យា</li>
 							        	<li>២. រាល់តារាងកាលវិភាគត្រូវបង់ ដែលនៅសល់ទាំងអស់</li>
 							        	<li>៣. ប្រាក់បានបង់ពីមុន ទាំងអស់</li>
 						        	</ul>
@@ -132,8 +143,8 @@ ul li{ list-style-type: none;}
 	<tr>
 		<td align="center">
 			<input type="reset" label="<?php echo $tr->translate("CLEAR");?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
-			<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconDelete"/>
-			<input type="submit" label="<?php echo $tr->translate("SAVENEW");?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+			<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" name='saveclose' id='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconDelete"/>
+			<input type="submit" label="<?php echo $tr->translate("SAVENEW");?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
 		</td>
 	</tr>	
 </table>

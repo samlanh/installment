@@ -66,7 +66,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'required' =>'true',
+				'required' =>'false',
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 		));

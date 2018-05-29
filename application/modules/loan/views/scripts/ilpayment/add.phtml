@@ -227,7 +227,8 @@
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("TOTAL_SERVICE_CHARGE")?></td>
-							<td><?php echo $frm->getElement('service_charge');echo $frm->getElement('old_service_charge');?></td>
+							<td><?php echo $frm->getElement('service_charge');
+								echo $frm->getElement('old_service_charge');?></td>
 						</tr>
 						<tr>
 							<td style="color:red;"><?php echo $tr->translate("TOTAL_AMOUNT_PAYMENT")?></td>
@@ -784,12 +785,15 @@ function showReciept(receipt_number){
 			year = format_date_payment.getFullYear();
 			date_payment = day+'-'+month+'-'+year;
 		}
+		extra_payment = dijit.byId("extrapayment").get("value");
+		extra_payment = isNaN(extra_payment)?0:extra_payment;
+		penelize = dijit.byId('penalize_amount').get('value');
+		service_charge = dijit.byId('service_charge').get('value');
+		
 		if(option_pay==1){
 			total_payment = dijit.byId('total_payment').get('value');
 			total_received = dijit.byId('amount_receive').get('value');
 			if(total_received<total_payment){
-				penelize = dijit.byId('penalize_amount').get('value');
-				service_charge = dijit.byId('service_charge').get('value');
 				interest = dijit.byId('total_interest').get('value');
 				begining_balance = $('#total_priciple_1').val();				
 				os_amount = total_received - penelize - service_charge - interest;				
@@ -797,8 +801,10 @@ function showReciept(receipt_number){
 			}else{
 				ending_balance = dijit.byId('priciple_amount').get('value');
 			}
-		}else if(option_pay==3){//រំលស់ប្រាក់ដើម
+			total_paid = parseFloat(dijit.byId('sold_price').get('value')) - parseFloat(ending_balance)+parseFloat(extra_payment);
+		}else if(option_pay==3){//រំលស់ប្រាក់ដើម 100%work
 			ending_balance = dijit.byId('priciple_amount').get('value');
+			total_paid = parseFloat(dijit.byId('total_pricipalpaid').get('value')) + parseFloat(dijit.byId('amount_receive').get('value')-penelize-service_charge);
 		}else{//បង់ផ្តាច់
 			ending_balance = 0;
 			date_payment = dijit.byId("datepaymentlastrecord").get('value');
@@ -811,6 +817,9 @@ function showReciept(receipt_number){
 			}
 			year = format_date_payment.getFullYear();
 			date_payment = day+'-'+month+'-'+year;
+
+			total_paid = parseFloat(dijit.byId('sold_price').get('value')) - parseFloat(ending_balance)+parseFloat(extra_payment);
+			
 		}
 		document.getElementById('lbl_principle_amount').innerHTML = dojo.number.format(dijit.byId('os_amount').get('value'),{places:2})+symbal;
 		document.getElementById('lbl_total_interest').innerHTML = dojo.number.format(dijit.byId('total_interest').get('value'),{places:2})+symbal;
@@ -829,11 +838,7 @@ function showReciept(receipt_number){
 		document.getElementById('lbl_penalize').innerHTML = dojo.number.format(dijit.byId('penalize_amount').get('value'),{places:2})+symbal;
 		document.getElementById('lbl_property_price').innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),{places:2})+symbal;
 		document.getElementById('lbl_property_address').innerHTML = dijit.byId('land_address').attr('displayedValue');
-		extra_payment = dijit.byId("extrapayment").get("value");
-		extra_payment = isNaN(extra_payment)?0:extra_payment;
-
-		total_paid = parseFloat(dijit.byId('sold_price').get('value')) - parseFloat(ending_balance)+parseFloat(extra_payment);
-
+		
 		document.getElementById('lbl_total_paid').innerHTML = dojo.number.format(total_paid,{places:2}) + symbal;
 		document.getElementById('lbl_ending_balance').innerHTML = dojo.number.format(ending_balance-extra_payment,{places:2})+symbal;
 		document.getElementById('lbl_extrapayment').innerHTML = dojo.number.format(extra_payment,{places:2})+symbal;
@@ -944,7 +949,8 @@ dojo.ready(function(){
 	<?php if(!empty($this->rsresult)){?>
 		dijit.byId('branch_id').attr('value','<?php echo $this->rsresult['branch_id'];?>');
 		dijit.byId('to_branch_id').attr('value','<?php echo $this->rsresult['branch_id'];?>');
-	<?php }?>	
+	<?php }?>
+	dijit.byId('service_charge').set("readOnly",true);	
 	enablePayment();
 });
 var url_getlastpaiddate = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-lastpaiddate')); ?>';

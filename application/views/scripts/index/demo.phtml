@@ -342,9 +342,9 @@ function checkScheduleOption(){
 			}
 			dijit.byId('first_payment').attr("value",'<?php echo date("Y-m-d");?>');
 			if(dijit.byId('interest_rate').get('value')==0){
-				dijit.byId('interest_rate').attr("value",0);}
+				dijit.byId('interest_rate').attr("value",0);
+			}
 			dijit.byId('interest_rate').set("readOnly",false);
-			
 		}else if(method_id==5){//times
 			dijit.byId('release_date').set("readOnly",true);
 			dijit.byId('first_payment').set("readOnly",true);
@@ -1461,6 +1461,7 @@ function calculateDuration(type=null){
 		pi = (parseFloat(fixed_payment)-(parseFloat(sold_price)*parseFloat(interest_rate)));
 		s = parseFloat(fixed_payment);
 		top_ii = Math.log(s/pi);
+
 		var duration =  Math.ceil(top_ii / Math.log(1+ parseFloat(interest_rate)));// ROUND UP
 		duration = duration/12;
 		dijit.byId('period').attr('value',duration);

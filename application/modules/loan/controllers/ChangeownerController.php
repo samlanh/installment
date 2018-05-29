@@ -23,19 +23,15 @@ class Loan_ChangeownerController extends Zend_Controller_Action {
 						'end_date'=>date('Y-m-d'),
 						 );
 			}
-// 			print_r($search);
-			$db = new Loan_Model_DbTable_DbTransferProject();
-			$rs_rows= $db->getAllChangeProject($search,1);
+			$db = new Loan_Model_DbTable_Dbtransferowner();
+			$rs_rows= $db->getAllTranferOwner($search,1);
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_NAME","PRICE","PAID_BEFORE","BRANCH_NAME","PROPERTY_NAME","PRICE","PAID","BALANCE","CHANGE_DATE",
-				"STATUS");
-			$link=array(
-					'module'=>'loan','controller'=>'transferproject','action'=>'view',
-			);
-			$link_info=array('module'=>'loan','controller'=>'transferproject','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('from_branch'=>$link,'sale_number'=>$link_info,'client_number'=>$link_info,'name_kh'=>$link_info,'from_property'=>$link_info),0);
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_NAME","PRICE","PAID_BEFORE","BALANCE","TO_CUSTOMER","NOTE","CHANGE_DATE","STATUS");
+			
+			$link_info=array('module'=>'loan','controller'=>'changeowner','action'=>'index',);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array(),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

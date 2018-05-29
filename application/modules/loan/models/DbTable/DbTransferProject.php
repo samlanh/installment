@@ -401,13 +401,7 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
 	    					$from_date=$next_payment;
 	    				}
 	    			}
-// 	    		}
-	    		
-	    			
     			$db->commit();
-//     			$sql=" SELECT * FROM ln_saleschedule where is_completed=1 AND sale_id =".$data['sale_id'];
-//     			print_r($db->fetchAll($sql));
-//     			exit();
     			return 1;
     		}catch (Exception $e){
     			$db->rollBack();
@@ -421,8 +415,4 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	return $db->fetchRow($sql);
     }
-
 }
-  
-
-

@@ -489,8 +489,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		
     		if($data['deposit']>0){//insert payment
     			$data['date_buy']=$data['paid_date'];
-    			$dbtable = new Application_Model_DbTable_DbGlobal();
-    			$receipt = $dbtable->getReceiptByBranch($data);
+//     			$dbtable = new Application_Model_DbTable_DbGlobal();
+//     			$receipt = $dbtable->getReceiptByBranch($data);
     			$pay_off = 0;
     			if($data["schedule_opt"]==2){
     				$pay_off = 1;
@@ -498,7 +498,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			$array = array(
     					'branch_id'			=>$data['branch_id'],
     					'client_id'			=>$data['member'],
-    					'receipt_no'		=>$receipt,
+//     					'receipt_no'		=>$receipt,
     					'date_pay'			=>$data['paid_date'],
     					'land_id'			=>$data['land_code'],
     					'sale_id'			=>$data['id'],
@@ -528,27 +528,29 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'payment_times'=>1,
     			);
     			$this->_name='ln_client_receipt_money';
-    			$crm_id = $this->insert($array);
+    			$this->update($array, $where);
+    			$where="receipt_no=".$data['receipt'];
+//     			$crm_id = $this->insert($array);
     				
     			$this->_name='ln_client_receipt_money_detail';
     			$array = array(
-    					'crm_id'			=>$crm_id,
+    					'crm_id'		=>$crm_id,
     					'client_id'		=>$data['member'],
-    					'land_id'			=>$data['land_code'],
+    					'land_id'		=>$data['land_code'],
     					'date_payment'	=>$data['date_buy'],
-    					'paid_date'       =>$data['date_buy'],
-    					'last_pay_date'   =>$data['date_buy'],
-    					'capital'			=>$data['sold_price'],
-    					'remain_capital'	=>$data['balance'],
+    					'paid_date'     =>$data['date_buy'],
+    					'last_pay_date' =>$data['date_buy'],
+    					'capital'	    =>$data['sold_price'],
+    					'remain_capital'=>$data['balance'],
     					'principal_permonth'=>$data['deposit'],
     					'old_principal_permonth'=>$data['deposit'],
-    					'total_interest'	=>0,
+    					'total_interest'=>0,
     					'total_payment'	=>$data['sold_price'],
     					'total_recieve'	=>$data['deposit'],
-    					'service_charge'	=>0,
-    					'penelize_amount'	=>0,
+    					'service_charge'=>0,
+    					'penelize_amount'=>0,
     					'is_completed'	=>($data['schedule_opt']==2)?1:0,
-    					'status'			=>1,
+    					'status'		=>1,
     			);
     			$this->insert($array);
     		}

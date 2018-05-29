@@ -407,7 +407,7 @@ public function init()
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'required' =>'true',
-				//'onkeyup'=>'calculateDuration(1)'
+				'onkeyup'=>'calculateDuration(1)'
 		));
 		
 		$note = new Zend_Dojo_Form_Element_Textarea("note");

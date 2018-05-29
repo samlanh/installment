@@ -6,76 +6,6 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 	{
 		
 	}
-// 	public function getArrCsType(){
-// 		$arr_type = array(
-// 				"fi_cs_type" => "CS-TYPE",
-// 				"fi_cs_zone" => "CS-ZONE",
-// 				"fi_cs_items" => "CS-ITEMS",
-// 				"fi_cs_subject" => "CS-SUBJECT",
-// 				"fi_cs_living_situation" => "CS-LIVING",
-// 				"fi_cs_ass_provided" => "CS-ASS-PROVIDED",
-// 				"fi_cs_ass_requested" => "CS-ASS-REQUESTED",
-// 				"fi_cs_current_condition" => "CS-CONDITION",
-// 				"fi_cs_referal" => "CS-REFERAL",
-// 				"fi_cs_type_caller" => "CS-TYPE-CALLER",
-// 				"fi_cs_type_case" => "CS-TYPE-CASE",
-// 				"fi_cs_ar_category" => "CS-AR-CATEGORY",
-				 
-// 				"cs-refresh" => "CS-REFRESH",
-// 				"cs-member" => "CS-MEMBER"
-// 		);
-// 		return $arr_type;
-// 	}
-// 	public function getForm($action, $method, $url_cancel, $elements, $legend = null, $hidenvalues = null, $type=null, $page=null, $tableadd=null,$id_popup){
-// 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-// 		if($type!=null && $page!=null){
-// 			$arr_type = $this->getArrCsType();
-// 		}
-		 
-// 		$script= '<script type="text/javascript">
-// 		jQuery(document).ready(function(){
-// 		//binds form submission and fields to the validation engine
-// 		jQuery("#frm").validationEngine();
-// 	});
-// 	</script>';
-// 		$form="<div class='dijitHidden'>
-// 				<div data-dojo-type='dijit.Dialog'  id='".$id_popup."' >";
-// 		$form.= "<form  id=\"frm\" method='". $method ."' action='". $action ."' accept-charset=\"utf-8\" enctype=\"multipart/form-data\" style=\"position:relative;\"> ";
-		 
-// 		$form .= '<div class="btn" align="right">
-// 		<button type="submit" class="positive">
-// 		<img src="'.BASE_URL.'/images/icon/apply2.png" alt=""/>
-// 		Save
-// 		</button>
-// 		<a href="'. $url_cancel .'" class="negative">
-// 		<img src="'.BASE_URL.'/images/icon/cross.png" alt=""/>
-// 		Cancel
-// 		</a>
-// 		</div>
-// 		<fieldset>
-// 		<legend>'.$tr->translate($legend).'</legend>
-// 		<table>';
-	
-// 		foreach ($elements as $lbl => $element){
-// 			$form .= '<tr>
-// 			<td class="field">'. $tr->translate($lbl) .'</td>
-// 			<td class="add-edit">'. $element .'</td>
-// 			</tr>';
-// 		}
-// 		$form .= '</table>';
-// 		if($tableadd!=null){
-// 			$form .= $tableadd;
-// 		}
-// 		$form .= '</fieldset>';
-// 		if(!empty($hidenvalues)){
-// 			foreach ($hidenvalues as $i =>$h){
-// 				$form .= $h;
-// 			}
-// 		}
-		 
-// 		$form .= "</form></div></div>";
-// 		return $form ;
-// 	}
 	public function frmPopupClient(){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$frmco = new Group_Form_FrmClient();
@@ -92,9 +22,9 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 									<td>'.$frm->getElement('client_no').'</td>
 								</tr>
 								<tr>
-									<td>Name Khmer</td>
+									<td>ខ្មែរmer</td>
 									<td>'.$frm->getElement('name_kh').'</td>
-									<td>Name Eng</td>
+									<td>Englishg</td>
 									<td>'.$frm->getElement('name_en').'</td>
 								</tr>
 								<tr>
@@ -162,7 +92,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<form id="form_co" name="form_co" >';
 			$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
 					<tr>
-						<td>Name Khmer</td>
+						<td>ខ្មែរmer</td>
 						<td>'.$frm->getElement('namsdfse_kh').'</td>
 					</tr>
 					<tr>
@@ -245,21 +175,21 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<form id="form_district" >';
 		$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
 					<tr>
-						<td>District In Khmer</td>
+						<td>'.$tr->translate('DISTRICT_KH').'</td>
 						<td>'.$frm->getElement('pop_district_namekh').'</td>
 					</tr>
 					<tr>
-						<td>District In English</td>
+						<td>'.$tr->translate('DISTRICT_ENG').'</td>
 						<td>'.$frm->getElement('pop_district_name').'</td>
 					</tr>
 					<tr>
-						<td>District Name Khmer</td>
+						<td>'.$tr->translate('PROVINCE').'</td>
 						<td>'.$frm->getElement('province_names').'</td>
 					</tr>
 					
 					<tr>
 						<td colspan="2" align="center">
-						<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
+						<input type="button" value="Save" label="'.$tr->translate('GO_SAVE').'" dojoType="dijit.form.Button"
 						iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewDistrict();"/>
 						</td>
 				    </tr>
@@ -273,14 +203,13 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$str='<div class="dijitHidden">
 				<div data-dojo-type="dijit.Dialog"  id="frm_commune" >
 					<form id="form_commune" >';
-			$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
-					
+			$str.='<table style="margin: 0 auto; width:500px;" cellspacing="7">
 					<tr>
-						<td>Commune KH</td>
+						<td>'.$tr->translate('COMMUNE_NAME_KH').'</td>
 						<td>'.'<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="commune_namekh" name="commune_namekh" value="" type="text">'.'</td>
 					</tr>
 					<tr>
-						<td>Commune Name EN</td>
+						<td>'.$tr->translate('COMUNE_NAME_EN').'</td>
 						<td>'.'<input dojoType="dijit.form.ValidationTextBox" class="fullside" id="commune_nameen" name="commune_nameen" value="" type="text">'.'</td>
 					</tr>
 					<tr>
@@ -289,7 +218,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</tr>
 					<tr>
 						<td colspan="2" align="center">
-						<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
+						<input type="button" value="Save" label="'.$tr->translate('GO_SAVE').'" dojoType="dijit.form.Button"
 						iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewCommune();"/>
 						</td>
 					</tr>
@@ -311,7 +240,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			}
         </script>
 		';
-		$str.='<table style="margin: 0 auto; width: 95%;" cellspacing="10">
+		$str.='<table style="margin: 0 auto;  width:500px" cellspacing="10">
 					    <tr>
 							<td>'.$tr->translate("VILLAGE_KH").'</td>
 							<td>'.'<input dojoType="dijit.form.ValidationTextBox" required="true" missingMessage="Invalid Module!" class="fullside" id="village_namekh" name="village_namekh" value="" type="text">'.'</td>
@@ -323,8 +252,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						<tr>
 							<td>'. $tr->translate("DISPLAY_BY").'</td>
 							<td>'.'<select name="display" id="display" dojoType="dijit.form.FilteringSelect" class="fullside">
-									    <option value="1" label="Name KH">Name KH</option>
-									    <option value="2" label="Name EN">Name EN</option>
+									    <option value="1" label="ខ្មែរ">ខ្មែរ</option>
+									    <option value="2" label="English">English</option>
 									</select>'.'</td>
 						</tr>
 						<tr>
@@ -366,7 +295,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					
 					<tr>
 						<td colspan="2" align="center">
-						<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
+						<input type="button" value="Save" label="'.$tr->translate('GO_SAVE').'" dojoType="dijit.form.Button"
 						iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewDocumentType();"/>
 						</td>
 					</tr>
@@ -481,7 +410,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</tr>
 					<tr>
 						<td colspan="6" align="center" colspan="3">
-						<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
+						<input type="button" value="Save" label="'.$tr->translate('GO_SAVE').'" dojoType="dijit.form.Button"
 						iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewindividual();"/>
 						</td>
 					</tr>
@@ -518,7 +447,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</tr>
 					<tr>
 						<td colspan="2" align="center">
-						<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
+						<input type="button" value="Save" label="'.$tr->translate('GO_SAVE').'" dojoType="dijit.form.Button"
 						iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewDepartment();"/>
 						</td>
 					</tr>
@@ -534,12 +463,12 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			<form id="form_propertytype" >';
 			$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
 						<tr>
-							<td>Title</td>
+							<td>'.$tr->translate('PROPERTIESTYPE').'</td>
 							<td>'.'<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="type_nameen" name="type_nameen" value="" type="text">'.'</td>
 							</tr>
 							<tr>
 							<td colspan="2" align="center">
-							<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
+							<input type="button" value="Save" label="'.$tr->translate('GO_SAVE').'" dojoType="dijit.form.Button"
 							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewPropertytype();"/>
 							</td>
 						</tr>
@@ -560,7 +489,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		</tr>
 		<tr>
 		<td colspan="2" align="center">
-		<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
+		<input type="button" value="Save" label="'.$tr->translate('GO_SAVE').'" dojoType="dijit.form.Button"
 		iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewLandBlog();"/>
 		</td>
 		</tr>
@@ -715,6 +644,4 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		</div>';
 		return $str;
 	}
-	
 }
-

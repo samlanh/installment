@@ -7,20 +7,10 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		$session_user=new Zend_Session_Namespace('authinstall');
 		return $session_user->user_id;
 	}
-// 	public function getCientAndPropertyInfo($sale_id){
-// 		$db = $this->getAdapter();
-// 		$sql="SELECT r.`id`,c.`name_kh`,
-// 			s.`house_id`,p.`id` as property_id,p.`land_code`,p.`land_address`,p.`land_size`,p.`width`,p.`height`,p.`street`,p.`land_price`,p.`house_price`
-// 			,p.`street`,(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
-// 			s.`comission`,s.`create_date`,s.`note` AS sale_note
-// 			FROM `ln_sale` AS s ,`ln_client` AS c,`ln_properties` AS p
-// 			WHERE c.`client_id` = s.`client_id` AND p.`id`=s.`house_id` AND s.id =".$sale_id;
-// 			return $db->fetchRow($sql);
-// 	}
 	public function getCustomerReceivedPlong($search=null){
 		$db = $this->getAdapter();
-		$from_date =(empty($search['start_date']))? '1': "c.`create_date` >= '".$search['start_date']." 00:00:00'";
-		$to_date = (empty($search['end_date']))? '1': "c.`create_date` <= '".$search['end_date']." 23:59:59'";
+		$from_date =(empty($search['from_date_search']))? '1': "c.`create_date` >= '".$search['from_date_search']." 00:00:00'";
+		$to_date = (empty($search['to_date_search']))? '1': "c.`create_date` <= '".$search['to_date_search']." 23:59:59'";
 		$where = " AND ".$from_date." AND ".$to_date;
 		$sql ='SELECT c.`id`,
 		    p.`project_name` as branch_name,

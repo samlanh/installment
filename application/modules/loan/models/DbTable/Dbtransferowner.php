@@ -8,70 +8,64 @@ class Loan_Model_DbTable_Dbtransferowner extends Zend_Db_Table_Abstract
     	return $session_user->user_id;
     	 
     }
-//    function getAllChangeHouse($search){
-//    	$from_date =(empty($search['start_date']))? '1': " s.change_date >= '".$search['start_date']." 00:00:00'";
-//    	$to_date = (empty($search['end_date']))? '1': " s.change_date <= '".$search['end_date']." 23:59:59'";
-//    	$where = " AND ".$from_date." AND ".$to_date;
-//    	$sql="SELECT cp.id,
-//    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.branch_id LIMIT 1) AS from_branch,
-// 		c.name_kh,
-// 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.from_property LIMIT 1) from_property,
-// 		from_paid,
-// 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.to_branch LIMIT 1) AS to_branch,
-// 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.to_property LIMIT 1) to_propertype,
-// 		cp.trafer_date,cp.status
-// 		FROM `ln_transfercash` AS cp,
-//    		`ln_client` c 
-//    		WHERE c.client_id=cp.from_clientid ";
-   	
-//    	$from_date =(empty($search['start_date']))? '1': " cp.trafer_date >= '".$search['start_date']." 00:00:00'";
-//    	$to_date = (empty($search['end_date']))? '1': " cp.trafer_date <= '".$search['end_date']." 23:59:59'";
-//    	$where = " AND ".$from_date." AND ".$to_date;
-//    	if(!empty($search['adv_search'])){
-//    		$s_where = array();
-//    	}
-//    	if($search['status']>-1){
-//    		$where.= " AND cp.status = ".$search['status'];
-//    	}
-//    	if(($search['client_name'])>0){
-//    		$where.= " AND cp.from_clientid=".$search['client_name'];
-//    	}
-//    	if(($search['branch_id'])>0){
-//    		$where.= " AND ( cp.branch_id = ".$search['branch_id']." OR cp.branch_id = ".$search['branch_id']." )";
-//    	}
-   	
-//    	$order = " ORDER BY id DESC ";
-//    	$db = $this->getAdapter();
-//    	return $db->fetchAll($sql.$where.$order);
-//    }
+   function getAllTranferOwner($search){
+	  
+	   	$sql="SELECT w.id,
+	   		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=w.branch_id LIMIT 1) AS from_branch,
+			c.name_kh,
+			(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=w.house_id LIMIT 1) from_property,
+			w.sold_price,
+			w.paid_before,
+			w.balance,
+			(SELECT cc.name_kh FROM `ln_client` AS cc WHERE cc.client_id=w.to_customer LIMIT 1) AS to_branch,
+			w.note,w.change_date,w.status
+			FROM 
+			`ln_change_owner` AS w,
+	   		`ln_client` c 
+	   		WHERE c.client_id=w.from_customer ";
+	   	
+	   	$from_date =(empty($search['start_date']))? '1': " w.change_date >= '".$search['start_date']." 00:00:00'";
+	   	$to_date = (empty($search['end_date']))? '1': " w.change_date <= '".$search['end_date']." 23:59:59'";
+	   	$where = " AND ".$from_date." AND ".$to_date;
+	   	if(!empty($search['adv_search'])){
+	   		$s_where = array();
+	   	}
+	   	if($search['status']>-1){
+	   		$where.= " AND w.status = ".$search['status'];
+	   	}
+	   	if(($search['branch_id'])>0){
+	   		$where.= " AND w.branch_id=".$search['branch_id'];
+	   	}
+	   	if(($search['client_name'])>0){
+	   		$where.= " AND ( w.from_customer= ".$search['client_name']." OR w.to_customer = ".$search['client_name']." )";
+	   	}
+	   	
+	   	$order = " ORDER BY id DESC ";
+	   	$db = $this->getAdapter();
+	   	return $db->fetchAll($sql.$where.$order);
+   }
    
    public function addTransferOwner($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
     		
-//     		$arr = array(
-//     				'branch_id'=>$data['branch_id'],
-//     				'from_sale'=>$data['loan_number'],
-//     				'from_property'=>$data['land_code'],
-//     				'from_clientid'=>$data['member'],
-//     				'from_saleprice'=>$data['total_sold'],
-//     				'from_paid'=>$data['paid_before'],
-//     				'from_balance'=>$data['balance_before'],
-    				
-//     				'to_branch'=>$data['to_branch_id'],
-//     				'to_sale'=>$data['toloan_number'],
-//     				'to_property'=>$rows['house_id'],
-//     				'to_saleprice'=>$data['land_price'],
-//     				'to_paid'=>$data['house_price'],
-//     				'to_balance'=>$data['to_total_sold'],
-    				
-//     				'note'=>$data['transfer_note'],
-//     				'trafer_date'=>date('Y-m-d'),
-//     				'user_id'=>$this->getUserId()
-//     				);
-// 	    		$this->_name="ln_transfercash";
-// 	    		$transferid = $this->insert($arr);
+    		$arr = array(
+    				'branch_id'=>$data['branch_id'],
+    				'sale_id'=>$data['loan_number'],
+    				'from_customer'=>$data['member'],
+    				'house_id'=>$data['land_code'],
+    				'to_customer'=>$data['to_customer'],
+    				'agreement_date'=>$data['agreement_date'],
+    				'note'=>$data['note'],
+    				'change_date'=>$data['change_date'],
+    				'sold_price'=>$data['total_sold'],
+    				'paid_before'=>$data['paid_before'],
+    				'balance'=>$data['balance_before'],
+    				'user_id'=>$this->getUserId()
+    				);
+    			$this->_name="ln_change_owner";
+	    		$transferid = $this->insert($arr);
 	    		
 	    		$arra = array(
 	    				'client_id' => $data['to_customer'],

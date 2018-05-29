@@ -61,10 +61,8 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 	    if(!empty($rows))foreach($rows AS $row){
   			$options[$row['key_code']]=$row['name_en'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
   		}
-
 		$schedule_opt->setMultiOptions($options);
 		$schedule_opt->setValue($request->getParam("schedule_opt"));
-		
 		
 		$_coid = new Zend_Dojo_Form_Element_FilteringSelect('co_id');
 		$_coid->setAttribs(array(
@@ -86,10 +84,8 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		$_date = $request->getParam("start_date");
 		
 		if(empty($_date)){
-			//$_date = date('Y-m-d');
 		}
 		$_releasedate->setValue($_date);
-		
 		
 		$_dateline = new Zend_Dojo_Form_Element_DateTextBox('end_date');
 		$_dateline->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','required'=>'true',
@@ -202,21 +198,32 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		$payment_method->setMultiOptions($opt);
 		$payment_method->setValue($request->getParam("payment_method"));
 		
+		$user = new Zend_Dojo_Form_Element_FilteringSelect('user_id');
+		$user->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>"false",
+				'queryExpr'=>'*${0}*',
+				'required'=>false
+		));
+		$user->setValue($request->getParam('user_id'));
+		$opt_user = array(''=>$this->tr->translate("LASTNAME_FIRSTNAME"));
+		$all_user=$db->getAllUser();
+		if(!empty($all_user))foreach ($all_user As $row)$opt_user[$row['id']]=$row['by_user'];
+		$user->setMultiOptions($opt_user);
+		
 		if($data!=null){
 // 			$_member->setValue($data['client_id']);
 			$_coid->setValue($data['co_id']);
 			$_releasedate->setValue($data['date_release']);
 			$client_name->setValue($data['client_name']);
 		}
-		$this->addElements(array($payment_method,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
-				$_category,$category_id_expense,
-		// 				$_groupid,$_member,$_group_code,$_customer_code,
-				$_dateline,$_status,$_btn_search));
+		$this->addElements(array($user,$payment_method,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
+				$_category,$category_id_expense,$_dateline,$_status,$_btn_search));
 		return $this;
 		
 	}	
 	function JurnalSearch($data=null){
-		
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$request=Zend_Controller_Front::getInstance()->getRequest();

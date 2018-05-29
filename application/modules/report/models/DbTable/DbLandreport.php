@@ -327,22 +327,7 @@ public function getAllOutstadingLoan($search=null){
 //         echo $sql.$where.$group_by;exit();
       	return $db->fetchAll($sql.$where.$group_by);
       }
-      public function getALLLoandateline(){
-      	//$to_date = (empty($search['to_date']))? '1': "date_payment <= '".$search['to_date']." 23:59:59'";
-      	$db = $this->getAdapter();
-//       	$sql="select g.level,(select first_name from rms_users where id=g.group_id) as first_name,(select last_name from rms_users where id=g.co_id)as last_name
-// 		,g.zone_id,g.date_release,g.date_line,g.create_date,g.total_duration,g.first_payment,g.time_collect
-// 		,g.collect_typeterm,g.pay_term,g.payment_method,g.holiday,g.is_renew,g.branch_id,g.loan_type,g.status,g.is_verify,g.is_badloan,g.teller_id
-// 		,m.chart_id,m.member_id,m.loan_number,m.currency_type,m.total_capital,m.admin_fee,m.interest_rate,m.loan_cycle,m.loan_purpose,m.pay_before
-// 		,m.pay_after,m.graice_period,m.amount_collect_principal,m.show_barcode,m.is_completed,m.semi from ln_loan_group as g,ln_loan_member as m where m.group_id = g.g_id";
-      	$sql="SELECT 
-      	g.level,(SELECT first_name FROM rms_users WHERE id=g.group_id) AS first_name,(SELECT last_name FROM rms_users WHERE id=g.co_id)AS last_name
-		,g.zone_id,g.date_release,g.`date_release` AS date_line,g.create_date,g.total_duration,g.first_payment,g.time_collect
-		,g.collect_typeterm,g.pay_term,g.payment_method,g.holiday,g.is_renew,g.branch_id,g.loan_type,g.status,g.is_verify,g.is_badloan,g.teller_id
-		,m.chart_id,m.member_id,m.loan_number,m.currency_type,m.total_capital,m.admin_fee,m.interest_rate,m.loan_cycle,m.loan_purpose,m.pay_before
-		,m.pay_after,m.graice_period,m.amount_collect_principal,m.show_barcode,m.is_completed FROM ln_loan_group AS g,ln_loan_member AS m WHERE m.group_id = g.g_id";
-      	return $db->fetchAll($sql);
-      }
+      
       public function getALLLoanTotalcollect($search=null){
 //       	$to_date = (empty($search['to_date']))? '1': "date_payment <= '".$search['to_date']." 23:59:59'";
        	$db = $this->getAdapter();
@@ -389,6 +374,10 @@ public function getAllOutstadingLoan($search=null){
       	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
       	$where = " AND ".$from_date." AND ".$to_date;
       	
+      	
+      	if(!empty($search['user_id']) AND $search['user_id']>0){
+      		$where.=" AND user_id = ".$search['user_id'];
+      	}
       	if($search['client_name']>0){
       		$where.=" AND client_id = ".$search['client_name'];
       	} 
@@ -950,46 +939,7 @@ public function getAllOutstadingLoan($search=null){
       	}
       	return $db->fetchAll($sql.$where);
       }
-      public function getClientLoanCo($search = null){//rpt-loan-released
-      	$db = $this->getAdapter();
-      
-      	$sql = "SELECT *,sum(total_capital) as alltotal_principle,count(level) as totallevel FROM v_released_co WHERE 1";
-      	$where ='';
-      	$from_date =(empty($search['start_date']))? '1': " date_release >= '".$search['start_date']." 00:00:00'";
-      	$to_date = (empty($search['end_date']))? '1': " date_release <= '".$search['end_date']." 23:59:59'";
-      	$where.= " AND ".$from_date." AND ".$to_date;
-      	 
-      	if($search['branch_id']>0){
-      		$where.=" AND branch_id = ".$search['branch_id'];
-      	}
-      	if($search['member']>0){
-      		$where.=" AND client_id = ".$search['member'];
-      	}
-      	if($search['co_id']>0){
-      		$where.=" AND co_id = ".$search['co_id'];
-      	}
-      	if($search['pay_every']>0){
-      		$where.=" AND pay_term_id = ".$search['pay_every'];
-      	}
-      	if(!empty($search['adv_search'])){
-      		$s_where = array();
-      		$s_search = addslashes(trim($search['adv_search']));
-      		$s_where[] = " branch_name LIKE '%{$s_search}%'";
-      		
-      		$s_where[] = " client_number LIKE '%{$s_search}%'";
-      		$s_where[] = " client_name LIKE '%{$s_search}%'";
-//       		$s_where[] = " total_capital LIKE '%{$s_search}%'";
-//       		$s_where[] = " other_fee LIKE '%{$s_search}%'";
-//       		$s_where[] = " admin_fee LIKE '%{$s_search}%'";
-      		$s_where[] = " name_en LIKE '%{$s_search}%'";
-      		$s_where[] = " client_khname LIKE '%{$s_search}%'";
-      		
-      		$s_where[] = " loan_type LIKE '%{$s_search}%'";
-      		$where .=' AND ('.implode(' OR ',$s_where).')';
-      	}
-      	$order = " GROUP BY client_id ORDER BY co_id DESC,totallevel DESC ";
-      	return $db->fetchAll($sql.$where.$order);
-      }
+     
       function roundhundred($n,$cu_type){
       	if($cu_type==1){
       		$y = round($n);

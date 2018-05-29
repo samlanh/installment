@@ -92,6 +92,7 @@ class Report_LoanController extends Zend_Controller_Action {
 				'client_name' => "",
 				'branch_id' => -2,
 				'land_id'=>-1,
+				'user_id'=>'',
 				'start_date'=> date('Y-m-d'),
 	  			'end_date'=>date('Y-m-d'),
 				'payment_method'=>-1,
@@ -134,10 +135,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	$id =$this->getRequest()->getParam('id');
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->rsincome =$db->getIncomeById($id);
-//   	$fm = new Loan_Form_Frmbadloan();
-//   	$frm = $fm->FrmBadLoan();
-//   	Application_Model_Decorator::removeAllDecorator($frm);
-//   	$this->view->frm_loan = $frm;
+
   	
 //   	$db = new Application_Model_DbTable_DbGlobal();
 //   	$this->view->classified_loan = $db->ClassifiedLoan();
@@ -494,86 +492,8 @@ public function exportFileToExcel($table,$data,$thead){
  	Application_Model_Decorator::removeAllDecorator($frm);
  	$this->view->frm_search = $frm;
  }
- function rptBadloanAction(){
- 	$db  = new Report_Model_DbTable_DbLandreport();
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- 	if($this->getRequest()->isPost()){
- 		$search = $this->getRequest()->getPost();
- 	}else{
- 		$search = array(
- 				'adv_search'=>'',
-				'branch' => '',
-				'client_name' =>'',
-				'client_code'=>'',
-				'Term'=>'',
-				'status' =>'',
-				'cash_type'=>'',
-				'start_date'=> date('Y-m-01'),
-				'end_date'=>date('Y-m-d'));
- 	}
- 	$this->view->LoanCollectionco_list =$db->getALLBadloan($search);
- 	$this->view->list_end_date=$search;
- 	$fm = new Loan_Form_Frmbadloan();
-	$frm = $fm->FrmBadLoan();
-	Application_Model_Decorator::removeAllDecorator($frm);
-	$this->view->frm_loan = $frm;
- }
- function rptWritoffAction(){
- 	$db  = new Report_Model_DbTable_DbLandreport();
- 	
- 	if($this->getRequest()->isPost()){
- 		$search = $this->getRequest()->getPost();
- 		
- 	}else{
- 		$search = array(
- 				'adv_search'=>'',
- 				'branch' => '',
- 				'client_name' =>'',
- 				'client_code'=>'',
- 				'Term'=>'',
- 				'status' =>'',
- 				'cash_type'=>'',
- 				'start_date'=> date('Y-m-01'),
- 				'end_date'=>date('Y-m-d'));
- 	}
- 	$this->view->LoanCollectionco_list =$db->getALLWritoff($search);
- 	$this->view->list_end_date=$search;
- 	$fm = new Loan_Form_Frmbadloan();
- 	$frm = $fm->FrmBadLoan();
- 	Application_Model_Decorator::removeAllDecorator($frm);
- 	$this->view->frm_loan = $frm;
- 	
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- }
- function rptLoanXchangeAction(){
- 	$db  = new Report_Model_DbTable_DbLandreport();
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- 	if($this->getRequest()->isPost()){
- 		$search = $this->getRequest()->getPost();
- 	}else{
- 		$search = array(
- 				'adv_search'=>'',
- 				'branch' => '',
- 				'client_name' =>'',
- 				'client_code'=>'',
- 				'Term'=>'',
- 				'status' =>'',
- 				'cash_type'=>'',
- 				'start_date'=> date('Y-m-01'),
- 				'end_date'=>date('Y-m-d'));
- 		
- 	}
- 	$this->view->Loanxchange_list =$db->getAllxchange($search);
- 	$frm = new Loan_Form_FrmSearchLoan();
- 	$frm = $frm->AdvanceSearch();
- 	Application_Model_Decorator::removeAllDecorator($frm);
- 	$this->view->frm_search = $frm;
- }
  
- function rptPaymentHistoryAction(){
+  function rptPaymentHistoryAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
  	if($this->getRequest()->isPost()){
  		$search = $this->getRequest()->getPost();
