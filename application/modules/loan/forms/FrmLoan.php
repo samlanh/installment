@@ -155,6 +155,14 @@ public function init()
 		));
 		$commission->setValue(0);
 		
+		$full_commission = new Zend_Dojo_Form_Element_NumberTextBox('full_commission');
+		$full_commission->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'required'=>true
+		));
+		$full_commission->setValue(0);
+		
 // 		$_loan_type = new Zend_Dojo_Form_Element_FilteringSelect('land_code');
 // 		$_loan_type->setAttribs(array(
 // 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -414,7 +422,7 @@ public function init()
 		$note->setAttribs(array(
 				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
-				'style'=>'width:100%;min-height:60px; font-size:18px; font-family:Kh Battambang'
+				'style'=>'width:100%;min-height:103px; font-size:18px; font-family:Kh Battambang'
 		));
 		
 		$cheque = new Zend_Dojo_Form_Element_TextBox("cheque");
@@ -493,13 +501,14 @@ public function init()
 // 			echo $data['price_sold'];
 			$note->setValue($data['note']);
 			$commission->setValue($data['comission']);
+			$full_commission->setValue($data['full_commission']);
 			$staff_id->setValue($data['staff_id']);
 			
 			$start_building->setValue($data['build_start']);
 			$amount_build->setValue($data['amount_build']);
 			
 		}
-		$this->addElements(array($payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

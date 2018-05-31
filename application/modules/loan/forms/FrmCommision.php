@@ -181,6 +181,15 @@ public function init()
 				'class'=>'fullside',
 				'readonly'=>true,
 		));
+		
+		$full_commission = new Zend_Dojo_Form_Element_NumberTextBox('full_commission');
+		$full_commission->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'readOnly'=>true
+		));
+		$full_commission->setValue(0);
+		
 		$_coid = new Zend_Dojo_Form_Element_FilteringSelect('co_id');
 		$_coid->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -281,7 +290,7 @@ public function init()
 // 			$_status->setValue($data['status']);
 			$return_back->setValue($data['total_amount']);
 		}
-		$this->addElements(array($staff_id,$date,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
+		$this->addElements(array($full_commission,$staff_id,$date,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
 				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$property,
 				$_period,$_loan_code,$_collect_term,

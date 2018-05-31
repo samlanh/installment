@@ -117,7 +117,7 @@
 							</table>
 						</td>
 					</tr>
-					<tr >
+					<tr>
 						<td class="agreement" colspan="2"><?php echo $tr->translate("AGREEMENT");?></td>
 					</tr>
 					<tr>
@@ -143,27 +143,19 @@
 	    	<fieldset>
 				<legend><strong style="color:#284db7;"><?php echo $tr->translate("PROPERTY_INFO");?></strong></legend>
 			    	<table width="100%" class="padding7" >
-						<tr height="40px">
+						<tr>
 							<td style="font-weight: bold;"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-							<td>
+							<td width="65%">
 								<?php echo $frm->getElement('typesale');?>
 								<input id="land_code" /><input dojoType="dijit.form.TextBox"  id="propertype" name="propertype" type="hidden">
 							</td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("DESCRIPTION");?></td>
-							<td style="background:#fff;height:25px; border:1px solid #aac4e6; widht:100%; font-size: 13px; color:#284db7;padding:2px;" colspan="4"><label id="land_information" style="max-width:100%;"></label><?php //echo $tr->translate("Address");?></td>
+							<td style="background:#fff;height:25px; border:1px solid #aac4e6; widht:100%; font-size: 11px; color:#284db7;padding:2px;" colspan="4"><label id="land_information" style="max-width:100%;"></label><?php //echo $tr->translate("Address");?></td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate("LAND_PRICE");?></td>
-							<td><?php echo $frm->getElement('land_price');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("HOUSE_PRICE");?></td>
-							<td><?php echo $frm->getElement('house_price');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("TOTAL_SOLD");?></td>
+							<td><?php echo $tr->translate("PRICE_BEFORE");?></td>
 							<td><?php echo $frm->getElement('total_sold');?></td>
 						</tr>
 						<tr>
@@ -181,6 +173,10 @@
 						<tr>
 							<td style="white-space: nowrap;"><?php echo $tr->translate("CO_NAME");?></td>
 							<td><input id="staff_id" /> </td>
+						</tr>
+						<tr>
+							<td style="white-space:"><strong><?php echo $tr->translate("COMISSION_EXPECTED");?></strong></td>
+							<td><?php echo $frm->getElement('full_commission');?></td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("COMISSION");?></td>
@@ -708,8 +704,6 @@ function resetSale(){
 	dijit.byId('land_label').attr("value",'');
 	$('#identity_land').val('');
 	dojo.byId('land_information').innerHTML ="";
-	dijit.byId('land_price').attr("value",0);
-	dijit.byId('house_price').attr("value",0);
 	dijit.byId('total_sold').attr("value",0);
 	dijit.byId('sold_price').attr("value",0);
 	land_id = dijit.byId("land_code").get("value");
@@ -1009,50 +1003,10 @@ function getReceiptByBranch(new_sale_id){
 		}
 	});
 }
-    function calCulatorBalance(){
-    	price = dijit.byId('land_price').get('value');
-    	deposit =dijit.byId('deposit').get('value');
-    	if(isNaN(deposit)){
-    		deposit=0;
-    	}
-    	if(deposit>price){
-    		alert("Deposit can not biger than price ");
-    		dijit.byId('deposit').focus();
-    		dijit.byId('deposit').attr('value',price)
-    	}
-        dijit.byId('balance').attr('value',price-deposit);
-        checkScheduleOption();
-    }   
     function checkValidateDate(){
 		return true;
      }
-    function setDefaultPaymentAmount(){
-    	amount_principal = dijit.byId('land_price').get('value');
-    	debt_term = dijit.byId('pay_every').get('value');
-    	debt_amount = dijit.byId('period').get('value')*<?php echo $install_month;?>;
-    	if(debt_term==1){
-    		debt_term=1;
-    	}else if(debt_term==2){
-    		debt_term=7;
-    	}
-    	else{
-    		debt_term=30;
-    	}
-		collect_amount = 1;
-		if(collect_term==1){
-			collect_term=1;
-    	}else if(collect_term==2){
-    		collect_term=7;
-    	}
-    	else{
-    		collect_term=30;
-    	}		
-    	term = (debt_term*debt_amount)/(collect_term*collect_amount);
-		interest_rate=dijit.byId('interest_rate').get('value')/100;
-		top_pow = Math.pow((1+interest_rate),term);
-		bellow = Math.pow((1+interest_rate),(term))-1;
-		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
-		}
+    
 	function hideDialog() {		
 		dijit.byId("recript_dialog").hide();
 		saveTrans(); 
@@ -1166,8 +1120,7 @@ var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','cont
 function getlandinfo(){
 	var typesale =dijit.byId('typesale').get('value');
 	var oldprice= dijit.byId('total_sold').get('value');
-	var land_price= dijit.byId('land_price').get('value');
-	var house_price= dijit.byId('house_price').get('value');
+	
 	land_id = dijit.byId('land_code').get('value');
 	if(land_id==''){return false;}
 	dojo.xhrPost({
@@ -1193,9 +1146,6 @@ function getlandinfo(){
 						var identity = $("#identity_land").val();
 						var price = oldprice + parseFloat(data.price);
 						
-						house_price = house_price+parseFloat(data.house_price);
-						land_price = land_price+parseFloat(data.land_price);
-						
 						oldland_code =  oldland_code+","+data.land_code;
 						address = address+"/"+data.land_address+','+data.street;
 						size = parseFloat(size)+parseFloat(data.land_size);
@@ -1206,9 +1156,6 @@ function getlandinfo(){
 						dijit.byId('total_sold').attr('value',price);
 						dijit.byId('sold_price').attr('value',price);
 
-						dijit.byId('land_price').attr('value',land_price);
-						dijit.byId('house_price').attr('value',house_price);
-						
 						dojo.byId('land_information').innerHTML ="លេខដី/ផ្ទះ  "+address+", ទំហំ "+size+" ម៉ែត្រការ៉េ ";
 						dijit.byId('land_label').attr('value',address);
 						}
@@ -1217,10 +1164,6 @@ function getlandinfo(){
 						dijit.byId('total_sold').attr('value',data.price);
 						dijit.byId('sold_price').attr('value',data.price);
 
-						dijit.byId('land_price').attr('value',data.land_price);
-						dijit.byId('house_price').attr('value',data.house_price);
-
-						
 						oldland_code = data.land_code;
 						address = data.land_address+','+data.street;
 						size = data.land_size;
@@ -1231,11 +1174,9 @@ function getlandinfo(){
 				}
 			}else{//normal
 				var price = oldprice + parseFloat(data.price);			
-				dijit.byId('land_price').attr('value',data.land_price);
-				dijit.byId('house_price').attr('value',data.house_price);
 				dijit.byId('total_sold').attr('value',data.price);
 				dijit.byId('sold_price').attr('value',data.price);
-				dojo.byId('land_information').innerHTML ="លេខសម្គាល់ "+data.land_code+", លេខផ្ទះ/ឡូតិ៏  "+data.land_address+", លេខផ្លូវ  "+data.street+", ប្រភេទ  "+data.property_type+", ទំហំ "+data.land_size+" ម៉ែត្រការ៉េ, បណ្តោយ "+data.height+" ម៉ែត្រ, ទទឹង  "+data.width+" ម៉ែត្រ";
+				dojo.byId('land_information').innerHTML ="លេខផ្ទះ/ឡូតិ៏  "+data.land_address+", លេខផ្លូវ  "+data.street+", ប្រភេទ  "+data.property_type+", ទំហំ "+data.land_size+" ម៉ែត្រការ៉េ, បណ្តោយ "+data.height+" ម៉ែត្រ, ទទឹង  "+data.width+" ម៉ែត្រ";
 				dijit.byId('propertype').attr('value',data.house_type);
 			}
 			Balance();
