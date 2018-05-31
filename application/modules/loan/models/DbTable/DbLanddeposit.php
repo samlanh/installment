@@ -489,10 +489,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$where = $db->quoteInto('id=?', $id);
     		$this->update($arr, $where);
     		
-    		if($data['deposit']>0){//insert payment
+    		//if($data['deposit']>0){//insert payment
     			$data['date_buy']=$data['paid_date'];
-//     			$dbtable = new Application_Model_DbTable_DbGlobal();
-//     			$receipt = $dbtable->getReceiptByBranch($data);
     			$pay_off = 0;
     			if($data["schedule_opt"]==2){
     				$pay_off = 1;
@@ -508,7 +506,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'outstanding'		=> $data['sold_price'],
     					'principal_amount'	=> $data['balance'],
     					'total_principal_permonth'=>$data['sold_price'],
-    					'total_principal_permonthpaid'=>$data['sold_price'],
+    					'total_principal_permonthpaid'=>$data['deposit'],
     					'total_interest_permonth'	=>0,
     					'total_interest_permonthpaid'=>0,
     					'penalize_amount'			=>0,
@@ -532,11 +530,9 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			$this->_name='ln_client_receipt_money';
     			$this->update($array, $where);
     			$where="receipt_no=".$data['receipt'];
-//     			$crm_id = $this->insert($array);
     				
     			$this->_name='ln_client_receipt_money_detail';
     			$array = array(
-    					'crm_id'		=>$crm_id,
     					'client_id'		=>$data['member'],
     					'land_id'		=>$data['land_code'],
     					'date_payment'	=>$data['date_buy'],
@@ -554,8 +550,10 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'is_completed'	=>($data['schedule_opt']==2)?1:0,
     					'status'		=>1,
     			);
-    			$this->insert($array);
-    		}
+    			$sql="SELECT id FROM `ln_client_receipt_money` WHERE receipt_no='".$data['receipt']."'";
+    			$crm_id = $db->fetchOne($sql);
+    			$where="crm_id=".$crm_id;
+    			$this->update($array, $where);
     		
 	        $db->commit();
 	        return 1;

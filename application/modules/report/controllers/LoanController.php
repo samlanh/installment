@@ -651,28 +651,28 @@ public function exportFileToExcel($table,$data,$thead){
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  }
- function rptExpenseAction(){
- 	$db = new Accounting_Model_DbTable_DbExpense();
- 	if($this->getRequest()->isPost()){
- 		$formdata=$this->getRequest()->getPost();
- 	}
- 	else{
- 		$formdata = array(
- 				"adv_search"=>'',
- 				"currency_type"=>-1,
- 				"status"=>-1,
- 				'start_date'=> date('Y-m-d'),
- 				'end_date'=>date('Y-m-d'),
- 		);
- 	}
- 	$this->view->rs= $db->getAllExpenseReport($formdata);//call frome model
- 	$this->view->list_end_date=$formdata;
+//  function rptExpenseAction(){
+//  	$db = new Accounting_Model_DbTable_DbExpense();
+//  	if($this->getRequest()->isPost()){
+//  		$formdata=$this->getRequest()->getPost();
+//  	}
+//  	else{
+//  		$formdata = array(
+//  				"adv_search"=>'',
+//  				"currency_type"=>-1,
+//  				"status"=>-1,
+//  				'start_date'=> date('Y-m-d'),
+//  				'end_date'=>date('Y-m-d'),
+//  		);
+//  	}
+//  	$this->view->rs= $db->getAllExpenseReport($formdata);//call frome model
+//  	$this->view->list_end_date=$formdata;
  	 
- 	$frm = new Loan_Form_FrmSearchLoan();
- 	$frm = $frm->AdvanceSearch();
- 	Application_Model_Decorator::removeAllDecorator($frm);
- 	$this->view->frm_search = $frm;
- }
+//  	$frm = new Loan_Form_FrmSearchLoan();
+//  	$frm = $frm->AdvanceSearch();
+//  	Application_Model_Decorator::removeAllDecorator($frm);
+//  	$this->view->frm_search = $frm;
+//  }
  function rptIncomestatementAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
  		

@@ -104,6 +104,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     }
     function getTranLoanByIdWithBranch($id,$is_newschedule=null){//group id
     	$sql = " SELECT s.*,
+    	(SELECT total_principal_permonthpaid  FROM `ln_client_receipt_money` 
+    		WHERE ln_client_receipt_money.receipt_no=s.receipt_no LIMIT 1) AS paid_amount,
     	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id=s.house_id) AS old_land_id 
     		FROM `ln_sale` AS s
 				WHERE s.id = ".$id;
@@ -1112,7 +1114,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'staff_id'=>$data['staff_id'],
     				'comission'=>$data['commission'],
     				'full_commission'=>$data['full_commission'],
-//     				'create_date'=>date("Y-m-d"),
     				'user_id'=>$this->getUserId(),
     				'status'=>$data['status_using']
     		);

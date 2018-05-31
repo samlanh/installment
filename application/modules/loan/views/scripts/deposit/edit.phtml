@@ -26,7 +26,7 @@
 <form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'deposit','action'=>'edit')); ?>" 
 				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 <script type="dojo/method" event="onSubmit">			
-			if(this.validate()) {
+		if(this.validate()) {
             branch_id = dijit.byId('branch_id').get('value');
             if (branch_id=='' || branch_id==-1){
 				alert('Please Select Branch!');
@@ -39,14 +39,12 @@
 				dijit.byId('member').focus();
 				return false;
 			}
-			if(payment_id==1 && paid_amount<=0){ alert("សូមបញ្ចូលចំនួនទឹកប្រាក់ត្រូវបង់");dijit.byId("deposit").focus();
-			return false;}
-			dijit.byId('saveclose').set('disabled',true);	
-			dijit.byId('savenew').set('disabled',true);
+				dijit.byId('saveclose').set('disabled',true);	
+				dijit.byId('savenew').set('disabled',true);
 			return true;
 			}else {
 				return false;
-			}
+		}
 </script>
 <table width="100%" style="margin-top:-5px;" cellspacing="10">
 	<td width="33%" valign="top">
@@ -193,8 +191,7 @@
 		<td align="center" colspan="3">
 			<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
 			<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconDelete"/>
-			<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
-			<input type="button" onclick="printSave('','');displayNone();" label="<?php echo $tr->translate("PREVIEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
+			<input type="button" onclick="printSave('','');displayNone();" label="<?php echo $tr->translate("PREVIEW")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 		</td>
 	</tr>	
 </table>
