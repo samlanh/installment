@@ -31,7 +31,7 @@ class Loan_ComissionController extends Zend_Controller_Action {
 			$link=array(
 					'module'=>'loan','controller'=>'comission','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('sale_number'=>$link,'client_number'=>$link,));
+			$this->view->list=$list->getCheckList(10,$collumns,$rs_rows,array());
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

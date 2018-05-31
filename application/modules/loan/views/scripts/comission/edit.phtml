@@ -1,6 +1,6 @@
 <?php
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
-echo $this->headTitle($tr->translate('SALE_CANCEL'));
+echo $this->headTitle($tr->translate('COMISSION_STAFF'));
 $frm = $this->frm_loan;
 ?>
 
@@ -110,6 +110,10 @@ dojo.require("dijit.Dialog");
 					</tr>
 					<tr>
 						<td colspan="3"><textarea class="fullside" style="height: 60px;font-family:'Khmer OS Battambang';font-size: 17px" id="note" name="note"><?php echo $rs['description'];?></textarea></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("STATUS")?></td>
+						<td><?php echo $frm->getElement('status')?></td>	
 					</tr>
 				</table>
 			</fieldset>
@@ -246,11 +250,13 @@ dojo.require("dijit.Dialog");
 				    <td colspan="3"><strong><label id="lb_date" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"></strong></td>
+				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['teller_sign'];?></strong></td>
 				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['customer_sign'];?></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="100px;">
 					<td class="one khmerbold" colspan="4" align="center" valign="bottom">
+						<h4 id="agent-sign" style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+						</h4>
 					</td>
 				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
 				  			<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
@@ -357,11 +363,13 @@ dojo.require("dijit.Dialog");
 				    <td colspan="3"><strong><label id="lb_date1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"></strong></td>
+				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['teller_sign'];?></strong></td>
 				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['customer_sign'];?></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="100px;">
 					<td class="one khmerbold" colspan="4" align="center" valign="bottom">
+						<h4 id="agent-sign1" style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+						</h4>
 					</td>
 				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
 				  			<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
@@ -681,7 +689,10 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 		});
 	}
 	function checkreturnAmount(){
-		paid_amount = dijit.byId('paid_amount').get('value');
+		//paid_amount = dijit.byId('paid_amount').get('value');
+		fullcommission = dijit.byId('full_commission').get('value');
+		commission = dijit.byId('commision').get('value');
+		paid_amount = fullcommission - commission;
 		return_back = dijit.byId('return_back').get('value');
 		sale_id = dijit.byId('sale_client').get('value');
 		if(sale_id==''){
@@ -733,14 +744,18 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 		
 		dojo.byId("lb_date").innerHTML = date_payment;
 		dojo.byId("lb_description").innerHTML = $("#note").val();
-		dojo.byId("lb_cheque").innerHTML = '';
+		dojo.byId("lb_cheque").innerHTML = dijit.byId("sale_client").attr('displayedValue');
 		dojo.byId("lb_branch1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
 		dojo.byId("lb_income_category1").innerHTML =dijit.byId("income_category").attr('displayedValue');
 		dojo.byId("lb_income_title1").innerHTML = 'ចំណាយលើកម្រៃជើងសារ';//dijit.byId("sale_client").attr('displayedValue');
 		dojo.byId("lb_total_amount1").innerHTML = currencyFormat(dijit.byId("return_back").get('value'));
 		dojo.byId("lb_date1").innerHTML = date_payment;
 		dojo.byId("lb_description1").innerHTML = $("#note").val();
-		dojo.byId("lb_cheque1").innerHTML = '';
+		dojo.byId("lb_cheque1").innerHTML = dijit.byId("sale_client").attr('displayedValue');
+
+		dojo.byId("agent-sign").innerHTML = dijit.byId("staff_id").attr('displayedValue');
+		dojo.byId("agent-sign1").innerHTML = dijit.byId("staff_id").attr('displayedValue');
+		
 		dijit.byId("print_expense").show();
 		}
 	}

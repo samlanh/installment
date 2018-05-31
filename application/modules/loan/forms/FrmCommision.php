@@ -278,6 +278,16 @@ public function init()
 				'class'=>'fullside',
 		));
 		
+		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
+		$_status->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside',));
+		$_status_opt = array(
+				1=>$this->tr->translate("ACTIVE"),
+				0=>$this->tr->translate("DACTIVE"));
+		$_status->setMultiOptions($_status_opt);
+		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$staff_opt = $db->getAllCOName(1);
 		$staff_id->setMultiOptions($staff_opt);
@@ -289,13 +299,14 @@ public function init()
 // 			echo $data['id'];exit();
 // 			$_status->setValue($data['status']);
 			$return_back->setValue($data['total_amount']);
+			$_status->setValue($data['status']);
 		}
 		$this->addElements(array($full_commission,$staff_id,$date,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
 				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$property,
 				$_period,$_loan_code,$_collect_term,
 				$_customer_code,
-				$return_back
+				$return_back,$_status
 				));
 		return $this;
 		

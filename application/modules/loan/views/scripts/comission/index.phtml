@@ -2,6 +2,9 @@
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 echo $this->headTitle($tr->translate('BAD_LOAN'));
  $frm = $this->frm_cancel;
+ $edit_sale = $tr->translate("EDIT");
+ $urlEdit = $this->baseUrl()."/loan/comission/edit/id/";
+ $urlReciept = $this->baseUrl()."/report/paramater/commissionreceipt/id/";
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -20,4 +23,37 @@ echo $this->headTitle($tr->translate('BAD_LOAN'));
 	</table>
 	<?php echo $this->list;?>
 </form>
+<script>
 
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+		
+			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+			}else if(key=="receipt"){
+				url='<?php echo $urlReciept;?>';
+			}
+			
+			gotoAction();
+			//window.console && console.log(m) || alert(m); 
+		},
+		items: {
+			"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
+			"receipt": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-money", accesskey: "h"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
+</script>

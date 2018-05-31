@@ -296,4 +296,39 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
   }
+  function commissionbalanceAction(){
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+  				'land_id'=>0,
+  				'start_date'  => date('Y-m-d'),
+  				'end_date'    => date('Y-m-d'),
+  				'txtsearch' => '',
+  				'branch_id'=>-1,
+  				'co_khname'=>-1,
+  				'search_status'=>-1);
+  	}
+  	$row = $db->getCommissionBalance($search);
+  	$this->view->row = $row;
+  	
+  	$frm=new Other_Form_FrmStaff();
+  	$row=$frm->FrmAddStaff();
+  	Application_Model_Decorator::removeAllDecorator($row);
+  	$this->view->frm_staff=$row;
+  }
+  function commissionreceiptAction(){
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$id = $this->getRequest()->getParam('id');
+  	$id = empty($id)?0:$id;
+  	$row = $db->getComissionById($id);
+  	if (empty($row)){
+  		Application_Form_FrmMessage::Sucessfull("NO RECORD","/loan/comission");
+  	}
+  	$this->view->row = $row;
+  	
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  }
 }

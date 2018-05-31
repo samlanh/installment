@@ -119,7 +119,8 @@ class Loan_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 					'staff_id'	  => $data['staff_id'],
 					'user_id'	  => $this->getUserId(),
 // 					'create_date' => date('Y-m-d'),
-					'property_id' => $data['property_id']
+					'property_id' => $data['property_id'],
+					'status' => $data['status']
 			);
 			$this->_name="ln_comission";
 			$where = " id = ".$data['id'];
