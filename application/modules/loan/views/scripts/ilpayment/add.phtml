@@ -187,6 +187,10 @@
 							<td align="left"><?php echo $frm->getElement('priciple_amount');?></td>
 						</tr>
 						<tr>
+					    	<td><?php echo $tr->translate("ថ្ងៃត្រូវបង់")?></td>
+							<td align="left"><?php echo $frm->getElement('date_payment');?></td>
+					    </tr>
+						<tr>
 							<td><?php echo $tr->translate("COLLECT_DATE");?></td>
 							<td><?php echo $frm->getElement('collect_date');?></td>
 						</tr>
@@ -1068,19 +1072,6 @@ function AddNewCo(){
 dojo.ready(function(){
 });
 function payOption(){
-	/*pay_option = dijit.byId('option_pay').get('value');
-	var ids =dijit.byId('record_id').get('value');
-	var arrays = ids.split(',');
-	for(var i=0;i<arrays.length;i++){
-		if(pay_option==4){
-			$('#mfdid_'+i).attr('onclick',"return false", 'onkeydown',"return false");
-			$('#mfdid_'+i).attr('checked',true);
-			$('#check_all').attr('checked',true);
-			
-		}else{
- 			trRow(arrays[i]);
-		}
-	}*/
 	calculateTotal();
 }
 /*function trRow(x){
@@ -1306,7 +1297,6 @@ function getLaonPayment(type){//tab ទី១
 
 function calculateTotal(index){
 	try{
-		//alert("testing payoff");
 		var penelize = 0;
 		var total_payment = 0;
 		var os_amount = 0;
@@ -1322,7 +1312,6 @@ function calculateTotal(index){
 		
 		var total_penelize =0;
 		var service_charge_amount=0;
-		//var condition = 0;
 	
 		if(payOption==4){
 			var ids =dijit.byId('record_id').get('value');
@@ -1362,7 +1351,6 @@ function calculateTotal(index){
 		          	var principlePerMonth = $('#principal_permonth_'+arrays[i]).val();
 		          	old_interest = $('#old_interest_'+arrays[i]).val();
 		  	  		
-		          	//var interest = parseFloat($('#interest_'+arrays[i]).val());
 					penelize =  parseFloat($('#old_penelize_1').val());
 					var old_service_charge =  parseFloat($('#old_service_1').val());
 		          	var service_charge = parseFloat($('#service_'+arrays[i]).val());
@@ -1394,8 +1382,7 @@ function calculateTotal(index){
 					}else{
 						total_late_day = late_day;
 					}
-					//alert("total_late_day"+total_late_day);
-					//totalPay =  parseFloat(principlePerMonth) + parseFloat(interest);
+					
 					dijit.byId('late_day').attr('value',total_late_day+ " Days");
 					dijit.byId('option_pay').attr('readOnly',false);
 					if(payOption==1){//pay normall
@@ -1409,7 +1396,6 @@ function calculateTotal(index){
 							document.getElementById('lb_interest_'+arraysn[j]).innerHTML = (parseFloat(old_interest));
 							$('#interest_'+arraysn[j]).val((parseFloat(old_interest)));
 						  }  
-						
 						
 						total_penelize = parseFloat(total_penelize) +  parseFloat(penelize); 	
 						totalAmount = parseFloat(principlePerMonth) + parseFloat(total_interest) + parseFloat(service_charge) + parseFloat(penelize);
@@ -1425,15 +1411,17 @@ function calculateTotal(index){
 						total_interest_late = total_interest_late + 0;
 						var ids =dijit.byId('record_id').get('value');
 						var arraysn = ids.split(',');
-						document.getElementById('lb_interest_'+arrays[i]).innerHTML = roundhundred(parseFloat(0));
-
+						//document.getElementById('lb_interest_'+arrays[i]).innerHTML = roundhundred(parseFloat(0));
 						$('#interest_'+arrays[i]).val(roundhundred(parseFloat(0)));
+						var total_interest = total_interest+parseFloat($('#interest_'+arrays[i]).val());
+						totalprinciple = $('#total_priciple_1').val();
+						
 						document.getElementById('lb_payment_'+arrays[i]).innerHTML = roundhundred(parseFloat(totalPay)+penelize+service_charge);
 						$('#payment_'+arrays[i]).val(roundhundred(parseFloat(totalPay)+penelize+service_charge));
 						totalAmount = totalAmount + parseFloat(principlePerMonth)+parseFloat(total_interest_late)+penelize+service_charge;
 						document.getElementById('lb_penelize_'+arrays[i]).innerHTML = roundhundred(total_penelize+parseFloat(penelize));
 						$('#penelize_'+arrays[i]).val(roundhundred(total_penelize+parseFloat(penelize)));
-						var total_interest = total_interest+parseFloat($('#interest_'+arrays[i]).val());
+						
 					}else if(payOption==4){
 						priciple_amount = 0;//ប្រាក់ដើមបង់នៅសល់បន្ទាប់ពីបង់
 						total_penelize = 0;//ប្រាក់ពិន័យ
@@ -1627,7 +1615,7 @@ function calculateTotal(index){
 		dijit.byId('total_payment').attr('value',totalAmount);//ប្រាក់ត្រូវ​បង់សរុរប
 		dijit.byId('os_amount').attr('value',os_amount);
 		dijit.byId('total_interest').attr('value',total_interest);
-		
+		//alert("total_interest"+total_interest);
 		dijit.byId('priciple_amount').attr('value',priciple_amount);
 		dijit.byId('service_charge').attr('value',service_charge_amount);
 		var identity = dijit.byId('identity').get('value');
@@ -1701,8 +1689,7 @@ function totalReturn(){
 			os_amount = dijit.byId('os_amount').get('value');//os ប្រាក់ដើមត្រូវបង់
 			dijit.byId('priciple_amount').attr('value',begining_balance-os_amount);
 		}
-		//all_total = os_amount+total_interest+service_charge+penalize_amount;
-	    //dijit.byId('total_payment').attr('value',all_total);
+		
 	}else if(option_pay==3){
 		dijit.byId('extrapayment').attr('value',0);
 		dijit.byId('extrapayment').set("readOnly",true);

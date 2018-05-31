@@ -339,13 +339,14 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$c_date = date('Y-m-d');
 		$_collect_date->setValue($c_date);
 		
-// 		$date_input = new Zend_Dojo_Form_Element_DateTextBox('date_input');
-// 		$date_input->setAttribs(array(
-// 				'dojoType'=>'dijit.form.DateTextBox',
-// 				'class'=>'fullside',
-// 				'required' =>true
-// 		));
-// 		$date_input->setValue($c_date);
+		$date_payment = new Zend_Dojo_Form_Element_DateTextBox('date_payment');
+		$date_payment->setAttribs(array(
+				'dojoType'=>'dijit.form.DateTextBox',
+				'class'=>'fullside',
+				'required' =>true,
+				'constraints'=>'{datePattern:"dd-MM-yyyy"}'
+		));
+		$date_payment->setValue($c_date);
 
 		$date_input = new Zend_Form_Element_Hidden("date_input");
 		$date_input->setValue($c_date);
@@ -484,7 +485,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 			$_collect_date->setValue($data["date_pay"]);
 // 			$old_tota_pay->setValue($data["total_payment"]-$data["service_charge"]);
 		}
-		$this->addElements(array($to_branch_id,$paid_times,$discount_percent,$late_day,$_cheque,$_pay_late,$branch_id,$sold_price,$_graice_pariod,$commission,$schedule_opt,$_landsize,$_loan_codes,$_loan_codes,$old_amount_receive,$old_loan_number,$old_release_date,$old_service_charge,$old_penelize,$_cocode,$_last_payment_date,$using_date,$total_amount_loan,$loan_period,$candition_payment,$payment_method,$release_date,$loan_level,$remain,$old_tota_pay,$installment_date,$amount_payment_term,$_interest_rate,$_payterm,$payment_method,$id,$option_pay,$date_input,$reciept_no,$reciever,$discount,$id,$_groupid,$_coid,$_priciple_amount,$_loan_fee,$_os_amount,$_rate,
+		$this->addElements(array($date_payment,$to_branch_id,$paid_times,$discount_percent,$late_day,$_cheque,$_pay_late,$branch_id,$sold_price,$_graice_pariod,$commission,$schedule_opt,$_landsize,$_loan_codes,$_loan_codes,$old_amount_receive,$old_loan_number,$old_release_date,$old_service_charge,$old_penelize,$_cocode,$_last_payment_date,$using_date,$total_amount_loan,$loan_period,$candition_payment,$payment_method,$release_date,$loan_level,$remain,$old_tota_pay,$installment_date,$amount_payment_term,$_interest_rate,$_payterm,$payment_method,$id,$option_pay,$date_input,$reciept_no,$reciever,$discount,$id,$_groupid,$_coid,$_priciple_amount,$_loan_fee,$_os_amount,$_rate,
 				$_penalize_amount,$_collect_date,$_total_payment,$_note,$_service_charge,$_amount_return,
 				$_amount_receive,$_client_code,$_loan_number,$_hide_total_payment));
 		return $this;
