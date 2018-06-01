@@ -35,7 +35,7 @@ class Group_CustomerController extends Zend_Controller_Action {
 					'module'=>'group','controller'=>'customer','action'=>'edit',
 			);
 			
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('name'=>$link,'phone'=>$link));
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('name'=>$link,'phone'=>$link));
 
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");

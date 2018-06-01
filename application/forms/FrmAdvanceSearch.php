@@ -42,7 +42,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		
 		$employee = new Zend_Dojo_Form_Element_FilteringSelect('employee');
 		$rows = $db ->getAllCOName();
-		$options=array(''=>"---select---");
+		$options=array(''=>$this->tr->translate("SELECT_EMPLOYEE"));
 		if(!empty($rows))foreach($rows AS $row) $options[$row['co_id']]=$row['co_khname'];
 		$employee->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -71,7 +71,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 				'queryExpr'=>'*${0}*',
 		));
 		$rows = $db->getAllBranchName();
-		$options_branch=array('-1'=>"---Select Branch---");
+		$options_branch=array('-1'=>$this->tr->translate("SELECT_BRANCH"));
 		if(!empty($rows))foreach($rows AS $row){
 			$options_branch[$row['br_id']]=$row['project_name'];
 		}
@@ -80,7 +80,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		
 		$approve_by = new Zend_Dojo_Form_Element_FilteringSelect('approve_by');
 		$rows = $db ->getAllCOName();
-		$options_approve=array(''=>"---ជ្រើសរើស---");
+		$options_approve=array(''=>$this->tr->translate("SELECT_APPROVE_BY"));
 		if(!empty($rows))foreach($rows AS $row) $options_approve[$row['co_id']]=$row['co_khname'];
 		$approve_by->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -101,25 +101,6 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		));
 		$type->setMultiOptions($opt_type);
 		$type->setValue($request->getParam("type"));
-		
-// 		$from_date=new Zend_Dojo_Form_Element_DateTextBox('from_date');
-// 		$from_date->setAttribs(array(
-// 				'dojoType'=>'dijit.form.DateTextBox',
-// 				'required'=>true,
-// 				'class'=>'fullside'
-// 		));
-// 		$from_date->setValue(date('Y-m-d'));
-// // 		$from_date->setValue($request->getParam("from_date"));
-		 
-// 		$to_date=new Zend_Dojo_Form_Element_DateTextBox('to_date');
-// 		$to_date->setAttribs(array(
-// 				'dojoType'=>'dijit.form.DateTextBox',
-// 				'required'=>true,
-// 				'class'=>'fullside'
-// 		));
-// 		$to_date->setValue(date('Y-m-d'));
-// // 		$to_date->setValue($request->getParam("to_date"));
-
 		
 		$from_date = new Zend_Dojo_Form_Element_DateTextBox('start_date');
 		$from_date->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
@@ -160,7 +141,20 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$position_->setMultiOptions($opt_position);
 		$position_->setValue($request->getParam("position"));
 		
-		$this->addElements(array($position_,$from_date,$to_date,$type,$employee,$_title,$_title,$_status,$_btn_search,$branch_id,$approve_by));
+		$user = new Zend_Dojo_Form_Element_FilteringSelect('user');
+		$rows = $db ->getAllUser();
+		$options=array(''=>$this->tr->translate("SELECT_USER"));
+		if(!empty($rows))foreach($rows AS $row) $options[$row['id']]=$row['by_user'];
+		$user->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+		));
+		$user->setMultiOptions($options);
+		$user->setValue($request->getParam('user'));
+		
+		
+		$this->addElements(array($position_,$from_date,$to_date,$type,$employee,$_title,$_title,$_status,$_btn_search,$branch_id,$approve_by,$user));
 		return $this;
 	}
 	

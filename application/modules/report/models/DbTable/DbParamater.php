@@ -1273,6 +1273,7 @@ function getAllBranch($search=null){
     			$s_search = addslashes(trim($search['adv_search']));
     			$s_where[] =" s.`sale_number` LIKE '%{$s_search}%'";
     			$s_where[]=" s.`receipt_no` LIKE '%{$s_search}%'";
+    			$s_where[]=" (SELECT st.tel FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) LIKE '%{$s_search}%'";
     			$s_where[]=" (SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) LIKE '%{$s_search}%'";
     			$s_where[]=" (SELECT st.co_code FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) LIKE '%{$s_search}%'";
     			$where .=' AND ( '.implode(' OR ',$s_where).')';
@@ -1295,6 +1296,31 @@ function getAllBranch($search=null){
 			`ln_sale` AS s
 			WHERE s.`id` = c.`sale_id` AND c.`id` = ".$id;
     		return $db->fetchRow($sql);
+    	}
+    	function getCustomerRequirement($search=null){
+    		$db = $this->getAdapter();
+    		$sql="SELECT c.*,			
+				(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name,
+				STATUS FROM in_customer AS c WHERE c.`status`=1";
+    		$where ="";
+    		$from_date =(empty($search['start_date']))? '1': " c.`date` >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " c.`date` <= '".$search['end_date']." 23:59:59'";
+    		$where.= " AND ".$from_date." AND ".$to_date;
+    		if(!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = addslashes(trim($search['adv_search']));
+    			$s_where[] =" c.`name` LIKE '%{$s_search}%'";
+    			$s_where[]=" c.`phone` LIKE '%{$s_search}%'";
+    			$s_where[]=" c.`from_price` LIKE '%{$s_search}%'";
+    			$s_where[]=" c.`to_price` LIKE '%{$s_search}%'";
+    			$s_where[]=" c.`type` LIKE '%{$s_search}%'";
+    			$s_where[]=" (SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) LIKE '%{$s_search}%'";
+    			$where .=' AND ( '.implode(' OR ',$s_where).')';
+    		}
+    		if(!empty($search['user'])){
+    			$where.= " AND c.user_id = ".$search['user'];
+    		}
+    		return $db->fetchAll($sql.$where);
     	}
 
 }

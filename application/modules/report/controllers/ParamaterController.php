@@ -310,6 +310,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'co_khname'=>-1,
   				'search_status'=>-1);
   	}
+  	$this->view->search =$search;
   	$row = $db->getCommissionBalance($search);
   	$this->view->row = $row;
   	
@@ -330,5 +331,27 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  }
+  function customerrequireAction(){
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+  				'start_date'  => date('Y-m-d'),
+  				'end_date'    => date('Y-m-d'),
+  				'adv_search' => '',
+  				'user' => '',
+  				);
+  	}
+  	$this->view->search =$search;
+  	$row = $db->getCustomerRequirement($search);
+  	$this->view->row = $row;
+  	
+  	$frm = new Application_Form_FrmAdvanceSearch();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm=$frm;
   }
 }
