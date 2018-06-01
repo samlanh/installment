@@ -1278,7 +1278,15 @@ function getAllBranch($search=null){
     			$s_where[]=" (SELECT st.co_code FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) LIKE '%{$s_search}%'";
     			$where .=' AND ( '.implode(' OR ',$s_where).')';
     		}
+    		if(!empty($search['commission_type'])){
+    			if ($search['commission_type']==1){
+    			$where.=" AND s.`full_commission` = (SUM(c.`total_amount`)+ s.`comission`)";
+    			}else if ($search['commission_type']==2){
+    				$where.=" AND s.`full_commission` > (SUM(c.`total_amount`)+ s.`comission`)";
+    			}
+    		}
     		$groupby =" GROUP BY c.`staff_id`,s.`id` ORDER BY s.`id` DESC";
+    		echo $sql.$where.$groupby;exit();
     		return $db->fetchAll($sql.$where.$groupby);
     	}
     	public function getComissionById($id){

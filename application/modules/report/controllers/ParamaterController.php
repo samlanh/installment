@@ -267,6 +267,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'co_khname'=>-1,
   				'search_status'=>-1);
   	}
+  	$this->view->search =$search;
   	$this->view->staff_list = $db->getALLCommissionStaff($search);
   	$frm=new Other_Form_FrmStaff();
   	$row=$frm->FrmAddStaff();
@@ -308,6 +309,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'txtsearch' => '',
   				'branch_id'=>-1,
   				'co_khname'=>-1,
+  				'commission_type'=>'',
   				'search_status'=>-1);
   	}
   	$this->view->search =$search;
