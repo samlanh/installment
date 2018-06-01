@@ -100,23 +100,22 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 	}
 	public function getClientDetailInfo($id){
 		$db = $this->getAdapter();
-		$sql = "SELECT c.client_id , c.client_number ,c.`name_en`,c.`name_kh`,c.`sex`,
-		c.`id_number`,c.`id_type`,c.`acc_number`,c.`phone`,c.`dob`,c.`pob`,c.`tel`,c.`email`,c.`street`,c.`house`,
-		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=23 AND v.key_code = c.`client_d_type`) AS doc_name,
-		(SELECT commune_namekh FROM `ln_commune` WHERE com_id = c.com_id   LIMIT 1) AS commune_name
-		,(SELECT district_namekh FROM `ln_district` AS ds WHERE dis_id = c.dis_id  LIMIT 1) AS district_name
-		,(SELECT province_kh_name FROM `ln_province` WHERE province_id= c.pro_id  LIMIT 1) AS province_en_name
-		,(SELECT village_namekh FROM `ln_village` WHERE vill_id = c.village_id  LIMIT 1) AS village_name , 
-		(SELECT project_name FROM `ln_project` WHERE br_id =c.branch_id LIMIT 1) AS project_name ,
-		 c.`remark`,c.`status`,
-		 c.bname_kh,c.`hname_kh`,c.`lphone`,c.`ksex`,
-		 (SELECT commune_namekh FROM `ln_commune` WHERE com_id = c.dcommune   LIMIT 1) AS p_commune_name
-		,(SELECT district_namekh FROM `ln_district` AS ds WHERE dis_id = c.adistrict  LIMIT 1) AS p_district_name
-		,(SELECT province_kh_name FROM `ln_province` WHERE province_id= c.cprovince  LIMIT 1) AS p_province_en_name
-		,(SELECT village_namekh FROM `ln_village` WHERE vill_id = c.qvillage  LIMIT 1) AS p_village_name ,
-		c.`dstreet`,c.`ghouse`,c.`nationality`,c.`nation_id`,c.`p_nationality`,c.`rid_no`,c.`arid_no`,c.refe_nation_id,
-		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=23 AND v.key_code = c.`joint_doc_type`) AS join_doc_name,
-		 c.photo_name FROM `ln_client` AS c WHERE client_id =  ".$db->quote($id);
+		$sql = "SELECT c.*,
+(SELECT  v.name_kh FROM `ln_view` AS v WHERE v.type=11 AND v.key_code =c.`sex` LIMIT 1) AS sex,
+(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=23 AND v.key_code = c.`client_d_type`) AS doc_name,
+(SELECT commune_namekh FROM `ln_commune` WHERE com_id = c.com_id   LIMIT 1) AS commune_name
+,(SELECT district_namekh FROM `ln_district` AS ds WHERE dis_id = c.dis_id  LIMIT 1) AS district_name
+,(SELECT province_kh_name FROM `ln_province` WHERE province_id= c.pro_id  LIMIT 1) AS province_en_name
+,(SELECT village_namekh FROM `ln_village` WHERE vill_id = c.village_id  LIMIT 1) AS village_name , 
+(SELECT project_name FROM `ln_project` WHERE br_id =c.branch_id LIMIT 1) AS project_name ,
+(SELECT  v.name_kh FROM `ln_view` AS v WHERE v.type=11 AND v.key_code =c.`ksex` LIMIT 1) AS ksex,
+ (SELECT commune_namekh FROM `ln_commune` WHERE com_id = c.dcommune   LIMIT 1) AS p_commune_name
+,(SELECT district_namekh FROM `ln_district` AS ds WHERE dis_id = c.adistrict  LIMIT 1) AS p_district_name
+,(SELECT province_kh_name FROM `ln_province` WHERE province_id= c.cprovince  LIMIT 1) AS p_province_en_name
+,(SELECT village_namekh FROM `ln_village` WHERE vill_id = c.qvillage  LIMIT 1) AS p_village_name ,
+(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=23 AND v.key_code = c.`joint_doc_type`) AS join_doc_name
+		 FROM 
+		`ln_client` AS c WHERE client_id =  ".$db->quote($id);
 		$sql.=" LIMIT 1 ";
 		$row=$db->fetchRow($sql);
 		return $row;
