@@ -45,7 +45,8 @@
    
 	if(schedule_opt==2){
 		balance_before = dijit.byId("balance_before").get("value");
-		if(balance_before!=deposit){
+		sold_price = dijit.byId("sold_price").get("value");
+		if(sold_price!=(deposit+paid_before)){
 			alert("បង់ផ្តាច់ ប្រាក់ត្រូវបង់ត្រូវស្មើរនិងប្រាក់នៅជំពាក់");
 			dijit.byId('deposit').focus();
 			return false;
@@ -767,6 +768,7 @@ function checkScheduleOption(){
 			dijit.byId('period').set("readOnly",true);
 			amount_principal = dijit.byId("sold_price").get("value")-dijit.byId("paid_before").get("value");
 			dijit.byId('deposit').attr("value",amount_principal);
+			dijit.byId('balance').attr("value",0);
 			dijit.byId('period').attr("value",0);
 			dijit.byId('date_line').attr('value','<?php echo date("Y-m-d");?>');
 			dijit.byId('first_payment').attr('value','<?php echo date("Y-m-d");?>');			
@@ -908,13 +910,15 @@ function calculateDiscount(){
 function Balance(){
 	price = dijit.byId('sold_price').get('value');
 	deposit =dijit.byId('deposit').get('value');
+	paid_before = dijit.byId("paid_before").get("value");
+	
 	if(isNaN(deposit)){
 		deposit=0;
 	}
-	if(deposit>price){
+	if((deposit+paid_before)>price){
 		alert("ប្រាក់បង់មិនអាចធំជាងតម្លៃលក់បានទេ!");
 		dijit.byId('deposit').focus();
-		dijit.byId('deposit').attr('value',price)
+		dijit.byId('deposit').attr('value',price-paid_before)
 		dijit.byId('balance').attr('value',0)
 	}else{ 
 		schedule_opt = dijit.byId('schedule_opt').get('value');
@@ -1681,6 +1685,7 @@ function calCulateFirstPayment(){
 }
 function printSave(new_receipt_no){	
 	deposit = dijit.byId('deposit').get('value');
+	paid_before = dijit.byId("paid_before").get("value");
 	if (deposit=='' || deposit==-1){
 		alert('សូមបញ្ចូលប្រាក់ត្រូវបង់ ទើបបោះពុម្ភបង្កាន់ដៃបង់ប្រាក់បាន!');
 		dijit.byId('deposit').focus();
@@ -1688,8 +1693,8 @@ function printSave(new_receipt_no){
 	}
 	schedule_opt = dijit.byId('schedule_opt').get('value');
 	if(schedule_opt==2){
-		balance_before = dijit.byId("balance_before").get("value");
-		if(balance_before!=deposit){
+		sold_price = dijit.byId("sold_price").get("value");
+		if(sold_price!=(deposit+paid_before)){
 			alert("បង់ផ្តាច់ ប្រាក់ត្រូវបង់ត្រូវស្មើរនិងប្រាក់នៅជំពាក់");
 			dijit.byId('deposit').focus();
 			return false;
@@ -1703,7 +1708,7 @@ function printSave(new_receipt_no){
 	
 	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
 	deposit = dijit.byId("deposit").get("value");
-	paid_before = dijit.byId("paid_before").get("value");
+	
 	total_paid = deposit+paid_before;
 	dojo.byId("lbl_total_paid").innerHTML = dojo.number.format(total_paid,{places:2})+" "+symbal;
 	dojo.byId("lblpropertyprice").innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),{places:2})+" "+symbal;//dijit.byId("schedule_opt").attr('displayedValue');
