@@ -1280,13 +1280,13 @@ function getAllBranch($search=null){
     		}
     		if(!empty($search['commission_type'])){
     			if ($search['commission_type']==1){
-    			$where.=" AND s.`full_commission` = (SUM(c.`total_amount`)+ s.`comission`)";
+    			//$where.=" AND s.`full_commission` = (SUM(c.`total_amount`)+ s.`comission`)";
     			}else if ($search['commission_type']==2){
-    				$where.=" AND s.`full_commission` > (SUM(c.`total_amount`)+ s.`comission`)";
+    				//$where.=" AND s.`full_commission` > (SUM(c.`total_amount`)+ s.`comission`)";
     			}
     		}
     		$groupby =" GROUP BY c.`staff_id`,s.`id` ORDER BY s.`id` DESC";
-    		echo $sql.$where.$groupby;exit();
+//     		echo $sql.$where.$groupby;exit();
     		return $db->fetchAll($sql.$where.$groupby);
     	}
     	public function getComissionById($id){
