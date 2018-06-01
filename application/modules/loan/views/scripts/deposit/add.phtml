@@ -970,9 +970,14 @@ function printSave(new_stu_id,new_receipt_no){
 		dijit.byId('deposit').focus();
 		return false;
 	}
+	date_line = dijit.byId('date_line').get('value');
+	if(date_line=="" || date_line==null){
+		alert("<?php echo $tr->translate("ALERT_DEPOSIT_WARNING");?>");
+		dijit.byId("date_line").focus();return false;
+	}
 	
 	if(schedule_opt==1 && new_receipt_no!=''){
-		var r = confirm("<?php echo $tr->translate("ALERT_DEPOSIT_WARNING");?>"+"\n"+"<?php echo $tr->translate("ALERT_BEFORE_SAVE");?>");
+		var r = confirm("<?php //echo $tr->translate("ALERT_DEPOSIT_WARNING");?>"+"\n"+"<?php echo $tr->translate("ALERT_BEFORE_SAVE");?>");
 		if (r == true) {
 			
 		} else {

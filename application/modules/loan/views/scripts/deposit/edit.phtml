@@ -922,6 +922,11 @@ function getClientInfo(type){
 	}
 }
 function printSave(new_stu_id,new_receipt_no){
+	date_line = dijit.byId('date_line').get('value');
+	if(date_line=="" || date_line==null){
+		alert("<?php echo $tr->translate("ALERT_DEPOSIT_WARNING");?>");
+		dijit.byId("date_line").focus();return false;
+	}
 	symbal=" $";
 	dojo.byId("lb_student_id").innerHTML = dijit.byId("sale_code").get("value");
 	dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get("value");;
