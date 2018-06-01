@@ -3,6 +3,8 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 echo $this->headTitle($tr->translate("Client List"));
 $frm = $this->frm_search;
 $frms=$this->frm_client;
+$urlEdit = $this->baseUrl()."/group/index/edit/id/";
+$urlProfile = $this->baseUrl()."/group/index/view/id/";
 ?>
 <form id="list" name="list" action="<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
 <table width="100%">
@@ -156,5 +158,35 @@ function filterVillage(){
 	});
 }
 
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+		
+			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+			}else if(key=="profile"){
+				url='<?php echo $urlProfile;?>';
+			}
+			
+			gotoAction();
+			//window.console && console.log(m) || alert(m); 
+		},
+		items: {
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
+			"profile": {name: "<?php echo $tr->translate("PROFILE");?>", icon: "fa-user"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
 
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
 </script>
