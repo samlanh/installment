@@ -396,6 +396,12 @@ require(["dojo/ready"], function(ready){
 var url_submiinfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloan-bymemberid')); ?>';
 function getInfoByLoanNumber(){
 	loan_id = dijit.byId('loan_number').get('value');
+	if(loan_id=="" || loan_id==null){
+		dijit.byId('paid_before').attr('value',"");
+		dijit.byId("member").attr('value',"");
+		dijit.byId('land_code').attr('value',"");
+		return false;
+	}
 	dojo.xhrPost({
 	    url: url_submiinfo,	
 	    content : { 
@@ -472,10 +478,20 @@ function getAllSaleNumber(branch_id){//used
 var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfo(){
 	dijit.byId('total_sold').attr('value',0);
+	land_id = dijit.byId('land_code').get('value');
+	if(land_id=="" || land_id==null){
+		dijit.byId('land_code').set('readOnly',true);
+		dijit.byId('paid_before').set('readOnly',true);
+		dijit.byId('balance_before').set('readOnly',true);
+
+		dijit.byId('total_sold').attr('value',0);
+		dijit.byId('balance_before').attr('value',0);
+		return false;
+	}
 	dojo.xhrPost({
 		url:url_getlandinfodetail,	
 		content:{ 
-		    'land_id':dijit.byId('land_code').get('value')
+		    'land_id':land_id
 		},		    
 		handleAs:"json",
 		load: function(data) {
