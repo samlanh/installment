@@ -41,9 +41,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	if(!empty($search['advance_search'])){
     		$s_where = array();
     		$s_search = addslashes(trim($search['advance_search']));
-    		//$s_where[] = "lcrmd.`loan_number` LIKE '%{$s_search}%'";
     		$s_where[] = " lcrm.`receipt_no` LIKE '%{$s_search}%'";
-    		
     		$where .=' AND ('.implode(' OR ',$s_where).')';
     	}
     	if($search['status']>-1){
@@ -65,58 +63,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$order = " ORDER BY id DESC";
     	return $db->fetchAll($sql.$where.$order);
     }
-//     public function getAllQuickIndividuleLoan($search){
-//     	$start_date = $search['start_date'];
-//     	$end_date = $search['end_date'];
-    	 
-//     	$db = $this->getAdapter();
-//     	$sql = "SELECT lcrm.`id`,
-//     				(SELECT b.`branch_namekh` FROM `ln_branch` AS b WHERE b.`br_id`=lcrm.`branch_id`) AS branch,
-//     				(SELECT co.`co_khname` FROM `ln_co` AS co WHERE co.`co_id`=lcrm.`co_id`) AS co_name,
-// 					lcrm.`receipt_no`,
-// 					lcrm.`total_principal_permonth`,
-// 					lcrm.`total_payment`,
-// 					lcrm.`recieve_amount`,
-// 					lcrm.`total_interest`,
-// 					lcrm.`penalize_amount`,
-// 					lcrm.`date_input`
-// 				FROM `ln_client_receipt_money` AS lcrm WHERE lcrm.is_group=2";
-//     	$where ='';
-//     	if(!empty($search['advance_search'])){
-//     		//print_r($search);
-//     		$s_where = array();
-//     		$s_search = $search['advance_search'];
-//     		$s_where[] = "lcrm.`loan_number` LIKE '%{$s_search}%'";
-//     		$s_where[] = " lcrm.`receipt_no` LIKE '%{$s_search}%'";
-    
-//     		$where .=' AND ('.implode(' OR ',$s_where).')';
-//     	}
-//     	if($search['status']!=""){
-//     		$where.= " AND status = ".$search['status'];
-//     	}
-    	 
-//     	if(!empty($search['start_date']) or !empty($search['end_date'])){
-//     		$where.=" AND lcrm.`date_input` BETWEEN '$start_date' AND '$end_date'";
-//     	}
-//     	if($search['client_name']>0){
-//     		$where.=" AND lcrm.`group_id`= ".$search['client_name'];
-//     	}
-//     	if($search['branch_id']>0){
-//     		$where.=" AND lcrm.`branch_id`= ".$search['branch_id'];
-//     	}
-//     	if($search['co_id']>0){
-//     		$where.=" AND lcrm.`co_id`= ".$search['co_id'];
-//     	}
-//     	if($search['paymnet_type']>0){
-//     		$where.=" AND lcrm.`payment_option`= ".$search['paymnet_type'];
-//     	}
-    	 
-//     	//$where='';
-//     	$order = " ORDER BY receipt_no DESC";
-//     	//echo $sql.$where.$order;
-//     	return $db->fetchAll($sql.$where.$order);
-//     }
-    
+
 	function getIlPaymentByID($id){
 		$db = $this->getAdapter();
 		$sql="SELECT 
@@ -132,24 +79,10 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				  `ln_client_receipt_money_detail` AS rmd
 				WHERE rm.id = $id
 				AND rm.id=rmd.`crm_id`";
-		//echo $sql;
 		return $db->fetchRow($sql);
 	}
 	public function getIlDetail($id){
 		$db = $this->getAdapter();
-// 		$sql="SELECT 
-// 					(SELECT d.`date_payment` FROM `ln_client_receipt_money_detail` AS d WHERE d.`loan_number`=crmd.loan_number AND d.id NOT IN($id) ORDER BY d.`date_payment` DESC LIMIT 1) AS installment_date ,
-// 					(SELECT crm.`date_input` FROM `ln_client_receipt_money` AS crm,`ln_client_receipt_money_detail` AS crmd WHERE crm.`id`=crmd.`crm_id` AND crm.`id` != $id 
-// AND crmd.`lfd_id` = (SELECT c.`lfd_id` FROM `ln_client_receipt_money_detail` AS c WHERE c.`crm_id`=$id) ORDER BY crm.`id` DESC LIMIT 1)  AS last_pay_date ,
-// 					(SELECT `currency_id` FROM `ln_client_receipt_money_detail` WHERE crm_id = $id LIMIT 1) AS `currency_type`,
-// 					(SELECT crm.`recieve_amount` FROM `ln_client_receipt_money` AS crm WHERE crm.`id`=$id ) AS recieve_amount,
-// 					(SELECT crm.`receiver_id` FROM `ln_client_receipt_money` AS crm WHERE crm.`id`=$id ) AS receiver_id,
-// 					(SELECT c.`client_number` FROM `ln_client` AS c WHERE crmd.`client_id`=c.`client_id` LIMIT 1) AS client_number,
-// 					(SELECT c.`name_kh` FROM `ln_client` AS c WHERE crmd.`client_id`=c.`client_id` LIMIT 1) AS name_kh,
-// 					crmd.* 
-// 				FROM
-// 					`ln_client_receipt_money_detail` AS crmd 
-// 				WHERE crmd.`crm_id` =$id";
 		$sql="SELECT
 		(SELECT d.`date_payment` FROM `ln_client_receipt_money_detail` AS d WHERE d.`loan_number`=crmd.loan_number AND d.id NOT IN($id) ORDER BY d.`date_payment` DESC LIMIT 1) AS installment_date ,
 		(SELECT crm.`date_input` FROM `ln_client_receipt_money` AS crm,`ln_client_receipt_money_detail` AS crmd WHERE crm.`id`=crmd.`crm_id` AND crm.`id` != $id
@@ -176,22 +109,17 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 			crmd.*
 		FROM
 			`ln_client_receipt_money_detail` AS crmd WHERE crmd.`crm_id` = $id";
-		//return $sql;
 		return $db->fetchAll($sql);
 	}
-   
-    
     function getPrefixCode($branch_id){
     	$db  = $this->getAdapter();
     	$sql = " SELECT prefix FROM `ln_project` WHERE br_id = $branch_id  LIMIT 1";
     	return $db->fetchOne($sql);
     }
-    
     public function getIlPaymentNumber($branch_id=1){
     	$this->_name='ln_client_receipt_money';
     	$db = $this->getAdapter();
     	$sql=" SELECT id  FROM $this->_name WHERE branch_id = $branch_id  ORDER BY id DESC LIMIT 1 ";
-    	
     	$pre = "";
     	$pre = $this->getPrefixCode($branch_id)."-P";
     	
@@ -248,7 +176,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$this->update($arr, $where);
     			
     		$sql = "SELECT
-    		crmd.*
+    		crmd.*,
+    		
+    		crm.branch_id
     		FROM
     		`ln_client_receipt_money_detail` AS crmd,
     		ln_client_receipt_money as crm
@@ -261,9 +191,12 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$where ="crm_id=".$receipt_id;
     		$this->_name="ln_saleschedule";
     		$this->delete($where);
+    		$branc_id=1;
+    		
     		
     		if(!empty($receipt_money_detail)){
     			foreach ($receipt_money_detail as $rs){
+    				$branc_id = $rs['branch_id'];
     				$arra = array(
     						'begining_balance' 	     => $rs['capital'],
     						'begining_balance_after' => $rs['capital'],
@@ -278,9 +211,38 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     				);
     				$where ="id=".$rs['lfd_id'];
     				$this->_name="ln_saleschedule";
-    				$this->update($arra, $where);
-    				//ករណីមានលុបខ្លះ ត្រូវបញ្ចូលឡើងវិញ
+    				$updated = $this->update($arra, $where);
     				
+    				if($updated==0){//ករណីមានលុបខ្លះ ត្រូវបញ្ចូលឡើងវិញ
+    					$sql="SELECT (no_installment) FROM ln_saleschedule WHERE status=1 AND sale_id=$sale_id ORDER BY no_installment DESC ";
+    					$start_id = $db->fetchOne($sql);
+    					
+    					$this->_name="ln_saleschedule";
+    					$datapayment = array(
+	    					'branch_id'=>$branc_id,
+	    					'sale_id'=>$sale_id,//good
+	    					'begining_balance'=>$rs['capital'],//good
+	    					'begining_balance_after'=>$rs['capital'],//good
+	    					'principal_permonth'=>$rs['old_principal_permonth'],//good
+	    					'principal_permonthafter'=>$rs['old_principal_permonth'],//good
+	    					'total_interest'=>$rs['old_interest'],//good
+	    					'total_interest_after'=>$rs['old_interest'],//good
+	    					'total_payment'=>$rs['old_total_payment'],//good
+	    					'total_payment_after'=>$rs['old_total_payment'],//good
+	    					'ending_balance'=>$rs['remain_capital'],
+	    					'cum_interest'=>0,//check more
+	    					'amount_day'=>0,//check more
+	    					'is_completed'=>0,
+	    					'date_payment'=>$rs['date_payment'],
+	    					'percent'=>100,
+	    					'note'=>'',
+    						'status'=>1,
+	    					'is_completed'=>0,
+	    					'is_installment'=>1,
+	    					'no_installment'=>$start_id+1,
+    				);
+    				$this->insert($datapayment);
+    				}
     			}
     		}
     		
