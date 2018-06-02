@@ -391,7 +391,7 @@ function getAllBranch($search=null){
     			$s_where[] = " client_name_en LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
-    		if(!empty($search['land_id'])){
+    		if($search['land_id']>0){
     			$where.= " AND house_id = ".$search['land_id'];
     		}
     		if(!empty($search['client_name'])){

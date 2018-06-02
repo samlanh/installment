@@ -12,19 +12,10 @@
 		 <tr> 
 		   <td><?php echo $frm->getElement("adv_search");?></td>
 		   <td><?php echo $frm->getElement("branch_id");?></td>
-		   <td><input id="land_id" /><?php //echo $frm->getElement('land_id');?></td>
+		   <td><input id="land_id" /></td>
 		   <td><?php echo $frm->getElement("co_khname");?></td>
 		   <td><?php echo $frm->getElement("start_date");?></td>
 		   <td><?php echo $frm->getElement("end_date");?></td>
-		   <!-- 
-		   <td><?php //echo $frm->getElement('search_status');?>
-		   		<select dojoType='dijit.form.FilteringSelect' id="commission_type" name="commission_type" class="fullside">
-		   			<option value=""><?php //echo $tr->translate("ALL");?></option>
-					<option value="1"><?php //echo $tr->translate("COMPLETED_PAID");?></option>
-					<option value="2"><?php //echo $tr->translate("NOT_YET_PAID");?></option>
-				</select> 
-		   </td>
-		    -->
 		   <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
 		   </td>
 	   	  </tr>
@@ -37,7 +28,7 @@
     	<td align="center">
     	 	<style>
 				.style{
-					line-height: 20px;font-size: 14px !important;
+					line-height: 20px;font-size: 12px !important;
 					font-family: 'Khmer OS Battambang';
 					}
 					th{padding: 5px;}
@@ -47,15 +38,15 @@
             	<tr>
                 	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
                 	<td width="60%" valign="top">
-                	<h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
-                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_COMISSION_BALANCE");?></h2>
-                	<?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?>
+                	<h2 style="line-height: 20px;;text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+                	<h2 style="line-height: 20px;text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_COMISSION_BALANCE");?></h2>
+                	<h2 style="line-height: 20px;text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></h2>
                 	</td>
                     <td width="20%"></td>
                 </tr> 
             </table>
-			<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 14px;" bordercolor="black">  
-		    	<tr class="style" align="center" style="background:#c1d0f3 !important;font-weight:bold; line-height: 28px; font-size:12px; padding:5px 0px; " >
+			<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 12px;" bordercolor="black">  
+		    	<tr class="style" align="center" style="white-space:nowrap;background:#c1d0f3 !important;font-weight:bold; line-height: 25px; font-size:12px; padding:2px 0px; " >
 		        		<td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 			            <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
 			            <td rowspan="2"><?php echo $tr->translate("STAFF");?></td>
@@ -65,7 +56,7 @@
 			            <td colspan="3"><?php echo $tr->translate("COMMISSION_INFO");?></td>
 			            
 		         </tr>
-		         <tr class="style" align="center" style="background:#c1d0f3 !important;font-weight:bold; line-height: 28px; font-size:12px; padding:5px 0px; " >
+		         <tr class="style" align="center" style="white-space:nowrap;background:#c1d0f3 !important;font-weight:bold; line-height: 25px; font-size:12px; padding:2px 0px; " >
 		         	<td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 		         	<td><?php echo $tr->translate("PROPERTY_INFO");?></td>
 		         	<td><?php echo $tr->translate("PRICE_SOLD");?></td>
@@ -75,13 +66,16 @@
 		            <td><?php echo $tr->translate("PAID");?></td>
 		            <td><?php echo $tr->translate("REMAIN");?></td>
 		         </tr>
-		       <?php  $total = 0;
-		       $totalpaid_com = 0;
-		       		 $key=0; 
+		       <?php  
+		       		$total = 0;
+		       		$totalpaid_com = 0;
+		       		$balance = 0;
+		       		$key=0; 
 		       	   if(!empty($this->row))foreach($this->row as $key =>$row){
 				   $total = $total +$row['full_commission'];	
 				   $paidcommision = $row['totoal_comminssion']+$row['total_sale_commission'];
 				   $remain = $row['full_commission'] - $paidcommision;
+				   $balance = $balance+$remain;
 				   $totalpaid_com = $totalpaid_com+$paidcommision;
 				   $percentpaid = ($row['total_sale_paid']*100)/$row['price_sold'];
 				  ?>
@@ -103,7 +97,7 @@
 				<?php }?>
 		    </table>
 			<br>
-			<table width="50%" border="1" style="float: right; border-collapse:collapse;font-size: 12px;" bordercolor="black">
+			<table width="30%" border="1" style="font-weight:bold;float: right; border-collapse:collapse;font-size: 12px;" bordercolor="black">
 				<tr class="style" align="center" style="floafont-weight:bold; line-height:25px; font-size:12px; padding:5px 0px; " >
 		        	<td bgcolor="#c1d0f3" ><?php echo $tr->translate("TOTAL");?></td>
 		            <td><strong><?php echo '$ '.number_format($total,2);?></strong></td>
@@ -111,6 +105,10 @@
 		         <tr class="style" align="center" style="floafont-weight:bold; line-height:25px; font-size:12px; padding:5px 0px; " >
 		        	<td bgcolor="#c1d0f3" ><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>
 		            <td><strong><?php echo '$ '.number_format($totalpaid_com,2);?></strong></td>
+		         </tr>
+		          <tr class="style" align="center" style="floafont-weight:bold; line-height:25px; font-size:12px; padding:5px 0px; " >
+		        	<td bgcolor="#c1d0f3" ><?php echo $tr->translate("REMAIN");?></td>
+		            <td><strong><?php echo '$ '.number_format($balance,2);?></strong></td>
 		         </tr>
 			</table>
     	</td>
@@ -145,7 +143,7 @@ require(["dojo/ready"], function(ready){
 		id: "land_id",
 		value:-1,
 		searchAttr: "name",
-		class: 'fullside fullside50',
+		class: 'fullside',
 		onChange: function() {
 			//dijit.byId('land_id').attr('value','');
 			land_id=-1;

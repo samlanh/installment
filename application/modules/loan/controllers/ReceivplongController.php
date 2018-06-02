@@ -15,12 +15,13 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 			else{
 				$search = array(
 					    'adv_search'=>'',
-						'branch_id_search' => -1,
+						'branch_id' => -1,
 						'land_id'=> -1,
 						'client_name'=> -1,
 						'from_date_search'=> date('Y-m-d'),
 						'to_date_search'=>date('Y-m-d'));
 			}
+			$this->view->rssearch = $search;
 			$rs_rows= $db->getCustomerReceivedPlong($search);//call frome model
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);

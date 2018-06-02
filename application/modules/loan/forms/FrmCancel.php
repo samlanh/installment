@@ -65,10 +65,12 @@ public function init()
 				'onchange'=>'getSaleNo(), getSaleClie();'
 		));
 		$rows_branch = $db->getAllBranchName();
+		$options_branch=array('-1'=>$this->tr->translate("SELECT_PROJECT"));
 		if(!empty($rows_branch))foreach($rows_branch AS $row){
 			$options_branch[$row['br_id']]=$row['project_name'];
 		}
 		$branch_id->setMultiOptions($options_branch);
+		$branch_id->setValue($request->getParam("branch_id"));
 		
 		
 		$branch_id_search = new Zend_Dojo_Form_Element_FilteringSelect('branch_id_search');

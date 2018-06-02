@@ -458,7 +458,7 @@ public function exportFileToExcel($table,$data,$thead){
 	 	'client_name' => 0,
 	 	'start_date'  => date('Y-m-d'),
 	 	'end_date'    => date('Y-m-d'),
-	 	'branch_id'	  =>0,
+	 	'branch_id'	  =>-1,
 		'land_id'	  => 0,
 		'paymnet_type'=> 0,
 	 	'status'      => "",);
@@ -826,12 +826,13 @@ public function exportFileToExcel($table,$data,$thead){
   	}else{
   		$search = array(
 			    'adv_search'=>'',
-				'branch_id_search' => -1,
+				'branch_id' => -1,
 				'land_id'=> -1,
 				'client_name'=> -1,
 				'from_date_search'=> date('Y-m-d'),
 				'to_date_search'=>date('Y-m-d'));
   	}
+  	$this->view->rssearch = $search;
   	$db  = new Loan_Model_DbTable_DdReceived();
   	$this->view->row = $db->getCustomerReceivedPlong($search);
   	

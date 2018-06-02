@@ -117,6 +117,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'from_date_search'=> date('Y-m-d'),
   				'to_date_search'=>date('Y-m-d'));
   	}
+  	$this->view->search = $search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getCancelSale($search);
   	 
@@ -238,7 +239,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"adv_search"=>'',
   				"branch_id"=>-1,
   				"client_name"=>-1,
-  				"land_id"=>'',
+  				"land_id"=>-1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   		);

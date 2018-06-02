@@ -1,19 +1,19 @@
 <?php 
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$frm = $this->frm_search;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_search;
 ?>
 <script>
-dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.DateTextBox");
 </script>
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT_SALE_HISTORY");?></title>
 <form name="frm_rptstaff" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-sale-history')); ?>" dojoType="dijit.form.Form" method="post">
-	<table style="width:28cm; margin: 0 auto;">
+	<table style="width:29cm; margin: 0 auto;">
 		 <tr>
 			<td><?php echo $frm->getElement("adv_search");?></td>
 	        <td><?php echo $frm->getElement('branch_id');?></td>
+	        <td><input id="land_id" /></td>
 	        <td><?php echo $frm->getElement('client_name');?></td>
-	        <td><?php echo $frm->getElement('land_id');?></td>
 	   		<td><?php echo $frm->getElement('start_date');?></td>
 	   		<td><?php echo $frm->getElement('end_date');?></td>
 			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
@@ -21,36 +21,37 @@ dojo.require("dijit.form.DateTextBox");
 	</table>
  </form> 
 <div style=" width:28cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
-<table style="font-family: 'Khmer OS Content'; width:100%;"  >
-	<tr>
-    	<td align="center">
-    	 <div id="divPrint">
-    	 	<style>
+	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	    	 <div id="divPrint">
+	    	 	<style>
 					.style{
 						line-height: 20px;font-size: 12px !important;
 						font-family: 'Khmer OS Battambang';
 						}
 						th{padding: 5px;}
-					</style>
-        	<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0; border:none;" >
-        	<tr>
-                <td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
-                <td width="60%" valign="top">
-                <h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
-                <h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("REPORT_SALE_HISTORY");?></label></h2>
-                <td width="20%"></td>
-             </tr> 
-             <tr>
-            	<td colspan="3">
-            		<table id="exportExcel" width="100%" style="border-collapse:collapse;font-size: 14px;" >  
-				       <?php $property_id=0; $is_cancel=""; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
-				      	<?php  
-						if($row['house_id']!=$property_id){	
-							if($key>0 ){
-						?>
-							
+				</style>
+	        	<table borde="1" width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0; border:none;" >
+	        	<tr>
+	                <td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+	                <td width="60%" valign="top">
+		                <h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+		                <h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("REPORT_SALE_HISTORY");?></label></h2>
+		            </td>
+	             	<td width="20%"></td>
+	             </tr> 
+	             <tr>
+	            	<td colspan="3">
+	            		<table id="exportExcel" width="100%" style="border-collapse:collapse;font-size: 14px;" >  
+					      <?php $property_id=0; $is_cancel=""; $i=0; $total=0; 
+					       if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
+					      <?php  
+							if($row['house_id']!=$property_id){	
+								if($key>0 ){
+							?>
 							<?php $i=1;}?>
-					</table>
+							</table>
 						</td>
 					</tr>
 					<tr><td></td></tr>
@@ -61,12 +62,12 @@ dojo.require("dijit.form.DateTextBox");
 							<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 14px;     line-height: 24px;" bordercolor="black">
 								<tr style=" border-top: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;">
 									<td colspan="7">
-									<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 14px;font-family:'Khmer MEF2'; padding:5px;" >
-									<?php echo $tr->translate("PROPERTY_CODE")." : ".$row['property_code']." ".$tr->translate("PROPERTY_TYPE")." : ".$row['property_type_name']; ?>
-									</strong>
+										<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 14px;font-family:'Khmer MEF2'; padding:5px;" >
+										<?php echo $tr->translate("PROPERTY_CODE")." : ".$row['property_code']." ".$tr->translate("PROPERTY_TYPE")." : ".$row['property_type_name']; ?>
+										</strong>
 									</td>
 								</tr>
-								<tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+								<tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold;padding:0px 2px;white-space: nowrap;">
 				                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 				                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
 				                    <td rowspan="2"><?php echo $tr->translate("SALE_NO");?></td>	
@@ -77,54 +78,108 @@ dojo.require("dijit.form.DateTextBox");
 				                    <td colspan="6"><?php echo $tr->translate("PAYMENT_INFO");?></td>    
 				                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
 				                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
-				                     <td rowspan="2"><?php echo $tr->translate("STATUS");?></td>
-				                </tr>
-				                <tr class="style" style="white-space: nowrap;text-align: center;">
+				                    <td rowspan="2"><?php echo $tr->translate("STATUS");?></td>
+					              </tr>
+					              <tr class="style" style="font-weight:bold;background:#c1d0f3;white-space: nowrap;text-align: center;">
 				                	<td><?php echo $tr->translate("PRINCIPLE_PICE");?></td> 
 				                    <td><?php echo $tr->translate("DISCOUNT");?></td>
 				                    <td><?php echo $tr->translate("DISCOUNT");?>%</td>                  
 				                    <td><?php echo $tr->translate("PRICE_SOLD");?></td>	                    
 				                    <td><?php echo $tr->translate("PAID_AMOUNT");?></td>
 				                    <td><?php echo $tr->translate("BALANCE");?></td>
-				                </tr>
-						<?php }?>
-						   <tr style="font-size: 12px;" align="left">
-						     <td align="center">&nbsp;<?php echo $i; ?></td>
-						     <td align="center">&nbsp;<?php echo $row['project_name'];?>&nbsp;</td>
-						     <td align="center">&nbsp;<?php echo $row['sale_number'];?>&nbsp;</td>
-						     <td align="center">&nbsp;<?php echo $row['client_code'];?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo $row['client_name_kh'];?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo $row['property_name'];?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo $row['street'];?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo number_format($row['price_before'],2);?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo number_format($row['discount_amount'],2);?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo number_format($row['discount_percent'],2);?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo number_format($row['paid_amount'],2);?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo number_format($row['balance'],2);?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($row['create_date']));?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo $row['paymenttype'];?></td>
-							 <td align="center">&nbsp;<?php if ($row['is_cancel']==1){ echo $tr->translate("CANCELED");}else{ echo $tr->translate(""); }?></td>
-							</tr>
-							<?php 
-							$property_id = $row['house_id'];
-							?>
-						<?php }?>
-				    </table>
-            	</td>
-            </tr>
-            </table>
-    	</td>
-    </tr>
-</table>
-		<br />
-	   <table align="center" width="100%">
-			   <tr style="font-size: 14px;">
+					               </tr>
+							<?php }?>
+							   <tr style="font-size: 12px;" align="left">
+							     <td align="center">&nbsp;<?php echo $i; ?></td>
+							     <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['project_name'];?>&nbsp;</td>
+							     <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['sale_number'];?>&nbsp;</td>
+							     <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_code'];?>&nbsp;</td>
+								 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_name_kh'];?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo $row['property_name'];?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo $row['street'];?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo number_format($row['price_before'],2);?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo number_format($row['discount_amount'],2);?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo number_format($row['discount_percent'],2);?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo number_format($row['paid_amount'],2);?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo number_format($row['balance'],2);?>&nbsp;</td>
+								 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['create_date']));?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo $row['paymenttype'];?></td>
+								 <td align="center">&nbsp;<?php if ($row['is_cancel']==1){ echo $tr->translate("CANCELED");}else{ echo $tr->translate(""); }?></td>
+								</tr>
+								<?php 
+								$property_id = $row['house_id'];
+								?>
+							<?php }?>
+					    </table>
+	            	</td>
+	            </tr>
+	            </table>
+	            <br />
+			   	<table align="center" width="100%">
+				   <tr style="font-size: 14px;">
 			        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
 			        <th></th>
 			        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
 			        <th></th>
 			        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
-			   </tr>
-		</table>
+				   </tr>
+				</table>
+	            </div>
+	    	</td>
+	    </tr>
+	</table>
 </div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getAllPropertyBranch();
+	});
+	new dijit.form.FilteringSelect({
+		store: property_store,
+		required: false,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		name: "land_id",
+		id: "land_id",
+		value:-1,
+		searchAttr: "name",
+		class: 'fullside fullside50',
+		onChange: function() {
+			//dijit.byId('land_id').attr('value','');
+			land_id=-1;
+	}
+		}, "land_id");
+	
+	 
+});
+land_id = '<?php echo $this->rssearch['land_id']?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getAllPropertyBranch(branch_id){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id<0){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'action':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_id').set('store', property_store);
+		    
+		    if(land_id>0){
+		    	dijit.byId('land_id').attr('value',land_id);
+			 }
+		},
+		error: function(err) {
+		}
+	});
+} 
+</script>
