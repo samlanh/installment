@@ -66,7 +66,7 @@
 	<script src="<?php echo $base_url;?>js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
 	<script>dojoConfig = {parseOnLoad: true}</script>
 	    <script>
-			require(["dijit/form/Form","dijit/form/FilteringSelect","dijit/form/Button"]);
+			require(["dijit/form/Form","dijit/form/FilteringSelect","dijit/form/Button","dijit/Dialog"]);
       </script>
 <?php }?>
 	<!-- end -->
@@ -82,14 +82,18 @@
 		.soria .dijitButtonText {
 		    line-height: 30px;
 		}
+		#menu ul {
+		    margin: 0;
+		}
 		.add-link{  
-				    background-color: rgb(90, 138, 237);
-			  width: 90px;
-			  margin-top: 2px;
-			  color: #fff;
-			  text-align: center;
-			  font-size: 13px;
-			  font-weight: 600;}
+        background-color: #0f2a5b;
+	    /* width: 90px; */
+	    /* margin-top: 2px; */
+	    color: #fff;
+	    text-align: center;
+	    font-size: 13px;
+	    font-weight: 600;
+	    padding: 3px 15px;}
 		.fullside{ width:98%; height: 28px;}
 		.full{ width:100%;}
 		body, html {font-size:98%; 
@@ -101,7 +105,8 @@
 		.border{ border: 1px solid #ccc; height: 100%; margin: 5px; padding: 5px;}
         .border1{ border: 1px solid #ccc; height: 100%; margin: 5px; margin-left:0px; padding: 5px;}
 		.hover:hover{background: #eee;}
-		.odd{background-color: #f9f9f9;}
+		.odd{background-color: #f9f9f9;
+		}
 	</style>	
 	
 </head>
@@ -111,13 +116,15 @@
                 	<td colspan="2" valign="top" style="position: fixed;width: 100%; z-index: 1;top: 0;" >
                 		 <?php echo $this->render('header.phtml')?>
 			                <p style="font-size:13px !important;background: #fff;">
-						              <span style="padding-left: 3px;padding-right: 3px;float: left; font-weight:600;"><?php echo $tr->translate("USING_BY");?><a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'changepassword')); ?>"><?php echo $username;?></a></span>  
-							<a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'logout','value'=>'1')); ?>"> | <?php echo $tr->translate("SIGN_OUT");?></a>
-			                 <?php if($action=='index' AND $module!='report' AND $module!='home' AND $controller!='updateprice'){?>
-			                 <a class='add-link' style="float:right;" href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>"><?php echo $tr->translate('ADD');?></a>
-							<?php }elseif($action=='add' OR $action=='edit' OR $module=='report'){?>
-							 <span style="padding-left: 3px;padding-right: 3px; float: right; font-weight:600;"><a class='add-link' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>"><?php echo $tr->translate('GO_BACK');?></a></span>
-						<?php }?>
+				                <span style="padding-left: 3px;padding-right: 3px; display: inline-block; font-weight:600;"> <i class="fa fa-user" aria-hidden="true" style="line-height: 25px; font-size: 22px; color: #0f2a5b;"></i></span>
+							    <span style="padding-left: 3px;padding-right: 3px; display: inline-block; font-weight:600;"> <?php //echo $tr->translate("USING_BY");?><a title="<?php echo $tr->translate("CHANGEPASSWORD");?>" style="color: #000098; text-transform: capitalize; font-size: 14px;" href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'changepassword')); ?>"><?php echo $username;?></a></span>  
+								<span style="padding-left: 3px;padding-right: 3px; display: inline-block; font-weight:600;"> <a title="<?php echo $tr->translate("SIGN_OUT");?>" href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'logout','value'=>'1')); ?>" style="color: #000098; text-transform: capitalize;"> | <?php echo $tr->translate("SIGN_OUT");?></a></span>
+				                <span style="padding-left: 3px;padding-right: 3px; display: inline-block; font-weight:600;"> <i class="fa fa-building" aria-hidden="true" style="line-height: 25px; font-size: 22px; color: #0f2a5b;" onclick="dijit.byId('popupCalculator').show();" ></i></span>
+				                 <?php if($action=='index' AND $module!='report' AND $module!='home' AND $controller!='updateprice'){?>
+				                	 <a class='add-link' style="float:right;" href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>"><?php echo $tr->translate('ADD');?> <i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+								<?php }elseif($action=='add' OR $action=='edit' OR $module=='report'){?>
+								 	<span style="padding-left: 3px;padding-right: 3px; float: right; font-weight:600;"><a class='add-link' style="float:right;" href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> <?php echo $tr->translate('GO_BACK');?></a></span>
+								<?php }?>
 						</p>
                 	</td>
                 </tr>
@@ -182,6 +189,7 @@
             		</td>
             	</tr>
             </table>
+            <?php echo $this->render('calculator.phtml')?>
     </body>
 
 <iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
