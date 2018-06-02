@@ -230,7 +230,6 @@ $frm = $this->frm_loan;
 		    								<option value="0" label="deactive"><?php echo $tr->translate("DACTIVE");?></option>
 										</select>
 									</td>
-									
 								</tr>
 								<tr>
 									<td colspan="4" align="center">
@@ -546,23 +545,23 @@ var url_add_category = '<?php echo $this->url(array("module"=>"loan","controller
 function addCategory(){
 	if(dijit.byId('frm_category').validate()){
 		dijit.byId('save').set('disabled',true);
-	dojo.xhrPost({
-		url:url_add_category,
-		form: dojo.byId("frm_category"),
-		handleAs:"json",
-		load: function(data) {
-			var Itemmake = { 
-	    		id: data,
-		        name: dijit.byId('cate_name').get('value')
-		    };
-	 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
-		    dijit.byId('frm_category').reset();
-		    dijit.byId("popup_category").hide();
-		    dijit.byId('save').set('disabled',false);
-		},
-		error: function(err) {
-		}
-	});
+		dojo.xhrPost({
+			url:url_add_category,
+			form: dojo.byId("frm_category"),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = { 
+		    		id: data,
+			        name: dijit.byId('cate_name').get('value')
+			    };
+		 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
+			    dijit.byId('frm_category').reset();
+			    dijit.byId("popup_category").hide();
+			    dijit.byId('save').set('disabled',false);
+			},
+			error: function(err) {
+			}
+		});
 	}
   }
 

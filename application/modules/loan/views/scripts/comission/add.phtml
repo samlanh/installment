@@ -131,31 +131,32 @@
 					<td>
 						<fieldset style="background-color: buttonface;">
 							<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend>
-							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
-								<tr>
-									<td><?php echo $tr->translate('NAME_KH');?></td>
-									<td>
-										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="cate_name" name="cate_name" value="" type="text">
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('STATUS');?></td>
-									<td>
-										<select name="status_j" id="status_j" dojoType="dijit.form.FilteringSelect"   class="fullside">
-		    								<option value="1" label="active">Active</option>
-		    								<option value="0" label="deactive">Deactive</option>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="4" align="center">
-										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
-										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
-										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
-										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
-									</td>
-								</tr>
-							</table>
+								<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+									<tr>
+										<td><?php echo $tr->translate('EXPENSE_TITLE');?></td>
+										<td>
+											<input dojoType="dijit.form.ValidationTextBox" required="1" class="fullside" id="cate_name" name="cate_name" value="" type="text">
+										</td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate('STATUS');?></td>
+										<td>
+											<select name="status_j" id="status_j" dojoType="dijit.form.FilteringSelect"   class="fullside">
+			    								<option value="1" label="active"><?php echo $tr->translate("ACTIVE");?></option>
+			    								<option value="0" label="deactive"><?php echo $tr->translate("DACTIVE");?></option>
+											</select>
+										</td>
+										
+									</tr>
+									<tr>
+										<td colspan="4" align="center">
+											<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button" 
+											​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+											<input type="button" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button" 
+											 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
+										</td>
+									</tr>
+								</table>
 					    </fieldset>
 					</td>
 				</tr>
@@ -526,23 +527,26 @@ new dijit.form.FilteringSelect({
 
 var url_add_category = '<?php echo $this->url(array("module"=>"loan","controller"=>"expense","action"=>"add-category")); ?>';
 function addCategory(){
-	dojo.xhrPost({
-		url:url_add_category,
-		form: dojo.byId("frm_category"),
-		handleAs:"json",
-		load: function(data) {
-			var Itemmake = { 
-	    		id: data,
-		        name: dijit.byId('cate_name').get('value')
-		    };
-	 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
-		    dijit.byId('frm_category').reset();
-		    dijit.byId("popup_category").hide();
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
+	if(dijit.byId('frm_category').validate()){
+		dijit.byId('save').set('disabled',true);
+		dojo.xhrPost({
+			url:url_add_category,
+			form: dojo.byId("frm_category"),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = { 
+		    		id: data,
+			        name: dijit.byId('cate_name').get('value')
+			    };
+		 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
+			    dijit.byId('frm_category').reset();
+			    dijit.byId("popup_category").hide();
+			    dijit.byId('save').set('disabled',false);
+			},
+			error: function(err) {
+			}
+		});
+	}
 }
 var sale_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );

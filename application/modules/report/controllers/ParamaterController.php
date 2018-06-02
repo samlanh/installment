@@ -136,6 +136,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"branch_id"=>-1,
   				"status"=>-1,
   				"category_id"=>-1,
+  				'land_id'=>-1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   		);

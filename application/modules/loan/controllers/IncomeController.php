@@ -20,7 +20,7 @@ class Loan_IncomeController extends Zend_Controller_Action
     			$search = array(
     					"adv_search"=>'',
     					"branch_id"=>-1,
-//     					"status"=>-1,
+    					"category_id"=>'',
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
     					'land_id'=>-1,

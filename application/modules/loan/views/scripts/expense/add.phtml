@@ -1,7 +1,6 @@
 <?php
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm_expense;
-// print_r($this->all_category);
 ?>
 <title>Add Other Expense</title>
 <style>	
@@ -23,8 +22,8 @@ $frm = $this->frm_expense;
 					dijit.byId('branch_id').focus();
 					return false;
 				}
-				dijit.byId('saveclose').set('disabled',true);	
-				dijit.byId('savenew').set('disabled',true);
+			   dijit.byId('saveclose').set('disabled',true);	
+			   dijit.byId('savenew').set('disabled',true);
 			   return true;
 			}else {
 				return false;
@@ -188,30 +187,30 @@ new dijit.form.FilteringSelect({
 
 var url_add_category = '<?php echo $this->url(array("module"=>"loan","controller"=>"expense","action"=>"add-category")); ?>';
 function addCategory(){
-	dojo.xhrPost({
-		url:url_add_category,
-		form: dojo.byId("frm_category"),
-		handleAs:"json",
-		load: function(data) {
-			var Itemmake = { 
-	    		id: data,
-		        name: dijit.byId('cate_name').get('value')
-		    };
-	 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
-		    dijit.byId('frm_category').reset();
-		    dijit.byId("popup_category").hide();
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
+	if(dijit.byId('frm_category').validate()){
+		dijit.byId('save').set('disabled',true);
+		dojo.xhrPost({
+			url:url_add_category,
+			form: dojo.byId("frm_category"),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = { 
+		    		id: data,
+			        name: dijit.byId('cate_name').get('value')
+			    };
+		 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
+			    dijit.byId('frm_category').reset();
+			    dijit.byId("popup_category").hide();
+			    dijit.byId('save').set('disabled',false);
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
 }
-
-
 function printSave(new_invoice_no){
-	
 /////////////////// check Validate /////////////////////////////////////////
-
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
 		alert('Select branch');
@@ -234,8 +233,6 @@ function printSave(new_invoice_no){
 	}
 	
 //////////////////////////////////////////////////////////////////		
-
-	
 	if(new_invoice_no==''){
 		getInvoiceNo(1);
 	}else{
@@ -244,7 +241,6 @@ function printSave(new_invoice_no){
 	}
 	
 	dojo.byId("lb_branch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
-	//dojo.byId("lb_customer").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_income_category").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title").innerHTML = dijit.byId("title").get('value');
 	dojo.byId("lb_total_amount").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
@@ -262,18 +258,14 @@ function printSave(new_invoice_no){
 	
 	dojo.byId("lb_date").innerHTML = date_payment;
 	dojo.byId("lb_description").innerHTML = dijit.byId("Description").attr('displayedValue');
-	//dojo.byId("lb_customer_name").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_cheque").innerHTML = dijit.byId("cheque").attr('displayedValue');
 
-
 	dojo.byId("lb_branch1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
-	//dojo.byId("lb_customer1").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_income_category1").innerHTML = dijit.byId("income_category").attr('displayedValue');
 	dojo.byId("lb_income_title1").innerHTML = dijit.byId("title").get('value');
 	dojo.byId("lb_total_amount1").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
 	dojo.byId("lb_date1").innerHTML = date_payment;//dijit.byId("Date").attr('displayedValue');
 	dojo.byId("lb_description1").innerHTML = dijit.byId("Description").attr('displayedValue');
-	//dojo.byId("lb_customer_name1").innerHTML = dijit.byId("customer").attr('displayedValue');
 	dojo.byId("lb_cheque1").innerHTML = dijit.byId("cheque").attr('displayedValue');
 	
 	dijit.byId("print_expense").show();
@@ -282,7 +274,6 @@ function printSave(new_invoice_no){
 function currencyFormat(num) {
     return "$ " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 }
-
 function doPrint() {
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML + dojo.byId('divPrint1').innerHTML;;
     window.frames["print_frame"].window.focus();
@@ -309,30 +300,29 @@ function hideDialog1(){
 						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend>
 							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
 								<tr>
-									<td><?php echo $tr->translate('NAME_KH');?></td>
+									<td><?php echo $tr->translate('EXPENSE_TITLE');?></td>
 									<td>
-										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="cate_name" name="cate_name" value="" type="text">
+										<input dojoType="dijit.form.ValidationTextBox" required="1"  class="fullside" id="cate_name" name="cate_name" value="" type="text">
 									</td>
 								</tr>
 								<tr>
 									<td><?php echo $tr->translate('STATUS');?></td>
 									<td>
 										<select name="status_j" id="status_j" dojoType="dijit.form.FilteringSelect"   class="fullside">
-		    								<option value="1" label="active">Active</option>
-		    								<option value="0" label="deactive">Deactive</option>
+		    								<option value="1" label="active"><?php echo $tr->translate("ACTIVE");?></option>
+		    								<option value="0" label="deactive"><?php echo $tr->translate("DACTIVE");?></option>
 										</select>
 									</td>
 									
 								</tr>
 								<tr>
 									<td colspan="4" align="center">
-										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button" 
 										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
-										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										<input type="button" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button" 
 										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
 									</td>
 								</tr>
-								
 							</table>
 					</fieldset>
 					</td>
