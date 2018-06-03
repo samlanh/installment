@@ -66,8 +66,8 @@ class Loan_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     	if($search['type']>-1){
     		$where.= " AND v.type = ".$search['type'];
     	}
-    	if($search['status_search']>-1){
-    		$where.= " AND v.status = ".$search['status_search'];
+    	if($search['status']>-1){
+    		$where.= " AND v.status = ".$search['status'];
     	}
     	return $db->fetchAll($sql.$where.$Other);
     	

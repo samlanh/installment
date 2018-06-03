@@ -47,7 +47,7 @@ public function init()
     			$search = array(
     					'adv_search' => '',
     					'type'=>-1,
-    					'status_search' => -1);
+    					'status' => -1);
     		}
     		$rs_rows= $db->getAllviewBYType($search);//call frome model
     		$glClass = new Application_Model_GlobalClass();
@@ -62,8 +62,8 @@ public function init()
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
-    	$frm = new Callecterall_Form_Frmcallecterall();
-    	$frm = $frm->Frmcallecterall();
+    	$frm = new Loan_Form_FrmSearchLoanType();
+    	$frm = $frm->AdvanceSearch();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
     }
