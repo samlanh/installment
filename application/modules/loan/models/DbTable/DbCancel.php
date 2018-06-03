@@ -52,6 +52,9 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		if($search['branch_id_search']>-1){
 			$where.= " AND c.branch_id = ".$search['branch_id_search'];
 		}
+		if($search['client_name']>-1){
+			$where.= " AND s.`client_id` = ".$search['client_name'];
+		}
 		if(!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = addslashes(trim($search['adv_search']));

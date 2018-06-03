@@ -15,6 +15,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 			else{
 				$search = array(
 					    'adv_search'=>'',
+						'client_name'=> -1,
 						'branch_id_search' => -1,
 						'from_date_search'=> date('Y-m-d'),
 						'to_date_search'=>date('Y-m-d'));
@@ -37,6 +38,11 @@ class Loan_CancelController extends Zend_Controller_Action {
 		$frm = $fm->FrmAddFrmCancel();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_cancel = $frm;
+		
+		$frm = new Loan_Form_FrmSearchLoan();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
 	}
 	public function addAction(){
 		if($this->getRequest()->isPost()){//check condition return true click submit button
