@@ -47,6 +47,9 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     	if(($search['branch_id'])>0){
     		$where.= " AND s.branch_id = ".$search['branch_id'];
     	}
+    	if($search['land_id']>0){
+    		$where.=" AND `s`.`land_id` = ".$search['land_id'];
+    	}
     	if(($search['schedule_opt'])>0){
     		$where.= " AND ( s.payment_method_before = ".$search['schedule_opt'];
     		$where.= " OR s.payment_method_after = ".$search['schedule_opt']." )";

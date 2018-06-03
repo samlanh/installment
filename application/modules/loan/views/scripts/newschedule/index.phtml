@@ -11,6 +11,7 @@ dojo.require("dijit.form.DateTextBox");
    		<tr>
    			<td><?php echo $frm->getElement("adv_search");?></td>
    			<td> <?php echo $frm->getElement('branch_id');?></td>
+   			<td><input id="land_id" /><?php //echo $frm->getElement('land_id');?></td>
    			<td><?php echo $frm->getElement("client_name");?></td>
    			<td><?php echo $frm->getElement('schedule_opt');?></td>
    		</tr>
@@ -23,6 +24,7 @@ dojo.require("dijit.form.DateTextBox");
    </table>
 </form>
 <?php echo $this->list;?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <script>
 function getmemberIdGroup(){
 	customer_code= dijit.byId('customer_code').get('value');
@@ -32,4 +34,64 @@ function checkMember(){
 	customer_code= dijit.byId('member').get('value');
 	dijit.byId('customer_code').attr('value',customer_code);
 }
+
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getAllPropertyBranch();
+	});
+	new dijit.form.FilteringSelect({
+		store: property_store,
+		required: false,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		name: "land_id",
+		id: "land_id",
+		value:-1,
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+			//dijit.byId('land_id').attr('value','');
+			land_id=-1;
+	}
+		}, "land_id");
+	new dijit.form.FilteringSelect({
+		name: "branch_id",
+		id: "branch_id",
+		class: 'fullside',
+		autoComplete: false,
+		onChange: function() {
+			 getAllPropertyBranch();
+		}
+		}, "branch_id");
+	 
+});
+land_id = '<?php echo $this->search['land_id']?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getAllPropertyBranch(branch_id){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id<0){
+		 dijit.byId('land_id').reset();
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'action':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_id').set('store', property_store);
+		    dijit.byId('land_id').reset();
+		    if(land_id>0){
+		    	dijit.byId('land_id').attr('value',land_id);
+			 }
+		},
+		error: function(err) {
+		}
+	});
+} 
 </script>

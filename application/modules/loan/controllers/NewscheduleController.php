@@ -18,6 +18,7 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 						'client_name'=> -1,
 						'schedule_opt' => -1,
 						'branch_id' => -1,
+						'land_id' => -1,
 						'status' => -1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),

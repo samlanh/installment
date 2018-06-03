@@ -41,6 +41,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	if($search['status']>-1){
     		$where.= " AND s.status = ".$search['status'];
     	}
+    	if($search['land_id']>0){
+    		$where.=" AND s.`land_id` = ".$search['land_id'];
+    	}
     	if(($search['client_name'])>0){
     		$where.= " AND `s`.`client_id`=".$search['client_name'];
     	}
@@ -51,7 +54,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$where.= " AND ( s.payment_method_before = ".$search['schedule_opt'];
     		$where.= " OR s.payment_method_after = ".$search['schedule_opt']." )";
     	}
-    		
     	$order = " ORDER BY s.id DESC";
     	$db = $this->getAdapter();    
     	return $db->fetchAll($sql.$where.$order);
