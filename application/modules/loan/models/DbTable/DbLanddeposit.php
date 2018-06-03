@@ -48,9 +48,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
         `s`.`balance`         AS `balance`,
         `s`.`buy_date`        AS `buy_date`,
-         s.status,
-         '$edit_sale',
-         '$str_schedule'
+         s.status
 		FROM ((`ln_sale` `s`
 		    JOIN `ln_client` `c`)
 		   JOIN `ln_properties` `p`)

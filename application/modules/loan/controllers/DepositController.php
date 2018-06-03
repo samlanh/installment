@@ -31,16 +31,13 @@ class Loan_DepositController extends Zend_Controller_Action {
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","TOTAL_SOLD","PAID","BALANCE","DATE_BUY",
-				"STATUS","EDIT","AGREEMENT");
+				"STATUS");
 			$link_info=array('module'=>'loan','controller'=>'deposit','action'=>'edit',);
 
 			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);
 			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);
 			$payment=array('module'=>'loan','controller'=>'ilpayment','action'=>'add',);
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array(
-						'ការលក់'=>$link_info,'Sale'=>$link_info,'name_kh'=>$link_info,
-					    'issue sch'=>$reschedule,'ចេញតារាង'=>$reschedule,
-					    'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array(),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

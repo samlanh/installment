@@ -1,7 +1,10 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate("LOAN_IL"));
+	echo $this->headTitle($tr->translate("SALE_DEPOSIT"));
 	$frm = $this->frm_search;
+	
+	$urlRepaymentschedule = $this->baseUrl()."/loan/repaymentschedule/add/id/";
+	$urlEdit = $this->baseUrl()."/loan/deposit/edit/id/";
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -75,4 +78,36 @@ function getAllPropertyBranch(branch_id){
 		}
 	});
 } 
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+		
+			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+			}else if(key=="reschedule"){
+				url='<?php echo $urlRepaymentschedule;?>';
+			}
+			
+			gotoAction();
+			//window.console && console.log(m) || alert(m); 
+		},
+		items: {
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
+			"reschedule": {name: "<?php echo $tr->translate("ISSUE_SCHEDULE");?>", icon: "fa-calendar"},
+			
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
 </script>
