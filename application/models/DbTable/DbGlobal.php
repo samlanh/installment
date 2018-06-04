@@ -461,7 +461,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db = $this->getAdapter();
   	$sql= " SELECT br_id,project_name,
   	project_type,br_address,branch_code,branch_tel,displayby
-  	FROM `ln_project` WHERE project_name !=''  ";
+  	FROM `ln_project` WHERE project_name !='' ";
   	if($branch_id!=null){
   		$sql.=" AND br_id=$branch_id LIMIT 1";
   	}

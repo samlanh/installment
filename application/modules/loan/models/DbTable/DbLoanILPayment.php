@@ -44,6 +44,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$s_where[] = " lcrm.`receipt_no` LIKE '%{$s_search}%'";
     		$where .=' AND ('.implode(' OR ',$s_where).')';
     	}
+    	if($search['branch_id']>0){
+    		$where.= " AND lcrm.branch_id = ".$search['branch_id'];
+    	}
     	if($search['status']>-1){
     		$where.= " AND status = ".$search['status'];
     	}

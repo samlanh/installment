@@ -138,6 +138,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		u.`user_name` ,
 		u.`user_type`,
 		(SELECT user_type FROM `rms_acl_user_type` WHERE user_type_id=u.user_type LIMIT 1) aS users_type,
+		(SELECT project_name FROM `ln_project` WHERE br_id=u.branch_id) as project_name,
 		u.`active` as status
 		FROM `rms_users` AS u
 		
@@ -192,6 +193,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	function getUserEdit($id){
 		$db = $this->getAdapter();
 		$sql = "SELECT 
+		            u.branch_id,
 					u.`first_name`, 
 					u.`last_name`, 
 					u.`user_name`, 
@@ -238,7 +240,8 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	function insertUser($data){
 		
 		$_user_data=array(
-	    	'last_name'=>$data['last_name'],
+			'branch_id'=>$data['branch_id'],
+			'last_name'=>$data['last_name'],
 			'first_name'=>$data['first_name'],
 			'user_name'=>$data['user_name'],
 			'password'=> MD5($data['password']),
@@ -251,6 +254,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	
 	function updateUser($data){		
 		$_user_data=array(
+			'branch_id'=>$data['branch_id'],
 	    	'last_name'=>$data['last_name'],
 			'first_name'=>$data['first_name'],
 			'user_name'=>$data['user_name'],

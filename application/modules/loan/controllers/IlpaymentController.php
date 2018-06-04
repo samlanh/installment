@@ -26,6 +26,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 								'status'=>-1,
 								'payment_method'=>-1,);
 					}
+				$this->view->search = $search;
 			$rs_rows= $db->getAllIndividuleLoan($search);
 			$result = array();
 			$list = new Application_Form_Frmtable();

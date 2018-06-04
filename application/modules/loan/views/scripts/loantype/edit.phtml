@@ -11,6 +11,7 @@ $frm = $this->Form_Frmcallecterall;
                      dijit.byId('type').focus();
                     return false;
                 }
+				dijit.byId('save_new').set('disabled',true);
 				return true;
 			}else {
 				return false;
@@ -21,22 +22,24 @@ $frm = $this->Form_Frmcallecterall;
 		<td>
 				<fieldset>
 					<legend><strong><?php echo $tr->translate("LOAN_TYPE")?></strong></legend>
-					<table cellspacing="10"  width="100%">
+					<table cellspacing="10"  width="50%">
 						<tr>
-							<?php echo $frm->getElement('id')?>
-							<td><?php echo $tr->translate("NAME_KH")?></td>
-							<td><?php echo $frm->getElement('title_kh')?></td>								
+							<td><?php echo $tr->translate("NAME_KH")?>
+								<?php echo $frm->getElement('id')?>
+							</td>
+							<td><?php echo $frm->getElement('title_kh')?></td>
+						</tr>
+						<tr>								
 							<td><?php echo $tr->translate("NAME_ENG")?></td>
-							<td><?php echo $frm->getElement('title_en')?></td>	
-							<td><?php echo $tr->translate("DISPLAY_BY")?></td>
-							<td><?php echo $frm->getElement('display_by')?></td>
+							<td><?php echo $frm->getElement('title_en')?></td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("TYPE")?></td>
 							<td><?php echo $frm->getElement('type')?></td>
+						</tr>
+						<tr>
 							<td><?php echo $tr->translate("STATUS")?></td>
 							<td><?php echo $frm->getElement('status')?></td>
-							
 					   </tr>
 					</table>
 					</fieldset>
@@ -44,12 +47,11 @@ $frm = $this->Form_Frmcallecterall;
 	</tr>		
 	<tr>
 		<td align="center">
-			<input type="submit" value="កែប្រៃ & ចាកចេញ" name="btn_save_close" label="<?php echo $tr->translate('SAVEEDIT');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+			<input type="submit" value="កែប្រៃ & ចាកចេញ" name="btn_save_close" id="save_new" label="<?php echo $tr->translate('SAVEEDIT');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
 		</td>
 	</tr>	
 </table>
 </form>
 <script type="text/javascript">
-dojo.require("dijit.form.Textarea");
-dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dijit.form.NumberTextBox");
 </script>

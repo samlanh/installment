@@ -36,7 +36,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 							<td align="center" valign="top">
 								<table cellspacing="10">
 									<tr>
-										<td><?php echo $tr->translate("FIRST_NAME");?></td>
+										<td><?php echo $tr->translate("FIRST_NAME");?>*</td>
 										<td width="250px">
 											<input type="text" required="true" name="first_name" id="first_name" placeholder="នាមខ្លួន" 
 											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->user_edit['first_name'];?>"
@@ -44,7 +44,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 										</td>
 									</tr>
 									<tr>
-										<td><?php echo $tr->translate("LAST_NAME");?></td>
+										<td><?php echo $tr->translate("LAST_NAME");?>*</td>
 										<td>
 											<input type="text" required="true" name="last_name" id="last_name" placeholder="នាម​ត្រកូល" 
 											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->user_edit['last_name'];?>"
@@ -52,7 +52,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 										</td>
 									</tr>
 									<tr>
-										<td><?php echo $tr->translate("USER_NAME");?></td>
+										<td><?php echo $tr->translate("USER_NAME");?>*</td>
 										<td>
 											<input type="text" required="true" name="user_name" id="user_name" placeholder="ឈ្នោះ​អ្នក​ប្រើ​ប្រាស់" 
 											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->user_edit['user_name'];?>" 
@@ -60,7 +60,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 										</td>
 									</tr>
 									<tr>
-										<td><?php echo $tr->translate("PASSWORD");?></td>							
+										<td><?php echo $tr->translate("PASSWORD");?>*</td>							
 										<td>
 											<input type="password" required="true" name="password" id="password" placeholder="ពាក្យ​​សំងាត់" 
 											regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
@@ -68,7 +68,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 										</td>
 									</tr>
 									<tr>
-										<td><?php echo $tr->translate("CONFIRM_PASSWORD");?></td>							
+										<td><?php echo $tr->translate("CONFIRM_PASSWORD");?>*</td>							
 										<td>
 											<input type="password" required="true" name="con_password" id="con_password" placeholder="បញ្ជាក់ពាក្យ​​សំងាត់" 
 											regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
@@ -76,7 +76,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 										</td>
 									</tr>
 									<tr>
-										<td><?php echo $tr->translate('STATUS');?></td>
+										<td><?php echo $tr->translate('STATUS');?>*</td>
 										<td>
 											<select name="active" required="true" id="active" class='fullside' dojoType="dijit.form.FilteringSelect"  missingMessage="អ្នក​ភ្លេច​បំពេញ​  ស្ថាន​ភាព!"> 
 												<option value="1" <?php if($this->user_edit['active'] == 1) echo 'selected';?> >ប្រើ​ប្រាស់</option>
@@ -85,8 +85,19 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 										</td>
 									</tr>
 									<tr>
-										<td><?php echo $tr->translate("USER_TYPE");?></td>
+										<td><?php echo $tr->translate("USER_TYPE");?>*</td>
 										<td><input id="user_type" /></td>
+									</tr>	
+									<tr>
+										<td><?php echo $tr->translate("BRANCH_NAME");?>*</td>
+										<td>
+											<select class="fullside" dojoType="dijit.form.FilteringSelect" id="branch_id" name="branch_id">
+												<option value="" <?php if($this->user_edit['branch_id'] == '') echo 'selected';?>>គ្រប់គម្រោង</option>
+												<?php if(!empty($this->rs)){foreach($this->rs as $r){?>
+													<option <?php echo $r['br_id'];?> <?php if($this->user_edit['branch_id'] == $r['br_id']) echo 'selected';?>><?php echo $r['project_name'];?></option>
+												<?php }}?>
+											</select>
+										</td>
 									</tr>									
 								</table>
 							</td>							
@@ -99,7 +110,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 			<td colspan="2" align="center">
 				<input type="button" value="GO_BACK" label="<?php echo $tr->translate('GO_BACK');?>" id="back" dojoType="dijit.form.Button" 
 				iconClass="dijitIconUndo" onclick="window.location = '<?php echo $this->url(array('module'=>'rsvacl','controller'=>"user",'action'=>'index'),null,true); ?>';" />
-				<input type="submit" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" id="submitButton" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+				<input type="submit" value="Save" label="<?php echo $tr->translate('GO_EDIT');?>" id="submitButton" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
 			</td>
 		</tr>
 	</table>	

@@ -44,6 +44,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
         	'name'=>$rs['last_name'].' '.$rs['name'],
         	'user_name'=>$rs['user_name'],
         	'user_type'=>$rs['users_type'],
+            'project_name'=>$rs['project_name'],
         	'status'=>$rs['status']);
         }
         $list = new Application_Form_Frmtable();
@@ -54,7 +55,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
         else{
         	$result = Application_Model_DbTable_DbGlobal::getResultWarning();
         }
-        $collumns = array("LASTNAME_FIRSTNAME","USER_NAME","USER_TYPE","STATUS");
+        $collumns = array("LASTNAME_FIRSTNAME","USER_NAME","USER_TYPE","BRANCH_NAME","STATUS");
         $link=array(
         		'module'=>'rsvacl','controller'=>'user','action'=>'edit',
         );
@@ -122,6 +123,9 @@ class RsvAcl_UserController extends Zend_Controller_Action
 				
 			array_unshift($user_type, array('id'=>-1,'name'=>'Add New'));
 			$this->view->user_type = $user_type;
+			
+			$db = new Application_Model_DbTable_DbGlobal();
+			$this->view->rs = $db->getAllBranchName();
 	}
 	public function editAction()
 	    {
@@ -149,6 +153,8 @@ class RsvAcl_UserController extends Zend_Controller_Action
 		$this->view->user_typelist =$user_type;
 		array_unshift($user_type, array('id'=>-1,'name'=>'Add New'));
 		$this->view->user_type = $user_type;
+		$db = new Application_Model_DbTable_DbGlobal();
+		$this->view->rs = $db->getAllBranchName();
     }
     
  

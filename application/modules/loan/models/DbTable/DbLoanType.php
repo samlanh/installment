@@ -11,7 +11,7 @@ class Loan_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     			'name_en'=>$data['title_en'],
     			'name_kh'=>$data['title_kh'],
     			'status'=>$data['status'],
-    			'displayby'=>$data['display_by'],
+    			'displayby'=>1,
     			'key_code'=>$key_code,
     			'type'=>$data['type'],
     			
@@ -32,7 +32,7 @@ class Loan_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     			'name_en'=>$data['title_en'],
     			'name_kh'=>$data['title_kh'],
     			'status'=>$data['status'],
-    			'displayby'=>$data['display_by'],
+    			'displayby'=>1,
     			'type'=>$data['type'],
     			);
     	
