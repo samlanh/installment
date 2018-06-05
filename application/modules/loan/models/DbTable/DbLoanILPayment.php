@@ -29,6 +29,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 					lcrm.`recieve_amount`,
 				    (SELECT lcrmd.`date_payment` from ln_client_receipt_money_detail AS lcrmd WHERE lcrm.id=lcrmd.`crm_id` ORDER BY lcrmd.id DESC LIMIT 1 ) AS date_payment,
 					lcrm.`date_input`,
+					(SELECT name_kh FROM `ln_view` WHERE type=7 AND key_code=lcrm.`payment_option`) AS payment_method,
 					(SELECT name_en FROM `ln_view` WHERE type=3 and key_code = lcrm.status),
 					'បោះពុម្ភ',
 					'".$delete."'
@@ -301,65 +302,18 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    	}else{
 	    		$reciept_no = $data['reciept_no'];
 	    	}
-    	$loan_number = $data['loan_number'];    	
+    	
+	    $loan_number = $data['loan_number'];    	
     	$amount_receive = $data["amount_receive"];
+    	$amount_payment=$amount_receive;
     	$total_payment = $data["total_payment"];
     	$return = 0;
     	$option_pay = $data["option_pay"];
-    	
-    	if($amount_receive>$total_payment){
-    		$amount_payment = $amount_receive - $return;
-    		$is_compleated = 1;
-    	}elseif($amount_receive<$total_payment){
-    		$amount_payment = $amount_receive;
-    		$is_compleated = 0;
-    	}else{
-    		$amount_payment = $total_payment;
+    	$is_compleated=0;
+    	if($amount_receive>=$total_payment){
     		$is_compleated = 1;
     	}
     	
-    	$principle = $data["os_amount"];
-    	$penelize  = $data["penalize_amount"];
-    	$service_charge = $data["service_charge"];
-    	$interest = $data["total_interest"];
-    	if($option_pay==3){//រំលស់ប្រាក់ដើម
-    		$interest = 0;
-    	}
-    	$total_pay = $data["total_payment"];
-    	$recieve = $data["amount_receive"];
-    	
-    	$new_service = $recieve-$service_charge;
-    	if($new_service>=0){//ដកសេវាកម្មហើយនៅតែ<០
-    		$service = $service_charge;
-    		$new_penelize = $new_service - $penelize;
-    		if($new_penelize>=0){
-    			$penelize_amount =  $penelize;
-    			$new_interest = $new_penelize - $interest;
-    			if($new_interest>=0){
-    				$interest_amount = $interest;
-    				$new_printciple = $new_interest - $principle;
-    				if($new_printciple>=0){
-    					$principle_amount = $principle;
-    				}else{
-    					$principle_amount = abs($new_interest);
-    				}
-    			}else{
-    				$interest_amount = abs($new_penelize);
-    				$principle_amount=0;
-    			}
-    		}else{
-    			$penelize_amount = abs($new_service);
-    			$interest =0;
-    			$principle_amount=0;
-    		}
-    	}else{
-    		$service = abs($recieve);
-    		$penelize_amount = 0;
-    		$interest =0;
-    		$principle_amount=0;
-    	}
-    	$service_charge= $data["service_charge"];
-    	$penalize = $data["penalize_amount"];
     	$pay_off = 0;
     	if($data["option_pay"]==4){//payoff
     		$pay_off = 1;
@@ -367,23 +321,21 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$arr_client_pay = array(
     			'branch_id'						=>	$data["to_branch_id"],//$data["branch_id"],
     			'receipt_no'					=>	$reciept_no,
-    			'date_pay'					    =>	$data['collect_date'],
+    			'date_pay'					    =>	$data['date_payment'],
     			'date_input'					=>	date("Y-m-d"),
+    			'from_date'						=>	$data['date_payment'],//check more
     			'client_id'                     =>	$data['client_id'],
     			'sale_id'						=>	$data['loan_number'],
     			'land_id'						=>	$data['property_id'],
-    			'outstanding'                   =>	$data['priciple_amount']+$principle_amount,//ប្រាក់ដើមមុនបង់
+    			'outstanding'                   =>	$data['outstanding_balance'],//ប្រាក់ដើមមុនបង់
     			'total_principal_permonth'		=>	$data["os_amount"]+$data["extrapayment"],//ប្រាក់ដើមត្រូវបង់
     			'total_interest_permonth'		=>	$data["total_interest"],
-    			'penalize_amount'				=>	$penalize,
+    			'penalize_amount'				=>	$data["penalize_amount"],
+    			'total_payment'					=>	$data["total_payment"],//ប្រាក់ត្រូវបង់ok
     			'service_charge'				=>	$data["service_charge"],
     			'principal_amount'				=>	$data['priciple_amount'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
-    			'total_principal_permonthpaid'	=>	$principle_amount,//ok ប្រាក់ដើមបានបង
-    			'total_interest_permonthpaid'	=>	$interest_amount,//ok ការប្រាក់បានបង
-    			'penalize_amountpaid'			=>	$penelize_amount,// ok បានបង
-    			'service_chargepaid'			=>	$service,// okបានបង
+    			
     			'balance'						=>	$data["remain"],
-    			'total_payment'					=>	$data["total_payment"],//ប្រាក់ត្រូវបង់ok
     			'recieve_amount'				=>	$amount_receive,//ok
     			'amount_payment'				=>	$amount_payment,//brak ban borng
     			'return_amount'					=>	$return,//ok
@@ -393,20 +345,29 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			'payment_option'				=>	$data["option_pay"],
     			'status'						=>	1,
     			'is_completed'					=>	$is_compleated,
-    		    'field3'			=>3,
-    			'is_payoff'=>$pay_off,
-    			'extra_payment' =>$data["extrapayment"],
-    			'payment_times'=>$data['paid_times'],
-    			'payment_method'=>$data['payment_method'],
+    		    'field3'						=>  3,
+    			'is_payoff'						=>  $pay_off,
+    			'extra_payment' 				=>  $data["extrapayment"],
+    			'payment_times'					=>  $data['paid_times'],
+    			'payment_method'				=>  $data['payment_method'],
     		);
     		
 			$this->_name = "ln_client_receipt_money";
     		$client_pay = $this->insert($arr_client_pay);
     		
-    		$sub_recieve_amount = $data["amount_receive"];
-    		$date_collect = $data["collect_date"];
-  		    
-    		if($data['option_pay']!=3){//ក្រៅពីរំលស់ប្រាក់ដើម
+    		
+    		//$date_collect = $data["collect_date"];
+    		$paid_principalall = 0;// ត្រូវទាំងអស់ព្រោះការពារបង់២ record ទី៣ វាបូកបញ្ចូល Paid អោយដែ
+    		$paid_interestall = 0;
+    		$paid_penaltyall = 0;
+    		$paid_serviceall = 0;
+    		$set_service=0;//សម្រាប់បង់ថ្លៃសេវាកម្មតែម្តង
+    		$set_penalty=0;//សម្រាប់បង់ថ្លៃផាគពិន័យតែម្តង
+    		
+    		$service_charge= $data["service_charge"];//សេវាផ្សេងៗ
+    		$penalize = $data["penalize_amount"];//ផាកពិន័យ
+    		$total_interest = $data["total_interest"];//ត្រូវបង់សរុប
+    		//if($data['option_pay']!=3){//ក្រៅពីរំលស់ប្រាក់ដើម​ => after ហេតុអីត្រូវសរសេរចឹង?
     			$rows = $this->getSaleScheduleById($loan_number, 1);
 		    		if(!empty($rows)){
 		    			$remain_money = $data['amount_receive']-$data['extrapayment'];
@@ -414,6 +375,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    				if($remain_money<=0){
 		    					break;
 		    				}
+		    			if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
 		    				$arr_money_detail = array(
     								'crm_id'				=>	$client_pay,
     								'land_id'			    =>	$data['property_id'],//ok
@@ -440,14 +402,15 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     								'paid_date'				=>	$data["collect_date"],
     								'is_completed'			=>	1,
     								'status'				=>	1);
+		    				$db->insert("ln_client_receipt_money_detail", $arr_money_detail);
+		    			}			
 		    						
-		    						$db->insert("ln_client_receipt_money_detail", $arr_money_detail);
+		    						$after_outstanding = $row['begining_balance_after'];
+		    						$after_payment_after = $row['total_payment_after'];
+		    						$after_principal = $row['principal_permonthafter'];//$data["principal_permonth_".$i];
+		    						$total_principal = $after_principal;
 		    						
-		    						$after_outstanding= $row['begining_balance_after'];
-		    						$after_payment_after= $row['total_payment_after'];
-		    						$after_principal= $row['principal_permonthafter'];//$data["principal_permonth_".$i];
-		    						$after_interest = $row['total_interest_after'];//$data["interest_".$i];
-		    						$total_principal=$after_principal;
+		    						$after_interest = $row['total_interest_after'];
 		    						
 		    						if($option_pay!=4){
 		    							$total_interest = $after_interest;
@@ -460,6 +423,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    						$paid_penalty = 0;
 		    						$paid_service = 0;
 		    						$is_compleated_d=0;
+		    						
 		    						if($key!=0){
 		    							$penalize = 0;//ធ្លាប់បងហើយម្តង អោយ =0
 		    							$service_charge=0;
@@ -472,9 +436,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    						}elseif($option_pay==3){
 		    							$total_interest=0;
 		    							$total_principal = $after_principal;//$data["principal_permonth_".$i];
-		    						}elseif($option_pay==2){//ដើម្បីអោយគណនា១ Record ម្តងៗរក completed=1
-		    							$total_interest=$after_interest;//$data["interest_".$i];
-		    							$total_principal =$after_principal;// $data["principal_permonth_".$i];
 		    						}
 		    						
 		    						$remain_money = $remain_money-$service_charge;
@@ -512,30 +473,52 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    						}else{
 		    							$paid_service=$service_charge-abs($remain_money);
 		    							$after_service = abs($remain_money);
-		    						}
+		    						}		    						
+		    						
 		    						if($after_principal==0){
 		    							$is_compleated_d=1;
 		    						}
-    								 $arra = array(
-    								 		'begining_balance_after'=>$after_outstanding-$paid_principal,
-//     								 		'ending_balance'=>$row['ending_balance']-($paid_principal),
-    								    	"principal_permonthafter"=>$after_principal,
-    								    	'total_interest_after'=>$after_interest,
-    								 		'total_payment_after'=>	$after_principal+$after_interest,
-    								    	'is_completed'=>$is_compleated_d,
-    								    	'paid_date'	=>	$data['collect_date'],
-    								    	'payment_option'	=>	$data["option_pay"],
-    								    	'paid_date'			=> 	$data['collect_date'],
-    								  );
-    								  $where = " id = ".$row['id'];
-    								  $this->_name="ln_saleschedule";
-    								  $this->update($arra, $where);		    						
+		    						if(($key+1)==count($rows)){
+// 		    							echo $is_compleated_d;
+// 		    							exit();
+		    						}
+		    						if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
+	    								 $arra = array(
+	    								 		'begining_balance_after'=>$after_outstanding-$paid_principal,
+	//     								 		'ending_balance'=>$row['ending_balance']-($paid_principal),
+	    								    	"principal_permonthafter"=>$after_principal,
+	    								    	'total_interest_after'=>$after_interest,
+	    								 		'total_payment_after'=>	$after_principal+$after_interest,
+	    								    	'is_completed'=>$is_compleated_d,
+	    								    	'paid_date'	=>	$data['collect_date'],
+	    								    	'payment_option'	=>	$data["option_pay"],
+	    								    	'paid_date'			=> 	$data['collect_date'],
+	    								  );
+	    								  $where = " id = ".$row['id'];
+	    								  $this->_name="ln_saleschedule";
+	    								  $this->update($arra, $where);	
+		    						}
+    								  
+    							$paid_principalall = $paid_principalall+$paid_principal;
+    							$paid_interestall = $paid_interestall+$paid_interest;
+    						    $paid_penaltyall = $paid_penaltyall+$paid_penalty;
+    						    $paid_serviceall = $paid_serviceall+$paid_service;
 		    		}//end foreach 
 		    	}
-    		}
+    		//}
+    		$arr = array(
+    				'total_principal_permonthpaid'	=>	$paid_principalall,//ok ប្រាក់ដើមបានបង
+    				'total_interest_permonthpaid'	=>	$paid_interestall,//ok ការប្រាក់បានបង
+    				'penalize_amountpaid'			=>	$paid_penaltyall,// ok បានបង
+    				'service_chargepaid'			=>	$paid_serviceall,// okបានបង
+    		);
+    		$this->_name="ln_client_receipt_money";
+    		$where = $db->quoteInto("id=?", $client_pay);
+    		$this->update($arr, $where);
+    		
     		////////////////////////////////////start extra payment///////////////////////////////////////
     		if($data['option_pay']==3){
-    			$data['extrapayment'] = $data['amount_receive']-$data['penalize_amount'];
+    			$data['extrapayment'] = $data['amount_receive']-$data['total_interest']-$data['penalize_amount']-$data['service_charge'];
     		}
     		if($data['extrapayment']>0){
     			$extrapayment = $data['extrapayment'];
@@ -556,15 +539,15 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     						'branch_id'=>$data['branch_id'],
     						'crm_id'=>$client_pay,//ទុកសម្រាប់លុប ពេលគេលុប​បង្កាន់ដៃបង់ប្រាក់
     						'sale_id'=>$data['loan_number'],//good
-    						'begining_balance'=> $data['priciple_amount']+$principle_amount,//good
-    						'begining_balance_after'=> $data['priciple_amount']+$principle_amount,//good
+    						'begining_balance'=> $data['outstanding_balance'],//good
+    						'begining_balance_after'=> $data['outstanding_balance'],//good
     						'principal_permonth'=> $data['extrapayment'],//good
     						'principal_permonthafter'=> 0,//good
     						'total_interest'=>0,//good
     						'total_interest_after'=>0,//good
     						'total_payment'=> $data['extrapayment'],//good
     						'total_payment_after'=>0,//good
-    						'ending_balance'=> $data['priciple_amount']+$principle_amount,
+    						'ending_balance'=>$data['outstanding_balance']-$paid_principalall,
     						'cum_interest'=>0,
     						'amount_day'=>0,
     						'is_completed'=>1,
@@ -579,7 +562,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     				
     				$times = count($rs);
     				foreach ($rs as $index => $row){//ដក Begining after ដើម្បីអោយបង្កាន់ដៃបង់លើកក្រោយចេញត្រូវនឹងប្រាក់ដែលធ្លាប់បានបង់
-    					
     					$arr = array(
     							'crm_id'				=>	$client_pay,
     							'land_id'			    =>	$data['property_id'],//ok
@@ -1195,7 +1177,10 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 						 (SELECT ln_properties.land_code  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_code,
 						 (SELECT t.type_nameen FROM `ln_properties_type` as t WHERE t.id=(SELECT p.property_type FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1)) As property_type,
 						  s.*,
+						  s.buy_date AS sold_date,
+						  DATE_FORMAT(s.buy_date, '%d-%m-%Y') AS `buy_date`,
 						  (SELECT hname_kh FROM `ln_client` WHERE client_id=s.client_id) as buy_with,
+						  (SELECT crm.`from_date` FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id ORDER BY crm.id DESC LIMIT 1) AS from_date,
 						  ss.*,
 						   DATE_FORMAT(ss.date_payment, '%d-%m-%Y') AS date_payments
 						FROM

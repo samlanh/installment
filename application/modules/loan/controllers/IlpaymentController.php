@@ -31,7 +31,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$result = array();
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
-					"PAY_DATE","DATE","STATUS",'PRINT','DELETE');
+					"PAY_DATE","DATE","PAYMENT_OPTION","STATUS",'PRINT','DELETE');
 			$link=array('module'=>'loan','controller'=>'ilpayment','action'=>'edit',);
 			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);
 			$link_delete=array('module'=>'loan','controller'=>'ilpayment','action'=>'delete',);
@@ -130,6 +130,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		
 	}	
 	function editAction(){
 		$id = $this->getRequest()->getParam("id");
@@ -312,7 +313,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	function getLoanHasPayByLoanNumberAction(){//បង្ហាញប្រវត្តប្រាក់បានបងសរុប
+	function getLoanHasPayByLoanNumberAction(){//បង្ហាញប្រវត្តប្រាក់បានបងសរុបtab3
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
