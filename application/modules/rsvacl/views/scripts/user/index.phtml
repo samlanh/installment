@@ -12,33 +12,41 @@
 		height: 30px;		
 	}
 </style>
-<form name="frmlist_users" action="<?php echo $this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
-<table>	  	
-	  <tr>
-	    <td>
-	    	<input type="text" name="txtsearch" id="txtsearch" placeholder="តាម (នាម​ត្រកូល , នាម​ខ្លួន  និង អ្នក​ប្រើ​ប្រាស់)"  dojoType="dijit.form.TextBox"
-			 style="height: 30px;" value='<?php echo $this->txtsearch;?>'/>
-		</td>
-	    <td align="right">
-	    	<select name="user_type" id="user_type"  onChange="document.frmlist_agent.submit();" style=" height: 30px;" dojoType="dijit.form.FilteringSelect"> 
-				<option value="-1" <?php if($this->user_type == -1) echo 'selected="selected"';?> >ជ្រើសរើស ប្រភេទ​អ្នក​ប្រើ​ប្រាស់</option> 
-				<?php foreach ($this->user_typelist as $key => $ut) : ?>
-					<option value="<?php echo $ut['id'];?>" <?php if($ut['id'] == $this->user_type) echo 'selected'?>><?php echo $ut['name'];?></option>
-				<?php endforeach;?>	 
-			</select>
-		</td>
-		<td>
-	    	<select name="active" id="active"  onChange="document.frmlist_agent.submit();" style=" height: 30px;" dojoType="dijit.form.FilteringSelect"> 
-				<option value="-1" <?php if($this->active == -1) echo 'selected="selected"';?> >ជ្រើសរើស ស្ថានការណ៍</option> 
-				<?php foreach ($this->activelist as $key => $at) : ?>
-					<option value="<?php echo $key;?>" <?php if($key == $this->active) echo 'selected'?>><?php echo $at;?></option>
-				<?php endforeach;?>	 
-			</select>
-		</td>
-		<td>
-			 <button dojoType="dijit.form.Button" showLabel="true" type="submit">ស្វែង​រក</button>
-		</td>			
-	  </tr>	
-</table>
-</form>
-<?php echo $this->list;?>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+			<form name="frmlist_users" action="<?php echo $this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+				<table>	  	
+					  <tr>
+					    <td>
+					    	<input type="text" name="txtsearch" id="txtsearch" placeholder="តាម (នាម​ត្រកូល , នាម​ខ្លួន  និង អ្នក​ប្រើ​ប្រាស់)"  dojoType="dijit.form.TextBox"
+							 style="height: 30px;" value='<?php echo $this->txtsearch;?>'/>
+						</td>
+					    <td align="right">
+					    	<select name="user_type" id="user_type"  onChange="document.frmlist_agent.submit();" style=" height: 30px;" dojoType="dijit.form.FilteringSelect"> 
+								<option value="-1" <?php if($this->user_type == -1) echo 'selected="selected"';?> >ជ្រើសរើស ប្រភេទ​អ្នក​ប្រើ​ប្រាស់</option> 
+								<?php foreach ($this->user_typelist as $key => $ut) : ?>
+									<option value="<?php echo $ut['id'];?>" <?php if($ut['id'] == $this->user_type) echo 'selected'?>><?php echo $ut['name'];?></option>
+								<?php endforeach;?>	 
+							</select>
+						</td>
+						<td>
+					    	<select name="active" id="active"  onChange="document.frmlist_agent.submit();" style=" height: 30px;" dojoType="dijit.form.FilteringSelect"> 
+								<option value="-1" <?php if($this->active == -1) echo 'selected="selected"';?> >ជ្រើសរើស ស្ថានការណ៍</option> 
+								<?php foreach ($this->activelist as $key => $at) : ?>
+									<option value="<?php echo $key;?>" <?php if($key == $this->active) echo 'selected'?>><?php echo $at;?></option>
+								<?php endforeach;?>	 
+							</select>
+						</td>
+						<td>
+							 <button dojoType="dijit.form.Button" showLabel="true" type="submit">ស្វែង​រក</button>
+						</td>			
+					  </tr>	
+				</table>
+			</form>
+		</div>
+		<div class="card-box">
+			<?php echo $this->list;?>
+		</div>
+	</div>
+</div>

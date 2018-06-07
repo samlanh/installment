@@ -78,9 +78,10 @@ class Group_indexController extends Zend_Controller_Action {
 			}
 		}
 		$db = new Application_Model_DbTable_DbGlobal();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$client_type = $db->getclientdtype();
-		array_unshift($client_type,array('id' => -1,'name' => '--- បន្ថែមថ្មី ---',));
-		array_unshift($client_type,array('id' => 0,'name' => '---Please Select ---',));
+		array_unshift($client_type,array('id' => -1,'name' =>$tr->translate("ADD_NEW"),));
+		array_unshift($client_type,array('id' => 0,'name' => $tr->translate("SELECT_DOCUMENT_TYPE"),));
 		$this->view->clienttype = $client_type;
 		
 		$fm = new Group_Form_FrmClient();
@@ -130,11 +131,10 @@ class Group_indexController extends Zend_Controller_Action {
 		$this->view->frm_popup_clienttype = $dbpop->frmPopupclienttype();
 		
 		$db = new Application_Model_DbTable_DbGlobal();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$client_type = $db->getclientdtype();
-		array_unshift($client_type,array(
-				'id' => -1,
-				'name' => '---Add New ---',
-		) );
+		array_unshift($client_type,array('id' => -1,'name' =>$tr->translate("ADD_NEW"),));
+		array_unshift($client_type,array('id' => 0,'name' => $tr->translate("SELECT_DOCUMENT_TYPE"),));
 		$this->view->clienttype = $client_type;
 	}
 	function viewAction(){

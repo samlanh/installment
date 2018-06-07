@@ -187,7 +187,7 @@ class Application_Form_Frmtable
     	//$head='<form name="list"><div style="overflow:scroll; max-height:450px; overflow-x:hidden;" ><table class="collape tablesorter" id="'.$id.'" width="100%">';
     	
     	$head='<form name="list">
-    				<div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%; background:#fff;     padding: 10px 0px; ">
+    				<div class="dataTables_scrollBody" style="position: relative;  width: 100%; background:#fff;   ">
     					<table border="1" id="datatable-responsive" style="  border-collapse: collapse;   border-color: #ddd;"  class="display nowrap dataTable dtr-inline collapsed" cellspacing="0" width="100%" >
     	';
     	$col_str='';
