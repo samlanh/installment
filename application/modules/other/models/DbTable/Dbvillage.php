@@ -59,8 +59,8 @@ class Other_Model_DbTable_DbVillage extends Zend_Db_Table_Abstract
 // 		$sql =" CALL st_getAllVillage('',1) ";
 		$sql =" SELECT
 				v.vill_id,v.village_namekh,v.village_name,
-				(SELECT commune_name FROM ln_commune WHERE v.commune_id=com_id LIMIT 1) AS commune_name,
-				d.district_name,p.province_en_name,
+				(SELECT commune_namekh FROM ln_commune WHERE v.commune_id=com_id LIMIT 1) AS commune_name,
+				d.district_namekh,p.province_kh_name,
 				v.modify_date,(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code=v.status LIMIT 1) AS status, 
 				(SELECT first_name FROM rms_users WHERE id=v.user_id LIMIT 1) AS user_name
 				FROM ln_village AS v,`ln_commune` AS c, `ln_district` AS d , `ln_province` AS p

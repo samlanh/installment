@@ -53,7 +53,7 @@ class Other_Model_DbTable_DbDistrict extends Zend_Db_Table_Abstract
 					dis_id,code,
 					district_namekh,district_name,
 					
-				    (SELECT province_en_name FROM ln_province WHERE province_id=pro_id limit 1) As province_name
+				    (SELECT province_kh_name FROM ln_province WHERE province_id=pro_id limit 1) As province_name
 					,modify_date,
 					(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = status LIMIT 1) AS status_name,
 				(SELECT first_name FROM rms_users WHERE id=user_id LIMIT 1) As user_name
