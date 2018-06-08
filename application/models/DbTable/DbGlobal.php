@@ -614,7 +614,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		$string = "name_en";
   	}
   	 
-  	$sql="SELECT key_code as id, $string AS name ,displayby FROM `ln_view` WHERE status =1 AND type=23";
+  	$sql="SELECT key_code as id, $string AS name ,displayby FROM `ln_view` WHERE status =1 AND type=23 AND (name_kh!='' OR name_en!='')";
   	$rows = $db->fetchAll($sql);
   	return $rows;
   }
