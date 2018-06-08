@@ -236,7 +236,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	        ln_staff WHERE status=1 AND co_khname!='' AND `position_id`=1 ";
    	$db = $this->getAdapter();
    	$rows =  $db->fetchAll($sql);
-   	$options = array(''=>'----Select Staff ----');
+   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+   	$options = array(''=>$tr->translate("SELECT_SALE_AGENT"));
    	if($option!=null){
    		if(!empty($rows))foreach($rows as $rs){
    				$options[$rs['co_id']]=$rs['co_khname'];}

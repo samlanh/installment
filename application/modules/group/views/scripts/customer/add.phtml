@@ -1,6 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('Customer Information'));
+	echo $this->headTitle($tr->translate('CUSTOMER_REQUIREMENT'));
 ?>	
 <?php  $frm = $this->frm_customer;?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
@@ -11,79 +11,94 @@ dojo.require("dijit.form.NumberTextBox");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.form.TextArea");
 </script>
-<form id='add_customer' action="<?php echo $this->url(array('module'=>'group','controller'=>'customer','action'=>'add')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
-<script type="dojo/method" event="onSubmit">			
-			if(this.validate()){
-				dijit.byId('save_new').set('disabled',true);
-				return true;
-			} else {
-				return false;
-			}
-</script>
-<table  width="75%" style="margin-top:-5px;">
-	<tr>
-		<td style="padding-left:30%">
-		<fieldset style="background: #fff;">
-				<legend ><strong><?php echo $tr->translate("CUSTOMER_REQUIREMENT");?></strong></legend>
-					<table style="margin: 0 auto; width:100%;" cellspacing="10">
-						<tr>
-							<td valign="top" width="33%">
-									<table width="100%">
-										<tr>
-											<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
-										    <td><?php echo $frm->getElement('name');?></td>
-										</tr>
-                                         <tr>
-											<td><?php echo $tr->translate("PHONE")?></td>
-									        <td><?php echo $frm->getElement('phone');?></td>
-										</tr>
-                                        <tr>
-											<td><?php echo $tr->translate("DATE")?></td>
-									        <td><?php echo $frm->getElement('date');?></td>
-										</tr>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CUSTOMER_REQUIREMENT');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<div class="card-box">
+    		<form id='add_customer' action="<?php echo $this->url(array('module'=>'group','controller'=>'customer','action'=>'add')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+				<script type="dojo/method" event="onSubmit">			
+					if(this.validate()){
+						dijit.byId('save_new').set('disabled',true);
+						return true;
+					} else {
+						return false;
+					}
+				</script>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('date');?>
+	                   </div>
+	                </div>
                                         
-                                          <tr>
-											<td><?php echo $tr->translate("FROM_PRICE")?></td>
-									        <td><?php echo $frm->getElement('from_price');?></td>
-										</tr>
-                                        
-                                         <tr>
-											<td><?php echo $tr->translate("TO_PRICE")?></td>
-									        <td><?php echo $frm->getElement('to_price');?></td>
-										</tr>
-                                        <tr>
-											<td><?php echo $tr->translate("REQUIREDMENT")?></td>
-									        <td><?php echo $frm->getElement('requirement');?></td>
-										</tr>
-                                         <tr>
-											<td><?php echo $tr->translate("PROPERTIESTYPE")?></td>
-									        <td><?php echo $frm->getElement('type');?></td>
-										</tr>
-                                          <tr>
-											<td><?php echo $tr->translate("DESCRIPTION")?></td>
-									       <td><?php echo $frm->getElement('description');?></td>
-										</tr>
-	
-									</table>
-							</td>
-						
-							
-						</tr>
-						<tr>
-							<td colspan="3" align="center">
-								<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" 
-									 iconClass="dijitIconClear" /> 
-								<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
-									 iconClass="dijitEditorIcon dijitEditorIconSave"/> 
-							</td>
-						</tr>
-					</table>		
-		</fieldset>		
-		</td>
-	</tr>
-</table>	
-</form>
-<table>
-<tr>
-</tr>
-</table>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CUSTOMER_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('name');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PHONE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('phone');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("FROM_PRICE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('from_price');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TO_PRICE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('to_price');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("REQUIREDMENT");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('requirement');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTIESTYPE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('type');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DESCRIPTION");?>  :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('description');?>
+	                   </div>
+	                </div>
+	                <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+			    			<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" 
+								 iconClass="dijitIconClear" /> 
+							<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
+								 iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+		    		</div>
+                </div>
+			</form>
+    	</div>
+    </div>
+</div>
+

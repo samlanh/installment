@@ -236,7 +236,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				'queryExpr'=>'*${0}*',
 		));
 		$opt = $db->getVewOptoinTypeByType(15,1,3,1);
-		$opt['-1']=("--Select Currency Type--");
+		$opt['-1']=($this->tr->translate("SELECT_CURRENCY_TYPE"));
 		$_currency_type->setMultiOptions($opt);
 		
 		$_valuecurr=$request->getParam("currency_type");
