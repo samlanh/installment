@@ -72,10 +72,11 @@ class Loan_DepositController extends Zend_Controller_Action {
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$db = new Application_Model_DbTable_DbGlobal();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$co_name = $db->getAllCoNameOnly();
 		array_unshift($co_name,array(
 		        'id' => -1,
-		        'name' => '---Add New ---',
+		        'name' => $tr->translate("ADD_NEW"),
 		) );
 	    $this->view->co_name=$co_name;
 	    

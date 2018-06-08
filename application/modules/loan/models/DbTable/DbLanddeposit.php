@@ -251,6 +251,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$dbtable = new Application_Model_DbTable_DbGlobal();
     		$loan_number = $dbtable->getLoanNumber($data);
     		$receipt = $dbtable->getReceiptByBranch($data);
+    		$property_info = $this->getProperty($data["land_code"]);
     			   $arr = array(
     				'branch_id'=>$data['branch_id'],
     			   	'receipt_no'=>$receipt,
@@ -274,7 +275,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			   	'validate_date'=>$data['date_line'],
     				'payment_method'=>1,//$data['loan_type'],
     				'note'=>$data['note'],
-    			   	'land_price'=>$data['house_price'],
+    			   	'land_price'=>$property_info['house_price'],
 //     				'build_start'=>$data['start_building'],
     				'typesale'=>$data['typesale'],
     				'is_reschedule'=>$is_schedule,

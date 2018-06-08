@@ -94,7 +94,7 @@ public function init()
 		$schedule_opt = new Zend_Dojo_Form_Element_FilteringSelect('schedule_opt');
 		$schedule_opt->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside fullside50',
+				'class'=>'fullside',
 				'onchange'=>'checkScheduleOption();'
 		));
 		$opt = $db->getVewOptoinTypeByType(25,1,null,1);
@@ -455,7 +455,7 @@ public function init()
 		$typesale = new Zend_Dojo_Form_Element_FilteringSelect('typesale');
 		$typesale->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside50',
+				'class'=>'fullside',
 				'onchange'=>'resetSale();'
 		));
 		$options= array(1=>$this->tr->translate("NORMAL_SALE"),2=>$this->tr->translate("MULTY_SALE"));
