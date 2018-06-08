@@ -61,7 +61,7 @@ public function init()
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
-    	$frm = new Callecterall_Form_Frmcallecterall();
+    	$frm = new Other_Form_Frmcallecterall();
     	$frm = $frm->Frmcallecterall();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
