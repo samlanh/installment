@@ -48,6 +48,13 @@
 				dijit.byId('client_id').focus();
 				return false;
 			}
+			branch_id = dijit.byId('to_branch_id').get("value");
+			if(branch_id==0 || branch_id==-1){
+				alert("Please Select Branch");
+				dijit.byId('to_branch_id').focus();
+				return false;
+			}
+
 			dijit.byId('submit_close').set('disabled',true);
 			dijit.byId('submitButton').set('disabled',true);
             return true;
@@ -745,6 +752,12 @@ function showReciept(receipt_number){
 		dijit.byId('amount_receive').focus();
 		return false;
 	}
+	branch_id = dijit.byId('to_branch_id').get("value");
+	if(branch_id==0 || branch_id==-1){
+		alert("Please Select Branch");
+		dijit.byId('to_branch_id').focus();
+		return false;
+	}
 	if(dijit.byId('frm_add_group_pay').validate()){
          service_charge = dijit.byId('service_charge').get('value');
 		 receive_amount = dijit.byId('amount_receive').get('value');
@@ -969,10 +982,15 @@ function getLastPaidDate(){
 var sale_number_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
 var url_getsalenumber = "<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-sale-number')); ?>";
 function getAllSaleNumber(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id== 0 || branch_id==-1){
+		return false;
+	}
+	dijit.byId('to_branch_id').attr("value",branch_id);
 	dojo.xhrPost({
 		url:url_getsalenumber,	
 		content:{ 
-		    'branch_id':dijit.byId('branch_id').get('value')
+		    'branch_id':branch_id
 		},		    
 		handleAs:"json",
 		load: function(data) {
@@ -1337,17 +1355,9 @@ function totalReturn(){
 	receive_amount = dijit.byId('amount_receive').get('value');
 	option_pay = dijit.byId('option_pay').get('value');
 	
-	//total_payments = dijit.byId('total_payment').get('value');
-	//amonut_return = parseFloat(receive_amount)-parseFloat(total_payments);
-	/*remain_amount = parseFloat(total_payments)-parseFloat(receive_amount);
-	if(remain_amount>0){
-		dijit.byId('remain').attr('value',remain_amount.toFixed(2));
-	}else{
-		dijit.byId('remain').attr('value',0);
-	}*/
 	begining_balance = $('#total_priciple_1').val();
 	if(option_pay==1){
-		if(receive_amount<=total_amount){
+		/*if(receive_amount<=total_amount){
 			os_amount = receive_amount - service_charge - penalize_amount - total_interest;
 			if(os_amount>0){
 				ending_balance = begining_balance - os_amount;
@@ -1355,7 +1365,7 @@ function totalReturn(){
 				ending_balance = begining_balance;
 			}
 			dijit.byId('priciple_amount').attr('value',ending_balance);//ប្រាក់ដើមនៅសល់បន្ទាប់ពីបង់			
-		}else{
+		}else{*/
 			 paid_principalall=0;
 			 paid_interestall = 0;
 			 remain_money = receive_amount-extrapayment-penalize_amount-service_charge;
@@ -1391,7 +1401,10 @@ function totalReturn(){
 			dijit.byId('total_interest').attr('value',paid_interestall);
 			paid_principalall = paid_principalall + extrapayment; 
 			dijit.byId('priciple_amount').attr('value',dijit.byId("outstanding_balance").get("value")-paid_principalall);//អោយរកប្រាក់ដើមនៅសល់ពីបង់ត្រូវគឺត្រូវហើយ
-		}
+			total_amount = receive_amount ;
+			
+
+		//}
 	}else if(option_pay==3){
 		dijit.byId('extrapayment').attr('value',0);
 		dijit.byId('extrapayment').set("readOnly",true);
