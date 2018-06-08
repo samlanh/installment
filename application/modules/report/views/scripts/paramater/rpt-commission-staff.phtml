@@ -7,167 +7,166 @@
 </script>
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT_COMISSION");?></title>
-<form name="frm_rptstaff" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-commission-staff')); ?>" dojoType="dijit.form.Form" method="post">
-	<table style="width:29cm; margin: 0 auto;">
-		 <tr> 
-		   <td><?php echo $frm->getElement("adv_search");?></td>
-		   <td><?php echo $frm->getElement("branch_id");?></td>
-		   <td><?php //echo $frm->getElement('land_id');?><input id="land_id" /></td>
-		   <td><?php echo $frm->getElement("co_khname");?></td>
-		   <td><?php echo $frm->getElement("start_date");?></td>
-		   <td><?php echo $frm->getElement("end_date");?></td>
-		   <td><?php echo $frm->getElement('search_status');?></td>
-		   <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
-		   </td>
-	   	  </tr>
-	</table>
- </form> 
-<div style=" width:28cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
-<div id="divPrint">
-<table style="font-family: 'Khmer OS Content'; width:100%;"  >
-	<tr>
-    	<td align="center">
-    	 	<style>
-				.style{
-					line-height: 20px;font-size: 14px !important;
-					font-family: 'Khmer OS Battambang';
-					}
-					th{padding: 5px;}
-					.hover:hover{background: #ccc;}
-			</style>
-        	<table width="100%" style="margin:0; padding:0;border:none;" >
-            	<tr>
-                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
-                	<td width="60%" valign="top">
-                	<h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
-                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_COMISSION");?></h2></td>
-                    <td width="20%"></td>
-                </tr> 
-            </table>
-			<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 14px;" bordercolor="black">  
-		    	<tr class="style" align="center" style="background:#b2ccff !important;font-weight:bold; line-height: 28px; font-size:12px; padding:5px 0px; " >
-		        	<td><?php echo $tr->translate("NUM");?></td>
-			            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-			            <td><?php echo $tr->translate("STAFF_ID");?></td>
-			            <td><?php echo $tr->translate("TEL");?></td>
-			            <td><?php echo $tr->translate("SEX");?></td>
-			            <td><?php echo $tr->translate("PROPERTY_NAME");?></td>
-			            <td><?php echo $tr->translate("COMISSION");?></td>
-			            <td><?php echo $tr->translate("DATE");?></td>
-		         </tr>
-		       <?php  $total = 0;
-		       		 $key=0; 
-		       	   if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){
-				   $total = $total +$row['comission'];				   ?>
-				   <tr style="font-size: 12px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
-				     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-				     <td align="center">&nbsp;<?php echo $row['project_name']?>&nbsp;</td>
-					 <td>&nbsp;<?php echo $row['co_khname'];?>&nbsp;</td>
-					 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['tel'];?>&nbsp;</td>
-					 <td align="center" style="white-space: nowrap;">&nbsp;<?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
-					 <td style="white-space: nowrap;">&nbsp;<?php echo $row['land_name'].', '.$row['street'];?>&nbsp;</td>
-					 <td align="right">&nbsp;<?php echo '$ '.number_format($row['comission'],2);?>&nbsp;</td>
-					 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['buy_date']));?>&nbsp;</td>
-					</tr>
-				<?php }?>
-				<?php 
-				 $record = $key+1;
-				if(!empty($this->rscomisison))foreach($this->rscomisison as $key => $rscom){?>
-				<?php 
-					$total = $total +$rscom['total_amount'];
-				?>
-				 <tr style="font-size: 12px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
-				     <td align="center">&nbsp;<?php echo $key+1+$record; ?>&nbsp;</td>
-				     <td align="center">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
-					 <td>&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
-					 <td align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
-					 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
-					 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
-					 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
-					 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
-				</tr>
-				<?php } ?>
-		    </table>
-			<br>
-			<table width="50%" border="1" style="float: right; border-collapse:collapse;font-size: 12px;" bordercolor="black">
-				<tr class="style" align="center" style="floafont-weight:bold; line-height:25px; font-size:12px; padding:5px 0px; " >
-		        	<td bgcolor="#ccc" ><?php echo $tr->translate("TOTAL");?></td>
-		            <td><strong><?php echo '$ '.number_format($total,2);?></strong></td>
-		         </tr>
-			</table>
-    	</td>
-    </tr>
-</table>
-		<br />
-		   <table align="center" width="100%">
-				   <tr style="font-size: 14px;">
-				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
-				        <th></th>
-				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
-				        <th></th>
-				        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
-				   </tr>
-			</table>
-</div>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
+	<form name="frm_rptstaff" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-commission-staff')); ?>" dojoType="dijit.form.Form" method="post">
+		<table style="width:100%; margin: 0 auto;">
+			 <tr> 
+			   <td><?php echo $frm->getElement("adv_search");?></td>
+			   <td><?php echo $frm->getElement("branch_id");?></td>
+			   <td><?php //echo $frm->getElement('land_id');?><input id="land_id" /></td>
+			   <td><?php echo $frm->getElement("co_khname");?></td>
+			   <td><?php echo $frm->getElement("start_date");?></td>
+			   <td><?php echo $frm->getElement("end_date");?></td>
+			   <td><?php echo $frm->getElement('search_status');?></td>
+			   <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
+			   </td>
+		   	  </tr>
+		</table>
+	 </form> 
+	<div id="divPrint">
+		<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+			<tr>
+		    	<td align="center">
+		    	 	<style>
+						.style{
+							line-height: 20px;font-size: 14px !important;
+							font-family: 'Khmer OS Battambang';
+							}
+							th{padding: 5px;}
+							.hover:hover{background: #ccc;}
+					</style>
+		        	<table width="100%" style="margin:0; padding:0;border:none;" >
+		            	<tr>
+		                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+		                	<td width="60%" valign="top">
+		                	<h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+		                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_COMISSION");?></h2></td>
+		                    <td width="20%"></td>
+		                </tr> 
+		            </table>
+					<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 14px;" bordercolor="black">  
+				    	<tr class="style" align="center" style="background:#b2ccff !important;font-weight:bold; line-height: 28px; font-size:12px; padding:5px 0px; " >
+				        	<td><?php echo $tr->translate("NUM");?></td>
+					            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+					            <td><?php echo $tr->translate("STAFF_ID");?></td>
+					            <td><?php echo $tr->translate("TEL");?></td>
+					            <td><?php echo $tr->translate("SEX");?></td>
+					            <td><?php echo $tr->translate("PROPERTY_NAME");?></td>
+					            <td><?php echo $tr->translate("COMISSION");?></td>
+					            <td><?php echo $tr->translate("DATE");?></td>
+				         </tr>
+				       <?php  $total = 0;
+				       		 $key=0; 
+				       	   if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){
+						   $total = $total +$row['comission'];				   ?>
+						   <tr style="font-size: 12px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
+						     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+						     <td align="center">&nbsp;<?php echo $row['project_name']?>&nbsp;</td>
+							 <td>&nbsp;<?php echo $row['co_khname'];?>&nbsp;</td>
+							 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['tel'];?>&nbsp;</td>
+							 <td align="center" style="white-space: nowrap;">&nbsp;<?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
+							 <td style="white-space: nowrap;">&nbsp;<?php echo $row['land_name'].', '.$row['street'];?>&nbsp;</td>
+							 <td align="right">&nbsp;<?php echo '$ '.number_format($row['comission'],2);?>&nbsp;</td>
+							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['buy_date']));?>&nbsp;</td>
+							</tr>
+						<?php }?>
+						<?php 
+						 $record = $key+1;
+						if(!empty($this->rscomisison))foreach($this->rscomisison as $key => $rscom){?>
+						<?php 
+							$total = $total +$rscom['total_amount'];
+						?>
+						 <tr style="font-size: 12px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
+						     <td align="center">&nbsp;<?php echo $key+1+$record; ?>&nbsp;</td>
+						     <td align="center">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
+							 <td>&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
+							 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
+							 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
+							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
+						</tr>
+						<?php } ?>
+				    </table>
+					<br>
+					<table width="50%" border="1" style="float: right; border-collapse:collapse;font-size: 12px;" bordercolor="black">
+						<tr class="style" align="center" style="floafont-weight:bold; line-height:25px; font-size:12px; padding:5px 0px; " >
+				        	<td bgcolor="#ccc" ><?php echo $tr->translate("TOTAL");?></td>
+				            <td><strong><?php echo '$ '.number_format($total,2);?></strong></td>
+				         </tr>
+					</table>
+		    	</td>
+		    </tr>
+		</table>
+			<br />
+			   <table align="center" width="100%">
+					   <tr style="font-size: 14px;">
+					        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+					        <th></th>
+					        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+					        <th></th>
+					        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+					   </tr>
+				</table>
+		</div>
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <script>
-dojo.require("dojo.data.ItemFileWriteStore"); 
-var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
-require(["dojo/ready"], function(ready){
-	ready(function(){
-		 getAllPropertyBranch();
-	});
-	new dijit.form.FilteringSelect({
-		store: property_store,
-		required: false,
-		autoComplete: false,
-		queryExpr: "*${0}*",
-		name: "land_id",
-		id: "land_id",
-		value:-1,
-		searchAttr: "name",
-		class: 'fullside fullside50',
-		onChange: function() {
-			//dijit.byId('land_id').attr('value','');
-			land_id=-1;
-	}
-		}, "land_id");
-	new dijit.form.FilteringSelect({
-		name: "branch_id",
-		id: "branch_id",
-		autoComplete: false,
-		onChange: function() {
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+	require(["dojo/ready"], function(ready){
+		ready(function(){
 			 getAllPropertyBranch();
+		});
+		new dijit.form.FilteringSelect({
+			store: property_store,
+			required: false,
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			name: "land_id",
+			id: "land_id",
+			value:-1,
+			searchAttr: "name",
+			class: 'fullside fullside50',
+			onChange: function() {
+				land_id=-1;
 		}
-		}, "branch_id");
-	 
-});
-land_id = '<?php echo $this->search['land_id']?>';
-var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
-function getAllPropertyBranch(branch_id){
-	branch_id = dijit.byId('branch_id').get('value');
-	if(branch_id<0){
-		 dijit.byId('land_id').reset();
-		return false;
-	}
-	dojo.xhrPost({
-		url:url_getland,	
-		content:{ 
-		    'branch_id':branch_id,
-		    'action':1
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			property_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('land_id').set('store', property_store);
-		    dijit.byId('land_id').reset();
-		    if(land_id>0){
-		    	dijit.byId('land_id').attr('value',land_id);
-			 }
-		},
-		error: function(err) {
-		}
+			}, "land_id");
+		new dijit.form.FilteringSelect({
+			name: "branch_id",
+			id: "branch_id",
+			autoComplete: false,
+			onChange: function() {
+				 getAllPropertyBranch();
+			}
+			}, "branch_id");
+		 
 	});
-} 
+	land_id = '<?php echo $this->search['land_id']?>';
+	var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+	function getAllPropertyBranch(branch_id){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id<0){
+			 dijit.byId('land_id').reset();
+			return false;
+		}
+		dojo.xhrPost({
+			url:url_getland,	
+			content:{ 
+			    'branch_id':branch_id,
+			    'action':1
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				property_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('land_id').set('store', property_store);
+			    dijit.byId('land_id').reset();
+			    if(land_id>0){
+			    	dijit.byId('land_id').attr('value',land_id);
+				 }
+			},
+			error: function(err) {
+			}
+		});
+	} 
 </script>

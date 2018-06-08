@@ -7,83 +7,83 @@ dojo.require("dijit.form.DateTextBox");
 </script>
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT STAFF");?></title>
-<form name="frm_rptstaff" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-staff')); ?>" dojoType="dijit.form.Form" method="post">
-	<table style="width:28cm; margin: 0 auto;">
-		 <tr> 
-		   <td><?php echo $frm->getElement("adv_search");?></td>
-		   <td><?php echo $frm->getElement("branch_id");?></td>
-		   <td><?php echo $frm->getElement("co_khname");?></td>
-		   <td><?php echo $frm->getElement("co_sex");?></td>
-		   <td><?php echo $frm->getElement('search_status');?></td>
-		   <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
-		   </td>
-	   	  </tr>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
+	<form name="frm_rptstaff" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-staff')); ?>" dojoType="dijit.form.Form" method="post">
+		<table style="margin: 0 auto;">
+			 <tr> 
+			   <td><?php echo $frm->getElement("adv_search");?></td>
+			   <td><?php echo $frm->getElement("branch_id");?></td>
+			   <td><?php echo $frm->getElement("co_khname");?></td>
+			   <td><?php echo $frm->getElement("co_sex");?></td>
+			   <td><?php echo $frm->getElement('search_status');?></td>
+			   <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
+			   </td>
+		   	  </tr>
+		</table>
+ 	</form> 
+	<div id="divPrint">
+	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	    	 	<style>
+					.style{
+						line-height: 20px;font-size: 12px !important;
+						font-family: 'Khmer OS Battambang';
+						}
+						.hover:hover{background: #ccc;}
+				</style>
+	        	<table width="100%" style="font-family:khmer;margin:0; padding:0;border:none;" >
+	            	<tr>
+	                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+	                	<td width="60%" valign="top">
+	                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+	                	<h2 style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_STAFF");?></h2></td>
+	                    <td width="20%"></td>
+	                </tr> 
+	            </table>
+				<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 12px;" bordercolor="black">  
+			    	<tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 30px; font-size:12px; padding:5px 0px; " >
+			        	<td><?php echo $tr->translate("NUM");?></td>
+			            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+			            <!--<td><?php //echo $tr->translate("STAFF_ID");?></td> -->
+			            <td><?php echo $tr->translate("CO_NAME");?></td>
+			            <td><?php echo $tr->translate("SEX");?></td>
+			            <td><?php echo $tr->translate("PHONE");?></td>
+			            <td><?php echo $tr->translate("NATIONALITY_NO");?></td>
+			            <td><?php echo $tr->translate("EMAIL");?></td>
+			            <td><?php echo $tr->translate("POB");?></td>
+			            <td><?php echo $tr->translate("ADDRESS");?></td>
+			            <td><?php echo $tr->translate("NOTE");?></td>
+			         </tr>
+			       <?php if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){?>
+					   <tr style="font-size: 12px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
+					     <td>&nbsp;<?php echo $key+1; ?></td>
+					     <td style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name']?></td>
+					     <!--<td style="white-space: nowrap;">&nbsp;<?php //echo $row['co_code']?></td> -->
+						 <td>&nbsp;<?php echo $row['co_khname'];?></td>
+						 <td>&nbsp;<?php echo $row['sex']?></td>
+						 <td style="white-space: nowrap;">&nbsp;<?php echo $row['tel']?></td>
+						 <td>&nbsp;<?php echo $row['national_id']?></td>
+						 <td>&nbsp;<?php echo $row['email']?></td>
+						 <td style="white-space: pre;">&nbsp;<?php echo $row['pob']?></td>
+						 <td style="white-space: pre;">&nbsp;<?php echo $row['address']?></td>
+						 <td>&nbsp;<?php echo $row['note']?></td>
+						</tr>
+					<?php }?>
+					
+			    </table>
+	    	</td>
+	    </tr>
 	</table>
- </form> 
-<div style=" width:28cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
-<div id="divPrint">
-<table style="font-family: 'Khmer OS Content'; width:100%;"  >
-	<tr>
-    	<td align="center">
-    	 	<style>
-				.style{
-					line-height: 20px;font-size: 12px !important;
-					font-family: 'Khmer OS Battambang';
-					}
-					.hover:hover{background: #ccc;}
-			</style>
-        	<table width="100%" style="font-family:khmer;margin:0; padding:0;border:none;" >
-            	<tr>
-                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
-                	<td width="60%" valign="top">
-                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
-                	<h2 style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_STAFF");?></h2></td>
-                    <td width="20%"></td>
-                </tr> 
-            </table>
-			<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 12px;" bordercolor="black">  
-		    	<tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 30px; font-size:12px; padding:5px 0px; " >
-		        	<td><?php echo $tr->translate("NUM");?></td>
-		            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-		            <!--<td><?php //echo $tr->translate("STAFF_ID");?></td> -->
-		            <td><?php echo $tr->translate("CO_NAME");?></td>
-		            <td><?php echo $tr->translate("SEX");?></td>
-		            <td><?php echo $tr->translate("PHONE");?></td>
-		            <td><?php echo $tr->translate("NATIONALITY_NO");?></td>
-		            <td><?php echo $tr->translate("EMAIL");?></td>
-		            <td><?php echo $tr->translate("POB");?></td>
-		            <td><?php echo $tr->translate("ADDRESS");?></td>
-		            <td><?php echo $tr->translate("NOTE");?></td>
-		         </tr>
-		       <?php if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){?>
-				   <tr style="font-size: 12px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
-				     <td>&nbsp;<?php echo $key+1; ?></td>
-				     <td style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name']?></td>
-				     <!--<td style="white-space: nowrap;">&nbsp;<?php //echo $row['co_code']?></td> -->
-					 <td>&nbsp;<?php echo $row['co_khname'];?></td>
-					 <td>&nbsp;<?php echo $row['sex']?></td>
-					 <td style="white-space: nowrap;">&nbsp;<?php echo $row['tel']?></td>
-					 <td>&nbsp;<?php echo $row['national_id']?></td>
-					 <td>&nbsp;<?php echo $row['email']?></td>
-					 <td style="white-space: pre;">&nbsp;<?php echo $row['pob']?></td>
-					 <td style="white-space: pre;">&nbsp;<?php echo $row['address']?></td>
-					 <td>&nbsp;<?php echo $row['note']?></td>
-					</tr>
-				<?php }?>
-				
-		    </table>
-    	</td>
-    </tr>
-</table>
-		<br />
-		   <table align="center" width="100%">
-				   <tr style="font-size: 14px;">
-				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
-				        <th></th>
-				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
-				        <th></th>
-				        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
-				   </tr>
-			</table>
-</div>
+	   <br />
+	   <table align="center" width="100%">
+		   <tr style="font-size: 14px;">
+		        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+		        <th></th>
+		        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+		        <th></th>
+		        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+		   </tr>
+		</table>
+	</div>
 </div>

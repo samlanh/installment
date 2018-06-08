@@ -8,11 +8,11 @@
 ?>
 <title><?php echo $tr->translate('REPORT WEEK');?></title>
 <style>
-td p{ margin-top:0px !important;}
-#printfooter{display: none !important;}
-h2{line-height: 25px !important;}
+	td p{ margin-top:0px !important;}
+	#printfooter{display: none !important;}
+	h2{line-height: 25px !important;}
 </style>
-<div style=" width:21cm; margin:0 auto; border: 1px dotted #ccc; padding: 0 40px;">
+<div style="margin:0 auto; padding: 0 40px;">
 	<div id="divPrint">
 	<style type="text/css">
 	.style{
@@ -40,21 +40,20 @@ table { page-break-inside:auto }
 	}
 	h2{line-height: 10px;}
 	</style>
-	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+<table style="font-family: 'Khmer OS Content'; width:100%;"  >
 		<tr>
 	    	<td align="center">
 	        	<table width="100%" style="font-family:khmer;margin:0 auto;padding:0px; border:none;">
 	            	<tr>
 	                	<td width="30%" style=""><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px">
-	                		<p style="font-family: 'Khmer OS Battambang'; font-size:9px;margin-top:4px; line-height:15px;">
-						    </p>
+	                		<p style="font-family: 'Khmer OS Battambang'; font-size:9px;margin-top:4px; line-height:15px;"></p>
 	                	</td>
 	                	<td width="47%" valign="top">
 		                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><label><?php echo $tr->translate("BRAND_TITLE");?><?php //echo $this->data['brand_title'];?></label></h2>
 		                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><?php echo $tr->translate("BRANCH_NAME");?> : <?php echo  $client['branch_name']; ;?></h2>
 		                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"> <?php echo $tr->translate('RPT_ILLOAN');?></h2>
 	                	</td>
-	                    <td ><h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"> <?php echo $tr->translate('ARTICLE_1');?></h2></td>
+	                    <td><h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"> <?php echo $tr->translate('ARTICLE_1');?></h2></td>
 	                </tr>
 	                <?php $db = new Application_Model_DbTable_DbGlobal();
 	                	  $row = $db->getClientByType(null,$client['client_id'],1);
@@ -75,23 +74,24 @@ table { page-break-inside:auto }
 				                      <p><?php //echo $tr->translate("OTHER_FEE");?>  : <?php //echo number_format($client['other_fee'],2);?></p>
 				                      <p><?php //echo $tr->translate("TOTAL_AMOUNT");?>  : <?php //echo number_format($client['price_sold'],2);?></p>
 				                      <p><?php //echo $tr->translate("PAID");?>  : <?php //echo number_format($client['paid_amount'],2);?></p>
-				                     <p><?php //echo $tr->translate("BALANCE");?>  : <strong><?php //echo number_format($client['balance'],2);?></strong></p> -->
-				                     <p><?php echo $tr->translate("PROPERTY_CODE");?> : <b><?php echo $client['land_address'].",".$client['stree'];?></b></p>
-				                     <p><?php echo $tr->translate("SOLD_PRICE");?>  : $ <strong><?php echo number_format($client['price_sold'],2);?></strong></p>
-				                	 <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : $ <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?></p>
-				                     <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php echo $client['interest_rate'];?>&nbsp;%</p>
-									 <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo ($client['total_duration']);?>&nbsp;
+				                      <p><?php //echo $tr->translate("BALANCE");?>  : <strong><?php //echo number_format($client['balance'],2);?></strong></p> -->
+				                      <p><?php echo $tr->translate("PROPERTY_CODE");?> : <b><?php echo $client['land_address'].",".$client['stree'];?></b></p>
+				                      <p><?php echo $tr->translate("SOLD_PRICE");?>  : $ <strong><?php echo number_format($client['price_sold'],2);?></strong></p>
+				                	  <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : $ <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?></p>
+				                      <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php echo $client['interest_rate'];?>&nbsp;%</p>
+									  <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo ($client['total_duration']);?>&nbsp;
 										<?php if($client['payment_id']!=4){
 											echo $tr->translate("MONTH");
 										}else{
 											echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
-										}?></p>
+										}?>
+									  </p>
 				     	             <!-- <p><?php //echo $tr->translate("TERM_BORROW");?> : <?php //echo $client['total_duration']*12;?>&nbsp;ខែ</p> -->
-				                     </td>
-				                     <td valign="top">
-				                     <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-M-Y',strtotime($client['buy_date']));?> </p>
-				                     <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-M-Y',strtotime($client['first_payment'])); ?></p>
-				                     <p><?php echo $tr->translate("LIFE_LOAN");?> : <?php echo date('d-M-Y',strtotime($client['end_line'])); ?></p>
+				                      </td>
+				                      <td valign="top">
+				                      <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-M-Y',strtotime($client['buy_date']));?> </p>
+				                      <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-M-Y',strtotime($client['first_payment'])); ?></p>
+				                      <p><?php echo $tr->translate("LIFE_LOAN");?> : <?php echo date('d-M-Y',strtotime($client['end_line'])); ?></p>
 				                    </td>
 				                </tr>
 			                </table>
