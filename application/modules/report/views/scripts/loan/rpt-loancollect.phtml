@@ -1,26 +1,20 @@
-<?php  $tran = $this->tran_schedule;
+<?php  
 
 	$filter = $this->frm_search;
 	$dayin_khmer = $this->day_inkhmer;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();	
 	$db = new Report_Model_DbTable_DbLandreport();
 
-$tran = $this->tran_schedule;
-$client = $this->client;											
-?>
-<?php  
+	$tran = $this->tran_schedule;
 	$end_dat=$this->date_show;
-?>
-<?php 
 	$db_keycode = new Application_Model_DbTable_DbKeycode();
 	$key_code= $db_keycode->getSystemSetting(9);
 	$free_day=$key_code['value'];
+	$intest_rate = 2;
 	
 // 	$db_keycode = new Application_Model_DbTable_DbKeycode();
 // 	$key_code= $db_keycode->getSystemSetting(22);
-	
 // 	$free_day=$key_code['value'];	
-	$intest_rate = 2;
 ?>
 <style>
 .hover:hover{background: #ccc;}
@@ -30,28 +24,27 @@ $client = $this->client;
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
- <div style="height: auto; width:29cm; margin: 0 auto;">
- <form method="post">
-	<table width="100%">
-		<tr>
-			<td><?php echo $filter->getElement('adv_search');?></td>
-			<td><?php echo $filter->getElement('branch_id');?></td>
-			<td><?php echo $filter->getElement('client_name');?></td>
-			<td>
-				<select class="fullside" id="last_optiontype" name="last_optiontype" dojoType="dijit.form.FilteringSelect">
-					<option value="-1">ទាំងអស់</option>
-					<option value="1">យកតាមកាលបរិច្ឆេទបង់</option>
-					<option value="0">បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ</option>
-				</select>
-			</td>
-			<td><?php echo $filter->getElement('start_date');?></td>
-			<td><?php echo $filter->getElement('end_date');?></td>
-			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
-		</tr>
-	</table>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
+ 	<form method="post">
+		<table style="width:100%;margin: 0 auto;">
+			<tr>
+				<td><?php echo $filter->getElement('adv_search');?></td>
+				<td><?php echo $filter->getElement('branch_id');?></td>
+				<td><?php echo $filter->getElement('client_name');?></td>
+				<td>
+					<select class="fullside" id="last_optiontype" name="last_optiontype" dojoType="dijit.form.FilteringSelect">
+						<option value="-1">ទាំងអស់</option>
+						<option value="1">យកតាមកាលបរិច្ឆេទបង់</option>
+						<option value="0">បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ</option>
+					</select>
+				</td>
+				<td><?php echo $filter->getElement('start_date');?></td>
+				<td><?php echo $filter->getElement('end_date');?></td>
+				<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+			</tr>
+		</table>
 	</form>
- </div>
-<div style="min-width:27cm; min-height:25cm; margin:0 auto; border: 1px dotted #ccc; padding: 0 5px;">
+<div style="min-height:25cm; margin:0 auto;">
 	<div id="divPrint">
 	<style>
 		.style{
@@ -169,29 +162,25 @@ $client = $this->client;
 							$total_d=$amt_d4;
 		               ?>
 	                <?php }}?>
-                <?php 
-                ?>
                 <?php $i=1;?>
-              
                 </table>
               <br />
-			             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
-			                 <tr bgcolor="#c1d0f3" class="style" style="font-weight:bold; line-height: 15px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
-			                    <td><?php echo $tr->translate('CURRENT_TYPE');?></td>                  
-			                    <th><?php echo $tr->translate("TOTAL_PRINCIPLE");?></th>
-			                    <th><?php echo $tr->translate("TOTAL_INTEREST");?></th>
-			                    <th><?php echo $tr->translate("PENALIZE AMOUNT");?></th>
-			                    <th><?php echo $tr->translate("TOTAL_PAYMENT");?></th>
-			                </tr>
-			                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
-			                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
-			                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
-			                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
-			                    <td>&nbsp;&nbsp;<?php echo number_format($penelize,2);?>&nbsp;</td>
-			                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1+$amt_d2+$penelize,2);?>&nbsp;</td>
-			                </tr>
-			              </table>
-			           
+		             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+		                 <tr bgcolor="#c1d0f3" class="style" style="font-weight:bold; line-height: 15px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
+		                    <td><?php echo $tr->translate('CURRENT_TYPE');?></td>                  
+		                    <th><?php echo $tr->translate("TOTAL_PRINCIPLE");?></th>
+		                    <th><?php echo $tr->translate("TOTAL_INTEREST");?></th>
+		                    <th><?php echo $tr->translate("PENALIZE AMOUNT");?></th>
+		                    <th><?php echo $tr->translate("TOTAL_PAYMENT");?></th>
+		                </tr>
+		                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
+		                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
+		                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
+		                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
+		                    <td>&nbsp;&nbsp;<?php echo number_format($penelize,2);?>&nbsp;</td>
+		                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1+$amt_d2+$penelize,2);?>&nbsp;</td>
+		                </tr>
+		              </table>
 		               <table align="center" width="100%">
 						   <tr style="font-size: 12px;">
 						        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
@@ -205,4 +194,5 @@ $client = $this->client;
 				</tr>
 		</table>
 	</div>
+</div>
 </div>

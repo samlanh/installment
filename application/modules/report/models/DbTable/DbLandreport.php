@@ -1928,7 +1928,7 @@ function updatePaymentStatus($data){
       	if($search['land_id']>0){
       		$where.=" AND `land_id`= ".$search['land_id'];
       	}      	
-      	$order = " ORDER BY id DESC ";
+      	$order = " GROUP by id ORDER BY id DESC ";
       	return $db->fetchAll($sql.$where.$order);
       }
       function updatePaid(){

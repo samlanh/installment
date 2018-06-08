@@ -9,166 +9,166 @@ dojo.require("dijit.form.DateTextBox");
 .hover:hover{background: #ccc;}
 </style>
 <title><?php echo $tr->translate("LOAN_OUTSTADING");?></title>
- <form method="post">
-<table style="font-family: 'Khmer OS Content'; margin: 0 auto;width:100%;" >
-	<tr>
-   		<td><?php echo $frm->getElement("adv_search");?></td>
-   		<td><?php echo $frm->getElement('branch_id');?></td>
-   		<td><?php echo $frm->getElement('client_name');?></td>
-   		<td><?php echo $frm->getElement('land_id');?></td>
-   	</tr>
-   	<tr>
-   		<td><?php echo $frm->getElement('end_date');?></td>
-   		<td><?php echo $frm->getElement('schedule_opt');?></td>
-   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
-   	</tr>
-</table>
-</form>
-<div style="width:100%;margin:0 auto; border: 1px dotted #ccc; padding:2cm 0.2cm">
-<div id="divPrint" style="width: 100%;">
-<style>
-.style{
-	line-height: 20px;font-size: 11px !important;
-	font-family: 'Khmer OS Battambang';
-}
-table { page-break-inside:auto }
-tr{ page-break-inside:avoid; page-break-after:auto; }
-#header {
-  display: table-header-group;
-  page-break-inside:avoid; page-break-after:auto;
-}
-table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
-th{padding: 5px;}
-.hide{visibility: hidden;}
-@media print {
-  div.divFooter {
-    position: fixed;
-    top: 0;
-  	width: 100%;
-  	height: 100px;
-  	bottom:0px;
-	margin:0;
-  }
-.hide{visibility: visible; height: 110px;}
-}
-</style>
-<table style="font-family: 'Khmer OS Content'; width:100%;">
-	<tr>
-    	<td align="center">
-        	<div class="divFooter">
-	        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
-	            	<tr>
-	                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
-	                	<td width="60%" valign="top">
-	                	    <ul>
-	                			<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_TITLE");?></li>
-	                			<li style="text-align:center; font-size:15px; font-family:'Khmer MEF2'"><?php echo $tr->translate("LOAN_OUTSTADING");?></li>
-	                			<li style="text-align:center; font-size:14px;"><?php echo date('D-d-m-Y',strtotime($this->fordate));?></li>
-	                		</ul></td>
-	                    <td width="20%"></td>
-	                </tr> 
-	            </table>
-            </div>
-        </td>
-    </tr>
-    <tr>
-    	<td id="exportExcel">
-            <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px; white-space: nowrap;" width="100%" cellspacing="0">
-                 <thead>
-	                 <tr class="hide" style="border:1px solid #000;">
-		                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
-		             </tr>
-	                 <tr height="35px;" bgcolor="#c1d0f3" class="style" align="center" style="min-height:40px; font-weight:bold; line-height: 14px; padding: 2px 0px;">
-	                    <td style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
-		                <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-		                <!-- <td><?php echo $tr->translate("SALE_NO");?></td>	
-	                    <td style="">&nbsp;<?php //echo $tr->translate("CLIENT_NUM");?>&nbsp;</td> -->
-	                    <td style="">&nbsp;<?php echo $tr->translate("CUSTOMER_NAME");?>&nbsp;</td>
-	                    <td style="">&nbsp;<?php echo $tr->translate("TEL");?>&nbsp;</td>
-	                    <td><?php echo $tr->translate("PROPERTY_NAME");?></td>  
-	                    <td style="">&nbsp;<?php echo $tr->translate("PRICE_BEFORE");?>&nbsp;</td>
-	                    <td style="">&nbsp;<?php echo $tr->translate("DISCOUNT");?>%&nbsp;</td>
-	                    <td style="">&nbsp;<?php echo $tr->translate("DISCOUNT");?>&nbsp;</td>
-	                    <td style="">&nbsp;<?php echo $tr->translate("SOLD_PRICE");?>&nbsp;</td>
-	                    <td style="">&nbsp;<?php echo $tr->translate("RELEASE_DATE");?>&nbsp;</td>
-	                    <td>&nbsp;<?php echo $tr->translate("LIFE_LOAN");?>&nbsp;</td>
-	                    <td style="">&nbsp;<?php echo $tr->translate("LOAN_PERIOD");?>&nbsp;</td>
-	                    <td style="">&nbsp;<?php echo $tr->translate("PAMENT_METHOD");?>&nbsp;</td>
-	                    <td style="">&nbsp;<?php echo $tr->translate("PAID");?>&nbsp;</td>
-	                    <td style="">&nbsp;<?php echo $tr->translate("PERCENTAGE");?>&nbsp;</td>
-	                    <td style="">&nbsp;<?php echo $tr->translate("NOT_TO_REPAY");?>&nbsp;</td>
-	                    <td><?php echo $tr->translate("SCHEDULE_PAYMENT");?></td>
-	                </tr>
-                </thead>
-               <?php 
-	               $db = new Report_Model_DbTable_DbLandreport();
-	               $amt_r = 0;$amt_d = 0;$amt_b = 0; $amn_r = 0;$amn_d = 0;$amn_b = 0;$result_b=0;$result_r=0;$result_d=0;
-	               $url_client = $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-paymentschedules'));
-	               if(!empty($this->outstandloan))foreach($this->outstandloan as $key =>$row){?>
-               <?php 
-               		$total_receive = $db->getAmountReceiveByLoanNumber($row['id'],$row['client_id']);
-               		$amt_d = $amt_d+$row['price_sold'];
-               		$amn_d = $amn_d+$total_receive;
-               		$result_d=number_format(($amn_d/$amt_d)*100,2).' %';
-               		$link="#";
-               		if($row['payment_id']==2 OR $row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==6){
-               			$link = $url_client."/id/".$row['id'];
-               		}
-               ?>
-					<tr align="center" class="hover">
-						<td>&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-						<td>&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
-						<!-- <td>&nbsp;<?php //echo $row['sale_number'];?>&nbsp;</td> -->
-						<!-- <td style="line-height: 12px; white-space: nowrap;">&nbsp;<?php //echo $row['client_number']; ?>&nbsp;</td> -->
-						<td align="left" style="font-size:11px; line-height: 13px; white-space: nowrap;">&nbsp;<?php echo $row['client_kh']; ?>&nbsp;</td>
-						<td style="line-height: 12px; white-space: nowrap;"><?php echo $row['phone']; ?></td>
-						<td>&nbsp;<?php echo $row['land_address'].",".$row['street'];?>&nbsp;</td>
-						<td>&nbsp;<?php echo number_format($row['price_before'],2);?>&nbsp;</td>
-						<td>&nbsp;<?php echo number_format($row['discount_percent'],2);?>%&nbsp;</td>
-						<td>&nbsp;<?php echo number_format($row['discount_amount'],2);?>&nbsp;</td>
-						<td>&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
-						<td>&nbsp;<?php echo date("d-m-Y",strtotime($row['first_payment']));?>&nbsp;</td>
-						<td>&nbsp;<?php echo date("d-m-Y",strtotime($row['date_line']));?>&nbsp;</td>
-						<td>&nbsp;<?php echo $row['total_duration'];?>ខែ&nbsp;</td>
-						<td>&nbsp;<?php echo $row['paymenttype'];?>&nbsp;</td>
-						<td style="white-space:nowrap; text-align: right;">&nbsp;<?php echo number_format($total_receive,2);?>&nbsp;</td>
-						<td>&nbsp;<?php 
-							echo number_format($total_receive/$row['price_sold']*100,2).' %';
-						?>&nbsp;</td>
-						<td>&nbsp;<?php echo number_format(($row['price_sold']-$total_receive),2);?>&nbsp;</td>
-						<td><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $tr->translate("SCHEDULE_PAYMENT");?></a></td>
-					</tr>
-				<?php }?>
-            </table>
-            <br />
-             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px;" width="100%" cellspacing="0">
-                <tr bgcolor="#ccc" class="style" style="font-weight:bold; line-height: 24px; text-align: center; font-size:11px;">
-                    <td style="padding:2px 0px;"><?php echo $tr->translate("CURRENT_TYPE");?></td>
-                    <td style="padding:2px 0px;"><?php echo $tr->translate("TOTAL");?></td>
-                    <td style="padding:2px 0px;"><?php echo $tr->translate("LOAN_RETURN_TO_CLIENT");?></td>
-                    <td style="padding:2px 0px;"><?php echo $tr->translate("PERCENTAGE");?></td>
-                    <td style="padding:2px 0px;"><?php echo $tr->translate("NOT_TO_REPAY");?></td>
-                </tr>
-                <tr class="style" style=" line-height: 24px; font-size:11px;">
-                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
-                    <td>&nbsp;<?php echo number_format($amt_d,2);?>&nbsp;</td>
-                    <td>&nbsp;<?php echo number_format($amn_d,2);?>&nbsp;</td>
-                    <td>&nbsp;<?php echo $result_d;?>&nbsp;</td>
-                    <td>&nbsp;<?php echo number_format($amt_d-$amn_d,2);?>&nbsp;</td>
-                </tr>
-              </table>
-              <br />
-              <table align="center" width="100%">
-				   <tr style="font-size: 12px;">
-				        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
-				        <th></th>
-				        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
-				        <th></th>
-				        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
-				   </tr>
-			</table>
-    	</td>
-    </tr>
-</table>
-</div>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
+	<form method="post">
+		<table style="font-family: 'Khmer OS Content'; margin: 0 auto;width:100%;" >
+			<tr>
+		   		<td><?php echo $frm->getElement("adv_search");?></td>
+		   		<td><?php echo $frm->getElement('branch_id');?></td>
+		   		<td><?php echo $frm->getElement('client_name');?></td>
+		   		<td><?php echo $frm->getElement('land_id');?></td>
+		   	</tr>
+		   	<tr>
+		   		<td><?php echo $frm->getElement('end_date');?></td>
+		   		<td><?php echo $frm->getElement('schedule_opt');?></td>
+		   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+		   	</tr>
+		</table>
+	</form>
+	<div id="divPrint" style="width: 100%;">
+		<style>
+		.style{
+			line-height: 20px;font-size: 11px !important;
+			font-family: 'Khmer OS Battambang';
+		}
+		table { page-break-inside:auto }
+		tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+		th{padding: 5px;}
+		.hide{visibility: hidden;}
+		@media print {
+		  div.divFooter {
+		    position: fixed;
+		    top: 0;
+		  	width: 100%;
+		  	height: 100px;
+		  	bottom:0px;
+			margin:0;
+		  }
+		.hide{visibility: visible; height: 110px;}
+		}
+		</style>
+		<table style="font-family: 'Khmer OS Content'; width:100%;">
+			<tr>
+		    	<td align="center">
+		        	<div class="divFooter">
+			        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+			            	<tr>
+			                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+			                	<td width="60%" valign="top">
+			                	    <ul>
+			                			<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+			                			<li style="text-align:center; font-size:15px; font-family:'Khmer MEF2'"><?php echo $tr->translate("LOAN_OUTSTADING");?></li>
+			                			<li style="text-align:center; font-size:14px;"><?php echo date('D-d-m-Y',strtotime($this->fordate));?></li>
+			                		</ul></td>
+			                    <td width="20%"></td>
+			                </tr> 
+			            </table>
+		            </div>
+		        </td>
+		    </tr>
+		    <tr>
+		    	<td id="exportExcel">
+		            <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px; white-space: nowrap;" width="100%" cellspacing="0">
+		                 <thead>
+			                 <tr class="hide" style="border:1px solid #000;">
+				                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+				             </tr>
+			                 <tr height="35px;" bgcolor="#c1d0f3" class="style" align="center" style="min-height:40px; font-weight:bold; line-height: 14px; padding: 2px 0px;">
+			                    <td style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+				                <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+				                <!-- <td><?php echo $tr->translate("SALE_NO");?></td>	
+			                    <td style="">&nbsp;<?php //echo $tr->translate("CLIENT_NUM");?>&nbsp;</td> -->
+			                    <td style="">&nbsp;<?php echo $tr->translate("CUSTOMER_NAME");?>&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("TEL");?>&nbsp;</td>
+			                    <td><?php echo $tr->translate("PROPERTY_NAME");?></td>  
+			                    <td style="">&nbsp;<?php echo $tr->translate("PRICE_BEFORE");?>&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("DISCOUNT");?>%&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("DISCOUNT");?>&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("SOLD_PRICE");?>&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("RELEASE_DATE");?>&nbsp;</td>
+			                    <td>&nbsp;<?php echo $tr->translate("LIFE_LOAN");?>&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("LOAN_PERIOD");?>&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("PAMENT_METHOD");?>&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("PAID");?>&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("PERCENTAGE");?>&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("NOT_TO_REPAY");?>&nbsp;</td>
+			                    <td><?php echo $tr->translate("SCHEDULE_PAYMENT");?></td>
+			                </tr>
+		                </thead>
+		               <?php 
+			               $db = new Report_Model_DbTable_DbLandreport();
+			               $amt_r = 0;$amt_d = 0;$amt_b = 0; $amn_r = 0;$amn_d = 0;$amn_b = 0;$result_b=0;$result_r=0;$result_d=0;
+			               $url_client = $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-paymentschedules'));
+			               if(!empty($this->outstandloan))foreach($this->outstandloan as $key =>$row){?>
+		               <?php 
+		               		$total_receive = $db->getAmountReceiveByLoanNumber($row['id'],$row['client_id']);
+		               		$amt_d = $amt_d+$row['price_sold'];
+		               		$amn_d = $amn_d+$total_receive;
+		               		$result_d=number_format(($amn_d/$amt_d)*100,2).' %';
+		               		$link="#";
+		               		if($row['payment_id']==2 OR $row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==6){
+		               			$link = $url_client."/id/".$row['id'];
+		               		}
+		               ?>
+							<tr align="center" class="hover">
+								<td>&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+								<!-- <td>&nbsp;<?php //echo $row['sale_number'];?>&nbsp;</td> -->
+								<!-- <td style="line-height: 12px; white-space: nowrap;">&nbsp;<?php //echo $row['client_number']; ?>&nbsp;</td> -->
+								<td align="left" style="font-size:11px; line-height: 13px; white-space: nowrap;">&nbsp;<?php echo $row['client_kh']; ?>&nbsp;</td>
+								<td style="line-height: 12px; white-space: nowrap;"><?php echo $row['phone']; ?></td>
+								<td>&nbsp;<?php echo $row['land_address'].",".$row['street'];?>&nbsp;</td>
+								<td>&nbsp;<?php echo number_format($row['price_before'],2);?>&nbsp;</td>
+								<td>&nbsp;<?php echo number_format($row['discount_percent'],2);?>%&nbsp;</td>
+								<td>&nbsp;<?php echo number_format($row['discount_amount'],2);?>&nbsp;</td>
+								<td>&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
+								<td>&nbsp;<?php echo date("d-m-Y",strtotime($row['first_payment']));?>&nbsp;</td>
+								<td>&nbsp;<?php echo date("d-m-Y",strtotime($row['date_line']));?>&nbsp;</td>
+								<td>&nbsp;<?php echo $row['total_duration'];?>ខែ&nbsp;</td>
+								<td>&nbsp;<?php echo $row['paymenttype'];?>&nbsp;</td>
+								<td style="white-space:nowrap; text-align: right;">&nbsp;<?php echo number_format($total_receive,2);?>&nbsp;</td>
+								<td>&nbsp;<?php 
+									echo number_format($total_receive/$row['price_sold']*100,2).' %';
+								?>&nbsp;</td>
+								<td>&nbsp;<?php echo number_format(($row['price_sold']-$total_receive),2);?>&nbsp;</td>
+								<td><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $tr->translate("SCHEDULE_PAYMENT");?></a></td>
+							</tr>
+						<?php }?>
+		            </table>
+		            <br />
+		             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px;" width="100%" cellspacing="0">
+		                <tr bgcolor="#c1d0f3" class="style" style="font-weight:bold; line-height: 24px; text-align: center; font-size:11px;">
+		                    <td style="padding:2px 0px;"><?php echo $tr->translate("CURRENT_TYPE");?></td>
+		                    <td style="padding:2px 0px;"><?php echo $tr->translate("TOTAL");?></td>
+		                    <td style="padding:2px 0px;"><?php echo $tr->translate("LOAN_RETURN_TO_CLIENT");?></td>
+		                    <td style="padding:2px 0px;"><?php echo $tr->translate("PERCENTAGE");?></td>
+		                    <td style="padding:2px 0px;"><?php echo $tr->translate("NOT_TO_REPAY");?></td>
+		                </tr>
+		                <tr class="style" style=" line-height: 24px; font-size:11px;">
+		                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
+		                    <td>&nbsp;<?php echo number_format($amt_d,2);?>&nbsp;</td>
+		                    <td>&nbsp;<?php echo number_format($amn_d,2);?>&nbsp;</td>
+		                    <td>&nbsp;<?php echo $result_d;?>&nbsp;</td>
+		                    <td>&nbsp;<?php echo number_format($amt_d-$amn_d,2);?>&nbsp;</td>
+		                </tr>
+		              </table>
+		              <br />
+		              <table align="center" width="100%">
+						   <tr style="font-size: 14px;">
+						        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+						        <th></th>
+						        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+						        <th></th>
+						        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+						   </tr>
+					</table>
+		    	</td>
+		    </tr>
+		</table>
+	</div>
 </div>
