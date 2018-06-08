@@ -34,71 +34,94 @@ function filterDistrict(){
 }
 </script>
 <?php  $commune = $this->frm_commune;?>
-<form  id='add_techer' action="<?php echo $this->url(array('module'=>'other','controller'=>'Commune','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
- <script type="dojo/method" event="onSubmit">			
-	if(this.validate()) {
-      if(dijit.byId('province_name').get('value')==0){
-		alert('Please Select Province !');
-        return false;
-     }
-     if(dijit.byId('district_name').get('value')==''){
-       	alert('Please Select District !');
-        return false;
-     }
-		return true;
-	} else {
-		return false;
-	}
-</script>
-<table cellspacing="10" width="45%" style="margin: 0 auto;">
-	<tr>
-		<td>
-		<fieldset>
-			<legend align="center" ><strong><?php echo $tr->translate("ADD_COMMUNE");?></strong></legend>
-			<table style="margin: 0 auto; width: 95%;" cellspacing="10">
-				<tr>
-					<td><?php echo $tr->translate("COMMUNE_CODE")?></td>
-					<td><?php  echo $commune->getElement('code');?></td>
-				</tr>
-				<tr>
-					<td><?php echo $tr->translate("COMMUNE_NAME_KH")?></td>
-					<td><?php  echo $commune->getElement('commune_namekh');?></td>
-				</tr>
-				<tr>
-					<td><?php echo $tr->translate("COMMUNE_NAME")?></td>
-					<td><?php  echo $commune->getElement('commune_name');?></td>
-				</tr>
-				<!--<tr>
-					<td><?php //echo $tr->translate("DISPLAY_BY")?></td>
-					<td><?php //echo $frm->getElement('display');?></td>
-				</tr>-->
-				<tr>
-					<td><?php echo $tr->translate("PROVINCE_NAME")?></td>
-					<td><?php  echo $commune->getElement('province_name');?></td>
-				</tr>
-				<tr>
-					<td><?php echo $tr->translate("DISTRICT_NAME")?></td>
-					<td><input id="district_name" ><?php  //echo $commune->getElement('district_name');?></td>
-				</tr>
-				<tr>
-					<td><?php echo $tr->translate("STATUS")?></td>
-					<td><?php  echo $commune->getElement('status');?></td>
-				</tr>
-				<tr>
-					<td colspan="2" align="center">
-						<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+<div class="card">
+	<div class="card-content collapse show">
+		<form  id='add_techer' action="<?php echo $this->url(array('module'=>'other','controller'=>'commune','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			 <script type="dojo/method" event="onSubmit">			
+			  if(this.validate()) {
+     				 if(dijit.byId('province_name').get('value')==0){
+						alert('Please Select Province !');
+      					  return false;
+   					  }
+     			if(dijit.byId('district_name').get('value')==''){
+       				alert('Please Select District !');
+        			return false;
+     			}
+				return true;
+			} else {
+				return false;
+			}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD_COMMUNE');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMMUNE_CODE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $commune->getElement("code");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMMUNE_NAME_KH");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $commune->getElement("commune_namekh");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMMUNE_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $commune->getElement("commune_name");?>
+	                   </div>
+	                </div>
+	                
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROVINCE_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $commune->getElement("province_name");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DISTRICT_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="district_name" >
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $commune->getElement("status");?>
+	                   </div>
+	                </div>
+	                <div class="clearfix"></div>
+				    <div class="card-box">
+	               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+			    			<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
 						<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
 							iconClass="dijitEditorIcon dijitEditorIconSave" />
 						<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
 							iconClass="dijitEditorIcon dijitEditorIconSave" />
-					</td>
-				</tr>
-			</table>	
-		</fieldset>		
-		</td>
-	</tr>
-</table>	
-</form>
+		    			</div>
+		    		</div>
+	            </div>
+	        </div>
+		</form>
+	</div>
+</div>
+
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog"  id="frm_distict" >
 		<form id="form_distict" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">

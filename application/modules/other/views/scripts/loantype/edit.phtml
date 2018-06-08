@@ -3,49 +3,75 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->Form_Frmcallecterall;
 ?>
 <title> <?php echo $tr->translate("LOAN_TYPE")?></title>
-<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'other','controller'=>'loantype','action'=>'edit')); ?>" 
-				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-<script type="dojo/method" event="onSubmit">			
-			if(this.validate()) {
-				//return false;
-				return true;
-			}else {
-				return false;
-			}
-</script>
-<table cellspacing="10" class='fullside'>
-	<tr>
-		<td>
-				<fieldset>
-					<legend><strong><?php echo $tr->translate("LOAN_TYPE")?></strong></legend>
-					<table cellspacing="10"  width="100%">
-						<tr>
-							<?php echo $frm->getElement('id')?>
-							<td><?php echo $tr->translate("NAME_KH")?></td>
-							<td><?php echo $frm->getElement('title_kh')?></td>								
-							<td><?php echo $tr->translate("NAME_ENG")?></td>
-							<td><?php echo $frm->getElement('title_en')?></td>	
-							<td><?php echo $tr->translate("DISPLAY_BY")?></td>
-							<td><?php echo $frm->getElement('display_by')?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("TYPE")?></td>
-							<td><?php echo $frm->getElement('type')?></td>
-							<td><?php echo $tr->translate("STATUS")?></td>
-							<td><?php echo $frm->getElement('status')?></td>
-							
-					   </tr>
-					</table>
-					</fieldset>
-		</td>
-	</tr>		
-	<tr>
-		<td align="center">
-			<input type="submit" value="កែប្រៃ & ចាកចេញ" name="btn_save_close" label="<?php echo $tr->translate('SAVEEDIT');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
-		</td>
-	</tr>	
-</table>
-</form>
+<div class="card">
+	<div class="card-content collapse show">
+		<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'other','controller'=>'loantype','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					return true;
+				}else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-folder-open" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('LOAN_TYPE');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NAME_KH");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement("title_kh");?>
+	                    	<?php echo $frm->getElement('id')?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NAME_ENG");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement("title_en");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DISPLAY_BY");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement("display_by");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Type");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement("type");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement("status");?>
+	                   </div>
+	                </div>
+	                <div class="clearfix"></div>
+				    <div class="card-box">
+	               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+			    			<input type="submit" value="កែប្រៃ & ចាកចេញ" name="btn_save_close" label="<?php echo $tr->translate('SAVEEDIT');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+		    			</div>
+		    		</div>
+	            </div>
+	        </div>
+		</form>
+	</div>
+</div>
+
 <script type="text/javascript">
 dojo.require("dijit.form.Textarea");
 dojo.require("dijit.form.NumberTextBox");

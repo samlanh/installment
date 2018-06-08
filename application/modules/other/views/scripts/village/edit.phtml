@@ -99,71 +99,92 @@ function filterCommune(){
 	});
 }
 </script>
-<form  id='add_techer' action="<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-<script type="dojo/method" event="onSubmit">			
-			if(this.validate()) {
-				return true;
-			} else {
-				return false;
-			}
-</script>
-<table cellspacing="10" width="45%" style="margin: 0 auto;">
-	<tr>
-		<td>
-		<fieldset>
-					<legend align="center" ><strong><?php echo $tr->translate("EDIT_VILLAGE");?></strong></legend>
-					
-					<table style="margin: 0 auto; width: 95%;" cellspacing="10">
-						<tr>
-							<td><?php echo $tr->translate("VILLAGE_CODE")?></td>
-							<td><?php  echo $commune->getElement('code');?></td>
-						</tr>
-						 <tr>
-							<td><?php echo $tr->translate("VILLAGE_KH")?></td>
-							<td><?php  echo $commune->getElement('village_namekh');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("VILLAGE_NAME")?></td>
-							<td><?php  echo $commune->getElement('village_name');?>
-								<?php  echo $commune->getElement('id');?>
-							</td>
-						</tr>
-						<!--<tr>
-							<td><?php //echo $tr->translate("DISPLAY_BY")?></td>
-							<td><?php //echo $frm->getElement('display');?></td>
-						</tr>-->
-						
-						<tr>
-							<td><?php echo $tr->translate("PROVINCE_NAME")?></td>
-							<td><?php  echo $commune->getElement('province_name');?>
-							<?php echo $commune->getElement('id')?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("DISTRICT_NAME")?></td>
-							<td><input id="district_name" ><?php  //echo $commune->getElement('district_name');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("COMMUNE_NAME")?></td>
-							<td><input id="commune_name" > <?php  //echo $commune->getElement('commune_name');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("STATUS")?></td>
-							<td><?php  echo $commune->getElement('status');?></td>
-						</tr>
-						<tr>
-							<td colspan="2" align="center">
-							  <input type="reset" label="<?php echo $tr->translate('CLEAR');?>" id="" dojoType="dijit.form.Button"
+<div class="card">
+	<div class="card-content collapse show">
+		<form  id='add_techer' action="<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			 <script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					return true;
+				} else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_VILLAGE');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("VILLAGE_CODE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $commune->getElement("code");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("VILLAGE_KH");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $commune->getElement("village_namekh");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("VILLAGE_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $commune->getElement("village_name");?>
+	                    	<?php  echo $commune->getElement('id');?>
+	                   </div>
+	                </div>
+	                
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROVINCE_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $commune->getElement("province_name");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DISTRICT_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="district_name" >
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMMUNE_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="commune_name" >
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $commune->getElement("status");?>
+	                   </div>
+	                </div>
+	                <div class="clearfix"></div>
+	                <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+		    			 <input type="reset" label="<?php echo $tr->translate('CLEAR');?>" id="" dojoType="dijit.form.Button"
 				                  iconClass="dijitIconClear" />
 							<input type="submit" value="កែប្រែទិន្នន័យ" label="<?php echo $tr->translate('GO_EDIT');?>" id="submitButton" dojoType="dijit.form.Button" 
 								 iconClass=""/>
-							</td>
-						</tr>
-					</table>	
-		</fieldset>		
-		</td>
-	</tr>
-</table>	
-</form>
+	    			</div>
+	            </div>
+	        </div>
+	        
+		</form>
+	</div>
+</div>
+
 <?php 
 echo $this->frm_popup_district;
 echo $this->frm_popup_comm;
