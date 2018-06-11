@@ -64,7 +64,8 @@ class Loan_CancelController extends Zend_Controller_Action {
 		
 		$db = new Loan_Model_DbTable_DbExpense();
 		$result = $db->getAllExpenseCategory();
-		array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		array_unshift($result, array ( 'id' => -1,'name' =>$tr->translate("ADD_NEW")));
 		$this->view->all_category = $result;
 		
 		$key = new Application_Model_DbTable_DbKeycode();
@@ -86,7 +87,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 				}
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel");
 			}catch (Exception $e) {
-				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Form_FrmMessage::message("UPDATE_FAIL");
 				$err =$e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
@@ -100,7 +101,8 @@ class Loan_CancelController extends Zend_Controller_Action {
 	
 		$db = new Loan_Model_DbTable_DbExpense();
 		$result = $db->getAllExpenseCategory();
-		array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		array_unshift($result, array ( 'id' => -1,'name' =>$tr->translate("ADD_NEW")));
 		$this->view->all_category = $result;
 		
 		$key = new Application_Model_DbTable_DbKeycode();
