@@ -71,7 +71,8 @@ class Loan_IncomeController extends Zend_Controller_Action
 		}
 		$db = new Loan_Model_DbTable_DbIncome();
 		$result = $db->getAllIncomeCategory();
-		array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
 		$this->view->all_category = $result;
 		
     	$pructis=new Loan_Form_Frmexpense();
@@ -91,9 +92,9 @@ class Loan_IncomeController extends Zend_Controller_Action
 			$db = new Loan_Model_DbTable_DbIncome();				
 			try {
 				$db->updateIncome($data,$id);				
-				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', "/loan/income");		
+				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', "/loan/income");		
 			} catch (Exception $e) {
-				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
+				$this->view->msg = 'UPDATE_FAIL';
 			}
 		}
 		
@@ -107,9 +108,10 @@ class Loan_IncomeController extends Zend_Controller_Action
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
     	
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$db = new Loan_Model_DbTable_DbIncome();
     	$result = $db->getAllIncomeCategory();
-    	array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+    	array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
     	$this->view->all_category = $result;
     	
     	$key = new Application_Model_DbTable_DbKeycode();
@@ -143,8 +145,9 @@ class Loan_IncomeController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
     		$data = $this->getRequest()->getPost();
     		$db = new Loan_Model_DbTable_DbIncome();
+    		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     		$result = $db->getAllCustomer($data['branch_id']);
-    		array_unshift($result, array ( 'id' => -1, 'name' => 'Select Customer') );
+    		array_unshift($result, array ( 'id' => -1, 'name' => $tr->translate("CHOOSE_CUSTOEMR")) );
     		print_r(Zend_Json::encode($result));
     		exit();
     	}

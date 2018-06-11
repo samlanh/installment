@@ -8,121 +8,177 @@
 	dojo.require("dojo.data.ItemFileWriteStore");  
 	dojo.require("dijit.form.DateTextBox");
 	dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dijit.form.Textarea");
 	dojo.require("dijit.Dialog");
 </script>
-<form id="add_cancel" action="<?php echo $this->url(array('module'=>'loan','controller'=>'comission','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-   <script type="dojo/method" event="onSubmit">			
-		if(this.validate()) {
-            dijit.byId('save_new').set('disabled',true);
-    		return true;
-   		}else {
-    	   return false;
-   	    }
-	</script>
-<table cellspacing="10" class='fullside' >
-	<tr>
-		<td valign="top" width="33%">
-			<fieldset>
-				<legend><strong><?php echo $tr->translate('CLIENT_INFO');?></strong></legend>
-				<table cellspacing="5"  width="100%">
-				   <tr>
-						<td><?php echo $tr->translate("BRANCH_NAME")?></td>
-						<td><?php echo $frm->getElement('branch_id');?></td>
-					</tr>
-					<tr>
-						<td style="white-space: nowrap;"><strong><?php echo $tr->translate("CLIENT_NAME");?></strong></td>
-						<td><input id="sale_client" /></td>
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("SALE_NO")?></td>
-						<td><input id="sale_no" ><?php echo $frm->getElement('property_id')?></td>
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("CUSTOMER_INFO")?></td>
-						<td><?php echo $tr->translate("LAND_INFO")?></td>
-					</tr>
-					<tr>
-						<td colspan="3" style="background:#fff;height: 100px; border:1px solid #aac4e6; widht:100%;"><label id="land_information"></label></td>					
-					</tr>
-				</table>
-			</fieldset>
-		</td>
-		<td valign="top" width="33%">
-			<fieldset>
-				<legend><strong><?php echo $tr->translate('INFO_INDILOAN');?></strong></legend>
-				<table cellspacing="5"  width="100%">
-					<tr>
-						<td><?php echo $tr->translate("PRICE_SOLD")?></td>
-						<td><?php echo $frm->getElement('price_sold');?></td>
-					</tr>
-					<tr>
-						<td style="white-space: nowrap;"><?php echo $tr->translate("PAYMENT_TYPE")?></td>
-						<td><?php  echo $frm->getElement('schedule_opt');?></td>	
-					</tr>
-					<tr>
-						<td style="white-space: nowrap;"><?php echo $tr->translate("INSTALLMENT_PAID")?></td>
-						<td><?php  echo $frm->getElement('installment_paid');?></td>	
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("PAID_AMOUNT")?></td>
-						<td><?php  echo $frm->getElement('paid_amount');?></td>	
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("BALANCE")?></td>
-						<td><?php echo $frm->getElement('balance')?></td>	
-					</tr>
-					<tr>
-						<td><strong><?php echo $tr->translate("COMISSION_EXPECTED")?></strong></td>
-						<td><?php echo $frm->getElement('full_commission');?></td>
-					</tr>
-					<tr>
-						<td style="white-space: nowrap;"><strong><?php echo $tr->translate("TOTAL_COMMISSIONPAID")?></strong></td>
-						<td><?php  echo $frm->getElement('commision');?></td>	
-					</tr>
-				</table>
-			  </fieldset>
-		</td>
-		<td valign="top" width="33%">
-			<fieldset>
-				<legend><strong><?php echo $tr->translate('PAYMENT_TYPE');?></strong></legend>
-				<table cellspacing="5"  width="100%">
-					
-					<tr>
-						<td><strong><?php echo $tr->translate("STAFF_NAME")?></strong></td>
-						<td><input id="staff_id" /> </td>	
-					</tr>
-					<tr>
-						<td style="white-space: nowrap;"><strong><?php echo $tr->translate("COMMISSION")?></strong></td>
-						<td><?php echo $frm->getElement('return_back')?></td>
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("CATEGORY")?></td>
-						<td><input id="income_category" /></td>
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("DATE")?></td>
-						<td><?php echo $frm->getElement('date')?></td>	
-					</tr>
-					<tr>
-						<td colspan="3"><?php echo $tr->translate("NOTE")?></td>
-					</tr>
-					<tr>
-						<td colspan="3"><textarea class="fullside" style="height: 60px;font-family:'Khmer OS Battambang';font-size: 17px" id="note" name="note"></textarea></td>
-					</tr>
-				</table>
-			</fieldset>
-		   </td>
-		  </tr>
-		  <tr>
-			<td align="center" colspan="3">
-				<input type="submit" name="save" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="save_new" dojoType="dijit.form.Button"
+<div class="card">
+	<div class="card-content collapse show">
+		<form id="add_cancel" action="<?php echo $this->url(array('module'=>'loan','controller'=>'comission','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	 	  <script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+            	dijit.byId('save_new').set('disabled',true);
+    			return true;
+   			}else {
+    	  		 return false;
+   	  		  }
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT_COMISSION_STAFF');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CLIENT_INFO");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('branch_id');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CLIENT_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="sale_client" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SALE_NO");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="sale_no" ><?php echo $frm->getElement('property_id')?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12" for="first-name"><?php echo $tr->translate("LAND_INFO");?> :
+	                   </label>
+	                   
+	                </div>
+	                <div class="form-group">
+	              	   <div id="land_information" class="col-md-12 col-sm-12 col-xs-12 " style="background:#fff;height: 100px; border:1px solid #aac4e6; widht:100%;">
+	                   </div>
+	                </div>
+	            </div>
+	            <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRICE_SOLD");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('price_sold');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('schedule_opt');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("INSTALLMENT_PAID");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('installment_paid');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAID_AMOUNT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('paid_amount');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BALANCE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('balance');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMISSION_EXPECTED");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('full_commission');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_COMMISSIONPAID");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $frm->getElement('commision');?>
+	                   </div>
+	                </div>
+	            </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-money" aria-hidden="true"></i> <?php echo $tr->translate("PAYMENT_TYPE");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STAFF_NAME");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="staff_id" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMMISSION");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('return_back')?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CATEGORY");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="income_category" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('date')?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                	<div class="col-md-12 col-sm-12 col-xs-12">
+	                		<input style=" min-height: 60px;" dojoType="dijit.form.Textarea" class="fullside" id="note" name="note" value="" type="text">
+	                   </div>
+	                </div>
+	            </div>
+	      	</div>
+	      	<div class="clearfix"></div>
+			 <div class="card-box">
+             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+             		<input type="submit" name="save" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="save_new" dojoType="dijit.form.Button"
  				   iconClass="dijitEditorIcon dijitEditorIconSave"/>
- 				<input type="button" label="<?php echo $tr->translate("PREVIEW")?>" name='print' value=''print'' dojoType="dijit.form.Button"
+ 					<input type="button" label="<?php echo $tr->translate("PREVIEW")?>" name='print' value=''print'' dojoType="dijit.form.Button"
  					iconClass="dijitIconNewTask" onClick="printSave('');displayNone();" />
-			</td>
-			</tr>
-		</table>
-</form>
+    			</div>
+    		</div>
+		</form>
+	</div>
+</div>
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_category" >
 		<form style="background-color: buttonface; width:100%;" id='frm_category' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -463,13 +519,13 @@ new dijit.form.FilteringSelect({
    // tabindex: "17",    
     class: 'fullside',  
     required:true,
-    placeHolder:"Selected Agent", 
+    placeHolder:"<?php echo $tr->translate("SELECT_SALE_AGENT");?>", 
     onChange: function() {        
     	branch_id = dijit.byId('branch_id').get('value');
     	staff_id = dijit.byId('staff_id').get('value');
     	if(branch_id==0){
     		if(staff_id==-1){
-    			alert('Please select branch');
+    			alert('<?php echo $tr->translate("Please select project");?>');
     			dijit.byId('branch_id').focus();
     			return false;
         	}
@@ -516,7 +572,7 @@ new dijit.form.FilteringSelect({
     name: "income_category",  
     class: 'fullside',  
     required:false,
-    placeHolder:"Selected Category", 
+    placeHolder:"<?php echo $tr->translate("SELECT_CATEGORY");?>", 
     onChange: function() {          
 	   	fa_job = dijit.byId('income_category').get('value');
 	    if(fa_job==-1){

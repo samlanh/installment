@@ -70,9 +70,10 @@ class Loan_ExpenseController extends Zend_Controller_Action
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
     	
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$db = new Loan_Model_DbTable_DbExpense();
     	$result = $db->getAllExpenseCategory();
-    	array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+    	array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
     	$this->view->all_category = $result;
     	
     	$key = new Application_Model_DbTable_DbKeycode();
@@ -89,7 +90,7 @@ class Loan_ExpenseController extends Zend_Controller_Action
 				$db->updatExpense($data);				
 				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', self::REDIRECT_URL);		
 			} catch (Exception $e) {
-				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
+				$this->view->msg = 'UPDATE_FAIL';
 			}
 		}
 		$id = $this->getRequest()->getParam('id');
@@ -102,9 +103,10 @@ class Loan_ExpenseController extends Zend_Controller_Action
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
 		
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$db = new Loan_Model_DbTable_DbExpense();
     	$result = $db->getAllExpenseCategory();
-    	array_unshift($result, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+    	array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
     	$this->view->all_category = $result;
     	
     	$key = new Application_Model_DbTable_DbKeycode();
