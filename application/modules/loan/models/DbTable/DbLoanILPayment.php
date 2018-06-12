@@ -30,9 +30,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				    (SELECT lcrmd.`date_payment` from ln_client_receipt_money_detail AS lcrmd WHERE lcrm.id=lcrmd.`crm_id` ORDER BY lcrmd.id DESC LIMIT 1 ) AS date_payment,
 					lcrm.`date_input`,
 					(SELECT name_kh FROM `ln_view` WHERE type=7 AND key_code=lcrm.`payment_option`) AS payment_method,
-					(SELECT name_en FROM `ln_view` WHERE type=3 and key_code = lcrm.status),
-					'បោះពុម្ភ',
-					'".$delete."'
+					lcrm.status
 				FROM `ln_client_receipt_money` AS lcrm WHERE 1 ";
     	$where ='';
     	$from_date =(empty($search['start_date']))? '1': " lcrm.date_input >= '".$search['start_date']." 00:00:00'";

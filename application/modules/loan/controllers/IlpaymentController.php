@@ -28,15 +28,16 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 					}
 				$this->view->search = $search;
 			$rs_rows= $db->getAllIndividuleLoan($search);
+			$glClass = new Application_Model_GlobalClass();
+			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$result = array();
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
-					"PAY_DATE","DATE","PAYMENT_OPTION","STATUS",'PRINT','DELETE');
+					"PAY_DATE","DATE","PAYMENT_OPTION","STATUS");
 			$link=array('module'=>'loan','controller'=>'ilpayment','action'=>'edit',);
 			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);
 			$link_delete=array('module'=>'loan','controller'=>'ilpayment','action'=>'delete',);
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('លុប'=>$link_delete,'Delete'=>$link_delete,'branch_name'=>$link,'land_id'=>$link,'team_group'=>$link,
-					'client_name'=>$link,'receipt_no'=>$link,'branch'=>$link,'street'=>$link,'បោះពុម្ភ'=>$linkprint));
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array());
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

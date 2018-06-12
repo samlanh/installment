@@ -1,34 +1,33 @@
 <?php 
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
-echo $this->headTitle($tr->translate("Client List"));
+echo $this->headTitle($tr->translate("CUSTOMER_LIST"));
 $frm = $this->frm_search;
 $frms=$this->frm_client;
 $url_delete =$this->url(array('module'=>'property','controller'=>'customers','action'=>'delete'));
 $formList = new Application_Form_Frmtable();
 ?>
-<form id="list" name="list" action="<?php echo $this->url(array('module'=>'property','controller'=>'customers','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
-<table>
-	<tr>
-	    <td><?php echo $frm->getElement("adv_search");?></td>
-	    <td><?php echo $frm->getElement('start_date');?></td>
-     	<td><?php echo $frm->getElement('end_date');?></td>
-      	<td><?php echo $frm->getElement('status');?></td>
-      	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
-      <input type="submit" onClick="resetForm();" value="show_all" label="<?php echo $tr->translate('SHOW_ALL');?>" id="show_all" dojoType="dijit.form.Button" name="show_all" /></td>
-	</tr>
-   <tr>  
-      
-   </tr>
-  <!--  <tr>
-   	  <td><?php //echo $frms->getElement('province');?></td>
-      <td><input id="district" ></td>
-      <td><input id="commune" ></td>
-      <td><input id="village" ></td>
-	  </td> -->
-   </tr>
-</table>  
-<?php echo $this->list;?> 
-</form>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'property','controller'=>'customers','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+				<table>
+					<tr>
+					    <td><?php echo $frm->getElement("adv_search");?></td>
+					    <td><?php echo $frm->getElement('start_date');?></td>
+				     	<td><?php echo $frm->getElement('end_date');?></td>
+				      	<td><?php echo $frm->getElement('status');?></td>
+				      	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				      <input type="submit" onClick="resetForm();" value="show_all" label="<?php echo $tr->translate('SHOW_ALL');?>" id="show_all" dojoType="dijit.form.Button" name="show_all" /></td>
+					</tr>
+				      
+				</table>  
+			</form>
+		</div>	
+		<div class="card-box">
+			<?php echo $this->list;?> 
+		</div>
+	</div>
+</div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <script type="text/javascript">
 dojo.require("dojo.data.ObjectStore");

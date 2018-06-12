@@ -70,11 +70,11 @@ class Property_customersController extends Zend_Controller_Action {
 				try{
 				 if(isset($data['save_new'])){
 					$id= $db->addClient($data);
-					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+					Application_Form_FrmMessage::message("INSERT_SUCESS");
 				}
 				else if (isset($data['save_close'])){
 					$id= $db->addClient($data);
-					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+					Application_Form_FrmMessage::message("INSERT_SUCESS");
 					Application_Form_FrmMessage::redirectUrl("/property/customers");
 				}
 			}catch (Exception $e){
@@ -86,8 +86,9 @@ class Property_customersController extends Zend_Controller_Action {
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$client_type = $db->getclientdtype();
-		array_unshift($client_type,array('id' => -1,'name' => '--- បន្ថែមថ្មី ---',));
-		array_unshift($client_type,array('id' => 0,'name' => '---Please Select ---',));
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		array_unshift($client_type,array('id' => -1,'name' => $tr->translate("ADD_NEW"),));
+		array_unshift($client_type,array('id' => 0,'name' => $tr->translate("PLEASE_SELECT"),));
 		$this->view->clienttype = $client_type;
 		
 		$fm = new Property_Form_FrmClient();
@@ -125,12 +126,13 @@ class Property_customersController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_client = $frm;
 		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$client_type = $db->getclientdtype();
 		array_unshift($client_type,array(
 				'id' => -1,
-				'name' => '---Add New ---',
+				'name' => $tr->translate("ADD_NEW"),
 		) );
 		$this->view->clienttype = $client_type;
 	}
