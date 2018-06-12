@@ -30,8 +30,8 @@ class Loan_TransfercashController extends Zend_Controller_Action {
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_NAME","TRANSFER_AMOUNT","BRANCH_NAME","PROPERTY_NAME","TRANSFER_DATE",
 				"STATUS");
-			$link_info=array('module'=>'loan','controller'=>'changproperty','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('sale_number'=>$link_info,'client_number'=>$link_info,'name_kh'=>$link_info,'from_property'=>$link_info),0);
+			$link_info=array('module'=>'loan','controller'=>'transfercash','action'=>'edit',);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array(),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
