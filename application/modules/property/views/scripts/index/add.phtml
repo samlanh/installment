@@ -14,321 +14,497 @@ dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.Dialog");
 require(["dijit/form/CheckBox","dijit/Dialog","dijit/layout/TabContainer"]);
 </script>
-<form id='buy_land'	action="<?php echo $this->url(array('module'=>'property','controller'=>'index','action'=>'add')); ?>"
-	enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
-	<script type="dojo/method" event="onSubmit">			
-			if(this.validate()) {
-				return true;
-			} else {
-				return false;
-			}
-   </script>  
-
-	<table width="100%" style="">
-		<tr>
-			<td style="overflow: scroll;max-width:1100px;overflow-y:hidden;">
-			<div id="mainTabContainer" style="max-width:100%; height: 530px;overflow-y:hidden;" dojoType="dijit.layout.TabContainer" region="center" >
-				<div class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate("LAND_INFO");?>" selected="true">
-					<fieldset>
-						<legend><strong><?php echo $tr->translate("LAND_INFO");?></strong></legend>
-						<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-							<tr>
-								<td width="33%">
-									
-									<table width="100%">      
-										<tr>
-											<td width="33%"><?php echo $tr->translate("BUY_NO")?></td>          
-										  <td width="66%"><?php echo $frm->getElement('buy_no');?></td>
-										</tr>
-										<tr>
-											<td width="33%"><?php echo $tr->translate("LAND_BLOG")?>*</td>          
-											<td width="66%"><input id="land_blog"></td>
-										</tr>
-										<tr>
-											<td width="33%"><?php echo $tr->translate("TITLE")?>* </td>          
-											<td width="66%"><?php echo $frm->getElement('title');?></td>
-										</tr>
-										
-										<tr>
-											<td width="33%"><?php echo $tr->translate("THE_CREDENTAIL_NO")?></td>          
-											<td width="66%"><?php  echo $frm->getElement('credentail_no');?></td>
-										</tr>
-										<tr>
-											<td width="33%"><?php echo $tr->translate("Issue Date")?></td>          
-											<td width="66%"><?php  echo $frm->getElement('issue_date');?></td>
-										</tr>
-										<tr>			
-											<td width="33%"><?php echo $tr->translate("BUY_DATE")?></td>          
-											<td width="66%"><?php  echo $frm->getElement('buy_date');?></td>
-										</tr>
-									</table>
-						
-								</td>
-								<td width="33%" style="vertical-align: top;">
-								  <table width="100%">
-										<tr>
-											<td width="33%"><?php echo $tr->translate("WIDTH")."(".$tr->translate("HEAD").")";?></td>        
-											<td width="66%"><?php  echo $frm->getElement('width');?></td>
-										</tr>
-										<tr>
-											<td width="33%"><?php echo $tr->translate("HEIGHT")?></td>          
-											<td width="66%"><?php  echo $frm->getElement('height');?></td>
-										</tr>
-										 <tr>
-											<td width="33%"><?php echo $tr->translate("SIZE")?></td>          
-											<td width="66%"><?php  echo $frm->getElement('size');?></td>
-										</tr>
-										<tr>
-											<td width="33%"><?php echo $tr->translate("PRICE")?>*</td>          
-											<td width="66%"><?php echo $frm->getElement('land_price');?></td>
-										</tr>				
-										<tr>
-											<td width="33%"><?php echo $tr->translate("STATUS")?></td>          
-											<td width="66%"><?php  echo $frm->getElement('status');?></td>
-										</tr>
-									</table>
-								</td>
-								<td width="33%" style="vertical-align: top;">
-								  <table width="100%">			
-										<tr>
-											<td width="33%"><?php echo $tr->translate("BORDER_NORTH")?></td>          
-											<td width="66%"><?php  echo $frm->getElement('border_north');?></td>
-										</tr>
-										<tr>		
-											<td width="33%"><?php echo $tr->translate("BORDER_SOUTH")?></td>          
-											<td width="66%"><?php  echo $frm->getElement('border_south');?></td>
-										</tr>
-										<tr>				
-											<td width="33%"><?php echo $tr->translate("BORDER_WEST")?></td>          
-											<td width="66%"><?php  echo $frm->getElement('border_west');?></td>
-										</tr>
-										<tr>			
-											<td width="33%"><?php echo $tr->translate("BORDER_EAST")?></td>          
-											<td width="66%"><?php  echo $frm->getElement('border_east');?></td>
-										</tr>				
-										
-									</table>	
-								</td>
-							</tr>	
-							<tr>
-									<td style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("LOCATION")?></td>
-									<td style="border-bottom: solid 1px #ccc;"><?php echo $tr->translate("NOTE")?></td>
-						   </tr>
-							<tr>							
-								<td><?php  echo $frm->getElement('location');?></td>
-								<td ><?php  echo $frm->getElement('note');?></td>
-							</tr>
-								
-								<tr>
-									<td colspan="3"><?php echo $frm->getElement('land_img1').$frm->getElement('land_img2');?></td>
-									
-								</tr>
-							</table>
-					</fieldset>
-				</div><!-- end tab 1 -->
-				<div class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate("SELLER_INFO");?>" selected="false">
-					<fieldset>
-						<legend><strong><?php echo $tr->translate("SELLER_INFO");?></strong></legend>
-						<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-							<tr>
-								<td width="50%" style="vertical-align: top;">
-									<fieldset>
-										<legend><strong><?php echo $tr->translate("SELLER_INFO");?></strong></legend>
-										<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-											<tr>
-												<td><?php echo $tr->translate("SELL_NAME")?>*</td>
-												<td><?php  echo $frm->getElement('sale_name_kh');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("SEX")?></td>
-												<td><?php  echo $frm->getElement('sale_sex');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("AGE")?></td>
-												<td><?php  echo $frm->getElement('sale_age');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("NATIONALITY")?></td>
-												<td><?php  echo $frm->getElement('sale_nationality');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("DOCMENT_TYPE")?></td>
-												<td><input id="sale_d_type" required="true" /></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-												<td><?php  echo $frm->getElement('sale_nation_id');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("PHONE")?></td>
-												<td><?php  echo $frm->getElement('sale_phone');?></td>
-											</tr>
-											
-										</table>
-									</fieldset>
-								</td>
-								<td width="50%" style="vertical-align: top;">
-									<fieldset>
-										<legend><strong><?php echo $tr->translate("RELEVANT STAKEHOLDER");?></strong></legend>
-										<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-										
-											<tr>
-												<td><?php echo $tr->translate("RELEVANT STAKEHOLDER")?></td>
-												<td><?php  echo $frm->getElement('sale_relevent_name');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("SEX")?></td>
-												<td><?php  echo $frm->getElement('sale_relevent_sex');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("AGE")?></td>
-												<td><?php  echo $frm->getElement('sale_relevent_age');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("NATIONALITY")?></td>
-												<td><?php  echo $frm->getElement('sale_relevent_nationlity');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("DOCMENT_TYPE")?></td>
-												<td><input id="sale_relevent_d_type" required="true" /></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-												<td><?php  echo $frm->getElement('sale_relevent_nationid');?></td>
-											</tr>
-											<tr>
-												
-												<td><?php echo $tr->translate("JOIN_TYPE")?></td>
-												<td><?php  echo $frm->getElement('sale_relevent_is');?></td>
-											</tr>
-											
-										</table>
-									</fieldset>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2"><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
-							</tr>
-							<tr>
-								<td colspan="2"><?php  echo $frm->getElement('sale_address');?></td>
-							</tr>
-							<tr>
-								<td colspan="2"><?php echo $frm->getElement('sale_img1').$frm->getElement('sale_img2');?></td>
-								
-							</tr>
-						</table>
-					</fieldset>
-				</div><!-- end tab 2 -->
-				<div class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate("BUYER_INFO");?>" selected="false">
-					<fieldset>
-						<legend><strong><?php echo $tr->translate("BUYER_INFO");?></strong></legend>
-						<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-							<tr>
-								<td width="50%" style="vertical-align: top;">
-									<fieldset>
-										<legend><strong><?php echo $tr->translate("BUYER_INFO");?></strong></legend>
-										<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-											<tr>
-												<td><?php echo $tr->translate("Buyer Name")?>*</td>
-												<td><?php  echo $frm->getElement('buy_name_kh');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("SEX")?></td>
-												<td><?php  echo $frm->getElement('buy_sex');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("AGE")?></td>
-												<td><?php  echo $frm->getElement('buy_age');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("NATIONALITY")?></td>
-												<td><?php  echo $frm->getElement('buy_nationality');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("DOCMENT_TYPE")?></td>
-												<td><input id="buyer_d_type" required="true" /></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-												<td><?php  echo $frm->getElement('buy_nation_id');?></td>
-											</tr>
-											
-											<tr>
-												<td><?php echo $tr->translate("PHONE")?></td>
-												<td><?php  echo $frm->getElement('buy_phone');?></td>
-											</tr>
-											
-										</table>
-									</fieldset>
-								</td>
-								<td width="50%" style="vertical-align: top;">
-									<fieldset>
-										<legend><strong><?php echo $tr->translate("RELEVANT_STAKEHOLDER");?></strong></legend>
-										<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-											<tr>
-												<td><?php echo $tr->translate("JOIN_NAME")?></td>
-												<td><?php  echo $frm->getElement('buyer_relevent_name');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("SEX")?></td>
-												<td><?php  echo $frm->getElement('buyer_relevent_sex');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("AGE")?></td>
-												<td><?php  echo $frm->getElement('buyer_relevent_age');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("NATIONALITY")?></td>
-												<td><?php  echo $frm->getElement('buyer_relevent_nationality');?></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("DOCMENT_TYPE")?></td>
-												<td><input id="buyer_relevent_d_type" required="true" /></td>
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("NATIONAL_ID")?></td>
-												<td><?php  echo $frm->getElement('buyer_relevent_nationid');?></td>
-											</tr>
-											
-											<tr>
-												<td><?php echo $tr->translate("JOIN_TYPE")?></td>
-												<td><?php  echo $frm->getElement('buyer_relevent_is');?></td>
-											</tr>
-											
-										</table>
-									</fieldset>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2"><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
-							</tr>
-							<tr>
-								<td colspan="2"><?php  echo $frm->getElement('buy_address');?></td>
-							</tr>
-						</table>
-					</fieldset>
-
-				</div><!-- end tab 3 -->
-			</div>
-				<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-					<tr>
-						<td colspan="6" align="center"><input type="reset"
-							label="<?php echo $tr->translate('CLEAR');?>"
-							dojoType="dijit.form.Button" iconClass="dijitIconClear" /> <input
-							type="submit" value="SAVE_CLOSE" tabindex="2"
-							label="<?php echo $tr->translate('SAVECLOSE');?>"
-							id="save_close" dojoType="dijit.form.Button" name="save_close"
-							iconClass="dijitEditorIcon dijitEditorIconSave" /> <input
-							type="submit" value="SAVE_NEW" tabindex="1"
-							label="<?php echo $tr->translate('SAVENEW');?>" id="save_new"
-							dojoType="dijit.form.Button" name="save_new"
-							iconClass="dijitEditorIcon dijitEditorIconSave" /></td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-</form>
+<div class="card">
+	<div class="card-content collapse show">
+		<form id='buy_land'	action="<?php echo $this->url(array('module'=>'property','controller'=>'index','action'=>'add')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					return true;
+				} else {
+					return false;
+				}
+  			 </script>
+  			 <div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-map" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('Buy Land');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<!-- Tab Menu -->
+	    	<div class="card-box">
+	    		 <ul class="nav  md-pills pills-primary nav-tab" role="tablist">
+		            <li class="nav-item active">
+		                <a class="nav-link " data-toggle="tab" href="#panel21" role="tab"><i class="fa fa-map ml-2"></i> <?php echo $tr->translate("LAND_INFO");?></a>
+		            </li>
+		            <li class="nav-item">
+		                <a class="nav-link" data-toggle="tab" href="#panel22" role="tab">
+		                <i class="fa fa-users ml-2"></i> <?php echo $tr->translate("SELLER_INFO");?>
+		                </a>
+		            </li>
+		            <li class="nav-item">
+		                <a class="nav-link" data-toggle="tab" href="#panel23" role="tab">
+		                <i class="fa fa-users ml-2"></i> <?php echo $tr->translate("BUYER_INFO");?>
+		                </a>
+		            </li>
+		        </ul>
+		    </div>
+		     <!--/.Tab Menu-->
+		     <div class="col-md-12">
+		        <!-- Tab panels -->
+		        <div class="tab-content vertical">
+			        <!--Panel 1-->
+			        <div class="tab-pane fade in active" id="panel21" role="tabpanel">
+			        	<div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("BUY_INFO");?> 
+			                   </label>
+			                </div>
+			                 <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BUY_NO");?> <span class="required">*</span> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('buy_no');?>
+			                   </div>
+			                </div>
+			                 <div class="form-group">
+			                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("LAND_BLOG");?> <span class="required">*</span> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<input id="land_blog">
+			                   </div>
+			                </div>
+			                 <div class="form-group">
+			                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TITLE");?> <span class="required">*</span> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('title');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("THE_CREDENTAIL_NO");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('credentail_no');?>
+			                   </div>
+			                </div>
+			                 <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Issue Date");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('issue_date');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BUY_DATE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('buy_date');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('status');?>
+			                   </div>
+			                </div>
+			           </div>
+			           <div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("LAND_INFO");?> 
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("WIDTH")."(".$tr->translate("HEAD").")";?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('width');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("HEIGHT");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('height');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SIZE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('size');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRICE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('land_price');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BORDER_NORTH");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('border_north');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BORDER_SOUTH");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('border_south');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BORDER_WEST");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('border_west');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BORDER_EAST");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                    	<?php echo $frm->getElement('border_east');?>
+			                   </div>
+			                </div>
+			           </div>
+			           <div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER_INFO");?> 
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PHOTO");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('land_img1');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('land_img2');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("LOCATION");?> :
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <div class="col-md-12 col-sm-12 col-xs-12">
+			                   <?php echo $frm->getElement('location');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <div class="col-md-12 col-sm-12 col-xs-12">
+			                   <?php echo $frm->getElement('note');?>
+			                   </div>
+			                </div>
+			           </div>
+			       </div>
+			       <!--/ .Panel 1-->
+			       
+			       <!--Panel 2-->
+			        <div class="tab-pane fade in " id="panel22" role="tabpanel">
+			        	<div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("SELLER_INFO");?> 
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SELL_NAME");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_name_kh');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SEX");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_sex');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("AGE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_age');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONALITY");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_nationality');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DOCMENT_TYPE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <input id="sale_d_type" required="true" />
+			                   </div>
+			                </div>
+			                 <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONAL_ID");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_nation_id');?>
+			                   </div>
+			                </div>
+			                 <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PHONE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_phone');?>
+			                   </div>
+			                </div>
+			           </div>
+			           <div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("RELEVANT STAKEHOLDER");?> 
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("RELEVANT STAKEHOLDER");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_relevent_name');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SEX");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_relevent_sex');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("AGE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_relevent_age');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONALITY");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_relevent_nationlity');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DOCMENT_TYPE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                  		<input id="sale_relevent_d_type" required="true" />
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONAL_ID");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_relevent_nationid');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("JOIN_TYPE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_relevent_is');?>
+			                   </div>
+			                </div>
+			           </div>
+			            <div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER_INFO");?> 
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PHOTO");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_img1');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('sale_img2');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CURRENT_ADDRESS");?> :
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <div class="col-md-12 col-sm-12 col-xs-12">
+			                   <?php echo $frm->getElement('sale_address');?>
+			                   </div>
+			                </div>
+			           </div>
+			           
+			       </div>
+			       <!--/ .Panel 2-->
+			       
+			        <!--Panel 3-->
+			        <div class="tab-pane fade in " id="panel23" role="tabpanel">
+			        	<div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("BUYER_INFO");?> 
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Buyer Name");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buy_name_kh');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SEX");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buy_sex');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("AGE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buy_age');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONALITY");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buy_nationality');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DOCMENT_TYPE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                 		 <input id="buyer_d_type" required="true" />
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONAL_ID");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buy_nation_id');?>
+			                   </div>
+			                </div>
+			                 <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PHONE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buy_phone');?>
+			                   </div>
+			                </div>
+			           </div>
+			           <div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("RELEVANT_STAKEHOLDER");?> 
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("JOIN_NAME");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buyer_relevent_name');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SEX");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buyer_relevent_sex');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("AGE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buyer_relevent_age');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONALITY");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buyer_relevent_nationality');?>
+			                   </div>
+			                </div>
+			                 <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DOCMENT_TYPE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                  	 <input id="buyer_relevent_d_type" required="true" />
+			                   </div>
+			                </div>
+			                 <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONAL_ID");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buyer_relevent_nationid');?>
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("JOIN_TYPE");?> :
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   <?php echo $frm->getElement('buyer_relevent_is');?>
+			                   </div>
+			                </div>
+			           </div>
+			           <div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER_INFO");?> 
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CURRENT_ADDRESS");?> :
+			                   </label>
+			                </div>
+			                <div class="form-group">
+			                   <div class="col-md-12 col-sm-12 col-xs-12">
+			                   <?php echo $frm->getElement('buy_address');?>
+			                   </div>
+			                </div>
+			           </div>
+			       </div>
+			       <!--/ .Panel 3-->
+			       
+			  	</div>
+			  	 <!--/. Tab panels -->
+			 </div>
+			 <div class="clearfix"></div>
+			    <div class="card-box">
+               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+		    			<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear" /> 
+		    			<input type="submit" value="SAVE_CLOSE" tabindex="2" label="<?php echo $tr->translate('SAVECLOSE');?>"id="save_close" dojoType="dijit.form.Button" name="save_close"	iconClass="dijitEditorIcon dijitEditorIconSave" /> 
+						<input type="submit" value="SAVE_NEW" tabindex="1"	label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" iconClass="dijitEditorIcon dijitEditorIconSave" />
+	    		</div>
+	    	</div>
+  		</form>
+	</div>
+</div>
+ 
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_doc_type" >
 		<form style="background-color: buttonface; width:100%;" id='frm_client_doc_type' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">

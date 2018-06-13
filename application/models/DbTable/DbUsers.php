@@ -258,11 +258,13 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	    	'last_name'=>$data['last_name'],
 			'first_name'=>$data['first_name'],
 			'user_name'=>$data['user_name'],
-			'password'=> MD5($data['password']),
+// 			'password'=> MD5($data['password']),
 			'user_type'=> $data['user_type'],
 			'active'=> $data['active']			
 	    );    	   
-		
+		if (!empty($data['check_change'])){
+			$_user_data['password']= md5($data['password']);
+		}
 		$where=$this->getAdapter()->quoteInto('id=?', $data['id']); 
     	   
 		return  $this->update($_user_data,$where);

@@ -1,4 +1,5 @@
-<title>User Access</title>
+<?php  $tr = Application_Form_FrmLanguages::getCurrentlanguage();?>
+<title><?php echo $tr->translate("USERACCESS");?></title>
 <style>
 fieldset.fifthy {	
 	border-right: 0px;
@@ -16,7 +17,7 @@ table.user td{
 	
 	  $acl=($this->acl=='')? array():$this->acl;
 	  $acl_name=($this->acl_name=='')? array(): $this->acl_name;
-	  $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	 
 	  $df=$this->data;
 	  $module_str = array(
 	  		'home'=>'HOME_PAGE',
@@ -33,64 +34,87 @@ table.user td{
 	  		'default'=>'default'
 	  		);
 ?>
-<table style="margin: 0 auto; width: 100%">
-	<tr>
-		<td>
-			<fieldset>
-				<legend><?php echo $tr->translate("USER_ACCESS_EDIT");?></legend>
-				<table cellspacing="20" align="center">
-					<tr>
-						<td><?php echo $tr->translate("USER_TYPE");?></td>
-						<td class="add-edit">
-							<input type="text" required="true" name="user_type" id="user_type" placeholder="User Type" 
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('USER_ACCESS_EDIT');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<div class="card-box">
+    		<div class="col-md-6 col-sm-6 col-xs-12">
+    			<div class="form-group">
+                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("USER_TYPE");?> :
+                   </label>
+                   <div class="col-md-7 col-sm-7 col-xs-12">
+                    	<input type="text" required="true" name="user_type" id="user_type" placeholder="User Type" 
 								dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->rs[0]['user_type'];?>"
 								missingMessage="Invalid User type!" class='fullside' disabled/>
-						</td>				
-					</tr>			
-				</table>
-			</fieldset>	
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<fieldset>
-				<legend><?php echo $tr->translate("SEARCH");?></legend>
-				<form name="frmsearch" action="" method="post">
-					<table cellspacing="20" style="margin: 0 auto; width: 100%">
-						<tr>
-							<td>Module</td>
-							<td>
-								<select name="fmod" id="fmod" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
-									<?php echo $this->optoin_mod;?>
-								</select>
-							</td>	
-							<td>Controller</td>
-							<td>
-								<select name="fcon" id="fcon" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
-									<?php echo $this->optoin_con;?>
-								</select>
-							</td>
-							<td>Action</td>
-							<td>
-								<select name="fact" id="fact" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
-									<?php echo $this->optoin_act;?>
-								</select>
-							</td>	
-							<td>Status</td>
-							<td>
-								<select name="fstatus" id="fstatus" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
-									<?php echo $this->optoin_status;?>
-								</select>
-							</td>
-							<td class="btn" align="center">
-								<input type="submit" value="Search" name="btsave" label="<?php echo $tr->translate("SEARCH");?>" title="Search" dojoType="dijit.form.Button"/>
-						    </td>					
-						</tr>	
-					</table>
-				</form>
-			</fieldset>
-		</td>
-	</tr>
+                   </div>
+                </div>
+               
+	   		 </div>
+    	</div>
+    	<form name="frmsearch" action="" method="post">
+    	<div class="card-box">
+    		<div class="col-md-12 col-sm-12 col-xs-12">
+    			 <div class="form-group">
+                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name">
+                   <?php echo $tr->translate("SEARCH");?> <i class="fa fa-search" aria-hidden="true"></i> 
+                   </label>
+                </div>
+    		</div>
+    		<div class="col-md-4 col-sm-4 col-xs-12">
+    			<div class="form-group">
+                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("MODULE");?> :
+                   </label>
+                   <div class="col-md-7 col-sm-7 col-xs-12">
+                    	<select name="fmod" id="fmod" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
+								<?php echo $this->optoin_mod;?>
+						</select>
+                   </div>
+                </div>
+    		</div>
+    		<div class="col-md-4 col-sm-4 col-xs-12">
+    			<div class="form-group">
+                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Controller");?> :
+                   </label>
+                   <div class="col-md-7 col-sm-7 col-xs-12">
+                    	<select name="fcon" id="fcon" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
+							<?php echo $this->optoin_con;?>
+						</select>
+						<input type="hidden" name="fstatus" value="">
+						<input type="hidden" name="fact" value="">
+                   </div>
+                </div>
+    		</div>
+    		<div class="col-md-4 col-sm-4 col-xs-12">
+    			<div class="form-group">
+    				<input type="submit" value="Search" name="btsave" label="<?php echo $tr->translate("SEARCH");?>" title="Search" dojoType="dijit.form.Button"/>
+    			</div>
+    		</div>
+    	</div>
+    	</form>
+    	<?php $show =0; if ($show==1){?>
+			<td><?php echo $tr->translate("Action");?></td>
+			<td>
+				
+				<select name="fact" id="fact" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
+					<?php echo $this->optoin_act;?>
+				</select>
+			</td>	
+			<td><?php echo $tr->translate("STATUS");?></td>
+			<td>
+				<select name="fstatus" id="fstatus" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
+					<?php echo $this->optoin_status;?>
+				</select>
+			</td>
+			<?php }?>
+	<table style="margin: 0 auto; width: 100%">
 	<tr>
 		<td>
 			<?php 
@@ -184,7 +208,8 @@ table.user td{
 		</td>
 	</tr>
 </table>
-		
+</div>
+</div>	
 <style>
 	.pointer{
 		cursor: pointer;	

@@ -11,10 +11,11 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
    }
    public function getOptonsHtml($sql, $display, $value){
    	$db = $this->getAdapter();
-   	$option = '<option value="">--- Select ---</option>';
+   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+   	$option = '<option value="">'.$tr->translate("PLEASE_SELECT").'</option>';
    	foreach($db->fetchAll($sql) as $r){
    			
-   		$option .= '<option value="'.$r[$value].'">'.htmlspecialchars($r[$display], ENT_QUOTES).'</option>';
+   		$option .= '<option value="'.$r[$value].'">'.htmlspecialchars($tr->translate(strtoupper($r[$display])), ENT_QUOTES).'</option>';
    	}
    	return $option;
    }
