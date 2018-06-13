@@ -77,6 +77,7 @@ class Group_ProjectController extends Zend_Controller_Action {
 		$db=new Group_Model_DbTable_DbProject();
 		$row=$db->getBranchById($id);
 	
+		$this->view->row = $row;
 		$frm= new Group_Form_Frmbranch();
 		$update=$frm->FrmBranch($row);
 		$this->view->frm_branch=$update;
@@ -108,6 +109,7 @@ class Group_ProjectController extends Zend_Controller_Action {
 		}
 		$db=new Group_Model_DbTable_DbProject();
 		$row=$db->getBranchById($id);
+		$this->view->row = $row;
 		
 		$fm = new Group_Form_Frmbranch();
 		$frm = $fm->Frmbranch($row,"1");

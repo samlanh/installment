@@ -7,149 +7,296 @@
 	dojo.require("dijit.form.Textarea");
 	dojo.require("dijit.form.DateTextBox");
 </script>
-<form action="<?php echo $this->url(array('module'=>'group','controller'=>'project','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-	 <script type="dojo/method" event="onSubmit">			
-			if(this.validate()) {
-				return true;
-			} else {
-				return false;
-			}
-	</script>
-	<table cellspacing="10" style="margin: 0 auto; width:100%">
-		<tr>
-			<td width="33%" valign="top">
-				<fieldset>
-					<legend align="center"><strong><?php echo $tr->translate("ADD_BRANCH");?></strong></legend>
-					<table cellspacing="5" width="100%" >
-						<tr>
-							<td align="center" valign="top">
-								<table width="100%" cellspacing="10">
-									<tr>
-										<td><?php echo $tr->translate("BRANCH_CODE")?></td>
-										<td><?php echo $frm->getElement("branch_code");?></td>
-									</tr>
-									<tr>
-										<td><?php echo $tr->translate("PROJECT_NAME")?></td>
-										<td><?php echo $frm->getElement("branch_namekh");?></td>
-									</tr>
-									<tr>
-										<td><?php echo $tr->translate("PREFIX_CODE");?></td>
-									    <td><?php echo $frm->getElement("prefix_code");?></td>
-									</tr>
-									<tr>
-										<td><?php echo $tr->translate("BRANCH_ADDRESS")?></td>
-										<td><?php echo $frm->getElement("br_address");?></td>
-									</tr>
-									<tr>
-										<td><?php echo $tr->translate("PHONE")?></td>
-										<td><?php echo $frm->getElement("branch_tel");?></td>
-									</tr>
-									<tr>
-										<td><?php echo $tr->translate("BRNACH_FAX")?></td>
-										<td><?php echo $frm->getElement("fax");?></td>	
-									</tr>
-									<tr>		
-										<td><?php echo $tr->translate("BRANCH_NOTE")?></td>
-										<td><?php echo $frm->getElement("branch_note");?></td>
-									</tr>
-									<tr>
-										<td><?php echo $tr->translate("BRANCH_STATUS")?></td>
-										<td><?php echo $frm->getElement("branch_status");?></td>
-									</tr>
-								</table>
-							</td>							
-						</tr>
-					</table>	
-				</fieldset>
-			</td>	
-			<td width="33%" valign="top">
-				<fieldset>
-					<legend align="center"><strong><?php echo $tr->translate("SIGNATUR_NAME");?></strong></legend>
-					<table cellspacing="5" width="100%" >
-						<tr>
-							<td><?php echo $tr->translate("SELLER_NAME")?></td>
-							<td><?php echo $frm->getElement("project_manager_namekh");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONALITY")?></td>
-							<td><?php echo $frm->getElement("project_manager_nationality");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("SEX")?></td>
-							<td><?php echo $frm->getElement("p_manager_sex");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("DOB")?></td>
-							<td><?php echo $frm->getElement("dob_manager");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONALITY_NO")?></td>
-							<td><?php echo $frm->getElement("project_manager_nation_id");?></td>
-						<tr>
-						<tr>
-							<td><?php echo $tr->translate("Issue Date")?></td>
-							<td><?php echo $frm->getElement("date_iss_doc");?></td>
-						<tr>
-						<tr>
-							<td><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
-							<td><?php echo $frm->getElement("current_address");?></td>
-						</tr>
-					</table>
-				</fieldset>
-			</td>
-			<td width="33%" valign="top">
-				<fieldset>
-					<legend align="center"><strong><?php echo $tr->translate("SIGNATUR_NAME_WITH");?></strong></legend>
-					<table cellspacing="5" width="100%" >
-						<tr>
-							<td><?php echo $tr->translate("SELLER_NAME_WITH")?></td>
-							<td><?php echo $frm->getElement("sc_project_manager_nameen");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONALITY")?></td>
-							<td><?php echo $frm->getElement("sc_project_manager_nationality");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("SEX")?></td>
-							<td><?php echo $frm->getElement("csp_manager_sex");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("DOB")?></td>
-							<td><?php echo $frm->getElement("dob_cs_manager");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("NATIONALITY_NO")?></td>
-							<td><?php echo $frm->getElement("sc_project_manager_nation_id");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("Issue Date")?></td>
-							<td><?php echo $frm->getElement("date_iss_doc_cs_manager");?></td>
-						<tr>
-						<tr>
-							<td><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
-							<td><?php echo $frm->getElement("cs_manager_current_address");?></td>
-						</tr>
-					</table>
-				</fieldset>
-			</td>		
-		</tr>
-		<tr style="background: #fff;padding:2px;">
-			<td colspan="3" align="center" style="   border: 1px solid #7296de;";>
-			<div  id="showrecord"></div>
-			<input type="button" label="<?php echo $tr->translate('បន្ថែមម្ចាស់ភាគហ៊ុន');?>" dojoType="dijit.form.Button" 
-		 	iconClass="dijitIconEditProperty" onclick="addRow();" />
-		 	<input type="hidden" name="identity" id="identity"  value="" >
-		</tr>
-		<tr>
-			<td colspan="3" align="center">
-				<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear" />
-				<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
+<style>
+.image-box {
+    text-align: center;
+}
+.image-box img {
+    width: 250px;
+    height: 130px;
+    border: solid 1px #eee;
+}
+.button_browse {
+    /*margin-top: 10px; */
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+    height: 45px;
+    cursor: pointer;
+    background: #fbf9f9;
+    border: 1px solid #e8e8e8;
+}
+.button_browse span {
+    line-height: 45px;
+    font-weight: 600;
+    cursor: pointer;
+}
+input.btn_borwse_image {
+    position: absolute;
+    width: 100%;
+    height: 45px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+.account-image {
+    border: solid 1px #eee;
+    width: 100%;
+}
+</style>
+<div class="card">
+	<div class="card-content collapse show">
+		<form action="<?php echo $this->url(array('module'=>'group','controller'=>'project','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			 <script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+               		 dijit.byId('save_new').set('disabled',true);
+					return true;
+				} else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD_BRANCH');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PROJECT_INFO");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH_CODE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('branch_code');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROJECT_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('branch_namekh');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PREFIX_CODE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('prefix_code');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH_ADDRESS");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('br_address');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PHONE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('branch_tel');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRNACH_FAX");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('fax');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH_NOTE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('branch_note');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH_STATUS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('branch_status');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <div class="col-md-12 col-sm-12 col-xs-12">
+	                    	<?php 
+							$images = $this->baseUrl().'/images/no-logo.jpg';
+							if (!empty($this->row['logo'])){
+								$images = $this->baseUrl().'/images/projects/'.$this->row['logo'];
+							}
+							?>
+							<input name="old_photo"  value="<?php echo $this->row['logo'];?>" type="hidden" />
+							<div class="account-image" >
+								<div class="image-box">
+									<img id="logo_wiew" src="<?php echo $images;?>" alt=""  />
+								</div>
+								<div class="button_browse">
+								<div id='preview'></div>	
+										<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+										<input class="btn_borwse_image" type="file" id="logo" name="logo" />
+								</div>
+							</div>
+	                   </div>
+	                </div>
+	            </div>
+	            <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("SIGNATUR_NAME");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SELLER_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('project_manager_namekh');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONALITY");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('project_manager_nationality');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SEX");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('p_manager_sex');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DOB");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('dob_manager');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONALITY_NO");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('project_manager_nation_id');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Issue Date");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('date_iss_doc');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CURRENT_ADDRESS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('current_address');?>
+	                   </div>
+	                </div>
+	            </div>
+	            <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("SIGNATUR_NAME_WITH");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('sc_project_manager_nameen');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONALITY");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('sc_project_manager_nationality');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SEX");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('csp_manager_sex');?>
+	                   </div>
+	                </div>
+						
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DOB");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('dob_cs_manager');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NATIONALITY_NO");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('sc_project_manager_nation_id');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Issue Date");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('date_iss_doc_cs_manager');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CURRENT_ADDRESS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cs_manager_current_address');?>
+	                   </div>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="card-box">
+	    		<div class="col-md-12 col-sm-12 col-xs-12 text-center">
+	    			<div  id="showrecord"></div>
+	    			<input type="button" label="<?php echo $tr->translate('Add More Shareholder');?>" dojoType="dijit.form.Button" 
+			 		iconClass="dijitIconEditProperty" onclick="addRow();" />
+			 		<input type="hidden" name="identity" id="identity"  value="" >
+	    		</div>
+	    	</div>
+	    	<div class="clearfix"></div>
+			    <div class="card-box">
+               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+		    			<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" iconClass="dijitIconClear" />
+					<input type="submit" value="save_new" id="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
 					iconClass="dijitEditorIcon dijitEditorIconSave" />
-			</td>	
-		</tr>
-	</table>	
-</form>
+	    		</div>
+	    	</div>
+		</form>
+	</div>
+</div>
 <script>
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function (e) {
+            $('#logo_wiew').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+$("#logo").change(function(){
+    readURL(this);
+});
+
 dojo.require("dojo.NodeList-manipulate");
 dojo.require("dojo.html");
 dojo.require("dijit.form.NumberTextBox");

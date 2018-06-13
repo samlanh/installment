@@ -5,6 +5,26 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
 
     protected $_name = 'ln_project';
     function addbranch($_data){
+    	
+    	$part= PUBLIC_PATH.'/images/projects/';
+    	if (!file_exists($part)) {
+    		mkdir($part, 0777, true);
+    	}
+    	$name = $_FILES['logo']['name'];
+    	$photo='';
+    	if (!empty($name)){
+    		$tem =explode(".", $name);
+    		$new_image_name = "logo".date("Y").date("m").date("d").time().".".end($tem);
+    		$tmp = $_FILES['logo']['tmp_name'];
+    		if(move_uploaded_file($tmp, $part.$new_image_name)){
+    			$photo = $new_image_name;
+    		}
+    		else
+    			$string = "Image Upload failed";
+    	}else{
+    		$photo = $_data['old_photo'];
+    	}
+    	
     	$_arr = array(
     			'project_name'=>$_data['branch_namekh'],
     			//'project_type'=>$_data['project_type'],
@@ -32,6 +52,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_dob'=>$_data['dob_cs_manager'],
     			'w_nation_id_issue'=>$_data['date_iss_doc_cs_manager'],
     			'w_current_address'=>$_data['cs_manager_current_address'],
+    			'logo'=>$_data['$photo'],
     			);
     	$branch_id = $this->insert($_arr);//insert data
     	$ids = explode(',', $_data['identity']);
@@ -55,6 +76,26 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
 
     }
     public function updateBranch($_data,$id){
+    	
+    	$part= PUBLIC_PATH.'/images/projects/';
+    	if (!file_exists($part)) {
+    		mkdir($part, 0777, true);
+    	}
+    	$name = $_FILES['logo']['name'];
+    	$photo='';
+    	if (!empty($name)){
+    		$tem =explode(".", $name);
+    		$new_image_name = "logo".date("Y").date("m").date("d").time().".".end($tem);
+    		$tmp = $_FILES['logo']['tmp_name'];
+    		if(move_uploaded_file($tmp, $part.$new_image_name)){
+    			$photo = $new_image_name;
+    		}
+    		else
+    			$string = "Image Upload failed";
+    	}else{
+    		$photo = $_data['old_photo'];
+    	}
+    	
     	$_arr = array(
     			'project_name'=>$_data['branch_namekh'],
     			//'project_type'=>$_data['project_type'],
@@ -82,6 +123,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_dob'=>$_data['dob_cs_manager'],
     			'w_nation_id_issue'=>$_data['date_iss_doc_cs_manager'],
     			'w_current_address'=>$_data['cs_manager_current_address'],
+    			'logo'=>$photo,
     			);
     	$where=$this->getAdapter()->quoteInto("br_id=?", $id);
     	$this->update($_arr, $where);
