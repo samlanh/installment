@@ -52,7 +52,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_dob'=>$_data['dob_cs_manager'],
     			'w_nation_id_issue'=>$_data['date_iss_doc_cs_manager'],
     			'w_current_address'=>$_data['cs_manager_current_address'],
-    			'logo'=>$_data['$photo'],
+    			'logo'=>$photo,
     			);
     	$branch_id = $this->insert($_arr);//insert data
     	$ids = explode(',', $_data['identity']);
