@@ -459,12 +459,30 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'onblur'=>'checkTitle();',
 		));
 		
-		$street = new Zend_Dojo_Form_Element_TextBox('street');
+// 		$street = new Zend_Dojo_Form_Element_TextBox('street');
+// 		$street->setAttribs(array(
+// 				'dojoType'=>'dijit.form.TextBox',
+// 				'class'=>'fullside',
+// 				'onkeyup'=>'checkTitle();',
+// 		));
+		
+		$street = new Zend_Dojo_Form_Element_FilteringSelect('street');
 		$street->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'onkeyup'=>'checkTitle();',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'showStreet();'
+		
 		));
+		$rows = $db->getAllStreetForOpt();
+		$options = array(''=>$this->tr->translate("CHOOSE_STREET"),'-1'=>$this->tr->translate("ADD_NEW"));
+		if(!empty($rows))foreach($rows AS $row){
+			$options[$row['name']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
+		}
+		$street->setMultiOptions($options);
+		$street->setValue($request->getParam("street"));
+		
 	
 		$land_price = new Zend_Dojo_Form_Element_NumberTextBox('land_price');
 		$land_price->setAttribs(array(

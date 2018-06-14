@@ -1272,6 +1272,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}
   	return $options;
   }
+  function  getAllStreetForOpt(){
+  	$db = $this->getAdapter();
+  	$sql = 'SELECT DISTINCT street as name,street as id FROM `ln_properties` WHERE street!="" ORDER BY street ASC ';
+  	$rows =  $db->fetchAll($sql);
+  	return $rows;
+  }
   function updateLateRecordSaleschedule($sale_id){
   	$db = $this->getAdapter();
   	$sql = "SELECT * FROM ln_saleschedule WHERE sale_id = $sale_id ORDER BY id DESC limit 1 ";

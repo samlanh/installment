@@ -79,8 +79,10 @@ class Group_LandController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
 		$property_type = $db->getPropertyType();
-		array_unshift($property_type, array('id'=>'','name' => "-----ជ្រើសរើស-----"), array('id'=>'-1', 'name'=>'Add New Property Type'));
+		array_unshift($property_type, array('id'=>'','name' => $tr->translate("SELECT_PROPERTY")), array('id'=>'-1', 'name'=>$tr->translate("Add New Property Type")));
 		$this->view->pro_type = $property_type;
 		$fm = new Group_Form_FrmClient();
 		$frm = $fm->FrmLandInfo();
@@ -97,8 +99,10 @@ class Group_LandController extends Zend_Controller_Action {
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$branch_opt = $db->getAllBranchByUser();
-		array_unshift($branch_opt, array('id'=>'-1', 'name'=>'បន្ថែមគម្រោងថ្មី'));
+		array_unshift($branch_opt, array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW_PROJECT")));
 		$this->view->branch_opt = $branch_opt;
+		
+		$this->view->street = $db->getAllStreetForOpt();
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
@@ -117,8 +121,10 @@ class Group_LandController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
 		$property_type = $db->getPropertyType();
-		array_unshift($property_type, array('id'=>'','name' => "-----ជ្រើសរើស-----"), array('id'=>'-1', 'name'=>'Add New Property Type'));
+		array_unshift($property_type, array('id'=>'','name' => $tr->translate("SELECT_PROPERTY")), array('id'=>'-1', 'name'=>$tr->translate("Add New Property Type")));
 		$this->view->pro_type = $property_type;
 		
 		$row = $db->getClientById($id);
@@ -136,6 +142,9 @@ class Group_LandController extends Zend_Controller_Action {
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$this->view->street = $db->getAllStreetForOpt();
 		
 	}
 	function viewAction(){
@@ -326,8 +335,10 @@ class Group_LandController extends Zend_Controller_Action {
 			$this->_redirect("/group/land");
 		}
 		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
 		$property_type = $db->getPropertyType();
-		array_unshift($property_type, array('id'=>'','name' => "-----ជ្រើសរើស-----"), array('id'=>'-1', 'name'=>'Add New Property Type'));
+		array_unshift($property_type, array('id'=>'','name' => $tr->translate("SELECT_PROPERTY")), array('id'=>'-1', 'name'=>$tr->translate("Add New Property Type")));
 		$this->view->pro_type = $property_type;
 		$fm = new Group_Form_FrmClient();
 		$frm = $fm->FrmLandInfo($row);
@@ -339,5 +350,8 @@ class Group_LandController extends Zend_Controller_Action {
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$this->view->street = $db->getAllStreetForOpt();
 	}	
 }
