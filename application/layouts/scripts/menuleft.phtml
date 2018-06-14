@@ -36,16 +36,7 @@
 		</div>
 	    <div class="main-menu-content">
 			<ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-			   <!-- 
-			   <li class="nav-item has-sub">
-			       <a href="#"><i class="la la-book"></i><span class="menu-title" data-i18n="nav.page_layouts.main">ចំណាត់ថ្នាក់ចំណាយ</span></a>
-			           <ul class="menu-content">
-			       	    	<li><a class="menu-item" href="/maffsystem/expenses">INDEX</a></li>
-			                 <li><a class="menu-item" href="/maffsystem/expenses/category">ប្រភេទការចំណាយ</a></li>
-			          </ul>
-			  </li>
-			    -->
-			    <?php foreach ($arr_param_menu[$request->getModuleName()] as $param =>$url){
+			    <?php if(!empty($arr_param_menu[$request->getModuleName()]))foreach ($arr_param_menu[$request->getModuleName()] as $param =>$url){
 			    	$uri=$this->baseUrl().'/'.$module.'/'.$param;
 			    	?>
 			  <li class="nav-item <?php if($param==$controller){ echo "active";}?>">
@@ -53,26 +44,25 @@
 			  </li>
 			  <?php }?>
 			</ul>
-			
 			<div  style="background: #fff;padding: 2px;max-width: 100%;min-height:70px;max-height: 500px;overflow: scroll;" >
 	   			<div class="portlet box green" style="">
 						<div class="portlet-body flip-scroll">
 							<table cellpadding="2" cellpadding="2" border="1" 
 								style="border-collapse:collapse;border: 1px solid #ddd;color:#888888;font-size:13px;font-family:'Kh Battambang','Khmer Battambang' !important;" class="table table-bordered table-striped table-condensed flip-content">
-							<thead class="flip-content" style="background:#3598dc;color: #eee;">
-							<tr height="30px;" style="font-family:'Khmer MEF2'; color: #100505; background: #e6e6e6; font-size: 14px;"><td colspan="9"><?php echo $tr->translate("CUSTOMER_PAYMENTLIST");?></td></tr>
-							<tr style="white-space: nowrap;">
-								<th><?php echo $tr->translate("NUM");?></th>
-								<th><?php echo $tr->translate("CUSTOMER_NAME");?></th>
-								<th><?php echo $tr->translate("TEL");?></th>
-								<th><?php echo $tr->translate("PROPERTY_NAME");?></th>
-								<th class="numeric"><?php echo $tr->translate("BALANCE");?></th>
-								<th class="numeric"><?php echo $tr->translate("DATE_PAYMENT");?></th>
-								<th class="numeric"><?php echo $tr->translate("AMOUNT_LATE");?></th>
-								<th class="numeric"><?php echo $tr->translate("AMOUNT_COLLECT");?></th>
-								<th class="numeric"><?php echo $tr->translate("PAYMENT");?></th>
-							</tr>
-							</thead>
+								<thead class="flip-content" style="background:#3598dc;color: #eee;">
+									<tr height="30px;" style="font-family:'Khmer MEF2'; color: #100505; background: #e6e6e6; font-size: 14px;"><td colspan="9"><?php echo $tr->translate("CUSTOMER_PAYMENTLIST");?></td></tr>
+									<tr style="white-space: nowrap;">
+										<th><?php echo $tr->translate("NUM");?></th>
+										<th><?php echo $tr->translate("CUSTOMER_NAME");?></th>
+										<th><?php echo $tr->translate("TEL");?></th>
+										<th><?php echo $tr->translate("PROPERTY_NAME");?></th>
+										<th class="numeric"><?php echo $tr->translate("BALANCE");?></th>
+										<th class="numeric"><?php echo $tr->translate("DATE_PAYMENT");?></th>
+										<th class="numeric"><?php echo $tr->translate("AMOUNT_LATE");?></th>
+										<th class="numeric"><?php echo $tr->translate("AMOUNT_COLLECT");?></th>
+										<th class="numeric"><?php echo $tr->translate("PAYMENT");?></th>
+									</tr>
+								</thead>
 							<?php 
 								$db = new Report_Model_DbTable_DbloanCollect();
 								$rs = $db->getCustomerNearlyPayment();
@@ -155,33 +145,17 @@
 					</div>
    				</div>
 		</div>
-	</div>
-	
-	<!-- <span id ="mynavclose" style="font-size: 22px;cursor: pointer;display: none;background: #000088;text-align: center;color: #fff;border-radius: 4px;" onclick="openNav()">&#9776;</span> onclick="closeNav()"-->
-	<!-- <div id="mySidenav" class="sidenav" style=" width:185px;">
-	<a href="<?php //echo $this->baseUrl()."/loan/deposit/add"?>"  class="closebtn-makesale"  ><i class="fa fa-plus" aria-hidden="true"></i> <?php //echo $tr->translate("SALE_PROPERTY");?> </a> -->
-		<?php 
-// 		if($request->getModuleName()!='report'){
-// 				if($request->getModuleName()!='default' AND $action!='changepassword' ){
-// 				$dc=new Application_Model_Decorator();					
-// 				$class="current-left";					
-// 				$menu=$dc->getMenuLeft($arr_param_menu[$request->getModuleName()],$request->getControllerName(),$request->getModuleName());
-// 				if($menu) echo $menu;	
-// 		 }		
-// 		}		
-			?>
-			
-			 
+	</div>			 
 	<?php $kkk=0; if($kkk==1){?>
 	<script>
-	function openNav() {
-	    document.getElementById("mySidenav").style.width = "175px";
-	    $('#mynavclose').css('display','none');
-	}
-	function closeNav() {
-	    document.getElementById("mySidenav").style.width = "0";
-	    document.getElementById("mySidenav").style.height = "100%";
-	    $('#mynavclose').css('display','block');
-	}
+		function openNav() {
+		    document.getElementById("mySidenav").style.width = "175px";
+		    $('#mynavclose').css('display','none');
+		}
+		function closeNav() {
+		    document.getElementById("mySidenav").style.width = "0";
+		    document.getElementById("mySidenav").style.height = "100%";
+		    $('#mynavclose').css('display','block');
+		}
 	</script>
 	<?php }?>

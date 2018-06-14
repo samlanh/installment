@@ -34,7 +34,7 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			$link=array(
 					'module'=>'loan','controller'=>'newschedule','action'=>'view',
 			);
-			$link_info=array('module'=>'loan','controller'=>'newschedule','action'=>'edit',);
+			$link_info=array('module'=>'loan','controller'=>'newschedule','action'=>'index',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link_info,'sale_number'=>$link_info,'name_kh'=>$link_info,'land_address'=>$link_info,'total_capital'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
