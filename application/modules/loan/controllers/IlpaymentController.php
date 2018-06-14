@@ -49,7 +49,15 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 }
   function deleteAction(){
   		$id = $this->getRequest()->getParam("id");
+  		$id = empty($id)?0:$id;
   		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  		$db = new Loan_Model_DbTable_DbLoanILPayment();
+  		$payment_il = $db->getIlPaymentByID($id);
+  		if (!empty($payment_il)){
+  			if ($payment_il['is_closed']==1){
+  				Application_Form_FrmMessage::Sucessfull("Can not delete this record","/loan/ilpayment");
+  			}
+  		}
   		$delete_sms=$tr->translate('CONFIRM_DELETE');
 		echo "<script language='javascript'>
 		var txt;

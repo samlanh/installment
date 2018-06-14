@@ -743,6 +743,10 @@ public function exportFileToExcel($table,$data,$thead){
   		if(empty($receipt['name_kh'])){
   			$this->_redirect("/report/paramater");
   		}
+  		if ($receipt['is_closed']==1){
+  			Application_Form_FrmMessage::message("CANNOT_EDIT");
+  			echo "<script>window.close();</script>";	
+  		}
   	}else{
   		$this->_redirect("/report/paramater");
   	}
