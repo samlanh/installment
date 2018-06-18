@@ -14,6 +14,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		$where = " AND ".$from_date." AND ".$to_date;
 		$sql ='SELECT c.`id`,
 		    p.`project_name` as branch_name,
+			clie.client_number,
 			clie.`name_kh` AS client_name,
 			(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
 			pro.`land_address`,pro.`street`,c.date,c.create_date,c.note,c.`status`

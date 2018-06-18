@@ -546,7 +546,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     function addPaymenttoSale($data){
     	$dbtable = new Application_Model_DbTable_DbGlobal();
     	$receipt = $dbtable->getReceiptByBranch($data);
-    	$is_deposit='';
+    	$is_deposit='0';
     	if($data['schedule_opt']==1){$is_deposit=1;}//បញ្ចាក់ថាប្រាក់កក
     	$array = array(
     			'branch_id'			=>$data['branch_id'],

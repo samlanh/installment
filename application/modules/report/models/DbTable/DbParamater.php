@@ -1170,13 +1170,18 @@ function getAllBranch($search=null){
     	$where = " AND ".$from_date." AND ".$to_date;
     	return $db->fetchAll($sql.$where.$order);
     }
-    function geIncomeFromSale($search){
+    function geIncomeFromSale($search,$money_type=-1){
     	$db = $this->getAdapter();
     	$sql="SELECT SUM(crm.`recieve_amount`) AS recieve_amount FROM `ln_client_receipt_money` AS crm WHERE 1 ";
     	$where="";
+    	if($money_type>-1){
+    		$where.=" AND field3 = $money_type ";
+    	}
+    	
     	$from_date =(empty($search['start_date']))? '1': " crm.`date_pay` >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " crm.`date_pay` <= '".$search['end_date']." 23:59:59'";
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	$where.= " AND ".$from_date." AND ".$to_date;
+//     	echo $sql.$where."====<br />";
     	return $db->fetchRow($sql.$where);
     }
     function geOtherIncome($cate_id){

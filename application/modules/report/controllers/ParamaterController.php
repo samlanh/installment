@@ -292,7 +292,12 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->income = $db->getIncomeCategory($search);
   	$this->view->expense = $db->getExpenseCategory($search);
-  	$this->view->saleicome = $db->geIncomeFromSale($search);
+  	$this->view->saleicome = $db->geIncomeFromSale($search,null);
+  	
+  	$this->view->money_deposit = $db->geIncomeFromSale($search,1);
+  	$this->view->money_schedule = $db->geIncomeFromSale($search,0);
+  	$this->view->money_install = $db->geIncomeFromSale($search,3);
+  	
   
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
