@@ -28,7 +28,7 @@ class Loan_ChangeownerController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_NAME","PRICE","PAID_BEFORE","BALANCE","TO_CUSTOMER","NOTE","CHANGE_DATE","STATUS");
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","PRICE","PAID_BEFORE","BALANCE","TO_CUSTOMER","NOTE","CHANGE_DATE","STATUS");
 			
 			$link_info=array('module'=>'loan','controller'=>'changeowner','action'=>'index',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array(),0);

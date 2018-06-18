@@ -533,7 +533,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 							<legend><strong>'.$tr->translate("ADD_CLIENT").'</strong></legend>
 							<table style="margin: 0 auto; width: 100%;" cellspacing="10">
 								<tr>
-									<td>'.$tr->translate("CLIENT_NO").'</td>
+									<td>'.$tr->translate("CLIENT_NUM").'</td>
 									<td>'.$frm->getElement('client_no').'</td>
 									<td>'.$tr->translate("AGE").'</td>
 									<td>'.$frm->getElement('age').'</td>

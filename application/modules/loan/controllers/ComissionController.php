@@ -27,7 +27,7 @@ class Loan_ComissionController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","SALE_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_NAME","STREET","PRICE_SOLD","STAFF_NAME","COMMISSION","DATE","STATUS");
+			$collumns = array("PROJECT_NAME","SALE_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","SOLD_PRICE","STAFF_NAME","COMMISSION","DATE","STATUS");
 			$link=array(
 					'module'=>'loan','controller'=>'comission','action'=>'edit',
 			);

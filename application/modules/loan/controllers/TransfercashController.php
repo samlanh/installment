@@ -28,7 +28,7 @@ class Loan_TransfercashController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_NAME","TRANSFER_AMOUNT","BRANCH_NAME","PROPERTY_NAME","TRANSFER_DATE",
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","TRANSFER_AMOUNT","BRANCH_NAME","PROPERTY_CODE","TRANSFER_DATE",
 				"STATUS");
 			$link_info=array('module'=>'loan','controller'=>'transfercash','action'=>'edit',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array(),0);

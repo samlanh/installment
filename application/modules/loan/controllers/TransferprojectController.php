@@ -29,7 +29,7 @@ class Loan_TransferprojectController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_NAME","PRICE","PAID_BEFORE","BRANCH_NAME","PROPERTY_NAME","PRICE","PAID","BALANCE","CHANGE_DATE",
+			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_CODE","PRICE","PAID_BEFORE","BRANCH_NAME","PROPERTY_CODE","PRICE","PAID","BALANCE","CHANGE_DATE",
 				"STATUS");
 			$link=array(
 					'module'=>'loan','controller'=>'transferproject','action'=>'view',
