@@ -184,7 +184,6 @@ public function init()
  		$start_building->setAttribs(array(
  				'dojoType'=>'dijit.form.DateTextBox',
  				'class'=>'fullside',
- 				'required'=>true,
  				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
  		));
  		//$start_building->setValue(date("Y-m-d"));

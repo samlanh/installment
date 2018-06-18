@@ -41,9 +41,8 @@ public function init()
 				'class'=>'fullside',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				));
-		
-		$_date = date("Y-m-d");
-		$start_date_search->setValue($_date);
+		$from_date = $request->getParam("from_date_search");
+		$start_date_search->setValue($from_date);
 		$search = $request->getParam("to_date_search");
 		if(!empty($search))$start_date_search->setValue($request->getParam("from_date_search"));
 		
@@ -52,6 +51,7 @@ public function init()
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'dojoType'=>'dijit.form.DateTextBox','class'=>'fullside',
 		));
+		$_date = date("Y-m-d");
 		$to_date_search->setValue($_date);
 		$to_searhcdate = $request->getParam("to_date_search");
 		if(!empty($to_searhcdate))$to_date_search->setValue($request->getParam("to_date_search"));

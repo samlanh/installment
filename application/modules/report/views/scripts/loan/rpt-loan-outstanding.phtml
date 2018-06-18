@@ -1,5 +1,8 @@
-<?php $frm = $this->frm_search;
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+<?php 
+	$frm = $this->frm_search;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$key = new Application_Model_DbTable_DbKeycode();
+	$dataterm = $key->getKeyCodeMiniInv(TRUE);
 ?>
 <meta charset="utf-8">
 <script>
@@ -28,7 +31,7 @@ dojo.require("dijit.form.DateTextBox");
 	<div id="divPrint" style="width: 100%;">
 		<style>
 		.style{
-			line-height: 20px;font-size: 11px !important;
+			line-height: 25px;font-size: 11px !important;
 			font-family: 'Khmer OS Battambang';
 		}
 		table { page-break-inside:auto }
@@ -129,7 +132,13 @@ dojo.require("dijit.form.DateTextBox");
 								<td>&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
 								<td>&nbsp;<?php echo date("d-m-Y",strtotime($row['first_payment']));?>&nbsp;</td>
 								<td>&nbsp;<?php echo date("d-m-Y",strtotime($row['date_line']));?>&nbsp;</td>
-								<td>&nbsp;<?php echo $row['total_duration'];?>ខែ&nbsp;</td>
+								<td>&nbsp;<?php echo $row['total_duration']; 
+								if($row['payment_id']!=4){
+									echo $tr->translate("MONTH");
+								}else{
+									echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
+																		}?>
+								&nbsp;</td>
 								<td>&nbsp;<?php echo $row['paymenttype'];?>&nbsp;</td>
 								<td style="white-space:nowrap; text-align: right;">&nbsp;<?php echo number_format($total_receive,2);?>&nbsp;</td>
 								<td>&nbsp;<?php 

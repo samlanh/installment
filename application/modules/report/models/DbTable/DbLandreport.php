@@ -47,7 +47,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 if($search['branch_id']>0){
       	 	$where.=" AND branch_id = ".$search['branch_id'];
       	 }
-      	 if(!empty($search['co_id'])){
+      	 if(!empty($search['co_id']) AND $search['co_id']>-1){
       	 	$where.=" AND staff_id = ".$search['co_id'];
       	 }
       	 if($search['land_id']>0){
