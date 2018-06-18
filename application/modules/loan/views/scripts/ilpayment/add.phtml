@@ -1509,13 +1509,7 @@ function getDayString(num){
 	return days[num];
 }
 function doTotalByServ(){
-	totalReturn();//
-	total_payment = dijit.byId('total_payment').get('value');
-	total_payment=isNaN(total_payment)?0:total_payment;
-	dijit.byId('amount_receive').attr('value',total_payment);
-	totalReturn();//បាន Calling 2ដងព្រោះបើមិនធ្វើចេញពេលបញ្ចូលប្រាក់បង់បន្ថែម=>ប្រាក់បានបង់សរុបខុស
-}
-function totalReturn(){
+	//totalReturn();//
 	total_principal = dijit.byId('os_amount').get('value');//ប្រាក់ដើមត្រូវបង់
 	total_principal=isNaN(total_principal)?0:total_principal;
 	
@@ -1532,21 +1526,42 @@ function totalReturn(){
 	penalize_amount=isNaN(penalize_amount)?0:penalize_amount;
 
 	total_amount = parseFloat(total_principal)+parseFloat(total_interest)+parseFloat(service_charge)+parseFloat(penalize_amount)+parseFloat(extrapayment);
+	option_pay = dijit.byId('option_pay').get('value');
+	dijit.byId('total_payment').attr('value',total_amount);
+	dijit.byId('amount_receive').attr('value',total_amount);
+	totalReturn();
+}
+function totalReturn(){
+	option_pay = dijit.byId('option_pay').get('value');
+	total_principal = dijit.byId('os_amount').get('value');//ប្រាក់ដើមត្រូវបង់
+	total_principal=isNaN(total_principal)?0:total_principal;
+	
+	total_interest = dijit.byId('total_interest').get('value');
+	total_interest=isNaN(total_interest)?0:total_interest;
+
+	
+	if(option_pay==4){
+		extrapayment=0;
+		dijit.byId('extrapayment').attr('value',extrapayment);
+	}else{
+		extrapayment = dijit.byId('extrapayment').get('value');
+		extrapayment=isNaN(extrapayment)?0:extrapayment;
+	}
+	
+	service_charge = dijit.byId('service_charge').get('value');
+	service_charge=isNaN(service_charge)?0:service_charge;
+	
+	penalize_amount = dijit.byId('penalize_amount').get('value');
+	penalize_amount=isNaN(penalize_amount)?0:penalize_amount;
+
+	total_amount = parseFloat(total_principal)+parseFloat(total_interest)+parseFloat(service_charge)+parseFloat(penalize_amount)+parseFloat(extrapayment);
 	
 	receive_amount = dijit.byId('amount_receive').get('value');
-	option_pay = dijit.byId('option_pay').get('value');
+	
 	
 	begining_balance = $('#total_priciple_1').val();
-	if(option_pay==1){
-		/*if(receive_amount<=total_amount){
-			os_amount = receive_amount - service_charge - penalize_amount - total_interest;
-			if(os_amount>0){
-				ending_balance = begining_balance - os_amount;
-			}else{
-				ending_balance = begining_balance;
-			}
-			dijit.byId('priciple_amount').attr('value',ending_balance);//ប្រាក់ដើមនៅសល់បន្ទាប់ពីបង់			
-		}else{*/
+	
+	if(option_pay==1){	
 			 paid_principalall=0;
 			 paid_interestall = 0;
 			 remain_money = receive_amount-extrapayment-penalize_amount-service_charge;
@@ -1583,9 +1598,7 @@ function totalReturn(){
 			paid_principalall = paid_principalall + extrapayment; 
 			dijit.byId('priciple_amount').attr('value',dijit.byId("outstanding_balance").get("value")-paid_principalall);//អោយរកប្រាក់ដើមនៅសល់ពីបង់ត្រូវគឺត្រូវហើយ
 			total_amount = receive_amount ;
-			
 
-		//}
 	}else if(option_pay==3){
 		dijit.byId('extrapayment').attr('value',0);
 		dijit.byId('extrapayment').set("readOnly",true);
@@ -1596,9 +1609,29 @@ function totalReturn(){
 	    all_total = dijit.byId("sold_price").get("value")-(principal_paid+dijit.byId("total_pricipalpaid").get("value"));
 	    dijit.byId('priciple_amount').attr('value',all_total);
 	    total_amount = principal_paid+total_interest+penalize_amount;//good
-	}else{	
+	}else{
 	}
 	dijit.byId('total_payment').attr('value',total_amount);
+}
+function CalculateAlltotal(received_amount){
+	total_principal = dijit.byId('os_amount').get('value');//ប្រាក់ដើមត្រូវបង់
+	total_principal=isNaN(total_principal)?0:total_principal;
+	
+	total_interest = dijit.byId('total_interest').get('value');
+	total_interest=isNaN(total_interest)?0:total_interest;
+	
+	extrapayment = dijit.byId('extrapayment').get('value');
+	extrapayment=isNaN(extrapayment)?0:extrapayment;
+	
+	service_charge = dijit.byId('service_charge').get('value');
+	service_charge=isNaN(service_charge)?0:service_charge;
+	
+	penalize_amount = dijit.byId('penalize_amount').get('value');
+	penalize_amount=isNaN(penalize_amount)?0:penalize_amount;
+
+	total_amount = parseFloat(total_principal)+parseFloat(total_interest)+parseFloat(service_charge)+parseFloat(penalize_amount)+parseFloat(extrapayment);
+	dijit.byId('total_payment').attr('value',total_amount);
+	dijit.byId('amount_receive').attr('value',total_amount);
 }
 function loading(){
     document.getElementsByClassName("overlay")[0].style.display="block";
