@@ -443,6 +443,7 @@ function getAllBranch($search=null){
      			   c.hname_kh,
      			   c.dob_buywith,
      			   c.rid_no,
+     			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=c.sex limit 1) AS sexKh,
      			   (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=c.joint_doc_type limit 1) AS joint_doc_type,
      			   (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=c.client_d_type limit 1) AS client_d_type,
      			   c.p_nationality,
@@ -500,6 +501,7 @@ function getAllBranch($search=null){
 				     `prope_type`.`type_namekh`
 				   FROM `ln_properties_type` `prope_type`
 				   WHERE `prope_type`.`id` = `pp`.`property_type` LIMIT 1) AS `property_type_kh`,
+			`pp`.`land_size` AS `property_land_size`,
 			`pp`.`width` AS `property_width`,
 		    `pp`.`height` AS `property_height`,
 		    `pp`.`land_code` AS `property_code`,
