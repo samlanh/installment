@@ -1,6 +1,17 @@
 <?php 
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm_staff;
+
+$dbGB = new Application_Model_DbTable_DbGlobal();
+$logo = $this->baseUrl()."/images/logo.jpg";
+$branch_title = $tr->translate("BRAND_TITLE");
+if ($this->search['branch_id'] >0 ){
+	$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+	}
+	$branch_title = $branch['project_name'];
+}
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -34,9 +45,9 @@ dojo.require("dijit.form.DateTextBox");
 				</style>
 	        	<table width="100%" style="font-family:khmer;margin:0; padding:0;border:none;" >
 	            	<tr>
-	                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+	                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
 	                	<td width="60%" valign="top">
-	                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+	                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $branch_title;?></label></h2>
 	                	<h2 style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_STAFF");?></h2></td>
 	                    <td width="20%"></td>
 	                </tr> 

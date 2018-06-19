@@ -1,6 +1,17 @@
 <?php 
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm_property;
+
+$dbGB = new Application_Model_DbTable_DbGlobal();
+$logo = $this->baseUrl()."/images/logo.jpg";
+$branch_title = $tr->translate("BRAND_TITLE");
+if ($this->list_end_date['branch_id'] >0 ){
+	$branch = $dbGB->getAllBranchInfoByID($this->list_end_date['branch_id']);
+	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+	}
+	$branch_title = $branch['project_name'];
+}
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -59,10 +70,10 @@ $frm = $this->frm_property;
 	<div class="divFooter">
 	    <table width="100%" style="font-family:'Khmer OS Battambang';margin:0; padding:0;border:none;" >
 	        <tr>
-	          	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+	          	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
 	              <td width="60%" valign="top">
 	                <ul>
-	                	<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+	                	<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $branch_title;?></li>
 	                	<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("TABLE_PROPERTY");?></li>
 	                	<li style="text-align:center; font-size:16px;"><?php if(!empty($this->list_end_date['start_date'])){ echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
 		            </ul>

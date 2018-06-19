@@ -1,86 +1,3 @@
-<script type="text/javascript">
-	dojo.require("dojo.data.ObjectStore");
-	dojo.require("dijit.form.DateTextBox");
-dojo.ready(function(){
-	dijit.byId('province').attr('value',<?php echo $this->result['province'];?>);	
-	var district_data = new dojo.store.Memory({
-	       data: <?php print_r(Zend_Json::encode($this->district));?>
-	});
-	 
-	new dijit.form.FilteringSelect({
-	store: dojo.data.ObjectStore({objectStore: district_data}),
-	autoComplete: true,
-	query: {
-		pro_id:"<?php echo $this->result['province'];?>"
-	},            
-	required: false,		           
-	name: "district",
-	id: "district",
-	searchAttr: "name",
-	value: "<?php echo $this->result['district'];?>",
-	class: 'fullside',
-	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
-		onChange: function() {
-				filterCommune();
-	    }
-	}, "district");
-	
-
-	var commune_data = new dojo.store.Memory({
-	       data: <?php print_r(Zend_Json::encode($this->commune));?>
-	});
-	 
-	new dijit.form.FilteringSelect({
-	store: dojo.data.ObjectStore({objectStore: commune_data}),
-	autoComplete: true,
-	query: {
-		district_id: "<?php echo $this->result['district'];?>"
-	},            
-	required: false,		           
-	name: "commune",
-	id: "commune",
-	searchAttr: "name",
-	value: "<?php echo $this->result['commune'];?>",
-	class: 'fullside',
-	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
-		onChange: function() {
-			filterVillage();
-  }
-	}, "commune");
-
-	var village_data = new dojo.store.Memory({
-	       data: <?php print_r(Zend_Json::encode($this->village));?>
-	});
-	 
-	new dijit.form.FilteringSelect({
-	store: dojo.data.ObjectStore({objectStore: village_data}),
-	autoComplete: true,
-	query: {
-		commune_id:"<?php echo $this->result['commune'];?>"
-	},            
-	required: false,		           
-	name: "village",
-	id: "village",
-	searchAttr: "name",
-	value: "<?php echo $this->result['village'];?>",
-	class: 'fullside',
-	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
-		onChange: function() {
-}
-	}, "village");
-	
-});
-function filterDistrict(){
-	dijit.byId('district').query.pro_id = dijit.byId('province').get('value');
-}
-function filterCommune(){
-	dijit.byId('commune').query.district_id = dijit.byId('district').get('value');
-}
-function filterVillage(){
-	id =dijit.byId('commune').get('value');
-	dijit.byId('village').query.commune_id = dijit.byId('commune').get('value');
-}
-</script>
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_village;
@@ -88,6 +5,17 @@ function filterVillage(){
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
 	$frms=$this->frm_client;
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->result['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->result['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}
 ?>
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT_CLIENT");?></title>
@@ -130,9 +58,9 @@ function filterVillage(){
 	    	<td align="center">
 	        	<table width="100%" style="font-family:khmer;" style="margin:0; padding:0;border:none;" >
 	            	<tr>
-	                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="70px"></td>
+	                	<td width="20%"><img src="<?php echo $logo;?>" height="70px"></td>
 	                	<td width="60%" valign="top">
-	                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+	                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><label><?php echo $branch_title;?></label></h2>
 	                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><?php echo $tr->translate("REPORT_CLIENT");?></h2>
 	                	<h2 style="text-align:center; font-size:13px;"><?php if(!empty($this->result['start_date'])){ echo date("d-M-Y",strtotime($this->result['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->result['end_date']));}?></h2>
 	                	</td>
@@ -217,3 +145,86 @@ function filterVillage(){
 		</table>	
 	</div>
 </div>
+<script type="text/javascript">
+	dojo.require("dojo.data.ObjectStore");
+	dojo.require("dijit.form.DateTextBox");
+	dojo.ready(function(){
+	dijit.byId('province').attr('value',<?php echo $this->result['province'];?>);	
+	var district_data = new dojo.store.Memory({
+	       data: <?php print_r(Zend_Json::encode($this->district));?>
+	});
+	 
+	new dijit.form.FilteringSelect({
+	store: dojo.data.ObjectStore({objectStore: district_data}),
+	autoComplete: true,
+	query: {
+		pro_id:"<?php echo $this->result['province'];?>"
+	},            
+	required: false,		           
+	name: "district",
+	id: "district",
+	searchAttr: "name",
+	value: "<?php echo $this->result['district'];?>",
+	class: 'fullside',
+	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+		onChange: function() {
+				filterCommune();
+	    }
+	}, "district");
+	
+
+	var commune_data = new dojo.store.Memory({
+	       data: <?php print_r(Zend_Json::encode($this->commune));?>
+	});
+	 
+	new dijit.form.FilteringSelect({
+	store: dojo.data.ObjectStore({objectStore: commune_data}),
+	autoComplete: true,
+	query: {
+		district_id: "<?php echo $this->result['district'];?>"
+	},            
+	required: false,		           
+	name: "commune",
+	id: "commune",
+	searchAttr: "name",
+	value: "<?php echo $this->result['commune'];?>",
+	class: 'fullside',
+	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+		onChange: function() {
+			filterVillage();
+  }
+	}, "commune");
+
+	var village_data = new dojo.store.Memory({
+	       data: <?php print_r(Zend_Json::encode($this->village));?>
+	});
+	 
+	new dijit.form.FilteringSelect({
+	store: dojo.data.ObjectStore({objectStore: village_data}),
+	autoComplete: true,
+	query: {
+		commune_id:"<?php echo $this->result['commune'];?>"
+	},            
+	required: false,		           
+	name: "village",
+	id: "village",
+	searchAttr: "name",
+	value: "<?php echo $this->result['village'];?>",
+	class: 'fullside',
+	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+		onChange: function() {
+}
+	}, "village");
+	
+});
+function filterDistrict(){
+	dijit.byId('district').query.pro_id = dijit.byId('province').get('value');
+}
+function filterCommune(){
+	dijit.byId('commune').query.district_id = dijit.byId('district').get('value');
+}
+function filterVillage(){
+	id =dijit.byId('commune').get('value');
+	dijit.byId('village').query.commune_id = dijit.byId('commune').get('value');
+}
+</script>

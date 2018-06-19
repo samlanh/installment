@@ -12,6 +12,18 @@
 	$free_day=$key_code['value'];
 	$intest_rate = 2;
 	
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}
+	
 // 	$db_keycode = new Application_Model_DbTable_DbKeycode();
 // 	$key_code= $db_keycode->getSystemSetting(22);
 // 	$free_day=$key_code['value'];	
@@ -79,12 +91,12 @@
 	        	<div class="divFooter">
 	        	<table width="100%" style="font-family:khmer;margin:0 auto;padding:0px; border:none;">
 	            	<tr>
-	                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="70px"></td>
+	                	<td width="20%"><img src="<?php echo $logo;?>" height="70px"></td>
 	                	<td width="60%" valign="top">
 	                	<ul>
-                			<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+                			<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $branch_title;?></li>
                 			<li style="text-align:center; font-size:15px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_LOAN_COLLECT");?></li>
-                			<li style="text-align:center; font-size:15px;"><?php if(!empty($this->list_end_date['start_date'])){ echo date("D-d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
+                			<li style="text-align:center; font-size:15px;"><?php if(!empty($this->search['start_date'])){ echo date("D-d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></li>
                 		</ul>
                     </td>
 	                    <td width="20%"></td>

@@ -2,6 +2,17 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate("REPORT_EXPECT_INCOME"));
 	$frm = $this->frm_search;
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -55,12 +66,12 @@ dojo.require("dijit.form.DateTextBox");
 			        	<div class="divFooter">
 				        	<table width="100%" style="font-family: 'Khmer OS Battambang';margin:0; padding:0;border:none;">
 				            	<tr>
-				                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+				                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
 				                	<td width="60%" valign="top">
 				                		<ul>
-				                			<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+				                			<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
 				                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_EXPECT_INCOME");?></li>
-				                			<li style="text-align:center; font-size:14px;"><?php if (!empty($this->list_end_date['start_date'])) { echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
+				                			<li style="text-align:center; font-size:14px;"><?php if (!empty($this->search['start_date'])) { echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></li>
 				                		</ul>
 				                	</td>
 				                    <td width="20%"></td>

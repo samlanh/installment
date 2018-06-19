@@ -53,7 +53,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	}
   	$db  = new Report_Model_DbTable_DbLandreport();
   	$this->view->date_show=$search['end_date'];
-  	$this->view->list_end_date=$search;
+  	$this->view->search=$search;
   	$row = $dbs->getAllLnClient($search);
   	$this->view->tran_schedule=$row;
   	
@@ -126,6 +126,8 @@ class Report_LoanController extends Zend_Controller_Action {
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   	$this->view->list_end_date = $search["end_date"];
   	
+  	$this->view->search = $search;
+  	
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
@@ -158,6 +160,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	  		);
 	  	}
 	  	$this->view->fordate = $search['end_date'];
+	  	$this->view->search = $search;
 	  	$rs= $db->getAllOutstadingLoan($search);
 	  	$frm = new Loan_Form_FrmSearchLoan();
 	  	$frms = $frm->AdvanceSearch();
@@ -166,6 +169,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	  	Application_Model_Decorator::removeAllDecorator($frms);
 	  	$this->view->frm_search = $frms;
 	  	$this->view->outstandloan = $rs;
+	  	
   }
   
   
@@ -225,6 +229,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	$this->view->LoanCollectionco_list =$db->getALLLoanCollectionco($search);
 	$this->view->date_show=$search['end_date'];
 	$this->view->start_date=$search['start_date'];
+	
   	$frm = new Loan_Form_FrmSearchGroupPayment();
   	$fm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($fm);
@@ -483,7 +488,7 @@ public function exportFileToExcel($table,$data,$thead){
  				'schedule_opt'	=> -1,
  				'status'=>-1,);
  	}
- 	$this->view->list_end_date=$search;
+ 	$this->view->search=$search;
  	$db  = new Report_Model_DbTable_DbLandreport();
  	$this->view->LoanCollectionco_list =$db->getALLLoanExpectIncome($search);
  	
@@ -511,7 +516,7 @@ public function exportFileToExcel($table,$data,$thead){
  		);
  	}
  	$this->view->loantotalcollect_list =$db->getALLLoanPayment($search);
- 	$this->view->list_end_date=$search;
+ 	$this->view->search=$search;
  	$frm = new Loan_Form_FrmSearchLoan();
  	$frm = $frm->AdvanceSearch();
  	Application_Model_Decorator::removeAllDecorator($frm);

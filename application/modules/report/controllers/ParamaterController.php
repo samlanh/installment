@@ -24,6 +24,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'search_status'=>-1);
   	}
   	$this->view->staff_list = $db->getAllstaff($search);
+  	$this->view->search = $search;
   	$frm=new Other_Form_FrmStaff();
   	$row=$frm->FrmAddStaff();
   	Application_Model_Decorator::removeAllDecorator($row);
@@ -141,7 +142,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'end_date'=>date('Y-m-d'),
   		);
   	}
-  	$this->view->list_end_date=$search;
+  	$this->view->search=$search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllIncome($search);
   	 
@@ -165,7 +166,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
     		'end_date'=>date('Y-m-d'),
     	);
     }
-    $this->view->list_end_date=$search;
+    $this->view->search=$search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllExpense($search);
   
@@ -191,7 +192,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'payment_method'=>-1,
   		);
   	}
-  	$this->view->list_end_date=$search;
+  	$this->view->search=$search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllIncome($search);
   	$this->view->rowExpense = $db->getAllExpense($search);
@@ -248,6 +249,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getSaleHistory($search);
   	
+  	$this->view->search = $search;
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);

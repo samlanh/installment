@@ -1,6 +1,16 @@
 <?php $frm = $this->frm_search;
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 
+$dbGB = new Application_Model_DbTable_DbGlobal();
+$logo = $this->baseUrl()."/images/logo.jpg";
+$branch_title = $tr->translate("BRAND_TITLE");
+if ($this->rs['branch_id'] >0 ){
+	$branch = $dbGB->getAllBranchInfoByID($this->rs['branch_id']);
+	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+	}
+	$branch_title = $branch['project_name'];
+}
 ?>
 <meta charset="utf-8">
 <script>
@@ -48,7 +58,7 @@ img.view{height: 85px !important;}
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 							<tr>
 								<td width="25%">
-									<img class="view" style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+									<img class="view" style="height:75px;" src="<?php echo $logo;?>">
 								</td>					
 								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
 									<div style="line-height:10px;"><strong style="font-size: 18px;">OFFICIAL RECEIPT</strong></div>

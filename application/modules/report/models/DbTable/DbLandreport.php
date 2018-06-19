@@ -1922,9 +1922,9 @@ function updatePaymentStatus($data){
       	if($search['client_name']>0){
       		$where.=" AND `group_id`= ".$search['client_name'];
       	}
-      	if($search['branch_id']>0){
-      		$where.=" AND `branch_id`= ".$search['branch_id'];
-      	}
+//       	if($search['branch_id']>0){
+//       		$where.=" AND `branch_id`= ".$search['branch_id'];
+//       	}
       	if($search['land_id']>0){
       		$where.=" AND `land_id`= ".$search['land_id'];
       	}      	
