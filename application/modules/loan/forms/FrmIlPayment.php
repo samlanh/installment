@@ -316,8 +316,9 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		
 		$_note = new Zend_Dojo_Form_Element_TextBox('note');
 		$_note->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
+				'style'=>'min-height:50px;'
 				//'required' =>'true'
 		));
 		
