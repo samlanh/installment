@@ -591,6 +591,7 @@ public function exportFileToExcel($table,$data,$thead){
  	}
  	$this->view->loanrelease_list=$db->getAllLoan($search);
  	$this->view->list_end_date=$search;
+ 	$this->view->search = $search;
  	$this->view->branch_id = $search['branch_id'];
  	 
  	$frm = new Loan_Form_FrmSearchLoan();

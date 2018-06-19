@@ -32,6 +32,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$sql = 'select br_id as id,project_name as name from ln_project where 1 and project_name!="" ORDER BY br_id DESC ';
 		return $db->fetchAll($sql);
 	}
+	function  getAllBranchInfoByID($id){
+		$db = $this->getAdapter();
+		$sql = "select * from ln_project where 1 and project_name!='' AND br_id = $id ORDER BY br_id DESC ";
+		return $db->fetchRow($sql);
+	}
 	public function getReceiptnumber($branch_id=1){
 		$this->_name='ln_client_receipt_money';
 		$db = $this->getAdapter();
