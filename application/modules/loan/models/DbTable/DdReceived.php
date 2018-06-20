@@ -17,7 +17,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 			clie.client_number,
 			clie.`name_kh` AS client_name,
 			(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
-			pro.`land_address`,pro.`street`,c.date,c.create_date,c.note,c.`status`
+			pro.`land_address`,pro.`street`,c.date,c.create_date,c.note,c.`status`,"ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ"
 			FROM `ln_receiveplong` AS c ,`ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE p.`br_id` = c.`branch_id` AND pro.`id` = c.`house_id` AND
@@ -50,6 +50,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 					'date'		  => $data['date'],
 					'house_id'	  => $data['house_id'],
 					'note'		  => $data['reason'],
+					'layout_type' => $data['plong_type'],
 					'user_id'	  => $this->getUserId(),
 					'status'	  =>1,
 					'create_date'=>date("Y-m-d")
@@ -70,6 +71,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 					'date'		  => $data['date'],
 					'house_id'	  => $data['house_id'],
 					'note'		  => $data['reason'],
+					'layout_type' => $data['plong_type'],
 					'user_id'	  => $this->getUserId(),
 					'status'	  =>1,
 					'create_date'=>date("Y-m-d")
@@ -98,6 +100,62 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		FROM `ln_sale` AS s
 		WHERE s.`is_completed` =0 AND (s.`is_cancel` =0 ".$sale." ) AND s.`branch_id` =".$branch_id;
 		return $db->fetchAll($sql);
+	}
+	function getLayoutType(){
+		$db = $this->getAdapter();
+		$sql="SELECT DISTINCT rp.`layout_type` AS `name`,rp.`layout_type` AS `id`  FROM `ln_receiveplong` AS rp WHERE rp.`status`=1 AND rp.`layout_type` !='' ORDER BY rp.layout_type ASC";
+		return $db->fetchAll($sql);
+	}
+	function getRecivePlongInfo($id){
+		$db = $this->getAdapter();
+		$sql="SELECT 
+		cl.name_kh AS client_namekh,
+		cl.name_en AS client_nameen,
+		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = cl.`sex` AND v.`type`=11 LIMIT 1 ) AS sexKh,
+		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = cl.`client_d_type` AND v.`type`=23 LIMIT 1 ) AS client_d_typekh,
+		cl.`nation_id`,
+		cl.`house`,
+		cl.`street`,
+		(SELECT p.province_kh_name FROM `ln_province` AS p WHERE p.province_id = cl.`pro_id` LIMIT 1) AS province_kh_name,
+		(SELECT d.district_namekh FROM `ln_district` AS d WHERE d.dis_id = cl.`dis_id` LIMIT 1) AS district_namekh,
+		(SELECT com.commune_namekh FROM `ln_commune` AS com WHERE com.com_id = cl.`com_id` LIMIT 1) AS commune_namekh,
+		(SELECT vil.village_namekh FROM `ln_village` AS vil WHERE vil.vill_id = cl.`village_id` LIMIT 1) AS village_namekh,
+		(SELECT CONCAT(pro.land_address,'-',pro.street) FROM `ln_properties` AS pro WHERE pro.id = s.`house_id` LIMIT 1) AS propertyinfo,
+		c.*
+		 FROM `ln_receiveplong` AS c,
+		`ln_sale` AS s,
+		`ln_client` AS cl
+		  WHERE 
+		  s.`id` = c.`sale_id`
+		  AND cl.`client_id` = s.`client_id`
+		  AND c.`id`=5 LIMIT 1";
+		return $db->fetchRow($sql);
+	}
+	
+	function getSaleInfo($id){
+		$db = $this->getAdapter();
+		$sql="
+			SELECT 
+			cl.name_kh AS client_namekh,
+			cl.name_en AS client_nameen,
+			(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = cl.`sex` AND v.`type`=11 LIMIT 1 ) AS sexKh,
+			(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = cl.`client_d_type` AND v.`type`=23 LIMIT 1 ) AS client_d_typekh,
+			cl.`nation_id`,
+			cl.`house`,
+			cl.`street`,
+			(SELECT p.province_kh_name FROM `ln_province` AS p WHERE p.province_id = cl.`pro_id` LIMIT 1) AS province_kh_name,
+			(SELECT d.district_namekh FROM `ln_district` AS d WHERE d.dis_id = cl.`dis_id` LIMIT 1) AS district_namekh,
+			(SELECT com.commune_namekh FROM `ln_commune` AS com WHERE com.com_id = cl.`com_id` LIMIT 1) AS commune_namekh,
+			(SELECT vil.village_namekh FROM `ln_village` AS vil WHERE vil.vill_id = cl.`village_id` LIMIT 1) AS village_namekh,
+			CONCAT(p.land_address,'-',p.street) AS propertyInfo,
+			s.* 
+			FROM `ln_sale` AS s,
+			`ln_client` AS cl,
+			`ln_properties` AS p
+			WHERE cl.`client_id` = s.`client_id`
+			AND p.`id` = s.`house_id` AND s.`id` =$id LIMIT 1
+		";
+		return $db->fetchRow($sql);
 	}
 }
 

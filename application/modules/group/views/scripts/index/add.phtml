@@ -319,7 +319,10 @@ input.btn_borwse_image {
 			             </div>
 			             <div class="col-md-4 col-sm-4 col-xs-12">
 							<div class="form-group">
-			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CONTACT_INFO");?> 
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name">
+			                   <i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CONTACT_INFO");?> 
+			                   <input type="button" value="" tabindex="2" label="<?php echo $tr->translate('COPY_ADDRESS');?>" id="copy_add" dojoType="dijit.form.Button" name="copy_add"
+						 		iconClass="dijitIconCopy" /> 
 			                   </label>
 			                </div>
 			                <div class="form-group">
@@ -453,8 +456,24 @@ var adistrict_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json
 var dcommune_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var qvillage_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 
-
+function CopyAddress(){
+	house = dijit.byId('house').get('value');
+	street = dijit.byId('street').get('value');
+	province = dijit.byId('province').get('value');
+	district = dijit.byId('district').get('value');
+    commune_id = dijit.byId('commune').get('value');
+    village = dijit.byId('village').get('value');
+   
+    dijit.byId('ghouse').attr('value',house);
+    dijit.byId('dstreet').attr('value',street);
+    dijit.byId('cprovince').attr('value',province);
+    dfilterDistrict(district);
+    
+}
 dojo.ready(function(){
+	$("#copy_add").click(function(){
+		CopyAddress();
+	});
 	
 	try{
 	new dijit.form.FilteringSelect({
@@ -706,7 +725,7 @@ function filterVillage(){
 	});
 }
 url_getdistrict = '<?php echo $this->url(array('module'=>'other','controller'=>'district','action'=>'get-district'));?>';
-function dfilterDistrict(){
+function dfilterDistrict(value=null){
 	cpro_id = dijit.byId('cprovince').get('value');
 	if(cpro_id==0){
 		return false;}
@@ -719,6 +738,14 @@ function dfilterDistrict(){
 		load: function(data) {	
 			adistrict_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('adistrict').set('store', adistrict_store);
+
+		    if(value!=null){
+		    	 dijit.byId('adistrict').set('value', value);
+		    	 commune_id = dijit.byId('commune').get('value');
+			     dfilterCommune(commune_id);
+			    	 	
+		    }
+		    
 		},
 		error: function(err) {
 			alert(err);
@@ -726,7 +753,7 @@ function dfilterDistrict(){
 	});	
 }
 url_getcommune = '<?php echo $this->url(array('module'=>'other','controller'=>'commune','action'=>'get-commune'));?>';
-function dfilterCommune(){
+function dfilterCommune(value=null){
 	adistict_id = dijit.byId('adistrict').get('value');
 	if(adistict_id==0){
 		return false;}
@@ -739,6 +766,11 @@ function dfilterCommune(){
 		load: function(data) {	
 			dcommune_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('dcommune').set('store', dcommune_store);
+		    if(value!=null){
+		    	 dijit.byId('dcommune').set('value', value);
+		    	 village = dijit.byId('village').get('value');
+			     dfilterVillage(village);
+		    }
 		},
 		error: function(err) {
 			alert(err);
@@ -746,7 +778,7 @@ function dfilterCommune(){
 	});
 }
 url_getvillage = '<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'get-allvillage'));?>';
-function dfilterVillage(){
+function dfilterVillage(value=null){
 	dcommune_id = dijit.byId('dcommune').get('value');
 	if(dcommune_id==0){
 		return false;}
@@ -759,6 +791,10 @@ function dfilterVillage(){
 		load: function(data) {	
 			qvillage_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('qvillage').set('store', qvillage_store);
+
+		    if(value!=null){
+		    	 dijit.byId('qvillage').set('value', value);
+		    }
 		},
 		error: function(err) {
 			alert(err);

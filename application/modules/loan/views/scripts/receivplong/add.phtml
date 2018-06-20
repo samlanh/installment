@@ -47,6 +47,13 @@ $frm = $this->frm_loan;
 	                    	<input id="sale_client" />
 	                   </div>
 	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("LAYOUT_TYPE")?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="plong_type" />
+	                   </div>
+	                </div>
 	              	<div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
 	                   </label>
@@ -80,13 +87,400 @@ $frm = $this->frm_loan;
              	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
              		<input type="submit" name="savenew" id="savenew" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="submitButton" dojoType="dijit.form.Button"
 					 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
+					 <input type="button" value="រក្សាទុក & បោះពុម្ព" label="<?php echo $tr->translate('SAVEPRINT');?>" id="saveprint" dojoType="dijit.form.Button" 
+					iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="getSaleInfo();displayNone();"/>
     			</div>
     		</div>
 		</form>
 	</div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("LAYOUT_TYPE")?>'"  id="frm_plong_type" >
+		<form id="form_propertytype" >
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="newplong_type" name="newplong_type" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addPlongType();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<div class="dijitHidden" style="width: 25cm !important; height: 12cm ; padding: 0px; margin: 0px;">
+	<div style="width: 25cm !important; " data-dojo-type="dijit.Dialog" style="text-align:center;" data-dojo-props="title:'បោះពុម្ភ វិក័យបត្រ', onCancel:hideDialog" id="frm_receipt">
+		<div id="rpt_print" >
+			<style>
+				body {
+				    position: relative;
+				}
+				.border {
+				        border: none;
+				    display: block;
+				    width: 100%;
+				    height: 1px;
+				    margin-bottom: 10px;
+				}
+				span.border-bottom-head {
+				    display: inline-block;
+				    border-bottom: dotted 1px #000;
+				    width: 55%;
+				}
+				span.labelBorderBottom {
+				    border-bottom: dashed 1px #000;
+				    min-width: 25px;
+				    display: inline-block;
+					line-height: 11px;
+					text-align: center;
+				}
+	  		 </style>
+	  		 <table width="100%" style="font-size:12px; font-family:Tahoma,'Khmer OS Battambang'; position: relative;"> 
+					<tr class="head">
+						<td colspan="2" valign="middle" style="    top: 50px;  position: absolute;">
+							<img alt="" src="<?php echo $this->baseUrl()."/images/logo.jpg"?>" style="max-height: 130px;display: inline-block;margin-right: 10px;">
+					   </td>
+					</tr>
+					<tr class="head">
+					   <td colspan="3" align="center">
+					   		<h2 style="font-size:16px;     line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';" >ព្រះរាជាណាចក្រកម្ពុជា</h2>
+					   		<h2 style="font-size:14px; margin-right: 7px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Battambang';">ជាតិ សាសនា ព្រះមហាក្សត្រ</h2>
+					   		<img alt="" src="<?php echo $this->baseUrl()."/images/sign.PNG"?>" style=" width: 120px; margin-right: 24px;">
+					   </td>
+					</tr>
+					
+						
+						<tr class="head">
+						   <td colspan="3" align="center">
+						   		<br />
+						   		<h2 style="font-size:14px; line-height: 20px;     margin: 0; font-weight: initial; font-family:'Khmer OS Muol Light';"><span >ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ</span></h2>
+						   		<span style="font-family:'Khmer OS Muol Light'; text-align:center; min-width: 100%; display: inline-block;">សូមបញ្ជាក់ថា</span>
+						   </td>
+						</tr>
+						<tr>
+             				<td colspan="3">
+             					
+             					<br />
+             					<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
+									<tr>
+										<td>បានប្រគល់</td>
+										<td width="95%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="layouttype"><?php //echo $row['layout_type']."(".$row['propertyinfo'].")"?></span></span></td>
+									</tr>
+									<tr>
+										<td colspan="2" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" >&nbsp;<?php //echo $row['layout_type']?></span></span></td>
+									</tr>
+									<tr>
+										<td colspan="2" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" >&nbsp;<?php //echo $row['layout_type']?></span></span></td>
+									</tr>
+								</table>
+             					<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
+									<tr>
+										<td>ជូនអតិថិជន ឈ្មោះ</td>
+										<td width="60%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientName"><?php //echo $row['client_namekh']?></span></span></td>
+										<td>&nbsp;ភេទ&nbsp;</td>
+										<td width="10%">​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="LBclientGender"><?php //echo $row['sexKh']?>&nbsp;</span></span></td>
+										<td>&nbsp;កាន់<span id="lbldoc_type"></span><?php //echo $row['client_d_typekh']?>&nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="LBclientNational">&nbsp;<?php //echo $row['nation_id']?>&nbsp;</span></span>
+										</td>
+									</tr>
+								</table>
+								<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
+									<tr>
+										<td>មានទីលំនៅ ផ្ទះលេខ ឈ្មោះ</td>
+										<td width="10%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="lbl_house"><?php //echo $row['house']?></span></span></td>
+										<td>&nbsp;ផ្លូវ&nbsp;</td>
+										<td width="10%">​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblstreet"><?php //echo $row['street']?>&nbsp;</span></span></td>
+										<td>&nbsp;ភូមិ&nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblvillage">&nbsp;<?php //echo $row['village_namekh']?>&nbsp;</span></span>
+										</td>
+										<td>&nbsp;ឃុំ-សង្កាត់&nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblcommune">&nbsp;<?php //echo $row['commune_namekh']?>&nbsp;</span></span>
+										</td>
+										<td>&nbsp;ស្រុក-ខណ្ឌ &nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lbldistrict">&nbsp;<?php //echo $row['district_namekh']?>&nbsp;</span></span>
+										</td>
+										<td>&nbsp;ខេត្ត-ក្រុង &nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblprovince">&nbsp;<?php //echo $row['province_kh_name']?>&nbsp;</span></span>
+										</td>
+										<td>។</td>
+									</tr>
+								</table>
+								<br />
+             				</td>
+             			</tr>
+						<tr>
+							<td colspan="3" align="center">
+								<table  style=" text-align: center; width:100%;">
+									<tr style="font-size: 12px;">
+										<td style="width:50%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;"><td>&nbsp;</td>
+										<td style=" width:50%;  text-align:center; font-size: 14px; font-weight:200;">ធ្វើនៅថ្ងៃទី<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;</span>ខែ<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;</span>ឆ្នាំ <span class="labelBorderBottom" style="min-width: 15%;">&nbsp;</span><br /><br /><br /></td>
+								   </tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3" align="center">
+								<table  style=" text-align: center; width:100%;">
+									<tr style="font-size: 12px;">
+										<td style="width:25%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;">&nbsp;ស្នាមមេដៃអ្នកទទួល&nbsp;</td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light'; font-weight:200;">សាក្សី</td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light'; font-weight:200;">ស្នាមមេដៃអ្នកប្រគល់</td>
+								   </tr>
+								   <tr>
+								   		<td style="height: 40px;">&nbsp;</td>
+								   </tr>
+								   <tr style="font-size: 12px;">
+										<td style="width:25%;  text-align:center; border-bottom:solid 1px #000; font-size: 14px; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;">&nbsp;<?php //echo $row['client_namekh']?>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center;  border-bottom:solid 1px #000; font-size: 14px; font-family:'Khmer OS Muol Light'; font-weight:200;"></td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center;  border-bottom:solid 1px #000; font-size: 14px; font-family:'Khmer OS Muol Light'; font-weight:200;"></td>
+								   </tr>
+								</table>
+								<br />
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3" style="border-top:2px dashed #000;" >
+								<br />
+								<br />
+							</td>
+						</tr>
+		  		 	</table>
+		</div>
+		
+		<table width="100%">
+			<tr>
+				<td align="center">
+					<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+					<input type="button" value="បិទ" label="បិទ" id="close" dojoType="dijit.form.Button" 
+						iconClass="dijitEditorIcon dijitEditorIconCancel" onclick="hideDialog();"/>
+					<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="print" dojoType="dijit.form.Button" 
+						iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="print();"/>
+				<td>
+			<tr>
+		</table>
+		<div id="rpt_print1" >
+			<style>
+				body {
+				    position: relative;
+				}
+				.border {
+				        border: none;
+				    display: block;
+				    width: 100%;
+				    height: 1px;
+				    margin-bottom: 10px;
+				}
+				span.border-bottom-head {
+				    display: inline-block;
+				    border-bottom: dotted 1px #000;
+				    width: 55%;
+				}
+				span.labelBorderBottom {
+				    border-bottom: dashed 1px #000;
+				    min-width: 25px;
+				    display: inline-block;
+					line-height: 11px;
+					text-align: center;
+				}
+	  		 </style>
+	  		 <table width="100%" style="font-size:12px; font-family:Tahoma,'Khmer OS Battambang'; position: relative;"> 
+					<tr class="head">
+						<td colspan="2" valign="middle" style="    top: 50px;  position: absolute;">
+							<img alt="" src="<?php echo $this->baseUrl()."/images/logo.jpg"?>" style="max-height: 130px;display: inline-block;margin-right: 10px;">
+					   </td>
+					</tr>
+					<tr class="head">
+					   <td colspan="3" align="center">
+					   		<h2 style="font-size:16px;     line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';" >ព្រះរាជាណាចក្រកម្ពុជា</h2>
+					   		<h2 style="font-size:14px; margin-right: 7px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Battambang';">ជាតិ សាសនា ព្រះមហាក្សត្រ</h2>
+					   		<img alt="" src="<?php echo $this->baseUrl()."/images/sign.PNG"?>" style=" width: 120px; margin-right: 24px;">
+					   </td>
+					</tr>
+					
+						
+						<tr class="head">
+						   <td colspan="3" align="center">
+						   		<br />
+						   		<h2 style="font-size:14px; line-height: 20px;     margin: 0; font-weight: initial; font-family:'Khmer OS Muol Light';"><span >ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ</span></h2>
+						   		<span style="font-family:'Khmer OS Muol Light'; text-align:center; min-width: 100%; display: inline-block;">សូមបញ្ជាក់ថា</span>
+						   </td>
+						</tr>
+						<tr>
+             				<td colspan="3">
+             					
+             					<br />
+             					<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
+									<tr>
+										<td>បានប្រគល់</td>
+										<td width="95%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="layouttype1"><?php //echo $row['layout_type']."(".$row['propertyinfo'].")"?></span></span></td>
+									</tr>
+									<tr>
+										<td colspan="2" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" >&nbsp;<?php //echo $row['layout_type']?></span></span></td>
+									</tr>
+									<tr>
+										<td colspan="2" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" >&nbsp;<?php //echo $row['layout_type']?></span></span></td>
+									</tr>
+								</table>
+             					<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
+									<tr>
+										<td>ជូនអតិថិជន ឈ្មោះ</td>
+										<td width="60%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientName1"><?php //echo $row['client_namekh']?></span></span></td>
+										<td>&nbsp;ភេទ&nbsp;</td>
+										<td width="10%">​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="LBclientGender1"><?php //echo $row['sexKh']?>&nbsp;</span></span></td>
+										<td>&nbsp;កាន់<span id="lbldoc_type1"></span><?php //echo $row['client_d_typekh']?>&nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="LBclientNational1">&nbsp;<?php //echo $row['nation_id']?>&nbsp;</span></span>
+										</td>
+									</tr>
+								</table>
+								<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
+									<tr>
+										<td>មានទីលំនៅ ផ្ទះលេខ ឈ្មោះ</td>
+										<td width="10%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="lbl_house1"><?php //echo $row['house']?></span></span></td>
+										<td>&nbsp;ផ្លូវ&nbsp;</td>
+										<td width="10%">​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblstreet1"><?php //echo $row['street']?>&nbsp;</span></span></td>
+										<td>&nbsp;ភូមិ&nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblvillage1">&nbsp;<?php //echo $row['village_namekh']?>&nbsp;</span></span>
+										</td>
+										<td>&nbsp;ឃុំ-សង្កាត់&nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblcommune1">&nbsp;<?php //echo $row['commune_namekh']?>&nbsp;</span></span>
+										</td>
+										<td>&nbsp;ស្រុក-ខណ្ឌ &nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lbldistrict1">&nbsp;<?php //echo $row['district_namekh']?>&nbsp;</span></span>
+										</td>
+										<td>&nbsp;ខេត្ត-ក្រុង &nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblprovince1">&nbsp;<?php //echo $row['province_kh_name']?>&nbsp;</span></span>
+										</td>
+										<td>។</td>
+									</tr>
+								</table>
+								<br />
+             				</td>
+             			</tr>
+						<tr>
+							<td colspan="3" align="center">
+								<table  style=" text-align: center; width:100%;">
+									<tr style="font-size: 12px;">
+										<td style="width:50%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;"><td>&nbsp;</td>
+										<td style=" width:50%;  text-align:center; font-size: 14px; font-weight:200;">ធ្វើនៅថ្ងៃទី<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;</span>ខែ<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;</span>ឆ្នាំ <span class="labelBorderBottom" style="min-width: 15%;">&nbsp;</span><br /><br /><br /></td>
+								   </tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3" align="center">
+								<table  style=" text-align: center; width:100%;">
+									<tr style="font-size: 12px;">
+										<td style="width:25%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;">&nbsp;ស្នាមមេដៃអ្នកទទួល&nbsp;</td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light'; font-weight:200;">សាក្សី</td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light'; font-weight:200;">ស្នាមមេដៃអ្នកប្រគល់</td>
+								   </tr>
+								   <tr>
+								   		<td style="height: 40px;">&nbsp;</td>
+								   </tr>
+								   <tr style="font-size: 12px;">
+										<td style="width:25%;  text-align:center; border-bottom:solid 1px #000; font-size: 14px; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;">&nbsp;<?php //echo $row['client_namekh']?>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center;  border-bottom:solid 1px #000; font-size: 14px; font-family:'Khmer OS Muol Light'; font-weight:200;"></td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center;  border-bottom:solid 1px #000; font-size: 14px; font-family:'Khmer OS Muol Light'; font-weight:200;"></td>
+								   </tr>
+								</table>
+								<br />
+								<br />
+							</td>
+						</tr>
+		  		 	</table>
+		</div>
+	</div>
+</div>
 <script type="text/javascript">
+function displayNone(){
+	document.getElementById('rpt_print1').style.display="none";
+}
+var	url_getSaleInfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'receivplong','action'=>'getsaleinfo'));?>';
+function getSaleInfo(){
+	sale_client = dijit.byId('sale_client').get('value');
+	if(sale_client==0){
+		return false;}
+	if(dijit.byId('add_cancel').validate()){
+		dojo.xhrPost({
+			url:url_getSaleInfo,	
+			content:{ 
+				'sale_client': sale_client
+			},
+			handleAs:"json",
+			load: function(data) {	
+				
+				document.getElementById('layouttype').innerHTML = dijit.byId('plong_type').attr('displayedValue')+' ('+data.propertyInfo+')';
+				document.getElementById('LBclientName').innerHTML = data.client_namekh;
+				document.getElementById('LBclientGender').innerHTML = data.sexKh;
+				document.getElementById('lbldoc_type').innerHTML = data.client_d_typekh;
+				document.getElementById('LBclientNational').innerHTML = data.nation_id;
+				document.getElementById('lbl_house').innerHTML = data.house;
+				document.getElementById('lblstreet').innerHTML = data.street;
+				document.getElementById('lblvillage').innerHTML = data.village_namekh;
+				document.getElementById('lblcommune').innerHTML = data.commune_namekh;
+				document.getElementById('lbldistrict').innerHTML = data.district_namekh;
+				document.getElementById('lblprovince').innerHTML = data.province_kh_name;
+
+				document.getElementById('layouttype1').innerHTML = dijit.byId('plong_type').attr('displayedValue')+' ('+data.propertyInfo+')';
+				document.getElementById('LBclientName1').innerHTML = data.client_namekh;
+				document.getElementById('LBclientGender1').innerHTML = data.sexKh;
+				document.getElementById('lbldoc_type1').innerHTML = data.client_d_typekh;
+				document.getElementById('LBclientNational1').innerHTML = data.nation_id;
+				document.getElementById('lbl_house1').innerHTML = data.house;
+				document.getElementById('lblstreet1').innerHTML = data.street;
+				document.getElementById('lblvillage1').innerHTML = data.village_namekh;
+				document.getElementById('lblcommune1').innerHTML = data.commune_namekh;
+				document.getElementById('lbldistrict1').innerHTML = data.district_namekh;
+				document.getElementById('lblprovince1').innerHTML = data.province_kh_name;
+				
+				dijit.byId('frm_receipt').show();
+				//showReciept();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+}
+
+function hideDialog() {		
+	dijit.byId("frm_receipt").hide();
+}
+function print(){
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('rpt_print').innerHTML + dojo.byId('rpt_print1').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    dijit.byId("frm_receipt").hide();
+    dijit.byId('savenew').set('disabled',true);
+    dijit.byId('saveprint').set('disabled',true);
+    dijit.byId('add_cancel').submit()
+}
 var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var plongtype_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->layouttype));?> );
 dojo.ready(function(){
 	try{
 		new dijit.form.FilteringSelect({
@@ -101,12 +495,39 @@ dojo.ready(function(){
 					getLandAndClientDetail("2");
 				}
 			}, "sale_client");
+
+		new dijit.form.FilteringSelect({
+			store: plongtype_store,
+			autoComplete: true,
+			required: true,		           
+			name: "plong_type",
+			id: "plong_type",
+			searchAttr: "name",
+			class: 'fullside',
+				onChange: function() {
+					plong_type = dijit.byId('plong_type').get('value');
+					if(plong_type==-1){
+						dijit.byId('frm_plong_type').show();
+					}
+				}
+			}, "plong_type");
 		getSaleClie();
 
 		}catch(e){
 			alert(e);
 		}
 });
+
+function addPlongType(){
+	var Itemmake = {					
+			id: dijit.byId('newplong_type').get('value'),
+		    name: dijit.byId('newplong_type').get('value')
+	};		
+	addDataToSelectbox(dijit.byId('plong_type'), plongtype_store, Itemmake, dijit.byId('newplong_type').get('value'));	
+	dijit.byId('plong_type').attr('value',dijit.byId('newplong_type').get('value'));
+	dijit.byId('frm_plong_type').reset();
+	dijit.byId('frm_plong_type').hide();
+}
 	var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
 	function getSaleClie(){
 		branch_id = dijit.byId('branch_id').get('value');
