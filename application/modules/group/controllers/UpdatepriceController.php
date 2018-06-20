@@ -27,7 +27,7 @@ class Group_UpdatepriceController extends Zend_Controller_Action {
 			$rs_rows= $db->getAllRoad($search);
 			$glClass = new Application_Model_GlobalClass();
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","STREET","PRICE");
+			$collumns = array("BRANCH_NAME","STREET","PROPERTY_TYPE","PRICE");
 			$link=array(
 					'module'=>'group','controller'=>'updateprice','action'=>'edit',
 			);

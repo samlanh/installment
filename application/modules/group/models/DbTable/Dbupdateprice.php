@@ -12,6 +12,7 @@ class Group_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
 	  	$sql = 'SELECT DISTINCT street,
 				  	(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
 				  	street AS street_name,
+	  				(SELECT type_namekh FROM `ln_properties_type` WHERE id=1) AS properties_type,
 				  	price
 	  		 FROM `ln_properties` WHERE street!="" ';
 	  	$where="";
@@ -27,7 +28,7 @@ class Group_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
 	  	if($search['branch_id']>-1){
 	  		$where.= " AND branch_id = ".$search['branch_id'];
 	  	}
-	  	$where.=" GROUP BY branch_id,street ORDER BY branch_id DESC,street ASC";
+	  	$where.=" GROUP BY branch_id,street,property_type ORDER BY branch_id DESC,street ASC";
 	  	return  $db->fetchAll($sql.$where);
     }
     public function getPropertiesByStreet($street,$branch_id){

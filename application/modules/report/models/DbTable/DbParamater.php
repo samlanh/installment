@@ -441,6 +441,8 @@ function getAllBranch($search=null){
      			  `c`.`name_en` AS `client_nameen`,
      			   c.dob,
      			   c.hname_kh,
+    			   c.ksex,
+    			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=c.ksex limit 1) AS partner_gender,
      			   c.dob_buywith,
      			   c.rid_no,
      			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=c.sex limit 1) AS sexKh,
@@ -454,38 +456,38 @@ function getAllBranch($search=null){
                   `c`.`street` AS `client_street`,
                   c.phone,
 				  (SELECT
-				     `village`.`village_name`
+				     `village`.`village_namekh`
 				   FROM `ln_village` `village`
-				   WHERE (`village`.`vill_id` = `c`.`village_id`)
-				   LIMIT 1) AS `client_village_en`,
-					  (SELECT
+				   WHERE (`village`.`vill_id` = `c`.`qvillage`)
+				   LIMIT 1) AS `joint_village`,
+    			  (SELECT
+				     `comm`.`commune_namekh` FROM `ln_commune` `comm`
+				   WHERE (`comm`.`com_id` = `c`.`dcommune`)
+				   LIMIT 1) AS `join_commune`,
+    			 (SELECT
+				     `dist`.`district_namekh`
+				   FROM `ln_district` `dist`
+				   WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `join_district`,
+    			(SELECT
+				     `provi`.`province_kh_name`
+				   FROM `ln_province` `provi`
+				   WHERE (`provi`.`province_id` = `c`.`pro_id`) LIMIT 1) AS `join_province`,	
+    				
+				  (SELECT
 					     `village`.`village_namekh`
 					   FROM `ln_village` `village`
 					   WHERE (`village`.`vill_id` = `c`.`village_id`
 					                                 )
 					   LIMIT 1) AS `client_village_kh`,
-				  (SELECT
-				     `comm`.`commune_name` FROM `ln_commune` `comm`
-				   WHERE (`comm`.`com_id` = `c`.`com_id`)
-				   LIMIT 1) AS `client_commune_en`,
-				   
 				   (SELECT
 				     `comm`.`commune_namekh` FROM `ln_commune` `comm`
 				   WHERE (`comm`.`com_id` = `c`.`com_id`)
 				   LIMIT 1) AS `client_commune_kh`,
 				  (SELECT
-				     `dist`.`district_name`
-				   FROM `ln_district` `dist`
-				   WHERE (`dist`.`dis_id` = `c`.`dis_id`) LIMIT 1) AS `client_district`,
-				  (SELECT
 				     `dist`.`district_namekh`
 				   FROM `ln_district` `dist`
 				   WHERE (`dist`.`dis_id` = `c`.`dis_id`)
 				   LIMIT 1) AS `client_districtkh`,
-				  (SELECT
-				     `provi`.`province_en_name`
-				   FROM `ln_province` `provi`
-				   WHERE (`provi`.`province_id` = `c`.`pro_id`) LIMIT 1) AS `client_province_en`,
 				  (SELECT
 				     `provi`.`province_kh_name`
 				   FROM `ln_province` `provi`
@@ -1104,6 +1106,15 @@ function getAllBranch($search=null){
     	AND s.id=".$id;
     	return $db->fetchRow($sql);
     }*/
+    function getFirstDepositBySaleID($id=null,$payment_id){//សម្រាប់លីមហេង ទាយយកថាត្រូវកក់ %?
+    	$db = $this->getAdapter();
+    	$sql=" SELECT * FROM `ln_saleschedule` AS sc WHERE sc.`sale_id`= ".$id;
+    	if($payment_id==4){
+    		$sql.=" AND sc.is_installment=1 ";
+    	}
+    	$order = ' AND is_rescheule=0 ORDER BY sc.no_installment ASC, sc.`date_payment` ASC ';
+    	return $db->fetchRow($sql.$order);
+    }
     function getScheduleBySaleID($id=null,$payment_id){
     		$db = $this->getAdapter();
     		$sql=" SELECT * FROM `ln_saleschedule` AS sc WHERE sc.`sale_id`= ".$id;

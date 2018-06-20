@@ -9,8 +9,9 @@ $day = array(
 		"Sat" =>'សៅរ៍',
 		"Sun" =>'អាទិត្យ',
 		);
-$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
-?>
+	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
+// 	print_r($this->sale_schedule);exit();
+	?>
 <script>
 dojo.require("dijit.form.DateTextBox");
 </script>
@@ -131,7 +132,11 @@ dojo.require("dijit.form.DateTextBox");
 									  	 ភូមិ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_village_kh'];?></span>       
 									         ឃុំ/សង្កាត់  <span class="value" style="min-width:100px;"><?php echo $this->agreement['client_commune_kh'];?></span> 
 									        ស្រុក/ខណ្ឌ <span class="value" style="min-width:100px;"><?php echo $this->agreement['client_districtkh'];?></span>
-	             					       ខេត្ត/រាជធានី <span class="value" style="min-width:100px;">&nbsp;<?php echo $this->agreement['client_province_kh'];?></span> តទៅនេះហៅកាត់ថា ភាគី “ខ”។
+	             					       ខេត្ត/រាជធានី <span class="value" style="min-width:100px;">&nbsp;<?php echo $this->agreement['client_province_kh'];?></span>
+	             					  <?php if(!empty($this->agreement['hname_kh'])){?>និងឈ្មោះ <span class="value" style="width:130px;"><?php echo $this->agreement['hname_kh'];?></span> ភេទ  <span class="value" style="width:50px;font-weight:200;"><?php echo $this->agreement['partner_gender'];?></span> ឆ្នាំកំណើត <span class="value" style="min-width:80px;font-weight:200;"><?php echo date("d/m/Y",strtotime($this->agreement['dob_buywith']));?></span> ជាជនជាតិ <span class="value" style="width:30px;"><?php echo $this->agreement['p_nationality'];?></span> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="width:100px;"><?php echo $this->agreement['rid_no'];?></span><?php }?>
+							មានទីលំនៅផ្ទះលេខ: <span class="value" style="min-width:55px;"><?php echo $this->agreement['client_house_no'];?></span> ផ្លូវលេខ  <span class="value" style="min-width:55px;"><?php echo $this->agreement['client_street'];?></span>ភូមិ <span class="value" style="min-width:55px;"><?php echo $this->agreement['joint_village'];?></span> ឃុំ-សង្កាត់  <span class="value" style="width:150px;"><?php echo $this->agreement['join_commune'];?></span> ស្រុក-ខណ្ឌ <span class="value" style="width:130px;"><?php echo $this->agreement['join_district'];?></span>
+							ខេត្ត-ក្រុង <span class="value" style="width:100px;"><?php echo $this->agreement['join_province'];?></span>     
+	             					        តទៅនេះហៅកាត់ថា ភាគី “ខ”។
 									   </p>
 									   </td>  
 								   </tr>							 
@@ -140,23 +145,19 @@ dojo.require("dijit.form.DateTextBox");
 	             			<span style="width: 100%; display: block; line-height: 32px;">
 		             			<span style="font-family:'Khmer OS Battambang';">ប្រការ១ ៖ <span id="padding-left-2">កម្មវត្ថុ</span></span><br />
 		             			<span class="padding-left">ភាគី“ក” យល់ព្រមលក់តូប </span> <strong>“លក់ទំនិញ”</strong> ឲ្យទៅ ភាគី“ខ” ហើយ ភាគី“ខ” បានយល់ព្រមទិញ      ”តូបលក់ទំនិញ” នៅផ្សារអូរឫស្សីពី ភាគី“ក” ដែលតូបលក់ទំនិញនេះ គឺបានទទួលការអនុញ្ញាត្តពីសាលារាជធានីភ្នំពេញ ឲ្យមានសិទ្ធិប្រើប្រាស់រហូតដល់ឆ្នាំ២០៧០។ បន្ទាប់ពីធ្វើការទិញ-លក់រួចរាល់ ភាគី“ក” ត្រូវផ្តល់ប័ណ្ណកាន់កាប់តូបលក់ទំនិញឲ្យទៅ ភាគី“ខ”។
-		             			
 		             			<br />
 		             			<span style="font-family:'Khmer OS Battambang';">ប្រការ២ ៖ <span id="padding-left-2">ទីតាំង និងអត្តសញ្ញាណតូបលក់ទំនិញ</span></span><br />
-	             				<span class="padding-left">ភាគី“ក”</span> នឹងយកតូបលក់ទំនិញលេខៈ  <span class="value" style="min-width:30px;"><?php echo $this->agreement['property_title'];?></span> ទំហំ  <span class="value" style="min-width:40px;"><?php echo $this->agreement['property_land_size'];?> </span>ម<sup>២</sup> (...............ម៉ែត្រការ៉េ) ជាន់ទី <span class="value" style="min-width:40px;"><?php echo $this->agreement['property_street'];?></span>
-	             				លើទីតាំងអគារ<?php echo $this->agreement['project_name'];?>លក់ទៅឲ្យ ភាគី“ខ” សម្រាប់ប្រើប្រាស់ប្រកបអាជីវកម្មគ្រប់ប្រភេទស្របច្បាប់ លើកលែងតែ៖ គ្រឿងហូបចុក    ឥវ៉ាន់មានសំណើម (បន្លែ ត្រី អាហារសមុទ្រ មាន់ទា និងសាច់គ្រប់ប្រភេទ ។ល។) គ្រឿងទេស និង    សម្ភារៈដែលមានទម្ងន់ធ្ងន់ ( ស្រូវ អង្ករ ពោត សណ្តែក និងគ្រឿងដែក ។ល។)។
-		             		
+	             				<span class="padding-left">ភាគី“ក”</span> នឹងយកតូបលក់ទំនិញលេខៈ  <span class="value" style="min-width:30px;"><?php echo $this->agreement['property_title'];?></span> ទំហំ  <span class="value" style="min-width:40px;"><?php echo $this->agreement['property_land_size'];?> </span>ម<sup>២</sup> (...............ម៉ែត្រការ៉េ) ជាន់ទី <span class="value" style="min-width:40px;"><?php echo str_replace("ជាន់ទី", "", $this->agreement['property_street']);?></span>
+	             				លើទីតាំងអគារ<strong>&nbsp;<?php echo $this->agreement['project_name'];?></strong>&nbsp;លក់ទៅឲ្យ ភាគី“ខ” សម្រាប់ប្រើប្រាស់ប្រកបអាជីវកម្មគ្រប់ប្រភេទស្របច្បាប់ លើកលែងតែ៖ គ្រឿងហូបចុក    ឥវ៉ាន់មានសំណើម (បន្លែ ត្រី អាហារសមុទ្រ មាន់ទា និងសាច់គ្រប់ប្រភេទ ។ល។) គ្រឿងទេស និង    សម្ភារៈដែលមានទម្ងន់ធ្ងន់ ( ស្រូវ អង្ករ ពោត សណ្តែក និងគ្រឿងដែក ។ល។)។
 		             			<br />
 		             			<span style="font-family:'Khmer OS Battambang';">ប្រការ៣ ៖ <span id="padding-left-2">អាណត្តិនៃកិច្ចសន្យា</span></span><br />
 	             				<span class="padding-left">អាណត្តិ</span>អាណត្តិនៃកិច្ចសន្យានេះមានសុពលភាពចាប់ពីថ្ងៃចុះកិច្ចសន្យានេះ រហូតដល់ដំណាច់ឆ្នាំ២០៧០។
-	             				
 	             				<br />
 		             			<span style="font-family:'Khmer OS Battambang';">ប្រការ ៤ ៖ <span id="padding-left-2">តម្លៃតូប</span></span><br />
 	             				<span class="padding-left">ភាគី</span> “ក” និង ភាគី “ខ” បានឯកភាពគ្នាទិញ-លក់ តូបលក់ទំនិញខាងលើក្នុងតម្លៃ <?php echo number_format($this->agreement['price_sold'],2);?> ដុល្លារ (<label id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក) ។
 	             				<script>
 											a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
 											money_khmersold=read_money_in_khmer(a_sold);
-											
 											decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
 											str_centsold = 'សេន';
 											if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
@@ -165,7 +166,7 @@ dojo.require("dijit.form.DateTextBox");
 											if(last_number_sold<=0){last_number_sold='';}
 											money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
 											dojo.byId('lable_pricekhmer').innerHTML=money_khmersold+" ";
-											dojo.byId('lable_pricekhmer1').innerHTML=money_khmersold+" ";
+											
 									</script>
 	             				<br />
 		             			<span style="font-family:'Khmer OS Battambang';">ប្រការ ៥ ៖ <span id="padding-left-2">របៀបបង់ប្រាក់</span></span><br />
@@ -178,13 +179,43 @@ dojo.require("dijit.form.DateTextBox");
 								  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
 									    <td align="justify" style="padding-left:5px">
-									    -	ភាគី “ខ” យល់ព្រមបង់ប្រាក់កក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;">១០% (ដប់ភាគរយ)</span> ឲ្យទៅ ភាគី “ក” នៅថ្ងៃចុះកិច្ចសន្យាទិញ-លក់នេះ។<br />
+									    -	ភាគី “ខ” យល់ព្រមបង់ប្រាក់កក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;"><?php echo @number_format($this->first_deposit['percent'])?>% ( <label id="lable_percent"></label>ភាគរយ)</span> ឲ្យទៅ ភាគី “ក” នៅថ្ងៃចុះកិច្ចសន្យាទិញ-លក់នេះ។<br />
 										-	ភាគី “ក” នឹងប្រគល់តូបលក់ទំនិញដែលជាកម្មវត្ថុនៃការទិញលក់ ទៅឲ្យភាគី“ខ” ប្រើប្រាស់ជា    បណ្តោះអាសន្ននៅរយៈពេលយ៉ាងយូរ<strong>៣០</strong>ថ្ងៃក្រោយចុះកិច្ចសន្យា។ 
+									    <script>
+											percent_first ='<?php echo ($this->first_deposit['percent']) ?>';
+											money_khmersold1=read_money_in_khmer(percent_first);
+											
+											decimalmoney_khmersold1='<?php echo substr(number_format($this->first_deposit['percent'],2),-2);?>';
+											str_centsold = 'សេន';
+											if(decimalmoney_khmersold1>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
+											last_number_sold='<?php echo substr(number_format($this->first_deposit['percent'],2),-2);?>';
+											
+											if(last_number_sold<=0){last_number_sold='';}
+											money_khmersold1 = money_khmersold1+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold1)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+											dojo.byId('lable_percent').innerHTML=money_khmersold1+" ";
+											
+									</script>
 									    </td>  
 								  </tr>
 								   <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;">៥.២.</td>
-									    <td align="justify" style="padding-left:5px"><strong>ដំណាក់កាលទី២៖</strong> ភាគី “ខ” យល់ព្រមបង់ប្រាក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;">៩០% (កៅសិបភាគរយ)</span> ទៀតឲ្យទៅ ភាគី “ក”  ក្នុងរយៈពេល<span class="value" style="min-width:30px; font-weight: 700;">១០ឆ្នាំ</span> ក្នុងអត្រាការប្រាក់ <span class="value" style="min-width:30px; font-weight: 700;">៨%</span> ក្នុង១ឆ្នាំ។
+									    <td align="justify" style="padding-left:5px"><strong>ដំណាក់កាលទី២៖</strong> ភាគី “ខ” យល់ព្រមបង់ប្រាក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;">
+									    <?php 
+									    	$remain_percent = 100-$this->first_deposit['percent'];
+									    	echo $remain_percent;?>% ( <label id="lbl_remainpercent"></label> ភាគរយ)</span> ទៀតឲ្យទៅ ភាគី “ក”  ក្នុងរយៈពេល<span class="value" style="min-width:30px; font-weight: 700;"><?php echo number_format($this->agreement['total_duration'],0);?> ឆ្នាំ</span> ក្នុងអត្រាការប្រាក់ <span class="value" style="min-width:30px; font-weight: 700;"><?php echo number_format($this->agreement['total_duration'],0);?>%</span> ក្នុង១ឆ្នាំ។
+									    	<script>
+										    	percent_remain ='<?php echo $remain_percent; ?>';
+												money_khmersold=read_money_in_khmer(percent_remain);
+												
+												decimalmoney_khmersold='<?php echo substr(number_format($remain_percent,2),-2);?>';
+												str_centsold = 'សេន';
+												if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
+												last_number_sold='<?php echo substr(number_format($remain_percent,2),-2);?>';
+												
+												if(last_number_sold<=0){last_number_sold='';}
+												money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+												dojo.byId('lbl_remainpercent').innerHTML=money_khmersold+"";
+									    	</script>
 									    </td>  
 								  </tr>
 								  <tr>
@@ -205,7 +236,13 @@ dojo.require("dijit.form.DateTextBox");
 								  </tr>
 								</table>
 		             			<span style="font-family:'Khmer OS Battambang';">ប្រការ ៦ ៖ <span id="padding-left-2">ការជួសជុល ឬតុបតែងតូបលក់ទំនិញ</span></span><br />
-		             			<span class="padding-left">បន្ទាប់ពី</span> ភាគី “ខ” បានបង់ប្រាក់កក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;">១០%(ដប់ភាគរយ)</span> រួច   ភាគី “ក” ប្រគល់តូបលក់ទំនិញ ជាបណ្តោះអាសន្ន(ទ្រព្យភោគ:)អោយភាគី “ខ” ដើម្បីប្រើប្រាស់ ជួសជុល ឬតុបតែងលំអរ នៅផ្នែកខាងក្នុងនៃតូបទៅតាមប្រភេទនៃអាជីវកម្មរបស់ខ្លួន រីឯផ្នែកខាងក្រៅនៃតូបត្រូវរក្សាទុកស្ថានភាពដើម។
+		             			<span class="padding-left">បន្ទាប់ពី</span> ភាគី “ខ” បានបង់ប្រាក់កក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;">
+		             			<?php echo @number_format($this->first_deposit['percent'])?>
+		             			%(<label id="lable_percent1"></label> ភាគរយ)</span> 
+		             			<script>
+		             			dojo.byId('lable_percent1').innerHTML=money_khmersold1+" ";
+		             			</script>
+		             			រួច   ភាគី “ក” ប្រគល់តូបលក់ទំនិញ ជាបណ្តោះអាសន្ន(ទ្រព្យភោគ:)អោយភាគី “ខ” ដើម្បីប្រើប្រាស់ ជួសជុល ឬតុបតែងលំអរ នៅផ្នែកខាងក្នុងនៃតូបទៅតាមប្រភេទនៃអាជីវកម្មរបស់ខ្លួន រីឯផ្នែកខាងក្រៅនៃតូបត្រូវរក្សាទុកស្ថានភាពដើម។
 		             			
 		             			<br />
 		             			<span style="font-family:'Khmer OS Battambang';">ប្រការ ៧ ៖ <span id="padding-left-2">លក្ខខណ្ឌផ្សេងៗ</span></span>
@@ -341,21 +378,7 @@ dojo.require("dijit.form.DateTextBox");
 			</tr>
 			</tfoot>
         </table>
-        	<div id="printfooter">
-        		<table  width="100%" style="background: #fff;border-top: 2px solid #000;font-family: 'Khmer OS Battambang'; font-size:10px;line-height: 15px;white-space:nowrap;"> 
-					<tbody>
-						<tr style="white-space:nowrap;line-height: 12px;">
-							<td width="40%"><?php echo $this->keyValue['website'];?></td>
-							<td width="40%" align="right"><?php echo $this->keyValue['email_client'];?></td>
-						</tr>
-						<tr style="white-space:nowrap;line-height: 15px;">
-							<td><?php echo $this->keyValue['footer_branch'];?></td>
-							<td width="40%" align="right"><?php echo $this->keyValue['tel-client'];?></td>
-						</tr>
-					</tbody>
-				</table>
-        	</div>
-        	</div>
+        </div>
         </div>
     </td>	
 </tr>
