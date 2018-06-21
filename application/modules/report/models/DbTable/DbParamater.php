@@ -426,6 +426,7 @@ function getAllBranch($search=null){
 				   s.amount_build,
 				   s.build_start,
 				   s.buy_date,
+				   s.`end_line`,
 				   s.agreement_date,
 				   (SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.payment_id limit 1) AS payment_type,
 				   `p`.`project_name`,
@@ -436,6 +437,16 @@ function getAllBranch($search=null){
                   `p`.`p_current_address` AS `project_manager_p_current_address`,
                    p.w_manager_namekh ,
                    p.w_manager_nation_id,
+                   p.p_dob as manager_dob,
+                   p.`p_nationid_issue`,
+                    p.w_manager_namekh ,
+                   p.w_manager_nation_id,
+                   p.`w_manager_nationality`,
+                   (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=p.`w_sex` LIMIT 1) AS sc_manager_sex,
+	                  p.`w_dob`,
+	                  p.`w_current_address`,
+	                  p.`w_nation_id_issue`,
+                   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=p.p_sex limit 1) AS manager_sex ,
                   `c`.`client_number` AS `client_code`,
      			  `c`.`name_kh` AS `client_namekh`,
      			  `c`.`name_en` AS `client_nameen`,
@@ -455,6 +466,7 @@ function getAllBranch($search=null){
   				  `c`.`house` AS `client_house_no`,
                   `c`.`street` AS `client_street`,
                   c.phone,
+                  c.lphone as with_phone,
 				  (SELECT
 				     `village`.`village_namekh`
 				   FROM `ln_village` `village`
@@ -493,6 +505,50 @@ function getAllBranch($search=null){
 				   FROM `ln_province` `provi`
 				   WHERE (`provi`.`province_id` = `c`.`pro_id`)
 				   LIMIT 1) AS `client_province_kh`,
+				   (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=c.`ksex` LIMIT 1) AS client_buywith_sex,
+				   c.hname_kh AS w_client_namekh,
+				   c.dob_buywith AS w_client_dob_buywith,
+				   c.p_nationality AS w_client_nationality,
+				   c.`ghouse` AS w_client_house,
+					c.lphone AS w_client_phone,
+				  (SELECT
+				     `village`.`village_name`
+				   FROM `ln_village` `village`
+				   WHERE (`village`.`vill_id` = `c`.`qvillage`)
+				   LIMIT 1) AS `w_client_village_en`,
+					  (SELECT
+					     `village`.`village_namekh`
+					   FROM `ln_village` `village`
+					   WHERE (`village`.`vill_id` = `c`.`qvillage`
+					                                 )
+					   LIMIT 1) AS `w_client_village_kh`,
+				  (SELECT
+				     `comm`.`commune_name` FROM `ln_commune` `comm`
+				   WHERE (`comm`.`com_id` = `c`.`dcommune`)
+				   LIMIT 1) AS `w_client_commune_en`,
+				   
+				   (SELECT
+				     `comm`.`commune_namekh` FROM `ln_commune` `comm`
+				   WHERE (`comm`.`com_id` = `c`.`dcommune`)
+				   LIMIT 1) AS `w_client_commune_kh`,
+				  (SELECT
+				     `dist`.`district_name`
+				   FROM `ln_district` `dist`
+				   WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `w_client_district`,
+				  (SELECT
+				     `dist`.`district_namekh`
+				   FROM `ln_district` `dist`
+				   WHERE (`dist`.`dis_id` = `c`.`adistrict`)
+				   LIMIT 1) AS `w_client_districtkh`,
+				  (SELECT
+				     `provi`.`province_en_name`
+				   FROM `ln_province` `provi`
+				   WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `w_client_province_en`,
+				  (SELECT
+				     `provi`.`province_kh_name`
+				   FROM `ln_province` `provi`
+				   WHERE (`provi`.`province_id` = `c`.`cprovince`)
+				   LIMIT 1) AS `w_client_province_kh`,
 				  
 			(SELECT
 				     `prope_type`.`type_nameen`
@@ -508,7 +564,14 @@ function getAllBranch($search=null){
 		    `pp`.`height` AS `property_height`,
 		    `pp`.`land_code` AS `property_code`,
 		    `pp`.`land_address` AS `property_title`,
- 			 pp.`street` AS `property_street`
+ 			 pp.`street` AS `property_street`,
+ 			  pp.land_width,
+ 			 pp.land_height,
+ 			 pp.`land_size`,
+ 			 pp.`north` AS border_north,
+ 			 pp.`south` AS border_south,
+ 			 pp.`east` AS border_east,
+ 			 pp.`west` AS border_west
 		FROM 
 			`ln_sale` AS `s`,
 			ln_project AS p ,
