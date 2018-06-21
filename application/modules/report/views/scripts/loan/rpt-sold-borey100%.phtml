@@ -137,7 +137,7 @@
 	               $paid_price1=0;$paid_price2=0;$paid_price3=0;$paid_price4=0;$paid_price5=0;$paid_price6=0;
 	               $balace_price1=0;$balace_price2=0;$balace_price3=0;$balace_price4=0;$balace_price5=0;$balace_price6=0;
 	               $payment_id='';
-	               $db  = new Report_Model_DbTable_DbParamater();
+	               
 	               if(!empty($this->loanrelease_list)) foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
 	             if($row['is_cancel']==0){
@@ -205,25 +205,9 @@
 						<td style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?>&nbsp;</td>	
 						<td style="white-space:nowrap;"><?php echo number_format($row['discount_amount'],2); ?>&nbsp;</td>	
 						<td style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$row['other_fee'],2); ?>&nbsp;</td>	
-						<!-- <td align="left"><span style="line-height:15px;">&nbsp;<?php //echo $row['other_fee']; ?></span>&nbsp;</td>-->
-						<?php 
-							$percent = $db->getFirstDepositBySaleID($row['id'],$row['payment_id']);
-							$percent =$percent['percent'];
-						?>
-						<td style="white-space:nowrap; text-align: right;"><?php 
-							if($row['payment_id']==4){
-								$percent_paid =  number_format($row['paid_amount']/$row['price_sold']*100,2); 
-								if($percent_paid>$percent)
-								{
-									echo"រំលស់";
-								}else{
-									echo"កក់បង្គ្រប់";
-								}
-							}elseif($row['payment_id']==1){
-								echo number_format($row['paid_amount'],2);
-							}
-							//echo $percent_paid;
-						?>&nbsp;</td>
+						<!-- <td align="left"><span style="line-height:15px;">&nbsp;<?php //echo $row['other_fee']; ?></span>&nbsp;</td>	
+						<td style="white-space:nowrap; text-align: right;font-weight: bold;font-family:Arial,'Khmer OS Battambang'">&nbsp;<?php //echo number_format($row['price_sold'],2); ?>&nbsp;</td> -->
+						<td style="white-space:nowrap; text-align: right;"><?php echo number_format($row['paid_amount'],2); ?>&nbsp;</td>
 						<td style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold']-$row['paid_amount'],2); ?>&nbsp;</td>
 						<!-- <td style="white-space:nowrap; font-size:10px;text-align: left;">&nbsp;<?php //echo $row['paymenttype']; ?>&nbsp;</td> -->
 						<td style="white-space:nowrap; text-align: center;"><?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['total_duration']; }

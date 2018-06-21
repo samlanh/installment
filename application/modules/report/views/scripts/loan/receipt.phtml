@@ -1,17 +1,3 @@
-<?php $frm = $this->frm_search;
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-
-$dbGB = new Application_Model_DbTable_DbGlobal();
-$logo = $this->baseUrl()."/images/logo.jpg";
-$branch_title = $tr->translate("BRAND_TITLE");
-if ($this->rs['branch_id'] >0 ){
-	$branch = $dbGB->getAllBranchInfoByID($this->rs['branch_id']);
-	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
-		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
-	}
-	$branch_title = $branch['project_name'];
-}
-?>
 <meta charset="utf-8">
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -20,10 +6,23 @@ dojo.require("dijit.form.DateTextBox");
 .hover:hover{background: #ccc;}
 img.view{height: 85px !important;}
 </style>
+<?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();?>
 <title><?php echo $tr->translate("RECEIPT");?></title>
  <form method="post">
 <div style=" width:29cm;min-height:23cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm;background: #fff;">
 	<div id="divPrint" style="width: 100%;">
+			<?php 
+				$dbGB = new Application_Model_DbTable_DbGlobal();
+				$logo = $this->baseUrl()."/images/logo.jpg";
+				$branch_title = $tr->translate("BRAND_TITLE");
+			if ($this->rs['branch_id'] >0){
+				$branch = $dbGB->getAllBranchInfoByID($this->rs['branch_id']);
+				if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+					$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+				}
+				$branch_title = $branch['project_name'];
+			}
+		?>
 			<style>
 				.fontbig{
 					font-size: 16px;	
@@ -36,12 +35,20 @@ img.view{height: 85px !important;}
 				}
 
 				.label{ font-size: 22px;}
-				.value{ font:16px 'Khmer OS Battambang';border: 1px solid #000; height: 30px; padding: 0 2px;width: 100%;margin-right:5px; display: block;
+				.value{ font:16px 'Khmer OS Battambang';border: 1px solid #000; min-height: 30px; padding: 0 2px;width: 100%;margin-right:5px; display: block;
 						line-height: 30px;
 					    text-align: center;
 						}
+						
 				.values{ border: 1px solid #000; height: 30px; padding: 0 10px;display: block;
 						line-height: 30px;}
+				.noted{white-space: pre-wrap;     
+						word-wrap: break-word;      
+						word-break: break-all;
+						white-space: normal;
+					    font:12px 'Khmer OS Battambang';
+					    border: 1px solid #000;
+                        line-height:20px;font-weight: normal !important;}
 				.h{}
 				.print tr td{
 					padding:2px 2px; 
@@ -114,21 +121,27 @@ img.view{height: 85px !important;}
 				</tr>
 				<tr>
 					<td >ប្រាក់បានបង់សរុប</td>
-					<td ><strong><label id="lbl_total_paid1" class="value"><?php echo  number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2)." $";?></label></strong></td>
+					<td >
+						<table width="100%" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="33.5%" ><strong><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"><?php echo  number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2)." $";?></label></strong></td>
+								<td width="33%">ប្រាក់នៅសល់</td>
+								<td width="33.5%"><strong style="white-space: nowrap;"><label style="white-space: nowrap;margin-right: -4px;" class="value"><?php echo  number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2)." $";?></label></strong></td>
+							</tr>
+						</table>
+					</td>
 					<td>&nbsp;&nbsp;ប្រាក់បានបង់</td>
 				    <td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;"><?php echo number_format($this->rs['recieve_amount'],2)." $";?></label></strong></td>
 				</tr>
-				<tr style="white-space: nowrap;">
-					<td >ប្រាក់នៅសល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" class="value"><?php echo  number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2)." $";?></label></strong></td>
+				<tr style="">
+					<td rowspan="2">សម្គាល់</td>
+				    <td rowspan="2" class="noted" valign="top"><?php echo $this->rs['note'];?></td>
 					<td >&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
 				    <td><strong><label id="lb_buydate1" class="value"><?php echo date("d-M-Y",strtotime($this->rs['date_payment']));?></label></strong></td>
 					<td>&nbsp;ថ្ងៃទទួល</td>
 					<td><strong><label id="lbl_paid_date1" class="value"><?php echo date("d-M-Y",strtotime($this->rs['date_pay']));?></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-					<td >សម្គាល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"><?php echo $this->rs['note'];?></label></strong></td>
 					<td>&nbsp;បង់ជា</td>
 					<td><strong><label id="lbl_paid_date1" class="value"><?php echo $this->rs['payment_method'];?></label></strong></td>
 					<td>&nbsp;&nbsp;លេខ</td>
@@ -148,7 +161,7 @@ img.view{height: 85px !important;}
 									ស្នាមមេដៃអ្នកទទួល
 								</td>
 							</tr>
-							<tr>
+							<tr height="60px">
 								<td colspan="3">&nbsp;
 									
 								</td>
@@ -169,10 +182,6 @@ img.view{height: 85px !important;}
 								<td align="center" width="30%">
 									<strong>
 										<?php 
-// 										   $session_user=new Zend_Session_Namespace('authinstall');
-// 										   $last_name=$session_user->last_name;
-// 										   $username = $session_user->first_name;
-// 										   echo $last_name." ".$username;
 											echo $this->rs['by_user'];
 										?>
 									</strong>
