@@ -109,6 +109,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 	function getRecivePlongInfo($id){
 		$db = $this->getAdapter();
 		$sql="SELECT 
+		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =c.`branch_id` LIMIT 1) AS branch_name,
 		cl.name_kh AS client_namekh,
 		cl.name_en AS client_nameen,
 		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = cl.`sex` AND v.`type`=11 LIMIT 1 ) AS sexKh,
