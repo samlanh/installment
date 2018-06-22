@@ -400,7 +400,17 @@ function getAllBranch($search=null){
     		
     		return $db->fetchAll($sql.$where.$order);
     	}
-   function getAgreementBySaleID($id=null){//bppt,natha,longny
+    function getFirstDepositAgreement($sale_id){
+    	$db = $this->getAdapter();
+    	$sql="SELECT crm.`recieve_amount` AS recieve_amount,
+    			crm.date_pay,
+    			(SELECT second_depostit FROM  ln_sale WHERE id = $sale_id ) AS  second_depostit,
+    			(SELECT validate_date FROM  ln_sale WHERE id = $sale_id ) AS  validate_date
+    		FROM `ln_client_receipt_money` AS crm WHERE crm.status=1 AND crm.field3=1
+				AND sale_id = $sale_id ORDER BY crm.id ASC";
+    	return $db->fetchRow($sql);
+    }
+   function getAgreementBySaleID($id=null){//bppt,natha,longny,moul mith
     		$db = $this->getAdapter();
     		$sql="
     		SELECT

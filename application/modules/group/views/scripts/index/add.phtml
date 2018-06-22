@@ -955,38 +955,37 @@ function addNewCommune(){
 }
 var document_type_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insert-document-type'));?>';
 function addNewDocumentType(){
-	//alert(1);
-	type = dijit.byId('type').get('value');
-	old_client_doc = dijit.byId('client_d_type').get('value');
-	old_join_doc = dijit.byId('join_d_type').get('value');
-	
-	dojo.xhrPost({
-		
-		url:document_type_url,	
-		form:dojo.byId('frm_client_doc_type'),
-		handleAs:"json",
-		load: function(data) {	
-		
-			var myNewItem = {					
-				id: data,
-				name: dijit.byId('doc_name').get('value')
-			};			
-			addDataToSelectbox(dijit.byId('client_d_type'), d_datastore, myNewItem, data);	
-			addDataToSelectbox(dijit.byId('join_d_type'), joint_doc_type_store, myNewItem, data);				
-				 
-			dijit.byId('frm_client_doc_type').reset();
-			dijit.byId('popup_doc_type').hide();
-			if(type == 2){
-				dijit.byId('client_d_type').attr('value',old_client_doc);
-			}else{
-				dijit.byId('join_d_type').attr('value',old_join_doc);
+	if(dijit.byId('frm_client_doc_type').validate()) {
+		dijit.byId('save').set('disabled',true);
+		type = dijit.byId('type').get('value');
+		old_client_doc = dijit.byId('client_d_type').get('value');
+		old_join_doc = dijit.byId('join_d_type').get('value');
+		dojo.xhrPost({
+			url:document_type_url,	
+			form:dojo.byId('frm_client_doc_type'),
+			handleAs:"json",
+			load: function(data) {	
+				dijit.byId('save').set('disabled',false);
+				var myNewItem = {					
+					id: data,
+					name: dijit.byId('doc_name').get('value')
+				};			
+				addDataToSelectbox(dijit.byId('client_d_type'), d_datastore, myNewItem, data);	
+				addDataToSelectbox(dijit.byId('join_d_type'), joint_doc_type_store, myNewItem, data);				
+					 
+				dijit.byId('frm_client_doc_type').reset();
+				dijit.byId('popup_doc_type').hide();
+				if(type == 2){
+					dijit.byId('client_d_type').attr('value',old_client_doc);
+				}else{
+					dijit.byId('join_d_type').attr('value',old_join_doc);
+				}
+			},
+			error: function(err) {
+				dijit.byId('save').set('disabled',false);
 			}
-	
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});	
+		});	
+	}
 }
 function showPopupclientdtype(){
 	dijit.byId('popup_doc_type').show();
@@ -1014,9 +1013,6 @@ function hideDialog1(){
 	dijit.byId('popup_doc_type').hide();
 }
 </script>
-
-
-
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_doc_type" >
 		<form style="background-color: buttonface; width:100%;" id='frm_client_doc_type' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -1024,26 +1020,23 @@ function hideDialog1(){
 				<tr>
 					<td>
 						<fieldset style="background-color: buttonface;">
-						<legend align="center" ><?php echo $tr->translate('ADD_DOC_TYPE');?></legend>
+						<legend align="center" ><?php echo $tr->translate('DOCMENT_TYPE');?></legend>
 							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
 								<tr>
 									<td><?php echo $tr->translate('NAME');?></td>
 									<td>
-										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="doc_name" name="doc_name" value="" type="text">
+										<input dojoType="dijit.form.ValidationTextBox"  required="1" class="fullside" id="doc_name" name="doc_name" value="" type="text">
+										<input type="hidden" name="type"	id="type" dojoType="dijit.form.TextBox" />
 									</td>
 								</tr>
-								
-								<input type="hidden" name="type"	id="type" dojoType="dijit.form.TextBox" />
-								
 								<tr>
 									<td colspan="4" align="center">
-										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button" 
 										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
-										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										<input type="button" value="save" label="<?php echo $tr->translate("SAVECLOSE");?>" id="save" name="save" dojoType="dijit.form.Button" 
 										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewDocumentType();"/>
 									</td>
 								</tr>
-								
 							</table>
 					</fieldset>
 					</td>

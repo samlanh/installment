@@ -92,7 +92,7 @@ body {
     	<div class="pages-break">
         	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="padding:0;margin:0;border:0px;" >
         	<tr>
-                <td width="30%" valign="top"><!-- <img src="<?php //echo $this->baseUrl();?>/images/logo.jpg" style="max-width:100%"> --></td>
+                <td width="30%" valign="top"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="max-width:100%"></td>
                 <td width="40%" align="center">
                 <span style="text-align:center; line-height:28px; font-size:17px;font-family:'Khmer OS Muol Light';">ព្រះរាជាណាចក្រកម្ពុជា</span>
                 <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><label><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></label></span>
@@ -122,9 +122,9 @@ body {
              		ទំហំ <span class="value" style="min-width:70px;"><?php echo $this->agreement['property_width'];?> m x <?php echo $this->agreement['property_height'];?> m ម៉ែត្រក្រឡា</span>។</p>
              		<p style="font-family:'Khmer OS Muol Light'; text-align: center; font-weight: 200;">ដែលមានព្រំប្រទល់ដូចខាងក្រោម៖</p>
              		<p >
-             			<span style=" margin-left: 50px;"></span>-	ខាងជើងទល់នឹង <span class="value" style="min-width:150px;"><?php echo $this->agreement['border_north'];?></span> -		ខាងកើតទល់នឹង<span class="value" style="min-width:150px;"><?php echo $this->agreement['border_east'];?></span>
+             			<span style=" margin-left: 50px;"></span>- ខាងជើងទល់នឹង <span class="value" style="min-width:150px;"><?php echo $this->agreement['border_north'];?></span> - ខាងត្បូងទល់នឹង 	<span class="value" style="min-width:150px;"><?php echo $this->agreement['border_south'];?></span>
              			<br />
-             			<span style=" margin-left: 50px;"></span>- ខាងត្បូងទល់នឹង <span class="value" style="min-width:150px;"><?php echo $this->agreement['border_south'];?></span> -	ខាងលិចទល់នឹង <span class="value" style="min-width:150px;"><?php echo $this->agreement['border_west'];?></span> 
+             			<span style=" margin-left: 50px;"></span>- ខាងលិចទល់នឹង<span class="value" style="min-width:150px;"><?php echo $this->agreement['border_west'];?></span> - ខាងកើតទល់នឹង <span class="value" style="min-width:150px;"><?php echo $this->agreement['border_east'];?></span> 
              			<br />
              			<span style=" margin-left: 50px;"></span>ដែលមានទីតាំងដីនៅ <span class="value" style="min-width:150px;"><?php echo $this->agreement['project_location'];?></span>។
              			<br />
@@ -142,7 +142,7 @@ body {
              		ទូរស័ព្ទលេខ <span class="value" style="min-width:20px;"><?php echo $this->agreement['with_phone'];?></span>។
              		</p>
              		<p>
-             			<span style=" margin-left: 50px;">ភាគីលក់-ទិញ</span> បានឯកភាពគ្នាក្នុងតម្លៃ <span class="value" style="min-width:100px;"><?php echo number_format($this->agreement['price_sold'],2);?> </span>ដុល្លារ  ជាអក្សរ <label id="lable_pricesoldkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក
+             			<span style=" margin-left: 50px;">ភាគីលក់-ទិញ</span> បានឯកភាពគ្នាក្នុងតម្លៃ <span class="value" style="min-width:100px;font-weight: bolder;"><?php echo number_format($this->agreement['price_sold'],2);?> </span>ដុល្លារ  ជាអក្សរ <label id="lable_pricesoldkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក
              			<script>
 							a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
 							money_khmersold=read_money_in_khmer(a_sold);
@@ -157,12 +157,50 @@ body {
 							
 						</script>
 						<br />
-						ភាគីទិញបានកក់ប្រាក់លើកទី១ ចំនួន <span class="value" style="min-width:120px;"><?php //echo number_format($this->agreement['price_sold'],2);?> </span>ដុល្លារ ជាអក្សរ <label id="lable_firstpaymentkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក ថ្ងៃទី.........ខែ.........ឆ្នាំ២០........
+						ភាគីទិញបានកក់ប្រាក់លើកទី១ចំនួន <span class="value" style="min-width:70px;font-weight: bold;"><?php echo @number_format($this->first_deposit['recieve_amount'])?></span>ដុល្លារ ជាអក្សរ <label id="lable_firstpaymentkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក 
+						ថ្ងៃទី..<?php echo date("d",strtotime($this->first_deposit['date_pay']));?>.ខែ...<?php echo date("m",strtotime($this->first_deposit['date_pay']));?>...ឆ្នាំ...<?php echo date("Y",strtotime($this->first_deposit['date_pay']));?>...
+						<script>
+							a_sold ='<?php echo ($this->first_deposit['recieve_amount']); ?>';
+							money_khmersold=read_money_in_khmer(a_sold);
+							decimalmoney_khmersold='<?php echo substr(number_format($this->first_deposit['recieve_amount'],2),-2);?>';
+							str_centsold = 'សេន';
+							if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
+							last_number_sold='<?php echo substr(number_format($this->first_deposit['recieve_amount'],2),-2);?>';
+							
+							if(last_number_sold<=0){last_number_sold='';}
+							money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+							dojo.byId('lable_firstpaymentkhmer').innerHTML=money_khmersold+" ";
+							
+						</script>
+						
 						<br />
-						បានកក់ប្រាក់លើកទី២  ចំនួន <span class="value" style="min-width:120px;"><?php //echo number_format($this->agreement['price_sold'],2);?> </span>ដុល្លារ ជាអក្សរ <label id="lable_secondpaymentkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក ថ្ងៃទី.........ខែ.........ឆ្នាំ២០........
+						កក់ប្រាក់លើកទី២  ចំនួន... <span class="value" style="min-width:100px;font-weight: bolder;"><?php if($this->first_deposit['second_depostit']>0 AND !empty($this->first_deposit['second_depostit'])){echo number_format($this->first_deposit['second_depostit'],2);}?>...</span>ដុល្លារ ជាអក្សរ <label id="lable_secondpaymentkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក
+						 ថ្ងៃទី..<?php echo date("d",strtotime($this->first_deposit['date_pay']));?>..ខែ...<?php echo date("m",strtotime($this->first_deposit['date_pay']));?>...ឆ្នាំ...<?php echo date("Y",strtotime($this->first_deposit['date_pay']));?>...
              			<br />
-             			ហើយបានសន្យាប្រគល់ប្រាក់គ្រប់ចំនួន នៅថ្ងៃទី..........ខែ..........ឆ្នាំ២០...... ទឹកប្រាក់សរុបចំនួន.....................ជាអក្សរ............................
+             			<script>
+             					<?php $second_deposit = ($this->first_deposit['second_depostit'])>0?$this->first_deposit['second_depostit']:0;?>
+							a_sold ='<?php echo $second_deposit; ?>';
+							money_khmersold=read_money_in_khmer(a_sold);
+							decimalmoney_khmersold='<?php echo substr(number_format($second_deposit,2),-2);?>';
+							str_centsold = 'សេន';
+							if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
+							last_number_sold='<?php echo substr(number_format($second_deposit,2),-2);?>';
+							
+							if(last_number_sold<=0){last_number_sold='';}
+							money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+							dojo.byId('lable_secondpaymentkhmer').innerHTML=money_khmersold+" ";
+							
+						</script>
+						ហើយបានសន្យាប្រគល់ប្រាក់គ្រប់ចំនួន នៅថ្ងៃទី..........ខែ..........ឆ្នាំ២០...... ទឹកប្រាក់សរុបចំនួន........................
              		</p>
+             		<table width="100%" style="margin-top: 10px;">
+             			<tr>
+             				<td  style="border-bottom: 1px dotted #000;">&nbsp;</td>
+             			</tr>
+             			<tr>
+             				<td style="border-bottom: 1px dotted #000;">&nbsp;</td>
+             			</tr>
+             		</table>
              		<p>
              			<span style=" margin-left: 50px;">បើដល់ថ្ងៃកំណត់</span> មិនឃើញភាគីអ្នកទិញប្រគល់ប្រាក់គ្រប់ចំនួនទេនោះ ប្រាក់កក់កន្លងមកត្រូវបានទៅអ្នកលក់។
              			<br />
@@ -172,8 +210,8 @@ body {
              		</p>
              		
              		<p style=" text-align: right;">
-             			ធ្វើនៅ<span class="border_bt  value" style="width:15%;" ></span>ថ្ងៃ..................ខែ............ឆ្នាំ............នព្វស័ក ព.ស២៥......
-             			<br />
+             			<!-- ធ្វើនៅ<span class="border_bt  value" style="width:15%;" ></span>ថ្ងៃ..................ខែ............ឆ្នាំ............នព្វស័ក ព.ស២៥......
+             			<br /> -->
              			ត្រូវនឹងថ្ងៃទី<span class="value" style="min-width:50px;"> <?php echo date("d",strtotime($this->agreement['agreement_date']));?></span>ខែ <span class="value" style="min-width:50px;"> <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:50px;"> <?php echo date("Y",strtotime($this->agreement['agreement_date']));?></span>
              		</p>
              		<p>
@@ -193,7 +231,7 @@ body {
              			</div>
              			
              			<div style="width:24%; text-align: center; display: inline-block;">
-             				<span class="border_bt  value" style="width:75%;" >&nbsp;<?php echo $this->agreement['client_namekh'];?>&nbsp;</span>
+             				<span class="border_bt  value" style="width:75%;" >&nbsp;&nbsp;<?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?>&nbsp;</span>
              			</div>
              			<div style="width:24%; text-align: center; display: inline-block;">
              				<span class="border_bt  value" style="width:75%;" >&nbsp;</span>
@@ -202,7 +240,7 @@ body {
              				<span class="border_bt  value" style="width:75%;" >&nbsp;</span>
              			</div>
              			<div style="width:24%; text-align: center; display: inline-block;">
-             				<span class="border_bt  value" style="width:75%;" >&nbsp;<?php echo $this->agreement['project_manager_namekh'];?></span>
+             				<span class="border_bt  value" style="width:75%;" >&nbsp;<?php //echo $this->agreement['project_manager_namekh'];?></span>
              			</div>
              			
              			

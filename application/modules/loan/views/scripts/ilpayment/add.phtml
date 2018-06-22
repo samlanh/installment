@@ -4,7 +4,6 @@
 	$frm = $this->frm_ilpayment;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
-	//$base_url = Application_Form_FrmMessage::getUrl("/");
 	$graiceperiod = $this->graiceperiod;
 ?>
 <script src="<?php echo $baseurl;?>/js/help.js"></script>
@@ -1553,10 +1552,12 @@ function totalReturn(){
 	total_interest = dijit.byId('total_interest').get('value');
 	total_interest=isNaN(total_interest)?0:total_interest;
 
-	
+	dijit.byId('extrapayment').set("readOnly",false);
 	if(option_pay==4){
 		extrapayment=0;
 		dijit.byId('extrapayment').attr('value',extrapayment);
+		dijit.byId('extrapayment').attr('value',0);
+		dijit.byId('extrapayment').set("readOnly",true);
 	}else{
 		extrapayment = dijit.byId('extrapayment').get('value');
 		extrapayment=isNaN(extrapayment)?0:extrapayment;

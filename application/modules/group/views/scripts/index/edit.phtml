@@ -938,40 +938,44 @@ function addNewCommune(){
 }
 var document_type_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insert-document-type'));?>';
 function addNewDocumentType(){
-	dojo.xhrPost({
-		url:document_type_url,	
-		content:{ 
-		    'title_en':dijit.byId('clienttype_nameen').get('value'),
-		    'title_kh':dijit.byId('clienttype_namekh').get('value'),
-		    'type':23,
-		},
-		handleAs:"json",
-		load: function(data) {	
-			clienttypeen = dijit.byId('clienttype_nameen').get('value');
-			clienttypekh = dijit.byId('clienttype_namekh').get('value');
-			if(doc_type==1){
-				document_type = dijit.byId('client_d_type');
-				
-			}else if(doc_type==2){
-				document_type = dijit.byId('join_d_type');
-			}else{
-				document_type = dijit.byId('guarantor_d_type');
-			}
-
-			 var myNewItem1 = {					
-						id: data,
-						name: clienttypekh+'-'+clienttypeen
-				};			
-				addDataToSelectbox(document_type, d_datastore, myNewItem1, data);		
-				 
-			dijit.byId('frm_clienttype').reset();
-			dijit.byId('frm_clienttype').hide();
+	if(dijit.byId('frm_client_doc_type').validate()) {
+		dijit.byId('save').set('disabled',true);
+		dojo.xhrPost({
+			url:document_type_url,	
+			content:{ 
+			    'title_en':dijit.byId('clienttype_nameen').get('value'),
+			    'title_kh':dijit.byId('clienttype_namekh').get('value'),
+			    'type':23,
+			},
+			handleAs:"json",
+			load: function(data) {	
+				dijit.byId('save').set('disabled',false);
+				clienttypeen = dijit.byId('clienttype_nameen').get('value');
+				clienttypekh = dijit.byId('clienttype_namekh').get('value');
+				if(doc_type==1){
+					document_type = dijit.byId('client_d_type');
+					
+				}else if(doc_type==2){
+					document_type = dijit.byId('join_d_type');
+				}else{
+					document_type = dijit.byId('guarantor_d_type');
+				}
 	
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});	
+				 var myNewItem1 = {					
+							id: data,
+							name: clienttypekh+'-'+clienttypeen
+					};			
+					addDataToSelectbox(document_type, d_datastore, myNewItem1, data);		
+					 
+				dijit.byId('frm_clienttype').reset();
+				dijit.byId('frm_clienttype').hide();
+		
+			},
+			error: function(err) {
+				dijit.byId('save').set('disabled',false);
+			}
+		});	
+	}
 }
 function showPopupclientdtype(){
 	dijit.byId('frm_clienttype').show();
