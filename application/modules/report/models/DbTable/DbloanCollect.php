@@ -66,6 +66,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 			   FROM `ln_client_receipt_money` `cr`
 			   WHERE (`cr`.`sale_id` = `s`.`id`)) AS `paid_amount`,
 			  `s`.`balance`          AS `balance`,
+			  `s`.`second_depostit`         AS `second_depostit`,
 			  `s`.`buy_date`         AS `buy_date`,
 			  `s`.`end_line`         AS `end_line`,
 			  `s`.`note`             AS `note`,
