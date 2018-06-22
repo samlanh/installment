@@ -283,6 +283,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'staff_id'=>$data['staff_id'],
     			   	'full_commission'=>$data['full_commission'],
     				'comission'=>$data['commission'],
+    			   	'second_depostit'=>$data['second_depostit'],
     				'create_date'=>date("Y-m-d"),
     				'user_id'=>$this->getUserId()
     				);
@@ -479,6 +480,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'staff_id'=>$data['staff_id'],
     				'full_commission'=>$data['full_commission'],
     				'comission'=>$data['commission'],
+    				'second_depostit'=>$data['second_depostit'],
     				'create_date'=>date("Y-m-d"),
     				'user_id'=>$this->getUserId()
     			);

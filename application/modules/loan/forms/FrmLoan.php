@@ -474,6 +474,15 @@ public function init()
 		$_interest_rate = new Zend_Form_Element_Hidden("old_rate");
 		$_old_payterm = new Zend_Form_Element_Hidden("old_payterm");
 		$_id = new Zend_Form_Element_Hidden('id');
+		
+		$second_depostit = new Zend_Dojo_Form_Element_NumberTextBox('second_depostit');
+		$second_depostit->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'required'=>true
+		));
+		$second_depostit->setValue(0);
+		
 		if($data!=null){
 			$agreementdate->setValue($data['agreement_date']);
 			$_branch_id->setValue($data['branch_id']);
@@ -506,13 +515,19 @@ public function init()
 			$start_building->setValue($data['build_start']);
 			$amount_build->setValue($data['amount_build']);
 			
+			if (!empty($data['second_depostit'])){
+			$second_depostit->setValue($data['second_depostit']);
+			}
+			
 		}
 		$this->addElements(array($full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
-				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id));
+				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id,
+				$second_depostit
+				));
 		return $this;
 		
 	}	
