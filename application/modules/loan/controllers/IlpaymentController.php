@@ -378,4 +378,14 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	
+	function getbranchAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$dbGB = new Application_Model_DbTable_DbGlobal();
+			$branch = $dbGB->getAllBranchInfoByID($data['branch_id']);
+			print_r(Zend_Json::encode($branch));
+			exit();
+		}
+	}
 }

@@ -348,7 +348,7 @@
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 							<tr>
-								<td width="25%">
+								<td id="projectlogo" width="25%">
 									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
 								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
@@ -375,8 +375,10 @@
 					<td align="right"><strong><label id="lb_receipt" ></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				    <td>លេខកូដលក់</td>
-				    <td><strong><label id="lb_student_id" class="value">3</label></strong></td>
+				    <td style="display: none;">លេខកូដលក់</td>
+				    <td style="display: none;"><strong><label id="lb_student_id" class="value">3</label></strong></td>
+				    <td>គម្រោង</td>
+				    <td><strong><label id="lbl_project" class="value">3</label></strong></td>
 					<td>&nbsp;&nbsp;&nbsp;តម្លៃលក់</td>
                     <td colspan="3" ><strong><label id="lb_price" class="value"></label></strong></td>
 				</tr>				
@@ -508,7 +510,7 @@
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 							<tr>
-								<td width="25%">
+								<td id="projectlogo1" width="25%">
 									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>					
 								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
@@ -535,8 +537,10 @@
 					<td align="right"><strong><label id="lb_receipt1" ></label></strong></td>
 				</tr>				
 				<tr style="white-space: nowrap;">
-				    <td>លេខកូដលក់</td>
-				    <td><strong><label id="lb_student_id1" class="value">3</label></strong></td>
+				    <td style="display: none;">លេខកូដលក់</td>
+				    <td style="display: none;"><strong><label id="lb_student_id1" class="value">3</label></strong></td>
+				    <td>គម្រោង</td>
+				    <td><strong><label id="lbl_project1" class="value">3</label></strong></td>
 					<td>&nbsp;&nbsp;&nbsp;តម្លៃលក់</td>
                     <td colspan="3" ><strong><label id="lb_price1" class="value"></label></strong></td>
 				</tr>
@@ -1026,7 +1030,30 @@ function getClientInfo(type){
 		dijit.byId('customer_code').attr('value',customer_code);
 	}
 }
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:75px;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+
+			document.getElementById('projectlogo').innerHTML = imagesUrl;
+			document.getElementById('projectlogo1').innerHTML = imagesUrl;
+		},
+		error: function(e) {
+		}
+	});
+}
 function printSave(new_stu_id,new_receipt_no){
+	getBranchInfo();
 	date_line = dijit.byId('date_line').get('value');
 	if(date_line=="" || date_line==null){
 		alert("<?php echo $tr->translate("ALERT_DEPOSIT_WARNING");?>");
@@ -1097,6 +1124,9 @@ function printSave(new_stu_id,new_receipt_no){
 	dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
 	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
 	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
+
+	dojo.byId("lbl_project").innerHTML = dijit.byId("branch_id").attr('displayedValue');
+	dojo.byId("lbl_project1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
 	
 	schedule_opt = dijit.byId("schedule_opt").get("value");
 	if(schedule_opt==1){
