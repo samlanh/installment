@@ -437,6 +437,7 @@ function getAllBranch($search=null){
 				   s.build_start,
 				   s.buy_date,
 				   s.`end_line`,
+    			   s.validate_date,
 				   s.agreement_date,
 				   (SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.payment_id limit 1) AS payment_type,
 				   `p`.`project_name`,

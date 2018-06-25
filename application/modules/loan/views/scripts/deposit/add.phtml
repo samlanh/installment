@@ -367,7 +367,9 @@
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td colspan="5"></td>
-					<td align="right"><strong><label id="lb_receipt" ></label></strong></td>
+					<td align="right">
+					<div><strong><label id="lbl_project" ></label></strong></div>
+					<strong><label id="lb_receipt" ></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td>លេខកូដលក់</td>
@@ -525,7 +527,9 @@
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td colspan="5"></td>
-					<td align="right"><strong><label id="lb_receipt1" ></label></strong></td>
+					<td align="right">
+					<div><strong><label id="lbl_project1" ></label></strong></div>
+					<strong><label id="lb_receipt1" ></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td>លេខកូដលក់</td>
@@ -1095,6 +1099,7 @@ function printSave(new_stu_id,new_receipt_no){
 		dojo.byId("lb_receipt1").innerHTML = new_receipt_no;
 	}
 	if(dijit.byId('frm_add_tran').validate()){
+		
 		dijit.byId("lbl_schedule").hide();
 		dojo.byId("lb_paymentid").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
 	
@@ -1130,6 +1135,9 @@ function printSave(new_stu_id,new_receipt_no){
 		
 		discount_percent = total_sold*discount_percent/100;
 		total_discount = parseInt(discount_percent)+parseFloat(discount);
+		dojo.byId("lbl_project").innerHTML = dijit.byId("branch_id").attr('displayedValue');
+		dojo.byId("lbl_project1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
+		
 		dojo.byId("lb_discount").innerHTML = symbal+" "+dojo.number.format(total_discount,2);
 		dojo.byId("lb_amount").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),{places:2});
 		dojo.byId("lb_paid").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});

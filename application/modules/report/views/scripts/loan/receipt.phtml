@@ -9,7 +9,7 @@ img.view{height: 85px !important;}
 <?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();?>
 <title><?php echo $tr->translate("RECEIPT");?></title>
  <form method="post">
-<div style=" width:29cm;min-height:23cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm;background: #fff;">
+<div style="width:29cm;min-height:23cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm;background: #fff;">
 	<div id="divPrint" style="width: 100%;">
 			<?php 
 				$dbGB = new Application_Model_DbTable_DbGlobal();
@@ -51,7 +51,7 @@ img.view{height: 85px !important;}
                         line-height:20px;font-weight: normal !important;}
 				.h{}
 				.print tr td{
-					padding:2px 2px; 
+					padding:1px 2px; 
 				}
 			   .khmerbold{font:14px 'Khmer OS Battambang';}
 			   .khmer{font:14px 'Khmer OS Battambang';}
@@ -59,7 +59,7 @@ img.view{height: 85px !important;}
 			   .h{ margin-top: -10px;}
 			</style>
 			<?php for($i=0; $i<2; $i++){ ?>			
-			<table width="100%" style="white-space: nowrap;font-size:14px;  padding:5px 10px 0px 5px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
+			<table width="100%" style="white-space: nowrap;font-size:14px;  padding:3px 10px 0px 5px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
@@ -86,9 +86,11 @@ img.view{height: 85px !important;}
 					<td width="10%" ></td>
 					<td width="18%" ></td>
 				</tr>
-				<tr style="white-space: nowrap;font-size: 14px;margin-top: -10px;" >
+				<tr style="white-space: nowrap;font-size: 14px;margin-top: -15px;" >
 				    <td colspan="5"></td>
-					<td align="right"><strong><label><?php echo $this->rs['receipt_no'];?></label></strong></td>
+					<td align="right"><strong>
+						<div><?php echo $this->rs['project_name'];?></div>
+					<label><?php echo $this->rs['receipt_no'];?></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td  >លេខកូដលក់</td>
@@ -124,8 +126,8 @@ img.view{height: 85px !important;}
 					<td >
 						<table width="100%" cellpadding="0" cellspacing="0">
 							<tr>
-								<td width="33.5%" ><strong><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"><?php echo  number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2)." $";?></label></strong></td>
-								<td width="33%">ប្រាក់នៅសល់</td>
+								<td width="33.5%" style="white-space: nowrap;"><strong><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"><?php echo  number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2)." $";?></label></strong></td>
+								<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
 								<td width="33.5%"><strong style="white-space: nowrap;"><label style="white-space: nowrap;margin-right: -4px;" class="value"><?php echo  number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2)." $";?></label></strong></td>
 							</tr>
 						</table>

@@ -217,7 +217,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
 	  	$db_keycode = new Application_Model_DbTable_DbKeycode();
 	  	$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
   	}else{
-  		$this->_redirect("/report/paramater");
+  		///$this->_redirect("/report/paramater");
   	}
   }
   /*function rptAgreementHouseAction(){
