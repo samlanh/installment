@@ -288,14 +288,18 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	}
   	else{
   		$search = array(
+  				'branch_id'=>0,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
+  				
   		);
   	}
   	$this->view->list_end_date=$search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->income = $db->getIncomeCategory($search);
   	$this->view->expense = $db->getExpenseCategory($search);
+  	
+  	$this->view->expense_comission = $db->getAllComissionExpense($search);
   	$this->view->saleicome = $db->geIncomeFromSale($search,null);
   	
   	$this->view->money_deposit = $db->geIncomeFromSale($search,1);

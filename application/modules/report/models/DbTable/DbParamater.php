@@ -1242,11 +1242,15 @@ function getAllBranch($search=null){
     	$from_date =(empty($search['start_date']))? '1': " ic.`date` >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " ic.`date` <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
+    	if($search['branch_id']>0){
+    		$where.=" AND branch_id=".$search['branch_id'];
+    	}
     	return $db->fetchAll($sql.$where.$order);
     }
     function getExpenseCategory($search){
     	$db = $this->getAdapter();
     	$sql="SELECT ex.`category_id`,
+    	SUM(total_amount) AS total_amount,
     	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) AS category_name,
     	ex.`date` FROM `ln_expense` AS ex WHERE 1
     	";
@@ -1255,6 +1259,25 @@ function getAllBranch($search=null){
     	$from_date =(empty($search['start_date']))? '1': " ex.`date` >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " ex.`date` <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
+    	if($search['branch_id']>0){
+    		$where.=" AND branch_id=".$search['branch_id'];
+    	}
+    	return $db->fetchAll($sql.$where.$order);
+    }
+    function getAllComissionExpense($search){//for income statement
+    	$db = $this->getAdapter();
+    	$sql="SELECT co.`category_id`,
+    	SUM(total_amount) AS total_amount,
+    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = co.`category_id` LIMIT 1) AS category_name,
+    	co.`date` FROM `ln_comission` AS co WHERE 1";
+    	$order =" GROUP BY co.`category_id` ORDER BY co.`category_id` ASC";
+    	$where="";
+    	$from_date =(empty($search['start_date']))? '1': " co.`date` >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " co.`date` <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	if($search['branch_id']>0){
+    		$where.=" AND branch_id=".$search['branch_id'];
+    	}
     	return $db->fetchAll($sql.$where.$order);
     }
     function geIncomeFromSale($search,$money_type=-1){
@@ -1268,7 +1291,9 @@ function getAllBranch($search=null){
     	$from_date =(empty($search['start_date']))? '1': " crm.`date_pay` >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " crm.`date_pay` <= '".$search['end_date']." 23:59:59'";
     	$where.= " AND ".$from_date." AND ".$to_date;
-//     	echo $sql.$where."====<br />";
+    	if($search['branch_id']>0){
+    		$where.=" AND branch_id=".$search['branch_id'];
+    	}
     	return $db->fetchRow($sql.$where);
     }
     function geOtherIncome($cate_id){
