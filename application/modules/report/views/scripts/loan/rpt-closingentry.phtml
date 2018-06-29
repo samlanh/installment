@@ -1,0 +1,307 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_search;
+	$opt = array(1=>"បង់ធម្មតា",2=>"បង់មុន",3=>"បង់រំលោះប្រាក់ដើម",4=>"បង់ផ្តាច់");
+	$url_receipt = $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt'));
+	$url_receiptupdate = $this->url(array('module'=>'report','controller'=>'loan','action'=>'updatereceipt'));
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->rssearch['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->rssearch['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}
+?>
+<title><?php echo $tr->translate("RPT_CLIENT_PAYMENT");?></title>
+<script>
+     dojo.require("dijit.form.DateTextBox");
+</script>
+	<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
+		<form method="post">
+			<table style="font-family: 'Khmer OS Content'; margin: 0 auto;width:100%;" >
+				<tr>
+			   		<td><?php echo $frm->getElement("adv_search");?></td>
+			   		<td><?php echo $frm->getElement('branch_id');?></td>
+			   		<td><input id="land_id" /></td>
+			   		<td><?php echo $frm->getElement('client_name');?></td>
+			   	</tr>
+			   	<tr>
+			   		<td><?php echo $frm->getElement('payment_method');?></td>
+			   		<td><?php echo $frm->getElement('user_id');?></td>
+			   		<td><?php echo $frm->getElement('start_date');?></td>
+			   		<td><?php echo $frm->getElement('end_date');?></td>
+			   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+			   	</tr>
+			</table>
+		</form>
+		<div style="width:100%; margin:0 auto;">
+		<div style="min-height:22cm; margin:0 auto;">
+			<style>
+				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
+				.hiddenblog{display: block !important;}
+			</style>
+			<div id="divPrint">
+			<style type="text/css">
+				.style{
+					line-height: 25px;font-size: 12px !important;
+					font-family: 'Khmer OS Battambang';
+				}
+				.even{background:#f1f1f1;border:1px solid #d2d2d2;}
+				.hideblog{display: none;}
+				.hiddenblog{display: block !important;}
+				.style1:hover{ background: #ccc; }
+				table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+				table { page-break-inside:auto }
+				tr{ page-break-inside:avoid; page-break-after:auto; }
+				#header {
+				  display: table-header-group;
+				  page-break-inside:avoid; page-break-after:auto;
+				  margin-top: 100px;
+				}
+				.hide{visibility: hidden;}
+				@media print {
+				  div.divFooter {
+				    position: fixed;
+				    top: 0;
+				  	width: 100%;
+				  	height: 100px;
+				  	bottom:0px;
+					margin:0;
+				  }
+					.hide{visibility: visible; height: 110px;}
+				}
+			</style>
+				 <form id="list" name="list" action="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'submitentry')); ?>" dojoType="dijit.form.Form" method="post">
+						<table width="100%">
+							<tr>
+						    	<td align="center" valign="top">
+						        	<div class="divFooter">
+							        	<table border="0" width="100%" style="font-family: 'Khmer OS Battambang';margin:0;padding:0;">
+							            	<tr>
+							                	<td width="20%" style="border:1px solid #fff;"></td>
+							                	<td width="60%" valign="top">
+							                		<ul>
+							                			<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
+							                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("បិទបញ្ជីប្រចាំថ្ងៃ");?></li>
+							                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("Closing Entry");?></li>
+							                			<li style="text-align:center; font-size:16px;"><?php if($this->list_end_date['start_date']){echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
+							                		</ul>
+							                   </td>
+							                    <td width="20%"></td>
+							                </tr> 
+							            </table>
+						            </div>
+						        </td>
+						    </tr>
+						    <tr>
+						    	<td id="exportExcel">
+						          	 <table width="100%" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
+								             <thead>
+								                <tr class="hide" style="border:1px solid #000;">
+								                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+								                </tr>
+								                <tr bgcolor="#c1d0f3" class="style" align="center" style="border:1px solid #000;font-weight:bold;padding:0px 2px;white-space: nowrap;">
+								                    <td rowspan="2"><input type="checkBox" onclick="checkAll('<?php echo count($this->loantotalcollect_list);?>');" name="checkall" id="checkall" />
+								                    <?php echo $tr->translate("NUM");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
+								                    <td rowspan="2"><?php echo $tr->translate("បង់ជា");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("បង់លើក");?></td>		
+								                    <td colspan="5"><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>    
+								                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("RECIEPT_NO");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
+								                    <td rowspan="2" class=""><?php echo $tr->translate("BY_USER");?></td>
+								                    <td rowspan="2" class=""><?php echo $tr->translate("STATUS");?></td>
+								                </tr>
+								                <tr class="style" style="border:1px solid #000;font-weight:bold;background:#c1d0f3;white-space: nowrap;text-align: center;">
+								                	<td style="padding:1px;"><?php echo $tr->translate("PRINCIPAL");?></td>                   
+								                    <td style="padding:1px;"><?php echo $tr->translate("INTEREST");?></td>
+								                    <td style="padding:1px;"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+								                    <td style="padding:1px;"><?php echo $tr->translate("EXTRA_PAYMENT");?></td>	                    
+								                    <td style="padding:1px;"><?php echo $tr->translate("TOTAL");?>
+								                    <input type="hidden" name="id_selected" id="id_selected" dojoType="dijit.form.TextBox" />
+								                    </td>
+								                </tr>
+								            </thead>
+							                <?php 
+							                	$total_cash = 0;$total_cheque = 0;$total_bank = 0;
+							                	$amt_r1 = 0; $amn_r2 = 0; $amn_r3 = 0;$amt_r4 = 0;$amn_r5 = 0;
+							                	  $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;$amt_d5 = 0;
+							                	 $amn_b1 = 0; $amn_b2 = 0; $amn_b3 = 0; $amn_b4 = 0;$amn_b5 = 0;
+							                	 $i=1;$oldloan_number='';
+							                	 $total_d=0;$total_b=0;$total_r=0;
+							                ?>
+							                <?php 
+							                $is_set =0; 
+							                $number=0;
+							                if(!empty($this->loantotalcollect_list)) foreach ($this->loantotalcollect_list as $index => $rs){ ?>
+							               <?php 
+							               
+												$amt_d1 = $amt_d1+$rs['total_principal_permonthpaid'];
+												$amt_d2 = $amt_d2+$rs['total_interest_permonthpaid'];
+												$amt_d3 = $amt_d3+$rs['penalize_amountpaid'];
+												$amt_d5 = $amt_d5+$rs['extra_payment'];
+												$total_d=$amt_d1+$amt_d2+$amt_d3+$amt_d5;
+												if($rs['payment_methodid']==1){
+													$total_cash = $total_cash + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+												}elseif($rs['payment_methodid']==2){
+													$total_bank = $total_bank  + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+												}else{
+													$total_cheque = $total_bank + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+												}
+							               ?>
+							                <tr class="style style1 <?php if($index%2==1){echo"even";}?>" style="border-right: 1px solid #ccc;border-left: 1px solid #ccc;font-family: 'Khmer OS Content'; white-space:nowrap;">
+							               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;
+							               			<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $index+1;?>)" name="check_box<?php echo $index+1;?>" id="check_box<?php echo $index+1;?>" />
+							               			<input type="hidden" id="id_<?php echo $index+1;?>" name="id_<?php echo $index+1;?>" value="<?php echo $rs['id'];?>" dojoType="dijit.form.TextBox" />
+							               		</td>
+							               		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+							               		<td>&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
+							               		<td>&nbsp;<?php echo $rs["land_address"].",".$rs["street"];?>&nbsp;</td>
+							               		<td>&nbsp;<?php echo $rs["payment_method"];?>&nbsp;</td>
+							               		<td>&nbsp;<?php echo $rs["payment_times"];?>&nbsp;</td>
+							               		<td align="center" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['total_principal_permonthpaid'],2);?></td>               		
+							               		<td align="center" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['total_interest_permonthpaid'],2);?></td>
+							               		<td align="center" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['penalize_amountpaid'],2);?></td>
+							               		<td align="center" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['extra_payment'],2);?></td>
+							               		<td style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['amount_payment'],2);?></td>
+							               		<td style="white-space:nowrap; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
+							               		<td>&nbsp;<?php echo $rs["receipt_no"];?>&nbsp;</td>
+							               		<td style="white-space: nowrap;font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;
+												<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
+												<?php echo $rs["paymentoption"];?></a>
+												</td>
+							               		<td class="" style="font:bolder 11px 'Khmer OS Battambang',Arial;text-align: center;"><?php echo $rs['user_name']?></td>
+							               		<td class=""><?php echo($rs['is_closed']==0)?"Unclose":"Closed";?></td>
+							                </tr>
+							                <?php }?>
+							            </table>
+						            
+						            <br />
+						             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+						                 <tr bgcolor="#c1d0f3" class="style" style="font-weight:bold; line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
+						                    <td><?php echo $tr->translate("CURRENT_TYPE");?></td>
+						                    <td><?php echo $tr->translate("PRINCIPAL");?></td>                    
+						                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+						                    <td><?php echo $tr->translate("TOTAL_PENILIZE_AMOUNT");?></td>
+						                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
+						                    <td><?php echo $tr->translate("TOTAL");?></td>
+						                    <td rowspan="2">ចំណូលតាមប្រភេទ</td>
+						                    <td><?php echo $tr->translate("សាច់ប្រាក់សរុប");?></td>
+						                    <td><?php echo $tr->translate("តាមធនាគារ");?></td>
+						                    <td><?php echo $tr->translate("សែកសរុប");?></td>
+						                </tr>
+						                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
+						                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d5,2);?>&nbsp;</td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($total_d,2);?>&nbsp;</td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($total_cash,2);?>&nbsp;</td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($total_bank,2);?>&nbsp;</td>
+						                    <td>&nbsp;&nbsp;<?php echo number_format($total_cheque,2);?>&nbsp;</td>
+						                </tr>
+						              </table>
+						    	</td>
+						    </tr>
+						     <tr>
+						    	<td align="center">
+						    		<button iconclass="dijitIconSave" dojoType="dijit.form.Button" showLabel="true" type="submit">Closing Entry</button>
+						    	</td>
+						</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+	require(["dojo/ready"], function(ready){
+		ready(function(){
+			 getAllPropertyBranch();
+		});
+		new dijit.form.FilteringSelect({
+			store: property_store,
+			required: false,
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			name: "land_id",
+			id: "land_id",
+			value:-1,
+			searchAttr: "name",
+			class: 'fullside fullside50',
+			onChange: function() {
+				land_id=-1;
+		}
+			}, "land_id");
+	});
+	land_id = '<?php echo $this->rssearch['land_id']?>';
+	var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+	function getAllPropertyBranch(branch_id){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id<0){
+			return false;
+		}
+		dojo.xhrPost({
+			url:url_getland,	
+			content:{ 
+			    'branch_id':branch_id,
+			    'action':1
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				property_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('land_id').set('store', property_store);
+			    if(land_id>0){
+			    	dijit.byId('land_id').attr('value',land_id);
+				 }
+			},
+			error: function(err) {
+			}
+		});
+	}
+
+	function checkAll(array_length){
+		dijit.byId('id_selected').attr('value','');
+		if(dojo.byId('checkall').checked){
+			for(var j=1;j<=array_length;j++){
+				$("#check_box"+j).attr('checked', 'checked');
+				checked_id(j);
+			}
+		}else{
+			for(var j=1;j<=array_length;j++){
+				$("#check_box"+j).removeAttr("checked");
+				checked_id(j);
+			}
+		}
+	}
+
+	function checked_id(index){
+		row_id = dijit.byId('id_'+index).get('value');
+		if(dojo.byId('check_box'+index).checked){
+			if($("#id_selected").val()!="") {
+				var identity = $("#id_selected").val();
+				$("#id_selected").val(identity+','+row_id);
+			}else{
+				$("#id_selected").val(row_id);
+			}
+		}else{
+			var identity = $('#id_selected').val();
+			var arrays = identity.split(',');
+			for(var i=0;i<arrays.length;i++) {
+			if(arrays[i] == row_id) arrays.splice(i,1);
+			}
+			var strings = arrays.join(',');
+			$('#id_selected').val(strings);
+		}
+	}
+</script>

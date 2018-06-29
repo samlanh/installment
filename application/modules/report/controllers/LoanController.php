@@ -107,6 +107,46 @@ class Report_LoanController extends Zend_Controller_Action {
 	Application_Model_Decorator::removeAllDecorator($frm);
 	$this->view->frm_search = $frm;
   }
+  function rptClosingentryAction(){
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}else {
+  		$search = array(
+  				'adv_search' => '',
+  				'status_search' => -1,
+  				'status' => -1,
+  				'client_name' => "",
+  				'branch_id' => -2,
+  				'land_id'=>-1,
+  				'user_id'=>'',
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  				'payment_method'=>-1,
+  		);
+  	}
+  	$this->view->rssearch = $search;
+  	$this->view->loantotalcollect_list =$rs=$db->getALLLoanPayment($search);
+  	$this->view->list_end_date = $search;
+  
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  }
+  function submitentryAction(){
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	if($this->getRequest()->isPost()){
+  		$data = $this->getRequest()->getPost();
+  		$db = new Report_Model_DbTable_DbLandreport();
+  		$db->submitClosingEngry($data);
+  		Application_Form_FrmMessage::Sucessfull("Closing Entry Success", "/report/loan/rpt-closingentry");
+  	}
+  }
   function rptLoanLateAction(){
 
   	if($this->getRequest()->isPost()){

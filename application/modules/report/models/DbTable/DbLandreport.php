@@ -414,6 +414,21 @@ public function getAllOutstadingLoan($search=null){
       	$order=" ORDER BY id DESC ";
       	return $db->fetchAll($sql.$where.$order);
       }
+      function submitClosingEngry($data){
+      	$db = $this->getAdapter();
+      	if(!empty($data['id_selected'])){
+      		$ids = explode(',', $data['id_selected']);
+      		$key = 1;
+      		$arr = array(
+      				"is_closed"=>1,
+      		);
+      		foreach ($ids as $i){
+      			$this->_name="ln_client_receipt_money";
+      			$where="id= ".$i;
+      			$this->update($arr, $where);
+      		}
+      	}
+      }
       public function getALLLoanIcome($search=null){
 		$start_date = $search['start_date'];
     	$end_date = $search['end_date'];
