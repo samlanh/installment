@@ -31,9 +31,15 @@
 	$controller = $request->getControllerName();
 	?>
 	<div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow  " data-scroll-to-active="true">
+		<?php 
+			$db = new Application_Model_DbTable_DbUsers();
+			$rs = $db->getAccessUrl("loan","deposit","add");
+			if(!empty($rs)){
+		?>
 		<div class="button-make-loan mb-10">
 			<a href="<?php echo $this->baseUrl()."/loan/deposit/add"?>"  class="closebtn-makesale"  ><i class="fa fa-plus" aria-hidden="true"></i> <?php echo $tr->translate("SALE_PROPERTY");?> </a>
 		</div>
+		<?php }?>
 	    <div class="main-menu-content">
 			<ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
 			    <?php if(!empty($arr_param_menu[$request->getModuleName()]))foreach ($arr_param_menu[$request->getModuleName()] as $param =>$url){
