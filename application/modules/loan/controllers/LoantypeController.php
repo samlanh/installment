@@ -91,6 +91,7 @@ public function init()
     	$frm = $fm->FrmViewType($row);
 	    Application_Model_Decorator::removeAllDecorator($frm);
 	    $this->view->Form_Frmcallecterall = $frm;
+	    $this->view->rs  = $row;
     }
 }
 ?>

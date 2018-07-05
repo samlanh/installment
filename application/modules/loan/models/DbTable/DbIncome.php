@@ -160,9 +160,9 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		return $prefix.$pre.$result;
 	}
 
-	function getAllIncomeCategory(){
+	function getAllIncomeCategory($type=12){
 		$db = $this->getAdapter();
-		$sql = " select key_code as id,name_kh as name from ln_view where type=12 AND name_kh!='' ";
+		$sql = " select key_code as id,name_kh as name from ln_view where type=$type AND name_kh!='' ";
 		return $db->fetchAll($sql);
 		
 	}

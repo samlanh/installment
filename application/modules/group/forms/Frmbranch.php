@@ -149,7 +149,6 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 		$branch_code->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'readOnly'=>'readOnly',
 				'style'=>'color:red',
 				'onkeyup'=>'Calcuhundred()'
 				));

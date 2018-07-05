@@ -23,17 +23,17 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 			$_data['photo']="";
 		}
 		unset($_data['MAX_FILE_SIZE']);
-		if(!empty($_data['id'])){
-			$oldCode = $this->getCOById($_data['id']);
-			$staff_id = $oldCode['co_code'];
-		}else{
-			$db = new Application_Model_DbTable_DbGlobal();
-			$staff_id = $db->getStaffNumberByBranch($_data['branch_id']);
-		}
+// 		if(!empty($_data['id'])){
+// 			$oldCode = $this->getCOById($_data['id']);
+// 			$staff_id = $oldCode['co_code'];
+// 		}else{
+// 			$db = new Application_Model_DbTable_DbGlobal();
+// 			$staff_id = $db->getStaffNumberByBranch($_data['branch_id']);
+// 		}
 		
 		$_arr=array(
 				'branch_id'	  => $_data['branch_id'],
-				'co_code'	  => $staff_id,
+				'co_code'	  => $_data['co_id'],
 				'co_khname'	  => $_data['name_kh'],
 				//'co_lastname' => '',//$_data['last_name'],
 				'sex'		  => $_data['co_sex'],

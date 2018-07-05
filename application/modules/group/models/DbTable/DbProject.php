@@ -220,7 +220,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	for($i = $acc_no;$i<3;$i++){
     		$pre.='0';
     	}
-    	return "C-".$pre.$new_acc_no;
+    	return $pre.$new_acc_no;
     }
 }  
 	  

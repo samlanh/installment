@@ -1,8 +1,10 @@
 <?php
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$frm = $this->Form_Frmcallecterall;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->Form_Frmcallecterall;
+	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 ?>
 <title> <?php echo $tr->translate("EDIT_CATEGORY")?></title>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
  <div class="card">
 	<div class="card-content collapse show">
 		<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'loantype','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -52,6 +54,13 @@ $frm = $this->Form_Frmcallecterall;
 	                   </div>
 	                </div>
 	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PARENT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="parent_id" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -68,4 +77,45 @@ $frm = $this->Form_Frmcallecterall;
 </div>
 <script type="text/javascript">
 	dojo.require("dijit.form.NumberTextBox");
+</script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var acc_store  = getDataStorefromJSON('id','name');
+require(["dojo/ready"], function(ready){
+		ready(function(){
+			getParentbytype();
+	 	});
+		new dijit.form.FilteringSelect({
+			store: acc_store,
+			autoComplete: true,
+			required: false,		           
+			name: "parent_id",
+			id: "parent_id",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+				
+		    }
+		}, "parent_id");
+});
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'income','action'=>'getparentbyid')); ?>';
+function getParentbytype(){
+	account_type = dijit.byId('type').get("value");
+	if(account_type==-1){return false;}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'type':account_type
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			acc_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('parent_id').set('store', acc_store);
+		    dijit.byId('parent_id').attr('value','<?php echo $this->rs['parent_id'];?>');
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
 </script>

@@ -41,9 +41,8 @@ Class Loan_Form_Frmtype extends Zend_Dojo_Form {
 		
 		$name_en = new Zend_Dojo_Form_Element_TextBox('title_en');
 		$name_en->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'required'=>true
 		));
 		
 		$name_kh = new Zend_Dojo_Form_Element_ValidationTextBox('title_kh');
@@ -72,7 +71,7 @@ Class Loan_Form_Frmtype extends Zend_Dojo_Form {
 		$_type->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required'=>'true',
-				'missingMessage'=>'Invalid Module!',
+				'onchange'=>'getParentbytype();',
 				'class'=>'fullside'));
 		$opt= $db->getAllViewType(1,1);
 		$_type->setMultiOptions($opt);
