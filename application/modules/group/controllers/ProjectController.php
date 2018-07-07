@@ -29,6 +29,8 @@ class Group_ProjectController extends Zend_Controller_Action {
 					      'module'=>'group','controller'=>'project','action'=>'edit',
 			);
 			$this->view->list=$list->getCheckList(2, $collumns, $rs_rowshow,array('project_name'=>$link,'project_type'=>$link));
+			
+			$this->view->row = $rs_rowshow;
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message($this->tr->translate("APPLICATION_ERROR"));
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

@@ -13,6 +13,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$session_lang=new Zend_Session_Namespace('lang');
 		return $session_lang->lang_id;
 	}
+	public function getLaguage(){
+		$db = $this->getAdapter();
+		$sql="SELECT * FROM `ln_language` AS l WHERE l.`status`=1 ORDER BY l.ordering ASC";
+		return $db->fetchAll($sql);
+	}
 // 	public function getAllDegree($id=null){//use for staff education
 // 		$tr= Application_Form_FrmLanguages::getCurrentlanguage();
 // 		$opt_degree = array(

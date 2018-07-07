@@ -1,0 +1,206 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('EDIT_NEWS')); 
+	$countlang = count($this->lang);
+	$frm = $this->frm_new;
+	$db = new Other_Model_DbTable_DbNews();
+	if(!empty($this->row['image_feature'])){
+		$profile="/news/".$this->row['image_feature'];
+	}else{
+		$profile ="/no-photo.png";
+	}
+?>
+<style>
+	div.cke_contents.cke_reset {
+		height: 600px !important;
+	}
+	img.image_view {
+		width: 100%;
+		height: 182px;
+		margin-bottom: 1px;
+		border: solid 1px #eee;
+	}
+.button_browse span {
+    color: #000;
+    padding: 6px 0;
+    display: inline-block;
+}
+input.btn_borwse_image {
+    position: absolute;
+    width: 100%;
+    height: 35px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+.button_browse {
+    /*margin-top: 10px; */
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    width: initial;
+   height: initial;
+    cursor: pointer;
+    background: #fbf9f9;
+    border: 1px solid #e8e8e8;
+}
+.button_browse span {
+    line-height: 33px;
+    font-weight: 600;
+    cursor: pointer;
+}
+</style>
+<script type="text/javascript">	
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<script src="<?php echo $this->baseUrl();?>/ckeditor/ckeditor.js"></script>
+<div class="card">
+	<div class="card-content collapse show">
+		<form id='add_client' action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					dijit.byId('save_close').set('disabled',true);
+					return true;
+				} else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_NEWS');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="col-md-8 col-sm-12 col-xs-12">
+	    	<?php if ($countlang>1){?>
+	    	<div class="card-box">
+	    		 <ul class="nav  md-pills pills-primary nav-tab" role="tablist">
+	    		 	<?php $alias=''; foreach($this->lang as $key=> $rs){
+                      	$alias = str_replace(' ','',$rs['title']);?>
+		            <li class="nav-item <?php if ($key<1){echo "active";}?>">
+		                <a class="nav-link " data-toggle="tab" href="<?php echo "#".$alias;?>" role="tab"><i class="fa fa-flag ml-2"></i> <?php echo $tr->translate(strtoupper($rs['title']));?></a>
+		            </li>
+		            <?php }?>
+		        </ul>
+		    </div>
+		    <?php }?>
+		    <?php if ($countlang>1){?>
+		    <div class="col-md-12">
+		        <!-- Tab panels -->
+		        <div class="tab-content vertical">
+		         <?php $alias=''; foreach($this->lang as $key=> $rs){
+                      	$alias = str_replace(' ','',$rs['title']);
+                      	$lang = $db->getArticleTitleByLang($this->id, $rs['id']);
+                  ?>
+			        <!--Panel <?php echo $key+1?>-->
+			        <div class="tab-pane fade <?php if ($key<1){echo "active in";}?>" id="<?php echo $alias;?>" role="tabpanel">
+			        	<div class="col-md-12 col-sm-12 col-xs-12">
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TITLE_IN_".strtoupper($rs['title']));?>
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   		<input   type="text" dojoType="dijit.form.TextBox" required="required" name="title<?php echo str_replace(' ','',$rs['title']);?>"  id="title<?php echo str_replace(' ','',$rs['title']);?>" value="<?php echo $lang['title']?>" class="fullside" placeholder="<?php echo $tr->translate("TITLE_IN_".strtoupper($rs['title']));?>" />
+			                  		<input type="hidden" dojoType="dijit.form.TextBox" name="iddetail<?php echo str_replace(' ','',$rs['title']);?>"  id="iddetail<?php echo str_replace(' ','',$rs['title']);?>" value="<?php echo $lang['id'];?>" class="fullside" />
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12" for="first-name"><?php echo $tr->translate('CONTENT_'.strtoupper($rs['title']))?><span class="required">*</span>
+			                   </label>
+			                   <div class="col-md-12 col-sm-12 col-xs-12">
+			                 	  <textarea class="ckeditor"   style="min-height:400px; height:400px;" id="description<?php echo str_replace(' ','',$rs['title']);?>" name="description<?php echo str_replace(' ','',$rs['title']);?>"><?php echo $lang['description']?></textarea>
+			                   </div>
+			                </div>
+			          	</div>
+			          	
+			          	
+			        </div>
+			        <!--/ Panel <?php echo $key+1?>-->
+			        <?php }?>
+			   </div>
+			</div>
+			<?php }else{?>
+			<div class="col-md-12">
+					 <?php $alias=''; foreach($this->lang as $key=> $rs){
+                      	$alias = str_replace(' ','',$rs['title']);
+                      	$lang = $db->getArticleTitleByLang($this->id, $rs['id']);
+                  ?>
+			        	<div class="col-md-12 col-sm-12 col-xs-12">
+			                <div class="form-group">
+			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TITLE_IN_".strtoupper($rs['title']));?>
+			                   </label>
+			                   <div class="col-md-7 col-sm-7 col-xs-12">
+			                   		<input   type="text" dojoType="dijit.form.TextBox" required="required" name="title<?php echo str_replace(' ','',$rs['title']);?>"  id="title<?php echo str_replace(' ','',$rs['title']);?>" value="<?php echo $lang['title']?>" class="fullside" placeholder="<?php echo $tr->translate("TITLE_IN_".strtoupper($rs['title']));?>" />
+			                  		<input type="hidden" dojoType="dijit.form.TextBox" name="iddetail<?php echo str_replace(' ','',$rs['title']);?>"  id="iddetail<?php echo str_replace(' ','',$rs['title']);?>" value="<?php echo $lang['id'];?>" class="fullside" />
+			                   </div>
+			                </div>
+			                <div class="form-group">
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12" for="first-name"><?php echo $tr->translate('CONTENT_'.strtoupper($rs['title']))?><span class="required">*</span>
+			                   </label>
+			                   <div class="col-md-12 col-sm-12 col-xs-12">
+			                 	  <textarea class="ckeditor"   style="min-height:400px; height:400px;" id="description<?php echo str_replace(' ','',$rs['title']);?>" name="description<?php echo str_replace(' ','',$rs['title']);?>"><?php echo $lang['description']?></textarea>
+			                   </div>
+			                </div>
+			          	</div>
+			        <?php }?>
+			</div>
+			<?php }?>
+			</div>
+			<div class="col-md-4 col-sm-12 col-xs-12">
+                 <div class="form-group">
+	              	  <div class="col-md-12 col-sm-12 col-xs-12">
+	               		<img class="image_view" id="image_view" src="<?php echo $this->baseUrl().'/images'.$profile;?>" alt=""  />
+	               		<p style="padding: 10px 0;text-align: center;margin-bottom: 0;/* background: #454545; */margin-top: 10px;color: #000;"><?php echo $tr->translate('IMAGES')?> (640 X 420px)</p>
+						<div class="button_browse">
+							<span><?php echo $tr->translate('Image Feature')?><span> &nbsp; <i class="fa fa-camera" aria-hidden="true"></i></span></span>
+							<input class="btn_borwse_image"  type="file" id="photo" name="photo" >
+						</div>
+					</div>
+                </div>
+                <div class="form-group">
+                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PUBLISH_DATE");?>
+                   </label>
+                   <div class="col-md-7 col-sm-7 col-xs-12">
+                   <?php echo $frm->getElement("public_date");?>
+                   </div>
+                </div>
+                <div class="form-group">
+                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?>
+                   </label>
+                   <div class="col-md-7 col-sm-7 col-xs-12">
+                   <?php echo $frm->getElement("status");?>
+                   <input type="hidden" dojoType="dijit.form.TextBox" name="id"  id="id" value="<?php echo $this->id;?>" class="fullside" />
+                   </div>
+                </div>
+			</div>
+			<div class="clearfix"></div>
+			    <div class="card-box">
+               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+		    			<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" 
+						 iconClass="dijitIconClear" /> 
+					 <input type="submit" value="SAVE_CLOSE" tabindex="2" label="<?php echo $tr->translate('SAVECLOSE');?>" id="save_close" dojoType="dijit.form.Button" name="save_close"
+						 iconClass="dijitEditorIcon dijitEditorIconSave" /> 
+	    		</div>
+	    	</div>
+		</form>
+	</div>
+</div>
+<script>
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function (e) {
+            $('#image_view').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+$("#photo").change(function(){
+    readURL(this);
+});
+ </script>

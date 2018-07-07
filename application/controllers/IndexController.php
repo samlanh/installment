@@ -90,7 +90,10 @@ class IndexController extends Zend_Controller_Action
 							break;
 						}
 					}
-					
+					if(!empty($user_info['staff_id'])){
+						Application_Form_FrmMessage::redirectUrl("/home/index/dashboard");
+						exit();
+					}
 					Application_Form_FrmMessage::redirectUrl("/home");	
 					exit();
 				}

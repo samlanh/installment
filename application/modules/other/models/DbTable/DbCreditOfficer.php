@@ -10,6 +10,7 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
     	 
     }
 	public function addCreditOfficer($_data){
+		
 		$photoname = str_replace(" ", "_", $_data['co_id']) . '.jpg';
 		$upload = new Zend_File_Transfer();
 		$upload->addFilter('Rename',
@@ -30,7 +31,6 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 // 			$db = new Application_Model_DbTable_DbGlobal();
 // 			$staff_id = $db->getStaffNumberByBranch($_data['branch_id']);
 // 		}
-		
 		$_arr=array(
 				'branch_id'	  => $_data['branch_id'],
 				'co_code'	  => $_data['co_id'],
@@ -63,12 +63,49 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 				'photo'=>$_data['photo'],
 
 		);
+		$this->_name="ln_staff";
 		if(!empty($_data['id'])){
+			
 			$where = 'co_id = '.$_data['id'];
-			return  $this->update($_arr, $where);
+			  $this->update($_arr, $where);
+			  $id = $_data['id'];
 		}else{
-			return  $this->insert($_arr);
+			$id =  $this->insert($_arr);
 		}
+		if (!empty($_data['check_create'])){
+			$userdata = array(
+					'branch_id'=>$_data['branch_id'],
+					'first_name'=>$_data['name_kh'],
+					'user_name'=>$_data['user_name'],
+					'password'=> MD5($_data['password']),
+					'user_type'=> $_data['user_type'],
+					'active'=> 1,
+					'staff_id'=>$id,
+			);
+			$this->_name="rms_users";
+			$this->insert($userdata);
+		}else{
+			if (!empty($_data['id']) && !empty($_data['check_create'])){
+				$userdata = array(
+						'branch_id'=>$_data['branch_id'],
+						'first_name'=>$_data['name_kh'],
+						'user_name'=>$_data['user_name'],
+						'user_type'=> $_data['user_type'],
+						'active'=> 1,
+						'staff_id'=>$id,
+				);
+				if (!empty($_data['check_create'])){
+					$userdata = MD5($_data['password']);
+				}
+				$this->_name="rms_users";
+				$where="staff_id = ".$id;
+				$this->update($userdata, $where);
+			}
+		}
+		return $id;
+		
+	}
+	function addUserSystem($sale_id){
 		
 	}
 	public function addCoByAjax($data){
@@ -93,10 +130,20 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 	}
 	public function getCOById($id){
 		$db = $this->getAdapter();
-		$sql = "SELECT * FROM $this->_name WHERE co_id = ".$db->quote($id);
+		$this->_name="ln_staff";
+		$sql = "SELECT s.*,
+		(SELECT u.user_name FROM `rms_users` AS u WHERE u.staff_id = s.co_id LIMIT 1) AS user_name,
+		(SELECT u.user_type FROM `rms_users` AS u WHERE u.staff_id = s.co_id LIMIT 1) AS user_type
+		FROM $this->_name AS s WHERE s.co_id = ".$db->quote($id);
 		$sql.=" LIMIT 1 ";
 		$row=$db->fetchRow($sql);
 		return $row;
+	}
+	public function getUserByStaffID($staff_id){
+		$db = $this->getAdapter();
+		$sql="SELECT u.* FROM `rms_users` AS u WHERE u.`staff_id` = $staff_id LIMIT 1";
+		return $db->fetchRow($sql);
+		
 	}
 	function getAllCreditOfficer($search=null){
 		$db = $this->getAdapter();
@@ -137,5 +184,15 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 		}
 		return $db->fetchAll($sql.$where.$order);	
 	}	
+	
+	function checkusername($user_name){
+		$db = $this->getAdapter();
+		$sql="SELECT * FROM `rms_users` AS u WHERE u.`user_name`='$user_name' LIMIT 1";
+		$row = $db->fetchRow($sql);
+		if (!empty($row)) {
+			return 1;
+		}
+		return 2;
+	}
 }
 

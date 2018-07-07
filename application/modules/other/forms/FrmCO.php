@@ -205,6 +205,29 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 		
 		$_id = new Zend_Form_Element_Hidden('id');
 		
+		$_user_name = new Zend_Dojo_Form_Element_TextBox('user_name');
+		$_user_name->setAttribs(
+				array(
+						'dojoType'=>$this->text,
+						'class'=>'fullside',
+						'onChange'=>'getCheckUserName();'
+					)
+				);
+		
+		$sql = "SELECT u.user_type_id as id,u.user_type as name FROM `rms_acl_user_type` u where u.`status`=1";
+		$usertype = $db->getGlobalDb($sql);
+		$usertype_opt=array(''=>$this->tr->translate("SELECT_USER_TYPE"));
+		if(!empty($usertype))foreach($usertype AS $row){
+			$usertype_opt[$row['id']]=$row['name'];
+		}
+		$_user_type =  new Zend_Dojo_Form_Element_FilteringSelect('user_type');
+		$_user_type->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$_user_type->setMultiOptions($usertype_opt);
+		$_user_type->setValue(3);
+		
 		if(!empty($_data)){
 			$_branch_id->setValue($_data['branch_id']);
 			$_co_id->setValue($_data['co_code']);
@@ -233,9 +256,14 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 			$_figer_print_id->setValue($_data['figer_print_id']);
 			$_photo->setValue($_data['photo']);
 			
+			$_user_name->setValue($_data['user_name']);
+			$_user_type->setValue($_data['user_type']);
+			
 		}
 		$this->addElements(array($_figer_print_id,$_department,$_photo,$_annual_lives,$_btn_search,$_status_search,$_title,$_id,$_co_id,$_name_kh,$_branch_id,$_national_id,$_display,$_enname,$_lname,
-				$_sex,$_tel,$_email,$_pob,$_address,$_shift,$_workingtime,$_status,$_position,$_basic_salary,$_start_work,$_end_work,$_contract,$_note));
+				$_sex,$_tel,$_email,$_pob,$_address,$_shift,$_workingtime,$_status,$_position,$_basic_salary,$_start_work,$_end_work,$_contract,$_note,
+				$_user_name,$_user_type
+				));
 		
 		return $this;
 	}

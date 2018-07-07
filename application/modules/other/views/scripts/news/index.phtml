@@ -1,0 +1,80 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("NEWS"));
+$frm = $this->frm_new;
+$urlEdit = $this->baseUrl()."/other/news/edit/id/";
+$urlDelete = $this->baseUrl()."/other/news/delete/id/";
+?>
+<script type="text/javascript">	
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
+			  	<div class="form-group">
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<?php echo $frm->getElement("adv_search");?>
+                   </div>
+                    <div class="col-md-2 col-sm-2 col-xs-12">
+                    	<?php echo $frm->getElement('status_search');?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                    <?php echo $frm->getElement('start_date');?>
+                   </div>
+                    <div class="col-md-2 col-sm-2 col-xs-12">
+                    <?php echo $frm->getElement('end_date');?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                     <button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+                   </div>
+                    
+                </div>
+			</form>
+		</div>
+		<div class="card-box">
+			<?php echo $this->list;?>
+		</div>
+	</div>
+</div>
+<script>
+var row=0;
+var url="";
+var indexkey="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			indexkey="";
+			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+			}else if(key=="delete"){
+				url='<?php echo $urlDelete;?>';
+				indexkey = 'delete';
+			}
+			gotoAction();
+		},
+		items: {
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "c o p y"},
+			"delete": {name: "<?php echo $tr->translate("DELETE");?>", icon: "delete"},
+			
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	if(indexkey=='delete'){
+	    if (confirm("<?php echo $tr->translate("Do you want to delete this record ?");?>")) {
+	    	window.location.href = url+row;
+	    } else {
+	    	 return false;
+	    }
+	}else{
+	 	window.open(url+row, '_blank');
+	}
+}
+</script>

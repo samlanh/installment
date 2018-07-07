@@ -1,6 +1,7 @@
   <?php 
   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   ?>
+  <title><?php echo $tr->translate("REPORT");?></title>
   <style>
   ul.link-rpt li a {
 	
@@ -28,21 +29,25 @@
 	width: 200px !important;
   }
   </style>
-  <div style="background:#ccc; width: 100%;">
-  	<ul class="link-rpt">
-   	   <?php
-   	   $session_user=new Zend_Session_Namespace('authinstall');
-   	   $report_url = $session_user->url_report;
-   	   if(!empty($report_url)){
-   	   foreach($report_url as $url){
-   	   if($url['action']=='index' OR $url['action']=='receipt' OR $url['action']=='rpt-updatepayment' OR $url['action']=='updatereceipt'){continue;}
-   	   	?>
-   	   	<li><a href="<?php echo $this->url(array('module'=>$url['module'],'controller'=>$url['controller'],'action'=>$url['action'])); ?>">
-   	   	<?php echo $tr->translate($url['label']);?></a></li>
-   	   <?php }
-   	   }?>
-   	   <li><a style="color:red;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'bug')); ?>"><span style="background:#fff;padding:3px;">ត្រួតពិនិត្យកំហុស</span></a></li>
-   	   	
-  	</ul>
-  </div>
+  <div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box report-list">
+		  	<ul class="link-rpt">
+		   	   <?php
+		   	   $session_user=new Zend_Session_Namespace('authinstall');
+		   	   $report_url = $session_user->url_report;
+		   	   if(!empty($report_url)){
+		   	   foreach($report_url as $url){
+		   	   if($url['action']=='index' OR $url['action']=='receipt' OR $url['action']=='rpt-updatepayment' OR $url['action']=='updatereceipt'){continue;}
+		   	   	?>
+		   	   	<li><a href="<?php echo $this->url(array('module'=>$url['module'],'controller'=>$url['controller'],'action'=>$url['action'])); ?>">
+		   	   	<?php echo $tr->translate($url['label']);?></a></li>
+		   	   <?php }
+		   	   }?>
+		   	   <li><a style="color:red;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'bug')); ?>"><span style="background:#fff;padding:3px;">ត្រួតពិនិត្យកំហុស</span></a></li>
+		   	   	
+		  	</ul>
+		  </div>
+		</div>
+	</div>
   <div style="clear: both;"></div>

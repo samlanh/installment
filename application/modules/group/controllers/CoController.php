@@ -91,6 +91,7 @@ class Group_CoController extends Zend_Controller_Action {
    	if(empty($row)){
    		$this->_redirect('group/co');
    	}
+   	$this->view->datainuser = $db_co->getUserByStaffID($id);
    	$frm = new Other_Form_FrmCO();
    	$frm_co=$frm->FrmAddCO($row);
    	Application_Model_Decorator::removeAllDecorator($frm_co);
@@ -123,6 +124,15 @@ class Group_CoController extends Zend_Controller_Action {
    		$db = new Application_Model_DbTable_DbGlobal();
    		$_data = $this->getRequest()->getPost();
    		$id = $db->getStaffNumberByBranch($_data['branch_id']);
+   		print_r(Zend_Json::encode($id));
+   		exit();
+   	}
+   }
+   function checkusernameAction(){
+   	if($this->getRequest()->isPost()){
+   		$db = new Other_Model_DbTable_DbCreditOfficer();
+   		$_data = $this->getRequest()->getPost();
+   		$id = $db->checkusername($_data['user_name']);
    		print_r(Zend_Json::encode($id));
    		exit();
    	}

@@ -1,0 +1,155 @@
+<?php 
+$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+$db = new Home_Model_DbTable_DbDashboard();
+$session_user=new Zend_Session_Namespace('authinstall');
+$username = $session_user->first_name;
+$user_id = $session_user->user_id;
+$id_newfeed='';
+if (!empty($this->newsfeeNotClick)) foreach ($this->newsfeeNotClick as $new){
+	if (empty($id_newfeed)){
+		$id_newfeed=$new['id'];
+	}else{$id_newfeed=$id_newfeed.",".$new['id'];
+	}
+}
+?>
+
+          	<div class="clearfix"></div>
+          	<div class="row">
+              <div class="col-md-12">
+                <div class="x_panel news">
+                  <div class="x_title">
+                    <h2><?php echo $tr->translate("NEWS")?></h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div class="row">
+                    <?php if (!empty($this->detail)){?>
+                     <title><?php echo $tr->translate("NEWS")."--".$this->detail['title'];?></title>
+                      <div class="col-sm-4 mail_list_column news">
+                      <?php if (!empty($this->allnews)) foreach ($this->allnews as $rs){
+                      	$result = $db->checkReadNewfeed($rs['id']);
+                      	if ($result['is_read']==1){
+                      		$class="read";
+                      		$read = $tr->translate("Read");
+                      	}else{
+                      		$class="";
+                      		$read = $tr->translate("Unread");
+                      	}
+                      	?>
+                        <a class="<?php echo $class;?>" href="<?php echo $this->baseUrl()."/home/index/news?detail=".$rs['id']?>">
+                          <div class="mail_list">
+                          <?php 
+	                      	$image = $this->baseUrl()."/images/no-photo.png";
+	                      	if (!empty($rs['image_feature'])){
+	                      		$image = $this->baseUrl()."/images/news/".$rs['image_feature'];
+	                      	}
+	                      	?>
+                          	<div class="left">
+                              <span class="image"><img src="<?php echo $image;?>" alt="Profile Image"></span>
+                            </div>
+                            <div class="right">
+                              <h3><?php echo $rs['title']?></h3>
+                              <small><?php if (date("Y-m-d",strtotime($rs['publish_date']))==date("Y-m-d")){ echo $tr->translate("Today"); }else{ echo date("Y-M-d",strtotime($rs['publish_date']));}?> <span class="statu-read"><?php echo $read;?></span></small>
+                              <p><?php echo  mb_substr(strip_tags($rs['description']),0,50, "utf-8")."...";?></p>
+                            </div>
+                          </div>
+                        </a>
+                        <?php }?>
+                      </div>
+                      <!-- /MAIL LIST -->
+
+                      <!-- CONTENT MAIL -->
+                      <div class="col-sm-8 mail_view">
+                        <div class="inbox-body">
+                          <div class="mail_heading row">
+                            <div class="col-md-8">
+                            </div>
+                            <div class="col-md-12">
+                              <h4> <?php echo $this->detail['title'];?></h4>
+                              <p class="date"> <?php echo date("d M Y",strtotime($this->detail['publish_date']))?></p>
+                            </div>
+                          </div>
+                          <div class="view-mail">
+                            <?php echo $this->detail['description']?>
+                          </div>
+                        </div>
+
+                      </div>
+                      <!-- /CONTENT MAIL -->
+                      <?php }else{?>
+                      <title><?php echo $tr->translate("NEWS")?></title>
+                      <div class="col-sm-8 article-list">
+                       <?php if (!empty($this->allnews)) foreach ($this->allnews as $rs){
+		                      	$result = $db->checkReadNewfeed($rs['id']);
+		                      	if ($result['is_read']==1){
+		                      		$class="read";
+		                      		$read = $tr->translate("Read");
+		                      	}else{
+		                      		$class="";
+		                      		$read = $tr->translate("Unread");
+		                      	}
+		                      	?>
+                      		<article>
+                      		 <a class="<?php echo $class;?>" href="<?php echo $this->baseUrl()."/home/index/news?detail=".$rs['id']?>">
+		                          <div class="mail_list">
+		                          <?php 
+			                      	$image = $this->baseUrl()."/images/no-photo.png";
+			                      	if (!empty($rs['image_feature'])){
+			                      		$image = $this->baseUrl()."/images/news/".$rs['image_feature'];
+			                      	}
+			                      	?>
+		                          	<div class="left">
+		                              <span class="image"><img src="<?php echo $image;?>" alt="Profile Image"></span>
+		                            </div>
+		                            <div class="right">
+		                              <h3><?php echo $rs['title']?></h3>
+		                              <small><?php if (date("Y-m-d",strtotime($rs['publish_date']))==date("Y-m-d")){ echo $tr->translate("Today"); }else{ echo date("Y-M-d",strtotime($rs['publish_date']));}?> <span class="statu-read"><?php echo $read;?></span></small>
+		                              <p><?php echo  mb_substr(strip_tags($rs['description']),0,50, "utf-8")."...";?></p>
+		                            </div>
+		                          </div>
+		                        </a>
+                      		</article>
+                      	<?php }?>
+                      	
+                      	<?php 
+             	if($this->countPages>1){ 
+					$statpage = $this->currentPage - 5;
+					$endpage = $this->currentPage + 5;
+				 	if ($this->currentPage<=5){
+				 		$statpage = 1;
+				 		$endpage =10;
+				 	}
+                 if (!empty($this->countPages)){
+						 ?>
+						<div class="clearfix"></div>
+			            <div class="pagin text-center">
+			            	<nav aria-label="Page navigation example">
+							  <ul class="pagination">
+							  	<?php if($this->currentPage!=1){ ?>
+							  	<li class="page-item"><a class="page-link" href="<?php echo $this->baseUrl()."/home/index/news?pages=1";?>"><?php echo $tr->translate('First');?></a></li>
+							    <li class="page-item"><a class="page-link" href="<?php echo $this->baseUrl()."/home/index/news?pages=".$this->previousPage;?>"><?php echo $tr->translate('Previous');?></a></li>
+							    <?php }?>
+							     <?php  $i=0; for( $i=1; $i<=$this->countPages; $i++){?>
+			           			 	<?php if ($statpage<=$i && $endpage>=$i){?>
+							    <li class="page-item <?php if($i==$this->currentPage){ echo "active";}?>">
+							    	<a class="page-link" href="<?php echo $this->baseUrl()."/home/index/news?pages=".$i;?>"><?php echo $i;?></a>
+							    </li>
+							    	<?php }
+								}?>
+								<?php if($this->countPages!= $this->currentPage){ ?>
+							    <li class="page-item"><a class="page-link" href="<?php echo $this->baseUrl()."/home/index/news?pages=".$this->nextPage;?>"><?php echo $tr->translate('Next');?></a></li>
+							    <li class="page-item"><a class="page-link" href="<?php echo $this->baseUrl()."/home/index/news?pages=".$this->countPages;?>"><?php echo $tr->translate('Last');?></a></li>
+							    <?php }?>
+							  </ul>
+							</nav>
+							<span><?php echo $tr->translate('Total Pages')." : ".$this->countPages." ".$tr->translate('Pages');?></span>
+			            </div>
+			       <?php }}?>
+                      </div>
+                      <?php }?>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+			          			

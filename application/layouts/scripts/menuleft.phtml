@@ -30,140 +30,87 @@
 	$module = $request->getModuleName();
 	$controller = $request->getControllerName();
 	?>
-	<div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow  " data-scroll-to-active="true">
-		<?php 
-			$db = new Application_Model_DbTable_DbUsers();
-			$rs = $db->getAccessUrl("loan","deposit","add");
-			if(!empty($rs)){
-		?>
-		<div class="button-make-loan mb-10">
-			<a href="<?php echo $this->baseUrl()."/loan/deposit/add"?>"  class="closebtn-makesale"  ><i class="fa fa-plus" aria-hidden="true"></i> <?php echo $tr->translate("SALE_PROPERTY");?> </a>
-		</div>
-		<?php }?>
-	    <div class="main-menu-content">
-			<ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-			    <?php if(!empty($arr_param_menu[$request->getModuleName()]))foreach ($arr_param_menu[$request->getModuleName()] as $param =>$url){
-			    	$uri=$this->baseUrl().'/'.$module.'/'.$param;
-			    	?>
-			  <li class="nav-item <?php if($param==$controller){ echo "active";}?>">
-			  	<a href="<?php echo $uri;?>"><i class="la la-user"></i><span class="menu-title" data-i18n="nav.dash.main"><?php echo $url;?></span></a>
-			  </li>
-			  <?php }?>
-			</ul>
-			<div  style="background: #fff;padding: 2px;max-width: 100%;min-height:70px;max-height: 500px;overflow: scroll;" >
-	   			<div class="portlet box green" style="">
-						<div class="portlet-body flip-scroll">
-							<table cellpadding="2" cellpadding="2" border="1" 
-								style="border-collapse:collapse;border: 1px solid #ddd;color:#888888;font-size:13px;font-family:'Kh Battambang','Khmer Battambang' !important;" class="table table-bordered table-striped table-condensed flip-content">
-								<thead class="flip-content" style="background:#3598dc;color: #eee;">
-									<tr height="30px;" style="font-family:'Khmer MEF2'; color: #100505; background: #e6e6e6; font-size: 14px;"><td colspan="9"><?php echo $tr->translate("CUSTOMER_PAYMENTLIST");?></td></tr>
-									<tr style="white-space: nowrap;">
-										<th><?php echo $tr->translate("NUM");?></th>
-										<th><?php echo $tr->translate("CUSTOMER_NAME");?></th>
-										<th><?php echo $tr->translate("TEL");?></th>
-										<th><?php echo $tr->translate("PROPERTY_CODE");?></th>
-										<th class="numeric"><?php echo $tr->translate("BALANCE");?></th>
-										<th class="numeric"><?php echo $tr->translate("DATE_PAYMENT");?></th>
-										<th class="numeric"><?php echo $tr->translate("AMOUNT_LATE");?></th>
-										<th class="numeric"><?php echo $tr->translate("AMOUNT_COLLECT");?></th>
-										<th class="numeric"><?php echo $tr->translate("PAYMENT");?></th>
-									</tr>
-								</thead>
-							<?php 
-								$db = new Report_Model_DbTable_DbloanCollect();
-								$rs = $db->getCustomerNearlyPayment();
-								$num=0;
-								$class='';
-								if(!empty($rs)){
-							?>
-							<?php foreach($rs as $key=> $result){
-								if($class==''){$class='odd';}else{$class='';}
-								?>
-								<tr class="hover <?php echo $class;?>" style="white-space: nowrap;">
-								<?php $url = $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add'), null, true)."/id/".$result['sale_id'];?>
-									<td align="center"><?php echo $key+1;?></td>
-									<td style="white-space: nowrap;"><a href="<?php echo $url;?>"><?php echo $result['client_name'];?></a></td>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo $result['phone_number'];?></a></td>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo $result['land_address'].' '.$result['street'];?></a></td>
-									<?php  $total_payment = $result['principal_permonthafter']+$result['total_interest_after']+$result['service_charge'];?>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo number_format($result['begining_balance_after'],2);?></a></td>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo date("d/m/Y",strtotime($result['date_payment']));?></a></td>
-									<?php 
-									$end_dat=date("Y-m-d");
-									$total_day=strtotime($end_dat)-strtotime($result['date_payment']);
-									$total_late_day=$total_day/(60*60*24);
-								    ?>
-									<td class="numeric"><a href="<?php echo $url;?>" style='color:red;'><?php echo $total_late_day."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?></a></td>
-									<td class="numeric" align="center"><a href="<?php echo $url;?>"><?php echo $result['no_installment'];?></a></td>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo number_format($total_payment,2);?></a></td>
-								</tr>
-							<?php }
-							}?>
-							<tr><td colspan="9">សរុបទាំងអស់:<span style="color:red;"><?php echo count($rs);?> នាក់</span></td></tr>
-						</table>
-						<table cellpadding="2" cellpadding="2" border="1" 
-							style="border-collapse:collapse;border: 1px solid #ddd;color:#888888;font-size:13px;font-family:'Kh Battambang','Khmer Battambang' !important;" class="table table-bordered table-striped table-condensed flip-content">
-							<thead class="flip-content" style="background:#3598dc;color: #eee;">
-							<tr height="30px;" style="font-family:'Khmer MEF2'; color: #100505; background: #ffbfbf; font-size: 14px;"><td colspan="10"><?php echo $tr->translate("MAKE_AGREEMENTLIST");?></td></tr>
-							<tr style="white-space: nowrap;">
-								<th class="numeric"><?php echo $tr->translate("NUM");?></th>
-								<th class="numeric"><?php echo $tr->translate("CUSTOMER_NAME");?></th>
-								<th class="numeric"><?php echo $tr->translate("TEL");?></th>
-								<th class="numeric"><?php echo $tr->translate("PROPERTY_CODE");?></th>
-								<th class="numeric"><?php echo $tr->translate("SOLD_PRICE");?></th>
-								<th class="numeric"><?php echo $tr->translate("SECOND_DEPOSIT");?></th>
-								<th class="numeric"><?php echo $tr->translate("PAID");?></th>
-								<th class="numeric"><?php echo $tr->translate("DATE_BUY");?></th>
-								<th class="numeric"><?php echo $tr->translate("MAKE_AGREEMENT");?></th>
-								<th class="numeric"><?php echo $tr->translate("AMOUNT_LATE");?></th>
-							</tr>
-							</thead>
-							<?php 
-								$rs = $db->getCustomerNearAgreement();
-								$num=0;
-								$class='';
-								if(!empty($rs)){
-							?>
-							<?php foreach($rs as $key=> $result){
-								if($class==''){$class='odd';}else{$class='';}
-								?>
-								<tr class="hover <?php echo $class;?>" style="white-space: nowrap;">
-								<?php $url = $this->url(array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add'), null, true)."/id/".$result['id'];?>
-									<td align="center"><?php echo $key+1;?></td>
-									<td style="white-space: nowrap;"><a href="<?php echo $url;?>"><?php echo $result['name_kh'];?></a></td>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo $result['phone'];?></a></td>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo $result['land_address'].' '.$result['street'];?></a></td>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo number_format($result['price_sold'],2);?></a></td>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo number_format($result['second_depostit'],2);?></a></td>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo number_format($result['paid_amount'],2);?></a></td>
-									<td class="numeric" align="center"><?php echo date("d/m/Y",strtotime($result['buy_date']));?></td>
-									<?php 
-										$end_dat=date("Y-m-d");
-										$total_day=strtotime($end_dat)-strtotime($result['end_line']);
-										$total_late_day=$total_day/(60*60*24);
-								    ?>
-									<td class="numeric" align="center"><?php echo date("d/m/Y",strtotime($result['end_line']));?></td>
-									<td class="numeric"><a href="<?php echo $url;?>"><?php echo $total_late_day;?></a></td>
-								</tr>
-							<?php }
-							}?>
-							<tr><td colspan="10">សរុបទាំងអស់:<span style="color:red;"><?php echo count($rs);?> នាក់</span></td></tr>
-						</table>
-						</div>
-					</div>
-   				</div>
-		</div>
-	</div>			 
-	<?php $kkk=0; if($kkk==1){?>
-	<script>
-		function openNav() {
-		    document.getElementById("mySidenav").style.width = "175px";
-		    $('#mynavclose').css('display','none');
-		}
-		function closeNav() {
-		    document.getElementById("mySidenav").style.width = "0";
-		    document.getElementById("mySidenav").style.height = "100%";
-		    $('#mynavclose').css('display','block');
-		}
-	</script>
-	<?php }?>
+	<?php 
+	$array_icon = array(
+      		'home'=>'<i class="fa fa-home" aria-hidden="true"></i>',
+      		'registrar'=>'<i class="fa fa-graduation-cap" aria-hidden="true"></i>',
+      		'group'=>'<i class="fa fa-users" aria-hidden="true"></i>',
+      		'loan'=>'<i class="fa fa-money" aria-hidden="true"></i>',
+      		'accounting'=>'<i class="fa fa-money" aria-hidden="true"></i>',
+      		'other'=>'<i class="fa fa-book" aria-hidden="true"></i>',
+      		'report'=>'<i class="fa  fa-file-text" aria-hidden="true"></i>',
+      		'rsvacl'=>'<i class="fa  fa-cog" aria-hidden="true"></i>',
+      		'setting'=>'<i class="fa  fa-cogs" aria-hidden="true"></i>',
+      		'property'=>'<i class="fa  fa-cogs" aria-hidden="true"></i>',
+      );
+	
+	$arr_module = $session_user->arr_module;
+	$arr_acl = $session_user->arr_acl;
+	?>
+	<!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+              &nbsp;
+                <?php 
+					$db = new Application_Model_DbTable_DbUsers();
+					$rs = $db->getAccessUrl("loan","deposit","add");
+					if(!empty($rs)){
+				?>
+				<div class="button-make-loan mb-10">
+					<a href="<?php echo $this->baseUrl()."/loan/deposit/add"?>"  class="closebtn-makesale"  ><i class="fa fa-plus" aria-hidden="true"></i> <?php echo $tr->translate("SALE_PROPERTY");?> </a>
+				</div>
+				<?php }?>
+                <ul class="nav side-menu">
+                	<?php if(!empty($arr_module)){ foreach ($arr_module as $rs){
+                		$url =$this->url(array('module'=>$rs,'controller'=>'index','action'=>'index'), null, true);
+                		if ($rs=="project"){
+                			$title=$tr->translate("JOBS");
+                		}else{
+                			$title=$tr->translate(strtoupper($rs));
+                		}
+                	?>
+                	<li>
+                		<?php if ($rs=="report"){?>
+                			<a href="<?php echo $this->url(array('module'=>$rs,'controller'=>'index','action'=>'index'), null, true);;?>">
+                			<?php echo $array_icon[$rs];?> <?php echo $title;?> 
+	                		</a>
+                		<?php }else{?>
+                		
+                			<?php if (count($arr_param_menu[$rs])>1){?>
+		                		<a><?php echo $array_icon[$rs];?> <?php echo $title;?> 
+		                		<?php if (!empty($arr_param_menu[$rs])){?><span class="fa fa-chevron-down"></span><?php }?>
+		                		</a>
+		                		<?php if (!empty($arr_param_menu[$rs])){?>
+			                    <ul class="nav child_menu">
+			                       <?php  foreach ($arr_param_menu[$rs] as $key => $sub){
+			                       	$urlsub = $this->url(array('module'=>$rs,'controller'=>$key,'action'=>'index'), null, true);
+			                       	?>
+			                      <li><a href="<?php echo $urlsub;?>"><?php echo $sub;?></a></li>
+			                       <?php }?>
+			                    </ul>
+			                    <?php }?>
+		                    <?php }else{?>
+			                    <a href="<?php echo $this->url(array('module'=>$rs,'controller'=>'index','action'=>'index'), null, true);;?>">
+	                			<?php echo $array_icon[$rs];?> <?php echo $title;?> 
+		                		</a>
+		                    <?php }?>
+	                    <?php }?>
+                 	 </li>
+                	<?php }
+                	}?>
+                </ul>
+              </div>
+
+            </div>
+            <!-- /sidebar menu -->
+
+            <!-- /menu footer buttons -->
+            <div class="sidebar-footer hidden-small">
+              <a data-toggle="tooltip" data-placement="top" onClick="toggleFullScreen(document.body)" title="<?php echo $tr->translate("FullScreen");?>">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="<?php echo $tr->translate("SIGN_OUT");?>" href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'logout','value'=>'1')); ?>">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+              </a>
+            </div>
+            <!-- /menu footer buttons -->

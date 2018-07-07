@@ -1,0 +1,208 @@
+<?php 
+$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+$session_user=new Zend_Session_Namespace('authinstall');
+$username = $session_user->first_name;
+$user_id = $session_user->user_id;
+
+$parameterserch =  basename($_SERVER['REQUEST_URI']);
+$urlsting = str_replace("&pages=".$this->currentPage,"",$parameterserch);
+// echo $urlsting;exit();
+$sign="?";
+if (!empty($urlsting)){
+	$sign="&";
+}
+$db = new Home_Model_DbTable_DbDashboard();
+$id_newfeed='';
+if (!empty($this->newsfeeNotClick)) foreach ($this->newsfeeNotClick as $new){
+	if (empty($id_newfeed)){
+		$id_newfeed=$new['id'];
+	}else{$id_newfeed=$id_newfeed.",".$new['id'];
+	}
+}
+$totalpaid =0;
+if (!empty($this->commissionpaid)){
+	$totalpaid = $this->commissionpaid['total_commission'] + $this->commissionpaid['total_commission_get'];
+}
+$remain =$this->totalFullCommission - $totalpaid;
+
+$frm = $this->frm_search;
+$frms=$this->frm_land;
+?>
+<title><?php echo $tr->translate("DASHBOARD")?></title>
+<style>
+.dijitTextBox, .dijitValidationTextBox, .dijitInputField, .dijitInputContainer, .dijitInputInner, dijitReset, .dijitRight, .dijitButtonNode, .dijitArrowButton, .dijitDownArrowButton, .dijitArrowButtonContainer {
+    height: 33px;
+}
+</style>
+<div class=" col-lg-8 col-md-8 col-sm-8 col-xs-12">
+		<div class="row top_tiles">
+			<div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
+				<div title="<?php echo $tr->translate("Expectation Commision Fee")?>" class="tile-stats dashboard">
+					<div class="icon"><i class="fa fa-money"></i></div>
+					<div class="small-count"><span><?php echo $tr->translate("SOLD")?> <strong><?php echo $this->totalSale; ?></strong></span></div>
+					<div class="count"><?php echo number_format($this->totalFullCommission,2);?> USD </div>
+                 	<h3><?php echo $tr->translate("Expectation Commision Fee")?></h3>
+				</div>
+              </div>
+              <div title="<?php echo $tr->translate("Commission Fee Received")?>" class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
+	                <div class="tile-stats dashboard">
+	                  <div class="icon"><i class="fa fa-exchange"></i></div>
+	                  <div class="small-count"><span>&nbsp;</span></div>
+	                  <div class="count"><?php echo number_format($totalpaid,2);?> USD</div>
+	                  <h3><?php echo $tr->translate("Commission Fee Received")?></h3>
+	                </div>
+              </div>
+              <div title="<?php echo $tr->translate("Commission Fee Remain")?>" class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="tile-stats dashboard">
+                  <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
+                  <div class="small-count"><span>&nbsp;</span></div>
+                  <div class="count"><?php echo number_format($remain,2);?> USD</div>
+                  <h3><?php echo $tr->translate("Commission Fee Remain")?></h3>
+                </div>
+             </div>
+          </div>
+          <div class="row">
+          		<form id="list" name="list" action="" dojoType="dijit.form.Form" method="GET">
+	          		<div class="x_panel searc-blog">
+	          			<div class="x_title">
+					    	<h2><i class="fa fa-search"></i> <?php echo $tr->translate("FIND_PROPERTY")?></h2>
+							<span class="pull-right">
+								<button iconclass="dijitIconSearch" name="search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+							</span>
+							<div class="clearfix"></div>
+							
+						</div>
+						<div class="x_content search">
+							<div class="form-control">
+								<div class="search-list col-lg-3 col-md-3 col-sm-12 col-xs-12">
+								<?php echo $frm->getElement("adv_search");?>
+								</div>
+								<div class="search-list  col-lg-3 col-md-3 col-sm-12 col-xs-12">
+								<?php echo $frm->getElement("branch_id");?>
+								</div>
+								<div class="search-list  col-lg-3 col-md-3 col-sm-12 col-xs-12">
+								<?php echo $frms->getElement("streetlist");?>
+								</div>
+								<div class=" search-list col-lg-3 col-md-3 col-sm-12 col-xs-12">
+								<?php echo $frms->getElement("property_type_search");?>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							<div class="form-control" style="border:none;">
+								<ul class="guide-info">
+									<li>
+										<div class="info-squar "></div> <span class="lab-info"><?php echo $tr->translate("AVAILABLE")?> <strong id="abailable_re"><?php echo (count($this->row) - count($this->soldout));?></strong></span>
+									</li>
+									<li>
+										<div class="info-squar sold"></div> <span class="lab-info"><?php echo $tr->translate("SOLD_OUT")?> <strong id="sold_out_re"><?php echo count($this->soldout);?></strong></span> 
+									</li>
+								</ul>
+								<div class="pull-right restult-count">
+									<span><?php echo $tr->translate("TOTAL_RESULT")?> <strong id="total_result"><?php echo count($this->row)?></strong> </span><br />
+								</div>
+							</div>
+						</div>
+	          		</div>
+          		</form>
+          </div>
+          <div class="row">
+          		<div class=" property-result">
+          			<?php if (!empty($this->property)) foreach ($this->property as $property){?>
+          			<div class="property-detail text-center col-lg-3 col-md-3 col-sm-12 col-xs-12">
+          				<div title="<?php echo $property['land_address']." , ".$property['street']." ".$property['pro_type'];?>" class="contetn-data <?php if ($property['is_lock']==1){ echo "sold";}?>">
+	          				<span><i class="fa fa-map"></i></span>
+	          				<h3 class="land-title"><?php echo $property['land_address']." , ".$property['street'];?></h3>
+	          				<span class="pro-street"><?php echo $property['pro_type']?></span>
+	          				<span class="pro-price"><?php echo $property['price']?></span>
+	          				<span class="pro-project"><?php echo $property['branch_name']?></span>
+          				</div>
+          			</div>
+          			<?php }?>
+          			<div class="clearfix"></div>
+          			
+          			 <?php 
+             	if($this->countPages>1){ 
+					$statpage = $this->currentPage - 5;
+					$endpage = $this->currentPage + 5;
+				 	if ($this->currentPage<=5){
+				 		$statpage = 1;
+				 		$endpage =10;
+				 	}
+                 if (!empty($this->countPages)){
+						 ?>
+						<div class="clearfix"></div>
+			            <div class="pagin text-center">
+			            	<nav aria-label="Page navigation example">
+							  <ul class="pagination">
+							  	<?php if($this->currentPage!=1){ ?>
+							  	<li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=1";?>"><?php echo $tr->translate('First');?></a></li>
+							    <li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->previousPage;?>"><?php echo $tr->translate('Previous');?></a></li>
+							    <?php }?>
+							     <?php  $i=0; for( $i=1; $i<=$this->countPages; $i++){?>
+			           			 	<?php if ($statpage<=$i && $endpage>=$i){?>
+							    <li class="page-item <?php if($i==$this->currentPage){ echo "active";}?>">
+							    	<a class="page-link" href="<?php echo $urlsting.$sign."pages=".$i;?>"><?php echo $i;?></a>
+							    </li>
+							    	<?php }
+								}?>
+								<?php if($this->countPages!= $this->currentPage){ ?>
+							    <li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->nextPage;?>"><?php echo $tr->translate('Next');?></a></li>
+							    <li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->countPages;?>"><?php echo $tr->translate('Last');?></a></li>
+							    <?php }?>
+							  </ul>
+							</nav>
+							<span><?php echo $tr->translate('Total Pages')." : ".$this->countPages." ".$tr->translate('Pages');?></span>
+			            </div>
+			       <?php }}?>
+          		</div>
+          </div>
+      </div>
+	  <div class="col-md-4">
+		<div class="x_panel news">
+			<div class="x_title">
+		    	<h2><i class="fa fa-bell"></i> <?php echo $tr->translate("ANNOUNCEMENT")?></h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="x_content">
+			<?php $class=''; if (!empty($this->lastestnews)) foreach ($this->lastestnews as $news){ 
+				$result = $db->checkReadNewfeed($news['id']);
+				if ($result['is_read']==1){
+					$class="read";
+					$read = $tr->translate("Read");
+				}else{
+					$class="";
+					$read = $tr->translate("Unread");
+				}
+				?>
+            	<article class="media event listnews <?php echo $class;?>">
+                	<a href="<?php echo $this->baseUrl()."/home/index/news?detail=".$news['id']?>" class="pull-left images-sho">
+                		<?php 
+                      	$image = $this->baseUrl()."/images/no-photo.png";
+                      	if (!empty($news['image_feature'])){
+                      		$image = $this->baseUrl()."/images/news/".$news['image_feature'];
+                      	}
+                      	?>
+                    	<span class="image"><img src="<?php echo $image;?>" alt="Profile Image"></span>
+                   	</a>
+                    <div class="media-body">
+                    	<a class="title" href="<?php echo $this->baseUrl()."/home/index/news?detail=".$news['id']?>"><?php echo $news['title'];?></a>
+                        <span class="time"><?php if (date("Y-m-d",strtotime($news['publish_date']))==date("Y-m-d")){ echo $tr->translate("Today"); }else{ echo date("Y-M-d",strtotime($news['publish_date']));}?> 
+                        	<span class="statu-read"><?php echo $read;?></span>
+                        </span>
+                        <p><?php echo  mb_substr(strip_tags($news['description']),0,50, "utf-8")."...";?></p>
+                      </div>
+                </article>
+             <?php }?>
+             <?php if (count($this->allnews)>9){?>
+             	<a class="showallnew" href="#"><?php echo $tr->translate("Show All")?></a>
+             <?php }?>
+           </div>
+       </div>
+   </div>
+<script type="text/javascript">
+dojo.require("dijit.form.CheckBox"); 
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+
+</script>

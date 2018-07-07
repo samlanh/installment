@@ -1355,35 +1355,33 @@ function getAllBranch($search=null){
     	}
     	function getCommissionBalance($search=null){
     		$db = $this->getAdapter();
-    		$sql="SELECT c.*,
-				SUM(c.`total_amount`) AS totoal_comminssion,
-				s.`comission` AS total_sale_commission,
+    		$sql="SELECT 
+				(SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` ) AS totoal_comminssion,
+				SUM(s.`comission`) AS total_sale_commission,
 				s.`full_commission`,
-				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = c.`branch_id` LIMIT 1) AS branch_name,
-				(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=13 AND v.key_code = c.`category_id` LIMIT 1) AS cate_title,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = s.`branch_id` LIMIT 1) AS branch_name,
 				(SELECT cu.name_kh FROM `ln_client` AS cu WHERE cu.client_id = s.`client_id` LIMIT 1) AS cutomer_name,
 				(SELECT p.land_code FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_code,
 				(SELECT p.street FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS street,
 				(SELECT p.land_address FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_address,
-				(SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) AS co_khname,
-				(SELECT st.tel FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) AS tel,
-				(SELECT st.sex FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) AS sex,
+				(SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) AS co_khname,
+				(SELECT st.tel FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) AS tel,
+				(SELECT st.sex FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) AS sex,
 				s.`price_sold`,
 				(SELECT SUM(crm.total_principal_permonthpaid) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id = s.id  GROUP BY crm.sale_id LIMIT 1) AS total_sale_paid
 				 FROM 
-				`ln_comission` AS c,
 				`ln_sale` AS s
-				WHERE s.`id` = c.`sale_id` AND c.`status`=1
+				WHERE 1
 				";
     		$where ="";
-    		$from_date =(empty($search['start_date']))? '1': " c.`for_date` >= '".$search['start_date']." 00:00:00'";
-    		$to_date = (empty($search['end_date']))? '1': " c.`for_date` <= '".$search['end_date']." 23:59:59'";
+    		$from_date =(empty($search['start_date']))? '1': " s.`buy_date` >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " s.`buy_date` <= '".$search['end_date']." 23:59:59'";
     		$where.= " AND ".$from_date." AND ".$to_date;
     		if($search['co_khname']>0){
-    			$where.= " AND c.`staff_id` = ".$search['co_khname'];
+    			$where.= " AND s.`staff_id` = ".$search['co_khname'];
     		}
     		if($search['branch_id']>0){
-    			$where.= " AND c.`branch_id` = ".$search['branch_id'];
+    			$where.= " AND s.`branch_id` = ".$search['branch_id'];
     		}
     		if($search['land_id']>0){
     			$where.= " AND s.`house_id` = ".$search['land_id'];
@@ -1393,9 +1391,9 @@ function getAllBranch($search=null){
     			$s_search = addslashes(trim($search['adv_search']));
     			$s_where[] =" s.`sale_number` LIKE '%{$s_search}%'";
     			$s_where[]=" s.`receipt_no` LIKE '%{$s_search}%'";
-    			$s_where[]=" (SELECT st.tel FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) LIKE '%{$s_search}%'";
-    			$s_where[]=" (SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) LIKE '%{$s_search}%'";
-    			$s_where[]=" (SELECT st.co_code FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) LIKE '%{$s_search}%'";
+    			$s_where[]=" (SELECT st.tel FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) LIKE '%{$s_search}%'";
+    			$s_where[]=" (SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) LIKE '%{$s_search}%'";
+    			$s_where[]=" (SELECT st.co_code FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) LIKE '%{$s_search}%'";
     			$where .=' AND ( '.implode(' OR ',$s_where).')';
     		}
     		if(!empty($search['commission_type'])){
@@ -1405,7 +1403,8 @@ function getAllBranch($search=null){
     				//$where.=" AND s.`full_commission` > (SUM(c.`total_amount`)+ s.`comission`)";
     			}
     		}
-    		$groupby =" GROUP BY c.`staff_id`,s.`id` ORDER BY s.`id` DESC";
+//     		$groupby =" GROUP BY s.`staff_id`,s.`id` ORDER BY s.`id` DESC";
+    		$groupby =" GROUP BY s.`staff_id`,s.`id` ORDER BY s.`id` DESC";
 //     		echo $sql.$where.$groupby;exit();
     		return $db->fetchAll($sql.$where.$groupby);
     	}
