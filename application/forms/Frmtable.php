@@ -313,8 +313,12 @@ class Application_Form_Frmtable
 		return $stat;
     }
     public function checkValue($value){
-    	//Sophen comment for number format
-    	
+    	if(is_numeric($value)){
+    		$real_float	= strpos($value, ".");
+    		if($real_float>0 AND $value>0){
+    			return number_format($value,2);
+    		}
+    	}
     	if($this->is_date($value)) return date_format(date_create($value), 'd-M-Y');  	
     	return $value;
     }

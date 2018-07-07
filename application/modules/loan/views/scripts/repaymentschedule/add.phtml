@@ -5,6 +5,7 @@
 	$install_month = $this->data['install_by'];
 	$this->headTitle($tr->translate('REPAYMENTSCHEDULE'));
 	echo $this->headTitle();
+	$percentage = 1;
 ?>
 <style>
 .fullside50{ width:48%;}
@@ -434,13 +435,13 @@
 	</div>
 </div>
 
-<div class="dijitHidden">
+<div class="dijitHidden" style="z-index: 1000;">
 <style>
 .print tr td{
 	padding:5px 2px; 
 }
 </style>
-	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'កាលវិភាគត្រូវបង់ប្រាក់'" id="lbl_schedule" style="width:1000px">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'កាលវិភាគត្រូវបង់ប្រាក់'" id="lbl_schedule" style="width:1000px;z-index: 1000 !important">
 	<div id="rpt_print" class="print" style="text-align: center;">
 		<input style="text-align: center;" type="button" onclick="printSave();" label="<?php echo $tr->translate("បោះពុម្ភបង្កាន់ដៃ")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 		<div id="t_amountmoneytype" name="t_amountmoneytype">
@@ -475,6 +476,14 @@
 			   .khmer{font:12px 'Khmer OS Battambang';}
 			   .one{white-space:nowrap;}
 			   .h{ margin-top: -10px;/*margin-left:4px;*/}
+				.noted{white-space: pre-wrap;     
+						word-wrap: break-word;      
+						word-break: break-all;
+						white-space: normal;
+					    font:12px 'Khmer OS Battambang';
+					    border: 1px solid #000;
+                        line-height:20px;font-weight: normal !important;
+                }
 			</style>
 			<table  style="width: 21cm!important; white-space: nowrap;font-size:16px;  padding:-5px 10px 0px 5px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
@@ -508,8 +517,8 @@
 					<td align="right"><strong> <label id="lb_receipt" ></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				    <td  >លេខកូដលក់</td>
-				    <td  ><strong><label id="lb_sale_code" class="value"></label></strong></td>
+				    <td  >គម្រោង</td>
+				    <td  ><strong><label id="lbl_project" class="value"></label></strong></td>
 					<td  >&nbsp;&nbsp;ប្រាក់ដើមត្រូវបង់</td>
                     <td  ><strong><label id="lbl_principle_amount" class="value"></label></strong></td>
                     <td  >&nbsp;&nbsp;បង់លើកទី</td>
@@ -524,7 +533,7 @@
 				<tr style="white-space: nowrap;">
 					<td ><?php echo $tr->translate("PROPERTY_CODE");?></td>
                     <td><strong><label id="lb_hourseno" class="value"></label></strong></td>
-				   <td >&nbsp;ប្រាក់បង់បន្ថែម</td>
+				   <td >&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
 					<td colspan="3"><strong><label id="lb_balance" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
@@ -534,23 +543,29 @@
                     <td colspan="3"><strong><label id="lbl_total_payment" class="value"></label></strong></td>
 				</tr>
 				<tr>
-					<td >ប្រាក់បានបង់សរុប</td>
-					<td ><strong><label id="lbl_total_paid" class="value"></label></strong></td>
-					<td>&nbsp;ប្រាក់បានបង់</td>
+					<td>ប្រាក់បានបង់សរុប</td>
+					<td>
+						<table width="100%" cellpadding="0" cellspacing="0" style="margin-left:-5px;">
+							<tr>
+								<td width="33.5%" style="white-space: nowrap;"><strong><label id="lbl_total_paid" class="value"></label></strong></td>
+								<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
+								<td width="33.5%"><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lbl_ending_balance" class="value"></label></strong></td>
+							</tr>
+						</table>
+					</td>
+					<td>&nbsp;&nbsp;ប្រាក់បានបង់</td>
 				    <td colspan="3"><strong><label id="lb_paid" class="value" style="font-weight: bold; font-family:Arial;"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-					<td >ប្រាក់នៅសល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lbl_ending_balance" class="value"></label></strong></td>
+					<td rowspan="2">សម្គាល់</td>
+				    <td rowspan="2" class="noted" valign="top"><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted" ></label></strong></td>
 					<td >&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
 				    <td><strong><label id="lb_buydate" class="value"></label></strong></td>
 					<td>&nbsp;ថ្ងៃទទួល</td>
 					<td><strong><label id="lbl_paid_date" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-					<td >សម្គាល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted" class="value"></label></strong></td>
-					<td >&nbsp;សែក</td>
+					<td >&nbsp;&nbsp;សែក</td>
 					<td colspan="3"><strong><label id="lb_cheque" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="65px;">
@@ -691,8 +706,8 @@
 					<td align="right"><strong>No. : <label id="lb_receipt1" ></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				    <td  >លេខកូដលក់</td>
-				    <td  ><strong><label id="lb_sale_code1" class="value"></label></strong></td>
+				    <td  >គម្រោង</td>
+				    <td  ><strong><label id="lbl_project1" class="value"></label></strong></td>
 					<td  >&nbsp;&nbsp;ប្រាក់ដើមត្រូវបង់</td>
                     <td ><strong><label id="lbl_principle_amount1" class="value"></label></strong></td>
                     <td  >&nbsp;&nbsp;បង់លើកទី</td>
@@ -707,7 +722,7 @@
 				<tr style="white-space: nowrap;">
 					<td ><?php echo $tr->translate("PROPERTY_CODE");?></td>
                     <td><strong><label id="lb_hourseno1" class="value"></label></strong></td>
-				   <td >&nbsp;ប្រាក់បង់បន្ថែម</td>
+				   <td >&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
 					<td colspan="3"><strong><label id="lb_balance1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
@@ -717,23 +732,29 @@
                     <td colspan="3"><strong><label id="lbl_total_payment1" class="value"></label></strong></td>
 				</tr>
 				<tr>
-					<td >ប្រាក់បានបង់សរុប</td>
-					<td ><strong><label id="lbl_total_paid1" class="value"></label></strong></td>
-					<td>&nbsp;ប្រាក់បានបង់</td>
+					<td>ប្រាក់បានបង់សរុប</td>
+					<td>
+						<table width="100%" cellpadding="0" cellspacing="0" style="margin-left:-5px;">
+							<tr>
+								<td width="33.5%" style="white-space: nowrap;"><strong><label id="lbl_total_paid1" class="value"></label></strong></td>
+								<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
+								<td width="33.5%"><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lbl_ending_balance1" class="value"></label></strong></td>
+							</tr>
+						</table>
+					</td>
+					<td>&nbsp;&nbsp;ប្រាក់បានបង់</td>
 				    <td colspan="3"><strong><label id="lb_paid1" class="value" style="font-weight: bold; font-family:Arial;"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-					<td >ប្រាក់នៅសល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lbl_ending_balance1" class="value"></label></strong></td>
-					<td >&nbsp;ថ្ងៃត្រូវបង់</td>
+					<td rowspan="2">សម្គាល់</td>
+				    <td rowspan="2" class="noted" valign="top"><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" ></label></strong></td>
+					<td >&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
 				    <td><strong><label id="lb_buydate1" class="value"></label></strong></td>
 					<td>&nbsp;ថ្ងៃទទួល</td>
 					<td><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-					<td >សម្គាល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"></label></strong></td>
-					<td >&nbsp;សែក</td>
+					<td >&nbsp;&nbsp;សែក</td>
 					<td colspan="3"><strong><label id="lb_cheque1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="65px;">
@@ -1557,6 +1578,7 @@ function addRow(){
 				temp+='<th><?php echo $tr->translate("DEL");?></th>';
 				temp+='<th><?php echo $tr->translate("NUM");?></th>';
 				temp+='<th><?php echo $tr->translate("DATE_PAYMENT");?></th>';
+				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("PERCENT_AGREE");?></th>';
 				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
 				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("OS_AMOUNT");?></th>';
 				if(payment_method==5){
@@ -1584,6 +1606,7 @@ function addRow(){
 				template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td width="2%" align="center">'+no+'</td>';
 				template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
+				template+='<td><input type="text" class="fullside" data-dojo-type="dijit.form.NumberTextBox" id="percent_agree'+col+'" name="percent_agree'+col+'" /></td>';
 				template+='<td><input type="text" onkeyup="calCulateAmount('+col+')" class="fullside" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';			
 				template+='<td><input class="fullside"  onkeyup="calCulateAmount('+col+',2)" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
 				if(payment_method==5){
@@ -1631,6 +1654,7 @@ function addInstallment(){
 				temp+='<th><?php echo $tr->translate("DEL");?></th>';
 				temp+='<th><?php echo $tr->translate("NUM");?></th>';
 				temp+='<th><?php echo $tr->translate("DATE_PAYMENT");?></th>';
+				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("PERCENT_AGREE");?></th>';
 				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
 				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("OS_AMOUNT");?></th>';
 				temp+='<th><?php echo $tr->translate("REMARK");?></th>';
@@ -1664,6 +1688,7 @@ function addInstallment(){
 				template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td width="2%" align="center">'+no+'</td>';
 				template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
+				template+='<td><input type="text" class="fullside" data-dojo-type="dijit.form.NumberTextBox" id="percent_agree'+col+'" name="percent_agree'+col+'" /></td>';
 				template+='<td><input onkeyup="calCulateAmount('+col+')" class="fullside" type="text" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
 				template+='<td><input onkeyup="calCulateAmount('+col+',2)" class="fullside" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
 				template+='<td <input class="fullside" type="text"  name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"/><label id="subsub"></label></td>';
@@ -1832,7 +1857,7 @@ function printSave(new_receipt_no){
 	
 	dijit.byId("lbl_schedule").hide();		
 	symbal = " $";
-	dojo.byId("lb_sale_code").innerHTML = dijit.byId("sale_code").attr('displayedValue');
+	dojo.byId("lbl_project").innerHTML = dijit.byId("branch_id").attr('displayedValue');
 	dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get('value');
 	
 	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
@@ -1887,7 +1912,7 @@ function printSave(new_receipt_no){
 	dojo.byId("lbl_paid_date").innerHTML = collect_payment;
 	dojo.byId("lb_buydate").innerHTML = collect_payment;
 	
-	dojo.byId("lb_sale_code1").innerHTML = dijit.byId("sale_code").attr('displayedValue');
+	dojo.byId("lbl_project1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
 	dojo.byId("lb_receipt1").innerHTML = dijit.byId("receipt").get('value');
 	dojo.byId("lb_buydate1").innerHTML = dijit.byId("date_buy").attr('displayedValue');
 	

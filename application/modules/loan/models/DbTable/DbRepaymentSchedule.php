@@ -398,6 +398,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     									'is_completed'=>0,
     									'date_payment'=>$data['date_payment'.$j],
     									'percent'=>$data['percent'.$j],
+			    						'percent_agree'=>$data['percent_agree'.$j],
     									'note'=>$data['remark'.$j],
     									'is_installment'=>1,
 			    						'no_installment'=>$key,
@@ -467,6 +468,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			   				'date_payment'=>$data['date_payment'.$i],
     			   				'note'=>$data['remark'.$i],
     			   				'percent'=>$data['percent'.$i],
+    			   				'percent_agree'=>$data['percent_agree'.$i],
     			   				'is_installment'=>1,
     			   				'no_installment'=>$key,
     			   		);
