@@ -16,6 +16,7 @@
 	$user_id = $session_user->user_id;
 	if(empty($user_id)){
 			Application_Form_FrmMessage::redirectUrl("/");
+			exit();
 	}
 	$user_info = $db_user->getUserInfo($user_id);
 	$them_style = 'soria'; //$session_user->theme_style;
@@ -224,6 +225,12 @@
 			                        </ul>
 				              </li>
 				              <?php }?>
+				              
+				              <li class="">
+				                  	<a onclick="dijit.byId('popupCalculator').show();" href="javascript:;" title="<?php echo $tr->translate("CALCULATOR");?>"  class="user-profile " >
+                                        <i class="fa fa-calculator"></i>
+					                 </a>
+				                </li>
              				</ul>
             			</nav>
           			</div>
@@ -321,7 +328,7 @@
 		          <div class="clearfix"></div>
 		        </footer>
 		        <!-- /footer content -->
-     <?php  if( $module!='home') { echo $this->render('calculator.phtml'); }?>
+     <?php   echo $this->render('calculator.phtml'); ?>
      <div class="overlay">
 		<div class="overlay-load">
 			<div class="overlay-msg">
