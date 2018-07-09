@@ -92,9 +92,13 @@
 		                    <?php }else{?>
 		                    	<?php  foreach ($arr_param_menu[$rs] as $key => $sub){
 			                       	$urlsub = $this->url(array('module'=>$rs,'controller'=>$key,'action'=>'index'), null, true);
+			                       	$title=$tr->translate(strtoupper($key));
+			                       	if ($rs=="home" and $key=="index" ){
+			                       		$title=$tr->translate(strtoupper($rs));
+			                       	}
 			                       	?>
 			                    <a href="<?php echo $urlsub;?>">
-	                			<?php echo $array_icon[$rs];?> <?php echo $title=$tr->translate(strtoupper($key));?> 
+	                			<?php echo $array_icon[$rs];?> <?php echo $title;?> 
 		                		</a>
 		                		<?php }?>
 		                    <?php }?>
