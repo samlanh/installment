@@ -90,9 +90,13 @@
 			                    </ul>
 			                    <?php }?>
 		                    <?php }else{?>
-			                    <a href="<?php echo $this->url(array('module'=>$rs,'controller'=>'index','action'=>'index'), null, true);;?>">
-	                			<?php echo $array_icon[$rs];?> <?php echo $title;?> 
+		                    	<?php  foreach ($arr_param_menu[$rs] as $key => $sub){
+			                       	$urlsub = $this->url(array('module'=>$rs,'controller'=>$key,'action'=>'index'), null, true);
+			                       	?>
+			                    <a href="<?php echo $urlsub;?>">
+	                			<?php echo $array_icon[$rs];?> <?php echo $title=$tr->translate(strtoupper($key));?> 
 		                		</a>
+		                		<?php }?>
 		                    <?php }?>
 	                    <?php }?>
                  	 </li>

@@ -9,6 +9,18 @@ public function init()
 	}
 	public function indexAction()
 	{
+		$dbglobal = new Application_Model_DbTable_DbGlobal();
+		$userid = $dbglobal->getUserId();
+		if (empty($userid)){
+			$this->_redirect("/index");
+		}
+		$db_user=new Application_Model_DbTable_DbUsers();
+		$user_info = $db_user->getUserInfo($userid);
+		
+		if (!empty($user_info['staff_id'])){
+			$this->_redirect("/home/index/dashboard");
+		}
+		
 		$db = new Home_Model_DbTable_DbDashboard();
 		$allProperty = $db->getAllProperty();
 		$propertySold = $db->getAllProperty(1);
@@ -58,7 +70,9 @@ public function init()
 // 		$this->_helper->layout()->disableLayout();
 		$dbglobal = new Application_Model_DbTable_DbGlobal();
 		$userid = $dbglobal->getUserId();
-		
+		if (empty($userid)){
+			$this->_redirect("/index");
+		}
 		$db_user=new Application_Model_DbTable_DbUsers();
 		$user_info = $db_user->getUserInfo($userid);
 		

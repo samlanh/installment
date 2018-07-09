@@ -24,6 +24,10 @@
     <!-- Custom Theme Style -->
     <link href="<?php echo $base_url;?>admin/build/css/custom.min.css" rel="stylesheet">
 	<style type="text/css">
+.container {
+    padding: 0;
+    width: auto;
+}
 		.fullside {
 		    width: 99%;
 		    height: 30px;
@@ -54,8 +58,8 @@
 	</style>
 
 </head>
-<body class="tundra" style="background: #edf7ef;" id="body" >
-	<div class="container body">
+<body class="tundra" style="background: #edf7ef;" >
+	<div class="container ">
     	<div class="main_container login-page">
     		<div class="header-top">
     			<div class="col-md-3 col-sm-3 col-xs-12">
@@ -71,6 +75,9 @@
     			</div>
     			<div class="clearfix"></div>
     		</div>
+    		<div id='marquee' style="margin-top: 5px;">
+				<marquee behavior="scroll" direction="left" onmouseout="this.start()" onmouseover="this.stop()" scrollamount="5"><?php echo $this->data["label_animation"];?></marquee>
+			</div>
     		<div class="content">
     			<div class="col-md-6 col-sm-6 col-xs-12">
     				<div class="imgage-content text-center">
@@ -128,7 +135,7 @@
     			<div class="col-md-5 col-sm-5 col-xs-12">
     				<div class="contact_info">
     					<ul>
-    						<li><?php echo $tr->translate("USINGBY")?> <strong><?php echo $this->data['client_company_name']?></strong></li>
+    						<li><?php echo $tr->translate("USINGBY")?> : <strong><?php echo $this->data['client_company_name']?></strong></li>
     						<li><?php echo $this->data['footer_branch']?></li>
     						<li> <?php echo $this->data['tel-client'];?> <?php echo $this->data['email_client']?></li>
     						<li><?php echo $this->data['website']?></li>
@@ -155,6 +162,7 @@
     		</div>
     	</div>
     </div>
+    <script src="<?php echo $this->baseUrl()?>/admin/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 			var url_changelang = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'changelange'));?> ';
 			function changeLange(){
