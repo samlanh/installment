@@ -9,7 +9,7 @@ img.view{height: 85px !important;}
 <?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();?>
 <title><?php echo $tr->translate("RECEIPT");?></title>
  <form method="post">
-<div style="width:29cm;min-height:23cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm;background: #fff;">
+ <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
 	<div id="divPrint" style="width: 100%;">
 			<?php 
 				$dbGB = new Application_Model_DbTable_DbGlobal();
@@ -22,6 +22,7 @@ img.view{height: 85px !important;}
 				}
 				$branch_title = $branch['project_name'];
 			}
+			$install_month = $this->data['install_by'];
 		?>
 			<style>
 				.fontbig{
@@ -58,7 +59,7 @@ img.view{height: 85px !important;}
 			   .one{white-space:nowrap;}
 			   .h{ margin-top: -10px;}
 			</style>
-			<?php for($i=0; $i<2; $i++){ ?>			
+			<?php for($i=0; $i<$this->data['showreceipt']; $i++){ ?>			
 			<table width="100%" style="white-space: nowrap;font-size:14px;  padding:3px 10px 0px 5px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
@@ -156,7 +157,6 @@ img.view{height: 85px !important;}
 						<table width="100%" border="0" style="font-size:14px;line-height: 18px;">
 							<tr>
 								<td width="30%">&nbsp;
-									
 								</td>
 								<td align="center" width="40%">
 									ស្នាមមេដៃអ្នកប្រគល់
@@ -167,22 +167,18 @@ img.view{height: 85px !important;}
 							</tr>
 							<tr height="60px">
 								<td colspan="3">&nbsp;
-									
 								</td>
 							</tr>
 							<tr>
 								<td colspan="3">&nbsp;
-									
 								</td>
 							</tr>
 							<tr>
 								<td width="30%">&nbsp;
-									
 								</td>
 								<td align="center" width="40%">
 									<strong><label id="lbl_customer1"><?php echo $this->rs['name_kh'];echo (empty($this->rs['hname_kh'])?"":"/".$this->rs['hname_kh']); ?></label></strong>
 								</td>
-									
 								<td align="center" width="30%">
 									<strong>
 										<?php 
@@ -199,8 +195,8 @@ img.view{height: 85px !important;}
 						<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
 					</td>
 					<td colspan="5">
-						<span style="font-size: 13px;"><?php echo $this->data['comment'];?></span><br />
-						<span style="white-space: pre-line;font-size: 13px;"><?php echo $this->data['comment1'];?></span><br />
+						<span style="font-size: 11px;"><?php echo $this->data['comment'];?></span><br />
+						<span style="white-space: pre-line;font-size: 11px;"><?php echo $this->data['comment1'];?></span><br />
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
@@ -209,7 +205,7 @@ img.view{height: 85px !important;}
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 10px;margin-top: -10px; margin-bottom:10px;white-space:nowrap;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:10px;line-height: 10px;margin-top: -10px; margin-bottom:10px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
 									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
@@ -232,16 +228,13 @@ img.view{height: 85px !important;}
 						</table>
 					</td>
 				</tr>
-				<?php if($i==0){?>
+				<?php if($i==0 AND $this->data['showreceipt']>1){?>
 				<tr>
 					<td colspan="6" style="border-top:2px dashed #000;" >
-						
 					</td>
 				</tr>
 				<?php }?>
 			</table>
 			<?php } ?>
-		</div>
 	</div>
-</div>
 </div>
