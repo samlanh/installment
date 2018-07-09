@@ -598,10 +598,11 @@ dojo.ready(function(){
 	try{
 		new dijit.form.FilteringSelect({
 		store: sale_store,
-		autoComplete: true,
 		required: false,		           
 		name: "sale_no",
 		id: "sale_no",
+		autoComplete: false,
+		queryExpr: "*${0}*",  
 		searchAttr: "name",
 		class: 'fullside',
 			onChange: function() {
@@ -611,7 +612,8 @@ dojo.ready(function(){
 
 		new dijit.form.FilteringSelect({
 			store: sale_client_store,
-			autoComplete: true,
+			autoComplete: false,
+			queryExpr: "*${0}*",  
 			required: false,		           
 			name: "sale_client",
 			id: "sale_client",
@@ -648,8 +650,8 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 				alert(err);
 			}
 		});
-	}
-	var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
+}
+var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
 	function getSaleClie(){
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id==0){
@@ -668,9 +670,9 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 				alert(err);
 			}
 		});
-	}
-	var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
-	function getLandAndClientDetail(inds){
+}
+var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
+function getLandAndClientDetail(inds){
 		if(inds == "2"){
 			sale_id = dijit.byId('sale_client').get('value');
 			dijit.byId('sale_no').set("value",sale_id)
@@ -689,9 +691,14 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 				dijit.byId('installment_paid').attr('value',data.installment_paid);
 				
 				total_principal= data.total_principal;
-				if(isNaN(total_principal) || total_principal==null){total_principal=0;}
+				if(isNaN(total_principal) || total_principal==null){
+					total_principal=0;
+				}
 			    paid_amount = data.paid_amount;
-				if(isNaN(paid_amount) || paid_amount==null){paid_amount=0;}
+				if(isNaN(paid_amount) || paid_amount==null)
+				{
+					paid_amount=0;
+				}
 				total_principal = parseFloat(total_principal);
 				
 				dijit.byId('paid_amount').attr('value',total_principal);
