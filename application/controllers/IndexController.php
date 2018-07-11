@@ -62,6 +62,7 @@ class IndexController extends Zend_Controller_Action
 					$session_user->last_name= $user_info['last_name'];
 					$session_user->first_name= $user_info['first_name'];
 					$session_user->theme_style=$db_user->getThemeByUserId($user_id);
+					$session_user->timeout= time();
 					
 					$a_i = 0;
 					$arr_actin = array();	
