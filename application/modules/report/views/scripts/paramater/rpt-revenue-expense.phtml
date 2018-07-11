@@ -102,8 +102,10 @@ dojo.require("dijit.form.DateTextBox");
 	             				<td >&nbsp;</td>
 	             			</tr>
 	             			<?php 
-	             				$beginingbalance = 0;
-	             			$total_other_income=0; if (!empty($this->income)) foreach ($this->income as $income_cate){ 
+	             			$beginingbalance = 0;
+	             			$total_other_income=0; 
+	             			$parent=0;
+	             			if (!empty($this->income)) foreach ($this->income as $income_cate){ 
 	             				if($income_cate['is_beginning']==1){
 	             					$beginingbalance = $beginingbalance+$income_cate['total_amount']; 
 	             					continue;
@@ -111,15 +113,39 @@ dojo.require("dijit.form.DateTextBox");
 	//              					$incomcategory = $db->geOtherIncome($income_cate['category_id']); 
 	             					$total_other_income = $total_other_income+$income_cate['total_amount'];
 	             				?>
-	             			<tr height="21px">
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;<?php echo $income_cate['category_name'];?>&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo  number_format($income_cate['total_amount'],2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td >&nbsp;</td>
-	             			</tr>
+	             				<?php if ( $income_cate['parent']!=0 AND $parent != $income_cate['parent']){?>
+	             					<tr height="21px">
+			             				<td style="width: 20%;">&nbsp;</td>
+			             				<td >&nbsp;<strong><?php echo $income_cate['parent_title'];?></strong>&nbsp;</td>
+			             				<td class="" align="right">&nbsp;<?php //echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td><?php //echo $expense_cate['parent_title']?></td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td >&nbsp;</td>
+			             				<?php $parent = $income_cate['parent'];?>
+			             			</tr>
+	             				<?php }?>
+	             				<?php if ( $income_cate['parent']==0){?>
+	             					<tr height="21px">
+			             				<td style="width: 20%;">&nbsp;</td>
+			             				<td >&nbsp;<?php echo $income_cate['category_name'];?>&nbsp;</td>
+			             				<td class="" align="right">&nbsp;<?php echo  number_format($income_cate['total_amount'],2);?>&nbsp;</td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td>&nbsp;</td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td >&nbsp;</td>
+			             			</tr>
+	             				<?php }else{?>
+			             			<tr height="21px">
+			             				<td style="width: 20%;">&nbsp;</td>
+			             				<td >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $income_cate['category_name'];?>&nbsp;</td>
+			             				<td class="" align="right">&nbsp;<?php echo  number_format($income_cate['total_amount'],2);?>&nbsp;</td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td>&nbsp;</td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td >&nbsp;</td>
+			             			</tr>
+	             				<?php }?>
 	             			<?php } $total_income = $total_other_income+$this->saleicome['recieve_amount'];?>
 	             			<tr>
 	             				<td style="width: 20%;">&nbsp;</td>
@@ -134,17 +160,43 @@ dojo.require("dijit.form.DateTextBox");
 	             				<td colspan="3" style=" font-size:16px; font-family:'Khmer MEF2'"> <?php echo $tr->translate("ចំណាយផ្សេងៗ");?> </td>
 	             				<td align="right">&nbsp;&nbsp;</td>
 	             			</tr>
-	             			<?php if (!empty($this->expense)) foreach ($this->expense as $expense_cate){ 
+	             			<?php 
+	             			$parent="";
+	             			if (!empty($this->expense)) foreach ($this->expense as $expense_cate){ 
 	             					$total_expense = $total_expense +$expense_cate['total_amount'];?>
-	             			<tr height="21px">
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td >&nbsp;</td>
-	             			</tr>
+	             			<?php if ( $expense_cate['parent']!=0 AND $parent != $expense_cate['parent']){?>
+	             				<tr height="21px">
+		             				<td style="width: 20%;">&nbsp;</td>
+		             				<td >&nbsp;<strong><?php echo $expense_cate['parent_title'];?></strong>&nbsp;</td>
+		             				<td class="" align="right">&nbsp;<?php //echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
+		             				<td style="width:10px;">&nbsp;</td>
+		             				<td><?php //echo $expense_cate['parent_title']?></td>
+		             				<td style="width:10px;">&nbsp;</td>
+		             				<td >&nbsp;</td>
+		             				<?php $parent = $expense_cate['parent'];?>
+		             			</tr>
+		             		<?php }?>
+		             		<?php if ( $expense_cate['parent']==0){?>
+		             			<tr height="21px">
+		             				<td style="width: 20%;">&nbsp;</td>
+		             				<td >&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
+		             				<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
+		             				<td style="width:10px;">&nbsp;</td>
+		             				<td><?php //echo $expense_cate['parent_title']?></td>
+		             				<td style="width:10px;">&nbsp;</td>
+		             				<td >&nbsp;</td>
+		             			</tr>
+		             		<?php }else{?>
+		             			<tr height="21px">
+		             				<td style="width: 20%;">&nbsp;</td>
+		             				<td >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
+		             				<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
+		             				<td style="width:10px;">&nbsp;</td>
+		             				<td><?php //echo $expense_cate['parent_title']?></td>
+		             				<td style="width:10px;">&nbsp;</td>
+		             				<td >&nbsp;</td>
+		             			</tr>
+	             			<?php }?>
 	             			<?php }?>
 	             			<!-- for expense from commission -->
 	             			<?php if (!empty($this->expense_comission)) foreach ($this->expense_comission as $comission){ $total_expense = $total_expense + $comission['total_amount'];?>

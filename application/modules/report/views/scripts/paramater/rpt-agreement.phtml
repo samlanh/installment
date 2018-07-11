@@ -10,7 +10,8 @@ $day = array(
 		"Sun" =>'អាទិត្យ',
 		);
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
-	?>
+$dbparmeter = new Report_Model_DbTable_DbParamater();
+?>
 <script>
 dojo.require("dijit.form.DateTextBox");
 </script>
@@ -160,7 +161,7 @@ dojo.require("dijit.form.DateTextBox");
 		             			<span style="font-family:'Khmer OS Muol';">ប្រការ៣ ៖ <span id="padding-left-2">អាណត្តិនៃកិច្ចសន្យា</span></span><br />
 	             				<div><span class="padding-left">អាណត្តិ</span>អាណត្តិនៃកិច្ចសន្យានេះមានសុពលភាពចាប់ពីថ្ងៃចុះកិច្ចសន្យានេះ រហូតដល់ដំណាច់ឆ្នាំ២០៧០។</div>
 		             			<span style="font-family:'Khmer OS Muol';">ប្រការ ៤ ៖ <span id="padding-left-2">តម្លៃតូប</span></span>
-	             				<div><span class="padding-left">ភាគី</span> “ក” និង ភាគី “ខ” បានឯកភាពគ្នាទិញ-លក់ តូបលក់ទំនិញខាងលើក្នុងតម្លៃ <strong><?php echo number_format($this->agreement['price_before'],2);?></strong> ដុល្លារ (<label id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក) ។</div>
+	             				<div><span class="padding-left">ភាគី</span> “ក” និង ភាគី “ខ” បានឯកភាពគ្នាទិញ-លក់ តូបលក់ទំនិញខាងលើក្នុងតម្លៃ <strong><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['price_before'],2)); ;?></strong> ដុល្លារ (<label id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក) ។</div>
 	             				<script>
 											a_sold ='<?php echo ($this->agreement['price_before']) ?>';
 											money_khmersold=read_money_in_khmer(a_sold);
@@ -192,7 +193,7 @@ dojo.require("dijit.form.DateTextBox");
 										    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
 										    <td align="justify" style="padding-left:5px">
 										    	<ul class="blogsub">
-										    		<li>ភាគី “ខ” យល់ព្រមបង់ប្រាក់កក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;"><?php echo @number_format($this->first_deposit['percent_agree'])?>% ( <label id="lable_percent"></label>ភាគរយ)</span> ឲ្យទៅ ភាគី “ក” នៅថ្ងៃចុះកិច្ចសន្យាទិញ-លក់នេះ។</li>
+										    		<li>ភាគី “ខ” យល់ព្រមបង់ប្រាក់កក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;"><?php echo $dbparmeter->getNumberInkhmer(@number_format($this->first_deposit['percent_agree']));?>% ( <label id="lable_percent"></label>ភាគរយ)</span> ឲ្យទៅ ភាគី “ក” នៅថ្ងៃចុះកិច្ចសន្យាទិញ-លក់នេះ។</li>
 										    		<li>ភាគី “ក” នឹងប្រគល់តូបលក់ទំនិញដែលជាកម្មវត្ថុនៃការទិញលក់ ទៅឲ្យភាគី“ខ” ប្រើប្រាស់ជា    បណ្តោះអាសន្ននៅរយៈពេលយ៉ាងយូរ<strong>៣០</strong>ថ្ងៃក្រោយចុះកិច្ចសន្យា។ </li>
 										    	</ul>
 										    <script>
@@ -216,7 +217,7 @@ dojo.require("dijit.form.DateTextBox");
 										    <td align="justify" style="padding-left:5px"><strong>ដំណាក់កាលទី២៖</strong> ភាគី “ខ” យល់ព្រមបង់ប្រាក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;">
 										    <?php 
 										    	$remain_percent = 100-$this->first_deposit['percent_agree'];
-										    	echo $remain_percent;?>% ( <label id="lbl_remainpercent"></label> ភាគរយ)</span> ទៀតឲ្យទៅ ភាគី “ក”  ក្នុងរយៈពេល<span class="value" style="min-width:30px; font-weight: 700;"><?php echo number_format($this->agreement['total_duration'],0);?> ឆ្នាំ</span> ក្នុងអត្រាការប្រាក់ <span class="value" style="min-width:30px; font-weight: 700;"><?php echo number_format($this->agreement['total_duration'],0);?>%</span> ក្នុង១ឆ្នាំ។
+										    	echo $dbparmeter->getNumberInkhmer($remain_percent);?>% ( <label id="lbl_remainpercent"></label> ភាគរយ)</span> ទៀតឲ្យទៅ ភាគី “ក”  ក្នុងរយៈពេល<span class="value" style="min-width:30px; font-weight: 700;"><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0));?> ឆ្នាំ</span> ក្នុងអត្រាការប្រាក់ <span class="value" style="min-width:30px; font-weight: 700;"><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0));?>%</span> ក្នុង១ឆ្នាំ។
 										    	<script>
 											    	percent_remain ='<?php echo $remain_percent; ?>';
 													money_khmersold=read_money_in_khmer(percent_remain);
@@ -249,8 +250,8 @@ dojo.require("dijit.form.DateTextBox");
 								  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៥.១.</td>
 									    <td align="justify" style="padding-left:5px">
-									          ភាគី “ខ” យល់ព្រមបង់ប្រាក់កក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;"><?php echo @number_format($this->first_deposit['percent_agree'])?>% ( <label id="lable_percent"></label>ភាគរយ)</span> ឲ្យទៅ ភាគី “ក” នៅថ្ងៃចុះកិច្ចសន្យាទិញ-លក់នេះ។<br />
-										ហើយភាគី“ខ” បង់ប្រាក់នៅសល់ចំនួន<strong> 50% (ហាសិបភាគរយ)</strong> នៅថ្ងៃប្រគល់ប័ណ្ណកាន់កាប់តូប។ 
+									          ភាគី “ខ” យល់ព្រមបង់ប្រាក់កក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;"><?php echo $dbparmeter->getNumberInkhmer(@number_format($this->first_deposit['percent_agree']))?>% ( <label id="lable_percent"></label>ភាគរយ)</span> ឲ្យទៅ ភាគី “ក” នៅថ្ងៃចុះកិច្ចសន្យាទិញ-លក់នេះ។<br />
+										ហើយភាគី“ខ” បង់ប្រាក់នៅសល់ចំនួន<strong> <?php echo $dbparmeter->getNumberInkhmer(50)?>% (ហាសិបភាគរយ)</strong> នៅថ្ងៃប្រគល់ប័ណ្ណកាន់កាប់តូប។ 
 									    <script>
 											percent_first ='<?php echo ($this->first_deposit['percent_agree']) ?>';
 											money_khmersold1=read_money_in_khmer(percent_first);
@@ -299,7 +300,7 @@ dojo.require("dijit.form.DateTextBox");
 								</table>
 		             			<span style="font-family:'Khmer OS Muol';">ប្រការ ៦ ៖ <span id="padding-left-2">ការជួសជុល ឬតុបតែងតូបលក់ទំនិញ</span></span><br />
 		             			<span class="padding-left">បន្ទាប់ពី</span> ភាគី “ខ” បានបង់ប្រាក់កក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;">
-		             			<?php echo @number_format($this->first_deposit['percent_agree'])?>
+		             			<?php echo $dbparmeter->getNumberInkhmer(@number_format($this->first_deposit['percent_agree']))?>
 		             			%(<label id="lable_percent1"></label> ភាគរយ)</span> 
 		             			<script>
 		             			dojo.byId('lable_percent1').innerHTML=money_khmersold1+" ";

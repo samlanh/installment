@@ -166,7 +166,12 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		return $db->fetchAll($sql);
 		
 	}
+	function getAllIncomeCategoryParent($type=12){
+		$db = $this->getAdapter();
+		$sql = " select key_code as id,name_kh as name from ln_view where type=$type AND name_kh!='' AND parent_id=0 ";
+		return $db->fetchAll($sql);
 	
+	}
 	function getNewKeyCode($type){
 		$db = $this->getAdapter();
 		$sql="SELECT COUNT(id) FROM ln_view WHERE type = $type ORDER BY key_code DESC LIMIT 1";

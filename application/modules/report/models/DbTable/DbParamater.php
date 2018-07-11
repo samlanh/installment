@@ -1237,10 +1237,15 @@ function getAllBranch($search=null){
     function getIncomeCategory($search){
     	$db = $this->getAdapter();
     	$sql="SELECT ic.`category_id`,
+    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) as parent,
+    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = 
+    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) LIMIT 1) as parent_title,
     	SUM(ic.`total_amount`) AS total_amount,ic.is_beginning,
     	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) AS category_name,
     	ic.`date` FROM `ln_income` AS ic WHERE 1 ";
-    	$order =" GROUP BY ic.`category_id` ,ic.is_beginning  ORDER BY ic.`category_id` ASC";
+    	$order =" GROUP BY ic.`category_id` ,ic.is_beginning  ORDER BY 
+    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) ASC,
+    	ic.`category_id` ASC";
     	$where="";
     	$from_date =(empty($search['start_date']))? '1': " ic.`date` >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " ic.`date` <= '".$search['end_date']." 23:59:59'";
@@ -1253,11 +1258,17 @@ function getAllBranch($search=null){
     function getExpenseCategory($search){
     	$db = $this->getAdapter();
     	$sql="SELECT ex.`category_id`,
+    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) as parent,
+    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = 
+    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) LIMIT 1) as parent_title,
     	SUM(total_amount) AS total_amount,
     	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) AS category_name,
     	ex.`date` FROM `ln_expense` AS ex WHERE 1
     	";
-    	$order =" GROUP BY ex.`category_id` ORDER BY ex.`category_id` ASC";
+    	$order =" GROUP BY ex.`category_id` ORDER BY 
+    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) ASC,
+    	
+    	ex.`category_id` ASC";
     	$where="";
     	$from_date =(empty($search['start_date']))? '1': " ex.`date` >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " ex.`date` <= '".$search['end_date']." 23:59:59'";
@@ -1449,6 +1460,21 @@ function getAllBranch($search=null){
     		}
     		$where.=" ORDER BY c.id DESC ";
     		return $db->fetchAll($sql.$where);
+    	}
+    	
+    	function getNumberInkhmer($number){
+    		$khmernumber = array("០","១","២","៣","៤","៥","៦","៧","៨","៩");
+    		$spp = str_split($number);
+    		$num="";
+    		foreach ($spp as $ss){
+    	
+    			if (!empty($khmernumber[$ss])){
+    				$num.=$khmernumber[$ss];
+    			}else{
+    				$num.=$ss;
+    			}
+    		}
+    		return $num;
     	}
 
 }
