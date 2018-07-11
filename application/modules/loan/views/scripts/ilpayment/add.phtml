@@ -497,22 +497,26 @@ th.tdheader{
 	    </div>
 	</div>
 </div>	
-<div class="dijitHidden" style="width: 25cm !important; height: 12cm ; padding: 0px; margin: 0px;">
+<div class="dijitHidden" style="width: 25cm !important;height: 10cm ; padding: 0px; margin: 0px;">
 	<div data-dojo-type="dijit.Dialog" style="text-align:center;" data-dojo-props="title:'បោះពុម្ភ វិក័យបត្រ', onCancel:hideDialog" id="frm_client">
 		<div id="rpt_print" >
-			<table cellpadding="0" cellspacing="0" style="width:21cm; white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 16px;">
+			<style>
+				td span{line-height: 15px;}								
+			</style>
+			<table cellpadding="0" cellspacing="0" style="padding:0;margin:0 auto; width:21cm; white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 16px;">
 				<tr valign="top" >
 					<td align="center" colspan="6" valign="top" >	
 						<table  cellpadding="0" cellspacing="0" style=" font-family: 'Khmer OS Battambang';padding:0; width:100%;white-space:nowrap;">
 							<tr style="line-height:10px;">
 								<td id="projectlogo" valign="top" width="25%" align="left" style="color: #000;">
-									<img style="height:75px;margin-bottom: -25px;margin-top: -10px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+									<img style="height:75px;margin-top: -25px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>
 								<td width="50%" valign="top" align="center" style="color: #000;">
 									<span style="text-align:center; font-size:18px !important; font-family:'Khmer MEF2';text-decoration:none;"><?php echo $tr->translate("PAYMENT_RECEIPT");?></span><br />
 									<span style="text-align:center;line-height:30px; font-size:16px !important;font-family:sans-serif;text-decoration:none;">OFFICIAL RECEIPT</span>
 								</td>
-								<td width="25%"  style="color: #000;">&nbsp;
+								<td width="25%"  style="color: #000;text-align: right;">&nbsp;
+									<strong><label id="lbl_reciept_no" class="value"></label></strong>
 								</td>
 							</tr>
 						</table>
@@ -520,19 +524,11 @@ th.tdheader{
 				</tr> 
 				<tr>
 						<td align="center" colspan="6" valign="top" >	
-							<table width="100%" cellpadding="0" cellspacing="5px" style="font-family: 'Khmer OS Battambang' ;font-size:16px !important;white-space:nowrap; width:21cm; margin-top: -25px;">
-								<tr class="fontsize" >
-									<td class="fontsize" valign="top"></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td align="right"><strong><label id="lbl_reciept_no" class="value"></label></strong></td>
-								</tr>
+							<table  width="100%" cellpadding="0" cellspacing="5px" style="font-family: 'Khmer OS Battambang' ;font-size:16px !important;white-space:nowrap; width:21cm; margin-top: -10px;">
 								<tr class="fontsize" >
 									<td style="width:10%; display: none;"  >លេខកូដលក់</td>
 									<td style="width:40%;border:1px solid #000;  display: none;">&nbsp;&nbsp;<strong><label id="lbl_loan_number" class="value"></label></strong></td>
-									<td style="width:10%;"  >គម្រោង</td>
+									<td style="width:10%;">គម្រោង</td>
 									<td style="width:40%;border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_project" class="value"></label></strong></td>
 									<td  style="width:10%;" class="padding">ប្រាក់ដើមត្រូវបង់</td>
 									<td style="border:1px solid #000;">&nbsp;&nbsp;<strong><label id="lbl_principle_amount" class="value"></label></strong></td>
@@ -564,9 +560,9 @@ th.tdheader{
 									<td >
 										<table width="100%">
 											<tr>
-												<td width="33%" style="white-space:nowrap;"><strong>&nbsp;&nbsp;<label id="lbl_total_paid" class="value"></label></strong></td>
+												<td width="33%" style="white-space:nowrap;border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_total_paid" class="value"></label></strong></td>
 												<td width="33%" style="white-space:nowrap;">ប្រាក់នៅសល់</td>
-												<td width="33%" style="white-space:nowrap;"><strong>&nbsp;&nbsp;<label id="lbl_ending_balance" class="value"></label></strong></td>
+												<td width="33%" style="white-space:nowrap;border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_ending_balance" class="value"></label></strong></td>
 											</tr>
 										</table>
 									</td>
@@ -600,11 +596,7 @@ th.tdheader{
 													<?php echo $this->data['teller_sign'];?>
 												</td>
 											</tr>
-											<tr>
-												<td colspan="3">&nbsp;
-												</td>
-											</tr>
-											<tr>
+											<tr height="55px">
 												<td colspan="3">&nbsp;
 												</td>
 											</tr>
@@ -633,18 +625,17 @@ th.tdheader{
 										<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
 									</td>
 									<td colspan="5">
-										<span style="font-size: 13px;"><?php echo $this->data['comment'];?></span><br />
-										<span style="white-space: pre-line;font-size: 13px;"><?php echo $this->data['comment1'];?></span><br />
+										<span style="font-size: 11px;"><?php echo $this->data['comment'];?></span><br />
+										<span style="white-space: pre-line;font-size: 11px;"><?php echo $this->data['comment1'];?></span><br />
 									</td>
 								</tr>
 								<tr style="line-height: 10px;font-size: 10px;">
 									<td colspan="6" style="border: 1px solid rgba(255, 235, 59, 0.88)">
-										
 									</td>
 								</tr>
 								<tr >
-									<td colspan="6" >
-										<table width="100%" style="font-family:'Khmer OS Battambang'; font-size:13px;line-height: 10px;margin-top: -5px;margin-bottom:15px;"> 
+									<td colspan="6" valign="top">
+										<table width="100%" celpadding="0" cellspacing="0" style="font-family:'Khmer OS Battambang'; font-size:10px;line-height: 10px;margin-top: -5px;"> 
 											<tr>
 												<td width="22%">
 													<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
@@ -668,7 +659,7 @@ th.tdheader{
 									</td>
 								</tr>
 								<?php if($this->data['showreceipt']>1){?>
-								<tr>
+								 <tr height="15px">
 									<td colspan="6" style="border-bottom:2px dashed #000;" >
 									</td>
 								</tr>
@@ -756,7 +747,7 @@ th.tdheader{
 									<td >
 										<table width="100%">
 											<tr>
-												<td width="33%" style="white-space:nowrap;"><strong>&nbsp;&nbsp;<label id="lbl_total_paid1" class="value"></label></strong></td>
+												<td width="33%" style="white-space:nowrap;border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_total_paid1" class="value"></label></strong></td>
 												<td width="33%" style="white-space:nowrap;">ប្រាក់នៅសល់</td>
 												<td width="33%" style="white-space:nowrap;border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_ending_balance1" class="value"></label></strong></td>
 											</tr>
@@ -792,13 +783,8 @@ th.tdheader{
 													<?php echo $this->data['teller_sign'];?>
 												</td>
 											</tr>
-											<tr>
-												<td colspan="3">&nbsp;
-												</td>
-											</tr>
-											<tr>
-												<td colspan="3">&nbsp;
-												</td>
+											<tr height="80p">
+												<td colspan="3">&nbsp;</td>
 											</tr>
 											<tr>
 												<td width="30%">&nbsp;
@@ -825,8 +811,8 @@ th.tdheader{
 										<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
 									</td>
 									<td colspan="5">
-										<span style="font-size: 13px;"><?php echo $this->data['comment'];?></span><br />
-										<span style="white-space: pre-line;font-size: 13px;"><?php echo $this->data['comment1'];?></span><br />
+										<span style="font-size: 11px;"><?php echo $this->data['comment'];?></span><br />
+										<span style="white-space: pre-line;font-size: 11px;"><?php echo $this->data['comment1'];?></span><br />
 									</td>
 								</tr>
 								<tr style="line-height: 10px;font-size: 10px;">
@@ -835,7 +821,7 @@ th.tdheader{
 								</tr>
 								<tr >
 									<td colspan="6" >
-										<table width="100%" style="font-family:'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;"> 
+										<table width="100%" style="font-family:'Khmer OS Battambang'; font-size:10px;line-height: 15px;margin-top: -5px;margin-bottom:15px;"> 
 											<tr>
 												<td width="22%">
 													<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
