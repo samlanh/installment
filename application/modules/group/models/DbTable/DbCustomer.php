@@ -73,6 +73,13 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		if($search['status']>-1){
 			$where.= " AND status = ".$search['status'];
 		}	
+		
+		$userid = $this->getUserId();
+		$db_user=new Application_Model_DbTable_DbUsers();
+		$user_info = $db_user->getUserInfo($userid);
+		if (!empty($user_info['staff_id'])){
+			$where.= " AND user_id = ".$userid;
+		}
 		$order=" ORDER BY id DESC ";
 		return $db->fetchAll($sql.$where.$order);	
 	}
