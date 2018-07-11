@@ -521,7 +521,7 @@ th.tdheader{
 				<tr>
 						<td align="center" colspan="6" valign="top" >	
 							<table width="100%" cellpadding="0" cellspacing="5px" style="font-family: 'Khmer OS Battambang' ;font-size:16px !important;white-space:nowrap; width:21cm; margin-top: -25px;">
-								<tr class="fontsize" style="border:1px solid #000;">
+								<tr class="fontsize" >
 									<td class="fontsize" valign="top"></td>
 									<td></td>
 									<td></td>
@@ -529,7 +529,7 @@ th.tdheader{
 									<td></td>
 									<td align="right"><strong><label id="lbl_reciept_no" class="value"></label></strong></td>
 								</tr>
-								<tr class="fontsize" style="border:1px solid #000;">
+								<tr class="fontsize" >
 									<td style="width:10%; display: none;"  >លេខកូដលក់</td>
 									<td style="width:40%;border:1px solid #000;  display: none;">&nbsp;&nbsp;<strong><label id="lbl_loan_number" class="value"></label></strong></td>
 									<td style="width:10%;"  >គម្រោង</td>
@@ -539,7 +539,7 @@ th.tdheader{
 									<td  >បង់លើកទី</td>
 									<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_paidtimes" class="value"></label></strong></td>
 								</tr>
-								<tr class="fontsize" style="border:1px solid #000;">
+								<tr class="fontsize" >
 									<td >ឈ្មោះ​អតិថិជន</td>
 									<td style="border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_client_id" class="value"></label></strong></td>
 									<td class="padding">ប្រាក់ការ</td>
@@ -564,9 +564,9 @@ th.tdheader{
 									<td >
 										<table width="100%">
 											<tr>
-												<td width="33%" style="white-space:nowrap;border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_total_paid" class="value"></label></strong></td>
+												<td width="33%" style="white-space:nowrap;"><strong>&nbsp;&nbsp;<label id="lbl_total_paid" class="value"></label></strong></td>
 												<td width="33%" style="white-space:nowrap;">ប្រាក់នៅសល់</td>
-												<td width="33%" style="white-space:nowrap;border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_ending_balance" class="value"></label></strong></td>
+												<td width="33%" style="white-space:nowrap;"><strong>&nbsp;&nbsp;<label id="lbl_ending_balance" class="value"></label></strong></td>
 											</tr>
 										</table>
 									</td>
@@ -667,10 +667,12 @@ th.tdheader{
 										</table>
 									</td>
 								</tr>
+								<?php if($this->data['showreceipt']>1){?>
 								<tr>
 									<td colspan="6" style="border-bottom:2px dashed #000;" >
 									</td>
 								</tr>
+								<?php }?>
 							</table>
 						</td>
 				</tr>
@@ -754,7 +756,7 @@ th.tdheader{
 									<td >
 										<table width="100%">
 											<tr>
-												<td width="33%" style="white-space:nowrap;border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_total_paid1" class="value"></label></strong></td>
+												<td width="33%" style="white-space:nowrap;"><strong>&nbsp;&nbsp;<label id="lbl_total_paid1" class="value"></label></strong></td>
 												<td width="33%" style="white-space:nowrap;">ប្រាក់នៅសល់</td>
 												<td width="33%" style="white-space:nowrap;border:1px solid #000;"><strong>&nbsp;&nbsp;<label id="lbl_ending_balance1" class="value"></label></strong></td>
 											</tr>
@@ -1242,7 +1244,7 @@ function filterClient(){
     var tran_store  = getDataStorefromJSON('','name',null);
 	var tran_status = {};
 	function print(){
-		window.frames["print_frame"].document.body.innerHTML=dojo.byId('rpt_print').innerHTML + dojo.byId('rpt_print1').innerHTML;
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('rpt_print').innerHTML<?php if($this->data['showreceipt']>1){ ?> + dojo.byId('rpt_print1').innerHTML<?php }?>;
 	    window.frames["print_frame"].window.focus();
 	    window.frames["print_frame"].window.print();
 		submitData();

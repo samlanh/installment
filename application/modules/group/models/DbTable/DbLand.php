@@ -8,6 +8,70 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
     }
+    public function addLandinfoAuto($_data){
+    	try{
+    		$increase = 0;
+    		for($i=$_data['land_address'];$i<=$_data['to_land_address'];$i++){
+    			$db = new Application_Model_DbTable_DbGlobal();
+    			$land_code = $db->getNewLandByBranch($_data['branch_id']);
+	    		$south = '';
+	    		$north='';
+	    		$west='';
+	    		$east='';
+    			if($_data['south']!=-1 AND ($_data['south'] !='' AND ($_data['south_prefix']!='' OR $_data['postfix_south']!='' )))
+    			{
+    				$south = $_data['south_prefix'].($_data['south']+$increase).$_data['postfix_south'];
+    			}elseif($_data['south'] =='' AND $_data['postfix_south']==''){
+    				$south = $_data['south_prefix'];
+    			}
+    			
+    			if($_data['north']!=-1 AND ($_data['north'] !='' AND ($_data['north_prefix']!='' OR $_data['postfix_north']!='' )))
+    			{
+    				$north = $_data['north_prefix'].($_data['north']+$increase).$_data['postfix_north'];
+    			}elseif($_data['north'] =='' AND $_data['postfix_north']==''){
+    				$north = $_data['north_prefix'];
+    			}
+    			if($_data['west']!=-1 AND ($_data['west'] !='' AND ($_data['west_prefix']!='' OR $_data['postfix_west']!='')))
+    			{
+    				$west = $_data['west_prefix'].($_data['west']+$increase).$_data['postfix_west'];
+    			}elseif($_data['west'] =='' AND $_data['postfix_west']==''){
+    				$west = $_data['west_prefix'];
+    			}
+    			if($_data['east']!=-1 AND ($_data['east'] !='' AND ($_data['east_prefix']!='' OR $_data['postfix_east']!='')))
+    			{
+    				$east = $_data['east_prefix'].($_data['east']+$increase).$_data['postfix_east'];
+    			}elseif($_data['east'] =='' AND $_data['postfix_east']==''){
+    				$east = $_data['east_prefix'];
+    			}
+    			
+	    		$_arr=array(
+	    				'branch_id'	  => $_data['branch_id'],
+	    				'land_code'	  => $land_code,
+	    				'land_address'=> $_data['land_address_prefix'].$i.$_data['postfix_land_address'],
+	    				'street'	  => $_data['street'],
+	    				'price'	      => $_data['house_price'],
+	    				'land_price'  => 0,
+	    				'house_price' => $_data['house_price'],
+	    				'land_size'	  => $_data['size'],
+	    				'width'       => $_data['width'],
+	    				'height'      => $_data['height'],
+	    				'is_lock'     => $_data['buy_status'],
+	    				'status'	  => 1,
+	    				'user_id'	  => $this->getUserId(),
+	    				'property_type'=> $_data['property_type'],
+	    				'south'	      => $south,
+	    				'north'	      => $north,
+	    				'west'	      => $west,
+	    				'east'	      => $east,
+	    				'create_date'=>date('Y-m-d')
+	    		);
+	    	    $this->insert($_arr);
+	    	    $increase++;
+    		}
+    	}catch(Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    	}
+    }
 	public function addLandinfo($_data){
 		try{
 			if(!empty($_data['id'])){
