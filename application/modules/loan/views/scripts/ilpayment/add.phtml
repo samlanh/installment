@@ -851,8 +851,68 @@ th.tdheader{
 		</div>	
 	</div>
 </div>
+<div class="dijitHidden" style="width: 25cm !important;height: 10cm ; padding: 0px; margin: 0px;">
+	<div id="frm_permission" data-dojo-type="dijit.Dialog" style="text-align:center;" data-dojo-props="title:'<?php echo $tr->translate("Verify Account")?>', onCancel:hideDialog" >
+		<form id="checkUserPermission" action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<div class="card-box">
+				<div class="form-group">
+	            	<label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("USER_NAME");?> <span class="required">*</span> :
+	                </label>
+	                <div class="col-md-7 col-sm-7 col-xs-12">
+	                	<input type="text" required="true" name="user_name" id="user_name" placeholder="<?php echo $tr->translate("USER_NAME");?>" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ​អ្នក​ប្រើ​ប្រាស់!" class='fullside'/>
+	               </div>
+	            </div>
+	            <div class="form-group">
+	            	<label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PASSWORD");?> <span class="required">*</span> :
+	                </label>
+	                <div class="col-md-7 col-sm-7 col-xs-12">
+	                	<input type="password" required="true" name="password" id="password" placeholder="<?php echo $tr->translate("PASSWORD");?>" 
+						regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
+						dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពាក្យ​​សំងាត់!" class='fullside'/>
+	                </div>
+	           </div>
+	           <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+	               			<input type="button" value="OK" label="<?php echo $tr->translate('OK');?>" id="back" dojoType="dijit.form.Button" 
+					iconClass="dijitIconUndo" onclick="checkUserPermission();" />
+	    		</div>
+			</div>
+		</form>
+	</div>
+</div>
 <?php $baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();?>
 <script type="text/javascript">
+function checkUserPermission(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'checkpermission')); ?>';
+	user_name = dijit.byId('user_name').get('value');
+	password = dijit.byId('password').get('value');
+	if(user_name==""){
+		alert("<?php echo $tr->translate("Please enter user name");?>");
+		return false;
+	}
+	if(password==""){
+		alert("<?php echo $tr->translate("Please enter password");?>");
+		return false;
+	}
+	loading();
+	dojo.xhrPost({
+	    url: url_submit,	
+		form: dojo.byId("checkUserPermission"),		    
+		load: function(data) {
+			dijit.byId('penalize_amount').set('value',0);
+			if(data==1){
+				dijit.byId('penalize_amount').set('readonly',false);
+				
+			}else if(data==2){
+				dijit.byId('penalize_amount').set('readonly',true); 
+			}
+			dojo.byId("checkUserPermission").reset();
+			dijit.byId('frm_permission').hide();
+			HideloadingBlock();
+		},
+		error: function(e) {
+		}
+	});
+}
 function enablePayment(){
 	payment_method = dijit.byId('payment_method').get('value');
 	dijit.byId("cheque").set("readOnly",false);
@@ -1166,6 +1226,9 @@ dojo.ready(function(){
 	<?php }?>
 	dijit.byId('service_charge').set("readOnly",true);	
 	enablePayment();
+	$( "#penalize_amount" ).dblclick(function() {
+		dijit.byId("frm_permission").show();
+	});
 });
 var url_getlastpaiddate = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-lastpaiddate')); ?>';
 function getLastPaidDate(){

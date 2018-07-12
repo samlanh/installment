@@ -388,4 +388,14 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	
+	function checkpermissionAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$dbGB = new Loan_Model_DbTable_DbLoanILPayment();
+			$branch = $dbGB->checkUserPermission($data);
+			print_r(Zend_Json::encode($branch));
+			exit();
+		}
+	}
 }

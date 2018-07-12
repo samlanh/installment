@@ -1491,4 +1491,19 @@ function getLoanPaymentByLoanNumberEdit($data){
 				ORDER BY id DESC LIMIT 1";
 		return $db->fetchRow($sql);
 	}
+	
+	function checkUserPermission($data){
+		$user_name = empty($data['user_name'])?"":$data['user_name'];
+		$password = empty($data['password'])?"":$data['password'];
+		$db = $this->getAdapter();
+		$sql="SELECT u.* FROM `rms_users` AS u WHERE u.`user_name`='$user_name' AND u.`password` = MD5('$password') AND u.`active` =1 LIMIT 1";
+		$row = $db->fetchRow($sql);
+		if (empty($row)){
+			return 2;
+		}elseif ($row['user_type']==1) {
+			return 1;
+		}else{
+			return 2;
+		}
+	}
 }
