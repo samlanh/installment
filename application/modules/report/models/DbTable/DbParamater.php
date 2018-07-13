@@ -404,7 +404,7 @@ function getAllBranch($search=null){
     	$db = $this->getAdapter();
     	$sql="SELECT crm.`recieve_amount` AS recieve_amount,
     			crm.date_pay,
-    			(SELECT percent_agree FROM `ln_saleschedule` WHERE is_installment = 1 AND sale_id=$sale_id ORDER BY id DESC  LIMIT 1) AS percent_agree,
+    			(SELECT percent_agree FROM `ln_saleschedule` WHERE is_installment = 1 AND sale_id=$sale_id ORDER BY id ASC  LIMIT 1) AS percent_agree,
     			(SELECT percent FROM `ln_saleschedule` WHERE is_installment = 1 AND sale_id=$sale_id ORDER BY id DESC  LIMIT 1) AS percent,
     			(SELECT second_depostit FROM  ln_sale WHERE id = $sale_id ) AS  second_depostit,
     			(SELECT second_depostit FROM  ln_sale WHERE id = $sale_id ) AS  second_depostit,

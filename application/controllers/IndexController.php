@@ -33,8 +33,8 @@ class IndexController extends Zend_Controller_Action
 		if($this->getRequest()->isPost())		
 		{
 			if(date('Y-m-d')>='2018-07-13'){
-				$this->view->msg = 'System Expired';
-				return false;
+// 				$this->view->msg = 'System Expired';
+// 				return false;
 			}
 			
 			$formdata=$this->getRequest()->getPost();
@@ -63,7 +63,6 @@ class IndexController extends Zend_Controller_Action
 					$session_user->first_name= $user_info['first_name'];
 					$session_user->theme_style=$db_user->getThemeByUserId($user_id);
 					$session_user->timeout= time();
-					
 					$a_i = 0;
 					$arr_actin = array();	
 					for($i=0; $i<count($arr_acl);$i++){
