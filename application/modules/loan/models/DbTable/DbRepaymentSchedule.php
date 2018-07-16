@@ -184,7 +184,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     						'build_start'=>$data['start_building'],
     						'amount_build'=>$data['amount_build'],
     						'is_reschedule'=>$is_schedule,
-    						'is_completed'=>($data['schedule_opt']==2)?1:0
+    						'is_completed'=>($data['schedule_opt']==2)?1:0,
+    						'amount_daydelay'=>$data['delay_day']
     				);
     				$where= " id = ".$data['id'];
     				$this->update($arr, $where);

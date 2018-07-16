@@ -227,7 +227,7 @@ $frm = $this->frm_loan;
 								<table  style=" text-align: center; width:100%;">
 									<tr style="font-size: 12px;">
 										<td style="width:50%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;"><td>&nbsp;</td>
-										<td style=" width:50%;  text-align:center; font-size: 14px; font-weight:200;">ធ្វើនៅថ្ងៃទី<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;</span>ខែ<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;</span>ឆ្នាំ <span class="labelBorderBottom" style="min-width: 15%;">&nbsp;</span><br /><br /><br /></td>
+										<td style=" width:50%;  text-align:center; font-size: 14px; font-weight:200;">ធ្វើនៅថ្ងៃទី<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;<span class="labelValue" id="lbl_day"></span></span>ខែ<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;<span class="labelValue" id="lbl_month"></span></span>ឆ្នាំ <span class="labelBorderBottom" style="min-width: 15%;"><span class="labelValue" id="lbl_year"></span>&nbsp;</span><br /><br /><br /></td>
 								   </tr>
 								</table>
 							</td>
@@ -391,7 +391,7 @@ $frm = $this->frm_loan;
 								<table  style=" text-align: center; width:100%;">
 									<tr style="font-size: 12px;">
 										<td style="width:50%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;"><td>&nbsp;</td>
-										<td style=" width:50%;  text-align:center; font-size: 14px; font-weight:200;">ធ្វើនៅថ្ងៃទី<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;</span>ខែ<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;</span>ឆ្នាំ <span class="labelBorderBottom" style="min-width: 15%;">&nbsp;</span><br /><br /><br /></td>
+										<td style=" width:50%;  text-align:center; font-size: 14px; font-weight:200;">ធ្វើនៅថ្ងៃទី<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;<span class="labelValue" id="lbl_day1"></span></span>ខែ<span class="labelBorderBottom" style="min-width: 25%;"><span class="labelValue" id="lbl_month1"></span>&nbsp;</span>ឆ្នាំ <span class="labelBorderBottom" style="min-width: 15%;"><span class="labelValue" id="lbl_year1"></span>&nbsp;</span><br /><br /><br /></td>
 								   </tr>
 								</table>
 							</td>
@@ -471,9 +471,26 @@ function getSaleInfo(){
 				document.getElementById('lblcommune1').innerHTML = data.commune_namekh;
 				document.getElementById('lbldistrict1').innerHTML = data.district_namekh;
 				document.getElementById('lblprovince1').innerHTML = data.province_kh_name;
+
+				date_payment = dijit.byId("date").get('value');
+				var a = new Date(date_payment);
+				mm = a.getMonth()+1;
+				var dd = a.getDate();
+				 if(dd<10){
+					 dd = "0"+dd;
+				}
+				month = returnMOnth(mm);
+				var y = a.getFullYear();
+
+				document.getElementById('lbl_day').innerHTML = dd;
+				document.getElementById('lbl_month').innerHTML = month;
+				document.getElementById('lbl_year').innerHTML = y;
+				
+				document.getElementById('lbl_day1').innerHTML = dd;
+				document.getElementById('lbl_month1').innerHTML = month;
+				document.getElementById('lbl_year1').innerHTML = y;
 				
 				dijit.byId('frm_receipt').show();
-				//showReciept();
 			},
 			error: function(err) {
 				alert(err);
@@ -481,7 +498,22 @@ function getSaleInfo(){
 		});
 	}
 }
-
+function returnMOnth(monthnum){
+	var month = new Array();
+	month[1] = "Jan";
+	month[2] = "Feb";
+	month[3] = "Mar";
+	month[4] = "Apr";
+	month[5] = "May";
+	month[6] = "Jun";
+	month[7] = "Jul";
+	month[8] = "Aug";
+	month[9] = "Sep";
+	month[10] = "Oct";
+	month[11] = "Nov";
+	month[12] = "Dec";
+	return month[monthnum];
+}
 function hideDialog() {		
 	dijit.byId("frm_receipt").hide();
 }

@@ -18,20 +18,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$sql="SELECT * FROM `ln_language` AS l WHERE l.`status`=1 ORDER BY l.ordering ASC";
 		return $db->fetchAll($sql);
 	}
-// 	public function getAllDegree($id=null){//use for staff education
-// 		$tr= Application_Form_FrmLanguages::getCurrentlanguage();
-// 		$opt_degree = array(
-// 				''=>$this->tr->translate("----ជ្រើសរើស----"),
-// 				1=>$this->tr->translate("Diploma"),
-// 				2=>$this->tr->translate("Associate"),
-// 				3=>$this->tr->translate("Bechelor"),
-// 				4=>$this->tr->translate("Master"),
-// 				5=>$this->tr->translate("PhD")
-// 		);
-// 		if($id==null)return $opt_degree;
-// 		else return $opt_degree[$id];
-// 	}
-	
 	function  getAllBranchByUser(){
 		$db = $this->getAdapter();
 		$sql = 'select br_id as id,project_name as name from ln_project where 1 and project_name!="" ORDER BY br_id DESC ';
@@ -1287,6 +1273,24 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$sql = 'SELECT DISTINCT street as name,street as id FROM `ln_properties` WHERE street!="" ORDER BY street ASC ';
   	$rows =  $db->fetchAll($sql);
   	return $rows;
+  }
+  function  getAllInterestratestore(){
+  	$db = $this->getAdapter();
+  	$sql = 'SELECT DISTINCT(interest_rate) AS name, interest_rate AS id FROM `ln_sale` WHERE interest_rate>0 ORDER BY interest_rate ASC  ';
+  	$rows =  $db->fetchAll($sql);
+  	return $rows;
+  }
+  function  getAllInterestrate(){
+  	$db = $this->getAdapter();
+  	$sql = 'SELECT DISTINCT(interest_rate) FROM `ln_sale` WHERE interest_rate>0 ORDER BY interest_rate ASC ';
+  	$rows =  $db->fetchAll($sql);
+  	$options=array(0=>0);
+  	if(!empty($rows))foreach($rows AS $row){
+  		$options[$row['interest_rate']]=$row['interest_rate'];
+  	}
+  	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  	$options[-1]=$tr->translate("ADD_NEW");
+  	return $options;
   }
   function updateLateRecordSaleschedule($sale_id){
   	$db = $this->getAdapter();

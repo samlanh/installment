@@ -300,7 +300,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'comission'=>$data['commission'],
     			   	'full_commission'=>$data['full_commission'],
     				'create_date'=>date("Y-m-d"),
-    				'user_id'=>$this->getUserId()
+    				'user_id'=>$this->getUserId(),
+    			   	'amount_daydelay'=>$data['delay_day']
     				);
     		$this->_name='ln_sale';
     		$id = $this->insert($arr);//add group loan

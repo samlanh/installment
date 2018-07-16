@@ -70,6 +70,14 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
         $this->view->allclient = $db->getAllClient();
         $this->view->allclient_number = $db->getAllClientNumber();
         $frmpopup = new Application_Form_FrmPopupGlobal();
+
+        $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+        $interest = $db->getAllInterestratestore();
+        array_unshift($interest,array(
+        'id' => -1,
+        'name' =>$tr->translate("ADD_NEW"),
+        ) );
+        $this->view->rs_interest = $interest;
         
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();        

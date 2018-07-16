@@ -207,16 +207,16 @@ public function init()
 				'readonly'=>true
 		));
 		
-		$_rate =  new Zend_Dojo_Form_Element_NumberTextBox("interest_rate");
+		$_rate =  new Zend_Dojo_Form_Element_FilteringSelect("interest_rate");
 		$_rate->setAttribs(array(
-				'data-dojo-Type'=>'dijit.form.NumberTextBox',
-				'data-dojo-props'=>"
-				'required':true,
-				'name':'interest_rate',
-				'class':'fullside',
-				'onkeyup':'checkScheduleOption();',
-				'invalidMessage':'អាចបញ្ជូលពី 1 ដល់'
-				"));
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'required'=>false,
+				'name'=>'interest_rate',
+				'class'=>'fullside',
+				'onchange'=>'checkScheduleOption();',
+				));
+		$interest_opt = $db->getAllInterestrate();
+		$_rate->setMultiOptions($interest_opt);
 				
 		$_period = new Zend_Dojo_Form_Element_NumberTextBox('period');
 		$_period->setAttribs(array(
@@ -483,6 +483,14 @@ public function init()
 		));
 		$second_depostit->setValue(0);
 		
+		$delay_day = new Zend_Dojo_Form_Element_NumberTextBox('delay_day');
+		$delay_day->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'required'=>true
+		));
+		$delay_day->setValue(0);
+		
 		if($data!=null){
 			$agreementdate->setValue($data['agreement_date']);
 			$_branch_id->setValue($data['branch_id']);
@@ -520,7 +528,7 @@ public function init()
 			}
 			
 		}
-		$this->addElements(array($full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

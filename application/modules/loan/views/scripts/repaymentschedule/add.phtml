@@ -274,6 +274,7 @@
 								</select>
 	                   		</div>
 	                   </div>
+	                   </div>
 	                   <div class="form-group">
 		                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_FORINTALLMENT");?>  :
 		                   </label>
@@ -334,11 +335,14 @@
 		                <div class="form-group">
 		                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("paid_receivehouse");?>  :
 		                   </label>
-		                   <div class="col-md-7 col-sm-7 col-xs-12">
+		                   <div class="col-md-4 col-sm-4 col-xs-12">
 		                   		<?php echo $frm->getElement('paid_receivehouse');?>
 		                   </div>
+		                   <div class="col-md-3 col-sm-3 col-xs-12">
+		                   		<?php echo $frm->getElement('delay_day');?>
+		                   </div>
 		                </div>
-	                </div>
+	                
 	            </div>
 	         </div>
 	         
@@ -845,7 +849,27 @@
 		</div>
 	</div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("INTEREST_RATE")?>'"  id="frm_interest" >
+		<form id="form_interestrate" dojoType="dijit.form.Form">
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<input dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="interest_ratenew" name="interest_ratenew" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addinterest();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
 <script type="text/javascript">	
+						           	
 var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-il-loan-Detail')); ?>';
 function getLaonPayment(){
 	loan_number = dijit.byId("loan_number").get('value');
@@ -876,6 +900,11 @@ function getLaonPayment(){
 		});
 }
 function checkScheduleOption(){
+	interest_rate = dijit.byId("interest_rate").get("value");
+  	if(interest_rate==-1){
+  		dijit.byId('frm_interest').show();
+  		return false;
+	}
 	dijit.byId("install_type").set("readOnly",true);
 	dijit.byId('first_payment').set("readOnly",false);
 	dijit.byId('period').set("readOnly",false);
@@ -1566,7 +1595,7 @@ function addRow(){
 	no=0;title=0;temp='';$('#identity').val('');
 	dojo.byId("showrecord").innerHTML = '';
 	tmp='<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
-	tmp+='<tr id="head-title" class="head-td" style="background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+	tmp+='<tr id="head-title" class="head-td" style="color:#000;background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
 	tmp+='</table>';
 	dojo.query("#showrecord").append(tmp);
 	
@@ -1606,7 +1635,7 @@ function addRow(){
 				template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td width="2%" align="center">'+no+'</td>';
 				template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
-				template+='<td><input type="text" class="fullside" data-dojo-type="dijit.form.NumberTextBox" id="percent_agree'+col+'" name="percent_agree'+col+'" /></td>';
+				template+='<td><input type="text" class="fullside" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent_agree'+col+'" name="percent_agree'+col+'" /></td>';
 				template+='<td><input type="text" onkeyup="calCulateAmount('+col+')" class="fullside" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';			
 				template+='<td><input class="fullside"  onkeyup="calCulateAmount('+col+',2)" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
 				if(payment_method==5){
@@ -1647,7 +1676,7 @@ function addInstallment(){
 			template='';
 			if(title!=1){    
 				tmp='<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
-				tmp+='<tr id="head-title" class="head-td" style="background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+				tmp+='<tr id="head-title" class="head-td" style="color:#000;background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
 				tmp+='</table>';
 				dojo.query("#showrecord").append(tmp);
 				
@@ -2078,17 +2107,25 @@ function addNewindividual(){
 					name: dijit.byId('name_en').get('value')+' - '+dijit.byId('name_kh').get('value'),
 			};			
 			addDataToSelectbox(dijit.byId('member'), client_store, myNewItem, response.id);
-			/*var myNewItem1 = {					
-					id: response.id,
-					name: response.client_code,
-			};*			
-			//addDataToSelectbox(dijit.byId('customer_code'), client_number_store, myNewItem1, response.id);	*/	
 			dijit.byId('addclient').reset();
 		},
 		error: function(err) {
 		}
 	});
  }	
+}
+var interestStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->rs_interest));?> );
+function addinterest(){
+	if(dijit.byId('form_interestrate').validate()){
+		var Itemmake = {					
+				id: dijit.byId('interest_ratenew').get('value'),
+			    name: dijit.byId('interest_ratenew').get('value')
+		};		
+		addDataToSelectbox(dijit.byId('interest_rate'), interestStore, Itemmake, dijit.byId('interest_ratenew').get('value'));	
+		dijit.byId('interest_rate').attr('value',dijit.byId('interest_ratenew').get('value'));
+		dijit.byId('frm_interest').reset();
+		dijit.byId('frm_interest').hide();
+	}
 }
 function printSubmit(){
 	 $('#frm_add_tran').submit();

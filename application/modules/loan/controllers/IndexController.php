@@ -90,6 +90,13 @@ class Loan_IndexController extends Zend_Controller_Action {
 		) );
 	    $this->view->co_name=$co_name;
 	    
+	    $interest = $db->getAllInterestratestore();
+	    array_unshift($interest,array(
+	    'id' => -1,
+	    'name' =>$tr->translate("ADD_NEW"),
+	    ) );
+	    $this->view->rs_interest = $interest;
+	    
 	    $db = new Application_Model_DbTable_DbGlobal();
 	    $this->view->client_doc_type = $db->getclientdtype();
 	    
