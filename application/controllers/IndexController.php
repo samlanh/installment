@@ -167,6 +167,16 @@ class IndexController extends Zend_Controller_Action
         }   
     }
 
+    public function reloadrAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$session_user=new Zend_Session_Namespace('authinstall');
+    		$session_user->timeout= time();
+    		print_r(Zend_Json::encode($session_user->timeout));
+    		exit();
+    	}
+    }
+    
     public function errorAction()
     {
         // action body
