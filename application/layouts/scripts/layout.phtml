@@ -28,6 +28,7 @@
 	$t = time();
 	$t0 = $session_user->timeout;;
 	$diff = $t - $t0;
+	$timeout = 600; //10 min
 	//500 = 5 min
 // 	if ($diff > 500 || !isset($t0))
 // 	{
@@ -156,6 +157,7 @@
 	                	                </ul>
               					</li>
 			                	<li class="">
+			                	<input name="d2" type="hidden" id="d2" value="<?php echo $timeout;?>" size="1px" style="border:0 none;width:22px" />
 				                  	<a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                        	<img src="<?php echo $this->baseUrl()?>/images/user.png" alt="">
 				                    <?php echo $username;?> <span class=" fa fa-angle-down"></span>
@@ -377,8 +379,32 @@ function changeLange(lang){
 </script>
 
 <script type="text/javascript">
+$(document).ready(function(){
+	$("body").hover(function() {
+		//start();
+		//check();
+		$("#d2").val("<?php echo $timeout;?>");
+	});
+	$("body").click(function() {
+		$("#d2").val("<?php echo $timeout;?>");
+	});
+});
 
-
+input = document.getElementById("d2");
+function start() {
+	add = setInterval("input.value--",1000);
+	check();
+}
+function check(){
+	number = document.getElementById("d2").value;
+	if(number == 0){
+		clearInterval(add);
+		location.href = "<?php echo $this->baseUrl()."/index/logout/value/1"?>";
+	}
+	setTimeout("check()",100);
+}
+	start();
+	check();
 function loadingBlock(){
   document.getElementsByClassName("overlay")[0].style.display="block";
 }
