@@ -1,8 +1,8 @@
 <?php
-	$this->headTitle('Add IL Payment'); 
-	echo $this->headTitle();
 	$frm = $this->frm_ilpayment;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate("CUSTOMER_PAYMENT"));
+	echo $this->headTitle();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 	$base_url = Application_Form_FrmMessage::getUrl("/");
 	$graiceperiod = $this->graiceperiod;
@@ -11,6 +11,7 @@
    <script>
 		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog",
 		         "dijit/layout/TabContainer"]);
+				 dojo.require("dijit.form.Textarea");
 		dojo.require("dojo.NodeList-manipulate");
 		dojo.require("dojo.html");
 	    dojo.require("dojo.data.ItemFileWriteStore"); 
@@ -21,221 +22,287 @@
 		text-align: center;	
 		height: 30px;		
 	}
+table#table tr th.tdheader {
+    background: #bcd5f0;
+    border: solid 1px #a0a0a0;
+    padding: 8px 4px;
+}
+table#table tr td input[type=checkbox] {
+    margin: 0;
+    padding: 0;
+}
 </style>
-<form id='frm_add_group_pay' action="<?php echo $this->url(array('module'=>'loan','controller'=>'customerpayment','action'=>'add')); ?>" 
-				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-<script type="dojo/method" event="onSubmit">
-			if(this.validate()) {
-				service_charge = dijit.byId('service_charge').get('value');
-				receive_amount = dijit.byId('amount_receive').get('value');
-				option_pay = dijit.byId('option_pay').get('value');
-				total_payments = dijit.byId('total_payment').get('value');
-				if(option_pay==2 || option_pay==3 || option_pay==4){
-					if(receive_amount<total_payments){
-						alert('You Can not pay in this option! Please Input Recieve Amount more than or equal Total Payment!');
-						dijit.byId('amount_receive').focus();
-						return false;
-					}
-				}
-				if(receive_amount<0){
-					alert('Please fill Recieve Amount');
-					dijit.byId('amount_receive').focus();
-					return false;
-				}
-			client = dijit.byId('client_id').get('value');
-			if (client=='' || client==-1){
-				alert('Please Select Client Name !');
-				dijit.byId('client_id').focus();
-				return false;
-			}
-			dijit.byId('submitButton').set('disabled',true);
-            return true;
-
-		}else {
-			return false;
-		}
-</script>
 <div class="overlay">
 	<div class="overlay-load">
 		<div class="overlay-msg">
 	    </div>
 	</div>
-</div>	
-<style>
-.center tr{text-align:left;}
-</style>
-<table width="100%" >
-	<tr>
-		<td>
-			<input type="hidden" dojoType="dijit.form.TextBox" name="property_id" id="property_id">
-			<input type="hidden" dojoType="dijit.form.TextBox" name="sale_id" id="sale_id">
-			<input type="hidden" dojoType="dijit.form.TextBox" name="datepaymentlastrecord" id="datepaymentlastrecord">
-			<input type="hidden" dojoType="dijit.form.TextBox" name="lastpaiddate" id="lastpaiddate">
-			<input type="hidden" dojoType="dijit.form.TextBox" name="identity" id="identity">
-			<input type="hidden" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
-			<input type="hidden" dojoType="dijit.form.TextBox" name="curr" id="curr">
+</div>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+            <div class="col-sm-12 border-botom">
+		    	<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate("CUSTOMER_PAYMENT");?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<form id='frm_add_group_pay' action="<?php echo $this->url(array('module'=>'loan','controller'=>'customerpayment','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<script type="dojo/method" event="onSubmit">
+				if(this.validate()) {
+					service_charge = dijit.byId('service_charge').get('value');
+					receive_amount = dijit.byId('amount_receive').get('value');
+					option_pay = dijit.byId('option_pay').get('value');
+					total_payments = dijit.byId('total_payment').get('value');
+					if(option_pay==2 || option_pay==3 || option_pay==4){
+						if(receive_amount<total_payments){
+							alert('You Can not pay in this option! Please Input Recieve Amount more than or equal Total Payment!');
+							dijit.byId('amount_receive').focus();
+							return false;
+						}
+					}
+					if(receive_amount<0){
+						alert('Please fill Recieve Amount');
+						dijit.byId('amount_receive').focus();
+						return false;
+					}
+					client = dijit.byId('client_id').get('value');
+					if (client=='' || client==-1){
+						alert('Please Select Client Name !');
+						dijit.byId('client_id').focus();
+						return false;
+					}
+					dijit.byId('submitButton').set('disabled',true);
+           			 return true;
+
+			}else {
+				return false;
+			}
+			</script>
+			<div class="card-box">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="property_id" id="property_id">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="sale_id" id="sale_id">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="datepaymentlastrecord" id="datepaymentlastrecord">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="lastpaiddate" id="lastpaiddate">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="identity" id="identity">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="curr" id="curr">
 				<?php  echo $frm->getElement('reciever');?>
-				<fieldset style="margin-top:-10px">
-					<legend><strong style="color:#284db7;"><?php echo $tr->translate("INFO_INDILOAN")?></strong></legend>
-					<table class="center" cellspacing="5" >
-					      <tr>
-                        	<td width="33%">                            
-                                <table width="100%">
-                                	<tr>
-                                        <td><?php echo $tr->translate("BRANCH_NAME")?></td>
-                                        <td><?php echo $frm->getElement("branch_id")?></td>                                    
-                                    </tr>
-                                </table>
-                         	 </td>
-                             <td width="33%">
-                                <table width="100%">
-                                	<tr>
-                                   		<td><?php echo $tr->translate("CUSTOMER_NAME")?></td>
-										<td><input id="client_id"><input type="hidden" name="buy_with"  dojoType="dijit.form.TextBox"  id="buy_with"></td>
-                                    </tr>
-                                </table>
-                         	 </td>
-                             <td width="33%">
-                                <table width="100%">
-                                	<tr>
-                                   	 	<td><?php echo $tr->translate("ADDRESS")?></td>
-										<td><?php echo $frm->getElement("land_address")?>
-										<input type="hidden" name="sale_number"  dojoType="dijit.form.TextBox"  id="sale_number">
-										</td>
-                                    </tr>
-                                </table>
-                         	 </td>
-                          </tr>
-						<tr style="background: #edf7f8;">
-						 <td colspan="3" style="border-bottom:1px solid #aac4e6;color:#284db7;"><strong><?php echo $tr->translate("PAYMENT_INFORMATION")?></strong></td>
-						</tr>
-                      	  <tr>
-                        	<td width="33%">
-                            	<fieldset style="border:1px solid blue;">
-                                <legend></legend>
-                                <table width="100%">
-                                	<tr>
-                                    	<td><?php echo $tr->translate("RECIEPT_NO")?></td>
-										<td><?php echo $frm->getElement('reciept_no');?></td>
-                                    </tr>
-                                    <tr>
-                                    	<td><?php echo $tr->translate("ប្រាក់ដើមត្រូវបង់")?></td>
-										<td><?php echo $frm->getElement('os_amount');?></td>
-                                    </tr>
-                                    <tr>
-                                    	<td><?php echo $tr->translate("TOTAL_SERVICE_CHARGE")?></td>
-										<td><?php echo $frm->getElement('service_charge');echo $frm->getElement('old_service_charge');?></td>
-                                    </tr>
-                                    <tr>
-                                    	<td><?php echo $tr->translate("COLLECT_DATE");?></td>
-										<td><?php echo $frm->getElement('collect_date');?></td>
-                                    </tr>
-                                    <tr>
-                                    	<td><?php echo $tr->translate("AMOUNT_LATE")?><?php echo $frm->getElement('date_input');?></td>
-										<td><?php echo $frm->getElement('late_day');?></td>	
-                                    </tr>
-                                    <tr>
-                                    	<td>ប្រាក់បង់ពីមុនសរុប<?php echo $frm->getElement('last_payment_date'); ?></td>
-										<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="total_pricipalpaid" name="total_pricipalpaid" readonly  type="text"></td>
-                                    </tr>
-                                </table>
-                                 </fieldset>
-                            </td>
-                           <td width="33%">
-                           	 <fieldset style="border:1px solid blue;">
-                               <legend></legend>
-                               <table width="100%">
-                                <tr>
-                                  <td><table width="100%">
-                                        <tr>
-                                              <td><?php echo $tr->translate("ប្រាក់ដើមនៅសល់បន្ទាប់ពីបង់")?></td>
-                                              <td align="left"><?php echo $frm->getElement('priciple_amount');?></td>
-                                        </tr>
-                                        <tr>
-                                              <td><?php echo $tr->translate("TOTAL_INTEREST")?></td>
-                                              <td><?php echo $frm->getElement('total_interest');?></td>
-                                        </tr>
-                                        <tr>
-                                              <td><?php echo $tr->translate("ប្រាក់បង់បន្ថែម")?></td>
-                                              <td><?php  echo $frm->getElement('extrapayment');?></td>
-                                        </tr>
-                                        <tr>
-                                              <td style="color:red;"><?php echo $tr->translate("TOTAL_AMOUNT_PAYMENT")?></td>
-                                              <td style="font-weight: bold;"><?php echo $frm->getElement('total_payment');?>
-                                                <input type="hidden" dojotype="dijit.form.TextBox" name="oldTotalPay" id="oldTotalPay" /></td>
-                                        </tr>
-                                        <tr>
-                                            <td><?php echo $tr->translate("REMAIN")?></td>
-                                            <td><?php echo $frm->getElement('remain');?></td>
-                                        </tr>
-                                        <tr>
-                                            <td><?php echo $tr->translate("CHEQUE");?></td>
-                                            <td><?php echo $frm->getElement('cheque');?></td>
-                                        </tr>
-                                   </table>
-                                  </td>
-                                </tr>
-                               </table>
-                            	</fieldset>
-                            </td>
-						   <td width="33%">
-                            	<fieldset style="border:1px solid blue;">
-                                <legend></legend>
-                                <table width="100%">
-                                	<tr>
-                                     	<td><?php echo $tr->translate("បង់លើក")?></td>
-										<td align="left"><?php echo $frm->getElement('paid_times');?></td>
-                                    </tr>
-                                    <tr>
-                                    	<td><?php echo $tr->translate("PAYMENT_OPTION")?></td>
-										<td><?php  echo $frm->getElement('option_pay');?></td>
-                                    </tr>
-                                    <tr>
-                                    	<td><?php echo $tr->translate("TOTAL_PENELIZE")?></td>
-										<td><?php echo $frm->getElement('penalize_amount');?><?php echo $frm->getElement('old_penelize');?><input type="hidden" name="new_penelize" id="new_penelize"></td>
-                                    </tr>
-                                    <tr>
-                                    	<td style="color:red;"><?php echo $tr->translate("TOTAL_RECIEPT")?></td>
-										<td style="font-weight: bold;"><?php echo $frm->getElement('amount_receive');?></td>
-                                    </tr>
-                                    <tr>
-                                    	<td><?php echo $tr->translate("NOTE")?></td>
-										<td><?php echo $frm->getElement('note');?></td>
-                                    </tr>
-                                    <tr>
-                                       <td style="height: 32px;">&nbsp;</td>
-                                       <td>&nbsp;</td>
-                                    </tr>
-                                </table>
-                                 </fieldset>
-                            </td>
-                        </tr>   
-					</table>
-				</fieldset>
-		   </td>
-		</tr>
-		<tr>
-			<td align="center">
-			    <input type="button" value="រក្សាទុក & បិទ" label="<?php echo $tr->translate('SAVECLOSE');?>" id="submit_close" dojoType="dijit.form.Button"
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH_NAME");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement("branch_id")?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CUSTOMER_NAME");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<input id="client_id"><input type="hidden" name="buy_with"  dojoType="dijit.form.TextBox"  id="buy_with">
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("ADDRESS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement("land_address")?>
+							<input type="hidden" name="sale_number"  dojoType="dijit.form.TextBox"  id="sale_number">
+	                   </div>
+	                </div>
+	             </div>
+			</div>
+			<div class="card-box">
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PAYMENT_INFORMATION");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("RECIEPT_NO");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('reciept_no');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("ប្រាក់ដើមត្រូវបង់");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('os_amount');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_SERVICE_CHARGE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('service_charge');echo $frm->getElement('old_service_charge');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COLLECT_DATE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('collect_date');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("AMOUNT_LATE")?>
+	                   <?php echo $frm->getElement('date_input');?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   <?php echo $frm->getElement('late_day');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("ប្រាក់បង់ពីមុនសរុប");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('last_payment_date'); ?>
+	                   		<input dojoType="dijit.form.NumberTextBox" class="fullside" id="total_pricipalpaid" name="total_pricipalpaid" readonly  type="text">
+	                   </div>
+	                </div>
+	            </div>
+	            <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PAYMENT_INFORMATION");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("ប្រាក់ដើមនៅសល់បន្ទាប់ពីបង់");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('priciple_amount');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("TOTAL_INTEREST");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('total_interest');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("ប្រាក់បង់បន្ថែម");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php  echo $frm->getElement('extrapayment');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("TOTAL_AMOUNT_PAYMENT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('total_payment');?>
+                            <input type="hidden" dojotype="dijit.form.TextBox" name="oldTotalPay" id="oldTotalPay" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("REMAIN");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('remain');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("CHEQUE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('cheque');?>
+	                   </div>
+	                </div>
+	            </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PAYMENT_INFORMATION");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("បង់លើក");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('paid_times');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("PAYMENT_OPTION");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php  echo $frm->getElement('option_pay');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("TOTAL_PENELIZE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   	<?php echo $frm->getElement('penalize_amount');?>
+	                   	<?php echo $frm->getElement('old_penelize');?>
+	                   	<input type="hidden" name="new_penelize" id="new_penelize">
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("TOTAL_RECIEPT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   	<?php echo $frm->getElement('amount_receive');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("NOTE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('note');?>
+	                   </div>
+	                </div>
+	            </div>
+			</div>
+			<div class="card-box">
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<div class="form-group" style="overflow:hidden;max-width:1200;">
+				<style>
+				.dijitTabPaneWrapper , .dijitContentPane,.dijitTabListContainer-top{max-width: 99% !important;}
+				</style>
+				<div style="width:100%;" class="tabContentSection"  title="<?php echo $tr->translate('SCHEDULE_PAYMENTUNPAID');?>" selected="true">
+					<div id='data_table' name='data_table'></div>
+				</div>
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			    <div class="card-box">
+               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+		    			<input type="button" value="រក្សាទុក & បិទ" label="<?php echo $tr->translate('SAVECLOSE');?>" id="submit_close" dojoType="dijit.form.Button"
 					iconClass="dijitEditorIcon dijitEditorIconSave"  OnClick="submitDataClose();" />
 			    <input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('SAVENEW');?>" id="submitButton" dojoType="dijit.form.Button"
 					iconClass="dijitEditorIcon dijitEditorIconSave" />
 			    <input type="button" value="រក្សាទុក & បោះពុម្ព" label="<?php echo $tr->translate('SAVEPRINT');?>" id="saveprint" dojoType="dijit.form.Button" 
 					iconClass="dijitEditorIcon dijitEditorIconPrint" onClick="showReciept('');displayNone();"/>
-			</td>
-		</tr>
-		<tr>
-			<td  style="overflow:hidden;max-width:1200;">
-				<style>
-			.dijitTabPaneWrapper , .dijitContentPane,.dijitTabListContainer-top{max-width: 99% !important;}
-			</style>
-			<div style="width:100%;" class="tabContentSection"  title="<?php echo $tr->translate('SCHEDULE_PAYMENTUNPAID');?>" selected="true">
-				<div id='data_table' name='data_table'></div>
-			</div>
-		 </td>
-	</tr>		
-</table>
-</form>
+	    		</div>
+	    	</div>
+		</form>
+    </div>
+</div>
+
+
 <div class="dijitHidden" style="width: 25cm !important; height: 12cm ; padding: 0px; margin: 0px;">
 	<div data-dojo-type="dijit.Dialog" style="text-align:center;" data-dojo-props="title:'បោះពុម្ភ វិក័យបត្រ', onCancel:hideDialog" id="frm_client">
 		<div id="rpt_print" >
@@ -1053,7 +1120,7 @@ function getLaonPayment(type){//តារាងបង់ Tab ទី១
 							pay_option = dijit.byId('option_pay').get('value');
 							tem+= '<tr id=tr_'+inx+' style="background-color:none">';
 							tem += '<td>&nbsp;'+num+'</td>';
-							tem += '<td>&nbsp;<input type="checkbox" class="checkbox" name="mfdid_'+inx+'" id="mfdid_'+inx+'" value="'+respone[i].record_id+'" OnChange="calculateTotal('+inx+')" checked="checked"/><input type="hidden"  name="total_principal_permonthpaid'+inx+'" id="total_principal_permonthpaid'+inx+'" value="'+respone[i].total_principal_permonthpaid+'" /></td>';
+							tem += '<td><input type="checkbox" class="checkbox" name="mfdid_'+inx+'" id="mfdid_'+inx+'" value="'+respone[i].record_id+'" OnChange="calculateTotal('+inx+')" checked="checked"/><input type="hidden"  name="total_principal_permonthpaid'+inx+'" id="total_principal_permonthpaid'+inx+'" value="'+respone[i].total_principal_permonthpaid+'" /></td>';
 							tem += '<td style="white-space: nowrap;text-align:center;"><input type="hidden" class="checkbox" name="sale_id'+inx+'" id="sale_id'+inx+'" value="'+respone[i].id+'" />&nbsp;<input type="hidden"  name="price_sold'+inx+'" id="price_sold'+inx+'" value="'+respone[i].price_sold+'" /><input type="hidden"  name="land_name'+inx+'" id="land_name'+inx+'" value="'+respone[i].property_address+'" />'+respone[i].property_address+'&nbsp;</td>';
 
 							 tem += '<td style="white-space: nowrap;">&nbsp;'+dojo.number.format(respone[i].price_sold)+'&nbsp;</td>';
