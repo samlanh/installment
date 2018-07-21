@@ -89,7 +89,7 @@ table#table tr td input[type=checkbox] {
 				<input type="hidden" dojoType="dijit.form.TextBox" name="identity" id="identity">
 				<input type="hidden" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
 				<input type="hidden" dojoType="dijit.form.TextBox" name="curr" id="curr">
-				<?php  echo $frm->getElement('reciever');?>
+					<?php  echo $frm->getElement('reciever');?>
 				<div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
 	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
@@ -281,9 +281,9 @@ table#table tr td input[type=checkbox] {
 				<style>
 				.dijitTabPaneWrapper , .dijitContentPane,.dijitTabListContainer-top{max-width: 99% !important;}
 				</style>
-				<div style="width:100%;" class="tabContentSection"  title="<?php echo $tr->translate('SCHEDULE_PAYMENTUNPAID');?>" selected="true">
-					<div id='data_table' name='data_table'></div>
-				</div>
+					<div style="width:100%;" class="tabContentSection"  title="<?php echo $tr->translate('SCHEDULE_PAYMENTUNPAID');?>" selected="true">
+						<div id='data_table' name='data_table'></div>
+					</div>
 					</div>
 				</div>
 			</div>
@@ -1017,6 +1017,8 @@ function filterClient(){
 	}
 </script>
 <script type="text/javascript">
+function getAllSaleNumber(){
+}
 function clearTextBox(){
 	dijit.byId('member').set('value','');
 	dijit.byId('total_amount').set('value',0);
@@ -1078,8 +1080,8 @@ function getLaonPayment(type){//តារាងបង់ Tab ទី១
 				tem='<table class="collape tablesorter" style="font-size:12px;" id="table" width="100%">'
 					+'<thead><tr><th class="tdheader"><?php echo $tr->translate('NO');?></th>'
 					+'<th class="tdheader"></th>'
-					+'<th class="tdheader"><?php echo $tr->translate("PROPERTY_CODE");?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('SOLD_PRICE');?></th>'
+					+'<th class="tdheader"><?php echo $tr->translate('HOUSE_TITLE');?></th>'
+					+'<th class="tdheader"><?php echo $tr->translate('តម្លៃលក់');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate('ប្រាក់បានបង់សរុប');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate('ប្រាក់នៅសល់សរុប');?></th>'
 					+'<th class="tdheader">បង់លើក</th>'
@@ -1226,7 +1228,8 @@ function calculateTotal(index){
 			for(var i=0;i<arrays.length;i++) {
 				last_payment_date=0;
 				var oneDay = 24*60*60*1000;
-				if($('#mfdid_'+arrays[i]).attr('checked')){
+				//if($('#mfdid_'+arrays[i]).attr('checked')){
+				if ($('#mfdid_'+arrays[i]).is(':checked')) {
 					paid_times = $('#no_installment'+arrays[i]).val();
 					dijit.byId('paid_times').attr("value",paid_times);
 					

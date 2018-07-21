@@ -1251,6 +1251,7 @@ public function addPaymentByCustomer($data){
 						  `ln_sale` AS s
 						WHERE 
 						  s.status = 1 
+						  AND s.`payment_id` NOT IN (1,2)
 						  AND s.is_cancel=0
 						  AND s.client_id = ".$data['client_id'];
     		
