@@ -49,12 +49,13 @@ class Application_Model_DbTable_DbRate extends Zend_Db_Table_Abstract
      */
     function getCurrentRateJson(){
     	$db = $this->getAdapter();
-    	$sql = "SELECT `id`,`in_cur_id`,`out_cur_id`,`rate_in`,`rate_out`
+		return array();
+    	/*$sql = "SELECT `id`,`in_cur_id`,`out_cur_id`,`rate_in`,`rate_out`
 				FROM `ln_exchangerate` as r
     			WHERE r.`active` = 1
 				ORDER BY r.`in_cur_id`, r.`out_cur_id`";
     	$rows = $db->fetchAll($sql);
-    	return Zend_Json::encode($rows);
+    	return Zend_Json::encode($rows);*/
     }
     
     function setNewRate($data){

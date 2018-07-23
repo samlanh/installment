@@ -327,9 +327,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	$this->_name='ln_client_receipt_money';
    	$db = $this->getAdapter();
    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 ";
-//    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." LIMIT 1 ";
-//    	$pre = $this->getPrefixCode($data['branch_id'])."-R";
-   	$pre="N1:";
+   	$pre='№';
    	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+1;
    	$acc_no= strlen((int)$acc_no+1);
@@ -1411,6 +1409,32 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 
   		$this->update($arr, $where);
   	}
+  }
+  function getAllplongissue(){
+  	$db=$this->getAdapter();
+//   	$search['end_date']= date('Y-m-d');
+  	$sql ="SELECT `s`.`id` AS `id`,
+    	(SELECT
+		     `ln_project`.`project_name`
+		   FROM `ln_project`
+		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+		   LIMIT 1) AS `branch_name`,
+	    `c`.`name_kh`         AS `name_kh`,
+	    `c`.`phone`         AS `phone`,
+	    `p`.`land_address`    AS `land_address`,
+	    `p`.`street`          AS `street`,
+	    sp.issue_date,
+         s.status
+		FROM (`ln_sale` `s`,
+			ln_issueplong AS sp,
+		     `ln_client` `c`
+		   JOIN `ln_properties` `p`)
+		WHERE (
+		s.id=sp.sale_id
+		AND (`c`.`client_id` = `s`.`client_id`)
+       AND (`p`.`id` = `s`.`house_id`)) AND s.is_receivedplong=0 ";
+  	$order=" ORDER BY end_line ASC";
+  	return $db->fetchAll($sql.$order);
   }
 }
 ?>

@@ -125,7 +125,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 //     	,(SELECT branch_nameen FROM `ln_branch` WHERE br_id =lg.branch_id LIMIT 1) AS branch_name
 //     	,lg.level,
 //     	(SELECT name_en FROM `ln_view` WHERE status =1 and type=24 and key_code=lg.for_loantype) AS for_loantype
-//     	,(SELECT co_firstname FROM `ln_co` WHERE co_id =lg.co_id LIMIT 1) AS co_firstname
 //     	,(select concat(zone_name,'-',zone_num)as dd from `ln_zone` where zone_id = lg.zone_id ) AS zone_name
 //     	,(SELECT name_en FROM `ln_view` WHERE status =1 and type=14 and key_code=lg.pay_term) AS pay_term
 //     	,(SELECT name_en FROM `ln_view` WHERE status =1 and type=14 and key_code=lg.collect_typeterm) AS collect_typeterm
@@ -149,7 +148,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 //     	lm.total_capital,lm.interest_rate,lm.payment_method,
 //     	lg.time_collect,
 //     	lg.zone_id,
-//     	(SELECT co_firstname FROM `ln_co` WHERE co_id =lg.co_id LIMIT 1) AS co_enname,
+//     	(SELECT co_firstname FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS co_enname,
 //     	lg.status AS str ,lg.status FROM `ln_loan_group` AS lg,`ln_loan_member` AS lm
 //     	WHERE lg.g_id = lm.group_id AND lm.member_id = $id LIMIT 1 ";
 //     	return $this->getAdapter()->fetchRow($sql);

@@ -144,7 +144,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 					          AND (`ln_view`.`key_code` = `lg`.`pay_term`))) AS `Term Borrow`
 					FROM
 					  `ln_client_receipt_money` AS c,
-					  `ln_co` AS co,
+					  `ln_staff` AS co,
 					  `ln_branch` AS b ,
 					  `ln_client_receipt_money_detail` AS cm,
 					  `ln_client` AS lc,

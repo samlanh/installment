@@ -384,7 +384,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 			    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
 			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
 			    		if($data['install_type']==2){
-			    			$pri_permonth=$data['for_installamount']/($data['period']*12);
+			    			$pri_permonth=$data['for_installamount']/($data['period']);
 			    			$pri_permonth =$this->round_up_currency(2, $pri_permonth);
 			    		}else{
 			    			$pri_permonth = $data['fixed_payment']-$interest_paymonth;
@@ -679,7 +679,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
     				}
-    			}elseif($payment_method==4){
+    			}elseif($payment_method==4){//រំលស់
     				if($i!=1){
     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
     					$start_date = $next_payment;
@@ -724,6 +724,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     							$from_date = $data['date_payment'.$j];
     						}
     					}
+    					
     					$old_remain_principal=0;
     					$old_pri_permonth = 0;
     					$old_interest_paymonth = 0;
@@ -739,12 +740,14 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				$total_day = $amount_day;
     				$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
     				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
+    				
     				if($data['install_type']==2){
-    					$pri_permonth=$data['for_installamount']/($data['period']*12);
+    					$pri_permonth=$data['for_installamount']/($data['period']);
     					$pri_permonth =$this->round_up_currency(2, $pri_permonth);
     				}else{
     					$pri_permonth = $data['fixed_payment']-$interest_paymonth;
     				}
+    				
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
     				}

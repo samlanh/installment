@@ -336,7 +336,11 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
-			$row = $db->getAllLoanNumberByBranch($data["branch_id"]);
+			$is_issueplong = 0;
+			if(!empty($data["is_issueplong"])){
+				$is_issueplong=$data["is_issueplong"];
+			}
+			$row = $db->getAllLoanNumberByBranch($data["branch_id"],$is_issueplong);
 			print_r(Zend_Json::encode($row));
 			exit();
 		}

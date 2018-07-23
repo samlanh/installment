@@ -1261,7 +1261,7 @@ function getLoanPaymentByLoanNumberEdit($data){
 
    function getAllCo(){
    			$db = $this->getAdapter();
-   			$sql="SELECT `co_id` AS id,CONCAT(`co_firstname`,' ',`co_lastname`,'- ',`co_khname`) AS `name`,`branch_id` FROM `ln_co` WHERE `position_id`=1 AND (`co_khname`!=''  OR `co_firstname`!='')" ;
+   			$sql="SELECT `co_id` AS id,CONCAT(`co_firstname`,' ',`co_lastname`,'- ',`co_khname`) AS `name`,`branch_id` FROM `ln_staff` WHERE `position_id`=1 AND (`co_khname`!=''  OR `co_firstname`!='')" ;
    			return $db->fetchAll($sql);
    		
    }
@@ -1353,7 +1353,7 @@ function getLoanPaymentByLoanNumberEdit($data){
    	$cu_id = $data["currency"];
    	$date = $data["date_collect"];
    	$sql="SELECT 
-			  (SELECT CONCAT(co.`co_firstname`,`co_lastname`,',',`co_khname`) FROM `ln_co` AS co WHERE co.`co_id`=lg.`co_id`) AS co_name,
+			  (SELECT CONCAT(co.`co_firstname`,`co_lastname`,',',`co_khname`) FROM `ln_staff` AS co WHERE co.`co_id`=lg.`co_id`) AS co_name,
 			  (SELECT b.`branch_namekh` FROM `ln_branch` AS b WHERE b.`br_id`=lm.`branch_id`) AS branch,
 			  (SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lm.`client_id` ) AS `client`,
   			  (SELECT c.`client_number` FROM `ln_client` AS c WHERE c.`client_id`=lm.`client_id` ) AS `client_number`,
@@ -1443,7 +1443,7 @@ function getLoanPaymentByLoanNumberEdit($data){
    	$sql = "SELECT lf.`is_completed` FROM `ln_loanmember_funddetail` AS lf WHERE lf.id =$id";
    	return $db->fetchOne($sql);
    }
-	public function getAllLoanNumberByBranch($branch_id){
+	public function getAllLoanNumberByBranch($branch_id,$is_issueplong=0){
 		$db = $this->getAdapter();
 		$sql= "SELECT id,
 				  CONCAT((SELECT name_kh FROM ln_client WHERE ln_client.client_id=ln_sale.`client_id` LIMIT 1),'-',
@@ -1452,7 +1452,9 @@ function getLoanPaymentByLoanNumberEdit($data){
 				  ln_sale 
 				WHERE status=1 
 				  AND branch_id=$branch_id ";
-		
+		if($is_issueplong!=0){
+			$sql.=" AND is_issueplong=0";
+		}
 		return $db->fetchAll($sql);
 	}
 	public function getAllLoanNumberByBranchEdit($branch_id){

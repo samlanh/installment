@@ -82,7 +82,8 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 	
 	function getTotalSaleIncome(){
 		$db = $this->getAdapter();
-		$sql="SELECT  SUM(v.`amount_recieve`) AS total FROM v_getcollectmoney AS v WHERE v.`status`=1";
+// 		$sql="SELECT  SUM(v.`amount_recieve`) AS total FROM v_getcollectmoney AS v WHERE v.`status`=1";
+		$sql="SELECT SUM(recieve_amount) AS total FROM `ln_client_receipt_money` WHERE status=1 ";
 		return $db->fetchOne($sql);
 	}
 	
@@ -108,6 +109,8 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql="SELECT  SUM(v.`amount_recieve`) AS total FROM v_getcollectmoney AS v WHERE v.`status`=1
 			AND DATE_FORMAT(v.`date_pay`, '%Y-%m') ='$yearMonth' LIMIT 1";
+		
+// 		$sql="SELECT SUM(recieve_amount) AS total FROM `ln_client_receipt_money` WHERE status=1 ";
 		return $db->fetchOne($sql);
 	}
 	function getOtherIncomeMonthly($yearMonth){

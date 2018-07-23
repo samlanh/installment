@@ -67,7 +67,7 @@ class Loan_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql = "SELECT lcrm.`id`,
     				(SELECT b.`branch_namekh` FROM `ln_branch` AS b WHERE b.`br_id`=lcrm.`branch_id`) AS branch,
-    				(SELECT co.`co_khname` FROM `ln_co` AS co WHERE co.`co_id`=lcrm.`co_id`) AS co_name,
+    				
 					lcrm.`receipt_no`,
 					lcrm.`total_principal_permonth`,
 					lcrm.`total_payment`,
@@ -183,7 +183,7 @@ class Loan_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 // 	  		lm.total_capital,lm.interest_rate,lm.payment_method,
 // 	    	lg.time_collect,
 // 	    	lg.zone_id,
-// 	    	(SELECT co_firstname FROM `ln_co` WHERE co_id =lg.co_id LIMIT 1) AS co_enname,
+
 // 	    	lg.status AS str ,lg.status FROM `ln_loan_group` AS lg,`ln_loan_member` AS lm
 // 			WHERE lg.g_id = lm.group_id AND lg.g_id = $id LIMIT 1 ";
 //     	return $this->getAdapter()->fetchRow($sql);
@@ -1318,7 +1318,7 @@ function getLoanPaymentByLoanNumberEdit($data){
 
    function getAllCo(){
    			$db = $this->getAdapter();
-   			$sql="SELECT `co_id` AS id,CONCAT(`co_firstname`,' ',`co_lastname`,'- ',`co_khname`) AS `name`,`branch_id` FROM `ln_co` WHERE `position_id`=1 AND (`co_khname`!=''  OR `co_firstname`!='')" ;
+   			$sql="SELECT `co_id` AS id,CONCAT(`co_firstname`,' ',`co_lastname`,'- ',`co_khname`) AS `name`,`branch_id` FROM `ln_staff` WHERE `position_id`=1 AND (`co_khname`!=''  OR `co_firstname`!='')" ;
    			return $db->fetchAll($sql);
    		
    }
@@ -1410,7 +1410,7 @@ function getLoanPaymentByLoanNumberEdit($data){
    	$cu_id = $data["currency"];
    	$date = $data["date_collect"];
    	$sql="SELECT 
-			  (SELECT CONCAT(co.`co_firstname`,`co_lastname`,',',`co_khname`) FROM `ln_co` AS co WHERE co.`co_id`=lg.`co_id`) AS co_name,
+			  (SELECT CONCAT(co.`co_firstname`,`co_lastname`,',',`co_khname`) FROM `ln_staff` AS co WHERE co.`co_id`=lg.`co_id`) AS co_name,
 			  (SELECT b.`branch_namekh` FROM `ln_branch` AS b WHERE b.`br_id`=lm.`branch_id`) AS branch,
 			  (SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lm.`client_id` ) AS `client`,
   			  (SELECT c.`client_number` FROM `ln_client` AS c WHERE c.`client_id`=lm.`client_id` ) AS `client_number`,

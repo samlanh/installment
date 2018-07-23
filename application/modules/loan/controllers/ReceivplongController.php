@@ -75,6 +75,8 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 		$frm = $fm->FrmAddFrmCancel();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
+		$id = $this->getRequest()->getParam('id');
+		$this->view->id = $id;
 	}
 	public function editAction(){
 		$id = $this->getRequest()->getParam('id');

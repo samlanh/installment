@@ -71,7 +71,7 @@ class Report_Model_DbTable_DbRptPaymentSchedule extends Zend_Db_Table_Abstract
     	(SELECT payment_nameen FROM `ln_payment_method` WHERE id = m.payment_method) AS payment_nameen,
     	lg.time_collect
     	,(SELECT `zone_name` FROM `ln_zone` WHERE zone_id = lg.zone_id) AS zone_name
-    	,(SELECT co_khname FROM `ln_co` WHERE co_id = lg.co_id ) AS co_khname, m.status 
+    	,(SELECT co_khname FROM `ln_staff` WHERE co_id = lg.co_id ) AS co_khname, m.status 
     	    FROM `ln_loan_member` AS m,`ln_loan_group` AS lg,`ln_client` AS c 
     		WHERE lg.g_id = m.group_id AND c.client_id = m.client_id ";
     	$Other =" ORDER BY member_id DESC ";

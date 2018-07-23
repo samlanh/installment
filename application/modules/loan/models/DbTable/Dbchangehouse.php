@@ -53,11 +53,43 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql.$where.$order);
    }
-   
    public function addChangeHouse($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{//need add schedule
+    		
+    		$sql=" SELECT SUM(total_principal_permonthpaid) AS total_permonth FROM `ln_client_receipt_money` WHERE sale_id =".$data['loan_number']." AND status=1 ";
+    		$paid_amount = $db->fetchOne($sql);
+    		
+    		$arr = array(
+//     				'branch_id'=>$data['to_branch_id'],
+//     				'house_id'=>$data["to_land_code"],
+//     				'payment_id'=>$data["schedule_opt"],
+//     				'price_before'=>$data['to_total_sold'],
+//     				'discount_amount'=>$data['discount'],
+//     				'discount_percent'=>$data['discount_percent'],
+    				'price_sold'=>$data['to_total_sold'],
+    				'paid_amount'=>$paid_amount,
+//     				'balance'=>$data['balance'],
+    				'is_reschedule'=>3,
+//     				'interest_rate'=>$data['interest_rate'],
+//     				'total_duration'=>$data['period'],
+//     				'startcal_date'=>$data['release_date'],
+//     				'first_payment'=>$data['first_payment'],
+//     				'validate_date'=>$data['first_payment'],
+//     				'payment_method'=>1,//$data['loan_type'],
+//     				'note'=>$data['note'],
+//     				'land_price'=>$data['house_price'],//true
+//     				'total_installamount'=>$data['total_installamount'],
+//     				'agreement_date'=>$data['agreement_date'],
+//     				'create_date'=>date("Y-m-d"),
+//     				'user_id'=>$this->getUserId()
+    		);
+//     		$data['sale_id']=$id;
+    		$where = " id = ".$data['loan_number'];
+    		$this->_name="ln_sale";
+    		$this->update($arr, $where);//add group loan
+    		
     		$dbs = new Loan_Model_DbTable_DbLandpayment();
     		$id = $data['loan_number'];
     		$rows = $dbs->getTranLoanByIdWithBranch($id);
@@ -69,16 +101,16 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				'change_date'=>date('Y-m-d'),//$data['date_buy'],
     				'to_branchid'=>$data['to_branch_id'],
     				'to_houseid'=>$data['to_land_code'],
-    				'note'=>'',//$data['note'],
+    				'note'=>$data['note'],
     				'user_id'=>$this->getUserId()
     				);
 	    		$this->_name="ln_change_house";
 	    		$changeid = $this->insert($arr);
 
-    		$arr = array(
+    			$arr = array(
     				'branch_id'=>$data['branch_id'],
     				'house_id'=>$data["to_land_code"],
-    		);
+    			);
 	    		$where = " id = ".$data['loan_number'];
 	    		$this->_name="ln_sale";
 	    		$id = $this->update($arr, $where);//add group loan
@@ -97,7 +129,6 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
 	    		$this->update($arr, $where);//lock new house
     			$db->commit();
     			return 1;
-    			
     		}catch (Exception $e){
     			$db->rollBack();
     			$err =$e->getMessage();

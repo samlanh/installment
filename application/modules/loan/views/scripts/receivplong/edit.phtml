@@ -112,7 +112,7 @@ $frm = $this->frm_loan;
 	</div>
 </div>
 <div class="dijitHidden" style="width: 25cm !important; height: 12cm ; padding: 0px; margin: 0px;">
-	<div style="width: 25cm !important; " data-dojo-type="dijit.Dialog" style="text-align:center;" data-dojo-props="title:'បោះពុម្ភ វិក័យបត្រ', onCancel:hideDialog" id="frm_receipt">
+	<div style="width: 25cm !important; " data-dojo-type="dijit.Dialog" style="text-align:center;" data-dojo-props="title:'ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ', onCancel:hideDialog" id="frm_receipt">
 		<div id="rpt_print" >
 			<style>
 				body {
@@ -431,6 +431,8 @@ function displayNone(){
 }
 var	url_getSaleInfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'receivplong','action'=>'getsaleinfo'));?>';
 function getSaleInfo(){
+	plong_type = dijit.byId('plong_type').get('value');
+	if(plong_type==-1){dijit.byId('plong_type').focus();return false;}
 	sale_client = dijit.byId('sale_client').get('value');
 	if(sale_client==0){
 		return false;}

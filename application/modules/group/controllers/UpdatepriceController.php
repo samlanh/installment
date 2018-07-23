@@ -235,18 +235,11 @@ class Group_UpdatepriceController extends Zend_Controller_Action {
 		$id=$this->getRequest()->getParam("id");
 		$db = new Group_Model_DbTable_DbLand();
 		if($this->getRequest()->isPost()){
-				$data = $this->getRequest()->getPost();
-				try{
-				// if(isset($data['save_new'])){
+			$data = $this->getRequest()->getPost();
+			try{
 					$id= $db->addLandinfo($data);
 					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
 					Application_Form_FrmMessage::redirectUrl("/group/land/index");
-				//}
-// 				else if (isset($data['save_close'])){
-// 					$id= $db->addLandinfo($data);
-// 					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
-// 					
-// 				}
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

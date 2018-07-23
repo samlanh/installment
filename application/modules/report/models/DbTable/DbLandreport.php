@@ -190,7 +190,7 @@ public function getAllOutstadingLoan($search=null){
 //       	(SELECT loan_number FROM ln_loan_member WHERE loan_number=(SELECT lm.loan_number FROM ln_loan_member AS lm  WHERE lm.member_id LIMIT 1) LIMIT 1 ) AS loan_number,
 //       	(SELECT name_kh FROM ln_client WHERE client_id = (SELECT lm.client_id FROM ln_loan_member AS lm  WHERE lm.member_id LIMIT 1) LIMIT 1 ) AS client_name
 //       	,(SELECT branch_namekh FROM ln_branch WHERE br_id= branch_id LIMIT 1) AS branch_id,
-//       	(SELECT co_khname FROM ln_co WHERE co_id=(SELECT co_id FROM ln_loan_group WHERE g_id=(SELECT lm.client_id FROM ln_loan_member AS lm  WHERE lm.member_id LIMIT 1) LIMIT 1 )LIMIT 1 ) AS co,
+//       	(SELECT co_khname FROM ln_staff WHERE co_id=(SELECT co_id FROM ln_loan_group WHERE g_id=(SELECT lm.client_id FROM ln_loan_member AS lm  WHERE lm.member_id LIMIT 1) LIMIT 1 )LIMIT 1 ) AS co,
 //       	total_principal,total_interest,STATUS
 //       	,total_payment,date_payment FROM ln_loanmember_funddetail WHERE 1 ";
       	
@@ -209,8 +209,8 @@ public function getAllOutstadingLoan($search=null){
 				  m.loan_number ,  
 				  (SELECT name_kh FROM ln_client WHERE client_id=m.client_id) AS client_name , 
 				  (SELECT branch_namekh FROM ln_branch WHERE br_id= m.branch_id LIMIT 1) AS branch_id ,
-				  (SELECT co_khname FROM ln_co WHERE co_id=(SELECT co_id FROM ln_loan_group WHERE g_id= m.group_id LIMIT 1) LIMIT 1) AS co,
-				  (SELECT co_firstname FROM ln_co WHERE co_id=(SELECT co_id FROM ln_loan_group WHERE g_id= m.group_id LIMIT 1) LIMIT 1) AS co_name
+				  (SELECT co_khname FROM ln_staff WHERE co_id=(SELECT co_id FROM ln_loan_group WHERE g_id= m.group_id LIMIT 1) LIMIT 1) AS co,
+				  (SELECT co_firstname FROM ln_staff WHERE co_id=(SELECT co_id FROM ln_loan_group WHERE g_id= m.group_id LIMIT 1) LIMIT 1) AS co_name
 				  FROM `ln_loanmember_funddetail` AS f ,`ln_loan_member` AS m WHERE m.member_id = f.member_id 
 				  AND f.is_completed=0 AND f.status=1 AND m.is_completed=0 ";
       	if(!empty($search['txtsearch'])){
@@ -447,7 +447,7 @@ public function getAllOutstadingLoan($search=null){
 // 					lcrm.`penalize_amount`,
 // 					lcrm.`date_pay`,
 // 					lcrm.`date_input`,
-// 				    (SELECT co.`co_khname` FROM `ln_co` AS co WHERE co.`co_id`=lcrm.`co_id`) AS co_name,
+// 				    (SELECT co.`co_khname` FROM `ln_staff` AS co WHERE co.`co_id`=lcrm.`co_id`) AS co_name,
 //     				(SELECT b.`branch_namekh` FROM `ln_branch` AS b WHERE b.`br_id`=lcrm.`branch_id`) AS branch
 // 				FROM `ln_client_receipt_money` AS lcrm WHERE lcrm.is_group=0 AND lcrm.`status`=1";
     	$where ='';
@@ -497,7 +497,7 @@ public function getAllOutstadingLoan($search=null){
 				  crmd.`loan_number`,
 				  (SELECT c.`phone` FROM ln_client AS c WHERE c.`client_id`=crmd.`client_id`) AS phone,
 				  (SELECT b.`branch_namekh` FROM `ln_branch` AS b WHERE b.`br_id`=crm.`branch_id`) AS branch,
-				  (SELECT CONCAT(c.`co_code`,'-',c.`co_khname`,'-',c.`co_firstname`,' ',c.`co_lastname`) FROM ln_co AS c WHERE c.`co_id`=crm.`co_id`) AS co_name,
+				  (SELECT CONCAT(c.`co_code`,'-',c.`co_khname`,'-',c.`co_firstname`,' ',c.`co_lastname`) FROM ln_staff AS c WHERE c.`co_id`=crm.`co_id`) AS co_name,
 				  (SELECT c.`client_number` FROM ln_client AS c WHERE c.`client_id`=crmd.`client_id`) AS client_code,
 				  (SELECT c.`name_kh` FROM ln_client AS c WHERE c.`client_id`=crmd.`client_id`) AS client_name,
 				  lg.`loan_type`,
@@ -881,7 +881,7 @@ public function getAllOutstadingLoan($search=null){
 				FROM
 				  `ln_paymentschedule` AS p,
 				  `ln_paymentschedule_detail` AS pd,
-				  `ln_co` AS co,
+				  `ln_staff` AS co,
 				  `ln_client` AS c
 				WHERE pd.`is_completed` = 0 
 				  AND p.`id` = pd.`paymentid` 

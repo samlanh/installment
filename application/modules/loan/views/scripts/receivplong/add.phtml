@@ -41,7 +41,7 @@ $frm = $this->frm_loan;
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CLIENT_NAME")?> :
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE")?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id="sale_client" />
@@ -114,7 +114,7 @@ $frm = $this->frm_loan;
 	</div>
 </div>
 <div class="dijitHidden" style="width: 25cm !important; height: 12cm ; padding: 0px; margin: 0px;">
-	<div style="width: 25cm !important; " data-dojo-type="dijit.Dialog" style="text-align:center;" data-dojo-props="title:'បោះពុម្ភ វិក័យបត្រ', onCancel:hideDialog" id="frm_receipt">
+	<div style="width: 25cm !important; " data-dojo-type="dijit.Dialog" style="text-align:center;" data-dojo-props="title:'ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ', onCancel:hideDialog" id="frm_receipt">
 		<div id="rpt_print" >
 			<style>
 				body {
@@ -433,7 +433,10 @@ function displayNone(){
 }
 var	url_getSaleInfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'receivplong','action'=>'getsaleinfo'));?>';
 function getSaleInfo(){
+	plong_type = dijit.byId('plong_type').get('value');
+	if(plong_type==-1){dijit.byId('plong_type').focus();return false;}
 	sale_client = dijit.byId('sale_client').get('value');
+	
 	if(sale_client==0){
 		return false;}
 	if(dijit.byId('add_cancel').validate()){
@@ -533,7 +536,8 @@ dojo.ready(function(){
 	try{
 		new dijit.form.FilteringSelect({
 			store: sale_client_store,
-			autoComplete: true,
+			autoComplete: false,
+			queryExpr: "*${0}*",
 			required: false,		           
 			name: "sale_client",
 			id: "sale_client",
@@ -546,7 +550,8 @@ dojo.ready(function(){
 
 		new dijit.form.FilteringSelect({
 			store: plongtype_store,
-			autoComplete: true,
+			autoComplete: false,
+			queryExpr: "*${0}*",
 			required: true,		           
 			name: "plong_type",
 			id: "plong_type",
@@ -560,7 +565,6 @@ dojo.ready(function(){
 				}
 			}, "plong_type");
 		getSaleClie();
-
 		}catch(e){
 			alert(e);
 		}
@@ -590,6 +594,9 @@ function addPlongType(){
 			load: function(data) {	
 				sale_client_store  = getDataStorefromJSON('id','name', data);		
 			    dijit.byId('sale_client').set('store', sale_client_store);
+			    <?php if(!empty($this->id) AND $this->id>0){?>
+					dijit.byId('sale_client').attr('value',<?php echo $this->id;?>);
+				<?php }?>
 			},
 			error: function(err) {
 				alert(err);
