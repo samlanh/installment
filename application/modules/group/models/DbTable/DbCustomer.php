@@ -74,8 +74,10 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		}
 		if($search['status']>-1){
 			$where.= " AND status = ".$search['status'];
+		}
+		if(!empty($search['statusreq'])){
+			$where.= " AND statusreq = '".$search['statusreq']."'";
 		}	
-		
 		$userid = $this->getUserId();
 		$db_user=new Application_Model_DbTable_DbUsers();
 		$user_info = $db_user->getUserInfo($userid);

@@ -7,13 +7,15 @@ class Group_CustomerController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
+		$dbc = new Group_Model_DbTable_DbCustomer();
 		try{
-			$db = new Group_Model_DbTable_DbCustomer();
+			
 			if($this->getRequest()->isPost()){
 				$formdata=$this->getRequest()->getPost();
 				$search = array(
 						'adv_search' => $formdata['adv_search'],
-						'status'=>$formdata['status'],						
+						'status'=>$formdata['status'],		
+						'statusreq'=>$formdata['statusreq'],
 						'start_date'=> $formdata['start_date'],
 						'end_date'=>$formdata['end_date']						
 						);
@@ -21,12 +23,13 @@ class Group_CustomerController extends Zend_Controller_Action {
 			else{
 				$search = array(
 						'adv_search' => '',
-						'status' => -1,					
+						'status' => -1,		
+						'statusreq'=>'',			
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d')								
 						);
 			}
-			$rs_rows= $db->getAllInfo($search);
+			$rs_rows= $dbc->getAllInfo($search);
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
@@ -46,13 +49,7 @@ class Group_CustomerController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
 		$this->view->result=$search;	
-		
-		$fm = new Group_Form_FrmClient();
-		$frmserch = $fm->FrmLandInfo();
-		Application_Model_Decorator::removeAllDecorator($frmserch);
-		$this->view->frm_land = $frmserch;
 	}
-
 	public function addAction(){
 		$db = new Group_Model_DbTable_DbCustomer();
 		if($this->getRequest()->isPost()){

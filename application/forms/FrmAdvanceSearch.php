@@ -153,8 +153,26 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$user->setMultiOptions($options);
 		$user->setValue($request->getParam('user'));
 		
+		$dbcusre = new Group_Model_DbTable_DbCustomer();
+		$statusreq = new Zend_Dojo_Form_Element_FilteringSelect('statusreq');
+		$statusreq->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'showstatusreq();'
 		
-		$this->addElements(array($position_,$from_date,$to_date,$type,$employee,$_title,$_title,$_status,$_btn_search,$branch_id,$approve_by,$user));
+		));
+		$rows = $dbcusre->getAllstatusreqForOpt();
+		$options = array(''=>$this->tr->translate("CHOOSE_STATUS_REQ"));
+		if(!empty($rows))foreach($rows AS $row){
+			$options[$row['name']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
+		}
+		$statusreq->setMultiOptions($options);
+		$statusreq->setValue($request->getParam('statusreq'));
+		
+		
+		$this->addElements(array($statusreq,$position_,$from_date,$to_date,$type,$employee,$_title,$_title,$_status,$_btn_search,$branch_id,$approve_by,$user));
 		return $this;
 	}
 	

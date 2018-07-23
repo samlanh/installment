@@ -1459,6 +1459,9 @@ function getAllBranch($search=null){
     		if(!empty($search['user'])){
     			$where.= " AND c.user_id = ".$search['user'];
     		}
+    		if(!empty($search['statusreq'])){
+    			$where.= " AND statusreq = '".$search['statusreq']."'";
+    		}
     		$where.=" ORDER BY c.id DESC ";
     		return $db->fetchAll($sql.$where);
     	}

@@ -359,6 +359,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'start_date'  => date('Y-m-d'),
   				'end_date'    => date('Y-m-d'),
   				'adv_search' => '',
+  				'statusreq'=>'',
   				'user' => '',
   				);
   	}
