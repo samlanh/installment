@@ -78,6 +78,63 @@ class Report_Model_DbTable_DbRptPaymentSchedule extends Zend_Db_Table_Abstract
     	
     	return $db->fetchAll($sql.$Other); 
     }
+   /*combine schedule*/
+public function getClientCombineId($id){
+  	$sql="SELECT 
+		  `s`.`client_id`       AS `client_id`,
+		  SUM(`s`.`price_sold`)      AS `price_sold`,
+		  `s`.`buy_date`        AS `buy_date`,
+		  `s`.`first_payment`   AS `first_payment`,
+		  `s`.`validate_date`   AS `validate_date`,
+		  `s`.`end_line`        AS `end_line`,
+		  `s`.`interest_rate`   AS `interest_rate`,
+		  `s`.`total_duration`  AS `total_duration`,
+		  `s`.`payment_id`      AS `payment_id`,
+		   SUM(s.total_installamount) AS total_installamount,
+				(SELECT project_name FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS branch_name,
+		  		(SELECT client_number FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_number,
+		  		(SELECT name_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_kh,
+		  		(SELECT hname_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS hname_kh,
+		  		(SELECT name_en FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_en,
+		  		(SELECT phone FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS tel,
+		  		(SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = s.user_id LIMIT 1) AS user_name,
+				GROUP_CONCAT(`p`.`land_address`)    AS `land_address`,
+		`p`.`street`           AS `stree`,
+	  (SELECT
+	     `ln_properties_type`.`type_nameen`
+	   FROM `ln_properties_type`
+	   WHERE (`ln_properties_type`.`id` = `p`.`property_type`)
+	   LIMIT 1) AS `propertype`
+  		FROM 
+  	   `ln_sale` AS s,
+  	   `ln_properties` AS p
+  	 WHERE `p`.`id` = `s`.`house_id` AND s.id IN($id) LIMIT 1 ";
+  	$db=$this->getAdapter();
+  	return $db->fetchRow($sql);
+  }
+  public function getScheduleCombine($id,$payment_id=null){
+  	$db=$this->getAdapter();
+  	$sql = "SELECT *,
+  	SUM(begining_balance) AS begining_balance,
+  	SUM(principal_permonth) AS principal_permonth,
+  	SUM(total_interest) aS total_interest,
+  	SUM(total_payment) AS total_payment,
+  	SUM(ending_balance) AS ending_balance,
+  	(SELECT (paid_date) FROM `ln_client_receipt_money_detail` WHERE lfd_id IN($id) limit 1) as paid_date,
+  	(SELECT SUM(total_recieve) FROM `ln_client_receipt_money_detail` WHERE lfd_id IN($id) limit 1) as total_recieve,
+  	(SELECT SUM(total_interest) FROM `ln_client_receipt_money_detail` WHERE lfd_id IN($id) limit 1) as total_interestpaid,
+  	(SELECT SUM(principal_permonth) FROM `ln_client_receipt_money_detail` WHERE lfd_id IN($id) limit 1) as principal_paid
+  	FROM `ln_saleschedule`
+  	WHERE sale_id IN($id) AND (status=1 OR (status=0 AND collect_by=2)) ";
+  
+  	if($payment_id==4){
+  		$sql.=" AND is_installment=1 ";
+  	};
+  	$sql.="
+  	GROUP BY date_payment
+  	ORDER BY no_installment ASC,date_payment ASC, collect_by ASC, status DESC ";
+  	return $db->fetchAll($sql);
+  }
 	
 }
 

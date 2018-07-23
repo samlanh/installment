@@ -192,7 +192,7 @@ class Application_Form_Frmtable
     	';
     	$col_str='';
     	$col_str .='<thead><tr>';
-    	if($delete== 1) {
+    	if($delete== 1 OR $delete== 11) {
     		$col_str .= '<th class="tdheader tdcheck"></td>';
     	}elseif($delete==2){
     		$col_str .= '<th class="tdheader tdcheck"></td>';
@@ -238,6 +238,9 @@ class Application_Form_Frmtable
 		  					}else if($delete==1){
 		  						$row_str .= '<td><input type="checkbox" name="del[]" id="del[]" value="'.$temp.'" /></td>';
 		  					}
+		  					else if($delete==11){
+		  						$row_str .= '<td oncontextmenu="setrowdata('.$temp.');return false;" class="context-menu-one"><input onClick="checked_id('.$temp.')" type="checkbox" name="del[]" id="del[]" value="'.$temp.'" /></td>';
+		  					}
 		  					$row_str.='<td style="text-align:center;" >'.$r.'</td>';
 		  				} else {
     						if($link!=null){
@@ -257,7 +260,7 @@ class Application_Form_Frmtable
 	    							$text  = " align=". $textalign;
 	    						}
     						}
-    						if($delete== 10) {
+    						if($delete== 10 OR $delete== 11) {
     							$clisc='oncontextmenu="setrowdata('.$temp.');return false;" class="context-menu-one" ';
     						}
     						$row_str.='<td '.$clisc.' >'.$read.'</td>';

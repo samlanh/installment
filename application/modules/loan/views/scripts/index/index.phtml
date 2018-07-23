@@ -3,7 +3,7 @@
 	echo $this->headTitle($tr->translate("LOAN_IL"));
 	$url_copy =$this->url(array('module'=>'loan','controller'=>'newschedule','action'=>'add'));
 	
-	$url_agreement =$this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-paymentschedules'));
+	
 	$frm = $this->frm_search;
 	$edit_sale = $tr->translate("EDIT");
 	$payment_history = $tr->translate("REPORT_LOAN_PAYMENT");
@@ -20,6 +20,8 @@
 	$urlpaymentschedules = $this->baseUrl()."/report/loan/rpt-paymentschedules/id/";
 	$urlNewschedule = $this->baseUrl()."/loan/newschedule/add/id/";
 	$urlpaymenthistory = $this->baseUrl()."/report/loan/paymenthistory/id/";
+	$urleditschedule = $this->baseUrl()."/loan/index/rpt-updatepayment/id/";
+	
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -41,12 +43,14 @@
 				   		<td><?php echo $frm->getElement('start_date');?></td>
 				   		<td><?php echo $frm->getElement('end_date');?></td>
 				   		<td><?php echo $frm->getElement('status');?></td>
-				   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
-				   		
+				   		<td>
+				   			<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				   			<button onclick="combineschedule();" iconclass="dijitIconPrint" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("MERCH_SCHEDULE");?></button>
 				   		</td>
 				   </tr>
 				</table>
 			</form>
+			<input type="hidden" id="id_selected" name="id_selected" />
 		</div>
 		<div class="card-box">
 			<?php echo $this->list;?>
@@ -102,27 +106,19 @@ function getAllPropertyBranch(branch_id){
 		}
 	});
 } 
-function reschedule(url){
-	 id = dijit.byId('recordcopy').get('value');
+function combineschedule(url){
+	 url_combine ='<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-combineschedules'));?>';
+	 id = $('#id_selected').val();
 	 if(id==''){alert("Please select record first!");return false;}
-	 window.location.href = url+'/id/'+id;
+	 //window.location.href = url_combine+'/id/'+id;
+	 window.open(url_combine+'/id/'+id, '_blank');
 }
-function agreement(url){
-	 id = dijit.byId('recordcopy').get('value');
-	 if(id==''){alert("Please select record first!");return false;}
-	 window.open(url+'/id/'+id);
-}
-function setValue(index){
-	var recordcopy = $('input[name=copy]:checked').val();
-	dijit.byId('recordcopy').attr('value',recordcopy);
-}
-function getmemberIdGroup(){
-	customer_code= dijit.byId('customer_code').get('value');
-	dijit.byId('member').attr('value',customer_code);
-}
-function checkMember(){
-	customer_code= dijit.byId('member').get('value');
-	dijit.byId('customer_code').attr('value',customer_code);
+function checked_id(index){
+	$("#id_selected").val('');
+	 var searchIDs = $('input:checked').map(function(){
+	      return $(this).val();
+	    });
+	    $("#id_selected").val(searchIDs.get());
 }
 
 var row=0;
@@ -134,7 +130,6 @@ $(function(){
 			var m = "clicked: " + key;
 			if(key=="edit"){
 				url='<?php echo $urlEdit;?>';
-				
 			}else if(key=="agreement"){
 				url='<?php echo $urlAgreement;?>';
 			}else if(key=="payment"){
@@ -147,6 +142,8 @@ $(function(){
 				url='<?php echo $urlNewschedule;?>';
 			}else if(key=="payhistory"){
 				url='<?php echo $urlpaymenthistory;?>';
+			}else if(key=="editschedule"){
+				url='<?php echo $urleditschedule;?>';
 			}
 			gotoAction();
 		},
@@ -155,6 +152,7 @@ $(function(){
 			"reschedule": {name: "<?php echo $reschedule;?>", icon: "fa-calendar"},
 			"agreement": {name: "<?php echo $aggreeement;?>", icon: "fa-file-text", accesskey: "c"},
 			"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
+			"editschedule": {name: "<?php echo $tr->translate("EDIT_SCHEDULE");?>", icon: "edit", accesskey: "e"},
 			"payhistory": {name: "<?php echo $payment_history;?>", icon: "fa-dollar", accesskey: "h"},
 			"schedulePay": {name: "<?php echo $scheduleReport;?>", icon: "paste", accesskey: "cool paste"},
 			"newschedule": {name: "<?php echo $tr->translate("NEW_SCHEDULE");?>", icon: "fa-calendar"},
