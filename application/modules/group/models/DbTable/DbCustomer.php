@@ -20,6 +20,7 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 				'requirement'      => $_data['requirement'],
 				'type'       => $_data['type'],
 				'description'       => $_data['description'],
+		    	'statusreq'       => $_data['statusreq'],
 				'status'	  => 1,//$_data['status'],
 				'user_id'	  => $this->getUserId(),
 		    	
@@ -55,7 +56,8 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;		
-		$sql = "SELECT id,name, phone, `date`,from_price,to_price,requirement,type,description,				
+		$sql = "SELECT id,name, phone, `date`,from_price,to_price,requirement,type,description,	
+		statusreq,			
 		    (SELECT  first_name FROM rms_users WHERE id = user_id limit 1 ) AS user_name,
 			status FROM $this->_name ";
 		if(!empty($search['adv_search'])){
@@ -83,5 +85,10 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$order=" ORDER BY id DESC ";
 		return $db->fetchAll($sql.$where.$order);	
 	}
-
+	function  getAllstatusreqForOpt(){
+		$db = $this->getAdapter();
+		$sql = 'SELECT DISTINCT statusreq as name,statusreq as id FROM `in_customer` WHERE statusreq!="" ORDER BY statusreq ASC ';
+		$rows =  $db->fetchAll($sql);
+		return $rows;
+	}
 }

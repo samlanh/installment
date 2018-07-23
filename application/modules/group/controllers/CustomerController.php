@@ -30,7 +30,7 @@ class Group_CustomerController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","PHONE","DATE","FROM_PRICE","TO_PRICE","REQUIREDMENT","TYPE","DESCRIPTION","BY_USER","STATUS");
+			$collumns = array("BRANCH_NAME","PHONE","DATE","FROM_PRICE","TO_PRICE","REQUIREDMENT","TYPE","DESCRIPTION","STATUS_REQ","BY_USER","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'customer','action'=>'edit',
 			);
@@ -67,7 +67,10 @@ class Group_CustomerController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$row = $db->getAllstatusreqForOpt();
+		array_unshift($row, array('id'=>'','name' => $tr->translate("CHOOSE_STATUS_REQ")),array('id'=>'-1','name' => $tr->translate("ADD_NEW")));
+		$this->view->statusreq = $row;
 		$fm = new Group_Form_FrmCustomer();
 		$frm = $fm->FrmAddCustomer();
 		Application_Model_Decorator::removeAllDecorator($frm);
@@ -91,11 +94,18 @@ class Group_CustomerController extends Zend_Controller_Action {
 			}
 		}
 	
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$row = $db->getAllstatusreqForOpt();
+		array_unshift($row, array('id'=>'','name' => $tr->translate("CHOOSE_STATUS_REQ")),array('id'=>'-1','name' => $tr->translate("ADD_NEW")));
+		$this->view->statusreq = $row;
+		
 		$row = $db->getById($id);
 	        $this->view->row=$row;
 		if(empty($row)){
 			$this->_redirect("/group/customer");
 		}
+		
+		
 		$fm = new Group_Form_FrmCustomer();
 		$frm = $fm->FrmAddCustomer($row);
 		Application_Model_Decorator::removeAllDecorator($frm);

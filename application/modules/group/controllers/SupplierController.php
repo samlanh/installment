@@ -1,0 +1,108 @@
+<?php
+class Group_SupplierController extends Zend_Controller_Action {
+	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
+	const REDIRECT_URL = '/group';
+    public function init()
+    {    	
+     /* Initialize action controller here */
+    	header('content-type: text/html; charset=utf8');
+    	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
+	}
+	public function indexAction(){
+		try{
+			$db = new Group_Model_DbTable_DbSupplier();
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}
+			else{
+				$search = array(
+						'adv_search' => '',
+						'status_search' => -1,
+						'branch_id' => '',
+						);
+			}
+			$rs_rows= $db->getAllSupplier($search);
+			$glClass = new Application_Model_GlobalClass();
+			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
+			$list = new Application_Form_Frmtable();
+			$collumns = array("BRANCH_NAME","CODE","NAME","ADDRESS","PHONE",
+					"EMAIL","STATUS");
+			$link=array(
+					'module'=>'group','controller'=>'supplier','action'=>'edit',
+			);
+			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'supplier_code'=>$link,'name'=>$link));
+		}catch (Exception $e){
+			Application_Form_FrmMessage::message("Application Error");
+			echo $e->getMessage();
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+		
+		$fm = new Group_Form_FrmSupplier();
+   		$frm_co=$fm->FrmAddCO();
+   		Application_Model_Decorator::removeAllDecorator($frm_co);
+   		$this->view->frm_co = $frm_co;
+	
+	}
+	
+   function addAction(){
+   	if($this->getRequest()->isPost()){
+   		$_data = $this->getRequest()->getPost();
+   		$db_co = new Group_Model_DbTable_DbSupplier();
+   		 
+   		try{
+   			$db_co->addSupplier($_data);
+   				if(!empty($_data['save_new'])){
+					Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
+				}else{
+					Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL . '/supplier/index');
+				}
+   		}catch(Exception $e){
+   			Application_Form_FrmMessage::message("ការ​បញ្ចូល​មិន​ជោគ​ជ័យ");
+   			$err =$e->getMessage();
+   			Application_Model_DbTable_DbUserLog::writeMessageError($err);
+   		}
+   	}
+   	
+   	$frm = new Group_Form_FrmSupplier();
+   	$frm_co=$frm->FrmAddCO();
+   	Application_Model_Decorator::removeAllDecorator($frm_co);
+   	$this->view->frm_co = $frm_co;
+   	
+   	$frmpopup = new Application_Form_FrmPopupGlobal();
+   	$this->view->frmpopupdepartment = $frmpopup->frmPopupDepartment();
+   }
+   function editAction(){
+   	$db_co = new Group_Model_DbTable_DbSupplier();
+   	if($this->getRequest()->isPost()){
+   		$_data = $this->getRequest()->getPost();
+   		try{
+   			$db_co->addSupplier($_data);
+   			Application_Form_FrmMessage::Sucessfull("ការ​បញ្ចូល​ជោគ​ជ័យ !",'/group/supplier');
+   		}catch(Exception $e){
+   			Application_Form_FrmMessage::message("ការ​បញ្ចូល​មិន​ជោគ​ជ័យ");
+   			$err =$e->getMessage();
+   			Application_Model_DbTable_DbUserLog::writeMessageError($err);
+   		}
+   	}
+   	$id = $this->getRequest()->getParam("id");
+   	$row = $db_co->getCOById($id);
+   	if(empty($row)){
+   		$this->_redirect('group/supplier');
+   	}
+   	$frm = new Group_Form_FrmSupplier();
+   	$frm_co=$frm->FrmAddCO($row);
+   	Application_Model_Decorator::removeAllDecorator($frm_co);
+   	$this->view->frm_co = $frm_co;
+   
+   }
+   function getstaffcodeAction(){
+   	if($this->getRequest()->isPost()){
+   		$db = new Application_Model_DbTable_DbGlobal();
+   		$_data = $this->getRequest()->getPost();
+   		$id = $db->getSupplierCodeByBranch($_data['branch_id']);
+   		print_r(Zend_Json::encode($id));
+   		exit();
+   	}
+   }
+}
+

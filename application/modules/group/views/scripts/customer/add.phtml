@@ -90,6 +90,13 @@ dojo.require("dijit.form.TextArea");
 	                    	<?php  echo $frm->getElement('description');?>
 	                   </div>
 	                </div>
+	                 <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS_REQ");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('statusreq');?>
+	                   </div>
+	                </div>
 	                <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
 			    			<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" 
 								 iconClass="dijitIconClear" /> 
@@ -101,4 +108,46 @@ dojo.require("dijit.form.TextArea");
     	</div>
     </div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("STATUS_REQ")?>'"  id="frm_statusreq" >
+		<form id="form_propertytype" >
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="newstatusreq" name="newstatusreq" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewstatusreq();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+function showstatusreq(){
+	statusreq = dijit.byId('statusreq').get('value');
+	if(statusreq==''){
+		alert("<?php echo $tr->translate("PLEASE_SELECT_statusreq")?>");
+		dijit.byId('statusreq').focus();
+		return false;
+	}else if(statusreq==-1){
+		dijit.byId('frm_statusreq').show();
+	}
+}
+var statusreqStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->statusreq));?> );
+function addNewstatusreq(){
+	var Itemmake = {					
+			id: dijit.byId('newstatusreq').get('value'),
+		    name: dijit.byId('newstatusreq').get('value')
+	};		
+	addDataToSelectbox(dijit.byId('statusreq'), statusreqStore, Itemmake, dijit.byId('newstatusreq').get('value'));	
+	dijit.byId('newstatusreq').attr('value',dijit.byId('newstatusreq').get('value'));
+	dijit.byId('frm_statusreq').reset();
+	dijit.byId('frm_statusreq').hide();
+}
 
+</script>

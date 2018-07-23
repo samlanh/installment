@@ -27,6 +27,7 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 					'description'	=>$data['Description'],
 					'date'			=>$data['Date'],
 					'status'		=>$data['Stutas'],
+					'supplier_id'		=>$data['supplier_id'],
 					'user_id'		=>$this->getUserId(),
 					'create_date'	=>date('Y-m-d'),
 				);
@@ -45,6 +46,7 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			'description'	=>$data['Description'],
 			'date'			=>$data['Date'],
 			'status'		=>$data['Stutas'],
+			'supplier_id'		=>$data['supplier_id'],
 			'user_id'		=>$this->getUserId(),
 
 		);
@@ -67,6 +69,7 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		
 		$sql=" SELECT id,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+		(SELECT sup.name FROM `ln_supplier` AS sup WHERE sup.id = supplier_id LIMIT 1) AS supplier,
 		title,invoice,
 		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
 		(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
@@ -87,6 +90,9 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			}
 			if($search['category_id_expense']>0){
 				$where.= " AND category_id = ".$search['category_id_expense'];
+			}
+			if(!empty($search['supplier_id'])){
+				$where.= " AND supplier_id = ".$search['supplier_id'];
 			}
 			if($search['payment_type']>0){
 				$where.= " AND payment_id = ".$search['payment_type'];

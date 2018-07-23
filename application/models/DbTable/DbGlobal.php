@@ -351,7 +351,21 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	}
    	return $pre.$new_acc_no;
    }
- 
+   public function getSupplierCodeByBranch($branch_id){
+   	$this->_name='ln_supplier';
+   	$db = $this->getAdapter();
+   	$sql = "SELECT COUNT(id)FROM $this->_name WHERE branch_id=".$branch_id." LIMIT 1 ";
+   	$pre = $this->getPrefixCode($branch_id)."";
+   	$acc_no = $db->fetchOne($sql);
+   	 
+   	$new_acc_no= (int)$acc_no+1;
+   	$acc_no= strlen((int)$acc_no+1);
+   	 
+   	for($i = $acc_no;$i<5;$i++){
+   		$pre.='0';
+   	}
+   	return $pre.$new_acc_no;
+   }
    public function getClientByType($type=null,$client_id=null ,$row=null){
    $this->_name='ln_client';
    $session_lang=new Zend_Session_Namespace('lang');
@@ -1435,6 +1449,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
        AND (`p`.`id` = `s`.`house_id`)) AND s.is_receivedplong=0 ";
   	$order=" ORDER BY end_line ASC";
   	return $db->fetchAll($sql.$order);
+  }
+  function getAllSupplier(){
+  	$db = $this->getAdapter();
+  	$sql="SELECT s.`id`,s.`name` FROM `ln_supplier` AS s WHERE s.`status`=1 AND s.`name`!=''";
+  	return $db->fetchAll($sql);
   }
 }
 ?>

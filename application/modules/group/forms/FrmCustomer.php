@@ -60,8 +60,23 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 				'style'=>'width:98%;min-height:60px; font-size:inherit; font-family:Kh Battambang'
 		));
 		
+		$dbcusre = new Group_Model_DbTable_DbCustomer();
+		$statusreq = new Zend_Dojo_Form_Element_FilteringSelect('statusreq');
+		$statusreq->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'showstatusreq();'
 		
-	
+		));
+		$rows = $dbcusre->getAllstatusreqForOpt();
+		$options = array(''=>$this->tr->translate("CHOOSE_STATUS_REQ"),'-1'=>$this->tr->translate("ADD_NEW"));
+		if(!empty($rows))foreach($rows AS $row){
+			$options[$row['name']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
+		}
+		$statusreq->setMultiOptions($options);
+		
 		if($data!=null){
 			
 			$_name->setValue($data['name']);
@@ -72,9 +87,10 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 			$_requirement->setValue($data['requirement']);
 			$_type->setValue($data['type']);
 			$_description->setValue($data['description']);
+			$statusreq->setValue($data['statusreq']);
 
 		}
-		$this->addElements(array($_name,$_phone,$_date,$_from_price,$_to_price,$_requirement,$_type,$_description));
+		$this->addElements(array($_name,$_phone,$_date,$_from_price,$_to_price,$_requirement,$_type,$_description,$statusreq));
 		return $this;
 		
 	}	

@@ -125,6 +125,22 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				1=>$this->tr->translate("BEGENING_TYPE"));
 		$_status->setMultiOptions($_status_opt);
 		
+		
+		$_supplier_id = new Zend_Dojo_Form_Element_FilteringSelect('supplier_id');
+		$_supplier_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'required' =>'true',
+				'class'=>'fullside',
+		));
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$rows = $db->getAllSupplier();
+		$options=array(''=>$this->tr->translate("SELECT_SUPPLIER"));
+		if(!empty($rows))foreach($rows AS $row){
+			$options[$row['id']]=$row['name'];
+		}
+		$_supplier_id->setMultiOptions($options);
+		
 		if($data!=null){
 			$_currency_type->setValue($data['category_id']);
 			$category_id_expense->setValue($data['category_id']);
@@ -142,11 +158,11 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 			if($request->getControllerName()=='income'){
 				$_status->setValue($data['is_beginning']);
 			}
-			
+			$_supplier_id->setValue($data['supplier_id']);
 		}
 		$this->addElements(array($_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
-				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,));
+				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id));
 		return $this;
 		
 	}	

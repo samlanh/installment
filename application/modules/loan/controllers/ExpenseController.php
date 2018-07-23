@@ -23,6 +23,7 @@ class Loan_ExpenseController extends Zend_Controller_Action
     					"branch_id"=>-1,
      					"category_id_expense"=>-1,
     					'payment_type'=>-1,
+    					'supplier_id'=>'',
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
     			);
@@ -32,11 +33,11 @@ class Loan_ExpenseController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","EXPENSE_TITLE","RECEIPT_NO","EXPENSE_FOR","CATEGORY","TOTAL_EXPENSE","NOTE","DATE","STATUS");
+    		$collumns = array("BRANCH_NAME","SUPPLIER","EXPENSE_TITLE","RECEIPT_NO","EXPENSE_FOR","CATEGORY","TOTAL_EXPENSE","NOTE","DATE","STATUS");
     		$link=array(
     				'module'=>'loan','controller'=>'expense','action'=>'edit',
     		);
-    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'title'=>$link,'invoice'=>$link));
+    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'supplier'=>$link,'title'=>$link,'invoice'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		echo $e->getMessage();
@@ -46,6 +47,11 @@ class Loan_ExpenseController extends Zend_Controller_Action
     	$frm = $frm->AdvanceSearch();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
+    	
+    	$pructis=new Loan_Form_Frmexpense();
+    	$frm = $pructis->FrmAddExpense();
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm_expense=$frm;
     }
     public function addAction()
     {
