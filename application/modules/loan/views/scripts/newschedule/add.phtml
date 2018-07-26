@@ -1,13 +1,10 @@
 <?php	
-	
 	$frm = $this->frm_loan;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
-// 	$this->headTitle('Add Reschedule');
-// 	echo $this->headTitle();
 ?>
 <style>
-.fullside50{ width:48%;}
+	.fullside50{ width:48%;}
 </style>
 <div class="overlay">
 	<div class="overlay-load">
@@ -29,8 +26,8 @@
          		  var rowId = $('#identity').val();
           			 if(schedule_opt==6 && rowId==''){
 						alert("Please Add Record First");
-             		   addRow();
-              		  return false;
+             		    addRow();
+              		    return false;
 		 			  }
 					branch_id = dijit.byId('branch_id').get('value');
             		if (branch_id=='' || branch_id==-1){
@@ -1375,13 +1372,17 @@ function calculateDuration(type=null){
 		
 		interest_rate= dijit.byId('interest_rate').get('value')/12/(100);
 		fixed_payment = dijit.byId('fixed_payment').get('value');
-		if(isNaN(interest_rate)){interest_rate=0;}
-		
-		pi = (parseFloat(fixed_payment)-(parseFloat(sold_price)*parseFloat(interest_rate)));
-		s = parseFloat(fixed_payment);
-		top_ii = Math.log(s/pi);
-
-		var duration =  Math.ceil(top_ii / Math.log(1+ parseFloat(interest_rate)));// ROUND UP
+		if(interest_rate>0){
+			if(isNaN(interest_rate)){interest_rate=0;}
+			
+			pi = (parseFloat(fixed_payment)-(parseFloat(sold_price)*parseFloat(interest_rate)));
+			s = parseFloat(fixed_payment);
+			top_ii = Math.log(s/pi);
+	
+			var duration =  Math.ceil(top_ii / Math.log(1+ parseFloat(interest_rate)));// ROUND UP
+		}else if(interest_rate==0){
+			duration = sold_price/fixed_payment;
+		}
 		dijit.byId('period').attr('value',duration);
 	}
 }

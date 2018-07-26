@@ -220,6 +220,22 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		///$this->_redirect("/report/paramater");
   	}
   }
+  function authorizationLetterAction(){
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$id = $this->getRequest()->getParam("id");
+  	if(!empty($id)){
+  		$this->view->termcodiction = $db->getTermCodiction();
+  		$rsagreement = $db->getAgreementBySaleID($id);
+  		$this->view->agreement = $rsagreement;
+  		$this->view->sale_schedule = $db->getScheduleBySaleID($id,$rsagreement['payment_id']);
+  		$this->view->first_deposit = $db->getFirstDepositAgreement($id);
+  
+  		$db_keycode = new Application_Model_DbTable_DbKeycode();
+  		$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
+  	}else{
+  		///$this->_redirect("/report/paramater");
+  	}
+  }
   /*function rptAgreementHouseAction(){
   	$db  = new Report_Model_DbTable_DbParamater();
   	$id = $this->getRequest()->getParam("id");
