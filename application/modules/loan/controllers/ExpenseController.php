@@ -84,6 +84,7 @@ class Loan_ExpenseController extends Zend_Controller_Action
     	
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+    	
     }
     public function editAction()
     {
@@ -126,6 +127,17 @@ class Loan_ExpenseController extends Zend_Controller_Action
     		$db = new Loan_Model_DbTable_DbIncome();
     		$ex_rate = $db->AddNewCategory($data,2);
     		print_r(Zend_Json::encode($ex_rate));
+    		exit();
+    	}
+    }
+    function getsupplierAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$db = new Application_Model_DbTable_DbGlobal();
+    		$rows = $db->getAllSupplier();
+    		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    		array_unshift($rows,array ( 'id' => "",'name' => $tr->translate("SELECT_SUPPLIER")), array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
+    		print_r(Zend_Json::encode($rows));
     		exit();
     	}
     }

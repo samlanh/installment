@@ -45,17 +45,25 @@ class Group_SupplierController extends Zend_Controller_Action {
 	}
 	
    function addAction(){
+   	$page = $this->getRequest()->getParam("page");
+   	$page = empty($page)?"":$page;
+   	$this->view->page = $page;
    	if($this->getRequest()->isPost()){
    		$_data = $this->getRequest()->getPost();
    		$db_co = new Group_Model_DbTable_DbSupplier();
    		 
    		try{
    			$db_co->addSupplier($_data);
+   			if (!empty($_data['page'])){
+   				Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
+   				echo "<script>window.close();</script>";
+   			}
    				if(!empty($_data['save_new'])){
 					Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
 				}else{
 					Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL . '/supplier/index');
 				}
+				
    		}catch(Exception $e){
    			Application_Form_FrmMessage::message("ការ​បញ្ចូល​មិន​ជោគ​ជ័យ");
    			$err =$e->getMessage();

@@ -131,11 +131,12 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
+				'onChange'=>'Addsupplier();',
 		));
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$rows = $db->getAllSupplier();
-		$options=array(''=>$this->tr->translate("SELECT_SUPPLIER"));
+		$options=array(''=>$this->tr->translate("SELECT_SUPPLIER"),'-1'=>$this->tr->translate("ADD_NEW"));
 		if(!empty($rows))foreach($rows AS $row){
 			$options[$row['id']]=$row['name'];
 		}
