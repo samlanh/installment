@@ -1414,7 +1414,6 @@ function calculateDuration(type=null){
 	
 			var duration =  Math.ceil(top_ii / Math.log(1+ parseFloat(interest_rate)));// ROUND UP
 			duration = duration/<?php echo $install_month;?>;//year 
-			dijit.byId('period').attr('value',duration);
 		}else if(interest_rate==0){
 			duration = sold_price/fixed_payment;
 		}
@@ -1780,7 +1779,7 @@ function calCulateSchedulePayment(){
 	var rowId = $('#identity').val();
 	var rowIDArray = rowId.split(',');
 	if(rowId!=''){
-	for(var n = 0; n < rowIDArray.length; n++) {
+		for(var n = 0; n < rowIDArray.length; n++) {
 			total_amountpayment = (dijit.byId('total_payment'+rowIDArray[n]).get('value'));
 			if(n==0){ 
 			}
@@ -1791,8 +1790,13 @@ function calCulateSchedulePayment(){
 		}
 	}
 	dijit.byId('total_installamount').attr('value',total_amount);
+	total_paidbefore = dijit.byId("paid_before").get("value");
+	paid_new = total_amount - total_paidbefore;
+	dijit.byId('deposit').attr('value',paid_new);
+	
 	total_sold = dijit.byId("sold_price").get("value");
 	total_amount = total_sold-total_amount;
+	
 	calCulateFixedPeriod();
 }
 function deleteRecord(index) {

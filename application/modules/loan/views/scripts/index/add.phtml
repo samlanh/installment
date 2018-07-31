@@ -3,6 +3,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 	$install_month = $this->data['install_by'];
+	$autocalcualte = $this->data['autocalcualte_period'];
 ?>
 <title><?php echo $tr->translate("SALE_PROPERTY");?></title>
 <style>
@@ -2003,23 +2004,29 @@ function returnMOnth(monthnum){
 	return month[monthnum];
 }
 function calculateDuration(type=null){
-	return false;
-	if(type==1){
-		var total_paid_install = dijit.byId('total_installamount').get('value');
-		if(total_paid_install == 0){
-			sold_price = dijit.byId('sold_price').get('value');
-		}else{
-			sold_price = dijit.byId('sold_price').get('value')-dijit.byId('total_installamount').get('value');
+	<?php if($autocalcualte==1){// 1 auto calculate date ,0 no calculate?>
+		if(type==1){
+			var total_paid_install = dijit.byId('total_installamount').get('value');
+			if(total_paid_install == 0){
+				sold_price = dijit.byId('sold_price').get('value');
+			}else{
+				sold_price = dijit.byId('sold_price').get('value')-dijit.byId('total_installamount').get('value');
+			}
+			interest_rate= dijit.byId('interest_rate').get('value')/<?php echo $install_month;?>/(100);//(100/30day)
+			fixed_payment = dijit.byId('fixed_payment').get('value');
+			if(isNaN(interest_rate)){interest_rate=0;}
+			if(interest_rate>0){
+				pi = (parseFloat(fixed_payment)-(parseFloat(sold_price)*parseFloat(interest_rate)));
+				s = parseFloat(fixed_payment);
+				top_ii = Math.log(s/pi);
+				var duration =  Math.ceil(top_ii / Math.log(1+ parseFloat(interest_rate)));// ROUND UP
+				duration = duration/<?php echo $install_month;?>;
+				
+			}else{
+				duration = sold_price/fixed_payment;
+			}
+			dijit.byId('period').attr('value',duration);
 		}
-		interest_rate= dijit.byId('interest_rate').get('value')/<?php echo $install_month;?>/(100);//(100/30day)
-		fixed_payment = dijit.byId('fixed_payment').get('value');
-		if(isNaN(interest_rate)){interest_rate=0;}
-		pi = (parseFloat(fixed_payment)-(parseFloat(sold_price)*parseFloat(interest_rate)));
-		s = parseFloat(fixed_payment);
-		top_ii = Math.log(s/pi);
-		var duration =  Math.ceil(top_ii / Math.log(1+ parseFloat(interest_rate)));// ROUND UP
-		duration = duration/<?php echo $install_month;?>;
-		dijit.byId('period').attr('value',duration);
-	}
+	<?php }?>
 }
 </script>
