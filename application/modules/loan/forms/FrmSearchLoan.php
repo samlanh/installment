@@ -212,6 +212,23 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		if(!empty($all_user))foreach ($all_user As $row)$opt_user[$row['id']]=$row['by_user'];
 		$user->setMultiOptions($opt_user);
 		
+		
+		$_supplier_id = new Zend_Dojo_Form_Element_FilteringSelect('supplier_id');
+		$_supplier_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'required' =>'true',
+				'class'=>'fullside',
+				'onChange'=>'Addsupplier();',
+		));
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$rows = $db->getAllSupplier();
+		$options=array(''=>$this->tr->translate("SELECT_SUPPLIER"));
+		if(!empty($rows))foreach($rows AS $row){
+			$options[$row['id']]=$row['name'];
+		}
+		$_supplier_id->setMultiOptions($options);
+		$_supplier_id->setValue($request->getParam('supplier_id'));
 		if($data!=null){
 // 			$_member->setValue($data['client_id']);
 			$_coid->setValue($data['co_id']);
@@ -219,7 +236,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 			$client_name->setValue($data['client_name']);
 		}
 		$this->addElements(array($user,$payment_method,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
-				$_category,$category_id_expense,$_dateline,$_status,$_btn_search));
+				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id));
 		return $this;
 		
 	}	

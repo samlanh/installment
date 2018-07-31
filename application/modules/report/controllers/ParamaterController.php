@@ -159,6 +159,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
    	}else{
     		$search = array(
     		"adv_search"=>'',
+    		"supplier_id"=>"",
     		"branch_id"=>-1,
     		"category_id_expense"=>-1,
     		'payment_type'=>-1,

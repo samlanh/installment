@@ -288,6 +288,7 @@ function getAllBranch($search=null){
     	
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+    		(SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) AS supplier_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
     		title,invoice,
     	
@@ -311,6 +312,9 @@ function getAllBranch($search=null){
     		}
     		if(@$search['payment_type']>0){
     			$where.= " AND payment_id = ".$search['payment_type'];
+    		}
+    		if (!empty($search['supplier_id'])){
+    			$where.= " AND supplier_id = ".$search['supplier_id'];
     		}
     		$order=" order by id desc ";
     		return $db->fetchAll($sql.$where.$order);
