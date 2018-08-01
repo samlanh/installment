@@ -58,7 +58,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 			    		$client_id = $this->insert($_arr);
 		    		}
 		    		
-		    		$sql="SELECT id FROM `ln_properties` WHERE land_address = '".$data[$i]['H']."'";
+		    		$sql="SELECT id FROM `ln_properties` WHERE land_address = '".$data[$i]['J']."'";
 		    		$land_id = $db->fetchOne($sql);
 		    		if(empty($land_id)){
 		    			$_arr=array(

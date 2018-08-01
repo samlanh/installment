@@ -12,7 +12,7 @@ class Group_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
 	  	$sql = 'SELECT DISTINCT street,
 				  	(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
 				  	street AS street_name,
-	  				(SELECT type_namekh FROM `ln_properties_type` WHERE id=1) AS properties_type,
+	  				(SELECT type_namekh FROM `ln_properties_type` WHERE id=ln_properties.property_type) AS properties_type,
 				  	price
 	  		 FROM `ln_properties` WHERE street!="" ';
 	  	$where="";
