@@ -219,20 +219,20 @@ public function addPaymentByCustomer($data){
     	$session_user=new Zend_Session_Namespace('authinstall');
     	$user_id = $session_user->user_id;
     	try{
-    	$reciept_no = $data['reciept_no'];
-    	$sql="SELECT id  FROM ln_client_receipt_money WHERE receipt_no='$reciept_no' ORDER BY id DESC LIMIT 1 ";
-    	$acc_no = $db->fetchOne($sql);
-    	if($acc_no){
-    		$dbc = new Application_Model_DbTable_DbGlobal();
-    		$reciept_no = $dbc->getReceiptByBranch(array("branch_id"=>$data["branch_id"]));
-    	}else{
-    		$reciept_no = $data['reciept_no'];
-    	}
+	    	$reciept_no = $data['reciept_no'];
+	    	$sql="SELECT id  FROM ln_client_receipt_money WHERE receipt_no='$reciept_no' ORDER BY id DESC LIMIT 1 ";
+	    	$acc_no = $db->fetchOne($sql);
+	    	if($acc_no){
+	    		$dbc = new Application_Model_DbTable_DbGlobal();
+	    		$reciept_no = $dbc->getReceiptByBranch(array("branch_id"=>$data["branch_id"]));
+	    	}else{
+	    		$reciept_no = $data['reciept_no'];
+	    	}
     	
-    	$amount_receive = $data["amount_receive"];
-    	$total_payment = $data["total_payment"];
-    	$return = 0;
-    	$option_pay = $data["option_pay"];
+		    	$amount_receive = $data["amount_receive"];
+		    	$total_payment = $data["total_payment"];
+		    	$return = 0;
+		    	$option_pay = $data["option_pay"];
     	
     	if($amount_receive>$total_payment){
     		$amount_payment = $amount_receive - $return;

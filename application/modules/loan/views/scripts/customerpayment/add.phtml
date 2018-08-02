@@ -18,10 +18,7 @@
 		dojo.require("dojo.data.ObjectStore");
    </script>
 <style>	
-	.dojoxGridSortNode{
-		text-align: center;	
-		height: 30px;		
-	}
+
 table#table tr th.tdheader {
     background: #bcd5f0;
     border: solid 1px #a0a0a0;
@@ -30,6 +27,10 @@ table#table tr th.tdheader {
 table#table tr td input[type=checkbox] {
     margin: 0;
     padding: 0;
+}
+#rpt_print table{
+	border-spacing: 5px !important;
+    border-collapse: inherit;
 }
 </style>
 <div class="overlay">
@@ -147,13 +148,6 @@ table#table tr td input[type=checkbox] {
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COLLECT_DATE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement('collect_date');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("AMOUNT_LATE")?>
 	                   <?php echo $frm->getElement('date_input');?> :
 	                   </label>
@@ -166,7 +160,6 @@ table#table tr td input[type=checkbox] {
 	                   <?php echo $tr->translate("ប្រាក់បង់ពីមុនសរុប");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement('last_payment_date'); ?>
 	                   		<input dojoType="dijit.form.NumberTextBox" class="fullside" id="total_pricipalpaid" name="total_pricipalpaid" readonly  type="text">
 	                   </div>
 	                </div>
@@ -230,6 +223,13 @@ table#table tr td input[type=checkbox] {
 					<div class="form-group">
 	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PAYMENT_INFORMATION");?> 
 	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COLLECT_DATE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('collect_date');?>
+	                   </div>
 	                </div>
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
@@ -301,33 +301,30 @@ table#table tr td input[type=checkbox] {
 		</form>
     </div>
 </div>
-
-
-<div class="dijitHidden" style="width: 25cm !important; height: 12cm ; padding: 0px; margin: 0px;">
-	<div data-dojo-type="dijit.Dialog" style="text-align:center;" data-dojo-props="title:'បោះពុម្ភ វិក័យបត្រ', onCancel:hideDialog" id="frm_client">
+<div class="dijitHidden" style="width:24cm;padding: 0px; margin: 0px;">
+	<div data-dojo-type="dijit.Dialog" style="width:22cm !important; text-align:center;" data-dojo-props="title:'បោះពុម្ភ វិក័យបត្រ', onCancel:hideDialog" id="frm_client">
 		<div id="rpt_print" >
-			<table cellpadding="0" cellspacing="0" style="width:21cm; white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 16px;">
+			<table cellpadding="0" cellspacing="0" style="width:20cm; white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 16px;">
 				<tr valign="top" >
 					<td align="center" colspan="6" valign="top" >	
 						<table  cellpadding="0" cellspacing="0" style=" font-family: 'Khmer OS Battambang';padding:0; width:100%;white-space:nowrap;">
-									<tr style="line-height:10px;">
-										<td valign="top" width="25%" align="left" style="color: #000;">
-											<img style="height:75px;margin-bottom: -25px;margin-top: -10px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
-										</td>
-										<td width="50%" valign="top" align="center" style="color: #000;">
-											<span style="text-align:center; font-size:18px !important; font-family:'Khmer MEF2';text-decoration:none;"><?php echo $tr->translate("PAYMENT_RECEIPT");?></span><br />
-											<span style="text-align:center;line-height:30px; font-size:16px !important;font-family:sans-serif;text-decoration:none;">OFFICIAL RECEIPT</span>
-										</td>
-										<td width="25%"  style="color: #000;">&nbsp;
-											
-										</td>
-									</tr>
+							<tr style="line-height:10px;">
+								<td valign="top" width="25%" align="left" style="color: #000;">
+									<img style="height:75px;margin-bottom: -25px;margin-top: -10px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+								</td>
+								<td width="50%" valign="top" align="center" style="color: #000;">
+									<span style="text-align:center; font-size:18px !important; font-family:'Khmer MEF2';text-decoration:none;"><?php echo $tr->translate("PAYMENT_RECEIPT");?></span><br />
+									<span style="text-align:center;line-height:30px; font-size:16px !important;font-family:sans-serif;text-decoration:none;">OFFICIAL RECEIPT</span>
+								</td>
+								<td width="25%"  style="color: #000;">&nbsp;
+								</td>
+							</tr>
 						</table>
 					</td>
 				</tr> 
 				<tr>
 						<td align="center" colspan="6" valign="top" >	
-							<table width="100%" cellpadding="0" cellspacing="5px" style="font-family: 'Khmer OS Battambang' ;font-size:16px !important;white-space:nowrap; width:21cm; margin-top: -25px;">
+							<table width="100%" cellpadding="0" cellspacing="3px" style="font-family: 'Khmer OS Battambang' ;font-size:16px !important;white-space:nowrap; margin-top: -35px;">
 								<tr class="fontsize" >
 										<td class="fontsize" valign="top"></td>
 										<td ></td>
@@ -393,7 +390,7 @@ table#table tr td input[type=checkbox] {
 										<table width="100%" border="0" style="font-size:14px;line-height: 18px;">
 											<tr>
 												<td width="30%">&nbsp;
-													
+													<?php echo $this->data['account_sign'];?>
 												</td>
 												<td align="center" width="40%">
 													<?php echo $this->data['customer_sign'];?>
@@ -402,25 +399,16 @@ table#table tr td input[type=checkbox] {
 													<?php echo $this->data['teller_sign'];?>
 												</td>
 											</tr>
-											<tr>
+											<tr height="80px">
 												<td colspan="3">&nbsp;
-													
-												</td>
-											</tr>
-											<tr>
-												<td colspan="3">&nbsp;
-													
 												</td>
 											</tr>
 											<tr>
 												<td width="30%">&nbsp;
-													
-												</td>
-												
+												</td>												
 												<td align="center" width="40%">
 													<strong><label id="lbl_client_name" class="value"></label></strong>
 												</td>
-													
 												<td align="center" width="30%">
 													<strong>
 														<?php 
@@ -440,19 +428,17 @@ table#table tr td input[type=checkbox] {
 										<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
 									</td>
 									<td colspan="5">
-										<span style="font-size: 13px;"><?php echo $this->data['comment'];?></span><br />
-										<span style="white-space: pre-line;font-size: 13px;"><?php echo $this->data['comment1'];?></span><br />
+										<span style="font-size: 11px;"><?php echo $this->data['comment'];?></span><br />
+										<span style="white-space: pre-line;font-size: 11px;"><?php echo $this->data['comment1'];?></span><br />
 									</td>
 								</tr>
 								<tr style="line-height: 10px;font-size: 10px;">
-									<td colspan="6" style="border: 1px solid rgba(255, 235, 59, 0.88)">
-										
+									<td colspan="6" style="border: 1px solid rgba(255, 235, 59, 0.88)">										
 									</td>
 								</tr>
-								
 								<tr >
 									<td colspan="6" >
-										<table width="100%" style="font-family:'Khmer OS Battambang'; font-size:13px;line-height: 10px;margin-top: -5px;margin-bottom:15px;"> 
+										<table width="100%" style="font-family:'Khmer OS Battambang'; font-size:10px;line-height: 10px;margin-top: -5px;margin-bottom:15px;"> 
 											<tr>
 												<td width="22%">
 													<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
@@ -475,9 +461,8 @@ table#table tr td input[type=checkbox] {
 										</table>
 									</td>
 								</tr>
-								
 								<tr>
-									<td colspan="6" style="border-bottom:2px dashed #000;" >
+									<td colspan="6" style="border-top:2px dashed #000;" >
 									</td>
 								</tr>
 							</table>
@@ -496,10 +481,10 @@ table#table tr td input[type=checkbox] {
 				<tr>
 			</table>
 		<div id="rpt_print1" >
-			<table cellpadding="0" cellspacing="0" style=" margin-top:30px;width:21cm; white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 12px;">
+			<table cellpadding="0" cellspacing="0" style="width:100%;margin-top:0px;white-space:nowrap; font-family:'Khmer OS Battambang'; font-size: 12px;">
 				<tr valign="top" >
 					<td align="center" colspan="6" valign="top" >	
-						<table  cellpadding="0" cellspacing="0" style="font-family: 'Khmer OS Battambang';padding:0; width:100%;white-space:nowrap;">
+						<table cellpadding="0" cellspacing="0" style="font-family: 'Khmer OS Battambang';padding:0; width:100%;white-space:nowrap;">
 									<tr style="line-height:20px;">
 										<td valign="top" width="25%" align="left" style="color: #000;">
 											<img style="height:75px;margin-bottom: -25px;margin-top: -10px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
@@ -509,7 +494,6 @@ table#table tr td input[type=checkbox] {
 											<span style="text-align:center; font-size:16px !important;line-height:30px; text-decoration:none;">OFFICIAL RECEIPT</span>
 										</td>
 										<td width="25%"  style="color: #000;">&nbsp;
-											
 										</td>
 									</tr>
 						</table>
@@ -517,7 +501,7 @@ table#table tr td input[type=checkbox] {
 				</tr> 
 				<tr>
 						<td align="center" colspan="6" valign="top" >	
-							<table width="100%" cellpadding="0" cellspacing="5px" style=" margin-top:-10px;font-family: 'Khmer OS Battambang';font-size:16px !important;white-space:nowrap; width:21cm;margin-top: -25px;">
+							<table width="100%" cellpadding="0" cellspacing="3px" style=" margin-top:-10px;font-family: 'Khmer OS Battambang';font-size:16px !important;white-space:nowrap;margin-top: -25px;">
 								<tr class="fontsize" style="border:1px solid #000;">
 									<td class="fontsize" valign="top"></td>
 									<td ></td>
@@ -581,7 +565,7 @@ table#table tr td input[type=checkbox] {
 										<table width="100%" border="0" style="font-size: 14px;line-height: 18px;">
 											<tr>
 												<td width="30%">&nbsp;
-													
+													<?php echo $this->data['account_sign'];?>
 												</td>
 												<td align="center" width="40%">
 													<?php echo $this->data['customer_sign'];?>
@@ -590,14 +574,8 @@ table#table tr td input[type=checkbox] {
 													<?php echo $this->data['teller_sign'];?>
 												</td>
 											</tr>
-											<tr>
+											<tr height="80px">
 												<td colspan="3">&nbsp;
-													
-												</td>
-											</tr>
-											<tr>
-												<td colspan="3">&nbsp;
-													
 												</td>
 											</tr>
 											<tr>
@@ -627,8 +605,8 @@ table#table tr td input[type=checkbox] {
 										<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
 									</td>
 									<td colspan="5">
-										<span style="font-size: 13px;"><?php echo $this->data['comment'];?></span><br />
-										<span style="white-space: pre-line;font-size: 13px;"><?php echo $this->data['comment1'];?></span><br />
+										<span style="font-size: 11px;"><?php echo $this->data['comment'];?></span><br />
+										<span style="white-space: pre-line;font-size: 11px;"><?php echo $this->data['comment1'];?></span><br />
 									</td>
 								</tr>
 								<tr style="line-height: 10px;font-size: 10px;">
@@ -639,7 +617,7 @@ table#table tr td input[type=checkbox] {
 								
 								<tr >
 									<td colspan="6" >
-										<table width="100%" style="font-family:'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;"> 
+										<table width="100%" style="font-family:'Khmer OS Battambang'; font-size:10px;line-height: 15px;margin-top: -5px;margin-bottom:15px;"> 
 											<tr>
 												<td width="22%">
 													<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
@@ -834,14 +812,11 @@ function showReciept(receipt_number){
 		document.getElementById('lbl_total_paid').innerHTML = dojo.number.format(all_paid,{places:2}) + symbal;
 		document.getElementById('lbl_total_paid1').innerHTML = dojo.number.format(all_paid,{places:2}) + symbal;
 	 	
-//document.getElementById('lbl_total_paid').innerHTML = dojo.number.format(receive_amount,{places:2}) + symbal;
-		//document.getElementById('lbl_totalpayment').innerHTML = dojo.number.format(total_payments,{places:2}) + symbal;  
 		document.getElementById('lbl_reciept_no').innerHTML = receipt_number;
 
 		document.getElementById('lbl_total_interest1').innerHTML = dojo.number.format(dijit.byId('total_interest').get('value'),{places:2})+symbal;
 		document.getElementById('lbl_penalize1').innerHTML = dojo.number.format(dijit.byId('penalize_amount').get('value'),{places:2})+symbal;
 		
-		//document.getElementById('lbl_totalpayment1').innerHTML = dojo.number.format(total_payments,{places:2}) + symbal;  
 		document.getElementById('lbl_reciept_no1').innerHTML = receipt_number;
 		document.getElementById('lbl_client_name1').innerHTML = dijit.byId('client_id').attr('displayedValue');
 		document.getElementById('lbl_client_name').innerHTML = dijit.byId('client_id').attr('displayedValue');
@@ -849,8 +824,6 @@ function showReciept(receipt_number){
 		document.getElementById('lbl_total_payment1').innerHTML = dojo.number.format(dijit.byId('total_payment').get('value'),{places:2})+symbal;				
 		document.getElementById('lbl_total_receive').innerHTML = dojo.number.format(dijit.byId('amount_receive').get('value'),{places:2})+symbal;
 		document.getElementById('lbl_total_receive1').innerHTML = dojo.number.format(dijit.byId('amount_receive').get('value'),{places:2})+symbal;
-		//document.getElementById('lbl_property_price').innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),{places:2})+symbal;
-		//document.getElementById('lbl_property_price1').innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),{places:2})+symbal;
 		
 		extra_payment = dijit.byId("extrapayment").get("value");
 		extra_payment = isNaN(extra_payment)?0:extra_payment;
@@ -907,7 +880,7 @@ function showReciept(receipt_number){
 function returnMOnth(monthnum){
 	var month = new Array();
 	month[1] = "Jan";month[2] = "Feb";month[3] = "Mar";month[4] = "Apr";month[5] = "May";
-	month[6] = "Jun";month[7] = "Jul";month[8] = "Aug";month[8] = "Sep";
+	month[6] = "Jun";month[7] = "Jul";month[8] = "Aug";month[9] = "Sep";
 	month[10] = "Oct";month[11] = "Nov";month[12] = "Dec";
 	return month[monthnum];
 }
@@ -1079,9 +1052,9 @@ function getLaonPayment(type){//តារាងបង់ Tab ទី១
 			handleAs:"json",
 			load: function(respone) {
 				tem='<table class="collape tablesorter" style="font-size:12px;" id="table" width="100%">'
-					+'<thead><tr><th class="tdheader"><?php echo $tr->translate('NO');?></th>'
+					+'<thead><tr><th class="tdheader"><?php echo $tr->translate('NUM');?></th>'
 					+'<th class="tdheader"></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('HOUSE_TITLE');?></th>'
+					+'<th class="tdheader"><?php echo $tr->translate('PROPERTY_CODE');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate('តម្លៃលក់');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate('ប្រាក់បានបង់សរុប');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate('ប្រាក់នៅសល់សរុប');?></th>'

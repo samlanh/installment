@@ -87,7 +87,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 		    			$arr = array('is_lock'=>1);
 		    			$this->_name='ln_properties';
 		    			$where="id = ".$land_id;
-		    			$this->update($data, $where);
+		    			$this->update($arr, $where);
 		    		}
 		    		
 		    		$dbtable = new Application_Model_DbTable_DbGlobal();

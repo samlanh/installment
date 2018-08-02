@@ -69,7 +69,6 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-// 				print_r($_data);exit();/
 				$db->addPaymentByCustomer($_data);
 				if(isset($_data['submit_close'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/customerpayment/");
