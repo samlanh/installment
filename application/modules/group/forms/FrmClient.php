@@ -16,6 +16,13 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$_dob= new Zend_Dojo_Form_Element_DateTextBox('dob_client');
 		$_dob->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",));
 		
+		$client_issuedateid= new Zend_Dojo_Form_Element_DateTextBox('client_issuedateid');
+		$client_issuedateid->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",));
+		
+		$join_issuedateid= new Zend_Dojo_Form_Element_DateTextBox('join_issuedateid');
+		$join_issuedateid->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",));
+		
+		
 		$dob_buywith= new Zend_Dojo_Form_Element_DateTextBox('dob_buywith');
 		$dob_buywith->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','class'=>'fullside','constraints'=>"{datePattern:'dd/MM/yyyy'}",));
 		
@@ -144,34 +151,6 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		if(!empty($rows))foreach($rows AS $row) $options[$row['province_id']]=$row['province_en_name'];
 		$_province->setMultiOptions($options);
 		
-// 		$_district = new Zend_Dojo_Form_Element_FilteringSelect('district');
-// 		$_district->setAttribs(array(
-// 				'dojoType'=>'dijit.form.FilteringSelect',
-// 				'class'=>'fullside',
-// 				'onchange'=>'popupCheckDistrict();'
-// 		));
-		
-// 		$_commune = new Zend_Dojo_Form_Element_FilteringSelect('commune');
-// 		$options=array(''=>"------Select------",-1=>"Add New");
-// 		$_commune->setMultiOptions($options);
-// 		$_commune->setAttribs(array(
-// 				'dojoType'=>'dijit.form.FilteringSelect',
-// 				'class'=>'fullside',
-// 				'onchange'=>'popupCheckCommune();'
-// 		));
-		
-// 		$_village = new Zend_Dojo_Form_Element_FilteringSelect('village');
-// 		$_village->setAttribs(array(
-// 				'dojoType'=>'dijit.form.FilteringSelect',
-// 				'class'=>'fullside',
-// 				'required' =>'true',
-// 				'onchange'=>'popupCheckVillage();'
-// 		));
-// 		$rows =  $db->getVillage();
-// 		$options=array(''=>"------Select------",-1=>"Add New");
-// 		if(!empty($rows))foreach($rows AS $row) $options[$row['vill_id']]=$row['village_name'];
-// 		$_village->setMultiOptions($options);
-		
 		$_house = new Zend_Dojo_Form_Element_TextBox('house');
 		$_house->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
@@ -286,38 +265,6 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		if(!empty($rows))foreach($rows AS $row) $options[$row['province_id']]=$row['province_en_name'];
 		$_cprovince->setMultiOptions($options);
 		
-// 		$_adistrict = new Zend_Dojo_Form_Element_FilteringSelect('adistrict');
-// 		$_adistrict->setAttribs(array(
-// 				'dojoType'=>'dijit.form.FilteringSelect',
-// 				'class'=>'fullside',
-// 				'onchange'=>'popupCheckDistrict();'
-// 		));
-// 		$rows =  $db->getAllDistrict();
-// 		$options=array($this->tr->translate("SELECT_DISTRICT")); //array(''=>"------Select Province------",-1=>"Add New");
-// 		if(!empty($rows))foreach($rows AS $row) $options[$row['dis_id']]=$row['district_name'];
-// 		$_adistrict->setMultiOptions($options);
-		
-		
-// 		$_dcommune = new Zend_Dojo_Form_Element_FilteringSelect('dcommune');
-// 		$options=array(''=>"------Select------",-1=>"Add New");
-// 		$_dcommune->setMultiOptions($options);
-// 		$_dcommune->setAttribs(array(
-// 				'dojoType'=>'dijit.form.FilteringSelect',
-// 				'class'=>'fullside',
-// 				'onchange'=>'popupCheckCommune();'
-// 		));
-// 		$_qvillage = new Zend_Dojo_Form_Element_FilteringSelect('qvillage');
-// 		$_qvillage->setAttribs(array(
-// 				'dojoType'=>'dijit.form.FilteringSelect',
-// 				'class'=>'fullside',
-// 				'required' =>'true',
-// 				'onchange'=>'popupCheckVillage();'
-// 		));
-// 		$rows =  $db->getVillage();
-// 		$options=array(''=>"------Select------",-1=>"Add New");
-// 		if(!empty($rows))foreach($rows AS $row) $options[$row['vill_id']]=$row['village_name'];
-// 		$_qvillage->setMultiOptions($options);
-		
 		$_dstreet = new Zend_Dojo_Form_Element_TextBox('dstreet');
 		$_dstreet->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
@@ -411,8 +358,10 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 // 			$_dcommune->setValue($data['dcommune']);
 			$_join_type->setValue($data['join_type']);
 			$referecce_national_id->setValue($data['refe_nation_id']);
+			$client_issuedateid->setValue($data['client_issuedateid']);
+			$join_issuedateid->setValue($data['join_issuedateid']);
 		}
-		$this->addElements(array($dob_buywith,$_join_type,$referecce_national_id,$p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
+		$this->addElements(array($join_issuedateid,$client_issuedateid,$dob_buywith,$_join_type,$referecce_national_id,$p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
 				$_join_with,$_id,$photo,$job,$national_id,$_member,$_namekh,$_nameen,$_sex,
 				$_province,$_house,$_street,$_id_no,$branch_id,$_email,
 				$_phone,$_desc,$_status,$_clientno,$_dob,$clienttype_namekh,$clienttype_nameen));
