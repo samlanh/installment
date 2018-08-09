@@ -153,7 +153,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->rssearch = $search;
   }
   function rptExpenseAction(){ // by Vandy
-  
  	 if($this->getRequest()->isPost()){
     			$search=$this->getRequest()->getPost();
    	}else{
@@ -175,6 +174,23 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
+  	
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+  				'land_id'=>0,
+  				'start_date'  => date('Y-m-d'),
+  				'end_date'    => date('Y-m-d'),
+  				'txtsearch' => '',
+  				'branch_id'=>-1,
+  				'co_khname'=>-1,
+  				'search_status'=>-1);
+  	}
+  	 
+  	$this->view->rscomisison = $db->getAllCommission($search);
   }
   function rptDailyCashAction(){ // by Vandy
   	if($this->getRequest()->isPost()){

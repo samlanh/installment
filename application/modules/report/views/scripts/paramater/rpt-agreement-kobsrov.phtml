@@ -137,41 +137,43 @@ body {
              		សញ្ជាតិ <span class="value" style="min-width:20px;"><?php echo $this->agreement['client_nationality'];?></span>
              		កាន់<?php echo $this->agreement['client_d_type'];?>លេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nation_id'];?></span>
              		ទីលំនៅបច្ចុប្បន្ន ភូមិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_village_kh'];?></span> ឃុំ/សង្កាត់ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_commune_kh'];?></span> ស្រុក/ខណ្ឌ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_districtkh'];?></span> ខេត្ត/ក្រុង  <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_province_kh'];?></span>
-             		និងឈ្មោះ <span class="value" style="min-width:150px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['hname_kh'];?></span> ភេទ  <span class="value" style="min-width:40px;"><?php echo $this->agreement['client_buywith_sex'];?></span>
-             		អាយុ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['w_client_dob_buywith'])){ echo date("Y") - date("Y",strtotime($this->agreement['w_client_dob_buywith']));}?></span> ឆ្នាំ
-             		សញ្ជាតិ <span class="value" style="min-width:20px;"><?php echo $this->agreement['w_client_nationality'];?></span>
-             		កាន់<?php echo $this->agreement['joint_doc_type'];?>លេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['rid_no'];?></span>
-             		ទីលំនៅបច្ចុប្បន្នភូមិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_village_kh'];?></span> ឃុំ/សង្កាត់ <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_commune_kh'];?></span> ស្រុក/ខណ្ឌ <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_districtkh'];?></span> ខេត្ត/ក្រុង  <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_province_kh'];?></span>
-             		ទូរស័ព្ទលេខ <span class="value" style="min-width:20px;"><?php echo $this->agreement['with_phone'];?></span>។
+             		<?php if(!empty($this->agreement['hname_kh'])){?>
+	             		និងឈ្មោះ <span class="value" style="min-width:150px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['hname_kh'];?></span> ភេទ  <span class="value" style="min-width:40px;"><?php echo $this->agreement['client_buywith_sex'];?></span>
+	             		អាយុ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['w_client_dob_buywith'])){ echo date("Y") - date("Y",strtotime($this->agreement['w_client_dob_buywith']));}?></span> ឆ្នាំ
+	             		សញ្ជាតិ <span class="value" style="min-width:20px;"><?php echo $this->agreement['w_client_nationality'];?></span>
+	             		កាន់<?php echo $this->agreement['joint_doc_type'];?>លេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['rid_no'];?></span>
+	             		ទីលំនៅបច្ចុប្បន្នភូមិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_village_kh'];?></span> ឃុំ/សង្កាត់ <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_commune_kh'];?></span> ស្រុក/ខណ្ឌ <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_districtkh'];?></span> ខេត្ត/ក្រុង  <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_province_kh'];?></span>
+             		<?php }?>
+             		ទូរស័ព្ទលេខ <span class="value" style="min-width:20px;"><?php echo $this->agreement['phone'];?></span>។
              		</p>
              		<table width="100%" >
-             			<tr>
-             				<td style="width: 100px;white-space: nowrap;" colspan="1"><span style=" margin-left: 50px;">ភាគីលក់-ទិញ បានឯកភាពគ្នាក្នុងតម្លៃ </span></td>
-             				<td class="value_label" colspan="2"><span class="value" style="min-width:100px;font-weight: bolder;"><?php echo number_format($this->agreement['price_sold'],2);?> </span><span>ដុល្លារ  ជាអក្សរ <label id="lable_pricesoldkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក</span></td>
-             			</tr>
-             			<tr>
-             				<td><span>ភាគីទិញបានកក់ប្រាក់លើកទី១ចំនួន</span></td>
-             				<td class="value_label" style="white-space: nowrap;"><span class="value" style="min-width:70px;font-weight: bold;"><?php echo @number_format($this->first_deposit['recieve_amount'])?> ដុល្លារ ជាអក្សរ <label id="lable_firstpaymentkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក</span> </td>
-             				<td class="value_label"><span>នៅថ្ងៃទី  <?php echo date("d",strtotime($this->first_deposit['date_pay']));?>  ខែ  <?php echo date("m",strtotime($this->first_deposit['date_pay']));?>  ឆ្នាំ  <?php echo date("Y",strtotime($this->first_deposit['date_pay']));?></span></td>
-             			</tr>
-             			<tr>
-             				<td><span>កក់ប្រាក់លើកទី២  ចំនួន</span></td>
-             				<td class="value_label"><span class="value" style="min-width:100px;font-weight: bolder;"><?php if($this->first_deposit['second_depostit']>0 AND !empty($this->first_deposit['second_depostit'])){echo number_format($this->first_deposit['second_depostit'],2);}?>ដុល្លារ ជាអក្សរ <label id="lable_secondpaymentkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក</span></td>
-             				<td class="value_label" style="white-space: nowrap;"><span>នៅថ្ងៃទី<?php echo date("d",strtotime($this->first_deposit['validate_date']));?>  ខែ <?php echo date("m",strtotime($this->first_deposit['validate_date']));?>  ឆ្នាំ   <?php echo date("Y",strtotime($this->first_deposit['validate_date']));?></span></td>
-             			</tr>
-             			<tr>
-             				<td><span>ហើយបានសន្យាប្រគល់ប្រាក់គ្រប់ចំនួន</span></td>
-             				<td class="value_label" style="white-space: nowrap;"><span> នៅថ្ងៃទី&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="width: 100px;"></span> ខែ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ឆ្នាំ២០  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-             				     													          </span></td>
-             				<td class="value_label"><span class="value" style="min-width:100px;font-weight: bolder;">ទឹកប្រាក់សរុបចំនួន</span></td>
-             			</tr>
-             			<tr>
-             				<td colspan="3" class="value_label">&nbsp;<span>​</span></td>
-             			</tr>
-             			<tr>
-             				<td colspan="3" class="value_label">&nbsp;<span>​</span></td>
-             			</tr>
-             		</table>
+	             			<tr>
+	             				<td style="width: 100px;white-space: nowrap;" colspan="1"><span style=" margin-left: 50px;">ភាគីលក់-ទិញ បានឯកភាពគ្នាក្នុងតម្លៃ </span></td>
+	             				<td class="value_label" colspan="2" style="white-space: nowrap;"><span class="value" style="min-width:100px;font-weight: bolder;text-align:left;"><?php echo number_format($this->agreement['price_sold'],2);?> </span><span>ដុល្លារ  ជាអក្សរ <label id="lable_pricesoldkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក</span></td>
+	             			</tr>
+	             			<tr>
+	             				<td><span>ភាគីទិញបានកក់ប្រាក់លើកទី១ចំនួន</span></td>
+	             				<td class="value_label" style="white-space: nowrap;"><span class="value" style="min-width:70px;font-weight: bold;"><?php echo @number_format($this->first_deposit['recieve_amount'])?> ដុល្លារ ជាអក្សរ <label id="lable_firstpaymentkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក</span> </td>
+	             				<td class="value_label" style="white-space: nowrap;"><span>នៅថ្ងៃទី  <?php echo date("d",strtotime($this->first_deposit['date_pay']));?>  ខែ  <?php echo date("m",strtotime($this->first_deposit['date_pay']));?>  ឆ្នាំ  <?php echo date("Y",strtotime($this->first_deposit['date_pay']));?></span></td>
+	             			</tr>
+	             			<tr>
+	             				<td><span>កក់ប្រាក់លើកទី២  ចំនួន</span></td>
+	             				<td class="value_label"><span class="value" style="min-width:50px;font-weight: bolder;"><?php if($this->first_deposit['second_depostit']>0 AND !empty($this->first_deposit['second_depostit'])){echo number_format($this->first_deposit['second_depostit'],2);}?></span><span>ដុល្លារ ជាអក្សរ <label id="lable_secondpaymentkhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក</span></td>
+	             				<td class="value_label" style="white-space: nowrap;"><span>នៅថ្ងៃទី<?php echo date("d",strtotime($this->first_deposit['validate_date']));?>  ខែ <?php echo date("m",strtotime($this->first_deposit['validate_date']));?>  ឆ្នាំ   <?php echo date("Y",strtotime($this->first_deposit['validate_date']));?></span></td>
+	             			</tr>
+	             			<tr>
+	             				<td><span>ហើយបានសន្យាប្រគល់ប្រាក់គ្រប់ចំនួន</span></td>
+	             				<td class="value_label" style="white-space: nowrap;"><span> នៅថ្ងៃទី&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="width: 100px;"></span> ខែ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ឆ្នាំ២០  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	             				     													          </span></td>
+	             				<td class="value_label"><span class="value" style="min-width:100px;font-weight: bolder;">ទឹកប្រាក់សរុបចំនួន</span></td>
+	             			</tr>
+	             			<tr>
+	             				<td colspan="3" class="value_label">&nbsp;<span>​</span></td>
+	             			</tr>
+	             			<tr>
+	             				<td colspan="3" class="value_label">&nbsp;<span>​</span></td>
+	             			</tr>
+	             		</table>
              		<p>
              			<script>
 							a_sold ='<?php echo ($this->agreement['price_sold']) ?>';

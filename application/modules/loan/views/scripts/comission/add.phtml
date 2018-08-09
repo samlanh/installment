@@ -221,7 +221,7 @@
 	</div>
 </div>
 <div class="dijitHidden" style="width:25cm !important; height: 11cm ; padding: 0px; margin: 0px;">
-	<div data-dojo-type="dijit.Dialog" style="width:24cm; font-family:Khmer OS Battambang;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_expense" >
+	<div data-dojo-type="dijit.Dialog" style="width:24cm; font-family:Khmer OS Battambang;" align="center" data-dojo-props="title:'<?php echo $tr->translate("EXPENSE");?>'" id="print_expense" >
 		<div id="divPrint" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
 			<style>
 				.fontbig{
@@ -235,7 +235,7 @@
 				}
 
 				.label{ font-weight: bold;font-size: 22px;}
-				.value{ font:14px 'Khmer OS Battambang';border: 1px solid #000; height: 29px; width: 100%;margin-right:5px; display: block;
+				.value{ font:16px 'Khmer OS Battambang';border: 1px solid #000; height: 30px; width: 100%;margin-right:5px; display: block;
 						line-height: 28px;
 					    text-align: center;
 						}
@@ -245,11 +245,10 @@
 			   .khmerbold{font:16px 'Khmer OS Battambang';}
 			   .khmer{font:16px 'Khmer OS Battambang';}
 			   .one{white-space:nowrap;}
-			   .h{ margin-top: -10px;/*margin-left:4px;*/}
 			</style>	
 			<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;" >
 				<tr>
-					<td width="25%">
+					<td id="projectlogo" width="25%">
 						<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 					</td>					
 					<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃចំណាយ</strong></b></u>
@@ -259,15 +258,7 @@
 					</td>
 				</tr>
 			</table>
-			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 20px;" class="print" cellspacing="3px"  cellpadding="0">
-				<tr>
-					<td width="10%" ></td>
-					<td width="37%" ></td>
-					<td width="15%" ></td>
-					<td width="13%" ></td>
-					<td width="10%" ></td>
-					<td width="20%" ></td>
-				</tr>
+			<table width="100%" style="white-space: nowrap;font-size:14px;" class="print" cellspacing="3px"  cellpadding="0">
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">គម្រោង</td>
                     <td><strong><label id="lb_branch" class="value"></label></strong></td>
@@ -298,11 +289,11 @@
 				</tr>
 				<tr style="white-space: nowrap;" height="100px;">
 					<td class="one khmerbold" colspan="4" align="center" valign="bottom">
-						<h4 id="agent-sign" style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+						<h4 id="agent-sign" style="padding-right: 5px ! important;margin-bottom: -3px  !important;">
 						</h4>
 					</td>
 				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
-			  			<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+			  			<h4 style="padding-right: 5px ! important;margin-bottom: -3px  !important;">
 			              <?php $session_user=new Zend_Session_Namespace('authinstall');
 				           $last_name=$session_user->last_name;
 				           $username = $session_user->first_name;
@@ -316,10 +307,10 @@
 				</tr>
 				<tr style="line-height: 15px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:12px;line-height: 15px;margin-top: -5px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
-									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
+									<span style="font-family:'Khmer MEF2'; font-size:16px;"><?php echo $tr->translate("BRAND_FOOTER_TITLE");?></span>
 								</td>
 								<td width="40%">
 									<span style=""><?php echo $this->data['website'];?></span>
@@ -339,13 +330,13 @@
 						</table>
 					</td>
 				</tr>
-				<tr>
-					<td colspan="6">&nbsp;</td>
-				</tr>
-				<tr>
-					<td colspan="6" style="border-top:2px dashed #000;" >
-					</td>
-				</tr>
+				<?php if($this->data['showreceipt']>1){?>
+					<tr height="70px">
+						<td colspan="6"  >
+							<div style="border-bottom:2px dashed #000; vertical-align: middle;"></div>
+						</td>
+					</tr>
+				<?php }?>
 			</table>
 		</div>
 		<table>
@@ -356,7 +347,7 @@
 		<div id="divPrint1" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
 			<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;" >
 				<tr>
-					<td width="25%">
+					<td id="projectlogo1" width="25%">
 						<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 					</td>					
 					<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃចំណាយ</strong></b></u>
@@ -366,15 +357,7 @@
 					</td>
 				</tr>
 			</table>
-			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 20px;" class="print" cellspacing="3px"  cellpadding="0">
-				<tr>
-					<td width="10%" ></td>
-					<td width="37%" ></td>
-					<td width="15%" ></td>
-					<td width="13%" ></td>
-					<td width="10%" ></td>
-					<td width="20%" ></td>
-				</tr>
+			<table width="100%" style="white-space: nowrap;font-size:14px;" class="print" cellspacing="3px"  cellpadding="0">
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">គម្រោង</td>
                     <td><strong><label id="lb_branch1" class="value"></label></strong></td>
@@ -405,11 +388,11 @@
 				</tr>
 				<tr style="white-space: nowrap;" height="100px;">
 					<td class="one khmerbold" colspan="4" align="center" valign="bottom">
-						<h4 id="agent-sign1" style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+						<h4 id="agent-sign1" style="padding-right: 5px ! important;margin-bottom: -3px  !important;">
 						</h4>
 					</td>
 				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
-				  			<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+				  			<h4 style="padding-right: 5px ! important;margin-bottom: -3px  !important;">
 				              <?php $session_user=new Zend_Session_Namespace('authinstall');
 						           $last_name=$session_user->last_name;
 						           $username = $session_user->first_name;
@@ -426,10 +409,10 @@
 				</tr>
 				<tr style="line-height: 15px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:12px;line-height: 15px;margin-top: -5px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
-									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
+									<span style="font-family:'Khmer MEF2'; font-size:16px;"><?php echo $tr->translate("BRAND_FOOTER_TITLE");?></span>
 								</td>
 								<td width="40%">
 									<span style=""><?php echo $this->data['website'];?></span>
@@ -636,6 +619,7 @@ dojo.ready(function(){
 			}, "sale_client");
 		getSaleClie();
 		getSaleNo();
+		getLogobybranch();
 		}catch(e){
 			alert(e);
 		}
@@ -661,7 +645,7 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 		});
 	}
 	var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
-	function getSaleClie(){
+	function getLogobybranch(){
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id==0){
 			return false;}
@@ -844,7 +828,8 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 		return month[monthnum];
 	}
 	function doPrint() {
-		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML + dojo.byId('divPrint1').innerHTML;;
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML <?php if($this->data['showreceipt']>1){ ?>+ dojo.byId('divPrint1').innerHTML<?php }?>;
+	    
 	    window.frames["print_frame"].window.focus();
 	    window.frames["print_frame"].window.print();
 	    printSubmit();
@@ -852,5 +837,26 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 	}
 	function printSubmit(){
 		 $('#add_cancel').submit();
+	}
+function getSaleClie(){
+		var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==""){
+			return false;
+		}
+		dojo.xhrPost({
+		    url: url_submit,	
+		    content:{ 
+			    'branch_id':branch_id
+			},	
+			load: function(data) {
+				var arr = JSON.parse(data);
+				var imagesUrl = '<img class="view" style="height:75px;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+				document.getElementById('projectlogo').innerHTML = imagesUrl;
+				document.getElementById('projectlogo1').innerHTML = imagesUrl;
+			},
+			error: function(e) {
+			}
+		});
 	}
 </script>

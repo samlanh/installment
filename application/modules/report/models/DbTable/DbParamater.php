@@ -428,7 +428,7 @@ function getAllBranch($search=null){
 				  `s`.`client_id`       AS `client_id`,
 				  `s`.`price_before`    AS `price_before`,
 				  `s`.`discount_amount` AS `discount_amount`,
-				  s.discount_percent,
+				   s.discount_percent,
 				  `s`.`price_sold`      AS `price_sold`,
 				  `s`.`other_fee`       AS `other_fee`,
 				  `s`.`admin_fee`       AS `admin_fee`,

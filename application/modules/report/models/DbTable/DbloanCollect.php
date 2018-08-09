@@ -59,24 +59,11 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$search['end_date']= date('Y-m-d');
     	$sql = "SELECT
 			  `s`.`id`               AS `id`,
-			  `s`.`price_before`     AS `price_before`,
 			  `s`.`price_sold`       AS `price_sold`,
-			  (SELECT
-			     SUM(`cr`.`total_principal_permonthpaid`)
-			   FROM `ln_client_receipt_money` `cr`
-			   WHERE (`cr`.`sale_id` = `s`.`id`)) AS `paid_amount`,
-			  `s`.`balance`          AS `balance`,
 			  `s`.`second_depostit`         AS `second_depostit`,
-			  `s`.`buy_date`         AS `buy_date`,
 			  `s`.`end_line`         AS `end_line`,
-			  `s`.`note`             AS `note`,
 			  `p`.`land_address`     AS `land_address`,
 			  `p`.`street`           AS `street`,
-			  (SELECT
-			     `ln_properties_type`.`type_nameen`
-			   FROM `ln_properties_type`
-			   WHERE (`ln_properties_type`.`id` = `p`.`property_type`)
-			   LIMIT 1) AS `propertype`,
 			   c.phone,
 			  `c`.`name_kh`          AS `name_kh`
 			FROM ((`ln_sale` `s`

@@ -84,7 +84,6 @@ class Loan_ExpenseController extends Zend_Controller_Action
     	
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-    	
     }
     public function editAction()
     {

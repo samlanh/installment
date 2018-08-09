@@ -466,7 +466,7 @@
 			   .one{white-space:nowrap;}
 			   .h{ margin-top: -10px;}
 			</style>	
-			<table style="width:21cm !important; white-space: nowrap;font-size:14px;  padding:-10px 10px 0px 5px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
+			<table style="width:21cm !important; white-space: nowrap;font-size:14px;  padding:-10px 10px 0px 5px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
@@ -485,14 +485,6 @@
 				</tr>
 			</table>
 			<table style="width:22cm !important;white-space: nowrap;margin-top: -30px;font-family:'Khmer OS Battambang';font-size: 16px;" class="print" cellspacing="3px"  cellpadding="0">
-				<tr>
-					<td width="10%" ></td>
-					<td width="30%" ></td>
-					<td width="15%" ></td>
-					<td width="17%" ></td>
-					<td width="10%" ></td>
-					<td width="18%" ></td>
-				</tr>
 				<tr style="white-space: nowrap;">
 				    <td colspan="5"></td>
 					<td align="right"><strong style="font-family:Arial !important;"><label id="lb_receipt" ></label></strong></td>
@@ -505,7 +497,6 @@
 					<td>&nbsp;&nbsp;&nbsp;តម្លៃលក់</td>
                     <td colspan="3" ><strong><label id="lb_price" class="value"></label></strong></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;">
 				    <td>ឈ្មោះ​អតិថិជន </td>
 				    <td><strong><label id="lb_customer" class="value"></label></strong></td>
@@ -539,11 +530,11 @@
 				    <td colspan="3"><strong><label id="lb_buydate" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;" height="60px;">
-					<td colspan="6">
+					<td colspan="6" valign="top">
 						<table width="100%" border="0" style="font-size:14px;line-height: 18px;">
 							<tr>
 								<td width="30%">&nbsp;
-									
+									<?php echo $this->data['account_sign'];?>
 								</td>
 								<td align="center" width="40%">
 									<?php echo $this->data['customer_sign'];?>
@@ -552,14 +543,8 @@
 									<?php echo $this->data['teller_sign'];?>
 								</td>
 							</tr>
-							<tr>
+							<tr height="85">
 								<td colspan="3">&nbsp;
-									
-								</td>
-							</tr>
-							<tr>
-								<td colspan="3">&nbsp;
-									
 								</td>
 							</tr>
 							<tr>
@@ -598,10 +583,10 @@
 				</tr>
 				<tr style="line-height: 15px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:10px;line-height: 15px;margin-top: -5px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
-									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
+									<span style="font-family:'Khmer MEF2'; font-size:16px;"><?php echo $tr->translate("BRAND_FOOTER_TITLE");?></span>
 								</td>
 								<td width="40%">
 									<span style=""><?php echo $this->data['website'];?></span>
@@ -621,14 +606,15 @@
 						</table>
 					</td>
 				</tr>
-				<tr>
-					<td colspan="6" style="border-top:2px dashed #000;" >
-						
-					</td>
-				</tr>
+				<?php if($this->data['showreceipt']>1){?>
+					<tr height="50px">
+						<td colspan="6"  >
+							<div style="border-bottom:2px dashed #000; vertical-align: middle;"></div>
+						</td>
+					</tr>
+				<?php }?>
 			</table>
 		</div>
-		
 		<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
 			<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
 				type="button" onclick="doPrint();">បោះពុម្ភ/Print</button>
@@ -653,73 +639,56 @@
 				</tr>
 			</table>
 			<table width="100%" style="white-space: nowrap;font-size:16px;margin-top:-30px;font-family: 'Khmer OS Battambang';" class="print" cellspacing="3px"  cellpadding="0">
-				<tr>
-					<td width="10%" ></td>
-					<td width="30%" ></td>
-					<td width="15%" ></td>
-					<td width="17%" ></td>
-					<td width="10%" ></td>
-					<td width="18%" ></td>
-				</tr>
-				
 				<tr style="white-space: nowrap;">
 				    <td colspan="5"></td>
 					<td align="right"><strong style="font-family:Arial !important;"><label id="lb_receipt1" ></label></strong></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;">
 				    <td   style="display: none;">លេខកូដលក់</td>
 				    <td  style="display: none;"><strong><label id="lb_student_id1" class="value">3</label></strong></td>
-				 	<td   >គម្រោង</td>
-				    <td  ><strong><label id="lbl_project1" class="value">3</label></strong></td>
+				 	<td>គម្រោង</td>
+				    <td><strong><label id="lbl_project1" class="value">3</label></strong></td>
 					<td   >&nbsp;&nbsp;&nbsp;តម្លៃលក់</td>
                     <td colspan="3" ><strong><label id="lb_price1" class="value"></label></strong></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;">
-				
-				    <td  >ឈ្មោះ​អតិថិជន </td>
-				    <td ><strong><label id="lb_customer1" class="value"></label></strong></td>
-					
-					<td  >​&nbsp;&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
+				    <td>ឈ្មោះ​អតិថិជន </td>
+				    <td><strong><label id="lb_customer1" class="value"></label></strong></td>
+					<td>​&nbsp;&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
 				    <td><strong><label id="lb_discount1" class="value"></label></strong></td>
-				    
-					<td  >&nbsp;&nbsp;តម្លៃផ្សេងៗ</td>
+					<td>&nbsp;&nbsp;តម្លៃផ្សេងៗ</td>
 				    <td><strong><label id="lb_otherfee1" class="value"></label></strong></td>
                 </tr>
 				<tr style="white-space: nowrap;">
-					<td  ><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
                     <td><strong><label id="lb_hourseno1" class="value"></label></strong></td>
-				    <td  >&nbsp;&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
+				    <td>&nbsp;&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
                     <td colspan="3"><strong><label id="lb_amount1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-					<td   width="10%">ប្រភេទបង់</td>
+					<td width="10%">ប្រភេទបង់</td>
 				    <td width="40%"><strong><label id="lb_paymentid1" class="value"></label></strong></td>
-					<td  >&nbsp;&nbsp;&nbsp;ប្រាក់បានបង់</td>
+					<td>&nbsp;&nbsp;&nbsp;ប្រាក់បានបង់</td>
 				    <td colspan="3"><strong><label id="lb_paid1" class="value" style="font-weight: bold; font-family:Arial;"></label></strong></td>
 				</tr>
 				<tr>
-					<td  >សែក</td>
-					<td ><strong><label id="lb_moneynote1" class="value"></label></strong></td>
-					<td  >&nbsp;&nbsp;&nbsp;ប្រាក់នៅសល់</td>
+					<td>សែក</td>
+					<td><strong><label id="lb_moneynote1" class="value"></label></strong></td>
+					<td>&nbsp;&nbsp;&nbsp;ប្រាក់នៅសល់</td>
 					<td colspan="3"><strong><label id="lb_balance1" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				
-					<td  >សម្គាល់</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"></label></strong></td>
-					
-					<td  >&nbsp;&nbsp;&nbsp;ថ្ងៃលក់</td>
+					<td>សម្គាល់</td>
+				    <td><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_noted1" class="value"></label></strong></td>
+					<td>&nbsp;&nbsp;&nbsp;ថ្ងៃលក់</td>
 				    <td colspan="3"><strong><label id="lb_buydate1" class="value"></label></strong></td>
 				</tr>
-				
-				
 				<tr style="white-space: nowrap;" height="60px;">
 					<td colspan="6">
 						<table width="100%" border="0" style="font-size:14px;line-height: 18px;">
 							<tr>
 								<td width="30%">&nbsp;
+									<?php echo $this->data['account_sign'];?>
 								</td>
 								<td align="center" width="40%">
 									<?php echo $this->data['customer_sign'];?>
@@ -728,11 +697,7 @@
 									<?php echo $this->data['teller_sign'];?>
 								</td>
 							</tr>
-							<tr>
-								<td colspan="3">&nbsp;
-								</td>
-							</tr>
-							<tr>
+							<tr height="85">
 								<td colspan="3">&nbsp;
 								</td>
 							</tr>
@@ -771,10 +736,10 @@
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
+						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;white-space:nowrap;"> 
 							<tr>
 								<td width="22%">
-									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
+									<span style="font-family:'Khmer MEF2'; font-size:16px;"><?php echo $tr->translate("BRAND_FOOTER_TITLE");?></span>
 								</td>
 								<td width="40%">
 									<span style=""><?php echo $this->data['website'];?></span>
@@ -1180,7 +1145,7 @@ function getReceiptByBranch(new_sale_id){
 		saveTrans(); 
 	}
 	function doPrint() {
-		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML + dojo.byId('divPrint1').innerHTML;;
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML <?php if($this->data['showreceipt']>1){ ?>+ dojo.byId('divPrint1').innerHTML<?php }?>;
 	    window.frames["print_frame"].window.focus();
 	    window.frames["print_frame"].window.print();
 	    printSubmit();
@@ -1680,7 +1645,6 @@ function getBranchInfo(){
 		load: function(data) {
 			var arr = JSON.parse(data);
 			var imagesUrl = '<img class="view" style="height:75px;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
-
 			document.getElementById('projectlogo').innerHTML = imagesUrl;
 			document.getElementById('projectlogo1').innerHTML = imagesUrl;
 		},
