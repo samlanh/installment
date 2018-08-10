@@ -66,21 +66,22 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 		$frm_loan=$frm->FrmAddLoan();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
+		
         $db = new Application_Model_DbTable_DbGlobal();
         $this->view->allclient = $db->getAllClient();
         $this->view->allclient_number = $db->getAllClientNumber();
+        
         $frmpopup = new Application_Form_FrmPopupGlobal();
+        $this->view->footer = $frmpopup->getFooterReceipt();
 
         $tr = Application_Form_FrmLanguages::getCurrentlanguage();
         $interest = $db->getAllInterestratestore();
         array_unshift($interest,array(
-        'id' => -1,
-        'name' =>$tr->translate("ADD_NEW"),
+	        'id' => -1,
+	        'name' =>$tr->translate("ADD_NEW"),
         ) );
         $this->view->rs_interest = $interest;
         
-        $db_keycode = new Application_Model_DbTable_DbKeycode();
-        $this->view->keycode = $db_keycode->getKeyCodeMiniInv();        
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
 		

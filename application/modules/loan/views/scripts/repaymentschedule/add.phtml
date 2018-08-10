@@ -63,8 +63,6 @@
 					return false;
 				}
 			}
-
-   
 				if(schedule_opt==2){
 					balance_before = dijit.byId("balance_before").get("value");
 					sold_price = dijit.byId("sold_price").get("value");
@@ -627,27 +625,7 @@
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;"> 
-							<tr>
-								<td width="22%">
-									<span style="font-family:'Khmer MEF2'; font-size:16px;"><?php echo $tr->translate("BRAND_FOOTER_TITLE");?></span>
-								</td>
-								<td width="40%">
-									<span style=""><?php echo $this->data['website'];?></span>
-								</td>
-								<td width="40%" align="right">
-									<span style="font-family: 'Khmer OS Battambang';"><?php echo $this->data['email_client'];?></span>
-								</td>
-							</tr>
-							<tr style="white-space:nowrap;">
-								<td colspan="2">
-									<?php echo $this->data['footer_branch'];?>
-								</td>
-								<td width="40%" align="right">
-									<span style=""><?php echo $this->data['tel-client'];?></span>
-								</td>
-							</tr>
-						</table>
+						<?php echo $this->footer;?>
 					</td>
 				</tr>
 				<?php if($this->data['showreceipt']>1){?>
@@ -805,28 +783,7 @@
 				</tr>
 				<tr style="line-height: 15px;">
 					<td colspan="6" >
-						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
-							<tr>
-								<td width="22%">
-									<span style="font-family:'Khmer MEF2'; font-size:16px;"><?php echo $tr->translate("BRAND_FOOTER_TITLE");?></span>
-								</td>
-								<td width="40%">
-									<span style=""><?php echo $this->data['website'];?></span>
-								</td>
-								<td width="40%" align="right">
-									<span style="font-family: 'Khmer OS Battambang';"><?php echo $this->data['email_client'];?></span>
-								</td>
-							</tr>
-							<tr style="white-space:nowrap;">
-								<td colspan="2">
-
-									<?php echo $this->data['footer_branch'];?>
-								</td>
-								<td width="40%" align="right">
-									<span style=""><?php echo $this->data['tel-client'];?></span>
-								</td>
-							</tr>
-						</table>
+						<?php echo $this->footer;?>
 					</td>
 				</tr>
 			</table>
@@ -1402,6 +1359,7 @@ function calculateDuration(type=null){
 			duration = duration/<?php echo $install_month;?>;//year 
 		}else if(interest_rate==0){
 			duration = sold_price/fixed_payment;
+			duration = parseInt(duration);
 		}
 		dijit.byId('period').attr('value',duration);
 	}
@@ -1782,7 +1740,7 @@ function calCulateSchedulePayment(){
 	
 	total_sold = dijit.byId("sold_price").get("value");
 	total_amount = total_sold-total_amount;
-	
+	Balance();
 	calCulateFixedPeriod();
 }
 function deleteRecord(index) {

@@ -788,6 +788,8 @@ public function exportFileToExcel($table,$data,$thead){
 	 }else{
   		$this->_redirect("/report/paramater");
   	}
+  		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footer = $frmpopup->getFooterReceipt();
   }
   function updatereceiptAction(){
   	$key = new Application_Model_DbTable_DbKeycode();

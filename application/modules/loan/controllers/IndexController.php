@@ -81,6 +81,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footer = $frmpopup->getFooterReceipt();
+		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$co_name = $db->getAllCoNameOnly();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -92,13 +94,10 @@ class Loan_IndexController extends Zend_Controller_Action {
 	    
 	    $interest = $db->getAllInterestratestore();
 	    array_unshift($interest,array(
-	    'id' => -1,
-	    'name' =>$tr->translate("ADD_NEW"),
+		    'id' => -1,
+		    'name' =>$tr->translate("ADD_NEW"),
 	    ) );
 	    $this->view->rs_interest = $interest;
-	    
-	    $db = new Application_Model_DbTable_DbGlobal();
-	    $this->view->client_doc_type = $db->getclientdtype();
 	    
 	    $key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);

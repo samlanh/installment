@@ -71,6 +71,8 @@ class Loan_DepositController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footer = $frmpopup->getFooterReceipt();
+		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$co_name = $db->getAllCoNameOnly();
@@ -79,9 +81,6 @@ class Loan_DepositController extends Zend_Controller_Action {
 		        'name' => $tr->translate("ADD_NEW"),
 		) );
 	    $this->view->co_name=$co_name;
-	    
-// 	    $db = new Application_Model_DbTable_DbGlobal();
-// 	    $this->view->client_doc_type = $db->getclientdtype();
 	    
 	    $key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);

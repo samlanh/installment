@@ -644,4 +644,30 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		</div>';
 		return $str;
 	}
+	function getFooterReceipt(){
+		$key = new Application_Model_DbTable_DbKeycode();
+		$data=$key->getKeyCodeMiniInv(TRUE);
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$str='<table width="100%" celpadding="0" cellspacing="0" style="font-family:Khmer OS Battambang; font-size:10px;line-height: 15px;margin-top: -4px;">
+				<tr>
+					<td width="22%">';
+						$str.='<span style="font-family:Khmer MEF2; font-size:16px;">'.$tr->translate("BRAND_FOOTER_TITLE").'</span>
+					</td>
+					<td width="40%">
+						<span>'.$data["website"].'</span>
+					</td>
+					<td width="40%" align="right">
+						<span style="font-family:Khmer OS Battambang;">'.$data["email_client"].'</span>
+					</td>
+				</tr>
+				<tr style="white-space:nowrap;">
+					<td colspan="2">'.$data["footer_branch"].'
+					</td>
+					<td width="40%" align="right">
+						<span style="">'.$data["tel-client"].'</span>
+					</td>
+				</tr>
+			</table>';
+		return $str;
+	}
 }
