@@ -52,12 +52,14 @@ public function init()
     		$rs_rows= $db->getAllviewBYType($search);//call frome model
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
-    		$list = new Application_Form_Frmtable();
-    		$collumns = array("PARENT","NAME_EN","NAME_KH","TYPE","STATUS");
-    		$link=array(
-    				'module'=>'loan','controller'=>'loantype','action'=>'edit',
-    		);
-    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('name_en'=>$link,'name_kh'=>$link));
+    		
+    		$this->view->row = $rs_rows;
+//     		$list = new Application_Form_Frmtable();
+//     		$collumns = array("PARENT","NAME_EN","NAME_KH","TYPE","STATUS");
+//     		$link=array(
+//     				'module'=>'loan','controller'=>'loantype','action'=>'edit',
+//     		);
+//     		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('name_en'=>$link,'name_kh'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

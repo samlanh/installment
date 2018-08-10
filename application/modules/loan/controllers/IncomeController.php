@@ -132,7 +132,11 @@ class Loan_IncomeController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
     		$data = $this->getRequest()->getPost();
     		$db = new Loan_Model_DbTable_DbIncome();
-    		$parentrs = $db->getAllIncomeCategoryParent($data['type']);
+    		$cate_id = "";
+    		if(!empty($data['cateid'])){
+    			$cate_id = $data['cateid'];
+    		}
+    		$parentrs = $db->getAllIncomeCategoryParent($data['type'],$cate_id);
     		print_r(Zend_Json::encode($parentrs));
     		exit();
     	}

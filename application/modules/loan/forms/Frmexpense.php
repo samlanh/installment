@@ -104,7 +104,12 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'required'=>'true',
 		));
-		$opt= $db->getVewOptoinTypeByType(12,1,null,1);
+// 		$opt= $db->getVewOptoinTypeByType(12,1,null,1);
+		$cateIncome = $db->getAllCategoryIncomeExpens(12);
+		$opt=array(''=>$this->tr->translate("SELECT_CATEGORY"));
+		if(!empty($cateIncome))foreach($cateIncome AS $row){
+			$opt[$row['id']]=$row['name'];
+		}
 		$_currency_type->setMultiOptions($opt);
 	
 		$category_id_expense = new Zend_Dojo_Form_Element_FilteringSelect('category_id_expense');
@@ -112,7 +117,12 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 		));
-		$opt1= $db->getVewOptoinTypeByType(13,1,null,1);
+// 		$opt1= $db->getVewOptoinTypeByType(13,1,null,1);
+		$cateEx = $db->getAllCategoryIncomeExpens(13);
+		$opt1=array(''=>$this->tr->translate("SELECT_CATEGORY"));
+		if(!empty($cateEx))foreach($cateEx AS $row){
+			$opt1[$row['id']]=$row['name'];
+		}
 		$category_id_expense->setMultiOptions($opt1);
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('is_beginning');
@@ -159,7 +169,9 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 			if($request->getControllerName()=='income'){
 				$_status->setValue($data['is_beginning']);
 			}
+			if (!empty($data['supplier_id'])){
 			$_supplier_id->setValue($data['supplier_id']);
+			}
 		}
 		$this->addElements(array($_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,

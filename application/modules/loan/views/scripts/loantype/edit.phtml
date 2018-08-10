@@ -101,11 +101,12 @@ require(["dojo/ready"], function(ready){
 var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'income','action'=>'getparentbyid')); ?>';
 function getParentbytype(){
 	account_type = dijit.byId('type').get("value");
+	cateid = '<?php echo $this->rs['id'];?>';
 	if(account_type==-1){return false;}
 	dojo.xhrPost({
 		url:url_getland,	
 		content:{ 
-		    'type':account_type
+		    'type':account_type,'cateid':cateid
 		},		    
 		handleAs:"json",
 		load: function(data) {

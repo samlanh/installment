@@ -160,17 +160,49 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		return $prefix.$pre.$result;
 	}
 
-	function getAllIncomeCategory($type=12){
+	function getAllIncomeCategory($type=12,$parent = 0, $spacing = '', $cate_tree_array = ''){
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
 		$db = $this->getAdapter();
-		$sql = " select key_code as id,name_kh as name from ln_view where type=$type AND name_kh!='' ";
-		return $db->fetchAll($sql);
+		$sql = " select key_code as id,name_kh as name from ln_view where type=$type AND name_kh!='' AND `parent_id` = $parent ";
+		$query= $db->fetchAll($sql);
+		
+		$rowCount = count($query);
+		if ($rowCount > 0) {
+			foreach ($query as $row){
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllIncomeCategory($type,$row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		return $cate_tree_array;
 		
 	}
-	function getAllIncomeCategoryParent($type=12){
-		$db = $this->getAdapter();
-		$sql = " select key_code as id,name_kh as name from ln_view where type=$type AND name_kh!='' AND parent_id=0 ";
-		return $db->fetchAll($sql);
+// 	function getAllIncomeCategoryParent($type=12){
+// 		$db = $this->getAdapter();
+// 		$sql = " select key_code as id,name_kh as name from ln_view where type=$type AND name_kh!='' AND parent_id=0 ";
+// 		return $db->fetchAll($sql);
 	
+// 	}
+
+	public function getAllIncomeCategoryParent($type=12,$cate_id,$parent = 0, $spacing = '', $cate_tree_array = ''){
+		$db=$this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+		$sql = " SELECT key_code AS id,name_kh as name FROM ln_view where type=$type AND name_kh!='' AND `parent_id` = $parent ";
+		if (!empty($cate_id)){
+			$sql.=" AND id != $cate_id";
+		}
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		
+		$id='';
+		if ($rowCount > 0) {
+			foreach ($query as $row){
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllIncomeCategoryParent($type,$cate_id,$row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		return $cate_tree_array;
 	}
 	function getNewKeyCode($type){
 		$db = $this->getAdapter();

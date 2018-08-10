@@ -19,7 +19,33 @@ $frm = $this->frm_search;
 			</form>
 		</div>
 		<div class="card-box">
-			<?php echo $this->list;?>
+			<div class="dataTables_scrollBody" style="position: relative;  width: 100%; background:#fff;   ">
+    			<table border="1" id="datatable-responsive" style="  border-collapse: collapse;   border-color: #ddd;"  class="display nowrap dataTable dtr-inline collapsed" cellspacing="0" width="100%" >
+    				<thead>
+    					<tr>
+    						<th class="tdheader text-center"><?php echo $tr->translate("NUM");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("NAME_KH");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("TYPE");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("STATUS");?></th>
+    					</tr>
+    				</thead>
+    				<tbody>
+    					<?php $r=0; if (!empty($this->row)) foreach ($this->row as $rs){ 
+    						if($r%2==0)$attb='normal';
+    						else $attb='alternate';
+    						$r++?>
+    					<tr >
+    						<td style="text-align:center;" ><?php echo $r;?></td>
+    						<td class="itesms" ><a class="edit" href="<?php echo $this->baseUrl()."/loan/loantype/edit/id/".$rs['id'];?> "><?php echo $rs['name']?></a></td>
+    						<td class="itesms text-center" ><?php echo $rs['type']?></td>
+    						<td class="itesms text-center" ><?php echo $rs['status']?></td>
+    					</tr>
+    					<?php }?>
+    				</tbody>
+    				
+    			</table>
+    		</div>		
+			<?php //echo $this->list;?>
 		</div>
 	</div>
 </div>

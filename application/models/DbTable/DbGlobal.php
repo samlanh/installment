@@ -655,6 +655,27 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		return $rows;
   	}
   }
+  public function getAllCategoryIncomeExpens($type,$parent = 0, $spacing = '', $cate_tree_array = ''){
+  	$db=$this->getAdapter();
+  	if (!is_array($cate_tree_array))
+  		$cate_tree_array = array();
+  	
+  	$string = "name_kh";
+  	if($this->currentlang()==2){
+  		$string = "name_en";
+  	}
+  	$sql = " SELECT key_code AS id,$string as name FROM ln_view where type=$type AND $string!='' AND `parent_id` = $parent ";
+  	$query = $db->fetchAll($sql);
+  	$rowCount = count($query);
+  	$id='';
+  	if ($rowCount > 0) {
+  		foreach ($query as $row){
+  			$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+  			$cate_tree_array = $this->getAllCategoryIncomeExpens($type,$row['id'], $spacing . ' - ', $cate_tree_array);
+  		}
+  	}
+  	return $cate_tree_array;
+  }
   public function getAllLandInfo($branch_id=null,$option=null,$action=null){
   	   $db = $this->getAdapter();
   	   $tr = Application_Form_FrmLanguages::getCurrentlanguage();

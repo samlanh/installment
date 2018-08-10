@@ -142,9 +142,14 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				'queryExpr'=>'*${0}*',
 				'class'=>'fullside',
 		));
-		$opt= $db->getVewOptoinTypeByType(12,1,null,null);
-		if($request->getActionName()!='add' OR $request->getActionName()!='edit'){
-			unset($opt[-1]);
+// 		$opt= $db->getVewOptoinTypeByType(12,1,null,null);
+// 		if($request->getActionName()!='add' OR $request->getActionName()!='edit'){
+// 			unset($opt[-1]);
+// 		}
+		$cateIncome = $db->getAllCategoryIncomeExpens(12);
+		$opt=array(''=>$this->tr->translate("SELECT_CATEGORY"));
+		if(!empty($cateIncome))foreach($cateIncome AS $row){
+			$opt[$row['id']]=$row['name'];
 		}
 		$_category->setMultiOptions($opt);
 		$_category->setValue($request->getParam("category_id"));
@@ -156,9 +161,14 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 		));
-		$opt1= $db->getVewOptoinTypeByType(13,1,null,null);
-		if($request->getActionName()!='add' OR $request->getActionName()!='edit'){
-			unset($opt1[-1]);
+// 		$opt1= $db->getVewOptoinTypeByType(13,1,null,null);
+// 		if($request->getActionName()!='add' OR $request->getActionName()!='edit'){
+// 			unset($opt1[-1]);
+// 		}
+		$cateEx = $db->getAllCategoryIncomeExpens(13);
+		$opt1=array(''=>$this->tr->translate("SELECT_CATEGORY"));
+		if(!empty($cateEx))foreach($cateEx AS $row){
+			$opt1[$row['id']]=$row['name'];
 		}
 		$category_id_expense->setMultiOptions($opt1);
 		$category_id_expense->setValue($request->getParam("category_id_expense"));
