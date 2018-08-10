@@ -82,7 +82,7 @@ class Loan_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     		$cate_tree_array = array();
     	if (count($rows) > 0) {
     		foreach ($rows as $row){
-    			$cate_tree_array[] = array("id" => $row['id'],"parent" => $row['parent'], "name" => $spacing . $row['name'],"key_code" => $row['key_code'],"type" => $row['type'],"status" => $row['status']);
+    			$cate_tree_array[] = array("id" => $row['id'],"parent" => $row['parent'], "name" => $spacing . $row['name'],"name_en" => $spacing . $row['name_en'],"key_code" => $row['key_code'],"type" => $row['type'],"status" => $row['status']);
     			$cate_tree_array = $this->getAllviewBYType($search,$type,$row['key_code'], $spacing . ' - ', $cate_tree_array);
     		}
     	}
