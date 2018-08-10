@@ -1352,7 +1352,7 @@ function getAllBranch($search=null){
     		if($search['branch_id']>0){
     			$where.= " AND c.branch_id = ".$search['branch_id'];
     		}
-    		if($search['co_khname']>0){
+    		if(!empty($search['co_khname']) AND $search['co_khname']>0){
     			$where.= " AND c.staff_id = ".$search['co_khname'];
     		}
     		if(!empty($search['adv_search'])){
