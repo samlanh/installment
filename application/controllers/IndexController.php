@@ -28,7 +28,8 @@ class IndexController extends Zend_Controller_Action
 		$this->view->form=$form;
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);		
-		
+		$vdgb = new Application_Model_DbTable_DbGlobal();
+		$this->view->alllang =  $vdgb->getLaguage();
         
 		if($this->getRequest()->isPost())		
 		{

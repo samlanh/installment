@@ -126,8 +126,9 @@
 				                 </label>
 			                   	 <div class="col-md-9 col-sm-9 col-xs-12">
 			                    	<select class="fullside" data-dojo-type="dijit/form/FilteringSelect" name="lang" id="lang" style="width: 150px"  onchange="changeLange();" > 
-									<option value="1" <?php if($this->rslang==1){echo"selected";}?>>ខ្មែរ</option> 
-									<option value="2" <?php if($this->rslang==2){echo"selected";}?>>English</option> 
+									<?php if (!empty($this->alllang)) foreach ($this->alllang as $lang){?>
+									<option value="<?php echo $lang['id'];?>" <?php if($this->rslang==$lang['id']){echo"selected";}?>><?php echo $lang['title'];?></option> 
+									<?php }?>
 								</select>
 			                    </div>
 							</div>
