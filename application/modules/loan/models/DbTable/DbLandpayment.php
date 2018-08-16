@@ -1155,7 +1155,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    		
     		$sql=" TRUNCATE TABLE ln_sale_test ";
     		$db->query($sql);
     		$sql = "TRUNCATE TABLE ln_saleschedule_test";

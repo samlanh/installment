@@ -887,7 +887,7 @@ function checkScheduleOption(){
 		}
 		else if(method_id==6){//times			
 			if(dijit.byId('period').get('value')==12){
-				dijit.byId('period').attr('value',12);
+				dijit.byId('period').attr('value',0);
 			}
 			$('#identity').val('');
 			dijit.byId('first_payment').attr("value",'<?php echo date("Y-m-d");?>');
@@ -915,7 +915,6 @@ function calCulateFixedPeriod(){
 	}else{
 		amount_principal = dijit.byId('sold_price').get('value')-dijit.byId('total_installamount').get('value');
 	}	
-
 	dijit.byId('remain_balance').attr('value',amount_principal);
 	
 	dijit.byId('fixed_payment').set('readOnly',false);
@@ -927,7 +926,7 @@ function calCulateFixedPeriod(){
 	debt_amount = dijit.byId('period').get('value')*<?php echo $install_month;?>;
 	
 	term = (debt_term*debt_amount)/(collect_term*collect_amount);
-	interest_rate=dijit.byId('interest_rate').get('value')/<?php echo $install_month;?>/(100);//(100/30day)
+	interest_rate=dijit.byId('interest_rate').get('value')/<?php echo 12; //$install_month;?>/(100);//(100/30day)
 	if(interest_rate==0){
 		amount_payment = parseFloat(amount_principal/debt_amount);
 		amount_payment = amount_payment.toFixed(0);
@@ -936,7 +935,6 @@ function calCulateFixedPeriod(){
 		top_pow = Math.pow((1+interest_rate),term);
 		bellow = Math.pow((1+interest_rate),(term))-1;
 		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
-		
 		amount_payment = amount_payment.toFixed(0);
 		if(isNaN(amount_payment)){amount_payment=0;
 		}
@@ -944,7 +942,6 @@ function calCulateFixedPeriod(){
 	amount_payment = parseInt(amount_payment);
 	dijit.byId('fixed_payment').attr('value',amount_payment);
 	dijit.byId('for_installamount').attr('value',amount_principal);
-	
 }
 function calculateDiscount(){
 	total_sold = dijit.byId('total_sold').get('value');

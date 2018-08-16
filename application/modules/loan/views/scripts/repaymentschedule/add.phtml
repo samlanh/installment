@@ -922,7 +922,7 @@ function checkScheduleOption(){
 		else if(method_id==6){//times ដំណាក់កាលមិនថេ			
 			dijit.byId('interest_rate').attr('value',0);
 			if(dijit.byId('period').get('value')==12){
-				dijit.byId('period').attr('value',12);
+				dijit.byId('period').attr('value',0);
 			}
 			$('#identity').val('');
 			dijit.byId('first_payment').attr("value",'<?php echo date("Y-m-d");?>');
@@ -965,7 +965,7 @@ function calCulateFixedPeriod(){
 	debt_amount = dijit.byId('period').get('value')*<?php echo $install_month;?>;
 	
 	term = (debt_term*debt_amount)/(collect_term*collect_amount);
-	interest_rate=dijit.byId('interest_rate').get('value')/<?php echo $install_month;?>/(100);//(100/30day)
+	interest_rate=dijit.byId('interest_rate').get('value')/<?php echo 12;//$install_month;?>/(100);//(100/30day)
 	if(interest_rate==0){
 		amount_payment = parseFloat(amount_principal/debt_amount);
 		amount_payment = amount_payment.toFixed(2);
@@ -987,8 +987,6 @@ function calCulateFixedPeriod(){
 		dijit.byId('fixed_payment').attr('value',0);
 		dijit.byId("fixed_payment").set("readOnly",false);
 	}
-	
-	
 }
 function calculateDiscount(){
 	total_sold = dijit.byId('total_sold').get('value');
