@@ -1452,6 +1452,9 @@ function getLoanPaymentByLoanNumberEdit($data){
 				  ln_sale 
 				WHERE status=1 
 				  AND branch_id=$branch_id ";
+		//new check is cancel 17-08-2018
+		$sql.=" AND is_cancel=0";
+		
 		if($is_issueplong!=0){
 			$sql.=" AND is_issueplong=0";
 		}

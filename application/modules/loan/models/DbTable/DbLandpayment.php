@@ -55,7 +55,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	   FROM `ln_client_receipt_money` `cr`
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance_remain`,   
         `s`.`buy_date`        AS `buy_date`,
-         s.status
+         s.status,
+         CASE    
+				WHEN  `s`.`is_cancel` = 0 THEN ' '
+				WHEN  `s`.`is_cancel` = 1 THEN '".$tr->translate("CANCELED")."'
+				END AS modify_date
 		FROM ((`ln_sale` `s`
 		    JOIN `ln_client` `c`)
 		   JOIN `ln_properties` `p`)

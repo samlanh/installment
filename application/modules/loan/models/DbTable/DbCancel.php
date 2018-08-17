@@ -126,6 +126,13 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			 			$where = "id =".$land;
 			 			$this->update($arr, $where);
 			 		}
+			 		
+			 		$this->_name="ln_properties";
+			 		$arr = array(
+			 				"status"=>-1
+			 		);
+			 		$where = "id =".$data['property_id'];
+			 		$this->update($arr, $where);
 			 	}
 			 }
 			 

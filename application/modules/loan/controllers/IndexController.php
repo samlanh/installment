@@ -31,7 +31,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","SOLD_PRICE","PAID","BALANCE","DATE_BUY",
-				"STATUS");
+				"STATUS","IS_CANCEL");
 			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
 
 			$link_editsale=array('module'=>'loan','controller'=>'index','action'=>'editsale');
@@ -202,12 +202,21 @@ class Loan_IndexController extends Zend_Controller_Action {
 			}
 		}
 		$id = $this->getRequest()->getParam('id');
+		
 		$db = new Loan_Model_DbTable_DbLandpayment();
 		$row = $db->getTranLoanByIdWithBranch($id,null);
 		
 		if(empty($row)){
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
 		}
+		
+		if($row['is_cancel']==1){
+			Application_Form_FrmMessage::message('This Sale already cancel');
+			echo "<script>window.close();</script>";
+// 			Application_Form_FrmMessage::Sucessfull("This Sale already cancel","/loan");
+		}
+		
+		
 		$frm = new Loan_Form_FrmLoan();
 		$frm_loan=$frm->FrmAddLoan($row);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
@@ -387,6 +396,17 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  		}
 	  	}
 	  	$id =$this->getRequest()->getParam('id');
+	  	
+	  	
+	  	if(!empty($id)){
+	  		$db = new Loan_Model_DbTable_DbLandpayment();
+	  		$rs = $db->getTranLoanByIdWithBranch($id,null);
+	  		if($rs['is_cancel']==1){
+	  			Application_Form_FrmMessage::message('This Sale already cancel');
+				echo "<script>window.close();</script>";
+	  		}
+	  	}
+	  	
 	  	$db = new Application_Model_DbTable_DbGlobal();
 	  	$rs = $db->getClientByMemberId($id);
 	  	$this->view->client =$rs;
