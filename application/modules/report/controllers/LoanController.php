@@ -947,5 +947,35 @@ public function exportFileToExcel($table,$data,$thead){
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
   }
+  
+  function rptChangeownerAction(){
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	
+  	if($this->getRequest()->isPost()){
+ 				$search = $this->getRequest()->getPost();
+ 				
+ 	}else{
+		$search = array(
+			'txt_search'=>'',
+			'client_name'=> -1,
+			'branch_id' => -1,
+// 			'status' => -1,
+			'land_id'=>0,
+			'start_date'=> date('Y-m-d'),
+			'end_date'=>date('Y-m-d'),
+			 );
+	}
+	$rs_rows= $db->getAllTranferOwner($search,1);
+	$this->view->row = $rs_rows;
+  	$this->view->rssearch = $search;
+  	$this->view->list_end_date = $search;
+  	
+  	$frm = new Loan_Form_FrmSearchLoan();
+	$frm = $frm->AdvanceSearch();
+	Application_Model_Decorator::removeAllDecorator($frm);
+	$this->view->frm_search = $frm;
+  }
 }
 

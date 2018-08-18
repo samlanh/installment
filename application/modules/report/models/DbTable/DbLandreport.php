@@ -2150,5 +2150,46 @@ function updatePaymentStatus($data){
       	$order=" ORDER BY id DESC ";
       	return $db->fetchAll($sql.$order);
       }
+      
+      function getAllTranferOwner($search){
+      	 
+      	$sql="SELECT w.*,
+      	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=w.branch_id LIMIT 1) AS from_branch,
+      	c.client_number,
+      	c.name_kh,
+      	(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=w.house_id LIMIT 1) from_property,
+      	(SELECT cc.name_kh FROM `ln_client` AS cc WHERE cc.client_id=w.to_customer LIMIT 1) AS to_branch,
+      	(SELECT first_name FROM `rms_users` WHERE id=w.user_id) AS user_name
+      	FROM
+      	`ln_change_owner` AS w,
+      	`ln_client` c
+      	WHERE c.client_id=w.from_customer AND w.status=1 ";
+      	 
+      	$from_date =(empty($search['start_date']))? '1': " w.change_date >= '".$search['start_date']." 00:00:00'";
+      	$to_date = (empty($search['end_date']))? '1': " w.change_date <= '".$search['end_date']." 23:59:59'";
+      	$where = " AND ".$from_date." AND ".$to_date;
+      	if(!empty($search['adv_search'])){
+      		$s_where = array();
+      	}
+//       	if($search['status']>-1){
+//       		$where.= " AND w.status = ".$search['status'];
+//       	}
+      	if(($search['branch_id'])>0){
+      		$where.= " AND w.branch_id=".$search['branch_id'];
+      	}
+//       	if(($search['client_name'])>0){
+//       		$where.= " AND ( w.from_customer= ".$search['client_name']." OR w.to_customer = ".$search['client_name']." )";
+//       	}
+      	if(($search['client_name'])>0){
+      		$where.= " AND ".$search['client_name']." IN ( w.from_customer,w.to_customer )";
+      	}
+      	if ($search['land_id']>0){
+      		$where.= " AND w.house_id=".$search['land_id'];
+      	}
+      	 
+      	$order = " ORDER BY id DESC ";
+      	$db = $this->getAdapter();
+      	return $db->fetchAll($sql.$where.$order);
+      }
  }
 
