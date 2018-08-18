@@ -98,12 +98,20 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 	 }
   function addAction()
   {
+  	$rightclick = $this->getRequest()->getParam('rightclick');
+  	$rightclick = empty($rightclick)?"":$rightclick;
+  	$this->view->rightclick = $rightclick;
+  	
   	$db = new Loan_Model_DbTable_DbLoanILPayment();
   	$db_global = new Application_Model_DbTable_DbGlobal();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
 				$receipt = $db->addILPayment($_data);
+				if($rightclick=="true"){
+					Application_Form_FrmMessage::message('INSERT_SUCCESS');
+					echo "<script>window.close();</script>";exit();
+				}
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");

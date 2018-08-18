@@ -7,6 +7,11 @@
 	$this->headTitle($tr->translate('REPAYMENTSCHEDULE'));
 	echo $this->headTitle();
 	$percentage = 1;
+	
+	$urlsubmit = array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add');
+	if (!empty($this->rightclick)){
+		$urlsubmit = array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add','rightclick'=>'true');
+	}
 ?>
 <style>
 .fullside50{ width:48%;}
@@ -38,7 +43,7 @@
  </script>
  <div class="card">
 	<div class="card-content collapse show">
-		<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<form id='frm_add_tran' action="<?php echo $this->url($urlsubmit); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
 				branch_id = dijit.byId('branch_id').get('value');

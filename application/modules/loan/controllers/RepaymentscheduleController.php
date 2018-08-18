@@ -49,11 +49,19 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
   }
   function addAction()
   {
+  	$rightclick = $this->getRequest()->getParam('rightclick');
+  	$rightclick = empty($rightclick)?"":$rightclick;
+  	$this->view->rightclick = $rightclick;
+  	
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
 				$_dbmodel = new Loan_Model_DbTable_DbRepaymentSchedule();
 				$_dbmodel->addRepayMentSchedule($_data);
+				if($rightclick=="true"){
+					Application_Form_FrmMessage::message('INSERT_SUCCESS');
+					echo "<script>window.close();</script>";exit();
+				}
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/loan/index");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
