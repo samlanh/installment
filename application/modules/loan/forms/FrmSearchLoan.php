@@ -239,6 +239,20 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		}
 		$_supplier_id->setMultiOptions($options);
 		$_supplier_id->setValue($request->getParam('supplier_id'));
+		
+		//new filter search
+		$streetlist = new Zend_Dojo_Form_Element_FilteringSelect('streetlist');
+		$streetlist->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+		
+		));
+		$streetopt = $db->getAllStreet();
+		$streetlist->setMultiOptions($streetopt);
+		$streetlist->setValue($request->getParam("streetlist"));
+		
 		if($data!=null){
 // 			$_member->setValue($data['client_id']);
 			$_coid->setValue($data['co_id']);
@@ -246,7 +260,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 			$client_name->setValue($data['client_name']);
 		}
 		$this->addElements(array($user,$payment_method,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
-				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id));
+				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist));
 		return $this;
 		
 	}	

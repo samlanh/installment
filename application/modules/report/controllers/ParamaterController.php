@@ -203,6 +203,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"status"=>-1,
   				'land_id'=>-1,
   				'client_name' => -1,
+  				'streetlist'=>'',
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   				'payment_type'=>-1,

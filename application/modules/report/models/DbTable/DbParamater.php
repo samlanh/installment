@@ -261,6 +261,9 @@ function getAllBranch($search=null){
     		if(@$search['category_id']>-1 AND !@empty($search['category_id'])){
     			$where.= " AND category_id = ".$search['category_id'];
     		}
+    		if (!empty($search['streetlist'])){
+    			$where.=" AND (SELECT street FROM `ln_properties` WHERE id =ln_income.house_id) = '".$search['streetlist']."'";
+    		}
     		$order=" order by id desc ";
     		return $db->fetchAll($sql.$where.$order);
     	}
@@ -366,6 +369,10 @@ function getAllBranch($search=null){
 	      		$s_where[] = " client_name LIKE '%{$s_search}%'";
 	      		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
 	      		$where .=' AND ('.implode(' OR ',$s_where).')';
+	      	}
+	      	
+	      	if (!empty($search['streetlist'])){
+	      		$where.=" AND street = '".$search['streetlist']."'";
 	      	}
     		return $db->fetchAll($sql.$where);
     	}
