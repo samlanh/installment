@@ -3,6 +3,11 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 	$install_month = $this->data['install_by'];
+	
+	$urlsubmit = array('module'=>'loan','controller'=>'index','action'=>'editsale');
+	if (!empty($this->rightclick)){
+		$urlsubmit = array('module'=>'loan','controller'=>'index','action'=>'editsale','rightclick'=>'true');
+	}
 ?>
 <title><?php echo $tr->translate("EDITSALE");?></title>
 <style>
@@ -25,7 +30,7 @@
 </script>
 <div class="card">
 	<div class="card-content collapse show">
-		<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'editsale')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<form id='frm_add_tran' action="<?php echo $this->url($urlsubmit); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
          		   branch_id = dijit.byId('branch_id').get('value');

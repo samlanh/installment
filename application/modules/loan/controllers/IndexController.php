@@ -190,11 +190,20 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
 	public function editsaleAction(){
+		
+		$rightclick = $this->getRequest()->getParam('rightclick');
+		$rightclick = empty($rightclick)?"":$rightclick;
+		$this->view->rightclick = $rightclick;
+		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try{
 				$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
 				$_dbmodel->updateSaleOnlyById($_data);
+				if($rightclick=="true"){
+					Application_Form_FrmMessage::message('UPDATE_SUCCESS');
+					echo "<script>window.close();</script>";exit();
+				}
 				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/loan/index/index");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
