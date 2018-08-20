@@ -19,6 +19,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    	$first_pay = 0;
 	    	$cum_interest=0;
 	    	$first_payment=0;
+	    	$n=0;
 	    	for($i=2; $i<=$count; $i++){
 	    		if(empty($data[$i]['C'])){
 	    			$first_pay=1;
@@ -145,17 +146,25 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 		    	   $this->update($arr, $where);
 		    	   $first_payment=1;
 	    		}
-	    	   
-	    		
 	    		
 	    		$is_completed =($data[$i]['G']=='Y')?1:0;
 	    		$cum_interest = $cum_interest+$data[$i]['E'];
 	    		$this->_name="ln_saleschedule";
+// 	    		$begining=0;
+// 	    		$ending = 0;
+	    		if($n==0){
+	    			$begining = $data[$i]['F']+$data[$i]['C'];
+	    			$ending=$begining;
+	    		}else{
+	    			$begining = $ending;
+	    			$ending = $data[$i]['F']+$data[$i]['C'];
+	    		}
+	    		$n++;
 	    		$datapayment = array(
 	    				'branch_id'=>1,
 	    				'sale_id'=>$sale_id,//good
-	    				'begining_balance'=> $data[$i]['F']+$data[$i]['C'],//good
-	    				'begining_balance_after'=>$data[$i]['F']+$data[$i]['C'],//good
+	    				'begining_balance'=>$begining,//$data[$i]['F']+$data[$i]['C'],//good
+	    				'begining_balance_after'=>$begining,//$data[$i]['F']+$data[$i]['C'],//good
 	    				'principal_permonth'=> $data[$i]['C'],//good
 	    				'principal_permonthafter'=>$data[$i]['C'],//good
 	    				'total_interest'=>$data[$i]['D'],//good

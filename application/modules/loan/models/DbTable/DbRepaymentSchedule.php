@@ -259,6 +259,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    				'is_completed'=>1,
 		    				'is_installment'=>1,
 		    				'no_installment'=>1,
+		    				'received_userid'=>$this->getUserId(),
 		    		);
 		    		$recordid = $this->insert($datapayment);
 		    		
@@ -619,7 +620,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     					"principal_permonthafter"=>$remain_principal,
     					'total_interest_after'=>$after_interest,
     					"total_payment_after"=>$remain_principal+$after_interest,
-    					'is_completed'=>$statuscomplete
+    					'is_completed'=>$statuscomplete,
+    					'received_userid'=>$this->getUserId(),
     			);
     			$where = " id = ".$row['id'];
     			$this->_name="ln_saleschedule";

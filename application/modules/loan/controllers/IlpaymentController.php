@@ -150,6 +150,9 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footer = $frmpopup->getFooterReceipt();
+		
 	}	
 	function editAction(){
 		$id = $this->getRequest()->getParam("id");

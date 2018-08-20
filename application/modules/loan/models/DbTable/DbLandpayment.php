@@ -333,6 +333,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'is_completed'=>1,
     					'is_installment'=>1,
     					'no_installment'=>1,
+    					'received_userid'=>$this->getUserId(),
     			);
     			$recordid = $this->insert($datapayment);
     		}
@@ -674,6 +675,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'is_completed'=>$statuscomplete,
     					'paid_date'			=> 	$data['date_buy'],
     					'total_payment_after'	=>	$pyament_after,
+    					'received_userid'=>$this->getUserId(),
     			);
     			$this->_name="ln_saleschedule";
     			$where="id = ".$row['id'];

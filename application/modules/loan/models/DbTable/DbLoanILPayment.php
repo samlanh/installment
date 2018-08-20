@@ -210,6 +210,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     						'total_payment_after'    => $rs['old_total_payment'],
     						'total_payment'    		 => $rs['old_total_payment'],
     						'is_completed'           => 0,
+    						'received_userid'=>		0
     				);
     				$where ="id=".$rs['lfd_id'];
     				$this->_name="ln_saleschedule";
@@ -242,6 +243,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    					'is_completed'=>0,
 	    					'is_installment'=>1,
 	    					'no_installment'=>$start_id+1,
+    						'received_userid'=>		0
     				);
     				$this->insert($datapayment);
     				}
@@ -491,6 +493,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    								    	'paid_date'	=>	$data['collect_date'],
 	    								    	'payment_option'	=>	$data["option_pay"],
 	    								    	'paid_date'			=> 	$data['collect_date'],
+	    								 		'received_userid'=>		$user_id
 	    								  );
 	    								  $where = " id = ".$row['id'];
 	    								  $this->_name="ln_saleschedule";
@@ -555,7 +558,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     						'is_installment'=>0,
     						'no_installment'=>$start_id+1,
     						'status'=>0,
-    						'collect_by'=>2,);
+    						'collect_by'=>2,
+    						'received_userid'=>$user_id
+    						);
     				$this->insert($datapayment);
     				
     				$times = count($rs);
@@ -646,7 +651,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    						    'total_interest'=>$total_interestafter,
 	    							'total_payment'=>$fixed_payment,
 	    							'total_payment_after'=>$fixed_payment,//$row['total_payment']-$principal_paid-$row['total_interest_after'],
-								    'is_completed'=>$is_completed			    					
+								    'is_completed'=>$is_completed,
+	    							'received_userid'=>$user_id
 	    							);
 	    					$where = "id = ".$row['id'];
 	    					$this->_name="ln_saleschedule";
