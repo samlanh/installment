@@ -150,14 +150,12 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    		$is_completed =($data[$i]['G']=='Y')?1:0;
 	    		$cum_interest = $cum_interest+$data[$i]['E'];
 	    		$this->_name="ln_saleschedule";
-// 	    		$begining=0;
-// 	    		$ending = 0;
 	    		if($n==0){
 	    			$begining = $data[$i]['F']+$data[$i]['C'];
-	    			$ending=$begining;
+	    			$ending=$data[$i]['F'];
 	    		}else{
 	    			$begining = $ending;
-	    			$ending = $data[$i]['F']+$data[$i]['C'];
+	    			$ending = $data[$i]['F'];
 	    		}
 	    		$n++;
 	    		$datapayment = array(
