@@ -370,7 +370,8 @@ public function getAllOutstadingLoan($search=null){
       public function getALLLoanPayment($search=null){
       	$db = $this->getAdapter();
       	$sql="SELECT *,
-			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id) AS user_name
+			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id) AS user_name,
+			(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = id LIMIT 1) AS sold_price
       	FROM v_getcollectmoney WHERE status=1 ";
       	
       	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
@@ -411,7 +412,8 @@ public function getAllOutstadingLoan($search=null){
       		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
       		$where .=' AND ('.implode(' OR ',$s_where).')';
       	}
-      	$order=" ORDER BY id DESC ";
+//       	$order=" ORDER BY client_id ASC ,id DESC ";
+		$order = " ORDER BY client_id ASC ,sale_id DESC , id ASC";
       	return $db->fetchAll($sql.$where.$order);
       }
       function submitClosingEngry($data){

@@ -69,12 +69,15 @@ if ($this->search['branch_id'] >0 ){
 			    </tr>
 			    <tr><td  id="exportExcel" class="mymy">
 			    		<table width="100%" border="1" style="border-collapse:collapse; border: 1px solid #000;" cellspacing="0">
-			            	<?php if(!empty($this->loantotalcollect_list)) {
+			            	<?php $totalpaid =0;
+			            	if(!empty($this->loantotalcollect_list)) {
+			            		
 				              	foreach ($this->loantotalcollect_list as $index => $rs){?>
 				              			<?php 
+				              				
 				              				if ($client_id!=$rs["client_id"]) {
 				              			?>
-				              				<tr style="background:#c1d0f3"><td colspan="17" class="style">&nbsp;&nbsp;
+				              				<tr style="background:#c1d0f3"><td colspan="18" class="style">&nbsp;&nbsp;
 				              			<?php 
 				              				 echo $tr->translate("CUSTOMER_NAME").':'.$rs["name_kh"].',';
 				              				 echo $tr->translate("SEX").':';
@@ -86,6 +89,7 @@ if ($this->search['branch_id'] >0 ){
 				              				}
 				              				
 				              				$client_id=$rs["client_id"];
+				              				$totalpaid = 0;
 				              			?>
 					              			</td>
 					              	</tr>
@@ -95,12 +99,13 @@ if ($this->search['branch_id'] >0 ){
 				                    <td><?php echo $tr->translate("SALE_NO");?></td>
 				                    <td><?php echo $tr->translate("LOAN_NO");?></td>	
 				                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
-				                    <td><?php echo $tr->translate("STREET");?></td>	
+				                    <td><?php echo $tr->translate("STREET");?></td>
+				                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>	
 				                    <td><?php echo $tr->translate("PAID_PRINCIPAL");?></td>                   
 				                    <td><?php echo $tr->translate("INTEREST");?></td>
 				                    <td><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
 				                    <td><?php echo $tr->translate("SERVICE CHARGE");?></td>	 
-				                    <td><?php echo $tr->translate("TOTAL");?></td>                   
+				                    <!-- <td><?php //echo $tr->translate("TOTAL");?></td> -->                   
 				                    <td><?php echo $tr->translate("PAY_DATE");?></td>
 				                    <td bgcolor="#999"><?php echo $tr->translate("RECIEPT_NO");?></td>
 				                    <td bgcolor="#999"><?php echo $tr->translate("PAYMENTED");?></td>
@@ -114,6 +119,8 @@ if ($this->search['branch_id'] >0 ){
 								$interst_d = $interst_d+$rs["total_interest_permonth"];
 								$penalize_d = $penalize_d+$rs["penalize_amountpaid"];
 								$service_charge_d = $service_charge_d+$rs["service_chargepaid"];
+								
+								$totalpaid = $totalpaid + $rs['amount_payment'];
 			               ?>
 			                <tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
 			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
@@ -122,21 +129,22 @@ if ($this->search['branch_id'] >0 ){
 			               		<td>&nbsp;<?php echo $rs["land_code"];?>&nbsp;</td>
 			               		<td>&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
 			               		<td>&nbsp;<?php echo $rs["street"];?>&nbsp;</td>
+			               		<td>&nbsp;&nbsp;<?php echo number_format($rs["sold_price"],2);?>&nbsp;</td>
 			               		<td>&nbsp;&nbsp;<?php echo number_format($rs["total_principal_permonth"],2);?></td>               		
 			               		<td>&nbsp;&nbsp;<?php echo number_format($rs["total_interest_permonth"],2);?></td>
 			               		<td>&nbsp;&nbsp;<?php echo number_format($rs["penalize_amount"],2);?></td>
 			               		<td>&nbsp;&nbsp;<?php echo number_format($rs["service_charge"],2);?></td>
-			               		<td>&nbsp;&nbsp;<?php echo number_format($rs["total_payment"],2);?>
+			               		<!-- <td>&nbsp;&nbsp;<?php //echo number_format($rs["total_payment"],2);?></td> -->
 			               		<td>&nbsp;&nbsp;<?php echo date('d-m-Y',strtotime($rs["date_payment"]));?></td>
 			               		<td>&nbsp;&nbsp;<?php echo $rs["receipt_no"];?></td>
 			               		<td>&nbsp;&nbsp;<?php echo number_format($rs["amount_payment"],2);?></td>
-			               		<td style="background:#FFB5B5;">&nbsp;&nbsp;<?php echo number_format($rs["total_payment"]-$rs["amount_payment"],2);?></td>
+			               		<td style="background:#FFB5B5;">&nbsp;&nbsp;<?php echo  number_format($rs["sold_price"] - $totalpaid,2); //number_format($rs["total_payment"]-$rs["amount_payment"],2);?></td>
 			               		<td>&nbsp;&nbsp;<?php echo date("d-m-Y",strtotime($rs['date_pay']));?></td>
 			               		<td style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;<?php echo @$opt[$rs["payment_option"]];?>&nbsp;</td>
 			                </tr>
 			                <?php }}?>
 			                <tr>
-			                	<td colspan="17" style="border-left:1px solid #fff;border-right:1px solid #fff;">&nbsp;</td>
+			                	<td colspan="18" style="border-left:1px solid #fff;border-right:1px solid #fff;">&nbsp;</td>
 			                </tr>
 			                  <tr bgcolor="#c1d0f3" class="style stylehover" style="font-weight:bold; line-height: 20px; text-align: center;" >
 				                    <td style="padding:5px 0px;" colspan="2">&nbsp;​<?php echo $tr->translate("CURRENT_TYPE");?>&nbsp;</td>
