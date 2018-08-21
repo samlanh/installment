@@ -30,7 +30,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 		    		$client_id = $db->fetchOne($sql);
 		    		if(empty($client_id)){
 			    		$_arr=array(
-			    				'client_number' => $data[$i]['H'],//$_data['client_no'],
+			    				'client_number' => $data[$i]['J'],//$_data['client_no'],
 			    				'name_kh'	  => $data[$i]['I'],
 			    				'sex'	      => 1,
 			    				'pro_id'      => 12,
@@ -258,9 +258,12 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    		}
 	    		$install = $install+1;
 	    	}
+// 	    	exit();
 	    	$db->commit();	    	
 	   }catch(Exception $e){
-	   		$db->rollBack();	   		 
+	   		$db->rollBack();	
+	   		echo $e->getMessage();
+	   		exit();   		 
        } 
     }   	  
 }   
