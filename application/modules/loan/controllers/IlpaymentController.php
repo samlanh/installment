@@ -33,7 +33,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$result = array();
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
-					"PAY_DATE","DATE","PAYMENT_OPTION","STATUS");
+					"PAY_DATE","DATE","PAYMENT_OPTION","BY_USER","STATUS");
 			$link=array('module'=>'loan','controller'=>'ilpayment','action'=>'edit',);
 			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);
 			$link_delete=array('module'=>'loan','controller'=>'ilpayment','action'=>'delete',);

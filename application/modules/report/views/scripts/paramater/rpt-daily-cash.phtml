@@ -32,6 +32,7 @@
 		   		<td><?php echo $frm->getElement('client_name');?></td>
 		   	</tr>
 		   	<tr>
+		   		<td><?php echo $frm->getElement('user_id');?></td>
 		   		<td><?php echo $frm->getElement('payment_method');?></td>
 		   		<td><?php echo $frm->getElement('start_date');?></td>
 		   		<td><?php echo $frm->getElement('end_date');?></td>
@@ -117,7 +118,7 @@
 					                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
 					                    <td rowspan="2"><?php echo $tr->translate("RECIEPT_NO");?></td>
 					                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
-					                    <!-- <th rowspan="2"><?php //echo $tr->translate("BALANCE");?></th>-->
+					                    <th rowspan="2"><?php echo $tr->translate("BY_USER");?></th>
 					                </tr>
 					                <tr class="style" style="white-space: nowrap;text-align: center;font-weight: bold;">
 					                	<td><?php echo $tr->translate("ទ្រនាប់ដៃ");?></td>                   
@@ -174,7 +175,7 @@
 			               		<td style="white-space:nowrap; ">&nbsp;<?php echo date("d-m-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
 			               		<td>&nbsp;<?php echo $rs["receipt_no"];?>&nbsp;</td>
 			               		<td style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;<?php echo $rs["paymentoption"];?>&nbsp;</td>
-			               		<!--<td style="font:bolder 11px Arial;">&nbsp;<?php //$balance=($rs["recieve_amount"]-$rs["recieve_amount"])-$rs["total_payment"]; if($balance<0){echo '('.abs($balance).')';}else {echo $balance=0;};echo $rs['currency_typeshow'];?>&nbsp;</td>-->
+			               		<td style="font:bolder 11px Arial;">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
 			                </tr>
 			                <?php }?>
 			                <tr style="font-weight: bold;text-align: center;font-size: 14px;">
@@ -217,6 +218,7 @@
 							    <th><?php echo $tr->translate("TOTAL_INCOME");?></th>
 							    <th><?php echo $tr->translate("NOTE");?></th>
 							    <th><?php echo $tr->translate("DATE");?></th>
+							    <th><?php echo $tr->translate("BY_USER");?></th>
 							</tr>
 							</thead>
 					       <?php $branch_id=''; $i=0;  foreach($this->row as $key =>$row){ $i++;?>
@@ -231,6 +233,7 @@
 							   <td align="center">&nbsp;<?php echo number_format($row['total_amount'],2);?>&nbsp;</td>
 							   <td align="center">&nbsp;<?php echo $row['description'];?>&nbsp;</td>
 							   <td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($row['date']));?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
 							</tr>
 								<?php $total_other_income = $total_other_income +$row['total_amount'];?>
 							<?php }?>
@@ -260,6 +263,7 @@
 								    <th><?php echo $tr->translate("TOTAL_EXPENSE");?></th>
 								    <th><?php echo $tr->translate("NOTE");?></th>
 								    <th><?php echo $tr->translate("DATE");?></th>
+								    <th ><?php echo $tr->translate("BY_USER");?></th>
 								</tr>
 							<thead>
 					       <?php $branch_id=''; $i=0; 
@@ -274,6 +278,7 @@
 							   <td align="center">&nbsp;<?php echo number_format($rows['total_amount'],2);?>&nbsp;</td>
 							   <td align="center">&nbsp;<?php echo $rows['description'];?></td>
 							   <td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rows['date']));?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
 							</tr>
 								<?php $total_expese = $total_expese +$rows['total_amount'];?>
 							<?php }?>

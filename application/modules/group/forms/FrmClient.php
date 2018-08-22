@@ -427,12 +427,11 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$rows = $db->getAllStreetForOpt();
 		$options = array(''=>$this->tr->translate("CHOOSE_STREET"),'-1'=>$this->tr->translate("ADD_NEW"));
 		if(!empty($rows))foreach($rows AS $row){
-			$options[$row['name']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
+			$options[$row['name']]=$row['name'];
 		}
 		$street->setMultiOptions($options);
 		$street->setValue($request->getParam("street"));
 		
-	
 		$land_price = new Zend_Dojo_Form_Element_NumberTextBox('land_price');
 		$land_price->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
@@ -479,11 +478,19 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 		$width_land = new Zend_Dojo_Form_Element_NumberTextBox('width_land');
 		$width_land->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
+				'onkeyup'=>'calCulateFullSize();',
 				'class'=>'fullside',
 		));
 		
 		$height_land = new Zend_Dojo_Form_Element_NumberTextBox('height_land');
 		$height_land->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'onkeyup'=>'calCulateFullSize();',
+		));
+		
+		$full_size = new Zend_Dojo_Form_Element_NumberTextBox('full_size');
+		$full_size->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 		));
@@ -545,9 +552,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'queryExpr'=>'*${0}*',
 		));
 		$options_branch = $db->getAllBranchName(null,1);
-// 		if(!empty($rows_branch))foreach($rows_branch AS $row){
-// 			$options_branch[$row['br_id']]=$row['project_name'];
-// 		}
+
 		$branch_id->setMultiOptions($options_branch);
 		$branch_id->setValue($request->getParam("branch_id"));
 		
@@ -622,8 +627,9 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$_size->setValue($data['land_size']);
 			$width->setValue($data['width']);
 			$height->setValue($data['height']);
-			//$width_land->setValue($data['land_width']);
-			//$height_land->setValue($data['land_height']);
+			$width_land->setValue($data['land_width']);
+			$height_land->setValue($data['land_height']);
+			$full_size->setValue($data['full_size']);
 			$street->setValue($data['street']);
 			$hardtitle->setValue($data['hardtitle']);
 			
@@ -636,7 +642,7 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$floor->setValue($data['floor']);
 			$status_using->setValue($data['is_lock']);
 		}
-		$this->addElements(array($status_using,$width_land,$height_land,$north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
+		$this->addElements(array($full_size,$status_using,$width_land,$height_land,$north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
 		return $this;
 	}
 }

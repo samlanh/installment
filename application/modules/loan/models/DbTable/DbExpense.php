@@ -73,7 +73,9 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		title,invoice,
 		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
 		(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
-		total_amount,description,date,status FROM ln_expense ";
+		total_amount,description,date,
+		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
+		status FROM ln_expense ";
 		
 		if (!empty($search['adv_search'])){
 				$s_where = array();

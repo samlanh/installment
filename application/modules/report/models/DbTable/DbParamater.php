@@ -238,7 +238,9 @@ function getAllBranch($search=null){
     		(SELECT CONCAT(land_address,',',street)FROM `ln_properties` WHERE id =ln_income.house_id) as house_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
-    		cheque,total_amount,description,date,status FROM ln_income WHERE status=1 ";
+    		cheque,total_amount,description,date,
+    		(SELECT  first_name FROM rms_users WHERE id=ln_income.user_id limit 1 ) AS user_name,
+    		status FROM ln_income WHERE status=1 ";
     	
     		if (!empty($search['adv_search'])){
     			$s_where = array();
@@ -252,6 +254,10 @@ function getAllBranch($search=null){
     		if($search['client_name']>0){
     			$where.= " AND ln_income.client_id = ".$search['client_name'];
     		}
+    		if(!empty($search['user_id']) AND $search['user_id']>0){
+    			$where.= " AND ln_income.user_id = ".$search['user_id'];
+    		}
+    		
     		if($search['land_id']>0){
     			$where.= " AND ln_income.house_id = ".$search['land_id'];
     		}
@@ -296,7 +302,9 @@ function getAllBranch($search=null){
     		title,invoice,
     	
     		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
-    		cheque,total_amount,description,date,status FROM ln_expense WHERE status=1 ";
+    		cheque,total_amount,description,date,
+    		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
+    		status FROM ln_expense WHERE status=1 ";
     	
     		if (!empty($search['adv_search'])){
     			$s_where = array();
@@ -309,6 +317,9 @@ function getAllBranch($search=null){
     		}
     		if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){
     			$where.= " AND category_id = ".$search['category_id_expense'];
+    		}
+    		if(!empty($search['user_id']) AND $search['user_id']>0){
+    			$where.= " AND ln_expense.user_id = ".$search['user_id'];
     		}
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
@@ -347,12 +358,17 @@ function getAllBranch($search=null){
     	function getCollectPayment($search=null){
     		$db= $this->getAdapter();
     		//$where='';
-    		$sql = "SELECT * FROM v_getcollectmoney WHERE 1";
+    		$sql = "SELECT v_getcollectmoney.*,
+				(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name
+    		FROM v_getcollectmoney WHERE 1";
     		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
 	      	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
 	      	$where = " AND ".$from_date." AND ".$to_date;
 	      	if($search['branch_id']>0){
 	      		$where.= " AND branch_id = ".$search['branch_id'];
+	      	}
+	      	if(!empty($search['user_id']) AND $search['user_id']>0){
+	      		$where.= " AND user_id = ".$search['user_id'];
 	      	}
 	      	if($search['client_name']>0){
 	      		$where.=" AND client_id = ".$search['client_name'];
@@ -588,15 +604,20 @@ function getAllBranch($search=null){
 				   FROM `ln_properties_type` `prope_type`
 				   WHERE `prope_type`.`id` = `pp`.`property_type` LIMIT 1) AS `property_type_kh`,
 			`pp`.`land_size` AS `property_land_size`,
+			
 			`pp`.`width` AS `property_width`,
 		    `pp`.`height` AS `property_height`,
+		     pp.`land_size`,
+		     
 		    `pp`.`property_type`,
 		    `pp`.`land_code` AS `property_code`,
 		    `pp`.`land_address` AS `property_title`,
  			 pp.`street` AS `property_street`,
+ 			 
  			 pp.land_width,
  			 pp.land_height,
- 			 pp.`land_size`,
+ 			 pp.`full_size`,
+
  			 pp.`north` AS border_north,
  			 pp.`south` AS border_south,
  			 pp.`east` AS border_east,

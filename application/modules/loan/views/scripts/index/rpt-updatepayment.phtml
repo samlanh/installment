@@ -249,12 +249,12 @@ td p{ margin-top:0px !important;}
 					                    		<td><input class="fullside" readOnly style="color:red; font-weight: bold;" dojoType="dijit.form.NumberTextBox" type="text" name="total_installamount" id="total_installamount" value="<?php echo $client['price_sold']-$balance;?>" /></td>
 					                    	</tr>
 				                    		<tr>
-					                    		<td width="40%"><?php echo $tr->translate("ប្រាក់នៅសល់");// print_r($client);
+					                    		<td width="40%"><?php echo $tr->translate("Balance");// print_r($client);
 					                    		?></td>
 					                    		<td><input class="fullside" dojoType="dijit.form.NumberTextBox" onkeyup="checkScheduleOption();"  type="text" name="total_remain" id="total_remain" value="<?php echo $client['price_sold']-$total_pricipale;?>"  /></td>
 					                    	</tr>
 					                    	<tr>
-					                    		<td><?php echo $tr->translate("ប្រភេទបង់ ");?></td>
+					                    		<td><?php echo $tr->translate("PAYMENT_TYPE");?></td>
 					                    		<td>
 					                    			<select class="fullside50" onchange="checkScheduleOption();"  dojoType="dijit.form.FilteringSelect" name="payment_id" id="payment_id" >
 						                    			<?php if(!empty($this->payment_option)){ //echo 333;exit();
@@ -270,11 +270,11 @@ td p{ margin-top:0px !important;}
 					                    		</td>
 					                    	</tr>
 					                    	<tr>
-					                    		<td><?php echo $tr->translate("អាត្រាការប្រាក់");?></td>
+					                    		<td><?php echo $tr->translate("INTEREST_RATE");?>/<?php echo $tr->translate("YEAR");?></td>
 					                    		<td><input class="fullside" dojoType="dijit.form.NumberTextBox" onkeyup="checkScheduleOption();" type="text" name="interest_rate" id="interest_rate" value="<?php echo $client['interest_rate']; ?>" /></td>
 					                    	</tr>
 					                    	<tr>
-					                    		<td><?php echo $tr->translate("រយៈពេលបង់");?></td>
+					                    		<td><?php echo $tr->translate("TERM_BORROW");?></td>
 					                    		<td><input class="fullside" dojoType="dijit.form.NumberTextBox" onkeyup="checkScheduleOption();" type="text" name="total_duration" id="total_duration" value="<?php echo $client['total_duration']; ?>" />
 					                    		</td>
 					                    	</tr>
@@ -283,23 +283,23 @@ td p{ margin-top:0px !important;}
 				                    <td valign="top" style="" width="33%">
 				                    	<table width="100%" style="font-size: 14px; background: #d2e9f7; padding: 10px;">
 					                    	<tr>
-					                    		<td width="40%"><?php echo $tr->translate("ទឹកប្រាក់ត្រូវបង់ថេរ");?></td>
+					                    		<td width="40%"><?php echo $tr->translate("AMOUNT_GRAICE_PARIOD");?></td>
 					                    		<td><input  dojoType="dijit.form.NumberTextBox" type="text" name="fixed_payment" id="fixed_payment"  /></td>
 					                    	</tr>
 					                    	<tr>
-					                    		<td><?php echo $tr->translate("ថ្ងៃរំលស់ដំបូង ");?></td>
+					                    		<td><?php echo $tr->translate("FIRST_PAYMENT");?></td>
 					                    		<td><input constraints="{datePattern:'dd/MM/yyyy'}" onchange="calCulateEndDate();"   dojoType="dijit.form.DateTextBox" type="text" name="first_payment" id="first_payment" value="<?php echo $client['first_payment'];?>" /></td>
 					                    	</tr>
 					                    	<tr>
-					                    		<td><?php echo $tr->translate("ថ្ងៃបញ្ចប់	");?></td>
+					                    		<td><?php echo $tr->translate("LIFE_LOAN");?></td>
 					                    		<td><input constraints="{datePattern:'dd/MM/yyyy'}"  dojoType="dijit.form.DateTextBox" type="text" name="end_date" id="end_date"  value="<?php //echo $client['validate_date'];?>" /></td>
 					                    	</tr>
 					                    	<tr>
-					                    		<td><?php echo $tr->translate("បង់ចុងក្រោយ");?></td>
+					                    		<td><?php echo $tr->translate("paid_receivehouse");?></td>
 					                    		<td>
 					                    			<select name="paid_receivehouse" id="paid_receivehouse" dojoType="dijit.form.FilteringSelect">
-													    <option value="0" label="បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ">បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ</option>
-													    <option value="1" label="យកតាមកាលបរិច្ឆេទបង់">យកតាមកាលបរិច្ឆេទបង់</option>
+													    <option value="0" label="បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ"><?php echo $tr->translate("RECEIVED_PROPERTY");?></option>
+													    <option value="1" label="យកតាមកាលបរិច្ឆេទបង់"><?php echo $tr->translate("BY_SCHEDULE_DATE");?></option>
 													</select>
 					                    		</td>
 					                    	</tr>
@@ -308,7 +308,7 @@ td p{ margin-top:0px !important;}
 					                    			<input type="hidden" name="id" id="id" value="<?php echo $this->id;?>" />
 					                    	        <input type="hidden" name="identity" id="identity" value="<?php echo $str;?>" />
 							               			<input type="button"  name="btn_save" label="<?php echo $tr->translate('GO_BACK');?>" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon"/>
-							               			<input type="button" onclick="addPreviewLoan();" value="បោះពុម្ពតារាង" name="preview_submit" label="<?php echo $tr->translate('PREVIEW SCHEDULE');?>" id="preview_submit" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+							               			<input type="button" onclick="addPreviewLoan();" value="បោះពុម្ពតារាង" name="preview_submit" label="<?php echo $tr->translate('PREVIEW');?>" id="preview_submit" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
 							               			<input type="submit" value="រក្សាទុក & ចាកចេញ"  id="btn_save_close" name="btn_save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
 							               		</td>
 					                    	</tr>

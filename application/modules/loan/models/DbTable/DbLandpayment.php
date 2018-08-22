@@ -16,15 +16,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$session_lang=new Zend_Session_Namespace('lang');
     	$lang = $session_lang->lang_id;
     	$str = 'name_en';
-    	$str_agree = 'agreement';
-    	$str_schedule = 'issue sch';
-    	$str_collect='Payment';
-    	if($lang==1){
-    		$str = 'name_kh';
-    		$str_agree = 'កិច្ចសន្យា';
-    		$str_schedule='ចេញតារាង';
-    		$str_collect='បង់ប្រាក់';
-    	}
     	
     	$from_date =(empty($search['start_date']))? '1': " s.buy_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";
@@ -55,6 +46,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	   FROM `ln_client_receipt_money` `cr`
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance_remain`,   
         `s`.`buy_date`        AS `buy_date`,
+        (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
          s.status,
          CASE    
 				WHEN  `s`.`is_cancel` = 0 THEN ' '

@@ -87,15 +87,14 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				'land_address'	  => $_data['land_address'],
 		    	'street'	  => $_data['street'],
 				'price'	      => $_data['price'],
-		    	'land_price'	      => $_data['land_price'],
-		    	'house_price'	      => $_data['house_price'],
-				'land_size'			=>$_data['size'],
-				'width'      => $_data['width'],
+		    	'land_price'  => $_data['land_price'],
+		    	'house_price' => $_data['house_price'],
+				'land_size'	  => $_data['size'],
+				'width'       => $_data['width'],
 				'height'      => $_data['height'],
-	    		'is_lock'      => $_data['buy_status'],
-	    		//'land_height'      => $_data['height_land'],
-				'hardtitle'      => $_data['hardtitle'],
-				'note'       => $_data['desc'],
+	    		'is_lock'     => $_data['buy_status'],
+				'hardtitle'   => $_data['hardtitle'],
+				'note'        => $_data['desc'],
 // 		        'create_date'=>date("Y-m-d"),
 				'status'	  => $_data['status'],
 				'user_id'	  => $this->getUserId(),
@@ -109,6 +108,9 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    $setting=$key->getKeyCodeMiniInv(TRUE);
 	    $show_house = $setting['showhouseinfo'];
 	    if($show_house==1){
+	    	$_arr['land_width'] = $_data['width_land'];
+	    	$_arr['land_height'] = $_data['height_land'];
+	    	$_arr['full_size'] = $_data['full_size'];
 	    	$_arr['floor']	=$_data['floor'];
 	    	$_arr['living']	 = $_data['living'];
 	    	$_arr['bedroom']  = $_data['bedroom'];
@@ -118,11 +120,9 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    }
 		    
 		if(!empty($_data['id'])){
-			
 			$where = 'id = '.$_data['id'];
 			$this->update($_arr, $where);
 			return $_data['id'];
-			 
 		}else{
 			$_arr['create_date']=date('Y-m-d');
 			return  $this->insert($_arr);
@@ -184,7 +184,7 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				price,width,height,land_size,hardtitle,
 				(SELECT name_kh FROM `ln_view` WHERE type = 28 AND key_code=is_lock LIMIT 1) sale_type,
 				create_date,
-		    (SELECT  CONCAT(last_name,' ', first_name) FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
+		    (SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
 			status FROM $this->_name ";
 		if(!empty($search['adv_search'])){
 			$s_where = array();

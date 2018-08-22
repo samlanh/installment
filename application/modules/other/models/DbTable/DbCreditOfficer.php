@@ -148,9 +148,12 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 	function getAllCreditOfficer($search=null){
 		$db = $this->getAdapter();
 		$sql = "SELECT co_id,
-		(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
-		co_code,co_khname,(select name_kh FROM `ln_view` WHERE type=11 and key_code =sex LIMIT 1) as gender,national_id,address,
-					tel,email,status FROM $this->_name WHERE 1";
+			(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
+			co_code,co_khname,(select name_kh FROM `ln_view` WHERE type=11 and key_code =sex LIMIT 1) as gender,
+			national_id,address,
+			tel,email,
+			(SELECT  CONCAT(first_name) FROM rms_users WHERE id=user_id ) AS user_name,
+		status FROM $this->_name WHERE 1";
 // 		(SELECT first_name FROM rms_users WHERE id=user_id) As user_name
 		$order=" ORDER BY co_id DESC";
 		$where = '';

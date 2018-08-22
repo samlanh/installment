@@ -32,7 +32,7 @@ class Loan_IncomeController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","INCOME_TITLE","RECEIPT_NO","CATEGORY","TOTAL_INCOME","NOTE","DATE","STATUS",'PRINT');
+    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","INCOME_TITLE","RECEIPT_NO","CATEGORY","TOTAL_INCOME","NOTE","DATE","BY_USER","STATUS",'PRINT');
     		$link=array('module'=>'loan','controller'=>'income','action'=>'edit');
     		$link1=array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome');
     		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('បោះពុម្ភ'=>$link1,'branch_name'=>$link,'client_name'=>$link,'title'=>$link,'invoice'=>$link));

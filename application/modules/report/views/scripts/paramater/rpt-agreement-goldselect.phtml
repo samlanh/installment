@@ -174,8 +174,8 @@ body {
 													    <td align="justify" style="vertical-align:top; text-align:center;width:9%;"></td>
 													    <td align="justify" style="padding-left:5px">
 															   ភាគី “<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ក</span>” នឹងភាគី “<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ខ</span>” 
-															  យល់ព្រមលក់-ទិញ-សំណង់ផ្ទះល្វែងលេខ <span class="value" style="min-width:70px;"><?php echo $this->agreement['property_title'];?></span> ផ្លូវលេខ<span class="value" style="min-width:100px;"><?php echo $this->agreement['property_street'];?></span>ដែលមាន ទំហំដី <span class="value" style="min-width: 30px;"><?php echo $this->agreement['land_width'];?></span> x <span class="value" style="min-width: 30px;"><?php echo $this->agreement['land_height'];?></span> ម៉ែត្រ
-															  ផ្ទៃក្រលាសរុប <span class="value" style="min-width: 30px;"><?php echo $this->agreement['land_size'];?></span>ម៉ែត្រការ៉េ និងទំហំផ្ទះ <span class="value" style="min-width: 30px;"><?php echo $this->agreement['property_width'];?></span> x <span class="value" style="min-width: 30px;"><?php echo $this->agreement['property_height'];?></span> ម៉ែត្រ ផ្ទៃក្រឡាសំណង់ផ្ទះល្វែងសរុប <span class="value" style="min-width: 50px;"><?php echo $this->agreement['property_land_size'];?></span> ម៉ែត្រការ៉េ
+															  យល់ព្រមលក់-ទិញ-សំណង់ផ្ទះល្វែងលេខ <span class="value" style="min-width:70px;"><?php echo $this->agreement['property_title'];?></span> ផ្លូវលេខ<span class="value" style="min-width:100px;"><?php echo $this->agreement['property_street'];?></span>ដែលមាន ទំហំដី <span class="value" style="min-width: 30px;"><?php echo $this->agreement['property_width'];?></span> x <span class="value" style="min-width: 30px;"><?php echo $this->agreement['property_height'];?></span> ម៉ែត្រ
+															  ផ្ទៃក្រលាសរុប <span class="value" style="min-width: 30px;"><?php echo $this->agreement['land_size'];?></span>ម៉ែត្រការ៉េ និងទំហំផ្ទះ <span class="value" style="min-width: 30px;"><?php echo $this->agreement['land_width'];?></span> x <span class="value" style="min-width: 30px;"><?php echo $this->agreement['land_height'];?></span> ម៉ែត្រ ផ្ទៃក្រឡាសំណង់ផ្ទះល្វែងសរុប <span class="value" style="min-width: 50px;"><?php echo $this->agreement['full_size'];?></span> ម៉ែត្រការ៉េ
 															 ដែលមានទីតាំងស្ថិតនៅ  <?php echo $this->agreement['project_location'];?> ក្នុងតម្លៃសរុប <?php echo number_format($this->agreement['price_sold'],2);?> USD (<label id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក)។
 													    </td>  
 												  </tr>
@@ -203,7 +203,92 @@ body {
 											  <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;
 												"><b>២.១</b>-</td>
-												    <td align="justify" style="padding-left:5px">ភាគី "<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ខ</span>" ប្រគល់ប្រាក់កក់ចំនួន <strong>2.000 USD (ពីរពាន់ដុល្លារអាមេរិក)</strong> អោយទៅភាគី "<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ក</span>" នៅកាលបរិច្ឆេទចុះកិច្ចសន្យា។</td>  
+												    <td align="justify" style="padding-left:5px">
+												    	<ol style="list-style-type: none;text-align:justify;padding:0;" start="0">
+								             				<li>ភាគីទាំងពីរបានព្រមព្រៀងទូទាត់ប្រាក់ តាមដំណាក់កាលដូចខាងក្រោម ៖
+									             				<ul style="list-style-type: square;text-align:justify; margin-left: -20px" start="1">
+										             				<li >
+									             					<?php $dbs = new Loan_Model_DbTable_DbLandpayment();
+												             			$resultdeposit = $dbs->getDepositFirstPaymentMoney($this->agreement['id']);
+												             			$start_id=0;
+												             			$paid_amount=0;
+												             			$rowpaid = $dbs->getPaymentPayoff($this->agreement['id']);
+												             			$paid_payoff = $rowpaid['outstanding'];
+												             			$paid = 0;
+												             			?>
+												             			<?php if(!empty($resultdeposit) AND $this->agreement['is_reschedule']==1){?><!-- ប្រាក់កក់ -->
+												             			<?php foreach($resultdeposit as $keydeposite =>$rsdeposite){?>
+													             			<span style="white-space: nowrap;" >ភាគីអ្នកទិញបានកក់ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($rsdeposite['total_principal_permonthpaid'],2);?>
+												             				<label style="font-family:'Khmer OS Battambang'" id="lable_depositpaid<?php echo $keydeposite+1;?>"></label><span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)</span></span>
+												             				នៅថ្ងៃ <?php echo $day[date("D",strtotime($rsdeposite['date_input']))]." ទី ".date("d",strtotime($rsdeposite['date_input']))." ខែ ".$month[date("m",strtotime($rsdeposite['date_input']))]." ឆ្នាំ ".date("Y",strtotime($rsdeposite['date_input'])); ?>
+												             				</span>
+												             				 <script>
+																				a ='<?php echo ($rsdeposite['total_principal_permonthpaid']) ?>';
+																				money_khmer=read_money_in_khmer(a);
+																				decimalmoney_khmer='<?php echo substr(number_format($rsdeposite['total_principal_permonthpaid'],2),-2);?>';
+																				str_cent = 'សេន';
+																				if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent='';}
+																				
+																				last_number='<?php echo substr(number_format($rsdeposite['total_principal_permonthpaid'],2),-2);?>';
+																				
+																				if(last_number<=0){last_number='';}
+																				money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+																				dojo.byId('lable_depositpaid<?php echo $keydeposite+1;?>').innerHTML=money_khmer;
+																			</script>
+																			<?php 
+																			$paid_amount = $paid_amount+$rsdeposite['total_principal_permonthpaid'];
+												             				}}?>
+												             				<?php 
+														             			$i=0; $numrow = 0;
+														             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++;  ?>
+														             			<?php 
+														             			if($row['is_completed']==1 AND $this->agreement['is_reschedule']==3){continue;}
+														             			$paid = $paid+$row['principal_permonth'];?>             	
+														             			<?php if($key==0){?>
+															             		<?php
+															             			if($row['date_payment']==$this->agreement['buy_date'] AND $paid_amount==$row['principal_permonth'] ){
+															             				continue;
+															             			}
+														             				$paidbefore = $row['principal_permonth']-$paid_amount;
+														             				if(strlen($paidbefore)<=3){$row['principal_permonth']=number_format($paidbefore,2);}
+														             				else{
+														             					$row['principal_permonth'] = ($paidbefore);
+														             				}
+														             			}?>
+														             			</li>
+													             			<li>
+														             			<?php 
+														             				$numrow=$numrow+1;?>
+														             				<span style="white-space: nowrap;" >ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>
+														             				<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label><span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)
+														             					<span style="font-weight: normal !important;">&nbsp;&nbsp;ត្រូវបង់នៅថ្ងៃទី <?php echo date("d",strtotime($row['date_payment']))."ខែ ".$month[date("m",strtotime($row['date_payment']))]."ឆ្នាំ ".date("Y",strtotime($row['date_payment'])); ?></span>
+														             				</span>
+														             				</span>
+														             				</span>
+														             				 <script>
+																						a ='<?php echo ($row['principal_permonth']) ?>';
+																						money_khmer=read_money_in_khmer(a);
+																						decimalmoney_khmer='<?php echo substr(number_format($row['principal_permonth'],2),-2);?>';
+																						str_cent = 'សេន';
+																						if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent='';}
+																						
+																						last_number='<?php echo substr(number_format($row['principal_permonth'],2),-2);?>';
+																						
+																						if(last_number<=0){last_number='';}
+																						money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+																						dojo.byId('lable_depositkhmer<?php echo $i;?>').innerHTML=money_khmer;
+																					</script>
+																					<?php if($row['ispay_bank']==1){?>
+															             				<span class="padding-left"  >&nbsp;&nbsp;&nbsp;<?php echo $this->keyValue['bank_info'];?></span>
+															             			<?php break;
+															             			}?>
+														             				<?php 
+														                       }?>
+													                       </li>
+									             				</ul>
+								             				</li>
+								             			</ol>
+												    </td>  
 											  </tr>
 											   <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;"><b>២.២</b>-</td>

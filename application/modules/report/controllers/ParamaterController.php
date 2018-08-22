@@ -138,6 +138,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"status"=>-1,
   				"category_id"=>-1,
   				'land_id'=>-1,
+  				'user_id'=>-1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   		);
@@ -208,6 +209,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'end_date'=>date('Y-m-d'),
   				'payment_type'=>-1,
   				'payment_method'=>-1,
+  				'user_id'=>-1,
   		);
   	}
   	$this->view->search=$search;

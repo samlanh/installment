@@ -159,6 +159,13 @@ dojo.require("dijit.Dialog");
 	                   </div>
 	                </div>
 	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('desc');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
 	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS_BUY");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -172,7 +179,28 @@ dojo.require("dijit.Dialog");
 	                   </label>
 	                </div>
 	                 <?php $is_show =$this->data['showhouseinfo']; 
-									if($is_show==1){?>
+					if($is_show==1){?>
+					<div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("WIDTH");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('width_land');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("HEIGHT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('height_land');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SIZE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('full_size');?>
+	                   </div>
+	                </div>
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("FLOOR");?> :
 	                   </label>
@@ -221,13 +249,6 @@ dojo.require("dijit.Dialog");
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('status');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('desc');?>
 	                   </div>
 	                </div>
 			    </div>      
@@ -352,6 +373,12 @@ function CalculatePrice(){
 	land_price = dijit.byId('land_price').get('value');
 	var price = Number(house_price + land_price);
 	dijit.byId('price').attr('value',price);
+}
+function calCulateFullSize(){
+	width = dijit.byId("width_land").get('value');
+	height = dijit.byId("height_land").get('value');
+	totalsize = width*height;
+	dijit.byId("full_size").attr('value',totalsize);
 }
 var old_title = '<?php echo $this->row['land_address'];?>';
 url_CheckTitle = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'check-title'));?>';

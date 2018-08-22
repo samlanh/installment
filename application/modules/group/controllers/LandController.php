@@ -11,7 +11,7 @@ class Group_LandController extends Zend_Controller_Action {
 			$db = new Group_Model_DbTable_DbLand();
 			if($this->getRequest()->isPost()){
 				$formdata=$this->getRequest()->getPost();
-				$search = array(
+					$search = array(
 						'adv_search' => $formdata['adv_search'],
 						'status'=>$formdata['status'],
 						'branch_id'=>$formdata['branch_id'],
@@ -19,7 +19,7 @@ class Group_LandController extends Zend_Controller_Action {
 						'end_date'=>$formdata['end_date'],
 						'streetlist'=>$formdata['streetlist'],
 						'property_type_search'=>$formdata['property_type_search'],
-						);
+					);
 			}
 			else{
 				$search = array(
@@ -30,7 +30,7 @@ class Group_LandController extends Zend_Controller_Action {
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						'streetlist'=>''			
-						);
+					);
 			}
 			$rs_rows= $db->getAllLandInfo($search);
 			$glClass = new Application_Model_GlobalClass();
@@ -43,8 +43,7 @@ class Group_LandController extends Zend_Controller_Action {
 			$link1=array(
 					'module'=>'group','controller'=>'land','action'=>'view',
 			);
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('branch_name'=>$link1,'land_code'=>$link,'land_address'=>$link,'pro_type'=>$link,
-					'price'=>$link));
+			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('branch_name'=>$link1,'land_code'=>$link,'land_address'=>$link,'pro_type'=>$link,'price'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -64,7 +63,7 @@ class Group_LandController extends Zend_Controller_Action {
 		$db = new Group_Model_DbTable_DbLand();
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
-				try{
+			try{
 					$id= $db->addLandinfo($data);
 					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
 			}catch (Exception $e){
@@ -363,7 +362,6 @@ class Group_LandController extends Zend_Controller_Action {
 		}
 		
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		
 		$property_type = $db->getPropertyType();
 		array_unshift($property_type, array('id'=>'','name' => $tr->translate("SELECT_PROPERTY")), array('id'=>'-1', 'name'=>$tr->translate("Add New Property Type")));
 		$this->view->pro_type = $property_type;

@@ -31,7 +31,7 @@ class Loan_DepositController extends Zend_Controller_Action {
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","SOLD_PRICE","PAID","BALANCE","DATE_BUY",
-				"STATUS");
+				"BY_USER","STATUS");
 			$link_info=array('module'=>'loan','controller'=>'deposit','action'=>'edit',);
 
 			$agreement=array('module'=>'report','controller'=>'paramater','action'=>'rpt-agreement',);

@@ -70,7 +70,9 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) as house_no,
 		title, invoice,
 		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
-		total_amount,description,date,status,'បោះពុម្ភ' FROM ln_income ";
+		total_amount,description,date,
+		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
+		status,'បោះពុម្ភ' FROM ln_income ";
 		
 		if (!empty($search['adv_search'])){
 				$s_where = array();

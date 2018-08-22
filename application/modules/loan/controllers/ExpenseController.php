@@ -33,7 +33,8 @@ class Loan_ExpenseController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","SUPPLIER","EXPENSE_TITLE","RECEIPT_NO","EXPENSE_FOR","CATEGORY","TOTAL_EXPENSE","NOTE","DATE","STATUS");
+    		$collumns = array("BRANCH_NAME","SUPPLIER","EXPENSE_TITLE","RECEIPT_NO","EXPENSE_FOR","CATEGORY","TOTAL_EXPENSE",
+    					"NOTE","DATE","BY_USER","STATUS");
     		$link=array(
     				'module'=>'loan','controller'=>'expense','action'=>'edit',
     		);

@@ -30,8 +30,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","SOLD_PRICE","PAID","BALANCE","DATE_BUY",
-				"STATUS","IS_CANCEL");
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","SOLD_PRICE",
+					"PAID","BALANCE","DATE_BUY","BY_USER","STATUS","IS_CANCEL");
 			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
 
 			$link_editsale=array('module'=>'loan','controller'=>'index','action'=>'editsale');
