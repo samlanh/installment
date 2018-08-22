@@ -10,7 +10,16 @@ $day = array(
 		"Sun" =>'អាទិត្យ',
 		);
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
-$dbparmeter = new Report_Model_DbTable_DbParamater();
+	$key = new Application_Model_DbTable_DbKeycode();
+	$dataterm = $key->getKeyCodeMiniInv(TRUE);
+	
+	$dbparmeter = new Report_Model_DbTable_DbParamater();
+	$paid=0; if(!empty($this->sale_schedule)) foreach ($this->sale_schedule as $key=> $row){
+	if($row['is_completed']==1 AND $this->agreement['is_reschedule']==3){
+		continue;
+	}
+	$paid = $paid+$row['principal_permonth'];
+}
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -79,7 +88,7 @@ dojo.require("dijit.form.DateTextBox");
              	</td>
              </tr>
         	<tr>
-                <td width="30%" valign="top"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="max-width:100%;max-height:90px;"></td>
+                <td width="30%" valign="top"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="max-width:100%;max-height:100px;"></td>
                 <td width="40%" align="center">
                 <span style="text-align:center; line-height:36px; font-size:22px;font-family:'Khmer OS Muol Light';">ព្រះរាជាណាចក្រកម្ពុជា</span>
                 <span style="text-align:center; line-height:36px; width: 100%; display: block; font-size:20px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></span>
@@ -88,7 +97,7 @@ dojo.require("dijit.form.DateTextBox");
              </tr> 
              <tr>
              	<td colspan="3">
-             		<span style="margin-top:-10px;text-align:center; line-height:36px; width: 100%; display: block; font-size:20px; font-family:'Khmer OS Muol Light'"><label>កិច្ចសន្យាលក់-ទិញ</label></span>
+             		<span style="margin-top:10px;text-align:center; line-height:26px; width: 100%; display: block; font-size:20px; font-family:'Khmer OS Muol Light'"><label>កិច្ចសន្យាលក់-ទិញ</label></span>
              	</td>
              </tr>
              <tr>
@@ -213,9 +222,41 @@ dojo.require("dijit.form.DateTextBox");
 								             				<?php 
 								                       }?>
 							                       </li>
+							                       <?php
+								  if($this->agreement['payment_id']==4){
+								  ?>
+							             <li>
+							         		  ហើយ  ភាគីអ្នកទិញ យល់ព្រមបង់រំលស់ទឹកប្រាក់ដែលនៅសល់ចំនួន  <span class="value" style="min-width: 50px;"><strong><?php echo number_format(($this->agreement['price_sold']-$paid),2);?></strong></span> USD(<span class="value" style="min-width: 50px;"><label id="lable_remainkhmer" style="font-family: 'Times New Roman','Khmer OS Battambang'"></label> </span>ដុល្លារអាមេរិក)
+										  	  រយៈពេល <?php echo number_format($this->agreement['total_duration'],0); //$dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0));?>
+										  	 <?php if($this->agreement['payment_id']!=4){
+													echo $tr->translate("MONTH");
+												}else{
+													echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
+											}?> 
+										  	  ចាប់ផ្ដើមបង់ចាប់ពីថ្ងៃទី <?php echo date("d",strtotime($this->agreement['first_payment']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['first_payment']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['first_payment']));?>
+										            តាមតារាងបង់ប្រាក់រំលស់(ឧបសម្ព័ន១)។
+											<script>
+											     <?php $remain = $this->agreement['price_sold']-$paid;?>
+												a ='<?php echo $remain; ?>';
+												money_khmer=read_money_in_khmer(a);
+												decimalmoney_khmer='<?php echo substr(number_format($remain,2),-2);?>';
+												str_cent = 'សេន';
+											
+												if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent=""}
+												
+												last_number='<?php echo substr(number_format($remain,2),-1);?>';
+												
+												if(last_number<=0){last_number='';}
+												money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+												dojo.byId('lable_remainkhmer').innerHTML=money_khmer;
+											</script>
+							             </li>
+							             <?php }?>
 	             				</ul>
              				</li>
+             				
              			</ol>
+												    
              		<ol style="list-style-type: cambodian;text-align:justify; margin-bottom: 20px;" start="3">
              			<li style="white-space: nowrap; margin-bottom: 20px;">
              				ភាគីអ្នកលក់ នឹងប្រគល់លិខិតបំបែកក្បាលដី អោយភាគីអ្នកទិញ បើរដ្ឋតម្រូវអោយបង់ពន្ធ និងធ្វើកម្មសិទ្ធ ជាបន្ទុករបស់អ្នកទិញ។
@@ -255,7 +296,7 @@ dojo.require("dijit.form.DateTextBox");
              				<span class="border_bt  value" style="width:80%;white-space: nowrap;text-align: center; font-size: 21px;" >&nbsp;&nbsp;<?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?>&nbsp;</span>
              			</div>
              			<div style="width:24%; text-align: center; display: inline-block;">
-             				<span class="border_bt  value" style="width:75%; font-size: 21px;" >&nbsp;<?php echo $this->agreement['project_manager_namekh'];?></span>
+             				<span class="border_bt  value" style="width:75%; font-size: 21px;" >&nbsp;<?php //echo $this->agreement['project_manager_namekh'];?></span>
              			</div>
              		</p>
              	</td>
