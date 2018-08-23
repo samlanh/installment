@@ -307,7 +307,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			$db = new Application_Model_DbTable_DbGlobal();
 			$action = (!empty($data['action'])?$data['action']:null);
-			$row = $db->getAllLandInfo($data['branch_id'],1,$action);
+			$propertytype= empty($data['property_type'])?null:$data['property_type'];
+			$row = $db->getAllLandInfo($data['branch_id'],1,$action,$propertytype);
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 			array_unshift($row,array(
 					'id' => -1,

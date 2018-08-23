@@ -113,6 +113,13 @@
 	                   </label>
 	                </div>
 	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_TYPE");?>  :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('property_type');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
 	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> <span class="required">*</span> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -433,19 +440,25 @@ function filterClient(){
 	getAllClientNumberByBranch(branch_id);
 }
 house_id = '<?php echo $this->datarow['house_id'];?>';
+var firstload=0;
 var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
 function getAllPropertyBranch(branch_id){
+	property_type = dijit.byId('property_type').get('value');
 	dojo.xhrPost({
 		url:url_getland,	
 		content:{ 
-		    'branch_id':branch_id,
+		    'branch_id':branch_id,'property_type':property_type,
 		    'action':1
 		},		    
 		handleAs:"json",
 		load: function(data) {
 			property_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('land_code').set('store', property_store);
-		    dijit.byId('land_code').attr('value',house_id);
+		    dijit.byId('land_code').reset();
+		    if(firstload==0){
+			    dijit.byId('land_code').attr('value',house_id);
+			    firstload=1;
+		    }
 		},
 		error: function(err) {
 		}
@@ -669,13 +682,16 @@ function getcustomerinfo(client_id){
 }
 var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfo(){
-	
+	land_code = dijit.byId('land_code').get('value');
+	if(land_code==""){
+		return false;
+	}
 	dijit.byId('total_sold').attr('value',0);
 	dijit.byId('sold_price').attr('value',0);
 	dojo.xhrPost({
 		url:url_getlandinfodetail,	
 		content:{ 
-		    'land_id':dijit.byId('land_code').get('value')
+		    'land_id':land_code
 		},		    
 		handleAs:"json",
 		load: function(data) {

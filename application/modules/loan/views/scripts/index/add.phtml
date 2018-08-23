@@ -151,6 +151,13 @@
 	                   </label>
 	                </div>
 	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_TYPE");?>  :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('property_type');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
 	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> <span class="required">*</span> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -996,10 +1003,11 @@ function filterClient(){
 }
 var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
 function getAllPropertyBranch(branch_id){
+	property_type = dijit.byId('property_type').get('value');
 	dojo.xhrPost({
 		url:url_getland,	
 		content:{ 
-		    'branch_id':branch_id
+		    'branch_id':branch_id,'property_type':property_type
 		},		    
 		handleAs:"json",
 		load: function(data) {

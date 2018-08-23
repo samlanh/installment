@@ -491,6 +491,16 @@ public function init()
 		));
 		$delay_day->setValue(0);
 		
+		
+		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
+		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside','onChange'=>'filterClient();'));
+		$propertiestype_opt = $db->getPropertyTypeForsearch();
+		$propertiestype->setMultiOptions($propertiestype_opt);
+		
 		if($data!=null){
 			$agreementdate->setValue($data['agreement_date']);
 			$_branch_id->setValue($data['branch_id']);
@@ -534,7 +544,8 @@ public function init()
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id,
-				$second_depostit
+				$second_depostit,
+				$propertiestype
 				));
 		return $this;
 		
