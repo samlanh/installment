@@ -15,7 +15,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$edit_sale = $tr->translate("EDITSALEONLY");
     	$session_lang=new Zend_Session_Namespace('lang');
     	$lang = $session_lang->lang_id;
+    	
     	$str = 'name_en';
+    	if($lang==1){
+    		$str = 'name_kh';
+    	}
     	
     	$from_date =(empty($search['start_date']))? '1': " s.buy_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";

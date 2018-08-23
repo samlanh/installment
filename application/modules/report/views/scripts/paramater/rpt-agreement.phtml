@@ -47,14 +47,15 @@ dojo.require("dijit.form.DateTextBox");
     $addressIssue = "ផ្ទះលេខ១៥ បន្ទប់លេខA១០៥ ផ្លូវ៦១០ សង្កាត់បឹងកក់២ ខណ្ឌទួលគោក រាជធានីភ្នំពេញ";
     
     $propertytype =1;
-    $propertytype = 1;//$this->agreement['property_type'];
-    if($propertytype==17){//lots
+	$propertytype = $this->agreement['property_type'];
+    if($propertytype==17 OR $propertytype==2){//lots
     	$propertytype=2;
-    }else if($propertytype==18){//tob
+    }else if($propertytype==18 OR $propertytype==14){//tob
     	$propertytype=3;
     }else{//house
     	$propertytype=1;
     }
+  
 	if($propertytype==1){
 ?>
 <!-- Start Land and House -->
@@ -121,7 +122,7 @@ dojo.require("dijit.form.DateTextBox");
 			                <span style="text-align:center; line-height:28px; font-size:17px;font-family:'Khmer OS Muol Light';">ព្រះរាជាណាចក្រកម្ពុជា</span>
 			                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></span>
 			                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family: 'Tacteing';"><img src="<?php echo $this->baseUrl();?>/images/agreementsign.jpg" height="25px"></span>
-			                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><label><?php echo $tr->translate("កិច្ចសន្យាលក់-ទិញអចលវត្ថុ (ដី និង ផ្ទះ)");?></label></span>
+			                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light';white-space: nowrap;"><label><?php echo $tr->translate("កិច្ចសន្យាលក់-ទិញអចលវត្ថុ (ដី និង ផ្ទះ)");?></label></span>
 			                <td width="30%"></td>
 			             </tr> 
 			             <tr>
@@ -131,10 +132,11 @@ dojo.require("dijit.form.DateTextBox");
 			             </tr>
 			             <tr>
 			             	<td colspan="3">
-			             		<p style="font-family:'Khmer OS Battambang','Times New Roman',; text-align:justify; line-height:24px; font-size:14px; font-weight: normal !important;">
+			             		<p style="margin:0 auto;font-family:'Khmer OS Battambang','Times New Roman';text-align: justify; text-justify: inter-word;line-height:24px; font-size:14px; font-weight: normal !important;">
 									ក្រុមហ៊ុន <span style=" font-family:'Khmer OS Muol Light';font-weight:200;">ហ្គោល ស៊ីលេក រៀល អ៊ីស្ទេត (ខេមបូឌា) ឯ.ក</span> ជាក្រុមហ៊ុនមួយបង្កើតឡើងក្រោមច្បាប់នៃព្រះរាជាណាចក្រកម្ពុជា មានអត្តលេខចុះបញ្ជីលេខ ០០០២៩៨០៧ ចុះថ្ងៃទី០៧ ខែធ្នូ ឆ្នាំ២០១៧ មានអាស័យដ្ឋានចុះបញ្ជីនៅ<?php echo $addressIssue;?>
-									ដែលតំណាងដោយលោក/ស្រី	<span class="value" style="min-width:150px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh'];?></span> កាន់អត្តសញ្ញាណប័ណ្ណខ្មែរលេខ  <span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> ចុះថ្ងៃទី  <?php echo date("d",strtotime($this->agreement['p_nationid_issue']));?> ខែ <?php echo date("m",strtotime($this->agreement['p_nationid_issue']));?>	ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['p_nationid_issue']));?> មានទីលំនៅបច្ចុប្បន្ន <?php echo $this->agreement['project_manager_p_current_address'];?>
-									<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ជាអ្នកលក់ដី-ផ្ទះ</span> ចាប់ពីពេលនេះតទៅហៅកាត់ថា ភាគី "<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ក</span>"។
+									ដែលតំណាងដោយលោក/ស្រី	<span class="value" style="min-width:100px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh'];?></span> កាន់អត្តសញ្ញាណប័ណ្ណខ្មែរលេខ  <span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> ចុះថ្ងៃទី  <?php echo date("d",strtotime($this->agreement['p_nationid_issue']));?> ខែ <?php echo date("m",strtotime($this->agreement['p_nationid_issue']));?>	ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['p_nationid_issue']));?> មានទីលំនៅបច្ចុប្បន្ន <?php echo $this->agreement['project_manager_p_current_address'];?>
+									<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ជាអ្នកលក់ដី-ផ្ទះ</span>ចាប់ពីពេលនេះតទៅហៅកាត់ថាភាគី"<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ក</span>"។
+									
 									<span style="font-family:'Khmer OS Muol Light';font-weight:200; text-decoration:underline; text-align:center; min-width: 100%; display: inline-block;">និង</span>
 									លោក/លោកស្រី<span class="value" style="min-width:100px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span>កាន់<?php echo $this->agreement['client_d_type'];?>ខ្មែរលេខ<span class="value" style="min-width:80px;"><?php echo $this->agreement['client_nation_id'];?></span>	
 									ចុះថ្ងៃទី <?php echo date("d",strtotime($this->agreement['client_issuedateid']));?> ខែ <?php echo date("m",strtotime($this->agreement['client_issuedateid']));?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['client_issuedateid']));?>
@@ -546,7 +548,7 @@ dojo.require("dijit.form.DateTextBox");
 	                <span style="text-align:center; line-height:28px; font-size:17px;font-family:'Khmer OS Muol Light';">ព្រះរាជាណាចក្រកម្ពុជា</span>
 	                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></span>
 	                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family: 'Tacteing';"><img src="<?php echo $this->baseUrl();?>/images/agreementsign.jpg" height="25px"></span>
-	                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><label><?php echo $tr->translate("កិច្ចសន្យាលក់-ទិញដីឡូតិ៍");?></label></span>
+	                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light';white-space: nowrap;"><label><?php echo $tr->translate("កិច្ចសន្យាលក់-ទិញដីឡូតិ៍");?></label></span>
 	                <td width="30%"></td>
 	             </tr> 
 	             <tr>
@@ -910,7 +912,7 @@ dojo.require("dijit.form.DateTextBox");
                 <span style="text-align:center; line-height:28px; font-size:17px;font-family:'Khmer OS Muol Light';">ព្រះរាជាណាចក្រកម្ពុជា</span>
                 <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></span>
                 <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family: 'Tacteing';"><img src="<?php echo $this->baseUrl();?>/images/agreementsign.jpg" height="25px"></span>
-                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><label><?php echo $tr->translate("ភតិសន្យាតូបក្នុងផ្សារ");?></label></span>
+                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light';white-space: nowrap;"><label><?php echo $tr->translate("ភតិសន្យាតូបក្នុងផ្សារ");?></label></span>
                 <td width="30%"></td>
              </tr> 
              <tr>
