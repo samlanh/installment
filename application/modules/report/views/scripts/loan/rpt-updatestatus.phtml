@@ -4,6 +4,9 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
 <title><?php echo $tr->translate('REPORT WEEK');?></title>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
 <style>
 td p{ margin-top:0px !important;}
 </style>
@@ -32,13 +35,9 @@ table { page-break-inside:auto }
 	    	<td align="center">
 	        	<table width="100%" style="font-family:khmer;margin:0 auto;padding:0px; border:none;">
 	            	<tr>
-	                	<td width="30%" style="border-bottom: 1px solid #000;"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px">
-	                		<p style="font-family: 'Khmer OS Battambang'; font-size:9px;margin-top:4px; line-height:15px;"><?php //echo $client['branch_name'];?> 	<?php echo $this->data['footer_branch'];?>
-								<br /><?php //echo $this->data['phone_brand'];?></p>
-	                	</td>
+	                	<td width="30%" ></td>
 	                	<td width="47%" valign="top">
 	                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol'"><label><?php echo $tr->translate("BRAND_TITLE");?><?php //echo $this->data['brand_title'];?></label></h2>
-	                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"><?php //echo $tr->translate('rpt-paymentschedule');?> <?php //echo ($client['loan_type']==1)?$tr->translate('RPT_ILLOAN'):$tr->translate('RPT_GROULOAN') ;?></h2>
 	                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol'"> <?php echo $tr->translate('RPT_ILLOAN');?></h2>
 	                	</td>
 	                    <td ></td>
@@ -56,24 +55,16 @@ table { page-break-inside:auto }
 				                		<p><b><?php echo $tr->translate("ADDRESS");?></b>:<?php echo $row['village_name'];?> ,<?php echo $row['commune_name'];?> <br /><?php echo $row['district_name'];?> ,  <?php echo $row['province_en_name'];?>
 				                		<p><?php echo $tr->translate("TEL");?>  : <?php echo $client['tel'];?></p>  
 				                		</td>
-				                    <td valign="top" style="" width="33%">
-				                        <!--<p><?php //echo $tr->translate("LOAN_AMOUNT");?>  : <?php //echo number_format($client['price_sold']-$client['other_fee'],2);?> $</p>
-				                    	<p><?php //echo $tr->translate("Discount");?> : <b><?php //echo $client['discount_percent']."% +".number_format($client['discount_amount'],2);?> $</b></p>
-				                    	<p><?php //echo $tr->translate("OTHER_FEE");?>  : <?php //echo number_format($client['other_fee'],2);?></p>
-				                    	<p><?php //echo $tr->translate("TOTAL_AMOUNT");?>  : <?php //echo number_format($client['price_sold'],2);?></p>
-				                    	<p><?php //echo $tr->translate("PAID");?>  : <?php //echo number_format($client['paid_amount'],2);?></p>
-				                    	<p><?php //echo $tr->translate("BALANCE");?>  : <strong><?php //echo number_format($client['balance'],2);?></strong></p> -->
-				                     <p><?php echo $tr->translate("PROPERTY_CODE");?> : <b><?php echo $client['land_address'].",".$client['stree'];?></b></p>
-				                	 <p><?php echo $tr->translate("ចំនួនប្រាក់ត្រូវរំលស់");?>  : <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?> $</p>
-				                     <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php echo $client['interest_rate'];?>&nbsp;%</p>
-									 <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo ($client['total_duration']);?>&nbsp;ឆ្នាំ</p>
-				     	             <!-- <p><?php //echo $tr->translate("TERM_BORROW");?> : <?php //echo $client['total_duration']*12;?>&nbsp;ខែ</p> -->
-				                     
-				                    </td>
+				                     <td valign="top" style="" width="33%">
+					                     <p><?php echo $tr->translate("PROPERTY_CODE");?> : <b><?php echo $client['land_address'].",".$client['stree'];?></b></p>
+					                	 <p><?php echo $tr->translate("ចំនួនប្រាក់ត្រូវរំលស់");?>  : <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?> $</p>
+					                     <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php echo $client['interest_rate'];?>&nbsp;%</p>
+										 <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo ($client['total_duration']);?>&nbsp;ឆ្នាំ</p>
+				                     </td>
 				                     <td valign="top">
-				                     <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-M-Y',strtotime($client['buy_date']));?> </p>
-				                     <p><?php echo $tr->translate("ថ្ងៃបង់រំលស់ដំបូង");?> : <?php echo date('d-M-Y',strtotime($client['first_payment'])); ?></p>
-				                     <p><?php echo $tr->translate("ថ្ងៃបញ្ចប់");?> : <?php echo date('d-M-Y',strtotime($client['end_line'])); ?></p>
+					                     <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-M-Y',strtotime($client['buy_date']));?> </p>
+					                     <p><?php echo $tr->translate("ថ្ងៃបង់រំលស់ដំបូង");?> : <?php echo date('d-M-Y',strtotime($client['first_payment'])); ?></p>
+					                     <p><?php echo $tr->translate("ថ្ងៃបញ្ចប់");?> : <?php echo date('d-M-Y',strtotime($client['end_line'])); ?></p>
 				                    </td>
 				                </tr>
 			                </table>
@@ -86,22 +77,20 @@ table { page-break-inside:auto }
 	    	<td>
 	    		<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-updatestatus')); ?>" 
 				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-<script type="dojo/method" event="onSubmit">			
-			if(this.validate()) {
-            	dijit.byId('btn_save').set('disabled',true);
-				return true;
-			}else {
-				return false;
-			}
-</script>
+					<script type="dojo/method" event="onSubmit">			
+					if(this.validate()) {
+            			dijit.byId('btn_save').set('disabled',true);
+						return true;
+					}else {
+						return false;
+					}
+				</script>
 	            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%">
 	                 <thead>
 		                 <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
 		                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
-		                    <!-- <td>ចំនួនថ្ងៃ</td> -->
 		                    <td rowspan="2"><?php echo $tr->translate("PRINCIPLE");?></td>
-		                    <td rowspan="2"><?php echo $tr->translate("ប្រាក់បង់បន្ថែម");?></td>
 		                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("Cumulative Interest");?></td>
@@ -137,10 +126,8 @@ table { page-break-inside:auto }
 	                    <?php $str_day = date('D',strtotime($row['date_payment']));
 	                    	$day_as_khmer = $dayin_khmer[$str_day];
 	                    ?>
-	                    <!--<td align="right">&nbsp;<?php //echo $day_as_khmer.'-'.$str_day; ?>&nbsp;&nbsp;&nbsp;</td> -->
-	                    <td align="center"><?php echo date('d-M-Y',strtotime($row['date_payment']));?></td>
+	                    <td align="center"><input dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="<?php echo date("Y-m-d",strtotime($row['date_payment']));?>" name="payment_date<?php echo $key+1;?>" id="payment_date<?php echo $key+1;?>" /></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['begining_balance'],2));?></td>
-	                    <td align="center">&nbsp;-<?php  ?>&nbsp;&nbsp;&nbsp;</td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['principal_permonth'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['total_interest'],2));?></td>
 	                    <td ><?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></td>

@@ -1910,6 +1910,7 @@ function updatePaymentStatus($data){
 	  		foreach ($ids as $i){
   					$datapayment = array(
   						'is_completed'=>$data['payment_option'.$i],
+  						'date_payment'=>$data['payment_date'.$i],
   					);
   					$where = "id = ".$data['fundid_'.$i];
   					$this->update($datapayment, $where);

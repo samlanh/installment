@@ -295,7 +295,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'required'=>true,
-				'readonly'=>"readonly",
+				//'readonly'=>"readonly",
 				'onKeyup'=>'doTotalByServ();'
 		));
 		$_penalize_amount->setValue(0);

@@ -6,7 +6,7 @@
 	echo $this->headTitle();
 ?>
 <style>
-.fullside50{ width:48%;}
+.fullside50{ width:100% !important;}
 .hover:hover{background: #eee !important;}
 </style>
 <div class="overlay">
@@ -96,6 +96,15 @@
 	                    	<input id="member" />
 	                   </div>
 	                </div>
+	                 <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   		<?php echo $tr->translate("NOTE");?>
+	                   </label>
+	                    <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('note')?>
+	                   </div>
+	                </div>
+	                
 	    		</div>
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
 	    			<div class="form-group">
@@ -130,14 +139,14 @@
 	                    	<?php echo $frm->getElement('balance_before')?>
 	                   </div>
 	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
-	                   		<?php echo $tr->translate("NOTE");?>
+	               <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CHANGE_DATE");?> <span class="required">*</span>:
 	                   </label>
-	                    <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement('note')?>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('release_date')?>
 	                   </div>
 	                </div>
+	               
 	    		</div>
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
 	    			<div class="form-group">
@@ -155,7 +164,7 @@
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TO_LAND_CODE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="to_land_code" /><?php //echo $frm->getElement('');?>
+	                    	<input id="to_land_code" />
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -163,6 +172,17 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('house_price')?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Discount");?> :
+	                   </label>
+	                   <div class="col-md-3 col-sm-3 col-xs-3">
+	                    	<?php echo $frm->getElement('discount_percent');?>
+	                   </div>
+	                   <div class="col-md-1 col-sm-1 col-xs-1"></div>
+	                   <div class="col-md-3 col-sm-3 col-xs-3">
+	                    	<?php echo $frm->getElement('discount');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -253,7 +273,22 @@ function calCulateFixedPeriod(){
 	
 }
 function calculateDiscount(){
-	
+	total_sold = dijit.byId('house_price').get('value');
+	discount = dijit.byId('discount').get('value');
+	discount_percent = dijit.byId('discount_percent').get('value');
+	if(isNaN(discount)){
+		discount=0;
+	}
+	if(isNaN(discount_percent)){
+		discount_percent=0;
+	}
+	discount_percent = parseInt(total_sold*discount_percent/100);
+	total_sold = total_sold-discount_percent-discount;
+	dijit.byId('to_total_sold').attr('value',total_sold);
+
+	paid_before = dijit.byId('paid_before').get('value');
+	balance = total_sold-paid_before;
+	dijit.byId('balance').attr('value',balance);
 }
 function Balance(){
 	
@@ -404,6 +439,7 @@ function getReceiptByBranch(){
 	}
 </script>
 <script type="text/javascript">
+dojo.require("dijit.form.Textarea");
 dojo.require("dojo.data.ItemFileWriteStore"); 
 dojo.require("dojo.NodeList-manipulate");
 dojo.require("dojo.html");
@@ -495,7 +531,7 @@ require(["dojo/ready"], function(ready){
 	}, "customer_code");
 
 	new dijit.form.FilteringSelect({
-		store: co_store,//dojo.data.ObjectStore({objectStore: client_number}),
+		store: co_store,
 		autoComplete: true,            
 		required: false,		           
 		name: "co_id",
@@ -512,7 +548,7 @@ require(["dojo/ready"], function(ready){
 		}, "co_id");
 
 	new dijit.form.FilteringSelect({
-		store: co_store,//dojo.data.ObjectStore({objectStore: client_number}),
+		store: co_store,
 		autoComplete: true,            
 		required: false,		           
 		name: "loan_number",
@@ -543,7 +579,6 @@ function getInfoByLoanNumber(){
 			if(isNaN(total_principal) || total_principal==null){total_principal=0;}
 		    paid_amount = data.paid_amount;
 			if(isNaN(paid_amount) || paid_amount==null){paid_amount=0;}
-			total_principal = parseFloat(paid_amount)+parseFloat(total_principal);
 			
 			dijit.byId('paid_before').attr('value',total_principal);
 			
@@ -584,7 +619,6 @@ function checkScheduleOption(){
 var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfo(){
 	dijit.byId('total_sold').attr('value',0);
-	//dijit.byId('sold_price').attr('value',0);
 	dojo.xhrPost({
 		url:url_getlandinfodetail,	
 		content:{ 
@@ -605,7 +639,6 @@ function getlandinfo(){
 		}
 	});
 }
-
 var url_getlandinfotransferdetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfotransfer(){
 	dojo.xhrPost({
@@ -617,6 +650,7 @@ function getlandinfotransfer(){
 		load: function(data) {
 			dijit.byId('house_price').attr('value',data.house_price);
 			dijit.byId('to_total_sold').attr('value',data.price);
+			dijit.byId('house_price').attr('value',data.price);
             tohouseprice = dijit.byId('to_total_sold').get('value');
             if(isNaN(tohouseprice)){tohouseprice=0;}
             paid_before = dijit.byId('paid_before').get('value');
@@ -625,16 +659,13 @@ function getlandinfotransfer(){
 
             paid_before = dijit.byId('paid_before').get('value');
             if(isNaN(paid_before)){paid_before=0;}
-            dijit.byId('balance').attr('value',data.price-paid_before);
-            
+            dijit.byId('balance').attr('value',data.price-paid_before);            
 		},
 		error: function(err) {
 			alert(err);
 		}
 	});
 }
-
-
 function clearTextBox(){
 	dijit.byId('member').set('value','');
 	dijit.byId('total_amount').set('value',0);

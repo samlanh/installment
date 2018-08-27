@@ -330,7 +330,7 @@ function getAllBranch($search=null){
     		if (!empty($search['supplier_id'])){
     			$where.= " AND supplier_id = ".$search['supplier_id'];
     		}
-    		$order=" order by id desc ";
+    		$order=" order by date desc ";
     		return $db->fetchAll($sql.$where.$order);
     	}
     	function getSoldIncome($search=null){

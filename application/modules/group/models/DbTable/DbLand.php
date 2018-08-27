@@ -65,6 +65,22 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    				'east'	      => $east,
 	    				'create_date'=>date('Y-m-d')
 	    		);
+	    		
+	    		$key = new Application_Model_DbTable_DbKeycode();
+	    		$setting=$key->getKeyCodeMiniInv(TRUE);
+	    		$show_house = $setting['showhouseinfo'];
+	    		if($show_house==1){
+	    			$_arr['land_width'] = $_data['width_land'];
+	    			$_arr['land_height'] = $_data['height_land'];
+	    			$_arr['full_size'] = $_data['full_size'];
+	    			$_arr['floor']	=$_data['floor'];
+	    			$_arr['living']	 = $_data['living'];
+	    			$_arr['bedroom']  = $_data['bedroom'];
+	    			$_arr['dinnerroom']= $_data['dinnerroom'];
+	    			$_arr['buidingyear']= $_data['buidingyear'];
+	    			$_arr['parkingspace'] = $_data['parkingspace'];
+	    		}
+	    		
 	    	    $this->insert($_arr);
 	    	    $increase++;
     		}

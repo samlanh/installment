@@ -28,8 +28,9 @@ class Loan_ChangpropertyController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_CODE","BRANCH_NAME","PROPERTY_CODE","CHANGE_DATE",
-				"STATUS");
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","SOLD_PRICE","PAID","BALANCE",
+					"BRANCH_NAME","PROPERTY_CODE","SOLD_PRICE","DISCOUNT_PERCENT","Discount","SOLD_PRICE","BALANCE",
+					"CHANGE_DATE","BY_USER","STATUS");
 			$link_info=array('module'=>'loan','controller'=>'changproperty','action'=>'edit',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('sale_number'=>$link_info,'client_number'=>$link_info,'name_kh'=>$link_info,'from_property'=>$link_info),0);
 		}catch (Exception $e){

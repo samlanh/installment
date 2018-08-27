@@ -14,12 +14,16 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
    	$where = " AND ".$from_date." AND ".$to_date;
    	$sql="SELECT cp.id,
    	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.from_branchid LIMIT 1) AS from_branch,
-	(SELECT sale_number FROM `ln_sale` WHERE id=cp.sale_id LIMIT 1) AS sale_number,
+
 	c.name_kh,
 	(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.from_houseid LIMIT 1) from_property,
+	cp.soldprice_before,cp.paid_before,cp.balance_before,
 	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.to_branchid LIMIT 1) AS to_branch,
 	(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.to_houseid LIMIT 1) to_propertype,
-	cp.change_date,cp.status
+	cp.house_priceafter,cp.discount_percentafter,cp.discount_amountafter,cp.sold_priceafter,cp.balance_after,
+	cp.change_date,
+	(SELECT  first_name FROM rms_users WHERE id=cp.user_id limit 1 ) AS user_name,
+	cp.status
 	FROM `ln_change_house` AS cp,`ln_client` c WHERE c.client_id=cp.client_id ";
    	
    	$from_date =(empty($search['start_date']))? '1': " cp.change_date >= '".$search['start_date']." 00:00:00'";
@@ -65,9 +69,9 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
 //     				'branch_id'=>$data['to_branch_id'],
 //     				'house_id'=>$data["to_land_code"],
 //     				'payment_id'=>$data["schedule_opt"],
-//     				'price_before'=>$data['to_total_sold'],
-//     				'discount_amount'=>$data['discount'],
-//     				'discount_percent'=>$data['discount_percent'],
+    				'price_before'=>$data['house_price'],
+    				'discount_amount'=>$data['discount'],
+    				'discount_percent'=>$data['discount_percent'],
     				'price_sold'=>$data['to_total_sold'],
     				'paid_amount'=>$paid_amount,
 //     				'balance'=>$data['balance'],
@@ -94,18 +98,29 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     		$id = $data['loan_number'];
     		$rows = $dbs->getTranLoanByIdWithBranch($id);
     		$arr = array(
-    				'from_branchid'=>$data['branch_id'],
-    				'from_houseid'=>$rows['house_id'],
     				'sale_id'=>$id,
     				'client_id'=>$data['member'],
-    				'change_date'=>date('Y-m-d'),//$data['date_buy'],
+    				'from_branchid'=>$data['branch_id'],
+    				'from_houseid'=>$rows['house_id'],
+    				'soldprice_before'=>$data['total_sold'],
+    				'paid_before'=>$data['paid_before'],
+    				'balance_before'=>$data['balance_before'],
+    				
     				'to_branchid'=>$data['to_branch_id'],
     				'to_houseid'=>$data['to_land_code'],
+    				'house_priceafter'=>$data['house_price'],
+    				'discount_percentafter'=>$data['discount_percent'],
+    				'discount_amountafter'=>$data['discount'],
+    				'sold_priceafter'=>$data['to_total_sold'],    				
+    				'balance_after'=>$data['balance'],
+    				
+    				'change_date'=>$data['release_date'],//$data['date_buy'],
     				'note'=>$data['note'],
     				'user_id'=>$this->getUserId()
     				);
 	    		$this->_name="ln_change_house";
 	    		$changeid = $this->insert($arr);
+	    		
 
     			$arr = array(
     				'branch_id'=>$data['branch_id'],
@@ -113,7 +128,8 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     			);
 	    		$where = " id = ".$data['loan_number'];
 	    		$this->_name="ln_sale";
-	    		$id = $this->update($arr, $where);//add group loan
+	    		$id = $this->update($arr, $where);
+	    		
 	    		
 	    		$this->_name="ln_properties";
 	    		$where=" id=".$data['land_code'];
@@ -121,6 +137,7 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
 	    				'is_lock'=>0
 	    				);
 	    		$this->update($arr, $where);//unlock old house
+	    		
 	    		
 	    		$where=" id=".$data['to_land_code'];
 	    		$arr = array(

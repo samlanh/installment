@@ -651,7 +651,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$str='<table width="100%" celpadding="0" cellspacing="0" style="font-family:Khmer OS Battambang; font-size:10px;line-height: 15px;margin-top: -4px;">
 				<tr>
 					<td width="22%">';
-						$str.='<span style="font-family:Khmer MEF2; font-size:16px;">'.$tr->translate("BRAND_FOOTER_TITLE").'</span>
+						$str.='<span style="font-family:Khmer MEF2; font-size:16px;white-space:nowrap;">'.$tr->translate("BRAND_FOOTER_TITLE").'</span>
 					</td>
 					<td width="40%">
 						<span>'.$data["website"].'</span>

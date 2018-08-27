@@ -1,7 +1,6 @@
 <?php
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$frm = $this->frm_expense;
-// print_r($this->all_category);
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_expense;
 ?>
 <title><?php echo $tr->translate('ADDINCOME');?></title>
 <style>	
@@ -186,6 +185,7 @@ dojo.ready(function(){
 var customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
 var url_customer = '<?php echo $this->url(array('module'=>'loan','controller'=>'income','action'=>'get-all-customer')); ?>';
 	function getallCustomer(){
+		getBranchinfo();
 		branch_id = dijit.byId('branch_id').get('value');
 		dojo.xhrPost({
 			url:url_customer,
@@ -497,9 +497,9 @@ function hideDialog1(){
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 							<tr>
-								<td width="25%">
+								<td id="projectlogo" width="25%">
 									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
-								</td>					
+								</td>						
 								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
 									<div style="line-height:10px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 								</td>
@@ -600,27 +600,7 @@ function hideDialog1(){
 				</tr>
 				<tr style="line-height: 15px;font-size: 12px;">
 					<td colspan="6" >
-						<table width="100%" style="font-size:12px;line-height: 12px;margin-top: -5px;font-family: 'Khmer OS Battambang';"> 
-							<tr>
-								<td width="22%">
-									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
-								</td>
-								<td width="40%">
-									<span style=""><?php echo $this->data['website'];?></span>
-								</td>
-								<td width="40%" align="right">
-									<span style="font-family: 'Khmer OS Battambang';"><?php echo $this->data['email_client'];?></span>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<?php echo $this->data['footer_branch'];?>
-								</td>
-								<td width="40%" align="right">
-									<span style=""><?php echo $this->data['tel-client'];?></span>
-								</td>
-							</tr>
-						</table>
+						<?php echo $this->footer;?>
 					</td>
 				</tr>
 				<tr>
@@ -642,9 +622,9 @@ function hideDialog1(){
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 							<tr>
-								<td width="25%">
+								<td id="projectlogo1" width="25%">
 									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
-								</td>					
+								</td>						
 								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
 									<div style="line-height:10px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 								</td>
@@ -733,27 +713,7 @@ function hideDialog1(){
 				
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" >
-						<table width="100%" style="font-size:11px;line-height: 12px;margin-top: -5px;font-family: 'Khmer OS Battambang';"> 
-							<tr>
-								<td width="22%">
-									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
-								</td>
-								<td width="40%">
-									<span style=""><?php echo $this->data['website'];?></span>
-								</td>
-								<td width="40%" align="right">
-									<span style="font-family: 'Khmer OS Battambang';"><?php echo $this->data['email_client'];?></span>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<?php echo $this->data['footer_branch'];?>
-								</td>
-								<td width="40%" align="right">
-									<span style=""><?php echo $this->data['tel-client'];?></span>
-								</td>
-							</tr>
-						</table>
+						<?php echo $this->footer;?>
 					</td>
 				</tr>
 				<tr>
@@ -765,6 +725,27 @@ function hideDialog1(){
 	</div>
 </div>
 <script>
+function getBranchinfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:75px;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;
+			document.getElementById('projectlogo1').innerHTML = imagesUrl;
+		},
+		error: function(e) {
+		}
+	});
+}
 function returnMOnth(monthnum){
 	var month = new Array();
 	month[1] = "Jan";

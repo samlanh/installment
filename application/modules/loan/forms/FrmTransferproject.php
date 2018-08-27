@@ -205,7 +205,8 @@ public function init()
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside fullside50',
 				'style'=>'width:50%',
-				'onKeyu'=>'calculateDiscount();'
+				'onKeyup'=>'calculateDiscount();',
+				'placeHolder'=>'ជាតម្លៃ'
 		));
 		//$discount->setValue(0);
 		
@@ -250,8 +251,9 @@ public function init()
 		
 		$note = new Zend_Dojo_Form_Element_TextBox("note");
 		$note->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
+				'style'=>'width:100%;min-height:103px; font-size:18px; font-family:Kh Battambang'
 		));
 		
 		$cheque = new Zend_Dojo_Form_Element_TextBox("cheque");

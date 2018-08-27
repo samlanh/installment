@@ -3,6 +3,7 @@
 	$base_url = Application_Form_FrmMessage::getUrl("/");
 	$request=Zend_Controller_Front::getInstance()->getRequest();
 	$action=$request->getActionName();
+	
 	$controller=$request->getControllerName();
 	$module=$request->getModuleName();
 	
@@ -303,7 +304,7 @@
 									<a title="<?php echo $tr->translate('ADD_NEW');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>">
 										<i class="fa fa-plus-circle" aria-hidden="true"></i>
 									</a>
-								<?php }elseif($action=='add' OR $action=='edit' OR $action=='copy' OR $action='addauto' OR $module=='report'){
+								<?php }elseif($action=='add' OR $action=='edit' OR $action=='copy' OR $action=='addauto' OR $module=='report'){
 // 								if($controller=='paramater'){$controller='loan';}?>
 									<a title="<?php echo $tr->translate('GO_BACK');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>">
 										<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
@@ -355,11 +356,12 @@
 							<?php 
 								$db = new Application_Model_DbTable_DbUsers();
 	            				$rs = $db->getAccessUrl($module,$controller,$action);
-	            				echo $this->layout()->content;
+	            				//echo $this->layout()->content;
+	            				//print_r($rs);exit();
 		            			if(!empty($rs) OR $action=='changepassword'){
-		            				//echo $this->layout()->content;
+		            				echo $this->layout()->content;
 		            			}else{
-		            				//echo $this->render('pagenotfund.phtml');
+		            				echo $this->render('pagenotfund.phtml');
 		            			}
             				 ?>
             				 <?php if($module!='home') {?>

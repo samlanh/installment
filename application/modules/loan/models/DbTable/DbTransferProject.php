@@ -89,6 +89,7 @@ class Loan_Model_DbTable_DbTransferProject extends Zend_Db_Table_Abstract
     				'cal_startdate'=>$rows['startcal_date'],
     				'first_paymentbefore'=>$rows['first_payment'],
     				'end_datebefore'=>$rows['end_line'],
+    				
     				'amount_before'=>$data['total_sold'],
     				'paid_before'=>$data['paid_before'],
     				'balance_before'=>$data['balance_before'],

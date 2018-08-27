@@ -276,7 +276,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'discount_amount'=>$data['discount'],
     			   	'discount_percent'=>$data['discount_percent'],
     				'price_sold'=>$data['sold_price'],
-    				'other_fee'=>$data['other_fee'],
+    				'other_fee'=>0,
     				'paid_amount'=>$data['deposit'],
     				'balance'=>$data['balance'],
     				'buy_date'=>$data['date_buy'],
@@ -586,17 +586,18 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			'date_input'		=>$data['date_buy'],//paid_date
     			'outstanding'		=> $data['sold_price'],
     			'principal_amount'	=> $data['balance'],
-    			'total_principal_permonth'	=>$data['deposit'],
-    	    	'total_principal_permonthpaid'=>$data['deposit'],
-    			'total_interest_permonth'	=>0,
-    			'total_interest_permonthpaid'=>0,
     			'penalize_amount'			=>0,
     			'penalize_amountpaid'		=>0,
-    			'service_charge'	=>$data['other_fee'],
-    			'service_chargepaid'=>$data['other_fee'],
-    			'total_payment'		=>$data['deposit'],//$data['sold_price'],
+    			'service_charge'	=>0,
+    			'service_chargepaid'=>0,
+    			'total_payment'		=>$data['deposit'],
     			'amount_payment'	=>$data['deposit'],
     			'recieve_amount'	=>$data['deposit'],
+    			'total_principal_permonth'	=>$data['deposit'],
+    			'total_principal_permonthpaid'=>$data['deposit'],
+    			'total_interest_permonth'	=>0,
+    			'total_interest_permonthpaid'=>0,
+    			
     			'balance'			=>$data['balance'],
     			'payment_option'	=>($data['schedule_opt']==2)?4:1,//4 payoff,1normal
     			'is_completed'		=>($data['schedule_opt']==2)?1:0,
@@ -653,9 +654,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					$statuscomplete=0;
     				}
     			}else{
-    				$remain_principal = 0;
+    				$remain_principal = $row['principal_permonthafter'];
     				$statuscomplete=0;
-    				 $principal_paid=0;
+    				$principal_paid=0;
     				$total_interestpaid=($old_interest);
     				$total_interestafter=$total_interestpaid;
     			}
@@ -667,7 +668,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					"principal_permonthafter"=>$remain_principal,
     					'total_interest_after'=>$total_interestafter,
     					'begining_balance_after'=>$row['begining_balance_after']-($data['deposit']-$total_interest),
-    					'ending_balance'=>$row['begining_balance_after']-($data['deposit']-$total_interest)-$remain_principal,//check again
+    					//'ending_balance'=>$row['begining_balance_after']-($data['deposit']-$total_interest)-$remain_principal,//check again
     					'is_completed'=>$statuscomplete,
     					'paid_date'			=> 	$data['date_buy'],
     					'total_payment_after'	=>	$pyament_after,
@@ -709,7 +710,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			if($paid_amount<=0){
     				break;
     			}
+    			
     		}
+
     		$arr = array(
 	    		'outstanding'		=> $data['sold_price'],
 	    		'principal_amount'	=> $data['sold_price']-$total_principal,//សល់ពីបង់
@@ -718,7 +721,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    		'total_interest_permonth'	=>$total_interest,
 	    		'total_interest_permonthpaid'=>$total_interest
     			);
-    		//need balance
     		
     		$this->_name='ln_client_receipt_money';
     		$where="id = ".$crm_id;
@@ -727,24 +729,23 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		if($data["schedule_opt"]==1 OR $data["schedule_opt"]==2 OR $data["schedule_opt"]==5){//only កក់ ផ្តាច់ បង់១ធនាគារ
 	    		$this->_name='ln_client_receipt_money_detail';
 	    		$array = array(
-	    				'crm_id'				=>$crm_id,
-	    				'client_id'				=>$data['member'],
-	    				'land_id'				=>$data['land_code'],
-	    				'date_payment'			=>$data['date_buy'],
-	    				'paid_date'             =>$data['date_buy'],
-	    				'last_pay_date'			=>$data['date_buy'],
-	    				'capital'				=>$data['sold_price'],
-	    				'remain_capital'		=>$data['balance'],
-	    				'principal_permonth'	=>$data['deposit'],
-	    				'old_principal_permonth'=>$data['deposit'],
-	    				'total_interest'		=>0,
-	    				'total_payment'			=>$data['sold_price'],
-	    				'total_recieve'			=>$data['deposit'],
-	    				'service_charge'		=>$data['other_fee'],
-	    				'penelize_amount'		=>0,
-	    				'is_completed'			=>($data['schedule_opt']==2)?1:0,
-	    				'status'				=>1,
-	    		);
+    				'crm_id'				=> $crm_id,
+    				'client_id'				=> $data['member'],
+    				'land_id'				=> $data['land_code'],
+    				'date_payment'			=> $data['date_buy'],
+    				'paid_date'             => $data['date_buy'],
+    				'last_pay_date'			=> $data['date_buy'],
+    				'capital'				=> $data['sold_price'],
+    				'remain_capital'		=> $data['balance'],
+    				'principal_permonth'	=> $data['deposit'],
+    				'old_principal_permonth'=> $data['deposit'],
+    				'total_interest'		=> 0,
+    				'total_payment'			=> $data['sold_price'],
+    				'total_recieve'			=> $data['deposit'],
+    				'service_charge'		=> 0,
+    				'penelize_amount'		=> 0,
+    				'is_completed'			=> ($data['schedule_opt']==2)?1:0,
+    				'status'				=>1);
     		if($action==null){//edit
     				$crm_id = $this->insert($array);
     			}else{
@@ -814,7 +815,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		  		'discount_amount'=>$data['discount'],
     		  		'discount_percent'=>$data['discount_percent'],
     		  		'price_sold'=>$data['sold_price'],
-    		  		'other_fee'=>$data['other_fee'],
+    		  		'other_fee'=>0,
     		  		'paid_amount'=>$data['deposit'],
     		  		'balance'=>$data['balance'],
     		  		'buy_date'=>$data['date_buy'],
@@ -1101,7 +1102,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'discount_amount'=>$data['discount'],
     				'discount_percent'=>$data['discount_percent'],
     				'price_sold'=>$data['sold_price'],
-    				'other_fee'=>$data['other_fee'],
+    				'other_fee'=>0,
 //     				'paid_amount'=>$data['deposit'],
 //     				'balance'=>$data['balance'],
     				'buy_date'=>$data['date_buy'],
@@ -1173,7 +1174,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'price_before'=>$data['total_sold'],
     				'discount_amount'=>$data['discount'],
     				'price_sold'=>$data['sold_price'],
-    				'other_fee'=>$data['other_fee'],
+    				'other_fee'=>0,
     				//'paid_amount'=>$data['deposit'],
     				'balance'=>$data['balance'],
     			  //'buy_date'=>$data['date_buy'],
@@ -1562,7 +1563,6 @@ function getLoanLevelByClient($client_id,$type){
   				//'client_id'=>$data['member'],
   				//'price_before'=>$data['total_sold'],
   				//'discount_amount'=>$data['discount'],
-  				//'other_fee'=>$data['other_fee'],
   				'branch_id'=>$data['branch_id'],
   				'payment_id'=>$data["schedule_opt"],
   				'price_sold'=>$data['sold_price'],
