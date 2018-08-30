@@ -371,7 +371,7 @@ public function getAllOutstadingLoan($search=null){
       	$db = $this->getAdapter();
       	$sql="SELECT *,
 			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id) AS user_name,
-			(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = id LIMIT 1) AS sold_price
+			(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1) AS sold_price
       	FROM v_getcollectmoney WHERE status=1 ";
       	
       	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
