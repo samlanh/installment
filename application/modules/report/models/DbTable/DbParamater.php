@@ -53,7 +53,9 @@ GROUP BY sl.sale_id ";
     	,email,contract_no,shift,workingtime,
     	tel,basic_salary,national_id,address,pob,
     	(SELECT project_name FROM ln_project WHERE br_id = branch_id limit 1) AS branch_name,
-    	note FROM ln_staff WHERE 1 ";
+    	note,
+		(SELECT  first_name FROM rms_users WHERE id = ln_staff.user_id LIMIT 1 ) AS user_name
+    	FROM ln_staff WHERE 1 ";
     	$Other =" ORDER BY co_id DESC ";
     	if($search['co_khname']>0){
     		$where.= " AND co_id = ".$search['co_khname'];
@@ -149,8 +151,9 @@ function getAllBranch($search=null){
     		   (SELECT project_name FROM ln_project WHERE br_id = p.`branch_id` limit 1) AS branch_name,
     		    p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,p.note,
 				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type`) AS pro_type,
-				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`
-				 FROM `ln_properties` AS p WHERE p.`status`=1 ";
+				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`,
+				(SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
+			 FROM `ln_properties` AS p WHERE p.`status`=1 ";
     		if(!empty($search['property_type'])){
     			$where.= " AND p.`property_type` = ".$search['property_type'];
     		}
@@ -195,8 +198,9 @@ function getAllBranch($search=null){
 				(clie.`name_kh`) AS client_name,
 				pro.`land_code`,
 				(SELECT pt.`type_nameen` FROM `ln_properties_type` AS pt WHERE pt.`id` = pro.`property_type` LIMIT 1) AS type_name,
-				pro.`property_type`,pro.`land_address`,pro.`street`
-				FROM `ln_sale_cancel` AS c , 
+				pro.`property_type`,pro.`land_address`,pro.`street`,
+				(SELECT first_name FROM `rms_users` WHERE id=c.user_id LIMIT 1) AS user_name
+				FROM `ln_sale_cancel` AS c, 
 				`ln_sale` AS s, 
 				`ln_properties` AS pro,
 				`ln_client` AS clie
@@ -1244,8 +1248,11 @@ function getAllBranch($search=null){
     		(SELECT land_address FROM `ln_properties` WHERE id=s.house_id) AS land_name,
     		(SELECT street FROM `ln_properties` WHERE id=s.house_id) AS street,
 			st.`branch_id`,(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = st.`branch_id`) AS project_name
-			,st.`co_khname`,st.`co_lastname`,st.`co_code`,st.`sex`
-			 FROM ln_sale AS s , `ln_staff` AS st WHERE s.`comission` !=0 AND st.`co_id` = s.`staff_id`";
+			,st.`co_khname`,st.`co_lastname`,st.`co_code`,st.`sex`,
+			(SELECT  first_name FROM rms_users WHERE id = s.user_id LIMIT 1 ) AS user_name
+			FROM ln_sale AS s ,
+    		`ln_staff` AS st 
+    	WHERE s.`comission` !=0 AND st.`co_id` = s.`staff_id`";
     	$Other =" ORDER BY s.`id` DESC ";
 		$from_date =(empty($search['start_date']))? '1': " s.`buy_date` >= '".$search['start_date']." 00:00:00'";
 	    $to_date = (empty($search['end_date']))? '1': " s.`buy_date` <= '".$search['end_date']." 23:59:59'";
@@ -1375,8 +1382,12 @@ function getAllBranch($search=null){
     		(SELECT sex FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS sex,
     		(SELECT tel FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS tel,
     		c.total_amount,
-    		for_date AS `create_date`, c.`status`
-    		FROM `ln_comission` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
+    		for_date AS `create_date`, c.`status`,
+    		(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
+    		FROM `ln_comission` AS c ,
+    			`ln_sale` AS s,
+    			`ln_project` AS p,
+    			`ln_properties` AS pro,
     		`ln_client` AS clie
     		WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
     		clie.`client_id` = s.`client_id` ';

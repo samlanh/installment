@@ -476,7 +476,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    							$after_service = abs($remain_money);
 		    						}		    						
 		    						
-		    						if($after_principal==0){
+		    						if($after_principal<=0){
 		    							$is_compleated_d=1;
 		    						}
 		    						if(($key+1)==count($rows)){
@@ -653,7 +653,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    							'total_payment'=>$fixed_payment,
 	    							'total_payment_after'=>$fixed_payment,//$row['total_payment']-$principal_paid-$row['total_interest_after'],
 								    'is_completed'=>$is_completed,
-	    							'received_userid'=>$user_id
+// 	    							'received_userid'=>$user_id
 	    							);
 	    					$where = "id = ".$row['id'];
 	    					$this->_name="ln_saleschedule";

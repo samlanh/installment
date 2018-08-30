@@ -96,8 +96,6 @@ if ($this->search['branch_id'] >0 ){
 				                <tr bgcolor="#ccc" class="style" align="center" style="padding:5px 0;height: 20px; white-space: nowrap;">
 				                    <td><?php echo $tr->translate("NUM");?></td>
 				                    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-				                    <td><?php echo $tr->translate("SALE_NO");?></td>
-				                    <td><?php echo $tr->translate("LOAN_NO");?></td>	
 				                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
 				                    <td><?php echo $tr->translate("STREET");?></td>
 				                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>	
@@ -112,6 +110,7 @@ if ($this->search['branch_id'] >0 ){
 				                    <td bgcolor="#999"><?php echo $tr->translate("BALANCE");?></td>
 				                    <td bgcolor="#999"><?php echo $tr->translate("INPUT_DATE");?></td>
 				                    <td bgcolor="#999"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
+				                    <td bgcolor="#999"><?php echo $tr->translate("BY_USER");?></td>
 				                </tr>
 				                <?php }?>
 			               <?php 
@@ -125,8 +124,6 @@ if ($this->search['branch_id'] >0 ){
 			                <tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
 			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
 			               		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-			               		<td>&nbsp;<?php echo $rs["sale_number"];?>&nbsp;</td>
-			               		<td>&nbsp;<?php echo $rs["land_code"];?>&nbsp;</td>
 			               		<td>&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
 			               		<td>&nbsp;<?php echo $rs["street"];?>&nbsp;</td>
 			               		<td>&nbsp;&nbsp;<?php echo number_format($rs["sold_price"],2);?>&nbsp;</td>
@@ -141,10 +138,11 @@ if ($this->search['branch_id'] >0 ){
 			               		<td style="background:#FFB5B5;">&nbsp;&nbsp;<?php echo  number_format($rs["sold_price"] - $totalpaid,2); //number_format($rs["total_payment"]-$rs["amount_payment"],2);?></td>
 			               		<td>&nbsp;&nbsp;<?php echo date("d-m-Y",strtotime($rs['date_pay']));?></td>
 			               		<td style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;<?php echo @$opt[$rs["payment_option"]];?>&nbsp;</td>
+			               		<td>&nbsp;&nbsp;<?php echo $rs["user_name"];?></td>
 			                </tr>
 			                <?php }}?>
 			                <tr>
-			                	<td colspan="18" style="border-left:1px solid #fff;border-right:1px solid #fff;">&nbsp;</td>
+			                	<td colspan="16" style="border-left:1px solid #fff;border-right:1px solid #fff;">&nbsp;</td>
 			                </tr>
 			                  <tr bgcolor="#c1d0f3" class="style stylehover" style="font-weight:bold; line-height: 20px; text-align: center;" >
 				                    <td style="padding:5px 0px;" colspan="2">&nbsp;​<?php echo $tr->translate("CURRENT_TYPE");?>&nbsp;</td>

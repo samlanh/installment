@@ -19,7 +19,7 @@
 	dojo.require("dijit.form.DateTextBox");
 	</script>
 <title><?php echo $tr->translate("LOAN_DISBURSE");?></title>
-<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
+<div style="min-height:26cm; margin:0 auto; padding:0.2cm 0.2cm 0cm 0.2cm">
 	<form method="post">
 		<table width="100%">
 			<tr>
@@ -94,7 +94,7 @@
 	            <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:13px;" width="100%" cellspacing="0">
 	               <thead>
 	                 <tr class="hide" style="border:1px solid #000;">
-		                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+		                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 		             </tr>
 	                 <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; ">
 	                    <td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
@@ -103,6 +103,7 @@
 	                    <td colspan="3"><?php echo $tr->translate("PROPERTY_INFO");?></td>
 	                    <td colspan="3"><?php echo $tr->translate("INFO_INDILOAN");?></td>
 	                    <td colspan="8"><?php echo $tr->translate("PAYMENT_INFO");?></td>
+	                    <td rowspan="2">&nbsp;<?php echo $tr->translate("BY_USER");?>&nbsp;</td>
 	                </tr>
 	                <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; ">
 	                	<!--<td><?php //echo $tr->translate("CLIENT_NUM");?></td> -->
@@ -179,7 +180,7 @@
 	              
 	              if($row['payment_id']!=$payment_id){?>
 	              	<tr>
-	              		<td colspan="16" style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $row['paymenttype']; ?></td>
+	              		<td colspan="17" style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $row['paymenttype']; ?></td>
 	              	</tr>
 	              <?php } 
 	             }else{
@@ -188,7 +189,7 @@
 	             	if($set_cancel==0){$set_cancel=1;
 	             	?>
 	             	<tr>
-	              		<td colspan="16" style="text-align:center; font-size:14px; font-family:'Khmer MEF2'">បោះបង់<?php //echo $row['paymenttype']; ?></td>
+	              		<td colspan="17" style="text-align:center; font-size:14px; font-family:'Khmer MEF2'">បោះបង់<?php //echo $row['paymenttype']; ?></td>
 	              	</tr>
 	             <?php }}
 	              	$payment_id = $row['payment_id']?>
@@ -233,10 +234,11 @@
 						<!--<td>&nbsp;<?php //if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['startcal_date']));}?>&nbsp;</td> -->
 						<td style="max-width:120px;white-space: normal;"><?php if($row['payment_id']==1){echo "<span style='font-size:10px;line-height:15px;'>".$row['note']."</span>"; } if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['first_payment'])); }?>&nbsp;</td>
 						<td style="white-space:nowrap;" ><?php echo date("d-m-Y",strtotime($row['end_line']));?>&nbsp;</td>
+						<td style="white-space:nowrap;" ><?php echo $row['user_name'];?>&nbsp;</td>
 						</tr>
 					<?php }?>
 	            		<tr>
-	            			<td colspan="16" style=" border: #fff solid 1px;    border-top: solid 1px #000;">
+	            			<td colspan="17" style=" border: #fff solid 1px;    border-top: solid 1px #000;">
 				             <br /><table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:13px;" width="100%" cellspacing="0">
 				                 <tr bgcolor="#a0baf5" class="style" align="center" style="font-weight:bold; line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 				                    <td><?php echo $tr->translate("TYPE");?></td>

@@ -52,7 +52,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		if($search['branch_id_search']>-1){
 			$where.= " AND c.branch_id = ".$search['branch_id_search'];
 		}
-		if($search['client_name']>-1){
+		if(!empty($search['client_name']) AND $search['client_name']>-1){
 			$where.= " AND s.`client_id` = ".$search['client_name'];
 		}
 		if(!empty($search['adv_search'])){
@@ -67,6 +67,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
+// 		echo $sql.$where;exit();
 		$where.=" ORDER BY c.`id` DESC ";
 		return $db->fetchAll($sql.$where);
 	}

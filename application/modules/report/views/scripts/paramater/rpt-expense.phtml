@@ -94,6 +94,7 @@ dojo.require("dijit.form.DateTextBox");
 							    <th><?php echo $tr->translate("CHEQUE_NUMBER");?></th>
 							    <th><?php echo $tr->translate("NOTE");?></th>
 							    <th><?php echo $tr->translate("DATE");?></th>
+							    <th><?php echo $tr->translate("BY_USER");?></th>
 							</tr>
 					       <?php $branch_id=''; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
 							<tr style="font-size: 12px; line-height:20px;" align="left">
@@ -108,6 +109,7 @@ dojo.require("dijit.form.DateTextBox");
 							   <td align="center">&nbsp;<?php echo $row['cheque'];?></td>
 							   <td align="center">&nbsp;<?php echo $row['description'];?></td>
 							   <td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($row['date']));?></td>
+							   <td align="center">&nbsp;<?php echo $row['user_name'];?></td>
 							</tr>
 								<?php $total = $total +$row['total_amount'];?>
 							<?php }?>
@@ -123,6 +125,7 @@ dojo.require("dijit.form.DateTextBox");
 					            <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
 					            <td><?php echo $tr->translate("COMISSION");?></td>
 					            <td><?php echo $tr->translate("DATE");?></td>
+					            <th><?php echo $tr->translate("BY_USER");?></th>
 				         </tr>
 				       <?php  
 				       	$key=0; 
@@ -140,6 +143,7 @@ dojo.require("dijit.form.DateTextBox");
 							 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
 							 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
 							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
+							 <td align="center">&nbsp;<?php echo $rscom['user_name'];?></td>
 						</tr>
 						<?php } ?>
 				    </table>
