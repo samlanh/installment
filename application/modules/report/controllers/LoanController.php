@@ -550,6 +550,7 @@ public function exportFileToExcel($table,$data,$thead){
  				'branch_id' => "",
  				'client_name' => -1,
  				'co_id' => "",
+ 				'streetlist'=> "",
  				'land_id'=>-1,
  				'start_date' =>date('Y-m-d'),
  				'end_date' => date('Y-m-d'),

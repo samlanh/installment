@@ -395,6 +395,9 @@ public function getAllOutstadingLoan($search=null){
 		if(@$search['payment_method']>0){
 			$where.=" AND payment_methodid = ".$search['payment_method'];
 		}
+		if (!empty($search['streetlist'])){
+			$where.=" AND street = '".$search['streetlist']."'";
+		}
 		
       	if(!empty($search['adv_search'])){
       		$s_where = array();
