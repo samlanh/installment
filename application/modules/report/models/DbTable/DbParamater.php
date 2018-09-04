@@ -1332,6 +1332,26 @@ function getAllBranch($search=null){
     	$from_date =(empty($search['start_date']))? '1': " co.`date` >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " co.`date` <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
+    	
+    	if (!empty($search['property_type'])){
+    		$where.=" AND (SELECT pt.property_type FROM `ln_properties` AS pt WHERE pt.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE co.sale_id=s.id LIMIT 1 ) LIMIT 1 ) =".$search['property_type'];
+    	}
+    	if (!empty($search['streetlist'])){
+    		$st = explode(",", $search['streetlist']);
+    		$tags="";
+    		if (!empty($st)) foreach ($st as $ss){
+    			if (empty($tags)){
+    				$tags = "'".$ss."'";
+    			}else{
+    				if (!empty($ss)){
+    					$tags=$tags.",'".$ss."'";
+    				}
+    			}
+    		}
+//     		$where.=" AND (SELECT pt.street FROM `ln_properties` AS pt WHERE pt.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE co.sale_id=s.id LIMIT 1 ) LIMIT 1  )= '".$search['streetlist']."'";
+    		$where.=" AND (SELECT pt.street FROM `ln_properties` AS pt WHERE pt.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE co.sale_id=s.id LIMIT 1 ) LIMIT 1  ) IN ( ".$tags.")";
+    	}
+    	
     	if($search['branch_id']>0){
     		$where.=" AND branch_id=".$search['branch_id'];
     	}
@@ -1348,6 +1368,25 @@ function getAllBranch($search=null){
     	$from_date =(empty($search['start_date']))? '1': " crm.`date_pay` >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " crm.`date_pay` <= '".$search['end_date']." 23:59:59'";
     	$where.= " AND ".$from_date." AND ".$to_date;
+    	
+    	if (!empty($search['property_type'])){
+    		$where.=" AND (SELECT pt.property_type FROM `ln_properties` AS pt WHERE pt.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE crm.sale_id=s.id LIMIT 1 ) LIMIT 1 ) =".$search['property_type'];
+    	}
+    	if (!empty($search['streetlist'])){
+    		$st = explode(",", $search['streetlist']);
+    		$tags="";
+    		if (!empty($st)) foreach ($st as $ss){
+    			if (empty($tags)){
+    				$tags = "'".$ss."'";
+    			}else{
+    				if (!empty($ss)){
+    					$tags=$tags.",'".$ss."'";
+    				}
+    			}
+    		}
+//     		$where.=" AND (SELECT pt.street FROM `ln_properties` AS pt WHERE pt.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE crm.sale_id=s.id LIMIT 1 ) LIMIT 1  )='".$search['streetlist']."'";
+    		$where.=" AND (SELECT pt.street FROM `ln_properties` AS pt WHERE pt.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE crm.sale_id=s.id LIMIT 1 ) LIMIT 1  ) IN ( ".$tags.")";
+    	}
     	if($search['branch_id']>0){
     		$where.=" AND branch_id=".$search['branch_id'];
     	}

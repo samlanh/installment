@@ -327,6 +327,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'branch_id'=>0,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
+  				'property_type'=>'',
+  				'streetlist'=>'',
   				
   		);
   	}
@@ -342,7 +344,10 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->money_schedule = $db->geIncomeFromSale($search,0);
   	$this->view->money_install = $db->geIncomeFromSale($search,3);
   	
-  
+  	$db = new Application_Model_DbTable_DbGlobal();
+  	$street = $db->getAllStreetForOpt();
+  	$this->view->street = $street;
+  	
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
