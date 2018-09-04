@@ -473,6 +473,7 @@ function getAllBranch($search=null){
 				   s.`end_line`,
     			   s.validate_date,
 				   s.agreement_date,
+				   s.is_verify,
 				   (SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.payment_id limit 1) AS payment_type,
 				  `p`.`project_name`,
 				  `p`.`branch_tel`,
@@ -1565,5 +1566,16 @@ function getAllBranch($search=null){
     		}
     		return $num;
     	}
-
+	function verifyAgreement($data){
+ 		$db = $this->getAdapter();
+ 		$session_user=new Zend_Session_Namespace('authinstall');
+ 		$user_id = $session_user->user_id;
+		$this->_name='ln_sale';
+		$arr = array(
+				'is_verify'=>1,
+				'verify_by'=>$user_id
+				);
+		$where=' id='.$data['sale_id'];
+		$this->update($arr, $where);
+	}
 }

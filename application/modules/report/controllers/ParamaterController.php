@@ -413,4 +413,22 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm=$frm;
   }
+  function verifyagreementAction(){
+  	try {
+  		$dbacc = new Application_Model_DbTable_DbUsers();
+  		$rs = $dbacc->getAccessUrl('report','paramater','verifyagreement');
+  		if(!empty($rs)){
+  			$data=$this->getRequest()->getPost();
+  			$db = new Report_Model_DbTable_DbParamater();
+  			if(!empty($data)){
+  				$db->verifyAgreement($data);
+  				Application_Form_FrmMessage::Sucessfull("VERIFIED_SUCCESS","/report/paramater/rpt-agreement/id/".$data['sale_id']);
+  			}
+  		}
+  		Application_Form_FrmMessage::Sucessfull("You no permission to verify","/report/paramater/rpt-agreement/id/".$data['sale_id']);
+  	}catch (Exception $e) {
+  		Application_Form_FrmMessage::message("INSERT_FAIL");
+  		echo $e->getMessage();
+  	}
+  }
 }
