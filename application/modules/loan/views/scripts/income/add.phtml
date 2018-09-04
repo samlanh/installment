@@ -326,7 +326,7 @@ function addCategory(){
 function printSave(new_invoice_no){
 	
 /////////////////// check Validate /////////////////////////////////////////
-
+	getBranchinfo();
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
 		alert('Select branch');
@@ -354,7 +354,7 @@ function printSave(new_invoice_no){
 		getInvoiceNo(1);
 	}else{
 		dojo.byId("lb_invoice").innerHTML = new_invoice_no;
-		dojo.byId("lb_invoice1").innerHTML = new_invoice_no;
+		//dojo.byId("lb_invoice1").innerHTML = new_invoice_no;
 	}
 
 	cus_id = dijit.byId('customer').get('value');
@@ -387,15 +387,15 @@ function printSave(new_invoice_no){
 	dojo.byId("lb_cheque").innerHTML = dijit.byId("cheque").attr('displayedValue');
 
 
-	dojo.byId("lb_branch1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
-	dojo.byId("lb_customer1").innerHTML = customer_name;
-	dojo.byId("lb_income_category1").innerHTML = dijit.byId("income_category").attr('displayedValue');
-	dojo.byId("lb_income_title1").innerHTML = dijit.byId("title").get('value');
-	dojo.byId("lb_total_amount1").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
-	dojo.byId("lb_date1").innerHTML = date_payment;//dijit.byId("Date").attr('displayedValue');
-	dojo.byId("lb_description1").innerHTML = dijit.byId("Description").attr('displayedValue');
-	dojo.byId("lb_customer_name1").innerHTML = customer_name;
-	dojo.byId("lb_cheque1").innerHTML = dijit.byId("cheque").attr('displayedValue');
+	//dojo.byId("lb_branch1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
+	//dojo.byId("lb_customer1").innerHTML = customer_name;
+	//dojo.byId("lb_income_category1").innerHTML = dijit.byId("income_category").attr('displayedValue');
+	//dojo.byId("lb_income_title1").innerHTML = dijit.byId("title").get('value');
+	//dojo.byId("lb_total_amount1").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
+	//dojo.byId("lb_date1").innerHTML = date_payment;//dijit.byId("Date").attr('displayedValue');
+	//dojo.byId("lb_description1").innerHTML = dijit.byId("Description").attr('displayedValue');
+	//dojo.byId("lb_customer_name1").innerHTML = customer_name;
+	//dojo.byId("lb_cheque1").innerHTML = dijit.byId("cheque").attr('displayedValue');
 	dijit.byId("print_income").show();
 }
 
@@ -405,6 +405,7 @@ function currencyFormat (num) {
 
 
 function doPrint() {
+	dojo.byId("printblog2").innerHTML = dojo.byId('divPrint').innerHTML;
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML + dojo.byId('divPrint1').innerHTML;;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
@@ -603,11 +604,6 @@ function hideDialog1(){
 						<?php echo $this->footer;?>
 					</td>
 				</tr>
-				<tr>
-					<td colspan="6" style="border-bottom:2px dashed #000;" >&nbsp;
-						
-					</td>
-				</tr>
 			</table>
 		</div>
 		<table>
@@ -616,110 +612,11 @@ function hideDialog1(){
 				type="button" onclick="doPrint();">បោះពុម្ភ/Print</button>
 		</table>
 		
-		<div id="divPrint1" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
-			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 15px;" class="print" cellspacing="0"  cellpadding="0" >
-				<tr>
-					<td colspan="6">
-						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
-							<tr>
-								<td id="projectlogo1" width="25%">
-									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
-								</td>						
-								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></b></u>
-									<div style="line-height:10px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
-								</td>
-								<td width="25%">
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-			<table width="100%" style="white-space: nowrap;font-size:14px;" class="print" cellspacing="2px"  cellpadding="0">
-				<tr>
-					<td width="10%" ></td>
-					<td width="30%" ></td>
-					<td width="15%" ></td>
-					<td width="17%" ></td>
-					<td width="10%" ></td>
-					<td width="18%" ></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">សាខា</td>
-                    <td><strong><label id="lb_branch1" class="value"></label></strong></td>
-				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
-                    <td colspan="3"><strong><label id="lb_invoice1" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-				
-					<td class="one khmerbold" width="10%">អតិថិជន</td>
-				    <td width="40%"><strong><label id="lb_customer1" class="value"></label></strong></td>
-					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ប្រភេទចំនូល</td>
-				    <td colspan="3"><strong><label id="lb_income_category1" class="value"></label></strong></td>
-				</tr>
-				<tr>
-					<td class="one khmerbold">ពណ៌នាចំនូល</td>
-					<td ><strong><label id="lb_income_title1" class="value"></label></strong></td>
-					<td class="one khmerbold">&nbsp;&nbsp;ចំនូលសរុប</td>
-					<td colspan="3"><strong><label id="lb_total_amount1" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">សែក</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque1" class="value"></label></strong></td>
-					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃទទួល</td>
-				    <td colspan="3"><strong><label id="lb_date1" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">សម្គាល់</td>
-				    <td colspan="1"><strong><label style="white-space: nowrap;text-align: center;" id="lb_description1" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['customer_sign'];?></strong></td>
-				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['teller_sign'];?></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;" height="60px;">
-					<td class="one khmerbold" colspan="4" align="center" valign="bottom">
-						<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
-							<lable id="lb_customer_name1"></lable>
-						</h4>
-					</td>
-				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
-				  			<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
-				              <?php $session_user=new Zend_Session_Namespace('authinstall');
-						           $last_name=$session_user->last_name;
-						           $username = $session_user->first_name;
-						           echo $last_name." ".$username;?></h4>  
-					</td>
-				</tr>
-				
-				<tr style="line-height: 15px;font-size: 10px;">
-					<td colspan="6" valign="top" >
-					</td>
-				</tr>
-				<tr style="line-height: 20px;font-size: 11px;font-family:'Khmer OS Battambang'">
-					<td valign="top" >
-						<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
-					</td>
-					<td colspan="5">
-						<span style="font-size: 12px;"><?php echo $this->data['comment'];?></span><br />
-						<span style="white-space: pre-line;font-size: 12px;"><?php echo $this->data['comment1'];?></span><br />
-					</td>
-				</tr>
-				<tr style="line-height: 15px;font-size: 10px;">
-					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
-						
-					</td>
-				</tr>
-				
-				<tr style="line-height: 15px;font-size: 10px;">
-					<td colspan="6" >
-						<?php echo $this->footer;?>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="6">&nbsp;</td>
-				</tr>
-			</table>
+		<div id="divPrint1" style="width: 21cm !important; height: 12cm ; padding: 0px; margin: 0px;">
+			<?php if($this->data['showreceipt']>1){?>
+				<div style="border:2px dashed #000; vertical-align: middle;margin:20px 0px 40px 0px"></div>
+			<?php }?>
+			<div id="printblog2"></div>
 		</div>
 		
 	</div>
@@ -740,7 +637,7 @@ function getBranchinfo(){
 			var arr = JSON.parse(data);
 			var imagesUrl = '<img class="view" style="height:75px;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
 			document.getElementById('projectlogo').innerHTML = imagesUrl;
-			document.getElementById('projectlogo1').innerHTML = imagesUrl;
+			//document.getElementById('projectlogo1').innerHTML = imagesUrl;
 		},
 		error: function(e) {
 		}
