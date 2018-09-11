@@ -292,7 +292,7 @@ function getAllBranch($search=null){
     		WHERE status=1 AND id =".$income_id;
     		return $db->fetchRow($sql);
     	}
-    	function getAllExpense($search=null){
+    	function getAllExpense($search=null,$group_by=null){
     		$db = $this->getAdapter();
     		$session_user=new Zend_Session_Namespace('authinstall');
     		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
@@ -334,6 +334,50 @@ function getAllBranch($search=null){
     		if (!empty($search['supplier_id'])){
     			$where.= " AND supplier_id = ".$search['supplier_id'];
     		}
+    		if($group_by!=null){
+    			$where.=" group by category_id ";
+    		}
+    		$order=" order by date desc ";
+    		return $db->fetchAll($sql.$where.$order);
+    	}
+    	function getAllExpensebyCate($search=null){
+    		$db = $this->getAdapter();
+    		$session_user=new Zend_Session_Namespace('authinstall');
+    		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+    		$where = " AND ".$from_date." AND ".$to_date;
+    		 
+    		$sql=" SELECT id,
+    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+    		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
+    		SUM(total_amount) AS total_amount
+    		 FROM ln_expense WHERE status=1 ";
+    		 
+    		if (!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = trim(addslashes($search['adv_search']));
+    			$s_where[] = " description LIKE '%{$s_search}%'";
+    			$s_where[] = " title LIKE '%{$s_search}%'";
+    			$s_where[] = " total_amount LIKE '%{$s_search}%'";
+    			$s_where[] = " invoice LIKE '%{$s_search}%'";
+    			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){
+    			$where.= " AND category_id = ".$search['category_id_expense'];
+    		}
+    		if(!empty($search['user_id']) AND $search['user_id']>0){
+    			$where.= " AND ln_expense.user_id = ".$search['user_id'];
+    		}
+    		if($search['branch_id']>0){
+    			$where.= " AND branch_id = ".$search['branch_id'];
+    		}
+    		if(@$search['payment_type']>0){
+    			$where.= " AND payment_id = ".$search['payment_type'];
+    		}
+    		if (!empty($search['supplier_id'])){
+    			$where.= " AND supplier_id = ".$search['supplier_id'];
+    		}
+    		$where.=" group by category_id ";
     		$order=" order by date desc ";
     		return $db->fetchAll($sql.$where.$order);
     	}
@@ -1431,6 +1475,41 @@ function getAllBranch($search=null){
     		`ln_client` AS clie
     		WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
     		clie.`client_id` = s.`client_id` ';
+    		if($search['branch_id']>0){
+    			$where.= " AND c.branch_id = ".$search['branch_id'];
+    		}
+    		if(!empty($search['co_khname']) AND $search['co_khname']>0){
+    			$where.= " AND c.staff_id = ".$search['co_khname'];
+    		}
+    		if(!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = addslashes(trim($search['adv_search']));
+    			$s_where[] = " clie.`client_number` LIKE '%{$s_search}%'";
+    			$s_where[] = " clie.`name_kh` LIKE '%{$s_search}%'";
+    			$s_where[] = " c.`description` LIKE '%{$s_search}%'";
+    			$s_where[] = " s.`sale_number` LIKE '%{$s_search}%'";
+    			$s_where[] = " pro.`land_address` LIKE '%{$s_search}%'";
+    			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
+    			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
+    			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		return $db->fetchAll($sql.$where);
+    	}
+    	function getSumCommission($search){
+    		$db = $this->getAdapter();
+    		$from_date =(empty($search['start_date']))? '1': "c.`for_date` >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': "c.`for_date` <= '".$search['end_date']." 23:59:59'";
+    		$where = " AND ".$from_date." AND ".$to_date;
+    		$sql ='SELECT c.`id`,
+		    		p.`project_name`,
+		    		SUM(c.total_amount) AS total_amount
+		    		FROM `ln_comission` AS c ,
+		    		`ln_sale` AS s,
+		    		`ln_project` AS p,
+		    		`ln_properties` AS pro,
+    			`ln_client` AS clie
+    			WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
+    			clie.`client_id` = s.`client_id` ';
     		if($search['branch_id']>0){
     			$where.= " AND c.branch_id = ".$search['branch_id'];
     		}

@@ -494,7 +494,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    								    	'paid_date'	=>	$data['collect_date'],
 	    								    	'payment_option'	=>	$data["option_pay"],
 	    								    	'paid_date'			=> 	$data['collect_date'],
-	    								 		'received_userid'=>		$user_id
+	    								 		'received_userid'=> ($is_compleated_d==1)?$user_id:0,
+	    								 		'received_date'=> ($is_compleated_d==1)?$data['collect_date']:0
 	    								  );
 	    								  $where = " id = ".$row['id'];
 	    								  $this->_name="ln_saleschedule";

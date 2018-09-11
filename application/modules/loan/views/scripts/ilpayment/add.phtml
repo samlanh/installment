@@ -1485,7 +1485,7 @@ function calculateTotal(index){//គណនាបង់
 		var total_payment = 0;//ប្រាក់ត្រូវបង់សរុប
 		var totalAmount = 0;
 		principal_permonth=0;
-
+		condition=0;
 		//last_payment_date=0;
 		//is_set = 0;
 		var oneDay = 24*60*60*1000;
@@ -1541,11 +1541,13 @@ function calculateTotal(index){//គណនាបង់
 							}
 						}
 					}
-					total_late_day=0;
+			
+					//total_late_day=0;
 					if(total_late_day>0){ //ករណីអតិថិជនបង់យឺត
-						if(payOption==1){//បង់ធម្មតា
-							 total_penelize_peryear = roundhundred((parseFloat(totalPay)*(parseFloat(ps/100)/30)*parseFloat(total_late_day))+parseFloat(penelize));
+						if(payOption==1 && condition==0){//បង់ធម្មតា
+							 total_penelize_peryear = roundhundred((parseFloat(principal_permonth+total_interest)*(parseFloat(ps/100)/30)*parseFloat(total_late_day)));
 							 total_penelize = total_penelize+parseFloat(total_penelize_peryear);
+							 condition=1;
 						}
 					}
 					//}

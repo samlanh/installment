@@ -415,4 +415,37 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	function updatereceiptAction(){
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		$db  = new Report_Model_DbTable_DbLandreport();
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			try {
+				$_dbmodel = new Report_Model_DbTable_DbLandreport();
+				$_dbmodel->updateReceipt($_data);
+				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/receipt/id/".$_data['id']);
+			}catch (Exception $e) {
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+		 
+		$id = $this->getRequest()->getParam('id');
+		if(!empty($id)){
+			$receipt = $db->getReceiptByID($id);
+			$this->view->rs = $receipt;
+			if(empty($receipt['name_kh'])){
+				$this->_redirect("/loan/ilpayment");
+			}
+			if ($receipt['is_closed']==1){
+				Application_Form_FrmMessage::message("CANNOT_EDIT");
+				echo "<script>window.close();</script>";
+			}
+		}else{
+			$this->_redirect("/loan/ilpayment");
+		}
+		$db = new Application_Model_DbTable_DbGlobal();
+		$this->view->customer =  $db->getAllClient();
+	}
 }

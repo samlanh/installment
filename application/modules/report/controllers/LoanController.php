@@ -792,39 +792,7 @@ public function exportFileToExcel($table,$data,$thead){
   		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
   }
-  function updatereceiptAction(){
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	$db  = new Report_Model_DbTable_DbLandreport();
-  	if($this->getRequest()->isPost()){
-  		$_data = $this->getRequest()->getPost();
-  		try {
-  			$_dbmodel = new Report_Model_DbTable_DbLandreport();
-  			$_dbmodel->updateReceipt($_data);
-  			Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/receipt/id/".$_data['id']);
-  		}catch (Exception $e) {
-  			Application_Form_FrmMessage::message("INSERT_FAIL");
-  			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-  		}
-  	}
-  	
-  	$id = $this->getRequest()->getParam('id');
-  	if(!empty($id)){
-  		$receipt = $db->getReceiptByID($id);
-  		$this->view->rs = $receipt;
-  		if(empty($receipt['name_kh'])){
-  			$this->_redirect("/report/paramater");
-  		}
-  		if ($receipt['is_closed']==1){
-  			Application_Form_FrmMessage::message("CANNOT_EDIT");
-  			echo "<script>window.close();</script>";	
-  		}
-  	}else{
-  		$this->_redirect("/report/paramater");
-  	}
-  	$db = new Application_Model_DbTable_DbGlobal();
-  	$this->view->customer =  $db->getAllClient();
-  }
+  
 //   function rptUpdatepaymentAction(){
 //   	if($this->getRequest()->isPost()){
 //   		$_data = $this->getRequest()->getPost();
@@ -1003,6 +971,50 @@ public function exportFileToExcel($table,$data,$thead){
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
+  }
+  public function rptExpenseBycateAction(){
+  	try{
+  		if($this->getRequest()->isPost()){
+  			$search=$this->getRequest()->getPost();
+  		}else{
+  			$search=array(
+  					'txtsearch' =>'',
+  					'branch_id'	=>'',
+  					'user'	=>'',
+  					'start_date'=>date('Y-m-d'),
+  					'end_date'=>date('Y-m-d'),
+  			);
+  		}
+  		$this->view->search = $search;
+  		$db  = new Report_Model_DbTable_DbParamater();
+  		$this->view->row = $db->getAllExpensebyCate($search);
+  		
+  		$key = new Application_Model_DbTable_DbKeycode();
+  		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  		if($this->getRequest()->isPost()){
+  			$search = $this->getRequest()->getPost();
+  		}else{
+  			$search = array(
+  					'land_id'=>0,
+  					'start_date'  => date('Y-m-d'),
+  					'end_date'    => date('Y-m-d'),
+  					'txtsearch' => '',
+  					'branch_id'=>-1,
+  					'co_khname'=>-1,
+  					'search_status'=>-1);
+  		}
+  		
+  		$this->view->rscomisison = $db->getAllCommission($search);
+  		
+  		$frm = new Loan_Form_FrmSearchLoan();
+  		$frm = $frm->AdvanceSearch();
+  		Application_Model_Decorator::removeAllDecorator($frm);
+  		$this->view->frm_search = $frm;
+  	}catch(Exception $e){
+  		Application_Form_FrmMessage::message("APPLICATION_ERROR");
+  		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+  		echo $e->getMessage();
+  	}
   }
 }
 

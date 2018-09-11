@@ -6,6 +6,7 @@
 	
 	$urlReciept = $this->baseUrl()."/report/loan/receipt/id/";
 	$urlDelete = $this->baseUrl()."/loan/ilpayment/delete/id/";
+	$updateReciept = $this->baseUrl()."/loan/ilpayment/updatereceipt/id/";
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -126,11 +127,17 @@
 					url='<?php echo $urlDelete;?>';
 					indexkey = 'delete';
 				}
+				else if(key=="update"){
+					url='<?php echo $updateReciept;?>';
+					indexkey = 'update';
+				}
+				
 				gotoAction();
 			},
 			items: {
 				"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-print", accesskey: "c o p y"},
 				"delete": {name: "<?php echo $tr->translate("DELETE");?>", icon: "delete"},
+				"update": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit"},
 				
 			}
 		});

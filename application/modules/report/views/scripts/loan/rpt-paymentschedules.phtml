@@ -112,6 +112,7 @@
 		                    <!-- <td rowspan="2"><?php //echo $tr->translate("Cumulative Interest");?></td> -->
 		                    <td rowspan="2"><?php echo $tr->translate("OTHER");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("RECEIVED_BY");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("PAID_DATE");?></td>
 		                </tr>
 	                <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
 	                    <!--<td>ចំនួនថ្ងៃ</td>-->
@@ -122,7 +123,7 @@
 	                </thead>
 	               <?php $set=1; 
 	               $i=0;
-	             
+// 	             print_r($tran);
 	               if(!empty($tran)) foreach($tran as $key =>$row){ ?>
 	               	<?php if($row['status']==0 AND $row['collect_by']==2){?>
 	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style">
@@ -149,7 +150,13 @@
 	                    <td><?php echo number_format($remain,(!strrpos($remain,"."))? 0 : 2);?></td>
 	                    <!-- <td><?php //echo str_replace('.00', '', number_format($row['cum_interest'],2)); ?></td> -->
 	                    <td><?php echo $row['note']; echo ($row['is_completed']==1)?$tr->translate("COMPLETED"):""; ?></td>
-	                     <td><?php  echo empty($row['received_by'])?"-":$row['received_by']; ?></td>
+	                    <td><?php  echo empty($row['received_by'])?"-":$row['received_by']; ?></td>
+	                    <td><?php  
+		                    if($row['received_date']!=0){
+		                    	$date = new DateTime($row['received_date']);
+		                   	 	$receive_date =  $date->format("d-m-Y");
+		                    }else{$receive_date='';}
+	                    	echo ($row['received_date']==0)?"":$receive_date; ?></td>
 	                </tr>
 	               <?php }
 	               ?>

@@ -192,6 +192,13 @@
 	                    	<?php echo $frm->getElement('discount_percent');?><?php echo $frm->getElement('discount');?>
 	                   </div>
 	                </div>
+	                 <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_DISCOUNT");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('total_discount');?>
+	                   </div>
+	                </div>
 	                <div class="form-group">
 	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SOLD_PRICE");?> <span class="required">*</span> :
 	                   </label>
@@ -603,9 +610,10 @@ function calculateDiscount(){
 		discount_percent=0;
 	}
 	discount_percent = parseInt(total_sold*discount_percent/100);
-	total_sold = total_sold-discount_percent-discount;
+	total_sold = total_sold - discount_percent-discount;
+	total_discount = discount_percent+discount;
+	dijit.byId('total_discount').attr('value',total_discount);
 	dijit.byId('sold_price').attr('value',total_sold);
-	//dijit.byId('balance').attr('value',total_sold);
 	Balance();
 }
 function Balance(){

@@ -663,6 +663,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			$total_principal = $total_principal+$principal_paid;
     			
     			$pyament_after = $row['total_payment_after']-($total_interestpaid+$principal_paid);//ប្រាក់ត្រូវបង់លើកក្រោយសំរាប់ installmet 1 1
+    			$user_id = $this->getUserId();
     			$arra = array(
     					"principal_permonthafter"=>$remain_principal,
     					'total_interest_after'=>$total_interestafter,
@@ -671,7 +672,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'is_completed'=>$statuscomplete,
     					'paid_date'			=> 	$data['date_buy'],
     					'total_payment_after'	=>	$pyament_after,
-    					'received_userid'=>$this->getUserId(),
+    					'received_userid'=>($statuscomplete==1)?$user_id:0,
     			);
     			$this->_name="ln_saleschedule";
     			$where="id = ".$row['id'];

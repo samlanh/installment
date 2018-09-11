@@ -1,0 +1,132 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('Report Other Expense'); 
+	echo $this->headTitle(''); 
+	$frm = $this->frm_search;
+?>	
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<div style="width: 28cm;margin: 0 auto;">
+	<form name="" action="" dojoType="dijit.form.Form" method="post">
+		<div class="form-group">
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement("adv_search");?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('branch_id');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement('supplier_id');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement('category_id_expense');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement('payment_type');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        	</div>
+        </div>
+        <div class="form-group">
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('start_date');?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('end_date');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        	</div>
+        </div>        
+	 </form> 
+</div>
+<div style="background: #fff;width: 100%;margin: 0 auto;min-height: 27cm;padding: 0.5cm;">
+	<div id="divPrint">
+	<style>
+		table {page-break-inside:auto }
+		      tr{ page-break-inside:avoid; page-break-after:auto; }
+		      #header {
+		        display: table-header-group;
+		        page-break-inside:avoid; page-break-after:auto;
+		      }
+	</style>
+		<div id="exportExcel">
+			<table  style="background:#fff; margin: 0 auto; ;white-space: nowrap;width: 100%">
+				<tr>
+					<td width="15%" align="center">
+						<img style="width: 60%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+					</td>
+					<td width="70%" align="center">
+						<strong style=" font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><?php echo $tr->translate('BRAND_TITLE');?></strong><br />
+						<strong style=" font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><?php echo $tr->translate('RPT_CATE_EXPENSE')?></strong><br />
+						<strong style=" font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';"><?php if(!empty($this->search["start_date"])){?>For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));}?></strong>
+					</td>
+					<td width="15%" align="center">
+					</td>
+				</tr>
+				<style>
+					table tr th{background-color: #ccc;}										
+				</style>
+				<tr>
+					<td colspan="3" id="exportExcel">
+						<table cellpadding="5"​ style="font-family:'Khmer OS Battambang';margin:0 auto;width:100%; " >
+							<thead>
+								<tr style="font-size:14px; height: 20px;background-color: #ccd9ff;line-height: 30px;font-weight: bold;" align="center" >
+									<td style="text-align: right;" colspan="2"><?php echo $tr->translate('CATEGORY')?></td>
+									<td style=""></td>
+									<td style=""><?php echo $tr->translate('TOTAL_EXPENSE')?></td>
+								</tr>
+							</thead>
+						<?php $i=0;
+							$total_expense = 0;
+						if(!empty($this->row)){foreach ($this->row AS $row) { $i++;?>
+							<tr class="hover" style="font-size:15px; height: 20px;" align="center" >
+								<td style=""></td>
+								<td style="text-align: right;"><?php echo $row['category_name'];?></td>
+								<td style="white-space: nowrap;width:200px;">...................................................................................</td>
+								<td style=""><?php echo number_format($row['total_amount'],2);
+								$total_expense = $total_expense+$row['total_amount'];
+								?></td>
+							</tr>
+						<?php }}?>
+							<tr>
+								<td colspan="3"></td>
+								<td style="border-bottom: 5px double #000;text-align: center;">$&nbsp;<strong><?php echo number_format($total_expense,2);?></strong></td>
+							</tr>	
+						</table>	
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr >
+					<td colspan="3" width="100%">
+						<table width="100%" style="font-family:'Khmer OS Battambang';">
+							<tr>
+								<td  width="25%" align="center">
+									<span style=" font-size: 15px;font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFIED_BY')?></span>
+								</td>
+								<td  width="50%">
+									&nbsp;
+								</td>
+								<td align="center"  width="25%">
+									<span style="font-size: 15px;text-align: right;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARED_BY')?></span>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			</div>
+	</div>		
+</div>
