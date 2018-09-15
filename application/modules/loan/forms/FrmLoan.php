@@ -428,7 +428,7 @@ public function init()
 		$note->setAttribs(array(
 				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
-				'style'=>'width:100%;min-height:103px; font-size:18px; font-family:Kh Battambang'
+				'style'=>'width:100%;min-height:103px; font-size:14px; font-family:Kh Battambang'
 		));
 		
 		$cheque = new Zend_Dojo_Form_Element_TextBox("cheque");

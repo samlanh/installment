@@ -59,6 +59,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		$rows = $db->getVewOptoinTypeByType(25,null,null,1);
 		$options = array(-1=>$this->tr->translate("REPAYMENT_TYPE"));
 	    if(!empty($rows))foreach($rows AS $row){
+	    	$row['name_en'] = $this->tr->translate($row['name_en']);
   			$options[$row['key_code']]=$row['name_en'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
   		}
 		$schedule_opt->setMultiOptions($options);
@@ -191,7 +192,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 		));
-		$options= array(-1=>"ជ្រើសរើសការលក់",1=>"ធ្វើកិច្ចសន្យា",2=>"ប្រាក់កក់");
+		$options= array(-1=>$this->tr->translate("CHOOSE_SALE_TYPE"),1=>"ធ្វើកិច្ចសន្យា",2=>$this->tr->translate("DEPOSIT"));
 		$buy_type->setMultiOptions($options);
 		$buy_type->setValue($request->getParam("buy_type"));
 		

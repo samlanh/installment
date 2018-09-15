@@ -11,6 +11,7 @@
     background: #cbdcff;
     font-weight: bold;
     text-align: center;}
+   textarea{font-size:10px;}
 </style>
 <div class="overlay">
 	<div class="overlay-load">
@@ -130,13 +131,13 @@
 	                    	<?php echo $frm->getElement('full_commission');?>
 	                   </div>
 	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMISSION");?> <span class="required">*</span> :
+	                <!-- <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php //echo $tr->translate("COMISSION");?> <span class="required">*</span> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('commission');?>
+	                    	<?php //echo $frm->getElement('commission');?>
 	                   </div>
-	                </div>
+	                </div> -->
 	            </div>
 	            <div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
@@ -277,6 +278,20 @@
 	                   </div>
 	                </div>
 	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('payment_method');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NUMBER");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cheque');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Paid");?> <span class="required">*</span> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -357,8 +372,8 @@
 								<td id="projectlogo" width="25%">
 									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>"> 
 								</td>					
-								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
-									<div style="line-height:35px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
+								<td width="50%" style="font:18px 'Kh Muol';" valign="bottom" align="center"><u><div style=" font-family: Arial Black;font-family:'Khmer MEF2';margin-top: 15px;padding-top: 15px;">បង្កាន់ដៃទទួលប្រាក់</div></u>
+									<div style="line-height:30px;margin-top:-10px"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 								</td>
 								<td width="25%">
 								</td>
@@ -428,52 +443,10 @@
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td>&nbsp;បង់ជា</td>
-					<td><strong><label id="lbl_paymenttype" class="value">សាច់ប្រាក់</label></strong></td>
+					<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
 					<td>&nbsp;&nbsp;លេខ</td>
-					<td><strong><label id="lb_cheque1" class="value">N/A</label></strong></td>
+					<td><strong><label id="lbl_cheque" class="value"></label></strong></td>
 				</tr>
-				
-				
-				<!-- 
-				<tr style="white-space: nowrap;">
-				    <td style="display: none;">លេខកូដលក់</td>
-				    <td style="display: none;"><strong><label id="lb_sale_id" class="value">3</label></strong></td>
-				    <td>គម្រោង</td>
-				    <td><strong><label id="lbl_project" class="value">3</label></strong></td>
-					<td>&nbsp;&nbsp;&nbsp;តម្លៃលក់</td>
-                    <td colspan="3" ><strong><label id="lb_price" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-				    <td>ឈ្មោះ​អតិថិជន </td>
-				    <td><strong><label id="lb_customer" class="value"></label></strong></td>
-					<td>​&nbsp;&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
-				    <td><strong><label id="lb_discount" class="value"></label></strong></td>
-					<td>&nbsp;&nbsp;តម្លៃផ្សេងៗ</td>
-				    <td><strong><label id="lb_otherfee" class="value"></label></strong></td>
-                </tr>
-				<tr style="white-space: nowrap;">
-					<td><?php //echo $tr->translate("PROPERTY_CODE");?></td>
-                    <td><strong><label id="lb_hourseno" class="value"></label></strong></td>
-				    <td>&nbsp;&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
-                    <td colspan="3"><strong><label id="lb_amount" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td width="10%">ប្រភេទបង់</td>
-				    <td width="40%"><strong><label id="lb_paymentid" class="value"></label></strong></td>
-					<td>&nbsp;&nbsp;&nbsp;ប្រាក់ទទួលបាន</td>
-				    <td colspan="3"><strong><label id="lb_paid" class="value" style="font-weight: bold; font-family:Arial;"></label></strong></td>
-				</tr>
-				<tr>
-					<td rowspan="2">សម្គាល់</td>
-				    <td rowspan="2" style="border: 1px solid #000;" class="noted" valign="top"><label id="lb_noted" ></label></td>
-					<td>&nbsp;&nbsp;&nbsp;ប្រាក់នៅសល់</td>
-					<td colspan="3"><strong><label id="lb_balance" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td>&nbsp;&nbsp;&nbsp;<?php //echo $tr->translate("DAY_PAYMENT");?> </td>
-				    <td colspan="3"><strong><label id="lb_buydate" class="value"></label></strong></td>
-				</tr>
-				 -->
 				<tr style="white-space: nowrap;" height="60px;">
 					<td colspan="6" valign="top">
 						<table width="100%" border="0" style="font-size:14px;line-height: 18px;">
@@ -573,6 +546,16 @@ new dijit.form.FilteringSelect({
     	}
     } 
 }, "staff_id");
+function enablePayment(){
+	payment_method = dijit.byId('payment_method').get('value');
+	dijit.byId("cheque").set("readOnly",false);
+	dijit.byId("cheque").attr("value",'');
+	if(payment_method==1){
+		dijit.byId("cheque").attr("value",'N/A');
+		dijit.byId("cheque").set("readOnly",true);
+	}
+}
+
 function displayNone(){
 	document.getElementById('divPrint1').style.display="none";
 }
@@ -776,6 +759,8 @@ var property_store  = getDataStorefromJSON('id','name', null );
 require(["dojo/ready"], function(ready){
 	 ready(function(){
 		 dijit.byId("date_line").set("readOnly",false);
+		 enablePayment();
+		 
 	  });
 	 
 	new dijit.form.FilteringSelect({
@@ -948,9 +933,7 @@ function getBranchInfo(){
 		load: function(data) {
 			var arr = JSON.parse(data);
 			var imagesUrl = '<img class="view" style="height:75px;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
-
 			document.getElementById('projectlogo').innerHTML = imagesUrl;
-			//document.getElementById('projectlogo1').innerHTML = imagesUrl;
 		},
 		error: function(e) {
 		}
@@ -1002,8 +985,6 @@ function printSave(new_stu_id,new_receipt_no){
 	}else{
 		dojo.byId("lb_sale_id").innerHTML = new_stu_id;
 		dojo.byId("lb_receipt").innerHTML = new_receipt_no;
-		//dojo.byId("lb_sale_id1").innerHTML = new_stu_id;
-		//dojo.byId("lb_receipt1").innerHTML = new_receipt_no;
 	}
 	if(dijit.byId('frm_add_tran').validate()){
 		
@@ -1044,12 +1025,9 @@ function printSave(new_stu_id,new_receipt_no){
 		discount_percent = total_sold*discount_percent/100;
 		total_discount = parseInt(discount_percent)+parseFloat(discount);
 		dojo.byId("lbl_project").innerHTML = dijit.byId("branch_id").attr('displayedValue');
-		//dojo.byId("lbl_project1").innerHTML = dijit.byId("branch_id").attr('displayedValue');
 		
-		//dojo.byId("lb_discount").innerHTML = symbal+" "+dojo.number.format(total_discount,2);
 		dojo.byId("lbl_total_paid1").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
 		dojo.byId("lb_amount").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
-		//dojo.byId("lb_paid").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
 		dojo.byId("lbl_total_receive").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
 		dojo.byId("lbl_totalpayment").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
 		
@@ -1057,21 +1035,13 @@ function printSave(new_stu_id,new_receipt_no){
 		if(isNaN(balance)){balance=0;}
 		dojo.byId("lbl_balance").innerHTML = "$ "+dojo.number.format(balance,{places:2});
 		dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
-		//dojo.byId("lb_paymentid1").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
-		//dojo.byId("lb_buydate1").innerHTML = date_payment;//dijit.byId("date_buy").attr('displayedValue');
-		//dojo.byId("lb_hourseno1").innerHTML = lbl_landaddress;//dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
-		//dojo.byId("lb_price1").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
-		//dojo.byId("lb_discount1").innerHTML = symbal+" "+dojo.number.format(total_discount,2);//dis_percent+discount;//dijit.byId("discount").get('value');
-		
-		//dojo.byId("lb_amount1").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),{places:2});
-		//dojo.byId("lb_paid1").innerHTML = "$ "+dojo.number.format(dijit.byId("deposit").get('value'),{places:2});
-		//dojo.byId("lb_balance1").innerHTML = "$ "+dojo.number.format(balance,{places:2});
-		//dojo.byId("lb_noted1").innerHTML =dijit.byId("note").get('value');
 		joint_with = dijit.byId("joint_with").attr('displayedValue');
-		if(joint_with!=''){joint_with = "/"+joint_with}
 		
-		//dojo.byId("lbl_customer1").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
-		//dojo.byId("lb_customer1").innerHTML = dijit.byId("member").attr('displayedValue');
+		
+		if(joint_with!=''){joint_with = "/"+joint_with}
+		dojo.byId("lbl_paymenttype").innerHTML = dijit.byId("payment_method").attr('displayedValue');
+		document.getElementById('lbl_cheque').innerHTML = dijit.byId('cheque').get('value');
+		
 		dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
 		dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');	
 		dijit.byId("terms").show();	

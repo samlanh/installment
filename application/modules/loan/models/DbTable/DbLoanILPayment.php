@@ -323,7 +323,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			'branch_id'						=>	$data["to_branch_id"],//$data["branch_id"],
     			'receipt_no'					=>	$reciept_no,
     			'date_pay'					    =>	$data['collect_date'],
-    			'date_input'					=>	date("Y-m-d"),
+    			'date_input'					=>	$data['collect_date'],
     			'from_date'						=>	$data['date_payment'],//check more
     			'client_id'                     =>	$data['client_id'],
     			'sale_id'						=>	$data['loan_number'],

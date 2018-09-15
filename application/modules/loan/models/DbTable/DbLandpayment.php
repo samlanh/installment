@@ -297,7 +297,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'is_reschedule'=>$is_schedule,
     			    'agreement_date'=>$data['agreement_date'],
     				'staff_id'=>$data['staff_id'],
-    				'comission'=>$data['commission'],
+    				'comission'=>0,//$data['commission'],
     			   	'full_commission'=>$data['full_commission'],
     				'create_date'=>date("Y-m-d"),
     				'user_id'=>$this->getUserId(),
@@ -575,6 +575,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	if($data["schedule_opt"]==2){
     		$pay_off = 1;
     	}
+    	$field3 = 1;//deposit
+    	if($data['total_installamount']>0){
+    		$field3 = 3;//monthly payment
+    	}
     	$array = array(
     			'branch_id'			=>$data['branch_id'],
     			'client_id'			=>$data['member'],
@@ -603,7 +607,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			'status'			=>1,
     			'note'				=>$data['note'],
     			'user_id'			=>$this->getUserId(),
-    			'field3'			=>1,// ជាប្រាក់កក់
+    			'field3'			=>$field3,// ជាប្រាក់កក់
     			'field2'=>1,
     			'is_payoff'=>$pay_off,
     			'payment_times'=>1,
@@ -832,7 +836,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		  		'agreement_date'=>$data['agreement_date'],
     		  		'staff_id'=>$data['staff_id'],
     		  		'full_commission'=>$data['full_commission'],
-    		  		'comission'=>$data['commission'],
+    		  		'comission'=>0,//$data['commission'],
     		  		'create_date'=>date("Y-m-d"),
     		  		'user_id'=>$this->getUserId(),
     		  		'is_reschedule'=>$is_schedule,
@@ -1120,7 +1124,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'total_installamount'=>$data['total_installamount'],
     				'agreement_date'=>$data['agreement_date'],
     				'staff_id'=>$data['staff_id'],
-    				'comission'=>$data['commission'],
+    				'comission'=>0,//$data['commission'],
     				'full_commission'=>$data['full_commission'],
     				'user_id'=>$this->getUserId(),
     				'status'=>$data['status_using']
