@@ -10,7 +10,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 	$str = 'name_kh';
       	 }
       	 $sql = " SELECT * ,
-      	 (SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id ) AS times,
+      	 (SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id AND status=1 ) AS times,
       	 (SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
       	 (SELECT $str FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
       	 FROM v_soldreport WHERE 1 ";
@@ -66,6 +66,57 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 $order = " ORDER BY is_cancel ASC,payment_id DESC ";
       	 return $db->fetchAll($sql.$where.$order);
       }
+      public function getValidationAgreement($search = null){//rpt-loan-released/
+      	$db = $this->getAdapter();
+      	$session_lang=new Zend_Session_Namespace('lang');
+      	$lang = $session_lang->lang_id;
+      	$str = 'name_en';
+      	if($lang==1){
+      		$str = 'name_kh';
+      	}
+      	$sql = " SELECT * ,
+      	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id ) AS times,
+      	(SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
+      	(SELECT $str FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
+      	FROM v_soldreport WHERE payment_id=1 AND is_cancel=0 ";
+      
+      	$where ='';
+      	$to_date = (empty($search['end_date']))? '1': " validate_date <= '".$search['end_date']." 23:59:59'";
+      	$where= " AND ".$to_date;
+      		if(!empty($search['adv_search'])){
+      		$s_where = array();
+      		$s_search = addslashes(trim($search['adv_search']));
+      		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
+      		$s_where[] = " land_code LIKE '%{$s_search}%'";
+      		$s_where[] = " land_address LIKE '%{$s_search}%'";
+      		$s_where[] = " client_number LIKE '%{$s_search}%'";
+      		$s_where[] = " name_en LIKE '%{$s_search}%'";
+      		$s_where[] = " name_kh LIKE '%{$s_search}%'";
+      		$s_where[] = " staff_name LIKE '%{$s_search}%'";
+      		$s_where[] = " price_sold LIKE '%{$s_search}%'";
+      		$s_where[] = " comission LIKE '%{$s_search}%'";
+      		$s_where[] = " total_duration LIKE '%{$s_search}%'";
+      		$s_where[] = " street LIKE '%{$s_search}%'";
+      		$where .=' AND ( '.implode(' OR ',$s_where).')';
+      		}
+      		if($search['branch_id']>0){
+      		$where.=" AND branch_id = ".$search['branch_id'];
+      		}
+      		if(!empty($search['co_id']) AND $search['co_id']>-1){
+      		$where.=" AND staff_id = ".$search['co_id'];
+      }
+      		if($search['land_id']>0){
+      		$where.=" AND house_id = ".$search['land_id'];
+      }
+      if($search['property_type']>0 AND $search['property_type']>0){
+      	$where.=" AND v_soldreport.property_type = ".$search['property_type'];
+      }
+      if($search['client_name']!='' AND $search['client_name']>0){
+      $where.=" AND client_id = ".$search['client_name'];
+      }
+      $order = " ORDER BY payment_id DESC ";
+      return $db->fetchAll($sql.$where.$order);
+      }
       public function getAlertDeposit($search = null){//rpt-loan-released/
       		$db = $this->getAdapter();
 	      	$sql =" SELECT * ,
@@ -102,6 +153,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 	      		$where.=" AND client_id = ".$search['client_name'];
 	      	}
 	      	$order = " ORDER BY payment_id DESC ";
+	      	
       		return $db->fetchAll($sql.$where.$order);
       }
       public function getAllLoanCo($search = null){//rpt-loan-released
