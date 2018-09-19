@@ -47,7 +47,7 @@ dojo.require("dijit.form.DateTextBox");
     $addressIssue = "ផ្ទះលេខ១៥ បន្ទប់លេខA១០៥ ផ្លូវ៦១០ សង្កាត់បឹងកក់២ ខណ្ឌទួលគោក រាជធានីភ្នំពេញ";
     
     $propertytype =1;
-	$propertytype = $this->agreement['property_type'];
+	$propertytype = 18;//$this->agreement['property_type'];
     if($propertytype==17 OR $propertytype==2){//lots
     	$propertytype=2;
     }else if($propertytype==18 OR $propertytype==14){//tob
@@ -984,13 +984,13 @@ if($propertytype==1){
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
 									    <td align="justify" style="padding-left:5px">ភតិសន្យាជួលតូបនេះមានរយៈពេល 50 ឆ្នាំ
 									 
-									    	<?php //echo number_format($this->agreement['total_duration'],0); ?>
-										  	 <?php //if($this->agreement['payment_id']!=4){
-													//echo $tr->translate("MONTH");
-												//}else{
-													//echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
-											//}?>   
-									     គិតចាប់ពីថ្ងៃទី <?php echo date("d",strtotime($this->agreement['first_payment']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['first_payment']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['first_payment']));?> ដល់ថ្ងៃទី <?php echo date("d",strtotime($this->agreement['end_line']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['end_line']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['end_line']));?> ។</td>  
+									    <?php 
+									    	$default_day = date("d",strtotime($this->agreement['agreement_date']));
+									    	$date= new DateTime($this->agreement['agreement_date']);
+									    	$date->modify('+600 month');
+									    	$next_payment = $date->format("Y-m-$default_day");
+										?>   
+									     គិតចាប់ពីថ្ងៃទី <?php echo date("d",strtotime($this->agreement['agreement_date']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['agreement_date']));?> ដល់ថ្ងៃទី <?php echo $date->format("$default_day");?> ខែ <?php echo $month[$date->format("m")];?> ឆ្នាំ <?php echo $date->format("Y");?> ។</td>  
 								  </tr>
 								</table>
 		             		</span>

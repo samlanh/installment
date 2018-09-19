@@ -252,6 +252,16 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$loan_number = $dbtable->getLoanNumber($data);
     		$receipt = $dbtable->getReceiptByBranch($data);
     		$property_info = $this->getProperty($data["land_code"]);
+    		
+    		
+    		
+    		$key = new Application_Model_DbTable_DbKeycode();
+    		$setting=$key->getKeyCodeMiniInv(TRUE);
+    		$note_agreement = '';
+    		if($setting['note_agreement']==1){
+    			$note_agreement = $data['note_agreement'];
+    		}
+    		
     			   $arr = array(
     				'branch_id'=>$data['branch_id'],
     			   	'receipt_no'=>$receipt,
@@ -276,7 +286,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'payment_method'=>1,//$data['loan_type'],
     				'note'=>$data['note'],
     			   	'land_price'=>$property_info['house_price'],
-//     				'build_start'=>$data['start_building'],
+    				'note_agreement'=>$note_agreement,
     				'typesale'=>$data['typesale'],
     				'is_reschedule'=>$is_schedule,
     			    'agreement_date'=>$data['agreement_date'],
@@ -398,6 +408,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
+    	
     		$dbl = new Loan_Model_DbTable_DbLandpayment();
     		$row = $dbl->getTranLoanByIdWithBranch($data['id'],null);
     		if(!empty($row)){
@@ -413,7 +424,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				}
     			}
     		}
-    		
     		if($data['status_using']==0){//cancel
     			$this->_name="ln_sale";
     			$arr_update = array(
@@ -436,10 +446,10 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			$this->_name="ln_client_receipt_money";
     			$where = ' status = 1 AND land_id ='.$data["old_landid"].' AND sale_id = '.$data['id'];   		
     			$this->update($arr_update, $where);
-    			 $db->commit();
+    			$db->commit();
     			return true;
     		}
-    		
+    	
     		$this->_name="ln_properties";//ប្តូរពីទិញច្រើនមកទិញតែមួយ Error
     		$where = "id =".$data["old_landid"];
     		$arr = array(
@@ -452,6 +462,13 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				"is_lock"=>1
     		);
     		$this->update($arr, $where);
+    		
+    		$key = new Application_Model_DbTable_DbKeycode();
+    		$setting=$key->getKeyCodeMiniInv(TRUE);
+    		$note_agreement = '';
+    		if($setting['note_agreement']==1){
+    			$note_agreement = $data['note_agreement'];
+    		}
     		
     		$arr = array(
     				'branch_id'=>$data['branch_id'],
@@ -484,7 +501,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'comission'=>0,//$data['commission'],
     				'second_depostit'=>$data['second_depostit'],
     				'create_date'=>date("Y-m-d"),
-    				'user_id'=>$this->getUserId()
+    				'user_id'=>$this->getUserId(),
+    				'note_agreement'=>$note_agreement,
     			);
     		
     		$id = $data['id'];
@@ -557,7 +575,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			$crm_id = $db->fetchOne($sql);
     			$where="crm_id=".$crm_id;
     			$this->update($array, $where);
-    		
 	        $db->commit();
 	        return 1;
     	}catch (Exception $e){
@@ -567,760 +584,4 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     }
-//     function updateSaleOnlyById($data){
-//     	$db = $this->getAdapter();
-//     	$db->beginTransaction();
-//     	try{
-    
-//     		$arr = array(
-//     				'branch_id'=>$data['branch_id'],
-//     				'house_id'=>$data["land_code"],
-//     				'payment_id'=>$data["schedule_opt"],
-//     				'client_id'=>$data['member'],
-//     				'price_before'=>$data['total_sold'],
-//     				'discount_amount'=>$data['discount'],
-//     				'discount_percent'=>$data['discount_percent'],
-//     				'price_sold'=>$data['sold_price'],
-//     				'other_fee'=>$data['other_fee'],
-// //     				'paid_amount'=>$data['deposit'],
-// //     				'balance'=>$data['balance'],
-//     				'buy_date'=>$data['date_buy'],
-//     				'end_line'=>$data['date_line'],
-//     				'interest_rate'=>$data['interest_rate'],
-//     				'total_duration'=>$data['period'],
-//     				'startcal_date'=>$data['release_date'],
-//     				'first_payment'=>$data['first_payment'],
-//     				'validate_date'=>$data['first_payment'],
-//     				'payment_method'=>1,//$data['loan_type'],
-//     				'house_id'=>$data["land_code"],
-//     				'build_start'=>$data['start_building'],
-//     				'amount_build'=>$data['amount_build'],
-//     				'land_price'=>$data['house_price'],
-//     				'total_installamount'=>$data['total_installamount'],
-//     				'agreement_date'=>$data['agreement_date'],
-//     				'staff_id'=>$data['staff_id'],
-//     				'comission'=>$data['commission'],
-// //     				'create_date'=>date("Y-m-d"),
-//     				'user_id'=>$this->getUserId(),
-//     				'status'=>$data['status_using']
-//     		);
-    
-//     		$id = $data['id'];
-//     		$this->_name='ln_sale';
-//     		$where = $db->quoteInto('id=?', $id);
-//     		$this->update($arr, $where);
-			
-//     		$this->_name="ln_properties";
-//     		$where = "id =".$data["old_landid"];
-//     		$arr = array(
-//     				"is_lock"=>0
-//     		);
-//     		$this->update($arr, $where);
-    		
-//     		if($data['status_using']>0){
-// 	    		$this->_name="ln_properties";
-// 	    		$where = "id =".$data["land_code"];
-// 	    		$arr = array(
-// 	    				"is_lock"=>1
-// 	    		);
-// 	    		$this->update($arr, $where);
-//     		}
-//     		$db->commit();
-//     		return 1;
-//     	}catch (Exception $e){
-//     		$db->rollBack();
-//     		Application_Form_FrmMessage::message("INSERT_FAIL");
-//     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-//     	}
-//     }
-//     public function addScheduleTestPayment($data){
-//     	$db = $this->getAdapter();
-//     	$db->beginTransaction();
-//     	try{
-    		
-//     		$sql=" TRUNCATE TABLE ln_sale_test ";
-//     		$db->query($sql);
-//     		$sql = "TRUNCATE TABLE ln_saleschedule_test";
-//     		$db->query($sql);
-    		
-//     		$dbtable = new Application_Model_DbTable_DbGlobal();
-//     		$loan_number = $dbtable->getLoanNumber($data);
-//     		$arr = array(
-//     				'branch_id'=>$data['branch_id'],
-// //     				'house_id'=>$data["land_code"],
-// //     				'sale_number'=>$data['sale_code'],
-//     				'payment_id'=>$data["schedule_opt"],
-//     				'client_id'=>$data['member'],
-//     				'price_before'=>$data['total_sold'],
-//     				'discount_amount'=>$data['discount'],
-//     				'price_sold'=>$data['sold_price'],
-//     				'other_fee'=>$data['other_fee'],
-//     				//'paid_amount'=>$data['deposit'],
-//     				'balance'=>$data['balance'],
-//     			  //'buy_date'=>$data['date_buy'],
-//     				'end_line'=>$data['date_line'],
-//     				'interest_rate'=>$data['interest_rate'],
-//     				'total_duration'=>$data['period'],
-//     				'first_payment'=>$data['first_payment'],
-//     				'validate_date'=>$data['first_payment'],
-//     				'payment_method'=>1,//$data['loan_type'],
-//     				'note'=>$data['note'],
-// //     				'staff_id'=>$data['staff_id'],
-// //     				'comission'=>$data['commission'],
-//     				'create_date'=>date("Y-m-d"),
-//     				'user_id'=>$this->getUserId()
-//     		);
-//     		$this->_name="ln_sale_test";
-//     		$id = $this->insert($arr);//add group loan
-    
-//     		$total_day=0;
-//     		$old_remain_principal = 0;
-//     		$old_pri_permonth = 0;
-//     		$old_interest_paymonth = 0;
-//     		$old_amount_day = 0;
-//     		$cum_interest=0;
-//     		$amount_collect = 1;
-//     		//$remain_principal = $data['balance'];
-//     		$remain_principal = $data['sold_price'];
-//     		$next_payment = $data['first_payment'];
-//     		$from_date =  $data['release_date'];
-//     		$curr_type = 2;//$data['currency_type'];
-//     		//$term_types = 12;
-//     		$key = new Application_Model_DbTable_DbKeycode();
-//     		$key = $key->getKeyCodeMiniInv(TRUE);
-//     		$term_types=$key['install_by'];
-//     		//$term_types=12;
-//     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6){
-//     			$term_types=1;
-//     		}
-//     		$loop_payment = $data['period']*$term_types;
-//     		$borrow_term = $data['period']*$term_types;
-//     		$payment_method = $data["schedule_opt"];
-    
-//     		$str_next = '+1 month';
-//     		for($i=1;$i<=$loop_payment;$i++){
-//     			if($payment_method==1){//booking
-    				
-//     			}elseif($payment_method==2){//payoff
-    				
-//     			}elseif($payment_method==3){//pay by times//check date payment
-//     			if($i!=1){
-// //     				$old_remain_principal=0;
-//     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
-//     					$start_date = $next_payment;
-//     					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
-//     				}else{
-//     					$next_payment = $data['first_payment'];
-    					
-//     					//$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
-//     				}
-//     				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
-//     				$total_day = $amount_day;
-//     				$interest_paymonth = 0;
-//     				$pri_permonth = round($data['sold_price']/$borrow_term,0);
-//     				if($i==$loop_payment){//for end of record only
-//     					$pri_permonth = $remain_principal;
-//     				}
-//     			}elseif($payment_method==4){
-//     				if($i!=1){
-//     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
-//     					$start_date = $next_payment;
-//     					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
-//     				}else{
-//     					//​​បញ្ចូលចំនូនត្រូវបង់ដំបូងសិន    					
-//     					if(!empty($data['identity'])){
-// 	    					$ids = explode(',', $data['identity']);
-// 	    					$key = 1;
-// 	    					foreach ($ids as $j){
-// 	    						if($key==1){
-// // 	    							$old_remain_principal = $data['sold_price'];
-// 	    							$remain_principal=$data['sold_price'];
-// 	    							$old_pri_permonth = $data['total_payment'.$j];
-// 	    						}else{
-// // 	    							$old_remain_principal = $old_remain_principal-$old_pri_permonth;
-// 	    							$remain_principal = $remain_principal-$old_pri_permonth;
-// 	    							$old_pri_permonth = $data['total_payment'.$j];
-// 	    						}
-// 	    						$key = $key+1;
-// 	    						$old_interest_paymonth = 0;
-
-// 	    						$cum_interest = $cum_interest+$old_interest_paymonth;
-// 	    						$amount_day = $dbtable->CountDayByDate($from_date,$data['date_payment'.$j]);
-	    							
-// 	    						$this->_name="ln_saleschedule_test";
-// 	    						$datapayment = array(
-// 	    								'branch_id'=>$data['branch_id'],
-// 	    								'sale_id'=>$id,//good
-// 	    								'begining_balance'=> $remain_principal,//good
-// 	    								'principal_permonth'=> $old_pri_permonth,//good
-// 	    								'principal_permonthafter'=>$old_pri_permonth,//good
-// 	    								'total_interest'=>$old_interest_paymonth,//good
-// 	    								'total_interest_after'=>$old_interest_paymonth,//good
-// 	    								'total_payment'=>$old_interest_paymonth+$old_pri_permonth,//good
-// 	    								'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth,//good
-// 	    								'ending_balance'=>$remain_principal-$old_pri_permonth,
-// 	    								'cum_interest'=>$cum_interest,
-// 	    								'amount_day'=>$old_amount_day,
-// 	    								'is_completed'=>0,
-// 	    								'date_payment'=>$data['date_payment'.$j],
-// 	    						);
-// 	    						$this->insert($datapayment);
-// 	    						$from_date = $data['date_payment'.$j];
-// 	    					}
-// 	    				   }
-// 	    					$old_remain_principal=0;
-// 	    					$old_pri_permonth = 0;
-// 	    					$old_interest_paymonth = 0;
-// 	    					if(!empty($data['identity'])){$remain_principal = $data['sold_price']-$data['total_installamount'];}
-	    					
-// 	    					$next_payment = $data['first_payment'];
-// 	    					$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
-// 	    				}
-	    				
-//     				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
-//     				$total_day = $amount_day;
-//     			    $interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
-//     				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
-//     				if($data['install_type']==2){
-//     					$pri_permonth=$data['for_installamount']/($data['period']*12);
-//     					$pri_permonth =$this->round_up_currency(2, $pri_permonth);
-//     				}else{
-//     					$pri_permonth = $data['fixed_payment']-$interest_paymonth;
-//     				}
-//     				if($i==$loop_payment){//for end of record only
-//     					$pri_permonth = $remain_principal;
-//     				}
-//     			}elseif($payment_method==5){//bank
-    				
-//     			}elseif($payment_method==6){
-//     			   	 $ids = explode(',', $data['identity']);
-//     			   	 $key = 1;
-//     			   	 foreach ($ids as $i){
-//     			   	 	if($key==1){
-//     			   	 		$old_remain_principal = $data['sold_price'];
-//     			   	 		$old_pri_permonth = $data['total_payment'.$i];
-//     			   	 	}else{
-//     			   	 		$old_remain_principal = $old_remain_principal-$old_pri_permonth;
-//     			   	 		$old_pri_permonth = $data['total_payment'.$i];
-//     			   	 	}
-    			   	 	
-//     			   	 	$key = $key+1;
-//     			   	 	$old_interest_paymonth = ($data['interest_rate']==0)?0:$this->round_up_currency(1,($old_remain_principal*$data['interest_rate']/12/100));
-
-//     			   	 	$cum_interest = $cum_interest+$old_interest_paymonth;
-//     			   	 	$amount_day = $dbtable->CountDayByDate($from_date,$data['date_payment'.$i]);
-    			   	 	
-//     			   	 	$this->_name="ln_saleschedule_test";
-//     			   	 	$datapayment = array(
-//     			   	 			'branch_id'=>$data['branch_id'],
-//     			   	 			'sale_id'=>$id,//good
-//     			   	 			'begining_balance'=> $old_remain_principal,//good
-// //     			   	 			'begining_balance_after'=> $old_remain_principal,//good
-//     			   	 			'principal_permonth'=> $old_pri_permonth,//good
-//     			   	 			'principal_permonthafter'=>$old_pri_permonth,//good
-//     			   	 			'total_interest'=>$old_interest_paymonth,//good
-//     			   	 			'total_interest_after'=>$old_interest_paymonth,//good
-//     			   	 			'total_payment'=>$old_interest_paymonth+$old_pri_permonth,//good
-//     			   	 			'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth,//good
-//     			   	 			'ending_balance'=>$old_remain_principal-$old_pri_permonth,
-//     			   	 			'cum_interest'=>$cum_interest,
-//     			   	 			'amount_day'=>$old_amount_day,
-//     			   	 			'is_completed'=>0,
-//     			   	 			'date_payment'=>$data['date_payment'.$i],
-//     			   	 	);
-//     			   	 	$this->insert($datapayment);
-//     			   	 	$from_date = $data['date_payment'.$i];
-//     			   	 }
-//     			   	 break;
-//     			   }
-//     			if($payment_method==3 OR $payment_method==4){
-// 	    			$old_remain_principal =$old_remain_principal+$remain_principal;
-// 	    			$old_pri_permonth = $old_pri_permonth+$pri_permonth;
-// 	    			$old_interest_paymonth = $this->round_up_currency($curr_type,($old_interest_paymonth+$interest_paymonth));
-// 	    			$cum_interest = $cum_interest+$old_interest_paymonth;
-// 	    			$old_amount_day =$old_amount_day+ $amount_day;
-// 	    			$this->_name="ln_saleschedule_test";
-// 	    			$datapayment = array(
-// 	    					'branch_id'=>$data['branch_id'],
-// 	    					'sale_id'=>$id,//good
-// 	    					'begining_balance'=> $old_remain_principal,//good
-// 	    					'principal_permonth'=> $old_pri_permonth,//good
-// 	    					'principal_permonthafter'=>$old_pri_permonth,//good
-// 	    					'total_interest'=>$old_interest_paymonth,//good
-// 	    					'total_interest_after'=>$old_interest_paymonth,//good
-// 	    					'total_payment'=>$old_pri_permonth+$old_interest_paymonth,//good
-// 	    					'total_payment_after'=>$old_pri_permonth+$old_interest_paymonth,//good
-// 	    					'ending_balance'=>$old_remain_principal-$old_pri_permonth,
-// 	    					'cum_interest'=>$cum_interest,
-// 	    					'amount_day'=>$old_amount_day,
-// 	    					'is_completed'=>0,
-// 	    					'date_payment'=>$next_payment,
-// 	    			);    
-// 	    			$this->insert($datapayment);
-// 	    			$old_remain_principal = 0;
-// 	    			$old_pri_permonth = 0;
-// 	    			$old_interest_paymonth = 0;
-// 	    			$old_amount_day = 0;
-// 	    			$from_date=$next_payment;
-//     			}
-//     		}
-//     		if($payment_method==3 OR $payment_method==4 OR $payment_method==6){
-// 	    		$sql = " SELECT t.* , DATE_FORMAT(t.date_payment, '%d-%m-%Y') AS date_payments,
-// 	    		DATE_FORMAT(t.date_payment, '%Y-%m-%d') AS date_name FROM
-// 	    		ln_saleschedule_test AS t WHERE t.sale_id = ".$id;
-// 	    		$rows = $db->fetchAll($sql);
-//     		}else{
-//     			$sql = " SELECT *,'row_id' FROM ln_sale_test WHERE id = ".$id;
-//     			$rows = $db->fetchRow($sql);
-//     		}
-//     		$db->commit();
-//     		return $rows;
-//     	}catch (Exception $e){
-//     		echo $e->getMessage();exit();
-//     		$db->rollBack();
-//     		Application_Form_FrmMessage::message("INSERT_FAIL");
-//     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-//     	}
-//     }
-// function getLoanPaymentByLoanNumber($data){
-//     	$db = $this->getAdapter();
-//     	$loan_number= $data['loan_number'];
-//     	if($data['type']!=2){
-//     		$where =($data['type']==1)?'loan_number = '.$loan_number:'client_id='.$loan_number;
-//     	    $sql=" SELECT *,
-//     	            (SELECT co_id FROM `ln_loan_group` WHERE g_id = 
-//     	            (SELECT lm.member_id FROM `ln_loan_member` AS lm WHERE lm.member_id = member_id LIMIT 1)) AS co_id,
-//     	            (SELECT lm.client_id FROM `ln_loan_member` AS lm WHERE lm.member_id = member_id LIMIT 1) AS client_id
-// 					,(SELECT currency_type FROM `ln_loan_member` WHERE $where LIMIT 1  ) AS curr_type
-//     	     FROM `ln_loanmember_funddetail` WHERE member_id =
-// 		    	(SELECT  member_id FROM `ln_loan_member` WHERE $where AND status=1 LIMIT 1)
-// 		    	AND status = 1 ";
-//     	}elseif($data['type']==2){
-//     		$sql=" SELECT *,
-// 	    		(SELECT co_id FROM `ln_loan_group` WHERE g_id = 
-// 	    	    (SELECT lm.member_id FROM `ln_loan_member` AS lm WHERE lm.member_id = member_id LIMIT 1)) AS co_id,    	            	
-// 	    		(SELECT lm.client_id FROM `ln_loan_member` AS lm WHERE lm.member_id = member_id LIMIT 1) AS client_id
-// 	    		,(SELECT currency_type FROM `ln_loan_member` WHERE $where LIMIT 1  ) AS curr_type
-//     		 FROM `ln_loanmember_funddetail` WHERE status = 1 AND member_id = 
-//     		       (SELECT member_id FROM `ln_loan_member` WHERE client_id =
-//     		       (SELECT client_id FROM `ln_client` WHERE client_number = ".$loan_number." LIMIT 1) LIMIT 1) ";
-//     	}
-//     	return $db->fetchAll($sql);
-//     }
-// function getLoanLevelByClient($client_id,$type){
-//     	$db  = $this->getAdapter();
-//     	if($type==1){
-//     		$sql = " SELECT COUNT(member_id) FROM `ln_loan_member` WHERE STATUS =1 AND client_id = $client_id LIMIT 1 ";
-//     	}else{
-//     		$sql = "SELECT COUNT(m.member_id) FROM `ln_loan_member` AS m,`ln_loan_group` AS g WHERE m.status =1 AND
-//     		m.group_id =g_id AND m.client_id = $client_id AND g.loan_type=2 LIMIT 1";
-//     	} 
-//     	$level  = $db->fetchOne($sql);
-//     	return ($level+1);
-//     }
-   
-//     public function getLoanInfo($id){//when repayment shedule
-//     	$db=$this->getAdapter();
-//     	$sql="SELECT  (SELECT lf.total_principal FROM `ln_loanmember_funddetail` AS lf WHERE lf. member_id= l.member_id AND STATUS=1 AND lf.is_completed=0 LIMIT 1)  AS total_principal
-//     	,l.currency_type FROM `ln_loan_member` AS l WHERE l.client_id=$id AND status=1 AND l.is_completed=0
-//     	";
-//     	return $db->fetchRow($sql);
-//     }
-//     public function getAllMemberLoanById($member_id){//for get id fund detail for update
-//     	$db = $this->getAdapter();
-//     	$sql = "SELECT lm.member_id ,lm.client_id,lm.group_id ,lm.loan_number,
-//     	(SELECT name_kh FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_kh,
-//     	(SELECT name_en FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_en,
-//     	(SELECT client_number FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_number,
-//     	lm.total_capital,lm.admin_fee,lm.loan_purpose FROM `ln_loan_member` AS lm
-//     	WHERE lm.status =1 AND lm.group_id = $member_id ";
-//     	return $db->fetchAll($sql);
-//     }
-//     public function getLastPayDate($data){
-//     	$loanNumber = $data['loan_numbers'];
-//     	$db = $this->getAdapter();
-//     	$sql ="SELECT cd.`date_payment` FROM `ln_client_receipt_money_detail` AS cd,`ln_client_receipt_money` AS c WHERE c.`id` = cd.`crm_id` AND c.`loan_number`='$loanNumber' ORDER BY cd.`id` DESC";
-//     	//return $sql;
-//     	return $db->fetchOne($sql);
-//     }
-    
-//     public function addStaff($data){
-    	
-//     	$db = $this->getAdapter();
-   
-//     	$_db = new Application_Model_DbTable_DbGlobal();
-//     	$staff_id = $_db->getStaffNumberByBranch($data['branch_id_pop']);  // get new staff code by branch
-    	
-//     	$this->_name="ln_staff";
-//     	$array = array(
-//     			'branch_id'		=>$data['branch_id_pop'],		
-//     			'position_id'	=>1, // 1 => sale agent
-//     			'co_code'		=>$staff_id,
-//     			'co_khname'		=>$data['kh_name'],
-//     			'sex'			=>$data['sex'],
-//     			'tel'			=>$data['phone'],
-//     			'note'			=>$data['note_pop'],
-//     			'create_date'	=>date('Y-m-d'),
-    			
-//     			);
-//     	return $this->insert($array);
-    	
-// //     	$sql = "select co_id as id , CONCAT(co_khname,' - ',co_code) as name_code from ln_staff where co_id = $id limit 1";
-// //     	return  $db->fetchRow($sql);
-    	
-//     }
-    
-//     public function addClient($data){
-    	 
-//     	$db = $this->getAdapter();
-    	 
-//     	$_db = new Application_Model_DbTable_DbGlobal();
-//     	$client_code=$_db->getNewClientIdByBranch($data['client_branch_id']);
-    	
-//     	$this->_name="ln_client";
-//     	$array = array(
-//     			'branch_id'		=>$data['client_branch_id'],
-//     			'client_number'	=>$client_code,
-//     			'name_kh'		=>$data['client_name'],
-//     			'sex'			=>$data['client_sex'],
-//     			'client_d_type'	=>$data['client_doc_type'],
-//     			'nation_id'		=>$data['national_id'],
-//     			'phone'			=>$data['client_phone'],
-//     			'remark'		=>$data['client_note'],
-//     			'create_date'	=>date('Y-m-d'),
-    			 
-//     	);
-//     	$id = $this->insert($array);
-//     	$result = array(
-//     			"id"=>$id,
-//     			'customer_code'=>$client_code);
-//     	return $result;       
-//     }
-//   function getDepositFirstPayment($sale_id){//old but not true if many deposit
-//   	$sql="SELECT total_principal_permonthpaid FROM `ln_client_receipt_money` WHERE sale_id=$sale_id ORDER BY id ASC LIMIT 1 ";
-//   	$db = $this->getAdapter();
-//   	return $db->fetchOne($sql);
-//   }
-//   function getDepositFirstPaymentMoneyOnly($sale_id){//ប្រើបានករណើតែបង់កកតែ១លើក
-//   	$sql="SELECT SUM(cr.total_principal_permonthpaid) AS total_principal_permonthpaid  FROM `ln_client_receipt_money` as cr
-//   	WHERE cr.sale_id=$sale_id AND field3=1 GROUP BY cr.sale_id  ORDER BY cr.id ASC LIMIT 1 ";
-//   	$db = $this->getAdapter();
-//   	return $db->fetchOne($sql);
-//   }
-  
-//   function getDepositFirstPaymentMoney($sale_id){//new from above
-//   	$sql="SELECT (cr.total_principal_permonthpaid) AS total_principal_permonthpaid,cr.date_input  FROM `ln_client_receipt_money` as cr
-//   		 WHERE cr.sale_id=$sale_id AND field3=1  AND cr.total_principal_permonthpaid>0 ORDER BY cr.id ASC ";
-//   	$db = $this->getAdapter();
-//   	return $db->fetchAll($sql);
-//   }
-//   function getReceiptMoneyPaid($sale_id){//new from above
-//   	$sql="SELECT * FROM `ln_client_receipt_money` as cr
-//   	WHERE cr.sale_id=$sale_id AND total_principal_permonthpaid>0 ORDER BY cr.id ASC  ";
-//   	$db = $this->getAdapter();
-//   	return $db->fetchAll($sql);
-//   }
-//   function getPaymentPayoff($sale_id){
-//   	$sql="SELECT outstanding,date_pay FROM `ln_client_receipt_money` WHERE sale_id=$sale_id ORDER BY id DESC  LIMIT 1 ";
-//   	$db = $this->getAdapter();
-//   	return $db->fetchRow($sql);
-//   }
-//   public function demoSchedule($data){
-//   	$db = $this->getAdapter();
-//   	$db->beginTransaction();
-//   	try{
-  
-//   		$sql=" TRUNCATE TABLE ln_sale_test ";
-//   		$db->query($sql);
-//   		$sql = "TRUNCATE TABLE ln_saleschedule_test";
-//   		$db->query($sql);
-  
-//   		$dbtable = new Application_Model_DbTable_DbGlobal();
-//   		$loan_number = $dbtable->getLoanNumber($data);
-//   		$arr = array(
-//   				//'client_id'=>$data['member'],
-//   				//'price_before'=>$data['total_sold'],
-//   				//'discount_amount'=>$data['discount'],
-//   				//'other_fee'=>$data['other_fee'],
-//   				'branch_id'=>$data['branch_id'],
-//   				'payment_id'=>$data["schedule_opt"],
-//   				'price_sold'=>$data['sold_price'],
-//   				'paid_amount'=>$data['deposit'],
-//   				'balance'=>$data['balance'],
-//   				'buy_date'=>$data['date_buy'],
-//   				'end_line'=>$data['date_line'],
-//   				'interest_rate'=>$data['interest_rate'],
-//   				'total_duration'=>$data['period'],
-//   				'first_payment'=>$data['first_payment'],
-//   				'validate_date'=>$data['first_payment'],
-//   				'create_date'=>date("Y-m-d"),
-//   				//'user_id'=>$this->getUserId(),
-//   				'payment_method'=>1,//$data['loan_type'],
-//   				//'note'=>$data['note'],
-//   				//     				'staff_id'=>$data['staff_id'],
-//   		//     				'comission'=>$data['commission'],
-  				
-//   		);
-//   		$this->_name="ln_sale_test";
-//   		$id = $this->insert($arr);//add group loan
-  
-//   		$total_day=0;
-//   		$old_remain_principal = 0;
-//   		$old_pri_permonth = 0;
-//   		$old_interest_paymonth = 0;
-//   		$old_amount_day = 0;
-//   		$cum_interest=0;
-//   		$amount_collect = 1;
-//   		//$remain_principal = $data['balance'];
-//   		$remain_principal = $data['sold_price'];
-//   		$next_payment = $data['first_payment'];
-//   		$from_date =  $data['release_date'];
-//   		$curr_type = 2;//$data['currency_type'];
-//   		//$term_types = 12;
-//   		$key = new Application_Model_DbTable_DbKeycode();
-//   		$key = $key->getKeyCodeMiniInv(TRUE);
-//   		$term_types=$key['install_by'];
-  		
-//   		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==6){
-//   			$term_types=1;
-//   		}
-//   		$loop_payment = $data['period']*$term_types;
-//   		$borrow_term = $data['period']*$term_types;
-//   		$payment_method = $data["schedule_opt"];
-  
-//   		$str_next = '+1 month';
-//   		for($i=1;$i<=$loop_payment;$i++){
-//   			if($payment_method==1){//booking
-  
-//   			}elseif($payment_method==2){//payoff
-  
-//   			}elseif($payment_method==3){//pay by times//check date payment
-//   				if($i!=1){
-//   					//     				$old_remain_principal=0;
-//   					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
-//   					$start_date = $next_payment;
-//   					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
-//   				}else{
-//   					$next_payment = $data['first_payment'];
-//   					$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
-//   				}
-//   				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
-//   				$total_day = $amount_day;
-//   				$interest_paymonth = 0;
-//   				$pri_permonth = round($data['sold_price']/$borrow_term,0);
-//   				if($i==$loop_payment){//for end of record only
-//   					$pri_permonth = $remain_principal;
-//   				}
-//   			}elseif($payment_method==4){
-//   				if($i!=1){
-//   					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
-//   					$start_date = $next_payment;
-//   					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
-  
-//   				}else{
-//   					//​​បញ្ចូលចំនូនត្រូវបង់ដំបូងសិន
-//   					if(!empty($data['identity'])){
-//   						$ids = explode(',', $data['identity']);
-//   						$key = 1;
-//   						foreach ($ids as $j){
-//   							if($key==1){
-//   								// 	    							$old_remain_principal = $data['sold_price'];
-//   								$remain_principal=$data['sold_price'];
-//   								$old_pri_permonth = $data['total_payment'.$j];
-//   							}else{
-//   								// 	    							$old_remain_principal = $old_remain_principal-$old_pri_permonth;
-//   								$remain_principal = $remain_principal-$old_pri_permonth;
-//   								$old_pri_permonth = $data['total_payment'.$j];
-//   							}
-//   							$key = $key+1;
-//   							$old_interest_paymonth = 0;
-  								
-//   							$cum_interest = $cum_interest+$old_interest_paymonth;
-//   							$amount_day = $dbtable->CountDayByDate($from_date,$data['date_payment'.$j]);
-  
-//   							$this->_name="ln_saleschedule_test";
-//   							$datapayment = array(
-//   									'branch_id'=>$data['branch_id'],
-//   									'sale_id'=>$id,//good
-//   									'begining_balance'=> $remain_principal,//good
-//   									'principal_permonth'=> $old_pri_permonth,//good
-//   									'principal_permonthafter'=>$old_pri_permonth,//good
-//   									'total_interest'=>$old_interest_paymonth,//good
-//   									'total_interest_after'=>$old_interest_paymonth,//good
-//   									'total_payment'=>$old_interest_paymonth+$old_pri_permonth,//good
-//   									'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth,//good
-//   									'ending_balance'=>$remain_principal-$old_pri_permonth,
-//   									'cum_interest'=>$cum_interest,
-//   									'amount_day'=>$old_amount_day,
-//   									'is_completed'=>0,
-//   									'date_payment'=>$data['date_payment'.$j],
-//   							);
-//   							$this->insert($datapayment);
-//   							$from_date = $data['date_payment'.$j];
-//   						}
-//   					}
-//   					$old_remain_principal=0;
-//   					$old_pri_permonth = 0;
-//   					$old_interest_paymonth = 0;
-//   					if(!empty($data['identity'])){
-//   						$remain_principal = $data['sold_price']-$data['total_installamount'];
-//   					}
-  
-//   					$next_payment = $data['first_payment'];
-//   					$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
-//   				}
-//   				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
-//   				$total_day = $amount_day;
-//   				$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
-//   				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
-  				 
-//   				$pri_permonth = $data['fixed_payment']-$interest_paymonth;
-//   				if($i==$loop_payment){//for end of record only
-//   					$pri_permonth = $remain_principal;
-//   				}
-//   			}elseif($payment_method==5){//bank
-  
-//   			}elseif($payment_method==6){
-//   				$ids = explode(',', $data['identity']);
-//   				$key = 1;
-//   				foreach ($ids as $i){
-//   					if($key==1){
-//   						$old_remain_principal = $data['sold_price'];
-//   						//     			   	 		$old_pri_permonth = $data['total_payment'.$i]-$data['deposit'];
-//   						$old_pri_permonth = $data['total_payment'.$i];
-//   					}else{
-//   						$old_remain_principal = $old_remain_principal-$old_pri_permonth;
-//   						$old_pri_permonth = $data['total_payment'.$i];
-//   					}
-  						
-//   					$key = $key+1;
-//   					$old_interest_paymonth = ($data['interest_rate']==0)?0:$this->round_up_currency(1,($old_remain_principal*$data['interest_rate']/12/100));
-  
-//   					$cum_interest = $cum_interest+$old_interest_paymonth;
-//   					$amount_day = $dbtable->CountDayByDate($from_date,$data['date_payment'.$i]);
-  						
-//   					$this->_name="ln_saleschedule_test";
-//   					$datapayment = array(
-//   							'branch_id'=>$data['branch_id'],
-//   							'sale_id'=>$id,//good
-//   							'begining_balance'=> $old_remain_principal,//good
-//   							//     			   	 			'begining_balance_after'=> $old_remain_principal,//good
-//   							'principal_permonth'=> $old_pri_permonth,//good
-//   							'principal_permonthafter'=>$old_pri_permonth,//good
-//   							'total_interest'=>$old_interest_paymonth,//good
-//   							'total_interest_after'=>$old_interest_paymonth,//good
-//   							'total_payment'=>$old_interest_paymonth+$old_pri_permonth,//good
-//   							'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth,//good
-//   							'ending_balance'=>$old_remain_principal-$old_pri_permonth,
-//   							'cum_interest'=>$cum_interest,
-//   							'amount_day'=>$old_amount_day,
-//   							'is_completed'=>0,
-//   							'date_payment'=>$data['date_payment'.$i],
-//   					);
-//   					$this->insert($datapayment);
-//   					$from_date = $data['date_payment'.$i];
-//   				}
-//   				break;
-//   			}
-//   			if($payment_method==3 OR $payment_method==4){
-//   				$old_remain_principal =$old_remain_principal+$remain_principal;
-//   				$old_pri_permonth = $old_pri_permonth+$pri_permonth;
-//   				$old_interest_paymonth = $this->round_up_currency($curr_type,($old_interest_paymonth+$interest_paymonth));
-//   				$cum_interest = $cum_interest+$old_interest_paymonth;
-//   				$old_amount_day =$old_amount_day+ $amount_day;
-//   				$this->_name="ln_saleschedule_test";
-//   				$datapayment = array(
-//   						'branch_id'=>$data['branch_id'],
-//   						'sale_id'=>$id,//good
-//   						'begining_balance'=> $old_remain_principal,//good
-//   						'principal_permonth'=> $old_pri_permonth,//good
-//   						'principal_permonthafter'=>$old_pri_permonth,//good
-//   						'total_interest'=>$old_interest_paymonth,//good
-//   						'total_interest_after'=>$old_interest_paymonth,//good
-//   						'total_payment'=>$old_pri_permonth+$old_interest_paymonth,//good
-//   						'total_payment_after'=>$old_pri_permonth+$old_interest_paymonth,//good
-//   						'ending_balance'=>$old_remain_principal-$old_pri_permonth,
-//   						'cum_interest'=>$cum_interest,
-//   						'amount_day'=>$old_amount_day,
-//   						'is_completed'=>0,
-//   						'date_payment'=>$next_payment,
-//   				);
-//   				$this->insert($datapayment);
-//   				$old_remain_principal = 0;
-//   				$old_pri_permonth = 0;
-//   				$old_interest_paymonth = 0;
-//   				$old_amount_day = 0;
-//   				$from_date=$next_payment;
-//   			}
-//   		}
-//   		if($payment_method==3 OR $payment_method==4 OR $payment_method==6){
-//   			$sql = " SELECT t.* , DATE_FORMAT(t.date_payment, '%d-%m-%Y') AS date_payments,
-//   			DATE_FORMAT(t.date_payment, '%Y-%m-%d') AS date_name FROM
-//   			ln_saleschedule_test AS t WHERE t.sale_id = ".$id;
-//   			$rows = $db->fetchAll($sql);
-//   		}else{
-//   			$sql = " SELECT *,'row_id' FROM ln_sale_test WHERE id = ".$id;
-//   			$rows = $db->fetchRow($sql);
-//   		}
-//   		$db->commit();
-//   		return $rows;
-//   	}catch (Exception $e){
-//   		$db->rollBack();
-//   		Application_Form_FrmMessage::message("INSERT_FAIL");
-//   		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-//   	}
-  
-  
-//   }
-  
-//   function updateEnddateSale($sale_id){
-//   		$db = $this->getAdapter();
-// // //   	$sql="  SELECT s.id,s.end_line,
-// // // 		(SELECT date_payment FROM `ln_saleschedule` WHERE s.id=ln_saleschedule.sale_id ORDER BY ln_saleschedule.id DESC LIMIT 1) AS payment_date
-// // // 		FROM `ln_sale` AS s WHERE s.payment_id=3 OR s.payment_id=6 ";
-// // //   	$sql="  SELECT s.id,
-// // //   	(SELECT ln_saleschedule.id FROM `ln_saleschedule` WHERE s.id=ln_saleschedule.sale_id ORDER BY ln_saleschedule.id DESC LIMIT 1) AS last_recordid
-// // //   	FROM `ln_sale` AS s WHERE s.payment_id=3 OR s.payment_id=6 ";
-// //   $rows = $db->fetchAll($sql);
-//   	  $sql="  SELECT s.id,s.date_payment FROM ln_saleschedule AS s WHERE sale_id=$sale_id ORDER BY id ASC ";
-//   	  $rows = $db->fetchAll($sql);
-	
-// 	  if(!empty($rows)){
-// 	  	$this->_name='ln_saleschedule';
-// 	  	$nextpayment = $rows['buy_date'][0];
-// 		  	foreach($rows as $rs){
-// 		  		$arr = array(
-// 		  				'date_payment'=>$nextpayment,
-// 		  				);
-// 		  		$where = " id = ".$rs['id'];
-// 		  		$this->update($arr, $where);
-		  		
-// 		  		$sql1=" SELECT cr.id FROM ln_client_receipt_money AS cr,ln_client_receipt_money_detail AS cmd
-// 		  		WHERE cr.id= cmd.crm_id AND lfd_id=".$rs['id'];
-// 		  		$rsmoney = $db->fetchAll($sql1);
-		  		
-// 		  		$arr = array(
-// 		  				'date_pay'=>$nextpayment,
-// 		  				'date_input'=>$nextpayment,
-// 		  		);
-// 		  		$this->_name='ln_client_receipt_money';
-// 		  		$where = " id = ".$rsmoney['id'];
-// 		  		$this->update($arr, $where);
-		  		
-// 		  		$arr=array(
-// 		  				'date_pay'=>$nextpayment,
-// 		  				'date_input'=>$nextpayment,
-		  		
-// 		  		);
-// 		  		$this->_name='ln_client_receipt_money_detail';
-// 		  		$where = " lfd_id = ".$rs['id'];
-// 		  		$this->update($arr, $where);
-		  		
-// 		  		$nextpayment = date("Y-m-d",strtotime("$nextpayment +30 day"));
-// 		  	}
-// 	    }
-//  	 }
 }
-
-
-
