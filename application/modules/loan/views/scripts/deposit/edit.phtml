@@ -740,6 +740,8 @@ require(["dojo/ready"], function(ready){
 		dijit.byId("date_line").set("readOnly",false);
 		filterClient();
 		enablePayment();
+		dijit.byId("typesale").set("value",'<?php echo $this->datarow['typesale']; ?>');
+		
 	  });
 	 
 	new dijit.form.FilteringSelect({
@@ -838,11 +840,11 @@ function getcustomerinfo(client_id){
 }
 var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfo(){
-	alert(333);
 	//dijit.byId('land_price').attr('value',0);
 	var typesale =dijit.byId('typesale').get('value');
-	dijit.byId('total_sold').attr('value',0);
-	dijit.byId('sold_price').attr('value',0);
+	//dijit.byId('total_sold').attr('value',0);
+	//dijit.byId('sold_price').attr('value',0);
+	var oldprice= dijit.byId('total_sold').get('value');
 	dojo.xhrPost({
 		url:url_getlandinfodetail,	
 		content:{ 
@@ -905,6 +907,7 @@ function getlandinfo(){
 					dijit.byId('sold_price').attr('value',data.price);
 				}
 			}
+			calculateDiscount();
 		},
 		error: function(err) {
 			alert(err);
@@ -1100,6 +1103,14 @@ function enablePayment(){
 }
 function hideDialog1(){
 	 dijit.byId("popup_staff").hide();
+}
+function resetSale(){
+	dijit.byId('land_label').attr("value",'');
+	$('#identity_land').val('');
+	dojo.byId('land_information').innerHTML ="";
+	dijit.byId('total_sold').attr("value",0);
+	dijit.byId('sold_price').attr("value",0);
+	
 }
 </script>
 <style>

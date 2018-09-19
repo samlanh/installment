@@ -69,7 +69,7 @@
                 			$title=$tr->translate(strtoupper($rs));
                 		}
                 	?>
-                	<li>
+                	<li <?php if ($rs==$module ){ echo 'class="active"';}?>>
                 		<?php if ($rs=="report"){?>
                 			<a href="<?php echo $this->url(array('module'=>$rs,'controller'=>'index','action'=>'index'), null, true);;?>">
                 			<?php echo $array_icon[$rs];?> <?php echo $title;?> 
@@ -81,11 +81,11 @@
 		                		<?php if (!empty($arr_param_menu[$rs])){?><span class="fa fa-chevron-down"></span><?php }?>
 		                		</a>
 		                		<?php if (!empty($arr_param_menu[$rs])){?>
-			                    <ul class="nav child_menu">
+			                    <ul class="nav child_menu" <?php if ($rs==$module ){ echo 'style="display: block;"';}?>>
 			                       <?php  foreach ($arr_param_menu[$rs] as $key => $sub){
 			                       	$urlsub = $this->url(array('module'=>$rs,'controller'=>$key,'action'=>'index'), null, true);
 			                       	?>
-			                      <li><a href="<?php echo $urlsub;?>"><?php echo $sub;?></a></li>
+			                      <li <?php if ($rs==$module AND $key==$controller){ echo 'class="current-page"';}?>><a href="<?php echo $urlsub;?>"><?php echo $sub;?></a></li>
 			                       <?php }?>
 			                    </ul>
 			                    <?php }?>

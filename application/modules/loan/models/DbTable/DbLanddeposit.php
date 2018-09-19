@@ -449,19 +449,159 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			$db->commit();
     			return true;
     		}
-    	
-    		$this->_name="ln_properties";//ប្តូរពីទិញច្រើនមកទិញតែមួយ Error
-    		$where = "id =".$data["old_landid"];
-    		$arr = array(
-    				"is_lock"=>0);
-    		$this->update($arr, $where);
+    		if(!empty($row)){
+    			if($row['typesale']==2){//multi sale
+    				if ($data['typesale']==2){//លក់ម្តងច្រើន
+    					$ids_land = explode(',', $data['identity_land']);
+    					$size = 0; $width=''; $height='';
+    					$land_address='';
+    					$land_code='';
+    					$price = 0;
+    					$land_price=0;
+    					$house_price=0;
+    					$property_type='';
+    					foreach ($ids_land as $key => $i){
+    						$this->_name="ln_properties";
+    						$where = "id =".$ids_land[$key];
+    						$arr = array(
+    								"is_lock"=>1,
+    						);
+    						$this->update($arr, $where);
+    						$newpro = $this->getProperty($ids_land[$key]);
+    						$size = $size + $newpro['land_size'];
+    				
+    						$width = $width+$newpro['width'];
+    						$height =$newpro['height'];
+    				
+    						$price = $price + $newpro['price'];
+    						$land_price = $land_price+$newpro['land_price'];
+    						$house_price = $house_price+$newpro['house_price'];
+    				
+    						if(!empty($land_address)){
+    							$land_address= $land_address.'&'.$newpro['land_address'];
+    						}else{
+    							$land_address =$newpro['land_address'];
+    						}
+    						if(!empty($land_code)){
+    							$land_code=$land_code.','.$newpro['land_code'];
+    						}else{ $land_code =$newpro['land_code'];
+    						}
+    						$property_type = $newpro['property_type'];
+    					}//end loop
+    					 
+    					$newproperty = array(
+    							'branch_id'=>$data['branch_id'],
+    							'land_code'=>$land_code,
+    							'land_address'=>$land_address,
+    							'street'=>$newpro['street'],
+    							'price'=>$price,
+    							'land_price'=>$land_price,
+    							'house_price'=>$house_price,
+    							'property_type'=>$property_type,
+    							'width'=>$width,
+    							'height'=>$height,
+    							'land_size'=>$size,
+    							"is_lock"=>1,
+    							"status"=>-2,
+    							"create_date"=>date("Y-m-d"),
+    							"user_id"=>$this->getUserId(),
+    							"old_land_id"=>$data['identity_land']
+    					);
+    					$this->_name="ln_properties";
+    					$whereNewPro = "id =".$data["old_landid"];
+    					$land_id =$data["old_landid"];
+    					$this->update($newproperty, $whereNewPro);
+    				}else {
+    					$this->_name = 'ln_properties';
+    					$where="id = ".$data["old_landid"];
+    					$this->delete($where);
+    					
+    					$this->_name="ln_properties";
+    					$where = "id =".$data["land_code"];
+    					$arr = array(
+    							"is_lock"=>1
+    					);
+    					$this->update($arr, $where);
+    					$land_id = $data["land_code"];
+    				}
+    			}else{
+    				if ($data['typesale']==2){//លក់ម្តងច្រើន
+    					$ids_land = explode(',', $data['identity_land']);
+    					$size = 0; $width=''; $height='';
+    					$land_address='';
+    					$land_code='';
+    					$price = 0;
+    					$land_price=0;
+    					$house_price=0;
+    					$property_type='';
+    					foreach ($ids_land as $key => $i){
+    						$this->_name="ln_properties";
+    						$where = "id =".$ids_land[$key];
+    						$arr = array(
+    								"is_lock"=>1,
+    						);
+    						$this->update($arr, $where);
+    						$newpro = $this->getProperty($ids_land[$key]);
+    						$size = $size + $newpro['land_size'];
+    				
+    						$width = $width+$newpro['width'];
+    						$height =$newpro['height'];
+    				
+    						$price = $price + $newpro['price'];
+    						$land_price = $land_price+$newpro['land_price'];
+    						$house_price = $house_price+$newpro['house_price'];
+    				
+    						if(!empty($land_address)){
+    							$land_address= $land_address.'&'.$newpro['land_address'];
+    						}else{
+    							$land_address =$newpro['land_address'];
+    						}
+    						if(!empty($land_code)){
+    							$land_code=$land_code.','.$newpro['land_code'];
+    						}else{ $land_code =$newpro['land_code'];
+    						}
+    						$property_type = $newpro['property_type'];
+    					}//end loop
+    					 
+    					$newproperty = array(
+    							'branch_id'=>$data['branch_id'],
+    							'land_code'=>$land_code,
+    							'land_address'=>$land_address,
+    							'street'=>$newpro['street'],
+    							'price'=>$price,
+    							'land_price'=>$land_price,
+    							'house_price'=>$house_price,
+    							'property_type'=>$property_type,
+    							'width'=>$width,
+    							'height'=>$height,
+    							'land_size'=>$size,
+    							"is_lock"=>1,
+    							"status"=>-2,
+    							"create_date"=>date("Y-m-d"),
+    							"user_id"=>$this->getUserId(),
+    							"old_land_id"=>$data['identity_land']
+    					);
+    					$this->_name="ln_properties";
+    					$land_id = $this->insert($newproperty);
+//     					$data['land_code']=$land_id;
+    				}else{
+    					$this->_name="ln_properties";//ប្តូរពីទិញច្រើនមកទិញតែមួយ Error
+    					$where = "id =".$data["old_landid"];
+    					$arr = array(
+    							"is_lock"=>0);
+    					$this->update($arr, $where);
+    					
+    					$this->_name="ln_properties";
+    					$where = "id =".$data["land_code"];
+    					$arr = array(
+    							"is_lock"=>1
+    					);
+    					$this->update($arr, $where);
+    					$land_id = $data["land_code"];
+    				}
+    			}
+    		}
     		
-    		$this->_name="ln_properties";
-    		$where = "id =".$data["land_code"];
-    		$arr = array(
-    				"is_lock"=>1
-    		);
-    		$this->update($arr, $where);
     		
     		$key = new Application_Model_DbTable_DbKeycode();
     		$setting=$key->getKeyCodeMiniInv(TRUE);
@@ -474,7 +614,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'branch_id'=>$data['branch_id'],
     			   	'receipt_no'=>$data['receipt'],
     				'sale_number'=>$data['sale_code'],
-    			   	'house_id'=>$data["land_code"],
+    			   	'house_id'=>$land_id,
     			   	'payment_id'=>$data["schedule_opt"],
     				'client_id'=>$data['member'],
     				'price_before'=>$data['total_sold'],
@@ -493,6 +633,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			   	'validate_date'=>$data['date_line'],
     				'payment_method'=>1,
     				'note'=>$data['note'],
+    				'typesale'=>$data['typesale'],
     			   	'land_price'=>0,
     				'is_reschedule'=>0,
     			    'agreement_date'=>$data['agreement_date'],
