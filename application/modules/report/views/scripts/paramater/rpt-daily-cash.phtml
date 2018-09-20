@@ -110,8 +110,8 @@
 					                    <!--<td rowspan="2"><?php //echo $tr->translate("CLIENT_NUM");?></td>     -->              
 					                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 					                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-					                    <td rowspan="2"><?php echo $tr->translate("បង់ជា");?></td>   
-					                    <td colspan="3"><?php echo $tr->translate("PAID_PRINCIPAL");?></td>
+					                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_TYPE");?></td>   
+					                    <td colspan="4"><?php echo $tr->translate("PAID_PRINCIPAL");?></td>
 					                    <td rowspan="2"><?php echo $tr->translate("INTEREST");?></td>
 					                    <td rowspan="2"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
 					                    <td rowspan="2"><?php echo $tr->translate("TOTAL");?></td>    
@@ -121,10 +121,10 @@
 					                    <th rowspan="2"><?php echo $tr->translate("BY_USER");?></th>
 					                </tr>
 					                <tr class="style" style="white-space: nowrap;text-align: center;font-weight: bold;">
-					                	<td><?php echo $tr->translate("ទ្រនាប់ដៃ");?></td>                   
+					                	<td><?php echo $tr->translate("DEPOSIT");?></td>                   
 					                    <td><?php echo $tr->translate("កក់បង្គ្រប់");?></td>     
-					                    <td><?php echo $tr->translate("រំលស់ប្រចាំខែ");?></td>     
-					                    <!-- <td><?php //echo $tr->translate("SERVICE CHARGE");?></td>	  -->                   
+					                    <td><?php echo $tr->translate("រំលស់ប្រចាំខែ");?></td>
+					                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
 					                </tr>
 				                </thead>
 			                <?php 
@@ -141,14 +141,16 @@
 			                	 
 			                	 $total_other_income=0;
 			                	 $total_expese=0;
+			                	 $total_extra=0;
 			                ?>
 			                <?php $is_set =0; if(!empty($this->collectMoney)) foreach ($this->collectMoney as $index => $rs){ ?>
 			               <?php 
 								$amt_d1 = $amt_d1+$rs['total_principal_permonthpaid'];
 								$amt_d2 = $amt_d2+$rs['total_interest_permonthpaid'];
+								$total_extra = $total_extra+$rs['extra_payment'];
 								$amt_d3 = $amt_d3+$rs['penalize_amountpaid'];
 								$amt_d5 = $amt_d5+$rs['service_chargepaid'];
-								$total_d=$amt_d1+$amt_d2+$amt_d3+$amt_d5;
+								$total_d=$amt_d1+$amt_d2+$amt_d3+$amt_d5+$total_extra;
 								
 								if($rs['payment_methodid']==1){
 									$total_cash = $total_cash + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
@@ -167,7 +169,8 @@
 			               		<td>&nbsp;<?php echo $rs["payment_method"];?>&nbsp;</td>
 			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php if($rs['field3']==1){ echo number_format($rs['total_principal_permonthpaid'],2);$depsit = $depsit+$rs['total_principal_permonthpaid'];}else{ echo"-";}?>&nbsp;</td>
 			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php if($rs['field3']==0){ echo number_format($rs['total_principal_permonthpaid'],2);$install = $install+$rs['total_principal_permonthpaid'];}else{echo"-";}?>&nbsp;</td>
-			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php if($rs['field3']==3){ echo number_format($rs['total_principal_permonthpaid'],2);$income_daily = $income_daily+$rs['total_principal_permonthpaid'];}else{echo"-";}?>&nbsp;</td>               		
+			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php if($rs['field3']==3){ echo number_format($rs['total_principal_permonthpaid'],2);$income_daily = $income_daily+$rs['total_principal_permonthpaid'];}else{echo"-";}?>&nbsp;</td>        
+			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php if($rs['extra_payment']>0){ echo number_format($rs['extra_payment'],2);}else{echo"-";}?>&nbsp;</td>       		
 			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['total_interest_permonthpaid'],2);?>&nbsp;</td>
 			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['penalize_amountpaid'],2);?>&nbsp;</td>
 			               		<!-- <td align="center" style="font:bolder 11px Arial;">&nbsp;<?php //echo number_format($rs['service_chargepaid'],2);?>&nbsp;</td> -->
@@ -180,10 +183,11 @@
 			                <?php }?>
 			                <tr style="font-weight: bold;text-align: center;font-size: 14px;">
 			                	<td colspan="3" style="border: 1px solid #fff;border-top: 1px solid #000;border-right: 1px solid #000"></td>
-			                	<td colspan="2" style="font-size:14px; font-family:'Khmer MEF2';" >សរុប</td>
+			                	<td colspan="2" style="font-size:14px; font-family:'Khmer MEF2';" ><?php echo $tr->translate("TOTAL_AMOUNT");?></td>
 			                	<td ><?php echo number_format($depsit,2);?></td>
 			                	<td ><?php echo number_format($install,2);?></td>
 			                	<td ><?php echo number_format($income_daily,2);?></td>
+			                	<td ><?php echo number_format($total_extra,2);?></td>
 			                	<td ><?php echo number_format($amt_d2,2);?></td>
 			                	<td ><?php echo number_format($amt_d3+$amt_d5,2);?></td>
 			                	<td ><?php echo number_format($total_d,2);?></td>

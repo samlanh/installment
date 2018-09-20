@@ -244,19 +244,22 @@
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("OTHER_FEE");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement('other_fee');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
 	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SOLD_PRICE");?>  :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                   		<?php echo $frm->getElement('sold_price');?>
 	                   </div>
 	                </div>
+	                <?php if($this->data['note_agreement']==1){?>
+	                <div class="form-group">
+	                   <label id="lbl_dateline" class="control-label   col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   <?php echo $tr->translate("AGREEMENT_NOTE")?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('note_agreement');?>
+	                   </div>
+	                </div>
+	                <?php }?>
 	            </div>
 	            <div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
@@ -878,13 +881,8 @@ function calculateDiscount(){
 	}
 	discount = parseFloat(discount)+parseFloat(bdiscount_fixed);
 
-	other_fee = dijit.byId('other_fee').get('value');
-	if(isNaN(other_fee)){
-		other_fee=0;
-	}
-	
 	discount_percent = parseInt(total_sold*discount_percent/100);
-	total_sold = total_sold-discount_percent-discount+other_fee;
+	total_sold = total_sold-discount_percent-discount;
 	
 	if(dijit.byId('old_paymentmethod').get('value')==1){
 		//total_sold = total_sold-dijit.byId('paid_before').get('value');
@@ -1248,7 +1246,7 @@ function getInfoByLoanNumber(){
 			total_principal = parseFloat(total_principal);
 			
 			dijit.byId('sale_code').attr('value',data.sale_number);
-			
+			dijit.byId('note_agreement').attr('value',data.note_agreement);
 			dijit.byId('amount_build').attr('value',data.amount_build);
 			dijit.byId("start_building").attr('value',data.build_start);
 			dijit.byId("agreement_date").attr('value',data.agreement_date);
@@ -1258,25 +1256,27 @@ function getInfoByLoanNumber(){
 			dijit.byId('member').set('readOnly',true);
 			dijit.byId('bdiscount_percent').attr('value',data.discount_percent);
 			dijit.byId('bdiscount_fixed').attr('value',data.discount_amount);
-			dijit.byId('paid_before').attr('value',data.paid_amount);
+			dijit.byId('paid_before').attr('value',data.total_principal);
+
+			
 			
 			price_before = data.price_before;
-			paid_amount = data.paid_amount;
+			paid_amount = data.total_principal;
 			discount_percent = parseFloat(data.discount_percent)*parseFloat(price_before)/100;
 			balance_before = parseFloat(price_before)-parseFloat(paid_amount)-parseFloat(discount_percent);
 			
-			dijit.byId('balance_before').attr('value',balance_before);
+			//dijit.byId('balance_before').attr('value',balance_before);
+			dijit.byId('balance_before').attr('value',data.price_sold-paid_amount);
 			if(data.payment_id==1){
 				dijit.byId('sold_price').attr('value',data.price_sold);//ok
-				//dijit.byId('remain_balance').attr('value',data.price_sold);//ok
 			}else{
 				dijit.byId('sold_price').attr('value',data.price_sold-data.paid_amount);
-				//dijit.byId('remain_balance').attr('value',data.price_sold-data.paid_amount);//ok
 			}
 			dijit.byId('old_paymentmethod').attr('value',data.payment_id);
 			//alert(data.payment_id);
 			
-			dijit.byId('house_price').attr('value',parseFloat(data.paid_amount)+parseFloat(balance_before));
+			dijit.byId('house_price').attr('value',parseFloat(data.price_sold));
+			//dijit.byId('house_price').attr('value',parseFloat(data.paid_amount)+parseFloat(balance_before));
 			
 		},
 		error: function(err) {
