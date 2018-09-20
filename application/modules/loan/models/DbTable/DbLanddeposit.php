@@ -414,16 +414,19 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		if(!empty($row)){
     			if($row['typesale']==2){//multi sale
     				$ids = explode(',', $row['old_land_id']);
-    				foreach($ids as $land){
-    					$this->_name="ln_properties";
-    					$arr = array(
-    							"is_lock"=>0
-    					);
-    					$where = "id =".$land;
-    					$this->update($arr, $where);
+    				if (!empty($row['old_land_id'])){
+	    				foreach($ids as $land){
+	    					$this->_name="ln_properties";
+	    					$arr = array(
+	    							"is_lock"=>0
+	    					);
+	    					$where = "id =".$land;
+	    					$this->update($arr, $where);
+	    				}
     				}
     			}
     		}
+    		
     		if($data['status_using']==0){//cancel
     			$this->_name="ln_sale";
     			$arr_update = array(
@@ -449,6 +452,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			$db->commit();
     			return true;
     		}
+    	
     		if(!empty($row)){
     			if($row['typesale']==2){//multi sale
     				if ($data['typesale']==2){//លក់ម្តងច្រើន
