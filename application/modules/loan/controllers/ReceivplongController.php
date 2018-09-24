@@ -26,7 +26,7 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","LOAN_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","RECEIVED_DATE","DATE","NOTE","STATUS","ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ");
+			$collumns = array("PROJECT_NAME","LOAN_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","RECEIVED_DATE","DATE","NOTE","STATUS","PLONG_TITLE");
 			$link=array(
 					'module'=>'loan','controller'=>'receivplong','action'=>'edit',
 			);

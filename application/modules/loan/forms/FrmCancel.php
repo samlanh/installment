@@ -79,7 +79,7 @@ public function init()
 				'class'=>'fullside',
 				'required' =>'true',
 		));
-		$options_branch_search=array("-1"=>"Select Project");
+		$options_branch_search=array("-1"=>$this->tr->translate("SELECT_PROJECT"));
 		$rows_branch_saerch = $db->getAllBranchName();
 		if(!empty($rows_branch))foreach($rows_branch_saerch AS $row){
 			$options_branch_search[$row['br_id']]=$row['project_name'];
@@ -402,7 +402,7 @@ public function init()
 		$return_back->setValue(0);
 		
 		$client_name = new Zend_Dojo_Form_Element_FilteringSelect("client_name");
-		$opt_client = array(''=>'ជ្រើសរើស ឈ្មោះអតិថិជន');
+		$opt_client = array(''=>$this->tr->translate('CHOOSE_CUSTOEMR'));
 		$rows = $db->getAllClient();
 		if(!empty($rows))foreach($rows AS $row){
 			$opt_client[$row['id']]=$row['name'];
@@ -429,7 +429,7 @@ public function init()
 		$land_id->setValue($request->getParam("land_id"));
 		
 		$client_name = new Zend_Dojo_Form_Element_FilteringSelect("client_name");
-		$opt_client = array(''=>'ជ្រើសរើស ឈ្មោះអតិថិជន');
+		$opt_client = array(''=>$this->tr->translate('CHOOSE_CUSTOEMR'));
 		$rows = $db->getAllClient();
 		if(!empty($rows))foreach($rows AS $row){
 			$opt_client[$row['id']]=$row['name'];

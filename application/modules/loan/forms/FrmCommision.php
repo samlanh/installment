@@ -77,7 +77,7 @@ public function init()
 				'class'=>'fullside',
 				'required' =>'true',
 		));
-		$options_branch_search=array("-1"=>"Select Project");
+		$options_branch_search=array("-1"=>$this->tr->translate("SELECT_PROJECT"));
 		$rows_branch_saerch = $db->getAllBranchName();
 		if(!empty($rows_branch))foreach($rows_branch_saerch AS $row){
 			$options_branch_search[$row['br_id']]=$row['project_name'];
