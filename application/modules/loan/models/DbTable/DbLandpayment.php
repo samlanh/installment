@@ -451,10 +451,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    		$total_day = $amount_day;
 			    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
 			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
-			    		if($data['install_type']==2){//គិតជាខែ
-			    			$pri_permonth=$data['for_installamount']/($data['period']*12);
+			    		if($data['install_type']==2){//ថយ
+			    			$pri_permonth=$data['for_installamount']/($data['period']*$term_types);
 			    			$pri_permonth =$this->round_up_currency(2, $pri_permonth);
-			    		}else{
+			    		}else{//ថេរ
 			    			$pri_permonth = $data['fixed_payment']-$interest_paymonth;
 			    		}
 			    		if($i==$loop_payment){//for end of record only
@@ -986,7 +986,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
     				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
     				if($data['install_type']==2){
-    					$pri_permonth=$data['for_installamount']/($data['period']*12);
+    					$pri_permonth=$data['for_installamount']/($data['period']*$term_types);
     					$pri_permonth =$this->round_up_currency(2, $pri_permonth);
     				}else{
     					$pri_permonth = $data['fixed_payment']-$interest_paymonth;
@@ -1121,7 +1121,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'build_start'=>$data['start_building'],
     				'amount_build'=>$data['amount_build'],
     				'land_price'=>0,//$data['house_price'],
-    				'total_installamount'=>$data['total_installamount'],
+    				//'total_installamount'=>$data['total_installamount'],
     				'agreement_date'=>$data['agreement_date'],
     				'staff_id'=>$data['staff_id'],
     				'comission'=>0,//$data['commission'],
@@ -1306,19 +1306,17 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			    $interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
     				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
     				
-    				if($data['install_type']==2){
-    					$pri_permonth=$data['for_installamount']/($data['period']*12);
+    				if($data['install_type']==2){//ថយ
+    					$pri_permonth=$data['for_installamount']/($data['period']*$term_types);
     					$pri_permonth =$this->round_up_currency(2, $pri_permonth);
-    				}else{
+    				}else{//ថេរ
     					$pri_permonth = $data['fixed_payment']-$interest_paymonth;
     				}
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
     				}
     				
-    			}elseif($payment_method==5){//bank
-    				
-    			}elseif($payment_method==6){
+    			}elseif($payment_method==6 OR $payment_method==5){
     			   	 $ids = explode(',', $data['identity']);
     			   	 $key = 1;
     			   	 foreach ($ids as $i){

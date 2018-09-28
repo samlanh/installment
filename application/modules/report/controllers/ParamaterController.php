@@ -139,6 +139,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"category_id"=>-1,
   				'land_id'=>-1,
   				'user_id'=>-1,
+  				'client_name'=>'',
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   		);

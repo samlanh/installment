@@ -367,7 +367,7 @@
 				    white-space: pre-wrap;     
 					word-wrap: break-word;      
 					word-break: break-all;
-					white-space: normal;
+					white-space: pre;
 					font:12px 'Khmer OS Battambang';
 					border: 1px solid #000;
                     line-height:20px;font-weight: normal !important;
@@ -380,8 +380,7 @@
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 							<tr>
 								<td id="projectlogo" width="35%">
-									<img style="height:75px; max-width: 100%;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>"> 
-								</td>					
+									<img style="height:75px; max-width:100%" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>"> 
 								<td width="30%" style="font:18px 'Kh Muol';" valign="bottom" align="center"><u><div style=" font-family: Arial Black;font-family:'Khmer MEF2';margin-top: 15px;padding-top: 15px;">បង្កាន់ដៃទទួលប្រាក់</div></u>
 									<div style="line-height:30px;margin-top:-10px"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 								</td>
@@ -770,7 +769,7 @@ require(["dojo/ready"], function(ready){
 	 ready(function(){
 		 dijit.byId("date_line").set("readOnly",false);
 		 enablePayment();
-		 
+		 dijit.byId("receipt").set("readOnly",false);
 	  });
 	 
 	new dijit.form.FilteringSelect({
@@ -942,7 +941,7 @@ function getBranchInfo(){
 		},	
 		load: function(data) {
 			var arr = JSON.parse(data);
-			var imagesUrl = '<img class="view" style="height:75px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			var imagesUrl = '<img class="view" style="height:75px; max-width:100%" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
 			document.getElementById('projectlogo').innerHTML = imagesUrl;
 		},
 		error: function(e) {
@@ -950,6 +949,7 @@ function getBranchInfo(){
 	});
 }
 function printSave(new_stu_id,new_receipt_no){
+	new_receipt_no = dijit.byId("receipt").get("value");
 	getBranchInfo();
 	schedule_opt = dijit.byId("schedule_opt").get("value");
 	if(schedule_opt==2){//បង់ផ្តាច់
@@ -1020,7 +1020,7 @@ function printSave(new_stu_id,new_receipt_no){
 			lbl_landaddress =  dijit.byId("land_label").get('value');
 		}
 		dojo.byId("lb_hourseno").innerHTML = lbl_landaddress;
-		dojo.byId("lb_saleprice").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
+		dojo.byId("lb_saleprice").innerHTML = "$ "+dojo.number.format(dijit.byId("sold_price").get('value'),{places:2});
 	
 		total_sold = dijit.byId('total_sold').get('value');
 		discount_percent = dijit.byId('discount_percent').get('value');

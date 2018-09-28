@@ -11,6 +11,8 @@ $day = array(
 		);
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
 $dbparmeter = new Report_Model_DbTable_DbParamater();
+	$key = new Application_Model_DbTable_DbKeycode();
+	$dataterm = $key->getKeyCodeMiniInv(TRUE);
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -155,7 +157,7 @@ dojo.require("dijit.form.DateTextBox");
 		             			<?php echo $this->agreement['project_name'];?>ពី ភាគី“ក” ដែលតូបលក់ទំនិញនេះ គឺបានទទួលការអនុញ្ញាត្តពីសាលារាជធានីភ្នំពេញ ឲ្យមានសិទ្ធិប្រើប្រាស់រហូតដល់ឆ្នាំ២០៧០។ បន្ទាប់ពីធ្វើការទិញ-លក់រួចរាល់ ភាគី“ក” ត្រូវផ្តល់ប័ណ្ណកាន់កាប់តូបលក់ទំនិញឲ្យទៅ ភាគី“ខ”។
 		             			<br />
 		             			<span style="font-family:'Khmer OS Muol';">ប្រការ២ ៖ <span id="padding-left-2">ទីតាំង និងអត្តសញ្ញាណតូបលក់ទំនិញ</span></span><br />
-	             				<span class="padding-left">ភាគី“ក”</span> នឹងយកតូបលក់ទំនិញលេខៈ  <span class="value" style="min-width:30px;"><?php echo $this->agreement['property_title'];?></span> ទំហំ  <span class="value" style="min-width:40px;"><?php echo $this->agreement['property_land_size'];?> </span>ម<sup>២</sup> (...............ម៉ែត្រការ៉េ)<span class="value" style="min-width:40px;"><?php echo $this->agreement['property_street'];?></span>
+	             				<span class="padding-left">ភាគី“ក”</span> នឹងយកតូបលក់ទំនិញលេខៈ  <span class="value" style="min-width:30px;"><?php echo $this->agreement['property_title'];?></span> ទំហំ  (......<?php echo $this->agreement['property_land_size'];?>.........ម៉ែត្រការ៉េ)<span class="value" style="min-width:40px;"><?php echo $this->agreement['property_street'];?></span>
 	             				លើទីតាំងអគារ<strong>&nbsp;<?php echo $this->agreement['project_name'];?></strong>&nbsp;លក់ទៅឲ្យ ភាគី“ខ” សម្រាប់ប្រើប្រាស់ប្រកបអាជីវកម្មគ្រប់ប្រភេទស្របច្បាប់ លើកលែងតែ៖ គ្រឿងហូបចុក    ឥវ៉ាន់មានសំណើម (បន្លែ ត្រី អាហារសមុទ្រ មាន់ទា និងសាច់គ្រប់ប្រភេទ ។ល។) គ្រឿងទេស និង    សម្ភារៈដែលមានទម្ងន់ធ្ងន់ ( ស្រូវ អង្ករ ពោត សណ្តែក និងគ្រឿងដែក ។ល។)។
 		             			<br />
 		             			<span style="font-family:'Khmer OS Muol';">ប្រការ៣ ៖ <span id="padding-left-2">អាណត្តិនៃកិច្ចសន្យា</span></span><br />
@@ -217,7 +219,14 @@ dojo.require("dijit.form.DateTextBox");
 										    <td align="justify" style="padding-left:5px"><strong>ដំណាក់កាលទី២៖</strong> ភាគី “ខ” យល់ព្រមបង់ប្រាក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;">
 										    <?php 
 										    	$remain_percent = 100-$this->first_deposit['percent_agree'];
-										    	echo $dbparmeter->getNumberInkhmer($remain_percent);?>% ( <label id="lbl_remainpercent"></label> ភាគរយ)</span> ទៀតឲ្យទៅ ភាគី “ក”  ក្នុងរយៈពេល<span class="value" style="min-width:30px; font-weight: 700;"><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0));?> ឆ្នាំ</span> ក្នុងអត្រាការប្រាក់ <span class="value" style="min-width:30px; font-weight: 700;"><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['interest_rate'],0));?>%</span> ក្នុង១ឆ្នាំ។
+										    	echo $dbparmeter->getNumberInkhmer($remain_percent);?>% ( <label id="lbl_remainpercent"></label> ភាគរយ)</span> ទៀតឲ្យទៅ ភាគី “ក”  ក្នុងរយៈពេល<span class="value" style="min-width:30px; font-weight: 700;"><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0));?> 
+										    	
+										    	<?php if($this->agreement['payment_id']!=4){
+															echo $tr->translate("MONTH");
+														}else{
+															echo ($dataterm['install_by']==12)?$tr->translate("ឆ្នាំ"):$tr->translate("ខែ");
+												}?> 
+										    	</span> ក្នុងអត្រាការប្រាក់ <span class="value" style="min-width:30px; font-weight: 700;"><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['interest_rate'],0));?>%</span> ក្នុង១ឆ្នាំ។
 										    	<script>
 											    	percent_remain ='<?php echo $remain_percent; ?>';
 													money_khmersold=read_money_in_khmer(percent_remain);
@@ -251,7 +260,11 @@ dojo.require("dijit.form.DateTextBox");
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៥.១.</td>
 									    <td align="justify" style="padding-left:5px">
 									          ភាគី “ខ” យល់ព្រមបង់ប្រាក់កក់ចំនួន <span class="value" style="min-width:30px; font-weight: 700;"><?php echo $dbparmeter->getNumberInkhmer(@number_format($this->first_deposit['percent_agree']))?>% ( <label id="lable_percent"></label>ភាគរយ)</span> ឲ្យទៅ ភាគី “ក” នៅថ្ងៃចុះកិច្ចសន្យាទិញ-លក់នេះ។<br />
-										ហើយភាគី“ខ” បង់ប្រាក់នៅសល់ចំនួន<strong> <?php echo $dbparmeter->getNumberInkhmer(៥០)?>% (ហាសិបភាគរយ)</strong> នៅថ្ងៃប្រគល់ប័ណ្ណកាន់កាប់តូប។ 
+										ហើយភាគី“ខ” បង់ប្រាក់នៅសល់ចំនួន<strong> <?php 
+										$remain_percent = 100-$this->first_deposit['percent_agree'];
+										echo @$dbparmeter->getNumberInkhmer($remain_percent)?>% (
+										
+										<label id="lable_percentremain"></label>ភាគរយ)</strong> នៅថ្ងៃប្រគល់ប័ណ្ណកាន់កាប់តូប។ 
 									    <script>
 											percent_first ='<?php echo ($this->first_deposit['percent_agree']) ?>';
 											money_khmersold1=read_money_in_khmer(percent_first);
@@ -264,6 +277,8 @@ dojo.require("dijit.form.DateTextBox");
 											if(last_number_sold<=0){last_number_sold='';}
 											money_khmersold1 = money_khmersold1+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold1)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
 											dojo.byId('lable_percent').innerHTML=money_khmersold1+" ";
+											
+											
 											
 									</script>
 									    </td>  
@@ -278,10 +293,27 @@ dojo.require("dijit.form.DateTextBox");
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
 									    <td align="justify" style="padding-left:5px">
 											   ភាគី “ខ” ។ ភាគី “ខ” 
-											    ត្រូវទូទាត់ប្រាក់ដែលនៅសល់ <strong>50%</strong> (ហាសិបភាគរយ)នោះ ទៅអោយ      ភាគី“ក” នៅថ្ងៃប្រគល់ប័ណ្ណកាន់កាប់តូប។ ក្នុងករណី ភាគី“ខ” 
+											    ត្រូវទូទាត់ប្រាក់ដែលនៅសល់ <strong><?php echo $remain_percent;?>% (<label id="lable_percentremain1"></label>ភាគរយ)</strong>នោះ ទៅអោយ      ភាគី“ក” នៅថ្ងៃប្រគល់ប័ណ្ណកាន់កាប់តូប។ ក្នុងករណី ភាគី“ខ” 
 											    មិនបានបង់ប្រាក់តាមថ្ងៃកំណត់ នេះទេ នោះភាគី“ខ” យល់ព្រមទុកប្រាក់កក់ដែលបានបង់រួចនោះជាប្រយោជន៍របស់ភាគី“ក” 
 											    និងត្រូវទុកកិច្ចសន្យាទិញលក់តូបនេះជាមោឃ:។ បន្ថែមពីលើនេះទៀត ភាគី“ខ” ត្រូវសហការក្នុងការ   ផ្តិតមេដៃផ្ទេរសិទ្ធិកាន់កាប់តូបនេះមកអោយភាគី“ក” 
 											    វិញ ព្រមទាំងទទួលខុសត្រូវរាល់ការចំណាយ ទាំងអស់ដែលកើតមានឡើងចំពោះការផ្ទេរសិទ្ធិកាន់កាប់ត្រឡប់មកភាគី“ក” វិញ។
+										<script>
+											
+											//remain
+											percent_first ='<?php echo $remain_percent ?>';
+											money_khmersold1=read_money_in_khmer(percent_first);
+											
+											decimalmoney_khmersold1='<?php echo substr(number_format($remain_percent,2),-2);?>';
+											str_centsold = 'សេន';
+											if(decimalmoney_khmersold1>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
+											last_number_sold='<?php echo substr(number_format($remain_percent,2),-2);?>';
+											
+											if(last_number_sold<=0){last_number_sold='';}
+											money_khmersold1 = money_khmersold1+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold1)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+											dojo.byId('lable_percentremain').innerHTML=money_khmersold1+" ";
+											dojo.byId('lable_percentremain1').innerHTML=money_khmersold1+" ";
+											
+									</script>
 									    </td>  
 								  </tr>
 								  <?php }?>

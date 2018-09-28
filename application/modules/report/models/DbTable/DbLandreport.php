@@ -204,7 +204,9 @@ public function getAllOutstadingLoan($search=null){
       	if($search['schedule_opt']>0){
       		$where.=" AND payment_id = ".$search['schedule_opt'];
       	}
-      	
+      	if($search['branch_id']>0){
+      		$where.=" AND branch_id = ".$search['branch_id'];
+      	}
       	
       	if(!empty($search['adv_search'])){
       		$s_where = array();
@@ -1357,21 +1359,12 @@ function updatePaymentStatus($data){
 	  					$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
 	  				}
 	  				
-// 	  				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
-// 	  				$total_day = $amount_day;
-// 	  				$interest_paymonth =$remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
-// 	  				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
-// 	  				$pri_permonth = $data['fixed_payment']-$interest_paymonth;
-// 	  				if($i==$loop_payment){//for end of record only
-// 	  					$pri_permonth = $remain_principal;
-// 	  					$paid_receivehouse = $data['paid_receivehouse'];
-// 	  				}
 	  				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
 	  				$total_day = $amount_day;
 	  				$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
 	  				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
 	  				if($data['install_type']==2){
-	  					$pri_permonth=$data['total_remain']/($data['period']*12);
+	  					$pri_permonth=$data['total_remain']/($data['period']*$term_types);
 	  					$pri_permonth =$this->round_up_currency(2, $pri_permonth);
 	  				}else{
 	  					$pri_permonth = $data['fixed_payment']-$interest_paymonth;
@@ -1381,8 +1374,7 @@ function updatePaymentStatus($data){
 	  					$paid_receivehouse = $data['paid_receivehouse'];
 	  				}
 	  				
-	  				
-	  			}elseif($payment_method==6){
+	  			}elseif($payment_method==6 OR $payment_method==5){
 	  				$ids = explode(',', $data['identity']);
 	  				$key = 1;
 	  				foreach ($ids as $i){
@@ -1422,6 +1414,10 @@ function updatePaymentStatus($data){
 	  							'no_installment'=>$key,
 	  							'last_optiontype'=>$paid_receivehouse,
 	  					);
+	  					if($payment_method==5){//with bank
+	  						//$datapayment['ispay_bank']= $data['pay_with'.$i];
+	  					}
+	  					
 	  					$from_date = $data['date_payment'.$i];
 	  					$key = $key+1;
 	  					if($data['payment_option'.$i]==1 OR !empty($data['paid_amount_'.$i])){
@@ -1457,7 +1453,6 @@ function updatePaymentStatus($data){
 	  						}else{
 	  							$this->insert($datapayment);
 	  						}
-	  						
 	  					}
 	  				}
 	  				break;
@@ -1531,19 +1526,7 @@ function updatePaymentStatus($data){
 	  					}
 	  					
 	  				}else{
-// 	  					$sql = "SELECT id FROM ln_saleschedule WHERE id =".$data['fundid_'.$i]." AND sale_id=".$data['id']." LIMIT 1";
-// 	  					$rsschedule = $db->fetchRow($sql);
-// 	  					if(!empty($rsschedule)){
-// 	  						$datapayment['is_installment']=1;
-// 	  						$datapayment['branch_id']=$data['branch_id'];
-// 	  						$datapayment['is_completed']=$data['payment_option'.$i];
-// 	  						$datapayment['date_payment']=$data['date_payment'.$i];
-	  						
-// 	  						$where=" id = ".$data['fundid_'.$i];
-// 	  						$this->update($datapayment, $where);
-// 	  					}else{
 	  						$idsaleid = $this->insert($datapayment);
-// 	  					}
 	  					
 	  				}
 	  				$old_remain_principal = 0;
@@ -1752,23 +1735,12 @@ function updatePaymentStatus($data){
 	  					$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
 	  				}
 	  				
-	  				
-// 	  				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
-// 	  				$total_day = $amount_day;
-// 	  				$interest_paymonth =$remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
-// 	  				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
-// 	  				$pri_permonth = $data['fixed_payment']-$interest_paymonth;
-// 	  				if($i==$loop_payment){//for end of record only
-// 	  					$pri_permonth = $remain_principal;
-// 	  					$paid_receivehouse = $data['paid_receivehouse'];
-// 	  				}
-	  				
 	  				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
 	  				$total_day = $amount_day;
 	  				$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
 	  				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
 	  				if($data['install_type']==2){
-	  					$pri_permonth=$data['total_remain']/($data['period']*12);
+	  					$pri_permonth=$data['total_remain']/($data['period']*$term_types);
 	  					$pri_permonth =$this->round_up_currency(2, $pri_permonth);
 	  				}else{
 	  					$pri_permonth = $data['fixed_payment']-$interest_paymonth;
@@ -1778,7 +1750,7 @@ function updatePaymentStatus($data){
 	  					$paid_receivehouse = $data['paid_receivehouse'];
 	  				}
 	  				
-	  			}elseif($payment_method==6){
+	  			}elseif($payment_method==6 OR $payment_method==5){
 	  				$ids = explode(',', $data['identity']);
 	  				$key = 1;
 	  				foreach ($ids as $i){
@@ -1940,7 +1912,7 @@ function updatePaymentStatus($data){
 // 	  		$dbtable = new Application_Model_DbTable_DbGlobal();
 // 	  		$dbtable->updateLateRecordSaleschedule($data['id']);
 	  		
-	  		if($payment_method==3 OR $payment_method==4 OR $payment_method==6){
+	  		if($payment_method==3 OR $payment_method==4 OR $payment_method==6 OR $payment_method==5){
 		  		$sql = " SELECT t.* , DATE_FORMAT(t.date_payment, '%d-%m-%Y') AS date_payments,
 		  		DATE_FORMAT(t.date_payment, '%Y-%m-%d') AS date_name FROM
 		  		ln_saleschedule_test AS t WHERE t.sale_id = ".$data['id']." ORDER BY date_payment asc";

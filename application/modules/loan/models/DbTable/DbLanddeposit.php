@@ -249,11 +249,20 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		}
     		$is_schedule = 0;
     		$dbtable = new Application_Model_DbTable_DbGlobal();
+    		
     		$loan_number = $dbtable->getLoanNumber($data);
-    		$receipt = $dbtable->getReceiptByBranch($data);
+    		
+    		$receipt = $data['receipt'];
+    		$sql="SELECT id FROM ln_client_receipt_money WHERE receipt_no='$receipt' ORDER BY id DESC LIMIT 1 ";
+    		$acc_no = $db->fetchOne($sql);
+    		if($acc_no){
+    			$dbc = new Application_Model_DbTable_DbGlobal();
+    			$receipt = $dbc->getReceiptByBranch(array("branch_id"=>$data["branch_id"]));
+    		}else{
+    			$receipt = $data['receipt'];
+    		}
+    		
     		$property_info = $this->getProperty($data["land_code"]);
-    		
-    		
     		
     		$key = new Application_Model_DbTable_DbKeycode();
     		$setting=$key->getKeyCodeMiniInv(TRUE);
@@ -330,9 +339,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	    }
     		
 	    	if($data['deposit']>0){//insert payment
-	    		$data['date_buy']=$data['paid_date'];
-    		    	$dbtable = new Application_Model_DbTable_DbGlobal();
-    		    	$receipt = $dbtable->getReceiptByBranch($data);
+	    			$data['date_buy']=$data['paid_date'];
     		    	$pay_off = 0;
     		    	if($data["schedule_opt"]==2){
     		    		$pay_off = 1;

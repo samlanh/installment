@@ -117,8 +117,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				'status'				=>1,
     				'note'					=>$data['note'],
     				'user_id'				=>$this->getUserId(),
-    				
-    				);
+    			);
     		$this->_name='ln_reschedule';
     		$id = $this->insert($array);
     		
@@ -197,17 +196,25 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			}else{
     				$is_complete = 0;
     			}
+    			$dbtable = new Application_Model_DbTable_DbGlobal();
+    			$receipt = $data['receipt'];
+    			$sql="SELECT id FROM ln_client_receipt_money WHERE receipt_no='$receipt' ORDER BY id DESC LIMIT 1 ";
+    			$acc_no = $db->fetchOne($sql);
+    			if($acc_no){
+    				$data['receipt'] = $dbtable->getReceiptByBranch(array("branch_id"=>$data["branch_id"]));
+    			}else{
+    				//$receipt = $data['receipt'];
+    			}
+    			
     			if($data['schedule_opt']==2 AND $data['deposit']>0){//ករណីបង់ផ្តាច់
-		    		$this->_name='ln_client_receipt_money';
-		    		$dbtable = new Application_Model_DbTable_DbGlobal();
+    				$this->_name='ln_client_receipt_money';
 		    		$loan_number = $dbtable->getLoanNumber($data);
-		    		$receipt = $dbtable->getReceiptByBranch($data);
 		    		$array = array(
 		    				'field1'=>$id,
 		    				'field2'=>2,
 		    				'branch_id'			=>$data['branch_id'],
 		    				'client_id'			=>$data['member'],
-		    				'receipt_no'		=>$receipt,
+		    				'receipt_no'		=>$data['receipt'],
 		    				'sale_id'			=>$data['loan_number'],
 		    				'land_id'			=>$data['land_code'],
 		    				'date_pay'			=>$data['paid_date'],
@@ -426,7 +433,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
 			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);//
 			    		if($data['install_type']==2){
-			    			$pri_permonth=$data['for_installamount']/($data['period']*12);
+			    			$pri_permonth=$data['for_installamount']/($data['period']*$term_types);
 			    			$pri_permonth =$this->round_up_currency(2, $pri_permonth);
 			    		}else{
 			    			$pri_permonth = $data['fixed_payment']-$interest_paymonth;
@@ -550,13 +557,12 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     }
     function addPaymenttoSale($data){
     	$dbtable = new Application_Model_DbTable_DbGlobal();
-    	$receipt = $dbtable->getReceiptByBranch($data);
     	$is_deposit='0';
     	if($data['schedule_opt']==1){$is_deposit=1;}//បញ្ចាក់ថាប្រាក់កក
     	$array = array(
     			'branch_id'			=>$data['branch_id'],
     			'client_id'			=>$data['member'],
-    			'receipt_no'		=>$receipt,
+    			'receipt_no'		=>$data['receipt'],
     			'land_id'			=>$data['land_code'],
     			'sale_id'			=>$data['sale_id'],
     			'date_pay'			=>$data['paid_date'],
@@ -635,7 +641,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     					'client_id'				=>$data['member'],
     					'land_id'				=>$data['land_code'],
     					'date_payment'			=>$row['date_payment'],
-    					'paid_date'         =>$data['date_buy'],
+    					'paid_date'         	=>$data['paid_date'],
     					'capital'				=>$row['begining_balance'],
     					'remain_capital'		=>$row['begining_balance']-$principal_paid,
     					'principal_permonth'	=>$data['deposit'],
@@ -662,8 +668,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				'crm_id'				=>$crm_id,
     				'client_id'				=>$data['member'],
     				'land_id'				=>$data['land_code'],
-    				'date_payment'			=>$data['date_buy'],
-    				'paid_date'         =>$data['date_buy'],
+    				'date_payment'			=>$data['paid_date'],
+    				'paid_date'         	=>$data['paid_date'],
     				'capital'				=>$data['sold_price'],
     				'remain_capital'		=>$data['balance'],
     				'principal_permonth'	=>$data['deposit'],

@@ -1114,6 +1114,7 @@ require(["dojo/ready"], function(ready){
 		<?php }?>
 		dijit.byId('schedule_opt').attr('value',4);
 		checkScheduleOption();
+		dijit.byId("receipt").set("readOnly",false);
 	  });
 	 
 	new dijit.form.FilteringSelect({
@@ -1719,6 +1720,8 @@ function getBranchInfo(){
 	});
 }
 function printSave(new_receipt_no){	
+	new_receipt_no = dijit.byId("receipt").get('value');
+	
 	deposit = dijit.byId('deposit').get('value');
 	paid_before = dijit.byId("paid_before").get("value");
 	if (deposit=='' || deposit==-1){

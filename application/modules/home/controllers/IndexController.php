@@ -63,6 +63,11 @@ public function init()
 		$this->view->customerNearlyPayment = $rs;
 		$rsAgree = $db->getCustomerNearAgreement();
 		$this->view->customerNearlyAgreement = $rsAgree;
+		
+		$db = new Home_Model_DbTable_DbDashboard();
+		$lastest = $db->getAllNews(9);
+		$this->view->lastestnews = $lastest;
+		$this->view->allnews = $db->getAllNews();
 	}
 	
 	public function dashboardAction()

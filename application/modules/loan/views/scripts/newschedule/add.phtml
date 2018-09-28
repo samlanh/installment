@@ -586,15 +586,15 @@ function Balance(){
 	price = price-paid_before+other_fee;	
 	price = parseInt(price);
 	schedule_opt = dijit.byId('schedule_opt').get('value');
-		if(schedule_opt==2){
+	if(schedule_opt==2){
 			dijit.byId('balance').attr('value',0);
 		}else{
 			if(schedule_opt==3){
 				dijit.byId('for_installamount').attr('value',price);
 			}
 			dijit.byId('balance').attr('value',price);
-		}
-		checkScheduleOption();
+	}
+	checkScheduleOption();
 }
 function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');
@@ -813,10 +813,7 @@ function getInfoByLoanNumber(){
 		},	
 		handleAs:"json",
 		load: function(data) {
-
 			dijit.byId("paid_pricipaldate").attr('value',data.date_input);
-			//dijit.byId("principal_paid").attr('value',data.extra_payment);
-			
 			total_principal= data.total_principal;
 			if(isNaN(total_principal) || total_principal==null){total_principal=0;}
 		    paid_amount = data.paid_amount;
@@ -834,6 +831,10 @@ function getInfoByLoanNumber(){
 			dijit.byId('bdiscount_fixed').attr('value',data.discount_amount);
 			dijit.byId('paid_before').attr('value',total_principal);
 			dijit.byId('period').attr('value',data.intallment);
+			dijit.byId("interest_rate").attr('value',data.interest_rate);
+			dijit.byId("first_payment").attr('value',data.first_payment);
+			//alert(data.first_payment);
+			//
 			
 			price_before = data.price_before;
 			paid_amount = data.paid_amount;

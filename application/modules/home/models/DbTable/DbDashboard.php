@@ -210,6 +210,9 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		if(($search['property_type_search'])>0){
 			$where.= " AND property_type = ".$search['property_type_search'];
 		}
+		if($search['buy_status']>-1){
+			$where.= " AND is_lock = ".$search['buy_status'];
+		}
 	
 		$order=" ORDER BY id DESC ";
 		return $db->fetchAll($sql.$where.$order);

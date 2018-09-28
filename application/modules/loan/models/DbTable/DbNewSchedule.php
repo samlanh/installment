@@ -101,7 +101,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     	return $db->fetchRow($sql);
     }    
     public function addNewSchedule($data){
-    $db = $this->getAdapter();
+    	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
     		if($data['schedule_opt']==1 OR $data['schedule_opt']==2){
@@ -186,10 +186,9 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     			}else{
     				$is_complete = 0;
     			}
-    			   $arr = array(
+    			 $arr = array(
     				'is_reschedule'=>1,
-    			   	//'create_date'=>date("Y-m-d"),
-    				);
+    			);
     	    $this->_name='ln_sale';
     	    $where = "id =".$data["loan_number"];
     		$id = $this->update($arr, $where);//add group loan
@@ -223,7 +222,6 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$from_date =  $data['release_date'];
     		
     		$curr_type = 2;
-    		//$data['currency_type'];
 //     		$key = new Application_Model_DbTable_DbKeycode();
 //     		$key=$key->getKeyCodeMiniInv(TRUE);
     		$term_types = 1;
