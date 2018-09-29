@@ -160,6 +160,14 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				$this->_name='ln_sale';
     				$dbp = new Loan_Model_DbTable_DbLandpayment();
     				$row = $dbp->getTranLoanByIdWithBranch($data['id'],null);
+    				
+    				$key = new Application_Model_DbTable_DbKeycode();
+    				$setting = $key->getKeyCodeMiniInv(TRUE);
+    				$note_agreement = '';
+    				if($setting['note_agreement']==1){
+    					$note_agreement = $data['note_agreement'];
+    				}
+    				
     				$arr = array(
     						'paid_amount'=>$row['paid_amount']+$data['deposit'],
     						'balance'=>$data['sold_price']-($data['deposit']+$data['paid_before']),
@@ -177,7 +185,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     						'price_sold'=>$data['sold_price'],
     						'note'=>$data['note'],
     						'total_installamount'=>$data['total_installamount'],
-    						'note_agreement'=>$data['note_agreement'],
+    						'note_agreement'=>$note_agreement,
     						'user_id'=>$this->getUserId(),
     						'other_fee'=>0,
     						'agreement_date'=>$data['agreement_date'],
