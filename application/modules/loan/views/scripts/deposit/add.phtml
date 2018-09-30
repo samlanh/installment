@@ -769,7 +769,9 @@ require(["dojo/ready"], function(ready){
 	 ready(function(){
 		 dijit.byId("date_line").set("readOnly",false);
 		 enablePayment();
-		 dijit.byId("receipt").set("readOnly",false);
+		 <?php if($this->data['enable_receipt']==1){?>
+		 	dijit.byId("receipt").set("readOnly",false);
+		 <?php }?>
 	  });
 	 
 	new dijit.form.FilteringSelect({
@@ -949,7 +951,9 @@ function getBranchInfo(){
 	});
 }
 function printSave(new_stu_id,new_receipt_no){
-	new_receipt_no = dijit.byId("receipt").get("value");
+	<?php if($this->data['enable_receipt']==1){?>
+		new_receipt_no = dijit.byId("receipt").get("value");
+	<?php }?>
 	getBranchInfo();
 	schedule_opt = dijit.byId("schedule_opt").get("value");
 	if(schedule_opt==2){//បង់ផ្តាច់
