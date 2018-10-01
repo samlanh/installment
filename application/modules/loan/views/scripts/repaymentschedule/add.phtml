@@ -536,8 +536,10 @@
 				<tr style="white-space: nowrap;">
 				    <td >ឈ្មោះ​អតិថិជន </td>
 				    <td ><strong><label id="lb_customer" class="value"></label></strong></td>
-					<td >​&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
-				    <td colspan="3"><strong><label id="lb_discount" class="value"></label></strong></td>
+					<td >​&nbsp;&nbsp;ប្រាក់ការ</td>
+				    <td><strong><label id="lb_discount" class="value">0.00 $</label></strong></td>
+				    <td>&nbsp;&nbsp;ប្រាក់ពិន័យ</td>
+                    <td><label id="" class="value">0.00 $</label></td>
                 </tr>
 				<tr style="white-space: nowrap;">
 					<td ><?php echo $tr->translate("PROPERTY_CODE");?></td>
@@ -639,12 +641,6 @@
 						<?php echo $this->footer;?>
 					</td>
 				</tr>
-				<?php if($this->data['showreceipt']>1){?>
-				<tr>
-					<td colspan="6" style="border-bottom:1px dashed #000;" >
-					</td>
-				</tr>
-				<?php }?>
 			</table>
 		</div>
 		<table width="100%">
@@ -657,6 +653,9 @@
 			</tr>
 	</table>
 		<div id="divPrint1" style="width: 21cm !important; height: 13.4cm ; padding: 0px; margin: 0px;">
+			<?php if($this->data['showreceipt']>1){?>
+				<div style="border:2px dashed #000; vertical-align: middle;margin:20px 0px 40px 0px"></div>
+			<?php }?>
 			<div id="innerdivPrint1"></div>
 		</div>
 	</div>
@@ -1781,7 +1780,7 @@ function printSave(new_receipt_no){
 	discount_percent = total_sold*discount_percent/100;
 	total_discount = discount_percent+discount;
 
-	dojo.byId("lb_discount").innerHTML = dojo.number.format(total_discount,{places:2})+" "+symbal;
+	//dojo.byId("lb_discount").innerHTML = dojo.number.format(total_discount,{places:2})+" "+symbal;
 	dojo.byId("lbl_total_payment").innerHTML =dojo.number.format(deposit,{places:2})+" "+symbal;
 	dojo.byId("lb_paid").innerHTML = dojo.number.format(deposit,{places:2})+" "+symbal;
 	dojo.byId("lb_noted").innerHTML =dijit.byId("note").get('value');
