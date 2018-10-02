@@ -161,9 +161,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-// 				print_r($_data);exit();
 				$db->updateIlPayment($_data,$_data['id']);
-				
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");

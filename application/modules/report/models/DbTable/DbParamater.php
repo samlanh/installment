@@ -406,10 +406,9 @@ function getAllBranch($search=null){
     	}
     	function getCollectPayment($search=null){
     		$db= $this->getAdapter();
-    		//$where='';
     		$sql = "SELECT v_getcollectmoney.*,
 				(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name
-    		FROM v_getcollectmoney WHERE 1";
+    		FROM v_getcollectmoney WHERE status=1 ";
     		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
 	      	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
 	      	$where = " AND ".$from_date." AND ".$to_date;

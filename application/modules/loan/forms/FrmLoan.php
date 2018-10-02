@@ -215,6 +215,15 @@ public function init()
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
 		));
 		
+		$paid_date = new Zend_Dojo_Form_Element_DateTextBox('paid_date');
+		$paid_date->setAttribs(array(
+				'dojoType'=>'dijit.form.DateTextBox',
+				'required' =>'true',
+				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+		));
+		$paid_date->setValue(date("Y-m-d"));
+		
 		$_date_buy = new Zend_Dojo_Form_Element_DateTextBox('date_buy');
 		$_date_buy->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
@@ -403,6 +412,8 @@ public function init()
 			$schedule_opt->setValue($data['payment_id']);
 			$paid->setValue($data["paid_amount"]);
 			$balance->setValue($data['balance']);
+			$paid_date->setValue($data['date_input']);
+			
 			
 			$_period->setValue($data['total_duration']);
 			$_first_payment->setValue($data['first_payment']);
@@ -430,7 +441,7 @@ public function init()
 			}
 			
 		}
-		$this->addElements(array($note_agreement,$total_discount,$delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($paid_date,$note_agreement,$total_discount,$delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 // 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
 // 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,

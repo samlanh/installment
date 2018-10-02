@@ -594,7 +594,8 @@ dojo.ready(function(){
 		
 		new dijit.form.FilteringSelect({
 		store: sale_store,
-		autoComplete: true,
+		autoComplete: false,
+		queryExpr: "*${0}*", 
 		required: false,		           
 		name: "sale_no",
 		id: "sale_no",
@@ -607,7 +608,8 @@ dojo.ready(function(){
 
 		new dijit.form.FilteringSelect({
 			store: sale_client_store,
-			autoComplete: true,
+			autoComplete: false,
+			queryExpr: "*${0}*", 
 			required: false,		           
 			name: "sale_client",
 			id: "sale_client",
@@ -619,13 +621,14 @@ dojo.ready(function(){
 			}, "sale_client");
 		getSaleClie();
 		getSaleNo();
-		getLogobybranch();
+		
 		}catch(e){
 			alert(e);
 		}
 });
 var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-sale'));?>';
 	function getSaleNo(){
+		getLogobybranch();
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id==0){
 			return false;}
@@ -668,12 +671,12 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 	function getLandAndClientDetail(inds){
 		if(inds == "2"){
 			sale_id = dijit.byId('sale_client').get('value');
-			//dijit.byId('sale_no').attr("value",sale_id)
 			dijit.byId("sale_no").set("value",sale_id);
 		}else{
 			sale_id = dijit.byId('sale_no').get('value');
 			dijit.byId('sale_client').set("value",sale_id);
 		}
+		if(sale_id ==''){return false;}
 		dojo.xhrPost({
 			url:url_land,	
 			content:{ 

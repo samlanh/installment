@@ -415,7 +415,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    	
     		$dbl = new Loan_Model_DbTable_DbLandpayment();
     		$row = $dbl->getTranLoanByIdWithBranch($data['id'],null);
     		if(!empty($row)){
@@ -613,7 +612,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			}
     		}
     		
-    		
     		$key = new Application_Model_DbTable_DbKeycode();
     		$setting=$key->getKeyCodeMiniInv(TRUE);
     		$note_agreement = '';
@@ -701,8 +699,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'payment_times'=>1,
     			);
     			$this->_name='ln_client_receipt_money';
+    			$where="receipt_no='".$data['receipt']."'";
     			$this->update($array, $where);
-    			$where="receipt_no=".$data['receipt'];
     				
     			$this->_name='ln_client_receipt_money_detail';
     			$array = array(

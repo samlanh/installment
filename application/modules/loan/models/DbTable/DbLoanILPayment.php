@@ -199,58 +199,59 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		
     		if(!empty($receipt_money_detail)){
     			foreach ($receipt_money_detail as $rs){
-    				$branc_id = $rs['branch_id'];
-    				$arra = array(
-    						'begining_balance' 	     => $rs['capital'],
-    						'begining_balance_after' => $rs['capital'],
-    						'ending_balance'         => $rs['remain_capital'],
-    						"principal_permonth"	 => $rs['old_principal_permonth'],
-    						"principal_permonthafter"=> $rs['old_principal_permonth'],
-    						'total_interest_after'   => $rs['old_interest'],
-    						'total_interest'   		 => $rs['old_interest'],
-    						'total_payment_after'    => $rs['old_total_payment'],
-    						'total_payment'    		 => $rs['old_total_payment'],
-    						'is_completed'           => 0,
-    						'received_userid'=>		0
-    				);
-    				$where ="id=".$rs['lfd_id'];
-    				$this->_name="ln_saleschedule";
-    				$updated = $this->update($arra, $where);
-    				
-    				if($updated==0){//ករណីមានលុបខ្លះ ត្រូវបញ្ចូលឡើងវិញ
-    					$sql="SELECT (no_installment) FROM ln_saleschedule WHERE status=1 AND sale_id=$sale_id ORDER BY no_installment DESC ";
-    					$start_id = $db->fetchOne($sql);
-    					
-    					$this->_name="ln_saleschedule";
-    					$datapayment = array(
-	    					'branch_id'=>$branc_id,
-	    					'sale_id'=>$sale_id,//good
-	    					'begining_balance'=>$rs['capital'],//good
-	    					'begining_balance_after'=>$rs['capital'],//good
-	    					'principal_permonth'=>$rs['old_principal_permonth'],//good
-	    					'principal_permonthafter'=>$rs['old_principal_permonth'],//good
-	    					'total_interest'=>$rs['old_interest'],//good
-	    					'total_interest_after'=>$rs['old_interest'],//good
-	    					'total_payment'=>$rs['old_total_payment'],//good
-	    					'total_payment_after'=>$rs['old_total_payment'],//good
-	    					'ending_balance'=>$rs['remain_capital'],
-	    					'cum_interest'=>0,//check more
-	    					'amount_day'=>0,//check more
-	    					'is_completed'=>0,
-	    					'date_payment'=>$rs['date_payment'],
-	    					'percent'=>100,
-	    					'note'=>'',
-    						'status'=>1,
-	    					'is_completed'=>0,
-	    					'is_installment'=>1,
-	    					'no_installment'=>$start_id+1,
-    						'received_userid'=>		0
-    				);
-    				$this->insert($datapayment);
+    				if(!empty($rs['lfd_id'])){
+	    				$branc_id = $rs['branch_id'];
+	    				$arra = array(
+	    						'begining_balance' 	     => $rs['capital'],
+	    						'begining_balance_after' => $rs['capital'],
+	    						'ending_balance'         => $rs['remain_capital'],
+	    						"principal_permonth"	 => $rs['old_principal_permonth'],
+	    						"principal_permonthafter"=> $rs['old_principal_permonth'],
+	    						'total_interest_after'   => $rs['old_interest'],
+	    						'total_interest'   		 => $rs['old_interest'],
+	    						'total_payment_after'    => $rs['old_total_payment'],
+	    						'total_payment'    		 => $rs['old_total_payment'],
+	    						'is_completed'           => 0,
+	    						'received_userid'=>		0
+	    				);
+	    				$where ="id=".$rs['lfd_id'];
+	    				$this->_name="ln_saleschedule";
+	    				$updated = $this->update($arra, $where);
+	    				
+	    				if($updated==0){//ករណីមានលុបខ្លះ ត្រូវបញ្ចូលឡើងវិញ
+	    					$sql="SELECT (no_installment) FROM ln_saleschedule WHERE status=1 AND sale_id=$sale_id ORDER BY no_installment DESC ";
+	    					$start_id = $db->fetchOne($sql);
+	    					
+	    					$this->_name="ln_saleschedule";
+	    					$datapayment = array(
+		    					'branch_id'=>$branc_id,
+		    					'sale_id'=>$sale_id,//good
+		    					'begining_balance'=>$rs['capital'],//good
+		    					'begining_balance_after'=>$rs['capital'],//good
+		    					'principal_permonth'=>$rs['old_principal_permonth'],//good
+		    					'principal_permonthafter'=>$rs['old_principal_permonth'],//good
+		    					'total_interest'=>$rs['old_interest'],//good
+		    					'total_interest_after'=>$rs['old_interest'],//good
+		    					'total_payment'=>$rs['old_total_payment'],//good
+		    					'total_payment_after'=>$rs['old_total_payment'],//good
+		    					'ending_balance'=>$rs['remain_capital'],
+		    					'cum_interest'=>0,//check more
+		    					'amount_day'=>0,//check more
+		    					'is_completed'=>0,
+		    					'date_payment'=>$rs['date_payment'],
+		    					'percent'=>100,
+		    					'note'=>'',
+	    						'status'=>1,
+		    					'is_completed'=>0,
+		    					'is_installment'=>1,
+		    					'no_installment'=>$start_id+1,
+	    						'received_userid'=>		0
+	    				);
+	    				$this->insert($datapayment);
+    					}
     				}
     			}
     		}
-    		
     		$arr_money_detail = array(
     				'principal_permonth'	=>	0,//$principle_amount,
     				'total_interest'		=>	0,//$data["interest_".$i],

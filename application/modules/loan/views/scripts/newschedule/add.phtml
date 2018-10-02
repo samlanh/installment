@@ -584,17 +584,18 @@ function Balance(){
 		other_fee=0;
 	}
 	price = price-paid_before+other_fee;	
-	price = parseInt(price);
+	price = parseFloat(price).toFixed(2);
 	schedule_opt = dijit.byId('schedule_opt').get('value');
 	if(schedule_opt==2){
 			dijit.byId('balance').attr('value',0);
 		}else{
 			if(schedule_opt==3){
 				dijit.byId('for_installamount').attr('value',price);
-			}
+		}
 			dijit.byId('balance').attr('value',price);
 	}
 	checkScheduleOption();
+	
 }
 function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');

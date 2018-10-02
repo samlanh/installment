@@ -106,6 +106,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$sql = " SELECT s.*,
     	(SELECT total_principal_permonthpaid  FROM `ln_client_receipt_money` 
     		WHERE ln_client_receipt_money.receipt_no=s.receipt_no LIMIT 1) AS paid_amount,
+    	(SELECT date_input  FROM `ln_client_receipt_money` 
+    		WHERE ln_client_receipt_money.receipt_no=s.receipt_no LIMIT 1) AS date_input,
+    		
     	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id=s.house_id) AS old_land_id 
     		FROM `ln_sale` AS s
 				WHERE s.id = ".$id;
@@ -763,7 +766,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    		
     		$dbp = new Loan_Model_DbTable_DbLandpayment();
     		$row = $dbp->getTranLoanByIdWithBranch($data['id'],null);
     		if(!empty($row)){
@@ -779,7 +781,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				}
     			}
     		}
-    		
     		if($data['status_using']==0){//cancel
     			$this->_name="ln_sale";
     			$arr_update = array(
