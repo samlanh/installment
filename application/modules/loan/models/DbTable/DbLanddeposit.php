@@ -49,7 +49,11 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
         `s`.`balance`         AS `balance`,
         `s`.`buy_date`        AS `buy_date`,
         (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
-         s.status
+         s.status,
+         CASE    
+				WHEN  `s`.`is_cancel` = 0 THEN ' '
+				WHEN  `s`.`is_cancel` = 1 THEN '".$tr->translate("CANCELED")."'
+				END AS cancel
 		FROM ((`ln_sale` `s`
 		    JOIN `ln_client` `c`)
 		   JOIN `ln_properties` `p`)

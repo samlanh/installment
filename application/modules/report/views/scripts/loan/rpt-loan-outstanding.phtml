@@ -142,7 +142,11 @@ dojo.require("dijit.form.DateTextBox");
 								<td>&nbsp;<?php echo number_format($row['discount_amount'],2);?>&nbsp;</td>
 								<td>&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
 								<td>&nbsp;<?php echo date("d-m-Y",strtotime($row['first_payment']));?>&nbsp;</td>
-								<td>&nbsp;<?php echo date("d-m-Y",strtotime($row['date_line']));?>&nbsp;</td>
+								<td>&nbsp;<?php echo 
+								$date= new DateTime($row['end_line']);
+								echo $date->format("d-m-Y");
+								
+								date("d-m-Y",strtotime($row['date_line']));?>&nbsp;</td>
 								<td>&nbsp;<?php echo $row['total_duration']; 
 								if($row['payment_id']!=4){
 									echo $tr->translate("MONTH");

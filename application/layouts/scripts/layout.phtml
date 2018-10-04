@@ -44,7 +44,6 @@
 	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-
 <html>
 <head>
 	<meta name="apple-mobile-web-app-capable" content="yes" />
@@ -182,11 +181,12 @@
 					                  	<h4><a style="color: #fff;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-validateagreement'), null, true);?>"><?php echo $tr->translate("MAKE_AGREEMENTLIST");?></a></h4>
 					                  </li>
 					                   <?php if(!empty($rsagree)){?>
-				                  	<?php foreach($rsagree as $key=> $result){
-			                          	$url = $this->url(array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add'), null, true)."/id/".$result['id'];
-			                          	$end_dat=date("Y-m-d");
-										$total_day=strtotime($end_dat)-strtotime($result['end_line']);
-										$total_late_day=$total_day/(60*60*24);
+				                  	<?php 
+				                  		foreach($rsagree as $key=> $result){
+				                          	$url = $this->url(array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add'), null, true)."/id/".$result['id'];
+				                          	$end_dat=date("Y-m-d");
+											$total_day=strtotime($end_dat)-strtotime($result['end_line']);
+											$total_late_day=$total_day/(60*60*24);
 			                          	?>
 			                          <li class=" event">
 			                         	 <a href="<?php echo $url;?>">

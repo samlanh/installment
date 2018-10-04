@@ -404,7 +404,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     								'paid_date'				=>	$data["collect_date"],
     								'is_completed'			=>	1,
     								'status'				=>	1);
-		    				$db->insert("ln_client_receipt_money_detail", $arr_money_detail);
+		    				$this->_name='ln_client_receipt_money_detail';
+		    				$this->insert($arr_money_detail);
 		    			}			
 		    						
 		    						$after_outstanding = $row['begining_balance_after'];

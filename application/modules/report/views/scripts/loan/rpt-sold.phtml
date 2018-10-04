@@ -234,7 +234,10 @@
 						<td style="white-space:nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date'])); ?>&nbsp;</td>
 						<!--<td>&nbsp;<?php //if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['startcal_date']));}?>&nbsp;</td> -->
 						<td style="max-width:120px;white-space: normal;"><?php if($row['payment_id']==1){echo "<span style='font-size:10px;line-height:15px;'>".$row['note']."</span>"; } if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['first_payment'])); }?>&nbsp;</td>
-						<td style="white-space:nowrap;" ><?php echo date("d-m-Y",strtotime($row['end_line']));?>&nbsp;</td>
+						<td style="white-space:nowrap;" ><?php 
+							$date= new DateTime($row['end_line']);
+							echo $date->format("d-m-Y");
+						?>&nbsp;</td>
 						<td style="white-space:nowrap;" ><?php echo $row['user_name'];?>&nbsp;</td>
 						</tr>
 					<?php }?>

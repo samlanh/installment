@@ -1304,6 +1304,7 @@ function updatePaymentStatus($data){
 	  									'is_completed'=>0,
 	  									'date_payment'=>$data['date_payment'.$j],
 	  									'percent'=>$data['percent'.$j],
+	  									'percent_agree'=>$data['percent_agreement'.$j],
 	  									'is_installment'=>1,
 	  									'no_installment'=>$key,
 	  									'last_optiontype'=>$paid_receivehouse,
@@ -1410,6 +1411,7 @@ function updatePaymentStatus($data){
 	  							'date_payment'=>$data['date_payment'.$i],
 // 	  							'note'=>$data['remark'.$i],
 	  							'percent'=>$data['percent'.$i],
+	  							'percent_agree'=>$data['percent_agreement'.$i],
 	  							'is_installment'=>1,
 	  							'no_installment'=>$key,
 	  							'last_optiontype'=>$paid_receivehouse,
@@ -1935,10 +1937,13 @@ function updatePaymentStatus($data){
 	  	try{
 	  		$ids =explode(',', $data['identity']);
 	  		$this->_name="ln_saleschedule";
+	  		
 	  		foreach ($ids as $i){
+		  			$date= new DateTime($data['payment_date'.$i]);
+		  			$next_payment = $date->format("Y-m-d");
   					$datapayment = array(
   						'is_completed'=>$data['payment_option'.$i],
-  						'date_payment'=>$data['payment_date'.$i],
+  						'date_payment'=>$next_payment,
   					);
   					$where = "id = ".$data['fundid_'.$i];
   					$this->update($datapayment, $where);

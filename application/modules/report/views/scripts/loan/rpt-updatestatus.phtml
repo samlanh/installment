@@ -126,7 +126,12 @@ table { page-break-inside:auto }
 	                    <?php $str_day = date('D',strtotime($row['date_payment']));
 	                    	$day_as_khmer = $dayin_khmer[$str_day];
 	                    ?>
-	                    <td align="center"><input dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="<?php echo date("Y-m-d",strtotime($row['date_payment']));?>" name="payment_date<?php echo $key+1;?>" id="payment_date<?php echo $key+1;?>" /></td>
+	                    <td align="center">
+	                    <?php 
+	                    $date= new DateTime($row['date_payment']);
+	                    $next_payment = $date->format("Y-m-d");
+	                    ?>
+	                    <input dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="<?php echo $next_payment;?>" name="payment_date<?php echo $key+1;?>" id="payment_date<?php echo $key+1;?>" /></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['begining_balance'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['principal_permonth'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['total_interest'],2));?></td>
