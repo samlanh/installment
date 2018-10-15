@@ -1345,7 +1345,7 @@ function calculateTotal(index){//គណនាបង់
 		var oneDay = 24*60*60*1000;
 		
 		var payOption = dijit.byId('option_pay').get('value');
-		var interest_rate = dijit.byId('interest_rate').get('value')/<?php echo $this->data['install_by'];?>;
+		var interest_rate = dijit.byId('interest_rate').get('value')/12;<?php //echo $this->data['install_by'];?>
 		var collect_date = new Date(dijit.byId("collect_date").attr("value"));
 		var date_payment = new Date(dijit.byId("date_payment").attr("value"));
 		graice_period = '<?php echo $graiceperiod["value"]?>';//រយៈអនុគ្រោះ
@@ -1414,8 +1414,8 @@ function calculateTotal(index){//គណនាបង់
 			priciple_amount=0;
 		}
 		dijit.byId('service_charge').attr('value',0);
-		dijit.byId('os_amount').attr('value',principal_permonth);
-		dijit.byId('total_interest').attr('value',total_interest);
+		dijit.byId('os_amount').attr('value',parseFloat(principal_permonth).toFixed(2));
+		dijit.byId('total_interest').attr('value',parseFloat(total_interest).toFixed(2));
 		dijit.byId('penalize_amount').attr('value',total_penelize);
 		total_payment = parseFloat(principal_permonth)+parseFloat(total_interest)+parseFloat(total_penelize);
 		
@@ -1534,7 +1534,7 @@ function totalReturn(){
 		dijit.byId('extrapayment').set("readOnly",true);
 		
 		principal_paid = receive_amount - service_charge - penalize_amount - total_interest;
-		dijit.byId('os_amount').attr('value',principal_paid);
+		dijit.byId('os_amount').attr('value',parseFloat(principal_paid).toFixed(2));
 	    
 	    all_total = dijit.byId("sold_price").get("value")-(principal_paid+dijit.byId("total_pricipalpaid").get("value"));
 	    dijit.byId('priciple_amount').attr('value',all_total);
