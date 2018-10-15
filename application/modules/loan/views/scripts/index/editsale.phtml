@@ -414,6 +414,7 @@ function Balance(){
 		checkScheduleOption();
 	}
 }
+
 function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');	
 	getAllPropertyBranch(branch_id);
@@ -450,6 +451,7 @@ function getAllPropertyBranch(branch_id){
 		}
 	});
 } 
+
 customer_id = '<?php echo $this->datarow['client_id'];?>';
 var url_getclient = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclientbybranch')); ?>';
 function getAllClientByBranch(branch_id){
@@ -573,7 +575,6 @@ require(["dojo/ready"], function(ready){
 		dijit.byId("fixed_payment").attr("value",0);
 		dijit.byId("total_sold").set("readOnly",false);
 		dijit.byId("sold_price").set("readOnly",false);
-		
 	  });
 	 
 	new dijit.form.FilteringSelect({
@@ -647,6 +648,7 @@ require(["dojo/ready"], function(ready){
 			}
 	    }
 		}, "co_id");
+
 	});
 </script>
 <script type="text/javascript">
@@ -666,6 +668,7 @@ function getcustomerinfo(client_id){
 		}
 	});
 }
+var fistTime=1;
 var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfo(){
 	land_code = dijit.byId('land_code').get('value');
@@ -695,6 +698,27 @@ function getlandinfo(){
 				//dijit.byId('sold_price').attr('value',data.price);
 			}
 			dijit.byId('sold_price').attr('value',data.price);
+			
+			
+		    if(fistTime==1){//check first time has discount when edit sale
+			    
+		    	total_sold = dijit.byId('total_sold').get('value');
+		    	discount = dijit.byId('discount').get('value');
+		    	discount_percent = dijit.byId('discount_percent').get('value');
+		    	other_fee = 0;
+		    	if(isNaN(other_fee)){
+		    		other_fee=0;
+		    	}if(isNaN(discount)){
+		    		discount=0;
+		    	}
+		    	if(isNaN(discount_percent)){
+		    		discount_percent=0;
+		    	}
+		    	discount_percent = parseInt(total_sold*discount_percent/100);
+		    	total_sold = total_sold-discount_percent-discount+other_fee;
+		    	dijit.byId('sold_price').attr('value',total_sold);
+		    	fistTime=2;	
+		    }
 		},
 		error: function(err) {
 			alert(err);

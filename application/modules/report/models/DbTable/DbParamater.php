@@ -1375,8 +1375,8 @@ function getAllBranch($search=null){
     	co.`date` FROM `ln_comission` AS co WHERE 1";
     	$order =" GROUP BY co.`category_id` ORDER BY co.`category_id` ASC";
     	$where="";
-    	$from_date =(empty($search['start_date']))? '1': " co.`date` >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " co.`date` <= '".$search['end_date']." 23:59:59'";
+    	$from_date =(empty($search['start_date']))? '1': " co.`for_date` >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " co.`for_date` <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
     	
     	if (!empty($search['property_type'])){

@@ -18,6 +18,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 						'client_name'=> -1,
 						'schedule_opt' => -1,
 						'branch_id' => -1,
+						'streetlist'=>'',
 						'status' => -1,
 						'co_id' => -1,
 						'land_id'=>-1,

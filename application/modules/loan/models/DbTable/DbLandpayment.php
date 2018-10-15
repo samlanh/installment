@@ -97,7 +97,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	if(($search['schedule_opt'])>0){
     		$where.= " AND s.payment_id = ".$search['schedule_opt'];
     	}
-    		
+    	if(!empty($search['streetlist'])){
+    		$where.= " AND p.street = '".$search['streetlist']."'";
+    	}	
     	$order = " ORDER BY s.id DESC";
     	$db = $this->getAdapter();    
     	return $db->fetchAll($sql.$where.$order);
