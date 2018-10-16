@@ -545,6 +545,7 @@ function getAllBranch($search=null){
      			   c.dob,
      			   c.hname_kh,
     			   c.ksex,
+    			    c.join_type,
     			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=c.ksex limit 1) AS partner_gender,
      			   c.dob_buywith,
      			   c.rid_no,

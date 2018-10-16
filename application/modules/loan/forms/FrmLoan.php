@@ -435,7 +435,9 @@ public function init()
 			$start_building->setValue($data['build_start']);
 			$amount_build->setValue($data['amount_build']);
 			$note_agreement->setValue($data['note_agreement']);
-			
+			if (!empty($data['buy_date'])){
+				$_date_buy->setValue($data['buy_date']);
+			}
 			if (!empty($data['second_depostit'])){
 			$second_depostit->setValue($data['second_depostit']);
 			}
