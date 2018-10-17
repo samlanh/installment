@@ -454,28 +454,18 @@ function printSubmit(){
 	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_income" >
 		<div id="divPrint" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
 			<style>
-				.fontbig{
-					font-size: 15px;	
-				}
-				.fonttel{
-					font-size: 18px;	
-				}
-				.pleft{
-					width: 110px;	
-				}
-
 				.label{ font-size: 22px;}
-				.value{ font: 14px 'Khmer OS Battambang';border: 1px solid #000; height: 27px; width: 100%;margin-right:5px; display: block;
-						line-height: 25px;
+				.value{ font:16px 'Khmer OS Battambang';border: 1px solid #000; height: 30px; width: 100%;margin-right:5px; display: block;
+						line-height: 28px;
 					    text-align: center;
-						}
+				}
 				.print tr td{
 					padding:2px 2px; 
 				}
-			   .khmerbold{font:14px 'Khmer OS Battambang';}
+			   .khmerbold{font:16px 'Khmer OS Battambang';}
 			   .khmer{font:12px 'Khmer OS Battambang';}
 			   .one{white-space:nowrap;}
-			   .h{ margin-top: -10px;/*margin-left:4px;*/}
+				label{margin-bottom: 0px !important}
 			</style>	
 			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
@@ -496,95 +486,71 @@ function printSubmit(){
 				</tr>
 			</table>
 			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: -5px;" class="print" cellspacing="2px"  cellpadding="0">
-				<tr>
-					<td width="10%" ></td>
-					<td width="30%" ></td>
-					<td width="15%" ></td>
-					<td width="17%" ></td>
-					<td width="10%" ></td>
-					<td width="18%" ></td>
-				</tr>
-				
 				<tr style="white-space: nowrap;">
-				
-					<td class="one khmerbold">គម្រោង</td>
-                    <td><strong><label id="lb_branch" class="value"></label></strong></td>
-					
-					
-				    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
-                    <td colspan="3"><strong><label id="lb_invoice" class="value"></label></strong></td>
+					<td width="15%" class="one khmerbold">គម្រោង</td>
+                    <td width="35%"><strong><label id="lb_branch" class="value"></label></strong></td>
+				    <td width="15%" class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
+                    <td width="35%"><strong><label id="lb_invoice" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-				
 					<td class="one khmerbold" width="10%">អតិថិជន</td>
-				    <td width="40%"><strong><label id="lb_customer" class="value"></label></strong></td>
-					
+				    <td><strong><label id="lb_customer" class="value"></label></strong></td>
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ប្រភេទចំនូល</td>
-				    <td colspan="3"><strong><label id="lb_income_category" class="value"></label></strong></td>
+				    <td><strong><label id="lb_income_category" class="value"></label></strong></td>
 				</tr>
-
 				<tr>
 					<td class="one khmerbold">ពណ៌នាចំនូល</td>
 					<td ><strong><label id="lb_income_title" class="value"></label></strong></td>
-					
-					
-					<td class="one khmerbold">&nbsp;&nbsp;ចំនូលសរុប</td>
-					<td colspan="3"><strong><label id="lb_total_amount" class="value"></label></strong></td>
-					
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ចំនូលសរុប</td>
+					<td><strong><label id="lb_total_amount" class="value"></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">សែក</td>
 				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"></label></strong></td>
-					
-					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃទទួល</td>
-				    <td colspan="3"><strong><label id="lb_date" class="value"></label></strong></td>
+					<td rowspan="2" class="one khmerbold">&nbsp;&nbsp;&nbsp;សម្គាល់</td>
+				    <td rowspan="2" style="border: 1px solid #000 !important;text-align: left;"><label style="text-align:left; " id="lb_description"></label></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">សម្គាល់</td>
-				    <td colspan="1"><strong><label style="white-space: nowrap;text-align: center; " id="lb_description" class="value"></label></strong></td>
+					<td class="one khmerbold">ថ្ងៃទទួល</td>
+				    <td><strong><label id="lb_date" class="value"></label></strong></td>
 				</tr>
-				
 				<tr style="white-space: nowrap;">
-				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['customer_sign'];?></strong></td>
+				    <td colspan="2" class="khmerbold" style="line-height: 14px;"   align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['customer_sign'];?></strong></td>
 				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['teller_sign'];?></strong></td>
 				</tr>
-				<tr style="white-space: nowrap;" height="60px;">
-					<td class="one khmerbold" colspan="4" align="center" valign="bottom">
+				<tr style="white-space: nowrap;" height="85px;">
+					<td colspan="2" class="one khmerbold" align="center" valign="bottom">
 						<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
 							<lable id="lb_customer_name"></lable>
 						</h4>
 					</td>
-				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
+				    <td colspan="2" class="one khmerbold" align="center" valign="bottom">&nbsp;
 				  			<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
-				              <?php $session_user=new Zend_Session_Namespace('authinstall');
+				              <?php 
+				              	   $session_user=new Zend_Session_Namespace('authinstall');
 						           $last_name=$session_user->last_name;
 						           $username = $session_user->first_name;
 						           echo $last_name." ".$username;?></h4>  
 					</td>
 				</tr>
-				
 				<tr style="line-height: 15px;font-size: 12px;">
-					<td colspan="6" valign="top" >
-						
-					</td>
+					<td colspan="4" valign="top" ></td>
 				</tr>
 				<tr style="line-height: 20px;font-size: 11px;font-family:'Khmer OS Battambang'">
 					<td valign="top" >
-						<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
+						<span style="text-decoration:underline;font-size: 12px;">សំគាល់ ៖</span>
 					</td>
-					<td colspan="5">
-						<span style="font-size: 12px;"><?php echo $this->data['comment'];?></span><br />
-						<span style="white-space: pre-line;font-size: 12px;"><?php echo $this->data['comment1'];?></span><br />
-					</td>
-				</tr>
-				<tr style="line-height: 15px;font-size: 12px;">
-					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
-						
+					<td colspan="3">
+						<span style="font-size: 10px;"><?php echo $this->data['comment'];?></span><br />
+						<span style="white-space: pre-line;font-size: 10px;"><?php echo $this->data['comment1'];?></span><br />
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 12px;">
-					<td colspan="6" >
+					<td colspan="4" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
+					</td>
+				</tr>
+				<tr style="line-height:20px;font-size: 10px;">
+					<td colspan="4" >
 						<?php echo $this->footer;?>
 					</td>
 				</tr>

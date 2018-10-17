@@ -543,10 +543,18 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		  $data['deposit'] = $data['deposit']+$data['paid_before'];
     		 
     		  $data['sale_id']=$data['loan_number'];
+    		  $client_pay=0;
     		  if(($payment_method!=2)){//ខុសពីផ្តាច់
-    		  	$this->addPaymenttoSale($data);
+    		  	$client_pay = $this->addPaymenttoSale($data);
     		  }
     		  if(!empty($data['id'])){$dbtable->updateLateRecordSaleschedule($data['id']);}
+    		  
+    		  $dbpayment = new Loan_Model_DbTable_DbLoanILPayment();
+    		  $rows = $dbpayment->getSaleScheduleById($data['id'], 1);
+    		  if(empty($rows)){
+    		  	$dbpayment->updatePayoff($data['loan_number'],$client_pay);
+    		  }
+    		  
     		  $db->commit();
 	          return 1;
 	        }catch (Exception $e){
@@ -605,7 +613,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    	$crm_id = $this->insert($array);
     	}
     	$rows = $this->getSaleScheduleById($data['sale_id'],1);
-//     	$paid_amount = $data['deposit']-$data['paid_before'];
 		$after_interest=0;
     	$paid_amount = $data['deposit'];
     	$remain_principal=0;
@@ -694,6 +701,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    		}
     	   }
     	}
+    	return $crm_id;
     }
     public function getNextDateById($pay_term){
     	if($pay_term==3){

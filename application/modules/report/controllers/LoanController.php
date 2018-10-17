@@ -99,7 +99,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		);
 	}
 	$this->view->rssearch = $search;
-	$this->view->loantotalcollect_list =$rs=$db->getALLLoanPayment($search);
+	$this->view->loantotalcollect_list = $db->getALLLoanPayment($search);
 	$this->view->list_end_date = $search;	
 	
 	$frm = new Loan_Form_FrmSearchLoan();
@@ -556,7 +556,7 @@ public function exportFileToExcel($table,$data,$thead){
  				'end_date' => date('Y-m-d'),
  		);
  	}
- 	$this->view->loantotalcollect_list =$db->getALLLoanPayment($search);
+ 	$this->view->loantotalcollect_list =$db->getALLLoanPayment($search,1);
  	$this->view->search=$search;
  	$frm = new Loan_Form_FrmSearchLoan();
  	$frm = $frm->AdvanceSearch();
