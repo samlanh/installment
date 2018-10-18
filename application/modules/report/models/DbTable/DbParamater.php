@@ -1605,7 +1605,8 @@ function getAllBranch($search=null){
     	}
     	function getCustomerRequirement($search=null){
     		$db = $this->getAdapter();
-    		$sql="SELECT c.*,			
+    		$sql="SELECT c.*,
+    			(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=c.know_by LIMIT 1) as know_by,			
 				(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name,
 				STATUS FROM in_customer AS c WHERE c.`status`=1";
     		$where ="";
@@ -1628,6 +1629,9 @@ function getAllBranch($search=null){
     		}
     		if(!empty($search['statusreq'])){
     			$where.= " AND statusreq = '".$search['statusreq']."'";
+    		}
+    		if($search['know_by']>0){
+    			$where.= " AND know_by = ".$search['know_by'];
     		}
     		$where.=" ORDER BY c.id DESC ";
     		return $db->fetchAll($sql.$where);

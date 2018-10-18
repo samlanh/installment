@@ -78,18 +78,94 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    	'branch_id'      => $_data['branch_id'],
 		    	'joint_doc_type'      => $_data['join_d_type'],
 		    	'refe_nation_id'      => $_data['reference_national_id'],
-		    	'join_type'      => $_data['join_type'],
-		    		
-		);
+		    	'join_type'      => $_data['join_type'],		    		
+		); 
 		if(!empty($_data['id'])){
-			$where = 'client_id = '.$_data['id'];
-			$this->update($_arr, $where);
-			return $_data['id'];
-			 
+			$customer_id =  $_data['id'];
+			$where = 'client_id = '.$customer_id;
+			$this->update($_arr, $where);			 
 		}else{
-			return  $this->insert($_arr);
+			$customer_id = $this->insert($_arr);
+		}
+		
+		$part= PUBLIC_PATH.'/images/document/';
+		if (!file_exists($part)) {
+			mkdir($part, 0777, true);
+		}
+		
+		if (!empty($_data['identity'])){
+			$identity = $_data['identity'];
+			$ids = explode(',', $identity);
+			$image_name="";
+			$photo="";
+			$this->_name='ln_client_document';
+			$detailId="";
+			foreach ($ids as $i){
+				if(!empty($_data['id'])){//only edit (delete only)
+					if (empty($detailId)){
+						if (!empty($_data['detailid'.$i])){
+							$detailId = $_data['detailid'.$i];
+						}
+					}else{
+						if (!empty($_data['detailid'.$i])){
+							$detailId= $detailId.",".$_data['detailid'.$i];
+						}
+					}
+					$this->_name = "ln_client_document";
+					$where1 =" client_id=".$_data['id'];
+					if (!empty($detailId)){
+						$where1.=" AND id NOT IN ($detailId) ";
+					}
+					$this->delete($where1);
+				}
+				if (!empty($_data['detailid'.$i])){//for edit (delete)
+					$name = $_FILES['attachment'.$i]['name'];
+					if (!empty($name)){
+						$ss = 	explode(".", $name);
+						$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
+						$tmp = $_FILES['attachment'.$i]['tmp_name'];
+						if(move_uploaded_file($tmp, $part.$image_name)){
+							$photo = $image_name;
+							$arr = array(
+									'client_id'=>$customer_id,
+									'document_name'=>$photo,
+							);
+							$this->_name = "rms_specail_discount_document";
+							$where=" id=".$_data['detailid'.$i];
+							$this->update($arr, $where);
+						}
+						else
+							$string = "Image Upload failed";
+						//     				}
+					}
+				}else{//for add action
+					$name = $_FILES['attachment'.$i]['name'];
+					if (!empty($name)){
+						$ss = 	explode(".", $name);
+						$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
+						$tmp = $_FILES['attachment'.$i]['tmp_name'];
+						if(move_uploaded_file($tmp, $part.$image_name)){
+							$photo = $image_name;
+							$arr = array(
+									'client_id'=>$customer_id,
+									'document_name'=>$photo,
+							);
+							$this->insert($arr);
+						}
+						else{
+							$string = "Image Upload failed";
+						   }
+					}
+				}
+			}
+		}
+		if(empty($_data['identity'])){
+			$this->_name = "ln_client_document";
+			$where1 =" client_id=".$customer_id;
+			$this->delete($where1);
 		}
 		}catch(Exception $e){
+			echo $e->getMessage();exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}
@@ -97,8 +173,13 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql = "SELECT * FROM $this->_name WHERE client_id = ".$db->quote($id);
 		$sql.=" LIMIT 1 ";
-		$row=$db->fetchRow($sql);
-		return $row;
+			$row=$db->fetchRow($sql);
+			return $row;
+	}
+	public function getDocumentClientById($client_id){
+		$db = $this->getAdapter();
+		$sql = "SELECT * FROM ln_client_document WHERE client_id = ".$client_id;
+		return $db->fetchAll($sql);
 	}
 	public function getClientDetailInfo($id){
 		$db = $this->getAdapter();

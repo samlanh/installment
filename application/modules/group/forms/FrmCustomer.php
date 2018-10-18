@@ -19,6 +19,18 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
+		
+		$know_by = new Zend_Dojo_Form_Element_FilteringSelect('know_by');
+		$know_by->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+		
+		));
+		$db = new Application_Model_DbTable_DbGlobal();
+		$opt_know = $db->getAllKnowBy(1);
+		$know_by->setMultiOptions($opt_know);
 
 		$_date = new Zend_Dojo_Form_Element_DateTextBox('date');
 		$_date->setAttribs(array(
@@ -88,9 +100,9 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 			$_type->setValue($data['type']);
 			$_description->setValue($data['description']);
 			$statusreq->setValue($data['statusreq']);
-
+			$know_by->setValue($data['know_by']);
 		}
-		$this->addElements(array($_name,$_phone,$_date,$_from_price,$_to_price,$_requirement,$_type,$_description,$statusreq));
+		$this->addElements(array($know_by,$_name,$_phone,$_date,$_from_price,$_to_price,$_requirement,$_type,$_description,$statusreq));
 		return $this;
 		
 	}	

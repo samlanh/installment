@@ -1593,10 +1593,12 @@ function calCulateSchedulePayment(){
 	var total_amount=0;
 	var rowId = $('#identity').val();
 	var rowIDArray = rowId.split(',');
+	total_firstrecord = 0;
 	if(rowId!=''){
 		for(var n = 0; n < rowIDArray.length; n++) {
 			total_amountpayment = (dijit.byId('total_payment'+rowIDArray[n]).get('value'));
 			if(n==0){ 
+				total_firstrecord = total_amountpayment;
 			}
 			if(isNaN(total_amountpayment)){
 				total_amountpayment = 0;
@@ -1606,11 +1608,12 @@ function calCulateSchedulePayment(){
 	}
 	dijit.byId('total_installamount').attr('value',total_amount);
 	total_paidbefore = dijit.byId("paid_before").get("value");
-	paid_new = total_amount - total_paidbefore;
+	paid_new = total_firstrecord - total_paidbefore;
 	dijit.byId('deposit').attr('value',paid_new);
 	
-	total_sold = dijit.byId("sold_price").get("value");
-	total_amount = total_sold-total_amount;
+	//total_sold = dijit.byId("sold_price").get("value");
+	//total_amount = total_sold-total_amount;
+	
 	Balance();
 	calCulateFixedPeriod();
 }

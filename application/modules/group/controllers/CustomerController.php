@@ -15,6 +15,7 @@ class Group_CustomerController extends Zend_Controller_Action {
 				$search = array(
 						'adv_search' => $formdata['adv_search'],
 						'status'=>$formdata['status'],		
+						'know_by'=>$formdata['know_by'],
 						'statusreq'=>$formdata['statusreq'],
 						'start_date'=> $formdata['start_date'],
 						'end_date'=>$formdata['end_date']						
@@ -24,7 +25,8 @@ class Group_CustomerController extends Zend_Controller_Action {
 				$search = array(
 						'adv_search' => '',
 						'status' => -1,		
-						'statusreq'=>'',			
+						'statusreq'=>'',
+						'know_by'=>-1,			
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d')								
 						);
@@ -33,13 +35,11 @@ class Group_CustomerController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","PHONE","DATE","FROM_PRICE","TO_PRICE","REQUIREDMENT","TYPE","DESCRIPTION","STATUS_REQ","BY_USER","STATUS");
+			$collumns = array("BRANCH_NAME","PHONE","KNOW_BY","DATE","FROM_PRICE","TO_PRICE","REQUIREDMENT","TYPE","DESCRIPTION","STATUS_REQ","BY_USER","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'customer','action'=>'edit',
 			);
-			
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('name'=>$link,'phone'=>$link));
-
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -54,10 +54,9 @@ class Group_CustomerController extends Zend_Controller_Action {
 		$db = new Group_Model_DbTable_DbCustomer();
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
-				try{
-			
+			try{
 					$id= $db->add($data);
-					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+					Application_Form_FrmMessage::message("INSERT_SUCESS");
 
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
@@ -72,9 +71,7 @@ class Group_CustomerController extends Zend_Controller_Action {
 		$frm = $fm->FrmAddCustomer();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_customer = $frm;		
-		
 	}
-
 	public function editAction(){
 
 		$id = $this->getRequest()->getParam("id");

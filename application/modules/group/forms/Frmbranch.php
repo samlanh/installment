@@ -254,6 +254,12 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 				'style'=>'width:100%;min-height:60px; font-size:13px; font-family:"Kh Battambang"'
 		));
 		$_id = new Zend_Form_Element_Hidden('id');
+		
+		$map = new Zend_Dojo_Form_Element_TextBox('map_url');
+		$map->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
 		if(!empty($data)){
 			$br_id->setValue($data['br_id']);
 			$prefix_code->setValue($data['prefix']);
@@ -261,6 +267,7 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 			$branch_nameen->setValue($data['project_type']);
 			
 			$br_address->setValue($data['br_address']);
+			$map->setValue($data['map_url']);
 			$branch_tel->setValue($data['branch_tel']);
 			if (empty($copy)){
 				$branch_code->setValue($data['branch_code']);
@@ -290,7 +297,7 @@ Class Group_Form_Frmbranch extends Zend_Dojo_Form {
 		}
 		
 		
-		$this->addElements(array($prefix_code,$_btn_search,$_title,$_status,$br_id,$branch_namekh,
+		$this->addElements(array($map,$prefix_code,$_btn_search,$_title,$_status,$br_id,$branch_namekh,
 		$branch_nameen,$br_address,$branch_code,$branch_tel,$_fax ,$branch_note,
 				$current_addres,$project_manager_nameen,$project_manager_namekh,$project_manager_nation_id,$project_manager_nationality,
 				$sc_project_manager_nameen,$sc_project_manager_namekh,$sc_project_manager_nation_id,$sc_project_manager_nationality,

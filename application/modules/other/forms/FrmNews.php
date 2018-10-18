@@ -51,11 +51,12 @@ Class Other_Form_FrmNews extends Zend_Dojo_Form {
 		$_status_search->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required'=>'true',
+				'class'=>'fullside',
 		));
 		$_status_search->setValue($request->getParam('status_search'));
 		
 		$_adv_search = new Zend_Dojo_Form_Element_TextBox('adv_search');
-		$_adv_search->setAttribs(array('dojoType'=>$this->text,
+		$_adv_search->setAttribs(array('dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 		));

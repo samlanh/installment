@@ -171,8 +171,20 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$statusreq->setMultiOptions($options);
 		$statusreq->setValue($request->getParam('statusreq'));
 		
+		$know_by = new Zend_Dojo_Form_Element_FilteringSelect('know_by');
+		$know_by->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		
-		$this->addElements(array($statusreq,$position_,$from_date,$to_date,$type,$employee,$_title,$_title,$_status,$_btn_search,$branch_id,$approve_by,$user));
+		));
+		$db = new Application_Model_DbTable_DbGlobal();
+		$opt_know = $db->getAllKnowBy(1);
+		$know_by->setMultiOptions($opt_know);
+		$know_by->setValue($request->getParam('know_by'));
+		
+		$this->addElements(array($know_by,$statusreq,$position_,$from_date,$to_date,$type,$employee,$_title,$_title,$_status,$_btn_search,$branch_id,$approve_by,$user));
 		return $this;
 	}
 	

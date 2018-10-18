@@ -108,16 +108,17 @@ class Group_indexController extends Zend_Controller_Action {
 				Application_Form_FrmMessage::Sucessfull('EDIT_SUCCESS',"/group/index");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("EDIT_FAILE");
-				echo $e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
 		$id = $this->getRequest()->getParam("id");
 		$row = $db->getClientById($id);
-	        $this->view->row=$row;
+	    $this->view->row=$row;
+	    $this->view->document=$db->getDocumentClientById($id);
+	    
 		$this->view->photo = $row['photo_name'];
 		if(empty($row)){
-			$this->_redirect("/group/client");
+			$this->_redirect("/group");
 		}
 		$fm = new Group_Form_FrmClient();
 		$frm = $fm->FrmAddClient($row);

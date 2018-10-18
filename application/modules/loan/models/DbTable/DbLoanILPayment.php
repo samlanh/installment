@@ -415,7 +415,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    						
 		    						$after_interest = $row['total_interest_after'];
 		    						
-		    						if($option_pay!=4){
+		    						if($option_pay==1){
 		    							$total_interest = $after_interest;
 		    						}
 		    						$after_penalty = $row['penelize'];//$data["penelize_".$i];
@@ -430,14 +430,13 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    						if($key!=0){
 		    							$penalize = 0;//ធ្លាប់បងហើយម្តង អោយ =0
 		    							$service_charge=0;
-		    							if($option_pay==4){
+		    							if($option_pay==4 OR $option_pay==3 ){
 		    								$total_interest=0;
 		    							}
 		    						}
 		    						if($option_pay==1){
 		    							$total_principal =$after_principal;
 		    						}elseif($option_pay==3){
-		    							$total_interest=0;
 		    							$total_principal = $after_principal;//$data["principal_permonth_".$i];
 		    						}
 		    						
@@ -449,7 +448,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    								
 		    							if($remain_money>=0){//ដកផាគពិន័យ
 		    								$paid_penalty = $penalize;
-		    								$principle_after=0;		    						
+		    								//$principle_after=0;		    						
 		    								$remain_money = $remain_money - $total_interest;
 		    								if($remain_money>=0){
 		    									$paid_interest = $total_interest;
@@ -458,7 +457,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    									$remain_money = ($remain_money)-($total_principal);
 		    									if($remain_money>=0){//check here of គេបង់លើសខ្លះ
 		    										$paid_principal = $total_principal;
-		    										$after_principal =0;
+		    										$after_principal = 0;
 		    										$is_compleated_d=1;
 		    									}else{
 		    										$paid_principal = $total_principal-abs($remain_money);

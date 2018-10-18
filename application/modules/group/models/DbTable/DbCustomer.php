@@ -10,20 +10,19 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
     }
 	public function add($_data){
 		try{
-		
 		    $_arr=array(		    
 		    	'name'	      => $_data['name'],
 		    	'phone'	      => $_data['phone'],
-				'date'			=>$_data['date'],
-				'from_price'      => $_data['from_price'],
-				'to_price'      => $_data['to_price'],
-				'requirement'      => $_data['requirement'],
-				'type'       => $_data['type'],
-				'description'       => $_data['description'],
-		    	'statusreq'       => $_data['statusreq'],
+		    	'know_by'	  => $_data['know_by'],
+				'date'		  => $_data['date'],
+				'from_price'  => $_data['from_price'],
+				'to_price'    => $_data['to_price'],
+				'requirement' => $_data['requirement'],
+				'type'        => $_data['type'],
+				'description' => $_data['description'],
+		    	'statusreq'   => $_data['statusreq'],
 				'status'	  => 1,//$_data['status'],
 				'user_id'	  => $this->getUserId(),
-		    	
 		);
 	
 		$this->_name;   
@@ -56,7 +55,9 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;		
-		$sql = "SELECT id,name, phone, `date`,from_price,to_price,requirement,type,description,	
+		$sql = "SELECT id,name, phone,
+		(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=know_by LIMIT 1) as know_by,
+		 `date`,from_price,to_price,requirement,type,description,	
 		statusreq,			
 		    (SELECT  first_name FROM rms_users WHERE id = user_id limit 1 ) AS user_name,
 			status FROM $this->_name ";
@@ -77,6 +78,9 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		}
 		if(!empty($search['statusreq'])){
 			$where.= " AND statusreq = '".$search['statusreq']."'";
+		}
+		if($search['know_by']>0){
+			$where.= " AND know_by = ".$search['know_by'];
 		}	
 		$userid = $this->getUserId();
 		$db_user=new Application_Model_DbTable_DbUsers();

@@ -50,6 +50,18 @@ input.btn_borwse_image {
     border: solid 1px #eee;
     width: 120px;
 }
+.btn-reset{
+	background: #c00;
+    color: #fff;
+}
+.btn-choose{
+	background: #f7f7f7;
+    color: #212129;
+}
+.addfile{
+	background: #0077c5 !important;
+    color: #fff !important;
+}
 </style>
 <div class="card">
 	<div class="card-content collapse show">
@@ -85,6 +97,11 @@ input.btn_borwse_image {
 		            <li class="nav-item">
 		                <a class="nav-link" data-toggle="tab" href="#panel22" role="tab">
 		                <i class="fa fa-users ml-2"></i> <?php echo $tr->translate("RELEVANT_STAKEHOLDER");?>
+		                </a>
+		            </li>
+		            <li class="nav-item">
+		                <a class="nav-link" data-toggle="tab" href="#document" role="tab">
+		                <i class="fa fa-book ml-2"></i> <?php echo $tr->translate("DOCUMENT");?>
 		                </a>
 		            </li>
 		        </ul>
@@ -425,6 +442,18 @@ input.btn_borwse_image {
 			             </div>
 			        </div>
 			        <!--/.Panel 2-->
+			        <div class="tab-pane fade in " id="document" role="tabpanel">
+			        	<div class="col-md-8 col-sm-8 col-xs-12">
+			         		<div class="form-group">
+				         	 	 <div class="col-md-10 col-sm-10 col-xs-10" id="fileList">
+			                	 </div>
+				         	 </div>
+				         	 <div class="form-group">
+				         	 	<button class="btn btn-default addfile" onclick="addRow();" type="button"><?php echo $tr->translate('Add More Doc')?></button>
+								<input type="hidden" name="identity" id="identity"  value="" >
+				         	 </div>
+			         	</div>
+			        </div>
 			    </div>
 			</div>
 			<div class="clearfix"></div>
@@ -676,8 +705,75 @@ dojo.ready(function(){
 	}
 	dijit.byId('client_d_type').attr('value',4);
 	dijit.byId('join_d_type').attr('value',4);
+	addRow();
 });
 
+var col = 0;
+var no = 0;
+func='';
+tmp = '';
+var temp='';
+function addRow() {
+		col++;no++;
+		template='';
+			template+='<div id="attachment'+col+'" class="form-group" style=" margin-bottom: 5px !important;">';
+				template+='<div class="input-group input-file" name="attachment'+col+'">';
+	 				template+='<span class="input-group-btn">';
+	 					template+='<button class="btn btn-default btn-choose" type="button"><?php echo $tr->translate('CHOOSE_FILE');?></button>';
+	 				template+='</span>';
+					template+='<input type="text" class="form-control" placeholder="<?php echo $tr->translate('CHOOSE_FILE');?>..." />';
+					template+='<span class="input-group-btn">';
+						template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+col+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+					template+='</span>';
+				template+='</div>';
+			template+='</div> <div class="clearfix"></div>';
+
+			$("#fileList").append(template);
+		
+		if($("#identity").val()!='') {
+			var identity = $("#identity").val();
+			$("#identity").val(identity+','+col);
+		} else {$("#identity").val(col);}
+		bs_input_file();
+ }
+
+function bs_input_file() {
+	$(".input-file").before(
+		function() {
+		if ( ! $(this).prev().hasClass('input-ghost') ) {
+			var element = $("<input  type='file' accept='.xlsx,.xls,image/*,.doc, .docx,.txt,.pdf' class='input-ghost' style='visibility:hidden; height:0'>");
+			element.attr("name",$(this).attr("name"));
+			element.change(function(){
+				element.next(element).find('input').val((element.val()).split('\\').pop());
+			});
+			$(this).find("button.btn-choose").click(function(){
+				element.click();
+			});
+			
+			$(this).find('input').css("cursor","pointer");
+			$(this).find('input').mousedown(function() {
+				$(this).parents('.input-file').prev().click();
+				return false;
+			});
+			return element;
+		}
+	}
+	);
+}
+function deleteRecord(index){
+	var identity = $('#identity').val();
+	var arrays = identity.split(',');
+	for(var i=0;i<arrays.length;i++) {
+	if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity').val(strings);
+	$("#attachment"+index).remove();
+	bs_input_file();
+}
+$(function() {
+	bs_input_file();
+});
 url_getdistrict = '<?php echo $this->url(array('module'=>'other','controller'=>'district','action'=>'get-district'));?>';
 function filterDistrict(){
 	pro_id = dijit.byId('province').get('value');

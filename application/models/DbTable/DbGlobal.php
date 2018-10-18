@@ -1480,5 +1480,20 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$sql="SELECT s.`id`,s.`name` FROM `ln_supplier` AS s WHERE s.`status`=1 AND s.`name`!=''";
   	return $db->fetchAll($sql);
   }
+  function getAllKnowBy($option=1){
+  	$db = $this->getAdapter();
+  	$sql="SELECT id,title FROM `rms_know_by` WHERE `status`=1 AND `title`!='' ";
+  	$result=$db->fetchAll($sql);
+  	if($option!=null){
+  		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  		$options=array(-1=>$tr->translate("SELCT_TYPE"));
+  		if(!empty($result))foreach($result as $rs){
+  			$options[$rs['id']]=$rs['title'];
+  		}
+  		return $options;
+  	}else{
+  		return $result ;
+  	}
+  }
 }
 ?>
