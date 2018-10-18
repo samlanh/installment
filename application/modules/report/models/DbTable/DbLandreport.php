@@ -1043,11 +1043,12 @@ public function getAllOutstadingLoan($search=null){
 				(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS price_sold,
 				(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS name_kh,
 				(SELECT
-			     `d`.`date_payment`
-			   FROM `ln_client_receipt_money_detail` `d`
-			   WHERE (`crm`.`id` = `d`.`crm_id`)
-			   ORDER BY `d`.`date_payment` DESC
-			   LIMIT 1) AS `date_payment`,crm.payment_method as payment_methodid,
+			     	`d`.`date_payment`
+			   		FROM `ln_client_receipt_money_detail` `d`
+			   		WHERE (`crm`.`id` = `d`.`crm_id`)
+			   		ORDER BY `d`.`date_payment` ASC
+			   LIMIT 1) AS `date_payment`,
+			   crm.payment_method as payment_methodid,
 				(SELECT `ln_view`.`name_kh` FROM `ln_view` WHERE ((`ln_view`.`key_code` = `crm`.`payment_method`)
          		 AND (`ln_view`.`type` = 2))LIMIT 1) AS `payment_method`,
 				(SELECT c.hname_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS hname_kh,
