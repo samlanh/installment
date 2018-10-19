@@ -1,0 +1,338 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('Land Information'));
+?>	
+<?php  $frm = $this->frm_client;?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.Dialog");
+dojo.require("dijit.form.Textarea");
+</script>
+<form id='add_client' action="<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'add')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				dijit.byId('save_new').set('disabled',true);
+				return true;
+			} else {
+				return false;
+			}
+</script>
+<table  width="100%" style="margin-top:-5px;">
+	<tr>
+		<td>
+		<fieldset>
+					<legend ><strong><?php echo $tr->translate("ADD_PROPERTY");?></strong></legend>
+					<table style="margin: 0 auto; width:100%;" cellspacing="10">
+							<tr>
+								<td><?php echo $tr->translate("BRANCH_NAME")?></td>
+								<td><input id="branch_id" /><?php //echo $frm->getElement('branch_id');?></td>
+								<td><?php echo $tr->translate("PROPERTY_CODE")?></td>
+								<td><?php echo $frm->getElement('landcode');?></td>
+								<td valign="top"><?php echo $tr->translate("HEAD_TITLE_NO")?></td>
+								<td valign="top"><?php  echo $frm->getElement('hardtitle');?></td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("PROPERTY_CODE")?>*</td>
+								<td><label id="message" style="color: red;"></label>
+								<?php  echo $frm->getElement('land_address');?>
+								</td>
+								<td><?php echo $tr->translate("STREET")?></td>
+								<td><?php  echo $frm->getElement('street');?></td>
+								<td valign="top"><?php echo $tr->translate("PROPERTY_TYPE")?></td>
+								<td valign="top"><input id="property_type" /><?php  //echo $frm->getElement('property_type');?></td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("LAND_PRICE")?>*</td>
+								<td><?php  echo $frm->getElement('land_price');?></td>
+								<td><?php echo $tr->translate("HOUSE_PRICE")?>*</td>
+								<td><?php  echo $frm->getElement('house_price');?></td>
+								<td><?php echo $tr->translate("PRICE")?>*</td>
+								<td><?php  echo $frm->getElement('price');?></td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("WIDTH")?></td>
+								<td><?php  echo $frm->getElement('width');?></td>
+								<td><?php echo $tr->translate("HEIGHT")?></td>
+								<td><?php  echo $frm->getElement('height');?></td>
+								<td><?php echo $tr->translate("SIZE")?></td>
+								<td><?php  echo $frm->getElement('size');?></td>
+							</tr>
+							<tr style="background: #edf7f8;">
+								<td colspan="6">លក្ខណៈ ដី/ផ្ទះ</td>
+							</tr>
+						<?php $is_show =$this->data['showhouseinfo']; 
+						if($is_show==1){?>
+							<tr>
+								<td valign="top"><?php echo $tr->translate("FLOOR")?></td>
+								<td><?php  echo $frm->getElement('floor');?></td>
+								<td valign="top"><?php echo $tr->translate("BEDROOM")?></td>
+								<td valign="top"><?php  echo $frm->getElement('bedroom');?></td>
+							    <td valign="top"><?php echo $tr->translate("LIVING")?></td>
+								<td valign="top"><?php  echo $frm->getElement('living');?></td>
+							</tr>
+							<tr>
+								<td valign="top"><?php echo $tr->translate("DINNER_ROOM")?></td>
+								<td><?php  echo $frm->getElement('dinnerroom');?></td>
+								<td valign="top"><?php echo $tr->translate("BUIDING_YEAR")?></td>
+								<td valign="top"><?php  echo $frm->getElement('buidingyear');?></td>
+							    <td valign="top"><?php echo $tr->translate("PARKING_SPACE")?></td>
+								<td valign="top"><?php echo $frm->getElement('parkingspace');?></td>
+							</tr>
+						<?php }?>
+							<tr style="background: #edf7f8;">
+								<td colspan="6">ព្រំប្រទល់ ដី/ផ្ទះ</td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("ខាងត្បូងជាប់")?></td>
+								<td><?php echo $frm->getElement('south');?></td>
+								<td><?php echo $tr->translate("ខាងជើងជាប់")?></td>
+								<td><?php echo $frm->getElement('north');?></td>
+								<td><?php //echo $tr->translate("SIZE")?></td>
+								<td><?php  //echo $frm->getElement('size');?></td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("ខាងលិចជាប់")?></td>
+								<td><?php echo $frm->getElement('west');?></td>
+								<td><?php echo $tr->translate("ខាងកើតជាប់")?></td>
+								<td><?php  echo $frm->getElement('east');?></td>
+								<td><?php //echo $tr->translate("SIZE")?></td>
+								<td><?php  //echo $frm->getElement('size');?></td>
+							</tr>
+							<tr>
+								<td valign="top"><?php echo $tr->translate("STATUS")?></td>
+								<td valign="top"><?php  echo $frm->getElement('status');?></td>
+								<td valign="top"><?php echo $tr->translate("NOTE")?></td>
+								<td><?php  echo $frm->getElement('desc');?></td>
+							</tr>
+						<tr>
+							<td colspan="6" align="center">
+							<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" 
+								 iconClass="dijitIconClear" /> 
+							<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
+								 iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+							</td>
+						</tr>
+					</table>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>
+<table>
+<tr>
+</tr>
+</table>
+<?php echo $this->frmPopupPropertyType;?>
+<?php  $frm = $this->frm_branch;?>
+<div class="dijitHidden">
+		<div data-dojo-type="dijit.Dialog"  id="popup_project" >
+			<table cellspacing="10" style="margin: 0 auto; width:100%">
+			<tr>
+				<td>
+					<fieldset>
+						<legend align="center"><strong><?php echo $tr->translate("ADD_BRANCH");?></strong></legend>
+						<form id='add_branch' enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+						<table cellspacing="5" width="100%" >
+							<tr>
+								<td align="center" valign="top">
+									<table width="100%" cellspacing="10" >
+										<tr>
+											<td><?php echo $tr->translate("PROJECT_NAME")?></td>
+											<td><?php echo $frm->getElement("branch_namekh");?></td>
+											<td><?php echo $tr->translate("PREFIX_CODE")?></td>
+											<td><?php echo $frm->getElement("prefix_code");?></td>
+										</tr>	
+										<tr>
+										    <td><?php echo $tr->translate("BRANCH_ADDRESS")?></td>
+											<td><?php echo $frm->getElement("br_address");?></td>
+											<td><?php echo $tr->translate("PHONE")?></td>
+											<td><?php echo $frm->getElement("branch_tel");?></td>
+										</tr>
+										<tr style="background: #edf7f8">
+											<td colspan="4"><?php echo $tr->translate("PROJECT_MANGER_INFO")?></td>
+										</tr>
+										<tr>		
+											<td><?php echo $tr->translate("NAME_KH")?></td>
+											<td><?php echo $frm->getElement("project_manager_namekh");?></td>
+											<td><?php echo $tr->translate("NATIONALITY")?></td>
+											<td><?php echo $frm->getElement("project_manager_nationality");?></td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("NATIONAL_ID")?></td>
+											<td><?php echo $frm->getElement("project_manager_nation_id");?></td>
+											<td ><?php echo $tr->translate("CURRENT_ADDRESS")?></td>
+											<td><?php echo $frm->getElement("current_address");?></td>
+										</tr>
+										<tr>
+											<td colspan="4" align="center">
+												<input type="button"  onclick="addNewBranch();" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
+													iconClass="dijitEditorIcon dijitEditorIconSave" />
+											</td>
+										</tr>					
+									</table>
+								</td>							
+							</tr>
+						</table>
+						</form>	
+					</fieldset>
+				</td>			
+			</tr>
+		</table>			
+		</div>
+</div>
+<script type="text/javascript">
+	
+var propertyType_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->pro_type));?> );
+var branch_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->branch_opt));?> );
+
+dojo.ready(function(){
+	try{
+		new dijit.form.FilteringSelect({
+			store: propertyType_store,
+			autoComplete: true,
+			required: false,		           
+			name: "property_type",
+			id: "property_type",
+			searchAttr: "name",
+			class: 'fullside',
+				onChange: function() {
+					showPopupForm();
+				}  
+			}, "property_type");
+
+		new dijit.form.FilteringSelect({
+			store: branch_store,
+			autoComplete: true,
+			required: true,		           
+			name: "branch_id",
+			id: "branch_id",
+			searchAttr: "name",
+			class: 'fullside',
+				onChange: function() {
+					branch_id = dijit.byId('branch_id').get('value');
+					if(branch_id==-1){
+						dijit.byId('popup_project').show();
+						}else{
+						getPropertyNo();
+					}
+				}  
+			}, "branch_id");
+	}catch(e){
+	}
+});
+function calCulateSize(){
+width = dijit.byId("width").get('value');
+height = dijit.byId("height").get('value');
+totalsize = width*height;
+dijit.byId("size").attr('value',totalsize);
+}
+function showPopupForm(){
+	property_type = dijit.byId('property_type').get('value');
+	if(property_type==''){
+		alert('Please Select Property Type');
+		dijit.byId('property_type').focus();
+		return false;
+	}else if(property_type==-1){
+		dijit.byId('frm_propertytype').show();
+	}
+}
+url_addbranch = '<?php echo $this->url(array('module'=>'group','controller'=>'project','action'=>'addbranchajax'));?>';
+function addNewBranch(){
+	if(dijit.byId('add_branch').validate()) {
+		dojo.xhrPost({
+			url:url_addbranch,	
+			form:dojo.byId('add_branch'),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = {					
+						id: data,
+					    name: dijit.byId('branch_namekh').get('value')
+				};		
+				addDataToSelectbox(dijit.byId('branch_id'), branch_store, Itemmake, data);	
+				dijit.byId('add_branch').reset();
+				dijit.byId('popup_project').hide();
+			},
+			error: function(response, ioArgs) {
+			}
+		});
+	}
+}
+
+url_property = '<?php echo $this->url(array('module'=>'group','controller'=>'propertiestype','action'=>'add-propertytype'));?>';
+function addNewPropertytype(){
+	if(dijit.byId('frm_propertytype').validate()) {
+		dojo.xhrPost({
+			url:url_property,	
+			form:dojo.byId('form_propertytype'),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = {					
+						id: data,
+					    name: dijit.byId('type_nameen').get('value')
+				};		
+				addDataToSelectbox(dijit.byId('property_type'), propertyType_store, Itemmake, data);	
+				dijit.byId('property_type').attr('value',data);
+				dijit.byId('frm_propertytype').reset();
+				dijit.byId('frm_propertytype').hide();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+}
+url_getPropertyNo = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'get-property-no'));?>';
+function getPropertyNo(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0 || branch_id==-1){
+		return false;}
+	dojo.xhrPost({
+		url:url_getPropertyNo,	
+		content:{ 
+			'branch_id': branch_id
+		},
+		handleAs:"json",
+		load: function(data) {	
+		    dijit.byId('landcode').attr('value',data);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+function CalculatePrice(){
+	house_price = dijit.byId('house_price').get('value');
+	land_price = dijit.byId('land_price').get('value');
+	var price = Number(house_price + land_price);
+	dijit.byId('price').attr('value',price);
+}
+
+url_CheckTitle = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'check-title'));?>';
+function checkTitle(){
+	title = dijit.byId('land_address').get('value');
+	branch_id = dijit.byId('branch_id').get('value');
+	street = dijit.byId('street').get('value');
+	if(title=='' || street==''){ return false;}
+	dojo.xhrPost({
+		url:url_CheckTitle,	
+		content:{ 
+			'branch_id': branch_id , 'land_address': title,'street': street
+		},
+		handleAs:"json",
+		load: function(data) {	
+			if(data !== false ){
+		   		document.getElementById('message').innerHTML ='លេខផ្ទះ/ឡូតិ៍នេះមានរួចរាល់ហើយ';
+		   		dijit.byId('land_address').focus();
+			}else{
+				document.getElementById('message').innerHTML ='';
+			}
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+</script>
