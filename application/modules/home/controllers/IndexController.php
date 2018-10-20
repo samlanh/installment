@@ -88,8 +88,6 @@ public function init()
 		$lastest = $db->getAllNews(9);
 		$this->view->lastestnews = $lastest;
 		$this->view->allnews = $db->getAllNews();
-// 		$this->view->countNewFead = $db->getCountNewFeed();
-// 		$this->view->newsfeeNotClick = $db->getNewsFeedNotClick();
 		
 		$this->view->totalFullCommission = $db->getTotalFullCommission();
 		$this->view->commissionpaid = $db->getCommissionPiadByAgent();

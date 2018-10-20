@@ -179,6 +179,7 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$where = " WHERE 1 ";
 		$sql = "SELECT id,
 		(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
+		(SELECT ln_project.map_url FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS map_url,
 		land_code,land_address,street,
 		(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type limit 1) AS  pro_type,
 		price,width,height,land_size,hardtitle,
