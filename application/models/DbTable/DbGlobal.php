@@ -9,6 +9,15 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$session_user=new Zend_Session_Namespace('authinstall');
 		return $session_user->user_id;
 	}
+	public function getUserInfo(){
+		$session_user=new Zend_Session_Namespace('authinstall');
+		$userName=$session_user->user_name;
+		$GetUserId= $session_user->user_id;
+		$level = $session_user->level;
+		$location_id = $session_user->branch_id;
+		$info = array("user_name"=>$userName,"user_id"=>$GetUserId,"level"=>$level,"branch_id"=>$location_id);
+		return $info;
+	}
 	function currentlang(){
 		$session_lang=new Zend_Session_Namespace('lang');
 		return $session_lang->lang_id;
@@ -557,7 +566,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   function getAllUser(){
   	$db=$this->getAdapter();  	 
-  	$sql="SELECT id,first_name AS by_user FROM `rms_users` WHERE active=1 ORDER BY id DESC ";
+  	$sql="SELECT id,first_name AS by_user,first_name AS name FROM `rms_users` WHERE active=1 ORDER BY id DESC ";
   	return $db->fetchAll($sql);
   }
   function getAllPaymentMethod($payment_id=null,$option = null){

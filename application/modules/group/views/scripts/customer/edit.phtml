@@ -104,17 +104,69 @@ dojo.require("dijit.form.TextArea");
 	                    	<?php echo $frm->getElement('statusreq');?>
 	                   </div>
 	                </div>
+                </div>
+               <div class="col-md-6 col-sm-6 col-xs-12">
+               		<?php if (!empty($this->history )){?>
+	               		 <div class="form-group">
+		                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CONTACT_HISTORY");?> 
+		                   </label>
+		                </div>
+		                <div class="form-group">
+		                	<table class="history-record" >
+		                		<thead>
+		                			<tr>
+		                				<th><?php echo $tr->translate("NUM");?></th>
+		                				<th><?php echo $tr->translate("CONTACT_DATE");?></th>
+		                				<th style="width: 150px;"><?php echo $tr->translate("FEEDBACK");?></th>
+		                				<th><?php echo $tr->translate("NEXT_DATE_CONTACT");?></th>
+		                				<th><?php echo $tr->translate("CONTACT_BY");?></th>
+		                			</tr>
+		                		</thead>
+		                		<tbody>
+		                			<?php foreach ($this->history as $key => $record){?>
+		                			<tr>
+		                				<td align="center">&nbsp;<?php echo $key+1;?>&nbsp;</td>
+		                				<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($record['contact_date']))?>&nbsp;</td>
+		                				<td align="left">&nbsp;<?php echo $record['feedback'];?>&nbsp;</td>
+		                				<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($record['next_contact']))?>&nbsp;</td>
+		                				<td align="center">&nbsp;<?php echo $record['user_contact_name'];?>&nbsp;</td>
+		                			</tr>
+		                			<?php }?>
+		                		</tbody>
+		                	</table>
+		                </div>
+		                <?php }?>
+	               </div>
 	                <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
 			    			<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" 
 								 iconClass="dijitIconClear" /> 
 							<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
 								 iconClass="dijitEditorIcon dijitEditorIconSave"/> 
 		    		</div>
-                </div>
 			</form>
     	</div>
+    	
     </div>
 </div>
+<style>
+table.history-record {
+    width: 100%;
+    font-size: 12px;
+}
+table.history-record thead tr th {
+    text-align: center;
+    padding: 5px 2px;
+    background: #e0eafb;
+    border-bottom: solid 1px #afadad;
+}
+table.history-record tbody tr {
+    border-bottom: solid 1px #e8e8e8;
+}
+table.history-record tbody tr td {
+    padding: 5px;
+	vertical-align: top;
+}
+</style>
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("STATUS_REQ")?>'"  id="frm_statusreq" >
 		<form id="form_propertytype" >

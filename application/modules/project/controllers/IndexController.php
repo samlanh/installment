@@ -104,7 +104,7 @@ class Project_indexController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			$_dbmodel = new Project_Model_DbTable_DbProject();
 			try {
-				Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL . "/project/index");
+				Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL . "/index");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message($this->tr->translate("INSERT_FAIL"));
 				$err =$e->getMessage();

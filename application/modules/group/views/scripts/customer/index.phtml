@@ -4,6 +4,8 @@ echo $this->headTitle($tr->translate("CUSTOMER_REQUIREMENT"));
 $frm = $this->frm_search;
 
 $formList = new Application_Form_Frmtable();
+$urlContact = $this->baseUrl()."/group/customer/contact/id/";
+$urlEdit = $this->baseUrl()."/group/customer/edit/id/";
 ?>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
@@ -45,4 +47,44 @@ $formList = new Application_Form_Frmtable();
 <script type="text/javascript">
 	dojo.require("dijit.form.NumberTextBox");
 	dojo.require("dijit.form.DateTextBox");
-</script>
+
+	var row=0;
+	var url="";
+	$(function(){
+		$.contextMenu({
+			selector: '.context-menu-one', 
+			callback: function(key, options) {
+			
+				var m = "clicked: " + key;
+				if(key=="contact"){
+					url='<?php echo $urlContact;?>';
+				
+				}else if(key=="edit"){
+					url='<?php echo $urlEdit;?>';
+					/*}else if(key=="testpayment"){
+					url='<?php //echo $urlTestPayment;?>';
+					*/
+				}
+				
+				gotoAction();
+				//window.console && console.log(m) || alert(m); 
+			},
+			items: {
+				"contact": {name: "<?php echo $tr->translate("CREATE_CONTACT_HISTORY");?>", icon: "fa-phone"},
+				
+				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-magic"},
+				/*"testpayment": {name: "<?php //echo $tr->translate("CREATE_TO_STUDENT_TEST_PAYMENT");?>", icon: "fa-money"},
+				*/
+			}
+		});
+	});
+	function setrowdata(index){
+		row = index;
+	}
+
+	var recordid ='';
+	function gotoAction(){
+		//window.location.href =url+row;
+		 window.open(url+row);
+	}
+</script> 

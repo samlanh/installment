@@ -1,0 +1,148 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("CREATE_CONTACT_HISTORY"));
+	$baseurl = $this->baseUrl();
+	$frm_items= $this->frm_crmhistory;
+?>
+<script type="text/javascript">
+    dojo.require("dojo.NodeList-manipulate");
+    dojo.require("dojo.parser");
+    dojo.require("dijit.form.Textarea");
+    dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+table.history-record {
+    width: 100%;
+    font-size: 12px;
+}
+table.history-record thead tr th {
+    text-align: center;
+    padding: 5px 2px;
+    background: #e0eafb;
+    border-bottom: solid 1px #afadad;
+}
+table.history-record tbody tr {
+    border-bottom: solid 1px #e8e8e8;
+}
+table.history-record tbody tr td {
+    padding: 5px;
+	vertical-align: top;
+}
+.ptss-frame.js-ptss-frame {
+    display: none;
+}
+</style>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+       		<div class="col-sm-12 border-botom">
+		    	<div class="col-sm-8 pd-0">
+	    			<h4 class="m-b-0"><i class="fa fa-volume-control-phone " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CREATE_CONTACT_HISTORY');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	
+    	<form  id='edit-major' action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					loadingBlock();
+					return true;
+				}else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="form-group">
+		                <label class="control-label col-md-3 col-sm-3 col-xs-12"><?php echo $tr->translate("CONTACT_DATE");?> </label>
+		                <div class="col-md-9 col-sm-9 col-xs-12">
+		                	<?php echo $frm_items->getElement("contact_date");?>
+		                	<?php echo $frm_items->getElement("id");?>
+		                </div>
+		             </div>
+					<div class="form-group">
+		                <label class="control-label bold col-md-3 col-sm-3 col-xs-12"><?php echo $tr->translate("FEEDBACK");?> </label>
+		                <div class="col-md-9 col-sm-9 col-xs-12">
+		                	<?php echo $frm_items->getElement("feedback");?>
+		                </div>
+		             </div>
+	                <div class="form-group">
+		               <label class="control-label col-md-3 col-sm-3 col-xs-12"><?php echo $tr->translate("PROCCESS");?> </label>
+		               <div class="col-md-9 col-sm-9 col-xs-12">
+		                	<?php echo $frm_items->getElement("proccess");?>
+		                </div>
+		             </div>
+					<div class="form-group">
+		                <label class="control-label col-md-3 col-sm-3 col-xs-12"><?php echo $tr->translate("NEXT_DATE_CONTACT");?> </label>
+		                <div class="col-md-9 col-sm-9 col-xs-12">
+		                	<?php echo $frm_items->getElement("next_contact");?>
+		                </div>
+		             </div>
+		             <div class="form-group">
+	                   <label class="control-label col-md-3 col-sm-3 col-xs-12"><?php echo $tr->translate("CONTACT_BY");?>
+	                   </label>
+	                   <div class="col-md-9 col-sm-9 col-xs-12">
+	                   		<?php echo $frm_items->getElement("user_contact");?>
+	                   </div>
+	                </div>
+		         </div>
+		         <div class="col-md-6 col-sm-6 col-xs-12">
+		         	<div class="form-group">
+		         		<ul style="list-style: none;">
+		         			<li><span class="bold" style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("NAME");?></span> <span > : <?php echo $this->row['name'];?></span></li>
+		         			<li><span style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("PHONE");?></span> <span > : <?php echo $this->row['phone'];?> </span></li>
+		         			<li><span style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("KNOW_BY");?></span> <span > : <?php echo $this->row['know_bytitle'];?> </span></li>
+		         			<li><span style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("PROPERTY_TYPE");?></span> <span > : <span style="font-weight: bold;"><?php echo $this->row['type'];?></span></span></li>
+		         			<li><span style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("PRICE");?></span> <span > : <span style="color: red; font-weight: bold;">$ <?php echo number_format($this->row['from_price'],2);?> <?php echo $tr->translate("TO");?> $ <?php echo number_format($this->row['to_price'],2);?></span> </span></li>
+		         			<li><span style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("REQUIREDMENT");?></span> 
+		         			<span > :  <?php echo $this->row['requirement'];?></span></li>
+		         			
+		         			<li><span style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("Amount Contacted");?></span> <span class="bold" > : <?php echo count($this->history);?></span></li>
+		         		</ul>
+		         	</div>
+		         	<?php if (!empty($this->history )){?>
+		         	<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CONTACT_HISTORY");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                	<table class="history-record" >
+	                		<thead>
+	                			<tr>
+	                				<th><?php echo $tr->translate("NUM");?></th>
+	                				<th><?php echo $tr->translate("CONTACT_DATE");?></th>
+	                				<th style="width: 150px;"><?php echo $tr->translate("FEEDBACK");?></th>
+	                				<th><?php echo $tr->translate("NEXT_DATE_CONTACT");?></th>
+	                				<th><?php echo $tr->translate("CONTACT_BY");?></th>
+	                			</tr>
+	                		</thead>
+	                		<tbody>
+	                			<?php foreach ($this->history as $key => $record){?>
+	                			<tr>
+	                				<td align="center">&nbsp;<?php echo $key+1;?>&nbsp;</td>
+	                				<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($record['contact_date']))?>&nbsp;</td>
+	                				<td align="left">&nbsp;<?php echo $record['feedback'];?>&nbsp;</td>
+	                				<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($record['next_contact']))?>&nbsp;</td>
+	                				<td align="center">&nbsp;<?php echo $record['user_contact_name'];?>&nbsp;</td>
+	                			</tr>
+	                			<?php }?>
+	                		</tbody>
+	                	</table>
+	                </div>
+	                <?php }?>
+		         </div>
+		         <div class="clearfix"></div>
+			         <div class="card-box mt-20">
+		               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+		               		<input iconClass="dijitIconClear" type="reset" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+							<input type="submit"  value="save_close" name="save_close" id="save_close" label="<?php echo $tr->translate('SAVE');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+		               	</div>
+		             </div>
+			</div>
+		</form>
+		
+    </div>
+</div>

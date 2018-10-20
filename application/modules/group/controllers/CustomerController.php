@@ -39,7 +39,7 @@ class Group_CustomerController extends Zend_Controller_Action {
 			$link=array(
 					'module'=>'group','controller'=>'customer','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('name'=>$link,'phone'=>$link));
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array('name'=>$link,'phone'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -99,11 +99,43 @@ class Group_CustomerController extends Zend_Controller_Action {
 			$this->_redirect("/group/customer");
 		}
 		
+		$allContact = $db->AllHistoryContact($id);
+		$this->view->history = $allContact;
 		
 		$fm = new Group_Form_FrmCustomer();
 		$frm = $fm->FrmAddCustomer($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_customer = $frm;
+	}
+	
+	public function contactAction(){
+	
+		$db = new Group_Model_DbTable_DbCustomer();
+		$id = $this->getRequest()->getParam("id");
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			try{
+					
+				$row = $db->addContactHistory($_data);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/customer");
+				exit();
+			}catch(Exception $e){
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+				echo $e->getMessage();
+			}
+		}
+		$row = $db->getById($id);
+		if (empty($row)){
+			Application_Form_FrmMessage::Sucessfull("No Record","/group/customer");
+		}
+		$this->view->row = $row;
+		$allContact = $db->AllHistoryContact($id);
+		$this->view->history = $allContact;
+		$frm = new Group_Form_FrmContactHistory();
+		$frm->FrmAddCRMContactHistory($row);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_crmhistory = $frm;
 	}
 
 }

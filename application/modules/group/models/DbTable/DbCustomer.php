@@ -43,7 +43,7 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 
 	public function getById($id){
 		$db = $this->getAdapter();
-		$sql = "SELECT * FROM $this->_name WHERE id = ".$db->quote($id);
+		$sql = "SELECT *,(SELECT kn.title FROM rms_know_by as kn WHERE kn.id = know_by LIMIT 1) as know_bytitle FROM $this->_name WHERE id = ".$db->quote($id);
 		$sql.=" LIMIT 1 ";
 		$row=$db->fetchRow($sql);
 		return $row;
@@ -96,5 +96,37 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$sql = 'SELECT DISTINCT statusreq as name,statusreq as id FROM `in_customer` WHERE statusreq!="" ORDER BY statusreq ASC ';
 		$rows =  $db->fetchAll($sql);
 		return $rows;
+	}
+	public function AllHistoryContact($crm_id){
+		$db = $this->getAdapter();
+		$sql="SELECT c.*,
+		(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE c.user_contact=id LIMIT 1 ) AS user_contact_name
+		FROM `ln_history_contact` AS c WHERE customer_id = $crm_id ORDER BY c.id DESC";
+		return $db->fetchAll($sql);
+	}
+	public function addContactHistory($_data){
+		$_db= $this->getAdapter();
+		try{
+	
+			$_arr=array(
+					'customer_id'	  => $_data['id'],
+					'contact_date' => $_data['contact_date'],
+					'feedback'=> $_data['feedback'],
+					'proccess'=> $_data['proccess'],
+					'next_contact'=> $_data['next_contact'],
+					'user_contact'=> $_data['user_contact'],
+					'create_date' => date("Y-m-d H:i:s"),
+					'modify_date' => date("Y-m-d H:i:s"),
+					'user_id'	  => $this->getUserId()
+			);
+			$this->_name = "ln_history_contact";
+			$id = $this->insert($_arr);
+				
+			return $id;
+		}catch(exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("Application Error!");
+			echo $e->getMessage();
+		}
 	}
 }
