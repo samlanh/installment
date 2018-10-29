@@ -522,6 +522,7 @@ function getAllBranch($search=null){
 				   (SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.payment_id limit 1) AS payment_type,
 				  `p`.`project_name`,
 				  `p`.`branch_tel`,
+				   p.p_sex,
 			      `p`.`br_address` AS `project_location`,
 			      `p`.`p_manager_namekh` AS `project_manager_namekh`,
 			      `p`.`p_manager_nationality` AS `project_manager_nationality`,
