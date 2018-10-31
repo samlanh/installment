@@ -55,7 +55,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    				'land_size'	  => $_data['size'],
 	    				'width'       => $_data['width'],
 	    				'height'      => $_data['height'],
-	    				'is_lock'     => $_data['buy_status'],
+	    				'is_lock'     => 0,
 	    				'status'	  => 1,
 	    				'user_id'	  => $this->getUserId(),
 	    				'property_type'=> $_data['property_type'],

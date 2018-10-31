@@ -137,6 +137,16 @@ public function init()
 		$s_date = date('Y-m-d');
 		$buy_date->setValue($s_date);
 		
+		$cancel_date = new Zend_Dojo_Form_Element_DateTextBox('cancel_date');
+		$cancel_date->setAttribs(array(
+				'dojoType'=>'dijit.form.DateTextBox',
+				'required' =>'true',
+				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+		));
+		$s_date = date('Y-m-d');
+		$cancel_date->setValue($s_date);
+		
 		$end_date = new Zend_Dojo_Form_Element_DateTextBox('end_date');
 		$end_date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
@@ -450,8 +460,9 @@ public function init()
 			$return_back->setValue($data['return_back']);
 			
 			$expense_date->setValue($data['create_date']);
+			$cancel_date->setValue($data['create_date']);
 		}
-		$this->addElements(array($expense_date,$client_name,$land_id,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
+		$this->addElements(array($cancel_date,$expense_date,$client_name,$land_id,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
 				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$_old_property_id,$property,
 				$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$penalize,$_service_charge,

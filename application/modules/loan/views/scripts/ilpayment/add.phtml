@@ -40,7 +40,10 @@ table tr td input {
 th.tdheader{
 	background: #607D8B;
     color: #fff;
+	border:#bfc6ca 1px solid;
+	line-height: 20px;
 }
+table.collape th.tdheader{padding:5px 0px;}
 </style>
 <div class="card">
 	<div class="card-content collapse show">
@@ -1658,25 +1661,34 @@ function getLaonHasPayByLoanNumber(){//tab3 ប្រវត្តបានបង
 				load: function(data_loan) {
 					temp='';	
 					temp='<table class="collape tablesorter" style="font-size:12px;" id="table" width="100%">'
-					+'<thead><tr><th class="tdheader"><?php echo $tr->translate('NO');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('AMOUNT_COLLECT');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('RECIEPT_NO');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('PAY_DATE');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('DATE_INPUT');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('PRINCIPLE');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('OS_AMOUNT');?></th>'
+					+'<thead>'
+					+'<tr><th class="tdheader" rowspan="2"><?php echo $tr->translate('NO');?></th>'
+					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('AMOUNT_COLLECT');?></th>'
+					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('RECIEPT_NO');?></th>'
+					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('PAY_DATE');?></th>'
+					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('DATE_INPUT');?></th>'
+					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('PRINCIPLE');?></th>'
+					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('AMOUNT_PAYMENT');?></th>'
+					+'<th class="tdheader" colspan="5"><?php echo $tr->translate('TOTAL_PAYMENTED');?></th>'
+					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('ALL_PRINCIPAL_PAID');?></th>'
+					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('Balance');?></th>'
+					+'</tr>'
+					+'<tr>'
+					+'<th class="tdheader"><?php echo $tr->translate('PRINCIPAL');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate('INTEREST');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('SERVICE_CHARGE');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate('PENALIZE');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('AMOUNT_PAYMENT');?></th>'
+					+'<th class="tdheader"><?php echo $tr->translate('EXTRA_PAYMENT');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate('PAID_AMOUNT');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('ALL_PRINCIPAL_PAID');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('Balance');?></th>'
+					+'<tr>'
 					+'</thead>';
 					nums=0;
 					sold_price = dijit.byId('sold_price').get('value');
+					
 					if(data_loan!=""){
 						for(k=0;k<data_loan.length;k++){
+							paid_allamount = parseFloat(data_loan[k].price_sold)-(parseFloat(data_loan[k].outstanding)-(parseFloat(data_loan[k].recieve_amount)-parseFloat(data_loan[k].penalize_amountpaid)-parseFloat(data_loan[k].total_interest_permonthpaid)));
+							balance_amount = (parseFloat(data_loan[k].outstanding)-(parseFloat(data_loan[k].recieve_amount)-parseFloat(data_loan[k].penalize_amountpaid)-parseFloat(data_loan[k].total_interest_permonthpaid)));
+							
 							statuss='<label style="color:red;"><?php echo $tr->translate('NOT_COMPLETED');?></label>';
 							++nums;
 							total_pay = parseFloat(data_loan[k].total_principal_permonth)+parseFloat(data_loan[k].total_interest)+parseFloat(data_loan[k].service_charge)+parseFloat(data_loan[k].penalize_amount);
@@ -1687,14 +1699,14 @@ function getLaonHasPayByLoanNumber(){//tab3 ប្រវត្តបានបង
 								temp += '<td style="white-space: nowrap;">&nbsp;'+data_loan[k].date_payment+'&nbsp;</td>';
 								temp += '<td style="white-space: nowrap;">&nbsp;'+data_loan[k].date_input+'&nbsp;</td>';
 								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].outstanding)+'&nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].total_principal_permonth)+'&nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].total_interest_permonth)+' &nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].service_charge)+' &nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].penalize_amount)+'&nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].total_payment)+' &nbsp;</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].total_payment)+'&nbsp;</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].total_principal_permonthpaid)+' &nbsp;</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].total_interest_permonthpaid)+' &nbsp;</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].penalize_amountpaid)+'&nbsp;</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].extra_payment)+' &nbsp;</td>';
 								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].amount_payment)+'&nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].price_sold-(data_loan[k].outstanding-data_loan[k].recieve_amount)-data_loan[k].total_interest_permonth)+'&nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].outstanding-data_loan[k].recieve_amount+parseFloat(data_loan[k].total_interest_permonth))+'&nbsp;</td>';//used before
+								temp += '<td>&nbsp;'+dojo.number.format(paid_allamount)+'</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(balance_amount)+'</td>';//used before
 								principal_paid = principal_paid+parseFloat(data_loan[k].total_principal_permonthpaid);
 								if(data_loan[k].is_completed==1){
 									statuss = '<label style="color:blue;"><?php echo $tr->translate('COMPLETED');?></label>';

@@ -1327,7 +1327,6 @@ function getLoanPaymentByLoanNumberEdit($data){
    }
    public function getLaonHasPayByLoanNumber($loan_number){
    	$db= $this->getAdapter();
-   	
    	$sql=" SELECT 
 			  (SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=crm.`client_id` LIMIT 1) AS client_name,
 			  (SELECT c.`client_number` FROM `ln_client` AS c WHERE c.`client_id`=crm.`client_id` LIMIT 1) AS client_code,
@@ -1338,6 +1337,9 @@ function getLoanPaymentByLoanNumberEdit($data){
 			  crm.`principal_amount`,
 			  crm.`total_principal_permonth`,
 			  (total_principal_permonthpaid+extra_payment) AS total_principal_permonthpaid,
+			  total_principal_permonthpaid AS permonthpaid,
+			  total_interest_permonthpaid ,
+			  penalize_amountpaid,
 			  extra_payment,
 			  crm.payment_times,
 			  crm.`total_payment`,
@@ -1350,7 +1352,7 @@ function getLoanPaymentByLoanNumberEdit($data){
 			  crm.`group_id`,
 			  crm.`is_completed`,
 			  (SELECT ln_sale.price_sold FROM `ln_sale` WHERE ln_sale.id=crm.sale_id LIMIT 1) AS price_sold,
-			  (SELECT DATE_FORMAT(crmd.date_payment, '%d-%m-%Y') FROM `ln_client_receipt_money_detail` AS crmd WHERE crm.`id` = crmd.`crm_id` limit 1) AS `date_payment`
+			  (SELECT DATE_FORMAT(crmd.date_payment, '%d-%m-%Y') FROM `ln_client_receipt_money_detail` AS crmd WHERE crm.`id` = crmd.`crm_id` ORDER BY crmd.date_payment ASC LIMIT 1) AS `date_payment`
 			FROM
 			  `ln_client_receipt_money` AS crm
 			WHERE 

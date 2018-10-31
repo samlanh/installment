@@ -17,12 +17,12 @@ img.view{height: 85px !important;}
  <form dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded" >
  <script type="dojo/method" event="onSubmit">			
 if(this.validate()) {
-			    printcipal = dijit.byId('total_principal_permonth').get("value");
-				total_interest_permonthpaid = dijit.byId('total_interest_permonthpaid').get("value");
-				penalize_amountpaid	 = dijit.byId('penalize_amountpaid').get("value");
-				extra_payment = dijit.byId('extra_payment').get("value");
-all_total = parseFloat(printcipal)+parseFloat(total_interest_permonthpaid)+parseFloat(penalize_amountpaid)+parseFloat(extra_payment);
-total_payment = dijit.byId('total_payment').get("value");
+			printcipal = parseFloat(dijit.byId('total_principal_permonth').get("value").toFixed(2));
+		    total_interest_permonthpaid = parseFloat(dijit.byId('total_interest_permonthpaid').get("value").toFixed(2));
+		    penalize_amountpaid	 = parseFloat(dijit.byId('penalize_amountpaid').get("value").toFixed(2));
+			extra_payment = parseFloat(dijit.byId('extra_payment').get("value").toFixed(2));
+			all_total = parseFloat(printcipal+total_interest_permonthpaid+penalize_amountpaid+extra_payment).toFixed(2);
+			total_payment = parseFloat(dijit.byId('total_payment').get("value").toFixed(2));
 if(all_total!=total_payment){
 	alert("ប្រាក់ត្រូវបង់សរុបមិនត្រឹមត្រូវទេ !សូមត្រួតពិនិត្យឡើងវិញ");
 	dijit.byId('total_payment').focus();

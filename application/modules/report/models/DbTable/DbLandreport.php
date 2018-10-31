@@ -1108,7 +1108,7 @@ function updateReceipt($data){
 			'return_amount'					=>	0,//ok
 			'note'							=>	$data['note'],
 			'cheque'						=>	$data['cheque'],
-			'user_id'						=>	$user_id,
+// 			'user_id'						=>	$user_id,
 			'status'						=>	1,
 // 			'is_completed'					=>	$is_compleated,
 // 			'field3'						=>3,
