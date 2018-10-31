@@ -422,7 +422,7 @@ public function getAllOutstadingLoan($search=null){
 		$order=" ORDER BY currency_type DESC ";
 		return $db->fetchAll($sql.$where.$order);
       }
-      public function getALLLoanPayment($search=null,$order=1){
+      public function getALLLoanPayment($search=null,$order11=1){
       	$db = $this->getAdapter();
       	$sql="SELECT *,
 			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id LIMIT 1) AS user_name,
@@ -471,8 +471,8 @@ public function getAllOutstadingLoan($search=null){
       		$where .=' AND ('.implode(' OR ',$s_where).')';
       	}
 		$order = " ORDER BY id DESC ";
-		if($order==1){//for history
-			$order = " ORDER BY client_id ASC ,sale_id DESC , id ASC";
+		if($order11==1){//for history
+			$order = " ORDER BY client_id DESC ,sale_id DESC , id ASC";
 		}
       	return $db->fetchAll($sql.$where.$order);
       }
