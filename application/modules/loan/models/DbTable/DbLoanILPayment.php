@@ -1470,7 +1470,7 @@ function getLoanPaymentByLoanNumberEdit($data){
 		$sql.=" AND is_cancel=0";
 		
 		if($is_issueplong!=0){
-			$sql.=" AND is_issueplong=0";
+			$sql.=" AND is_issueplong=0 ";
 		}
 		return $db->fetchAll($sql);
 	}

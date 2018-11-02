@@ -132,7 +132,8 @@ class Loan_CancelController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbCancel();
-			$dataclient=$db->getSaleNoByProject($data['branch_id'],$data['sale_id']);
+			$data['is_issueplong'] = empty($data['is_issueplong'])?0:1;
+			$dataclient=$db->getSaleNoByProject($data['branch_id'],$data['sale_id'],$data['is_issueplong']);
 			print_r(Zend_Json::encode($dataclient));
 			exit();
 		}

@@ -308,7 +308,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		return $db->fetchRow($sql);
 	}
 	
-	public function getSaleNoByProject($branch_id,$sale_id){
+	public function getSaleNoByProject($branch_id,$sale_id,$issue_plong=0){
 		$db = $this->getAdapter();
 		$sale='';
 		if(!empty($sale_id)){
@@ -319,6 +319,9 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=s.`house_id` LIMIT 1),')' ) AS `name`
 		FROM `ln_sale` AS s
 		WHERE s.`is_completed` =0 AND (s.`is_cancel` =0 ".$sale." ) AND s.`branch_id` =".$branch_id;
+		if($issue_plong>0){
+			$sql.=" AND is_issueplong = ".$issue_plong;
+		}
 		return $db->fetchAll($sql);
 	}
 }
