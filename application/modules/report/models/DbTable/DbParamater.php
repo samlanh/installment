@@ -1354,7 +1354,7 @@ function getAllBranch($search=null){
     	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) LIMIT 1) as parent_title,
     	SUM(total_amount) AS total_amount,
     	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) AS category_name,
-    	ex.`date` FROM `ln_expense` AS ex WHERE 1
+    	ex.`date` FROM `ln_expense` AS ex WHERE 1 AND ex.status=1
     	";
     	$order =" GROUP BY ex.`category_id` ORDER BY 
     	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) ASC,
