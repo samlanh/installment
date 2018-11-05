@@ -70,17 +70,43 @@ if ($this->search['branch_id'] >0 ){
 			    </tr>
 			    <tr><td  id="exportExcel" class="mymy">
 			    		<table width="100%" border="1" style="border-collapse:collapse; border: 1px solid #000;" cellspacing="0">
-			            	<?php $totalpaid =0; $totalsa=0; $clientTotal=0;
+			            	<?php $totalpaid =0; 
+			            	$totalprincsa=0; 
+			            	$clientPrincsa=0;
+			            	
+			            	$totalInterestsa=0;
+			            	$clientInterest=0;
+			            	
+			            	$totalPenalizesa=0;
+			            	$clientPenalize=0;
+			            	
+			            	$totalExtrasa=0;
+			            	$clientExtra=0;
+			            	
+			            	$totalsa=0;
+			            	$clientTotal=0;
+			            	
+			            	
+			            	
 			            	if(!empty($this->loantotalcollect_list)) {
 			            		
 				              	foreach ($this->loantotalcollect_list as $index => $rs){?>
 				              			<?php if ($client_id!=$rs["client_id"]) { ?>
 				              			<?php if ($index>0){?>
 				              			 <tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
-			               						<td colspan="18"  style="text-align: right;">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;: <strong><?php echo number_format($totalsa,2);?></strong>&nbsp;</td>
+			               						<td colspan="5" rowspan="2"  style="border-left:1px solid #fff; border-bottom:1px solid #fff; text-align: right;">&nbsp;<strong><?php echo $tr->translate("TOTAL");?></strong>&nbsp;</td>
+			               						<td align="right">&nbsp;<strong><?php echo number_format($totalprincsa,2);?></strong>&nbsp;</td>
+			               						<td align="right">&nbsp;<strong><?php echo number_format($totalInterestsa,2);?></strong>&nbsp;</td>
+			               						<td align="right">&nbsp;<strong><?php echo number_format($totalPenalizesa,2);?></strong>&nbsp;</td>
+			               						<td align="right">&nbsp;<strong><?php echo number_format($totalExtrasa,2);?></strong>&nbsp;</td>
+			               						<td align="right">&nbsp;<strong><?php echo number_format($totalsa,2);?></strong>&nbsp;</td>
 			               				</tr>
-			               				<tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
-		               						<td colspan="18" align="center" >&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;: <strong><?php echo number_format($clientTotal,2);?></strong>&nbsp;</td>
+			               				<tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;background: #c1d0f3;" width="100%">
+		               						<td align="right">&nbsp;<strong><?php echo number_format($clientPrincsa,2);?></strong>&nbsp;</td>
+		               						<td align="right" >&nbsp;<strong><?php echo number_format($clientInterest,2);?></strong>&nbsp;</td>
+		               						<td align="right">&nbsp;<strong><?php echo number_format($clientPenalize,2);?></strong>&nbsp;</td>
+		               						<td align="right">&nbsp;<strong><?php echo number_format($clientExtra,2);?></strong>&nbsp;</td>
+		               						<td align="right">&nbsp;<strong><?php echo number_format($clientTotal,2);?></strong>&nbsp;</td>
 		               					</tr>
 		               					 <tr>
 						                	<td colspan="16" style="border-left:1px solid #fff;border-right:1px solid #fff;">&nbsp;</td>
@@ -99,7 +125,18 @@ if ($this->search['branch_id'] >0 ){
 				              				
 				              				$totalpaid = 0;
 				              				$totalsa=0;
+				              				$totalprincsa=0;
+				              				$clientPrincsa=0;
 				              				$clientTotal=0;
+				              				
+				              				$totalInterestsa=0;
+				              				$clientInterest=0;
+				              				
+				              				$totalPenalizesa=0;
+				              				$clientPenalize=0;
+				              				
+				              				$totalExtrasa=0;
+				              				$clientExtra=0;
 				              			?>
 					              			</td>
 					              	</tr>
@@ -127,9 +164,17 @@ if ($this->search['branch_id'] >0 ){
 				                <?php if ($client_id==$rs["client_id"]) {?>
 				                	<?php if($sale_id!=$rs["sale_id"]){?>
 			              			<tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
-		               						<td colspan="18"  style="text-align: right;">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;: <strong><?php echo number_format($totalsa,2);?></strong>&nbsp;</td>
+		               						<td colspan="5"  style="border-left:1px solid #fff;  text-align: right;">&nbsp;<strong><?php echo $tr->translate("TOTAL");?></strong>&nbsp;</td>
+		               						<td align="right">&nbsp;<strong><?php echo number_format($totalprincsa,2);?></strong>&nbsp;</td>
+		               						<td align="right">&nbsp;<strong><?php echo number_format($totalInterestsa,2);?></strong>&nbsp;</td>
+		               						<td align="right">&nbsp;<strong><?php echo number_format($totalPenalizesa,2);?></strong>&nbsp;</td>
+		               						<td align="right">&nbsp;<strong><?php echo number_format($totalExtrasa,2);?></strong>&nbsp;</td>
+		               						<td align="right">&nbsp;<strong><?php echo number_format($totalsa,2);?></strong>&nbsp;</td>
 		               				</tr>
-			              			<?php $totalsa=0; }?>
+			              			<?php $totalsa=0; $totalprincsa=0; $totalInterestsa=0;
+			              			
+			              			$totalPenalizesa=0;	$totalExtrasa=0;
+				              			 }?>
 			              		<?php }?>
 			               <?php 
 			              
@@ -148,6 +193,19 @@ if ($this->search['branch_id'] >0 ){
 								$totalpaid = $totalpaid + $rs['amount_payment'];
 								$totalsa = $totalsa+ $rs["total_principal_permonthpaid"]+$rs["total_interest_permonth"]+$rs["penalize_amountpaid"]+$rs["service_chargepaid"]+$rs["extra_payment"];
 								$clientTotal = $clientTotal+ $rs["total_principal_permonthpaid"]+$rs["total_interest_permonth"]+$rs["penalize_amountpaid"]+$rs["service_chargepaid"]+$rs["extra_payment"];
+							
+								$totalprincsa=$totalprincsa+$rs["total_principal_permonthpaid"];
+								$clientPrincsa=$clientPrincsa+$rs["total_principal_permonthpaid"];
+								
+								$totalInterestsa=$totalInterestsa+$rs["total_interest_permonth"];
+								$clientInterest=$clientInterest+$rs["total_interest_permonth"];
+								
+								
+								$totalPenalizesa=$totalPenalizesa+$rs["penalize_amountpaid"];
+								$clientPenalize=$clientPenalize+$rs["penalize_amountpaid"];
+								
+								$totalExtrasa=$totalExtrasa+$rs["extra_payment"];
+								$clientExtra=$clientExtra+$rs["extra_payment"];
 							?>
 			                <tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
 			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
@@ -174,10 +232,19 @@ if ($this->search['branch_id'] >0 ){
 			                } ?>
 			                <?php }}?>
 			                 <tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
-               						<td colspan="18"  style="text-align: right;">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;: <strong><?php echo number_format($totalsa,2);?></strong>&nbsp;</td>
+               						<td colspan="5" rowspan="2"  style="border-left:1px solid #fff; border-bottom:1px solid #fff; text-align: right;">&nbsp;<strong><?php echo $tr->translate("TOTAL");?></strong>&nbsp;</td>
+               						<td align="right">&nbsp;<strong><?php echo number_format($totalprincsa,2);?></strong>&nbsp;</td>
+               						<td align="right">&nbsp;<strong><?php echo number_format($totalInterestsa,2);?></strong>&nbsp;</td>
+               						<td align="right">&nbsp;<strong><?php echo number_format($totalPenalizesa,2);?></strong>&nbsp;</td>
+               						<td align="right">&nbsp;<strong><?php echo number_format($totalExtrasa,2);?></strong>&nbsp;</td>
+               						<td align="right">&nbsp;<strong><?php echo number_format($totalsa,2);?></strong>&nbsp;</td>
                				</tr>
-               				<tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
-               						<td colspan="18" align="center" >&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;: <strong><?php echo number_format($clientTotal,2);?></strong>&nbsp;</td>
+               				<tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;background: #c1d0f3;" width="100%">
+               						<td align="right">&nbsp;<strong><?php echo number_format($clientPrincsa,2);?></strong>&nbsp;</td>
+               						<td align="right" >&nbsp;<strong><?php echo number_format($clientInterest,2);?></strong>&nbsp;</td>
+               						<td align="right">&nbsp;<strong><?php echo number_format($clientPenalize,2);?></strong>&nbsp;</td>
+               						<td align="right">&nbsp;<strong><?php echo number_format($clientExtra,2);?></strong>&nbsp;</td>
+               						<td align="right">&nbsp;<strong><?php echo number_format($clientTotal,2);?></strong>&nbsp;</td>
                					</tr>
 			                <tr>
 			                	<td colspan="16" style="border-left:1px solid #fff;border-right:1px solid #fff;">&nbsp;</td>
