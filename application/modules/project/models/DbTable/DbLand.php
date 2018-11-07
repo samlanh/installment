@@ -47,7 +47,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    		$_arr=array(
 	    				'branch_id'	  => $_data['branch_id'],
 	    				'land_code'	  => $land_code,
-	    				'land_address'=> $_data['land_address_prefix'].$i.$_data['postfix_land_address'],
+	    				'land_address'=> strtoupper($_data['land_address_prefix'].$i.$_data['postfix_land_address']),
 	    				'street'	  => $_data['street'],
 	    				'price'	      => $_data['house_price'],
 	    				'land_price'  => 0,
@@ -100,7 +100,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		    $_arr=array(
 		    	'branch_id'	  => $_data['branch_id'],
 				'land_code'	  => $land_code,
-				'land_address'	  => $_data['land_address'],
+				'land_address'=> strtoupper($_data['land_address']),
 		    	'street'	  => $_data['street'],
 				'price'	      => $_data['price'],
 		    	'land_price'  => $_data['land_price'],
