@@ -10,6 +10,11 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	if (!file_exists($part)) {
     		mkdir($part, 0777, true);
     	}
+    	
+    	$record = $this->recordhistory($_data);
+    	$activityold = $record['activityold'];
+    	$after_edit_info = $record['after_edit_info'];
+    	
     	$name = $_FILES['logo']['name'];
     	$photo='';
     	if (!empty($name)){
@@ -74,7 +79,9 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
 	    		$this->insert($datashare);
 	    	}
     	}
-
+    	$dbgb = new Application_Model_DbTable_DbGlobal();
+    	$_datas = array('description'=>'Create New Project','activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
+    	$dbgb->addActivityUser($_datas);
     }
     public function updateBranch($_data,$id){
     	
@@ -82,6 +89,11 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	if (!file_exists($part)) {
     		mkdir($part, 0777, true);
     	}
+    	$_data['id']=$id;
+    	$record = $this->recordhistory($_data);
+    	$activityold = $record['activityold'];
+    	$after_edit_info = $record['after_edit_info'];
+    	
     	$name = $_FILES['logo']['name'];
     	$photo='';
     	if (!empty($name)){
@@ -151,6 +163,45 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			$this->insert($datashare);
     		}
     	}
+    	
+    	$dbgb = new Application_Model_DbTable_DbGlobal();
+    	$_datas = array('description'=>'Edit New Project','activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
+    	$dbgb->addActivityUser($_datas);
+    }
+    function recordhistory($_data){
+    	$arr=array();
+    	$stringold="";
+    	$string="";
+    	if (!empty($_data['id'])){
+    
+    		$row=$this->getBranchById($_data['id']);
+    		$stringold="Project : ".$row['project_name']."<br />";
+    		$stringold="Address : ".$row['br_address']."<br />";
+    		$stringold.="Branch Tel : ".$row['branch_tel']."<br />";
+    		$stringold.="Project Manager : ".$row['p_manager_namekh']."<br />";
+    		$stringold.="Nationality : ".$row['p_manager_nationality']."<br />";
+    		$stringold.="Current Address : ".$row['p_current_address']."<br />";
+    
+    		$string="Project : ".$_data['branch_namekh']."<br />";
+    		$string="Address : ".$_data['br_address']."<br />";
+    		$string.="Branch Tel : ".$_data['branch_tel']."<br />";
+    		$string.="Project Manager : ".$_data['project_manager_namekh']."<br />";
+    		$string.="Nationality : ".$_data['project_manager_nationality']."<br />";
+    		$string.="Current Address : ".$_data['current_address']."<br />";
+    
+    
+    	}else{
+    		$string="";
+    		$stringold="Project : ".$_data['branch_namekh']."<br />";
+    		$stringold="Address : ".$_data['br_address']."<br />";
+    		$stringold.="Branch Tel : ".$_data['branch_tel']."<br />";
+    		$stringold.="Project Manager : ".$_data['project_manager_namekh']."<br />";
+    		$stringold.="Nationality : ".$_data['project_manager_nationality']."<br />";
+    		$stringold.="Current Address : ".$_data['current_address']."<br />";
+    	}
+    	$arr['activityold']=$stringold;
+    	$arr['after_edit_info']=$string;
+    	return $arr;
     }
     function addbranchajax($_data){
     	$_arr = array(

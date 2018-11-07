@@ -80,6 +80,10 @@ class IndexController extends Zend_Controller_Action
 						
 					$session_user->lock();
 					
+					$dbgb = new Application_Model_DbTable_DbGlobal();
+					$_datas = array('description'=>'Login to System');
+					$dbgb->addActivityUser($_datas);
+					
 					$log=new Application_Model_DbTable_DbUserLog();
 					$log->insertLogin($user_id);	
 					foreach ($arr_module AS $i => $d){
@@ -131,7 +135,12 @@ class IndexController extends Zend_Controller_Action
     {
         if($this->getRequest()->getParam('value')==1){        	
         	$aut=Zend_Auth::getInstance();
-        	$aut->clearIdentity();        	
+        	$aut->clearIdentity();  
+
+        	$dbgb = new Application_Model_DbTable_DbGlobal();
+        	$_datas = array('description'=>'Log out From System');
+        	$dbgb->addActivityUser($_datas);
+        	
         	$session_user=new Zend_Session_Namespace('authinstall');
         	$log=new Application_Model_DbTable_DbUserLog();
 			$log->insertLogout($session_user->user_id);

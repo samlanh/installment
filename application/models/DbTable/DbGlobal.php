@@ -22,6 +22,46 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$session_lang=new Zend_Session_Namespace('lang');
 		return $session_lang->lang_id;
 	}
+	function getUserIP()
+	{ // get current ip
+		$client  = @$_SERVER['HTTP_CLIENT_IP'];
+		$forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+		$remote  = $_SERVER['REMOTE_ADDR'];
+		if(filter_var($client, FILTER_VALIDATE_IP))
+		{
+			$ip = $client;
+		}
+		elseif(filter_var($forward, FILTER_VALIDATE_IP))
+		{
+			$ip = $forward;
+		}
+		else
+		{
+			$ip = $remote;
+		}
+		return $ip;
+	}
+	function addActivityUser($_data){
+		try{
+			$id = $this->getUserId();
+			$row = $this->getUserInfo($id);
+			$ipaddress = $this->getUserIP();
+			$_arr=array(
+					'user_id'	  => $id,
+					'branch_id'	      => $row['branch_id'],
+					'user_name'	      => $row['user_name'],
+					'date_time'  => date("Y-m-d H:i:s"),
+					'description'=> $_data['description'],
+					'activityold'=> empty($_data['activityold'])?"":$_data['activityold'],
+					'after_edit_info'=> empty($_data['after_edit_info'])?"":$_data['after_edit_info'],
+					'ipaddress'=> empty($ipaddress)?"":$ipaddress,
+			);
+			$this->_name="rns_user_activity";
+			$this->insert($_arr);
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+	}
 	public function getLaguage(){
 		$db = $this->getAdapter();
 		$sql="SELECT * FROM `ln_language` AS l WHERE l.`status`=1 ORDER BY l.ordering ASC";
