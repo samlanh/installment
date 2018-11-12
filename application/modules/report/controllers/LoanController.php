@@ -1044,5 +1044,22 @@ public function exportFileToExcel($table,$data,$thead){
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   }
+  function samplereceiptAction(){
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$id = $this->getRequest()->getParam('id');
+  	if(!empty($id)){
+  		$receipt = $db->getReceiptByID($id);
+  		$this->view->rs = $receipt;
+  		if(empty($receipt['name_kh'])){
+  			$this->_redirect("/report/paramater");
+  		}
+  	}else{
+  		$this->_redirect("/report/paramater");
+  	}
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footer = $frmpopup->getFooterReceipt();
+  }
 }
 
