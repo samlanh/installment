@@ -42,6 +42,8 @@ img.view{height: 70px !important;}
 			   .h{ margin-top: -10px;}
 			   .note_size{font-size: 10px;}
 			   .title_size{font-size:12px;font-weight: 800;}
+			  .border {border-bottom: 1px dotted #000;height: 12px;
+					white-space: nowrap;line-height: 10px; }
 			</style>
 			<?php for($i=1; $i<$this->data['showreceipt']; $i++){ ?>			
 			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:14px; padding:0px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
@@ -85,35 +87,42 @@ img.view{height: 70px !important;}
 				    <td>គម្រោង</td>
 				    <td><strong><label class="value"><?php echo $this->rs['project_name'];?></label></strong></td>
 					<td>&nbsp;&nbsp;<?php echo $tr->translate("PROPERTY_CODE");?></td>
-                    <td><strong><label class="value"><?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; } echo ' '.$this->rs['property_type'];?></label></strong></td>
+                    <td><label class="value"><?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; } echo ' '.$this->rs['property_type'];?></label></td>
                     <td>&nbsp;&nbsp;<?php echo $tr->translate("ចំនួនឡូត៍ៈ");?></td>
-                    <td><label class="value"></label></td>
+                    <td><label class="value"><?php echo !empty($this->rs['landlot_amount'])?count(explode(",",$this->rs['landlot_amount'])):1;?></label></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td>ឈ្មោះ​អតិថិជន </td>
-				    <td colspan="3"><strong><label class="value"><?php echo $this->rs['name_kh'];echo !empty($this->rs['hname_kh'])?" /".$this->rs['hname_kh']:"";?></label></strong></td>
+				    <td colspan="3"><label class="value"><?php echo $this->rs['name_kh'];echo !empty($this->rs['hname_kh'])?" /".$this->rs['hname_kh']:"";?></label></td>
 					<td>&nbsp; លេខទូរសព្ទ</td>
-					<td><label id="lbl_paid_date1" class="value"></label></td>
+					<td><label class="value"><?php echo $this->rs['phone'];?></label></td>
                 </tr>
                 <tr style="line-height: 15px;">
 					<td colspan="6" style="padding-top:5px;">
 						<?php echo $tr->translate("ADDRESS_COMPANY");?>
+						កាលបរិច្ឋេទបង់ <?php echo date("d-m-Y",strtotime($this->rs['date_pay']));?>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="6" style="padding-top:10px;">
-						<table style="width:80%;margin:0 auto;">
+						<table style="width:80%;margin:0 auto;white-space: nowrap;">
 							<tr>
-								<td>*ជាប្រាក់សុទ្ឋចំនួនៈ</td>
-								<td>*តាម Wing:</td>
+								<td width="10%">*ជាប្រាក់សុទ្ឋចំនួនៈ </td>
+								<td width="40%" ><div class="border"><?php if($this->rs['payment_methodid']==1){ echo number_format($this->rs['recieve_amount'],2)." $";}?></div></td>
+								<td width="10%">*តាម Wing: </td>
+								<td width="40%"><div class="border"></div></td>
 							</tr>
 							<tr>
-								<td>*ផ្ទេរប្រាក់តាមធនាគារៈ</td>
+								<td>*ផ្ទេរប្រាក់តាមធនាគារៈ <?php if($this->rs['payment_methodid']==2){ echo number_format($this->rs['recieve_amount'],2)." $";}?></td>
+								<td><div class="border"></div></td>
 								<td>*តាម E-Money:</td>
+								<td><div class="border"></div></td>
 							</tr>
 							<tr>
-								<td>*ជាសែកចំនួនៈ</td>
+								<td>*ជាសែកចំនួនៈ <?php if($this->rs['payment_methodid']==3){ echo number_format($this->rs['recieve_amount'],2)." $";}?></td>
+								<td><div class="border"></div></td>
 								<td>*តាម True-Money:</td>
+								<td><div class="border"></div></td>
 							</tr>
 						</table>
 					</td>
@@ -131,9 +140,7 @@ img.view{height: 70px !important;}
 								<td colspan="4">&nbsp;</td>
 							</tr>
 							<tr>
-								<td><?php 
-										echo $this->rs['by_user'];
-									?>
+								<td><?php echo $this->rs['by_user'];?>
 								</td>
 								<td>&nbsp;</td>
 								<td align="center">
@@ -168,11 +175,11 @@ Beneficiary Account Number: 000179802
 							</tr>
 							<tr>
 								<td width="50%">២. បង់បាន............ខែ-រំលស់!</td>
-			                    <td width="50%">៤. ប្រាក់បង់បានចំនួនៈ..................USD</td>
+			                    <td width="50%">៤. ប្រាក់បង់បានចំនួនៈ <?php echo  number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2);?> USD</td>
 			                </tr>
 			                <tr>
 								<td>៣. នៅលស់............ខែ-ទៀត!</td>
-			                    <td>៥. ប្រាក់នៅសល់ចំនួនៈ.................ទៀត!</td>
+			                    <td>៥. ប្រាក់នៅសល់ចំនួនៈ <?php echo  number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2);?> USD ទៀត!</td>
 			                </tr>
 	                    </table>
 					</td>

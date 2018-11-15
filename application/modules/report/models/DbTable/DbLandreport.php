@@ -1036,12 +1036,14 @@ public function getAllOutstadingLoan($search=null){
 		  $sql="SELECT *,
 		  		(SELECT project_name FROM `ln_project` WHERE br_id=crm.branch_id LIMIT 1) AS project_name,
 				(SELECT p.land_address  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS land_address,
+				(SELECT p.old_land_id  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS landlot_amount,
 				(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = (SELECT p.property_type  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) LIMIT 1)AS property_type,
 				(SELECT p.street  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS street,
 				(SELECT s.sale_number FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS sale_number,
 				(SELECT s.land_price FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS land_price,
 				(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS price_sold,
 				(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS name_kh,
+				(SELECT c.phone FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS phone,
 				(SELECT
 			     	`d`.`date_payment`
 			   		FROM `ln_client_receipt_money_detail` `d`
