@@ -67,6 +67,11 @@ class Loan_ChangpropertyController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
         
+        $frmpopup = new Application_Form_FrmPopupGlobal();
+        $this->view->footer = $frmpopup->getFooterReceipt();
+        
+        $key = new Application_Model_DbTable_DbKeycode();
+        $this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}	
 	public function editAction(){
 		$_dbmodel = new Loan_Model_DbTable_Dbchangehouse();
@@ -95,9 +100,13 @@ class Loan_ChangpropertyController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
+
+        $frmpopup = new Application_Form_FrmPopupGlobal();
+        $this->view->footer = $frmpopup->getFooterReceipt();
         
+        $key = new Application_Model_DbTable_DbKeycode();
+        $this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
-	
 	function getalllandAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();

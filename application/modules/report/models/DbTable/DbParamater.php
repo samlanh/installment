@@ -563,6 +563,7 @@ function getAllBranch($search=null){
                   `c`.`street` AS `client_street`,
                   c.phone,
                   c.lphone as with_phone,
+                  c.dstreet AS w_street,
 				  (SELECT
 				     `village`.`village_namekh`
 				   FROM `ln_village` `village`
@@ -1609,7 +1610,7 @@ function getAllBranch($search=null){
     		$sql="SELECT c.*,
     			(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=c.know_by LIMIT 1) as know_by,			
 				(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name,
-				STATUS FROM in_customer AS c WHERE c.`status`=1";
+				STATUS FROM in_customer AS c WHERE c.`status`=1 ";
     		$where ="";
     		$from_date =(empty($search['start_date']))? '1': " c.`date` >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " c.`date` <= '".$search['end_date']." 23:59:59'";
@@ -1633,6 +1634,15 @@ function getAllBranch($search=null){
     		}
     		if($search['know_by']>0){
     			$where.= " AND know_by = ".$search['know_by'];
+    		}
+    		
+    		$session_user=new Zend_Session_Namespace('authinstall');
+    		$userid = $session_user->user_id;
+    		
+    		$db_user=new Application_Model_DbTable_DbUsers();
+    		$user_info = $db_user->getUserInfo($userid);
+    		if (!empty($user_info['staff_id'])){
+    			$where.= " AND user_id = ".$userid;
     		}
     		$where.=" ORDER BY c.id DESC ";
     		return $db->fetchAll($sql.$where);

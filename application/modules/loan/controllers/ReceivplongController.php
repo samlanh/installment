@@ -18,6 +18,7 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 						'branch_id' => -1,
 						'land_id'=> -1,
 						'client_name'=> -1,
+						'plong_type'=>'',
 						'from_date_search'=> date('Y-m-d'),
 						'to_date_search'=>date('Y-m-d'));
 			}
@@ -26,12 +27,12 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","LOAN_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","RECEIVED_DATE","DATE","NOTE","STATUS","PLONG_TITLE");
+			$collumns = array("PROJECT_NAME","LOAN_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","LAYOUT_TYPE","RECEIVED_DATE","DATE","NOTE","STATUS","PLONG_TITLE");
 			$link=array(
 					'module'=>'loan','controller'=>'receivplong','action'=>'edit',
 			);
 			$link1=array(
-					'module'=>'loan','controller'=>'receivplong','action'=>'titledeed',
+					'module'=>'report','controller'=>'loan','action'=>'rpt-printplong',
 			);
 			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('branch_name'=>$link,'client_name'=>$link,'ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ'=>$link1));
 		}catch (Exception $e){
@@ -48,7 +49,6 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
 			try {		
-				
 				$_dbmodel->addReceivedplong($_data);
 				if(isset($_data['save'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/receivplong/add");
@@ -77,6 +77,9 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm;
 		$id = $this->getRequest()->getParam('id');
 		$this->view->id = $id;
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
 	public function editAction(){
 		$id = $this->getRequest()->getParam('id');
@@ -107,12 +110,9 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 		$frm = $fm->FrmAddFrmCancel($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
-	}
-	function titledeedAction(){
-		$id = $this->getRequest()->getParam('id');
-		$_dbmodel = new Loan_Model_DbTable_DdReceived();
-		$row  = $_dbmodel->getRecivePlongInfo($id);
-		$this->view->row = $row;
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
 	function getsaleinfoAction(){
 		if($this->getRequest()->isPost()){

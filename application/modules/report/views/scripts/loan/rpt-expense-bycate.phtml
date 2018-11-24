@@ -92,10 +92,21 @@
 								<td style="text-align: right;"><?php echo $row['category_name'];?></td>
 								<td style="white-space: nowrap;width:200px;">...................................................................................</td>
 								<td style=""><?php echo number_format($row['total_amount'],2);
-								$total_expense = $total_expense+$row['total_amount'];
-								?></td>
+									$total_expense = $total_expense+$row['total_amount'];?>
+								</td>
 							</tr>
 						<?php }}?>
+						<?php if (!empty($this->expense_comission)) foreach ($this->expense_comission as $comission){ 
+									$total_expense = $total_expense+$comission['total_amount'];
+						?>
+	             			<tr height="21px">
+	             				<td style=""></td>
+	             				<td style="text-align: right;"><?php echo $comission['category_name'];?>&nbsp;</td>
+	             				<td style="white-space: nowrap;width:200px;">...................................................................................</td>
+	             				<td class="" ><?php echo number_format($comission['total_amount'],2);
+	             				?></td>
+	             			</tr>
+	             			<?php }?>
 							<tr>
 								<td colspan="3"></td>
 								<td style="border-bottom: 5px double #000;text-align: center;">$&nbsp;<strong><?php echo number_format($total_expense,2);?></strong></td>

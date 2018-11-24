@@ -12,6 +12,8 @@ public function init()
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'filterClient();setBranchID();'
 		));
 		$options = $db->getAllBranchName(null,1);
@@ -22,7 +24,9 @@ public function init()
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
-				'onchange'=>'getAllPropertyBranchTransfer();'
+				'onchange'=>'getAllPropertyBranchTransfer();',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$options = $db->getAllBranchName(null,1);
 		$_to_branch_id->setMultiOptions($options);
@@ -331,9 +335,7 @@ public function init()
 // 			//$_loan_type->setValue($data['land_id']);
 // 			$note->setValue($data['note']);
 // 			$commission->setValue($data['comission']);
-// 			$staff_id->setValue($data['staff_id']);
-			
-			
+// 			$staff_id->setValue($data['staff_id']);			
 		}
 		$this->addElements(array($paid_receivehouse,$total_installamount,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,

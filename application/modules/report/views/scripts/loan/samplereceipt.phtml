@@ -41,9 +41,11 @@ img.view{height: 70px !important;}
 				}
 			   .h{ margin-top: -10px;}
 			   .note_size{font-size: 10px;}
+				.note_size li{list-style-type: cambodian ;}
 			   .title_size{font-size:12px;font-weight: 800;}
 			  .border {border-bottom: 1px dotted #000;height: 12px;
 					white-space: nowrap;line-height: 10px; }
+			 ul.note_size{padding: 0;}
 			</style>
 			<?php for($i=1; $i<$this->data['showreceipt']; $i++){ ?>			
 			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:14px; padding:0px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
@@ -88,12 +90,12 @@ img.view{height: 70px !important;}
 				    <td><strong><label class="value"><?php echo $this->rs['project_name'];?></label></strong></td>
 					<td>&nbsp;&nbsp;<?php echo $tr->translate("PROPERTY_CODE");?></td>
                     <td><label class="value"><?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; } echo ' '.$this->rs['property_type'];?></label></td>
-                    <td>&nbsp;&nbsp;<?php echo $tr->translate("ចំនួនឡូត៍ៈ");?></td>
-                    <td><label class="value"><?php echo !empty($this->rs['landlot_amount'])?count(explode(",",$this->rs['landlot_amount'])):1;?></label></td>
+                    <td>&nbsp;&nbsp;<?php echo $tr->translate("ចំនួន");?>:</td>
+                    <td><label class="value"><?php echo !empty($this->rs['landlot_amount'])?count(explode(",",$this->rs['landlot_amount'])):1;?> ឡូត៍</label></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td>ឈ្មោះ​អតិថិជន </td>
-				    <td colspan="3"><label class="value"><?php echo $this->rs['name_kh'];echo !empty($this->rs['hname_kh'])?" /".$this->rs['hname_kh']:"";?></label></td>
+				    <td colspan="3" ><label class="value" style="text-align: center;"><?php echo $this->rs['name_kh'];echo !empty($this->rs['hname_kh'])?" /".$this->rs['hname_kh']:"";?></label></td>
 					<td>&nbsp; លេខទូរសព្ទ</td>
 					<td><label class="value"><?php echo $this->rs['phone'];?></label></td>
                 </tr>
@@ -136,17 +138,15 @@ img.view{height: 70px !important;}
 			                    <td width="25%">ឈ្មោះសាក្សី    <div>អ្នកបង់ប្រាក់</div></td>
 			                    <td width="25%">ហត្ថលេខា-ស្នាមេដៃ<div>អ្នកបង់ប្រាក់</div></td>
 			                </tr>
-			                <tr height="80px">
+			                <tr height="90px">
 								<td colspan="4">&nbsp;</td>
 							</tr>
 							<tr>
-								<td><?php echo $this->rs['by_user'];?>
-								</td>
+								<td><?php echo $this->rs['by_user'];?></td>
 								<td>&nbsp;</td>
-								<td align="center">
-									<strong><label id="lbl_customer1"><?php echo $this->rs['name_kh'];echo (empty($this->rs['hname_kh'])?"":"/".$this->rs['hname_kh']); ?></label></strong>
-								</td>
+								<td align="center"></td>
 								<td align="center" width="30%">
+									<strong><label id="lbl_customer1"><?php echo $this->rs['name_kh'];echo (empty($this->rs['hname_kh'])?"":"/".$this->rs['hname_kh']); ?></label></strong>
 								</td>
 							</tr>
 	                    </table>
@@ -171,14 +171,14 @@ Beneficiary Account Number: 000179802
 								<td colspan="2" align="center">សេចក្តីរៀបរាប់</td>
 							</tr>
 							 <tr>
-								<td colspan="2">១. ថ្ងៃ............ខែ................ឆ្នាំ.................បង់បន្តទៀត!</td>
+								<td colspan="2">១.  ថ្ងៃទី...<?php echo date("d",strtotime($this->rs['nextdate_payment']));?>..ខែ...<?php echo date("m",strtotime($this->rs['nextdate_payment']));?>...ឆ្នាំ...<?php echo date("Y",strtotime($this->rs['nextdate_payment']));?>...បង់បន្តទៀត!</td>
 							</tr>
 							<tr>
-								<td width="50%">២. បង់បាន............ខែ-រំលស់!</td>
+								<td width="50%">២. បង់បាន..<?php echo $this->rs['payment_times'];?>...ខែ-រំលស់!</td>
 			                    <td width="50%">៤. ប្រាក់បង់បានចំនួនៈ <?php echo  number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2);?> USD</td>
 			                </tr>
 			                <tr>
-								<td>៣. នៅលស់............ខែ-ទៀត!</td>
+								<td>៣. នៅសស់...<?php echo number_format($this->rs['total_duration']-$this->rs['payment_times']);?>...ខែ-ទៀត!</td>
 			                    <td>៥. ប្រាក់នៅសល់ចំនួនៈ <?php echo  number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2);?> USD ទៀត!</td>
 			                </tr>
 	                    </table>
@@ -189,17 +189,17 @@ Beneficiary Account Number: 000179802
 				</tr>
 				<tr>
 					<td colspan="6">
-						<ol class="note_size" style="list-style-type:none;">
+						<ul class="note_size" style="list-style-type:none;">
 							<li style="white-space: normal;">
 								អតិថិជនដែលបានទិញដីក្នុងលក្ខខណ្ឌបង់រំលស់ត្រូវធ្វើការបង់ប្រាក់អោយបានទៀងទាត់តាមកាលវិភាគដែលបានកំណត់លើក្រដាសឯកសារទិញ-លក់-<br />ប្រសិនបើអតិថិជនយឺតយ៉ាវមិនបានបង់ប្រាក់ក្នុងរយះពេល ១៥ថ្ងៃ នោះក្រុមហ៊ុននឹងធ្វើការផាកពិន័យលើអតិថិជនចំនួន ១៥$ (ជាលើកទី១)៕
 							</li>
 							<li style="white-space: normal;">
-								២.ប្រសិនបើអតិថិជនខកខានមិនបានបង់ប្រាក់ក្នុងរយះពេល ១ខែ(ស្មើនឹង៣០ថ្ងៃ) នោះក្រុមហ៊ុននឹងធ្វើការផាកពិន័យលើអតិថិជនចំនួន ៣០$ (ជាលើកទី២) ប្រសិនបើខានបង់ប្រាក់ក្នុងរយះពេល ២ខែ គឺត្រូវកាត់ ៧០% នៃចំនួនទឹកប្រាក់ដែលបានបង់-ហើយនៅសល់ ៣០% គឺត្រូវប្រគល់អោយអតិថិជនវិញ៕
+								ប្រសិនបើអតិថិជនខកខានមិនបានបង់ប្រាក់ក្នុងរយះពេល ១ខែ(ស្មើនឹង៣០ថ្ងៃ) នោះក្រុមហ៊ុននឹងធ្វើការផាកពិន័យលើអតិថិជនចំនួន ៣០$ (ជាលើកទី២) ប្រសិនបើខានបង់ប្រាក់ក្នុងរយះពេល ២ខែ គឺត្រូវកាត់ ៧០% នៃចំនួនទឹកប្រាក់ដែលបានបង់-ហើយនៅសល់ ៣០% គឺត្រូវប្រគល់អោយអតិថិជនវិញ៕
 							</li>
 							<li style="white-space: normal;">
-								៣.ក្រុមហ៊ុននិងធ្វើការដកហូតដីកម្មសិទ្ឋិមកវិញប្រសិនបើអតិថិជនមិនគោរពតាមកិច្ចសន្យាដែលបានព្រមព្រៀងគ្នាដោយសរសេរជាលាយលក្ខណ៍អក្សរលើឯកសារទិញដី៕
+							          ក្រុមហ៊ុននិងធ្វើការដកហូតដីកម្មសិទ្ឋិមកវិញប្រសិនបើអតិថិជនមិនគោរពតាមកិច្ចសន្យាដែលបានព្រមព្រៀងគ្នាដោយសរសេរជាលាយលក្ខណ៍អក្សរលើឯកសារទិញដី៕
 							</li>
-						</ol>
+						</ul>
 					</td>
 				</tr>
 				<tr>
@@ -215,15 +215,15 @@ Beneficiary Account Number: 000179802
 				</tr>
 				<tr>
 					<td colspan="6" style="white-space: normal;">
-						<ol class="note_size">
+						<ul class="note_size">
 							<li style="white-space: normal;">
-								១.គ្មានបុគ្គលណាមានសិទ្ឋិទទួលប្រាក់ពីអតិថិជនបានឡើយក្រៅពីបុគ្គលិកក្រុមហ៊ុន ហើយអ្នកដែលមានសិទ្ឋិទទួលប្រាក់ពីអតិថិជនបានមានដូចជាៈ លោកប្រធានក្រុមហ៊ុន
+								គ្មានបុគ្គលណាមានសិទ្ឋិទទួលប្រាក់ពីអតិថិជនបានឡើយក្រៅពីបុគ្គលិកក្រុមហ៊ុន ហើយអ្នកដែលមានសិទ្ឋិទទួលប្រាក់ពីអតិថិជនបានមានដូចជាៈ លោកប្រធានក្រុមហ៊ុន
 								០៩៦ ៦៦៦៦៦៤៣-លោកអនុប្រធានក្រុមហ៊ុន ០៩៦ ៧៦ ៧៧៧ ៧៨-ផ្នែករដ្ឋបាល និងជំនួយការគណនេយ្យ ០៩៦ ៧៧១ ៧៣៧៣ ៕
 							</li>
 							<li style="white-space: normal;">
-								២.បើអតិថិជនបង់ប្រាក់ទៅឪ្យអ្នកផ្សេងខុសពីបុគ្គលិកក្រុមហ៊ុននោះមិនទទួលខុសត្រូវឡើយ ហើយប្រាក់ដែលបាត់បង់អតិថិជនផ្ទាល់ត្រូវទទួលខុសត្រូវដោយខ្លួនឯង៕
+								បើអតិថិជនបង់ប្រាក់ទៅឪ្យអ្នកផ្សេងខុសពីបុគ្គលិកក្រុមហ៊ុននោះមិនទទួលខុសត្រូវឡើយ ហើយប្រាក់ដែលបាត់បង់អតិថិជនផ្ទាល់ត្រូវទទួលខុសត្រូវដោយខ្លួនឯង៕
 							</li>
-						</ol>
+						</ul>
 					</td>
 				</tr>
 				<tr>

@@ -25,12 +25,13 @@ public function init()
 		$property->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'class'=>'fullside',
 		));
 		$property->setMultiOptions($opt_co);
 		
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
-		$_title->setAttribs(array('dojoType'=>'dijit.form.TextBox',
+		$_title->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 		));
 		$_title->setValue($request->getParam("adv_search"));
@@ -62,7 +63,9 @@ public function init()
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required' =>'true',
-				'onchange'=>'getSaleNo(), getSaleClie();'
+				'onchange'=>'getSaleNo(), getSaleClie();',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$rows_branch = $db->getAllBranchName();
 		$options_branch=array('-1'=>$this->tr->translate("SELECT_PROJECT"));
@@ -411,17 +414,21 @@ public function init()
 		));
 		$return_back->setValue(0);
 		
-		$client_name = new Zend_Dojo_Form_Element_FilteringSelect("client_name");
-		$opt_client = array(''=>$this->tr->translate('CHOOSE_CUSTOEMR'));
-		$rows = $db->getAllClient();
+		$plong_type = new Zend_Dojo_Form_Element_FilteringSelect("plong_type");
+		$opt_plong = array(''=>$this->tr->translate('PLEASE_SELECT'));
+		$rows = $db->getAllPlong();
 		if(!empty($rows))foreach($rows AS $row){
-			$opt_client[$row['id']]=$row['name'];
+			$opt_plong[$row['id']]=$row['name'];
 		}
-		$client_name->setMultiOptions($opt_client);
-		$client_name->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
-		$client_name->setValue($request->getParam("client_name"));
+		$plong_type->setMultiOptions($opt_plong);
+		$plong_type->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				));
+		$plong_type->setValue($request->getParam("plong_type"));
 		
-		$client_name->setValue($request->getParam('client_name'));
 		
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$_branch_id->setAttribs(array(
@@ -445,7 +452,11 @@ public function init()
 			$opt_client[$row['id']]=$row['name'];
 		}
 		$client_name->setMultiOptions($opt_client);
-		$client_name->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
+		$client_name->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',));
 		$client_name->setValue($request->getParam("client_name"));
 		
 		if($data!=null){
@@ -462,7 +473,7 @@ public function init()
 			$expense_date->setValue($data['create_date']);
 			$cancel_date->setValue($data['create_date']);
 		}
-		$this->addElements(array($cancel_date,$expense_date,$client_name,$land_id,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
+		$this->addElements(array($plong_type,$cancel_date,$expense_date,$client_name,$land_id,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
 				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$_old_property_id,$property,
 				$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$penalize,$_service_charge,

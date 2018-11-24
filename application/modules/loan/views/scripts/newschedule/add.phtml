@@ -537,6 +537,7 @@ function calCulateFixedPeriod(){
 	
 	dijit.byId('fixed_payment').attr('value',amount_payment);
 	dijit.byId('for_installamount').attr('value',amount_principal);
+	
 }
 function calculateDiscount(){
 	total_sold = dijit.byId('total_sold').get('value');
@@ -723,16 +724,15 @@ var client_number_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_
 var co_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->co_name));?> );
 var property_store  = getDataStorefromJSON('id','name', null );
 require(["dojo/ready"], function(ready){
-	 ready(function(){
+	ready(function(){
 		setFirstPaymentAndDateLine(3,<?php echo date('d-m-Y');?>,1);
 		<?php if(!empty($this->rsresult)){?>
-		dijit.byId('branch_id').attr('value','<?php echo $this->rsresult['branch_id'];?>');
-		filterClient();
+			dijit.byId('branch_id').attr('value','<?php echo $this->rsresult['branch_id'];?>');
+			filterClient();
 		<?php }?>
-		dijit.byId('schedule_opt').attr('value',4);
-		checkScheduleOption();
-	  });
-	 
+			dijit.byId('schedule_opt').attr('value',4);
+			checkScheduleOption();
+	});
 	new dijit.form.FilteringSelect({
 			store: property_store,//dojo.data.ObjectStore({objectStore: client_data}),
 			autoComplete: true,
@@ -814,6 +814,9 @@ function getInfoByLoanNumber(){
 		handleAs:"json",
 		load: function(data) {
 			dijit.byId("paid_pricipaldate").attr('value',data.date_input);
+			dijit.byId("release_date").attr('value',data.startdate_calcualte);
+			dijit.byId("first_payment").attr('value',data.date_payment);
+			
 			total_principal= data.total_principal;
 			if(isNaN(total_principal) || total_principal==null){total_principal=0;}
 		    paid_amount = data.paid_amount;
@@ -832,8 +835,6 @@ function getInfoByLoanNumber(){
 			dijit.byId('paid_before').attr('value',total_principal);
 			dijit.byId('period').attr('value',data.intallment);
 			dijit.byId("interest_rate").attr('value',data.interest_rate);
-			
-			dijit.byId("release_date").attr('value',data.first_payment);
 			
 			price_before = data.price_before;
 			paid_amount = data.paid_amount;

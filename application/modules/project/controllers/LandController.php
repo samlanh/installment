@@ -105,7 +105,7 @@ class Project_LandController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			try{
 				$id= $db->addLandinfoAuto($data);
-				//Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

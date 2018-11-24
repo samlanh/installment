@@ -19,6 +19,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
             s.`balance`,s.`discount_amount`,s.`other_fee`,s.`payment_id`,s.`graice_period`,s.`total_duration`,s.`buy_date`,s.`end_line`,
 			s.`client_id`,
 			s.`house_id`,p.`id` as property_id,p.`land_code`,p.`land_address`,
+			p.hardtitle,
 			p.`land_size`,p.`width`,p.`height`,p.`street`,p.`land_price`,p.`house_price`
 			,p.`street`,(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
 			s.staff_id,

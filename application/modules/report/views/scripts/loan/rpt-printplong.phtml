@@ -6,7 +6,7 @@ $row = $this->row;
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
 		<div class="card-box">
-			<div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+			<div style="background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
 				<div id="divPrint">
 					<style>
 						body {
@@ -47,8 +47,6 @@ $row = $this->row;
 					   		<img alt="" src="<?php echo $this->baseUrl()."/images/sign.png"?>" style=" width: 120px; margin-right: 24px;">
 					   </td>
 					</tr>
-					
-						
 						<tr class="head">
 						   <td colspan="3" align="center">
 						   		<br />
@@ -58,16 +56,17 @@ $row = $this->row;
 						</tr>
 						<tr>
              				<td colspan="3">
-             					
              					<br />
              					<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
 									<tr>
 										<td>បានប្រគល់</td>
-										<td width="30%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientName"><?php echo $row['layout_type']?>   </span></span></td>
+										<td width="20%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientName"><?php echo $row['layout_type']?>   </span></span></td>
 										<td>សម្រាប់គម្រោង</td>
-										<td width="30%" align="left" ><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientProjectname"><?php echo $row['branch_name']?></span></span></td>
+										<td width="20%" align="left" ><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientProjectname"><?php echo $row['branch_name']?></span></span></td>
 										<td><?php echo $tr->translate("PROPERTY_CODE")?></td>
-										<td width="30%" align="left" ><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientPropertycode"><?php echo $row['propertyinfo'];?></span></span></td>
+										<td width="20%" align="left" ><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientPropertycode"><?php echo $row['propertyinfo'];?></span></span></td>
+										<td><?php echo $tr->translate("HEAD_TITLE_NO")?></td>
+										<td width="20%" align="left" ><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBHeadtitle">&nbsp;<?php echo $row['hardtitle'];?></span></span></td>
 									</tr>
 								</table>
              					<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
@@ -84,8 +83,8 @@ $row = $this->row;
 								</table>
 								<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
 									<tr>
-										<td>មានទីលំនៅ ផ្ទះលេខ ឈ្មោះ</td>
-										<td width="10%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="lbl_house"><?php echo $row['house']?></span></span></td>
+										<td>មានទីលំនៅ ផ្ទះលេខ </td>
+										<td width="10%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="lbl_house">&nbsp;<?php echo $row['house']?></span></span></td>
 										<td>&nbsp;ផ្លូវ&nbsp;</td>
 										<td width="10%">​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblstreet"><?php echo $row['street']?>&nbsp;</span></span></td>
 										<td>&nbsp;ភូមិ&nbsp;</td>
@@ -158,7 +157,6 @@ $row = $this->row;
 						<tr>
 							<td colspan="3" style="border-top:2px dashed #000;" >
 								<br />
-								<br />
 							</td>
 						</tr>
 						<?php }?>
@@ -210,35 +208,5 @@ function doPrint() {
     window.frames["print_frame"].window.print();
     hideDialog();
 }
-jQuery(function () {
-	'use strict';
-	
-	jQuery(".ptss__toggle-btn").click(function () {	
-		jQuery('.js-ptss-frame').toggleClass('is-opened');
-	});
-	
-	jQuery('.ptss__layout-wrapper > div').click(function(){
-		
-		jQuery(this).closest('.ptss__setting-control').find('.ptss__layout-wrapper').removeClass('is-selected');
-		
-		jQuery(this).parent().addClass('is-selected');
-		
-		if( jQuery(this).hasClass('ptss__layout-box--wide') ) {
-			
-			jQuery('body').removeClass('boxed');
-			jQuery('#ptss__boxed-bg').hide();
-			
-			jQuery('body').removeClass('bg1').removeClass('bg2').removeClass('bg3').removeClass('bg4');
-			
-			jQuery('#ptss__boxed-backgrounds span').removeClass('is-selected');
-			
-		} else {
-			
-			jQuery('body').addClass('boxed');
-			jQuery('#ptss__boxed-bg').show();
-			
-		}
-		
-	});
-})
+
 </script>

@@ -586,9 +586,6 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     	WHERE lm.status =1 AND lm.group_id = $member_id ";
     	return $db->fetchAll($sql);
     }
-    
-    
-    
     function  getRescheduleById($id){
     	$db = $this->getAdapter();
     	$sql = "SELECT * FROM `ln_reschedule` where id = $id";

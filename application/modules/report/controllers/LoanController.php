@@ -8,7 +8,6 @@ class Report_LoanController extends Zend_Controller_Action {
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
   function indexAction(){
-  	
   }
   function rptLoanDisburseCoAction(){//realease by co
 	  $db  = new Report_Model_DbTable_DbLandreport();
@@ -872,6 +871,7 @@ public function exportFileToExcel($table,$data,$thead){
 				'branch_id' => -1,
 				'land_id'=> -1,
 				'client_name'=> -1,
+  				'plong_type'=>'', 				
 				'from_date_search'=> date('Y-m-d'),
 				'to_date_search'=>date('Y-m-d'));
   	}
@@ -973,6 +973,7 @@ public function exportFileToExcel($table,$data,$thead){
   }
   public function rptExpenseBycateAction(){
   	try{
+  		
   		if($this->getRequest()->isPost()){
   			$search=$this->getRequest()->getPost();
   		}else{
@@ -987,6 +988,7 @@ public function exportFileToExcel($table,$data,$thead){
   		$this->view->search = $search;
   		$db  = new Report_Model_DbTable_DbParamater();
   		$this->view->row = $db->getAllExpensebyCate($search);
+  		
   		
   		$key = new Application_Model_DbTable_DbKeycode();
   		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
@@ -1005,15 +1007,19 @@ public function exportFileToExcel($table,$data,$thead){
   		
   		$this->view->rscomisison = $db->getAllCommission($search);
   		
-  		$frm = new Loan_Form_FrmSearchLoan();
-  		$frm = $frm->AdvanceSearch();
-  		Application_Model_Decorator::removeAllDecorator($frm);
-  		$this->view->frm_search = $frm;
+  		$this->view->expense_comission = $db->getAllComissionExpense($search);
+  		
+  		
+  		
   	}catch(Exception $e){
   		Application_Form_FrmMessage::message("APPLICATION_ERROR");
   		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
   		echo $e->getMessage();
   	}
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
   }
   function rptValidateagreementAction(){//release all loan
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -1161,6 +1167,12 @@ public function exportFileToExcel($table,$data,$thead){
 // 		$frm->FrmAddCRM(null);
 // 		Application_Model_Decorator::removeAllDecorator($frm);
 // 		$this->view->frm_crm = $frm;
+	}
+	function rptPrintplongAction(){
+		$id = $this->getRequest()->getParam('id');
+		$_dbmodel = new Loan_Model_DbTable_DdReceived();
+		$row  = $_dbmodel->getRecivePlongInfo($id);
+		$this->view->row = $row;
 	}
 }
 

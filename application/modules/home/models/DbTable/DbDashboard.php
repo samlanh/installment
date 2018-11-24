@@ -226,7 +226,8 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$datenow = date("Y-m-d");
 		$sql="SELECT n.*,
 		(SELECT nd.title FROM `ln_news_detail` AS nd WHERE nd.lang=2 AND nd.news_id = n.`id` LIMIT 1) AS title,
-		(SELECT nd.description FROM `ln_news_detail` AS nd WHERE nd.lang=$currentlang AND nd.news_id = n.`id` LIMIT 1) AS description
+		(SELECT nd.description FROM `ln_news_detail` AS nd WHERE nd.lang=$currentlang AND nd.news_id = n.`id` LIMIT 1) AS description,
+		 (SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = user_id LIMIT 1) AS user_name
 		 FROM `ln_news` AS n
 		 WHERE n.`status`=1 AND n.`publish_date` <='$datenow' ";
 		if (!empty($notInId)){
@@ -339,7 +340,8 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$datenow = date("Y-m-d");
 		$sql="SELECT n.*,
 		(SELECT nd.title FROM `ln_news_detail` AS nd WHERE nd.lang=2 AND nd.news_id = n.`id` LIMIT 1) AS title,
-		(SELECT nd.description FROM `ln_news_detail` AS nd WHERE nd.lang=$currentlang AND nd.news_id = n.`id` LIMIT 1) AS description
+		(SELECT nd.description FROM `ln_news_detail` AS nd WHERE nd.lang=$currentlang AND nd.news_id = n.`id` LIMIT 1) AS description,
+		(SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = user_id LIMIT 1) AS user_name
 		FROM `ln_news` AS n
 		WHERE n.`status`=1 AND n.`publish_date` <='$datenow' AND n.id=$id ORDER BY n.`publish_date` DESC";
 		return $db->fetchRow($sql);

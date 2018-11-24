@@ -17,7 +17,10 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 			clie.client_number,
 			clie.`name_kh` AS client_name,
 			(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
-			pro.`land_address`,pro.`street`,c.date,c.create_date,c.note,c.`status`,"ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ"
+			pro.`land_address`,pro.`street`,
+			`layout_type`,
+			c.date,
+			c.create_date,c.note,c.`status`,"ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ"
 			FROM `ln_receiveplong` AS c ,`ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE p.`br_id` = c.`branch_id` AND pro.`id` = c.`house_id` AND
@@ -30,6 +33,9 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		}
 		if($search['client_name']>0){
 			$where.= " AND c.customer_id = ".$search['client_name'];
+		}
+		if(!empty($search['plong_type'])){
+			$where.= " AND c.layout_type = '".$search['plong_type']."'";
 		}
 		if(!empty($search['adv_search'])){
 			$s_where = array();
@@ -122,14 +128,15 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		(SELECT com.commune_namekh FROM `ln_commune` AS com WHERE com.com_id = cl.`com_id` LIMIT 1) AS commune_namekh,
 		(SELECT vil.village_namekh FROM `ln_village` AS vil WHERE vil.vill_id = cl.`village_id` LIMIT 1) AS village_namekh,
 		(SELECT CONCAT(pro.land_address,'-',pro.street) FROM `ln_properties` AS pro WHERE pro.id = s.`house_id` LIMIT 1) AS propertyinfo,
+		(SELECT pro.hardtitle FROM `ln_properties` AS pro WHERE pro.id = s.`house_id` LIMIT 1) AS hardtitle,
 		c.*
 		 FROM `ln_receiveplong` AS c,
-		`ln_sale` AS s,
-		`ln_client` AS cl
+			`ln_sale` AS s,
+			`ln_client` AS cl
 		  WHERE 
-		  s.`id` = c.`sale_id`
-		  AND cl.`client_id` = s.`client_id`
-		  AND c.`id`=5 LIMIT 1";
+			  s.`id` = c.`sale_id`
+			  AND cl.`client_id` = s.`client_id`
+			  AND c.`id`=$id LIMIT 1";
 		return $db->fetchRow($sql);
 	}
 	

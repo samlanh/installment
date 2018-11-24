@@ -115,14 +115,8 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
-//      $this->view->allclient = $db->getAllClient();
-//      $this->view->allclient_number = $db->getAllClientNumber();
-//         $frmpopup = new Application_Form_FrmPopupGlobal();
-//      $this->view->frmpupoploantype = $frmpopup->frmPopupLoanTye();
-//      $this->view->frmPopupZone = $frmpopup->frmPopupZone();
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-//         $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
 	}
