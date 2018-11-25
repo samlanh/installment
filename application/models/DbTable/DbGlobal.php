@@ -69,7 +69,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	}
 	function  getAllBranchByUser(){
 		$db = $this->getAdapter();
-		$sql = 'select br_id as id,project_name as name from ln_project where 1 and project_name!="" ORDER BY br_id DESC ';
+		$sql = 'select br_id as id,project_name as name from ln_project where status=1 and project_name!="" ORDER BY br_id DESC ';
 		return $db->fetchAll($sql);
 	}
 	function  getAllBranchInfoByID($id){
@@ -519,7 +519,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db = $this->getAdapter();
   	$sql= " SELECT br_id,project_name,
   	project_type,br_address,branch_code,branch_tel,displayby
-  	FROM `ln_project` WHERE project_name !='' ";
+  	FROM `ln_project` WHERE project_name !='' AND status=1 ";
   	if($branch_id!=null){
   		$sql.=" AND br_id=$branch_id LIMIT 1";
   	}
@@ -1543,6 +1543,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}else{
   		return $result ;
   	}
+  }
+  function getAllPlong(){
+  	$db = $this->getAdapter();
+  	$sql="SELECT DISTINCT rp.`layout_type` AS `name`,rp.`layout_type` AS `id`  FROM `ln_receiveplong` AS rp WHERE rp.`status`=1 AND rp.`layout_type` !='' ORDER BY rp.layout_type ASC";
+  	return $db->fetchAll($sql);
   }
 }
 ?>
