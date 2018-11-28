@@ -545,6 +545,7 @@ function getAllBranch($search=null){
      			  `c`.`name_en` AS `client_nameen`,
      			   c.dob,
      			   c.hname_kh,
+     			   c.sex,
     			   c.ksex,
     			    c.join_type,
     			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=c.ksex limit 1) AS partner_gender,
@@ -563,6 +564,7 @@ function getAllBranch($search=null){
                   `c`.`street` AS `client_street`,
                   c.phone,
                   c.lphone as with_phone,
+                  c.ghouse as with_house,
                   c.dstreet AS w_street,
 				  (SELECT
 				     `village`.`village_namekh`
@@ -674,7 +676,8 @@ function getAllBranch($search=null){
  			 pp.`north` AS border_north,
  			 pp.`south` AS border_south,
  			 pp.`east` AS border_east,
- 			 pp.`west` AS border_west
+ 			 pp.`west` AS border_west,
+ 			 pp.`old_land_id`
 		FROM 
 			`ln_sale` AS `s`,
 			ln_project AS p ,
