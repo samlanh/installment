@@ -648,17 +648,15 @@ function calCulateFixedPeriod(){
 	interest_rate=dijit.byId('interest_rate').get('value')/<?php echo 12; //$install_month;?>/(100);//(100/30day)
 	if(interest_rate==0){
 		amount_payment = parseFloat(amount_principal/debt_amount);
-		amount_payment = amount_payment.toFixed(0);
+		//amount_payment = amount_payment.toFixed(0);
 		if(amount_payment=='Infinity' || amount_payment=='NaN'){amount_payment=0;}
 	}else{
 		top_pow = Math.pow((1+interest_rate),term);
 		bellow = Math.pow((1+interest_rate),(term))-1;
 		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
-		amount_payment = amount_payment.toFixed(0);
 		if(isNaN(amount_payment)){amount_payment=0;
 		}
 	}	
-	
 	amount_payment = Math.ceil(amount_payment);
 	dijit.byId('fixed_payment').attr('value',amount_payment);
 	dijit.byId('for_installamount').attr('value',amount_principal);
