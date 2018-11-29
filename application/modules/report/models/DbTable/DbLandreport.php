@@ -422,7 +422,7 @@ public function getAllOutstadingLoan($search=null){
 		$order=" ORDER BY currency_type DESC ";
 		return $db->fetchAll($sql.$where.$order);
       }
-      public function getALLLoanPayment($search=null,$order11=1){
+      public function getALLLoanPayment($search=null,$order11=0){
       	$db = $this->getAdapter();
       	$sql="SELECT *,
 			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id LIMIT 1) AS user_name,

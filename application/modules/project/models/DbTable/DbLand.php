@@ -8,6 +8,48 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
     }
+    function getAllLandInfo($search = null){
+    	$db = $this->getAdapter();
+    	$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
+    	$where = " WHERE ".$from_date." AND ".$to_date;
+    	$sql = "SELECT id,
+    	(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
+    	land_code,land_address,street,
+    	(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type limit 1) AS  pro_type,
+    	price,width,height,land_size,hardtitle,
+    	(SELECT name_kh FROM `ln_view` WHERE type = 28 AND key_code=is_lock LIMIT 1) sale_type,
+    	create_date,
+    	(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
+    	status FROM $this->_name ";
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['adv_search']));
+    		$s_where[] = " land_code LIKE '%{$s_search}%'";
+    		$s_where[] = " land_address LIKE '%{$s_search}%'";
+    		$s_where[] = " street LIKE '%{$s_search}%'";
+    		$s_where[] = " price LIKE '%{$s_search}%'";
+    		$s_where[] = " land_size LIKE '%{$s_search}%'";
+    		$s_where[] = " width LIKE '%{$s_search}%'";
+    		$s_where[] = " height LIKE '%{$s_search}%'";
+    		$where .=' AND ('.implode(' OR ',$s_where).')';
+    	}
+    	if($search['status']>-1){
+    		$where.= " AND status = ".$search['status'];
+    	}
+    	if(!empty($search['streetlist'])){
+    		$where.= " AND street ='".$search['streetlist']."'";
+    	}
+    	if($search['branch_id']>-1){
+    		$where.= " AND branch_id = ".$search['branch_id'];
+    	}
+    	if(($search['property_type_search'])>0){
+    		$where.= " AND property_type = ".$search['property_type_search'];
+    	}
+    
+    	$order=" ORDER BY cast(land_address as unsigned) , id DESC ";
+    	return $db->fetchAll($sql.$where.$order);
+    }
     public function addLandinfoAuto($_data){
     	try{
     		$increase = 0;
@@ -188,48 +230,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	$row=$db->fetchRow($sql);
     	return $row;
     }
-	function getAllLandInfo($search = null){		
-		$db = $this->getAdapter();
-		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
-		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
-		$where = " WHERE ".$from_date." AND ".$to_date;		
-		$sql = "SELECT id,
-				(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
-				land_code,land_address,street,
-				(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type limit 1) AS  pro_type,
-				price,width,height,land_size,hardtitle,
-				(SELECT name_kh FROM `ln_view` WHERE type = 28 AND key_code=is_lock LIMIT 1) sale_type,
-				create_date,
-		    (SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
-			status FROM $this->_name ";
-		if(!empty($search['adv_search'])){
-			$s_where = array();
-			$s_search = addslashes(trim($search['adv_search']));
-			$s_where[] = " land_code LIKE '%{$s_search}%'";
-			$s_where[] = " land_address LIKE '%{$s_search}%'";
-			$s_where[] = " street LIKE '%{$s_search}%'";
-			$s_where[] = " price LIKE '%{$s_search}%'";
-			$s_where[] = " land_size LIKE '%{$s_search}%'";
-			$s_where[] = " width LIKE '%{$s_search}%'";
-			$s_where[] = " height LIKE '%{$s_search}%'";
-			$where .=' AND ('.implode(' OR ',$s_where).')';
-		}
-		if($search['status']>-1){
-			$where.= " AND status = ".$search['status'];
-		}
-		if(!empty($search['streetlist'])){
-			$where.= " AND street ='".$search['streetlist']."'";
-		}
-		if($search['branch_id']>-1){
-			$where.= " AND branch_id = ".$search['branch_id'];
-		}
-		if(($search['property_type_search'])>0){
-			$where.= " AND property_type = ".$search['property_type_search'];
-		}
-		
-		$order=" ORDER BY id DESC ";
-		return $db->fetchAll($sql.$where.$order);	
-	}
+	
 	public function getGroupCodeBYId($data){
 		$db = $this->getAdapter();
 		if($data['is_group']==1){

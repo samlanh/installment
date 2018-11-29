@@ -97,6 +97,7 @@ dojo.require("dijit.form.DateTextBox");
 							</script>
              			អ្នកទិញត្រូវប្រគល់ប្រាក់ថ្លៃទិញជូនទៅ អ្នកលក់ តាមដំណាក់កាលដូចខាងក្រោមៈ
              			<?php $dbs = new Loan_Model_DbTable_DbLandpayment();
+//              			$paid_amount = $dbs->getDepositFirstPayment($this->agreement['id']);
              			$resultdeposit = $dbs->getDepositFirstPaymentMoney($this->agreement['id']);
              			$start_id=0;
              			$paid_amount=0;
@@ -191,13 +192,15 @@ dojo.require("dijit.form.DateTextBox");
 	             				continue;
 	             			}
              			$paidbefore = $row['principal_permonth']-$paid_amount;
-             				if(strlen($paidbefore)<=3){$row['principal_permonth']=number_format($paidbefore,2);}
+             				if(strlen($paidbefore)<=3){
+								$row['principal_permonth']=number_format($paidbefore,2);}
              				else{
              					$row['principal_permonth'] = ($paidbefore);
              				}
              			 
              			}?>
              			<?php //} 
+						if($row['principal_permonth']<=0){continue;}
              			$numrow=$numrow+1;?>
              			
              				<span class="child" style="white-space: nowrap;" ><?php echo @$numrow+$start_id;?>. ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:380px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>

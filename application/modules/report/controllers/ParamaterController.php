@@ -312,11 +312,11 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	}
   	$this->view->search =$search;
   	$this->view->staff_list = $db->getALLCommissionStaff($search);
+  	
   	$frm=new Other_Form_FrmStaff();
   	$row=$frm->FrmAddStaff();
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_staff=$row;
-  	
   	$this->view->rscomisison = $db->getAllCommission($search);
   }
   function rptRevenueExpenseAction(){

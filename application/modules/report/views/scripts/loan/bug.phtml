@@ -103,7 +103,10 @@ th{padding: 5px;}
 			               		<td>&nbsp;&nbsp;<?php echo $rs["land_name"];?></td>
 			               		<td>&nbsp;&nbsp;<?php echo $rs["paid_amount"];?></td>
 			               		<td>&nbsp;&nbsp;<?php echo number_format($rs["realpaid"],2);?></td>
-			               		<td>&nbsp;&nbsp;<?php echo ($rs["realpaid"]>$rs["paid_amount"])?"កាត់ពីតារាងលើស":"មិនទាន់ដកក្នុងតារាង";
+			               		<td <?php 
+			               				if(($rs["realpaid"]-$rs["paid_amount"]) >=1 ){echo "style='background:red;'";}
+			               				if(($rs["realpaid"]-$rs["paid_amount"]) <=-1 ){echo "style='background:red;'";} ?>
+			               				>&nbsp;&nbsp;<?php echo ($rs["realpaid"]>$rs["paid_amount"])?"កាត់ពីតារាងលើស":"មិនទាន់ដកក្នុងតារាង";
 			               		
 			               		?></td>
 			                </tr>

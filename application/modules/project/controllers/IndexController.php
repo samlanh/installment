@@ -45,6 +45,7 @@ class Project_indexController extends Zend_Controller_Action {
 	
 	function addAction()
 	{
+		//$this->_redirect("/project/index");
 		if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
 			$_dbmodel = new Project_Model_DbTable_DbProject();
