@@ -1462,26 +1462,26 @@ function getAllBranch($search=null){
     		$to_date = (empty($search['end_date']))? '1': "c.`for_date` <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
     		$sql ='SELECT c.`id`,
-    		p.`project_name`,
-    		s.`sale_number`,
-    		clie.`name_kh` AS client_name,
-    		(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
-    		pro.`land_address`,pro.`street`,
-    		s.price_sold,
-    		(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name,
-    		(SELECT co_code FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS co_code,
-    		(SELECT sex FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS sex,
-    		(SELECT tel FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS tel,
-    		c.total_amount,
-    		for_date AS `create_date`, c.`status`,
-    		(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
-    		FROM `ln_comission` AS c ,
-    			`ln_sale` AS s,
-    			`ln_project` AS p,
-    			`ln_properties` AS pro,
-    		`ln_client` AS clie
-    		WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
-    		clie.`client_id` = s.`client_id` ';
+	    		p.`project_name`,
+	    		s.`sale_number`,
+	    		clie.`name_kh` AS client_name,
+	    		(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
+	    		pro.`land_address`,pro.`street`,
+	    		s.price_sold,
+	    		(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name,
+	    		(SELECT co_code FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS co_code,
+	    		(SELECT sex FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS sex,
+	    		(SELECT tel FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS tel,
+	    		c.total_amount,
+	    		for_date AS `create_date`, c.`status`,
+	    		(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
+	    		FROM `ln_comission` AS c ,
+	    			`ln_sale` AS s,
+	    			`ln_project` AS p,
+	    			`ln_properties` AS pro,
+	    		`ln_client` AS clie
+	    		WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
+	    		clie.`client_id` = s.`client_id` ';
     		if($search['branch_id']>0){
     			$where.= " AND c.branch_id = ".$search['branch_id'];
     		}
