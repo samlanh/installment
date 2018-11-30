@@ -1217,6 +1217,7 @@ function getLaonPayment(type){//tab ទី១
 							dijit.byId('discount').set("readOnly",true);
 							dijit.byId('sold_price').attr('value',(parseFloat(respone[i].price_sold)-parseFloat(respone[i].other_fee)));
 							dijit.byId('sold_price').set("readOnly",true);
+							dijit.byId('total_pricipalpaid').attr("value",respone[i].total_principal_permonthpaid);
 							dijit.byId('loan_period').attr('value',respone[i].total_duration);
 							dijit.byId('loan_period').set("readOnly",true);
 							dijit.byId('interest_rate').attr('value',respone[i].interest_rate);
@@ -1230,8 +1231,7 @@ function getLaonPayment(type){//tab ទី១
 							dijit.byId('total_interest').set("readOnly",true);
 							dijit.byId('release_date').attr('value',respone[i].buy_date);
 							dijit.byId('release_date').set("readOnly",true);
-							dijit.byId("date_payment").attr("value",respone[i].date_payment);
-
+							dijit.byId("date_payment").attr("value",respone[i].date_payment);							
 							from_date = respone[i].from_date;
 							if(from_date==null || from_date=='' || from_date=='0000-00-00'){
 								from_date=respone[i].sold_date;
@@ -1356,7 +1356,8 @@ function calculateTotal(index){//គណនាបង់
 		
 		sold_price = dijit.byId("sold_price").get("value");
 		total_pricipalpaid = dijit.byId("total_pricipalpaid").get("value");
-		total_pricipalpaid=isNaN(total_pricipalpaid)?0:total_pricipalpaid;
+		///total_pricipalpaid=isNaN(total_pricipalpaid)?0:total_pricipalpaid;//បើបើកវានឹងចេញខុស
+		///alert("total_pricipalpaid"+total_pricipalpaid);
 		dijit.byId("outstanding_balance").attr("value",sold_price-total_pricipalpaid);
 		
 	   ids = dijit.byId("record_id").get('value');
@@ -1713,7 +1714,7 @@ function getLaonHasPayByLoanNumber(){//tab3 ប្រវត្តបានបង
 								}
 							temp+= '</tr>';
 						}
-						dijit.byId('total_pricipalpaid').attr("value",principal_paid);
+						//dijit.byId('total_pricipalpaid').attr("value",principal_paid);
 					}
 					temp+='</table>';
 					dojo.byId('data_table_loan_haspay').innerHTML = temp;
