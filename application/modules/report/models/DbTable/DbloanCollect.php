@@ -46,7 +46,9 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$db=$this->getAdapter();
     	$search['start_date'] = date('Y-m-d');
     	$search['end_date']= date('Y-m-d');
-    	$sql = "SELECT * FROM v_newloancolect WHERE last_optiontype=1 ";
+    	$sql = "SELECT *,
+				(SELECT(c.phone) FROM `ln_client` c WHERE c.client_id =v_newloancolect.client_id LIMIT 1) AS phone
+    		FROM v_newloancolect WHERE last_optiontype=1 ";
     	$where ='';
     	$from_date =(empty($search['start_date']))? '1': " date_payment <= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";

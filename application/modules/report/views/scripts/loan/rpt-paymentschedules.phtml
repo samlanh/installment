@@ -126,7 +126,6 @@
 	                </thead>
 	               <?php $set=1; 
 	               $i=0;
-// 	             print_r($tran);
 	               if(!empty($tran)) foreach($tran as $key =>$row){ ?>
 	               	<?php if($row['status']==0 AND $row['collect_by']==2){?>
 	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style">
@@ -135,14 +134,20 @@
 	               	<?php continue;}
 	               	$i++; ?>
 	               	<tr align="center" style="font-weight:bold; height: 20px;" class="style hover" >
-	                    <td ><?php echo ($key+1<10)?"0":"";echo $i;?></td>
-	                    <?php $str_day = date('D',strtotime($row['date_payment']));
-	                    	$day_as_khmer = $dayin_khmer[$str_day];
-	                    ?>
-	                    <!--<td align="right">&nbsp;<?php //echo $day_as_khmer.'-'.$str_day; ?>&nbsp;&nbsp;&nbsp;</td> -->
-	                    <td align="center"><?php 
-	                    $date= new DateTime($row['date_payment']);
-	                    echo $date->format("d-m-Y");?></td>
+	                    <td><?php echo ($key+1<10)?"0":"";echo $i;?></td>
+		                    <?php $str_day = date('D',strtotime($row['date_payment']));
+		                    	$day_as_khmer = $dayin_khmer[$str_day];
+		                    ?>
+	                    <td align="center">
+	                    	<?php 
+		                    	$date= new DateTime($row['date_payment']);
+		                    	if($row['last_optiontype']==1){
+		                    		echo $date->format("d-m-Y");
+		                    	}else{
+		                    		echo $tr->translate("RECEIVED_PROPERTY");
+		                    	}
+	                    	?>
+	                    </td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['begining_balance'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['principal_permonth'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['total_interest'],2));?></td>
@@ -153,7 +158,7 @@
 	                    <td><?php echo number_format($remain,(!strrpos($remain,"."))? 0 : 2);?></td>
 	                    <!-- <td><?php //echo str_replace('.00', '', number_format($row['cum_interest'],2)); ?></td> -->
 	                    <td><?php echo $row['note']; echo ($row['is_completed']==1)?$tr->translate("COMPLETED"):""; ?></td>
-	                    <td><?php  echo empty($row['received_by'])?"-":$row['received_by']; ?></td>
+	                    <td><?php if($row['is_completed']==1){ echo empty($row['received_by'])?"-":$row['received_by'];} ?></td>
 	                    <td><?php  
 		                    if($row['received_date']!=0){
 		                    	$date = new DateTime($row['received_date']);

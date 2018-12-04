@@ -132,6 +132,12 @@ table.collape th.tdheader{padding:5px 0px;}
 				                    	<input id="loan_number" />
 				                   </div>
 				                </div>
+				                 <div class="form-group">
+				                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PHONE");?> </label>
+				                   <div class="col-md-7 col-sm-7 col-xs-12">
+				                    	<input dojoType="dijit.form.TextBox" class="fullside" id="phone" name="phone" value="" type="text">
+				                   </div>
+				                </div>
 				                <div class="form-group">
 				                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAID_BEFORE");?> :
 				                   </label>
@@ -903,7 +909,6 @@ function showReciept(receipt_number){
 		if(option_pay==1){ //រំលស់ប្រាក់ដើម 100%work
 			ending_balance = dijit.byId('priciple_amount').get('value');
 			total_paid = parseFloat(dijit.byId('sold_price').get('value')) - parseFloat(ending_balance);
-			//total_paid = parseFloat(dijit.byId('sold_price').get('value')) - parseFloat(ending_balance)+parseFloat(extra_payment);
 		}else if(option_pay==3){ //រំលស់ប្រាក់ដើម 100%work
 			ending_balance = dijit.byId('priciple_amount').get('value');
 			total_paid = parseFloat(dijit.byId('total_pricipalpaid').get('value')) + parseFloat(dijit.byId('amount_receive').get('value')-penelize-service_charge);
@@ -937,10 +942,9 @@ function showReciept(receipt_number){
 		document.getElementById('lbl_total_receive').innerHTML = dojo.number.format(dijit.byId('amount_receive').get('value'),{places:2})+symbal;
 		document.getElementById('lbl_penalize').innerHTML = dojo.number.format(dijit.byId('penalize_amount').get('value'),{places:2})+symbal;
 		document.getElementById('lbl_property_price').innerHTML = dojo.number.format(dijit.byId('sold_price').get('value'),{places:2})+symbal;
-		document.getElementById('lbl_property_address').innerHTML = dijit.byId('land_address').attr('displayedValue');
-		
+		document.getElementById('lbl_property_address').innerHTML = dijit.byId('land_address').attr('displayedValue');		
 		document.getElementById('lbl_total_paid').innerHTML = dojo.number.format(total_paid,{places:2}) + symbal;
-		document.getElementById('lbl_ending_balance').innerHTML = dojo.number.format(ending_balance-extra_payment,{places:2})+symbal;
+		document.getElementById('lbl_ending_balance').innerHTML = dojo.number.format(ending_balance,{places:2})+symbal;
 		document.getElementById('lbl_extrapayment').innerHTML = dojo.number.format(extra_payment,{places:2})+symbal;
 		document.getElementById('lbl_paidtimes').innerHTML = dijit.byId("paid_times").get("value");
 		//document.getElementById('lbl_paidtimes1').innerHTML = dijit.byId("paid_times").get("value");
@@ -1013,7 +1017,7 @@ dojo.ready(function(){
 	new dijit.form.FilteringSelect({
 	store: dojo.data.ObjectStore({objectStore: client_data}),
 	autoComplete: true,
-	required: false,		           
+	required: true,		           
 	name: "client_id",
 	id: "client_id",
 	searchAttr: "name",
@@ -1203,9 +1207,10 @@ function getLaonPayment(type){//tab ទី១
 						if(i==0){
 							clearhistory();
 							dijit.byId('buy_with').attr('value',respone[i].buy_with);	
-							dijit.byId('client_id').attr('value',client_id);					//penalize_amount
+							dijit.byId('client_id').attr('value',client_id);					
 							dijit.byId('client_id').set("readOnly",true);
 							dijit.byId('client_code').attr('value',client_id);
+							dijit.byId('phone').attr('value',respone[i].phone);
 							dijit.byId('client_code').set("readOnly",true);
 							dijit.byId('land_address').attr('value',respone[i].property_address);
 							dijit.byId('sale_number').attr('value',respone[i].sale_number);

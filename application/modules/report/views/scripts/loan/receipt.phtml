@@ -25,7 +25,7 @@ img.view{height: 70px !important;}
 		?>
 			<style>
 				.label{ font-size: 22px;}
-				.value{ font:14px 'Bokor';border: 1px solid #000; min-height: 29px; padding: 0 2px;width: 100%;margin-right:2px; display: block;
+				.value{ font:16px 'Khmer OS Battambang';border: 1px solid #000; min-height: 29px; padding: 0 2px;width: 100%;margin-right:2px; display: block;
 						line-height: 29px;
 					    text-align: left;
 						}
@@ -33,22 +33,16 @@ img.view{height: 70px !important;}
 						word-wrap: break-word;      
 						word-break: break-all;
 						white-space: pre;
-					    font:12px 'Bokor';
+					    font:12px 'Khmer OS Battambang';
 					    border: 1px solid #000;
                         line-height:20px;font-weight: normal !important;}
 				.print tr td{
 					padding:0px 2px 0px 2px; 
 				}
 			   .h{ margin-top: -10px;}
-			   .note_size{font-size: 10px;}
-				.note_size li{list-style-type: cambodian ;text-align: justify !important;}
-			   .title_size{font-size:12px;font-weight: 800;}
-			  .border {border-bottom: 1px dotted #000;height: 12px;
-					white-space: nowrap;line-height: 10px;}
-			 ul.note_size{padding: 0;}
 			</style>
-			<?php for($i=1; $i<$this->data['showreceipt']; $i++){ ?>			
-			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:14px; padding:0px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
+			<?php for($i=0; $i<$this->data['showreceipt']; $i++){ ?>			
+			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:14px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
@@ -56,13 +50,8 @@ img.view{height: 70px !important;}
 								<td id="projectlogo" width="35%">
 									<img style="height:80px; max-width:100%" src="<?php echo $logo;?>">
 								</td>					
-								<td width="30%" style="font:18px 'Kh Muol';" valign="bottom" align="center">
-									<div style="line-height: 30px;font-family: Arial Black;font-family:'Bokor';">ព្រះរាជាណាចក្រកម្ពុជា</div>
-									<div style="line-height: 25px;font-family: Arial Black;font-family:'Bokor';">ជាតិ សាសនា ព្រះមហាក្សត្រ</div>
-									<img height="35px" src="<?php echo $this->baseUrl();?>/images/agreementsign.jpg">
-									<u>
-										<div style="line-height: 25px;font-family: Arial Black;font-family:'Bokor';">បង្កាន់ដៃទទួលប្រាក់</div>
-									</u>
+								<td width="30%" style="font:18px 'Kh Muol';" valign="bottom" align="center"><u><div style=" font-family: Arial Black;font-family:'Khmer MEF2';margin-top: 15px;padding-top: 15px;">បង្កាន់ដៃទទួលប្រាក់</div></u>
+									<div style="line-height:30px;margin-top:-10px"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
 								</td>
 								<td width="35%"></td>
 							</tr>
@@ -70,14 +59,14 @@ img.view{height: 70px !important;}
 					</td>
 				</tr>
 			</table>
-			<table style="width:100%;white-space: nowrap;margin-top: -25px;font-family:'Bokor';font-size: 14px;" class="print" cellspacing="3px"  cellpadding="0">
+			<table style="width:100%;white-space: nowrap;margin-top: -30px;font-family:'Khmer OS Battambang';font-size: 16px;" class="print" cellspacing="3px"  cellpadding="0">
 				<tr height="1px">
+					<td width="10%" ></td>
+					<td width="30%" ></td>
 					<td width="15%" ></td>
-					<td width="18.33%" ></td>
-					<td width="15%" ></td>
-					<td width="18.33%" ></td>
-					<td width="15%" ></td>
-					<td width="18.33%" ></td>
+					<td width="17%" ></td>
+					<td width="10%" ></td>
+					<td width="18%" ></td>
 				</tr>
 				<tr style="white-space: nowrap;font-size: 14px;margin-top: -15px;" >
 				    <td colspan="5"></td>
@@ -86,150 +75,117 @@ img.view{height: 70px !important;}
 					<label style="font-family:Arial !important;"><?php echo $this->rs['receipt_no'];?></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
+				    <td style="display: none;" >លេខកូដលក់</td>
+				    <td style="display: none;" ><strong><label class="value"><?php echo $this->rs['sale_number'];?></label></strong></td>
 				    <td>គម្រោង</td>
 				    <td><strong><label class="value"><?php echo $this->rs['project_name'];?></label></strong></td>
-					<td>&nbsp;&nbsp;<?php echo $tr->translate("PROPERTY_CODE");?></td>
-                    <td><label class="value"><?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; } echo ' '.$this->rs['property_type'];?></label></td>
-                    <td>&nbsp;&nbsp;<?php echo $tr->translate("ចំនួន");?>:</td>
-                    <td><label class="value"><?php echo !empty($this->rs['landlot_amount'])?count(explode(",",$this->rs['landlot_amount'])):1;?> ឡូត៍</label></td>
+					<td>&nbsp;&nbsp;ប្រាក់ដើមត្រូវបង់</td>
+                    <td><strong><label  class="value"><?php echo  number_format($this->rs['total_principal_permonth'],2)." $";?></label></strong></td>
+					<td>&nbsp;បង់លើកទី</td>
+					<td><strong><label id="lbl_paid_date1" class="value"><?php echo $this->rs['payment_times'];?></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td>ឈ្មោះ​អតិថិជន </td>
-				    <td colspan="3" ><label class="value" style="text-align: center;"><?php echo $this->rs['name_kh'];echo !empty($this->rs['hname_kh'])?" /".$this->rs['hname_kh']:"";?></label></td>
-					<td>&nbsp; លេខទូរសព្ទ</td>
-					<td><label class="value"><?php echo $this->rs['phone'];?></label></td>
+				    <td><strong><label class="value"><?php echo $this->rs['name_kh'];echo !empty($this->rs['hname_kh'])?" /".$this->rs['hname_kh']:"";?></label></strong></td>
+					<td>&nbsp;&nbsp;ប្រាក់ការ</td>
+                    <td><strong><label class="value"><?php echo  number_format($this->rs['total_interest_permonthpaid'],2)." $";?></label></strong></td>
+					<td>&nbsp; ប្រាក់ពិន័យ</td>
+					<td><strong><label id="lbl_paid_date1" class="value"><?php echo number_format($this->rs['penalize_amountpaid'],2);?></label></strong></td>
                 </tr>
-                <tr style="line-height: 15px;">
-					<td colspan="6" style="padding-top:5px;">
-						<?php echo $tr->translate("ADDRESS_COMPANY");?>
-						កាលបរិច្ឋេទបង់ <?php echo date("d-m-Y",strtotime($this->rs['date_pay']));?>
-					</td>
+				<tr style="white-space: nowrap;">
+					<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+                    <td><strong><label class="value"><?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; } echo ' '.$this->rs['property_type'];?></label></strong></td>
+				   <td>&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
+					<td colspan="3"><strong><label  class="value"><?php echo number_format($this->rs['extra_payment'],2)." $";?></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td width="10%"><?php echo $tr->translate("HOUSE_PRICE");?></td>
+				    <td width="40%"><strong><label id="lblpropertyprice1" class="value"><?php echo  number_format($this->rs['price_sold'],2)." $";?></label></strong></td>
+					<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
+                    <td colspan="3"><strong><label id="lbl_total_payment1" class="value"><?php echo  number_format($this->rs['total_payment'],2)." $";//total_principal_permonth?></label></strong></td>
 				</tr>
 				<tr>
-					<td style="padding-top:10px;" >
-					<td colspan="5" style="padding-top:10px;" >
-						<table style="width:100%;white-space: nowrap;text-align: left;">
+					<td>ប្រាក់បានបង់សរុប</td>
+					<td>
+						<table width="100%" cellpadding="0" cellspacing="0">
 							<tr>
-								<td width="10%">*ជាប្រាក់សុទ្ឋចំនួនៈ </td>
-								<td width="40%" ><div class="border"><?php if($this->rs['payment_methodid']==1){ echo number_format($this->rs['recieve_amount'],2)." $";}?></div></td>
-								<td width="10%">*តាម Wing: </td>
-								<td width="40%"><div class="border"></div></td>
+								<td width="33.5%" style="white-space: nowrap;"><strong><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"><?php echo  number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2)." $";?></label></strong></td>
+								<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
+								<td width="33.5%"><strong style="white-space: nowrap;"><label style="white-space: nowrap;margin-right: -4px;" class="value"><?php echo  number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2)." $";?></label></strong></td>
+							</tr>
+						</table>
+					</td>
+					<td>&nbsp;&nbsp;ប្រាក់ទទួលបាន</td>
+				    <td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;"><?php echo number_format($this->rs['recieve_amount'],2)." $";?></label></strong></td>
+				</tr>
+				<tr style="">
+					<td rowspan="2">សម្គាល់</td>
+				    <td rowspan="2" class="noted" valign="top"><?php echo $this->rs['note'];?></td>
+					<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
+				    <td><strong><label id="lb_buydate1" class="value"><?php echo date("d-M-Y",strtotime($this->rs['date_payment']));?></label></strong></td>
+					<td>&nbsp;ថ្ងៃទទួល</td>
+					<td><strong><label id="lbl_paid_date1" class="value"><?php echo date("d-M-Y",strtotime($this->rs['date_pay']));?></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td>&nbsp;បង់ជា</td>
+					<td><strong><label id="lbl_paid_date1" class="value"><?php echo $this->rs['payment_method'];?></label></strong></td>
+					<td>&nbsp;&nbsp;លេខ</td>
+					<td><strong><label id="lb_cheque1" class="value"><?php echo $this->rs['cheque'];?></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;" height="35px;">
+					<td colspan="6" valign="top">
+						<table width="100%" border="0" style="font-size:14px;line-height: 18px;">
+							<tr>
+								<td width="30%">&nbsp;
+									<?php echo $this->data['account_sign'];?>
+								</td>
+								<td align="center" width="40%">
+									<?php echo $this->data['customer_sign'];?>
+								</td>
+								<td align="center" width="30%">
+									<?php echo $this->data['teller_sign'];?>
+								</td>
+							</tr>
+							<tr height="80px">
+								<td colspan="3">&nbsp;
+								</td>
 							</tr>
 							<tr>
-								<td>*ផ្ទេរប្រាក់តាមធនាគារៈ <?php if($this->rs['payment_methodid']==2){ echo number_format($this->rs['recieve_amount'],2)." $";}?></td>
-								<td><div class="border"></div></td>
-								<td>*តាម E-Money:</td>
-								<td><div class="border"></div></td>
+								<td colspan="3">&nbsp;
+								</td>
 							</tr>
 							<tr>
-								<td>*ជាសែកចំនួនៈ <?php if($this->rs['payment_methodid']==3){ echo number_format($this->rs['recieve_amount'],2)." $";}?></td>
-								<td><div class="border"></div></td>
-								<td>*តាម True-Money:</td>
-								<td><div class="border"></div></td>
+								<td width="30%">&nbsp;
+								</td>
+								<td align="center" width="40%">
+									<strong><label id="lbl_customer1"><?php echo $this->rs['name_kh'];echo (empty($this->rs['hname_kh'])?"":"/".$this->rs['hname_kh']); ?></label></strong>
+								</td>
+								<td align="center" width="30%">
+									<strong>
+										<?php 
+											echo $this->rs['by_user'];
+										?>
+									</strong>
+								</td>
 							</tr>
 						</table>
 					</td>
 				</tr>
-				<tr style="white-space: nowrap;">
-					<td colspan="6">
-						<table style="width:100%;margin:0 auto;text-align: center;">
-							<tr>
-								<td width="25%">ហត្ថលេខា-ស្នាមេដៃ <div>អ្នកទទួលប្រាក់</div></td>
-			                    <td width="25%">ឈ្មោះសាក្សី  <div>អ្នកទទួលប្រាក់</div></td>
-			                    <td width="25%">ឈ្មោះសាក្សី    <div>អ្នកបង់ប្រាក់</div></td>
-			                    <td width="25%">ហត្ថលេខា-ស្នាមេដៃ<div>អ្នកបង់ប្រាក់</div></td>
-			                </tr>
-			                <tr height="90px">
-								<td colspan="4">&nbsp;</td>
-							</tr>
-							<tr>
-								<td><?php echo $this->rs['by_user'];?></td>
-								<td>&nbsp;</td>
-								<td align="center"></td>
-								<td align="center" width="30%">
-									<strong><label id="lbl_customer1"><?php echo $this->rs['name_kh'];echo (empty($this->rs['hname_kh'])?"":"/".$this->rs['hname_kh']); ?></label></strong>
-								</td>
-							</tr>
-	                    </table>
-                    </td>
-				</tr>
-				<tr>
-					<td colspan="2" valign="top">
-						<pre style="font-family:'Times New Roman';font-size: 10px;font-weight: bold;">
-Payment Information
-The Check Is Payable To West Land Property Co., LTD
-For Bank Transfer, Please Include Invoice No. 
-For The Amount Transfer
-Please Use The Following Bank Details For Transfer:
-Beneficiary Bank: ABA BANK
-Beneficiary Account Name: Chea Socheat
-Beneficiary Account Number: 000179802
-						</pre>
+				<tr style="line-height: 20px;font-size: 11px;">
+					<td valign="top" >
+						<span style="text-decoration:underline;font-size: 14px; margin-top: -5px;">សម្គាល់ ៖</span>
 					</td>
-					<td colspan="4" style="border: 1px solid #000;">
-						<table style="font-size:13px;width:100%;margin:0 auto;white-space: nowrap;" >
-							 <tr>
-								<td colspan="2" align="center">សេចក្តីរៀបរាប់</td>
-							</tr>
-							 <tr>
-								<td colspan="2">១.  ថ្ងៃទី...<?php echo date("d",strtotime($this->rs['nextdate_payment']));?>..ខែ...<?php echo date("m",strtotime($this->rs['nextdate_payment']));?>...ឆ្នាំ...<?php echo date("Y",strtotime($this->rs['nextdate_payment']));?>...បង់បន្តទៀត!</td>
-							</tr>
-							<tr>
-								<td width="50%">២. បង់បាន..<?php echo $this->rs['payment_times'];?>...ខែ-រំលស់!</td>
-			                    <td width="50%">៤. ប្រាក់បង់បានចំនួនៈ <?php echo  number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2);?> USD</td>
-			                </tr>
-			                <tr>
-								<td>៣. នៅសស់...<?php echo number_format($this->rs['total_duration']-$this->rs['payment_times']);?>...ខែ-ទៀត!</td>
-			                    <td>៥. ប្រាក់នៅសល់ចំនួនៈ <?php echo  number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2);?> USD ទៀត!</td>
-			                </tr>
-	                    </table>
+					<td colspan="5">
+						<span style="font-size: 11px;margin-top: -5px;"><?php echo $this->data['comment'];?></span><br />
+						<span style="white-space: pre-line;font-size: 11px;margin-top: -5px;"><?php echo $this->data['comment1'];?></span><br />
 					</td>
 				</tr>
-				<tr>
-					<td colspan="6" align="center" class="title_size">កាតព្វកិច្ច-អ្នកទិញ</td>
+				<tr style="line-height: 15px;font-size: 10px;">
+					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)"></td>
 				</tr>
-				<tr>
-					<td colspan="6">
-						<ul class="note_size" style="list-style-type:none;">
-							<li style="white-space: normal;">
-								អតិថិជនដែលបានទិញដីក្នុងលក្ខខណ្ឌបង់រំលស់ត្រូវធ្វើការបង់ប្រាក់អោយបានទៀងទាត់តាមកាលវិភាគដែលបានកំណត់លើក្រដាសឯកសារទិញ-លក់-ប្រសិនបើអតិថិជនយឺតយ៉ាវមិនបានបង់ប្រាក់ក្នុងរយះពេល ១៥ថ្ងៃ នោះក្រុមហ៊ុននឹងធ្វើការផាកពិន័យលើអតិថិជនចំនួន ១៥$ (ជាលើកទី១)៕
-							</li>
-							<li style="white-space: normal;">
-								ប្រសិនបើអតិថិជនខកខានមិនបានបង់ប្រាក់ក្នុងរយះពេល ១ខែ(ស្មើនឹង៣០ថ្ងៃ) នោះក្រុមហ៊ុននឹងធ្វើការផាកពិន័យលើអតិថិជនចំនួន ៣០$ (ជាលើកទី២) ប្រសិនបើខានបង់ប្រាក់ក្នុងរយះពេល ២ខែ គឺត្រូវកាត់ ៧០% នៃចំនួនទឹកប្រាក់ដែលបានបង់-ហើយនៅសល់ ៣០% គឺត្រូវប្រគល់អោយអតិថិជនវិញ៕
-							</li>
-							<li style="white-space: normal;">
-							          ក្រុមហ៊ុននិងធ្វើការដកហូតដីកម្មសិទ្ឋិមកវិញប្រសិនបើអតិថិជនមិនគោរពតាមកិច្ចសន្យាដែលបានព្រមព្រៀងគ្នាដោយសរសេរជាលាយលក្ខណ៍អក្សរលើឯកសារទិញដី៕
-							</li>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="6" align="center" class="title_size">សេចក្តីជូនដំណឹង</td>
-				</tr>
-				<tr>
-					<td colspan="6" style="white-space: normal;" class="note_size">
-						ក្រុមហ៊ុន វេស្ត លែន ប្រផឹធី ឯ.ក មានកិត្តិយស សូមជម្រាបជូនដំណឹងដល់អតិថិជនដែលបានកក់ដី-ទិញដីឡូត៍ តាមគម្រោងនីមួយៗមេត្តាជ្រាបថាៈ រាល់ការបង់ប្រាក់លើកដបូងរបស់អតិថិជនត្រូវធ្វើឡើងនៅ ការិយាល័យ វេស្ត លែន ផ្ទាល់ដោយបង់ជាមួយ-ផ្នែករដ្ឋបាលនិងផ្នែកគណេយ្យ-ជាអ្នកទទួលប្រាក់របស់អតិថិជនដោយផ្អែកលើឯកសារបង់ដីជាដើម (មានទាំងហត្ថលេខា ឬ ស្នាមមេដៃស្តាំ-ទុកជាភស្តុតាងទៅថ្ងៃក្រោយ)៕
-					</td>
-				</tr>
-				<tr>
-					<td colspan="6" align="center" class="title_size">ការទទួលខុសត្រូវរបស់ក្រុមហ៊ុន និង អតិថិជន</td>
-				</tr>
-				<tr>
-					<td colspan="6" style="white-space: normal;">
-						<ul class="note_size">
-							<li style="white-space: normal;">
-								គ្មានបុគ្គលណាមានសិទ្ឋិទទួលប្រាក់ពីអតិថិជនបានឡើយក្រៅពីបុគ្គលិកក្រុមហ៊ុន ហើយអ្នកដែលមានសិទ្ឋិទទួលប្រាក់ពីអតិថិជនបានមានដូចជាៈ លោកប្រធានក្រុមហ៊ុន
-								០៩៦ ៦៦៦៦៦៤៣-លោកអនុប្រធានក្រុមហ៊ុន ០៩៦ ៧៦ ៧៧៧ ៧៨-ផ្នែករដ្ឋបាល និងជំនួយការគណនេយ្យ ០៩៦ ៧៧១ ៧៣៧៣ ៕
-							</li>
-							<li style="white-space: normal;">
-								បើអតិថិជនបង់ប្រាក់ទៅឪ្យអ្នកផ្សេងខុសពីបុគ្គលិកក្រុមហ៊ុននោះមិនទទួលខុសត្រូវឡើយ ហើយប្រាក់ដែលបាត់បង់អតិថិជនផ្ទាល់ត្រូវទទួលខុសត្រូវដោយខ្លួនឯង៕
-							</li>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="6" style="white-space: normal;" class="note_size">
-						<strong style="font-weight: bolder;">សេចក្តីបញ្ចាក់លំអិតៈ</strong> ភាគីទាំងពីរបានអាននិងឯកភាពគ្នាគ្រប់ចំណុចដែលមានចែងក្នុងប្រការទាំងឡាយខាងលើនេះនៅចំពោះមុខសាក្សីដោយមិនមានការបង្ខិតបង្ខំ ឬក្លែងបន្លំឡើយ៕
+				<tr style="line-height: 15px;font-size: 10px;">
+					<td colspan="6" >
+						<?php echo $this->footer;?>
 					</td>
 				</tr>
 				<?php if($i==0 AND $this->data['showreceipt']>1){?>
