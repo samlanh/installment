@@ -338,7 +338,7 @@ function getAllBranch($search=null){
     		if($group_by!=null){
     			$where.=" group by category_id ";
     		}
-    		$order=" order by date desc ";
+    		$order=" order by branch_id DESC,id desc ";
     		return $db->fetchAll($sql.$where.$order);
     	}
     	function getAllExpensebyCate($search=null){
