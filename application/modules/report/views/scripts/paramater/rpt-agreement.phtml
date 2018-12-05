@@ -1,18 +1,18 @@
 <?php 
-	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	$day = array(
-			"Mon" =>'ច័ន្ទ',
-			"Tue" =>'អង្គារ',
-			"Wed" =>'ពុធ',
-			"Thu" =>'ព្រហស្បតិ៍',
-			"Fri" =>'សុក្រ',
-			"Sat" =>'សៅរ៍',
-			"Sun" =>'អាទិត្យ',
-			);
-	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
-	$dbparmeter = new Report_Model_DbTable_DbParamater();
-	$key = new Application_Model_DbTable_DbKeycode();
-	$dataterm = $key->getKeyCodeMiniInv(TRUE);
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$day = array(
+		"Mon" =>'ច័ន្ទ',
+		"Tue" =>'អង្គារ',
+		"Wed" =>'ពុធ',
+		"Thu" =>'ព្រហស្បតិ៍',
+		"Fri" =>'សុក្រ',
+		"Sat" =>'សៅរ៍',
+		"Sun" =>'អាទិត្យ',
+		);
+$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
+$dbparmeter = new Report_Model_DbTable_DbParamater();
+$key = new Application_Model_DbTable_DbKeycode();
+$dataterm = $key->getKeyCodeMiniInv(TRUE);
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -21,339 +21,549 @@ dojo.require("dijit.form.DateTextBox");
 <meta charset="utf-8">
 <title><?php echo $tr->translate("AGREEMENT");?></title>
 <style>
-	#divPrint .reff{ font-size: 20px !important; line-height:34px !important;}
-	#divPrint tr td h2,#divPrint p, #divPrint pre, #divPrint span{ font-size: 20px !important; line-height:34px !important;}
-	#divPrint #padding-left-p-2{
+	.reff{ font-size: 20px !important; line-height:34px !important;}
+	#divPrint tr td h2,#divPrint p,#divPrint pre,#divPrint span,#divPrint td{ font-size: 20px !important; line-height:34px !important;}
+	#padding-left-p-2{
 	 padding-left: 105px !important;	
 	}
-	#divPrint .padding-buttom{
+	.padding-buttom{
 		margin-top: -5px !important;
 	}
-#mainbody{
-	    display: block !important;
-    position: relative !important;
-}
-#watermark{
-	display: none !important;	
-}
-ul.blogsub li{
-	line-height:34px !important;
-}
-#printfooter{display: none !important;}
+	#printfooter{display: none !important;}
 </style>
-
-<?php    
-    $paid=0; 
-    $addressIssue = "ផ្ទះលេខ 287BE<sub>2</sub> ផ្លូវ 182 ភូមិ 13 សង្កាត់ ទឹកល្អក់ 2 ខណ្ឌ ទួលគោក រាជធានី ភ្នំពេញ";
-    
-	$propertytype = $this->agreement['property_type'];
-    if($propertytype==1){// L
-    	$str_sizehouse='4.3m x 15m';
-    }else{//LV
-    	$str_sizehouse='4.5m x 11m';
-    }
-?>
-<!-- Start Land and House -->
-		<div  id="exportword" style="min-height:22cm; margin:0 auto;padding:0px 0.5cm">
-			<table style="font-family: 'Khmer OS Content'; width:100%;"  >
-				<tr>
-			    	<td align="center">
-				    	 <div id="divPrint" style="position: relative;" >
-				    	 	<style>		
-								body {
-								    position: relative;
-								}
-							    #divPrint #padding-left-p-2{
-								 padding-left: 105px !important;	
-								}
-								#divPrint .padding-buttom{
-									margin-top: -5px !important;
-								}
-		    	 				#divPrint .reff{ font-size: 16px !important; line-height:34px !important;}
-								#divPrint tr td h2,#divPrint p, #divPrint pre, #divPrint span{ font-size: 15px ; line-height:30px;}
-								#divPrint #padding-left{
-								padding-left: 18px;
-								}
-								#divPrint #bold-padding-right{
-									margin-right: 15px;
-									font-family: khmer os battambang;
-									font-size:19px;
-								}
-								
-								#divPrint #padding-left-2{
-								/*margin-top: -10px;*/
-								padding-left:15px;
-								}
-								#divPrint .padding-buttom{
-									margin-top: -5px;
-								}
-								#divPrint #padding-left-p-2{
-								 margin-top:-1px; 
-								 padding-left: 85px;	
-								}
-								#divPrint #padding-left-p{
-							    padding-left: 105px;
-								}
-								#divPrint th{padding: 5px;}
-								#divPrint span.value{ line-height:12px;display: inline-block; text-align: center;}
-								#divPrint span.child {display:block; margin-left:25px; line-height: 25px;}
-								#divPrint span{line-height: 26px;}
-								body {
-								    position: relative;
-								}
-								
-								ul.blogsub li{
-									list-style-type: square;
-									line-height: 26px;
-								}
-								ul.reference li{
-									line-height: 26px;
-									list-style: none;
-								}
-								ul.blogsub{
-									padding:0;margin:0;
-								}
-								#printfooter {
-								    position: absolute;
-								    bottom: -2;
-								    position: fixed;
-								    display: block ;
-								}
-		   				</style>
-		    	<div id="mainbody" style="position: absolute;z-index: 5;top: 0;height: 100%;">
-		    	  <div id="watermark" style=" top: 0; position: fixed; display: block; height: 100%;z-index: -1; width: 100%;  opacity: 0.3;" ></div>
-		        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="padding:0;margin:0;border:0px;" >
-			        	<tr>
-			                <td width="30%" valign="top"></td>
-			                <td width="40%" align="center">
-			                	<span style="text-align:center; line-height:28px; font-size:17px;font-family:'Khmer OS Muol Light';">ព្រះរាជាណាចក្រកម្ពុជា</span>
-				                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></span>
-				                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family: 'Tacteing';"><img src="<?php echo $this->baseUrl();?>/images/agreementsign.jpg" height="25px"></span>
-				                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("កិច្ចសន្យាលក់ផ្ទះល្វែង");?></span>
-	              			</td>
-			                <td width="30%"></td>
-			             </tr> 
-			             <tr>
-			             	<td colspan="3">
-			                	<span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Battambang'">កិច្ចសន្យានេះធ្វើឡើងនៅថ្ងៃទី  <?php echo date("d",strtotime($this->agreement['agreement_date']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['agreement_date']));?> <br />រវាង</span>
-			             	</td>
-			             </tr>
-			             <tr>
-			             	<td colspan="3">
-			             		<p style="margin:0 auto;font-family:'Khmer OS Battambang','Times New Roman';text-align: justify; text-justify: inter-word;line-height:24px; font-weight: normal !important;">
-									<span style="text-align:left; min-width: 100%; display: inline-block;text-indent: 40px;">
-									<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">គម្រោង ហ្វាយស្តាររេស៊ីដេន</span> មានការិយាល័យកណ្តាលស្ថិតនៅ<?php echo $addressIssue;?> 
-									តំណាងដោយឈ្មោះ  <span style=" font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span> កើតឆ្នាំ 1980 កាន់អត្តសញ្ញាណប័ណ្ណលេខ  <span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> 
-									មានទីលំនៅ <?php echo $this->agreement['project_manager_p_current_address'];?>
-									ជាអ្នកលក់ តទៅហៅថា ភាគី(ក) ។
-									</span>
-									<span style="font-weight:200; text-align:left; min-width: 100%; display: inline-block;">ទូរស័ព្ទការិយាល័យទំនាក់ទំនងលេខ ៖  <?php echo $this->agreement['branch_tel'];?></span>
-									<span style="font-weight:200; text-align:center; min-width: 100%; display: inline-block;">និង</span>
-									<span style="text-align:left; min-width: 100%; display: inline-block;text-indent: 40px;">
-									ឈ្មោះ <span class="value" style="min-width:100px;font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['client_namekh'];?></span>
-									ភេទ <span class="value" style="min-width:30px;"><?php echo $this->agreement['sexKh'];?></span>
-									កើតឆ្នាំ<span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['dob'])){ echo date("Y",strtotime($this->agreement['dob']));}?></span>
-									កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:80px;"><?php echo $this->agreement['client_nation_id'];?></span>	
-									មានទីលំនៅផ្ទះលេខ <span class="value" style="min-width:55px;"><?php echo $this->agreement['client_house_no'];?></span>
-									 ផ្លូវ <span class="value" style=""><?php echo $this->agreement['client_street'];?></span> 
-									  ភូមិ <span class="value" style="min-width:50px;"><?php echo str_replace("ភូមិ", "", $this->agreement['client_village_kh']);?></span>
-									  ឃុំ/សង្កាត់  <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_commune_kh'];?></span>
-									 ស្រុក/ខណ្ឌ/ក្រុង  <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_districtkh'];?></span>
-									 ខេត្ដ/រាជធានី  <span class="value" style="min-width:50px;">&nbsp;<?php echo $this->agreement['client_province_kh'];?></span>
-									<?php if(!empty($this->agreement['hname_kh'])){?>
-									និងឈ្មោះ  <span class="value" style="min-width:130px;font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['hname_kh'];?></span> 
-									ភេទ <span class="value" style="min-width:30px;"><?php echo $this->agreement['partner_gender'];?></span>
-									កើតឆ្នាំ<span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['dob_buywith'])){ echo date("Y",strtotime($this->agreement['dob_buywith']));}?></span>
-									កាន់<?php echo $this->agreement['joint_doc_type'];?>លេខ <span class="value" style="min-width:100px;"><?php echo $this->agreement['rid_no'];?></span>  
-									មានទីលំនៅផ្ទះលេខ<span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_house'];?></span>
-									ផ្លូវលេខ<span class="value" style="min-width:30px;"><?php echo $this->agreement['w_street'];?></span>
-									ភូមិ <span class="value" style="min-width:30px;"><?php echo str_replace("ភូមិ", "",$this->agreement['w_client_village_kh']);?></span>
-									ឃុំ/សង្កាត់ <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_commune_kh'];?></span> 
-									ស្រុក/ខណ្ឌ/ក្រុង <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_districtkh'];?></span> 
-									ខេត្ត/រាជធានី  <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_province_kh'];?></span>	  
-									<?php }?>
-									ជាអ្នកទិញតទៅហៅថា  ភាគី(ខ)។
-									</span>
-				             			<span class="value" style="min-width:100px;">ទូរស័ព្ទទំនាក់ទំនងលេខ  ៖  <?php echo $this->agreement['phone'];?></span>
-				             				<br />យោង ៖
-				             			<ul class="reference" style="padding-top:0;margin-bottom: 0;margin-top:-5;list-style-type: none;text-align:justify; margin-left: -20px" start="1">
-				             				<li ><span>- ឧបសម្ព័ន្ធ១ ៖ តារាងទូទាត់ប្រាក់</span></li>
-				             				<li ><span>- ឧបសម្ព័ន្ធ២ ៖ ប្លង់ទីតាំងផ្ទះក្នុងគម្រោង</span></li>
-				             				<li ><span>- ឧបសម្ព័ន្ធ៣ ៖ សម្ភារៈដែលបំពាក់ក្នុងគេហដ្ឋាន</span></li>
-										</ul>   				
-										<span>ដោយផ្អែកលើគោលការណ៍ស្ម័គ្រចិត្ត និងស្មើភាព ភាគី(ក) និងភាគី(ខ) បានព្រមព្រៀងគ្នាដូចខាងក្រោម៖</span>
-				             			<span style="width: 100%; display: block; line-height: 32px;">
-				             				<div class="padding-buttom">
-					             				<span style="font-family:'Khmer OS Muol Light';">ប្រការ១៖  <span id="padding-left-2">កម្មវត្ថុនៃការទិញ-លក់ និងតម្លៃ</span></span>
-					             			</div>
-						             			<table width="100%" border="0"> 
-												  <tr>
-													    <td align="justify" style="vertical-align:top; text-align:center;width:9%;"></td>
-													    <td align="justify" style="padding-left:5px">
-													    	<ul class="blogsub">
-												    			<li>
-													    			ភាគី(ក) យល់ព្រមលក់ ហើយភាគី(ខ) យល់ព្រមទិញផ្ទះ ដែលមានអាសយដ្ឋាន
-													    			 ផ្ទះលេខ <span class="value" style="min-width:70px;"><?php echo $this->agreement['property_title'];?></span> 
-																	  ផ្លូវលេខ<span class="value" style="min-width:100px;"><?php echo $this->agreement['property_street'];?></span>
-																	  ក្នុងតម្លៃសរុប USD <?php echo number_format($this->agreement['price_sold'],2);?> (<label id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></label><span style="font-family:'khmer os battambang';">ដុល្លារអាមេរិក)</span>
-																	  ក្នុងគម្រោង  <?php echo $this->agreement['project_name'];?> 
-																	  ដែលមានទីតាំងស្ថិតនៅ  <?php echo $this->agreement['project_location'];?> ។
-																	 តម្លៃនេះជាតម្លៃដែលមានបំពាក់សម្ភារៈប្រើប្រាស់ដូចមានក្នុងឧបសម្ព័ន្ធ៣។ ផ្ទះប្រភេទ  <?php echo $this->agreement['property_type_en'];?> មានទំហំ <?php echo $this->agreement['land_width'];?>m x <?php echo $this->agreement['land_height'];?>m សំរាប់ជាន់ E<sub>0</sub> ទំហំ <?php echo $str_sizehouse; ?> សំរាប់ជាន់ E<sub>1</sub> មានទំហំដី <?php echo $this->agreement['property_width'];?>m x <?php echo $this->agreement['property_height'];?>m ដែលមានដូចខាងក្រោម៖
-												    			</li>
-												    		</ul>
-													    </td>  
-												  </tr>
-												  <script>
-														a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
-														money_khmersold=read_money_in_khmer(a_sold);
-														
-														decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
-														str_centsold = 'សេន';
-														if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
-														last_number_sold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
-														
-														if(last_number_sold<=0){last_number_sold='';}
-														money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
-														dojo.byId('lable_pricekhmer').innerHTML=money_khmersold+" ";
-												</script>
-												<tr>
-													<td></td>
-													<td>
-														<table border="0" cellpadding="0" cellspacing="0">
-													  		<tr>
-														  		<td>១. 	បន្ទប់គេង</td>
-														  		<td>ចំនួន២</td>
-														  	</tr>
-														  	<tr>
-														  		<td>២. 	បន្ទប់ទឹក</td>
-														  		<td>ចំនួន៣</td>
-														  	</tr>
-														  	<tr>
-														  		<td>៣.	បន្ទប់ទទួលភ្ញៀវ&nbsp;&nbsp;&nbsp;&nbsp;</td>
-														  		<td>ចំនួន១</td>
-														  	</tr>
-														  	<tr>
-														  		<td>៤. 	ផ្ទះបាយ</td>
-														  		<td>ចំនួន១</td>
-														  	</tr>				  			
-														</table>
-													</td>
-												</tr>
-											</table>
-					             		</span>
-					             		<span style="width: 100%; display: block; line-height: 32px;">
-				             				<div class="padding-buttom">
-					             				<span style="font-family:'Khmer OS Muol Light';">ប្រការ២៖	<span id="padding-left-2">ការបរិច្ឆេទនៃការទូទាត់ប្រាក់</span></span>
-					             			</div>
-					             				<table width="100%" border="0"> 
-												  <tr>
-													    <td align="justify" style="vertical-align:top; text-align:right; width:9%;"></td>
-													    <td align="justify" style="padding-left:5px">
-														    <ul class="blogsub">
-														    	<li>ភាគី (ខ) ត្រូវទូទាត់ប្រាក់សរុបថ្លៃទិញផ្ទះតាមដំណាក់កាលជាបន្តបន្ទាប់ដូចមានចែងក្នុង តារាងទូទាត់សាច់ប្រាក់ ក្នុងឧបសម្ព័ន្ធ១។ភាគី(ខ) អាចមកទូទាត់ប្រាក់នៅក្រុមហ៊ុនផ្ទាល់ ឬ អាចទូទាត់ប្រាក់ចូលគណនីរបស់ភាគី (ក) 
-													         	តាមរយៈធនាគារ<strong> ABA</strong> ដែលមានគណនីឈ្មោះ <strong>អែម សុគៀង និង តាំង គួងហាវ</strong> លេខគណនី <strong>000563989</strong>។</li>
-														    	<li>ក្នុងករណីដែលភាគី(ខ) យឺតយ៉ាវ ឬខកខានមិនបានបង់ប្រាក់តាមកាលកំណត់ក្នុងតារាងបង់ប្រាក់លើស     រយៈពេល ១០ថ្ងៃ នោះ ភាគី(ខ) ត្រូវបង់ប្រាក់ពិន័យក្នុងអត្រា ១០% (ដប់ភាគរយ) នៃទឹកប្រាក់ត្រូវបង់ក្នុងមួយខែ។ ករណីមានការយឺតយ៉ាវ និងខកខានលើសពី ៣ខែជាប់ៗគ្នា នោះចាត់ទុកថាភាគី(ខ) បានបោះបង់ចោលការទិញផ្ទះនេះជាឯកតោភាគី។ ក្នុងករណីនេះ ភាគី(ក) មានសិទ្ធិលក់ផ្ទះខាងលើ អោយទៅអ្នកផ្សេងទៀតបាន ហើយប្រាក់ដែលបានបង់គ្រប់ដំណាក់កាលនីមួយៗ ត្រូវចាត់ទុកជាអសារបង់។</li>
-														    </ul>
-													    
-													   </td>  
-												  </tr>
-											</table>
-					             		</span>
-					             		
-				             			<span style="width: 100%; display: block; line-height: 32px;">
-				             				<div class="padding-buttom">
-					             				<span style="font-family:'Khmer OS Muol Light';">ប្រការ៣៖	<span id="padding-left-2">កាតព្វកិច្ច និងការទទួលខុសត្រូវរបស់ភាគី(ក)</span></span>
-					             			</div>
-					             				<table width="100%" border="0"> 
-												  <tr>
-													    <td align="justify" style="vertical-align:top; text-align:right; width:9%;"></td>
-													    <td align="justify" style="padding-left:5px">
-														    <ul class="blogsub">
-														    	<li>ភាគី(ក) ធានាថាផ្ទះល្វែងនៃគម្រោងអភិវឌ្ឍន៍ ហ្វាយស្តាររេស៊ីដេន ជាដីស្របច្បាប់។</li>
-														    	<li>ភាគី(ក) សន្យាសាងសង់សំណង់អោយរួចរាល់ក្នុងកំឡុងរយៈពេលចន្លោះពី ១៨ ខែទៅ ២៤ ខែ និងបានភ្ជាប់រួចជាស្រេចនូវបណ្តាញផ្លូវបេតុងក្នុងគម្រោង លូបង្ហូរ បណ្តាញទឹកស្អាត និងអគ្គិសនី។</li>
-														    	<li>ភាគី(ក) នឹងប្រគល់ប្លង់បំបែកក្បាលដី (មិនទាន់ផ្ទេរសិទ្ធិ) ជូនភាគី(ខ) នៅពេលដែលភាគី(ខ) បានទូទាត់ប្រាក់ជូនភាគី(ក) គ្រប់ចំនួន។</li>
-														    	<li>ភាគី(ក) ធានាគុណភាព បច្ចេកទេសសំណង់ ការជួសជុលការប្រេះស្រាំ និងការលិចទឹករយៈពេល ១ឆ្នាំគិតចាប់ពីថ្ងៃប្រគល់ផ្ទះ។</li>
-														    	<li>ប្រសិនបើភាគី(ក) មានការយឺតយ៉ាវក្នុងការប្រគល់ផ្ទះជូនភាគី(ខ) នោះ ភាគី(ក) នឹងមានសំណងជូនភាគី(ខ) ចំនួន ១% នៃទឹកប្រាក់ដែលភាគី(ខ) បានបង់រួច។</li>
-														    </ul>
-													    
-													   </td>  
-												  </tr>
-											</table>
-					             		</span>
-					             		<span style="width: 100%; display: block; line-height: 32px;">
-					             			<div class="padding-buttom">
-					             				<span style="font-family:'Khmer OS Muol Light';">ប្រការ៤៖	<span id="padding-left-2">កាតព្វកិច្ច និងការទទួលខុសត្រូវរបស់ភាគី(ខ)</span></span>
-					             			</div>	             			
-											 <table width="100%" border="0"> 
-												  <tr>
-												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
-												    <td align="justify" style="padding-left:5px">
-													    <ul class="blogsub">
-															<li>ភាគី(ខ) មានកាតព្វកិច្ចបង់សេវាចំនួន $១៥០ (មួយរយហាសិបដុល្លារអាមេរិកគត់)ក្នុង១ឆ្នាំ លើផ្នែកសេវាដែលមានដូចជាភ្លើងបំភ្លឺផ្លូវ អនាម័យសាធារណៈ និងសន្តិសុខ ២៤ ម៉ោង។ ភាគី(ក)មានសិទ្ធិកែប្រែតម្លៃខាងលើ ប្រសិនបើមានការកែប្រែភាគី(ក)នឹងជូនដំណឹងជាសាធារណៈរយៈពេលមួយខែមុន។</li>
-													    	<li>ភាគី(ខ) មានកាតព្វកិច្ចទៅលើ ការចំណាយកាត់ឈ្មោះ បង់ពន្ធប្រថាប់ត្រា៤% បង់ពន្ធអចលនទ្រព្យបន្ទាប់ពីរភាគី(ក) ប្រគល់ផ្ទះជូន។</li>
-													    </ul>
-												    </td>
-												  </tr>	
-											</table>
-					             		</span>
-				             			<span style="width: 100%; display: block; line-height: 32px;">
-				             				<span style="font-family:'Khmer OS Muol Light';">ប្រការ៥៖<span id="padding-left-2">លក្ខខណ្ឌរួម</span></span>
-						             		<table width="100%" >
-						             			<tr>
-												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
-												    <td align="justify" style="padding-left:5px">
-												    	<ul class="blogsub">
-															<li>ភាគី(ខ) មិនអាចសង់របងនៅមុខផ្ទះបានឡើយ។</li>
-															<li>ការកែប្រែផ្ទះដូចជា ការវាយទំលុះផ្ទះឬរបង ការសាងសង់សំណង់បន្ថែម ត្រូវធ្វើការដាក់ពាក្យស្នើសុំនិងមានការឯកភាព យល់ព្រមពីភាគី(ក) ជាមុនសិន ទើបភាគី(ខ) អាចធ្វើការកែប្រែ និងសាងសង់បាន ដើម្បីអោយត្រូវនឹងស្តង់ដារ និងរក្សាសោភ័ណ្ឌភាពក្នុងគម្រោងផ្ទះល្វែង <strong>ហ្វាយស្តាររេស៊ីដេន</strong> ។ បើសិនជាភាគី(ខ) មិនគោរពតាមគោលការណ៍ណែនាំរបស់ភាគី(ក) នោះភាគី(ខ) ត្រូវរុះរើចេញសំណង់ដែលគ្មានការអនុញ្ញាត ។</li>
-															<li>អំឡុងពេលសាងសង់ ភាគី(ខ) អាចលក់ឬផ្ទេរសិទ្ធិកិច្ចសន្យាបាន ដោយតម្រូវអោយស្នើរសុំជាទម្រង់លិខិត រដ្ឋបាល និងត្រូវបង់សេវា $១៥០(មួយរយហាសិបដុល្លារអាមេរិកគត់) ជូនភាគី(ក) ។ ភាគីទីបីដែលទទួលយកការផ្ទេរសិទ្ធិពីភាគី(ខ) ត្រូវគោរពតាមខ្លឹមសារទាំងស្រុងនៃកិច្ចសន្យានេះ។</li>
-														</ul>
-												   </td>  
-											</table>
-										</span>
-					             		<span style=";text-align:justify;line-height:25px;">
-						             		កិច្ចព្រមព្រៀងនេះត្រូវធ្វើឡើងដោយគ្មានការគំរាមកំហែង បង្ខិតបង្ខំ ឬមានបញ្ហាខុសច្បាប់ណាមួយឡើយ ជាការធានាដល់សុក្រិតភាពនៃកិច្ចសន្យានេះភាគីទាំងពីរបានព្រមព្រៀងគ្នាផ្ដិតមេដៃស្ដាំដើម្បីជាភស្ដុតាងក្នុងការទទួលខុសត្រូវចំពោះមុខច្បាប់។
-						             	</span>
-			             	</td>
-			             </tr>
-			             <tr>
-			             	<td colspan="3">
-			             		<table align="center" width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';">
-									   <tr style="font-size: 14px;">
-									        <td class="reff" style="width:20%;text-align:center; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;">ស្នាមមេដៃស្ដាំភាគី(ក)</td>
-									        <td style="width:20%;">&nbsp;</td>
-									        <td class="reff" style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light';font-weight:200;">សាក្សី </td>
-									        <td style="width:20%;">&nbsp;</td>
-									        <td  class="reff" style="width:20%; text-align:center; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;">ស្នាមមេដៃស្ដាំភាគី (ខ)</td>
-									   </tr>
-									   <tr height="80px">
-							             	<td>&nbsp;</td>
-							           </tr>
-							           <tr style="font-size: 14px;">
-						             		<td  style="text-align:center;font-family:'Khmer OS Muol Light';">&nbsp;<span><?php echo $this->agreement['project_manager_namekh'];?></span></td>
-									        <td style="width:20%;">&nbsp;</td>
-								          	<td style="width:20%;">&nbsp;</td>
-									        <td style="width:20%;">&nbsp;</td>
-									        <td class="reff" align="center" style="white-space:nowrap;font-family:'Khmer OS Muol Light';">&nbsp;<span><?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?" ".$this->agreement['hname_kh']:"";?></span></td>
-									 </tr>
-								</table>
-			             	</td>
-			             </tr>
-			        	</table>
-		        	 	<div id="printfooter" style="font-size: 10px;margin-top:5px;font-family:'khmer os battambang';border-top:1px solid #000;width:100%;background: white;">
-			        		<span>ម្ចាស់គម្រោងមានសិទិ្ធកែប្រែប្លង់ដោយមិនបាច់ជូនដំណឹងទៅអតិថិជន</span>
-			        	</div> 
-			        </div>
-			    </td>	
-			</tr>
-		</table>
-	</div>
-<!-- End Store Agreement -->
-<script>
-function doPrint() {
-		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
-	    window.frames["print_frame"].window.focus();
-	    window.frames["print_frame"].window.print();
-	    hideDialog();
+<div  id="exportword" style=" width:28cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
+<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+	<tr>
+    	<td align="center">
+    	 <div id="divPrint" >
+    	 	<style>		
+					    #padding-left-p-2{
+						 padding-left: 105px !important;	
+						}
+						.padding-buttom{
+							margin-top: -5px !important;
+						}
+    	 				.reff{ font-size: 16px !important; line-height:34px !important;}
+						tr td h2,p,pre,span{ font-size: 15px ; line-height:30px;}
+						#padding-left{
+						padding-left: 18px;
+						}
+						#bold-padding-right{
+							margin-right: 15px;
+							font-family: khmer os battambang;
+							font-size:19px;
+						}
+						
+						#padding-left-2{
+						/*margin-top: -10px;*/
+						padding-left:15px;
+						}
+						.padding-buttom{
+							margin-top: -5px;
+						}
+						#padding-left-p-2{
+						 margin-top:-1px; 
+						 padding-left: 85px;	
+						}
+						#padding-left-p{
+					    padding-left: 105px;
+						}
+						th{padding: 5px;}
+						span.value{ line-height:12px;display: inline-block; text-align: center;}
+						span.child {display:block; margin-left:25px; line-height: 25px;}
+						span{line-height: 26px;}
+						
+.value_label{
+	        border-bottom: dashed 1px #000;
+    line-height: 12px !important;
+    min-width: 100%;
+    display: inline-block;
+	}
+					
+    </style>
+    <style>
+body {
+    position: relative;
 }
 	
-</script>
+	#printfooter {
+	    position: absolute;
+	    bottom: 0;
+	    position: fixed;
+	    display: block ;
+	}
+    </style>
+    	<div>
+        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="padding:0;margin:0;border:0px;" >
+        	<tr>
+                <td width="30%" valign="top"><!-- <img src="<?php //echo $this->baseUrl();?>/images/logo.jpg" style="max-width:100%"> --></td>
+                <td width="40%" align="center">
+                <span style="text-align:center; line-height:28px; font-size:17px; font-family:'Khmer OS Muol Light';">ព្រះរាជាណាចក្រកម្ពុជា</span>
+                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><label><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></label></span>
+                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family: 'Tacteing';"><img src="<?php echo $this->baseUrl();?>/images/agreementsign.jpg" height="25px"></span>
+                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><label><?php echo $tr->translate("កិច្ចសន្យាបង់រំលស់ទិញ-លក់ដីឡូត៏");?></label></span>
+                </td>
+                <td width="30%"></td>
+             </tr> 
+             <tr>
+             	<td colspan="3">
+             		<span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><label><?php echo $tr->translate("(គម្រោងត្រាវកុដ្ឋ ផារ៉ាដាយ ហូថែល អេនរីសត)");?></label></span>
+             	</td>
+             </tr>
+              <tr>
+             	<td colspan="3">
+                	<span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Battambang'">កិច្ចសន្យាទិញ លក់ ដីឡូត៍នេះត្រូវបានធ្វើឡើងនៅថ្ងៃទី  <?php echo date("d",strtotime($this->agreement['agreement_date']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['agreement_date']));?> ដោយ និងរវាង៖</span>
+             	</td>
+             </tr>
+             <tr>
+             	<td colspan="3">
+             		<p style="font-family:'Khmer OS Battambang','Times New Roman',; text-align:justify; line-height:24px; font-size:14px; font-weight: normal !important;">
+             				<?php 
+             				$sex="ប្រុស";
+             				$title="លោក";
+             				if($this->agreement['p_sex']==2){
+             					$sex="ស្រី";
+             					$title="លោកស្រី";
+             				}?>
+							<span style="width: 100%; display: block; line-height: 32px;"> <span style=" font-family:'Khmer OS Muol Light';font-weight:200;">អ្នកលក់៖ </span><span id="padding-left"><?php echo $title;?></span><span class="value" style="min-width:150px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh'];?></span> ភេទ <?php echo $sex;?> ឆ្នាំកំណើត <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['manager_dob'])));?> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> សញ្ជាតិ <?php echo $this->agreement['project_manager_nationality'];?> 
+							មានអាស័យដ្ឋានបច្ចុប្បន្ន <?php echo $this->agreement['project_manager_p_current_address'];?> <strong>ហៅកាត់ថាភាគី</strong><span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span><strong>។</strong>
+							</span>
+	             			<?php 
+             				$cussex="ប្រុស";
+             				if($this->agreement['sex']==2){
+             					$cussex="ស្រី";
+             				}
+             				$with_sex="ប្រុស";
+             				if($this->agreement['ksex']==2){
+             					$with_sex="ស្រី";
+             				}
+             				?>
+	             			<span style="width: 100%; display: block; line-height: 32px;"> 
+	             				<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">អ្នកទិញ៖ </span>
+	             				<span id="padding-left">ឈ្មោះ</span>
+	             				
+	             				<span class="value" style="min-width:100px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span> ភេទ <?php echo $cussex;?> ថ្ងៃខែឆ្នាំកំណើត <?php if (!empty($this->agreement['dob'])){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob'])))." ខែ ".$month[date("m",strtotime($this->agreement['dob']))]." ឆ្នាំ  ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob'])));}?>
+	             				សញ្ជាតិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span>
+	             				កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:80px;"><?php echo $this->agreement['client_nation_id'];?></span> <?php if(!empty($this->agreement['client_issuedateid'])){ ?> ចុះថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['client_issuedateid'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['client_issuedateid']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['client_issuedateid']))); }?> 
+	             				មានទីលំនៅសព្វថ្ងៃផ្ទះលេខ : <span class="value" style="min-width:55px;"><?php echo $this->agreement['client_house_no'];?></span> ផ្លូវលេខ  <span class="value" style=""><?php echo $this->agreement['client_street'];?></span> 
+								   ភូមិ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_village_kh'];?></span>       
+								      ឃុំ/សង្កាត់  <span class="value" style="min-width:100px;"><?php echo $this->agreement['client_commune_kh'];?></span> 
+								      ក្រុង/ស្រុក/ខណ្ឌ <span class="value" style="min-width:100px;"><?php echo $this->agreement['client_districtkh'];?></span>
+             					      រាជធានី/ខេត្ត/ក្រុង <span class="value" style="min-width:100px;">&nbsp;<?php echo $this->agreement['client_province_kh'];?></span> 
+             					 <?php if(!empty($this->agreement['hname_kh'])){?> និងឈ្មោះ  <span class="value" style="min-width:130px;font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['hname_kh'];?></span> ភេទ <?php echo $with_sex;?> ថ្ងៃខែឆ្នាំកំណើត <?php if (!empty($this->agreement['dob_buywith'])){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob_buywith'])))." ខែ ".$month[date("m",strtotime($this->agreement['dob_buywith']))]." ឆ្នាំ  ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob_buywith'])));}?>  
+			             			          កាន់<?php echo $this->agreement['joint_doc_type'];?> លេខ <span class="value" style="min-width:100px;"><?php echo $this->agreement['rid_no'];?></span>
+			             			   <?php if(!empty($this->agreement['join_issuedateid'])){ ?> ចុះថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['join_issuedateid'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['join_issuedateid']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob_buywith']))); }?> 
+									   មានទីលំនៅបច្ចុប្បន្នផ្ទះលេខ: <span class="value" style="min-width:45px;"><?php echo $this->agreement['with_house'];?></span> 
+									          ផ្លូវលេខ  <span class="value" style="min-width:45px;"><?php echo $this->agreement['w_street'];?></span> 
+									    ភូមិ <span class="value" style="min-width:50px;"><?php echo $this->agreement['w_client_village_kh'];?></span>             
+									          ឃុំ-សង្កាត់  <span class="value" style="min-width:70px;"><?php echo $this->agreement['w_client_commune_kh'];?></span> 
+									           ក្រុង/ស្រុក/ខណ្ឌ  <span class="value" style="min-width:80px;"><?php echo $this->agreement['join_district'];?></span>
+										រាជធានី/ខេត្ត/ក្រុង <span class="value" style="min-width:100px;"><?php echo $this->agreement['join_province'];?></span>
+										<?php }?>
+								<?php if (!empty($this->agreement['client_phone'])){?>ទូរសព្ទ័ខ្សែទី១ <?php echo $this->agreement['client_phone'];?> <?php }?>
+								<?php if (!empty($this->agreement['with_phone'])){?>ទូរសព្ទ័ខ្សែទី២ <?php echo $this->agreement['with_phone'];?> <?php }?>
+								<strong>ហៅកាត់ថាភាគី</strong><span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span><strong>។</strong>
+							</span>   
+							<span style="width: 100%; display: block; font-family:'Khmer OS Muol Light';font-weight:200;text-align: center;">បុព្វកថា</span>
+	             			<span style="width: 100%; display: block; line-height: 32px;"> 
+	             				<?php
+									$countland = 1;
+	             				 if (!empty($this->agreement['old_land_id'])){
+	             					$idse = explode(",", $this->agreement['old_land_id']);
+	             					$countland = count($idse);
+	             				}?>
+	             				<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">ដោយហេតុថា៖  </span> ភាគី <span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> មានបំណងចង់ធ្វើជា កម្មសិទ្ធិករលើដីឡូត៍ដែលមានចំនួនឡូត៍ សរុប <?php echo $dbparmeter->getNumberInkhmer($countland);?> ឡូត៍ និងមានផ្ទៃក្រឡាសរុប <?php echo $dbparmeter->getNumberInkhmer($this->agreement['land_size']);?> ម៉ែត្រការ៉េ ដែលស្ថិតនៅ <strong><?php echo $this->agreement['project_location'];?></strong> ដែលជាកម្មសិទ្ធិរបស់ ភាគី <span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> ។
+	             				<br />
+	             				<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">ដោយហេតុថា៖  </span> ភាគី <span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> មានបំណងលក់អចលនវត្ថុទៅឲ្យ ភាគី <span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> ហើយភាគី <span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> មានបំណងទិញអចលនវត្ថុនេះពី ភាគី <span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> ។
+	             			</span>       		
+	             			<span style="width: 100%; display: block; font-family:'Khmer OS Muol Light';font-weight:200;text-align: center;">ភាគីទាំងពីរបានព្រមព្រៀងគ្នាដោយស្ម័គ្រចិត្តតាមលក្ខខណ្ឌដូចខាងក្រោម៖</span>
+	             			<span style="width: 100%; display: block; line-height: 32px;">
+	             				<div class="padding-buttom">
+		             				<strong >ប្រការ ១ :<span id="padding-left-2">កម្មវត្ថុនៃ កិច្ចសន្យា, ទីតាំង, និង តម្លៃ</span></strong>
+		             			</div>
+			             			<table width="100%" border="0"> 
+			             			  <tr>
+										    <td align="justify" style="vertical-align:top; text-align:center;width:5%;"></td>
+										    <td align="justify" style="vertical-align:top;" >
+										    	<b>១.១</b> <span style="padding-left:5px"></span>ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> បានយល់ព្រមលក់ ហើយ ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>បានយល់ព្រមទិញអចលនទ្រព្យ <strong>ដីឡូត៏នៃគម្រោង<?php echo $this->agreement['project_name'];?> (តទៅនេះហៅកាត់ថា “គម្រោង”)</strong> មានទីតាំងស្ថិតនៅ<strong><?php echo $this->agreement['project_location'];?></strong>
+										    </td>  
+									  </tr>
+									  <tr>
+										    <td align="justify" style="vertical-align:top; text-align:center;width:5%;"></td>
+										    <td align="justify" style="vertical-align:top;" >
+										    	<b>១.២</b> តម្លៃសរុបនៃថ្លៃដីឡូត៍ចំនួន <?php echo $dbparmeter->getNumberInkhmer($countland); ?> ឡូត៍ដែលភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> យល់ព្រមទិញពីភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span>ដូចមានចែងក្នុង<strong>ប្រការ១.១.</strong> 
+										    	ខាងលើមានចំនួនUSD<span style="font-weight: bold;"> <?php echo number_format($this->agreement['price_sold'],2);?> (<label id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក)។ </span> ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> យល់ព្រមបង់ប្រាក់រំលស់តាមដំណាក់កាលដូចកាលបរិឆ្ឆេទខាងក្រោមនេះ៖
+										    	<?php 
+										    	$dbland = new Project_Model_DbTable_DbLand();
+										    	if (!empty($this->agreement['old_land_id'])){
+										    		$idse = explode(",", $this->agreement['old_land_id']);
+										    		?>
+										    	<?php  foreach ($idse as $keyland => $land){
+										    		$proper = $dbland->getClientById($land);
+										    		?>
+										    	<span style="display: block; width: 100%;">
+										    	<?php echo $dbparmeter->getNumberInkhmer($keyland+1);?>/ឡូត៏លេខ<span class="value_label" style="text-align:center; min-width:70px;"><?php echo $proper['land_address'];?></span>មានទទឹង<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $proper['width'];?></span>ម៉ែត្រ បណ្តោយ<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $proper['height'];?></span>ម៉ែត្រ សរុបផ្ទៃក្រឡាទំហំ<span class="value_label" style="text-align:center; min-width:60px;"><?php echo $proper['land_size'];?></span>ម៉ែត្រក្រឡា។
+										    	</span>
+										    	<?php }?>
+										    	<?php }else{?>
+										    	<span style="display: block; width: 100%;">
+										    	១/ឡូត៏លេខ<span class="value_label" style="text-align:center; min-width:70px;"><?php echo $this->agreement['property_title'];?></span>មានទទឹង<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $this->agreement['property_width'];?></span>ម៉ែត្រ បណ្តោយ<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $this->agreement['property_height'];?></span>ម៉ែត្រ សរុបផ្ទៃក្រឡាទំហំ<span class="value_label" style="text-align:center; min-width:60px;"><?php echo $this->agreement['land_size'];?></span>ម៉ែត្រក្រឡា។
+										    	</span>
+										    	<?php }?>
+										    	
+										    	
+										    	 <script>
+													a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
+													money_khmersold=read_money_in_khmer(a_sold);
+													
+													decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
+													str_centsold = 'សេន';
+													if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
+													last_number_sold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
+													
+													if(last_number_sold<=0){last_number_sold='';}
+													money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+													dojo.byId('lable_pricekhmer').innerHTML=money_khmersold+" ";
+													dojo.byId('lable_pricekhmer1').innerHTML=money_khmersold+" ";
+											</script>
+										    </td>  
+									  </tr>
+											  <?php 
+											    	$dbs = new Loan_Model_DbTable_DbLandpayment();
+											    	$resultdeposit = $dbs->getDepositFirstPaymentMoney($this->agreement['id']);
+											    	$reset_start = 0;
+											    	$paid = 0;
+											    	if(!empty($resultdeposit) AND !empty($this->sale_schedule)){
+											    		$reset_start=1;
+											    	?>
+											  	<tr>
+												    <td align="justify" style="vertical-align:top; text-align:right;width:5%;"></td>
+												    <td align="justify" style="padding-left:5px">
+												    	<ol style="list-style-type: none;text-align:justify;padding:0;" start="0">
+								             				<li>
+									             				<ul style="list-style-type: square;text-align:justify; margin-left: -20px" start="1">
+										             				<li >
+									             					<?php 
+												             			$start_id=0;
+												             			$paid_amount=0;
+												             			$rowpaid = $dbs->getPaymentPayoff($this->agreement['id']);
+												             			$paid_payoff = $rowpaid['outstanding'];
+												             			$keystart=0;
+												             		?>
+												             			<?php if(!empty($resultdeposit)){?><!-- ករណីកកច្រើនដង ចេញប្រវត្តិបង់ -->
+												             			<?php foreach($resultdeposit as $keydeposite =>$rsdeposite){$keystart++;?>
+													             			<span  ><strong>ដំណាក់កាលទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?>៖</strong> នៅថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($rsdeposite['date_input'])))." ខែ ".$month[date("m",strtotime($rsdeposite['date_input']))]." ឆ្នាំ ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($rsdeposite['date_input']))); ?> ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> បានបង់ប្រាក់ដំណាក់កាលទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?>ចំនួន USD <span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($rsdeposite['total_principal_permonthpaid'],2);?>
+												             				(<label style="font-family:'Khmer OS Battambang'" id="lable_depositpaid<?php echo $keydeposite+1;?>"></label><span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក</span>)</span> ជាប្រាក់កក់ថ្លៃទិញដីឡូត៍។
+												             				</span>
+												             				 <script>
+																				a ='<?php echo ($rsdeposite['total_principal_permonthpaid']) ?>';
+																				money_khmer=read_money_in_khmer(a);
+																				decimalmoney_khmer='<?php echo substr(number_format($rsdeposite['total_principal_permonthpaid'],2),-2);?>';
+																				str_cent = 'សេន';
+																				if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent='';}
+																				
+																				last_number='<?php echo substr(number_format($rsdeposite['total_principal_permonthpaid'],2),-2);?>';
+																				
+																				if(last_number<=0){last_number='';}
+																				money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+																				dojo.byId('lable_depositpaid<?php echo $keydeposite+1;?>').innerHTML=money_khmer;
+																			</script>
+																			<?php 
+																			$paid_amount = $paid_amount+$rsdeposite['total_principal_permonthpaid'];
+												             				}}?>
+												             				<?php 
+														             			$i=0; $numrow = 0;
+														             			$countSchdule = count($this->sale_schedule);
+														             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++; $keystart++; ?>
+														             			<?php 
+														             			if($row['is_completed']==1 AND $this->agreement['is_reschedule']==3){continue;}
+														             			$paid = $paid+$row['principal_permonth'];?>             	
+														             			<?php if($key==0){?>
+															             		<?php
+															             			if($row['date_payment']==$this->agreement['buy_date'] AND $paid_amount==$row['principal_permonth'] ){
+															             				continue;
+															             			}
+														             				$paidbefore = $row['principal_permonth']-$paid_amount;
+														             				if(strlen($paidbefore)<=3){
+														             					$row['principal_permonth']=number_format($paidbefore,2);
+														             				}else{
+														             					$row['principal_permonth'] = ($paidbefore);
+														             				}
+														             			}?>
+														             			</li>
+													             			<li>
+														             			<?php 
+														             				$numrow=$numrow+1;?>
+														             				<span  ><strong>ដំណាក់កាលទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?>៖</strong> នៅថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($row['date_payment'])))." ខែ ".$month[date("m",strtotime($row['date_payment']))]." ឆ្នាំ  ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($row['date_payment']))); ?> ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> យល់ព្រមបង់ថ្លៃទិញដីឡូត៍បន្ថែមសរុប <span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>
+														             				(<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label><span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក)</span>
+														             				</span>
+														             				<?php if($this->agreement['payment_id']==2){?>
+															             					<?php if ($countSchdule==$key+1){?>
+															             					ជាប្រាក់បង់ផ្តាច់ថ្លៃទិញដីឡូតិ៍។ 
+															             					<?php }?>
+														             					<?php }?>
+														             				</span>
+														             				 <script>
+																						a ='<?php echo ($row['principal_permonth']) ?>';
+																						money_khmer=read_money_in_khmer(a);
+																						decimalmoney_khmer='<?php echo substr(number_format($row['principal_permonth'],2),-2);?>';
+																						str_cent = 'សេន';
+																						if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent='';}
+																						
+																						last_number='<?php echo substr(number_format($row['principal_permonth'],2),-2);?>';
+																						
+																						if(last_number<=0){last_number='';}
+																						money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+																						dojo.byId('lable_depositkhmer<?php echo $i;?>').innerHTML=money_khmer;
+																					</script>
+																					<?php if($row['ispay_bank']==1){?>
+															             				<span class="padding-left"  >&nbsp;&nbsp;&nbsp;<?php echo $this->keyValue['bank_info'];?></span>
+															             			<?php break;
+															             			}?>
+														             				<?php 
+														                       }?>
+													                       </li>
+									             				</ul>
+								             				</li>
+								             			</ol>
+												    </td>  
+											  </tr>
+											  <?php }?>
+											  <?php if($this->agreement['payment_id']==4){?>
+											  <tr>
+												    <td align="justify" style="vertical-align:top; text-align:right;width:5%;"></td>
+												    <td align="justify" ><span style="padding-left:35px"></span>ភាគី "<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ខ</span>
+												    " យល់ព្រមបង់រំលស់ទឹកប្រាក់ដែលនៅសល់ចំនួន  USD <span class="value" style="min-width: 50px;"><strong><?php echo number_format(($this->agreement['price_sold']-$paid),2);?></strong></span>(<span class="value" style="min-width: 50px;"><label id="lable_remainkhmer" style="font-family: 'Times New Roman','Khmer OS Battambang'"></label> </span>ដុល្លារអាមេរិក)
+												  	
+												  	  រយៈពេល <?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0)); ?>
+												  	 <?php if($this->agreement['payment_id']!=4){
+															echo $tr->translate("MONTH");
+														}else{
+															echo ($dataterm['install_by']==12)?$tr->translate("ឆ្នាំ"):$tr->translate("ខែ");
+													}?> 
+												  	  ចាប់ផ្ដើមបង់ចាប់ពីថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['first_payment'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['first_payment']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['first_payment'])));?>
+												            តាមតារាងបង់ប្រាក់រំលស់(ឧបសម្ព័ន១)។
+												         <script>
+														     <?php $remain = $this->agreement['price_sold']-$paid;?>
+															a ='<?php echo $remain; ?>';
+															money_khmer=read_money_in_khmer(a);
+															decimalmoney_khmer='<?php echo substr(number_format($remain,2),-2);?>';
+															str_cent = 'សេន';
+														
+															if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent=""}
+															
+															last_number='<?php echo substr(number_format($remain,2),-1);?>';
+															
+															if(last_number<=0){last_number='';}
+															money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+															dojo.byId('lable_remainkhmer').innerHTML=money_khmer;
+														</script>
+												    </td>  
+											  </tr>
+											   <tr>
+											  		 <td align="justify" style="vertical-align:top; text-align:right;width:5%;"></td>
+												    <td align="justify"><span style="padding-left:5px"></span>ភាគី <span style="font-family:'Khmer OS Muol Light';font-weight:200;">"ខ"</span> មានសិទ្ធិបង់ទឹកប្រាក់ច្រើនជាងតារាងបង់ប្រាក់រំលស់ ឬបង់ផ្តាច់មុនបាន។
+												    </td>  
+											  </tr>
+											  <?php }?>
+											</table>
+		             		</span>
+		             		<div style="width: 100%; display: block; line-height: 32px;">
+		             			<div class="padding-buttom">
+		             				<strong>ប្រការ ២ :<span id="padding-left-2">សិទ្ធនិងករណីកិច្ចរបស់គូភាគី</span></strong>
+		             			</div>
+		             			<table width="100%" border="0"> 
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><b>២.១</b></td>
+									    <td align="justify" style="padding-left:5px">ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span>ធានាថាដីឡូត៏ខាងលើនេះ ជាដីស្របច្បាប់ និងមិនមានជំលោះ។</td>  
+								  </tr>
+								   <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;"><b>២.២</b></td>
+									    <td align="justify" style="padding-left:5px">ប្រសិនបើភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> កែប្រែឈប់ទិញវិញ នៅដំណាក់កាលណាមួយ នៃការបង់ប្រាក់ នោះប្រាក់ដែលបានបង់ជូនភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> ទុកជាអាសាបង់ គឺមិនប្រគល់ជូនភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>វិញឡើយ។ ប្រសិនបើភាគី”ក”កែប្រែឈប់លក់វិញ ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span>ត្រូវប្រគល់ត្រឡប់មកវិញនូវប្រាក់ដែលអ្នកទិញបានបង់ទាំងអស់ ដោយគិតការប្រាក់ ២០% ក្នុងមួយឆ្នាំ ទៅជូន ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>វិញ។</td>  
+								  </tr>
+								 <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;"><b>២.៣</b></td>
+									    <td align="justify" style="padding-left:5px">ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> មានសិទ្ធិសាងសង់សំណង់លើដីឡូត៏ខាងលើនេះបានដោយត្រូវសុំ ច្បាប់សាងសង់ពីអាជ្ញាធរមានសមត្ថកិច្ច តាមបែបបទដោយខ្លួនឯង។ ការសាងសង់សំណង់នៅលើដីឡូត៍ត្រូវគោរពតាមគោលការណ៍សោភ័ណភាពរបស់គម្រោង។ ការតបណ្តាញ និងប្រព័ន្ធ ទឹកភ្លើងចូលក្នុងដីឡូត៍ ឬ គេហដ្ឋានជាបន្ទុករបស់ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>ខ្លួនឯង។ ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>តំរូវអោយអនុវត្តតាមបទបញ្ជាផ្ទៃក្នុង ដែលបានបានបរិយាយលំអិតនៅក្នុងឧបសម្ព័ន្ធ បទបញ្ជាផ្ទៃក្នុងខាងក្រោមនៃកុងត្រានេះ។</td>  
+								  </tr>
+								   <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;"><b>២.៤</b></td>
+									    <td align="justify" style="padding-left:5px">ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> នឹងផ្តល់លិខិតផ្ទេរសិទ្ធិកម្មសិទ្ធិដីឡូត៏ខាងលើជូនភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>យ៉ាងយូរចន្លោះពី ៣ ខែទៅ ៦ ខែ គិតចាប់ពីថ្ងៃបង់ប្រាក់ដំណាក់កាលទី២ ឬ ប្រែប្រួលទៅតាមការកំណត់របស់មន្រ្តីពាក់ពន្ធ័របស់អាជ្ញាធរខេត្ត។ ហើយភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> ត្រូវចូលរួមសហការធ្វើបែបបទផ្ទេរសិទ្ធិកម្មសិទ្ធិដីឡូត៏។ ការចំណាយលើសេវានិងបង់ពន្ធផ្សេងៗ ពាក់ព័ន្ធនឹងការផ្ទេរសិទ្ធិនេះ ជាការទទួលបន្ទុករបស់ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span>។ <strong>បន្ទាប់ពីបញ្ចប់ការកាត់ឈ្មោះផ្ទេរកម្មសិទ្ធិមកភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>ហើយ ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span>ត្រូវប្រគល់លិខិតផ្ទេរកម្មសិទ្ធិដីច្បាប់ដើមមកភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> ដែលមានឈ្មោះភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> ឬអ្នកទទួលសិទ្ធិបន្តដែលមានការយល់ព្រមពីភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> ដូចមានចែងក្នុងប្រការ៤ ដើម្បីធ្វើការចាត់ចែង និងអាស្រ័យផល ។</strong></td>  
+								  </tr>
+								   <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;"><b>២.៥</b></td>
+									    <td align="justify" style="padding-left:5px">ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> មិនត្រូវបង្កការប៉ះពាល់នាំឲ្យខូចខាតប្រយោជន៍ឬជះឥទ្ធិពលមិនល្អដល់គម្រោងក្នុងអំឡុងពេលកំពុងដំណើរការឡើយ។ ប្រសិនបើមានការប៉ះពាល់ ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> ត្រូវទទួលខុសត្រូវសងការខូចខាតជាក់ស្តែង និងសងជំងឺចិត្តដល់ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span>។</td>  
+								  </tr>
+								</table>
+		             		</div>
+		             		<div style="width: 100%; display: block; line-height: 32px;">
+		             			<div class="padding-buttom">
+		             				<strong>ប្រការ ៣ :<span id="padding-left-2">សិទ្ធិ និងកាតព្វកិច្ចប្រើប្រាស់សេវា និងហេដ្ឋារចនាសម្ព័ន្ធរួមរបស់គម្រោង</span></strong>
+		             			</div>
+		             			<table width="100%" border="0"> 
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
+									    <td align="justify" style="padding-left:5px">ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> មានសិទ្ធិប្រើប្រាស់ សេវា និងហេដ្ឋារចនាសម្ព័ន្ធ ដែលអភិវឌ្ឍន៍ដោយគម្រោងដែលគម្រោងអនុញ្ញាតឲ្យមានការប្រើប្រាស់ និងទទួលផលប្រយោជន៍ ពីសំណាក់អ្នកដែលរស់នៅក្នុងទីតាំងប្លង់មេរបស់គម្រោង។ សេវា និងហេដ្ឋារចនាសម្ព័ន្ធទាំងនោះរួមមានប៉ុន្តែមិនកំណត់ត្រឹមនេះ ដូចជា សេវាបំភ្លឺសាធារណៈ សេវាសំអាតសួន ផ្លូវថ្នល់ដែលប្រើប្រាស់រួមគ្នា កន្លែងក្មេងលេង សួនច្បារ កន្លែងកំសាន្ត ផ្លូវថ្នល់ ជាដើម។ ការប្រើប្រាស់សេវា និងហេដ្ឋារចនាសម្ព័ន្ធទាំងនោះនឹងតម្រូវឲ្យមាន ការបង់ថ្លៃសមរម្យណាមួយដែលកំណត់ដោយ គម្រោងនៅពេលដែលសេវា និងហេដ្ឋារចនាសម្ព័ន្ធទាំងនោះដំណើរការ ដោយយោងទៅតាមទំហំនិងទីតាំងរបស់អចលនទ្រព្យ។ </td>
+								  </tr>
+								</table>
+							</div>
+							<div style="width: 100%; display: block; line-height: 32px;">
+		             			<div class="padding-buttom">
+		             				<strong>ប្រការ ៤ :<span id="padding-left-2">ការលក់បន្ត និងផ្ទេសិទ្ធិបន្តពីភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span></span></strong>
+		             			</div>
+		             			<table width="100%" border="0"> 
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
+									    <td align="justify" style="padding-left:5px">
+									  	  ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>មានសិទ្ធិលក់បន្ត ឬផ្ទេរសិទ្ធិបន្ត ទៅឲ្យតតិយជនណាមួយនូវ ចំនួនដីឡូត៍ជាក់លាក់ណាមួយ ឬឡូត៍ទាំងអស់ដែលខ្លួនបានទិញពីភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span>បន្ទាប់ពីបង់ប្រាក់ដំណាក់កាលទីមួយ ឬ បន្ទាប់ពីបង់ប្រាក់ដំណាក់កាលទី២ និងមុនពេលដំណើរកាត់ឈ្មោះ ផ្ទេរសិទ្ធិពីភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> ទៅ   ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>។ ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> ត្រូវបង់ប្រាក់ឲ្យភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span>ចំនួន ៣០ដុល្លាអាមេរិក សំរាប់សោហ៊ុយចំណាយចំពោះការងាររដ្ឋបាលទាក់ទងនឹង ការលក់បន្ត ឬ ផ្ទេរសិទ្ធិបន្តនេះ ។ ចំពោះការលក់បន្តឬផ្ទេរសិទ្ធិបន្តនៅក្នុងអំឡុងពេលដំណើរការកាត់ឈ្មោះ មិនអាចធ្វើបានទេ។ ក្នុងករណីមានការលក់ទិញដីឡូត៍នេះបន្ទាប់ពីការកាត់ឈ្មោះផ្ទេរកម្មសិទ្ធិដូចមានចែងក្នុងប្រការ២.៤ ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> ត្រូវជូនដំណឹងមកភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> នូវអត្តសញ្ញាណ ដូចជាឈ្មោះ និងលេខទំនាក់ទំនងរបស់ម្ចាស់កម្មសិទ្ធិថ្មី។ លក្ខខណ្ឌនេះក៏អនុវត្តផងដែរចំពោះម្ចាស់កម្មសិទ្ធិដែលទទួលការផ្ទេរសិទ្ធិបន្តៗទៀត។ ប្រសិនបើភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> ខកខានក្នុងការ ជូនដំណឹងពីអត្តសញ្ញាណរបស់ម្ចាស់កម្មសិទ្ធិថ្មី កាតព្វកិច្ចបង់ថ្លៃសេវា និងការប្រើប្រាស់ហេដ្ឋារចនាសម្ព័ន្ធដែលមានចែងនៅក្នុងប្រការ៣ នៅតែជាការទទួលខុសត្រូវរបស់ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>ដដែល ។
+									    </td>
+								  </tr>
+								</table>
+							</div>
+							<div style="width: 100%; display: block; line-height: 32px;">
+		             			<div class="padding-buttom">
+		             				<strong>ប្រការ ៥ :<span id="padding-left-2">អ្នកស្នងមរតក ទាយាទ ឬអ្នកអនុវត្តសិទ្ធិប្រទាន</span></strong>
+		             			</div>
+		             			<table width="100%" border="0"> 
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
+									    <td align="justify" style="padding-left:5px">
+									    ក្នុងករណីដែលមានភាគីណាមួយមិនអាចអនុវត្តសិទ្ធិ និងកាតព្វកិច្ចរបស់ខ្លួនបានដោយមូលហេតុបណ្តាលមកពី មរណៈភាព ឬពិការភាព ឬអវត្តមានក្នុងពេលអនុវត្តកាតព្វកិច្ចទាំងអស់ក្នុងកិច្ចសន្យា នោះសិទ្ធិ និងកាតព្វកិច្ចទាំងអស់របស់គូភាគីត្រូវប្រគល់ជូនទាយាទរបស់ភាគីនោះ ឬតំណាងស្របច្បាប់របស់ភាគីនោះ។
+									    </td>
+								  </tr>
+								</table>
+							</div>
+							<div style="width: 100%; display: block; line-height: 32px;">
+		             			<div class="padding-buttom">
+		             				<strong>ប្រការ ៦ :<span id="padding-left-2">ករណីប្រធានសក្តិ</span></strong>
+		             			</div>
+		             			<table width="100%" border="0"> 
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
+									    <td align="justify" style="padding-left:5px">
+									    	ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> អាចពន្យារពេលអនុវត្តកាតព្វកិច្ចរបស់ខ្លួនតាមប្រការទាំងឡាយនៃកិច្ចសន្យា ដោយយោងតាមហេតុផលខាងក្រោម៖
+									    </td>
+								  </tr>
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><b>៦.១</b></td>
+									    <td align="justify" style="padding-left:5px">
+									     ក្នុងករណីមានព្រឹត្តិការណ៏ប្រធានសក្តិកើតឡើងហួសពីការគ្រប់គ្រងរបស់ភាគី ដែលទទួលរងប៉ះពាល់ រួមមាន អាទ៏បញ្ញត្តិថ្មីរបស់អាជ្ញាធរមានសមត្ថកិច្ច ការផ្លាស់ប្តូរច្បាប់ រាល់ការផ្អាក សង្រ្គាម បដិវត្តន៍អស្ថេរភាពនយោបាយ គ្រោះធម្មជាតិ (ខ្យល់ព្យុះ ទឹកជំនន់ គ្រោះអគ្គីភ័យ គ្រោះរញ្ជួយដី ជាដើម) ការបះបោរ ចលាចល បាតុកម្មទូទាំងប្រទេស សកម្មភាពឧទ្ទាម (ទោះបីប្រកាស ឬអត់) ការឈ្លានពាន សកម្មភាពសត្រូវបរទេស បដិវត្តន៏ កុបកម្ម ភេរវកម្ម ឬអំពើដែលកើតឡើងដោយបុព្វហេតុណាមួយដែលភាគីទាំងពីរ មិនអាចគ្រប់គ្រងបាន ឬមិនអាចទប់ទល់បានដែលធ្វើអោយមានការរាំងស្ទះដល់ការអនុវត្តន៏កិច្ចសន្យានេះ។
+									    </td>
+								  </tr>
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><b>៦.២</b></td>
+									    <td align="justify" style="padding-left:5px">
+									    	 រាល់ការផ្អាកការអភិវឌ្ឍន៏គំរោង ដោយហេតុមានសេចក្តីសំរេចបញ្ជាពីស្ថាប័នរដ្ឋាភិបាល។
+									    </td>
+								  </tr>
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><b>៦.៣</b></td>
+									    <td align="justify" style="padding-left:5px">
+									    	 គូភាគីណាដែលទទួលរងការប៉ះពាល់ដោយព្រឹត្តិការណ៍ ករណីប្រធានសក្តិនេះនឹងជូនដំណឹងអំពីការពន្យារពេល និងការចាប់ផ្តើមនៃការអនុវត្តកាតព្វកិច្ចរបស់ខ្លួនតាមប្រការទាំង ឡាយ នៃកិច្ចសន្យានេះបន្ទាប់ពីចប់ករណីប្រធានសក្តិ។
+									    </td>
+								  </tr>
+								</table>
+							</div>
+							<div style="width: 100%; display: block; line-height: 32px;">
+		             			<div class="padding-buttom">
+		             				<strong>ប្រការ ៧ :<span id="padding-left-2">ការអនុវត្តកិច្ចសន្យា និងការដោះស្រាយវិវាទ</span></strong>
+		             			</div>
+		             			<table width="100%" border="0"> 
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><b>៧.១</b></td>
+									    <td align="justify" style="padding-left:5px">
+									  	  គូភាគីយល់ព្រមអនុវត្តខ្លឹមសារនៃកិច្ចសន្យានេះដោយស្មោះត្រង់ សុចរិត និងមិនបង្កការលំបាកណាមួយឡើយ។ ករណីមិនគោរពកិច្ចសន្យានេះ គូភាគីសុខចិត្តទទួលខុសត្រូវចំពោះមុខច្បាប់។
+									    </td>
+								  </tr>
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><b>៧.២</b></td>
+									    <td align="justify" style="padding-left:5px">
+									  	  ប្រសិនបើមានវិវាទណាមួយកើតឡើង គូភាគីនឹងសហការ ដោយស្មោះត្រង់ សន្តិវិធីតាមការសម្រុះសម្រួលគ្នាអោយអស់លទ្ធភាព មុននឹងប្ដឹងទៅ តុលាការតាមនីតិវិធីច្បាប់ នៃព្រះរាជាណាចក្រកម្ពុជា។ 
+									    </td>
+								  </tr>
+								</table>
+							</div>
+							<div style="width: 100%; display: block; line-height: 32px;">
+		             			<div class="padding-buttom">
+		             				<strong>ប្រការ ៨ :<span id="padding-left-2">អវសាន្តបញ្ញត្តិ</span></strong>
+		             			</div>
+		             			<table width="100%" border="0"> 
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><b>៨.១</b></td>
+									    <td align="justify" style="padding-left:5px">
+									  	 កិច្ចសន្យានេះធ្វើឡើងជាភាសាខ្មែរ ចំនួនពីរច្បាប់ ហើយមានតម្លៃស្មើៗគ្នា ដោយរក្សាទុកនៅភាគីនីមួយៗម្នាក់មួយច្បាប់។
+									    </td>
+								  </tr>
+								  <tr>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><b>៨.២</b></td>
+									    <td align="justify" style="padding-left:5px">
+									  	 កិច្ចសន្យានេះមិនអាចកែប្រែបានឡើយ លើកលែងតែភាគីទាំងពីរព្រមព្រៀង ធ្វើជាលាយលក្ខណ៍អក្សរ ដោយមានផ្តិតមេដៃនៃចំណុចកែប្រែនោះ។
+									    </td>
+								  </tr>
+								</table>
+							</div>
+							<p style="display: block; width: 100%; text-align: center; margin: 20px 0;">កិច្ចសន្យានេះមានអនុភាពអនុវត្តចាប់ពីថ្ងៃគូភាគីផ្តិតស្នាមមេដៃនេះតទៅ។</p>
+             	</td>
+             </tr>
+             <tr>
+             	<td colspan="3">
+             		<table align="center" width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';">
+             				<tr>
+						        <td  colspan="5" class="reff" style="text-align:center; font-family:'Khmer OS Battambang';font-weight:200;white-space:nowrap;">ធ្វើនៅភ្នំពេញថ្ងៃទី <?php echo date("d",strtotime($this->agreement['agreement_date']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['agreement_date']));?></td>
+						   </tr>
+						   <tr style="font-size: 14px;">
+						        <td class="reff" style="width:25%;text-align:center; white-space: nowrap;">ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> (អ្នកទិញ)</td>
+						        <td>&nbsp;</td>
+						        <td class="reff" style="width:23%;text-align:center; text-decoration:underline; font-family:'Khmer OS Muol Light';font-weight:200;"></td>
+						        <td>&nbsp;</td>
+						        <td class="reff" style="width:25%; text-align:center; ">ភាគី<span style="font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> (អ្នកលក់)</td>
+						   </tr>
+						   <tr height="80px">
+				             	<td>&nbsp;</td>
+				           </tr>
+				           <tr style="font-size: 14px;">
+			             		<td  style="width:25%; text-align:center; font-family:'Khmer OS Muol Light';font-weight:200;">ឈ្មោះ &nbsp;<?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?></td>
+						        <td class="reff" align="center" colspan="3" style=""></td>
+						        <td class="reff"  align="center" style="width:25%; white-space:nowrap; font-family:'Khmer OS Muol Light';font-weight:200;">&nbsp;<?php echo $this->agreement['project_manager_namekh'];?></td>
+						 </tr>
+						  <tr height="20px">
+				             	<td>&nbsp;</td>
+				           </tr>
+						   <tr style="font-size: 14px;">
+						        <td class="reff" style="width:25%;text-align:center; white-space: nowrap;">សាក្សីអ្នកទិញ</td>
+						        <td>&nbsp;</td>
+						        <td class="reff" style="width:23%;text-align:center; text-decoration:underline; font-family:'Khmer OS Muol Light';font-weight:200;"></td>
+						        <td>&nbsp;</td>
+						        <td class="reff" style="width:25%; text-align:center; ">សាក្សីអ្នកលក់</td>
+						   </tr>
+						   <tr height="80px">
+				             	<td>&nbsp;</td>
+				           </tr>
+				           <tr style="font-size: 14px;">
+			             		<td  style="width:25%; text-align:center; font-family:'Khmer OS Muol Light';font-weight:200;">ឈ្មោះ &nbsp;<span style="display: inline-block;width: 65%;border-bottom: dashed 1px #000;"></span></td>
+						        <td class="reff" align="center" colspan="3" style=""></td>
+						        <td class="reff"  align="center" style="width:25%; white-space:nowrap; font-family:'Khmer OS Muol Light';font-weight:200;">ឈ្មោះ &nbsp;<span style="display: inline-block;width: 65%;border-bottom: dashed 1px #000;"></span></td>
+						 </tr>
+					</table>
+             	</td>
+             </tr>
+        </table>
+        	<div id="printfooter" style="display: none">
+        		<table  width="100%" style="background: #fff;border-top: 2px solid #000;font-family: 'Khmer OS Battambang'; font-size:10px;line-height: 15px;white-space:nowrap;"> 
+					<tbody>
+						<tr style="white-space:nowrap;line-height: 12px;">
+							<td width="40%"><?php echo $this->keyValue['website'];?></td>
+							<td width="40%" align="right"><?php echo $this->keyValue['email_client'];?></td>
+						</tr>
+						<tr style="white-space:nowrap;line-height: 15px;">
+							<td><?php echo $this->keyValue['footer_branch'];?></td>
+							<td width="40%" align="right"><?php echo $this->keyValue['tel-client'];?></td>
+						</tr>
+					</tbody>
+				</table>
+        	</div>
+        	</div>
+        </div>
+    </td>	
+</tr>
+</table>
+</div>

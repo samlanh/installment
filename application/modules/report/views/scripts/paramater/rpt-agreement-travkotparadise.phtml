@@ -72,6 +72,13 @@ dojo.require("dijit.form.DateTextBox");
 						span.value{ line-height:12px;display: inline-block; text-align: center;}
 						span.child {display:block; margin-left:25px; line-height: 25px;}
 						span{line-height: 26px;}
+						
+.value_label{
+	        border-bottom: dashed 1px #000;
+    line-height: 12px !important;
+    min-width: 100%;
+    display: inline-block;
+	}
 					
     </style>
     <style>
@@ -178,7 +185,7 @@ body {
 			             			  <tr>
 										    <td align="justify" style="vertical-align:top; text-align:center;width:5%;"></td>
 										    <td align="justify" style="vertical-align:top;" >
-										    	<b>១.១</b> <span style="padding-left:5px"></span>ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> បានយល់ព្រមលក់ ហើយ ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>បានយល់ព្រមទិញអចលនទ្រព្យ <strong>ដីឡូត៏នៃគម្រោងត្រាវកុដ្ឋផារ៉ាដាយ ហូថែលអេន រីសត (តទៅនេះហៅកាត់ថា “គម្រោង”)</strong> មានទីតាំងស្ថិតនៅ<strong><?php echo $this->agreement['project_location'];?></strong>
+										    	<b>១.១</b> <span style="padding-left:5px"></span>ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span> បានយល់ព្រមលក់ ហើយ ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span>បានយល់ព្រមទិញអចលនទ្រព្យ <strong>ដីឡូត៏នៃគម្រោង<?php echo $this->agreement['project_name'];?> (តទៅនេះហៅកាត់ថា “គម្រោង”)</strong> មានទីតាំងស្ថិតនៅ<strong><?php echo $this->agreement['project_location'];?></strong>
 										    </td>  
 									  </tr>
 									  <tr>
@@ -186,6 +193,25 @@ body {
 										    <td align="justify" style="vertical-align:top;" >
 										    	<b>១.២</b> តម្លៃសរុបនៃថ្លៃដីឡូត៍ចំនួន <?php echo $dbparmeter->getNumberInkhmer($countland); ?> ឡូត៍ដែលភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> យល់ព្រមទិញពីភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span>ដូចមានចែងក្នុង<strong>ប្រការ១.១.</strong> 
 										    	ខាងលើមានចំនួនUSD<span style="font-weight: bold;"> <?php echo number_format($this->agreement['price_sold'],2);?> (<label id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក)។ </span> ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> យល់ព្រមបង់ប្រាក់រំលស់តាមដំណាក់កាលដូចកាលបរិឆ្ឆេទខាងក្រោមនេះ៖
+										    	<?php 
+										    	$dbland = new Project_Model_DbTable_DbLand();
+										    	if (!empty($this->agreement['old_land_id'])){
+										    		$idse = explode(",", $this->agreement['old_land_id']);
+										    		?>
+										    	<?php  foreach ($idse as $keyland => $land){
+										    		$proper = $dbland->getClientById($land);
+										    		?>
+										    	<span style="display: block; width: 100%;">
+										    	<?php echo $dbparmeter->getNumberInkhmer($keyland+1);?>/ឡូត៏លេខ<span class="value_label" style="text-align:center; min-width:70px;"><?php echo $proper['land_address'];?></span>មានទទឹង<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $proper['width'];?></span>ម៉ែត្រ បណ្តោយ<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $proper['height'];?></span>ម៉ែត្រ សរុបផ្ទៃក្រឡាទំហំ<span class="value_label" style="text-align:center; min-width:60px;"><?php echo $proper['land_size'];?></span>ម៉ែត្រក្រឡា។
+										    	</span>
+										    	<?php }?>
+										    	<?php }else{?>
+										    	<span style="display: block; width: 100%;">
+										    	១/ឡូត៏លេខ<span class="value_label" style="text-align:center; min-width:70px;"><?php echo $this->agreement['property_title'];?></span>មានទទឹង<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $this->agreement['property_width'];?></span>ម៉ែត្រ បណ្តោយ<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $this->agreement['property_height'];?></span>ម៉ែត្រ សរុបផ្ទៃក្រឡាទំហំ<span class="value_label" style="text-align:center; min-width:60px;"><?php echo $this->agreement['land_size'];?></span>ម៉ែត្រក្រឡា។
+										    	</span>
+										    	<?php }?>
+										    	
+										    	
 										    	 <script>
 													a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
 													money_khmersold=read_money_in_khmer(a_sold);
