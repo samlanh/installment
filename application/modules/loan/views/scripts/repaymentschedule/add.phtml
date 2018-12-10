@@ -784,7 +784,7 @@ function checkScheduleOption(){
 			
 		}else if(method_id==5){//times
 			dijit.byId('release_date').set("readOnly",true);
-			dijit.byId('first_payment').set("readOnly",true);
+			//dijit.byId('first_payment').set("readOnly",true);
 			
 			dijit.byId('interest_rate').attr("value",0);
 			dijit.byId('interest_rate').set("readOnly",true);
@@ -793,7 +793,7 @@ function checkScheduleOption(){
 		else if(method_id==6){//times ដំណាក់កាលមិនថេ			
 			dijit.byId('interest_rate').attr('value',0);
 			if(dijit.byId('period').get('value')==12){
-				dijit.byId('period').attr('value',0);
+				//dijit.byId('period').attr('value',0);
 			}
 			$('#identity').val('');
 			dijit.byId('first_payment').attr("value",'<?php echo date("Y-m-d");?>');
@@ -1448,8 +1448,19 @@ function addRow(){
 				}
 				temp+='<th><?php echo $tr->translate("NOTE");?></th>';
 				dojo.query("#head-title").append(temp);
-				title=1;
-				epx_date ='<?php echo date('Y-m-d');?>';
+				title=1;		
+				epx_date = dijit.byId("first_payment").get("value");
+				var a = new Date(epx_date);
+				mm = a.getMonth()+1;
+				var dd = a.getDate();
+				 if(dd<10){
+					 dd = "0"+dd;
+				}
+				if(mm<10){
+					 mm = "0"+mm;
+				}
+				var y = a.getFullYear();
+				var epx_date = y+'-'+ mm + '-'+dd ;
 			}else{
 				indexs = col-1;
 				epx_date = dijit.byId("date_payment"+indexs).get("value");
@@ -1467,7 +1478,7 @@ function addRow(){
 				}
 				template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td width="2%" align="center">'+no+'</td>';
-				template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
+				template+="<td style='width:100px;'><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
 				template+='<td><input type="text" class="fullside" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent_agree'+col+'" name="percent_agree'+col+'" /></td>';
 				template+='<td><input type="text" onkeyup="calCulateAmount('+col+')" class="fullside" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';			
 				template+='<td><input class="fullside"  onkeyup="calCulateAmount('+col+',2)" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
