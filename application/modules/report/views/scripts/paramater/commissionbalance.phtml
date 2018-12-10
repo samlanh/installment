@@ -33,39 +33,58 @@
 						}
 						th{padding: 5px;}
 						.hover:hover{background: #ccc;}
+						.hide{visibility: hidden;}
+								@media print {
+								  div.divFooter {
+								    position: fixed;
+								    top: 0;
+								  	width: 100%;
+								  	height: 100px;
+								  	bottom:0px;
+									margin:0;
+								  }
+								.hide{visibility: visible; height: 110px;}
+								}
 				</style>
-	        	<table width="100%" style="margin:0; padding:0;border:none;" >
-	            	<tr>
-	                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
-	                	<td width="60%" valign="top">
-	                	<h2 style="line-height: 20px;;text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
-	                	<h2 style="line-height: 20px;text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_COMISSION_BALANCE");?></h2>
-	                	<h2 style="line-height: 20px;text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></h2>
-	                	</td>
-	                    <td width="20%"></td>
-	                </tr> 
-	            </table>
+				<div class="divFooter">
+			        	<table width="100%" style="margin:0; padding:0;border:none;" >
+			            	<tr>
+			                	<td width="20%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" height="85px"></td>
+			                	<td width="60%" valign="top">
+			                	<h2 style="line-height: 20px;;text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+			                	<h2 style="line-height: 20px;text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_COMISSION_BALANCE");?></h2>
+			                	<h2 style="line-height: 20px;text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></h2>
+			                	</td>
+			                    <td width="20%"></td>
+			                </tr> 
+			            </table>
+			     </div>
 				<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 12px;" bordercolor="black">  
-			    	<tr class="style" align="center" style="white-space:nowrap;background:#c1d0f3 !important;font-weight:bold; line-height: 25px; font-size:12px; padding:2px 0px; " >
-			        		<td rowspan="2"><?php echo $tr->translate("NUM");?></td>
-				            <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-				            <td rowspan="2"><?php echo $tr->translate("STAFF");?></td>
-				            <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
-				            <td rowspan="2"><?php echo $tr->translate("SEX");?></td>
-				            <td colspan="5"><?php echo $tr->translate("INFO_INDILOAN");?></td>
-				            <td colspan="3" style="font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("COMMISSION_INFO");?></td>
+			    	 <thead>
+		                 <tr class="hide" style="border:1px solid #000;">
+			                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+			             </tr>
+			    	  <tr class="style" align="center" style="white-space:nowrap;background:#c1d0f3 !important;font-weight:bold; line-height: 25px; font-size:12px; padding:2px 0px; " >
+			        		<th rowspan="2"><?php echo $tr->translate("NUM");?></th>
+				            <th rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></th>
+				            <th rowspan="2"><?php echo $tr->translate("STAFF");?></th>
+				            <th rowspan="2"><?php echo $tr->translate("TEL");?></th>
+				            <th rowspan="2"><?php echo $tr->translate("SEX");?></th>
+				            <th colspan="5"><?php echo $tr->translate("INFO_INDILOAN");?></th>
+				            <th colspan="3" style="font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("COMMISSION_INFO");?></th>
 				            
 			         </tr>
 			         <tr class="style" align="center" style="white-space:nowrap;background:#c1d0f3 !important;font-weight:bold; line-height: 25px; font-size:12px; padding:2px 0px; " >
-			         	<td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-			         	<td><?php echo $tr->translate("PROPERTY_INFO");?></td>
-			         	<td><?php echo $tr->translate("SOLD_PRICE");?></td>
-			         	<td><?php echo $tr->translate("PAID");?></td>
-			         	<td><?php echo $tr->translate("PERCENTAGE");?></td>
-			         	<td style="font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("TOTAL");?></td>
-			            <td style="font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("PAID");?></td>
-			            <td style="font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REMAIN");?></td>
+			         	<th><?php echo $tr->translate("CUSTOMER_NAME");?></th>
+			         	<th><?php echo $tr->translate("PROPERTY_INFO");?></th>
+			         	<th><?php echo $tr->translate("SOLD_PRICE");?></th>
+			         	<th><?php echo $tr->translate("PAID");?></th>
+			         	<th><?php echo $tr->translate("PERCENTAGE");?></th>
+			         	<th style="font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("TOTAL");?></th>
+			            <th style="font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("PAID");?></th>
+			            <th style="font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REMAIN");?></th>
 			         </tr>
+			         </thead>
 			       <?php  
 			       		$total = 0;
 			       		$totalpaid_com = 0;

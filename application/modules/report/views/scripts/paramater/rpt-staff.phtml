@@ -42,31 +42,50 @@ dojo.require("dijit.form.DateTextBox");
 						font-family: 'Khmer OS Battambang';
 						}
 						.hover:hover{background: #ccc;}
+						.hide{visibility: hidden;}
+							@media print {
+							  div.divFooter {
+							    position: fixed;
+							    top: 0;
+							  	width: 100%;
+							  	height: 100px;
+							  	bottom:0px;
+								margin:0;
+							  }
+							.hide{visibility: visible; height: 110px;}
+							}
 				</style>
-	        	<table width="100%" style="font-family:khmer;margin:0; padding:0;border:none;" >
-	            	<tr>
-	                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
-	                	<td width="60%" valign="top">
-	                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $branch_title;?></label></h2>
-	                	<h2 style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_STAFF");?></h2></td>
-	                    <td width="20%"></td>
-	                </tr> 
-	            </table>
+					<div class="divFooter">
+			        	<table width="100%" style="font-family:khmer;margin:0; padding:0;border:none;" >
+			            	<tr>
+			                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
+			                	<td width="60%" valign="top">
+			                	<h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $branch_title;?></label></h2>
+			                	<h2 style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("BRAND_STAFF");?></h2></td>
+			                    <td width="20%"></td>
+			                </tr> 
+			            </table>
+			       </div>
 				<table id="exportExcel" width="100%" border="1" style="border-collapse:collapse;font-size: 12px;" bordercolor="black">  
+			    	<thead>
+		                 <tr class="hide" style="border:1px solid #000;">
+			                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+			             </tr>
 			    	<tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 30px; font-size:12px; padding:5px 0px; " >
-			        	<td><?php echo $tr->translate("NUM");?></td>
-			            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+			        	<th><?php echo $tr->translate("NUM");?></th>
+			            <th><?php echo $tr->translate("BRANCH_NAME");?></th>
 			            <!--<td><?php //echo $tr->translate("STAFF_ID");?></td> -->
-			            <td><?php echo $tr->translate("CO_NAME");?></td>
-			            <td><?php echo $tr->translate("SEX");?></td>
-			            <td><?php echo $tr->translate("PHONE");?></td>
-			            <td><?php echo $tr->translate("NATIONALITY_NO");?></td>
-			            <td><?php echo $tr->translate("EMAIL");?></td>
-			            <td><?php echo $tr->translate("POB");?></td>
-			            <td><?php echo $tr->translate("ADDRESS");?></td>
-			            <td><?php echo $tr->translate("NOTE");?></td>
-			            <td><?php echo $tr->translate("BY_USER");?></td>
+			            <th><?php echo $tr->translate("CO_NAME");?></th>
+			            <th><?php echo $tr->translate("SEX");?></th>
+			            <th><?php echo $tr->translate("PHONE");?></th>
+			            <th><?php echo $tr->translate("NATIONALITY_NO");?></th>
+			            <th><?php echo $tr->translate("EMAIL");?></th>
+			            <th><?php echo $tr->translate("POB");?></th>
+			            <th><?php echo $tr->translate("ADDRESS");?></th>
+			            <th><?php echo $tr->translate("NOTE");?></th>
+			            <th><?php echo $tr->translate("BY_USER");?></th>
 			         </tr>
+			         </thead>
 			       <?php if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){?>
 					   <tr style="font-size: 12px; font-family: 'Khmer OS Battambang'" align="left" class="hover">
 					     <td>&nbsp;<?php echo $key+1; ?></td>
