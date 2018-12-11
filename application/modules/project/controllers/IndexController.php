@@ -98,6 +98,12 @@ class Project_indexController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	public function viewAction(){
+		$id=$this->getRequest()->getParam("id");
+		$db= new Project_Model_DbTable_DbProject();
+		$this->view->rs = $db->getBranchById($id);
+		$this->view->shareholder = $db->getBranchHolderById($id);
+	}
 	function copyAction()
 	{
 		$id=$this->getRequest()->getParam("id");

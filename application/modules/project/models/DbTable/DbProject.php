@@ -50,7 +50,7 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_manager_nationality'=>$_data['sc_project_manager_nationality'],
     			'w_manager_nation_id'=>$_data['sc_project_manager_nation_id'],
     			
-    			'p_sex'=>$_data['p_manager_sex'],
+    			'p_manager_sex'=>$_data['p_manager_sex'],
     			'p_dob'=>$_data['dob_manager'],
     			'p_nationid_issue'=>$_data['date_iss_doc'],
     			 
@@ -253,7 +253,10 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     
  function getBranchById($id){
     	$db = $this->getAdapter();
-    	$sql = "SELECT * FROM
+    	$sql = "SELECT * ,
+    		(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND p_sex=key_code LIMIT 1) AS sex,
+    		(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND w_sex=key_code LIMIT 1) AS sex_w
+    		FROM		
     	$this->_name ";
     	$where = " WHERE `br_id`= $id" ;
    		return $db->fetchRow($sql.$where);

@@ -1,0 +1,263 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate('PROJECT_INFO')); 
+	echo $this->headTitle(''); 
+// 	$sex='';
+// 	if($this->rs['sex']==1){
+// 		$sex=$tr->translate("MALE");
+// 	}else{
+// 		$sex=$tr->translate("FEMALE");
+// 	}
+	$image = $this->baseUrl().'/images/no-profile.png';
+			if(!empty($this->rs['photo'])){
+				if (file_exists(PUBLIC_PATH."/images/photo/".$this->rs['photo'])){
+				$image = $this->baseUrl().'/images/photo/'.$this->rs['photo'];
+				}
+	}
+	//print_r($image); exit();
+?>	
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script type="dojo/method" event="onSubmit">			
+	if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+</script>
+<style>
+tr.head td h2 {
+    font-size: 16px !important;
+    line-height: 27px !important;
+}
+.b{ font-weight: bold; }
+
+p.padding-left {
+    line-height: 24px !important;
+}
+
+table#exportExcel tr td {
+    font-size: 14px !important;
+}
+label.title {
+    font-size: 14px !important;
+    min-width: 100px !important;
+}
+label.value {
+    font-size: 14px !important;
+    min-width: 100px !important;
+}
+</style>
+<script type="text/javascript">
+dojo.require("dijit.form.NumberTextBox");
+dojo.ready(function(){
+	 
+}); 
+ 
+</script>
+<table width="100%">
+<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+		<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+			<i class="fa fa-print"></i>
+		</div>
+      <div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+		<div class="ptss__settings">
+			<div class="ptss__single-setting" id="ptss__layout">
+				<div class="ptss__setting-control">
+					<div class="ptss__layout-wrapper">
+						<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
+						<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+						<a class="qButton excel" href="#"  title="<?php echo $tr->translate("Export");?>"  onclick="exportExcel();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+</div>
+</table>
+<div style="background: #fff;width: 27cm;margin: 0 auto;min-height: 25cm; padding: 0.5cm;">
+<div id="divPrint">
+			<style>
+				.border {
+			    display: block;
+			    width: 100%;
+			    height: 2px;
+			    margin-bottom: 10px;
+			    background: black;
+						} 
+	   			label.value{
+	   				font-weight: initial;
+	   				min-width: 90px;
+	   				font-size: 14px;
+	   				display: inline-block;
+				}
+				p.padding-left {
+				    padding-left: 10px;
+					    line-height: 20px;
+				}
+				label.title {
+				    font-size: 14px;
+				    min-width: 80px;
+				    display: inline-block;
+				}
+				.border {
+				    
+				    display: block;
+				    width: 100%;
+				    height: 1px;
+				    margin-bottom: 10px;
+				}
+	  		 </style>
+				<table width="100%" style="font-size:12px; font-family:Tahoma,'Khmer OS Battambang';"> 
+					<tr class="head">
+						<td width="20%" valign="middle" align="center">
+							<div style=" display: inline-block;    vertical-align: top;">
+							<img alt="" src="<?php echo $this->baseUrl()."/images/logo.PNG"?>" style=" width: 150px;"><br>
+					   		<span style="font-size:16px;     line-height: 12px; font-weight: initial; font-family:'Times New Roman';"><?php echo $tr->translate("Borey Phnom Penh Thmey");?></span>
+							</div>
+					   </td>
+					   <td width="30%" align="center">
+					   		
+					   </td>
+					   <td width="30%" align="center">
+					   		<h2 style="font-size:16px;     line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';" >ព្រះរាជាណាចក្រកម្ពុជា</h2>
+					   		<h2 style="font-size:14px;     line-height: 14px; font-weight: initial; font-family:'Khmer OS Battambang';">ជាតិ សាសនា ព្រះមហាក្សត្រ</h2>
+					   		<img alt="" src="<?php echo $this->baseUrl()."/images/sign.PNG"?>" style=" width: 120px;">
+					   </td>
+					</tr>
+					<tr class="head">
+					   <td colspan="3" align="center">
+					   		<h1 style="font-size:18px;font-weight: initial;font-family:'Khmer OS Muol Light';text-decoration: underline;" ><?php echo $tr->translate("PROJECT_INFO");?></h1>
+					   </td>
+					</tr>
+					<tr>
+					   <td colspan="3">
+					   		<table id="exportExcel" style="font-family:'Khmer OS Battambang'; border-collapse:collapse;  font-size:14px; white-space: nowrap;" width="100%" cellspacing="0">
+						    	<tr>
+						    		<td style="font-size:14px; font-weight: initial; font-family:'Khmer OS Battambang';">
+						    			I. <?php echo $tr->translate("PROJECT_INFO");?>
+						    			<div class="border"></div>
+						    		</td>
+						    	</tr>
+						    	<tr>
+						    		<td style="font-size:14px; font-weight:600;  font-family:'Khmer OS Battambang';">
+						    			<p class="padding-left">
+						    			<label class="title"><?php echo $tr->translate("BRANCH_CODE");?></label> : <label class="value"><?php echo $this->rs['branch_code'];?></label><label class="title"><?php echo $tr->translate("PROJECT_NAME");?></label> : <label class="value"><?php echo $this->rs['project_name'];?></label><label class="title"><?php echo $tr->translate("PHONE");?></label> : <label class="value"><?php echo $this->rs['branch_tel'];?></label> 
+						    			</p>
+						    			<p class="padding-left">
+						    			 <label class="title"><?php echo $tr->translate("PREFIX_CODE");?></label> : <label class="value"><?php echo $this->rs['prefix'];?></label><label class="title"><?php echo $tr->translate("FAX");?></label> : <label class="value"><?php echo $this->rs['fax'];?></label><label class="title"><?php echo $tr->translate("BRANCH_NOTE");?></label> : <label class="value"><?php echo $this->rs['other'];?></label>  
+						    			</p>
+						    			<p class="padding-left">
+						    			<label class="title"><?php echo $tr->translate("BRANCH_ADDRESS");?></label> : <label class="value"><?php echo $this->rs['br_address'];?></label> 
+						    			</p>
+						    		</td>
+						    	</tr>
+						    	<tr><td>&nbsp;</td></tr>
+						    	<tr>
+						    		<td style="font-size:14px; font-weight: initial; font-family:'Khmer OS Battambang';">
+						    			II. <?php echo $tr->translate("SIGNATUR_NAME");?>
+						    			<div class="border"></div>
+						    		</td>
+						    	</tr>
+						    	<tr>
+						    		<td style="font-size:14px; font-weight:600;  font-family:'Khmer OS Battambang';">
+						    			<p class="padding-left">
+						    			<label class="title"><?php echo $tr->translate("SELLER_NAME");?></label> : <label class="value"><?php echo $this->rs['p_manager_namekh'];?></label><label class="title"><?php echo $tr->translate("SEX");?> </label> : <label class="value"><?php echo $this->rs['sex'];?></label><label class="title"><?php echo $tr->translate("CURRENT_ADDRESS");?></label> : <label class="value"><?php echo $this->rs['p_manager_nation_id'];?></label>
+						    			</p>
+						    			<p class="padding-left">
+						    			 <label class="title"><?php echo $tr->translate("DOB");?></label> : <label class="value"><?php echo date("d/m/Y",strtotime($this->rs['p_dob']));?></label><label class="title"><?php echo $tr->translate("NATIONALITY");?> </label> : <label class="value"><?php echo $this->rs['p_manager_nationality'];?></label><label class="title"><?php echo $tr->translate("ISSUE_DATE");?></label> : <label class="value"><?php echo date("d/m/Y",strtotime($this->rs['p_nationid_issue']));?></label>  
+						    			</p>
+						    			<p class="padding-left">
+						    			 <label class="title"><?php echo $tr->translate("CURRENT_ADDRESS");?></label> : <label class="value"><?php echo $this->rs['p_current_address'];?></label>  
+						    			</p>
+						    		</td>
+						    	</tr>
+						    	<tr><td>&nbsp;</td></tr>
+						    	<tr>
+						    		<td style="font-size:14px; font-weight: initial; font-family:'Khmer OS Battambang';">
+						    			III. <?php echo $tr->translate("SIGNATUR_NAME_WITH");?>
+						    			<div class="border"></div>
+						    		</td>
+						    	</tr>
+						    	<tr>
+						    		<td style="font-size:14px; font-weight:600;  font-family:'Khmer OS Battambang';">
+						    			<p class="padding-left">
+						    			<label class="title"><?php echo $tr->translate("COMMUNENAME");?></label> : <label class="value"><?php  echo $this->rs['w_manager_namekh'];?></label><label class="title"><?php echo $tr->translate("SEX");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo $this->rs['sex_w'];?></label><label class="title"><?php echo $tr->translate("CURRENT_ADDRESS");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo $this->rs['w_manager_nation_id'];?></label>
+						    			</p>
+						    			<p class="padding-left">
+						    			 <label class="title"><?php echo $tr->translate("DOB");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo date("d/m/Y",strtotime($this->rs['w_dob']));?></label><label class="title"><?php echo $tr->translate("NATIONALITY");?> </label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo $this->rs['w_manager_nationality'];?></label><label class="title"><?php echo $tr->translate("ISSUE_DATE");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh']))echo date("d/m/Y",strtotime($this->rs['w_nation_id_issue']));?></label>  
+						    			</p>
+						    			<p class="padding-left">
+						    			 <label class="title"><?php echo $tr->translate("CURRENT_ADDRESS");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo $this->rs['w_current_address'];?></label>  
+						    			</p>
+						    		</td>
+						    	</tr>
+						    	<tr><td>&nbsp;</td></tr>
+						    	<tr>
+						    		<td style="font-size:14px; font-weight: initial; font-family:'Khmer OS Battambang';">
+						    			VI. <?php echo $tr->translate("INFORMATION_SAREHOLDER");?>
+						    			<div class="border"></div>
+						    		</td>
+						    	</tr>
+						    	<tr>
+						    		<td style="font-size:14px;font-family:'Times New Roman','Khmer OS Battambang';">
+						    			<table width="100%" border="1" style="color: black; border: 1px solid black;border-collapse:collapse;line-height: 24px;white-space:nowrap;">
+											<tbody>
+											<tr align="center" style="font-size:14px;height:27px;font-weight: bold;background-color: #ffdbdb;">
+												<td><?php echo $tr->translate("NUM");?></td>
+												<td><?php echo $tr->translate("NAME_OFSHAREHOLDER");?></td>
+												<td><?php echo $tr->translate("SEX");?></td>
+												<td><?php echo $tr->translate("DOB");?></td>
+												<td><?php echo $tr->translate("CURRENT_ADDRESS");?></td>
+												<td><?php echo $tr->translate("ADDRESS");?></td>
+												<td><?php echo $tr->translate("PHONE");?></td>
+												<td><?php echo $tr->translate("QTY_OFSHAREHOLDER");?></td>
+											</tr>
+											<?php $i=0;if(!empty($this->shareholder)){foreach($this->shareholder as $rs){$i++;?>
+											<tr style="font-size:13px;height:23px;">
+												<td align="center"><?php echo $i;?></td>
+												<td><?php echo $rs['shareholder_name'];?></td>
+												<td><?php echo $rs['gender'];?></td>
+												<td align="center"><?php echo date("d/m/Y",strtotime($rs['dob']));?></td>
+												<td align="center"><?php echo $rs['pob'];?></td>
+												<td align="center"><?php echo $rs['nation_id'];?></td>
+												<td align="center"><?php echo $rs['tel'];?></td>
+												<td><?php echo $rs['percentage'];?></td>
+											</tr>
+											<?php }}?>
+											</tbody>
+										</table>
+						    		</td>
+						    	</tr>
+						    </table>
+					   </td>
+					</tr>
+	  		 	</table>
+	   		</div>
+		 </div>
+<script type="text/javascript">
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
+}
+</script>
+
