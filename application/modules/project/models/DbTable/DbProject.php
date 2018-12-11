@@ -4,6 +4,11 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
 {
 
     protected $_name = 'ln_project';
+    function countProject(){
+    	$db =$this->getAdapter();
+    	$sql="SELECT COUNT(br_id) AS pro FROM ln_project";
+    	return $db->fetchOne($sql);
+    }
     function addbranch($_data){
     	
     	$part= PUBLIC_PATH.'/images/projects/';
