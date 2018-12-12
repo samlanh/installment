@@ -310,13 +310,13 @@ function getAllBranch($search=null){
     		cheque,total_amount,description,date,
     		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
     		status FROM ln_expense WHERE status=1 ";
-    		
-    		$order=" order by branch_id DESC,id desc ";
-    		if($search['ordering']==1){ 
+    		 
+    		$order=" order by branch_id DESC";
+    		if($search['ordering']==1){
     			$order.=" , date DESC";
     		}
     		if($search['ordering']==2){
-    			$order.=" , invoice DESC";
+    			$order.=" , id DESC";
     		}
     		if(empty($search)){
     			return $db->fetchAll($sql.$order);
