@@ -22,6 +22,17 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		$_status->setMultiOptions($_status_opt);
 		$_status->setValue($request->getParam("status"));
 		
+		$_ordering=  new Zend_Dojo_Form_Element_FilteringSelect('ordering');
+		$_ordering->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside'));
+		$_ordering_opt = array(
+				1=>$this->tr->translate("Sort By Date"),
+				2=>$this->tr->translate("Sort By Invoice"));
+		$_ordering->setMultiOptions($_ordering_opt);
+		$_ordering->setValue($request->getParam("ordering"));
+		
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
 		$_title->setAttribs(array('dojoType'=>'dijit.form.TextBox',
 				'onkeyup'=>'this.submit()',
@@ -260,7 +271,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 			$_releasedate->setValue($data['date_release']);
 			$client_name->setValue($data['client_name']);
 		}
-		$this->addElements(array($user,$payment_method,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
+		$this->addElements(array($user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
 				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist));
 		return $this;
 		

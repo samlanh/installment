@@ -244,9 +244,18 @@ function getAllBranch($search=null){
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
     		cheque,total_amount,description,date,
     		(SELECT  first_name FROM rms_users WHERE rms_users.id=ln_income.user_id limit 1 ) AS user_name,
-    		
     		status FROM ln_income WHERE status=1 ";
-    	
+    		
+    		$order=" order by branch_id DESC ";
+    		if($search['ordering']==1){
+    			$order.=" , date DESC";
+    		}
+    		if($search['ordering']==2){
+    			$order.=" , id DESC";
+    		}
+    		if(empty($search)){
+    			return $db->fetchAll($sql.$order);
+    		}
     		if (!empty($search['adv_search'])){
     			$s_where = array();
     			$s_search = trim(addslashes($search['adv_search']));
@@ -275,7 +284,6 @@ function getAllBranch($search=null){
     		if (!empty($search['streetlist'])){
     			$where.=" AND (SELECT street FROM `ln_properties` WHERE id =ln_income.house_id) = '".$search['streetlist']."'";
     		}
-    		$order=" order by id desc ";
     		return $db->fetchAll($sql.$where.$order);
     	}
     	function getIncomeById($income_id){

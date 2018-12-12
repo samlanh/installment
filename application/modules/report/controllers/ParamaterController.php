@@ -137,6 +137,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"branch_id"=>-1,
   				"status"=>-1,
   				"category_id"=>-1,
+  				"ordering"=>1,
   				'land_id'=>-1,
   				'user_id'=>-1,
   				'client_name'=>'',
