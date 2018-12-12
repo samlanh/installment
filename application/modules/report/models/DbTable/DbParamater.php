@@ -310,7 +310,17 @@ function getAllBranch($search=null){
     		cheque,total_amount,description,date,
     		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
     		status FROM ln_expense WHERE status=1 ";
-    	
+    		
+    		$order=" order by branch_id DESC,id desc ";
+    		if($search['ordering']==1){ 
+    			$order.=" , date DESC";
+    		}
+    		if($search['ordering']==2){
+    			$order.=" , invoice DESC";
+    		}
+    		if(empty($search)){
+    			return $db->fetchAll($sql.$order);
+    		}
     		if (!empty($search['adv_search'])){
     			$s_where = array();
     			$s_search = trim(addslashes($search['adv_search']));
@@ -338,7 +348,7 @@ function getAllBranch($search=null){
     		if($group_by!=null){
     			$where.=" group by category_id ";
     		}
-    		$order=" order by branch_id DESC,id desc ";
+    		
     		return $db->fetchAll($sql.$where.$order);
     	}
     	function getAllExpensebyCate($search=null){

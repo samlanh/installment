@@ -162,6 +162,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
     		"adv_search"=>'',
     		"supplier_id"=>"",
     		"branch_id"=>-1,
+    		"ordering"=>1,
     		"category_id_expense"=>-1,
     		'payment_type'=>-1,
     		'start_date'=> date('Y-m-d'),
