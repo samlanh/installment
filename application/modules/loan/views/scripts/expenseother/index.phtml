@@ -1,0 +1,51 @@
+<?php 
+$frm = $this->frm_search;
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm_expense = $this->frm_expense;
+?>
+<title><?php echo $tr->translate('OTHER_EXPENSE');?></title>
+<script>
+	dojo.require('dijit.form.Button');
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'loan','controller'=>'expense','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+			   <div class="form-group">
+			   		<div class="col-md-3 col-sm-3 col-xs-12">
+			   			<?php echo $frm->getElement("adv_search");?>
+			   		</div>
+			   		<div class="col-md-3 col-sm-3 col-xs-12">
+			   			<?php echo $frm->getElement('branch_id');?>
+			   		</div>
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   			<?php echo $frm->getElement('category_id_expense');?>
+			   		</div>
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   			<?php echo $frm->getElement('payment_type');?>
+			   		</div>
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   		<?php echo $frm_expense->getElement('supplier_id');?>
+			   		</div>
+			   	</div>
+			   	<div class="form-group">
+			   		<div class="col-md-3 col-sm-2 col-xs-12">
+			   			<?php echo $frm->getElement('start_date');?>
+			   		</div>
+			   		<div class="col-md-3 col-sm-2 col-xs-12">
+			   			<?php echo $frm->getElement('end_date');?>
+			   		</div>
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   			<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+			   		</div>
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   		</div>
+			   	</div>
+			</form>
+		</div>
+		<div class="card-box">
+			 <?php echo $this->list;?>
+		</div>
+	</div>
+</div>

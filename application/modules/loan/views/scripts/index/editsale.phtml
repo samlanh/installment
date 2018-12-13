@@ -746,6 +746,7 @@ function loading(){
 }
 var url_add_staff = '<?php echo $this->url(array("module"=>"loan","controller"=>"index","action"=>"add-staff")); ?>';
 function addStaff(){
+	dijit.byId('save').set('disabled',true);
 	dojo.xhrPost({
 		url:url_add_staff,
 		form: dojo.byId("frm_staff"),
@@ -785,7 +786,7 @@ function hideDialog1(){
 					<td>
 						<fieldset style="background-color: buttonface;">
 						<legend align="center" ><?php echo $tr->translate('ADD_STAFF');?></legend>
-							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+							<table style="margin: 0 auto; width: 100%;  padding:10px; line-height: 32px;" cellspacing="7" >
 								<tr>
 									<td><?php echo $tr->translate('NAME_KH');?></td>
 									<td>
@@ -818,7 +819,7 @@ function hideDialog1(){
 									<td colspan="4" align="center">
 										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
 										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
-										<input type="button" value="save" label="SAVE" name="save_close" dojoType="dijit.form.Button" 
+										<input type="button" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button" 
 										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addStaff();"/>
 									</td>
 								</tr>
