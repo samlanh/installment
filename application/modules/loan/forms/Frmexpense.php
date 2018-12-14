@@ -81,6 +81,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'required'=>'true',
+				'readOnly'=>'readOnly',
 				'onkeyup'=>'convertToDollar();',
 		));
 		

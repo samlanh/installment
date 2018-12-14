@@ -22,8 +22,7 @@ class Group_indexController extends Zend_Controller_Action {
 					'start_date'=> $formdata['start_date'],
 					'end_date'=>$formdata['end_date'],
 					'customer_id'=>$formdata['customer_id']);
-			}
-			else{
+			}else{
 				$search = array(
 					'branch_id'=>-1,
 					'adv_search' => '',
