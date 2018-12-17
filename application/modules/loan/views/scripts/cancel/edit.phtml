@@ -725,10 +725,11 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 				
 				total_principal= data.total_principal;
 				if(isNaN(total_principal) || total_principal==null){total_principal=0;}
+				
 			    paid_amount = data.paid_amount;
 				if(isNaN(paid_amount) || paid_amount==null){paid_amount=0;}
-				total_principal = parseFloat(paid_amount)+parseFloat(total_principal);
-				
+				//total_principal = parseFloat(paid_amount)+parseFloat(total_principal);
+				total_principal = parseFloat(total_principal);
 				
 				dijit.byId('paid_amount').attr('value',total_principal);
 				balance = data.price_sold-total_principal;
@@ -751,9 +752,9 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 				dojo.byId('sale_note').innerHTML = data.sale_note;
 
 				//current total paid amount on sale
-				<?php if (!empty($this->row['paid_amount'])){?>
-					dijit.byId('paid_amount').set('value','<?php echo $this->row['paid_amount'];?>');
-				<?php }?>
+				<?php //if (!empty($this->row['paid_amount'])){?>
+					//dijit.byId('paid_amount').set('value','<?php //echo $this->row['paid_amount'];?>');
+				<?php //}?>
 			},
 			error: function(err) {
 				alert(err);
