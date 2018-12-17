@@ -22,7 +22,6 @@ class Loan_Model_DbTable_DbExpenseother extends Zend_Db_Table_Abstract
 					'invoice'		=>$invoice,
 					'category_id'	=>$data['income_category'],
 					'cheque'		=>$data['cheque'],
-					//'status'		=>$data['status'],
 					'description'	=>$data['Description'],
 					'date'			=>$data['Date'],
 					'user_id'		=>$this->getUserId(),
@@ -85,8 +84,6 @@ class Loan_Model_DbTable_DbExpenseother extends Zend_Db_Table_Abstract
  	$_db= $this->getAdapter();
  	$_db->beginTransaction();
 	 	try{
- 		//print_r($data); exit();
- 		//echo $data['id']; exit();
 		$arr = array(
 					'sale_id'	=>$data['sale_client'],
 					'house_id'	=>$data['house_id'],

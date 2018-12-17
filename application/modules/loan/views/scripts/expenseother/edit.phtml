@@ -223,6 +223,7 @@ function displayNone(){
 	document.getElementById('divPrint1').style.display="none";
 }
 dojo.ready(function(){
+	getInvoiceNo('');
 	new dijit.form.FilteringSelect({
 	    autoComplete: true,                        
 	    id: "customer",
@@ -507,7 +508,30 @@ function getLandAndClientDetail(){
 		}
 	});
 }
-
+var url_get_invoice = '<?php echo $this->url(array('module'=>'loan','controller'=>'income','action'=>'get-invoice-no')); ?>';
+function getInvoiceNo(condition){
+	getSaleClie();
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0){
+		branch_id=1;
+	}
+	dojo.xhrPost({
+		url:url_get_invoice,
+		content:{
+			'branch_id':branch_id
+			},
+		handleAs:"json",
+		load: function(data) {
+		    dijit.byId('invoice').attr('value',data);   
+			if(condition==1){
+				printSave(data);
+			}
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
 var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
 var url_customer = '<?php echo $this->url(array('module'=>'loan','controller'=>'income','action'=>'get-all-customer')); ?>';
@@ -592,9 +616,7 @@ function addCategory(){
 		}
 	});
 }
-function getInvoiceNo(condition){
-	getSaleClie();
-}
+ 
 
 function printSave(new_invoice_no){
 
