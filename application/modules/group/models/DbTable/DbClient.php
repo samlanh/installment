@@ -92,7 +92,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		if (!file_exists($part)) {
 			mkdir($part, 0777, true);
 		}
-		
+		 
 		if (!empty($_data['identity'])){
 			$identity = $_data['identity'];
 			$ids = explode(',', $identity);
@@ -151,8 +151,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 									'document_name'=>$photo,
 							);
 							$this->insert($arr);
-						}
-						else{
+						}else{
 							$string = "Image Upload failed";
 						   }
 					}

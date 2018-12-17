@@ -12,7 +12,7 @@ class Loan_ExpenseOtherController extends Zend_Controller_Action
     public function indexAction()
     {
     	try{
-    		$db = new Loan_Model_DbTable_DbIncome();
+    		$db = new Loan_Model_DbTable_DbExpenseother();
     		if($this->getRequest()->isPost()){
     			$search=$this->getRequest()->getPost();
     		}
@@ -28,7 +28,7 @@ class Loan_ExpenseOtherController extends Zend_Controller_Action
     			);
     		}
     		$this->view->adv_search = $search;
-			$rs_rows= $db->getAllIncome($search);//call frome model
+			$rs_rows= $db->getAllExpense($search);//call frome model
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
@@ -55,11 +55,11 @@ class Loan_ExpenseOtherController extends Zend_Controller_Action
     {
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
-			$db = new Loan_Model_DbTable_DbIncome();				
+			$db = new Loan_Model_DbTable_DbExpenseother();				
 			try {
-				$db->addIncome($data);
+				$db->addExpens($data);
 				if(!empty($data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/income");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/expenseother");
 				}else{
 					Application_Form_FrmMessage::message("INSERT_SUCCESS");
 				}				
@@ -76,9 +76,9 @@ class Loan_ExpenseOtherController extends Zend_Controller_Action
 		$this->view->all_category = $result;
 		
     	$pructis=new Loan_Form_Frmexpense();
-    	$frm = $pructis->FrmAddExpense();
+    	$frm = $pructis->FrmAddExpenseother();
     	Application_Model_Decorator::removeAllDecorator($frm);
-    	$this->view->frm_expense=$frm;
+    	$this->view->frm_expenseother=$frm;
     	
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
@@ -124,64 +124,64 @@ class Loan_ExpenseOtherController extends Zend_Controller_Action
     	$this->view->footer = $frmpopup->getFooterReceipt();
     }
     
-    function getRateAction(){
-    	if($this->getRequest()->isPost()){
-    		$data = $this->getRequest()->getPost();
-	    	$db = new Loan_Model_DbTable_DbIncome();
-	    	$ex_rate = $db->getExchangeRate();
-	    	//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
-	    	print_r(Zend_Json::encode($ex_rate));
-	    	exit();
-    	}
-    }
-    function getparentbyidAction(){
-    	if($this->getRequest()->isPost()){
-    		$data = $this->getRequest()->getPost();
-    		$db = new Loan_Model_DbTable_DbIncome();
-    		$cate_id = "";
-    		if(!empty($data['cateid'])){
-    			$cate_id = $data['cateid'];
-    		}
-    		$parentrs = $db->getAllIncomeCategoryParent($data['type'],$cate_id);
-    		print_r(Zend_Json::encode($parentrs));
-    		exit();
-    	}
-    }
-    function addCategoryAction(){
-    	if($this->getRequest()->isPost()){
-    		$data = $this->getRequest()->getPost();
-    		$db = new Loan_Model_DbTable_DbIncome();
-    		$ex_rate = $db->AddNewCategory($data,1);
-    		//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
-    		print_r(Zend_Json::encode($ex_rate));
-    		exit();
-    	}
-    }
+//     function getRateAction(){
+//     	if($this->getRequest()->isPost()){
+//     		$data = $this->getRequest()->getPost();
+// 	    	$db = new Loan_Model_DbTable_DbIncome();
+// 	    	$ex_rate = $db->getExchangeRate();
+// 	    	//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
+// 	    	print_r(Zend_Json::encode($ex_rate));
+// 	    	exit();
+//     	}
+//     }
+//     function getparentbyidAction(){
+//     	if($this->getRequest()->isPost()){
+//     		$data = $this->getRequest()->getPost();
+//     		$db = new Loan_Model_DbTable_DbIncome();
+//     		$cate_id = "";
+//     		if(!empty($data['cateid'])){
+//     			$cate_id = $data['cateid'];
+//     		}
+//     		$parentrs = $db->getAllIncomeCategoryParent($data['type'],$cate_id);
+//     		print_r(Zend_Json::encode($parentrs));
+//     		exit();
+//     	}
+//     }
+//     function addCategoryAction(){
+//     	if($this->getRequest()->isPost()){
+//     		$data = $this->getRequest()->getPost();
+//     		$db = new Loan_Model_DbTable_DbIncome();
+//     		$ex_rate = $db->AddNewCategory($data,1);
+//     		//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
+//     		print_r(Zend_Json::encode($ex_rate));
+//     		exit();
+//     	}
+//     }
     
-    function getAllCustomerAction(){
-    	if($this->getRequest()->isPost()){
-    		$data = $this->getRequest()->getPost();
-    		$db = new Loan_Model_DbTable_DbIncome();
-    		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-    		$result = $db->getAllCustomer($data['branch_id']);
-    		array_unshift($result, array ( 'id' => -1, 'name' => $tr->translate("CHOOSE_CUSTOEMR")) );
-    		print_r(Zend_Json::encode($result));
-    		exit();
-    	}
-    }
+//     function getAllCustomerAction(){
+//     	if($this->getRequest()->isPost()){
+//     		$data = $this->getRequest()->getPost();
+//     		$db = new Loan_Model_DbTable_DbIncome();
+//     		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+//     		$result = $db->getAllCustomer($data['branch_id']);
+//     		array_unshift($result, array ( 'id' => -1, 'name' => $tr->translate("CHOOSE_CUSTOEMR")) );
+//     		print_r(Zend_Json::encode($result));
+//     		exit();
+//     	}
+//     }
 
-    function getInvoiceNoAction(){
+//     function getInvoiceNoAction(){
     	
-    	if($this->getRequest()->isPost()){
-    		$data = $this->getRequest()->getPost();
-    		$db = new Loan_Model_DbTable_DbIncome();
-    		$result = $db->getInvoiceNo($data['branch_id']);
-    		//array_unshift($result, array ( 'id' => -1, 'name' => 'Select Customer') );
-    		print_r(Zend_Json::encode($result));
-    		exit();
-    	}
+//     	if($this->getRequest()->isPost()){
+//     		$data = $this->getRequest()->getPost();
+//     		$db = new Loan_Model_DbTable_DbIncome();
+//     		$result = $db->getInvoiceNo($data['branch_id']);
+//     		//array_unshift($result, array ( 'id' => -1, 'name' => 'Select Customer') );
+//     		print_r(Zend_Json::encode($result));
+//     		exit();
+//     	}
     	
-    }
+//     }
     
     
     

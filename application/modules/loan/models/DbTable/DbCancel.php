@@ -315,7 +315,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		if(!empty($sale_id)){
 			$sale=' OR s.`id`= '.$sale_id;
 		}
-		$sql="SELECT s.`id`,
+		$sql="SELECT *, s.`id`,
 		CONCAT((SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = s.`client_id` LIMIT 1),' (',
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=s.`house_id` LIMIT 1),')' ) AS `name`
 		FROM `ln_sale` AS s
