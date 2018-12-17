@@ -5,7 +5,6 @@ class Loan_Model_DbTable_DbExpenseother extends Zend_Db_Table_Abstract
 	public function getUserId(){
 		$session_user=new Zend_Session_Namespace('authinstall');
 		return $session_user->user_id;
-	
 	}
 	
 	function addExpens($data){
@@ -41,7 +40,6 @@ class Loan_Model_DbTable_DbExpenseother extends Zend_Db_Table_Abstract
 			if (!file_exists($part)) {
 				mkdir($part, 0777, true);
 			}
-			
 			//print_r($data); exit();
 			
 			if (!empty($data['identity2'])){

@@ -144,11 +144,6 @@
 		               	 <i class="fa fa-pie-chart"></i> <?php echo $tr->translate("ADDINEXPENSETYPE");?></a>
 			            </li>
 			            <li class="nav-item">
-			                <a class="nav-link" data-toggle="tab" href="#panel212" role="tab">
-			                <i class="fa fa-audio-description"></i> <?php echo $tr->translate("DESCRIPTION");?>
-			                </a>
-			            </li>
-			            <li class="nav-item">
 			                <a class="nav-link" data-toggle="tab" href="#panel213" role="tab">
 			                <i class="fa fa-file-text"></i> <?php echo $tr->translate("CUSTOMER_DOCUMENT");?>
 			                </a>
@@ -174,22 +169,6 @@
 						        </div>
 					        </div>
 					        <!--Schedule Panel 2-->
-					        <div class="tab-pane fade in " id="panel212" role="tabpanel">
-					        	<div class="card-box mb-20">
-						        	<div class="col-md-12 col-sm-12 col-xs-12 ">
-						        		<table id="table_rows" style="border-collapse: collapse; border:1px solid #ccc;white-space: nowrap;width:100%;">
-											<tr id="head-title" class="head-td" align="right"></tr>
-										</table>
-						        	</div>
-						        	<div class="col-md-12 col-sm-12 col-xs-12 ">
-						        		<input type="button" label="<?php echo $tr->translate('ADD_EXPENSE');?>" dojoType="dijit.form.Button" 
-											 	   iconClass="dijitIconEditProperty" onclick="addRowdiscription();" />
-										<input type="hidden" name="identity1" id="identity1"  value="" >
-						        	</div>
-						        </div> 
-					        </div>
-					        <!--/.Schedule Panel 2-->
-					        <!--Schedule Panel 3-->
 					        <div class="tab-pane fade in " id="panel213" role="tabpanel">
 					        	<div class="form-group">
 						         	 	 <div class="col-md-10 col-sm-10 col-xs-10" id="fileList">
@@ -197,7 +176,7 @@
 						         	 </div>
 						         	 <div class="form-group">
 						         	 	<button class="btn btn-default addfile" onclick="addRow();" type="button"><?php echo $tr->translate('Add More Doc')?></button>
-										<input type="hidden" name="identity2" id="identity2"  value="" >
+										<input type="hidden" name="identity1" id="identity1"  value="" >
 						         	 </div>
 					         	</div>
 					        </div>
@@ -245,7 +224,6 @@ dojo.ready(function(){
 	    }
 	}, "customer");
 	addRowexpense();
-	addRowdiscription();
 });
 dojo.ready(function(){
 	addRow();
@@ -297,45 +275,6 @@ function getInvoiceNo(condition){
 		}
 	});
 }
-var col= 0; var no1=0;
-var title = 0;
-var all_stu = '<?php //echo $this->all_stu; ?>';
-function addRowdiscription() {
-	col++;no1++;
-	template='';
-	temp = "";
-	if(title!=1){
-		temp+='<td><?php echo $tr->translate("DEL");?></td>';
-		temp+='<td><?php echo $tr->translate("N_O");?></td>';
-		temp+='<td><?php echo $tr->translate("SCHOOL_AND_NAME");?></td>';
-		dojo.query("#head-title").append(temp);
-		title=1;
-	}
-	template+='<td width="2%" align="center"><img onclick="deleteRecorddi('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
-	template+='<td align="center" width="2%">'+no1+'</td>';
-	template+='<td width="80%"><input dojoType="dijit.form.Textarea" class="fullside" id="discription'+col+'" name="discription'+col+'" value="" type="text"  style="height: 43px;"></td>';	
-	tmp='<tr id="row'+col+'">';
-	tmp+="</tr>";
-	dojo.query("#table_rows").append(tmp);
-	if($("#identity1").val()!="") {
-		var identity = $("#identity1").val();
-		$("#identity1").val(identity+','+col);
-	} else {$("#identity1").val(col);}
-	dojo.html.set(dojo.byId("row"+col),template , {
-	     parseContent: true,
-	});
-}
-function deleteRecorddi(index) {
-	var identity1 = $('#identity1').val();
-	//alert(identity1);
-	var arrays = identity1.split(',');
-	for(var i=0;i<arrays.length;i++) {
-	if(arrays[i] == index) arrays.splice(i,1);
-	}
-	var strings = arrays.join(',');
-	$('#identity1').val(strings);
-	dojo.query("#row"+index).remove();
-}
 var template = '';
 var service = '';
 var col = 0;
@@ -364,7 +303,7 @@ function addRowexpense(){
 		template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+');" name="price_'+col+'" id="price_'+col+'"  dojoType="dijit.form.NumberTextBox" style="width:140px;" /></td>';	
 		template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+',1);" name="qty_'+col+'" id="qty_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:140px;" /></td>';
 		template+='<td><input type="text" onkeyup="calculateTotal('+col+');" readonly="readonly" name="total_'+col+'" id="total_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:170px; text-align: center;" /></td>';		
-		template+='<td><input type="text" name="remark_'+col+'" id="remark_'+col+'" dojoType="dijit.form.TextBox" placeholder="<?php echo $tr->translate("NOTE");?>" style="width:100%;" /><label id="subsub"></label></td>';
+		template+='<td><input type="text" name="remark_'+col+'" id="remark_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" style="width:100%;" /><label id="subsub"></label></td>';
 		tmp='<tr id="row'+col+'">';
 		tmp+="</tr>";
 		dojo.query("#table_row").append(tmp);
@@ -482,10 +421,10 @@ function addRow() {
 
 			$("#fileList").append(template);
 		
-		if($("#identity2").val()!='') {
-			var identity = $("#identity2").val();
-			$("#identity2").val(identity+','+col);
-		} else {$("#identity2").val(col);}
+		if($("#identity1").val()!='') {
+			var identity = $("#identity1").val();
+			$("#identity1").val(identity+','+col);
+		} else {$("#identity1").val(col);}
 		bs_input_file();
 }
 function bs_input_file() {
@@ -512,13 +451,13 @@ function bs_input_file() {
 	);
 }
 function deleteRecord(index){
-	var identity2 = $('#identity2').val();
-	var arrays = identity2.split(',');
+	var identity1 = $('#identity1').val();
+	var arrays = identity1.split(',');
 	for(var i=0;i<arrays.length;i++) {
 	if(arrays[i] == index) arrays.splice(i,1);
 	}
 	var strings = arrays.join(',');
-	$('#identity2').val(strings);
+	$('#identity1').val(strings);
 	$("#attachment"+index).remove();
 	bs_input_file();
 }
@@ -662,7 +601,7 @@ function hideDialog1(){
 					<td>
 						<fieldset style="background-color: buttonface;">
 						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend><br />
-							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+							<table style="margin: 0 auto; width: 100%;  padding:10px; line-height: 35px;" cellspacing="7" >
 								<tr>
 									<td><?php echo $tr->translate('NAME_KH');?></td>
 									<td>
