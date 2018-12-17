@@ -33,7 +33,7 @@ class Loan_ExpenseOtherController extends Zend_Controller_Action
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
     		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","INCOME_TITLE","RECEIPT_NO","CATEGORY","TOTAL_INCOME","NOTE","DATE","BY_USER","STATUS",'PRINT');
-    		$link=array('module'=>'loan','controller'=>'income','action'=>'edit');
+    		$link=array('module'=>'loan','controller'=>'expenseother','action'=>'edit');
     		$link1=array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome');
     		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('បោះពុម្ភ'=>$link1,'branch_name'=>$link,'client_name'=>$link,'title'=>$link,'invoice'=>$link));
     	}catch (Exception $e){
@@ -92,17 +92,20 @@ class Loan_ExpenseOtherController extends Zend_Controller_Action
     	$id = $this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
-			$db = new Loan_Model_DbTable_DbIncome();				
+			$db = new Loan_Model_DbTable_DbExpenseother();				
 			try {
-				$db->updateIncome($data,$id);				
-				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', "/loan/income");		
+				$db->updateExpense($data,$id);				
+				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', "/loan/expenseother");		
 			} catch (Exception $e) {
 				$this->view->msg = 'UPDATE_FAIL';
 			}
 		}
 		
-		$db = new Loan_Model_DbTable_DbIncome();
+		$db = new Loan_Model_DbTable_DbExpenseother();
 		$row  = $db->getexpensebyid($id);
+		$this->view->rows = $db->getexpenseDetailbyid($id);
+		$_db = new Group_Model_DbTable_DbClient();
+		$this->view->document=$_db->getDocumentClientById($id);
 		$row['payment_id']=0;
 		$this->view->row = $row;
 		

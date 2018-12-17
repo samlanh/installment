@@ -181,6 +181,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		return $this;
 		
 	}
+	
 	public function FrmAddExpenseother($data=null){
 	
 		$title = new Zend_Dojo_Form_Element_ValidationTextBox('title');

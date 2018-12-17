@@ -8,49 +8,127 @@ class Loan_Model_DbTable_DbExpenseother extends Zend_Db_Table_Abstract
 	}
 	
 	function addExpens($data){
-		try{
-		$invoice = $this->getInvoiceNo($data['branch_id']);
-		$_arr = array(
-			'branch_id'		=>$data['branch_id'],
-			'sale_id'		=>$data['sale_client'],
-			'house_id'		=>$data['house_id'],
-			'client_id'		=>$data['customer'],
-			'title'			=>$data['title'],
-			'total_amount'	=>$data['total_amount'],
-			'invoice'		=>$invoice,
-			'category_id'	=>$data['income_category'],
-			'cheque'		=>$data['cheque'],
-			'status'		=>$data['status'],
-			'description'	=>$data['Description'],
-			'date'			=>$data['Date'],
-			'user_id'		=>$this->getUserId(),
-			'create_date'	=>date('Y-m-d'),
-			//'is_beginning'=>$data['is_beginning'],
-			);
-		$this->insert($_arr);
-		
-			if(!empty($data['id'])){
-				$customer_id =  $data['id'];
-				$where = 'client_id = '.$customer_id;
-				$this->update($_arr, $where);
-			}else{
-				$customer_id = $this->insert($_arr);
-			}
-			$part= PUBLIC_PATH.'/images/document/';
-			if (!file_exists($part)) {
-				mkdir($part, 0777, true);
-			}
-			//print_r($data); exit();
-			
-			if (!empty($data['identity2'])){
-				$identity = $data['identity2'];
-				$ids = explode(',', $identity);
-				$image_name="";
-				$photo="";
-				$this->_name='ln_client_document';
-				$detailId="";
-				foreach ($ids as $i){
-					if(!empty($data['id'])){//only edit (delete only)
+		$_db= $this->getAdapter();
+		$_db->beginTransaction();
+			try{
+				$invoice = $this->getInvoiceNo($data['branch_id']);
+				$_arr = array(
+					'branch_id'		=>$data['branch_id'],
+					'sale_id'		=>$data['sale_client'],
+					'house_id'		=>$data['house_id'],
+					'client_id'		=>$data['customer'],
+					'title'			=>$data['title'],
+					'total_amount'	=>$data['total_amount'],
+					'invoice'		=>$invoice,
+					'category_id'	=>$data['income_category'],
+					'cheque'		=>$data['cheque'],
+					//'status'		=>$data['status'],
+					'description'	=>$data['Description'],
+					'date'			=>$data['Date'],
+					'user_id'		=>$this->getUserId(),
+					'create_date'	=>date('Y-m-d'),
+					//'is_beginning'=>$data['is_beginning'],
+					);
+				$expend_id = $this->insert($_arr);
+				
+				$ids = explode(',', $data['identity']);
+				$this->_name='ln_expense_detail';
+				foreach ($ids as $j){
+					$arr = array(
+							'expense_id'	=>$expend_id,
+							'service_id'	=>$data['description_'.$j],
+							'description'	=>$data['remark_'.$j],
+							'price'			=>$data['price_'.$j],
+							'qty'			=>$data['qty_'.$j],
+							'total'			=>$data['total_'.$j],
+					);
+					$this->insert($arr);
+				}
+				$part= PUBLIC_PATH.'/images/document/';
+				if (!file_exists($part)) {
+					mkdir($part, 0777, true);
+				}
+				if (!empty($data['identity1'])){
+					$identity = $data['identity1'];
+					$ids = explode(',', $identity);
+					$image_name="";
+					$photo="";
+					foreach ($ids as $i){
+						$name = $_FILES['attachment'.$i]['name'];
+						if (!empty($name)){
+							$ss = 	explode(".", $name);
+							$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
+							$tmp = $_FILES['attachment'.$i]['tmp_name'];
+							if(move_uploaded_file($tmp, $part.$image_name)){
+								$photo = $image_name;
+								$arr = array(
+										'client_id'=>$expend_id,
+										'document_name'=>$photo,
+										'type'=>2,
+								);
+								$this->_name = "ln_client_document";
+								$this->insert($arr);
+							}
+							else
+								$string = "Image Upload failed";
+							//     				}
+						}
+					}
+				}
+				$_db->commit();
+				}catch(Exception $e){
+					echo $e->getMessage();exit();
+					Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+				}
+ 	 }
+ function updateExpense($data,$id){
+ 	$_db= $this->getAdapter();
+ 	$_db->beginTransaction();
+	 	try{
+ 		//print_r($data); exit();
+ 		//echo $data['id']; exit();
+		$arr = array(
+					'sale_id'	=>$data['sale_client'],
+					'house_id'	=>$data['house_id'],
+					'branch_id'	=>$data['branch_id'],
+					'client_id'	=>$data['customer'],
+					'title'		=>$data['title'],
+					'total_amount'=>$data['total_amount'],
+					'invoice'	=>$data['invoice'],
+					'category_id'=>$data['income_category'],
+					'cheque'	=>$data['cheque'],
+					'description'=>$data['Description'],
+					'date'		=>$data['Date'],
+ 					'status'	=>$data['Stutas'],
+// 				   'is_beginning'=>$data['is_beginning'],
+					'user_id'	=>$this->getUserId(),
+				);
+				$where=" id = ".$id;
+				$this->update($arr, $where);
+				
+				$this->_name='ln_expense_detail';
+				$where = "expense_id = ".$id;
+				$this->delete($where);
+				$ids = explode(',', $data['identity']);
+				foreach ($ids as $j){
+					$arr = array(
+							'expense_id'	=>$id,
+							'service_id'	=>$data['description_'.$j],
+							'description'	=>$data['remark_'.$j],
+							'price'			=>$data['price_'.$j],
+							'qty'			=>$data['qty_'.$j],
+							'total'			=>$data['total_'.$j],);
+					$this->insert($arr);
+				}
+				$part= PUBLIC_PATH.'/images/document/';
+				if (!file_exists($part)) {
+					mkdir($part, 0777, true);
+				}
+				if (!empty($data['identity1'])){
+					$identity = $data['identity1'];
+					$ids = explode(',', $identity);
+					$detailId="";
+					foreach ($ids as $i){
 						if (empty($detailId)){
 							if (!empty($data['detailid'.$i])){
 								$detailId = $data['detailid'.$i];
@@ -60,90 +138,82 @@ class Loan_Model_DbTable_DbExpenseother extends Zend_Db_Table_Abstract
 								$detailId= $detailId.",".$data['detailid'.$i];
 							}
 						}
-						$this->_name = "ln_client_document";
-						$where1 =" client_id=".$data['id'];
-						if (!empty($detailId)){
-							$where1.=" AND id NOT IN ($detailId) ";
-						}
-						$this->delete($where1);
 					}
-					if (!empty($data['detailid'.$i])){//for edit (delete)
-						$name = $_FILES['attachment'.$i]['name'];
-						if (!empty($name)){
-							$ss = 	explode(".", $name);
-							$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
-							$tmp = $_FILES['attachment'.$i]['tmp_name'];
-							if(move_uploaded_file($tmp, $part.$image_name)){
-								$photo = $image_name;
-								$arr = array(
-										'client_id'=>$customer_id,
-										'document_name'=>$photo,
-								);
-								$this->_name = "rms_specail_discount_document";
-								$where=" id=".$data['detailid'.$i];
-								$this->update($arr, $where);
+					$this->_name = "ln_client_document";
+					$where1 =" client_id=".$id;
+					if (!empty($detailId)){
+						$where1.=" AND id NOT IN ($detailId) ";
+					}
+					$this->delete($where1);
+						
+					$image_name="";
+					$photo="";
+						
+					foreach ($ids as $i){
+						if (!empty($data['detailid'.$i])){
+							$name = $_FILES['attachment'.$i]['name'];
+							if (!empty($name)){
+								$ss = 	explode(".", $name);
+								$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
+								$tmp = $_FILES['attachment'.$i]['tmp_name'];
+								if(move_uploaded_file($tmp, $part.$image_name)){
+									$photo = $image_name;
+									$arr = array(
+											'client_id'=>$id,
+											'document_name'=>$photo,
+											'type'=>2,
+									);
+									$this->_name = "ln_client_document";
+									$where=" id=".$data['detailid'.$i];
+									$this->update($arr, $where);
+								}
+								else
+									$string = "Image Upload failed";
+								//     				}
 							}
-							else
-								$string = "Image Upload failed";
-							//     				}
-						}
-					}else{//for add action
-						$name = $_FILES['attachment'.$i]['name'];
-						if (!empty($name)){
-							$ss = 	explode(".", $name);
-							$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
-							$tmp = $_FILES['attachment'.$i]['tmp_name'];
-							if(move_uploaded_file($tmp, $part.$image_name)){
-								$photo = $image_name;
-								$arr = array(
-										'client_id'=>$customer_id,
-										'document_name'=>$photo,
-								);
-								$this->insert($arr);
-							}
-							else{
-								$string = "Image Upload failed";
+						}else{
+							$name = $_FILES['attachment'.$i]['name'];
+							if (!empty($name)){
+								$ss = 	explode(".", $name);
+								$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
+								$tmp = $_FILES['attachment'.$i]['tmp_name'];
+								if(move_uploaded_file($tmp, $part.$image_name)){
+									$photo = $image_name;
+									$arr = array(
+											'client_id'=>$id,
+											'document_name'=>$photo,
+											'type'=>2,
+									);
+									$this->_name = "ln_client_document";
+									$this->insert($arr);
+								}
+								else
+									$string = "Image Upload failed";
+								//     				}
 							}
 						}
 					}
+				}else{
+					$this->_name = "ln_client_document";
+					$where1 =" client_id=".$id;
+					$this->delete($where1);
 				}
-			}
-			if(empty($data['identity2'])){
-				$this->_name = "ln_client_document";
-				$where1 =" client_id=".$customer_id;
-				$this->delete($where1);
-			}
-		}catch(Exception $e){
-			echo $e->getMessage();exit();
-			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-		}
- }
-	 function updateIncome($data,$id){
-		$arr = array(
-					'sale_id'	=>$data['sale_client'],
-					'house_id'	=>$data['house_id'],
-					'branch_id'=>$data['branch_id'],
-					'client_id'=>$data['customer'],
-					'title'=>$data['title'],
-					'total_amount'=>$data['total_amount'],
-					'invoice'=>$data['invoice'],
-					'category_id'=>$data['income_category'],
-					'cheque'=>$data['cheque'],
-					'description'=>$data['Description'],
-					'date'=>$data['Date'],
-					'status'=>$data['Stutas'],
-				   'is_beginning'=>$data['is_beginning'],
-					'user_id'=>$this->getUserId(),
-				);
-		$where=" id =  $id " ;
-		$this->update($arr, $where);
+				$_db->commit();
+				}catch(Exception $e){
+					echo $e->getMessage();exit();
+					Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+				}
 	}
 	function getexpensebyid($id){
 		$db = $this->getAdapter();
-		$sql=" SELECT * FROM ln_income where id=$id ";
+		$sql=" SELECT * FROM ln_expense_other where id=$id ";
 		return $db->fetchRow($sql);
 	}
-	
+	function getexpenseDetailbyid($id){
+		$db = $this->getAdapter();
+		$sql="SELECT * FROM ln_expense_detail WHERE expense_id=".$id;
+		return $db->fetchAll($sql);
+	}
 	function getAllExpense($search=null){
 		$db = $this->getAdapter();
 		$session_user=new Zend_Session_Namespace('authinstall');

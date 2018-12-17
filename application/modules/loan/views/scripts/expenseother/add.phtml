@@ -23,11 +23,11 @@
  </script>
  <div class="card">
 	<div class="card-content collapse show">
-		<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'expenseother','action'=>'add')); ?>"	dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'loan','controller'=>'expenseother','action'=>'add')); ?>"	dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
-					//dijit.byId('saveclose').set('disabled',true);	
-					//dijit.byId('savenew').set('disabled',true);
+					dijit.byId('saveclose').set('disabled',true);	
+					dijit.byId('savenew').set('disabled',true);
 					return true;
 				}else {
 					return false;
@@ -74,6 +74,8 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id="sale_client" />
+	                    <input type="hidden" id="land_address" name="land_address" dojoType="dijit.form.TextBox"/>
+	                    <input type="hidden" id=street name="street" dojoType="dijit.form.TextBox"/>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -191,7 +193,7 @@
              		<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button"
 					 	 iconClass="dijitIconClear"/>
 					<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button"
-						 iconClass="dijitIconDelete"/>
+						 iconClass="dijitEditorIcon dijitEditorIconSave"/>
 					<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' name='savenew' value='savenew' dojoType="dijit.form.Button"
 						 iconClass="dijitIconNewTask"/>
 					<input type="button" label="<?php echo $tr->translate("SAVEPRINT")?>" name='print' value='print' dojoType="dijit.form.Button"
@@ -377,7 +379,7 @@ new dijit.form.FilteringSelect({
 		}
 	}, "sale_client");
 	
-
+ 
 var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
 function getSaleClie(){
 	branch_id = dijit.byId('branch_id').get('value');
@@ -399,22 +401,22 @@ function getSaleClie(){
 	});
 }
 
-var col = 0;
+var coll = 0;
 var no = 0;
 func='';
 tmp = '';
 var temp='';
 function addRow() {
-		col++;no++;
+		coll++;no++;
 		template='';
-			template+='<div id="attachment'+col+'" class="form-group" style=" margin-bottom: 5px !important;">';
-				template+='<div class="input-group input-file" name="attachment'+col+'">';
+			template+='<div id="attachment'+coll+'" class="form-group" style=" margin-bottom: 5px !important;">';
+				template+='<div class="input-group input-file" name="attachment'+coll+'">';
 	 				template+='<span class="input-group-btn">';
 	 					template+='<button class="btn btn-default btn-choose" type="button"><?php echo $tr->translate('CHOOSE_FILE');?></button>';
 	 				template+='</span>';
 					template+='<input type="text" class="form-control" placeholder="<?php echo $tr->translate('CHOOSE_FILE');?>..." />';
 					template+='<span class="input-group-btn">';
-						template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+col+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+						template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+coll+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 					template+='</span>';
 				template+='</div>';
 			template+='</div> <div class="clearfix"></div>';
@@ -423,8 +425,8 @@ function addRow() {
 		
 		if($("#identity1").val()!='') {
 			var identity = $("#identity1").val();
-			$("#identity1").val(identity+','+col);
-		} else {$("#identity1").val(col);}
+			$("#identity1").val(identity+','+coll);
+		} else {$("#identity1").val(coll);}
 		bs_input_file();
 }
 function bs_input_file() {
@@ -477,7 +479,8 @@ function getLandAndClientDetail(){
 		load: function(data) {
 			dijit.byId("customer").attr("value",data.client_id);
 			dijit.byId("house_id").attr("value",data.house_id);
-			
+			dijit.byId("land_address").attr("value",data.land_address);
+			dijit.byId("street").attr("value",data.street);
 		},
 		error: function(err) {
 			alert(err);
@@ -507,6 +510,25 @@ function addCategory(){
 }
 function printSave(new_invoice_no){
 	getBranchinfo();
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0){
+		alert('Select branch');
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	cate = dijit.byId('income_category').get('value');
+	if(cate=='' ||cate==-1){
+		alert('Select Category');
+		dijit.byId('income_category').focus();
+		return false;
+	}
+	
+	total_amount = dijit.byId('total_amount').get('value');
+	if(isNaN(total_amount)){
+		alert('Income can not be null');
+		dijit.byId('total_amount').focus();
+		return false;
+	}
 //////////////////////////////////////////////////////////////////	
 	if(new_invoice_no==''){
 		getInvoiceNo(1);
@@ -533,9 +555,9 @@ function printSave(new_invoice_no){
 	var date_payment = dd +'-'+month+'-'+y ;
 	
 	dojo.byId("lb_date").innerHTML =dijit.byId("Date").attr('displayedValue') ;
-	//dojo.byId("lb_description").innerHTML = dijit.byId("Description").attr('displayedValue');
+	dojo.byId("lb_land_code").innerHTML = dijit.byId("land_address").attr('displayedValue');
 	dojo.byId("lb_customer_name").innerHTML = customer_name ;
-	//dojo.byId("lb_cheque").innerHTML = dijit.byId("cheque").attr('displayedValue');
+	dojo.byId("lb_street").innerHTML = dijit.byId("street").attr('displayedValue');
 
 	var rowId = $('#identity').val();
 	var rowIDArray = rowId.split(',');
@@ -691,10 +713,10 @@ function hideDialog1(){
 					<td colspan="3" valign="top">:&nbsp;<label id="lb_invoice"></label></td>
 				</tr>
 				<tr style="line-height: 15px;">
-					<td class="one ">ឈ្មោះអតិថិជន <br />Name Customer</td>
-					<td valign="top"> :&nbsp; <label id="lb_customer"></label> </td>
-					<td  align="center"> </br /></td>
-					<td valign="top"> &nbsp; </td>
+					<td class="one ">ផ្ទះ <br />Home Number</td>
+					<td valign="top"> :&nbsp; <label id="lb_land_code"></label> </td>
+					<td class="one ">លេខផ្លូវ <br /> Street Number</td>
+					<td valign="top"> :&nbsp; <label id="lb_street"></label> </td>
 					<td colspan="3">កាលបរិច្ឆេទ </br />Date</td>
 					<td colspan="3" valign="top">:&nbsp;<label id="lb_date"></label></td>
 				</tr>
