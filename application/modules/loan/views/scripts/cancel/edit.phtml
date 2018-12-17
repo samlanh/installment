@@ -625,6 +625,7 @@ dojo.ready(function(){
 		//getCancelNo();
 		getSaleClie();
 		getSaleNo();
+
 		
 		
 		}catch(e){
@@ -674,6 +675,7 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 			    dijit.byId('sale_no').set('store', sale_store);
 			    if(oldbranch==branch_id){
 			    dijit.byId('sale_no').attr('value',oldsale);
+			  
 			    }
 			},
 			error: function(err) {
@@ -747,6 +749,11 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 				dojo.byId('cus_information').innerHTML ="លេខកូដអតិថិជន  : "+data.client_number+", ឈ្មោះជាភាសាខ្មែរ : "+data.name_kh+", ឈ្មោះជាភាសាអង់គ្លេស  : "+data.name_en;
 				dojo.byId('land_information').innerHTML ="លេខសម្គាល់  : "+data.land_code+", ឈ្មោះ  :  "+data.land_address+", ផ្លូវ : "+data.street+", ប្រភេទ   : "+data.pro_type+", ទំហំ  : "+data.land_size+", បណ្តោយ :  "+data.height+",ទទឹង  :  "+data.width;
 				dojo.byId('sale_note').innerHTML = data.sale_note;
+
+				//current total paid amount on sale
+				<?php if (!empty($this->row['paid_amount'])){?>
+					dijit.byId('paid_amount').set('value','<?php echo $this->row['paid_amount'];?>');
+				<?php }?>
 			},
 			error: function(err) {
 				alert(err);

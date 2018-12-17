@@ -112,7 +112,7 @@ dojo.ready(function(){
 						<td width="20%" valign="middle" align="center">
 							<div style=" display: inline-block;    vertical-align: top;">
 							<img alt="" src="<?php echo $this->baseUrl()."/images/logo.PNG"?>" style=" width: 150px;"><br>
-					   		<span style="font-size:16px;     line-height: 12px; font-weight: initial; font-family:'Times New Roman';"><?php echo $tr->translate("Borey Phnom Penh Thmey");?></span>
+					   		<span style="font-size:16px;     line-height: 12px; font-weight: initial; font-family:'Khmer OS Muol Light','Times New Roman';"><?php echo $tr->translate("អចលនទ្រព្យ ខេ ខេ អ័រ");?></span>
 							</div>
 					   </td>
 					   <td width="30%" align="center">
@@ -161,7 +161,7 @@ dojo.ready(function(){
 						    	<tr>
 						    		<td style="font-size:14px; font-weight:600;  font-family:'Khmer OS Battambang';">
 						    			<p class="padding-left">
-						    			<label class="title"><?php echo $tr->translate("SELLER_NAME");?></label> : <label class="value"><?php echo $this->rs['p_manager_namekh'];?></label><label class="title"><?php echo $tr->translate("SEX");?> </label> : <label class="value"><?php echo $this->rs['sex'];?></label><label class="title"><?php echo $tr->translate("CURRENT_ADDRESS");?></label> : <label class="value"><?php echo $this->rs['p_manager_nation_id'];?></label>
+						    			<label class="title"><?php echo $tr->translate("SELLER_NAME");?></label> : <label class="value"><?php echo $this->rs['p_manager_namekh'];?></label><label class="title"><?php echo $tr->translate("SEX");?> </label> : <label class="value"><?php echo $this->rs['sex'];?></label><label class="title"><?php echo $tr->translate("NATIONALITY_NO");?></label> : <label class="value"><?php echo $this->rs['p_manager_nation_id'];?></label>
 						    			</p>
 						    			<p class="padding-left">
 						    			 <label class="title"><?php echo $tr->translate("DOB");?></label> : <label class="value"><?php echo date("d/m/Y",strtotime($this->rs['p_dob']));?></label><label class="title"><?php echo $tr->translate("NATIONALITY");?> </label> : <label class="value"><?php echo $this->rs['p_manager_nationality'];?></label><label class="title"><?php echo $tr->translate("ISSUE_DATE");?></label> : <label class="value"><?php echo date("d/m/Y",strtotime($this->rs['p_nationid_issue']));?></label>  
@@ -181,7 +181,7 @@ dojo.ready(function(){
 						    	<tr>
 						    		<td style="font-size:14px; font-weight:600;  font-family:'Khmer OS Battambang';">
 						    			<p class="padding-left">
-						    			<label class="title"><?php echo $tr->translate("COMMUNENAME");?></label> : <label class="value"><?php  echo $this->rs['w_manager_namekh'];?></label><label class="title"><?php echo $tr->translate("SEX");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo $this->rs['sex_w'];?></label><label class="title"><?php echo $tr->translate("CURRENT_ADDRESS");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo $this->rs['w_manager_nation_id'];?></label>
+						    			<label class="title"><?php echo $tr->translate("COMMUNENAME");?></label> : <label class="value"><?php  echo $this->rs['w_manager_namekh'];?></label><label class="title"><?php echo $tr->translate("SEX");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo $this->rs['sex_w'];?></label><label class="title"><?php echo $tr->translate("NATIONALITY_NO");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo $this->rs['w_manager_nation_id'];?></label>
 						    			</p>
 						    			<p class="padding-left">
 						    			 <label class="title"><?php echo $tr->translate("DOB");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo date("d/m/Y",strtotime($this->rs['w_dob']));?></label><label class="title"><?php echo $tr->translate("NATIONALITY");?> </label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh'])) echo $this->rs['w_manager_nationality'];?></label><label class="title"><?php echo $tr->translate("ISSUE_DATE");?></label> : <label class="value"><?php if(!empty($this->rs['w_manager_namekh']))echo date("d/m/Y",strtotime($this->rs['w_nation_id_issue']));?></label>  
@@ -212,7 +212,7 @@ dojo.ready(function(){
 												<td><?php echo $tr->translate("PHONE");?></td>
 												<td><?php echo $tr->translate("QTY_OFSHAREHOLDER");?></td>
 											</tr>
-											<?php $i=0;if(!empty($this->shareholder)){foreach($this->shareholder as $rs){$i++;?>
+											<?php $total=0; $i=0;if(!empty($this->shareholder)){foreach($this->shareholder as $rs){$i++;?>
 											<tr style="font-size:13px;height:23px;">
 												<td align="center"><?php echo $i;?></td>
 												<td><?php echo $rs['shareholder_name'];?></td>
@@ -220,10 +220,15 @@ dojo.ready(function(){
 												<td align="center"><?php echo date("d/m/Y",strtotime($rs['dob']));?></td>
 												<td align="center"><?php echo $rs['pob'];?></td>
 												<td align="center"><?php echo $rs['nation_id'];?></td>
-												<td align="center"><?php echo $rs['tel'];?></td>
-												<td><?php echo $rs['percentage'];?></td>
+												<td align="center">&nbsp;<?php echo $rs['tel'];?>&nbsp;</td>
+												<td>&nbsp;<?php echo number_format($rs['percentage'],2);?></td>
+												<?php $total = $total +$rs['percentage'];?>
 											</tr>
 											<?php }}?>
+											<tr style="font-size:13px;height:23px;">
+												<td align="right" colspan="7">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+												<td>&nbsp;<?php echo number_format($total,2);?>&nbsp;</td>
+											</tr>
 											</tbody>
 										</table>
 						    		</td>
