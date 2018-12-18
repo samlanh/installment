@@ -258,7 +258,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 	
 		$_cheque = new Zend_Dojo_Form_Element_TextBox('cheque');
 		$_cheque ->setAttribs(array(
-				'dojoType'=>'dijit.form.NumberTextBox',
+				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
 	
