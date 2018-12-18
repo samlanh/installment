@@ -226,7 +226,7 @@ class Loan_Model_DbTable_DbExpenseother extends Zend_Db_Table_Abstract
 		(SELECT name_kh FROM `ln_view` WHERE TYPE=12 AND key_code=category_id LIMIT 1) AS category_name,
 		total_amount,description,DATE,
 		(SELECT  first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name,
-		status,'បោះពុម្ភ' FROM ln_expense_other";
+		status FROM ln_expense_other";
 		
 		if (!empty($search['adv_search'])){
 				$s_where = array();
