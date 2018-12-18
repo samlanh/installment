@@ -32,10 +32,10 @@ class Loan_ExpenseOtherController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","INCOME_TITLE","RECEIPT_NO","CATEGORY","TOTAL_INCOME","NOTE","DATE","BY_USER","STATUS");
+    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","PAYMENT_TYPE","RECEIPT_NO","CATEGORY","TOTAL_INCOME","NOTE","DATE","BY_USER","STATUS");
     		$link=array('module'=>'loan','controller'=>'expenseother','action'=>'edit');
     		//$link1=array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome');
-    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'client_name'=>$link,'title'=>$link,'invoice'=>$link));
+    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'client_name'=>$link,'title'=>$link,'house_no'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -110,7 +110,7 @@ class Loan_ExpenseOtherController extends Zend_Controller_Action
 		$this->view->row = $row;
 		
     	$pructis=new Loan_Form_Frmexpense();
-    	$frm = $pructis->FrmAddExpense($row);
+    	$frm = $pructis->FrmAddExpenseother($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
     	

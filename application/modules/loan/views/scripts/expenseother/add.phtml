@@ -99,11 +99,25 @@
 	                    	<input id="income_category" />
 	                   </div>
 	                </div>
-	                <div class="form-group">
+	               <!-- <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("INCOME_TITLE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('title');?>
+	                   </div>
+	                </div> -->
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('payment_method');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NUMBER");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cheque');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -111,13 +125,6 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('total_amount');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CHEQUE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('cheque');?>
 	                   </div>
 	                </div>
 	             </div>
@@ -159,7 +166,7 @@
 					        <div class="tab-pane fade in active" id="panel211" role="tabpanel">
 					        	<div class="card-box mb-20">
 						        	<div class="col-md-12 col-sm-12 col-xs-12 ">
-						        		<table id="table_row" style="border-collapse: collapse; border:1px solid #ccc;white-space: nowrap;width:100%;">
+						        		<table id="table_row" style="border-collapse: collapse; border:1px solid #ccc;white-space: nowrap;width:100%; margin-top: 8px;">
 											<tr id="head-title1" class="head-td" align="right"></tr>
 										</table>
 						        	</div>
@@ -173,7 +180,10 @@
 					        <!--Schedule Panel 2-->
 					        <div class="tab-pane fade in " id="panel213" role="tabpanel">
 					        	<div class="form-group">
-						         	 	 <div class="col-md-10 col-sm-10 col-xs-10" id="fileList">
+						         	 	 <div class="col-md-10 col-sm-10 col-xs-10" >
+						         	 	 	<table style="white-space: nowrap;width:100%; margin-top: 8px;">
+												<tr id="fileList"></tr>
+											</table>
 					                	 </div>
 						         	 </div>
 						         	 <div class="form-group">
@@ -219,6 +229,7 @@ dojo.ready(function(){
 	    autoComplete: true,                        
 	    id: "customer",
 	    name: "customer",  
+	    readOnly: "readOnly",
 	    tabindex: "16",  
 	    class: 'fullside',  
 	    placeHolder:"<?php echo $tr->translate("CHOOSE_CUSTOEMR")?>",          
@@ -229,6 +240,7 @@ dojo.ready(function(){
 });
 dojo.ready(function(){
 	addRow();
+	enablePayment();
 	//dijit.byId('payment_method').attr('value',1);
 });
 var customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
@@ -291,7 +303,7 @@ function addRowexpense(){
 		if(title!=1){  
 			temp+='<th><?php echo $tr->translate("DEL");?></th>';
 			temp+='<th><?php echo $tr->translate("NUM");?></th>';
-			temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("CATE_EXPENSE");?></th>';
+			temp+='<th id="lbl_titlemetion" style="height:40px; width="100px "><?php echo $tr->translate("CATE_EXPENSE");?></th>';
 			temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("PRICE");?></th>';
 			temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("AMOUNTS");?></th>';
 			temp+='<th id="lbl_titlemetion" width="150px"><?php echo $tr->translate("TOTAL");?></th>';
@@ -301,10 +313,10 @@ function addRowexpense(){
 	    }
 		template+='<td width="47px" align="center"><img onclick="deleteRecords('+col+');calculateTotal('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td width="50px" align="center">'+noo+'</td>';
-		template+='<td width="30%"><input dojoType="dijit.form.ValidationTextBox" class="fullside" required="required" id="description_'+col+'" name="description_'+col+'" value="" type="text" style=" height:40px;"></td>';	
-		template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+');" name="price_'+col+'" id="price_'+col+'"  dojoType="dijit.form.NumberTextBox" style="width:140px; height:40px;" /></td>';	
-		template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+',1);" name="qty_'+col+'" id="qty_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:140px; height:40px;" /></td>';
-		template+='<td><input type="text" onkeyup="calculateTotal('+col+');" readonly="readonly" name="total_'+col+'" id="total_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:170px; height:40px; text-align: center;" /></td>';		
+		template+='<td width="35%"><input dojoType="dijit.form.ValidationTextBox" class="fullside" onKeyup="typethisamename('+col+');" required="required" id="description_'+col+'" name="description_'+col+'" value="" type="text" style="height:40px;"></td>';	
+		template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+');" name="price_'+col+'" id="price_'+col+'"  dojoType="dijit.form.NumberTextBox" style="width:100px; height:40px;" /></td>';	
+		template+='<td><input type="text" required="1" value="1" onkeyup="calculateTotal('+col+',1);" name="qty_'+col+'" id="qty_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:100px; height:40px;" /></td>';
+		template+='<td><input type="text" onkeyup="calculateTotal('+col+');" readonly="readonly" name="total_'+col+'" id="total_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:150px; height:40px; text-align: center;" /></td>';		
 		template+='<td><input type="text" name="remark_'+col+'" id="remark_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" style="width:100%;" /><label id="subsub"></label></td>';
 		tmp='<tr id="row'+col+'">';
 		tmp+="</tr>";
@@ -316,6 +328,10 @@ function addRowexpense(){
 		dojo.html.set(dojo.byId("row"+col),template , {
 		     parseContent: true,
 		});
+}
+function typethisamename(index,type){
+	description = dijit.byId('description_'+index).get('value');
+	dijit.byId('remark_'+index).set('value',description);
 }
 function deleteRecords(index) {
 	var identity = $('#identity').val();
@@ -399,6 +415,15 @@ function getSaleClie(){
 			alert(err);
 		}
 	});
+}
+function enablePayment(){
+	payment_method = dijit.byId('payment_method').get('value');
+	dijit.byId("cheque").set("readOnly",false);
+	dijit.byId("cheque").attr("value",'');
+	if(payment_method==1){
+		dijit.byId("cheque").attr("value",'N/A');
+		dijit.byId("cheque").set("readOnly",true);
+	}
 }
 
 var coll = 0;
@@ -561,11 +586,10 @@ function printSave(new_invoice_no){
 		 temp='<table class="collape tablesorter"  align="center" style=" width: 100%; padding: 0px; margin: 0px; border-collapse: collapse; border: 1px solid #000; font-size:14px;font-family:Khmer OS Battambang !important;  " id="table">'
 			  temp+='<tr style=" font-size:14px; text-align:center; height:25px;">';
 		 temp+='<td style="border:1px solid #000;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14;">លរ/No</div></strong></td>';
-		  temp+='<td style="border:1px solid #000;><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ប្រភេទចំណាយ/Expense Type</div></strong></td>';
+		  temp+='<td style="border:1px solid #000;><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ពណ៌នា/Description</div></strong></td>';
 		  temp+='<td style="border:1px solid #000;><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">តម្លៃ/Price</div></strong></td>';
 		  temp+='<td style="border:1px solid #000;><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ចំនួន/QTY</div></strong></td>';
 		  temp+='<td style="border:1px solid #000;><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ចំនួនប្រាក់/Amount</div></strong></td>';
-		  temp+='<td style="border:1px solid #000;><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ពណ៌នា/Description</div></strong></td>';
 			  temp+='</tr>';
 			  n=0;
 			i=1;  for(var n = 0; n < rowIDArray.length; n++) {
@@ -574,7 +598,6 @@ function printSave(new_invoice_no){
 			  temp+='<td align="center" style="border:1px solid #000;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;">'+dijit.byId("price_"+rowIDArray[n]).attr('displayedValue')+'</td>';
 			  temp+='<td align="center" style="border:1px solid #000;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;">'+dijit.byId("qty_"+rowIDArray[n]).attr('displayedValue')+'</td>';
 			  temp+='<td align="center" style="border:1px solid #000;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;">'+dijit.byId("total_"+rowIDArray[n]).attr('displayedValue')+'</td>';
-			  temp+='<td style="border:1px solid #000;">'+dijit.byId("remark_"+rowIDArray[n]).get('value')+'</td>';
 			  i++;
 			  temp+='</tr>';
 			}
@@ -582,7 +605,6 @@ function printSave(new_invoice_no){
 				  temp+='<tr style=" font-size:12px;height: 25px;"​ align="center"><td align="center" style="border:1px solid #000;">'+row+'</td>';
 				  temp+='<td align="left" style="border:1px solid #000;max-width:200px !important;line-height:18px;">&nbsp;&nbsp;</td>'; 
 				  temp+='<td align="left" style="border:1px solid #000;max-width:200px !important;line-height:18px;">&nbsp;&nbsp;</td>'; 
-				  temp+='<td align="center" style="border:1px solid #000;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;"></td>';
 				  temp+='<td align="center" style="border:1px solid #000;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;"></td>';
 				  temp+='<td style="border:1px solid #000;"></td>';
 				  temp+='</tr>';
@@ -700,7 +722,7 @@ function hideDialog1(){
 					<td width="3%"></td>
 					<td width="8%"></td>
 				</tr>
-				<tr style="line-height: 15px;">
+				<tr style="line-height: 15px; font-family: Khmer OS Battambang;">
 					<td class="one ">ឈ្មោះអតិថិជន <br />Name Customer</td>
 					<td valign="top"> :&nbsp; <label id="lb_customer"></label> </td>
 					<td  align="center"> </br /></td>
@@ -708,10 +730,10 @@ function hideDialog1(){
 					<td colspan="3">លេខបង្កាន់ដៃបង់  </br />Receipt No</td>
 					<td colspan="3" valign="top">:&nbsp;<label id="lb_invoice"></label></td>
 				</tr>
-				<tr style="line-height: 15px;">
-					<td class="one ">លេខផ្ទះ <br />Home Number</td>
+				<tr style="line-height: 15px; font-family: Khmer OS Battambang;">
+					<td class="one ">លេខផ្ទះ <br />Home No</td>
 					<td valign="top"> :&nbsp; <label id="lb_land_code"></label> </td>
-					<td class="one ">លេខផ្លូវ <br /> Street Number</td>
+					<td class="one ">លេខផ្លូវ <br /> Street No</td>
 					<td valign="top"> :&nbsp; <label id="lb_street"></label> </td>
 					<td colspan="3">កាលបរិច្ឆេទ </br />Date</td>
 					<td colspan="3" valign="top">:&nbsp;<label id="lb_date"></label></td>
@@ -770,14 +792,14 @@ function hideDialog1(){
 							</tr>
 							<tr>
 								<td colspan="2" align="center" width="30%">
-									<div style="width:70%;border-bottom:1px solid #000;margin-bottom:10px;margin-top: 40px;"></div>
+									<div style="width:70%;border-bottom:1px solid #000;margin-bottom:10px;margin-top: 60px;"></div>
 									<div style="font-weight:bold;color:#000; font-size: 14px;margin-top:-7px;"> 
 										<label id="lb_customer_name"> &nbsp; </label>
 									</div>
 									<div style="margin-top:-2px;">Date : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / </div>
 								</td>
 								<td colspan="2" align="center" >
-									<div style="width:70%;border-bottom:1px solid #000;margin-bottom:10px;margin-top: 40px;"></div>
+									<div style="width:70%;border-bottom:1px solid #000;margin-bottom:10px;margin-top: 60px;"></div>
 									<div style="font-weight:bold;color:#000; font-size: 14px;margin-top:-7px;"> 
 										 <?php 
 						              	   $session_user=new Zend_Session_Namespace('authinstall');

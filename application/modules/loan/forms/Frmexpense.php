@@ -184,12 +184,12 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 	
 	public function FrmAddExpenseother($data=null){
 	
-		$title = new Zend_Dojo_Form_Element_ValidationTextBox('title');
-		$title->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
-				'class'=>'fullside',
-				//'required'=>true
-		));
+// 		$title = new Zend_Dojo_Form_Element_ValidationTextBox('title');
+// 		$title->setAttribs(array(
+// 				'dojoType'=>'dijit.form.ValidationTextBox',
+// 				'class'=>'fullside',
+// 				//'required'=>true
+// 		));
 	
 		$for_date = new Zend_Dojo_Form_Element_FilteringSelect('for_date');
 		$for_date->setAttribs(array(
@@ -246,10 +246,19 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'style'=>"height:70px !important",
 	
 		));
+		
+		$payment_method = new Zend_Dojo_Form_Element_FilteringSelect('payment_method');
+		$payment_method->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>'enablePayment();'
+		));
+		$opt = $db->getVewOptoinTypeByType(2,1,3,1);
+		$payment_method->setMultiOptions($opt);
 	
 		$_cheque = new Zend_Dojo_Form_Element_TextBox('cheque');
 		$_cheque ->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 		));
 	
@@ -336,12 +345,13 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 			$_currency_type->setValue($data['category_id']);
 			$category_id_expense->setValue($data['category_id']);
 			$_branch_id->setValue($data['branch_id']);
-			$title->setValue($data['title']);
+			//$title->setValue($data['title']);
 			$total_amount->setValue($data['total_amount']);
 			$_Description->setValue($data['description']);
 			$_Date->setValue($data['date']);
 			$_stutas->setValue($data['status']);
 			$invoice->setValue($data['invoice']);
+			$payment_method->setValue($data['payment_method']);
 			$id->setValue($data['id']);
 			$_cheque->setValue($data['cheque']);
 			$payment_type->setValue($data['payment_id']);
@@ -353,7 +363,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				$_supplier_id->setValue($data['supplier_id']);
 			}
 		}
-		$this->addElements(array($_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
+		$this->addElements(array($_status,$payment_method,$payment_type,$_cheque,$invoice,$_currency_type,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
 				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id));
 		return $this;
