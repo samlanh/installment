@@ -182,15 +182,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		
 	}
 	
-	public function FrmAddExpenseother($data=null){
-	
-// 		$title = new Zend_Dojo_Form_Element_ValidationTextBox('title');
-// 		$title->setAttribs(array(
-// 				'dojoType'=>'dijit.form.ValidationTextBox',
-// 				'class'=>'fullside',
-// 				//'required'=>true
-// 		));
-	
+	public function FrmAddIncomeother($data=null){
 		$for_date = new Zend_Dojo_Form_Element_FilteringSelect('for_date');
 		$for_date->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',

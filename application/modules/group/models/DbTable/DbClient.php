@@ -129,7 +129,6 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 							$arr = array(
 									'client_id'=>$customer_id,
 									'document_name'=>$photo,
-									'type'=>1,
 							);
 							$this->_name = "rms_specail_discount_document";
 							$where=" id=".$_data['detailid'.$i];
@@ -150,7 +149,6 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 							$arr = array(
 									'client_id'=>$customer_id,
 									'document_name'=>$photo,
-									'type'=>1,
 							);
 							$this->insert($arr);
 						}else{
