@@ -23,8 +23,9 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     					"category_id"=>'',
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
-    					'land_id'=>-1,
     					'client_name'=>-1,
+    					'land_id'=>-1,
+    					'payment_method'=>'',
     			);
     		}
     		$this->view->adv_search = $search;
@@ -78,7 +79,7 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     	$pructis=new Loan_Form_Frmexpense();
     	$frm = $pructis->FrmAddIncomeother();
     	Application_Model_Decorator::removeAllDecorator($frm);
-    	$this->view->frm_expenseother=$frm;
+    	$this->view->frm_incomeother=$frm;
     	
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);

@@ -80,31 +80,32 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 					echo $e->getMessage();exit();
 					Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 				}
- 	 }
+ 	 	}
  function updateIncome($data,$id){
  	$_db= $this->getAdapter();
  	$_db->beginTransaction();
+ 	//print_r($data); exit();
 	 	try{
 		$arr = array(
-					'sale_id'	=>$data['sale_client'],
-					'house_id'	=>$data['house_id'],
-					'branch_id'	=>$data['branch_id'],
-					'client_id'	=>$data['customer'],
-					'total_amount'=>$data['total_amount'],
+					'sale_id'		=>$data['sale_client'],
+					'house_id'		=>$data['house_id'],
+					'branch_id'		=>$data['branch_id'],
+					'client_id'		=>$data['customer'],
+					'total_amount'	=>$data['total_amount'],
 					'payment_method'=>$data['payment_method'],
-					'invoice'	=>$data['invoice'],
-					'category_id'=>$data['income_category'],
-					'cheque'	=>$data['cheque'],
-					'description'=>$data['Description'],
-					'date'		=>$data['Date'],
- 					'status'	=>$data['Stutas'],
-					'user_id'	=>$this->getUserId(),
+					'invoice'		=>$data['invoice'],
+					'category_id'	=>$data['income_category'],
+					'cheque'		=>$data['cheque'],
+					'description'	=>$data['Description'],
+					'date'			=>$data['Date'],
+ 					'status'		=>$data['Stutas'],
+					'user_id'		=>$this->getUserId(),
 				);
 				$where=" id = ".$id;
 				$this->update($arr, $where);
 				
 				$this->_name='ln_otherincome_detail';
-				$where = "income_id = ".$id;
+				$where = " income_id = ".$id;
 				$this->delete($where);
 				$ids = explode(',', $data['identity']);
 				foreach ($ids as $j){
@@ -146,7 +147,6 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 						
 					$image_name="";
 					$photo="";
-						
 					foreach ($ids as $i){
 						if (!empty($data['detailid'.$i])){
 							$name = $_FILES['attachment'.$i]['name'];
@@ -239,19 +239,19 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 				$s_where = array();
 				$s_search = trim(addslashes($search['adv_search']));
 				$s_where[] = " description LIKE '%{$s_search}%'";
-				$s_where[] = " title LIKE '%{$s_search}%'";
-				$s_where[] = " total_amount LIKE '%{$s_search}%'";
+				$s_where[] = " house_id LIKE '%{$s_search}%'";
+				$s_where[] = " payment_method LIKE '%{$s_search}%'";
 				$s_where[] = " invoice LIKE '%{$s_search}%'";
 				$where .=' AND ('.implode(' OR ',$s_where).')';
 			}
-// 			if($search['client_name']>0){
-// 				$where.= " AND ln_income.client_id = ".$search['client_name'];
-// 			}
-// 			if($search['land_id']>0){
-// 				$where.= " AND ln_income.house_id = ".$search['land_id'];
-// 			}
+			if(!empty($search['payment_method'])){
+				$where.= " AND payment_method = ".$search['payment_method'];
+			}
 			if(!empty($search['category_id'])){
 				$where.= " AND category_id = ".$search['category_id'];
+			}
+			if($search['client_name']>0){
+				$where.= " AND ln_otherincome.client_id = ".$search['client_name'];
 			}
 			if($search['branch_id']>-0){
 				$where.= " AND branch_id = ".$search['branch_id'];

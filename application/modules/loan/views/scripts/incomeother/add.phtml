@@ -1,6 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	$frm = $this->frm_expenseother;
+	$frm = $this->frm_incomeother;
 ?>
 <title><?php echo $tr->translate('ADDEXPENSE_OTHER');?></title>
 <style>	
@@ -515,6 +515,7 @@ function getLandAndClientDetail(){
 var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var url_add_category = '<?php echo $this->url(array("module"=>"loan","controller"=>"income","action"=>"add-category")); ?>';
 function addCategory(){
+	dijit.byId('save').set('disabled',true);	
 	dojo.xhrPost({
 		url:url_add_category,
 		form: dojo.byId("frm_category"),
@@ -794,14 +795,14 @@ function hideDialog1(){
 							<tr>
 								<td colspan="2" align="center" width="30%">
 									<div style="width:70%;border-bottom:1px solid #000;margin-bottom:10px;margin-top: 60px;"></div>
-									<div style="font-weight:bold;color:#000; font-size: 14px;margin-top:-7px;"> 
+									<div style="font-weight:bold; color:#000; font-size: 14px;margin-top:-7px;"> 
 										<label id="lb_customer_name"> &nbsp; </label>
 									</div>
 									<div style="margin-top:-2px;">Date : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / </div>
 								</td>
 								<td colspan="2" align="center" >
 									<div style="width:70%;border-bottom:1px solid #000;margin-bottom:10px;margin-top: 60px;"></div>
-									<div style="font-weight:bold;color:#000; font-size: 14px;margin-top:-7px;"> 
+									<div style="font-weight:bold; color:#000; font-size: 14px;margin-top:-7px;"> 
 										 <?php 
 						              	   $session_user=new Zend_Session_Namespace('authinstall');
 								           $last_name=$session_user->last_name;
