@@ -237,7 +237,6 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	if($search['status_search']>-1){
     		$where.= " AND b.status = ".$search['status_search'];
     	}
-    	
     	if(!empty($search['adv_search'])){
     		$s_where=array();
     		$s_search=addslashes(trim($search['adv_search']));

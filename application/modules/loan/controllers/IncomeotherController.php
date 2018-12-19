@@ -33,10 +33,10 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","PAYMENT_TYPE","RECEIPT_NO","CATEGORY","TOTAL_INCOME","NOTE","DATE","BY_USER","STATUS");
+    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","PAYMENT_TYPE","RECEIPT_NO","CATEGORY","TOTAL_INCOME","NOTE","DATE","BY_USER","STATUS","PRINT");
     		$link=array('module'=>'loan','controller'=>'incomeother','action'=>'edit');
-    		//$link1=array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome');
-    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'client_name'=>$link,'title'=>$link,'house_no'=>$link));
+    		$link1=array('module'=>'loan','controller'=>'incomeother','action'=>'description');
+    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('Print'=>$link1,'branch_name'=>$link,'client_name'=>$link,'title'=>$link,'house_no'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -125,5 +125,12 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     	
     	$frmpopup = new Application_Form_FrmPopupGlobal();
     	$this->view->footer = $frmpopup->getFooterReceipt();
+    }
+    public function descriptionAction(){
+    	$id=$this->getRequest()->getParam("id");
+    	$db= new Loan_Model_DbTable_DbIncomeother();
+		$this->view->rows = $db->getincomeDetailbyid($id);
+		$this->view->rs = $db->getincomebyid($id);
+		//print_r($this->view->rs); exit();
     }
 }

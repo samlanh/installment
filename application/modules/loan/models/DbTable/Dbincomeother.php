@@ -13,6 +13,7 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		//print_r($data); exit();
 			try{
 				$invoice = $this->getInvoiceNo($data['branch_id']);
+				
 				$_arr = array(
 					'branch_id'		=>$data['branch_id'],
 					'sale_id'		=>$data['sale_client'],
@@ -86,6 +87,31 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
  	$_db->beginTransaction();
  	//print_r($data); exit();
 	 	try{
+// 	 		if(!empty($data['id'])){
+// 	 			$oldClient_Code = $this->getClientById($data['id']);
+// 	 			$client_code = $oldClient_Code['client_number'];
+// 	 		}else{
+// 	 			$db = new Application_Model_DbTable_DbGlobal();
+// 	 			$client_code = $db->getNewClientIdByBranch($data['branch_id']);
+// 	 		}
+// 	 		$photoname = str_replace(" ", "_", $client_code) . '.jpg';
+// 	 		$upload = new Zend_File_Transfer();
+// 	 		$upload->addFilter('Rename',
+// 	 				array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
+// 	 		$receive = $upload->receive();
+// 	 		if($receive)
+// 	 		{
+// 	 			$data['photo'] = $photoname;
+// 	 		}
+// 	 		else{
+// 	 			$data['photo']="";
+// 	 		}
+// 	 		if (empty($data['photo'])){
+// 	 			$photo = @$data['old_photo'];
+// 	 		}else{
+// 	 			$photo = $data['photo'];
+// 	 		}
+	 		
 		$arr = array(
 					'sale_id'		=>$data['sale_client'],
 					'house_id'		=>$data['house_id'],
@@ -108,7 +134,8 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 				$where = " income_id = ".$id;
 				$this->delete($where);
 				$ids = explode(',', $data['identity']);
-				foreach ($ids as $j){
+				//print_r($ids);exit();
+				foreach ($ids as $j){ 
 					$arr = array(
 							'income_id'		=>$id,
 							'description'	=>$data['description_'.$j],
@@ -139,12 +166,6 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 						}
 					}
 					$this->_name = "ln_otherincome_detail";
-					$where1 =" income_id=".$id;
-					if (!empty($detailId)){
-						$where1.=" AND id NOT IN ($detailId) ";
-					}
-					$this->delete($where1);
-						
 					$image_name="";
 					$photo="";
 					foreach ($ids as $i){
@@ -204,7 +225,13 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 	}
 	function getincomebyid($id){
 		$db = $this->getAdapter();
-		$sql=" SELECT * FROM ln_otherincome where id=$id ";
+		$sql=" SELECT *,
+				(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+		 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_otherincome.client_id LIMIT 1) AS client_name,
+		 		(SELECT land_address FROM `ln_properties` WHERE id=house_id LIMIT 1) AS land_address,
+		 		(SELECT street FROM `ln_properties` WHERE id=house_id LIMIT 1) AS street
+		 		
+		FROM ln_otherincome where id=$id ";
 		return $db->fetchRow($sql);
 	}
 	function getincomeDetailbyid($id){
@@ -233,7 +260,7 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		(SELECT name_kh FROM `ln_view` WHERE TYPE=12 AND key_code=category_id LIMIT 1) AS category_name,
 		total_amount,description,date,
 		(SELECT  first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name,
-		status FROM ln_otherincome ";
+		status,'Print' FROM ln_otherincome ";
 		
 		if (!empty($search['adv_search'])){
 				$s_where = array();
