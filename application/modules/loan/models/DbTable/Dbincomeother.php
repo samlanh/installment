@@ -87,32 +87,7 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
  	$_db->beginTransaction();
  	//print_r($data); exit();
 	 	try{
-// 	 		if(!empty($data['id'])){
-// 	 			$oldClient_Code = $this->getClientById($data['id']);
-// 	 			$client_code = $oldClient_Code['client_number'];
-// 	 		}else{
-// 	 			$db = new Application_Model_DbTable_DbGlobal();
-// 	 			$client_code = $db->getNewClientIdByBranch($data['branch_id']);
-// 	 		}
-// 	 		$photoname = str_replace(" ", "_", $client_code) . '.jpg';
-// 	 		$upload = new Zend_File_Transfer();
-// 	 		$upload->addFilter('Rename',
-// 	 				array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
-// 	 		$receive = $upload->receive();
-// 	 		if($receive)
-// 	 		{
-// 	 			$data['photo'] = $photoname;
-// 	 		}
-// 	 		else{
-// 	 			$data['photo']="";
-// 	 		}
-// 	 		if (empty($data['photo'])){
-// 	 			$photo = @$data['old_photo'];
-// 	 		}else{
-// 	 			$photo = $data['photo'];
-// 	 		}
-	 		
-		$arr = array(
+			$arr = array(
 					'sale_id'		=>$data['sale_client'],
 					'house_id'		=>$data['house_id'],
 					'branch_id'		=>$data['branch_id'],
@@ -133,6 +108,8 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 				$this->_name='ln_otherincome_detail';
 				$where = " income_id = ".$id;
 				$this->delete($where);
+				
+				
 				$ids = explode(',', $data['identity']);
 				//print_r($ids);exit();
 				foreach ($ids as $j){ 
@@ -146,6 +123,9 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 							'total'			=>$data['total_'.$j],);
 					$this->insert($arr);
 				}
+				
+				
+				
 				$part= PUBLIC_PATH.'/images/document/';
 				if (!file_exists($part)) {
 					mkdir($part, 0777, true);
@@ -153,18 +133,6 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 				if (!empty($data['identity1'])){
 					$identity = $data['identity1'];
 					$ids = explode(',', $identity);
-					$detailId="";
-					foreach ($ids as $i){
-						if (empty($detailId)){
-							if (!empty($data['detailid'.$i])){
-								$detailId = $data['detailid'.$i];
-							}
-						}else{
-							if (!empty($data['detailid'.$i])){
-								$detailId= $detailId.",".$data['detailid'.$i];
-							}
-						}
-					}
 					$this->_name = "ln_otherincome_detail";
 					$image_name="";
 					$photo="";
@@ -186,9 +154,17 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 									$where=" id=".$data['detailid'.$i];
 									$this->update($arr, $where);
 								}
-								else
+								else{
 									$string = "Image Upload failed";
-								//     				}
+								}
+							}else{
+								$photo = $data['old_file'.$i];
+								$arr = array(
+										'income_id'=>$id,
+										'document_name'=>$photo,
+										'item_type'=>2,
+								);
+								$this->insert($arr);
 							}
 						}else{
 							$name = $_FILES['attachment'.$i]['name'];

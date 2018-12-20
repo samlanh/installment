@@ -454,7 +454,8 @@ function initialize() {
 					template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+coll+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 					template+='<a title="<?php echo $tr->translate('VIEW_DOCUMENT');?>" href="<?php echo $this->baseUrl()."/images/document/".$rs['document_name'];?>" target="_blank" class="btn btn-error btn-reset" ><i class="fa fa-eye" aria-hidden="true"></i></button></a>';
 				template+='</span>';
-				template+='<input type="hidden" id="detailid'+col+'" name="detailid'+col+'"  value="<?php echo $rs['id'];?>" />';
+				template+='<input type="hidden" id="detailid'+coll+'" name="detailid'+coll+'"  value="<?php echo $rs['id'];?>" />';
+				template+='<input type="hidden" id="old_file'+coll+'" name="old_file'+coll+'"  value="<?php echo $rs['document_name'];?>" />';
 			template+='</div>';
 		template+='</div> <div class="clearfix"></div>';
 
@@ -506,6 +507,9 @@ $(function() {
 });
 function hideDialog(){
 	dijit.byId('print_expense').hide();
+}
+function hideDialog1(){
+	dijit.byId('popup_category').hide();
 }
 var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
 function getLandAndClientDetail(){
@@ -595,6 +599,7 @@ new dijit.form.FilteringSelect({
 	    }
     } 
 }, "income_category");
+
 function getBranchinfo(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
 	branch_id = dijit.byId('branch_id').get('value');
@@ -676,7 +681,7 @@ function printSave(new_invoice_no){
 		customer_name = dijit.byId("customer").attr('displayedValue');
 	}
 	dojo.byId("lb_customer").innerHTML = customer_name ;
-	dojo.byId("lb_total_amount").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
+	dojo.byId("lb_total_amount").innerHTML = dojo.number.format(dijit.byId("total_amount").get('value'),{places:2});
 	date_payment = dijit.byId("Date").get('value');
 	var a = new Date(date_payment);
 	mm = a.getMonth()+1;
@@ -729,7 +734,7 @@ function printSave(new_invoice_no){
 }
 
 function currencyFormat (num) {
-    return "$ " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+    //return "$ " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 }
 function doPrintInvoice() {
 	$('#frm_add_tran');
@@ -751,7 +756,7 @@ function printSubmit(){
 					<td>
 						<fieldset style="background-color: buttonface;">
 						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend>
-							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+							<table style="margin: 0 auto; width: 100%; line-height: 35px; padding:10px;​ " cellspacing="7" >
 								<tr>
 									<td><?php echo $tr->translate('NAME_KH');?></td>
 									<td>
@@ -770,9 +775,9 @@ function printSubmit(){
 								</tr>
 								<tr>
 									<td colspan="4" align="center">
-										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CLOSE");?>" id="close" name="close" dojoType="dijit.form.Button" 
 										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
-										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										<input type="button" value="save" label="<?php echo $tr->translate("SAVE");?>" id="save" name="save" dojoType="dijit.form.Button" 
 										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
 									</td>
 								</tr>

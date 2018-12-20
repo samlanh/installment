@@ -93,7 +93,8 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     	$id = $this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
-			$db = new Loan_Model_DbTable_DbIncomeother();				
+			$db = new Loan_Model_DbTable_DbIncomeother();	
+			$data['old_photo']=null;
 			try {
 				$db->updateIncome($data,$id);				
 				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', "/loan/incomeother");		
