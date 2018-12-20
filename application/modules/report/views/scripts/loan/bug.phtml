@@ -95,7 +95,7 @@ th{padding: 5px;}
 			                </thead>
 			                <?php if(!empty($this->rs_paid)) foreach ($this->rs_paid as $key => $rs){ ?>
 			                <?php
-			                if($rs["paid_amount"]==($rs["realpaid"])){ 
+			                if($rs["paid_amount"]==($rs["realpaid"]+$rs["printcipal_permonthlast"])){ 
 			                	continue;
 			                } 
 			               ?>
@@ -164,8 +164,7 @@ th{padding: 5px;}
 		                <?php if(!empty($this->rs_begining)) foreach ($this->rs_begining as $key => $rs){ ?>
 		                <?php
 							$result = ($rs["price_sold"]-$rs["paid_amount"]);
-							$result = number_format($result,2)-number_format($rs["begining_balance"],2);
-							
+							$result = number_format($result,2)-number_format($rs["begining_balance"]-$rs["printcipal_permonthlast"],2);
 			                if($result==0){ 
 			                	continue;
 			                }else{

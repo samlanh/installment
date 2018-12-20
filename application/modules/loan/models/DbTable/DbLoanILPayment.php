@@ -164,7 +164,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$this->_name = "ln_client_receipt_money";
     		$where="id =".$receipt_id;
     		$this->update($arr_client_pay, $where);
-    		$client_pay = $this->insert($arr_client_pay);
+    		
     		
     		$sql = "SELECT
     		crm.sale_id FROM ln_client_receipt_money AS crm
@@ -279,6 +279,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$where = " crm_id = ".$receipt_id;
     		$this->_name="ln_client_receipt_money_detail";
     		$this->update($arr_money_detail, $where);
+    		
     		$db->commit();
     	}catch(Exception $e){
     		$db->rollBack();
@@ -539,7 +540,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			$ending_balance=0;
     			if(!empty($rs)){    				
 //     				/*សម្រាប់បញ្ចូលថាប្រាក់ដើមប្រានរំលស់*/
-    				$sql="SELECT (no_installment) FROM ln_saleschedule WHERE is_completed=1 AND status=1 AND sale_id=".$loan_number." ORDER BY no_installment DESC ";
+    				$sql="SELECT (no_installment) FROM ln_saleschedule WHERE is_completed=1 AND status=1 AND sale_id=".$loan_number." ORDER BY no_installment DESC LIMIT 1 ";
     				$start_id = $db->fetchOne($sql);
     				
     				$this->_name="ln_saleschedule";

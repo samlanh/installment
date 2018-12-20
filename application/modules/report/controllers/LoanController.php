@@ -1174,5 +1174,36 @@ public function exportFileToExcel($table,$data,$thead){
 		$row  = $_dbmodel->getRecivePlongInfo($id);
 		$this->view->row = $row;
 	}
+	function rptSoldsummaryAction(){//release all loan
+		$db  = new Report_Model_DbTable_DbLandreport();
+		if($this->getRequest()->isPost()){
+			$search = $this->getRequest()->getPost();
+		}
+		else{
+			$search = array(
+					'adv_search'=>'',
+					'branch_id'=>-1,
+					'schedule_opt'=>-1,
+					'property_type'=>0,
+					'client_name'=>'',
+					'buy_type'=>-1,
+					'land_id'=>-1,
+					'co_id'=>-1,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'));
+		}
+		$this->view->loanrelease_list=$db->getSaleSummary($search);
+		$this->view->list_end_date=$search;
+		$this->view->search = $search;
+		$this->view->branch_id = $search['branch_id'];
+			
+		$frm = new Loan_Form_FrmSearchLoan();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+			
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+	}
 }
 

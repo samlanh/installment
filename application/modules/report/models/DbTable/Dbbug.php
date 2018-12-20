@@ -24,7 +24,9 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 	     (SELECT `cr`.`id` FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`) ORDER BY `cr`.`id` DESC LIMIT 1) AS `crm_id`,	     
 	     (SELECT SUM(ss.principal_permonth) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND  is_completed=1  LIMIT 1) AS realpaid,
 	     (SELECT SUM(ss.principal_permonth-principal_permonthafter) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND ss.status=1 AND principal_permonth!=principal_permonthafter LIMIT 1) AS principal_remain,
-	     (SELECT COUNT(ss.id) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND STATUS=1 LIMIT 1) AS countpaid
+	     (SELECT COUNT(ss.id) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND STATUS=1 LIMIT 1) AS countpaid,
+	     (SELECT (ss.principal_permonth-ss.principal_permonthafter) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 order by ss.no_installment ASC  LIMIT 1  ) AS printcipal_permonthlast
+	     
 	  	FROM `ln_sale` AS s WHERE is_completed=0 AND STATUS=1 AND is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2 ";
       	return $db->fetchAll($sql);
       }
@@ -58,8 +60,14 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       (SELECT  CONCAT(`land_address`,',',`street`) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
       (SELECT SUM(`cr`.`total_principal_permonthpaid`+`cr`.`extra_payment`) FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`)) AS `paid_amount`,
       (SELECT (ss.id) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND STATUS=1 LIMIT 1) AS fund_id,
-      (SELECT ss.begining_balance FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 order by ss.no_installment ASC  LIMIT 1  ) AS begining_balance
-      FROM `ln_sale` AS s WHERE is_completed=0 AND STATUS=1 AND is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2 ";
+      (SELECT ss.begining_balance FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 order by ss.no_installment ASC  LIMIT 1  ) AS begining_balance,
+      (SELECT (ss.principal_permonth-ss.principal_permonthafter) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 order by ss.no_installment ASC  LIMIT 1  ) AS printcipal_permonthlast
+      FROM 
+      		`ln_sale` AS s WHERE is_completed=0 
+      		AND status=1 
+      		AND is_cancel=0 
+      		AND s.payment_id!=1 
+      		AND s.payment_id!=2 ";
       	return $db->fetchAll($sql);
       }
       

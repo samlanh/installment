@@ -149,6 +149,10 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	function getInvoiceNo($branch_id){
 		$db = $this->getAdapter();
 		
+		$dbtable = new Application_Model_DbTable_DbGlobal();
+		
+// 		$receipt = $dbtable->getReceiptByBranch($data);
+		
 		$prefix ="";// $this->getPrefixCodeByBranch($branch_id);
 		
 		$sql = " select count(id) from ln_income where branch_id = $branch_id";
