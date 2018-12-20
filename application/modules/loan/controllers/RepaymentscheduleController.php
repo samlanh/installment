@@ -79,6 +79,8 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
         $this->view->allclient = $db->getAllClient();
         $this->view->allclient_number = $db->getAllClientNumber();
         
+        $this->view->stepoption = $db->getOptionStepPayment();
+        
         $frmpopup = new Application_Form_FrmPopupGlobal();
         $this->view->footer = $frmpopup->getFooterReceipt();
 

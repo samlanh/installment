@@ -1563,5 +1563,17 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$sql="SELECT DISTINCT rp.`layout_type` AS `name`,rp.`layout_type` AS `id`  FROM `ln_receiveplong` AS rp WHERE rp.`status`=1 AND rp.`layout_type` !='' ORDER BY rp.layout_type ASC";
   	return $db->fetchAll($sql);
   }
+  
+  public function getOptionStepPayment(){
+  	$db = $this->getAdapter();
+  	$rows = $this->getVewOptoinTypeByType(29);
+  	$option='';
+  	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  	$option='<option value="0" >'.htmlspecialchars($tr->translate("PLEASE_SELECT"), ENT_QUOTES).'</option>'; 
+  	if(!empty($rows))foreach($rows as $value){
+  		$option .= '<option value="'.$value['key_code'].'" >'.htmlspecialchars($value['name_en'], ENT_QUOTES).'</option>';
+  	}
+  	return $option;
+  }
 }
 ?>

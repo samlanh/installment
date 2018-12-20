@@ -70,6 +70,9 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
         $db = new Application_Model_DbTable_DbGlobal();
         $this->view->allclient = $db->getAllClient();
         $this->view->allclient_number = $db->getAllClientNumber();
+        
+        $this->view->stepoption = $db->getOptionStepPayment();
+        
         $frmpopup = new Application_Form_FrmPopupGlobal();
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();        

@@ -1316,6 +1316,7 @@ function updatePaymentStatus($data){
 	  									'no_installment'=>$key,
 	  									'last_optiontype'=>$paid_receivehouse,
 	  							);
+	  							
 	  							$key = $key+1;
 	  							$installment_paid = $installment_paid+$data['principal_permonth_'.$j];
 	  							if($data['payment_option'.$j]==1 OR !empty($data['paid_amount_'.$j])){//complete or paid
@@ -1422,6 +1423,7 @@ function updatePaymentStatus($data){
 	  							'is_installment'=>1,
 	  							'no_installment'=>$key,
 	  							'last_optiontype'=>$paid_receivehouse,
+	  							'ispay_bank'=>$data['pay_with'.$i],
 	  					);
 	  					if($payment_method==5){//with bank
 	  						//$datapayment['ispay_bank']= $data['pay_with'.$i];

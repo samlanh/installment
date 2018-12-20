@@ -490,9 +490,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			   				'is_installment'=>1,
     			   				'no_installment'=>$key,
     			   		);
-    			   		if($payment_method==5){//with bank
+    			   		//if($payment_method==5){//with bank
     			   			$datapayment['ispay_bank']= $data['pay_with'.$i];
-    			   		}
+    			   		//}
     			   		$sale_currid = $this->insert($datapayment);
     			   		$from_date = $data['date_payment'.$i];
     			   		$key = $key+1;

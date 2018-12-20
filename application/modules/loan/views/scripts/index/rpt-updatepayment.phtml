@@ -183,6 +183,7 @@ td p{ margin-top:0px !important;}
 	                    <td>បានបង់សរុប</td>
 	                    <td>ថ្ងៃបានបង់</td>
 	                    <td>ស្ថានការបង់</td>
+	                     <td><?php echo $tr->translate("TYPE");?></td>
 	                </tr>
 	               <?php
 				   $indentity = "";
@@ -220,6 +221,14 @@ td p{ margin-top:0px !important;}
 	                    <td style="width:120px;"><select dojoType="dijit.form.FilteringSelect" class="fullside"  style="border:1px solid #fff;height: 30px;"  name="payment_option<?php echo $key+1;?>" id="payment_option<?php echo $key+1;?>">
 	                    <option value="0" <?php if($row['is_completed']==0){ echo "selected='selected'"; }?>>មិនទាន់គ្រប់</option>
 	                    <option value="1" <?php if($row['is_completed']==1){ echo "selected='selected'"; }?>>បង់ដាច់</option></select></td>
+	                    <td width="140px">
+		                    <select class="fullside" dojoType="dijit.form.FilteringSelect" id="pay_with<?php echo $key+1;?>" name="pay_with<?php echo $key+1;?>" >
+		                   		<option value="0"><?php echo $tr->translate("PLEASE_SELECT");?></option>
+		                   		<?php if (!empty($this->steppay)) foreach ($this->steppay as $stt){?>
+		                   		<option value="<?php echo $stt['key_code']?>" <?php if($row['ispay_bank']==$stt['key_code']){ echo "selected='selected'"; }?>><?php echo $stt['name_en']?></option>
+		                   		<?php }?>
+		                    </select>
+	                    </td>
 	                </tr>
 	                
 	               <?php } ?>
@@ -439,6 +448,7 @@ function calCulateEndDate(){
 		}
     }
 }
+var steppayoption = '<?php echo $this->stepoption;?>';
 col=<?php echo $recordstart;?>;
 no=<?php echo $recordstart;?>;
 title=0;temp='';
@@ -506,6 +516,8 @@ function addRow(){
 				template+='<td style="width:185px;"><input class="fullside" readOnly class="fullside" type="text" data-dojo-type="dijit.form.NumberTextBox" id="paid_amount_'+col+'" name="paid_amount_'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
 				template+="<td style='width:100px;'><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='paid_date_"+col+"' name='paid_date_"+col+"' /></td>";
 				template+='<td style="width:120px;"><select class="fullside" id="payment_option'+col+'" name="payment_option'+col+'" dojoType="dijit.form.FilteringSelect"><option value="0">មិនទាន់គ្រប់</option><option value="1">បង់ដាច់</option></select></td>';
+				template+='<td width="140px"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="pay_with'+col+'" name="pay_with'+col+'" >'+steppayoption+'</select></td>';
+				
 			tmp='<tr class="hover" style="border-bottom:1px solid #ccc;font-size: 14px; width:100%;" id="row'+col+'">';
 			tmp+="</tr>";
 			dojo.query("#table_row").append(tmp);

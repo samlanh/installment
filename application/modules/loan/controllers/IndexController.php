@@ -5,6 +5,7 @@ class Loan_IndexController extends Zend_Controller_Action {
     {    	
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
 	private $sex=array(1=>'M',2=>'F');
 	public function indexAction(){
@@ -92,6 +93,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 		        'name' =>$tr->translate("ADD_NEW"),
 		) );
 	    $this->view->co_name=$co_name;
+	    
+	    $this->view->stepoption = $db->getOptionStepPayment();
 	    
 	    $interest = $db->getAllInterestratestore();
 	    array_unshift($interest,array(
@@ -421,9 +424,16 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  	$db = new Application_Model_DbTable_DbGlobal();
 	  	$rs = $db->getClientByMemberId($id);
 	  	$this->view->client =$rs;
+	  	
+	  	$this->view->stepoption = $db->getOptionStepPayment();
+	  	
+	  	$steppay = $db->getVewOptoinTypeByType(29);
+	  	$this->view->steppay =$steppay;
+	  	
 	  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
 	  	$row = $db->getPaymentupdateSchedule($id,$rs['payment_id']);
 	  	$this->view->tran_schedule=$row;
+	  	
 	
 	  	$db = new Application_Model_DbTable_DbGlobal();
 	  	$key = new Application_Model_DbTable_DbKeycode();

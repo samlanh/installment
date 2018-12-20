@@ -959,6 +959,7 @@ function addNewVillage(){
 </script>
 <script>
 
+var steppayoption = '<?php echo $this->stepoption;?>';
 col=0;no=0;title=0;temp='';
 function addRow(){
 	
@@ -986,9 +987,9 @@ function addRow(){
 				temp+='<th wid="90px"><?php echo $tr->translate("DATE_PAYMENT");?></th>';
 				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
 				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("OS_AMOUNT");?></th>';
-				if(payment_method==5){
-					temp+='<th><?php echo $tr->translate("រំលស់ជាមួយ");?></th>';
-				}
+				//if(payment_method==5){
+					temp+='<th><?php echo $tr->translate("TYPE");?></th>';
+				//}
 				temp+='<th><?php echo $tr->translate("NOTE");?></th>';
 				dojo.query("#head-title").append(temp);
 				title=1;
@@ -1013,9 +1014,9 @@ function addRow(){
 				template+="<td width='100px'><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
 				template+='<td width="60px"><input type="text" onkeyup="calCulateAmount('+col+')" class="fullside" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';			
 				template+='<td width="60px"><input class="fullside"  onkeyup="calCulateAmount('+col+',2)" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
-				if(payment_method==5){
-					template+='<td width="90px"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="pay_with'+col+'" name="pay_with'+col+'" ><option value="0">បង់ជាមួយម្ចាស់</option><option value="1">បង់ជាធនាគារ</option></select></td>';			
-				}
+				//if(payment_method==5){
+					template+='<td width="90px"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="pay_with'+col+'" name="pay_with'+col+'" >'+steppayoption+'</select></td>';			
+				//}
 				template+='<td <input class="fullside" type="text"  name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"/><label id="subsub"></label></td>';
 			tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
 			tmp+="</tr>";
@@ -1051,6 +1052,7 @@ function addInstallment(){
 				temp+='<th><?php echo $tr->translate("DATE_PAYMENT");?></th>';
 				temp+='<th id="lbl_titlemetion" width="60px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
 				temp+='<th id="lbl_titlemetion" width="60px"><?php echo $tr->translate("OS_AMOUNT");?></th>';
+				temp+='<th><?php echo $tr->translate("TYPE");?></th>';
 				temp+='<th><?php echo $tr->translate("REMARK");?></th>';
 				dojo.query("#head-title").append(temp);
 				title=1;
@@ -1084,6 +1086,7 @@ function addInstallment(){
 				template+="<td width='100px'><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
 				template+='<td width="60px"><input onkeyup="calCulateAmount('+col+')" class="fullside" type="text" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
 				template+='<td width="60px"><input onkeyup="calCulateAmount('+col+',2)" class="fullside" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
+				template+='<td width="140px"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="pay_with'+col+'" name="pay_with'+col+'" >'+steppayoption+'</select></td>';
 				template+='<td <input class="fullside" type="text"  name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"/><label id="subsub"></label></td>';
 			tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
 			tmp+="</tr>";

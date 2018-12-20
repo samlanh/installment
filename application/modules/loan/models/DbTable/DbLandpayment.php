@@ -508,9 +508,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   				'no_installment'=>$key,
 	    			   				'last_optiontype'=>$paid_receivehouse,
 	    			   		);
-	    			   		if($payment_method==5){//with bank
+	    			   		//if($payment_method==5){//with bank
 	    			   			$datapayment['ispay_bank']= $data['pay_with'.$i];
-	    			   		}
+	    			   		//}
 	    			   		$sale_currid = $this->insert($datapayment);
 	    			   		$from_date = $data['date_payment'.$i];
 	    			   		$key = $key+1;
@@ -1039,9 +1039,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   				'no_installment'=>$key,
 	    			   				'last_optiontype'=>$paid_receivehouse,
 	    			   		);
-	    			   		if($payment_method==5){//with bank
+	    			   		//if($payment_method==5){//with bank
 	    			   			$datapayment['ispay_bank']= $data['pay_with'.$i];
-	    			   		}
+	    			   		//}
 	    			   		$sale_currid = $this->insert($datapayment);
 	    			   		$from_date = $data['date_payment'.$i];
 	    			   		$key = $key+1;
