@@ -10,6 +10,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
     	 
     }
 	public function addClient($_data){
+		//print_r($_data);exit();
 		try{
 			if(!empty($_data['id'])){
 				$oldClient_Code = $this->getClientById($_data['id']);
@@ -130,7 +131,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 									'client_id'=>$customer_id,
 									'document_name'=>$photo,
 							);
-							$this->_name = "rms_specail_discount_document";
+							$this->_name = "ln_client_document";
 							$where=" id=".$_data['detailid'.$i];
 							$this->update($arr, $where);
 						}

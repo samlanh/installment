@@ -2,6 +2,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$this->headTitle($tr->translate('REPORT_HOME')); 
 	echo $this->headTitle(''); 
+	$format = new Application_Model_DbTable_DbGlobal();
 ?>	
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <script type="dojo/method" event="onSubmit">			
@@ -86,6 +87,10 @@ dojo.ready(function(){
 					    height: 1px;
 					    margin-bottom: 10px;
 					}
+					#print-footer {
+						position: absolute;
+						bottom:0;
+					}
 		  		 </style>
 				<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
 						<td colspan="6">
@@ -121,14 +126,30 @@ dojo.ready(function(){
 		            	<div style=" font-weight: initial; font-family:'Khmer OS Muol Light';padding:15px; font-size:20px;">បរិយាយ ៖ </div>
 		            		<table width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; " >  
 						       <?php  $i=0; $n=0; if(!empty($this->rows)){foreach($this->rows as $key =>$row) {$i++?>
-								<tr style="font-size: 18px; line-height:30px;" align="left">
+								<tr style="font-size: 18px; line-height:38px;" align="left">
 								   <td align="center" width="5%"><?php echo $i; ?>&nbsp;.</td>
 								   <td align="left">&nbsp;<?php echo $row['work_note'];?></td>
 								</tr>
 								<?php }}?>
 						    </table>
+						   <div style=" font-weight: initial; margin: 23px; font-family:'Khmer OS Muol Light';padding:15px; font-size:16px;"><i class="fa fa-circle-o-notch" ></i>&nbsp;<u>បញ្ជាក់ សូមពិនិត្យមើលប្លង់បន្ថែម</u></div>
 		            	</td>
-		           		 </tr>
+		           		</tr>
+		           		<tr class="head" style="font-weight: initial;font-family:'Khmer OS Muol Light';" >
+						   <td colspan="7" align="center" >
+						   		<label style=" margin-left: 55%; font-size:14px; line-height: 18px; font-weight: initial; font-family:'Khmer OS Muol Light';">រាជធានីភ្នំពេញ ថ្ងៃទី <?php echo $format->getNumberInkhmer(date('d',strtotime(Zend_Date::now())));?> ខែ <?php echo $format->getNumberInkhmer(date('m',strtotime(Zend_Date::now())));?> ឆ្នាំ <?php echo $format->getNumberInkhmer(date('Y',strtotime(Zend_Date::now())));?> </label><br>
+						   		<label style=" margin-left: 55%; font-size:14px; line-height: 18px; font-weight: initial; font-family:'Khmer OS Muol Light';">ហត្ថលេខា</label><br>
+						  		<label>&nbsp;</label><br>
+						  		<label>&nbsp;</label><br>
+						  		<label>&nbsp;</label><br>
+						  		<label style=" margin-left: 55%; font-size:16px; line-height: 18px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['client_name'];?></label>
+						   </td>
+						</tr>
+						<tr class="head" style="font-weight: initial;font-family:'Khmer OS Muol Light';">
+							<td colspan="7">
+								<div id="print-footer" style="font-size:12px;"><i><strong><u>សម្គាល់៖</u></strong> អ្នកលក់ទទួលស្គាល់និងព្រមព្រៀងថាដោយសារការប្រែសំណង់នេះអ្នកទិញនឹងទទួលខុសត្រូវ ចំពោះការ<br>ពន្យានៃការសាងសង់នេះអ្នកលក់នឹងបញ្ចាប់ការសាងសង់ក្នុងកំឡុងពេល៣ខែទៅ៦ខែបន្ថែម។</i></div>
+							</td>
+						</tr>
 		          </table>
 	   		</div>
 		 </div>

@@ -214,7 +214,21 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     	if(empty($date)) return NULL;
     	$time = strtotime($date);
     	return date($format, $time);
-    }   
+    }  
+    function getNumberInkhmer($number){
+    	$khmernumber = array("០","១","២","៣","៤","៥","៦","៧","៨","៩");
+    	$spp = str_split($number);
+    	$num="";
+    	foreach ($spp as $ss){
+    			
+    		if (!empty($khmernumber[$ss])){
+    			$num.=$khmernumber[$ss];
+    		}else{
+    			$num.=$ss;
+    		}
+    	}
+    	return $num;
+    } 
     public static function getResultWarning(){
           return array('err'=>1,'msg'=>'មិន​ទាន់​មាន​ទន្និន័យ​នូវ​ឡើយ​ទេ!');	
     }
