@@ -2302,7 +2302,7 @@ function updatePaymentStatus($data){
 			   	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id AND status=1 ) AS times,
 			   	(SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
 			   	(SELECT $str FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
-   		FROM v_soldreport WHERE 1 ";
+   		FROM v_soldreport WHERE is_cancel=0 ";
    
    	$where ='';
    	$str = 'buy_date';
@@ -2337,24 +2337,24 @@ function updatePaymentStatus($data){
    		if($search['branch_id']>0){
    		$where.=" AND branch_id = ".$search['branch_id'];
    		}
-   		if(!empty($search['co_id']) AND $search['co_id']>-1){
-   		$where.=" AND staff_id = ".$search['co_id'];
-   }
+   		if(!empty($search['streetlist']) AND $search['streetlist']>-1){
+   			$where.=" AND street = '".$search['streetlist']."'";
+   		}
    		if($search['land_id']>0){
    		$where.=" AND house_id = ".$search['land_id'];
    }
-   if($search['property_type']>0 AND $search['property_type']>0){
-   	$where.=" AND v_soldreport.property_type = ".$search['property_type'];
-   }
-   if($search['client_name']!='' AND $search['client_name']>0){
-   $where.=" AND client_id = ".$search['client_name'];
-   }
-   if($search['schedule_opt']>0){
-   $where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
-   }
-   $order = " ORDER BY is_cancel ASC,payment_id DESC ";
-   echo $sql.$where.$order;
-   return $db->fetchAll($sql.$where.$order);
+	   if($search['property_type']>0 AND $search['property_type']>0){
+	   	$where.=" AND v_soldreport.property_type = ".$search['property_type'];
+	   }
+	   if($search['client_name']!='' AND $search['client_name']>0){
+	   $where.=" AND client_id = ".$search['client_name'];
+	   }
+	   if($search['schedule_opt']>0){
+	   $where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
+	   }
+	   $order = " ORDER BY is_cancel ASC,payment_id DESC ";
+	   
+	   return $db->fetchAll($sql.$where.$order);
    }
  }
 

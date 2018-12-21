@@ -1188,7 +1188,7 @@ public function exportFileToExcel($table,$data,$thead){
 					'client_name'=>'',
 					'buy_type'=>-1,
 					'land_id'=>-1,
-					'co_id'=>-1,
+					'streetlist'=>'',
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'));
 		}
@@ -1206,4 +1206,3 @@ public function exportFileToExcel($table,$data,$thead){
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
 }
-
