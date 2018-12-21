@@ -374,7 +374,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		//if($data['option_pay']!=3){//ក្រៅពីរំលស់ប្រាក់ដើម​ => after ហេតុអីត្រូវសរសេរចឹង?
     			$rows = $this->getSaleScheduleById($loan_number, 1);
 		    		if(!empty($rows)){
-		    			$remain_money = $data['amount_receive']-$data['extrapayment'];
+		    			$remain_money = round($data['amount_receive']-$data['extrapayment'],2);
 		    			foreach ($rows AS $key => $row){
 		    				if($remain_money<=0){
 		    					break;
@@ -442,21 +442,21 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    							$total_principal = $after_principal;//$data["principal_permonth_".$i];
 		    						}
 		    						
-		    						$remain_money = $remain_money-$service_charge;
+		    						$remain_money = round($remain_money-$service_charge,2);
 		    						if($remain_money>=0){//ដកសេវាកម្ម
 		    							$paid_service=$service_charge;
 		    							$after_service=0;
-		    							$remain_money = $remain_money - $penalize;
+		    							$remain_money = round($remain_money - $penalize,2);
 		    								
 		    							if($remain_money>=0){//ដកផាគពិន័យ
 		    								$paid_penalty = $penalize;
 		    								//$principle_after=0;		    						
-		    								$remain_money = $remain_money - $total_interest;
+		    								$remain_money = round($remain_money - $total_interest,2);
 		    								if($remain_money>=0){
 		    									$paid_interest = $total_interest;
 		    									$after_interest = 0;
 		    										
-		    									$remain_money = ($remain_money)-($total_principal);
+		    									$remain_money = round($remain_money-$total_principal,2);
 		    									if($remain_money>=0){//check here of គេបង់លើសខ្លះ
 		    										$paid_principal = $total_principal;
 		    										$after_principal = 0;
