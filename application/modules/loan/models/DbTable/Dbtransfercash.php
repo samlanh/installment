@@ -100,7 +100,6 @@ class Loan_Model_DbTable_Dbtransfercash extends Zend_Db_Table_Abstract
     		}catch (Exception $e){
     			$db->rollBack();
     			$err =$e->getMessage();
-    			echo $err;exit();
     			Application_Model_DbTable_DbUserLog::writeMessageError($err);
     		}
     }

@@ -343,7 +343,7 @@ require(["dojo/ready"], function(ready){
 				land_code = dijit.byId('land_code').get('value');
 				if(land_code==-1){
 				}else{
-					getlandinfo();
+					//getlandinfo();
 				}
 		}
 	}, "land_code");
@@ -455,6 +455,13 @@ function getInfoByLoanNumber(){
 			dijit.byId("member").attr('value',data.client_id);
 			dijit.byId('land_code').attr('value',data.house_id)
 			dijit.byId('member').set('readOnly',true);
+
+			dijit.byId('land_code').set('readOnly',true);
+			dijit.byId("total_sold").attr('value',data.price_sold);
+			dijit.byId("paid_before").attr('value',data.total_principal);
+			dijit.byId('paid_before').set('readOnly',true);
+			dijit.byId("balance_before").attr('value', parseFloat(data.price_sold)- parseFloat(data.total_principal));
+			dijit.byId('balance_before').set('readOnly',true);
 		},
 		error: function(err) {
 			alert(err);
@@ -510,39 +517,4 @@ function getAllSaleNumber(branch_id){//used
 		}
 	});
 }
-
-var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
-function getlandinfo(){
-	dijit.byId('total_sold').attr('value',0);
-	land_id = dijit.byId('land_code').get('value');
-	if(land_id=="" || land_id==null){
-		dijit.byId('land_code').set('readOnly',true);
-		dijit.byId('paid_before').set('readOnly',true);
-		dijit.byId('balance_before').set('readOnly',true);
-
-		dijit.byId('total_sold').attr('value',0);
-		dijit.byId('balance_before').attr('value',0);
-		return false;
-	}
-	dojo.xhrPost({
-		url:url_getlandinfodetail,	
-		content:{ 
-		    'land_id':land_id
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			dijit.byId('land_code').set('readOnly',true);
-			dijit.byId('paid_before').set('readOnly',true);
-			dijit.byId('balance_before').set('readOnly',true);
-
-			dijit.byId('total_sold').attr('value',data.price);
-			paid_before = dijit.byId('paid_before').get('value');
-			dijit.byId('balance_before').attr('value',data.price-paid_before);
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
-}
-
 </script>
