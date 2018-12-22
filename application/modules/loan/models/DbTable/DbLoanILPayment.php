@@ -450,7 +450,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    								
 		    							if($remain_money>=0){//ដកផាគពិន័យ
 		    								$paid_penalty = $penalize;
-		    								//$principle_after=0;		    						
 		    								$remain_money = round($remain_money - $total_interest,2);
 		    								if($remain_money>=0){
 		    									$paid_interest = $total_interest;
@@ -482,17 +481,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    						if($after_principal<=0){
 		    							$is_compleated_d=1;
 		    						}
-		    						if(($key+1)==count($rows)){
-// 		    							echo $is_compleated_d;
-// 		    							exit();
-		    						}
-		    						if($is_compleated_d==0){
-// 		    							echo $row['total_payment_after'];exit();
-		    						}
 		    						if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
 	    								 $arra = array(
 	    								 		'begining_balance_after'=>$after_outstanding-$paid_principal,
-	//     								 		'ending_balance'=>$row['ending_balance']-($paid_principal),
 	    								    	"principal_permonthafter"=>$after_principal,
 	    								    	'total_interest_after'=>$after_interest,
 	    								 		'total_payment_after'=>	$after_principal+$after_interest,
@@ -616,7 +607,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    					}else{
 	    						$begining_balance = $ending_balance;
 	    					}
-// 	    					
+ 	    					
 		    				$total_interestafter=$begining_balance*$interst_rate;
 		    				$total_interestafter = $this->round_up_currency(2, $total_interestafter);
 		    				$principal = $fixed_payment-$total_interestafter;

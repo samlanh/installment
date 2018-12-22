@@ -276,6 +276,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'sale_number'=>$loan_number,
     			   	'house_id'=>$data["land_code"],
     			   	'payment_id'=>$data["schedule_opt"],
+    			   	'install_type'=>$data['install_type'],
     				'client_id'=>$data['member'],
     				'price_before'=>$data['total_sold'],
     				'discount_amount'=>$data['discount'],

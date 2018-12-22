@@ -17,7 +17,7 @@
 </div>
 <script src="<?php echo $baseurl;?>/js/help.js"></script>
 <script>
-	require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
+	require(["dijit/form/DateTextBox","dijit/form/NumberTextBox"]);
 </script>
 <div class="card">
 	<div class="card-content collapse show">
@@ -199,23 +199,7 @@
 		</form>
 	</div>
 </div>
-
 <script type="text/javascript">	
-var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-il-loan-Detail')); ?>';
-function getLaonPayment(){
-	loan_number = dijit.byId("loan_number").get('value');
-		dojo.xhrPost({
-		    url: url_submit,
-		    content : { 
-			    'loan_number':loan_number,
-			},	
-			handleAs:"json",
-			load: function(respone) {
-			},
-			error: function(e) {
-			}
-		});
-}
 function setBranchID(){
 	dijit.byId('to_branch_id').attr('value',dijit.byId('branch_id').get('value'));	
 }
@@ -293,29 +277,7 @@ function getAllClientNumberByBranch(branch_id){
 		}
 	});
 }
-var url_getloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloannumber')); ?>';
-function getLoanByBranch(){
-	branch_id = dijit.byId('branch_id').get('value');
-	if(branch_id==''){
-		alert('Please Select Branch');
-		dijit.byId('branch_id').focus();
-		return false;
-	}
-	dojo.xhrPost({
-		url:url_getloan,	
-		content:{ 
-		    'branch_id':branch_id,
-		    'is_group':0
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			dijit.byId('sale_code').attr('value',data);
-		},
-		error: function(err) {
-			//alert(err);
-		}
-	});
-}
+
 </script>
 <script type="text/javascript">
 dojo.require("dojo.data.ItemFileWriteStore"); 
@@ -323,13 +285,9 @@ dojo.require("dojo.html");
 
 var client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_name));?> );
 var client_number_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_code));?> );
-var co_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->co_name));?> );
 var property_store  = getDataStorefromJSON('id','name', null );
-var property_store_transfer  = getDataStorefromJSON('id','name', null );
 
 require(["dojo/ready"], function(ready){
-	 ready(function(){
-	  });
 	new dijit.form.FilteringSelect({
 			store: property_store,
 			autoComplete: true,
@@ -347,24 +305,6 @@ require(["dojo/ready"], function(ready){
 				}
 		}
 	}, "land_code");
-
-	new dijit.form.FilteringSelect({
-		store: property_store_transfer,
-		autoComplete: true,
-		required: false,		           
-		name: "to_land_code",
-		id: "to_land_code",
-		searchAttr: "name",
-		class: 'fullside',
-		required:true,
-		onChange: function() {
-			land_code = dijit.byId('to_land_code').get('value');
-			if(land_code==-1){
-			}else{
-				getlandinfotransfer();
-			}
-	}
-}, "to_land_code");
 	 
 	new dijit.form.FilteringSelect({
 	store: client_store,
@@ -385,26 +325,9 @@ require(["dojo/ready"], function(ready){
 	}, "member");
 
 	new dijit.form.FilteringSelect({
-		store: co_store,
-		autoComplete: true,            
-		required: false,		           
-		name: "co_id",
-		id: "co_id",
-		searchAttr: "name",
-		class: 'fullside',
-		onChange: function() {
-			co_id = dijit.byId('co_id').get('value');
-			if(co_id==-1){
-				popupcreditofficer();
-			}else{
-			}
-	    }
-		}, "co_id");
-
-	new dijit.form.FilteringSelect({
-		store: co_store,
-		autoComplete: true,            
-		required: false,		           
+		autoComplete: false, 
+		queryExpr: "*${0}*",
+		required: true,		           
 		name: "loan_number",
 		id: "loan_number",
 		searchAttr: "name",
@@ -415,9 +338,9 @@ require(["dojo/ready"], function(ready){
 		}, "loan_number");
 
 	new dijit.form.FilteringSelect({
-		store: co_store,
-		autoComplete: true,            
-		required: false,		           
+		autoComplete: false,  
+		queryExpr: "*${0}*",
+		required: true,		           
 		name: "toloan_number",
 		id: "toloan_number",
 		searchAttr: "name",
@@ -472,6 +395,9 @@ function getInfoByLoanNumber(){
 var url_submiinfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloan-bymemberid')); ?>';
 function getInfoBytoLoanNumber(){
 	loan_id = dijit.byId('toloan_number').get('value');
+	if(loan_id==''){
+		return false;
+	}
 	dojo.xhrPost({
 	    url: url_submiinfo,	
 	    content : { 
@@ -491,7 +417,7 @@ function getInfoBytoLoanNumber(){
 			total_principal = parseFloat(paid_amount)+parseFloat(total_principal);
 			dijit.byId('house_price').attr('value',total_principal);//paid
 			dijit.byId('land_price').attr('value',price_sold);
-			dijit.byId('to_total_sold').attr('value',price_sold - total_principal);
+			dijit.byId('to_total_sold').attr('value',price_sold - total_principal);//balance
 		},
 		error: function(err) {
 			alert(err);
@@ -513,7 +439,6 @@ function getAllSaleNumber(branch_id){//used
 		    dijit.byId('loan_number').set('store',sale_number_store); 
 		},
 		error: function(err) {
-			
 		}
 	});
 }
