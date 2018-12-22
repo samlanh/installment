@@ -1,0 +1,199 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_search;
+$opt = array(1=>"បង់ធម្មតា",2=>"បង់មុន",3=>"បង់រំលោះប្រាក់ដើម",4=>"បង់ផ្តាច់");
+
+$dbGB = new Application_Model_DbTable_DbGlobal();
+$logo = $this->baseUrl()."/images/logo.jpg";
+$branch_title = $tr->translate("BRAND_TITLE");
+if ($this->search['branch_id'] >0 ){
+	$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+	}
+	$branch_title = $branch['project_name'];
+}
+?>
+<script>
+     dojo.require("dijit.form.DateTextBox");
+</script>
+<title><?php echo $tr->translate("REPORT_OTHERINCOME_DETAIL");?></title>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<form method="post">
+		<div class="form-group">
+	   		<div class="col-md-3 col-sm-3 col-xs-12">
+	   			<?php echo $frm->getElement("adv_search");?>
+	   		</div>
+	   		<div class="col-md-3 col-sm-3 col-xs-12">
+	   			<?php echo $frm->getElement('branch_id');?>
+	   		</div>
+	   		<div class="col-md-2 col-sm-2 col-xs-12">
+	   			<?php echo $frm->getElement('client_name');?>
+	   		</div>
+	   		<div class="col-md-2 col-sm-2 col-xs-12">
+	   			<?php echo $frm->getElement('category_id');?>
+	   		</div>
+	   		<!-- 
+	   		<div class="col-md-2 col-sm-2 col-xs-12">
+	   			<?php //echo $frm->getElement('payment_method');?>
+	   		</div>
+	   		 -->
+	   		<div class="col-md-2 col-sm-2 col-xs-12">
+	   			<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+	   		</div>
+	   	</div>
+	   	<div class="form-group">
+	   		<div class="col-md-3 col-sm-2 col-xs-12">
+	   			<?php echo $frm->getElement('start_date');?>
+	   		</div>
+	   		<div class="col-md-3 col-sm-2 col-xs-12">
+	   			<?php echo $frm->getElement('end_date');?>
+	   		</div>
+	   		
+	   		<div class="col-md-2 col-sm-2 col-xs-12">
+	   		</div>
+	   	</div>
+	</form>
+	<div style="min-height:22cm; margin:0 auto;">
+			<div id="divPrint">
+			<style>
+			.style{
+				line-height: 20px;font-size: 11px !important;
+				font-family: 'Khmer OS Battambang';
+			}
+			.stylehover:hover{background: #ccc;}
+			table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+			th{padding: 5px;}
+			</style>
+			<?php $client_id = null; $sale_id = null;?>
+			<?php 
+                $i=1;
+			?>
+			<table width="100%">
+				<tr>
+			    	<td align="center">
+			    	<div class="divFooter">
+			        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+			            	<tr>
+			                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
+			                	<td width="60%" valign="top">
+			                         <ul>
+			                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
+			                			<li style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_OTHERINCOME_DETAIL");?></li>
+			                			<li style="text-align:center; font-size:13px;"><?php if(!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></li>
+			                		</ul>
+			                 </td>
+			                    <td width="20%"></td>
+			                </tr> 
+			            </table>
+		            </div>
+			        </td>
+			    </tr>
+			    <tr><td  id="exportExcel" class="mymy">
+			    		<table width="100%" border="1" style="border-collapse:collapse; border: 1px solid #000;" cellspacing="0">
+			            	<?php 
+			            	
+			            	$grtotalprice =0; 
+			            	
+			            	$totalcustomer=0;
+			            	
+			            	if(!empty($this->loantotalcollect_list)) {
+			            		
+				              	foreach ($this->loantotalcollect_list as $index => $rs){?>
+				              			<?php if ($client_id!=$rs["client_id"]) { ?>
+				              			<?php if ($index>0){?>
+				              			<tr  class="style stylehover" style="font-weight:bold; line-height: 20px; text-align: center;" >
+					                		<td colspan="8" style="border-left: solid #fff 1px;  border-bottom : solid #fff 1px;">&nbsp;</td>
+						                    <td bgcolor="#c1d0f3" style="padding:2px 0px;" colspan="2">&nbsp;​<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+						                    <td align="right" style="padding:2px 0px;">&nbsp;<?php echo number_format($totalcustomer,2);?>&nbsp;</td>
+						                </tr>
+		               					 <tr>
+						                	<td colspan="16" style="border-left:1px solid #fff;border-right:1px solid #fff;">&nbsp;</td>
+						                </tr>
+				              			<?php }?>
+			              				<tr style="background:#c1d0f3">
+			              					<td colspan="18" class="style">&nbsp;&nbsp;
+						              			<?php 
+						              				 echo $tr->translate("CUSTOMER_NAME").':'.$rs["name_kh"].',';
+						              				 echo $tr->translate("SEX").':';
+						              					if (!empty($rs['sex']) AND $rs['sex']==1){
+						              					echo "M";
+						              				}
+						              				else {
+						              					echo "F";
+						              				}
+						              				$totalcustomer=0;
+						              			?>
+				              			</td>
+					              	</tr>
+				                <tr bgcolor="#ccc" class="style" align="center" style="padding:5px 0;height: 20px; white-space: nowrap;">
+				                    <td><?php echo $tr->translate("NUM");?></td>
+				                    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+				                    <td><?php echo $tr->translate("DATE");?></td>
+				                    <td><?php echo $tr->translate("INVOICE_NO");?></td>
+				                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
+				                    <td><?php echo $tr->translate("STREET");?></td>
+				                    
+				                    <td><?php echo $tr->translate("CATEGORY");?></td>	
+				                    <td><?php echo $tr->translate("DESCRIPTION");?></td>   
+				                                    
+				                    <td><?php echo $tr->translate("PRICE");?></td>
+				                    <td><?php echo $tr->translate("QTY");?></td>
+				                    <td><?php echo $tr->translate("TOTAL");?></td>
+				                </tr>
+				                <?php }?>
+				            <?php 
+				            $grtotalprice = $grtotalprice+$rs["total"];
+				            $totalcustomer = $totalcustomer+$rs["total"];
+				            ?>
+			                <tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
+			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($rs["date"]));?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["invoice"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["street"];?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+			               		<td style="min-width: 150px;">&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+			               		
+			               		<td align="right">&nbsp;&nbsp;<?php echo number_format($rs["price"],2);?>&nbsp;</td>
+			               		<td align="center">&nbsp;&nbsp;<?php echo $rs["qty"];?></td>               		
+			               		<td align="right">&nbsp;<?php echo number_format($rs["total"],2);?>&nbsp;</td>
+			               		
+			                </tr>
+			                <?php if ($client_id!=$rs["client_id"]) {
+			                	$client_id=$rs["client_id"];
+			                } ?>
+			               
+			                <?php }?>
+			                 <tr  class="style stylehover" style="font-weight:bold; line-height: 20px; text-align: center;" >
+		                		<td colspan="8" style="border-left: solid #fff 1px;  border-bottom : solid #fff 1px;">&nbsp;</td>
+			                    <td bgcolor="#c1d0f3" style="padding:2px 0px;" colspan="2">&nbsp;​<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+			                    <td align="right" style="padding:2px 0px;">&nbsp;<?php echo number_format($totalcustomer,2);?>&nbsp;</td>
+			                </tr>
+			                <tr>
+			                	<td colspan="16" style="border-left:1px solid #fff; border-bottom : solid #fff 1px; border-right:1px solid #fff;">&nbsp;</td>
+			                </tr>
+			                <tr  class="style stylehover" style="font-weight:bold; line-height: 20px; text-align: center;" >
+			                		<td colspan="8" style="border-left: solid #fff 1px;  border-bottom : solid #fff 1px;">&nbsp;</td>
+				                    <td bgcolor="#c1d0f3" style="padding:5px 0px; border-top: solid #000 2px;" colspan="2">&nbsp;​<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+				                    <td align="right" style="padding:5px 0px; border-top: solid #000 2px;">&nbsp;<?php echo number_format($grtotalprice,2);?>&nbsp;</td>
+				                </tr>
+			                <?php }?>
+			            </table>
+			              <br />
+			               <table align="center" width="100%">
+							   <tr style="font-size: 12px;">
+							        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+							        <th></th>
+							        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+							        <th></th>
+							        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+							   </tr>
+						</table>
+			    	</td>
+			    </tr>
+			</table>
+		</div>
+	</div>
+</div>

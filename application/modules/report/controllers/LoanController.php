@@ -1205,4 +1205,32 @@ public function exportFileToExcel($table,$data,$thead){
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
+	
+	function rptOtherincomedetailAction(){
+		$db  = new Report_Model_DbTable_DbLandreport();
+			if($this->getRequest()->isPost()){
+    			$search=$this->getRequest()->getPost();
+    		}
+    		else{
+    			$search = array(
+    					"adv_search"=>'',
+    					"branch_id"=>-1,
+    					"category_id"=>'',
+    					'start_date'=> date('Y-m-d'),
+    					'end_date'=>date('Y-m-d'),
+    					'client_name'=>-1,
+//     					'payment_method'=>'',
+    			);
+    		}
+		$this->view->loantotalcollect_list =$db->getAllIncomeOtherDetail($search,1);
+		$this->view->search=$search;
+		
+		$frm = new Loan_Form_FrmSearchLoan();
+    	$frm = $frm->AdvanceSearch();
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm_search = $frm;
+	
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+	}
 }
