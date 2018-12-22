@@ -253,6 +253,9 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 			if(!empty($search['category_id'])){
 				$where.= " AND category_id = ".$search['category_id'];
 			}
+			if(!empty($search['land_id']) AND $search['land_id']>-1){
+				$where.= " AND house_id = ".$search['land_id'];
+			}
 			if($search['client_name']>0){
 				$where.= " AND ln_otherincome.client_id = ".$search['client_name'];
 			}
