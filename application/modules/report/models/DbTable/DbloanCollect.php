@@ -9,37 +9,49 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 //     }
     public function getAllLnClient($search=null){
     	$db=$this->getAdapter();
-    	$start_date = $search['start_date'];
+//     	$start_date = $search['start_date'];
    		$end_date = $search['end_date'];
-    	$sql = "SELECT * FROM v_newloancolect WHERE 1 ";
+    	$sql = "SELECT v.*,
+			(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) AS ispay_bank,
+			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) LIMIT 1) AS payment_type
+			 FROM v_newloancolect AS v WHERE 1 ";
     	$where ='';
     	//$from_date =(empty($search['start_date']))? '1': " date_payment <= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
-    	$where= " AND ".$to_date;
+    	$to_date = (empty($search['end_date']))? '1': " v.date_payment <= '".$search['end_date']." 23:59:59'";
+//     	$where.= " AND ".$to_date;
     	
     	if($search['client_name']>0){
-    		$where.=" AND client_id = ".$search['client_name'];
+    		$where.=" AND v.client_id = ".$search['client_name'];
     	}
     	if($search['branch_id']>0){
-    		$where.=" AND branch_id = ".$search['branch_id'];
+    		$where.=" AND v.branch_id = ".$search['branch_id'];
+    	}
+    	if($search['stepoption']>0){
+    		$where.=" AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) = ".$search['stepoption'];
+    	}else{
+    		$where.= " AND ".$to_date;
+    		if ($search['stepoption']==0){
+    			$where.= " AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  )=0";
+    		}
     	}
     	
     	if($search['last_optiontype']>-1){
-    		$where.=" AND last_optiontype = ".$search['last_optiontype'];
+    		$where.=" AND v.last_optiontype = ".$search['last_optiontype'];
     	}
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = trim(addslashes($search['adv_search']));
-    		$s_where[] = " sale_number LIKE '%{$s_search}%'";
-    		$s_where[] = " client_number LIKE '%{$s_search}%'";
-    		$s_where[] = " phone_number LIKE '%{$s_search}%'";
-    		$s_where[] = " client_name LIKE '%{$s_search}%'";
-    		$s_where[] = " land_code LIKE '%{$s_search}%'";
-    		$s_where[] = " land_address LIKE '%{$s_search}%'";
-    		$s_where[] = " street LIKE '%{$s_search}%'";
+    		$s_where[] = " v.sale_number LIKE '%{$s_search}%'";
+    		$s_where[] = " v.client_number LIKE '%{$s_search}%'";
+    		$s_where[] = " v.phone_number LIKE '%{$s_search}%'";
+    		$s_where[] = " v.client_name LIKE '%{$s_search}%'";
+    		$s_where[] = " v.land_code LIKE '%{$s_search}%'";
+    		$s_where[] = " v.land_address LIKE '%{$s_search}%'";
+    		$s_where[] = " v.street LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	$order=" ORDER BY date_payment ASC ";
+    	$order=" ORDER BY v.date_payment ASC ";
+    	
     	return $db->fetchAll($sql.$where.$order);
     }
     function getCustomerNearlyPayment(){
@@ -53,6 +65,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$from_date =(empty($search['start_date']))? '1': " date_payment <= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
     	$where= " AND ".$from_date." AND ".$to_date;
+    	$where.= " AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_newloancolect.id LIMIT 1  )=0";
     	$order=" ORDER BY date_payment DESC";
     	return $db->fetchAll($sql.$where.$order);
     }

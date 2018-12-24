@@ -48,6 +48,7 @@ class Report_LoanController extends Zend_Controller_Action {
   				'last_optiontype'=>-1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
+  				'stepoption'=>0,
   				'status' => -1,);  		 
   	}
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -64,7 +65,10 @@ class Report_LoanController extends Zend_Controller_Action {
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
-  	$this->view->frm_search = $frm;  	
+  	$this->view->frm_search = $frm;  
+
+  	$db = new Application_Model_DbTable_DbGlobal();
+  	$this->view->stepoption = $db->getVewOptoinTypeByType(29);
   }
   function rptGroupmemberAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();

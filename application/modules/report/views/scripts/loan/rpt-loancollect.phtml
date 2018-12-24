@@ -38,21 +38,63 @@
 </script>
 <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
  	<form method="post">
-		<table style="width:100%;margin: 0 auto;">
-			<tr>
-				<td><?php echo $filter->getElement('adv_search');?></td>
-				<td><?php echo $filter->getElement('branch_id');?></td>
-				<td><?php echo $filter->getElement('client_name');?></td>
-				<td>
-					<select class="fullside" id="last_optiontype" name="last_optiontype" dojoType="dijit.form.FilteringSelect">
+ 		<div class="form-group">
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            	<?php echo $filter->getElement('adv_search');?>
+            </div>
+             <div class="col-md-2 col-sm-2 col-xs-12">
+             	<?php echo $filter->getElement('branch_id');?>
+            </div>
+             <div class="col-md-2 col-sm-2 col-xs-12">
+             	<?php echo $filter->getElement('client_name');?>
+            </div>
+             <div class="col-md-2 col-sm-2 col-xs-12">
+             	<select class="fullside" id="last_optiontype" name="last_optiontype" dojoType="dijit.form.FilteringSelect">
 						<option value="-1">ទាំងអស់</option>
 						<option value="1">យកតាមកាលបរិច្ឆេទបង់</option>
 						<option value="0">បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ</option>
 					</select>
+            </div>
+             <!-- 
+             <div class="col-md-2 col-sm-2 col-xs-12">
+             <?php //echo $filter->getElement('start_date');?>
+            </div>
+              -->
+             <div class="col-md-2 col-sm-2 col-xs-12">
+             	<select class="fullside" id="stepoption" name="stepoption" dojoType="dijit.form.FilteringSelect">
+						<option value="-1" <?php if ($this->search['stepoption']==-1){ echo 'selected=selected';}?>><?php  echo $tr->translate("ALL");?></option>
+						<option value="0" <?php if ($this->search['stepoption']==0){ echo 'selected=selected';}?>><?php  echo $tr->translate("DATE_PAYMENT");?></option>
+						<?php if (!empty($this->stepoption)) foreach ($this->stepoption as $rs){?>
+						<option value="<?php echo $rs['key_code']?>" <?php if ($this->search['stepoption']==$rs['key_code']){ echo 'selected=selected';}?>><?php echo $rs['name_en']?></option>
+						<?php }?>
+					</select>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+             	<?php echo $filter->getElement('end_date');?>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            	<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+            </div>
+             
+        </div>
+        <div class="form-group">
+           
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            </div>
+        </div>
+		<table style="width:100%;margin: 0 auto;">
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					
 				</td>
-				<td><?php echo $filter->getElement('start_date');?></td>
-				<td><?php echo $filter->getElement('end_date');?></td>
-				<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 		</table>
 	</form>
@@ -163,7 +205,24 @@
 	                    </td>
 	                   	<td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($total_payment,2));?>&nbsp;</td>
 	                    <td><?php echo $row['no_installment'];?></td>
-	                   <td align="center" style="white-space: nowrap;"><?php echo ($row['last_optiontype']==1)?date('d-m-Y',strtotime($row['date_payment'])):"បង់ពេលប្រគល់ផ្ទះ";?>&nbsp;</td>
+	                   <td align="center" style="white-space: nowrap;">
+	                   		<?php 
+		                    	if($row['last_optiontype']==1){//by date
+		                    		if($row['ispay_bank']==0){
+		                    			$date= new DateTime($row['date_payment']);
+		                    			echo $date->format("d-m-Y");
+		                    		}else{
+		                    			echo $row['payment_type'];
+		                    		}
+		                    	}else{//by last payment
+		                    		echo $tr->translate("RECEIVED_PROPERTY");
+		                    	}
+	                    		
+	                    	?>
+	                   <?php
+	                   		//echo ($row['last_optiontype']==1)?date('d-m-Y',strtotime($row['date_payment'])):"បង់ពេលប្រគល់ផ្ទះ";
+	                   		?>
+	                   		&nbsp;</td>
 	                 </tr>
 		               <?php 
 							$amt_d1 = $amt_d1+$row['principal_permonthafter'];
