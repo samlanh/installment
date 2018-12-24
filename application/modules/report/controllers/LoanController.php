@@ -124,6 +124,7 @@ class Report_LoanController extends Zend_Controller_Action {
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   				'payment_method'=>-1,
+				'is_closed' => "",
   		);
   	}
   	$this->view->rssearch = $search;
