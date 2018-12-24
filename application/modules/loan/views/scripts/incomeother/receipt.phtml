@@ -134,7 +134,7 @@ dojo.ready(function(){
 						</tr>
 		            	<tr>
 			            	<td colspan="7" id="exportExcel">
-			            		<table border="1"  width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; " > 
+			            		<table border="1" width="100%" style="border-collapse:collapse;border:1px solid #000; line-height: 24px; font-size: 14px; " > 
 				            		<thead>
 							    	<tr bgcolor="#c1d0f3" lign="center" style="white-space:nowrap;font-weight:bold; line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
 										<th style="text-align:center;"><?php echo $tr->translate("NUM");?></th>
@@ -144,8 +144,8 @@ dojo.ready(function(){
 									    <th style="text-align:center;"><?php echo $tr->translate("TOTAL_AMOUNT");?></th>
 									</tr>
 									</thead>
-							       <?php  $branch_id=''; $i=0; $total=0; if(!empty($this->income)){foreach($this->income as $key =>$row) {$i++?>
-									<tr style="font-size: 12px; line-height:38px;" align="left">
+							       <?php  $branch_id='';$n=0; $i=0; $total=0; if(!empty($this->income)){foreach($this->income as $key =>$row) {$i++?>
+									<tr style="font-size: 12px;line-height:38px;" align="left">
 									   <td align="center" width="5%"><?php echo $i; ?></td>
 									   <td align="left">&nbsp;<?php echo $row['description'];?></td>
 									   <td align="left">&nbsp;<?php echo $row['qty'];?></td>
@@ -154,6 +154,15 @@ dojo.ready(function(){
 									</tr>
 									<?php $total = $total +$row['total'];?>
 									<?php }}?>
+									<?php for($j=$i; $j<=7; $j++){?>
+									<tr style="font-size: 12px;line-height:38px;" align="left">
+									   <td align="center" width="5%"><?php echo $j+1; ?></td>
+									   <td align="center" width="5%"></td>
+									   <td align="center" width="5%"></td>
+									   <td align="center" width="5%"></td>
+									   <td align="center" width="5%"></td>
+									</tr>
+									<?php }?>
 							    </table>
 			            	</td>
 		           		</tr>
