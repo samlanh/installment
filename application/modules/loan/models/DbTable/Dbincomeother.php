@@ -6,7 +6,6 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		$session_user=new Zend_Session_Namespace('authinstall');
 		return $session_user->user_id;
 	}
-	
 	function addIncome($data){
 		$_db= $this->getAdapter();
 		$_db->beginTransaction();

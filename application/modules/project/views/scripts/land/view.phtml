@@ -16,35 +16,46 @@
   background: #E5F2F5;
 }}
 </style>
-<div class="menureport">
-	<ul>
-		<li class="preview"><a title="Preview" href="#" onclick="preview();"></a></li>
-		<li class="print"><a href="#" title="Print" onclick="doPrint();" ></a></li>
-	</ul>
+<table width="100%">
+<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+		<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+			<i class="fa fa-print"></i>
+		</div>
+      <div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+		<div class="ptss__settings">
+			<div class="ptss__single-setting" id="ptss__layout">
+				<div class="ptss__setting-control">
+					<div class="ptss__layout-wrapper">
+						<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
+						<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+						<a class="qButton excel" href="#"  title="<?php echo $tr->translate("Export");?>"  onclick="exportExcel();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+					</div>
+					
+				</div>
+			</div>
+		</div>
 </div>
-<input type="button"  label="<?php echo $tr->translate("GO_BACK");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'group','controller'=>"land",'action'=>'index'),null,true); ?>';"/>
-<input  type="button" id="wu-register" iconClass="dijitIconEdit" label="<?php echo $tr->translate("GO_EDIT");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'group','controller'=>"land",'action'=>'edit','id'=>$rs['id']),null,true); ?>';"/>
-</p>
+</table>
 <table  cellspacing="10" class='fullside' style="font-size:12px;font-family: 'Kh Battambang','Khmer Battambang',Arial,Helvetica,sans-serif;">
 	<tr>
 		<td>	
-		<div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+		<div style="background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
 			<div id="divPrint" style="width: 100%;">
 					<style>
 		   			tr.header-line{
 		   				font-size: 16px;
 					}
 		   		</style>
-				<table width="100%" style="font-size:12px;font-family:'Times New Roman','Khmer OS Battambang';"> 
+				<table width="100%" style="font-size:12px; margin: 23px; font-family:'Times New Roman','Khmer OS Battambang';"> 
 					<tr>
 						<td>
 						   <table width="100%" >
 						   			<tr>
-										<td width="28%" align="left">
-											&nbsp;
-										</td>
+										<td id="projectlogo" width="25%">
+											<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+										</td>	
 										<td align="center" width="44%"  >
-											<strong style="font-weight:bold;color:#000; font-size: 18px;font-family:'Times New Roman','Khmer MEF2';"><?php echo $tr->translate("PROPERTY_INFO"); ?></strong><br />
+											<strong style="font-weight:bold;color:#000; font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:25px;"><u><?php echo $tr->translate("PROPERTY_INFO"); ?></u></strong><br />
 										</td>
 										<td width="28%" align="right">
 										</td>
@@ -55,11 +66,11 @@
 			   </table>
 			   <table  cellspacing="5"  style="background:#fff;margin: 0 auto;width: 100%;font-size:16px;font-family:'Times New Roman','Khmer OS Battambang';" >
 		      		<tr class="header-line">
-		     	         <td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("PROJECT_INFO");?></strong></td>
+		     	         <td colspan="6" style="border-bottom:3px solid #000; font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:16px;"><strong><?php echo $tr->translate("PROJECT_INFO");?></strong></td>
 		     	    </tr>
 		      		<tr>
 	      		      	<td style="width:80%; vertical-align: top;" colspan="4">
-	      		         	<table width="100%" style="font-size:16px;">
+	      		         	<table width="100%" style="font-size:18px;line-height: 32px; margin: 2%; ">
 	      		               <tr>
 	      		                  	<td><?php echo $tr->translate("PROJECT_NAME");?></td>
 									<td >: <?php echo $rs['project_name'];?></td>
@@ -72,11 +83,11 @@
 						</td>
 		      		</tr>
 		      		<tr class="header-line">
-		     	         <td colspan="6" style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("LAND_INFO");?></strong></td>
+		     	         <td colspan="6" style="font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:16px;"><strong><?php echo $tr->translate("LAND_INFO");?></strong></td>
 		     	    </tr>
 		     	    <tr>
 	      		      	<td style="width:80%; vertical-align: top;" colspan="4">
-	      		         	<table width="100%" style="font-size:16px;">
+	      		         	<table width="100%" style="font-size:18px; line-height: 32px; margin: 2%; ">
 	      		               <tr>
 	      		               		<td><?php echo $tr->translate("LAND_CODE")?></td>
 								  <td>: <?php echo $rs['land_code'];?></td>
@@ -121,13 +132,27 @@
 	      		               </tr>
 	      		               <tr>
 	      		               		<td><?php echo $tr->translate("PARKING_SPACE")?></td>
-								  <td>: <?php echo $rs['parkingspace'];?></td>
-									<td><?php echo $tr->translate("STATUS")?></td>
-									<td>: <?php echo $status;?></td>
+								 	<td>: <?php echo $rs['parkingspace'];?></td>
+									<td><?php echo $tr->translate("PROPERTY_CODE")?></td>
+									<td>: <?php echo $rs['land_address'];?></td>
+	      		               </tr>
+	      		               <tr>
+	      		               		<td><?php echo $tr->translate("SOUTH")?></td>
+								 	<td>: <?php echo $rs['south'];?></td>
+									<td><?php echo $tr->translate("NORTH")?></td>
+									<td>: <?php echo $rs['north'];?></td>
+	      		               </tr>
+	      		               <tr>
+	      		               		<td><?php echo $tr->translate("WEST")?></td>
+								 	<td>: <?php echo $rs['west'];?></td>
+									<td><?php echo $tr->translate("EAST")?></td>
+									<td>: <?php echo $rs['east'];?></td>
 	      		               </tr>
 	      		              	<tr>
 									<td><?php echo $tr->translate("NOTE")?></td>
-									<td colspan="3" >: <?php echo $rs['note'];?></td>
+									<td>: <?php echo $rs['note'];?></td>
+									<td><?php echo $tr->translate("STATUS")?></td>
+									<td>: <?php echo $status;?></td>
 								</tr>
 		      		         </table>
 						</td>
@@ -138,6 +163,13 @@
 		</td>
 	</tr>
 </table>
+<div class="clearfix"></div>
+ <div class="card-box">
+     <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+        <input type="button"  label="<?php echo $tr->translate("GO_BACK");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'group','controller'=>"land",'action'=>'index'),null,true); ?>';"/>
+		<input  type="button" id="wu-register" iconClass="dijitIconEdit" label="<?php echo $tr->translate("GO_EDIT");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'group','controller'=>"land",'action'=>'edit','id'=>$rs['id']),null,true); ?>';"/>
+    </div>
+  </div>
 </form>
 <table>
 <tr>
@@ -145,10 +177,16 @@
 </table>
 <iframe style="font-size: 10px; !important;" name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
 <script>
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
 function preview()
 { 
   var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
-      disp_setting+="scrollbars=no,width=1100, height=700, left=100, top=25"; 
+      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
   var content_vlue = document.getElementById("divPrint").innerHTML; 
   
   var docprint=window.open("","",disp_setting); 
@@ -160,12 +198,7 @@ function preview()
    docprint.document.close(); 
    docprint.focus(); 
 }
-
-function doPrint() {
-	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
-    window.frames["print_frame"].window.focus();
-    window.frames["print_frame"].window.print();
-    hideDialog();
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
 }
-
 </script>

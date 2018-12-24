@@ -133,6 +133,12 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     	$db= new Loan_Model_DbTable_DbIncomeother();
 		$this->view->rows = $db->getincomeDetailbyid($id);
 		$this->view->rs = $db->getincomebyid($id);
-		//print_r($this->view->rs); exit();
+    }
+    public function receiptAction(){
+    	$id=$this->getRequest()->getParam("id");
+    	$_db= new Loan_Model_DbTable_DbIncomeother();
+ 		$this->view->income = $_db->getincomeDetailbyid($id);
+ 		$this->view->rs = $_db->getincomebyid($id);
+		//print_r($this->view->income); exit();
     }
 }

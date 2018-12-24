@@ -220,7 +220,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     	$spp = str_split($number);
     	$num="";
     	foreach ($spp as $ss){
-    			
     		if (!empty($khmernumber[$ss])){
     			$num.=$khmernumber[$ss];
     		}else{
@@ -229,6 +228,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     	}
     	return $num;
     } 
+    
     public static function getResultWarning(){
           return array('err'=>1,'msg'=>'មិន​ទាន់​មាន​ទន្និន័យ​នូវ​ឡើយ​ទេ!');	
     }
