@@ -11,6 +11,7 @@ class Report_Model_DbTable_DbRptPaymentSchedule extends Zend_Db_Table_Abstract
     	$db=$this->getAdapter();
     	$sql = "SELECT *,
     	paid_date as date_paid,
+    	(SELECT name_kh FROM ln_view WHERE type =29 AND key_code = ln_saleschedule.ispay_bank LIMIT 1) AS payment_type,
 		(SELECT (paid_date) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as paid_date,
 		(SELECT SUM(total_recieve) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as total_recieve,
 		(SELECT SUM(total_interest) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as total_interestpaid,

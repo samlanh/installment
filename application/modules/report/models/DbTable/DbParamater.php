@@ -230,6 +230,7 @@ function getAllBranch($search=null){
     		
     	}
     	function getAllIncome($search=null){
+    		if(empty($search['ordering'])){$search['ordering']=2;}
     		$db = $this->getAdapter();
     		$session_user=new Zend_Session_Namespace('authinstall');
     		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
@@ -302,6 +303,9 @@ function getAllBranch($search=null){
     		return $db->fetchRow($sql);
     	}
     	function getAllExpense($search=null,$group_by=null){
+    		if(empty($search['ordering'])){
+    			$search['ordering']=2;
+    		}
     		$db = $this->getAdapter();
     		$session_user=new Zend_Session_Namespace('authinstall');
     		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";

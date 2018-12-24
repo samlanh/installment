@@ -432,9 +432,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     									'date_payment'=>$data['date_payment'.$j],
     									'percent'=>$data['percent'.$j],
 			    						'percent_agree'=>$data['percent_agree'.$j],
+			    						'ispay_bank'=>$data['pay_with'.$j],
     									'note'=>$data['remark'.$j],
     									'is_installment'=>1,
 			    						'no_installment'=>$key,
+			    							
 			    					);
 			    					$key = $key+1;
 			    					$this->insert($datapayment);
@@ -508,10 +510,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   				'is_installment'=>1,
 	    			   				'no_installment'=>$key,
 	    			   				'last_optiontype'=>$paid_receivehouse,
+	    			   				'ispay_bank'=>$data['pay_with'.$i],
 	    			   		);
-	    			   		//if($payment_method==5){//with bank
-	    			   			$datapayment['ispay_bank']= $data['pay_with'.$i];
-	    			   		//}
+	    			   		
 	    			   		$sale_currid = $this->insert($datapayment);
 	    			   		$from_date = $data['date_payment'.$i];
 	    			   		$key = $key+1;
@@ -543,9 +544,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    			        	'date_payment'=>$next_payment,
 			    			        	'no_installment'=>$i+$j,
 			    			        	'last_optiontype'=>$paid_receivehouse,
-	// 		    			        	'payment_option'=>$cum_interest,
-	// 		    			        	'penelize'=>,
-	// 		    			        	'service_charge'=>,
 	// 		    			        	'status'=>,
 			    			        );
 		            		 
@@ -646,12 +644,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	if(!empty($rows)){
     		foreach ($rows as $row){
     			$old_interest=$paid_amount;
-    			$paid_amount = $paid_amount-$row['total_interest_after'];
+    			$paid_amount = round($paid_amount-$row['total_interest_after'],2);
     			if($paid_amount>=0){
     				$total_interestafter=0;
     				$total_interestpaid=$row['total_interest_after'];
     				$old_paid = $paid_amount;
-    				$paid_amount = $paid_amount-$row['principal_permonthafter'];
+    				$paid_amount = round($paid_amount-$row['principal_permonthafter'],2);
     				
     				if($paid_amount>=0){
     					$principal_paid = $row['principal_permonthafter'];

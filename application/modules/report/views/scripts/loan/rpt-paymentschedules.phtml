@@ -66,14 +66,8 @@
 				                	    <p> <?php echo "<strong>". $tr->translate("CLIENT_NUM")."</strong> : ".$client['client_number']?></p>
 				                		<p><b><?php echo $tr->translate("ADDRESS");?></b>:<?php echo $row['village_name'];?> ,<?php echo $row['commune_name'];?> <br /><?php echo $row['district_name'];?> ,  <?php echo $row['province_en_name'];?>
 				                		<p><?php echo $tr->translate("TEL");?>  : <?php echo $client['tel'];?></p>  
-				                		</td>
+				                	</td>
 				                    <td valign="top" style="" width="33%">
-				                      <!--<p><?php //echo $tr->translate("LOAN_AMOUNT");?>  : <?php //echo number_format($client['price_sold']-$client['other_fee'],2);?> $</p>
-				                      <p><?php //echo $tr->translate("Discount");?> : <b><?php //echo $client['discount_percent']."% +".number_format($client['discount_amount'],2);?> $</b></p>
-				                      <p><?php //echo $tr->translate("OTHER_FEE");?>  : <?php //echo number_format($client['other_fee'],2);?></p>
-				                      <p><?php //echo $tr->translate("TOTAL_AMOUNT");?>  : <?php //echo number_format($client['price_sold'],2);?></p>
-				                      <p><?php //echo $tr->translate("PAID");?>  : <?php //echo number_format($client['paid_amount'],2);?></p>
-				                      <p><?php //echo $tr->translate("BALANCE");?>  : <strong><?php //echo number_format($client['balance'],2);?></strong></p> -->
 				                      <p><?php echo $tr->translate("PROPERTY_CODE");?> : <b><?php echo $client['land_address'].",".$client['stree'];?></b></p>
 				                      <p><?php echo $tr->translate("SOLD_PRICE");?>  : $ <strong><?php echo number_format($client['price_sold'],2);?></strong></p>
 				                	  <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : $ <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?></p>
@@ -85,9 +79,8 @@
 											echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
 										}?>
 									  </p>
-				     	             <!-- <p><?php //echo $tr->translate("TERM_BORROW");?> : <?php //echo $client['total_duration']*12;?>&nbsp;ខែ</p> -->
-				                      </td>
-				                      <td valign="top">
+				                    </td>
+				                    <td valign="top">
 				                      <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-m-Y',strtotime($client['buy_date']));?> </p>
 				                      <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-m-Y',strtotime($client['first_payment'])); ?></p>
 				                      <p><?php echo $tr->translate("LIFE_LOAN");?> : <?php 
@@ -112,13 +105,11 @@
 		                    <td rowspan="2"><?php echo $tr->translate("PRINCIPLE");?></td>
 		                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
-		                    <!-- <td rowspan="2"><?php //echo $tr->translate("Cumulative Interest");?></td> -->
 		                    <td rowspan="2"><?php echo $tr->translate("OTHER");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("RECEIVED_BY");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("PAID_DATE");?></td>
 		                </tr>
 	                <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
-	                    <!--<td>ចំនួនថ្ងៃ</td>-->
 	                    <td><?php echo $tr->translate("PRINCIPAL");?></td>
 	                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
 	                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
@@ -140,12 +131,17 @@
 		                    ?>
 	                    <td align="center">
 	                    	<?php 
-		                    	$date= new DateTime($row['date_payment']);
-		                    	if($row['last_optiontype']==1){
-		                    		echo $date->format("d-m-Y");
-		                    	}else{
+		                    	if($row['last_optiontype']==1){//by date
+		                    		if($row['ispay_bank']==0){
+		                    			$date= new DateTime($row['date_payment']);
+		                    			echo $date->format("d-m-Y");
+		                    		}else{
+		                    			echo $row['payment_type'];
+		                    		}
+		                    	}else{//by last payment
 		                    		echo $tr->translate("RECEIVED_PROPERTY");
 		                    	}
+	                    		
 	                    	?>
 	                    </td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['begining_balance'],2));?></td>

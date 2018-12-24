@@ -123,7 +123,7 @@ public function init()
 		$options = $db->getAllCOName(1);
 		$staff_id->setMultiOptions($options);
 		
-		$receivedopt = array(0=>$this->tr->translate("RECEIVED_PROPERTY"),1=>$this->tr->translate("BY_SCHEDULE_DATE"));
+		$receivedopt = array(1=>$this->tr->translate("BY_SCHEDULE_DATE"),0=>$this->tr->translate("RECEIVED_PROPERTY"));
 		$paid_receivehouse = new Zend_Dojo_Form_Element_FilteringSelect('paid_receivehouse');
 		$paid_receivehouse->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
