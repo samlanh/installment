@@ -64,20 +64,21 @@ class Group_indexController extends Zend_Controller_Action {
 		$this->view->result=$search;	
 	}
 	public function addAction(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		if($this->getRequest()->isPost()){
+			try{
 				$data = $this->getRequest()->getPost();
 				$data['old_photo']=null;
 				$db = new Group_Model_DbTable_DbClient();
 				$id= $db->addClient($data);
-				try{
-				Application_Form_FrmMessage::message("INSERT_SUCESS");
+				Application_Form_FrmMessage::message($tr->translate("INSERT_SUCCESS"));
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
 		$db = new Application_Model_DbTable_DbGlobal();
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
 		$client_type = $db->getclientdtype();
 		array_unshift($client_type,array('id' => -1,'name' =>$tr->translate("ADD_NEW"),));
 		array_unshift($client_type,array('id' => 0,'name' => $tr->translate("SELECT_DOCUMENT_TYPE"),));
