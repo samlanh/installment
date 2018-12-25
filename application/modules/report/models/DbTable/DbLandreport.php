@@ -1068,6 +1068,8 @@ public function getAllOutstadingLoan($search=null){
 			}
 		
 	  }
+	  
+	  
 public static function getUserId(){
 	  	$session_user=new Zend_Session_Namespace('authinstall');
 	  	return $session_user->user_id;
@@ -2427,6 +2429,31 @@ function updatePaymentStatus($data){
    	}
    	$order=" ORDER BY oin.client_id,oin.id DESC ";
    	return $db->fetchAll($sql.$where.$order);
+   }
+   
+   function UpdatePaytimeBooking(){
+   	$db = $this->getAdapter();
+	   	$sql="SELECT crm.sale_id,crm.id,crm.payment_times
+	FROM `ln_client_receipt_money` AS crm WHERE crm.field3 =1
+	ORDER BY crm.sale_id,crm.id ASC";
+	$row = $db->fetchAll($sql);
+	   	$sale=""; $i=0;
+   	if (!empty($row)) foreach ($row as $ddd){
+   		if ($sale!=$ddd['sale_id']){
+   			$i=0;
+   		}
+   		$i++;
+   		$array =  array(
+   				'payment_times'	=>$i,
+   		);
+   		$where=" id = ".$ddd['id'];
+   		$this->_name="ln_client_receipt_money";
+   		$this->update($array, $where);
+   		
+   		$sale = $ddd['sale_id'];
+   	}
+   	
+   	
    }
  }
 

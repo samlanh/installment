@@ -366,6 +366,10 @@ function rptRescheduleLoanAction(){
  	Application_Model_Decorator::removeAllDecorator($frm);
  	$this->view->frm_search = $frm;
  	
+ 	$db = new Application_Model_DbTable_DbGlobal();
+ 	$street = $db->getAllStreetForOpt();
+ 	$this->view->street = $street;
+ 	
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  }
@@ -591,6 +595,10 @@ function rptRescheduleLoanAction(){
 	 }else{
   		$this->_redirect("/report/paramater");
   	}
+  	
+//   	$rss = $db->UpdatePaytimeBooking();
+  	
+  	
   		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
   }
