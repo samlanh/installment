@@ -534,7 +534,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     function countDepositTimes($sale_id){
     	$sql="SELECT COUNT(id) FROM ln_client_receipt_money WHERE sale_id = $sale_id AND field3=1 LIMIT 1";
     	$db = $this->getAdapter();
-    	return $db->fetchOne($sql);
+    	$rs = $db->fetchOne($sql);
+    	return $rs+1;
     }
     function addPaymenttoSale($data){
     	$dbtable = new Application_Model_DbTable_DbGlobal();
@@ -575,7 +576,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'field3'			=>$is_deposit,
     			'payment_method'	=>$data['payment_method'],
     			'cheque'=>$data['cheque'],
-    			'payment_times'=>($data['schedule_opt']==1)?($times+1):1,
+    			'payment_times'=>($data['schedule_opt']==1)?($times):1,
     	);
     	$crm_id=0;
     	if($data['new_deposit']>0){
