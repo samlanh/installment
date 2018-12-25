@@ -30,7 +30,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 				
 		);
 		$this->insert($array);
- }
+ 	 }
 	 function updateIncome($data,$id){
 		$arr = array(
 					'sale_id'	=>$data['sale_client'],
@@ -157,8 +157,15 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		
 		$sql = " select count(id) from ln_income where branch_id = $branch_id";
 		$amount = $db->fetchOne($sql);
+		
+		$sql1 = " select count(id) from ln_otherincome where branch_id = $branch_id";
+		$amount1 = $db->fetchOne($sql1);
+		
 		$pre = 'inc1:';
 		$result = $amount + 1;
+		
+		$result =$result+$amount1;
+		
 		$length = strlen((int)$result);
 		for($i = $length;$i < 3 ; $i++){
 			$pre.='0';
