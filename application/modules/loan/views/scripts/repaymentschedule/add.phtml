@@ -681,36 +681,6 @@
 	</div>
 </div>
 <script type="text/javascript">	
-						           	
-var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-il-loan-Detail')); ?>';
-function getLaonPayment(){
-	loan_number = dijit.byId("loan_number").get('value');
-		dojo.xhrPost({
-		    url: url_submit,
-		    content : { 
-			    'loan_number':loan_number,
-			},	
-			handleAs:"json",
-			load: function(respone) {
-					/*dijit.byId('identity').attr('value',"");
-					dijit.byId('priciple_amount').attr('value',0);
-					dijit.byId('os_amount').attr('value',0);
-					dijit.byId('total_payment').attr('value',0);
-					dijit.byId('amount_receive').attr('value',0);
-					dijit.byId('discount').attr('value',0);
-					dijit.byId('service_charge').attr('value',0);
-					dijit.byId('penalize_amount').attr('value',0);
-					dijit.byId('total_interest').attr('value',"");
-					dijit.byId('amount_return').attr('value',0);
-					dijit.byId('payment_term').attr('value',"");
-					dijit.byId('currency_type').attr('value',"");*/
-				
-			},
-			error: function(e) {
-				//alert(e);
-			}
-		});
-}
 function checkScheduleOption(){
 	interest_rate = dijit.byId("interest_rate").get("value");
   	if(interest_rate==-1){
@@ -959,22 +929,6 @@ function getAllClientByBranch(branch_id){
 		}
 	});
 }
-/*var url_getclientnum = '<?php //echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclientnumberbybranch')); ?>';
-function getAllClientNumberByBranch(branch_id){
-	dojo.xhrPost({
-		url:url_getclientnum,	
-		content:{ 
-		    'branch_id':branch_id
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			client_number_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('customer_code').set('store', client_number_store);
-		},
-		error: function(err) {
-		}
-	});
-}*/
 var url_getloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloannumber')); ?>';
 function getLoanByBranch(){
 	branch_id = dijit.byId('branch_id').get('value');
@@ -999,32 +953,7 @@ function getLoanByBranch(){
 	});
 }
 
-var url_getreceipt = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'get-receipt-number')); ?>';
-function getReceiptByBranch(condition){
-	branch_id = dijit.byId('branch_id').get('value');
-	if(branch_id==''){
-		alert('Please Select Branch');
-		dijit.byId('branch_id').focus();
-		return false;
-	}
-	dojo.xhrPost({
-		url:url_getreceipt,	
-		content:{ 
-		    'branch_id':branch_id,
-		    'is_group':0
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			dijit.byId('receipt').attr('value',data);
-			if(condition==1){
-			}
-		},
-		error: function(err) {
-			//alert(err);
-		}
-	});
-}
-    function calCulatorBalance(){
+function calCulatorBalance(){
     	price = dijit.byId('land_price').get('value');
     	deposit =dijit.byId('deposit').get('value');
     	if(isNaN(deposit)){
@@ -1120,7 +1049,7 @@ require(["dojo/ready"], function(ready){
 	  });
 	 
 	new dijit.form.FilteringSelect({
-			store: property_store,//dojo.data.ObjectStore({objectStore: client_data}),
+			store: property_store,
 			autoComplete: true,
 			required: false,		           
 			name: "land_code",
@@ -1138,7 +1067,7 @@ require(["dojo/ready"], function(ready){
 			}, "land_code");
 	 
 	new dijit.form.FilteringSelect({
-	store: client_store,//dojo.data.ObjectStore({objectStore: client_data}),
+	store: client_store,
 	autoComplete: true,
 	required: false,		           
 	name: "member",
@@ -1151,32 +1080,13 @@ require(["dojo/ready"], function(ready){
 		if(member==-1){
 			showPopupclient();
 		}else{
-			//dijit.byId('customer_code').attr('value',member);
 			getcustomerinfo(member);
 		}
 }
 	}, "member");
-/*	
-	new dijit.form.FilteringSelect({
-	store: client_number_store,//dojo.data.ObjectStore({objectStore: client_number}),
-	autoComplete: true,
-	required: false,		           
-	name: "customer_code",
-	id: "customer_code",
-	searchAttr: "name",
-	class: 'fullside',
-	onChange: function() {
-		customer_code = dijit.byId('customer_code').get('value');
-		if(customer_code==-1){
-			showPopupclient();
-		}else{
-			dijit.byId('member').attr('value',customer_code);
-		}
-    }
-	}, "customer_code");*/
 
 	new dijit.form.FilteringSelect({
-		store: co_store,//dojo.data.ObjectStore({objectStore: client_number}),
+		store: co_store,
 		autoComplete: false,
 		queryExpr: "*${0}*",          
 		required: false,		           
@@ -1741,6 +1651,7 @@ function getBranchInfo(){
 	});
 }
 function printSave(new_receipt_no){	
+	
 	<?php if($this->data['enable_receipt']==1){?>
 		new_receipt_no = dijit.byId("receipt").get('value');
 	<?php }?>
@@ -1764,6 +1675,10 @@ function printSave(new_receipt_no){
 	dijit.byId("lbl_schedule").hide();		
 	symbal = " $";
 	dojo.byId("lbl_project").innerHTML = dijit.byId("branch_id").attr('displayedValue');
+	if(new_receipt_no==''){
+		getReceiptByBranch(1);
+	}
+	
 	dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get('value');
 	
 	dojo.byId("lb_hourseno").innerHTML = dijit.byId("land_code").attr('displayedValue')+dijit.byId("propertype").attr('displayedValue');
@@ -1821,14 +1736,60 @@ function printSave(new_receipt_no){
 	
 	dojo.byId("lbl_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
 	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue')+joint_with;
+	
 	dojo.byId("lbl_paidtimes").innerHTML = 1;
+	if(dijit.byId('schedule_opt').get('value')==1){
+		getDepositTimes();
+	}
 	dojo.byId("lbl_paymenttype").innerHTML = dijit.byId("payment_method").attr('displayedValue');
 	document.getElementById('lbl_cheque').innerHTML = dijit.byId('cheque').get('value');
 
-	if(schedule_opt==1){
-		//EXPIRED_DATE
+	dijit.byId("terms").show();	
+}
+var url_getreceipt = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'get-receipt-number')); ?>';
+function getReceiptByBranch(condition){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==''){
+		alert('Please Select Branch');
+		dijit.byId('branch_id').focus();
+		return false;
 	}
-	 dijit.byId("terms").show();	
+	dojo.xhrPost({
+		url:url_getreceipt,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'is_group':0
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('receipt').attr('value',data);
+			if(condition==1){
+				printSave(data);
+			}
+	
+		},
+		error: function(err) {
+			//alert(err);
+		}
+	});
+}
+var url_getTimes = '<?php echo $this->url(array('module'=>'loan','controller'=>'repaymentschedule','action'=>'get-times')); ?>';
+function getDepositTimes(){
+	loan_number = dijit.byId('loan_number').get('value');
+	if(loan_number==''){return false;}
+	dojo.xhrPost({
+		url:url_getTimes,	
+		content:{ 
+		    'loan_number':loan_number,
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			dojo.byId("lbl_paidtimes").innerHTML = "កក់លើក "+data;
+		},
+		error: function(err) {
+			alert(err+"error here");
+		}
+	});
 }
 function returnMOnth(monthnum){
 	var month = new Array();

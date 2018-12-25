@@ -186,5 +186,14 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	function getTimesAction(){
+		if($this->getRequest()->isPost()){
+			$data=$this->getRequest()->getPost();
+			$db=new Loan_Model_DbTable_DbRepaymentSchedule();
+			$row=$db->countDepositTimes($data['loan_number']);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
 }
 
