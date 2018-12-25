@@ -575,7 +575,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'field3'			=>$is_deposit,
     			'payment_method'	=>$data['payment_method'],
     			'cheque'=>$data['cheque'],
-    			'payment_times'=>($data['schedule_opt']==1)?$times:1,
+    			'payment_times'=>($data['schedule_opt']==1)?($times+1):1,
     	);
     	$crm_id=0;
     	if($data['new_deposit']>0){
