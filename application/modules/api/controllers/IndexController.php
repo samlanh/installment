@@ -27,5 +27,10 @@ class Api_IndexController extends Zend_Controller_Action {
 		print_r(Zend_Json::encode($db->getExpenseType()));
 		exit();
 	}
+	function expensedetailAction(){
+		$db = new Api_Model_DbTable_Dbapi();
+		print_r(Zend_Json::encode($db->getAllDetailExpense()));
+		exit();
+	}
 }
 

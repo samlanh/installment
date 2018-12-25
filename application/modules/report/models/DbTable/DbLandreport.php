@@ -1317,6 +1317,7 @@ function updatePaymentStatus($data){
 	  									'percent_agree'=>$data['percent_agreement'.$j],
 	  									'is_installment'=>1,
 	  									'no_installment'=>$key,
+	  									'ispay_bank'=>$data['pay_with'.$j],
 	  									'last_optiontype'=>$paid_receivehouse,
 	  							);
 	  							

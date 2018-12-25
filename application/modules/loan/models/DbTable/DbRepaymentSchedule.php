@@ -531,10 +531,20 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql);
     }
+    function countDepositTimes($sale_id){
+    	$sql="SELECT COUNT(id) FROM ln_client_receipt_money WHERE sale_id = $sale_id AND field3=1 LIMIT 1";
+    	$db = $this->getAdapter();
+    	return $db->fetchOne($sql);
+    }
     function addPaymenttoSale($data){
     	$dbtable = new Application_Model_DbTable_DbGlobal();
     	$is_deposit='0';
-    	if($data['schedule_opt']==1){$is_deposit=1;}//បញ្ចាក់ថាប្រាក់កក
+    	$times = 1;
+    	
+    	if($data['schedule_opt']==1){
+    		$is_deposit=1;
+    		$times = $this->countDepositTimes($data['sale_id']);//កក់ច្រើនដង
+    	}//បញ្ចាក់ថាប្រាក់កក
     	$array = array(
     			'branch_id'			=>$data['branch_id'],
     			'client_id'			=>$data['member'],
@@ -565,7 +575,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'field3'			=>$is_deposit,
     			'payment_method'	=>$data['payment_method'],
     			'cheque'=>$data['cheque'],
-    			'payment_times'=>1,
+    			'payment_times'=>($data['schedule_opt']==1)?$times:1,
     	);
     	$crm_id=0;
     	if($data['new_deposit']>0){
