@@ -101,6 +101,7 @@ class Report_LoanController extends Zend_Controller_Action {
 				'payment_method'=>-1,
 		);
 	}
+	$search['is_closed']='';
 	$this->view->rssearch = $search;
 	$this->view->loantotalcollect_list = $db->getALLLoanPayment($search);
 	$this->view->list_end_date = $search;	
