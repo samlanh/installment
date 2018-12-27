@@ -20,150 +20,136 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				$client_code = $db->getNewClientIdByBranch($_data['branch_id']);
 			}
 			
-			$photoname = str_replace(" ", "_", $client_code) . '.jpg';
-			$upload = new Zend_File_Transfer();
-			$upload->addFilter('Rename',
-					array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
-			$receive = $upload->receive();
-			if($receive)
-			{
-				$_data['photo'] = $photoname;
-			}
-			else{
-				$_data['photo']="";
-			}
-			if (empty($_data['photo'])){
-				$photo = @$_data['old_photo'];
+// 			$photoname = str_replace(" ", "_", $client_code) . '.jpg';
+// 			$upload = new Zend_File_Transfer();
+// 			$upload->addFilter('Rename',
+// 					array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
+// 			$receive = $upload->receive();
+// 			if($receive)
+// 			{
+// 				$_data['photo'] = $photoname;
+// 			}
+// 			else{
+// 				$_data['photo']="";
+// 			}
+// 			if (empty($_data['photo'])){
+// 				$photo = @$_data['old_photo'];
+// 			}else{
+// 				$photo = $_data['photo'];
+// 			}
+
+			$part= PUBLIC_PATH.'/images/';
+			$photo_name = $_FILES['photo']['name'];
+			if (!empty($photo_name)){
+				$tem =explode(".", $photo_name);
+				$image_name_stu = $client_code.".".end($tem);
+				$tmp = $_FILES['photo']['tmp_name'];
+				if(move_uploaded_file($tmp, $part.$image_name_stu)){
+					move_uploaded_file($tmp, $part.$image_name_stu);
+					$photo = $image_name_stu;
+				}else{
+					$photo='';
+				}
 			}else{
-				$photo = $_data['photo'];
+				$photo = $_data['old_photo'];
 			}
+			
+			//echo $photo;exit();
 			
 		    $_arr=array(
 				'client_number'=> $client_code,//$_data['client_no'],
-				'name_kh'	  => $_data['name_kh'],
-				//'name_en'	  => $_data['name_en'],
-				'sex'	      => $_data['sex'],
+				'name_kh'	  	=> $_data['name_kh'],
+				//'name_en'	  	=> $_data['name_en'],
+				'sex'	      	=> $_data['sex'],
 				'dob'			=>$_data['dob_client'],
-				'pro_id'      => $_data['province'],
-				'dis_id'      => $_data['district'],
-				'com_id'      => $_data['commune'],
-				'village_id'  => $_data['village'],
-				'street'	  => $_data['street'],
-				'house'	      => $_data['house'],
-				'photo_name'  =>$photo,
-				'nation_id'=>$_data['national_id'],
-		    	'nationality'=>$_data['nationality'],
+				'pro_id'     	=> $_data['province'],
+				'dis_id'      	=> $_data['district'],
+				'com_id'     	=> $_data['commune'],
+				'village_id'  	=> $_data['village'],
+				'street'	  	=> $_data['street'],
+				'house'	      	=> $_data['house'],
+				'photo_name'  	=> $photo,
+				'nation_id'		=>$_data['national_id'],
+		    	'nationality'	=>$_data['nationality'],
 		    	'client_issuedateid' => $_data['client_issuedateid'],
 		    	'join_issuedateid' => $_data['join_issuedateid'],
-				'phone'	      => $_data['phone'],
-		    	'email'	      => $_data['email'],
-				'create_date' => date("Y-m-d"), 
-				'remark'	  => $_data['desc'],
-				'status'      => $_data['status'],
-				'client_d_type'      => $_data['client_d_type'],
-				'user_id'	  => $this->getUserId(),
+				'phone'	      	=> $_data['phone'],
+		    	'email'	      	=> $_data['email'],
+				'create_date' 	=> date("Y-m-d"), 
+				'remark'	  	=> $_data['desc'],
+				'status'      	=> $_data['status'],
+				'client_d_type' => $_data['client_d_type'],
+				'user_id'	  	=> $this->getUserId(),
 		    	'hname_kh'      => $_data['hname_kh'],
-		    	'dob_buywith'      => $_data['dob_buywith'],
-		    	'p_nationality'      => $_data['p_nationality'],
-		    	'ghouse'      => $_data['ghouse'],
-		    	'ksex'      => $_data['ksex'],
-		    	'adistrict'      => $_data['adistrict'],
-		    	'lphone'      => $_data['lphone'],
-		    	'cprovince'      => $_data['cprovince'],
+		    	'dob_buywith'	=> $_data['dob_buywith'],
+		    	'p_nationality' => $_data['p_nationality'],
+		    	'ghouse'      	=> $_data['ghouse'],
+		    	'ksex'      	=> $_data['ksex'],
+		    	'adistrict'     => $_data['adistrict'],
+		    	'lphone'      	=> $_data['lphone'],
+		    	'cprovince'     => $_data['cprovince'],
 		    	'dcommune'      => $_data['dcommune'],
 		    	'qvillage'      => $_data['qvillage'],
-		    	'dstreet'      => $_data['dstreet'],
-		    	'rid_no'      => $_data['rid_no'],
-		    	'arid_no'      => $_data['arid_no'],
-		    	'edesc'      => $_data['edesc'],
-		    	'branch_id'      => $_data['branch_id'],
-		    	'joint_doc_type'      => $_data['join_d_type'],
-		    	'refe_nation_id'      => $_data['reference_national_id'],
-		    	'join_type'      => $_data['join_type'],		    		
-		); 
-		if(!empty($_data['id'])){
-			$customer_id =  $_data['id'];
-			$where = 'client_id = '.$customer_id;
-			$this->update($_arr, $where);			 
-		}else{
-			$customer_id = $this->insert($_arr);
-		}
+		    	'dstreet'      	=> $_data['dstreet'],
+		    	'rid_no'      	=> $_data['rid_no'],
+		    	'arid_no'      	=> $_data['arid_no'],
+		    	'edesc'      	=> $_data['edesc'],
+		    	'branch_id'     => $_data['branch_id'],
+		    	'joint_doc_type'=> $_data['join_d_type'],
+		    	'refe_nation_id'=> $_data['reference_national_id'],
+		    	'join_type'     => $_data['join_type'],		    		
+			); 
+			if(!empty($_data['id'])){
+				$customer_id =  $_data['id'];
+				$where = 'client_id = '.$customer_id;
+				$this->update($_arr, $where);			 
+			}else{
+				$customer_id = $this->insert($_arr);
+			}
 		
-		$part= PUBLIC_PATH.'/images/document/';
-		if (!file_exists($part)) {
-			mkdir($part, 0777, true);
-		}
+			$part= PUBLIC_PATH.'/images/document/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
 		 
-		if (!empty($_data['identity'])){
-			$identity = $_data['identity'];
-			$ids = explode(',', $identity);
-			$image_name="";
-			$photo="";
-			$this->_name='ln_client_document';
-			$detailId="";
-			foreach ($ids as $i){
-				if(!empty($_data['id'])){//only edit (delete only)
-					if (empty($detailId)){
-						if (!empty($_data['detailid'.$i])){
-							$detailId = $_data['detailid'.$i];
+			if(!empty($_data['id'])){//only edit (delete only)
+				$this->_name = "ln_client_document";
+				$where1 =" client_id=".$_data['id'];
+				$this->delete($where1);
+			}
+			
+			if (!empty($_data['identity'])){
+				$identity = $_data['identity'];
+				$ids = explode(',', $identity);
+				$image_name="";
+				$photo="";
+				$this->_name='ln_client_document';
+				$detailId="";
+				foreach ($ids as $i){
+					$name = $_FILES['attachment'.$i]['name'];
+					if (!empty($name)){
+						$ss = 	explode(".", $name);
+						$file_new = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
+						$tmp = $_FILES['attachment'.$i]['tmp_name'];
+						if(move_uploaded_file($tmp, $part.$file_new)){
+							$photo_new = $file_new;
+							$arr_new = array(
+									'client_id'=>$customer_id,
+									'document_name'=>$photo_new,
+							);
+							$this->insert($arr_new);
 						}
 					}else{
-						if (!empty($_data['detailid'.$i])){
-							$detailId= $detailId.",".$_data['detailid'.$i];
-						}
-					}
-					$this->_name = "ln_client_document";
-					$where1 =" client_id=".$_data['id'];
-					if (!empty($detailId)){
-						$where1.=" AND id NOT IN ($detailId) ";
-					}
-					$this->delete($where1);
-				}
-				if (!empty($_data['detailid'.$i])){//for edit (delete)
-					$name = $_FILES['attachment'.$i]['name'];
-					if (!empty($name)){
-						$ss = 	explode(".", $name);
-						$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
-						$tmp = $_FILES['attachment'.$i]['tmp_name'];
-						if(move_uploaded_file($tmp, $part.$image_name)){
-							$photo = $image_name;
-							$arr = array(
-									'client_id'=>$customer_id,
-									'document_name'=>$photo,
-							);
-							$this->_name = "ln_client_document";
-							$where=" id=".$_data['detailid'.$i];
-							$this->update($arr, $where);
-						}
-						else
-							$string = "Image Upload failed";
-						//     				}
-					}
-				}else{//for add action
-					$name = $_FILES['attachment'.$i]['name'];
-					if (!empty($name)){
-						$ss = 	explode(".", $name);
-						$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
-						$tmp = $_FILES['attachment'.$i]['tmp_name'];
-						if(move_uploaded_file($tmp, $part.$image_name)){
-							$photo = $image_name;
-							$arr = array(
-									'client_id'=>$customer_id,
-									'document_name'=>$photo,
-							);
-							$this->insert($arr);
-						}else{
-							$string = "Image Upload failed";
-						   }
+						$photo = $_data['old_file'.$i];
+						$arr = array(
+								'client_id'=>$customer_id,
+								'document_name'=>$photo,
+						);
+						$this->insert($arr);
 					}
 				}
 			}
-		}
-		if(empty($_data['identity'])){
-			$this->_name = "ln_client_document";
-			$where1 =" client_id=".$customer_id;
-			$this->delete($where1);
-		}
+			return true;
 		}catch(Exception $e){
 			echo $e->getMessage();exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

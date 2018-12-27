@@ -254,7 +254,7 @@ input.btn_borwse_image {
 									if (!empty($this->photo)){
 										$images = $this->baseUrl().'/images/'.$this->photo;
 									}?>
-									<input name="old_photo"  value="<?php echo $this->photo;?>" type="hidden" />
+									<input name="old_photo" id="old_photo"  value="<?php echo $this->photo;?>" type="hidden" />
 									<div class="account-image" >
 										<div class="image-box">
 											<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
@@ -696,7 +696,7 @@ function addRow() {
 	 				template+='</span>';
 					template+='<input type="text" class="form-control" placeholder="<?php echo $tr->translate('CHOOSE_FILE');?>..." />';
 					template+='<span class="input-group-btn">';
-						template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+col+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+					template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+col+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 					template+='</span>';
 				template+='</div>';
 			template+='</div> <div class="clearfix"></div>';
@@ -712,7 +712,7 @@ function addRow() {
 
 function initialize(){
     <?php if (!empty($this->document)) foreach ($this->document as $rs){?>
-	   col++;no++;
+	    col++;no++;
 		template='';
 			template+='<div id="attachment'+col+'" class="form-group"  style=" margin-bottom: 5px !important;">';
 				template+='<div  class=" input-group input-file foredit" name="attachment'+col+'">';
@@ -726,7 +726,7 @@ function initialize(){
 					template+='</span>';
 					template+='<input type="hidden" id="detailid'+col+'" name="detailid'+col+'"  value="<?php echo $rs['id'];?>" />';
 				template+='</div>';
-				
+				template+='<input type="hidden" id="old_file'+col+'" name="old_file'+col+'"  value="<?php echo $rs['document_name'];?>" />';
 				template+='<div class="clearfix"></div>';
 			template+='</div>';
 			$("#fileList").append(template);
