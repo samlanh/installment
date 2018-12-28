@@ -68,6 +68,9 @@ public function init()
 		$lastest = $db->getAllNews(9);
 		$this->view->lastestnews = $lastest;
 		$this->view->allnews = $db->getAllNews();
+		
+// 		$this->view->allbranch = $dbglobal->getAllBranchName();
+// 		$this->view->client = $dbglobal->getAllClient();
 	}
 	
 	public function dashboardAction()
@@ -207,6 +210,18 @@ public function init()
 				$this->view->nextPage = $currentPage+1;
 				$this->view->previousPage = $currentPage-1;
 			}
+		}
+	}
+	
+	function getalllandAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$action = (!empty($data['action'])?$data['action']:null);
+			$propertytype= empty($data['property_type'])?null:$data['property_type'];
+			$db = new Home_Model_DbTable_DbDashboard();
+			$faculty = $db->getAllLand($data['branch_id'],1,$action,$propertytype);
+			print_r(Zend_Json::encode($faculty));
+			exit();
 		}
 	}
 }

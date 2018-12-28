@@ -57,6 +57,10 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     {
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
+			if (empty($data)){
+				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/incomeother");
+				exit();
+			}
 			$db = new Loan_Model_DbTable_DbIncomeother();				
 			try {
 				$db->addIncome($data);
@@ -94,6 +98,10 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     	$id = $this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
+			if (empty($data)){
+				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/incomeother");
+				exit();
+			}
 			$db = new Loan_Model_DbTable_DbIncomeother();	
 			$data['old_photo']=null;
 			try {

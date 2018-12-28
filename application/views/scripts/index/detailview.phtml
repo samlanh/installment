@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<?php $tr=Application_Form_FrmLanguages::getCurrentlanguage();
+$format = new Application_Model_DbTable_DbGlobal();
+
+?>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="<?php echo $this->baseUrl();?>/images/icon.ico" type="image/x-icon"/>
+    <title><?php echo $tr->translate("REPORT_HOME")?> </title>
+
+    <!-- Bootstrap -->
+    <link href="<?php echo $this->baseUrl();?>/admin/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="<?php echo $this->baseUrl();?>/admin/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="<?php echo $this->baseUrl();?>/admin/vendors/nprogress/nprogress.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="<?php echo $this->baseUrl();?>/admin/build/css/custom.min.css" rel="stylesheet">
+    <link href="<?php echo $this->baseUrl();?>/datatable/bootstrap-custome.css" media="screen" rel="stylesheet" type="text/css">
+    
+     <script src="<?php echo $this->baseUrl()."/contextMenu/1.11.3/"?>jquery.min.js"></script>
+    <link href="<?php echo $this->baseUrl()."/admin/"?>/select2/css/select2.min.css" rel="stylesheet">
+	 <script src="<?php echo $this->baseUrl()."/admin/"?>/select2/js/select2.js"></script>   
+	 <script src="<?php echo $this->baseUrl()?>/admin/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+	<style>
+		/* Select 2 */
+		.select2-container .select2-selection--single {
+		  border: 1px solid #E3E3E3 !important;
+		  height: 38px !important; }
+		  .select2-container .select2-selection--single .select2-selection__rendered {
+		    line-height: 30px !important;
+		    padding-left: 12px !important; }
+		  .select2-container .select2-selection--single .select2-selection__arrow {
+		    height: 34px;
+		    width: 34px;
+		    right: 3px; }
+		    .select2-container .select2-selection--single .select2-selection__arrow b {
+		      border-color: #999 transparent transparent transparent;
+		      border-width: 6px 6px 0 6px; }
+		
+		.select2-container--open .select2-selection--single .select2-selection__arrow b {
+		  border-color: transparent transparent #999 transparent !important;
+		  border-width: 0 6px 6px 6px !important; }
+		
+		.select2-container--default .select2-results__option--highlighted[aria-selected] {
+		  background-color: #000000; }
+		
+		.select2-results__option {
+		  padding: 6px 12px; }
+		
+		.select2-dropdown {
+		  border: 1px solid #e3e3e3 !important;
+		  padding-top: 5px;
+		  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15); }
+		
+		.select2-search input {
+		  border: 1px solid #e3e3e3 !important; }
+		
+		.select2-container .select2-selection--multiple {
+		  min-height: 38px !important;
+		  border: 1px solid #e3e3e3 !important; }
+		  .select2-container .select2-selection--multiple .select2-selection__rendered {
+		    padding: 2px 10px; }
+		  .select2-container .select2-selection--multiple .select2-search__field {
+		    margin-top: 7px;
+		    border: 0 !important; }
+		  .select2-container .select2-selection--multiple .select2-selection__choice {
+		    background-color: #f5f5f5;
+		    border: 1px solid #e3e3e3;
+		    border-radius: 1px;
+		    padding: 0 7px; }
+		span.select2.select2-container.select2-container--default {
+		    width: 100% !important;
+		}
+.login {
+    background: #fff;
+}
+		.header-top {
+		    background: #02014a;
+		    color: #fff;
+		    padding: 10px 0;
+		    min-height: 10%;
+		    border-bottom: solid 4px #0077c5;
+		}
+		.system-title {
+		    font-size: 18px;
+		    font-family: 'Khmer MEF2';
+		    line-height: 30px;
+		}
+		.imgage-content.text-center {
+		    padding: 45px 0;
+		}
+		.searc-blog-main {
+		    padding: 0;
+		    margin-top: 13px;
+		    background: #fff;
+		    min-height: 630px;
+			border-left: solid 1px #eee;
+   			box-shadow: -1px 16px 13px #e4e4e4;
+		}
+.property-detail .contetn-data span i {
+    font-size: 15px;
+}
+	</style>
+  </head>
+
+  <body class="login">
+    <div>
+      <div class="header-top">
+    			<div class="col-md-3 col-sm-3 col-xs-12">
+    				<img src="/Installmentnew/trunk/public/images/cam-app-logo.png" style="max-height:45px;margin: 0;padding-left: 10px;">
+    			</div>
+    			<div class="col-md-6 col-sm-6 col-xs-12">
+    				<div class="system-title text-center">
+    				<?php echo $this->data["system_name"];?><br />
+					Installment Management System
+					</div>
+    			</div>
+    			<div class="col-md-3 col-sm-3 col-xs-12">
+    			</div>
+    			<div class="clearfix"></div>
+    		</div>
+	 		<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+	  			<div class="imgage-content text-center">
+    				<img src="<?php echo $this->baseUrl()."/images/loan-animationold.png"?>" style="width: 300px;">
+    			</div>
+    			 <div class="text-center">
+                  <h1></h1>
+                  <div style="height: 200px;"></div>
+                  <p>&copy រក្សាសិទ្ធិគ្រប់យ៉ាង 
+                  	<a title="<?php echo $this->data['power_by']?>" class="copyright" href="http://<?php echo $this->data['companywebsite']?>" target="_blank">
+								<strong><?php echo $this->data['power_by']?></strong></a>
+					<br />
+					<?php echo $this->data['branch-tel'];	?>
+					
+				</p>
+                </div>
+	 		 </div>
+	  		<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 " style="background: #fff;">
+	  			<div class="card-box searc-blog-main">
+	  				<div class="card-box">
+					<!-- Tab Menu -->
+			    	<div class="card-box">
+			    		 <ul class="nav  md-pills pills-primary nav-tab" role="tablist">
+				            <li class="nav-item active">
+				                <a class="nav-link " data-toggle="tab" href="#panel21" role="tab"><i class="fa fa-user ml-2"></i> <?php echo $tr->translate("របាយការណ៍ផ្ទះ");?></a>
+				            </li>
+				            <li class="nav-item">
+				                <a class="nav-link" data-toggle="tab" href="#panel22" role="tab">
+				                <i class="fa fa-money ml-2"></i> <?php echo $tr->translate("ឯកសារផ្ទះ");?>
+				                </a>
+				            </li>
+				        </ul>
+				        <div class="text-right">
+			        		<a class="qButton print" href="<?php echo $this->baseUrl()."/default/index/saledash";?>" title="<?php echo $tr->translate("GO_BACK");?>" style=" position: absolute; right: 11px; top: 18px; font-size: 14px; padding: 6px 19px;  border-radius: 0;  background: #02014a;"><?php echo $tr->translate("GO_BACK");?></a>
+			        	</div>
+				    </div>
+				     <!--/. Tab Menu -->
+				    <div class="col-md-12">
+				        <!-- Tab panels -->
+				        <div class="tab-content vertical">
+					        <!--Panel 1-->
+					        <div class="tab-pane fade in active" id="panel21" role="tabpanel">
+					        	<div class="text-right">
+					        		<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrintProfle('divPrintdescription');" ><i class="fa fa-print" aria-hidden="true"></i></a>
+					        	</div>
+					        	
+					        	<div id="divPrintdescription">
+									<style>
+							   			label.value{
+							   				font-weight: initial;
+							   				min-width: 90px;
+							   				font-size: 14px;
+							   				display: inline-block;
+										}
+										p.padding-left {
+										    padding-left: 10px;
+											    line-height: 20px;
+										}
+										label.title {
+										    font-size: 14px;
+										    min-width: 80px;
+										    display: inline-block;
+										}
+										.border {
+										    
+										    display: block;
+										    width: 100%;
+										    height: 1px;
+										    margin-bottom: 10px;
+										}
+										#print-footer {
+											position: absolute;
+											bottom:0;
+										}
+							  		 </style>
+									<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
+											<td colspan="6">
+												<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
+													<tr>
+														<td id="projectlogo" width="25%">
+															<?php 
+															$images = $this->baseUrl().'/images/logo.png';
+															if (!empty($this->rs['photo'])){
+																$images = $this->baseUrl().'/images/projects/'.$this->rs['photo'];
+															}?>
+															<img style="height:75px;" src="<?php echo $images;?>">
+															
+														</td>						
+														<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center">
+															<u>
+																<strong style="  font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:25px;">របាយការណ៍ផ្ទះ</strong>
+															</u>
+														</td>
+														<td width="25%">
+														</td>
+													</tr>
+												</table>
+											</td>
+										<tr style="line-height: 35px; font-family: Khmer OS Battambang;">
+												<td valign="top"> &nbsp;  </td>
+											</tr>
+									</table>
+									<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:23px;border:none;" >
+							            	<tr style="line-height: 15px; font-size: 14px; font-family: Khmer OS Battambang;">
+												<td colspan="2">ឈ្មោះ&nbsp;: <strong style="font-size:14px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['client_name'];?></strong></td>
+												<td colspan="2">លេខផ្ទះ &nbsp;: <strong style="font-size:14px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['land_address'];?></strong></td>
+												<td colspan="2">លេខផ្លូវ &nbsp;: <strong style="font-size:14px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['street'];?></strong></td>
+												<td >គម្រោង &nbsp;: <strong style="font-size:14px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['branch_name'];?></strong></td>
+											</tr>
+											<tr style="line-height: 15px; font-family: Khmer OS Battambang;">
+												<td valign="top"> &nbsp; </td>
+											</tr>
+							            	<tr>
+							            	<td colspan="7" id="exportExcel">
+							            	<div style="border: 1px solid black;"></div>
+							            	<div style=" font-weight: initial; font-family:'Khmer OS Muol Light';padding:15px; font-size:20px;">បរិយាយ ៖ </div>
+							            		<table width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; " >  
+											       <?php  $i=0; $n=0; if(!empty($this->rows)){foreach($this->rows as $key =>$row) {$i++?>
+													<tr style="font-size: 18px; line-height:38px;" align="left">
+													   <td align="center" width="5%"><?php echo $i; ?>&nbsp;.</td>
+													   <td align="left">&nbsp;<?php echo $row['work_note'];?></td>
+													</tr>
+													<?php }}?>
+											    </table>
+											   <div style=" font-weight: initial; margin: 23px; font-family:'Khmer OS Muol Light';padding:15px; font-size:16px;"><i class="fa fa-circle-o-notch"></i>&nbsp;<u>បញ្ជាក់ សូមពិនិត្យមើលប្លង់បន្ថែម</u></div>
+							            	</td>
+							           		</tr>
+							           		<tr class="head" style="font-weight: initial;font-family:'Khmer OS Muol Light';" >
+											   <td colspan="7" align="center" >
+											   		<label style=" margin-left: 55%; font-size:14px; line-height: 18px; font-weight: initial; font-family:'Khmer OS Muol Light';">រាជធានីភ្នំពេញ ថ្ងៃទី <?php echo $format->getNumberInkhmer(date('d',strtotime($this->rs['date'])));?> ខែ <?php echo $format->getNumberInkhmer(date('m',strtotime($this->rs['date'])));?> ឆ្នាំ <?php echo $format->getNumberInkhmer(date('Y',strtotime($this->rs['date'])));?> </label><br>
+											   		<label style=" margin-left: 55%; font-size:14px; line-height: 18px; font-weight: initial; font-family:'Khmer OS Muol Light';">ហត្ថលេខា</label><br>
+											  		<label>&nbsp;</label><br>
+											  		<label>&nbsp;</label><br>
+											  		<label>&nbsp;</label><br>
+											  		<label style=" margin-left: 55%; font-size:16px; line-height: 18px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['client_name'];?></label>
+											   </td>
+											</tr>
+											<tr class="head" style="font-weight: initial;font-family:'Khmer OS Battambang';">
+												<td colspan="7">
+													<div id="print-footer" style="font-size:12px;"><i><strong><u>សម្គាល់៖</u></strong> អ្នកលក់ទទួលស្គាល់និងព្រមព្រៀងថាដោយសារការកែប្រែសំណង់នេះអ្នកទិញនឹងទទួលខុសត្រូវ ចំពោះការ<br>ពន្យានៃការសាងសង់នេះអ្នកលក់នឹងបញ្ចាប់ការសាងសង់ក្នុងកំឡុងពេល៣ខែទៅ៦ខែបន្ថែម។</i></div>
+												</td>
+											</tr>
+							          </table>
+						   		</div>
+					        </div>
+					        <!--/. Panel 1-->
+					        <!--Panel 2-->
+					        <div class="tab-pane fade in " id="panel22" role="tabpanel">
+					        	<div class="text-right">
+					        	&nbsp;
+					        	</div>
+					        	<div id="divPrintincomdocument">
+									<style>
+							   			label.value{
+							   				font-weight: initial;
+							   				min-width: 90px;
+							   				font-size: 14px;
+							   				display: inline-block;
+										}
+										p.padding-left {
+										    padding-left: 10px;
+											    line-height: 20px;
+										}
+										label.title {
+										    font-size: 14px;
+										    min-width: 80px;
+										    display: inline-block;
+										}
+										.border {
+										    
+										    display: block;
+										    width: 100%;
+										    height: 1px;
+										    margin-bottom: 10px;
+										}
+										#print-footer {
+											position: absolute;
+											bottom:0;
+										}
+							  		 </style>
+									<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
+										<td colspan="6">
+											<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
+												<tr>
+													<td id="projectlogo" width="25%">
+														<?php 
+														$images = $this->baseUrl().'/images/logo.png';
+														if (!empty($this->rs['photo'])){
+															$images = $this->baseUrl().'/images/projects/'.$this->rs['photo'];
+														}?>
+														<img style="height:75px;" src="<?php echo $images;?>">
+														
+													</td>						
+													<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center">
+														<u>
+															<strong style="  font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:25px;">ឯកសារផ្ទះ</strong>
+														</u>
+													</td>
+													<td width="25%">
+													</td>
+												</tr>
+											</table>
+										</td>
+										<tr style="line-height: 35px; font-family: Khmer OS Battambang;">
+												<td valign="top"> &nbsp;  </td>
+											</tr>
+									</table>
+									<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:23px;border:none;" >
+							            	<tr style="line-height: 15px; font-size: 14px; font-family: Khmer OS Battambang;">
+												<td colspan="2">ឈ្មោះ&nbsp;: <strong style="font-size:14px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['client_name'];?></strong></td>
+												<td colspan="2">លេខផ្ទះ &nbsp;: <strong style="font-size:14px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['land_address'];?></strong></td>
+												<td colspan="2">លេខផ្លូវ &nbsp;: <strong style="font-size:14px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['street'];?></strong></td>
+												<td >គម្រោង &nbsp;: <strong style="font-size:14px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['branch_name'];?></strong></td>
+											</tr>
+											<tr style="line-height: 15px; font-family: Khmer OS Battambang;">
+												<td valign="top"> &nbsp; </td>
+											</tr>
+							          </table>
+							          <div style="border: 1px solid black;"></div>
+							          <br />
+									<?php if (!empty($this->incomdocument)){?>
+    								<?php foreach ($this->incomdocument as $key => $saledoc){?>
+	    								<div class="property-detail text-center col-lg-3 col-md-3 col-sm-12 col-xs-12">
+					          				<a target="_blank" href="<?php echo $this->baseUrl()."/images/document/".$saledoc['document_name']?>">
+						          				<div title="ឯកសារផ្ទះ<?php echo $key+1;?>" class="contetn-data">
+							          				<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+							          					<span><i class="fa fa-map"></i></span>
+							          				</div>
+							          				<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+							          				</div>
+							          				<div class="clearfix"></div>
+							          				<span class="pro-street">ឯកសារផ្ទះ<?php echo $key+1;?></span>
+						          				</div>
+					          				</a>
+					          			</div>
+	    								<?php }?>
+	    					<?php }?>
+								</div>
+					        	
+					        </div>
+					        <!--/. Panel 2-->
+					     </div>
+					 </div>
+				        	
+				</div>
+				</div>
+	  </div>
+      
+    </div>
+    
+ 
+ 	<script>
+        $(document).ready(function() { 
+         
+        	$(".select2").select2();
+        	getAllPropertyBranch();
+         });
+
+        var oldbranch ='<?php echo $this->search['branch_id'];?>';
+        var url_getland ='<?php echo $this->url(array('module'=>'home','controller'=>'index','action'=>'getallland')); ?>';  
+        function getAllPropertyBranch(){
+        	branch_id = $("#branch_id").val();
+        	if(branch_id<=0){
+        		$('#land_id').empty().append("");
+           		$('#land_id').select2();
+          		 return false;
+        	}
+        	$.ajax({
+                url: url_getland,
+                type: "post",
+                data: {'branch_id':branch_id,'action':1},
+                success: function(data){
+                	val = $.parseJSON(data);
+               	 $('#land_id').empty().append(val);
+                	if(branch_id==oldbranch){
+                		$("#land_id").val('<?php echo $this->search['land_id'];?>');
+               	 		}
+                 $('#land_id').select2();
+                
+        		},
+        		error: function(err) {
+        			//alert(err);
+        		}
+        	});
+        } 
+        function doPrintProfle(keyid) {
+    		window.frames["print_frame"].document.body.innerHTML=document.getElementById(keyid).innerHTML;
+    	    window.frames["print_frame"].window.focus();
+    	    window.frames["print_frame"].window.print();
+    	    hideDialog();
+    	}
+    </script>  
+    <iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+    
+  </body>
+</html>

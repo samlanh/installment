@@ -346,4 +346,75 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		WHERE n.`status`=1 AND n.`publish_date` <='$datenow' AND n.id=$id ORDER BY n.`publish_date` DESC";
 		return $db->fetchRow($sql);
 	}
+	
+	public function getAllLand($branch_id=null,$option=null,$action=null,$propertytype=null){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE status Not IN (-1,0) AND `land_address`!='' ";//just concate
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		if($action==null){
+			$sql.=" AND `is_lock`=0  ";
+		}
+		if($branch_id!=null){
+			$sql.=" AND `branch_id`=$branch_id ";
+		}
+		if (!empty($propertytype)){
+			$sql.=" AND `property_type`=$propertytype ";
+		}
+		$sql.=" ORDER BY id DESC";
+		$rows = $db->fetchAll($sql);
+		
+		$options = '';
+		$options .= '<option value="0" >'.htmlspecialchars($tr->translate('SELECT_PROPERTY'), ENT_QUOTES).'</option>';
+		if(!empty($rows))foreach($rows as $value){
+			$options .= '<option value="'.$value['id'].'" >'.htmlspecialchars($value['name'], ENT_QUOTES).'</option>';
+		}
+		return $options;
+		
+		return $options;
+	}
+	
+	function getAllOtherIncome($search=null){
+		$db = $this->getAdapter();
+		$session_user=new Zend_Session_Namespace('authinstall');
+		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+		$where = " WHERE ".$from_date." AND ".$to_date;
+	
+		$sql=" SELECT *,
+		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+		(SELECT logo FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS projectlogo,
+		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_otherincome.client_id LIMIT 1) AS client_name,
+		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) AS house_no,
+		(SELECT name_kh FROM ln_view WHERE TYPE=2 AND key_code=payment_method LIMIT 1) AS payment_method,
+		(SELECT name_kh FROM `ln_view` WHERE TYPE=12 AND key_code=category_id LIMIT 1) AS category_name,
+		(SELECT  first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name,
+		(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id= (SELECT ln_properties.property_type FROM `ln_properties` WHERE ln_properties.id=house_id LIMIT 1) LIMIT 1) AS property_type
+		 FROM ln_otherincome ";
+	
+		if (!empty($search['advance_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['advance_search']));
+			$s_where[] = " description LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if(!empty($search['branch_id'])){
+			$where.= " AND branch_id = ".$search['branch_id'];
+		}
+		if(!empty($search['land_id']) AND $search['land_id']>-1){
+			$where.= " AND house_id = ".$search['land_id'];
+		}
+		if($search['customer']>0){
+			$where.= " AND ln_otherincome.client_id = ".$search['customer'];
+		}
+		if(!empty($search['pro_type'])){
+			$where.= " AND (SELECT property_type FROM `ln_properties` WHERE id=house_id LIMIT 1) = ".$search['pro_type'];
+		}
+		
+		
+		
+		$order=" order by id desc ";
+		return $db->fetchAll($sql.$where.$order);
+	}
 }

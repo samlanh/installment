@@ -9,7 +9,6 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 	function addIncome($data){
 		$_db= $this->getAdapter();
 		$_db->beginTransaction();
-		//print_r($data); exit();
 			try{
 				$invoice = $this->getInvoiceNo($data['branch_id']);
 				
@@ -211,9 +210,9 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		FROM ln_otherincome where id=$id ";
 		return $db->fetchRow($sql);
 	}
-	function getincomeDetailbyid($id){
+	function getincomeDetailbyid($id,$type=1){
 		$db = $this->getAdapter();
-		$sql="SELECT * FROM ln_otherincome_detail WHERE item_type=1 AND income_id=".$id;
+		$sql="SELECT * FROM ln_otherincome_detail WHERE item_type=$type AND income_id=".$id;
 		return $db->fetchAll($sql);
 	}
 	public function getDocumentClientById($income_id){

@@ -218,7 +218,56 @@ class IndexController extends Zend_Controller_Action
     		exit();
     	}
     }
-    
+    function saledashAction(){
+    	$this->_helper->layout()->disableLayout();
+    	
+    	$dbglobal = new Application_Model_DbTable_DbGlobal();
+    	$this->view->allbranch = $dbglobal->getAllBranchName();
+    	$this->view->client = $dbglobal->getAllClient();
+    	
+    	$db = new Project_Model_DbTable_DbLand();
+    	$property_type = $db->getPropertyType();
+    	$this->view->pro_type = $property_type;
+    	
+    	$key = new Application_Model_DbTable_DbKeycode();
+    	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+    	
+    	
+    	$param = $this->getRequest()->getParams();
+    	$search = array(
+    					"advance_search"=>'',
+    					"branch_id"=>0,
+    					"pro_type"=>0,
+    					'customer'=>0,
+    					'land_id'=>0,
+    			);
+		if(isset($param['search'])){
+			$search=$param;
+			$db = new Home_Model_DbTable_DbDashboard();
+			$this->view->rs = $db->getAllOtherIncome($search);
+		}
+		$this->view->search = $search;
+    	
+    }
+    function detailviewAction(){
+    	$this->_helper->layout()->disableLayout();
+    	
+    	$id=$this->getRequest()->getParam("id");
+    	if (empty($id)){
+    		$this->_redirect("/default/index/saledash");
+    	}
+    	$db= new Loan_Model_DbTable_DbIncomeother();
+    	$this->view->rows = $db->getincomeDetailbyid($id);
+    	$row = $db->getincomebyid($id);
+    	if (empty($row)){
+    		$this->_redirect("/default/index/saledash");
+    	}
+    	$this->view->rs = $row;
+    	$this->view->incomdocument = $db->getincomeDetailbyid($id,2);
+    	
+    	$key = new Application_Model_DbTable_DbKeycode();
+    	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+    }
 }
 
 
