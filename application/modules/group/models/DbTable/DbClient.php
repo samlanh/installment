@@ -38,21 +38,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 // 				$photo = $_data['photo'];
 // 			}
 
-			$part= PUBLIC_PATH.'/images/';
-			$photo_name = $_FILES['photo']['name'];
-			if (!empty($photo_name)){
-				$tem =explode(".", $photo_name);
-				$image_name_stu = $client_code.".".end($tem);
-				$tmp = $_FILES['photo']['tmp_name'];
-				if(move_uploaded_file($tmp, $part.$image_name_stu)){
-					move_uploaded_file($tmp, $part.$image_name_stu);
-					$photo = $image_name_stu;
-				}else{
-					$photo='';
-				}
-			}else{
-				$photo = $_data['old_photo'];
-			}
+			
 			
 			//echo $photo;exit();
 			
@@ -68,7 +54,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				'village_id'  	=> $_data['village'],
 				'street'	  	=> $_data['street'],
 				'house'	      	=> $_data['house'],
-				'photo_name'  	=> $photo,
+// 				'photo_name'  	=> $photo,
 				'nation_id'		=>$_data['national_id'],
 		    	'nationality'	=>$_data['nationality'],
 		    	'client_issuedateid' => $_data['client_issuedateid'],
@@ -99,6 +85,20 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    	'refe_nation_id'=> $_data['reference_national_id'],
 		    	'join_type'     => $_data['join_type'],		    		
 			); 
+		    
+		    $part= PUBLIC_PATH.'/images/';
+		    $photo_name = $_FILES['photo']['name'];
+		    if (!empty($photo_name)){
+		    	$tem =explode(".", $photo_name);
+		    	$image_name_stu = "profile_".date("Y").date("m").date("d").time().".".end($tem);
+		    	$tmp = $_FILES['photo']['tmp_name'];
+		    	if(move_uploaded_file($tmp, $part.$image_name_stu)){
+		    		move_uploaded_file($tmp, $part.$image_name_stu);
+		    		$photo = $image_name_stu;
+		    		$_arr['photo_name']=$photo;
+		    	}
+		    }
+		    
 			if(!empty($_data['id'])){
 				$customer_id =  $_data['id'];
 				$where = 'client_id = '.$customer_id;
