@@ -32,5 +32,15 @@ class Api_IndexController extends Zend_Controller_Action {
 		print_r(Zend_Json::encode($db->getAllDetailExpense()));
 		exit();
 	}
+	function expectincomeAction(){
+		$db = new Api_Model_DbTable_Dbapi();
+		print_r(Zend_Json::encode($db->getALLLoanExpectIncome()));
+		exit();
+	}
+	function outstandingAction(){
+		$db = new Api_Model_DbTable_Dbapi();
+		print_r(Zend_Json::encode($db->getAllOutstadingLoan()));
+		exit();
+	}
 }
 

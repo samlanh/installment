@@ -8,8 +8,9 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 				(SELECT  CONCAT(`land_address`,',',`street`) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
 				s.house_id,
 				s.price_sold,
-			(SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id AND status!=0 AND collect_by!=2 ) AS sold_schedule
-      	 FROM `ln_sale`  AS s WHERE s.status =1 AND s.is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2";
+			(SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE (ln_saleschedule.sale_id=s.id AND status!=0) LIMIT 1) AS sold_schedule,
+			(SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id AND ln_saleschedule.collect_by=2 AND ln_saleschedule.status=0 LIMIT 1) AS extra_principal
+      	 FROM `ln_sale`  AS s WHERE s.status =1 AND s.is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2  ";
       	 return $db->fetchAll($sql);
       }
       function getRealPaid(){//ប្រាក់បានបង់ និងប្រាក់ដែលដកក្នុងតារាង
@@ -20,12 +21,13 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 		  s.payment_id,
 		  s.client_id,s.price_sold,s.house_id,
 	     (SELECT  CONCAT(`land_address`,',',`street`) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
-	     (SELECT SUM(`cr`.`total_principal_permonthpaid`+`cr`.`extra_payment`) FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`) LIMIT 1) AS `paid_amount`,
+	     (SELECT SUM(`cr`.`total_principal_permonthpaid`+`cr`.`extra_payment`) FROM `ln_client_receipt_money` `cr` WHERE `cr`.`sale_id` = `s`.`id` AND status=1 LIMIT 1) AS `paid_amount`,
 	     (SELECT `cr`.`id` FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`) ORDER BY `cr`.`id` DESC LIMIT 1) AS `crm_id`,	     
 	     (SELECT SUM(ss.principal_permonth) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND  is_completed=1  LIMIT 1) AS realpaid,
+	     (SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id AND ln_saleschedule.collect_by=2 AND ln_saleschedule.status=0 LIMIT 1) AS extra_principal,
 	     (SELECT SUM(ss.principal_permonth-principal_permonthafter) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND ss.status=1 AND principal_permonth!=principal_permonthafter LIMIT 1) AS principal_remain,
-	     (SELECT COUNT(ss.id) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND STATUS=1 LIMIT 1) AS countpaid,
-	     (SELECT (ss.principal_permonth-ss.principal_permonthafter) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 order by ss.no_installment ASC  LIMIT 1  ) AS printcipal_permonthlast
+	     (SELECT (ss.principal_permonth-ss.principal_permonthafter) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 order by ss.no_installment ASC  LIMIT 1  ) AS printcipal_permonthlast,
+	     (SELECT COUNT(ss.id) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND STATUS=1 LIMIT 1) AS countpaid
 	     
 	  	FROM `ln_sale` AS s WHERE is_completed=0 AND STATUS=1 AND is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2 ";
       	return $db->fetchAll($sql);

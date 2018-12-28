@@ -52,14 +52,14 @@ th{padding: 5px;}
                     <th style="padding:5px 0px;"><?php echo $tr->translate("ផ្ទះ/ដី");?></th>
                     <th style="padding:5px 0px;"><?php echo $tr->translate("តម្លៃលក់");?></th>
                     <th style="padding:5px 0px;"><?php echo $tr->translate("តម្លៃបានចុះក្នុងតារាង");?></th>
-                     <th style="padding:5px 0px;"><?php echo $tr->translate("ស្ថានការណ៏");?></th>
+                    <th style="padding:5px 0px;"><?php echo $tr->translate("ស្ថានការណ៏");?></th>
                 </tr>
                 </thead>
                 <?php $amt_r = 0;$amt_d = 0;$amt_b3 = 0;
                 ?>
                 <?php if(!empty($this->rs_sold)) foreach ($this->rs_sold as $key => $rs){ ?>
                 <?php
-                if($rs["price_sold"]==$rs["sold_schedule"]){ 
+                if($rs["price_sold"]==($rs["sold_schedule"]+$rs['extra_principal'])){ 
                 	continue;
                 } 
                ?>
@@ -95,7 +95,7 @@ th{padding: 5px;}
 			                </thead>
 			                <?php if(!empty($this->rs_paid)) foreach ($this->rs_paid as $key => $rs){ ?>
 			                <?php
-			                if($rs["paid_amount"]==($rs["realpaid"]+$rs["printcipal_permonthlast"])){ 
+			                if($rs["paid_amount"]==($rs["realpaid"]+$rs["printcipal_permonthlast"]+$rs['extra_principal'])){ 
 			                	continue;
 			                } 
 			               ?>

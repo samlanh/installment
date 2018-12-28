@@ -86,7 +86,12 @@ class Project_indexController extends Zend_Controller_Action {
 		}
 		$db=new Project_Model_DbTable_DbProject();
 		$row=$db->getBranchById($id);
-	
+		
+		
+// 		if ($id>=3){
+// 			$this->_redirect("/project/index");
+// 		}
+		
 		$this->view->row = $row;
 		$frm= new Project_Form_Frmbranch();
 		$update=$frm->FrmBranch($row);
