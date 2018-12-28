@@ -292,6 +292,7 @@ function getAllBranch($search=null){
 //     		$session_user=new Zend_Session_Namespace('authinstall');
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+    		(SELECT logo FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS photo,
     		title, invoice,branch_id,
     		(SELECT CONCAT(land_address,',',street)FROM `ln_properties` WHERE id =ln_income.house_id) as house_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,

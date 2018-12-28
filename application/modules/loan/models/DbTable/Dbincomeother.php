@@ -202,6 +202,7 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql=" SELECT *,
 				(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+				(SELECT logo FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS photo,
 		 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_otherincome.client_id LIMIT 1) AS client_name,
 		 		(SELECT land_address FROM `ln_properties` WHERE id=house_id LIMIT 1) AS land_address,
 		 		(SELECT name_kh FROM ln_view WHERE TYPE=2 AND key_code=payment_method LIMIT 1) AS payment_method,

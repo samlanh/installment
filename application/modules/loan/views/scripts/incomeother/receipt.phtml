@@ -3,6 +3,10 @@
 	$this->headTitle($tr->translate('REPORT_HOME')); 
 	echo $this->headTitle(''); 
 	$format = new Application_Model_DbTable_DbGlobal();
+	$images = $this->baseUrl().'/images/no-profile.png';
+	if (!empty($this->rs['photo'])){
+		$images = $this->baseUrl().'/images/projects/'.$this->rs['photo'];
+	}
 ?>	
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <script type="dojo/method" event="onSubmit">			
@@ -97,7 +101,7 @@ dojo.ready(function(){
 							<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 								<tr>
 									<td id="projectlogo" width="25%">
-										<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+										<img style="height:75px;"  src="<?php echo $images;?>" alt="">
 									</td>	
 									<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center">
 										<div style="line-height:20px; margin-top:6%;"><u><strong style="font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:17px;">របាយការណ៍ទូទាត់ថ្លៃចំណាយកែផ្ទះ</strong></u></div>
@@ -120,7 +124,7 @@ dojo.ready(function(){
 						<tr style="line-height: 15px; font-size: 15px; font-family: Khmer OS Battambang;">
 							<td colspan="3">លេខផ្ទះ&nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: bold; font-family:'Khmer OS Battambang';"><?php echo $this->rs['land_address'];?></strong></td>
 							<td colspan="3">លេខផ្លូវ &nbsp;: <strong style="font-size:15px; line-height: 14px; font-weight: bold; font-family:'Khmer OS Battambang';"><?php echo $this->rs['street'];?></strong></td>
-							<td colspan="2">កាលបរិច្ឆេទ &nbsp;: <strong style="font-size:15px; line-height: 14px; font-weight: bold; font-family:'Khmer OS Battambang';"><?php echo date('d / m / Y',strtotime($this->rs['date']));?></strong></td>
+							<td colspan="2">កាលបរិច្ឆេទ &nbsp;: <strong style="font-size:15px; line-height: 14px; white-space: nowrap;font-weight: bold; font-family:'Khmer OS Battambang';"><?php echo date('d/ m / Y',strtotime($this->rs['date']));?></strong></td>
 						</tr>
 						<tr style="line-height: 5px; font-family: Khmer OS Battambang;">
 							<td valign="top"> &nbsp; </td>
@@ -178,7 +182,7 @@ dojo.ready(function(){
 								<div style="margin-top:-20px; white-space: nowrap;​">សរុបទឹកប្រាក់ដែលត្រូវបង់</div>
 							</td>
 							<td>
-								<div style="width:100%;border-bottom:1px solid #000;margin-bottom:px;margin-top: -10px; font-weight: bold;font-size: 16px;">: &nbsp;$ <?php echo number_format($total,2);?></div>
+								<div style="width:100%;border-bottom:1px solid #000;margin-bottom:20px; font-weight: bold;font-size: 16px;">: &nbsp;$ <?php echo number_format($total,2);?></div>
 							</td>
 						</tr>
 		           		<tr >

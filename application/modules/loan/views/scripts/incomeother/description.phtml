@@ -3,6 +3,12 @@
 	$this->headTitle($tr->translate('REPORT_HOME')); 
 	echo $this->headTitle(''); 
 	$format = new Application_Model_DbTable_DbGlobal();
+?>
+<?php 
+	$images = $this->baseUrl().'/images/no-profile.png';
+	if (!empty($this->rs['photo'])){
+		$images = $this->baseUrl().'/images/projects/'.$this->rs['photo'];
+	}
 ?>	
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <script type="dojo/method" event="onSubmit">			
@@ -96,8 +102,8 @@ dojo.ready(function(){
 						<td colspan="6">
 							<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
 								<tr>
-									<td id="projectlogo" width="25%">
-										<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+									<td width="25%">
+										<img style="height:75px;"  src="<?php echo $images;?>" alt="">
 									</td>						
 									<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style="  font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:25px;">របាយការណ៍ផ្ទះ</strong></b></u>
 									</td>
@@ -179,25 +185,5 @@ function exportExcel(){
 	$('#exportExcel').tableExport({type:'excel',escape:'false'});
 }
 
-function getBranchinfo(){
-	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
-	branch_id = dijit.byId('branch_id').get('value');
-	if(branch_id==""){
-		return false;
-	}
-	dojo.xhrPost({
-	    url: url_submit,	
-	    content:{ 
-		    'branch_id':branch_id
-		},	
-		load: function(data) {
-			var arr = JSON.parse(data);
-			var imagesUrl = '<img class="view" style="height:75px;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
-			document.getElementById('projectlogo').innerHTML = imagesUrl;
-		},
-		error: function(e) {
-		}
-	});
-}
 </script>
 
