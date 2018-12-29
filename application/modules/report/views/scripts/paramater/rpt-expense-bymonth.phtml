@@ -1,0 +1,185 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_search;
+
+$dbGB = new Application_Model_DbTable_DbGlobal();
+$logo = $this->baseUrl()."/images/logo.jpg";
+$branch_title = $tr->translate("BRAND_TITLE");
+if ($this->search['branch_id'] >0 ){
+	$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+	}
+	$branch_title = $branch['project_name'];
+}
+
+$dbparam  = new Report_Model_DbTable_DbParamater();
+?>
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<meta charset="utf-8">
+<title><?php echo $tr->translate("REPORT_EXPENSE");?></title>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<form name="frm_rptstaff" action="" dojoType="dijit.form.Form" method="post">
+		<div class="form-group">
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement("adv_search");?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('branch_id');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement('supplier_id');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement('category_id_expense');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement('payment_type');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12"></div>
+        </div>
+        <div class="form-group">
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('start_date');?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('end_date');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+				<?php echo $frm->getElement('ordering');?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        	</div>
+        </div>        
+	 </form> 
+	<div style="min-height:22cm; margin:0 auto;">
+	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	    	 <div id="divPrint">
+	    	 	<style>
+						.style{
+							line-height: 20px;font-size: 14px !important;
+							font-family: 'Khmer OS Battambang';
+							}
+							th{padding: 2px;}
+							.hide{visibility: hidden;}
+								@media print {
+								  div.divFooter {
+								    position: fixed;
+								    top: 0;
+								  	width: 100%;
+								  	height: 100px;
+								  	bottom:0px;
+									margin:0;
+								 }
+							.hide{visibility: visible; height: 110px;}
+							}
+							
+					td.verites-col {
+					    text-align: center;
+					    white-space: nowrap;
+					    g-origin: 50% 50%;
+					    -webkit-transform: rotate(270deg);
+					    -moz-transform: rotate(270deg);
+					    -ms-transform: rotate(270deg);
+					    -o-transform: rotate(270deg);
+					    transform: rotate(270deg);
+					}
+					tr.hover td.verites-col span.verites,
+					td.verites-col span.verites {
+					    margin: 0 -100%;
+					    display: inline-block;
+					}
+					tr.hover td.verites-col span.verites:before,
+					td.verites-col span.verites:before {
+					    content: '';
+					    width: 0;
+					    padding-top: 110%;
+					    display: inline-block;
+					    vertical-align: middle;
+					}
+					
+						</style>
+				<div class="divFooter">
+		        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+		            	<tr>
+			                <td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
+			                <td width="60%" valign="top">
+			                <h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $branch_title;?></label></h2>
+			                <h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("REPORT_EXPENSE");?></label></h2>
+			                <p style="text-align:center; font-size:13px; font-family:'Khmer MEF2';margin-top: -15px;"><?php if(!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
+			                </td>
+		                	<td width="20%"></td>
+		             	</tr> 
+		            </table>
+		        </div>
+	        	<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
+		            <tr>
+	            	   <td colspan="3">
+	            		<table id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; border:solid 1px #000;" >  
+					    	<thead>
+					    		<tr class="hide" style="border:1px solid #000;">
+						             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+						        </tr>
+						    	<tr bgcolor="#c1d0f3" class="style" align="center" style="text-align: center;table-layout : fixed; white-space:nowrap; font-weight:bold; line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
+									<td>&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+								    <td>&nbsp;<?php echo $tr->translate("BRANCH_NAME");?>&nbsp;</td>
+								    <?php if (!empty($this->search['start_date'])){
+								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
+								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
+								    	for ($i=0; date("Y-m-01",strtotime("$startmonth+$i month"))<= date("Y-m-01",strtotime($endmonth)); $i++){
+								    ?>
+								    <td class="verites-col">&nbsp;<span class="verites"><?php echo date("M-Y",strtotime(" $startmonth+$i month"));?></span>&nbsp;</td>
+								   <?php }
+								    }?>
+								</tr>
+							</thead>
+							<tbody>
+								<?php if (!empty($this->project)) foreach ($this->project as $key=> $pro){ ?>
+								<tr>
+									<td align="center">&nbsp;<?php echo $key+1?>&nbsp;</td>
+									<td style="white-space: nowrap;">&nbsp;<?php echo $pro['project_name']?>&nbsp;</td>
+									 <?php if (!empty($this->search['start_date'])){
+								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
+								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
+								    	for ($i=0; date("Y-m-01",strtotime("$startmonth+$i month"))<= date("Y-m-01",strtotime($endmonth)); $i++){
+								    ?>
+								    <td align="center" style="white-space: nowrap;">&nbsp;
+								    	<?php 
+								    	$total = $dbparam->getExpensByMonth($pro['br_id'], date("Y-m",strtotime(" $startmonth+$i month")));
+								     if ($total>0){	echo "$ ".number_format($total,2);}else { echo "-";}?>&nbsp;</td>
+								   <?php }
+								    }?>
+								</tr>
+								<?php }?>
+							</tbody>
+					    </table>
+	            	</td>
+	            </tr>
+	            </table>
+			</div>
+	    </td>
+	   </tr>
+   </table>
+	<br />
+		<table align="center" width="100%">
+		   <tr style="font-size: 14px;">
+		        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+		        <th></th>
+		        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+		        <th></th>
+		        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+		   </tr>
+		</table>
+	</div>
+</div>

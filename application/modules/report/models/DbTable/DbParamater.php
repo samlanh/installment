@@ -1700,4 +1700,25 @@ function getAllBranch($search=null){
 		$where=' id='.$data['sale_id'];
 		$this->update($arr, $where);
 	}
+	
+	function getProject($search=null){
+		$db = $this->getAdapter();
+		$sql="SELECT p.* FROM `ln_project` as p WHERE 1";
+		if ($search['branch_id']>0){
+			$sql.=" AND p.br_id=".$search['branch_id'];
+		}
+		return $db->fetchAll($sql);
+	}
+	function getExpensByMonth($branch,$date){
+		$db = $this->getAdapter();
+		$date = date("Y-m",strtotime($date));
+		$sql="SELECT 
+			SUM(ex.total_amount) AS totalbymonth
+			FROM `ln_expense` AS ex
+			WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y-%m') ='$date'";
+		if (!empty($branch)){
+			$sql.=" AND ex.branch_id=".$branch;
+		}
+		return $db->fetchOne($sql);
+	}
 }

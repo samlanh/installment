@@ -435,4 +435,29 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		echo $e->getMessage();
   	}
   }
+  
+  function rptExpenseBymonthAction(){ // by Vandy
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+  				"adv_search"=>'',
+  				"supplier_id"=>"",
+  				"branch_id"=>-1,
+  				"ordering"=>1,
+  				"category_id_expense"=>-1,
+  				'payment_type'=>-1,
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  		);
+  	}
+  	$this->view->search=$search;
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->project = $db->getProject($search);
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  	 
+  }
 }
