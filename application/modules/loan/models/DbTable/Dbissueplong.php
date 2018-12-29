@@ -19,10 +19,11 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
 		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
 		   LIMIT 1) AS `branch_name`,
 	    `c`.`name_kh`         AS `name_kh`,
-	    `c`.`phone`         AS `phone`,
+	     c.phone,
 	    `p`.`land_address`    AS `land_address`,
 	    `p`.`street`          AS `street`,
-	    sp.issue_date,
+	     sp.issue_date,
+	     sp.note,
          s.status
 		FROM (`ln_sale` `s`,
 			ln_issueplong AS sp,

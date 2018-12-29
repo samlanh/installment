@@ -156,11 +156,15 @@
 	                    <td><?php echo $row['note']; echo ($row['is_completed']==1)?$tr->translate("COMPLETED"):""; ?></td>
 	                    <td><?php if($row['is_completed']==1){ echo empty($row['received_by'])?"-":$row['received_by'];} ?></td>
 	                    <td><?php  
-		                    if($row['received_date']!=0){
-		                    	$date = new DateTime($row['received_date']);
-		                   	 	$receive_date =  $date->format("d-m-Y");
-		                    }else{$receive_date='';}
-	                    	echo ($row['received_date']==0)?"":$receive_date; ?></td>
+		                    if($row['is_completed']==1){
+			                    if($row['received_date']!=0){
+			                    	$date = new DateTime($row['received_date']);
+			                   	 	$receive_date =  $date->format("d-m-Y");
+			                    }else{$receive_date='';}
+		                    	echo ($row['received_date']==0)?"":$receive_date;
+		                    }
+	                    	?>
+	                    </td>
 	                </tr>
 	               <?php }
 	               ?>

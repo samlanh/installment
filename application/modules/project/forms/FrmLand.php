@@ -76,6 +76,8 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				'required' =>'true',
 				'onKeyup'=>'CalculatePrice();'
 		));
+		$land_price->setValue(0);
+		
 		$house_price = new Zend_Dojo_Form_Element_NumberTextBox('house_price');
 		$house_price->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
@@ -83,6 +85,7 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				'required' =>'true',
 				'onKeyup'=>'CalculatePrice();'
 		));
+		$house_price->setValue(0);
 		
 		$_price = new Zend_Dojo_Form_Element_NumberTextBox('price');
 		$_price->setAttribs(array(

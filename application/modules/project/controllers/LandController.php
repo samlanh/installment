@@ -64,8 +64,8 @@ class Project_LandController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
 			try{
-					$id= $db->addLandinfo($data);
-					Application_Form_FrmMessage::message("ការ​បញ្ចូល​ជោគ​ជ័យ !");
+				$id= $db->addLandinfo($data);
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -104,8 +104,8 @@ class Project_LandController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			try{
-				$id= $db->addLandinfoAuto($data);
-				Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCESS"));
+				$db->addLandinfoAuto($data);
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

@@ -72,7 +72,7 @@ th{padding: 5px;}
                		<td>&nbsp;&nbsp;<?php echo number_format($rs["price_sold"],2);?></td>
                		<td>&nbsp;&nbsp;<?php echo number_format($rs["sold_schedule"],2);?></td>
                		<td>&nbsp;&nbsp;<?php echo ($rs["sold_schedule"]<$rs["price_sold"])?"តារាងខ្វះ":"តារាងលើស";
-               		echo " ".number_format($rs["sold_schedule"]-$rs["price_sold"],2);
+               		echo " ".number_format(($rs["sold_schedule"]+$rs['extra_principal'])-$rs["price_sold"],2);
                		?></td>
                 </tr>
                 <?php }?>
@@ -95,7 +95,7 @@ th{padding: 5px;}
 			                </thead>
 			                <?php if(!empty($this->rs_paid)) foreach ($this->rs_paid as $key => $rs){ ?>
 			                <?php
-			                if($rs["paid_amount"]==($rs["realpaid"]+$rs["printcipal_permonthlast"]+$rs['extra_principal'])){ 
+			                if($rs["paid_amount"]==round(($rs["realpaid"]+$rs["printcipal_permonthlast"]+$rs['extra_principal']),2)){ 
 			                	continue;
 			                } 
 			               ?>

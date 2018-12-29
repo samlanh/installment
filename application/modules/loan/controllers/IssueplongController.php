@@ -23,19 +23,17 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 						'end_date'=>date('Y-m-d'),
 						 );
 			}
-// 			print_r($search);
 			$db = new Loan_Model_DbTable_Dbissueplong();
 			$rs_rows= $db->getAllissueplong($search,1);
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","DATE","NOTE","STATUS");
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PHONE","PROPERTY_CODE","STREET","DATE","NOTE","STATUS");
 			$link_info=array('module'=>'loan','controller'=>'issueplong','action'=>'edit',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('from_branch'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-			echo $e->getMessage();
 		}	
 		$frm = new Loan_Form_FrmSearchLoan();
 		$frm = $frm->AdvanceSearch();

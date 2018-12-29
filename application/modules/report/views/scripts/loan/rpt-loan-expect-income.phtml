@@ -87,30 +87,22 @@ dojo.require("dijit.form.DateTextBox");
 			                 <tr class="hide" style="border:1px solid #000;">
 				                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				             </tr>
-			                <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 24px; font-size:12px; padding:10px 0px; ">
+			                <tr bgcolor="#c1d0f3" class="style" align="center" style="text-align:center;font-weight:bold; line-height: 20px; font-size:12px; padding:5px 0px; ">
 			                    <th rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</th>
 			                    <th rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></th>
-			                    <!--<td rowspan="2" style="font-size: 12px;"><?php //echo $tr->translate("SALE_NO");?></td> -->
-			                    <th colspan="2"><?php echo $tr->translate("CLIENT_INFO");?></th>
-			                    <th ><?php echo $tr->translate("PROPERTY_INFO");?></th>
-			                    <th colspan="5"><?php echo $tr->translate("PAYMENT_INFO");?></th>
-			                    <th colspan="4"><?php echo $tr->translate("PAID_INFO");?></th>
-			                    <th colspan="3"><?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?></th>
+			                    <th rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></th>
+			                    <th rowspan="2"><?php echo $tr->translate("TEL");?></th>
+			                    <th rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></th>
+			                    <th rowspan="2"><?php echo $tr->translate("SOLD_PRICE");?></th>
+			                    <th colspan="5" style="text-align: center;"><?php echo $tr->translate("PAID_INFO");?></th>
+			                    <th colspan="3" style="text-align: center;"><?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?></th>
 			                </tr>
-			                <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 24px; font-size:12px; padding:10px 0px; ">
-			                    <!-- <td style="font-size: 12px;"><?php //echo $tr->translate("CLIENT_NUM");?></td>  -->
-			                    <th style="font-size: 12px;"><?php echo $tr->translate("CUSTOMER_NAME");?></th>
-			                    <th style="font-size: 12px;"><?php echo $tr->translate("TEL");?></th>
-			                    <th style="font-size: 12px;"><?php echo $tr->translate("PROPERTY_CODE");?></th> 
-			                    <th style="font-size: 12px;"><?php echo $tr->translate("LOAN_AMOUNT");?></th> 
-			                    <th style="font-size: 12px;">&nbsp;<?php echo $tr->translate("BUY_DATE");?>&nbsp;</th>
-			                    <th style="font-size: 12px;">&nbsp;<?php echo $tr->translate("LIFE_LOAN");?>&nbsp;</th>
-			                    <th style="font-size: 12px;"><?php echo $tr->translate("INTEREST_RATE");?></th> 
-			                    <th style="font-size: 12px;"><?php echo $tr->translate("LOAN_PERIOD");?></th>
+			                <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 20px; font-size:12px; padding:5px 0px; ">
 			                    <th style="font-size: 12px;"><?php echo $tr->translate("PRINCIPAL");?></th> 
 			                    <th style="font-size: 12px;"><?php echo $tr->translate("INTEREST");?></th>
 			                    <th style="font-size: 12px;"><?php echo $tr->translate("TOTAL_PAYMENT");?></th>
 			                    <th style="font-size: 12px;"><?php echo $tr->translate("DAY_PAYMENT");?></th>
+			                    <th style="font-size: 12px;"><?php echo $tr->translate("AMOUNT_COLLECT");?></th>
 			                    <th style="font-size: 12px;"><?php echo $tr->translate("PRINCIPAL");?></th> 
 			                    <th style="font-size: 12px;"><?php echo $tr->translate("INTEREST");?></th>
 			                    <th style="font-size: 12px;"><?php echo $tr->translate("TOTAL_PAYMENT");?></th>
@@ -135,25 +127,18 @@ dojo.require("dijit.form.DateTextBox");
 			                <tr class="style hover" style="font-family: 'Khmer OS Content';">
 			               		<td style="font-size: 12px; text-align: center;">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 			               		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["branch_name"];?></td>
-			               		<!-- <td style="font-size: 12px; text-align: center;">&nbsp;<?php //echo $rs["sale_number"]; ?>&nbsp;</td> 
-			               		<td style="font-size: 12px;">&nbsp;&nbsp;<?php //echo $rs["client_number"];?></td>-->
 			               		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["name_kh"];?></td>
 			               		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["phone"];?></td>
-			               		<!-- <td style="font-size: 11px;">&nbsp;&nbsp;<?php ///echo $rs["land_code"];?></td> -->
 			               		<td style="font-size: 12px;">&nbsp;&nbsp;<?php echo $rs["land_address"].','.$rs["street"];?></td>
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;&nbsp;<?php echo number_format($rs["price_sold"]-$rs["other_fee"],2);?></td>
-			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo date("d-m-Y",strtotime($rs["first_payment"]));?>&nbsp;</td>
-			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo date("d-m-Y",strtotime($rs["end_line"]));?>&nbsp;</td>
-			               		<td style="font-size: 12px;text-align: center;">&nbsp;&nbsp;<?php echo $rs["interest_rate"];?>&nbsp;%</td>
-			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo $rs['total_duration'];//$rs['pay_term'];?>&nbsp;</td>
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonth"],2);?></td>
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["total_interest"],2);?></td>
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonth"]+$rs["total_interest"],2);?></td>
 			               		<td style="font-size: 12px;text-align: center;"><?php echo date("d-m-Y",strtotime($rs["date_payment"]));?></td>
-			                	<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?></td>
+								<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo $rs["no_installment"];?></td>
+			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?></td>
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["total_interest_after"],2);?></td>
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonthafter"]+$rs["total_interest_after"],2);?></td>
-			                
 			                </tr>
 			                <?php }?>
 			            </table>
