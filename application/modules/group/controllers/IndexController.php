@@ -233,7 +233,6 @@ class Group_indexController extends Zend_Controller_Action {
 			print_r(Zend_Json::encode($row));
 			exit();
 		}
-	
 	}
 	function getclientnumberbybranchAction(){
 		if($this->getRequest()->isPost()){
@@ -254,9 +253,7 @@ class Group_indexController extends Zend_Controller_Action {
              array_unshift($dataclient, array('id' => "-1",'name'=>'Add New Client') );
 			 print_r(Zend_Json::encode($dataclient));
 			exit();
-		}
-		
-	
+		}		
 	}
 	function getGroupclientbybranchAction(){//At callecteral when click client
 		if($this->getRequest()->isPost()){
@@ -272,8 +269,7 @@ class Group_indexController extends Zend_Controller_Action {
 			$dataclient=$db->getAllClient($data['branch_id']);
 			//array_unshift($dataclient, array('id' => "-1",'branch_id'=>$data['branch_id'],'name'=>'---Add New Client---') );
 			echo (Zend_Json::encode($data['branch_id']));
-			exit();
-			
+			exit();			
 		}
 	}
 	function getClientNoAction(){
@@ -293,7 +289,5 @@ class Group_indexController extends Zend_Controller_Action {
 			print_r(Zend_Json::encode($dataclient));
 			exit();
 		}
-	}
-	
+	}	
 }
-

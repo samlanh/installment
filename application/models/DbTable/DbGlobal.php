@@ -1577,5 +1577,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}
   	return $option;
   }
+  function getAllPaidBefore($sale_id){
+    $db = $this->getAdapter();
+    $sql=" SELECT SUM(total_principal_permonthpaid+extra_payment) AS paid_before FROM ln_client_receipt_money 
+    	WHERE sale_id = $sale_id AND status =1 LIMIT 1";
+    return $db->fetchOne($sql);
+  }
 }
 ?>

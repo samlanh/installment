@@ -194,6 +194,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    				'land_id'			=>$data['land_code'],
 		    				'date_pay'			=>$data['paid_date'],
 		    				'date_input'		=>$data['paid_date'],
+		    				'allpaid_before'	=>$data['sold_price'],
+		    				'selling_price'     =>$data['sold_price'],
 		    				'outstanding'		=>$data['sold_price']-$data['paid_before'],
 		    				'principal_amount'	=>$data['sold_price']-($data['paid_before']+$data['deposit']),
 		    				'total_principal_permonth'	=>$data['sold_price']-($data['paid_before']),
@@ -546,6 +548,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$is_deposit=1;
     		$times = $this->countDepositTimes($data['sale_id']);//កក់ច្រើនដង
     	}//បញ្ចាក់ថាប្រាក់កក
+    	
+    	$all_paidbefore = $dbtable->getAllPaidBefore($data['sale_id']);
+    	
     	$array = array(
     			'branch_id'			=>$data['branch_id'],
     			'client_id'			=>$data['member'],
@@ -554,6 +559,10 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'sale_id'			=>$data['sale_id'],
     			'date_pay'			=>$data['paid_date'],
     			'date_input'		=>$data['paid_date'],
+    			
+    			'allpaid_before'	=>($data['deposit']-$data['paid_before'])+$all_paidbefore,
+    			'selling_price'     =>$data['sold_price'],
+    			
     			'outstanding'		=> $data['sold_price']-$data['paid_before'],//ok for id=3 បង់ថេ
     			'principal_amount'	=> $data['sold_price']-($data['deposit']),//ok for 3
     			'total_principal_permonth'	=>$data['deposit']-$data['paid_before'],//ok

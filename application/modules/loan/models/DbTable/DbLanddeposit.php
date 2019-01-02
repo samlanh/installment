@@ -349,15 +349,17 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		    		$pay_off = 1;
     		    	}
     		    	$array = array(
-    		    			'branch_id'			=>$data['branch_id'],
-    		    			'client_id'			=>$data['member'],
-    		    			'receipt_no'		=>$receipt,
-    		    			'date_pay'			=>$data['paid_date'],
-    		    			'land_id'			=>$data['land_code'],
-    		    			'sale_id'			=>$data['sale_id'],
-    		    			'date_input'		=>$data['paid_date'],//paid_date
+    		    			'branch_id'			=> $data['branch_id'],
+    		    			'client_id'			=> $data['member'],
+    		    			'receipt_no'		=> $receipt,
+    		    			'date_pay'			=> $data['paid_date'],
+    		    			'land_id'			=> $data['land_code'],
+    		    			'sale_id'			=> $data['sale_id'],
+    		    			'date_input'		=> $data['paid_date'],//paid_date
     		    			'outstanding'		=> $data['sold_price'],
     		    			'principal_amount'	=> $data['balance'],
+    		    			'selling_price'     => $data['sold_price'],
+    		    			'allpaid_before'=>$data['deposit'],
     		    			'total_principal_permonth'=>$data['deposit'],
     		    	    	'total_principal_permonthpaid'=>$data['deposit'],
     		    			'total_interest_permonth'	=>0,
@@ -366,18 +368,18 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				    	'penalize_amountpaid'		=>0,
     				    	'service_charge'	=>0,
     				    	'service_chargepaid'=>0,
-    				    	'total_payment'		=>$data['deposit'],//$data['sold_price'],
-    				    	'amount_payment'	=>$data['deposit'],
-    				    	'recieve_amount'	=>$data['deposit'],
-    				    	'balance'			=>$data['balance'],
+    				    	'total_payment'		=> $data['deposit'],//$data['sold_price'],
+    				    	'amount_payment'	=> $data['deposit'],
+    				    	'recieve_amount'	=> $data['deposit'],
+    				    	'balance'			=> $data['balance'],
     				    	'payment_option'	=>($data['schedule_opt']==2)?4:1,//4 payoff,1normal
     				    	'is_completed'		=>($data['schedule_opt']==2)?1:0,
-    		    			'payment_method'	=>  $data['payment_method'],
-    		    			'cheque'			=>	$data['cheque'],
-    				    	'status'			=>1,
-    				    	'note'				=>$data['note'],
-    				    	'user_id'			=>$this->getUserId(),
-    				    	'field3'			=>1,// ជាប្រាក់កក់
+    		    			'payment_method'	=> $data['payment_method'],
+    		    			'cheque'			=> $data['cheque'],
+    				    	'status'			=> 1,
+    				    	'note'				=> $data['note'],
+    				    	'user_id'			=> $this->getUserId(),
+    				    	'field3'			=> 1,// ជាប្រាក់កក់
     				    	'field2'=>1,
     				    	'is_payoff'=>$pay_off,
     				    	'payment_times'=>1,
@@ -385,35 +387,35 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		    	$this->_name='ln_client_receipt_money';
     		    	$crm_id = $this->insert($array);
     		    	
-    		         $this->_name='ln_client_receipt_money_detail';
-    		    	 $array = array(
-    		    		  'crm_id'			=>$crm_id,
-    		    		  'client_id'		=>$data['member'],
-    		    		  'land_id'			=>$data['land_code'],
-    		    		  'date_payment'	=>$data['date_buy'],
-    		    		  'paid_date'       =>$data['date_buy'],
-    		    		  'last_pay_date'   =>$data['date_buy'],
-    		    		  'capital'			=>$data['sold_price'],
-    		    		  'remain_capital'	=>$data['balance'],
+    		        $this->_name='ln_client_receipt_money_detail';
+    		    	$array = array(
+    		    		  'crm_id'			=> $crm_id,
+    		    		  'client_id'		=> $data['member'],
+    		    		  'land_id'			=> $data['land_code'],
+    		    		  'date_payment'	=> $data['date_buy'],
+    		    		  'paid_date'       => $data['date_buy'],
+    		    		  'last_pay_date'   => $data['date_buy'],
+    		    		  'capital'			=> $data['sold_price'],
+    		    		  'remain_capital'	=> $data['balance'],
     		    		  'principal_permonth'=>$data['deposit'],
     		    		  'old_principal_permonth'=>$data['deposit'],
-    		    		  'total_interest'	=>0,
-    		    		  'total_payment'	=>$data['sold_price'],
-    		    		  'total_recieve'	=>$data['deposit'],
-    		    		  'service_charge'	=>0,
-    		    		  'penelize_amount'	=>0,
-    		    		  'is_completed'	=>($data['schedule_opt']==2)?1:0,
-    		    		  'status'			=>1,
-    		    		    		);
-    		    	 $this->insert($array);
+    		    		  'total_interest'	=> 0,
+    		    		  'total_payment'	=> $data['sold_price'],
+    		    		  'total_recieve'	=> $data['deposit'],
+    		    		  'service_charge'	=> 0,
+    		    		  'penelize_amount'	=> 0,
+    		    		  'is_completed'	=> ($data['schedule_opt']==2)?1:0,
+    		    		  'status'			=> 1,
+    		    		);
+    		     $this->insert($array);
 	    	}
 	        $db->commit();
 	        return 1;
-	        }catch (Exception $e){
-	            $db->rollBack();
-	            Application_Form_FrmMessage::message("INSERT_FAIL");
-	            Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-	        }
+        }catch (Exception $e){
+            $db->rollBack();
+            Application_Form_FrmMessage::message("INSERT_FAIL");
+            Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+        }
     }
     function updateLoanById($data){
     	$db = $this->getAdapter();
@@ -680,6 +682,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'date_input'		=>$data['paid_date'],//paid_date
     					'outstanding'		=>$data['sold_price'],
     					'principal_amount'	=> $data['balance'],
+    					'selling_price'=>$data['sold_price'],
+    					'allpaid_before'=>$data['deposit'],
     					'total_principal_permonth'=>$data['deposit'],
     					'total_principal_permonthpaid'=>$data['deposit'],
     					'total_interest_permonth'	=>0,

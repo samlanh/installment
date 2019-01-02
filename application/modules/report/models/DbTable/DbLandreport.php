@@ -1108,6 +1108,8 @@ function updateReceipt($data){
 			'total_interest_permonth'		=>	$data["total_interest_permonthpaid"],
 			'penalize_amount'				=>	$data["penalize_amountpaid"],
 			'principal_amount'				=>	$data['balance'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
+			'selling_price'					=>	$data['price_sold'],
+			'allpaid_before'				=>	$data['all_paid'],
 			'total_principal_permonthpaid'	=>	$data['total_principal_permonth'],//ok ប្រាក់ដើមបានបង
 			'total_interest_permonthpaid'	=>	$data["total_interest_permonthpaid"],//ok ការប្រាក់បានបង
 			'penalize_amountpaid'			=>	$data["penalize_amountpaid"],// ok បានបង
@@ -1992,9 +1994,9 @@ function updatePaymentStatus($data){
       	if($search['client_name']>0){
       		$where.=" AND `group_id`= ".$search['client_name'];
       	}
-//       	if($search['branch_id']>0){
-//       		$where.=" AND `branch_id`= ".$search['branch_id'];
-//       	}
+      	if($search['branch_id']>0){
+      		$where.=" AND `branch_id`= ".$search['branch_id'];
+      	}
       	if($search['land_id']>0){
       		$where.=" AND `land_id`= ".$search['land_id'];
       	}      	

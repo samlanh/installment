@@ -2,15 +2,12 @@
 
 class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 {
-
     protected $_name = 'ln_client';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
-    	 
     }
 	public function addClient($_data){
-		//print_r($_data);exit();
 		try{
 			if(!empty($_data['id'])){
 				$oldClient_Code = $this->getClientById($_data['id']);
@@ -37,11 +34,6 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 // 			}else{
 // 				$photo = $_data['photo'];
 // 			}
-
-			
-			
-			//echo $photo;exit();
-			
 		    $_arr=array(
 				'client_number'=> $client_code,//$_data['client_no'],
 				'name_kh'	  	=> $_data['name_kh'],
@@ -97,8 +89,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    		$photo = $image_name_stu;
 		    		$_arr['photo_name']=$photo;
 		    	}
-		    }
-		    
+		    }		    
 			if(!empty($_data['id'])){
 				$customer_id =  $_data['id'];
 				$where = 'client_id = '.$customer_id;
@@ -151,7 +142,6 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			}
 			return true;
 		}catch(Exception $e){
-			echo $e->getMessage();exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}
@@ -170,19 +160,19 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 	public function getClientDetailInfo($id){
 		$db = $this->getAdapter();
 		$sql = "SELECT c.*,
-(SELECT  v.name_kh FROM `ln_view` AS v WHERE v.type=11 AND v.key_code =c.`sex` LIMIT 1) AS sex,
-(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=23 AND v.key_code = c.`client_d_type`) AS doc_name,
-(SELECT commune_namekh FROM `ln_commune` WHERE com_id = c.com_id   LIMIT 1) AS commune_name
-,(SELECT district_namekh FROM `ln_district` AS ds WHERE dis_id = c.dis_id  LIMIT 1) AS district_name
-,(SELECT province_kh_name FROM `ln_province` WHERE province_id= c.pro_id  LIMIT 1) AS province_en_name
-,(SELECT village_namekh FROM `ln_village` WHERE vill_id = c.village_id  LIMIT 1) AS village_name , 
-(SELECT project_name FROM `ln_project` WHERE br_id =c.branch_id LIMIT 1) AS project_name ,
-(SELECT  v.name_kh FROM `ln_view` AS v WHERE v.type=11 AND v.key_code =c.`ksex` LIMIT 1) AS ksex,
- (SELECT commune_namekh FROM `ln_commune` WHERE com_id = c.dcommune   LIMIT 1) AS p_commune_name
-,(SELECT district_namekh FROM `ln_district` AS ds WHERE dis_id = c.adistrict  LIMIT 1) AS p_district_name
-,(SELECT province_kh_name FROM `ln_province` WHERE province_id= c.cprovince  LIMIT 1) AS p_province_en_name
-,(SELECT village_namekh FROM `ln_village` WHERE vill_id = c.qvillage  LIMIT 1) AS p_village_name ,
-(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=23 AND v.key_code = c.`joint_doc_type`) AS join_doc_name
+				(SELECT  v.name_kh FROM `ln_view` AS v WHERE v.type=11 AND v.key_code =c.`sex` LIMIT 1) AS sex,
+				(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=23 AND v.key_code = c.`client_d_type`) AS doc_name,
+				(SELECT commune_namekh FROM `ln_commune` WHERE com_id = c.com_id   LIMIT 1) AS commune_name
+				,(SELECT district_namekh FROM `ln_district` AS ds WHERE dis_id = c.dis_id  LIMIT 1) AS district_name
+				,(SELECT province_kh_name FROM `ln_province` WHERE province_id= c.pro_id  LIMIT 1) AS province_en_name
+				,(SELECT village_namekh FROM `ln_village` WHERE vill_id = c.village_id  LIMIT 1) AS village_name , 
+				(SELECT project_name FROM `ln_project` WHERE br_id =c.branch_id LIMIT 1) AS project_name ,
+				(SELECT  v.name_kh FROM `ln_view` AS v WHERE v.type=11 AND v.key_code =c.`ksex` LIMIT 1) AS ksex,
+				 (SELECT commune_namekh FROM `ln_commune` WHERE com_id = c.dcommune   LIMIT 1) AS p_commune_name
+				,(SELECT district_namekh FROM `ln_district` AS ds WHERE dis_id = c.adistrict  LIMIT 1) AS p_district_name
+				,(SELECT province_kh_name FROM `ln_province` WHERE province_id= c.cprovince  LIMIT 1) AS p_province_en_name
+				,(SELECT village_namekh FROM `ln_village` WHERE vill_id = c.qvillage  LIMIT 1) AS p_village_name ,
+				(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=23 AND v.key_code = c.`joint_doc_type`) AS join_doc_name
 		 FROM 
 		`ln_client` AS c WHERE client_id =  ".$db->quote($id);
 		$sql.=" LIMIT 1 ";
@@ -255,12 +245,12 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			$order=" ORDER BY client_id DESC ";
 			return $db->fetchAll($sql.$where.$order);
 		}catch (Exception $e){
-			echo $e->getMessage();
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
 	}
 	public function getGroupCodeBYId($data){
 		$db = $this->getAdapter();
-			$sql = " SELECT *,
+		$sql = " SELECT *,
 				(SELECT t.type_nameen FROM `ln_properties_type` as t WHERE t.id=property_type) As property_type
 				FROM `ln_properties` 
 			WHERE id = ".$data['land_id']." LIMIT 1" ;
@@ -270,7 +260,6 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			if(empty($rs)){return ''; }else{
 				return $rs;
 			}
-		
 	}
 	function getPrefixCode($branch_id){
 		$db  = $this->getAdapter();
@@ -290,55 +279,35 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		}
 		return $pre.$new_acc_no;
 	}
-// 	public function adddoocumenttype($data){
-		
-// 		$db = $this->getAdapter();
-// 		$document_type=array(
-// 				'name_en'=>$data['clienttype_nameen'],
-// 				'name_kh'=>$data['clienttype_namekh'],
-// 				'displayby'=>1,
-// 				'type'=>23,
-// 				'status'=>1
-				
-// 		);
-		
-// 		$row= $this->insert($document_type);
-// 		return $row;
-// 	}
-	public function addIndividaulClient($_data){
-		
+	public function addIndividaulClient($_data){		
 		$client_code = $this->getClientCode($_data['branch_id']);
-			$_arr=array(
-					'is_group'=>0,
-					'group_code'=>'',
-					'parent_id'=>0,
-					'client_number'=>$client_code,
-					'name_kh'	  => $_data['name_kh'],
-					'name_en'	  => $_data['name_en'],
-					'sex'	      => $_data['sex'],
-					'sit_status'  => $_data['situ_status'],
-					'dis_id'      => $_data['district'],
-					'village_id'  => $_data['village'],
-					'street'	  => $_data['street'],
-					'house'	      => $_data['house'],
-					'branch_id'  => $_data['branch_id'],
-					'job'        =>$_data['job'],
-					'phone'	      => $_data['phone'],
-					'create_date' => date("Y-m-d"),
-					'client_d_type'      => $_data['client_d_type'],
-					'user_id'	  => $this->getUserId(),
-					'dob'			=>$_data['dob_client'],	
-					'pro_id'      => $_data['province'],
-					'com_id'      => $_data['commune'],
-					
-			
-			);
-			
-				$this->_name = "ln_client";
-				$id =$this->insert($_arr);
-				return array('id'=>$id,'client_code'=>$client_code);
+		$_arr=array(
+			'is_group'=>0,
+			'group_code'=>'',
+			'parent_id'=>0,
+			'client_number'=>$client_code,
+			'name_kh'	  => $_data['name_kh'],
+			'name_en'	  => $_data['name_en'],
+			'sex'	      => $_data['sex'],
+			'sit_status'  => $_data['situ_status'],
+			'dis_id'      => $_data['district'],
+			'village_id'  => $_data['village'],
+			'street'	  => $_data['street'],
+			'house'	      => $_data['house'],
+			'branch_id'  => $_data['branch_id'],
+			'job'        =>$_data['job'],
+			'phone'	      => $_data['phone'],
+			'create_date' => date("Y-m-d"),
+			'client_d_type'      => $_data['client_d_type'],
+			'user_id'	  => $this->getUserId(),
+			'dob'			=>$_data['dob_client'],	
+			'pro_id'      => $_data['province'],
+			'com_id'      => $_data['commune'],
+		);
+		$this->_name = "ln_client";
+		$id =$this->insert($_arr);
+		return array('id'=>$id,'client_code'=>$client_code);
 	}
-	
 	function addViewType($data){
 		try{
 			$db = $this->getAdapter();
@@ -357,25 +326,10 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			echo '<script>alert('."$e".');</script>';
 		}
 	}
-	
 	function getLastKeycodeByType($type){
 		$db =$this->getAdapter();
 		$sql = "SELECT key_code FROM `ln_view` WHERE type=$type ORDER BY key_code DESC LIMIT 1 ";
 		$number = $db->fetchOne($sql);
 		return $number+1;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
-

@@ -1,10 +1,10 @@
 <meta charset="utf-8">
-<script>
-dojo.require("dijit.form.DateTextBox");
-</script>
+	<script>
+		dojo.require("dijit.form.DateTextBox");
+	</script>
 <style>
-.hover:hover{background: #ccc;}
-img.view{height: 70px !important;}
+	.hover:hover{background: #ccc;}
+	img.view{height: 70px !important;}
 </style>
 <?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();?>
 <title><?php echo $tr->translate("RECEIPT");?></title>
@@ -106,7 +106,7 @@ img.view{height: 70px !important;}
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td width="10%"><?php echo $tr->translate("HOUSE_PRICE");?></td>
-				    <td width="40%"><strong><label id="lblpropertyprice1" class="value"><?php echo  number_format($this->rs['price_sold'],2)." $";?></label></strong></td>
+				    <td width="40%"><strong><label id="lblpropertyprice1" class="value"><?php echo number_format($this->rs['selling_price'],2)." $"; //number_format($this->rs['price_sold'],2)." $";?></label></strong></td>
 					<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
                     <td colspan="3"><strong><label id="lbl_total_payment1" class="value"><?php echo  number_format($this->rs['total_payment'],2)." $";//total_principal_permonth?></label></strong></td>
 				</tr>
@@ -115,9 +115,9 @@ img.view{height: 70px !important;}
 					<td>
 						<table width="100%" cellpadding="0" cellspacing="0">
 							<tr>
-								<td width="33.5%" style="white-space: nowrap;"><strong><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"><?php echo  number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2)." $";?></label></strong></td>
+								<td width="33.5%" style="white-space: nowrap;"><strong><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"><?php echo number_format($this->rs['allpaid_before'],2)." $";//number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2)." $";?></label></strong></td>
 								<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
-								<td width="33.5%"><strong style="white-space: nowrap;"><label style="white-space: nowrap;margin-right: -4px;" class="value"><?php echo  number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2)." $";?></label></strong></td>
+								<td width="33.5%"><strong style="white-space: nowrap;"><label style="white-space: nowrap;margin-right: -4px;" class="value"><?php echo  number_format($this->rs['selling_price']-$this->rs['allpaid_before'],2)." $";//number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2)." $";?></label></strong></td>
 							</tr>
 						</table>
 					</td>

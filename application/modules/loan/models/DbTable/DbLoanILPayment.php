@@ -300,8 +300,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$reciept_no = $data['reciept_no'];
 	    	$sql="SELECT id FROM ln_client_receipt_money WHERE receipt_no='$reciept_no' ORDER BY id DESC LIMIT 1 ";
 	    	$acc_no = $db->fetchOne($sql);
+	    	$dbc = new Application_Model_DbTable_DbGlobal();
 	    	if($acc_no){
-	    		$dbc = new Application_Model_DbTable_DbGlobal();
 	    		$reciept_no = $dbc->getReceiptByBranch(array("branch_id"=>$data["branch_id"]));
 	    	}else{
 	    		$reciept_no = $data['reciept_no'];
@@ -332,6 +332,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			'sale_id'						=>	$data['loan_number'],
     			'land_id'						=>	$data['property_id'],
     			'outstanding'                   =>	$data['outstanding_balance'],//ប្រាក់ដើមមុនបង់
+    			'selling_price'    				=>  $data['sold_price'],
     			'total_principal_permonth'		=>	$data["os_amount"]+$data["extrapayment"],//ប្រាក់ដើមត្រូវបង់
     			'total_interest_permonth'		=>	$data["total_interest"],
     			'penalize_amount'				=>	$data["penalize_amount"],
@@ -506,11 +507,13 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    		}//end foreach 
 		    	}
     		//}
+    		$all_paidbefore = $dbc->getAllPaidBefore($data['loan_number']);
     		$arr = array(
-    				'total_principal_permonthpaid'	=>	$paid_principalall,//ok ប្រាក់ដើមបានបង
-    				'total_interest_permonthpaid'	=>	$paid_interestall,//ok ការប្រាក់បានបង
-    				'penalize_amountpaid'			=>	$paid_penaltyall,// ok បានបង
-    				'service_chargepaid'			=>	$paid_serviceall,// okបានបង
+    				'allpaid_before'				=> $all_paidbefore+$paid_principalall+$data["extrapayment"],
+    				'total_principal_permonthpaid'	=> $paid_principalall,//ok ប្រាក់ដើមបានបង
+    				'total_interest_permonthpaid'	=> $paid_interestall,//ok ការប្រាក់បានបង
+    				'penalize_amountpaid'			=> $paid_penaltyall,// ok បានបង
+    				'service_chargepaid'			=> $paid_serviceall,// okបានបង
     		);
     		$this->_name="ln_client_receipt_money";
     		$where = $db->quoteInto("id=?", $client_pay);
@@ -677,7 +680,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		return $client_pay;
     	}catch (Exception $e){
     		$db->rollBack();
-    		echo $e->getMessage();exit();
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     }
