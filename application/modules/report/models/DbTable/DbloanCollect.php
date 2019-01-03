@@ -80,7 +80,8 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 			  `p`.`land_address`     AS `land_address`,
 			  `p`.`street`           AS `street`,
 			   c.phone,
-			  `c`.`name_kh`          AS `name_kh`
+			  `c`.`name_kh`          AS `name_kh`,
+  				(SELECT pr.project_name FROM `ln_project` AS pr WHERE pr.br_id = `p`.`branch_id` LIMIT 1 ) AS branch_name
 			FROM ((`ln_sale` `s`
 			    JOIN `ln_client` `c`)
 			   JOIN `ln_properties` `p`)
