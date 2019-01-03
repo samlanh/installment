@@ -112,7 +112,7 @@ body {
              </tr>
               <tr>
              	<td colspan="3">
-                	<span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Battambang'">កិច្ចសន្យាទិញ លក់ ដីឡូត៍នេះត្រូវបានធ្វើឡើងនៅថ្ងៃទី  <?php echo date("d",strtotime($this->agreement['agreement_date']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['agreement_date']));?> ដោយ និងរវាង៖</span>
+                	<span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Battambang'">កិច្ចសន្យាទិញ លក់ ដីឡូត៍នេះត្រូវបានធ្វើឡើងនៅថ្ងៃទី  <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?> ដោយ និងរវាង៖</span>
              	</td>
              </tr>
              <tr>
@@ -125,7 +125,7 @@ body {
              					$sex="ស្រី";
              					$title="លោកស្រី";
              				}?>
-							<span style="width: 100%; display: block; line-height: 32px;"> <span style=" font-family:'Khmer OS Muol Light';font-weight:200;">អ្នកលក់៖ </span><span id="padding-left"><?php echo $title;?></span><span class="value" style="min-width:150px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh'];?></span> ភេទ <?php echo $sex;?> ឆ្នាំកំណើត <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['manager_dob'])));?> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> សញ្ជាតិ <?php echo $this->agreement['project_manager_nationality'];?> 
+							<span style="width: 100%; display: block; line-height: 32px;"> <span style=" font-family:'Khmer OS Muol Light';font-weight:200;">អ្នកលក់៖ </span><span id="padding-left"><?php echo $title;?></span> <span style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh'];?></span> ភេទ <?php echo $sex;?> ឆ្នាំកំណើត <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['manager_dob'])));?> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <?php echo $dbparmeter->getNumberInkhmer($this->agreement['project_manager_nation_id']);?> សញ្ជាតិ <?php echo $this->agreement['project_manager_nationality'];?> 
 							មានអាស័យដ្ឋានបច្ចុប្បន្ន <?php echo $this->agreement['project_manager_p_current_address'];?> <strong>ហៅកាត់ថាភាគី</strong><span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span><strong>។</strong>
 							</span>
 	             			<?php 
@@ -144,14 +144,14 @@ body {
 	             				
 	             				<span class="value" style="min-width:100px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span> ភេទ <?php echo $cussex;?> ថ្ងៃខែឆ្នាំកំណើត <?php if (!empty($this->agreement['dob'])){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob'])))." ខែ ".$month[date("m",strtotime($this->agreement['dob']))]." ឆ្នាំ  ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob'])));}?>
 	             				សញ្ជាតិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span>
-	             				កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:80px;"><?php echo $this->agreement['client_nation_id'];?></span> <?php if(!empty($this->agreement['client_issuedateid'])){ ?> ចុះថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['client_issuedateid'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['client_issuedateid']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['client_issuedateid']))); }?> 
+	             				កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:80px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['client_nation_id']);?></span> <?php if(!empty($this->agreement['client_issuedateid'])){ ?> ចុះថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['client_issuedateid'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['client_issuedateid']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['client_issuedateid']))); }?> 
 	             				មានទីលំនៅសព្វថ្ងៃផ្ទះលេខ : <span class="value" style="min-width:55px;"><?php echo $this->agreement['client_house_no'];?></span> ផ្លូវលេខ  <span class="value" style=""><?php echo $this->agreement['client_street'];?></span> 
 								   ភូមិ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_village_kh'];?></span>       
 								      ឃុំ/សង្កាត់  <span class="value" style="min-width:100px;"><?php echo $this->agreement['client_commune_kh'];?></span> 
 								      ក្រុង/ស្រុក/ខណ្ឌ <span class="value" style="min-width:100px;"><?php echo $this->agreement['client_districtkh'];?></span>
              					      រាជធានី/ខេត្ត/ក្រុង <span class="value" style="min-width:100px;">&nbsp;<?php echo $this->agreement['client_province_kh'];?></span> 
              					 <?php if(!empty($this->agreement['hname_kh'])){?> និងឈ្មោះ  <span class="value" style="min-width:130px;font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['hname_kh'];?></span> ភេទ <?php echo $with_sex;?> ថ្ងៃខែឆ្នាំកំណើត <?php if (!empty($this->agreement['dob_buywith'])){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob_buywith'])))." ខែ ".$month[date("m",strtotime($this->agreement['dob_buywith']))]." ឆ្នាំ  ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob_buywith'])));}?>  
-			             			          កាន់<?php echo $this->agreement['joint_doc_type'];?> លេខ <span class="value" style="min-width:100px;"><?php echo $this->agreement['rid_no'];?></span>
+			             			          កាន់<?php echo $this->agreement['joint_doc_type'];?> លេខ <span class="value" style="min-width:100px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['rid_no']);?></span>
 			             			   <?php if(!empty($this->agreement['join_issuedateid'])){ ?> ចុះថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['join_issuedateid'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['join_issuedateid']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob_buywith']))); }?> 
 									   មានទីលំនៅបច្ចុប្បន្នផ្ទះលេខ: <span class="value" style="min-width:45px;"><?php echo $this->agreement['with_house'];?></span> 
 									          ផ្លូវលេខ  <span class="value" style="min-width:45px;"><?php echo $this->agreement['w_street'];?></span> 
@@ -195,12 +195,12 @@ body {
 										    		$proper = $dbland->getClientById($land);
 										    		?>
 										    	<span style="display: block; width: 100%;">
-										    	<?php echo $dbparmeter->getNumberInkhmer($keyland+1);?>/ឡូត៏លេខ<span class="value_label" style="text-align:center; min-width:70px;"><?php echo $proper['land_address'];?></span>មានទទឹង<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $proper['width'];?></span>ម៉ែត្រ បណ្តោយ<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $proper['height'];?></span>ម៉ែត្រ សរុបផ្ទៃក្រឡាទំហំ<span class="value_label" style="text-align:center; min-width:60px;"><?php echo $proper['land_size'];?></span>ម៉ែត្រក្រឡា។
+										    	<?php echo $dbparmeter->getNumberInkhmer($keyland+1);?>/ឡូត៍លេខ<span class="value_label" style="text-align:center; min-width:70px;"><?php echo $proper['land_address'];?></span>មានទទឹង<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $dbparmeter->getNumberInkhmer($proper['width']);?></span>ម៉ែត្រ បណ្តោយ<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $dbparmeter->getNumberInkhmer($proper['height']);?></span>ម៉ែត្រ សរុបផ្ទៃក្រឡាទំហំ<span class="value_label" style="text-align:center; min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($proper['land_size']);?></span>ម៉ែត្រក្រឡា។
 										    	</span>
 										    	<?php }?>
 										    	<?php }else{?>
 										    	<span style="display: block; width: 100%;">
-										    	១/ឡូត៏លេខ<span class="value_label" style="text-align:center; min-width:70px;"><?php echo $this->agreement['property_title'];?></span>មានទទឹង<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $this->agreement['property_width'];?></span>ម៉ែត្រ បណ្តោយ<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $this->agreement['property_height'];?></span>ម៉ែត្រ សរុបផ្ទៃក្រឡាទំហំ<span class="value_label" style="text-align:center; min-width:60px;"><?php echo $this->agreement['land_size'];?></span>ម៉ែត្រក្រឡា។
+										    	១/ឡូត៍លេខ<span class="value_label" style="text-align:center; min-width:70px;"><?php echo $this->agreement['property_title'];?></span>មានទទឹង<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_width']);?></span>ម៉ែត្រ បណ្តោយ<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_height']);?></span>ម៉ែត្រ សរុបផ្ទៃក្រឡាទំហំ<span class="value_label" style="text-align:center; min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['land_size']);?></span>ម៉ែត្រក្រឡា។
 										    	</span>
 										    	<?php }?>
 										    </td>  
@@ -241,7 +241,7 @@ body {
 												    	<ol style="list-style-type: none;text-align:justify;padding:0;" start="0">
 								             				<li>
 									             				<ul style="list-style-type: square;text-align:justify; margin-left: -20px" start="1">
-										             				<li >
+										             				
 									             					<?php 
 												             			$start_id=0;
 												             			$paid_amount=0;
@@ -251,6 +251,7 @@ body {
 												             		?>
 												             			<?php if(!empty($resultdeposit)){?><!-- ករណីកកច្រើនដង ចេញប្រវត្តិបង់ -->
 												             			<?php foreach($resultdeposit as $keydeposite =>$rsdeposite){$keystart++;?>
+												             			<li >
 													             			<span  ><strong>ដំណាក់កាលទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?>៖</strong> នៅថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($rsdeposite['date_input'])))." ខែ ".$month[date("m",strtotime($rsdeposite['date_input']))]." ឆ្នាំ ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($rsdeposite['date_input']))); ?> ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> បានបង់ប្រាក់ដំណាក់កាលទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?>ចំនួន USD <span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($rsdeposite['total_principal_permonthpaid'],2);?>
 												             				(<label style="font-family:'Khmer OS Battambang'" id="lable_depositpaid<?php echo $keydeposite+1;?>"></label><span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក</span>)</span> ជាប្រាក់កក់ថ្លៃទិញដីឡូត៍។
 												             				</span>
@@ -269,7 +270,11 @@ body {
 																			</script>
 																			<?php 
 																			$paid_amount = $paid_amount+$rsdeposite['total_principal_permonthpaid'];
-												             				}}?>
+												             				}
+												             		?>
+												             		</li>
+												             	<?php 	}?>
+												             				
 												             				<?php 
 														             			$i=0; $numrow = 0;
 														             			$countSchdule = count($this->sale_schedule);
@@ -289,7 +294,7 @@ body {
 														             					$row['principal_permonth'] = ($paidbefore);
 														             				}
 														             			}?>
-														             			</li>
+														             			
 													             			<li>
 														             			<?php 
 														             				$numrow=$numrow+1;?>

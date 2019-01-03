@@ -180,7 +180,7 @@ dojo.require("dijit.form.DateTextBox");
 							             			$i=0; $numrow = 0;
 							             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++;  ?>
 							             			<?php 
-							             			if($row['is_completed']==1 AND $this->agreement['is_reschedule']==1){continue;}
+							             			if($row['is_completed']==1 AND $this->agreement['is_reschedule']==3){continue;}
 							             			$paid = $paid+$row['principal_permonth'];?>             	
 							             			<?php if($key==0){?>
 								             		<?php
@@ -197,11 +197,13 @@ dojo.require("dijit.form.DateTextBox");
 							             			<li>
 								             			<?php 
 								             				$numrow=$numrow+1;?>
-								             				<span  >ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>
-								             				<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label><span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)
+								             				<span  >ទឹកប្រាក់ចំនួនUSD 
+								             					<span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>
+								             					<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label>
+								             					<span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)</span>
+								             					</span>
+								             					
 								             					<span style="font-weight: normal !important;">&nbsp;&nbsp;អ្នកទិញត្រូវបង់នៅថ្ងៃ <?php echo $day[date("D",strtotime($row['date_payment']))]." ទី ".date("d",strtotime($row['date_payment']))." ខែ ".$month[date("m",strtotime($row['date_payment']))]." ឆ្នាំ ".date("Y",strtotime($row['date_payment'])); ?></span>
-								             				</span>
-								             				</span>
 								             				</span>
 								             				 <script>
 																a ='<?php echo ($row['principal_permonth']) ?>';
