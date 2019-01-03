@@ -338,6 +338,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'percent'=>100,
     					'is_installment'=>1,
     					'no_installment'=>1,
+    					'received_date'=>$data['date_buy'],
+    					'received_userid'=> $this->getUserId(),
     				);
     				$this->insert($datapayment);
     	    }
