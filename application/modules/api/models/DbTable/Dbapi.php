@@ -57,14 +57,15 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
 	      	$to_date = (empty($search['end_date']))? '1': " date_release <= '".$search['end_date']." 23:59:59'";
 	      	$where.= "  AND ".$to_date;
 	      	$sql="SELECT *,
-					(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE STATUS=1 AND sale_id=v_loanoutstanding.id) AS paid_amount
+					(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE status=1 AND sale_id=v_loanoutstanding.id) AS paid_amount,
+					(price_sold-(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE status=1 AND sale_id=v_loanoutstanding.id)) AS balance_amount
 	      	FROM v_loanoutstanding WHERE 1 ";//IF BAD LOAN STILL GET IT
 	      	$where.=" LIMIT 100";
 	      	return $db->fetchAll($sql.$where);
 	}
     public function getALLLoanExpectIncome($search=null){
     	$search = array(
-    			'start_date'=> date('Y-m-d'),
+    			'start_date'=> date('Y-m-1'),
     			'end_date'=>date('Y-m-d')
     			);
     	$from_date =(empty($search['start_date']))? '1': " date_payment >= '".$search['start_date']." 00:00:00'";
@@ -77,4 +78,40 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     	$row = $db->fetchAll($sql.$where.$group_by);
     	return $row;
     }
+    public function getAllSaleCancel($search=null){
+    	$search = array(
+    			'start_date'=> date('Y-m-d'),
+    			'end_date'=>date('Y-m-d')
+    	);
+//     	$from_date =(empty($search['start_date']))? '1': " date_payment >= '".$search['start_date']." 00:00:00'";
+//     	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
+//     	$where= " AND ".$from_date." AND ".$to_date;
+    	$where="";
+    	$db = $this->getAdapter();
+    	$sql='SELECT 
+    		    c.`id`,c.return_back,
+    		    (SELECT project_name FROM `ln_project` WHERE br_id=c.`branch_id` LIMIT 1) AS `project_name`,
+    		    c.paid_amount,
+    		    c.installment_paid,
+    		    c.reason,
+    		    c.`create_date`,
+				s.`sale_number`,
+				s.price_sold,
+				(clie.`name_kh`) AS client_name,
+				pro.`land_code`,
+				(SELECT pt.`type_nameen` FROM `ln_properties_type` AS pt WHERE pt.`id` = pro.`property_type` LIMIT 1) AS type_name,
+				pro.`property_type`,pro.`land_address`,pro.`street`,
+				(SELECT first_name FROM `rms_users` WHERE id=c.user_id LIMIT 1) AS user_name
+				FROM `ln_sale_cancel` AS c, 
+				`ln_sale` AS s, 
+				`ln_properties` AS pro,
+				`ln_client` AS clie
+				WHERE s.`id` = c.`sale_id` AND pro.`id` = c.`property_id` AND
+				clie.`client_id` = s.`client_id`';
+    		$order = " ORDER BY c.`branch_id` DESC";
+    	$row = $db->fetchAll($sql.$where.$order);
+    	return $row;
+    }
+    
+    
 }

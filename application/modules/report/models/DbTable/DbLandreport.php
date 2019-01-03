@@ -423,6 +423,7 @@ public function getAllOutstadingLoan($search=null){
 		return $db->fetchAll($sql.$where.$order);
       }
       public function getALLLoanPayment($search=null,$order11=0){
+      	$search['is_closed']='';
       	$db = $this->getAdapter();
       	$sql="SELECT *,
 			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id LIMIT 1) AS user_name,
@@ -433,7 +434,6 @@ public function getAllOutstadingLoan($search=null){
       	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
       	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
       	$where = " AND ".$from_date." AND ".$to_date;
-      	
       	
       	if(!empty($search['user_id']) AND $search['user_id']>0){
       		$where.=" AND user_id = ".$search['user_id'];

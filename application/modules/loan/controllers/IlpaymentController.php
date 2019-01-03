@@ -127,7 +127,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			if($rs['payment_id']==1 || $rs['is_cancel']==1){
 				Application_Form_FrmMessage::message('មិនមានទិន្នន័យសម្រាប់បង់ប្រាក់ទេ!');
 				echo "<script>window.close();</script>";
-// 				Application_Form_FrmMessage::Sucessfull("មិនមានទិន្នន័យសម្រាប់បង់ប្រាក់ទេ!","/loan");
 			}
 		}
 		$frm = new Loan_Form_FrmIlPayment();

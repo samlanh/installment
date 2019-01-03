@@ -1176,29 +1176,29 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 
    function getLoanPaymentByLoanNumber($data){//tab1
     	$db = $this->getAdapter();
-    		if($data['type']==1){
+    	if($data['type']==1){
 	    		$sql ="SELECT 
-						 (SELECT CONCAT(ln_properties.land_address,',',ln_properties.street) AS land_address  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_address,
-						 (SELECT ln_properties.land_code  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_code,
-						 (SELECT t.type_nameen FROM `ln_properties_type` as t WHERE t.id=(SELECT p.property_type FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1)) As property_type,
-						  s.*,
-						  s.buy_date AS sold_date,
-						  DATE_FORMAT(s.buy_date, '%d-%m-%Y') AS `buy_date`,
-						  (SELECT phone FROM `ln_client` WHERE ln_client.client_id=s.client_id) as phone,
-						  (SELECT hname_kh FROM `ln_client` WHERE client_id=s.client_id) as buy_with,
-						  (SELECT crm.`from_date` FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id ORDER BY crm.id DESC LIMIT 1) AS from_date,
-						  (SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id AND crm.status=1 LIMIT 1) AS total_principal_permonthpaid,
-						  ss.*,
-						   DATE_FORMAT(ss.date_payment, '%d-%m-%Y') AS date_payments
-						FROM
-						  `ln_sale` AS s,
-						  `ln_saleschedule` AS ss 
-						WHERE s.id = ss.`sale_id` 
-						  AND s.status = 1
-						  AND ss.status = 1  
-						  AND ss.is_completed = 0 
-						  AND s.id = ".$data['loan_number']." ORDER BY ss.id ASC ";
-    		}
+				 (SELECT CONCAT(ln_properties.land_address,',',ln_properties.street) AS land_address  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_address,
+				 (SELECT ln_properties.land_code  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_code,
+				 (SELECT t.type_nameen FROM `ln_properties_type` as t WHERE t.id=(SELECT p.property_type FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1)) As property_type,
+				  s.*,
+				  s.buy_date AS sold_date,
+				  DATE_FORMAT(s.buy_date, '%d-%m-%Y') AS `buy_date`,
+				  (SELECT phone FROM `ln_client` WHERE ln_client.client_id=s.client_id LIMIT 1) as phone,
+				  (SELECT hname_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1) as buy_with,
+				  (SELECT crm.`from_date` FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id ORDER BY crm.id DESC LIMIT 1) AS from_date,
+				  (SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id AND crm.status=1 LIMIT 1) AS total_principal_permonthpaid,
+				  ss.*,
+				   DATE_FORMAT(ss.date_payment, '%d-%m-%Y') AS date_payments
+				FROM
+				  `ln_sale` AS s,
+				  `ln_saleschedule` AS ss 
+				WHERE s.id = ss.`sale_id` 
+				  AND s.status = 1
+				  AND ss.status = 1  
+				  AND ss.is_completed = 0 
+				  AND s.id = ".$data['loan_number']." ORDER BY ss.id ASC ";
+    	}
     	return $db->fetchAll($sql);
    }
 function getLoanPaymentschedulehistory($data){//used page edit il payment
@@ -1256,15 +1256,16 @@ function getLoanPaymentByLoanNumberEdit($data){
    function getAllLoanPaymentByLoanNumber($data){
 	   	$db = $this->getAdapter();
 	   	$loan_number= $data['loan_number'];
-	   	$sql = "select *,
+	   	$sql = "SELECT *,
 			DATE_FORMAT(scd.date_payment, '%d-%m-%Y') AS `date_payment`
 	   	FROM 
-	   		ln_sale as s ,ln_saleschedule as scd 
-	   		WHERE 
-	   	scd.status=1 
-	   	AND s.id=scd.sale_id 
-	   	AND sale_id = $loan_number 
-	   	ORDER BY no_installment ASC ";
+	   		ln_sale as s ,
+	   		ln_saleschedule as scd 
+	   	WHERE 
+		   	scd.status=1 
+		   	AND s.id=scd.sale_id 
+		   	AND sale_id = $loan_number 
+		   	ORDER BY no_installment ASC ";
    		return $db->fetchAll($sql);
    	}
 

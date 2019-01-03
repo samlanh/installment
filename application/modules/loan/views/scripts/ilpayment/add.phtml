@@ -1530,26 +1530,7 @@ function totalReturn(){
 	}
 	dijit.byId('total_payment').attr('value',total_amount);
 }
-function CalculateAlltotal(received_amount){
-	total_principal = dijit.byId('os_amount').get('value');//ប្រាក់ដើមត្រូវបង់
-	total_principal=isNaN(total_principal)?0:total_principal;
-	
-	total_interest = dijit.byId('total_interest').get('value');
-	total_interest=isNaN(total_interest)?0:total_interest;
-	
-	extrapayment = dijit.byId('extrapayment').get('value');
-	extrapayment=isNaN(extrapayment)?0:extrapayment;
-	
-	service_charge = dijit.byId('service_charge').get('value');
-	service_charge=isNaN(service_charge)?0:service_charge;
-	
-	penalize_amount = dijit.byId('penalize_amount').get('value');
-	penalize_amount=isNaN(penalize_amount)?0:penalize_amount;
 
-	total_amount = parseFloat(total_principal)+parseFloat(total_interest)+parseFloat(service_charge)+parseFloat(penalize_amount)+parseFloat(extrapayment);
-	dijit.byId('total_payment').attr('value',total_amount);
-	dijit.byId('amount_receive').attr('value',total_amount);
-}
 function loading(){
     document.getElementsByClassName("overlay")[0].style.display="block";
 }
@@ -1573,7 +1554,7 @@ function getReceiptNumber(condition){
 			}
 		},
 		error:  function(response, ioArgs) {
-			alert("Failed while doing the operation: " + ioArgs.xhr.response);
+			//alert("Failed while doing the operation: " + ioArgs.xhr.response);
 		}
 	});
 }
@@ -1604,9 +1585,6 @@ function getAllLaonPayment(){//get schedule Tab ទី២
 					for(j=0;j<data.length;j++){
 						statuss='<label style="color:red;"><?php echo $tr->translate('NOT_COMPLETED');?></label>';
 						++nums;					
-						/*ds = new Date(data[j].date_payment);
-						str_days = getDayString(ds.getDay());
-						datePayment = new Date(ds);*/
 						tmp+= '<tr style="background: #ffffff;">';
 						    tmp += '<td>&nbsp;'+nums+'</td>';
 						    tmp += '<td style="white-space: nowrap;">&nbsp;'+data[j].date_payment+'&nbsp;</td>';
@@ -1697,7 +1675,6 @@ function getLaonHasPayByLoanNumber(){//tab3 ប្រវត្តបានបង
 								}
 							temp+= '</tr>';
 						}
-						//dijit.byId('total_pricipalpaid').attr("value",principal_paid);
 					}
 					temp+='</table>';
 					dojo.byId('data_table_loan_haspay').innerHTML = temp;
