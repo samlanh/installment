@@ -1339,6 +1339,8 @@ function getLoanPaymentByLoanNumberEdit($data){
 			  total_interest_permonthpaid ,
 			  penalize_amountpaid,
 			  extra_payment,
+			  crm.allpaid_before,
+			  crm.selling_price,
 			  crm.payment_times,
 			  crm.`total_payment`,
 			  crm.`total_interest_permonth`,

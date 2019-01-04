@@ -20,8 +20,8 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     	$sql="SELECT *,
 			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id LIMIT 1) AS user_name,
 			(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1) AS sold_price
-      	FROM v_getcollectmoney WHERE status=1  limit 100 ";
-    	$sql.= " ORDER BY id DESC ";
+      	FROM v_getcollectmoney WHERE status=1 ";
+    	$sql.= " ORDER BY id DESC  limit 100 ";
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql);
     }
