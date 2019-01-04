@@ -181,7 +181,13 @@ dojo.require("dijit.form.DateTextBox");
 							             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++;  ?>
 							             			<?php 
 							             			if($row['is_completed']==1 AND $this->agreement['is_reschedule']==3){continue;}
-							             			$paid = $paid+$row['principal_permonth'];?>             	
+							             			
+							             			$paid = $paid+$row['principal_permonth'];?>    
+							             			
+							             			<?php if ($row['principal_permonth']==$paid){
+							             				continue;
+							             			}
+							             			?>         	
 							             			<?php if($key==0){?>
 								             		<?php
 								             			if($row['date_payment']==$this->agreement['buy_date'] AND $paid_amount==$row['principal_permonth'] ){
