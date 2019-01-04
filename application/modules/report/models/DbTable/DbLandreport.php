@@ -680,10 +680,13 @@ public function getAllOutstadingLoan($search=null){
       public function getALLLoanExpectIncome($search=null){
       	$from_date =(empty($search['start_date']))? '1': " date_payment >= '".$search['start_date']." 00:00:00'";
       	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
-      	$where= " AND ".$from_date." AND ".$to_date;
+      	$where="";
       	
       	$db = $this->getAdapter();
-      	$sql = "SELECT * FROM `v_getexpectincome` WHERE 1 ";
+      	$sql = "SELECT *,
+      	(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) AS ispay_bank,
+(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) LIMIT 1) AS payment_type
+      	FROM `v_getexpectincome` WHERE 1 ";
       	
       	if(!empty($search['adv_search'])){
 			$s_search = addslashes(trim($search['adv_search']));
@@ -707,7 +710,16 @@ public function getAllOutstadingLoan($search=null){
       	if($search['branch_id']>0){
       		$where.= " AND branch_id = ".$search['branch_id'];
       	}
-      	$group_by = " GROUP BY id,date_payment ORDER BY date_payment DESC ";
+      	if($search['stepoption']>0){
+      		$where.=" AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) = ".$search['stepoption'];
+      	}else{
+      		$where.= " AND ".$from_date." AND ".$to_date;
+      		if ($search['stepoption']==0){
+      			$where.= " AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  )=0";
+      		}
+      	}
+      //GROUP BY id,date_payment
+      	$group_by = " GROUP BY id ORDER BY id ASC,date_payment DESC ";
         $row = $db->fetchAll($sql.$where.$group_by);
         return $row;
       }

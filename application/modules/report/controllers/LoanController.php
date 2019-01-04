@@ -330,6 +330,7 @@ function rptRescheduleLoanAction(){
  				'end_date'=>date('Y-m-d'),
  				'branch_id'		=>	-1,
  				'schedule_opt'	=> -1,
+ 				'stepoption'=>-1,
  				'status'=>-1,);
  	}
  	$this->view->search=$search;
@@ -340,6 +341,9 @@ function rptRescheduleLoanAction(){
  	$frm = $frm->AdvanceSearch();
  	Application_Model_Decorator::removeAllDecorator($frm);
  	$this->view->frm_search = $frm;
+ 	
+ 	$db = new Application_Model_DbTable_DbGlobal();
+ 	$this->view->stepoption = $db->getVewOptoinTypeByType(29);
  }
  
   function rptPaymentHistoryAction(){

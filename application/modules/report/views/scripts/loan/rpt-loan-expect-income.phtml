@@ -19,17 +19,42 @@ dojo.require("dijit.form.DateTextBox");
 </script>
 <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
 	<form method="post">
-		<table style="font-family: 'Khmer OS Content'; margin: 0 auto;width:100%" >
-				<tr>
-		   			<td><?php echo $frm->getElement("adv_search");?></td>
-		   			<td><?php echo $frm->getElement("branch_id");?></td>
-		   			<td><?php echo $frm->getElement("client_name");?></td>
-		   			<td><?php echo $frm->getElement('schedule_opt');?></td>
-		   			<td><?php echo $frm->getElement('start_date');?></td>
-		   			<td><?php echo $frm->getElement('end_date');?></td>
-		   			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
-		   		</tr>
-		</table>
+		<div class="form-group">
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            	<?php echo $frm->getElement("adv_search");?>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            	<?php echo $frm->getElement("branch_id");?>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            	<?php echo $frm->getElement("client_name");?>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            	<?php echo $frm->getElement('schedule_opt');?>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            	<select class="fullside" id="stepoption" name="stepoption" dojoType="dijit.form.FilteringSelect">
+					<option value="-1" <?php if ($this->search['stepoption']==-1){ echo 'selected=selected';}?>><?php  echo $tr->translate("ALL");?></option>
+					<option value="0" <?php if ($this->search['stepoption']==0){ echo 'selected=selected';}?>><?php  echo $tr->translate("DATE_PAYMENT");?></option>
+					<?php if (!empty($this->stepoption)) foreach ($this->stepoption as $rs){?>
+					<option value="<?php echo $rs['key_code']?>" <?php if ($this->search['stepoption']==$rs['key_code']){ echo 'selected=selected';}?>><?php echo $rs['name_en']?></option>
+					<?php }?>
+				</select>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            	<?php echo $frm->getElement('start_date');?>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            	<?php echo $frm->getElement('end_date');?>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+            	<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+            </div>
+        </div>
 	</form>
 	<div style="min-height:28cm; margin:0 auto;">
 		<div id="divPrint">
@@ -134,7 +159,14 @@ dojo.require("dijit.form.DateTextBox");
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonth"],2);?></td>
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["total_interest"],2);?></td>
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonth"]+$rs["total_interest"],2);?></td>
-			               		<td style="font-size: 12px;text-align: center;"><?php echo date("d-m-Y",strtotime($rs["date_payment"]));?></td>
+			               		<td style="font-size: 12px;text-align: center;">
+			               		<?php if($rs['ispay_bank']==0){
+		                    			$date= new DateTime($rs['date_payment']);
+		                    			echo $date->format("d-m-Y");
+		                    		}else{
+		                    			echo $rs['payment_type'];
+		                    		}?>
+			               		</td>
 								<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo $rs["no_installment"];?></td>
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?></td>
 			               		<td style="font-size: 12px;text-align: center;">&nbsp;<?php echo number_format($rs["total_interest_after"],2);?></td>
