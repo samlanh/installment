@@ -44,7 +44,7 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
    		$where.= " AND `cp`.`client_id`=".$search['client_name'];
    	}
    	if(($search['branch_id'])>0){
-   		$where.= " AND ( cp.from_branchid = ".$search['branch_id']." OR cp.to_branchid = ".$search['branch_id']." )";
+   		$where.= " AND sp.sale_id = ".$search['branch_id'];
    	}
    	
    	$order = " ORDER BY sp.id DESC";

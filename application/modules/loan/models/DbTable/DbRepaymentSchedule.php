@@ -618,12 +618,12 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			}
     			$arra = array(
     					'begining_balance_after'=>$row['begining_balance_after']-($principal_paid),
-//     					'ending_balance'=>$row['ending_balance']-($principal_paid),
     					"principal_permonthafter"=>$remain_principal,
     					'total_interest_after'=>$after_interest,
     					"total_payment_after"=>$remain_principal+$after_interest,
     					'is_completed'=>$statuscomplete,
     					'received_userid'=>$this->getUserId(),
+    					'received_date'=>$data['paid_date'],
     			);
     			$where = " id = ".$row['id'];
     			$this->_name="ln_saleschedule";
@@ -640,6 +640,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     					'capital'				=>$row['begining_balance'],
     					'remain_capital'		=>$row['begining_balance']-$principal_paid,
     					'principal_permonth'	=>$data['deposit'],
+    					'last_pay_date'			=>$data['paid_date'],
     					'total_interest'		=>0,
     					'total_payment'			=>$principal_paid,
     					'total_recieve'			=>$principal_paid,

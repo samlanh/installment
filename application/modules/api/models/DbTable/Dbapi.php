@@ -112,6 +112,30 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     	$row = $db->fetchAll($sql.$where.$order);
     	return $row;
     }
+    public function getDailyIncome($search=null){
+    	$search = array(
+    			'start_date'=> date('Y-m-d'),
+    	);
+    	$db = $this->getAdapter();
+    	$sql='SELECT 
+    			SUM(total_principal_permonthpaid+extra_payment+total_interest_permonthpaid+penalize_amountpaid) 
+    			FROM `ln_client_receipt_money` WHERE status=1 AND ';
+    	$curr_date = (empty($search['start_date']))? '1': " date_input <= '".$search['start_date']." 23:59:59'";
+    	$row = $db->fetchOne($sql.$curr_date);
+    	return $row;
+    }
+    public function getDailyExpense($search=null){
+    	$search = array(
+    			'start_date'=> date('Y-m-d'),
+    	);
+    	$db = $this->getAdapter();
+    	$sql='SELECT
+    	SUM(total_amount)
+    	FROM `ln_expense` WHERE status=1 AND ';
+    	$curr_date = (empty($search['start_date']))? '1': " date <= '".$search['start_date']." 23:59:59'";
+    	$row = $db->fetchOne($sql.$curr_date);
+    	return $row;
+    }
     
     
 }

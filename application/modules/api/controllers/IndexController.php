@@ -47,5 +47,15 @@ class Api_IndexController extends Zend_Controller_Action {
 		print_r(Zend_Json::encode($db->getAllSaleCancel()));
 		exit();
 	}
+	function getdailyincomeAction(){
+		$db = new Api_Model_DbTable_Dbapi();
+		print_r(Zend_Json::encode($db->getDailyIncome()));
+		exit();
+	}
+	function getdailyexpenseAction(){
+		$db = new Api_Model_DbTable_Dbapi();
+		print_r(Zend_Json::encode($db->getDailyExpense()));
+		exit();
+	}
 }
 

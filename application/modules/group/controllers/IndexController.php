@@ -105,7 +105,7 @@ class Group_indexController extends Zend_Controller_Action {
 				$data = $this->getRequest()->getPost();
 				$data['id'] = $id;
 				$db->addClient($data);
-				Application_Form_FrmMessage::Sucessfull('EDIT_SUCCESS',"/group/index");
+				Application_Form_FrmMessage::Sucessfull('EDIT_SUCCESS',"/group");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("EDIT_FAILE");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
