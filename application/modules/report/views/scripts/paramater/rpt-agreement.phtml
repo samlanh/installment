@@ -541,7 +541,7 @@ dojo.require("dijit.form.DateTextBox");
 												             				<?php 
 														             			$i=0; $numrow = 0;
 														             			$countSchdule = count($this->sale_schedule);
-														             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++; $keystart++; ?>
+														             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++;  ?>
 														             			<?php 
 														             			if($row['is_completed']==1 AND $this->agreement['is_reschedule']==3){continue;}
 														             			$paid = $paid+$row['principal_permonth'];?>             	
@@ -560,19 +560,15 @@ dojo.require("dijit.form.DateTextBox");
 														             			
 													             			<li>
 														             			<?php 
-														             				$numrow=$numrow+1;?>
+														             				$numrow=$numrow+1; $keystart++;?>
 														             				<span  ><strong>លើកទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?>៖</strong> អ្នកទិញសន្យាបន្ថែមប្រាក់ចំនួន 
 														             				<span class="value" style=" font-family:Arial;font-weight: bold;">
 														             				<?php echo @number_format($row['principal_permonth'],2);?>
 														             				</span>
-														             				ជាអក្សរ  <span style="">
-														             				(<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label>
+														             				ជាអក្សរ<span style="">(<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label>
 														             				<span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក)</span>
 														             				</span>
-														             				
-														             				
-														             				នៅថ្ងៃទី <?php echo "<span style=''>".$dbparmeter->getNumberInkhmer(date("d",strtotime($row['date_payment'])))."</span> ខែ <span style=''>".$month[date("m",strtotime($row['date_payment']))]."</span> ឆ្នាំ  <span style=''>".$dbparmeter->getNumberInkhmer(date("Y",strtotime($row['date_payment'])))."</span>"; ?> 
-														             				
+														             				នៅថ្ងៃទី<?php echo "<span style=''>".$dbparmeter->getNumberInkhmer(date("d",strtotime($row['date_payment'])))."</span>ខែ<span style=''>".$month[date("m",strtotime($row['date_payment']))]."</span>ឆ្នាំ<span style=''>".$dbparmeter->getNumberInkhmer(date("Y",strtotime($row['date_payment'])))."</span>"; ?> 
 														             				<?php if($this->agreement['payment_id']==2){?>
 															             					<?php if ($countSchdule==$key+1){?>
 															             					ជាប្រាក់បង់ផ្តាច់ថ្លៃទិញដីឡូតិ៍។ 
