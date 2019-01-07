@@ -1,20 +1,20 @@
 <?php 
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$frm = $this->frm_search;
-
-$dbGB = new Application_Model_DbTable_DbGlobal();
-$logo = $this->baseUrl()."/images/logo.jpg";
-$branch_title = $tr->translate("BRAND_TITLE");
-if ($this->search['branch_id'] >0 ){
-	$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
-	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
-		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_search;
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
 	}
-	$branch_title = $branch['project_name'];
-}
 ?>
 <script>
-dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.DateTextBox");
 </script>
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT_EXPENSE");?></title>
@@ -198,6 +198,5 @@ dojo.require("dijit.form.DateTextBox");
 	    </td>
 	   </tr>
    </table>
-	
 	</div>
 </div>

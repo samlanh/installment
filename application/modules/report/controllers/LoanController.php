@@ -213,88 +213,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	  	Application_Model_Decorator::removeAllDecorator($frms);
 	  	$this->view->frm_search = $frms;
 	  	$this->view->outstandloan = $rs;
-	  	
-  }
- 
-function rptLoanTotalCollectAction(){
-	$db  = new Report_Model_DbTable_DbLandreport();	
-	$key = new Application_Model_DbTable_DbKeycode();
-	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-	if($this->getRequest()->isPost()){
-		$search = $this->getRequest()->getPost();
-		if(isset($search['btn_search'])){
-			$this->view->loantotalcollect_list=$db->getALLLoanTotalcollect($search);
-		}
-	}else {
-	$search = array(
-			'adv_search' => '',
-			'status_search' => -1,
-			'status' => -1,
-			'branch_id' => "",
-			'client_name' => "",
-			'co_id' => "",
-			'start_date' =>date('Y-m-d'),
-			'end_date' => date('Y-m-d'),
-	);
-	$this->view->loantotalcollect_list =$rs=$db->getALLLoanTotalcollect($search);
-	}
-	$this->view->list_end_date=$search;
-	$frm = new Loan_Form_FrmSearchLoan();
-	$frm = $frm->AdvanceSearch();
-	Application_Model_Decorator::removeAllDecorator($frm);
-	$this->view->frm_search = $frm;
-}
-function rptRescheduleLoanAction(){
-	$db  = new Report_Model_DbTable_DbLandreport();
-	$key = new Application_Model_DbTable_DbKeycode();
-	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-	if($this->getRequest()->isPost()){
-		$search = $this->getRequest()->getPost();
-	}
-	else{
-		$search = array(
-				'branch_id'=>'',
-				'client_name'=>'',
-				'pay_every'=>-1,
-				'start_date'=> date('Y-m-d'),
-				'end_date'=>date('Y-m-d'));
-	}
-	$this->view->loanrelease_list=$db->getRescheduleLoan($search);
-	$this->view->list_end_date=$search;
-	 
-	$frm = new Loan_Form_FrmSearchLoan();
-	$frm = $frm->AdvanceSearch();
-	Application_Model_Decorator::removeAllDecorator($frm);
-	$this->view->frm_search = $frm;
-}
-
- function rptLoanIncomeAction(){
- 	$db  = new Report_Model_DbTable_DbLandreport();
- 	 
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- 	if($this->getRequest()->isPost()){
- 		$search = $this->getRequest()->getPost();
- 	}else{
- 	$search = array(
-	 	'adv_search' => '',
-	 	'client_name' => -1,
-	 	'start_date'=> date('Y-m-d'),
-	 	'end_date'=>date('Y-m-d'),
-		'co_id'		=> -1,
-		'paymnet_type'	=> -1,
- 		'status'=>"",);
-			
- 	}
- 	
- 	$this->view->LoanFee_list =$db->getALLLFee($search);//sale
- 	$this->view->LoanCollectionco_list =$db->getALLLoanIcome($search);//collect money
- 	$this->view->list_end_date=$search;
- 	$frm = new Loan_Form_FrmSearchGroupPayment();
- 	$fm = $frm->AdvanceSearch();
- 	Application_Model_Decorator::removeAllDecorator($fm);
- 	$this->view->frm_search = $fm;
- }
+  } 
  function rptLoanPayoffAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
  	$key = new Application_Model_DbTable_DbKeycode();
@@ -377,30 +296,6 @@ function rptRescheduleLoanAction(){
  	
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- }
- function rptLoanTrasferAction(){//release all loan
- 	$db  = new Report_Model_DbTable_DbLandreport();
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- 	if($this->getRequest()->isPost()){
- 		$search = $this->getRequest()->getPost();
- 	}
- 	else{
- 		$search = array(
- 				'branch_id'=>'',
- 				'client_name'=>'',
- 				'pay_every'=>-1,
- 				'co_id'=>'',
- 				'start_date'=> date('Y-m-d'),
- 				'end_date'=>date('Y-m-d'));
- 	}
- 	$this->view->loantrasfer=$db->getAllTransferoan($search);
- 	$this->view->list_end_date=$search;
- 	 
- 	$frm = new Loan_Form_FrmSearchLoan();
- 	$frm = $frm->AdvanceSearch();
- 	Application_Model_Decorator::removeAllDecorator($frm);
- 	$this->view->frm_search = $frm;
  }
  function rptLoanClientcoAction()
  {
