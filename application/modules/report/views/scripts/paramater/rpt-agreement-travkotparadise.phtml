@@ -217,24 +217,24 @@ body {
 										    	<span style="display: block; width: 100%;">
 										    	១/ឡូត៍លេខ<span class="value_label" style="text-align:center; min-width:70px;"><?php echo $this->agreement['property_title'];?></span>មានទទឹង<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_width']);?></span>ម៉ែត្រ បណ្តោយ<span class="value_label" style="text-align:center; min-width:40px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_height']);?></span>ម៉ែត្រ សរុបផ្ទៃក្រឡាទំហំ<span class="value_label" style="text-align:center; min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['land_size']);?></span>ម៉ែត្រក្រឡា
 										    	<br />
-										    	តម្លៃ USD <strong><?php echo number_format($this->agreement['land_price'],2);?> (<label id="lable_pricekhmer_land" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក) </strong>។
+										    	តម្លៃ USD <strong><?php echo number_format($this->agreement['price_before'],2);?> (<label id="lable_pricekhmer_land" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក) </strong>។
 										    	</span>
 												
 										    	<script>
-													a_sold ='<?php echo ($this->agreement['land_price']) ?>';
+													a_sold ='<?php echo ($this->agreement['price_before']) ?>';
 													money_khmersold=read_money_in_khmer(a_sold);
 													
-													decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['land_price'],2),-2);?>';
+													decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['price_before'],2),-2);?>';
 													str_centsold = 'សេន';
 													if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
-													last_number_sold='<?php echo substr(number_format($this->agreement['land_price'],2),-2);?>';
+													last_number_sold='<?php echo substr(number_format($this->agreement['price_before'],2),-2);?>';
 													
 													if(last_number_sold<=0){last_number_sold='';}
 													money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
 													dojo.byId('lable_pricekhmer_land').innerHTML=money_khmersold+" ";
 											</script>
 										    	<?php }?>
-												<?php if ($this->agreement['price_sold']<$this->agreement['land_price']){
+												<?php if ($this->agreement['price_sold']<$this->agreement['price_before']){
 													
 													$discountamount = $this->agreement['land_price']-$this->agreement['price_sold'];
 													?>
