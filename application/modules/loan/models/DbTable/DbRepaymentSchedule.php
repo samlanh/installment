@@ -603,7 +603,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	if(!empty($rows)){
     		foreach ($rows as $key =>$row){
     			$statuscomplete=0;
-    			$paid_amount = $paid_amount-$row['principal_permonthafter'];
+    			$paid_amount = round($paid_amount-$row['principal_permonthafter'],2);
     			if($paid_amount>=0){
     				$remain_principal=0;
     				$statuscomplete=1;
@@ -622,8 +622,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     					'total_interest_after'=>$after_interest,
     					"total_payment_after"=>$remain_principal+$after_interest,
     					'is_completed'=>$statuscomplete,
-    					'received_userid'=>$this->getUserId(),
-    					'received_date'=>$data['paid_date'],
+    					'received_userid'=>($statuscomplete==1)?$this->getUserId():'',
+    					'received_date'=>($statuscomplete==1)?$data['paid_date']:'',
     			);
     			$where = " id = ".$row['id'];
     			$this->_name="ln_saleschedule";

@@ -291,6 +291,13 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$sql="SELECT recieve_amount FROM `ln_client_receipt_money` WHERE id=$id AND recieve_amount>0";
     	return $db->fetchOne($sql);
     }
+    function getSalebyId($sale_id){
+    	$db= $this->getAdapter();
+    	$sql="SELECT s.*,
+				(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=$sale_id AND status=1 AND is_completed=0 LIMIT 1) as intallment
+    		  FROM ln_sale AS s WHERE s.id = $sale_id LIMIT 1 "; 
+    	return $db->fetchRow($sql);
+    }
 	public function addILPayment($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
@@ -359,7 +366,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		
 			$this->_name = "ln_client_receipt_money";
     		$client_pay = $this->insert($arr_client_pay);
-    		
     		
     		//$date_collect = $data["collect_date"];
     		$paid_principalall = 0;// ត្រូវទាំងអស់ព្រោះការពារបង់២ record ទី៣ វាបូកបញ្ចូល Paid អោយដែ
@@ -528,6 +534,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			$extrapayment_after=$extrapayment;
     			$order=0;
     			if($data['schedule_opt']==4){$order=1;}//ករណីរំលស់
+    			
     			$rs = $this->getSaleScheduleById($loan_number,$order);
     			$principal = 0;
     			$last_record=0;
@@ -537,8 +544,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     				$sql="SELECT (no_installment) FROM ln_saleschedule WHERE is_completed=1 AND status=1 AND sale_id=".$loan_number." ORDER BY no_installment DESC LIMIT 1 ";
     				$start_id = $db->fetchOne($sql);
     				
-    				$this->_name="ln_saleschedule";
-    				$datapayment = array(
+    					$this->_name="ln_saleschedule";
+    					$datapayment = array(
     						'branch_id'=>$data['branch_id'],
     						'crm_id'=>$client_pay,//ទុកសម្រាប់លុប ពេលគេលុប​បង្កាន់ដៃបង់ប្រាក់
     						'sale_id'=>$data['loan_number'],//good
@@ -562,11 +569,13 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     						'status'=>0,
     						'collect_by'=>2,
     						'received_userid'=>$user_id
-    						);
+    					);
     				$this->insert($datapayment);
     				
     				$times = count($rs);
-    				foreach ($rs as $index => $row){//ដក Begining after ដើម្បីអោយបង្កាន់ដៃបង់លើកក្រោយចេញត្រូវនឹងប្រាក់ដែលធ្លាប់បានបង់
+    				$rs_sale = $this->getSalebyId($loan_number);//get sale by id
+    				
+    				foreach ($rs as $index => $row){	//ដក Begining after ដើម្បីអោយបង្កាន់ដៃបង់លើកក្រោយចេញត្រូវនឹងប្រាក់ដែលធ្លាប់បានបង់
     					$arr = array(
     							'crm_id'				=>	$client_pay,
     							'land_id'			    =>	$data['property_id'],//ok
@@ -597,24 +606,36 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     					$db->insert("ln_client_receipt_money_detail", $arr);
     					
     					if($data['schedule_opt']==4){//សម្រាប់រំលស់
-	    					if($index==0){
+	    					if($index==0){						
 	    						$begining_balance = $row['begining_balance_after']-$extrapayment;
-								$interst_rate = ($data['interest_rate']/12/100);
+	    						$remain_afterextrapayment = $begining_balance;//ប្រាក់ដើមនៅសល់ពីបង់រំលស់ដើម
+	    						
+	    						$interst_rate = ($data['interest_rate']/12/100);
 								if($interst_rate!=0){
 			    					$top = pow(1+$interst_rate,$times);
 			    					$bottom = pow(1+$interst_rate,$times)-1;
 			    					$fixed_payment = ceil($begining_balance*$interst_rate*$top/$bottom);//always round up
 	    					   }else{
-	    					   	$fixed_payment =$row['principal_permonthafter'];
+	    					   		$fixed_payment =$row['principal_permonthafter'];
 	    					   }
 	    					}else{
 	    						$begining_balance = $ending_balance;
 	    					}
- 	    					
-		    				$total_interestafter=$begining_balance*$interst_rate;
+	    					
+		    				$total_interestafter = $begining_balance*$interst_rate;
 		    				$total_interestafter = $this->round_up_currency(2, $total_interestafter);
-		    				$principal = $fixed_payment-$total_interestafter;
+		    				if($rs_sale['install_type']==2){//រំលស់ថយ ដើមថេរ
+		    					$principal = $remain_afterextrapayment/$rs_sale['intallment'];
+		    					$principal = $this->round_up_currency(2, $principal);
+		    					if($index+1==$rs_sale['intallment']){//for end of record only
+		    						$principal = $ending_balance;
+		    					}
+		    					$fixed_payment = $principal + $total_interestafter;
+		    				}else{
+		    					$principal = $fixed_payment-$total_interestafter;
+		    				}
 		    				$ending_balance = $begining_balance-$principal;
+		    				
     					}else{//ក្រៅពីរំលស់ // ត្រូវដក បងបន្ថែមតែម្តងទេ សម្រាប់ប្រាក់ដើមរាល់ខែ
     						$total_interestafter=0;
     						$begining_balance = $row['begining_balance_after']-$extrapayment;
@@ -695,7 +716,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		return $this->round_up($value, $places);
     	}
     	else{
-    		return round($value,2);
+    		return round($value,0);
     	}
     }
     function addExtrapayment($data){

@@ -336,15 +336,18 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	}
   	$this->view->list_end_date=$search;
   	$db  = new Report_Model_DbTable_DbParamater();
-  	$this->view->income = $db->getIncomeCategory($search);
+  
   	$this->view->expense = $db->getExpenseCategory($search);
-  	
   	$this->view->expense_comission = $db->getAllComissionExpense($search);
-  	$this->view->saleicome = $db->geIncomeFromSale($search,null);
+  	
+  	$this->view->saleicome = $db->geIncomeFromSale($search,null);  	
   	
   	$this->view->money_deposit = $db->geIncomeFromSale($search,1);
   	$this->view->money_schedule = $db->geIncomeFromSale($search,0);
   	$this->view->money_install = $db->geIncomeFromSale($search,3);
+  	$this->view->income = $db->getIncomeCategory($search);
+  	$this->view->income_changehouse = $db->getIncomeChangehouse($search);
+  	print_r($db->getIncomeChangehouse);
   	
   	$db = new Application_Model_DbTable_DbGlobal();
   	$street = $db->getAllStreetForOpt();

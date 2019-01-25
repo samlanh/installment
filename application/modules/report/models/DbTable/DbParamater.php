@@ -542,6 +542,8 @@ function getAllBranch($search=null){
 				   s.agreement_date,
 				   s.note_agreement,
 				   s.is_verify,
+				   (SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE id = s.user_id LIMIT 1 ) AS user_name,
+				   (SELECT co_khname FROM `ln_staff` WHERE co_id=s.staff_id LIMIT 1) AS staff_name,
 				   (SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.payment_id limit 1) AS payment_type,
 				  `p`.`project_name`,
 				   `p`.`logo` AS project_logo,
@@ -1376,6 +1378,22 @@ function getAllBranch($search=null){
     	}
     	return $db->fetchAll($sql.$where.$order);
     }
+    function getIncomeChangehouse($search){
+    	$db = $this->getAdapter();
+    	$sql="SELECT ic.`category_id`,    	
+    	SUM(ic.`total_amount`) AS total_amount,
+    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) AS category_name,
+    	ic.`date` FROM `ln_otherincome` AS ic WHERE 1 ";
+    	$order =" GROUP BY ic.`category_id` ORDER BY ic.`category_id` ";
+    	$where="";
+    	$from_date =(empty($search['start_date']))? '1': " ic.`date` >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " ic.`date` <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	if($search['branch_id']>0){
+    		$where.=" AND branch_id=".$search['branch_id'];
+    	}
+    	return $db->fetchAll($sql.$where.$order);
+    }
     function getExpenseCategory($search){
     	$db = $this->getAdapter();
     	$sql="SELECT ex.`category_id`,
@@ -1722,6 +1740,19 @@ function getAllBranch($search=null){
 		if (!empty($branch)){
 			$sql.=" AND ex.branch_id=".$branch;
 		}
-		return $db->fetchOne($sql);
+		$total_expense = $db->fetchOne($sql);
+		if(empty($total_expense)){$total_expense=0;}
+		
+		
+		$sql="SELECT SUM(total_amount) FROM `ln_comission` WHERE status=1 
+			AND DATE_FORMAT(for_date,'%Y-%m') ='$date'";
+		if (!empty($branch)){
+			$sql.=" AND branch_id=".$branch;
+		}
+		$total_commission = $db->fetchOne($sql);
+		if(empty($total_commission)){
+			$total_commission=0;
+		}
+		return $total_expense+$total_commission;
 	}
 }

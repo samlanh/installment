@@ -19,28 +19,16 @@ $dbparam  = new Report_Model_DbTable_DbParamater();
 dojo.require("dijit.form.DateTextBox");
 </script>
 <meta charset="utf-8">
-<title><?php echo $tr->translate("REPORT_EXPENSE");?></title>
+<title><?php echo $tr->translate("REPORT_BUGET_PLAN");?></title>
 <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
 	<form name="frm_rptstaff" action="" dojoType="dijit.form.Form" method="post">
 		<div class="form-group">
-        	<div class="col-md-3 col-sm-3 col-xs-12">
+        	<div class="col-md-2 col-sm-2 col-xs-12">
         		<?php echo $frm->getElement("adv_search");?>
         	</div>
-        	<div class="col-md-3 col-sm-3 col-xs-12">
+        	<div class="col-md-2 col-sm-2 col-xs-12">
         		<?php echo $frm->getElement('branch_id');?>
         	</div>
-        	<div class="col-md-2 col-sm-2 col-xs-12">
-        		<?php echo $frm->getElement('supplier_id');?>
-        	</div>
-        	<div class="col-md-2 col-sm-2 col-xs-12">
-        		<?php echo $frm->getElement('category_id_expense');?>
-        	</div>
-        	<div class="col-md-2 col-sm-2 col-xs-12">
-        		<?php echo $frm->getElement('payment_type');?>
-        	</div>
-        	<div class="col-md-2 col-sm-2 col-xs-12"></div>
-        </div>
-        <div class="form-group">
         	<div class="col-md-3 col-sm-3 col-xs-12">
         		<?php echo $frm->getElement('start_date');?>
         	</div>
@@ -48,16 +36,7 @@ dojo.require("dijit.form.DateTextBox");
         		<?php echo $frm->getElement('end_date');?>
         	</div>
         	<div class="col-md-2 col-sm-2 col-xs-12">
-				<?php echo $frm->getElement('ordering');?>
-        	</div>
-        	<div class="col-md-2 col-sm-2 col-xs-12">
         		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
-        	</div>
-        	<div class="col-md-2 col-sm-2 col-xs-12">
-        	</div>
-        	<div class="col-md-2 col-sm-2 col-xs-12">
-        	</div>
-        	<div class="col-md-2 col-sm-2 col-xs-12">
         	</div>
         </div>        
 	 </form> 
@@ -116,7 +95,7 @@ dojo.require("dijit.form.DateTextBox");
 			                <td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
 			                <td width="60%" valign="top">
 			                <h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $branch_title;?></label></h2>
-			                <h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("REPORT_EXPENSE");?></label></h2>
+			                <h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("REPORT_BUGET_PLAN");?></label></h2>
 			                <p style="text-align:center; font-size:13px; font-family:'Khmer MEF2';margin-top: -15px;"><?php if(!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
 			                </td>
 		                	<td width="20%"></td>
@@ -142,10 +121,14 @@ dojo.require("dijit.form.DateTextBox");
 								    <td class="verites-col">&nbsp;<span class="verites"><?php echo date("M-Y",strtotime(" $startmonth+$i month"));?></span>&nbsp;</td>
 								   <?php }
 								    }?>
+								    <td><?php echo $tr->translate("TOTAL_EXPENSE");?></td>
 								</tr>
 							</thead>
 							<tbody>
-								<?php if (!empty($this->project)) foreach ($this->project as $key=> $pro){ ?>
+								<?php 
+									$total_expense= 0;
+									$total_allexpense = 0;
+								if (!empty($this->project)) foreach ($this->project as $key=> $pro){ ?>
 								<tr>
 									<td align="center">&nbsp;<?php echo $key+1?>&nbsp;</td>
 									<td style="white-space: nowrap;">&nbsp;<?php echo $pro['project_name']?>&nbsp;</td>
@@ -157,13 +140,21 @@ dojo.require("dijit.form.DateTextBox");
 								    <td align="center" style="white-space: nowrap;">&nbsp;
 								    	<?php 
 								    	$total = $dbparam->getExpensByMonth($pro['br_id'], date("Y-m",strtotime(" $startmonth+$i month")));
-								     if ($total>0){	echo "$ ".number_format($total,2);}else { echo "-";}?>&nbsp;</td>
+								     	if ($total>0){	echo "$ ".number_format($total,2);}else { echo "-";};
+								     	$total_expense = $total_expense+$total;
+								     	$total_allexpense = $total_allexpense+$total;
+								     	?>&nbsp;
+								     </td>
 								   <?php }
 								    }?>
+								    <td>&nbsp;<?php echo number_format($total_expense,2);
+								    $total_expense=0;
+								    ?></td>
 								</tr>
 								<?php }?>
 							</tbody>
 					    </table>
+					    <div style="text-align: right;"><?php echo $tr->translate("TOTAL_EXPENSE");?> <?php echo number_format($total_allexpense,2);?></div>
 	            	</td>
 	            </tr>
 	            </table>

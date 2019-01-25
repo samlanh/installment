@@ -193,7 +193,10 @@ public function getAllOutstadingLoan($search=null){
       	$where="";
       	$to_date = (empty($search['end_date']))? '1': " date_release <= '".$search['end_date']." 23:59:59'";
       	$where.= "  AND ".$to_date;
-      	$sql="SELECT * FROM v_loanoutstanding WHERE 1 ";//IF BAD LOAN STILL GET IT
+      	$sql="SELECT *,
+			(SELECT SUM(s.total_interest_after) FROM `ln_saleschedule` AS s 
+				WHERE s.total_interest_after> 0 AND  s.is_completed=0 AND s.sale_id = v_loanoutstanding.id LIMIT 1 ) as balance_interest
+      	FROM v_loanoutstanding WHERE 1 ";//IF BAD LOAN STILL GET IT
       	
       	if($search['client_name']>0){
            		$where.=" AND client_id = ".$search['client_name'];

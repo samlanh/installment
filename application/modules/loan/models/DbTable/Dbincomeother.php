@@ -81,119 +81,111 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 				}
  	 	}
  function updateIncome($data,$id){
- 	$_db= $this->getAdapter();
- 	$_db->beginTransaction();
- 	//print_r($data); exit();
-	 	try{
-			$arr = array(
-					'sale_id'		=>$data['sale_client'],
-					'house_id'		=>$data['house_id'],
-					'branch_id'		=>$data['branch_id'],
-					'client_id'		=>$data['customer'],
-					'total_amount'	=>$data['total_amount'],
-					'payment_method'=>$data['payment_method'],
-					'invoice'		=>$data['invoice'],
-					'category_id'	=>$data['income_category'],
-					'cheque'		=>$data['cheque'],
-					'description'	=>$data['Description'],
-					'date'			=>$data['Date'],
- 					'status'		=>$data['Stutas'],
-					'user_id'		=>$this->getUserId(),
-				);
-				$where=" id = ".$id;
-				$this->update($arr, $where);
-				
-				$this->_name='ln_otherincome_detail';
-				$where = " income_id = ".$id;
-				$this->delete($where);
-				
-				
-				$ids = explode(',', $data['identity']);
-				//print_r($ids);exit();
-				foreach ($ids as $j){ 
+		 	$_db = $this->getAdapter();
+		 	$_db->beginTransaction();
+	 			try{
 					$arr = array(
-							'income_id'		=>$id,
-							'description'	=>$data['description_'.$j],
-							'work_note'		=>$data['remark_'.$j],
-							'price'			=>$data['price_'.$j],
-							'qty'			=>$data['qty_'.$j],
-							'item_type'		=>1,
-							'total'			=>$data['total_'.$j],);
-					$this->insert($arr);
-				}
+							'sale_id'		=>$data['sale_client'],
+							'house_id'		=>$data['house_id'],
+							'branch_id'		=>$data['branch_id'],
+							'client_id'		=>$data['customer'],
+							'total_amount'	=>$data['total_amount'],
+							'payment_method'=>$data['payment_method'],
+							'invoice'		=>$data['invoice'],
+							'category_id'	=>$data['income_category'],
+							'cheque'		=>$data['cheque'],
+							'description'	=>$data['Description'],
+							'date'			=>$data['Date'],
+		 					'status'		=>$data['Stutas'],
+							'user_id'		=>$this->getUserId(),
+						);
+						$where=" id = ".$id;
+						$this->update($arr, $where);
+						
+						$this->_name='ln_otherincome_detail';
+						$where = " income_id = ".$id;
+						$this->delete($where);
+						
+					$ids = explode(',', $data['identity']);
+						foreach ($ids as $j){ 
+							$arr = array(
+									'income_id'		=>$id,
+									'description'	=>$data['description_'.$j],
+									'work_note'		=>$data['remark_'.$j],
+									'price'			=>$data['price_'.$j],
+									'qty'			=>$data['qty_'.$j],
+									'item_type'		=>1,
+									'total'			=>$data['total_'.$j],);
+							$this->insert($arr);
+						}
 				
-				
-				
-				$part= PUBLIC_PATH.'/images/document/';
-				if (!file_exists($part)) {
-					mkdir($part, 0777, true);
-				}
-				if (!empty($data['identity1'])){
-					$identity = $data['identity1'];
-					$ids = explode(',', $identity);
-					$this->_name = "ln_otherincome_detail";
-					$image_name="";
-					$photo="";
-					foreach ($ids as $i){
-						if (!empty($data['detailid'.$i])){
-							$name = $_FILES['attachment'.$i]['name'];
-							if (!empty($name)){
-								$ss = 	explode(".", $name);
-								$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
-								$tmp = $_FILES['attachment'.$i]['tmp_name'];
-								if(move_uploaded_file($tmp, $part.$image_name)){
-									$photo = $image_name;
-									$arr = array(
-											'income_id'=>$id,
-											'document_name'=>$photo,
-											'item_type'=>2,
-									);
-									$this->_name = "ln_otherincome_detail";
-									$where=" id=".$data['detailid'.$i];
-									$this->update($arr, $where);
+						$part= PUBLIC_PATH.'/images/document/';
+						if (!file_exists($part)) {
+							mkdir($part, 0777, true);
+						}
+						if (!empty($data['identity1'])){
+							$identity = $data['identity1'];
+							$ids = explode(',', $identity);
+							$this->_name = "ln_otherincome_detail";
+							$image_name="";
+							$photo="";
+							foreach ($ids as $i){
+								if (!empty($data['detailid'.$i])){
+									$name = $_FILES['attachment'.$i]['name'];
+									if (!empty($name)){
+										$ss = 	explode(".", $name);
+										$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
+										$tmp = $_FILES['attachment'.$i]['tmp_name'];
+										if(move_uploaded_file($tmp, $part.$image_name)){
+											$photo = $image_name;
+											$arr = array(
+													'income_id'=>$id,
+													'document_name'=>$photo,
+													'item_type'=>2,
+											);
+											$this->_name = "ln_otherincome_detail";
+											$where=" id=".$data['detailid'.$i];
+											$this->update($arr, $where);
+										}
+										else{
+											$string = "Image Upload failed";
+										}
+									}else{
+										$photo = $data['old_file'.$i];
+										$arr = array(
+												'income_id'=>$id,
+												'document_name'=>$photo,
+												'item_type'=>2,
+										);
+										$this->insert($arr);
+									}
+								}else{
+									$name = $_FILES['attachment'.$i]['name'];
+									if (!empty($name)){
+										$ss = 	explode(".", $name);
+										$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
+										$tmp = $_FILES['attachment'.$i]['tmp_name'];
+										if(move_uploaded_file($tmp, $part.$image_name)){
+											$photo = $image_name;
+											$arr = array(
+													'income_id'=>$id,
+													'document_name'=>$photo,
+													'item_type'=>2,
+											);
+											$this->_name = "ln_otherincome_detail";
+											$this->insert($arr);
+										}
+										else{
+											$string = "Image Upload failed";
+										}
+									}
 								}
-								else{
-									$string = "Image Upload failed";
-								}
-							}else{
-								$photo = $data['old_file'.$i];
-								$arr = array(
-										'income_id'=>$id,
-										'document_name'=>$photo,
-										'item_type'=>2,
-								);
-								$this->insert($arr);
-							}
-						}else{
-							$name = $_FILES['attachment'.$i]['name'];
-							if (!empty($name)){
-								$ss = 	explode(".", $name);
-								$image_name = "document_".date("Y").date("m").date("d").time().$i.".".end($ss);
-								$tmp = $_FILES['attachment'.$i]['tmp_name'];
-								if(move_uploaded_file($tmp, $part.$image_name)){
-									$photo = $image_name;
-									$arr = array(
-											'income_id'=>$id,
-											'document_name'=>$photo,
-											'item_type'=>2,
-									);
-									$this->_name = "ln_otherincome_detail";
-									$this->insert($arr);
-								}
-								else
-									$string = "Image Upload failed";
-								//     				}
 							}
 						}
-					}
-				}else{
-					$this->_name = "ln_otherincome_detail";
-					$where1 =" income_id=".$id;
-					$this->delete($where1);
-				}
-				$_db->commit();
+					$_db->commit();
 				}catch(Exception $e){
-					echo $e->getMessage();exit();
+					$_db->rollBack();
+					Application_Form_FrmMessage::message("INSERT_FAIL");
 					Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 				}
 	}

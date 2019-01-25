@@ -41,11 +41,7 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		echo $e->getMessage();
     	}
-//     	$frm = new Loan_Form_Frmexpense();
-//     	Application_Model_Decorator::removeAllDecorator($frm);
-//     	$this->view->frm_search = $frm;
     	
     	$frm = new Loan_Form_FrmSearchLoan();
     	$frm = $frm->AdvanceSearch();
@@ -72,7 +68,6 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-				echo $e->getMessage();
 			}
 		}
 		$db = new Loan_Model_DbTable_DbIncome();
@@ -108,7 +103,8 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
 				$db->updateIncome($data,$id);				
 				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', "/loan/incomeother");		
 			} catch (Exception $e) {
-				$this->view->msg = 'UPDATE_FAIL';
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
 		
@@ -141,7 +137,6 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     	$db= new Loan_Model_DbTable_DbIncomeother();
 		$this->view->rows = $db->getincomeDetailbyid($id);
 		$this->view->rs = $db->getincomebyid($id);
-		//print_r($this->view->rs); exit();
     }
     public function receiptAction(){
     	$id=$this->getRequest()->getParam("id");

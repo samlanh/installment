@@ -151,7 +151,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
-		
 	}	
 	function editAction(){
 		$id = $this->getRequest()->getParam("id");

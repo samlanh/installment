@@ -247,16 +247,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	
 	function getAllCustomer($branch_id){
 		$db = $this->getAdapter();
-		$sql="SELECT client_id as id,name_kh as name FROM ln_client WHERE status = 1 and branch_id = $branch_id";
+		$sql="SELECT client_id as id,name_kh as name FROM ln_client WHERE status = 1 ";
 		return $db->fetchAll($sql);
-	}
-	
-	
+	}	
 }
-
-
-
-
-
-
-
