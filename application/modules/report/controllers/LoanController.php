@@ -501,6 +501,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	
   		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
+		$this->view->officailreceipt = $frmpopup->getOfficailReceipt();
   }
   
 //   function rptUpdatepaymentAction(){

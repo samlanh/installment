@@ -670,4 +670,180 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			</table>';
 		return $str;
 	}
+	function getOfficailReceipt(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$key = new Application_Model_DbTable_DbKeycode();
+		$data=$key->getKeyCodeMiniInv(TRUE);
+		
+		$footer = $this->getFooterReceipt();
+		
+		$baseurl= Zend_Controller_Front::getInstance()->getBaseUrl();
+		
+		$session_user=new Zend_Session_Namespace('authinstall');
+		$last_name=$session_user->last_name;
+		$username = $session_user->first_name;
+		
+		$str='
+		<div >
+			<style>
+				.label{ font-size: 22px;}
+				.value{ font:14px '."Khmer OS Battambang".';border: 1px solid #000; height: 26px; padding: 0 2px;width: 100%;margin-right:5px; display: block;
+						line-height: 25px;
+					    text-align: center;
+				}
+				.print tr td{
+					padding:1px 2px; 
+				}
+			   .khmer{font:14px '."Khmer OS Battambang".';}
+			   .one{white-space:nowrap;}
+			   .h{ margin-top: -10px;}
+			   .noted{
+				    white-space: pre-wrap;     
+					word-wrap: break-word;      
+					word-break: break-all;
+					white-space: pre;
+					font:12px '."Khmer OS Battambang".';
+					border: 1px solid #000;
+                    line-height:20px;font-weight: normal !important;
+				}
+			</style>	
+			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:14px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
+				<tr>
+					<td colspan="6">
+						<table width="100%" style="font-family:'."Khmer MEF2".';white-space:nowrap;">
+							<tr>
+								<td id="projectlogo" width="35%">
+									<img style="height:75px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
+								</td>			
+								<td width="30%" style="font:16px '."Kh Muol".';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'."Khmer MEF2".';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
+									<div style="line-height:10px;"><strong style="font-size: 16px;">OFFICIAL RECEIPT</strong></div>
+								</td>
+								<td width="35%"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<table style="width:100%;white-space: nowrap;font-size:16px; margin-top: -38px;font-family: '."Khmer OS Battambang".';" class="print" cellspacing="3px"  cellpadding="0" >
+				<tr style="white-space: nowrap;font-size: 14px;margin-top: -15px;" >
+				    <td colspan="5"></td>
+					<td align="right"><strong>
+						<div style=" display: none;"></div>
+						<label id="lb_receipt" ></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+				    <td style="display: none;">លេខកូដលក់</td>
+				    <td style="display: none;"><strong><label class="value"></label></strong></td>
+				    <td>គម្រោង</td>
+				    <td><strong><strong><label id="lbl_project" class="value">3</label></strong></td>
+					<td>&nbsp;&nbsp;ប្រាក់ដើមត្រូវបង់</td>
+                    <td><strong><label id="lb_amount" class="value"></label></strong></td>
+					<td>&nbsp;បង់លើកទី</td>
+					<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+				    <td>ឈ្មោះ​អតិថិជន </td>
+				    <td><strong><label id="lb_customer" class="value"></label></strong></td>
+					<td>&nbsp;&nbsp; ប្រាក់ការ</td>
+                    <td><strong><label id="lb_interest" class="value">0.00</label></strong></td>
+					<td>&nbsp; ប្រាក់ពិន័យ</td>
+					<td><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
+                </tr>
+				<tr style="white-space: nowrap;">
+					<td>'.$tr->translate("PROPERTY_CODE").'</td>
+                    <td><strong><label id="lb_hourseno" class="value"></label></strong></td>
+				   <td>&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
+					<td colspan="3"><strong><label id="lb_extrapayment" class="value">0.00</label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td width="10%">'.$tr->translate("HOUSE_PRICE").'</td>
+				    <td width="40%"><strong><label id="lb_saleprice" class="value"></label></strong></td>
+					<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
+                    <td colspan="3"><strong><label id="lbl_totalpayment" class="value"></label></strong></td>
+				</tr>
+				<tr>
+					<td>ប្រាក់បានបង់សរុប</td>
+					<td valign="top">
+						<table width="100%" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"></label></td>
+								<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
+								<td width="33.5%"><label style="white-space: nowrap;margin-right: -4px;" class="value" id="lbl_balance"></label></td>
+							</tr>
+						</table>
+					</td>
+					<td>&nbsp;&nbsp;ប្រាក់ទទួលបាន</td>
+				    <td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;" id="lbl_total_receive"></label></strong></td>
+				</tr>
+				<tr style="">
+					<td rowspan="2">សម្គាល់</td>
+				    <td rowspan="2" class="noted" valign="top"><label id="lb_noted"></label></td>
+					<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
+				    <td><strong><label id="lb_buydate1" class="value"></label></strong></td>
+					<td>&nbsp;ថ្ងៃទទួល</td>
+					<td><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td>&nbsp;បង់ជា</td>
+					<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
+					<td>&nbsp;&nbsp;លេខ</td>
+					<td><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td colspan="6" valign="top">
+						<table width="100%" border="0" style="font-size:14px;line-height: 18px;">
+							<tr>
+								<td width="30%">&nbsp;
+									'.$data['account_sign'].'
+								</td>
+								<td align="center" width="40%">
+									'.$data['customer_sign'].'
+								</td>
+								<td align="center" width="30%">
+									'.$data['teller_sign'].'
+								</td>
+							</tr>
+							<tr height="75px">
+								<td colspan="3">&nbsp;
+								</td>
+							</tr>
+							<tr>
+								<td width="30%">&nbsp;</td>
+								<td align="center" width="40%">
+									<label id="lbl_customer" ></label>
+								</td>
+								<td align="center" width="30%">
+								<label id="lbl_usersale" >'.$last_name." ".$username.'</label>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr style="font-size: 11px;">
+						<td colspan="6" valign="top">
+							<table width="100%" border="0" style="margin-top:-5px">
+								<tr>
+									<td width="10%"><span style="text-decoration:underline;font-size: 12px; margin-top: -5px;">សម្គាល់ ៖</span></td>
+									<td colspan="5">
+										<p style="font-size: 11px;margin:-5px 0px -5px 0px !important;padding:0 !important; margin">'.$data['comment'].'</p>
+										<span style="white-space: pre-line;font-size: 11px;margin-top: -5px;">'.$data['comment1'].'</span>
+									</td>
+								</tr>
+							</table>
+					</td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 10px;">
+					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)"></td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 10px;">
+					<td colspan="6" >
+						'.$footer.'
+					</td>
+				</tr>
+			</table>
+		</div>
+		';
+		
+		return $str;
+	}
 }

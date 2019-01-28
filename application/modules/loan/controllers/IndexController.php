@@ -84,6 +84,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
+		$this->view->officailreceipt = $frmpopup->getOfficailReceipt();
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$co_name = $db->getAllCoNameOnly();
