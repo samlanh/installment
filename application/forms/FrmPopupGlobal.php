@@ -687,9 +687,9 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		<div >
 			<style>
 				.label{ font-size: 22px;}
-				.value{ font:14px '."Khmer OS Battambang".';border: 1px solid #000; height: 26px; padding: 0 2px;width: 100%;margin-right:5px; display: block;
-						line-height: 25px;
-					    text-align: center;
+				.value{font:16px '."Khmer OS Battambang".';border: 1px solid #000; min-height: 29px; padding: 0 2px;width: 100%;margin-right:2px; display: block;
+						line-height: 29px;
+					    text-align: left;
 				}
 				.print tr td{
 					padding:1px 2px; 
@@ -697,17 +697,16 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			   .khmer{font:14px '."Khmer OS Battambang".';}
 			   .one{white-space:nowrap;}
 			   .h{ margin-top: -10px;}
-			   .noted{
-				    white-space: pre-wrap;     
-					word-wrap: break-word;      
-					word-break: break-all;
-					white-space: pre;
-					font:12px '."Khmer OS Battambang".';
-					border: 1px solid #000;
-                    line-height:20px;font-weight: normal !important;
+			   .noted{white-space: pre-wrap;     
+						word-wrap: break-word;      
+						word-break: break-all;
+						white-space: pre;
+					    font:12px '."Khmer OS Battambang".';
+					    border: 1px solid #000;
+                        line-height:20px;font-weight: normal !important;
 				}
 			</style>	
-			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:14px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
+			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
 						<table width="100%" style="font-family:'."Khmer MEF2".';white-space:nowrap;">
