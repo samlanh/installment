@@ -11,7 +11,6 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		$title->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				//'required'=>true
 				));
 		
 		$for_date = new Zend_Dojo_Form_Element_FilteringSelect('for_date');
@@ -44,6 +43,8 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'getInvoiceNo("");getallCustomer();'
 		));
 		

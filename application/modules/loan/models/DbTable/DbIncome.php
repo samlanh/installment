@@ -23,7 +23,7 @@ class Loan_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			'cheque'		=>$data['cheque'],
 			'description'	=>$data['Description'],
 			'date'			=>$data['Date'],
-			'status'		=>$data['Stutas'],
+			'status'		=>1,
 			'user_id'		=>$this->getUserId(),
 			'create_date'	=>date('Y-m-d'),
 			'is_beginning'=>$data['is_beginning'],

@@ -66,7 +66,6 @@ class Loan_IncomeController extends Zend_Controller_Action
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-				echo $e->getMessage();
 			}
 		}
 		$db = new Loan_Model_DbTable_DbIncome();
@@ -97,7 +96,8 @@ class Loan_IncomeController extends Zend_Controller_Action
 				$db->updateIncome($data,$id);				
 				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', "/loan/income");		
 			} catch (Exception $e) {
-				$this->view->msg = 'UPDATE_FAIL';
+				Application_Form_FrmMessage::message("UPDATE_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
 		
