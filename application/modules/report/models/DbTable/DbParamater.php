@@ -1314,7 +1314,7 @@ function getAllBranch($search=null){
     }
     function getScheduleBySaleID($id=null,$payment_id){
     		$db = $this->getAdapter();
-    		$sql=" SELECT * FROM `ln_saleschedule` AS sc WHERE sc.`sale_id`= ".$id;
+    		$sql=" SELECT *,(SELECT name_kh FROM ln_view WHERE type =29 AND key_code = sc.ispay_bank LIMIT 1) AS payment_type FROM `ln_saleschedule` AS sc WHERE sc.`sale_id`= ".$id;
     		if($payment_id==4){
     			$sql.=" AND sc.is_installment=1 ";
     		}
