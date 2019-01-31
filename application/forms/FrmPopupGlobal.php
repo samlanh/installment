@@ -723,7 +723,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</td>
 				</tr>
 			</table>
-			<table style="width:100%;white-space: nowrap;font-size:16px; margin-top: -38px;font-family: '."Khmer OS Battambang".';" class="print" cellspacing="3px"  cellpadding="0" >
+			<table style="width:100%;white-space: nowrap;font-size:16px; margin-top: -30px;font-family: '."Khmer OS Battambang".';" class="print" cellspacing="3px"  cellpadding="0" >
 				<tr style="white-space: nowrap;font-size: 14px;margin-top: -15px;" >
 				    <td colspan="5"></td>
 					<td align="right"><strong>
