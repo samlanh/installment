@@ -347,7 +347,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->money_install = $db->geIncomeFromSale($search,3);
   	$this->view->income = $db->getIncomeCategory($search);
   	$this->view->income_changehouse = $db->getIncomeChangehouse($search);
-  	print_r($db->getIncomeChangehouse);
   	
   	$db = new Application_Model_DbTable_DbGlobal();
   	$street = $db->getAllStreetForOpt();
