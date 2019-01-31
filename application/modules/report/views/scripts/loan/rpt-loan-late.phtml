@@ -30,7 +30,7 @@
 		   		<td><?php echo $frm->getElement("adv_search");?></td>
 		   		<td><?php echo $frm->getElement('branch_id');?></td>
 		   		<td><?php echo $frm->getElement('client_name');?></td>
-		   		<td><?php echo $frm->getElement('status');?></td>
+		   		<!-- <td><?php //echo $frm->getElement('status');?></td> -->
 		   		<td><?php echo $frm->getElement('end_date');?></td>
 		   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
 		   	</tr>
@@ -63,6 +63,10 @@
 				  }
 					.hide{visibility: visible; height: 110px;}
 				}
+thead tr td{
+			text-align: center;
+			font-weight: bold;
+		}
 		</style>
 	<?php 
 	$db_keycode = new Application_Model_DbTable_DbKeycode();
@@ -96,26 +100,28 @@
 		                	<th colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></th>
 		                </tr>
 		                 <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 24px;font-size:12px; font-family: 'Khmer OS Content';white-space: nowrap;">
-		                    <th rowspan="2"><?php echo $tr->translate("NUM");?></th>
-		                    <th rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></th>
-		                    <th rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></th>
-		                    <th rowspan="2"><?php echo $tr->translate("TEL");?></th>
-			                <th rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></th>  
-			                <th rowspan="2"><?php echo $tr->translate("STREET");?></th>
-			                <th rowspan="2"><?php echo $tr->translate("SOLD_PRICE");?></th>	
-		                    <th rowspan="2"><?php echo $tr->translate("INTEREST RATE");?></th>
-		                    <th rowspan="2"><?php echo $tr->translate("LOAN_PERIOD");?></th>
-		                    <th rowspan="2"><?php echo $tr->translate("OS");?></th>
-		                    <th colspan="5"><?php echo $tr->translate("PAYMENT_INFO");?></th>
-		                    <th rowspan="2"><?php echo $tr->translate("LATE_DAY");?></th>
-		                    <th rowspan="2"><?php echo $tr->translate("PAY_DATE");?></th>
+		                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></th>
+		                    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
+			                <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
+			                <td rowspan="2"><?php echo $tr->translate("STREET");?></td>
+			                <!-- 
+			                <td rowspan="2"><?php //echo $tr->translate("SOLD_PRICE");?></td>	
+		                    <td rowspan="2"><?php //echo $tr->translate("INTEREST RATE");?></td>
+		                    <td rowspan="2"><?php //echo $tr->translate("LOAN_PERIOD");?></td>
+			                 -->
+		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
+		                    <td colspan="4"><?php echo $tr->translate("PAYMENT_INFO");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("LATE_DAY");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("PAY_DATE");?></td>
 		                </tr>
 		                <tr bgcolor="#c1d0f3" style="font-weight: bold;">
-		                	<th align="center"><?php echo $tr->translate("PRINCIPAL");?></th>
-		                    <th align="center"><?php echo $tr->translate("INTEREST");?></th>
-		                    <th align="center"><?php echo $tr->translate("PENALIZE AMOUNT");?></th>
-		                    <th align="center"><?php echo $tr->translate("SERVICE_CHARGE");?></th>
-		                    <th align="center"><?php echo $tr->translate("PAYMENT");?></th>
+		                	<td align="center"><?php echo $tr->translate("PRINCIPAL");?></td>
+		                    <td align="center"><?php echo $tr->translate("INTEREST");?></td>
+		                    <td align="center"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+		                    <td align="center"><?php echo $tr->translate("PAYMENT");?></td>
 		                </tr>
 	                </thead>
 	                <?php 
@@ -132,12 +138,14 @@
 	               		<td style="text-align: center;"><?php echo $i++;?></td>
 	               		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 	               		<td style="white-space: nowrap;">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>
-	               		<td style="white-space: nowrap;">&nbsp;<?php echo $rs["phone"];?>&nbsp;</td>
+	               		<td style="line-height: 12px; white-space: normal !important;max-width: 100px;    width: 100px; padding: 5px;"><?php echo $rs["phone"];?></td>
 		                <td align="left">&nbsp;<?php echo $rs['land_address'];?>&nbsp;</td>
 		                <td align="left">&nbsp;<?php echo $rs['street'];?>&nbsp;</td>
-		                <td align="left">&nbsp;$ <?php echo number_format($rs['price_sold']-$rs['other_fee'],2);?>&nbsp;</td>
-	               		<td>&nbsp;<?php echo $rs["interest_rate"];?>&nbsp;</td>
-	               		<td>&nbsp;<?php echo $rs["total_duration"];?> Months&nbsp;</td>
+		                <!-- 
+		                <td align="left">&nbsp;$ <?php //echo number_format($rs['price_sold']-$rs['other_fee'],2);?>&nbsp;</td>
+	               		<td>&nbsp;<?php //echo $rs["interest_rate"];?>&nbsp;</td>
+	               		<td>&nbsp;<?php //echo $rs["total_duration"];?> Months&nbsp;</td>
+		                 -->
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["begining_balance_after"],2);?>&nbsp;</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?>&nbsp;</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["total_interest_after"],2);?>&nbsp;</td>
@@ -170,7 +178,6 @@
 	               			
 	               			?>&nbsp;
 	               		</td>
-	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["service_charge"],2);?>&nbsp;</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($total_payment,2);?>&nbsp;</td>
 	               		<td align="center" 
 	               		<?php 
@@ -185,6 +192,7 @@
 	               		echo $color;
 	               		?>
 	               		>&nbsp;&nbsp;<?php echo $total_late_day." Days";?> &nbsp;</td>
+	               		<td align="center">&nbsp;&nbsp;<?php echo $rs["no_installment"];?>&nbsp;</td>
 	               		<td align="center">&nbsp;&nbsp;<?php echo date_format(date_create($rs["date_payment"]),'d-m-Y');?>&nbsp;</td>
 	                </tr>
 	                <?php 
@@ -210,7 +218,6 @@
 	                    <th><?php echo $tr->translate("TOTAL_PRINCIPLE");?></th>
 	                    <th><?php echo $tr->translate("TOTAL_INTEREST");?></th>
 	                    <th><?php echo $tr->translate("PENALIZE AMOUNT");?></th>
-	                    <th><?php echo $tr->translate("SERVICE_CHARGE");?></th>
 	                    <th><?php echo $tr->translate("TOTAL_PAYMENT");?></th>
 	                </tr>
 	                </thead>
@@ -219,7 +226,6 @@
 	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
 	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>
 	                    <td>&nbsp;&nbsp;<?php echo number_format($pene_amd,2);?>&nbsp;</td>
-	                    <td>&nbsp;&nbsp;<?php echo number_format($serv_amd,2);?>&nbsp;</td>
 	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d4,2);?>&nbsp;</td>
 	                </tr>
 	              </table>
