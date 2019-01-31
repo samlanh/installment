@@ -366,10 +366,11 @@ function netTotal(){
 var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->all_category));?> );
 new dijit.form.FilteringSelect({
 	store: income_category_store,
-	autoComplete: true,                        
+	autoComplete: false,
+	queryExpr: "*${0}*",
+	                       
     id: "income_category",
     name: "income_category",  
-   // tabindex: "17",    
     class: 'fullside',  
     placeHolder:"<?php echo $tr->translate("SELECT_CATEGORY")?>", 
     onChange: function() {          
@@ -382,7 +383,8 @@ new dijit.form.FilteringSelect({
 
 new dijit.form.FilteringSelect({
 	store: sale_client_store,
-	autoComplete: true,
+	autoComplete: false,
+	queryExpr: "*${0}*",
 	required: false,		           
 	name: "sale_client",
 	id: "sale_client",

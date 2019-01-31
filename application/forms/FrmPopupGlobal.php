@@ -648,7 +648,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$key = new Application_Model_DbTable_DbKeycode();
 		$data=$key->getKeyCodeMiniInv(TRUE);
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$str='<table width="100%" celpadding="0" cellspacing="0" style="font-family:Khmer OS Battambang; font-size:10px;line-height: 15px;margin-top: -4px;">
+		$str='<table width="100%" celpadding="0" cellspacing="0" style="font-family:Khmer OS Battambang; font-size:10px;line-height: 15px;margin-top: 4px;">
 				<tr>
 					<td width="22%">';
 						$str.='<span style="font-family:Khmer MEF2; font-size:16px;white-space:nowrap;padding-top:5px;">'.$tr->translate("BRAND_FOOTER_TITLE").'</span>
@@ -802,7 +802,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 									'.$data['teller_sign'].'
 								</td>
 							</tr>
-							<tr height="75px">
+							<tr height="85px">
 								<td colspan="3">&nbsp;
 								</td>
 							</tr>
@@ -834,7 +834,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<tr style="line-height: 15px;font-size: 10px;">
 					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)"></td>
 				</tr>
-				<tr style="line-height: 15px;font-size: 10px;">
+				<tr style="line-height: 18px;font-size: 10px;">
 					<td colspan="6" >
 						'.$footer.'
 					</td>

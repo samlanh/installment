@@ -48,7 +48,7 @@ class Project_indexController extends Zend_Controller_Action {
 		//$this->_redirect("/project/index");
 		$_dbmodel = new Project_Model_DbTable_DbProject();
 		$allpro = $_dbmodel->countProject();
-		if ($allpro>=10){
+		if ($allpro>=1){
 			$this->_redirect("/project/index");
 		}
 		if($this->getRequest()->isPost()){//check condition return true click submit button
