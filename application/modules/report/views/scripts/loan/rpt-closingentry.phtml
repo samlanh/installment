@@ -61,7 +61,7 @@
 				.hideblog{display: none;}
 				.hiddenblog{display: block !important;}
 				.style1:hover{ background: #ccc; }
-				table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+				table tr td ul li{text-align: center;list-style: none;line-height: 25px;}
 				table { page-break-inside:auto }
 				tr{ page-break-inside:avoid; page-break-after:auto; }
 				#header {
@@ -80,6 +80,15 @@
 					margin:0;
 				  }
 					.hide{visibility: visible; height: 110px;}
+				}
+				table.content-data{
+					border-collapse:collapse;
+					font-size:13px;
+					font-family: 'Times New Roman','Khmer OS Battambang';
+				}
+				table.content-data thead tr.style {
+				   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #c1d0f3;
 				}
 			</style>
 				 <form id="list" name="list" action="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'submitentry')); ?>" dojoType="dijit.form.Form" method="post">
@@ -100,9 +109,9 @@
 							                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
 							                	<td width="60%" valign="top">
 							                		<ul>
-							                			<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
-							                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("បិទបញ្ជីប្រចាំថ្ងៃ");?></li>
-							                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("Closing Entry");?></li>
+							                			<li style="text-align:center; font-size:18px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
+							                			<li style="text-align:center; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("បិទបញ្ជីប្រចាំថ្ងៃ");?></li>
+							                			<li style="text-align:center; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("Closing Entry");?></li>
 							                			<li style="text-align:center; font-size:16px;"><?php if($this->list_end_date['start_date']){echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
 							                		</ul>
 							                   </td>
@@ -114,34 +123,36 @@
 						    </tr>
 						    <tr>
 						    	<td id="exportExcel">
-						          	 <table width="100%" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
+						          	 <table class="content-data" width="100%" cellspacing="0">
 								             <thead>
 								                <tr class="hide" style="border:1px solid #000;">
-								                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+								                	<td colspan="17" style="border:1px solid #fff;"></td>
 								                </tr>
-								                <tr bgcolor="#c1d0f3" class="style" align="center" style="border:1px solid #000;font-weight:bold;padding:0px 2px;white-space: nowrap;">
-								                    <th rowspan="2"><input type="checkBox" onclick="checkAll('<?php echo count($this->loantotalcollect_list);?>');" name="checkall" id="checkall" />
-								                    <?php echo $tr->translate("NUM");?></th>
-								                    <th rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></th>
-								                    <th rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></th>
-								                    <th rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></th>  
-								                    <th rowspan="2"><?php echo $tr->translate("បង់ជា");?></th>
-								                    <th rowspan="2"><?php echo $tr->translate("បង់លើក");?></th>		
-								                    <th colspan="5"><?php echo $tr->translate("TOTAL_PAYMENTED");?></th>    
-								                    <th rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></th>
-								                    <th rowspan="2"><?php echo $tr->translate("RECIEPT_NO");?></th>
-								                    <th rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></th>
-								                    <th rowspan="2" class=""><?php echo $tr->translate("BY_USER");?></th>
-								                    <th rowspan="2" class=""><?php echo $tr->translate("STATUS");?></th>
+								                <tr  class="style" align="center" >
+								                    <td rowspan="2">
+								                    <input type="checkBox" onclick="checkAll('<?php echo count($this->loantotalcollect_list);?>');" name="checkall" id="checkall" />
+								                    <?php echo $tr->translate("NUM");?>
+								                    </td>
+								                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
+								                    <td rowspan="2"><?php echo $tr->translate("បង់ជា");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("បង់លើក");?></td>		
+								                    <td colspan="5"><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>    
+								                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("RECIEPT_NO");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
+								                    <td rowspan="2" class=""><?php echo $tr->translate("BY_USER");?></td>
+								                    <td rowspan="2" class=""><?php echo $tr->translate("STATUS");?></td>
 								                </tr>
-								                <tr class="style" style="border:1px solid #000;font-weight:bold;background:#c1d0f3;white-space: nowrap;text-align: center;">
-								                	<th style="padding:1px;"><?php echo $tr->translate("PRINCIPAL");?></th>                   
-								                    <th style="padding:1px;"><?php echo $tr->translate("INTEREST");?></th>
-								                    <th style="padding:1px;"><?php echo $tr->translate("PENALIZE AMOUNT");?></th>
-								                    <th style="padding:1px;"><?php echo $tr->translate("EXTRA_PAYMENT");?></th>	                    
-								                    <th style="padding:1px;"><?php echo $tr->translate("TOTAL");?>
+								                <tr class="style" >
+								                	<td style="padding:1px;"><?php echo $tr->translate("PRINCIPAL");?></td>                   
+								                    <td style="padding:1px;"><?php echo $tr->translate("INTEREST");?></td>
+								                    <td style="padding:1px;"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+								                    <td style="padding:1px;"><?php echo $tr->translate("EXTRA_PAYMENT");?></td>	                    
+								                    <td style="padding:1px;"><?php echo $tr->translate("TOTAL");?>
 								                    <input type="hidden" name="id_selected" id="id_selected" dojoType="dijit.form.TextBox" />
-								                    </th>
+								                    </td>
 								                </tr>
 								            </thead>
 							                <?php 
@@ -188,12 +199,12 @@
 							               		<td style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['amount_payment'],2);?></td>
 							               		<td style="white-space:nowrap; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
 							               		<td>&nbsp;<?php echo $rs["receipt_no"];?>&nbsp;</td>
-							               		<td style="white-space: nowrap;font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;
+							               		<td style="white-space: nowrap; font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;
 												<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
 												<?php echo $rs["paymentoption"];?></a>
 												</td>
-							               		<td class="" style="font:bolder 11px 'Khmer OS Battambang',Arial;text-align: center;"><?php echo $rs['user_name']?></td>
-							               		<td class=""><?php echo($rs['is_closed']==0)?"Unclose":"Closed";?></td>
+							               		<td align="center">&nbsp;<?php echo $rs['user_name']?>&nbsp;</td>
+							               		<td class="">&nbsp;<?php echo($rs['is_closed']==0)?"Unclose":"Closed";?>&nbsp;</td>
 							                </tr>
 							                <?php }?>
 							            </table>
@@ -201,17 +212,17 @@
 						            <br />
 						             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
 						                  <thead>
-						                 <tr bgcolor="#c1d0f3" class="style" style="font-weight:bold; line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
-						                    <th><?php echo $tr->translate("CURRENT_TYPE");?></th>
-						                    <th><?php echo $tr->translate("PRINCIPAL");?></th>                    
-						                    <th><?php echo $tr->translate("TOTAL_INTEREST");?></th>
-						                    <th><?php echo $tr->translate("TOTAL_PENILIZE_AMOUNT");?></th>
-						                    <th><?php echo $tr->translate("EXTRA_PAYMENT");?></th>
-						                    <th><?php echo $tr->translate("TOTAL");?></th>
-						                    <th rowspan="2">ចំណូលតាមប្រភេទ</th>
-						                    <th><?php echo $tr->translate("សាច់ប្រាក់សរុប");?></th>
-						                    <th><?php echo $tr->translate("តាមធនាគារ");?></th>
-						                    <th><?php echo $tr->translate("សែកសរុប");?></th>
+						                 <tr bgcolor="#c1d0f3" class="style" style=" line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
+						                    <td><?php echo $tr->translate("CURRENT_TYPE");?></td>
+						                    <td><?php echo $tr->translate("PRINCIPAL");?></td>                    
+						                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+						                    <td><?php echo $tr->translate("TOTAL_PENILIZE_AMOUNT");?></td>
+						                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
+						                    <td><?php echo $tr->translate("TOTAL");?></td>
+						                    <td rowspan="2">ចំណូលតាមប្រភេទ</td>
+						                    <td><?php echo $tr->translate("សាច់ប្រាក់សរុប");?></td>
+						                    <td><?php echo $tr->translate("តាមធនាគារ");?></td>
+						                    <td><?php echo $tr->translate("សែកសរុប");?></td>
 						                </tr>
 						                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
 						                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>

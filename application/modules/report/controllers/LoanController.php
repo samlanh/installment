@@ -187,6 +187,9 @@ class Report_LoanController extends Zend_Controller_Action {
 //   	$this->view->classified_loan = $db->ClassifiedLoan();
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footer = $frmpopup->getFooterReceipt();
   }
   function rptLoanOutstandingAction(){//loand out standing with /collection
 	    $db  = new Report_Model_DbTable_DbLandreport();

@@ -59,46 +59,67 @@
 					  }
 						.hide{visibility: visible; height: 110px;}
 					}
+				table.content-data{
+					border-collapse:collapse;
+					border:1px solid #000; 
+					font-size:13px;
+					font-family: 'Times New Roman','Khmer OS Battambang';
+					white-space: nowrap;
+					line-height: 22px;
+				}
+				table.content-data thead tr.style {
+				   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #c1d0f3;
+				}
+				table.tb-footer{
+					border-collapse:collapse;
+					border:1px solid #000; 
+					font-family: 'Times New Roman','Khmer OS Battambang';
+					font-size:11px;
+				}
+				table.tb-footer tr{
+				 line-height: 14px;  padding:2px 0px; height: 25px;
+				}
 					</style>
 					<div class="divFooter">
 		        	<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
 			        	<tr>
-			                <td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
-			                <td width="60%" valign="top">
-			                <h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></label></h2>
-			                <h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("REPORT_INCOME");?></label></h2>
-			                <p style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
+			                <td width="25%"><img src="<?php echo $logo;?>" height="85px"></td>
+			                <td width="50%" valign="top">
+			                <h2 style="text-align:center; font-size:18px; font-weight:200; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></h2>
+			                <h2 style="text-align:center; font-size:16px; font-weight:200;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_INCOME");?></h2>
+			                <p style="text-align:center; font-size:14px; font-weight:200; font-family:'Khmer OS Muol Light'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
 			                </td>
-			                <td width="20%"></td>
+			                <td width="25%"></td>
 			             </tr> 
 			          </table>
 			          </div>
 			         <table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
 		            	<tr>	
 		            	<td colspan="3" id="exportExcel">
-		            		<table  border="1" width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; border:solid 1px #000;" >  
+		            		<table  class="content-data" border="1" width="100%"  >  
 						    	<thead>
 						    	<tr class="hide" style="border:1px solid #000;">
 						             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 						        </tr>
-						    	<tr bgcolor="#c1d0f3" class="style" align="center" style="white-space:nowrap;font-weight:bold; line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
-									<th ><?php echo $tr->translate("NUM");?></th>
-								    <th><?php echo $tr->translate("BRANCH_NAME");?></th>
-								    <th><?php echo $tr->translate("INCOME_TITLE");?></th>
-								    <th><?php echo $tr->translate("RECEIPT_NO");?></th>
-								    <th><?php echo $tr->translate("CLIENT_NAME");?></th>
-								    <th><?php echo $tr->translate("PROPERTY_CODE");?></th>
-								    <th><?php echo $tr->translate("CATEGORY");?></th>
-								    <th><?php echo $tr->translate("TOTAL_INCOME");?></th>
-								    <th><?php echo $tr->translate("CHEQUE");?></th>
-								    <th><?php echo $tr->translate("NOTE");?></th>
-								    <th><?php echo $tr->translate("DATE");?></th>
-								    <th><?php echo $tr->translate("BY_USER");?></th>
-								    <th><?php echo $tr->translate("PRINT");?></th>
+						    	<tr class="style" align="center"  >
+									<td><?php echo $tr->translate("NUM");?></td>
+								    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+								    <td><?php echo $tr->translate("INCOME_TITLE");?></td>
+								    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
+								    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
+								    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+								    <td><?php echo $tr->translate("CATEGORY");?></td>
+								    <td><?php echo $tr->translate("TOTAL_INCOME");?></td>
+								    <td><?php echo $tr->translate("CHEQUE");?></td>
+								    <td><?php echo $tr->translate("NOTE");?></td>
+								    <td><?php echo $tr->translate("DATE");?></td>
+								    <td><?php echo $tr->translate("BY_USER");?></td>
+								    <td><?php echo $tr->translate("PRINT");?></td>
 								</tr>
 								</thead>
 						       <?php $branch_id=''; $n=0; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
-								<tr style="font-size: 14px; line-height:25px;" align="left">
+								<tr align="left">
 								   <td align="center">&nbsp;<?php echo $i; ?></td>
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name'];?></td>
 								   <td align="center" style="min-width: 120px;max-width: 150px;">&nbsp;<?php echo $row['title'];?></td>
@@ -111,7 +132,7 @@
 								   <td align="center">&nbsp;<?php echo $row['description'];?></td>
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['date']));?></td>
 								    <td align="center">&nbsp;<?php echo $row['user_name'];?></td>
-								   <td align="center" style="white-space: nowrap;">&nbsp;<a target="_blank" style="color:#000;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$row['id']));?>"><?php echo $tr->translate("PRINT");?></a></td>
+								   <td align="center" style="white-space: nowrap;">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$row['id']));?>"><?php echo $tr->translate("PRINT");?></a></td>
 								</tr>
 									<?php $total = $total +$row['total_amount'];?>
 								<?php }?>
@@ -122,7 +143,7 @@
 						<td colspan="11">
 							<table align="left" style="margin-right: 6px;">
 								  <tr style="font-size:10px; color:#000; height: 18px;"​ align="center">
-									<td style="width:146px; font-weight:bold; font-size: 16px;">&nbsp;<?php echo $tr->translate('TOTAL_INCOME');?>&nbsp;</td>
+									<td style="width:146px;  font-size: 16px;">&nbsp;<?php echo $tr->translate('TOTAL_INCOME');?>&nbsp;</td>
 									<td style="background: rgba(249, 225, 11, 0.7);  color:#000; font-weight:bold; width:112px; font-size: 14px;"><?php echo $i;?></td>
 									<td style="background: rgba(249, 225, 11, 0.7); color:#000; font-weight:bold; width:112px; font-size: 14px;">$ <?php echo number_format($total,2);?></td>
 								  </tr>
@@ -133,11 +154,11 @@
 					<br />
 					   <table align="center" width="100%">
 						   <tr style="font-size: 14px;">
-						        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
-						        <th></th>
-						        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
-						        <th></th>
-						        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+						        <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
+						        <td></td>
+						        <td style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
+						        <td></td>
+						        <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
 						   </tr>
 						</table>
 					</div>

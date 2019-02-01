@@ -705,17 +705,66 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					    border: 1px solid #000;
                         line-height:20px;font-weight: normal !important;
 				}
+				table.receipt-titile tr td {
+					font-size:16px;
+				}
+				table.receipt-titile tr td span {
+					font-family: Arial Black;font-family:'."Khmer OS Muol Light".';
+				}
+				table.receipt-titile tr td div span {
+					line-height:10px;
+					font-weight: bold;
+				}
+				#lb_receipt {
+					font-weight: bold;
+				}
+				table.print.contentdata{
+					width:100%;
+					white-space: nowrap;
+					font-size:16px; 
+					margin-top: -30px;
+					font-family: Times New Roman,'."Khmer OS Battambang".';
+				}
+				table.print.contentdata tr{
+					white-space: nowrap;
+				}
+				tr.receipt-row {
+					white-space: nowrap;
+					font-size: 14px;
+					margin-top: -15px;
+				}
+				table.signature-table{
+					font-size:14px;line-height: 18px;
+				}
+				table.comment-footer{
+					margin-top:-5px
+				}
+				table.comment-footer tr td span.lbnote {
+					text-decoration:underline;
+					font-size: 12px; 
+					margin-top: -5px;
+				}
+				table.comment-footer tr td p.comment1{
+					font-size: 11px;
+					margin:-5px 0px -5px 0px !important;
+					padding:0 !important;
+				}
+				table.comment-footer tr td span.comment{
+					white-space: pre-line;
+					font-size: 11px;
+					margin-top: -5px;
+				}
 			</style>	
 			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
-						<table width="100%" style="font-family:'."Khmer MEF2".';white-space:nowrap;">
+						<table class="receipt-titile" width="100%" style="font-family:'."Khmer MEF2".';white-space:nowrap;">
 							<tr>
 								<td id="projectlogo" width="35%">
 									<img style="height:75px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
 								</td>			
-								<td width="30%" style="font:16px '."Kh Muol".';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'."Khmer MEF2".';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
-									<div style="line-height:10px;"><strong style="font-size: 16px;">OFFICIAL RECEIPT</strong></div>
+								<td width="30%" valign="top" align="center"><u><span>បង្កាន់ដៃទទួលប្រាក់</span></u>
+									<div ><span >OFFICIAL RECEIPT</span></div>
 								</td>
 								<td width="35%"></td>
 							</tr>
@@ -723,14 +772,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</td>
 				</tr>
 			</table>
-			<table style="width:100%;white-space: nowrap;font-size:16px; margin-top: -30px;font-family: '."Khmer OS Battambang".';" class="print" cellspacing="3px"  cellpadding="0" >
-				<tr style="white-space: nowrap;font-size: 14px;margin-top: -15px;" >
+			<table  class="print contentdata" cellspacing="3px"  cellpadding="0" >
+				<tr class="receipt-row"  >
 				    <td colspan="5"></td>
-					<td align="right"><strong>
-						<div style=" display: none;"></div>
-						<label id="lb_receipt" ></label></strong></td>
+					<td align="right">
+						<span id="lb_receipt" ></span>
+					</td>
 				</tr>
-				<tr style="white-space: nowrap;">
+				<tr >
 				    <td style="display: none;">លេខកូដលក់</td>
 				    <td style="display: none;"><strong><label class="value"></label></strong></td>
 				    <td>គម្រោង</td>
@@ -740,7 +789,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td>&nbsp;បង់លើកទី</td>
 					<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
 				</tr>
-				<tr style="white-space: nowrap;">
+				<tr >
 				    <td>ឈ្មោះ​អតិថិជន </td>
 				    <td><strong><label id="lb_customer" class="value"></label></strong></td>
 					<td>&nbsp;&nbsp; ប្រាក់ការ</td>
@@ -748,13 +797,13 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td>&nbsp; ប្រាក់ពិន័យ</td>
 					<td><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
                 </tr>
-				<tr style="white-space: nowrap;">
+				<tr >
 					<td>'.$tr->translate("PROPERTY_CODE").'</td>
                     <td><strong><label id="lb_hourseno" class="value"></label></strong></td>
 				   <td>&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
 					<td colspan="3"><strong><label id="lb_extrapayment" class="value">0.00</label></strong></td>
 				</tr>
-				<tr style="white-space: nowrap;">
+				<tr >
 					<td width="10%">'.$tr->translate("HOUSE_PRICE").'</td>
 				    <td width="40%"><strong><label id="lb_saleprice" class="value"></label></strong></td>
 					<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
@@ -774,7 +823,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td>&nbsp;&nbsp;ប្រាក់ទទួលបាន</td>
 				    <td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;" id="lbl_total_receive"></label></strong></td>
 				</tr>
-				<tr style="">
+				<tr >
 					<td rowspan="2">សម្គាល់</td>
 				    <td rowspan="2" class="noted" valign="top"><label id="lb_noted"></label></td>
 					<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
@@ -782,15 +831,15 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td>&nbsp;ថ្ងៃទទួល</td>
 					<td><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
 				</tr>
-				<tr style="white-space: nowrap;">
+				<tr >
 					<td>&nbsp;បង់ជា</td>
 					<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
 					<td>&nbsp;&nbsp;លេខ</td>
 					<td><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
 				</tr>
-				<tr style="white-space: nowrap;">
+				<tr >
 					<td colspan="6" valign="top">
-						<table width="100%" border="0" style="font-size:14px;line-height: 18px;">
+						<table class="signature-table" width="100%" border="0">
 							<tr>
 								<td width="30%">&nbsp;
 									'.$data['account_sign'].'
@@ -820,12 +869,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</tr>
 				<tr style="font-size: 11px;">
 						<td colspan="6" valign="top">
-							<table width="100%" border="0" style="margin-top:-5px">
+							<table class="comment-footer" width="100%" border="0" >
 								<tr>
-									<td width="10%"><span style="text-decoration:underline;font-size: 12px; margin-top: -5px;">សម្គាល់ ៖</span></td>
+									<td width="10%">
+										<span class="lbnote" style="">សម្គាល់ ៖</span>
+									</td>
 									<td colspan="5">
-										<p style="font-size: 11px;margin:-5px 0px -5px 0px !important;padding:0 !important; margin">'.$data['comment'].'</p>
-										<span style="white-space: pre-line;font-size: 11px;margin-top: -5px;">'.$data['comment1'].'</span>
+										<p class="comment1">'.$data['comment'].'</p>
+										<span class="comment">'.$data['comment1'].'</span>
 									</td>
 								</tr>
 							</table>

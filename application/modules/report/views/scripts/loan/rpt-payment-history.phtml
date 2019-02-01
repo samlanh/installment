@@ -20,7 +20,7 @@ if ($this->search['branch_id'] >0 ){
 <title><?php echo $tr->translate("REPORT_LOAN_PAYMENT");?></title>
 <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
 	<form method="post">
-		<table style="font-family:'Khmer OS Content';margin: 0 auto;" >
+		<table style="font-family:'Times New Roman','Khmer OS Battambang';margin: 0 auto;" >
 			<tr>
 	   			<td><?php echo $frm->getElement("adv_search");?></td>
 	   			<td><?php echo $frm->getElement('branch_id');?></td>
@@ -43,8 +43,23 @@ if ($this->search['branch_id'] >0 ){
 				font-family: 'Khmer OS Battambang';
 			}
 			.stylehover:hover{background: #ccc;}
-			table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+			table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
 			th{padding: 5px;}
+			table.content-data{
+				border-collapse:collapse;
+				border:1px solid #000; 
+				font-size:13px;
+				font-family: 'Times New Roman','Khmer OS Battambang';
+			}
+			table.content-data thead tr.style {
+			   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+			}
+			tr.style.saleback{
+				 background: #c1d0f3;
+			}
+			.payment-info{
+			    background: #8dabf3;
+			}
 			</style>
 			<?php $client_id = null; $sale_id = null;?>
 			<?php 
@@ -62,8 +77,8 @@ if ($this->search['branch_id'] >0 ){
 			                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
 			                	<td width="60%" valign="top">
 			                         <ul>
-			                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
-			                			<li style="text-align:center; font-size:14px; font-family:'Khmer MEF2'"><?php echo $tr->translate("REPORT_LOAN_PAYMENT");?></li>
+			                			<li style="text-align:center; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
+			                			<li style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_LOAN_PAYMENT");?></li>
 			                			<li style="text-align:center; font-size:13px;"><?php if(!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></li>
 			                		</ul>
 			                 </td>
@@ -74,7 +89,7 @@ if ($this->search['branch_id'] >0 ){
 			        </td>
 			    </tr>
 			    <tr><td  id="exportExcel" class="mymy">
-			    		<table width="100%" border="1" style="border-collapse:collapse; border: 1px solid #000;" cellspacing="0">
+			    		<table class="content-data" width="100%" border="1"  cellspacing="0">
 			            	<?php $totalpaid =0; 
 			            	$totalprincsa=0; 
 			            	$clientPrincsa=0;
@@ -100,15 +115,15 @@ if ($this->search['branch_id'] >0 ){
 				              			<?php if ($index>0){?>
 				              			
 				              			<?php if ($counsaleCus>1){?>
-				              			 <tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
-			               						<td colspan="5" rowspan="2"  style="border-left:1px solid #fff; border-bottom:1px solid #fff; text-align: right;">&nbsp;<strong><?php echo $tr->translate("TOTAL");?></strong>&nbsp;</td>
+				              			 <tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+			               						<td colspan="5" rowspan="2"  style="border-left:1px solid #fff; border-bottom:1px solid #fff; text-align: right;">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
 			               						<td align="right">&nbsp;<strong><?php echo number_format($totalprincsa,2);?></strong>&nbsp;</td>
 			               						<td align="right">&nbsp;<strong><?php echo number_format($totalInterestsa,2);?></strong>&nbsp;</td>
 			               						<td align="right">&nbsp;<strong><?php echo number_format($totalPenalizesa,2);?></strong>&nbsp;</td>
 			               						<td align="right">&nbsp;<strong><?php echo number_format($totalExtrasa,2);?></strong>&nbsp;</td>
 			               						<td align="right">&nbsp;<strong><?php echo number_format($totalsa,2);?></strong>&nbsp;</td>
 			               				</tr>
-			               				<tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;background: #c1d0f3;" width="100%">
+			               				<tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;background: #c1d0f3;" width="100%">
 		               						<td align="right">&nbsp;<strong><?php echo number_format($clientPrincsa,2);?></strong>&nbsp;</td>
 		               						<td align="right" >&nbsp;<strong><?php echo number_format($clientInterest,2);?></strong>&nbsp;</td>
 		               						<td align="right">&nbsp;<strong><?php echo number_format($clientPenalize,2);?></strong>&nbsp;</td>
@@ -116,8 +131,8 @@ if ($this->search['branch_id'] >0 ){
 		               						<td align="right">&nbsp;<strong><?php echo number_format($clientTotal,2);?></strong>&nbsp;</td>
 		               					</tr>
 		               					<?php }else{?>
-		               					<tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
-		               						<td colspan="5" style="border-left:1px solid #fff; border-bottom:1px solid #fff; text-align: right;">&nbsp;<strong><?php echo $tr->translate("TOTAL");?></strong>&nbsp;</td>
+		               					<tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+		               						<td colspan="5" style="border-left:1px solid #fff; border-bottom:1px solid #fff; text-align: right;">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
 		               						<td align="right" style="background: #c1d0f3;">&nbsp;<strong><?php echo number_format($clientPrincsa,2);?></strong>&nbsp;</td>
 		               						<td align="right" style="background: #c1d0f3;">&nbsp;<strong><?php echo number_format($clientInterest,2);?></strong>&nbsp;</td>
 		               						<td align="right" style="background: #c1d0f3;">&nbsp;<strong><?php echo number_format($clientPenalize,2);?></strong>&nbsp;</td>
@@ -159,8 +174,8 @@ if ($this->search['branch_id'] >0 ){
 				              			?>
 					              			</td>
 					              	</tr>
-				                <tr bgcolor="#ccc" class="style" align="center" style="padding:5px 0;height: 20px; white-space: nowrap;">
-				                    <td><?php echo $tr->translate("NUM");?></td>
+				                <tr class="style saleback" align="center" style="padding:5px 0;height: 20px; white-space: nowrap;">
+				                    <td ><?php echo $tr->translate("NUM");?></td>
 				                    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
 				                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
 				                    <td><?php echo $tr->translate("STREET");?></td>
@@ -172,18 +187,18 @@ if ($this->search['branch_id'] >0 ){
 				                   <!--  <td><?php //echo $tr->translate("SERVICE CHARGE");?></td> -->	 
 				                    <!-- <td><?php //echo $tr->translate("TOTAL");?></td> -->                   
 				                    <td><?php echo $tr->translate("PAY_DATE");?></td>
-				                    <td bgcolor="#999"><?php echo $tr->translate("RECIEPT_NO");?></td>
-				                    <td bgcolor="#999"><?php echo $tr->translate("PAYMENTED");?></td>
+				                    <td class="payment-info"><?php echo $tr->translate("RECIEPT_NO");?></td>
+				                    <td class="payment-info"><?php echo $tr->translate("PAYMENTED");?></td>
 				                    <!-- <td bgcolor="#999"><?php //echo $tr->translate("BALANCE");?></td> -->
-				                    <td bgcolor="#999"><?php echo $tr->translate("INPUT_DATE");?></td>
-				                    <td bgcolor="#999"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
-				                    <td bgcolor="#999"><?php echo $tr->translate("BY_USER");?></td>
+				                    <td class="payment-info"><?php echo $tr->translate("INPUT_DATE");?></td>
+				                    <td class="payment-info"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
+				                    <td class="payment-info"><?php echo $tr->translate("BY_USER");?></td>
 				                </tr>
 				                <?php }?>
 				                <?php if ($client_id==$rs["client_id"]) {?>
 				                	<?php if($sale_id!=$rs["sale_id"]){ $counsaleCus++;?>
-			              			<tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
-		               						<td colspan="5"  style="border-left:1px solid #fff;  text-align: right;">&nbsp;<strong><?php echo $tr->translate("TOTAL");?></strong>&nbsp;</td>
+			              			<tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+		               						<td colspan="5"  style="border-left:1px solid #fff;  text-align: right;">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
 		               						<td align="right">&nbsp;<strong><?php echo number_format($totalprincsa,2);?></strong>&nbsp;</td>
 		               						<td align="right">&nbsp;<strong><?php echo number_format($totalInterestsa,2);?></strong>&nbsp;</td>
 		               						<td align="right">&nbsp;<strong><?php echo number_format($totalPenalizesa,2);?></strong>&nbsp;</td>
@@ -226,7 +241,7 @@ if ($this->search['branch_id'] >0 ){
 								$totalExtrasa=$totalExtrasa+$rs["extra_payment"];
 								$clientExtra=$clientExtra+$rs["extra_payment"];
 							?>
-			                <tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
+			                <tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
 			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
 			               		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 			               		<td>&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
@@ -250,7 +265,7 @@ if ($this->search['branch_id'] >0 ){
 			                	$client_id=$rs["client_id"];
 			                } ?>
 			                <?php }?>
-			                 <tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;" width="100%">
+			                 <tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
                						<td colspan="5" rowspan="2"  style="border-left:1px solid #fff; border-bottom:1px solid #fff; text-align: right;">&nbsp;<strong><?php echo $tr->translate("TOTAL");?></strong>&nbsp;</td>
                						<td align="right">&nbsp;<strong><?php echo number_format($totalprincsa,2);?></strong>&nbsp;</td>
                						<td align="right">&nbsp;<strong><?php echo number_format($totalInterestsa,2);?></strong>&nbsp;</td>
@@ -258,7 +273,7 @@ if ($this->search['branch_id'] >0 ){
                						<td align="right">&nbsp;<strong><?php echo number_format($totalExtrasa,2);?></strong>&nbsp;</td>
                						<td align="right">&nbsp;<strong><?php echo number_format($totalsa,2);?></strong>&nbsp;</td>
                				</tr>
-               				<tr class="style stylehover" style="font-family: 'Khmer OS Content';white-space: nowrap;background: #c1d0f3;" width="100%">
+               				<tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;background: #c1d0f3;" width="100%">
                						<td align="right">&nbsp;<strong><?php echo number_format($clientPrincsa,2);?></strong>&nbsp;</td>
                						<td align="right" >&nbsp;<strong><?php echo number_format($clientInterest,2);?></strong>&nbsp;</td>
                						<td align="right">&nbsp;<strong><?php echo number_format($clientPenalize,2);?></strong>&nbsp;</td>
@@ -269,7 +284,7 @@ if ($this->search['branch_id'] >0 ){
 			                <tr>
 			                	<td colspan="16" style="border-left:1px solid #fff;border-right:1px solid #fff;">&nbsp;</td>
 			                </tr>
-			                  <tr bgcolor="#c1d0f3" class="style stylehover" style="font-weight:bold; line-height: 20px; text-align: center;" >
+			                  <tr bgcolor="#c1d0f3" class="style stylehover" style=" line-height: 20px; text-align: center;" >
 				                    <td style="padding:5px 0px;" colspan="2">&nbsp;​<?php echo $tr->translate("CURRENT_TYPE");?>&nbsp;</td>
 				                    <td style="padding:5px 0px;" colspan="3">&nbsp;<?php echo $tr->translate("TOTAL_PRINCIPLE");?>&nbsp;</td>
 				                    <td style="padding:5px 0px;" colspan="3">&nbsp;<?php echo $tr->translate("TOTAL_INTEREST");?>&nbsp;</td>
@@ -278,7 +293,7 @@ if ($this->search['branch_id'] >0 ){
 				                    <!-- <td style="padding:5px 0px;" colspan="2">&nbsp;<?php //echo $tr->translate("TOTAL_SERVICE_CHARGE");?>&nbsp;</td> -->
 				                    <td style="padding:5px 0px;" colspan="4">&nbsp;<?php echo $tr->translate("TOTAL_PAYMENTED");?>&nbsp;</td>
 				                </tr>
-			                	 <tr class="style" style=" line-height: 24px; font-size:11px;font-family: 'Khmer OS Content';">
+			                	 <tr class="style" style=" line-height: 24px; font-size:11px;font-family: 'Times New Roman','Khmer OS Battambang';">
 			                    <td colspan="2">&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
 			                    <td colspan="3">&nbsp;<?php echo number_format($principle_d,2);?>&nbsp;</td>
 			                    <td colspan="3">&nbsp;<?php echo number_format($interst_d,2);?>&nbsp;</td>
@@ -292,11 +307,11 @@ if ($this->search['branch_id'] >0 ){
 			              <br />
 			               <table align="center" width="100%">
 							   <tr style="font-size: 12px;">
-							        <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
-							        <th></th>
-							        <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
-							        <th></th>
-							        <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+							        <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
+							        <td></td>
+							        <td style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
+							        <td></td>
+							        <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
 							   </tr>
 						</table>
 			    	</td>
