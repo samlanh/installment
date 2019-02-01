@@ -39,7 +39,7 @@ if ($this->search['branch_id_search'] >0 ){
 	    	 	<style>
 					.style{
 						line-height: 20px;font-size: 12px !important;
-						font-family: 'Khmer OS Battambang';
+						font-family: 'Times New Roman','Khmer OS Battambang';
 						}
 						th{padding: 2px;}
 						.hide{visibility: hidden;}
@@ -54,41 +54,63 @@ if ($this->search['branch_id_search'] >0 ){
 								  }
 								.hide{visibility: visible; height: 110px;}
 								}
+						table.content-data{
+							border-collapse:collapse;
+							border:1px solid #000; 
+							font-size:13px;
+							font-family: 'Times New Roman','Khmer OS Battambang';
+							white-space: nowrap;
+							line-height: 22px;
+							width: 100%;
+						}
+						table.content-data thead tr.style {
+						   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+							background: #c1d0f3;
+						}
+						table.tb-footer{
+							border-collapse:collapse;
+							border:1px solid #000; 
+							font-family: 'Times New Roman','Khmer OS Battambang';
+							font-size:11px;
+						}
+						table.tb-footer tr{
+						 line-height: 14px;  padding:2px 0px; height: 25px;
+						}
 					</style>
 	        		<div class="divFooter">
-	        			<table width="100%" style="font-family:khmer;margin:0 auto;padding:0px; border:none;">
+	        			<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0 auto;padding:0px; border:none;">
 				        	<tr>
 				                <td width="30%"><img src="<?php echo $logo;?>" height="85px"></td>
 				                <td width="40%" valign="top">
-				                <h2 style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><label><?php echo $branch_title;?></label></h2>
-				                <h2 style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><label><?php echo $tr->translate("CANCEL_SALE_REPORT");?></label></h2>
-				                <h2 style="text-align:center; font-size:16px;"><?php if(!empty($this->search['from_date_search'])){echo date("d-M-Y",strtotime($this->search['from_date_search'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['to_date_search']));}?></h2>
+				                <h2 style="text-align:center; font-size:18px; font-weight:normal; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;?></h2>
+				                <h2 style="text-align:center; font-size:16px; font-weight:normal; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("CANCEL_SALE_REPORT");?></h2>
+				                <h2 style="text-align:center; font-size:16px; font-weight:normal;"><?php if(!empty($this->search['from_date_search'])){echo date("d-M-Y",strtotime($this->search['from_date_search'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['to_date_search']));}?></h2>
 				                <td width="30%"></td>
 				             </tr> 
 			             </table>
 			          </div>
-		          <table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
+		          <table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0; border:none;" >
 		            <tr>
 		            	<td colspan="3">
-		            		<table id="exportExcel" width="100%" style="border-collapse:collapse;font-size: 14px; border:1px solid #000;" border="1" >  
+		            		<table id="exportExcel" class="content-data" width="100%"  border="1" >  
 						      	 <thead>
 					                <tr class="hide" style="border:1px solid #000;">
 						                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 						            </tr>
-							      	<tr bgcolor="#a0baf5" class="style" align="center" style="white-space:nowrap;font-weight:bold;font-weight:bold; line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px;text-align: center; " >
-										<th><?php echo $tr->translate("NUM");?></th>
-										<th><?php echo $tr->translate("PROJECT_NAME");?></th>
-										<th><?php echo $tr->translate("CUSTOMER_NAME");?></th>
-										<th><?php echo $tr->translate("PROPERTY_TYPE");?></th>
-										<th><?php echo $tr->translate("PROPERTY_CODE");?></th>
-										<th><?php echo $tr->translate("PRICE");?></th>
-						                <th><?php echo $tr->translate("PAID");?></th>
-						                <th><?php echo $tr->translate("BALANCE");?></th>
-						                <th><?php echo $tr->translate("INSTALLMENT_PAID");?></th>
-						                <th><?php echo $tr->translate("RETURN_MONEY_BACK");?></th>
-									    <th><?php echo $tr->translate("DATE");?></th>
-									    <th><?php echo $tr->translate("REASON");?></th>
-									    <th><?php echo $tr->translate("BY_USER");?></th>
+							      	<tr bgcolor="#a0baf5" class="style" align="center"  >
+										<td><?php echo $tr->translate("NUM");?></td>
+										<td><?php echo $tr->translate("PROJECT_NAME");?></td>
+										<td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+										<td><?php echo $tr->translate("PROPERTY_TYPE");?></td>
+										<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+										<td><?php echo $tr->translate("PRICE");?></td>
+						                <td><?php echo $tr->translate("PAID");?></td>
+						                <td><?php echo $tr->translate("BALANCE");?></td>
+						                <td><?php echo $tr->translate("INSTALLMENT_PAID");?></td>
+						                <td><?php echo $tr->translate("RETURN_MONEY_BACK");?></td>
+									    <td><?php echo $tr->translate("DATE");?></td>
+									    <td><?php echo $tr->translate("REASON");?></td>
+									    <td><?php echo $tr->translate("BY_USER");?></td>
 									</tr>
 								</thead>
 						       <?php $property_type=''; $i=0; $total=0; 
@@ -109,7 +131,7 @@ if ($this->search['branch_id_search'] >0 ){
 									 <td align="left" style="font-size: 10px;">&nbsp;<?php echo $row['return_back'];?></td>
 									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['create_date']));?> </td>
 									 <td align="left" style="font-size: 10px;max-width:180px;white-space: pre-line;">&nbsp;<?php echo $row['reason'];?></td>
-									 <td align="left" style="font-size: 10px;">&nbsp;<?php echo $row['user_name'];?></td>
+									 <td align="center" >&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
 								  </tr>
 								<?php 
 								$total = $total+$row['return_back'];
@@ -118,7 +140,7 @@ if ($this->search['branch_id_search'] >0 ){
 									<td colspan="14"  align="right">
 										<table align="right" style="margin-right: 6px;">
 										    <tr style="font-size:10px; color:#000; height: 18px;" align="center">
-												<td style="width:146px;font-weight:bold; font-size: 14px;">&nbsp;ប្រាក់ប្រគល់សរុប&nbsp;</td>
+												<td style="width:146px;font-size: 14px;">&nbsp;ប្រាក់ប្រគល់សរុប&nbsp;</td>
 												<td style="background: rgba(249, 225, 11, 0.7); color:#000; font-weight:bold; width:112px; font-size: 14px;"><?php echo number_format($total,2);?></td>
 										  </tr>
 										</table>
@@ -135,11 +157,11 @@ if ($this->search['branch_id_search'] >0 ){
 		<br />
 		<table align="center" width="100%">
 		   <tr style="font-size: 14px;">
-	        <td style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></td>
+	        <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
 	        <td></td>
-	        <td style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></td>
+	        <td style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
 	        <td></td>
-	        <td style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></td>
+	        <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
 		   </tr>
 		</table>
 </div>
