@@ -83,6 +83,9 @@ class Loan_ComissionController extends Zend_Controller_Action {
 				'name' => $tr->translate("ADD_NEW"),
 		) );
 		$this->view->co_name=$co_name;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footer = $frmpopup->getFooterReceipt();
 	}
 	public function editAction(){
 		$id = $this->getRequest()->getParam('id');
@@ -128,6 +131,9 @@ class Loan_ComissionController extends Zend_Controller_Action {
 				'name' => $tr->translate("ADD_NEW"),
 		) );
 		$this->view->co_name=$co_name;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footer = $frmpopup->getFooterReceipt();
 	}
     function getCancelNoAction(){// by vandy get property code
 		if($this->getRequest()->isPost()){

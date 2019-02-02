@@ -70,6 +70,9 @@ class Loan_CancelController extends Zend_Controller_Action {
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footer = $frmpopup->getFooterReceipt();
 	}
 	public function editAction(){
 		$id = $this->getRequest()->getParam('id');
@@ -109,6 +112,9 @@ class Loan_CancelController extends Zend_Controller_Action {
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		
 		$this->view->expense_id = $row['expense_id'];
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footer = $frmpopup->getFooterReceipt();
 	}
     function getCancelNoAction(){// by vandy get property code
 		if($this->getRequest()->isPost()){
