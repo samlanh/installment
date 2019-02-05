@@ -2470,8 +2470,77 @@ function updatePaymentStatus($data){
    		
    		$sale = $ddd['sale_id'];
    	}
-   	
-   	
    }
+   public function getAllRemainMonth($search = null){//rpt-loan-released/
+	   	$db = $this->getAdapter();
+	   	$session_lang=new Zend_Session_Namespace('lang');
+	   	$lang = $session_lang->lang_id;
+	   	
+	   	$sql = " 
+	   	 SELECT  
+	   	 id ,
+	   	 name_kh,
+	   	 phone,
+	   	 land_address,
+	   	 street,
+	   	 price_sold,
+	   	 paid_amount,
+	   	 total_duration,
+	   	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id AND status=1 AND is_completed=0 ) AS times_remain
+	   	FROM v_soldreport WHERE is_cancel=0 
+	   	AND (SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id AND status=1 AND is_completed=0 LIMIT 1) <=6 
+	   	AND (SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id AND status=1 AND is_completed=0 LIMIT 1) >0 ";
+	   
+	   	$where ='';
+	   	$str = 'buy_date';
+	   	if($search['buy_type']>0 AND $search['buy_type']!=2){
+	   	$str = ' agreement_date ';
+	   	}
+	   	if($search['buy_type']==2){
+	   	$where.=" AND v_soldreport.payment_id = 1";
+	   	}
+	   	if($search['buy_type']==1){
+	   	$where.=" AND v_soldreport.payment_id != 1";
+	   	}
+	   		$from_date =(empty($search['start_date']))? '1': " $str >= '".$search['start_date']." 00:00:00'";
+	   		$to_date = (empty($search['end_date']))? '1': " $str <= '".$search['end_date']." 23:59:59'";
+	   		$where.= " AND ".$from_date." AND ".$to_date;
+	   		if(!empty($search['adv_search'])){
+	   		$s_where = array();
+	   		$s_search = addslashes(trim($search['adv_search']));
+	   		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
+	   		$s_where[] = " land_code LIKE '%{$s_search}%'";
+	   		$s_where[] = " land_address LIKE '%{$s_search}%'";
+	   		$s_where[] = " client_number LIKE '%{$s_search}%'";
+	   		$s_where[] = " name_en LIKE '%{$s_search}%'";
+	   		$s_where[] = " name_kh LIKE '%{$s_search}%'";
+	   		$s_where[] = " staff_name LIKE '%{$s_search}%'";
+	   		$s_where[] = " price_sold LIKE '%{$s_search}%'";
+	   		$s_where[] = " comission LIKE '%{$s_search}%'";
+	   		$s_where[] = " total_duration LIKE '%{$s_search}%'";
+	   		$s_where[] = " street LIKE '%{$s_search}%'";
+	   		$where .=' AND ( '.implode(' OR ',$s_where).')';
+	   		}
+	   		if($search['branch_id']>0){
+	   		$where.=" AND branch_id = ".$search['branch_id'];
+	   		}
+	   		if(!empty($search['co_id']) AND $search['co_id']>-1){
+	   		$where.=" AND staff_id = ".$search['co_id'];
+	   }
+	   		if($search['land_id']>0){
+	   		$where.=" AND house_id = ".$search['land_id'];
+	   }
+	   if($search['property_type']>0 AND $search['property_type']>0){
+	   	$where.=" AND v_soldreport.property_type = ".$search['property_type'];
+	   }
+	   if($search['client_name']!='' AND $search['client_name']>0){
+	   $where.=" AND client_id = ".$search['client_name'];
+	   }
+	   if($search['schedule_opt']>0){
+	   $where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
+	   }
+	   $order = " ORDER BY times_remain DESC,payment_id DESC ";
+	   return $db->fetchAll($sql.$where.$order);
+   } 
  }
 
