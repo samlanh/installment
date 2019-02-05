@@ -345,6 +345,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->money_deposit = $db->geIncomeFromSale($search,1);
   	$this->view->money_schedule = $db->geIncomeFromSale($search,0);
   	$this->view->money_install = $db->geIncomeFromSale($search,3);
+  	
   	$this->view->income = $db->getIncomeCategory($search);
   	$this->view->income_changehouse = $db->getIncomeChangehouse($search);
   	

@@ -1480,7 +1480,6 @@ function getAllBranch($search=null){
     				}
     			}
     		}
-//     		$where.=" AND (SELECT pt.street FROM `ln_properties` AS pt WHERE pt.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE crm.sale_id=s.id LIMIT 1 ) LIMIT 1  )='".$search['streetlist']."'";
     		$where.=" AND (SELECT pt.street FROM `ln_properties` AS pt WHERE pt.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE crm.sale_id=s.id LIMIT 1 ) LIMIT 1  ) IN ( ".$tags.")";
     	}
     	if($search['branch_id']>0){
@@ -1599,8 +1598,7 @@ function getAllBranch($search=null){
 				(SELECT SUM(crm.total_principal_permonthpaid) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id = s.id  GROUP BY crm.sale_id LIMIT 1) AS total_sale_paid
 				 FROM 
 				`ln_sale` AS s
-				WHERE 1
-				";
+				WHERE full_commission>0 ";
     		$where ="";
     		$from_date =(empty($search['start_date']))? '1': " s.`buy_date` >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " s.`buy_date` <= '".$search['end_date']." 23:59:59'";

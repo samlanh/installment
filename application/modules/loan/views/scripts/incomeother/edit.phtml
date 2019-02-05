@@ -202,8 +202,6 @@ $frm = $this->frm_income;
 	        <div class="clearfix"></div>
 			 <div class="card-box">
              	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-             		<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button"
-						 iconClass="dijitIconClear"/>
 					<input type="submit" label="<?php echo $tr->translate("GO_EDIT");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button"
 						 iconClass="dijitIconDelete"/>
 					<input type="button" label="<?php echo $tr->translate("PRINT")?>" name='print' value=''print'' dojoType="dijit.form.Button"
@@ -220,7 +218,6 @@ dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dojo.NodeList-manipulate");
 dojo.require("dijit.form.NumberTextBox");
 dojo.require("dijit.form.DateTextBox");
-dojo.require("dijit.form.CheckBox");
 
 function displayNone(){
 	document.getElementById('divPrint1').style.display="none";
@@ -706,16 +703,17 @@ function printSave(new_invoice_no){
 	template="";
 		 temp='<table class="collape tablesorter"  align="center" style=" width: 100%; padding: 0px; margin: 0px; border-collapse: collapse; border: 1px solid #000; font-size:14px;font-family:Khmer OS Battambang !important;  " id="table">'
 			  temp+='<tr style=" font-size:14px; text-align:center; height:23px;">';
-		 temp+='<td style="border:1px solid #000;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ល.រ</div></strong></td>';
-		  temp+='<td style="border:1px solid #000;><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">អធិប្បាយ</div></strong></td>';
-		  temp+='<td style="border:1px solid #000;><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">បរិមាណ</div></strong></td>';
-		  temp+='<td style="border:1px solid #000;><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">តម្លៃ</div></strong></td>';
-		  temp+='<td style="border:1px solid #000;><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">សរុប</div></strong></td>';
-			  temp+='</tr>';
+		  temp+='<td style="border:1px solid #000;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ល.រ</span></td>';
+		  temp+='<td style="border:1px solid #000;><span style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">អធិប្បាយ</span></td>';
+		  temp+='<td style="border:1px solid #000;><span style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">បរិមាណ</span></td>';
+		  temp+='<td style="border:1px solid #000;><span style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">តម្លៃ</span></td>';
+		  temp+='<td style="border:1px solid #000;><span style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">សរុប</span></td>';
+		  temp+='</tr>';
 			  n=0;
-			i=1;  for(var n = 0; n < rowIDArray.length; n++) {
+			  i=1; 
+		   for(var n = 0; n < rowIDArray.length; n++) {
 			  temp+='<tr  style=" font-size:12px;line-height: 23px;"​ ><td align="center" style="border:1px solid #000;">'+i+'</td>';
-			  temp+='<td  style="border:1px solid #000;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;">'+dijit.byId("description_"+rowIDArray[n]).get('value')+'</td>';
+			  temp+='<td  style="border:1px solid #000;white-space:normal;max-width:150px;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;">'+dijit.byId("description_"+rowIDArray[n]).get('value')+'</td>';
 			  temp+='<td  style="border:1px solid #000;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;">'+dojo.number.format(dijit.byId("qty_"+rowIDArray[n]).get('value'),{places:2})+'</td>';
 			  temp+='<td  style="border:1px solid #000;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;">'+dojo.number.format(dijit.byId("price_"+rowIDArray[n]).get('value'),{places:2})+'</td>';
 			  temp+='<td  style="border:1px solid #000;"><span style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;">'+dojo.number.format(dijit.byId("total_"+rowIDArray[n]).get('value'),{places:2})+'</td>';
@@ -733,10 +731,6 @@ function printSave(new_invoice_no){
 		temp+='</table>';
 	dojo.byId('t_amountmoneytype').innerHTML = temp;
 	dijit.byId("print_expense").show();
-}
-
-function currencyFormat (num) {
-    //return "$ " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 }
 function doPrintInvoice() {
 	$('#frm_add_tran');

@@ -129,7 +129,7 @@
 	               	<?php continue;}
 	               	$i++; ?>
 	               	<tr align="center" style=" height: 20px;" class="style hover" >
-	                    <td><?php echo ($key+1<10)?"0":"";echo $i;?></td>
+	                    <td><?php echo ($i<10)?"0":"";echo $i;?></td>
 		                    <?php $str_day = date('D',strtotime($row['date_payment']));
 		                    	$day_as_khmer = $dayin_khmer[$str_day];
 		                    ?>
@@ -156,7 +156,6 @@
 	                   		$remain = $row['ending_balance'];
 	                    ?>
 	                    <td><?php echo number_format($remain,(!strrpos($remain,"."))? 0 : 2);?></td>
-	                    <!-- <td><?php //echo str_replace('.00', '', number_format($row['cum_interest'],2)); ?></td> -->
 	                    <td><?php echo $row['note']; echo ($row['is_completed']==1)?$tr->translate("COMPLETED"):""; ?></td>
 	                    <td><?php if($row['is_completed']==1){ echo empty($row['received_by'])?"-":$row['received_by'];} ?></td>
 	                    <td><?php  
