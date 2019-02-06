@@ -56,6 +56,7 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 		$street->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'required'=>'false',
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 				'onchange'=>'showStreet();'

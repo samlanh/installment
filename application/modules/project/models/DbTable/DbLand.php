@@ -15,7 +15,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	$where = " WHERE ".$from_date." AND ".$to_date;
     	$sql = "SELECT id,
     	(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
-    	land_code,land_address,street,
+    	land_address,street,
     	(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type limit 1) AS  pro_type,
     	price,width,height,land_size,hardtitle,
     	(SELECT name_kh FROM `ln_view` WHERE type = 28 AND key_code=is_lock LIMIT 1) sale_type,

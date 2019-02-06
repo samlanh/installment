@@ -468,7 +468,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 							</tr>
 							<tr>
 							<td colspan="2" align="center">
-							<input type="button" value="Save" label="'.$tr->translate('GO_SAVE').'" dojoType="dijit.form.Button"
+							<input type="button" id="save_property" value="Save" label="'.$tr->translate('GO_SAVE').'" dojoType="dijit.form.Button"
 							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewPropertytype();"/>
 							</td>
 						</tr>

@@ -256,8 +256,6 @@ dojo.require("dijit.Dialog");
 	    	<div class="clearfix"></div>
 			    <div class="card-box">
                		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-		    			<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" 
-									 iconClass="dijitIconClear" /> 
 						<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
 							 iconClass="dijitEditorIcon dijitEditorIconSave"/> 
 	    		</div>
@@ -277,7 +275,7 @@ dojo.require("dijit.Dialog");
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
-						<input type="button" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+						<input type="button" id="save_street" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
 							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewStreet();"/>
 					</td>
 				</tr>
@@ -288,6 +286,7 @@ dojo.require("dijit.Dialog");
 <script type="text/javascript">
 
 function showStreet(){
+	dijit.byId('save_street').set('disabled',false);
 	street = dijit.byId('street').get('value');
 	if(street==''){
 		alert("<?php echo $tr->translate("PLEASE_SELECT_STREET")?>");
@@ -299,35 +298,35 @@ function showStreet(){
 }
 var StreetStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->street));?> );
 function addNewStreet(){
-	var Itemmake = {					
-			id: dijit.byId('newStreet').get('value'),
-		    name: dijit.byId('newStreet').get('value')
-	};		
-	addDataToSelectbox(dijit.byId('street'), StreetStore, Itemmake, dijit.byId('newStreet').get('value'));	
-	dijit.byId('newStreet').attr('value',dijit.byId('newStreet').get('value'));
-	dijit.byId('frm_street').reset();
-	dijit.byId('frm_street').hide();
+	if(dijit.byId('frm_street').validate()) {
+		var Itemmake = {					
+				id: dijit.byId('newStreet').get('value'),
+			    name: dijit.byId('newStreet').get('value')
+		};		
+		addDataToSelectbox(dijit.byId('street'), StreetStore, Itemmake, dijit.byId('newStreet').get('value'));	
+		dijit.byId('newStreet').attr('value',dijit.byId('newStreet').get('value'));
+		dijit.byId('frm_street').reset();
+		dijit.byId('frm_street').hide();
+		dijit.byId('save_street').set('disabled',true);
+	}
 }
 
 var propertyType_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->pro_type));?> );
 dojo.ready(function(){
-	
-	try{
-		new dijit.form.FilteringSelect({
-			store: propertyType_store,
-			autoComplete: true,
-			required: false,         
-			name: "property_type",
-			id: "property_type",
-			value: "<?php echo $this->row['property_type'];?>",
-			searchAttr: "name",
-			class: 'fullside',
-				onChange: function() {
-					showPopupForm();
-				}  
-			}, "property_type");
-	}catch(e){
-	}
+	new dijit.form.FilteringSelect({
+		store: propertyType_store,
+		queryExpr:'*${0}*',
+		autoComplete: false,
+		required: false,         
+		name: "property_type",
+		id: "property_type",
+		value: "<?php echo $this->row['property_type'];?>",
+		searchAttr: "name",
+		class: 'fullside',
+			onChange: function() {
+				showPopupForm();
+			}  
+		}, "property_type");
 });
 function calCulateSize(){
 	width = dijit.byId("width").get('value');
@@ -336,6 +335,7 @@ function calCulateSize(){
 	dijit.byId("size").attr('value',totalsize);
 	}
 function showPopupForm(){
+	dijit.byId('save_property').set('disabled',false);
 	property_type = dijit.byId('property_type').get('value');
 	if(property_type==''){
 		alert('Please Select Property Type');
@@ -348,6 +348,7 @@ function showPopupForm(){
 url_property = '<?php echo $this->url(array('module'=>'project','controller'=>'propertiestype','action'=>'add-propertytype'));?>';
 function addNewPropertytype(){
 	if(dijit.byId('frm_propertytype').validate()) {
+		dijit.byId('save_property').set('disabled',true);
 		dojo.xhrPost({
 			url:url_property,	
 			form:dojo.byId('form_propertytype'),
@@ -361,9 +362,9 @@ function addNewPropertytype(){
 				dijit.byId('property_type').attr('value',data);	
 				dijit.byId('frm_propertytype').reset();
 				dijit.byId('frm_propertytype').hide();
+				dijit.byId('save_property').set('disabled',false);
 			},
 			error: function(err) {
-				alert(err);
 			}
 		});
 	}
@@ -402,7 +403,6 @@ function checkTitle(){
 			}
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }

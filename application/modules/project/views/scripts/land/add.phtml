@@ -270,8 +270,8 @@
 <?php echo $this->frmPopupPropertyType;?>
 <?php  $frm = $this->frm_branch;?>
 <div class="dijitHidden">
-		<div data-dojo-type="dijit.Dialog"  id="popup_project" >
-			<table cellspacing="10" style="margin: 0 auto; width:100%">
+	<div data-dojo-type="dijit.Dialog"  id="popup_project" >
+		<table cellspacing="10" style="margin: 0 auto; width:100%">
 			<tr>
 				<td>
 					<fieldset>
@@ -310,20 +310,20 @@
 										</tr>
 										<tr>
 											<td colspan="4" align="center">
-												<input type="button"  onclick="addNewBranch();" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
+												<input type="button" id="save_branch" onclick="addNewBranch();" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVE');?>" dojoType="dijit.form.Button" 
 													iconClass="dijitEditorIcon dijitEditorIconSave" />
 											</td>
 										</tr>					
 									</table>
 								</td>							
 							</tr>
-						</table>
-						</form>	
+					</table>
+					</form>	
 					</fieldset>
 				</td>			
 			</tr>
 		</table>			
-		</div>
+	</div>
 </div>
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("STREET")?>'"  id="frm_street" >
@@ -336,7 +336,7 @@
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
-						<input type="button" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+						<input type="button" id="save_street" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
 							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewStreet();"/>
 					</td>
 				</tr>
@@ -346,6 +346,7 @@
 </div>
 <script type="text/javascript">
 function showStreet(){
+	dijit.byId('save_street').set('disabled',false);
 	street = dijit.byId('street').get('value');
 	if(street==''){
 		alert("<?php echo $tr->translate("PLEASE_SELECT_STREET")?>");
@@ -357,16 +358,18 @@ function showStreet(){
 }
 var StreetStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->street));?> );
 function addNewStreet(){
-	var Itemmake = {					
-			id: dijit.byId('newStreet').get('value'),
-		    name: dijit.byId('newStreet').get('value')
-	};		
-	addDataToSelectbox(dijit.byId('street'), StreetStore, Itemmake, dijit.byId('newStreet').get('value'));	
-	dijit.byId('newStreet').attr('value',dijit.byId('newStreet').get('value'));
-	dijit.byId('frm_street').reset();
-	dijit.byId('frm_street').hide();
+	if(dijit.byId('frm_street').validate()) {
+		var Itemmake = {					
+				id: dijit.byId('newStreet').get('value'),
+			    name: dijit.byId('newStreet').get('value')
+		};		
+		addDataToSelectbox(dijit.byId('street'), StreetStore, Itemmake, dijit.byId('newStreet').get('value'));	
+		dijit.byId('newStreet').attr('value',dijit.byId('newStreet').get('value'));
+		dijit.byId('frm_street').reset();
+		dijit.byId('frm_street').hide();
+		dijit.byId('save_street').set('disabled',true);
+	}
 }
-
 var propertyType_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->pro_type));?> );
 var branch_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->branch_opt));?> );
 
@@ -374,7 +377,8 @@ dojo.ready(function(){
 	try{
 		new dijit.form.FilteringSelect({
 			store: propertyType_store,
-			autoComplete: true,
+			queryExpr:'*${0}*',
+			autoComplete: false,
 			required: false,		           
 			name: "property_type",
 			id: "property_type",
@@ -387,7 +391,8 @@ dojo.ready(function(){
 
 		new dijit.form.FilteringSelect({
 			store: branch_store,
-			autoComplete: true,
+			queryExpr:'*${0}*',
+			autoComplete: false,
 			required: true,		           
 			name: "branch_id",
 			id: "branch_id",
@@ -418,6 +423,7 @@ function calCulateFullSize(){
 	dijit.byId("full_size").attr('value',totalsize);
 }
 function showPopupForm(){
+	dijit.byId('save_property').set('disabled',false);
 	property_type = dijit.byId('property_type').get('value');
 	if(property_type==''){
 		alert('Please Select Property Type');
@@ -452,6 +458,7 @@ function addNewBranch(){
 url_property = '<?php echo $this->url(array('module'=>'project','controller'=>'propertiestype','action'=>'add-propertytype'));?>';
 function addNewPropertytype(){
 	if(dijit.byId('frm_propertytype').validate()) {
+		dijit.byId('save_property').set('disabled',true);
 		dojo.xhrPost({
 			url:url_property,	
 			form:dojo.byId('form_propertytype'),
@@ -465,9 +472,9 @@ function addNewPropertytype(){
 				dijit.byId('property_type').attr('value',data);
 				dijit.byId('frm_propertytype').reset();
 				dijit.byId('frm_propertytype').hide();
+				dijit.byId('save_property').set('disabled',false);
 			},
 			error: function(err) {
-				alert(err);
 			}
 		});
 	}

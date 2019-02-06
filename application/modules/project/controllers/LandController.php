@@ -36,7 +36,7 @@ class Project_LandController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","LOAN_NO","PROPERTY_CODE","STREET","PROPERTY_TYPE","PRICE","WIDTH","HEIGHT","SIZE","HEAD_TITLE_NO","STATUS_BUY","DATE","BY_USER","STATUS");
+			$collumns = array("BRANCH_NAME","PROPERTY_CODE","STREET","PROPERTY_TYPE","PRICE","WIDTH","HEIGHT","SIZE","HEAD_TITLE_NO","STATUS_BUY","DATE","BY_USER","STATUS");
 			$link=array(
 					'module'=>'project','controller'=>'land','action'=>'edit',
 			);
@@ -94,7 +94,9 @@ class Project_LandController extends Zend_Controller_Action {
 		array_unshift($branch_opt, array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW_PROJECT")));
 		$this->view->branch_opt = $branch_opt;
 		
-		$this->view->street = $db->getAllStreetForOpt();
+		$rs_street = $db->getAllStreetForOpt();
+		array_unshift($rs_street, array('id'=>-1,'name' => $tr->translate("Add New Property Type")));
+		$this->view->street = $rs_street;
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
@@ -134,7 +136,9 @@ class Project_LandController extends Zend_Controller_Action {
 		array_unshift($branch_opt, array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW_PROJECT")));
 		$this->view->branch_opt = $branch_opt;
 	
-		$this->view->street = $db->getAllStreetForOpt();
+		$rs_street = $db->getAllStreetForOpt();
+		array_unshift($rs_street, array('id'=>-1,'name' => $tr->translate("Add New Property Type")));
+		$this->view->street = $rs_street;
 	
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
@@ -175,9 +179,10 @@ class Project_LandController extends Zend_Controller_Action {
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		
-		$db = new Application_Model_DbTable_DbGlobal();
-		$this->view->street = $db->getAllStreetForOpt();
-		
+		$db = new Application_Model_DbTable_DbGlobal();		
+		$rs_street = $db->getAllStreetForOpt();
+		array_unshift($rs_street, array('id'=>-1,'name' => $tr->translate("Add New Property Type")));
+		$this->view->street = $rs_street;
 	}
 	function viewAction(){
 		$id = $this->getRequest()->getParam("id");
