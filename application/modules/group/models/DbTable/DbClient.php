@@ -201,18 +201,18 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			$sql = "
 			SELECT client_id,
 			(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
-			client_number,name_kh,
+			name_kh,
 			(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND sex=key_code LIMIT 1) AS sex
 			,phone,house,street,
-				(SELECT village_namekh FROM `ln_village` WHERE vill_id= village_id) AS village_name,
+				(SELECT village_namekh FROM `ln_village` WHERE vill_id= village_id LIMIT 1) AS village_name,
 			    create_date,
-			    (SELECT  CONCAT(first_name) FROM rms_users WHERE id=user_id ) AS user_name,
+			    (SELECT  CONCAT(first_name) FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name,
 				status FROM $this->_name ";
 			if(!empty($search['adv_search'])){
 				$s_where = array();
 				$s_search = addslashes(trim($search['adv_search']));
+				$s_search = str_replace(' ', '', addslashes(trim($search['adv_search'])));
 				$s_where[] = " client_number LIKE '%{$s_search}%'";
-				//$s_where[] = " name_en LIKE '%{$s_search}%'";
 				$s_where[] = " name_kh LIKE '%{$s_search}%'";
 				$s_where[] = " phone LIKE '%{$s_search}%'";
 				$s_where[] = " tel LIKE '%{$s_search}%'";
@@ -235,7 +235,6 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			if($search['customer_id']>0){
 				$where.=" AND client_id= ".$search['customer_id'];
 			}
-			
 			if(!empty($search['comm_id'])){
 				$where.=" AND com_id= ".$search['comm_id'];
 			}
@@ -244,6 +243,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			}
 			$order=" ORDER BY client_id DESC ";
 			return $db->fetchAll($sql.$where.$order);
+			
 		}catch (Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	

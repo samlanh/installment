@@ -4,17 +4,9 @@
 ?>	
 <?php  $techer= $this->frm_co;?>
 <script>
-	dojo.require("dijit/form/DateTextBox");
-	dojo.require("dijit/form/NumberTextBox");
-	dojo.require("dijit/form/DateTextBox");
-	dojo.require("dijit/form/NumberTextBox");
 	dojo.require("dijit.form.ValidationTextBox");
-	dojo.require('dijit.form.Form');	
-	dojo.require('dijit.form.Button');
-	dojo.require('dijit.form.FilteringSelect');
 	dojo.require("dijit.form.CheckBox");
 	dojo.ready(function(){
-		//getStaffCode();
 		});
 </script>
 <style>
@@ -201,7 +193,6 @@ input.btn_borwse_image {
 							dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពាក្យ​​សំងាត់!" class='fullside'/>
 	                   </div>
 	                </div>
-	                
 	             </div>
 	             <div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
@@ -209,13 +200,11 @@ input.btn_borwse_image {
 	                   </label>
 	                </div>
 					 <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
-	                   </label>
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"></label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	 <?php 
 								$images = $this->baseUrl().'/images/no-profile.png';
 							?>
-							<?php  //echo $techer->getElement('photo');?>
 							<input name="old_photo"  value="<?php echo $this->photo;?>" type="hidden" />
 							<div class="account-image" >
 								<div class="image-box">
@@ -223,22 +212,17 @@ input.btn_borwse_image {
 								</div>
 								<div class="button_browse">
 								<div id='preview'></div>	
-										<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
-										<input class="btn_borwse_image" type="file" id="photo" name="photo" />
+									<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+									<input class="btn_borwse_image" type="file" id="photo" name="photo" />
 								</div>
 							</div>
 	                   </div>
 	                </div>
-	                
 	             </div>
 	        </div>
 	        <div class="clearfix"></div>
 			    <div class="card-box">
                		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-		    			<input type="hidden" name="exchangefrom" value="2" />
-						<input type="hidden" name="inv_no" value="<?php echo $this->inv_no;?>">
-						<input type="reset" label="<?php echo $tr->translate("CLEAR");?>" dojoType="dijit.form.Button"/>
-						
 						<input type="submit" id="save_new" value="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW");?>" dojoType="dijit.form.Button" 
 							iconClass="dijitEditorIcon dijitEditorIconSave" />
 	    		</div>
@@ -246,15 +230,8 @@ input.btn_borwse_image {
 		</form>
 	</div>
 </div>
-<?php  echo $this->frmpopupdepartment;?>
 <script type="text/javascript">
 dojo.require("dojo.data.ItemFileWriteStore"); 
-dojo.require("dojo.date.locale");
-
-dojo.require("dojo.data.ObjectStore");
-dojo.require("dojo.NodeList-manipulate");
-dojo.require("dojo.html");
-
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -324,78 +301,11 @@ function getCheckUserName(){
 			}else{
 				isCheck=0;
 			}
-			
 		},
 		error: function(err) {
 		}
 	});
 }
-	function calculateDay(){
-		start_date = dijit.byId("start_date").get('value');
-		var a=new Date(start_date);
-		m=a.getMonth()+1;
-		d=a.getDate();
-		if(d<15){
-			m=m-1;
-		}
-		t_day=18*(12-m)/12;
-		dijit.byId('annual_lives').attr('value',t_day);
-	}
-	function Checktime(type){
-		workingtime_id=dijit.byId("workingtime").get("value");
-		shift_id=dijit.byId("shift").get("value");
-		if(type==1){
-			if(workingtime_id==1){
-				dijit.byId("shift").attr('value',1);
-				dijit.byId("workingtime").set('readOnly',true);
-			}
-			else if(workingtime_id==2){
-				dijit.byId("shift").attr('value',2);
-			}
-			else if(workingtime_id==3){
-				dijit.byId("shift").attr('value',2);
-			}
-		}else{
-			if(shift_id==1){
-				dijit.byId("workingtime").attr('value',1);
-				dijit.byId("workingtime").set('readOnly',true);
-			}
-			else if(shift_id==2){
-				dijit.byId("workingtime").attr('value',2);
-				dijit.byId("workingtime").set('readOnly',false);
-			}
-			else if(shift_id==2){
-				dijit.byId("workingtime").attr('value',3);
-				dijit.byId("workingtime").set('readOnly',false);
-			}
-		}
-	}
-
-	function popupDepartment(){
-		var department_id = dijit.byId('department_id').get('value');
-		if(department_id==-1){
-			dijit.byId('department').show();
-		}
-	}
-	function addNewDepartment(){
-		var url_submit = '<?php echo $this->url(array('module'=>'payroll','controller'=>'co','action'=>'addnewdepartment')); ?>';
-				dojo.xhrPost({
-			    url: url_submit,	
-				form: dojo.byId("frm_department"),		    
-				handleAs:"json", 
-				load: function(data) {	
-					labelen = dijit.byId('department_en').get('value');
-					labelkh = dijit.byId('department_kh').get('value');
-					$('#department_id').val(labelen);
-					$('input[name="department_id"]').val(data);
-					dojo.byId('frm_department').reset(); 
-					dijit.byId('department').hide();
-				},
-				error: function(e) {
-				alert("Your message could not be sent, please try again!.");
-				}
-			});
-	}
 var url_staffcode = '<?php echo $this->url(array('module'=>'group','controller'=>'co','action'=>'getstaffcode')); ?>';
 	function getStaffCode(){
 		branch_id = dijit.byId('branch_id').get('value');

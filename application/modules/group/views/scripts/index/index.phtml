@@ -15,7 +15,7 @@ $urlProfile = $this->baseUrl()."/group/index/view/id/";
 				      <td><?php echo $frm->getElement("adv_search");?></td>
 				      <td><?php echo $frm->getElement("branch_id");?></td>
 				      <td><?php echo $frms->getElement('customer_id');?></td>
-				       <td><?php echo $frm->getElement('start_date');?></td>
+				      <td><?php echo $frm->getElement('start_date');?></td>
 				      <td><?php echo $frm->getElement('end_date');?></td>
 				   </tr>
 				   <tr>
@@ -37,7 +37,6 @@ $urlProfile = $this->baseUrl()."/group/index/view/id/";
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <script type="text/javascript">
-dojo.require("dojo.data.ObjectStore");
 dojo.require("dojo.data.ItemFileWriteStore");  
 dojo.require("dijit.form.DateTextBox");
 
@@ -85,7 +84,6 @@ dojo.ready(function(){
 				}
 	  }
 		}, "commune");
-
 		 
 		new dijit.form.FilteringSelect({
 		store: village_store,
@@ -110,20 +108,19 @@ function filterDistrict(){
 	pro_id = dijit.byId('province').get('value');
 	if(pro_id==0){
 		return false;}
-	dojo.xhrPost({
-		url:url_getdistrict,	
-		content:{ 
-			'pro_id': pro_id
-		},
-		handleAs:"json",
-		load: function(data) {	
-			district_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('district').set('store', district_store);
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});	
+		dojo.xhrPost({
+			url:url_getdistrict,	
+			content:{ 
+				'pro_id': pro_id
+			},
+			handleAs:"json",
+			load: function(data) {	
+				district_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('district').set('store', district_store);
+			},
+			error: function(err) {
+			}
+		});	
 }
 url_getcommune = '<?php echo $this->url(array('module'=>'other','controller'=>'commune','action'=>'get-commune'));?>';
 function filterCommune(){
@@ -141,7 +138,6 @@ function filterCommune(){
 		    dijit.byId('commune').set('store', commune_store);
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
@@ -150,22 +146,21 @@ function filterVillage(){
 	commune_id = dijit.byId('commune').get('value');
 	if(commune_id==0){
 		return false;}
-	dojo.xhrPost({
-		url:url_getvillage,	
-		content:{ 
-			'commune_id': commune_id
-		},
-		handleAs:"json",
-		load: function(data) {	
-			village_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('village').set('store', village_store);
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
+		dojo.xhrPost({
+			url:url_getvillage,	
+			content:{ 
+				'commune_id': commune_id
+			},
+			handleAs:"json",
+			load: function(data) {	
+				village_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('village').set('store', village_store);
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
 }
-
 var row=0;
 var url="";
 $(function(){
@@ -179,9 +174,7 @@ $(function(){
 			}else if(key=="profile"){
 				url='<?php echo $urlProfile;?>';
 			}
-			
 			gotoAction();
-			//window.console && console.log(m) || alert(m); 
 		},
 		items: {
 			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
@@ -192,7 +185,6 @@ $(function(){
 function setrowdata(index){
 	row = index;
 }
-
 var recordid ='';
 function gotoAction(){
 	 window.open(url+row, '_blank');

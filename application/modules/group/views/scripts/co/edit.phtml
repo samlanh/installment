@@ -6,11 +6,7 @@
 <?php  $techer= $this->frm_co;?>
 <script>
 	dojo.require("dijit/form/DateTextBox");
-	dojo.require("dijit/form/NumberTextBox");
 	dojo.require("dijit.form.ValidationTextBox");
-	dojo.require('dijit.form.Form');	
-	dojo.require('dijit.form.Button');
-	dojo.require('dijit.form.FilteringSelect');
 	dojo.require("dijit.form.CheckBox");
 </script>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
@@ -64,6 +60,7 @@ input.btn_borwse_image {
 						dijit.byId('user_name').focus();
 						return false;
 					}
+					dijit.byId('save_new').set('disabled',true);
 					return true;
 				} else {
 					return false;
@@ -219,7 +216,6 @@ input.btn_borwse_image {
 									$images =  $this->baseUrl().'/images/'.$this->photo;
 								}
 							?>
-							<?php  //echo $techer->getElement('photo');?>
 							<input name="old_photo"  value="<?php echo $this->photo;?>" type="hidden" />
 							<div class="account-image" >
 								<div class="image-box">
@@ -238,28 +234,26 @@ input.btn_borwse_image {
 	        <div class="clearfix"></div>
 			    <div class="card-box">
                		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-		    			<input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate("GO_EDIT")?>" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+		    			<input type="submit" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate("GO_EDIT")?>" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 
 	    		</div>
 	    	</div>
 		</form>
 	</div>
 </div>
-
 <script type="text/javascript">
-
 function Checkchange(){
-	  if (dojo.byId("check_change").checked){
-		  dijit.byId('password').set('required',true); 
-		  dijit.byId('password').set('readonly',false); 
-		 
-	  }else{
-		  $('#password').val('');
-		  dijit.byId('password').set('required',false); 
-		  dijit.byId('password').set('readonly',true); 
-	  }
+  if (dojo.byId("check_change").checked){
+	  dijit.byId('password').set('required',true); 
+	  dijit.byId('password').set('readonly',false); 
+	 
+  }else{
+	  $('#password').val('');
+	  dijit.byId('password').set('required',false); 
+	  dijit.byId('password').set('readonly',true); 
+  }
 }
 function CheckCreatUser(){
-	  if (dojo.byId("check_create").checked){
+	  if(dojo.byId("check_create").checked){
 		  dijit.byId('user_name').set('required',true); 
 		  dijit.byId('user_name').set('readonly',false); 
 		  dijit.byId('user_type').set('required',true); 
@@ -277,7 +271,6 @@ function CheckCreatUser(){
 		  dijit.byId('user_type').set('readonly',true);
 		  dijit.byId('password').set('required',false); 
 		  dijit.byId('password').set('readonly',true);
-		  
 		  dijit.byId('password').set('disabled', true);
 		  dijit.byId('user_name').set('disabled', true);
 		  dijit.byId('user_type').set('disabled', true);
@@ -291,7 +284,6 @@ dojo.ready(function(){
 		CheckCreatUser();
 		<?php }?>
 	}catch(e){
-		alert(e);
 	}
 	$(window).keydown(function(event){
 		if(event.keyCode == 13) {
@@ -303,7 +295,6 @@ dojo.ready(function(){
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
-        
         reader.onload = function (e) {
             $('#profile_wiew').attr('src', e.target.result);
         }
@@ -337,23 +328,11 @@ function getCheckUserName(){
 			}else{
 				isCheck=0;
 			}
-			
 		},
 		error: function(err) {
 		}
 	});
 }
-	function calculateDay(){
-		start_date = dijit.byId("start_date").get('value');
-		var a=new Date(start_date);
-		m=a.getMonth()+1;
-		d=a.getDate();
-		if(d<15){
-			m=m-1;
-		}
-		t_day=18*(12-m)/12;
-		dijit.byId('annual_lives').attr('value',t_day);
-	}
 	var url_staffcode = '<?php echo $this->url(array('module'=>'payroll','controller'=>'co','action'=>'getstaffcode')); ?>';
 	function getStaffCode(){
 		branch_id = dijit.byId('branch_id').get('value');

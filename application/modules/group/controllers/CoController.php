@@ -1,6 +1,5 @@
 <?php
 class Group_CoController extends Zend_Controller_Action {
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
 	const REDIRECT_URL = '/group';
     public function init()
     {    	
@@ -40,31 +39,26 @@ class Group_CoController extends Zend_Controller_Action {
 	}
 	
    function addAction(){
-   	if($this->getRequest()->isPost()){
-   		$_data = $this->getRequest()->getPost();
-   		$db_co = new Other_Model_DbTable_DbCreditOfficer();
-   		 
-   		try{
-   			$db_co->addCreditOfficer($_data);
-   				if(!empty($_data['save_new'])){
-					Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
-				}else{
-					Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL . '/co/index');
-				}
-   		}catch(Exception $e){
-   			Application_Form_FrmMessage::message("ការ​បញ្ចូល​មិន​ជោគ​ជ័យ");
-   			$err =$e->getMessage();
-   			Application_Model_DbTable_DbUserLog::writeMessageError($err);
-   		}
-   	}
-   	
-   	$frm = new Other_Form_FrmCO();
-   	$frm_co=$frm->FrmAddCO();
-   	Application_Model_Decorator::removeAllDecorator($frm_co);
-   	$this->view->frm_co = $frm_co;
-   	
-   	$frmpopup = new Application_Form_FrmPopupGlobal();
-   	$this->view->frmpopupdepartment = $frmpopup->frmPopupDepartment();
+	   	if($this->getRequest()->isPost()){
+	   		$_data = $this->getRequest()->getPost();
+	   		$db_co = new Other_Model_DbTable_DbCreditOfficer();
+	   		try{
+	   			$db_co->addCreditOfficer($_data);
+	   				if(!empty($_data['save_new'])){
+						Application_Form_FrmMessage::message('INSERT_SUCCESS');
+					}else{
+						Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL . '/co/index');
+					}
+	   		}catch(Exception $e){
+	   			Application_Form_FrmMessage::message("INSERT_FAIL");
+	   			$err =$e->getMessage();
+	   			Application_Model_DbTable_DbUserLog::writeMessageError($err);
+	   		}
+	   	}
+	   	$frm = new Other_Form_FrmCO();
+	   	$frm_co=$frm->FrmAddCO();
+	   	Application_Model_Decorator::removeAllDecorator($frm_co);
+	   	$this->view->frm_co = $frm_co;
    }
    function editAction(){
    	$db_co = new Other_Model_DbTable_DbCreditOfficer();
@@ -72,9 +66,9 @@ class Group_CoController extends Zend_Controller_Action {
    		$_data = $this->getRequest()->getPost();
    		try{
    			$db_co->addCreditOfficer($_data);
-   			Application_Form_FrmMessage::Sucessfull("ការ​បញ្ចូល​ជោគ​ជ័យ !",'/group/co');
+   			Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",'/group/co');
    		}catch(Exception $e){
-   			Application_Form_FrmMessage::message("ការ​បញ្ចូល​មិន​ជោគ​ជ័យ");
+   			Application_Form_FrmMessage::message("INSERT_FAIL");
    			$err =$e->getMessage();
    			Application_Model_DbTable_DbUserLog::writeMessageError($err);
    		}

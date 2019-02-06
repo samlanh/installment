@@ -52,7 +52,23 @@ label.value {
     min-width: 100px !important;
 }
 </style>
-<div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+	<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+		<i class="fa fa-print"></i>
+	</div>
+    <div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+		<div class="ptss__settings">
+			<div class="ptss__single-setting" id="ptss__layout">
+				<div class="ptss__setting-control">
+					<div class="ptss__layout-wrapper">
+						<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
+						<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+					</div>
+				</div>
+		</div>
+	 </div>
+</div>
+<div style="background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
 			<div id="divPrint">
 				<style>
 		   			label.value{
@@ -87,8 +103,8 @@ label.value {
 						</div>
 					   </td>
 					   <td width="30%" align="center">
-					   		<h2 style="font-size:16px;     line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';" >ព្រះរាជាណាចក្រកម្ពុជា</h2>
-					   		<h2 style="font-size:14px;     line-height: 14px; font-weight: initial; font-family:'Khmer OS Battambang';">ជាតិ សាសនា ព្រះមហាក្សត្រ</h2>
+					   		<h2 style="font-size:16px;line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';" >ព្រះរាជាណាចក្រកម្ពុជា</h2>
+					   		<h2 style="font-size:14px;line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';">ជាតិ សាសនា ព្រះមហាក្សត្រ</h2>
 					   		<img alt="" src="<?php echo $this->baseUrl()."/images/sign.PNG"?>" style=" width: 120px;">
 					   </td>
 					</tr>
@@ -112,7 +128,7 @@ label.value {
 						    		</td>
 						    	</tr>
 						    	<tr>
-						    		<td style="font-size:14px; font-weight:600;  font-family:'Khmer OS Battambang';">
+						    		<td style="font-size:14px; font-family:'Khmer OS Battambang';">
 						    			<p class="padding-left">
 						    			<label class="title">នាមត្រកូល-ខ្លួន</label> : <label class="value"><?php echo $rs['name_kh'];?></label> <label class="title">ភេទ</label> : <label class="value"><?php echo $rs['sex'];?></label> <label class="title">សញ្ជាតិ</label> : <label class="value"><?php  echo $rs['nationality'];?></label> 
 						    			</p>
@@ -136,7 +152,7 @@ label.value {
 						    		</td>
 						    	</tr>
 						    	<tr>
-						    		<td style="font-size:14px; font-weight:600;  font-family:'Khmer OS Battambang';">
+						    		<td style="font-size:14px; font-family:'Khmer OS Battambang';">
 						    			<p class="padding-left">
 						    			<label class="title">ឈ្មោះ </label> : <label class="value"><?php echo $rs['hname_kh'];?></label> <label class="title">ភេទ</label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo $rs['ksex'];?></label> <label class="title">សញ្ជាតិ</label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo $rs['p_nationality'];?></label>
 						    			</p>
@@ -159,9 +175,9 @@ label.value {
 						    		</td>
 						    	</tr>
 						    	<tr>
-						    		<td style="font-size:14px; font-weight:600;  font-family:'Khmer OS Battambang';">
+						    		<td style="font-size:14px; font-family:'Khmer OS Battambang';">
 						    			<p class="padding-left">
-						    			<label class="title">ឈ្មោះ </label> : <label class="value"><?php echo $rs['arid_no']; ?></label> <label class="title">លេខអត្តសញ្ញាណប័ណ្ណ</label> : <label class="value"><?php echo $rs['refe_nation_id'];?></label> 
+						    				<label class="title">ឈ្មោះ </label> : <label class="value"><?php echo $rs['arid_no']; ?></label> <label class="title">លេខអត្តសញ្ញាណប័ណ្ណ</label> : <label class="value"><?php echo $rs['refe_nation_id'];?></label> 
 						    			</p>
 						    		</td>
 						    	</tr>
@@ -188,12 +204,10 @@ function preview()
    docprint.document.close(); 
    docprint.focus(); 
 }
-
 function doPrint() {
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
     hideDialog();
 }
-
 </script>

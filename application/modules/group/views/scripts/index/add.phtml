@@ -7,7 +7,6 @@
 <script>
 	dojo.require("dojo.data.ItemFileWriteStore");  
 	dojo.require("dijit.form.DateTextBox");
-	dojo.require("dijit.form.CheckBox");
 	dojo.require("dijit.Dialog");
 	dojo.require("dijit.layout.TabContainer");
 </script>
@@ -21,7 +20,6 @@
     border: solid 1px #eee;
 }
 .button_browse {
-    /*margin-top: 10px; */
     position: relative;
     overflow: hidden;
     text-align: center;
@@ -261,8 +259,8 @@ input.btn_borwse_image {
 										</div>
 										<div class="button_browse">
 										<div id='preview'></div>	
-												<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
-												<input class="btn_borwse_image" type="file" id="photo" name="photo" />
+											<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+											<input class="btn_borwse_image" type="file" id="photo" name="photo" />
 										</div>
 									</div>
 			                   </div>
@@ -459,8 +457,6 @@ input.btn_borwse_image {
 			<div class="clearfix"></div>
 			    <div class="card-box">
                		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-		    			<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" 
-						 iconClass="dijitIconClear" /> 
 					 <input type="submit" value="SAVE_CLOSE" tabindex="2" label="<?php echo $tr->translate('SAVECLOSE');?>" id="save_close" dojoType="dijit.form.Button" name="save_close"
 						 iconClass="dijitEditorIcon dijitEditorIconSave" /> 
 					<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
@@ -470,17 +466,15 @@ input.btn_borwse_image {
 		</form>
 	</div>
 </div>
-
 <?php 
-echo $this->frm_popup_district;
-echo $this->frm_popup_village;
-echo $this->frm_popup_comm;
+	echo $this->frm_popup_district;
+	echo $this->frm_popup_village;
+	echo $this->frm_popup_comm;
 ?>
 <script type="text/javascript">
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
-        
         reader.onload = function (e) {
             $('#profile_wiew').attr('src', e.target.result);
         }
@@ -506,12 +500,10 @@ function CopyAddress(){
 	district = dijit.byId('district').get('value');
     commune_id = dijit.byId('commune').get('value');
     village = dijit.byId('village').get('value');
-   
     dijit.byId('ghouse').attr('value',house);
     dijit.byId('dstreet').attr('value',street);
     dijit.byId('cprovince').attr('value',province);
     dfilterDistrict(district);
-    
 }
 dojo.ready(function(){
 	$("#copy_add").click(function(){
@@ -559,7 +551,6 @@ dojo.ready(function(){
   }
 	}, "commune");
 
-	 
 	new dijit.form.FilteringSelect({
 	store: village_store,
 	autoComplete:false,
@@ -578,12 +569,10 @@ dojo.ready(function(){
 		}
 
 	}, "village");
-
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 	new dijit.form.FilteringSelect({
-		store: d_datastore,//dojo.data.ObjectStore({objectStore: d_data}),
+		store: d_datastore,
 		autoComplete:false,
 		queryExpr:'*${0}*',         
 		required: false,		           
@@ -603,7 +592,7 @@ dojo.ready(function(){
 		}, "client_d_type");
 
 	new dijit.form.FilteringSelect({
-			store: joint_doc_type_store,//dojo.data.ObjectStore({objectStore: d_data}),
+			store: joint_doc_type_store,
 			autoComplete:false,
 			queryExpr:'*${0}*',       
 			required: false,		           
@@ -622,7 +611,6 @@ dojo.ready(function(){
 			}
 		}, "join_d_type");
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	new dijit.form.FilteringSelect({
 		store: adistrict_store,
 		autoComplete:false,
@@ -661,7 +649,7 @@ dojo.ready(function(){
 					dfilterVillage();
 				}
 	  }
-		}, "dcommune");
+	}, "dcommune");
 
 		 
 		new dijit.form.FilteringSelect({
@@ -694,27 +682,26 @@ func='';
 tmp = '';
 var temp='';
 function addRow() {
-		col++;no++;
-		template='';
-			template+='<div id="attachment'+col+'" class="form-group" style=" margin-bottom: 5px !important;">';
-				template+='<div class="input-group input-file" name="attachment'+col+'">';
-	 				template+='<span class="input-group-btn">';
-	 					template+='<button class="btn btn-default btn-choose" type="button"><?php echo $tr->translate('CHOOSE_FILE');?></button>';
-	 				template+='</span>';
+	col++;no++;
+	template='';
+		template+='<div id="attachment'+col+'" class="form-group" style=" margin-bottom: 5px !important;">';
+			template+='<div class="input-group input-file" name="attachment'+col+'">';
+ 				template+='<span class="input-group-btn">';
+ 					template+='<button class="btn btn-default btn-choose" type="button"><?php echo $tr->translate('CHOOSE_FILE');?></button>';
+ 					template+='</span>';
 					template+='<input type="text" class="form-control" placeholder="<?php echo $tr->translate('CHOOSE_FILE');?>..." />';
 					template+='<span class="input-group-btn">';
-						template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+col+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
-					template+='</span>';
-				template+='</div>';
-			template+='</div> <div class="clearfix"></div>';
-
-			$("#fileList").append(template);
-		
-		if($("#identity").val()!='') {
-			var identity = $("#identity").val();
-			$("#identity").val(identity+','+col);
-		} else {$("#identity").val(col);}
-		bs_input_file();
+					template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+col+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+				template+='</span>';
+			template+='</div>';
+		template+='</div> <div class="clearfix"></div>';
+		$("#fileList").append(template);
+	
+	if($("#identity").val()!='') {
+		var identity = $("#identity").val();
+		$("#identity").val(identity+','+col);
+	} else {$("#identity").val(col);}
+	bs_input_file();
  }
 
 function bs_input_file() {
@@ -729,7 +716,6 @@ function bs_input_file() {
 			$(this).find("button.btn-choose").click(function(){
 				element.click();
 			});
-			
 			$(this).find('input').css("cursor","pointer");
 			$(this).find('input').mousedown(function() {
 				$(this).parents('.input-file').prev().click();
@@ -738,7 +724,7 @@ function bs_input_file() {
 			return element;
 		}
 	}
-	);
+   );
 }
 function deleteRecord(index){
 	var identity = $('#identity').val();
@@ -770,7 +756,6 @@ function filterDistrict(){
 		    dijit.byId('district').set('store', district_store);
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});	
 }
@@ -790,35 +775,35 @@ function filterCommune(){
 		    dijit.byId('commune').set('store', commune_store);
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
 url_getvillage = '<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'get-allvillage'));?>';
 function filterVillage(){
-	commune_id = dijit.byId('commune').get('value');
-	if(commune_id==0){
-		return false;}
-	dojo.xhrPost({
-		url:url_getvillage,	
-		content:{ 
-			'commune_id': commune_id
-		},
-		handleAs:"json",
-		load: function(data) {	
-			village_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('village').set('store', village_store);
-		},
-		error: function(err) {
-			alert(err);
+		commune_id = dijit.byId('commune').get('value');
+		if(commune_id==0){
+			return false;
 		}
-	});
+		dojo.xhrPost({
+			url:url_getvillage,	
+			content:{ 
+				'commune_id': commune_id
+			},
+			handleAs:"json",
+			load: function(data) {	
+				village_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('village').set('store', village_store);
+			},
+			error: function(err) {
+			}
+		});
 }
 url_getdistrict = '<?php echo $this->url(array('module'=>'other','controller'=>'district','action'=>'get-district'));?>';
 function dfilterDistrict(value=null){
 	cpro_id = dijit.byId('cprovince').get('value');
 	if(cpro_id==0){
-		return false;}
+		return false;
+	}
 	dojo.xhrPost({
 		url:url_getdistrict,	
 		content:{ 
@@ -828,17 +813,13 @@ function dfilterDistrict(value=null){
 		load: function(data) {	
 			adistrict_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('adistrict').set('store', adistrict_store);
-
 		    if(value!=null){
 		    	 dijit.byId('adistrict').set('value', value);
 		    	 commune_id = dijit.byId('commune').get('value');
 			     dfilterCommune(commune_id);
-			    	 	
 		    }
-		    
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});	
 }
@@ -847,70 +828,65 @@ function dfilterCommune(value=null){
 	adistict_id = dijit.byId('adistrict').get('value');
 	if(adistict_id==0){
 		return false;}
-	dojo.xhrPost({
-		url:url_getcommune,	
-		content:{ 
-			'district_id': adistict_id
-		},
-		handleAs:"json",
-		load: function(data) {	
-			dcommune_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('dcommune').set('store', dcommune_store);
-		    if(value!=null){
-		    	 dijit.byId('dcommune').set('value', value);
-		    	 village = dijit.byId('village').get('value');
-			     dfilterVillage(village);
-		    }
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
+		dojo.xhrPost({
+			url:url_getcommune,	
+			content:{ 
+				'district_id': adistict_id
+			},
+			handleAs:"json",
+			load: function(data) {	
+				dcommune_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('dcommune').set('store', dcommune_store);
+			    if(value!=null){
+			    	 dijit.byId('dcommune').set('value', value);
+			    	 village = dijit.byId('village').get('value');
+				     dfilterVillage(village);
+			    }
+			},
+			error: function(err){
+			}
+		});
 }
 url_getvillage = '<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'get-allvillage'));?>';
 function dfilterVillage(value=null){
 	dcommune_id = dijit.byId('dcommune').get('value');
 	if(dcommune_id==0){
 		return false;}
-	dojo.xhrPost({
-		url:url_getvillage,	
-		content:{ 
-			'commune_id': dcommune_id
-		},
-		handleAs:"json",
-		load: function(data) {	
-			qvillage_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('qvillage').set('store', qvillage_store);
-
-		    if(value!=null){
-		    	 dijit.byId('qvillage').set('value', value);
-		    }
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
+		dojo.xhrPost({
+			url:url_getvillage,	
+			content:{
+				'commune_id': dcommune_id
+			},
+			handleAs:"json",
+			load: function(data){	
+				qvillage_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('qvillage').set('store', qvillage_store);
+			    if(value!=null){
+			    	 dijit.byId('qvillage').set('value', value);
+			    }
+			},
+			error: function(err){
+			}
+	  });
 }
 client_village = '<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'add-village'));?>';
 function addVillage(){
-	if(dijit.byId('frm_village').validate()) {
+	if(dijit.byId('frm_village').validate()){
 		dojo.xhrPost({
 			url:client_village,	
 			form:dojo.byId('form_village'),
 			handleAs:"json",
 			load: function(data) {
-				labelen = dijit.byId('village_name').get('value');
 				labelkh = dijit.byId('village_namekh').get('value');
 				var villageItem1 = {					
 						id: data,
-						name: labelen+' - '+labelkh,
+						name: labelkh,
 				};			
 				addDataToSelectbox(dijit.byId('village'), village_store, villageItem1, data);	
 				dijit.byId('frm_village').reset();
 				dijit.byId('frm_village').hide();
 			},
 			error: function(err) {
-				alert(err);
 			}
 		});
 	}
@@ -999,22 +975,21 @@ function dshowPopupdistrict(){
 }
 var district_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insert-district'));?>';
 function addNewDistrict(){
-	if(dijit.byId('frm_district').validate()) {
+	if(dijit.byId('frm_district').validate()){
 		dojo.xhrPost({
 			url:district_url,	
 			form:dojo.byId('form_district'),
 			handleAs:"json",
-			load: function(data) {	
+			load: function(data){	
 				var myNewItem1 = {					
 						id: data,
-						name: dijit.byId('pop_district_name').get('value')+' - '+dijit.byId('pop_district_namekh').get('value'),
+						name: dijit.byId('pop_district_namekh').get('value'),
 				};			
 				addDataToSelectbox(dijit.byId('district'), district_store, myNewItem1, data);	
 				dijit.byId('frm_district').reset();
 				dijit.byId('frm_district').hide();
 			},
-			error: function(err) {
-				alert(err);
+			error: function(err){
 			}
 		});	
 	}
@@ -1027,18 +1002,17 @@ function addNewCommune(){
 			form:dojo.byId('form_commune'),
 			handleAs:"json",
 			load: function(data) {	
-				communeen = dijit.byId('commune_nameen').get('value');
+				
 				communekh = dijit.byId('commune_namekh').get('value');
 				var Itemcommune = {					
 						id: data,
-						name: communeen+' - '+communekh,
+						name: communekh,
 				};			
 				addDataToSelectbox(dijit.byId('commune'), commune_store, Itemcommune, data);
 				dijit.byId('frm_commune').reset();
 				dijit.byId('frm_commune').hide();
 			},
 			error: function(err) {
-				alert(err);
 			}
 		});
 	}
@@ -1054,7 +1028,7 @@ function addNewDocumentType(){
 			url:document_type_url,	
 			form:dojo.byId('frm_client_doc_type'),
 			handleAs:"json",
-			load: function(data) {	
+			load : function(data){	
 				dijit.byId('save').set('disabled',false);
 				var myNewItem = {					
 					id: data,
@@ -1071,7 +1045,7 @@ function addNewDocumentType(){
 					dijit.byId('join_d_type').attr('value',old_join_doc);
 				}
 			},
-			error: function(err) {
+			error: function(err){
 				dijit.byId('save').set('disabled',false);
 			}
 		});	
@@ -1084,7 +1058,8 @@ url_getClientNo = '<?php echo $this->url(array('module'=>'group','controller'=>'
 function getClientNo(){
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
-		return false;}
+		return false;
+	}
 	dojo.xhrPost({
 		url:url_getClientNo,	
 		content:{ 
@@ -1094,8 +1069,7 @@ function getClientNo(){
 		load: function(data) {	
 		    dijit.byId('client_no').attr('value',data);
 		},
-		error: function(err) {
-			alert(err);
+		error: function(err){
 		}
 	});
 }
@@ -1110,35 +1084,28 @@ function hideDialog1(){
 				<tr>
 					<td>
 						<fieldset style="background-color: buttonface;">
-						<legend align="center" ><?php echo $tr->translate('DOCMENT_TYPE');?></legend>
-							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
-								<tr>
-									<td><?php echo $tr->translate('NAME');?></td>
-									<td>
-										<input dojoType="dijit.form.ValidationTextBox"  required="1" class="fullside" id="doc_name" name="doc_name" value="" type="text">
-										<input type="hidden" name="type"	id="type" dojoType="dijit.form.TextBox" />
-									</td>
-								</tr>
-								<tr>
-									<td colspan="4" align="center">
-										<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button" 
-										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
-										<input type="button" value="save" label="<?php echo $tr->translate("SAVECLOSE");?>" id="save" name="save" dojoType="dijit.form.Button" 
-										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewDocumentType();"/>
-									</td>
-								</tr>
-							</table>
-					</fieldset>
+							<legend align="center" ><?php echo $tr->translate('DOCMENT_TYPE');?></legend>
+								<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+									<tr>
+										<td><?php echo $tr->translate('NAME');?></td>
+										<td>
+											<input dojoType="dijit.form.ValidationTextBox"  required="1" class="fullside" id="doc_name" name="doc_name" value="" type="text">
+											<input type="hidden" name="type"	id="type" dojoType="dijit.form.TextBox" />
+										</td>
+									</tr>
+									<tr>
+										<td colspan="4" align="center">
+											<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button" 
+											​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+											<input type="button" value="save" label="<?php echo $tr->translate("SAVECLOSE");?>" id="save" name="save" dojoType="dijit.form.Button" 
+											 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewDocumentType();"/>
+										</td>
+									</tr>
+								</table>
+						</fieldset>
 					</td>
 				</tr>
 			</table>
-
 		</form>
 	</div>
 </div>
-
-
-
-
-
-
