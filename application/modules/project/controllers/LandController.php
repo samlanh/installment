@@ -1,6 +1,5 @@
 <?php
 class Project_LandController extends Zend_Controller_Action {
-	const REDIRECT_URL = '/project';
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -91,7 +90,7 @@ class Project_LandController extends Zend_Controller_Action {
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$branch_opt = $db->getAllBranchByUser();
-		array_unshift($branch_opt, array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW_PROJECT")));
+		//array_unshift($branch_opt, array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW_PROJECT")));
 		$this->view->branch_opt = $branch_opt;
 		
 		$rs_street = $db->getAllStreetForOpt();
@@ -133,7 +132,7 @@ class Project_LandController extends Zend_Controller_Action {
 	
 		$db = new Application_Model_DbTable_DbGlobal();
 		$branch_opt = $db->getAllBranchByUser();
-		array_unshift($branch_opt, array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW_PROJECT")));
+// 		array_unshift($branch_opt, array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW_PROJECT")));
 		$this->view->branch_opt = $branch_opt;
 	
 		$rs_street = $db->getAllStreetForOpt();

@@ -31,7 +31,6 @@ class Loan_CancelController extends Zend_Controller_Action {
 			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('client_name'=>$link,'project_name'=>$link,'land_address'=>$link,));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
-			echo $e->getMessage();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 		$fm = new Loan_Form_FrmCancel();
@@ -45,7 +44,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 		$this->view->frm_search = $frm;
 	}
 	public function addAction(){
-		if($this->getRequest()->isPost()){//check condition return true click submit button
+		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
 				$_dbmodel = new Loan_Model_DbTable_DbCancel();
@@ -88,7 +87,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 				}else{
 					$_dbmodel->editCancelSale($_data);
 				}
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel");
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/loan/cancel");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("UPDATE_FAIL");
 				$err =$e->getMessage();

@@ -71,7 +71,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		return $this->round_up($value, $places);
     	}
     	else{
-    		return round($value,0);
+    		return round($value,2);
     	}
     }
     

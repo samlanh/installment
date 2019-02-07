@@ -168,10 +168,9 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'total_amount'	=>$data['return_back'],
 					'category_id'	=>$data['income_category'],
 					'date'			=>$data['expense_date'],
-					'status'		=>1,//$data['status_using'],
+					'status'		=>1,
 					'description'	=>$data['reason'],
 					'user_id'		=>$this->getUserId(),
-					//'paid_amount'=>$data['paid_amount'],
 					'category_id'	=>$data['income_category'],
 					'create_date'	=>$data['expense_date'],
 						);
@@ -180,7 +179,6 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				$this->update($arr1,$where);
 				$expenid = $result['expense_id'];
 			}else{
-				
 				if($data['return_back']>0){
 					$dbexpense = new Loan_Model_DbTable_DbExpense();
 					$invoice = $dbexpense->getInvoiceNo($data['branch_id']);
@@ -190,9 +188,8 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'total_amount'	=>$data['return_back'],
 						'invoice'		=>$invoice,
 						'category_id'	=>$data['income_category'],
-// 						'paid_amount'=>$data['paid_amount'],
 						'date'			=>$data['expense_date'],
-						'status'		=>1,//$data['status_using'],
+						'status'		=>1,
 						'description'	=>$data['reason'],
 						'user_id'		=>$this->getUserId(),
 						'create_date'	=>$data['expense_date'],
@@ -264,7 +261,6 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				$this->update($arr_, $where);
 				
 				$arr = array(
-						//'cancel_code'=>$data['cancel_code'],
 						'branch_id'=>$data['branch_id'],
 						'sale_id'=>$data['sale_no'],
 						'property_id'=>$data['property_id'],
@@ -323,4 +319,3 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		return $db->fetchAll($sql);
 	}
 }
-

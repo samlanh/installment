@@ -1,17 +1,17 @@
 <?php 
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$frm = $this->frm_cancel;
-
-$dbGB = new Application_Model_DbTable_DbGlobal();
-$logo = $this->baseUrl()."/images/logo.jpg";
-$branch_title = $tr->translate("BRAND_TITLE");
-if ($this->search['branch_id_search'] >0 ){
-	$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id_search']);
-	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
-		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_cancel;
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id_search'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id_search']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
 	}
-	$branch_title = $branch['project_name'];
-}
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -150,18 +150,17 @@ if ($this->search['branch_id_search'] >0 ){
 		            	</td>
 		             </tr>
 		           </table>
+			           <table align="center" width="100%">
+						   <tr style="font-size: 14px;">
+					        <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
+					        <td></td>
+					        <td style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
+					        <td></td>
+					        <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
+						   </tr>
+						</table>
 	            </div>
 	    	</td>
 	    </tr>
 	</table>
-		<br />
-		<table align="center" width="100%">
-		   <tr style="font-size: 14px;">
-	        <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
-	        <td></td>
-	        <td style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
-	        <td></td>
-	        <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
-		   </tr>
-		</table>
 </div>

@@ -1103,7 +1103,7 @@ function round_up_currency($curr_id, $value,$places=-2){
 		return $this->round_up($value, $places);
 	}
 	else{
-		return round($value,0);
+		return round($value,2);
 	}
 }
 function updateReceipt($data){
@@ -1231,7 +1231,6 @@ function updatePaymentStatus($data){
 	  		     $db->commit();
 	  		     return 1;
 	  		}else{
-	  			//$where = " principal_permonth=principal_permonthafter AND is_completed=0 AND sale_id = ".$data['id'];
 	  			$this->delete($where);
 	  		}
 	  		$total_day=0;
@@ -1277,9 +1276,7 @@ function updatePaymentStatus($data){
 	  				if($i!=1){
 	  					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
 	  					$start_date = $next_payment;
-	  					//$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
 	  				}else{
-	  					//$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
 	  				}
 	  				$paid_principal = $data['paid_principal'.$i];
 	  				$paid_interest = $data['interest_paid'.$i];

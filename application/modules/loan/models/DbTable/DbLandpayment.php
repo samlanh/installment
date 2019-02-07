@@ -183,7 +183,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		return $this->round_up($value, $places);
     	}
     	else{
-    		return round($value,0);
+    		return round($value,2);
     	}
     }
     function getProperty($id){
@@ -1233,14 +1233,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				
     			}elseif($payment_method==3){//pay by times//check date payment
     			if($i!=1){
-//     				$old_remain_principal=0;
     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
     					$start_date = $next_payment;
     					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
     				}else{
     					$next_payment = $data['first_payment'];
-    					
-    					//$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
     				}
     				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
     				$total_day = $amount_day;
@@ -1261,11 +1258,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    					$key = 1;
 	    					foreach ($ids as $j){
 	    						if($key==1){
-// 	    							$old_remain_principal = $data['sold_price'];
 	    							$remain_principal=$data['sold_price'];
 	    							$old_pri_permonth = $data['total_payment'.$j];
 	    						}else{
-// 	    							$old_remain_principal = $old_remain_principal-$old_pri_permonth;
 	    							$remain_principal = $remain_principal-$old_pri_permonth;
 	    							$old_pri_permonth = $data['total_payment'.$j];
 	    						}
