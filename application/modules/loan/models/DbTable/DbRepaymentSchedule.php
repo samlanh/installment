@@ -410,10 +410,10 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    		$total_day = $amount_day;
 			    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
 			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);//
-			    		if($data['install_type']==2){
+			    		if($data['install_type']==2){//ថយ
 			    			$pri_permonth=$data['for_installamount']/($data['period']*$term_types);
-			    			$pri_permonth =$this->round_up_currency(2, $pri_permonth);
-			    		}else{
+			    			$pri_permonth = round($pri_permonth,0); 
+			    		}else{//ថេរ
 			    			$pri_permonth = $data['fixed_payment']-$interest_paymonth;
 			    		}
 			    		if($i==$loop_payment){//for end of record only
@@ -472,6 +472,10 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			   	    $old_remain_principal =$old_remain_principal+$remain_principal;
 			    		$old_pri_permonth = $old_pri_permonth+$pri_permonth;
 			    		$old_interest_paymonth = $this->round_up_currency($curr_type,($old_interest_paymonth+$interest_paymonth));
+			    		if($payment_method==4 AND $data['install_type']==2){//រំលស់ថយ
+			    			$old_interest_paymonth = round($old_interest_paymonth,0);
+			    		}
+			    		
 			    		$cum_interest = $cum_interest+$old_interest_paymonth;
 			    		$old_amount_day =$old_amount_day+ $amount_day;
 			    		          $this->_name="ln_saleschedule";

@@ -21,7 +21,7 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	$after_edit_info = $record['after_edit_info'];
     	
     	$name = $_FILES['logo']['name'];
-    	$photo='';
+    	$photo='logo.png';
     	if (!empty($name)){
     		$tem =explode(".", $name);
     		$new_image_name = "logo".date("Y").date("m").date("d").time().".".end($tem);

@@ -1395,7 +1395,7 @@ function updatePaymentStatus($data){
 	  				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
 	  				if($data['install_type']==2){
 	  					$pri_permonth=$data['total_remain']/($data['period']*$term_types);
-	  					$pri_permonth =$this->round_up_currency(2, $pri_permonth);
+	  					$pri_permonth = round($pri_permonth,0);
 	  				}else{
 	  					$pri_permonth = $data['fixed_payment']-$interest_paymonth;
 	  				}
@@ -1493,6 +1493,9 @@ function updatePaymentStatus($data){
 	  				$old_remain_principal =$old_remain_principal+$remain_principal;
 	  				$old_pri_permonth = $old_pri_permonth+$pri_permonth;
 	  				$old_interest_paymonth = $this->round_up_currency($curr_type,($old_interest_paymonth+$interest_paymonth));
+	  				if($payment_method==4 AND $data['install_type']==2){//រំលស់ថយ
+	  					$old_interest_paymonth = round($old_interest_paymonth,0);
+	  				}
 	  				$cum_interest = $cum_interest+$old_interest_paymonth;
 	  				$old_amount_day =$old_amount_day+ $amount_day;
 	  				$this->_name="ln_saleschedule";
@@ -1679,10 +1682,8 @@ function updatePaymentStatus($data){
 	  							$this->_name="ln_saleschedule_test";
 	  							$datapayment = array(
 	  									'branch_id'=>$data['branch_id'],
-// 	  									'id'=>$data['fundid_'.$j],//good
 	  									'sale_id'=>$data['id'],//good
 	  									'begining_balance'=> $old_remain_principal,//good
-	  									//'begining_balance_after'=> $old_remain_principal,//good
 	  									'principal_permonth'=> $data['principal_permonth_'.$j],//good
 	  									'principal_permonthafter'=>$data['principal_permonth_'.$j]-$data['paid_principal'.$j],//good
 	  									'total_interest'=>$data['total_interest_'.$j],//good
@@ -1694,33 +1695,12 @@ function updatePaymentStatus($data){
 	  									'amount_day'=>$amount_day,
 	  									'is_completed'=>0,
 	  									'date_payment'=>$data['date_payment'.$j],
-	  									//'percent'=>$data['percent'.$j],
-	  									//'is_installment'=>1,
-	  									//'no_installment'=>$key,
-	  									//'last_optiontype'=>$paid_receivehouse,
 	  							);
 	  							$key = $key+1;
 	  							$installment_paid = $installment_paid+$data['principal_permonth_'.$j];
 	  							if($data['payment_option'.$j]==1 OR !empty($data['paid_amount_'.$j])){//complete or paid
 	  								$is_completed = 0;
 	  								if($data['payment_option'.$j]==1){$is_completed=1;}
-// 	  								$datapayment = array(
-// 	  										'sale_id'=>$data['id'],
-// 	  										'branch_id'=>$data['branch_id'],
-// 	  										'begining_balance'=> $old_remain_principal,//good
-// 	  										'begining_balance_after'=> $old_remain_principal,//good
-// 	  										'principal_permonth'=> $data['principal_permonth_'.$j],//good
-// 	  										'principal_permonthafter'=>$old_pri_permonth-$data['paid_principal'.$j],//good
-// 	  										'total_interest'=>$old_interest_paymonth,//good
-// 	  										'total_interest_after'=>$old_interest_paymonth,//good
-// // 	  									'total_payment'=>$old_interest_paymonth+$old_pri_permonth-$data['paid_amount_'.$j],//good
-// 	  										'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth-$data['paid_amount_'.$j],//good
-// 	  										'ending_balance'=>$old_remain_principal-$old_pri_permonth,
-// // 	  									'is_completed'=>$is_completed,//good
-// 	  										'is_installment'=>1,
-// 	  										'no_installment'=>$key,
-// 	  										'date_payment'=>$data['date_payment'.$j],
-// 	  								);
 	  								if(empty($data['fundid_'.$j])){
 	  									$data['fundid_'.$j]=0;
 	  								}
@@ -1773,15 +1753,14 @@ function updatePaymentStatus($data){
 	  				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
 	  				if($data['install_type']==2){
 	  					$pri_permonth=$data['total_remain']/($data['period']*$term_types);
-	  					$pri_permonth =$this->round_up_currency(2, $pri_permonth);
+	  					$pri_permonth = round($pri_permonth,0);
 	  				}else{
 	  					$pri_permonth = $data['fixed_payment']-$interest_paymonth;
 	  				}
 	  				if($i==$loop_payment){//for end of record only
 	  					$pri_permonth = $remain_principal;
 	  					$paid_receivehouse = $data['paid_receivehouse'];
-	  				}
-	  				
+	  				}	  				
 	  			}elseif($payment_method==6 OR $payment_method==5){
 	  				$ids = explode(',', $data['identity']);
 	  				$key = 1;
@@ -1864,9 +1843,12 @@ function updatePaymentStatus($data){
 	  				$old_remain_principal =$old_remain_principal+$remain_principal;
 	  				$old_pri_permonth = $old_pri_permonth+$pri_permonth;
 	  				$old_interest_paymonth = $this->round_up_currency($curr_type,($old_interest_paymonth+$interest_paymonth));
+	  				if($payment_method==4 AND $data['install_type']==2){//រំលស់ថយ
+	  					$old_interest_paymonth = round($old_interest_paymonth,0);
+	  				}
 	  				$cum_interest = $cum_interest+$old_interest_paymonth;
 	  				$old_amount_day =$old_amount_day+ $amount_day;
-	  				//if($data['payment_option'.$i]==1 OR !empty($data['paid_amount_'.$i])){ continue;}
+	  				
 	  				$this->_name="ln_saleschedule_test";
 	  				$datapayment = array(
 	  				// 	  						'branch_id'=>$data['branch_id'],

@@ -562,6 +562,10 @@ function checkScheduleOption(){
 			total_collect = total_collect.toFixed(0);
 			if(debt_amount!=0){
 				dijit.byId('fixed_payment').attr("value",total_collect);
+				paid_before = dijit.byId('paid_before').get('value');
+				if(isNaN(paid_before)){paid_before=0;}
+				dijit.byId('deposit').attr("value",total_collect-paid_before);
+				Balance();
 			}
 			dijit.byId('interest_rate').attr("value",0);
 			dijit.byId('interest_rate').set("readOnly",true);
@@ -569,7 +573,6 @@ function checkScheduleOption(){
 			
 		}else if(method_id==5){//times
 			dijit.byId('release_date').set("readOnly",true);
-			//dijit.byId('first_payment').set("readOnly",true);
 			
 			dijit.byId('interest_rate').attr("value",0);
 			dijit.byId('interest_rate').set("readOnly",true);
@@ -578,7 +581,6 @@ function checkScheduleOption(){
 		else if(method_id==6){//times ដំណាក់កាលមិនថេ			
 			dijit.byId('interest_rate').attr('value',0);
 			if(dijit.byId('period').get('value')==12){
-				//dijit.byId('period').attr('value',0);
 			}
 			$('#identity').val('');
 			dijit.byId('first_payment').attr("value",'<?php echo date("Y-m-d");?>');
@@ -630,8 +632,9 @@ function calCulateFixedPeriod(){
 		top_pow = Math.pow((1+interest_rate),term);
 		bellow = Math.pow((1+interest_rate),(term))-1;
 		amount_payment = (amount_principal*interest_rate*top_pow)/(bellow);
-		//amount_payment = amount_payment.toFixed(0);
-		if(isNaN(amount_payment)){amount_payment=0;
+		
+		if(isNaN(amount_payment)){
+			amount_payment=0;
 		}
 	}		
 	dijit.byId('for_installamount').attr('value',amount_principal);
@@ -701,7 +704,6 @@ function Balance(){
 			if(isNaN(paid_before)){paid_before=0;}
 			dijit.byId('balance').attr('value',price-deposit-paid_before);
 		}
-		//checkScheduleOption();
 	}
 }
 function filterClient(){
@@ -1350,9 +1352,6 @@ function calCulateSchedulePayment(){
 	total_paidbefore = dijit.byId("paid_before").get("value");
 	paid_new = total_firstrecord - total_paidbefore;
 	dijit.byId('deposit').attr('value',paid_new);
-	
-	//total_sold = dijit.byId("sold_price").get("value");
-	//total_amount = total_sold-total_amount;
 	
 	Balance();
 	calCulateFixedPeriod();

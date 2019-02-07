@@ -347,7 +347,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$old_amount_day = 0;
     		$cum_interest=0;
     		$amount_collect = 1;
-//     		$remain_principal = $data['balance'];
     		$remain_principal = $data['sold_price'];
     		$next_payment = $data['first_payment'];
     		$from_date =  $data['release_date'];
@@ -461,7 +460,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
 			    		if($data['install_type']==2){//ថយ
 			    			$pri_permonth=$data['for_installamount']/($data['period']*$term_types);
-			    			$pri_permonth =$this->round_up_currency(2, $pri_permonth);
+			    			$pri_permonth = round($pri_permonth,0);// $this->round_up_currency(2, $pri_permonth);
 			    		}else{//ថេរ
 			    			$pri_permonth = $data['fixed_payment']-$interest_paymonth;
 			    		}
@@ -523,6 +522,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    		$old_remain_principal =$old_remain_principal+$remain_principal;
 			    		$old_pri_permonth = $old_pri_permonth+$pri_permonth;
 			    		$old_interest_paymonth = $this->round_up_currency($curr_type,($old_interest_paymonth+$interest_paymonth));
+			    		if($payment_method==4 AND $data['install_type']==2){//រំលស់ថយ
+			    			$old_interest_paymonth = round($old_interest_paymonth,0);
+			    		}
 			    		$cum_interest = $cum_interest+$old_interest_paymonth;
 			    		$old_amount_day =$old_amount_day+ $amount_day;
 			    		          $this->_name="ln_saleschedule";
@@ -1307,7 +1309,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				
     				if($data['install_type']==2){//ថយ
     					$pri_permonth=$data['for_installamount']/($data['period']*$term_types);
-    					$pri_permonth =$this->round_up_currency(2, $pri_permonth);
+    					$pri_permonth =round($pri_permonth,0);
     				}else{//ថេរ
     					$pri_permonth = $data['fixed_payment']-$interest_paymonth;
     				}
@@ -1360,6 +1362,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			$old_remain_principal =$old_remain_principal+$remain_principal;
 	    			$old_pri_permonth = $old_pri_permonth+$pri_permonth;
 	    			$old_interest_paymonth = $this->round_up_currency($curr_type,($old_interest_paymonth+$interest_paymonth));
+	    			if($payment_method==4 AND $data['install_type']==2){//រំលស់ថយ
+	    				$old_interest_paymonth = round($old_interest_paymonth,0);
+	    			}
 	    			$cum_interest = $cum_interest+$old_interest_paymonth;
 	    			$old_amount_day =$old_amount_day+ $amount_day;
 	    			$this->_name="ln_saleschedule_test";
