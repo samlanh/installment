@@ -100,9 +100,9 @@
 						                <tr>
 							                <td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
 							                <td width="60%" valign="top">
-								                <h2 style="text-align:center; font-weight:200; font-size:18px; font-family:'Khmer OS Muol Light'"><label><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></label></h2>
-								                <h2 style="text-align:center; font-weight:200; font-size:16px; font-family:'Khmer OS Muol Light'"><label><?php echo $tr->translate("REPORT_DAILY_CASH");?></label></h2>
-								                <p style="text-align:center; font-weight:200; font-size:13px; font-family:'Khmer OS Muol Light'"><?php if (!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
+								                <h2 style="text-align:center; font-weight:200; font-size:18px; font-family:'Times New Roman','Khmer OS Muol Light'"><label><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></label></h2>
+								                <h2 style="text-align:center; font-weight:200; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light'"><label><?php echo $tr->translate("REPORT_DAILY_CASH");?></label></h2>
+								                <p style="text-align:center; font-weight:200; font-size:13px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if (!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
 							                </td>
 						                	<td width="20%"></td>
 					                	</tr>
@@ -123,7 +123,7 @@
 							        </tr>
 				                	<tr  style="border:1px solid #000;">
 						                <td colspan="7" style="border:1px solid #fff;border-bottom:1px solid #000;">
-						                	<h2 style="font-weight:normal; text-align:left; font-size:14px; font-family:'Khmer OS Muol Light'">
+						                	<h2 style="font-weight:normal; text-align:left; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
 								             	<span><?php echo $tr->translate("COLLECT_MONEY_INCOME");?></span>
 								             </h2>
 						                </td>
@@ -156,6 +156,7 @@
 			                	 $total_other_income=0;
 			                	 $total_expese=0;
 			                	 $total_extra=0;
+			                	 $houserepair=0;
 			                ?>
 			                <?php $is_set =0; if(!empty($this->collectMoney)) foreach ($this->collectMoney as $index => $rs){ ?>
 			               <?php 
@@ -196,7 +197,7 @@
 			                <?php }?>
 			                <tr style="text-align: center;font-size: 14px;">
 			                	<td colspan="3" style="border: 1px solid #fff;border-top: 1px solid #000;border-right: 1px solid #000"></td>
-			                	<td colspan="2" style="font-size:14px; font-family:'Khmer OS Muol Light';" ><?php echo $tr->translate("TOTAL_AMOUNT");?></td>
+			                	<td colspan="2" style="font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light';" ><?php echo $tr->translate("TOTAL_AMOUNT");?></td>
 			                	<td ><?php echo number_format($principal,2);?></td>
 			                	<td ><?php echo number_format($total_extra,2);?></td>
 			                	<td ><?php echo number_format($amt_d2,2);?></td>
@@ -207,6 +208,55 @@
 			            </table>
 	            	</td>
 	            </tr>
+	            <?php 
+	            	if (!empty($this->houserepair)){
+	            ?>
+	            <tr>
+	            	<td colspan="3">
+	            		<table class="content-data" id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 20px; font-size: 12px; border:solid 1px #000;" >  
+					    	<thead>
+					    	<tr class="hide" style="border:1px solid #fff;">
+					             <td colspan="11" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+					        </tr>
+					        <tr  style="border:1px solid #000;">
+				                <td colspan="10" style="border:1px solid #fff;border-bottom:1px solid #000;">
+				                	<h2 style="font-weight:normal; text-align:left; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
+						             	<span><?php echo $tr->translate("REPAIR_HOUSE_INCOME");?></span>
+						             </h2>
+				                </td>
+				             </tr>
+				             <tr  class="style" align="center" style="padding:5px 0;height: 20px; white-space: nowrap;">
+			                   <td><?php echo $tr->translate("NUM");?></td>
+			                   <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+			                   <td><?php echo $tr->translate("CLIENT_NAME");?></td>
+			                   <td><?php echo $tr->translate("DATE");?></td>
+			                   <td><?php echo $tr->translate("RECEIPT_NO");?></td>
+			                   <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
+			                   <td><?php echo $tr->translate("STREET");?></td>
+			                   <td><?php echo $tr->translate("CATEGORY");?></td>	
+			                   <td><?php echo $tr->translate("NOTE");?></td>   
+			                   <td><?php echo $tr->translate("AMOUNT");?></td>
+			                </tr>
+					   		</thead>
+					   		<?php foreach ($this->houserepair as $index => $rs){?>
+					   		<tr class=" stylehover <?php if($index%2==1){echo"even";}?>" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td> 
+			               		<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($rs["date"]));?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["invoice"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["street"];?>&nbsp;</td>
+			               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+			               		<td align="right">&nbsp;&nbsp;<?php echo number_format($rs["total_amount"],2);?>&nbsp;</td>
+			                </tr>
+			                <?php $houserepair = $houserepair+$rs["total_amount"];?>
+					   		<?php }?>
+					   	</table>
+					</td>
+				</tr>
+	            <?php }?>
 	            <?php if(!empty($this->row)){?>
 	            <tr>
 	            	<td colspan="3">
@@ -217,7 +267,7 @@
 					        </tr>
 		                	<tr  style="border:1px solid #000;">
 				                <td colspan="10" style="border:1px solid #fff;border-bottom:1px solid #000;">
-				                	<h2 style="font-weight:normal; text-align:left; font-size:14px; font-family:'Khmer OS Muol Light'">
+				                	<h2 style="font-weight:normal; text-align:left; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
 						             	<span><?php echo $tr->translate("OTHER_INCOME");?></span>
 						             </h2>
 				                </td>
@@ -255,8 +305,9 @@
 					    </table>
 	            	</td>
 	            </tr>
-	            <?php }
-	            if(!empty($this->rowExpense)){
+	            <?php }?>
+	            
+	           <?php  if(!empty($this->rowExpense)){
 	            ?>
 	             <tr>
 	            	<td colspan="3">
@@ -266,7 +317,7 @@
 					                <td colspan="9" style="border:1px solid #fff"></td>
 					           </tr>
 					           <tr>
-					                <td colspan="10" style="border:1px solid #fff;border-bottom:1px solid #000;font-size:14px; font-family:'Khmer OS Muol Light'">
+					                <td colspan="10" style="border:1px solid #fff;border-bottom:1px solid #000;font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
 					                	<?php echo $tr->translate("OTHER_EXPENSE");?>
 					                </td>
 					           </tr>
@@ -302,13 +353,16 @@
 	            	</td>
 	            </tr>
 	            <?php }?>
-	            	<?php $total = ($total_d + $total_other_income) - $total_expese ;?>
+	            
+	            
+	            	<?php $total = ($total_d + $total_other_income +$houserepair) - $total_expese ;?>
 	            <tr>
 	            	<td colspan="3">
 	            		<br />
 	            		<table class="tb-footer" border="1"​  width="100%" cellspacing="0">
 		                 <tr bgcolor="#c1d0f3" class="style" align="center" >
 		                 	<td colspan="5">&nbsp;<?php echo $tr->translate("COLLECT_MONEY_INCOME");?>&nbsp;</td>
+		                 	<td rowspan="2">&nbsp;<?php echo $tr->translate("TOTAL_HOUSE_INCOME_RE");?>&nbsp;</td>
 		                 	<td rowspan="2">&nbsp;<?php echo $tr->translate("OTHER_INCOME");?>&nbsp;</td>
 		                 	<td rowspan="2">&nbsp;<?php echo $tr->translate("OTHER_EXPENSE");?>&nbsp;</td>
 		                 	<td rowspan="2">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
@@ -326,9 +380,10 @@
 		                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
 		                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>
 		                    <td>&nbsp;&nbsp;<?php echo number_format($total_d,2);?>&nbsp;</td>
-		                    <td>&nbsp;<?php echo number_format($total_other_income,2);?></td>
-		                    <td>&nbsp;<?php echo number_format($total_expese,2);?></td>
-		                    <td>&nbsp;<?php echo number_format($total,2);?></td>
+		                    <td>&nbsp;<?php echo number_format($houserepair,2);?>&nbsp;</td>
+		                    <td>&nbsp;<?php echo number_format($total_other_income,2);?>&nbsp;</td>
+		                    <td>&nbsp;<?php echo number_format($total_expese,2);?>&nbsp;</td>
+		                    <td>&nbsp;<?php echo number_format($total,2);?>&nbsp;</td>
 		                </tr>
 		              </table>
 	            	</td>
@@ -337,11 +392,11 @@
 	           <br />
 			   <table align="center" width="100%">
 				   <tr style="font-size: 16px;">
-				      <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
+				      <td style="width:20%;text-align:center;  font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
 				      <td></td>
-				      <th style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
+				      <th style="width:20%;text-align:center; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
 				      <td></td>
-				      <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
+				      <td style="width:20%;text-align:center;font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
 				   </tr>
 				</table>
 	          </div>

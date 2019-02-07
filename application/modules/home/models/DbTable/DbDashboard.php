@@ -416,4 +416,10 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$order=" order by id desc ";
 		return $db->fetchAll($sql.$where.$order);
 	}
+	
+	function getTotalHouseRepaireIncome(){
+		$db = $this->getAdapter();
+		$sql="SELECT SUM(total_amount) AS total FROM `ln_otherincome` WHERE status=1 ";
+		return $db->fetchOne($sql);
+	}
 }

@@ -2416,6 +2416,7 @@ function updatePaymentStatus($data){
 			AND s.id = oin.sale_id
 			AND p.id = oin.house_id
 			AND c.client_id = oin.client_id
+			AND oin.status=1
 		
    	 ";
    
@@ -2537,5 +2538,66 @@ function updatePaymentStatus($data){
 	   $order = " ORDER BY times_remain DESC,payment_id DESC ";
 	   return $db->fetchAll($sql.$where.$order);
    } 
+   
+   function getAllIncomeOther($search=null){
+   	$db = $this->getAdapter();
+   	$session_user=new Zend_Session_Namespace('authinstall');
+   	$from_date =(empty($search['start_date']))? '1': " oin.date >= '".$search['start_date']." 00:00:00'";
+   	$to_date = (empty($search['end_date']))? '1': " oin.date <= '".$search['end_date']." 23:59:59'";
+   	$where ="";
+   	$where.= " AND ".$from_date." AND ".$to_date;
+   	 
+   	$sql=" SELECT
+	   	oin.id,
+	   	oin.branch_id,
+	   	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =oin.branch_id LIMIT 1) AS branch_name,
+	   	oin.client_id,
+	   	oin.date,
+	   	oin.invoice,
+	   	oin.total_amount,
+	   	oin.description,
+	   	s.sale_number,
+	   	p.land_address,
+	   	p.street,
+	   	(SELECT v.name_kh FROM `ln_view`  AS v WHERE v.type =13 AND v.key_code = oin.category_id LIMIT 1) AS category,
+	   	c.name_kh,
+	   	c.sex,
+	   	c.tel
+	   	FROM
+	   	`ln_otherincome` AS oin,
+	   	`ln_sale` AS s,
+	   	`ln_client` AS c,
+	   	`ln_properties` AS p
+	   	WHERE
+	   	s.id = oin.sale_id
+	   	AND p.id = oin.house_id
+	   	AND c.client_id = oin.client_id
+	   	AND oin.status=1
+   	";
+   	 
+   	if (!empty($search['adv_search'])){
+   		$s_where = array();
+   		$s_search = trim(addslashes($search['adv_search']));
+   		$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
+   		$s_where[] = " oin.invoice LIKE '%{$s_search}%'";
+   		$s_where[] = " p.land_address LIKE '%{$s_search}%'";
+   		$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
+   		$where .=' AND ('.implode(' OR ',$s_where).')';
+   	}
+   	//    	if(!empty($search['payment_method'])){
+   	//    		$where.= " AND payment_method = ".$search['payment_method'];
+   	//    	}
+   	if(!empty($search['category_id'])){
+   		$where.= " AND oin.category_id = ".$search['category_id'];
+   	}
+   	if($search['client_name']>0){
+   		$where.= " AND oin.client_id = ".$search['client_name'];
+   	}
+   	if($search['branch_id']>-0){
+   		$where.= " AND oin.branch_id = ".$search['branch_id'];
+   	}
+   	$order=" ORDER BY oin.client_id,oin.id DESC ";
+   	return $db->fetchAll($sql.$where.$order);
+   }
  }
 

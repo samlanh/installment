@@ -37,6 +37,7 @@ public function init()
 		$TotalExpense = $db->TotalExpense();
 		$TotalOtherIncome = $db->getTotalOtherIncome();
 		$TotalSaleIncome = $db->getTotalSaleIncome();
+		$houseRepaireIncome = $db->getTotalHouseRepaireIncome();
 		
 		$this->view->allProperty =$allProperty;
 		$this->view->propertySold =$propertySold;
@@ -52,7 +53,7 @@ public function init()
 		
 		$this->view->totalExpense = $TotalExpense;
 		
-		$totalIncome = $TotalSaleIncome+$TotalOtherIncome;
+		$totalIncome = $TotalSaleIncome+$TotalOtherIncome+$houseRepaireIncome;
 		$this->view->totalIncome = $totalIncome;
 		
 		$netincome = $totalIncome-$TotalExpense;
