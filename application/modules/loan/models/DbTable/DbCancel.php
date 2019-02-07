@@ -40,8 +40,6 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		$where = " AND ".$from_date." AND ".$to_date;
 		$sql ='SELECT c.`id`,
 		    p.`project_name`,
-			s.`sale_number`,
-			clie.`client_number`,
 			clie.`name_kh` AS client_name,
 			(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
 			pro.`land_address`,pro.`street`,
@@ -98,8 +96,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				$expenid = $this->insert($arr1);
 			}
 			
-			$arr = array(
-					//'cancel_code'=>$data['cancel_code'],
+			 $arr = array(
 					'branch_id'=>$data['branch_id'],
 					'sale_id'=>$data['sale_no'],
 					'property_id'=>$data['property_id'],
@@ -112,7 +109,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'return_back'=>$data['return_back'],
 					'expense_id'=>$expenid,
 					);
-			$this->_name="ln_sale_cancel";
+			 $this->_name="ln_sale_cancel";
 			 $this->insert($arr);
 			 
 			 $db = new Loan_Model_DbTable_DbLandpayment();

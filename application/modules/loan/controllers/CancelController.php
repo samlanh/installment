@@ -24,11 +24,11 @@ class Loan_CancelController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","SALE_NO","CLIENT_NUM","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","SOLD_PRICE","INSTALLMENT_PAID","PAID_AMOUNT","RETURN_MONEY_BACK","DATE","STATUS");
+			$collumns = array("PROJECT_NAME","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","SOLD_PRICE","INSTALLMENT_PAID","PAID_AMOUNT","RETURN_MONEY_BACK","DATE","STATUS");
 			$link=array(
 					'module'=>'loan','controller'=>'cancel','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('sale_number'=>$link,'client_number'=>$link,));
+			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('client_name'=>$link,'project_name'=>$link,'land_address'=>$link,));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			echo $e->getMessage();

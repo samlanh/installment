@@ -961,8 +961,7 @@ class Report_LoanController extends Zend_Controller_Action {
 					'buy_type'=>-1,
 					'land_id'=>-1,
 					'co_id'=>-1,
-					'start_date'=> date('Y-m-d'),
-					'end_date'=>date('Y-m-d'));
+					);
 		}
 		$this->view->loanrelease_list=$db->getAllRemainMonth($search);
 		$this->view->list_end_date=$search;
