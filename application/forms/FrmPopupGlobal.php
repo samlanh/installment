@@ -683,6 +683,101 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$last_name=$session_user->last_name;
 		$username = $session_user->first_name;
 		
+		$fiveStarReciept=0;
+		if ($fiveStarReciept==1){
+			$str='
+				<style>
+					span.postingdate {
+					    position: absolute;
+					    top: 237px;
+					    left: 14px;
+					}
+					span#lb_receipt {
+					    position: absolute;
+					    top: 204px;
+					    right: 106px;
+					    font-weight: bold;
+					}
+					span#lb_customer {
+					    position: absolute;
+					    top: 270px;
+					    left: 215px;
+					}
+					span#lbl_total_receive {
+					    position: absolute;
+					    top: 270px;
+					    right: 132px;
+					    font-weight: bold;
+					}
+					span#lable_chartotalreceipt {
+					    position: absolute;
+					    top: 326px;
+					    left: 215px;
+					}
+					span#lb_hourseno {
+					    position: absolute;
+					    top: 384px;
+					    right: -10px;
+					    display: block;
+					    min-width: 200px;
+					    text-align: left;
+					}
+					span#lb_descriptionall {
+					    position: absolute;
+					    top: 382px;
+					    left: 120px;
+					}
+					
+					span#lbl_customer,span#lbl_usersale {
+					    position: absolute;
+					    top: 525px;
+					    display: block;
+					    min-width: 215px;
+					    text-align: center;
+					}
+					span#lbl_customer {
+						left: 70px;
+					}
+					span#lbl_usersale {
+						right: 91px;
+					}
+				</style>
+				<div class="five-startreceipt" style=" font-size: 14px; font-family: '."'Times New Roman'".','."'Khmer OS Battambang'".';  color: #275ca9; width: 21cm; height: 15cm;padding: 0px;margin: 0 auto;position: relative; margin-top:-18px;" >
+				<div style="display: none;">
+					<span id="projectlogo"></span>
+					<span id="lbl_project"></span>
+					
+					<span id="lb_saleprice"></span>
+					<span id="lbl_total_paid1"></span>
+					<span id="lbl_balance"></span>
+					<span id="lb_noted"></span>
+					
+					
+					<span id="lb_amount"></span>
+					<span id="lbl_paidtimes"></span>
+					<span id="lb_interest"></span>
+					<span id="lb_penalty"></span>
+					<span id="lb_extrapayment"></span>
+					<span id="lbl_totalpayment"></span>
+					<span id="lb_buydate1"></span>
+					<span id=lbl_paid_date1></span>
+					<span id="lbl_paymenttype"></span>
+					<span id="lbl_cheque"></span>
+					
+				</div>
+				<span class="postingdate">Posting Date: <span id=lblpaid_date></span></span>
+				<span id="lb_receipt"></span>
+				<span id="lb_customer"></span>
+				<span id="lbl_total_receive"></span>
+				<span id="lable_chartotalreceipt"></span>
+				<span id="lb_hourseno"></span>
+				<span id="lb_descriptionall"></span>
+				
+				<span id="lbl_customer"></span>
+				<span id="lbl_usersale">'.$last_name." ".$username.'</span>
+			</div>
+			';
+		}else{
 		$str='
 		<div >
 			<style>
@@ -891,9 +986,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</td>
 				</tr>
 			</table>
+			<div style="display: none;">
+				<span id="lable_chartotalreceipt"></span>
+				<span id="lblpaid_date"></span>
+				<span id="lb_descriptionall"></span>
+			</div>
 		</div>
 		';
-		
+		}
 		return $str;
 	}
 }
