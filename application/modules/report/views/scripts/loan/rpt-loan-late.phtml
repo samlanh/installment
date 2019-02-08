@@ -1,6 +1,5 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	
 	$dbGB = new Application_Model_DbTable_DbGlobal();
 	$logo = $this->baseUrl()."/images/logo.jpg";
 	$branch_title = $tr->translate("BRAND_TITLE");
@@ -30,7 +29,6 @@
 		   		<td><?php echo $frm->getElement("adv_search");?></td>
 		   		<td><?php echo $frm->getElement('branch_id');?></td>
 		   		<td><?php echo $frm->getElement('client_name');?></td>
-		   		<!-- <td><?php //echo $frm->getElement('status');?></td> -->
 		   		<td><?php echo $frm->getElement('end_date');?></td>
 		   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
 		   	</tr>
@@ -100,14 +98,14 @@
 	    		<div class="divFooter">
 	        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;" >
 	            	<tr>
-	                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
-	                	<td width="60%" valign="top">
+	                	<td width="30%"><img src="<?php echo $logo;?>" style="height:85px;max-width: 100%;"></td>
+	                	<td width="40%" valign="top" align="center">
 	                		<ul>
 	                			<li style="text-align:center; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;?></li>
 	                			<li style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_LOAN_LATE");?></li>
 	                			<li style="text-align:center; font-size:13px;"><?php echo date("D-d-m-Y",strtotime($this->list_end_date));?></li>
 	                		</ul>
-	                	<td width="20%"></td>
+	                	<td width="30%"></td>
 	                </tr> 
 	            </table>
 	            </div>
@@ -117,9 +115,9 @@
 	    	<td id="exportExcel" >
 	            <table border="1" class="content-data"​  width="100%" cellspacing="0">
 	                  <thead>
-	                   	<tr class="hide" style="border:1px solid #000;">
+	                   	 <tr class="hide" style="border:1px solid #000;">
 		                	<th colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
-		                </tr>
+		                 </tr>
 		                 <tr class="style" align="center" >
 		                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
@@ -127,11 +125,6 @@
 		                    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
 			                <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
 			                <td rowspan="2"><?php echo $tr->translate("STREET");?></td>
-			                <!-- 
-			                <td rowspan="2"><?php //echo $tr->translate("SOLD_PRICE");?></td>	
-		                    <td rowspan="2"><?php //echo $tr->translate("INTEREST RATE");?></td>
-		                    <td rowspan="2"><?php //echo $tr->translate("LOAN_PERIOD");?></td>
-			                 -->
 		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
 		                    <td colspan="4"><?php echo $tr->translate("PAYMENT_INFO");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("LATE_DAY");?></td>
@@ -162,11 +155,6 @@
 	               		<td style="line-height: 18px; white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $rs["phone"];?></td>
 		                <td align="left">&nbsp;<?php echo $rs['land_address'];?>&nbsp;</td>
 		                <td align="left">&nbsp;<?php echo $rs['street'];?>&nbsp;</td>
-		                <!-- 
-		                <td align="left">&nbsp;$ <?php //echo number_format($rs['price_sold']-$rs['other_fee'],2);?>&nbsp;</td>
-	               		<td>&nbsp;<?php //echo $rs["interest_rate"];?>&nbsp;</td>
-	               		<td>&nbsp;<?php //echo $rs["total_duration"];?> Months&nbsp;</td>
-		                 -->
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["begining_balance_after"],2);?>&nbsp;</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?>&nbsp;</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["total_interest_after"],2);?>&nbsp;</td>
@@ -179,7 +167,6 @@
 		               				$amount_lateday=$total_day/(60*60*24)-$free_day;
 		               				$total_late_day=$total_day/(60*60*24);
 		               			}else {
-		               				//$total_day=strtotime($end_dat)-strtotime($row['last_pay_date']);//have problem
 		               				$total_day=strtotime($end_dat)-strtotime($rs['date_payment']);
 		               				$total_late_day=$total_day/(60*60*24);
 		               				$amount_lateday=$total_day/(60*60*24);
