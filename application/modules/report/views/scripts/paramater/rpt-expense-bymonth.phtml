@@ -47,7 +47,7 @@ dojo.require("dijit.form.DateTextBox");
 	    	 	<style>
 					.style{
 						line-height: 20px;font-size: 14px !important;
-						font-family: 'Khmer OS Battambang';
+						font-family: 'Times New Roman','Khmer OS Battambang';
 						}
 						th{padding: 2px;}
 						.hide{visibility: hidden;}
@@ -87,19 +87,19 @@ dojo.require("dijit.form.DateTextBox");
 					}
 					</style>
 				<div class="divFooter">
-		        	<table width="100%" style="font-family: 'Khmer OS Battambang';margin:0; padding:0;border:none;">
+		        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;">
 		            	<tr>
 			                <td width="30%"><img src="<?php echo $logo;?>" style="height:85px;width: 100%;"></td>
 			                <td width="40%" valign="top">
-			                	<h2 style="text-align:center; font-size:18px; font-family:'Khmer OS Muol Light'"><label><?php echo $branch_title;?></label></h2>
-			               		<h2 style="text-align:center; font-size:16px; font-family:'Khmer OS Muol Light'"><label><?php echo $tr->translate("REPORT_BUGET_PLAN");?></label></h2>
-			                	<p style="text-align:center; font-size:13px; font-family:'Khmer OS Muol Light';margin-top: -15px;"><?php if(!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
+			                	<h2 style="font-weight:normal; text-align:center; font-size:18px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></h2>
+			               		<h2 style="font-weight:normal; text-align:center; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_BUGET_PLAN");?></h2>
+			                	<p style="font-weight:normal; text-align:center; font-size:13px; font-family:'Times New Roman','Khmer OS Muol Light';margin-top: -15px;"><?php if(!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
 			                </td>
 		                	<td width="30%"></td>
 		             	</tr> 
 		            </table>
 		        </div>
-	        	<table width="100%" style="font-family:'Khmer OS Battambang';margin:0; padding:0;border:none;" >
+	        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;" >
 		            <tr>
 	            	   <td colspan="3">
 	            		<table id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; border:solid 1px #000;" >  
@@ -110,6 +110,7 @@ dojo.require("dijit.form.DateTextBox");
 						    	<tr bgcolor="#c1d0f3" class="style" align="center" style="text-align: center;table-layout : fixed; white-space:nowrap;line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
 									<td>&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
 								    <td>&nbsp;<?php echo $tr->translate("BRANCH_NAME");?>&nbsp;</td>
+								    <td >&nbsp;<?php echo $tr->translate("BUDGET_AMOUNT");?>&nbsp;</td>
 								    <?php if (!empty($this->search['start_date'])){
 								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
 								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
@@ -118,23 +119,29 @@ dojo.require("dijit.form.DateTextBox");
 								    <td class="verites-col">&nbsp;<span class="verites"><?php echo date("M-Y",strtotime(" $startmonth+$i month"));?></span>&nbsp;</td>
 								   <?php }
 								    }?>
-								    <td><?php echo $tr->translate("TOTAL_EXPENSE");?></td>
+								    <td>&nbsp;<?php echo $tr->translate("TOTAL_EXPENSE");?>&nbsp;</td>
+								    <td>&nbsp;<?php echo $tr->translate("REMAIN");?>&nbsp;</td>
 								</tr>
 							</thead>
 							<tbody>
 								<?php 
 									$total_expense= 0;
 									$total_allexpense = 0;
+									$total_remain = 0;
+									$total_allbudget= 0;
+									
 								if (!empty($this->project)) foreach ($this->project as $key=> $pro){ ?>
 								<tr>
 									<td align="center">&nbsp;<?php echo $key+1?>&nbsp;</td>
 									<td style="white-space: nowrap;">&nbsp;<?php echo $pro['project_name']?>&nbsp;</td>
+									<td align="center">&nbsp;<strong><?php echo "$ ".number_format($pro['budget_amount'],2);?></strong>&nbsp;</td>
 									 <?php if (!empty($this->search['start_date'])){
 								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
 								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
 								    	for ($i=0; date("Y-m-01",strtotime("$startmonth+$i month"))<= date("Y-m-01",strtotime($endmonth)); $i++){
 								    ?>
-								    <td align="center" style="white-space: nowrap;">&nbsp;
+								    <td  align="center" style="white-space: nowrap;">
+								    	&nbsp;
 								    	<?php 
 								    	$total = $dbparam->getExpensByMonth($pro['br_id'], date("Y-m",strtotime(" $startmonth+$i month")));
 								     	if ($total>0){	echo "$ ".number_format($total,2);}else { echo "-";};
@@ -143,26 +150,35 @@ dojo.require("dijit.form.DateTextBox");
 								     	?>&nbsp;
 								     </td>
 								   <?php }
-								    }?>
-								    <td>&nbsp;<?php echo number_format($total_expense,2);
-								    $total_expense=0;
-								    ?></td>
+									 }
+									 $total_allbudget = $total_allbudget+$pro['budget_amount'];
+									 $total_remain = $pro['budget_amount'] - $total_expense;
+									 ?>
+								    <td>&nbsp;<strong><?php echo "$ ".number_format($total_expense,2);$total_expense=0;?></strong>&nbsp;</td>
+								    <td>&nbsp;<strong style="color: red;"><?php if ($total_remain<0){ echo "$ (".number_format(abs($total_remain),2).")"; }else{ echo "$ ".number_format($total_remain,2);}?></strong>&nbsp;</td>
 								</tr>
 								<?php }?>
 							</tbody>
 					    </table>
-					    <div style="text-align: right;"><?php echo $tr->translate("TOTAL_EXPENSE");?> <?php echo number_format($total_allexpense,2);?></div>
+					    <?php $totalAllREmain = $total_allbudget-$total_allexpense; ?>
+					    <div style="text-align: right;">
+					   		 <span style="display: inline-block;"><?php echo $tr->translate("TOTAL_EXPENSE");?></span> 
+					   		 : <strong style="display: inline-block; min-width: 100px;"><?php echo "$ ".number_format($total_allexpense,2);?></strong>
+					   </div>
+					    <div style="text-align: right;">
+					    	<span style="display: inline-block;"><?php echo $tr->translate("TOTAL_REMAIN");?></span> : 
+					    	<strong style="display: inline-block; min-width: 100px;"><?php if ($totalAllREmain<0){ echo "$ (".number_format(abs($totalAllREmain),2).")"; }else{ echo "$ ".number_format($totalAllREmain,2);}?></strong></div>
 	            	</td>
 	            </tr>
 	            </table>
 	            	<br />
 	               <table align="center" width="100%">
 					   <tr style="font-size: 14px;">
-					        <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
+					        <td style="width:20%;text-align:center;  font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
 					        <td></td>
-					        <td style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
+					        <td style="width:20%;text-align:center; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
 					        <td></td>
-					        <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
+					        <td style="width:20%;text-align:center;font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
 					   </tr>
 				  </table>
 			</div>

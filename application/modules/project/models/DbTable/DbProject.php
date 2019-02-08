@@ -65,6 +65,9 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_current_address'=>$_data['cs_manager_current_address'],
     			'logo'=>$photo,
     			);
+		    	if (!empty($_data['budget_amount'])){
+		    		$_arr['budget_amount']=$_data['budget_amount'];
+		    	}
     	$branch_id = $this->insert($_arr);//insert data
     	$ids = explode(',', $_data['identity']);
     	$key = 1;
@@ -143,6 +146,9 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_current_address'=>$_data['cs_manager_current_address'],
     			'logo'=>$photo,
     			);
+		    	if (!empty($_data['budget_amount'])){
+		    		$_arr['budget_amount']=$_data['budget_amount'];
+		    	}
     	$where=$this->getAdapter()->quoteInto("br_id=?", $id);
     	$this->update($_arr, $where);
     	

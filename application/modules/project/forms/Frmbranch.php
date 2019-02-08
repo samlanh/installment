@@ -260,6 +260,14 @@ Class Project_Form_Frmbranch extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
+		
+		$budget_amount = new Zend_Dojo_Form_Element_NumberTextBox('budget_amount');
+		$budget_amount->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+		));
+		$budget_amount->setValue(0);
+		
 		if(!empty($data)){
 			$br_id->setValue($data['br_id']);
 			$prefix_code->setValue($data['prefix']);
@@ -294,6 +302,8 @@ Class Project_Form_Frmbranch extends Zend_Dojo_Form {
 			$_dob_cs_manager->setValue(date("Y-m-d",strtotime($data['w_dob'])));
 			$date_iss_doc_cs_manager->setValue($data['w_nation_id_issue']);
 			$cs_manager_current_address->setValue($data['w_current_address']);
+			
+			$budget_amount->setValue($data['budget_amount']);
 		}
 		
 		
@@ -309,7 +319,8 @@ Class Project_Form_Frmbranch extends Zend_Dojo_Form {
 				$_csp_manager_sex,
 				$_dob_cs_manager,
 				$date_iss_doc_cs_manager,
-				$cs_manager_current_address
+				$cs_manager_current_address,
+				$budget_amount
 				));
 		
 		return $this;
