@@ -24,7 +24,7 @@
 			 <tr> 
 			   <td><?php echo $frm->getElement("adv_search");?></td>
 			   <td><?php echo $frm->getElement("branch_id");?></td>
-			   <td><?php //echo $frm->getElement('land_id');?><input id="land_id" /></td>
+			   <td><input id="land_id" /></td>
 			   <td><?php echo $frm->getElement("co_khname");?></td>
 			   <td><?php echo $frm->getElement("start_date");?></td>
 			   <td><?php echo $frm->getElement("end_date");?></td>
@@ -83,38 +83,38 @@
 					<div class="divFooter">
 			        	<table width="100%" style="margin:0; padding:0;border:none;" >
 			            	<tr>
-			                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
-			                	<td width="60%" valign="top">
-			                	<h2 style="text-align:center; font-weight:normal; font-size:18px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;?></h2>
-			                	<h2 style="text-align:center; font-weight:normal; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_COMISSION");?></h2>
-			                		<h2 style="text-align:center; font-size:16px; font-weight:normal;"><?php if(!empty($this->search['start_date'])){echo date("d-m-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-m-Y",strtotime($this->search['end_date']));}?></h2>
+			                	<td width="30%"><img src="<?php echo $logo;?>" style="height:80px;max-width: 100%;"></td>
+			                	<td width="40%" valign="top">
+			                	<h2 style="text-align:center; font-weight:normal; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;?></h2>
+			                	<h2 style="text-align:center; font-weight:normal; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_COMISSION");?></h2>
+			                		<h2 style="text-align:center; font-size:14px; font-weight:normal;"><?php if(!empty($this->search['start_date'])){echo date("d-m-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-m-Y",strtotime($this->search['end_date']));}?></h2>
 			                	</td>
-			                    <td width="20%"></td>
+			                    <td width="30%"></td>
 			                </tr> 
 			            </table>
 			         </div>
 					<table id="exportExcel" class="content-data" width="100%" border="1"  bordercolor="black">  
-				    	<thead>
+				    	  <thead>
 			                 <tr class="hide" style="border:1px solid #000;">
 				                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				             </tr>
 					    	<tr class="style" align="center"  >
-					        		<td><?php echo $tr->translate("NUM");?></td>
-						            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-						            <td><?php echo $tr->translate("STAFF_NAME");?></td>
-						            <td><?php echo $tr->translate("TEL");?></td>
-						            <td><?php echo $tr->translate("SEX");?></td>
-						            <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-						            <td><?php echo $tr->translate("COMISSION");?></td>
-						            <td><?php echo $tr->translate("DATE");?></td>
-						            <td><?php echo $tr->translate("BY_USER");?></td>
+				        		<td><?php echo $tr->translate("NUM");?></td>
+					            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+					            <td><?php echo $tr->translate("STAFF_NAME");?></td>
+					            <td><?php echo $tr->translate("TEL");?></td>
+					            <td><?php echo $tr->translate("SEX");?></td>
+					            <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					            <td><?php echo $tr->translate("COMISSION");?></td>
+					            <td><?php echo $tr->translate("DATE");?></td>
+					            <td><?php echo $tr->translate("BY_USER");?></td>
 					         </tr>
 				         </thead>
 				       <?php  $total = 0;
 				       		 $key=0; 
 				       	   if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){
 						   $total = $total +$row['comission'];				   ?>
-						   <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
+						<tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
 						     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 						     <td align="center">&nbsp;<?php echo $row['project_name']?>&nbsp;</td>
 							 <td>&nbsp;<?php echo $row['co_khname'];?>&nbsp;</td>
@@ -124,7 +124,7 @@
 							 <td align="right">&nbsp;<?php echo '$ '.number_format($row['comission'],2);?>&nbsp;</td>
 							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['buy_date']));?>&nbsp;</td>
 							 <td>&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
-							</tr>
+						</tr>
 						<?php }?>
 						<?php 
 						 $record = $key;
@@ -149,7 +149,7 @@
 					<table width="50%" border="1" style="float: right; border-collapse:collapse;font-size: 12px;" bordercolor="black">
 						<tr class="style" align="center" style=" line-height:25px; font-size:12px; padding:5px 0px; " >
 				        	<td bgcolor="#ccc" ><?php echo $tr->translate("TOTAL");?></td>
-				            <td><strong><?php echo '$ '.number_format($total,2);?></strong></td>
+				            <td><?php echo '$ '.number_format($total,2);?></td>
 				         </tr>
 					</table>
 		    	</td>
