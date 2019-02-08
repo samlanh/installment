@@ -686,7 +686,6 @@ class Report_LoanController extends Zend_Controller_Action {
   }
   public function rptExpenseBycateAction(){
   	try{
-  		
   		if($this->getRequest()->isPost()){
   			$search=$this->getRequest()->getPost();
   		}else{
@@ -719,15 +718,11 @@ class Report_LoanController extends Zend_Controller_Action {
   		}
   		
   		$this->view->rscomisison = $db->getAllCommission($search);
-  		
   		$this->view->expense_comission = $db->getAllComissionExpense($search);
-  		
-  		
   		
   	}catch(Exception $e){
   		Application_Form_FrmMessage::message("APPLICATION_ERROR");
   		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-  		echo $e->getMessage();
   	}
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();

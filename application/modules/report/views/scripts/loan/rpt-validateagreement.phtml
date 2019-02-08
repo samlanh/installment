@@ -41,7 +41,7 @@
 	<style>
 		.hover:hover{ background: #ccc;}
 		.style{
-			line-height: 20px;font-size: 14px !important;
+			line-height: 20px;font-size: 12px !important;
 			font-family:Arial,'Khmer OS Battambang';
 		}
 		table { page-break-inside:auto }
@@ -72,7 +72,7 @@
 	        	<div class="divFooter">
 		        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
 		            	<tr>
-		                	<td width="30%"><img src="<?php echo $logo;?>" height="85px"></td>
+		                	<td width="30%"><img src="<?php echo $logo;?>" style="max-height:85px;max-width:100%;"></td>
 		                	<td width="40%" valign="top">
 		                		<ul>
 		                			<li style="text-align:center; font-size:18px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;?></li>
@@ -126,6 +126,7 @@
 	               if(!empty($this->loanrelease_list)) foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
 	             if($row['is_cancel']==0){
+	             	
 	               if($row['payment_id']==1){
 	               	 $payment_1=$payment_1+1;
 	               	 $sold_price1=$sold_price1+$row['price_sold'];
@@ -139,7 +140,7 @@
 	             ?>
 	             <?php 
 	              	$payment_id = $row['payment_id']?>
-	              	<tr <?php //if($row['payment_id']!=1){?>oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" <?php //}?> style="line-height: 20px; white-space: nowrap;" class="hover context-menu-one">
+	              	<tr oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" style="line-height: 20px; white-space: nowrap;" class="hover context-menu-one">
 						<td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 						<td style="width: 100px; !important">&nbsp;<?php echo $row['name_kh'];?></td>
 						<td style="line-height: 12px;white-space: normal !important;max-width: 100px;width: 120px;padding: 5px;overflow-wrap: break-word;"><?php echo $row['phone'];?></td>
@@ -151,17 +152,15 @@
 							$percent =$percent['percent'];
 						?>
 						<td style="white-space:nowrap; text-align: right;"><?php 
+						
 							if($row['payment_id']==4){
-								$percent_paid =  number_format($row['paid_amount']/$row['price_sold']*100,2); 
-								if($percent_paid>$percent)
-								{
-									echo"រំលស់";
-								}else{
-									echo"កក់បង្គ្រប់";
-								}
+								$percent_paid =  number_format($row['paid_amount']/$row['price_sold']*100,2);
 							}elseif($row['payment_id']==1){
 								echo number_format($row['paid_amount'],2);
+							}else{
+								echo number_format($row['paid_amount'],2);
 							}
+						
 							$end_dat=date("Y-m-d");
 							$total_day=strtotime($end_dat)-strtotime($row['end_line']);
 							$total_late_day=$total_day/(60*60*24);

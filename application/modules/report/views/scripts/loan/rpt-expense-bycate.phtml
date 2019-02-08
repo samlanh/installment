@@ -3,6 +3,18 @@
 	$this->headTitle('Report Other Expense'); 
 	echo $this->headTitle(''); 
 	$frm = $this->frm_search;
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}
+	
 ?>	
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -60,15 +72,15 @@
 		<div id="exportExcel">
 			<table  style="background:#fff; margin: 0 auto; ;white-space: nowrap;width: 100%">
 				<tr>
-					<td width="15%" align="center">
-						<img style="width:100%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+					<td width="30%" align="center">
+						<img src="<?php echo $logo;?>" height="80px">
 					</td>
-					<td width="70%" align="center">
+					<td width="40%" align="center">
 						<span style=" font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer OS Muol Light';"><?php echo $tr->translate('BRAND_TITLE');?></span><br />
 						<span style=" font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer OS Muol Light';"><?php echo $tr->translate('RPT_CATE_EXPENSE')?></span><br />
 						<span style=" font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer OS Muol Light';"><?php if(!empty($this->search["start_date"])){?>For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));}?></span>
 					</td>
-					<td width="15%" align="center">
+					<td width="30%" align="center">
 					</td>
 				</tr>
 				<style>

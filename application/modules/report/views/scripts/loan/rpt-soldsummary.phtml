@@ -52,7 +52,7 @@
 		  display: table-header-group;
 		  page-break-inside:avoid; page-break-after:auto;
 		}
-		table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px;}
 		th{padding: 5px;}
 		.hover td{padding: 2px;}
 		.hide{visibility: hidden;}
@@ -72,18 +72,18 @@
 		<tr>
 	    	<td align="center">
 	        	<div class="divFooter">
-		        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+		        	<table width="100%" style="font-family: 'Khmer OS Battambang';margin:0; padding:0;border:none;">
 		            	<tr>
-		                	<td width="25%"><img src="<?php echo $logo;?>" height="85px" ></td>
-		                	<td width="50%" valign="top">
+		                	<td width="30%"><img src="<?php echo $logo;?>" style="max-height:100%;max-width: 100%;"></td>
+		                	<td width="40%" valign="top">
 		                		<ul>
-		                			<li style="text-align:center; font-size:18px; font-family:'Khmer MEF2'"><?php echo $branch_title;?></li>
-		                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'"><?php echo $tr->translate("RPT_SOLDSUMMARY");?></li>
+		                			<li style="text-align:center; font-size:18px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;?></li>
+		                			<li style="text-align:center; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("RPT_SOLDSUMMARY");?></li>
 		                			<li style="text-align:center; font-size:16px;"><?php if(!empty($this->list_end_date['start_date'])){echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
 		                			<li style="text-align:center; font-size:16px;"><?php if($this->branch_id>0){ echo $tr->translate("BRANCH_NAME").' '.@$this->loanrelease_list[0]['branch_name']; }?></li>
 		                		</ul>
 		                	</td>
-		                    <td width="25%"></td>
+		                    <td width="30%"></td>
 		                </tr> 
 		            </table>
 	            </div>
@@ -96,7 +96,7 @@
 	                 <tr class="hide" style="border:1px solid #000;">
 		                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 		             </tr>
-	                 <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 25px; font-size:11px !important; padding:1px 0px; white-space: nowrap;height: 22px; ">
+	                 <tr bgcolor="#c1d0f3" class="style" align="center" style="line-height: 25px; font-size:11px !important; padding:1px 0px; white-space: nowrap;height: 22px; ">
 	                    <td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
 	                    <td><?php echo $tr->translate("BUY_DATE");?></td>
 	                    <td><?php echo $tr->translate("END_DATE");?></td>
@@ -142,7 +142,6 @@
 	               if(empty($row['paid_amount'])){
 	               	$row['paid_amount']=0;
 	               }
-// 	             if($row['is_cancel']==0){
 	               if($row['payment_id']==1){//កក់
 	               	 $payment_1=$payment_1+1;
 	               	 
@@ -183,7 +182,7 @@
 						?>
 					</tr>
 					<?php }?>
-					<tr style="height: 30px;text-align: center;font-size: 14px;font-weight: bold;background:#87acff;">
+					<tr style="height: 30px;text-align: center;font-size: 14px;background:#87acff;">
 						<td colspan="4"></td>
 						<td><?php echo $key>0?$key+1:0;?></td>
 						<td><?php echo number_format($price_before,2);?></td>
@@ -199,7 +198,7 @@
             		<tr>
             			<td colspan="17" style="border: #fff solid 1px;border-top: solid 1px #000;"><br />
 			             <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
-			                 <tr bgcolor="#a0baf5" class="style" style="font-weight:bold; line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"></td>
 			                    <td></td>
 			                    <td align="right"><?php echo $tr->translate("កក់ទ្រនាប់ដៃ");?>&nbsp;&nbsp;</td>
@@ -207,15 +206,15 @@
 			                    <td align="left">ដាច់</td>
 			                    <td align="left">នៅសល់</td>
 			                 </tr>
-			                 <tr bgcolor="#a0baf5" class="style" style="font-weight:bold; line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                    <td align="right"><?php echo $tr->translate("តម្លៃតូបសរុប");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
+			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                    <td align="right">តម្លៃដី/ផ្ទះសរុប&nbsp;&nbsp;$&nbsp;&nbsp;</td>
 			                    <td><?php echo number_format($sold_price,2);?></td>
 			                    <td align="right"><?php echo $tr->translate("បង់ផ្តាច់");?>&nbsp;&nbsp;</td>
 			                    <td><?php echo $payment_2;?></td>
 			                    <td><?php echo $payment_2_completed;?></td>
 			                    <td><?php echo $payment_2-$payment_2_completed; ?></td>
 			                 </tr>
-			                 <tr bgcolor="#a0baf5" class="style" style="font-weight:bold; line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"><?php echo $tr->translate("ប្រាក់ដើមបានបង់សរុប");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
 			                    <td><?php echo number_format($paid_price,2);?></td>
 			                    <td align="right"><?php echo $tr->translate("រំលស់");?>&nbsp;&nbsp;</td>
@@ -223,7 +222,7 @@
 			                    <td><?php echo $payment_3_completed;?></td>
 			                    <td><?php echo $payment_3-$payment_3_completed;?></td>
 			                 </tr>
-			                 <tr bgcolor="#a0baf5" class="style"  style="font-weight:bold; line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                 <tr bgcolor="#a0baf5" class="style"  style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"><?php echo $tr->translate("ប្រាក់នៅសល់");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
 			                    <td><?php echo number_format($balace_price,2);?>&nbsp;&nbsp;</td>
 			                    <td align="right"><?php echo $tr->translate("លក់សរុប");?>&nbsp;&nbsp;</td>
@@ -237,11 +236,11 @@
 	              <br />
 	              <table align="center" width="100%">
 					   <tr style="font-size: 14px;">
-					       <th style="width:20%;text-align:center;  font-family:'Khmer MEF2'"><?php echo $tr->translate('APPROVED BY');?></th>
+					       <th style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></th>
 					       <th></th>
-					       <th style="width:20%;text-align:center; font-family:'Khmer MEF2'"><?php echo $tr->translate('VERIFYED BY');?></th>
+					       <th style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></th>
 					       <th></th>
-					       <th style="width:20%;text-align:center;font-family:'Khmer MEF2'"><?php echo $tr->translate('PREPARE BY');?></th>
+					       <th style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></th>
 					   </tr>
 				</table>	
 	    	</td>

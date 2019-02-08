@@ -1,7 +1,6 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
-	$opt = array(1=>"បង់ធម្មតា",2=>"បង់មុន",3=>"បង់រំលោះប្រាក់ដើម",4=>"បង់ផ្តាច់");
 	$url_receipt = $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt'));
 	$url_receiptupdate = $this->url(array('module'=>'report','controller'=>'loan','action'=>'updatereceipt'));
 	
@@ -106,8 +105,8 @@
 						        	<div class="divFooter">
 							        	<table border="0" width="100%" style="font-family: 'Khmer OS Battambang';margin:0;padding:0;">
 							            	<tr>
-							                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
-							                	<td width="60%" valign="top">
+							                	<td width="30%"><img src="<?php echo $logo;?>" height="85px"></td>
+							                	<td width="40%" valign="top">
 							                		<ul>
 							                			<li style="text-align:center; font-size:18px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
 							                			<li style="text-align:center; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("បិទបញ្ជីប្រចាំថ្ងៃ");?></li>
@@ -115,7 +114,7 @@
 							                			<li style="text-align:center; font-size:16px;"><?php if($this->list_end_date['start_date']){echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
 							                		</ul>
 							                   </td>
-							                    <td width="20%"></td>
+							                    <td width="30%"></td>
 							                </tr> 
 							            </table>
 						            </div>
@@ -207,34 +206,33 @@
 							               		<td class="">&nbsp;<?php echo($rs['is_closed']==0)?"Unclose":"Closed";?>&nbsp;</td>
 							                </tr>
 							                <?php }?>
-							            </table>
-						            
-						            <br />
+							          </table>
+						             <br />
 						             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
-						                  <thead>
-						                 <tr bgcolor="#c1d0f3" class="style" style=" line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
-						                    <td><?php echo $tr->translate("CURRENT_TYPE");?></td>
-						                    <td><?php echo $tr->translate("PRINCIPAL");?></td>                    
-						                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
-						                    <td><?php echo $tr->translate("TOTAL_PENILIZE_AMOUNT");?></td>
-						                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
-						                    <td><?php echo $tr->translate("TOTAL");?></td>
-						                    <td rowspan="2">ចំណូលតាមប្រភេទ</td>
-						                    <td><?php echo $tr->translate("សាច់ប្រាក់សរុប");?></td>
-						                    <td><?php echo $tr->translate("តាមធនាគារ");?></td>
-						                    <td><?php echo $tr->translate("សែកសរុប");?></td>
-						                </tr>
-						                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
-						                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
-						                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
-						                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
-						                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>
-						                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d5,2);?>&nbsp;</td>
-						                    <td>&nbsp;&nbsp;<?php echo number_format($total_d,2);?>&nbsp;</td>
-						                    <td>&nbsp;&nbsp;<?php echo number_format($total_cash,2);?>&nbsp;</td>
-						                    <td>&nbsp;&nbsp;<?php echo number_format($total_bank,2);?>&nbsp;</td>
-						                    <td>&nbsp;&nbsp;<?php echo number_format($total_cheque,2);?>&nbsp;</td>
-						                </tr>
+						                <thead>
+							                 <tr bgcolor="#c1d0f3" class="style" style=" line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
+							                    <td><?php echo $tr->translate("CURRENT_TYPE");?></td>
+							                    <td><?php echo $tr->translate("PRINCIPAL");?></td>                    
+							                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+							                    <td><?php echo $tr->translate("TOTAL_PENILIZE_AMOUNT");?></td>
+							                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
+							                    <td><?php echo $tr->translate("TOTAL");?></td>
+							                    <td rowspan="2">ចំណូលតាមប្រភេទ</td>
+							                    <td><?php echo $tr->translate("សាច់ប្រាក់សរុប");?></td>
+							                    <td><?php echo $tr->translate("តាមធនាគារ");?></td>
+							                    <td><?php echo $tr->translate("សែកសរុប");?></td>
+							                </tr>
+							                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
+							                    <td>&nbsp;<?php echo $tr->translate("DOLLAR");?></td>
+							                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
+							                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
+							                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>
+							                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d5,2);?>&nbsp;</td>
+							                    <td>&nbsp;&nbsp;<?php echo number_format($total_d,2);?>&nbsp;</td>
+							                    <td>&nbsp;&nbsp;<?php echo number_format($total_cash,2);?>&nbsp;</td>
+							                    <td>&nbsp;&nbsp;<?php echo number_format($total_bank,2);?>&nbsp;</td>
+							                    <td>&nbsp;&nbsp;<?php echo number_format($total_cheque,2);?>&nbsp;</td>
+							                </tr>
 						                </thead>
 						              </table>
 						    	</td>
@@ -303,8 +301,7 @@
 		dijit.byId('id_selected').attr('value','');
 		if(dojo.byId('checkall').checked){
 			for(var j=1;j<=array_length;j++){
-				//$("#check_box"+j).attr('checked', 'checked');
-				$('#check_box'+j).each(function() { //loop through each checkbox
+				$('#check_box'+j).each(function() { 
 					this.checked = true;  
 				});
 				checked_id(j);

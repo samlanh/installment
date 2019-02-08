@@ -3,16 +3,16 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm_search;
 $opt = array(1=>"បង់ធម្មតា",2=>"បង់មុន",3=>"បង់រំលោះប្រាក់ដើម",4=>"បង់ផ្តាច់");
 
-$dbGB = new Application_Model_DbTable_DbGlobal();
-$logo = $this->baseUrl()."/images/logo.jpg";
-$branch_title = $tr->translate("BRAND_TITLE");
-if ($this->search['branch_id'] >0 ){
-	$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
-	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
-		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
 	}
-	$branch_title = $branch['project_name'];
-}
 ?>
 <script>
      dojo.require("dijit.form.DateTextBox");
@@ -69,23 +69,23 @@ if ($this->search['branch_id'] >0 ){
 				<tr>
 			    	<td align="center">
 			    	<div class="divFooter">
-			        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+			        	<table width="100%" style="font-family: 'Khmer OS Battambang';margin:0; padding:0;border:none;">
 			            	<tr>
-			                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
-			                	<td width="60%" valign="top">
+			                	<td width="30%"><img src="<?php echo $logo;?>" style="height:85px;max-width: 100%;"></td>
+			                	<td width="40%" valign="top" align="center">
 			                         <ul>
 			                			<li style="text-align:center; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
 			                			<li style="text-align:center; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_OTHERINCOME_DETAIL");?></li>
 			                			<li style="text-align:center; font-size:14px;"><?php if(!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></li>
 			                		</ul>
 			                 </td>
-			                    <td width="20%"></td>
-			                </tr> 
+			                 <td width="30%"></td>
+			               </tr> 
 			            </table>
 		            </div>
 			        </td>
 			    </tr>
-			    <tr><td  id="exportExcel" class="mymy">
+			    <tr><td id="exportExcel" class="mymy">
 			    		<table width="100%" style="border-collapse:collapse; border: 1px solid #000;" cellspacing="0">
 			            	<?php 
 			            	$grtotalprice =0; 
@@ -94,12 +94,12 @@ if ($this->search['branch_id'] >0 ){
 				              	foreach ($this->loantotalcollect_list as $index => $rs){?>
 			              			<?php if ($client_id!=$rs["client_id"]) { ?>
 			              			<?php if ($index>0){?>
-			              			<tr  class="style stylehover" style=" line-height: 20px; text-align: center;" >
+			              			<tr class="style stylehover" style=" line-height: 20px; text-align: center;" >
 				                		<td colspan="8" style="border-left: solid #fff 1px;  border-bottom : solid #fff 1px;">&nbsp;</td>
-					                    <td  style="background:#eaeaea;padding:2px 0px;" colspan="2">&nbsp;​<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+					                    <td style="background:#eaeaea;padding:2px 0px;" colspan="2">&nbsp;​<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
 					                    <td align="right" style="padding:5px 0px; border-bottom: double #000 2px;padding:2px 0px;">&nbsp;<?php echo number_format($totalcustomer,2);?>&nbsp;</td>
 					                </tr>
-	               					 <tr>
+	               					<tr>
 					                	<td colspan="16" style="border-left:1px solid #fff;border-right:1px solid #fff;">&nbsp;</td>
 					                </tr>
 			              			<?php }?>
