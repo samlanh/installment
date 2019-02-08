@@ -110,7 +110,6 @@ dojo.require("dijit.form.DateTextBox");
 						    	<tr bgcolor="#c1d0f3" class="style" align="center" style="text-align: center;table-layout : fixed; white-space:nowrap;line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
 									<td>&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
 								    <td>&nbsp;<?php echo $tr->translate("BRANCH_NAME");?>&nbsp;</td>
-								    <td >&nbsp;<?php echo $tr->translate("BUDGET_AMOUNT");?>&nbsp;</td>
 								    <?php if (!empty($this->search['start_date'])){
 								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
 								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
@@ -120,6 +119,7 @@ dojo.require("dijit.form.DateTextBox");
 								   <?php }
 								    }?>
 								    <td>&nbsp;<?php echo $tr->translate("TOTAL_EXPENSE");?>&nbsp;</td>
+								    <td >&nbsp;<?php echo $tr->translate("BUDGET_AMOUNT");?>&nbsp;</td>
 								    <td>&nbsp;<?php echo $tr->translate("REMAIN");?>&nbsp;</td>
 								</tr>
 							</thead>
@@ -134,7 +134,6 @@ dojo.require("dijit.form.DateTextBox");
 								<tr>
 									<td align="center">&nbsp;<?php echo $key+1?>&nbsp;</td>
 									<td style="white-space: nowrap;">&nbsp;<?php echo $pro['project_name']?>&nbsp;</td>
-									<td align="center">&nbsp;<strong><?php echo "$ ".number_format($pro['budget_amount'],2);?></strong>&nbsp;</td>
 									 <?php if (!empty($this->search['start_date'])){
 								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
 								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
@@ -155,6 +154,7 @@ dojo.require("dijit.form.DateTextBox");
 									 $total_remain = $pro['budget_amount'] - $total_expense;
 									 ?>
 								    <td>&nbsp;<strong><?php echo "$ ".number_format($total_expense,2);$total_expense=0;?></strong>&nbsp;</td>
+								    <td align="center">&nbsp;<strong><?php echo "$ ".number_format($pro['budget_amount'],2);?></strong>&nbsp;</td>
 								    <td>&nbsp;<strong style="color: red;"><?php if ($total_remain<0){ echo "$ (".number_format(abs($total_remain),2).")"; }else{ echo "$ ".number_format($total_remain,2);}?></strong>&nbsp;</td>
 								</tr>
 								<?php }?>
