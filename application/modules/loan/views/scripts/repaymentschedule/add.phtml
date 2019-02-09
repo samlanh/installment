@@ -139,6 +139,7 @@
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id="member" /> <?php //echo $frm->getElement('member');?>
 							<input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with" type="hidden">
+							<input dojoType="dijit.form.TextBox" class="fullside" id="customer_code" name="customer_code" type="hidden">
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -929,6 +930,7 @@ function getcustomerinfo(client_id){
 		handleAs:"json",
 		load: function(data) {
 			dijit.byId('joint_with').attr('value',data.hname_kh);
+			dijit.byId('customer_code').attr('value',data.client_number);
 		},
 		error: function(err) {
 			alert(err);
@@ -1570,6 +1572,8 @@ function printSave(new_receipt_no){
 
 
 	//for Five star Receipt
+	dojo.byId("lb_customercode").innerHTML = dijit.byId("customer_code").attr('displayedValue');
+	
 	a =dojo.number.format(deposit,{places:2}).replace(",", "");
 	money_khmer=read_money_in_english(a);
 	decimalmoney_khmer=dojo.number.format(deposit,{places:2}).replace(",", "").substr(-2);
@@ -1582,7 +1586,7 @@ function printSave(new_receipt_no){
 	money_khmer = money_khmer+" "+string+" "+read_in_english_from_10_to_99(decimalmoney_khmer)+''+read_in_english_from_0_to_9(last_number)+' '+str_cent;
 	dojo.byId('lable_chartotalreceipt').innerHTML=money_khmer;
 	dojo.byId("lblpaid_date").innerHTML = datepay1;
-	dojo.byId("lb_descriptionall").innerHTML = lbl_landaddress+" PMT "+lbl_paidtimes+" "+datepay1+" "+dijit.byId("payment_method").attr('displayedValue')+" "+dijit.byId('cheque').get('value');
+	dojo.byId("lb_descriptionall").innerHTML = lbl_landaddress+" PMT No "+lbl_paidtimes+" Date "+datepay1+" "+dijit.byId("payment_method").attr('displayedValue')+" "+dijit.byId('cheque').get('value');
 
 	
 	dijit.byId("terms").show();	

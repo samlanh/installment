@@ -683,7 +683,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$last_name=$session_user->last_name;
 		$username = $session_user->first_name;
 		
-		$fiveStarReciept=0;
+		$fiveStarReciept=1;
 		if ($fiveStarReciept==1){
 			$str='
 				<style>
@@ -701,6 +701,11 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					span#lb_customer {
 					    position: absolute;
 					    top: 270px;
+					    left: 215px;
+					}
+					span#lb_customercode {
+					    position: absolute;
+					    top: 300px;
 					    left: 215px;
 					}
 					span#lbl_total_receive {
@@ -768,6 +773,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<span class="postingdate">Posting Date: <span id=lblpaid_date></span></span>
 				<span id="lb_receipt"></span>
 				<span id="lb_customer"></span>
+				<span id="lb_customercode"></span>
 				<span id="lbl_total_receive"></span>
 				<span id="lable_chartotalreceipt"></span>
 				<span id="lb_hourseno"></span>
@@ -990,6 +996,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<span id="lable_chartotalreceipt"></span>
 				<span id="lblpaid_date"></span>
 				<span id="lb_descriptionall"></span>
+				<span id="lb_customercode"></span>
 			</div>
 		</div>
 		';

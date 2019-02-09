@@ -1064,6 +1064,7 @@ public function getAllOutstadingLoan($search=null){
 				(SELECT s.total_duration FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS total_duration,
 				(SELECT date_payment FROM `ln_saleschedule` WHERE sale_id= crm.sale_id AND status=1 AND no_installment>payment_times ORDER BY date_payment ASC LIMIT 1) as nextdate_payment,
 				(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS name_kh,
+				(SELECT c.client_number FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS client_number,
 				(SELECT c.phone FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS phone,
 				(SELECT
 			     	`d`.`date_payment`
