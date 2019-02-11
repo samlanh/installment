@@ -683,7 +683,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$last_name=$session_user->last_name;
 		$username = $session_user->first_name;
 		
-		$fiveStarReciept=1;
+		$fiveStarReciept=0;
 		if ($fiveStarReciept==1){
 			$str='
 				<style>
@@ -702,6 +702,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					    position: absolute;
 					    top: 270px;
 					    left: 215px;
+					    font-family: '."'Times New Roman'".','."'Khmer OS Muol Light'".';
 					}
 					span#lb_customercode {
 					    position: absolute;
@@ -718,6 +719,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					    position: absolute;
 					    top: 326px;
 					    left: 215px;
+					    font-weight: bold;
 					}
 					span#lb_hourseno {
 					    position: absolute;
@@ -739,6 +741,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					    display: block;
 					    min-width: 215px;
 					    text-align: center;
+					     font-family: '."'Times New Roman'".','."'Khmer OS Muol Light'".';
 					}
 					span#lbl_customer {
 						left: 70px;
@@ -747,7 +750,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						right: 91px;
 					}
 				</style>
-				<div class="five-startreceipt" style=" font-size: 14px; font-family: '."'Times New Roman'".','."'Khmer OS Battambang'".';  color: #275ca9; width: 21cm; height: 15cm;padding: 0px;margin: 0 auto;position: relative; margin-top:-18px;" >
+				<div class="five-startreceipt" style=" font-size: 16px; font-family: '."'Times New Roman'".','."'Khmer OS Battambang'".';  color: #000; width: 21cm; height: 15cm;padding: 0px;margin: 0 auto;position: relative; margin-top:-18px;" >
 				<div style="display: none;">
 					<span id="projectlogo"></span>
 					<span id="lbl_project"></span>
