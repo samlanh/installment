@@ -15,6 +15,13 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		if(!$row) return NULL;
 		return $row;
 	}	
+	function getUserInformationById($user_id){
+		$db = $this->getAdapter();
+		$sql="SELECT s.*,
+			(SELECT ut.user_type FROM `rms_acl_user_type` AS ut WHERE ut.user_type_id = s.user_type LIMIT 1) AS user_typetitle FROM `rms_users` AS s
+			WHERE s.id = $user_id LIMIT 1";
+		return $db->fetchRow($sql);
+	}
 	public function getThemeByUserId($user_id){
 		$db = $this->getAdapter();
 		$sql = "SELECT theme_name FROM `ln_theme_user` WHERE user_id =$user_id LIMIT 1";

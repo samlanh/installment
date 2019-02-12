@@ -682,6 +682,11 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$session_user=new Zend_Session_Namespace('authinstall');
 		$last_name=$session_user->last_name;
 		$username = $session_user->first_name;
+		$user_id = $session_user->user_id;
+		$usertype="";
+// 		$dbuser = new Application_Model_DbTable_DbUsers();
+// 		$userinfo = $dbuser->getUserInformationById($user_id);
+// 		$usertype = " (".$userinfo['user_typetitle'].")";
 		
 		$fiveStarReciept=0;
 		if ($fiveStarReciept==1){
@@ -965,8 +970,9 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 									<label id="lbl_customer" ></label>
 								</td>
 								<td align="center" width="30%">
-								<label id="lbl_usersale" >'.$last_name." ".$username.'</label>
+								<label id="lbl_usersale" >'.$last_name." ".$username.$usertype.'</label>
 								</td>
+								
 							</tr>
 						</table>
 					</td>
