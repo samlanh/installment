@@ -201,6 +201,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			$sql = "
 			SELECT client_id,
 			(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
+			client_number,
 			name_kh,
 			(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND sex=key_code LIMIT 1) AS sex
 			,phone,house,street,
