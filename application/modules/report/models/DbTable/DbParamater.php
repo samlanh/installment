@@ -324,12 +324,13 @@ function getAllBranch($search=null){
     		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
     		status FROM ln_expense WHERE status=1 ";
     		 
-    		$order=" order by branch_id DESC";
+//     		$order=" order by branch_id DESC";
+    		$order="";
     		if($search['ordering']==1){
-    			$order.=" , date DESC";
+    			$order.=" order by date DESC";
     		}
     		if($search['ordering']==2){
-    			$order.=" , id DESC";
+    			$order.=" order by id DESC";
     		}
     		if(empty($search)){
     			return $db->fetchAll($sql.$order);
@@ -594,6 +595,7 @@ function getAllBranch($search=null){
                   c.lphone as with_phone,
                   c.ghouse as with_house,
                   c.dstreet AS w_street,
+                   c.arid_no AS witnesses,
 				  (SELECT
 				     `village`.`village_namekh`
 				   FROM `ln_village` `village`

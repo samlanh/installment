@@ -648,16 +648,16 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$key = new Application_Model_DbTable_DbKeycode();
 		$data=$key->getKeyCodeMiniInv(TRUE);
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$str='<table width="100%" celpadding="0" cellspacing="0" style="font-family:Khmer OS Battambang; font-size:10px;line-height: 15px;margin-top: 4px;">
+		$str='<table width="100%" celpadding="0" cellspacing="0" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'; font-size:10px;line-height: 15px;margin-top: 4px;">
 				<tr>
 					<td width="22%">';
-						$str.='<span style="font-family:Khmer MEF2; font-size:16px;white-space:nowrap;padding-top:5px;">'.$tr->translate("BRAND_FOOTER_TITLE").'</span>
+						$str.='<span style="font-family:'."'Khmer OS Muol Light'".'; font-size:16px;white-space:nowrap;padding-top:5px;">'.$tr->translate("BRAND_FOOTER_TITLE").'</span>
 					</td>
 					<td width="40%">
 						<span>'.$data["website"].'</span>
 					</td>
 					<td width="40%" align="right">
-						<span style="font-family:Khmer OS Battambang;">'.$data["email_client"].'</span>
+						<span style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';">'.$data["email_client"].'</span>
 					</td>
 				</tr>
 				<tr style="white-space:nowrap;">

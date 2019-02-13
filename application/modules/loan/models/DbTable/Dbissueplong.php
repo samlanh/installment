@@ -13,6 +13,10 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
    	$to_date = (empty($search['end_date']))? '1': " sp.issue_date <= '".$search['end_date']." 23:59:59'";
    	$where = " AND ".$from_date." AND ".$to_date;
    	$sql="SELECT `s`.`id` AS `id`,
+	      CASE    
+		WHEN  (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 AND rec.sale_id = sp.sale_id ORDER BY rec.id DESC LIMIT 1 ) IS NOT NULL  THEN 'បានប្រគល់'
+		WHEN  (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 AND rec.sale_id = sp.sale_id ORDER BY rec.id DESC LIMIT 1 ) IS NULL THEN 'មិនទាន់ប្រគល់'
+		END AS ask_for,
     	(SELECT
 		     `ln_project`.`project_name`
 		   FROM `ln_project`

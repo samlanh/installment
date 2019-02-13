@@ -28,7 +28,7 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PHONE","PROPERTY_CODE","STREET","DATE","NOTE","STATUS");
+			$collumns = array("PROCESS","BRANCH_NAME","CUSTOMER_NAME","PHONE","PROPERTY_CODE","STREET","DATE","NOTE","STATUS");
 			$link_info=array('module'=>'loan','controller'=>'issueplong','action'=>'edit',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('from_branch'=>$link_info),0);
 		}catch (Exception $e){
