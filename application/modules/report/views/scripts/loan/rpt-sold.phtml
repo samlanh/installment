@@ -15,36 +15,69 @@
 	}
 ?>
 <meta charset="utf-8">
-	<script>
-	dojo.require("dijit.form.DateTextBox");
-	</script>
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
 <title><?php echo $tr->translate("LOAN_DISBURSE");?></title>
 <div style="min-height:26cm; margin:0 auto; padding:0.2cm 0.2cm 0cm 0.2cm">
-	<form method="post">
-		<table width="100%">
-			<tr>
-				<td><?php echo $filter->getElement('adv_search');?></td>
-				<td><?php echo $filter->getElement('branch_id');?></td>
-				<td><input id="land_id" /></td>
-				<td><?php echo $filter->getElement('client_name');?></td>
-				<td><?php echo $filter->getElement('schedule_opt');?></td>
-			</tr>
-			<tr>
-				<td><?php echo $filter->getElement('co_id');?></td>
-				<td><?php echo $filter->getElement('buy_type');?></td>
-				<td><?php echo $filter->getElement('property_type');?></td>
-				<td><?php echo $filter->getElement('start_date');?></td>
-				<td><?php echo $filter->getElement('end_date');?></td>
-				<td align="left"><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
-			</tr>
-		</table>
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('LOAN_DISBURSE');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+    <form method="post">
+	    <div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('adv_search');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('branch_id');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<input id="land_id" />
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('client_name');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('schedule_opt');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('co_id');?>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('buy_type');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('property_type');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('start_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('end_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+				</div>
+			</div>
+		</div>
 	</form>
 	<div id="divPrint" style="margin: 0 auto;">
 	<style>
 		.hover:hover{ background: #ccc;}
 		.style{
 			line-height: 20px;font-size: 14px !important;
-			font-family:Arial,'Khmer OS Battambang';
+			font-family:'Times New Roman','Khmer OS Battambang';
 		}
 		table { page-break-inside:auto }
 		tr{ page-break-inside:avoid; page-break-after:auto; }
@@ -90,7 +123,7 @@
 		 line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;
 		}
 	</style>
-	<table style="font-family: 'Khmer OS Content'; width:100%;">
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 		<tr>
 	    	<td align="center">
 	        	<div class="divFooter">
@@ -228,13 +261,14 @@
 						<td style="white-space:nowrap; text-align: right;">
 						<?php 
 							if($row['payment_id']==4){
-								$percent_paid =  number_format($row['paid_amount']/$row['price_sold']*100,2); 
-								if($percent_paid>$percent)
-								{
-									echo"រំលស់";
-								}else{
-									echo"កក់បង្គ្រប់";
-								}
+// 								$percent_paid =  number_format($row['paid_amount']/$row['price_sold']*100,2); 
+// 								if($percent_paid>$percent)
+// 								{
+// 									echo"រំលស់";
+// 								}else{
+// 									echo"កក់បង្គ្រប់";
+// 								}
+								echo number_format($row['paid_amount'],2);
 							}elseif($row['payment_id']==1){
 								echo number_format($row['paid_amount'],2);
 							}else{
