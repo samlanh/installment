@@ -126,6 +126,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frm = $fm->FrmAddFrmCancel();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_cancel = $frm;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function rptIncomeAction(){ // by Vandy
   	if($this->getRequest()->isPost()){

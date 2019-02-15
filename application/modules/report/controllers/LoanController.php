@@ -228,6 +228,9 @@ class Report_LoanController extends Zend_Controller_Action {
 	  	Application_Model_Decorator::removeAllDecorator($frms);
 	  	$this->view->frm_search = $frms;
 	  	$this->view->outstandloan = $rs;
+	  	
+	  	$frmpopup = new Application_Form_FrmPopupGlobal();
+	  	$this->view->footerReport = $frmpopup->getFooterReport();
   } 
  function rptLoanPayoffAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
