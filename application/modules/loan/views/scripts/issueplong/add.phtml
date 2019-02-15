@@ -105,6 +105,7 @@ function addRow(){
 		temp+='<th><?php echo $tr->translate("SOLD_PRICE");?></th>';
 		temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("PAID");?></th>';
 		temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("BALANCE");?></th>';
+		temp+='<th width="130px"><?php echo $tr->translate("HEAD_TITLE_NO");?></th>';
 		temp+='<th><?php echo $tr->translate("NOTE");?></th>';
 		
 		dojo.query("#head-title").append(temp);
@@ -119,6 +120,7 @@ function addRow(){
 		template+='<td width="100px;"><input readonly class="fullside" type="text"  name="price_sold'+col+'" id="price_sold'+col+'" dojoType="dijit.form.TextBox" /></td>';	
 		template+='<td width="50px;"><input readonly class="fullside" type="text"  name="paid'+col+'" id="paid'+col+'" dojoType="dijit.form.TextBox" /></td>';			
 		template+='<td><input readonly class="fullside" type="text"  name="balance'+col+'" id="balance'+col+'" dojoType="dijit.form.TextBox" /></td>';
+		template+='<td><input class="fullside" type="text"  name="hardtitle'+col+'" id="hardtitle'+col+'" dojoType="dijit.form.TextBox" /><input class="fullside" value="" type="hidden" data-dojo-type="dijit.form.TextBox" id="house_id'+col+'" name="house_id'+col+'" /></td>';
 		template+='<td><input class="fullside" type="text" name="note'+col+'" id="note'+col+'" dojoType="dijit.form.TextBox" /></td>';
 	tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
 	tmp+="</tr>";
@@ -216,6 +218,8 @@ function getInfoByLoanNumber(index){
 			dijit.byId('price_sold'+index).attr('value', data.price_sold);
 			dijit.byId('paid'+index).attr('value', data.total_principal);
 			dijit.byId('balance'+index).attr('value', data.price_sold - data.total_principal);
+			dijit.byId('house_id'+index).attr('value', data.house_id);
+			dijit.byId('hardtitle'+index).attr('value', data.hardtitle);
 		},
 		error: function(err) {
 			alert(err);

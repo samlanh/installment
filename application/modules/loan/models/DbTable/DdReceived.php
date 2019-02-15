@@ -49,6 +49,13 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 	public function addReceivedplong($data){
 		try{
 			$db= $this->getAdapter();
+			$where_proper="id = ".$data['house_id'];
+			$this->_name="ln_properties";
+			$arr_proper = array(
+					'hardtitle'=>$data['hardtitle'],
+			);
+			$this->update($arr_proper, $where_proper);
+			
 			$arr1 = array(
 					'branch_id'	  => $data['branch_id'],
 					'sale_id'	  => $data['sale_client'],
@@ -63,6 +70,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 					);
 			$this->_name="ln_receiveplong";
 			$this->insert($arr1);
+			
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
@@ -70,21 +78,28 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 	public function editReceivedplong($data){
 		try{
 			$db= $this->getAdapter();
-			$arr1 = array(
-					'branch_id'	  => $data['branch_id'],
-					'sale_id'	  => $data['sale_client'],
-					'customer_id' => $data['customer_id'],
-					'date'		  => $data['date'],
-					'house_id'	  => $data['house_id'],
-					'note'		  => $data['reason'],
-					'layout_type' => $data['plong_type'],
-					'user_id'	  => $this->getUserId(),
-					'status'	  =>1,
-					'create_date'=>date("Y-m-d")
+			$where_proper="id = ".$data['house_id'];
+			$this->_name="ln_properties";
+			$arr_proper = array(
+					'hardtitle'=>$data['hardtitle'],
 			);
-				$this->_name="ln_receiveplong";
-				$where = 'id = '.$data['id'];
-				$this->update($arr1,$where);
+			$this->update($arr_proper, $where_proper);
+			
+			$arr1 = array(
+				'branch_id'	  => $data['branch_id'],
+				'sale_id'	  => $data['sale_client'],
+				'customer_id' => $data['customer_id'],
+				'date'		  => $data['date'],
+				'house_id'	  => $data['house_id'],
+				'note'		  => $data['reason'],
+				'layout_type' => $data['plong_type'],
+				'user_id'	  => $this->getUserId(),
+				'status'	  =>1,
+				'create_date'=>date("Y-m-d")
+			);
+			$this->_name="ln_receiveplong";
+			$where = 'id = '.$data['id'];
+			$this->update($arr1,$where);
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}

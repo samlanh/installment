@@ -103,11 +103,19 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
 	    						}
 	    					}
 	    					
+	    					$where_proper="id = ".$data['house_id'.$i];
+	    					$this->_name="ln_properties";
+	    					$arr_proper = array(
+	    							'hardtitle'=>$data['hardtitle'.$i],
+	    					);
+	    					$this->update($arr_proper, $where_proper);
+	    					
 	    					$where="id = ".$data['sale_id'.$i];
 	    					$this->_name="ln_issueplong";
     						$arr = array(
     							'sale_id'=>$data['sale_id'.$i],
     							'issue_date'=>date('Y-m-d'),
+    							'layout_number'=>$data['hardtitle'.$i],
     							'note'=>$data['note'.$i],
     							'is_receivedplong'=>0,
     						);
