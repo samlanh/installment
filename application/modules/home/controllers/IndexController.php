@@ -37,7 +37,8 @@ public function init()
 		$TotalExpense = $db->TotalExpense();
 		$TotalOtherIncome = $db->getTotalOtherIncome();
 		$TotalSaleIncome = $db->getTotalSaleIncome();
-		$houseRepaireIncome = $db->getTotalHouseRepaireIncome();
+// 		$houseRepaireIncome = $db->getTotalHouseRepaireIncome();
+		$houseRepaireIncome=0;
 		
 		$this->view->allProperty =$allProperty;
 		$this->view->propertySold =$propertySold;

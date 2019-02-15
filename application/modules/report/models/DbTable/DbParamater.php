@@ -1424,7 +1424,7 @@ function getAllBranch($search=null){
     	$sql="SELECT co.`category_id`,
     	SUM(total_amount) AS total_amount,
     	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = co.`category_id` LIMIT 1) AS category_name,
-    	co.`date` FROM `ln_comission` AS co WHERE 1";
+    	co.`date` FROM `ln_comission` AS co WHERE 1 AND co.status=1 ";
     	$order =" GROUP BY co.`category_id` ORDER BY co.`category_id` ASC";
     	$where="";
     	$from_date =(empty($search['start_date']))? '1': " co.`for_date` >= '".$search['start_date']." 00:00:00'";
