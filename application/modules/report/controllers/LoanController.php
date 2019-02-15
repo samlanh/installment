@@ -69,6 +69,9 @@ class Report_LoanController extends Zend_Controller_Action {
 
   	$db = new Application_Model_DbTable_DbGlobal();
   	$this->view->stepoption = $db->getVewOptoinTypeByType(29);
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function rptGroupmemberAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -183,6 +186,9 @@ class Report_LoanController extends Zend_Controller_Action {
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function receiptOtherincomeAction(){
   	$id =$this->getRequest()->getParam('id');
@@ -275,6 +281,9 @@ class Report_LoanController extends Zend_Controller_Action {
  	
  	$db = new Application_Model_DbTable_DbGlobal();
  	$this->view->stepoption = $db->getVewOptoinTypeByType(29);
+ 	
+ 	$frmpopup = new Application_Form_FrmPopupGlobal();
+ 	$this->view->footerReport = $frmpopup->getFooterReport();
  }
  
   function rptPaymentHistoryAction(){

@@ -372,6 +372,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function commissionbalanceAction(){
   	$db  = new Report_Model_DbTable_DbParamater();
