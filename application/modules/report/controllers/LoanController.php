@@ -623,6 +623,8 @@ class Report_LoanController extends Zend_Controller_Action {
   	$frm = $fm->FrmAddFrmCancel();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_cancel = $frm;
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function bugAction(){
   		$db = new Report_Model_DbTable_Dbbug();
@@ -682,6 +684,9 @@ class Report_LoanController extends Zend_Controller_Action {
 	$frm = $frm->AdvanceSearch();
 	Application_Model_Decorator::removeAllDecorator($frm);
 	$this->view->frm_search = $frm;
+	
+	$frmpopup = new Application_Form_FrmPopupGlobal();
+	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function rptChangepropertyAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -710,6 +715,9 @@ class Report_LoanController extends Zend_Controller_Action {
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   public function rptExpenseBycateAction(){
   	try{

@@ -29,6 +29,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$row=$frm->FrmAddStaff();
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_staff=$row;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
  
   public function exportFileToExcel($table,$data,$thead){
@@ -337,6 +340,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_staff=$row;
   	$this->view->rscomisison = $db->getAllCommission($search);
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function rptRevenueExpenseAction(){
   	if($this->getRequest()->isPost()){
@@ -402,6 +408,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$row=$frm->FrmAddStaff();
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_staff=$row;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function commissionreceiptAction(){
   	$db  = new Report_Model_DbTable_DbParamater();
@@ -439,6 +448,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm=$frm;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function verifyagreementAction(){
   	try {

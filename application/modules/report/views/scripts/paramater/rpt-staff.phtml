@@ -19,27 +19,53 @@ dojo.require("dijit.form.DateTextBox");
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT STAFF");?></title>
 <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT STAFF');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
 	<form name="frm_rptstaff" action="<?php echo $this->url(array('module'=>'report','controller'=>'paramater','action'=>'rpt-staff')); ?>" dojoType="dijit.form.Form" method="post">
-		<table style="margin: 0 auto;">
-			 <tr> 
-			   <td><?php echo $frm->getElement("adv_search");?></td>
-			   <td><?php echo $frm->getElement("branch_id");?></td>
-			   <td><?php echo $frm->getElement("co_khname");?></td>
-			   <td><?php echo $frm->getElement("co_sex");?></td>
-			   <td><?php echo $frm->getElement('search_status');?></td>
-			   <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
-			   </td>
-		   	  </tr>
-		</table>
+		<div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement("adv_search");?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement("branch_id");?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement("co_khname");?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement("co_sex");?>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement('search_status');?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+				</div>
+			</div>
+		</div>
  	</form> 
 	<div id="divPrint">
-	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
 		<tr>
 	    	<td align="center">
 	    	 	<style>
 					.style{
 						line-height: 20px;font-size: 12px !important;
-						font-family: 'Khmer OS Battambang';
+						font-family: 'Times New Roman','Khmer OS Battambang';
 						}
 						.hover:hover{background: #ccc;}
 						.hide{visibility: hidden;}
@@ -82,8 +108,8 @@ dojo.require("dijit.form.DateTextBox");
 			            	<tr>
 			                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
 			                	<td width="60%" valign="top">
-			                	<h2 style="text-align:center; font-weight:normal; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;?></h2>
-			                	<h2 style="text-align:center; font-weight:normal; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_STAFF");?></h2></td>
+			                	<h2 style="text-align:center; font-weight:normal; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></h2>
+			                	<h2 style="text-align:center; font-weight:normal; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT STAFF");?></h2></td>
 			                    <td width="20%"></td>
 			                </tr> 
 			            </table>
@@ -130,14 +156,6 @@ dojo.require("dijit.form.DateTextBox");
 	    </tr>
 	</table>
 	   <br />
-	   <table align="center" width="100%">
-		   <tr style="font-size: 14px;">
-		        <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
-		        <td></td>
-		        <td style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
-		        <td></td>
-		        <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
-		   </tr>
-		</table>
+	   <?php echo $this->footerReport;?>
 	</div>
 </div>

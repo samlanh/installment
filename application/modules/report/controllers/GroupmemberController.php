@@ -95,6 +95,8 @@ class Report_GroupMemberController extends Zend_Controller_Action {
   	$this->view->commune = $db->getCommune();
   	$this->view->village = $db->getVillage();
   	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   	
   }
   

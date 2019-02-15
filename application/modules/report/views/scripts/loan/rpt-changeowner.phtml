@@ -21,20 +21,45 @@
      dojo.require("dijit.form.DateTextBox");
 </script>
 	<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
+		<div class="card-box">
+	       	<div class="col-sm-12 border-botom">
+		   		<div class="col-sm-8 pd-0">
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_CHANGE_OWNER');?></h4>
+	    		</div>
+	    		<div class="col-sm-4 text-right">
+	    		</div>
+	    	</div>
+	    </div>
 		<form method="post">
-			<table style="font-family: 'Khmer OS Content'; margin: 0 auto;width:100%;" >
-				<tr>
-			   		<td><?php echo $frm->getElement("adv_search");?></td>
-			   		<td><?php echo $frm->getElement('branch_id');?></td>
-			   		<td><input id="land_id" /></td>
-			   		<td><?php echo $frm->getElement('client_name');?></td>
-			   	</tr>
-			   	<tr>
-			   		<td><?php echo $frm->getElement('start_date');?></td>
-			   		<td><?php echo $frm->getElement('end_date');?></td>
-			   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
-			   	</tr>
-			</table>
+			<div class="card-box">
+		    	<div class="form-group"> 
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement('branch_id');?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<input id="land_id" />
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement('client_name');?>
+					</div>
+				</div>
+				<div class="form-group"> 
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement('start_date');?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement('end_date');?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+					</div>
+				</div>
+			</div>
 		</form>
 		<div style="width:100%; margin:0 auto;">
 		<div style="min-height:22cm; margin:0 auto;">
@@ -46,7 +71,7 @@
 			<style type="text/css">
 				.style{
 					line-height: 20px;font-size: 12px !important;
-					font-family: 'Khmer OS Battambang';
+					font-family: 'Times New Roman','Khmer OS Battambang';
 				}
 				.hideblog{display: none;}
 				.hiddenblog{display: block !important;}
@@ -76,13 +101,13 @@
 					<tr>
 				    	<td align="center" valign="top">
 				        	<div class="divFooter">
-					        	<table border="0" width="100%" style="font-family: 'Khmer OS Battambang';"style="margin:0;padding:0;">
+					        	<table border="0" width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';"style="margin:0;padding:0;">
 					            	<tr>
 					                	<td width="30%" style="border:1px solid #fff;"><img src="<?php echo $logo;?>" style="height:80px;max-width: 100%;"></td>
 					                	<td width="40%" valign="top">
 					                		<ul>
-					                			<li style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;?></li>
-					                			<li style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("RPT_CHANGE_OWNER");?></li>
+					                			<li style="text-align:center; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
+					                			<li style="text-align:center; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("RPT_CHANGE_OWNER");?></li>
 					                			<li style="text-align:center; font-size:14px;"><?php if($this->list_end_date['start_date']){echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
 					                		</ul>
 					                   </td>
@@ -128,7 +153,7 @@
 				                $is_set =0; if(!empty($this->row)) foreach ($this->row as $index => $rs){ ?>
 				               <?php 
 				               ?>
-				                <tr class="style style1" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+				                <tr class="style style1" style="font-family: 'Times New Roman','Khmer OS Battambang'; white-space:nowrap; ">
 				               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
 				               		<td>&nbsp;<?php echo $rs["from_branch"];?>&nbsp;</td>
 				               		<td>&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
@@ -139,20 +164,12 @@
 				               		<td>&nbsp;<?php echo $rs['to_branch'];?>&nbsp;</td>
 				               		<td style="white-space:nowrap; ">&nbsp;<?php echo $rs["note"];?>&nbsp;</td>
 				               		<td align="center" style="white-space:nowrap; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["change_date"]));?>&nbsp;</td>
-				               		<td class="" style="font: 11px 'Khmer OS Battambang',Arial;text-align: center;"><?php echo $rs['user_name']?></td>
+				               		<td align="center"><?php echo $rs['user_name']?></td>
 				                </tr>
 				                <?php }?>
 				            </table>
 				            <br />
-				            <table align="center" width="100%">
-							   <tr style="font-size: 14px;">
-							        <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
-							        <td></td>
-							        <td style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
-							        <td></td>
-							        <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
-							   </tr>
-							</table>
+				            <?php echo $this->footerReport;?>
 				    	</td>
 				    </tr>
 				</table>
