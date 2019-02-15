@@ -19,28 +19,60 @@ if ($this->search['branch_id'] >0 ){
 </script>
 <title><?php echo $tr->translate("REPORT_LOAN_PAYMENT");?></title>
 <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT_LOAN_PAYMENT');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
 	<form method="post">
-		<table style="font-family:'Times New Roman','Khmer OS Battambang';margin: 0 auto;" >
-			<tr>
-	   			<td><?php echo $frm->getElement("adv_search");?></td>
-	   			<td><?php echo $frm->getElement('branch_id');?></td>
-	   			<td><?php echo $frm->getElement('client_name');?></td>
-	   			<td><?php echo $frm->getElement('streetlist');?></td>
-	   			<td><?php echo $frm->getElement('start_date');?></td>
-	   			<td><?php echo $frm->getElement('end_date');?></td>
-	   			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
-		   	</tr>
-		   	<tr>  
-		   		<td colspan="6" width="100%"><input value="<?php echo $this->search['streetlist'];?>" type="text" id="e15" name="streetlist" style="width: 100%"><?php //echo $frm->getElement('streetlist');?></td>
-		   </tr>
-		</table>
+		<div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement("adv_search");?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement('branch_id');?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement('client_name');?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement('streetlist');?>
+				</div>
+				
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement('start_date');?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement('end_date');?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+				</div>
+			</div>
+			<!-- 
+			<div class="form-group"> 
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<input value="<?php //echo $this->search['streetlist'];?>" type="text" id="e15" name="streetlist" style="width: 100%">
+				</div>
+			</div>
+			 -->
+		</div>
 	</form>
 	<div style="min-height:22cm; margin:0 auto;">
 			<div id="divPrint">
 			<style>
 			.style{
 				line-height: 20px;font-size: 11px !important;
-				font-family: 'Khmer OS Battambang';
+				font-family: 'Times New Roman','Khmer OS Battambang';
 			}
 			.stylehover:hover{background: #ccc;}
 			table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
@@ -72,13 +104,13 @@ if ($this->search['branch_id'] >0 ){
 				<tr>
 			    	<td align="center">
 			    	<div class="divFooter">
-			        	<table width="100%" style="font-family: 'Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
+			        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
 			            	<tr>
 			                	<td width="30%"><img src="<?php echo $logo;?>" height="85px"></td>
 			                	<td width="40%" valign="top">
 			                         <ul>
-			                			<li style="text-align:center; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
-			                			<li style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_LOAN_PAYMENT");?></li>
+			                			<li style="text-align:center; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
+			                			<li style="text-align:center; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_LOAN_PAYMENT");?></li>
 			                			<li style="text-align:center; font-size:13px;"><?php if(!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></li>
 			                		</ul>
 			                 </td>
@@ -294,15 +326,7 @@ if ($this->search['branch_id'] >0 ){
 			                <?php }?>
 			            </table>
 			              <br />
-			               <table align="center" width="100%">
-							   <tr style="font-size: 12px;">
-							        <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
-							        <td></td>
-							        <td style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
-							        <td></td>
-							        <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
-							   </tr>
-						</table>
+			         	 <?php echo $this->footerReport;?>
 			    	</td>
 			    </tr>
 			</table>

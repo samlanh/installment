@@ -33,7 +33,7 @@ class IndexController extends Zend_Controller_Action
         
 		if($this->getRequest()->isPost())		
 		{
-			if(date('Y-m-d')>='2019-03-30'){
+			if(date('Y-m-d')>='2020-01-15'){
  				$this->view->msg = 'System Expired';
  				return false;
 			}

@@ -80,7 +80,7 @@ function printSave(){
 	dojo.byId("lb_saleprice").innerHTML = '<?php echo "$ ".number_format($this->rs['selling_price'],2); //number_format($this->rs['price_sold'],2)." $";?>';
 	dojo.byId("lbl_total_paid1").innerHTML ='<?php echo "$ ".number_format($this->rs['allpaid_before'],2);//number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2)." $";?>';
 	dojo.byId("lbl_balance").innerHTML ='<?php echo  "$ ".number_format($this->rs['selling_price']-$this->rs['allpaid_before'],2);//number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2)." $";?>';
-	dojo.byId("lb_noted").innerHTML ='<?php echo $this->rs['note'];?>';
+	dojo.byId("lb_noted").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", strip_tags(htmlspecialchars($this->rs['note'])));?>';
 
 	dojo.byId("lb_amount").innerHTML = '<?php echo  "$ ".number_format($this->rs['total_principal_permonth'],2);?>';
 	dojo.byId("lbl_paidtimes").innerHTML = '<?php if($this->rs['field3']==1){ echo "កក់លើក ";} echo $this->rs['payment_times'];?>';

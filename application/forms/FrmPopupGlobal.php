@@ -867,7 +867,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
-						<table class="receipt-titile" width="100%" style="font-family:'."Khmer MEF2".';white-space:nowrap;">
+						<table class="receipt-titile" width="100%" style="font-family:'."Khmer OS Muol Light".';white-space:nowrap;">
 							<tr>
 								<td id="projectlogo" width="35%">
 									<img style="height:75px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
@@ -1010,6 +1010,32 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		</div>
 		';
 		}
+		return $str;
+	}
+	function getFooterReport(){
+		$key = new Application_Model_DbTable_DbKeycode();
+		$data=$key->getKeyCodeMiniInv(TRUE);
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$str='<table align="center" width="100%">
+				   <tr style="font-size: 14px;">
+				        <td style="width:20%;text-align:center;  font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'">'.$tr->translate('APPROVED BY').'</td>
+				        <td></td>
+				        <td style="width:20%;text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'">'.$tr->translate('VERIFYED BY').'</td>
+				        <td></td>
+				        <td style="width:20%;text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'">'.$tr->translate('PREPARE BY').'</td>
+				   </tr>';
+// 			$str.='<tr>
+// 					<td style="height: 60px;">&nbsp;</td>
+// 				  </tr>
+// 				  <tr style="font-size: 14px;">
+// 				        <td style="border-bottom: dashed 1px #000;">&nbsp;</td>
+// 				        <td></td>
+// 				        <td style="border-bottom: dashed 1px #000;">&nbsp;</td>
+// 				        <td></td>
+// 				        <td style="border-bottom: dashed 1px #000;">&nbsp;</td>
+// 				   </tr>
+// 			';
+		$str.='</table>';
 		return $str;
 	}
 }

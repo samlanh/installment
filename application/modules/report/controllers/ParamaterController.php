@@ -154,6 +154,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
   	$this->view->rssearch = $search;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function rptExpenseAction(){ // by Vandy
  	 if($this->getRequest()->isPost()){
@@ -195,6 +198,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	}
   	 
   	$this->view->rscomisison = $db->getAllCommission($search);
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function rptDailyCashAction(){ // by Vandy
   	if($this->getRequest()->isPost()){
@@ -228,6 +234,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function rptAgreementAction(){
   	$db  = new Report_Model_DbTable_DbParamater();
@@ -297,6 +306,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function  rptCommissionStaffAction(){
   	$db  = new Report_Model_DbTable_DbParamater();

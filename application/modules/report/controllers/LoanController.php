@@ -110,6 +110,9 @@ class Report_LoanController extends Zend_Controller_Action {
 	$frm = $frm->AdvanceSearch();
 	Application_Model_Decorator::removeAllDecorator($frm);
 	$this->view->frm_search = $frm;
+	
+	$frmpopup = new Application_Form_FrmPopupGlobal();
+	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function rptClosingentryAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -140,6 +143,9 @@ class Report_LoanController extends Zend_Controller_Action {
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function submitentryAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -240,6 +246,9 @@ class Report_LoanController extends Zend_Controller_Action {
  	$frm = $frm->AdvanceSearch();
  	Application_Model_Decorator::removeAllDecorator($frm);
  	$this->view->frm_search = $frm;
+ 	
+ 	$frmpopup = new Application_Form_FrmPopupGlobal();
+ 	$this->view->footerReport = $frmpopup->getFooterReport();
  }
  function rptLoanExpectIncomeAction(){
  	if($this->getRequest()->isPost()){
@@ -299,6 +308,9 @@ class Report_LoanController extends Zend_Controller_Action {
  	
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+ 	
+ 	$frmpopup = new Application_Form_FrmPopupGlobal();
+ 	$this->view->footerReport = $frmpopup->getFooterReport();
  }
  function rptLoanClientcoAction()
  {
@@ -357,6 +369,9 @@ class Report_LoanController extends Zend_Controller_Action {
  	 
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+ 	
+ 	$frmpopup = new Application_Form_FrmPopupGlobal();
+ 	$this->view->footerReport = $frmpopup->getFooterReport();
  }
  function rptDepositalertAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
@@ -720,6 +735,9 @@ class Report_LoanController extends Zend_Controller_Action {
   		$this->view->rscomisison = $db->getAllCommission($search);
   		$this->view->expense_comission = $db->getAllComissionExpense($search);
   		
+  		$frmpopup = new Application_Form_FrmPopupGlobal();
+  		$this->view->footerReport = $frmpopup->getFooterReport();
+  		
   	}catch(Exception $e){
   		Application_Form_FrmMessage::message("APPLICATION_ERROR");
   		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -757,6 +775,9 @@ class Report_LoanController extends Zend_Controller_Action {
   		
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function samplereceiptAction(){
   	$key = new Application_Model_DbTable_DbKeycode();
@@ -912,6 +933,9 @@ class Report_LoanController extends Zend_Controller_Action {
 			
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
 	}
 	
 	function rptOtherincomedetailAction(){
