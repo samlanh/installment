@@ -1642,9 +1642,7 @@ function updatePaymentStatus($data){
 	  				if($i!=1){
 	  					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
 	  					$start_date = $next_payment;
-	  					//$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
 	  				}else{
-	  					//$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
 	  				}
 	  				$paid_principal = $data['paid_principal'.$i];
 	  				$paid_interest = $data['interest_paid'.$i];
@@ -1652,7 +1650,7 @@ function updatePaymentStatus($data){
 	  				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
 	  				$total_day = $amount_day;
 	  				$interest_paymonth = $data['total_interest_'.$i];;
-	  				$pri_permonth =$data['principal_permonth_'.$i]; //round($data['price_sold']/$borrow_term,0);
+	  				$pri_permonth =$data['principal_permonth_'.$i]; 
 	  				if($i==$loop_payment){//for end of record only
 	  					$pri_permonth = $remain_principal;
 	  					$paid_receivehouse = $data['paid_receivehouse'];
