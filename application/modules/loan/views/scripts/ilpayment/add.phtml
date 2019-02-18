@@ -1291,6 +1291,7 @@ function getDayString(num){
 	var days= ["ច័ន្ទ", "អង្គារ", "ពុធ", "ព្រហ","សុក្រ","សៅរ៏","អាទិត្យ"];
 	return days[num];
 }
+
 function doTotalByServ(){
 	total_principal = dijit.byId('os_amount').get('value');//ប្រាក់ដើមត្រូវបង់
 	total_principal=isNaN(total_principal)?0:total_principal;
@@ -1343,7 +1344,7 @@ function totalReturn(){
 	receive_amount = dijit.byId('amount_receive').get('value');	
 	
 	begining_balance = $('#total_priciple_1').val();
-	
+	dijit.byId('total_interest').set("readOnly",true);
 	if(option_pay==1){	
 			 paid_principalall=0;
 			 paid_interestall = 0;
@@ -1392,11 +1393,12 @@ function totalReturn(){
 	    all_total = dijit.byId("sold_price").get("value")-(principal_paid+dijit.byId("total_pricipalpaid").get("value"));
 	    dijit.byId('priciple_amount').attr('value',all_total);
 	    total_amount = principal_paid+total_interest+penalize_amount;//good
+	}else if(option_pay==4){
+		dijit.byId('total_interest').set("readOnly",false);
 	}else{
 	}
 	dijit.byId('total_payment').attr('value',total_amount);
 }
-
 function loading(){
     document.getElementsByClassName("overlay")[0].style.display="block";
 }

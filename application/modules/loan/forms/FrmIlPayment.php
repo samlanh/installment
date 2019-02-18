@@ -286,6 +286,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				'style'=>'color:red;',
 				//'readOnly'=>'readOnly',
 				'required'=>true,
+				'onKeyup'=>'doTotalByServ();'
 		));
 // 		$value_interest = 2.5;
 // 		$_rate->setValue($value_interest);
