@@ -893,7 +893,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				    <td style="display: none;"><strong><label class="value"></label></strong></td>
 				    <td>គម្រោង</td>
 				    <td><strong><strong><label id="lbl_project" class="value">3</label></strong></td>
-					<td>&nbsp;&nbsp;ប្រាក់ដើមត្រូវបង់</td>
+					<td>&nbsp;&nbsp;ប្រាក់ដើម</td>
                     <td><strong><label id="lb_amount" class="value"></label></strong></td>
 					<td>&nbsp;បង់លើកទី</td>
 					<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
@@ -901,7 +901,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<tr >
 				    <td>ឈ្មោះ​អតិថិជន </td>
 				    <td><strong><label id="lb_customer" class="value"></label></strong></td>
-					<td>&nbsp;&nbsp; ប្រាក់ការ</td>
+					<td>&nbsp;&nbsp; ការប្រាក់</td>
                     <td><strong><label id="lb_interest" class="value">0.00</label></strong></td>
 					<td>&nbsp; ប្រាក់ពិន័យ</td>
 					<td><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
@@ -929,7 +929,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 							</tr>
 						</table>
 					</td>
-					<td>&nbsp;&nbsp;ប្រាក់ទទួលបាន</td>
+					<td>&nbsp;&nbsp;ប្រាក់បានទទួល</td>
 				    <td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;" id="lbl_total_receive"></label></strong></td>
 				</tr>
 				<tr >
