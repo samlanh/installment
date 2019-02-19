@@ -125,6 +125,7 @@ class Project_indexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
 			$_dbmodel = new Project_Model_DbTable_DbProject();
+			$_dbmodel->addbranch($_data);
 			try {
 				Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL . "/index");
 			}catch (Exception $e) {
