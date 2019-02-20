@@ -1381,22 +1381,22 @@ function getAllBranch($search=null){
     	}
     	return $db->fetchAll($sql.$where.$order);
     }
-    function getIncomeChangehouse($search){
-    	$db = $this->getAdapter();
-    	$sql="SELECT ic.`category_id`,    	
-    	SUM(ic.`total_amount`) AS total_amount,
-    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) AS category_name,
-    	ic.`date` FROM `ln_otherincome` AS ic WHERE 1 ";
-    	$order =" GROUP BY ic.`category_id` ORDER BY ic.`category_id` ";
-    	$where="";
-    	$from_date =(empty($search['start_date']))? '1': " ic.`date` >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " ic.`date` <= '".$search['end_date']." 23:59:59'";
-    	$where = " AND ".$from_date." AND ".$to_date;
-    	if($search['branch_id']>0){
-    		$where.=" AND branch_id=".$search['branch_id'];
-    	}
-    	return $db->fetchAll($sql.$where.$order);
-    }
+//     function getIncomeChangehouse($search){
+//     	$db = $this->getAdapter();
+//     	$sql="SELECT ic.`category_id`,    	
+//     	SUM(ic.`total_amount`) AS total_amount,
+//     	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) AS category_name,
+//     	ic.`date` FROM `ln_otherincome` AS ic WHERE 1 ";
+//     	$order =" GROUP BY ic.`category_id` ORDER BY ic.`category_id` ";
+//     	$where="";
+//     	$from_date =(empty($search['start_date']))? '1': " ic.`date` >= '".$search['start_date']." 00:00:00'";
+//     	$to_date = (empty($search['end_date']))? '1': " ic.`date` <= '".$search['end_date']." 23:59:59'";
+//     	$where = " AND ".$from_date." AND ".$to_date;
+//     	if($search['branch_id']>0){
+//     		$where.=" AND branch_id=".$search['branch_id'];
+//     	}
+//     	return $db->fetchAll($sql.$where.$order);
+//     }
     function getExpenseCategory($search){
     	$db = $this->getAdapter();
     	$sql="SELECT ex.`category_id`,
@@ -1755,5 +1755,22 @@ function getAllBranch($search=null){
 			$total_commission=0;
 		}
 		return $total_expense+$total_commission;
+	}
+	
+	function getIncomeRepairhouse($search){
+		$db = $this->getAdapter();
+		$sql="SELECT icp.cate_type,icp.category AS category_id,SUM(icp.total_paid) AS total_amount,
+			(SELECT v.name_kh FROM ln_view AS v WHERE v.type=icp.cate_type AND v.key_code=icp.category LIMIT 1) AS category_name
+			 FROM `ln_otherincomepayment` AS icp
+			WHERE icp.status=1  ";//AND icp.cate_type=$cate_type
+		$order =" GROUP BY icp.cate_type,icp.category ORDER BY icp.category ";
+		$where="";
+		$from_date =(empty($search['start_date']))? '1': " icp.`for_date` >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " icp.`for_date` <= '".$search['end_date']." 23:59:59'";
+		$where = " AND ".$from_date." AND ".$to_date;
+		if($search['branch_id']>0){
+			$where.=" AND icp.branch_id=".$search['branch_id'];
+		}
+		return $db->fetchAll($sql.$where.$order);
 	}
 }

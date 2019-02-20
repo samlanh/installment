@@ -2580,5 +2580,61 @@ function updatePaymentStatus($data){
 //    	$order=" ORDER BY oin.client_id,oin.id DESC ";
 //    	return $db->fetchAll($sql.$where.$order);
 //    }
+
+      function getAllIncomeOtherPayment($search=null){
+      	$db = $this->getAdapter();
+      	$session_user=new Zend_Session_Namespace('authinstall');
+      	$from_date =(empty($search['start_date']))? '1': " op.for_date >= '".$search['start_date']." 00:00:00'";
+      	$to_date = (empty($search['end_date']))? '1': " op.for_date <= '".$search['end_date']." 23:59:59'";
+      	$where ="";
+      	$where.= " AND ".$from_date." AND ".$to_date;
+    
+      	$sql=" SELECT
+   	   	op.id,
+   	   	op.branch_id,
+   	   	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS branch_name,
+   	   	oi.client_id,
+   	   	op.for_date AS date,
+   	   	op.receipt_no AS invoice,
+   	   	op.total_paid AS total_amount,
+   	   	op.note AS description,
+   	   	(SELECT p.land_address FROM `ln_properties` AS p WHERE p.id=oi.house_id LIMIT 1) AS land_address,
+   	   	(SELECT p.street FROM `ln_properties` AS p WHERE p.id=oi.house_id LIMIT 1) AS street,
+   	   	(SELECT vt.name FROM `ln_view_type` AS vt WHERE vt.id=op.cate_type LIMIT 1) AS typecate,
+		(SELECT v.name_kh FROM ln_view AS v WHERE v.type=op.cate_type AND v.key_code=op.category LIMIT 1) AS category,
+   	   	(SELECT ln_client.name_kh FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS name_kh,
+   	   	(SELECT ln_client.sex FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS sex,
+   	   	(SELECT ln_client.tel FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS tel,
+   	   	(SELECT  first_name FROM rms_users WHERE id=op.user_id LIMIT 1 ) AS user_name
+   	   	FROM `ln_otherincomepayment` AS op,
+			`ln_otherincome` AS oi
+		WHERE oi.id = op.otherincome_id
+   	   	AND op.status=1
+      	";
+    
+      	if (!empty($search['adv_search'])){
+      		$s_where = array();
+      		$s_search = trim(addslashes($search['adv_search']));
+      		$s_where[] = " op.receipt_no LIKE '%{$s_search}%'";
+      		$s_where[] = " op.total_paid LIKE '%{$s_search}%'";
+      		$s_where[] = " (SELECT p.land_address FROM `ln_properties` AS p WHERE p.id=oi.house_id LIMIT 1) LIKE '%{$s_search}%'";
+      		$s_where[] = " (SELECT ln_client.name_kh FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) LIKE '%{$s_search}%'";
+      		$where .=' AND ('.implode(' OR ',$s_where).')';
+      	}
+      	//    	if(!empty($search['payment_method'])){
+      	//    		$where.= " AND payment_method = ".$search['payment_method'];
+      	//    	}
+      	if(!empty($search['category_id'])){
+      		$where.= " AND op.category_id = ".$search['category_id'];
+      	}
+      	if($search['client_name']>0){
+      		$where.= " AND oi.client_id = ".$search['client_name'];
+      	}
+      	if($search['branch_id']>-0){
+      		$where.= " AND op.branch_id = ".$search['branch_id'];
+      	}
+      	$order=" ORDER BY op.for_date,op.id DESC ";
+      	return $db->fetchAll($sql.$where.$order);
+      }
  }
 

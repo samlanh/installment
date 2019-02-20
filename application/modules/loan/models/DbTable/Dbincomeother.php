@@ -10,7 +10,7 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		$_db= $this->getAdapter();
 		$_db->beginTransaction();
 			try{
-				$invoice = $this->getInvoiceNo($data['branch_id']);
+				$invoice = $this->getInvoiceNolnOtherincome($data['branch_id']);
 				
 				$_arr = array(
 					'branch_id'		=>$data['branch_id'],
@@ -18,10 +18,8 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 					'house_id'		=>$data['house_id'],
 					'client_id'		=>$data['customer'],
 					'total_amount'	=>$data['total_amount'],
-					'payment_method'=>$data['payment_method'],
+					'total_amountafter'	=>$data['total_amount'],
 					'invoice'		=>$invoice,
-					'category_id'	=>$data['income_category'],
-					'cheque'		=>$data['cheque'],
 					'description'	=>$data['Description'],
 					'date'			=>$data['Date'],
 					'user_id'		=>$this->getUserId(),
@@ -80,7 +78,7 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 					Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 				}
  	 	}
- function updateIncome($data,$id){
+ 		function updateIncome($data,$id){
 		 	$_db = $this->getAdapter();
 		 	$_db->beginTransaction();
 	 			try{
@@ -90,10 +88,8 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 							'branch_id'		=>$data['branch_id'],
 							'client_id'		=>$data['customer'],
 							'total_amount'	=>$data['total_amount'],
-							'payment_method'=>$data['payment_method'],
+							'total_amountafter'	=>$data['total_amount'],
 							'invoice'		=>$data['invoice'],
-							'category_id'	=>$data['income_category'],
-							'cheque'		=>$data['cheque'],
 							'description'	=>$data['Description'],
 							'date'			=>$data['Date'],
 		 					'status'		=>$data['Stutas'],
@@ -223,9 +219,7 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_otherincome.client_id LIMIT 1) AS client_name,
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) AS house_no,
-		(SELECT name_kh FROM ln_view WHERE TYPE=2 AND key_code=payment_method LIMIT 1) AS payment_method,
 		invoice,
-		(SELECT name_kh FROM `ln_view` WHERE TYPE=12 AND key_code=category_id LIMIT 1) AS category_name,
 		total_amount,description,date,
 		(SELECT  first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name,
 		status,'បោះពុម្ភ' FROM ln_otherincome ";
@@ -399,7 +393,23 @@ class Loan_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		return $db->fetchAll($sql);
 	}
 	
+	function getInvoiceNolnOtherincome($branch_id){
+		$db = $this->getAdapter();
 	
+		$dbtable = new Application_Model_DbTable_DbGlobal();
+		$prefix ="";// $this->getPrefixCodeByBranch($branch_id);
+	
+		$sql = " select count(id) from ln_otherincome where branch_id = $branch_id";
+		$amount = $db->fetchOne($sql);
+		$pre = 'incO:';
+		$result = $amount + 1;
+	
+		$length = strlen((int)$result);
+		for($i = $length;$i < 3 ; $i++){
+			$pre.='0';
+		}
+		return $prefix.$pre.$result;
+	}
 }
 
 

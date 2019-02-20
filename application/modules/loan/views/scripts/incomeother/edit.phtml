@@ -64,13 +64,6 @@ $frm = $this->frm_income;
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('Date');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -94,24 +87,10 @@ $frm = $this->frm_income;
 	                   </label>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CATEGORY");?> :
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="income_category" />
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> <span class="required">*</span> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('payment_method');?>
-	                   </div>
-	                </div>
-	                 <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NUMBER");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('cheque');?>
+	                    	<?php echo $frm->getElement('Date');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -121,26 +100,26 @@ $frm = $this->frm_income;
 	                    	<?php echo $frm->getElement('total_amount');?>
 	                   </div>
 	                </div>
-	             </div>
-	             <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER_INFO");?> 
-	                   </label>
-	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('Stutas');?>
-	                   </div>
-	                </div>
-	             	<div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('Description');?>
 	                   </div>
 	                </div>
+	                 <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('Stutas');?>
+	                   </div>
+	                </div>
+	             </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<!-- <div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER_INFO");?> 
+	                   </label>
+	                </div> -->
 	             </div>
 	        </div>
 	        <div class="card-box">
@@ -223,7 +202,6 @@ function displayNone(){
 	document.getElementById('divPrint1').style.display="none";
 }
 dojo.ready(function(){
-	getInvoiceNo('');
 	new dijit.form.FilteringSelect({
 		autoComplete: false,
 		queryExpr: "*${0}*",
@@ -238,7 +216,6 @@ dojo.ready(function(){
 	    }
 	}, "customer");
 	getallCustomer();
-	dijit.byId('income_category').attr('value',<?php echo $this->row['category_id'];?>); 
 
 	new dijit.form.FilteringSelect({
 		store: sale_client_store,
@@ -581,24 +558,6 @@ var url_customer = '<?php echo $this->url(array('module'=>'loan','controller'=>'
 		});
 	}
 
-var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->all_category));?> );
-
-new dijit.form.FilteringSelect({
-	store: income_category_store,
-	autoComplete: true,                        
-    id: "income_category",
-    name: "income_category",  
-   // tabindex: "17",    
-    class: 'fullside',  
-    placeHolder:"<?php echo $tr->translate("SELECT_CATEGORY")?>", 
-    onChange: function() {          
-	   	fa_job = dijit.byId('income_category').get('value');
-	    if(fa_job==-1){
-	   	 dijit.byId("popup_category").show();
-	    }
-    } 
-}, "income_category");
-
 function getBranchinfo(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
 	branch_id = dijit.byId('branch_id').get('value');
@@ -620,26 +579,6 @@ function getBranchinfo(){
 		}
 	});
 }
-var url_add_category = '<?php echo $this->url(array("module"=>"loan","controller"=>"income","action"=>"add-category")); ?>';
-function addCategory(){
-	dojo.xhrPost({
-		url:url_add_category,
-		form: dojo.byId("frm_category"),
-		handleAs:"json",
-		load: function(data) {
-			var Itemmake = { 
-	    		id: data,
-		        name: dijit.byId('cate_enname').get('value')
-		    };
-	 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
-		    dijit.byId('frm_category').reset();
-		    dijit.byId("popup_category").hide();
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
-}
  
 
 function printSave(new_invoice_no){
@@ -650,13 +589,6 @@ function printSave(new_invoice_no){
 	if(branch_id==0){
 		alert('Select branch');
 		dijit.byId('branch_id').focus();
-		return false;
-	}
-	
-	cate = dijit.byId('income_category').get('value');
-	if(cate=='' ||cate==-1){
-		alert('Select Category');
-		dijit.byId('income_category').focus();
 		return false;
 	}
 	
@@ -693,7 +625,7 @@ function printSave(new_invoice_no){
 	//var date_payment = dd +'-'+month+'-'+y ;
 	
 	dojo.byId("lb_date").innerHTML =dijit.byId("Date").attr('displayedValue') ;
-	dojo.byId("lb_payment_method").innerHTML =dijit.byId("payment_method").attr('displayedValue') ;
+	/*dojo.byId("lb_payment_method").innerHTML =dijit.byId("payment_method").attr('displayedValue') ;*/
 	dojo.byId("lb_land_code").innerHTML = dijit.byId("land_address").attr('displayedValue');
 	dojo.byId("lb_customer_name").innerHTML = customer_name ;
 	dojo.byId("lb_street").innerHTML = dijit.byId("street").attr('displayedValue');
@@ -839,8 +771,8 @@ function printSubmit(){
 				<tr style="line-height: 15px;  font-family:'Khmer OS Battambang'; ">
 					<td class="one ">ឈ្មោះអតិថិជន</td>
 					<td valign="top"> :&nbsp; <label id="lb_customer"></label> </td>
-					<td class="one ">ប្រភេទបង់ប្រាក់ </td>
-					<td valign="top"> :&nbsp; <label id="lb_payment_method" ></label> </td>
+					<td class="one "><!-- ប្រភេទបង់ប្រាក់ --> </td>
+					<td valign="top"> <!-- :&nbsp; <label id="lb_payment_method" ></label> --> </td>
 					<td colspan="3">លេខបង្កាន់ដៃបង់  </td>
 					<td colspan="3" valign="top">:&nbsp;<label id="lb_invoice"></label></td>
 				</tr>

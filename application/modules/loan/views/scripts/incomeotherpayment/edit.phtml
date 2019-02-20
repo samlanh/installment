@@ -1,0 +1,466 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_incomeotherpayment;
+?>
+<title><?php echo $tr->translate('EDIT_INCOME_OTHER_PAYMENT');?></title>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+.btn-reset{
+	background: #c00;
+    color: #fff;
+}
+.addfile{
+	background: #0077c5 !important;
+    color: #fff !important;
+}
+</style>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+ <script>
+		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
+ </script>
+ <div class="card">
+	<div class="card-content collapse show">
+		<form id='frm_add_tran' action=""	dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					branch_id = dijit.byId('branch_id').get('value');
+					if(branch_id=="" || branch_id ==-1){
+						alert("<?php echo $tr->translate("PLEASE_SELECT_BRANCH");?>");
+						return false;
+					}
+					otherincome_id = dijit.byId('otherincome_id').get('value');
+					if(otherincome_id=="" || otherincome_id ==-1){
+						alert("<?php echo $tr->translate("PLEASE_SELECT_HOUSE");?>");
+						return false;
+					}
+					total_amount = dijit.byId('total_amount').get('value');  
+					if(total_amount==""){
+						alert("<?php echo $tr->translate("PLEASE_ENTER_AMOUNT");?>");
+						return false;
+					}
+					loadingBlock();
+					return true;
+				}else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_INCOME_OTHER_PAYMENT');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PROJECT_INFO");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('branch_id');?>
+	                    	<?php echo $frm->getElement('id');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="otherincome_id" />
+	                   </div>
+	                </div>
+	             </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("AMOUNT_INFO");?> 
+	                   </label>
+	                </div>
+	                 <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("RECEIPT_NO");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('invoice');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('for_date');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12 bold" for="first-name"><?php echo $tr->translate("BALANCE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('balance');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12 bold" for="first-name"><?php echo $tr->translate("TOTAL_PAID");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('total_amount');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12 bold" for="first-name"><?php echo $tr->translate("REMAIN");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('remain');?>
+	                   </div>
+	                </div>
+	                 <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TYPE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cate_type');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CATEGORY");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="income_category" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('payment_method');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NUMBER");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cheque');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('status');?>
+	                   </div>
+	                </div>
+	             </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER_INFO");?> 
+	                   </label>
+	                </div>
+	             	 <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('description');?>
+	                   </div>
+	                </div>
+	             </div>
+	        </div>
+		     <div class="clearfix"></div>
+			 <div class="card-box">
+             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+					<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button"
+						 iconClass="dijitEditorIcon dijitEditorIconSave"/>
+    			</div>
+    		</div>
+	   	</form>
+	 </div>
+</div>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dojo.NodeList-manipulate");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.DateTextBox");
+var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+dojo.ready(function(){
+	new dijit.form.FilteringSelect({
+	    autoComplete: true,                        
+	    id: "otherincome_id",
+	    name: "otherincome_id",  
+	    tabindex: "16",  
+	    class: 'fullside',  
+	    placeHolder:"<?php echo $tr->translate("CHOOSE_CUSTOEMR")?>",          
+	    onChange: function() {  
+	    	getRepairIncomeByID();
+	    }
+	}, "otherincome_id");
+
+	new dijit.form.FilteringSelect({
+		store: income_category_store,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+	    id: "income_category",
+	    name: "income_category",  
+	    class: 'fullside',  
+	    placeHolder:"<?php echo $tr->translate("SELECT_CATEGORY")?>", 
+	    onChange: function() {          
+		   	fa_job = dijit.byId('income_category').get('value');
+		    if(fa_job==-1){
+		   	 dijit.byId("popup_category").show();
+		    }
+	    } 
+	}, "income_category");
+	enablePayment();
+	getCategoryByType();
+	getallCustomer();
+	getCategoryByType();
+});
+var oldBranch='<?php echo $this->row['branch_id'];?>';
+var oldotherincome_id='<?php echo $this->row['otherincome_id'];?>';
+var customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+var url_allotherincome = '<?php echo $this->url(array('module'=>'loan','controller'=>'incomeotherpayment','action'=>'get-allotherincomeedit')); ?>';
+function getallCustomer(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id=="" || branch_id ==-1){
+		customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?>);
+	    dijit.byId('otherincome_id').set('store',customer_store);   
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_allotherincome,
+		content:{
+			'branch_id':branch_id,'otherincome_id':oldotherincome_id
+			},
+		handleAs:"json",
+		load: function(data) {
+			customer_store  = getDataStorefromJSON('id','name', data);
+		    dijit.byId('otherincome_id').set('store',customer_store);   
+		    if(oldBranch==branch_id){
+		    	 dijit.byId('otherincome_id').set('value',oldotherincome_id); 
+		    }
+		},
+		error: function(err) {
+		}
+	});
+}
+var oldCateType='<?php echo $this->row['cate_type'];?>';
+var url_getcatebytype = '<?php echo $this->url(array('module'=>'loan','controller'=>'incomeotherpayment','action'=>'get-categorybytype')); ?>';
+function getCategoryByType(){
+	cate_type = dijit.byId('cate_type').get('value');
+	dijit.byId('income_category').reset(); 
+	if(cate_type=="" || cate_type ==-1){
+		income_category_store  = getDataStorefromJSON('id','name', <?php print_r(array())?>);
+	    dijit.byId('income_category').set('store',income_category_store);   
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_getcatebytype,
+		content:{
+			'cate_type':cate_type
+			},
+		handleAs:"json",
+		load: function(data) {
+			income_category_store  = getDataStorefromJSON('id','name', data);
+		    dijit.byId('income_category').set('store',income_category_store); 
+		    if(oldCateType==cate_type){
+		    	dijit.byId('income_category').set('value','<?php echo $this->row['category'];?>'); 
+		    }  
+		},
+		error: function(err) {
+		}
+	});
+}
+
+var url_otherincome = '<?php echo $this->url(array('module'=>'loan','controller'=>'incomeotherpayment','action'=>'getotherincomeinfo')); ?>';
+function getRepairIncomeByID(){
+	otherincome_id = dijit.byId('otherincome_id').get('value');
+	if(otherincome_id=="" || otherincome_id ==-1){
+		dijit.byId('balance').set('value',0); 
+		dijit.byId('total_amount').set('value',0); 
+		dijit.byId('remain').set('value',0); 
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_otherincome,
+		content:{
+			'otherincome_id':otherincome_id
+			},
+		handleAs:"json",
+		load: function(data) {
+			if(oldotherincome_id == otherincome_id){
+				var oldTotalAmount ='<?php echo $this->row['total_paid'];?>';
+				balance = (parseFloat(data.total_amountafter)+parseFloat(oldTotalAmount));
+				dijit.byId('balance').set('value',balance);
+				dijit.byId('total_amount').set('value',oldTotalAmount);
+				remain = parseFloat(balance) - parseFloat(oldTotalAmount);
+				dijit.byId('remain').set('value',remain); 
+			}else{
+				dijit.byId('balance').set('value',data.total_amountafter); 
+				dijit.byId('total_amount').set('value',data.total_amountafter); 
+				dijit.byId('remain').set('value',0); 
+			}
+		},
+		error: function(err) {
+		}
+	});
+}
+var url_get_invoice = '<?php echo $this->url(array('module'=>'loan','controller'=>'income','action'=>'get-invoice-no')); ?>';
+function getInvoiceNo(condition){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0){
+		branch_id=1;
+	}
+	dojo.xhrPost({
+		url:url_get_invoice,
+		content:{
+			'branch_id':branch_id
+			},
+		handleAs:"json",
+		load: function(data) {
+		    dijit.byId('invoice').attr('value',data);   
+			if(condition==1){
+				printSave(data);
+			}
+		},
+		error: function(err) {
+		}
+	});
+}
+function totalRemain(){
+	var balance =	dijit.byId('balance').get('value'); 
+	var total_amount = dijit.byId('total_amount').get('value');  
+
+	if(balance<0){
+		var remain = balance - total_amount;
+		if(remain>0){
+			dijit.byId('total_amount').set('value',balance); 
+			remain=0;
+		}
+		dijit.byId('remain').set('value',remain); 
+	}else{
+		var remain = balance - total_amount;
+		if(remain<0){
+			dijit.byId('total_amount').set('value',balance); 
+			remain=0;
+		}
+		dijit.byId('remain').set('value',remain); 
+	}
+}
+
+
+function enablePayment(){
+	payment_method = dijit.byId('payment_method').get('value');
+	dijit.byId("cheque").set("readOnly",false);
+	dijit.byId("cheque").attr("value",'');
+	if(payment_method==1){
+		dijit.byId("cheque").attr("value",'N/A');
+		dijit.byId("cheque").set("readOnly",true);
+	}
+}
+var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var url_add_category = '<?php echo $this->url(array("module"=>"loan","controller"=>"income","action"=>"add-category")); ?>';
+function addCategory(){
+	dijit.byId('save').set('disabled',true);	
+	dojo.xhrPost({
+		url:url_add_category,
+		form: dojo.byId("frm_category"),
+		handleAs:"json",
+		load: function(data) {
+			var Itemmake = { 
+	    		id: data,
+		        name: dijit.byId('cate_name').get('value')
+		    };
+	 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
+		    dijit.byId('frm_category').reset();
+		    dijit.byId("popup_category").hide();
+		},
+		error: function(err){
+		}
+	});
+}
+function hideDialog1(){
+	dijit.byId('popup_category').hide();
+}
+</script>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_category" >
+		<form style="background-color: buttonface; width:100%;" id='frm_category' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<fieldset style="background-color: buttonface;">
+						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend><br />
+							<table style="margin: 0 auto; width: 100%;  padding:10px; line-height: 35px;" cellspacing="7" >
+								<tr>
+									<td><?php echo $tr->translate('NAME_KH');?></td>
+									<td>
+										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="cate_name" name="cate_name" value="" type="text">
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate('STATUS');?></td>
+									<td>
+										<select name="status_j" id="status_j" dojoType="dijit.form.FilteringSelect"   class="fullside">
+		    								<option value="1" label="active">Active</option>
+		    								<option value="0" label="deactive">Deactive</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="4" align="center">
+										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
+									</td>
+								</tr>
+								
+							</table>
+					</fieldset>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<script>
+function getBranchinfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;
+		},
+		error: function(e) {
+		}
+	});
+}
+function returnMOnth(monthnum){
+	var month = new Array();
+	month[1] = "Jan";
+	month[2] = "Feb";
+	month[3] = "Mar";
+	month[4] = "Apr";
+	month[5] = "May";
+	month[6] = "Jun";
+	month[7] = "Jul";
+	month[8] = "Aug";
+	month[9] = "Sep";
+	month[10] = "Oct";
+	month[11] = "Nov";
+	month[12] = "Dec";
+	return month[monthnum];
+}
+</script>

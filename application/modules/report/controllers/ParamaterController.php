@@ -208,7 +208,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
-  function rptDailyCashAction(){ // by Vandy
+  function rptDailyCashAction(){ 
   	if($this->getRequest()->isPost()){
   		$search=$this->getRequest()->getPost();
   	}
@@ -233,8 +233,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->rowExpense = $db->getAllExpense($search);
   	$this->view->collectMoney = $db->getCollectPayment($search);
   
-//   	$db  = new Report_Model_DbTable_DbLandreport();
+  	$db  = new Report_Model_DbTable_DbLandreport();
 //   	$this->view->houserepair =$db->getAllIncomeOther($search);
+  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search);
   	
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
@@ -371,7 +372,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->money_install = $db->geIncomeFromSale($search,3);
   	
   	$this->view->income = $db->getIncomeCategory($search);
-  	$this->view->income_changehouse = $db->getIncomeChangehouse($search);
+//   	$this->view->income_changehouse = $db->getIncomeChangehouse($search);
+  	$this->view->income_changehouse = $db->getIncomeRepairhouse($search);
   	
   	$db = new Application_Model_DbTable_DbGlobal();
   	$street = $db->getAllStreetForOpt();
