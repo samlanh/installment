@@ -648,7 +648,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$key = new Application_Model_DbTable_DbKeycode();
 		$data=$key->getKeyCodeMiniInv(TRUE);
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$str='<table width="100%" celpadding="0" cellspacing="0" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'; font-size:10px;line-height: 15px;margin-top: 4px;">
+		$str='<table width="100%" celpadding="0" cellspacing="0" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'; font-size:11px;line-height: 15px;margin-top: 4px;">
 				<tr>
 					<td width="22%">';
 						$str.='<span style="font-family:'."'Khmer OS Muol Light'".'; font-size:16px;white-space:nowrap;padding-top:5px;">'.$tr->translate("BRAND_FOOTER_TITLE").'</span>
@@ -664,7 +664,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td colspan="2">'.$data["footer_branch"].'
 					</td>
 					<td width="40%" align="right">
-						<span style="">'.$data["tel-client"].'</span>
+						<span style="font-weight:bold;font-family:arial,Khmer OS Battambang;">'.$data["tel-client"].'</span>
 					</td>
 				</tr>
 			</table>';
@@ -831,7 +831,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					width:100%;
 					white-space: nowrap;
 					font-size:16px; 
-					margin-top: -30px;
+					margin-top: -28px;
 					font-family: Times New Roman,'."Khmer OS Battambang".';
 				}
 				table.print.contentdata tr{
@@ -870,7 +870,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						<table class="receipt-titile" width="100%" style="font-family:'."Khmer OS Muol Light".';white-space:nowrap;">
 							<tr>
 								<td id="projectlogo" width="35%">
-									<img style="height:75px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
+									<img style="height:80px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
 								</td>			
 								<td width="30%" valign="top" align="center"><u><span>បង្កាន់ដៃទទួលប្រាក់</span></u>
 									<div ><span >OFFICIAL RECEIPT</span></div>

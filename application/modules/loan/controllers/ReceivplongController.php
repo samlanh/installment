@@ -27,7 +27,7 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","LOAN_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","LAYOUT_TYPE","RECEIVED_DATE","DATE","NOTE","STATUS","PLONG_TITLE");
+			$collumns = array("PROJECT_NAME","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","LAYOUT_TYPE","RECEIVED_DATE","DATE","NOTE","STATUS","PLONG_TITLE");
 			$link=array(
 					'module'=>'loan','controller'=>'receivplong','action'=>'edit',
 			);
@@ -88,7 +88,7 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			$_data['id']=$id;
 			try {
-					$_dbmodel->editReceivedplong($_data);
+				$_dbmodel->editReceivedplong($_data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/receivplong");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -102,8 +102,8 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 	      		'id' => -1,
 	      		'name' =>$tr->translate("ADD_NEW"),
 	      ) );
-	      $this->view->layouttype=$layoutType;
 	      
+	    $this->view->layouttype=$layoutType;	      
 	    $row  = $_dbmodel->getPlongById($id);
 	    $this->view->row = $row;
 		$fm = new Loan_Form_Frmreceiveplong();

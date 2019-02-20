@@ -42,13 +42,13 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
    		$s_where = array();
    	}
    	if($search['status']>-1){
-   		$where.= " AND cp.status = ".$search['status'];
+   		$where.= " AND c.status = ".$search['status'];
    	}
-   	if(($search['client_name'])>0){
-   		$where.= " AND `cp`.`client_id`=".$search['client_name'];
+   	if(!empty($search['client_name']) AND ($search['client_name'])>0){
+   		$where.= " AND `c`.`client_id`=".$search['client_name'];
    	}
    	if(($search['branch_id'])>0){
-   		$where.= " AND sp.sale_id = ".$search['branch_id'];
+   		$where.= " AND s.branch_id = ".$search['branch_id'];
    	}
    	
    	$order = " ORDER BY sp.id DESC";

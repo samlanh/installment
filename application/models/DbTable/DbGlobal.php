@@ -1518,7 +1518,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   function getAllplongissue(){
   	$db=$this->getAdapter();
-//   	$search['end_date']= date('Y-m-d');
   	$sql ="SELECT `s`.`id` AS `id`,
     	(SELECT
 		     `ln_project`.`project_name`
@@ -1538,8 +1537,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		WHERE (
 		s.id=sp.sale_id
 		AND (`c`.`client_id` = `s`.`client_id`)
-       AND (`p`.`id` = `s`.`house_id`)) AND s.is_receivedplong=0 ";
-  	$order=" ORDER BY end_line ASC";
+       AND (`p`.`id` = `s`.`house_id`)) AND s.is_issueplong=1 AND s.is_receivedplong=0 ";
+  	$order=" ORDER BY end_line ASC ";
   	return $db->fetchAll($sql.$order);
   }
   function getAllSupplier(){

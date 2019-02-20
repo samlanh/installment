@@ -14,7 +14,6 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		$where = " AND ".$from_date." AND ".$to_date;
 		$sql ='SELECT c.`id`,
 		    p.`project_name` as branch_name,
-			clie.client_number,
 			clie.`name_kh` AS client_name,
 			(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
 			pro.`land_address`,pro.`street`,
@@ -71,6 +70,13 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 			$this->_name="ln_receiveplong";
 			$this->insert($arr1);
 			
+			$arr = array(
+					'is_receivedplong'=>1,
+			);
+			$where="id = ".$data['sale_client'];
+			$this->_name="ln_sale";
+			$this->update($arr, $where);
+			
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
@@ -84,6 +90,15 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 					'hardtitle'=>$data['hardtitle'],
 			);
 			$this->update($arr_proper, $where_proper);
+			
+			/*restored received plong*/
+			$rs = $this->getPlongById($data['id']);
+			$arr = array(
+					'is_receivedplong'=>0,
+			);
+			$where="id = ".$rs['sale_id'];
+			$this->_name="ln_sale";
+			$this->update($arr, $where);
 			
 			$arr1 = array(
 				'branch_id'	  => $data['branch_id'],
@@ -100,6 +115,13 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 			$this->_name="ln_receiveplong";
 			$where = 'id = '.$data['id'];
 			$this->update($arr1,$where);
+			
+			$arr = array(
+					'is_receivedplong'=>1,
+			);
+			$where="id = ".$data['sale_client'];
+			$this->_name="ln_sale";
+			$this->update($arr, $where);
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
