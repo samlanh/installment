@@ -172,14 +172,20 @@ dojo.require("dijit.form.DateTextBox");
 			                	 $p_b = 0;
 			                	 $principal=0;
 			                	 $interest=0;
+			                	 $i=0;
+			                	 $paid=0;
 			                ?>
-			                <?php if(!empty($this->LoanCollectionco_list))foreach ($this->LoanCollectionco_list as $key => $rs){ ?>
+			                <?php if(!empty($this->LoanCollectionco_list))foreach ($this->LoanCollectionco_list as $key => $rs){ $i++; ?>
 			                <?php 
 					             $p_d = $p_d+$rs['principal_permonthafter'];
 								 $amt_d1 = $amt_d1+$rs['total_interest_after'];
 								 
 								 $principal = $principal+$rs['principal_permonth'];
 								 $interest = $interest+$rs['total_interest'];
+								 
+								 if($rs["principal_permonthafter"]+$rs["total_interest_after"]<=0){
+								 	$paid++;
+								 }
 			               ?>
 			                <tr class="style hover" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';">
 			               		<td style="font-size: 12px; text-align: center;">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
@@ -208,10 +214,14 @@ dojo.require("dijit.form.DateTextBox");
 			            <br />
 			             <table class="tb-footer" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px;" width="100%" cellspacing="0">
 			                 <tr bgcolor="#c1d0f3" class="style" >
+			                 	<td colspan="3" align="center">&nbsp;<?php echo $tr->translate("PAYMENT_INFO");?>&nbsp;</td>
 			                    <td colspan="3" align="center">&nbsp;<?php echo $tr->translate("PAID_INFO");?>&nbsp;</td>
 			                    <td colspan="3" align="center">&nbsp;<?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?>&nbsp;</td>
 			                </tr>
-			                 <tr  class="style" >
+			                 <tr   bgcolor="#c1d0f3" class="style" align="center" >
+			                	<td>&nbsp;<?php echo $tr->translate("ALL");?>&nbsp;</td>
+			                    <td>&nbsp;<?php echo $tr->translate("PAID");?>&nbsp;</td>
+			                    <td>&nbsp;<?php echo $tr->translate("NOT_PAID");?>&nbsp;</td>
 			                    <td>&nbsp;<?php echo $tr->translate("TOTAL_PRINCIPLE");?>&nbsp;</td>
 			                    <td>&nbsp;<?php echo $tr->translate("TOTAL_INTEREST");?>&nbsp;</td>
 			                    <td>&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
@@ -219,13 +229,16 @@ dojo.require("dijit.form.DateTextBox");
 			                    <td>&nbsp;<?php echo $tr->translate("TOTAL_INTEREST");?>&nbsp;</td>
 			                    <td>&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
 			                </tr>
-			                 <tr class="style" >
-			                    <td>$&nbsp;<?php echo number_format($principal,2);?>&nbsp;</td>
-			                    <td>$&nbsp;<?php echo number_format($interest,2);?>&nbsp;</td>
-			                    <td>$&nbsp;<?php echo number_format($principal+$interest,2);?>&nbsp;</td>
-			                    <td>$&nbsp;<?php echo number_format($p_d,2);?>&nbsp;</td>
-			                    <td>$&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
-			                    <td>$&nbsp;<?php echo number_format($amt_d1+$p_d,2);?>&nbsp;</td>
+			                 <tr class="style" align="center" style="font-weight: bold;" >
+			                	<td>&nbsp;<?php echo $i;?>&nbsp;</td>
+			                	<td>&nbsp;<?php echo $paid;?>&nbsp;</td>
+			                	<td>&nbsp;<?php echo $i-$paid;?>&nbsp;</td>
+			                    <td>&nbsp;$&nbsp;<?php echo number_format($principal,2);?>&nbsp;</td>
+			                    <td>&nbsp;$&nbsp;<?php echo number_format($interest,2);?>&nbsp;</td>
+			                    <td>&nbsp;$&nbsp;<?php echo number_format($principal+$interest,2);?>&nbsp;</td>
+			                    <td>&nbsp;$&nbsp;<?php echo number_format($p_d,2);?>&nbsp;</td>
+			                    <td>&nbsp;$&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
+			                    <td>&nbsp;$&nbsp;<?php echo number_format($amt_d1+$p_d,2);?>&nbsp;</td>
 			                </tr>
 			              </table>
 			              <br />

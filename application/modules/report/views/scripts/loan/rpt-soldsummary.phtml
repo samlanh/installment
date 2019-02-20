@@ -172,6 +172,7 @@ table.tb-footer tr.style-head {
 	                </tr>
 	              </thead>
 	               <?php 
+	               $amount_property=0;
 	               $link="#";
 	               $payment_1=0;$payment_2=0;$payment_3=0;
 	               
@@ -188,6 +189,14 @@ table.tb-footer tr.style-head {
 	               $key=0;
 	               if(!empty($this->loanrelease_list)) foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
+	               
+	               if (!empty($row['old_land_id'])){
+	               	$idse = explode(",", $row['old_land_id']);
+	               	$countland = count($idse);
+	               	$amount_property = $amount_property+$countland;
+	               }else{
+	               	$amount_property = $amount_property+1;
+	               }
 	               $price_before = $price_before+$row['price_before'];
 	               $discount_amount = $discount_amount+$row['discount_amount'];
 	               $disc_percent = $disc_percent+($row['price_before']-$row['price_sold']-$row['discount_amount']);
@@ -263,6 +272,14 @@ table.tb-footer tr.style-head {
 			                    <td><?php echo ($payment_1);?></td>
 			                    <td align="left">ដាច់</td>
 			                    <td align="left">នៅសល់</td>
+			                 </tr>
+			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                    <td align="right"><?php echo $tr->translate("PROPERTY");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                    <td><?php echo $amount_property;?></td>
+			                    <td align="right"></td>
+			                    <td></td>
+			                    <td></td>
+			                    <td></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right">តម្លៃដី/ផ្ទះសរុប&nbsp;&nbsp;$&nbsp;&nbsp;</td>
