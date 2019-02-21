@@ -89,7 +89,7 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 			$where.= " AND user_id = ".$userid;
 		}
 		$dbgb = new Application_Model_DbTable_DbGlobal();
-		$userinfo = $dbgb->getUserId();
+		$userinfo = $dbgb->getUserInfo();
 		if($userinfo['level']!=1){
 			$where.= " AND user_id = ".$userinfo['user_id'];
 		}
