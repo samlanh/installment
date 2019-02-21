@@ -800,6 +800,13 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						line-height: 29px;
 					    text-align: left;
 				}
+				span#lb_hourseno {
+				    overflow-wrap: break-word;
+				    white-space: normal;
+				    width: 340px;
+				    display: inline-block;
+				    line-height: 24px;
+				}
 				.print tr td{
 					padding:1px 2px; 
 				}
@@ -908,7 +915,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
                 </tr>
 				<tr >
 					<td>'.$tr->translate("PROPERTY_CODE").'</td>
-                    <td><strong><label id="lb_hourseno" class="value"></label></strong></td>
+                    <td><strong><label class="value"><span id="lb_hourseno"></span></label></strong></td>
 				   <td>&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
 					<td colspan="3"><strong><label id="lb_extrapayment" class="value">0.00</label></strong></td>
 				</tr>
