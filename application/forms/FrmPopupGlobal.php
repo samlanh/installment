@@ -803,7 +803,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				span#lb_hourseno {
 				    overflow-wrap: break-word;
 				    white-space: normal;
-				    width: 340px;
+				    width: 200px;
 				    display: inline-block;
 				    line-height: 24px;
 				}
