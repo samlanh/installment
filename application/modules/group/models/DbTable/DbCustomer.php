@@ -88,6 +88,11 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		if (!empty($user_info['staff_id'])){
 			$where.= " AND user_id = ".$userid;
 		}
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$userinfo = $dbgb->getUserId();
+		if($userinfo['level']!=1){
+			$where.= " AND user_id = ".$userinfo['user_id'];
+		}
 		$order=" ORDER BY id DESC ";
 		return $db->fetchAll($sql.$where.$order);	
 	}

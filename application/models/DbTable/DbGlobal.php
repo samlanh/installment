@@ -599,6 +599,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`receipt_no`      AS `receipt_no`,
 		  s.total_installamount,
 		 (SELECT project_name FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS branch_name,
+		  (SELECT p_manager_namekh FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS project_manager_namekh,
+		  (SELECT w_manager_namekh FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS w_manager_namekh,
 		  (SELECT logo FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS project_logo,
   		(SELECT client_number FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_number,
   		(SELECT name_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_kh,
