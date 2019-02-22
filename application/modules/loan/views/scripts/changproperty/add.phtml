@@ -802,10 +802,14 @@ function checkScheduleOption(){
 var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfo(){
 	dijit.byId('total_sold').attr('value',0);
+	property_id = dijit.byId('land_code').get('value');
+	if(property_id==''){
+		return false;
+	}
 	dojo.xhrPost({
 		url:url_getlandinfodetail,	
 		content:{ 
-		    'land_id':dijit.byId('land_code').get('value')
+		    'land_id':property_id
 		},		    
 		handleAs:"json",
 		load: function(data) {
@@ -824,10 +828,14 @@ function getlandinfo(){
 }
 var url_getlandinfotransferdetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfotransfer(){
+	property_id = dijit.byId('to_land_code').get('value');
+	if(property_id==''){
+		return false;
+	}
 	dojo.xhrPost({
 		url:url_getlandinfotransferdetail,	
 		content:{ 
-		    'land_id':dijit.byId('to_land_code').get('value')
+		    'land_id':property_id
 		},		    
 		handleAs:"json",
 		load: function(data) {
