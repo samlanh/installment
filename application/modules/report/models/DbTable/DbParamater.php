@@ -1692,6 +1692,13 @@ function getAllBranch($search=null){
     		if (!empty($user_info['staff_id'])){
     			$where.= " AND user_id = ".$userid;
     		}
+    		
+    		$dbgb = new Application_Model_DbTable_DbGlobal();
+    		$userinfo = $dbgb->getUserInfo();
+    		if($userinfo['level']!=1){
+    			$where.= " AND user_id = ".$userinfo['user_id'];
+    		}
+    		
     		$where.=" ORDER BY c.id DESC ";
     		return $db->fetchAll($sql.$where);
     	}
