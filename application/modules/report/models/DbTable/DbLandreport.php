@@ -2629,7 +2629,7 @@ function updatePaymentStatus($data){
       	//    		$where.= " AND payment_method = ".$search['payment_method'];
       	//    	}
       	if(!empty($search['category_id'])){
-      		$where.= " AND op.category_id = ".$search['category_id'];
+      		$where.= " AND op.category = ".$search['category_id'];
       	}
       	if($search['client_name']>0){
       		$where.= " AND oi.client_id = ".$search['client_name'];
