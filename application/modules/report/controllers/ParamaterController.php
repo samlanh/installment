@@ -155,6 +155,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllIncome($search);
   	 
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search);
+  	
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);

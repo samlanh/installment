@@ -258,33 +258,35 @@
 						             </h2>
 				                </td>
 				             </tr>
-				             <tr  class="style" align="center" style="padding:5px 0;height: 20px; white-space: nowrap;">
-			                   <td><?php echo $tr->translate("NUM");?></td>
-			                   <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-			                   <td><?php echo $tr->translate("CLIENT_NAME");?></td>
-			                   <td><?php echo $tr->translate("DATE");?></td>
-			                   <td><?php echo $tr->translate("RECEIPT_NO");?></td>
-			                   <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
-			                   <td><?php echo $tr->translate("STREET");?></td>
-			                   <td><?php echo $tr->translate("TYPE");?></td>
-			                   <td><?php echo $tr->translate("CATEGORY");?></td>	
-			                   <td><?php echo $tr->translate("NOTE");?></td>   
-			                   <td><?php echo $tr->translate("AMOUNT");?></td>
-			                </tr>
+				             <tr class="style" align="center" >
+								<td><?php echo $tr->translate("NUM");?></td>
+								    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+								    <td><?php echo $tr->translate("INCOME_TITLE");?></td>
+								    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
+								    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
+								    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+								    <td><?php echo $tr->translate("CATEGORY");?></td>
+								    <td><?php echo $tr->translate("TOTAL_INCOME");?></td>
+								    <td><?php echo $tr->translate("CHEQUE");?></td>
+								    <td><?php echo $tr->translate("NOTE");?></td>
+								    <td><?php echo $tr->translate("DATE");?></td>
+								    <td><?php echo $tr->translate("BY_USER");?></td>
+							</tr>
 					   		</thead>
 					   		<?php foreach ($this->houserepair as $index => $rs){?>
 					   		<tr class=" stylehover <?php //if($index%2==1){echo"even";}?>" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
 			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
 			               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-			               		<td align="center">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td> 
-			               		<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($rs["date"]));?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["title_income"];?>&nbsp;</td> 
 			               		<td align="center">&nbsp;<?php echo $rs["invoice"];?>&nbsp;</td>
-			               		<td align="center">&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
-			               		<td align="center">&nbsp;<?php echo $rs["street"];?>&nbsp;</td>
-			               		<td valign="top">&nbsp;<?php echo $rs["typecate"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td> 
+			               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
 			               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<strong><?php echo number_format($rs["total_amount"],2);?></strong>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
 			               		<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
-			               		<td align="right">&nbsp;&nbsp;<?php echo number_format($rs["total_amount"],2);?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
 			                </tr>
 			                <?php $houserepair = $houserepair+$rs["total_amount"];?>
 					   		<?php }?>
@@ -311,9 +313,9 @@
 								<td><?php echo $tr->translate("NUM");?></td>
 							    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
 							    <td><?php echo $tr->translate("INCOME_TITLE");?></td>
+							    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
 							    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
 							    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-							    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
 							    <td><?php echo $tr->translate("CATEGORY");?></td>
 							    <td><?php echo $tr->translate("TOTAL_INCOME");?></td>
 							    <td><?php echo $tr->translate("NOTE");?></td>
@@ -326,9 +328,10 @@
 							   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
 							   <td align="center">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
 							   <td align="center" style="white-space: normal !important;max-width:180px;text-align: left;">&nbsp;<?php echo $row['title'];?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo $row['invoice'];?>&nbsp;</td>
 							   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_name'];?></td>
 							   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['house_name'];?></td>
-							   <td align="center">&nbsp;<?php echo $row['invoice'];?>&nbsp;</td>
+							   
 							   <td>&nbsp;<?php echo $row['category_name'];?>&nbsp;</td>
 							   <td align="center">&nbsp;<?php echo number_format($row['total_amount'],2);?>&nbsp;</td>
 							   <td align="center">&nbsp;<?php echo $row['description'];?>&nbsp;</td>

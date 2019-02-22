@@ -34,7 +34,7 @@ class Loan_IncomeOtherpaymentController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_row = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","TYPE","CATEGORY","BALANCE","TOTAL_PAID","REMAIN","PAYMENT_TYPE","DATE","BY_USER","STATUS");
+    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","TITLE","RECEIPT","TYPE","CATEGORY","BALANCE","TOTAL_PAID","REMAIN","PAYMENT_TYPE","DATE","BY_USER","STATUS");
     		$link=array('module'=>'loan','controller'=>'incomeotherpayment','action'=>'edit');
     		$this->view->list=$list->getCheckList(0, $collumns,$rs_row,array('branch_name'=>$link,'client_name'=>$link,'house_no'=>$link));
     		$this->view->row = $rs_row;
@@ -77,6 +77,10 @@ class Loan_IncomeOtherpaymentController extends Zend_Controller_Action
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_incomeotherpayment=$frm;
     	
+    	$key = new Application_Model_DbTable_DbKeycode();
+    	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+    	$frmpopup = new Application_Form_FrmPopupGlobal();
+    	$this->view->footer = $frmpopup->getFooterReceipt();
     }
  
     public function editAction()
@@ -99,6 +103,11 @@ class Loan_IncomeOtherpaymentController extends Zend_Controller_Action
     	$frm = $pructis->FrmAddIncomeother($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_incomeotherpayment=$frm;
+    	
+    	$key = new Application_Model_DbTable_DbKeycode();
+    	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+    	$frmpopup = new Application_Form_FrmPopupGlobal();
+    	$this->view->footer = $frmpopup->getFooterReceipt();
     }
     public function getAllotherincomeAction(){
    		if($this->getRequest()->isPost()){
@@ -147,16 +156,16 @@ class Loan_IncomeOtherpaymentController extends Zend_Controller_Action
     	}
     }
     
-    function getInvoiceNoAction(){
+//     function getInvoiceNoAction(){
     	 
-    	if($this->getRequest()->isPost()){
-    		$data = $this->getRequest()->getPost();
-    		$db = new Loan_Model_DbTable_DbIncomeOtherPayment();
-    		$result = $db->getInvoiceNoOtherIncomePayment($data['branch_id']);
-    		//array_unshift($result, array ( 'id' => -1, 'name' => 'Select Customer') );
-    		print_r(Zend_Json::encode($result));
-    		exit();
-    	}
+//     	if($this->getRequest()->isPost()){
+//     		$data = $this->getRequest()->getPost();
+//     		$db = new Loan_Model_DbTable_DbIncomeOtherPayment();
+//     		$result = $db->getInvoiceNoOtherIncomePayment($data['branch_id']);
+//     		//array_unshift($result, array ( 'id' => -1, 'name' => 'Select Customer') );
+//     		print_r(Zend_Json::encode($result));
+//     		exit();
+//     	}
     	 
-    }
+//     }
 }

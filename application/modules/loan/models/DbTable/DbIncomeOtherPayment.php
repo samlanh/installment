@@ -17,6 +17,8 @@ class Loan_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 			(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS branch_name,
 			(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS client_name,
 			(SELECT CONCAT(p.land_address,',',p.street) FROM `ln_properties` AS p WHERE p.id=oi.house_id LIMIT 1) AS house_no,
+			op.title_income,
+			op.receipt_no,
 			(SELECT vt.name FROM `ln_view_type` AS vt WHERE vt.id=op.cate_type LIMIT 1) AS typecate,
 			(SELECT v.name_kh FROM ln_view AS v WHERE v.type=op.cate_type AND v.key_code=op.category LIMIT 1) AS category,
 			op.balance,
@@ -33,6 +35,7 @@ class Loan_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 		if (!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = trim(addslashes($search['adv_search']));
+			$s_where[] = " op.receipt_no LIKE '%{$s_search}%'";
 			$s_where[] = " op.balance LIKE '%{$s_search}%'";
 			$s_where[] = " op.total_paid LIKE '%{$s_search}%'";
 			$s_where[] = " payment_method LIKE '%{$s_search}%'";
@@ -80,7 +83,10 @@ class Loan_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql='
 		SELECT
-		oin.*
+		oin.*,
+		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =oin.client_id LIMIT 1) AS client_name,
+		(SELECT land_address FROM `ln_properties` WHERE id=oin.house_id LIMIT 1) AS land_address,
+		(SELECT street FROM `ln_properties` WHERE id=oin.house_id LIMIT 1) AS street
 		FROM ln_otherincome
 		AS oin
 		WHERE oin.id ='.$id.'
@@ -91,7 +97,9 @@ class Loan_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 		$_db= $this->getAdapter();
 		$_db->beginTransaction();
 		try{
-			$invoice = $this->getInvoiceNoOtherIncomePayment($data['branch_id']);
+// 			$invoice = $this->getInvoiceNoOtherIncomePayment($data['branch_id']);
+			$dbincom = new Loan_Model_DbTable_DbIncome();
+			$invoice = $dbincom->getInvoiceNo($data['branch_id']);
 			
 			$OtherIncomeInfo = $this->getOtherIncomeInfo($data['otherincome_id']);
 			$totalpaid = $data['total_amount'];
@@ -121,6 +129,7 @@ class Loan_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 			$_arr = array(
 					'branch_id'			=>$data['branch_id'],
 					'otherincome_id'	=>$data['otherincome_id'],
+					'title_income'	=>$data['title'],
 					'receipt_no'		=>$invoice,
 					'for_date'			=>$data['for_date'],
 					'cate_type'			=>$data['cate_type'],
@@ -203,6 +212,7 @@ class Loan_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 			$_arr = array(
 					'branch_id'			=>$data['branch_id'],
 					'otherincome_id'	=>$data['otherincome_id'],
+					'title_income'	=>$data['title'],
 					'for_date'			=>$data['for_date'],
 					'cate_type'			=>$data['cate_type'],
 					'category'			=>$data['income_category'],
@@ -237,23 +247,23 @@ class Loan_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 		return $db->fetchOne($sql);
 	}
 	
-	function getInvoiceNoOtherIncomePayment($branch_id){
-		$db = $this->getAdapter();
+// 	function getInvoiceNoOtherIncomePayment($branch_id){
+// 		$db = $this->getAdapter();
 	
-		$dbtable = new Application_Model_DbTable_DbGlobal();
-		$prefix ="";// $this->getPrefixCodeByBranch($branch_id);
-		$sql = " select count(id) from ln_otherincomepayment where branch_id = $branch_id";
-		$amount = $db->fetchOne($sql);
+// 		$dbtable = new Application_Model_DbTable_DbGlobal();
+// 		$prefix ="";// $this->getPrefixCodeByBranch($branch_id);
+// 		$sql = " select count(id) from ln_otherincomepayment where branch_id = $branch_id";
+// 		$amount = $db->fetchOne($sql);
 	
-		$pre = 'incP:';
-		$result = $amount + 1;
+// 		$pre = 'incP:';
+// 		$result = $amount + 1;
 	
-		$length = strlen((int)$result);
-		for($i = $length;$i < 3 ; $i++){
-			$pre.='0';
-		}
-		return $prefix.$pre.$result;
-	}
+// 		$length = strlen((int)$result);
+// 		for($i = $length;$i < 3 ; $i++){
+// 			$pre.='0';
+// 		}
+// 		return $prefix.$pre.$result;
+// 	}
 }
 
 

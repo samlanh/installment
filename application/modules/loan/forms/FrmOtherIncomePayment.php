@@ -8,6 +8,13 @@ Class Loan_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 	
 	public function FrmAddIncomeother($data=null){
 	
+		$title = new Zend_Dojo_Form_Element_TextBox('title');
+		$title->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'required'=>false,
+		));
+		
 		$_Date = new Zend_Dojo_Form_Element_DateTextBox('for_date');
 		$_Date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
@@ -22,7 +29,7 @@ Class Loan_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
-				'onchange'=>'getallCustomer();'
+				'onchange'=>'getallCustomer();getBranchinfo();'
 		));
 	
 		$db = new Application_Model_DbTable_DbGlobal();
@@ -108,6 +115,7 @@ Class Loan_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 		$_cate_type->setMultiOptions($opt);
 	
 		if($data!=null){
+			$title->setValue($data['title_income']);
 			$_branch_id->setValue($data['branch_id']);
 			$invoice->setValue($data['receipt_no']);
 			$_Date->setValue($data['for_date']);
@@ -131,6 +139,7 @@ Class Loan_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 				$_Date,
 				$_stutus,
 				$_Description,
+				$title,
 				$total_amount,$_branch_id,$id));
 		return $this;
 	

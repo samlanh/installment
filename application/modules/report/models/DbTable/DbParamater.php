@@ -1780,4 +1780,32 @@ function getAllBranch($search=null){
 		}
 		return $db->fetchAll($sql.$where.$order);
 	}
+	
+	function getOtherIncomePaymentById($id){
+		$db = $this->getAdapter();
+		$sql="SELECT op.id,
+			(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS branch_name,
+			(SELECT logo FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS photo,
+			(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS client_name,
+			(SELECT CONCAT(p.land_address,',',p.street) FROM `ln_properties` AS p WHERE p.id=oi.house_id LIMIT 1) AS house_name,
+			op.receipt_no AS invoice,
+			(SELECT v.name_kh FROM ln_view AS v WHERE v.type=op.cate_type AND v.key_code=op.category LIMIT 1) AS category_name,
+			op.title_income AS title,
+			op.total_paid AS total_amount,
+			op.cheque,
+			op.note AS description,
+			op.for_date AS `date`,
+			
+			(SELECT vt.name FROM `ln_view_type` AS vt WHERE vt.id=op.cate_type LIMIT 1) AS typecate,
+			op.balance,
+			op.remain,
+			(SELECT v.name_kh FROM ln_view AS v WHERE v.type=2 AND key_code=op.payment_method LIMIT 1) AS payment_method,
+			op.status,
+			(SELECT  CONCAT(last_name,' ',first_name)FROM rms_users WHERE id=op.user_id LIMIT 1 ) AS user_name
+			FROM `ln_otherincomepayment` AS op,
+			`ln_otherincome` AS oi
+			WHERE oi.id = op.otherincome_id
+			AND op.id=$id LIMIT 1 ";
+		return $db->fetchRow($sql);
+	}
 }

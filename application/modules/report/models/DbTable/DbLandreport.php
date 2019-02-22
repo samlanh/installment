@@ -2598,6 +2598,8 @@ function updatePaymentStatus($data){
    	   	oi.client_id,
    	   	op.for_date AS date,
    	   	op.receipt_no AS invoice,
+   	   	op.title_income,
+   	   	op.cheque,
    	   	op.total_paid AS total_amount,
    	   	op.note AS description,
    	   	(SELECT p.land_address FROM `ln_properties` AS p WHERE p.id=oi.house_id LIMIT 1) AS land_address,
@@ -2631,6 +2633,9 @@ function updatePaymentStatus($data){
       	}
       	if($search['client_name']>0){
       		$where.= " AND oi.client_id = ".$search['client_name'];
+      	}
+      	if($search['land_id']>0){
+      		$where.= " AND oi.house_id = ".$search['land_id'];
       	}
       	if($search['branch_id']>-0){
       		$where.= " AND op.branch_id = ".$search['branch_id'];

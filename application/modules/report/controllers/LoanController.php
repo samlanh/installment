@@ -192,8 +192,16 @@ class Report_LoanController extends Zend_Controller_Action {
   }
   function receiptOtherincomeAction(){
   	$id =$this->getRequest()->getParam('id');
+  	
+  	$repair =$this->getRequest()->getParam('repair');
   	$db  = new Report_Model_DbTable_DbParamater();
-  	$this->view->rsincome =$db->getIncomeById($id);
+  	
+  	if (!empty($repair)){
+  		$this->view->rsincome =$db->getOtherIncomePaymentById($id);
+  	}else{
+  		$this->view->rsincome =$db->getIncomeById($id);
+  	}
+  	
   	
 //   	$db = new Application_Model_DbTable_DbGlobal();
 //   	$this->view->classified_loan = $db->ClassifiedLoan();

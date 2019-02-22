@@ -179,6 +179,34 @@
 								</tr>
 									<?php $total = $total +$row['total_amount'];?>
 								<?php }?>
+								<?php 
+					            	if (!empty($this->houserepair)){
+					            ?>
+					            <tr  style="border:1px solid #000;">
+					                <td colspan="12" align="center">
+					                	<h2 style="font-weight:normal; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
+							             	<span><?php echo $tr->translate("REPAIR_HOUSE_INCOME");?></span>
+							             </h2>
+					                </td>
+					             </tr>
+					            <?php foreach ($this->houserepair as $index => $rs){?>
+						   		<tr class=" stylehover <?php //if($index%2==1){echo"even";}?>" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+				               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+				               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+				               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
+				               		<td align="center">&nbsp;<?php echo $rs["invoice"];?>&nbsp;</td>
+				               		<td align="center">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td> 
+				               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
+				               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+				               		<td align="center">&nbsp;<strong><?php echo number_format($rs["total_amount"],2);?></strong>&nbsp;</td>
+				               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
+				               		<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+				               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
+				               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
+				                </tr>
+				                <?php $total = $total +$rs['total_amount'];?>
+						   		<?php }?>
+					            <?php }?>
 						    </table>
 		            	</td>
 		            </tr>
