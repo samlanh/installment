@@ -1,0 +1,236 @@
+<?php $tran = $this->tran_schedule;
+	$client = $this->client;
+	$filter = $this->form_filter;
+	$dayin_khmer = $this->day_inkhmer;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$key = new Application_Model_DbTable_DbKeycode();
+	$dataterm = $key->getKeyCodeMiniInv(TRUE);
+?>
+<title><?php echo $tr->translate('Payment Schedule');?></title>
+<style>
+	td p{ margin-top:0px !important;}
+	#printfooter{display: none !important;}
+	h2{line-height: 25px !important;}
+</style>
+<div style="margin:0 auto; padding: 0 40px;">
+	<div id="divPrint">
+	<style type="text/css">
+	.style{
+		line-height: 20px;font-size: 12px;
+		font-family: 'Times New Roman','Khmer OS Battambang';
+	}
+	.font_bold{
+		font-family:'Khmer OS Muol Light Light';
+		font-size: 14px;
+	}
+	td p{ margin-top:-12px;}
+	table { page-break-inside:auto }
+	tr{ page-break-inside:avoid; page-break-after:auto; }
+	#header {
+	  display: table-header-group;
+	  page-break-inside:avoid; page-break-after:auto;
+	}
+	.hover:hover{background: #ccc;}
+	#printfooter {
+		    position: absolute;
+		    bottom: 0;
+		    position: fixed;
+		    display: block ;
+		}
+	h2{line-height: 10px;}
+</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	        	<table width="100%" style="font-family:khmer;margin:0 auto;padding:0px; border:none;">
+	            	<tr>
+	                	<td width="25%" style="">
+	                		<?php $imagelogo = $this->baseUrl()."/images/logo.jpg";
+				                	if (!empty($client['project_logo'])){
+				                		$imagelogo = $this->baseUrl()."/images/projects/".$client['project_logo'];
+				                	}
+				                	?>
+				             <img src="<?php echo $imagelogo;?>"  style="max-width:100%;height:75px;">
+	                	</td>
+	                	<td width="50%" valign="top">
+		                	<h2 style="text-align:center;  font-weight:normal; font-size:14px; font-family:'Khmer OS Muol Light';white-space:nowrap;"><?php echo $tr->translate("BRAND_TITLE");?><?php //echo $this->data['brand_title'];?></h2>
+							<h2 style="text-align:center;  font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light'"> <?php echo $tr->translate('RPT_ILLOAN');?></h2>
+		                	
+		                	
+	                	</td>
+	                    <td width="25%" ><h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light';white-space:nowrap;"> <?php echo $tr->translate('ARTICLE_1');?></h2></td>
+	                </tr>
+	                <?php $db = new Application_Model_DbTable_DbGlobal();
+	                	  $row = $db->getClientByType(null,$client['client_id'],1);
+	                ?> 
+	                <tr>
+	                	<td colspan="3">
+	                		<table width="100%" style="margin-top:10px;">
+			                	<tr class='style'>
+				                   <td width="35%" valign="top">
+				                	    <p><?php echo $tr->translate('CUSTOMER_NAME');?>: <?php echo $client['client_name_kh'];echo !empty($client['hname_kh'])?"/".$client['hname_kh']:"";?> </p>
+										<p><?php echo $tr->translate("TEL");?>  : <?php echo $client['tel'];?></p>  
+				                		<p><?php echo $tr->translate("ADDRESS");?>:<?php echo $row['village_name'];?> ,<?php echo $row['commune_name'];?> <br /><?php echo $row['district_name'];?> ,  <?php echo $row['province_en_name'];?> </p>
+				                		
+				                	</td>
+				                    <td valign="top" style="" width="33%">
+				                      <p style="font-weight:bold;"><?php echo $tr->translate("BRANCH_NAME");?> : <?php echo  $client['branch_name']; ;?></p>
+									  <p style="width:200px;white-space:pre-line;"><?php echo $tr->translate("PROPERTY_CODE");?> : <?php echo $client['land_address'];?></p>
+									  <p><?php echo $tr->translate("SOLD_PRICE");?>  : $ <strong><?php echo number_format($client['price_sold'],0);?></strong></p>
+				                      <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : $ <?php echo number_format($client['price_sold']-$client['total_installamount'],0);?></p>
+				                      <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php echo number_format($client['interest_rate'],0);?>&nbsp;%</p>
+									  <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo number_format($client['total_duration'],0);?>&nbsp;
+										<?php if($client['payment_id']!=4){
+											echo $tr->translate("MONTH");
+										}else{
+											echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
+										}?>
+									  </p>
+				                    </td>
+				                    <td valign="top">
+				                      <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-m-Y',strtotime($client['buy_date']));?> </p>
+				                      <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-m-Y',strtotime($client['first_payment'])); ?></p>
+				                      <p><?php echo $tr->translate("LIFE_LOAN");?> : <?php 
+				                      	$date= new DateTime($client['end_line']);
+				                      	echo $next_payment = $date->format("d-m-Y");
+				                       ?></p>
+				                    </td>
+				                </tr>
+			                </table>
+			              </td>
+			           </tr>   
+	            </table>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td>
+	            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%">
+	                 <thead>
+		                 <tr class="style" align="center" style=" line-height: 20px;">
+		                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
+		                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
+		                    
+		                    <td rowspan="2"><?php echo $tr->translate("OTHER");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("RECEIVED_BY");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("PAID_DATE");?></td>
+		                </tr>
+		                <tr class="style" align="center" style="line-height: 20px;">
+		                    <td><?php echo $tr->translate("PRINCIPAL");?></td>
+		                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+		                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
+		                </tr>
+	                </thead>
+	               <?php $set=1; 
+	               $i=0;
+				   $total_principal = 0;
+				   $total_interest = 0;
+				   $total_payment = 0;
+	               if(!empty($tran)) foreach($tran as $key =>$row){ 
+				   $total_principal = $total_principal+$row['principal_permonth'];
+				   $total_interest =  $total_interest+$row['total_interest'];
+				   $total_payment = $total_payment+$row['total_payment'];
+				   $number=0;
+				   ?>
+	               	<?php if($row['status']==0 AND $row['collect_by']==2){?>
+	               	<tr align="center" style=" height: 20px;" class="style">
+	               		<td colspan="10" style="background: #d3d3ff;"><span style="font-family:'Khmer OS Muol Light'"><?php if(!empty($row['note'])){echo $row['note']; }else{?>បានរំលស់ប្រាក់ដើម ចំនួន<?php }?></span><span style="font-family:Arail;font-size:16px;"> $ <?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></span><span style="font-family:'Khmer OS Muol Light'"> នៅថ្ងៃទី  <?php echo date('d-m-Y',strtotime($row['date_payment']));?></span></td>
+	               	</tr>
+	               	<?php continue;}
+	               	$i++; 
+					if($i!=1){$number++;}?>
+	               	<tr align="center" style=" height: 20px;<?php if($i==1)echo'background:#6ac139;';?>" class="style hover" >
+	                    <td><?php echo ($i-1)>0?$i-1:'';?></td>
+		                    <?php $str_day = date('D',strtotime($row['date_payment']));
+		                    	$day_as_khmer = $dayin_khmer[$str_day];
+		                    ?>
+	                    <td align="center">
+	                    	<?php 
+		                    	if($row['last_optiontype']==1){//by date
+		                    		if($row['ispay_bank']==0){
+		                    			$date= new DateTime($row['date_payment']);
+		                    			echo $date->format("d-m-Y");
+		                    		}else{
+		                    			echo $row['payment_type'];
+		                    		}
+		                    	}else{//by last payment
+		                    		echo $tr->translate("RECEIVED_PROPERTY");
+		                    	}
+	                    		
+	                    	?>
+	                    </td>
+	                    <td><?php echo str_replace('.00', '', number_format($row['begining_balance'],2));?></td>
+	                    <td><?php echo str_replace('.00', '', number_format($row['principal_permonth'],2));?></td>
+	                    <td><?php echo str_replace('.00', '', number_format($row['total_interest'],2));?></td>
+	                    <td ><?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></td>
+	                    <?php 
+	                   		$remain = $row['ending_balance'];
+	                    ?>
+	                    
+	                    <td><?php echo $row['note']; echo ($row['is_completed']==1)?$tr->translate("COMPLETED"):""; ?></td>
+	                    <td><?php if($row['is_completed']==1){ echo empty($row['received_by'])?"-":$row['received_by'];} ?></td>
+	                    <td><?php  
+		                    if($row['is_completed']==1){
+			                    if($row['received_date']!=0){
+			                    	$date = new DateTime($row['received_date']);
+			                   	 	$receive_date =  $date->format("d-m-Y");
+			                    }else{$receive_date='';}
+		                    	echo ($row['received_date']==0)?"":$receive_date;
+		                    }
+	                    	?>
+	                    </td>
+	                </tr>
+	               <?php }
+	               ?>
+				   <tr align="center" style="background:#6ac139;font-weight: bold;height:30px;">
+						<td colspan="3">សរុប</td>
+						<td><?php echo number_format($total_principal ,0);?></td>
+						<td><?php echo number_format($total_interest ,0);?></td>
+						<td><?php echo number_format($total_payment ,0);?></td>
+						<td colspan="3"></td>
+				   </tr>
+	            </table>
+	            <table width="100%" cellpadding="0">
+	            	<tr>
+						<td colspan="3" style="font-family:khmer os battambang;font-size:10px;height:10px;">* គ្រប់អតិថិជនដែលបានបង់ប្រាក់ប្រចាំខែយឺត នឹងត្រូវពិន័យជាទឹកប្រាក់ក្នុងមួយថ្ងៃ ២ដុល្លារ។</td>
+					</tr>
+					<tr>
+						<td colspan="3" style="font-family:khmer os battambang;font-size:10px;height:10px;">* ក្នុងករណីអតិថិជនមិនបានបង់ប្រាក់ រយៈពេល២ខែ ក្រុមហ៊ុននឹងបញ្ចប់កិច្ចសន្យាទិញលក់ ដោយស្វ័យប្រវត្តិ។</td>
+					</tr>
+					<tr class="font_bold" style="height:25px;">
+	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('BORROWER');?></td>
+	            		<td align="center" valign="bottom"></td> 
+	            		
+						<td align="center" valign="bottom" style="font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('ACCOUNTING_SIGN');?></td>
+	            	</tr>
+	            	<tr class="font_bold" style="font-family:khmer os battambang;">
+	            		<td align="center" valign="bottom"><?php echo $client['client_name_kh'];echo !empty($client['hname_kh'])?"/".$client['hname_kh']:"";?></td>
+	            		<td align="center"  valign="bottom"></td>
+	            		<td align="center" height="120px" valign="bottom"><?php echo $client['user_name'];?></td>
+	            	</tr>
+					
+	            </table>
+	    	</td>
+	    </tr>
+	    <tfoot>
+			<tr height="30px">
+				<td >
+				<div id="printfooter">
+					<table width="100%" style="background: #fff;border-top: 2px solid #000;font-family: 'Times New Roman','Khmer OS Battambang'; font-size:10px;line-height: 15px;white-space:nowrap;"> 
+					<tbody>
+						<tr style="white-space:nowrap;line-height: 15px;">
+							<td width="33%"><?php echo $this->data['footer_branch'];?></td>
+							<td width="33%" align="right"><?php echo $this->data['email_client'];?></td>
+							<td width="33%" align="right"><?php echo $this->data['tel-client'];?></td>
+						</tr>
+						
+						</tbody>
+					</table>
+				</div> 
+			</td>
+			</tr>
+		 </tfoot>
+	</table>
+	</div>
+</div>

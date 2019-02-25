@@ -200,7 +200,6 @@
 	    	<div class="clearfix"></div>
 			 <div class="card-box">
              	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-               		<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
 					<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" name='saveclose' id='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconDelete"/>
 					<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
     				<input type="button" label="<?php echo $tr->translate("SAVEPRINT")?>" name='print' value='print' dojoType="dijit.form.Button"
@@ -211,7 +210,7 @@
 	</div>
 </div>
 <div class="dijitHidden" style="width: 22cm !important; height: 11cm ; padding: 0px; margin: 0px;">
-	<div data-dojo-type="dijit.Dialog" style="width:100;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_receipt" >
+	<div data-dojo-type="dijit.Dialog" style="width:100;" align="center" data-dojo-props="title:'<?php echo $tr->translate("ប័ណ្ណប្តូរផ្ទះ/ដី");?>'" id="print_receipt" >
 		<div id="divPrint" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
 			<style>
 				.label{ font-size: 22px;}
@@ -366,31 +365,33 @@ function getBranchinfo(){
 	});
 }
 function printSave(){
-	dojo.byId("lb_frombranch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
-	dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
-	dojo.byId("lb_fromhouse").innerHTML = dijit.byId("land_code").attr('displayedValue');
-	dojo.byId("lb_fromprice").innerHTML = dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
-	dojo.byId("lb_paid").innerHTML = dojo.number.format(dijit.byId("paid_before").get('value'),{places:2});
-	
-	dojo.byId("lb_changedate").innerHTML = dijit.byId("release_date").attr('displayedValue');
-	dojo.byId("lb_tobranch").innerHTML = dijit.byId("to_branch_id").attr('displayedValue');
-	dojo.byId("lb_tohouse").innerHTML = dijit.byId("to_land_code").attr('displayedValue');
-	dojo.byId("lb_topricebefore").innerHTML = dojo.number.format(dijit.byId("house_price").get('value'),{places:2});
-	dojo.byId("lb_toprice").innerHTML = dojo.number.format(dijit.byId("to_total_sold").get('value'),{places:2});
-	discount_percent = dijit.byId("discount_percent").get('value');
-	if(isNaN(discount_percent)){
-		discount_percent=0;
+	if(dijit.byId('frm_add_tran').validate()){
+		dojo.byId("lb_frombranch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
+		dojo.byId("lb_customer").innerHTML = dijit.byId("member").attr('displayedValue');
+		dojo.byId("lb_fromhouse").innerHTML = dijit.byId("land_code").attr('displayedValue');
+		dojo.byId("lb_fromprice").innerHTML = dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
+		dojo.byId("lb_paid").innerHTML = dojo.number.format(dijit.byId("paid_before").get('value'),{places:2});
+		
+		dojo.byId("lb_changedate").innerHTML = dijit.byId("release_date").attr('displayedValue');
+		dojo.byId("lb_tobranch").innerHTML = dijit.byId("to_branch_id").attr('displayedValue');
+		dojo.byId("lb_tohouse").innerHTML = dijit.byId("to_land_code").attr('displayedValue');
+		dojo.byId("lb_topricebefore").innerHTML = dojo.number.format(dijit.byId("house_price").get('value'),{places:2});
+		dojo.byId("lb_toprice").innerHTML = dojo.number.format(dijit.byId("to_total_sold").get('value'),{places:2});
+		discount_percent = dijit.byId("discount_percent").get('value');
+		if(isNaN(discount_percent)){
+			discount_percent=0;
+		}
+		discount_amount = dijit.byId("discount").get('value');
+		if(isNaN(discount_amount)){
+			discount_amount=0;
+		}
+		dojo.byId("lb_discountpercent").innerHTML = dojo.number.format(discount_percent,{places:2})+' %';
+		dojo.byId("lb_discountamount").innerHTML = dojo.number.format(discount_amount,{places:2})+' $';
+		
+		dojo.byId("lb_balance").innerHTML = dojo.number.format(dijit.byId("balance").get('value'),{places:2});
+		dojo.byId("lb_description").innerHTML = dijit.byId("note").attr('displayedValue');
+		dijit.byId("print_receipt").show();
 	}
-	discount_amount = dijit.byId("discount").get('value');
-	if(isNaN(discount_amount)){
-		discount_amount=0;
-	}
-	dojo.byId("lb_discountpercent").innerHTML = dojo.number.format(discount_percent,{places:2})+' %';
-	dojo.byId("lb_discountamount").innerHTML = dojo.number.format(discount_amount,{places:2})+' $';
-	
-	dojo.byId("lb_balance").innerHTML = dojo.number.format(dijit.byId("balance").get('value'),{places:2});
-	dojo.byId("lb_description").innerHTML = dijit.byId("note").attr('displayedValue');
-	dijit.byId("print_receipt").show();
 }
 function doPrint() {
 	dojo.byId("printblog2").innerHTML = dojo.byId('divPrint').innerHTML;
@@ -569,7 +570,6 @@ function getLoanByBranch(){
 			dijit.byId('sale_code').attr('value',data);
 		},
 		error: function(err) {
-			//alert(err);
 		}
 	});
 }
@@ -593,7 +593,6 @@ function getReceiptByBranch(){
 			dijit.byId('receipt').attr('value',data);
 		},
 		error: function(err) {
-			//alert(err);
 		}
 	});
 }
@@ -603,9 +602,6 @@ function getReceiptByBranch(){
     		deposit=0;
     	}
     	if(deposit>price){
-    		//alert("Deposit can not biger than price ");
-    		//dijit.byId('deposit').focus();
-    		//dijit.byId('deposit').attr('value',price)
     	}
         dijit.byId('balance').attr('value',price-deposit);
         checkScheduleOption();
@@ -750,6 +746,7 @@ require(["dojo/ready"], function(ready){
 var url_submiinfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloan-bymemberid')); ?>';
 function getInfoByLoanNumber(){
 	loan_id = dijit.byId('loan_number').get('value');
+	if(loan_id==''){return false;}
 	dojo.xhrPost({
 	    url: url_submiinfo,	
 	    content : { 
@@ -771,7 +768,6 @@ function getInfoByLoanNumber(){
 			dijit.byId('member').set('readOnly',true);
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
@@ -822,7 +818,6 @@ function getlandinfo(){
 			dijit.byId('balance_before').attr('value',data.price-paid_before);
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
@@ -853,7 +848,6 @@ function getlandinfotransfer(){
             dijit.byId('balance').attr('value',data.price-paid_before);            
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
