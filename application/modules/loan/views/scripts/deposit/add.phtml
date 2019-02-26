@@ -846,7 +846,14 @@ function printSave(new_stu_id,new_receipt_no){
 	if(dijit.byId('frm_add_tran').validate()){
 		
 		dijit.byId("lbl_schedule").hide();
-		dojo.byId("lbl_paidtimes").innerHTML = dijit.byId("schedule_opt").attr('displayedValue');
+
+		schedule_opt = dijit.byId("schedule_opt").get('value');
+		if(schedule_opt==1){
+			schedule_opt = dijit.byId("schedule_opt").attr('displayedValue');//'កក់ប្រាក់លើកទី1';
+		}else{
+			schedule_opt = dijit.byId("schedule_opt").attr('displayedValue');
+		}
+		dojo.byId("lbl_paidtimes").innerHTML = schedule_opt;
 	
 		date_payment = dijit.byId("paid_date").get('value');
 		var a = new Date(date_payment);
