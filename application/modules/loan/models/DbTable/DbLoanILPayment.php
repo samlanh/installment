@@ -138,10 +138,26 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
+    		
+    		$sql = "SELECT
+	    		crm.sale_id,
+				crm.total_principal_permonthpaid,
+				crm.extra_payment,
+				crm.selling_price,
+				crm.allpaid_before,
+				crm.outstanding
+			
+    		 FROM ln_client_receipt_money AS crm
+    		 WHERE  crm.`id` = $receipt_id ";
+    		$rsreceipt = $db->fetchRow($sql);
+    		
+    		$sale_id= $rsreceipt['sale_id'];
+    		
     		$session_user=new Zend_Session_Namespace('authinstall');
     		$user_id = $session_user->user_id;
+    		
     		$arr_client_pay = array(
-    				'outstanding'                   =>	0,//ប្រាក់ដើមមុនបង់
+    				//'outstanding'                 =>  0,//ប្រាក់ដើមមុនបង់
     				'total_principal_permonth'		=>	0,//ប្រាក់ដើមត្រូវបង់
     				'total_interest_permonth'		=>	0,
     				'penalize_amount'				=>	0,
@@ -155,6 +171,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     				'total_payment'					=>	0,//ប្រាក់ត្រូវបង់ok
     				'recieve_amount'				=>	0,//ok
     				'amount_payment'				=>	0,//brak ban borng
+    				'allpaid_before'				=>  $rsreceipt['allpaid_before']-$rsreceipt['total_principal_permonthpaid']-$rsreceipt['extra_payment'],
     				'return_amount'					=>	0,//ok
     				'note'							=>	"លុប",
     				'user_id'						=>	$user_id,
@@ -165,12 +182,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$where="id =".$receipt_id;
     		$this->update($arr_client_pay, $where);
     		
-    		
-    		$sql = "SELECT
-    		crm.sale_id FROM ln_client_receipt_money AS crm
-    		WHERE  crm.`id` = $receipt_id ";
-    		$sale_id = $db->fetchOne($sql);
-    		
     		$arr = array(
     				'is_completed'=>0
     		);
@@ -179,15 +190,15 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$this->update($arr, $where);
     			
     		$sql = "SELECT
-    		crmd.*,
-    		
-    		crm.branch_id
-    		FROM
-    		`ln_client_receipt_money_detail` AS crmd,
-    		ln_client_receipt_money as crm
-    		WHERE
-    		crm.id = crmd.`crm_id`
-    		and crmd.`crm_id` = $receipt_id ";
+		    		crmd.*,
+		    		crm.branch_id
+		    		
+		    		FROM
+		    		`ln_client_receipt_money_detail` AS crmd,
+		    		ln_client_receipt_money as crm
+		    		WHERE
+		    		crm.id = crmd.`crm_id`
+		    		and crmd.`crm_id` = $receipt_id ";
     		$receipt_money_detail = $db->fetchAll($sql);
     		
     		//delete extra payment in schedule
@@ -195,7 +206,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$this->_name="ln_saleschedule";
     		$this->delete($where);
     		$branc_id=1;
-    		
     		
     		if(!empty($receipt_money_detail)){
     			foreach ($receipt_money_detail as $rs){
@@ -253,25 +263,25 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			}
     		}
     		$arr_money_detail = array(
-    				'principal_permonth'	=>	0,//$principle_amount,
-    				'total_interest'		=>	0,//$data["interest_".$i],
-    				'total_payment'			=>	0,//$data["payment_".$i],
-    				'total_recieve'			=>	0,//$total_recieve,
-    				'pay_after'				=>	0,//$data['multiplier_'.$i],
-    				'penelize_amount'		=>	0,//$data['penelize_'.$i],
-    				'service_charge'		=>	0,//$data['service_'.$i],
-    				'penelize_new'			=>	0,//$data['penelize_'.$i]-$data['old_penelize_'.$i],
-    				'service_charge_new'	=>	0,//$data["service_charge"]-$data['service_'.$i],
+    				'principal_permonth'	=>	0,
+    				'total_interest'		=>	0,
+    				'total_payment'			=>	0,
+    				'total_recieve'			=>	0,
+    				'pay_after'				=>	0,
+    				'penelize_amount'		=>	0,
+    				'service_charge'		=>	0,
+    				'penelize_new'			=>	0,
+    				'service_charge_new'	=>	0,
     				'capital'				=>  0,
-    				'remain_capital'		=>	0, // remain balance after paid
+    				'remain_capital'		=>	0, 
     				'old_principal_permonth'=>	0,
     				'old_total_priciple'	=>	0,
     				'old_interest'			=>	0,
     				'old_total_payment'		=>	0,
     				'old_penelize'			=>	0,
     				'old_service_charge'	=>	0,
-//     				'last_pay_date'			=>	$row["date_payment"],//$row["last_date_payment_".$i],
-//     				'paid_date'			=>	$data["collect_date"],//$row["last_date_payment_".$i],
+//     				'last_pay_date'			=>	$row["date_payment"],
+//     				'paid_date'			=>	$data["collect_date"],
     				'is_completed'			=>	0,//$is_compleated,
     				'status'				=>	1
     		);
