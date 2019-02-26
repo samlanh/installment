@@ -1,0 +1,642 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_incomeotherpayment;
+?>
+<title><?php echo $tr->translate('ADD_INCOME_OTHER_PAYMENT');?></title>
+<style>	
+.fullside {
+	width: 100%;
+	height: 30px;
+}
+.btn-reset{
+	background: #c00;
+    color: #fff;
+}
+.addfile{
+	background: #0077c5 !important;
+    color: #fff !important;
+}
+</style>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+ <script>
+		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
+ </script>
+ <div class="card">
+	<div class="card-content collapse show">
+		<form id='frm_add_tran' action=""	dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					branch_id = dijit.byId('branch_id').get('value');
+					if(branch_id=="" || branch_id ==-1){
+						alert("<?php echo $tr->translate("PLEASE_SELECT_BRANCH");?>");
+						return false;
+					}
+					otherincome_id = dijit.byId('otherincome_id').get('value');
+					if(otherincome_id=="" || otherincome_id ==-1){
+						alert("<?php echo $tr->translate("PLEASE_SELECT_HOUSE");?>");
+						return false;
+					}
+					total_amount = dijit.byId('total_amount').get('value');  
+					if(total_amount==""){
+						alert("<?php echo $tr->translate("PLEASE_ENTER_AMOUNT");?>");
+						return false;
+					}
+					loadingBlock();
+					return true;
+				}else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD_INCOME_OTHER_PAYMENT');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PROJECT_INFO");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH_NAME");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('branch_id');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="otherincome_id" />
+	                    	<input type="hidden" id="customer_name" name="customer_name" dojoType="dijit.form.TextBox"/>
+	                    	<input type="hidden" id="house_no" name="house_no" dojoType="dijit.form.TextBox"/>
+	                    	<input type="hidden" id="street" name="street" dojoType="dijit.form.TextBox"/>
+	                   </div>
+	                </div>
+	             </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("AMOUNT_INFO");?> 
+	                   </label>
+	                </div>
+	                 <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("RECEIPT_NO");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('invoice');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('for_date');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12 bold" for="first-name"><?php echo $tr->translate("INCOME_TITLE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('title');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12 bold" for="first-name"><?php echo $tr->translate("BALANCE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('balance');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12 bold" for="first-name"><?php echo $tr->translate("TOTAL_PAID");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('total_amount');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12 bold" for="first-name"><?php echo $tr->translate("REMAIN");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('remain');?>
+	                   </div>
+	                </div>
+	                 <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TYPE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cate_type');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CATEGORY");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="income_category" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('payment_method');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NUMBER");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cheque');?>
+	                   </div>
+	                </div>
+	                
+	             </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER_INFO");?> 
+	                   </label>
+	                </div>
+	             	 <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('description');?>
+	                   </div>
+	                </div>
+	             </div>
+	        </div>
+		     <div class="clearfix"></div>
+			 <div class="card-box">
+             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+					<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button"
+						 iconClass="dijitEditorIcon dijitEditorIconSave"/>
+					<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' name='savenew' value='savenew' dojoType="dijit.form.Button"
+						 iconClass="dijitIconNewTask"/>
+					 <input type="button" label="<?php echo $tr->translate("PRINT")?>" name='print' value='' dojoType="dijit.form.Button"
+					 iconClass="dijitIconNewTask" onClick="printSave('');displayNone();" />
+    			</div>
+    		</div>
+	   	</form>
+	 </div>
+</div>
+<script type="text/javascript">
+dojo.require("dijit.form.Textarea");
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dojo.NodeList-manipulate");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.DateTextBox");
+var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+dojo.ready(function(){
+	new dijit.form.FilteringSelect({
+	    autoComplete: false,                        
+	    id: "otherincome_id",
+	    queryExpr: "*${0}*",
+	    name: "otherincome_id",  
+	    tabindex: "16",  
+	    class: 'fullside',  
+	    placeHolder:"<?php echo $tr->translate("CHOOSE_CUSTOEMR")?>",          
+	    onChange: function() {  
+	    	getRepairIncomeByID();
+	    }
+	}, "otherincome_id");
+
+	new dijit.form.FilteringSelect({
+		store: income_category_store,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+	    id: "income_category",
+	    name: "income_category",  
+	    class: 'fullside',  
+	    placeHolder:"<?php echo $tr->translate("SELECT_CATEGORY")?>", 
+	    onChange: function() {          
+		   	fa_job = dijit.byId('income_category').get('value');
+		    if(fa_job==-1){
+		   	 dijit.byId("popup_category").show();
+		    }
+	    } 
+	}, "income_category");
+	
+	getInvoiceNo('');
+	enablePayment();
+	getCategoryByType();
+});
+var customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+var url_allotherincome = '<?php echo $this->url(array('module'=>'incexp','controller'=>'incomeotherpayment','action'=>'get-allotherincome')); ?>';
+function getallCustomer(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id=="" || branch_id ==-1){
+		customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?>);
+	    dijit.byId('otherincome_id').set('store',customer_store);   
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_allotherincome,
+		content:{
+			'branch_id':branch_id
+			},
+		handleAs:"json",
+		load: function(data) {
+			customer_store  = getDataStorefromJSON('id','name', data);
+		    dijit.byId('otherincome_id').set('store',customer_store);   
+		},
+		error: function(err) {
+		}
+	});
+}
+
+var url_getcatebytype = '<?php echo $this->url(array('module'=>'incexp','controller'=>'incomeotherpayment','action'=>'get-categorybytype')); ?>';
+function getCategoryByType(){
+	cate_type = dijit.byId('cate_type').get('value');
+	dijit.byId('income_category').reset(); 
+	if(cate_type=="" || cate_type ==-1){
+		income_category_store  = getDataStorefromJSON('id','name', <?php print_r(array())?>);
+	    dijit.byId('income_category').set('store',income_category_store);   
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_getcatebytype,
+		content:{
+			'cate_type':cate_type
+			},
+		handleAs:"json",
+		load: function(data) {
+			income_category_store  = getDataStorefromJSON('id','name', data);
+		    dijit.byId('income_category').set('store',income_category_store);   
+		},
+		error: function(err) {
+		}
+	});
+}
+
+var url_otherincome = '<?php echo $this->url(array('module'=>'incexp','controller'=>'incomeotherpayment','action'=>'getotherincomeinfo')); ?>';
+function getRepairIncomeByID(){
+	otherincome_id = dijit.byId('otherincome_id').get('value');
+	if(otherincome_id=="" || otherincome_id ==-1){
+		dijit.byId('balance').set('value',0); 
+		dijit.byId('total_amount').set('value',0); 
+		dijit.byId('remain').set('value',0); 
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_otherincome,
+		content:{
+			'otherincome_id':otherincome_id
+			},
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('balance').set('value',data.total_amountafter); 
+			dijit.byId('total_amount').set('value',data.total_amountafter); 
+			dijit.byId('remain').set('value',0); 
+
+			dijit.byId('customer_name').set('value',data.client_name); 
+			dijit.byId('house_no').set('value',data.land_address);
+			dijit.byId('street').set('value',data.street);
+		},
+		error: function(err) {
+		}
+	});
+}
+var url_get_invoice = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'get-invoice-no')); ?>';
+function getInvoiceNo(condition){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0){
+		branch_id=1;
+	}
+	dojo.xhrPost({
+		url:url_get_invoice,
+		content:{
+			'branch_id':branch_id
+			},
+		handleAs:"json",
+		load: function(data) {
+		    dijit.byId('invoice').attr('value',data);   
+		    dojo.byId("lb_invoice").innerHTML = data;
+		},
+		error: function(err) {
+		}
+	});
+}
+
+function totalRemain(){
+	var balance =	dijit.byId('balance').get('value'); 
+	var total_amount = dijit.byId('total_amount').get('value');  
+
+	if(balance<0){
+		var remain = balance - total_amount;
+		if(remain>0){
+			dijit.byId('total_amount').set('value',balance); 
+			remain=0;
+		}
+		dijit.byId('remain').set('value',remain); 
+	}else{
+		var remain = balance - total_amount;
+		if(remain<0){
+			dijit.byId('total_amount').set('value',balance); 
+			remain=0;
+		}
+		dijit.byId('remain').set('value',remain); 
+	}
+}
+
+
+function enablePayment(){
+	payment_method = dijit.byId('payment_method').get('value');
+	dijit.byId("cheque").set("readOnly",false);
+	dijit.byId("cheque").attr("value",'');
+	if(payment_method==1){
+		dijit.byId("cheque").attr("value",'N/A');
+		dijit.byId("cheque").set("readOnly",true);
+	}
+}
+var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var url_add_category = '<?php echo $this->url(array("module"=>"incexp","controller"=>"income","action"=>"add-category")); ?>';
+function addCategory(){
+	dijit.byId('save').set('disabled',true);	
+	dojo.xhrPost({
+		url:url_add_category,
+		form: dojo.byId("frm_category"),
+		handleAs:"json",
+		load: function(data) {
+			var Itemmake = { 
+	    		id: data,
+		        name: dijit.byId('cate_name').get('value')
+		    };
+	 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
+		    dijit.byId('frm_category').reset();
+		    dijit.byId("popup_category").hide();
+		},
+		error: function(err){
+		}
+	});
+}
+function hideDialog1(){
+	dijit.byId('popup_category').hide();
+}
+
+function printSave(new_invoice_no){
+	/////////////////// check Validate /////////////////////////////////////////
+	getBranchinfo();
+	getInvoiceNo('');
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id=="" || branch_id ==-1){
+		alert("<?php echo $tr->translate("PLEASE_SELECT_BRANCH");?>");
+		return false;
+	}
+	otherincome_id = dijit.byId('otherincome_id').get('value');
+	if(otherincome_id=="" || otherincome_id ==-1){
+		alert("<?php echo $tr->translate("PLEASE_SELECT_HOUSE");?>");
+	return false;
+	}
+	total_amount = dijit.byId('total_amount').get('value');  
+	if(total_amount==""){
+		alert("<?php echo $tr->translate("PLEASE_ENTER_AMOUNT");?>");
+		dijit.byId('total_amount').focus();
+	return false;
+	}
+	
+	customer_name = dijit.byId("customer_name").attr('displayedValue')+" ("+dijit.byId("house_no").attr('displayedValue')+","+dijit.byId("street").attr('displayedValue')+")";
+	
+	//dojo.byId("lb_invoice").innerHTML = dijit.byId("invoice").attr('displayedValue');
+	dojo.byId("lb_branch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
+	
+	dojo.byId("lb_customer").innerHTML = customer_name;
+	dojo.byId("lb_income_category").innerHTML = dijit.byId("income_category").attr('displayedValue');
+	dojo.byId("lb_income_title").innerHTML = dijit.byId("title").get('value');
+	dojo.byId("lb_total_amount").innerHTML = currencyFormat(dijit.byId("total_amount").get('value'));
+	dojo.byId("lb_date").innerHTML = dijit.byId("for_date").attr('displayedValue');
+	dojo.byId("lb_description").innerHTML = dijit.byId("description").attr('displayedValue');
+	dojo.byId("lb_cheque").innerHTML = dijit.byId("cheque").attr('displayedValue');
+	dojo.byId("lb_customer_name").innerHTML = customer_name;
+	
+	dijit.byId("print_income").show();
+}
+function currencyFormat (num) {
+	return "$ " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+}
+function displayNone(){
+	document.getElementById('divPrint1').style.display="none";
+}
+
+function doPrint() {
+dojo.byId("printblog2").innerHTML = dojo.byId('divPrint').innerHTML;
+window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML + dojo.byId('divPrint1').innerHTML;;
+window.frames["print_frame"].window.focus();
+window.frames["print_frame"].window.print();
+printSubmit();
+hideDialog();
+}
+function printSubmit(){
+	$('#frm_add_tran').submit();
+}
+</script>
+
+<div class="dijitHidden" style="width: 22cm !important; height: 11cm ; padding: 0px; margin: 0px;">
+	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_income" >
+		<div id="divPrint" style="width: 21cm !important; height: 13cm ; padding: 0px; margin: 0px;">
+			<style>
+				.label{ font-size: 22px;}
+				.value{ font:16px 'Times New Roman','Khmer OS Battambang';border: 1px solid #000; height: 30px; width: 100%;margin-right:5px; display: block;
+						line-height: 28px;
+					    text-align: center;
+				}
+				.print tr td{
+					padding:2px 2px; 
+				}
+			   .khmerbold{font:16px 'Khmer OS Battambang';}
+			   .khmer{font:12px 'Khmer OS Battambang';}
+			   .one{white-space:nowrap;}
+				label{margin-bottom: 0px !important}
+			</style>	
+			<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
+				<tr>
+					<td colspan="6">
+						<table width="100%" style="font-family:'Khmer OS Muol Light';white-space:nowrap;">
+							<tr>
+								<td id="projectlogo" width="25%">
+									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+								</td>						
+								<td width="50%" style="font:18px 'Khmer OS Muol Light';" valign="top" align="center"><u><span style=" font-family: Arial Black;font-family:'Khmer OS Muol Light';">បង្កាន់ដៃទទួលប្រាក់</span></u>
+									<div style="line-height:10px;"><span style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</span></div>
+								</td>
+								<td width="25%">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: -2px;" class="print" cellspacing="2px"  cellpadding="0">
+				<tr style="white-space: nowrap;">
+					<td width="15%" class="one khmerbold">គម្រោង</td>
+                    <td width="35%"><strong><label id="lb_branch" class="value"></label></strong></td>
+				    <td width="15%" class="one khmerbold">&nbsp;&nbsp;&nbsp;វិក័យប័ត្រលេខ</td>
+                    <td width="35%"><strong><label id="lb_invoice" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold" width="10%">អតិថិជន</td>
+				    <td><strong><label id="lb_customer" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ប្រភេទចំនូល</td>
+				    <td><strong><label id="lb_income_category" class="value"></label></strong></td>
+				</tr>
+				<tr>
+					<td class="one khmerbold">ពណ៌នាចំនូល</td>
+					<td ><strong><label id="lb_income_title" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ចំនូលសរុប</td>
+					<td><strong><label id="lb_total_amount" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">សែក</td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"></label></strong></td>
+					<td rowspan="2" class="one khmerbold">&nbsp;&nbsp;&nbsp;សម្គាល់</td>
+				    <td rowspan="2" style="border: 1px solid #000 !important;text-align: left;"><span style="text-align:left; " id="lb_description"></span></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">ថ្ងៃទទួល</td>
+				    <td><strong><label id="lb_date" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+				    <td colspan="2" class="khmerbold" style="line-height: 14px;"   align="center" >&nbsp;&nbsp;<span style=" font-family: Arial Black;font-family:'Khmer OS Muol Light';"><?php echo $this->data['customer_sign'];?></span></td>
+				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><span style=" font-family: Arial Black;font-family:'Khmer OS Muol Light';"><?php echo $this->data['teller_sign'];?></span></td>
+				</tr>
+				<tr style="white-space: nowrap;" height="85px;">
+					<td colspan="2" class="one khmerbold" align="center" valign="bottom">
+						<h4 style="font-weight:normal; padding-right: 5px ! important;margin-bottom: -10px  !important;">
+							<span id="lb_customer_name"></span>
+						</h4>
+					</td>
+				    <td colspan="2" class="one khmerbold" align="center" valign="bottom">&nbsp;
+				  			<h4 style="font-weight:normal; padding-right: 5px ! important;margin-bottom: -10px  !important;">
+				              <?php 
+				              	   $session_user=new Zend_Session_Namespace('authinstall');
+						           $last_name=$session_user->last_name;
+						           $username = $session_user->first_name;
+						           echo $last_name." ".$username;?></h4>  
+					</td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 12px;">
+					<td colspan="4" valign="top" ></td>
+				</tr>
+				<tr style="line-height: 20px;font-size: 11px;font-family:'Khmer OS Battambang'">
+					<td valign="top" >
+						<span style="text-decoration:underline;font-size: 12px;">សំគាល់ ៖</span>
+					</td>
+					<td colspan="3">
+						<span style="font-size: 10px;"><?php echo $this->data['comment'];?></span><br />
+						<span style="white-space: pre-line;font-size: 10px;"><?php echo $this->data['comment1'];?></span><br />
+					</td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 12px;">
+					<td colspan="4" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
+					</td>
+				</tr>
+				<tr style="line-height:20px;font-size: 10px;">
+					<td colspan="4" >
+						<?php echo $this->footer;?>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<table>
+			<tr>
+				<td>
+					<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+					<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
+						type="button" onclick="doPrint();">បោះពុម្ភ/Print</button>
+				</td>
+			</tr>
+		</table>
+		<div id="divPrint1" style="width: 21cm !important; height: 12cm ; padding: 0px; margin: 0px;">
+			<?php if($this->data['showreceipt']>1){?>
+				<div style="border:2px dashed #000; vertical-align: middle;margin:15px 0px 30px 0px"></div>
+			<?php }?>
+			<div id="printblog2"></div>
+		</div>
+		
+	</div>
+</div>
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_category" >
+		<form style="background-color: buttonface; width:100%;" id='frm_category' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<fieldset style="background-color: buttonface;">
+						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend><br />
+							<table style="margin: 0 auto; width: 100%;  padding:10px; line-height: 35px;" cellspacing="7" >
+								<tr>
+									<td><?php echo $tr->translate('NAME_KH');?></td>
+									<td>
+										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="cate_name" name="cate_name" value="" type="text">
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate('STATUS');?></td>
+									<td>
+										<select name="status_j" id="status_j" dojoType="dijit.form.FilteringSelect"   class="fullside">
+		    								<option value="1" label="active">Active</option>
+		    								<option value="0" label="deactive">Deactive</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="4" align="center">
+										<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+										<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
+									</td>
+								</tr>
+								
+							</table>
+					</fieldset>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<script>
+function getBranchinfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;
+		},
+		error: function(e) {
+		}
+	});
+}
+function returnMOnth(monthnum){
+	var month = new Array();
+	month[1] = "Jan";
+	month[2] = "Feb";
+	month[3] = "Mar";
+	month[4] = "Apr";
+	month[5] = "May";
+	month[6] = "Jun";
+	month[7] = "Jul";
+	month[8] = "Aug";
+	month[9] = "Sep";
+	month[10] = "Oct";
+	month[11] = "Nov";
+	month[12] = "Dec";
+	return month[monthnum];
+}
+</script>

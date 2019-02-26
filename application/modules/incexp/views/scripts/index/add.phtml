@@ -1,0 +1,122 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->Form_Frmcallecterall;
+	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<title> <?php echo $tr->translate("CREATE_CATEGORY")?></title>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+ <div class="card">
+	<div class="card-content collapse show">
+		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+                if(dijit.byId('type').get('value')==-1){
+                     dijit.byId('type').focus();
+                    return false;
+                }
+				loadingBlock();
+				//dijit.byId('save_new').set('disabled',true);
+				return true;
+			}else {
+				return false;
+			}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CREATE_CATEGORY');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-6 col-sm-6 col-xs-12">
+	    			<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NAME_KH");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('title_kh');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NAME_ENG");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('title_en');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TYPE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('type');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PARENT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="parent_id" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('status');?>
+	                   </div>
+	                </div>
+	                <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+	             		<input type="reset" iconClass="dijitIconClear" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button"/>
+	             		<input type="submit" value="save_new" name="save_close" id="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+						<input type="submit" value="save_new" name="save_new" id="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+	    			</div>
+	    		</div>
+	    	</div>
+		</form>
+	</div>
+</div>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var acc_store  = getDataStorefromJSON('id','name');
+require(["dojo/ready"], function(ready){
+		new dijit.form.FilteringSelect({
+			store: acc_store,
+			autoComplete: true,
+			required: false,		           
+			name: "parent_id",
+			id: "parent_id",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+		    }
+		}, "parent_id");
+	//getParentbytype();
+});
+var url_getland = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getparentbyid')); ?>';
+function getParentbytype(){
+	account_type = dijit.byId('type').get("value");
+	dijit.byId('parent_id').reset();
+	if(account_type==-1){return false;}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'type':account_type
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			acc_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('parent_id').set('store', acc_store);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+</script>

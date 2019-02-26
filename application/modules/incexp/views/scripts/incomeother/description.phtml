@@ -1,0 +1,116 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate('REPORT_HOME')); 
+	echo $this->headTitle(''); 
+	$format = new Application_Model_DbTable_DbGlobal();
+?>
+<?php 
+	$images = $this->baseUrl().'/images/logo.png';
+	if (!empty($this->rs['photo'])){
+		$images = $this->baseUrl().'/images/projects/'.$this->rs['photo'];
+	}
+?>	
+<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+	<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+		<i class="fa fa-print"></i>
+	</div>
+    <div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+	<div class="ptss__settings">
+		<div class="ptss__single-setting" id="ptss__layout">
+			<div class="ptss__setting-control">
+				<div class="ptss__layout-wrapper">
+					<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
+					<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div style="background: #fff;width: 23cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+			<div id="divPrint">
+				<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
+					<tr>	
+						<td colspan="6">
+							<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
+								<tr>
+									<td width="25%">
+										<img style="height:75px;"  src="<?php echo $images;?>" alt="">
+									</td>						
+									<td width="50%" style="font:bold 16px 'Kh Muol';" valign="top" align="center"><u><b><strong style="font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:22px;">របាយការណ៍ផ្ទះ</strong></b></u>
+									</td>
+									<td width="25%">
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr style="line-height: 35px; font-family: Khmer OS Battambang;">
+						<td valign="top"> &nbsp;  </td>
+					</tr>
+				</table>
+				<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:23px;border:none;" >
+		            	<tr style="line-height: 15px; font-size: 16px; font-family: Khmer OS Battambang;">
+							<td colspan="2">ឈ្មោះ&nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['client_name'];?></strong></td>
+							<td colspan="2">លេខផ្ទះ &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['land_address'];?></strong></td>
+							<td colspan="2">លេខផ្លូវ &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['street'];?></strong></td>
+							<td >គម្រោង &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['branch_name'];?></strong></td>
+						</tr>
+						<tr style="line-height: 15px; font-family: Khmer OS Battambang;">
+							<td valign="top"> &nbsp; </td>
+						</tr>
+		            	<tr>
+		            	<td colspan="7" id="exportExcel">
+		            	<div style="border: 1px solid black;"></div>
+		            	<div style=" font-weight: initial; font-family:'Khmer OS Muol Light';padding:15px; font-size:16px;">បរិយាយ ៖ </div>
+		            		<table width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; " >  
+						       <?php  $i=0; $n=0; if(!empty($this->rows)){foreach($this->rows as $key =>$row) {$i++?>
+								<tr style="font-size: 16px; line-height:38px;" align="left">
+								   <td align="center" width="5%"><?php echo $i; ?>&nbsp;.</td>
+								   <td align="left">&nbsp;<?php echo $row['work_note'];?></td>
+								</tr>
+								<?php }}?>
+						    </table>
+						   <div style=" font-weight: initial; margin: 23px; font-family:'Khmer OS Muol Light';padding:15px; font-size:16px;"><i class="fa fa-circle-o-notch"></i>&nbsp;<u>បញ្ជាក់ សូមពិនិត្យមើលប្លង់បន្ថែម</u></div>
+		            	</td>
+		           		</tr>
+		           		<tr class="head" style="font-weight: initial;font-family:'Khmer OS Muol Light';" >
+						   <td colspan="7" align="center" >
+						   		<label style=" margin-left: 55%; font-size:14px; line-height: 16px; font-weight: initial; font-family:'Khmer OS Muol Light';">រាជធានីភ្នំពេញ ថ្ងៃទី <?php echo $format->getNumberInkhmer(date('d',strtotime($this->rs['date'])));?> ខែ <?php echo $format->getNumberInkhmer(date('m',strtotime($this->rs['date'])));?> ឆ្នាំ <?php echo $format->getNumberInkhmer(date('Y',strtotime($this->rs['date'])));?> </label><br>
+						   		<label style=" margin-left: 55%; font-size:14px; line-height: 16px; font-weight: initial; font-family:'Khmer OS Muol Light';">ហត្ថលេខា</label><br>
+						  		<label>&nbsp;</label><br>
+						  		<label>&nbsp;</label><br>
+						  		<label>&nbsp;</label><br>
+						  		<label style=" margin-left: 55%; font-size:16px; line-height: 16px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['client_name'];?></label>
+						   </td>
+						</tr>
+						<tr class="head" style="font-weight: initial;font-family:'Khmer OS Battambang';">
+							<td colspan="7">
+								<div id="print-footer" style="font-size:16px;"><span style="font-family:'Khmer OS Muol Light';"><u>សម្គាល់៖</u></span> អ្នកលក់ទទួលស្គាល់និងព្រមព្រៀងថាដោយសារការកែប្រែសំណង់នេះអ្នកទិញនឹងទទួលខុសត្រូវ <br>ចំពោះការពន្យានៃការសាងសង់នេះអ្នកលក់នឹងបញ្ចាប់ការសាងសង់ក្នុងកំឡុងពេល៣ខែទៅ៦ខែបន្ថែម។</div>
+							</td>
+						</tr>
+		          </table>
+	   		</div>
+		 </div>
+<script type="text/javascript">
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+</script>

@@ -1,0 +1,82 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate('COMMISSION'));
+ $frm = $this->frm_cancel;
+ $edit_sale = $tr->translate("EDIT");
+ $urlEdit = $this->baseUrl()."/incexp/comission/edit/id/";
+ $urlReciept = $this->baseUrl()."/report/paramater/commissionreceipt/id/";
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+	       	<div class="col-sm-12 border-botom">
+		   		<div class="col-sm-8 pd-0">
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('COMMISSION');?></h4>
+	    		</div>
+	    		<div class="col-sm-4 text-right">
+	    		</div>
+	    	</div>
+	    </div>
+		<div class="card-box">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post"> 
+				<div class="form-group">
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   			<?php echo $frm->getElement('adv_search');?>
+			   		</div>
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   			<?php echo $frm->getElement('branch_id_search');?>
+			   		</div>
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   			<?php echo $frm->getElement('staff_id');?>
+			   		</div>
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   			<?php echo $frm->getElement('from_date_search');?>
+			   		</div>
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   			<?php echo $frm->getElement('to_date_search');?>
+			   		</div>
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   			<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+			   		</div>
+			   	</div>  
+				<?php echo $this->list;?>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+		
+			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+			}else if(key=="receipt"){
+				url='<?php echo $urlReciept;?>';
+			}
+			
+			gotoAction();
+			//window.console && console.log(m) || alert(m); 
+		},
+		items: {
+			"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
+			"receipt": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-money", accesskey: "h"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
+</script>
