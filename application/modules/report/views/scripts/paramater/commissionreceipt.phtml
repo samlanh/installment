@@ -1,6 +1,7 @@
-<?php $frm = $this->frm_search;
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$commission = $this->row;
+<?php 
+	$frm = $this->frm_search;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$commission = $this->row;
 ?>
 <meta charset="utf-8">
 <script>
@@ -25,40 +26,41 @@ img.view{height: 85px !important;}
 			}
 
 			.label{ font-weight: bold;font-size: 22px;}
-			.value{ font:14px 'Khmer OS Battambang';border: 1px solid #000; height: 29px; width: 100%;margin-right:5px; display: block;
+			.value{ font:16px 'Khmer OS Battambang';border: 1px solid #000; height: 29px; width: 100%;margin-right:5px; display: block;
 					line-height: 28px;
 				    text-align: center;
 					}
-			.print tr td{
-				padding:4px 2px; 
-			}
+				.print tr td{
+					padding:2px 2px; 
+				}
 		   .khmerbold{font:16px 'Khmer OS Battambang';}
 		   .khmer{font:16px 'Khmer OS Battambang';}
 		   .one{white-space:nowrap;}
-		   .h{ margin-top: -10px;/*margin-left:4px;*/}
+		   .h{ margin-top: -10px;}
+		   .noted{
+					white-space: pre-wrap;     
+					word-wrap: break-word;      
+					word-break: break-all;
+					white-space: pre;
+					font:12px 'Khmer OS Battambang';
+					border: 1px solid #000;
+                   line-height:20px;font-weight: normal !important;
+                }
 		</style>
-		<?php for($i=0; $i<2; $i++){ ?>	
+		<?php for($i=1; $i<=2; $i++){ ?>	
 		<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;" >
 			<tr>
-				<td width="25%">
-					<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+				<td width="25%" id="projectlogo<?php echo $i;?>">
+					<img style="height:80px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 				</td>					
 				<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃចំណាយ</strong></b></u>
-					<div style="line-height:25px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
+					<div style="line-height:25px;"><strong style="font-size: 18px;font-weight:bold">PAYMENT VOUCHER</strong></div>
 				</td>
 				<td width="25%">
 				</td>
 			</tr>
 		</table>
-		<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 20px;" class="print" cellspacing="3px"  cellpadding="0">
-				<tr>
-					<td width="10%" ></td>
-					<td width="37%" ></td>
-					<td width="15%" ></td>
-					<td width="13%" ></td>
-					<td width="10%" ></td>
-					<td width="20%" ></td>
-				</tr>
+		<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: -2px;" class="print" cellspacing="2px"  cellpadding="0">
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold">គម្រោង</td>
                     <td><strong><label id="lb_branch" class="value"><?php echo $commission['brach_name']?></label></strong></td>
@@ -66,40 +68,43 @@ img.view{height: 85px !important;}
                     <td colspan="3"><strong><label id="lb_invoice" class="value"><?php echo $commission['invoice']?></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">ប្រភេទចំណាយ</td>
-					<td ><strong><label id="lb_income_category" class="value"><?php echo $commission['cate_title']?></label></strong></td>
-					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ពណ៌នាចំនាយ</td>
-				    <td colspan="3"><strong><label id="lb_income_title" class="value">ចំណាយលើកម្រៃជើងសារ</label></strong></td>
-				</tr>
-				<tr>
 					<td class="one khmerbold">លេខដី/ផ្ទះ</td>
-				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"><?php echo $commission['cutomer_name']." (".$commission['land_address'].",".$commission['street'].")"; ?></label></strong></td>
-					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ចំណាយសរុប</td>
-					<td colspan="3"><strong><label id="lb_total_amount" class="value"><?php echo '$ '.number_format($commission['total_amount'],2); ?></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">សម្គាល់</td>
-				    <td colspan="1" align="center"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: center; " id="lb_description" class="value"><?php echo $commission['desc'];?></label></strong></td>					
+				    <td><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"><?php echo $commission['cutomer_name']." (".$commission['land_address'].",".$commission['street'].")"; ?></label></strong></td>
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ថ្ងៃចំណាយ</td>
 				    <td colspan="3"><strong><label id="lb_date" class="value"><?php echo date("d-M-Y",strtotime($commission['for_date'])); ?></label></strong></td>
+				</tr>
+				<tr>
+					<td class="one khmerbold">ប្រភេទចំណាយ</td>
+					<td ><strong><label id="lb_income_category" class="value"><?php echo $commission['cate_title']?></label></strong></td>
+					<td rowspan="2" valign="top" class="one khmerbold">&nbsp;&nbsp;&nbsp;សម្គាល់</td>
+				    <td rowspan="2" valign="top" colspan="3" align="center" class="noted"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: center; " id="lb_description"><?php echo $commission['desc'];?></label></strong></td>					
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">ពណ៌នាចំនាយ</td>
+				    <td ><strong><label id="lb_income_title" class="value">ចំណាយលើកម្រៃជើងសារ</label></strong></td>
+				</tr>
+				<tr>
+					<td class="one khmerbold">ចំណាយសរុប</td>
+					<td><strong><label id="lb_total_amount" class="value"><?php echo '$ '.number_format($commission['total_amount'],2); ?></label></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['teller_sign'];?></strong></td>
 				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php echo $this->data['customer_sign'];?></strong></td>
 				</tr>
-				<tr style="white-space: nowrap;" height="100px;">
+				<tr style="white-space: nowrap;" height="125px;">
 					<td class="one khmerbold" colspan="4" align="center" valign="bottom">
-						<h4 id="agent-sign" style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+						<h4 id="agent-sign" style="padding-right: 5px ! important;margin-bottom: -5px  !important;">
 						<?php echo $commission['co_khname']; ?>
 						</h4>
 					</td>
 				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
-			  			<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+			  			<h4 style="padding-right: 5px ! important;margin-bottom: -5px  !important;">
 			              <?php $session_user=new Zend_Session_Namespace('authinstall');
 				           $last_name=$session_user->last_name;
 				           $username = $session_user->first_name;
 				           echo $last_name." ".$username;
-					      ?></h4>  
+					      ?>
+					     </h4>  
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
@@ -107,36 +112,15 @@ img.view{height: 85px !important;}
 					</td>
 				</tr>
 				<tr style="line-height: 15px;">
-					<td colspan="6" >
-						<table width="100%" style="font-family: 'Khmer OS Battambang'; font-size:13px;line-height: 15px;margin-top: -5px;margin-bottom:15px;white-space:nowrap;"> 
-							<tr>
-								<td width="22%">
-									<img style="width:70%;height: 25px;" src="<?php echo $this->baseUrl().'/images/bppt_letter.png'?>">
-								</td>
-								<td width="40%">
-									<span style=""><?php echo $this->data['website'];?></span>
-								</td>
-								<td width="40%" align="right">
-									<span style="font-family: 'Khmer OS Battambang'; "><?php echo $this->data['email_client'];?></span>
-								</td>
-							</tr>
-							<tr style="white-space:nowrap;">
-								<td colspan="2">
-									<?php echo $this->data['footer_branch'];?>
-								</td>
-								<td width="40%" align="right">
-									<span style=""><?php echo $this->data['tel-client'];?> </span>
-								</td>
-							</tr>
-						</table>
-					</td>
+					<td colspan="6" ><?php echo $this->footer;?></td>
 				</tr>
-				<?php if($i==0){?>
+				<?php if($i==1){?>
 				<tr>
 					<td colspan="6">&nbsp;</td>
 				</tr>
 				<tr>
-					<td colspan="6" style="border-top:2px dashed #000;" >
+					<td colspan="6" >
+						<div style="border:2px dashed #000; vertical-align: middle;margin:20px 0px 20px 0px"></div>
 					</td>
 				</tr>
 				<?php }?>
@@ -144,3 +128,32 @@ img.view{height: 85px !important;}
 			<?php } ?>
 	</div>
 </div>
+<script>
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 getBranchInfo();
+	 });
+});	
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($commission['branch_id'])?0:$commission['branch_id'];?>';
+	if(branch_id==""){
+		return false;
+	}
+	
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			document.getElementById('projectlogo1').innerHTML = imagesUrl;
+			document.getElementById('projectlogo2').innerHTML = imagesUrl;
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>
