@@ -489,6 +489,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'payment_type'=>-1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
+  				'monthlytype'=>1,
   		);
   	}
   	$this->view->search=$search;

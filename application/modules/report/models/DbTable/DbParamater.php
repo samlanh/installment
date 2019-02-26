@@ -1738,30 +1738,57 @@ function getAllBranch($search=null){
 		}
 		return $db->fetchAll($sql);
 	}
-	function getExpensByMonth($branch,$date){
+	function getExpensByMonth($branch,$date,$monthlytype=1){
 		$db = $this->getAdapter();
-		$date = date("Y-m",strtotime($date));
-		$sql="SELECT 
+		if ($monthlytype==1){
+			$date = date("Y-m",strtotime($date));
+			$sql="SELECT 
+				SUM(ex.total_amount) AS totalbymonth
+				FROM `ln_expense` AS ex
+				WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y-%m') ='$date'";
+			if (!empty($branch)){
+				$sql.=" AND ex.branch_id=".$branch;
+			}
+			$total_expense = $db->fetchOne($sql);
+			if(empty($total_expense)){$total_expense=0;}
+			
+			
+			$sql="SELECT SUM(total_amount) FROM `ln_comission` WHERE status=1 
+				AND DATE_FORMAT(for_date,'%Y-%m') ='$date'";
+			if (!empty($branch)){
+				$sql.=" AND branch_id=".$branch;
+			}
+			$total_commission = $db->fetchOne($sql);
+			if(empty($total_commission)){
+				$total_commission=0;
+			}
+			return $total_expense+$total_commission;
+		}else{
+			$date = date("Y",strtotime($date));
+			$sql="SELECT
 			SUM(ex.total_amount) AS totalbymonth
 			FROM `ln_expense` AS ex
-			WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y-%m') ='$date'";
-		if (!empty($branch)){
-			$sql.=" AND ex.branch_id=".$branch;
+			WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y') ='$date'";
+			if (!empty($branch)){
+				$sql.=" AND ex.branch_id=".$branch;
+			}
+			$total_expense = $db->fetchOne($sql);
+			if(empty($total_expense)){
+				$total_expense=0;
+			}
+			
+			$sql="SELECT SUM(total_amount) FROM `ln_comission` WHERE status=1
+			AND DATE_FORMAT(for_date,'%Y') ='$date'";
+			if (!empty($branch)){
+				$sql.=" AND branch_id=".$branch;
+			}
+			$total_commission = $db->fetchOne($sql);
+			if(empty($total_commission)){
+				$total_commission=0;
+			}
+			return $total_expense+$total_commission;
 		}
-		$total_expense = $db->fetchOne($sql);
-		if(empty($total_expense)){$total_expense=0;}
 		
-		
-		$sql="SELECT SUM(total_amount) FROM `ln_comission` WHERE status=1 
-			AND DATE_FORMAT(for_date,'%Y-%m') ='$date'";
-		if (!empty($branch)){
-			$sql.=" AND branch_id=".$branch;
-		}
-		$total_commission = $db->fetchOne($sql);
-		if(empty($total_commission)){
-			$total_commission=0;
-		}
-		return $total_expense+$total_commission;
 	}
 	
 	function getIncomeRepairhouse($search){
