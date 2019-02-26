@@ -13,7 +13,7 @@
 </script>
 <div class="card">
 	<div class="card-content collapse show">
-		<form id="add_cancel" action="<?php echo $this->url(array('module'=>'loan','controller'=>'comission','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<form id="frm_comission" action="<?php echo $this->url(array('module'=>'loan','controller'=>'comission','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	 	  <script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
             	dijit.byId('save_new').set('disabled',true);
@@ -551,7 +551,6 @@ var sale_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::enc
 var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 dojo.ready(function(){
 	try{
-		
 		new dijit.form.FilteringSelect({
 		store: sale_store,
 		autoComplete: false,
@@ -583,7 +582,6 @@ dojo.ready(function(){
 		getSaleNo();
 		
 		}catch(e){
-			alert(e);
 		}
 });
 var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-sale'));?>';
@@ -603,7 +601,6 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 			    dijit.byId('sale_no').set('store', sale_store);
 			},
 			error: function(err) {
-				alert(err);
 			}
 		});
 	}
@@ -623,7 +620,6 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 			    dijit.byId('sale_client').set('store', sale_client_store);
 			},
 			error: function(err) {
-				alert(err);
 			}
 		});
 	}
@@ -667,22 +663,20 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 				}
 				total_paid = parseFloat(data.comission)+parseFloat(data.comission_paid);
 				dijit.byId('commision').attr('value',total_paid);
-				dojo.byId('land_information').innerHTML ="លេខសម្គាល់  : "+data.land_code+", ឈ្មោះ  :  "+data.land_address+", ផ្លូវ : "+data.street+", ប្រភេទ   : "+data.pro_type+", ទំហំ  : "+data.land_size+", បណ្តោយ :  "+data.height+",ទទឹង  :  "+data.width;
+				dojo.byId('land_information').innerHTML ="<?php echo $tr->translate("PROPERTY_CODE");?>  :  "+data.land_address+", ផ្លូវ : "+data.street+", ប្រភេទ   : "+data.pro_type+", ទំហំ  : "+data.land_size+", បណ្តោយ :  "+data.height+",ទទឹង  :  "+data.width;
 			},
 			error: function(err) {
-				alert(err);
 			}
 		});
 	}
 	function checkreturnAmount(){
-		//paid_amount = dijit.byId('paid_amount').get('value');
 		fullcommission = dijit.byId('full_commission').get('value');
 		commission = dijit.byId('commision').get('value');
 		paid_amount = fullcommission - commission;
 		return_back = dijit.byId('return_back').get('value');
 		sale_id = dijit.byId('sale_client').get('value');
 		if(sale_id==''){
-			alert('សូមេជ្រើសរើសអតិថិជនជាមុនសិន!');
+			alert('<?php echo $tr->translate("CHOOSE_CUSTOEMR");?>');
 			dijit.byId('sale_client').focus();
 			dijit.byId('return_back').attr('value',0);
 			return false;
@@ -693,8 +687,7 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 		}
 	}
 	function printSave(new_invoice_no){
-		if(dijit.byId('add_cancel').validate()){
-			
+		if(dijit.byId('frm_comission').validate()){
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id==0){
 		alert('Select branch');
@@ -728,7 +721,6 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 		month = returnMOnth(mm);
 		var y = a.getFullYear();
 		var date_payment = dd +'-'+month+'-'+y ;
-		
 		dojo.byId("lb_date").innerHTML = date_payment;
 		dojo.byId("lb_description").innerHTML = $("#note").val();
 		dojo.byId("lb_cheque").innerHTML = dijit.byId("sale_client").attr('displayedValue');
@@ -739,7 +731,6 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 		dojo.byId("lb_date1").innerHTML = date_payment;
 		dojo.byId("lb_description1").innerHTML = $("#note").val();
 		dojo.byId("lb_cheque1").innerHTML = dijit.byId("sale_client").attr('displayedValue');
-
 		dojo.byId("agent-sign").innerHTML = dijit.byId("staff_id").attr('displayedValue');
 		dojo.byId("agent-sign1").innerHTML = dijit.byId("staff_id").attr('displayedValue');
 		
@@ -792,14 +783,13 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 	}
 	function doPrint() {
 		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML <?php if($this->data['showreceipt']>1){ ?>+ dojo.byId('divPrint1').innerHTML<?php }?>;
-	    
 	    window.frames["print_frame"].window.focus();
 	    window.frames["print_frame"].window.print();
 	    printSubmit();
 	    hideDialog();
 	}
 	function printSubmit(){
-		 $('#add_cancel').submit();
+		 $('#frm_comission').submit();
 	}
 function getSaleClie(){
 		var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
@@ -816,7 +806,6 @@ function getSaleClie(){
 				var arr = JSON.parse(data);
 				var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
 				document.getElementById('projectlogo').innerHTML = imagesUrl;
-				document.getElementById('projectlogo1').innerHTML = imagesUrl;
 			},
 			error: function(e) {
 			}
