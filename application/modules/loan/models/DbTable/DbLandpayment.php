@@ -86,7 +86,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$where.= " AND s.status = ".$search['status'];
     	}
     	if(!empty($search['land_id']) AND $search['land_id']>-1){
-    		$where.= " AND s.house_id = ".$search['land_id'];
+//     		$where.= " AND s.house_id = ".$search['land_id'];
+    		$where.= " AND (s.house_id = ".$search['land_id']." OR p.old_land_id LIKE '%".$search['land_id']."%')";
     	}
     	if(($search['client_name'])>0){
     		$where.= " AND `s`.`client_id`=".$search['client_name'];

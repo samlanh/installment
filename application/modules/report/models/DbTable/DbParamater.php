@@ -491,7 +491,8 @@ function getAllBranch($search=null){
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
     		if($search['land_id']>0){
-    			$where.= " AND house_id = ".$search['land_id'];
+//     			$where.= " AND house_id = ".$search['land_id'];
+    			$where.= " AND ( house_id = ".$search['land_id']." OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = v_getsalehistory.house_id LIMIT 1) LIKE '%".$search['land_id']."%')";
     		}
     		if(!empty($search['client_name'])){
     			$where.= " AND client_id = ".$search['client_name'];

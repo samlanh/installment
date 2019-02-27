@@ -52,7 +52,8 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 	$where.=" AND staff_id = ".$search['co_id'];
       	 }
       	 if($search['land_id']>0){
-      	 	$where.=" AND house_id = ".$search['land_id'];
+//       	 	$where.=" AND house_id = ".$search['land_id'];
+      	 	$where.=" AND (house_id = ".$search['land_id']."  OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = v_soldreport.house_id LIMIT 1) LIKE '%".$search['land_id']."%')";
       	 }
       	 if($search['property_type']>0 AND $search['property_type']>0){
       	 	$where.=" AND v_soldreport.property_type = ".$search['property_type'];
@@ -2345,8 +2346,9 @@ function updatePaymentStatus($data){
    			$where.=" AND street = '".$search['streetlist']."'";
    		}
    		if($search['land_id']>0){
-   		$where.=" AND house_id = ".$search['land_id'];
-   }
+//    			$where.=" AND house_id = ".$search['land_id'];
+   			$where.=" AND ( house_id = ".$search['land_id']." OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = v_soldreport.house_id LIMIT 1) LIKE '%".$search['land_id']."%' )";
+  		 }
 	   if($search['property_type']>0 AND $search['property_type']>0){
 	   	$where.=" AND v_soldreport.property_type = ".$search['property_type'];
 	   }
