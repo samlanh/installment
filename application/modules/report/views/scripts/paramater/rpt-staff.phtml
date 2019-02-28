@@ -5,7 +5,7 @@ $frm = $this->frm_staff;
 $dbGB = new Application_Model_DbTable_DbGlobal();
 $logo = $this->baseUrl()."/images/logo.jpg";
 $branch_title = $tr->translate("BRAND_TITLE");
-if ($this->search['branch_id'] >0 ){
+if($this->search['branch_id'] >0){
 	$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
 	if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 		$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
@@ -106,10 +106,10 @@ dojo.require("dijit.form.DateTextBox");
 					<div class="divFooter">
 			        	<table width="100%" style="font-family:khmer;margin:0; padding:0;border:none;" >
 			            	<tr>
-			                	<td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
+			                	<td width="20%"><img src="<?php echo $logo;?>" style="max-height:85px;max-width:100%;"></td>
 			                	<td width="60%" valign="top">
-			                	<h2 style="text-align:center; font-weight:normal; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></h2>
-			                	<h2 style="text-align:center; font-weight:normal; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT STAFF");?></h2></td>
+			                	<h2 style="white-space:nowrap;text-align:center; font-weight:normal; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></h2>
+			                	<h2 style="text-align:center; font-weight:normal; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT STAFF");?></h2></td>
 			                    <td width="20%"></td>
 			                </tr> 
 			            </table>
@@ -122,7 +122,6 @@ dojo.require("dijit.form.DateTextBox");
 				    	<tr bgcolor="#c1d0f3" class="style" align="center"  >
 				        	<td><?php echo $tr->translate("NUM");?></td>
 				            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-				            <!--<td><?php //echo $tr->translate("STAFF_ID");?></td> -->
 				            <td><?php echo $tr->translate("CO_NAME");?></td>
 				            <td><?php echo $tr->translate("SEX");?></td>
 				            <td><?php echo $tr->translate("PHONE");?></td>
@@ -138,7 +137,6 @@ dojo.require("dijit.form.DateTextBox");
 					   <tr style="font-size: 12px; " align="left" class="hover">
 					     <td>&nbsp;<?php echo $key+1; ?></td>
 					     <td style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name']?></td>
-					     <!--<td style="white-space: nowrap;">&nbsp;<?php //echo $row['co_code']?></td> -->
 						 <td>&nbsp;<?php echo $row['co_khname'];?></td>
 						 <td>&nbsp;<?php echo $row['sex']?></td>
 						 <td style="white-space: nowrap;">&nbsp;<?php echo $row['tel']?></td>
@@ -150,7 +148,6 @@ dojo.require("dijit.form.DateTextBox");
 						 <td>&nbsp;<?php echo $row['user_name']?></td>
 						</tr>
 					<?php }?>
-					
 			    </table>
 	    	</td>
 	    </tr>

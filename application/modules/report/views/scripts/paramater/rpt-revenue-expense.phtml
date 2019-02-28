@@ -40,14 +40,7 @@ dojo.require("dijit.form.DateTextBox");
 					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit">
 		   		<?php echo $tr->translate("SEARCH");?></button>
 				</div>
-			</div>
-			<!-- 
-			<div class="form-group"> 
-				<div class="col-md-12 col-sm-12 col-xs-12">
-					<input value="<?php //echo $this->list_end_date['streetlist'];?>" type="text" id="e15" name="streetlist" style="width: 100%">
-				</div>
-			</div>
-			 -->
+			</div>		
 		</div>
 	</form> 
 	<div style="min-height:22cm; margin:0 auto;">
@@ -69,8 +62,8 @@ dojo.require("dijit.form.DateTextBox");
 			                <td width="30%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="height:80px;max-width: 100%;"></td>
 			                <td width="40%" valign="top">
 			                <ul style="list-style: none;">
-				                <li style="line-height:25px;text-align:center; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></li>
-				                <li style="line-height:20px;text-align:center; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("របាយការណ៍ចំណូលចំណាយ");?></li>
+				                <li style="white-space:nowrap;line-height:25px;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+				                <li style="line-height:20px;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("របាយការណ៍ចំណូលចំណាយ");?></li>
 				                <li style="line-height:25px;text-align:center; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if (!empty($this->list_end_date['start_date'])){ echo  date("d-m-Y",strtotime($this->list_end_date['start_date']))." To ".date("d-m-Y",strtotime($this->list_end_date['end_date']));}?></li>
 			                </ul>
 			                </td>
@@ -135,7 +128,6 @@ dojo.require("dijit.form.DateTextBox");
 								}?>
 	             			<?php 
 		             			$beginingbalance = 0;
-		             			
 		             			$parent=0;
 	             			
 	             			if (!empty($this->income)){ ?>
@@ -149,21 +141,21 @@ dojo.require("dijit.form.DateTextBox");
 	             			<?php 
 	             			
 	             			foreach ($this->income as $income_cate){ 
-	             				if($income_cate['is_beginning']==1){
-	             					$beginingbalance = $beginingbalance+$income_cate['total_amount']; 
-	             					continue;
-	             				}
+		             				if($income_cate['is_beginning']==1){
+		             					$beginingbalance = $beginingbalance+$income_cate['total_amount']; 
+		             					continue;
+		             				}
 	             					$total_other_income = $total_other_income+$income_cate['total_amount'];
 	             				?>
 	             				<?php if ( $income_cate['parent']!=0 AND $parent != $income_cate['parent']){?>
 	             					<tr height="21px">
 			             				<td style="width: 20%;">&nbsp;</td>
-			             				<td >&nbsp;<strong><?php echo $income_cate['parent_title'];?></strong>&nbsp;</td>
+			             				<td>&nbsp;<strong><?php echo $income_cate['parent_title'];?></strong>&nbsp;</td>
 			             				<td class="" align="right">&nbsp;&nbsp;</td>
 			             				<td style="width:10px;">&nbsp;</td>
 			             				<td></td>
 			             				<td style="width:10px;">&nbsp;</td>
-			             				<td >&nbsp;</td>
+			             				<td>&nbsp;</td>
 			             				<?php $parent = $income_cate['parent'];?>
 			             			</tr>
 	             				<?php }?>
@@ -175,7 +167,7 @@ dojo.require("dijit.form.DateTextBox");
 			             				<td style="width:10px;">&nbsp;</td>
 			             				<td>&nbsp;</td>
 			             				<td style="width:10px;">&nbsp;</td>
-			             				<td >&nbsp;</td>
+			             				<td>&nbsp;</td>
 			             			</tr>
 	             				<?php }else{?>
 			             			<tr height="21px">
@@ -211,38 +203,37 @@ dojo.require("dijit.form.DateTextBox");
 	             			<?php if ( $expense_cate['parent']!=0 AND $parent != $expense_cate['parent']){?>
 	             				<tr height="21px">
 		             				<td style="width: 20%;">&nbsp;</td>
-		             				<td >&nbsp;<strong><?php echo $expense_cate['parent_title'];?></strong>&nbsp;</td>
+		             				<td>&nbsp;<strong><?php echo $expense_cate['parent_title'];?></strong>&nbsp;</td>
 		             				<td class="" align="right"></td>
 		             				<td style="width:10px;">&nbsp;</td>
 		             				<td></td>
 		             				<td style="width:10px;">&nbsp;</td>
-		             				<td >&nbsp;</td>
+		             				<td>&nbsp;</td>
 		             				<?php $parent = $expense_cate['parent'];?>
 		             			</tr>
 		             		<?php }?>
 		             		<?php if ( $expense_cate['parent']==0){?>
 		             			<tr height="21px">
 		             				<td style="width: 20%;">&nbsp;</td>
-		             				<td >&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
+		             				<td>&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
 		             				<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
 		             				<td style="width:10px;">&nbsp;</td>
 		             				<td></td>
 		             				<td style="width:10px;">&nbsp;</td>
-		             				<td >&nbsp;</td>
+		             				<td>&nbsp;</td>
 		             			</tr>
 		             		<?php }else{?>
 		             			<tr height="21px">
 		             				<td style="width: 20%;">&nbsp;</td>
-		             				<td >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
+		             				<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
 		             				<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
 		             				<td style="width:10px;">&nbsp;</td>
 		             				<td></td>
 		             				<td style="width:10px;">&nbsp;</td>
-		             				<td >&nbsp;</td>
+		             				<td>&nbsp;</td>
 		             			</tr>
 	             			<?php }?>
-	             			<?php }?>
-	             			
+	             			<?php }?>	             			
 	             			<!-- for expense from commission -->
 	             			<?php if (!empty($this->expense_comission)) foreach ($this->expense_comission as $comission){ $total_expense = $total_expense + $comission['total_amount'];?>
 	             			<tr height="21px">
@@ -252,26 +243,26 @@ dojo.require("dijit.form.DateTextBox");
 	             				<td style="width:10px;">&nbsp;</td>
 	             				<td>&nbsp;</td>
 	             				<td style="width:10px;">&nbsp;</td>
-	             				<td >&nbsp;</td>
+	             				<td>&nbsp;</td>
 	             			</tr>
 	             			<?php }?>
 	             			<tr height="22px">
 	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;</td>
+	             				<td>&nbsp;</td>
 	             				<td style="text-align:right;font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណាយសរុប");?> </td>
 	             				<td style="width:10px;">&nbsp;</td>
 	             				<td class="border_bottom" align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;"><?php echo number_format($total_expense,2);?>&nbsp;</strong></td>
 	             				<td style="width:10px;">&nbsp;</td>
-	             				<td >&nbsp;</td>
+	             				<td>&nbsp;</td>
 	             			</tr>
 	             			<?php $net_income = $total_income-$total_expense;
 	             			?>
 	             			<tr style="padding-top: 100px;">
 	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;</td>
+	             				<td>&nbsp;</td>
 	             				<td style="text-align:right ;font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("ប្រាក់ចំណេញសរុប");?> </td>
 	             				<td style="width:10px;">&nbsp;</td>
-	             				<td >&nbsp;</td>
+	             				<td>&nbsp;</td>
 	             				<td style="width:10px;">&nbsp;</td>
 	             				<td class="border_bottom" align="right"><strong style="font-family: Helvetica;font-weight: bold;">&nbsp;<?php if ($net_income<0){echo "(".number_format(abs($net_income),2).")";}else{ echo number_format($net_income,2);}?>&nbsp;</strong></td>
 	             			</tr>
@@ -406,8 +397,7 @@ input#e15 {
     font-size: 1px;
     outline: none;
     background: url(<?php echo $this->baseUrl()."/admin/3.5.0/"?>select2.png) right top no-repeat;
-}
-	
+}	
 .select2-drop.select2-drop-above.select2-drop-active {
     border-top: 1px solid #5897fb;
 }
@@ -475,17 +465,17 @@ input#e15 {
 </style>
  <link href="<?php echo $this->baseUrl()."/admin/"?>/3.5.0/select2.min.css" /> 
  <script src="<?php echo $this->baseUrl()."/admin/"?>/3.5.0/select2.min.js"></script>
- 	 <?php 
- $tags="";
- if (!empty($this->street)) foreach ($this->street as $rs){
- 	if (empty($tags)){
- 		$tags = '"'.$rs['id'].'"';
- 	}else{
- 		if (!empty($rs['id'])){
- 		$tags=$tags.',"'.$rs['id'].'"';
- 		}
- 	}
- } 	
+ <?php 
+	 $tags="";
+	 if (!empty($this->street)) foreach ($this->street as $rs){
+	 	if (empty($tags)){
+	 		$tags = '"'.$rs['id'].'"';
+	 	}else{
+	 		if (!empty($rs['id'])){
+	 		$tags=$tags.',"'.$rs['id'].'"';
+	 		}
+	 	}
+	 } 	
 ?>
  <script>
 
