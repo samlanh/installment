@@ -138,11 +138,11 @@ dojo.require("dijit.form.DateTextBox");
              <tr>
              	<td colspan="3">
              		<p style="font-family:'Khmer OS Battambang','Times New Roman',; text-align:justify; line-height:24px; font-size:14px; font-weight: normal !important;">
-             			<?php $certificat_No = "០០០៣៣៧២០";?>
-             			<span class="margin-left">&nbsp;</span><strong><?php echo $branch_title;?></strong> ដែលមានវិញ្ញាបនបត្របញ្ជាក់ការចុះបញ្ជីនៅ ក្រសួងពាណិជ្ជកម្មលេខ <strong><?php echo $dbparmeter->getNumberInkhmer($certificat_No);?></strong> តំណាងស្របច្បាប់ដោយលោក <span class="value" style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span> 
+             			<?php $certificat_No = "00033720";?>
+             			<span class="margin-left">&nbsp;</span><strong><?php echo $branch_title;?></strong> ដែលមានវិញ្ញាបនបត្របញ្ជាក់ការចុះបញ្ជីនៅ ក្រសួងពាណិជ្ជកម្មលេខ <strong><?php echo ($certificat_No);?></strong> តំណាងស្របច្បាប់ដោយលោក <span class="value" style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span> 
              			ភេទ<span class="value" style=""><?php echo $arrgender[$this->agreement['p_sex']];?></span> 
              			សញ្ជាតិ<span class="value" style="min-width:10px;"><?php echo $this->agreement['project_manager_nationality'];?></span> 
-             			កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['project_manager_nation_id']);?></span> 
+             			កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:60px;"><?php echo ($this->agreement['project_manager_nation_id']);?></span> 
              			អាសយដ្ឋាន<?php echo $this->agreement['project_manager_p_current_address'];?>
              			<?php if (!empty($this->agreement['w_manager_namekh'])){?>
              			 និងឈ្មោះ <span class="value" style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['w_manager_namekh'];?></span> 
@@ -159,11 +159,11 @@ dojo.require("dijit.form.DateTextBox");
              			<br />
              			<span class="margin-left">&nbsp;</span>បានលក់ជូនទៅឈ្មោះ <span class="value" style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span> 
              			ភេទ <span class="value" style="min-width:10px;"><?php echo $this->agreement['sexKh'];?></span>
-	             		អាយុ  <span class="value" style="min-width:10px;"><?php if (!empty($this->agreement['dob'])){ echo $dbparmeter->getNumberInkhmer(date("Y") - date("Y",strtotime($this->agreement['dob'])));}?></span> ឆ្នាំ
+	             		អាយុ  <span class="value" style="min-width:10px;"><?php if (!empty($this->agreement['dob'])){ echo (date("Y") - date("Y",strtotime($this->agreement['dob'])));}?></span> ឆ្នាំ
 	             		សញ្ជាតិ <span class="value" style="min-width:10px;"><?php echo $this->agreement['client_nationality'];?></span> 
 	             		<?php if(!empty($this->agreement['hname_kh'])){?>
 		             		ព្រមទំាងឈ្មោះ <span class="value" style="min-width:100px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['hname_kh'];?></span> ភេទ  <span class="value" style="min-width:40px;"><?php echo $this->agreement['client_buywith_sex'];?></span>
-		             		អាយុ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['w_client_dob_buywith'])){ echo $dbparmeter->getNumberInkhmer(date("Y") - date("Y",strtotime($this->agreement['w_client_dob_buywith'])));}?></span> ឆ្នាំ
+		             		អាយុ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['w_client_dob_buywith'])){ echo (date("Y") - date("Y",strtotime($this->agreement['w_client_dob_buywith'])));}?></span> ឆ្នាំ
 		             		សញ្ជាតិ <span class="value" style="min-width:20px;"><?php echo $this->agreement['w_client_nationality'];?></span>
              			<?php }?> 
              			មានទីលំនៅបច្ចុប្បន្ន ភូមិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_village_kh'];?></span> ឃុំ/សង្កាត់ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_commune_kh'];?></span> ស្រុក/ខណ្ឌ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_districtkh'];?></span> ខេត្ត/ក្រុង  <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_province_kh'];?></span> 
@@ -192,9 +192,9 @@ dojo.require("dijit.form.DateTextBox");
 	             				if ($keytime>1){
 	             					$labelpaid="កក់លើកទី";
 		             			}?>
-	             				<?php echo $labelpaid.$dbparmeter->getNumberInkhmer($keytime);?> ចំនួន
+	             				<?php echo $labelpaid.($keytime);?> ចំនួន
 		             				<span style="font-weight:bold;" class="value"><strong>$ <?php echo @number_format($rsdeposite['total_principal_permonthpaid'],0);?></strong> (<span  id="lable_depositpaid<?php echo $keydeposite+1;?>" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</span> 
-		             				<span>នៅថ្ងៃទី  <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($rsdeposite['date_input'])));?>  ខែ  <?php echo $month[date("m",strtotime($rsdeposite['date_input']))];?>  ឆ្នាំ  <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($rsdeposite['date_input'])));?> ។</span>
+		             				<span>នៅថ្ងៃទី  <?php echo (date("d",strtotime($rsdeposite['date_input'])));?>  ខែ  <?php echo $month[date("m",strtotime($rsdeposite['date_input']))];?>  ឆ្នាំ  <?php echo (date("Y",strtotime($rsdeposite['date_input'])));?> ។</span>
 	             				</span>
 	             				<script>
 									a ='<?php echo ($rsdeposite['total_principal_permonthpaid']) ?>';
@@ -236,10 +236,10 @@ dojo.require("dijit.form.DateTextBox");
 		             			<?php 
 		             				//$numrow=$numrow+1;?>
 		             				<span style="display: inline-block;white-space: nowrap;">
-		             						បង់ប្រាក់លើកទី<?php //echo $dbparmeter->getNumberInkhmer($keytime);?>  ចំនួន
+		             						បង់ប្រាក់លើកទី<?php //echo ($keytime);?>  ចំនួន
 			             				<span class="value"><strong>$ <?php //echo @number_format($row['principal_permonth'],2);?></strong> </span>
 			             				<span> ជាអក្សរ <span id="lable_depositkhmer<?php //echo $i;?>" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក</span>
-			             				<?php //if($row['last_optiontype']==1){?><span>នៅថ្ងៃទី<?php ///echo $dbparmeter->getNumberInkhmer(date("d",strtotime($row['date_payment'])));?>  ខែ <?php //echo $month[date("m",strtotime($row['date_payment']))];?> ឆ្នាំ   <?php //echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($row['date_payment'])));?></span><?php //}?>
+			             				<?php //if($row['last_optiontype']==1){?><span>នៅថ្ងៃទី<?php ///echo (date("d",strtotime($row['date_payment'])));?>  ខែ <?php //echo $month[date("m",strtotime($row['date_payment']))];?> ឆ្នាំ   <?php //echo (date("Y",strtotime($row['date_payment'])));?></span><?php //}?>
 			             				<?php //if($row['last_optiontype']==0){//received plong?><span>បង់បង្គ្រាប់ពេលប្រគល់ប្លង់</span><?php //}?>
 			             			</span>	
 		             				 <script>
@@ -267,7 +267,7 @@ dojo.require("dijit.form.DateTextBox");
 			             			<?php echo $this->agreement['note_agreement'];?>
 			             		</p>
 		             		<?php }?>
-		             		<span>កក់លើកទី<?php echo $dbparmeter->getNumberInkhmer($keytime+1);?></span> 
+		             		<span>កក់លើកទី<?php echo ($keytime+1);?></span> 
 		             		<?php if ($this->agreement['second_depostit']>0){?>
 		             		<span class="value"><strong>$ <?php echo @number_format($this->agreement['second_depostit'],0);?></strong> </span>
 			             	<span style="font-weight:bold;">(<span id="lable_seconddepositkhmer" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</span>
@@ -287,7 +287,7 @@ dojo.require("dijit.form.DateTextBox");
 							<?php }else{?>
 							<span class="value" style="display: inline-block; width: 350px; border-bottom: dashed 1px #000;">&nbsp;</span>
 							<?php }?>
-		             		<span> នៅថ្ងៃទី  <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['validate_date'])));?></span> <span style="width: 100px;"></span> ខែ  <?php echo $month[date("m",strtotime($this->agreement['validate_date']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['validate_date'])));?> ។
+		             		<span> នៅថ្ងៃទី  <?php echo (date("d",strtotime($this->agreement['validate_date'])));?></span> <span style="width: 100px;"></span> ខែ  <?php echo $month[date("m",strtotime($this->agreement['validate_date']))];?> ឆ្នាំ <?php echo (date("Y",strtotime($this->agreement['validate_date'])));?> ។
 		             		<span>ហើយប្រាក់ដែលនៅសល់ចំនួន</span>
 							<span class="value" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-$rsdeposite['total_principal_permonthpaid']-$this->agreement['second_depostit']),0);?></strong></span>
 											(<span class="value" style="min-width: 50px;font-weight:bold;"><label id="lable_remainkhmer" style="font-family: 'Times New Roman','Khmer OS Battambang'"></label> ដុល្លារអាមេរិក) ។</span>
@@ -347,9 +347,9 @@ dojo.require("dijit.form.DateTextBox");
              			<!-- ធ្វើនៅ<span class="border_bt  value" style="width:15%;" ></span>ថ្ងៃ..................ខែ............ឆ្នាំ............នព្វស័ក ព.ស២៥......
              			<br /> -->
              			 <?php if ($this->agreement['payment_id']!=1){?>
-             			ធ្វើនៅថ្ងៃទី<span class="value" style="min-width:50px;"> <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
+             			ធ្វើនៅថ្ងៃទី<span class="value" style="min-width:50px;"> <?php echo (date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> <?php echo (date("Y",strtotime($this->agreement['agreement_date'])));?></span>
              			 <?php }else { //case ដាក់ប្រាក់កក់ យកថ្ងៃលក់?>
-             			 ធ្វើនៅថ្ងៃទី<span class="value" style="min-width:50px;"> <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['buy_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php echo $month[date("m",strtotime($this->agreement['buy_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['buy_date'])));?></span>
+             			 ធ្វើនៅថ្ងៃទី<span class="value" style="min-width:50px;"> <?php echo (date("d",strtotime($this->agreement['buy_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php echo $month[date("m",strtotime($this->agreement['buy_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> <?php echo (date("Y",strtotime($this->agreement['buy_date'])));?></span>
              			 <?php }?>
              		</p>
              		<p>
@@ -357,10 +357,10 @@ dojo.require("dijit.form.DateTextBox");
              				<span class="value">ស្នាមមេដៃស្តាំអ្នកប្រគល់ប្រាក់</span>
              			</div>
              			<div style="font-weight:bold; width:24%; text-align: center; display: inline-block;">
-             				<span class="value">សាក្សីទី១</span>
+             				<span class="value">សាក្សីទី1</span>
              			</div>
              			<div style="font-weight:bold; width:24%; text-align: center; display: inline-block;">
-             				<span class="value">សាក្សីទី២</span>
+             				<span class="value">សាក្សីទី2</span>
              			</div>
              			<div style="white-space:nowrap; font-weight:bold; width:24%; text-align: center; display: inline-block;">
              				<span class="value">ស្នាមមេដៃស្តាំអ្នកទទួលប្រាក់</span>
@@ -497,10 +497,10 @@ dojo.require("dijit.form.DateTextBox");
 				             	<td colspan="3">
 				             		<p style="font-family:'Khmer OS Battambang','Times New Roman',; text-align:justify; line-height:24px; font-size:14px; font-weight: normal !important;">
 			             			<?php $certificat_No = "០០០៣៣៧២០";?>
-			             			<span class="margin-left">&nbsp;</span><strong><?php echo $branch_title;?></strong> ដែលមានវិញ្ញាបនបត្របញ្ជាក់ការចុះបញ្ជីនៅ ក្រសួងពាណិជ្ជកម្មលេខ <strong><?php echo $dbparmeter->getNumberInkhmer($certificat_No);?></strong> តំណាងស្របច្បាប់ដោយលោក <span class="value" style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span> 
+			             			<span class="margin-left">&nbsp;</span><strong><?php echo $branch_title;?></strong> ដែលមានវិញ្ញាបនបត្របញ្ជាក់ការចុះបញ្ជីនៅ ក្រសួងពាណិជ្ជកម្មលេខ <strong><?php echo ($certificat_No);?></strong> តំណាងស្របច្បាប់ដោយលោក <span class="value" style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span> 
 			             			ភេទ<span class="value" style=""><?php echo $arrgender[$this->agreement['p_sex']];?></span> 
 			             			សញ្ជាតិ<span class="value" style="min-width:10px;"><?php echo $this->agreement['project_manager_nationality'];?></span> 
-			             			កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['project_manager_nation_id']);?></span> 
+			             			កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:60px;"><?php echo ($this->agreement['project_manager_nation_id']);?></span> 
 			             			អាសយដ្ឋាន<?php echo $this->agreement['project_manager_p_current_address'];?>
 			             			<?php if (!empty($this->agreement['w_manager_namekh'])){?>
 			             			 និងឈ្មោះ <span class="value" style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['w_manager_namekh'];?></span> 
@@ -517,11 +517,11 @@ dojo.require("dijit.form.DateTextBox");
 				             			<br />
 				             			<span class="margin-left">&nbsp;</span>បានលក់ជូនទៅឈ្មោះ <span class="value" style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span> 
 				             			ភេទ <span class="value" style="min-width:10px;"><?php echo $this->agreement['sexKh'];?></span>
-					             		អាយុ  <span class="value" style="min-width:10px;"><?php if (!empty($this->agreement['dob'])){ echo $dbparmeter->getNumberInkhmer(date("Y") - date("Y",strtotime($this->agreement['dob'])));}?></span> ឆ្នាំ
+					             		អាយុ  <span class="value" style="min-width:10px;"><?php if (!empty($this->agreement['dob'])){ echo (date("Y") - date("Y",strtotime($this->agreement['dob'])));}?></span> ឆ្នាំ
 					             		សញ្ជាតិ <span class="value" style="min-width:10px;"><?php echo $this->agreement['client_nationality'];?></span> 
 					             		<?php if(!empty($this->agreement['hname_kh'])){?>
 						             		ព្រមទំាងឈ្មោះ <span class="value" style="min-width:100px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['hname_kh'];?></span> ភេទ  <span class="value" style="min-width:40px;"><?php echo $this->agreement['client_buywith_sex'];?></span>
-						             		អាយុ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['w_client_dob_buywith'])){ echo $dbparmeter->getNumberInkhmer(date("Y") - date("Y",strtotime($this->agreement['w_client_dob_buywith'])));}?></span> ឆ្នាំ
+						             		អាយុ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['w_client_dob_buywith'])){ echo (date("Y") - date("Y",strtotime($this->agreement['w_client_dob_buywith'])));}?></span> ឆ្នាំ
 						             		សញ្ជាតិ <span class="value" style="min-width:20px;"><?php echo $this->agreement['w_client_nationality'];?></span>
 				             			<?php }?> 
 				             			មានទីលំនៅបច្ចុប្បន្ន ភូមិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_village_kh'];?></span> ឃុំ/សង្កាត់ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_commune_kh'];?></span> ស្រុក/ខណ្ឌ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_districtkh'];?></span> ខេត្ត/ក្រុង  <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_province_kh'];?></span> 
@@ -550,9 +550,9 @@ dojo.require("dijit.form.DateTextBox");
 					             				if ($keytime>1){
 					             					$labelpaid="កក់លើកទី";
 						             			}?>
-					             				<?php echo $labelpaid.$dbparmeter->getNumberInkhmer($keytime);?> ចំនួន
+					             				<?php echo $labelpaid.($keytime);?> ចំនួន
 						             				<span class="value" style="font-weight:bold;"><strong>$ <?php echo @number_format($rsdeposite['total_principal_permonthpaid'],0);?></strong> (<span id="lablesale_depositpaid<?php echo $keydeposite+1;?>" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</span> 
-						             				<span>នៅថ្ងៃទី  <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($rsdeposite['date_input'])));?>  ខែ  <?php echo $month[date("m",strtotime($rsdeposite['date_input']))];?>  ឆ្នាំ  <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($rsdeposite['date_input'])));?> ។</span>
+						             				<span>នៅថ្ងៃទី  <?php echo (date("d",strtotime($rsdeposite['date_input'])));?>  ខែ  <?php echo $month[date("m",strtotime($rsdeposite['date_input']))];?>  ឆ្នាំ  <?php echo (date("Y",strtotime($rsdeposite['date_input'])));?> ។</span>
 					             				</span>
 					             				<script>
 																	a ='<?php echo ($rsdeposite['total_principal_permonthpaid']) ?>';
@@ -592,10 +592,10 @@ dojo.require("dijit.form.DateTextBox");
 						             			<?php 
 						             				$numrow=$numrow+1;?>
 						             				<span style="">
-						             						កក់ប្រាក់លើកទី<?php echo $dbparmeter->getNumberInkhmer($keytime);?>  ចំនួន
+						             						កក់ប្រាក់លើកទី<?php echo ($keytime);?>  ចំនួន
 							             				<span class="value"><strong>$ <?php echo @number_format($row['principal_permonth'],0);?></strong> </span>
 							             				<span style="font-weight:bold;">(<span id="lable_depositkhmer<?php echo $i;?>" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</span>
-							             				<?php if($row['last_optiontype']==1){?><span>នៅថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($row['date_payment'])));?> ខែ <?php echo $month[date("m",strtotime($row['date_payment']))];?> ឆ្នាំ   <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($row['date_payment'])));?></span><?php }?> ។
+							             				<?php if($row['last_optiontype']==1){?><span>នៅថ្ងៃទី <?php echo (date("d",strtotime($row['date_payment'])));?> ខែ <?php echo $month[date("m",strtotime($row['date_payment']))];?> ឆ្នាំ   <?php echo (date("Y",strtotime($row['date_payment'])));?></span><?php }?> ។
 							             				<?php if($row['last_optiontype']==0){//received plong?><span>បង់បង្គ្រាប់ពេលប្រគល់ប្លង់</span><?php }?>
 							             			</span>	
 						             				 <script>
@@ -687,17 +687,17 @@ dojo.require("dijit.form.DateTextBox");
 				             		<p style=" text-align: right;margin-top: -20px;">
 				             			<!-- ធ្វើនៅ<span class="border_bt  value" style="width:15%;" ></span>ថ្ងៃ..................ខែ............ឆ្នាំ............នព្វស័ក ព.ស២៥......
 				             			<br /> -->
-				             			ធ្វើនៅថ្ងៃទី<span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
+				             			ធ្វើនៅថ្ងៃទី<span class="value" style="min-width:30px;"> <?php echo (date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> <?php echo (date("Y",strtotime($this->agreement['agreement_date'])));?></span>
 				             		</p>
 				             		<p>
 				             			<div style="white-space:nowrap; font-weight:bold; width:24%; text-align: center; display: inline-block;">
 				             				<span class="value">ស្នាមមេដៃស្តាំអ្នកប្រគល់ប្រាក់</span>
 				             			</div>
 				             			<div style="font-weight:bold; width:24%; text-align: center; display: inline-block;">
-				             				<span class="value">សាក្សីទី១</span>
+				             				<span class="value">សាក្សីទី1</span>
 				             			</div>
 				             			<div style="font-weight:bold; width:24%; text-align: center; display: inline-block;">
-				             				<span class="value">សាក្សីទី២</span>
+				             				<span class="value">សាក្សីទី2</span>
 				             			</div>
 				             			<div style="white-space:nowrap; font-weight:bold; width:24%; text-align: center; display: inline-block;">
 				             				<span class="value">ស្នាមមេដៃស្តាំអ្នកទទួលប្រាក់</span>

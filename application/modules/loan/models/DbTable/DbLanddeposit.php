@@ -210,7 +210,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				$house_price = $house_price+$newpro['house_price'];
     				
     				if(!empty($land_address)){
-    					$land_address= $land_address.'&'.$newpro['land_address'];
+    					//$land_address= $land_address.'&'.$newpro['land_address'];
+    					$land_address= $land_address.','.$newpro['land_address'];
     				}else{ 
     					$land_address =$newpro['land_address'];
     				}
@@ -496,7 +497,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     						$house_price = $house_price+$newpro['house_price'];
     				
     						if(!empty($land_address)){
-    							$land_address= $land_address.'&'.$newpro['land_address'];
+    							//$land_address= $land_address.'&'.$newpro['land_address'];
+    							$land_address= $land_address.','.$newpro['land_address'];
     						}else{
     							$land_address =$newpro['land_address'];
     						}
