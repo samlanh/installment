@@ -347,6 +347,9 @@ public function getAllOutstadingLoan($search=null){
 				  `sd`.`service_charge`          AS `service_charge`,
 				  sd.no_installment,
 				  sd.begining_balance_after,
+				  sd.last_optiontype,
+				  sd.ispay_bank,
+				  (SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = sd.ispay_bank LIMIT 1) AS payment_type,
 				  (SELECT date_input FROM `ln_client_receipt_money` WHERE land_id=1 ORDER BY date_input DESC LIMIT 1) 
 				  	As last_pay_date
 				  FROM

@@ -208,21 +208,57 @@
 	               			?>&nbsp;
 	               		</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($total_payment,2);?>&nbsp;</td>
-	               		<td align="center" 
+	               		
 	               		<?php 
 	               		$color='';
-	               		if ($total_late_day<=13){
-	               			$color="style='background-color:blue;'";
-	               		}else if($total_late_day<=29){
-	               			$color="style='background-color: green;'";
-	               		}else{
-	               			$color="style='background-color:red;'";
-	               		}
-	               		echo $color;
+	               		
+						if($rs['last_optiontype']==1){//by date
+							if($rs['ispay_bank']==0){
+								if ($total_late_day<=13){
+									$color="style='background-color:blue;'";
+								}else if($total_late_day<=29){
+									$color="style='background-color: green;'";
+								}else{
+									$color="style='background-color:red;'";
+								}
+							}else{
+								
+							}
+						}else{//by last payment
+							
+						}	
 	               		?>
-	               		>&nbsp;&nbsp;<?php echo $total_late_day." Days";?> &nbsp;</td>
-	               		<td align="center">&nbsp;&nbsp;<?php echo $rs["no_installment"];?>&nbsp;</td>
-	               		<td align="center">&nbsp;&nbsp;<?php echo date_format(date_create($rs["date_payment"]),'d-m-Y');?>&nbsp;</td>
+	               		<td align="center" <?php echo $color;?> >&nbsp;
+							<?php //echo $total_late_day." Days";?>
+							<?php 
+		                    	if($rs['last_optiontype']==1){//by date
+		                    		if($rs['ispay_bank']==0){
+		                    			echo $total_late_day." Days";
+		                    		}else{
+		                    			echo "-";
+		                    		}
+		                    	}else{//by last payment
+		                    		echo "-";
+		                    	}	                    		
+	                    	?>	
+							&nbsp;
+						</td>
+	               		<td align="center">&nbsp;<?php echo $rs["no_installment"];?>&nbsp;</td>
+	               		<td align="center">&nbsp;
+							<?php //echo date_format(date_create($rs["date_payment"]),'d-m-Y');?>
+							<?php 
+		                    	if($rs['last_optiontype']==1){//by date
+		                    		if($rs['ispay_bank']==0){
+		                    			$date= new DateTime($rs['date_payment']);
+		                    			echo $date->format("d-m-Y");
+		                    		}else{
+		                    			echo $rs['payment_type'];
+		                    		}
+		                    	}else{//by last payment
+		                    		echo $tr->translate("RECEIVED_PROPERTY");
+		                    	}	                    		
+	                    	?>	
+						&nbsp;</td>
 	                </tr>
 	                <?php 
 						$amt_d1 = $amt_d1+$rs['begining_balance'];
