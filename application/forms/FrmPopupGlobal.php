@@ -670,6 +670,356 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			</table>';
 		return $str;
 	}
+// 	function getOfficailReceipt(){//SH
+// 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+// 		$key = new Application_Model_DbTable_DbKeycode();
+// 		$data=$key->getKeyCodeMiniInv(TRUE);
+	
+// 		$footer = $this->getFooterReceipt();
+	
+// 		$baseurl= Zend_Controller_Front::getInstance()->getBaseUrl();
+	
+// 		$session_user=new Zend_Session_Namespace('authinstall');
+// 		$last_name=$session_user->last_name;
+// 		$username = $session_user->first_name;
+// 		$user_id = $session_user->user_id;
+// 		$usertype="";
+// 		// 		$dbuser = new Application_Model_DbTable_DbUsers();
+// 		// 		$userinfo = $dbuser->getUserInformationById($user_id);
+// 		// 		$usertype = " (".$userinfo['user_typetitle'].")";
+	
+// 		$fiveStarReciept=0;
+// 		if ($fiveStarReciept==1){
+// 			$str='
+// 			<style>
+// 			span.postingdate {
+// 			position: absolute;
+// 			top: 237px;
+// 			left: 14px;
+// 		}
+// 		span#lb_receipt {
+// 		position: absolute;
+// 		top: 204px;
+// 		right: 106px;
+// 		font-weight: bold;
+// 		}
+// 		span#lb_customer {
+// 		position: absolute;
+// 		top: 270px;
+// 		left: 215px;
+// 		font-family: '."'Times New Roman'".','."'Khmer OS Muol Light'".';
+// 		}
+// 		span#lb_customercode {
+// 		position: absolute;
+// 		top: 300px;
+// 		left: 215px;
+// 		}
+// 		span#lbl_total_receive {
+// 		position: absolute;
+// 		top: 270px;
+// 		right: 132px;
+// 		font-weight: bold;
+// 		}
+// 		span#lable_chartotalreceipt {
+// 		position: absolute;
+// 		top: 326px;
+// 		left: 215px;
+// 		font-weight: bold;
+// 		}
+// 		span#lb_hourseno {
+// 		position: absolute;
+// 		top: 384px;
+// 		right: -10px;
+// 		display: block;
+// 		min-width: 200px;
+// 		text-align: left;
+// 		}
+// 		span#lb_descriptionall {
+// 		position: absolute;
+// 		top: 382px;
+// 		left: 120px;
+// 		}
+			
+// 		span#lbl_customer,span#lbl_usersale {
+// 		position: absolute;
+// 		top: 525px;
+// 		display: block;
+// 		min-width: 215px;
+// 		text-align: center;
+// 		font-family: '."'Times New Roman'".','."'Khmer OS Muol Light'".';
+// 		}
+// 		span#lbl_customer {
+// 		left: 70px;
+// 		}
+// 		span#lbl_usersale {
+// 		right: 91px;
+// 		}
+// 		</style>
+// 		<div class="five-startreceipt" style=" font-size: 16px; font-family: '."'Times New Roman'".','."'Khmer OS Battambang'".';  color: #000; width: 21cm; height: 15cm;padding: 0px;margin: 0 auto;position: relative; margin-top:-18px;" >
+// 		<div style="display: none;">
+// 		<span id="projectlogo"></span>
+// 		<span id="lbl_project"></span>
+			
+// 		<span id="lb_saleprice"></span>
+// 		<span id="lbl_total_paid1"></span>
+// 		<span id="lbl_balance"></span>
+// 		<span id="lb_noted"></span>
+			
+			
+// 		<span id="lb_amount"></span>
+// 		<span id="lbl_paidtimes"></span>
+// 		<span id="lb_interest"></span>
+// 		<span id="lb_penalty"></span>
+// 		<span id="lb_extrapayment"></span>
+// 		<span id="lbl_totalpayment"></span>
+// 		<span id="lb_buydate1"></span>
+// 		<span id=lbl_paid_date1></span>
+// 		<span id="lbl_paymenttype"></span>
+// 		<span id="lbl_cheque"></span>
+			
+// 		</div>
+// 		<span class="postingdate">Posting Date: <span id=lblpaid_date></span></span>
+// 		<span id="lb_receipt"></span>
+// 		<span id="lb_customer"></span>
+// 		<span id="lb_customercode"></span>
+// 		<span id="lbl_total_receive"></span>
+// 		<span id="lable_chartotalreceipt"></span>
+// 		<span id="lb_hourseno"></span>
+// 		<span id="lb_descriptionall"></span>
+	
+// 		<span id="lbl_customer"></span>
+// 		<span id="lbl_usersale">'.$last_name." ".$username.'</span>
+// 		</div>
+// 		';
+// 		}else{
+// 			$str='
+// 			<div >
+// 			<style>
+// 			.label{ font-size: 22px;}
+// 			.value{font:16px '."Khmer OS Battambang".';border: 1px solid #000; min-height: 29px; padding: 0 2px;width: 100%;margin-right:2px; display: block;
+// 			line-height: 29px;
+// 			text-align: left;
+// 		}
+// 		span#lb_hourseno {
+// 		overflow-wrap: break-word;
+// 		white-space: normal;
+// 		width: 200px;
+// 		display: inline-block;
+// 		line-height: 24px;
+// 		}
+// 		.print tr td{
+// 		padding:1px 2px;
+// 		}
+// 		.khmer{font:14px '."Khmer OS Battambang".';}
+// 		.one{white-space:nowrap;}
+// 		.h{ margin-top: -10px;}
+// 		.noted{white-space: pre-wrap;
+// 		word-wrap: break-word;
+// 		word-break: break-all;
+// 		white-space: pre;
+// 		font:12px '."Khmer OS Battambang".';
+// 		border: 1px solid #000;
+// 		line-height:20px;font-weight: normal !important;
+// 		}
+// 		table.receipt-titile tr td {
+// 		font-size:16px;
+// 		}
+// 		table.receipt-titile tr td span {
+// 		font-family: Arial Black;font-family:'."Khmer OS Muol Light".';
+// 		}
+// 		table.receipt-titile tr td div span {
+// 		line-height:10px;
+// 		font-weight: bold;
+// 		}
+// 		#lb_receipt {
+// 		font-weight: bold;
+// 		}
+// 		table.print.contentdata{
+// 		width:100%;
+// 		white-space: nowrap;
+// 		font-size:16px;
+// 		margin-top: -28px;
+// 		font-family: Times New Roman,'."Khmer OS Battambang".';
+// 		}
+// 		table.print.contentdata tr{
+// 		white-space: nowrap;
+// 		}
+// 		tr.receipt-row {
+// 		white-space: nowrap;
+// 		font-size: 14px;
+// 		margin-top: -15px;
+// 		}
+// 		table.signature-table{
+// 		font-size:14px;line-height: 18px;
+// 		}
+// 		table.comment-footer{
+// 		margin-top:-5px
+// 		}
+// 		table.comment-footer tr td span.lbnote {
+// 		text-decoration:underline;
+// 		font-size: 12px;
+// 		margin-top: -5px;
+// 		}
+// 		table.comment-footer tr td p.comment1{
+// 		font-size: 11px;
+// 		margin:-5px 0px -5px 0px !important;
+// 		padding:0 !important;
+// 		}
+// 		table.comment-footer tr td span.comment{
+// 		white-space: pre-line;
+// 		font-size: 11px;
+// 		margin-top: -5px;
+// 		}
+// 		</style>
+// 		<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top:-12px;" class="print" cellspacing="0"  cellpadding="0" >
+// 		<tr>
+// 		<td colspan="6">
+// 		<table class="receipt-titile" width="100%" style="font-family:'."Khmer OS Muol Light".';white-space:nowrap;">
+// 		<tr>
+// 		<td id="projectlogo" width="35%">
+// 		<img style="height:80px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
+// 		</td>
+// 		<td width="30%" valign="top" align="center"><u><span>បង្កាន់ដៃទទួលប្រាក់</span></u>
+// 		<div ><span >OFFICIAL RECEIPT</span></div>
+// 		</td>
+// 		<td width="35%"></td>
+// 		</tr>
+// 		</table>
+// 		</td>
+// 		</tr>
+// 		</table>
+// 		<table  class="print contentdata" cellspacing="3px"  cellpadding="0" >
+// 		<tr class="receipt-row"  >
+// 		<td colspan="5"></td>
+// 		<td align="right">
+// 		<span id="lb_receipt" ></span>
+// 		</td>
+// 		</tr>
+// 		<tr >
+// 		<td style="display: none;">លេខកូដលក់</td>
+// 		<td style="display: none;"><strong><label class="value"></label></strong></td>
+// 		<td>គម្រោង</td>
+// 		<td><strong><strong><label id="lbl_project" class="value">3</label></strong></td>
+// 		<td>&nbsp;&nbsp;ប្រាក់ដើម</td>
+// 		<td><strong><label id="lb_amount" class="value"></label></strong></td>
+// 		<td>&nbsp;បង់លើកទី</td>
+// 		<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
+// 		</tr>
+// 		<tr >
+// 		<td>ឈ្មោះ​អតិថិជន </td>
+// 		<td><strong><label id="lb_customer" class="value"></label></strong></td>
+// 		<td>&nbsp;&nbsp; ការប្រាក់</td>
+// 		<td><strong><label id="lb_interest" class="value">0.00</label></strong></td>
+// 		<td>&nbsp; ប្រាក់ពិន័យ</td>
+// 		<td><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
+// 		</tr>
+// 		<tr >
+// 		<td>'.$tr->translate("PROPERTY_CODE").'</td>
+// 		<td><strong><label class="value"><span id="lb_hourseno"></span></label></strong></td>
+// 		<td>&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
+// 		<td colspan="3"><strong><label id="lb_extrapayment" class="value">0.00</label></strong></td>
+// 		</tr>
+// 		<tr >
+// 		<td width="10%">'.$tr->translate("HOUSE_PRICE").'</td>
+// 		<td width="40%"><strong><label id="lb_saleprice" class="value"></label></strong></td>
+// 		<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
+// 		<td colspan="3"><strong><label id="lbl_totalpayment" class="value"></label></strong></td>
+// 		</tr>
+// 		<tr>
+// 		<td>ប្រាក់បានបង់សរុប</td>
+// 		<td valign="top">
+// 		<table width="100%" cellpadding="0" cellspacing="0">
+// 		<tr>
+// 		<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"></label></td>
+// 		<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
+// 		<td width="33.5%"><label style="white-space: nowrap;margin-right: -4px;" class="value" id="lbl_balance"></label></td>
+// 		</tr>
+// 		</table>
+// 		</td>
+// 		<td>&nbsp;&nbsp;ប្រាក់បានទទួល</td>
+// 		<td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;" id="lbl_total_receive"></label></strong></td>
+// 		</tr>
+// 		<tr >
+// 		<td rowspan="2">សម្គាល់</td>
+// 		<td rowspan="2" class="noted" valign="top"><label id="lb_noted"></label></td>
+// 		<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
+// 		<td><strong><label id="lb_buydate1" class="value"></label></strong></td>
+// 		<td>&nbsp;ថ្ងៃទទួល</td>
+// 		<td><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
+// 		</tr>
+// 		<tr >
+// 		<td>&nbsp;ទូទាត់ជា</td>
+// 		<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
+// 		<td>&nbsp;&nbsp;លេខ</td>
+// 		<td><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
+// 		</tr>
+// 		<tr >
+// 		<td colspan="6" valign="top">
+// 		<table class="signature-table" width="100%" border="0">
+// 		<tr>
+// 		<td width="30%" align="center">&nbsp;
+// 		'.$data['customer_sign'].'
+// 		</td>
+// 		<td align="center" width="40%">
+			
+// 		</td>
+// 		<td align="center" width="30%">
+// 		'.$data['teller_sign'].'
+// 		</td>
+// 		</tr>
+// 		<tr height="80px">
+// 		<td colspan="3">&nbsp;
+// 		</td>
+// 		</tr>
+// 		<tr>
+// 		<td align="center">
+// 		<label id="lbl_customer" ></label>
+// 		</td>
+// 		<td >&nbsp;</td>
+	
+// 		<td align="center" width="30%">
+// 		<label id="lbl_usersale" >'.$last_name." ".$username.$usertype.'</label>
+// 		</td>
+	
+// 		</tr>
+// 		</table>
+// 		</td>
+// 		</tr>
+// 		<tr style="font-size: 11px;">
+// 		<td colspan="6" valign="top">
+// 		<table class="comment-footer" width="100%" border="0" >
+// 		<tr>
+// 		<td width="10%">
+// 		<span class="lbnote" style=""></span>
+// 		</td>
+// 		<td colspan="5">
+// 		<p class="comment1">សម្គាល់ ៖ '.$data['comment'].'</p>
+	
+// 		</td>
+// 		</tr>
+// 		</table>
+// 		</td>
+// 		</tr>
+// 		<tr style="line-height: 15px;font-size: 10px;">
+// 		<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)"></td>
+// 		</tr>
+// 		<tr style="line-height: 18px;font-size: 10px;">
+// 		<td colspan="6" >
+// 		'.$footer.'
+// 		</td>
+// 		</tr>
+// 		</table>
+// 		<div style="display: none;">
+// 		<span id="lable_chartotalreceipt"></span>
+// 		<span id="lblpaid_date"></span>
+// 		<span id="lb_descriptionall"></span>
+// 		<span id="lb_customercode"></span>
+// 		</div>
+// 		</div>
+// 		';
+// 		}
+// 		return $str;
+// 	}
 	function getOfficailReceipt(){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$key = new Application_Model_DbTable_DbKeycode();
