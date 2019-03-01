@@ -587,12 +587,27 @@ dojo.require("dijit.form.DateTextBox");
 						             			}$keytime++;?>
 						             			<?php 
 						             				$numrow=$numrow+1;?>
+													<?php 
+														if($row['last_optiontype']==1){//by date
+															if($row['ispay_bank']==0){
+// 																	                    			$date= new DateTime($row['date_payment']);
+// 																	                    			echo $date->format("d-m-Y");
+																$stringLastDate="នៅថ្ងៃទី ".(date("d",strtotime($row['date_payment'])))." ខែ ".$month[date("m",strtotime($row['date_payment']))]." ឆ្នាំ ".(date("Y",strtotime($row['date_payment'])));
+																
+															}else{
+																$stringLastDate = $row['payment_type']." ".$row['note'];
+															}
+														}else{//by last payment
+															//$stringLastDate = $tr->translate("RECEIVED_PROPERTY");
+															$stringLastDate = $row['payment_type']." ".$row['note'];
+														}
+														
+													?>
 						             				<span style="">
 						             						កក់ប្រាក់លើកទី<?php echo ($keytime);?>  ចំនួន
 							             				<span class="value"><strong>$ <?php echo @number_format($row['principal_permonth'],0);?></strong> </span>
 							             				<span style="font-weight:bold;">(<span id="lable_depositkhmer<?php echo $i;?>" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</span>
-							             				<?php if($row['last_optiontype']==1){?><span>នៅថ្ងៃទី <?php echo (date("d",strtotime($row['date_payment'])));?> ខែ <?php echo $month[date("m",strtotime($row['date_payment']))];?> ឆ្នាំ   <?php echo (date("Y",strtotime($row['date_payment'])));?></span><?php }?> ។
-							             				<?php if($row['last_optiontype']==0){//received plong?><span>បង់បង្គ្រាប់ពេលប្រគល់ប្លង់</span><?php }?>
+							             				<?php  echo $stringLastDate."។";?>
 							             			</span>	
 						             				 <script>
 														a ='<?php echo ($row['principal_permonth']) ?>';
