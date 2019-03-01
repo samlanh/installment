@@ -39,7 +39,6 @@ dojo.require("dijit.form.DateTextBox");
 	.padding-buttom{
 		margin-top: -5px !important;
 	}
-	
 	#printfooter{display: none !important;}
 </style>
 <div  id="exportword" style=" width:28cm;min-height:22cm; margin:0 auto; padding:0px 0.5cm">
@@ -115,7 +114,7 @@ dojo.require("dijit.form.DateTextBox");
     </style>
     	<div class="pages-break ">
     		<div class="watermark"></div>
-        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="padding:0;margin:0;border:0px;" >
+        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';padding:0;margin:0;border:0px;" >
         	<tr>
                 <td width="30%" valign="top">
                 	<?php $imagelogo = $this->baseUrl()."/images/logo.jpg";
@@ -173,7 +172,7 @@ dojo.require("dijit.form.DateTextBox");
              		<p style="margin-top:-12px;">
              			<span style=" padding-left: 50px; min-width: 29%; display: inline-block;">ភាគីទាំងពីរបានឯកភាពគ្នាក្នុងតម្លៃ  </span> 
              				<span class="value" style="text-align:left; padding-left:2px;"><strong>$ <?php echo number_format($this->agreement['price_sold'],0);?></strong> </span><span style="font-weight:bold;"> (<span id="lable_pricesoldkhmer" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក ) ។</span>
-             			<br />
+             			
              			<?php $dbs = new Loan_Model_DbTable_DbLandpayment();
 		             			$resultdeposit = $dbs->getDepositFirstPaymentMoney($this->agreement['id']);
 		             			$start_id=0;
@@ -186,7 +185,7 @@ dojo.require("dijit.form.DateTextBox");
 		             		<?php //if(!empty($resultdeposit) AND $this->agreement['is_reschedule']==1){
 		             			if(!empty($resultdeposit)){?><!-- ប្រាក់កក់ -->
 	             				<?php foreach($resultdeposit as $keydeposite =>$rsdeposite){ $keytime++;?>
-	             				<span style=" display: inline-block;white-space: nowrap;">
+	             				<span style=" ">
 	             				<?php 
 	             				$labelpaid="ភាគីទិញបានកក់ប្រាក់លើកទី";
 	             				if ($keytime>1){
@@ -212,7 +211,7 @@ dojo.require("dijit.form.DateTextBox");
              				<?php 
 								$paid_amount = $paid_amount+$rsdeposite['total_principal_permonthpaid'];
 	             				}
-		             		echo "<br />";
+		             		//echo "<br />";
 		             		}?>
 	             			<!--
 	             			<?php 
@@ -267,7 +266,7 @@ dojo.require("dijit.form.DateTextBox");
 			             			<?php echo $this->agreement['note_agreement'];?>
 			             		</p>
 		             		<?php }?>
-		             		<span>កក់លើកទី<?php echo ($keytime+1);?></span> 
+		             		<span>កក់លើកទី<?php echo ($keytime+1);?>ចំនួន</span> 
 		             		<?php if ($this->agreement['second_depostit']>0){?>
 		             		<span class="value"><strong>$ <?php echo @number_format($this->agreement['second_depostit'],0);?></strong> </span>
 			             	<span style="font-weight:bold;">(<span id="lable_seconddepositkhmer" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</span>
@@ -288,11 +287,11 @@ dojo.require("dijit.form.DateTextBox");
 							<span class="value" style="display: inline-block; width: 350px; border-bottom: dashed 1px #000;">&nbsp;</span>
 							<?php }?>
 		             		<span> នៅថ្ងៃទី  <?php echo (date("d",strtotime($this->agreement['validate_date'])));?></span> <span style="width: 100px;"></span> ខែ  <?php echo $month[date("m",strtotime($this->agreement['validate_date']))];?> ឆ្នាំ <?php echo (date("Y",strtotime($this->agreement['validate_date'])));?> ។
+		             		<?php if($this->agreement['price_sold']-$paid<0){?>
 		             		<span>ហើយប្រាក់ដែលនៅសល់ចំនួន</span>
-							<span class="value" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-$rsdeposite['total_principal_permonthpaid']-$this->agreement['second_depostit']),0);?></strong></span>
-											(<span class="value" style="min-width: 50px;font-weight:bold;"><label id="lable_remainkhmer" style="font-family: 'Times New Roman','Khmer OS Battambang'"></label> ដុល្លារអាមេរិក) ។</span>
-											
-							
+							<span class="" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-$rsdeposite['total_principal_permonthpaid']-$this->agreement['second_depostit']),0);?></strong></span>
+									(<span  style="min-width: 50px;font-weight:bold;"><label id="lable_remainkhmer" style="overflow-wrap: break-word;white-space: normal;font-family: 'Times New Roman','Khmer OS Battambang'"></label> ដុល្លារអាមេរិក) ។</span>
+							<?php }?>
              		<p>
              			<script>
 							a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
@@ -318,7 +317,7 @@ dojo.require("dijit.form.DateTextBox");
 							
 							if(last_number_sold<=0){last_number_sold='';}
 							money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
-							dojo.byId('lable_firstpaymentkhmer').innerHTML=money_khmersold+" ";
+							//dojo.byId('lable_firstpaymentkhmer').innerHTML=money_khmersold+" ";
 							
 						</script>
              			<script>
@@ -332,14 +331,13 @@ dojo.require("dijit.form.DateTextBox");
 							
 							if(last_number_sold<=0){last_number_sold='';}
 							money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
-							dojo.byId('lable_secondpaymentkhmer').innerHTML=money_khmersold+" ";
+							//dojo.byId('lable_secondpaymentkhmer').innerHTML=money_khmersold+" ";
 						</script>
              		</p>
-             		
-             		<p>
-             			<span class="margin-left">&nbsp;</span>បើដល់ថ្ងៃកំណត់ភាគីទិញមិនបានប្រគល់ប្រាក់គ្រប់ចំនួនទេ ប្រាក់កក់កន្លងមកនឹងត្រូវបានដាច់ទៅលើក្រុមហ៊ុន។
-             			<br />
-             			ភាគីលក់សូមសន្យាថា ក្រោយពីទទួលប្រាក់ហើយ មិនកែប្រែតម្លៃ ឬ ប្រែថាមិនលក់ឡើយ ។
+             		<p style="margin-top:-12px;">
+             			<span class="margin-left" style="white-space: nowrap;">&nbsp;បើដល់ថ្ងៃកំណត់ភាគីទិញមិនបានប្រគល់ប្រាក់គ្រប់ចំនួនទេ ប្រាក់កក់កន្លងមកនឹងត្រូវបានដាច់ទៅលើក្រុមហ៊ុន។ភាគីលក់ 
+             			</span>
+             			សូមសន្យាថា ក្រោយពីទទួលប្រាក់ហើយ មិនកែប្រែតម្លៃ ឬ ប្រែថាមិនលក់ឡើយ ។
              			<br />
              			<span class="margin-left">&nbsp;</span>ក្រែងពុំពិតប្រាកដដូចកិច្ចសន្យាខាងលើ  យើងខ្ញុំសូមផ្តិតមេដៃស្តាំទុកជាភស្តុតាង  ។
              		</p>
@@ -384,23 +382,21 @@ dojo.require("dijit.form.DateTextBox");
              </tr>
 			 <tfoot>
 				<tr height="30px">
-					<td >
+					<td>
 					<div id="printfooter">
 						<table width="100%" style="background: #fff;border-top: 2px solid #000;font-family: 'Times New Roman','Khmer OS Battambang'; font-size:10px;line-height: 15px;white-space:nowrap;"> 
 						<tbody>
 							<tr style="white-space:nowrap;line-height: 15px;">
-								<td width="33%"><?php echo $this->data['footer_branch'];?></td>
-								<td width="33%" align="right"><?php echo $this->data['email_client'];?></td>
-								<td width="33%" align="right"><?php echo $this->data['tel-client'];?></td>
+								<td width="33%"><?php echo $this->keyValue['footer_branch'];?></td>
+								<td width="33%" align="right"><?php echo $this->keyValue['email_client'];?></td>
+								<td width="33%" align="right"><?php echo $this->keyValue['tel-client'];?></td>
 							</tr>
-							
 							</tbody>
 						</table>
 					</div> 
 				</td>
 				</tr>
 			 </tfoot>
-			
         </table>
         </div>
         </div>
@@ -496,7 +492,7 @@ dojo.require("dijit.form.DateTextBox");
 				             <tr>
 				             	<td colspan="3">
 				             		<p style="font-family:'Khmer OS Battambang','Times New Roman',; text-align:justify; line-height:24px; font-size:14px; font-weight: normal !important;">
-			             			<?php $certificat_No = "០០០៣៣៧២០";?>
+			             			
 			             			<span class="margin-left">&nbsp;</span><strong><?php echo $branch_title;?></strong> ដែលមានវិញ្ញាបនបត្របញ្ជាក់ការចុះបញ្ជីនៅ ក្រសួងពាណិជ្ជកម្មលេខ <strong><?php echo ($certificat_No);?></strong> តំណាងស្របច្បាប់ដោយលោក <span class="value" style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span> 
 			             			ភេទ<span class="value" style=""><?php echo $arrgender[$this->agreement['p_sex']];?></span> 
 			             			សញ្ជាតិ<span class="value" style="min-width:10px;"><?php echo $this->agreement['project_manager_nationality'];?></span> 
@@ -531,7 +527,7 @@ dojo.require("dijit.form.DateTextBox");
 				             		<p style="margin-top:-12px;">
 				             			<span style=" padding-left: 50px; min-width: 29%; display: inline-block;">ភាគីទាំងពីរបានឯកភាពគ្នាក្នុងតម្លៃ  </span> 
 				             				<span class="value" style="text-align:left; padding-left: 2px;"><strong>$ <?php echo number_format($this->agreement['price_sold'],0);?></strong> </span><span style="font-weight:bold;"> (<span id="lable_pricesoldkhmer1" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក ) ។</span>
-				             			<br />
+				             			
 				             			<?php $dbs = new Loan_Model_DbTable_DbLandpayment();
 						             			$resultdeposit = $dbs->getDepositFirstPaymentMoney($this->agreement['id']);
 						             			$start_id=0;
@@ -616,40 +612,15 @@ dojo.require("dijit.form.DateTextBox");
 								             			<?php break;
 								             			}?>
 								             			
-						             		<?php  }?>
+						             		<?php  }
+						             		if($this->agreement['price_sold']-$paid<0){
+						             		?>
 						             		<span>ហើយប្រាក់ដែលនៅសល់ចំនួន</span>
 						             		<span class="value" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-$paid),0);?></strong></span>
-											(<span class="value" style="min-width: 50px;font-weight:bold;"><label id="lable_remainkhmer1" style="font-family: 'Times New Roman','Khmer OS Battambang'"></label> ដុល្លារអាមេរិក) ។</span>
+											(<span  style="min-width: 50px;font-weight:bold;"><label id="lable_remainkhmer1" style="overflow-wrap: break-word;white-space: normal;font-family: 'Times New Roman','Khmer OS Battambang'"></label> ដុល្លារអាមេរិក) ។</span>
+				             			<?php }?>
 				             		<p>
-				             			<script>									
-										  <?php $remain = $this->agreement['price_sold']-$paid;?>
-											a ='<?php echo $remain; ?>';
-											money_khmer=read_money_in_khmer(a);
-											decimalmoney_khmer='<?php echo substr(number_format($remain,2),-2);?>';
-											str_cent = 'សេន';
-
-											if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent=""}
-											
-											last_number='<?php echo substr(number_format($remain,2),-1);?>';
-											
-											if(last_number<=0){last_number='';}
-											money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
-											dojo.byId('lable_remainkhmer').innerHTML=money_khmer;
-											dojo.byId('lable_remainkhmer1').innerHTML=money_khmer;
-	
-											a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
-											money_khmersold=read_money_in_khmer(a_sold);
-											decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
-											str_centsold = 'សេន';
-											if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
-											last_number_sold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
-											
-											if(last_number_sold<=0){last_number_sold='';}
-											money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
-											dojo.byId('lable_pricesoldkhmer').innerHTML=money_khmersold+" ";
-											dojo.byId('lable_pricesoldkhmer1').innerHTML=money_khmersold+" ";
-											
-										</script>
+				             			
 										
 										<script>
 											a_sold ='<?php echo ($this->first_deposit['recieve_amount']); ?>';
@@ -661,7 +632,7 @@ dojo.require("dijit.form.DateTextBox");
 											
 											if(last_number_sold<=0){last_number_sold='';}
 											money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
-											dojo.byId('lable_firstpaymentkhmer').innerHTML=money_khmersold+" ";
+											//dojo.byId('lable_firstpaymentkhmer').innerHTML=money_khmersold+" ";
 											
 										</script>
 				             			<script>
@@ -675,11 +646,11 @@ dojo.require("dijit.form.DateTextBox");
 											
 											if(last_number_sold<=0){last_number_sold='';}
 											money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
-											dojo.byId('lable_secondpaymentkhmer').innerHTML=money_khmersold+" ";
+											//dojo.byId('lable_secondpaymentkhmer').innerHTML=money_khmersold+" ";
 										</script>
 				             		</p>
 				             		<p style="margin-top:-12px;">
-				             			<span class="margin-left">&nbsp;</span>បើដល់ថ្ងៃកំណត់ភាគីទិញមិនបានប្រគល់ប្រាក់គ្រប់ចំនួនទេ ប្រាក់កក់កន្លងមកនឹងត្រូវបានដាច់ទៅលើក្រុមហ៊ុន។ ភាគីលក់សូមសន្យាថា ក្រោយពីទទួលប្រាក់ហើយ មិនកែប្រែតម្លៃ ឬ ប្រែថាមិនលក់ឡើយ ។ ក្នុងករណីការអនុវត្តន៍ផ្ទុយ ពីនេះ ខ្ញុំបាទ/នាងខ្ញុំសុខចិត្តសងប្រាក់..................ដងនៃប្រាក់ដែលបានបង់កន្លងមក។
+				             			<span class="margin-left" ></span>&nbsp;បើដល់ថ្ងៃកំណត់ភាគីទិញមិនបានប្រគល់ប្រាក់គ្រប់ចំនួនទេ ប្រាក់កក់កន្លងមកនឹងត្រូវបានដាច់ទៅលើក្រុមហ៊ុន។ ភាគីលក់ សូមសន្យាថា ក្រោយពីទទួលប្រាក់ហើយ មិនកែប្រែតម្លៃ ឬ ប្រែថាមិនលក់ឡើយ ។ ក្នុងករណីការអនុវត្តន៍ផ្ទុយ ពីនេះ ខ្ញុំបាទ/នាងខ្ញុំសុខចិត្តសងប្រាក់..................ដងនៃប្រាក់ដែលបានបង់កន្លងមក។
 										។
 				             			<br />
 				             			<span class="margin-left">&nbsp;</span>ក្រែងពុំពិតប្រាកដដូចកិច្ចសន្យាខាងលើ  យើងខ្ញុំសូមផ្តិតមេដៃស្តាំទុកជាភស្តុតាង  ។
@@ -727,9 +698,9 @@ dojo.require("dijit.form.DateTextBox");
 										<table width="100%" style="background: #fff;border-top: 2px solid #000;font-family: 'Times New Roman','Khmer OS Battambang'; font-size:10px;line-height: 15px;white-space:nowrap;"> 
 										<tbody>
 											<tr style="white-space:nowrap;line-height: 15px;">
-												<td width="33%"><?php echo $this->data['footer_branch'];?></td>
-												<td width="33%" align="right"><?php echo $this->data['email_client'];?></td>
-												<td width="33%" align="right"><?php echo $this->data['tel-client'];?></td>
+												<td width="33%"><?php echo $this->keyValue['footer_branch'];?></td>
+												<td width="33%" align="right"><?php echo $this->keyValue['email_client'];?></td>
+												<td width="33%" align="right"><?php echo $this->keyValue['tel-client'];?></td>
 											</tr>
 											
 											</tbody>
@@ -751,5 +722,33 @@ function doPrint1() {
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
 }
+
+<?php $remain = $this->agreement['price_sold']-$paid;?>
+	a ='<?php echo $remain; ?>';
+	money_khmer=read_money_in_khmer(a);
+	decimalmoney_khmer='<?php echo substr(number_format($remain,2),-2);?>';
+	str_cent = 'សេន';
+
+	if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent=""}
+	
+	last_number='<?php echo substr(number_format($remain,2),-1);?>';
+	
+	if(last_number<=0){last_number='';}
+	money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+	dojo.byId('lable_remainkhmer').innerHTML=money_khmer;
+	dojo.byId('lable_remainkhmer1').innerHTML=money_khmer;
+
+	a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
+	money_khmersold=read_money_in_khmer(a_sold);
+	decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
+	str_centsold = 'សេន';
+	if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
+	last_number_sold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
+	
+	if(last_number_sold<=0){last_number_sold='';}
+	money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+	dojo.byId('lable_pricesoldkhmer').innerHTML=money_khmersold+" ";
+	dojo.byId('lable_pricesoldkhmer1').innerHTML=money_khmersold+" ";
+	
 </script>
 </div>
