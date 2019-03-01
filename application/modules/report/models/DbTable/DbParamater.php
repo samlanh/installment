@@ -1837,4 +1837,17 @@ function getAllBranch($search=null){
 			AND op.id=$id LIMIT 1 ";
 		return $db->fetchRow($sql);
 	}
+	
+	function getTotalPrinciplePaidById($id){
+		$db = $this->getAdapter();
+		$sql="SELECT SUM(c.total_principal_permonthpaid) FROM `ln_client_receipt_money` AS c
+			WHERE c.sale_id = $id AND c.status=1";
+		return $db->fetchOne($sql);
+	}
+	function getLastDatePaidById($id){
+		$db = $this->getAdapter();
+		$sql="SELECT c.date_pay FROM `ln_client_receipt_money` AS c
+			WHERE c.sale_id = $id AND c.status=1 AND c.recieve_amount>0 ORDER BY c.id DESC LIMIT 1";
+		return $db->fetchOne($sql);
+	}
 }

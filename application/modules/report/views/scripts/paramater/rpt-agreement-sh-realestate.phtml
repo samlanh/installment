@@ -598,7 +598,8 @@ dojo.require("dijit.form.DateTextBox");
 																$stringLastDate = $row['payment_type']." ".$row['note'];
 															}
 														}else{//by last payment
-															$stringLastDate = $tr->translate("RECEIVED_PROPERTY");
+															//$stringLastDate = $tr->translate("RECEIVED_PROPERTY");
+															$stringLastDate = $row['payment_type']." ".$row['note'];
 														}
 														
 													?>
@@ -607,6 +608,7 @@ dojo.require("dijit.form.DateTextBox");
 							             				<span class="value"><strong>$ <?php echo @number_format($row['principal_permonth'],0);?></strong> </span>
 							             				<span style="font-weight:bold;">(<span id="lable_depositkhmer<?php echo $i;?>" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</span>
 							             				<?php  echo $stringLastDate."។";?>
+														
 							             			</span>	
 						             				 <script>
 														a ='<?php echo ($row['principal_permonth']) ?>';
@@ -633,6 +635,9 @@ dojo.require("dijit.form.DateTextBox");
 						             		<span class="value" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-$paid),0);?></strong></span>
 											(<span  style="min-width: 50px;font-weight:bold;"><label id="lable_remainkhmer1" style="overflow-wrap: break-word;white-space: normal;font-family: 'Times New Roman','Khmer OS Battambang'"></label> ដុល្លារអាមេរិក) ។</span>
 				             			<?php }?>
+										<?php  if($this->totalpaid >= $this->agreement['price_sold']){
+											echo $stringLastDate="ហើយភាគីទិញបានប្រគល់ប្រាក់រួចរាល់ នៅថ្ងៃទី ".(date("d",strtotime($this->lastpaiddate)))." ខែ ".$month[date("m",strtotime($this->lastpaiddate))]." ឆ្នាំ ".(date("Y",strtotime($this->lastpaiddate)))."។";
+										 }?>
 				             		<p>
 				             			
 										

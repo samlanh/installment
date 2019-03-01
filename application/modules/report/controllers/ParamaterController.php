@@ -258,6 +258,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
 	  	$this->view->sale_schedule = $db->getScheduleBySaleID($id,$rsagreement['payment_id']);
 	  	$this->view->first_deposit = $db->getFirstDepositAgreement($id);
 	  	
+		$this->view->totalpaid = $db->getTotalPrinciplePaidById($id);
+		$this->view->lastpaiddate = $db->getLastDatePaidById($id);
 	  	$db_keycode = new Application_Model_DbTable_DbKeycode();
 	  	$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
   	}else{
