@@ -36,7 +36,7 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
-		$fm = new Loan_Form_FrmCommision();
+		$fm = new Incexp_Form_FrmCommision();
 		$frm = $fm->FrmAddFrmCancel();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_cancel = $frm;
@@ -62,7 +62,7 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		$fm = new Loan_Form_FrmCommision();
+		$fm = new Incexp_Form_FrmCommision();
 		$frm = $fm->FrmAddFrmCancel();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
@@ -110,7 +110,7 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 	      }
 	    $row  = $_dbmodel->getComissionById($id);
 	    $this->view->row = $row;
-		$fm = new Loan_Form_FrmCommision();
+		$fm = new Incexp_Form_FrmCommision();
 		$frm = $fm->FrmAddFrmCancel($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
