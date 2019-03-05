@@ -116,6 +116,30 @@ class Report_LoanController extends Zend_Controller_Action {
 	
 	$frmpopup = new Application_Form_FrmPopupGlobal();
 	$this->view->footerReport = $frmpopup->getFooterReport();
+	
+	
+	/*if($this->getRequest()->isPost()){
+		$search=$this->getRequest()->getPost();
+		$search['category_id']=-1;
+		$search['client_name']='';
+	}
+	else{
+		$search = array(
+				"adv_search"=>'',
+				"branch_id"=>-1,
+				"status"=>-1,
+				"category_id"=>-1,
+				"ordering"=>1,
+				'land_id'=>-1,
+				'user_id'=>-1,
+				'client_name'=>'',
+				'start_date'=> date('Y-m-d'),
+				'end_date'=>date('Y-m-d'),
+		);
+	}
+	$this->view->search=$search;
+	$db  = new Report_Model_DbTable_DbParamater();
+	$this->view->row = $db->getAllIncome($search);*/
   }
   function rptClosingentryAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();

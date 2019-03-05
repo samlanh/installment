@@ -267,7 +267,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 	    		$this->insert($datapayment);
 	    		$start_id=$start_id+1;
     		}
-    		if($data['other_fee']>0){
+    		if(!empty($data['other_fee'])){
     			$datapayment = array(
     					'branch_id'=>$data['branch_id'],
     					'sale_id'=>$id,//good
