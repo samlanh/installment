@@ -733,14 +733,17 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'is_completed'	=>($data['schedule_opt']==2)?1:0,
     					'status'		=>1,
     			);
-    			$sql="SELECT id FROM `ln_client_receipt_money` WHERE receipt_no='".$data['receipt']."'";
-    			$crm_id = $db->fetchOne($sql);
-    			$where="crm_id=".$crm_id;
-    			$this->update($array, $where);
+    			if(!empty($data['receipt'])){
+    				$sql="SELECT id FROM `ln_client_receipt_money` WHERE receipt_no='".$data['receipt']."'";
+    				$crm_id = $db->fetchOne($sql);
+    				if(!empty($crm_id)){
+    					$where="crm_id=".$crm_id;
+    					$this->update($array, $where);
+    				}
+    			}
 	        $db->commit();
 	        return 1;
     	}catch (Exception $e){
-    		echo $e->getMessage();exit();
     		$db->rollBack();
     		Application_Form_FrmMessage::message("INSERT_FAIL");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

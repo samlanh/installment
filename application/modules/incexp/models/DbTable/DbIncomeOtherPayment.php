@@ -66,10 +66,10 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 	
 	function getAllOtherIncome($branch_id,$otherincome_id=null){
 		$db = $this->getAdapter();
-		$sql='
-		SELECT 
+		$sql='SELECT 
 			oin.id,
-			CONCAT(oin.invoice," ",(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = oin.client_id LIMIT 1)," ",(SELECT p.land_code FROM `ln_properties` AS p WHERE p.id = oin.house_id LIMIT 1),"-",(SELECT p.street FROM `ln_properties` AS p WHERE p.id = oin.house_id LIMIT 1)) AS `name`
+			CONCAT(oin.invoice," ",(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = oin.client_id LIMIT 1)," ",
+			(SELECT p.land_address FROM `ln_properties` AS p WHERE p.id = oin.house_id LIMIT 1),",",(SELECT p.street FROM `ln_properties` AS p WHERE p.id = oin.house_id LIMIT 1)) AS `name`
 		FROM ln_otherincome
 			AS oin
 		WHERE oin.is_fullpaid=0 AND oin.branch_id ='.$branch_id.'
