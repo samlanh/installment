@@ -2,12 +2,10 @@
 
 class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 {
-
     protected $_name = 'ln_properties_type';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
-    
     }
     function addPropery($data){
     	$db = $this->getAdapter();
@@ -30,18 +28,17 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 	    	}
 	    	$db->commit();
     	}catch(exception $e){
+    		$db->rollBack();
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		$db->rollBack();
     	}
 	}
 	
 	function geteAllPropertyType($search=null){
 		$db = $this->getAdapter();
-
 		$sql='SELECT t.`id`,t.`type_nameen`,t.`note`,
-(SELECT CONCAT(u.first_name," ",u.last_name) FROM `rms_users` AS u WHERE u.id = t.`user_id`) AS user_name,
-t.`status` FROM `ln_properties_type` AS t where 1 ';
+			(SELECT CONCAT(u.first_name," ",u.last_name) FROM `rms_users` AS u WHERE u.id = t.`user_id`) AS user_name,
+			t.`status` FROM `ln_properties_type` AS t where 1 ';
 		$where="";
 		if($search['status_search']>-1){
 			$where.=" AND t.status=".$search['status_search'];
@@ -49,9 +46,7 @@ t.`status` FROM `ln_properties_type` AS t where 1 ';
 		if(!empty($search['adv_search'])){
 			$s_where=array();
 			$s_search=$search['adv_search'];
-			
 			$s_where[]="t.`type_nameen` LIKE'%{$s_search}%'";
-			//$s_where[]="t.`type_namekh` LIKE'%{$s_search}%'";
 			$s_where[]="t.`note` LIKE'%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
@@ -68,9 +63,9 @@ t.`status` FROM `ln_properties_type` AS t where 1 ';
 		$db = $this->getAdapter();
 		$arr = array(
 				'type_nameen'=>$data['type_nameen'],
+				'type_namekh'=>$data['type_nameen'],
 				'status'=>1
 		);
 		return $this->insert($arr);
 	}
 }
-

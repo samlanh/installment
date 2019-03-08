@@ -138,7 +138,7 @@ dojo.require("dijit.form.DateTextBox");
 								<span class="margin-left">&nbsp;</span>ក្រុមហ៊ុន  <span style=" font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $branch_title;?></span> មានអាសយដ្ឋានបច្ចុប្បន្ន<?php echo $address;?>។<br />
 								<span class="margin-left">-</span> តំណាងដោយ<?php echo $title;?> <span style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh'];?></span><br />
 								<span class="margin-left">-</span> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <?php echo $dbparmeter->getNumberInkhmer($this->agreement['project_manager_nation_id']);?><br />
-								<span class="margin-left">-</span> លេខទូរសព្ទ័ <?php echo $dbparmeter->getNumberInkhmer($this->agreement['project_manager_nation_id']);?> ជាអ្នកលក់ ហៅកាត់ថាភាគី «ក»។<br />
+								<span class="margin-left">-</span> លេខទូរសព្ទ័ <?php echo $dbparmeter->getNumberInkhmer($this->agreement['branch_tel']);?> ជាអ្នកលក់ ហៅកាត់ថាភាគី «ក»។<br />
 							</span>
 							<span style="text-align:center; width: 100%; display: block; line-height: 32px; font-family:'Khmer OS Muol Light';">
 							និង
@@ -155,7 +155,7 @@ dojo.require("dijit.form.DateTextBox");
              				?>
 	             			<span style="width: 100%; display: block; line-height: 32px;"> 
 	             				លោក/លោកស្រី <span class="value" style="min-width:100px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span> ភេទ <?php echo $cussex;?> 
-	             				អាយុ <?php if (!empty($this->agreement['dob'])){ echo $dbparmeter->getNumberInkhmer(date("Y") - date("Y",strtotime($this->agreement['dob'])))." ឆ្នាំ";}?> ជនជាតិ<span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span> សញ្ជាតិ<span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span>
+	             				ថ្ងៃខែឆ្នាំកំណើត <?php if (!empty($this->agreement['dob']) AND date("Y",strtotime($this->agreement['dob']))){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['dob']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob'])));}?> ជនជាតិ<span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span> សញ្ជាតិ<span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span>
 	             				កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:80px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['client_nation_id']);?></span> 
 	             				អាសយដ្ឋានបច្ចុប្បន្នផ្ទះលេខ : <span class="value" style="min-width:55px;"><?php echo $this->agreement['client_house_no'];?></span> ផ្លូវ  <span class="value" style=""><?php echo $this->agreement['client_street'];?></span> 
 								   ភូមិ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_village_kh'];?></span>       
@@ -190,7 +190,7 @@ dojo.require("dijit.form.DateTextBox");
 		             			<table width="100%" border="0"> 
 								  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
-									    <td align="justify" style="padding-left:5px">ភាគី«ក» និង «ខ» បានឯកភាពគ្នាទិញ លក់ ដីឡូតិ៍លេខ <span class="value" style="text-align:center; min-width:70px;"><?php echo $this->agreement['property_title'];?></span> ទំហំ <span class="value" style="text-align:center; min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['land_size']);?></span> ម៉ែត្រការេ ដែលមានទីតាំងស្ថិតនៅ  <?php echo $project_location;?>។</td>  
+									    <td align="justify" style="padding-left:5px">ភាគី«ក» និង «ខ» បានឯកភាពគ្នាទិញ លក់ ដីឡូតិ៍លេខ <span class="value" style="text-align:center; min-width:70px;font-weight: bold;"><?php echo $this->agreement['property_title'];?></span> ទំហំ <span class="value" style="text-align:center; min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['land_size']);?></span> ម៉ែត្រការេ ដែលមានទីតាំងស្ថិតនៅ  <?php echo $project_location;?>។</td>  
 								  </tr>
 								   <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;"></td>
@@ -292,7 +292,6 @@ dojo.require("dijit.form.DateTextBox");
 										             		?>
 										             		</li>
 										             	<?php 	}?>
-										             				
 										             				<?php 
 												             			$i=0; $numrow = 0;
 												             			$countSchdule = count($this->sale_schedule);
@@ -320,10 +319,7 @@ dojo.require("dijit.form.DateTextBox");
 												             				<?php 
 																	                    	if($row['last_optiontype']==1){//by date
 																	                    		if($row['ispay_bank']==0){
-// 																	                    			$date= new DateTime($row['date_payment']);
-// 																	                    			echo $date->format("d-m-Y");
 																	                    			$stringLastDate="នៅថ្ងៃទី <span style=''>".$dbparmeter->getNumberInkhmer(date("d",strtotime($row['date_payment'])))."</span> ខែ <span style=''>".$month[date("m",strtotime($row['date_payment']))]."</span> ឆ្នាំ <span style=''>".$dbparmeter->getNumberInkhmer(date("Y",strtotime($row['date_payment'])))."</span>";
-																	                    			
 																	                    		}else{
 																	                    			$stringLastDate = $row['payment_type']." ".$row['note'];
 																	                    		}
@@ -449,9 +445,9 @@ dojo.require("dijit.form.DateTextBox");
 				             	<td>&nbsp;</td>
 				           </tr>
 				           <tr style="font-size: 14px;">
-			             		<td  style="text-align:center;"><span style="font-family:'Khmer OS Muol Light';font-weight:200; "><?php echo $this->agreement['user_name'];?><?php //echo $this->agreement['project_manager_namekh'];?></span></td>
+			             		<td  style="text-align:center;"><span style="font-family:'Khmer OS Muol Light';font-weight:200; "><?php echo str_replace('លោក','',$this->agreement['project_manager_namekh']) ;?></span></td>
 						       <td>&nbsp;</td>
-						       <td class="reff"  align="center" style="white-space:nowrap;"><span style="font-family:'Khmer OS Muol Light';font-weight:200; "><?php //echo $this->agreement['staff_name'];?></span></td>
+						       <td class="reff"  align="center" style="white-space:nowrap;"><span style="font-family:'Khmer OS Muol Light';font-weight:200; "><?php echo $this->agreement['user_name'];?></span></td>
 						       <td>&nbsp;</td>
 						       <td class="reff"  align="center" style="white-space:nowrap;"><span style="font-family:'Khmer OS Muol Light';font-weight:200; "><?php //echo $this->agreement['staff_name'];?></span></td>
 						       <td>&nbsp;</td>

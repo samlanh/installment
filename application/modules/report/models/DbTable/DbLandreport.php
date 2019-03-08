@@ -2404,9 +2404,7 @@ function updatePaymentStatus($data){
 			AND s.id = oin.sale_id
 			AND p.id = oin.house_id
 			AND c.client_id = oin.client_id
-			AND oin.status=1
-		
-   	 ";
+			AND oin.status=1 ";
    
    	if (!empty($search['adv_search'])){
    		$s_where = array();
@@ -2419,9 +2417,13 @@ function updatePaymentStatus($data){
    		$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
    		$where .=' AND ('.implode(' OR ',$s_where).')';
    	}
-//    	if(!empty($search['payment_method'])){
-//    		$where.= " AND payment_method = ".$search['payment_method'];
-//    	}
+   	
+   	if($search['payment_process']==1){//paid
+   		$where.= " AND is_fullpaid =1 ";
+   	}
+   	if($search['payment_process']==0){//unpaid
+   		$where.= " AND is_fullpaid = 0 ";
+   	}
    	if(!empty($search['category_id'])){
    		$where.= " AND oin.category_id = ".$search['category_id'];
    	}
@@ -2600,6 +2602,8 @@ function updatePaymentStatus($data){
    	   	op.id,
    	   	op.branch_id,
    	   	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS branch_name,
+   	   	(SELECT `ln_view`.`name_kh` FROM `ln_view` WHERE `key_code` = `op`.`payment_method`
+         		 AND `type` = 2 LIMIT 1) AS `payment_method`,
    	   	oi.client_id,
    	   	op.for_date AS date,
    	   	op.receipt_no AS invoice,
@@ -2618,8 +2622,7 @@ function updatePaymentStatus($data){
    	   	FROM `ln_otherincomepayment` AS op,
 			`ln_otherincome` AS oi
 		WHERE oi.id = op.otherincome_id
-   	   	AND op.status=1
-      	";
+   	   	AND op.status=1";
     
       	if (!empty($search['adv_search'])){
       		$s_where = array();
@@ -2630,9 +2633,9 @@ function updatePaymentStatus($data){
       		$s_where[] = " (SELECT ln_client.name_kh FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) LIKE '%{$s_search}%'";
       		$where .=' AND ('.implode(' OR ',$s_where).')';
       	}
-      	//    	if(!empty($search['payment_method'])){
-      	//    		$where.= " AND payment_method = ".$search['payment_method'];
-      	//    	}
+      	if(!empty($search['payment_method'])){
+      	   		$where.= " AND op.payment_method = ".$search['payment_method'];
+      	}
       	if(!empty($search['category_id'])){
       		$where.= " AND op.category = ".$search['category_id'];
       	}
@@ -2644,6 +2647,9 @@ function updatePaymentStatus($data){
       	}
       	if($search['branch_id']>-0){
       		$where.= " AND op.branch_id = ".$search['branch_id'];
+      	}
+      	if($search['user_id']>-0){
+      		$where.= " AND op.user_id = ".$search['user_id'];
       	}
       	$order=" ORDER BY op.for_date,op.id DESC ";
       	return $db->fetchAll($sql.$where.$order);

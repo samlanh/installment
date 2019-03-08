@@ -10,6 +10,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 		$db = new Application_Model_DbTable_DbGlobal();
 		
 		$request=Zend_Controller_Front::getInstance()->getRequest();
+		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
 		$_status->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
 				'autoComplete'=>'false',
@@ -21,6 +22,18 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				0=>$this->tr->translate("DACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		$_status->setValue($request->getParam("status"));
+		
+		$payment_process =  new Zend_Dojo_Form_Element_FilteringSelect('payment_process');
+		$payment_process->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside'));
+		$_status_opt = array(
+				-1=>$this->tr->translate("ALL"),
+				1=>$this->tr->translate("PAID"),
+				0=>$this->tr->translate("UNPAID"));
+		$payment_process->setMultiOptions($_status_opt);
+		$payment_process->setValue($request->getParam("payment_process"));
 		
 		$_ordering=  new Zend_Dojo_Form_Element_FilteringSelect('ordering');
 		$_ordering->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
@@ -271,7 +284,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 			$_releasedate->setValue($data['date_release']);
 			$client_name->setValue($data['client_name']);
 		}
-		$this->addElements(array($user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
+		$this->addElements(array($payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
 				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist));
 		return $this;
 		

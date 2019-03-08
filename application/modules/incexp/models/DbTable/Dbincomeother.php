@@ -192,9 +192,9 @@ class Incexp_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 				(SELECT logo FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS photo,
 		 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_otherincome.client_id LIMIT 1) AS client_name,
 		 		(SELECT land_address FROM `ln_properties` WHERE id=house_id LIMIT 1) AS land_address,
-		 		(SELECT name_kh FROM ln_view WHERE TYPE=2 AND key_code=payment_method LIMIT 1) AS payment_method,
-		 		(SELECT street FROM `ln_properties` WHERE id=house_id LIMIT 1) AS street
-		 		
+		 		(SELECT name_kh FROM ln_view WHERE type=2 AND key_code=payment_method LIMIT 1) AS payment_method,
+		 		(SELECT street FROM `ln_properties` WHERE id=house_id LIMIT 1) AS street,
+		 		(SELECT type_nameen FROM `ln_properties_type` WHERE id=(SELECT property_type FROM `ln_properties` WHERE id=house_id LIMIT 1)) AS property_type
 		FROM ln_otherincome where id=$id ";
 		return $db->fetchRow($sql);
 	}

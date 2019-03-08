@@ -26,7 +26,7 @@
 		</div>
 	</div>
 </div>
-<div style="background: #fff;width: 23cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+<div style="background: #fff;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
 			<div id="divPrint">
 				<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
 					<tr>	
@@ -36,7 +36,7 @@
 									<td width="25%">
 										<img style="height:75px;"  src="<?php echo $images;?>" alt="">
 									</td>						
-									<td width="50%" style="font:bold 16px 'Kh Muol';" valign="top" align="center"><u><b><strong style="font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:22px;">របាយការណ៍ផ្ទះ</strong></b></u>
+									<td width="50%" style="font:bold 16px 'Kh Muol';" valign="top" align="center"><u><b><strong style="font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:22px;"><?php echo $tr->translate("RPT_OUTOFSTANDARD");?></strong></b></u>
 									</td>
 									<td width="25%">
 									</td>
@@ -49,28 +49,31 @@
 					</tr>
 				</table>
 				<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:23px;border:none;" >
-		            	<tr style="line-height: 15px; font-size: 16px; font-family: Khmer OS Battambang;">
+		            	<tr style="line-height: 15px; font-size: 16px; font-family: Khmer OS Battambang;white-space: nowrap;">
 							<td colspan="2">ឈ្មោះ&nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['client_name'];?></strong></td>
 							<td colspan="2">លេខផ្ទះ &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['land_address'];?></strong></td>
-							<td colspan="2">លេខផ្លូវ &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['street'];?></strong></td>
-							<td >គម្រោង &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['branch_name'];?></strong></td>
+							<td colspan="3">លេខផ្លូវ &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['street'];?></strong></td>
+						</tr>
+						<tr>
+							<td colspan="2"><?php echo $tr->translate("PROPERTY_TYPE");?> &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['property_type'];?></strong></td>
+							<td colspan="4">គម្រោង &nbsp;: <strong style="font-size:16px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['branch_name'];?></strong></td>
 						</tr>
 						<tr style="line-height: 15px; font-family: Khmer OS Battambang;">
-							<td valign="top"> &nbsp; </td>
+							<td valign="top" colspan="7"></td>
 						</tr>
 		            	<tr>
 		            	<td colspan="7" id="exportExcel">
-		            	<div style="border: 1px solid black;"></div>
-		            	<div style=" font-weight: initial; font-family:'Khmer OS Muol Light';padding:15px; font-size:16px;">បរិយាយ ៖ </div>
-		            		<table width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; " >  
-						       <?php  $i=0; $n=0; if(!empty($this->rows)){foreach($this->rows as $key =>$row) {$i++?>
-								<tr style="font-size: 16px; line-height:38px;" align="left">
-								   <td align="center" width="5%"><?php echo $i; ?>&nbsp;.</td>
-								   <td align="left">&nbsp;<?php echo $row['work_note'];?></td>
-								</tr>
-								<?php }}?>
-						    </table>
-						   <div style=" font-weight: initial; margin: 23px; font-family:'Khmer OS Muol Light';padding:15px; font-size:16px;"><i class="fa fa-circle-o-notch"></i>&nbsp;<u>បញ្ជាក់ សូមពិនិត្យមើលប្លង់បន្ថែម</u></div>
+			            	<div style="border: 1px solid black;"></div>
+			            	<div style=" font-weight: initial; font-family:'Khmer OS Muol Light';padding:15px; font-size:16px;">បរិយាយ ៖ </div>
+			            		<table width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; " >  
+							       <?php  $i=0; $n=0; if(!empty($this->rows)){foreach($this->rows as $key =>$row) {$i++?>
+									<tr style="font-size: 16px; line-height:38px;" align="left">
+									   <td align="center" width="5%"><?php echo $i; ?>&nbsp;.</td>
+									   <td align="left">&nbsp;<?php echo $row['work_note'];?></td>
+									</tr>
+									<?php }}?>
+							    </table>
+							   <div style=" font-weight: initial; margin: 23px; font-family:'Khmer OS Muol Light';padding:15px; font-size:16px;"><i class="fa fa-circle-o-notch"></i>&nbsp;<u>បញ្ជាក់ សូមពិនិត្យមើលប្លង់បន្ថែម</u></div>
 		            	</td>
 		           		</tr>
 		           		<tr class="head" style="font-weight: initial;font-family:'Khmer OS Muol Light';" >

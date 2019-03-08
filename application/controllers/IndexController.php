@@ -256,7 +256,7 @@ class IndexController extends Zend_Controller_Action
     	if (empty($id)){
     		$this->_redirect("/default/index/saledash");
     	}
-    	$db= new Loan_Model_DbTable_DbIncomeother();
+    	$db= new Incexp_Model_DbTable_DbIncomeother();
     	$this->view->rows = $db->getincomeDetailbyid($id);
     	$row = $db->getincomebyid($id);
     	if (empty($row)){

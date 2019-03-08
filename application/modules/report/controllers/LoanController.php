@@ -1003,7 +1003,7 @@ class Report_LoanController extends Zend_Controller_Action {
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
     					'client_name'=>-1,
-//     					'payment_method'=>'',
+    					'payment_process'=>-1,
     			);
     		}
 		$this->view->loantotalcollect_list =$db->getAllIncomeOtherDetail($search,1);
