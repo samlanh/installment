@@ -2648,7 +2648,7 @@ function updatePaymentStatus($data){
       	if($search['branch_id']>-0){
       		$where.= " AND op.branch_id = ".$search['branch_id'];
       	}
-      	if($search['user_id']>-0){
+      	if(!empty($search['user_id']) AND $search['user_id']>-0){
       		$where.= " AND op.user_id = ".$search['user_id'];
       	}
       	$order=" ORDER BY op.for_date,op.id DESC ";
