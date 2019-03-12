@@ -133,29 +133,38 @@ dojo.require("dijit.form.DateTextBox");
 				             </tr> 
 				             <tr>
 				             	<td colspan="3">
+				             	<?php 
+				             		$company="អិម.អ.អ៊ី អ៊ិនវេសម៉ិន ឯ.ក(M.R.E INVESTMENT CO., LTD.)";
+				             		$companyAddress="ផ្លូវជាតិលេខ៧ ភូមិដំណាក់ចារ ឃុំអញ្ចើម ស្រុកត្បូងឃ្មុំ ខេត្តត្បូងឃ្មុំ";
+				             		$position = "ប្រធានក្រុមប្រឹក្សាភិបាល និងជានាយកប្រតិបត្តិក្រុមហ៊ុន ";
+				             	?>
 				             		<p style="font-family:'Khmer OS Battambang','Times New Roman',; text-align:justify; line-height:24px; font-size:14px; font-weight: normal !important;">
-			             			ឈ្មោះ <span class="value" style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span> 
+				             		<span class="margin-left"></span>ក្រុមហ៊ុន <strong><?php echo $company?></strong> អាសយដ្ឋាន <?php echo $companyAddress;?> ទូរស័ព្ទលេខ <?php echo $dbparmeter->getNumberInkhmer($this->agreement['branch_tel']);?> 
+			             			តំណាងដោយលោក <span class="value" style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span> 
 			             			ភេទ<span class="value" style=""><?php echo $arrgender[$this->agreement['p_sex']];?></span> 
 			             			
 			             			កើតថ្ងៃទី  <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['manager_dob']) && $this->agreement['manager_dob'] !='0000-00-00'){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['manager_dob'])));}?></span> 
 			             			ខែ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['manager_dob']) && $this->agreement['manager_dob'] !='0000-00-00'){ echo $month[date("m",strtotime($this->agreement['manager_dob']))];}?></span> 
 			             			ឆ្នាំ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['manager_dob']) && $this->agreement['manager_dob'] !='0000-00-00'){ echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['manager_dob'])));}?></span> 
 			             			កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:60px;"><?php echo ($this->agreement['project_manager_nation_id']);?></span> 
-			             			<?php if (!empty($this->agreement['w_manager_namekh'])){?>
-			             			 និងឈ្មោះ <span class="value" style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['w_manager_namekh'];?></span> 
-			             			ភេទ  <span class="value" style="min-width:10px;"><?php echo $this->agreement['sc_manager_sex'];?></span> 
-			             			កើតថ្ងៃទី  <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['w_dob']) && $this->agreement['w_dob'] !='0000-00-00'){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['w_dob'])));}?></span> 
-			             			ខែ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['w_dob']) && $this->agreement['w_dob'] !='0000-00-00'){ echo $month[date("m",strtotime($this->agreement['w_dob']))];}?></span> 
-			             			ឆ្នាំ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['w_dob']) && $this->agreement['w_dob'] !='0000-00-00'){ echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['w_dob'])));}?></span> 
-			             			កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_manager_nation_id'];?></span>
-			             			<?php }?>
 			             			<?php
 									$countland = 1;
 		             				 if (!empty($this->agreement['old_land_id'])){
 		             					$idse = explode(",", $this->agreement['old_land_id']);
 		             					$countland = count($idse);
 		             				}?>
-			             			 ទីលំនៅបច្ចុប្បន្ន<?php echo $this->agreement['project_manager_p_current_address'];?> បានព្រមព្រៀងលក់<?php echo $this->agreement['property_type_kh'];?> មានចំនួន <?php echo $dbparmeter->getNumberInkhmer($countland);?> ទំហំ <span class="value" style="min-width:20px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['full_size']);?></span> ម៉ែត្រក្រឡា 
+			             			 មានទីលំនៅ<?php echo $this->agreement['project_manager_p_current_address'];?> ជា<strong><?php echo $position;?></strong> 
+			             			<!-- 
+			             			<?php //if (!empty($this->agreement['w_manager_namekh'])){?>
+			             			 និងឈ្មោះ <span class="value" style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php //echo $this->agreement['w_manager_namekh'];?></span> 
+			             			ភេទ  <span class="value" style="min-width:10px;"><?php //echo $this->agreement['sc_manager_sex'];?></span> 
+			             			កើតថ្ងៃទី  <span class="value" style="min-width:30px;"><?php //if (!empty($this->agreement['w_dob']) && $this->agreement['w_dob'] !='0000-00-00'){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['w_dob'])));}?></span> 
+			             			ខែ <span class="value" style="min-width:30px;"><?php //if (!empty($this->agreement['w_dob']) && $this->agreement['w_dob'] !='0000-00-00'){ echo $month[date("m",strtotime($this->agreement['w_dob']))];}?></span> 
+			             			ឆ្នាំ <span class="value" style="min-width:30px;"><?php //if (!empty($this->agreement['w_dob']) && $this->agreement['w_dob'] !='0000-00-00'){ echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['w_dob'])));}?></span> 
+			             			កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:30px;"><?php //echo $this->agreement['w_manager_nation_id'];?></span>
+			             			<?php //}?> 
+			             			 -->
+			             			  <strong>បានព្រមព្រៀងលក់<?php echo $this->agreement['property_type_kh'];?></strong> មានចំនួន <?php echo $dbparmeter->getNumberInkhmer($countland);?> ទំហំ <span class="value" style="min-width:20px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['full_size']);?></span> ម៉ែត្រក្រឡា 
 			             			ទទឹង <span class="value" style="min-width:20px;"><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['land_width'],0));?></span> ម៉ែត្រ 
 			             			បណ្តោយ <span class="value" style="min-width:20px;"><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['land_height'],0));?></span> ម៉ែត្រ
 			             			ស្ថិតនៅក្នុង <?php echo $this->agreement['project_location'];?>។
@@ -194,7 +203,7 @@ dojo.require("dijit.form.DateTextBox");
 						             			</tr>
 						             		</table>
 				             			</div>
-				             			<span class="margin-left">&nbsp;</span>លក់ទៅអោយឈ្មោះ <span class="value" style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span> 
+				             			<span class="margin-left">&nbsp;</span>លក់ទៅឲ្យឈ្មោះ <span class="value" style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span> 
 				             			ភេទ <span class="value" style="min-width:10px;"><?php echo $this->agreement['sexKh'];?></span>
 					             		កើតថ្ងៃទី  <span class="value" style="min-width:10px;"><?php if (!empty($this->agreement['dob']) && $this->agreement['dob'] !='0000-00-00'){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob'])));}?></span> 
 					             		ខែ <span class="value" style="min-width:10px;"><?php if (!empty($this->agreement['dob']) && $this->agreement['dob'] !='0000-00-00'){ echo $month[date("m",strtotime($this->agreement['dob']))];}?></span>  
@@ -397,10 +406,9 @@ dojo.require("dijit.form.DateTextBox");
 				             		</p>
 				             		<p style="margin-top:-12px;">
 				             		ភាគីលក់សូមសន្យាដូចតទៅ:<br />
-				             		<span class="margin-left" ></span>-ក្រោយពីទទួលការលក់ហើយមិនកែប្រែតំលៃ ឬប្រែមិនលក់ដីវិញឡើយ។<br />
-				             		<span class="margin-left" ></span>-បើដល់ថ្ងៃកំណត់ហើយមិនឃើញអ្នកទិញប្រគល់ប្រាក់គ្រប់ចំនួនទេនោះប្រាក់បង់កន្លងមក ចាត់ទុកជាមោឃ:។<br />
-				             		<span class="margin-left" ></span>-បើអនុវត្តន៍ផ្ទុយពីនាះ ខ្ញុំបាទ/នាងខ្ញុំសុខចិត្តសងប្រាក់ដើមកក់កន្លងមក ហើយម្យ៉ាងវិញ<br />
-				             		<span class="margin-left" ></span>បើថ្ងៃក្រោយ មានជនណាមួយទោះក្នុង ឬក្រៅមកតវ៉ាដីនេះជាទ្រព្យសម្បត្តិរបស់ខ្លួន ខ្ញុំបាទ/នាងខ្ញុំ  សូមទទួលខុសត្រូវចំពោះមុខច្បាប់ជាធរមាន ។ក្រែងពុំពិតដូចពាក្យសន្យាខាងលើយើងខ្ញុំសូមផ្តិតមេដៃស្តាំជាភស្តុតាង។
+				             		<span class="margin-left" ></span>-ក្រោយពីទទួលការលក់ហើយ មិនកែប្រែតំលៃ ឬប្រែមិនលក់ដីវិញ។<br />
+				             		<span class="margin-left" ></span>-បើដល់ថ្ងៃកំណត់ហើយ មិនឃើញអ្នកទិញប្រគល់ប្រាក់គ្រប់ចំនួនទេនោះ ប្រាក់បង់កន្លងមកចាត់ទុកជាមោឃៈ។<br />
+				             		<span class="margin-left" ></span>-បើអនុវត្តន៍ផ្ទុយពីនាះ ខ្ញុំបាទ/នាងខ្ញុំសុខចិត្តសងប្រាក់ដើមកក់កន្លងមក ម្យ៉ាងវិញទៀត បើថ្ងៃក្រោយ មានជនណាមួយទោះក្នុង ឬក្រៅមកតវ៉ាដីនេះជាទ្រព្យសម្បត្តិរបស់ខ្លួន ខ្ញុំបាទ/នាងខ្ញុំ  សូមទទួលខុសត្រូវចំពោះមុខច្បាប់ជាធរមាន ក្រែងពុំពិតដូចពាក្យសន្យាខាងលើ យើងខ្ញុំសូមផ្តិតមេដៃស្តាំ ចុះហត្ថលេខា និងបោះត្រាក្រុមហ៊ុនជាភស្តុតាង។
 				             		</p>
 				             		<p style=" text-align: right;margin-top: -20px;">
 				             			ធ្វើនៅថ្ងៃទី<span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
@@ -416,7 +424,7 @@ dojo.require("dijit.form.DateTextBox");
 				             				<span class="value">សាក្សីទី២</span>
 				             			</div>
 				             			<div style="white-space:nowrap; font-weight:bold; width:24%; text-align: center; display: inline-block;">
-				             				<span class="value">ស្នាមមេដៃអ្នកលក់</span>
+				             				<span class="value">ហត្ថលេខា និងត្រា អ្នកលក់</span>
 				             			</div>
 				             			<div style="height: 90px;">
 				             			</div>
