@@ -118,8 +118,8 @@ public function init()
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 		));
-		$group_opt = $db->getGroupCodeById(1,0,1);//code,individual,option
-		$_customer_code->setMultiOptions($group_opt);
+		//$group_opt = $db->getGroupCodeById(1,0,1);//code,individual,option
+		//$_customer_code->setMultiOptions($group_opt);
 		
 		$_property = new Zend_Dojo_Form_Element_FilteringSelect('property');
 		$_property->setAttribs(array(

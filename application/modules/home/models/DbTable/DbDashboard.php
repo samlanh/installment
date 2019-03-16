@@ -158,18 +158,24 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 	}
 	function getCommissionPiadByAgent(){
 	
-		$dbglobal = new Application_Model_DbTable_DbGlobal();
-		$userid = $dbglobal->getUserId();
-		$db_user=new Application_Model_DbTable_DbUsers();
-		$user_info = $db_user->getUserInfo($userid);
-		$user_id = $user_info['staff_id'];
+// 		$dbglobal = new Application_Model_DbTable_DbGlobal();
+// 		$userid = $dbglobal->getUserId();
+		
+// 		$db_user=new Application_Model_DbTable_DbUsers();
+// 		$user_info = $db_user->getUserInfo($userid);
+// 		$user_id = $user_info['staff_id'];
+		$session_user=new Zend_Session_Namespace('authinstall');
+		$user_id = $session_user->user_id;
 		$db = $this->getAdapter();
-		$sql="
-		SELECT 
-			SUM(s.`comission`) AS total_commission,
-			(SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`staff_id` = c.`staff_id`) AS total_commission_get
-		 	FROM `ln_sale` AS s WHERE s.`staff_id` =$user_id ";
-		return $db->fetchRow($sql);
+		$sql="SELECT staff_id FROM `rms_users` WHERE id=$user_id limit 1 ";
+		$user_id  = $db->fetchOne($sql);
+	
+			$sql="
+			SELECT 
+				SUM(s.`comission`) AS total_commission,
+				(SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`staff_id` = c.`staff_id`) AS total_commission_get
+			 	FROM `ln_sale` AS s WHERE s.`staff_id` =$user_id ";
+			return $db->fetchRow($sql);
 	}
 	
 	function getAllLandInfo($search = null,$is_sold=null){

@@ -1160,7 +1160,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$options=array(''=>"------Select Client Code-Name------");
   	if($opt!=null){
 		if(!empty($result))foreach($result AS $row){
-				$label = ($diplayby==1)?$row['client_number']:$row['name_en'].','.$row['province_en_name'].','.$row['district_name'].','.$row['commune_name'].','.$row['village_name'];	
+				$label =$row['client_number'];	
   			$options[$row['client_id']]=$label;
 		}  
   		return $options;	

@@ -289,7 +289,7 @@ dojo.require("dijit.form.DateTextBox");
 		             		<span> នៅថ្ងៃទី  <?php echo (date("d",strtotime($this->agreement['validate_date'])));?></span> <span style="width: 100px;"></span> ខែ  <?php echo $month[date("m",strtotime($this->agreement['validate_date']))];?> ឆ្នាំ <?php echo (date("Y",strtotime($this->agreement['validate_date'])));?> ។
 		             		<?php if($this->agreement['price_sold']-$paid>0){?>
 		             		<span>ហើយប្រាក់ដែលនៅសល់ចំនួន</span>
-							<span class="" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-$rsdeposite['total_principal_permonthpaid']-$this->agreement['second_depostit']),0);?></strong></span>
+							<span class="" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-@$rsdeposite['total_principal_permonthpaid']-$this->agreement['second_depostit']),0);?></strong></span>
 									(<span  style="min-width: 50px;font-weight:bold;"><label id="lable_remainkhmer" style="overflow-wrap: break-word;white-space: normal;font-family: 'Times New Roman','Khmer OS Battambang'"></label> ដុល្លារអាមេរិក) ។</span>
 							<?php }?>
              		<p>
@@ -738,7 +738,11 @@ function doPrint1() {
     window.frames["print_frame"].window.print();
 }
 
-<?php $remain = $this->agreement['price_sold']-$paid;?>
+<?php $remain = $this->agreement['price_sold']-$paid;
+		if(empty($remain)){
+			$remain=0;
+		}
+	?>
 	a ='<?php echo $remain; ?>';
 	money_khmer=read_money_in_khmer(a);
 	decimalmoney_khmer='<?php echo substr(number_format($remain,2),-2);?>';
@@ -765,8 +769,10 @@ function doPrint1() {
 	dojo.byId('lable_pricesoldkhmer').innerHTML=money_khmersold+" ";
 	
 	 <?php if ($this->agreement['payment_id']!=1){?>
-	dojo.byId('lable_remainkhmer1').innerHTML=money_khmer;
-	dojo.byId('lable_pricesoldkhmer1').innerHTML=money_khmersold+" ";
+		if(a!=0){
+			dojo.byId('lable_remainkhmer1').innerHTML=money_khmer;
+		}
+		dojo.byId('lable_pricesoldkhmer1').innerHTML=money_khmersold+" ";
 	 <?php }?>
 	
 	
