@@ -2618,11 +2618,12 @@ function updatePaymentStatus($data){
    	   	(SELECT ln_client.name_kh FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS name_kh,
    	   	(SELECT ln_client.sex FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS sex,
    	   	(SELECT ln_client.tel FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS tel,
-   	   	(SELECT  first_name FROM rms_users WHERE id=op.user_id LIMIT 1 ) AS user_name
+   	   	(SELECT  first_name FROM rms_users WHERE id=op.user_id LIMIT 1 ) AS user_name,
+   	   	op.status
    	   	FROM `ln_otherincomepayment` AS op,
 			`ln_otherincome` AS oi
 		WHERE oi.id = op.otherincome_id
-   	   	AND op.status=1";
+   	   	";//AND op.status=1
     
       	if (!empty($search['adv_search'])){
       		$s_where = array();
