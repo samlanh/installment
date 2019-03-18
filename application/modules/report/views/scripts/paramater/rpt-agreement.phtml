@@ -319,28 +319,6 @@ dojo.require("dijit.form.DateTextBox");
 		             				<strong style="font-family:'Khmer OS Muol Light';font-weight:200;">ប្រការ ២ :<span id="padding-left-2">លក្ខខណ្ឌទូទាត់</span></strong>
 		             			</div>
 		             			<table width="100%" border="0">
-		             				<tr>
-									    <td align="justify" style="vertical-align:top; text-align:center;width:5%;"></td>
-									    <td align="justify" style="vertical-align:top;" >
-									    	<b>១.២</b> តម្លៃសរុបនៃថ្លៃដីឡូត៍ចំនួន <?php echo $dbparmeter->getNumberInkhmer($countland); ?> ឡូត៍ដែលភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> យល់ព្រមទិញពីភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ក”</span>ដូចមានចែងក្នុង<strong>ប្រការ១.១.</strong> 
-									    	ខាងលើមានចំនួនUSD<span style="font-weight: bold;"> <?php echo number_format($this->agreement['price_sold'],2);?> (<label id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក)។ </span> ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> យល់ព្រមបង់ប្រាក់រំលស់តាមដំណាក់កាលដូចកាលបរិច្ឆេទខាងក្រោមនេះ៖
-									    	
-									    	 <script>
-												a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
-												money_khmersold=read_money_in_khmer(a_sold);
-												
-												decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
-												str_centsold = 'សេន';
-												if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
-												last_number_sold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
-												
-												if(last_number_sold<=0){last_number_sold='';}
-												money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
-												dojo.byId('lable_pricekhmer').innerHTML=money_khmersold+" ";
-												dojo.byId('lable_pricekhmer1').innerHTML=money_khmersold+" ";
-										</script>
-									    </td>  
-								  </tr>
 										  <?php 
 										    	$dbs = new Loan_Model_DbTable_DbLandpayment();
 										    	$resultdeposit = $dbs->getDepositFirstPaymentMoney($this->agreement['id']);
@@ -366,8 +344,12 @@ dojo.require("dijit.form.DateTextBox");
 											             			<?php if(!empty($resultdeposit)){?><!-- ករណីកកច្រើនដង ចេញប្រវត្តិបង់ -->
 											             			<?php foreach($resultdeposit as $keydeposite =>$rsdeposite){$keystart++;?>
 											             			<li >
-												             			<span  ><strong>ដំណាក់កាលទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?>៖</strong> នៅថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($rsdeposite['date_input'])))." ខែ ".$month[date("m",strtotime($rsdeposite['date_input']))]." ឆ្នាំ ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($rsdeposite['date_input']))); ?> ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> បានបង់ប្រាក់ដំណាក់កាលទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?>ចំនួន USD <span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($rsdeposite['total_principal_permonthpaid'],2);?>
-											             				(<label style="font-family:'Khmer OS Battambang'" id="lable_depositpaid<?php echo $keydeposite+1;?>"></label><span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក</span>)</span> ជាប្រាក់កក់ថ្លៃទិញដីឡូត៍។
+												             			<span>
+													             			<!-- <strong>ដំណាក់កាលទី<?php //echo $dbparmeter->getNumberInkhmer($keystart);?>៖</strong> -->
+													             			ភាគី<strong>”ខ”</strong> បានកក់ប្រាក់ចំនួន USD <span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($rsdeposite['total_principal_permonthpaid'],2);?>
+												             				(<label style="font-family:'Khmer OS Battambang'" id="lable_depositpaid<?php echo $keydeposite+1;?>"></label><span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក</span>)</span> 
+												             				ជូនភាគី<strong>”ក”</strong>
+													             			 នៅថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($rsdeposite['date_input'])))." ខែ ".$month[date("m",strtotime($rsdeposite['date_input']))]." ឆ្នាំ ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($rsdeposite['date_input']))); ?>។ 
 											             				</span>
 											             				 <script>
 																			a ='<?php echo ($rsdeposite['total_principal_permonthpaid']) ?>';
@@ -392,10 +374,15 @@ dojo.require("dijit.form.DateTextBox");
 											             				<?php 
 													             			$i=0; $numrow = 0;
 													             			$countSchdule = count($this->sale_schedule);
-													             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++; $keystart++; ?>
+													             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++; ?>
 													             			<?php 
 													             			if($row['is_completed']==1 AND $this->agreement['is_reschedule']==3){continue;}
 													             			$paid = $paid+$row['principal_permonth'];?>             	
+													             			
+													             			<?php if ($row['principal_permonth']==$paid){
+														             				continue;
+														             			}
+														             			?>   
 													             			<?php if($key==0){?>
 														             		<?php
 														             			if($row['date_payment']==$this->agreement['buy_date'] AND $paid_amount==$row['principal_permonth'] ){
@@ -410,16 +397,28 @@ dojo.require("dijit.form.DateTextBox");
 													             			}?>
 													             			
 												             			<li>
-													             			<?php 
+													             			<?php $keystart++; 
 													             				$numrow=$numrow+1;?>
-													             				<span  ><strong>ដំណាក់កាលទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?>៖</strong> នៅថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($row['date_payment'])))." ខែ ".$month[date("m",strtotime($row['date_payment']))]." ឆ្នាំ  ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($row['date_payment']))); ?> ភាគី<span style=" font-family:'Khmer OS Muol Light';font-weight:200;">”ខ”</span> យល់ព្រមបង់ថ្លៃទិញដីឡូត៍បន្ថែមសរុប <span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>
-													             				(<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label><span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក)</span>
-													             				</span>
+													             				<span>
 													             				<?php if($this->agreement['payment_id']==2){?>
 														             					<?php if ($countSchdule==$key+1){?>
-														             					ជាប្រាក់បង់ផ្តាច់ថ្លៃទិញដីឡូតិ៍។ 
+														             					ភាគី<strong>”ខ”</strong> បានកក់ប្រាក់លើកទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?> ចំនួន USD 
+															             				<span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>
+															             				(<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label><span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក)</span>
+															             				</span>
+															             				ជូនភាគី<strong>”ក”</strong>
+															             				 នៅថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($row['date_payment'])))." ខែ ".$month[date("m",strtotime($row['date_payment']))]." ឆ្នាំ  ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($row['date_payment']))); ?> 
+															             				ជាប្រាក់បង់ផ្តាច់ថ្លៃទិញដីឡូតិ៍ ។ 
 														             					<?php }?>
-													             					<?php }?>
+												             					<?php }else{?>
+												             					ភាគី<strong>”ខ”</strong> បានកក់ប្រាក់លើកទី<?php echo $dbparmeter->getNumberInkhmer($keystart);?> ចំនួន USD 
+													             				<span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>
+													             				(<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label><span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក)</span>
+													             				</span>
+													             				ជូនភាគី<strong>”ក”</strong>
+													             				 នៅថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($row['date_payment'])))." ខែ ".$month[date("m",strtotime($row['date_payment']))]." ឆ្នាំ  ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($row['date_payment']))); ?> 
+													             				 ។
+													             				<?php }?>
 													             				</span>
 													             				 <script>
 																					a ='<?php echo ($row['principal_permonth']) ?>';
@@ -450,37 +449,43 @@ dojo.require("dijit.form.DateTextBox");
 										  <?php if($this->agreement['payment_id']==4){?>
 										  <tr>
 											    <td align="justify" style="vertical-align:top; text-align:right;width:5%;"></td>
-											    <td align="justify" ><span style="padding-left:35px"></span>ភាគី "<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ខ</span>
-											    " យល់ព្រមបង់រំលស់ទឹកប្រាក់ដែលនៅសល់ចំនួន  USD <span class="value" style="min-width: 50px;"><strong><?php echo number_format(($this->agreement['price_sold']-$paid),2);?></strong></span>(<span class="value" style="min-width: 50px;"><label id="lable_remainkhmer" style="font-family: 'Times New Roman','Khmer OS Battambang'"></label> </span>ដុល្លារអាមេរិក)
-											  	
-											  	  រយៈពេល <?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0)); ?>
-											  	 <?php if($this->agreement['payment_id']!=4){
-														echo $tr->translate("MONTH");
-													}else{
-														echo ($dataterm['install_by']==12)?$tr->translate("ឆ្នាំ"):$tr->translate("ខែ");
-												}?> 
-											  	  ចាប់ផ្ដើមបង់ចាប់ពីថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['first_payment'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['first_payment']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['first_payment'])));?>
-											            តាមតារាងបង់ប្រាក់រំលស់(ឧបសម្ព័ន១)។
-											         <script>
-													     <?php $remain = $this->agreement['price_sold']-$paid;?>
-														a ='<?php echo $remain; ?>';
-														money_khmer=read_money_in_khmer(a);
-														decimalmoney_khmer='<?php echo substr(number_format($remain,2),-2);?>';
-														str_cent = 'សេន';
-													
-														if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent=""}
-														
-														last_number='<?php echo substr(number_format($remain,2),-1);?>';
-														
-														if(last_number<=0){last_number='';}
-														money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
-														dojo.byId('lable_remainkhmer').innerHTML=money_khmer;
-													</script>
-											    </td>  
-										  </tr>
-										   <tr>
-										  		 <td align="justify" style="vertical-align:top; text-align:right;width:5%;"></td>
-											    <td align="justify"><span style="padding-left:5px"></span>ភាគី <span style="font-family:'Khmer OS Muol Light';font-weight:200;">"ខ"</span> មានសិទ្ធិបង់ទឹកប្រាក់ច្រើនជាងតារាងបង់ប្រាក់រំលស់ ឬបង់ផ្តាច់មុនបាន។
+											    <td align="justify" >
+											    
+											    <ol style="list-style-type: none;text-align:justify;padding:0;" start="0">
+						             				<li>
+							             				<ul style="list-style-type: square;text-align:justify; margin-left: -20px" start="1">
+							             					<li>
+							             					ប្រាក់នៅសល់ចំនួន USD <span class="value" style="min-width: 50px;"><strong><?php echo number_format(($this->agreement['price_sold']-$paid),2);?></strong></span>(<span class="value" style="min-width: 50px; font-weight: bold;"><span id="lable_remainkhmer" style="font-family: 'Times New Roman','Khmer OS Battambang'"></span> ដុល្លារអាមេរិក</span>)
+														  	ភាគី<strong>”ខ”</strong> ត្រូវបង់រំលស់ជូនភាគី<strong>”ក”</strong> ក្នុងរយៈពេល <?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0)); ?>
+														  	 <?php if($this->agreement['payment_id']!=4){
+																	echo $tr->translate("MONTH");
+																}else{
+																	echo ($dataterm['install_by']==12)?$tr->translate("ឆ្នាំ"):$tr->translate("ខែ");
+															}?> 
+														  	<!--   ចាប់ផ្ដើមបង់ចាប់ពីថ្ងៃទី <?php //echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['first_payment'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['first_payment']))];?> ឆ្នាំ <?php //echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['first_payment'])));?> -->
+														            តាមតារាងបង់ប្រាក់រំលស់(ឧបសម្ព័ន១)។
+														         <script>
+																     <?php $remain = $this->agreement['price_sold']-$paid;?>
+																	a ='<?php echo $remain; ?>';
+																	money_khmer=read_money_in_khmer(a);
+																	decimalmoney_khmer='<?php echo substr(number_format($remain,2),-2);?>';
+																	str_cent = 'សេន';
+																
+																	if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent=""}
+																	
+																	last_number='<?php echo substr(number_format($remain,2),-1);?>';
+																	
+																	if(last_number<=0){last_number='';}
+																	money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+																	dojo.byId('lable_remainkhmer').innerHTML=money_khmer;
+																</script>
+							             					</li>
+							             					<li>
+							             					ភាគី<strong>”ខ”</strong> ត្រូវបង់ប្រាក់ប្រចាំខែជូនភាគី<strong>”ក”</strong> អោយបានទៀងទាត់រៀងរាល់ថ្ងៃទី<span style="display: inline-block; min-width: 50px; text-align: center;"><?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['first_payment'])));?></span>នៃខែនីមួយៗតាម តារាងបង់ប្រាក់ដែលភ្ជាប់មកជាមួយ <strong>(បញ្ជាក់ ៖ ការបង់រំលស់ក្នុងតារាង គឺពុំមានការប្រាក់ទេ)</strong> ។
+							             					</li>
+							             				</ul>
+							             			</li>
+								             	</ol>
 											    </td>  
 										  </tr>
 										  <?php }?>
