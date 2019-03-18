@@ -23,7 +23,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 			FROM `ln_receiveplong` AS c ,`ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE p.`br_id` = c.`branch_id` AND pro.`id` = c.`house_id` AND
-			clie.`client_id` = c.`customer_id` ';
+			clie.`client_id` = c.`customer_id` AND c.`status`=1';
 		if($search['branch_id']>0){
 			$where.= " AND c.branch_id = ".$search['branch_id'];
 		}
@@ -83,6 +83,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 	}
 	public function editReceivedplong($data){
 		try{
+			
 			$db= $this->getAdapter();
 			$where_proper="id = ".$data['house_id'];
 			$this->_name="ln_properties";
@@ -109,7 +110,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 				'note'		  => $data['reason'],
 				'layout_type' => $data['plong_type'],
 				'user_id'	  => $this->getUserId(),
-				'status'	  =>1,
+				'status'	  =>$data['status'],
 				'create_date'=>date("Y-m-d")
 			);
 			$this->_name="ln_receiveplong";

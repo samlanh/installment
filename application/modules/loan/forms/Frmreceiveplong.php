@@ -58,13 +58,23 @@ public function init()
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside'));
 		
+		$_status = new Zend_Dojo_Form_Element_FilteringSelect('status');
+		$_status->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$options= array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DACTIVE"));
+		$_status->setMultiOptions($options);
+		
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
 			$_old_property_id->setValue($data['house_id']);
 			$buy_date->setValue($data['date']);
 			$_id->setValue($data['id']);
+			$_status->setValue($data['status']);
 		}
-		$this->addElements(array($branch_id,$_property,$buy_date,
+		$this->addElements(array($branch_id,$_property,$buy_date,$_status,
 				$_old_property_id,$_loan_code,$_id));
 		return $this;
 		
