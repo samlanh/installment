@@ -501,6 +501,8 @@ function getLandAndClientDetail(){
 			dijit.byId("house_id").attr("value",data.house_id);
 			dijit.byId("land_address").attr("value",data.land_address);
 			dijit.byId("street").attr("value",data.street);
+
+			dojo.byId("lb_property_type").innerHTML = data.pro_type;
 		},
 		error: function(err) {
 			alert(err);
@@ -624,6 +626,8 @@ function printSave(new_invoice_no){
 	//var date_payment = dd +'-'+month+'-'+y ;
 	
 	dojo.byId("lb_date").innerHTML =dijit.byId("Date").attr('displayedValue') ;
+	dojo.byId("lb_branch_name").innerHTML =dijit.byId("branch_id").attr('displayedValue') ;
+	
 	/*dojo.byId("lb_payment_method").innerHTML =dijit.byId("payment_method").attr('displayedValue') ;*/
 	dojo.byId("lb_land_code").innerHTML = dijit.byId("land_address").attr('displayedValue');
 	dojo.byId("lb_customer_name").innerHTML = customer_name ;
@@ -755,41 +759,26 @@ function printSubmit(){
 				</tr>
 			</table>
 			<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang'; white-space: nowrap;font-size:14px;margin-top: -5px;" class="print" cellspacing="2px"  cellpadding="0">
-				<tr >
-					<td width="10%"></td>
-					<td width="18%"></td>
-					<td width="9%"></td>
-					<td width="18%"></td>
-					<td width="4%"></td>
-					<td width="8%"></td>
-					<td width="4%"></td>
-					<td width="5%"></td>
-					<td width="3%"></td>
-					<td width="8%"></td>
+				<tr style=" font-size: 15px;">
+					<td colspan="3"><?php echo $tr->translate("CLIENT_NAME");?>&nbsp;: <span id="lb_customer"></span></td>
+					<td colspan="3" style="white-space: nowrap;"><?php echo $tr->translate("DATE");?>&nbsp;: <span style="font-size:15px; line-height: 14px; font-weight: bold;" id="lb_date"></span></td>
+					<td colspan="2"><?php echo $tr->translate("RECIEPT_NO");?>&nbsp;: <span style="font-size:15px; line-height: 14px; font-weight: bold;" id="lb_invoice"></span></td>
 				</tr>
-				<tr style="line-height: 15px;  font-family:'Khmer OS Battambang'; ">
-					<td class="one ">ឈ្មោះអតិថិជន</td>
-					<td valign="top"> :&nbsp; <span id="lb_customer"></span> </td>
-					<td class="one "><!-- ប្រភេទបង់ប្រាក់ --> </td>
-					<td valign="top"> <!-- :&nbsp; <label id="lb_payment_method" ></label> --> </td>
-					<td colspan="3">លេខបង្កាន់ដៃបង់  </td>
-					<td colspan="3" valign="top">:&nbsp;<span style="font-size:15px; line-height: 14px; font-weight: bold;" id="lb_invoice"></span></td>
+				<tr style="font-size: 15px; ">
+					<td colspan="3"><?php echo $tr->translate("PROPERTY_CODE");?>&nbsp;: <span id="lb_land_code"></span> <?php echo $tr->translate("STREET_NO");?>&nbsp;: <span id="lb_street"></span></td>
+					<td colspan="3">គម្រោង &nbsp;: <strong id="lb_branch_name" style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"></strong></td>
+					<td colspan="2"><?php echo $tr->translate("PROPERTY_TYPE");?>&nbsp;: <span  id="lb_property_type" style="font-size:15px; line-height: 14px;"></span></td>
 				</tr>
-				<tr style="line-height: 15px; ">
-					<td class="one ">លេខផ្ទះ</td>
-					<td valign="top"> :&nbsp; <span id="lb_land_code"></span> </td>
-					<td class="one ">លេខផ្លូវ </td>
-					<td valign="top"> :&nbsp; <span id="lb_street"></span> </td>
-					<td colspan="3">កាលបរិច្ឆេទ</td>
-					<td colspan="3" valign="top">:&nbsp;<span style="font-size:15px; line-height: 14px; font-weight: bold;" id="lb_date"></span></td>
+				<tr style="line-height: 5px; font-family: 'Times New Roman','Khmer OS Battambang';">
+					<td valign="top">&nbsp;</td>
 				</tr>
 				<tr>
-					<td colspan="10">
+					<td colspan="8">
 						<div id="t_amountmoneytype"></div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="10" valign="bottom">
+					<td colspan="8" valign="bottom">
 						<table width="100%"   style="font-family:'Times New Roman','Khmer OS Battambang';font-size:16px; line-height:18px;margin-top:-5px;margin-bottom:5px;">
 							<tr>
 								<td width="20%"></td>
