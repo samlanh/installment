@@ -298,7 +298,8 @@ function getAllBranch($search=null){
     		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
     		cheque,total_amount,description,date,
-    		(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id=ln_income.user_id LIMIT 1) AS user_name 
+    		(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id=ln_income.user_id LIMIT 1) AS user_name,
+    		status
     		FROM ln_income 
     		WHERE status=1 AND id =".$income_id;
     		return $db->fetchRow($sql);
