@@ -1529,7 +1529,7 @@ function getAllBranch($search=null){
 	    			`ln_properties` AS pro,
 	    		`ln_client` AS clie
 	    		WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
-	    		clie.`client_id` = s.`client_id` ';
+	    		clie.`client_id` = s.`client_id` AND c.status=1';
     		if($search['branch_id']>0){
     			$where.= " AND c.branch_id = ".$search['branch_id'];
     		}
@@ -1588,7 +1588,7 @@ function getAllBranch($search=null){
     	function getCommissionBalance($search=null){
     		$db = $this->getAdapter();
     		$sql="SELECT 
-				(SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` ) AS totoal_comminssion,
+				(SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` AND c.status=1 ) AS totoal_comminssion,
 				SUM(s.`comission`) AS total_sale_commission,
 				s.`full_commission`,
 				s.`branch_id`,

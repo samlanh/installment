@@ -78,11 +78,13 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	$sql = " SELECT * ,
       	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id ) AS times,
       	(SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
-      	(SELECT $str FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
+      	(SELECT $str FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype,
+      	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = v_soldreport.house_id LIMIT 1) AS old_land_id
       	FROM v_soldreport WHERE payment_id=1 AND is_cancel=0 ";
       
       	$where ='';
-      	$to_date = (empty($search['end_date']))? '1': " validate_date <= '".$search['end_date']." 23:59:59'";
+//       	$to_date = (empty($search['end_date']))? '1': " validate_date <= '".$search['end_date']." 23:59:59'";
+      	$to_date = (empty($search['end_date']))? '1': " end_line <= '".$search['end_date']." 23:59:59'";
       	$where= " AND ".$to_date;
       		if(!empty($search['adv_search'])){
       		$s_where = array();
