@@ -2,11 +2,9 @@
 
 class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
 {
-
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace('authinstall');
     	return $session_user->user_id;
-    	 
     }
    function getAllissueplong($search){
    	$from_date =(empty($search['start_date']))? '1': " sp.issue_date >= '".$search['start_date']." 00:00:00'";
@@ -56,7 +54,6 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
    	if($search['status_plong']==2){
    		$where.= " AND s.id  NOT IN (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 ) ";
    	}
-   	
    	$order = " ORDER BY sp.id DESC";
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql.$where.$order);

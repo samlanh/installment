@@ -94,7 +94,6 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 		$rs = $_dbmodel->getTransferProject($id);
 		$this->view->rs = $rs;
 		
-		
 		$frm = new Loan_Form_FrmTransferproject();
 		$frm_loan=$frm->FrmTransferProject($rs);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
