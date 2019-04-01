@@ -19,6 +19,7 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 						'client_name'=> -1,
 						'branch_id' => -1,
 						'status' => -1,
+						'status_plong'=>-1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						 );

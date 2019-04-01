@@ -1,5 +1,5 @@
 <?php 
-Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
+Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 	protected $tr;
 	public function init()
 	{
@@ -22,6 +22,18 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 				0=>$this->tr->translate("DACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		$_status->setValue($request->getParam("status"));
+		
+		$status_plong =  new Zend_Dojo_Form_Element_FilteringSelect('status_plong');
+		$status_plong->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside'));
+		$status_opt = array(
+				-1=>$this->tr->translate("SELECT_STATUS"),
+				1=>$this->tr->translate("បានប្រគល់"),
+				2=>$this->tr->translate("មិនទាន់ប្រគល់"));
+		$status_plong->setMultiOptions($status_opt);
+		$status_plong->setValue($request->getParam("status_plong"));
 		
 		$payment_process =  new Zend_Dojo_Form_Element_FilteringSelect('payment_process');
 		$payment_process->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
@@ -284,7 +296,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form {
 			$_releasedate->setValue($data['date_release']);
 			$client_name->setValue($data['client_name']);
 		}
-		$this->addElements(array($payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
+		$this->addElements(array($status_plong,$payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
 				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist));
 		return $this;
 		

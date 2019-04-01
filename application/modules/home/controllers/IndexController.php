@@ -167,7 +167,6 @@ public function init()
 	}
 	
 	function newsAction(){
-// 		$this->_helper->layout()->disableLayout();
 		$id = $this->getRequest()->getParam("detail");
 		$db = new Home_Model_DbTable_DbDashboard();
 		if (!empty($id)) {

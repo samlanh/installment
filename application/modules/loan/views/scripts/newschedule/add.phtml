@@ -1364,10 +1364,14 @@ function addNewindividual(){
 function calculateDuration(type=null){
 	if(type==1){
 		var total_paid_install = dijit.byId('for_installamount').get('value');
+		var other_fee = dijit.byId('other_fee').get('value');
+		if(isNaN(other_fee)){
+			other_fee=0;
+		}
 		if(total_paid_install == 0){
-			sold_price = dijit.byId('sold_price').get('value');
+			sold_price = dijit.byId('sold_price').get('value')+other_fee;
 		}else{
-			sold_price = dijit.byId('sold_price').get('value')-dijit.byId('paid_before').get('value');
+			sold_price = (dijit.byId('sold_price').get('value')+other_fee)-dijit.byId('paid_before').get('value');
 		}
 		
 		interest_rate= dijit.byId('interest_rate').get('value')/12/(100);
@@ -1381,8 +1385,8 @@ function calculateDuration(type=null){
 	
 			var duration =  Math.ceil(top_ii / Math.log(1+ parseFloat(interest_rate)));// ROUND UP
 		}else if(interest_rate==0){
-			duration = sold_price/fixed_payment;
-			duration = parseInt(duration);
+			duration = Math.round(sold_price/fixed_payment);
+			//duration = parseInt(duration);
 		}
 		dijit.byId('period').attr('value',duration);
 	}

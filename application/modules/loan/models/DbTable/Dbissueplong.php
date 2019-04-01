@@ -50,6 +50,12 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
    	if(($search['branch_id'])>0){
    		$where.= " AND s.branch_id = ".$search['branch_id'];
    	}
+   	if($search['status_plong']==1){
+   		$where.= " AND s.id = (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 AND rec.sale_id = sp.sale_id ORDER BY rec.id DESC LIMIT 1) ";
+   	}
+   	if($search['status_plong']==2){
+   		$where.= " AND s.id  NOT IN (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 ) ";
+   	}
    	
    	$order = " ORDER BY sp.id DESC";
    	$db = $this->getAdapter();
