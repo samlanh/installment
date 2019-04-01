@@ -85,12 +85,6 @@ dojo.require("dijit.form.DateTextBox");
 						span.margin-left{
 							margin-left:40px; display: inline-block;
 						}
-					div.watermark{
-							top: 0; position: fixed; display: block; 
-							background: url('<?php echo $this->baseUrl()."/images/watermark-soksan.png";?>') no-repeat center; 
-					    	height: 100%;z-index: -1; width: 100%;  
-							opacity: 0.15;
-						}
 
     		</style>
     		<style>
@@ -107,7 +101,6 @@ dojo.require("dijit.form.DateTextBox");
 			 </style>
 			 
 			 <div>
-    			<div class="watermark"></div>
 	        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="padding:0;margin:0;border:0px;" >
 	        	<tr>
 	                <td width="30%" valign="top" align="center">
@@ -355,12 +348,15 @@ dojo.require("dijit.form.DateTextBox");
 											                         <?php if($this->agreement['payment_id']==4){?>
 											                         <li>
 										             					ប្រាក់នៅសល់ចំនួន USD <span class="value" style="min-width: 50px;"><strong><?php echo number_format(($this->agreement['price_sold']-$paid),2);?></strong></span>(<span class="value" style="min-width: 50px; font-weight: bold;"><span id="lable_remainkhmer" style="font-family: 'Times New Roman','Khmer OS Battambang'"></span> ដុល្លារអាមេរិក</span>)
-																	  	ភាគី(ខ) ត្រូវបង់រំលស់ជូនភាគី(ក) ក្នុងរយៈពេល <strong><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0)); ?></strong>
-																	  	 <?php if($this->agreement['payment_id']!=4){
-																				echo $tr->translate("MONTH");
-																			}else{
-																				echo ($dataterm['install_by']==12)?$tr->translate("ឆ្នាំ"):$tr->translate("ខែ");
-																		}?> 
+																	  	ភាគី(ខ) ត្រូវបង់រំលស់ជូនភាគី(ក) 
+																	  	<!-- 
+																	  	ក្នុងរយៈពេល <strong><?php //echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0)); ?></strong>
+																	  	 <?php //if($this->agreement['payment_id']!=4){
+																				//echo $tr->translate("MONTH");
+																			//}else{
+																				//echo ($dataterm['install_by']==12)?$tr->translate("ឆ្នាំ"):$tr->translate("ខែ");
+																		//}?> 
+																	  	 -->
 																	  	<!--   ចាប់ផ្ដើមបង់ចាប់ពីថ្ងៃទី <?php //echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['first_payment'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['first_payment']))];?> ឆ្នាំ <?php //echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['first_payment'])));?> -->
 																	            តាមតារាងបង់ប្រាក់រំលស់(ឧបសម្ព័ន១)។
 																	         <script>
@@ -417,91 +413,49 @@ dojo.require("dijit.form.DateTextBox");
 										 </tr>
 									</table>
 			             		</span>
-			             		
-								<div style="width: 100%; display: block; line-height: 32px;">
-			             			<div class="padding-buttom">
-			             				<strong style="font-family:'Khmer OS Muol Light';font-weight:200;">ប្រការ ៧ :<span id="padding-left-2">សុពលភាពនៃកិច្ចសន្យា</span></strong>
-			             			</div>
-			             			<table width="100%" border="0"> 
-									  <tr>
-										    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
-										    <td align="justify" style="padding-left:5px">
-										    <span class="margin-left">&nbsp;</span>
-										  	 កិច្ចព្រមព្រៀងនេះជាកិច្ចព្រមព្រៀងទាំងមូលរបស់(ភាគី <strong>"ក"</strong>) និង (ភាគី <strong>"ខ"</strong>)។  រាល់កិច្ចព្រមព្រៀងដែលផ្ទុយពីកិច្ចសន្យាខាងលើមុនៗទាំងអស់ត្រូវទុកជាមោឃៈ។ ហើយការកែប្រែកិច្ចសន្យានេះ មិនត្រូវមានប្រសិទ្ធិភាពឡើយ លើកលែងតែធ្វើឡើងជាលាយលក្ខណ៍អក្សរហើយផ្តិតមេដៃដោយ (ភាគី <strong>"ក"</strong> ) និង (ភាគី<strong> "ខ"</strong>) ព្រមទាំងសាក្សីដឹងឭ។ ភាគីអ្នកលក់ <strong>"ក"</strong>  និង ភាគីអ្នកទិញ <strong>"ខ"</strong> សូមផ្តិតមេដៃស្តាំទុកជាភស្តុតាងដូចខាងក្រោម ៖
-										    </td>
-									  </tr>
-									</table>
-								</div>
 	             	</td>
 	             </tr>
 	             <tr>
 	             	<td colspan="3">
 	             		<p style=" text-align: right;">
-	             			ធ្វើនៅ<span style="display: inline-block;width: 100px;border-bottom: dashed 1px #000;"></span>ថ្ងៃទី<span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
+	             			ភ្នំពេញ ថ្ងៃទី<span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?></span> ខែ  <span class="value" style="min-width:30px;"> <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
 	             		</p>
 	             		<p>
-	             			<div style="white-space:nowrap;  font-family:'Khmer OS Muol Light'; width:24%; text-align: center; display: inline-block;">
-	             				<span class="value">ស្នាមមេដៃ ភាគី " ខ "</span>
+	             			<div style="white-space:nowrap; font-weight:bold; font-family:'Times New Roman','Khmer OS Battambang'; width:33%; text-align: center; display: inline-block;">
+	             				<span class="value">អ្នកទិញ</span>
 	             			</div>
-	             			<div style=" font-family:'Khmer OS Muol Light'; width:24%; text-align: center; display: inline-block;">
-	             				<span class="value">សាក្សីទី១</span>
+	             			<div style="font-weight:bold; font-family:'Times New Roman','Khmer OS Battambang'; width:33%; text-align: center; display: inline-block;">
+	             				<span class="value">សាក្សី</span>
 	             			</div>
-	             			<div style=" font-family:'Khmer OS Muol Light'; width:24%; text-align: center; display: inline-block;">
-	             				<span class="value">សាក្សីទី២</span>
-	             			</div>
-	             			<div style="white-space:nowrap;  font-family:'Khmer OS Muol Light'; width:24%; text-align: center; display: inline-block;">
-	             				<span class="value">ភាគី " ក "</span>
+	             			<div style="white-space:nowrap; font-weight:bold;  font-family:'Times New Roman','Khmer OS Battambang'; width:30%; text-align: center; display: inline-block;">
+	             				<span class="value">អ្នកលក់ តំណាងក្រុមហ៊ុន</span>
 	             			</div>
 	             			<div style="height: 90px;">
 	             			</div>
-	             			<div style="font-size:12px !important; width:24%;text-align: center; display: inline-block;">
-	             				<span class="border_bt  value" style="font-size:12px; font-family:'Khmer OS Muol Light'; width:80%;white-space: nowrap;text-align: center;" >ឈ្មោះ &nbsp;&nbsp;<?php echo $this->agreement['client_namekh'];//echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?>&nbsp;</span>
+	             			<div style="font-size:12px !important; font-weight:bold; font-family:'Times New Roman','Khmer OS Battambang'; width:33%;text-align: left; display: inline-block;">
+	             				<span class="border_bt  value" style=" font-size:12px; width:30%; text-align: left;"  >ឈ្មោះ &nbsp;&nbsp;</span>
+	             				<span class="border_bt  value" style="width:65%; border-bottom: dashed 1px #000;"><?php echo $this->agreement['client_namekh'];//echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?></span>
+	             				<br />
+	             				<span class="border_bt  value" style="font-size:12px; display: inline-block; width: 30%; ">លេខទូរស័ព្ទ</span>
+	             				<span class="border_bt  value" style="width:65%; border-bottom: dashed 1px #000;"><?php echo $this->agreement['client_phone'];?></span>
 	             			</div>
-	             			<div style="font-size:12px; width:24%; text-align: center; display: inline-block;">
-	             				<span class="border_bt  value" style="font-size:12px; display: inline-block; width: 15%; font-family:'Khmer OS Muol Light';">ឈ្មោះ</span>
-	             				<span class="border_bt  value" style="width:80%;font-family:'Khmer OS Muol Light';border-bottom: dashed 1px #000;">&nbsp;</span>
+	             			<div style="font-size:12px; font-weight:bold; width:30%; font-family:'Times New Roman','Khmer OS Battambang'; text-align: left; display: inline-block;">
+	             				<span class="border_bt  value" style="font-size:12px;  text-align: left; display: inline-block; width: 30%; ">ឈ្មោះ</span>
+	             				<span class="border_bt  value" style="width:65%; border-bottom: dashed 1px #000;">&nbsp;</span>
+	             				<br />
+	             				<span class="border_bt  value" style="font-size:12px; display: inline-block; width: 30%; ">លេខទូរស័ព្ទ</span>
+	             				<span class="border_bt  value" style="width:65%; border-bottom: dashed 1px #000;">&nbsp;</span>
 	             			</div>
-	             			<div style=" width:24%; text-align: center; display: inline-block;">
-	             				<span class="border_bt  value" style="font-size:12px; display: inline-block; width: 15%; font-family:'Khmer OS Muol Light';">ឈ្មោះ</span>
-	             				<span class="border_bt  value" style="width:80%;font-family:'Khmer OS Muol Light';border-bottom: dashed 1px #000;">&nbsp;</span>
-	             			</div>
-	             			<div style="font-size:12px; width:24%; text-align: center; display: inline-block;">
-	             				<span class="border_bt  value" style=" font-size:12px; font-family:'Khmer OS Muol Light'; width:80%;" >ឈ្មោះ &nbsp;&nbsp;<?php echo $this->agreement['user_name'];?></span>
+	             			<div style="font-size:12px; font-weight:bold; width:33%; text-align: left; display: inline-block; font-family:'Times New Roman','Khmer OS Battambang';">
+	             				<span class="border_bt  value" style=" font-size:12px; width:30%; text-align: left;" >ឈ្មោះ &nbsp;&nbsp;</span>
+	             				<span class="border_bt  value" style="width:65%; border-bottom: dashed 1px #000;"><?php echo $this->agreement['user_name'];?></span>
+	             				<br />
+	             				<span class="border_bt  value" style="font-size:12px; display: inline-block; width: 30%; ">លេខទូរស័ព្ទ</span>
+	             				<span class="border_bt  value" style="width:65%; border-bottom: dashed 1px #000;">&nbsp;</span>
 	             			</div>
 	             		</p>
 	             	</td>
 	             </tr>
-	             <tr>
-	             	<td colspan="3">
-	             		<table width="100%" border="0" style="font-family:'Khmer OS Muol Light'; font-size: 14px;">
-	             			<tr>
-	             				<td width="50%" align="center">
-	             					<br />
-	             					លេខៈ<span style="display: inline-block;width: 100px;border-bottom: dashed 1px #000;"></span><br />
-	             					បានឃើញ និង បញ្ចាក់ថា<br />
-	             					ហត្ថលេខាខាងស្ដាំពិតជារបស់<br />
-	             					លោកមេភូមិប្រាកដមែន។<br />
-	             					ថ្ងៃទី<span style="display: inline-block;width: 160px;border-bottom: dashed 1px #000;"></span>ខែ <span style="display: inline-block;width: 50px;border-bottom: dashed 1px #000;"></span> ឆ្នាំ <span style="display: inline-block;width: 50px;border-bottom: dashed 1px #000;"></span>
-	             					<br />
-	             					ធ្វើនៅ<span style="display: inline-block;width: 100px;border-bottom: dashed 1px #000;"></span>ថ្ងៃទី<span class="value" style="min-width:30px;"> <?php //echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php //echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> ២០<?php //echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
-	             					<br />
-	             					<strong>មេឃុំ/ចៅសង្កាត់.</strong><span style="display: inline-block;width: 100px;border-bottom: dashed 1px #000;"></span>
-	             				</td>
-	             				<td width="50%" align="center">
-	             					បានឃើញ និង បញ្ចាក់ថា<br />
-	             					ស្នាមមេដៃខាងលើនេះ ពិតជាស្នាមមេដៃ<br />
-	             					របស់ភាគីអ្នកលក់និងអ្នកទិញប្រាកដមែន<br />
-	             					ធ្វើនៅ<span style="display: inline-block;width: 100px;border-bottom: dashed 1px #000;"></span>ថ្ងៃទី<span class="value" style="min-width:30px;"> <?php //echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php //echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> ២០<?php //echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
-	             					<br />
-	             					<strong>មេភូមិ</strong><span style="display: inline-block;width: 100px;border-bottom: dashed 1px #000;"></span>
-	             				</td>
-	             			</tr>
-	             		</table>
-	             		<div style="height: 20px;">
-	             		
-	             		</div>
-	             	</td>
-	             </tr> 
 	        </table>
 	        <div id="printfooter" >
 	        		<table  width="100%" style="background: none;border-top: 2px solid #000;font-family: 'Khmer OS Battambang'; font-size:10px;line-height: 15px;white-space:nowrap;"> 
