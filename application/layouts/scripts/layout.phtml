@@ -22,29 +22,31 @@
 	$username = $session_user->first_name;
 	$user_id = $session_user->user_id;
 	if(empty($user_id)){
-			Application_Form_FrmMessage::redirectUrl("/");
-			exit();
+		Application_Form_FrmMessage::redirectUrl("/");
+		exit();
 	}
 	$user_info = $db_user->getUserInfo($user_id);
-	$them_style = 'soria'; //$session_user->theme_style;
+	$them_style = 'soria'; 
 	
 	$db = new Report_Model_DbTable_DbloanCollect();
 	$rs = $db->getCustomerNearlyPayment();
 	$rsagree = $db->getCustomerNearAgreement();
 	
 	$t = time();
-	$t0 = $session_user->timeout;;
+	$t0 = $session_user->timeout;
 	$diff = $t - $t0;
 	//500 = 5 min
 	if ($diff > 500 || !isset($t0))
 	{
 		$session_user->unsetAll();
 		Application_Form_FrmMessage::redirectUrl("/");
-			exit();
+		exit();
 	}
 	else
 	{
+		$session_user->unlock();
 		$session_user->timeout = time();
+		$session_user->lock();
 	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -84,7 +86,6 @@
     <link href="<?php echo $this->baseUrl()."/datatable/"?>responsive.dataTables.min.css" rel="stylesheet" type="text/css" />
     <script src="<?php echo $this->baseUrl()."/datatable/"?>datatables.min.js" type="text/javascript"></script>
     <script src="<?php echo $this->baseUrl()."/datatable/"?>dataTables.responsive.min.js" type="text/javascript"></script>
-    
     <script>
     $(document).ready(function() {
         $('#datatable-responsive').DataTable( {
@@ -113,19 +114,16 @@
 			background-image: url('<?php echo $this->baseUrl()."/images/fivestar-receipt.png";?>');background-size: 100%;
 		}
     </style>
-    <?php if($module=='home' AND $controller=="index" AND $action=="index"){?>
-	
+   <?php if($module=='home' AND $controller=="index" AND $action=="index"){?>	
    <?php }else{?>   
    <script src="<?php echo $base_url;?>js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
    <script>dojoConfig = {parseOnLoad: true}</script>
-	    <script>
+	   <script>
 			require(["dijit/form/Form","dijit/form/FilteringSelect","dijit/form/Button","dijit/Dialog"]);
       </script>
-	<?php }?>
-	 
+	<?php }?>	 
 	<link rel="shortcut icon" href="<?php echo $base_url;?>images/icon.ico" type="image/x-icon"/>
-	<link href="<?php echo $this->baseUrl()."/datatable/bootstrap-custome.css"?>" media="screen" rel="stylesheet" type="text/css">
-	 
+	<link href="<?php echo $this->baseUrl()."/datatable/bootstrap-custome.css"?>" media="screen" rel="stylesheet" type="text/css"> 
 </head>
 <body class="nav-md soria footer_fixed ">
 	<div class="container body">

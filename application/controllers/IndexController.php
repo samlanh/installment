@@ -9,9 +9,7 @@ class IndexController extends Zend_Controller_Action
     {
         /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');  
-    	
     }
-
     public function indexAction()
     {
     	$session_user=new Zend_Session_Namespace('authinstall');
@@ -37,9 +35,7 @@ class IndexController extends Zend_Controller_Action
  				$this->view->msg = 'System Expired';
  				return false;
 			}
-			
 			$formdata=$this->getRequest()->getPost();
-			
 			if($form->isValid($formdata))
 			{
 				$session_lang=new Zend_Session_Namespace('lang');
@@ -69,7 +65,6 @@ class IndexController extends Zend_Controller_Action
 					for($i=0; $i<count($arr_acl);$i++){
 						$arr_module[$i]=$arr_acl[$i]['module'];
 					}
-						
 					$arr_module=(array_unique($arr_module));
 					$arr_actin=(array_unique($arr_actin));
 					$arr_module=$this->sortMenu($arr_module);
@@ -79,7 +74,6 @@ class IndexController extends Zend_Controller_Action
 					$session_user->arr_actin = $arr_actin;
 						
 					$session_user->lock();
-					
 					$dbgb = new Application_Model_DbTable_DbGlobal();
 					$_datas = array('description'=>'Login to System');
 					$dbgb->addActivityUser($_datas);
@@ -105,7 +99,6 @@ class IndexController extends Zend_Controller_Action
 				else{					
 					$this->view->msg = 'ឈ្មោះ​អ្នក​ប្រើ​ប្រាស់ និង ពាក្យ​​សំងាត់ មិន​ត្រឺម​ត្រូវ​ទេ ';
 				}
-					
 			}
 			else{				
 				$this->view->msg = 'លោកអ្នកមិនមានសិទ្ធិប្រើប្រាស់ទេ!';
@@ -114,7 +107,6 @@ class IndexController extends Zend_Controller_Action
 		$session_lang=new Zend_Session_Namespace('lang');
 		$this->view->rslang = $session_lang->lang_id;
     }
-    
     protected function sortMenu($menus){
     	$menus_order = Array ( 'home','project','group','loan','incexp','property','other','report','rsvacl','setting');
     	$temp_menu = Array();
@@ -130,13 +122,11 @@ class IndexController extends Zend_Controller_Action
     	}
     	return $temp_menu;    	
     }
-
     public function logoutAction()
     {
         if($this->getRequest()->getParam('value')==1){        	
         	$aut=Zend_Auth::getInstance();
         	$aut->clearIdentity();  
-
         	$dbgb = new Application_Model_DbTable_DbGlobal();
         	$_datas = array('description'=>'Log out From System');
         	$dbgb->addActivityUser($_datas);
@@ -146,7 +136,6 @@ class IndexController extends Zend_Controller_Action
 			$log->insertLogout($session_user->user_id);
 			
         	$session_user->unsetAll();       	
-	           	         	 
         	Application_Form_FrmMessage::redirectUrl("/");
         	exit();
         } 
@@ -169,6 +158,7 @@ class IndexController extends Zend_Controller_Action
 					Application_Form_FrmMessage::Sucessfull('ការផ្លាស់ប្តូរដោយជោគជ័យ', self::REDIRECT_URL);
 				} catch (Exception $e) {
 					Application_Form_FrmMessage::message('ការផ្លាស់ប្តូរត្រូវបរាជ័យ');
+					Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 				}				
     		}
     		else{
@@ -176,7 +166,6 @@ class IndexController extends Zend_Controller_Action
     		}
         }   
     }
-
     public function reloadrAction(){
     	if($this->getRequest()->isPost()){
     		$data = $this->getRequest()->getPost();
@@ -186,15 +175,11 @@ class IndexController extends Zend_Controller_Action
     		exit();
     	}
     }
-    
     public function errorAction()
     {
-        // action body
-        
     }
     public function  demoAction(){
     	$this->_helper->layout()->disableLayout();
-    	
     	
     	$frm = new Loan_Form_Frmdemo();
     	$frm_loan=$frm->FrmAddLoan();
@@ -232,7 +217,6 @@ class IndexController extends Zend_Controller_Action
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     	
-    	
     	$param = $this->getRequest()->getParams();
     	$search = array(
     					"advance_search"=>'',
@@ -247,7 +231,6 @@ class IndexController extends Zend_Controller_Action
 			$this->view->rs = $db->getAllOtherIncome($search);
 		}
 		$this->view->search = $search;
-    	
     }
     function detailviewAction(){
     	$this->_helper->layout()->disableLayout();
@@ -269,8 +252,3 @@ class IndexController extends Zend_Controller_Action
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
 }
-
-
-
-
-

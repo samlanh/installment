@@ -323,7 +323,8 @@ function getAllBranch($search=null){
     		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
     		cheque,total_amount,description,date,
     		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
-    		status FROM ln_expense WHERE status=1 ";
+    		status 
+    			FROM ln_expense WHERE status=1 AND total_amount>0 ";
     		 
 //     		$order=" order by branch_id DESC";
     		$order="";
@@ -1529,7 +1530,8 @@ function getAllBranch($search=null){
 	    			`ln_properties` AS pro,
 	    		`ln_client` AS clie
 	    		WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
-	    		clie.`client_id` = s.`client_id` AND c.status=1';
+	    		clie.`client_id` = s.`client_id` AND c.status=1
+    			AND c.total_amount>0 ';
     		if($search['branch_id']>0){
     			$where.= " AND c.branch_id = ".$search['branch_id'];
     		}

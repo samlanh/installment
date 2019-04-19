@@ -57,7 +57,6 @@ class Report_LoanController extends Zend_Controller_Action {
   	$row = $dbs->getAllLnClient($search);
   	$this->view->tran_schedule=$row;
   	
-//  $this->view->loanlate_list = $db->getALLLoanlate($search);
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   	 

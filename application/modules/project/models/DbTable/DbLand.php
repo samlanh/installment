@@ -132,9 +132,11 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     }
 	public function addLandinfo($_data){
 		try{
+			$old_status = $_data['status'];
 			if(!empty($_data['id'])){
 				$oldCode = $this->getClientById($_data['id']);
 				$land_code = $oldCode['land_code'];
+				$old_status = $oldCode['status'];
 			}else{
 				$db = new Application_Model_DbTable_DbGlobal();
 				$land_code = $db->getNewLandByBranch($_data['branch_id']);
@@ -161,7 +163,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    		'north'	  => $_data['north'],
 	    		'west'	  => $_data['west'],
 	    		'east'	  => $_data['east'],
-		);
+			);
 	    $key = new Application_Model_DbTable_DbKeycode();
 	    $setting=$key->getKeyCodeMiniInv(TRUE);
 	    $show_house = $setting['showhouseinfo'];
@@ -178,6 +180,9 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    }
 		    
 		if(!empty($_data['id'])){
+			if($old_status==-2){
+				$_arr['status']=-2;
+			}
 			$where = 'id = '.$_data['id'];
 			$this->update($_arr, $where);
 			return $_data['id'];

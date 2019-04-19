@@ -597,7 +597,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`staff_id`        AS `staff_id`,
 		  `s`.`comission`       AS `comission`,
 		  `s`.`receipt_no`      AS `receipt_no`,
-		 
 		  s.total_installamount,
 		 (SELECT project_name FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS branch_name,
 		  (SELECT p_manager_namekh FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS project_manager_namekh,

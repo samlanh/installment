@@ -234,7 +234,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 //     					'width'=>$width,
 //     					'height'=>$height,
 //     					'land_size'=>$size,
-    			
     					'width'=>$data['width'],
     					'height'=>$data['height'],
     					'land_size'=>$data['land_size'],
@@ -242,7 +241,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'north'=>$data['north'],
     					'west'=>$data['west'],
     					'east'=>$data['east'],
-    					
     					"is_lock"=>1,
     					"status"=>-2,
     					"create_date"=>date("Y-m-d"),
@@ -256,7 +254,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			$this->_name="ln_properties";
     			$where = "id =".$data["land_code"];
     			$arr = array(
-    					"is_lock"=>1
+    				"is_lock"=>1
     			);
     			$this->update($arr, $where);
     			unset($datagroup);
@@ -277,7 +275,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		}
     		
     		$property_info = $this->getProperty($data["land_code"]);
-    		
     		$key = new Application_Model_DbTable_DbKeycode();
     		$setting=$key->getKeyCodeMiniInv(TRUE);
     		$note_agreement = '';
@@ -285,7 +282,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			$note_agreement = $data['note_agreement'];
     		}
     		
-    			   $arr = array(
+    			 $arr = array(
     				'branch_id'=>$data['branch_id'],
     			   	'receipt_no'=>$receipt,
     				'sale_number'=>$loan_number,
@@ -351,7 +348,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'received_date'=>$data['date_buy'],
     					'received_userid'=> $this->getUserId(),
     				);
-    				$this->insert($datapayment);
+    			$this->insert($datapayment);
     	    }
     		
 	    	if($data['deposit']>0){//insert payment

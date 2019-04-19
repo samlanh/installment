@@ -317,38 +317,23 @@ public function getAllOutstadingLoan($search=null){
 				  c.`phone`,
 				  (SELECT project_name FROM `ln_project` WHERE br_id=s.branch_id LIMIT 1 ) As branch_name ,
 				  `l`.`land_code`               AS `land_code`,
-				  `l`.`land_address`             AS `land_address`,
-				  `l`.`street`                   AS `street`,
-				  `s`.`sale_number`              AS `sale_number`,
-				  `s`.`client_id`                AS `client_id`,
-				  `s`.`price_before`             AS `price_before`,
-				  `s`.`price_sold`               AS `price_sold`,
-				  `s`.`discount_amount`          AS `discount_amount`,
-				  `s`.`other_fee`                AS `other_fee`,
-				  `s`.`paid_amount`              AS `paid_amount`,
-				  `s`.`balance`                  AS `balance`,
-				  `s`.`buy_date`                 AS `buy_date`,
-				  `s`.`startcal_date`            AS `startcal_date`,
-				  `s`.`first_payment`            AS `first_payment`,
-				  `s`.`validate_date`            AS `validate_date`,
-				  `s`.`end_line`                 AS `end_line`,
-				  `s`.`interest_rate`            AS `interest_rate`,
-				  `s`.`total_duration`           AS `total_duration`,
-				  `s`.`payment_id`               AS `payment_id`,
-				  `sd`.`id`                      AS `id`,
-				  `sd`.`penelize`                AS `penelize`,
-				  `sd`.`date_payment`            AS `date_payment`,
-				  `sd`.`amount_day`              AS `amount_day`,
-				  `sd`.`status`                  AS `status`,
-				  `sd`.`is_completed`            AS `is_completed`,
-				  `sd`.`begining_balance`        AS `begining_balance`,
-				  `sd`.`principal_permonthafter` AS `principal_permonthafter`,
-				  `sd`.`total_interest_after`    AS `total_interest_after`,
-				  `sd`.`total_payment_after`     AS `total_payment_after`,
-				  `sd`.`ending_balance`          AS `ending_balance`,
-				  `sd`.`service_charge`          AS `service_charge`,
+				  `l`.`land_address`            AS `land_address`,
+				  `l`.`street`                  AS `street`,
+				  `s`.`price_sold`              AS `price_sold`,
+				  `s`.`end_line`                AS `end_line`,
+				  `s`.`interest_rate`           AS `interest_rate`,
+				  `s`.`payment_id`              AS `payment_id`,
+				  `sd`.`id`                     AS `id`,
+				  `sd`.`penelize`               AS `penelize`,
+				  `sd`.`date_payment`           AS `date_payment`,
+				  `sd`.`amount_day`             AS `amount_day`,
+				  `sd`.`status`                 AS `status`,
+				  `sd`.`is_completed`           AS `is_completed`,
+				  SUM(`sd`.`principal_permonthafter`) AS `principal_permonthafter`,
+				  SUM(`sd`.`total_interest_after`)   AS `total_interest_after`,
+				  SUM(`sd`.`total_payment_after`)    AS `total_payment_after`,
+				  `sd`.`service_charge`         AS `service_charge`,
 				  sd.no_installment,
-				  sd.begining_balance_after,
 				  sd.last_optiontype,
 				  sd.ispay_bank,
 				  (SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = sd.ispay_bank LIMIT 1) AS payment_type,
@@ -366,7 +351,8 @@ public function getAllOutstadingLoan($search=null){
 				  AND sd.`is_completed` = 0 
 				  AND sd.`status` = 1 
 				  AND (`s`.`is_cancel` = 0)
-				  AND c.`client_id` = s.`client_id` ";
+				  AND c.`client_id` = s.`client_id` 
+				  AND sd.ispay_bank =0 ";
       	$where='';
       	if(!empty($search['adv_search'])){
       		$s_where = array();
@@ -391,7 +377,6 @@ public function getAllOutstadingLoan($search=null){
 		}
 		
         $group_by = " Group by s.id order by sd.date_payment ASC ";
-//         echo $sql.$where.$group_by;exit();
       	return $db->fetchAll($sql.$where.$group_by);
       }
       
@@ -728,7 +713,7 @@ public function getAllOutstadingLoan($search=null){
       		}
       	}
       //GROUP BY id,date_payment
-      	$group_by = " GROUP BY id ORDER BY id ASC,date_payment DESC ";
+      	$group_by = " GROUP BY id ORDER BY date_payment ASC ";
         $row = $db->fetchAll($sql.$where.$group_by);
         return $row;
       }

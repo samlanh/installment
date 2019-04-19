@@ -109,9 +109,9 @@
 		}
 		</style>
 	<?php 
-	$db_keycode = new Application_Model_DbTable_DbKeycode();
-	$key_code= $db_keycode->getSystemSetting(9);
-	$free_day=$key_code['value'];
+		$db_keycode = new Application_Model_DbTable_DbKeycode();
+		$key_code= $db_keycode->getSystemSetting(9);
+		$free_day=$key_code['value'];
 	?>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
 		<tr>
@@ -146,7 +146,6 @@
 		                    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
 			                <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
 			                <td rowspan="2"><?php echo $tr->translate("STREET");?></td>
-		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
 		                    <td colspan="4"><?php echo $tr->translate("PAYMENT_INFO");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("LATE_DAY");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
@@ -160,11 +159,11 @@
 		                </tr>
 	                </thead>
 	                <?php 
-	                    $amt_r1 = 0;$amt_r2 = 0;$amt_r3 = 0;$amt_r4 = 0;
 	                	$amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;
-	                	$amn_b1 = 0; $amn_b2 = 0; $amn_b3 = 0; $amn_b4 = 0;
 	                	$pene_amr=0; $pene_amb=0;$pene_amd=0;
-	                	$serv_amr=0;$serv_amb=0;$serv_amd=0;$penelize=0;$total_payment=0;
+	                	$serv_amd=0;
+	                	$penelize=0;
+	                	$total_payment=0;
 	                ?>
 	                <?php $i=1;?>
 	               <?php if(!empty($this->loanlate_list))foreach ($this->loanlate_list as $index => $rs){ 
@@ -176,7 +175,6 @@
 	               		<td style="line-height: 18px; white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $rs["phone"];?></td>
 		                <td align="left">&nbsp;<?php echo $rs['land_address'];?>&nbsp;</td>
 		                <td align="left">&nbsp;<?php echo $rs['street'];?>&nbsp;</td>
-	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["begining_balance_after"],2);?>&nbsp;</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?>&nbsp;</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["total_interest_after"],2);?>&nbsp;</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;
@@ -202,17 +200,15 @@
 		               				$result=$total_pay*(($rs['interest_rate']/100)/30/12)*($amount_lateday)*2;
 		               			}
 		               			$penelize = $rs['penelize']+$result;
-		               			$total_payment = $penelize+$rs['principal_permonthafter']+$rs['total_interest_after']+$rs['service_charge'];
+		               			$total_payment = $penelize+$rs['principal_permonthafter']+$rs['total_interest_after'];
 	               				echo number_format($penelize,2);
 	               			
 	               			?>&nbsp;
 	               		</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($total_payment,2);?>&nbsp;</td>
-	               		
 	               		<?php 
-	               		$color='';
-	               		
-						if($rs['last_optiontype']==1){//by date
+		               		$color='';
+							if($rs['last_optiontype']==1){//by date
 							if($rs['ispay_bank']==0){
 								if ($total_late_day<=13){
 									$color="style='background-color:blue;'";
@@ -225,11 +221,9 @@
 								
 							}
 						}else{//by last payment
-							
 						}	
 	               		?>
 	               		<td align="center" <?php echo $color;?> >&nbsp;
-							<?php //echo $total_late_day." Days";?>
 							<?php 
 		                    	if($rs['last_optiontype']==1){//by date
 		                    		if($rs['ispay_bank']==0){
@@ -245,7 +239,6 @@
 						</td>
 	               		<td align="center">&nbsp;<?php echo $rs["no_installment"];?>&nbsp;</td>
 	               		<td align="center">&nbsp;
-							<?php //echo date_format(date_create($rs["date_payment"]),'d-m-Y');?>
 							<?php 
 		                    	if($rs['last_optiontype']==1){//by date
 		                    		if($rs['ispay_bank']==0){
@@ -261,12 +254,10 @@
 						&nbsp;</td>
 	                </tr>
 	                <?php 
-						$amt_d1 = $amt_d1+$rs['begining_balance'];
 						$amt_d2 = $amt_d2+$rs['principal_permonthafter'];
 						$amt_d3 = $amt_d3+$rs['total_interest_after'];
 						$pene_amd=$pene_amd+$penelize;
 						$amt_d4 = $amt_d4+$total_payment;
-						$serv_amd = $serv_amd+$rs["service_charge"];
 		                $amount_days = strtotime($this->list_end_date)-strtotime($rs["date_payment"]);
 		                $amount_days =  floor($amount_days/(60*60*24));
 	               ?>
