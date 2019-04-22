@@ -158,6 +158,7 @@ dojo.require("dijit.form.DateTextBox");
 			                </tr>
 		                </thead>
 		               <?php 
+		               $amount_property =0;
 			               $db = new Report_Model_DbTable_DbLandreport();
 			               $amt_d = 0;
 			               $amn_d = 0;
@@ -165,6 +166,15 @@ dojo.require("dijit.form.DateTextBox");
 			               $url_client = $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-paymentschedules'));
 			               if(!empty($this->outstandloan))foreach($this->outstandloan as $key =>$row){?>
 		               <?php 
+		               
+			               if (!empty($row['old_land_id'])){
+			               	$idse = explode(",", $row['old_land_id']);
+			               	$countland = count($idse);
+			               	$amount_property = $amount_property+$countland;
+			               }else{
+			               	$amount_property = $amount_property+1;
+			               }
+		               
 		               		$total_receive = $db->getAmountReceiveByLoanNumber($row['id'],$row['client_id']);
 		               		$amt_d = $amt_d+$row['price_sold'];
 		               		$amn_d = $amn_d+$total_receive;
@@ -226,6 +236,9 @@ dojo.require("dijit.form.DateTextBox");
 		                    <td>&nbsp;<?php echo number_format($total_interest,2);?>&nbsp;</td>
 		                    <td>&nbsp;<?php echo number_format(($amt_d-$amn_d)+$total_interest,2);?>&nbsp;</td>
 		                </tr>
+		                 <tr class="style hover" style=" line-height: 24px; font-size:11px;">
+		                 	<td colspan="6" align="center"><?php echo $tr->translate("PROPERTY");?> : <?php echo $amount_property;?></td>
+		                 </tr>
 		              </table>
 		              <br />
 		              <?php echo $this->footerReport;?>

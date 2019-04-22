@@ -177,6 +177,7 @@ dojo.require("dijit.form.DateTextBox");
 	                </tr>
 	              </thead>
 	               <?php 
+	               $amount_property=0;
 	               $link="#";
 	               $total_paid = 0;$total=0;$balance=0;$set_cancel=0;
 	               $payment_0=0;$sold_price0=0;$paid_price0=0;$balace_price0=0;
@@ -188,6 +189,13 @@ dojo.require("dijit.form.DateTextBox");
 	               $db  = new Report_Model_DbTable_DbParamater();
 	               if(!empty($this->loanrelease_list)) foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
+	               if (!empty($row['old_land_id'])){
+	               	$idse = explode(",", $row['old_land_id']);
+	               	$countland = count($idse);
+	               	$amount_property = $amount_property+$countland;
+	               }else{
+	               	$amount_property = $amount_property+1;
+	               }
 	             if($row['is_cancel']==0){
 	               if($row['payment_id']==1){
 	               	 $payment_1=$payment_1+1;
@@ -348,6 +356,9 @@ dojo.require("dijit.form.DateTextBox");
 				                    <td align="center">&nbsp;<?php echo number_format($balace_price4,2);?>&nbsp;</td>
 				                    <td align="center">&nbsp;<?php echo number_format($balace_price5,2);?>&nbsp;</td>
 				                    <td align="center">&nbsp;<?php echo number_format($balace_price1+$balace_price2+$balace_price3+$balace_price4+$balace_price5+$balace_price6,2);?>&nbsp;</td>
+				                 </tr>
+				                 <tr class="style hover" style=" line-height: 24px; font-size:11px;">
+				                 	<td colspan="9" align="center"><?php echo $tr->translate("PROPERTY");?> : <?php echo $amount_property;?></td>
 				                 </tr>
 				              </table>
 				             </td>
