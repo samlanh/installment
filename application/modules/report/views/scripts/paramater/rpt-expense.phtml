@@ -172,7 +172,7 @@
 							<?php }?>
 					    </table>
 					    កម្រៃជើងសា
-					    <table id="exportExcel" class="content-data"  width="100%" border="1"  bordercolor="black">  
+					    <table  class="content-data"  width="100%" border="1"  bordercolor="black">  
 				    		<thead>
 				    		<tr class="hide" style="border:1px solid #000;">
 					             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
@@ -209,6 +209,50 @@
 						</tr>
 						<?php } ?>
 				    </table>
+				  	 ចំណាយពីការកែផ្ទះ
+				  	  <table  class="content-data" border="1" width="100%"  >
+					  	  <thead>  
+					    	<tr class="style" align="center"  >
+								<td><?php echo $tr->translate("NUM");?></td>
+							    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+							    <td><?php echo $tr->translate("EXPENSE_TITLE");?></td>
+							    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
+							    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
+							    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+							    <td><?php echo $tr->translate("CATEGORY");?></td>
+							    <td><?php echo $tr->translate("TOTAL_INCOME");?></td>
+							    <td><?php echo $tr->translate("CHEQUE");?></td>
+							    <td><?php echo $tr->translate("NOTE");?></td>
+							    <td><?php echo $tr->translate("DATE");?></td>
+							    <td><?php echo $tr->translate("BY_USER");?></td>
+							</tr>
+						</thead>
+						<?php 
+			            	if (!empty($this->houserepair)){
+			            ?>
+			            <?php foreach ($this->houserepair as $index => $rs){?>
+				   		<tr class=" stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+		               		<td style="text-align: center;">&nbsp;<?php echo $index+1; ?>&nbsp;</td>
+		               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+		               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
+		               		<td align="center">&nbsp;<a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a>&nbsp;</td>
+		               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a>&nbsp;</td> 
+		               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
+		               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+		               		<td align="center">&nbsp;<strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format(abs($rs["total_amount"]),2);}?></strong>&nbsp;</td>
+		               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
+		               		<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+		               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
+		               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
+		                </tr>
+		                 <?php 
+		                if ($rs['status']!=0){
+		                	$total = $total + abs($rs['total_amount']);
+		                }
+		               ?>
+				   		<?php }?>
+			            <?php }?>
+					</table>
 	            	</td>
 	            </tr>
 	            <tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;">

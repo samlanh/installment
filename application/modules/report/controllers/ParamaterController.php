@@ -26,7 +26,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->staff_list = $db->getAllstaff($search);
   	$this->view->search = $search;
   	$frm=new Other_Form_FrmStaff();
-  	$row=$frm->FrmAddStaff();
+  	$row=$frm->FrmAddStarf();
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_staff=$row;
   	
@@ -195,8 +195,11 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   	if($this->getRequest()->isPost()){
   		$search = $this->getRequest()->getPost();
+  		$search['client_name'] = empty($search['client_name'])?0:$search['client_name'];
+  		$search['land_id'] = empty($search['land_id'])?0:$search['land_id'];
   	}else{
   		$search = array(
+  				'client_name'=>0,
   				'land_id'=>0,
   				'start_date'  => date('Y-m-d'),
   				'end_date'    => date('Y-m-d'),
@@ -207,6 +210,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	}
   	 
   	$this->view->rscomisison = $db->getAllCommission($search);
+  	
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,1);
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();

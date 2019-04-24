@@ -2579,7 +2579,7 @@ function updatePaymentStatus($data){
 //    	return $db->fetchAll($sql.$where.$order);
 //    }
 
-      function getAllIncomeOtherPayment($search=null){
+      function getAllIncomeOtherPayment($search=null,$is_expense=null){
       	$db = $this->getAdapter();
       	$session_user=new Zend_Session_Namespace('authinstall');
       	$from_date =(empty($search['start_date']))? '1': " op.for_date >= '".$search['start_date']." 00:00:00'";
@@ -2613,7 +2613,9 @@ function updatePaymentStatus($data){
 			`ln_otherincome` AS oi
 		WHERE oi.id = op.otherincome_id
    	   	";//AND op.status=1
-    
+    	if (!empty($is_expense)){
+    		$where.= " AND op.total_paid <0 ";
+    	}
       	if (!empty($search['adv_search'])){
       		$s_where = array();
       		$s_search = trim(addslashes($search['adv_search']));
