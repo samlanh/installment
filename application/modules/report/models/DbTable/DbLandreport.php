@@ -2614,7 +2614,9 @@ function updatePaymentStatus($data){
 		WHERE oi.id = op.otherincome_id
    	   	";//AND op.status=1
     	if (!empty($is_expense)){
-    		$where.= " AND op.total_paid <0 ";
+    		$where.= " AND op.cate_type =13 ";
+    	}else{
+    		$where.= " AND op.cate_type =12 ";
     	}
       	if (!empty($search['adv_search'])){
       		$s_where = array();

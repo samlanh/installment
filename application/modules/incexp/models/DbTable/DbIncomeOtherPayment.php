@@ -98,8 +98,13 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 		$_db->beginTransaction();
 		try{
 // 			$invoice = $this->getInvoiceNoOtherIncomePayment($data['branch_id']);
-			$dbincom = new Incexp_Model_DbTable_DbIncome();
-			$invoice = $dbincom->getInvoiceNo($data['branch_id']);
+			if ($data['cate_type']==12){
+				$dbincom = new Incexp_Model_DbTable_DbIncome();
+				$invoice = $dbincom->getInvoiceNo($data['branch_id']);
+			}else{
+				$_dbexpense = new Incexp_Model_DbTable_DbExpense();
+				$invoice = $_dbexpense->getInvoiceNo($data['branch_id']);
+			}
 			
 			$OtherIncomeInfo = $this->getOtherIncomeInfo($data['otherincome_id']);
 			$totalpaid = $data['total_amount'];

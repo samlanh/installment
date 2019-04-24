@@ -31,6 +31,11 @@
 						alert("<?php echo $tr->translate("PLEASE_SELECT_BRANCH");?>");
 						return false;
 					}
+					cate_type = dijit.byId('cate_type').get('value');
+					if(cate_type=="" || cate_type ==-1){
+						alert("<?php echo $tr->translate("PLEASE_TYPE");?>");
+						return false;
+					}
 					otherincome_id = dijit.byId('otherincome_id').get('value');
 					if(otherincome_id=="" || otherincome_id ==-1){
 						alert("<?php echo $tr->translate("PLEASE_SELECT_HOUSE");?>");
@@ -221,7 +226,11 @@ dojo.ready(function(){
 		    }
 	    } 
 	}, "income_category");
-	
+	 var cate_type = dijit.byId('cate_type');
+	 cate_type.on('change', function(evt) {
+		 getInvoiceNo('');
+    });
+	    
 	getInvoiceNo('');
 	enablePayment();
 	getCategoryByType();
@@ -302,8 +311,14 @@ function getRepairIncomeByID(){
 		}
 	});
 }
-var url_get_invoice = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'get-invoice-no')); ?>';
+
 function getInvoiceNo(condition){
+	cate_type = dijit.byId('cate_type').get('value');
+	if(cate_type==12){
+		var url_get_invoice = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'get-invoice-no')); ?>';
+	}else{
+		var url_get_invoice = '<?php echo $this->url(array('module'=>'incexp','controller'=>'expense','action'=>'get-invoice-no')); ?>';
+	}
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
 		branch_id=1;

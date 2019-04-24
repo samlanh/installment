@@ -128,6 +128,9 @@ Class Incexp_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 			$_stutus->setValue($data['status']);
 			$_Description->setValue($data['note']);
 			$id->setValue($data['id']);
+			$_cate_type->setAttribs(array(
+					'readOnly'=>'true',
+			));
 		}
 		$this->addElements(array(
 				$_cate_type,

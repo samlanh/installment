@@ -158,7 +158,7 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		$sql = " select count(id) from ln_income where branch_id = $branch_id";
 		$amount = $db->fetchOne($sql);
 		
-		$sql1 = " select count(id) from ln_otherincomepayment where branch_id = $branch_id";
+		$sql1 = " select count(id) from ln_otherincomepayment where branch_id = $branch_id AND cate_type=12 ";
 		$amount1 = $db->fetchOne($sql1);
 		
 		$pre = 'inc1:';
