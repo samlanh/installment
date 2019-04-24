@@ -399,6 +399,15 @@ function printSave(new_invoice_no){
 		dijit.byId('total_amount').focus();
 	return false;
 	}
+
+	var total_amount = dijit.byId("total_amount").get('value');
+	if(total_amount>=0){
+		$("#incometitle").css("display", "block");
+		$("#expensetitle").css("display", "none");
+	}else{
+		$("#expensetitle").css("display", "block");
+		$("#incometitle").css("display", "none");
+	}
 	
 	customer_name = dijit.byId("customer_name").attr('displayedValue')+" ("+dijit.byId("house_no").attr('displayedValue')+","+dijit.byId("street").attr('displayedValue')+")";
 	
@@ -461,8 +470,16 @@ function printSubmit(){
 								<td id="projectlogo" width="25%">
 									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
 								</td>						
-								<td width="50%" style="font:18px 'Khmer OS Muol Light';" valign="top" align="center"><u><span style=" font-family: Arial Black;font-family:'Khmer OS Muol Light';">បង្កាន់ដៃទទួលប្រាក់</span></u>
-									<div style="line-height:10px;"><span style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</span></div>
+								<td width="50%" style="font:18px 'Khmer OS Muol Light';" valign="top" align="center">
+									<div id="incometitle">
+										<u><span style=" font-family: Arial Black;font-family:'Khmer OS Muol Light';">បង្កាន់ដៃទទួលប្រាក់</span></u>
+										<div style="line-height:10px;"><span style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</span></div>
+									</div>
+									<div id="expensetitle" style="display: none;">
+										<u><span style=" font-family: Arial Black;font-family:'Khmer OS Muol Light';">បង្កាន់ដៃចំណាយ</span></u>
+										<div style="line-height:10px;"><span style="font-size: 18px;font-weight:bold">PAYMENT VOUCHER</span></div>
+										</span>
+									</div>
 								</td>
 								<td width="25%">
 								</td>
