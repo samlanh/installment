@@ -414,9 +414,13 @@ function printSave(new_invoice_no){
 		dijit.byId('total_amount').focus();
 	return false;
 	}
-
-	var total_amount = dijit.byId("total_amount").get('value');
-	if(total_amount>=0){
+	cate_type = dijit.byId('cate_type').get('value');
+	if(cate_type=="" || cate_type ==-1){
+		alert("<?php echo $tr->translate("PLEASE_TYPE");?>");
+		return false;
+	}
+	
+	if(cate_type==12){
 		$("#incometitle").css("display", "block");
 		$("#expensetitle").css("display", "none");
 	}else{
