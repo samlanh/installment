@@ -39,7 +39,9 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 			s.price_sold,
 			(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name,
 			c.total_amount,
-			c.`for_date`,c.`status`
+			(SELECT name_kh from ln_view where type=13 AND key_code=c.category_id LIMIT 1) as expense_type,
+			c.`for_date`,
+			c.`status`
 			FROM `ln_comission` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND

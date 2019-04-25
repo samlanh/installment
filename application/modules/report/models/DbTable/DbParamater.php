@@ -326,7 +326,6 @@ function getAllBranch($search=null){
     		status 
     			FROM ln_expense WHERE status=1 AND total_amount>0 ";
     		 
-//     		$order=" order by branch_id DESC";
     		$order="";
     		if($search['ordering']==1){
     			$order.=" order by date DESC";

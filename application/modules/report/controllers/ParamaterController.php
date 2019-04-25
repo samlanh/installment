@@ -241,9 +241,10 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->row = $db->getAllIncome($search);
   	$this->view->rowExpense = $db->getAllExpense($search);
   	$this->view->collectMoney = $db->getCollectPayment($search);
-  
+  	
+  	$this->view->rscomisison = $db->getAllCommission($search);
+  	
   	$db  = new Report_Model_DbTable_DbLandreport();
-//   	$this->view->houserepair =$db->getAllIncomeOther($search);
   	$this->view->houserepair =$db->getAllIncomeOtherPayment($search);
   	
   	$frm = new Loan_Form_FrmSearchLoan();

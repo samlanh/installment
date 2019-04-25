@@ -74,7 +74,6 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		}else{
     			$array[]=round($total_loan_amount/$term,0, PHP_ROUND_HALF_DOWN);
     		}
-    
     	}
     	$array = array_values($array);
     	return Loan_Model_DbTable_DbIRRFunction::IRR($array);
