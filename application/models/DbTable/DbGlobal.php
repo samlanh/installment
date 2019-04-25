@@ -98,20 +98,34 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	function getAllCustomer(){
 		return array();
 	}
+// 	public function getAccessPermission($branch_str='branch_id'){
+// 		$session_user=new Zend_Session_Namespace('authinstall');
+// 		$branch_id = $session_user->branch_id;
+// 		$level = $session_user->level;
+// 		if($level==1 OR $level==2){
+// 			$result = "";
+// 			return '';
+// 		}
+// 		else{
+// 			$result = " AND $branch_str =".$branch_id;
+// 			return '';
+// 		}
+// 	}
 	public function getAccessPermission($branch_str='branch_id'){
 		$session_user=new Zend_Session_Namespace('authinstall');
-		$branch_id = $session_user->branch_id;
-		$level = $session_user->level;
-		if($level==1 OR $level==2){
-			$result = "";
-			return '';
+		$branch_list = $session_user->branch_list;
+		$result="";
+		if(!empty($branch_list)){
+			$level = $session_user->level;
+			if($level==1 OR $level==2){
+				$result.= "";
+			}
+			else{
+				$result.= " AND $branch_str IN ($branch_list)";
+			}
 		}
-		else{
-			$result = " AND $branch_str =".$branch_id;
-			return '';
-		}
+		return $result;
 	}
-	
 	public function init()
 	{
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();

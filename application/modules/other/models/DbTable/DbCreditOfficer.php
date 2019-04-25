@@ -80,6 +80,7 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 					'user_type'=> $_data['user_type'],
 					'active'=> 1,
 					'staff_id'=>$id,
+					'branch_list'=>$_data['branch_id'],
 			);
 			$this->_name="rms_users";
 			$this->insert($userdata);
@@ -92,6 +93,7 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 						'user_type'=> $_data['user_type'],
 						'active'=> 1,
 						'staff_id'=>$id,
+						'branch_list'=>$_data['branch_id'],
 				);
 				if (!empty($_data['check_create'])){
 					$userdata = MD5($_data['password']);

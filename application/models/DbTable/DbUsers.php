@@ -9,7 +9,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	public function getUserInfo($user_id)
 	{		
 		$select=$this->select();
-			$select->from($this,array('user_type', 'last_name' ,'first_name','staff_id'))
+			$select->from($this,array('user_type', 'last_name' ,'first_name','staff_id','branch_list'))
 			->where('id=?',$user_id);			
 		$row=$this->fetchRow($select);		
 		if(!$row) return NULL;
@@ -206,7 +206,8 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 					u.`user_name`, 
 					u.`user_type`, 
 					u.`active`, 
-					u.`id` 
+					u.`id`,
+					u.`branch_list` 
 					
 				FROM `rms_users` AS u
 				WHERE u.id = ".$id;	
@@ -245,36 +246,66 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	}
 	
 	function insertUser($data){
-		
-		$_user_data=array(
-			'branch_id'=>$data['branch_id'],
-			'last_name'=>$data['last_name'],
-			'first_name'=>$data['first_name'],
-			'user_name'=>$data['user_name'],
-			'password'=> MD5($data['password']),
-			'user_type'=> $data['user_type'],
-			'active'=> 1			
-	    ); 
-	    	           	    	   
-		return  $this->insert($_user_data);
+		$db = $this->getAdapter();
+		try{
+			$sql="SELECT id FROM rms_users WHERE user_name ='".$data['user_name']."'";
+			$rs = $db->fetchOne($sql);
+			if(!empty($rs)){
+				return -1;
+			}
+			$branchList="";
+			if (!empty($data['selector'])){
+				$branchList = implode(',', $data['selector']);
+			}
+			$_user_data=array(
+				'branch_id'=>$data['branch_id'],
+				'last_name'=>$data['last_name'],
+				'first_name'=>$data['first_name'],
+				'user_name'=>$data['user_name'],
+				'password'=> MD5($data['password']),
+				'user_type'=> $data['user_type'],
+				'active'=> 1,
+				'branch_list'=>$branchList,
+		    ); 
+			return  $this->insert($_user_data);
+		}catch (Exception $e){
+			Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCSS"));
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
 	}
 	
-	function updateUser($data){		
-		$_user_data=array(
-			'branch_id'=>$data['branch_id'],
-	    	'last_name'=>$data['last_name'],
-			'first_name'=>$data['first_name'],
-			'user_name'=>$data['user_name'],
-// 			'password'=> MD5($data['password']),
-			'user_type'=> $data['user_type'],
-			'active'=> $data['active']			
-	    );    	   
-		if (!empty($data['check_change'])){
-			$_user_data['password']= md5($data['password']);
+	function updateUser($data){
+		$db = $this->getAdapter();
+		try{	
+			$sql="SELECT id FROM rms_users WHERE user_name ='".$data['user_name']."' AND id != ".$data['id'];
+			$rs = $db->fetchOne($sql);
+			if(!empty($rs)){
+				return -1;
+			}	
+			$branchList="";
+			if (!empty($data['selector'])){
+				$branchList = implode(',', $data['selector']);
+			}
+			$_user_data=array(
+				'branch_id'=>$data['branch_id'],
+		    	'last_name'=>$data['last_name'],
+				'first_name'=>$data['first_name'],
+				'user_name'=>$data['user_name'],
+				'user_type'=> $data['user_type'],
+				'active'=> $data['active'],
+				'branch_list'=>$branchList,
+		    );    	   
+			if (!empty($data['check_change'])){
+				$_user_data['password']= md5($data['password']);
+			}
+			$where=$this->getAdapter()->quoteInto('id=?', $data['id']); 
+			$this->update($_user_data,$where);
+			
+			return $data['id'];
+		}catch (Exception $e){
+			Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCSS"));
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
-		$where=$this->getAdapter()->quoteInto('id=?', $data['id']); 
-    	   
-		return  $this->update($_user_data,$where);
 	}
 	
 	function changePassword($newpwd, $id){

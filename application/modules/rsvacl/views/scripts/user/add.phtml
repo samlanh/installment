@@ -10,6 +10,15 @@ echo $this->headTitle();
 	dojo.require('dijit.form.Button');
 	dojo.require('dijit.form.FilteringSelect');
 </script>
+<style>
+ul.opt-school {
+    list-style-type: none;
+}
+ input[type=checkbox],  input[type=radio]{
+	height: 15px;
+    display: initial;
+}
+</style>
 <div class="card">
 	<div class="card-content collapse show">
 		<form action="<?php echo $this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -104,13 +113,28 @@ echo $this->headTitle();
 							</select>
 	                   </div>
 	                </div>
-	                <div class="clearfix"></div>
+	            </div>
+	            <div class="col-md-6 col-sm-6 col-xs-12">
+	            	<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("Assign Branch Access");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                	<span><input type="checkbox" class="" checked="checked"  name="check_all" id="check_all" value="all" OnChange="CheckAllTotal(0);" style=" height: initial;"  />&nbsp;<span class="bold" style="vertical-align: top;"><?php echo $tr->translate('ALL');?></span></span>
+	                	<ul class="opt-school">
+	                		<?php $identityCheck = ""; if (!empty($this->rs)) foreach ($this->rs as $rs){?>
+	                		<li class="opt-items"> <input checked="checked"  type="checkbox"  class="checkbox"  value="<?php echo $rs['br_id'];?>" name="selector[]" onClick="CheckAllTotal(1);" /> <span style="vertical-align: top;"><?php echo $rs['project_name'];?></span></li>
+	                			<?php if (empty($identityCheck)){ $identityCheck = $rs['br_id'];}else{$identityCheck = $identityCheck.",".$rs['br_id'];}?>
+	                		<?php }?>
+	                	</ul>
+	                </div>
+	            </div>
+	            <div class="clearfix"></div>
                		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
                			<input type="button" value="GO_BACK" label="<?php echo $tr->translate('GO_BACK');?>" id="back" dojoType="dijit.form.Button" 
 						iconClass="dijitIconUndo" onclick="window.location = '<?php echo $this->url(array('module'=>'rsvacl','controller'=>"user",'action'=>'index'),null,true); ?>';" />
 						<input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('GO_SAVE');?>" id="save_new" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
 			    	</div>
-	            </div>
 	    	</div>
 		</form>
 	</div>
@@ -198,5 +222,24 @@ function addUsrType(){
 			}
 		});
    }
+}
+function CheckAllTotal(index){
+	if(index==0){
+			if($('#check_all').is(":checked")){
+				$('.checkbox').each(function() { //loop through each checkbox
+		            this.checked = true;  
+				});
+			}else{
+				$('.checkbox').each(function() { //loop through each checkbox
+		            this.checked = false;  
+				});
+			}
+	}else{
+		var a = $("input:checked").val();
+		 var identity = [];
+	     $('.checkbox:checked').each(function(i){
+	    	 identity[i] = $(this).val();
+	     });
+	}
 }
 </script>
