@@ -14,7 +14,6 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 	    	$arr = array(
 	    			'type_nameen'=>$data['type_nameen'],
 	    			'type_namekh'=>$data['type_nameen'],
-					'status'=>$data['status'],
 	    			'user_id'=>$this->getUserId(),
 	    			'date'=>date("Y-m-d"),
 	    			'note'=>$data['note'],
@@ -22,8 +21,10 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 	    	$this->_name='ln_properties_type';
 	    	if(!empty($data['id'])){
 	    		$where = 'id = '.$data['id'];
+	    		$arr['status']=$data['status'];
 	    		return  $this->update($arr, $where);
 	    	}else{
+	    		$arr['status']=1;
 	    		return  $this->insert($arr);
 	    	}
 	    	$db->commit();

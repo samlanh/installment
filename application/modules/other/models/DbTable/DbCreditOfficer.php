@@ -40,11 +40,9 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 				'national_id'	  => $_data['national_id'],
 				'address'	  => $_data['address'],
 				'pob'	      => $_data['pob'],
-// 				'degree'	      => $_data['degree'],
 				'tel'	  	  => $_data['tel'],
 				'email'	      => $_data['email'],
 				'create_date' => date("Y-m-d"),
-				'status'      => $_data['status'],
 				'user_id'	  => $this->getUserId(),
 				'note'		  => $_data['note'],
 				//'contract_no' => $_data['contract_no'],
@@ -65,11 +63,12 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 		);
 		$this->_name="ln_staff";
 		if(!empty($_data['id'])){
-			
+			$_arr['status'] = $_data['status'];
 			$where = 'co_id = '.$_data['id'];
 			  $this->update($_arr, $where);
 			  $id = $_data['id'];
 		}else{
+			$_arr['status'] = 1;
 			$id =  $this->insert($_arr);
 		}
 		if (!empty($_data['check_create'])){

@@ -16,24 +16,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				$db = new Application_Model_DbTable_DbGlobal();
 				$client_code = $db->getNewClientIdByBranch($_data['branch_id']);
 			}
-			
-// 			$photoname = str_replace(" ", "_", $client_code) . '.jpg';
-// 			$upload = new Zend_File_Transfer();
-// 			$upload->addFilter('Rename',
-// 					array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
-// 			$receive = $upload->receive();
-// 			if($receive)
-// 			{
-// 				$_data['photo'] = $photoname;
-// 			}
-// 			else{
-// 				$_data['photo']="";
-// 			}
-// 			if (empty($_data['photo'])){
-// 				$photo = @$_data['old_photo'];
-// 			}else{
-// 				$photo = $_data['photo'];
-// 			}
+		
 		    $_arr=array(
 				'client_number'=> $client_code,//$_data['client_no'],
 				'name_kh'	  	=> $_data['name_kh'],
@@ -46,7 +29,6 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				'village_id'  	=> $_data['village'],
 				'street'	  	=> $_data['street'],
 				'house'	      	=> $_data['house'],
-// 				'photo_name'  	=> $photo,
 				'nation_id'		=>$_data['national_id'],
 		    	'nationality'	=>$_data['nationality'],
 		    	'client_issuedateid' => $_data['client_issuedateid'],
@@ -55,7 +37,6 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    	'email'	      	=> $_data['email'],
 				'create_date' 	=> date("Y-m-d"), 
 				'remark'	  	=> $_data['desc'],
-				'status'      	=> $_data['status'],
 				'client_d_type' => $_data['client_d_type'],
 				'user_id'	  	=> $this->getUserId(),
 		    	'hname_kh'      => $_data['hname_kh'],
@@ -92,9 +73,11 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    }		    
 			if(!empty($_data['id'])){
 				$customer_id =  $_data['id'];
+				$_arr['status'] = $_data['status'];
 				$where = 'client_id = '.$customer_id;
 				$this->update($_arr, $where);			 
 			}else{
+				$_arr['status'] = 1;
 				$customer_id = $this->insert($_arr);
 			}
 		

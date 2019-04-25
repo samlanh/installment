@@ -19,7 +19,6 @@ class Group_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
 				'phone'	  	  => $_data['tel'],
 				'email'	      => $_data['email'],
 				'address'	  => $_data['address'],
-				'status'      => $_data['status'],
 				'user_id'	  => $this->getUserId(),
 				'note'		  => $_data['note'],
 				'create_date' => date("Y-m-d H:i:s"),
@@ -27,11 +26,12 @@ class Group_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
 		);
 		$this->_name="ln_supplier";
 		if(!empty($_data['id'])){
-			
+			$_arr['status'] = $_data['status'];
 			$where = 'id = '.$_data['id'];
 			  $this->update($_arr, $where);
 			  $id = $_data['id'];
 		}else{
+			$_arr['status'] = 1;
 			$id =  $this->insert($_arr);
 		}
 		return $id;
