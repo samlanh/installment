@@ -75,12 +75,21 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 	public function editAction(){
 		$_dbmodel = new Loan_Model_DbTable_Dbissueplong();
 		
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		$rs = $_dbmodel->getTransferProject($id);
+		$this->view->rs = rs;
+		if(empty($rs)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/issueplong");
+			exit();
+		}
+		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
 				$_dbmodel->addChangeProject($_data);
 				if(!empty($_data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/transferproject");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/issueplong");
 				}else{
 					Application_Form_FrmMessage::message("INSERT_SUCCESS");
 				}
@@ -90,9 +99,6 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		$id = $this->getRequest()->getParam('id');
-		$rs = $_dbmodel->getTransferProject($id);
-		$this->view->rs = $rs;
 		
 		$frm = new Loan_Form_FrmTransferproject();
 		$frm_loan=$frm->FrmTransferProject($rs);

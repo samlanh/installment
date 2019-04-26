@@ -83,6 +83,7 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 	}
 	public function editAction(){
 		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
 		$_dbmodel = new Loan_Model_DbTable_DdReceived();
 		if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
@@ -105,6 +106,10 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 	      
 	    $this->view->layouttype=$layoutType;	      
 	    $row  = $_dbmodel->getPlongById($id);
+	    if(empty($row)){
+	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/receivplong");
+	    	exit();
+	    }
 	    $this->view->row = $row;
 		$fm = new Loan_Form_Frmreceiveplong();
 		$frm = $fm->FrmAddFrmCancel($row);

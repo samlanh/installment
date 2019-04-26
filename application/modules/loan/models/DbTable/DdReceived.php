@@ -133,6 +133,8 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 	public function getPlongById($id){
 		$db = $this->getAdapter();
 		$sql= "SELECT * FROM `ln_receiveplong` AS c WHERE c.`id`=".$id;
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("branch_id");
 		return $db->fetchRow($sql);
 	}
 	public function getSaleNoByProject($branch_id,$sale_id){

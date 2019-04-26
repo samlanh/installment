@@ -75,6 +75,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 	}
 	public function editAction(){
 		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
 		$_dbmodel = new Loan_Model_DbTable_DbCancel();
 		if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
@@ -95,6 +96,10 @@ class Loan_CancelController extends Zend_Controller_Action {
 			}
 	      }
 	    $row  = $_dbmodel->getCancelById($id);
+	    if(empty($row)){
+	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/cancel");
+	    	exit();
+	    }
 	    $this->view->row = $row;
 		$fm = new Loan_Form_FrmCancel();
 		$frm = $fm->FrmAddFrmCancel($row);
