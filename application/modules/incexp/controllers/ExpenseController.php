@@ -91,6 +91,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
     public function editAction()
     {
     	$id = $this->getRequest()->getParam('id');
+    	$id = empty($id)?0:$id;
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
 			$data['id'] = $id;
@@ -105,6 +106,10 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 		$id = $this->getRequest()->getParam('id');
 		$db = new Incexp_Model_DbTable_DbExpense();
 		$row  = $db->getexpensebyid($id);
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",self::REDIRECT_URL);
+			exit();
+		}
 		$this->view->row = $row;
 		
     	$pructis=new Incexp_Form_Frmexpense();

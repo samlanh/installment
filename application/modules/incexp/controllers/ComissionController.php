@@ -89,6 +89,7 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 	}
 	public function editAction(){
 		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
 		$_dbmodel = new Incexp_Model_DbTable_DbComission();
 		if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
@@ -110,6 +111,10 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 	      }
 	    $row  = $_dbmodel->getComissionById($id);
 	    $this->view->row = $row;
+	    if(empty($row)){
+	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/comission");
+	    	exit();
+	    }
 		$fm = new Incexp_Form_FrmCommision();
 		$frm = $fm->FrmAddFrmCancel($row);
 		Application_Model_Decorator::removeAllDecorator($frm);

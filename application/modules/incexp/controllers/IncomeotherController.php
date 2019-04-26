@@ -91,6 +91,7 @@ class Incexp_IncomeOtherController extends Zend_Controller_Action
     public function editAction()
     {
     	$id = $this->getRequest()->getParam('id');
+    	$id = empty($id)?0:$id;
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
 			if (empty($data)){
@@ -110,6 +111,10 @@ class Incexp_IncomeOtherController extends Zend_Controller_Action
 		
 		$db = new Incexp_Model_DbTable_DbIncomeother();
 		$row  = $db->getincomebyid($id);
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/incomeother");
+			exit();
+		}
 		if ($row['is_fullpaid']==1){
 			Application_Form_FrmMessage::Sucessfull('PAYMENT_READY', "/incexp/incomeother");
 			exit();

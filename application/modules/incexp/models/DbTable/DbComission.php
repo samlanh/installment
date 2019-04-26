@@ -64,7 +64,8 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
-// 		echo $sql.$where;exit();
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("c.`branch_id`");
 		return $db->fetchAll($sql.$where);
 	}
 	public function addSaleComission($data){
@@ -134,6 +135,8 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 	public function getComissionById($id){
 		$db = $this->getAdapter();
 		$sql= "SELECT * FROM `ln_comission` AS c WHERE c.`id`= ".$id;
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("c.branch_id");
 		return $db->fetchRow($sql);
 	}
 	

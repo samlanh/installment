@@ -60,6 +60,9 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 		if($search['type']>0){
 			$where.= " AND op.cate_type = ".$search['type'];
 		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("op.branch_id");
+		
 		$order=" order by id desc ";
 		return $db->fetchAll($sql.$where.$order);
 	}
@@ -243,7 +246,11 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 	}
 	function getOtherIncomePaymentById($id){
 		$db = $this->getAdapter();
-		$sql="SELECT icp.* FROM `ln_otherincomepayment` AS icp WHERE icp.id = $id LIMIT 1";
+		$sql="SELECT icp.* FROM `ln_otherincomepayment` AS icp WHERE icp.id = $id ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("icp.branch_id");
+		$sql.=" LIMIT 1 ";
 		return $db->fetchRow($sql);
 	}
 	function checkOtherIncomeInpay($otherincome){

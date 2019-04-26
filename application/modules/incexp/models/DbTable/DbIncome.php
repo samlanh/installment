@@ -54,6 +54,8 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	function getexpensebyid($id){
 		$db = $this->getAdapter();
 		$sql=" SELECT * FROM ln_income where id=$id ";
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("branch_id");
 		return $db->fetchRow($sql);
 	}
 	
@@ -95,6 +97,9 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			if($search['branch_id']>-0){
 				$where.= " AND branch_id = ".$search['branch_id'];
 			}
+			$dbp = new Application_Model_DbTable_DbGlobal();
+			$where.=$dbp->getAccessPermission("branch_id");
+			
 	       $order=" order by id desc ";
 			return $db->fetchAll($sql.$where.$order);
 	}

@@ -196,6 +196,8 @@ class Incexp_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		 		(SELECT street FROM `ln_properties` WHERE id=house_id LIMIT 1) AS street,
 		 		(SELECT type_nameen FROM `ln_properties_type` WHERE id=(SELECT property_type FROM `ln_properties` WHERE id=house_id LIMIT 1)) AS property_type
 		FROM ln_otherincome where id=$id ";
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("branch_id");
 		return $db->fetchRow($sql);
 	}
 	function getincomeDetailbyid($id,$type=1){
@@ -248,6 +250,10 @@ class Incexp_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 			if($search['branch_id']>-0){
 				$where.= " AND branch_id = ".$search['branch_id'];
 			}
+			
+			$dbp = new Application_Model_DbTable_DbGlobal();
+			$where.=$dbp->getAccessPermission("branch_id");
+			
 	       $order=" order by id desc ";
 			return $db->fetchAll($sql.$where.$order);
 	}

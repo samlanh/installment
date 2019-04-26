@@ -89,6 +89,7 @@ class Incexp_IncomeController extends Zend_Controller_Action
     public function editAction()
     {
     	$id = $this->getRequest()->getParam('id');
+    	$id = empty($id)?0:$id;
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
 			$db = new Incexp_Model_DbTable_DbIncome();				
@@ -103,6 +104,10 @@ class Incexp_IncomeController extends Zend_Controller_Action
 		
 		$db = new Incexp_Model_DbTable_DbIncome();
 		$row  = $db->getexpensebyid($id);
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/income");
+			exit();
+		}
 		$row['payment_id']=0;
 		$this->view->row = $row;
 		

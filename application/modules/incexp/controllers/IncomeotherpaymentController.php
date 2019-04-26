@@ -86,6 +86,7 @@ class Incexp_IncomeOtherpaymentController extends Zend_Controller_Action
     public function editAction()
     {
     	$id = $this->getRequest()->getParam('id');
+    	$id = empty($id)?0:$id;
     	$db = new Incexp_Model_DbTable_DbIncomeOtherPayment();
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
@@ -99,6 +100,10 @@ class Incexp_IncomeOtherpaymentController extends Zend_Controller_Action
 		}
 		$row = $db->getOtherIncomePaymentById($id);
 		$this->view->row = $row;
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/incomeotherpayment");
+			exit();
+		}
     	$pructis=new Incexp_Form_FrmOtherIncomePayment();
     	$frm = $pructis->FrmAddIncomeother($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
