@@ -98,7 +98,10 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	}
     		
     	$order = " ORDER BY s.id DESC";
-    	$db = $this->getAdapter();    
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
+    	
     	return $db->fetchAll($sql.$where.$order);
     }
 //     function getTranLoanByIdWithBranch($id,$is_newschedule=null){//group id

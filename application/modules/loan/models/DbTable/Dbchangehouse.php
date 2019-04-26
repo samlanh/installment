@@ -9,6 +9,7 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     	 
     }
    function getAllChangeHouse($search){
+   	$db = $this->getAdapter();
    	$from_date =(empty($search['start_date']))? '1': " s.change_date >= '".$search['start_date']." 00:00:00'";
    	$to_date = (empty($search['end_date']))? '1': " s.change_date <= '".$search['end_date']." 23:59:59'";
    	$where = " AND ".$from_date." AND ".$to_date;
@@ -53,7 +54,10 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
    	}
    	
    	$order = " ORDER BY id DESC ";
-   	$db = $this->getAdapter();
+   	
+   	$dbp = new Application_Model_DbTable_DbGlobal();
+    $where.=$dbp->getAccessPermission("cp.from_branchid");
+    
    	return $db->fetchAll($sql.$where.$order);
    }
    public function addChangeHouse($data){

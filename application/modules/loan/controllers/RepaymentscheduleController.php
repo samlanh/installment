@@ -104,6 +104,10 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			$db = new Loan_Model_DbTable_DbLandpayment();
 			$rs = $db->getTranLoanByIdWithBranch($id,null);
 			$this->view->rsresult =  $rs;
+			if(empty($rs)){
+				Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+				exit();
+			}
 			if($rs['is_cancel']==1){
 				Application_Form_FrmMessage::message('This Sale already cancel');
 				echo "<script>window.close();</script>";

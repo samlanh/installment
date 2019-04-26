@@ -64,6 +64,7 @@ class Group_ProjectController extends Zend_Controller_Action {
 	}
 	function editAction(){
 		$id=$this->getRequest()->getParam("id");
+		$id = empty($id)?0:$id;
 		if($this->getRequest()->isPost())
 		{
 			$data = $this->getRequest()->getPost();
@@ -79,7 +80,10 @@ class Group_ProjectController extends Zend_Controller_Action {
 		}
 		$db=new Group_Model_DbTable_DbProject();
 		$row=$db->getBranchById($id);
-	
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull('RECORD_NOTFUND',"/project/index");
+			exit();
+		}
 		$this->view->row = $row;
 		$frm= new Group_Form_Frmbranch();
 		$update=$frm->FrmBranch($row);

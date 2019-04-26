@@ -46,7 +46,9 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	if(($search['property_type_search'])>0){
     		$where.= " AND property_type = ".$search['property_type_search'];
     	}
-    
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("ln_properties.branch_id");
+    	
     	$order=" ORDER BY cast(land_address as unsigned) , id DESC ";
     	return $db->fetchAll($sql.$where.$order);
     }
@@ -197,6 +199,8 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	public function getClientById($id){
 		$db = $this->getAdapter();
 		$sql = "SELECT * FROM $this->_name WHERE id = ".$db->quote($id);
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("branch_id");
 		$sql.=" LIMIT 1 ";
 		$row=$db->fetchRow($sql);
 		return $row;

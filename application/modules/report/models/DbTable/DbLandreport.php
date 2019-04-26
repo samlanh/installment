@@ -2189,6 +2189,8 @@ function updatePaymentStatus($data){
       	$sql="SELECT *,
       	(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id) AS user_name
       	FROM v_getcollectmoney WHERE status=1 AND sale_id= ".$sale_id;
+      	$dbp = new Application_Model_DbTable_DbGlobal();
+      	$sql.=$dbp->getAccessPermission("branch_id");
       	$order=" ORDER BY id DESC ";
       	return $db->fetchAll($sql.$order);
       }

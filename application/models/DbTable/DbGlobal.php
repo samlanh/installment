@@ -117,6 +117,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$result="";
 		if(!empty($branch_list)){
 			$level = $session_user->level;
+			$level = 1;
 			if($level==1 OR $level==2){
 				$result.= "";
 			}
@@ -551,6 +552,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$sql= " SELECT br_id,project_name,
   	project_type,br_address,branch_code,branch_tel,displayby
   	FROM `ln_project` WHERE project_name !='' AND status=1 ";
+  	$sql.= $this->getAccessPermission('br_id');
+  	
   	if($branch_id!=null){
   		$sql.=" AND br_id=$branch_id LIMIT 1";
   	}
@@ -635,6 +638,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	   `ln_sale` AS s,
   	   `ln_properties` AS p
   	 WHERE `p`.`id` = `s`.`house_id` AND s.id=$id LIMIT 1 ";
+  	
+  	$sql.=$this->getAccessPermission("`s`.`branch_id`");
+  	
   	$db=$this->getAdapter();
   	return $db->fetchRow($sql);
   }

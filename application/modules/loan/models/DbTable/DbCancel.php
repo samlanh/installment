@@ -66,7 +66,10 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
-// 		echo $sql.$where;exit();
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("c.`branch_id`");
+		
 		$where.=" ORDER BY c.`id` DESC ";
 		return $db->fetchAll($sql.$where);
 	}

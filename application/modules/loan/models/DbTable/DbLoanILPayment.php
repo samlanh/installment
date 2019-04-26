@@ -16,7 +16,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$delete=$tr->translate('DELETE');
     	$db = $this->getAdapter();
     	$sql = "SELECT lcrm.`id`,
-    	(SELECT project_name FROM `ln_project` WHERE br_id=lcrm.branch_id LIMIT 1) AS branch_name,
+    				(SELECT project_name FROM `ln_project` WHERE br_id=lcrm.branch_id LIMIT 1) AS branch_name,
 					(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lcrm.`client_id` limit 1) AS team_group ,
 					(SELECT land_address FROM `ln_properties` WHERE id=lcrm.land_id limit 1) AS land_id,
 					(SELECT street FROM `ln_properties` WHERE id=lcrm.land_id limit 1) AS street,
@@ -64,6 +64,10 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	}
     	
     	$order = " ORDER BY id DESC";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("lcrm.branch_id");
+    	
     	return $db->fetchAll($sql.$where.$order);
     }
 

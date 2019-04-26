@@ -247,6 +247,10 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     		$s_where[]=" b.displayby LIKE '%{$s_search}%'";
     		$where.=' AND ('.implode(' OR ',$s_where).')';
     	}
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("b.br_id");
+    	
     	$order=' ORDER BY b.br_id DESC';
         return $db->fetchAll($sql.$where.$order);
     }
@@ -256,6 +260,8 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	$sql = "SELECT * FROM
     	$this->_name ";
     	$where = " WHERE `br_id`= $id" ;
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("br_id");
    		return $db->fetchRow($sql.$where);
     }
     function getBranchHolderById($id){

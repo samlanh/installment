@@ -54,6 +54,10 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
    	if($search['status_plong']==2){
    		$where.= " AND s.id  NOT IN (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 ) ";
    	}
+   	
+   	$dbp = new Application_Model_DbTable_DbGlobal();
+   	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
+   	
    	$order = " ORDER BY sp.id DESC";
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql.$where.$order);

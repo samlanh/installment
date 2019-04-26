@@ -216,12 +216,12 @@ class Loan_IndexController extends Zend_Controller_Action {
 			}
 		}
 		$id = $this->getRequest()->getParam('id');
-		
+		$id = empty($id)?0:$id;
 		$db = new Loan_Model_DbTable_DbLandpayment();
 		$row = $db->getTranLoanByIdWithBranch($id,null);
-		
 		if(empty($row)){
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+			exit();
 		}
 		
 		if($row['is_cancel']==1){
@@ -416,6 +416,12 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  	if(!empty($id)){
 	  		$db = new Loan_Model_DbTable_DbLandpayment();
 	  		$rs = $db->getTranLoanByIdWithBranch($id,null);
+	  		
+	  		if(empty($rs)){
+	  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+	  			exit();
+	  		}
+	  		
 	  		if($rs['is_cancel']==1){
 	  			Application_Form_FrmMessage::message('This Sale already cancel');
 				echo "<script>window.close();</script>";

@@ -721,6 +721,10 @@ function getAllBranch($search=null){
 			AND `c`.`client_id` = `s`.`client_id`
 			AND `pp`.`id` = `s`.`house_id`
 			AND s.id=".$id;
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("`s`.`branch_id`");
+    		
     		return $db->fetchRow($sql);
     }
 //     function getAgreementBySaleID($id=null){//tbongkhmom

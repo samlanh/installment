@@ -85,6 +85,11 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			$db = new Loan_Model_DbTable_DbLandpayment();
 			$rs = $db->getTranLoanByIdWithBranch($id,null);
 			$this->view->rsresult =  $rs;
+			
+			if(empty($rs)){
+				Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+				exit();
+			}
 		}
 		$this->view->id = $id;
 	}	

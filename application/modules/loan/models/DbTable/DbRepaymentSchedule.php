@@ -55,7 +55,10 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$where.= " OR s.payment_method_after = ".$search['schedule_opt']." )";
     	}
     	$order = " ORDER BY s.id DESC";
-    	$db = $this->getAdapter();    
+
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
+    	
     	return $db->fetchAll($sql.$where.$order);
     }    
    

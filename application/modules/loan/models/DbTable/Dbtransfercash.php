@@ -52,6 +52,10 @@ class Loan_Model_DbTable_Dbtransfercash extends Zend_Db_Table_Abstract
    	}
    	
    	$order = " ORDER BY id DESC ";
+   	
+   	$dbp = new Application_Model_DbTable_DbGlobal();
+   	$where.=$dbp->getAccessPermission("cp.branch_id");
+   	
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql.$where.$order);
    }

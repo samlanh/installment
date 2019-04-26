@@ -102,7 +102,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$where.= " AND p.street = '".$search['streetlist']."'";
     	}	
     	$order = " ORDER BY s.id DESC";
-    	$db = $this->getAdapter();    
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
     	return $db->fetchAll($sql.$where.$order);
     }
     function getTranLoanByIdWithBranch($id,$is_newschedule=null){//group id
@@ -119,6 +121,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	if($is_newschedule!=null){
     		$where.=" AND s.is_reschedule = 2 ";
     	}
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
     	
     	$where.=" LIMIT 1 ";
     	$db = $this->getAdapter();

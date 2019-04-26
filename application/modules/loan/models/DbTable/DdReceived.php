@@ -42,6 +42,9 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 			$s_where[] = " c.`note` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("c.`branch_id`");
+		
 		$where.=" ORDER BY c.`id` DESC ";
 		return $db->fetchAll($sql.$where);
 	}

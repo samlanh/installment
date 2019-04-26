@@ -144,6 +144,7 @@ class Project_LandController extends Zend_Controller_Action {
 	}
 	public function editAction(){
 		$id = $this->getRequest()->getParam("id");
+		$id = empty($id)?0:$id;
 		$db = new Project_Model_DbTable_DbLand();
 		if($this->getRequest()->isPost()){
 			try{
@@ -165,7 +166,8 @@ class Project_LandController extends Zend_Controller_Action {
 		$row = $db->getClientById($id);
 	        $this->view->row=$row;
 		if(empty($row)){
-			$this->_redirect("/project/land");
+			Application_Form_FrmMessage::Sucessfull('RECORD_NOTFUND',"/project/land");
+			exit();
 		}
 		$fm = new Project_Form_FrmLand();
 		$frm = $fm->FrmLandInfo($row);

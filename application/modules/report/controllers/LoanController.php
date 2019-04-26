@@ -678,11 +678,17 @@ class Report_LoanController extends Zend_Controller_Action {
   }
   function paymenthistoryAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
+  	$id = $this->getRequest()->getParam('id');
+  	$id = empty($id)?0:$id;
+  	$rs=$db->getPaymentSaleid($id);
+  	$this->view->loantotalcollect_list =$rs;
+  	if(empty($rs)){
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+  		exit();
+  	}
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	$id = $this->getRequest()->getParam('id');
   	
-  	$this->view->loantotalcollect_list =$rs=$db->getPaymentSaleid($id);
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
