@@ -1860,4 +1860,57 @@ function getAllBranch($search=null){
 			WHERE c.sale_id = $id AND c.status=1 AND c.recieve_amount>0 ORDER BY c.id DESC LIMIT 1";
 		return $db->fetchOne($sql);
 	}
+	
+	function getAllPlongStep($search){
+		 
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$from_date =(empty($search['start_date']))? '1': " pr.date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " pr.date <= '".$search['end_date']." 23:59:59'";
+		$where = " AND ".$from_date." AND ".$to_date;
+		$sql="SELECT `pr`.*,
+		(SELECT `ln_project`.`project_name`   	FROM `ln_project`  	WHERE (`ln_project`.`br_id` = `pr`.`branch_id`)	LIMIT 1) AS `branch_name`,
+		`c`.`name_kh`         AS `name_kh`,
+		`p`.`land_address`    AS `land_address`,
+		`p`.`street`          AS `street`,
+		c.phone,
+		CASE
+		WHEN  pr.process_status = 1 THEN '1.HQ-P'
+		WHEN  pr.process_status = 2 THEN '2.P-HQ'
+		WHEN  pr.process_status = 3 THEN '3.HQ-T'
+		WHEN  pr.process_status = 4 THEN '4.HQ-P'
+		WHEN  pr.process_status = 5 THEN '5.HQ-C'
+		END AS processing
+		";
+		$sql.=$dbp->caseStatusShowImage("pr.status");
+		$sql.="
+		FROM (`ln_processing_plong` `pr`,
+		`ln_client` `c`
+		JOIN `ln_properties` `p`)
+		WHERE (`c`.`client_id` = `pr`.`customer_id`)
+		AND (`p`.`id` = `pr`.`property_id`)
+		";
+		if(!empty($search['adv_search'])){
+			$s_where = array();
+		}
+		if(!empty($search['client_name']) AND ($search['client_name'])>0){
+			$where.= " AND `c`.`client_id`=".$search['client_name'];
+		}
+		if(($search['branch_id'])>0){
+			$where.= " AND pr.branch_id = ".$search['branch_id'];
+		}
+		if($search['land_id']>0){
+			$where.= " AND pr.property_id = ".$search['land_id'];
+		}
+		$where.=$dbp->getAccessPermission("`pr`.`branch_id`");
+	
+		$order = " ORDER BY pr.id DESC";
+		$db = $this->getAdapter();
+		return $db->fetchAll($sql.$where.$order);
+	}
+	
+	function getPlongStepDetailByID($id,$step=1){
+		$db = $this->getAdapter();
+		$sql="SELECT * FROM ln_processing_plong_detail WHERE processplong_id =$id AND process_status = $step ORDER BY id DESC LIMIT 1";
+		return $db->fetchRow($sql);
+	}
 }

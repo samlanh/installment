@@ -90,6 +90,12 @@ public function init()
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
+		
+		$_detail_id = new Zend_Form_Element_Hidden('detail_id');
+		$_detail_id->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
 		if($data!=null){
 			$_branch_id->setValue($data['branch_id']);
 			$_branch_id->setAttribs(array(
@@ -106,7 +112,7 @@ public function init()
 			$_id->setValue($data['id']);
 		}
 		$this->addElements(
-				array($_branch_id,$_date,$_process_status,$give_by,$receive_by,$note,$_status,$_customer_id,$_property_id,$_id)
+				array($_branch_id,$_date,$_process_status,$give_by,$receive_by,$note,$_status,$_customer_id,$_property_id,$_id,$_detail_id)
 				);
 		return $this;
 		

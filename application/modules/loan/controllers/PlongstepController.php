@@ -78,6 +78,7 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 			exit();
 		}
 		$this->view->rsdetail = $_dbmodel->getPlogStepDetailById($id);
+		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
@@ -115,6 +116,13 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 			exit();
 		}
 		$this->view->rsdetail = $_dbmodel->getPlogStepDetailById($id);
+		
+		$record = $this->getRequest()->getParam('record');
+		$record = empty($record)?0:$record;
+		$this->view->record = $record;
+		$detialinfo =  $_dbmodel->getPlogStepDetailRowById($record);
+		$this->view->detialinfo = $detialinfo;
+		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {

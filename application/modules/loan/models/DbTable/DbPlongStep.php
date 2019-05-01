@@ -134,7 +134,18 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     	 FROM ln_processing_plong_detail as pr WHERE pr.processplong_id = $id ORDER BY pr.id DESC";
     	return $db->fetchAll($sql);
     }
-    
+    function getPlogStepDetailRowById($id){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT pr.*,CASE
+    	WHEN  pr.process_status = 1 THEN '1.HQ-P'
+    	WHEN  pr.process_status = 2 THEN '2.P-HQ'
+    	WHEN  pr.process_status = 3 THEN '3.HQ-T'
+    	WHEN  pr.process_status = 4 THEN '4.HQ-P'
+    	WHEN  pr.process_status = 5 THEN '5.HQ-C'
+    	END AS processing
+    	FROM ln_processing_plong_detail as pr WHERE pr.id = $id LIMIT 1";
+    	return $db->fetchRow($sql);
+    }
     public function addPlongStepDetail($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
@@ -150,7 +161,12 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     					'user_id'			=>$this->getUserId(),
     			);
     			$this->_name="ln_processing_plong_detail";
+    			if (!empty($data['detail_id'])){
+    				$wheredetal = "id = ".$data['detail_id'];
+    				$this->update($arr_detail, $wheredetal);
+    			}else{
     			$this->insert($arr_detail);
+    			}
     			
     			$arr = array(
     					'date'			=>$data['date'],

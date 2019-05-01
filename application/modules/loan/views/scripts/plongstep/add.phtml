@@ -20,6 +20,12 @@
 		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
+				process_status = dijit.byId('process_status').get('value');
+            		if (process_status=='' || branch_id==-1){
+						alert('<?php echo $tr->translate("PLEASE_SELECT_PROCCESSING");?>');
+						dijit.byId('process_status').focus();
+						return false;
+					}
 				loadingBlock();
 				return true;
 			}else {
