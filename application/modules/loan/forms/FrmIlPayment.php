@@ -330,6 +330,12 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				//'required' =>'true'
 		));
+		$c_date = date('Y-m-d');
+		
+		$next_payment = $c_date;
+		if(date('H')>=16){
+			$next_payment = date("Y-m-d", strtotime("$c_date +1 day"));
+		}
 		
 		$_collect_date = new Zend_Dojo_Form_Element_DateTextBox('collect_date');
 		$_collect_date->setAttribs(array(
@@ -337,9 +343,10 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'required' =>'true',
 				'Onchange'	=>'calculateTotal();',
+				//'constraints'=>"{min:'$next_payment',datePattern:'dd/MM/yyyy'}",
 				'constraints'=>'{datePattern:"dd-MM-yyyy"}'
 		));
-		$c_date = date('Y-m-d');
+		
 		$_collect_date->setValue($c_date);
 		
 		$date_payment = new Zend_Dojo_Form_Element_DateTextBox('date_payment');

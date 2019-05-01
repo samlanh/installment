@@ -917,7 +917,32 @@ dojo.ready(function(){
 		dijit.byId("reciept_no").set("readOnly",false);
 		dijit.byId('collect_date').set("readOnly",false);
 	<?php }?>	
+	//setPaymentDate();
 });
+
+
+function setPaymentDate(){	
+	time ='<?php echo date("H");?>';
+	time=17;
+	mins ='<?php echo (int)date("i");?>';
+	if(time>14 ){
+		release_date = '<?php echo date('Y-m-d');?>';
+		var a = new Date(release_date);
+		a.setDate(a.getDate() + 1); 
+		var mm = a.getMonth() + 1;
+		var dd = a.getDate();
+		 if(dd<10){
+			 dd = "0"+dd;
+		}
+		 if(mm<10){
+			 mm = "0"+mm;
+		}
+		var y = a.getFullYear();
+		var epx_date = y + '-'+ mm + '-'+dd ;
+		dijit.byId('collect_date').attr('value',epx_date);
+	}
+}
+
 var url_getlastpaiddate = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-lastpaiddate')); ?>';
 function getLastPaidDate(){
 	dojo.xhrPost({

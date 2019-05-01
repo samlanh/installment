@@ -108,16 +108,16 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 						if(move_uploaded_file($tmp, $part.$file_new)){
 							$photo_new = $file_new;
 							$arr_new = array(
-									'client_id'=>$customer_id,
-									'document_name'=>$photo_new,
+								'client_id'=>$customer_id,
+								'document_name'=>$photo_new,
 							);
 							$this->insert($arr_new);
 						}
 					}else{
 						$photo = $_data['old_file'.$i];
 						$arr = array(
-								'client_id'=>$customer_id,
-								'document_name'=>$photo,
+							'client_id'=>$customer_id,
+							'document_name'=>$photo,
 						);
 						$this->insert($arr);
 					}
