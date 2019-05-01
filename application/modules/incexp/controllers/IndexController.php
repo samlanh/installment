@@ -10,7 +10,32 @@ public function init()
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     }
-
+    public function indexAction()
+    {
+    	try{
+    		$db = new Incexp_Model_DbTable_DbLoanType();
+    		if($this->getRequest()->isPost()){
+    			$search = $this->getRequest()->getPost();
+    		}
+    		else{
+    			$search = array(
+    					'adv_search' => '',
+    					'type'=>-1,
+    					'status' => -1);
+    		}
+    		$rs_rows= $db->getAllviewBYType($search);//call frome model
+    		$glClass = new Application_Model_GlobalClass();
+    		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
+    		$this->view->row = $rs_rows;
+    	}catch (Exception $e){
+    		Application_Form_FrmMessage::message("Application Error");
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    	}
+    	$frm = new Incexp_Form_FrmSearchLoanType();
+    	$frm = $frm->AdvanceSearch();
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm_search = $frm;
+    }
     public function addAction()
     {
     	if($this->getRequest()->isPost()){
@@ -36,32 +61,7 @@ public function init()
 	   Application_Model_Decorator::removeAllDecorator($frm);
 	   $this->view->Form_Frmcallecterall = $frm;
     }
-    public function indexAction()
-    {
-    	try{
-    		$db = new Incexp_Model_DbTable_DbLoanType();
-    		if($this->getRequest()->isPost()){
-    			$search = $this->getRequest()->getPost();
-    		}
-    		else{
-    			$search = array(
-    					'adv_search' => '',
-    					'type'=>-1,
-    					'status' => -1);
-    		}
-    		$rs_rows= $db->getAllviewBYType($search);//call frome model
-    		$glClass = new Application_Model_GlobalClass();
-    		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);   		
-    		$this->view->row = $rs_rows;
-    	}catch (Exception $e){
-    		Application_Form_FrmMessage::message("Application Error");
-    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    	}
-    	$frm = new Incexp_Form_FrmSearchLoanType();
-    	$frm = $frm->AdvanceSearch();
-    	Application_Model_Decorator::removeAllDecorator($frm);
-    	$this->view->frm_search = $frm;
-    }
+    
     public function editAction()
     {
     if($this->getRequest()->isPost()){

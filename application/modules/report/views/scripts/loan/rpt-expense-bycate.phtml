@@ -108,7 +108,17 @@
 							</thead>
 						<?php $i=0;
 							$total_expense = 0;
+							$parent='';
 						if(!empty($this->row)){foreach ($this->row AS $row) { $i++;?>
+							<?php if ( $row['parent']!=0 AND $parent != $row['parent']){?>
+	             				<tr height="21px">
+		             				<td >&nbsp;</td>
+		             				<td style="text-align: right;"><strong><?php echo $row['parent_title'];?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		             				<td>&nbsp;</td>
+		             				<td>&nbsp;</td>
+		             				<?php $parent = $row['parent'];?>
+		             			</tr>
+		             		<?php }?>
 							<tr class="hover" style="font-size:15px; height: 20px;" align="center" >
 								<td style=""></td>
 								<td style="text-align: right;"><?php echo $row['category_name'];?></td>

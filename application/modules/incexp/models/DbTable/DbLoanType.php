@@ -48,12 +48,12 @@ class Incexp_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     }
     function getAllviewBYType($search=null,$type=null,$parent = 0, $spacing = '', $cate_tree_array = ''){
     	$db = $this->getAdapter();
-    	$sql=" SELECT v.id,
+    	$sql=" SELECT 
+    	v.id,
     	v.name_kh as name,
     	v.key_code,
     	(SELECT ve.name_kh FROM ln_view AS ve WHERE ve.key_code = v.parent_id AND ve.type = v.type LIMIT 1) AS parent,
     	v.name_en,
-    	
     	(SELECT t.name FROM `ln_view_type` AS t WHERE t.id =v.type LIMIT 1) as type ,
     	v.status
     	 FROM $this->_name AS v WHERE (v.type=12 OR v.type=13) AND v.`parent_id` = $parent";

@@ -190,11 +190,12 @@ class Report_LoanController extends Zend_Controller_Action {
   		$search = $this->getRequest()->getPost();		
   	}else {
   		$search = array(
-  				'adv_search'		=>	"",
-  				'end_date' => date('Y-m-d'),
-  				'status' => -1,
-  				'branch_id'=>-1,
-  				'client_name'=>0
+  				'adv_search' =>	"",
+  				'start_date' => '',
+  				'end_date'   => date('Y-m-d'),
+  				'branch_id'  => -1,
+  				'co_id'  => '',
+  				'client_name'=> 0
   		);
   	}
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -300,6 +301,7 @@ class Report_LoanController extends Zend_Controller_Action {
  				'start_date'=> date('Y-m-d'),
  				'end_date'=>date('Y-m-d'),
  				'branch_id'		=>	-1,
+ 				'co_id'			=>'',
  				'schedule_opt'	=> -1,
  				'stepoption'=>-1,
  				'status'=>-1,);

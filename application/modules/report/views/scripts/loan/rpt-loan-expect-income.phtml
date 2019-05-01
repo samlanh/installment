@@ -52,7 +52,8 @@ dojo.require("dijit.form.DateTextBox");
 					</select>
 	            </div>
 	            <div class="col-md-2 col-sm-2 col-xs-12">
-	            </div>
+					<?php echo $frm->getElement('co_id');?>
+				</div>
 	        </div>
 	        <div class="form-group">
 	            <div class="col-md-2 col-sm-2 col-xs-12">
@@ -182,12 +183,12 @@ dojo.require("dijit.form.DateTextBox");
 								 
 								 $principal = $principal+$rs['principal_permonth'];
 								 $interest = $interest+$rs['total_interest'];
-								 
-								 if($rs["principal_permonthafter"]+$rs["total_interest_after"]<=0){
+								 $total_paid= $rs["principal_permonthafter"]+$rs["total_interest_after"];
+								 if($total_paid<=0){
 								 	$paid++;
 								 }
 			               ?>
-			                <tr class="style hover" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';">
+			                <tr class="style hover" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';<?php if($total_paid>0){echo 'background:#fff4f4;';}?>">
 			               		<td style="font-size: 12px; text-align: center;">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 			               		<td >&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 			               		<td >&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>
@@ -229,7 +230,7 @@ dojo.require("dijit.form.DateTextBox");
 			                    <td>&nbsp;<?php echo $tr->translate("TOTAL_INTEREST");?>&nbsp;</td>
 			                    <td>&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
 			                </tr>
-			                 <tr class="style" align="center" style="font-weight: bold;" >
+			                <tr class="style" align="center" style="font-weight: bold;" >
 			                	<td>&nbsp;<?php echo $i;?>&nbsp;</td>
 			                	<td>&nbsp;<?php echo $paid;?>&nbsp;</td>
 			                	<td>&nbsp;<?php echo $i-$paid;?>&nbsp;</td>

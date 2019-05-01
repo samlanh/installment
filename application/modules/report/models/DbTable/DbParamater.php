@@ -374,6 +374,9 @@ function getAllBranch($search=null){
     		$where = " AND ".$from_date." AND ".$to_date;
     		 
     		$sql=" SELECT id,
+    		(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = `category_id` LIMIT 1) as parent,
+	    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = 
+	    		(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = `category_id` LIMIT 1) LIMIT 1) as parent_title,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
     		SUM(total_amount) AS total_amount
@@ -403,8 +406,10 @@ function getAllBranch($search=null){
     		if (!empty($search['supplier_id'])){
     			$where.= " AND supplier_id = ".$search['supplier_id'];
     		}
+    		
     		$where.=" group by category_id ";
-    		$order=" order by date desc ";
+    		$order=" ORDER BY (SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = `category_id` LIMIT 1) ASC,
+    				`category_id` ASC ,date DESC ";
     		return $db->fetchAll($sql.$where.$order);
     	}
     	function getSoldIncome($search=null){
@@ -1415,7 +1420,6 @@ function getAllBranch($search=null){
     	";
     	$order =" GROUP BY ex.`category_id` ORDER BY 
     	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) ASC,
-    	
     	ex.`category_id` ASC";
     	$where="";
     	$from_date =(empty($search['start_date']))? '1': " ex.`date` >= '".$search['start_date']." 00:00:00'";
