@@ -67,6 +67,16 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$sql="SELECT * FROM `ln_language` AS l WHERE l.`status`=1 ORDER BY l.ordering ASC";
 		return $db->fetchAll($sql);
 	}
+	public  function caseStatusShowImage($status="status"){
+		$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+		$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+		$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+		$string=", CASE
+		WHEN  $status = 1 THEN '$imgtick'
+		WHEN  $status = 0 THEN '$imgnone'
+		END AS status ";
+		return $string;
+	}
 	function  getAllBranchByUser(){
 		$db = $this->getAdapter();
 		$sql = 'select br_id as id,project_name as name from ln_project where status=1 and project_name!="" ORDER BY br_id DESC ';
@@ -1306,17 +1316,19 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 
 
 
-  public function getNewClientIdByBranch($branch_id){// by vandy get new client no by branch
+  public function getNewClientIdByBranch($branch_id=null){// by vandy get new client no by branch
   	$this->_name='ln_client';
   	$db = $this->getAdapter();
-  	$sql=" SELECT count(client_id)  FROM $this->_name WHERE branch_id = $branch_id LIMIT 1 ";
+//   	$sql=" SELECT count(client_id)  FROM $this->_name WHERE branch_id = $branch_id LIMIT 1 ";
+  	$sql=" SELECT count(client_id)  FROM $this->_name WHERE 1 LIMIT 1 ";
   	$acc_no = $db->fetchOne($sql);
   	
   	$new_acc_no= (int)$acc_no+1;
   	$acc_no= strlen((int)$acc_no+1);
-  	$prefix = $this->getPrefix($branch_id);
-  	$pre= "-";
-  	for($i = $acc_no;$i<3;$i++){
+  	$prefix="";
+//   	$prefix = $this->getPrefix($branch_id);
+  	$pre= "";
+  	for($i = $acc_no;$i<6;$i++){
   		$pre.='0';
   	}
   	return $prefix.$pre.$new_acc_no;

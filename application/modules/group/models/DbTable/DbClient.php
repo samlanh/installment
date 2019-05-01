@@ -14,7 +14,8 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				$client_code = $oldClient_Code['client_number'];
 			}else{
 				$db = new Application_Model_DbTable_DbGlobal();
-				$client_code = $db->getNewClientIdByBranch($_data['branch_id']);
+// 				$client_code = $db->getNewClientIdByBranch($_data['branch_id']);
+				$client_code = $db->getNewClientIdByBranch();
 			}
 		
 		    $_arr=array(
@@ -53,7 +54,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    	'rid_no'      	=> $_data['rid_no'],
 		    	'arid_no'      	=> $_data['arid_no'],
 		    	'edesc'      	=> $_data['edesc'],
-		    	'branch_id'     => $_data['branch_id'],
+// 		    	'branch_id'     => $_data['branch_id'],
 		    	'joint_doc_type'=> $_data['join_d_type'],
 		    	'refe_nation_id'=> $_data['reference_national_id'],
 		    	'join_type'     => $_data['join_type'],		    		
@@ -183,7 +184,6 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			$where = " WHERE  ".$from_date." AND ".$to_date;		
 			$sql = "
 			SELECT client_id,
-			(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
 			client_number,
 			name_kh,
 			(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND sex=key_code LIMIT 1) AS sex
