@@ -356,7 +356,7 @@ public function getAllOutstadingLoan($search=null){
 				  AND sd.ispay_bank =0 ";
 		
       	$from_date =(empty($search['start_date']))? '1': " sd.date_payment >= '".$search['start_date']." 00:00:00'";
-      	$to_date = (empty($search['end_date']))? '1': " sd.date_payment < '".$search['end_date']." 23:59:59'";
+      	$to_date = (empty($search['end_date']))? '1': " sd.date_payment < '".$search['end_date']."'";
       	$where = " AND ".$from_date." AND ".$to_date;
       	
       	if(!empty($search['adv_search'])){
@@ -382,7 +382,6 @@ public function getAllOutstadingLoan($search=null){
 		}
 		
         $group_by = " Group by s.id order by sd.date_payment ASC ";
-        echo $sql.$where.$group_by;
       	return $db->fetchAll($sql.$where.$group_by);
       }
       
