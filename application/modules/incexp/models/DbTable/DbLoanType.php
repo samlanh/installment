@@ -55,10 +55,11 @@ class Incexp_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     	(SELECT ve.name_kh FROM ln_view AS ve WHERE ve.key_code = v.parent_id AND ve.type = v.type LIMIT 1) AS parent,
     	v.name_en,
     	(SELECT t.name FROM `ln_view_type` AS t WHERE t.id =v.type LIMIT 1) as type ,
+    	v.type as type_id,
     	v.status
     	 FROM $this->_name AS v WHERE (v.type=12 OR v.type=13) AND v.`parent_id` = $parent";
     	if($type!=null){
-    		$sql.=" AND type = $type";
+    		$sql.=" AND v.type = $type";
     		
     	}
     	$Other=" ORDER BY v.type DESC, v.id desc ";
@@ -83,7 +84,7 @@ class Incexp_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     	if (count($rows) > 0) {
     		foreach ($rows as $row){
     			$cate_tree_array[] = array("id" => $row['id'],"parent" => $row['parent'], "name" => $spacing . $row['name'],"name_en" => $spacing . $row['name_en'],"key_code" => $row['key_code'],"type" => $row['type'],"status" => $row['status']);
-    			$cate_tree_array = $this->getAllviewBYType($search,$type,$row['key_code'], $spacing . ' - ', $cate_tree_array);
+    			$cate_tree_array = $this->getAllviewBYType($search,$row['type_id'],$row['key_code'], $spacing . ' - ', $cate_tree_array);
     		}
     	}
     	return $cate_tree_array;
