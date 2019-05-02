@@ -154,6 +154,10 @@ function getAllBranch($search=null){
 				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`,
 				(SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
 			 FROM `ln_properties` AS p WHERE p.`status`=1 ";
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("p.`branch_id`");
+    		
     		if(!empty($search['property_type'])){
     			$where.= " AND p.`property_type` = ".$search['property_type'];
     		}
@@ -206,6 +210,10 @@ function getAllBranch($search=null){
 				`ln_client` AS clie
 				WHERE s.`id` = c.`sale_id` AND pro.`id` = c.`property_id` AND
 				clie.`client_id` = s.`client_id`';
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("c.branch_id");
+    		
     		$order = " ORDER BY c.`branch_id` DESC";
     		if($search['branch_id_search']>-1){
     			$where.= " AND c.branch_id = ".$search['branch_id_search'];
@@ -246,6 +254,9 @@ function getAllBranch($search=null){
     		cheque,total_amount,description,date,
     		(SELECT  first_name FROM rms_users WHERE rms_users.id=ln_income.user_id limit 1 ) AS user_name,
     		status FROM ln_income WHERE status=1 ";
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("branch_id");
     		
     		$order=" order by branch_id DESC ";
     		if($search['ordering']==1){
@@ -302,6 +313,9 @@ function getAllBranch($search=null){
     		status
     		FROM ln_income 
     		WHERE status=1 AND id =".$income_id;
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("branch_id");
+    		
     		return $db->fetchRow($sql);
     	}
     	function getAllExpense($search=null,$group_by=null){
@@ -325,7 +339,10 @@ function getAllBranch($search=null){
     		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
     		status 
     			FROM ln_expense WHERE status=1 AND total_amount>0 ";
-    		 
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("branch_id");
+    		
     		$order="";
     		if($search['ordering']==1){
     			$order.=" order by date DESC";
@@ -382,6 +399,9 @@ function getAllBranch($search=null){
     		SUM(total_amount) AS total_amount
     		 FROM ln_expense WHERE status=1 ";
     		 
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("branch_id");
+    		
     		if (!empty($search['adv_search'])){
     			$s_where = array();
     			$s_search = trim(addslashes($search['adv_search']));
@@ -442,6 +462,10 @@ function getAllBranch($search=null){
     		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
 	      	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
 	      	$where = " AND ".$from_date." AND ".$to_date;
+	      	
+	      	$dbp = new Application_Model_DbTable_DbGlobal();
+	      	$where.=$dbp->getAccessPermission("branch_id");
+	      	
 	      	if($search['branch_id']>0){
 	      		$where.= " AND branch_id = ".$search['branch_id'];
 	      	}
@@ -482,6 +506,9 @@ function getAllBranch($search=null){
     		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$where.=$dbp->getAccessPermission("branch_id");
     		
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
@@ -1347,6 +1374,10 @@ function getAllBranch($search=null){
 			FROM ln_sale AS s ,
     		`ln_staff` AS st 
     	WHERE s.`comission` !=0 AND st.`co_id` = s.`staff_id`";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("st.`branch_id`");
+    	
     	$Other =" ORDER BY s.`id` DESC ";
 		$from_date =(empty($search['start_date']))? '1': " s.`buy_date` >= '".$search['start_date']." 00:00:00'";
 	    $to_date = (empty($search['end_date']))? '1': " s.`buy_date` <= '".$search['end_date']." 23:59:59'";
@@ -1380,6 +1411,10 @@ function getAllBranch($search=null){
     	SUM(ic.`total_amount`) AS total_amount,ic.is_beginning,
     	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) AS category_name,
     	ic.`date` FROM `ln_income` AS ic WHERE 1 ";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("branch_id");
+    	
     	$order =" GROUP BY ic.`category_id` ,ic.is_beginning  ORDER BY 
     	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) ASC,
     	ic.`category_id` ASC";
@@ -1418,6 +1453,10 @@ function getAllBranch($search=null){
     	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) AS category_name,
     	ex.`date` FROM `ln_expense` AS ex WHERE 1 AND ex.status=1
     	";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("branch_id");
+    	
     	$order =" GROUP BY ex.`category_id` ORDER BY 
     	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) ASC,
     	ex.`category_id` ASC";
@@ -1436,6 +1475,10 @@ function getAllBranch($search=null){
     	SUM(total_amount) AS total_amount,
     	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = co.`category_id` LIMIT 1) AS category_name,
     	co.`date` FROM `ln_comission` AS co WHERE 1 AND co.status=1 ";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("branch_id");
+    	
     	$order =" GROUP BY co.`category_id` ORDER BY co.`category_id` ASC";
     	$where="";
     	$from_date =(empty($search['start_date']))? '1': " co.`for_date` >= '".$search['start_date']." 00:00:00'";
@@ -1470,6 +1513,10 @@ function getAllBranch($search=null){
     	$db = $this->getAdapter();
     	$sql="SELECT SUM(crm.`recieve_amount`) AS recieve_amount FROM `ln_client_receipt_money` AS crm WHERE 1 ";
     	$where="";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("branch_id");
+    	
     	if($money_type>-1){
     		$where.=" AND field3 = $money_type ";
     	}
@@ -1539,6 +1586,10 @@ function getAllBranch($search=null){
 	    		WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
 	    		clie.`client_id` = s.`client_id` AND c.status=1
     			AND c.total_amount>0 ';
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("c.branch_id");
+    		
     		if($search['branch_id']>0){
     			$where.= " AND c.branch_id = ".$search['branch_id'];
     		}
@@ -1615,6 +1666,10 @@ function getAllBranch($search=null){
 				`ln_sale` AS s
 				WHERE full_commission>0 ";
     		$where ="";
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$where.=$dbp->getAccessPermission("s.`branch_id`");
+    		
     		$from_date =(empty($search['start_date']))? '1': " s.`buy_date` >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " s.`buy_date` <= '".$search['end_date']." 23:59:59'";
     		$where.= " AND ".$from_date." AND ".$to_date;
@@ -1663,6 +1718,9 @@ function getAllBranch($search=null){
 			`ln_comission` AS c,
 			`ln_sale` AS s
 			WHERE s.`id` = c.`sale_id` AND c.`id` = ".$id;
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("c.`branch_id`");
+    		
     		return $db->fetchRow($sql);
     	}
     	function getCustomerRequirement($search=null){
@@ -1809,6 +1867,10 @@ function getAllBranch($search=null){
 			(SELECT v.name_kh FROM ln_view AS v WHERE v.type=icp.cate_type AND v.key_code=icp.category LIMIT 1) AS category_name
 			 FROM `ln_otherincomepayment` AS icp
 			WHERE icp.status=1  ";//AND icp.cate_type=$cate_type
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("icp.branch_id");
+		
 		$order =" GROUP BY icp.cate_type,icp.category ORDER BY icp.category ";
 		$where="";
 		$from_date =(empty($search['start_date']))? '1': " icp.`for_date` >= '".$search['start_date']." 00:00:00'";
@@ -1844,7 +1906,11 @@ function getAllBranch($search=null){
 			FROM `ln_otherincomepayment` AS op,
 			`ln_otherincome` AS oi
 			WHERE oi.id = op.otherincome_id
-			AND op.id=$id LIMIT 1 ";
+			AND op.id=$id  ";
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("op.branch_id");
+		$sql.=" LIMIT 1 ";
+		
 		return $db->fetchRow($sql);
 	}
 	

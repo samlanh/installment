@@ -24,6 +24,10 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 			`ln_client` AS clie
 			WHERE p.`br_id` = c.`branch_id` AND pro.`id` = c.`house_id` AND
 			clie.`client_id` = c.`customer_id` AND c.`status`=1';
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("c.`branch_id`");
+		
 		if($search['branch_id']>0){
 			$where.= " AND c.branch_id = ".$search['branch_id'];
 		}

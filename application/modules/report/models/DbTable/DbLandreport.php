@@ -17,6 +17,10 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 FROM v_soldreport WHERE 1 ";
 
       	 $where ='';
+      	 
+      	 $dbp = new Application_Model_DbTable_DbGlobal();
+      	 $where.=$dbp->getAccessPermission("v_soldreport.`branch_id`");
+      	 
       	 $str = 'buy_date'; 
 	    if($search['buy_type']>0 AND $search['buy_type']!=2){
 	      	$str = ' agreement_date ';
@@ -84,7 +88,9 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	FROM v_soldreport WHERE payment_id=1 AND is_cancel=0 ";
       
       	$where ='';
-//       	$to_date = (empty($search['end_date']))? '1': " validate_date <= '".$search['end_date']." 23:59:59'";
+      	$dbp = new Application_Model_DbTable_DbGlobal();
+      	$where.=$dbp->getAccessPermission("v_soldreport.branch_id");
+//      $to_date = (empty($search['end_date']))? '1': " validate_date <= '".$search['end_date']." 23:59:59'";
       	$to_date = (empty($search['end_date']))? '1': " end_line <= '".$search['end_date']." 23:59:59'";
       	$where= " AND ".$to_date;
       		if(!empty($search['adv_search'])){
@@ -202,6 +208,9 @@ public function getAllOutstadingLoan($search=null){
 				WHERE s.total_interest_after> 0 AND  s.is_completed=0 AND s.sale_id = v_loanoutstanding.id LIMIT 1 ) as balance_interest,
 				(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = v_loanoutstanding.house_id LIMIT 1) AS old_land_id
       	FROM v_loanoutstanding WHERE 1 ";//IF BAD LOAN STILL GET IT
+      	
+      	$dbp = new Application_Model_DbTable_DbGlobal();
+      	$sql.=$dbp->getAccessPermission("branch_id");
       	
       	if($search['client_name']>0){
            		$where.=" AND client_id = ".$search['client_name'];
@@ -355,6 +364,9 @@ public function getAllOutstadingLoan($search=null){
 				  AND c.`client_id` = s.`client_id` 
 				  AND sd.ispay_bank =0 ";
 		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("s.branch_id");
+		
       	$from_date =(empty($search['start_date']))? '1': " sd.date_payment >= '".$search['start_date']." 00:00:00'";
       	$to_date = (empty($search['end_date']))? '1': " sd.date_payment < '".$search['end_date']."'";
       	$where = " AND ".$from_date." AND ".$to_date;
@@ -433,6 +445,9 @@ public function getAllOutstadingLoan($search=null){
       	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
       	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
       	$where = " AND ".$from_date." AND ".$to_date;
+      	
+      	$dbp = new Application_Model_DbTable_DbGlobal();
+      	$where.=$dbp->getAccessPermission("v_getcollectmoney.`branch_id`");
       	
       	if(!empty($search['user_id']) AND $search['user_id']>0){
       		$where.=" AND user_id = ".$search['user_id'];
@@ -686,6 +701,9 @@ public function getAllOutstadingLoan($search=null){
       	(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) AS ispay_bank,
 			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) LIMIT 1) AS payment_type
       	FROM `v_getexpectincome` WHERE 1 ";
+      	
+      	$dbp = new Application_Model_DbTable_DbGlobal();
+      	$sql.=$dbp->getAccessPermission("branch_id");
       	
       	if(!empty($search['adv_search'])){
 			$s_search = addslashes(trim($search['adv_search']));
@@ -1973,7 +1991,10 @@ function updatePaymentStatus($data){
       	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
       	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
       	$where= " AND ".$from_date." AND ".$to_date;
-      	 
+      	
+      	$dbp = new Application_Model_DbTable_DbGlobal();
+      	$where.=$dbp->getAccessPermission("branch_id");
+      	
       	if(!empty($search['advance_search'])){
 
       		$s_where = array();
@@ -2215,6 +2236,9 @@ function updatePaymentStatus($data){
       	`ln_client` c
       	WHERE c.client_id=w.from_customer AND w.status=1 ";
       	 
+      	$dbp = new Application_Model_DbTable_DbGlobal();
+      	$sql.=$dbp->getAccessPermission("w.branch_id");
+      	
       	$from_date =(empty($search['start_date']))? '1': " w.change_date >= '".$search['start_date']." 00:00:00'";
       	$to_date = (empty($search['end_date']))? '1': " w.change_date <= '".$search['end_date']." 23:59:59'";
       	$where = " AND ".$from_date." AND ".$to_date;
@@ -2257,6 +2281,9 @@ function updatePaymentStatus($data){
 		(SELECT  first_name FROM rms_users WHERE id=cp.user_id limit 1 ) AS user_name,
 		cp.status
 		FROM `ln_change_house` AS cp,`ln_client` c WHERE c.client_id=cp.client_id ";
+	   	
+	   	$dbp = new Application_Model_DbTable_DbGlobal();
+	   	$sql.=$dbp->getAccessPermission("cp.from_branchid");
 	   	
 	   	$from_date =(empty($search['start_date']))? '1': " cp.change_date >= '".$search['start_date']." 00:00:00'";
 	   	$to_date = (empty($search['end_date']))? '1': " cp.change_date <= '".$search['end_date']." 23:59:59'";
@@ -2310,6 +2337,8 @@ function updatePaymentStatus($data){
    		FROM v_soldreport WHERE is_cancel=0 ";
    
    	$where ='';
+   	$dbp = new Application_Model_DbTable_DbGlobal();
+   	$where.=$dbp->getAccessPermission("v_soldreport.`branch_id`");
    	$str = 'buy_date';
    	if($search['buy_type']>0 AND $search['buy_type']!=2){
    	$str = ' agreement_date ';
@@ -2621,6 +2650,10 @@ function updatePaymentStatus($data){
 			`ln_otherincome` AS oi
 		WHERE oi.id = op.otherincome_id
    	   	";//AND op.status=1
+      	
+      	$dbp = new Application_Model_DbTable_DbGlobal();
+      	$sql.=$dbp->getAccessPermission("op.branch_id");
+      	
     	if (!empty($is_expense)){
     		$where.= " AND op.cate_type =13 ";
     	}else{

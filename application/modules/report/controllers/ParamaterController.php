@@ -436,6 +436,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$row = $db->getComissionById($id);
   	if (empty($row)){
   		Application_Form_FrmMessage::Sucessfull("NO RECORD","/loan/comission");
+  		exit();
   	}
   	$this->view->row = $row;
   	

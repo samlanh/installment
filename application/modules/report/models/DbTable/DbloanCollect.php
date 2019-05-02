@@ -16,6 +16,10 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) LIMIT 1) AS payment_type
 			 FROM v_newloancolect AS v WHERE 1 ";
     	$where ='';
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("v.branch_id");
+    	
     	//$from_date =(empty($search['start_date']))? '1': " date_payment <= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " v.date_payment <= '".$search['end_date']." 23:59:59'";
 //     	$where.= " AND ".$to_date;

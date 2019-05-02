@@ -216,17 +216,20 @@ class Report_LoanController extends Zend_Controller_Action {
   }
   function receiptOtherincomeAction(){
   	$id =$this->getRequest()->getParam('id');
-  	
+  	$id = empty($id)?0:$id;
   	$repair =$this->getRequest()->getParam('repair');
   	$db  = new Report_Model_DbTable_DbParamater();
   	
   	if (!empty($repair)){
-  		$this->view->rsincome =$db->getOtherIncomePaymentById($id);
+  		$row =$db->getOtherIncomePaymentById($id);
   	}else{
-  		$this->view->rsincome =$db->getIncomeById($id);
+  		$row =$db->getIncomeById($id);
   	}
-  	
-  	
+  	$this->view->rsincome = $row;
+  	if(empty($row)){
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/paramater/rpt-income');
+  		exit();
+  	}
 //   	$db = new Application_Model_DbTable_DbGlobal();
 //   	$this->view->classified_loan = $db->ClassifiedLoan();
   	$key = new Application_Model_DbTable_DbKeycode();
@@ -449,6 +452,7 @@ class Report_LoanController extends Zend_Controller_Action {
  function rptPaymentschedulesAction(){
  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
  	$id =$this->getRequest()->getParam('id');
+ 	$id = empty($id)?0:$id;
  	$row = $db->getPaymentSchedule($id);
  	$this->view->tran_schedule=$row;
  	if(empty($row) or $row==''){
@@ -456,7 +460,10 @@ class Report_LoanController extends Zend_Controller_Action {
  	}
  	$db = new Application_Model_DbTable_DbGlobal();
  	$rs = $db->getClientByMemberId($id);
- 
+ 	if(empty($rs)){
+ 		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-sold');
+ 		exit();
+ 	}
  	$this->view->client =$rs;
  	$frm = new Application_Form_FrmSearchGlobal();
  	$form = $frm->FrmSearchLoadSchedule();
@@ -596,6 +603,22 @@ class Report_LoanController extends Zend_Controller_Action {
 //   	$this->view->customer =  $db->getAllClient();
 //   }
   function rptUpdatestatusAction(){
+  	
+  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
+  	$id =$this->getRequest()->getParam('id');
+  	$id = empty($id)?0:$id;
+  	$row = $db->getPaymentScheduleById($id);
+  	$this->view->tran_schedule=$row;
+  	if(empty($row) or $row==''){
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold');
+  		exit();
+  	}
+  	$db = new Application_Model_DbTable_DbGlobal();
+  	$rs = $db->getClientByMemberId($id);
+  	if(empty($rs)){
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-sold');
+  		exit();
+  	}
   	if($this->getRequest()->isPost()){
   		$_data = $this->getRequest()->getPost();
   		try {
@@ -606,15 +629,8 @@ class Report_LoanController extends Zend_Controller_Action {
   			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
   		}
   	}
-  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
-  	$id =$this->getRequest()->getParam('id');
-  	$row = $db->getPaymentScheduleById($id);
-  	$this->view->tran_schedule=$row;
-  	if(empty($row) or $row==''){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold');
-  	}
-  	$db = new Application_Model_DbTable_DbGlobal();
-  	$rs = $db->getClientByMemberId($id);
+  	
+  
   
   	$this->view->client =$rs;
   	$frm = new Application_Form_FrmSearchGlobal();
