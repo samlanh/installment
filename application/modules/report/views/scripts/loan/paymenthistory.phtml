@@ -1,8 +1,8 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
-	$url_receipt = $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt'),null, true);
-	$url_receiptupdate = $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'updatereceipt'),null, true);
+	$url_receipt = $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt'),null, true)."/id/";
+	$url_receiptupdate = $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'updatereceipt'),null, true)."/id/";
 ?>
 <title><?php echo $tr->translate("RPT_CLIENT_PAYMENT");?></title>
 <div style="width:100%; margin:0 auto;">
@@ -114,7 +114,7 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
 							$total_cheque = $total_cheque + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
 						}
                ?>
-                <tr class="style style1" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+                <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class="style style1 context-menu-one" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
                		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
                		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
                		<td>&nbsp;<?php echo $rs["client_number"];?>&nbsp;</td>
@@ -131,9 +131,7 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
                		<td style="white-space:nowrap; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
                		<td>&nbsp;<?php echo $rs["receipt_no"];?>&nbsp;</td>
                		<td style="white-space: nowrap;font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;
-					<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
-					<?php echo $rs["paymentoption"];?></a>
-						<span class="" ><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receiptupdate.'/id/'.$rs["id"];?>">|កែប្រែ</a></span>
+					<?php echo $rs["paymentoption"];?>
 					</td>
                		<td class="" style="font:bolder 11px 'Khmer OS Battambang',Arial;text-align: center;"><?php echo $rs['user_name']?></td>
                 </tr>
@@ -180,3 +178,32 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
 </div>
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="reciept"){
+				url='<?php echo $url_receipt;?>';
+			}else if(key=="edit"){
+				url='<?php echo $url_receiptupdate;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-file-text", accesskey: "c"},
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-edit", accesskey: "c o p y"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
+ </script>
