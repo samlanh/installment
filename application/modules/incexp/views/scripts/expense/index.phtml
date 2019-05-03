@@ -2,6 +2,7 @@
 $frm = $this->frm_search;
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm_expense = $this->frm_expense;
+$urlprint = $this->baseUrl()."/report/loan/receipt-expense/id/";
 ?>
 <title><?php echo $tr->translate('OTHER_EXPENSE');?></title>
 <script>
@@ -58,3 +59,30 @@ $frm_expense = $this->frm_expense;
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="print"){
+				url='<?php echo $urlprint;?>';
+			
+			}
+			gotoAction();
+		},
+		items: {
+			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row+'?rightclick=true', '_blank');
+}
+</script>

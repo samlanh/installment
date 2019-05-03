@@ -1979,4 +1979,17 @@ function getAllBranch($search=null){
 		$sql="SELECT * FROM ln_processing_plong_detail WHERE processplong_id =$id AND process_status = $step ORDER BY id DESC LIMIT 1";
 		return $db->fetchRow($sql);
 	}
+	function getExpensebyid($id){
+		$db = $this->getAdapter();
+		$sql=" SELECT *,
+		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+		(SELECT logo FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS photo,
+		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
+		(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id=ln_expense.user_id LIMIT 1) AS user_name,
+		(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = ln_expense.supplier_id LIMIT 1) AS supplier_name
+		FROM ln_expense where id=$id ";
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("branch_id");
+		return $db->fetchRow($sql);
+	}
 }
