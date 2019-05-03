@@ -8,6 +8,8 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 	}
 	function getAllIncomePayment($search=null){
 		$db = $this->getAdapter();
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		
 		$session_user=new Zend_Session_Namespace('authinstall');
 		$from_date =(empty($search['start_date']))? '1': " op.for_date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " op.for_date <= '".$search['end_date']." 23:59:59'";
@@ -26,12 +28,14 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 			op.remain,
 			(SELECT v.name_kh FROM ln_view AS v WHERE v.type=2 AND key_code=op.payment_method LIMIT 1) AS payment_method,
 			op.for_date,
-			op.status,
 			(SELECT  first_name FROM rms_users WHERE id=op.user_id LIMIT 1 ) AS user_name
-			FROM `ln_otherincomepayment` AS op,
+			 ";
+	
+		$sql.=$dbp->caseStatusShowImage("op.status");
+		$sql.=" FROM `ln_otherincomepayment` AS op,
 			`ln_otherincome` AS oi
 			WHERE oi.id = op.otherincome_id ";
-	
+		
 		if (!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = trim(addslashes($search['adv_search']));
@@ -60,7 +64,7 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 		if($search['type']>0){
 			$where.= " AND op.cate_type = ".$search['type'];
 		}
-		$dbp = new Application_Model_DbTable_DbGlobal();
+		
 		$where.=$dbp->getAccessPermission("op.branch_id");
 		
 		$order=" order by id desc ";

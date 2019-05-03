@@ -18,8 +18,6 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 					'status_search' => -1,);
 			}
 			$rs_rows= $db->geteAllPropertyType($search);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("PROPERTY_TYPE","NOTE","USER_NAME","STATUS");
 			$link=array(

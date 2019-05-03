@@ -80,7 +80,12 @@ class Group_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
 		$sql = "SELECT id,
 		(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
 		supplier_code,name,address,
-					phone,email,status FROM $this->_name WHERE 1";
+					phone,email ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->caseStatusShowImage("status");
+		$sql.=" FROM $this->_name WHERE 1 ";
+		
 		$order=" ORDER BY id DESC";
 		$where = '';
 		

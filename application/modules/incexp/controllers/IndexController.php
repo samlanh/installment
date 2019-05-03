@@ -24,8 +24,6 @@ public function init()
     					'status' => -1);
     		}
     		$rs_rows= $db->getAllviewBYType($search);//call frome model
-    		$glClass = new Application_Model_GlobalClass();
-    		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$this->view->row = $rs_rows;
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");

@@ -38,8 +38,11 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 	function geteAllPropertyType($search=null){
 		$db = $this->getAdapter();
 		$sql='SELECT t.`id`,t.`type_nameen`,t.`note`,
-			(SELECT CONCAT(u.first_name," ",u.last_name) FROM `rms_users` AS u WHERE u.id = t.`user_id`) AS user_name,
-			t.`status` FROM `ln_properties_type` AS t where 1 ';
+			(SELECT CONCAT(u.first_name," ",u.last_name) FROM `rms_users` AS u WHERE u.id = t.`user_id`) AS user_name ';
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->caseStatusShowImage("t.`status`");
+		$sql.=" FROM `ln_properties_type` AS t WHERE 1 ";
 		$where="";
 		if($search['status_search']>-1){
 			$where.=" AND t.status=".$search['status_search'];

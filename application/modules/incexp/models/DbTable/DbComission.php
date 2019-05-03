@@ -27,6 +27,8 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 // 	}
 	public function getComissionSale($search=null){
 		$db = $this->getAdapter();
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		
 		$from_date =(empty($search['from_date_search']))? '1': "c.`for_date` >= '".$search['from_date_search']." 00:00:00'";
 		$to_date = (empty($search['to_date_search']))? '1': "c.`for_date` <= '".$search['to_date_search']." 23:59:59'";
 		$where = " AND ".$from_date." AND ".$to_date;
@@ -40,12 +42,15 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 			(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name,
 			c.total_amount,
 			(SELECT name_kh from ln_view where type=13 AND key_code=c.category_id LIMIT 1) as expense_type,
-			c.`for_date`,
-			c.`status`
-			FROM `ln_comission` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
+			c.`for_date`
+			';
+		
+		$sql.=$dbp->caseStatusShowImage("c.`status`");
+		$sql.=" FROM `ln_comission` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
-			clie.`client_id` = s.`client_id` ';
+			clie.`client_id` = s.`client_id` ";
+		
 		if($search['branch_id_search']>-1){
 			$where.= " AND c.branch_id = ".$search['branch_id_search'];
 		}
@@ -64,7 +69,7 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
-		$dbp = new Application_Model_DbTable_DbGlobal();
+		
 		$where.=$dbp->getAccessPermission("c.`branch_id`");
 		return $db->fetchAll($sql.$where);
 	}

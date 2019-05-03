@@ -190,8 +190,12 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			,phone,house,street,
 				(SELECT village_namekh FROM `ln_village` WHERE vill_id= village_id LIMIT 1) AS village_name,
 			    create_date,
-			    (SELECT  CONCAT(first_name) FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name,
-				status FROM $this->_name ";
+			    (SELECT  CONCAT(first_name) FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name ";
+			
+			$dbp = new Application_Model_DbTable_DbGlobal();
+			$sql.=$dbp->caseStatusShowImage("status");
+			$sql.=" FROM $this->_name ";
+			
 			if(!empty($search['adv_search'])){
 				$s_where = array();
 				$s_search = addslashes(trim($search['adv_search']));

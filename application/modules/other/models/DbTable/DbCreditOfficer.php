@@ -153,8 +153,13 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 			co_code,co_khname,(select name_kh FROM `ln_view` WHERE type=11 and key_code =sex LIMIT 1) as gender,
 			national_id,address,
 			tel,email,
-			(SELECT  CONCAT(first_name) FROM rms_users WHERE id=user_id ) AS user_name,
-		status FROM $this->_name WHERE 1";
+			(SELECT  CONCAT(first_name) FROM rms_users WHERE id=user_id ) AS user_name
+		 ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->caseStatusShowImage("status");
+		$sql.=" FROM $this->_name WHERE 1 ";
+		
 // 		(SELECT first_name FROM rms_users WHERE id=user_id) As user_name
 		$order=" ORDER BY co_id DESC";
 		$where = '';

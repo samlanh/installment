@@ -232,12 +232,19 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	
     function getAllBranch($search=null){
     	$db = $this->getAdapter();
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	
     	$sql = "SELECT b.br_id,b.project_name,
 		b.prefix,b.branch_code,b.br_address,b.branch_tel,b.fax,
-		b.other,p_manager_namekh,w_manager_namekh,b.`status`,
-(SELECT COUNT(p.id) FROM `ln_properties` AS p  WHERE p.branch_id = b.`br_id` AND p.status = 1) AS totalproperty,
-(SELECT COUNT(p.id) FROM `ln_properties` AS p  WHERE p.branch_id = b.`br_id` AND p.status = 1 AND p.is_lock =1) AS totalpropertysold	
-    	FROM $this->_name AS b  ";
+		b.other,p_manager_namekh,w_manager_namekh	
+    	";
+    	
+    	$sql.=$dbp->caseStatusShowImage("b.`status`").",";
+    	$sql.="
+    	(SELECT COUNT(p.id) FROM `ln_properties` AS p  WHERE p.branch_id = b.`br_id` AND p.status = 1) AS totalproperty,
+    	(SELECT COUNT(p.id) FROM `ln_properties` AS p  WHERE p.branch_id = b.`br_id` AND p.status = 1 AND p.is_lock =1) AS totalpropertysold
+    	FROM $this->_name AS b ";
+    	
     	$where = ' WHERE b.project_name !="" ';
     	
     	if($search['status_search']>-1){
@@ -257,7 +264,7 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     		$s_where[]=" b.displayby LIKE '%{$s_search}%'";
     		$where.=' AND ('.implode(' OR ',$s_where).')';
     	}
-    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	
     	$where.=$dbp->getAccessPermission("b.br_id");
     	
     	$order=' ORDER BY b.br_id DESC';

@@ -10,6 +10,8 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     }
     function getAllLandInfo($search = null){
     	$db = $this->getAdapter();
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	
     	$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
     	$where = " WHERE ".$from_date." AND ".$to_date;
@@ -20,8 +22,10 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	price,width,height,land_size,hardtitle,
     	(SELECT name_kh FROM `ln_view` WHERE type = 28 AND key_code=is_lock LIMIT 1) sale_type,
     	create_date,
-    	(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
-    	status FROM $this->_name ";
+    	(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name";
+    	
+    	$sql.=$dbp->caseStatusShowImage("status");
+    	$sql.=" FROM $this->_name ";
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = addslashes(trim($search['adv_search']));
@@ -46,7 +50,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	if(($search['property_type_search'])>0){
     		$where.= " AND property_type = ".$search['property_type_search'];
     	}
-    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	
     	$where.=$dbp->getAccessPermission("ln_properties.branch_id");
     	
     	$order=" ORDER BY cast(land_address as unsigned) , id DESC ";

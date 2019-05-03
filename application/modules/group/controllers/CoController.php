@@ -22,8 +22,7 @@ class Group_CoController extends Zend_Controller_Action {
 						'degree' => '');
 			}
 			$rs_rows= $db->getAllCreditOfficer($search);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
+			
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","STAFF_CODE","NAME_KH","SEX","NATIONAL_ID","ADDRESS","PHONE","EMAIL","BY_USER","STATUS");
 			$link=array('module'=>'group','controller'=>'co','action'=>'edit',);

@@ -1,6 +1,7 @@
 <?php 
 $frm = $this->frm_search;
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$urlprint = $this->baseUrl()."/report/loan/receipt-otherincome/id/";
 ?>
 <title><?php echo $tr->translate("INCOME");?></title>
 <script>
@@ -103,4 +104,31 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
  		}
  	});
  } 
+
+ var row=0;
+ var url="";
+ $(function(){
+ 	$.contextMenu({
+ 		selector: '.context-menu-one', 
+ 		callback: function(key, options) {
+ 			var m = "clicked: " + key;
+ 			if(key=="print"){
+ 				url='<?php echo $urlprint;?>';
+ 			
+ 			}
+ 			gotoAction();
+ 		},
+ 		items: {
+ 			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
+ 		}
+ 	});
+ });
+ function setrowdata(index){
+ 	row = index;
+ }
+ var recordid ='';
+ function gotoAction(){
+ 	 window.open(url+row+'?rightclick=true', '_blank');
+ }
+
  </script>

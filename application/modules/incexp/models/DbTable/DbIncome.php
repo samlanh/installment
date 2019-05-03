@@ -73,8 +73,12 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		title, invoice,
 		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
 		total_amount,description,date,
-		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
-		status,'បោះពុម្ភ' FROM ln_income ";
+		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name
+		 ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->caseStatusShowImage("status");
+		$sql.=" FROM ln_income ";
 		
 		if (!empty($search['adv_search'])){
 				$s_where = array();
@@ -97,7 +101,6 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			if($search['branch_id']>-0){
 				$where.= " AND branch_id = ".$search['branch_id'];
 			}
-			$dbp = new Application_Model_DbTable_DbGlobal();
 			$where.=$dbp->getAccessPermission("branch_id");
 			
 	       $order=" order by id desc ";

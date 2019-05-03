@@ -2,6 +2,7 @@
 $frm = $this->frm_search;
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm_searchloantype = $this->frm_searchloantype;
+$urlprint = $this->baseUrl()."/report/loan/receipt-otherincome/id/";
 ?>
 <title><?php echo $tr->translate('REPAIRE_HOUSE_PAYMENT');?></title>
 <script>
@@ -163,5 +164,31 @@ function getCategoryByType(){
 		error: function(err) {
 		}
 	});
+}
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="print"){
+				url='<?php echo $urlprint;?>';
+			
+			}
+			gotoAction();
+		},
+		items: {
+			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row+'?repair=1', '_blank');
 }
 </script>

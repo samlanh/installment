@@ -212,6 +212,9 @@ class Incexp_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 	}
 	function getAllIncome($search=null){
 		$db = $this->getAdapter();
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		
 		$session_user=new Zend_Session_Namespace('authinstall');
 		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
@@ -223,8 +226,10 @@ class Incexp_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) AS house_no,
 		invoice,
 		total_amount,description,date,
-		(SELECT  first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name,
-		status,'បោះពុម្ភ' FROM ln_otherincome ";
+		(SELECT  first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name  ";
+		
+		$sql.=$dbp->caseStatusShowImage("status");
+		$sql.=" FROM ln_otherincome ";
 		
 		if (!empty($search['adv_search'])){
 				$s_where = array();
@@ -251,7 +256,6 @@ class Incexp_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 				$where.= " AND branch_id = ".$search['branch_id'];
 			}
 			
-			$dbp = new Application_Model_DbTable_DbGlobal();
 			$where.=$dbp->getAccessPermission("branch_id");
 			
 	       $order=" order by id desc ";

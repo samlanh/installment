@@ -24,8 +24,6 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 						'to_date_search'=>date('Y-m-d'));
 			}
 			$rs_rows= $db->getComissionSale($search);//call frome model
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("PROJECT_NAME","SALE_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","SOLD_PRICE","STAFF_NAME","COMMISSION","CATEGORY","DATE","STATUS");
 			$link=array(

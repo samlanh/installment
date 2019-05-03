@@ -22,16 +22,14 @@ class Project_indexController extends Zend_Controller_Action {
       		'status_search' => -1);
   		 }
            $rs_rows= $db->getAllBranch($search);
-           $glClass = new Application_Model_GlobalClass();
-			$rs_rowshow = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("PROJECT_NAME","PREFIX_CODE","BRANCH_CODE","ADDRESS","TEL","FAX","OTHER","SELLER_NAME","SELLER_NAME_WITH","STATUS");
 			$link=array(
 					      'module'=>'project','controller'=>'project','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rowshow,array('project_name'=>$link,'project_type'=>$link));
+			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('project_name'=>$link,'project_type'=>$link));
 			
-			$this->view->row = $rs_rowshow;
+			$this->view->row = $rs_rows;
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message($this->tr->translate("APPLICATION_ERROR"));
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

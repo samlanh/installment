@@ -64,6 +64,8 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 
 	function getAllExpense($search=null){
 		$db = $this->getAdapter();
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		
 		$session_user=new Zend_Session_Namespace('authinstall');
 		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
@@ -76,8 +78,10 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
 		(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
 		total_amount,description,date,
-		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
-		status FROM ln_expense ";
+		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name  ";
+		
+		$sql.=$dbp->caseStatusShowImage("status");
+		$sql.=" FROM ln_expense ";
 		
 		if (!empty($search['adv_search'])){
 				$s_where = array();
@@ -101,7 +105,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			if($search['payment_type']>0){
 				$where.= " AND payment_id = ".$search['payment_type'];
 			}
-			$dbp = new Application_Model_DbTable_DbGlobal();
+			
 			$where.=$dbp->getAccessPermission("branch_id");
 			
 	       $order=" order by id desc ";
