@@ -151,7 +151,7 @@
 								</tr>
 								</thead>
 						       <?php $branch_id=''; $n=0; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
-								<tr align="left">
+								<tr class="context-menu-one" oncontextmenu="setrowdata('<?php echo $row['id'];?>');return false;" align="left">
 								   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
 								   <td align="center" style="min-width: 120px;max-width: 150px;">
@@ -190,7 +190,7 @@
 					                </td>
 					             </tr>
 					            <?php foreach ($this->houserepair as $index => $rs){?>
-						   		<tr class=" stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+						   		<tr oncontextmenu="setrowdata('<?php echo $rs['id'];?>',1);return false;" class=" context-menu-one stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
 				               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
 				               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 				               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
@@ -234,6 +234,7 @@
 	</div>
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<?php $urlprint = $this->baseUrl()."/report/loan/receipt-otherincome/id/";?>
  <script>
  dojo.require("dojo.data.ItemFileWriteStore"); 
  var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
@@ -281,4 +282,37 @@
  		}
  	});
  } 
+
+ var row=0;
+ var url="";
+ var typeprint=0;
+ $(function(){
+ 	$.contextMenu({
+ 		selector: '.context-menu-one', 
+ 		callback: function(key, options) {
+ 			var m = "clicked: " + key;
+ 			if(key=="print"){
+ 				url='<?php echo $urlprint;?>';
+ 			
+ 			}
+ 			gotoAction();
+ 		},
+ 		items: {
+ 			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
+ 		}
+ 	});
+ });
+ function setrowdata(index,typeri){
+ 	row = index;
+ 	typeprint = typeri;
+ }
+ var recordid ='';
+ function gotoAction(){
+	 if(typeprint==1){
+		 window.open(url+row+'?repair=1', '_blank');
+	 }else{
+ 	 	window.open(url+row+'?rightclick=true', '_blank');
+	 }
+ }
+ 
  </script>

@@ -154,7 +154,7 @@
 								</tr>
 							</thead>
 					       <?php $branch_id=''; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
-							<tr style="font-size: 12px; line-height:20px;" align="left">
+							<tr class="context-menu-one" oncontextmenu="setrowdata('<?php echo $row['id'];?>');return false;" style="font-size: 12px; line-height:20px;" align="left">
 							   <td align="center">&nbsp;<?php echo $i; ?></td>
 							   <td align="center"  style="white-space:nowrap"><?php echo $row['branch_name'];?></td>
 							   <td  style="white-space:nowrap">&nbsp;<?php echo $row['supplier_name'];?>&nbsp;</td>
@@ -275,3 +275,31 @@
    </table>
 	</div>
 </div>
+<?php $urlprint = $this->baseUrl()."/report/loan/receipt-expense/id/";?>
+<script type="text/javascript">
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="print"){
+				url='<?php echo $urlprint;?>';
+			
+			}
+			gotoAction();
+		},
+		items: {
+			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row+'?rightclick=true', '_blank');
+}
+</script>
