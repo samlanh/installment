@@ -985,18 +985,20 @@ class Report_LoanController extends Zend_Controller_Action {
 		}
 		else{
 			$search = array(
-					'adv_search'=>'',
-					'branch_id'=>-1,
-					'schedule_opt'=>-1,
-					'property_type'=>0,
-					'client_name'=>'',
-					'buy_type'=>-1,
-					'land_id'=>-1,
-					'streetlist'=>'',
-					'start_date'=> date('Y-m-d'),
-					'end_date'=>date('Y-m-d'));
+				'adv_search'=>'',
+				'branch_id'=>-1,
+				'schedule_opt'=>-1,
+				'property_type'=>0,
+				'client_name'=>'',
+				'buy_type'=>-1,
+				'land_id'=>-1,
+				'streetlist'=>'',
+				'sale_status'=>'',
+				'start_date'=> date('Y-m-d'),
+				'end_date'=>date('Y-m-d')
+			);
 		}
-		$this->view->loanrelease_list=$db->getSaleSummary($search);
+		$this->view->loanrelease_list = $db->getSaleSummary($search);
 		$this->view->list_end_date=$search;
 		$this->view->search = $search;
 		$this->view->branch_id = $search['branch_id'];

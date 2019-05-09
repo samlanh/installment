@@ -60,6 +60,11 @@ table.tb-footer tr.style-head {
 			</div>
 			<div class="form-group"> 
 				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php 
+						echo $filter->getElement('sale_status');
+					?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $filter->getElement('buy_type');?>
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
@@ -125,6 +130,9 @@ table.tb-footer tr.style-head {
 		table.content-data td {
 			padding: 2px;
 		}
+		.border_bottom{
+			border-bottom:2px solid #000;
+		}
 	</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 		<tr>
@@ -176,7 +184,10 @@ table.tb-footer tr.style-head {
 	               $link="#";
 	               $payment_1=0;$payment_2=0;$payment_3=0;
 	               
-	               $payment_1_completed=0;$payment_2_completed=0;$payment_3_completed=0;
+	               $payment_0_completed=0;//for deposit;
+	               $payment_1_completed=0;
+	               $payment_2_completed=0;
+	               $payment_3_completed=0;
 	               $sold_price=0;
 	               $paid_price=0;
 	               $balace_price=0;
@@ -211,7 +222,9 @@ table.tb-footer tr.style-head {
 	               }
 	               if($row['payment_id']==1){//កក់
 	               	 $payment_1=$payment_1+1;
-	               	 
+	               	 if($row['price_sold']<=$row['paid_amount']){
+	               	 	$payment_0_completed=$payment_0_completed+1;
+	               	 }
 	               }elseif($row['payment_id']==2 OR $row['payment_id']==6){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
 	               	 $payment_2=$payment_2+1;
 	               	 
@@ -268,18 +281,18 @@ table.tb-footer tr.style-head {
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"></td>
 			                    <td></td>
-			                    <td align="right"><?php echo $tr->translate("កក់ទ្រនាប់ដៃ");?>&nbsp;&nbsp;</td>
-			                    <td><?php echo ($payment_1);?></td>
-			                    <td align="left">ដាច់</td>
-			                    <td align="left">នៅសល់</td>
+			                    <td align="right"><span class="border_bottom"><?php echo $tr->translate("ប្រភេទបង់");?></span>&nbsp;&nbsp;</td>
+			                    <td><span class="border_bottom">លក់បាន</span></td>
+			                    <td align="left"><span class="border_bottom">ដាច់</span></td>
+			                    <td align="left"><span class="border_bottom">នៅសល់</span></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"><?php echo $tr->translate("PROPERTY");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			                    <td><?php echo $amount_property;?></td>
-			                    <td align="right"></td>
-			                    <td></td>
-			                    <td></td>
-			                    <td></td>
+			                    <td align="right"><?php echo $tr->translate("កក់ទ្រនាប់ដៃ");?></td>
+			                    <td><?php echo ($payment_1);?></td>
+			                    <td><?php echo ($payment_0_completed);?></td>
+			                    <td><?php echo ($payment_1-$payment_0_completed);?></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right">តម្លៃដី/ផ្ទះសរុប&nbsp;&nbsp;$&nbsp;&nbsp;</td>

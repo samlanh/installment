@@ -2323,17 +2323,14 @@ function updatePaymentStatus($data){
    	if($lang==1){
    		$str = 'name_kh';
    	}
-   	$sql = "SELECT * ,
+   	$sql ="SELECT * ,
    				(SELECT SUM(extra_payment) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = v_soldreport.id LIMIT 1) AS extra_payment,
    				(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = v_soldreport.id LIMIT 1) AS total_interest_permonthpaid,
    				(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = v_soldreport.id LIMIT 1) AS penalize_amountpaid,
-   				
-   				
 			   	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id AND status=1 ) AS times,
 			   	(SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
 			   	(SELECT $str FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype,
 			   	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = v_soldreport.house_id LIMIT 1) AS old_land_id
-			   	
    		FROM v_soldreport WHERE is_cancel=0 ";
    
    	$where ='';
@@ -2353,42 +2350,48 @@ function updatePaymentStatus($data){
    		$to_date = (empty($search['end_date']))? '1': " $str <= '".$search['end_date']." 23:59:59'";
    		$where.= " AND ".$from_date." AND ".$to_date;
    		if(!empty($search['adv_search'])){
-   		$s_where = array();
-   		$s_search = addslashes(trim($search['adv_search']));
-   		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
-   		$s_where[] = " land_code LIKE '%{$s_search}%'";
-   		$s_where[] = " land_address LIKE '%{$s_search}%'";
-   		$s_where[] = " client_number LIKE '%{$s_search}%'";
-   		$s_where[] = " name_en LIKE '%{$s_search}%'";
-   		$s_where[] = " name_kh LIKE '%{$s_search}%'";
-   		$s_where[] = " staff_name LIKE '%{$s_search}%'";
-   		$s_where[] = " price_sold LIKE '%{$s_search}%'";
-   		$s_where[] = " comission LIKE '%{$s_search}%'";
-   		$s_where[] = " total_duration LIKE '%{$s_search}%'";
-   		$s_where[] = " street LIKE '%{$s_search}%'";
-   		$where .=' AND ( '.implode(' OR ',$s_where).')';
+	   		$s_where = array();
+	   		$s_search = addslashes(trim($search['adv_search']));
+	   		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
+	   		$s_where[] = " land_code LIKE '%{$s_search}%'";
+	   		$s_where[] = " land_address LIKE '%{$s_search}%'";
+	   		$s_where[] = " client_number LIKE '%{$s_search}%'";
+	   		$s_where[] = " name_en LIKE '%{$s_search}%'";
+	   		$s_where[] = " name_kh LIKE '%{$s_search}%'";
+	   		$s_where[] = " staff_name LIKE '%{$s_search}%'";
+	   		$s_where[] = " price_sold LIKE '%{$s_search}%'";
+	   		$s_where[] = " comission LIKE '%{$s_search}%'";
+	   		$s_where[] = " total_duration LIKE '%{$s_search}%'";
+	   		$s_where[] = " street LIKE '%{$s_search}%'";
+	   		$where .=' AND ( '.implode(' OR ',$s_where).')';
    		}
    		if($search['branch_id']>0){
-   		$where.=" AND branch_id = ".$search['branch_id'];
+   			$where.=" AND branch_id = ".$search['branch_id'];
    		}
    		if(!empty($search['streetlist']) AND $search['streetlist']>-1){
    			$where.=" AND street = '".$search['streetlist']."'";
    		}
-   		if($search['land_id']>0){
-//    			$where.=" AND house_id = ".$search['land_id'];
+   	   if($search['land_id']>0){
    			$where.=" AND ( house_id = ".$search['land_id']." OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = v_soldreport.house_id LIMIT 1) LIKE '%".$search['land_id']."%' )";
-  		 }
+  	   }
 	   if($search['property_type']>0 AND $search['property_type']>0){
-	   	$where.=" AND v_soldreport.property_type = ".$search['property_type'];
+	   		$where.=" AND v_soldreport.property_type = ".$search['property_type'];
 	   }
 	   if($search['client_name']!='' AND $search['client_name']>0){
-	   $where.=" AND client_id = ".$search['client_name'];
+	   		$where.=" AND client_id = ".$search['client_name'];
 	   }
 	   if($search['schedule_opt']>0){
-	   $where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
+	   		$where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
+	   }
+	   if($search['sale_status']>0){
+	   		if($search['sale_status']==1){//full paid
+	   			$where.=" AND price_sold <= paid_amount ";
+	   		}
+	   		else{
+	   			$where.=" AND price_sold > paid_amount ";
+	   		}
 	   }
 	   $order = " ORDER BY is_cancel ASC,payment_id DESC ";
-	   
 	   return $db->fetchAll($sql.$where.$order);
    }
    
