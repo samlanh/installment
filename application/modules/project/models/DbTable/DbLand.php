@@ -138,8 +138,8 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     }
 	public function addLandinfo($_data){
 		try{
-			$old_status = $_data['status'];
 			if(!empty($_data['id'])){
+				$old_status = $_data['status'];
 				$oldCode = $this->getClientById($_data['id']);
 				$land_code = $oldCode['land_code'];
 				$old_status = $oldCode['status'];
