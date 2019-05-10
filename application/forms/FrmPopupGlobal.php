@@ -1020,7 +1020,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 // 		}
 // 		return $str;
 // 	}
-	function getOfficailReceipt(){
+	function getOfficailReceipt(){//general
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$key = new Application_Model_DbTable_DbKeycode();
 		$data=$key->getKeyCodeMiniInv(TRUE);
@@ -1034,9 +1034,6 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$username = $session_user->first_name;
 		$user_id = $session_user->user_id;
 		$usertype="";
-// 		$dbuser = new Application_Model_DbTable_DbUsers();
-// 		$userinfo = $dbuser->getUserInformationById($user_id);
-// 		$usertype = " (".$userinfo['user_typetitle'].")";
 		
 		$fiveStarReciept=0;
 		if ($fiveStarReciept==1){
@@ -1141,6 +1138,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<span id="lbl_usersale">'.$last_name." ".$username.'</span>
 			</div>
 			';
+		}elseif ($fiveStarReciept==2){
+			
 		}else{
 		$str='
 		<div >
