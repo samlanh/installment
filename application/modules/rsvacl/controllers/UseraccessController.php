@@ -58,8 +58,9 @@ class RsvAcl_UserAccessController extends Zend_Controller_Action
     		$this->view->data = $post;
     		 
     		$db_acl=new Application_Model_DbTable_DbGlobal();
-    		$sqlNotParentId ="SELECT user_type_id,parent_id,user_type FROM `rms_acl_user_type` WHERE `user_type_id =".$id;
+    		$sqlNotParentId ="SELECT user_type_id,parent_id,user_type FROM `rms_acl_user_type` WHERE user_type_id =".$id;
     		$rsuser_type = $db_acl->getGlobalDbRow($sqlNotParentId);
+    		$this->view-> rs_usertype = $rsuser_type['user_type'];
     		$usernotparentid = $rsuser_type['parent_id'];
     		 
     		if($id == 1){
