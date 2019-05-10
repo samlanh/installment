@@ -12,14 +12,10 @@ table.user td{
 	vertical-align: top;   
 }
 </style>       
-
-<?php $rs=$this->rs;
-	
-	  $acl=($this->acl=='')? array():$this->acl;
-	  $acl_name=($this->acl_name=='')? array(): $this->acl_name;
-	 
+<?php 
+	  //$acl=($this->acl=='')? array():$this->acl;
+	  $acl_name=($this->acl_name=='')? array(): $this->acl_name;	 
 	  $df=$this->data;
-	
 ?>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
@@ -39,8 +35,8 @@ table.user td{
                    </label>
                    <div class="col-md-7 col-sm-7 col-xs-12">
                     	<input type="text" required="true" name="user_type" id="user_type" placeholder="User Type" 
-								dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->rs[0]['user_type'];?>"
-								missingMessage="Invalid User type!" class='fullside' disabled/>
+							dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->rs[0]['user_type'];?>"
+							missingMessage="Invalid User type!" class='fullside' disabled/>
                    </div>
                 </div>
                
@@ -51,56 +47,13 @@ table.user td{
     		<div class="col-md-12 col-sm-12 col-xs-12">
     			 <div class="form-group">
                    <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name">
-                   <?php echo $tr->translate("SEARCH");?> <i class="fa fa-search" aria-hidden="true"></i> 
                    </label>
-                </div>
-    		</div>
-    		<div class="col-md-4 col-sm-4 col-xs-12">
-    			<div class="form-group">
-                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("MODULE");?> :
-                   </label>
-                   <div class="col-md-7 col-sm-7 col-xs-12">
-                    	<select name="fmod" id="fmod" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
-								<?php echo $this->optoin_mod;?>
-						</select>
-                   </div>
-                </div>
-    		</div>
-    		<div class="col-md-4 col-sm-4 col-xs-12">
-    			<div class="form-group">
-                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Controller");?> :
-                   </label>
-                   <div class="col-md-7 col-sm-7 col-xs-12">
-                    	<select name="fcon" id="fcon" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
-							<?php echo $this->optoin_con;?>
-						</select>
-						<input type="hidden" name="fstatus" value="">
+                   <input type="hidden" name="fstatus" value="">
 						<input type="hidden" name="fact" value="">
-                   </div>
                 </div>
-    		</div>
-    		<div class="col-md-4 col-sm-4 col-xs-12">
-    			<div class="form-group">
-    				<input type="submit" value="Search" name="btsave" label="<?php echo $tr->translate("SEARCH");?>" title="Search" dojoType="dijit.form.Button"/>
-    			</div>
     		</div>
     	</div>
     	</form>
-    	<?php $show =0; if ($show==1){?>
-			<td><?php echo $tr->translate("Action");?></td>
-			<td>
-				
-				<select name="fact" id="fact" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
-					<?php echo $this->optoin_act;?>
-				</select>
-			</td>	
-			<td><?php echo $tr->translate("STATUS");?></td>
-			<td>
-				<select name="fstatus" id="fstatus" class='fullside' required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
-					<?php echo $this->optoin_status;?>
-				</select>
-			</td>
-			<?php }?>
 	<table style="margin: 0 auto; width: 100%">
 	<tr>
 		<td>
@@ -192,11 +145,8 @@ table.user td{
 <script>
 dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.BorderContainer");
-dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.AccordionContainer");
 dojo.require("dijit.layout.ContentPane");
-dojo.require("dojo.parser");
-					
 					
 	$(function(){		
 		$('#fmod').val('<?php echo $df['fmod']?>');
