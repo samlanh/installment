@@ -1,0 +1,189 @@
+<?php 
+	$filter = $this->form_filter;
+	$dayin_khmer = $this->day_inkhmer;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$key = new Application_Model_DbTable_DbKeycode();
+	$dataterm = $key->getKeyCodeMiniInv(TRUE);
+	
+	$tran = $this->tran_schedule;
+	$rs = $this->rs;
+?>
+<title><?php echo $tr->translate('BROKER_SCHEDULE');?></title>
+<style>
+	td p{ margin-top:0px !important;}
+	#printfooter{display: none !important;}
+	h2{line-height: 25px !important;}
+</style>
+<div class="reportblog">
+	<div class="card-box">
+	   	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('BROKER_SCHEDULE');?></h4>
+	   		</div>
+	   		<div class="col-sm-4 text-right">
+	   		</div>
+	   	</div>
+	</div>
+	<div id="divPrint">
+		<style type="text/css">
+			p {
+			    margin: 0 !important;
+			}
+		.style{
+			line-height: 20px;font-size: 12px;
+			font-family: 'Times New Roman','Khmer OS Battambang';
+		}
+		.font_bold{
+			font-family:'Khmer OS Muol Light';
+			font-size: 14px;
+		}
+		td p{ margin-top:-12px;}
+		table { page-break-inside:auto }
+		tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		.hover:hover{background: #ccc;}
+		#printfooter {
+			    position: absolute;
+			    bottom: 0;
+			    position: fixed;
+			    display: block ;
+			}
+		h2{line-height: 10px;}
+		p.lblhousecode{
+		 overflow-wrap: break-word;
+	    white-space: normal;
+	    width: 250px;
+	    display: block;
+	    line-height: 24px;
+		}
+	</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	        	<table width="100%" style="font-family:khmer;margin:0 auto;padding:0px; border:none;">
+	            	<tr>
+	                	<td width="25%" style="">
+	                		<?php $imagelogo = $this->baseUrl()."/images/logo.jpg";
+				                	?>
+				             <img src="<?php echo $imagelogo;?>"  style="max-width:100%;">
+	                	</td>
+	                	<td width="50%" valign="top">
+		                	<h2 style="text-align:center;  font-weight:normal; font-size:16px; font-family:'Khmer OS Muol'"><?php echo $tr->translate("BRAND_TITLE");?><?php //echo $this->data['brand_title'];?></h2>
+		                	<h2 style="text-align:center;  font-weight:normal; font-size:13px; font-family:'Khmer OS Muol'"> <?php echo $tr->translate('BROKER_SCHEDULE');?></h2>
+	                	</td>
+	                    <td width="25%" ></td>
+	                </tr>
+	                <tr>
+	                	<td colspan="3">
+	                		<table width="100%" style="margin-top:10px;">
+			                	<tr class='style'>
+				                   <td width="35%" valign="top">
+				                	    <p><?php echo $tr->translate('INVESTOR');?>: <?php echo $rs['name'];?> </p>
+				                	    <p><?php echo $tr->translate("TEL");?>  : <?php echo $rs['phone'];?></p>
+				                	    <p><?php echo $tr->translate("EMAIL");?>  : <?php echo $rs['email'];?></p>
+				                	</td>
+				                    <td valign="top" style="" width="33%">
+				                      <p><?php echo $tr->translate("BROKER_AMOUNT")." ($)";?> : <?php echo number_format($rs['broker_amount'],2);?> </p>
+				                      <p><?php echo $tr->translate("DURATION")." (".$tr->translate("TIMES").")";?> : <?php echo number_format($rs['broker_duration'],0);?> </p>
+				                    </td>
+				                    <td width="30%" valign="top">
+				                    	<p><?php echo $tr->translate("INVEST_NO");?> : <?php echo $rs['invest_no'];?> </p>
+				                      	<p><?php echo $tr->translate("INVEST_DATE");?> : <?php echo date('d-m-Y',strtotime($rs['date']));?> </p>
+				                      	
+				                    </td>
+				                </tr>
+				                <tr class='style'>
+				                   <td colspan="3">
+				                   		<p><?php echo $tr->translate("ADDRESS");?>: <?php echo $rs['current_address'];?>
+				                   </td>
+				                </tr>
+			                </table>
+			              </td>
+			           </tr>   
+	            </table>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td>
+	            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%">
+	                 <thead>
+		                 <tr class="style" align="center" style=" line-height: 20px;">
+		                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("DATE");?></td>
+		                    <td colspan="2"><?php echo $tr->translate("AMOUNT_RETURN");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("OTHER");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("PAID_DATE");?></td>
+		                </tr>
+		                <tr class="style" align="center" style="line-height: 20px;">
+		                    <td><?php echo $tr->translate("AMOUNT_RETURN");?></td>
+		                    <td><?php echo $tr->translate("TOTAL_AMOUNT_RETURN");?></td>
+		                </tr>
+	                </thead>
+	               <?php $set=1; 
+	               $i=0;
+	               if(!empty($tran)) foreach($tran as $key =>$row){ $i++;?>
+	               	<tr align="center" style=" height: 20px;" class="style hover" >
+	                    <td><?php echo ($i<10)?"0":"";echo $i;?></td>
+	                    <td align="center">
+	                    	<?php 
+		                    	$date= new DateTime($row['date']);
+		                    			echo $date->format("d-m-Y");
+	                    		
+	                    	?>
+	                    </td>
+	                    <td><?php echo str_replace('.00', '', number_format($row['interest_amount'],2));?></td>
+	                    <td><?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></td>
+	                    <td><?php echo $row['note']; echo ($row['is_complete']==1)?$tr->translate("COMPLETED"):""; ?></td>
+	                    <td><?php  
+		                    if($row['is_complete']==1){
+			                    if($row['date_receive']!=0){
+			                    	$date = new DateTime($row['date_receive']);
+			                   	 	$receive_date =  $date->format("d-m-Y");
+			                    }else{$receive_date='';}
+		                    	echo ($row['date_receive']==0)?"":$receive_date;
+		                    }
+	                    	?>
+	                    </td>
+	                </tr>
+	               <?php }
+	               ?>
+	            </table>
+	            <table width="100%" cellpadding="3">
+	            	<tr class="font_bold" style="height:25px;">
+	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol'"><?php echo $tr->translate('ACCOUNTING_SIGN');?></td>
+	            		<td align="center" valign="bottom"></td> 
+	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol'"><?php echo $tr->translate('BROKER_SIGN');?></td>
+	            	</tr>
+	            	<tr class="font_bold">
+	            		<td align="center" height="120px" valign="bottom"><?php echo $rs['user_name'];?></td>
+	            		<td align="center"  valign="bottom"></td>
+	            		<td align="center" valign="bottom"><?php echo $rs['name'];?></td>
+	            	</tr>
+	            </table>
+	    	</td>
+	    </tr>
+	    <tfoot>
+        <tr height="30px">
+		    <td ><div id="printfooter">
+        		<table width="100%" style="background: #fff;border-top: 2px solid #000;font-family: 'Times New Roman','Khmer OS Battambang'; font-size:10px;line-height: 15px;white-space:nowrap;"> 
+				<tbody>
+					<tr style="white-space:nowrap;line-height: 15px;">
+						<td width="40%"><?php echo $this->data['website'];?></td>
+						<td width="40%" align="right"><?php echo $this->data['email_client'];?></td>
+					</tr>
+					<tr style="white-space:nowrap;line-height: 15px;">
+						<td><?php echo $this->data['footer_branch'];?></td>
+						<td width="40%" align="right"><?php echo $this->data['tel-client'];?></td>
+						</tr>
+					</tbody>
+				</table>
+        	</div> </td>
+		</tr>
+	     </tfoot>
+           
+	</table>
+	</div>
+</div>

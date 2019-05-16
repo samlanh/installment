@@ -1,0 +1,81 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("WITHDRAWBROKER"));
+	$frm = $this->frm_search;
+	$frmin = $this->frm;
+	
+	$url_receipt = $this->url(array('module'=>'report','controller'=>'invest','action'=>'brokerreceipt'),null, true)."/id/";
+	$url_delete = $this->url(array('module'=>'invest','controller'=>'withdrawbroker','action'=>'delete'),null, true)."/id/";
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+	       	<div class="col-sm-12 border-botom">
+		   		<div class="col-sm-8 pd-0">
+		    		<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('WITHDRAWBROKER');?></h4>
+	    		</div>
+	    		<div class="col-sm-4 text-right">
+	    		</div>
+	    	</div>
+	    </div>
+		<div class="card-box">
+			<form  action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+				<div class="form-group">
+	               <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frm->getElement('adv_search');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frmin->getElement('broker_search');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frm->getElement('start_date');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frm->getElement('end_date');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frm->getElement('status');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+	                </div>
+	            </div>
+			</form>
+		</div>
+		<div class="card-box">
+			<?php echo $this->list;?>
+		</div>
+	</div>
+</div>
+<script>
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="reciept"){
+				url='<?php echo $url_receipt;?>';
+			}else if(key=="deltete"){
+				url='<?php echo $url_delete;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-file-text", accesskey: "c"},
+			"deltete": {name: "<?php echo $tr->translate("VOID");?>", icon: "fa-file-text", accesskey: "c"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
+</script>

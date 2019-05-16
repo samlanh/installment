@@ -1,0 +1,680 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('WITHDRAWAL'));
+	$frm = $this->frm;
+?>
+<div class="card">
+	<div class="card-content collapse show">
+		<form  action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					investment_id = dijit.byId('investment_id').get('value');
+					if(investment_id==0 || investment_id==""){
+						alert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
+						dijit.byId('investment_id').focus();
+						return false;
+					}
+					recieve_amount = dijit.byId('recieve_amount').get('value');
+					if(recieve_amount==0 || recieve_amount==""){
+						alert("<?php echo $tr->translate("PLEASE_ENTER_RECEIVE_AMOUNT");?>");
+						dijit.byId('recieve_amount').focus();
+						return false;
+					}
+
+					loadingBlock();
+					return true;
+				} else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-money " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('WITHDRAWAL');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-6 col-sm-6 col-xs-12">
+	    			<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("INVESTMENT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('investment_id');?>
+	                    	<?php echo $frm->getElement('investor_id');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAY_DATE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('payment_date');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TIMES");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('times');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_OPTION");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('option_pay');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRINCIPLE_PAID");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('principle_paid');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("AMOUNT_RETURN");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('interest_paid');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_AMOUNT_RETURN");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('total_payment');?>
+	                   </div>
+	                </div>
+	    		</div>
+	    		<div class="col-md-6 col-sm-6 col-xs-12">
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("RECIEPT_NO");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('receipt_no');?>
+	                   </div>
+	                </div>
+	                 <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE_INPUT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('paid_date');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('payment_method');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NUMBER_CODE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cheque');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("RECEIVE_AMOUNT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('recieve_amount');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("REMAIN");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('remain');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('note');?>
+	                   </div>
+	                </div>
+	    		</div>
+	           
+	    	</div>
+	    	
+	    	<div class="card-box">
+		        <div class="col-md-12 col-sm-12 col-xs-12">
+		         	<div class="form-group">
+                		 <div class="col-md-12 col-sm-12 col-xs-12 blog-left-content">
+                			<div class="card-box">
+						    	 <ul class="nav  md-pills pills-primary nav-tab" role="tablist">
+							         <li class="nav-item active">
+							             <a class="nav-link " data-toggle="tab" href="#panel211" role="tab"><i class="fa fa-calendar ml-2"></i> <?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?></a>
+							         </li>
+					            	<li class="nav-item">
+					                	<a class="nav-link" data-toggle="tab" href="#panel212" role="tab">
+					                		<i class="fa fa-calendar ml-2"></i> <?php echo $tr->translate("SCHEDULE_PAYMENT");?>
+					                	</a>
+					            	</li>
+						            <li class="nav-item">
+						                <a class="nav-link" data-toggle="tab" href="#panel213" role="tab">
+						                <i class="fa fa-calendar ml-2"></i> <?php echo $tr->translate("HISTORY_SCHEDULE_PAYMENTED");?>
+						                </a>
+						            </li>
+						        </ul>
+					    	</div>
+					    	<div class="col-md-12" style=" max-height: 400px; min-height;400px;   overflow-y: auto;">
+					       		 <!-- Tab panels -->
+					        	<div class="tab-content vertical">
+							        <!--Schedule Panel 1-->
+							        <div class="tab-pane fade in active" id="panel211" role="tabpanel">
+							        	<div id='data_table' name='data_table'></div>
+							        </div>
+							        <!--/.Schedule Panel 1-->
+							        <!--Schedule Panel 2-->
+							        <div class="tab-pane fade in " id="panel212" role="tabpanel">
+							        	<div id='data_table1' name='data_table1'></div>
+							        </div>
+							        <!--/.Schedule Panel 2-->
+							        <!--Schedule Panel 3-->
+							        <div class="tab-pane fade in " id="panel213" role="tabpanel">
+							        	<div id='data_table_loan_haspay' name='data_table_loan_haspay' style="white-space: nowrap;"></div>
+							        </div>
+							        <!--/.Schedule Panel 3-->
+							     </div>
+							     <input type="hidden" dojoType="dijit.form.TextBox" name="lastpaiddate" id="lastpaiddate">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="identity" id="identity">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
+							 </div>
+                		</div>
+                	</div>
+			   </div>
+			</div>
+									    
+	    	<div class="clearfix"></div>
+			    <div class="card-box">
+               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+					 <input type="submit" value="save_close" tabindex="2" label="<?php echo $tr->translate('SAVECLOSE');?>" id="save_close" dojoType="dijit.form.Button" name="save_close" iconClass="dijitEditorIcon dijitEditorIconSave" /> 
+					<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+	    		</div>
+	    	</div>
+		</form>
+	</div>
+</div>
+<style>	
+.blog-left-content {
+    min-height: 250px;
+    border: 1px solid #eee;
+    margin: 0 !important;
+    padding: 10px !important;
+    background: #f9f7f7;
+}
+table.collape {
+    width: 99%;
+}
+
+table tr td input {
+    height: auto;
+    margin: 0 !important;
+    vertical-align: top;
+}
+th.tdheader{
+	background: #607D8B;
+    color: #fff;
+	border:#bfc6ca 1px solid;
+	line-height: 20px;
+}
+table.collape th.tdheader{padding:5px 0px;}
+
+.image-box {
+    text-align: center;
+}
+.image-box img {
+    width: 170px;
+    height: 180px;
+    border: solid 1px #eee;
+}
+.account-image {
+    border: solid 1px #eee;
+    width: 170px;
+}
+.button_browse {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+    height: 45px;
+    cursor: pointer;
+    background: #fbf9f9;
+    border: 1px solid #e8e8e8;
+}
+.button_browse span {
+    line-height: 33px;
+    font-weight: 600;
+    cursor: pointer;
+}
+input.btn_borwse_image {
+    position: absolute;
+    width: 100%;
+    height: 45px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+</style>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script type="text/javascript">
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.TextArea");
+dojo.require("dijit.Dialog");
+dojo.require("dojo.NodeList-manipulate");
+dojo.require("dojo.html");
+
+dojo.ready(function(){
+	enablePayment();
+});
+function enablePayment(){
+	payment_method = dijit.byId('payment_method').get('value');
+	dijit.byId("cheque").set("readOnly",false);
+	dijit.byId("cheque").attr("value",'');
+	if(payment_method==1){
+		dijit.byId("cheque").attr("value",'N/A');
+		dijit.byId("cheque").set("readOnly",true);
+	}
+}
+var url_submit = '<?php echo $this->url(array('module'=>'invest','controller'=>'withdraw','action'=>'get-schedule-investor')); ?>';
+function getLaonPayment(){//tab ទី១
+	try{
+	tem='';	
+	is_set=0;
+		var investment_id = dijit.byId('investment_id').get('value');
+		if(investment_id==0 || investment_id==""){
+			alert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
+			dijit.byId('investment_id').focus();
+			return false;
+		}
+		dojo.xhrPost({
+		    url: url_submit,
+		    content : { 
+			    'investment_id':investment_id
+			},	
+			handleAs:"json",
+			load: function(respone) {
+				tem='<table class="collape tablesorter" style="font-size:12px;" id="table" width="100%">'
+					+'<thead><tr><th class="tdheader"></th><th class="tdheader"><?php echo $tr->translate('NUM');?></th>'
+					+'<th class="tdheader"><?php echo $tr->translate("AMOUNT_COLLECT");?></th>'
+					+'<th class="tdheader" colspan="2"><?php echo $tr->translate('PAY_DATE');?></th>'
+					+'<th class="tdheader"><?php echo $tr->translate('PRINCIPLE');?></th>'
+					+'<th class="tdheader"><?php echo $tr->translate('OS_AMOUNT');?></th>'
+					+'<th class="tdheader"><?php echo $tr->translate('AMOUNT_RETURN');?></th>'
+					+'<th class="tdheader"><?php echo $tr->translate('TOTAL_AMOUNT_RETURN');?></th>'
+				+'</thead>';
+				if(respone!=""){
+					num=0;
+					for(indexs=0;indexs<respone.length;indexs++){
+						inx = indexs+1;
+						num++;
+						date = new Date(respone[indexs].date);
+						str_day = getDayString(date.getDay());
+						
+						investor_id = respone[indexs].investor_id;
+
+						begining_balance_after = respone[indexs].beginning_balanceafter;
+						principal_permonth = respone[indexs].principle_after;
+						interest = respone[indexs].interest_amountafter;
+						total_payment = respone[indexs].total_paymentafter;
+						total_payment = parseFloat(total_payment);
+						
+						date_pay = respone[indexs].date;
+						id = respone[indexs].id;
+						if(indexs==0){
+							clearhistory();
+							dijit.byId('investor_id').attr('value',investor_id);
+							dijit.byId('principle_paid').attr('value',respone[indexs].principle_after);
+							dijit.byId('interest_paid').attr('value',respone[indexs].interest_amountafter);
+							dijit.byId('total_payment').attr('value',respone[indexs].total_paymentafter);
+							dijit.byId('payment_date').attr('value',respone[indexs].date);
+							dijit.byId('times').attr('value',respone[indexs].time);
+						}
+						pay_option = dijit.byId('option_pay').get('value');
+							if(pay_option==1){
+								if(inx==1){
+									dijit.byId("times").attr("value",respone[indexs].time);
+									tem+= '<tr id=tr_'+inx+' style="background: #d8ff0e2b;">';
+									tem += '<td align="center"><input type="checkbox" class="checkbox" name="mfdid_'+inx+'" id="mfdid_'+inx+'" value="'+id+'" OnChange="calculateTotal('+inx+')" checked="checked"/></td>';
+									tem += '<td align="center">&nbsp;'+num+'</td>';
+									
+								}else{
+									tem+= '<tr id=tr_'+inx+' style="background-color:#ffffff">';
+
+									tem += '<td align="center"><input type="checkbox" class="checkbox" name="mfdid_'+inx+'" id="mfdid_'+inx+'" value="'+id+'" OnChange="calculateTotal('+inx+')" onclick="return false" onkeydown="return false" /></td>';
+									tem += '<td align="center">&nbsp;'+num+'</td>';
+								}
+							}else{
+								if(inx==1){
+									tem+= '<tr id=tr_'+inx+' style="background: #d8ff0e2b;">';
+									tem += '<td align="center"><input type="checkbox" class="checkbox" name="mfdid_'+inx+'" id="mfdid_'+inx+'" value="'+id+'" OnChange="calculateTotal('+inx+')" checked="checked"/></td>';
+									tem += '<td align="center">&nbsp;'+num+'</td>';
+								}else{
+									tem+= '<tr id=tr_'+inx+' style="background: #d8ff0e2b;">';
+									tem += '<td align="center"><input type="checkbox" class="checkbox" name="mfdid_'+inx+'" id="mfdid_'+inx+'" value="'+id+'" OnChange="calculateTotal('+inx+')" /></td>';
+									tem += '<td align="center">&nbsp;'+num+'</td>';
+								}
+							}
+							tem += '<td style="white-space: nowrap;text-align:center;">&nbsp;'+respone[indexs].time+'&nbsp;</td>';
+						    tem += '<td style="white-space: nowrap;text-align:center;">&nbsp;'+date_pay+'&nbsp;<input type="hidden" name="date_payment_'+inx+'" id="date_payment_'+inx+'" value="'+respone[indexs].date+'" /></td>';
+						    tem += '<td style="white-space: nowrap;">&nbsp;'+str_day+'&nbsp;</td>';
+						    tem += '<td>&nbsp;'+dojo.number.format(begining_balance_after)+'&nbsp;<input type="hidden" name="total_priciple_'+inx+'" id="total_priciple_'+inx+'" value="'+begining_balance_after+'" /><input type="hidden" name="old_total_priciple_'+inx+'" id="old_total_priciple_'+inx+'" value="'+begining_balance_after+'" /></td>';
+						    tem += '<td>&nbsp;'+dojo.number.format(principal_permonth)+'&nbsp;<input type="hidden" name="principal_permonth_'+inx+'" id="principal_permonth_'+inx+'" value="'+principal_permonth+'" /><input type="hidden" name="old_principal_permonth_'+inx+'" id="old_principal_permonth_'+inx+'" value="'+principal_permonth+'" /></td>';
+						    tem += '<td>&nbsp;<label id="lb_interest_'+inx+'">'+dojo.number.format(interest)+'</label>&nbsp;&nbsp;<input type="hidden" name="interest_'+inx+'" id="interest_'+inx+'" value="'+interest+'" /><input type="hidden" name="old_interest_'+inx+'" id="old_interest_'+inx+'" value="'+interest+'" /></td>';
+						    tem += '<td>&nbsp;<label id="lb_payment_'+inx+'">'+dojo.number.format(total_payment,2)+'</label>&nbsp;<input type="hidden" name="payment_'+inx+'" id="payment_'+inx+'" value="'+total_payment+'" /><input type="hidden" name="old_payment_'+inx+'" id="old_payment_'+inx+'" value="'+total_payment+'" /></td>';
+							if(respone[indexs].is_complete==1){
+								status = '<label style="color:blue;"><?php echo $tr->translate('COMPLETED');?></label>';
+							}else{
+								status='<label style="color:red;"><?php echo $tr->translate('NOT_COMPLETED');?></label>';
+								
+								is_appr='';
+							}
+						    tem += '</tr>';
+						    dijit.byId('identity').attr('value',1);
+	 					    if(inx!=1) {
+	 							var identity = dijit.byId('record_id').get('value');
+	 							dijit.byId('record_id').attr('value',identity+','+inx);
+	 						} else {
+	 							dijit.byId('record_id').attr('value',inx);
+	 						}
+					}
+				}else{
+				}
+				tem+='</table>';
+				dojo.byId('data_table').innerHTML = tem;
+				calculateTotal();
+			},
+			error: function(e) {
+			}
+		});
+	}catch(err){
+	}	
+}
+
+function getAllLaonPayment(){//get schedule Tab ទី២
+	var url_submits = '<?php echo $this->url(array('module'=>'invest','controller'=>'withdraw','action'=>'get-allinvestdetail')); ?>';
+		var investment_id = dijit.byId('investment_id').get('value');
+		if(investment_id==0 || investment_id==""){
+			alert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
+			dijit.byId('investment_id').focus();
+			return false;
+		}
+		dojo.xhrPost({
+		    url: url_submits,
+		    content : { 
+			    'investment_id':investment_id,
+			},	
+			handleAs:"json",
+			load: function(data) {
+				tmp='';	is_sets=0;
+				tmp='<table class="collape tablesorter" style="font-size:12px;" id="table" width="100%">'
+					+'<thead><tr><th class="tdheader"><?php echo $tr->translate('NUM');?></th>'
+						+'<th class="tdheader"><?php echo $tr->translate('PAY_DATE');?></th>'
+						+'<th class="tdheader"><?php echo $tr->translate('PRINCIPLE');?></th>'
+						+'<th class="tdheader"><?php echo $tr->translate('PRINCIPAL');?></th>'
+						+'<th class="tdheader"><?php echo $tr->translate('AMOUNT_RETURN');?></th>'
+						+'<th class="tdheader"><?php echo $tr->translate('TOTAL_AMOUNT_RETURN');?></th>'
+						+'<th class="tdheader"><?php echo $tr->translate('STATUS');?></th>'
+						+'</tr>'
+					+'</thead>';
+				nums=0;
+				if(data!=""){
+					for(j=0;j<data.length;j++){
+						statuss='<label style="color:red;"><?php echo $tr->translate('NOT_COMPLETED');?></label>';
+						++nums;					
+						tmp+= '<tr style="background: #ffffff;">';
+						    tmp += '<td>&nbsp;'+nums+'</td>';
+						    tmp += '<td style="white-space: nowrap;">&nbsp;'+data[j].date_payment+'&nbsp;</td>';
+						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].beginning_balance)+'&nbsp;</td>';
+						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].principle)+'&nbsp;</td>';
+						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].interest_amount)+'&nbsp;</td>';
+						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].total_payment)+'&nbsp;</td>';
+							if(data[j].is_complete==1){
+								statuss = '<label style="color:blue;"><?php echo $tr->translate('COMPLETED');?></label>';
+							}else{
+							}
+							tmp += '<td>&nbsp;<label style="font-size:10px;">'+statuss+'</label></td>';
+						 tmp += '</tr>';
+					}
+				}
+				tmp+='</table>';
+				dojo.byId('data_table1').innerHTML = tmp;
+			},
+			error: function(e) {
+			}
+		});
+}
+function getInvesthaswithdraw(){//tab3 ប្រវត្តបានបង់ប្រាក់
+	try{
+		principal_paid = 0;
+
+		var investment_id = dijit.byId('investment_id').get('value');
+		if(investment_id==0 || investment_id==""){
+			alert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
+			dijit.byId('investment_id').focus();
+			return false;
+		}
+		
+		var url_submits = '<?php echo $this->url(array('module'=>'invest','controller'=>'withdraw','action'=>'get-investhaswithdraw')); ?>';
+			dojo.xhrPost({
+			    url: url_submits,
+			    content : { 
+				    'investment_id':investment_id,
+				},	
+				handleAs:"json",
+				load: function(data_loan) {
+					temp='';	
+					temp='<table class="collape tablesorter" style="font-size:12px;" id="table" width="100%">'
+					+'<thead>'
+						+'<tr><th class="tdheader" rowspan="2"><?php echo $tr->translate('NO');?></th>'
+							+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('AMOUNT_COLLECT');?></th>'
+							+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('RECIEPT_NO');?></th>'
+							+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('PAY_DATE');?></th>'
+							+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('DATE_INPUT');?></th>'
+							+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('PRINCIPLE');?></th>'
+							+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('TOTAL_AMOUNT_RETURN');?></th>'
+							+'<th class="tdheader" colspan="3"><?php echo $tr->translate('TOTAL_PAYMENTED');?></th>'
+						+'</tr>'
+						+'<tr>'
+							+'<th class="tdheader"><?php echo $tr->translate('PRINCIPAL');?></th>'
+							+'<th class="tdheader"><?php echo $tr->translate('AMOUNT_RETURN');?></th>'
+							+'<th class="tdheader"><?php echo $tr->translate('RECEIVE_AMOUNT');?></th>'
+						+'<tr>'
+					+'</thead>';
+					nums=0;
+					
+					if(data_loan!=""){
+						for(k=0;k<data_loan.length;k++){
+							
+							statuss='<label style="color:red;"><?php echo $tr->translate('NOT_COMPLETED');?></label>';
+							++nums;
+							temp+= '<tr style="background: #ffffff;">';
+								temp += '<td align="center">&nbsp;'+nums+'</td>';
+								temp += '<td>&nbsp;'+data_loan[k].times+'</td>';
+								temp += '<td>&nbsp;'+data_loan[k].receipt_no+'&nbsp;</td>';
+								temp += '<td style="white-space: nowrap;">&nbsp;'+data_loan[k].payment_date+'&nbsp;</td>';
+								temp += '<td style="white-space: nowrap;">&nbsp;'+data_loan[k].paid_date+'&nbsp;</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].principle_paid)+'&nbsp;</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].total_payment)+'&nbsp;</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].principle_paid)+' &nbsp;</td>';
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].interest_paid)+' &nbsp;</td>';
+								
+								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].recieve_amount)+'&nbsp;</td>';
+								
+								principal_paid = principal_paid+parseFloat(data_loan[k].principle_paid);
+								if(data_loan[k].is_completed==1){
+									statuss = '<label style="color:blue;"><?php echo $tr->translate('COMPLETED');?></label>';
+								}
+							temp+= '</tr>';
+						}
+					}
+					temp+='</table>';
+					dojo.byId('data_table_loan_haspay').innerHTML = temp;
+				},
+				error: function(e) {
+				}
+			});
+	}catch(err){
+	}
+}
+function getDayString(num){
+	var days= ["ច័ន្ទ", "អង្គារ", "ពុធ", "ព្រហ","សុក្រ","សៅរ៏","អាទិត្យ"];
+	return days[num];
+}
+function clearhistory(){
+	dijit.byId('investor_id').attr('value','');
+	dijit.byId('payment_date').attr('value',0);
+	
+	dijit.byId('principle_paid').attr('value',0);
+	dijit.byId('interest_paid').attr('value',0);
+	dijit.byId('total_payment').attr('value',0);
+	dijit.byId('recieve_amount').attr('value',0);
+	dijit.byId('remain').attr('value',0);
+	dijit.byId('times').attr('value',0);
+}
+function payOption(){
+	calculateTotal();
+}
+function calculateTotal(index){//គណនាបង់
+	try{
+		var priciple_amount = 0;
+		var total_interest = 0;
+		var total_penelize =0;//used
+		var total_payment = 0;//ប្រាក់ត្រូវបង់សរុប
+		var totalAmount = 0;
+		principal_permonth=0;
+		condition=0;
+		
+		var oneDay = 24*60*60*1000;
+		
+		var payOption = dijit.byId('option_pay').get('value');
+		var interest_rate = dijit.byId('interest_paid').get('value');
+		
+		var collect_date = new Date(dijit.byId("paid_date").attr("value"));
+		var date_payment = new Date(dijit.byId("payment_date").attr("value"));
+		
+	   ids = dijit.byId("record_id").get('value');
+	   var arrays = ids.split(',');
+		if(arrays!=""){
+		
+			for(var i=0;i<arrays.length;i++) {
+					if(payOption==1){//pay normall
+						if($('#mfdid_'+arrays[i]).attr('checked')){
+							principal_permonth = parseFloat($('#principal_permonth_'+arrays[i]).val());
+							total_interest = total_interest+parseFloat($('#interest_'+arrays[i]).val());
+				        }
+					}else if(payOption==2){//ដកប្រាក់ដើម
+						principal_permonth = $('#principal_permonth_1').val();
+					}else if(payOption==3){//ដកប្រាក់ដើមផ្ដាច់
+						principal_permonth = principal_permonth+parseFloat($('#principal_permonth_'+arrays[i]).val());
+					}
+								
+					
+				}/*end of checked*/
+			  /*end of loop*/
+		}else{
+			totalAmount=0;
+			total_interest=0;
+			priciple_amount=0;
+		}
+		dijit.byId('principle_paid').attr('value',parseFloat(principal_permonth).toFixed(2));
+		dijit.byId('interest_paid').attr('value',parseFloat(total_interest).toFixed(2));
+		
+		total_payment = parseFloat(principal_permonth)+parseFloat(total_interest);
+		dijit.byId('total_payment').attr('value',total_payment);//សរុបប្រាក់ត្រូវទូទាត់		
+		dijit.byId('recieve_amount').attr('value',total_payment);	
+		
+		totalReturn();	
+	}catch(err){
+		alert(err);
+	}
+}
+function doTotalByServ(){
+	total_principal = dijit.byId('principle_paid').get('value');//ប្រាក់ដើមត្រូវបង់
+	total_principal=isNaN(total_principal)?0:total_principal;
+	
+	total_interest = dijit.byId('interest_paid').get('value');
+	total_interest=isNaN(total_interest)?0:total_interest;
+
+	total_amount = parseFloat(total_principal)+parseFloat(total_interest);
+	option_pay = dijit.byId('option_pay').get('value');
+	dijit.byId('total_payment').attr('value',total_amount);
+	dijit.byId('recieve_amount').attr('value',total_amount);
+	totalReturn();
+}
+function totalReturn(){
+	option_pay = dijit.byId('option_pay').get('value');
+	total_principal = dijit.byId('principle_paid').get('value');//ប្រាក់ដើមត្រូវបង់
+	total_principal=isNaN(total_principal)?0:total_principal;
+	
+	total_interest = dijit.byId('interest_paid').get('value');
+	total_interest=isNaN(total_interest)?0:total_interest;
+
+	total_amount = parseFloat(total_principal)+parseFloat(total_interest);
+	
+	receive_amount = dijit.byId('recieve_amount').get('value');	
+	
+	dijit.byId('interest_paid').set("readOnly",true);
+	if(option_pay==1){	
+			 paid_principalall=0;
+			 paid_interestall = 0;
+			 remain_money = receive_amount;
+			 
+			 ids = dijit.byId("record_id").get('value');
+			 var arrays = ids.split(',');
+			   if(arrays!=""){
+				   for(var i=0;i<arrays.length;i++) {
+					   if(remain_money<=0){break;}					   
+						    paid_principal=0;
+						    paid_interest=0;
+						    total_interest = parseFloat($('#interest_'+arrays[i]).val());
+							remain_money = remain_money - total_interest;
+							if(remain_money>=0){
+								paid_interest = total_interest;
+								total_principal = parseFloat($('#principal_permonth_'+arrays[i]).val());
+								
+								remain_money = (remain_money)-total_principal;
+								if(remain_money>=0){
+									paid_principal = parseFloat(total_principal);
+								}else{
+									paid_principal = total_principal-abs(remain_money);								
+								}
+							}else{
+								paid_interest = total_interest-abs(remain_money);							
+							}
+							 paid_principalall = paid_principalall+paid_principal;
+							 paid_interestall = paid_interestall+paid_interest;
+				   }
+			  }
+			 
+			dijit.byId('principle_paid').attr('value',paid_principalall);
+			dijit.byId('interest_paid').attr('value',paid_interestall);
+			
+			//dijit.byId('priciple_amount').attr('value',dijit.byId("outstanding_balance").get("value")-paid_principalall);//អោយរកប្រាក់ដើមនៅសល់ពីបង់ត្រូវគឺត្រូវហើយ
+			total_amount = receive_amount ;
+
+	}else if(option_pay==2){
+		
+		principal_paid = receive_amount - total_interest;
+		dijit.byId('principle_paid').attr('value',parseFloat(principal_paid).toFixed(2));
+	 
+	    total_amount = principal_paid+total_interest;
+	    dijit.byId('interest_paid').set("readOnly",false);
+	    
+	}else if(option_pay==3){
+		dijit.byId('interest_paid').set("readOnly",false);
+	}else{
+	}
+	dijit.byId('total_payment').attr('value',total_amount);
+}
+</script>

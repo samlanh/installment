@@ -1,0 +1,222 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	
+	$frm = $this->frm_search;
+	$frmin = $this->frm;
+	
+	$investSchedule = $this->baseUrl()."/report/invest/rpt-invest-schedule/id/";
+	$brokerSchedule = $this->baseUrl()."/report/invest/rpt-broker-schedule/id/";
+	
+	$withdrawalHistory = $this->baseUrl()."/report/invest/withdrawalhistory/id/";
+	$brokerWithdrawalHistory = $this->baseUrl()."/report/invest/withdrawalbrokerhistory/id/";
+?>
+<title><?php echo $tr->translate("BROKER_REPORT");?></title>
+<div class="reportblog">
+	<div class="card-box">
+	   	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('BROKER_REPORT');?></h4>
+	   		</div>
+	   		<div class="col-sm-4 text-right">
+	   		</div>
+	   	</div>
+	</div>
+	<div class="card-box">
+			<form  action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+				<div class="form-group">
+	               <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frm->getElement('adv_search');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frmin->getElement('investor_id');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frmin->getElement('broker_id');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frm->getElement('start_date');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frm->getElement('end_date');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <?php echo $frm->getElement('status');?>
+	                </div>
+	                <div class="col-md-2 col-sm-2 col-xs-12">
+	                    <button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+	                </div>
+	            </div>
+			</form>
+		</div>
+	<style>
+		.hideblog{display: block !important;;border: 1px solid #fff;border-bottom: 1px solid #000;}
+		.hiddenblog{display: block !important;}
+	</style>
+	<div id="divPrint">
+		<style type="text/css">
+		.style{
+			line-height: 20px;font-size: 12px !important;
+			font-family: 'Khmer OS Battambang';
+		}
+		.hideblog{display: none;}
+		.hiddenblog{display: block !important;}
+		.style1:hover{ background: #ccc; }
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px;}
+		table { page-break-inside:auto }
+		tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		  margin-top: 100px;
+		}
+		.hide{visibility: hidden;}
+		@media print {
+		  div.divFooter {
+		    position: fixed;
+		    top: 0;
+		  	width: 100%;
+		  	height: 100px;
+		  	bottom:0px;
+			margin:0;
+		  }
+			.hide{visibility: visible; height: 110px;}
+		}
+		</style>
+		<table width="100%">
+			<tr>
+		    	<td align="center" valign="top">
+		        	<div class="divFooter">
+			        	<table border="0" width="100%" style="font-family: 'Khmer OS Battambang';margin:0;padding:0;">
+			            	<tr>
+			                	<td width="20%" style="border:1px solid #fff;"></td>
+			                	<td width="60%" valign="top">
+			                		<ul>
+			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BROKER_REPORT");?></li>
+			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;"><?php if($this->search['start_date']){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></li>
+			                		</ul>
+			                   </td>
+			                    <td width="20%"></td>
+			                </tr> 
+			            </table>
+		            </div>
+		        </td>
+		    </tr>
+		    <tr>
+		    	<td id="exportExcel">
+		            <table width="100%" border="1" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
+			                <thead>
+			                <tr class="hide" style="border:1px solid #000;">
+			                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+			                </tr>
+			                <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+			                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+			                    <td rowspan="2"><?php echo $tr->translate("NAME");?></td>
+			                    <td rowspan="2"><?php echo $tr->translate("PHONE");?></td>
+			                    <td rowspan="2"><?php echo $tr->translate("EMAIL");?></td>
+			                    <td rowspan="2"><?php echo $tr->translate("INVESTOR_NAME");?></td>		
+			                    <td rowspan="2"><?php echo $tr->translate("INVEST_DATE");?></td>
+			                    <td rowspan="2"><?php echo $tr->translate("AMOUNT_INVEST");?></td>
+			                    <td rowspan="2"><?php echo $tr->translate("DURATION_INVEST").$tr->translate("YEAR");?></td>
+			                    <td rowspan="2">(%) <?php echo $tr->translate("BROKER_PROFIT");?></td>
+			                         
+			                    <td colspan="2"><?php echo $tr->translate("TOTALED");?></td>
+			                    <td colspan="2"><?php echo $tr->translate("NOT_TOTAL");?></td>
+			                </tr>
+			                <tr bgcolor="#c1d0f3" class="style" style="white-space: nowrap;text-align: center;">
+			                	<td><?php echo $tr->translate("AMOUNT_TIME");?></td>                   
+			                    <td><?php echo $tr->translate("AMONT_RETURN_TOTALED");?></td>
+			                    <td><?php echo $tr->translate("AMOUNT_TIME");?></td>
+			                    <td><?php echo $tr->translate("AMONT_RETURN_NOT_TOTAL");?></td>
+			                </tr>
+			            </thead>
+		                <?php 
+		                $i=1;
+		                $total_remain=0;
+		                $total_complete=0;
+		                if(!empty($this->row)) foreach ($this->row as $index => $rs){ 
+		                	$total_remain = $total_remain +$rs["total_remain"];
+		                	$total_complete = $total_complete +$rs["total_paidready"];
+		                	?>
+		                <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class="style style1 context-menu-one" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+		               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+		               		<td>&nbsp;<?php echo $rs["broker_name"];?>&nbsp;</td>
+		               		<td>&nbsp;<?php echo $rs["broker_phone"];?>&nbsp;</td>                 		
+		               		<td>&nbsp;<?php echo $rs["broker_email"];?>&nbsp;</td>
+		               		
+		               		<td>&nbsp;<?php echo $rs["investor_name"];?>&nbsp;</td>
+		               		<td>&nbsp;<?php echo date("d/M/Y",strtotime($rs["date"]));?>&nbsp;</td>
+		               		<td>&nbsp;$ <?php echo number_format($rs["amount"],2);?>&nbsp;</td>
+		               		<td align="center">&nbsp;<?php echo $rs["duration"];?>&nbsp;</td>
+		               		
+		               		<td align="center">&nbsp;<?php echo $rs["broker_percent"]."%";?>&nbsp;</td>
+		               		<td align="center">&nbsp;<?php echo $rs["completed_time"];?>&nbsp;</td>
+		               		<td>&nbsp;$ <?php echo number_format($rs["total_paidready"],2);?>&nbsp;</td>
+		               		<td align="center">&nbsp;<?php echo $rs["not_completed_time"];?>&nbsp;</td>
+		               		<td>&nbsp;$ <?php echo number_format($rs["total_remain"],2);?>&nbsp;</td>
+		               		
+		                </tr>
+		                <?php }?>
+		            </table>
+		            <br />
+		            <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
+			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                    <td width="40%" align="right">&nbsp;</td>
+			                    <td width="10%">&nbsp;</td>
+			                    <td width="50%"><span class="border_bottom"><?php echo $tr->translate("TOTAL");?></span></td>
+			                 </tr>
+			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                    <td align="right"><?php echo $tr->translate("AMONT_RETURN_TOTALED");?>&nbsp;&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td align="left" style="font-weight: bold;">$&nbsp;&nbsp;<?php echo number_format($total_complete,2);?>&nbsp;&nbsp;</td>
+			                 </tr>
+			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                    <td align="right"><?php echo $tr->translate("AMONT_RETURN_NOT_TOTAL");?>&nbsp;&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td align="left" style="font-weight: bold;">$&nbsp;&nbsp;<?php echo number_format($total_remain,2);?>&nbsp;&nbsp;</td>
+			                 </tr>
+			              </table>
+		            <br />
+				    <?php echo $this->footerReport;?>
+		    	</td>
+		    </tr>
+		</table>
+		</div>
+</div>
+
+<script>
+dojo.require("dijit.form.DateTextBox");
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="investor"){
+				url='<?php echo $investSchedule;?>';
+			}else if(key=="broker"){
+				url='<?php echo $brokerSchedule;?>';
+			}else if(key=="history"){
+				url='<?php echo $withdrawalHistory;?>';
+			}else if(key=="brokerhistory"){
+				url='<?php echo $brokerWithdrawalHistory;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"investor": {name: "<?php echo $tr->translate("INVESTOR_SCHEDULE");?>", icon: "fa-calendar", accesskey: "c o p y"},
+			"history": {name: "<?php echo $tr->translate("WITHDRAWAL_HSITORY");?>", icon: "fa-money"},
+			"broker": {name: "<?php echo $tr->translate("BROKER_SCHEDULE");?>", icon: "fa-calendar"},
+			"brokerhistory": {name: "<?php echo $tr->translate("BROKER_WITHDRAWAL_HSITORY");?>", icon: "fa-money"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row+'?rightclick=true', '_blank');
+}
+ </script>

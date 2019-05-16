@@ -720,7 +720,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	if($this->currentlang()==2){
   		$string = "name_en";
   	}
-  	 
   	$sql="SELECT key_code as id, $string AS name ,displayby FROM `ln_view` WHERE status =1 AND type=23 AND (name_kh!='' OR name_en!='')";
   	$rows = $db->fetchAll($sql);
   	return $rows;
@@ -1617,6 +1616,17 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     $sql=" SELECT SUM(total_principal_permonthpaid+extra_payment) AS paid_before FROM ln_client_receipt_money 
     	WHERE sale_id = $sale_id AND status =1 LIMIT 1";
     return $db->fetchOne($sql);
+  }
+  
+  function getAllInvestor(){
+  	$db = $this->getAdapter();
+  	$sql="SELECT s.`id`,s.`name` FROM `rms_investor` AS s WHERE s.`status`=1 AND s.`name`!='' ORDER BY s.`name` ASC";
+  	return $db->fetchAll($sql);
+  }
+  function getAllBroker(){
+  	$db = $this->getAdapter();
+  	$sql="SELECT s.`id`,s.`name` FROM `rms_broker` AS s WHERE s.`status`=1 AND s.`name`!='' ORDER BY s.`name` ASC";
+  	return $db->fetchAll($sql);
   }
 }
 ?>
