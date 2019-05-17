@@ -583,4 +583,44 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
+  function rptClientAction($table='ln_account_name'){
+  	 
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}else{
+  		$search = array('adv_search' => '',
+  				'status' => -1,
+  				'branch_id' => 0,
+  				'province'=>0,
+  				'district'=>'',
+  				'commune'=>'',
+  				'village'=>'',
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'));
+  	}
+  
+  	$this->view->result=$search;
+  
+  	$db  = new Report_Model_DbTable_DbLnClient();
+  	$this->view->client_list =$db->getAllLnClient($search);
+  	 
+  	$frm = new Application_Form_FrmAdvanceSearch();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  	 
+  	$fm = new Group_Form_FrmClient();
+  	$frm = $fm->FrmAddClient();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_client = $frm;
+  	$db= new Application_Model_DbTable_DbGlobal();
+  	$this->view->district = $db->getAllDistricts();
+  	$this->view->commune = $db->getCommune();
+  	$this->view->village = $db->getVillage();
+  	 
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
+  }
 }

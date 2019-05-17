@@ -51,7 +51,7 @@ class IndexController extends Zend_Controller_Action
 					$user_info = $db_user->getUserInfo($user_id);
 					
 					$arr_acl=$db_user->getArrAcl($user_info['user_type']);
-					$session_user->url_report=$db_user->getArrAclReport($user_info['user_type']);
+					//$session_user->url_report=$db_user->getArrAclReport($user_info['user_type']);
 					$session_user->user_id=$user_id;
 					$session_user->user_name=$user_name;
 					$session_user->pwd=$password;		

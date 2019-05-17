@@ -331,13 +331,21 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		$rows = $db->fetchAll($sql);
 		return $rows;
 	}
-	public function getArrAclReport($user_type_id){
+	public function getArrAclReport($controller_name=null){
 		$db = $this->getAdapter();
-		$sql = "SELECT aa.label,aa.module, aa.controller, aa.action FROM rms_acl_user_access AS ua  INNER JOIN rms_acl_acl AS aa
-		ON (ua.acl_id=aa.acl_id) WHERE aa.status=1 AND ua.user_type_id='".$user_type_id."'
-		AND aa.module='report' GROUP BY  aa.module ,aa.controller,aa.action
+		$sql = "SELECT aa.label,aa.module, aa.controller, aa.action FROM rms_acl_user_access AS ua  
+			INNER JOIN rms_acl_acl AS aa
+		ON (ua.acl_id=aa.acl_id) WHERE aa.status=1
+		AND aa.module='report' ";
+		if($controller_name==null){
+			$sql.=" AND aa.controller!='invest'";
+		}else{
+			$sql.=" AND aa.controller='".$controller_name."'";
+		}
+		//
+		$order =" GROUP BY  aa.module ,aa.controller,aa.action
 		ORDER BY aa.module ,aa.rank ASC ";
-		$rows = $db->fetchAll($sql);
+		$rows = $db->fetchAll($sql.$order);
 		return $rows;
 	}
 	function getAccessUrl($module,$controller,$action){

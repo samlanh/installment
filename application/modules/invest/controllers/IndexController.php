@@ -26,7 +26,7 @@ class Invest_IndexController extends Zend_Controller_Action {
 			$rs_rows= $db->getAllInvestor($search);
 			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("NAME","SEX","DOCUMENT_TYPE","NUMBER","NATIONALITY","PHONE","EMAIL","STATUS");
+			$collumns = array("INVESTOR_NAME","SEX","DOCUMENT_TYPE","NUMBER","NATIONALITY","PHONE","EMAIL","STATUS");
 			$link=array('module'=>'invest','controller'=>'index','action'=>'edit',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('name'=>$link,'sex'=>$link,),0);
 			

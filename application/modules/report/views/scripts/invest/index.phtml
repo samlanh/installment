@@ -7,10 +7,8 @@
 		<div class="card-box report-list">
 		  	<div class="row top_tiles">
 			  	 <?php
-// 			   	   $session_user=new Zend_Session_Namespace('authinstall');
-// 			   	   $report_url = $session_user->url_report;
 			  	 	$db_user=new Application_Model_DbTable_DbUsers();
-			  		$report_url =  $db_user->getArrAclReport(null);
+			  		$report_url =  $db_user->getArrAclReport('invest');
 			   	   if(!empty($report_url)){
 			   	   foreach($report_url as $url){
 			   	   if($url['action']=='index' OR $url['action']=='receipt' OR $url['action']=='rpt-updatepayment' OR $url['action']=='updatereceipt' OR $url['action']=='rpt-combineschedules'
@@ -29,15 +27,6 @@
 			        </div> 
 			        <?php }
 				}?>
-					<div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-						<a style="color:red;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'bug')); ?>">
-						<div title="<?php echo $tr->translate("CHECK_MISTACK");?>" class="tile-stats report-list error">
-							<div class="icon"><i class="fa fa-book"></i></div>
-							<div class="count">&nbsp;</div>
-			                 	<h3><?php echo $tr->translate("CHECK_MISTACK");?></h3>
-						</div>
-						</a>
-			        </div> 
 			   </div>
 		  </div>
 		</div>
