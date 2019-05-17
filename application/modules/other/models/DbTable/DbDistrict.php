@@ -79,21 +79,8 @@ class Other_Model_DbTable_DbDistrict extends Zend_Db_Table_Abstract
 	}	
 	public function getDistrictByIdProvince($pro_id){
 		$db = $this->getAdapter();
-		$sql = "SELECT dis_id AS id ,district_namekh AS name FROM $this->_name WHERE status=1 AND pro_id = ".$db->quote($pro_id);
+		$sql = "SELECT dis_id AS id ,district_namekh AS name FROM $this->_name WHERE district_namekh!='' AND status=1 AND pro_id = ".$db->quote($pro_id);
 		$rows=$db->fetchAll($sql);
 		return $rows;
 	}
-// 	public function addDistrictByAjax($_data){
-// 		$_arr=array(
-// 				'pro_id'	  		=> $_data['province_names'],
-// 				'district_name'	  	=> $_data['pop_district_name'],
-// 				'district_namekh'	=> $_data['pop_district_namekh'],
-// 				'status'	  		=> 1,
-// 				'modify_date' 		=> Zend_Date::now(),
-// 				'user_id'	  		=> $this->getUserId()
-// 		);
-	
-// 		return  $this->insert($_arr);
-// 	}
 }
-

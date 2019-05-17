@@ -7,9 +7,7 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     	return $session_user->user_id;
     }
     function getAllissueplong($search){
-    	
     	$dbp = new Application_Model_DbTable_DbGlobal();
-    	
     	$from_date =(empty($search['start_date']))? '1': " pr.date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " pr.date <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
@@ -53,7 +51,9 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     	if(($search['branch_id'])>0){
     		$where.= " AND pr.branch_id = ".$search['branch_id'];
     	}
-    
+    	if(($search['land_id'])>0){
+    		$where.= " AND pr.property_id = ".$search['land_id'];
+    	}
     	$where.=$dbp->getAccessPermission("`pr`.`branch_id`");
     
     	$order = " ORDER BY pr.id DESC";
@@ -83,12 +83,12 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     			$id = $this->insert($arr);
     			if ($data['process_status']>0){
     				$arr_detail=array(
-    					'processplong_id'			=>$id,
+    					'processplong_id'=>$id,
     					'date'			=>$data['date'],
-    					'process_status'	=>$data['process_status'],
-    					'give_by'	=>$data['give_by'],
+    					'process_status'=>$data['process_status'],
+    					'give_by'		=>$data['give_by'],
     					'receive_by'	=>$data['receive_by'],
-    					'note'	=>$data['note'],
+    					'note'			=>$data['note'],
     				);
     				$this->_name="ln_processing_plong_detail";
     				$this->insert($arr_detail);
@@ -97,15 +97,14 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     			if ($data['process_status']==5){
     					$this->_name="ln_issueplong";
     					$arrissuepl = array(
-    							'sale_id'=>$data['loan_number'],
-    							'issue_date'=>$data['date'],
-    							'layout_number'=>"",
-    							'note'=>$data['note'],
-    							'is_receivedplong'=>0,
+    						'sale_id'=>$data['loan_number'],
+    						'issue_date'=>$data['date'],
+    						'layout_number'=>"",
+    						'note'=>$data['note'],
+    						'is_receivedplong'=>0,
     					);
     					$this->insert($arrissuepl);
     			}
-    			
     			$db->commit();
     			return $id;
     		}catch (Exception $e){
@@ -165,7 +164,7 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     				$wheredetal = "id = ".$data['detail_id'];
     				$this->update($arr_detail, $wheredetal);
     			}else{
-    			$this->insert($arr_detail);
+    				$this->insert($arr_detail);
     			}
     			
     			$arr = array(
@@ -192,6 +191,14 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
 	    				);
 	    				$this->insert($arr);
     				}
+    				
+    				$arr = array(
+    					'is_issueplong'=>1,
+    					'issueplong_date'=>date("Y-m-d")
+    				);
+    				$where="id = ".$rs['sale_id'];
+    				$this->_name="ln_sale";
+    				$this->update($arr, $where);
     			}
     		}
     		

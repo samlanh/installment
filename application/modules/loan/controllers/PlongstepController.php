@@ -18,6 +18,7 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 						'txt_search'=>'',
 						'client_name'=> -1,
 						'branch_id' => -1,
+						'land_id'=>-1,
 						'status' => -1,
 						'process_status'=>0,
 						'start_date'=> date('Y-m-d'),
@@ -34,6 +35,8 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
+		
+		$this->view->rssearch = $search;
 		$frm = new Loan_Form_FrmSearchLoan();
 		$frm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
@@ -63,21 +66,9 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
-        
 	}	
-	
 	public function editAction(){
 		$_dbmodel = new Loan_Model_DbTable_DbPlongStep();
-		
-		$id = $this->getRequest()->getParam('id');
-		$id = empty($id)?0:$id;
-		$rs = $_dbmodel->getPlogStepById($id);
-		$this->view->rs = $rs;
-		if(empty($rs)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/plongstep");
-			exit();
-		}
-		$this->view->rsdetail = $_dbmodel->getPlogStepDetailById($id);
 		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
@@ -95,6 +86,16 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 			}
 		}
 		
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		$rs = $_dbmodel->getPlogStepById($id);
+		$this->view->rs = $rs;
+		if(empty($rs)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/plongstep");
+			exit();
+		}
+		$this->view->rsdetail = $_dbmodel->getPlogStepDetailById($id);
+		
 		$frm = new Loan_Form_FrmPlongStep();
 		$frm_loan=$frm->FrmPlongStep($rs);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
@@ -102,8 +103,21 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 	}
 	function stepupAction()
 	{
-		$_dbmodel = new Loan_Model_DbTable_DbPlongStep();
 		$id = $this->getRequest()->getParam('id');
+		$_dbmodel = new Loan_Model_DbTable_DbPlongStep();
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			try {
+				$_dbmodel = new Loan_Model_DbTable_DbPlongStep();
+				$_dbmodel->addPlongStepDetail($_data);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/plongstep");
+			}catch (Exception $e) {
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+		
 		$id = empty($id)?0:$id;
 		$rs = $_dbmodel->getPlogStepById($id);
 		$this->view->rs = $rs;
@@ -123,25 +137,10 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 		$detialinfo =  $_dbmodel->getPlogStepDetailRowById($record);
 		$this->view->detialinfo = $detialinfo;
 		
-		if($this->getRequest()->isPost()){
-			$_data = $this->getRequest()->getPost();
-			try {
-				$_dbmodel = new Loan_Model_DbTable_DbPlongStep();
-				$_dbmodel->addPlongStepDetail($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/plongstep");
-			}catch (Exception $e) {
-				Application_Form_FrmMessage::message("INSERT_FAIL");
-				$err =$e->getMessage();
-				Application_Model_DbTable_DbUserLog::writeMessageError($err);
-			}
-		}
 		$frm = new Loan_Form_FrmPlongStep();
 		$frm_loan=$frm->FrmPlongStep();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
 		$db = new Application_Model_DbTable_DbGlobal();
-	
 	}
-	
 }
-

@@ -1360,6 +1360,7 @@ function getAllBranch($search=null){
     			$sql.=" AND sc.is_installment=1 ";
     		}
     		$order = ' AND is_rescheule=0 ORDER BY sc.no_installment ASC, sc.`date_payment` ASC ';
+    		//ORDER BY no_installment ASC,date_payment ASC, collect_by ASC, status DESC
     		return $db->fetchAll($sql.$order);
     }
 	function getALLCommissionStaff($search = null){
@@ -1664,7 +1665,7 @@ function getAllBranch($search=null){
 				(SELECT SUM(crm.total_principal_permonthpaid) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id = s.id  GROUP BY crm.sale_id LIMIT 1) AS total_sale_paid
 				 FROM 
 				`ln_sale` AS s
-				WHERE full_commission>0 ";
+				WHERE full_commission>0 AND s.is_cancel = 0 ";
     		$where ="";
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();
@@ -1966,6 +1967,9 @@ function getAllBranch($search=null){
 		}
 		if($search['land_id']>0){
 			$where.= " AND pr.property_id = ".$search['land_id'];
+		}
+		if (!empty($search['process_status'])){
+			$where.= " AND pr.process_status = ".$search['process_status'];
 		}
 		$where.=$dbp->getAccessPermission("`pr`.`branch_id`");
 	

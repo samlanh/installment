@@ -26,7 +26,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->staff_list = $db->getAllstaff($search);
   	$this->view->search = $search;
   	$frm=new Other_Form_FrmStaff();
-  	$row=$frm->FrmAddStarf();
+  	$row=$frm->FrmAddStaff();
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_staff=$row;
   	
@@ -557,6 +557,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"branch_id"=>-1,
   				'land_id'=>-1,
   				'user_id'=>-1,
+  				'process_status'=>0,
   				'client_name'=>'',
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
@@ -570,6 +571,12 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
+  	
+  	$frm = new Loan_Form_FrmPlongStep();
+  	$frm_loan=$frm->FrmPlongStep();
+  	Application_Model_Decorator::removeAllDecorator($frm_loan);
+  	$this->view->frm_searchplog = $frm_loan;
+  	
   	$this->view->rssearch = $search;
   	
   	 

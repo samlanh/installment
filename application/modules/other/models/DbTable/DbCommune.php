@@ -81,7 +81,7 @@ class Other_Model_DbTable_DbCommune extends Zend_Db_Table_Abstract
 	}
         public function getCommuneBydistrict($distict_id){
 		$db = $this->getAdapter();
-		$sql = "SELECT com_id AS id ,commune_namekh AS name FROM $this->_name WHERE status=1 AND commune_name!='' AND  $this->_name.district_id=".$db->quote($distict_id); 
+		$sql = "SELECT com_id AS id ,commune_namekh AS name FROM $this->_name WHERE status=1 AND commune_namekh!='' AND  $this->_name.district_id=".$db->quote($distict_id); 
 		$rows=$db->fetchAll($sql);
 		return $rows;
 	}	
