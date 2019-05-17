@@ -26,6 +26,12 @@
 						dijit.byId('process_status').focus();
 						return false;
 					}
+				identity= $("#identity").val();
+				if(identity=='' || identity==null){
+					alert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
+					dijit.byId("loan_number").focus();
+					return false;
+				}
 				loadingBlock();
 				return true;
 			}else {
@@ -53,8 +59,6 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('branch_id')?>
-	                    	<?php echo $frm->getElement('customer_id')?>
-	                    	<?php echo $frm->getElement('property_id')?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -62,11 +66,10 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id='loan_number' />
+	                    	<input type="hidden" name="identity" id="identity"  value="" >
 	                   </div>
 	                </div>
-	    		</div>
-	    		<div class="col-md-4 col-sm-4 col-xs-12">
-	    			<div class="form-group">
+	                <div class="form-group">
 	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("PROCESS_INFO");?> 
 	                   </label>
 	                </div>
@@ -98,16 +101,15 @@
 	                    	<?php echo $frm->getElement('receive_by')?>
 	                   </div>
 	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?>:
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('note')?>
-	                   </div>
-	                </div>
 	    		</div>
-	    	</div>
-	    	<div class="col-md-4 col-sm-4 col-xs-12">
+	    		<div class="col-md-8 col-sm-8 col-xs-12">
+	    			<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
+	                   </label>
+	                </div>
+	                <div  id="showrecord"></div>
+	    			<div id='data_table_loan_haspay' name='data_table_loan_haspay' style="white-space: nowrap;"></div>
+	    		</div>
 	    	</div>
 	    	<div class="clearfix"></div>
 			 <div class="card-box">
@@ -143,7 +145,8 @@ require(["dojo/ready"], function(ready){
 		searchAttr: "name",
 		class: 'fullside',
 		onChange: function(){
-			getInfoByLoanNumber();
+			
+			addRow();
 	    }
 		}, "loan_number");
 	 
@@ -182,7 +185,7 @@ function getLoanByBranch(){
 }
 
 var url_submiinfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloan-bymemberid')); ?>';
-function getInfoByLoanNumber(){
+function getInfoByLoanNumber(index){
 	loan_id = dijit.byId('loan_number').get('value');
 	dojo.xhrPost({
 	    url: url_submiinfo,	
@@ -191,8 +194,8 @@ function getInfoByLoanNumber(){
 		},	
 		handleAs:"json",
 		load: function(data) {
-			dijit.byId('customer_id').set('value', data.client_id);
-			dijit.byId('property_id').set('value', data.house_id);
+			dijit.byId('customer_id'+index).set('value', data.client_id);
+			dijit.byId('property_id'+index).attr('value', data.house_id);
 			
 		},
 		error: function(err) {
@@ -220,4 +223,71 @@ function getAllSaleNumber(branch_id){//used
 	});
 }
 
+col=0;no=0;
+title=0;
+temp='';
+function addRow(){
+	loan_number=dijit.byId("loan_number").get("value");
+	if(loan_number=='' || loan_number==-1){
+		return false;
+	}
+	var iden = $("#identity").val();
+	var arrays = iden.split(',');
+	 if(arrays!=""){
+		 for(var i=0;i< arrays.length;i++){
+			 readychoose = dijit.byId('sale_id'+arrays[i]).get('value');
+			 if(readychoose==loan_number){
+				 alert("<?php echo $tr->translate("Choosen ready")?>");
+				 return false;
+			 }
+		}
+	}
+		
+	temp='';
+	col++;no++;
+	template='';
+	if(title!=1){    
+		tmp='<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
+		tmp+='<tr id="head-title" class="head-td" style="color:#000 !important;background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+		tmp+='</table>';
+		dojo.query("#showrecord").append(tmp);
+		
+		temp+='<th><?php echo $tr->translate("DEL");?></th>';
+		temp+='<th><?php echo $tr->translate("NUM");?></th>';
+		temp+='<th><?php echo $tr->translate("PROPERTY_CODE");?></th>';
+		temp+='<th><?php echo $tr->translate("NOTE");?></th>';
+		
+		dojo.query("#head-title").append(temp);
+		title=1;
+	}else{
+	}
+		sale_label = dijit.byId("loan_number").attr("displayedValue");
+		sale_id = dijit.byId("loan_number").get("value");
+		template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"><input class="fullside" value="" type="hidden" data-dojo-type="dijit.form.TextBox" id="customer_id'+col+'" name="customer_id'+col+'" /></td>';
+		template+='<td width="2%" align="center">'+no+'</td>';
+		template+='<td style="white-space: nowrap"><input class="fullside" value="'+sale_id+'" type="hidden" data-dojo-type="dijit.form.TextBox" id="sale_id'+col+'" name="sale_id'+col+'" />'+sale_label+'<input class="fullside" value="" type="hidden" data-dojo-type="dijit.form.TextBox" id="property_id'+col+'" name="property_id'+col+'" /></td>';	
+		template+='<td><input class="fullside" type="text" name="note'+col+'" id="note'+col+'" dojoType="dijit.form.TextBox" /></td>';
+	tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
+	tmp+="</tr>";
+	dojo.query("#table_row").append(tmp);
+
+	if($("#identity").val()!="") {
+		var identity = $("#identity").val();
+		$("#identity").val(identity+','+col);
+	} else {$("#identity").val(col);}
+	dojo.html.set(dojo.byId("row"+col),template , {
+	     parseContent: true,
+	});
+	getInfoByLoanNumber(col);
+}
+function deleteRecord(index) {
+	var identity = $('#identity').val();
+	var arrays = identity.split(',');
+	for(var i=0;i<arrays.length;i++) {
+	if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity').val(strings);
+	dojo.query("#row"+index).remove();
+}
 </script>

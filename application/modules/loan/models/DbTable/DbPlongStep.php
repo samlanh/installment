@@ -64,47 +64,95 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    			$arr = array(
-    				'branch_id'		=>$data['branch_id'],
-    				'sale_id'		=>$data['loan_number'],
-    				'customer_id'	=>$data['customer_id'],
-    				'property_id'	=>$data['property_id'],
-    				'date'			=>$data['date'],
-    				'process_status'	=>$data['process_status'],
-    				'give_by'	=>$data['give_by'],
-    				'receive_by'	=>$data['receive_by'],
-    				'note'	=>$data['note'],
-    				'create_date'	=>date('Y-m-d H:i:s'),
-    				'modify_date'	=>date('Y-m-d H:i:s'),
-    				'user_id'			=>$this->getUserId(),
-    				'status'=>1,
-    			);
-    			$this->_name="ln_processing_plong";
-    			$id = $this->insert($arr);
-    			if ($data['process_status']>0){
-    				$arr_detail=array(
-    					'processplong_id'=>$id,
-    					'date'			=>$data['date'],
-    					'process_status'=>$data['process_status'],
-    					'give_by'		=>$data['give_by'],
-    					'receive_by'	=>$data['receive_by'],
-    					'note'			=>$data['note'],
+    		$ids = explode(',', $data['identity']);
+    		if(!empty($data['identity'])){
+    			foreach ($ids as $i){
+    				$arr = array(
+    						'branch_id'		=>$data['branch_id'],
+    						'sale_id'		=>$data['sale_id'.$i],
+    						'customer_id'	=>$data['customer_id'.$i],
+    						'property_id'	=>$data['property_id'.$i],
+    						'date'			=>$data['date'],
+    						'process_status'	=>$data['process_status'],
+    						'give_by'			=>$data['give_by'],
+    						'receive_by'	=>$data['receive_by'],
+    						'note'			=>$data['note'.$i],
+    						'create_date'	=>date('Y-m-d H:i:s'),
+    						'modify_date'	=>date('Y-m-d H:i:s'),
+    						'user_id'			=>$this->getUserId(),
+    						'status'=>1,
     				);
-    				$this->_name="ln_processing_plong_detail";
-    				$this->insert($arr_detail);
-    			}
-    			
-    			if ($data['process_status']==5){
+    				$this->_name="ln_processing_plong";
+    				$id = $this->insert($arr);
+    		
+    				if ($data['process_status']>0){
+    					$arr_detail=array(
+    							'processplong_id'=>$id,
+    							'date'			=>$data['date'],
+    							'process_status'=>$data['process_status'],
+    							'give_by'		=>$data['give_by'],
+    							'receive_by'	=>$data['receive_by'],
+    							'note'			=>$data['note'.$i],
+    					);
+    					$this->_name="ln_processing_plong_detail";
+    					$this->insert($arr_detail);
+    				}
+    				if ($data['process_status']==5){
     					$this->_name="ln_issueplong";
     					$arrissuepl = array(
-    						'sale_id'=>$data['loan_number'],
-    						'issue_date'=>$data['date'],
-    						'layout_number'=>"",
-    						'note'=>$data['note'],
-    						'is_receivedplong'=>0,
+    							'sale_id'=>$data['sale_id'.$i],
+    							'issue_date'=>$data['date'],
+    							'layout_number'=>"",
+    							'note'=>$data['note'.$i],
+    							'is_receivedplong'=>0,
     					);
     					$this->insert($arrissuepl);
+    				}
+    		
     			}
+    			 
+    		}
+//     			$arr = array(
+//     				'branch_id'		=>$data['branch_id'],
+//     				'sale_id'		=>$data['loan_number'],
+//     				'customer_id'	=>$data['customer_id'],
+//     				'property_id'	=>$data['property_id'],
+//     				'date'			=>$data['date'],
+//     				'process_status'	=>$data['process_status'],
+//     				'give_by'	=>$data['give_by'],
+//     				'receive_by'	=>$data['receive_by'],
+//     				'note'	=>$data['note'],
+//     				'create_date'	=>date('Y-m-d H:i:s'),
+//     				'modify_date'	=>date('Y-m-d H:i:s'),
+//     				'user_id'			=>$this->getUserId(),
+//     				'status'=>1,
+//     			);
+//     			$this->_name="ln_processing_plong";
+//     			$id = $this->insert($arr);
+//     			if ($data['process_status']>0){
+//     				$arr_detail=array(
+//     					'processplong_id'=>$id,
+//     					'date'			=>$data['date'],
+//     					'process_status'=>$data['process_status'],
+//     					'give_by'		=>$data['give_by'],
+//     					'receive_by'	=>$data['receive_by'],
+//     					'note'			=>$data['note'],
+//     				);
+//     				$this->_name="ln_processing_plong_detail";
+//     				$this->insert($arr_detail);
+//     			}
+    			
+//     			if ($data['process_status']==5){
+//     					$this->_name="ln_issueplong";
+//     					$arrissuepl = array(
+//     						'sale_id'=>$data['loan_number'],
+//     						'issue_date'=>$data['date'],
+//     						'layout_number'=>"",
+//     						'note'=>$data['note'],
+//     						'is_receivedplong'=>0,
+//     					);
+//     					$this->insert($arrissuepl);
+//     			}
     			$db->commit();
     			return $id;
     		}catch (Exception $e){
