@@ -148,7 +148,41 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 		
 		return $db->fetchAll($sql.$where.$order);
 	}
+	public function getAllInvestment($search=null){
+		$db=$this->getAdapter();
+		$sql = "SELECT
+		iv.name AS investor_name,
+		iv.phone AS investor_phone,
+		iv.email AS investor_email,
+		(SELECT SUM(wb.recieve_amount) FROM `rms_investor_withdraw` AS wb WHERE wb.investment_id = i.id LIMIT 1) AS total_paidready,
+		(SELECT COUNT(ib.id) FROM `rms_investment_detail` AS ib WHERE ib.investment_id = i.id AND ib.is_complete =1 LIMIT 1) AS completed_time,
+		(SELECT COUNT(ib.id) FROM `rms_investment_detail` AS ib WHERE ib.investment_id = i.id AND ib.is_complete =0 LIMIT 1) AS not_completed_time,
+		(SELECT SUM(ib.principle_after) FROM `rms_investment_detail` AS ib WHERE ib.investment_id = i.id AND ib.is_complete =0 LIMIT 1) AS total_principle_remain,
+		(SELECT SUM(ib.interest_amountafter) FROM `rms_investment_detail` AS ib WHERE ib.investment_id = i.id AND ib.is_complete =0 LIMIT 1) AS total_interest_remain,
+		i.*
+		FROM `rms_investment` AS i,
+		`rms_investor` AS iv
+		WHERE iv.id = i.investor_id AND i.status=1 ";
+		$from_date =(empty($search['start_date']))? '1': "i.date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': "i.date <= '".$search['end_date']." 23:59:59'";
+		$sql.= " AND  ".$from_date." AND ".$to_date;
+		$where = "";
+		if(!empty($search['adv_search'])){
+			$s_where = array();
+			$s_search = addslashes(trim($search['adv_search']));
+			$s_search = str_replace(' ', '', addslashes(trim($search['adv_search'])));
+			$s_where[] = " i.invest_no LIKE '%{$s_search}%'";
+			$s_where[] = " i.amount LIKE '%{$s_search}%'";
+			$s_where[] = " i.duration LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if(!empty($search['investor_id'])){
+			$where.=" AND i.investor_id = ".$search['investor_id'];
+		}
+		$order=" ORDER BY i.id DESC ";
 	
+		return $db->fetchAll($sql.$where.$order);
+	}
 	function getInvestmentReceiptById($id){
 		try{
 			$db = $this->getAdapter();

@@ -384,4 +384,43 @@ class Report_InvestController extends Zend_Controller_Action {
   		Application_Form_FrmMessage::Sucessfull("Closing Entry Success", "/report/invest/rpt-closingwithdrawalbroker");
   	}
   }
+  
+  public function rptInvestmentAction(){
+  	try{
+  		if($this->getRequest()->isPost()){
+  			$search = $this->getRequest()->getPost();
+  		}
+  		else{
+  			$search = array(
+  					'adv_search'=>'',
+  					'status' => -1,
+  					'investor_id'=>0,
+  					'start_date'=> date('Y-m-d'),
+  					'end_date'=>date('Y-m-d'),
+  			);
+  		}
+  		$db = new Report_Model_DbTable_DbInvestment();
+  		$rs_rows= $db->getAllInvestment($search);
+  		$this->view->row = $rs_rows;
+  			
+  	}catch (Exception $e){
+  		Application_Form_FrmMessage::message("Application Error");
+  		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+  	}
+  
+  	$this->view->search = $search;
+  	 
+  	$frm = new Application_Form_FrmAdvanceSearch();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  
+  	$frm = new Invest_Form_FrmInvestment();
+  	$frm_loan=$frm->FrmAddInvestment();
+  	Application_Model_Decorator::removeAllDecorator($frm_loan);
+  	$this->view->frm = $frm_loan;
+  	 
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
+  }
 }

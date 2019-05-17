@@ -10,12 +10,12 @@
 	$withdrawalHistory = $this->baseUrl()."/report/invest/withdrawalhistory/id/";
 	$brokerWithdrawalHistory = $this->baseUrl()."/report/invest/withdrawalbrokerhistory/id/";
 ?>
-<title><?php echo $tr->translate("BROKER_REPORT");?></title>
+<title><?php echo $tr->translate("INVESTMENT_REPORT");?></title>
 <div class="reportblog">
 	<div class="card-box">
 	   	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('BROKER_REPORT');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('INVESTMENT_REPORT');?></h4>
 	   		</div>
 	   		<div class="col-sm-4 text-right">
 	   		</div>
@@ -29,9 +29,6 @@
 	                </div>
 	                <div class="col-md-2 col-sm-2 col-xs-12">
 	                    <?php echo $frmin->getElement('investor_id');?>
-	                </div>
-	                <div class="col-md-2 col-sm-2 col-xs-12">
-	                    <?php echo $frmin->getElement('broker_id');?>
 	                </div>
 	                <div class="col-md-2 col-sm-2 col-xs-12">
 	                    <?php echo $frm->getElement('start_date');?>
@@ -89,7 +86,7 @@
 			                	<td width="60%" valign="top">
 			                		<ul>
 			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></li>
-			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BROKER_REPORT");?></li>
+			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("INVESTMENT_REPORT");?></li>
 			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;"><?php if($this->search['start_date']){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></li>
 			                		</ul>
 			                   </td>
@@ -108,14 +105,14 @@
 			                </tr>
 			                <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
 			                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+			                    <td rowspan="2"><?php echo $tr->translate("INVEST_NO");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("NAME");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("PHONE");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("EMAIL");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("INVESTOR_NAME");?></td>		
 			                    <td rowspan="2"><?php echo $tr->translate("INVEST_DATE");?></td>
+			                    
 			                    <td rowspan="2"><?php echo $tr->translate("AMOUNT_INVEST");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("DURATION_INVEST").$tr->translate("YEAR");?></td>
-			                    <td rowspan="2">(%) <?php echo $tr->translate("BROKER_PROFIT");?></td>
 			                         
 			                    <td colspan="2"><?php echo $tr->translate("TOTALED");?></td>
 			                    <td colspan="2"><?php echo $tr->translate("NOT_TOTAL");?></td>
@@ -123,34 +120,37 @@
 			                <tr bgcolor="#c1d0f3" class="style" style="white-space: nowrap;text-align: center;">
 			                	<td><?php echo $tr->translate("AMOUNT_TIME");?></td>                   
 			                    <td><?php echo $tr->translate("AMONT_RETURN_TOTALED");?></td>
-			                    <td><?php echo $tr->translate("AMOUNT_TIME");?></td>
-			                    <td><?php echo $tr->translate("AMONT_RETURN_NOT_TOTAL");?></td>
+			                    <td><?php echo $tr->translate("PRINCIPLE_AMOUNT");?></td>
+			                    <td><?php echo $tr->translate("INTEREST");?></td>
 			                </tr>
 			            </thead>
 		                <?php 
 		                $i=1;
-		                $total_remain=0;
+		                $total_invest=0;
+		                $total_principle_remain=0;
+		                $total_interest_remain=0;
 		                $total_complete=0;
 		                if(!empty($this->row)) foreach ($this->row as $index => $rs){ 
-		                	$total_remain = $total_remain +$rs["total_remain"];
+		                	$total_invest = $total_invest+$rs["amount"];
+		                	$total_principle_remain = $total_principle_remain +$rs["total_principle_remain"];
+		                	$total_interest_remain = $total_interest_remain +$rs["total_interest_remain"];
 		                	$total_complete = $total_complete +$rs["total_paidready"];
 		                	?>
 		                <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class="style style1 context-menu-one" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
 		               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
-		               		<td>&nbsp;<?php echo $rs["broker_name"];?>&nbsp;</td>
-		               		<td>&nbsp;<?php echo $rs["broker_phone"];?>&nbsp;</td>                 		
-		               		<td>&nbsp;<?php echo $rs["broker_email"];?>&nbsp;</td>
-		               		
+		               		<td>&nbsp;<?php echo $rs["invest_no"];?>&nbsp;</td>
 		               		<td>&nbsp;<?php echo $rs["investor_name"];?>&nbsp;</td>
+		               		<td>&nbsp;<?php echo $rs["investor_phone"];?>&nbsp;</td>                 		
+		               		<td>&nbsp;<?php echo $rs["investor_email"];?>&nbsp;</td>
+		               		
 		               		<td>&nbsp;<?php echo date("d/M/Y",strtotime($rs["date"]));?>&nbsp;</td>
 		               		<td>&nbsp;$ <?php echo number_format($rs["amount"],2);?>&nbsp;</td>
-		               		<td align="center">&nbsp;<?php echo $rs["duration"];?>&nbsp;</td>
+		               		<td align="center">&nbsp;<?php echo number_format($rs["duration"],0);?>&nbsp;</td>
 		               		
-		               		<td align="center">&nbsp;<?php echo $rs["broker_percent"]."%";?>&nbsp;</td>
 		               		<td align="center">&nbsp;<?php echo $rs["completed_time"];?>&nbsp;</td>
 		               		<td>&nbsp;$ <?php echo number_format($rs["total_paidready"],2);?>&nbsp;</td>
-		               		<td align="center">&nbsp;<?php echo $rs["not_completed_time"];?>&nbsp;</td>
-		               		<td>&nbsp;$ <?php echo number_format($rs["total_remain"],2);?>&nbsp;</td>
+		               		<td align="center">&nbsp;$ <?php echo number_format($rs["total_principle_remain"],2);?>&nbsp;</td>
+		               		<td>&nbsp;$ <?php echo number_format($rs["total_interest_remain"],2);?>&nbsp;</td>
 		               		
 		                </tr>
 		                <?php }?>
@@ -163,14 +163,24 @@
 			                    <td width="50%"><span class="border_bottom"><?php echo $tr->translate("TOTAL");?></span></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                    <td align="right"><?php echo $tr->translate("TOTAL_INVEST");?>&nbsp;&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td align="left" style="font-weight: bold;">$&nbsp;&nbsp;<?php echo number_format($total_invest,2);?>&nbsp;&nbsp;</td>
+			                 </tr>
+			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"><?php echo $tr->translate("AMONT_RETURN_TOTALED");?>&nbsp;&nbsp;</td>
 			                    <td>&nbsp;</td>
 			                    <td align="left" style="font-weight: bold;">$&nbsp;&nbsp;<?php echo number_format($total_complete,2);?>&nbsp;&nbsp;</td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                    <td align="right"><?php echo $tr->translate("AMONT_RETURN_NOT_TOTAL");?>&nbsp;&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("AMONT_PRINCIPLE_NOT_TOTAL");?>&nbsp;&nbsp;</td>
 			                    <td>&nbsp;</td>
-			                    <td align="left" style="font-weight: bold;">$&nbsp;&nbsp;<?php echo number_format($total_remain,2);?>&nbsp;&nbsp;</td>
+			                    <td align="left" style="font-weight: bold;">$&nbsp;&nbsp;<?php echo number_format($total_principle_remain,2);?>&nbsp;&nbsp;</td>
+			                 </tr>
+			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                    <td align="right"><?php echo $tr->translate("AMONT_INTEREST_NOT_TOTAL");?>&nbsp;&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td align="left" style="font-weight: bold;">$&nbsp;&nbsp;<?php echo number_format($total_interest_remain,2);?>&nbsp;&nbsp;</td>
 			                 </tr>
 			              </table>
 		            <br />
