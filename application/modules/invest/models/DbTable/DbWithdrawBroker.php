@@ -372,6 +372,7 @@ class Invest_Model_DbTable_DbWithdrawBroker extends Zend_Db_Table_Abstract
     			WHERE
     			crm.id = crmd.`withdraw_id`
     			and crmd.`withdraw_id` = $receipt_id ";
+    			
     			$receipt_money_detail = $db->fetchAll($sql);
     			 
     			$branc_id=1;
@@ -423,6 +424,7 @@ class Invest_Model_DbTable_DbWithdrawBroker extends Zend_Db_Table_Abstract
     					}
     				}
     			}
+    			
     			$arr_money_detail = array(
     					'beginning_balance'			=>	0,
     					'beginning_balanceafter'	=>	0,
@@ -437,11 +439,11 @@ class Invest_Model_DbTable_DbWithdrawBroker extends Zend_Db_Table_Abstract
     					'is_complete'				=>	0,
     					'status'					=>	1
     			);
-    			 
+    			
     			$where = " withdraw_id = ".$receipt_id;
-    			$this->_name="rms_investment_detail_broker";
+    			$this->_name="rms_investor_withdraw_broker_detail";
     			$this->update($arr_money_detail, $where);
-    			 
+    			
     			$db->commit();
     		}catch(Exception $e){
     			$db->rollBack();

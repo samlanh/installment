@@ -1829,17 +1829,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</tr>
 		<tr style="font-size: 11px;">
 			<td colspan="6" valign="top">
-				<table class="comment-footer" width="100%" border="0" >
-					<tr>
-						<td width="10%">
-							<span class="lbnote" style="">សម្គាល់ ៖</span>
-						</td>
-						<td colspan="5">
-							<p class="comment1">'.$data['comment'].'</p>
-							<span class="comment">'.$data['comment1'].'</span>
-						</td>
-					</tr>
-				</table>
+				
 			</td>
 		</tr>
 		<tr style="line-height: 15px;font-size: 10px;">
@@ -1985,10 +1975,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			<tr >
 				<td>ឈ្មោះឈ្មួញកណ្ដាល </td>
 				<td><strong><label id="lb_customer" class="value"></label></strong></td>
-				<td>&nbsp;&nbsp;ចំនួនទឹកប្រាក់វិនិយោគ</td>
-				<td><strong><label id="lb_amount" class="value"></label></strong></td>
-				<td>&nbsp;ដកលើកទី</td>
-				<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
+				<td>&nbsp;&nbsp;ដកលើកទី</td>
+				<td colspan="3"><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
 			</tr>
 			<tr >
 				<td>លេខវិនិយោគ</td>
@@ -2054,17 +2042,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		</tr>
 		<tr style="font-size: 11px;">
 			<td colspan="6" valign="top">
-				<table class="comment-footer" width="100%" border="0" >
-					<tr>
-						<td width="10%">
-							<span class="lbnote" style="">សម្គាល់ ៖</span>
-						</td>
-						<td colspan="5">
-							<p class="comment1">'.$data['comment'].'</p>
-							<span class="comment">'.$data['comment1'].'</span>
-						</td>
-					</tr>
-				</table>
+				
 			</td>
 		</tr>
 		<tr style="line-height: 15px;font-size: 10px;">
