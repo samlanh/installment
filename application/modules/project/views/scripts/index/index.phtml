@@ -58,7 +58,7 @@
                        		 $percent = ($project['totalpropertysold'] / $project['totalproperty'])*100;
                         	}
                         	?>
-                        <tr>
+                        <tr class="context-menu-one" oncontextmenu="setrowdata(<?php echo $project['br_id'];?>);return false;">
                           <td><?php echo $key+1;?></td>
                           <td>
                             <a href="<?php echo $this->baseUrl()."/project/index/edit/id/".$project['br_id'];?>"><?php echo $project['project_name']?> (<?php echo $project['totalproperty'];?>)</a>
@@ -122,10 +122,16 @@
 		}
 	
 	</style>
-	<!-- NProgress -->
-    <script src="<?php echo $this->baseUrl();?>/admin/vendors/nprogress/nprogress.js"></script>
-       <!-- bootstrap-progressbar -->
-    <script src="<?php echo $this->baseUrl();?>/admin/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+<!-- NProgress -->
+<script src="<?php echo $this->baseUrl();?>/admin/vendors/nprogress/nprogress.js"></script>
+<!-- bootstrap-progressbar -->
+<script src="<?php echo $this->baseUrl();?>/admin/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+<?php 
+	$urlEdit = $this->baseUrl()."/project/index/edit/id/";
+	$urlCopy = $this->baseUrl()."/project/index/copy/id/";
+	$urlView = $this->baseUrl()."/project/index/view/id/";
+
+?>
 <script type="text/javascript">
 dojo.require("dijit.form.CheckBox"); 
 dojo.require("dijit.form.NumberTextBox");
@@ -140,5 +146,36 @@ dojo.require("dijit.form.DateTextBox");
 	function setValue(index){
 		var recordcopy = $('input[name=copy]:checked').val();
 		dijit.byId('recordcopy').attr('value',recordcopy);
+	}
+
+	var row=0;
+	var url="";
+	$(function(){
+		$.contextMenu({
+			selector: '.context-menu-one', 
+			callback: function(key, options) {
+				var m = "clicked: " + key;
+				if(key=="edit"){
+					url='<?php echo $urlEdit;?>';
+				}else if(key=="copy"){
+					url='<?php echo $urlCopy;?>';
+				}else if(key=="info"){
+					url='<?php echo $urlView;?>';
+				}
+				gotoAction();
+			},
+			items: {
+				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
+				"copy": {name: "<?php echo $tr->translate("COPY");?>", icon: "fa-copy", accesskey: "e"},
+				"info": {name: "<?php echo $tr->translate("PROJECT_INFO");?>", icon: "fa-info"},
+			}
+		});
+	});
+	function setrowdata(index){
+		row = index;
+	}
+	var recordid ='';
+	function gotoAction(){
+		 window.open(url+row+'?rightclick=true', '_blank');
 	}
 </script> 

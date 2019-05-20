@@ -349,4 +349,15 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		 FROM `ln_properties` AS  pro WHERE pro.`id`=".$id;
 		return $db->fetchRow($sql);
 	}
+	public function getCheckPropertyInSale($id){
+		$db = $this->getAdapter();
+		$sql="SELECT s.id FROM `ln_sale` AS s WHERE s.house_id=$id ORDER BY s.id DESC LIMIT 1";
+		return $db->fetchOne($sql);
+	}
+	function deleteLand($land_id){
+		$where ="id=".$land_id;
+		$this->_name="ln_properties";
+		$this->delete($where);
+		return $land_id;
+	}
 }

@@ -1,5 +1,5 @@
 <?php 
-Class Project_Form_Frmbranch extends Zend_Dojo_Form {
+Class Project_Form_FrmProject extends Zend_Dojo_Form {
 	protected $tr;
 	protected $tvalidate =null;//text validate
 	protected $filter=null;
@@ -268,6 +268,17 @@ Class Project_Form_Frmbranch extends Zend_Dojo_Form {
 		));
 		$budget_amount->setValue(0);
 		
+		$position = new Zend_Dojo_Form_Element_TextBox('position');
+		$position->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
+		$w_position = new Zend_Dojo_Form_Element_TextBox('w_position');
+		$w_position->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
 		if(!empty($data)){
 			$br_id->setValue($data['br_id']);
 			$prefix_code->setValue($data['prefix']);
@@ -304,6 +315,9 @@ Class Project_Form_Frmbranch extends Zend_Dojo_Form {
 			$cs_manager_current_address->setValue($data['w_current_address']);
 			
 			$budget_amount->setValue($data['budget_amount']);
+			
+			$position->setValue($data['position']);
+			$w_position->setValue($data['w_position']);
 		}
 		
 		
@@ -320,7 +334,9 @@ Class Project_Form_Frmbranch extends Zend_Dojo_Form {
 				$_dob_cs_manager,
 				$date_iss_doc_cs_manager,
 				$cs_manager_current_address,
-				$budget_amount
+				$budget_amount,
+				$position,
+				$w_position
 				));
 		
 		return $this;

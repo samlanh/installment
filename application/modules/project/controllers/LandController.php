@@ -40,7 +40,7 @@ class Project_LandController extends Zend_Controller_Action {
 			$link1=array(
 					'module'=>'project','controller'=>'land','action'=>'view',
 			);
-			$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('branch_name'=>$link1,'land_code'=>$link,'land_address'=>$link,'pro_type'=>$link,'price'=>$link));
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array('branch_name'=>$link1,'land_code'=>$link,'land_address'=>$link,'pro_type'=>$link,'price'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -187,6 +187,50 @@ class Project_LandController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam("id");
 		$db = new Project_Model_DbTable_DbLand();
 		$this->view->propertyinfor = $db->getPropertyInfor($id);
+	}
+	function deleteAction(){
+		$id = $this->getRequest()->getParam("id");
+		$db = new Project_Model_DbTable_DbLand();
+		$row = $db->getCheckPropertyInSale($id);
+		if (!empty($row)){
+			Application_Form_FrmMessage::Sucessfull("Can not delete this record","/project/land");
+			exit();
+		}
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$delete_sms=$tr->translate('CONFIRM_DELETE');
+		echo "<script language='javascript'>
+		var txt;
+		var r = confirm('$delete_sms');
+		if (r == true) {";
+		echo "window.location ='".Zend_Controller_Front::getInstance()->getBaseUrl()."/project/land/deleterecord/id/".$id."'";
+		echo"}";
+		echo"else {";
+		echo "window.location ='".Zend_Controller_Front::getInstance()->getBaseUrl()."/project/land'";
+		echo"}
+		</script>";
+	}
+	function deleterecordAction(){
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$action=$request->getActionName();
+		$controller=$request->getControllerName();
+		$module=$request->getModuleName();
+		
+		$id = $this->getRequest()->getParam("id");
+		$db = new Project_Model_DbTable_DbLand();
+		try {
+			$dbacc = new Application_Model_DbTable_DbUsers();
+			$rs = $dbacc->getAccessUrl($module,$controller,'delete');
+			if(!empty($rs)){
+				$db->deleteLand($id);
+				Application_Form_FrmMessage::Sucessfull("DELETE_SUCCESS","/project/land");
+				exit();
+			}
+			Application_Form_FrmMessage::Sucessfull("You no permission to delete","/project/land");
+			exit();
+		}catch (Exception $e) {
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("DELETE_FAIL");
+		}
 	}
 	public function addNewclientAction(){//ajax
 		if($this->getRequest()->isPost()){

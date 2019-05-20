@@ -51,6 +51,7 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'p_manager_nationality'=>$_data['project_manager_nationality'],
     			'p_manager_nation_id'=>$_data['project_manager_nation_id'],
     			'p_current_address'=>$_data['current_address'],
+    			
     			'w_manager_namekh'=>$_data['sc_project_manager_nameen'],
     			'w_manager_nationality'=>$_data['sc_project_manager_nationality'],
     			'w_manager_nation_id'=>$_data['sc_project_manager_nation_id'],
@@ -64,6 +65,9 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_nation_id_issue'=>$_data['date_iss_doc_cs_manager'],
     			'w_current_address'=>$_data['cs_manager_current_address'],
     			'logo'=>$photo,
+    			
+    			'position'=>$_data['position'],
+    			'w_position'=>$_data['w_position'],
     			);
 		    	if (!empty($_data['budget_amount'])){
 		    		$_arr['budget_amount']=$_data['budget_amount'];
@@ -145,6 +149,9 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_nation_id_issue'=>$_data['date_iss_doc_cs_manager'],
     			'w_current_address'=>$_data['cs_manager_current_address'],
     			'logo'=>$photo,
+    			
+    			'position'=>$_data['position'],
+    			'w_position'=>$_data['w_position'],
     			);
 		    	if (!empty($_data['budget_amount'])){
 		    		$_arr['budget_amount']=$_data['budget_amount'];

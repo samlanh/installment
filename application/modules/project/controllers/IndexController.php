@@ -34,7 +34,7 @@ class Project_indexController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message($this->tr->translate("APPLICATION_ERROR"));
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
-		$fm = new Project_Form_Frmbranch();
+		$fm = new Project_Form_FrmProject();
 		$frm = $fm->Frmbranch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_branch = $frm;
@@ -62,7 +62,7 @@ class Project_indexController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		$fm = new Project_Form_Frmbranch();
+		$fm = new Project_Form_FrmProject();
 		$frm = $fm->Frmbranch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_branch = $frm;
@@ -91,7 +91,7 @@ class Project_indexController extends Zend_Controller_Action {
 // 		}
 		
 		$this->view->row = $row;
-		$frm= new Project_Form_Frmbranch();
+		$frm= new Project_Form_FrmProject();
 		$update=$frm->FrmBranch($row);
 		$this->view->frm_branch=$update;
 		Application_Model_Decorator::removeAllDecorator($update);
@@ -136,7 +136,7 @@ class Project_indexController extends Zend_Controller_Action {
 		$row=$db->getBranchById($id);
 		$this->view->row = $row;
 		
-		$fm = new Project_Form_Frmbranch();
+		$fm = new Project_Form_FrmProject();
 		$frm = $fm->Frmbranch($row,"1");
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_branch = $frm;

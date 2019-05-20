@@ -19,21 +19,35 @@ $formList = new Application_Form_Frmtable();
     	</div>
 		<div class="card-box">
 			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
-				 <table >  
-				   <tr>
-				   	  <td><button onclick="copyRecord('<?php echo $url_copy;?>')" iconclass="dijitIconCopy" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("COPY");?></button></td>
-				      <td><button onclick="window.open('<?php echo $this->url(array('module'=>'project','controller'=>'land','action'=>'addauto'));?>')" iconclass="dijitIconnew" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("QUICK_ADD");?></button></td>
-				      <td><?php echo $frm->getElement("adv_search");?></td>
-				      <td><?php echo $frm->getElement("branch_id");?></td>
-				      <td><?php echo $frms->getElement("streetlist");?></td>
-				      <td><?php echo $frms->getElement("property_type_search");?></td>
-				      <td><?php echo $frm->getElement('status');?></td>
-				   	  <td><?php echo $frm->getElement('start_date');?></td>
-				      <td><?php echo $frm->getElement('end_date');?></td>
-				      <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
-				     <td><input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" /></td>
-				   </tr>
-				</table>  
+				<div class="form-group">
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-xs-12">
+                   		<?php echo $frm->getElement("branch_id");?>
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-xs-12">
+                   		<?php echo $frms->getElement("streetlist");?>
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-xs-12">
+                   		<?php echo $frms->getElement("property_type_search");?>
+                   </div>
+                </div>
+                <div class="form-group">
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement('start_date');?>
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-xs-12">
+                   		<?php echo $frm->getElement('end_date');?>
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-xs-12">
+                   		<?php echo $frm->getElement('status');?>
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-xs-12">
+                   		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+                   		<button onclick="window.open('<?php echo $this->url(array('module'=>'project','controller'=>'land','action'=>'addauto'));?>')" iconclass="dijitIconnew" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("QUICK_ADD");?></button>
+                   </div>
+                </div>
 			</form>
 		</div>
 		<div class="card-box">
@@ -42,20 +56,26 @@ $formList = new Application_Form_Frmtable();
 	</div>
 </div>
 <style>
-		.btn-action{
-			padding: 3px 10px;
-   			    background: #3a3a5d;
-			    border: none;
-			    font-size: 10pt;
-			    float: left;
-			    color: #fff;
-			    padding-left: 15px;
-			    -webkit-border-radius: 5px;
-			    -moz-border-radius: 5px;
-			    border-radius: 5px;
-		}
-	
-	</style>
+	.btn-action{
+		padding: 3px 10px;
+   	    background: #3a3a5d;
+	    border: none;
+	    font-size: 10pt;
+	    float: left;
+	    color: #fff;
+	    padding-left: 15px;
+	    -webkit-border-radius: 5px;
+	   -moz-border-radius: 5px;
+	    border-radius: 5px;
+	}
+</style>
+<?php 
+	$urlEdit = $this->baseUrl()."/project/land/edit/id/";
+	$urlCopy = $this->baseUrl()."/project/land/copy/id/";
+	$urlView = $this->baseUrl()."/project/land/view/id/";
+	$urlDelete = $this->baseUrl()."/project/land/delete/id/";
+
+?>
 <script type="text/javascript">
 dojo.require("dijit.form.CheckBox"); 
 dojo.require("dijit.form.NumberTextBox");
@@ -70,5 +90,39 @@ dojo.require("dijit.form.DateTextBox");
 	function setValue(index){
 		var recordcopy = $('input[name=copy]:checked').val();
 		dijit.byId('recordcopy').attr('value',recordcopy);
+	}
+
+	var row=0;
+	var url="";
+	$(function(){
+		$.contextMenu({
+			selector: '.context-menu-one', 
+			callback: function(key, options) {
+				var m = "clicked: " + key;
+				if(key=="edit"){
+					url='<?php echo $urlEdit;?>';
+				}else if(key=="copy"){
+					url='<?php echo $urlCopy;?>';
+				}else if(key=="info"){
+					url='<?php echo $urlView;?>';
+				}else if(key=="delete"){
+					url='<?php echo $urlDelete;?>';
+				}
+				gotoAction();
+			},
+			items: {
+				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
+				"copy": {name: "<?php echo $tr->translate("COPY");?>", icon: "fa-copy", accesskey: "e"},
+				"info": {name: "<?php echo $tr->translate("INFORMATION");?>", icon: "fa-info"},
+				"delete": {name: "<?php echo $tr->translate("DELETE");?>", icon: "fa-trash"},
+			}
+		});
+	});
+	function setrowdata(index){
+		row = index;
+	}
+	var recordid ='';
+	function gotoAction(){
+		 window.open(url+row+'?rightclick=true', '_blank');
 	}
 </script>
