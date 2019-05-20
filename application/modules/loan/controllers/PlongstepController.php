@@ -30,7 +30,7 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","STREET","PHONE","DATE","NOTE","PROCCESSING","STATUS");
 			$link_info=array('module'=>'loan','controller'=>'plongstep','action'=>'edit',);
-			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array('branch_name'=>$link_info,'name_kh'=>$link_info),0);
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array(),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
