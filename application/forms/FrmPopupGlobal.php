@@ -1171,6 +1171,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			font:12px '."Khmer OS Content".';
 			border: 1px solid #000;
 			line-height:20px;font-weight: normal !important;
+			min-height:50px;
 			}
 			table.receipt-titile tr td {
 			font-size:18px;
@@ -1305,7 +1306,11 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td>បង់លើកទី</td>
 					<td colspan="2"><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
 				</tr>
-				<tr height="60px">
+				<tr>
+					<td>សម្គាល់</td>
+					<td colspan="5" class="noted" valign="top">&nbsp;<label id="lb_noted"></label></td>
+				</tr>
+				<tr height="40px">
 					<td colspan="6"><strong>សម្រាប់ភ្ញៀវរំលស់</strong></td>
 				</tr>
 				<tr>
@@ -1315,10 +1320,10 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td colspan="2"><strong><label id="lb_interest" class="value">0.00</label></strong></td>
 				</tr>
 				<tr>
+					<td>ប្រាក់បង់បន្ថែម</td>
+					<td colspan="2"><label id="lb_extrapayment" class="value">0.00</label></td>
 					<td>ប្រាក់ពិន័យ</td>
 					<td colspan="2"><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
-					<td >សម្គាល់</td>
-					<td colspan="2" class="noted" valign="top">&nbsp;<label id="lb_noted"></label></td>
 				</tr>
 				<tr>
 					<td colspan="6" align="right">
@@ -1368,7 +1373,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			</div>
 			
 			<div style="display: none;">
-				<label id="lb_extrapayment" class="value">0.00</label>
+				
 				<label id="lb_buydate1" class="value"></label>
 			<span id="lable_chartotalreceipt"></span>
 			<span id="lblpaid_date"></span>
