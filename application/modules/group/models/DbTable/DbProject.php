@@ -176,14 +176,14 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     		
     		$row=$this->getBranchById($_data['id']);
     		$stringold="Project : ".$row['project_name']."<br />";
-    		$stringold="Address : ".$row['br_address']."<br />";
+    		$stringold.="Address : ".$row['br_address']."<br />";
     		$stringold.="Branch Tel : ".$row['branch_tel']."<br />";
     		$stringold.="Project Manager : ".$row['p_manager_namekh']."<br />";
     		$stringold.="Nationality : ".$row['p_manager_nationality']."<br />";
     		$stringold.="Current Address : ".$row['p_current_address']."<br />";
     		
     		$string="Project : ".$_data['branch_namekh']."<br />";
-    		$string="Address : ".$_data['br_address']."<br />";
+    		$string.="Address : ".$_data['br_address']."<br />";
 	    	$string.="Branch Tel : ".$_data['branch_tel']."<br />";
 	    	$string.="Project Manager : ".$_data['project_manager_namekh']."<br />";
 	    	$string.="Nationality : ".$_data['project_manager_nationality']."<br />";
@@ -193,7 +193,7 @@ class Group_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	}else{
     		$string="";
     		$stringold="Project : ".$_data['branch_namekh']."<br />";
-    		$stringold="Address : ".$_data['br_address']."<br />";
+    		$stringold.="Address : ".$_data['br_address']."<br />";
     		$stringold.="Branch Tel : ".$_data['branch_tel']."<br />";
     		$stringold.="Project Manager : ".$_data['project_manager_namekh']."<br />";
     		$stringold.="Nationality : ".$_data['project_manager_nationality']."<br />";

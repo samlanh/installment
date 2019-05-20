@@ -138,6 +138,12 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     }
 	public function addLandinfo($_data){
 		try{
+			
+			$record = $this->recordhistory($_data);
+			$activityold = $record['activityold'];
+			$after_edit_info = $record['after_edit_info'];
+			$label_new = 'Create New Property';
+			
 			if(!empty($_data['id'])){
 				$old_status = $_data['status'];
 				$oldCode = $this->getClientById($_data['id']);
@@ -191,15 +197,87 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 			}
 			$where = 'id = '.$_data['id'];
 			$this->update($_arr, $where);
-			return $_data['id'];
+			$id = $_data['id'];
+			
+			$label_new = 'Edit Property '.$land_code; 
+			
 		}else{
 			$_arr['create_date']=date('Y-m-d');
-			return  $this->insert($_arr);
+			$id= $this->insert($_arr);
 		}
+		
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$_datas = array('description'=>$label_new,'activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
+		$dbgb->addActivityUser($_datas);
+		return $id;
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}
+	
+	function recordhistory($_data){
+		$arr=array();
+		$stringold="";
+		$string="";
+		$db_pro = new Project_Model_DbTable_DbProject();
+		$db_type = new Project_Model_DbTable_DbProperyType();
+		
+		if (!empty($_data['id'])){
+	
+			$row=$this->getClientById($_data['id']);
+			
+			$project = $db_pro->getBranchById($row['branch_id']);
+			$typename="";
+			if (!empty($row['property_type'])){
+				$type = $db_type->getPropertyTypeById($row['property_type']);
+				$typename = $type['type_namekh'];
+			}
+			$stringold="Project : ID:".$_data['branch_id']."-".$project['project_name']."<br />";
+			$stringold.="Property Code : ".strtoupper($row['land_address'])."<br />";
+			$stringold.="Street : ".$row['street']."<br />";
+			$stringold.="Price : ".$row['price']."<br />";
+			$stringold.="Land price : ".$row['land_price']."<br />";
+			$stringold.="House price : ".$row['house_price']."<br />";
+			$stringold.="Property type : id:".$row['property_type']."-".$typename."<br />";
+			
+	
+			$project = $db_pro->getBranchById($_data['branch_id']);
+			$typename="";
+			if (!empty($_data['property_type'])){
+				$type = $db_type->getPropertyTypeById($_data['property_type']);
+				$typename = $type['type_namekh'];
+			}
+			$string="Project : ID:".$_data['branch_id']."-".$project['project_name']."<br />";
+			$string.="Property Code : ".strtoupper($_data['land_address'])."<br />";
+			$string.="Street : ".$_data['street']."<br />";
+			$string.="Price : ".$_data['price']."<br />";
+			$string.="Land price : ".$_data['land_price']."<br />";
+			$string.="House price : ".$_data['house_price']."<br />";
+			$string.="Property type : id:".$_data['property_type']."-".$typename."<br />";
+	
+		}else{
+			
+			
+			$string="";
+			$project = $db_pro->getBranchById($_data['branch_id']);
+			$typename="";
+			if (!empty($_data['property_type'])){
+				$type = $db_type->getPropertyTypeById($_data['property_type']);
+				$typename = $type['type_namekh'];
+			}
+			$stringold="Project : ID:".$_data['branch_id']."-".$project['project_name']."<br />";
+			$stringold.="Property Code : ".strtoupper($_data['land_address'])."<br />";
+			$stringold.="Street : ".$_data['street']."<br />";
+			$stringold.="Price : ".$_data['price']."<br />";
+			$stringold.="Land price : ".$_data['land_price']."<br />";
+			$stringold.="House price : ".$_data['house_price']."<br />";
+			$stringold.="Property type : id:".$_data['property_type']."-".$typename."<br />";
+		}
+		$arr['activityold']=$stringold;
+		$arr['after_edit_info']=$string;
+		return $arr;
+	}
+	
 	public function getClientById($id){
 		$db = $this->getAdapter();
 		$sql = "SELECT * FROM $this->_name WHERE id = ".$db->quote($id);
@@ -355,9 +433,17 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		return $db->fetchOne($sql);
 	}
 	function deleteLand($land_id){
+		
+		$info = $this->getPropertyInfor($land_id);
+			
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$_datas = array('description'=>"Delete Property ".$info['land_address']." id = ($land_id) Street ".$info['street']);
+		$dbgb->addActivityUser($_datas);
+		
 		$where ="id=".$land_id;
 		$this->_name="ln_properties";
 		$this->delete($where);
+		
 		return $land_id;
 	}
 }

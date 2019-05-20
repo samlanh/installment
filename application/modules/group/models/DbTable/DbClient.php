@@ -17,7 +17,12 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 // 				$client_code = $db->getNewClientIdByBranch($_data['branch_id']);
 				$client_code = $db->getNewClientIdByBranch();
 			}
-		
+			
+			$record = $this->recordhistory($_data);
+			$activityold = $record['activityold'];
+			$after_edit_info = $record['after_edit_info'];
+			$labelDescribtion = 'Add New Customer';
+			
 		    $_arr=array(
 				'client_number'=> $client_code,//$_data['client_no'],
 				'name_kh'	  	=> $_data['name_kh'],
@@ -76,7 +81,9 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				$customer_id =  $_data['id'];
 				$_arr['status'] = $_data['status'];
 				$where = 'client_id = '.$customer_id;
-				$this->update($_arr, $where);			 
+				$this->update($_arr, $where);
+
+				$labelDescribtion = 'Edit Customer '.$client_code;
 			}else{
 				$_arr['status'] = 1;
 				$customer_id = $this->insert($_arr);
@@ -124,10 +131,90 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 					}
 				}
 			}
+			
+			
+			$dbgb = new Application_Model_DbTable_DbGlobal();
+			$_datas = array('description'=>$labelDescribtion,'activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
+			$dbgb->addActivityUser($_datas);
+			
 			return true;
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
+	}
+	function recordhistory($_data){
+		$arr=array();
+		$stringold="";
+		$string="";
+		if (!empty($_data['id'])){
+	
+			$row=$this->getClientById($_data['id']);
+			$sex = "M";
+			if ($row['sex']==2){ $sex = "F";}
+			$stringold="Customer Name : ".$row['name_kh']."<br />";
+			$stringold.="sex : ".$sex."<br />";
+			$stringold.="phone : ".$row['phone']."<br />";
+			$stringold.="Email: ".$row['email']."<br />";
+			$stringold.="Nationality : ".$row['nationality']."<br />";
+			
+			$sex = "M";
+			if ($row['ksex']==2){
+				$sex = "F";
+			}
+			$stringold.="With Name : ".$row['hname_kh']."<br />";
+			$stringold.="sex : ".$sex."<br />";
+			$stringold.="phone : ".$row['lphone']."<br />";
+			$stringold.="Email: ".$$row['email']."<br />";
+			$stringold.="Nationality : ".$row['p_nationality']."<br />";
+	
+			
+			$sex = "M";
+			if ($_data['sex']==2){
+				$sex = "F";
+			}
+			$string="Customer Name : ".$_data['name_kh']."<br />";
+			$string.="sex : ".$sex."<br />";
+			$string.="phone : ".$_data['phone']."<br />";
+			$string.="Email: ".$_data['email']."<br />";
+			$string.="Nationality : ".$_data['nationality']."<br />";
+				
+			$sex = "M";
+			if ($_data['ksex']==2){
+				$sex = "F";
+			}
+			$string.="With Name : ".$_data['hname_kh']."<br />";
+			$string.="sex : ".$sex."<br />";
+			$string.="phone : ".$_data['lphone']."<br />";
+			$string.="Email: ".$_data['email']."<br />";
+			$string.="Nationality : ".$_data['p_nationality']."<br />";
+			
+	
+	
+		}else{
+			$string="";
+			$sex = "M";
+			if ($_data['sex']==2){ $sex = "F";}
+			$stringold="Customer Name : ".$_data['name_kh']."<br />";
+			$stringold.="sex : ".$sex."<br />";
+			$stringold.="phone : ".$_data['phone']."<br />";
+			$stringold.="Email: ".$_data['email']."<br />";
+			$stringold.="Nationality : ".$_data['nationality']."<br />";
+			
+			$sex = "M";
+			if ($_data['ksex']==2){
+				$sex = "F";
+			}
+			$stringold.="With Name : ".$_data['hname_kh']."<br />";
+			$stringold.="sex : ".$sex."<br />";
+			$stringold.="phone : ".$_data['lphone']."<br />";
+			$stringold.="Email: ".$_data['email']."<br />";
+			$stringold.="Nationality : ".$_data['p_nationality']."<br />";
+			
+		}
+		
+		$arr['activityold']=$stringold;
+		$arr['after_edit_info']=$string;
+		return $arr;
 	}
 	public function getClientById($id){
 		$db = $this->getAdapter();
