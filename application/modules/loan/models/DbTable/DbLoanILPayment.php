@@ -143,7 +143,12 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try{
     		
+    		$record = $this->recordhistory($receipt_id);
+    		$activityold = $record['activityold'];
+    		$after_edit_info = $record['after_edit_info'];
+    		
     		$sql = "SELECT
+    			crm.receipt_no,
 	    		crm.sale_id,
 				crm.total_principal_permonthpaid,
 				crm.extra_payment,
@@ -293,6 +298,11 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$where = " crm_id = ".$receipt_id;
     		$this->_name="ln_client_receipt_money_detail";
     		$this->update($arr_money_detail, $where);
+    		
+    		
+    		$dbgb = new Application_Model_DbTable_DbGlobal();
+    		$_datas = array('description'=>'VOID OFFICIAL RECEIPT : '.$rsreceipt['receipt_no'],'activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
+    		$dbgb->addActivityUser($_datas);
     		
     		$db->commit();
     	}catch(Exception $e){
@@ -1559,5 +1569,98 @@ function getLoanPaymentByLoanNumberEdit($data){
 		}else{
 			return 2;
 		}
+	}
+	
+	function recordhistory($receipt_id){
+		$arr=array();
+		$stringold="";
+		$string="";
+		$dbclient = new Group_Model_DbTable_DbClient();
+		 
+		if (!empty($receipt_id)){
+	
+			$row = $this->getIlPaymentByID($receipt_id);
+	
+			$client = $dbclient->getClientById($row['client_id']);
+			$stringold="Receipt No : ".$row['receipt_no']."<br />";
+			$stringold.="ថ្ងៃត្រូវបង់/Date Payment : ".$row['date_pay']."<br />";
+			$stringold.="ថ្ងៃទទួល/Date Receive : ".$row['date_input']."<br />";
+			$stringold.="Customer : id=".$row['client_id']."-".$client['name_kh']."<br />";
+			$stringold.="Property Code : ".$row['land_id']."<br />";
+			$stringold.="បង់លើកទី : ".$row['payment_times']."<br />";
+	
+			$stringold.="តម្លៃផ្ទះ : ".$row['selling_price']."<br />";
+			$stringold.="ប្រាក់បានបង់សរុប : ".$row['allpaid_before']."<br />";
+			$stringold.="ប្រាក់នៅសល់ : ".$row['balance']."<br />";
+	
+			$stringold.="ប្រាក់ដើមត្រូវបង់ : ".$row['total_principal_permonthpaid']."<br />";
+			$stringold.="ប្រាក់ការ : ".$row['total_interest_permonthpaid']."<br />";
+			$stringold.="ប្រាក់ពិន័យ : ".$row['penalize_amountpaid']."<br />";
+			$stringold.="ប្រាក់បង់បន្ថែម : ".$row['extra_payment']."<br />";
+			$stringold.="ប្រាក់ត្រូវបង់ : ".$row['total_payment']."<br />";
+			$stringold.="ប្រាក់បានបង់ : ".$row['recieve_amount']."<br />";
+			$payment="";
+			if ($row['payment_method']==1){
+				$payment="សាច់ប្រាក់";
+			}else if ($row['payment_method']==3){
+				$payment="សែក";
+			}else if ($row['payment_method']==2){
+				$payment="ធនាគារ";
+			}
+			$paymenttype="";
+			if ($row['payment_option']==1){
+				$payment="បង់ធម្មតា";
+			}else if ($row['payment_option']==3){
+				$payment="រំលស់ដើម";
+			}else if ($row['payment_option']==4){
+				$payment="បង់ផ្តាច់១០០%";
+			}
+			$stringold.="បង់ជា : ".$row['payment_method']."-".$payment."<br />";
+			$stringold.="ប្រភេទបង់ : ".$row['payment_option']."-".$paymenttype."<br />";
+	
+			$string="Receipt No : ".$row['receipt_no']."<br />";
+			$string.="ថ្ងៃត្រូវបង់/Date Payment : ".$row['date_pay']."<br />";
+			$string.="ថ្ងៃទទួល/Date Receive : ".$row['date_input']."<br />";
+			$string.="Customer : id=".$row['client_id']."-".$client['name_kh']."<br />";
+			$string.="Property Code : ".$row['land_id']."<br />";
+			$string.="បង់លើកទី : ".$row['payment_times']."<br />";
+	
+	
+			$string.="តម្លៃផ្ទះ : ".$row['selling_price']."<br />";
+			$string.="ប្រាក់បានបង់សរុប : ".$row['allpaid_before']."<br />";
+			$string.="ប្រាក់នៅសល់ : ".$row['balance']."<br />";
+	
+			$string.="ប្រាក់ដើមត្រូវបង់ : 0<br />";
+			$string.="ប្រាក់ការ : 0<br />";
+			$string.="ប្រាក់ពិន័យ : 0<br />";
+			$string.="ប្រាក់បង់បន្ថែម : 0<br />";
+			$string.="ប្រាក់ត្រូវបង់ : 0<br />";
+			$string.="ប្រាក់បានបង់ : 0<br />";
+			$payment="";
+			if ($row['payment_method']==1){
+				$payment="សាច់ប្រាក់";
+			}else if ($row['payment_method']==3){
+				$payment="សែក";
+			}else if ($row['payment_method']==2){
+				$payment="ធនាគារ";
+			}
+			$paymenttype="";
+			if ($row['payment_option']==1){
+				$payment="បង់ធម្មតា";
+			}else if ($row['payment_option']==3){
+				$payment="រំលស់ដើម";
+			}else if ($row['payment_option']==4){
+				$payment="បង់ផ្តាច់១០០%";
+			}
+			$stringold.="បង់ជា : ".$row['payment_method']."-".$payment."<br />";
+			$stringold.="ប្រភេទបង់ : ".$row['payment_option']."-".$paymenttype."<br />";
+	
+		}else{
+			$string="";
+			$stringold="";
+		}
+		$arr['activityold']=$stringold;
+		$arr['after_edit_info']=$string;
+		return $arr;
 	}
 }
