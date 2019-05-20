@@ -149,6 +149,7 @@
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
 				                    	<input id="member" /><input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with"  type="hidden"><!-- ពេលបោះពុម្ពចេញអ្នកទិញជាមួយ -->
+										<input dojoType="dijit.form.TextBox" class="fullside" id="client_phone" name="client_phone"  type="hidden">
 										<input type="hidden" name="identity_land" id="identity_land"  value="" >
 										<input type="hidden" name="land_label" id="land_label" dojoType="dijit.form.TextBox" value="" >
 				                   </div>
@@ -1027,6 +1028,7 @@ function getcustomerinfo(client_id){
 		handleAs:"json",
 		load: function(data) {
 			dijit.byId('joint_with').attr('value',data.hname_kh);
+			dijit.byId('client_phone').attr('value',data.phone);
 		},
 		error: function(err) {
 			alert(err);
@@ -1592,7 +1594,6 @@ function printSave(new_stu_id,new_receipt_no){
 	dojo.byId("lbl_project").innerHTML = dijit.byId("branch_id").attr('displayedValue');
 
 	//for Five star Receipt
-	
 	dojo.byId("lb_customercode").innerHTML = dijit.byId("customer_code").attr('displayedValue');
 	
 	a =dojo.number.format(dijit.byId("deposit").get('value'),{places:2}).replace(",", "");
@@ -1609,6 +1610,20 @@ function printSave(new_stu_id,new_receipt_no){
 	dojo.byId("lblpaid_date").innerHTML = datepay1;
 	dojo.byId("lb_descriptionall").innerHTML = lbl_landaddress+" PMT No "+dijit.byId("schedule_opt").attr('displayedValue')+" Date "+datepay1+" សាច់ប្រាក់";
 
+	dojo.byId("lbl_phone").innerHTML = dijit.byId("client_phone").attr('displayedValue');
+	sold_price = dijit.byId('sold_price').get('value');
+	
+	a =dojo.number.format(sold_price,{places:2}).replace(",", "");
+	money_khmer=read_money_in_khmer(a);
+	decimalmoney_khmer=dojo.number.format(sold_price,{places:2}).replace(",", "").substr(-2);
+	str_cent = 'សេន';
+	if(decimalmoney_khmer>0){string='និង';}else{string="";str_cent='';}
+	
+	last_number=dojo.number.format(sold_price,{places:2}).replace(",", "").substr(-2);
+	
+	if(last_number<=0){last_number='';}
+	money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+' '+str_cent;
+	dojo.byId('lbl_pricelabel').innerHTML=money_khmer+" ដុល្លារអាមេរិក";
 	
 	dijit.byId("terms").show();	
 }

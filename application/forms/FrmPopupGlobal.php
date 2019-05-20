@@ -1133,6 +1133,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<span id="lable_chartotalreceipt"></span>
 				<span id="lb_hourseno"></span>
 				<span id="lb_descriptionall"></span>
+				<label id="lbl_phone" class="value"></label>
+				<label id="lbl_pricelabel" class="value" ></label>
 				
 				<span id="lbl_customer"></span>
 				<span id="lbl_usersale">'.$last_name." ".$username.'</span>
@@ -1308,7 +1310,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</tr>
 				<tr>
 					<td>សម្គាល់</td>
-					<td colspan="5" class="noted" valign="top">&nbsp;<label id="lb_noted"></label></td>
+					<td colspan="5" class="noted" valign="top"><label id="lb_noted"></label></td>
 				</tr>
 				<tr height="40px">
 					<td colspan="6"><strong>សម្រាប់ភ្ញៀវរំលស់</strong></td>
@@ -1320,7 +1322,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td colspan="2"><strong><label id="lb_interest" class="value">0.00</label></strong></td>
 				</tr>
 				<tr>
-					<td>ប្រាក់បង់បន្ថែម</td>
+					<td>ប្រាក់បន្ថែមដើម</td>
 					<td colspan="2"><label id="lb_extrapayment" class="value">0.00</label></td>
 					<td>ប្រាក់ពិន័យ</td>
 					<td colspan="2"><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
@@ -1617,6 +1619,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</tr>
 			</table>
 			<div style="display: none;">
+				<label id="lbl_phone" class="value"></label>
+				<label id="lbl_pricelabel" class="value" ></label>
 				<span id="lable_chartotalreceipt"></span>
 				<span id="lblpaid_date"></span>
 				<span id="lb_descriptionall"></span>
