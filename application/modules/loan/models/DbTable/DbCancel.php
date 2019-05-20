@@ -76,6 +76,11 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 	public function addCancelSale($data){
 		try{
 			$db= $this->getAdapter();
+			
+			$record = $this->recordhistory($data);
+			$activityold = $record['activityold'];
+			$after_edit_info = $record['after_edit_info'];
+			
 			$expenid='';
 			if($data['return_back']>0){
 				$dbexpense = new Loan_Model_DbTable_DbExpense();
@@ -151,13 +156,88 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			 $this->_name="ln_sale";
 			 $where =" id = ".$data['sale_no'];
 			 $this->update($arr_, $where);
+			 
+			 
+			 $dbgb = new Application_Model_DbTable_DbGlobal();
+			 $_datas = array('description'=>"Issue Sale To Cancel",'activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
+			 $dbgb->addActivityUser($_datas);
+			 
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}
+	
+	function recordhistory($_data){
+		$arr=array();
+		$stringold="";
+		$string="";
+		
+		$db_pro = new Project_Model_DbTable_DbProject();
+		$dbsale = new Loan_Model_DbTable_DbLandpayment();
+		$dbclient = new Group_Model_DbTable_DbClient();
+		$dbproper = new Project_Model_DbTable_DbLand();
+		if (!empty($_data['id'])){
+	
+			$row=$this->getCancelById($_data['id']);
+			$project = $db_pro->getBranchById($row['branch_id']);
+			$rowsale = $dbsale->getTranLoanByIdWithBranch($row['sale_id'],null);
+			$client = $dbclient->getClientById($rowsale['client_id']);
+			$land = $dbproper->getClientById($rowsale['house_id']);
+			
+			$stringold="Project : ID:".$row['branch_id']."-".$project['project_name']."<br />";
+			$stringold.="SALE : ID:".$row['sale_id']."-".$rowsale['sale_number']."<br />";
+			$stringold.="Customer : id=".$rowsale['client_id']."-".$client['name_kh']."<br />";
+			$stringold.="Property : id=".$rowsale['house_id']."-".$land['land_address']." Street ".$land['street']."<br />";
+			
+			$stringold.="Reason : ".$row['reason']."<br />";
+			$stringold.="Paid Amount : ".$row['paid_amount']."<br />";
+			$stringold.="Installment Paid : ".$row['installment_paid']."<br />";
+			$stringold.="Return Amount : ".$row['return_back']."<br />";
+
+	
+			$project = $db_pro->getBranchById($_data['branch_id']);
+			$rowsale = $dbsale->getTranLoanByIdWithBranch($_data['sale_no'],null);
+			$client = $dbclient->getClientById($rowsale['client_id']);
+			$land = $dbproper->getClientById($rowsale['house_id']);
+				
+			$string="Project : ID:".$_data['branch_id']."-".$project['project_name']."<br />";
+			$string.="SALE : ID:".$_data['sale_no']."-".$rowsale['sale_number']."<br />";
+			$string.="Customer : id=".$rowsale['client_id']."-".$client['name_kh']."<br />";
+			$string.="Property : id=".$rowsale['house_id']."-".$land['land_address']." Street ".$land['street']."<br />";
+				
+			$string.="Reason : ".$_data['reason']."<br />";
+			$string.="Paid Amount : ".$_data['paid_amount']."<br />";
+			$string.="Installment Paid : ".$_data['installment_paid']."<br />";
+			$string.="Return Amount : ".$_data['return_back']."<br />";
+		}else{
+			$string="";
+			
+			$project = $db_pro->getBranchById($_data['branch_id']);
+			$rowsale = $dbsale->getTranLoanByIdWithBranch($_data['sale_no'],null);
+			$client = $dbclient->getClientById($rowsale['client_id']);
+			$land = $dbproper->getClientById($rowsale['house_id']);
+			
+			$stringold="Project : ID:".$_data['branch_id']."-".$project['project_name']."<br />";
+			$stringold.="SALE : ID:".$_data['sale_no']."-".$rowsale['sale_number']."<br />";
+			$stringold.="Customer : id=".$rowsale['client_id']."-".$client['name_kh']."<br />";
+			$stringold.="Property : id=".$rowsale['house_id']."-".$land['land_address']." Street ".$land['street']."<br />";
+			
+			$stringold.="Reason : ".$_data['reason']."<br />";
+			$stringold.="Paid Amount : ".$_data['paid_amount']."<br />";
+			$stringold.="Installment Paid : ".$_data['installment_paid']."<br />";
+			$stringold.="Return Amount : ".$_data['return_back']."<br />";
+		}
+		$arr['activityold']=$stringold;
+		$arr['after_edit_info']=$string;
+		return $arr;
+	}
 	public function editCancelSale($data){
 		try{
 			$db= $this->getAdapter();
+			
+			$record = $this->recordhistory($data);
+			$activityold = $record['activityold'];
+			$after_edit_info = $record['after_edit_info'];
 			
 			$result = $this->getCancelById($data['id']);
 			$dbsale = new Loan_Model_DbTable_DbLandpayment();
@@ -293,6 +373,10 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				$where =" id = ".$data['old_sale_id'];
 				$this->update($arr_old, $where);
 			}
+			
+			$dbgb = new Application_Model_DbTable_DbGlobal();
+			$_datas = array('description'=>"Edit Cancel",'activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
+			$dbgb->addActivityUser($_datas);
 			
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
