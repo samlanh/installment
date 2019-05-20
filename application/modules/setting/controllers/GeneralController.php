@@ -47,6 +47,7 @@ public function init()
 		$row['website'] = $db_gs->geLabelByKeyName('website');
 		$row['customer_sign'] = $db_gs->geLabelByKeyName('customer_sign');
 		$row['teller_sign'] = $db_gs->geLabelByKeyName('teller_sign');
+		$row['account_sign'] = $db_gs->geLabelByKeyName('account_sign');
 		$row['bank_info'] = $db_gs->geLabelByKeyName('bank_info');
 		
 		$row['show_propertyprice'] = $db_gs->geLabelByKeyName('show_propertyprice');

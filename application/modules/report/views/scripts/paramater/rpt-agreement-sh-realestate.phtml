@@ -332,7 +332,7 @@ dojo.require("dijit.form.DateTextBox");
              				<span class="border_bt  value" style="width:80%;white-space: nowrap;text-align: center;" >&nbsp;&nbsp;<?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?>&nbsp;</span>
              			</div>
              			<div style="width:24%; text-align: center; display: inline-block;">
-             				<span class="border_bt  value" style="width:80%;" >&nbsp;</span>
+             				<span class="border_bt  value" style="width:80%;" >&nbsp;<?php echo $this->agreement['staff_name'];?></span>
              			</div>
              			<div style="width:24%; text-align: center; display: inline-block;">
              				<span class="border_bt  value" style="width:80%;" >&nbsp;</span>
@@ -534,20 +534,25 @@ dojo.require("dijit.form.DateTextBox");
 						             		}?>
 					             			<?php 
 						             			$i=0; $numrow = 0;
+												//print_r($this->sale_schedule);exit();
 						             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++;  ?>
 						             			<?php 
+												
 						             			if($row['is_completed']==1 AND $this->agreement['is_reschedule']==3){continue;}
 						             			$paid = $paid+$row['principal_permonth'];?>             	
 						             			<?php if($key==0){?>
 							             		<?php
 							             			if($row['date_payment']==$this->agreement['buy_date'] AND $paid_amount==$row['principal_permonth'] ){
+													
 							             				continue;
 							             			}
 						             				$paidbefore = $row['principal_permonth']-$paid_amount;
+													
 						             				if(strlen($paidbefore)<=3){$row['principal_permonth']=number_format($paidbefore,0);}
 						             				else{
 						             					$row['principal_permonth'] = ($paidbefore);
 						             				}
+													
 						             			}$keytime++;?>
 						             			<?php 
 						             				$numrow=$numrow+1;?>
@@ -568,8 +573,8 @@ dojo.require("dijit.form.DateTextBox");
 														
 													?>
 						             				<span style="">
-						             						កក់ប្រាក់លើកទី<?php echo ($keytime);?>  ចំនួន
-							             				<span class="value"><strong>$ <?php echo @number_format($row['principal_permonth'],0);?></strong> </span>
+						             						កក់ប្រាក់លើកទី<?php echo ($keytime); ?>  ចំនួន
+							             				<span class="value"><strong> $ <?php echo @number_format($row['principal_permonth'],0);?></strong> </span>
 							             				<span style="font-weight:bold;">(<span id="lable_depositkhmer<?php echo $i;?>" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</span>
 							             				<?php  echo $stringLastDate."។";?>
 							             			</span>	
@@ -656,7 +661,7 @@ dojo.require("dijit.form.DateTextBox");
 				             				<span class="border_bt  value" style="width:80%;white-space: nowrap;text-align: center;" >&nbsp;&nbsp;<?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?>&nbsp;</span>
 				             			</div>
 				             			<div style="width:24%; text-align: center; display: inline-block;">
-				             				<span class="border_bt  value" style="width:80%;" >&nbsp;</span>
+				             				<span class="border_bt  value" style="width:80%;" ><?php echo $this->agreement['staff_name'];?>&nbsp;</span>
 				             			</div>
 				             			<div style="width:24%; text-align: center; display: inline-block;">
 				             				<span class="border_bt  value" style="width:80%;" >&nbsp;</span>

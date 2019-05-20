@@ -157,6 +157,13 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				'placeholder'=>$this->tr->translate("Customer Sign")
 		));
 		
+		$account_sign = new Zend_Dojo_Form_Element_TextBox('account_sign');
+		$account_sign->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Account Sign")
+		));
+		
 		$_teller_sign = new Zend_Dojo_Form_Element_TextBox('teller_sign');
 		$_teller_sign->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
@@ -219,7 +226,7 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 // 			$_smsWarnning->setValue($data['sms-warnning-kh']['keyValue']);
 // 			$_reciept_kh->setValue($data['reciept_kh']['keyValue']);
 // 			$_exchange_ratetitle->setValue($data['exchange_ratetitle']['keyValue']);
-// 			$_exchange_reciept->setValue($data['exchange_reciept']['keyValue']);
+			$account_sign->setValue($data['account_sign']['keyValue']);
 			$_comment->setValue($data['comment']['keyValue']);
 			$_comment1->setValue($data['comment1']['keyValue']);
 			$_website->setValue($data['website']['keyValue']);
@@ -250,6 +257,7 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 			$_showhouseinfo->setValue($data['showhouseinfo']['keyValue']);
 		}
 		$this->addElements(array(
+				$account_sign,
 				$_label_animation,
 // 				$_smsWarnning,
 // 				$_reciept_kh,

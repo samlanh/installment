@@ -867,6 +867,7 @@ function dfilterVillage(value=null){
 client_village = '<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'add-village'));?>';
 function addVillage(){
 	if(dijit.byId('frm_village').validate()){
+		loadingBlock();
 		dojo.xhrPost({
 			url:client_village,	
 			form:dojo.byId('form_village'),
@@ -880,6 +881,7 @@ function addVillage(){
 				addDataToSelectbox(dijit.byId('village'), village_store, villageItem1, data);	
 				dijit.byId('frm_village').reset();
 				dijit.byId('frm_village').hide();
+				HideloadingBlock();
 			},
 			error: function(err) {
 			}
@@ -971,6 +973,7 @@ function dshowPopupdistrict(){
 var district_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insert-district'));?>';
 function addNewDistrict(){
 	if(dijit.byId('frm_district').validate()){
+		loadingBlock();
 		dojo.xhrPost({
 			url:district_url,	
 			form:dojo.byId('form_district'),
@@ -983,6 +986,7 @@ function addNewDistrict(){
 				addDataToSelectbox(dijit.byId('district'), district_store, myNewItem1, data);	
 				dijit.byId('frm_district').reset();
 				dijit.byId('frm_district').hide();
+				HideloadingBlock();
 			},
 			error: function(err){
 			}
@@ -992,6 +996,7 @@ function addNewDistrict(){
 var commune_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insertcommune'));?>';
 function addNewCommune(){
 	if(dijit.byId('frm_commune').validate()) {
+		loadingBlock();
 		dojo.xhrPost({
 			url:commune_url,	
 			form:dojo.byId('form_commune'),
@@ -1006,6 +1011,7 @@ function addNewCommune(){
 				addDataToSelectbox(dijit.byId('commune'), commune_store, Itemcommune, data);
 				dijit.byId('frm_commune').reset();
 				dijit.byId('frm_commune').hide();
+				HideloadingBlock();
 			},
 			error: function(err) {
 			}

@@ -96,6 +96,10 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 // 			$where=" keyName= 'branch_email'";
 // 			$this->update($arr, $where);
 			
+			$arr = array('keyValue'=>$data['account_sign'],	);
+			$where=" keyName= 'account_sign'";
+			$this->update($arr, $where);
+			
 			$arr = array('keyValue'=>$data['customer_sign'],	);
 			$where=" keyName= 'customer_sign'";
 			$this->update($arr, $where);
