@@ -1,7 +1,7 @@
 <meta charset="utf-8">
-	<script>
-		dojo.require("dijit.form.DateTextBox");
-	</script>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
 <style>
 	.hover:hover{background: #ccc;}
 	img.view{height: 70px !important;}
@@ -108,6 +108,19 @@ function printSave(){
 	dojo.byId('lable_chartotalreceipt').innerHTML=money_khmer+" US Dollars Only";
 	dojo.byId("lblpaid_date").innerHTML = "<?php echo date("d/m/y",strtotime($this->rs['date_pay']));?>";
 	dojo.byId("lb_descriptionall").innerHTML = '<?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; } echo ' '.$this->rs['property_type']; echo "PMT No"; if($this->rs['field3']==1){ echo " កក់លើក ";} echo " ".$this->rs['payment_times']." Date ".date("d/m/y",strtotime($this->rs['date_payment']))." ".$this->rs['payment_method']; echo empty($this->rs['cheque'])?"":$this->rs['cheque'];?>';
+
+
+	dojo.byId("lbl_phone").innerHTML = "<?php echo $this->rs['phone'];?>";
+	a_sold ='<?php echo ($this->rs['price_sold']) ?>';
+	money_khmersold=read_money_in_khmer(a_sold);
 	
+	decimalmoney_khmersold='<?php echo substr(number_format($this->rs['price_sold'],2),-2);?>';
+	str_centsold = 'សេន';
+	if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
+	last_number_sold='<?php echo substr(number_format($this->rs['price_sold'],2),-2);?>';
+	
+	if(last_number_sold<=0){last_number_sold='';}
+	money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+	dojo.byId('lbl_pricelabel').innerHTML=money_khmersold+" ដុល្លារអាមេរិក";
 }
 </script>

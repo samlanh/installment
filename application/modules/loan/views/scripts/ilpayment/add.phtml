@@ -814,16 +814,29 @@ function showReciept(receipt_number){
 		decimalmoney_khmer=dojo.number.format(dijit.byId("amount_receive").get('value'),{places:2}).replace(",", "").substr(-2);
 		str_cent = 'cent';
 		if(decimalmoney_khmer>0){string='and';}else{string="";str_cent='';}
-		
 		last_number=dojo.number.format(dijit.byId("amount_receive").get('value'),{places:2}).replace(",", "").substr(-2);
-		
 		if(last_number<=0){last_number='';}
 		money_khmer = money_khmer+" "+string+" "+read_in_english_from_10_to_99(decimalmoney_khmer)+''+read_in_english_from_0_to_9(last_number)+' '+str_cent;
 		dojo.byId('lable_chartotalreceipt').innerHTML=money_khmer+" US Dollars Only";
 		dojo.byId("lblpaid_date").innerHTML = collectpaymentdate;
 		dojo.byId("lb_descriptionall").innerHTML = dijit.byId('land_address').attr('displayedValue')+" PMT No "+dijit.byId("paid_times").get("value")+" Date "+datepay1+" "+dijit.byId("payment_method").attr('displayedValue')+" "+dijit.byId('cheque').get('value');
+	
 
-	 	
+		dojo.byId("lbl_phone").innerHTML = dijit.byId("phone").attr('displayedValue');	
+		sold_price = dijit.byId('sold_price').get('value');
+		
+		a =dojo.number.format(sold_price,{places:2}).replace(",", "");
+		money_khmer=read_money_in_khmer(a);
+		decimalmoney_khmer=dojo.number.format(sold_price,{places:2}).replace(",", "").substr(-2);
+		str_cent = 'cent';
+		if(decimalmoney_khmer>0){string='and';}else{string="";str_cent='';}
+		
+		last_number=dojo.number.format(sold_price,{places:2}).replace(",", "").substr(-2);
+		
+		if(last_number<=0){last_number='';}
+		money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+' '+str_cent;
+		dojo.byId('lbl_pricelabel').innerHTML=money_khmer+" ដុល្លារអាមេរិក";
+		
 		dijit.byId('frm_client').show();
 	}
  }
