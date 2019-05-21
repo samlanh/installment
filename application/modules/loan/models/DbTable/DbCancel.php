@@ -77,10 +77,6 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		try{
 			$db= $this->getAdapter();
 			
-			$record = $this->recordhistory($data);
-			$activityold = $record['activityold'];
-			$after_edit_info = $record['after_edit_info'];
-			
 			$expenid='';
 			if($data['return_back']>0){
 				$dbexpense = new Loan_Model_DbTable_DbExpense();
@@ -157,11 +153,6 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			 $where =" id = ".$data['sale_no'];
 			 $this->update($arr_, $where);
 			 
-			 
-			 $dbgb = new Application_Model_DbTable_DbGlobal();
-			 $_datas = array('description'=>"Issue Sale To Cancel",'activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
-			 $dbgb->addActivityUser($_datas);
-			 
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
@@ -209,6 +200,8 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$string.="Paid Amount : ".$_data['paid_amount']."<br />";
 			$string.="Installment Paid : ".$_data['installment_paid']."<br />";
 			$string.="Return Amount : ".$_data['return_back']."<br />";
+			
+			$labelactivity="Edit Cancel ";
 		}else{
 			$string="";
 			
@@ -226,18 +219,21 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$stringold.="Paid Amount : ".$_data['paid_amount']."<br />";
 			$stringold.="Installment Paid : ".$_data['installment_paid']."<br />";
 			$stringold.="Return Amount : ".$_data['return_back']."<br />";
+			
+			$labelactivity="Issue Cancel On Sale : ".$rowsale['sale_number']." ".$client['name_kh']."-".$land['land_address']." Street ".$land['street'];
 		}
 		$arr['activityold']=$stringold;
 		$arr['after_edit_info']=$string;
+		
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$_datas = array('description'=>$labelactivity,'activityold'=>$stringold,'after_edit_info'=>$string);
+		$dbgb->addActivityUser($_datas);
+		
 		return $arr;
 	}
 	public function editCancelSale($data){
 		try{
 			$db= $this->getAdapter();
-			
-			$record = $this->recordhistory($data);
-			$activityold = $record['activityold'];
-			$after_edit_info = $record['after_edit_info'];
 			
 			$result = $this->getCancelById($data['id']);
 			$dbsale = new Loan_Model_DbTable_DbLandpayment();
@@ -373,10 +369,6 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				$where =" id = ".$data['old_sale_id'];
 				$this->update($arr_old, $where);
 			}
-			
-			$dbgb = new Application_Model_DbTable_DbGlobal();
-			$_datas = array('description'=>"Edit Cancel",'activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
-			$dbgb->addActivityUser($_datas);
 			
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

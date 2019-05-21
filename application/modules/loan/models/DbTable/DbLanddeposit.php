@@ -422,7 +422,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		     $this->insert($array);
 	    	}
 	        $db->commit();
-	        return 1;
+	        return $id;
         }catch (Exception $e){
             $db->rollBack();
             Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -764,5 +764,123 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		Application_Form_FrmMessage::message("INSERT_FAIL");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
+    }
+    
+    function recordhistory($_data,$sale_id){
+    	$arr=array();
+    	$stringold="";
+    	$string="";
+    	$labelactivity="";
+    	$db_pro = new Project_Model_DbTable_DbProject();
+    	$dbsale = new Loan_Model_DbTable_DbLandpayment();
+    	$dbclient = new Group_Model_DbTable_DbClient();
+    	$dbproper = new Project_Model_DbTable_DbLand();
+    	$db_co = new Other_Model_DbTable_DbCreditOfficer();
+    	
+    	if (!empty($_data['id'])){
+    
+//     		$row=$this->getCancelById($_data['id']);
+//     		$project = $db_pro->getBranchById($row['branch_id']);
+//     		$rowsale = $dbsale->getTranLoanByIdWithBranch($row['sale_id'],null);
+//     		$client = $dbclient->getClientById($rowsale['client_id']);
+//     		$land = $dbproper->getClientById($rowsale['house_id']);
+    			
+//     		$stringold="Project : ID:".$row['branch_id']."-".$project['project_name']."<br />";
+//     		$stringold.="SALE : ID:".$row['sale_id']."-".$rowsale['sale_number']."<br />";
+//     		$stringold.="Customer : id=".$rowsale['client_id']."-".$client['name_kh']."<br />";
+//     		$stringold.="Property : id=".$rowsale['house_id']."-".$land['land_address']." Street ".$land['street']."<br />";
+    			
+//     		$stringold.="Reason : ".$row['reason']."<br />";
+//     		$stringold.="Paid Amount : ".$row['paid_amount']."<br />";
+//     		$stringold.="Installment Paid : ".$row['installment_paid']."<br />";
+//     		$stringold.="Return Amount : ".$row['return_back']."<br />";
+    
+    
+//     		$project = $db_pro->getBranchById($_data['branch_id']);
+//     		$rowsale = $dbsale->getTranLoanByIdWithBranch($sale_id,null);
+//     		$client = $dbclient->getClientById($rowsale['client_id']);
+//     		$land = $dbproper->getClientById($rowsale['house_id']);
+    
+//     		$string="Project : ID:".$_data['branch_id']."-".$project['project_name']."<br />";
+//     		$string.="SALE : ID:".$sale_id."-".$rowsale['sale_number']."<br />";
+//     		$string.="Customer : id=".$rowsale['client_id']."-".$client['name_kh']."<br />";
+//     		$string.="Property : id=".$rowsale['house_id']."-".$land['land_address']." Street ".$land['street']."<br />";
+    
+//     		$string.="Reason : ".$_data['reason']."<br />";
+//     		$string.="Paid Amount : ".$_data['paid_amount']."<br />";
+//     		$string.="Installment Paid : ".$_data['installment_paid']."<br />";
+//     		$string.="Return Amount : ".$_data['return_back']."<br />";
+    			
+//     		$labelactivity="Edit Cancel ";
+    	}else{
+    		$string="";
+    			
+    		$project = $db_pro->getBranchById($_data['branch_id']);
+    		$rowsale = $dbsale->getTranLoanByIdWithBranch($sale_id,null);
+    		$client = $dbclient->getClientById($rowsale['client_id']);
+    		$land = $dbproper->getClientById($rowsale['house_id']);
+    		$rowco = $db_co->getCOById($_data['staff_id']);
+    		
+    		$stringold="Project : ID:".$_data['branch_id']."-".$project['project_name']."<br />";
+    		$stringold.="SALE : ID:".$sale_id."-".$rowsale['sale_number']."<br />";
+    		$stringold.="Receipt : ".$rowsale['receipt_no']."<br />";
+    		$stringold.="Customer : id=".$rowsale['client_id']."-".$client['name_kh']."<br />";
+    		$stringold.="Property : id=".$rowsale['house_id']."-".$land['land_address']." Street ".$land['street']."<br />";
+    		
+    		$typesalelb="លក់តែមួយ";
+    		if ($_data['typesale']==2){
+    			$typesalelb="លក់ម្តងច្រើន";
+    		}
+    		$schedul_lb="កក់ទ្រនាប់ដៃ";
+    		if ($_data['schedule_opt']==2){
+    			$schedul_lb="បង់ផ្តាច់១០០%";
+    		}
+    		$agentName="";
+    		if (!empty($rowco)){
+    			$agentName=$rowco['co_khname'];
+    		}
+    		
+    		$payment_method = "";
+    		if ($_data['payment_method']==1){
+    			$payment_method = "សាច់ប្រាក់";
+    		}else if ($_data['payment_method']==2){
+    			$payment_method = "ធនាគារ";
+    		}else if ($_data['payment_method']==3){
+    			$payment_method = "សែក";
+    		}
+    		$stringold.="Price Before : ".$_data['price_before']."<br />";
+    		$stringold.="Discount Amount : ".$_data['discount']." And Disount Percent : ".$_data['discount_percent']."<br />";
+    		$stringold.="Price Sold : ".$_data['sold_price']."<br />";
+    		$stringold.="Deposit : ".$_data['deposit']."<br />";
+    		$stringold.="Second Deposit : ".$_data['second_depostit']."<br />";
+    		$stringold.="Balance : ".$_data['balance']."<br />";
+    		$stringold.="Interest rate : ".$_data['interest_rate']."<br />";
+    		$stringold.="Buy Date : ".date("Y-M-d",strtotime($_data['date_buy']))."<br />";
+    		$stringold.="Agreement Date : ".date("Y-M-d",strtotime($_data['agreement_date']))."<br />";
+    		$stringold.="Start Date : ".date("Y-M-d",strtotime($_data['date_buy']))."<br />";
+    		$stringold.="First Date : ".date("Y-M-d",strtotime($_data['date_buy']))."<br />";
+    		$stringold.="Validation Date : ".date("Y-M-d",strtotime($_data['date_line']))."<br />";
+    		$stringold.="End Date : ".($_data['schedule_opt']==1)?$_data['date_line']:$_data['paid_date']."<br />";
+    		$stringold.="Type Sale : ".$_data['typesale']."-".$typesalelb."<br />";
+    		$stringold.="ប្រភេទបង់ : ".$_data['schedule_opt']."-".$schedul_lb."<br />";
+    		
+    		$stringold.="Paid Date : ".date("Y-M-d",strtotime($_data['paid_date']))."<br />";
+    		$stringold.="Payment Method : ".$_data['payment_method']."<br />";
+    		$stringold.="Cheque No : ".$_data['cheque']."<br />";
+    		
+    		$stringold.="Agent : ".$_data['staff_id']."-".$agentName."<br />";
+    		$stringold.="កម្រៃជើងសារនឹងទទួល : ".$_data['full_commission']."<br />";
+    		$stringold.="Note : ".$_data['note']."<br />";
+    			
+    		$labelactivity="Issue Deposit Sale : ".$rowsale['sale_number']." ".$client['name_kh']."-".$land['land_address']." Street ".$land['street'];
+    	}
+    	$arr['activityold']=$stringold;
+    	$arr['after_edit_info']=$string;
+    
+    	$dbgb = new Application_Model_DbTable_DbGlobal();
+    	$_datas = array('description'=>$labelactivity,'activityold'=>$stringold,'after_edit_info'=>$string);
+    	$dbgb->addActivityUser($_datas);
+    
+    	return $arr;
     }
 }

@@ -142,11 +142,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    		
-    		$record = $this->recordhistory($receipt_id);
-    		$activityold = $record['activityold'];
-    		$after_edit_info = $record['after_edit_info'];
-    		
     		$sql = "SELECT
     			crm.receipt_no,
 	    		crm.sale_id,
@@ -299,11 +294,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$this->_name="ln_client_receipt_money_detail";
     		$this->update($arr_money_detail, $where);
     		
-    		
-    		$dbgb = new Application_Model_DbTable_DbGlobal();
-    		$_datas = array('description'=>'VOID OFFICIAL RECEIPT : '.$rsreceipt['receipt_no'],'activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
-    		$dbgb->addActivityUser($_datas);
-    		
     		$db->commit();
     	}catch(Exception $e){
     		$db->rollBack();
@@ -337,22 +327,22 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    	}else{
 	    		$reciept_no = $data['reciept_no'];
 	    	}
-    	
-	    $loan_number = $data['loan_number'];    	
-    	$amount_receive = $data["amount_receive"];
-    	$amount_payment=$amount_receive;
-    	$total_payment = $data["total_payment"];
-    	$return = 0;
-    	$option_pay = $data["option_pay"];
-    	$is_compleated=0;
-    	if($amount_receive>=$total_payment){
-    		$is_compleated = 1;
-    	}
-    	
-    	$pay_off = 0;
-    	if($data["option_pay"]==4){//payoff
-    		$pay_off = 1;
-    	}
+    		
+		    $loan_number = $data['loan_number'];    	
+	    	$amount_receive = $data["amount_receive"];
+	    	$amount_payment=$amount_receive;
+	    	$total_payment = $data["total_payment"];
+	    	$return = 0;
+	    	$option_pay = $data["option_pay"];
+	    	$is_compleated=0;
+	    	if($amount_receive>=$total_payment){
+	    		$is_compleated = 1;
+	    	}
+	    	
+	    	$pay_off = 0;
+	    	if($data["option_pay"]==4){//payoff
+	    		$pay_off = 1;
+	    	}
     		$arr_client_pay = array(
     			'branch_id'						=>	$data["to_branch_id"],//$data["branch_id"],
     			'receipt_no'					=>	$reciept_no,
@@ -1571,6 +1561,60 @@ function getLoanPaymentByLoanNumberEdit($data){
 		}
 	}
 	
+	function recordHistoryReceipt($_data,$receipt_id){
+		$stringold="";
+		$string="";
+		$dbclient = new Group_Model_DbTable_DbClient();
+		$db_pro = new Project_Model_DbTable_DbProject();
+		$dbproper = new Project_Model_DbTable_DbLand();
+		
+		$land = $dbproper->getClientById($_data['property_id']);
+		$project = $db_pro->getBranchById($_data['to_branch_id']);
+		$client = $dbclient->getClientById($_data['client_id']);
+		
+		$row = $this->getIlPaymentByID($receipt_id);
+		
+		$stringold.="Project : ID:".$_data['to_branch_id']."-".$project['project_name']."<br />";
+		$stringold.="Receipt No : ".$row['receipt_no']."<br />";
+		$stringold.="Property : id=".$_data['property_id']."-".$land['land_address']." Street ".$land['street']."<br />";
+		$stringold.="ថ្ងៃត្រូវបង់/Date Payment : ".$_data['collect_date']."<br />";
+		$stringold.="ថ្ងៃទទួល/Date Receive : ".$_data['date_payment']."<br />";
+		$stringold.="Customer : id=".$_data['client_id']."-".$client['name_kh']."<br />";
+		$stringold.="បង់លើកទី : ".$_data['paid_times']."<br />";
+		
+		$stringold.="តម្លៃផ្ទះ : ".$_data['sold_price']."<br />";
+		$stringold.="ប្រាក់បានបង់សរុប : ".$_data['total_pricipalpaid']."<br />";
+		$stringold.="ប្រាក់នៅសល់ : ".$_data['priciple_amount']."<br />";
+		
+		$stringold.="ប្រាក់ដើមត្រូវបង់ : ".$_data['os_amount']."<br />";
+		$stringold.="ប្រាក់ការ : ".$_data['total_interest']."<br />";
+		$stringold.="ប្រាក់ពិន័យ : ".$_data['penalize_amount']."<br />";
+		$stringold.="ប្រាក់បង់បន្ថែម : ".$_data['extrapayment']."<br />";
+		$stringold.="ប្រាក់ត្រូវបង់ : ".$_data['total_payment']."<br />";
+		$stringold.="ប្រាក់បានបង់ : ".$_data['amount_receive']."<br />";
+		$payment="";
+		if ($_data['payment_method']==1){
+			$payment="សាច់ប្រាក់";
+		}else if ($_data['payment_method']==3){
+			$payment="សែក";
+		}else if ($_data['payment_method']==2){
+			$payment="ធនាគារ";
+		}
+		$paymenttype="";
+		if ($_data['option_pay']==1){
+			$payment="បង់ធម្មតា";
+		}else if ($_data['option_pay']==3){
+			$payment="រំលស់ដើម";
+		}else if ($_data['option_pay']==4){
+			$payment="បង់ផ្តាច់១០០%";
+		}
+		$stringold.="បង់ជា : ".$_data['payment_method']."-".$payment."<br />";
+		$stringold.="ប្រភេទបង់ : ".$_data['option_pay']."-".$paymenttype."<br />";
+		
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$_datas = array('description'=>'Issue OFFICIAL RECEIPT : '.$row['receipt_no'],'activityold'=>$stringold,'after_edit_info'=>$string);
+		$dbgb->addActivityUser($_datas);
+	}
 	function recordhistory($receipt_id){
 		$arr=array();
 		$stringold="";
@@ -1652,8 +1696,8 @@ function getLoanPaymentByLoanNumberEdit($data){
 			}else if ($row['payment_option']==4){
 				$payment="បង់ផ្តាច់១០០%";
 			}
-			$stringold.="បង់ជា : ".$row['payment_method']."-".$payment."<br />";
-			$stringold.="ប្រភេទបង់ : ".$row['payment_option']."-".$paymenttype."<br />";
+			$string.="បង់ជា : ".$row['payment_method']."-".$payment."<br />";
+			$string.="ប្រភេទបង់ : ".$row['payment_option']."-".$paymenttype."<br />";
 	
 		}else{
 			$string="";
@@ -1661,6 +1705,11 @@ function getLoanPaymentByLoanNumberEdit($data){
 		}
 		$arr['activityold']=$stringold;
 		$arr['after_edit_info']=$string;
+		
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$_datas = array('description'=>'VOID OFFICIAL RECEIPT : '.$row['receipt_no'],'activityold'=>$stringold,'after_edit_info'=>$string);
+		$dbgb->addActivityUser($_datas);
+		
 		return $arr;
 	}
 }

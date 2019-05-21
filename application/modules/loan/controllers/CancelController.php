@@ -49,6 +49,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 			try {		
 				$_dbmodel = new Loan_Model_DbTable_DbCancel();
 				$_dbmodel->addCancelSale($_data);
+				$_dbmodel->recordhistory($_data);
 				Application_Form_FrmMessage::message("INSERT_SUCCESS");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -81,6 +82,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			$_data['id']=$id;
 			try {
+				$_dbmodel->recordhistory($_data);//Record History user
 				if(isset($_data['save'])){
 						$_dbmodel->editCancelSale($_data);
 				}elseif(isset($_data['save_close'])){
@@ -88,6 +90,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 				}else{
 					$_dbmodel->editCancelSale($_data);
 				}
+				
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/loan/cancel");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("UPDATE_FAIL");

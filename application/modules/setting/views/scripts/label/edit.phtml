@@ -1,19 +1,46 @@
-<title>Edit Label</title>
-<fieldset>
-		<legend><strong>Edit Label</strong></legend>
-<form action="<?php echo $this->url(array('module'=>'setting','controller'=>'Label','action'=>'edit')); ?>" method="post" enctype="application/x-www-form-urlencoded" >
-<table width="100%">
-	<tr>
-		<td>Label Name</td>
-		<td>
-			<input type="text" required="true" name="label_name"​  
-												dojoType="dijit.form.ValidationTextBox" value="<?php echo preg_replace( "/\r|\n/", "", strip_tags(htmlspecialchars($this->rs['keyValue'])));?>"
-												missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពិស្ដាជាខ្មែរ!" class="fullside" />
-		   <input type="hidden" name="id" value="<?php echo $this->rs['code'];?>"  />
-		   <input type="submit" value="រក្សាទុក" label="រក្សាទុក" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
-										
-		</td>
-	</tr>
-</table>
-</form>
-</fieldset>
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate('EDIT_LABEL')); 
+	echo $this->headTitle();
+?>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+        	<div class="col-sm-12 border-botom">
+		    	<div class="col-sm-8 pd-0">
+		    		<h4 class="m-b-0"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_LABEL');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<form action="<?php echo $this->url(array('module'=>'setting','controller'=>'Label','action'=>'edit')); ?>" method="post" enctype="application/x-www-form-urlencoded" >
+    		<script type="dojo/method" event="onSubmit">				
+				if(this.validate()) {
+					loadingBlock();
+					return true;
+				}
+
+				return false;
+			</script>
+    	<div class="card-box">
+    		<div class="col-md-12 col-sm-12 col-xs-12">
+    			<div class="form-group">
+                   <label class="control-label col-md-2 col-sm-2 col-xs-12" for="first-name"><?php echo $tr->translate("Label Name");?> :
+                   </label>
+                   <div class="col-md-10 col-sm-10 col-xs-12">
+                   		<input type="text" required="true" name="label_name"​ dojoType="dijit.form.ValidationTextBox" value="<?php echo preg_replace( "/\r|\n/", "", strip_tags(htmlspecialchars($this->rs['keyValue'])));?>" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពិស្ដាជាខ្មែរ!" class="fullside" />
+	 					<input type="hidden" name="id" value="<?php echo $this->rs['code'];?>"  />
+                   </div>
+                </div>
+             </div>
+    	</div>
+    	<div class="clearfix"></div>
+			<div class="card-box">
+               	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+					<input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate("SAVE");?>" id="submitButton" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+    			</div>
+    	 	</div>
+    	</form>
+    </div>
+ </div>

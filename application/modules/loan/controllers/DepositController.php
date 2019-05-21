@@ -54,7 +54,8 @@ class Loan_DepositController extends Zend_Controller_Action {
 		   $_data = $this->getRequest()->getPost();
 		   try {
 				$_dbmodel = new Loan_Model_DbTable_DbLanddeposit();
-				$_dbmodel->addDepositPayment($_data);
+				$sale_id = $_dbmodel->addDepositPayment($_data);
+				$_dbmodel->recordhistory($_data,$sale_id);
 				if(!empty($_data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/deposit");
 				}else{

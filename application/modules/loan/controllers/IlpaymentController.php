@@ -85,6 +85,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 	 			$row = $db->checkifExistingDelete($id);
 	 			if(!empty($row)){
 	 				$db->deleteReceipt($id);
+	 				$db->recordhistory($id);
 	 				Application_Form_FrmMessage::Sucessfull("DELETE_SUCCESS","/loan/ilpayment");
 	 			}else{
 	 				Application_Form_FrmMessage::Sucessfull("has been delete","/loan/ilpayment");
@@ -108,6 +109,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {
 				$receipt = $db->addILPayment($_data);
+				$db->recordHistoryReceipt($_data, $receipt);
 				if($rightclick=="true"){
 					Application_Form_FrmMessage::message('INSERT_SUCCESS');
 					echo "<script>window.close();</script>";exit();
