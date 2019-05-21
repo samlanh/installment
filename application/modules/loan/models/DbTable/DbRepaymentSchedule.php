@@ -123,6 +123,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			);
     		$this->_name='ln_reschedule';
     		$id = $this->insert($array);
+    		$reschedule_id=$id;//for return
     		
     		$is_schedule=0;
     		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==4 OR $data["schedule_opt"]==6){//
@@ -526,7 +527,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		  	$dbpayment->updatePayoff($data['loan_number'],$client_pay);
     		  }
     		  $db->commit();
-	          return 1;
+	          return $reschedule_id;
 	        }catch (Exception $e){
             	$db->rollBack();
             	Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -780,6 +781,113 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql = "SELECT * FROM `ln_reschedule` where id = $id";
     	return $db->fetchRow($sql);
+    }
+    
+    
+    function recordhistory($_data){
+    	$arr=array();
+    	$stringold="";
+    	$string="";
+    	$labelactivity="";
+    	$db_pro = new Project_Model_DbTable_DbProject();
+    	$dbsale = new Loan_Model_DbTable_DbLandpayment();
+    	$dbclient = new Group_Model_DbTable_DbClient();
+    	$dbproper = new Project_Model_DbTable_DbLand();
+    	$db_co = new Other_Model_DbTable_DbCreditOfficer();
+    	 
+    		$string="";
+    		 
+    		$project = $db_pro->getBranchById($_data['branch_id']);
+    		$rowsale = $this->getSaleInfo($_data['loan_number']);
+    		$client = $dbclient->getClientById($_data['member']);
+    		$land = $dbproper->getClientById($_data['land_code']);
+    		
+    		$stringold="Project : ID:".$_data['branch_id']."-".$project['project_name']."<br />";
+    		$stringold.="SALE : ID:".$_data['loan_number']."-".$rowsale['sale_number']."<br />";
+    		$stringold.="Customer : id=".$_data['member']."-".$client['name_kh']."<br />";
+    		$stringold.="Property : id=".$_data['land_code']."-".$land['land_address']." Street ".$land['street']."<br />";
+    		$stringold.="Issue Schedule Date : ".date("Y-M-d",strtotime($_data['date_buy']))."<br />";
+    		$stringold.="Amount Before : ".$_data['total_sold']."<br />";
+    		$stringold.="Paid Before : ".$_data['paid_before']."<br />";
+    		
+    		$schedul_lb="កក់ទ្រនាប់ដៃ";
+    		if ($_data['schedule_opt']==2){
+    			$schedul_lb="បង់ផ្តាច់";
+    		}else if ($_data['schedule_opt']==3){
+    			$schedul_lb="ដំណាក់កាលថេរ";
+    		}else if ($_data['schedule_opt']==4){	
+    			$schedul_lb="បង់រំលស់";
+    		}else if ($_data['schedule_opt']==5){
+    			$schedul_lb="ជាមួយធនាគារ";
+    		}else if ($_data['schedule_opt']==6){
+    			$schedul_lb="ដំណាក់កាលមិនថេរ";
+    		}
+    		$stringold.="Discount Amount : ".$_data['discount']." And Disount Percent : ".$_data['discount_percent']."<br />";
+    		$stringold.="តម្លៃលក់ : ".$_data['sold_price']."<br />";
+    		$stringold.="ប្រភេទបង់ : ".$_data['schedule_opt']."-".$schedul_lb."<br />";
+    		$stringold.="ប្រាក់សម្រាប់រំលស់ : ".$_data['for_installamount']."<br />";
+    		$stringold.="រយៈពេលរំលស់ : ".$_data['period']."<br />";
+    		$stringold.="Interest rate : ".$_data['interest_rate']."<br />";
+    		$stringold.="Fixed Payment : ".$_data['fixed_payment']."<br />";
+    
+    		$stringold.="ថ្ងៃចេញកិច្ចសន្យា : ".date("Y-M-d",strtotime($_data['agreement_date']))."<br />";
+    		$stringold.="ថ្ងៃចាប់ផ្តើមគិត : ".date("Y-M-d",strtotime($_data['release_date']))."<br />";
+    		$stringold.="ថ្ងៃរំលស់ដំបូង : ".date("Y-M-d",strtotime($_data['first_payment']))."<br />";
+    		$stringold.="ថ្ងៃបញ្ចប់ : ".date("Y-M-d",strtotime($_data['date_line']))."<br />";
+    		
+    		$payment_method = "";
+    		if ($_data['payment_method']==1){
+    			$payment_method = "សាច់ប្រាក់";
+    		}else if ($_data['payment_method']==2){
+    			$payment_method = "ធនាគារ";
+    		}else if ($_data['payment_method']==3){
+    			$payment_method = "សែក";
+    		}
+    		$stringold.="Paid Date : ".date("Y-M-d",strtotime($_data['paid_date']))."<br />";
+    		$stringold.="Deposit : ".$_data['deposit']."<br />";
+    		$stringold.="Payment Method : ".$_data['payment_method']."-".$payment_method."<br />";
+    		$stringold.="Cheque No : ".$_data['cheque']."<br />";
+    		$stringold.="Balance : ".$_data['balance']."<br />";
+    		$stringold.="Note : ".$_data['note']."<br />";
+    		
+    		
+    		if($_data['schedule_opt']==4 OR $_data['schedule_opt']==6 OR $_data['schedule_opt']==5){
+    			
+    			if(!empty($_data['identity'])){
+    					$ids = explode(',', $_data['identity']);
+    					$key = 1;
+    					$stringold.="<table class='tabeldescription'>";
+    					$stringold.="<tr>";
+    						$stringold.="<td>ល.រ	</td>";
+    						$stringold.="<td>ថ្ងៃត្រូវបង់ប្រាក់</td>";
+    						$stringold.="<td>ភាគរយត្រូវបង់</td>";
+    						$stringold.="<td>ប្រាក់ដើមត្រូវបង់</td>";
+    						$stringold.="<td>ប្រភេទ</td>";
+    						$stringold.="<td>សម្គាល់</td>";
+    					$stringold.="</tr>";
+    					foreach ($ids as $j){
+    						$stringold.="<tr>";
+	    						$stringold.="<td>".$key."</td>";
+	    						$stringold.="<td>".date("Y-M-d",strtotime($_data['date_payment'.$j]))."</td>";
+	    						$stringold.="<td>".$_data['percent'.$j]."</td>";
+	    						$stringold.="<td>".$_data['total_payment'.$j]."</td>";
+	    						$stringold.="<td>".$_data['pay_with'.$j]."</td>";
+	    						$stringold.="<td>".$_data['remark'.$j]."</td>";
+    						$stringold.="</tr>";
+    						$key = $key+1;
+    					}
+    					$stringold.="</table>";
+    			}
+    		}
+    		$labelactivity="Issue Schedule Sale : ".$rowsale['sale_number']." ".$client['name_kh']."-".$land['land_address']." Street ".$land['street'];
+    	$arr['activityold']=$stringold;
+    	$arr['after_edit_info']=$string;
+    
+    	$dbgb = new Application_Model_DbTable_DbGlobal();
+    	$_datas = array('description'=>$labelactivity,'activityold'=>$stringold,'after_edit_info'=>$string);
+    	$dbgb->addActivityUser($_datas);
+    
+    	return $arr;
     }
     
 }

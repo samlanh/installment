@@ -57,7 +57,8 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {
 				$_dbmodel = new Loan_Model_DbTable_DbRepaymentSchedule();
-				$_dbmodel->addRepayMentSchedule($_data);
+				$reschedule = $_dbmodel->addRepayMentSchedule($_data);
+				$_dbmodel->recordhistory($_data);
 				if($rightclick=="true"){
 					Application_Form_FrmMessage::message('INSERT_SUCCESS');
 					echo "<script>window.close();</script>";exit();

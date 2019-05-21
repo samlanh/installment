@@ -865,7 +865,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$stringold.="ប្រភេទបង់ : ".$_data['schedule_opt']."-".$schedul_lb."<br />";
     		
     		$stringold.="Paid Date : ".date("Y-M-d",strtotime($_data['paid_date']))."<br />";
-    		$stringold.="Payment Method : ".$_data['payment_method']."<br />";
+    		$stringold.="Payment Method : ".$_data['payment_method']."-".$payment_method."<br />";
     		$stringold.="Cheque No : ".$_data['cheque']."<br />";
     		
     		$stringold.="Agent : ".$_data['staff_id']."-".$agentName."<br />";
