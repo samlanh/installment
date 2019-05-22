@@ -623,4 +623,113 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
+  
+  
+  function rptClosingincomeAction(){ // by Vandy
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}
+  	else{
+  		$search = array(
+  				"adv_search"=>'',
+  				"branch_id"=>-1,
+  				"status"=>-1,
+  				"category_id"=>-1,
+  				"ordering"=>1,
+  				'land_id'=>-1,
+  				'user_id'=>-1,
+  				'client_name'=>'',
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  		);
+  	}
+  	$this->view->search=$search;
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->row = $db->getAllIncome($search);
+  
+//   	$db  = new Report_Model_DbTable_DbLandreport();
+//   	$this->view->houserepair =$db->getAllIncomeOtherPayment($search);
+  	 
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  	$this->view->rssearch = $search;
+  	 
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
+  }
+  function rptClosingexpenseAction(){ // by Vandy
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+  				"adv_search"=>'',
+  				"supplier_id"=>"",
+  				"branch_id"=>-1,
+  				"ordering"=>1,
+  				"category_id_expense"=>-1,
+  				'payment_type'=>-1,
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  		);
+  	}
+  	$this->view->search=$search;
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->row = $db->getAllExpense($search);
+  
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  	 
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  		$search['client_name'] = empty($search['client_name'])?0:$search['client_name'];
+  		$search['land_id'] = empty($search['land_id'])?0:$search['land_id'];
+  	}else{
+  		$search = array(
+  				'client_name'=>0,
+  				'land_id'=>0,
+  				'start_date'  => date('Y-m-d'),
+  				'end_date'    => date('Y-m-d'),
+  				'txtsearch' => '',
+  				'branch_id'=>-1,
+  				'co_khname'=>-1,
+  				'search_status'=>-1);
+  	}
+  
+  	$this->view->rscomisison = $db->getAllCommission($search);
+  	 
+//   	$db  = new Report_Model_DbTable_DbLandreport();
+//   	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,1);
+  	 
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
+  }
+  
+  function submitentryincomeAction(){
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	if($this->getRequest()->isPost()){
+  		$data = $this->getRequest()->getPost();
+  		$db = new Report_Model_DbTable_DbParamater();
+  		$db->submitClosingEngryIncome($data);
+  		Application_Form_FrmMessage::Sucessfull("Closing Entry Success", "/report/paramater/rpt-closingincome");
+  	}
+  }
+  function submitentryexpenseAction(){
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	if($this->getRequest()->isPost()){
+  		$data = $this->getRequest()->getPost();
+  		$db = new Report_Model_DbTable_DbParamater();
+  		$db->submitClosingEngryExpense($data);
+  		Application_Form_FrmMessage::Sucessfull("Closing Entry Success", "/report/paramater/rpt-closingexpense");
+  	}
+  }
 }
