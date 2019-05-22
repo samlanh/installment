@@ -221,6 +221,28 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("Show House Info")
 		));
+		
+		$_penalty_type=  new Zend_Dojo_Form_Element_FilteringSelect('penalty_type');
+		$_penalty_type->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside','onChange'=>'CheckPenalty();',));
+		$_penalty_type_opt = array(
+				1=>$this->tr->translate("PERCENTAGES"),
+				2=>$this->tr->translate("CASH"));
+		$_penalty_type->setMultiOptions($_penalty_type_opt);
+		
+		$_penalty_value = new Zend_Dojo_Form_Element_NumberTextBox('penalty_value');
+		$_penalty_value->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'onKeyup'=>'CheckPenalty();',
+		));
+		
+		$_graice_pariod_late = new Zend_Dojo_Form_Element_NumberTextBox('graice_pariod_late');
+		$_graice_pariod_late->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'onKeyup'=>'CheckPenalty();',
+		));
+		
 		if($data!=null){
 			$_label_animation->setValue($data['label_animation']['keyValue']);
 // 			$_smsWarnning->setValue($data['sms-warnning-kh']['keyValue']);
@@ -255,6 +277,10 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 			$_bank_account2number->setValue($data['bank_account2number']['keyValue']);
 			$_cheque_receiver->setValue($data['cheque_receiver']['keyValue']);
 			$_showhouseinfo->setValue($data['showhouseinfo']['keyValue']);
+			
+			$_penalty_type->setValue($data['penalty_type']['keyValue']);
+			$_penalty_value->setValue($data['penalty_value']['keyValue']);
+			$_graice_pariod_late->setValue($data['graice_pariod_late']['keyValue']);
 		}
 		$this->addElements(array(
 				$account_sign,
@@ -288,6 +314,10 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				$_bank_account2number,
 				$_cheque_receiver,
 				$_showhouseinfo,
+				
+				$_penalty_type,
+				$_penalty_value,
+				$_graice_pariod_late
 				));
 		
 		return $this;

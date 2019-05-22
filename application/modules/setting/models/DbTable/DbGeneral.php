@@ -15,6 +15,7 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
     }
 	public function updateWebsitesetting($data){
 		try{
+			$dbg = new Application_Model_DbTable_DbGlobal();
 			
 			$arr = array('keyValue'=>$data['label_animation'],);
 			$where=" keyName= 'label_animation'";
@@ -137,6 +138,36 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 			$arr = array('keyValue'=>$data['showhouseinfo'],);
 			$where=" keyName= 'showhouseinfo'";
 			$this->update($arr, $where);
+			
+			$rows = $this->geLabelByKeyName('penalty_type');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['penalty_type'],'keyName'=>'penalty_type','note'=>"1=ភាគរយ, 2=សាច់ប្រាក់",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['penalty_type'],);
+				$where=" keyName= 'penalty_type'";
+				$this->update($arr, $where);
+			}
+			
+			$rows = $this->geLabelByKeyName('penalty_value');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['penalty_value'],'keyName'=>"penalty_value",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['penalty_value'],);
+				$where=" keyName= 'penalty_value'";
+				$this->update($arr, $where);
+			}
+			
+			$rows = $this->geLabelByKeyName('graice_pariod_late');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['graice_pariod_late'],'keyName'=>'graice_pariod_late','note'=>"ចំនួនថ្ងៃអនុគ្រោះបង់យឺត",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['graice_pariod_late'],);
+				$where=" keyName= 'graice_pariod_late'";
+				$this->update($arr, $where);
+			}
 			
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

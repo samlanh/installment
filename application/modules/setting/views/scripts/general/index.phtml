@@ -173,6 +173,24 @@ tr.header td {
 		    				<div class="col-sm-8"><?php echo $frm->getElement('comment1');?></div>
 		    			</div>
 		    			<div class="form-group">
+		                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-money" aria-hidden="true"></i>
+		                   <?php echo $tr->translate('Penalty Info')?> 
+		                   </label>
+		                </div>
+		    			<div class="form-group">
+		    				<div class="col-sm-4"><?php echo $tr->translate('Penalty Type')?></div>
+		    				<div class="col-sm-8"><?php echo $frm->getElement('penalty_type');?></div>
+		    			</div>
+		    			<div class="form-group">
+		    				<div class="col-sm-4"><?php echo $tr->translate('អាត្រាការប្រាក់ពិន័យក្នុង១ខែ')?></div>
+		    				<div class="col-sm-8"><?php echo $frm->getElement('penalty_value');?></div>
+		    			</div>
+		    			<div class="form-group">
+		    				<div class="col-sm-4"><?php echo $tr->translate('ចំនួនថ្ងៃអនុគ្រោះបង់យឺត')?></div>
+		    				<div class="col-sm-8"><?php echo $frm->getElement('graice_pariod_late');?></div>
+		    			</div>
+		    			
+		    			<div class="form-group">
 		    				<table cellspacing="5" width="100%" style="padding:10px;">
 								<?php $sss=0; if ($sss==1){?>
 								<tr>
@@ -215,5 +233,17 @@ dojo.require("dijit.form.Textarea");
 function loadImage(){
 	 var output = document.getElementById('image_view');
   output.src = URL.createObjectURL(event.target.files[0]);
+}
+
+function CheckPenalty(){
+	penalty_type = dijit.byId("penalty_type").get('value');
+	if(penalty_type==1){
+		penalty_value = dijit.byId("penalty_value").get('value');
+		if(penalty_value>100){
+			alert("<?php echo $tr->translate('ប្រាក់ពិន័យជាភាគរយមិនអាចលើសពី ១០០%ឡើយ');?>");
+			dijit.byId('penalty_value').attr('value',100);
+			return false;
+		}
+	}
 }
 </script>

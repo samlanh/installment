@@ -57,6 +57,11 @@ public function init()
 		$row['bank_account2number'] = $db_gs->geLabelByKeyName('bank_account2number');
 		$row['cheque_receiver'] = $db_gs->geLabelByKeyName('cheque_receiver');
 		$row['showhouseinfo'] = $db_gs->geLabelByKeyName('showhouseinfo');
+		
+		$row['penalty_type'] = $db_gs->geLabelByKeyName('penalty_type');
+		$row['penalty_value'] = $db_gs->geLabelByKeyName('penalty_value');
+		$row['graice_pariod_late'] = $db_gs->geLabelByKeyName('graice_pariod_late');
+		
 		$fm = new Setting_Form_FrmGeneral();
 		$frm = $fm->FrmGeneral($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
