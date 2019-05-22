@@ -26,7 +26,10 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside'
 		));
-		$options= array(1=>$this->tr->translate("CASH"),2=>$this->tr->translate("CHEQUE"));
+		$options= array(
+				1=>$this->tr->translate("CASH"),
+				2=>$this->tr->translate("CHEQUE"),
+				3=>$this->tr->translate("PAYWITH_BANK"));
 		$payment_type->setMultiOptions($options);
 		
 		$_Date = new Zend_Dojo_Form_Element_DateTextBox('Date');

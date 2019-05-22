@@ -16,6 +16,12 @@
 		<form id="frm_comission" action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	 	  <script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
+		total_amount = dijit.byId('return_back').get('value');
+		if(isNaN(total_amount) || total_amount<=0){
+			alert('ប្រាក់ចំណាយត្រូវធំជាង ០ !');
+			dijit.byId('return_back').focus();
+			return false;
+		}	
             	dijit.byId('save_new').set('disabled',true);
     			return true;
    			}else{
@@ -378,7 +384,8 @@
 var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->co_name));?> );
 new dijit.form.FilteringSelect({
 	store: staff_store,
-	autoComplete: true,                        
+	autoComplete: false,  
+	queryExpr: "*${0}*",                   
     id: "staff_id",
     name: "staff_id",    
     class: 'fullside',  
@@ -431,7 +438,8 @@ function addStaff(){
 var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->all_category));?> );
 new dijit.form.FilteringSelect({
 	store: income_category_store,
-	autoComplete: true,                        
+	autoComplete: false,  
+	queryExpr: "*${0}*",                       
     id: "income_category",
     name: "income_category",  
     class: 'fullside',  
@@ -614,9 +622,8 @@ function getLandAndClientDetail(inds){
 			dijit.byId('branch_id').focus();
 			return false;
 		}
-		
 		total_amount = dijit.byId('return_back').get('value');
-		if(isNaN(total_amount) || total_amount==0){
+		if(isNaN(total_amount) || total_amount<=0){
 			alert('ប្រាក់ចំណាយត្រូវធំជាង ០ !');
 			dijit.byId('return_back').focus();
 			return false;

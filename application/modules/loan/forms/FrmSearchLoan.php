@@ -96,7 +96,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$options = array(-1=>$this->tr->translate("REPAYMENT_TYPE"));
 	    if(!empty($rows))foreach($rows AS $row){
 	    	$row['name_en'] = $this->tr->translate($row['name_en']);
-  			$options[$row['key_code']]=$row['name_en'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
+  			$options[$row['key_code']]=$row['name_en'];
   		}
 		$schedule_opt->setMultiOptions($options);
 		$schedule_opt->setValue($request->getParam("schedule_opt"));
@@ -201,10 +201,6 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 		));
-// 		$opt1= $db->getVewOptoinTypeByType(13,1,null,null);
-// 		if($request->getActionName()!='add' OR $request->getActionName()!='edit'){
-// 			unset($opt1[-1]);
-// 		}
 		$cateEx = $db->getAllCategoryIncomeExpens(13);
 		$opt1=array(''=>$this->tr->translate("SELECT_CATEGORY"));
 		if(!empty($cateEx))foreach($cateEx AS $row){
@@ -220,7 +216,11 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 		));
-		$options= array(-1=>$this->tr->translate("SELCT_TYPE"),1=>$this->tr->translate("CASH"),2=>$this->tr->translate("CHEQUE"));
+		$options= array(-1=>$this->tr->translate("SELCT_TYPE"),
+				1=>$this->tr->translate("CASH"),
+				2=>$this->tr->translate("CHEQUE"),
+				3=>$this->tr->translate("PAYWITH_BANK")
+			);
 		$payment_type->setMultiOptions($options);
 		$payment_type->setValue($request->getParam("payment_type"));
 		

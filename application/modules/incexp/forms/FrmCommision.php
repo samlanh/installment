@@ -139,6 +139,8 @@ public function init()
 		$staff_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$staff_opt = $db->getAllCOName(1);
 		$staff_id->setMultiOptions($staff_opt);
