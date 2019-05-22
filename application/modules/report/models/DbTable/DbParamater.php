@@ -1585,8 +1585,12 @@ function getAllBranch($search=null){
 	    			`ln_project` AS p,
 	    			`ln_properties` AS pro,
 	    		`ln_client` AS clie
-	    		WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
-	    		clie.`client_id` = s.`client_id` AND c.status=1
+	    		WHERE 
+	    		s.`id` = c.`sale_id` 
+	    		AND p.`br_id` = c.`branch_id` 
+	    		AND pro.`id` = s.`house_id` 
+	    		AND clie.`client_id` = s.`client_id` 
+	    		AND c.status=1
     			AND c.total_amount>0 ';
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();

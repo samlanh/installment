@@ -136,8 +136,6 @@
 	        <div class="clearfix"></div>
 			 <div class="card-box">
              	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-             		<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button"
-					 iconClass="dijitIconClear"/>
 					<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button"
 						 iconClass="dijitIconDelete"/>
 					<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' name='savenew' value='savenew' dojoType="dijit.form.Button"
@@ -256,7 +254,10 @@ var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller
 function getSaleClie(){
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
-		return false;}
+		return false;
+	}
+	dijit.byId('customer').attr('value','');
+	dijit.byId('sale_client').reset();
 	dojo.xhrPost({
 		url:url_getSaleClien,	
 		content:{ 

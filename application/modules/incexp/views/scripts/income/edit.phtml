@@ -197,7 +197,10 @@ var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller
 function getSaleClie(){
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
-		return false;}
+		return false;
+	}
+	dijit.byId('customer').attr('value','');
+	dijit.byId('sale_client').reset();
 	dojo.xhrPost({
 		url:url_getSaleClien,	
 		content:{ 
@@ -210,13 +213,16 @@ function getSaleClie(){
 		    dijit.byId('sale_client').attr('value',<?php echo $this->row['sale_id'];?>); 
 		},
 		error: function(err) {
-			alert(err);
+			
 		}
 	});
 }
 var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
 function getLandAndClientDetail(){
-		sale_id = dijit.byId('sale_client').get('value');
+	sale_id = dijit.byId('sale_client').get('value');
+	if(sale_id==''){
+		return false;
+	}
 	dojo.xhrPost({
 		url:url_land,	
 		content:{ 
@@ -229,7 +235,6 @@ function getLandAndClientDetail(){
 			
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
@@ -307,7 +312,6 @@ function addCategory(){
 		    dijit.byId("popup_category").hide();
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
@@ -315,7 +319,6 @@ function getInvoiceNo(condition){
 	getSaleClie();
 }
 function printSave(new_invoice_no){
-/////////////////// check Validate /////////////////////////////////////////
 	getBranchinfo();
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
@@ -344,7 +347,6 @@ function printSave(new_invoice_no){
 	}else{
 		customer_name = dijit.byId("sale_client").attr('displayedValue');
 	}
-
 	
 	dojo.byId("lb_branch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
 	dojo.byId("lb_customer").innerHTML = customer_name;
@@ -405,13 +407,11 @@ function printSubmit(){
 										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
 									</td>
 								</tr>
-								
 							</table>
 					</fieldset>
 					</td>
 				</tr>
 			</table>
-
 		</form>
 	</div>
 </div>
@@ -465,7 +465,7 @@ function printSubmit(){
 				</tr>
 				<tr>
 					<td class="one khmerbold">ពណ៌នាចំណូល</td>
-					<td ><strong><label id="lb_income_title" class="value"></label></strong></td>
+					<td><strong><label id="lb_income_title" class="value"></label></strong></td>
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ចំណូលសរុប</td>
 					<td><strong><label id="lb_total_amount" class="value"></label></strong></td>
 				</tr>
@@ -490,12 +490,14 @@ function printSubmit(){
 						</h4>
 					</td>
 				    <td colspan="2" class="one khmerbold" align="center" valign="bottom">&nbsp;
-				  			<h4 style="font-weight:normal; padding-right: 5px ! important;margin-bottom: -10px  !important;">
-				              <?php 
-				              	   $session_user=new Zend_Session_Namespace('authinstall');
-						           $last_name=$session_user->last_name;
-						           $username = $session_user->first_name;
-						           echo $last_name." ".$username;?></h4>  
+			  			<h4 style="font-weight:normal; padding-right: 5px ! important;margin-bottom: -10px  !important;">
+			              <?php 
+			              	  $session_user=new Zend_Session_Namespace('authinstall');
+					          $last_name=$session_user->last_name;
+					          $username = $session_user->first_name;
+					          echo $last_name." ".$username;
+					      ?>
+					   </h4>  
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 12px;">
@@ -536,9 +538,5 @@ function printSubmit(){
 			<?php }?>
 			<div id="printblog2"></div>
 		</div>
-		
 	</div>
 </div>
-
-
-

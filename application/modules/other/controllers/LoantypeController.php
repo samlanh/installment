@@ -6,7 +6,6 @@ class Other_LoanTypeController extends Zend_Controller_Action
 public function init()
     {
     	$this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
-        /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     }
@@ -19,10 +18,10 @@ public function init()
 			try {
 				if(isset($data['save_new'])){
 					$db->addViewType($data);
-					Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
+					Application_Form_FrmMessage::message('INSERT_SUCCESS');
 				}else{
 					$db->addViewType($data);
-					Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
+					Application_Form_FrmMessage::message('INSERT_SUCCESS');
 					Application_Form_FrmMessage::redirectUrl('/other/loantype');
 				}
 			} catch (Exception $e) {
@@ -68,7 +67,7 @@ public function init()
     }
     public function editAction()
     {
-    if($this->getRequest()->isPost()){
+    	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();
 			$db = new Other_Model_DbTable_DbLoanType();
 			try {
@@ -90,8 +89,6 @@ public function init()
     	$frm = $fm->FrmViewType($row);
 	    Application_Model_Decorator::removeAllDecorator($frm);
 	    $this->view->Form_Frmcallecterall = $frm;
-    		
-    
     }
 }
 ?>
