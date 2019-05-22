@@ -415,7 +415,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	$this->_name='ln_client_receipt_money';
    	$db = $this->getAdapter();
    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 ";
-   	$pre='№';
+   	$pre='№ ';
    	//$pre='N1:'; phnom penh thmey
    	
    	$acc_no = $db->fetchOne($sql);

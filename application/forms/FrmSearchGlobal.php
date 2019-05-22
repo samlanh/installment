@@ -4,7 +4,6 @@ class Application_Form_FrmSearchGlobal extends Zend_Dojo_Form
 {
 	public function init()
 	{
-		
 	}
 	public function FrmSearchLoadSchedule($forms = null){
 		$request=Zend_Controller_Front::getInstance()->getRequest();

@@ -1180,12 +1180,12 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			}
 			table.receipt-titile tr td span {
 			font-family: Arial Black;font-family:'."Khmer OS Muol Light".';
-			color:#2d71d8;
+			color:#036e97;
 			}
 			table.receipt-titile tr td div span {
 			line-height:38px;
 			font-weight: bold;
-			color:gold;
+			color:#f7c25a;
 			}
 			#lb_receipt {
 			font-weight: bold;
@@ -1257,12 +1257,12 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			</tr>
 			</table>
 			<div class="displayfirst" style="">
-				<div id="watermark" style="top:-55;opacity:0.1;position:fixed;z-index:-1;display: block;'.$watermark.' no-repeat center;background-size: 90%;z-index: -1; width:100%;height:100%;left:15;" ></div>
+				<div id="watermark" style="top:-55;opacity:0.2;position:fixed;z-index:-1;display: block;'.$watermark.' no-repeat center;background-size: 70%;z-index: -1; width:100%;height:100%;left:15;" ></div>
 			<table style="margin-top:10px;"  class="print contentdata" cellspacing="5px"  cellpadding="0" >
 				<tr class="receipt-row">
 					<td colspan="5"></td>
 					<td align="right">
-						<span id="lb_receipt" ></span>
+						<span id="lb_receipt" style="font-size:18px;"></span>
 					</td>
 				</tr>
 				<tr >
@@ -1328,6 +1328,12 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td colspan="2"><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
 				</tr>
 				<tr>
+					<td>ថ្ងៃត្រូវបង់</td>
+					<td colspan="2"><label id="lb_buydate1" class="value"></label></td>
+					<td>ផ្សេងៗ</td>
+					<td colspan="2"><label id="lb_other" class="value"></label></td>
+				</tr>
+				<tr>
 					<td colspan="6" align="right">
 						<strong>ថ្ងៃទទួល &nbsp;&nbsp;<label id="lbl_paid_date1" ></label></strong>
 					</td>
@@ -1376,7 +1382,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			
 			<div style="display: none;">
 				
-				<label id="lb_buydate1" class="value"></label>
+				
 			<span id="lable_chartotalreceipt"></span>
 			<span id="lblpaid_date"></span>
 			<span id="lb_descriptionall"></span>

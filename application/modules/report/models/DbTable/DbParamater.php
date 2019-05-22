@@ -592,6 +592,7 @@ function getAllBranch($search=null){
 				  `p`.`p_manager_nation_id` AS `project_manager_nation_id`,
                   `p`.`p_current_address` AS `project_manager_p_current_address`,
                    p.w_manager_namekh ,
+                   p.`position`,
                    p.w_manager_nation_id,
                    p.p_dob as manager_dob,
                    p.`p_nationid_issue`,

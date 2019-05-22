@@ -81,15 +81,15 @@ dojo.require("dijit.form.DateTextBox");
 body {
     position: relative;
 }
-	
 	#printfooter {
 	    position: absolute;
 	    bottom: 0;
 	    position: fixed;
 	    display: block ;
 	}
+	
     </style>
-    	<div>
+    	<div id="watermark" style="top:-90;opacity:0.150;position:fixed;z-index:-1;display: block;background:url('<?php echo $this->baseUrl()?>/images/phnommeaswatermark.jpg') no-repeat center;background-size: 80%;z-index: -1; width:100%;height:100%;left:15;" ></div>
         	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="padding:0;margin:0;border:0px;" >
         	<tr>
                 <td width="30%" valign="top"></td>
@@ -107,7 +107,7 @@ body {
              			$boreyname = "បុរី ភ្នំមាស";
              			$commercial_no="00023772";
              			$patong_no ="2019015910";
-             			$positionmg="នាយកគ្រប់គ្រងទូទៅ";
+             			$positionmg=$this->agreement['position'];//"នាយកគ្រប់គ្រងទូទៅ";
              			
              			$arrgender = array(1=>"ប្រុស",2=>"ស្រី");
              		?>
@@ -115,7 +115,7 @@ body {
              			<span style="text-align:left; line-height:28px; width: 100%; display: block; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light';"><u><?php echo $tr->translate("កិច្ចសន្យានេះធ្វើឡើងរវាង:");?></u></span>
              			<span class="margin-left"></span><span style=" font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $companyname;?> </span>មានវិញ្ញាបនបត្របញ្ជាក់ការចុះឈ្មោះក្នុងបញ្ជីក្រសួងពាណិជ្ជកម្មលេខ <?php echo $commercial_no;?> និង ប័ណ្ណពន្ធប៉ាតង់ឆ្នាំ ២០១៩ លេខ N<sup>o</sup>PTL <?php echo $patong_no;?> អពដ។ តែងតាំងឈ្មោះ <span class="value" style="min-width:150px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh'];?></span> ភេទ <span><?php if (!empty($arrgender[$this->agreement['p_sex']])){ echo $arrgender[$this->agreement['p_sex']];}?></span> តួនាទី<?php echo $positionmg;?> 
              			សញ្ជាតិ <?php echo $this->agreement['project_manager_nationality'];?> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> ចុះថ្ងៃទី  <?php echo date("d",strtotime($this->agreement['p_nationid_issue']));?> ខែ <?php echo date("m",strtotime($this->agreement['p_nationid_issue']));?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['p_nationid_issue']));?> អាស័យដ្ឋាន <?php echo $this->agreement['project_manager_p_current_address'];?> 
-             			តាមលិខិតប្រគល់សិទ្ធិ ចុះថ្ងៃទី <span style="display: inline-block; width: 50px;">..........</span> ខែ <span style="display: inline-block; width: 50px;">..........</span> ឆ្នាំ <span style="display: inline-block; width: 50px;">..........</span> ជាក្រុមហ៊ុនលក់ផ្ទះ ហៅកាត់ថាភាគី "ក" (បុរី)។
+             			ជាក្រុមហ៊ុនលក់ផ្ទះ ហៅកាត់ថាភាគី "ក" (បុរី)។
              			<br />
              			<span style="font-family:'Khmer OS Muol Light';font-weight:200;  text-align:center; min-width: 100%; display: inline-block;">និង</span>
              			<span class="margin-left"></span>លោក/លោកស្រី <span class="value" style="min-width:100px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span> កើតឆ្នាំ <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['dob'])){ echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob'])));}?></span> 

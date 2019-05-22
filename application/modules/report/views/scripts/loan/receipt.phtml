@@ -85,8 +85,8 @@ function printSave(){
 	dojo.byId("lb_extrapayment").innerHTML ="<?php echo "$ ".number_format($this->rs['extra_payment'],2);?>";
 	dojo.byId("lbl_totalpayment").innerHTML = '<?php echo  "$ ".number_format($this->rs['total_payment'],2);?>';
 	dojo.byId("lbl_total_receive").innerHTML = '<?php echo "$ ".number_format($this->rs['recieve_amount'],2);?>';
-	dojo.byId("lb_buydate1").innerHTML = "<?php echo date("d-M-Y",strtotime($this->rs['date_payment']));?>";
-	dojo.byId("lbl_paid_date1").innerHTML = "<?php echo date("d-M-Y",strtotime($this->rs['date_pay']));?>";
+	dojo.byId("lb_buydate1").innerHTML = "<?php echo date("d-m-Y",strtotime($this->rs['date_payment']));?>";
+	dojo.byId("lbl_paid_date1").innerHTML = "<?php echo date("d-m-Y",strtotime($this->rs['date_pay']));?>";
 	dojo.byId("lbl_paymenttype").innerHTML = "<?php echo $this->rs['payment_method'];?>";
 	dojo.byId("lbl_cheque").innerHTML = "<?php echo empty($this->rs['cheque'])?"N/A":$this->rs['cheque'];?>";
 
@@ -106,7 +106,7 @@ function printSave(){
 	if(last_number<=0){last_number='';}
 	money_khmer = money_khmer+" "+string+" "+read_in_english_from_10_to_99(decimalmoney_khmer)+''+read_in_english_from_0_to_9(last_number)+' '+str_cent;
 	dojo.byId('lable_chartotalreceipt').innerHTML=money_khmer+" US Dollars Only";
-	dojo.byId("lblpaid_date").innerHTML = "<?php echo date("d/m/y",strtotime($this->rs['date_pay']));?>";
+	dojo.byId("lblpaid_date").innerHTML = "<?php echo date("d/m/Y",strtotime($this->rs['date_pay']));?>";
 	dojo.byId("lb_descriptionall").innerHTML = '<?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; } echo ' '.$this->rs['property_type']; echo "PMT No"; if($this->rs['field3']==1){ echo " កក់លើក ";} echo " ".$this->rs['payment_times']." Date ".date("d/m/y",strtotime($this->rs['date_payment']))." ".$this->rs['payment_method']; echo empty($this->rs['cheque'])?"":$this->rs['cheque'];?>';
 
 	dojo.byId("lbl_phone").innerHTML = "<?php echo $this->rs['phone'];?>";
