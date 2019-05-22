@@ -11,7 +11,7 @@ Class Other_Form_FrmNews extends Zend_Dojo_Form {
 		$_status = new Zend_Dojo_Form_Element_FilteringSelect("status");
 		$_arr=array(
 				"1"=>$this->tr->translate("ACTIVE"),
-				"0"=>$this->tr->translate("DACTIVE"),
+				"0"=>$this->tr->translate("DEACTIVE"),
 		);
 		$_status->setMultiOptions($_arr);
 		$_status->setAttribs(array(
@@ -45,7 +45,7 @@ Class Other_Form_FrmNews extends Zend_Dojo_Form {
 		$_arrsearch=array(
 				""=>$this->tr->translate("SELECT_STATUS"),
 				"1"=>$this->tr->translate("ACTIVE"),
-				"0"=>$this->tr->translate("DACTIVE"),
+				"0"=>$this->tr->translate("DEACTIVE"),
 		);
 		$_status_search->setMultiOptions($_arrsearch);
 		$_status_search->setAttribs(array(

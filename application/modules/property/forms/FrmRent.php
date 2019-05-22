@@ -150,7 +150,7 @@ Class Property_Form_FrmRent extends Zend_Dojo_Form {
 		$_status->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		
 		$_land_blog = new Zend_Dojo_Form_Element_FilteringSelect('land_blog');

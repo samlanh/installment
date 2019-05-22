@@ -18,7 +18,6 @@ class Other_ProvinceController extends Zend_Controller_Action {
 						'status' => $_data['status_search']);
 			}
 			else{
-		
 				$search = array(
 						'title' => '',
 						'status' => -1,

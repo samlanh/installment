@@ -15,7 +15,7 @@ var commune_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::
 dojo.ready(function(){
 	 
 	new dijit.form.FilteringSelect({
-	store: district_store,//dojo.data.ObjectStore({objectStore: district_data}),
+	store: district_store,
 	autoComplete: false,
 	queryExpr: "*${0}*",     
 	required: false,		           
@@ -35,7 +35,7 @@ dojo.ready(function(){
 	}, "district_name");
 
 	new dijit.form.FilteringSelect({
-	store: commune_store,//dojo.data.ObjectStore({objectStore: commune_data}),
+	store: commune_store,
 	autoComplete: false,
 	queryExpr: "*${0}*", 
 	required: false,		           
@@ -54,7 +54,6 @@ dojo.ready(function(){
 	}, "commune_name");
 	filterDistrict();
 	filterCommune();
-	
 });
 url_getdistrict = '<?php echo $this->url(array('module'=>'other','controller'=>'district','action'=>'get-district'));?>';
 function filterDistrict(){
@@ -73,7 +72,6 @@ function filterDistrict(){
 		    dijit.byId('district_name').attr('value','<?php echo $this->row['dis_id'];?>');
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});	
 }
@@ -94,7 +92,6 @@ function filterCommune(){
 		    dijit.byId('commune_name').attr('value','<?php echo $this->row['commune_id'];?>');
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
@@ -142,7 +139,6 @@ function filterCommune(){
 	                    	<?php  echo $commune->getElement('id');?>
 	                   </div>
 	                </div>
-	                
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROVINCE_NAME");?> <span class="required">*</span> :
 	                   </label>
@@ -165,7 +161,8 @@ function filterCommune(){
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   		<?php echo $tr->translate("STATUS");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $commune->getElement("status");?>
@@ -173,10 +170,8 @@ function filterCommune(){
 	                </div>
 	                <div class="clearfix"></div>
 	                <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-		    			 <input type="reset" label="<?php echo $tr->translate('CLEAR');?>" id="" dojoType="dijit.form.Button"
-				                  iconClass="dijitIconClear" />
-							<input type="submit" value="កែប្រែទិន្នន័យ" label="<?php echo $tr->translate('GO_EDIT');?>" id="submitButton" dojoType="dijit.form.Button" 
-								 iconClass=""/>
+						<input type="submit" value="កែប្រែទិន្នន័យ" label="<?php echo $tr->translate('GO_EDIT');?>" id="submitButton" dojoType="dijit.form.Button" 
+							iconClass=""/>
 	    			</div>
 	            </div>
 	        </div>

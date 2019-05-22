@@ -93,7 +93,7 @@ Class Invest_Form_FrmInvestment extends Zend_Dojo_Form {
 				'class'=>'fullside',));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		
 		

@@ -16,7 +16,7 @@ Class global_Form_FrmDept extends Zend_Dojo_Form {
 				));
 		//$_dept->setLabel('សូមបញ្ចូលឈ្មោះមហាវិទ្យាល័យ');
 		$_kh_name = new Zend_Dojo_Form_Element_TextBox('kh_name');
-		$_arr = array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DACTIVE"));
+		$_arr = array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DEACTIVE"));
 		$_status = new Zend_Dojo_Form_Element_FilteringSelect("status");
 		$_status->setMultiOptions($_arr);
 		$_status->setAttribs(array(

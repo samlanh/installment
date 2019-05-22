@@ -37,9 +37,11 @@ class RsvAcl_UserAccessController extends Zend_Controller_Action
     	}
     }
     function addAction(){
-    	if($this->getRequest()->getParam('id')){
-    		$id = $this->getRequest()->getParam('id');
-    		 
+    	$id = $this->getRequest()->getParam('id');
+    	if(empty($id)){
+    		$this->_redirect('/rsvacl/useraccess');
+    	}
+    	if($id){
     		$db = new RsvAcl_Model_DbTable_DbUserAccess();
     		$gc = new Application_Model_GlobalClass();
     		 
@@ -147,4 +149,3 @@ class RsvAcl_UserAccessController extends Zend_Controller_Action
     	exit();
     }
 }
-

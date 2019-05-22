@@ -15,8 +15,7 @@ class Other_Model_DbTable_DbDistrict extends Zend_Db_Table_Abstract
 				'pro_id'	  => $_data['province_name'],
 				'district_name'	  => $_data['district_name'],
 				'district_namekh'	  => $_data['district_namekh'],
-				//'displayby'	  => $_data['display'],
-				'status'	  => $_data['status'],
+				'status'	  => 1,
 				'modify_date' => Zend_Date::now(),
 				'user_id'	  => $this->getUserId()
 		);

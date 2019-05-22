@@ -32,7 +32,7 @@ Class Other_Form_FrmHoliday extends Zend_Dojo_Form {
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status_search->setMultiOptions($_status_opt);
 		$_status_search->setValue($request->getParam("search_status"));
 		
@@ -83,7 +83,7 @@ Class Other_Form_FrmHoliday extends Zend_Dojo_Form {
 		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		
 // 		$_state_date = new Zend_Dojo_Form_Element_DateTextBox('from_date');

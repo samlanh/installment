@@ -28,7 +28,7 @@ Class Incexp_Form_Frmtype extends Zend_Dojo_Form {
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$status_search->setMultiOptions($_status_opt);
 		$status_search->setValue($request->getParam("status_search"));
 		
@@ -57,7 +57,7 @@ Class Incexp_Form_Frmtype extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'required'=>true
 				));
-		$_arr = array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DACTIVE"));
+		$_arr = array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DEACTIVE"));
 		$_status = new Zend_Dojo_Form_Element_FilteringSelect("status");
 		$_status->setMultiOptions($_arr);
 		$_status->setAttribs(array(

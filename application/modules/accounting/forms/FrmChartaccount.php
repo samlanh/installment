@@ -127,7 +127,7 @@ Class Accounting_Form_FrmChartaccount extends Zend_Dojo_Form {
 		$opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$Status->setMultiOptions($opt);
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
@@ -135,7 +135,7 @@ Class Accounting_Form_FrmChartaccount extends Zend_Dojo_Form {
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		$_status->setValue($request->getParam("status"));
 		

@@ -15,8 +15,7 @@ class Other_Model_DbTable_DbVillage extends Zend_Db_Table_Abstract
 				'commune_id'	  => $_data['commune_name'],
 				'village_name'	  => $_data['village_name'],
 				'village_namekh'	  => $_data['village_namekh'],
-				//'displayby'	  => $_data['display'],
-				'status'	  => $_data['status'],
+				'status'	  => 1,
 				'modify_date' => Zend_Date::now(),
 				'user_id'	  => $this->getUserId()
 		);

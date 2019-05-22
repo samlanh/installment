@@ -168,7 +168,7 @@ Class Loan_Form_FrmTransferCoClient extends Zend_Dojo_Form {
 		}
 		$user_id->setMultiOptions($options_from);	
 
-		$_arr = array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DACTIVE"),-1=>$this->tr->translate("ALL"));
+		$_arr = array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DEACTIVE"),-1=>$this->tr->translate("ALL"));
 		$_status = new Zend_Dojo_Form_Element_FilteringSelect("status");
 		$_status->setMultiOptions($_arr);
 		$_status->setAttribs(array(

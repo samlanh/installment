@@ -74,9 +74,7 @@ class Other_Model_DbTable_DbNews extends Zend_Db_Table_Abstract
     				'user_id'=>$this->getUserId(),
     		);
     		
-    		
     		if (!empty($data['id'])){
-    			
     			if (!empty($name)){
     				$arr['image_feature']= $photo;
     			}

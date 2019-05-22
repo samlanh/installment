@@ -157,7 +157,7 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				'queryExpr'=>'*${0}*',));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		
 		$_desc = new Zend_Dojo_Form_Element_TextBox('desc');

@@ -147,7 +147,7 @@ Class Property_Form_FrmClient extends Zend_Dojo_Form {
 		$_status->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		
 		$_hnamekh = new Zend_Dojo_Form_Element_TextBox('hname_kh');
@@ -190,7 +190,7 @@ Class Property_Form_FrmClient extends Zend_Dojo_Form {
 		$_istatus->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
 		$_istatus_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_istatus->setMultiOptions($_status_opt);
 		
 		$_edesc = new Zend_Dojo_Form_Element_TextBox('edesc');
@@ -402,7 +402,7 @@ Class Property_Form_FrmClient extends Zend_Dojo_Form {
 		$_status->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		
 		$_desc = new Zend_Dojo_Form_Element_TextBox('desc');

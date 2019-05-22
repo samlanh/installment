@@ -34,7 +34,7 @@ Class Project_Form_FrmPropertiestype extends Zend_Dojo_Form {
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status_search->setMultiOptions($_status_opt);
 		$_status_search->setValue($request->getParam("status_search"));
 		
@@ -66,7 +66,7 @@ Class Project_Form_FrmPropertiestype extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				));
-		$options= array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DACTIVE"));
+		$options= array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DEACTIVE"));
 		$status->setMultiOptions($options);
 		
 		$property_type_nameen=new Zend_Dojo_Form_Element_ValidationTextBox('type_nameen');

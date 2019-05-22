@@ -30,7 +30,7 @@ Class Other_Form_FrmDistrict extends Zend_Dojo_Form {
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status_search->setMultiOptions($_status_opt);
 		$_status_search->setValue($request->getParam("search_status"));
 		
@@ -103,7 +103,7 @@ Class Other_Form_FrmDistrict extends Zend_Dojo_Form {
 		$_provincess->setMultiOptions($opt_province);
 		
 		
-		$_arr = array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DACTIVE"));
+		$_arr = array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DEACTIVE"));
 		$_status = new Zend_Dojo_Form_Element_FilteringSelect("status");
 		$_status->setMultiOptions($_arr);
 		$_status->setAttribs(array(

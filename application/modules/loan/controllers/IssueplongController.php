@@ -18,6 +18,7 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 						'txt_search'=>'',
 						'client_name'=> -1,
 						'branch_id' => -1,
+						'land_id'	=>-1,
 						'status' => -1,
 						'status_plong'=>-1,
 						'start_date'=> date('Y-m-d'),
@@ -40,6 +41,7 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 		$frm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
+		$this->view->rssearch = $search;
   }
   function addAction()
   {

@@ -102,7 +102,7 @@ public function init()
 				'class'=>'fullside',));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		
 		$_discount = new Zend_Dojo_Form_Element_NumberTextBox('discount');

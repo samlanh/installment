@@ -64,7 +64,7 @@ public function init()
 				'class'=>'fullside',
 				'required' =>'true'
 		));
-		$options= array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DACTIVE"));
+		$options= array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($options);
 		
 		if($data!=null){

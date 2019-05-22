@@ -60,7 +60,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		));
 		$options= array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_stutas->setMultiOptions($options);
 		
 		$_Description = new Zend_Dojo_Form_Element_Textarea('Description');
@@ -229,7 +229,7 @@ Class Loan_Form_Frmexpense extends Zend_Dojo_Form {
 		));
 		$options= array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_stutas->setMultiOptions($options);
 	
 		$_Description = new Zend_Dojo_Form_Element_Textarea('Description');

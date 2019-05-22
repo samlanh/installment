@@ -44,7 +44,7 @@ Class Loan_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 		));
 		$options= array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_stutus->setMultiOptions($options);
 	
 		$_Description = new Zend_Dojo_Form_Element_Textarea('description');

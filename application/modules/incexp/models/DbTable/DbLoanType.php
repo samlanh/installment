@@ -10,7 +10,7 @@ class Incexp_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     	$arr = array(
     			'name_en'=>$data['title_en'],
     			'name_kh'=>$data['title_kh'],
-    			'status'=>$data['status'],
+    			'status'=>1,
     			'parent_id'=>$data['parent_id'],
     			'displayby'=>1,
     			'key_code'=>$key_code,
@@ -58,16 +58,13 @@ class Incexp_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     	(SELECT ve.name_kh FROM ln_view AS ve WHERE ve.key_code = v.parent_id AND ve.type = v.type LIMIT 1) AS parent,
     	v.name_en,
     	(SELECT t.name FROM `ln_view_type` AS t WHERE t.id =v.type LIMIT 1) as type ,
-    	v.type as type_id
-    	 ";
-    	
+    	v.type as type_id ";
     	
     	$sql.=$dbp->caseStatusShowImage("v.status");
     	$sql.=" FROM $this->_name AS v WHERE (v.type=12 OR v.type=13) AND v.`parent_id` = $parent ";
     	
     	if($type!=null){
     		$sql.=" AND v.type = $type";
-    		
     	}
     	$Other=" ORDER BY v.type DESC, v.id desc ";
     	$where = '';

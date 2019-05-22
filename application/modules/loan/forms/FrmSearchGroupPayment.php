@@ -90,7 +90,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$status->setMultiOptions($_status_opt);
 		$status->setValue($request->getParam("status"));
 		

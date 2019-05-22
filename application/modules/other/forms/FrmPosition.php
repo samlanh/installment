@@ -30,7 +30,7 @@ Class Other_Form_FrmPosition extends Zend_Dojo_Form {
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status_search->setMultiOptions($_status_opt);
 		$_status_search->setValue($request->getParam("status"));
 		
@@ -50,7 +50,7 @@ Class Other_Form_FrmPosition extends Zend_Dojo_Form {
 		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DACTIVE"));
+				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		
 		$_display=  new Zend_Dojo_Form_Element_FilteringSelect('display');

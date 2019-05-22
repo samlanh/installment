@@ -14,7 +14,6 @@ var district_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json:
 var commune_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 
 dojo.ready(function(){
-	
 	new dijit.form.FilteringSelect({
 	store: district_store,
 	autoComplete: false,
@@ -33,7 +32,6 @@ dojo.ready(function(){
 			}
 	    }
 	}, "district_name");
-
 	 
 	new dijit.form.FilteringSelect({
 	store:commune_store,
@@ -52,8 +50,6 @@ dojo.ready(function(){
 			}
   }
 	}, "commune_name");
-
-	
 });
 
 url_getdistrict = '<?php echo $this->url(array('module'=>'other','controller'=>'district','action'=>'get-district'));?>';
@@ -72,7 +68,7 @@ function filterDistrict(){
 		    dijit.byId('district_name').set('store', district_store);
 		},
 		error: function(err) {
-			alert(err);
+			
 		}
 	});	
 }
@@ -92,7 +88,6 @@ function filterCommune(){
 		    dijit.byId('commune_name').set('store', commune_store);
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
@@ -161,16 +156,8 @@ function filterCommune(){
 	                    	<input id="commune_name" >
 	                   </div>
 	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $commune->getElement("status");?>
-	                   </div>
-	                </div>
 	                <div class="clearfix"></div>
                		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-		    			<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
 						<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
 							iconClass="dijitEditorIcon dijitEditorIconSave" />
 						<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
@@ -178,14 +165,12 @@ function filterCommune(){
 	    			</div>
 	            </div>
 	        </div>
-	        
 		</form>
 	</div>
 </div>
-
 <?php 
-echo $this->frm_popup_district;
-echo $this->frm_popup_comm;
+	echo $this->frm_popup_district;
+	echo $this->frm_popup_comm;
 ?>
 <script>
 function showPopupdistrict(){
@@ -216,7 +201,7 @@ function addNewDistrict(){
 				dijit.byId('frm_district').hide();
 			},
 			error: function(err) {
-				alert(err);
+				
 			}
 		});	
 	}
@@ -240,7 +225,6 @@ function addNewCommune(){
 				dijit.byId('frm_commune').hide();
 			},
 			error: function(err) {
-				alert(err);
 			}
 		});
 	}
