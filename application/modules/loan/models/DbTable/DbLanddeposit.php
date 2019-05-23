@@ -848,13 +848,13 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		}else if ($_data['payment_method']==3){
     			$payment_method = "សែក";
     		}
-    		$stringold.="Price Before : ".$_data['price_before']."<br />";
+    		$stringold.="Price Before : ".$rowsale['price_before']."<br />";
     		$stringold.="Discount Amount : ".$_data['discount']." And Disount Percent : ".$_data['discount_percent']."<br />";
     		$stringold.="Price Sold : ".$_data['sold_price']."<br />";
     		$stringold.="Deposit : ".$_data['deposit']."<br />";
     		$stringold.="Second Deposit : ".$_data['second_depostit']."<br />";
     		$stringold.="Balance : ".$_data['balance']."<br />";
-    		$stringold.="Interest rate : ".$_data['interest_rate']."<br />";
+    		$stringold.="Interest rate : ".$rowsale['interest_rate']."<br />";
     		$stringold.="Buy Date : ".date("Y-M-d",strtotime($_data['date_buy']))."<br />";
     		$stringold.="Agreement Date : ".date("Y-M-d",strtotime($_data['agreement_date']))."<br />";
     		$stringold.="Start Date : ".date("Y-M-d",strtotime($_data['date_buy']))."<br />";

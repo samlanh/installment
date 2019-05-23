@@ -90,6 +90,21 @@ col=0;no=0;
 title=0;
 temp='';
 function addRow(){
+	loan_number=dijit.byId("loan_number").get("value");
+	if(loan_number=='' || loan_number==-1){
+		return false;
+	}
+	var iden = $("#identity").val();
+	var arrays = iden.split(',');
+	 if(arrays!=""){
+		 for(var i=0;i< arrays.length;i++){
+			 readychoose = dijit.byId('sale_id'+arrays[i]).get('value');
+			 if(readychoose==loan_number){
+				 alert("<?php echo $tr->translate("Choosen ready")?>");
+				 return false;
+			 }
+		}
+	}
 	temp='';
 	col++;no++;
 	template='';
