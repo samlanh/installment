@@ -6,7 +6,6 @@
 	$autocalcualte = $this->data['autocalcualte_period'];
 	$this->headTitle($tr->translate('REPAYMENTSCHEDULE'));
 	echo $this->headTitle();
-	$percentage = 1;
 	
 	$urlsubmit = array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add');
 	if (!empty($this->rightclick)){
@@ -59,6 +58,14 @@
            		
 			if(schedule_opt==6 || schedule_opt==5){ 
 				identity = $("#identity").val(); 
+				var rowIDArray = rowId.split(',');
+				period =  dijit.byId('period').get('value');
+				if(rowIDArray.length!=period){
+					alert("Duration and records must be equal!");
+					dijit.byId('period').focus();
+					return false;
+				}
+
 				if(identity==''){ 
 					alert("សូមបញ្ចូលប្រាក់ដែលអតិថិជននឹងត្រូវបង់!");
 					addRow(); return false;
@@ -137,7 +144,7 @@
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CUSTOMER_NAME");?> <span class="required">*</span> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="member" /> <?php //echo $frm->getElement('member');?>
+	                    	<input id="member" />
 							<input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with" type="hidden">
 							<input dojoType="dijit.form.TextBox" class="fullside" id="client_phone" name="client_phone"  type="hidden">
 							<input dojoType="dijit.form.TextBox" class="fullside" id="customer_code" name="customer_code" type="hidden">
@@ -170,7 +177,6 @@
 	                    	<?php echo $frm->getElement('agreement_date');?>
 	                   </div>
 	                </div>
-	                
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BUILD_PERIOD");?> :
 	                   </label>
@@ -185,7 +191,6 @@
 	                    	<?php echo $frm->getElement('start_building');?>
 	                   </div>
 	                </div>
-					
 	            </div>
 	            <div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
@@ -315,7 +320,6 @@
 		                   		<?php echo $frm->getElement('fixed_payment');?>
 		                   </div>
 		                </div>
-					
 		                <div class="form-group">
 		                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
 		                  	 <span id="lbl_release"><?php echo $tr->translate("LOAN_RELEASE");?></span>  :
@@ -324,7 +328,6 @@
 		                   		<?php echo $frm->getElement('release_date');?>
 		                   </div>
 		                </div>
-					
 		                <div class="form-group">
 		                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("FIRST_PAYMENT");?>  :
 		                   </label>
@@ -349,14 +352,14 @@
 		                   		<?php echo $frm->getElement('delay_day');?>
 		                   </div>
 		                </div>
-	                
 	            </div>
 	         </div>
 	         
 	         <div class="card-box">
 	             <div class="col-md-8 col-sm-8 col-xs-12">
 					<div class="form-group blog-left-title">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold m-0" for="first-name"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo $tr->translate("SCHEDULE_INSTALLMENT");?> 
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold m-0" for="first-name"><i class="fa fa-calendar" aria-hidden="true"></i>
+	                   		<?php echo $tr->translate("SCHEDULE_INSTALLMENT");?> 
 	                   </label>
 	                </div>
 	                <div class="form-group">
@@ -369,7 +372,8 @@
 	             </div>
 	             <div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-money" aria-hidden="true"></i> <?php echo $tr->translate("PAYMENT_INFORMATION");?> 
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-money" aria-hidden="true"></i>
+	                   		<?php echo $tr->translate("PAYMENT_INFORMATION");?> 
 	                   </label>
 	                </div>
 	                <div class="form-group">
@@ -379,7 +383,6 @@
 	                    	<?php echo $frm->getElement('receipt');?>
 	                   </div>
 	                </div>
-					
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DAY_PAYMENT");?> :
 	                   </label>
@@ -389,14 +392,16 @@
 	                </div>
 				  
 	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Paid");?> :
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   		<?php echo $tr->translate("RECIEVED_AMOUNT");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('deposit');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Balance");?> :
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   		<?php echo $tr->translate("Balance");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('balance');?>
@@ -404,21 +409,24 @@
 	                </div>
 	                
 	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> :
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   		<?php echo $tr->translate("PAYMENT_TYPE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('payment_method');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CHEQUE");?> :
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   		<?php echo $tr->translate("CHEQUE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('cheque');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+	                   		<?php echo $tr->translate("NOTE");?> :
 	                   </label>
 	                </div>
 	                <div class="form-group">
@@ -1699,6 +1707,14 @@ function addPreviewLoan(){
 					alert("ការរៀបចំតារាងត្រូវបង់មិនទាន់គ្រប់ចំនួនទេ។សូមត្រួតពិនិត្យម្តងទៀត !");	
 					return false;
 				}
+				identity = $("#identity").val(); 
+				var rowIDArray = identity.split(',');
+				period =  dijit.byId('period').get('value');
+				if(rowIDArray.length!=period){
+					alert("Duration and records must be equal!");
+					dijit.byId('period').focus();
+					return false;
+				}
 			}
 			result = checkFirstRecord();
 			if(result==false){return false;}
@@ -1753,7 +1769,6 @@ function addPreviewLoan(){
 			error: function(response, ioArgs) {
 				alert("មិនអាចមើលតារាងបាន");
 				document.getElementsByClassName("overlay")[0].style.display="none";
-				//alert("Failed while doing the operation: " + ioArgs.xhr.response);
 			}
 	   });
 	}

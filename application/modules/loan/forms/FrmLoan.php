@@ -224,13 +224,14 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 		));
 		$paid_date->setValue(date("Y-m-d"));
 		
+		$_date = date("Y-m-d");
 		$_date_buy = new Zend_Dojo_Form_Element_DateTextBox('date_buy');
 		$_date_buy->setAttribs(array(
 			'dojoType'=>'dijit.form.DateTextBox',
 			'required' =>'true',
 			'class'=>'fullside',
 			'onchange'=>'checkReleaseDate();',
-			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+			'constraints'=>"{max:'$_date',datePattern:'dd/MM/yyyy'}",
 		));
 		$_date_buy->setValue(date("Y-m-d"));
 		

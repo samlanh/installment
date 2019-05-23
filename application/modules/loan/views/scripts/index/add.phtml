@@ -54,6 +54,14 @@
 							alert("ការរៀបចំតារាងត្រូវបង់មិនទាន់គ្រប់ចំនួនទេ។សូមត្រួតពិនិត្យម្តងទៀត !");	
 							return false;
 						}
+						identity = $("#identity").val();
+						var rowIDArray = identity.split(',');
+						period =  dijit.byId('period').get('value');
+						if(rowIDArray.length!=period){
+							alert("Duration and records must be equal!");
+							dijit.byId('period').focus();
+							return false;
+						}
 					}
 					if(for_installamount>0 && schedule_opt==6 ){
 						alert("សូមបញ្ចូលប្រាក់ដែលត្រូវបង់ក្នុងតារាងខាងក្រោម អោយគ្រប់ចំនួន នៃតម្លៃ ដី/ផ្ទះ!");
@@ -443,10 +451,7 @@
 			          <!--/.Panel 2-->
 			   </div>
 			</div>
-			
-	    	
 	        <div class="card-box">
-	    		
 	             <div class="col-md-8 col-sm-8 col-xs-12">
 					<div class="form-group blog-left-title">
 	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold m-0" for="first-name"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo $tr->translate("SCHEDULE_INSTALLMENT");?> 
@@ -1649,10 +1654,19 @@ function addPreviewLoan(){
 			identity = $("#identity").val(); 
 			if(identity==''){ 
 				alert("សូមបញ្ចូលប្រាក់ដែលអតិថិជននឹងត្រូវបង់!");
-				addRow(); return false;
+				addRow(); 
+				return false;
 			}
 			if(remain_balance!=0){
 				alert("ការរៀបចំតារាងត្រូវបង់មិនទាន់គ្រប់ចំនួនទេ។សូមត្រួតពិនិត្យម្តងទៀត !");	
+				return false;
+			}
+			identity = $("#identity").val();
+			var rowIDArray = identity.split(',');
+			period =  dijit.byId('period').get('value');
+			if(rowIDArray.length!=period){
+				alert("Duration and records must be equal!");
+				dijit.byId('period').focus();
 				return false;
 			}
 		}

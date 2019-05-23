@@ -42,12 +42,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$payment=array('module'=>'loan','controller'=>'ilpayment','action'=>'add',);
 			$this->view->list=$list->getCheckList(11, $collumns, $rs_rows,array(),0);
 			
-// 			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array(
-// 					'ការលក់'=>$link_editsale,'Sale'=>$link_editsale,
-// 					'agreement'=>$agreement,
-// 					'issue sch'=>$reschedule,'Payment'=>$payment,'បង់ប្រាក់'=>$payment,
-// 					'ចេញតារាង'=>$reschedule,'កិច្ចសន្យា'=>$agreement,'name_kh'=>$link_info,
-// 					'land_address'=>$link_info,'client_number'=>$link_info,'name_en'=>$link_info,'branch_name'=>$link_info,'sale_number'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
