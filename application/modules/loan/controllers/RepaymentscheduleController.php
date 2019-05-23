@@ -36,10 +36,8 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			);
 			$link_info=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'index',);
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array(),0);
-// 			array('branch_name'=>$link_info,'sale_number'=>$link_info,'name_kh'=>$link_info,'land_address'=>$link_info,'total_capital'=>$link_info)
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
-			echo $e->getMessage();exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
 		$frm = new Loan_Form_FrmSearchLoan();

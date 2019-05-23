@@ -1035,8 +1035,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$user_id = $session_user->user_id;
 		$usertype="";
 		
-		$fiveStarReciept=2;
-		if ($fiveStarReciept==1){
+		$reciept_type=2;
+		if ($reciept_type==1){//for 5star
 			$str='
 				<style>
 					span.postingdate {
@@ -1126,6 +1126,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					
 				</div>
 				<span class="postingdate">Posting Date: <span id=lblpaid_date></span></span>
+				<input type="text" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
 				<span id="lb_receipt"></span>
 				<span id="lb_customer"></span>
 				<span id="lb_customercode"></span>
@@ -1140,7 +1141,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<span id="lbl_usersale">'.$last_name." ".$username.'</span>
 			</div>
 			';
-		}elseif ($fiveStarReciept==2){
+		}elseif ($reciept_type==2){//for phnom mease
 			$watermark = "background:url('$baseurl/images/phnommeaswatermark.jpg')";
 			$key = new Application_Model_DbTable_DbKeycode();
 			$data=$key->getKeyCodeMiniInv(TRUE);
@@ -1381,12 +1382,11 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			</div>
 			
 			<div style="display: none;">
-				
-				
-			<span id="lable_chartotalreceipt"></span>
-			<span id="lblpaid_date"></span>
-			<span id="lb_descriptionall"></span>
-			<span id="lb_customercode"></span>
+				<input type="text" dojoType="dijit.form.TextBox" value="1" name="is_showinstallment" id="is_showinstallment" />
+				<span id="lable_chartotalreceipt"></span>
+				<span id="lblpaid_date"></span>
+				<span id="lb_descriptionall"></span>
+				<span id="lb_customercode"></span>	
 			</div>
 			</div>';
 			/*<tr style="font-size: 11px;">
@@ -1407,7 +1407,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			//<div id="printfooter" style="padding-top:20px;">
 	        		//'.$data["tel-client"].'
 	        	//</div>
-		}else{
+		}else{// default
 		$str='
 		<div >
 			<style>
@@ -1625,6 +1625,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</tr>
 			</table>
 			<div style="display: none;">
+				<input type="text" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
 				<label id="lbl_phone" class="value"></label>
 				<label id="lbl_pricelabel" class="value" ></label>
 				<span id="lable_chartotalreceipt"></span>

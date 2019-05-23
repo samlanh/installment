@@ -6,9 +6,10 @@
 	.hover:hover{background: #ccc;}
 	img.view{height: 70px !important;}
 </style>
-<?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$dbuser = new Application_Model_DbTable_DbUsers();
-$usertype="";
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$dbuser = new Application_Model_DbTable_DbUsers();
+	$usertype="";
 ?>
 <title><?php echo $tr->translate("RECEIPT");?></title>
  <style>
@@ -93,7 +94,6 @@ function printSave(){
 	dojo.byId("lbl_customer").innerHTML = '<?php echo $this->rs['name_kh'];echo (empty($this->rs['hname_kh'])?"":"/".$this->rs['hname_kh']); ?>';
 	dojo.byId("lbl_usersale").innerHTML = "<?php echo $this->rs['by_user'].$usertype;?>";
 
-	
 	dojo.byId("lb_customercode").innerHTML = "<?php echo $this->rs['client_number'];?>";
 	a ='<?php echo ($this->rs['recieve_amount']) ?>';
 	money_khmer=read_money_in_english(a);
@@ -121,5 +121,11 @@ function printSave(){
 	if(last_number_sold<=0){last_number_sold='';}
 	money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
 	dojo.byId('lbl_pricelabel').innerHTML=money_khmersold+" ដុល្លារអាមេរិក";
+
+	is_showinstallment = dijit.byId('is_showinstallment').get('value');
+	schedule_opt = '<?php echo $this->rs['payment_option'];?>';
+	if(is_showinstallment==1 && schedule_opt!=4){
+		dojo.byId("lb_amount").innerHTML = "$ 0.00";
+	}
 }
 </script>
