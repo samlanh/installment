@@ -1761,6 +1761,9 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						font-size: 11px;
 						margin-top: -5px;
 					}
+					small {
+				   		 font-size: 11px;
+					}
 				</style>
 				<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 					<tr>
@@ -1787,57 +1790,57 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						</td>
 					</tr>
 					<tr >
-						<td>ឈ្មោះអ្នកវិនិយោគ </td>
+						<td>ឈ្មោះអ្នកវិនិយោគ <br /><small>Investor Name</small></td>
 						<td><strong><label id="lb_customer" class="value"></label></strong></td>
-						<td>&nbsp;&nbsp;ចំនួនទឹកប្រាក់វិនិយោគ</td>
+						<td>&nbsp;&nbsp;ចំនួនទឹកប្រាក់វិនិយោគ<br />&nbsp;&nbsp;<small>Amount Investment</small></td>
 						<td><strong><label id="lb_amount" class="value"></label></strong></td>
-						<td>&nbsp;ដកលើកទី</td>
+						<td>&nbsp;ដកលើកទី<br />&nbsp;<small>Time(s)</small></td>
 						<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
 					</tr>
 					<tr >
-						<td>លេខវិនិយោគ</td>
+						<td>លេខវិនិយោគ<br /><small>Investment No</small></td>
 						<td><strong><label class="value"><span id="lb_hourseno"></span></label></strong></td>
-						<td>&nbsp;&nbsp;ប្រាក់ត្រូវទូទាត់</td>
+						<td>&nbsp;&nbsp;ប្រាក់ត្រូវទូទាត់<br />&nbsp;&nbsp;<small>Amount Return</small></td>
 						<td colspan="3"><strong><label id="lb_interest" class="value">0.00</label></strong></td>
 					</tr>
 					<tr >
-						<td>ថ្ងៃត្រូវទូទាត់</td>
+						<td>ថ្ងៃត្រូវទូទាត់<br /><small>Date Payment</small></td>
 						<td valign="top">
 							<table width="100%" cellpadding="0" cellspacing="0">
 								<tr>
 									<td width="33.5%" style="white-space: nowrap;"><strong><label id="lb_buydate1" class="value"></label></strong></td>
-									<td width="33%" style="white-space: nowrap;">ថ្ងៃបានទូទាត់</td>
+									<td width="33%" style="white-space: nowrap;">ថ្ងៃបានទូទាត់<br /><small>Date Paid</small></td>
 									<td width="33.5%"><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
 								</tr>
 							</table>
 						</td>
-						<td>&nbsp;&nbsp;សរុបប្រាក់ត្រូវទូទាត់</td>
+						<td>&nbsp;&nbsp;សរុបប្រាក់ត្រូវទូទាត់<br />&nbsp;&nbsp;<small>Total Amount Return</small></td>
 						<td colspan="3"><strong><label id="lbl_totalpayment" class="value"></label></strong></td>
 					</tr>
 					<tr>
-						<td rowspan="2">សម្គាល់</td>
+						<td rowspan="2">សម្គាល់<br /><small>Note</small></td>
 						<td rowspan="2" class="noted" valign="top"><label id="lb_noted"></label></td>
-						<td>&nbsp;&nbsp;ប្រាក់បានទូទាត់</td>
+						<td>&nbsp;&nbsp;ប្រាក់បានទូទាត់<br />&nbsp;&nbsp;<small>Total Paid</small></td>
 						<td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;" id="lbl_total_receive"></label></strong></td>
 					</tr>
 					<tr >
-						<td>&nbsp;&nbsp;ប្រភេទ</td>
+						<td>&nbsp;&nbsp;ប្រភេទ<br /><small>Paid Type</small></td>
 						<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
-						<td>&nbsp;&nbsp;លេខ</td>
+						<td>&nbsp;&nbsp;លេខ<br />&nbsp;&nbsp;<small>code</small></td>
 						<td><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
 					</tr>
 					<tr >
 						<td colspan="6" valign="top">
 							<table class="signature-table" width="100%" border="0">
 								<tr>
-									<td width="30%">&nbsp;
-									'.$data['account_sign'].'
+									<td width="30%" align="center">&nbsp;
+									'.$data['account_sign'].'<br />Accountant Sign
 									</td>
 									<td align="center" width="40%">
-									ស្នាមមេដៃអ្នកវិនិយោគ
+									ស្នាមមេដៃអ្នកវិនិយោគ<br />Investor Sign
 									</td>
 									<td align="center" width="30%">
-									'.$data['teller_sign'].'
+									'.$data['teller_sign'].'<br />Receiver Sign
 									</td>
 								</tr>
 								<tr height="85px">
@@ -1977,6 +1980,9 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				font-size: 11px;
 				margin-top: -5px;
 			}
+			small {
+				   		 font-size: 11px;
+					}
 		</style>
 		<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 			<tr>
@@ -2003,41 +2009,41 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</td>
 			</tr>
 			<tr >
-				<td>ឈ្មោះឈ្មួញកណ្ដាល </td>
+				<td>ឈ្មោះភ្នាក់ងារ <br /><small>Broker Name</small></td>
 				<td><strong><label id="lb_customer" class="value"></label></strong></td>
-				<td>&nbsp;&nbsp;ដកលើកទី</td>
+				<td>&nbsp;&nbsp;ដកលើកទី<br />&nbsp;&nbsp;<small>Time(s)</small></td>
 				<td colspan="3"><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
 			</tr>
 			<tr >
-				<td>លេខវិនិយោគ</td>
+				<td>លេខវិនិយោគ<br /><small>Investment No</small></td>
 				<td><strong><label class="value"><span id="lb_hourseno"></span></label></strong></td>
-				<td>&nbsp;&nbsp;ប្រាក់ត្រូវទូទាត់</td>
+				<td>&nbsp;&nbsp;ប្រាក់ត្រូវទូទាត់<br />&nbsp;&nbsp;<small>Amount Return</small></td>
 				<td colspan="3"><strong><label id="lb_interest" class="value">0.00</label></strong></td>
 			</tr>
 			<tr >
-				<td>ថ្ងៃត្រូវទូទាត់</td>
+				<td>ថ្ងៃត្រូវទូទាត់<br /><small>Date Payment</small></td>
 				<td valign="top">
 					<table width="100%" cellpadding="0" cellspacing="0">
 						<tr>
 							<td width="33.5%" style="white-space: nowrap;"><strong><label id="lb_buydate1" class="value"></label></strong></td>
-							<td width="33%" style="white-space: nowrap;">ថ្ងៃបានទូទាត់</td>
+							<td width="33%" style="white-space: nowrap;">ថ្ងៃបានទូទាត់<br /><small>Date Paid</small></td>
 							<td width="33.5%"><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
 						</tr>
 					</table>
 				</td>
-				<td>&nbsp;&nbsp;សរុបប្រាក់ត្រូវទូទាត់</td>
+				<td>&nbsp;&nbsp;សរុបប្រាក់ត្រូវទូទាត់<br /><small>&nbsp;&nbsp;Total Amount Return</small></td>
 				<td colspan="3"><strong><label id="lbl_totalpayment" class="value"></label></strong></td>
 			</tr>
 			<tr>
-				<td rowspan="2">សម្គាល់</td>
+				<td rowspan="2">សម្គាល់<br /><small>Note</small></td>
 				<td rowspan="2" class="noted" valign="top"><label id="lb_noted"></label></td>
-				<td>&nbsp;&nbsp;ប្រាក់បានទូទាត់</td>
+				<td>&nbsp;&nbsp;ប្រាក់បានទូទាត់<br /><small>&nbsp;&nbsp;Total Paid</small></td>
 				<td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;" id="lbl_total_receive"></label></strong></td>
 			</tr>
 			<tr >
-				<td>&nbsp;&nbsp;ប្រភេទ</td>
+				<td>&nbsp;&nbsp;ប្រភេទ<br /><small>&nbsp;&nbsp;Paid Type</small></td>
 				<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
-				<td>&nbsp;&nbsp;លេខ</td>
+				<td>&nbsp;&nbsp;លេខ<br /><small>&nbsp;&nbsp;Code</small></td>
 				<td><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
 			</tr>
 			<tr >
@@ -2045,13 +2051,13 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<table class="signature-table" width="100%" border="0">
 					<tr>
 						<td width="30%">&nbsp;
-						'.$data['account_sign'].'
+						'.$data['account_sign'].'<br />Accountant Sign
 						</td>
 						<td align="center" width="40%">
-						ស្នាមមេដៃឈ្មួញកណ្ដាល
+						ស្នាមមេដៃភ្នាក់ងារ<br />Broker Sign
 						</td>
 						<td align="center" width="30%">
-						'.$data['teller_sign'].'
+						'.$data['teller_sign'].'<br />Receiver Sign
 						</td>
 					</tr>
 					<tr height="85px">

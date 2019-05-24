@@ -97,7 +97,7 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     					$this->_name="ln_processing_plong_detail";
     					$this->insert($arr_detail);
     				}
-    				if ($data['process_status']==5){
+    				if ($data['process_status']==7){
     					$this->_name="ln_issueplong";
     					$arrissuepl = array(
     							'sale_id'=>$data['sale_id'.$i],
@@ -226,7 +226,7 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     			$where=" id = ".$data['id'];
     			$id = $this->update($arr, $where);
     			
-    			if ($data['process_status']==5){
+    			if ($data['process_status']==7){
     				$rs = $this->getPlogStepById($data['id']);
     				if (!empty($rs)){
 	    				$this->_name="ln_issueplong";
