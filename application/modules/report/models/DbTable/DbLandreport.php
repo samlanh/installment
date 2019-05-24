@@ -2389,7 +2389,11 @@ function updatePaymentStatus($data){
 	   		$where.=" AND client_id = ".$search['client_name'];
 	   }
 	   if($search['schedule_opt']>0){
-	   		$where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
+	   		if ($search['schedule_opt']==2 OR $search['schedule_opt']==6){
+	   			$where.=" AND v_soldreport.payment_id IN (2,6) ";
+	   		}else{
+	   			$where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
+	   		}
 	   }
 	   if($search['sale_status']>0){
 	   		if($search['sale_status']==1){//full paid
@@ -2400,6 +2404,7 @@ function updatePaymentStatus($data){
 	   		}
 	   }
 	   $order = " ORDER BY is_cancel ASC,payment_id DESC ";
+	 
 	   return $db->fetchAll($sql.$where.$order);
    }
    

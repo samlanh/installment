@@ -171,6 +171,7 @@
 								<?php $total = $total +$row['total_amount'];?>
 							<?php }?>
 					    </table>
+					   <?php if(!empty($this->rscomisison)){?>
 					    កម្រៃជើងសា
 					    <table  class="content-data"  width="100%" border="1"  bordercolor="black">  
 				    		<thead>
@@ -192,7 +193,7 @@
 				       <?php  
 				       	$key=0; 
 						$record = $key;
-						if(!empty($this->rscomisison))foreach($this->rscomisison as $key => $rscom){?>
+						foreach($this->rscomisison as $key => $rscom){?>
 						<?php 
 							$total = $total +$rscom['total_amount'];
 						?>
@@ -207,8 +208,13 @@
 							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
 							 <td align="center">&nbsp;<?php echo $rscom['user_name'];?></td>
 						</tr>
-						<?php } ?>
+						<?php }
+						}
+						?>
 				    </table>
+				  	<?php 
+		            	if (!empty($this->houserepair)){
+		            ?> 
 				  	 ចំណាយពីការកែផ្ទះ
 				  	  <table  class="content-data" border="1" width="100%"  >
 					  	  <thead>  
@@ -227,9 +233,6 @@
 							    <td><?php echo $tr->translate("BY_USER");?></td>
 							</tr>
 						</thead>
-						<?php 
-			            	if (!empty($this->houserepair)){
-			            ?>
 			            <?php foreach ($this->houserepair as $index => $rs){?>
 				   		<tr class=" stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
 		               		<td style="text-align: center;">&nbsp;<?php echo $index+1; ?>&nbsp;</td>
