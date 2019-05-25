@@ -39,13 +39,17 @@ public function init()
 		));
 		$options_pro= array(
 				0=>$this->tr->translate("PLEASE_SELECT"),
-				1=>$this->tr->translate("1.HQ-P"),
-				2=>$this->tr->translate("2.P-HQ"),
-				3=>$this->tr->translate("3.HQ-T"),
-				4=>$this->tr->translate("4.T-HQ"),
-				5=>$this->tr->translate("5.HQ-P"),
-				6=>$this->tr->translate("6.P-HQ"),
-				7=>$this->tr->translate("7.HQ-C"),
+				1=>$this->tr->translate("1.ការិយាល័យ - សាលាស្រុក"),
+				2=>$this->tr->translate("2.ការិយាល័យ - ពន្ធដា"),
+				3=>$this->tr->translate("3.ការិយាល័យ - សាលាស្រុក"),
+				4=>$this->tr->translate("4.ការិយាល័យ - អតិថិជន"),
+// 				1=>$this->tr->translate("1.HQ-P"),
+// 				2=>$this->tr->translate("2.P-HQ"),
+// 				3=>$this->tr->translate("3.HQ-T"),
+// 				4=>$this->tr->translate("4.T-HQ"),
+// 				5=>$this->tr->translate("5.HQ-P"),
+// 				6=>$this->tr->translate("6.P-HQ"),
+// 				7=>$this->tr->translate("7.HQ-C"),
 				);
 		$_process_status->setMultiOptions($options_pro);
 		$_process_status->setValue($request->getParam("process_status"));
