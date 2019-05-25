@@ -114,7 +114,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	(SELECT date_input  FROM `ln_client_receipt_money` 
     		WHERE ln_client_receipt_money.receipt_no=s.receipt_no LIMIT 1) AS date_input,
     		
-    	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id=s.house_id) AS old_land_id 
+    	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id=s.house_id) AS old_land_id,
+    	(SELECT CASE WHEN p.old_land_id  IS NULL THEN p.id ELSE p.old_land_id 	END  FROM `ln_properties` AS p WHERE p.id=s.house_id) AS all_land_id  
     		FROM `ln_sale` AS s
 				WHERE s.id = ".$id;
     	$where="";

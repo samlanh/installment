@@ -436,17 +436,28 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$dbl = new Loan_Model_DbTable_DbLandpayment();
     		$row = $dbl->getTranLoanByIdWithBranch($data['id'],null);
     		if(!empty($row)){
-    			if($row['typesale']==2){//multi sale
-    				$ids = explode(',', $row['old_land_id']);
-    				if (!empty($row['old_land_id'])){
-	    				foreach($ids as $land){
-	    					$this->_name="ln_properties";
-	    					$arr = array(
-	    							"is_lock"=>0
-	    					);
-	    					$where = "id =".$land;
-	    					$this->update($arr, $where);
-	    				}
+//     			if($row['typesale']==2){//multi sale
+//     				$ids = explode(',', $row['old_land_id']);
+//     				if (!empty($row['old_land_id'])){
+// 	    				foreach($ids as $land){
+// 	    					$this->_name="ln_properties";
+// 	    					$arr = array(
+// 	    							"is_lock"=>0
+// 	    					);
+// 	    					$where = "id =".$land;
+// 	    					$this->update($arr, $where);
+// 	    				}
+//     				}
+//     			}
+    			$ids = explode(',', $row['all_land_id']);
+    			if (!empty($row['all_land_id'])){
+    				foreach($ids as $land){
+    					$this->_name="ln_properties";
+    					$arr = array(
+    							"is_lock"=>0
+    					);
+    					$where = "id =".$land;
+    					$this->update($arr, $where);
     				}
     			}
     		}
