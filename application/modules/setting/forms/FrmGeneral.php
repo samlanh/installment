@@ -231,14 +231,14 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 		
 		$_penalty_value = new Zend_Dojo_Form_Element_NumberTextBox('penalty_value');
 		$_penalty_value->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'onKeyup'=>'CheckPenalty();',
 		));
 		
 		$_graice_pariod_late = new Zend_Dojo_Form_Element_NumberTextBox('graice_pariod_late');
 		$_graice_pariod_late->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'onKeyup'=>'CheckPenalty();',
 		));
