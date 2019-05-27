@@ -63,6 +63,10 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$search['start_date'] = date('Y-m-d');
     	$search['end_date']= date('Y-m-d');
     	$sql = "SELECT *,
+    	SUM(principal_permonthafter) AS principal_permonthafter,
+SUM(total_interest_after) AS total_interest_after,
+SUM(service_charge) AS service_charge,
+COUNT(id) AS amount_late,
 				(SELECT(c.phone) FROM `ln_client` c WHERE c.client_id =v_newloancolect.client_id LIMIT 1) AS phone
     		FROM v_newloancolect WHERE last_optiontype=1 ";
     	$where ='';
@@ -70,7 +74,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
     	$where= " AND ".$from_date." AND ".$to_date;
     	$where.= " AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_newloancolect.id LIMIT 1  )=0";
-    	$order=" ORDER BY date_payment DESC";
+    	$order=" GROUP BY sale_id ORDER BY date_payment DESC ,sale_id ASC, id ASC";
     	return $db->fetchAll($sql.$where.$order);
     }
     function getCustomerNearAgreement(){

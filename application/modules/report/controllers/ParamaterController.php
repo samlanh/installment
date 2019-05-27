@@ -732,4 +732,32 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		Application_Form_FrmMessage::Sucessfull("Closing Entry Success", "/report/paramater/rpt-closingexpense");
   	}
   }
+  
+  function rptSaleCommissionAction(){
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+  				'land_id'=>0,
+  				'start_date'  => date('Y-m-d'),
+  				'end_date'    => date('Y-m-d'),
+  				'txtsearch' => '',
+  				'branch_id'=>-1,
+  				'co_khname'=>-1,
+  				'commission_type'=>'',
+  				'search_status'=>-1);
+  	}
+  	$this->view->search =$search;
+  	$row = $db->getSaleCommission($search);
+  	$this->view->row = $row;
+  	 
+  	$frm=new Other_Form_FrmStaff();
+  	$row=$frm->FrmAddStaff();
+  	Application_Model_Decorator::removeAllDecorator($row);
+  	$this->view->frm_staff=$row;
+  	 
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
+  }
 }
