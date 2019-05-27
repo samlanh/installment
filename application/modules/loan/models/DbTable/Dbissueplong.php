@@ -138,13 +138,7 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
     		}catch (Exception $e){
     			$db->rollBack();
     			$err =$e->getMessage();
-//     			echo $err;exit();
     			Application_Model_DbTable_DbUserLog::writeMessageError($err);
     		}
     }
-//     function getTransferProject($id){
-//     	$sql=" select * from ln_change_project where id= $id limit 1";
-//     	$db = $this->getAdapter();
-//     	return $db->fetchRow($sql);
-//     }
 }

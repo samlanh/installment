@@ -775,7 +775,7 @@ function getLoanByBranch(){
 			dijit.byId('sale_code').attr('value',data);
 		},
 		error: function(err) {
-			//alert(err);
+			//
 		}
 	});
 }
@@ -925,7 +925,6 @@ require(["dojo/ready"], function(ready){
 			getInfoByLoanNumber();
 	    }
 		}, "loan_number");
-
 	});
 </script>
 <script type="text/javascript">
@@ -943,7 +942,7 @@ function getcustomerinfo(client_id){
 			dijit.byId('client_phone').attr('value',data.phone);
 		},
 		error: function(err) {
-			alert(err);
+			
 		}
 	});
 }
@@ -1009,7 +1008,6 @@ function getInfoByLoanNumber(){
 			discount_percent = parseFloat(data.discount_percent)*parseFloat(price_before)/100;
 			balance_before = parseFloat(price_before)-parseFloat(paid_amount)-parseFloat(discount_percent);
 			
-			//dijit.byId('balance_before').attr('value',balance_before);
 			dijit.byId('balance_before').attr('value',data.price_sold-paid_amount);
 			if(data.payment_id==1){
 				dijit.byId('sold_price').attr('value',data.price_sold);//ok
@@ -1017,14 +1015,11 @@ function getInfoByLoanNumber(){
 				dijit.byId('sold_price').attr('value',data.price_sold-data.paid_amount);
 			}
 			dijit.byId('old_paymentmethod').attr('value',data.payment_id);
-			//alert(data.payment_id);
 			
 			dijit.byId('house_price').attr('value',parseFloat(data.price_sold));
-			//dijit.byId('house_price').attr('value',parseFloat(data.paid_amount)+parseFloat(balance_before));
-			
 		},
 		error: function(err) {
-			alert(err);
+			
 		}
 	});
 }
@@ -1076,7 +1071,7 @@ function getlandinfo(){
 			
 		},
 		error: function(err) {
-			alert(err);
+			
 		}
 	});
 }
@@ -1146,10 +1141,19 @@ function checkFirstRecord(){
 	if(rowId!=''){
 		var rowIDArray = rowId.split(',');
 		for(var n = 0; n < rowIDArray.length; n++) {
-			total_amountpayment = (dijit.byId('total_payment'+rowIDArray[n]).get('value'));
+			total_amountpayment = parseFloat(dijit.byId('total_payment'+rowIDArray[n]).get('value'));
+			//alert('N+'+n);
 			if(n==0){ 
-				paid = dijit.byId('deposit').get('value');
-				if(total_amountpayment<paid){alert("សូមបញ្ជូលប្រាក់ត្រូវបង់ ធំជាងប្រាក់ដែលទទួលបាន! ");dijit.byId('percent'+rowIDArray[n]).focus();return false;}
+					paid = parseFloat(dijit.byId('deposit').get('value'));
+					//alert(total_amountpayment);
+					//alert(paid+'paid');
+					if(total_amountpayment<paid){
+						alert("សូមបញ្ជូលប្រាក់ត្រូវបង់ ធំជាងប្រាក់ដែលទទួលបាន! ");
+						dijit.byId('percent'+rowIDArray[n]).focus();
+						return false;
+					}else{
+						//alert("return true");
+					}
 			}
 		}
   }
@@ -1157,6 +1161,7 @@ function checkFirstRecord(){
 col=0;no=0;title=0;temp='';
 var steppayoption = '<?php echo $this->stepoption;?>';
 function addRow(){
+	
 	result = checkFirstRecord();
 	if(result==false){return false;}
 	payment_method = dijit.byId('schedule_opt').get('value');
@@ -1642,10 +1647,8 @@ function getReceiptByBranch(condition){
 			if(condition==1){
 				printSave(data);
 			}
-	
 		},
 		error: function(err) {
-			//alert(err);
 		}
 	});
 }
@@ -1664,7 +1667,6 @@ function getDepositTimes(){
 			return "កក់លើក "+data;
 		},
 		error: function(err) {
-			alert(err+"error here");
 		}
 	});
 }
@@ -1717,6 +1719,8 @@ function addPreviewLoan(){
 				}
 			}
 			result = checkFirstRecord();
+			
+			return false;
 			if(result==false){return false;}
 			loading();
 		dojo.xhrPost({
