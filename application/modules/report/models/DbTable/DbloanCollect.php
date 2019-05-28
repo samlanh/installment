@@ -63,10 +63,10 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$search['start_date'] = date('Y-m-d');
     	$search['end_date']= date('Y-m-d');
     	$sql = "SELECT *,
-    	SUM(principal_permonthafter) AS principal_permonthafter,
-SUM(total_interest_after) AS total_interest_after,
-SUM(service_charge) AS service_charge,
-COUNT(id) AS amount_late,
+    		SUM(principal_permonthafter) AS principal_permonthafter,
+			SUM(total_interest_after) AS total_interest_after,
+			SUM(service_charge) AS service_charge,
+			COUNT(id) AS amount_late,
 				(SELECT(c.phone) FROM `ln_client` c WHERE c.client_id =v_newloancolect.client_id LIMIT 1) AS phone
     		FROM v_newloancolect WHERE last_optiontype=1 ";
     	$where ='';
