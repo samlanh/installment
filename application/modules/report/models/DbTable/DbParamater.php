@@ -1602,6 +1602,9 @@ function getAllBranch($search=null){
     		if(!empty($search['co_khname']) AND $search['co_khname']>0){
     			$where.= " AND c.staff_id = ".$search['co_khname'];
     		}
+    		if(!empty($search['land_id']) AND $search['land_id']>0){
+    			$where.= " AND s.house_id = ".$search['land_id'];
+    		}
     		if(!empty($search['adv_search'])){
     			$s_where = array();
     			$s_search = addslashes(trim($search['adv_search']));
