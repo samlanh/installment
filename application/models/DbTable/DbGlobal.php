@@ -414,15 +414,27 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    public function getReceiptByBranch($data=array('branch_id'=>1,'is_group'=>0)){
    	$this->_name='ln_client_receipt_money';
    	$db = $this->getAdapter();
-   	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 ";
-   	$pre='№ ';
-   	//$pre='N1:'; phnom penh thmey
+   	
+   	//phnom penh thmey
+   	$pre='N1:'; //phnom penh thmey
+   	if ($data['branch_id']>2){
+   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id >2 LIMIT 1 ";
+   	}else{
+   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id <=2 LIMIT 1 ";
+   	}
+   	
+   
+ 
+   	//For General
+	// $sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 "; 
+   	//$pre='№ ';
+   	
    	
    	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+1;
    	$acc_no= strlen((int)$acc_no+1);
-   	for($i = $acc_no;$i<6;$i++){
-//  for($i = $acc_no;$i<4;$i++){//phnom penh thmey
+   	//for($i = $acc_no;$i<6;$i++){
+  	for($i = $acc_no;$i<4;$i++){//phnom penh thmey
    		$pre.='0';
    	}
    	return $pre.$new_acc_no;
