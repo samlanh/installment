@@ -162,6 +162,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			$_currency_type->setValue($data['category_id']);
 			$category_id_expense->setValue($data['category_id']);
 			$_branch_id->setValue($data['branch_id']);
+			$_branch_id->setAttribs(array("readonly"=>true));
 			$title->setValue($data['title']);
 			$total_amount->setValue($data['total_amount']);
 			$_Description->setValue($data['description']);

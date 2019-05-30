@@ -1035,7 +1035,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$user_id = $session_user->user_id;
 		$usertype="";
 		
-		$reciept_type=2;
+		$reciept_type=RECEIPT_TYPE;
+		
 		if ($reciept_type==1){//for 5star
 			$str='
 				<style>
@@ -1126,7 +1127,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					
 				</div>
 				<span class="postingdate">Posting Date: <span id=lblpaid_date></span></span>
-				<input type="text" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
+				<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
 				<span id="lb_receipt"></span>
 				<span id="lb_customer"></span>
 				<span id="lb_customercode"></span>
@@ -1136,7 +1137,6 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<span id="lb_descriptionall"></span>
 				<label id="lbl_phone" class="value"></label>
 				<label id="lbl_pricelabel" class="value" ></label>
-				
 				<span id="lbl_customer"></span>
 				<span id="lbl_usersale">'.$last_name." ".$username.'</span>
 			</div>
@@ -1382,7 +1382,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			</div>
 			
 			<div style="display: none;">
-				<input type="text" dojoType="dijit.form.TextBox" value="1" name="is_showinstallment" id="is_showinstallment" />
+				<input type="hidden" dojoType="dijit.form.TextBox" value="1" name="is_showinstallment" id="is_showinstallment" />
 				<span id="lable_chartotalreceipt"></span>
 				<span id="lblpaid_date"></span>
 				<span id="lb_descriptionall"></span>
@@ -1625,7 +1625,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</tr>
 			</table>
 			<div style="display: none;">
-				<input type="text" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
+				<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
 				<label id="lbl_phone" class="value"></label>
 				<label id="lbl_pricelabel" class="value" ></label>
 				<span id="lable_chartotalreceipt"></span>

@@ -358,7 +358,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
-			//if($_data['old_paymentmethod']){$_data['deposit'] = $_data['deposit']+$_data['paid_before'];}
 			$rows_return=$_dbmodel->addScheduleTestPayment($_data);
 			print_r(Zend_Json::encode($rows_return));
 			exit();

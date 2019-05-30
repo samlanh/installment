@@ -135,7 +135,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$_dateline = new Zend_Dojo_Form_Element_DateTextBox('end_date');
 		$_dateline->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','required'=>'true',
 				'class'=>'fullside',
-				'constraints'=>"{min:'$_date',datePattern:'dd/MM/yyyy'}",
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 		));
 		
 		$_dateline->setValue($_date);

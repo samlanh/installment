@@ -154,15 +154,16 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     						'first_payment'=>$data['first_payment'],
     						'validate_date'=>$data['first_payment'],
     						'end_line'=>$data['date_line'],
-    						'payment_method'=>1,//$data['loan_type'],
+    						'payment_method'=>1,
     						'price_sold'=>$data['sold_price'],
+    						'lastpayment_amount'=>$data['last_payment'],
     						'note'=>$data['note'],
     						'total_installamount'=>$data['total_installamount'],
     						'note_agreement'=>$note_agreement,
     						'user_id'=>$this->getUserId(),
     						'other_fee'=>0,
     						'agreement_date'=>$data['agreement_date'],
-    						//'buy_date'=>$data['agreement_date'],
+    						'lastpayment_amount'=>$data['last_payment'],
     						'build_start'=>$data['start_building'],
     						'amount_build'=>$data['amount_build'],
     						'is_reschedule'=>$is_schedule,
@@ -275,10 +276,10 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    		return 1;
     			}
     		
-    			$arr = array(
+    		$arr = array(
     			'is_reschedule'=>1,
-    			 'create_date'=>date("Y-m-d"),
-    			);
+    			'create_date'=>date("Y-m-d"),
+    		);
     		$this->_name='ln_sale';
     	    $where = "id =".$data["loan_number"];
     		$id = $this->update($arr, $where);//add group loan
@@ -304,8 +305,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				$data['sold_price']= $data['sold_price'];
     				$remain_principal = $data['sold_price'];
     			}else{
-    				$remain_principal = $data['sold_price'];//-$data['paid_before'];
-    				$data['sold_price']= $data['sold_price'];//-$data['paid_before'];
+    				$remain_principal = $data['sold_price'];
+    				$data['sold_price']= $data['sold_price'];
     			}
     		}
     		$next_payment = $data['first_payment'];
@@ -472,8 +473,86 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			   		$key = $key+1;
     			   	}
     			   	break;
+    			   }elseif($payment_method==7){//បង់រំលស់ខ្លះ
+	    			   	$data['sold_price'] = $data['sold_price']-$data['last_payment'];
+	    			   	if($i!=1){
+	    			   		$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
+	    			   		$start_date = $next_payment;
+	    			   		$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+	    			   	}else{
+	    			   		//​​បញ្ចូលចំនូនត្រូវបង់ដំបូងសិន
+	    			   		if(!empty($data['identity'])){
+	    			   			$ids = explode(',', $data['identity']);
+	    			   			$key = 1;
+	    			   			foreach ($ids as $j){
+	    			   				if($key==1){
+	    			   					$old_remain_principal = $data['sold_price'];
+	    			   					$old_pri_permonth = $data['total_payment'.$j];
+	    			   				}else{
+	    			   					$old_remain_principal = $old_remain_principal-$old_pri_permonth;
+	    			   					$old_pri_permonth = $data['total_payment'.$j];
+	    			   				}
+	    			   				$old_interest_paymonth = 0;
+	    			   				 
+	    			   				$cum_interest = $cum_interest+$old_interest_paymonth;
+	    			   				$amount_day = $dbtable->CountDayByDate($from_date,$data['date_payment'.$j]);
+	    			   				 
+	    			   				$this->_name="ln_saleschedule";
+	    			   				$datapayment = array(
+	    			   						'branch_id'=>$data['branch_id'],
+	    			   						'sale_id'=>$id,//good
+	    			   						'begining_balance'=> $old_remain_principal,//good
+	    			   						'begining_balance_after'=> $old_remain_principal,//good
+	    			   						'principal_permonth'=> $data['total_payment'.$j],//good
+	    			   						'principal_permonthafter'=>$old_pri_permonth,//good
+	    			   						'total_interest'=>$old_interest_paymonth,//good
+	    			   						'total_interest_after'=>$old_interest_paymonth,//good
+	    			   						'total_payment'=>$old_interest_paymonth+$old_pri_permonth,//good
+	    			   						'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth,//good
+	    			   						'ending_balance'=>$old_remain_principal-$old_pri_permonth,
+	    			   						'cum_interest'=>$cum_interest,
+	    			   						'amount_day'=>$amount_day,
+	    			   						'is_completed'=>0,
+	    			   						'date_payment'=>$data['date_payment'.$j],
+	    			   						'percent'=>$data['percent'.$j],
+	    			   						'percent_agree'=>$data['percent_agree'.$j],
+	    			   						'ispay_bank'=>$data['pay_with'.$j],
+	    			   						'note'=>$data['remark'.$j],
+	    			   						'is_installment'=>1,
+	    			   						'no_installment'=>$key,
+	    			   				);
+	    			   				$key = $key+1;
+	    			   				$this->insert($datapayment);
+	    			   				$from_date = $data['date_payment'.$j];
+	    			   			}
+	    			   			$j=$key-1;
+	    			   		}
+	    			   
+	    			   		$old_remain_principal=0;
+	    			   		$old_pri_permonth = 0;
+	    			   		$old_interest_paymonth = 0;
+	    			   		if(!empty($data['identity'])){
+	    			   			$remain_principal = $data['sold_price']-$data['total_installamount'];//check here
+	    			   		}
+	    			   		$next_payment = $data['first_payment'];
+	    			   		$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
+	    			   	}
+	    			   	$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
+	    			   	$total_day = $amount_day;
+	    			   	$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
+	    			   	$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
+	    			   	if($data['install_type']==2){//ថយ
+	    			   		$pri_permonth=$data['for_installamount']/($data['period']*$term_types);
+	    			   		$pri_permonth = round($pri_permonth,0);
+	    			   	}else{//ថេរ
+	    			   		$pri_permonth = $data['fixed_payment']-$interest_paymonth;
+	    			   	}
+	    			   	if($i==$loop_payment){//for end of record only
+	    			   		$pri_permonth = $remain_principal;
+	    			   		$paid_receivehouse = $data['paid_receivehouse'];
+	    			   	}
     			   }
-    			   if($payment_method==3 OR $payment_method==4){// រំលស់និងដំណាក់កាលថេរ	
+    			   if($payment_method==3 OR $payment_method==4 OR $payment_method==7){// រំលស់និងដំណាក់កាលថេរ	
     			   	    $old_remain_principal =$old_remain_principal+$remain_principal;
 			    		$old_pri_permonth = $old_pri_permonth+$pri_permonth;
 			    		$old_interest_paymonth = $this->round_up_currency($curr_type,($old_interest_paymonth+$interest_paymonth));
@@ -511,6 +590,36 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    		$from_date=$next_payment;
     			   }
     		  }
+    		  
+    		  if($payment_method==7 AND $data['last_payment']>0){
+	    		  	$this->_name="ln_saleschedule";
+	    		  	$old_remain_principal = $data['last_payment'];
+	    		  	$old_pri_permonth = $old_remain_principal;
+	    		  	$old_interest_paymonth=0;
+	    		  	$old_amount_day=0;
+	    		  	$cum_interest=0;
+	    		  	$datapayment = array(
+	    		  			'branch_id'=>$data['branch_id'],
+	    		  			'sale_id'=>$id,//good
+	    		  			'begining_balance'=> $old_remain_principal,//good
+	    		  			'begining_balance_after'=> $old_remain_principal,//good
+	    		  			'principal_permonth'=> $old_pri_permonth,//good
+	    		  			'principal_permonthafter'=>$old_pri_permonth,//good
+	    		  			'total_interest'=>$old_interest_paymonth,//good
+	    		  			'total_interest_after'=>$old_interest_paymonth,//good
+	    		  			'total_payment'=>$old_pri_permonth+$old_interest_paymonth,//good
+	    		  			'total_payment_after'=>$old_pri_permonth+$old_interest_paymonth,//good
+	    		  			'ending_balance'=>$old_remain_principal-$old_pri_permonth,
+	    		  			'cum_interest'=>$cum_interest,
+	    		  			'amount_day'=>$old_amount_day,
+	    		  			'is_completed'=>0,
+	    		  			'date_payment'=>$next_payment,
+	    		  			'no_installment'=>$i+$j,
+	    		  			'last_optiontype'=>$paid_receivehouse,
+	    		  	);
+	    		  	$this->insert($datapayment);
+    		  }
+    		  
     		  $data['new_deposit'] = $data['deposit'];
     		  $data['deposit'] = $data['deposit']+$data['paid_before'];
     		 

@@ -181,6 +181,10 @@ table.tb-footer tr.style-head {
 	              </thead>
 	               <?php 
 	               $amount_property=0;
+	               $property_deposit = 0;
+	               $property_payoff = 0;
+	               $property_install = 0;
+	               
 	               $link="#";
 	               $payment_1=0;$payment_2=0;$payment_3=0;
 	               
@@ -198,46 +202,63 @@ table.tb-footer tr.style-head {
 	               $total_panelty = 0;
 	               $db  = new Report_Model_DbTable_DbParamater();
 	               $key=0;
-	               if(!empty($this->loanrelease_list)) foreach($this->loanrelease_list as $key =>$row){?>
+	              
+	               if(!empty($this->loanrelease_list))foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
-	               
-	               if (!empty($row['old_land_id'])){
-	               	$idse = explode(",", $row['old_land_id']);
-	               	$countland = count($idse);
-	               	$amount_property = $amount_property+$countland;
-	               }else{
-	               	$amount_property = $amount_property+1;
-	               }
-	               $price_before = $price_before+$row['price_before'];
-	               $discount_amount = $discount_amount+$row['discount_amount'];
-	               $disc_percent = $disc_percent+($row['price_before']-$row['price_sold']-$row['discount_amount']);
-	               $sold_price=$sold_price+$row['price_sold'];
-	               $paid_price=$paid_price+$row['paid_amount'];
-	               $total_interest = $total_interest+$row['total_interest_permonthpaid'];
-	               $total_panelty = $total_panelty+$row['penalize_amountpaid'];
-	               $balace_price=$balace_price+($row['price_sold']-$row['paid_amount']);
-	               
-	               if(empty($row['paid_amount'])){
-	               	$row['paid_amount']=0;
-	               }
-	               if($row['payment_id']==1){//កក់
-	               	 $payment_1=$payment_1+1;
-	               	 if($row['price_sold']<=$row['paid_amount']){
-	               	 	$payment_0_completed=$payment_0_completed+1;
-	               	 }
-	               }elseif($row['payment_id']==2 OR $row['payment_id']==6){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
-	               	 	$payment_2=$payment_2+1;
-	               	 if($row['price_sold']<=$row['paid_amount']){
-	               	 	$payment_2_completed=$payment_2_completed+1;
-	               	 }
-	               }elseif($row['payment_id']==3 OR $row['payment_id']==4){//រំលស់ និងបង់ដំណាក់កាល់ថេរ
-	               	 $payment_3=$payment_3+1;
-	               	 
-	               	 if($row['price_sold']<=$row['paid_amount']){
-	               	 	$payment_3_completed=$payment_3_completed+1;
-	               	 }
-	               }         
-	             ?>
+		               if(!empty($row['old_land_id'])){
+			               	$idse = explode(",", $row['old_land_id']);
+			               	$countland = count($idse);
+			               	$amount_property = $amount_property+$countland;
+			               	
+			               	if($row['payment_id']==1){//កក់
+			               		$property_deposit=$property_deposit+$countland;
+			               	}elseif($row['payment_id']==2 OR $row['payment_id']==6 OR $row['payment_id']==5){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
+			               		$property_payoff=$property_payoff+$countland;
+			               	}elseif($row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==7){//រំលស់ និងបង់ដំណាក់កាល់ថេរ
+			               		$property_install=$property_install+$countland;
+			               	}
+			               	
+		               }else{
+		               		$amount_property = $amount_property+1;
+		               		if($row['payment_id']==1){//កក់
+		               			$property_deposit=$property_deposit+1;
+		               		}elseif($row['payment_id']==2 OR $row['payment_id']==6 OR $row['payment_id']==5){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
+		               			$property_payoff=$property_payoff+1;
+		               		}elseif($row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==7){//រំលស់ និងបង់ដំណាក់កាល់ថេរ
+		               			$property_install=$property_install+1;
+		               		}
+		               		
+		               }
+		               $price_before = $price_before+$row['price_before'];
+		               $discount_amount = $discount_amount+$row['discount_amount'];
+		               $disc_percent = $disc_percent+($row['price_before']-$row['price_sold']-$row['discount_amount']);
+		               $sold_price=$sold_price+$row['price_sold'];
+		               $paid_price=$paid_price+$row['paid_amount'];
+		               $total_interest = $total_interest+$row['total_interest_permonthpaid'];
+		               $total_panelty = $total_panelty+$row['penalize_amountpaid'];
+		               $balace_price=$balace_price+($row['price_sold']-$row['paid_amount']);
+		               
+		               if(empty($row['paid_amount'])){
+		               		$row['paid_amount']=0;
+		               }
+		               if($row['payment_id']==1){//កក់
+		               	 $payment_1=$payment_1+1;
+		               	 if($row['price_sold']<=$row['paid_amount']){
+		               	 	$payment_0_completed=$payment_0_completed+1;
+		               	 }
+		               }elseif($row['payment_id']==2 OR $row['payment_id']==6){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
+		               	 	$payment_2=$payment_2+1;
+		               	 if($row['price_sold']<=$row['paid_amount']){
+		               	 	$payment_2_completed=$payment_2_completed+1;
+		               	 }
+		               }elseif($row['payment_id']==3 OR $row['payment_id']==4 || $row['payment_id']==7){//រំលស់ និងបង់ដំណាក់កាល់ថេរ
+		               	 $payment_3=$payment_3+1;
+		               	 
+		               	 if($row['price_sold']<=$row['paid_amount']){
+		               	 	$payment_3_completed=$payment_3_completed+1;
+		               	 }
+		               }         
+		             ?>
 	             <?php 
 	              	$payment_id = $row['payment_id']?>
 	              	<tr class="style-rowdata hover context-menu-one" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
@@ -282,14 +303,30 @@ table.tb-footer tr.style-head {
 			                    <td></td>
 			                    <td align="right"><span class="border_bottom"><?php echo $tr->translate("ប្រភេទបង់");?></span>&nbsp;&nbsp;</td>
 			                    <td><span class="border_bottom">លក់បាន</span></td>
+			                    <?php 
+			                    $showhouseinfo=1;
+			                    if($showhouseinfo==0){?>
+			                     <td><span class="border_bottom">ចំនួនអចលនទ្រព្យ</span></td>
+			                    <?php }?>
 			                    <td align="left"><span class="border_bottom">ដាច់</span></td>
 			                    <td align="left"><span class="border_bottom">នៅសល់</span></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                    <td align="right"><?php echo $tr->translate("PROPERTY");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			                    <td><?php echo $amount_property;?></td>
+			                    <td align="right">
+			                    	<?php if($showhouseinfo==1){?>
+			                    		<?php echo $tr->translate("PROPERTY");?>&nbsp;&nbsp;&nbsp;&nbsp;
+			                    	<?php }?>
+			                    </td>
+			                    <td>
+			                    	<?php if($showhouseinfo==1){
+			                    		echo $amount_property;
+			                    	}?>
+			                    </td>
 			                    <td align="right"><?php echo $tr->translate("កក់ទ្រនាប់ដៃ");?></td>
 			                    <td><?php echo ($payment_1);?></td>
+			                    <?php if($showhouseinfo==0){?>
+			                    	<td><?php echo $property_deposit;?></td>
+			                    <?php }?>
 			                    <td><?php echo ($payment_0_completed);?></td>
 			                    <td><?php echo ($payment_1-$payment_0_completed);?></td>
 			                 </tr>
@@ -298,6 +335,9 @@ table.tb-footer tr.style-head {
 			                    <td><?php echo number_format($sold_price,2);?></td>
 			                    <td align="right"><?php echo $tr->translate("បង់ផ្តាច់");?>&nbsp;&nbsp;</td>
 			                    <td><?php echo $payment_2;?></td>
+			                     <?php if($showhouseinfo==0){?>
+			                    	<td><?php echo $property_payoff;?></td>
+			                    <?php }?>
 			                    <td><?php echo $payment_2_completed;?></td>
 			                    <td><?php echo $payment_2-$payment_2_completed; ?></td>
 			                 </tr>
@@ -306,6 +346,9 @@ table.tb-footer tr.style-head {
 			                    <td><?php echo number_format($paid_price,2);?></td>
 			                    <td align="right"><?php echo $tr->translate("រំលស់");?>&nbsp;&nbsp;</td>
 			                    <td><?php echo $payment_3;?></td>
+			                     <?php if($showhouseinfo==0){?>
+			                    	<td><?php echo $property_install;?></td>
+			                    <?php }?>
 			                    <td><?php echo $payment_3_completed;?></td>
 			                    <td><?php echo $payment_3-$payment_3_completed;?></td>
 			                 </tr>
@@ -314,6 +357,9 @@ table.tb-footer tr.style-head {
 			                    <td><?php echo number_format($balace_price,2);?>&nbsp;&nbsp;</td>
 			                    <td align="right"><?php echo $tr->translate("លក់សរុប");?>&nbsp;&nbsp;</td>
 			                    <td style="border-bottom: 4px double #000;"><?php echo $payment_1+$payment_2+$payment_3;?></td>
+			                 	 <?php if($showhouseinfo==0){?>
+			                    	<td style="border-bottom: 4px double #000;"><?php echo $amount_property;?></td>
+			                    <?php }?>
 			                 	<td style="border-bottom: 4px double #000;"><?php echo $payment_0_completed+$payment_2_completed+$payment_3_completed;?></td>
 			                    <td style="border-bottom: 4px double #000;"><?php echo ($payment_1+$payment_2+$payment_3)-($payment_0_completed+$payment_2_completed+$payment_3_completed); ?></td>
 			                 </tr>

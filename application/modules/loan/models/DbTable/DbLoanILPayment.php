@@ -547,7 +547,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			$extrapayment = $data['extrapayment'];
     			$extrapayment_after=$extrapayment;
     			$order=0;
-    			if($data['schedule_opt']==4){$order=1;}//ករណីរំលស់
+    			if($data['schedule_opt']==4 OR $data['schedule_opt']==7){
+    				$order=1;
+    			}//ករណីរំលស់
     			
     			$rs = $this->getSaleScheduleById($loan_number,$order);
     			$principal = 0;
@@ -619,7 +621,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     					
     					$db->insert("ln_client_receipt_money_detail", $arr);
     					
-    					if($data['schedule_opt']==4){//សម្រាប់រំលស់
+    					if($data['schedule_opt']==4 OR $data['schedule_opt']==7){//សម្រាប់រំលស់
 	    					if($index==0){						
 	    						$begining_balance = $row['begining_balance_after']-$extrapayment;
 	    						$remain_afterextrapayment = $begining_balance;//ប្រាក់ដើមនៅសល់ពីបង់រំលស់ដើម
@@ -628,7 +630,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 								if($interst_rate!=0){
 			    					$top = pow(1+$interst_rate,$times);
 			    					$bottom = pow(1+$interst_rate,$times)-1;
-			    					$fixed_payment = ceil($begining_balance*$interst_rate*$top/$bottom);//always round up
+			    					$fixed_payment = round($begining_balance*$interst_rate*$top/$bottom);//always round up
 	    					   }else{
 	    					   		$fixed_payment =$row['principal_permonthafter'];
 	    					   }

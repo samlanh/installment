@@ -42,7 +42,7 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
 				'required' =>'true',
-				'onblur'=>'checkTitle();',
+				'onkeyup'=>'checkTitle();',
 		));
 		
 // 		$street = new Zend_Dojo_Form_Element_TextBox('street');

@@ -245,6 +245,14 @@
 				                    	</div>
 				                   </div>
 				                </div>
+				                <div class="form-group" id="hidden_lastpayment" style="display:none;">
+				                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+				                   		<?php echo $tr->translate("LAST_PAYMENT");?> 
+				                   </label>
+				                   <div class="col-md-7 col-sm-7 col-xs-12">
+				                   		<?php echo $frm->getElement('last_payment');?>
+				                   </div>
+				                </div>
 				                <div class="form-group">
 				                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
 				                   		<?php echo $tr->translate("TOTAL_FORINTALLMENT");?> :
@@ -612,6 +620,7 @@ function resetSale(){
 	}
 }
 function checkScheduleOption(){
+	document.getElementById('hidden_lastpayment').style.display='none';
     interest_rate = dijit.byId("interest_rate").get("value");
   	if(interest_rate==-1){
   		dijit.byId('frm_interest').show();
@@ -643,10 +652,13 @@ function checkScheduleOption(){
 	title=0;
 	no=0;
 	
-	if(method_id==4){
+	if(method_id==4 || method_id==7){
 		dijit.byId("install_type").set("readOnly",false);
+		if(method_id==7){
+			document.getElementById('hidden_lastpayment').style.display='flow-root';
+		}
 		calCulateFixedPeriod();	
-		}else {
+	}else {
 			dijit.byId('fixed_payment').attr('value',0);
 			dijit.byId('fixed_payment').set("readOnly",true);
 		if(method_id==1){//booking
@@ -718,11 +730,15 @@ function checkScheduleOption(){
 	}
 }
 function calCulateFixedPeriod(){
+	last_payment = dijit.byId('last_payment').get('value');
+	if(isNaN(last_payment)){
+		last_payment = 0;
+	}
 	var total_paid_install = dijit.byId('total_installamount').get('value');
 	if(total_paid_install == 0){
-		amount_principal = dijit.byId('sold_price').get('value');
+		amount_principal = dijit.byId('sold_price').get('value')-last_payment;
 	}else{
-		amount_principal = dijit.byId('sold_price').get('value')-dijit.byId('total_installamount').get('value');
+		amount_principal = dijit.byId('sold_price').get('value')-dijit.byId('total_installamount').get('value')-last_payment;
 	}	
 	dijit.byId('remain_balance').attr('value',amount_principal);
 	
@@ -1153,8 +1169,10 @@ function addRow(){
 	result = checkFirstRecord();
 	if(result==false){return false;}
 	payment_method = dijit.byId('schedule_opt').get('value');
-	if(payment_method==4){addInstallment();}
-	if(payment_method ==4 || payment_method==3 || payment_method==2 || payment_method==1){return false;}
+	if(payment_method==4 || payment_method==7){
+		addInstallment();
+	}
+	if(payment_method ==4 || payment_method==3 || payment_method==2 || payment_method==1 || payment_method==7){return false;}
 	period = dijit.byId('period').get('value');
 	if(period==0){alert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
 
@@ -1242,7 +1260,7 @@ function addInstallment(){
 
 	result = checkFirstRecord();
 	if(result==false){return false;}
-		if(payment_method==4){
+		if(payment_method==4 || payment_method==7){
 			col++;no++;
 			template='';
 			if(title!=1){    
@@ -1307,6 +1325,7 @@ function addInstallment(){
 		}
 }
 function calCulateAmount(index,revers=1){
+	
 	balance = dijit.byId('sold_price').get('value');
 	if(revers==1){//% to value
 	    percent = dijit.byId('percent'+index).get('value');
