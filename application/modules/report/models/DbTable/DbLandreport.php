@@ -2702,7 +2702,15 @@ function updatePaymentStatus($data){
       	if(!empty($search['user_id']) AND $search['user_id']>-0){
       		$where.= " AND op.user_id = ".$search['user_id'];
       	}
-      	$order=" ORDER BY op.for_date,op.id DESC ";
+      	$order=" ORDER BY oi.branch_id DESC ";
+      	if($search['ordering']==1){
+      		$order.=" , op.for_date DESC";
+      	}
+      	if($search['ordering']==2){
+      		$order.=" , op.id DESC";
+      	}
+      	
+      	//$order=" ORDER BY op.for_date,op.id DESC ";
       	return $db->fetchAll($sql.$where.$order);
       }
       

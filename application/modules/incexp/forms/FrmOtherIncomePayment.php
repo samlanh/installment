@@ -117,6 +117,7 @@ Class Incexp_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 		if($data!=null){
 			$title->setValue($data['title_income']);
 			$_branch_id->setValue($data['branch_id']);
+			$_branch_id->setAttrib('readonly', true);
 			$invoice->setValue($data['receipt_no']);
 			$_Date->setValue($data['for_date']);
 			$_cate_type->setValue($data['cate_type']);

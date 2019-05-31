@@ -134,17 +134,17 @@ class RsvAcl_UserAccessController extends Zend_Controller_Action
     		$acl_id = $post['acl_id'];
     		$status = $post['status'];
     		$data=array('acl_id'=>$acl_id, 'user_type_id'=>$user_type_id);
-    		if($status === "yes"){
+    		if($status== "yes"){
     			$where="user_type_id='".$user_type_id."' AND acl_id='". $acl_id . "'";
     			$db->delete($where);    		
     			echo "no";	
     		}
-    		elseif($status === "no"){
+    		elseif($status== "no"){
     			$db->insert($data);    		
     			echo "yes";
     		}
-    		$userLog= new Application_Model_Log();
-    		$userLog->writeUserLog($acl_id);
+    		//$userLog= new Application_Model_Log();
+    		//$userLog->writeUserLog($acl_id);
     	}
     	exit();
     }

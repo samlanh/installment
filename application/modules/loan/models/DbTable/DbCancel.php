@@ -384,7 +384,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		return $db->fetchRow($sql);
 	}
 	
-	public function getSaleNoByProject($branch_id,$sale_id,$issue_plong=0,$is_completed=0){
+	public function getSaleNoByProject($branch_id,$sale_id,$issue_plong=0,$is_completed=0,$is_comission=0){
 		$db = $this->getAdapter();
 		$sale='';
 		if(!empty($sale_id)){
@@ -400,6 +400,9 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		}
 		if($issue_plong>0){
 			$sql.=" AND is_issueplong = ".$issue_plong;
+		}
+		if($is_comission==1){
+			$sql.=" AND s.full_commission >0 AND s.full_commission > (SELECT SUM(c.total_amount) FROM ln_comission AS c WHERE c.sale_id=s.id LIMIT 1) ";
 		}
 		return $db->fetchAll($sql);
 	}

@@ -160,22 +160,22 @@
 								   		<?php echo $row['title'];?>
 								   		</a>
 								   		&nbsp;
-								   	</td>
+								   </td>
 								   <td align="center">
 								   		&nbsp;
 									   	<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$row['id']));?>">
 									   	<?php echo $row['invoice'];?>
 									   	</a>
 									   	&nbsp;
-								   	</td>
+								   </td>
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_name'];?>&nbsp;</td>
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['house_name'];?>&nbsp;</td>
 								   <td style="white-space: nowrap;">&nbsp;<?php echo $row['category_name'];?></td>
 								   <td align="center">&nbsp;<strong><?php echo number_format($row['total_amount'],2);?></strong>&nbsp;</td>
 								   <td align="center">&nbsp;<?php echo $row['cheque'];?>&nbsp;</td>
-								   <td align="center">&nbsp;<?php echo $row['description'];?>&nbsp;</td>
+								   <td align="center" style="max-width:200px;">&nbsp;<?php echo $row['description'];?>&nbsp;</td>
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['date']));?>&nbsp;</td>
-								    <td align="center">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
+								   <td align="center">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
 								</tr>
 									<?php $total = $total +$row['total_amount'];?>
 								<?php }?>
@@ -184,26 +184,26 @@
 					            ?>
 					            <tr  style="border:1px solid #000;">
 					                <td colspan="12" align="center">
-					                	<h2 style="font-weight:normal; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
-							             	<span><?php echo $tr->translate("REPAIR_HOUSE_INCOME");?></span>
-							             </h2>
+					                	<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'">
+							             	<?php echo $tr->translate("REPAIR_HOUSE_INCOME");?>
+							             </span>
 					                </td>
 					             </tr>
 					            <?php foreach ($this->houserepair as $index => $rs){?>
-						   		<tr oncontextmenu="setrowdata('<?php echo $rs['id'];?>',1);return false;" class=" context-menu-one stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
-				               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
-				               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-				               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
-				               		<td align="center">&nbsp;<a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a>&nbsp;</td>
-				               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a>&nbsp;</td> 
-				               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
-				               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
-				               		<td align="center">&nbsp;<strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format($rs["total_amount"],2);}?></strong>&nbsp;</td>
-				               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
-				               		<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
-				               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
-				               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
-				                </tr>
+							   		<tr oncontextmenu="setrowdata('<?php echo $rs['id'];?>',1);return false;" class=" context-menu-one stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+					               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+					               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+					               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
+					               		<td align="center">&nbsp;<a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a>&nbsp;</td>
+					               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a>&nbsp;</td> 
+					               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
+					               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+					               		<td align="center">&nbsp;<strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format($rs["total_amount"],2);}?></strong>&nbsp;</td>
+					               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
+					               		<td style="max-width:200px;">&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+					               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
+					               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
+					                </tr>
 				                <?php 
 				                if ($rs['status']==0){
 				                }else{

@@ -103,8 +103,8 @@ dojo.require("dijit.form.DateTextBox");
 			width: 100%;
 		}
 		table.content-data thead tr.style {
-		   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
-			background: #c1d0f3;
+		   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+			background: #ccd9ff;font-weight: bold;
 		}
 		table.tb-footer{
 			border-collapse:collapse;
@@ -128,7 +128,8 @@ dojo.require("dijit.form.DateTextBox");
 			                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
 			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("LOAN_OUTSTADING");?></li>
 			                			<li style="text-align:center; font-size:14px;"><?php echo date('D-d-m-Y',strtotime($this->fordate));?></li>
-			                		</ul></td>
+			                		</ul>
+			                	</td>
 			                    <td width="30%"></td>
 			                </tr> 
 			            </table>
@@ -142,15 +143,15 @@ dojo.require("dijit.form.DateTextBox");
 			                 <tr class="hide" style="border:1px solid #000;">
 				                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				             </tr>
-			                 <tr height="35px;" bgcolor="#c1d0f3" class="style" align="center" >
+			                 <tr height="35px;" class="style" align="center" >
 			                    <td style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
 			                    <td style="">&nbsp;<?php echo $tr->translate("CUSTOMER_NAME");?>&nbsp;</td>
 			                    <td style="">&nbsp;<?php echo $tr->translate("TEL");?>&nbsp;</td>
 			                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
 			                    <td style="">&nbsp;<?php echo $tr->translate("DATE_BUY");?>&nbsp;</td>
 			                    <td style="">&nbsp;<?php echo $tr->translate("PAMENT_METHOD");?>&nbsp;</td>
-			                    <td style="">&nbsp;<?php echo $tr->translate("SOLD_PRICE");?>&nbsp;</td>			                   
 			                    <td style="">&nbsp;<?php echo $tr->translate("LOAN_PERIOD");?>&nbsp;</td>
+			                    <td style="">&nbsp;<?php echo $tr->translate("SOLD_PRICE");?>&nbsp;</td>			                   
 			                    <td style="">&nbsp;<?php echo $tr->translate("PRINCIPAL").$tr->translate("PAID");?>&nbsp;</td>
 			                    <td style="">&nbsp;<?php echo $tr->translate("PERCENTAGE");?>&nbsp;</td>
 			                    <td style="">&nbsp;<?php echo $tr->translate("NOT_TO_REPAY");?>&nbsp;</td>
@@ -166,13 +167,12 @@ dojo.require("dijit.form.DateTextBox");
 			               $url_client = $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-paymentschedules'));
 			               if(!empty($this->outstandloan))foreach($this->outstandloan as $key =>$row){?>
 		               <?php 
-		               
-			               if (!empty($row['old_land_id'])){
-			               	$idse = explode(",", $row['old_land_id']);
-			               	$countland = count($idse);
-			               	$amount_property = $amount_property+$countland;
+			               if(!empty($row['old_land_id'])){
+				               	$idse = explode(",", $row['old_land_id']);
+				               	$countland = count($idse);
+				               	$amount_property = $amount_property+$countland;
 			               }else{
-			               	$amount_property = $amount_property+1;
+			               		$amount_property = $amount_property+1;
 			               }
 		               
 		               		$total_receive = $db->getAmountReceiveByLoanNumber($row['id'],$row['client_id']);
@@ -194,19 +194,19 @@ dojo.require("dijit.form.DateTextBox");
 								<td align="left">&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['land_address'].",".$row['street'];?></a>&nbsp;</td>
 								<td>&nbsp;<?php echo date("d-m-Y",strtotime($row['first_payment']));?>&nbsp;</td>
 								<td>&nbsp;<?php echo $row['paymenttype'];?>&nbsp;</td>
-								<td>&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
 								<td>
-								&nbsp;
-								<?php 
-									echo $row['total_duration']; 
-									if($row['payment_id']!=4){
-										echo $tr->translate("MONTH");
-									}else{
-										echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
-									}
-								?>
-								&nbsp;
+									&nbsp;
+									<?php 
+										echo $row['total_duration']; 
+										if($row['payment_id']!=4){
+											echo $tr->translate("MONTH");
+										}else{
+											echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
+										}
+									?>
+									&nbsp;
 								</td>
+								<td>&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
 								<td style="white-space:nowrap; text-align: right;">&nbsp;<?php echo number_format($total_receive,2);?>&nbsp;</td>
 								<td>&nbsp;<?php 
 									echo number_format($total_receive/$row['price_sold']*100,2).' %';
@@ -217,31 +217,22 @@ dojo.require("dijit.form.DateTextBox");
 								?></td>
 							</tr>
 						<?php }?>
+							<tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
+								<td colspan="7"><?php echo $tr->translate("TOTAL");?></td>
+								<td>&nbsp;<?php echo number_format($amt_d,2);?>&nbsp;</td>
+								<td>&nbsp;<?php echo number_format($amn_d,2);?>&nbsp;</td>
+								<td>&nbsp;<?php echo $result_d;?>&nbsp;</td>
+								<td>&nbsp;<?php echo number_format($amt_d-$amn_d,2);?>&nbsp;</td>
+								<td>&nbsp;<?php echo number_format($total_interest,2);?>&nbsp;
+								<?php 
+									  //echo number_format(($amt_d-$amn_d)+$total_interest,2);
+									  //echo $tr->translate("PROPERTY")." :"; //echo $amount_property;
+								?>
+								</td>
+							</tr>
 		            </table>
 		            <br />
-		             <table border="1"​ class="tb-footer" width="100%" cellspacing="0">
-		                <tr bgcolor="#c1d0f3" class="style" align="center">
-		                    <td style="padding:2px 0px;"><?php echo $tr->translate("TOTAL");?></td>
-		                    <td style="padding:2px 0px;"><?php echo $tr->translate("LOAN_RETURN_TO_CLIENT");?></td>
-		                    <td style="padding:2px 0px;"><?php echo $tr->translate("PERCENTAGE");?></td>
-		                    <td style="padding:2px 0px;"><?php echo $tr->translate("NOT_TO_REPAY");?></td>
-		                    <td style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("TOTAL_INTEREST");?>&nbsp;</td>
-		                    <td style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("TOTAL_ALL_BALANCE");?>&nbsp;</td>
-		                </tr>
-		                <tr class="style" style=" line-height: 24px; font-size:11px;">
-		                    <td>&nbsp;<?php echo number_format($amt_d,2);?>&nbsp;</td>
-		                    <td>&nbsp;<?php echo number_format($amn_d,2);?>&nbsp;</td>
-		                    <td>&nbsp;<?php echo $result_d;?>&nbsp;</td>
-		                    <td>&nbsp;<?php echo number_format($amt_d-$amn_d,2);?>&nbsp;</td>
-		                    <td>&nbsp;<?php echo number_format($total_interest,2);?>&nbsp;</td>
-		                    <td>&nbsp;<?php echo number_format(($amt_d-$amn_d)+$total_interest,2);?>&nbsp;</td>
-		                </tr>
-		                 <tr class="style hover" style=" line-height: 24px; font-size:11px;">
-		                 	<td colspan="6" align="center"><?php echo $tr->translate("PROPERTY");?> : <?php echo $amount_property;?></td>
-		                 </tr>
-		              </table>
-		              <br />
-		              <?php echo $this->footerReport;?>
+		            <?php echo $this->footerReport;?>
 		    	</td>
 		    </tr>
 		</table>
