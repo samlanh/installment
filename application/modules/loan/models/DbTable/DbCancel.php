@@ -404,6 +404,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		if($is_comission==1){
 			$sql.=" AND s.full_commission >0 AND s.full_commission > (SELECT SUM(c.total_amount) FROM ln_comission AS c WHERE c.sale_id=s.id LIMIT 1) ";
 		}
+		//return $sql;
 		return $db->fetchAll($sql);
 	}
 }

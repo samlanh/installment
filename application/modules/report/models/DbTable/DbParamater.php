@@ -1657,23 +1657,23 @@ function getAllBranch($search=null){
     	function getCommissionBalance($search=null){
     		$db = $this->getAdapter();
     		$sql="SELECT 
-				(SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` AND c.status=1 ) AS totoal_comminssion,
-				SUM(s.`comission`) AS total_sale_commission,
-				s.`full_commission`,
-				s.`branch_id`,
-				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = s.`branch_id` LIMIT 1) AS branch_name,
-				(SELECT cu.name_kh FROM `ln_client` AS cu WHERE cu.client_id = s.`client_id` LIMIT 1) AS cutomer_name,
-				(SELECT p.land_code FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_code,
-				(SELECT p.street FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS street,
-				(SELECT p.land_address FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_address,
-				(SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) AS co_khname,
-				(SELECT st.tel FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) AS tel,
-				(SELECT st.sex FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) AS sex,
-				s.`price_sold`,
-				(SELECT SUM(crm.total_principal_permonthpaid) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id = s.id  GROUP BY crm.sale_id LIMIT 1) AS total_sale_paid
+						(SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` AND c.status=1 LIMIT 1) AS totoal_comminssion,
+						SUM(s.`comission`) AS total_sale_commission,
+						s.`full_commission`,
+						s.`branch_id`,
+						(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = s.`branch_id` LIMIT 1) AS branch_name,
+						(SELECT cu.name_kh FROM `ln_client` AS cu WHERE cu.client_id = s.`client_id` LIMIT 1) AS cutomer_name,
+						(SELECT p.land_code FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_code,
+						(SELECT p.street FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS street,
+						(SELECT p.land_address FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_address,
+						(SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) AS co_khname,
+						(SELECT st.tel FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) AS tel,
+						(SELECT st.sex FROM `ln_staff` AS st WHERE st.co_id = s.`staff_id` LIMIT 1) AS sex,
+						s.`price_sold`,
+						(SELECT SUM(crm.total_principal_permonthpaid) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id = s.id  GROUP BY crm.sale_id LIMIT 1) AS total_sale_paid
 				 FROM 
-				`ln_sale` AS s
-				WHERE full_commission>0 AND s.is_cancel = 0 ";
+					`ln_sale` AS s
+				WHERE full_commission>0 AND s.is_cancel = 0 AND full_commission> (SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` AND c.status=1 LIMIT 1)";
     		$where ="";
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();

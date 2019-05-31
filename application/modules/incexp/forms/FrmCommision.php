@@ -170,9 +170,8 @@ public function init()
 		
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
+			$branch_id->setAttrib('readonly',true);
 			$_old_sale_id->setValue($data['id']);
-// 			echo $data['id'];exit();
-// 			$_status->setValue($data['status']);
 			$return_back->setValue($data['total_amount']);
 			$_status->setValue($data['status']);
 		}

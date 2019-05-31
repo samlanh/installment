@@ -81,8 +81,13 @@
 							width: 100%;
 						}
 						table.content-data thead tr.style {
-						   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
-							background: #c1d0f3;
+						   line-height: 25px;
+						   font-size:12px !important;
+						   padding:1px 0px;
+						   white-space: nowrap;
+						   height: 22px; 
+						   background:#ccd9ff;
+						   font-weight: bolder;
 						}
 						table.tb-footer{
 							border-collapse:collapse;
@@ -119,7 +124,7 @@
 				            <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
 				            <td rowspan="2"><?php echo $tr->translate("SEX");?></td>
 				            <td colspan="5"><?php echo $tr->translate("INFO_INDILOAN");?></td>
-				            <td colspan="3" style="font-size:13px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("COMMISSION_INFO");?></td>
+				            <td colspan="3"><?php echo $tr->translate("COMMISSION_INFO");?></td>
 				         </tr>
 				         <tr class="style" align="center">
 				         	<td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
@@ -127,9 +132,9 @@
 				         	<td><?php echo $tr->translate("SOLD_PRICE");?></td>
 				         	<td><?php echo $tr->translate("PAID");?></td>
 				         	<td><?php echo $tr->translate("PERCENTAGE");?></td>
-				         	<td style="font-size:13px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("TOTAL");?></td>
-				            <td style="font-size:13px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("PAID");?></td>
-				            <td style="font-size:13px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("REMAIN");?></td>
+				         	<td><?php echo $tr->translate("TOTAL");?></td>
+				            <td><?php echo $tr->translate("PAID");?></td>
+				            <td><?php echo $tr->translate("REMAIN");?></td>
 				         </tr>
 			         </thead>
 			       <?php  
@@ -147,7 +152,7 @@
 					  ?>
 					   <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
 					     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-					     <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name']?>&nbsp;</td>
+					     <td align="left" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name']?>&nbsp;</td>
 						 <td style="white-space: nowrap;">&nbsp;<?php echo $row['co_khname'];?>&nbsp;</td>
 						 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['tel'];?>&nbsp;</td>
 						 <td align="center" style="white-space: nowrap;">&nbsp;<?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
@@ -156,27 +161,18 @@
 						 <td style="white-space: nowrap;">&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
 						 <td style="white-space: nowrap;">&nbsp;<?php echo number_format($row['total_sale_paid'],2);?>&nbsp;</td>
 						 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo number_format($percentpaid,2)."%";?>&nbsp;</td>
-						 <td align="right" style="white-space: nowrap;font-size:13px; font-family:'Arial';font-weight:bold;">&nbsp;<?php echo '$ '.number_format($row['full_commission'],2);?>&nbsp;</td>
-						 <td align="right" style="white-space: nowrap;font-size:13px; font-family:'Arial';font-weight:bold;">&nbsp;<?php echo '$ '.number_format($paidcommision,2);?>&nbsp;</td>
-						 <td align="right" style="white-space: nowrap;font-family:'Arial';font-weight:bold;">&nbsp;<?php echo '$ '.number_format($remain,2);?>&nbsp;</td>
-						</tr>
+						 <td align="right" style="white-space: nowrap;font-size:13px; font-family:'Arial';font-weight:bold;">&nbsp;<?php echo number_format($row['full_commission'],2);?>&nbsp;</td>
+						 <td align="right" style="white-space: nowrap;font-size:13px; font-family:'Arial';font-weight:bold;">&nbsp;<?php echo number_format($paidcommision,2);?>&nbsp;</td>
+						 <td align="right" style="white-space: nowrap;font-family:'Arial';font-weight:bold;">&nbsp;<?php echo number_format($remain,2);?>&nbsp;</td>
+					</tr>
 					<?php }?>
+					<tr style="background:#87acff;font-weight:bold; font-size:14px;text-align: center;">
+						<td colspan="10"></td>
+						<td><?php echo '$ '.number_format($total,2);?></td>
+						<td><?php echo '$ '.number_format($totalpaid_com,2);?></td>
+						<td><?php echo '$ '.number_format($balance,2);?></td>
+					</tr>	
 			    </table>
-				<br>
-				<table width="30%" border="1" style="font-family: 'Times New Roman','Khmer OS Battambang'; float: right; border-collapse:collapse;font-size: 12px;" bordercolor="black">
-					<tr class="style" align="center" style="line-height:25px; font-size:12px; padding:5px 0px; " >
-			        	<td bgcolor="#c1d0f3" ><?php echo $tr->translate("TOTAL");?></td>
-			            <td><?php echo '$ '.number_format($total,2);?></td>
-			         </tr>
-			         <tr class="style" align="center" style=" line-height:25px; font-size:12px; padding:5px 0px; " >
-			        	<td bgcolor="#c1d0f3" ><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>
-			            <td><?php echo '$ '.number_format($totalpaid_com,2);?></td>
-			         </tr>
-			          <tr class="style" align="center" style="line-height:25px; font-size:12px; padding:5px 0px; " >
-			        	<td bgcolor="#c1d0f3" ><?php echo $tr->translate("REMAIN");?></td>
-			            <td><?php echo '$ '.number_format($balance,2);?></td>
-			         </tr>
-				</table>
 	    	</td>
 	    </tr>
 	</table>
