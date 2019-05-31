@@ -1152,7 +1152,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   public function getSystemSetting($keycode){
   	$db = $this->getAdapter();
   	$sql = "SELECT * FROM `ln_system_setting` WHERE keycode ='".$keycode."'";
-//   	echo $sql;
+
   	return $db->fetchRow($sql);
   }
   static function getPaymentTermById($id=null){

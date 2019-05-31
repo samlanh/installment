@@ -136,11 +136,11 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_ilpayment = $frm_loan;
 				
-		$db_keycode = new Application_Model_DbTable_DbKeycode();
-		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
+// 		$db_keycode = new Application_Model_DbTable_DbKeycode();
+// 		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
+// 		$this->view->graiceperiod = $db_keycode->getSystemSetting(9);
+		//$this->view->interest = $db_keycode->getSystemSetting(8);
 		
-		$this->view->graiceperiod = $db_keycode->getSystemSetting(9);
-		$this->view->interest = $db_keycode->getSystemSetting(8);
 		$this->view->client = $db->getAllClient();
 		$this->view->clientCode = $db->getAllClientCode();
 		

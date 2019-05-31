@@ -61,43 +61,8 @@ class Setting_Model_DbTable_DbLabel extends Zend_Db_Table_Abstract
 					$where=$this->getAdapter()->quoteInto('keycode=?', "work_sunday");
 					$this->update( $_key_code_data, $where);
 				}
-				else if($key == 'adminfee'){
-					$where=$this->getAdapter()->quoteInto('keycode=?', "adminfee");
-					$this->update( $_key_code_data, $where);
-				}else if($key == 'interest_late'){
-					$where=$this->getAdapter()->quoteInto('keycode=?', "interest_late");
-					$this->update( $_key_code_data, $where);
-				}else if($key == 'graice_pariod_late'){
-					$where=$this->getAdapter()->quoteInto('keycode=?', "graice_pariod_late");
-					$this->update( $_key_code_data, $where);
-				}else if($key == 'reschedule_postfix'){
-					$where=$this->getAdapter()->quoteInto('keycode=?', "reschedule_postfix");
-					$this->update( $_key_code_data, $where);
-				}else if($key == 'co_prefix'){
-					$where=$this->getAdapter()->quoteInto('keycode=?', "co_prefix");
-					$this->update( $_key_code_data, $where);
-				}else if($key == 'theme_setting'){
-					$where=$this->getAdapter()->quoteInto('keycode=?', "theme_setting");
-					$this->update( $_key_code_data, $where);
-					$array_theme = array(
-							1=>"claro",
-							2=>"nihilo",
-							3=>"soria",
-							4=>"tundra"
-					);
-					$session_user=new Zend_Session_Namespace('authinstall');
-					$session_user->theme_style=$array_theme[$val];
-						 
-				}
-				
-				
-				
-				
-	
 			}
 				
 		}
 	}
-	
 }
-

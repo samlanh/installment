@@ -107,7 +107,7 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	$after_edit_info = $record['after_edit_info'];
     	
     	$name = $_FILES['logo']['name'];
-    	$photo='';
+    	$photo='logo.png';
     	if (!empty($name)){
     		$tem =explode(".", $name);
     		$new_image_name = "logo".date("Y").date("m").date("d").time().".".end($tem);
@@ -124,6 +124,7 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	$_arr = array(
     			'project_name'=>$_data['branch_namekh'],
     			//'project_type'=>$_data['project_type'],
+    			//'displayby'=>$_data['branch_display'],
     			'prefix'      =>      $_data['prefix_code'],
     			'br_address'=>$_data['br_address'],
     			'branch_code'=>$_data['branch_code'],
@@ -131,7 +132,6 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'fax'=>$_data['fax'],
     			'other'=>$_data['branch_note'],
     			'status'=>$_data['branch_status'],
-    			//'displayby'=>$_data['branch_display'],
     			'p_manager_namekh'=>$_data['project_manager_namekh'],
     			'p_manager_nationality'=>$_data['project_manager_nationality'],
     			'p_manager_nation_id'=>$_data['project_manager_nation_id'],
@@ -139,17 +139,14 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_manager_namekh'=>$_data['sc_project_manager_nameen'],
     			'w_manager_nationality'=>$_data['sc_project_manager_nationality'],
     			'w_manager_nation_id'=>$_data['sc_project_manager_nation_id'],
-    			
     			'p_sex'=>$_data['p_manager_sex'],
     			'p_dob'=>$_data['dob_manager'],
     			'p_nationid_issue'=>$_data['date_iss_doc'],
-    			 
     			'w_sex'=>$_data['csp_manager_sex'],
     			'w_dob'=>$_data['dob_cs_manager'],
     			'w_nation_id_issue'=>$_data['date_iss_doc_cs_manager'],
     			'w_current_address'=>$_data['cs_manager_current_address'],
     			'logo'=>$photo,
-    			
     			'position'=>$_data['position'],
     			'w_position'=>$_data['w_position'],
     			);
