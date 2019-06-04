@@ -404,12 +404,9 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  		}
 	  	}
 	  	$id =$this->getRequest()->getParam('id');
-	  	
-	  	
 	  	if(!empty($id)){
 	  		$db = new Loan_Model_DbTable_DbLandpayment();
 	  		$rs = $db->getTranLoanByIdWithBranch($id,null);
-	  		
 	  		if(empty($rs)){
 	  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
 	  			exit();
@@ -433,7 +430,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
 	  	$row = $db->getPaymentupdateSchedule($id,$rs['payment_id']);
 	  	$this->view->tran_schedule=$row;
-	  	
 	
 	  	$db = new Application_Model_DbTable_DbGlobal();
 	  	$key = new Application_Model_DbTable_DbKeycode();
@@ -444,4 +440,3 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  	$this->view->customer =  $db->getAllClient();
 	}
 }
-

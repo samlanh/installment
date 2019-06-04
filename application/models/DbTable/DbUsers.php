@@ -23,26 +23,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		return $db->fetchRow($sql);
 	}
 	public function getThemeByUserId($user_id){
-		$db = $this->getAdapter();
-		$sql = "SELECT theme_name FROM `ln_theme_user` WHERE user_id =$user_id LIMIT 1";
-		$rs_theme = $db->fetchOne($sql);
-		$array_theme = array(
-			1=>"claro",
-			2=>"nihilo",
-			3=>"soria",
-			4=>"tundra"
-			);
-		if(!empty($rs_theme)){
-			return $array_theme[$rs_theme];
-		}else{
-			$sql = "SELECT value FROM `ln_system_setting` WHERE keycode ='theme_setting' ";
-			$rs_theme = $db->fetchOne($sql);
-			if(!empty($rs_theme)){
-				return $array_theme[$rs_theme];
-			}else{
-				return $array_theme[1];
-			}
-		}
+		return 'soria';
 	}
 	
 	//function get user id from database

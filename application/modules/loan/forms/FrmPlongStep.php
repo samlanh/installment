@@ -61,8 +61,8 @@ public function init()
 		));
 		$receive_by = new Zend_Dojo_Form_Element_TextBox("receive_by");
 		$receive_by->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
-				'class'=>'fullside',
+			'dojoType'=>'dijit.form.TextBox',
+			'class'=>'fullside',
 		));
 		
 		$note = new Zend_Dojo_Form_Element_TextBox("note");

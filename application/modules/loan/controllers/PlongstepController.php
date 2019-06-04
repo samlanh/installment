@@ -12,18 +12,17 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 		try{
 		    if($this->getRequest()->isPost()){
  				$search = $this->getRequest()->getPost();
- 				
  			}else{
 				$search = array(
-						'txt_search'=>'',
-						'client_name'=> -1,
-						'branch_id' => -1,
-						'land_id'=>-1,
-						'status' => -1,
-						'process_status'=>0,
-						'start_date'=> date('Y-m-d'),
-						'end_date'=>date('Y-m-d'),
-						 );
+					'txt_search'=>'',
+					'client_name'=> -1,
+					'branch_id' => -1,
+					'land_id'=>-1,
+					'status' => -1,
+					'process_status'=>0,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'),
+				);
 			}
 			$db = new Loan_Model_DbTable_DbPlongStep();
 			$rs_rows= $db->getAllissueplong($search,1);
@@ -35,7 +34,6 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
-		
 		$this->view->rssearch = $search;
 		$frm = new Loan_Form_FrmSearchLoan();
 		$frm = $frm->AdvanceSearch();

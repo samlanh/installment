@@ -164,10 +164,9 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				'land_size'	  => $_data['size'],
 				'width'       => $_data['width'],
 				'height'      => $_data['height'],
-	    		'is_lock'     => 0,//$_data['buy_status'],
+	    		'is_lock'     => $_data['buy_status'],
 				'hardtitle'   => $_data['hardtitle'],
 				'note'        => $_data['desc'],
-// 		        'create_date'=>date("Y-m-d"),
 				'status'	  => 1,//$_data['status'],
 				'user_id'	  => $this->getUserId(),
 		    	'property_type'	  => $_data['property_type'],
@@ -198,18 +197,16 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 			$where = 'id = '.$_data['id'];
 			$this->update($_arr, $where);
 			$id = $_data['id'];
-			
 			$label_new = 'Edit Property '.$land_code; 
-			
 		}else{
 			$_arr['create_date']=date('Y-m-d');
 			$id= $this->insert($_arr);
 		}
 		
-		$dbgb = new Application_Model_DbTable_DbGlobal();
-		$_datas = array('description'=>$label_new,'activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
-		$dbgb->addActivityUser($_datas);
-		return $id;
+			$dbgb = new Application_Model_DbTable_DbGlobal();
+			$_datas = array('description'=>$label_new,'activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
+			$dbgb->addActivityUser($_datas);
+			return $id;
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}

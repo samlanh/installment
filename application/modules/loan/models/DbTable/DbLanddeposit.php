@@ -143,7 +143,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 //     	,(SELECT name_en FROM `ln_view` WHERE status =1 and type=2 and key_code=lg.holiday) AS holiday
 //     	,lg.date_line
 //     	,lm.pay_after, lm.pay_before
-//     	,(SELECT payment_nameen FROM `ln_payment_method` WHERE id =lm.payment_method ) AS payment_nameen
 //     	,(SELECT curr_nameen FROM `ln_currency` WHERE id=lm.currency_type) AS currency_type
 //     	,lm.graice_period,
 //     	lm.loan_number,lm.interest_rate,lm.amount_collect_principal,lm.semi,

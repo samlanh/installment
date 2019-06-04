@@ -120,6 +120,7 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    		'west'	  => $_data['west'],
 	    		'east'	  => $_data['east'],
 		);
+		    print_r($_arr);exit();
 	    $key = new Application_Model_DbTable_DbKeycode();
 	    $setting=$key->getKeyCodeMiniInv(TRUE);
 	    $show_house = $setting['showhouseinfo'];

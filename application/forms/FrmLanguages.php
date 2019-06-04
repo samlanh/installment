@@ -27,17 +27,4 @@ class Application_Form_FrmLanguages
 		}
 		return $tr;
 	}	
-// 	public static  function getActiveLanguage(){
-// 		$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
-// 		$md_site_language = new Application_Model_DbTable_DbSiteLanguages();
-// 		$site_langs = $md_site_language->getSiteLanguageActive();
-// 		$str ="";
-// 		foreach ($site_langs as $i => $lang) {
-// 		 $str .="<a href='". $baseurl ."/langs/index/index?ln=".$lang['language_short'] ."'>".
-// 					"<img src='". $baseurl ."/images/flag/". $lang['icon'] ."' title='". $lang['language'] .
-// 			 			"' alt='". $lang['language'] ."' class='icon32' />
-// 				</a>";
-// 		}
-// 		return $str;
-// 	}
 }

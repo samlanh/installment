@@ -2,8 +2,7 @@
 
 class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 {
-   public static function getInvoiceNo(){	
-		//return strtoupper(uniqid());
+   public static function getInvoiceNo(){			
 		$sub=substr(uniqid(rand(10,1000),false),rand(0,10),5);
 		$date= new Zend_Date();
 		$head="W".$date->get('YY-MM-d/ss');
@@ -14,7 +13,6 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
    	$option = '<option value="">'.$tr->translate("PLEASE_SELECT").'</option>';
    	foreach($db->fetchAll($sql) as $r){
-   			
    		$option .= '<option value="'.$r[$value].'">'.htmlspecialchars($tr->translate(strtoupper($r[$display])), ENT_QUOTES).'</option>';
    	}
    	return $option;
@@ -163,44 +161,8 @@ public function getOptonsHtmlTranslate($sql, $display, $value){
 		return $phone;
 	}
 	
-	/**
-	 * Generate navigation for use global
-	 * @author channy
-	 * @param $url current of action
-	 * @param $frm form for use cover of control 
-	 * @param $limit number of limit record
-	 * @return $record_count number of record
-	 */
-// 		public function getList($url,$frm,$start,$limit,$record_count){
-// 			$page = new Application_Form_FrmNavigation($url, $start, $limit, $record_count);
-// 			$page->init($url, $start, $limit, $record_count);//can wrong $form
-// 			$nevigation = $page->navigationPage();
-// 			$rows_per_page = $page->getRowsPerPage($limit, $frm);
-// 			$result_row = $page->getResultRows();
-// 			$arr = array(
-// 					"nevigation"=>$nevigation,
-// 					"rows_per_page"=>$rows_per_page,
-// 					"result_row"=>$result_row);
-// 			return $arr;
-// 		}
-// 		public function getAllMetionOption(){
-// 			$_db = new Application_Model_DbTable_DbGlobal();
-// 			$rows = $_db->getAllMention();
-// 			$option = '';
-// 			if(!empty($rows))foreach($rows as $key => $value){
-// 				$option .= '<option value="'.$key.'" >'.htmlspecialchars($value, ENT_QUOTES).'</option>';
-// 			}
-// 			return $option;
-// 		}
-// 		public function getAllPayMentTermOption(){
-// 			$_db = new Application_Model_DbTable_DbGlobal();
-// 			$rows = $_db->getAllPaymentTerm();
-// 			$option = '';
-// 			if(!empty($rows))foreach($rows as $key => $value){
-// 				$option .= '<option value="'.$key.'" >'.htmlspecialchars($value, ENT_QUOTES).'</option>';
-// 			}
-// 			return $option;
-// 		}
+	
+
 		public function getAllFacultyOption(){
 			$_db = new Application_Model_DbTable_DbGlobal();
 			$rows = $_db->getAllFecultyName();

@@ -20,7 +20,7 @@
 		font-family: 'Times New Roman','Khmer OS Battambang';
 	}
 	.font_bold{
-		font-family:'Khmer OS Muol Light';
+		font-family:'Khmer OS Muol Light Light';
 		font-size: 14px;
 	}
 	td p{ margin-top:-12px;}
@@ -60,11 +60,11 @@
 				             <img src="<?php echo $imagelogo;?>"  style="max-width:100%;">
 	                	</td>
 	                	<td width="50%" valign="top">
-		                	<h2 style="text-align:center;  font-weight:normal; font-size:16px; font-family:'Khmer OS Muol'"><?php echo $tr->translate("BRAND_TITLE");?><?php //echo $this->data['brand_title'];?></h2>
-		                	<h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol'"><?php echo $tr->translate("BRANCH_NAME");?> : <?php echo  $client['branch_name']; ;?></h2>
-		                	<h2 style="text-align:center;  font-weight:normal; font-size:13px; font-family:'Khmer OS Muol'"> <?php echo $tr->translate('RPT_ILLOAN');?></h2>
+		                	<h2 style="text-align:center;  font-weight:normal; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?><?php //echo $this->data['brand_title'];?></h2>
+		                	<h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BRANCH_NAME");?> : <?php echo  $client['branch_name']; ;?></h2>
+		                	<h2 style="text-align:center;  font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light'"> <?php echo $tr->translate('RPT_ILLOAN');?></h2>
 	                	</td>
-	                    <td width="25%" ><h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol';white-space:nowrap;"> <?php echo $tr->translate('ARTICLE_1');?></h2></td>
+	                    <td width="25%" ><h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light';white-space:nowrap;"> <?php echo $tr->translate('ARTICLE_1');?></h2></td>
 	                </tr>
 	                <?php $db = new Application_Model_DbTable_DbGlobal();
 	                	  $row = $db->getClientByType(null,$client['client_id'],1);
@@ -108,6 +108,7 @@
 	    </tr>
 	    <tr>
 	    	<td>
+	            <div id="watermark" style="top:-50;opacity:0.150;position:fixed;z-index:-1;display: block;background:url('<?php echo $this->baseUrl()?>/images/phnommeaswatermark.jpg') no-repeat center;background-size: 80%;z-index: -1; width:100%;height:100%;left:15;" ></div>
 	            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%">
 	                 <thead>
 		                 <tr class="style" align="center" style=" line-height: 20px;">
@@ -131,7 +132,7 @@
 	               if(!empty($tran)) foreach($tran as $key =>$row){ ?>
 	               	<?php if($row['status']==0 AND $row['collect_by']==2){?>
 	               	<tr align="center" style=" height: 20px;" class="style">
-	               		<td colspan="10" style="background: #d3d3ff;"><span style="font-family:'Khmer OS Muol'"><?php if(!empty($row['note'])){echo $row['note']; }else{?>បានរំលស់ប្រាក់ដើម ចំនួន<?php }?></span><span style="font-family:Arail;font-size:16px;"> $ <?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></span><span style="font-family:'Khmer OS Muol'"> នៅថ្ងៃទី  <?php echo date('d-m-Y',strtotime($row['date_payment']));?></span></td>
+	               		<td colspan="10" style="background: #d3d3ff;"><span style="font-family:'Khmer OS Muol Light'"><?php if(!empty($row['note'])){echo $row['note']; }else{?>បានរំលស់ប្រាក់ដើម ចំនួន<?php }?></span><span style="font-family:Arail;font-size:16px;"> $ <?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></span><span style="font-family:'Khmer OS Muol Light'"> នៅថ្ងៃទី  <?php echo date('d-m-Y',strtotime($row['date_payment']));?></span></td>
 	               	</tr>
 	               	<?php continue;}
 	               	$i++; ?>
@@ -183,16 +184,16 @@
 	               <?php }
 	               ?>
 	            </table>
-	            <table width="100%" cellpadding="3">
+	            <table width="100%" cellpadding="3" style="font-family:'Khmer OS Muol Light'">
 	            	<tr class="font_bold" style="height:25px;">
-	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol'"><?php echo $tr->translate('ACCOUNTING_SIGN');?></td>
+	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('ACCOUNTING_SIGN');?></td>
 	            		<td align="center" valign="bottom"></td> 
-	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol'"><?php echo $tr->translate('BORROWER');?></td>
+	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('BORROWER');?></td>
 	            	</tr>
 	            	<tr class="font_bold">
-	            		<td align="center" height="120px" valign="bottom"><?php echo $client['user_name'];?></td>
+	            		<td align="center" height="120px" valign="bottom" style="font-family:'Khmer OS Muol Light'"><?php echo $client['user_name'];?></td>
 	            		<td align="center"  valign="bottom"></td>
-	            		<td align="center" valign="bottom"><?php echo $client['client_name_kh'];echo !empty($client['hname_kh'])?"/".$client['hname_kh']:"";?></td>
+	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol Light'"><?php echo $client['client_name_kh'];echo !empty($client['hname_kh'])?"/".$client['hname_kh']:"";?></td>
 	            	</tr>
 	            </table>
 	    	</td>

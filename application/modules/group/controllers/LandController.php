@@ -177,7 +177,6 @@ class Group_LandController extends Zend_Controller_Action {
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$this->view->street = $db->getAllStreetForOpt();
-		
 	}
 	function viewAction(){
 		$id = $this->getRequest()->getParam("id");

@@ -1399,53 +1399,7 @@ function getLoanPaymentByLoanNumberEdit($data){
    }
    
    function getAllLoanByCoId($data){ //quick Il Payment
-   	$db = $this->getAdapter();
-   	$co_id = $data["co_id"];
-   	$cu_id = $data["currency"];
-   	$date = $data["date_collect"];
-   	$sql="SELECT 
-			  (SELECT CONCAT(co.`co_firstname`,`co_lastname`,',',`co_khname`) FROM `ln_staff` AS co WHERE co.`co_id`=lg.`co_id`) AS co_name,
-			  (SELECT b.`branch_namekh` FROM `ln_branch` AS b WHERE b.`br_id`=lm.`branch_id`) AS branch,
-			  (SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lm.`client_id` ) AS `client`,
-  			  (SELECT c.`client_number` FROM `ln_client` AS c WHERE c.`client_id`=lm.`client_id` ) AS `client_number`,
-			  (SELECT crm.`date_input` FROM `ln_client_receipt_money` AS crm , `ln_client_receipt_money_detail` AS crmd WHERE crm.`id`=(SELECT c.`crm_id` FROM `ln_client_receipt_money_detail` AS c WHERE c.`lfd_id`=lf.`id` ORDER BY c.`id` DESC LIMIT 1) ORDER BY `crm`.`date_input` DESC LIMIT 1) AS last_pay_date,
-			  lm.`loan_number`,
-			  lm.`client_id`,
-			  lm.`branch_id`,
-			  lm.`interest_rate`,
-			  lm.`payment_method`,
-			  lm.`pay_after`,
-			  lm.`collect_typeterm`,
-			  lm.`currency_type`,
-			  SUM(lf.`total_principal`) AS total_principal,
-			  SUM(lf.`principle_after`) AS principle_after,
-			  SUM(lf.`total_interest_after`) AS total_interest_after,
-			  SUM(lf.`penelize`) AS penelize,
-			  SUM(lf.`service_charge`) AS service_charge,
-			  SUM(lf.`total_payment_after`) AS total_payment_after,
-			  lf.`date_payment`,
-  			  lf.`id`,
-  			  lg.`g_id`,
-  			  lg.`loan_type`
-			FROM
-			  `ln_loanmember_funddetail` AS lf,
-			  `ln_loan_member` AS lm,
-			  `ln_loan_group` AS lg 
-			WHERE lf.`is_completed` = 0 
-			  AND lf.`member_id` = lm.`member_id` 
-			  AND lm.`status` = 1 
-			  AND lg.`status` = 1 
-			  AND lf.status = 1
-			  AND lm.`is_completed` = 0
-			  AND lm.`group_id`=lg.`g_id`
-			  AND lm.`is_reschedule` !=1
-			  AND lf.`collect_by` = $co_id
-			  AND lm.`currency_type`=$cu_id
-			  AND lf.`date_payment`<='$date'
-			  ";
-
-   		$order = " GROUP BY lm.`group_id`,lf.`date_payment`";
-   		return $db->fetchAll($sql.$order);
+		return array();
    }
    function getFunByGroupId($id){
    		$db = $this->getAdapter();

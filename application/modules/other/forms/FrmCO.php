@@ -102,7 +102,7 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 				'required'=>'true','class'=>'fullside','OnChange'=>'popupDepartment()'));
 		
 		$db = new Application_Model_DbTable_DbGlobal();
-		$opt = $db->getAllDepartment(null,1);
+		$opt = array();
 		$_department->setMultiOptions($opt);
 		
 		$_figer_print_id=new Zend_Dojo_Form_Element_TextBox('figer_print_id');

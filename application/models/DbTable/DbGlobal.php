@@ -616,6 +616,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`house_id`        AS `house_id`,
 		  `s`.`price_before`    AS `price_before`,
 		  `s`.`price_sold`      AS `price_sold`,
+		   s.lastpayment_amount,
 		  `s`.`discount_amount` AS `discount_amount`,
 		  s.land_price ,
 		  s.discount_percent,
@@ -672,7 +673,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	return $db->fetchAll($sql);
   }
   function getAllPaymentMethod($payment_id=null,$option = null){
-  	$sql = "SELECT * FROM ln_payment_method WHERE status = 1 ";
+	  return array();
+  	/*$sql = "SELECT * FROM ln_payment_method WHERE status = 1 ";
   	if($payment_id!=null){
   		$sql.=" AND id = $payment_id";
   	}
@@ -685,8 +687,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		return $options;
   	}else{
   		return $rows;
-  	}
-//   return $this->getAdapter()->fetchAll($sql);	
+  	}*/
   	
   }
   public function getAllStaffPosition($id=null,$option = null){
@@ -709,7 +710,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   
   public function getAllDepartment($id=null,$option = null){
-  	$db = $this->getAdapter();
+  	/*
+	$db = $this->getAdapter();
   	$sql=" SELECT id,department_kh,department_en,displayby
   	FROM `ln_department` WHERE status =1 ";
   	if($id!=null){
@@ -725,6 +727,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}else{
   		return $rows;
   	}
+	*/
   }
   public  function getclientdtype(){
   	$db = $this->getAdapter();

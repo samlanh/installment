@@ -571,37 +571,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->officailreceipt = $frmpopup->getOfficailReceipt();
   }
   
-//   function rptUpdatepaymentAction(){
-//   	if($this->getRequest()->isPost()){
-//   		$_data = $this->getRequest()->getPost();
-//   		try {
-//   			$_dbmodel = new Report_Model_DbTable_DbLandreport();
-//   			$_dbmodel->updatePaymentStatus($_data);
-//   			Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/rpt-sold");
-//   		}catch (Exception $e) {
-//   			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-//   		}
-//   	}
-//   	$id =$this->getRequest()->getParam('id');
-//   	$db = new Application_Model_DbTable_DbGlobal();
-//   	$rs = $db->getClientByMemberId($id);
-//   	$this->view->client =$rs;
-//   	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
-//   	$row = $db->getPaymentupdateSchedule($id,$rs['payment_id']);
-//   	$this->view->tran_schedule=$row;
-//   	if(empty($row)){
-//   		//Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold');
-//   	}
-// //   	$day_inkhmer = $db->getDayInkhmerBystr(null);
-//   	//$this->view->day_inkhmer = $day_inkhmer;
-//   	$db = new Application_Model_DbTable_DbGlobal();
-//   	$key = new Application_Model_DbTable_DbKeycode();
-//   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-//   	$this->view->id = $id;
-//   	$this->view->payment_option = $db->getVewOptoinTypeByType(25,null,null,1);
-//   	$db = new Application_Model_DbTable_DbGlobal();
-//   	$this->view->customer =  $db->getAllClient();
-//   }
+
   function rptUpdatestatusAction(){
   	
   	$db = new Report_Model_DbTable_DbRptPaymentSchedule();

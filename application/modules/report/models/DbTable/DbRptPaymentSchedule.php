@@ -36,7 +36,7 @@ class Report_Model_DbTable_DbRptPaymentSchedule extends Zend_Db_Table_Abstract
     	FROM `ln_saleschedule`
     	WHERE sale_id= $id AND status=1 ";
     	 
-    	if($payment_id==4){
+    	if($payment_id==4 OR $payment_id==7){
     		$sql.=" AND is_installment=1 ";
     	};
     	$sql.=" ORDER BY date_payment ASC,no_installment ASC, collect_by ASC, status DESC ";
@@ -71,7 +71,6 @@ class Report_Model_DbTable_DbRptPaymentSchedule extends Zend_Db_Table_Abstract
   		,c.name_en ,m.total_capital,m.admin_fee
   		,m.interest_rate,
     	CONCAT( lg.total_duration,' ',(SELECT name_en FROM `ln_view` WHERE type = 14 AND key_code =lg.pay_term )),
-    	(SELECT payment_nameen FROM `ln_payment_method` WHERE id = m.payment_method) AS payment_nameen,
     	lg.time_collect
     	,(SELECT `zone_name` FROM `ln_zone` WHERE zone_id = lg.zone_id) AS zone_name
     	,(SELECT co_khname FROM `ln_staff` WHERE co_id = lg.co_id ) AS co_khname, m.status 

@@ -15,7 +15,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	protected function _initAuthPlugin()
 	{		
 		//Zend_Controller_Front::getInstance()->registerPlugin(
- 		//new Application_Model_CustomAuth(Zend_Auth::getInstance()));	
+ 		
 
 		date_default_timezone_set('Asia/Phnom_Penh');
 		$view = new Zend_View();

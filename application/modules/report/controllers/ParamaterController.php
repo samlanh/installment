@@ -227,6 +227,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"branch_id"=>-1,
   				"status"=>-1,
   				'land_id'=>-1,
+  				"ordering"=>1,
   				'client_name' => -1,
   				'streetlist'=>'',
   				'start_date'=> date('Y-m-d'),
