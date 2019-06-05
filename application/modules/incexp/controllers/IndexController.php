@@ -42,11 +42,10 @@ public function init()
 			try {
 				if(isset($data['save_new'])){
 					$db->addViewType($data);
-					Application_Form_FrmMessage::message('INSERT_SUCCESS');
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/index/add");
 				}else{
 					$db->addViewType($data);
-					Application_Form_FrmMessage::message('INSERT_SUCCESS');
-					Application_Form_FrmMessage::redirectUrl('/incexp/index');
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/index");
 				}
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");

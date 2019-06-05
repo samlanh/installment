@@ -20,13 +20,7 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     	c.phone,
     	pr.date,
     	pr.note,
-    	CASE
-			WHEN  pr.process_status = 1 THEN '1.HQ-P'
-			WHEN  pr.process_status = 2 THEN '2.P-HQ'
-			WHEN  pr.process_status = 3 THEN '3.HQ-T'
-			WHEN  pr.process_status = 4 THEN '4.HQ-P'
-			WHEN  pr.process_status = 5 THEN '5.HQ-C'
-		END AS processing
+    	(SELECT ps.title FROM `ln_plongstep_option` AS ps WHERE ps.id = pr.process_status LIMIT 1) AS processing
     	 ";
     	$sql.=$dbp->caseStatusShowImage("pr.status");
     	$sql.="
@@ -97,16 +91,21 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     					$this->_name="ln_processing_plong_detail";
     					$this->insert($arr_detail);
     				}
-    				if ($data['process_status']==4){
-    					$this->_name="ln_issueplong";
-    					$arrissuepl = array(
-    							'sale_id'=>$data['sale_id'.$i],
-    							'issue_date'=>$data['date'],
-    							'layout_number'=>"",
-    							'note'=>$data['note'.$i],
-    							'is_receivedplong'=>0,
-    					);
-    					$this->insert($arrissuepl);
+    				
+    				$_dbStepOpt = new Loan_Model_DbTable_DbStepOption();
+    				$lastStep = $_dbStepOpt->getLastStepoption();
+    				if (!empty($lastStep)){
+	    				if ($data['process_status']==$lastStep){
+	    					$this->_name="ln_issueplong";
+	    					$arrissuepl = array(
+	    							'sale_id'=>$data['sale_id'.$i],
+	    							'issue_date'=>$data['date'],
+	    							'layout_number'=>"",
+	    							'note'=>$data['note'.$i],
+	    							'is_receivedplong'=>0,
+	    					);
+	    					$this->insert($arrissuepl);
+	    				}
     				}
     		
     			}
@@ -171,25 +170,13 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     }
     function getPlogStepDetailById($id){
     	$db = $this->getAdapter();
-    	$sql=" SELECT pr.*,CASE
-			WHEN  pr.process_status = 1 THEN '1.HQ-P'
-			WHEN  pr.process_status = 2 THEN '2.P-HQ'
-			WHEN  pr.process_status = 3 THEN '3.HQ-T'
-			WHEN  pr.process_status = 4 THEN '4.HQ-P'
-			WHEN  pr.process_status = 5 THEN '5.HQ-C'
-		END AS processing
+    	$sql=" SELECT pr.*,(SELECT ps.title FROM `ln_plongstep_option` AS ps WHERE ps.id = pr.process_status LIMIT 1) AS processing
     	 FROM ln_processing_plong_detail as pr WHERE pr.processplong_id = $id ORDER BY pr.id DESC";
     	return $db->fetchAll($sql);
     }
     function getPlogStepDetailRowById($id){
     	$db = $this->getAdapter();
-    	$sql=" SELECT pr.*,CASE
-    	WHEN  pr.process_status = 1 THEN '1.HQ-P'
-    	WHEN  pr.process_status = 2 THEN '2.P-HQ'
-    	WHEN  pr.process_status = 3 THEN '3.HQ-T'
-    	WHEN  pr.process_status = 4 THEN '4.HQ-P'
-    	WHEN  pr.process_status = 5 THEN '5.HQ-C'
-    	END AS processing
+    	$sql=" SELECT pr.*,(SELECT ps.title FROM `ln_plongstep_option` AS ps WHERE ps.id = pr.process_status LIMIT 1) AS processing
     	FROM ln_processing_plong_detail as pr WHERE pr.id = $id LIMIT 1";
     	return $db->fetchRow($sql);
     }
@@ -226,27 +213,31 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     			$where=" id = ".$data['id'];
     			$id = $this->update($arr, $where);
     			
-    			if ($data['process_status']==4){
-    				$rs = $this->getPlogStepById($data['id']);
-    				if (!empty($rs)){
-	    				$this->_name="ln_issueplong";
+    			$_dbStepOpt = new Loan_Model_DbTable_DbStepOption();
+    			$lastStep = $_dbStepOpt->getLastStepoption();
+    			if (!empty($lastStep)){
+	    			if ($data['process_status']==$lastStep){
+	    				$rs = $this->getPlogStepById($data['id']);
+	    				if (!empty($rs)){
+		    				$this->_name="ln_issueplong";
+		    				$arr = array(
+		    						'sale_id'=>$rs['sale_id'],
+		    						'issue_date'=>$data['date'],
+		    						'layout_number'=>"",
+		    						'note'=>$data['note'],
+		    						'is_receivedplong'=>0,
+		    				);
+		    				$this->insert($arr);
+	    				}
+	    				
 	    				$arr = array(
-	    						'sale_id'=>$rs['sale_id'],
-	    						'issue_date'=>$data['date'],
-	    						'layout_number'=>"",
-	    						'note'=>$data['note'],
-	    						'is_receivedplong'=>0,
+	    					'is_issueplong'=>1,
+	    					'issueplong_date'=>date("Y-m-d")
 	    				);
-	    				$this->insert($arr);
-    				}
-    				
-    				$arr = array(
-    					'is_issueplong'=>1,
-    					'issueplong_date'=>date("Y-m-d")
-    				);
-    				$where="id = ".$rs['sale_id'];
-    				$this->_name="ln_sale";
-    				$this->update($arr, $where);
+	    				$where="id = ".$rs['sale_id'];
+	    				$this->_name="ln_sale";
+	    				$this->update($arr, $where);
+	    			}
     			}
     		}
     		

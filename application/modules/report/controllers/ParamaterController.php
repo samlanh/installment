@@ -580,7 +580,10 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$this->view->rssearch = $search;
   	
-  	 
+  	$_dbStepOpt = new Loan_Model_DbTable_DbStepOption();
+  	$allStep = $_dbStepOpt->getAllStepOptions();
+  	$this->view->allStep = $allStep; 
+  	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }

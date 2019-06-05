@@ -103,7 +103,13 @@
 				table.content-data thead tr.style {
 				   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
 					background: #c1d0f3;
+					font-weight: bold;
 				}
+				table.content-data  tr td{
+					padding: 1px;
+					
+				}
+				
 				table.tb-footer{
 					border-collapse:collapse;
 					border:1px solid #000; 
@@ -127,7 +133,7 @@
 			             </tr> 
 			          </table>
 			          </div>
-			         <table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
+			         <table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
 		            	<tr>	
 		            	<td colspan="3" id="exportExcel">
 		            		<table  class="content-data" border="1" width="100%"  >  
@@ -140,24 +146,17 @@
 								    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
 								    <td rowspan="2"><?php echo $tr->translate("ដីឡូតិ៍");?></td>
 								    <td rowspan="2"><?php echo $tr->translate("ឈ្មោះអតិថិជន");?></td>
+								    <?php if (!empty($this->allStep)) foreach ($this->allStep as $step){?>
 								    <td style="min-width: 78px;" rowspan="2"><?php echo $tr->translate("Date");?></td>
-								    <td colspan="2"><?php echo $tr->translate("1.ការិយាល័យ - សាលាស្រុក");?></td>
-								    <td style="min-width: 78px;" rowspan="2"><?php echo $tr->translate("Date");?></td>
-								    <td colspan="2"><?php echo $tr->translate("2.ការិយាល័យ - ពន្ធដា");?></td>
-								    <td style="min-width: 78px;" rowspan="2"><?php echo $tr->translate("Date");?></td>
-								    <td colspan="2"><?php echo $tr->translate("3.ការិយាល័យ - សាលាស្រុក");?></td>
-								    <td style="min-width: 78px;" rowspan="2"><?php echo $tr->translate("Date");?></td>
-								    <td colspan="2"><?php echo $tr->translate("4.ការិយាល័យ - អតិថិជន");?></td>
+								    <td colspan="2"><?php echo $step['name'];?></td>
+								    <?php }?>
+								    
 								</tr>
 								<tr class="style" align="center"  >
+								<?php if (!empty($this->allStep)) foreach ($this->allStep as $step){?>
 									<td><?php echo $tr->translate("ប្រគល់");?></td>
 									<td><?php echo $tr->translate("ទទួល");?></td>
-									<td><?php echo $tr->translate("ប្រគល់");?></td>
-									<td><?php echo $tr->translate("ទទួល");?></td>
-									<td><?php echo $tr->translate("ប្រគល់");?></td>
-									<td><?php echo $tr->translate("ទទួល");?></td>
-									<td><?php echo $tr->translate("ប្រគល់");?></td>
-									<td><?php echo $tr->translate("ទទួល");?></td>
+								<?php }?>
 								</tr>
 								</thead>
 						       <?php $i=0; if(!empty($this->row)) foreach($this->row as $key =>$row){ $i++;?>
@@ -170,29 +169,13 @@
 								   <td align="center">
 								   		<?php echo $row['name_kh'];?>
 								   </td>
-								   <?php $step1= $dbpara->getPlongStepDetailByID($row['id'],1);
-								  		 $step2= $dbpara->getPlongStepDetailByID($row['id'],2);
-								  		 $step3= $dbpara->getPlongStepDetailByID($row['id'],3);
-								  		 $step4= $dbpara->getPlongStepDetailByID($row['id'],4);
-// 								  		 $step5= $dbpara->getPlongStepDetailByID($row['id'],5);
-// 								  		 $step6= $dbpara->getPlongStepDetailByID($row['id'],6);
-// 								  		 $step7= $dbpara->getPlongStepDetailByID($row['id'],7);
-								   ?>
-								   <td align="center">&nbsp;<?php echo empty($step1['date'])?"":date("d/m/Y",strtotime($step1['date']))?>&nbsp;</td>
-								   <td>&nbsp;<?php echo empty($step1['give_by'])?"":$step1['give_by']?>&nbsp;</td>
-								   <td>&nbsp;<?php echo empty($step1['receive_by'])?"":$step1['receive_by']?>&nbsp;</td>
-								   
-								   <td align="center">&nbsp;<?php echo empty($step2['date'])?"":date("d/m/Y",strtotime($step2['date']))?>&nbsp;</td>
-								   <td>&nbsp;<?php echo empty($step2['give_by'])?"":$step2['give_by']?>&nbsp;</td>
-								   <td>&nbsp;<?php echo empty($step2['receive_by'])?"":$step2['receive_by']?>&nbsp;</td>
-								   
-								   <td align="center">&nbsp;<?php echo empty($step3['date'])?"":date("d/m/Y",strtotime($step3['date']))?>&nbsp;</td>
-								   <td>&nbsp;<?php echo empty($step3['give_by'])?"":$step3['give_by']?>&nbsp;</td>
-								   <td>&nbsp;<?php echo empty($step3['receive_by'])?"":$step3['receive_by']?>&nbsp;</td>
-								   
-								   <td align="center">&nbsp;<?php echo empty($step4['date'])?"":date("d/m/Y",strtotime($step4['date']))?>&nbsp;</td>
-								   <td>&nbsp;<?php echo empty($step4['give_by'])?"":$step4['give_by']?>&nbsp;</td>
-								   <td>&nbsp;<?php echo empty($step4['receive_by'])?"":$step4['receive_by']?>&nbsp;</td>
+								   <?php if (!empty($this->allStep)) foreach ($this->allStep as $step){
+								   		$step1= $dbpara->getPlongStepDetailByID($row['id'],$step['id']);
+								   	?>
+								   	<td align="center">&nbsp;<?php echo empty($step1['date'])?"":date("d/m/Y",strtotime($step1['date']))?>&nbsp;</td>
+									<td>&nbsp;<?php echo empty($step1['give_by'])?"":$step1['give_by']?>&nbsp;</td>
+									<td>&nbsp;<?php echo empty($step1['receive_by'])?"":$step1['receive_by']?>&nbsp;</td>
+								   <?php }?>
 								   
 								</tr>
 								<?php }?>
