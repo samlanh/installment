@@ -1,0 +1,185 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("DATABASE_INFO"));
+	
+	$data = $this->data;
+	$servername =$data['servername'];
+	$dbuser = $data['dbuser'];
+	$dbpassword =$data['dbpassword'];
+	$dbname = $data['dbname'];
+	$part=PUBLIC_PATH. '/sytembackup/';
+	$url = $this->baseUrl().'/sytembackup/';
+?>
+<style>
+table.history-record {
+    width: 100%;
+    font-size: 12px;
+}
+table.history-record thead tr th {
+    text-align: center;
+    padding: 5px 2px;
+    background: #e0eafb;
+    border-bottom: solid 1px #afadad;
+}
+table.history-record tbody tr {
+    border-bottom: solid 1px #e8e8e8;
+}
+table.history-record tr td {
+    padding: 2px;
+}
+table.history-record a.btn.btn-primary.btn-xs ,
+table.history-record a.btn.btn-danger.btn-xs {
+    font-size: 10px;
+    margin: 0;
+}
+</style>
+<div class="card" style="min-height: 400px;">
+	<div class="card-content collapse show">
+		<div class="card-box">
+        	<div class="col-sm-12 border-botom" style="text-align: left;">
+		    	<div class="col-sm-8 pd-0">
+		    		<h4 class="m-b-0"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('DATABASE_INFO');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<div class="card-box">
+    		<form action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+				<script type="dojo/method" event="onSubmit">				
+						if(this.validate()) {
+							loadingBlock();
+							return true;
+						}
+						return false;
+				</script>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("Click Button Below To​  Backup Database");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <div class="col-md-12 col-sm-12 col-xs-12 ">
+	                   		<button type="submit" name="submit" value="<?php echo $tr->translate("BACKUP_NOW");?>" class="btn btn-success" onclick="return confirm('<?php echo $tr->translate("You Want to Backup Now");?>');" ><i class="fa fa-arrow-circle-down" aria-hidden="true"></i> <?php echo $tr->translate("BACKUP_NOW");?></button>
+	                   </div>
+	                </div>
+            </div>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+            	<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("File Backup List");?> 
+	                   </label>
+	                </div>
+            	<div class="form-group">
+                   <div class="col-md-12 col-sm-12 col-xs-12">
+                   		<div class="backup_list">
+                   			<?php $downloads=getDownloads($part);
+                   			if(count($downloads)>0){ ?>
+                   			<table class="history-record">
+		                		<thead>
+		                			<tr>
+		                				<th><?php echo $tr->translate("NUM")?></th>
+		                				<th><?php echo $tr->translate("DATE")?></th>
+		                				<th><?php echo $tr->translate("FILE_NAME")?></th>
+		                				<th><?php echo $tr->translate("SIZE")?></th>
+		                				<th><?php echo $tr->translate("DOWNLOAD")?></th>
+		                				<th><?php echo $tr->translate("REMOVE")?></th>
+		                			</tr>
+		                		</thead>
+		                		<tbody>
+		                		<?php foreach ($downloads as $k => $v) {
+		                			?>
+	                				<tr>
+		                				<td align="center">&nbsp;<?php echo $k+1;?>&nbsp;</td>
+		                				<td align="center">&nbsp;<?php echo date("F d Y H:i:s.", filectime($part.'/'.$v));?>&nbsp;</td>
+		                				<td align="center">&nbsp;<?php echo $v;?>&nbsp;</td>
+		                				<td align="center">&nbsp;<?php echo get_file_size_unit(filesize($part.'/'.$v));?>&nbsp;</td>
+		                				<td align="center">&nbsp;
+		                					<a class="btn btn-primary btn-xs" href="<?php echo $url.$v;?>" target="_blank">
+		                					<span><i class="fa fa-download"></i> <?php echo $tr->translate("DOWNLOAD")?></span>
+		                					</a>
+		                					&nbsp;</td>
+		                				<td align="center">
+		                					&nbsp;
+			                				<a onclick="return confirm('Are you sure want to remove this file');" class="btn btn-danger btn-xs" href="?task=clear&file=<?php echo $v;?>">
+			                					<span><i class="fa fa-times"></i> <?php echo $tr->translate("REMOVE")?></span>
+			                				</a>
+		                					&nbsp;
+		                				</td>
+	                				</tr>
+	                				<?php }?>
+	                			</tbody>
+	                		</table>
+                   			<?php }
+                   			?>
+					    </div> 
+                   </div>
+                </div>
+            </div>
+            </form>
+         </div>   
+                
+    </div>
+ </div>
+<?php 
+function getDownloads($dir="./sytembackup"){
+	if (is_dir($dir)){
+		$dh  = opendir($dir);
+		$files=array();
+		$i=0;
+		
+		$ignored = array('.', '..', '.svn', '.htaccess');
+		
+		$files = array();
+		foreach (scandir($dir) as $file) {
+			if (in_array($file, $ignored)) continue;
+			$files[$file] = filemtime($dir . '/' . $file);
+		}
+		
+		arsort($files);
+		$files = array_keys($files);
+// 		print_r($files);exit();
+		
+		
+// 		$xclude=array('.','..','.htaccess');
+// 		while (false !== ($filename = readdir($dh))) {
+// 			if(!in_array($filename, $xclude))
+// 			{
+// 				$files[$i]['name'] = $filename;
+// 				$files[$i]['size'] = get_file_size_unit(filesize($dir.'/'.$filename));
+// 				$files[$i]['datecreate'] = date("F d Y H:i:s.", filectime($dir.'/'.$filename));
+				
+// 				$i++;
+// 			}
+// 		}
+// 		ksort($files);
+		return $files;
+	}
+}
+function get_file_size_unit($file_size){
+	switch (true) {
+		case ($file_size/1024 < 1) :
+			return intval($file_size ) ." Bytes" ;
+			break;
+		case ($file_size/1024 >= 1 && $file_size/(1024*1024) < 1)  :
+			return intval($file_size/1024) ." KB" ;
+			break;
+		default:
+			return intval($file_size/(1024*1024)) ." MB" ;
+	}
+}
+
+//Delete File
+if(isset($_GET['task'])&& $_GET['task']=='clear'){
+	$file_name=$_GET['file'];
+	$file=$part.$file_name;
+	if(file_exists($file)){
+		if(unlink($file))
+			$this->baseUrl();
+		echo'<script>alert("'.$tr->translate("DELETE_SUCCESS").'"); window.location="'.Zend_Controller_Front::getInstance()->getBaseUrl().'/setting/backupdatabase";</script>';
+	}
+	else {
+		echo"<script>alert('".$tr->translate("Not found already removed")."'); window.location='".Zend_Controller_Front::getInstance()->getBaseUrl()."/setting/backupdatabase';</script>";
+	}
+}
+?>
+
