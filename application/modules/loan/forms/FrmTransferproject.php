@@ -313,6 +313,17 @@ public function init()
 		$_interest_rate = new Zend_Form_Element_Hidden("old_rate");
 		$_old_payterm = new Zend_Form_Element_Hidden("old_payterm");
 		$_id = new Zend_Form_Element_Hidden('id');
+		
+		
+		$typesale = new Zend_Dojo_Form_Element_FilteringSelect('typesale');
+		$typesale->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>'resetSale();'
+		));
+		$options= array(1=>$this->tr->translate("NORMAL_SALE"),2=>$this->tr->translate("MULTY_SALE"));
+		$typesale->setMultiOptions($options);
+		
 		if($data!=null){
 // 			$_loan_code->setValue($data['sale_number']);
 // 			$receipt->setValue($data['receipt_no']);
@@ -340,7 +351,9 @@ public function init()
 		$this->addElements(array($paid_receivehouse,$total_installamount,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
-				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id));
+				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id,
+				$typesale
+				));
 		return $this;
 		
 	}	

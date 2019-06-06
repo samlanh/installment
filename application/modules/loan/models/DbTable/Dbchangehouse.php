@@ -60,11 +60,88 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     
    	return $db->fetchAll($sql.$where.$order);
    }
+   function getProperty($id){
+   	$db = $this->getAdapter();
+   	$sql="SELECT * FROM `ln_properties` AS p WHERE p.`id`=".$id;
+   	return $db->fetchRow($sql);
+   }
    public function addChangeHouse($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{//need add schedule
     		
+    		if ($data['typesale']==2){//លក់ម្តងច្រើន
+    			$ids_land = explode(',', $data['identity_land']);
+    			$size = 0; $width=''; $height='';
+    			$land_address='';
+    			$land_code='';
+    			$price = 0;
+    			$land_price=0;
+    			$house_price=0;
+    			$property_type='';
+    			foreach ($ids_land as $key => $i){
+    				$this->_name="ln_properties";
+    				$where = "id =".$ids_land[$key];
+    				$arr = array(
+    						"is_lock"=>1,
+    				);
+    				$this->update($arr, $where);
+    				$newpro = $this->getProperty($ids_land[$key]);
+    				$size = $size + $newpro['land_size'];
+    		
+    				$width = $width+$newpro['width'];
+    				$height =$newpro['height'];
+    		
+    				$price = $price + $newpro['price'];
+    				$land_price = $land_price+$newpro['land_price'];
+    				$house_price = $house_price+$newpro['house_price'];
+    				
+    				if(!empty($land_address)){
+    					//$land_address= $land_address.'&'.$newpro['land_address'];
+    					$land_address= $land_address.','.$newpro['land_address'];
+    				}else{ 
+    					$land_address =$newpro['land_address'];
+    				}
+    				if(!empty($land_code)){
+    					$land_code=$land_code.','.$newpro['land_code'];
+    				}else{ $land_code =$newpro['land_code'];
+    				}
+    				$property_type = $newpro['property_type'];
+    			}//end loop
+    			
+    			$newproperty = array(
+    					'branch_id'=>$data['branch_id'],
+    					'land_code'=>$land_code,
+    					'land_address'=>$land_address,
+    					'street'=>$newpro['street'],
+    					'price'=>$price,
+    					'land_price'=>$land_price,
+    					'house_price'=>$house_price,
+    					'property_type'=>$property_type,
+//     					'width'=>$data['width'],
+//     					'height'=>$data['height'],
+//     					'land_size'=>$data['land_size'],
+//     					'south'=>$data['south'],
+//     					'north'=>$data['north'],
+//     					'west'=>$data['west'],
+//     					'east'=>$data['east'],
+    					"is_lock"=>1,
+    					"status"=>-2,
+    					"create_date"=>date("Y-m-d"),
+    					"user_id"=>$this->getUserId(),
+    					"old_land_id"=>$data['identity_land']
+    			);
+    			$this->_name="ln_properties";
+    			$land_id = $this->insert($newproperty);
+    			$data['to_land_code']=$land_id;
+    		}else{
+    			$this->_name="ln_properties";
+    			$where=" id=".$data['to_land_code'];
+	    		$arr = array(
+	    				'is_lock'=>1
+	    		);
+	    		$this->update($arr, $where);//lock new house
+    		}
     		$sql=" SELECT SUM(total_principal_permonthpaid) AS total_permonth FROM `ln_client_receipt_money` WHERE sale_id =".$data['loan_number']." AND status=1 ";
     		$paid_amount = $db->fetchOne($sql);
     		
@@ -100,6 +177,26 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     		$dbs = new Loan_Model_DbTable_DbLandpayment();
     		$id = $data['loan_number'];
     		$rows = $dbs->getTranLoanByIdWithBranch($id);
+    		
+    		if(!empty($rows)){
+    			$ids = explode(',', $rows['all_land_id']);
+    			if (!empty($rows['all_land_id'])){
+    				foreach($ids as $land){ //unlock old house
+    					$this->_name="ln_properties";
+    					$arr = array(
+    							"is_lock"=>0
+    					);
+    					$where = "id =".$land;
+    					$this->update($arr, $where);
+    				}
+    			}
+//     			if($rows['typesale']==2){ //case old Sale Multi sale
+//     				$this->_name = 'ln_properties';
+//     				$where="id = ".$rows["house_id"];
+//     				$this->delete($where);
+//     			}
+    		}
+    		
     		$arr = array(
     				'sale_id'=>$id,
     				'client_id'=>$data['member'],
@@ -119,7 +216,9 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				
     				'change_date'=>$data['release_date'],//$data['date_buy'],
     				'note'=>$data['note'],
-    				'user_id'=>$this->getUserId()
+    				'user_id'=>$this->getUserId(),
+    				
+    				'typesale'=>$data['typesale'],
     				);
 	    		$this->_name="ln_change_house";
 	    		$changeid = $this->insert($arr);
@@ -128,25 +227,20 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     			$arr = array(
     				'branch_id'=>$data['branch_id'],
     				'house_id'=>$data["to_land_code"],
+    				'typesale'=>$data['typesale'],
     			);
 	    		$where = " id = ".$data['loan_number'];
 	    		$this->_name="ln_sale";
 	    		$id = $this->update($arr, $where);
 	    		
 	    		
-	    		$this->_name="ln_properties";
-	    		$where=" id=".$data['land_code'];
-	    		$arr = array(
-	    				'is_lock'=>0
-	    				);
-	    		$this->update($arr, $where);//unlock old house
+// 	    		$this->_name="ln_properties";
+// 	    		$where=" id=".$data['land_code'];
+// 	    		$arr = array(
+// 	    				'is_lock'=>0
+// 	    				);
+// 	    		$this->update($arr, $where);//unlock old house
 	    		
-	    		
-	    		$where=" id=".$data['to_land_code'];
-	    		$arr = array(
-	    				'is_lock'=>1
-	    		);
-	    		$this->update($arr, $where);//lock new house
     			$db->commit();
     			return 1;
     		}catch (Exception $e){
@@ -159,9 +253,96 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{//need add schedule
+    		
+    		if ($data['typesale']==2){//លក់ម្តងច្រើន
+    			$ids_land = explode(',', $data['identity_land']);
+    			$size = 0; $width=''; $height='';
+    			$land_address='';
+    			$land_code='';
+    			$price = 0;
+    			$land_price=0;
+    			$house_price=0;
+    			$property_type='';
+    			foreach ($ids_land as $key => $i){
+    				$this->_name="ln_properties";
+    				$where = "id =".$ids_land[$key];
+    				$arr = array(
+    						"is_lock"=>1,
+    				);
+    				$this->update($arr, $where);
+    				$newpro = $this->getProperty($ids_land[$key]);
+    				$size = $size + $newpro['land_size'];
+    		
+    				$width = $width+$newpro['width'];
+    				$height =$newpro['height'];
+    		
+    				$price = $price + $newpro['price'];
+    				$land_price = $land_price+$newpro['land_price'];
+    				$house_price = $house_price+$newpro['house_price'];
+    		
+    				if(!empty($land_address)){
+    					//$land_address= $land_address.'&'.$newpro['land_address'];
+    					$land_address= $land_address.','.$newpro['land_address'];
+    				}else{
+    					$land_address =$newpro['land_address'];
+    				}
+    				if(!empty($land_code)){
+    					$land_code=$land_code.','.$newpro['land_code'];
+    				}else{ $land_code =$newpro['land_code'];
+    				}
+    				$property_type = $newpro['property_type'];
+    			}//end loop
+    			 
+    			$newproperty = array(
+    					'branch_id'=>$data['branch_id'],
+    					'land_code'=>$land_code,
+    					'land_address'=>$land_address,
+    					'street'=>$newpro['street'],
+    					'price'=>$price,
+    					'land_price'=>$land_price,
+    					'house_price'=>$house_price,
+    					'property_type'=>$property_type,
+    					"is_lock"=>1,
+    					"status"=>-2,
+    					"create_date"=>date("Y-m-d"),
+    					"user_id"=>$this->getUserId(),
+    					"old_land_id"=>$data['identity_land']
+    			);
+    			$this->_name="ln_properties";
+    			$land_id = $this->insert($newproperty);
+    			$data['to_land_code']=$land_id;
+    		}else{
+    			$this->_name="ln_properties";
+    			$where=" id=".$data['to_land_code'];
+    			$arr = array(
+    					'is_lock'=>1
+    			);
+    			$this->update($arr, $where);//lock new house
+    		}
+    		
     		$dbs = new Loan_Model_DbTable_DbLandpayment();
     		$id = $data['loan_number'];
     		$rows = $dbs->getTranLoanByIdWithBranch($id);
+    		
+    		if(!empty($rows)){
+    			$ids = explode(',', $rows['all_land_id']);
+    			if (!empty($rows['all_land_id'])){
+    				foreach($ids as $land){ //unlock old house
+    					$this->_name="ln_properties";
+    					$arr = array(
+    							"is_lock"=>0
+    					);
+    					$where = "id =".$land;
+    					$this->update($arr, $where);
+    				}
+    			}
+//     			if($rows['typesale']==2){ //case old Sale Multi sale
+//     				$this->_name = 'ln_properties';
+//     				$where="id = ".$rows["house_id"];
+//     				$this->delete($where);
+//     			}
+    		}
+    		
     		$arr = array(
     				'from_branchid'=>$data['branch_id'],
     				'from_houseid'=>$rows['house_id'],
@@ -171,7 +352,8 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				'to_branchid'=>$data['to_branch_id'],
     				'to_houseid'=>$data['to_land_code'],
     				'note'=>'',//$data['note'],
-    				'user_id'=>$this->getUserId()
+    				'user_id'=>$this->getUserId(),
+    				'typesale'=>$data['typesale'],
     		);
     		$this->_name="ln_change_house";
     		$where=" id =".$data['id'];
@@ -180,23 +362,24 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     		$arr = array(
     				'branch_id'=>$data['branch_id'],
     				'house_id'=>$data["to_land_code"],
+    				'typesale'=>$data['typesale'],
     		);
     		$where = " id = ".$data['loan_number'];
     		$this->_name="ln_sale";
     		$id = $this->update($arr, $where);//add group loan
     		 
-    		$this->_name="ln_properties";
-    		$where=" id=".$data['land_code'];
-    		$arr = array(
-    				'is_lock'=>0
-    		);
-    		$this->update($arr, $where);//unlock old house
+//     		$this->_name="ln_properties";
+//     		$where=" id=".$data['land_code'];
+//     		$arr = array(
+//     				'is_lock'=>0
+//     		);
+//     		$this->update($arr, $where);//unlock old house
     		 
-    		$where=" id=".$data['to_land_code'];
-    		$arr = array(
-    				'is_lock'=>1
-    		);
-    		$this->update($arr, $where);//lock new house
+//     		$where=" id=".$data['to_land_code'];
+//     		$arr = array(
+//     				'is_lock'=>1
+//     		);
+//     		$this->update($arr, $where);//lock new house
     		$db->commit();
     		return 1;
     		 

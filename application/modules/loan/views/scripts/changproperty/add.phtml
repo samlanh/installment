@@ -155,7 +155,14 @@
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TO_LAND_CODE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="to_land_code" />
+	                   		<div class="col-md-6 col-sm-6 col-xs-12">
+	                   		 	<?php echo $frm->getElement('typesale');?>
+	                   		 	<input type="hidden" name="identity_land" id="identity_land"  value="" >
+	                   		 	<input type="hidden" name="land_label" id="land_label" dojoType="dijit.form.TextBox" value="" >
+	                   		 </div>
+	                   		 <div class="col-md-6 col-sm-6 col-xs-12">
+	                    		<input id="to_land_code" />
+	                    	 </div>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -188,6 +195,11 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('balance')?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <div class="col-md-12 col-sm-12 col-xs-12" style="background:#fff;border:1px solid #aac4e6;font-size: 13px;color:#284db7;padding:2px;clear: both;height: auto;min-height: 100px;">
+	                    	<label id="land_information" style="max-width:100%;"></label>
 	                   </div>
 	                </div>
 	    		</div>
@@ -824,6 +836,7 @@ function getlandinfo(){
 var url_getlandinfotransferdetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfotransfer(){
 	property_id = dijit.byId('to_land_code').get('value');
+	var oldprice= dijit.byId('to_total_sold').get('value');
 	if(property_id==''){
 		return false;
 	}
@@ -834,18 +847,77 @@ function getlandinfotransfer(){
 		},		    
 		handleAs:"json",
 		load: function(data) {
-			dijit.byId('house_price').attr('value',data.house_price);
-			dijit.byId('to_total_sold').attr('value',data.price);
-			dijit.byId('house_price').attr('value',data.price);
-            tohouseprice = dijit.byId('to_total_sold').get('value');
-            if(isNaN(tohouseprice)){tohouseprice=0;}
-            paid_before = dijit.byId('paid_before').get('value');
-            if(isNaN(tohouseprice)){paid_before=0;}
-            balance_price = parseFloat(tohouseprice)-parseFloat(paid_before);
+			var typesale =dijit.byId('typesale').get('value');
+			if(typesale==2){
+				var had = 0;
+				var rowId = $('#identity_land').val();
+			 	if($("#identity_land").val()!='') {
+			 		var rowIDArray = rowId.split(',');
+		 			for(var n = 0; n < rowIDArray.length; n++) {
+		 				if(property_id == rowIDArray[n]){
+			 				alert("លេខដី/ផ្ទះ នេះបានជ្រើសរើសរួចហើយ");
+			 				had = 1;
+		 				}
+		 			}
+		 			if(had==1){}else{
+		 				var identity = $("#identity_land").val();
+						var price = oldprice + parseFloat(data.price);
+						
+						oldland_code =  oldland_code+","+data.land_code;
+						//address = address+"&"+data.land_address+','+data.street;
+						address = address+","+data.land_address+','+data.street;
+						size = parseFloat(size)+parseFloat(data.land_size);
+						height = height+" , "+data.height;
+						width = width+" , "+data.width;
+						$("#identity_land").val(identity+','+data.id);
+						
+						dijit.byId('to_total_sold').attr('value',price);
+						dijit.byId('house_price').attr('value',price);
 
-            paid_before = dijit.byId('paid_before').get('value');
-            if(isNaN(paid_before)){paid_before=0;}
-            dijit.byId('balance').attr('value',data.price-paid_before);            
+						 paid_before = dijit.byId('paid_before').get('value');
+			            if(isNaN(paid_before)){paid_before=0;}
+			            dijit.byId('balance').attr('value',price-paid_before); 
+				            
+						dojo.byId('land_information').innerHTML ="លេខដី/ផ្ទះ  "+address+", ទំហំ "+size+" ម៉ែត្រការ៉េ ";
+						dijit.byId('land_label').attr('value',address);
+		 			}
+			 	}else {
+			 		$("#identity_land").val(data.id);
+
+					dijit.byId('to_total_sold').attr('value',data.price);
+					dijit.byId('house_price').attr('value',data.price);
+		            tohouseprice = dijit.byId('to_total_sold').get('value');
+		            if(isNaN(tohouseprice)){tohouseprice=0;}
+		            paid_before = dijit.byId('paid_before').get('value');
+		            if(isNaN(tohouseprice)){paid_before=0;}
+		            balance_price = parseFloat(tohouseprice)-parseFloat(paid_before);
+		
+		            paid_before = dijit.byId('paid_before').get('value');
+		            if(isNaN(paid_before)){paid_before=0;}
+		            dijit.byId('balance').attr('value',data.price-paid_before);   
+
+					oldland_code = data.land_code;
+					address = data.land_address+','+data.street;
+					size = data.land_size;
+					height = data.height;
+					width = data.width;
+					dijit.byId('land_label').attr('value',address);
+					dojo.byId('land_information').innerHTML ="លេខដី/ផ្ទះ  "+address+","+" ទំហំ "+size+" ម៉ែត្រការ៉េ ";
+			 	}
+			}else{
+				dijit.byId('house_price').attr('value',data.house_price);
+				dijit.byId('to_total_sold').attr('value',data.price);
+				dijit.byId('house_price').attr('value',data.price);
+	            tohouseprice = dijit.byId('to_total_sold').get('value');
+	            if(isNaN(tohouseprice)){tohouseprice=0;}
+	            paid_before = dijit.byId('paid_before').get('value');
+	            if(isNaN(tohouseprice)){paid_before=0;}
+	            balance_price = parseFloat(tohouseprice)-parseFloat(paid_before);
+	
+	            paid_before = dijit.byId('paid_before').get('value');
+	            if(isNaN(paid_before)){paid_before=0;}
+	            dijit.byId('balance').attr('value',data.price-paid_before);    
+			}        
 		},
 		error: function(err) {
 		}
@@ -854,5 +926,20 @@ function getlandinfotransfer(){
 function clearTextBox(){
 	dijit.byId('member').set('value','');
 	dijit.byId('total_amount').set('value',0);
+}
+
+function resetSale(){
+	dijit.byId('land_label').attr("value",'');
+	$('#identity_land').val('');
+	dojo.byId('land_information').innerHTML ="";
+	//dijit.byId('land_price').attr("value",0);
+	//dijit.byId('house_price').attr("value",0);
+	dijit.byId('house_price').attr("value",0);
+	dijit.byId('to_total_sold').attr("value",0);
+	land_id = dijit.byId("to_land_code").get("value");
+	if(land_id!='' && land_id>0){
+		getlandinfotransfer();
+	}
+	
 }
 </script>
