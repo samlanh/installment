@@ -20,12 +20,12 @@
 	dojo.require("dijit.form.DateTextBox");
 </script>
 <meta charset="utf-8">
-<title><?php echo $tr->translate("កំណត់ត្រារត់ប្លង់ដី(ស្រុក/ពន្ធដា)");?></title>
+<title><?php echo $tr->translate("PLONG_PROCESS_REPORT");?></title>
 <div class="reportblog">
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('កំណត់ត្រារត់ប្លង់ដី(ស្រុក/ពន្ធដា)');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('PLONG_PROCESS_REPORT');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -79,7 +79,7 @@
 							line-height: 20px;font-size: 14px !important;
 							font-family: 'Times New Roman','Khmer OS Battambang';
 							}
-							th{padding: 5px;}
+							th{padding: 2px;}
 					.hide{visibility: hidden;}
 					@media print {
 					  div.divFooter {
@@ -95,13 +95,13 @@
 				table.content-data{
 					border-collapse:collapse;
 					border:1px solid #000; 
-					font-size:13px;
+					font-size:12px;
 					font-family: 'Times New Roman','Khmer OS Battambang';
 					white-space: nowrap;
 					line-height: 22px;
 				}
 				table.content-data thead tr.style {
-				   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+				   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
 					background: #c1d0f3;
 					font-weight: bold;
 				}
@@ -109,7 +109,6 @@
 					padding: 1px;
 					
 				}
-				
 				table.tb-footer{
 					border-collapse:collapse;
 					border:1px solid #000; 
@@ -126,14 +125,14 @@
 			                <td width="25%"><img src="<?php echo $logo;?>" style="max-height:85px;max-width:100%;"></td>
 			                <td width="50%" valign="top">
 			                <h2 style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-weight:200; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;;?></h2>
-			                <h2 style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-weight:200;font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("កំណត់ត្រារត់ប្លង់ដី(ស្រុក/ពន្ធដា)");?></h2>
+			                <h2 style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-weight:200;font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("PLONG_PROCESS_REPORT");?></h2>
 			                <p style="text-align:center; font-size:14px; font-weight:200; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
 			                </td>
 			                <td width="25%"></td>
 			             </tr> 
 			          </table>
 			          </div>
-			         <table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
+			         <table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;" >
 		            	<tr>	
 		            	<td colspan="3" id="exportExcel">
 		            		<table  class="content-data" border="1" width="100%"  >  
@@ -141,11 +140,13 @@
 						    	<tr class="hide" style="border:1px solid #000;">
 						             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 						        </tr>
-						    	<tr class="style" align="center"  >
+						    	<tr class="style" align="center" >
 									<td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 								    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-								    <td rowspan="2"><?php echo $tr->translate("ដីឡូតិ៍");?></td>
-								    <td rowspan="2"><?php echo $tr->translate("ឈ្មោះអតិថិជន");?></td>
+								    <td rowspan="2"><?php echo $tr->translate("CLIENT_NAME");?></td>
+								    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
+								    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+								    <td rowspan="2"><?php echo $tr->translate("HEAD_TITLE_NO");?></td>
 								    <?php if (!empty($this->allStep)) foreach ($this->allStep as $step){?>
 								    <td style="min-width: 78px;" rowspan="2"><?php echo $tr->translate("Date");?></td>
 								    <td colspan="2"><?php echo $step['name'];?></td>
@@ -163,12 +164,12 @@
 								<tr align="left">
 								   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
-								   <td align="center" >
-								   		<?php echo $row['land_address'];?>
-								   	</td>
 								   <td align="center">
 								   		<?php echo $row['name_kh'];?>
 								   </td>
+								   <td align="center"><?php echo $row['phone'];?></td>
+								   <td align="center" ><?php echo $row['land_address'];?></td>
+								   <td align="center" ><?php echo $row['hardtitle'];?></td>
 								   <?php if (!empty($this->allStep)) foreach ($this->allStep as $step){
 								   		$step1= $dbpara->getPlongStepDetailByID($row['id'],$step['id']);
 								   	?>
@@ -176,7 +177,6 @@
 									<td>&nbsp;<?php echo empty($step1['give_by'])?"":$step1['give_by']?>&nbsp;</td>
 									<td>&nbsp;<?php echo empty($step1['receive_by'])?"":$step1['receive_by']?>&nbsp;</td>
 								   <?php }?>
-								   
 								</tr>
 								<?php }?>
 						    </table>

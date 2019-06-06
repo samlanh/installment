@@ -674,13 +674,13 @@ class Report_LoanController extends Zend_Controller_Action {
   		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
   		exit();
   	}
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+//   	$key = new Application_Model_DbTable_DbKeycode();
+//   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   	
-  	$frm = new Loan_Form_FrmSearchLoan();
-  	$frm = $frm->AdvanceSearch();
-  	Application_Model_Decorator::removeAllDecorator($frm);
-  	$this->view->frm_search = $frm;
+//   	$frm = new Loan_Form_FrmSearchLoan();
+//   	$frm = $frm->AdvanceSearch();
+//   	Application_Model_Decorator::removeAllDecorator($frm);
+//   	$this->view->frm_search = $frm;
   }
   
   function rptChangeownerAction(){

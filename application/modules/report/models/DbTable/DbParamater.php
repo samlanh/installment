@@ -1578,6 +1578,7 @@ function getAllBranch($search=null){
 	    		(SELECT sex FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS sex,
 	    		(SELECT tel FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS tel,
 	    		c.total_amount,
+	    		c.invoice,
 	    		for_date AS `create_date`, c.`status`,c.is_closed,
 	    		(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
 	    		FROM `ln_comission` AS c ,
@@ -1947,6 +1948,7 @@ function getAllBranch($search=null){
 		`c`.`name_kh`         AS `name_kh`,
 		`p`.`land_address`    AS `land_address`,
 		`p`.`street`          AS `street`,
+		p.hardtitle,
 		c.phone,
 		CASE
 		WHEN  pr.process_status = 1 THEN '1.HQ-P'

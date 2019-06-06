@@ -15,23 +15,27 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     	
     	(SELECT `ln_project`.`project_name`   	FROM `ln_project`  	WHERE (`ln_project`.`br_id` = `pr`.`branch_id`)	LIMIT 1) AS `branch_name`,
     	`c`.`name_kh`         AS `name_kh`,
+    	c.phone,
     	`p`.`land_address`    AS `land_address`,
     	`p`.`street`          AS `street`,
-    	c.phone,
+    	 p.hardtitle,
     	pr.date,
     	pr.note,
     	(SELECT ps.title FROM `ln_plongstep_option` AS ps WHERE ps.id = pr.process_status LIMIT 1) AS processing
     	 ";
     	$sql.=$dbp->caseStatusShowImage("pr.status");
     	$sql.="
-    	FROM (`ln_processing_plong` `pr`,
+    		FROM (`ln_processing_plong` `pr`,
 		     `ln_client` `c`
-		   JOIN `ln_properties` `p`)
-    	WHERE (`c`.`client_id` = `pr`.`customer_id`)
-       AND (`p`.`id` = `pr`.`property_id`) 
-    	";
+		   	  JOIN `ln_properties` `p`)
+    	    WHERE (`c`.`client_id` = `pr`.`customer_id`)
+              AND (`p`.`id` = `pr`.`property_id`) 
+    	   ";
     	if(!empty($search['adv_search'])){
     		$s_where = array();
+    		$s_search = addslashes(trim($search['adv_search']));
+    		$s_where[] = " p.`hardtitle` LIKE '%{$s_search}%'";
+    		$where .=' AND ('.implode(' OR ',$s_where).')';
     	}
     	if (!empty($search['process_status'])){
     		$where.= " AND pr.process_status = ".$search['process_status'];
