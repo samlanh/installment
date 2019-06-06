@@ -206,7 +206,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'txtsearch' => '',
   				'branch_id'=>-1,
   				'co_khname'=>-1,
-  				'search_status'=>-1);
+  				'search_status'=>-1,
+  				"category_id_expense"=>-1,);
   	}
   	 
   	$this->view->rscomisison = $db->getAllCommission($search);

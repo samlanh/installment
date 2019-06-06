@@ -163,94 +163,96 @@
 					</tr>
 						<?php $total = $total +$row['total_amount'];?>
 					<?php }}?>
+					 <?php if(!empty($this->rscomisison)){?>
+					 <tr  style="font-size: 12px; line-height:20px;">
+					   <td align="center" colspan="12">
+					   	<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("COMMISSION");?></span>
+					   </td>
+					 </tr>
+						<tr class="style" align="center" >
+				        	<td><?php echo $tr->translate("NUM");?></td>
+					        <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+					        <td ><?php echo $tr->translate("STAFF_NAME");?></td>
+					        <td><?php echo $tr->translate("SEX");?></td>
+					        <td colspan="2"><?php echo $tr->translate("TEL");?></td>
+					        <td>&nbsp;<?php echo $tr->translate("RECIEPT_NO");?>&nbsp;</td>
+					        <td><?php echo $tr->translate("Customers");?></td>
+					        <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					        <td ><?php echo $tr->translate("COMISSION");?></td>
+					        <td><?php echo $tr->translate("DATE");?></td>
+					        <td><?php echo $tr->translate("BY_USER");?></td>
+			         	</tr>
+			         	<?php  
+					       	$key=0; 
+							$record = $key;
+							foreach($this->rscomisison as $key => $rscom){?>
+							<?php 
+								$total = $total +$rscom['total_amount'];
+							?>
+							 <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
+							     <td align="center">&nbsp;<?php echo $key+1+$record; ?>&nbsp;</td>
+							     <td align="center">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
+								 <td >&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
+								 <td colspan="2" align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo $rscom['invoice'];?>&nbsp;</td>
+								 <td>&nbsp;<?php echo $rscom['client_name'];?>&nbsp;</td>
+								 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
+								 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
+								 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo $rscom['user_name'];?></td>
+							</tr>
+							<?php }
+							?>
+					 <?php }?>
+					 <?php 
+		            	if (!empty($this->houserepair)){
+		            	?> 
+						 <tr  style="font-size: 12px; line-height:20px;">
+						   <td align="center" colspan="12">
+						   		<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("ចំណាយពីការកែផ្ទះ");?></span>
+						   </td>
+						 </tr>
+						 <tr class="style" align="center"  >
+							<td><?php echo $tr->translate("NUM");?></td>
+						    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+						    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
+						    <td><?php echo $tr->translate("EXPENSE_TITLE");?></td>
+						    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
+						   ​​ 
+						   	<td><?php echo $tr->translate("CATEGORY");?></td>
+						    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+						    
+						    <td><?php echo $tr->translate("TOTAL");?></td>
+						    <td><?php echo $tr->translate("CHEQUE");?></td>
+						    <td><?php echo $tr->translate("NOTE");?></td>
+						    <td><?php echo $tr->translate("DATE");?></td>
+						    <td><?php echo $tr->translate("BY_USER");?></td>
+						</tr>
+						<?php foreach ($this->houserepair as $index => $rs){?>
+					   		<tr class="stylehover" style="<?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+			               		<td style="text-align: center;">&nbsp;<?php echo $index+1; ?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+			               		<td>&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a>&nbsp;</td>
+			               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
+			               		<td align="center">&nbsp;<a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a>&nbsp;</td>
+			               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
+			               		
+			               		<td align="center">&nbsp;<strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format(abs($rs["total_amount"]),2);}?></strong>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
+			                </tr>
+			                 <?php 
+			                if ($rs['status']!=0){
+			                	$total = $total + abs($rs['total_amount']);
+			                }
+			               ?>
+					   		<?php }?>
+					  <?php }?>
 			    </table>
-			    
-			   <?php if(!empty($this->rscomisison)){?>
-			  	  <span>កម្រៃជើងសា</span>
-				    <table  class="content-data"  width="100%" border="1"  bordercolor="black">  
-			    		<thead>
-				    		<tr class="hide" style="border:1px solid #000;">
-					             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
-					        </tr>
-				    		<tr class="style" align="center" >
-					        	<td><?php echo $tr->translate("NUM");?></td>
-						        <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-						        <td><?php echo $tr->translate("STAFF_NAME");?></td>
-						        <td><?php echo $tr->translate("TEL");?></td>
-						        <td><?php echo $tr->translate("SEX");?></td>
-						        <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-						        <td><?php echo $tr->translate("COMISSION");?></td>
-						        <td><?php echo $tr->translate("DATE");?></td>
-						        <td><?php echo $tr->translate("BY_USER");?></td>
-				         	</tr>
-			         	</thead>
-			       <?php  
-			       	$key=0; 
-					$record = $key;
-					foreach($this->rscomisison as $key => $rscom){?>
-					<?php 
-						$total = $total +$rscom['total_amount'];
-					?>
-					 <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
-					     <td align="center">&nbsp;<?php echo $key+1+$record; ?>&nbsp;</td>
-					     <td align="center">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
-						 <td>&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
-						 <td align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
-						 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
-						 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
-						 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
-						 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
-						 <td align="center">&nbsp;<?php echo $rscom['user_name'];?></td>
-					</tr>
-					<?php }
-					}
-					?>
-			    </table>
-					   
-			  	<?php 
-	            	if (!empty($this->houserepair)){
-	            ?> 
-		  	 	<span style="clear: both;">ចំណាយពីការកែផ្ទះ</span>
-		  	  <table  class="content-data" border="1" width="100%">
-			  	  <thead>  
-			    	<tr class="style" align="center"  >
-						<td><?php echo $tr->translate("NUM");?></td>
-					    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-					    <td><?php echo $tr->translate("EXPENSE_TITLE");?></td>
-					    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
-					    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
-					    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-					    <td><?php echo $tr->translate("CATEGORY");?></td>
-					    <td><?php echo $tr->translate("TOTAL");?></td>
-					    <td><?php echo $tr->translate("CHEQUE");?></td>
-					    <td><?php echo $tr->translate("NOTE");?></td>
-					    <td><?php echo $tr->translate("DATE");?></td>
-					    <td><?php echo $tr->translate("BY_USER");?></td>
-					</tr>
-				</thead>
-	            <?php foreach ($this->houserepair as $index => $rs){?>
-		   		<tr class="stylehover" style="<?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
-               		<td style="text-align: center;">&nbsp;<?php echo $index+1; ?>&nbsp;</td>
-               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
-               		<td align="center">&nbsp;<a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a>&nbsp;</td>
-               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a>&nbsp;</td> 
-               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
-               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
-               		<td align="center">&nbsp;<strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format(abs($rs["total_amount"]),2);}?></strong>&nbsp;</td>
-               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
-               		<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
-               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
-               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
-                </tr>
-                 <?php 
-                if ($rs['status']!=0){
-                	$total = $total + abs($rs['total_amount']);
-                }
-               ?>
-		   		<?php }?>
-	            <?php }?>
-			</table>
 			<table align="right" style="margin-right: 6px;">
 				  <tr style="font-size:14px; color:#000; height: 18px;"​ align="center">
 					<td style="  width:146px;  font-size: 14px;">&nbsp;<?php echo $tr->translate('TOTAL_EXPENSE');?>&nbsp;</td>
