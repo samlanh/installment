@@ -1610,7 +1610,6 @@ function getAllBranch($search=null){
     			$where.= " AND c.category_id = ".$search['category_id_expense'];
     		}
     		
-    		
     		if(!empty($search['adv_search'])){
     			$s_where = array();
     			$s_search = addslashes(trim($search['adv_search']));

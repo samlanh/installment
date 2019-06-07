@@ -691,7 +691,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'penalize_amountpaid'		=>0,
     			'service_charge'	=>0,
     			'service_chargepaid'=>0,
-    			'total_payment'		=>$data['sold_price'],
+    			'total_payment'		=>$data['deposit']-$data['paid_before'],
     			'amount_payment'	=>$data['deposit']-$data['paid_before'],
     			'recieve_amount'	=>$data['deposit']-$data['paid_before'],
     			'balance'			=>0,//$data['balance'],

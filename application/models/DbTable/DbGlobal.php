@@ -424,8 +424,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	}*/
    
    	//For General
-	// $sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 "; 
-   	//$pre='№ ';
+	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 "; 
+   	$pre='№ ';
    	
    	
    	$acc_no = $db->fetchOne($sql);
