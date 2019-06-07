@@ -300,6 +300,24 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 			$propertiestype->setValue($data['property_type']);
 			$floor->setValue($data['floor']);
 			$status_using->setValue($data['is_lock']);
+			
+			if ($data['is_lock']==1){
+				$landaddress->setAttribs(array(
+						'readOnly' =>'true',
+				));
+				$street->setAttribs(array(
+						'readOnly' =>'true',
+				));
+				$_price->setAttribs(array(
+						'readOnly' =>'true',
+				));
+				$land_price->setAttribs(array(
+						'readOnly' =>'true',
+				));
+				$house_price->setAttribs(array(
+						'readOnly' =>'true',
+				));
+			}
 		}
 		$this->addElements(array($full_size,$status_using,$width_land,$height_land,$north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
 		return $this;

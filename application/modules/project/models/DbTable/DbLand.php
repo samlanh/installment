@@ -129,7 +129,21 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    			$_arr['parkingspace'] = $_data['parkingspace'];
 	    		}
 	    		
-	    	    $this->insert($_arr);
+	    		$arrayCheck = array(
+	    				'branch_id'=>$_data['branch_id'],
+	    				'land_address'=>strtoupper($_data['land_address_prefix'].$i.$_data['postfix_land_address']),
+	    				'street'=>$_data['street'],
+	    		);
+	    		$check=0;
+	    		if (!empty($arrayCheck['land_address']) AND !empty($arrayCheck['street'])){
+	    			$ch_query=$this->CheckTitle($arrayCheck);
+	    			if (!empty($ch_query)){
+	    				$check=1;// already exits
+	    			}
+	    		}
+	    		if ($check==0){
+	    	   	 	$this->insert($_arr);
+	    		}
 	    	    $increase++;
     		}
     	}catch(Exception $e){
@@ -164,7 +178,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				'land_size'	  => $_data['size'],
 				'width'       => $_data['width'],
 				'height'      => $_data['height'],
-	    		'is_lock'     => $_data['buy_status'],
+// 	    		'is_lock'     => $_data['buy_status'],
 				'hardtitle'   => $_data['hardtitle'],
 				'note'        => $_data['desc'],
 				'status'	  => 1,//$_data['status'],
@@ -194,11 +208,13 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 			if($old_status==-2){
 				$_arr['status']=-2;
 			}
+			$_arr['is_lock']=$_data['buy_status'];
 			$where = 'id = '.$_data['id'];
 			$this->update($_arr, $where);
 			$id = $_data['id'];
 			$label_new = 'Edit Property '.$land_code; 
 		}else{
+			$_arr['is_lock']=0;
 			$_arr['create_date']=date('Y-m-d');
 			$id= $this->insert($_arr);
 		}

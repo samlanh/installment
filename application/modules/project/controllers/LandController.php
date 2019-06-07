@@ -1,5 +1,6 @@
 <?php
 class Project_LandController extends Zend_Controller_Action {
+	const REDIRECT_URL='/project/land';
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -56,13 +57,14 @@ class Project_LandController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frmserch);
 		$this->view->frm_land = $frmserch;
 	}
+	
 	public function addAction(){
 		$db = new Project_Model_DbTable_DbLand();
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
 			try{
 				$id= $db->addLandinfo($data);
-				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/add");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -104,7 +106,7 @@ class Project_LandController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			try{
 				$db->addLandinfoAuto($data);
-				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/addauto");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

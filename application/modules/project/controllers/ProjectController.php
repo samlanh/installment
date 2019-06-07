@@ -1,6 +1,6 @@
 <?php
 class Group_ProjectController extends Zend_Controller_Action {
-	const REDIRECT_URL='/group';
+	const REDIRECT_URL='/project';
 	protected $tr;
 	public function init()
 	{

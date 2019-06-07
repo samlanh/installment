@@ -15,7 +15,12 @@ dojo.require("dijit.Dialog");
 		<form id='add_client' action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
-					//loadingBlock();
+					if(checkhouse_title==1){
+						alert("លេខផ្ទះ/ឡូតិ៍នេះមានរួចរាល់ហើយ");
+						dijit.byId('land_address').focus();
+						return false;
+					}
+					loadingBlock();
 					return true;
 				} else {
 					return false;
@@ -295,6 +300,7 @@ function showStreet(){
 	}else if(street==-1){
 		dijit.byId('frm_street').show();
 	}
+	checkTitle();
 }
 var StreetStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->street));?> );
 function addNewStreet(){
@@ -320,6 +326,9 @@ dojo.ready(function(){
 		required: false,         
 		name: "property_type",
 		id: "property_type",
+		<?php if ($this->row['is_lock']==1){?>
+		readOnly: true, 
+		<?php }?>
 		value: "<?php echo $this->row['property_type'];?>",
 		searchAttr: "name",
 		class: 'fullside',
@@ -381,13 +390,15 @@ function calCulateFullSize(){
 	totalsize = width*height;
 	dijit.byId("full_size").attr('value',totalsize);
 }
+var checkhouse_title=0;
 var old_title = '<?php echo $this->row['land_address'];?>';
 url_CheckTitle = '<?php echo $this->url(array('module'=>'project','controller'=>'land','action'=>'check-title'));?>';
 function checkTitle(){
 	title = dijit.byId('land_address').get('value');
 	branch_id = dijit.byId('branch_id').get('value');
 	street = dijit.byId('street').get('value');
-	if(title=='' || street=='' || title==old_title){ document.getElementById('message').innerHTML ='';return false;}
+	if(branch_id=='' || branch_id==-1){ return false;}
+	if(title=='' || street=='' || title==old_title){ checkhouse_title=0; document.getElementById('message').innerHTML ='';return false;}
 	dojo.xhrPost({
 		url:url_CheckTitle,	
 		content:{ 
@@ -396,9 +407,11 @@ function checkTitle(){
 		handleAs:"json",
 		load: function(data) {	
 			if(data !== false ){
+				checkhouse_title=1;
 		   		document.getElementById('message').innerHTML ='លេខផ្ទះ/ឡូតិ៍នេះមានរួចរាល់ហើយ';
 		   		dijit.byId('land_address').focus();
 			}else{
+				checkhouse_title=0;
 				document.getElementById('message').innerHTML ='';
 			}
 		},
@@ -406,4 +419,5 @@ function checkTitle(){
 		}
 	});
 }
+
 </script>
