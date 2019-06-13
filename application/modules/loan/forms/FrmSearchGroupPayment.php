@@ -12,7 +12,7 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		$dbs = new Application_Model_DbTable_DbGlobal();
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$rows = $dbs ->getAllBranchByUser();
-		$options=array('');		
+		$options=array(0=>$tr->translate('SELECT_BRANCH'));		
 		if(!empty($rows)){
 			foreach($rows AS $row) $options[$row['id']]=$row['name'];
 		}
