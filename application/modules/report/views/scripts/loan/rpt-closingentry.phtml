@@ -172,6 +172,7 @@
 								                    <td colspan="5"><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>    
 								                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
 								                    <td rowspan="2"><?php echo $tr->translate("RECIEPT_NO");?></td>
+								                    <td rowspan="2"><?php echo $tr->translate("NOTE");?></td>
 								                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
 								                    <td rowspan="2" class=""><?php echo $tr->translate("BY_USER");?></td>
 								                    <td rowspan="2" class=""><?php echo $tr->translate("STATUS");?></td>
@@ -218,9 +219,9 @@
 							               			<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $index+1;?>)" name="check_box<?php echo $index+1;?>" id="check_box<?php echo $index+1;?>" />
 							               			<input type="hidden" id="id_<?php echo $index+1;?>" name="id_<?php echo $index+1;?>" value="<?php echo $rs['id'];?>" dojoType="dijit.form.TextBox" />
 							               		</td>
-							               		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-							               		<td>&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
-							               		<td>&nbsp;<?php echo $rs["land_address"].",".$rs["street"];?>&nbsp;</td>
+							               		<td align="left" style="line-height: 12px; white-space: normal !important; max-width: 80px;width: 80px;padding: 5px;overflow-wrap: break-word;">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+							               		<td align="left" style="font-size:11px; line-height: 12px; white-space: normal !important; max-width: 80px;width: 80px;padding: 5px;overflow-wrap: break-word;">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
+							               		<td align="left" style="font-size:11px; line-height: 12px; white-space: normal !important; max-width: 80px;width: 80px;padding: 5px;overflow-wrap: break-word;">&nbsp;<?php echo $rs["land_address"].",".$rs["street"];?>&nbsp;</td>
 							               		<td>&nbsp;<?php echo $rs["payment_method"];?>&nbsp;</td>
 							               		<td>&nbsp;<?php echo $rs["payment_times"];?>&nbsp;</td>
 							               		<td align="center" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['total_principal_permonthpaid'],2);?></td>               		
@@ -228,8 +229,9 @@
 							               		<td align="center" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['penalize_amountpaid'],2);?></td>
 							               		<td align="center" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['extra_payment'],2);?></td>
 							               		<td style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['amount_payment'],2);?></td>
-							               		<td style="white-space:nowrap; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
+							               		<td style="white-space:nowrap; ">&nbsp;<?php echo date("d-m-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
 							               		<td>&nbsp;<?php echo $rs["receipt_no"];?>&nbsp;</td>
+							               		<td><input <?php if ($rs['is_closed']==1){ echo 'readonly="readOnly"';}?> dojoType="dijit.form.TextBox" class="fullside" type="text" name="note_<?php echo $index+1;?>" id="note_<?php echo $index+1;?>" value="<?php echo $rs["closing_note"];?>" /></td>
 							               		<td style="white-space: nowrap; font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;
 												<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
 												<?php echo $rs["paymentoption"];?></a>
@@ -352,7 +354,7 @@
 	}
 
 	function checked_id(index){
-		row_id = dijit.byId('id_'+index).get('value');
+		row_id = index;//dijit.byId('id_'+index).get('value');
 		if(dojo.byId('check_box'+index).checked){
 			if($("#id_selected").val()!="") {
 				var identity = $("#id_selected").val();

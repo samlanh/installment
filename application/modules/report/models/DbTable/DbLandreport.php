@@ -438,7 +438,8 @@ public function getAllOutstadingLoan($search=null){
       	$sql="SELECT *,
 			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id LIMIT 1) AS user_name,
 			(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1) AS sold_price,
-			(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_getcollectmoney.sale_id LIMIT 1) As times
+			(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_getcollectmoney.sale_id LIMIT 1) As times,
+			(SELECT c.closing_note FROM `ln_client_receipt_money` AS c WHERE c.id =v_getcollectmoney.id LIMIT 1) AS closing_note
       	FROM v_getcollectmoney WHERE status=1 ";
       	
       	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
@@ -503,7 +504,11 @@ public function getAllOutstadingLoan($search=null){
       		);
       		foreach ($ids as $i){
       			$this->_name="ln_client_receipt_money";
-      			$where="id= ".$i;
+      			if (!empty($data['note_'.$i])){
+      				$arr['closing_note']=$data['note_'.$i];
+      			}
+      			$where="id= ".$data['id_'.$i];
+//       			$where="id= ".$i;
       			$this->update($arr, $where);
       		}
       	}
