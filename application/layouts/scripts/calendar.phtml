@@ -1,0 +1,126 @@
+<?php 
+$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+$moment=date("Y-m-d");
+$lunar = new Application_Model_DbTable_DbLunaCalendar($moment);
+$w = $lunar->toLunarDate('w');
+$g = $lunar->toLunarDate('g');
+$s = $lunar->toLunarDate('s');
+?>
+<style>
+	.details-calendar {
+	    line-height: 16px;
+	    overflow: hidden;
+	    width: 55px;
+	    text-align: center;
+	    color: #f6f6f6;
+	    /* border-radius: 3px; */
+	    margin-right: 5px;
+	}
+	.details-calendar .calendar_date {
+	    font-size: 12px;
+	    background-color: #144673;
+	    padding: 4px 0;
+	}
+	.details-calendar .date {
+	    margin: 1px 0;
+	    /* font-weight: 700; */
+	    color: #ffffff;
+	    font-size: 20px;
+	}
+	.details-calendar .day, .month {
+    	line-height: 13px;
+	    text-transform: uppercase;
+	}
+	.top_nav .dropdown-menu li.calendar {
+	    text-align: center;
+	    line-height: 23px;
+	    padding: 2px;
+	    color: #02014a;
+	    /*font-family: 'Khmer OS Muol Pali';*/
+	    min-height: 110px;
+	    border: none;
+	}
+	.row-top {
+	    font-weight: 600;
+	    color: #f7f7f7;
+	    background: #02014a;
+	    height: 25px;
+	}
+
+	
+	.row-middle span.g-day {
+	    font-size: 24px;
+	    margin-top: 17px;
+	    display: block;
+	    padding: 16px 0;
+	    border-radius: 6px;
+	    border: 3px #02014a solid;
+	}
+</style>
+				<li role="presentation" class="dropdown">
+                	<a style="margin: 0;  padding: 0; border: none; " title="<?php echo $tr->translate("CALENDAR");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
+	                  	<div class="details-calendar">
+							<div class="calendar_date">
+								<div class="day"><?php echo $w;?></div>
+								<div class="date"><?php echo $g;?></div>
+								<div class="month"><?php echo $s;?></div>
+							</div>
+						</div>
+					</a>
+					 <ul id="menu1" class="dropdown-menu list-unstyled " role="menu" style="background: #ffffff; border: none;">
+		                 <li class="calendar">
+		                 	<div class="block-calendar">
+		                 		<div class="row-top">
+		                 			<div class="form-row">
+			                 			<div class="center col-lg-4 col-md-6 col-sm-12 col-xs-12">
+			                 				<span><?php echo $lunar->toLunarDate('ឆ្នាំa');?></span>
+				                 		</div>
+				                 		<div class="center col-lg-4 col-md-6 col-sm-12 col-xs-12">
+				                 			<?php echo $lunar->toLunarDate('e');?>
+				                 		</div>
+				                 		<div class="center col-lg-4 col-md-6 col-sm-12 col-xs-12">
+				                 			<span><?php echo $lunar->toLunarDate('b');?></span>
+				                 		</div>
+				                 	</div>
+		                 		</div>
+		                 		<div class="row-middle">
+		                 			<div class="form-row">
+		                 				<div class="center col-lg-4 col-md-6 col-sm-12 col-xs-12">
+			                 				<span><?php echo $lunar->toLunarDate('dN');?></span><br />
+			                 				<span><?php echo $lunar->toLunarDate('s');?></span>
+				                 		</div>
+				                 		<div class="center col-lg-4 col-md-6 col-sm-12 col-xs-12">
+				                 			<span class="g-day"><?php echo $lunar->toLunarDate('g');?></span>
+				                 		</div>
+				                 		<div class="center col-lg-4 col-md-6 col-sm-12 col-xs-12">
+				                 			<span><?php echo $lunar->toLunarDate('m');?></span><br />
+				                 			<span><?php echo $lunar->toLunarDate('c');?></span>
+				                 		</div>
+		                 			</div>
+		                 			
+			                 		<div class="form-row">
+			                 			<div class="center col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			                 			<strong>ចន្ទគតិ</strong>
+			                 			</div>
+		                 			</div>
+		                 			<div class="form-row">
+			                 			<div class="center col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			                 			<small><?php echo $lunar->toLunarDate('ថ្ងៃW dN ខែm ឆ្នាំa ព.ស. b');?></small>
+			                 			</div>
+		                 			</div>
+		                 			<div class="form-row">
+			                 			<div class="center col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			                 			<strong>សូរិយគតិ</strong>
+			                 			</div>
+		                 			</div>
+		                 			<div class="form-row">
+			                 			<div class="center col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			                 			<small><?php echo $lunar->toLunarDate('ត្រូវ​នឹងថ្ងៃទីg ខែs ឆ្នាំc');?></small>
+			                 			</div>
+		                 			</div>
+		                 		</div>
+		                 		
+		                 	</div>
+		                 </li>
+	                 </ul>
+                </li>
