@@ -207,11 +207,11 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     			}
     			
     			$arr = array(
-    					'date'			=>$data['date'],
+    					'date'				=>$data['date'],
     					'process_status'	=>$data['process_status'],
-    					'give_by'	=>$data['give_by'],
-    					'receive_by'	=>$data['receive_by'],
-    					'note'	=>$data['note'],
+    					'give_by'			=>$data['give_by'],
+    					'receive_by'		=>$data['receive_by'],
+    					'note'				=>$data['note'],
     					'receive_by'	=>$data['receive_by'],
     					'modify_date'	=>date('Y-m-d H:i:s'),
     			);
