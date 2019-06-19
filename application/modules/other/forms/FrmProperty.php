@@ -18,15 +18,13 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		$this->tnumber='dijit.form.NumberTextBox';
 	}
 	public function FrmFrmProperty($_data=null){
-	
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
 		$_title->setAttribs(array('dojoType'=>$this->tvalidate,'class'=>'fullside',
-				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
+			'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 		));
 		$_title->setValue($request->getParam("adv_search"));
-		
 		
 		$_status_search=  new Zend_Dojo_Form_Element_FilteringSelect('search_status');
 		$_status_search->setAttribs(array('dojoType'=>$this->filter));
@@ -36,6 +34,14 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 				'0'=>$this->tr->translate("DEACTIVE"));
 		$_status_search->setMultiOptions($_status_opt);
 		$_status_search->setValue($request->getParam("search_status"));
+		
+		$date_type =  new Zend_Dojo_Form_Element_FilteringSelect('date_type');
+		$date_type->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$date_opt = array(
+				1=>$this->tr->translate("CREATE_DATE"),
+				2=>$this->tr->translate("SALE_DATE"));
+		$date_type->setMultiOptions($date_opt);
+		$date_type->setValue($request->getParam("date_type"));
 		
 		$_btn_search = new Zend_Dojo_Form_Element_SubmitButton('btn_search');
 		$_btn_search->setAttribs(array(
@@ -70,7 +76,6 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		$_branch_id->setValue($request->getParam("branch_id"));
 		
 		if(empty($_date)){
-			//$_date = date("Y-m-d");
 			$_date = '';
 		}
 		$from_date->setValue($_date);
@@ -81,7 +86,12 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'dojoType'=>'dijit.form.DateTextBox','required'=>'true','class'=>'fullside',
 		));
-		$to_date->setValue(date("Y-m-d"));
+		if(empty($request->getParam("end_date"))){
+			$_date = date("Y-m-d");
+		}else{
+			$_date = $request->getParam("end_date");
+		}
+		$to_date->setValue($_date);
 		
 		$streetlist = new Zend_Dojo_Form_Element_FilteringSelect('streetlist');
 		$streetlist->setAttribs(array(
@@ -105,10 +115,7 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		$_type_of_property->setValue($request->getParam("type_property_sale"));
 		
 		$_id = new Zend_Form_Element_Hidden('id');
-		if(!empty($_data)){
-			//$_co->setValue($_data['co_name']);
-		}
-		$this->addElements(array($streetlist,$_branch_id,$_btn_search,$_status_search,$_title,$_id,$property,$_type_of_property,$from_date,$to_date));
+		$this->addElements(array($date_type,$streetlist,$_branch_id,$_btn_search,$_status_search,$_title,$_id,$property,$_type_of_property,$from_date,$to_date));
 		return $this;
 	}
 	

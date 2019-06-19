@@ -29,6 +29,8 @@ public function init()
 				'dojoType'=>'dijit.form.DateTextBox',
 				'required' =>'true',
 				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				//'constraints'=>"{min:'$now',datePattern:'dd/MM/yyyy'}",
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",//min:'$now',
 		));
 		$_date->setValue($now);

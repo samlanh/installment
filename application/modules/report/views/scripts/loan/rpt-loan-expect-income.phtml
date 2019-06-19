@@ -106,7 +106,7 @@ dojo.require("dijit.form.DateTextBox");
 					width: 100%;
 				}
 				table.content-data thead tr.style {
-				   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+				   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
 					background: #c1d0f3;
 				}
 				table.tb-footer{
@@ -130,7 +130,7 @@ dojo.require("dijit.form.DateTextBox");
 				                		<ul>
 				                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
 				                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_EXPECT_INCOME");?></li>
-				                			<li style="text-align:center; font-size:14px;"><?php if (!empty($this->search['start_date'])) { echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></li>
+				                			<li style="text-align:center; font-size:14px;"><?php if (!empty($this->search['start_date'])) { echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';}echo date("D-d-M-Y",strtotime($this->search['end_date']));?></li>
 				                		</ul>
 				                	</td>
 				                    <td width="30%"></td>
@@ -146,7 +146,7 @@ dojo.require("dijit.form.DateTextBox");
 			                 <tr class="hide" style="border:1px solid #000;">
 				                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				             </tr>
-			                <tr bgcolor="#c1d0f3" class="style" align="center" >
+			                <tr class="style" align="center" style="font-weight: bold;background: #ccd9ff" >
 			                    <td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
 			                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
@@ -155,15 +155,15 @@ dojo.require("dijit.form.DateTextBox");
 			                    <td colspan="5" style="text-align: center;"><?php echo $tr->translate("PAID_INFO");?></td>
 			                    <td colspan="3" style="text-align: center;"><?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?></td>
 			                </tr>
-			                <tr bgcolor="#c1d0f3" class="style" align="center" >
-			                    <td ><?php echo $tr->translate("PRINCIPAL");?></td> 
-			                    <td ><?php echo $tr->translate("INTEREST");?></td>
-			                    <td ><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
-			                    <td ><?php echo $tr->translate("DAY_PAYMENT");?></td>
-			                    <td ><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
-			                    <td ><?php echo $tr->translate("PRINCIPAL");?></td> 
-			                    <td ><?php echo $tr->translate("INTEREST");?></td>
-			                    <td ><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
+			                <tr  class="style" align="center"  style="font-weight: bold;background: #ccd9ff">
+			                    <td><?php echo $tr->translate("DAY_PAYMENT");?></td>
+			                    <td><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
+			                    <td><?php echo $tr->translate("PRINCIPAL");?></td> 
+			                    <td><?php echo $tr->translate("INTEREST");?></td>
+			                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
+			                    <td><?php echo $tr->translate("PRINCIPAL");?></td> 
+			                    <td><?php echo $tr->translate("INTEREST");?></td>
+			                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 			                </tr>
 			                </thead>
 			                <?php 
@@ -178,6 +178,10 @@ dojo.require("dijit.form.DateTextBox");
 			                ?>
 			                <?php if(!empty($this->LoanCollectionco_list))foreach ($this->LoanCollectionco_list as $key => $rs){ $i++; ?>
 			                <?php 
+			                	if($rs['is_completed']==1){
+			                		$rs['principal_permonthafter']=0;
+			                		$rs['total_interest_after']=0;
+			                	}
 					             $p_d = $p_d+$rs['principal_permonthafter'];
 								 $amt_d1 = $amt_d1+$rs['total_interest_after'];
 								 
@@ -188,15 +192,12 @@ dojo.require("dijit.form.DateTextBox");
 								 	$paid++;
 								 }
 			               ?>
-			                <tr class="style hover" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';<?php if($total_paid>0){echo 'background:#fff4f4;';}?>">
+			                <tr class="style hover" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';<?php if($total_paid>0){echo 'background:#fdf1f4;';}?>">
 			               		<td style="font-size: 12px; text-align: center;">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 			               		<td >&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 			               		<td >&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>
 			               		<td style="font-size: 12px; line-height: 18px;white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $rs["phone"];?></td>
 			               		<td >&nbsp;<?php echo $rs["land_address"].','.$rs["street"];?>&nbsp;</td>
-			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonth"],2);?>&nbsp;</td>
-			               		<td align="right">&nbsp;<?php echo number_format($rs["total_interest"],2);?>&nbsp;</td>
-			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonth"]+$rs["total_interest"],2);?>&nbsp;</td>
 			               		<td align="center">&nbsp;
 			               		<?php if($rs['ispay_bank']==0){
 		                    			$date= new DateTime($rs['date_payment']);
@@ -206,43 +207,25 @@ dojo.require("dijit.form.DateTextBox");
 		                    		}?>&nbsp;
 			               		</td>
 								<td align="center">&nbsp;<?php echo $rs["no_installment"];?>&nbsp;</td>
+			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonth"],2);?>&nbsp;</td>
+			               		<td align="right">&nbsp;<?php echo number_format($rs["total_interest"],2);?>&nbsp;</td>
+			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonth"]+$rs["total_interest"],2);?>&nbsp;</td>
 			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?>&nbsp;</td>
 			               		<td align="right">&nbsp;<?php echo number_format($rs["total_interest_after"],2);?>&nbsp;</td>
 			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonthafter"]+$rs["total_interest_after"],2);?>&nbsp;</td>
 			                </tr>
 			                <?php }?>
-			            </table>
-			            <br />
-			             <table class="tb-footer" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px;" width="100%" cellspacing="0">
-			                 <tr bgcolor="#c1d0f3" class="style" >
-			                 	<td colspan="3" align="center">&nbsp;<?php echo $tr->translate("PAYMENT_INFO");?>&nbsp;</td>
-			                    <td colspan="3" align="center">&nbsp;<?php echo $tr->translate("PAID_INFO");?>&nbsp;</td>
-			                    <td colspan="3" align="center">&nbsp;<?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?>&nbsp;</td>
-			                </tr>
-			                 <tr   bgcolor="#c1d0f3" class="style" align="center" >
-			                	<td>&nbsp;<?php echo $tr->translate("ALL");?>&nbsp;</td>
-			                    <td>&nbsp;<?php echo $tr->translate("PAID");?>&nbsp;</td>
-			                    <td>&nbsp;<?php echo $tr->translate("NOT_PAID");?>&nbsp;</td>
-			                    <td>&nbsp;<?php echo $tr->translate("TOTAL_PRINCIPLE");?>&nbsp;</td>
-			                    <td>&nbsp;<?php echo $tr->translate("TOTAL_INTEREST");?>&nbsp;</td>
-			                    <td>&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
-			                    <td>&nbsp;<?php echo $tr->translate("TOTAL_PRINCIPLE");?>&nbsp;</td>
-			                    <td>&nbsp;<?php echo $tr->translate("TOTAL_INTEREST");?>&nbsp;</td>
-			                    <td>&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
-			                </tr>
-			                <tr class="style" align="center" style="font-weight: bold;" >
-			                	<td>&nbsp;<?php echo $i;?>&nbsp;</td>
-			                	<td>&nbsp;<?php echo $paid;?>&nbsp;</td>
-			                	<td>&nbsp;<?php echo $i-$paid;?>&nbsp;</td>
-			                    <td>&nbsp;$&nbsp;<?php echo number_format($principal,2);?>&nbsp;</td>
+			                <tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
+			                	<td colspan="7"><?php echo $tr->translate("PAID");?>&nbsp;<?php echo $paid;?>&nbsp;&nbsp;<?php echo $tr->translate("NOT_PAID");?>&nbsp;&nbsp;<?php echo $i-$paid;?>&nbsp;</td>
+			                	<td>&nbsp;$&nbsp;<?php echo number_format($principal,2);?>&nbsp;</td>
 			                    <td>&nbsp;$&nbsp;<?php echo number_format($interest,2);?>&nbsp;</td>
-			                    <td>&nbsp;$&nbsp;<?php echo number_format($principal+$interest,2);?>&nbsp;</td>
+			                    <td style="background:#688de0;">&nbsp;$&nbsp;<?php echo number_format($principal+$interest,2);?>&nbsp;</td>
 			                    <td>&nbsp;$&nbsp;<?php echo number_format($p_d,2);?>&nbsp;</td>
 			                    <td>&nbsp;$&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
-			                    <td>&nbsp;$&nbsp;<?php echo number_format($amt_d1+$p_d,2);?>&nbsp;</td>
+			                    <td style="background:#f9a3a3;">&nbsp;$&nbsp;<?php echo number_format($amt_d1+$p_d,2);?>&nbsp;</td>
 			                </tr>
-			              </table>
-			              <br />
+			            </table>
+			            	<br />
 			              <?php echo $this->footerReport;?>
 			    	</td>
 			    </tr>

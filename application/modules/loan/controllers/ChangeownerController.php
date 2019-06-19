@@ -65,44 +65,5 @@ class Loan_ChangeownerController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
-        
-//         $db_keycode = new Application_Model_DbTable_DbKeycode();
-//         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-        
-//         $key = new Application_Model_DbTable_DbKeycode();
-//         $this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}	
-	
-// 	public function editAction(){
-// 		$_dbmodel = new Loan_Model_DbTable_DbTransferProject();
-		
-// 		if($this->getRequest()->isPost()){
-// 			$_data = $this->getRequest()->getPost();
-// 			try {
-// 				$_dbmodel->addChangeProject($_data);
-// 				if(!empty($_data['saveclose'])){
-// 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/transferproject");
-// 				}else{
-// 					Application_Form_FrmMessage::message("INSERT_SUCCESS");
-// 				}
-// 			}catch (Exception $e) {
-// 				Application_Form_FrmMessage::message("INSERT_FAIL");
-// 				$err =$e->getMessage();
-// 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
-// 			}
-// 		}
-// 		$id = $this->getRequest()->getParam('id');
-// 		$rs = $_dbmodel->getTransferProject($id);
-// 		$this->view->rs = $rs;
-		
-		
-// 		$frm = new Loan_Form_FrmTransferproject();
-// 		$frm_loan=$frm->FrmTransferProject($rs);
-// 		Application_Model_Decorator::removeAllDecorator($frm_loan);
-// 		$this->view->frm_loan = $frm_loan;
-//         $db = new Application_Model_DbTable_DbGlobal();
-        
-//         $db_keycode = new Application_Model_DbTable_DbKeycode();
-//         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-// 	}
 }

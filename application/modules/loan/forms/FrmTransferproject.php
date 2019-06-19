@@ -327,7 +327,8 @@ public function init()
 		if($data!=null){
 // 			$_loan_code->setValue($data['sale_number']);
 // 			$receipt->setValue($data['receipt_no']);
-			$_branch_id->setValue($data['from_branchid']);
+// 			$_branch_id->setValue($data['from_branchid']);
+			$_branch_id->setValue($data['branch_id']);
 // 			$discount->setValue($data['discount_amount']);
 			
 // 			$_date_buy->setValue($data['buy_date']);

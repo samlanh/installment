@@ -144,16 +144,23 @@ function getAllBranch($search=null){
     	}
     function getAllProperties($search=null){
     		$db = $this->getAdapter();
-    		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
-    		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
-    		$where = " AND ".$from_date." AND ".$to_date;
+    		$to_enddate = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";
     		$sql = "SELECT p.`id`,
     		   (SELECT project_name FROM ln_project WHERE br_id = p.`branch_id` limit 1) AS branch_name,
     		    p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,p.note,
 				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type`) AS pro_type,
-				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`,
-				(SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
+				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`, ";
+    			$sql.="CASE
+					WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE s.house_id =  p.`id`  AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
+					ELSE  0
+					END AS is_lock,";
+    		
+    		$sql.="(SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
 			 FROM `ln_properties` AS p WHERE p.`status`=1 ";
+    		
+    		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
+    		$where=" AND ".$from_date." AND ".$to_date;
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("p.`branch_id`");
@@ -170,20 +177,14 @@ function getAllBranch($search=null){
     		if(!empty($search['adv_search'])){
     			$s_where=array();
     			$s_search= addslashes(trim($search['adv_search']));
-//     			$s_where[]=" p.`land_code` LIKE '%{$s_search}%'";
     			$s_where[]=" p.`land_address` LIKE '%{$s_search}%'";
-//     			$s_where[]=" p.`land_size` LIKE '%{$s_search}%'";
 				$s_where[]=" p.street LIKE '%{$s_search}%'";
-//     			$s_where[]=" p.`height` LIKE '%{$s_search}%'";
-//     			$s_where[]=" p.width LIKE '%{$s_search}%'";
-//     			$s_where[]=" p.`price` LIKE '%{$s_search}%'";
-//     			$s_where[]=" p.`land_price` LIKE '%{$s_search}%'";
-//     			$s_where[]=" p.`house_price` LIKE '%{$s_search}%'";
     			$where.=' AND ('.implode(' OR ',$s_where).')';
     		}
     		if(!empty($search['streetlist'])){
     			$where.= " AND street ='".$search['streetlist']."'";
     		}
+
     		$where.=" ORDER BY p.`property_type`,p.`street` ASC, cast(land_address as unsigned) "; 
     		return $db->fetchAll($sql.$where);
     	}
@@ -1569,6 +1570,7 @@ function getAllBranch($search=null){
     		$sql ='SELECT c.`id`,
 	    		p.`project_name`,
 	    		s.`sale_number`,
+	    		s.full_commission,
 	    		clie.`name_kh` AS client_name,
 	    		(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
 	    		pro.`land_address`,pro.`street`,
@@ -1678,7 +1680,7 @@ function getAllBranch($search=null){
 						(SELECT SUM(crm.total_principal_permonthpaid) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id = s.id  GROUP BY crm.sale_id LIMIT 1) AS total_sale_paid
 				 FROM 
 					`ln_sale` AS s
-				WHERE full_commission>0 AND s.is_cancel = 0 AND full_commission> (SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` AND c.status=1 LIMIT 1)";
+				WHERE full_commission>0 AND s.is_cancel = 0 ";
     		$where ="";
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();

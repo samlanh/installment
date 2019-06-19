@@ -95,6 +95,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'property_type'=>'',
   				"branch_id"=> -1,
   				'type_property_sale'=>-1,
+  				'date_type'=>1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   				'streetlist'=>''

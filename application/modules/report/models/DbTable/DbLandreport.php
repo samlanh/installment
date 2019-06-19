@@ -9,7 +9,11 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 if($lang==1){
       	 	$str = 'name_kh';
       	 }
+      	 $from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
+      	 $to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
+      	 
       	 $sql = " SELECT * ,
+      	 (SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=v_soldreport.id AND STATUS=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount, 
       	 (SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id AND status=1 ) AS times,
       	 (SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
       	 (SELECT $str FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype,
@@ -57,7 +61,6 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
       	 	$where.=" AND staff_id = ".$search['co_id'];
       	 }
       	 if($search['land_id']>0){
-//       	 	$where.=" AND house_id = ".$search['land_id'];
       	 	$where.=" AND (house_id = ".$search['land_id']."  OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = v_soldreport.house_id LIMIT 1) LIKE '%".$search['land_id']."%')";
       	 }
       	 if($search['property_type']>0 AND $search['property_type']>0){
@@ -359,9 +362,11 @@ public function getAllOutstadingLoan($search=null){
 				  AND s.`status` = 1 
 				  AND sd.`is_completed` = 0 
 				  AND sd.`status` = 1 
+				  AND sd.last_optiontype=1
 				  AND `s`.`is_cancel` = 0
 				  AND c.`client_id` = s.`client_id` 
 				  AND sd.ispay_bank =0 ";
+		
 		
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$sql.=$dbp->getAccessPermission("s.branch_id");
@@ -2521,8 +2526,11 @@ function updatePaymentStatus($data){
    	if($lang==1){
    		$str = 'name_kh';
    	}
+   	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
+   	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
+   	
    	$sql ="SELECT * ,
-   				(SELECT SUM(extra_payment) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = v_soldreport.id LIMIT 1) AS extra_payment,
+   				(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=v_soldreport.id AND STATUS=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount,
    				(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = v_soldreport.id LIMIT 1) AS total_interest_permonthpaid,
    				(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = v_soldreport.id LIMIT 1) AS penalize_amountpaid,
 			   	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_soldreport.id AND status=1 ) AS times,

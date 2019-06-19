@@ -10,7 +10,7 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
    	$from_date =(empty($search['start_date']))? '1': " sp.issue_date >= '".$search['start_date']." 00:00:00'";
    	$to_date = (empty($search['end_date']))? '1': " sp.issue_date <= '".$search['end_date']." 23:59:59'";
    	$where = " AND ".$from_date." AND ".$to_date;
-   	$sql="SELECT `s`.`id` AS `id`,
+   	$sql="SELECT `sp`.`id` AS `id`,
 	      CASE    
 		WHEN  (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 AND rec.sale_id = sp.sale_id ORDER BY rec.id DESC LIMIT 1 ) IS NOT NULL  THEN 'បានប្រគល់'
 		WHEN  (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 AND rec.sale_id = sp.sale_id ORDER BY rec.id DESC LIMIT 1 ) IS NULL THEN 'មិនទាន់ប្រគល់'
@@ -66,8 +66,7 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql.$where.$order);
    }
-    
-    public function addIssuePlong($data){
+   public function addIssuePlong($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
@@ -110,7 +109,6 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
 	    							$where="id = ".$rs['id_detail'];
 	    							$this->_name="ln_saleschedule";
 	    							$this->update($arr, $where);
-	    							
 	    						}
 	    					}
 	    					
@@ -140,5 +138,47 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
     			$err =$e->getMessage();
     			Application_Model_DbTable_DbUserLog::writeMessageError($err);
     		}
+    }
+    function getPlongbyId($record_id){
+    	$db = $this->getAdapter();
+    	$sql="SELECT *,
+			(SELECT branch_id FROM ln_sale WHERE ln_sale.id=ln_issueplong.sale_id LIMIT 1) AS branch_id
+    	 FROM 
+    		ln_issueplong WHERE id=$record_id LIMIT 1";
+    	return $db->fetchRow($sql);
+    }
+    public function EditIssuePlong($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try{
+    
+    		$ids = explode(',', $data['identity']);
+    		if(!empty($data['identity'])){
+    			foreach ($ids as $i){
+    				$where_proper="id = ".$data['house_id'.$i];
+    				$this->_name="ln_properties";
+    				$arr_proper = array(
+    					'hardtitle'=>$data['hardtitle'.$i],
+    				);
+    				$this->update($arr_proper, $where_proper);
+    
+    				$where="id = ".$data['sale_id'.$i];
+    				$this->_name="ln_issueplong";
+    				$arr = array(
+    						'layout_number'=>$data['hardtitle'.$i],
+    						'note'=>$data['note'.$i],
+    						'is_receivedplong'=>0,
+    				);
+    				$where=" sale_id = ".$data['sale_id'.$i];
+    				$this->update($arr, $where);
+    			}
+    		}
+    		$db->commit();
+    		return 1;
+    	}catch (Exception $e){
+    		$db->rollBack();
+    		$err =$e->getMessage();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($err);
+    	}
     }
 }

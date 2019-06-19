@@ -433,7 +433,12 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			$sold_price->setValue($data['price_sold']);
 			$note->setValue($data['note']);
 			$commission->setValue($data['comission']);
+			$rs = $db->getUserInfo();
+			if($rs['level']!=1){
+				$data['full_commission'] = 0;
+			}
 			$full_commission->setValue($data['full_commission']);
+			
 			$staff_id->setValue($data['staff_id']);
 			
 			$start_building->setValue($data['build_start']);

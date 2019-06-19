@@ -32,7 +32,8 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 			$list = new Application_Form_Frmtable();
 			$collumns = array("PROCESS","BRANCH_NAME","CUSTOMER_NAME","PHONE","PROPERTY_CODE","STREET","DATE","NOTE","STATUS");
 			$link_info=array('module'=>'loan','controller'=>'issueplong','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('from_branch'=>$link_info),0);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('ask_for'=>$link_info,'branch_name'=>$link_info,'name_kh'=>$link_info,
+					'land_address'=>$link_info,'street'=>$link_info,'phone'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -65,51 +66,34 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 		$frm_loan=$frm->FrmTransferProject();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
-        $db = new Application_Model_DbTable_DbGlobal();
-        
-//         $db_keycode = new Application_Model_DbTable_DbKeycode();
-//         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-        
-//         $key = new Application_Model_DbTable_DbKeycode();
-//         $this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}	
 	
 	public function editAction(){
 		$_dbmodel = new Loan_Model_DbTable_Dbissueplong();
-		
-		$id = $this->getRequest()->getParam('id');
-		$id = empty($id)?0:$id;
-		$rs = $_dbmodel->getTransferProject($id);
-		$this->view->rs = rs;
-		if(empty($rs)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/issueplong");
-			exit();
-		}
-		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				$_dbmodel->addChangeProject($_data);
-				if(!empty($_data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/issueplong");
-				}else{
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
-				}
+				$_dbmodel->EditIssuePlong($_data);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/issueplong");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		$rs = $_dbmodel->getPlongbyId($id);
+		$this->view->rs = $rs;
+		if(empty($rs)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/issueplong");
+			exit();
+		}
 		
 		$frm = new Loan_Form_FrmTransferproject();
 		$frm_loan=$frm->FrmTransferProject($rs);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
-        $db = new Application_Model_DbTable_DbGlobal();
-        
-        $db_keycode = new Application_Model_DbTable_DbKeycode();
-        $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
 	}
 	function addschedultestAction(){
 		if($this->getRequest()->isPost()){

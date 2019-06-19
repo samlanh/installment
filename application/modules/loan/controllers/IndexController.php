@@ -1,6 +1,5 @@
 <?php
 class Loan_IndexController extends Zend_Controller_Action {
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
     	header('content-type: text/html; charset=utf8');
@@ -189,7 +188,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
 	public function editsaleAction(){
-		
 		$rightclick = $this->getRequest()->getParam('rightclick');
 		$rightclick = empty($rightclick)?"":$rightclick;
 		$this->view->rightclick = $rightclick;
@@ -217,13 +215,11 @@ class Loan_IndexController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
 			exit();
 		}
-		
 		if($row['is_cancel']==1){
 			Application_Form_FrmMessage::message('This Sale already cancel');
 			echo "<script>window.close();</script>";
 // 			Application_Form_FrmMessage::Sucessfull("This Sale already cancel","/loan");
 		}
-		
 		
 		$frm = new Loan_Form_FrmLoan();
 		$frm_loan=$frm->FrmAddLoan($row);

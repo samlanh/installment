@@ -2,11 +2,12 @@
 	$frm = $this->frm_loan;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
-	$this->headTitle($tr->translate('CHANGPROPERTY'));
+	$this->headTitle($tr->translate('EDIT').$tr->translate('ISSUE_PLONG'));
 	echo $this->headTitle();
 ?>
 <style>
 .fullside50{ width:48%;}
+.hover:hover{background: #eee !important;}
 </style>
 <div class="overlay">
 	<div class="overlay-load">
@@ -16,26 +17,14 @@
 </div>	
 <script src="<?php echo $baseurl;?>/js/help.js"></script>
 <script>
-		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
+	require(["dijit/form/DateTextBox","dijit/form/NumberTextBox"]);
 </script>
 <div class="card">
 	<div class="card-content collapse show">
 		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
-				branch_id = dijit.byId('branch_id').get('value');
-				if (branch_id=='' || branch_id==-1){
-					alert('Please Select Branch!');
-					dijit.byId('branch_id').focus();
-					return false;
-				}
-				client = dijit.byId('member').get('value');
-				if (client=='' || client==-1){
-					alert('Please Select Client Name !');
-					dijit.byId('member').focus();
-					return false;
-				}
-				
+				dijit.byId('savenew').set('disabled',true);
 				return true;
 			}else {
 				return false;
@@ -44,7 +33,7 @@
 			<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CHANGPROPERTY');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT').$tr->translate('ISSUE_PLONG');?></h4>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -53,7 +42,7 @@
 	    	<div class="card-box">
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
 	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-money" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-map" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
 	                   </label>
 	                </div>
 	                
@@ -65,206 +54,110 @@
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("LOAN_NO");?> <span class="required">*</span>:
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> <span class="required">*</span>:
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id='loan_number' />
+	                    	<input type="hidden" name="identity" id="identity"  value="" >
 	                   </div>
 	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CLIENT_NUM");?> <span class="required">*</span>:
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="customer_code" /><input type="hidden" name="identity" id="identity"  value="" >
-							<input type="hidden" dojoType="dijit.form.TextBox" name="total_installamount" id="total_installamount"  value="" >
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CUSTOMER_NAME");?> <span class="required">*</span>:
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="member" /> 
-	                   </div>
-	                </div>
-	            </div>
-	            <div class="col-md-4 col-sm-4 col-xs-12">
+	    		</div>
+	    		<div class="col-md-8 col-sm-8 col-xs-12">
 	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-map" aria-hidden="true"></i> <?php echo $tr->translate("PROPERTY_INFO");?> 
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
 	                   </label>
 	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="land_code" />
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SOLD_PRICE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('total_sold')?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAID");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('paid_before')?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Balance");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('balance_before')?>
-	                   </div>
-	                </div>
-	            </div>
-	            <div class="col-md-4 col-sm-4 col-xs-12">
-	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-money" aria-hidden="true"></i> <?php echo $tr->translate("TRANSFER_PROPERTY_INFORMATION");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH_NAME");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('to_branch_id')?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TO_LAND_CODE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="to_land_code" /><?php //echo $frm->getElement('');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("HOUSE_PRICE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('house_price')?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SOLD_PRICE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('to_total_sold')?>
-	                   </div>
-	                </div>
-	            </div>
-	        </div>
-	        <div class="clearfix"></div>
+	                <div  id="showrecord"></div>
+	    			<div id='data_table_loan_haspay' name='data_table_loan_haspay' style="white-space: nowrap;"></div>
+	    		</div>
+	    	</div>
+	    	<div class="col-md-4 col-sm-4 col-xs-12">
+	    	</div>
+	    	<div class="clearfix"></div>
 			 <div class="card-box">
              	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-             		<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
-					<input type="submit" label="<?php echo $tr->translate("GO_EDIT")?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
-			
+               		<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+					<input type="submit" label="<?php echo $tr->translate("GO_EDIT")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
     			</div>
     		</div>
 		</form>
 	</div>
 </div>
+
 <script type="text/javascript">	
-var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-il-loan-Detail')); ?>';
-function getLaonPayment(){
-	
+
+col=0;no=0;
+title=0;
+temp='';
+function addRow(){
+	loan_number=dijit.byId("loan_number").get("value");
+	if(loan_number=='' || loan_number==-1){
+		return false;
+	}
+	var iden = $("#identity").val();
+	var arrays = iden.split(',');
+	 if(arrays!=""){
+		 for(var i=0;i< arrays.length;i++){
+			 readychoose = dijit.byId('sale_id'+arrays[i]).get('value');
+			 if(readychoose==loan_number){
+				 alert("<?php echo $tr->translate("Choosen ready")?>");
+				 return false;
+			 }
+		}
+	}
+	temp='';
+	col++;no++;
+	template='';
+	if(title!=1){    
+		tmp='<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
+		tmp+='<tr id="head-title" class="head-td" style="color:#000 !important;background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+		tmp+='</table>';
+		dojo.query("#showrecord").append(tmp);
+		
+		temp+='<th><?php echo $tr->translate("DEL");?></th>';
+		temp+='<th><?php echo $tr->translate("NUM");?></th>';
+		temp+='<th><?php echo $tr->translate("PROPERTY_CODE");?></th>';
+		temp+='<th><?php echo $tr->translate("SOLD_PRICE");?></th>';
+		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("PAID");?></th>';
+		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("BALANCE");?></th>';
+		temp+='<th width="100px"><?php echo $tr->translate("HEAD_TITLE_NO");?></th>';
+		temp+='<th><?php echo $tr->translate("NOTE");?></th>';
+		
+		dojo.query("#head-title").append(temp);
+		title=1;
+	}else{
+	}
+		sale_label = dijit.byId("loan_number").attr("displayedValue");
+		sale_id = dijit.byId("loan_number").get("value");
+		template+='<td width="47px"align="center"></td>';
+		template+='<td width="2%" align="center">'+no+'</td>';
+		template+='<td style="white-space: nowrap"><input class="fullside" value="'+sale_id+'" type="hidden" data-dojo-type="dijit.form.TextBox" id="sale_id'+col+'" name="sale_id'+col+'" />'+sale_label+'</td>';	
+		template+='<td width="60px;"><input readonly class="fullside" type="text"  name="price_sold'+col+'" id="price_sold'+col+'" dojoType="dijit.form.TextBox" /></td>';	
+		template+='<td width="60px;"><input readonly class="fullside" type="text"  name="paid'+col+'" id="paid'+col+'" dojoType="dijit.form.TextBox" /></td>';			
+		template+='<td width="60px;"><input readonly class="fullside" type="text"  name="balance'+col+'" id="balance'+col+'" dojoType="dijit.form.TextBox" /></td>';
+		template+='<td><input class="fullside" type="text"  name="hardtitle'+col+'" id="hardtitle'+col+'" dojoType="dijit.form.TextBox" /><input class="fullside" value="" type="hidden" data-dojo-type="dijit.form.TextBox" id="house_id'+col+'" name="house_id'+col+'" /></td>';
+		template+='<td><input class="fullside" type="text" name="note'+col+'" id="note'+col+'" dojoType="dijit.form.TextBox" value="<?php echo $this->rs['note'];?>" /></td>';
+	tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
+	tmp+="</tr>";
+	dojo.query("#table_row").append(tmp);
+
+	if($("#identity").val()!="") {
+		var identity = $("#identity").val();
+		$("#identity").val(identity+','+col);
+	} else {$("#identity").val(col);}
+	dojo.html.set(dojo.byId("row"+col),template , {
+	     parseContent: true,
+	});
+	getInfoByLoanNumber(col);
 }
 
-function setBranchID(){
-	dijit.byId('to_branch_id').attr('value',dijit.byId('branch_id').get('value'));	
-}
-function checkScheduleOption(){
-	
-}
-function calCulateFixedPeriod(){
-	
-}
-function calculateDiscount(){
-	
-}
-function Balance(){
-	
-}
 function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');
-	getAllPropertyBranch(branch_id);
-	getAllClientByBranch(branch_id);
-	getAllClientNumberByBranch(branch_id);
 	getAllSaleNumber(branch_id);
 }
 var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'transferproject','action'=>'getallland')); ?>';
-function getAllPropertyBranch(branch_id){//used
-	dojo.xhrPost({
-		url:url_getland,	
-		content:{ 
-		    'branch_id':branch_id,
-		    'action':1
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			property_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('land_code').set('store', property_store);
-		},
-		error: function(err) {
-		}
-	});
-} 
 
-var url_getland_transfer = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
-function getAllPropertyBranchTransfer(){//used
-	to_branch_id = dijit.byId('to_branch_id').get('value');
-	dojo.xhrPost({
-		url:url_getland_transfer,	
-		content:{ 
-		    'branch_id':to_branch_id,
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			property_store_transfer  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('to_land_code').set('store', property_store_transfer);
-		    dijit.byId("to_land_code").attr("value",'<?php echo $this->rs['to_houseid'];?>');
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
-} 
-
-var url_getclient = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclientbybranch')); ?>';
-function getAllClientByBranch(branch_id){
-	dojo.xhrPost({
-		url:url_getclient,	
-		content:{ 
-		    'branch_id':branch_id
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			client_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('member').set('store', client_store);
-		},
-		error: function(err) {
-		}
-	});
-}
-var url_getclientnum = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclientnumberbybranch')); ?>';
-function getAllClientNumberByBranch(branch_id){
-	dojo.xhrPost({
-		url:url_getclientnum,	
-		content:{ 
-		    'branch_id':branch_id
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			client_number_store  = getDataStorefromJSON('id','name', data);		
-		    dijit.byId('customer_code').set('store', client_number_store);
-		},
-		error: function(err) {
-		}
-	});
-}
+function setBranchID(){}
 var url_getloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloannumber')); ?>';
 function getLoanByBranch(){
 	branch_id = dijit.byId('branch_id').get('value');
@@ -284,188 +177,41 @@ function getLoanByBranch(){
 			dijit.byId('sale_code').attr('value',data);
 		},
 		error: function(err) {
-			//alert(err);
 		}
 	});
 }
 
-var url_getreceipt = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'get-receipt-number')); ?>';
-function getReceiptByBranch(){
-	branch_id = dijit.byId('branch_id').get('value');
-	if(branch_id==''){
-		alert('Please Select Branch');
-		dijit.byId('branch_id').focus();
-		return false;
-	}
-	dojo.xhrPost({
-		url:url_getreceipt,	
-		content:{ 
-		    'branch_id':branch_id,
-		    'is_group':0
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			dijit.byId('receipt').attr('value',data);
-		},
-		error: function(err) {
-			//alert(err);
-		}
-	});
-}
-    function calCulatorBalance(){
-    	deposit =dijit.byId('deposit').get('value');
-    	if(isNaN(deposit)){
-    		deposit=0;
-    	}
-    	if(deposit>price){
-    		//alert("Deposit can not biger than price ");
-    		//dijit.byId('deposit').focus();
-    		//dijit.byId('deposit').attr('value',price)
-    	}
-        dijit.byId('balance').attr('value',price-deposit);
-        checkScheduleOption();
-    	
-    }
-    
-    function checkValidateDate(){
-		return true;
-     }
-    function setDefaultPaymentAmount(){
-    	
-		}
-	function hideDialog() {		
-		dijit.byId("recript_dialog").hide();
-		saveTrans(); 
-	}
-	
 </script>
 <script type="text/javascript">
 dojo.require("dojo.data.ItemFileWriteStore"); 
 dojo.require("dojo.NodeList-manipulate");
-dojo.require("dojo.html");
-
-var client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_name));?> );
-var client_number_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_code));?> );
-var co_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->co_name));?> );
-var property_store  = getDataStorefromJSON('id','name', null );
-var property_store_transfer  = getDataStorefromJSON('id','name', null );
+var sale_store  = getDataStorefromJSON('id','name', null );
 
 require(["dojo/ready"], function(ready){
 	 ready(function(){
-		dijit.byId("branch_id").attr("value",'<?php echo $this->rs['from_branchid']; ?>');
-		dijit.byId("to_land_code").attr("value",'<?php echo $this->rs['to_houseid']; ?>');
+		 filterClient();
+		 dijit.byId('branch_id').set('readOnly',true);
+		 dijit.byId('loan_number').set('readOnly',true);
 	  });
-	 
 	new dijit.form.FilteringSelect({
-			store: property_store,//dojo.data.ObjectStore({objectStore: client_data}),
-			autoComplete: true,
-			required: false,		           
-			name: "land_code",
-			id: "land_code",
-			searchAttr: "name",
-			class: 'fullside',
-			required:true,
-			onChange: function() {
-				land_code = dijit.byId('land_code').get('value');
-				if(land_code==-1){
-				}else{
-					getlandinfo();
-				}
-		}
-	}, "land_code");
-
-	new dijit.form.FilteringSelect({
-		store: property_store_transfer,//dojo.data.ObjectStore({objectStore: client_data}),
-		autoComplete: true,
-		required: false,		           
-		name: "to_land_code",
-		id: "to_land_code",
-		searchAttr: "name",
-		class: 'fullside',
-		value:'<?php echo $this->rs['to_houseid']; ?>',
-		required:true,
-		onChange: function() {
-			land_code = dijit.byId('to_land_code').get('value');
-			if(land_code==-1){
-			}else{
-				getlandinfotransfer();
-			}
-	}
-}, "to_land_code");
-	 
-	new dijit.form.FilteringSelect({
-	store: client_store,//dojo.data.ObjectStore({objectStore: client_data}),
-	autoComplete: true,
-	required: false,		           
-	name: "member",
-	id: "member",
-	searchAttr: "name",
-	required:true,
-	class: 'fullside',
-	onChange: function() {
-		member = dijit.byId('member').get('value');
-		if(member==-1){
-			showPopupclient();
-		}else{
-			dijit.byId('customer_code').attr('value',member);
-		}
-}
-	}, "member");
-	
-	new dijit.form.FilteringSelect({
-	store: client_number_store,//dojo.data.ObjectStore({objectStore: client_number}),
-	autoComplete: true,
-	           
-	required: false,		           
-	name: "customer_code",
-	id: "customer_code",
-	searchAttr: "name",
-	class: 'fullside',
-	onChange: function() {
-		customer_code = dijit.byId('customer_code').get('value');
-		if(customer_code==-1){
-			showPopupclient();
-		}else{
-			dijit.byId('member').attr('value',customer_code);
-		}
-    }
-	}, "customer_code");
-
-	new dijit.form.FilteringSelect({
-		store: co_store,//dojo.data.ObjectStore({objectStore: client_number}),
-		autoComplete: true,            
-		required: false,		           
-		name: "co_id",
-		id: "co_id",
-		searchAttr: "name",
-		class: 'fullside',
-		onChange: function() {
-			co_id = dijit.byId('co_id').get('value');
-			if(co_id==-1){
-				popupcreditofficer();
-			}else{
-			}
-	    }
-		}, "co_id");
-
-	new dijit.form.FilteringSelect({
-		store: co_store,//dojo.data.ObjectStore({objectStore: client_number}),
-		autoComplete: true,            
+		store: sale_store,
 		required: false,		           
 		name: "loan_number",
 		id: "loan_number",
+		autoComplete: false,
+		queryExpr: "*${0}*",      
 		searchAttr: "name",
 		class: 'fullside',
 		onChange: function(){
-			getInfoByLoanNumber();
+			addRow();
 	    }
 		}, "loan_number");
-	 
+	
 	});
 </script>
 <script type="text/javascript">
 var url_submiinfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloan-bymemberid')); ?>';
-function getInfoByLoanNumber(){
+function getInfoByLoanNumber(index){
 	loan_id = dijit.byId('loan_number').get('value');
 	dojo.xhrPost({
 	    url: url_submiinfo,	
@@ -474,22 +220,13 @@ function getInfoByLoanNumber(){
 		},	
 		handleAs:"json",
 		load: function(data) {
-
-			total_principal= data.total_principal;
-			if(isNaN(total_principal) || total_principal==null){total_principal=0;}
-		    paid_amount = data.paid_amount;
-			if(isNaN(paid_amount) || paid_amount==null){paid_amount=0;}
-			total_principal = parseFloat(paid_amount)+parseFloat(total_principal);
-			
-			dijit.byId('paid_before').attr('value',total_principal);
-			
-			dijit.byId("member").attr('value',data.client_id);
-			dijit.byId('customer_code').set('readOnly',true);
-			dijit.byId('land_code').attr('value',data.house_id)
-			dijit.byId('member').set('readOnly',true);
+			dijit.byId('price_sold'+index).attr('value', data.price_sold);
+			dijit.byId('paid'+index).attr('value', data.total_principal);
+			dijit.byId('balance'+index).attr('value', data.price_sold - data.total_principal);
+			dijit.byId('house_id'+index).attr('value', data.house_id);
+			dijit.byId('hardtitle'+index).attr('value', data.hardtitle);
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
@@ -499,73 +236,19 @@ function getAllSaleNumber(branch_id){//used
 	dojo.xhrPost({
 		url:url_getsalenumber,	
 		content:{ 
-		    'branch_id':dijit.byId('branch_id').get('value')
+		    'branch_id':dijit.byId('branch_id').get('value'),
+		    'is_issueplong':0
 		},		    
 		handleAs:"json",
 		load: function(data) {
 			sale_number_store  = getDataStorefromJSON('id','name', data);
 		    dijit.byId('loan_number').set('store',sale_number_store); 
-		    dijit.byId("loan_number").attr("value",'<?php echo $this->rs['sale_id']; ?>');
+		    dijit.byId('loan_number').attr('value','<?php echo $this->rs['sale_id'];?>');
 		},
 		error: function(err) {
 			
 		}
 	});
 }
-function setFirstPaymentAndDateLine (){
-}
-function checkScheduleOption(){
-}
-var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
-function getlandinfo(){
-	dijit.byId('total_sold').attr('value',0);
-	//dijit.byId('sold_price').attr('value',0);
-	dojo.xhrPost({
-		url:url_getlandinfodetail,	
-		content:{ 
-		    'land_id':dijit.byId('land_code').get('value')
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			dijit.byId('land_code').set('readOnly',true);
-			dijit.byId('paid_before').set('readOnly',true);
-			dijit.byId('balance_before').set('readOnly',true);
 
-			dijit.byId('total_sold').attr('value',data.price);
-			paid_before = dijit.byId('paid_before').get('value');
-			dijit.byId('balance_before').attr('value',data.price-paid_before);
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
-}
-
-var url_getlandinfotransferdetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
-function getlandinfotransfer(){
-	dojo.xhrPost({
-		url:url_getlandinfotransferdetail,	
-		content:{ 
-		    'land_id':dijit.byId('to_land_code').get('value')
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			dijit.byId('house_price').attr('value',data.house_price);
-			dijit.byId('to_total_sold').attr('value',data.price);
-            tohouseprice = dijit.byId('to_total_sold').get('value');
-            if(isNaN(tohouseprice)){tohouseprice=0;}
-            paid_before = dijit.byId('paid_before').get('value');
-            if(isNaN(tohouseprice)){paid_before=0;}
-            balance_price = parseFloat(tohouseprice)-parseFloat(paid_before);
-           
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
-}
-function clearTextBox(){
-	dijit.byId('member').set('value','');
-	dijit.byId('total_amount').set('value',0);
-}
 </script>
