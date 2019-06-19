@@ -185,7 +185,7 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		if (!is_array($cate_tree_array))
 			$cate_tree_array = array();
 		$db = $this->getAdapter();
-		$sql = " select key_code as id,name_kh as name from ln_view where type=$type AND name_kh!='' AND `parent_id` = $parent ";
+		$sql = " SELECT key_code AS id,name_kh AS name FROM ln_view WHERE type=$type AND status=1 AND name_kh!='' AND `parent_id` = $parent ";
 		$query= $db->fetchAll($sql);
 		
 		$rowCount = count($query);

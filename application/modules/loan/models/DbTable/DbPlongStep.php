@@ -211,6 +211,8 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     					'process_status'	=>$data['process_status'],
     					'give_by'	=>$data['give_by'],
     					'receive_by'	=>$data['receive_by'],
+    					'note'	=>$data['note'],
+    					'receive_by'	=>$data['receive_by'],
     					'modify_date'	=>date('Y-m-d H:i:s'),
     			);
     			$this->_name="ln_processing_plong";
