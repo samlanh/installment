@@ -601,6 +601,15 @@ function getAllBranch($search=null){
                    p.w_manager_nation_id,
                    p.`w_manager_nationality`,
                    p.`w_sex`,
+                   
+                   p.w_manager_nation_id,
+			    	p.w_manager_position,
+			    	p.w_manager_tel,
+    	
+                   p.w_managername1,
+			    	p.w_manager_position1,
+			    	p.w_manager_tel1,
+    	
                    (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=p.`w_sex` LIMIT 1) AS sc_manager_sex,
 	                  p.`w_dob`,
 	                  p.`w_current_address`,
@@ -617,9 +626,11 @@ function getAllBranch($search=null){
     			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=c.ksex limit 1) AS partner_gender,
      			   c.dob_buywith,
      			   c.rid_no,
+     			   (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=c.`sex` LIMIT 1) AS client_sex,
      			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=c.sex limit 1) AS sexKh,
      			   (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=c.joint_doc_type limit 1) AS joint_doc_type,
      			   (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=c.client_d_type limit 1) AS client_d_type,
+     			   
      			   c.p_nationality,
   				  `c`.`nationality` AS `client_nationality`,
      			  `c`.`nation_id` AS `client_nation_id`,
@@ -739,7 +750,11 @@ function getAllBranch($search=null){
  			 pp.land_width,
  			 pp.land_height,
  			 pp.`full_size`,
-
+(SELECT
+    	`property`.`land_size`
+    	FROM `ln_properties` `property`
+    	WHERE (`property`.`id` = `s`.`house_id`)
+    	LIMIT 1) AS `property_size`,
  			 pp.`north` AS border_north,
  			 pp.`south` AS border_south,
  			 pp.`east` AS border_east,
