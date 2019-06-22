@@ -23,8 +23,7 @@ $frm = $this->frm_expense;
 						dijit.byId('branch_id').focus();
 						return false;
 					}
-			   		dijit.byId('saveclose').set('disabled',true);	
-			   		dijit.byId('savenew').set('disabled',true);
+			   		loadingBlock();
 			   		return true;
 				}else {
 					return false;
@@ -125,13 +124,6 @@ $frm = $this->frm_expense;
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('Description');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('Stutas');?>
 	                   </div>
 	                </div>
 	            </div>
@@ -338,6 +330,7 @@ function doPrint() {
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML <?php if($this->data['showreceipt']>1){ ?>+ dojo.byId('divPrint1').innerHTML<?php }?>;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
+    loadingBlock();
     printSubmit();
     hideDialog();
 }
@@ -362,7 +355,7 @@ function hideDialog1(){
 								<tr>
 									<td><?php echo $tr->translate('EXPENSE_TITLE');?></td>
 									<td>
-										<input dojoType="dijit.form.ValidationTextBox" required="1"  class="fullside" id="cate_name" name="cate_name" value="" type="text">
+										<input dojoType="dijit.form.ValidationTextBox" required="true"  class="fullside" id="cate_name" name="cate_name" value="" type="text">
 									</td>
 								</tr>
 								<tr>

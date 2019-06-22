@@ -18,8 +18,7 @@ $frm = $this->frm_expense;
 		<form id='frm_add_tran' action=""	dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
-					dijit.byId('saveclose').set('disabled',true);	
-					dijit.byId('savenew').set('disabled',true);
+					loadingBlock();
 					return true;
 				}else {
 					return false;
@@ -387,15 +386,15 @@ function printSubmit(){
 								<tr>
 									<td><?php echo $tr->translate('NAME_KH');?></td>
 									<td>
-										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="cate_name" name="cate_name" value="" type="text">
+										<input dojoType="dijit.form.ValidationTextBox" required="true"  class="fullside" id="cate_name" name="cate_name" value="" type="text">
 									</td>
 								</tr>
 								<tr>
 									<td><?php echo $tr->translate('STATUS');?></td>
 									<td>
 										<select name="status_j" id="status_j" dojoType="dijit.form.FilteringSelect"   class="fullside">
-		    								<option value="1" label="active">Active</option>
-		    								<option value="0" label="deactive">Deactive</option>
+		    								<option value="1" label="active"><?php echo $tr->translate('ACTIVE');?></option>
+		    								<option value="0" label="deactive"><?php echo $tr->translate('DEACTIVE');?></option>
 										</select>
 									</td>
 								</tr>
