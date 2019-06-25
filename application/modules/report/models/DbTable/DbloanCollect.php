@@ -62,6 +62,15 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$db=$this->getAdapter();
     	$search['start_date'] = date('Y-m-d');
     	$search['end_date']= date('Y-m-d');
+    	
+    	$dbgb = new Setting_Model_DbTable_DbGeneral();
+    	$alert = $dbgb->geLabelByKeyName('payment_day_alert');
+    	$search['end_date']= date('Y-m-d');
+    	if (!empty($alert['keyValue'])){
+    		$amt_day = $alert['keyValue'];
+    		$search['end_date']= date('Y-m-d',strtotime("+$amt_day day"));
+    	}
+    	
     	$sql = "SELECT *,
     		SUM(principal_permonthafter) AS principal_permonthafter,
 			SUM(total_interest_after) AS total_interest_after,
@@ -79,7 +88,14 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     }
     function getCustomerNearAgreement(){
     	$db=$this->getAdapter();
+    	$dbgb = new Setting_Model_DbTable_DbGeneral();
+    	$alert = $dbgb->geLabelByKeyName('agree_day_alert');
     	$search['end_date']= date('Y-m-d');
+    	if (!empty($alert['keyValue'])){
+    		$amt_day = $alert['keyValue'];
+    		$search['end_date']= date('Y-m-d',strtotime("+$amt_day day"));
+    	}
+    	
     	$sql = "SELECT
 			  `s`.`id`               AS `id`,
 			  `s`.`price_sold`       AS `price_sold`,

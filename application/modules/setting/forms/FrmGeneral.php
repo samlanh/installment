@@ -243,6 +243,20 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				'onKeyup'=>'CheckPenalty();',
 		));
 		
+		$_agree_day_alert = new Zend_Dojo_Form_Element_NumberTextBox('agree_day_alert');
+		$_agree_day_alert->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+		));
+		$_agree_day_alert->setValue(1);
+		
+		$_payment_day_alert = new Zend_Dojo_Form_Element_NumberTextBox('payment_day_alert');
+		$_payment_day_alert->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+		));
+		$_payment_day_alert->setValue(1);
+		
 		if($data!=null){
 			$_label_animation->setValue($data['label_animation']['keyValue']);
 // 			$_smsWarnning->setValue($data['sms-warnning-kh']['keyValue']);
@@ -281,6 +295,9 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 			$_penalty_type->setValue($data['penalty_type']['keyValue']);
 			$_penalty_value->setValue($data['penalty_value']['keyValue']);
 			$_graice_pariod_late->setValue($data['graice_pariod_late']['keyValue']);
+			
+			$_agree_day_alert->setValue($data['agree_day_alert']['keyValue']);
+			$_payment_day_alert->setValue($data['payment_day_alert']['keyValue']);
 		}
 		$this->addElements(array(
 				$account_sign,
@@ -317,7 +334,10 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				
 				$_penalty_type,
 				$_penalty_value,
-				$_graice_pariod_late
+				$_graice_pariod_late,
+				
+				$_agree_day_alert,
+				$_payment_day_alert
 				));
 		
 		return $this;

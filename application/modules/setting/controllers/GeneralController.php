@@ -62,6 +62,9 @@ public function init()
 		$row['penalty_value'] = $db_gs->geLabelByKeyName('penalty_value');
 		$row['graice_pariod_late'] = $db_gs->geLabelByKeyName('graice_pariod_late');
 		
+		$row['agree_day_alert'] = $db_gs->geLabelByKeyName('agree_day_alert');
+		$row['payment_day_alert'] = $db_gs->geLabelByKeyName('payment_day_alert');
+		
 		$fm = new Setting_Form_FrmGeneral();
 		$frm = $fm->FrmGeneral($row);
 		Application_Model_Decorator::removeAllDecorator($frm);

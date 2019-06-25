@@ -169,6 +169,26 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 				$this->update($arr, $where);
 			}
 			
+			$rows = $this->geLabelByKeyName('agree_day_alert');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['agree_day_alert'],'keyName'=>'agree_day_alert','note'=>"ចំនួនថ្ងៃដែលត្រូវ Alert កិច្ចសន្យាមុន",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['agree_day_alert'],);
+				$where=" keyName= 'agree_day_alert'";
+				$this->update($arr, $where);
+			}
+			
+			$rows = $this->geLabelByKeyName('payment_day_alert');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['payment_day_alert'],'keyName'=>'payment_day_alert','note'=>"ចំនួនថ្ងៃដែលត្រូវ  Alert ថ្ងៃបង់លុយមុន",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['payment_day_alert'],);
+				$where=" keyName= 'payment_day_alert'";
+				$this->update($arr, $where);
+			}
+			
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
