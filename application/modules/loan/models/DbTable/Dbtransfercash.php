@@ -92,8 +92,9 @@ class Loan_Model_DbTable_Dbtransfercash extends Zend_Db_Table_Abstract
 	    		$transferid = $this->insert($arr);
 	    		
 	    		$arra = array(
-	    				'sale_id' => $data['toloan_number'],
+	    				'sale_id'   => $data['toloan_number'],
 	    				'client_id' => $rows['client_id'],
+	    				'land_id'	=> $rows['house_id']
 	    			);
 	    		$this->_name="ln_client_receipt_money";
 	    		$where="sale_id=".$data['loan_number'];
@@ -155,7 +156,6 @@ class Loan_Model_DbTable_Dbtransfercash extends Zend_Db_Table_Abstract
     	}catch (Exception $e){
     		$db->rollBack();
     		$err =$e->getMessage();
-    		echo $err;exit();
     		Application_Model_DbTable_DbUserLog::writeMessageError($err);
     	}
     }

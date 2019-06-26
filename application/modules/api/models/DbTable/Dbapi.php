@@ -10,6 +10,7 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     }
     function getAllSold(){
     	$sql="SELECT * ,
+    	  (price_before-price_sold) AS total_discount,
       	 (SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
       	 (SELECT name_kh FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
       	 FROM v_soldreport WHERE 1 ORDER BY id DESC limit 100 ";
