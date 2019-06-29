@@ -1584,6 +1584,7 @@ function getAllBranch($search=null){
     		$to_date = (empty($search['end_date']))? '1': "c.`for_date` <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
     		$sql ='SELECT c.`id`,
+    			s.id AS saleid,
 	    		p.`project_name`,
 	    		s.`sale_number`,
 	    		s.full_commission,

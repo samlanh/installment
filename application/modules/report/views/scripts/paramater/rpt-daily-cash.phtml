@@ -143,7 +143,6 @@
 				               </div>
 			               </td>
 			             </tr>
-			            
 			            <tr>
 			        <?php 
 			            $category_id=0; $category_id_expense=0; 
@@ -275,7 +274,7 @@
 							</tr>
 					   		</thead>
 					   		<?php foreach ($this->houserepair as $index => $rs){?>
-					   		<tr class=" stylehover <?php //if($index%2==1){echo"even";}?>" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+					   		<tr class=" stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;<?php if($rs['status']==0){echo'background:#f7c6c6';}?>" width="100%">
 			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
 			               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 			               		<td align="center">&nbsp;<?php echo $rs["title_income"];?>&nbsp;</td> 
@@ -290,7 +289,11 @@
 			               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
 			               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
 			                </tr>
-			                <?php $houserepair = $houserepair+$rs["total_amount"];?>
+			                <?php 
+			                	if($rs['status']==1){
+			                		$houserepair = $houserepair+$rs["total_amount"];
+			                	}
+			                ?>
 					   		<?php }?>
 					   	</table>
 					</td>
@@ -335,7 +338,6 @@
 							   <td align="center">&nbsp;<?php echo $row['invoice'];?>&nbsp;</td>
 							   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_name'];?></td>
 							   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['house_name'];?></td>
-							   
 							   <td>&nbsp;<?php echo $row['category_name'];?>&nbsp;</td>
 							   <td>&nbsp;<?php echo $row['payment_type'];?>&nbsp;</td>
 							   <td>&nbsp;<?php echo $row['cheque'];?>&nbsp;</td>
