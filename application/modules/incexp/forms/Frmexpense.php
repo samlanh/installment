@@ -24,7 +24,8 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 		$payment_type = new Zend_Dojo_Form_Element_FilteringSelect('payment_type');
 		$payment_type->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside'
+				'class'=>'fullside',
+				'onChange'=>'enablePayment();'
 		));
 		$options= array(
 				1=>$this->tr->translate("CASH"),

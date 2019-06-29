@@ -20,6 +20,7 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			'total_amount'	=>$data['total_amount'],
 			'invoice'		=>$invoice,
 			'category_id'	=>$data['income_category'],
+			'payment_id'=>$data['payment_type'],
 			'cheque'		=>$data['cheque'],
 			'description'	=>$data['Description'],
 			'date'			=>$data['Date'],
@@ -41,6 +42,7 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 					'total_amount'=>$data['total_amount'],
 					'invoice'=>$data['invoice'],
 					'category_id'=>$data['income_category'],
+					'payment_id'=>$data['payment_type'],
 					'cheque'=>$data['cheque'],
 					'description'=>$data['Description'],
 					'date'=>$data['Date'],
@@ -71,7 +73,8 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_income.client_id LIMIT 1) AS client_name,
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) as house_no,
 		title, invoice,
-		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id limit 1) AS category_name,
+		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) AS category_name,
+		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id LIMIT 1) AS payment_type,
 		total_amount,description,date,
 		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name
 		 ";

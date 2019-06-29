@@ -32,7 +32,7 @@ class Incexp_IncomeOtherpaymentController extends Zend_Controller_Action
     		$this->view->adv_search = $search;
 			$rs_rows= $db->getAllIncomePayment($search);//call frome model
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","TITLE","RECEIPT","TYPE","CATEGORY","BALANCE","TOTAL_PAID","REMAIN","PAYMENT_TYPE","DATE","BY_USER","STATUS");
+    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","TITLE","RECEIPT","TYPE","CATEGORY","PAYMENT_TYPE","BALANCE","TOTAL_PAID","REMAIN","PAYMENT_TYPE","DATE","BY_USER","STATUS");
     		$link=array('module'=>'incexp','controller'=>'incomeotherpayment','action'=>'edit');
     		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('branch_name'=>$link,'client_name'=>$link,'house_no'=>$link));
     		$this->view->row = $rs_rows;

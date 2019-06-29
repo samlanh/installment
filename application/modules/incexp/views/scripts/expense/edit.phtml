@@ -178,6 +178,16 @@ require(["dojo/ready"], function(ready){
 	    }
 		}, "supplier_id");
 });
+
+function enablePayment(){
+	payment_method = dijit.byId('payment_type').get('value');
+	dijit.byId("cheque").set("readOnly",false);
+	dijit.byId("cheque").attr("value",'');
+	if(payment_method==1){
+		dijit.byId("cheque").attr("value",'N/A');
+		dijit.byId("cheque").set("readOnly",true);
+	}
+}
 function Addsupplier(){
 	supplier_id = dijit.byId('supplier_id').get('value');
 	if(supplier_id==-1){

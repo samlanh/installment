@@ -2859,6 +2859,7 @@ function updatePaymentStatus($data){
    	   	(SELECT ln_client.sex FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS sex,
    	   	(SELECT ln_client.tel FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS tel,
    	   	(SELECT  first_name FROM rms_users WHERE id=op.user_id LIMIT 1 ) AS user_name,
+   	   	(SELECT ln_view.name_kh FROM `ln_view` WHERE ln_view.type=26 and ln_view.key_code=op.payment_method LIMIT 1) AS payment_type,
    	   	op.status
    	   	FROM `ln_otherincomepayment` AS op,
 			`ln_otherincome` AS oi

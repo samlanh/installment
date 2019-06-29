@@ -23,6 +23,7 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 			op.receipt_no,
 			(SELECT vt.name FROM `ln_view_type` AS vt WHERE vt.id=op.cate_type LIMIT 1) AS typecate,
 			(SELECT v.name_kh FROM ln_view AS v WHERE v.type=op.cate_type AND v.key_code=op.category LIMIT 1) AS category,
+			(SELECT ln_view.name_kh FROM `ln_view` WHERE ln_view.type=26 and ln_view.key_code=op.payment_method LIMIT 1) AS payment_type,
 			op.balance,
 			op.total_paid,
 			op.remain,

@@ -144,13 +144,14 @@
 								    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
 								    <td><?php echo $tr->translate("CATEGORY");?></td>
 								    <td><?php echo $tr->translate("TOTAL_INCOME");?></td>
-								    <td><?php echo $tr->translate("CHEQUE");?></td>
+								    <td><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+								    <td><?php echo $tr->translate("NUMBER");?></td>
 								    <td><?php echo $tr->translate("NOTE");?></td>
 								    <td><?php echo $tr->translate("DATE");?></td>
 								    <td><?php echo $tr->translate("BY_USER");?></td>
 								</tr>
 								</thead>
-						       <?php $branch_id=''; $n=0; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
+						       <?php $branch_id=''; $n=0; $i=0; $total=0; if(!empty($this->row)) foreach($this->row as $key =>$row){ $i++;?>
 								<tr class="context-menu-one" oncontextmenu="setrowdata('<?php echo $row['id'];?>');return false;" align="left">
 								   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
@@ -172,6 +173,7 @@
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['house_name'];?>&nbsp;</td>
 								   <td style="white-space: nowrap;">&nbsp;<?php echo $row['category_name'];?></td>
 								   <td align="center">&nbsp;<strong><?php echo number_format($row['total_amount'],2);?></strong>&nbsp;</td>
+								   <td align="center">&nbsp;<?php echo $row['payment_type'];?>&nbsp;</td>
 								   <td align="center">&nbsp;<?php echo $row['cheque'];?>&nbsp;</td>
 								   <td align="center" style="max-width:200px;">&nbsp;<?php echo $row['description'];?>&nbsp;</td>
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['date']));?>&nbsp;</td>
@@ -199,6 +201,7 @@
 					               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
 					               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
 					               		<td align="center">&nbsp;<strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format($rs["total_amount"],2);}?></strong>&nbsp;</td>
+					               		<td align="center">&nbsp;<?php echo $row['payment_type'];?>&nbsp;</td>
 					               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
 					               		<td style="max-width:200px;">&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
 					               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
