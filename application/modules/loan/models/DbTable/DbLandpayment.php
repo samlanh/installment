@@ -718,12 +718,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			'total_payment'		=>$data['deposit'],
     			'amount_payment'	=>$data['deposit'],
     			'recieve_amount'	=>$data['deposit'],
+    			'allpaid_before'	=>$data['deposit'],
     			'selling_price'     => $data['sold_price'],
     			'total_principal_permonth'	=>$data['deposit'],
     			'total_principal_permonthpaid'=>$data['deposit'],
     			'total_interest_permonth'	=>0,
     			'total_interest_permonthpaid'=>0,
-    			
     			'balance'			=>$data['balance'],
     			'payment_option'	=>($data['schedule_opt']==2)?4:1,//4 payoff,1normal
     			'is_completed'		=>($data['schedule_opt']==2)?1:0,
@@ -844,9 +844,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    		'outstanding'		=> $data['sold_price'],
 	    		'principal_amount'	=> $data['sold_price']-$total_principal,//សល់ពីបង់
     			'allpaid_before'	=> $total_principal,
-    			'total_principal_permonth'	=>$total_principal,
+    			'total_principal_permonth'=>$total_principal,
 	    		'total_principal_permonthpaid'=>$total_principal,
-    				
+    			'allpaid_before'=>$total_principal,
 	    		'total_interest_permonth'	=>$total_interest,
 	    		'total_interest_permonthpaid'=>$total_interest
     			);

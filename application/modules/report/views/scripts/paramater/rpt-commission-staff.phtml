@@ -150,15 +150,20 @@
 							 <td align="center" style="white-space: nowrap;">&nbsp;<?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
 							 <td style="white-space: nowrap;">&nbsp;<?php echo $row['land_name'].', '.$row['street'];?>&nbsp;</td>
 							 <td align="right">&nbsp;<?php echo '$ '.number_format($row['comission'],2);?>&nbsp;</td>
-							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['buy_date']));?>&nbsp;</td>
+							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['buy_date']));?>&nbsp;</td>
 							 <td>&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
 						</tr>
-						<?php }?>
-						<?php 
+						<?php }
 						 $record = $key;
+						 $expect_comission=0;
+						 $old_sale = '';
 						if(!empty($this->rscomisison))foreach($this->rscomisison as $key => $rscom){?>
 						<?php 
 							$total = $total +$rscom['total_amount'];
+							if($this->search['land_id']>0 AND $old_sale!=$rscom['saleid']){
+								$expect_comission  = $expect_comission+$rscom['full_commission'];
+							}
+							$old_sale=$rscom['saleid'];
 						?>
 						 <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
 						     <td align="center">&nbsp;<?php echo $key+1+$record; ?>&nbsp;</td>
@@ -169,7 +174,7 @@
 							 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
 							 <td align="right">&nbsp;<?php echo $rscom['invoice'];?>&nbsp;</td>
 							 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
-							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
+							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
 							 <td>&nbsp;<?php echo $rscom['user_name'];?>&nbsp;</td>
 						</tr>
 						<?php } ?>
@@ -178,6 +183,18 @@
 							<td align="center" style="font-weight: bold;font-size: 14px;border-bottom: 4px double #000;"><?php echo '$ '.number_format($total,2);?></td>
 							<td colspan="2"></td>
 						</tr>
+						<?php if($this->search['land_id']>0){?>
+							<tr style="border:1px solid #fff;">
+								<td colspan="7" align="right" style="font-weight: bold;font-size: 14px;"><?php echo $tr->translate("COMISSION_EXPECTED");?></td>
+								<td align="center" style="font-weight: bold;font-size: 14px;"><?php echo '$ '.number_format($expect_comission,2);?></td>
+								<td colspan="2"></td>
+							</tr>
+							<tr style="border:1px solid #fff;">
+								<td colspan="7" align="right" style="font-weight: bold;font-size: 14px;"><?php echo $tr->translate("Balance");?></td>
+								<td align="center" style="font-weight: bold;font-size: 14px;border-bottom: 2px solid #000;"><?php echo '$ '.number_format($expect_comission-$total,2);?></td>
+								<td colspan="2"></td>
+							</tr>
+						<?php }?>
 				    </table>
 		    	</td>
 		    </tr>

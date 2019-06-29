@@ -171,8 +171,9 @@
 							    <td><?php echo $tr->translate("BY_USER");?></td>
 							</tr>
 					   		</thead>
-					   		<?php if (!empty($this->houserepair)){ foreach ($this->houserepair as $index => $rs){?>
-					   		<tr class=" stylehover <?php //if($index%2==1){echo"even";}?>" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+					   		<?php 
+					   		if (!empty($this->houserepair)){ foreach ($this->houserepair as $index => $rs){?>
+					   		<tr class=" stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;<?php if($rs['status']==0){echo'background:#f7c6c6';}?>" width="100%">
 			               		<td style="text-align: center;">&nbsp;<?php echo ++$index; ?>&nbsp;</td>
 			               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 			               		<td align="center">&nbsp;<?php echo $rs["title_income"];?>&nbsp;</td> 
@@ -186,7 +187,10 @@
 			               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
 			               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
 			                </tr>
-			                <?php $houserepair = $houserepair+$rs["total_amount"];?>
+			                <?php 
+			                	if($rs['status']==1){
+			                		$houserepair = $houserepair+$rs["total_amount"];
+					   			}?>
 					   		<?php }}?>
 					   	</table>
 					</td>
