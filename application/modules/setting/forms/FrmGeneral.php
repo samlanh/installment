@@ -257,6 +257,14 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 		));
 		$_payment_day_alert->setValue(1);
 		
+		
+		$_signatur_agree = new Zend_Dojo_Form_Element_TextBox('signatur_agree');
+		$_signatur_agree->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("signatur_agree")
+		));
+		
 		if($data!=null){
 			$_label_animation->setValue($data['label_animation']['keyValue']);
 // 			$_smsWarnning->setValue($data['sms-warnning-kh']['keyValue']);
@@ -298,6 +306,7 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 			
 			$_agree_day_alert->setValue($data['agree_day_alert']['keyValue']);
 			$_payment_day_alert->setValue($data['payment_day_alert']['keyValue']);
+			$_signatur_agree->setValue($data['signatur_agree']['keyValue']);
 		}
 		$this->addElements(array(
 				$account_sign,
@@ -337,7 +346,8 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				$_graice_pariod_late,
 				
 				$_agree_day_alert,
-				$_payment_day_alert
+				$_payment_day_alert,
+				$_signatur_agree
 				));
 		
 		return $this;
