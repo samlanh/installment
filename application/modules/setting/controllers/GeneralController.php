@@ -71,6 +71,32 @@ public function init()
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_general = $frm;
 	}
+	function refreshAction(){
+		
+		
+		
+		if($this->getRequest()->isPost()){
+			try{
+				$data = $this->getRequest()->getPost();
+				$type=0;
+				if (!empty($data['type_fomate'])){
+					$type=$data['type_fomate'];
+				}
+				$dbglobal = new Application_Model_DbTable_DbGlobal();
+				$dbglobal->testTruncate($type);
+				Application_Form_FrmMessage::Sucessfull("SUCCESSFULLY", "/setting/general/refresh");
+			}catch (Exception $e){
+				Application_Form_FrmMessage::message("EDIT_FAILE");
+				echo $e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+		
+		$fm = new Setting_Form_FrmGeneral();
+		$frm = $fm->FrmTruncate();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_general = $frm;
+	}
 	
 }
 

@@ -353,5 +353,26 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 		return $this;
 		
 	}
+	public function FrmTruncate($data=null){
+		$request=Zend_Controller_Front::getInstance()->getRequest();
 	
+		$_type_fomate=  new Zend_Dojo_Form_Element_FilteringSelect('type_fomate');
+		$_type_fomate->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_penalty_type_opt = array(
+				0=>$this->tr->translate("FULL"),
+				1=>$this->tr->translate("PROPERTY"),
+				2=>$this->tr->translate("Customer,Supplier,Staff agency.."),
+				3=>$this->tr->translate("Investment Module"),
+				4=>$this->tr->translate("Other Income/Expense"),
+				5=>$this->tr->translate("Plong"),
+				6=>$this->tr->translate("Sale & Payment,Change House/Owner"),
+				);
+		$_type_fomate->setMultiOptions($_penalty_type_opt);
+		
+		$this->addElements(array(
+				$_type_fomate,
+		));
+		
+		return $this;
+	}
 }

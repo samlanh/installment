@@ -1641,5 +1641,112 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$sql="SELECT s.`id`,s.`name` FROM `rms_broker` AS s WHERE s.`status`=1 AND s.`name`!='' ORDER BY s.`name` ASC";
   	return $db->fetchAll($sql);
   }
+  
+  function testTruncate($type=0){
+//   	# truncate data from all table
+//   	# $sql = "SHOW TABLES IN 1hundred_2011";
+//   	# or,
+//   	$connection = $this->getAdapter();
+//   	$sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA LIKE 'db_borey'";
+  	
+//   	# use the instantiated db connection object from the init.php, to process the query
+//   	$tables = $connection ->fetchAll($sql);// fetch_all($sql);
+  	
+//   	foreach($tables as $table)
+//   	{
+//   		//echo $table['TABLE_NAME'].'<br/>';
+  	
+//   		# truncate data from this table
+//   		# $sql = "TRUNCATE TABLE `developer_configurations_cms`";
+  	
+//   		# use the instantiated db connection object from the init.php, to process the query
+//   		# $result = $connection -> query($sql);
+  	
+//   		# truncate data from this table
+//   		$sql = "TRUNCATE TABLE `".$table['TABLE_NAME']."`";
+  	
+//   		# use the instantiated db connection object from the init.php, to process the query
+//   		$result = $connection -> query($sql);
+//   	}
+		exit();
+	  	$connection = $this->getAdapter();
+	  	$arr_table = array();
+	  	if ($type==1 || $type==0){
+	  		//Property
+	  		$arr_table = array_merge($arr_table, array(
+	  			'ln_properties',
+	  			'ln_properties_type',
+	  			'ln_property_price',)
+	  				);
+	  	}
+	  	if ($type==2 || $type==0){
+	  		//Customer,Supplier,Staff agency..
+	  		$arr_table = array_merge($arr_table, 
+	  			array(
+	  				'ln_client',
+		  			'ln_client_document',
+		  			'ln_supplier',
+		  			'ln_staff',
+		  			'ln_supplier',)
+	  		);
+	  	}
+	  	if ($type==3 || $type==0){
+	  		//Investment Module
+	  		$arr_table = array_merge($arr_table,
+	  				array(
+	  			'rms_investment',
+	  			'rms_investment_detail',
+	  			'rms_investment_detail_broker',
+	  			'rms_investor',
+	  			'rms_investor_withdraw',
+	  			'rms_investor_withdraw_broker',
+	  			'rms_investor_withdraw_broker_detail',
+	  			'rms_investor_withdraw_detail',)
+	  		);
+	  	}
+	  	
+	  	if ($type==4 || $type==0){
+	  		//Other Income/Expense
+	  		$arr_table = array_merge($arr_table,
+	  				array(
+		  			'ln_expense',
+		  			'ln_income',
+		  			'ln_comission',
+		  			'ln_otherincome',
+		  			'ln_otherincome_detail',
+		  			'ln_otherincomepayment',)
+	  		);
+	  	}
+	  	if ($type==5 || $type==0){
+	  		//Plong
+	  		$arr_table = array_merge($arr_table,
+	  				array(
+	  				'ln_issueplong',
+		  			'ln_processing_plong',
+		  			'ln_processing_plong_detail',
+		  			'ln_receiveplong',)
+	  		);
+	  	}
+	  	if ($type==6 || $type==0){
+	  		//Sale & Payment,Change House/Owner
+	  		$arr_table = array_merge($arr_table,
+	  				array(
+	  				'ln_sale_cancel',
+		  			'ln_sale',
+		  			'ln_saleschedule',
+		  			'ln_client_receipt_money',
+		  			'ln_client_receipt_money_detail',
+		  			'ln_reschedule',
+	  				'ln_change_house',
+	  				'ln_change_owner',
+	  						)
+	  		);
+	  	}
+	  if (!empty($arr_table)) foreach ($arr_table as $rs){
+		  	$sql = "TRUNCATE TABLE `".$rs."`";
+		  	# use the instantiated db connection object from the init.php, to process the query
+		  	$result = $connection -> query($sql);
+	  }
+  }
 }
 ?>
