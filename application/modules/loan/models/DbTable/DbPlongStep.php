@@ -188,15 +188,15 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    		if ($data['process_status']>0){
+    		if($data['process_status']>0){
     			$arr_detail=array(
-    					'processplong_id'			=>$data['id'],
-    					'date'			=>$data['date'],
-    					'process_status'	=>$data['process_status'],
-    					'give_by'	=>$data['give_by'],
-    					'receive_by'	=>$data['receive_by'],
-    					'note'	=>$data['note'],
-    					'user_id'			=>$this->getUserId(),
+    					'processplong_id'=>$data['id'],
+    					'date'			 =>$data['date'],
+    					'process_status' =>$data['process_status'],
+    					'give_by'	     =>$data['give_by'],
+    					'receive_by'	 =>$data['receive_by'],
+    					'note'	         =>$data['note'],
+    					'user_id'		 =>$this->getUserId(),
     			);
     			$this->_name="ln_processing_plong_detail";
     			if (!empty($data['detail_id'])){
@@ -212,7 +212,6 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     					'give_by'			=>$data['give_by'],
     					'receive_by'		=>$data['receive_by'],
     					'note'				=>$data['note'],
-    					'receive_by'	=>$data['receive_by'],
     					'modify_date'	=>date('Y-m-d H:i:s'),
     			);
     			$this->_name="ln_processing_plong";
