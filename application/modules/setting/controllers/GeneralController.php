@@ -73,18 +73,23 @@ public function init()
 	}
 	function refreshAction(){
 		
-		
-		
 		if($this->getRequest()->isPost()){
 			try{
 				$data = $this->getRequest()->getPost();
+				$param = $this->getRequest()->getParam("channy");
+				$param = empty($param)?"":$param;
 				$type=0;
 				if (!empty($data['type_fomate'])){
 					$type=$data['type_fomate'];
 				}
 				$dbglobal = new Application_Model_DbTable_DbGlobal();
-				$dbglobal->testTruncate($type);
-				Application_Form_FrmMessage::Sucessfull("SUCCESSFULLY", "/setting/general/refresh");
+				$return = $dbglobal->testTruncate($type,$param);
+				if ($return==-1){
+					Application_Form_FrmMessage::Sucessfull("Can not Clear Data", "/setting/general/refresh");
+				}else{
+					Application_Form_FrmMessage::Sucessfull("SUCCESSFULLY", "/setting/general/refresh");
+				}
+				
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("EDIT_FAILE");
 				echo $e->getMessage();

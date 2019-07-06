@@ -1642,7 +1642,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	return $db->fetchAll($sql);
   }
   
-  function testTruncate($type=0){
+  function testTruncate($type=0,$param=null){
 //   	# truncate data from all table
 //   	# $sql = "SHOW TABLES IN 1hundred_2011";
 //   	# or,
@@ -1668,7 +1668,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 //   		# use the instantiated db connection object from the init.php, to process the query
 //   		$result = $connection -> query($sql);
 //   	}
-		exit();
+		if ($param != "123456"){
+			return -1;
+  		}
 	  	$connection = $this->getAdapter();
 	  	$arr_table = array();
 	  	if ($type==1 || $type==0){
@@ -1747,6 +1749,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  	# use the instantiated db connection object from the init.php, to process the query
 		  	$result = $connection -> query($sql);
 	  }
+	  return 1;
   }
 }
 ?>
