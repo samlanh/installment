@@ -219,7 +219,9 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		if($search['buy_status']>-1){
 			$where.= " AND is_lock = ".$search['buy_status'];
 		}
-	
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("branch_id");
+		
 		$order=" ORDER BY id DESC ";
 		return $db->fetchAll($sql.$where.$order);
 	}
