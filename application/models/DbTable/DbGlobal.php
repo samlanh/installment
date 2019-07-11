@@ -658,9 +658,10 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		FROM 
   	   `ln_sale` AS s,
   	   `ln_properties` AS p
-  	 WHERE `p`.`id` = `s`.`house_id` AND s.id=$id LIMIT 1 ";
+  	 WHERE `p`.`id` = `s`.`house_id` AND s.id=$id ";
   	
   	$sql.=$this->getAccessPermission("`s`.`branch_id`");
+  	$sql.=" LIMIT 1 ";
   	
   	$db=$this->getAdapter();
   	return $db->fetchRow($sql);

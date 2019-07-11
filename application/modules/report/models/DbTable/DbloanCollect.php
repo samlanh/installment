@@ -60,7 +60,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     }
     function getCustomerNearlyPayment(){
     	$db=$this->getAdapter();
-    	$search['start_date'] = date('Y-m-d');
+    	$search['start_date'] = "";
     	$search['end_date']= date('Y-m-d');
     	
     	$dbgb = new Setting_Model_DbTable_DbGeneral();

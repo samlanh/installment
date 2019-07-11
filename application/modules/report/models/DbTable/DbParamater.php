@@ -186,6 +186,7 @@ function getAllBranch($search=null){
     		}
 
     		$where.=" ORDER BY p.`property_type`,p.`street` ASC, cast(land_address as unsigned) "; 
+    		echo $sql.$where;exit();
     		return $db->fetchAll($sql.$where);
     	}
     	function getCancelSale($search=null){
