@@ -1752,5 +1752,25 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	  }
 	  return 1;
   }
+  
+  public function checkSessionExpire()
+  {
+  	$user_id = $this->getUserId();
+  	$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+  	if (empty($user_id)){
+  		return false;
+  	}else{
+  		return true;
+  	}
+  }
+  function reloadPageExpireSession(){
+  	$url="";
+  	$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+  	$msg = $tr->translate("Session Expire");
+  	echo '<script language="javascript">
+  	alert("'.$msg.'");
+  	window.location = "'.Zend_Controller_Front::getInstance()->getBaseUrl().$url.'";
+  	</script>';
+  }
 }
 ?>
