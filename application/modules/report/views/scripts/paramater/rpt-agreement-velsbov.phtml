@@ -123,7 +123,7 @@ dojo.require("dijit.form.DateTextBox");
 								          ខ័ណ្ឌ/ស្រុក <span class="value" style="min-width:100px;"><?php echo $this->agreement['client_districtkh'];?></span>
              					          ក្រុង/ខេត្ត <span class="value" style="min-width:100px;">&nbsp;<?php echo $this->agreement['client_province_kh'];?></span> ។
 		             				<br/>
-		             				លក់ក្នុងតម្លៃ USD <span class="value" style="min-width:100px;font-weight: bolder;"><?php echo number_format($this->agreement['price_sold'],2);?></span> ជាអក្សរ ( <label id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក ) ។
+		             				លក់ក្នុងតម្លៃ USD <span class="value" style="min-width:100px;font-weight: bolder;"><?php echo number_format($this->agreement['price_sold'],2);?></span> <strong>ជាអក្សរ ( <span id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</strong> ។
 		             		</li>
 		             	</ol>
              		<p style="margin-top: -10px;">
@@ -157,7 +157,11 @@ dojo.require("dijit.form.DateTextBox");
 					             			<?php if(!empty($resultdeposit) AND $this->agreement['is_reschedule']==1){?><!-- ប្រាក់កក់ -->
 					             			<?php foreach($resultdeposit as $keydeposite =>$rsdeposite){?>
 						             			<span style="display: block;" >ភាគីអ្នកទិញត្រូវកក់ទឹកប្រាក់ចំនួនUSD <span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($rsdeposite['total_principal_permonthpaid'],2);?>
-					             				<label style="font-family:'Khmer OS Battambang'" id="lable_depositpaid<?php echo $keydeposite+1;?>"></label><span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)</span></span>
+						             				<strong>
+						             				(<span style="font-family:'Khmer OS Battambang'" id="lable_depositpaid<?php echo $keydeposite+1;?>"></span>
+						             				<span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក</span>)
+						             				</strong>
+					             				</span>
 					             				នៅថ្ងៃ <?php echo $day[date("D",strtotime($rsdeposite['date_input']))]." ទី ".date("d",strtotime($rsdeposite['date_input']))." ខែ ".$month[date("m",strtotime($rsdeposite['date_input']))]." ឆ្នាំ ".date("Y",strtotime($rsdeposite['date_input'])); ?>
 					             				</span>
 					             				 <script>
@@ -170,13 +174,12 @@ dojo.require("dijit.form.DateTextBox");
 													last_number='<?php echo substr(number_format($rsdeposite['total_principal_permonthpaid'],2),-2);?>';
 													
 													if(last_number<=0){last_number='';}
-													money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+													money_khmer = money_khmer+""+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
 													dojo.byId('lable_depositpaid<?php echo $keydeposite+1;?>').innerHTML=money_khmer;
 												</script>
 												<?php 
 												$paid_amount = $paid_amount+$rsdeposite['total_principal_permonthpaid'];
 					             				}}?>
-					             				</li>
 					             				<?php 
 							             			$i=0; $numrow = 0;
 							             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++;  ?>
@@ -185,28 +188,31 @@ dojo.require("dijit.form.DateTextBox");
 							             			
 							             			$paid = $paid+$row['principal_permonth'];?>    
 							             			
-							             			        	
-							             			<?php //if($key==0){?>
+							             			<?php if ($paid_amount>=$paid){
+							             				continue;
+							             			}
+							             			?>         	
+							             			<?php if($key==0){?>
 								             		<?php
 								             			if($row['date_payment']==$this->agreement['buy_date'] AND $paid_amount==$row['principal_permonth'] ){
 								             				continue;
 								             			}
 							             				$paidbefore = $row['principal_permonth']-$paid_amount;
-														if($paidbefore<=0){
-															$paid_amount = abs($paidbefore);
-															continue;
-														}else{
-															$row['principal_permonth'] = ($paidbefore);
-														}
-							             			//}?>
-							             			
+							             				if(strlen($paidbefore)<=3){$row['principal_permonth']=number_format($paidbefore,2);}
+							             				else{
+							             					$row['principal_permonth'] = ($paidbefore);
+							             				}
+							             			}?>
+							             			</li>
 							             			<li>
 								             			<?php 
 								             				$numrow=$numrow+1;?>
-								             				<span  >ទឹកប្រាក់ចំនួនUSD 
+								             				<span>ទឹកប្រាក់ចំនួនUSD 
 								             					<span class="value" style="min-width:250px;font-family:Arial;font-weight: bold;"><?php echo @number_format($row['principal_permonth'],2);?>
-								             					<label style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></label>
-								             					<span  style="font-family:'Khmer OS Battambang'">(ដុល្លាអាមេរិក)</span>
+								             					<strong>
+									             					(<span style="font-family:'Khmer OS Battambang'" id="lable_depositkhmer<?php echo $i;?>"></span>
+									             					<span  style="font-family:'Khmer OS Battambang'">ដុល្លាអាមេរិក</span>)
+								             					</strong>
 								             					</span>
 								             					
 								             					<span style="font-weight: normal !important;">&nbsp;&nbsp;អ្នកទិញត្រូវបង់នៅថ្ងៃ <?php echo $day[date("D",strtotime($row['date_payment']))]." ទី ".date("d",strtotime($row['date_payment']))." ខែ ".$month[date("m",strtotime($row['date_payment']))]." ឆ្នាំ ".date("Y",strtotime($row['date_payment'])); ?></span>
@@ -221,22 +227,21 @@ dojo.require("dijit.form.DateTextBox");
 																last_number='<?php echo substr(number_format($row['principal_permonth'],2),-2);?>';
 																
 																if(last_number<=0){last_number='';}
-																money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
+																money_khmer = money_khmer+""+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
 																dojo.byId('lable_depositkhmer<?php echo $i;?>').innerHTML=money_khmer;
 															</script>
 															<?php if($row['ispay_bank']==1){?>
 									             				<span class="padding-left"  >&nbsp;&nbsp;&nbsp;<?php echo $this->keyValue['bank_info'];?></span>
 									             			<?php break;
 									             			}?>
-									             			 </li>
 								             				<?php 
 								                       }?>
-							                      
+							                       </li>
 							                       <?php
 								  if($this->agreement['payment_id']==4){
 								  ?>
 							             <li>
-							         		  ហើយ  ភាគីអ្នកទិញ យល់ព្រមបង់រំលស់ទឹកប្រាក់ដែលនៅសល់ចំនួន  <span class="value" style="min-width: 50px;"><strong><?php echo number_format(($this->agreement['price_sold']-$paid),2);?></strong></span> USD(<span class="value" style="min-width: 50px;"><label id="lable_remainkhmer" style="font-family: 'Times New Roman','Khmer OS Battambang'"></label> </span>ដុល្លារអាមេរិក)
+							         		  ហើយ  ភាគីអ្នកទិញ យល់ព្រមបង់រំលស់ទឹកប្រាក់ដែលនៅសល់ចំនួន  <span class="value" style="min-width: 50px;"><strong><?php echo number_format(($this->agreement['price_sold']-$paid),2);?></strong></span> USD <strong>(<span class="value" style="min-width: 50px;"><span id="lable_remainkhmer" style="font-family: 'Times New Roman','Khmer OS Battambang'"></span> </span>ដុល្លារអាមេរិក)</strong>
 										  	  រយៈពេល <?php echo number_format($this->agreement['total_duration'],0); //$dbparmeter->getNumberInkhmer(number_format($this->agreement['total_duration'],0));?>
 										  	 <?php if($this->agreement['payment_id']!=4){
 													echo $tr->translate("MONTH");
