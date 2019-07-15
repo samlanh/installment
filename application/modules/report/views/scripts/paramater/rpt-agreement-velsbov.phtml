@@ -176,6 +176,7 @@ dojo.require("dijit.form.DateTextBox");
 												<?php 
 												$paid_amount = $paid_amount+$rsdeposite['total_principal_permonthpaid'];
 					             				}}?>
+					             				</li>
 					             				<?php 
 							             			$i=0; $numrow = 0;
 							             			if (!empty($this->sale_schedule))  foreach ($this->sale_schedule as $key=> $row){$i++;  ?>
@@ -184,22 +185,21 @@ dojo.require("dijit.form.DateTextBox");
 							             			
 							             			$paid = $paid+$row['principal_permonth'];?>    
 							             			
-							             			<?php if ($row['principal_permonth']==$paid){
-							             				continue;
-							             			}
-							             			?>         	
-							             			<?php if($key==0){?>
+							             			        	
+							             			<?php //if($key==0){?>
 								             		<?php
 								             			if($row['date_payment']==$this->agreement['buy_date'] AND $paid_amount==$row['principal_permonth'] ){
 								             				continue;
 								             			}
 							             				$paidbefore = $row['principal_permonth']-$paid_amount;
-							             				if(strlen($paidbefore)<=3){$row['principal_permonth']=number_format($paidbefore,2);}
-							             				else{
-							             					$row['principal_permonth'] = ($paidbefore);
-							             				}
-							             			}?>
-							             			</li>
+														if($paidbefore<=0){
+															$paid_amount = abs($paidbefore);
+															continue;
+														}else{
+															$row['principal_permonth'] = ($paidbefore);
+														}
+							             			//}?>
+							             			
 							             			<li>
 								             			<?php 
 								             				$numrow=$numrow+1;?>
@@ -228,9 +228,10 @@ dojo.require("dijit.form.DateTextBox");
 									             				<span class="padding-left"  >&nbsp;&nbsp;&nbsp;<?php echo $this->keyValue['bank_info'];?></span>
 									             			<?php break;
 									             			}?>
+									             			 </li>
 								             				<?php 
 								                       }?>
-							                       </li>
+							                      
 							                       <?php
 								  if($this->agreement['payment_id']==4){
 								  ?>
