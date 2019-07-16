@@ -1,7 +1,7 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
-	
+	$frmPayme = $this->frm_searchloantype;
 	$dbGB = new Application_Model_DbTable_DbGlobal();
 	$logo = $this->baseUrl()."/images/logo.jpg";
 	$branch_title = $tr->translate("BRAND_TITLE");
@@ -61,11 +61,13 @@
 					<?php echo $frm->getElement('end_date');?>
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frmPayme->getElement('type');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<input id="category_id" />
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
-				</div>
-				<div class="col-md-2 col-sm-2 col-xs-12">
-				</div>
-				<div class="col-md-2 col-sm-2 col-xs-12">
 				</div>
 			</div>
 		</div>
@@ -214,3 +216,63 @@
 	</table>
 	</div>
 </div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+require(["dojo/ready"], function(ready){
+	new dijit.form.FilteringSelect({
+		store: income_category_store,
+		required: false,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		name: "category_id",
+		id: "category_id",
+		value:-1,
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+			land_id=-1;
+	}
+		}, "category_id");
+
+	 ready(function(){
+		 getCategoryByType();
+		 var catetype = dijit.byId('type');
+		 catetype.on('change', function(evt) {
+			 getCategoryByType();
+	    });
+	});
+	 
+});
+
+oldtype = '<?php echo $this->search['type']?>';
+var url_getcatebytype = '<?php echo $this->url(array('module'=>'loan','controller'=>'incomeotherpayment','action'=>'get-categorybytype')); ?>';
+function getCategoryByType(){
+	cate_type = dijit.byId('type').get('value');
+	dijit.byId('category_id').reset(); 
+	if(cate_type=="" || cate_type ==-1){
+		income_category_store  = getDataStorefromJSON('id','name', <?php print_r(array())?>);
+	    dijit.byId('category_id').set('store',income_category_store);   
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_getcatebytype,
+		content:{
+			'cate_type':cate_type
+			},
+		handleAs:"json",
+		load: function(data) {
+			income_category_store  = getDataStorefromJSON('id','name', data);
+		    dijit.byId('category_id').set('store',income_category_store);
+		    if(oldtype==cate_type){
+		    	dijit.byId('category_id').set('value','<?php echo $this->search['category_id']?>');
+		    }   
+		},
+		error: function(err) {
+		}
+	});
+}
+
+</script>

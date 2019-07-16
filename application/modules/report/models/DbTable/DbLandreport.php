@@ -2830,7 +2830,7 @@ function updatePaymentStatus($data){
 //    	return $db->fetchAll($sql.$where.$order);
 //    }
 
-      function getAllIncomeOtherPayment($search=null,$is_expense=null){
+      function getAllIncomeOtherPayment($search=null,$typeRecord=null){
       	$db = $this->getAdapter();
       	$session_user=new Zend_Session_Namespace('authinstall');
       	$from_date =(empty($search['start_date']))? '1': " op.for_date >= '".$search['start_date']." 00:00:00'";
@@ -2869,10 +2869,11 @@ function updatePaymentStatus($data){
       	$dbp = new Application_Model_DbTable_DbGlobal();
       	$sql.=$dbp->getAccessPermission("op.branch_id");
       	
-    	if (!empty($is_expense)){
-    		$where.= " AND op.cate_type =13 ";
+    	if (!empty($typeRecord)){
+    		// $typeRecord 12 = income,$typeRecord 13 = Expense
+    		$where.= " AND op.cate_type =$typeRecord ";
     	}else{
-    		$where.= " AND op.cate_type =12 ";
+//     		$where.= " AND op.cate_type =12 ";
     	}
       	if (!empty($search['adv_search'])){
       		$s_where = array();
@@ -2900,6 +2901,12 @@ function updatePaymentStatus($data){
       	}
       	if(!empty($search['user_id']) AND $search['user_id']>-0){
       		$where.= " AND op.user_id = ".$search['user_id'];
+      	}
+      	if(!empty($search['type'])){
+      		$where.= " AND op.cate_type = ".$search['type'];
+      		if(!empty($search['category_id'])){
+      			$where.= " AND op.category = ".$search['category_id'];
+      		}
       	}
       	$order=" ORDER BY oi.branch_id DESC ";
       	if(!empty($search['ordering'])){

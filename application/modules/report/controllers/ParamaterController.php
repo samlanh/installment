@@ -157,7 +157,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->row = $db->getAllIncome($search);
   	 
   	$db  = new Report_Model_DbTable_DbLandreport();
-  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search);
+  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,12);
   	
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
@@ -214,7 +214,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->rscomisison = $db->getAllCommission($search);
   	
   	$db  = new Report_Model_DbTable_DbLandreport();
-  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,1);
+  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,13);
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
@@ -534,6 +534,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'payment_type'=>-1,
   				'payment_method'=>-1,
   				'user_id'=>-1,
+  				'type'=>"",
+  				'category_id'=>"",
   		);
   	}
   	$this->view->search=$search;
@@ -546,6 +548,11 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
   	 
+  	$frm = new Incexp_Form_FrmSearchLoanType();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_searchloantype = $frm;
+  	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
