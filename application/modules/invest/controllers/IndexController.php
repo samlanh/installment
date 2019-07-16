@@ -45,6 +45,14 @@ class Invest_IndexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_dbmodel = new Invest_Model_DbTable_DbInvestor();
 				$_dbmodel->addInvestor($_data);
 				if(!empty($_data['save_close'])){
@@ -77,6 +85,14 @@ class Invest_IndexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_db->addInvestor($_data);
 				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/invest");
 			}catch (Exception $e) {

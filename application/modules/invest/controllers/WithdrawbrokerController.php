@@ -51,6 +51,14 @@ class Invest_WithdrawbrokerController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_dbmodel = new Invest_Model_DbTable_DbWithdrawBroker();
 				$_dbmodel->addInvestmentWithdrawal($_data);
 				if(!empty($_data['save_close'])){
@@ -71,7 +79,14 @@ class Invest_WithdrawbrokerController extends Zend_Controller_Action {
 	}
 	
 	function deleteAction(){
-	
+		// Check Session Expire
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$checkses = $dbgb->checkSessionExpire();
+		if (empty($checkses)){
+			$dbgb->reloadPageExpireSession();
+			exit();
+		}
+		
 		$id = $this->getRequest()->getParam("id");
 		$id = empty($id)?0:$id;
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -96,6 +111,15 @@ class Invest_WithdrawbrokerController extends Zend_Controller_Action {
 		</script>";
 	}
 	function deletereceiptAction(){
+		
+		// Check Session Expire
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$checkses = $dbgb->checkSessionExpire();
+		if (empty($checkses)){
+			$dbgb->reloadPageExpireSession();
+			exit();
+		}
+		
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$action=$request->getActionName();
 		$controller=$request->getControllerName();

@@ -58,6 +58,15 @@ class Incexp_IncomeOtherpaymentController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
 			try {
+				
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$db->addIncome($data);
 				if(!empty($data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/incomeotherpayment");
@@ -89,6 +98,14 @@ class Incexp_IncomeOtherpaymentController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$db->editIncomePayment($data);
 				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/incexp/incomeotherpayment");			
 			} catch (Exception $e) {

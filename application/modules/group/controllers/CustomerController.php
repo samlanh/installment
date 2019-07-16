@@ -55,6 +55,14 @@ class Group_CustomerController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
 			try{
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 					$id= $db->add($data);
 					Application_Form_FrmMessage::message("INSERT_SUCESS");
 
@@ -78,6 +86,14 @@ class Group_CustomerController extends Zend_Controller_Action {
 		$db = new Group_Model_DbTable_DbCustomer();
 		if($this->getRequest()->isPost()){
 			try{
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$data = $this->getRequest()->getPost();
 				$data['id']=$id;
 				$db->add($data);
@@ -115,6 +131,13 @@ class Group_CustomerController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try{
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
 					
 				$row = $db->addContactHistory($_data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/customer");

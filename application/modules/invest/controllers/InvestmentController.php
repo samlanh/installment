@@ -52,6 +52,15 @@ class Invest_InvestmentController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			
 			try {
+				
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_dbmodel = new Invest_Model_DbTable_DbInvestment();
 				$_dbmodel->addInvestment($_data);
 				if(!empty($_data['save_close'])){
@@ -102,6 +111,13 @@ class Invest_InvestmentController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 				
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
 				
 				$_dbmodel->editInvestment($_data);
 				if(!empty($_data['save_close'])){

@@ -47,6 +47,13 @@ class Loan_ChangeownerController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
 				$_dbmodel = new Loan_Model_DbTable_Dbtransferowner();
 				$_dbmodel->addTransferOwner($_data);
 				if(!empty($_data['saveclose'])){

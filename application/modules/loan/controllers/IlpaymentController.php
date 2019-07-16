@@ -105,6 +105,12 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
   	$db = new Loan_Model_DbTable_DbLoanILPayment();
   	$db_global = new Application_Model_DbTable_DbGlobal();
 		if($this->getRequest()->isPost()){
+			// Check Session Expire
+			$checkses = $db_global->checkSessionExpire();
+			if (empty($checkses)){
+				$db_global->reloadPageExpireSession();
+				exit();
+			}
 			$_data = $this->getRequest()->getPost();
 			try {
 				$receipt = $db->addILPayment($_data);

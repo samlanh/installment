@@ -49,6 +49,14 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_dbmodel = new Loan_Model_DbTable_Dbissueplong();
 				$_dbmodel->addIssuePlong($_data);
 				if(!empty($_data['saveclose'])){
@@ -73,6 +81,14 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_dbmodel->EditIssuePlong($_data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/issueplong");
 			}catch (Exception $e) {

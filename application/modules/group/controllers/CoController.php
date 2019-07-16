@@ -42,6 +42,14 @@ class Group_CoController extends Zend_Controller_Action {
 	   		$_data = $this->getRequest()->getPost();
 	   		$db_co = new Other_Model_DbTable_DbCreditOfficer();
 	   		try{
+	   			// Check Session Expire
+	   			$dbgb = new Application_Model_DbTable_DbGlobal();
+	   			$checkses = $dbgb->checkSessionExpire();
+	   			if (empty($checkses)){
+	   				$dbgb->reloadPageExpireSession();
+	   				exit();
+	   			}
+	   			
 	   			$db_co->addCreditOfficer($_data);
 	   				if(!empty($_data['save_new'])){
 						Application_Form_FrmMessage::message('INSERT_SUCCESS');
@@ -64,6 +72,14 @@ class Group_CoController extends Zend_Controller_Action {
    	if($this->getRequest()->isPost()){
    		$_data = $this->getRequest()->getPost();
    		try{
+   			// Check Session Expire
+   			$dbgb = new Application_Model_DbTable_DbGlobal();
+   			$checkses = $dbgb->checkSessionExpire();
+   			if (empty($checkses)){
+   				$dbgb->reloadPageExpireSession();
+   				exit();
+   			}
+   			
    			$db_co->addCreditOfficer($_data);
    			Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",'/group/co');
    		}catch(Exception $e){

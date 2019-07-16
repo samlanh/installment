@@ -50,6 +50,14 @@ class Incexp_IncomeOtherController extends Zend_Controller_Action
     public function addAction()
     {
     	if($this->getRequest()->isPost()){
+    		// Check Session Expire
+    		$dbgb = new Application_Model_DbTable_DbGlobal();
+    		$checkses = $dbgb->checkSessionExpire();
+    		if (empty($checkses)){
+    			$dbgb->reloadPageExpireSession();
+    			exit();
+    		}
+    		
 			$data=$this->getRequest()->getPost();	
 			if (empty($data)){
 				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/incomeother");
@@ -91,6 +99,13 @@ class Incexp_IncomeOtherController extends Zend_Controller_Action
     	$id = $this->getRequest()->getParam('id');
     	$id = empty($id)?0:$id;
     	if($this->getRequest()->isPost()){
+    		// Check Session Expire
+    		$dbgb = new Application_Model_DbTable_DbGlobal();
+    		$checkses = $dbgb->checkSessionExpire();
+    		if (empty($checkses)){
+    			$dbgb->reloadPageExpireSession();
+    			exit();
+    		}
 			$data=$this->getRequest()->getPost();	
 			if (empty($data)){
 				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/incomeother");

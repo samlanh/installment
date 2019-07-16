@@ -42,7 +42,15 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 	public function addAction(){
 		if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
-			try {		
+			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+						
 				$_dbmodel = new Incexp_Model_DbTable_DbComission();
 				if(isset($_data['save'])){
 					$_dbmodel->addSaleComission($_data);
@@ -93,6 +101,14 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			$_data['id']=$id;
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				if(isset($_data['save'])){
 					$_dbmodel->editCommission($_data);
 				}elseif(isset($_data['save_close'])){

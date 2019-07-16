@@ -63,6 +63,14 @@ class Project_LandController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 				$data = $this->getRequest()->getPost();
 			try{
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$id= $db->addLandinfo($data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/add");
 			}catch (Exception $e){
@@ -105,6 +113,14 @@ class Project_LandController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			try{
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$db->addLandinfoAuto($data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/addauto");
 			}catch (Exception $e){
@@ -148,6 +164,14 @@ class Project_LandController extends Zend_Controller_Action {
 		$db = new Project_Model_DbTable_DbLand();
 		if($this->getRequest()->isPost()){
 			try{
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$data = $this->getRequest()->getPost();
 				$data['id']=$id;
 				$db->addLandinfo($data);
@@ -191,6 +215,15 @@ class Project_LandController extends Zend_Controller_Action {
 		$this->view->propertyinfor = $db->getPropertyInfor($id);
 	}
 	function deleteAction(){
+		
+		// Check Session Expire
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$checkses = $dbgb->checkSessionExpire();
+		if (empty($checkses)){
+			$dbgb->reloadPageExpireSession();
+			exit();
+		}
+		
 		$id = $this->getRequest()->getParam("id");
 		$db = new Project_Model_DbTable_DbLand();
 		$row = $db->getCheckPropertyInSale($id);
@@ -212,6 +245,15 @@ class Project_LandController extends Zend_Controller_Action {
 		</script>";
 	}
 	function deleterecordAction(){
+		
+		// Check Session Expire
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$checkses = $dbgb->checkSessionExpire();
+		if (empty($checkses)){
+			$dbgb->reloadPageExpireSession();
+			exit();
+		}
+		
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$action=$request->getActionName();
 		$controller=$request->getControllerName();

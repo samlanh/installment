@@ -45,6 +45,13 @@ class Loan_CancelController extends Zend_Controller_Action {
 	}
 	public function addAction(){
 		if($this->getRequest()->isPost()){
+			// Check Session Expire
+			$dbgb = new Application_Model_DbTable_DbGlobal();
+			$checkses = $dbgb->checkSessionExpire();
+			if (empty($checkses)){
+				$dbgb->reloadPageExpireSession();
+				exit();
+			}
 			$_data = $this->getRequest()->getPost();
 			try {		
 				$_dbmodel = new Loan_Model_DbTable_DbCancel();
@@ -80,6 +87,13 @@ class Loan_CancelController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$_dbmodel = new Loan_Model_DbTable_DbCancel();
 		if($this->getRequest()->isPost()){//check condition return true click submit button
+			// Check Session Expire
+			$dbgb = new Application_Model_DbTable_DbGlobal();
+			$checkses = $dbgb->checkSessionExpire();
+			if (empty($checkses)){
+				$dbgb->reloadPageExpireSession();
+				exit();
+			}
 			$_data = $this->getRequest()->getPost();
 			$_data['id']=$id;
 			try {

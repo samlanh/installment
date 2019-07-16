@@ -56,6 +56,15 @@ class Incexp_IncomeController extends Zend_Controller_Action
 			$data=$this->getRequest()->getPost();	
 			$db = new Incexp_Model_DbTable_DbIncome();				
 			try {
+				
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$db->addIncome($data);
 				if(!empty($data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/income");
@@ -93,6 +102,14 @@ class Incexp_IncomeController extends Zend_Controller_Action
 			$data=$this->getRequest()->getPost();	
 			$db = new Incexp_Model_DbTable_DbIncome();				
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$db->updateIncome($data,$id);				
 				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', "/incexp/income");		
 			} catch (Exception $e) {

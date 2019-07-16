@@ -51,6 +51,13 @@ class Loan_DepositController extends Zend_Controller_Action {
   function addAction()
   {
 		if($this->getRequest()->isPost()){
+			// Check Session Expire
+			$dbgb = new Application_Model_DbTable_DbGlobal();
+			$checkses = $dbgb->checkSessionExpire();
+			if (empty($checkses)){
+				$dbgb->reloadPageExpireSession();
+				exit();
+			}
 		   $_data = $this->getRequest()->getPost();
 		   try {
 				$_dbmodel = new Loan_Model_DbTable_DbLanddeposit();
@@ -89,6 +96,13 @@ class Loan_DepositController extends Zend_Controller_Action {
 	}	
 	public function editAction(){
 		if($this->getRequest()->isPost()){
+			// Check Session Expire
+			$dbgb = new Application_Model_DbTable_DbGlobal();
+			$checkses = $dbgb->checkSessionExpire();
+			if (empty($checkses)){
+				$dbgb->reloadPageExpireSession();
+				exit();
+			}
 			$_data = $this->getRequest()->getPost();
 			try{
 				$_dbmodel = new Loan_Model_DbTable_DbLanddeposit();

@@ -50,6 +50,14 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_dbmodel = new Loan_Model_DbTable_DbPlongStep();
 				$_dbmodel->addPlongStep($_data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/plongstep");
@@ -71,6 +79,14 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_dbmodel->addChangeProject($_data);
 				if(!empty($_data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/issueplong");
@@ -106,6 +122,14 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_dbmodel = new Loan_Model_DbTable_DbPlongStep();
 				$_dbmodel->addPlongStepDetail($_data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/plongstep");

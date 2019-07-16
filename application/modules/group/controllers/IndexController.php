@@ -65,6 +65,14 @@ class Group_indexController extends Zend_Controller_Action {
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		if($this->getRequest()->isPost()){
 			try{
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$data = $this->getRequest()->getPost();
 				$data['old_photo']=null;
 				$db = new Group_Model_DbTable_DbClient();
@@ -100,6 +108,14 @@ class Group_indexController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam("id");
 		if($this->getRequest()->isPost()){
 			try{
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$data = $this->getRequest()->getPost();
 				$data['id'] = $id;
 				$db->addClient($data);

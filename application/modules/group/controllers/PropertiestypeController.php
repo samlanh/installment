@@ -47,6 +47,14 @@ class Group_propertiestypeController extends Zend_Controller_Action {
    		$db = new Group_Model_DbTable_DbProperyType();
    		 
    		try{
+   			// Check Session Expire
+   			$dbgb = new Application_Model_DbTable_DbGlobal();
+   			$checkses = $dbgb->checkSessionExpire();
+   			if (empty($checkses)){
+   				$dbgb->reloadPageExpireSession();
+   				exit();
+   			}
+   			
    			$db->addPropery($_data);
    				if(!empty($_data['save_new'])){
 					Application_Form_FrmMessage::message('INSERT_SUCCESS');
@@ -70,6 +78,14 @@ class Group_propertiestypeController extends Zend_Controller_Action {
    	if($this->getRequest()->isPost()){
    		$_data = $this->getRequest()->getPost();
    		try{
+   			// Check Session Expire
+   			$dbgb = new Application_Model_DbTable_DbGlobal();
+   			$checkses = $dbgb->checkSessionExpire();
+   			if (empty($checkses)){
+   				$dbgb->reloadPageExpireSession();
+   				exit();
+   			}
+   			
    			$_data['id']= $id;
    			$db_co->addPropery($_data);
    			Application_Form_FrmMessage::Sucessfull("ការ​បញ្ចូល​ជោគ​ជ័យ !",'/group/propertiestype');

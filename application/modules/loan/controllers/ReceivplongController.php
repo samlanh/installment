@@ -48,7 +48,15 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 		$_dbmodel = new Loan_Model_DbTable_DdReceived();
 		if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
-			try {		
+			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+						
 				$_dbmodel->addReceivedplong($_data);
 				if(isset($_data['save'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/receivplong/add");
@@ -89,6 +97,14 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			$_data['id']=$id;
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_dbmodel->editReceivedplong($_data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/receivplong");
 			}catch (Exception $e) {

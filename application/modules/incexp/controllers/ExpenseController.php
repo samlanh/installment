@@ -58,6 +58,14 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 			$db = new Incexp_Model_DbTable_DbExpense();	
 			$test = $db->getBranchId();
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$db->addExpense($data);
 				if(!empty($data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/expense");
@@ -91,6 +99,15 @@ class Incexp_ExpenseController extends Zend_Controller_Action
     	$id = $this->getRequest()->getParam('id');
     	$id = empty($id)?0:$id;
     	if($this->getRequest()->isPost()){
+    		
+    		// Check Session Expire
+    		$dbgb = new Application_Model_DbTable_DbGlobal();
+    		$checkses = $dbgb->checkSessionExpire();
+    		if (empty($checkses)){
+    			$dbgb->reloadPageExpireSession();
+    			exit();
+    		}
+    		
 			$data=$this->getRequest()->getPost();	
 			$data['id'] = $id;
 			$db = new Incexp_Model_DbTable_DbExpense();				

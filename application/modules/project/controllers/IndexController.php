@@ -53,6 +53,14 @@ class Project_indexController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			$_dbmodel = new Project_Model_DbTable_DbProject();
 			try {
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$_data['branch_status']=1;
 				$_dbmodel->addbranch($_data);
 				Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCESS"));
@@ -74,6 +82,14 @@ class Project_indexController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			$db = new Project_Model_DbTable_DbProject();
 			try{
+				// Check Session Expire
+				$dbgb = new Application_Model_DbTable_DbGlobal();
+				$checkses = $dbgb->checkSessionExpire();
+				if (empty($checkses)){
+					$dbgb->reloadPageExpireSession();
+					exit();
+				}
+				
 				$db->updateBranch($data,$id);
 				Application_Form_FrmMessage::Sucessfull($this->tr->translate("EDIT_SUCCESS"),self::REDIRECT_URL."/index");
 			}catch (Exception $e){

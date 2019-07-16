@@ -49,6 +49,14 @@ class Group_SupplierController extends Zend_Controller_Action {
 	   		$db_co = new Group_Model_DbTable_DbSupplier();
 	   		 
 	   		try{
+	   			// Check Session Expire
+	   			$dbgb = new Application_Model_DbTable_DbGlobal();
+	   			$checkses = $dbgb->checkSessionExpire();
+	   			if (empty($checkses)){
+	   				$dbgb->reloadPageExpireSession();
+	   				exit();
+	   			}
+	   			
 	   			$db_co->addSupplier($_data);
 		   			if (!empty($_data['page'])){
 		   				Application_Form_FrmMessage::message('INSERT_SUCCESS');
@@ -77,6 +85,14 @@ class Group_SupplierController extends Zend_Controller_Action {
    	if($this->getRequest()->isPost()){
    		$_data = $this->getRequest()->getPost();
    		try{
+   			// Check Session Expire
+   			$dbgb = new Application_Model_DbTable_DbGlobal();
+   			$checkses = $dbgb->checkSessionExpire();
+   			if (empty($checkses)){
+   				$dbgb->reloadPageExpireSession();
+   				exit();
+   			}
+   			
    			$db_co->addSupplier($_data);
    			Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",'/group/supplier');
    		}catch(Exception $e){
