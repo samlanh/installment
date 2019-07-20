@@ -1894,7 +1894,7 @@ function getAllBranch($search=null){
 		
 	}
 	
-	function getIncomeRepairhouse($search){
+	function getIncomeRepairhouse($search,$typeRecord=null){
 		$db = $this->getAdapter();
 		$sql="SELECT icp.cate_type,icp.category AS category_id,SUM(icp.total_paid) AS total_amount,
 			(SELECT v.name_kh FROM ln_view AS v WHERE v.type=icp.cate_type AND v.key_code=icp.category LIMIT 1) AS category_name
@@ -1911,6 +1911,11 @@ function getAllBranch($search=null){
 		$where = " AND ".$from_date." AND ".$to_date;
 		if($search['branch_id']>0){
 			$where.=" AND icp.branch_id=".$search['branch_id'];
+		}
+		if (!empty($typeRecord)){
+			// $typeRecord 12 = income,$typeRecord 13 = Expense
+			$where.= " AND icp.cate_type =$typeRecord ";
+		}else{
 		}
 		return $db->fetchAll($sql.$where.$order);
 	}

@@ -2903,9 +2903,11 @@ function updatePaymentStatus($data){
       		$where.= " AND op.user_id = ".$search['user_id'];
       	}
       	if(!empty($search['type'])){
-      		$where.= " AND op.cate_type = ".$search['type'];
-      		if(!empty($search['category_id'])){
-      			$where.= " AND op.category = ".$search['category_id'];
+      		if ($search['type']>0){
+	      		$where.= " AND op.cate_type = ".$search['type'];
+	      		if(!empty($search['category_id'])){
+	      			$where.= " AND op.category = ".$search['category_id'];
+	      		}
       		}
       	}
       	$order=" ORDER BY oi.branch_id DESC ";
@@ -2917,7 +2919,6 @@ function updatePaymentStatus($data){
 	      		$order.=" , op.id DESC";
 	      	}
       	}
-      	
       	return $db->fetchAll($sql.$where.$order);
       }
       

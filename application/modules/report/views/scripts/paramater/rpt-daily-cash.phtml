@@ -352,7 +352,67 @@
 	            	</td>
 	            </tr>
 	            <?php }?>
-	            
+	            <?php 
+	            $houserepairExpesnse = 0;
+	            	if (!empty($this->houserepairExpense)){
+	            ?>
+	            <tr>
+	            	<td colspan="3">
+	            		<table class="content-data" id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 20px; font-size: 12px; border:solid 1px #000;" >  
+					    	<thead>
+					    	<tr class="hide" style="border:1px solid #fff;">
+					             <td colspan="11" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+					        </tr>
+					        <tr  style="border:1px solid #000;">
+				                <td colspan="10" style="border:1px solid #fff;border-bottom:1px solid #000;">
+				                	<h2 style="font-weight:normal; text-align:left; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
+						             	<span><?php echo $tr->translate("REPAIR_HOUSE_EXPENSE");?></span>
+						             </h2>
+				                </td>
+				             </tr>
+				             <tr class="style" align="center" >
+								<td><?php echo $tr->translate("NUM");?></td>
+								    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+								    <td><?php echo $tr->translate("INCOME_TITLE");?></td>
+								    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
+								    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
+								    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+								    <td><?php echo $tr->translate("CATEGORY");?></td>
+								    <td><?php echo $tr->translate("TOTAL_INCOME");?></td>
+								    <td><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+								    <td><?php echo $tr->translate("NUMBER");?></td>
+								    <td><?php echo $tr->translate("NOTE");?></td>
+								    <td><?php echo $tr->translate("DATE");?></td>
+								    <td><?php echo $tr->translate("BY_USER");?></td>
+							</tr>
+					   		</thead>
+					   		<?php foreach ($this->houserepairExpense as $index => $rs){?>
+					   		<tr class=" stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;<?php if($rs['status']==0){echo'background:#f7c6c6';}?>" width="100%">
+			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["title_income"];?>&nbsp;</td> 
+			               		<td align="center">&nbsp;<?php echo $rs["invoice"];?> <?php if($rs['status']==0){ echo ' ('.$tr->translate("VOID").')';}?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td> 
+			               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
+			               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<strong><?php echo number_format(abs($rs["total_amount"]),2);?></strong>&nbsp;</td>
+			               		<td valign="top">&nbsp;<?php echo $rs["payment_type"];?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
+			               		<td style="white-space: normal !important;max-width:180px;text-align: left;">&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
+			                </tr>
+			                <?php 
+			                	if($rs['status']==1){
+			                		$houserepairExpesnse = $houserepairExpesnse+abs($rs["total_amount"]);
+			                		$total_expese = $total_expese + abs($rs["total_amount"]);
+			                	}
+			                ?>
+					   		<?php }?>
+					   	</table>
+					</td>
+				</tr>
+	            <?php }?>
 	           <?php  if(!empty($this->rowExpense)){
 	            ?>
 	             <tr>
@@ -459,6 +519,7 @@
 		                 	<td colspan="5">&nbsp;<?php echo $tr->translate("COLLECT_MONEY_INCOME");?>&nbsp;</td>
 		                 	<td rowspan="2">&nbsp;<?php echo $tr->translate("TOTAL_HOUSE_INCOME_RE");?>&nbsp;</td>
 		                 	<td rowspan="2">&nbsp;<?php echo $tr->translate("OTHER_INCOME");?>&nbsp;</td>
+		                 	<td rowspan="2">&nbsp;<?php echo $tr->translate("TOTAL_HOUSE_EXPENSE_RE");?>&nbsp;</td>
 		                 	<td rowspan="2">&nbsp;<?php echo $tr->translate("OTHER_EXPENSE");?>&nbsp;</td>
 		                 	<td rowspan="2">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
 		                 </tr>
@@ -477,6 +538,7 @@
 		                    <td>&nbsp;&nbsp;<?php echo number_format($total_d,2);?>&nbsp;</td>
 		                    <td>&nbsp;<?php echo number_format($houserepair,2);?>&nbsp;</td>
 		                    <td>&nbsp;<?php echo number_format($total_other_income,2);?>&nbsp;</td>
+		                    <td>&nbsp;<?php echo number_format($houserepairExpesnse,2);?>&nbsp;</td>
 		                    <td>&nbsp;<?php echo number_format($total_expese,2);?>&nbsp;</td>
 		                    <td>&nbsp;<?php echo number_format($total,2);?>&nbsp;</td>
 		                </tr>

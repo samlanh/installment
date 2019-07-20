@@ -248,7 +248,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->rscomisison = $db->getAllCommission($search);
   	
   	$db  = new Report_Model_DbTable_DbLandreport();
-  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search);
+  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,12);
+  	$this->view->houserepairExpense =$db->getAllIncomeOtherPayment($search,13);
   	
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
@@ -391,7 +392,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$this->view->income = $db->getIncomeCategory($search);
 //   	$this->view->income_changehouse = $db->getIncomeChangehouse($search);
-  	$this->view->income_changehouse = $db->getIncomeRepairhouse($search);
+  	$this->view->income_changehouse = $db->getIncomeRepairhouse($search,12);
+  	$this->view->expense_changehouse = $db->getIncomeRepairhouse($search,13);
   	
   	$db = new Application_Model_DbTable_DbGlobal();
   	$street = $db->getAllStreetForOpt();
@@ -541,7 +543,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->search=$search;
   	
   	$db  = new Report_Model_DbTable_DbLandreport();
-  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search);
+  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,12);
+  	$this->view->houserepairExpense =$db->getAllIncomeOtherPayment($search,13);
   	 
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
