@@ -86,7 +86,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'required'=>'true',
-				'onkeyup'=>'convertToDollar();',
+				//'onkeyup'=>'convertToDollar();',
 		));
 		
 		$convert_to_dollar=new Zend_Dojo_Form_Element_NumberTextBox('convert_to_dollar');
@@ -266,7 +266,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'required'=>'true',
 				'readOnly'=>'readOnly',
-				'onkeyup'=>'convertToDollar();',
+				//'onkeyup'=>'convertToDollar();',
 		));
 	
 		$convert_to_dollar=new Zend_Dojo_Form_Element_NumberTextBox('convert_to_dollar');

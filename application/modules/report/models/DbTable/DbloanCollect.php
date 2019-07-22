@@ -12,7 +12,11 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 //     	$start_date = $search['start_date'];
    		$end_date = $search['end_date'];
     	$sql = "SELECT v.*,
+    	SUM(v.principal_permonthafter) AS principal_permonthafter,
+    	SUM(v.total_interest_after) AS total_interest_after,
+    	
 			(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) AS ispay_bank,
+			(SELECT date_input FROM `ln_client_receipt_money` WHERE sale_id=v.sale_id ORDER BY date_input DESC LIMIT 1) As last_pay_date,
 			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) LIMIT 1) AS payment_type
 			 FROM v_newloancolect AS v WHERE 1 ";
     	$where ='';
@@ -54,7 +58,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     		$s_where[] = " v.street LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	$order=" ORDER BY v.date_payment ASC ";
+    	$order=" GROUP BY v.v.sale_id ORDER BY v.date_payment ASC ";
     	
     	return $db->fetchAll($sql.$where.$order);
     }

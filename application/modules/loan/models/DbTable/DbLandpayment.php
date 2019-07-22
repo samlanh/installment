@@ -1217,8 +1217,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     function updateSaleOnlyById($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
-    	try{
-    
+    	try{  
     		$arr = array(
     				'branch_id'=>$data['branch_id'],
     				'house_id'=>$data["land_code"],

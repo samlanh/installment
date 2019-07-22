@@ -168,16 +168,16 @@
 		                 <tr class="hide" style="border:1px solid #000;">
 			                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 			             </tr>
-		                 <tr class="style" align="center" >
+		                 <tr class="style" align="center" style="font-weight: bold;" >
 		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("NUM");?></td>
 		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>
 		                    <td colspan="2" style="padding:0px 1px;"><?php echo $tr->translate("CLIENT_INFO");?></td>
 		                    <td colspan="3" style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_INFO");?></td>
 		                    <td colspan="4" style="padding:0px 1px;"><?php echo $tr->translate("PAYMENT");?></td>
 		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
-		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("DATE_PAYMENT");?></td>
 		                </tr>
-		                <tr class="style" bgcolor="#c1d0f3" >
+		                <tr class="style" bgcolor="#c1d0f3" style="font-weight: bold;" >
 	                        <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 	                        <td><?php echo $tr->translate("TEL");?></td>
 		                    <td style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_CODE");?></td>
@@ -190,11 +190,14 @@
 		                </tr>
 	                </thead>
 	                <?php 
-		                 $amt_r1 = 0;$tir = 0;$amt_r3 = 0;$amt_r4 = 0;$amt_r5 = 0;$total_r=0;
-	                	 $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;$amt_d5 = 0;$total_b=0;
-	                	 $amn_b1 = 0; $amn_b2 = 0; $amn_b3 = 0; $amn_b4 = 0;$amn_b5 = 0;$total_d=0;
+		                
+	                	 $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;$amt_d5 = 0;
 	                	 $penelize=0;$total_payment=0;
 	                	 $key=0;
+	                	 $free_day = $this->data["graice_pariod_late"];//រយៈអនុគ្រោះ
+	                	 $ps = $this->data["penalty_value"];//ការប្រាក់ពិន័យ
+	                	 $penalty_type = $this->data["penalty_type"];//ប្រភេទពិន័យ
+	                	//echo $free_day;exit();
 		             ?>
 	               <?php if(!empty($tran)){foreach($tran as $key =>$row){
 	               	?>
@@ -212,10 +215,37 @@
 	                    ?>
 	                    <td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($row['total_interest_after'],2));?>&nbsp;</td>
 	                    <td align="center">&nbsp;<?php 
-		                    $penelize = $row['penelize'];
-							echo number_format($row['penelize'],2);
-		                    $total_payment = $row['principal_permonthafter']+$row['total_interest_after']+$penelize+$row['service_charge'];
-	                    ?>&nbsp;
+	                    
+	                    
+	                    $end_dat = $this->search['end_date'];
+	                    $total_pay=($row['principal_permonthafter']+$row['total_interest_after']);
+	                    
+	                    if ($row['last_pay_date']==null or $row['last_pay_date']==""){
+	                    	$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+	                    	$amount_lateday=$total_day/(60*60*24)-$free_day;
+	                    	$total_late_day=$total_day/(60*60*24);
+	                    }else {
+	                    	$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+	                    	$total_late_day=$total_day/(60*60*24);
+	                    	$amount_lateday=$total_day/(60*60*24)-$free_day;
+	                    }
+	                    $currentlate =$total_day/(60*60*24);
+	                    
+	                    if($amount_lateday<0){
+	                    	$amount_lateday=0;
+	                    	$total_penelize=0;
+	                    }
+	                    else {
+	                    	$total_late=($row['principal_permonthafter']+$row['total_interest_after']);
+	                    	if($penalty_type==1){//percent
+	                    		$total_penelize = $total_late*($ps/100/30)*$amount_lateday;
+	                    	}else{//fixed
+	                    		$total_penelize = $ps*$amount_lateday;
+	                    	}
+	                    }
+	                    	echo number_format($total_penelize,2);
+		                    $total_payment = $total_penelize+$row['principal_permonthafter']+$row['total_interest_after'];
+		                    ?>&nbsp;
 	                    </td>
 	                   	<td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($total_payment,2));?>&nbsp;</td>
 	                    <td><?php echo $row['no_installment']."/".number_format($row['total_duration'],0);?></td>
@@ -237,29 +267,22 @@
 		               <?php 
 							$amt_d1 = $amt_d1+$row['principal_permonthafter'];
 							$amt_d2 = $amt_d2+$row['total_interest_after'];
-							$amt_d3 = $amt_d3+$penelize;
+							$amt_d3 = $amt_d3+$total_penelize;
 							$amt_d4 = $amt_d4+$total_payment;
 							$amt_d5 = $amt_d5+$row['service_charge'];
 							$total_d=$amt_d4;
 		               ?>
 	                <?php }}?>
                 <?php $i=1;?>
+	                <tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
+	                	<td colspan="7"></td>
+	                	<td><?php echo number_format($amt_d1,2);?></td>
+	                	<td><?php echo number_format($amt_d2,2);?></td>
+	                	<td><?php echo number_format($penelize,2);?></td>
+	                	<td><?php echo number_format($amt_d1+$amt_d2+$penelize,2);?></td>
+	                	<td colspan="2"></td>
+	                </tr>
                 </table>
-                 <br />
-	             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:11px;" width="100%" cellspacing="0">
-	                 <tr bgcolor="#c1d0f3" class="style" style=" height:20px; line-height: 15px; text-align: center; font-size:11px;font-family: 'Times New Roman','Khmer OS Battambang';">
-	                    <td><?php echo $tr->translate("TOTAL_PRINCIPLE");?></td>
-	                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
-	                    <td><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
-	                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
-	                </tr>
-	                <tr class="style" style=" line-height: 24px; font-size:11px; font-family: 'Times New Roman','Khmer OS Battambang';">
-	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
-	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
-	                    <td>&nbsp;&nbsp;<?php echo number_format($penelize,2);?>&nbsp;</td>
-	                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1+$amt_d2+$penelize,2);?>&nbsp;</td>
-	                </tr>
-	              </table>
 	              <?php echo $this->footerReport;?>
 				</td>
 			</tr>

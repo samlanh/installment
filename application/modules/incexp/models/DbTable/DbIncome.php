@@ -8,9 +8,7 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	
 	}
 	function addIncome($data){
-		
 		$invoice = $this->getInvoiceNo($data['branch_id']);
-		
 		$array = array(
 			'branch_id'		=>$data['branch_id'],
 			'sale_id'		=>$data['sale_client'],
@@ -28,7 +26,6 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			'user_id'		=>$this->getUserId(),
 			'create_date'	=>date('Y-m-d'),
 			'is_beginning'=>$data['is_beginning'],
-				
 		);
 		$this->insert($array);
  	 }

@@ -435,7 +435,7 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			$commission->setValue($data['comission']);
 			$rs = $db->getUserInfo();
 			if($rs['level']!=1){
-				$data['full_commission'] = 0;
+				//$data['full_commission'] = 0;
 			}
 			$full_commission->setValue($data['full_commission']);
 			

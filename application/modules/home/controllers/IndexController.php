@@ -80,13 +80,13 @@ public function init()
 		$dbglobal = new Application_Model_DbTable_DbGlobal();
 		$userid = $dbglobal->getUserId();
 		if (empty($userid)){
-			$this->_redirect("/index");
+			//$this->_redirect("/index");
 		}
 		$db_user=new Application_Model_DbTable_DbUsers();
 		$user_info = $db_user->getUserInfo($userid);
 		
 		if (empty($user_info['staff_id'])){
-			$this->_redirect("/home");
+			//$this->_redirect("/home");
 		}
 		$db = new Home_Model_DbTable_DbDashboard();
 		$lastest = $db->getAllNews(9);
