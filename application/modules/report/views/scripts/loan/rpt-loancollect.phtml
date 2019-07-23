@@ -56,9 +56,9 @@
 	            </div>
 	             <div class="col-md-2 col-sm-2 col-xs-12">
 	             	<select class="fullside" id="last_optiontype" name="last_optiontype" dojoType="dijit.form.FilteringSelect">
-							<option value="-1">ទាំងអស់</option>
-							<option value="1">យកតាមកាលបរិច្ឆេទបង់</option>
-							<option value="0">បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ</option>
+							<option value="-1" <?php if ($this->search['last_optiontype']==-1){echo "selected";} ?>>ទាំងអស់</option>
+							<option value="1" <?php if ($this->search['last_optiontype']==1){echo "selected";} ?>>យកតាមកាលបរិច្ឆេទបង់</option>
+							<option value="0" <?php if ($this->search['last_optiontype']==0){echo "selected";} ?>>បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ</option>
 						</select>
 	            </div>
 	             <div class="col-md-2 col-sm-2 col-xs-12">
@@ -197,7 +197,7 @@
 	                	 $free_day = $this->data["graice_pariod_late"];//រយៈអនុគ្រោះ
 	                	 $ps = $this->data["penalty_value"];//ការប្រាក់ពិន័យ
 	                	 $penalty_type = $this->data["penalty_type"];//ប្រភេទពិន័យ
-	                	//echo $free_day;exit();
+	                	$total_penelize=0;
 		             ?>
 	               <?php if(!empty($tran)){foreach($tran as $key =>$row){
 	               	?>
@@ -236,11 +236,13 @@
 	                    	$total_penelize=0;
 	                    }
 	                    else {
-	                    	$total_late=($row['principal_permonthafter']+$row['total_interest_after']);
-	                    	if($penalty_type==1){//percent
-	                    		$total_penelize = $total_late*($ps/100/30)*$amount_lateday;
-	                    	}else{//fixed
-	                    		$total_penelize = $ps*$amount_lateday;
+	                    	if($row['last_optiontype']==1 AND $row['ispay_bank']==0){
+		                    	$total_late=($row['principal_permonthafter']+$row['total_interest_after']);
+		                    	if($penalty_type==1){//percent
+		                    		$total_penelize = $total_late*($ps/100/30)*$amount_lateday;
+		                    	}else{//fixed
+		                    		$total_penelize = $ps*$amount_lateday;
+		                    	}
 	                    	}
 	                    }
 	                    	echo number_format($total_penelize,2);
@@ -283,6 +285,7 @@
 	                	<td colspan="2"></td>
 	                </tr>
                 </table>
+                 <br />
 	              <?php echo $this->footerReport;?>
 				</td>
 			</tr>
