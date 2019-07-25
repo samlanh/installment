@@ -1772,5 +1772,83 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	window.location = "'.Zend_Controller_Front::getInstance()->getBaseUrl().$url.'";
   	</script>';
   }
+  
+  function getCollectPaymentSqlSt(){
+  	$sql=" SELECT
+			  (SELECT
+			     `ln_project`.`project_name`
+			   FROM `ln_project`
+			   WHERE (`ln_project`.`br_id` = `crm`.`branch_id`)
+			   LIMIT 1) AS `branch_name`,
+			  `c`.`client_id`                      AS `client_id`,
+			  `c`.`client_number`                  AS `client_number`,
+			  `c`.`name_kh`                        AS `name_kh`,
+			  `c`.`name_en`                        AS `client_name`,
+			  `crm`.`id`                           AS `id`,
+			  `crm`.`sale_id`                      AS `sale_id`,
+			  `crm`.`branch_id`                    AS `branch_id`,
+			  `crm`.`receipt_no`                   AS `receipt_no`,
+			  `crm`.`date_pay`                     AS `date_pay`,
+			  `crm`.`date_input`                   AS `date_input`,
+			  `crm`.`note`                         AS `note`,
+			  `crm`.`user_id`                      AS `user_id`,
+			  `crm`.`return_amount`                AS `return_amount`,
+			  `crm`.`status`                       AS `status`,
+			  `crm`.`payment_option`               AS `payment_option`,
+			  `crm`.`principal_amount`             AS `principal_amount`,
+			  `crm`.`is_payoff`                    AS `is_payoff`,
+			  `crm`.`total_principal_permonth`     AS `total_principal_permonth`,
+			  `crm`.`total_principal_permonthpaid` AS `total_principal_permonthpaid`,
+			  `crm`.`total_interest_permonth`      AS `total_interest_permonth`,
+			  `crm`.`total_interest_permonthpaid`  AS `total_interest_permonthpaid`,
+			  `crm`.`penalize_amount`              AS `penalize_amount`,
+			  `crm`.`penalize_amountpaid`          AS `penalize_amountpaid`,
+			  `crm`.`service_chargepaid`           AS `service_chargepaid`,
+			  `crm`.`service_charge`               AS `service_charge`,
+			  `crm`.`amount_payment`               AS `amount_payment`,
+			  `crm`.`total_payment`                AS `total_payment`,
+			  `crm`.`recieve_amount`               AS `amount_recieve`,
+			  `crm`.`penalize_amount`              AS `penelize`,
+			  `crm`.`service_charge`               AS `service`,
+			  `crm`.`extra_payment`                AS `extra_payment`,
+			  `crm`.`payment_times`                AS `payment_times`,
+			  `crm`.`field3`                       AS `field3`,
+			  `crm`.`is_closed`                    AS `is_closed`,
+			  `sl`.`sale_number`                   AS `sale_number`,
+			  `l`.`land_code`                      AS `land_code`,
+			  `l`.`land_address`                   AS `land_address`,
+			  `l`.`land_size`                      AS `land_size`,
+			  `l`.`street`                         AS `street`,
+			  `l`.`id`                             AS `hous_id`,
+			  (SELECT
+			     `d`.`date_payment`
+			   FROM `ln_client_receipt_money_detail` `d`
+			   WHERE (`crm`.`id` = `d`.`crm_id`)
+			   ORDER BY `d`.`date_payment` DESC
+			   LIMIT 1) AS `date_payment`,
+			  `crm`.`payment_method`               AS `payment_methodid`,
+			  (SELECT
+			     `ln_view`.`name_kh`
+			   FROM `ln_view`
+			   WHERE ((`ln_view`.`key_code` = `crm`.`payment_method`)
+			          AND (`ln_view`.`type` = 2))
+			   LIMIT 1) AS `payment_method`,
+			  (SELECT
+			     `ln_view`.`name_en`
+			   FROM `ln_view`
+			   WHERE ((`ln_view`.`key_code` = `crm`.`payment_option`)
+			          AND (`ln_view`.`type` = 7))
+			   LIMIT 1) AS `paymentoption`,
+			   (SELECT first_name FROM `rms_users` WHERE id=crm.user_id LIMIT 1) AS user_name
+			FROM (((`ln_client_receipt_money` `crm`
+			     JOIN `ln_properties` `l`)
+			    JOIN `ln_sale` `sl`)
+			   JOIN `ln_client` `c`)
+			WHERE ((`crm`.`client_id` = `c`.`client_id`)
+			       AND (`sl`.`id` = `crm`.`sale_id`)
+			       AND (`l`.`id` = `sl`.`house_id`))
+  	";
+  	return $sql;
+  }
 }
 ?>

@@ -8,47 +8,63 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	
 	}
 	function addIncome($data){
-		$invoice = $this->getInvoiceNo($data['branch_id']);
-		$array = array(
-			'branch_id'		=>$data['branch_id'],
-			'sale_id'		=>$data['sale_client'],
-			'house_id'		=>$data['house_id'],
-			'client_id'		=>$data['customer'],
-			'title'			=>$data['title'],
-			'total_amount'	=>$data['total_amount'],
-			'invoice'		=>$invoice,
-			'category_id'	=>$data['income_category'],
-			'payment_id'=>$data['payment_type'],
-			'cheque'		=>$data['cheque'],
-			'description'	=>$data['Description'],
-			'date'			=>$data['Date'],
-			'status'		=>1,
-			'user_id'		=>$this->getUserId(),
-			'create_date'	=>date('Y-m-d'),
-			'is_beginning'=>$data['is_beginning'],
-		);
-		$this->insert($array);
+		$_db= $this->getAdapter();
+		$_db->beginTransaction();
+		try{
+			$invoice = $this->getInvoiceNo($data['branch_id']);
+			$array = array(
+				'branch_id'		=>$data['branch_id'],
+				'sale_id'		=>$data['sale_client'],
+				'house_id'		=>$data['house_id'],
+				'client_id'		=>$data['customer'],
+				'title'			=>$data['title'],
+				'total_amount'	=>$data['total_amount'],
+				'invoice'		=>$invoice,
+				'category_id'	=>$data['income_category'],
+				'payment_id'=>$data['payment_type'],
+				'cheque'		=>$data['cheque'],
+				'description'	=>$data['Description'],
+				'date'			=>$data['Date'],
+				'status'		=>1,
+				'user_id'		=>$this->getUserId(),
+				'create_date'	=>date('Y-m-d'),
+				'is_beginning'=>$data['is_beginning'],
+			);
+			$this->insert($array);
+			$_db->commit();
+		}catch(Exception $e){
+			echo $e->getMessage();exit();
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
  	 }
 	 function updateIncome($data,$id){
-		$arr = array(
-					'sale_id'	=>$data['sale_client'],
-					'house_id'	=>$data['house_id'],
-					'branch_id'=>$data['branch_id'],
-					'client_id'=>$data['customer'],
-					'title'=>$data['title'],
-					'total_amount'=>$data['total_amount'],
-					'invoice'=>$data['invoice'],
-					'category_id'=>$data['income_category'],
-					'payment_id'=>$data['payment_type'],
-					'cheque'=>$data['cheque'],
-					'description'=>$data['Description'],
-					'date'=>$data['Date'],
-					'status'=>$data['Stutas'],
-				   'is_beginning'=>$data['is_beginning'],
-					'user_id'=>$this->getUserId(),
-				);
-		$where=" id =  $id " ;
-		$this->update($arr, $where);
+	 	$_db= $this->getAdapter();
+	 	$_db->beginTransaction();
+	 	try{
+			$arr = array(
+						'sale_id'	=>$data['sale_client'],
+						'house_id'	=>$data['house_id'],
+						'branch_id'=>$data['branch_id'],
+						'client_id'=>$data['customer'],
+						'title'=>$data['title'],
+						'total_amount'=>$data['total_amount'],
+						'invoice'=>$data['invoice'],
+						'category_id'=>$data['income_category'],
+						'payment_id'=>$data['payment_type'],
+						'cheque'=>$data['cheque'],
+						'description'=>$data['Description'],
+						'date'=>$data['Date'],
+						'status'=>$data['Stutas'],
+					   'is_beginning'=>$data['is_beginning'],
+						'user_id'=>$this->getUserId(),
+					);
+			$where=" id =  $id " ;
+			$this->update($arr, $where);
+			$_db->commit();
+		}catch(Exception $e){
+			echo $e->getMessage();exit();
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
 	}
 	function getexpensebyid($id){
 		$db = $this->getAdapter();

@@ -456,44 +456,87 @@ function getAllBranch($search=null){
     		}
     		return $db->fetchAll($sql.$where);
     	}
+    	//This below function tempory closed because query and query again than make proccessing too slow
+//     	function getCollectPayment($search=null){
+//     		$db= $this->getAdapter();
+//     		$sql = "SELECT v_getcollectmoney.*,
+// 				(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name
+//     		FROM v_getcollectmoney WHERE status=1 ";
+//     		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
+// 	      	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
+// 	      	$where = " AND ".$from_date." AND ".$to_date;
+	      	
+// 	      	$dbp = new Application_Model_DbTable_DbGlobal();
+// 	      	$where.=$dbp->getAccessPermission("branch_id");
+	      	
+// 	      	if($search['branch_id']>0){
+// 	      		$where.= " AND branch_id = ".$search['branch_id'];
+// 	      	}
+// 	      	if(!empty($search['user_id']) AND $search['user_id']>0){
+// 	      		$where.= " AND user_id = ".$search['user_id'];
+// 	      	}
+// 	      	if($search['client_name']>0){
+// 	      		$where.=" AND client_id = ".$search['client_name'];
+// 	      	}
+// 	      	if($search['payment_method']>0){
+// 	      		$where.=" AND payment_methodid = ".$search['payment_method'];
+// 	      	}
+	      	
+// 	      	if (!empty($search['adv_search'])){
+// 	      		$s_where = array();
+// 	      		$s_search = trim(addslashes($search['adv_search']));
+// 	      		$s_where[] = " client_number LIKE '%{$s_search}%'";
+// 	      		$s_where[] = " name_kh LIKE '%{$s_search}%'";
+// 	      		$s_where[] = " client_name LIKE '%{$s_search}%'";
+// 	      		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
+// 	      		$where .=' AND ('.implode(' OR ',$s_where).')';
+// 	      	}
+	      	
+// 	      	if (!empty($search['streetlist'])){
+// 	      		$where.=" AND street = '".$search['streetlist']."'";
+// 	      	}
+//     		return $db->fetchAll($sql.$where);
+//     	}
     	function getCollectPayment($search=null){
     		$db= $this->getAdapter();
-    		$sql = "SELECT v_getcollectmoney.*,
-				(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name
-    		FROM v_getcollectmoney WHERE status=1 ";
-    		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
-	      	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
-	      	$where = " AND ".$from_date." AND ".$to_date;
-	      	
-	      	$dbp = new Application_Model_DbTable_DbGlobal();
-	      	$where.=$dbp->getAccessPermission("branch_id");
-	      	
-	      	if($search['branch_id']>0){
-	      		$where.= " AND branch_id = ".$search['branch_id'];
-	      	}
-	      	if(!empty($search['user_id']) AND $search['user_id']>0){
-	      		$where.= " AND user_id = ".$search['user_id'];
-	      	}
-	      	if($search['client_name']>0){
-	      		$where.=" AND client_id = ".$search['client_name'];
-	      	}
-	      	if($search['payment_method']>0){
-	      		$where.=" AND payment_methodid = ".$search['payment_method'];
-	      	}
-	      	
-	      	if (!empty($search['adv_search'])){
-	      		$s_where = array();
-	      		$s_search = trim(addslashes($search['adv_search']));
-	      		$s_where[] = " client_number LIKE '%{$s_search}%'";
-	      		$s_where[] = " name_kh LIKE '%{$s_search}%'";
-	      		$s_where[] = " client_name LIKE '%{$s_search}%'";
-	      		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
-	      		$where .=' AND ('.implode(' OR ',$s_where).')';
-	      	}
-	      	
-	      	if (!empty($search['streetlist'])){
-	      		$where.=" AND street = '".$search['streetlist']."'";
-	      	}
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql = $dbp->getCollectPaymentSqlSt();
+    		$sql.= " AND crm.status= 1 ";
+    		$from_date =(empty($search['start_date']))? '1': " `crm`.`date_pay` >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " `crm`.`date_pay` <= '".$search['end_date']." 23:59:59'";
+    		$where = " AND ".$from_date." AND ".$to_date;
+    	
+    		
+    		$where.=$dbp->getAccessPermission("`crm`.branch_id");
+    	
+    		if($search['branch_id']>0){
+    			$where.= " AND `crm`.branch_id = ".$search['branch_id'];
+    		}
+    		if(!empty($search['user_id']) AND $search['user_id']>0){
+    			$where.= " AND `crm`.user_id = ".$search['user_id'];
+    		}
+    		if($search['client_name']>0){
+    			$where.=" AND `crm`.client_id = ".$search['client_name'];
+    		}
+    		if($search['payment_method']>0){
+    			$where.=" AND `crm`.`payment_method` = ".$search['payment_method'];
+    		}
+    	
+    		if (!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = trim(addslashes($search['adv_search']));
+    			$s_where[] = " `c`.`client_number`  LIKE '%{$s_search}%'";
+    			$s_where[] = " `c`.`name_kh`   LIKE '%{$s_search}%'";
+    			$s_where[] = " `c`.`name_en` LIKE '%{$s_search}%'";
+    			$s_where[] = " `crm`.`receipt_no` LIKE '%{$s_search}%'";
+    			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		if (!empty($search['land_id']) AND $search['land_id']>0){
+    			$where.=" AND `sl`.`house_id` = '".$search['land_id']."'";
+    		}
+    		if (!empty($search['streetlist'])){
+    			$where.=" AND `l`.`street` = '".$search['streetlist']."'";
+    		}
     		return $db->fetchAll($sql.$where);
     	}
     	function getTermCodiction(){

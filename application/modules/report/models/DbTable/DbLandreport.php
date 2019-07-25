@@ -2416,12 +2416,16 @@ function updatePaymentStatus($data){
       }
       public function getPaymentSaleid($sale_id){
       	$db = $this->getAdapter();
-      	$sql="SELECT *,
-      	(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id LIMIT 1) AS user_name
-      		FROM v_getcollectmoney WHERE status=1 AND sale_id= ".$sale_id;
+      	//because query and query again than make proccessing too slow
+//       	$sql="SELECT *,
+//       	(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id LIMIT 1) AS user_name
+//       		FROM v_getcollectmoney WHERE status=1 AND sale_id= ".$sale_id;
       	$dbp = new Application_Model_DbTable_DbGlobal();
-      	$sql.=$dbp->getAccessPermission("branch_id");
-      	$order=" ORDER BY id DESC ";
+      	$sql = $dbp->getCollectPaymentSqlSt();
+      	$sql.=" AND crm.status= 1
+			AND crm.sale_id= $sale_id ";
+      	$sql.=$dbp->getAccessPermission("crm.branch_id");
+      	$order=" ORDER BY crm.id DESC ";
       	return $db->fetchAll($sql.$order);
       }
       

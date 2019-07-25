@@ -8,9 +8,11 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 				(SELECT  CONCAT(`land_address`,',',`street`) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
 				s.house_id,
 				s.price_sold,
-			(SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE (ln_saleschedule.sale_id=s.id AND status=1) LIMIT 1) AS sold_schedule,
-			(SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id AND ln_saleschedule.collect_by=2 AND ln_saleschedule.status=0 LIMIT 1) AS extra_principal
+			(SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE (ln_saleschedule.sale_id=s.id AND status=1) GROUP BY ln_saleschedule.sale_id LIMIT 1) AS sold_schedule,
+			COALESCE((SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id AND ln_saleschedule.collect_by=2 AND ln_saleschedule.status=0 GROUP BY ln_saleschedule.sale_id LIMIT 1),0) AS extra_principal
       	 FROM `ln_sale`  AS s WHERE s.status =1 AND s.is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2  ";
+      	 //New codiction make query fastest than before
+      	 $sql.=" AND s.price_sold != (SELECT SUM(COALESCE(`principal_permonth`,0)) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id  GROUP BY ln_saleschedule.sale_id LIMIT 1)";
       	 return $db->fetchAll($sql);
       }
       function getRealPaid(){//ប្រាក់បានបង់ និងប្រាក់ដែលដកក្នុងតារាង
@@ -71,6 +73,10 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       		AND is_cancel=0 
       		AND s.payment_id!=1 
       		AND s.payment_id!=2 ";
+      	//New codiction make query fastest than before
+      	$sql.="
+      	AND ((s.price_sold - (SELECT SUM(`cr`.`total_principal_permonthpaid`+`cr`.`extra_payment`) FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`))) - ( COALESCE((SELECT ss.begining_balance FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 ORDER BY ss.no_installment ASC  LIMIT 1  ),0) - COALESCE((SELECT (COALESCE(ss.principal_permonth,0)-COALESCE(ss.principal_permonthafter,0)) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 AND ss.principal_permonthafter>0 ORDER BY ss.no_installment ASC  LIMIT 1  ),0) ) ) !=0
+      	";
       	return $db->fetchAll($sql);
       }
       
