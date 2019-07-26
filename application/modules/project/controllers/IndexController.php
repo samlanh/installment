@@ -103,7 +103,7 @@ class Project_indexController extends Zend_Controller_Action {
 		
 		
 		if ($id>=6){
-			$this->_redirect("/project/index");
+			//$this->_redirect("/project/index");
 		}
 		
 		$this->view->row = $row;
