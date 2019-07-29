@@ -1854,5 +1854,87 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	";
   	return $sql;
   }
+  
+  function soldreportSqlStatement(){
+  	$lang = $this->currentlang();
+  	$str = 'name_en';
+  	if($lang==1){
+  		$str = 'name_kh';
+  	}
+  	$sql="
+	  	SELECT
+		  `s`.`id`               AS `id`,
+		  (SELECT
+		     `ln_project`.`project_name`
+		   FROM `ln_project`
+		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+		   LIMIT 1) AS `branch_name`,
+		  `s`.`sale_number`      AS `sale_number`,
+		  `s`.`branch_id`        AS `branch_id`,
+		  `s`.`client_id`        AS `client_id`,
+		  `s`.`house_id`         AS `house_id`,
+		  `s`.`price_before`     AS `price_before`,
+		  `s`.`price_sold`       AS `price_sold`,
+		  `s`.`discount_amount`  AS `discount_amount`,
+		  `s`.`discount_percent` AS `discount_percent`,
+		  `s`.`admin_fee`        AS `admin_fee`,
+		  `s`.`other_fee`        AS `other_fee`,
+		  (SELECT
+		     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
+		   FROM `ln_client_receipt_money` `cr`
+		   WHERE (`cr`.`sale_id` = `s`.`id`)
+		   LIMIT 1) AS `paid_amount`,
+		  `s`.`balance`          AS `balance`,
+		  `s`.`create_date`      AS `create_date`,
+		  `s`.`buy_date`         AS `buy_date`,
+		  `s`.`startcal_date`    AS `startcal_date`,
+		  `s`.`first_payment`    AS `first_payment`,
+		  `s`.`validate_date`    AS `validate_date`,
+		  `s`.`end_line`         AS `end_line`,
+		  `s`.`interest_rate`    AS `interest_rate`,
+		  `s`.`total_duration`   AS `total_duration`,
+		  `s`.`payment_id`       AS `payment_id`,
+		  `s`.`staff_id`         AS `staff_id`,
+		  `s`.`comission`        AS `comission`,
+		  `s`.`receipt_no`       AS `receipt_no`,
+		  `s`.`agreement_date`   AS `agreement_date`,
+		  `s`.`is_cancel`        AS `is_cancel`,
+		  `s`.`user_id`          AS `user_id`,
+		  `s`.`note`             AS `note`,
+		  `p`.`land_code`        AS `land_code`,
+		  `p`.`land_address`     AS `land_address`,
+		  `p`.`land_size`        AS `land_size`,
+		  `p`.`street`           AS `street`,
+		  (SELECT
+		     `ln_properties_type`.`type_nameen`
+		   FROM `ln_properties_type`
+		   WHERE (`ln_properties_type`.`id` = `p`.`property_type`)
+		   LIMIT 1) AS `propertype`,
+		  `p`.`property_type`    AS `property_type`,
+		  `c`.`client_number`    AS `client_number`,
+		  `c`.`name_kh`          AS `name_kh`,
+		  `c`.`name_en`          AS `name_en`,
+		  `c`.`phone`            AS `phone`,
+		  (SELECT
+		     `ln_staff`.`co_khname`
+		   FROM `ln_staff`
+		   WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
+		   LIMIT 1) AS `staff_name`
+		
+	  	";
+  	$where=" 
+  	FROM ((`ln_sale` `s`
+		    JOIN `ln_client` `c`)
+		   JOIN `ln_properties` `p`)
+	  	WHERE ((`c`.`client_id` = `s`.`client_id`)
+			       AND (`p`.`id` = `s`.`house_id`)
+			       AND (`s`.`status` = 1))
+  	";
+  	$araa = array(
+  			'sql'=>$sql,
+  			'where'=>$where,
+  			);
+  	return $araa;
+  }
 }
 ?>
