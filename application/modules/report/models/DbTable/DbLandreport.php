@@ -440,62 +440,74 @@ public function getAllOutstadingLoan($search=null){
       public function getALLLoanPayment($search=null,$order11=0){
       	$search['is_closed']='';
       	$db = $this->getAdapter();
-      	$sql="SELECT *,
+      	/*
+		$sql="SELECT *,
 			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id LIMIT 1) AS user_name,
 			(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1) AS sold_price,
 			(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_getcollectmoney.sale_id LIMIT 1) As times,
 			(SELECT c.closing_note FROM `ln_client_receipt_money` AS c WHERE c.id =v_getcollectmoney.id LIMIT 1) AS closing_note
       	FROM v_getcollectmoney WHERE status=1 ";
+		*/
       	
-      	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
-      	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
+		$dbp = new Application_Model_DbTable_DbGlobal();
+      	$sql = $dbp->getCollectPaymentSqlSt();
+      	$sql.=" AND crm.status= 1
+		 ";
+			
+      	$from_date =(empty($search['start_date']))? '1': " `crm`.`date_pay` >= '".$search['start_date']." 00:00:00'";
+      	$to_date = (empty($search['end_date']))? '1': " `crm`.`date_pay` <= '".$search['end_date']." 23:59:59'";
       	$where = " AND ".$from_date." AND ".$to_date;
       	
       	$dbp = new Application_Model_DbTable_DbGlobal();
-      	$where.=$dbp->getAccessPermission("v_getcollectmoney.`branch_id`");
+      	$where.=$dbp->getAccessPermission("`crm`.`branch_id`");
       	
       	if(!empty($search['user_id']) AND $search['user_id']>0){
-      		$where.=" AND user_id = ".$search['user_id'];
+      		$where.=" AND `crm`.`user_id` = ".$search['user_id'];
       	}
       	if($search['client_name']>0){
-      		$where.=" AND client_id = ".$search['client_name'];
+      		$where.=" AND `crm`.`client_id` = ".$search['client_name'];
       	} 
 		if($search['branch_id']>0){
-		        $where.=" AND branch_id = ".$search['branch_id'];
+		        $where.=" AND `crm`.`branch_id` = ".$search['branch_id'];
 		}
 		if(!empty($search['land_id']) AND $search['land_id']>0){
-			$where.=" AND hous_id = ".$search['land_id'];
+			$where.=" AND `sl`.`house_id` = ".$search['land_id'];
 		}
 		if(@$search['payment_method']>0){
-			$where.=" AND payment_methodid = ".$search['payment_method'];
+			$where.=" AND `crm`.`payment_method` = ".$search['payment_method'];
 		}
 		if (!empty($search['streetlist'])){
-			$where.=" AND street = '".$search['streetlist']."'";
+			$where.=" AND `l`.`street` = '".$search['streetlist']."'";
 		}
 		if ($search['is_closed']!=""){
-			$where.=" AND is_closed = '".$search['is_closed']."'";
+			$where.=" AND `crm`.`is_closed` = '".$search['is_closed']."'";
 		}
 		
       	if(!empty($search['adv_search'])){
       		$s_where = array();
       		$s_search = addslashes(trim($search['adv_search']));
-      		$s_where[] = " sale_number LIKE '%{$s_search}%'";
-      		$s_where[] = " land_code LIKE '%{$s_search}%'";
-      		$s_where[] = " land_address LIKE '%{$s_search}%'";
-      		$s_where[] = " client_number LIKE '%{$s_search}%'";
-      		$s_where[] = " client_name LIKE '%{$s_search}%'";
-      		$s_where[] = " total_principal_permonthpaid LIKE '%{$s_search}%'";
-      		$s_where[] = " total_interest_permonthpaid LIKE '%{$s_search}%'";
-            $s_where[] = " payment_method LIKE '%{$s_search}%'";
-      		$s_where[] = " penalize_amountpaid LIKE '%{$s_search}%'";  
-      		$s_where[] = " service_chargepaid LIKE '%{$s_search}%'";
-      		$s_where[] = " amount_payment LIKE '%{$s_search}%'";
-      		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
+      		$s_where[] = " `sl`.`sale_number`  LIKE '%{$s_search}%'";
+      		$s_where[] = " `l`.`land_code`  LIKE '%{$s_search}%'";
+      		$s_where[] = " `l`.`land_address`  LIKE '%{$s_search}%'";
+      		$s_where[] = " `c`.`client_number` LIKE '%{$s_search}%'";
+      		$s_where[] = " `c`.`name_en`  LIKE '%{$s_search}%'";
+      		$s_where[] = " `crm`.`total_principal_permonthpaid` LIKE '%{$s_search}%'";
+      		$s_where[] = " `crm`.`total_interest_permonth`  LIKE '%{$s_search}%'";
+            $s_where[] = " (SELECT
+			     `ln_view`.`name_kh`
+			   FROM `ln_view`
+			   WHERE ((`ln_view`.`key_code` = `crm`.`payment_method`)
+			          AND (`ln_view`.`type` = 2))
+			   LIMIT 1) LIKE '%{$s_search}%'";
+      		$s_where[] = " `crm`.`penalize_amountpaid` LIKE '%{$s_search}%'";  
+      		$s_where[] = " `crm`.`service_chargepaid` LIKE '%{$s_search}%'";
+      		$s_where[] = " `crm`.`amount_payment` LIKE '%{$s_search}%'";
+      		$s_where[] = " `crm`.`receipt_no` LIKE '%{$s_search}%'";
       		$where .=' AND ('.implode(' OR ',$s_where).')';
       	}
-		$order = " ORDER BY id DESC ";
+		$order = " ORDER BY `crm`.id DESC ";
 		if($order11==1){//for history
-			$order = " ORDER BY client_id DESC ,sale_id DESC , id ASC";
+			$order = " ORDER BY `crm`.`client_id` DESC ,`crm`.`sale_id` DESC , crm.id ASC";
 		}
       	return $db->fetchAll($sql.$where.$order);
       }

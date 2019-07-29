@@ -168,6 +168,7 @@ table.tb-footer tr.style-head {
 	                    <td><?php echo $tr->translate("END_DATE");?></td>
 	                    <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 	                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+	                    <!-- <td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td> -->
 	                    <td><?php echo $tr->translate("PRICE_BEFORE");?></td>
 	                    <td><?php echo $tr->translate("DISCOUNT");?>$</td>
 	                    <td><?php echo $tr->translate("DISCOUNT_PERCENT");?></td>
@@ -227,7 +228,7 @@ table.tb-footer tr.style-head {
 		               		}elseif($row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==7){//រំលស់ និងបង់ដំណាក់កាល់ថេរ
 		               			$property_install=$property_install+1;
 		               		}
-		               		
+		               		$countland = 1;
 		               }
 		               $price_before = $price_before+$row['price_before'];
 		               $discount_amount = $discount_amount+$row['discount_amount'];
@@ -267,6 +268,7 @@ table.tb-footer tr.style-head {
 						<td style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format("d-m-Y"); ?>&nbsp;</td>
 						<td style="width: 100px; !important"><?php echo $row['name_kh'];?>&nbsp;</td>
 						<td>&nbsp;<?php echo $row['land_address'].",".$row['street']; ?>&nbsp;</td>
+						<!-- <td align="center">&nbsp;<?php echo $countland; ?>&nbsp;</td> -->
 						<td align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span>&nbsp;</td>
 						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['discount_amount'],2); ?></td>	
 						<td align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>	
@@ -285,6 +287,7 @@ table.tb-footer tr.style-head {
 					<tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
 						<td colspan="4"></td>
 						<td><?php echo $key>0?$key+1:0;?></td>
+						<!-- <td><?php echo $amount_property;?></td> -->
 						<td><?php echo number_format($price_before,2);?></td>
 						<td><?php echo number_format($discount_amount,2);?></td>
 						<td><?php echo number_format($disc_percent,0);?></td>

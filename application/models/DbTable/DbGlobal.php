@@ -1814,7 +1814,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			  `crm`.`payment_times`                AS `payment_times`,
 			  `crm`.`field3`                       AS `field3`,
 			  `crm`.`is_closed`                    AS `is_closed`,
+			  `crm`.`closing_note`                    AS `closing_note`,
 			  `sl`.`sale_number`                   AS `sale_number`,
+			  `sl`.`price_sold`                   AS `sold_price`,
+			  (SELECT COUNT(ln_saleschedule.id) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=`crm`.`sale_id` LIMIT 1) As times,
+			  
 			  `l`.`land_code`                      AS `land_code`,
 			  `l`.`land_address`                   AS `land_address`,
 			  `l`.`land_size`                      AS `land_size`,
