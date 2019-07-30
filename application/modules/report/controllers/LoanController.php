@@ -420,34 +420,34 @@ class Report_LoanController extends Zend_Controller_Action {
  	$frmpopup = new Application_Form_FrmPopupGlobal();
  	$this->view->footerReport = $frmpopup->getFooterReport();
  }
- function rptDepositalertAction(){
- 	$db  = new Report_Model_DbTable_DbLandreport();
- 	if($this->getRequest()->isPost()){
- 		$search = $this->getRequest()->getPost();
- 	}
- 	else{
- 		$search = array(
- 				'adv_search'=>'',
- 				'branch_id'=>-1,
- 				'schedule_opt'=>-1,
- 				'property_type'=>0,
- 				'client_name'=>'',
- 				'buy_type'=>-1,
- 				'start_date'=> date('Y-m-d'),
- 				'end_date'=>date('Y-m-d'));
- 	}
- 	$this->view->loanrelease_list=$db->getAlertDeposit($search);
- 	$this->view->list_end_date=$search;
- 	$this->view->branch_id = $search['branch_id'];
+//  function rptDepositalertAction(){
+//  	$db  = new Report_Model_DbTable_DbLandreport();
+//  	if($this->getRequest()->isPost()){
+//  		$search = $this->getRequest()->getPost();
+//  	}
+//  	else{
+//  		$search = array(
+//  				'adv_search'=>'',
+//  				'branch_id'=>-1,
+//  				'schedule_opt'=>-1,
+//  				'property_type'=>0,
+//  				'client_name'=>'',
+//  				'buy_type'=>-1,
+//  				'start_date'=> date('Y-m-d'),
+//  				'end_date'=>date('Y-m-d'));
+//  	}
+//  	$this->view->loanrelease_list=$db->getAlertDeposit($search);
+//  	$this->view->list_end_date=$search;
+//  	$this->view->branch_id = $search['branch_id'];
  		
- 	$frm = new Loan_Form_FrmSearchLoan();
- 	$frm = $frm->AdvanceSearch();
- 	Application_Model_Decorator::removeAllDecorator($frm);
- 	$this->view->frm_search = $frm;
+//  	$frm = new Loan_Form_FrmSearchLoan();
+//  	$frm = $frm->AdvanceSearch();
+//  	Application_Model_Decorator::removeAllDecorator($frm);
+//  	$this->view->frm_search = $frm;
  		
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- }
+//  	$key = new Application_Model_DbTable_DbKeycode();
+//  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+//  }
  function rptPaymentschedulesAction(){
  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
  	$id =$this->getRequest()->getParam('id');
