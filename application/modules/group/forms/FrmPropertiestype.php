@@ -6,7 +6,7 @@ Class Group_Form_FrmPropertiestype extends Zend_Dojo_Form {
 	protected $text=null;
 	protected $tarea=null;
 	public function getUserName(){
-		$session_user=new Zend_Session_Namespace('authinstall');
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		return $session_user->user_name;
 	}
 	public function init()

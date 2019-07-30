@@ -4,7 +4,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 {	protected $_name = 'ln_receiveplong';
 	
 	public function getUserId(){
-		$session_user=new Zend_Session_Namespace('authinstall');
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		return $session_user->user_id;
 	}
 	public function getCustomerReceivedPlong($search=null){

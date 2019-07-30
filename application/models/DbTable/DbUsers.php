@@ -330,7 +330,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		return $rows;
 	}
 	function getAccessUrl($module,$controller,$action){
-		$session_user=new Zend_Session_Namespace('authinstall');
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$user_typeid = $session_user->level;
 		if($user_typeid==1){return 1;}
 		$db = $this->getAdapter();

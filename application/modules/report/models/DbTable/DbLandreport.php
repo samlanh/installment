@@ -1228,7 +1228,7 @@ public function getAllOutstadingLoan($search=null){
 	}
 }
 public static function getUserId(){
-  	$session_user=new Zend_Session_Namespace('authinstall');
+  	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
   	return $session_user->user_id;
 }
 function round_up($value, $places)
@@ -1251,7 +1251,7 @@ function updateReceipt($data){
 	$db= $this->getAdapter();
 	$db->beginTransaction();
 	try{
-	$session_user=new Zend_Session_Namespace('authinstall');
+	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 	$user_id = $session_user->user_id;
 	
 	//For record history 
@@ -2416,7 +2416,7 @@ function updatePaymentStatus($data){
       		foreach($rs as $ss){
       			$ss['paid_amount']=0;
       			if($ss['realpaid']>$ss['paid_amount']){
-      				$session_user=new Zend_Session_Namespace('authinstall');
+      				$session_user=new Zend_Session_Namespace(SYSTEM_SES);
       				$user_id = $session_user->user_id;
       				$dbre = new Application_Model_DbTable_DbGlobal();
       				$receipt = $dbre->getReceiptByBranch(array("branch_id"=>1));
@@ -2476,7 +2476,7 @@ function updatePaymentStatus($data){
       			 if($ss['paid_amount']>$ss['realpaid']){
       			$rail_amount =$ss['paid_amount']-$ss['realpaid'];
       			$real_paid = $ss['paid_lastamount']-($ss['paid_amount']-$ss['realpaid']); ;
-      			$session_user=new Zend_Session_Namespace('authinstall');
+      			$session_user=new Zend_Session_Namespace(SYSTEM_SES);
       			$user_id = $session_user->user_id;
       			$dbre = new Application_Model_DbTable_DbGlobal();
       			$receipt = $dbre->getReceiptByBranch(array("branch_id"=>1));
@@ -2536,7 +2536,7 @@ function updatePaymentStatus($data){
       			}*/
       
       			// 	  			if($ss['realpaid']>$ss['paid_amount']){
-      			// 	  				$session_user=new Zend_Session_Namespace('authinstall');
+      			// 	  				$session_user=new Zend_Session_Namespace(SYSTEM_SES);
       			// 	  				$user_id = $session_user->user_id;
       			// 	  				$dbre = new Application_Model_DbTable_DbGlobal();
       			// 	  				$receipt = $dbre->getReceiptByBranch(array("branch_id"=>1));
@@ -2887,7 +2887,7 @@ function updatePaymentStatus($data){
    
    function getAllIncomeOtherDetail($search=null){
    	$db = $this->getAdapter();
-   	$session_user=new Zend_Session_Namespace('authinstall');
+   	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
    	$from_date =(empty($search['start_date']))? '1': " oin.date >= '".$search['start_date']." 00:00:00'";
    	$to_date = (empty($search['end_date']))? '1': " oin.date <= '".$search['end_date']." 23:59:59'";
    	$where ="";
@@ -3050,7 +3050,7 @@ function updatePaymentStatus($data){
    
 //    function getAllIncomeOther($search=null){
 //    	$db = $this->getAdapter();
-//    	$session_user=new Zend_Session_Namespace('authinstall');
+//    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 //    	$from_date =(empty($search['start_date']))? '1': " oin.date >= '".$search['start_date']." 00:00:00'";
 //    	$to_date = (empty($search['end_date']))? '1': " oin.date <= '".$search['end_date']." 23:59:59'";
 //    	$where ="";
@@ -3111,7 +3111,7 @@ function updatePaymentStatus($data){
 
       function getAllIncomeOtherPayment($search=null,$typeRecord=null){
       	$db = $this->getAdapter();
-      	$session_user=new Zend_Session_Namespace('authinstall');
+      	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
       	$from_date =(empty($search['start_date']))? '1': " op.for_date >= '".$search['start_date']." 00:00:00'";
       	$to_date = (empty($search['end_date']))? '1': " op.for_date <= '".$search['end_date']." 23:59:59'";
       	$where ="";

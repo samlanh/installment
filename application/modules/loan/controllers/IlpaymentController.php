@@ -149,7 +149,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$this->view->client = $db->getAllClient();
 		$this->view->clientCode = $db->getAllClientCode();
 		
-		$session_user=new Zend_Session_Namespace('authinstall');
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$this->view->user_name = $session_user->first_name .' '.$session_user->last_name;
 		$this->view->loan_number = $db_global->getSaleNumberByBranch();
 		
@@ -194,7 +194,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$this->view->client = $db->getAllClient();
 		$this->view->clientCode = $db->getAllClientCode();
 		
-		$session_user=new Zend_Session_Namespace('authinstall');
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$this->view->user_name = $session_user->first_name .' '.$session_user->last_name;
 		$test = $this->view->loan_number = $db_global->getSaleNumberByBranch();
 		
@@ -247,7 +247,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		
 		$this->view->graiceperiod = $db_keycode->getSystemSetting(9);
 		
-		$session_user=new Zend_Session_Namespace('authinstall');
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$this->view->user_name = $session_user->last_name .' '. $session_user->first_name;		
 		$this->view->loan_numbers = $db->getAllLoanNumberByBranch(1);
 	}

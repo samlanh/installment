@@ -5,7 +5,7 @@ class Loan_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 
     protected $_name = 'ln_client_receipt_money';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('authinstall');
+    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     	 
     }
@@ -216,7 +216,7 @@ class Loan_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 public function addPaymentByCustomer($data){
 		$db = $this->getAdapter();
     	$db->beginTransaction();
-    	$session_user=new Zend_Session_Namespace('authinstall');
+    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	$user_id = $session_user->user_id;
     	try{
 	    	$reciept_no = $data['reciept_no'];

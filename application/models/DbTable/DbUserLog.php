@@ -29,7 +29,7 @@ class Application_Model_DbTable_DbUserLog extends Zend_Db_Table_Abstract
     	$controller=$request->getControllerName();
     	$module=$request->getModuleName();
     
-    	$session = new Zend_Session_Namespace('authinstall');
+    	$session = new Zend_Session_Namespace(SYSTEM_SES);
     	$user_name = $session->user_name;
     
     	$file = "../logs/user.log";

@@ -5,7 +5,7 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
 
     protected $_name = 'ln_properties';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('authinstall');
+    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
     function getAllSold(){

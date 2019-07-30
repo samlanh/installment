@@ -4,7 +4,7 @@ class Project_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
 {
     protected $_name = 'ln_properties';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('authinstall');
+    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
     function getAllRoad($search){

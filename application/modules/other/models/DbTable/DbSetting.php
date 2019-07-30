@@ -4,7 +4,7 @@ class Global_Model_DbTable_DbSetting extends Zend_Db_Table_Abstract
 {
     protected $_name = 'rms_setting';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('authinstall');
+    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     
     }

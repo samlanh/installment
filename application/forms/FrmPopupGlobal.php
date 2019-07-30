@@ -679,7 +679,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 	
 // 		$baseurl= Zend_Controller_Front::getInstance()->getBaseUrl();
 	
-// 		$session_user=new Zend_Session_Namespace('authinstall');
+// 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 // 		$last_name=$session_user->last_name;
 // 		$username = $session_user->first_name;
 // 		$user_id = $session_user->user_id;
@@ -1029,7 +1029,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		
 		$baseurl=Zend_Controller_Front::getInstance()->getBaseUrl();
 		
-		$session_user=new Zend_Session_Namespace('authinstall');
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$last_name=$session_user->last_name;
 		$username = $session_user->first_name;
 		$user_id = $session_user->user_id;
@@ -1674,7 +1674,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 	
 		$baseurl= Zend_Controller_Front::getInstance()->getBaseUrl();
 	
-		$session_user=new Zend_Session_Namespace('authinstall');
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$last_name=$session_user->last_name;
 		$username = $session_user->first_name;
 		$user_id = $session_user->user_id;
@@ -1893,7 +1893,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 	
 		$baseurl= Zend_Controller_Front::getInstance()->getBaseUrl();
 	
-		$session_user=new Zend_Session_Namespace('authinstall');
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$last_name=$session_user->last_name;
 		$username = $session_user->first_name;
 		$user_id = $session_user->user_id;

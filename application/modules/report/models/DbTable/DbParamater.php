@@ -241,7 +241,7 @@ function getAllBranch($search=null){
     	function getAllIncome($search=null){
     		if(empty($search['ordering'])){$search['ordering']=2;}
     		$db = $this->getAdapter();
-    		$session_user=new Zend_Session_Namespace('authinstall');
+    		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
@@ -302,7 +302,7 @@ function getAllBranch($search=null){
     	}
     	function getIncomeById($income_id){
     		$db = $this->getAdapter();
-//     		$session_user=new Zend_Session_Namespace('authinstall');
+//     		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		(SELECT logo FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS photo,
@@ -325,7 +325,7 @@ function getAllBranch($search=null){
     			$search['ordering']=2;
     		}
     		$db = $this->getAdapter();
-    		$session_user=new Zend_Session_Namespace('authinstall');
+    		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
@@ -387,7 +387,7 @@ function getAllBranch($search=null){
     	}
     	function getAllExpensebyCate($search=null){
     		$db = $this->getAdapter();
-    		$session_user=new Zend_Session_Namespace('authinstall');
+    		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
@@ -1830,7 +1830,7 @@ function getAllBranch($search=null){
     			$where.= " AND know_by = ".$search['know_by'];
     		}
     		
-    		$session_user=new Zend_Session_Namespace('authinstall');
+    		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     		$userid = $session_user->user_id;
     		
     		$db_user=new Application_Model_DbTable_DbUsers();
@@ -1865,7 +1865,7 @@ function getAllBranch($search=null){
     	}
 	function verifyAgreement($data){
  		$db = $this->getAdapter();
- 		$session_user=new Zend_Session_Namespace('authinstall');
+ 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
  		$user_id = $session_user->user_id;
 		$this->_name='ln_sale';
 		$arr = array(

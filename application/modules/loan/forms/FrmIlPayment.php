@@ -376,7 +376,7 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		$db_loan = new Loan_Model_DbTable_DbLoanILPayment();
 		$loan_number = $db->getReceiptByBranch(array("branch_id"=>1));
 		
-		$session_user=new Zend_Session_Namespace('authinstall');
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		if($session_user->level!=1){
 			//$reciept_no->setAttribs(array('readonly'=>'true',));
 		}

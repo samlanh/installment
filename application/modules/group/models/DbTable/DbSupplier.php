@@ -5,7 +5,7 @@ class Group_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
 
     protected $_name = 'ln_supplier';
     public function getUserId(){
-    	$session_user=new Zend_Session_Namespace('authinstall');
+    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     	 
     }
