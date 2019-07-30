@@ -33,7 +33,7 @@
 	#divPrint #printfooter{display: none !important;}
 </style>
 <div  id="exportword" style=" width:28cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
-<?php if($this->agreement['property_type']==1){?>
+<?php if($this->agreement['property_type']==3){?>
 	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
 	<tr>
     	<td align="center">
@@ -159,7 +159,10 @@
 	             				លោក/លោកស្រី <span class="value" style="min-width:100px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span> ភេទ <?php echo $cussex;?> 
 	             				ថ្ងៃខែឆ្នាំកំណើត <?php if (!empty($this->agreement['dob']) AND date("Y",strtotime($this->agreement['dob']))){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['dob']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob'])));}?> ជនជាតិ<span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span> សញ្ជាតិ<span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span>
 	             				កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:80px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['client_nation_id']);?></span> 
-	             				អាសយដ្ឋានបច្ចុប្បន្នផ្ទះលេខ : <span class="value" style="min-width:55px;"><?php echo $this->agreement['client_house_no'];?></span> ផ្លូវ  <span class="value" style=""><?php echo $this->agreement['client_street'];?></span> 
+	             				<?php if(!empty($this->agreement['hname_kh'])){?> និងឈ្មោះ  <span class="value" style="min-width:130px;font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['hname_kh'];?></span> ភេទ <?php echo $with_sex;?> ថ្ងៃខែឆ្នាំកំណើត <?php if (!empty($this->agreement['dob_buywith'])){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob_buywith'])))." ខែ ".$month[date("m",strtotime($this->agreement['dob_buywith']))]." ឆ្នាំ  ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob_buywith'])));}?>  
+								 កាន់<?php echo $this->agreement['joint_doc_type'];?> លេខ <span class="value" style="min-width:100px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['rid_no']);?></span>
+								<?php }?>
+								អាសយដ្ឋានបច្ចុប្បន្នផ្ទះលេខ : <span class="value" style="min-width:55px;"><?php echo $this->agreement['client_house_no'];?></span> ផ្លូវ  <span class="value" style=""><?php echo $this->agreement['client_street'];?></span> 
 								   ភូមិ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_village_kh'];?></span>       
 								      ឃុំ/សង្កាត់  <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_commune_kh'];?></span> 
 								      ក្រុង/ស្រុក/ខណ្ឌ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_districtkh'];?></span>
@@ -511,7 +514,7 @@
 										  </tr>
 										  <tr>
 											    <td align="justify" style="vertical-align:top; text-align:right;">២.៣</td>
-											    <td align="justify" style="padding-left:5px">ការទូទាត់ទាំងអស់ ត្រូវភ្ជាប់ជាមួយនឹងវិក័យបត្រទទួលប្រាក់ចេញពី ភាគី “ក” (បុរី) ចៀសវាងមានការក្លែងបន្លំផ្សេងៗ។ </td>  
+											    <td align="justify" style="padding-left:5px">ការទូទាត់ទាំងអស់ ត្រូវភ្ជាប់ជាមួយនឹងវិក័យបត្រទទួលប្រាក់ចេញពី ភាគី “ក” (បុរី)ជៀសវាងមានការក្លែងបន្លំផ្សេងៗ។ </td>  
 										  </tr>
 										 
 										</table>
@@ -557,12 +560,16 @@
 											  </tr>
 											  <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៣.៩</td>
-												    <td align="justify" style="padding-left:5px">ក្នុងករណីភាគី“ខ” មានបំណងសង់បន្ថែមជាន់នោះអតិថិជនត្រូវដោះស្រាយរាល់បញ្ហាដែលពាក់ព័ន្ធ។</td>  
+												    <td align="justify" style="padding-left:5px">ក្នុងករណីភាគី“ខ”មានបំណងសង់បន្ថែមជាន់នោះអតិថិជនត្រូវដោះស្រាយរាល់បញ្ហាដែលពាក់ព័ន្ធ។</td>  
 											  </tr>
 											  <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៣.១០</td>
 												    <td align="justify" style="padding-left:5px">ករណីភាគី“ខ” ស្នើសុំយកប្លង់រឹង ទៅមុនដើម្បីរត់ការយកលុយពីធានាគារដើម្បីបង់ផ្តាច់   ភាគីសន្យាថានឹងរត់ការនិងទូទាត់លុយនៅសល់ ទាំអស់ជាមួយភាគី "ក" មិនអោយលើសពី២០ថ្ងៃឡើយ ។   ករណីមានការយឺតយា៉វ ក្នុងការរត់ការធានាគារ ដើម្បីបង់ផ្តាច់  ភាគី  “ខ” ត្រូវពិន័យដូចក្នុងប្រការ ៣.១  និង៣.២ ។</td>  
 											  </tr>
+											  <!-- <tr>
+												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៣.១១</td>
+												    <td align="justify" style="padding-left:5px">ភាគី“ក”និង“ខ”យល់ព្រមឯកភាព និង ទទួលស្គាល់ គោលការណ៍បង់ប្រាក់តាមភាគរយ នៃការងារសាងសង់ផ្ទះដូចខាងក្រោម ។</td>  
+											  </tr> -->
 										</table>
 				             		</span>
 				             		<span style="width: 100%; display: block; line-height: 32px;">
@@ -572,7 +579,7 @@
 										<table width="100%" border="0"> 
 											   <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៤.១</td>
-												    <td align="justify" style="padding-left:5px">បុរីជាម្ចាស់អចលវត្ថុពេញច្បាប់តែមួយគត់ ពុំមានបុគ្គលឬ អង្គភាពណាមួយមានផលប្រយោជន៍លើកម្មសិទ្ធិនៃអចលវត្ថុនេះឡើយ។</td>  
+												    <td align="justify" style="padding-left:5px">ភាគី “ក”ជាម្ចាស់អចលវត្ថុពេញច្បាប់តែមួយគត់ ពុំមានបុគ្គលឬ អង្គភាពណាមួយមានផលប្រយោជន៍លើកម្មសិទ្ធិនៃអចលវត្ថុនេះឡើយ។</td>  
 											  </tr>
 											   <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៤.២</td>
@@ -642,7 +649,7 @@
 						             	<span class="margin-left"></span>កិច្ចសន្យាទិញលក់ផ្ទះនេះ ធ្វើឡើងជាភាសាខ្មែរ មានចំនួន ០៣ ច្បាប់ មានតម្លៃស្មើគ្នាដោយរក្សាទុក ភាគី "ក" ចំនួន ០១ច្បាប់, ភាគី "ខ" ចំនួន ០១ច្បាប់ និង មេធាវីចំនួន ០១ច្បាប់ ។ កិច្ចសន្យាទិញលក់ផ្ទះនេះចាប់មានសុពលភាពពីថ្ងៃភាគីទាំងពីរបានចុះហត្ថលេខា ឬផ្ដិតមេដៃនេះតទៅ ។
 				             		</span>
 				             		<span style="width: 100%; display: block;line-height: 32px;">
-				             			<span class="margin-left"></span>ដើម្បីសក្ខីភាពនៃកិច្ចសន្យានេះ ភាគីទាំងពីរសូមផ្ដិតមេដៃទុកជាភស្ដុតាងនៅចំពោះមុខមេធាវី។
+				             			<span class="margin-left"></span>ដើម្បីសក្ខីភាពនៃកិច្ចសន្យានេះ ភាគីទាំងពីរសូមផ្ដិតមេដៃស្តាំទុកជាភស្ដុតាងនៅចំពោះមុខមេធាវី។
 				             		</span>
 		             		</p>
 		             	</td>
