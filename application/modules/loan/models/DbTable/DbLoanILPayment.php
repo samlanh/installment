@@ -940,7 +940,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     						$this->update($array, $where);
     					}
     					
-    				    //echo $data["mfdid_".$i];exit();
     					$this->_name="ln_client_receipt_money_detail";
     					$where = " crm_id = $id";
     					$this->delete($where);
