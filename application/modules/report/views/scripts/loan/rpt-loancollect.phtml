@@ -20,7 +20,9 @@
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
 		$branch_title = $branch['project_name'];
-	}		
+	}	
+
+	$dbLoanCollect = new Report_Model_DbTable_DbloanCollect();
 ?>
 <style>
 .hover:hover{background: #ccc;}
@@ -218,30 +220,37 @@
 	                    $end_dat = $this->search['end_date'];
 	                    $total_pay=($row['principal_permonthafter']+$row['total_interest_after']);
 	                    
-	                    if ($row['last_pay_date']==null or $row['last_pay_date']==""){
-	                    	$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
-	                    	$amount_lateday=$total_day/(60*60*24)-$free_day;
-	                    	$total_late_day=$total_day/(60*60*24);
-	                    }else {
-	                    	$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
-	                    	$total_late_day=$total_day/(60*60*24);
-	                    	$amount_lateday=$total_day/(60*60*24)-$free_day;
-	                    }
-	                    $currentlate =$total_day/(60*60*24);
+// 	                    if ($row['last_pay_date']==null or $row['last_pay_date']==""){
+// 	                    	$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+// 	                    	$amount_lateday=$total_day/(60*60*24)-$free_day;
+// 	                    	$total_late_day=$total_day/(60*60*24);
+// 	                    }else {
+// 	                    	$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+// 	                    	$total_late_day=$total_day/(60*60*24);
+// 	                    	$amount_lateday=$total_day/(60*60*24)-$free_day;
+// 	                    }
+// 	                    $currentlate =$total_day/(60*60*24);
 	                    
-	                    if($amount_lateday<0){
+// 	                    if($amount_lateday<0){
+// 	                    	$amount_lateday=0;
+// 	                    	$total_penelize=0;
+// 	                    }
+// 	                    else {
+// 	                    	if($row['last_optiontype']==1 AND $row['ispay_bank']==0){
+// 	                    		$total_penelize = $dbLoanCollect->checkSalePenalty($row['sale_id'], $this->search['end_date']);
+// // 		                    	$total_late=($row['principal_permonthafter']+$row['total_interest_after']);
+// // 		                    	if($penalty_type==1){//percent
+// // 		                    		$total_penelize = $total_late*($ps/100/30)*$amount_lateday;
+// // 		                    	}else{//fixed
+// // 		                    		$total_penelize = $ps*$amount_lateday;
+// // 		                    	}
+// 	                    	}
+// 	                    }
+	                    if($row['last_optiontype']==1 AND $row['ispay_bank']==0){
+	                    	$total_penelize = $dbLoanCollect->checkSalePenalty($row['sale_id'], $this->search['end_date']);
+	                    }else{
 	                    	$amount_lateday=0;
-	                    	$total_penelize=0;
-	                    }
-	                    else {
-	                    	if($row['last_optiontype']==1 AND $row['ispay_bank']==0){
-		                    	$total_late=($row['principal_permonthafter']+$row['total_interest_after']);
-		                    	if($penalty_type==1){//percent
-		                    		$total_penelize = $total_late*($ps/100/30)*$amount_lateday;
-		                    	}else{//fixed
-		                    		$total_penelize = $ps*$amount_lateday;
-		                    	}
-	                    	}
+                    		$total_penelize=0;
 	                    }
 	                    	echo number_format($total_penelize,2);
 		                    $total_payment = $total_penelize+$row['principal_permonthafter']+$row['total_interest_after'];
@@ -257,7 +266,7 @@
 		                    			$date= new DateTime($row['date_payment']);
 		                    			echo $date->format("d-m-Y");
 		                    		}else{
-		                    			echo $row['payment_type']." ".$row['ispay_bank'];
+		                    			echo $row['payment_type'];//." ".$row['ispay_bank'];
 		                    		}
 		                    	}else{//by last payment
 		                    		echo $tr->translate("RECEIVED_PROPERTY");
@@ -268,10 +277,12 @@
 		               <?php 
 							$amt_d1 = $amt_d1+$row['principal_permonthafter'];
 							$amt_d2 = $amt_d2+$row['total_interest_after'];
-							$amt_d3 = $amt_d3+$total_penelize;
-							$amt_d4 = $amt_d4+$total_payment;
-							$amt_d5 = $amt_d5+$row['service_charge'];
-							$total_d=$amt_d4;
+// 							$amt_d3 = $amt_d3+$total_penelize;
+// 							$amt_d4 = $amt_d4+$total_payment;
+// 							$amt_d5 = $amt_d5+$row['service_charge'];
+// 							$total_d=$amt_d4;
+							
+							$penelize = $penelize+$total_penelize;
 		               ?>
 	                <?php }}?>
                 <?php $i=1;?>

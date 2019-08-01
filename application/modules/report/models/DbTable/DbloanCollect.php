@@ -55,8 +55,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     		$s_where[] = " v.street LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	$order=" GROUP BY v.v.sale_id ORDER BY v.date_payment ASC ";
-    	
+    	$order=" GROUP BY v.sale_id,(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1) ORDER BY v.date_payment ASC ";
     	return $db->fetchAll($sql.$where.$order);
     }
     function getCustomerNearlyPayment(){
@@ -78,7 +77,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 			SUM(service_charge) AS service_charge,
 			COUNT(id) AS amount_late,
 				(SELECT(c.phone) FROM `ln_client` c WHERE c.client_id =v_newloancolect.client_id LIMIT 1) AS phone
-    		FROM v_newloancolect WHERE last_optiontype=1 ";
+    		FROM v_newloancolect WHERE last_optiontype=1 AND is_completed = 0 ";
     	$where ='';
     	$from_date =(empty($search['start_date']))? '1': " date_payment <= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
@@ -221,6 +220,46 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 		}catch (Exception $e){
 			echo $e->getMessage();
 		}
+	}
+	
+	function checkSalePenalty($sale_id,$end_date,$ispay_bank=0){
+		if ($ispay_bank!=0){
+			return 0;
+		}
+		$key = new Application_Model_DbTable_DbKeycode();
+		$data=$key->getKeyCodeMiniInv(TRUE);
+		$ps = $data["penalty_value"];//ការប្រាក់ពិន័យ
+		$penalty_type = $data["penalty_type"];//ប្រភេទពិន័យ
+		
+		$db = $this->getAdapter();
+		if($penalty_type==1){
+		$sql="SELECT 
+			SUM(((($ps/100)/30)*sh.total_payment_after*DATEDIFF('$end_date',sh.date_payment))) AS penalty_record
+			
+			 FROM `ln_saleschedule` AS sh 
+			WHERE sh.date_payment <= '$end_date 23:59:59' 
+			AND sh.sale_id = $sale_id 
+			AND sh.ispay_bank =0
+			AND sh.is_completed=0
+			GROUP BY sh.sale_id";
+		}else{
+			$sql="SELECT
+			SUM(($ps*DATEDIFF('$end_date',sh.date_payment))) AS penalty_record
+				
+			FROM `ln_saleschedule` AS sh
+			WHERE sh.date_payment <= '$end_date 23:59:59'
+			AND sh.sale_id = $sale_id
+			AND sh.ispay_bank =0
+			AND sh.is_completed=0
+			GROUP BY sh.sale_id";
+		}
+		/*
+		 * sh.date_payment,
+			DATEDIFF('$end_date',sh.date_payment) AS defday
+		 * */
+		$penalty = $db->fetchOne($sql);
+		return $penalty;
+		
 	}
 }
 
