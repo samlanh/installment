@@ -117,9 +117,9 @@ body {
 	             					<tr>
 	             						<td style="white-space:nowrap; vertical-align: top;"><span style=" font-family:'Khmer OS Muol Light';font-weight:200;">ភាគីអ្នកលក់៖​​​ </span></td>
 	             						<td style="padding-left: 20px;text-align: justify;">
-	             						លោកស្រី <span class="value" style="min-width:150px; font-weight:200; font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span>សញ្ជាតិ <?php echo $this->agreement['project_manager_nationality'];?> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:30px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['project_manager_nation_id']);?></span> 
-										<span style=" font-family:'Khmer OS Muol Light';font-weight:200;"><?php if($this->agreement['w_manager_namekh']!=""){echo $this->agreement['w_manager_namekh'];?></span> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:80px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['w_manager_nation_id']);?><?php }?></span>	
-										ចុះថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer("01");?> ខែ <?php echo $month['04'];?> ឆ្នំា <?php echo $dbparmeter->getNumberInkhmer("2015");?> មានទីលំនៅសព្វថ្ងៃ<?php echo $this->agreement['project_manager_p_current_address'];?>
+	             						លោកស្រី <span class="value" style="min-width:150px; font-weight:200; font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span>សញ្ជាតិ <?php echo $this->agreement['project_manager_nationality'];?> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> 
+										<span style=" font-family:'Khmer OS Muol Light';font-weight:200;"><?php if($this->agreement['w_manager_namekh']!=""){echo $this->agreement['w_manager_namekh'];?></span> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:80px;"><?php echo $this->agreement['w_manager_nation_id'];?><?php }?></span>	
+										ចុះថ្ងៃទី <?php echo date("d",strtotime($this->agreement['p_nationid_issue']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['p_nationid_issue']))];?> ឆ្នំា <?php echo date("Y",strtotime($this->agreement['p_nationid_issue']));?> មានទីលំនៅសព្វថ្ងៃ<?php echo $this->agreement['project_manager_p_current_address'];?>
 		             				     	ជាតំណាងបុរី <?php echo $projectName; ?> របស់ក្រុមហ៊ុន Natha Residence ចាប់ពីពេលនេះហៅកាត់ថា <span style=" font-family:'Khmer OS Muol Light';font-weight:200;"><span>ភាគី“ក”</span></span>។
 	             						</td>
 	             					</tr>
@@ -134,8 +134,8 @@ body {
 		             						លោក ឬ លោកស្រី
 				             				<span class="value" style="min-width:100px; font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span>
 				             				សញ្ជាតិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span>
-				             				កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:80px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['client_nation_id']);?></span> 
-				             				<?php if(!empty($this->agreement['client_issuedateid'])){ ?>ចុះថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['client_issuedateid'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['client_issuedateid']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['client_issuedateid']))); }?>
+				             				កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:80px;"><?php echo $this->agreement['client_nation_id'];?></span> 
+				             				<?php if(!empty($this->agreement['client_issuedateid'])){ ?>ចុះថ្ងៃទី<?php echo date("d",strtotime($this->agreement['client_issuedateid']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['client_issuedateid']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['client_issuedateid'])); }?>
 				             			មានទីលំនៅសព្វថ្ងៃផ្ទះលេខ : <span class="value" style="min-width:55px;"><?php echo $this->agreement['client_house_no'];?></span> ផ្លូវលេខ  <span class="value" style=""><?php echo $this->agreement['client_street'];?></span> 
 									   ភូមិ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_village_kh'];?></span>       
 									      ឃុំ/សង្កាត់  <span class="value" style="min-width:100px;"><?php echo $this->agreement['client_commune_kh'];?></span> 
@@ -143,8 +143,8 @@ body {
 	             					       ខេត្ត/ក្រុង <span class="value" style="min-width:100px;">&nbsp;<?php echo $this->agreement['client_province_kh'];?></span>
 			             			   <?php if(!empty($this->agreement['hname_kh'])){?> និងឈ្មោះ  <span class="value" style="min-width:130px;font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['hname_kh'];?></span>  
 										ជាជនជាតិ <span class="value" style="width:30px;"><?php echo $this->agreement['p_nationality'];?></span> 
-			             			          កាន់<?php echo $this->agreement['joint_doc_type'];?> លេខ <span class="value" style="min-width:100px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['rid_no']);?></span>
-	             						<?php if(!empty($this->agreement['join_issuedateid'])){ ?> ចុះថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['join_issuedateid'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['join_issuedateid']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['join_issuedateid']))); }?> 
+			             			          កាន់<?php echo $this->agreement['joint_doc_type'];?> លេខ <span class="value" style="min-width:100px;"><?php echo $this->agreement['rid_no'];?></span>
+	             						<?php if(!empty($this->agreement['join_issuedateid'])){ ?> ចុះថ្ងៃទី<?php echo date("d",strtotime($this->agreement['join_issuedateid']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['join_issuedateid']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['join_issuedateid'])); }?> 
 									    <!-- មានទីលំនៅផ្ទះលេខ: <span class="value" style="min-width:45px;"><?php echo $this->agreement['client_house_no'];?></span> 
 									          ផ្លូវលេខ  <span class="value" style="min-width:45px;"><?php //echo $this->agreement['client_street'];?></span> 
 									          ឃុំ-សង្កាត់  <span class="value" style="min-width:70px;"><?php //echo $this->agreement['client_commune_kh'];?></span> 
@@ -248,17 +248,17 @@ body {
 									    <td align="justify" style="padding-left:5px">
 									    	<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ក”</span> 
 									    	សន្យាថានឹងប្រគល់ផ្ទះខាងលើអោយទៅ <span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ខ”</span>
-									    	 នៅខែ<?php echo $month[date("m",strtotime($this->agreement['build_start']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['build_start']))); ?>។ 
+									    	 នៅខែ<?php echo $month[date("m",strtotime($this->agreement['build_start']))];?> ឆ្នាំ<?php echo date("Y",strtotime($this->agreement['build_start'])); ?>។ 
 									    	ក្នុង ករណីដែល<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ក”</span>
 									    	មិនអាចធ្វើការប្រគល់ផ្ទះខាងលើជូន<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ខ”</span>
-									    	ផុតរយៈពេល<?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['amount_build'],0));?>ខែ គិតចាប់ពី ខែ<?php echo $month[date("m",strtotime($this->agreement['build_start']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['build_start']))); ?> នោះ<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ក”</span> 
-									    	យល់ព្រមបង់ប្រាក់សំណងជំងឺចិត្តក្នុងមួយខែចំនួនUSD ២៥០(ពីររយហាសិបដុល្លារអាមេរិក)អោយទៅ<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ខ”</span>។
+									    	ផុតរយៈពេល<?php echo number_format($this->agreement['amount_build'],0);?>ខែ គិតចាប់ពី ខែ<?php echo $month[date("m",strtotime($this->agreement['build_start']))];?> ឆ្នាំ<?php echo date("Y",strtotime($this->agreement['build_start'])); ?> នោះ<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ក”</span> 
+									    	យល់ព្រមបង់ប្រាក់សំណងជំងឺចិត្តក្នុងមួយខែចំនួនUSD 250(ពីររយហាសិបដុល្លារអាមេរិក)អោយទៅ<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ខ”</span>។
 									    </td>
 									  </tr>	
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="font-weight:600;">៤.២</span></td>
 									  	<td align="justify" style="padding-left:5px">
-									  		<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ក”</span> ធានាលើការប្រេះស្រាំ ជ្រៀបទឹករយៈពេល១ឆ្នាំ ដោយគិតចាប់ពីថ្ងៃដែល<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ខ”</span> បានទទួលផ្ទះរួចរាល់។
+									  		<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ក”</span> ធានាលើការប្រេះស្រាំ ជ្រៀបទឹករយៈពេល01ឆ្នាំ ដោយគិតចាប់ពីថ្ងៃដែល<span style="font-family:'Khmer OS Muol Light';font-weight:200;">ភាគី“ខ”</span> បានទទួលផ្ទះរួចរាល់។
 									  	</td> 	
 									  </tr>		
 									   				 
@@ -317,8 +317,7 @@ body {
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style=" font-weight:600;">៧.១</span></td>
 									    <td align="justify" style="padding-left:5px">
 									    	<span style=" font-family:'Khmer OS Muol Light'; font-weight:200; ">ភាគី“ខ”</span> 
-									    	យល់ព្រមបង់សេវាកម្ម ភ្លើងបំភ្លឺផ្លូវ ថែទាំ គ្រប់គ្រង សន្តិសុខ រក្សាសណ្តាប់ធ្នាប់ និងសេវាកម្មផ្សេងៗ ក្នុងតម្លៃUSD..............(..............ដុល្លាអាមេរិក)រៀងរាល់.......ខែ ម្តង 
-									    	បន្ទាប់ពី<span style=" font-family:'Khmer OS Muol Light'; font-weight:200;">ភាគី“ខ”</span>ទទួលបានផ្ទះជាស្ថាពរ ទោះក្នុងករណីស្នាក់នៅ  ឬ មិនស្នាក់នៅក៏ដោយ។
+									    	យល់ព្រមបង់សេវាកម្ម ភ្លើងបំភ្លឺផ្លូវ ថែទាំ គ្រប់គ្រង សន្តិសុខ រក្សាសណ្តាប់ធ្នាប់ និងសេវាកម្មផ្សេងៗ ដែល <span style=" font-family:'Khmer OS Muol Light'; font-weight:200;">ភាគី“ខ”</span>បានកំណត់ បន្ទាប់ពី <span style=" font-family:'Khmer OS Muol Light'; font-weight:200; ">ភាគី“ខ”</span> ទទួលបានផ្ទះជាស្ថាពរ ទោះក្នុងករណីស្នាក់នៅ  ឬ មិនស្នាក់នៅក៏ដោយ ។
 									    </td>  
 									</tr>
 									<tr>

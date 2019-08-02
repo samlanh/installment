@@ -86,12 +86,14 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'dojoType'=>'dijit.form.DateTextBox','required'=>'true','class'=>'fullside',
 		));
-		if(empty($request->getParam("end_date"))){
-			$_date = date("Y-m-d");
-		}else{
-			$_date = $request->getParam("end_date");
-		}
+		$_date = $request->getParam("end_date");
 		$to_date->setValue($_date);
+		
+		if(empty($_date)){
+			$_date = date("Y-m-d");
+			$to_date->setValue($_date);
+		}
+		
 		
 		$streetlist = new Zend_Dojo_Form_Element_FilteringSelect('streetlist');
 		$streetlist->setAttribs(array(
