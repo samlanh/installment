@@ -207,6 +207,8 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		if(!empty($_data['id'])){
 			if($old_status==-2){
 				$_arr['status']=-2;
+			}else{
+				$_arr['status']= $_data['status'];
 			}
 			$_arr['is_lock']=$_data['buy_status'];
 			$where = 'id = '.$_data['id'];
