@@ -1119,9 +1119,10 @@ function getLaonPayment(type){//tab ទី១
 								var amount_day = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
 								str_checked='';
 								if(amount_day>=0){
-									str_checked = 'checked="checked"';
+									//str_checked = 'checked="checked"';
 								}
 								if(inx==1){
+									str_checked = 'checked="checked"';
 									dijit.byId("paid_times").attr("value",respone[indexs].no_installment);
 									tem+= '<tr id=tr_'+inx+' style="background: #d8ff0e2b;">';
 									tem += '<td align="center"><input '+str_checked+' checked="checked" type="checkbox" class="checkbox" name="mfdid_'+inx+'" id="mfdid_'+inx+'" value="'+id+'" OnChange="calculateTotal('+inx+')" /></td>';
@@ -1246,7 +1247,7 @@ function calculateTotal(index){//គណនាបង់
 							principal_permonth = principal_permonth + parseFloat($('#principal_permonth_'+arrays[i]).val());
 							total_interest = total_interest+parseFloat($('#interest_'+arrays[i]).val());
 						}
-						total_late_payment = total_late_payment+parseFloat($('#old_payment_'+arrays[i]).val());//sum data to culcualte penalty
+						//total_late_payment = total_late_payment+parseFloat($('#old_payment_'+arrays[i]).val());//sum data to culcualte penalty
 			        }
 				}else if(payOption==3){//បង់រំលោះប្រាក់ដើម
 					principal_permonth = $('#principal_permonth_1').val();
@@ -1290,7 +1291,7 @@ function calculateTotal(index){//គណនាបង់
 				if(total_late_day>0){ //ករណីអតិថិជនបង់យឺត
 					if(payOption==1 && condition==0){//បង់ធម្មតា
 						if(penalty_type==1){//for percent
-						 	total_penelize_peryear = roundhundred((parseFloat(total_late_payment)*(parseFloat(ps/100)/30)*parseFloat(total_late_day)));
+						 	total_penelize_peryear = roundhundred((parseFloat(principal_permonth+total_interest)*(parseFloat(ps/100)/30)*parseFloat(total_late_day)));
 					   	 	//total_penelize_peryear = roundhundred((parseFloat(principal_permonth+total_interest)*(parseFloat(ps/100))));//natha residence
 						}else if(penalty_type==2){//fixed panelty
 							total_penelize_peryear = roundhundred((parseFloat(ps)*parseFloat(total_late_day)));

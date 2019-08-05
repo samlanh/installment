@@ -50,7 +50,7 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql="SELECT COUNT(p.`id`) AS total,SUM(p.`price_sold`) AS totalAmount
 			FROM `ln_sale` AS p 
-			WHERE p.`status` =1 AND p.is_completed =1";
+			WHERE p.`status` =1 AND p.is_completed =1 ";
 		return $db->fetchRow($sql);
 	}
 	
@@ -72,6 +72,16 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		}
 		return $db->fetchOne($sql);
 	}
+	function getAllComission(){
+		$db = $this->getAdapter();
+		$sql='SELECT SUM(total_amount) FROM `ln_comission` WHERE status=1 ';
+		return $db->fetchOne($sql);
+	}
+    function getCountSupplier(){
+    	$db = $this->getAdapter();
+    	$sql='SELECT COUNT(id) FROM `ln_supplier` WHERE status=1 ';
+    	return $db->fetchOne($sql);
+    }
 	function getTotalOtherIncome(){
 		$db = $this->getAdapter();
 		$sql="SELECT SUM(total_amount) AS total
@@ -108,8 +118,6 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql="SELECT  SUM(v.`amount_recieve`) AS total FROM v_getcollectmoney AS v WHERE v.`status`=1
 			AND DATE_FORMAT(v.`date_pay`, '%Y-%m') ='$yearMonth' LIMIT 1";
-		
-// 		$sql="SELECT SUM(recieve_amount) AS total FROM `ln_client_receipt_money` WHERE status=1 ";
 		return $db->fetchOne($sql);
 	}
 	function getOtherIncomeMonthly($yearMonth){
@@ -130,9 +138,7 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		";
 		return $db->fetchOne($sql);
 	}
-	
 	//Dashboard Sale Agent
-	
 	function getTotalSaleByAgent(){
 		$db = $this->getAdapter();
 		$dbglobal = new Application_Model_DbTable_DbGlobal();
@@ -160,7 +166,6 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 	
 // 		$dbglobal = new Application_Model_DbTable_DbGlobal();
 // 		$userid = $dbglobal->getUserId();
-		
 // 		$db_user=new Application_Model_DbTable_DbUsers();
 // 		$user_info = $db_user->getUserInfo($userid);
 // 		$user_id = $user_info['staff_id'];
