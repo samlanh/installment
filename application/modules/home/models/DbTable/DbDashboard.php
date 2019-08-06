@@ -391,7 +391,7 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
-		$where = " WHERE ".$from_date." AND ".$to_date;
+		$where = " AND ".$from_date." AND ".$to_date;
 	
 		$sql=" SELECT *,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
@@ -402,7 +402,7 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		(SELECT name_kh FROM `ln_view` WHERE TYPE=12 AND key_code=category_id LIMIT 1) AS category_name,
 		(SELECT  first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name,
 		(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id= (SELECT ln_properties.property_type FROM `ln_properties` WHERE ln_properties.id=house_id LIMIT 1) LIMIT 1) AS property_type
-		 FROM ln_otherincome ";
+		 FROM ln_otherincome WHERE status=1 ";
 	
 		if (!empty($search['advance_search'])){
 			$s_where = array();
