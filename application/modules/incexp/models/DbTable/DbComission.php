@@ -8,23 +8,7 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 		return $session_user->user_id;
 	
 	}
-// 	public function getCientAndPropertyInfo($sale_id){
-// 		$db = $this->getAdapter();
-// 		$sql="SELECT s.`id`,s.`sale_number` AS `name`,
-// 			c.`client_number`,c.`name_en`,c.`name_kh`,
-// 			s.`price_before`,s.`price_sold`,
-//             s.`paid_amount`,
-//             (SELECT SUM(total_principal_permonthpaid) FROM `ln_client_receipt_money` WHERE sale_id=$sale_id AND status=1 LIMIT 1) AS total_principal,
-//             (SELECT COUNT(id) FROM `ln_client_receipt_money` WHERE status=1 AND is_completed=1 AND sale_id=$sale_id LIMIT 1) as installment_paid, 
-//             s.`balance`,s.`discount_amount`,s.`other_fee`,s.`payment_id`,s.`graice_period`,s.`total_duration`,s.`buy_date`,s.`end_line`,
-// 			s.`client_id`,
-// 			s.`house_id`,p.`id` as property_id,p.`land_code`,p.`land_address`,p.`land_size`,p.`width`,p.`height`,p.`street`,p.`land_price`,p.`house_price`
-// 			,p.`street`,(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
-// 			s.`comission`,s.`create_date`,s.`note` AS sale_note
-// 			FROM `ln_sale` AS s ,`ln_client` AS c,`ln_properties` AS p
-// 			WHERE c.`client_id` = s.`client_id` AND p.`id`=s.`house_id` AND s.id =".$sale_id;
-// 			return $db->fetchRow($sql);
-// 	}
+
 	public function getComissionSale($search=null){
 		$db = $this->getAdapter();
 		$dbp = new Application_Model_DbTable_DbGlobal();
@@ -34,7 +18,6 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 		$where = " AND ".$from_date." AND ".$to_date;
 		$sql ='SELECT c.`id`,
 		    p.`project_name`,
-			s.`sale_number`,
 			clie.`name_kh` AS client_name,
 			(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
 			pro.`land_address`,pro.`street`,
@@ -42,11 +25,10 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 			(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name,
 			c.total_amount,
 			(SELECT name_kh from ln_view where type=13 AND key_code=c.category_id LIMIT 1) as expense_type,
-			c.`for_date`
-			';
-		
+			c.`for_date` ';
 		$sql.=$dbp->caseStatusShowImage("c.`status`");
-		$sql.=" FROM `ln_comission` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
+		$sql.=" ,(SELECT  first_name FROM rms_users WHERE rms_users.id=c.user_id limit 1 ) AS user_name 
+				FROM `ln_comission` AS c , `ln_sale` AS s, `ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE s.`id` = c.`sale_id` AND p.`br_id` = c.`branch_id` AND pro.`id` = s.`house_id` AND
 			clie.`client_id` = s.`client_id` ";

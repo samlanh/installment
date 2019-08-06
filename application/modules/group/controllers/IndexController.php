@@ -261,10 +261,11 @@ class Group_indexController extends Zend_Controller_Action {
 	function getclientbybranchAction(){//At callecteral when click client
 		if($this->getRequest()->isPost()){
 			 $data = $this->getRequest()->getPost();
+			 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 			 $db = new Application_Model_DbTable_DbGlobal();
 			 $data['branch_id']=null;
              $dataclient=$db->getAllClient($data['branch_id']);
-             array_unshift($dataclient, array('id' => "-1",'name'=>'Add New Client') );
+             array_unshift($dataclient, array('id' => "-1",'name'=>$tr->translate('ADD_NEW')));
 			 print_r(Zend_Json::encode($dataclient));
 			exit();
 		}		

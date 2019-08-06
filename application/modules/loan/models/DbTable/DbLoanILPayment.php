@@ -360,7 +360,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			'total_payment'					=>	$data["total_payment"],//ប្រាក់ត្រូវបង់ok
     			'service_charge'				=>	$data["service_charge"],
     			'principal_amount'				=>	$data['priciple_amount'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
-    			
     			'balance'						=>	$data["remain"],
     			'recieve_amount'				=>	$amount_receive,//ok
     			'amount_payment'				=>	$amount_payment,//brak ban borng
@@ -435,7 +434,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    						$after_payment_after = $row['total_payment_after'];
 		    						$after_principal = $row['principal_permonthafter'];//$data["principal_permonth_".$i];
 		    						$total_principal = $after_principal;
-		    						
 		    						$after_interest = $row['total_interest_after'];
 		    						
 		    						if($option_pay==1){
@@ -475,7 +473,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    								if($remain_money>=0){
 		    									$paid_interest = $total_interest;
 		    									$after_interest = 0;
-		    										
 		    									$remain_money = round($remain_money-$total_principal,2);
 		    									if($remain_money>=0){//check here of គេបង់លើសខ្លះ
 		    										$paid_principal = $total_principal;
@@ -625,12 +622,12 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    					if($index==0){						
 	    						$begining_balance = $row['begining_balance_after']-$extrapayment;
 	    						$remain_afterextrapayment = $begining_balance;//ប្រាក់ដើមនៅសល់ពីបង់រំលស់ដើម
-	    						
 	    						$interst_rate = ($data['interest_rate']/12/100);
+	    						
 								if($interst_rate!=0){
 			    					$top = pow(1+$interst_rate,$times);
 			    					$bottom = pow(1+$interst_rate,$times)-1;
-			    					$fixed_payment = round($begining_balance*$interst_rate*$top/$bottom);//always round up
+			    					$fixed_payment = round(($begining_balance*$interst_rate*$top/$bottom),0,PHP_ROUND_HALF_UP);//always round up
 	    					   }else{
 	    					   		$fixed_payment =$row['principal_permonthafter'];
 	    					   }
@@ -1220,6 +1217,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				  s.*,
 				  s.buy_date AS sold_date,
 				  DATE_FORMAT(s.buy_date, '%d-%m-%Y') AS `buy_date`,
+				  (SELECT name_kh FROM ln_view WHERE type =29 AND key_code = ss.ispay_bank LIMIT 1) AS payment_type,
+				  ss.last_optiontype,
+				  ss.ispay_bank,
 				  (SELECT phone FROM `ln_client` WHERE ln_client.client_id=s.client_id LIMIT 1) as phone,
 				  (SELECT hname_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1) as buy_with,
 				  (SELECT crm.`from_date` FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id ORDER BY crm.id DESC LIMIT 1) AS from_date,
@@ -1293,7 +1293,11 @@ function getLoanPaymentByLoanNumberEdit($data){
 	   	$db = $this->getAdapter();
 	   	$loan_number= $data['loan_number'];
 	   	$sql = "SELECT *,
-			DATE_FORMAT(scd.date_payment, '%d-%m-%Y') AS `date_payment`
+			DATE_FORMAT(scd.date_payment, '%d-%m-%Y') AS `date_payment`,
+			(SELECT name_kh FROM ln_view WHERE type =29 AND key_code = scd.ispay_bank LIMIT 1) AS payment_type,
+			 scd.last_optiontype,
+			 scd.ispay_bank
+			
 	   	FROM 
 	   		ln_sale as s ,
 	   		ln_saleschedule as scd 

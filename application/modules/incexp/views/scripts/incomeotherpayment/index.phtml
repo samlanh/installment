@@ -1,8 +1,9 @@
 <?php 
-$frm = $this->frm_search;
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$frm_searchloantype = $this->frm_searchloantype;
-$urlprint = $this->baseUrl()."/report/loan/receipt-otherincome/id/";
+	$frm = $this->frm_search;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm_searchloantype = $this->frm_searchloantype;
+	$urlprint = $this->baseUrl()."/report/loan/receipt-otherincome/id/";
+	$urledit = $this->baseUrl()."/incexp/incomeotherpayment/edit/id/";
 ?>
 <title><?php echo $tr->translate('REPAIRE_HOUSE_PAYMENT');?></title>
 <script>
@@ -85,7 +86,7 @@ require(["dojo/ready"], function(ready){
 		onChange: function() {
 			land_id=-1;
 	}
-		}, "land_id");
+	}, "land_id");
 
 	new dijit.form.FilteringSelect({
 		store: income_category_store,
@@ -175,12 +176,15 @@ $(function(){
 			var m = "clicked: " + key;
 			if(key=="print"){
 				url='<?php echo $urlprint;?>';
-			
+			}
+			else if(key=="edit"){
+				url='<?php echo $urledit;?>';
 			}
 			gotoAction();
 		},
 		items: {
 			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-edit", accesskey: "c o p y"},
 		}
 	});
 });

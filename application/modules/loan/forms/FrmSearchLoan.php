@@ -217,7 +217,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 		));
-		$options= array(-1=>$this->tr->translate("SELCT_TYPE"),
+		$options= array(-1=>$this->tr->translate("PAYMENT_TYPE"),
 				1=>$this->tr->translate("CASH"),
 				2=>$this->tr->translate("CHEQUE"),
 				3=>$this->tr->translate("PAYWITH_BANK")

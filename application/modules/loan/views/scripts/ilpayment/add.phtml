@@ -1,13 +1,16 @@
 <?php
-	$this->headTitle('Add IL Payment'); 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+
+	$this->headTitle($tr->translate('ILPAYMENT')); 
 	echo $this->headTitle();
 	$frm = $this->frm_ilpayment;
-	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 	$urlsubmit = array('module'=>'loan','controller'=>'ilpayment','action'=>'add');
 	if(!empty($this->rightclick)){
 		$urlsubmit = array('module'=>'loan','controller'=>'ilpayment','action'=>'add','rightclick'=>'true');
 	}
+	
+	echo round(100.51,0,PHP_ROUND_HALF_UP)
 ?>
 <script src="<?php echo $baseurl;?>/js/help.js"></script>
 <script src="<?php echo $this->baseUrl();?>/js/pdbs_js.js"  type="text/javascript"></script>
@@ -124,7 +127,7 @@ table.collape th.tdheader{padding:5px 0px;}
 				                   </div>
 				                </div>
 				                <div class="form-group">
-				                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SALE_NO");?> :
+				                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> :
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
 				                    	<input id="loan_number" />
@@ -179,7 +182,6 @@ table.collape th.tdheader{padding:5px 0px;}
 				                   </div>
 				                </div>
 				            </div>
-				            
 				            <div class="col-md-4 col-sm-4 col-xs-12">
 								<div class="form-group">
 				                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PAYMENT_CURRENTINOF");?> 
@@ -206,7 +208,6 @@ table.collape th.tdheader{padding:5px 0px;}
 				                    	<?php echo $frm->getElement('os_amount');?>
 				                   </div>
 				                </div>
-				                  
 				                 <div class="form-group">
 				                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_INTEREST");?> :
 				                   </label>
@@ -214,7 +215,6 @@ table.collape th.tdheader{padding:5px 0px;}
 				                    	<?php echo $frm->getElement('total_interest');?>
 				                   </div>
 				                </div>
-					
 				                 <div class="form-group">
 				                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_PENELIZE");?> :
 				                   </label>
@@ -245,7 +245,6 @@ table.collape th.tdheader{padding:5px 0px;}
 				                   </div>
 				                </div>
 				            </div>
-				            
 				            <div class="col-md-4 col-sm-4 col-xs-12">
 								<div class="form-group">
 				                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PAYMENT_INFORMATION");?> 
@@ -279,7 +278,6 @@ table.collape th.tdheader{padding:5px 0px;}
 				                    	<?php echo $frm->getElement('cheque');?>
 				                   </div>
 				                </div>
-				                
 				                 <div class="form-group">
 				                   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("RECIEPT_NO");?> :
 				                   </label>
@@ -479,6 +477,8 @@ table.collape th.tdheader{padding:5px 0px;}
 				<input type="hidden" dojoType="dijit.form.TextBox" name="lastpaiddate" id="lastpaiddate">
 				<input type="hidden" dojoType="dijit.form.TextBox" name="identity" id="identity">
 				<input type="hidden" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="last_optiontype" id="last_optiontype">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="ispay_bank" id="ispay_bank">
 				<?php  echo $frm->getElement('reciever');?>
 			</div>
 			 <div class="card-box">
@@ -1068,11 +1068,31 @@ function getLaonPayment(type){//tab ទី១
 						total_payment = respone[indexs].total_payment_after;
 						total_payment = parseFloat(total_payment);
 						penalty = respone[indexs].penelize;
-						date_pay = respone[indexs].date_payments;
+
+						if(respone[indexs].last_optiontype==1){//show payment date or installment type
+							if(respone[indexs].ispay_bank==0){
+								date_pay = respone[indexs].date_payments;
+							}else{
+								date_pay = respone[indexs].payment_type;
+								str_day='';
+							}
+						}else{
+							if(respone[indexs].ispay_bank==0){
+								date_pay = '<?php echo $tr->translate("RECEIVED_PROPERTY");?>';
+								str_day='';
+							}else{
+								date_pay = respone[indexs].payment_type;
+								str_day='';
+							}
+						}
 						
 						id = respone[indexs].id;
 						if(indexs==0){
 							clearhistory();
+							
+							dijit.byId('last_optiontype').attr('value',respone[indexs].last_optiontype);
+							dijit.byId('ispay_bank').attr('value',respone[indexs].ispay_bank);
+							
 							dijit.byId('buy_with').attr('value',respone[indexs].buy_with);	
 							dijit.byId('client_id').attr('value',client_id);					
 							dijit.byId('client_id').set("readOnly",true);
@@ -1110,7 +1130,6 @@ function getLaonPayment(type){//tab ទី១
 							}
 							dijit.byId("last_payment_date").attr("value",from_date);
 						}
-							
 							if(pay_option==1){
 								current_date = '<?php echo date('Y-m-d');?>'
 								current_date = new Date(current_date);
@@ -1233,11 +1252,21 @@ function calculateTotal(index){//គណនាបង់
 		total_pricipalpaid=isNaN(total_pricipalpaid)?0:total_pricipalpaid;//បើបើកវានឹងចេញខុស
 		dijit.byId("outstanding_balance").attr("value",sold_price-total_pricipalpaid);
 	   ids = dijit.byId("record_id").get('value');
+
+	   last_optiontype = dijit.byId("last_optiontype").get("value");
+	   ispay_bank = dijit.byId("ispay_bank").get("value");
+				
 	   var arrays = ids.split(',');
 		if(arrays!=""){
-			var total_late_day = Math.round((collect_date - date_payment)/(oneDay));
-			total_late_day = total_late_day - graice_period;
-			if(total_late_day<0){total_late_day=0;}
+
+			if(last_optiontype==1 && ispay_bank!=0){//for other installment type
+				total_late_day=0;
+			}else{//for installment for date
+				   var total_late_day = Math.round((collect_date - date_payment)/(oneDay));
+					total_late_day = total_late_day - graice_period;
+					if(total_late_day<0){total_late_day=0;}
+			}
+			   
 			dijit.byId('late_day').attr('value',total_late_day+"ថ្ងៃ");
 			
 			for(var i=0;i<arrays.length;i++) {
@@ -1483,13 +1512,28 @@ function getAllLaonPayment(){//get schedule Tab ទី២
 						+'</tr>'
 					+'</thead>';
 				nums=0;
+				date_pay='';
 				if(data!=""){
 					for(j=0;j<data.length;j++){
+						if(data[j].last_optiontype==1){//show payment date or installment type
+							if(data[j].ispay_bank==0){
+								date_pay = data[j].date_payment;
+							}else{
+								date_pay = data[j].payment_type;
+							}
+						}else{
+							if(data[j].ispay_bank==0){
+								date_pay = '<?php echo $tr->translate("RECEIVED_PROPERTY");?>';
+							}else{
+								date_pay = data[j].payment_type;
+							}
+						}
+						
 						statuss='<label style="color:red;"><?php echo $tr->translate('NOT_COMPLETED');?></label>';
 						++nums;					
 						tmp+= '<tr style="background: #ffffff;">';
 						    tmp += '<td>&nbsp;'+nums+'</td>';
-						    tmp += '<td style="white-space: nowrap;">&nbsp;'+data[j].date_payment+'&nbsp;</td>';
+						    tmp += '<td style="white-space: nowrap;">&nbsp;'+date_pay+'&nbsp;</td>';
 						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].begining_balance)+'&nbsp;</td>';
 						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].principal_permonth)+'&nbsp;</td>';
 						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].total_interest)+'&nbsp;</td>';

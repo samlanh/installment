@@ -293,7 +293,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 	public function generateBarcodeAction(){
 			$loan_code = $this->getRequest()->getParam('loan_code');
 				header('Content-type: image/png');
-				
 				$this->_helper->layout()->disableLayout();
 				$barcodeOptions = array('text' => "$loan_code",'barHeight' => 40);
 				//'font' => 4(set size of label),//'barHeight' => 40//set height of img barcode

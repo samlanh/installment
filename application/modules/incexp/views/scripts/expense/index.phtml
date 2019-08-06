@@ -1,8 +1,9 @@
 <?php 
-$frm = $this->frm_search;
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$frm_expense = $this->frm_expense;
-$urlprint = $this->baseUrl()."/report/loan/receipt-expense/id/";
+	$frm = $this->frm_search;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm_expense = $this->frm_expense;
+	$urlprint = $this->baseUrl()."/report/loan/receipt-expense/id/";
+	$urledit = $this->baseUrl()."/incexp/expense/edit/id/";
 ?>
 <title><?php echo $tr->translate('OTHER_EXPENSE');?></title>
 <script>
@@ -69,12 +70,15 @@ $(function(){
 			var m = "clicked: " + key;
 			if(key=="print"){
 				url='<?php echo $urlprint;?>';
-			
+			}
+			if(key=="edit"){
+				url='<?php echo $urledit;?>';
 			}
 			gotoAction();
 		},
 		items: {
 			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-edit", accesskey: "edit"},
 		}
 	});
 });

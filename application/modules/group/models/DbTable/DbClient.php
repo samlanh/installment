@@ -277,7 +277,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			,phone,house,street,
 				(SELECT village_namekh FROM `ln_village` WHERE vill_id= village_id LIMIT 1) AS village_name,
 			    create_date,
-			    (SELECT  CONCAT(first_name) FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name ";
+			    (SELECT first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name ";
 			
 			$dbp = new Application_Model_DbTable_DbGlobal();
 			$sql.=$dbp->caseStatusShowImage("status");

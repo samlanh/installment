@@ -25,7 +25,8 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 			}
 			$rs_rows= $db->getComissionSale($search);//call frome model
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","SALE_NO","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","SOLD_PRICE","STAFF_NAME","COMMISSION","CATEGORY","DATE","STATUS");
+			$collumns = array("PROJECT_NAME","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","SOLD_PRICE","STAFF_NAME","COMMISSION",
+					"CATEGORY","DATE","STATUS","BY_USER");
 			$link=array(
 					'module'=>'incexp','controller'=>'comission','action'=>'edit',
 			);
