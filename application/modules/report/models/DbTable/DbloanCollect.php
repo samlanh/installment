@@ -11,9 +11,8 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$db=$this->getAdapter();
    		$end_date = $search['end_date'];
     	$sql = "SELECT v.*,
-    	SUM(v.principal_permonthafter) AS principal_permonthafter,
-    	SUM(v.total_interest_after) AS total_interest_after,
-    	
+	    	SUM(v.principal_permonthafter) AS principal_permonthafter,
+	    	SUM(v.total_interest_after) AS total_interest_after,
 			(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) AS ispay_bank,
 			(SELECT date_input FROM `ln_client_receipt_money` WHERE sale_id=v.sale_id ORDER BY date_input DESC LIMIT 1) As last_pay_date,
 			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) LIMIT 1) AS payment_type
@@ -55,7 +54,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     		$s_where[] = " v.street LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	$order=" GROUP BY v.sale_id,(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1) ORDER BY v.date_payment ASC ";
+    	$order=" GROUP BY v.sale_id,(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1) ORDER BY  v.date_payment ASC ";
     	return $db->fetchAll($sql.$where.$order);
     }
     function getCustomerNearlyPayment(){
@@ -218,7 +217,6 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 	      	return $db->fetchAll($sql.$where.$order);
 			
 		}catch (Exception $e){
-			echo $e->getMessage();
 		}
 	}
 	
@@ -230,12 +228,26 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 		$data=$key->getKeyCodeMiniInv(TRUE);
 		$ps = $data["penalty_value"];//ការប្រាក់ពិន័យ
 		$penalty_type = $data["penalty_type"];//ប្រភេទពិន័យ
-		
+		$graice_pariod_late = $data["graice_pariod_late"];//ប្រភេទពិន័យ
 		$db = $this->getAdapter();
+		
+		$sql="SELECT 
+				DATEDIFF('$end_date',sh.date_payment) AS total_latedate
+			FROM `ln_saleschedule` AS sh 
+			WHERE sh.date_payment <= '$end_date 23:59:59' 
+			AND sh.sale_id = $sale_id 
+			AND sh.ispay_bank =0
+			AND sh.is_completed=0
+			GROUP BY sh.sale_id";
+		$total_latedate = $db->fetchOne($sql);
+		$latedate = $total_latedate - $graice_pariod_late;
+		if($latedate<=0){
+			return 0;
+		}
+		
 		if($penalty_type==1){
 		$sql="SELECT 
 			SUM(((($ps/100)/30)*sh.total_payment_after*DATEDIFF('$end_date',sh.date_payment))) AS penalty_record
-			
 			 FROM `ln_saleschedule` AS sh 
 			WHERE sh.date_payment <= '$end_date 23:59:59' 
 			AND sh.sale_id = $sale_id 
@@ -245,7 +257,6 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 		}else{
 			$sql="SELECT
 			SUM(($ps*DATEDIFF('$end_date',sh.date_payment))) AS penalty_record
-				
 			FROM `ln_saleschedule` AS sh
 			WHERE sh.date_payment <= '$end_date 23:59:59'
 			AND sh.sale_id = $sale_id
@@ -259,7 +270,6 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 		 * */
 		$penalty = $db->fetchOne($sql);
 		return $penalty;
-		
 	}
 }
 

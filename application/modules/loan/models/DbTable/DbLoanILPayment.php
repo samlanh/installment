@@ -732,7 +732,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		return round($value,2);
     	}
     }
-    function addExtrapayment($data){
+    function addExtrapayment($data){//not used
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
@@ -835,7 +835,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$db->commit();
     	}catch (Exception $e){
     		$db->rollBack();
-    		echo $e->getMessage();exit();
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     }

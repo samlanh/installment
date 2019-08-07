@@ -306,7 +306,9 @@ class Report_LoanController extends Zend_Controller_Action {
  				'co_id'			=>'',
  				'schedule_opt'	=> -1,
  				'stepoption'=>-1,
- 				'status'=>-1,);
+ 				'status'=>-1,
+ 				'is_completed'=>-1
+ 				);
  	}
  	$this->view->search=$search;
  	$db  = new Report_Model_DbTable_DbLandreport();

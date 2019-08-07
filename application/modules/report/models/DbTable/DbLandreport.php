@@ -887,7 +887,7 @@ public function getAllOutstadingLoan($search=null){
       	
       	$db = $this->getAdapter();
       	$sql = "SELECT *,
-      	(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) AS ispay_bank,
+      		(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1 ) AS ispay_bank,
 			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) LIMIT 1) AS payment_type
       	FROM `v_getexpectincome` WHERE 1 ";
       	
@@ -918,6 +918,9 @@ public function getAllOutstadingLoan($search=null){
       	}
       	if(!empty($search['co_id'])){
       		$where.= " AND staff_id = ".$search['co_id'];
+      	}
+      	if($search['is_completed']>-1){
+      		$where.= " AND is_completed = ".$search['is_completed'];
       	}
       	
       	if($search['stepoption']>0){

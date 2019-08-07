@@ -27,9 +27,9 @@ public function init()
 		$TotalSaleIncome = $db->getTotalSaleIncome();
 		$houseRepaireIncome = $db->getTotalHouseRepaireIncome();
 		
-		$this->view->allProperty =$db->getAllProperty();;
+		$this->view->allProperty =$db->getAllProperty();
 		$this->view->propertySold =$db->getAllProperty(1);;
-		$this->view->availableProperty =$db->getAllProperty(null,1);;
+		$this->view->availableProperty =$db->getAllProperty(null,1);
 		
 		$this->view->AllClient = $db->CountAllClient();
 		$this->view->CountAllAgency = $db->CountAllAgency();
@@ -37,8 +37,8 @@ public function init()
 		
 		$this->view->CountAllSale = $db->CountAllSale();
 		$this->view->CountCompletedSale = $db->CountCompletedSale();
-		$this->view->CountCanceledSale = $db->CountCanceledSale();;
-		$this->view->CancelPropertyAmount = $db->TotalExpense(1);;
+		$this->view->CountCanceledSale = $db->CountCanceledSale();
+		$this->view->CancelPropertyAmount = $db->TotalExpense(1);
 		
 		$TotalExpense = $db->TotalExpense()+$db->getAllComission();
 		$this->view->totalExpense = $TotalExpense;
