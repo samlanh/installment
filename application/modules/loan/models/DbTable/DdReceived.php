@@ -9,6 +9,9 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 	}
 	public function getCustomerReceivedPlong($search=null){
 		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$plogtitle = $tr->translate('PLONG_TITLE');
+		
 		$from_date =(empty($search['from_date_search']))? '1': "c.`create_date` >= '".$search['from_date_search']." 00:00:00'";
 		$to_date = (empty($search['to_date_search']))? '1': "c.`create_date` <= '".$search['to_date_search']." 23:59:59'";
 		$where = " AND ".$from_date." AND ".$to_date;
@@ -19,7 +22,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 			pro.`land_address`,pro.`street`,
 			`layout_type`,
 			c.date,
-			c.create_date,c.note,c.`status`,"ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ"
+			c.create_date,c.note,c.`status`,"'.$plogtitle.'"
 			FROM `ln_receiveplong` AS c ,`ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE p.`br_id` = c.`branch_id` AND pro.`id` = c.`house_id` AND

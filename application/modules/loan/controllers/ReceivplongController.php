@@ -27,6 +27,10 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
+			
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			$plogtitle = $tr->translate('PLONG_TITLE');
+			
 			$collumns = array("PROJECT_NAME","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","LAYOUT_TYPE","RECEIVED_DATE","DATE","NOTE","STATUS","PLONG_TITLE");
 			$link=array(
 					'module'=>'loan','controller'=>'receivplong','action'=>'edit',
@@ -34,7 +38,7 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 			$link1=array(
 					'module'=>'report','controller'=>'loan','action'=>'rpt-printplong',
 			);
-			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('branch_name'=>$link,'client_name'=>$link,'ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ'=>$link1));
+			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('branch_name'=>$link,'client_name'=>$link,$plogtitle=>$link1));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
