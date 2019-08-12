@@ -219,7 +219,7 @@ require(["dojo/ready"], function(ready){
 });
 var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->cheque_issue));?> );
 function addNewCheque(){
-	//if(dijit.byId('form_cheque').validate()){
+	if(dijit.byId('form_cheque').validate()){
 		var Itemmake = {					
 				id: dijit.byId('addchequename').get('value'),
 			    name: dijit.byId('addchequename').get('value')
@@ -232,11 +232,12 @@ function addNewCheque(){
 		dijit.byId('form_cheque').reset();
 		dijit.byId('frm_cheque').hide();
 		dijit.byId('save_cheque').set('disabled',true);
-	//}
+	}
 }
 function popupIssuer(){
 	cheque_issuer = dijit.byId('cheque_issuer').get('value');
 	if(cheque_issuer==-1){
+		dijit.byId('save_cheque').set('disabled',false);
 		dijit.byId('frm_cheque').show();
 	}
 }
