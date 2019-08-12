@@ -756,6 +756,7 @@ class Report_LoanController extends Zend_Controller_Action {
   					'user'	=>'',
   					'start_date'=>date('Y-m-d'),
   					'end_date'=>date('Y-m-d'),
+  					'cheque_issuer_search'=>""
   			);
   		}
   		$this->view->search = $search;
@@ -775,7 +776,9 @@ class Report_LoanController extends Zend_Controller_Action {
   					'txtsearch' => '',
   					'branch_id'=>-1,
   					'co_khname'=>-1,
-  					'search_status'=>-1);
+  					'search_status'=>-1,
+  					
+  					);
   		}
   		
   		$this->view->rscomisison = $db->getAllCommission($search);

@@ -306,6 +306,22 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$streetlist->setMultiOptions($streetopt);
 		$streetlist->setValue($request->getParam("streetlist"));
 		
+		$cheque_issuer_search = new Zend_Dojo_Form_Element_FilteringSelect('cheque_issuer_search');
+		$cheque_issuer_search->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+		));
+		$dbe = new Incexp_Model_DbTable_DbExpense();
+		$rscheque = $dbe->getAllChequeIssue();
+		$opt1=array(''=>$this->tr->translate("SELECT_CHEQUE_ISSUE"));
+		if(!empty($rscheque))foreach($rscheque AS $row){
+			$opt1[$row['id']]=$row['name'];
+		}
+		$cheque_issuer_search->setMultiOptions($opt1);
+		$cheque_issuer_search->setValue($request->getParam("cheque_issuer_search"));
+		
 		if($data!=null){
 // 			$_member->setValue($data['client_id']);
 			$_coid->setValue($data['co_id']);
@@ -313,7 +329,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			$client_name->setValue($data['client_name']);
 		}
 		$this->addElements(array($sale_status,$status_plong,$payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
-				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist));
+				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist,$cheque_issuer_search));
 		return $this;
 		
 	}	

@@ -181,6 +181,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
     		'payment_type'=>-1,
     		'start_date'=> date('Y-m-d'),
     		'end_date'=>date('Y-m-d'),
+    		"cheque_issuer_search"=>"",
     	);
     }
     $this->view->search=$search;
@@ -237,6 +238,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'payment_type'=>-1,
   				'payment_method'=>-1,
   				'user_id'=>-1,
+  				"cheque_issuer_search"=>"",
   		);
   	}
   	$this->view->search=$search;

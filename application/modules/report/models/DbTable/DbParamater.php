@@ -335,7 +335,7 @@ function getAllBranch($search=null){
     		(SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) AS supplier_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
     		title,invoice,is_closed,
-    	
+    	cheque_issuer,
     		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
     		cheque,total_amount,description,date,
     		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
@@ -378,6 +378,9 @@ function getAllBranch($search=null){
     		}
     		if (!empty($search['supplier_id'])){
     			$where.= " AND supplier_id = ".$search['supplier_id'];
+    		}
+    		if (!empty($search['cheque_issuer_search'])){
+    			$where.= " AND cheque_issuer = '".$search['cheque_issuer_search']."'";
     		}
     		if($group_by!=null){
     			$where.=" group by category_id ";
@@ -428,7 +431,9 @@ function getAllBranch($search=null){
     		if (!empty($search['supplier_id'])){
     			$where.= " AND supplier_id = ".$search['supplier_id'];
     		}
-    		
+    		if (!empty($search['cheque_issuer_search'])){
+    			$where.= " AND cheque_issuer = '".$search['cheque_issuer_search']."'";
+    		}
     		$where.=" group by category_id ";
     		$order=" ORDER BY (SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = `category_id` LIMIT 1) ASC,
     				`category_id` ASC ,date DESC ";
