@@ -175,7 +175,6 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			}
 		}
 		return $cate_tree_array;
-	
 	}
 	
 	function getPrefixCodeByBranch($branch_id){
@@ -209,7 +208,9 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		}
 		return $pre.$result;
 	}
-
-
-
+	function getAllChequeIssue(){
+		$db = $this->getAdapter();
+		$sql = " SELECT DISTINCT cheque_issuer as name,cheque_issuer as id FROM `ln_expense` WHERE cheque_issuer!='' ORDER BY cheque_issuer ASC ";
+		return $db->fetchAll($sql);
+	}
 }

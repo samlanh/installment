@@ -151,13 +151,31 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'onChange'=>'Addsupplier();',
 		));
 		
-		$db = new Application_Model_DbTable_DbGlobal();
+		//$db = new Application_Model_DbTable_DbGlobal();
 		$rows = $db->getAllSupplier();
 		$options=array(''=>$this->tr->translate("SELECT_SUPPLIER"),'-1'=>$this->tr->translate("ADD_NEW"));
 		if(!empty($rows))foreach($rows AS $row){
 			$options[$row['id']]=$row['name'];
 		}
 		$_supplier_id->setMultiOptions($options);
+		
+		
+		$cheque_issuer = new Zend_Dojo_Form_Element_FilteringSelect('cheque_issuer');
+		$cheque_issuer->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'popupIssuer();'
+		));
+		
+		$dbe = new Incexp_Model_DbTable_DbExpense();
+		$rscheque = $dbe->getAllChequeIssue();
+		$opt1=array(''=>$this->tr->translate("SELECT_CHEQUE_ISSUE"),'-1'=>$this->tr->translate("ADD_NEW"));
+		if(!empty($rscheque))foreach($rscheque AS $row){
+			$opt1[$row['id']]=$row['name'];
+		}
+		$cheque_issuer->setMultiOptions($opt1);
 		
 		if($data!=null){
 			$_currency_type->setValue($data['category_id']);
@@ -183,7 +201,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 		}
 		$this->addElements(array($_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
-				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id));
+				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id,$cheque_issuer));
 		return $this;
 		
 	}
@@ -330,6 +348,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'onChange'=>'Addsupplier();',
 		));
+		
 	
 		$db = new Application_Model_DbTable_DbGlobal();
 		$rows = $db->getAllSupplier();
@@ -343,7 +362,6 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			$_currency_type->setValue($data['category_id']);
 			$category_id_expense->setValue($data['category_id']);
 			$_branch_id->setValue($data['branch_id']);
-			//$title->setValue($data['title']);
 			$total_amount->setValue($data['total_amount']);
 			$_Description->setValue($data['description']);
 			$_Date->setValue($data['date']);
@@ -357,7 +375,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			if($request->getControllerName()=='income'){
 				$_status->setValue($data['is_beginning']);
 			}
-			if (!empty($data['supplier_id'])){
+			if(!empty($data['supplier_id'])){
 				$_supplier_id->setValue($data['supplier_id']);
 			}
 		}

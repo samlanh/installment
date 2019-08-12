@@ -3,7 +3,6 @@
 class Incexp_ExpenseController extends Zend_Controller_Action
 {
 	const REDIRECT_URL = '/incexp/expense';
-	
     public function init()
     {
     	header('content-type: text/html; charset=utf8');
@@ -65,7 +64,6 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 					$dbgb->reloadPageExpireSession();
 					exit();
 				}
-				
 				$db->addExpense($data);
 				if(!empty($data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/expense");
@@ -87,6 +85,11 @@ class Incexp_ExpenseController extends Zend_Controller_Action
     	$result = $db->getAllExpenseCategory();
     	array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
     	$this->view->all_category = $result;
+    	
+    	$result = $db->getAllChequeIssue();
+    	array_unshift($result, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
+    	$this->view->cheque_issue = $result;
+    	
     	
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);

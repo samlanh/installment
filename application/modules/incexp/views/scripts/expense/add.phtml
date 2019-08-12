@@ -120,6 +120,13 @@ $frm = $this->frm_expense;
 	                   </div>
 	                </div>
 	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CHEQUE_ISSUER");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cheque_issuer');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -142,27 +149,48 @@ $frm = $this->frm_expense;
 		</form>
 	</div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("CHEQUE_ISSUER")?>'"  id="frm_cheque" >
+		<form id="form_cheque" >
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="addchequename" name="addchequename" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewCheque();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
 <script type="text/javascript">
 dojo.require("dijit.form.Textarea");
 dojo.require("dojo.data.ItemFileWriteStore");  
 dojo.require("dojo.html");
 var supplierStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array($this->cheque_issue)));?> );
 require(["dojo/ready"], function(ready){
 	new dijit.form.FilteringSelect({
 		name: "supplier_id",
 		id: "supplier_id",
+		autoComplete: false,
+		queryExpr: "*${0}*", 
+		required: false,
 		searchAttr: "name",
 		class: 'fullside',
 		onChange: function() {
 			Addsupplier()
 	    }
 		}, "supplier_id");
-
-	ready(function(){
-		enablePayment();
-	  });
+		ready(function(){
+			enablePayment();
+		});
 });
-
 function enablePayment(){
 	payment_method = dijit.byId('payment_type').get('value');
 	dijit.byId("cheque").set("readOnly",false);
@@ -172,11 +200,16 @@ function enablePayment(){
 		dijit.byId("cheque").set("readOnly",true);
 	}
 }
-
 function Addsupplier(){
 	supplier_id = dijit.byId('supplier_id').get('value');
 	if(supplier_id==-1){
 		window.open('<?php echo $this->baseUrl()."/group/supplier/add?page=popup";?>');
+	}
+}
+function popupIssuer(){
+	cheque_issuer = dijit.byId('cheque_issuer').get('value');
+	if(cheque_issuer==-1){
+		dijit.byId('frm_cheque').show();
 	}
 }
 var url_supplier = '<?php echo $this->url(array('module'=>'incexp','controller'=>'expense','action'=>'getsupplier')); ?>';
@@ -215,6 +248,20 @@ dojo.ready(function(){
 	    }
 	}, "customer");
 });
+var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->cheque_issue));?> );
+function addNewCheque(){
+	//if(dijit.byId('form_cheque').validate()){
+		var Itemmake = {					
+				id: dijit.byId('addchequename').get('value'),
+			    name: dijit.byId('addchequename').get('value')
+		};		
+		addDataToSelectbox(dijit.byId('cheque_issuer'), StreetStore, Itemmake, dijit.byId('addchequename').get('value'));	
+		dijit.byId('cheque_issuer').attr('value',dijit.byId('addchequename').get('value'));
+		dijit.byId('form_cheque').reset();
+		dijit.byId('form_cheque').hide();
+		dijit.byId('save_cheque').set('disabled',true);
+	//}
+}
 
 var url_get_invoice = '<?php echo $this->url(array('module'=>'incexp','controller'=>'expense','action'=>'get-invoice-no')); ?>';
 function getInvoiceNo(condition){
@@ -228,7 +275,7 @@ function getInvoiceNo(condition){
 			'branch_id':branch_id
 			},
 		handleAs:"json",
-		load: function(data) {
+		load: function(data){
 		    dijit.byId('invoice').attr('value',data);   
 			if(condition==1){
 				printSave(data);
@@ -275,7 +322,6 @@ function addCategory(){
 			    dijit.byId('save').set('disabled',false);
 			},
 			error: function(err) {
-				
 			}
 		});
 	}
@@ -351,12 +397,10 @@ function doPrint() {
 function printSubmit(){
 	 $('#frm_add_tran').submit();
 }
-
 function hideDialog1(){
 	dijit.byId('popup_category').hide();
 }
 </script>
-
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_category" >
 		<form style="background-color: buttonface; width:100%;" id='frm_category' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -380,7 +424,6 @@ function hideDialog1(){
 		    								<option value="0" label="deactive"><?php echo $tr->translate("DEACTIVE");?></option>
 										</select>
 									</td>
-									
 								</tr>
 								<tr>
 									<td colspan="4" align="center">
