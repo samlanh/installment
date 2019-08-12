@@ -23,6 +23,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
      					"category_id_expense"=>-1,
     					'payment_type'=>-1,
     					'supplier_id'=>'',
+    					'cheque_issuer_search'=>'',
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
     			);
@@ -31,7 +32,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 			$rs_rows= $db->getAllExpense($formdata);//call frome model
     		$list = new Application_Form_Frmtable();
     		$collumns = array("BRANCH_NAME","SUPPLIER","EXPENSE_TITLE","RECEIPT_NO","EXPENSE_FOR","CATEGORY","TOTAL_EXPENSE",
-    					"NOTE","DATE","BY_USER","STATUS");
+    					"NOTE","DATE","CHEQUE_ISSUER","BY_USER","STATUS");
     		$link=array(
     				'module'=>'incexp','controller'=>'expense','action'=>'edit',
     		);
@@ -140,6 +141,10 @@ class Incexp_ExpenseController extends Zend_Controller_Action
     	$result = $db->getAllExpenseCategory();
     	array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
     	$this->view->all_category = $result;
+    	
+    	$result = $db->getAllChequeIssue();
+    	array_unshift($result, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
+    	$this->view->cheque_issue = $result;
     	
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);

@@ -6,6 +6,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
 	public function FrmAddExpense($data=null){
+		$request=Zend_Controller_Front::getInstance()->getRequest();
 		
 		$title = new Zend_Dojo_Form_Element_ValidationTextBox('title');
 		$title->setAttribs(array(
@@ -177,6 +178,21 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 		}
 		$cheque_issuer->setMultiOptions($opt1);
 		
+		$cheque_issuer_search = new Zend_Dojo_Form_Element_FilteringSelect('cheque_issuer_search');
+		$cheque_issuer_search->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+		));
+		
+		$opt1=array(''=>$this->tr->translate("SELECT_CHEQUE_ISSUE"));
+		if(!empty($rscheque))foreach($rscheque AS $row){
+			$opt1[$row['id']]=$row['name'];
+		}
+		$cheque_issuer_search->setMultiOptions($opt1);
+		$cheque_issuer_search->setValue($request->getParam("cheque_issuer_search"));
+		
 		if($data!=null){
 			$_currency_type->setValue($data['category_id']);
 			$category_id_expense->setValue($data['category_id']);
@@ -198,10 +214,14 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			if (!empty($data['supplier_id'])){
 			$_supplier_id->setValue($data['supplier_id']);
 			}
+			
+			if (!empty($data['cheque_issuer'])){
+				$cheque_issuer->setValue($data['cheque_issuer']);
+			}
 		}
 		$this->addElements(array($_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
-				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id,$cheque_issuer));
+				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id,$cheque_issuer,$cheque_issuer_search));
 		return $this;
 		
 	}

@@ -151,7 +151,7 @@ $frm = $this->frm_expense;
 </div>
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("CHEQUE_ISSUER")?>'"  id="frm_cheque" >
-		<form id="form_cheque" >
+		<form id="form_cheque"​ dojoType="dijit.form.Form" >
 			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
 				<tr>
 					<td>
@@ -195,9 +195,12 @@ function enablePayment(){
 	payment_method = dijit.byId('payment_type').get('value');
 	dijit.byId("cheque").set("readOnly",false);
 	dijit.byId("cheque").attr("value",'');
+	dijit.byId("cheque_issuer").set("readOnly",false);
 	if(payment_method==1){
 		dijit.byId("cheque").attr("value",'N/A');
 		dijit.byId("cheque").set("readOnly",true);
+		dijit.byId('cheque_issuer').reset();
+		dijit.byId("cheque_issuer").set("readOnly",true);
 	}
 }
 function Addsupplier(){
@@ -248,6 +251,20 @@ dojo.ready(function(){
 	    }
 	}, "customer");
 });
+require(["dojo/ready"], function(ready){
+	new dijit.form.FilteringSelect({
+		name: "cheque_issuer",
+		id: "cheque_issuer",
+		autoComplete: false,
+		required: false,
+		queryExpr: "*${0}*",     
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+			popupIssuer();
+	    }
+	}, "cheque_issuer");
+});
 var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->cheque_issue));?> );
 function addNewCheque(){
 	//if(dijit.byId('form_cheque').validate()){
@@ -255,10 +272,13 @@ function addNewCheque(){
 				id: dijit.byId('addchequename').get('value'),
 			    name: dijit.byId('addchequename').get('value')
 		};		
-		addDataToSelectbox(dijit.byId('cheque_issuer'), StreetStore, Itemmake, dijit.byId('addchequename').get('value'));	
-		dijit.byId('cheque_issuer').attr('value',dijit.byId('addchequename').get('value'));
+
+		addDataToSelectbox(dijit.byId('cheque_issuer'),chequeStore , Itemmake, dijit.byId('addchequename').get('value'));
+		
+		//addDataToSelectbox(dijit.byId('cheque_issuer'), StreetStore, Itemmake, dijit.byId('addchequename').get('value'));	
+		//dijit.byId('cheque_issuer').attr('value',dijit.byId('addchequename').get('value'));
 		dijit.byId('form_cheque').reset();
-		dijit.byId('form_cheque').hide();
+		dijit.byId('frm_cheque').hide();
 		dijit.byId('save_cheque').set('disabled',true);
 	//}
 }

@@ -24,6 +24,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 						'total_amount'	=>$data['total_amount'],
 						'invoice'		=>$invoice,
 						'cheque'		=>$data['cheque'],
+						'cheque_issuer'		=>$data['cheque_issuer'],
 			            'payment_id'=>$data['payment_type'],
 						'category_id'	=>$data['income_category'],
 						'description'	=>$data['Description'],
@@ -50,6 +51,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'total_amount'	=>$data['total_amount'],
 				'payment_id'=>$data['payment_type'],
 				'cheque'		=>$data['cheque'],
+				'cheque_issuer'		=>$data['cheque_issuer'],
 				'category_id'	=>$data['income_category'],
 				'description'	=>$data['Description'],
 				'date'			=>$data['Date'],
@@ -89,7 +91,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		title,invoice,
 		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
 		(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
-		total_amount,description,date,
+		total_amount,description,date,cheque_issuer,
 		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name  ";
 		
 		$sql.=$dbp->caseStatusShowImage("status");
@@ -117,7 +119,9 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			if($search['payment_type']>0){
 				$where.= " AND payment_id = ".$search['payment_type'];
 			}
-			
+			if (!empty($search['cheque_issuer_search'])){
+				$where.= " AND cheque_issuer = '".$search['cheque_issuer_search']."'";
+			}
 			$where.=$dbp->getAccessPermission("branch_id");
 			
 	       $order=" order by id desc ";
