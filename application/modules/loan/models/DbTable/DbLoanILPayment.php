@@ -646,6 +646,11 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    					$fixed_payment = $principal + $total_interestafter;
 		    				}else{
 		    					$principal = $fixed_payment-$total_interestafter;
+		    					if($index+1==$rs_sale['intallment']){//for end of record only
+		    						$principal = $ending_balance;
+		    						$fixed_payment = $principal + $total_interestafter;
+		    					}
+		    					
 		    				}
 		    				$ending_balance = $begining_balance-$principal;
 		    				
