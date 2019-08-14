@@ -1536,7 +1536,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td colspan="3"><strong><label id="lb_extrapayment" class="value">0.00</label></strong></td>
 				</tr>
 				<tr >
-					<td width="10%">'.$tr->translate("HOUSE_PRICE").'</td>
+					<td width="10%">'.$tr->translate("SOLD_PRICE").'</td>
 				    <td width="40%"><strong><label id="lb_saleprice" class="value"></label></strong></td>
 					<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
                     <td colspan="3"><strong><label id="lbl_totalpayment" class="value"></label></strong></td>

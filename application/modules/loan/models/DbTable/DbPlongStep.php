@@ -109,6 +109,14 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
 	    							'is_receivedplong'=>0,
 	    					);
 	    					$this->insert($arrissuepl);
+	    					
+	    					$arr = array(
+	    							'is_issueplong'=>1,
+	    							'issueplong_date'=>date("Y-m-d")
+	    					);
+	    					$where="id = ".$data['sale_id'.$i];
+	    					$this->_name="ln_sale";
+	    					$this->update($arr, $where);
 	    				}
     				}
     		

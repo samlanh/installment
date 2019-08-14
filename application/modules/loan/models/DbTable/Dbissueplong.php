@@ -134,9 +134,11 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
     			$db->commit();
     			return 1;
     		}catch (Exception $e){
-    			$db->rollBack();
     			$err =$e->getMessage();
     			Application_Model_DbTable_DbUserLog::writeMessageError($err);
+    			$db->rollBack();
+    		
+    			
     		}
     }
     function getPlongbyId($record_id){

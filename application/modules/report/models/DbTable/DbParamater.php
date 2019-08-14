@@ -2183,4 +2183,11 @@ function getAllBranch($search=null){
 		$groupby =" GROUP BY s.`staff_id`,s.`id` ORDER BY s.`id` DESC";
 		return $db->fetchAll($sql.$where.$groupby);
 	}
+	
+	function checkLandSaleNotUpdateLock($pro_id){
+		$db = $this->getAdapter();
+		$sql="SELECT p.land_address FROM `ln_properties` AS p WHERE p.id =$pro_id AND p.is_lock =0 LIMIT 1";
+		return $db->fetchOne($sql);
+		
+	}
 }

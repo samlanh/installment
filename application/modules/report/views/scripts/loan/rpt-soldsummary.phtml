@@ -208,9 +208,20 @@ table.tb-footer tr.style-head {
 	              
 	               if(!empty($this->loanrelease_list))foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
+	               		$notupdateLock="";
 		               if(!empty($row['old_land_id'])){
 			               	$idse = explode(",", $row['old_land_id']);
 			               	$countland = count($idse);
+			               	/*//for check land not update lock
+							if (!empty($idse)) foreach ($idse as $pro_id){
+			               		if (empty($notupdateLock)){
+			               			$notupdateLock = $db->checkLandSaleNotUpdateLock($pro_id);
+			               		}else{
+			               			$notupdateLock = $notupdateLock.",".$db->checkLandSaleNotUpdateLock($pro_id);
+			               		}
+			               		
+			               	}
+							*/
 			               	$amount_property = $amount_property+$countland;
 			               	if($row['payment_id']==1){//កក់
 			               		$property_deposit=$property_deposit+$countland;
@@ -234,6 +245,7 @@ table.tb-footer tr.style-head {
 		               			$property_install=$property_install+1;
 		               		}
 		               		$countland = 1;
+		               		//$notupdateLock = $db->checkLandSaleNotUpdateLock($row['house_id']);
 		               }
 		               $price_before = $price_before+$row['price_before'];
 		               $discount_amount = $discount_amount+$row['discount_amount'];
@@ -278,7 +290,7 @@ table.tb-footer tr.style-head {
 						<td style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format("d-m-Y"); ?>&nbsp;</td>
 						<td style="width: 100px; !important"><?php echo $row['name_kh'];?>&nbsp;</td>
 						<td>&nbsp;<?php echo $row['land_address'].",".$row['street']; ?>&nbsp;</td>
-						<!-- <td align="center">&nbsp;<?php echo $countland; ?>&nbsp;</td> -->
+						<!-- <td align="center">&nbsp;<?php echo $countland." ".$notupdateLock; ?>&nbsp;</td> -->
 						<td align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span>&nbsp;</td>
 						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['discount_amount'],2); ?></td>	
 						<td align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>	
