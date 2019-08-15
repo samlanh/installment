@@ -63,7 +63,7 @@ class Group_SupplierController extends Zend_Controller_Action {
 		   				echo "<script>window.close();</script>";
 		   			}
 	   				if(!empty($_data['save_new'])){
-						Application_Form_FrmMessage::message('INSERT_SUCCESS');
+	   					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL . '/supplier/add');
 					}else{
 						Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL . '/supplier/index');
 					}

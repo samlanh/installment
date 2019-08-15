@@ -63,7 +63,7 @@ class Project_indexController extends Zend_Controller_Action {
 				
 				$_data['branch_status']=1;
 				$_dbmodel->addbranch($_data);
-				Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCESS"));
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/project/index/add");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message($this->tr->translate("INSERT_FAIL"));
 				$err =$e->getMessage();

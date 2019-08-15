@@ -64,7 +64,7 @@ class Group_CustomerController extends Zend_Controller_Action {
 				}
 				
 					$id= $db->add($data);
-					Application_Form_FrmMessage::message("INSERT_SUCESS");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/customer/add");
 
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");

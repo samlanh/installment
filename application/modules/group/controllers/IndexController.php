@@ -77,7 +77,7 @@ class Group_indexController extends Zend_Controller_Action {
 				$data['old_photo']=null;
 				$db = new Group_Model_DbTable_DbClient();
 				$id= $db->addClient($data);
-				Application_Form_FrmMessage::message($tr->translate("INSERT_SUCCESS"));
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/index/add");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

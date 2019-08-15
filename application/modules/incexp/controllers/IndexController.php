@@ -37,6 +37,15 @@ public function init()
     public function addAction()
     {
     	if($this->getRequest()->isPost()){
+    		
+    		// Check Session Expire
+    		$dbgb = new Application_Model_DbTable_DbGlobal();
+    		$checkses = $dbgb->checkSessionExpire();
+    		if (empty($checkses)){
+    			$dbgb->reloadPageExpireSession();
+    			exit();
+    		}
+    		
 			$data=$this->getRequest()->getPost();
 			$db = new Incexp_Model_DbTable_DbLoanType();
 			try {
@@ -62,6 +71,14 @@ public function init()
     public function editAction()
     {
     if($this->getRequest()->isPost()){
+    	
+    	// Check Session Expire
+    	$dbgb = new Application_Model_DbTable_DbGlobal();
+    	$checkses = $dbgb->checkSessionExpire();
+    	if (empty($checkses)){
+    		$dbgb->reloadPageExpireSession();
+    		exit();
+    	}
 			$data=$this->getRequest()->getPost();
 			$db = new Incexp_Model_DbTable_DbLoanType();
 			try {
