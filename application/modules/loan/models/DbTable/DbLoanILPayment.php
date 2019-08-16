@@ -623,8 +623,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    						$begining_balance = $row['begining_balance_after']-$extrapayment;
 	    						$remain_afterextrapayment = $begining_balance;//ប្រាក់ដើមនៅសល់ពីបង់រំលស់ដើម
 	    						$interst_rate = ($data['interest_rate']/12/100);
-	    						
-								if($interst_rate!=0){
+							   if($interst_rate!=0){
 			    					$top = pow(1+$interst_rate,$times);
 			    					$bottom = pow(1+$interst_rate,$times)-1;
 			    					$fixed_payment = round(($begining_balance*$interst_rate*$top/$bottom),0,PHP_ROUND_HALF_UP);//always round up
