@@ -31,6 +31,15 @@ class IndexController extends Zend_Controller_Action
         
 		if($this->getRequest()->isPost())		
 		{
+			$dbgb = new Application_Model_DbTable_DbGlobal();
+			$sys = $dbgb->getPh();
+			if (!$sys){
+// 				$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+// 				$session_user->unsetAll();
+				Application_Form_FrmMessage::redirectUrl("/");
+				exit();
+			}
+			
 			if(date('Y-m-d')>='2020-01-15'){
  				$this->view->msg = 'System Expired';
  				return false;
