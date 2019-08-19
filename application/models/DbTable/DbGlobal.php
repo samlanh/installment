@@ -417,8 +417,10 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	
    	//phnom penh thmey
    	/*$pre='N1:'; //phnom penh thmey
-   	if ($data['branch_id']>2){
-   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id >2 LIMIT 1 ";
+   	if ($data['branch_id']>=5){
+   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id =".$data['branch_id']." LIMIT 1 ";
+   	}else if ($data['branch_id']>2){
+   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id >2 AND  branch_id < 5 LIMIT 1 ";
    	}else{
    		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id <=2 LIMIT 1 ";
    	}*/
