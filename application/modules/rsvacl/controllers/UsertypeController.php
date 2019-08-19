@@ -61,15 +61,8 @@ class RsvAcl_UserTypeController extends Zend_Controller_Action
 				$db=new RsvAcl_Model_DbTable_DbUserType();	
 				$post=$this->getRequest()->getPost();			
 				if(!$db->isUserTypeExist($post['user_type'])){
-						
 						$id=$db->insertUserType($post);						
-						 //write log file 
-				             $userLog= new Application_Model_Log();
-				    		 $userLog->writeUserLog($id);
-				     	  //End write log file
-				
-						//Application_Form_FrmMessage::message('One row affected!');
-						Application_Form_FrmMessage::redirector('/rsvacl/usertype/index');																			
+						Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", '/rsvacl/usertype/index');
 				}else {
 					Application_Form_FrmMessage::message('User type had existed already');
 				}
@@ -106,25 +99,13 @@ class RsvAcl_UserTypeController extends Zend_Controller_Action
 			$post=$this->getRequest()->getPost();
 			//print_r($rs); exit;
 			if($rs['user_type']==$post['user_type']){
-																						
 					$db->updateUserType($post,$rs['user_type_id']);
-					
-					  //write log file 
-				             $userLog= new Application_Model_Log();
-				    		 $userLog->writeUserLog($user_type_id);
-				     	  //End write log file
-					//Application_Form_FrmMessage::message('One row affected!');
-					Application_Form_FrmMessage::redirector('/rsvacl/usertype/index');																																				
+					Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS", '/rsvacl/usertype/index');
 				
 			}else{
 				if(!$db->isUserTypeExist($post['user_type'])){
 					$db->updateUserType($post,$rs['user_type_id']);
-					 //write log file 
-				             $userLog= new Application_Model_Log();
-				    		 $userLog->writeUserLog($user_type_id);
-				     //End write log file
-					//Application_Form_FrmMessage::message('One row affected!');
-					Application_Form_FrmMessage::redirector('/rsvacl/usertype/index');						
+					Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS", '/rsvacl/usertype/index');
 				}else {
 					Application_Form_FrmMessage::message('User had existed already');
 				}
