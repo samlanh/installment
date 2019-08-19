@@ -799,6 +799,13 @@ function getAllBranch($search=null){
  			 pp.land_width,
  			 pp.land_height,
  			 pp.`full_size`,
+ 			 
+ 			 pp.floor,
+ 			 pp.living,
+ 			 pp.`bedroom`,
+ 			 pp.dinnerroom,
+ 			 pp.buidingyear,
+ 			 pp.`parkingspace`,
 (SELECT
     	`property`.`land_size`
     	FROM `ln_properties` `property`
