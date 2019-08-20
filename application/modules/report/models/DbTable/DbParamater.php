@@ -335,7 +335,7 @@ function getAllBranch($search=null){
     		(SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) AS supplier_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
     		title,invoice,is_closed,
-    	cheque_issuer,
+    	cheque_issuer,other_invoice,
     		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
     		cheque,total_amount,description,date,
     		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
@@ -362,6 +362,7 @@ function getAllBranch($search=null){
     			$s_where[] = " title LIKE '%{$s_search}%'";
     			$s_where[] = " total_amount LIKE '%{$s_search}%'";
     			$s_where[] = " invoice LIKE '%{$s_search}%'";
+    			$s_where[] = " other_invoice LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
     		if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){

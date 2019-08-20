@@ -178,7 +178,11 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 		}
 		$cheque_issuer->setMultiOptions($opt1);
 		
-		
+		$_other_invoice = new Zend_Dojo_Form_Element_TextBox('other_invoice');
+		$_other_invoice ->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
 		
 		if($data!=null){
 			$_currency_type->setValue($data['category_id']);
@@ -205,10 +209,11 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			if (!empty($data['cheque_issuer'])){
 				$cheque_issuer->setValue($data['cheque_issuer']);
 			}
+			$_other_invoice->setValue($data['other_invoice']);
 		}
 		$this->addElements(array($_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
-				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id,$cheque_issuer));
+				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id,$cheque_issuer,$_other_invoice));
 		return $this;
 		
 	}

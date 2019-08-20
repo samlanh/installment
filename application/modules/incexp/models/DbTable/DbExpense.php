@@ -25,6 +25,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 						'invoice'		=>$invoice,
 						'cheque'		=>$data['cheque'],
 						'cheque_issuer'		=>$data['cheque_issuer'],
+						'other_invoice'		=>$data['other_invoice'],
 			            'payment_id'=>$data['payment_type'],
 						'category_id'	=>$data['income_category'],
 						'description'	=>$data['Description'],
@@ -52,6 +53,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'payment_id'=>$data['payment_type'],
 				'cheque'		=>$data['cheque'],
 				'cheque_issuer'		=>$data['cheque_issuer'],
+				'other_invoice'		=>$data['other_invoice'],
 				'category_id'	=>$data['income_category'],
 				'description'	=>$data['Description'],
 				'date'			=>$data['Date'],
@@ -104,6 +106,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				$s_where[] = " title LIKE '%{$s_search}%'";
 				$s_where[] = " total_amount LIKE '%{$s_search}%'";
 				$s_where[] = " invoice LIKE '%{$s_search}%'";
+				$s_where[] = " other_invoice LIKE '%{$s_search}%'";
 				$where .=' AND ('.implode(' OR ',$s_where).')';
 			}
 	

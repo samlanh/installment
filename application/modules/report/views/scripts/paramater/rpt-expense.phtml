@@ -141,6 +141,7 @@
 						    <td>&nbsp;<?php echo $tr->translate("EXPENSE_TITLE");?>&nbsp;</td>
 						    <td>&nbsp;<?php echo $tr->translate("RECIEPT_NO");?>&nbsp;</td>
 						    <td>&nbsp;<?php echo $tr->translate("CATEGORY");?>&nbsp;</td>
+						    <td>&nbsp;<?php echo $tr->translate("INVOICE");?>&nbsp;</td>
 						    <td>&nbsp;<?php echo $tr->translate("TOTAL_EXPENSE");?>&nbsp;</td>
 						    <td>&nbsp;<?php echo $tr->translate("PAYMENT_TYPE");?>&nbsp;</td>
 						    <td>&nbsp;<?php echo $tr->translate("NUMBER");?>&nbsp;</td>
@@ -158,6 +159,7 @@
 					   <td style="line-height: 18px;white-space: normal !important; max-width: 150px;width: 150px;padding: 2px;overflow-wrap: break-word;"><?php echo $row['title'];?></td>
 					   <td align="center">&nbsp;<?php echo $row['invoice'];?></td>
 					   <td style="line-height: 18px;white-space: normal !important; max-width: 150px;width: 150px;padding: 2px;overflow-wrap: break-word;"><?php echo $row['category_name'];?></td>
+					   <td align="center">&nbsp;<?php echo $row['other_invoice'];?></td>
 					   <td align="center">&nbsp;<?php echo number_format($row['total_amount'],2);?></td>
 					   <td align="center">&nbsp;<?php echo $row['payment_type'];?></td>
 					   <td align="center">&nbsp;<?php echo $row['cheque'];?></td>
@@ -170,7 +172,7 @@
 					<?php }}?>
 					 <?php if(!empty($this->rscomisison)){?>
 					 <tr  style="font-size: 12px; line-height:20px;">
-					   <td align="center" colspan="12">
+					   <td align="center" colspan="14">
 					   	<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("COMMISSION");?></span>
 					   </td>
 					 </tr>
@@ -181,8 +183,8 @@
 					        <td><?php echo $tr->translate("SEX");?></td>
 					        <td colspan="2"><?php echo $tr->translate("TEL");?></td>
 					        <td>&nbsp;<?php echo $tr->translate("RECIEPT_NO");?>&nbsp;</td>
-					        <td><?php echo $tr->translate("Customers");?></td>
-					        <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					        <td colspan="2"><?php echo $tr->translate("Customers");?></td>
+					        <td colspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 					        <td ><?php echo $tr->translate("COMISSION");?></td>
 					        <td><?php echo $tr->translate("DATE");?></td>
 					        <td><?php echo $tr->translate("BY_USER");?></td>
@@ -201,8 +203,8 @@
 								 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
 								 <td colspan="2" align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
 								 <td align="center">&nbsp;<?php echo $rscom['invoice'];?>&nbsp;</td>
-								 <td>&nbsp;<?php echo $rscom['client_name'];?>&nbsp;</td>
-								 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
+								 <td colspan="2">&nbsp;<?php echo $rscom['client_name'];?>&nbsp;</td>
+								 <td colspan="2" style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
 								 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
 								 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
 								 <td align="center">&nbsp;<?php echo $rscom['user_name'];?></td>
@@ -214,7 +216,7 @@
 		            	if (!empty($this->houserepair)){
 		            	?> 
 						 <tr  style="font-size: 12px; line-height:20px;">
-						   <td align="center" colspan="12">
+						   <td align="center" colspan="14">
 						   		<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("ចំណាយពីការកែផ្ទះ");?></span>
 						   </td>
 						 </tr>
@@ -225,8 +227,8 @@
 						    <td><?php echo $tr->translate("EXPENSE_TITLE");?></td>
 						    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
 						   ​​ 
-						   	<td><?php echo $tr->translate("CATEGORY");?></td>
-						    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+						   	<td colspan="2"><?php echo $tr->translate("CATEGORY");?></td>
+						    <td colspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 						    
 						    <td><?php echo $tr->translate("TOTAL");?></td>
 						    <td><?php echo $tr->translate("CHEQUE");?></td>
@@ -241,8 +243,8 @@
 			               		<td>&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a>&nbsp;</td>
 			               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
 			               		<td align="center">&nbsp;<a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a>&nbsp;</td>
-			               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
-			               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
+			               		<td valign="top" colspan="2">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+			               		<td align="center" colspan="2">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
 			               		
 			               		<td align="center">&nbsp;<strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format(abs($rs["total_amount"]),2);}?></strong>&nbsp;</td>
 			               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
