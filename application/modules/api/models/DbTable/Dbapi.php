@@ -10,15 +10,26 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     }
     function getAllSold(){
     	$sql="SELECT * ,
-    	  (price_before-price_sold) AS total_discount,
-      	 (SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
-      	 (SELECT name_kh FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
-      	 FROM v_soldreport WHERE 1 ORDER BY id DESC limit 100 ";
+		FORMAT(price_before,2) AS price_before,
+		FORMAT(price_sold,2) AS price_sold,
+		FORMAT(balance,2) AS balance,
+		FORMAT(paid_amount,2) AS paid_amount,
+		DATE_FORMAT(buy_date, '%d-%m-%Y') AS  buy_date,
+		DATE_FORMAT(validate_date, '%d-%m-%Y') AS  validate_date,
+		DATE_FORMAT(agreement_date, '%d-%m-%Y') AS  agreement_date,
+		
+    	FORMAT((price_before-price_sold),2) AS total_discount,
+      	(SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
+      	(SELECT name_kh FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
+      FROM v_soldreport WHERE 1 ORDER BY id DESC limit 100 ";
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql);
     }
     function getAllIncome(){
     	$sql="SELECT *,
+		DATE_FORMAT(date_pay, '%d-%m-%Y') AS  date_pay,
+		DATE_FORMAT(date_payment, '%d-%m-%Y') AS  date_payment,
+		FORMAT(amount_recieve,2) AS amount_recieve,
 			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id LIMIT 1) AS user_name,
 			(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1) AS sold_price
       	FROM v_getcollectmoney WHERE status=1 ";
@@ -31,7 +42,7 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     	$sql="SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
-    		 SUM(total_amount) AS total_amount
+    		 FORMAT(SUM(total_amount),2) AS total_amount
     		FROM ln_expense WHERE status=1 AND total_amount>0 group by category_id order by date desc  limit 100 ";
     	return $db->fetchAll($sql);
     }
@@ -43,7 +54,8 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     		title,invoice,
     	
     		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
-    		cheque,total_amount,description,date,
+    		cheque,FORMAT(total_amount,2) total_amount,description,
+			DATE_FORMAT(date,'%d-%m-%Y') date,
     		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
     		status FROM ln_expense WHERE status=1 ";
     		 

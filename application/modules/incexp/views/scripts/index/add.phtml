@@ -79,7 +79,8 @@ var acc_store  = getDataStorefromJSON('id','name');
 require(["dojo/ready"], function(ready){
 		new dijit.form.FilteringSelect({
 			store: acc_store,
-			autoComplete: true,
+			autoComplete: false,
+			queryExpr: "*${0}*",
 			required: false,		           
 			name: "parent_id",
 			id: "parent_id",
@@ -88,7 +89,6 @@ require(["dojo/ready"], function(ready){
 			onChange: function() {
 		    }
 		}, "parent_id");
-	//getParentbytype();
 });
 var url_getland = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getparentbyid')); ?>';
 function getParentbytype(){
@@ -106,7 +106,6 @@ function getParentbytype(){
 		    dijit.byId('parent_id').set('store', acc_store);
 		},
 		error: function(err) {
-			alert(err);
 		}
 	});
 }
