@@ -33,7 +33,7 @@ dojo.require("dijit.form.DateTextBox");
 <style>
 	.reff{ font-size: 20px !important; line-height:34px !important;}
 	#divPrint tr td h2,#divPrint p,#divPrint pre,#divPrint span,#divPrint td,
-	#divPrint1 tr td h2,#divPrint1 p,#divPrint pre,#divPrint1 span,#divPrint td{ font-size: 20px !important; line-height:34px !important;}
+	#divPrint1 tr td h2,#divPrint1 p,#divPrint pre,#divPrint1 span,#divPrint1  td{ font-size: 20px !important; line-height:34px !important;}
 	#divPrint span.font-size12 { font-size: 16px !important;}
 	#padding-left-p-2{
 	 padding-left: 105px !important;	
@@ -250,7 +250,7 @@ dojo.require("dijit.form.DateTextBox");
 		             		<span> នៅថ្ងៃទី  <?php echo (date("d",strtotime($this->agreement['validate_date'])));?></span> <span style="width: 100px;"></span> ខែ  <?php echo $month[date("m",strtotime($this->agreement['validate_date']))];?> ឆ្នាំ <?php echo (date("Y",strtotime($this->agreement['validate_date'])));?> ។
 		             		<?php if($this->agreement['price_sold']-$paid>0){?>
 		             		<span>ហើយប្រាក់ដែលនៅសល់ចំនួន</span>
-							<span class="" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-@$rsdeposite['total_principal_permonthpaid']-$this->agreement['second_depostit']),0);
+							<span class="" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-@$paid),0);//echo number_format(($this->agreement['price_sold']-@$rsdeposite['total_principal_permonthpaid']-$this->agreement['second_depostit']),0);
 							
 							?></strong></span>
 									(<span  style="min-width: 50px;font-weight:bold;"><label id="lable_remainkhmer" style="overflow-wrap: break-word;white-space: normal;font-family: 'Times New Roman','Khmer OS Battambang'"></label> ដុល្លារអាមេរិក) ។</span>
@@ -314,30 +314,26 @@ dojo.require("dijit.form.DateTextBox");
              			 <?php }?>
              		</p>
              		<p>
-             			<div style="white-space:nowrap; font-weight:bold; width:24%; text-align: center; display: inline-block;">
-             				<span class="value">ស្នាមមេដៃស្តាំអ្នកប្រគល់ប្រាក់</span>
+             			<div style="white-space:nowrap; font-weight:bold; width:32%; text-align: center; display: inline-block;">
+             				<span class="value">ស្នាមមេដៃស្ដាំអ្នកទិញ</span>
              			</div>
-             			<div style="font-weight:bold; width:24%; text-align: center; display: inline-block;">
-             				<span class="value">សាក្សីទី1</span>
+             			<div style="font-weight:bold; width:32%; text-align: center; display: inline-block;">
+             				<span class="value">សាក្សី</span>
              			</div>
-             			<div style="font-weight:bold; width:24%; text-align: center; display: inline-block;">
-             				<span class="value">សាក្សីទី2</span>
-             			</div>
-             			<div style="white-space:nowrap; font-weight:bold; width:24%; text-align: center; display: inline-block;">
-             				<span class="value">ស្នាមមេដៃស្តាំអ្នកទទួលប្រាក់</span>
+             			
+             			<div style="white-space:nowrap; font-weight:bold; width:32%; text-align: center; display: inline-block;">
+             				<span class="value">ស្នាមមេដៃស្ដាំតំណាងអ្នកលក់</span>
              			</div>
              			<div style="height: 90px;">
              			</div>
-             			<div style="width:24%;text-align: center; display: inline-block;">
+             			<div style="width:32%;text-align: center; display: inline-block;">
              				<span class="border_bt  value" style="width:80%;white-space: nowrap;text-align: center;" >&nbsp;&nbsp;<?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?>&nbsp;</span>
              			</div>
-             			<div style="width:24%; text-align: center; display: inline-block;">
+             			<div style="width:32%; text-align: center; display: inline-block;">
              				<span class="border_bt  value" style="width:80%;" >&nbsp;<?php echo $this->agreement['staff_name'];?></span>
              			</div>
-             			<div style="width:24%; text-align: center; display: inline-block;">
-             				<span class="border_bt  value" style="width:80%;" >&nbsp;</span>
-             			</div>
-             			<div style="width:24%; text-align: center; display: inline-block;">
+             			
+             			<div style="width:32%; text-align: center; display: inline-block;">
              				<span class="border_bt  value" style="width:80%;" >&nbsp;<?php echo $this->agreement['user_name'];?><?php //echo $this->agreement['project_manager_namekh'];?></span>
              			</div>
              		</p>
@@ -553,7 +549,7 @@ dojo.require("dijit.form.DateTextBox");
 						             					$row['principal_permonth'] = ($paidbefore);
 						             				}
 													
-						             			}$keytime++;?>
+						             			}?>
 						             			<?php 
 						             				$numrow=$numrow+1;?>
 													<?php 
@@ -570,7 +566,8 @@ dojo.require("dijit.form.DateTextBox");
 															//$stringLastDate = $tr->translate("RECEIVED_PROPERTY");
 															$stringLastDate = $row['payment_type']." ".$row['note'];
 														}
-														
+														if($row['principal_permonth']<=0){continue;}
+														$keytime++;
 													?>
 						             				<span style="">
 						             						កក់ប្រាក់លើកទី<?php echo ($keytime); ?>  ចំនួន
@@ -631,42 +628,81 @@ dojo.require("dijit.form.DateTextBox");
 											money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
 										</script>
 				             		</p>
+				             		<?php
+								  	if($this->agreement['payment_id']==4){
+								  ?>
 				             		<p style="margin-top:-12px;">
-				             			<span class="margin-left" ></span>&nbsp;បើដល់ថ្ងៃកំណត់ភាគីទិញមិនបានប្រគល់ប្រាក់គ្រប់ចំនួនទេ ប្រាក់កក់កន្លងមកនឹងត្រូវបានដាច់ទៅលើក្រុមហ៊ុន។ ភាគីលក់ សូមសន្យាថា ក្រោយពីទទួលប្រាក់ហើយ មិនកែប្រែតម្លៃ ឬ ប្រែថាមិនលក់ឡើយ ។ ក្នុងករណីការអនុវត្តន៍ផ្ទុយ ពីនេះ ខ្ញុំបាទ/នាងខ្ញុំសុខចិត្តសងប្រាក់ x2 ដងនៃប្រាក់ដែលបានបង់កន្លងមក។
-										
-				             			<br />
-				             			<span class="margin-left">&nbsp;</span>ក្រែងពុំពិតប្រាកដដូចកិច្ចសន្យាខាងលើ  យើងខ្ញុំសូមផ្តិតមេដៃស្តាំទុកជាភស្តុតាង  ។
+				             		<span class="margin-left" ></span>&nbsp;
+				             		អ្នកទិញយល់ព្រមបង់ទឹកប្រាក់តាមគោលការណ៍ <strong><?php echo $branch_title;?></strong>
+				             		 យោងទៅតាមរាងបង់ប្រាក់ក្នុង <strong>(ឧបសម្ព័ន្ធទីមួយ)</strong> ភ្ជាប់មកជាមួយ ដើម្បីមានសេចក្តីទុកចិត្តលើការអនុវត្តន៍កិច្ចសន្យានេះភាគីទាំងពីរបានយល់ព្រមដូចខាងក្រោម ៖
+				             		 <ul style="list-style: none;margin: 0;padding: 0;padding-left: 93px;margin-top: -12px;">
+				             		 	<li>
+				             		 -	បើអ្នកទិញបង់រំលស់បាន៣ខែឡើងទៅ តែបង់យឺតរាប់ចាប់ពី ៣០ថ្ងៃនោះ នោះអ្នកទិញយល់ព្រមដាច់លុយកក់ដោយស្វ័យប្រវត្តិហើយ សុខចិត្តប្រគល់ដីជូនក្រុមហ៊ុនវិញដោយគ្មានការតវ៉ាអ្វីទាំងអស់។
+				             		 	</li>
+				             		 	<li>
+				             		 -	បើអ្នកទិញអត់បានបង់រំលស់៣ខែនោះ អ្នកទិញយល់ព្រមប្រគល់ដី ជូនក្រុមហ៊ុនវិញដោយគ្មានការតវ៉ាអ្វីទាំងអស់
+				             		 	</li>
+				             		 	<li>
+				             		 -	ពិន័យក្នុងការបង់ប្រាក់យឺតយ៉ាវ : បើយឺតចាប់ពី ៣ថ្ងៃដល់ ៣០ថ្ងៃ ពិន័យ 6% នៃប្រាក់ដែលមិនទាន់បានបង់ប្រចាំខែ។
+				             			</li>
+				             		 	<li>
+				             		 -	ករណីអ្នកទិញមិនគោរពតាមកិច្ចសន្យានេះ ប្រាក់កក់ទាំងអស់ត្រូវទុកជាប្រយោជន៍របស់ភាគីអ្នកលក់ដោយស្វ័យប្រវត្តិ។
+				             		 	</li>
+				             		 	<li>
+				             		 -	ករណីដែលអ្នកលក់កែប្រែ ថាមិនលក់វិញត្រូវប្រគល់ប្រាក់ទៅ អោយអ្នកទិញស្មើនឹងប្រាក់កក់គុណនឹង2។
+				             		 	</li>
+				             		 </ul>
+				             		 ភាគីទាំងពីរបានអាន បានស្តាប់នឹងយល់ខ្លឹមសារទាំងអស់នៃ កិច្ចសន្សានេះ និង បានផ្តិតមេដៃស្តាំទុកជាភស្តុតាងក្នុងការទទួលខុសត្រូវចំពោះមុខច្បាប់ ។
 				             		</p>
+				             		<?php }else{?>
+				             		<p style="margin-top:-12px;">
+				             			 <ul style="list-style: none;margin: 0;padding: 0;margin-top: -12px;">
+				             		 		<li>
+				             		 			-	បានប្លង់ បង់ផ្តាច់(ក្រុមហ៊ុនទុករយៈពេល១សប្តាហ៍ដើម្បីរៀបចំប្រាក់) ដើម្បីមានសេចក្តីទុកចិត្ត លើការអនុវត្តន៍កិច្ចសន្យានេះភាគីទាំងពីរបានយល់ព្រមដូចខាងក្រោម ។
+				             		 		</li>
+				             		 		<li>
+				             		 			-	ពេលប្លង់ធ្លាក់មក បើអ្នកទិញបង់ដាច់មិនបានមកយកប្លង់ ក្នុងរយៈពេល១សប្តាហ៍ នោះអ្នកទិញយល់ព្រមដាច់លុយកក់ នឹងប្រគល់ដីជូនក្រុមហ៊ុនវិញដោយគ្មានការតវ៉ាអ្វីទាំងអស់។
+				             		 		</li>
+				             		 		<li>
+				             		 			-	ករណីដែលអ្នកទិញ មិនគោរពតាមកិច្ចសន្សានេះ ប្រាក់កក់ទាំងអស់ត្រូវទុកជាប្រយោជន៍របស់ភាគីអ្នកលក់ដោយស្វ័យប្រវត្តិ។
+				             		 		</li>
+				             		 		<li>
+				             		 			-	ករណីដែលអ្នកលក់ កែប្រែថាមិនលក់វិញ ត្រូវប្រគល់ប្រាក់ទៅអោយអ្នកទិញ ស្មើនឹងប្រាក់កក់គុណនឹង2។
+				             		 		</li>
+				             		 		<li>
+				             		 			-	ភាគីទាំងពីរបានអាន បានស្តាប់នឹងយល់ខ្លឹមសារទាំងអស់នៃ កិច្ចសន្សានេះ និង បានផ្តិតមេដៃស្តាំ ទុកជាភស្តុតាងក្នុងការទទួលខុសត្រូវចំពោះមុខច្បាប់ ។
+				             		 		</li>
+				             		 	  </ul>
+				             		 	
+				             		</p>
+				             		<?php }?>
+				             		
 				             		<p style=" text-align: right;margin-top: -20px;">
 				             			<!-- ធ្វើនៅ<span class="border_bt  value" style="width:15%;" ></span>ថ្ងៃ..................ខែ............ឆ្នាំ............នព្វស័ក ព.ស២៥......
 				             			<br /> -->
 				             			ធ្វើនៅថ្ងៃទី<span class="value" style="min-width:30px;"> <?php echo (date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:30px;"> <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:30px;"> <?php echo (date("Y",strtotime($this->agreement['agreement_date'])));?></span>
 				             		</p>
 				             		<p>
-				             			<div style="white-space:nowrap; font-weight:bold; width:24%; text-align: center; display: inline-block;">
-				             				<span class="value">ស្នាមមេដៃស្តាំអ្នកប្រគល់ប្រាក់</span>
+				             			<div style="white-space:nowrap; font-weight:bold; width:32%; text-align: center; display: inline-block;">
+				             				<span class="value">ស្នាមមេដៃស្ដាំអ្នកទិញ</span>
 				             			</div>
-				             			<div style="font-weight:bold; width:24%; text-align: center; display: inline-block;">
-				             				<span class="value">សាក្សីទី1</span>
+				             			<div style="font-weight:bold; width:32%; text-align: center; display: inline-block;">
+				             				<span class="value">សាក្សី</span>
 				             			</div>
-				             			<div style="font-weight:bold; width:24%; text-align: center; display: inline-block;">
-				             				<span class="value">សាក្សីទី2</span>
-				             			</div>
-				             			<div style="white-space:nowrap; font-weight:bold; width:24%; text-align: center; display: inline-block;">
-				             				<span class="value">ស្នាមមេដៃស្តាំអ្នកទទួលប្រាក់</span>
+				             			
+				             			<div style="white-space:nowrap; font-weight:bold; width:32%; text-align: center; display: inline-block;">
+				             				<span class="value">ស្នាមមេដៃស្ដាំតំណាងអ្នកលក់</span>
 				             			</div>
 				             			<div style="height: 90px;">
 				             			</div>
-				             			<div style="width:24%;text-align: center; display: inline-block;">
+				             			<div style="width:32%;text-align: center; display: inline-block;">
 				             				<span class="border_bt  value" style="width:80%;white-space: nowrap;text-align: center;" >&nbsp;&nbsp;<?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?>&nbsp;</span>
 				             			</div>
-				             			<div style="width:24%; text-align: center; display: inline-block;">
+				             			<div style="width:32%; text-align: center; display: inline-block;">
 				             				<span class="border_bt  value" style="width:80%;" ><?php echo $this->agreement['staff_name'];?>&nbsp;</span>
 				             			</div>
-				             			<div style="width:24%; text-align: center; display: inline-block;">
-				             				<span class="border_bt  value" style="width:80%;" >&nbsp;</span>
-				             			</div>
-				             			<div style="width:24%; text-align: center; display: inline-block;">
+				             			
+				             			<div style="width:32%; text-align: center; display: inline-block;">
 				             				<span class="border_bt  value" style="width:80%;" >&nbsp;<?php echo $this->agreement['user_name'];?></span>
 				             			</div>
 				             		</p>
@@ -721,7 +757,7 @@ function doPrint1() {
 	
 	if(last_number<=0){last_number='';}
 	money_khmer = money_khmer+" "+string+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer)+''+read_in_khmer_from_0_to_9(last_number)+''+str_cent;
-	dojo.byId('lable_remainkhmer').innerHTML=money_khmer;
+	
 	
 
 	a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
@@ -733,7 +769,12 @@ function doPrint1() {
 	
 	if(last_number_sold<=0){last_number_sold='';}
 	money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+	
+	<?php 
+    	 if($this->agreement['payment_id']!=6){?>
+	dojo.byId('lable_remainkhmer').innerHTML=money_khmer;
 	dojo.byId('lable_pricesoldkhmer').innerHTML=money_khmersold+" ";
+		 <?php }?>
 	
 	 <?php if ($this->agreement['payment_id']!=1){?>
 	 
