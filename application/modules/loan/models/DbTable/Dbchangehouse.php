@@ -118,13 +118,6 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     					'land_price'=>$land_price,
     					'house_price'=>$house_price,
     					'property_type'=>$property_type,
-//     					'width'=>$data['width'],
-//     					'height'=>$data['height'],
-//     					'land_size'=>$data['land_size'],
-//     					'south'=>$data['south'],
-//     					'north'=>$data['north'],
-//     					'west'=>$data['west'],
-//     					'east'=>$data['east'],
     					"is_lock"=>1,
     					"status"=>-2,
     					"create_date"=>date("Y-m-d"),
@@ -146,30 +139,13 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     		$paid_amount = $db->fetchOne($sql);
     		
     		$arr = array(
-//     				'branch_id'=>$data['to_branch_id'],
-//     				'house_id'=>$data["to_land_code"],
-//     				'payment_id'=>$data["schedule_opt"],
     				'price_before'=>$data['house_price'],
     				'discount_amount'=>$data['discount'],
     				'discount_percent'=>$data['discount_percent'],
     				'price_sold'=>$data['to_total_sold'],
     				'paid_amount'=>$paid_amount,
-//     				'balance'=>$data['balance'],
     				'is_reschedule'=>3,
-//     				'interest_rate'=>$data['interest_rate'],
-//     				'total_duration'=>$data['period'],
-//     				'startcal_date'=>$data['release_date'],
-//     				'first_payment'=>$data['first_payment'],
-//     				'validate_date'=>$data['first_payment'],
-//     				'payment_method'=>1,//$data['loan_type'],
-//     				'note'=>$data['note'],
-//     				'land_price'=>$data['house_price'],//true
-//     				'total_installamount'=>$data['total_installamount'],
-//     				'agreement_date'=>$data['agreement_date'],
-//     				'create_date'=>date("Y-m-d"),
-//     				'user_id'=>$this->getUserId()
     		);
-//     		$data['sale_id']=$id;
     		$where = " id = ".$data['loan_number'];
     		$this->_name="ln_sale";
     		$this->update($arr, $where);//add group loan
@@ -184,17 +160,12 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				foreach($ids as $land){ //unlock old house
     					$this->_name="ln_properties";
     					$arr = array(
-    							"is_lock"=>0
+    						"is_lock"=>0
     					);
     					$where = "id =".$land;
     					$this->update($arr, $where);
     				}
     			}
-//     			if($rows['typesale']==2){ //case old Sale Multi sale
-//     				$this->_name = 'ln_properties';
-//     				$where="id = ".$rows["house_id"];
-//     				$this->delete($where);
-//     			}
     		}
     		
     		$arr = array(
@@ -205,7 +176,6 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				'soldprice_before'=>$data['total_sold'],
     				'paid_before'=>$data['paid_before'],
     				'balance_before'=>$data['balance_before'],
-    				
     				'to_branchid'=>$data['to_branch_id'],
     				'to_houseid'=>$data['to_land_code'],
     				'house_priceafter'=>$data['house_price'],
@@ -213,11 +183,9 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				'discount_amountafter'=>$data['discount'],
     				'sold_priceafter'=>$data['to_total_sold'],    				
     				'balance_after'=>$data['balance'],
-    				
     				'change_date'=>$data['release_date'],//$data['date_buy'],
     				'note'=>$data['note'],
     				'user_id'=>$this->getUserId(),
-    				
     				'typesale'=>$data['typesale'],
     				);
 	    		$this->_name="ln_change_house";
@@ -225,21 +193,13 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
 	    		
 
     			$arr = array(
-    				'branch_id'=>$data['branch_id'],
+    				'branch_id'=>$data['to_branch_id'],
     				'house_id'=>$data["to_land_code"],
     				'typesale'=>$data['typesale'],
     			);
 	    		$where = " id = ".$data['loan_number'];
 	    		$this->_name="ln_sale";
 	    		$id = $this->update($arr, $where);
-	    		
-	    		
-// 	    		$this->_name="ln_properties";
-// 	    		$where=" id=".$data['land_code'];
-// 	    		$arr = array(
-// 	    				'is_lock'=>0
-// 	    				);
-// 	    		$this->update($arr, $where);//unlock old house
 	    		
     			$db->commit();
     			return 1;
