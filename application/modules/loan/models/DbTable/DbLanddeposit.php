@@ -435,19 +435,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$dbl = new Loan_Model_DbTable_DbLandpayment();
     		$row = $dbl->getTranLoanByIdWithBranch($data['id'],null);
     		if(!empty($row)){
-//     			if($row['typesale']==2){//multi sale
-//     				$ids = explode(',', $row['old_land_id']);
-//     				if (!empty($row['old_land_id'])){
-// 	    				foreach($ids as $land){
-// 	    					$this->_name="ln_properties";
-// 	    					$arr = array(
-// 	    							"is_lock"=>0
-// 	    					);
-// 	    					$where = "id =".$land;
-// 	    					$this->update($arr, $where);
-// 	    				}
-//     				}
-//     			}
     			$ids = explode(',', $row['all_land_id']);
     			if (!empty($row['all_land_id'])){
     				foreach($ids as $land){
@@ -490,6 +477,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		if(!empty($row)){
     			if($row['typesale']==2){//multi sale
     				if ($data['typesale']==2){//លក់ម្តងច្រើន
+    					
     					$ids_land = explode(',', $data['identity_land']);
     					$size = 0; $width=''; $height='';
     					$land_address='';
@@ -551,8 +539,10 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     							"status"=>-2,
     							"create_date"=>date("Y-m-d"),
     							"user_id"=>$this->getUserId(),
-    							"old_land_id"=>$data['identity_land']
     					);
+    					if($data['identity_land']!=$row['house_id']){
+    						$newproperty["old_land_id"]=$data['identity_land'];
+    					}
     					$this->_name="ln_properties";
     					$whereNewPro = "id =".$data["old_landid"];
     					$land_id =$data["old_landid"];

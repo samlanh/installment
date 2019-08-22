@@ -790,10 +790,17 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}
   	return $cate_tree_array;
   }
-  public function getAllLandInfo($branch_id=null,$option=null,$action=null,$propertytype=null){
+  public function getAllLandInfo($branch_id=null,$option=null,$action=null,$propertytype=null,$foreditsale=null){
   	   $db = $this->getAdapter();
   	   $tr = Application_Form_FrmLanguages::getCurrentlanguage();
-  	   $sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE status Not IN (-1,0) AND `land_address`!='' ";//just concate
+  	   $sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE `land_address`!='' ";
+  	   if (!empty($foreditsale)){
+  	   		$sql.=" AND  status Not IN (-2,-1,0) ";
+  	   }else{
+  	   		$sql.=" AND  status Not IN (-1,0) ";
+  	   }
+  	   
+  	   //just concate
 //   	   $sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE status!=0 AND `land_address`!='' ";//just concate
   	   $request=Zend_Controller_Front::getInstance()->getRequest();
   	   if($action==null){
