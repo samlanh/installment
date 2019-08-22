@@ -35,6 +35,8 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     		$s_where = array();
     		$s_search = addslashes(trim($search['adv_search']));
     		$s_where[] = " p.`hardtitle` LIKE '%{$s_search}%'";
+    		$s_where[] = " p.`land_address` LIKE '%{$s_search}%'";
+    		$s_where[] = " p.`street` LIKE '%{$s_search}%'";
     		$where .=' AND ('.implode(' OR ',$s_where).')';
     	}
     	if (!empty($search['process_status'])){
