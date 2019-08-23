@@ -168,17 +168,60 @@ public function init()
 		$todatesearch = $request->getParam("to_date_search");
 		if(!empty($todatesearch))$to_date_search->setValue($request->getParam("to_date_search"));
 		
+		
+		$payment_type = new Zend_Dojo_Form_Element_FilteringSelect('payment_type');
+		$payment_type->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onChange'=>'enablePayment();'
+		));
+		$options= array(
+				1=>$this->tr->translate("CASH"),
+				2=>$this->tr->translate("CHEQUE"),
+				3=>$this->tr->translate("PAYWITH_BANK"));
+		$payment_type->setMultiOptions($options);
+		
+		$_cheque = new Zend_Dojo_Form_Element_TextBox('cheque');
+		$_cheque ->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
+		$cheque_issuer = new Zend_Dojo_Form_Element_FilteringSelect('cheque_issuer');
+		$cheque_issuer->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'popupIssuer();'
+		));
+		$dbe = new Incexp_Model_DbTable_DbComission();
+		$rscheque = $dbe->getAllChequeIssue();
+		$opt1=array(''=>$this->tr->translate("SELECT_CHEQUE_ISSUE"),'-1'=>$this->tr->translate("ADD_NEW"));
+		if(!empty($rscheque))foreach($rscheque AS $row){
+			$opt1[$row['id']]=$row['name'];
+		}
+		$cheque_issuer->setMultiOptions($opt1);
+		
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
 			$branch_id->setAttrib('readonly',true);
 			$_old_sale_id->setValue($data['id']);
 			$return_back->setValue($data['total_amount']);
 			$_status->setValue($data['status']);
+			
+			$payment_type->setValue($data['payment_id']);
+			$_cheque->setValue($data['cheque']);
+			$cheque_issuer->setValue($data['cheque_issuer']);
 		}
 		$this->addElements(array(
 		$branch_id,$_property_id,$_old_sale_id,$_price_sold,$schedule_opt,$installment_paid,$paid_amount,$_balance,$_commision,$full_commission,$return_back,$date,$_status,
 		$_discount,
-		$_title,$branch_id_search,$staff_id,$start_date_search,$to_date_search
+		$_title,$branch_id_search,$staff_id,$start_date_search,$to_date_search,
+				$payment_type,
+				$_cheque,
+				$cheque_issuer
+				
 				));
 		return $this;
 		

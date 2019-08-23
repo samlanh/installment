@@ -41,6 +41,7 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 		$this->view->frm_cancel = $frm;
 	}
 	public function addAction(){
+		$_dbmodel = new Incexp_Model_DbTable_DbComission();
 		if($this->getRequest()->isPost()){//check condition return true click submit button
 			$_data = $this->getRequest()->getPost();
 			try {
@@ -51,8 +52,7 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 					$dbgb->reloadPageExpireSession();
 					exit();
 				}
-						
-				$_dbmodel = new Incexp_Model_DbTable_DbComission();
+				
 				if(isset($_data['save'])){
 					$_dbmodel->addSaleComission($_data);
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/comission/add");
@@ -73,10 +73,15 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 		$frm = $fm->FrmAddFrmCancel();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+		$result = $_dbmodel->getAllChequeIssue();
+		array_unshift($result, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
+		$this->view->cheque_issue = $result;
 		
 		$db = new Loan_Model_DbTable_DbExpense();
 		$result = $db->getAllExpenseCategory();
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
 		array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
 		$this->view->all_category = $result;
 		
@@ -130,12 +135,18 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/comission");
 	    	exit();
 	    }
+	    $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	    
+	    $result = $_dbmodel->getAllChequeIssue();
+	    array_unshift($result, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
+	    $this->view->cheque_issue = $result;
+	    
 		$fm = new Incexp_Form_FrmCommision();
 		$frm = $fm->FrmAddFrmCancel($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
 		
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
 		$db = new Loan_Model_DbTable_DbExpense();
 		$result = $db->getAllExpenseCategory();
 		array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));

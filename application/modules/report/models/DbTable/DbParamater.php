@@ -1648,6 +1648,9 @@ function getAllBranch($search=null){
 	    		(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
 	    		pro.`land_address`,pro.`street`,
 	    		s.price_sold,
+	    		c.cheque,
+	    		c.cheque_issuer,
+	    		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=c.payment_id limit 1) AS payment_type,
 	    		(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name,
 	    		(SELECT co_code FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS co_code,
 	    		(SELECT sex FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS sex,
@@ -1802,7 +1805,11 @@ function getAllBranch($search=null){
 			(SELECT p.land_code FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_code,
 			(SELECT p.street FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS street,
 			(SELECT p.land_address FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_address,
-			(SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) AS co_khname
+			(SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) AS co_khname,
+			
+	    		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=c.payment_id limit 1) AS payment_type,
+	    		
+			(SELECT CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
 			 FROM 
 			`ln_comission` AS c,
 			`ln_sale` AS s

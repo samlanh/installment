@@ -22,8 +22,10 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
 		   LIMIT 1) AS `branch_name`,
 	    `c`.`name_kh`         AS `name_kh`,
 	     c.phone,
-	    `p`.`land_address`    AS `land_address`,
-	    `p`.`street`          AS `street`,
+	    CONCAT(COALESCE(`p`.`land_address`,''),' ',COALESCE(`p`.`street`,'')) AS land_address,
+	    
+	    s.price_sold,
+	    (s.price_sold - (SELECT SUM(cr.total_principal_permonthpaid) FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id = sp.sale_id LIMIT 1) ) AS balance,
 	     sp.issue_date,
 	     sp.note,
          s.status
@@ -186,6 +188,37 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
     		$db->rollBack();
     		$err =$e->getMessage();
     		Application_Model_DbTable_DbUserLog::writeMessageError($err);
+    	}
+    }
+    
+    
+    public function updateNote($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try{
+    
+    		$arr = array(
+    					'note'=>$data['noted'],
+    				);
+    		$where=" id = ".$data['id'];
+    		$this->_name="ln_issueplong";
+    		$this->update($arr, $where);
+    				
+    		$rs = $this->getPlongbyId($data['id']);
+    		if (!empty($rs)){
+    			$arr = array(
+    					'note'=>$data['noted'],
+    			);
+    			$where=" sale_id = ".$rs['sale_id'];
+    			$this->_name="ln_processing_plong";
+    			$this->update($arr, $where);
+    		}
+    		$db->commit();
+    		return 1;
+    	}catch (Exception $e){
+    		$err =$e->getMessage();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($err);
+    		$db->rollBack();
     	}
     }
 }

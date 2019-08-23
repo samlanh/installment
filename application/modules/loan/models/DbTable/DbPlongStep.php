@@ -20,8 +20,9 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     	`p`.`street`          AS `street`,
     	 p.hardtitle,
     	pr.date,
-    	pr.note,
-    	(SELECT ps.title FROM `ln_plongstep_option` AS ps WHERE ps.id = pr.process_status LIMIT 1) AS processing
+    	(SELECT ps.title FROM `ln_plongstep_option` AS ps WHERE ps.id = pr.process_status LIMIT 1) AS processing,
+    	pr.note
+    	
     	 ";
     	$sql.=$dbp->caseStatusShowImage("pr.status");
     	$sql.="

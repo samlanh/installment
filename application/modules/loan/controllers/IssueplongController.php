@@ -30,9 +30,9 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROCESS","BRANCH_NAME","CUSTOMER_NAME","PHONE","PROPERTY_CODE","STREET","DATE","NOTE","STATUS");
+			$collumns = array("PROCESS","BRANCH_NAME","CUSTOMER_NAME","PHONE","PROPERTY_CODE","SOLD_PRICE","BALANCE","DATE","NOTE","STATUS");
 			$link_info=array('module'=>'loan','controller'=>'issueplong','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('ask_for'=>$link_info,'branch_name'=>$link_info,'name_kh'=>$link_info,
+			$this->view->list=$list->getCheckList(12, $collumns, $rs_rows,array('ask_for'=>$link_info,'branch_name'=>$link_info,'name_kh'=>$link_info,
 					'land_address'=>$link_info,'street'=>$link_info,'phone'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
@@ -128,6 +128,16 @@ class Loan_IssueplongController extends Zend_Controller_Action {
 			$db = new Application_Model_DbTable_DbGlobal();
 			$action = (!empty($data['action'])?$data['action']:null);
 			$row = $db->getAllLandInfo($data['branch_id'],1,$action);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
+	
+	function updatenoteAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_Dbissueplong();
+			$row = $db->updateNote($data);
 			print_r(Zend_Json::encode($row));
 			exit();
 		}

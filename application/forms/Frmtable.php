@@ -230,7 +230,7 @@ class Application_Form_Frmtable
 		  				if($read==null) $read='&nbsp';
 		  				if($i==0) {
 		  					$temp=$read;
-		  					if($delete== 10) {
+		  					if($delete== 10 || $delete== 12) {
 		  						$clisc='oncontextmenu="setrowdata('.$temp.');return false;" class="context-menu-one" ';
 		  					}
 		  					if($delete==2){
@@ -260,10 +260,14 @@ class Application_Form_Frmtable
 	    							$text  = " align=". $textalign;
 	    						}
     						}
-    						if($delete== 10 OR $delete== 11) {
+    						if($delete== 10 OR $delete== 11 OR $delete== 12) {
     							$clisc='oncontextmenu="setrowdata('.$temp.');return false;" class="context-menu-one" ';
     						}
-    						$row_str.='<td '.$clisc.' >'.$read.'</td>';
+    						$idcolumn="";
+    						if($delete== 12) {
+    							$idcolumn = 'id="'.$key."_".$temp.'"';
+    						}
+    						$row_str.='<td '.$clisc.' '.$idcolumn.'   >'.$read.'</td>';
 			  				if($i == count($columns)) {
 	    						if($editLink != "") {
 									$row_str.='<td '.$clisc.' ><a class="edit" href="'.$editLink.'/id/'.$temp.'">'.'</a></td>';

@@ -55,6 +55,32 @@ dojo.require("dijit.form.DateTextBox");
 		<div class="card-box"><?php echo $this->list;?></div>
 	</div>
 </div>
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'កែប្រែពត៌មានអតិថិជន'"  id="updateForm" style="width:350px;" >
+		<div class="card pb-10 pt-10 pl-10 pr-10">
+			<form id="updateFormInfo"  name="data" action="" dojoType="dijit.form.Form" method="post">
+				<div class="card-box">
+					<div class="form-group">
+					   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate('NOTE');?> :
+					   </label>
+					   <div class="col-md-7 col-sm-7 col-xs-12">
+							<input class="fullside" type="text" dojoType="dijit.form.TextBox" name="noted" id="noted" placeholder="<?php echo $tr->translate("NOTE");?>" />
+							<input type="hidden" dojoType="dijit.form.TextBox" name="id" id="id"  />
+					   </div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+							<button onclick="upDateCustomerInfo();" iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("SAVE");?></button>
+						</div>
+					</div>
+				</div>
+				
+			</form>
+		</div>
+	</div>
+</div>
+
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <script>
 
@@ -108,4 +134,51 @@ function getAllPropertyBranch(){
 		}
 	});
 } 
+
+var urlUpdateInfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'issueplong','action'=>'updatenote')); ?>';
+function upDateCustomerInfo(){
+	if(dijit.byId('updateFormInfo').validate()){
+		loadingBlock();
+		dojo.xhrPost({
+			url: urlUpdateInfo,
+			form: dojo.byId("updateFormInfo"),
+			handleAs:"json",
+			load: function(data) {
+				var noted = dijit.byId('noted').get('value');
+				$("#note_"+row).html(noted);
+				dijit.byId('updateFormInfo').reset();
+				dijit.byId('updateForm').hide();
+				
+				HideloadingBlock();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+}
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="stepup"){
+				dijit.byId('id').set('value',row);
+				dijit.byId('updateForm').show();
+			}
+		},
+		items: {
+			"stepup": {name: "<?php echo $tr->translate("UPDATE_NOTE");?>", icon: "fa-file-text"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row);
+}
 </script>

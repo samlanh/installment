@@ -17,6 +17,7 @@
 		<form id="add_cancel" action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			 <script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
+					loadingBlock();
     				return true;
    				}else {
     				return false;
@@ -135,6 +136,27 @@
 	                   </div>
 	                </div>
 	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('payment_type');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CHEQUE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cheque');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CHEQUE_ISSUER");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('cheque_issuer');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMMISSION");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -178,8 +200,6 @@
 	      	<div class="clearfix"></div>
 			 <div class="card-box">
              	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-             		<input type="submit" name="save" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="submitButton" dojoType="dijit.form.Button"
- 				   iconClass="dijitEditorIcon dijitEditorIconSave"/>
  				<input type="submit" name="save_close"​​ value="រក្សាទុក​  + ចាកចេញ" label="<?php echo $tr->translate('SAVECLOSE')?>" id="submitBtn" dojoType="dijit.form.Button"
  					iconClass="dijitEditorIcon dijitEditorIconSave"/>
  				<input type="button" label="<?php echo $tr->translate("PREVIEW")?>" name='print' value=''print'' dojoType="dijit.form.Button"
@@ -289,25 +309,42 @@
 					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ថ្ងៃចំណាយ</td>
 				    <td colspan="3"><strong><label id="lb_date" class="value"></label></strong></td>
 				</tr>
+				
 				<tr>
 					<td class="one khmerbold">ប្រភេទចំណាយ</td>
-					<td><strong><label id="lb_income_category" class="value"></label></strong></td>
-					<td valign="top" rowspan="2" class="one khmerbold">&nbsp;&nbsp;&nbsp;សម្គាល់</td>
-				    <td valign="top" rowspan="2" colspan="3" align="center" class="noted"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: center; " id="lb_description"></label></strong></td>					
+					<td ><strong><label id="lb_income_category" class="value"></label></strong></td>
+					
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;ចំណាយសរុប</td>
+					<td colspan="3">
+						<strong><label id="lb_total_amount" class="value"></label></strong>
+					</td>
 				</tr>
+				
 				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">ពណ៌នាចំណាយ</td>
-				    <td><strong><label id="lb_income_title" class="value"></label></strong></td>
+					<td class="one khmerbold">ពណ៌នាចំនាយ</td>
+				    <td ><strong><label id="lb_income_title" class="value"></label></strong></td>
+				    
+				 	<td class="one khmerbold">&nbsp;&nbsp;&nbsp;បង់ជា</td>
+					<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;លេខ</td>
+					<td><strong><label id="lbl_cheque" class="value"></label></strong></td>
+				 </tr>
+				<tr>
+					 <td rowspan="2" valign="top" class="one khmerbold">សម្គាល់</td>
+				     <td rowspan="2"  valign="top"  align="center" class="noted"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: center; " id="lb_description"></label></strong>
+				</td>					
 				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">ចំណាយសរុប</td>
-					<td><strong><label id="lb_total_amount" class="value"></label></strong></td>
+				<tr >
+					<td>&nbsp;</td>
+				</tr>
+				<tr >
+					<td>&nbsp;</td>
 				</tr>
 				<tr>
 				 	<td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<span style=" font-family: Arial Black;font-family:'Khmer OS Muol Light';"><?php echo $this->data['teller_sign'];?></span></td>
 				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><span style=" font-family: Arial Black;font-family:'Khmer OS Muol Light';"><?php echo $this->data['customer_sign'];?></span></td>
 				</tr>
-				<tr style="white-space: nowrap;" height="125px;">
+				<tr style="white-space: nowrap;" height="105px;">
 					<td class="one khmerbold" colspan="4" align="center" valign="bottom">
 						<h4 id="agent-sign" style="font-weight:normal; padding-right: 5px !important;margin-bottom: -3px  !important;"></h4>
 					</td>
@@ -399,6 +436,25 @@
 		</form>
 	</div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("CHEQUE_ISSUER")?>'"  id="frm_cheque" >
+		<form id="form_cheque"​ dojoType="dijit.form.Form" >
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="addchequename" name="addchequename" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewCheque();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
 <script type="text/javascript">
 var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->co_name));?> );
 new dijit.form.FilteringSelect({
@@ -428,7 +484,64 @@ new dijit.form.FilteringSelect({
     	}
     } 
 }, "staff_id");
+function popupIssuer(){
+	cheque_issuer = dijit.byId('cheque_issuer').get('value');
+	if(cheque_issuer==-1){
+		dijit.byId('save_cheque').set('disabled',false);
+		dijit.byId('frm_cheque').show();
+	}
+}
+require(["dojo/ready"], function(ready){
+	new dijit.form.FilteringSelect({
+		name: "cheque_issuer",
+		id: "cheque_issuer",
+		autoComplete: false,
+		required: false,
+		queryExpr: "*${0}*",     
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+			popupIssuer();
+	    }
+	}, "cheque_issuer");
 
+	ready(function(){
+		enablePayment();
+	});
+});
+var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->cheque_issue));?> );
+function addNewCheque(){
+	if(dijit.byId('form_cheque').validate()){
+		var Itemmake = {					
+				id: dijit.byId('addchequename').get('value'),
+			    name: dijit.byId('addchequename').get('value')
+		};		
+
+		addDataToSelectbox(dijit.byId('cheque_issuer'),chequeStore , Itemmake, dijit.byId('addchequename').get('value'));
+		
+		//addDataToSelectbox(dijit.byId('cheque_issuer'), StreetStore, Itemmake, dijit.byId('addchequename').get('value'));	
+		//dijit.byId('cheque_issuer').attr('value',dijit.byId('addchequename').get('value'));
+		dijit.byId('form_cheque').reset();
+		dijit.byId('frm_cheque').hide();
+		dijit.byId('save_cheque').set('disabled',true);
+	}
+}
+var first =1;
+function enablePayment(){
+	payment_method = dijit.byId('payment_type').get('value');
+	dijit.byId("cheque").set("readOnly",false);
+	if(first==0){
+		dijit.byId("cheque").attr("value",'');
+		first = 0;
+	}
+	dijit.byId("cheque_issuer").set("readOnly",false);
+	if(payment_method==1){
+		dijit.byId("cheque").attr("value",'N/A');
+		dijit.byId("cheque").set("readOnly",true);
+		dijit.byId('cheque_issuer').reset();
+		dijit.byId("cheque_issuer").set("readOnly",true);
+	}
+}
 function printSubmit(){
 	 $('#frm_add_tran').submit();
 }
@@ -666,6 +779,10 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 		dojo.byId("lb_income_category").innerHTML = dijit.byId("income_category").attr('displayedValue');
 		dojo.byId("lb_income_title").innerHTML ='ចំណាយលើកម្រៃជើងសារ';
 		dojo.byId("lb_total_amount").innerHTML = currencyFormat(dijit.byId("return_back").get('value'));
+
+		dojo.byId("lbl_cheque").innerHTML = dijit.byId("cheque").attr('displayedValue');
+		dojo.byId("lbl_paymenttype").innerHTML = dijit.byId("payment_type").attr('displayedValue');
+		
 		date_payment = '<?php echo date("Y-m-d");?>';
 		var a = new Date(date_payment);
 		mm = a.getMonth()+1;
