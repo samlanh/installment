@@ -264,4 +264,16 @@ class Loan_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
     		$db->rollBack();
     	}
     }
+    
+    function checkSaleInPlong($sale_id){
+    	$db = $this->getAdapter();
+    	$sql="
+    	SELECT pp.* FROM `ln_processing_plong` AS pp WHERE pp.sale_id = $sale_id LIMIT 1
+    	";
+    	$rs  = $db->fetchRow($sql);
+    	if (!empty($rs)) {
+    		return 1;
+    	}
+    	return 0;
+    }
 }

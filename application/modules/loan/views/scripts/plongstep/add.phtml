@@ -145,13 +145,38 @@ require(["dojo/ready"], function(ready){
 		searchAttr: "name",
 		class: 'fullside',
 		onChange: function(){
+			checkSaleInPlongStep();
 			
-			addRow();
 	    }
 		}, "loan_number");
 	 
 });
-
+var url_checksale = '<?php echo $this->url(array('module'=>'loan','controller'=>'plongstep','action'=>'checksale')); ?>';
+function checkSaleInPlongStep(){
+	loan_number = dijit.byId('loan_number').get('value');
+	if(loan_number=='' || loan_number=='-1'){
+		alert('Please Select Sale Property');
+		dijit.byId('loan_number').focus();
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_checksale,	
+		content:{ 
+		    'sale_id':loan_number,
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			if(data==1){
+				alert('<?php echo $tr->translate("SALE_ALREADY_ON_PLONG_STEP"); ?>');
+			}else{
+				addRow();
+			}
+		},
+		error: function(err) {
+			
+		}
+	});
+}
 
 function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');

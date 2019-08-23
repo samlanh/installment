@@ -165,4 +165,15 @@ class Loan_PlongstepController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
 		$db = new Application_Model_DbTable_DbGlobal();
 	}
+	
+	function checksaleAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbPlongStep();
+			$sale_id = $data['sale_id'];
+			$return = $db->checkSaleInPlong($sale_id);
+			print_r(Zend_Json::encode($return));
+			exit();
+		}
+	}
 }
