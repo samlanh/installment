@@ -734,7 +734,13 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			'field2'=>1,
     			'is_payoff'=>$pay_off,
     			'payment_times'=>1,
+    			
+    			//additional 26-Aug-2019
+    			'payment_method'	=> empty($data['payment_method'])?1:$data['payment_method'],
+    			'cheque'			=> empty($data['cheque'])?"N/A":$data['cheque'],
     	);
+    	
+    	
     	$this->_name='ln_client_receipt_money';
     	if($action==null){//edit
     		$crm_id = $this->insert($array);
