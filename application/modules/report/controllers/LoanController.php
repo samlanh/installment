@@ -777,11 +777,10 @@ class Report_LoanController extends Zend_Controller_Action {
   					'branch_id'=>-1,
   					'co_khname'=>-1,
   					'search_status'=>-1,
-  					
   					);
   		}
   		
-  		$this->view->rscomisison = $db->getAllCommission($search);
+//   		$this->view->rscomisison = $db->getAllCommission($search);
   		$this->view->expense_comission = $db->getAllComissionExpense($search);
   		
   		$frmpopup = new Application_Form_FrmPopupGlobal();

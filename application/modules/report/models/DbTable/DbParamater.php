@@ -215,7 +215,7 @@ function getAllBranch($search=null){
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("c.branch_id");
     		
-    		$order = " ORDER BY c.`branch_id` DESC";
+    		$order = " ORDER BY c.`branch_id` DESC,c.id DESC ";
     		if($search['branch_id_search']>-1){
     			$where.= " AND c.branch_id = ".$search['branch_id_search'];
     		}

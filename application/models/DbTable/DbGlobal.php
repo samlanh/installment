@@ -675,61 +675,14 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   function getAllPaymentMethod($payment_id=null,$option = null){
 	  return array();
-  	/*$sql = "SELECT * FROM ln_payment_method WHERE status = 1 ";
-  	if($payment_id!=null){
-  		$sql.=" AND id = $payment_id";
-  	}
-  	$rows = $this->getAdapter()->fetchAll($sql);
-  	if($option!=null){
-  		$options="";
-  		if(!empty($rows))foreach($rows AS $row){
-  			$options[$row['id']]=($row['displayby']==1)?$row['payment_namekh']:$row['payment_nameen'];
-  		}
-  		return $options;
-  	}else{
-  		return $rows;
-  	}*/
+  	
   	
   }
   public function getAllStaffPosition($id=null,$option = null){
-  	$db = $this->getAdapter();
-  	$sql=" SELECT id,position_en,position_kh,displayby 
-  			FROM `ln_position` WHERE status =1 ";
-  	if($id!=null){
-  		$sql.=" AND id = $id LIMIT 1";
-  	}
-  	$rows = $db->fetchAll($sql);
-  	if($option!=null){
-  		$options=array(''=>"----ជ្រើសរើស----");
-  		if(!empty($rows))foreach($rows AS $row){
-  			$options[$row['id']]=($row['displayby']==1)?$row['position_kh']:$row['position_en'];
-  		}
-  		return $options;
-  	}else{
-  		return $rows;
-  	}
+  	return array();
   }
   
-  public function getAllDepartment($id=null,$option = null){
-  	/*
-	$db = $this->getAdapter();
-  	$sql=" SELECT id,department_kh,department_en,displayby
-  	FROM `ln_department` WHERE status =1 ";
-  	if($id!=null){
-  		$sql.=" AND id = $id LIMIT 1";
-  	}
-  	$rows = $db->fetchAll($sql);
-  	if($option!=null){
-  		$options=array(''=>"----ជ្រើសរើស----",'-1'=>"Add New");
-  		if(!empty($rows))foreach($rows AS $row){
-  			$options[$row['id']]=($row['displayby']==1)?$row['department_kh']:$row['department_kh'];
-  		}
-  		return $options;
-  	}else{
-  		return $rows;
-  	}
-	*/
-  }
+ 
   public  function getclientdtype(){
   	$db = $this->getAdapter();
   	$string = "name_kh";
@@ -821,40 +774,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		}
   		return $options;
   }
-  public function getVewOptoinTypeBys($option = null,$limit =null){
-  	$db = $this->getAdapter();
-  	$sql="SELECT id,title_en,title_kh,displayby,date,status FROM ln_callecteral_type WHERE status =1 ";
-  	if($limit!=null){
-  		$sql.=" LIMIT $limit ";
-  	}
-  	$rows = $db->fetchAll($sql);
-  	if($option!=null){
-  		$options=array(''=>"-----ជ្រើសរើស-----");
-  		if(!empty($rows))foreach($rows AS $row){
-  			$options[$row['id']]=($row['displayby']==1)?$row['title_kh']:$row['title_en'];
-  		}
-  		return $options;
-  	}else{
-  		return $rows;
-  	}
-  }
-  public function getCollteralType($option = null,$limit =null){
-  	$db = $this->getAdapter();
-  	$sql="SELECT id,title_en,title_kh,displayby FROM `ln_callecteral_type` WHERE status =1 ";
-  	if($limit!=null){
-  		$sql.=" LIMIT $limit ";
-  	}
-  	$rows = $db->fetchAll($sql);
-  	if($option!=null){
-  		$options=array(''=>"-----Select Callecteral Type-----",'-1'=>"Add New");
-  		if(!empty($rows))foreach($rows AS $row){
-  			$options[$row['id']]=($row['displayby']==1)?$row['title_kh']:$row['title_en'];
-  		}
-  		return $options;
-  	}else{
-  		return $rows;
-  	}
-  }
+  
   
   
  public function setReportParam($arr_param,$file){

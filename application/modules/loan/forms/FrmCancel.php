@@ -354,7 +354,7 @@ public function init()
 		$_pay_late->setValue($arr['value']);
 		
 
-		$_repayment_method = new Zend_Dojo_Form_Element_FilteringSelect('repayment_method');
+		/*$_repayment_method = new Zend_Dojo_Form_Element_FilteringSelect('repayment_method');
 		$_repayment_method->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
@@ -362,7 +362,7 @@ public function init()
 				'onchange'=>'chechPaymentMethod()'
 		));
 		$options = $db->getAllPaymentMethod(null,1);
-		$_repayment_method->setMultiOptions($options);
+		$_repayment_method->setMultiOptions($options);*/
 		
 		$_status = new Zend_Dojo_Form_Element_FilteringSelect('status_using');
 		$_status->setAttribs(array(
@@ -480,8 +480,8 @@ public function init()
 				$_coids,$_loan_type,
 				$_time_collect,$_paybefore,
 				$_pay_late,$_coid,$commission,$_amount,
-				$_every_payamount,$_time,$_time_collect_pri,$_status,$_period,
-				$_repayment_method,$_pay_every,$_loan_code,$_collect_term,
+				$_every_payamount,$_time,$_time_collect_pri,$_status,$_period
+				,$_pay_every,$_loan_code,$_collect_term,
 				$_customer_code,$_id,
 				$return_back
 				));

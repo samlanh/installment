@@ -137,7 +137,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 				'class'=>'fullside'
 		));
 		
-		$opt_position=$db->getAllStaffPosition(null,1);
+		$opt_position=array();
 		$position_->setMultiOptions($opt_position);
 		$position_->setValue($request->getParam("position"));
 		

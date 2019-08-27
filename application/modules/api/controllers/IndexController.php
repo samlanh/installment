@@ -16,6 +16,13 @@ class Api_IndexController extends Zend_Controller_Action {
 		print_r(Zend_Json::encode($db->getAllSold()));
 		exit();
 	}
+	public function salebytypeAction(){
+		$this->_helper->layout()->disableLayout();
+		$db = new Api_Model_DbTable_Dbapi();
+// 		print_r($db->getSalebyType());exit();
+		print_r(Zend_Json::encode($db->getSalebyType()));
+		exit();
+	}
 	public function incomeAction(){
 		$this->_helper->layout()->disableLayout();
 		$db = new Api_Model_DbTable_Dbapi();
@@ -24,12 +31,18 @@ class Api_IndexController extends Zend_Controller_Action {
 	}
 	function expenseAction(){
 		$db = new Api_Model_DbTable_Dbapi();
-		print_r(Zend_Json::encode($db->getExpenseType()));
+		$rs_expense = $db->getExpenseType();
+		$rs_comission = $db->getAllComissionbyType();
+		$rs = array_merge($rs_expense,$rs_comission);
+		print_r(Zend_Json::encode($rs));
 		exit();
 	}
 	function expensedetailAction(){
 		$db = new Api_Model_DbTable_Dbapi();
-		print_r(Zend_Json::encode($db->getAllDetailExpense()));
+		$rs_expense = $db->getAllDetailExpense();
+		$rs_comission = $db->getAllComissionDetail();
+		$rs = array_merge($rs_expense,$rs_comission);
+		print_r(Zend_Json::encode($rs));
 		exit();
 	}
 	function expectincomeAction(){

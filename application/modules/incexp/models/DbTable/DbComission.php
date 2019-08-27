@@ -13,6 +13,7 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		
+		try{
 		$from_date =(empty($search['from_date_search']))? '1': "c.`for_date` >= '".$search['from_date_search']." 00:00:00'";
 		$to_date = (empty($search['to_date_search']))? '1': "c.`for_date` <= '".$search['to_date_search']." 23:59:59'";
 		$where = " AND ".$from_date." AND ".$to_date;
@@ -54,6 +55,9 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 		
 		$where.=$dbp->getAccessPermission("c.`branch_id`");
 		return $db->fetchAll($sql.$where);
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
 	}
 	public function addSaleComission($data){
 		try{
