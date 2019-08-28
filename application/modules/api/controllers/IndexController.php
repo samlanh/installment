@@ -19,7 +19,6 @@ class Api_IndexController extends Zend_Controller_Action {
 	public function salebytypeAction(){
 		$this->_helper->layout()->disableLayout();
 		$db = new Api_Model_DbTable_Dbapi();
-// 		print_r($db->getSalebyType());exit();
 		print_r(Zend_Json::encode($db->getSalebyType()));
 		exit();
 	}
@@ -34,6 +33,15 @@ class Api_IndexController extends Zend_Controller_Action {
 		$rs_expense = $db->getExpenseType();
 		$rs_comission = $db->getAllComissionbyType();
 		$rs = array_merge($rs_expense,$rs_comission);
+		
+		$total_expense = 0;
+		if(!empty($rs)){
+			foreach($rs as $r){
+				$total_expense = $total_expense+$r['total_expense'];	
+			}
+		}
+		$total_expense = array('total_expense'=>number_format($total_expense,2));
+		$rs = array('total_expense'=>$total_expense,'expense_bytype'=>$rs);
 		print_r(Zend_Json::encode($rs));
 		exit();
 	}

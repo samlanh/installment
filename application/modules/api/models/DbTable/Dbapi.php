@@ -26,40 +26,55 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql);
     }
    	function getSalebyType(){
-   		$sql=" SELECT
-		  COUNT(`s`.`id` )              AS `count`,	
-		  (SELECT name_kh FROM `ln_view` WHERE TYPE=25 AND key_code = s.payment_id LIMIT 1) payment_type,
-		  s.payment_id,
-		  SUM(`s`.`price_sold`)       AS `price_sold`
-		   FROM `ln_sale` `s` WHERE `s`.`status` = 1 AND is_cancel=0  GROUP BY s.payment_id
+   		$sql_sale=" SELECT
+				  COUNT(`s`.`id` )              AS `count`,	
+				  (SELECT name_kh FROM `ln_view` WHERE TYPE=25 AND key_code = s.payment_id LIMIT 1) payment_type,
+				  s.payment_id,
+				  SUM(`s`.`price_sold`)       AS `price_sold`
+				  FROM `ln_sale` `s` WHERE `s`.`status` = 1 AND is_cancel=0  
+		     GROUP BY s.payment_id
 		   ORDER BY s.payment_id ASC LIMIT 6 ";
-   		 $rs = $this->getAdapter()->fetchAll($sql);
-   		 $result = array();
+   		
+   		$sql_paid='
+   		 SELECT s.payment_id, SUM(total_principal_permonthpaid+extra_payment) AS total_paid
+			FROM `ln_client_receipt_money` AS crm,
+		 		`ln_sale` AS `s` 
+		 WHERE 
+		   crm.sale_id=s.id 
+		   AND s.status=1 AND s.is_cancel=0  
+		     GROUP BY s.payment_id
+		   ORDER BY s.payment_id ASC LIMIT 6 ';
+   		 
+   		$rs_paid = $this->getAdapter()->fetchAll($sql_paid);
+   		$rs_sold = $this->getAdapter()->fetchAll($sql_sale);
+   		$result = array();
    		 $result_summary = array();
    		 $t_count = 0;
    		 $t_amount =0;
    		
    		 $total_paid = 0;
    		 
-   		 if(!empty($rs)){
-   		 	foreach($rs as $index => $r){
+   		 if(!empty($rs_sold)){
+   		 	foreach($rs_sold as $index => $r){
    		 		$t_count = $t_count+$r['count'];
    		 		$t_amount = $t_amount+$r['price_sold'];
-   		 		$total_paid = $total_paid+$r['price_sold'];
+   		 		$total_paid = $total_paid+$rs_paid[$index]['total_paid'];
    		 		
    		 		$result[$index]['payment_id']=$r['payment_id'];
    		 		$result[$index]['count']=$r['count'];
    		 		$result[$index]['payment_type']=$r['payment_type'];
    		 		$result[$index]['price_sold']=number_format($r['price_sold'],2);
    		 	}
-   		 	$result_summary['paid_amount']=$total_paid;
+   		 	$result_summary['price_sold'] = number_format($t_amount,2);
+   		 	$result_summary['paid_amount']=number_format($total_paid,2);
+   		 	$result_summary['balance']=number_format($t_amount-$total_paid,2);
    		 	$result[$index+1]['count']=$t_count;
    		 	$result[$index+1]['payment_id']=7;
    		 	$result[$index+1]['payment_type']='លក់សរុប';
    		 	$result[$index+1]['price_sold']=number_format($t_amount,2);
    		 }
-   		 //$include_array =array('main_sale'=>$result_summary,'sumary_sale'=>$result);
-   		return $result;
+   		 $include_array =array('main_sale'=>$result_summary,'sumary_sale'=>$result);
+   		return $include_array;
    	}
     function getAllIncome(){
     	$sql="SELECT *,
@@ -71,7 +86,46 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
       	FROM v_getcollectmoney WHERE status=1 ";
     	$sql.= " ORDER BY id DESC  limit 100 ";
     	$db = $this->getAdapter();
-    	return $db->fetchAll($sql);
+    	$rs_incomedetail = $db->fetchAll($sql);
+    	
+    	$sql_bytype="SELECT
+    	SUM(total_principal_permonthpaid+extra_payment+total_interest_permonthpaid+penalize_amountpaid) AS paid_amount,
+    	`payment_method`               AS `payment_methodid`
+    	
+    	FROM `ln_client_receipt_money`
+    	WHERE status=1 GROUP BY payment_method LIMIT 3 ";
+    	
+    	$rs_incomebytype =  $db->fetchAll($sql_bytype);
+    	$total_cash=0;$total_bank=0;$total_cheque=0;
+    	if(!empty($rs_incomebytype)){
+    		foreach ($rs_incomebytype as $rs){
+    			if($rs['payment_methodid']==1){//cash
+    				$total_cash = number_format($rs['paid_amount'],2);
+    			}elseif($rs['payment_methodid']==2){//bank
+    				$total_bank = number_format($rs['paid_amount'],2);
+    			}else{//cheque
+    				$total_cheque = number_format($rs['paid_amount'],2);
+    			}
+    		}
+    	}
+    	$rs_incometype = array('total_cash'=>$total_cash,'total_bank'=>$total_bank,'total_cheque'=>$total_cheque);
+    	return array('income_bytype'=>$rs_incometype,'income_detail'=>$rs_incomedetail);
+    }
+    function getAllIncomeByType(){
+    	$sql="SELECT 
+    				SUM(total_principal_permonthpaid+extra_payment+total_interest_permonthpaid+penalize_amountpaid) AS paid_amount,
+					`payment_method`               AS `payment_methodid`,
+					 (SELECT
+					     `ln_view`.`name_kh`
+					   FROM `ln_view`
+					   WHERE ((`ln_view`.`key_code` = `payment_method`)
+					          AND (`ln_view`.`type` = 2))
+					   LIMIT 1) AS `payment_method`
+					 FROM `ln_client_receipt_money`
+					WHERE status=1 GROUP BY payment_method LIMIT 3 ";
+    	$result = $this->getAdapter()->fetchAll($sql);
+    		
+//     	}
     }
     function getExpenseType(){
     	$db = $this->getAdapter();
@@ -80,7 +134,8 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
     		other_invoice,
     		cheque,
-    		 FORMAT(SUM(total_amount),2) AS total_amount
+    		 FORMAT(SUM(total_amount),2) AS total_amount,
+    		 SUM(total_amount) AS total_expense
     		FROM ln_expense WHERE status=1 AND total_amount>0 group by category_id 
 			ORDER BY (SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = `category_id` LIMIT 1) ASC,
     				`category_id` ASC ,date DESC
@@ -90,10 +145,10 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
    function getAllComissionbyType(){
    	$sql="SELECT co.`category_id` AS id,
     		 FORMAT(SUM(total_amount),2) AS total_amount,
+    		 SUM(total_amount) AS total_expense,
     		 (SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = co.`category_id` LIMIT 1) AS category_name,
     		 co.`date` FROM `ln_comission` AS co WHERE 1 AND co.status=1 ";
    	return $this->getAdapter()->fetchAll($sql);
-   	
    }
     function getAllDetailExpense(){
     	$sql=" SELECT id,
