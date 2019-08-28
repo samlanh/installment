@@ -41,6 +41,7 @@ class Loan_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
    	if(!empty($search['adv_search'])){
    		$s_where = array();
    		$s_search = addslashes(trim($search['adv_search']));
+   		$s_where[] = " `c`.`name_kh` LIKE '%{$s_search}%'";
    		$s_where[] = " p.`land_address` LIKE '%{$s_search}%'";
    		$s_where[] = " p.`street` LIKE '%{$s_search}%'";
    		$where .=' AND ('.implode(' OR ',$s_where).')';
