@@ -188,14 +188,13 @@
 		                </tr>
 	                </thead>
 	                <?php 
-		                
-	                	 $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;$amt_d5 = 0;
+	                	 $amt_d1 = 0;$amt_d2 = 0;
 	                	 $penelize=0;$total_payment=0;
 	                	 $key=0;
 	                	 $free_day = $this->data["graice_pariod_late"];//រយៈអនុគ្រោះ
 	                	 $ps = $this->data["penalty_value"];//ការប្រាក់ពិន័យ
 	                	 $penalty_type = $this->data["penalty_type"];//ប្រភេទពិន័យ
-	                	$total_penelize=0;
+	                	 $total_penelize=0;
 		             ?>
 	               <?php if(!empty($tran)){foreach($tran as $key =>$row){
 	               	?>
@@ -213,7 +212,6 @@
 	                    ?>
 	                    <td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($row['total_interest_after'],2));?>&nbsp;</td>
 	                    <td align="center">&nbsp;<?php 
-	                    
 	                    
 	                    $end_dat = $this->search['end_date'];
 	                    $total_pay=($row['principal_permonthafter']+$row['total_interest_after']);
@@ -275,12 +273,6 @@
 		               <?php 
 							$amt_d1 = $amt_d1+$row['principal_permonthafter'];
 							$amt_d2 = $amt_d2+$row['total_interest_after'];
-// 							$amt_d3 = $amt_d3+$total_penelize;
-// 							$amt_d4 = $amt_d4+$total_payment;
-// 							$amt_d5 = $amt_d5+$row['service_charge'];
-// 							$total_d=$amt_d4;
-							
-							$penelize = $penelize+$total_penelize;
 		               ?>
 	                <?php }}?>
                 <?php $i=1;?>
