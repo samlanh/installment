@@ -22,7 +22,8 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 			pro.`land_address`,pro.`street`,
 			`layout_type`,
 			c.date,
-			c.create_date,c.note,c.`status`,"'.$plogtitle.'"
+			c.create_date,c.note,c.`status`,"'.$plogtitle.'",
+			(SELECT first_name FROM `rms_users` WHERE  id=c.user_id LIMIT 1) AS user_name
 			FROM `ln_receiveplong` AS c ,`ln_project` AS p,`ln_properties` AS pro,
 			`ln_client` AS clie
 			WHERE p.`br_id` = c.`branch_id` AND pro.`id` = c.`house_id` AND

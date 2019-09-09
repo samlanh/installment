@@ -31,7 +31,8 @@ class Loan_ReceivplongController extends Zend_Controller_Action {
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 			$plogtitle = $tr->translate('PLONG_TITLE');
 			
-			$collumns = array("PROJECT_NAME","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","LAYOUT_TYPE","RECEIVED_DATE","DATE","NOTE","STATUS","PLONG_TITLE");
+			$collumns = array("PROJECT_NAME","CLIENT_NAME","PROPERTY_TYPE","PROPERTY_CODE","STREET","LAYOUT_TYPE",
+					"RECEIVED_DATE","DATE","NOTE","STATUS","PLONG_TITLE","BY_USER");
 			$link=array(
 					'module'=>'loan','controller'=>'receivplong','action'=>'edit',
 			);
