@@ -1744,6 +1744,7 @@ function getAllBranch($search=null){
 						SUM(s.`comission`) AS total_sale_commission,
 						s.`full_commission`,
 						s.`branch_id`,
+						s.buy_date,
 						(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = s.`branch_id` LIMIT 1) AS branch_name,
 						(SELECT cu.name_kh FROM `ln_client` AS cu WHERE cu.client_id = s.`client_id` LIMIT 1) AS cutomer_name,
 						(SELECT p.land_code FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_code,
