@@ -149,7 +149,11 @@
 					   $remain = $row['full_commission'] - $paidcommision;
 					   $balance = $balance+$remain;
 					   $totalpaid_com = $totalpaid_com+$paidcommision;
-					   $percentpaid = ($row['total_sale_paid']*100)/$row['price_sold'];
+					   if($row['price_sold']>0){
+					   	$percentpaid = @($row['total_sale_paid']*100)/$row['price_sold'];
+			       	   }else{
+			       	   	$percentpaid=100;
+			       	   }
 					  ?>
 					   <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
 					     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>

@@ -90,6 +90,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	try{
     		$dbtable = new Application_Model_DbTable_DbGlobal();
     		$sale = $this->getSaleInfo($data['loan_number']);
+    		
     		$array = array(
     				'branch_id'				=>$data['branch_id'],
     				'sale_id'				=>$data['loan_number'],
@@ -133,6 +134,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				$this->_name='ln_sale';
     				$dbp = new Loan_Model_DbTable_DbLandpayment();
     				$row = $dbp->getTranLoanByIdWithBranch($data['id'],null);
+    				
     				
     				$key = new Application_Model_DbTable_DbKeycode();
     				$setting = $key->getKeyCodeMiniInv(TRUE);

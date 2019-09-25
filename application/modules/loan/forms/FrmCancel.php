@@ -353,17 +353,6 @@ public function init()
 		$arr=$db->getSystemSetting('interest_late');
 		$_pay_late->setValue($arr['value']);
 		
-
-		/*$_repayment_method = new Zend_Dojo_Form_Element_FilteringSelect('repayment_method');
-		$_repayment_method->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'required' =>'true',
-				'class'=>'fullside',
-				'onchange'=>'chechPaymentMethod()'
-		));
-		$options = $db->getAllPaymentMethod(null,1);
-		$_repayment_method->setMultiOptions($options);*/
-		
 		$_status = new Zend_Dojo_Form_Element_FilteringSelect('status_using');
 		$_status->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',

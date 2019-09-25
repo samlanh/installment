@@ -50,6 +50,10 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
   	$rightclick = $this->getRequest()->getParam('rightclick');
   	$rightclick = empty($rightclick)?"":$rightclick;
   	$this->view->rightclick = $rightclick;
+  	$id = $this->getRequest()->getParam('id');
+  	if(empty($id)){
+  		$this->_redirect('/loan/index');////ទប់បើសិនជាអត់មាន ID រក្សាទុកទៅនឹងមាន Error ព្រោះគ្មាន id ចូលក្នុង hidden textbox
+  	}
   	
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
@@ -106,7 +110,7 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		
-		$id = $this->getRequest()->getParam('id');
+		
 		if(!empty($id)){
 			$db = new Loan_Model_DbTable_DbLandpayment();
 			$rs = $db->getTranLoanByIdWithBranch($id,null);
