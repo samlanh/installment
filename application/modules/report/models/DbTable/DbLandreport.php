@@ -2794,10 +2794,8 @@ function updatePaymentStatus($data){
    			$where.=" AND s.price_sold > paid_amount ";
    		}
    	}
-   	$order = " ORDER BY s.is_cancel ASC,s.payment_id DESC ";
-   	
-   	return $db->fetchAll($sql.$where.$order);
-   	
+	   	$order = " ORDER BY s.buy_date DESC ";
+	   	return $db->fetchAll($sql.$where.$order);
    }
 //    public function getSaleSummary($search = null){//rpt-loan-released/
 //    	$db = $this->getAdapter();
