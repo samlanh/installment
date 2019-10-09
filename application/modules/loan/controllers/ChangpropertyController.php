@@ -1,6 +1,5 @@
 <?php
 class Loan_ChangpropertyController extends Zend_Controller_Action {
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
      /* Initialize action controller here */
@@ -55,7 +54,6 @@ class Loan_ChangpropertyController extends Zend_Controller_Action {
 					$dbgb->reloadPageExpireSession();
 					exit();
 				}
-				
 				$_dbmodel = new Loan_Model_DbTable_Dbchangehouse();
 				$_dbmodel->addChangeHouse($_data);
 				if(!empty($_data['saveclose'])){

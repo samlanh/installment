@@ -34,7 +34,7 @@
 ul li{line-height: 30px !important;}
 </style> 
 <div  id="exportword" style=" width:28cm;min-height:22cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.5cm">
-<?php if($this->agreement['property_type']==3){?>
+<?php if($this->agreement['property_type']==3){//for lots?>
 	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
 	<tr>
     	<td align="center">
@@ -421,7 +421,7 @@ ul li{line-height: 30px !important;}
 		             			$boreyname = "ក្រុមហ៊ុន អាស៊ីណៃអ៊ីរៀលអេស្ទេត";//"បុរី ភ្នំមាស";
 		             			$commercial_no="00035729";
 		             			$patong_no ="2019015910";
-		             			$project_location=$this->agreement['project_location'];
+								$project_location=$this->agreement['project_location'];
 		             			$positionmg=$this->agreement['position'];//"នាយកគ្រប់គ្រងទូទៅ";
 		             			$arrgender = array(1=>"ប្រុស",2=>"ស្រី");
 		             			$cheuqe_payment_person = $dataterm['cheque_receiver'];
@@ -462,9 +462,11 @@ ul li{line-height: 30px !important;}
 												    <td align="justify" style="padding-left:5px">ភាគី "ក" (បុរី) និង ភាគី "ខ" បានឯកភាពគ្នាទិញ-លក់ផ្ទះដែលមានទីតាំងស្ថិតនៅក្នុង <span style=" font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $boreyname;?> </span> គម្រោង  <?php echo $this->agreement['project_name'];?> 
 											    	 ដែលមានទទឹងផ្ទះ <span class="value" style=""><?php echo $this->agreement['land_width'];?> ម៉ែត្រ </span> បណ្តោយប្រវែង<span class="value" style="min-width:75px;"><?php echo $this->agreement['land_height'];?> ម៉ែត្រ </span>
 											    	សង់អំពីថ្ម ដែលស្ថិតនៅផ្ទះលេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['property_title'];?></span> 
-											    	ផ្លូវលេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['property_street'];?></span> <?php echo $project_location;?> 
+													ផ្លូវលេខ<span class="value" style="min-width:30px;"><?php echo str_replace('ផ្លូវលេខ','',($this->agreement['property_street']));?></span>  <?php echo $project_location;?> 
 											    	រយៈសាងសង់<span class="value" style="min-width:30px;" class="value"><?php echo number_format($this->agreement['amount_build'],0)?>ខែ</span>
-											    	 ព្រមព្រៀងលក់ ក្នុងតម្លៃចំនួនUSD<span style="font-weight: bold;"> <?php echo number_format($this->agreement['price_sold'],2);?> (<span id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក)។</span></td>  
+											    	 ព្រមព្រៀងលក់ ក្នុងតម្លៃចំនួនUSD<span style="font-weight: bold;"> <?php echo number_format($this->agreement['price_sold'],2);?> (<span id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក)</span>
+													  ។
+													 </td>  
 											  </tr>
 											   <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;">១.១</td>
@@ -521,7 +523,7 @@ ul li{line-height: 30px !important;}
 											  </tr>
 											   <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៣.២</td>
-												    <td align="justify" style="padding-left:5px">ករណីភាគី “ខ” អាកខានបង់ប្រាក់តាមឧបសម្ព័ន្ធទីមួយ “សម្រាប់ភ្ញៀវរំលស់” ចំនួន០៣(បី)ខែ និង  “សម្រាប់ភ្ញៀវដំណាក់កាល” ចំនួន០១(មួយ)ខែ នោះត្រូវចាត់ទុកភាគី “ខ” បោះបង់ចោលសិទិ្ធ និងកាតព្វកិច្ចទិញរបស់ខ្លួន ហើយកិច្ចសន្យាទិញលក់ផ្ទះនេះត្រូវបញ្ចប់ ហើយប្រាក់កក់ និងប្រាក់ដែលបានបង់រួចកន្លងមក ភាគី “ក” មានសិទិ្ធ រឹបអូសដោយស្វ័យប្រវត្តិ ។</td>  
+												    <td align="justify" style="padding-left:5px">ករណីភាគី “ខ” អាកខានបង់ប្រាក់តាមឧបសម្ព័ន្ធទីមួយ “សម្រាប់ភ្ញៀវបង់រំលស់” ចំនួន០៣(បី)ខែ និង  “សម្រាប់ភ្ញៀវដំណាក់កាល” ចំនួន០១(មួយ)ខែ នោះត្រូវចាត់ទុកភាគី “ខ” បោះបង់ចោលសិទិ្ធ និងកាតព្វកិច្ចទិញរបស់ខ្លួន ហើយកិច្ចសន្យាទិញលក់ផ្ទះនេះត្រូវបញ្ចប់ ហើយប្រាក់កក់ និងប្រាក់ដែលបានបង់រួចកន្លងមក ភាគី “ក” មានសិទិ្ធ រឹបអូសដោយស្វ័យប្រវត្តិ ។</td>  
 											  </tr>
 											  
 											  <tr>
@@ -530,7 +532,7 @@ ul li{line-height: 30px !important;}
 											  </tr>
 											  <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៣.៤</td>
-												    <td align="justify" style="padding-left:5px">ភាគី "ខ" ទទួលបន្ទុកបង់ពន្ធអចលវត្ថុប្រចាំឆ្នាំជូនរដ្ឋចាប់ពីពេលភាគី "ខ" បានទទួលសិទ្ធិកាន់កាប់អចលវត្ថុ។</td>  
+												    <td align="justify" style="padding-left:5px">ភាគី "ខ" ទទួលបន្ទុកបង់ពន្ធអចលនវត្ថុប្រចាំឆ្នាំជូនរដ្ឋចាប់ពីពេលភាគី "ខ" បានទទួលសិទ្ធិកាន់កាប់អចលនវត្ថុ។</td>  
 											  </tr>
 											  <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៣.៥</td>
@@ -583,11 +585,11 @@ ul li{line-height: 30px !important;}
 										<table width="100%" border="0" cellpadding="0" cellspacing="0"> 
 											   <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៤.១</td>
-												    <td align="justify" style="padding-left:5px">ភាគី “ក”ជាម្ចាស់អចលវត្ថុពេញច្បាប់តែមួយគត់ ពុំមានបុគ្គលឬ អង្គភាពណាមួយមានផលប្រយោជន៍លើកម្មសិទ្ធិនៃអចលវត្ថុនេះឡើយ។</td>  
+												    <td align="justify" style="padding-left:5px">ភាគី “ក”ជាម្ចាស់អចលនវត្ថុពេញច្បាប់តែមួយគត់ ពុំមានបុគ្គលឬ អង្គភាពណាមួយមានផលប្រយោជន៍លើកម្មសិទ្ធិនៃអចលនវត្ថុនេះឡើយ។</td>  
 											  </tr>
 											   <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៤.២</td>
-												    <td align="justify" style="padding-left:5px">ករណីភាគី "ក" កែប្រែឈប់លក់ផ្ទះជូនភាគី "ខ" នោះភាគី "ក" ត្រូវបង់ប្រាក់សំណងខូចខាតចំនួន ២ ដង នៃប្រាក់បានទទួលរួចអោយភាគី "ខ" វិញ។</td>  
+												    <td align="justify" style="padding-left:5px">ករណីភាគី "ក" កែប្រែឈប់លក់ផ្ទះជូនភាគី "ខ" នោះភាគី "ក" ត្រូវបង់ប្រាក់សំណងខូចខាតគុណនឹង ២ ដង នៃប្រាក់បានទទួលរួចអោយភាគី "ខ" វិញ។</td>  
 											  </tr>
 											  <tr>
 												    <td align="justify" style="vertical-align:top; text-align:right;width:9%;">៤.៣</td>

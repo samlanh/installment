@@ -131,7 +131,7 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     			$this->_name="ln_properties";
     			$where=" id=".$data['to_land_code'];
 	    		$arr = array(
-	    				'is_lock'=>1
+	    			'is_lock'=>1
 	    		);
 	    		$this->update($arr, $where);//lock new house
     		}

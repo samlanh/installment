@@ -315,7 +315,7 @@
 				                   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> :
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
-				                    	<input id="land_code" /><?php //echo $frm->getElement('');?>
+				                    	<input id="land_code" />
 										<input dojoType="dijit.form.TextBox"  id="propertype" name="propertype" type="hidden">
 				                   </div>
 				                </div>
@@ -893,14 +893,12 @@ function getlandinfo(){
 			dijit.byId('paid_before').set('readOnly',true);
 			dijit.byId('balance_before').set('readOnly',true);
 			dijit.byId('total_sold').attr('value',data.price);
-			//dojo.byId('land_information').innerHTML ="លេខសម្គាល់ "+data.land_code+", លេខផ្ទះ/ឡូតិ៏  "+data.land_address+", លេខផ្លូវ  "+data.street+", ប្រភេទ  "+data.property_type+", ទំហំ "+data.land_size+" ម៉ែត្រការ៉េ, បណ្តោយ "+data.height+" ម៉ែត្រ, ទទឹង  "+data.width+" ម៉ែត្រ";
 			paid_before = dijit.byId('paid_before').get('value');
 			dijit.byId('propertype').attr('value',data.house_type);
 			checkScheduleOption();
 			Balance();
 		},
 		error: function(err) {
-			alert("value1"+err);
 		}
 	});
 }
@@ -1142,8 +1140,9 @@ function calCulateSchedulePayment(){
 	dijit.byId('total_installamount').attr('value',parseFloat(total_amount).toFixed(2));
 	payment_schedule = dijit.byId("schedule_opt").get("value");
 	if(payment_schedule==5 || payment_schedule==6){
-dijit.byId("fixed_payment").attr("value",0);
-		return false;}
+		dijit.byId("fixed_payment").attr("value",0);
+		return false;
+	}
 	calCulateFixedPeriod();
 }
 function deleteRecord(index) {
