@@ -1,7 +1,7 @@
 <?php 
 Class Loan_Form_Frmreceiveplong extends Zend_Dojo_Form {
 	protected $tr;
-public function init()
+	public function init()
 	{
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}

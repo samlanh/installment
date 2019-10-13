@@ -1785,11 +1785,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   
   function soldreportSqlStatement(){
-  	$lang = $this->currentlang();
-  	$str = 'name_en';
-  	if($lang==1){
-  		$str = 'name_kh';
-  	}
+//   	$lang = $this->currentlang();
+//   	$str = 'name_en';
+//   	if($lang==1){
+//   		$str = 'name_kh';
+//   	}
   	$sql="
 	  	SELECT
 		  `s`.`id`               AS `id`,
@@ -1806,14 +1806,13 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`price_sold`       AS `price_sold`,
 		  `s`.`discount_amount`  AS `discount_amount`,
 		  `s`.`discount_percent` AS `discount_percent`,
-		  `s`.`admin_fee`        AS `admin_fee`,
-		  `s`.`other_fee`        AS `other_fee`,
+		 
 		  (SELECT
 		     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
 		   FROM `ln_client_receipt_money` `cr`
 		   WHERE (`cr`.`sale_id` = `s`.`id`)
 		   LIMIT 1) AS `paid_amount`,
-		  `s`.`balance`          AS `balance`,
+		  
 		  `s`.`create_date`      AS `create_date`,
 		  `s`.`buy_date`         AS `buy_date`,
 		  `s`.`startcal_date`    AS `startcal_date`,
@@ -1824,12 +1823,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`total_duration`   AS `total_duration`,
 		  `s`.`payment_id`       AS `payment_id`,
 		  `s`.`staff_id`         AS `staff_id`,
-		  `s`.`comission`        AS `comission`,
+		 
 		  `s`.`receipt_no`       AS `receipt_no`,
 		  `s`.`agreement_date`   AS `agreement_date`,
 		  `s`.`is_cancel`        AS `is_cancel`,
 		  `s`.`user_id`          AS `user_id`,
-		  `s`.`note`             AS `note`,
+		  
 		  `p`.`land_code`        AS `land_code`,
 		  `p`.`land_address`     AS `land_address`,
 		  `p`.`land_size`        AS `land_size`,
@@ -1848,9 +1847,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		     `ln_staff`.`co_khname`
 		   FROM `ln_staff`
 		   WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
-		   LIMIT 1) AS `staff_name`
-		
-	  	";
+		   LIMIT 1) AS `staff_name` ";
   	$where=" 
   	FROM ((`ln_sale` `s`
 		    JOIN `ln_client` `c`)

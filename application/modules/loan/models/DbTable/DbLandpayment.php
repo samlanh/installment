@@ -7,10 +7,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
-    	 
     }
     public function getAllIndividuleLoan($search,$reschedule =null){
-    	
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$edit_sale = $tr->translate("EDITSALEONLY");
     	$session_lang=new Zend_Session_Namespace('lang');
@@ -86,7 +84,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$where.= " AND s.status = ".$search['status'];
     	}
     	if(!empty($search['land_id']) AND $search['land_id']>-1){
-//     		$where.= " AND s.house_id = ".$search['land_id'];
     		$where.= " AND (s.house_id = ".$search['land_id']." OR p.old_land_id LIKE '%".$search['land_id']."%')";
     	}
     	if(($search['client_name'])>0){

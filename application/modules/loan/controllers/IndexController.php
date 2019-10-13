@@ -50,7 +50,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
 		$this->view->rssearch = $search;
-		$db = new Application_Model_DbTable_DbGlobal();
+// 		$db = new Application_Model_DbTable_DbGlobal();
 		//$db->resetBegeningLoan();
   }
   function addAction()

@@ -1065,4 +1065,24 @@ class Report_LoanController extends Zend_Controller_Action {
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
 	}
+	function issueAgreementAction(){
+		$db  = new Report_Model_DbTable_DbParamater();
+		$id = $this->getRequest()->getParam("id");
+		$id = empty($id)?0:$id;
+	
+		$rsagreement = $db->getAgreementBySaleID($id);
+		if (empty($rsagreement)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+			exit();
+		}
+		$this->view->termcodiction = $db->getTermCodiction();
+		$this->view->agreement = $rsagreement;
+		$this->view->sale_schedule = $db->getScheduleBySaleID($id,$rsagreement['payment_id']);
+		$this->view->first_deposit = $db->getFirstDepositAgreement($id);
+	
+		$this->view->totalpaid = $db->getTotalPrinciplePaidById($id);
+		$this->view->lastpaiddate = $db->getLastDatePaidById($id);
+		$db_keycode = new Application_Model_DbTable_DbKeycode();
+		$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
+	}
 }
