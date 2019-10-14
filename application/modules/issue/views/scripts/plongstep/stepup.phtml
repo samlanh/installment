@@ -1,0 +1,182 @@
+<?php
+$editlabel="";
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+if (!empty($this->detialinfo)){
+	$editlabel= $tr->translate('EDIT');
+}	
+	$frm = $this->frm_loan;
+	
+	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+	$this->headTitle($editlabel." ".$tr->translate('PLONG_STEP')." ".$this->rs['land_address']);
+	echo $this->headTitle();
+	
+?>
+<style>
+.fullside50{ width:48%;}
+.hover:hover{background: #eee !important;}
+</style>
+<div class="overlay">
+	<div class="overlay-load">
+		<div class="overlay-msg">
+	    </div>
+	</div>
+</div>	
+<div class="card">
+	<div class="card-content collapse show">
+		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				process_status = dijit.byId('process_status').get('value');
+            		if (process_status=='' || process_status==-1){
+						alert('<?php echo $tr->translate("PLEASE_SELECT_PROCCESSING");?>');
+						dijit.byId('process_status').focus();
+						return false;
+					}
+				loadingBlock();
+				return true;
+			}else {
+				return false;
+			}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $editlabel." ".$tr->translate('PLONG_STEP')." (".$this->rs['land_address'].")";?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-4 col-sm-4 col-xs-12">
+	    			<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("PROCESS_INFO");?> 
+	                   </label>
+	                </div>
+	    			<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE");?>:
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('date')?>
+	                    	<?php echo $frm->getElement('id')?>
+	                    	<?php echo $frm->getElement('detail_id')?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROCCESSING");?>:
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('process_status')?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("GIVE_BY");?>:
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('give_by')?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("RECEIVE_BY");?>:
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('receive_by')?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?>:
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('note')?>
+	                   </div>
+	                </div>
+	    		</div>
+	    	</div>
+	    	<div class="col-md-8 col-sm-8 col-xs-12">
+	    			<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("PROCESS_HISTORY");?> 
+	                   </label>
+	                </div>
+	                <?php if (!empty($this->rsdetail)){?>
+	                <div class="form-group">
+	                	<table class="history-record" >
+	                		<thead>
+	                			<tr>
+	                				<th><?php echo $tr->translate("NUM");?></th>
+	                				<th><?php echo $tr->translate("DATE");?></th>
+	                				<th><?php echo $tr->translate("PROCCESSING");?></th>
+	                				<th><?php echo $tr->translate("NOTE");?></th>
+	                				<th><?php echo $tr->translate("GIVE_BY");?></th>
+	                				<th><?php echo $tr->translate("RECEIVE_BY");?></th>
+	                			</tr>
+	                		</thead>
+	                		<tbody>
+	                		<?php foreach ($this->rsdetail as $key => $record){?>
+	                			<tr>
+	                				<td align="center">&nbsp;<?php echo $key+1;?>&nbsp;</td>
+	                				<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($record['date']))?>&nbsp;</td>
+	                				<td align="center">&nbsp;<?php echo $record['processing'];?>&nbsp;</td>
+	                				<td align="center">&nbsp;<?php echo $record['note'];?>&nbsp;</td>
+	                				<td align="center">&nbsp;<?php echo $record['give_by']?>&nbsp;</td>
+	                				<td align="center">&nbsp;<?php echo $record['receive_by'];?>&nbsp;</td>
+	                			</tr>
+	                			<?php }?>
+	                		</tbody>
+	                	</table>
+	                </div>
+	                <?php }?>
+	    		</div>
+	    	<div class="clearfix"></div>
+			 <div class="card-box">
+             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+               		<input type="button" onclick="window.location.replace('<?php echo $this->baseUrl()."/issue/plongstep";?>');" label="<?php echo $tr->translate("GO_BACK")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+					<input type="submit" label="<?php echo $tr->translate("SAVE")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+    			</div>
+    		</div>
+		</form>
+	</div>
+</div>
+<style>
+table.history-record {
+    width: 100%;
+    font-size: 12px;
+}
+table.history-record thead tr th {
+    text-align: center;
+    padding: 5px 2px;
+    background: #e0eafb;
+    border-bottom: solid 1px #afadad;
+}
+table.history-record tbody tr {
+    border-bottom: solid 1px #e8e8e8;
+}
+table.history-record tbody tr td {
+    padding: 5px;
+	vertical-align: top;
+}
+</style>
+<script>
+	require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dijit/form/Textarea"]);
+	require(["dojo/ready"], function(ready){
+
+		 ready(function(){
+			 dijit.byId('id').set('value', '<?php echo $this->rs['id']?>');
+			 
+
+			 <?php if (!empty($this->detialinfo)){?>
+			 dijit.byId('detail_id').set('value', '<?php echo $this->detialinfo['id']?>');
+			 dijit.byId('date').set('value', '<?php echo $this->detialinfo['date']?>');
+			 dijit.byId('process_status').set('value', '<?php echo $this->detialinfo['process_status']?>');
+			 dijit.byId('give_by').set('value', '<?php echo $this->detialinfo['give_by']?>');
+			 dijit.byId('receive_by').set('value', '<?php echo $this->detialinfo['receive_by']?>');
+			 dijit.byId('note').set('value', '<?php echo $this->detialinfo['note']?>');
+			 
+			 <?php }else{?>
+				 <?php if ($this->rs['process_status']<5){?>
+				 dijit.byId('process_status').set('value', '<?php echo $this->rs['process_status']+1?>');
+				 <?php }?>
+			 <?php }?>
+		  });
+		 
+	});
+</script>
