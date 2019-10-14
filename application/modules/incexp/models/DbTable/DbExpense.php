@@ -19,48 +19,46 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		try{
 			$invoice = $this->getInvoiceNo($data['branch_id']);
 			$data = array(
-						'branch_id'		=>$data['branch_id'],
-						'title'			=>$data['title'],
-						'total_amount'	=>$data['total_amount'],
-						'invoice'		=>$invoice,
-						'cheque'		=>$data['cheque'],
-						'cheque_issuer'		=>$data['cheque_issuer'],
-						'other_invoice'		=>$data['other_invoice'],
-			            'payment_id'=>$data['payment_type'],
-						'category_id'	=>$data['income_category'],
-						'description'	=>$data['Description'],
-						'date'			=>$data['Date'],
-						'status'		=>1,//$data['Stutas'],
-						'supplier_id'		=>$data['supplier_id'],
-						'user_id'		=>$this->getUserId(),
-						'create_date'	=>date('Y-m-d'),
-					);
+				'branch_id'		=> $data['branch_id'],
+				'title'			=> $data['title'],
+				'total_amount'	=> $data['total_amount'],
+				'invoice'		=> $invoice,
+				'cheque'		=> $data['cheque'],
+				'cheque_issuer'	=> $data['cheque_issuer'],
+				'other_invoice'	=> $data['other_invoice'],
+	            'payment_id'	=> $data['payment_type'],
+				'category_id'	=> $data['income_category'],
+				'description'	=> $data['Description'],
+				'date'			=> $data['Date'],
+				'status'		=> 1,
+				'supplier_id'	=> $data['supplier_id'],
+				'user_id'		=> $this->getUserId(),
+				'create_date'   => date('Y-m-d'),
+			);
 			$this->insert($data);
 			$_db->commit();
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
  	}
- 	
  	function updatExpense($data){
  		$_db= $this->getAdapter();
  		$_db->beginTransaction();
  		try{
 			$arr = array(
-				'branch_id'		=>$data['branch_id'],
-				'title'			=>$data['title'],
-				'total_amount'	=>$data['total_amount'],
-				'payment_id'=>$data['payment_type'],
-				'cheque'		=>$data['cheque'],
-				'cheque_issuer'		=>$data['cheque_issuer'],
-				'other_invoice'		=>$data['other_invoice'],
-				'category_id'	=>$data['income_category'],
-				'description'	=>$data['Description'],
-				'date'			=>$data['Date'],
-				'status'		=>$data['Stutas'],
-				'supplier_id'		=>$data['supplier_id'],
-				'user_id'		=>$this->getUserId(),
-	
+				'branch_id'		=> $data['branch_id'],
+				'title'			=> $data['title'],
+				'total_amount'	=> $data['total_amount'],
+				'payment_id'	=> $data['payment_type'],
+				'cheque'		=> $data['cheque'],
+				'cheque_issuer'	=> $data['cheque_issuer'],
+				'other_invoice'	=> $data['other_invoice'],
+				'category_id'	=> $data['income_category'],
+				'description'	=> $data['Description'],
+				'date'			=> $data['Date'],
+				'status'		=> $data['Stutas'],
+				'supplier_id'	=> $data['supplier_id'],
+				'user_id'		=> $this->getUserId(),	
 			);
 			$where=" id = ".$data['id'];
 			$this->update($arr, $where);

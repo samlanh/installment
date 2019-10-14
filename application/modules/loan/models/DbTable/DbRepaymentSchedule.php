@@ -90,12 +90,11 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	try{
     		$dbtable = new Application_Model_DbTable_DbGlobal();
     		$sale = $this->getSaleInfo($data['loan_number']);
-    		
     		$array = array(
     				'branch_id'				=>$data['branch_id'],
     				'sale_id'				=>$data['loan_number'],
     				'client_id'				=>$data['member'],
-    				'reschedule_date'		=>$data['date_buy'],
+    				'reschedule_date'		=>date('Y-m-d'),
     				'land_id'			    =>$data['land_code'],
        				'amount_before'			=>$data['total_sold'],
     				'paid_before'			=>$data['paid_before'],
@@ -261,7 +260,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    				'lfd_id'=>$recordid,
 		    				'crm_id'				=>$crm_id,
 		    				'land_id'				=>$data['loan_number'],
-		    				'date_payment'			=>$data['date_buy'],
+		    				'date_payment'			=>$data['paid_date'],
 		    				'capital'				=>$data['sold_price']-$data['paid_before'],//ok
 		    				'remain_capital'		=>0,
 		    				'principal_permonth'	=>$data['deposit'],
@@ -398,6 +397,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    						'ispay_bank' => $data['pay_with'.$j],
     									'is_installment'=>1,
 			    						'no_installment'=>$key,
+			    						'commission'=>($data['times_commission']>=$j)?$data['commission_amt']:0
 			    					);
 			    					$key = $key+1;
 			    					$this->insert($datapayment);
@@ -468,6 +468,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			   				'is_installment'=>1,
     			   				'no_installment'=>$key,
     			   				'ispay_bank' => $data['pay_with'.$i],
+    			   				'commission'=>($data['times_commission']>=$i)?$data['commission_amt']:0
     			   		);
     			   		
     			   		$sale_currid = $this->insert($datapayment);
@@ -522,6 +523,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    			   						'note'=>$data['remark'.$j],
 	    			   						'is_installment'=>1,
 	    			   						'no_installment'=>$key,
+	    			   						'commission'=>($data['times_commission']>=$j)?$data['commission_amt']:0
 	    			   				);
 	    			   				$key = $key+1;
 	    			   				$this->insert($datapayment);
@@ -582,6 +584,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    			        	'is_completed'=>0,
 			    			        	'date_payment'=>$next_payment,
 			    			        	'no_installment'=>$i+$j,
+			    			        	'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0
 			    			        );
 		            		 
 			    		$idsaleid = $this->insert($datapayment);
@@ -617,6 +620,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    		  			'is_completed'=>0,
 	    		  			'date_payment'=>$next_payment,
 	    		  			'no_installment'=>$i+$j,
+	    		  			'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0,
 	    		  			'last_optiontype'=>$paid_receivehouse,
 	    		  	);
 	    		  	$this->insert($datapayment);
@@ -917,7 +921,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$stringold.="SALE : ID:".$_data['loan_number']."-".$rowsale['sale_number']."<br />";
     		$stringold.="Customer : id=".$_data['member']."-".$client['name_kh']."<br />";
     		$stringold.="Property : id=".$_data['land_code']."-".$land['land_address']." Street ".$land['street']."<br />";
-    		$stringold.="Issue Schedule Date : ".date("Y-M-d",strtotime($_data['date_buy']))."<br />";
+    		$stringold.="Issue Schedule Date : ".date("Y-M-d")."<br />";
     		$stringold.="Amount Before : ".$_data['total_sold']."<br />";
     		$stringold.="Paid Before : ".$_data['paid_before']."<br />";
     		
@@ -990,7 +994,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     					$stringold.="</table>";
     			}
     		}
-    		$labelactivity="Issue Schedule Sale : ".$rowsale['sale_number']." ".$client['name_kh']."-".$land['land_address']." Street ".$land['street'];
+    	$labelactivity="Issue Schedule Sale : ".$rowsale['sale_number']." ".$client['name_kh']."-".$land['land_address']." Street ".$land['street'];
     	$arr['activityold']=$stringold;
     	$arr['after_edit_info']=$string;
     

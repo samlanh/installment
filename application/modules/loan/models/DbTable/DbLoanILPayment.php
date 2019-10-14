@@ -391,7 +391,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$service_charge= $data["service_charge"];//សេវាផ្សេងៗ
     		$penalize = $data["penalize_amount"];//ផាកពិន័យ
     		$total_interest = $data["total_interest"];//ត្រូវបង់សរុប
-    		//if($data['option_pay']!=3){//ក្រៅពីរំលស់ប្រាក់ដើម​ => after ហេតុអីត្រូវសរសេរចឹង?
+    		
     			$rows = $this->getSaleScheduleById($loan_number, 1);
 		    		if(!empty($rows)){
 		    			$remain_money = round($data['amount_receive']-$data['extrapayment'],2);
@@ -515,6 +515,29 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    								  $where = " id = ".$row['id'];
 	    								  $this->_name="ln_saleschedule";
 	    								  $this->update($arra, $where);	
+	    								  
+	    								  
+	    								  if(AUTO_PAYCOMMISSION==1 AND $is_compleated_d==1 AND $row['commission']>0){
+	    								  	$__data = array(
+	    								  			'branch_id'      => $data['branch_id'],
+	    								  			'sale_id'	     => $data['loan_number'],
+	    								  			'sale_no' 		=> $data['loan_number'],
+	    								  			'title'	         => '',
+	    								  			'return_back'    => $row['commission'],
+	    								  			'cheque'	     => '',
+	    								  			'cheque_issuer'  => '',
+	    								  			'other_invoice'  => '',
+	    								  			'property_id'    => 1,
+	    								  			'income_category'=> 16,
+	    								  			'staff_id'		 => $data['co_id'],
+	    								  			'payment_type'   => $data['property_id'],
+	    								  			'note'           => '',
+	    								  			'date'           => $data['collect_date'],
+	    								  			'supplier_id'    => '',
+	    								  	);
+	    								  	$db_exp = new Incexp_Model_DbTable_DbComission();
+	    								  	$db_exp->addSaleComission($__data);
+	    								  }
 		    						}
     								  
     							$paid_principalall = $paid_principalall+$paid_principal;
@@ -649,7 +672,6 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    						$principal = $ending_balance;
 		    						$fixed_payment = $principal + $total_interestafter;
 		    					}
-		    					
 		    				}
 		    				$ending_balance = $begining_balance-$principal;
 		    				
@@ -683,16 +705,15 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     					if($last_record<=1){//check it ;
 	    					$arra = array(
 	    							'ending_balance'=>$begining_balance-$principal,
-	    							'begining_balance'=>$begining_balance,//$row['begining_balance']-$extrapayment,
-	    							'begining_balance_after'=>$begining_balance,//$row['begining_balance_after']-$extrapayment,
+	    							'begining_balance'=>$begining_balance,
+	    							'begining_balance_after'=>$begining_balance,
 	    							'principal_permonth'=>$principal,
 	    							'principal_permonthafter'=>$principal,
-	    							'total_interest_after'=>$total_interestafter,//ok
+	    							'total_interest_after'=>$total_interestafter,
 	    						    'total_interest'=>$total_interestafter,
 	    							'total_payment'=>$fixed_payment,
-	    							'total_payment_after'=>$fixed_payment,//$row['total_payment']-$principal_paid-$row['total_interest_after'],
+	    							'total_payment_after'=>$fixed_payment,
 								    'is_completed'=>$is_completed,
-// 	    							'received_userid'=>$user_id
 	    							);
 	    					$where = "id = ".$row['id'];
 	    					$this->_name="ln_saleschedule";

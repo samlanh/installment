@@ -5,39 +5,42 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
-	private $sex=array(1=>'M',2=>'F');
-	
 	public function indexAction(){
 		try{
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
 				if($this->getRequest()->isPost()){
-						$search=$this->getRequest()->getPost();
-					}
-					else{
-						$search = array(
-								'adv_search' => '',
-								'client_name' => -1,
-								'start_date'=> date('Y-m-d'),
-								'end_date'=>date('Y-m-d'),
-								'branch_id'		=>	-1,
-								'paymnet_type'	=> -1,
-								'land_id'=>-1,
-								'status'=>-1,
-								'payment_method'=>-1,);
-					}
-				$this->view->search = $search;
+					$search=$this->getRequest()->getPost();
+				}else{
+					$search = array(
+						'adv_search'  => '',
+						'client_name' => -1,
+						'start_date'  => date('Y-m-d'),
+						'end_date'    => date('Y-m-d'),
+						'branch_id'	  => -1,
+						'paymnet_type'=> -1,
+						'land_id'     => -1,
+						'status'      =>-1,
+						'payment_method'=>-1
+					);
+			}
+			$this->view->search = $search;
+			
 			$rs_rows= $db->getAllIndividuleLoan($search);
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
+			
 			$result = array();
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE","TOTAL_PAYMENT","RECEIVE_AMOUNT",
-					"PAY_DATE","DATE","PAYMENT_OPTION","BY_USER","STATUS");
+			
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","STREET","RECIEPT_NO","PRINCIPAL","TOTAL_INTEREST","PENALIZE AMOUNT","SERVICE",
+							  "TOTAL_PAYMENT","RECEIVE_AMOUNT","PAY_DATE","DATE","PAYMENT_OPTION","BY_USER","STATUS");
+			
 			$link=array('module'=>'loan','controller'=>'ilpayment','action'=>'edit',);
 			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);
 			$link_delete=array('module'=>'loan','controller'=>'ilpayment','action'=>'delete',);
+			
 			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array());
-		}catch (Exception $e){
+		}catch(Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
@@ -69,7 +72,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		echo"}
 		</script>";
   }
-	 function deletereceiptAction(){
+   function deletereceiptAction(){
 	 	$request=Zend_Controller_Front::getInstance()->getRequest();
 	 	$action=$request->getActionName();
 	 	$controller=$request->getControllerName();
@@ -95,7 +98,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 	 		Application_Form_FrmMessage::message("INSERT_FAIL");
 	 		echo $e->getMessage();
 	 	}
-	 }
+  }
   function addAction()
   {
   	$rightclick = $this->getRequest()->getParam('rightclick');
@@ -112,7 +115,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 				exit();
 			}
 			$_data = $this->getRequest()->getPost();
-			try {
+			try{
 				$receipt = $db->addILPayment($_data);
 				$db->recordHistoryReceipt($_data, $receipt);
 				if($rightclick=="true"){
@@ -140,11 +143,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$frm_loan=$frm->FrmAddIlPayment();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_ilpayment = $frm_loan;
-				
-// 		$db_keycode = new Application_Model_DbTable_DbKeycode();
-// 		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-// 		$this->view->graiceperiod = $db_keycode->getSystemSetting(9);
-		//$this->view->interest = $db_keycode->getSystemSetting(8);
 		
 		$this->view->client = $db->getAllClient();
 		$this->view->clientCode = $db->getAllClientCode();

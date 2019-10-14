@@ -1,13 +1,11 @@
 <?php
 class Loan_RepaymentScheduleController extends Zend_Controller_Action {
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
      /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
-	private $sex=array(1=>'M',2=>'F');
 	public function indexAction(){
 		try{
 		    if($this->getRequest()->isPost()){
@@ -52,20 +50,17 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
   	$this->view->rightclick = $rightclick;
   	$id = $this->getRequest()->getParam('id');
   	if(empty($id)){
-  		$this->_redirect('/loan/index');////ទប់បើសិនជាអត់មាន ID រក្សាទុកទៅនឹងមាន Error ព្រោះគ្មាន id ចូលក្នុង hidden textbox
+  		$this->_redirect('/loan/index');
   	}
-  	
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				// Check Session Expire
 				$dbgb = new Application_Model_DbTable_DbGlobal();
 				$checkses = $dbgb->checkSessionExpire();
 				if (empty($checkses)){
 					$dbgb->reloadPageExpireSession();
 					exit();
 				}
-				
 				$_dbmodel = new Loan_Model_DbTable_DbRepaymentSchedule();
 				$reschedule = $_dbmodel->addRepayMentSchedule($_data);
 				$_dbmodel->recordhistory($_data);
@@ -87,13 +82,9 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
 		
         $db = new Application_Model_DbTable_DbGlobal();
-        $this->view->allclient = $db->getAllClient();
-        $this->view->allclient_number = $db->getAllClientNumber();
-        
         $this->view->stepoption = $db->getOptionStepPayment();
         
         $frmpopup = new Application_Form_FrmPopupGlobal();
-        $this->view->footer = $frmpopup->getFooterReceipt();
         $this->view->officailreceipt = $frmpopup->getOfficailReceipt();
         
         $tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -104,12 +95,8 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
         ) );
         $this->view->rs_interest = $interest;
         
-		$db = new Setting_Model_DbTable_DbLabel();
-		$this->view->setting=$db->getAllSystemSetting();
-		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-		
 		
 		if(!empty($id)){
 			$db = new Loan_Model_DbTable_DbLandpayment();
@@ -122,36 +109,13 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			if($rs['is_cancel']==1){
 				Application_Form_FrmMessage::message('This Sale already cancel');
 				echo "<script>window.close();</script>";
-// 				Application_Form_FrmMessage::Sucessfull("This Sale already cancel","/loan");
 			}
 			if($rs['payment_id']!=1){
 				Application_Form_FrmMessage::Sucessfull("RESCHEDULE_EXIST","/loan");
 			}
 		}
-		$this->view->id = $id;
+		$this->view->id = $id;//use
 	}	
-// 	public function addloanAction(){
-// 		if($this->getRequest()->isPost()){
-// 			$data=$this->getRequest()->getPost();
-// 			$db = new Loan_Model_DbTable_DbRepaymentSchedule();
-// 			$id = $db->addNewLoanGroup($data);
-// 			$suc = array('sms'=>'ប្រាក់ឥណទានត្រូវបានបញ្ចូលដោយជោគជ័យ !');
-// 			print_r(Zend_Json::encode($suc));
-// 			exit();
-// 		}
-// 	}
-	public function viewAction(){
-		// 		$this->_helper->layout()->disableLayout();
-		$id = $this->getRequest()->getParam('id');
-		$db_g = new Application_Model_DbTable_DbGlobal();
-		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOT_FUND","/loan/index/index");
-		}
-		$db = new Loan_Model_DbTable_DbLoanIL();
-		$row = $db->getLoanviewById($id);
-		$this->view->tran_rs = $row;
-	}
-	
 	public function editAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
@@ -168,31 +132,17 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 		$_db = new Loan_Model_DbTable_DbRepaymentSchedule();
 		$data_row = $_db->getRescheduleById($id); 
 		$this->view->rsresult = $data_row;
-// 		$rs = $db_g->getLoanFundExist($id);
-// 		if($rs==true){
-// 			Application_Form_FrmMessage::Sucessfull("LOAN_FUND_EXIST","/loan/repaymentschedule/index");
-// 		}
-// 		$db = new Loan_Model_DbTable_DbLoanIL();
-// 		$row = $db->getTranLoanByIdWithBranch($id,1,1);
-// 		if(empty($row)){ Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST","/loan/repaymentschedule/index"); }
 		print_r($data_row);
 		$frm = new Loan_Form_FrmRepaymentSchedule();
 		$frm_loan=$frm->FrmAddLoan($data_row);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
         $db = new Application_Model_DbTable_DbGlobal();
-//      $this->view->allclient = $db->getAllClient();
-//      $this->view->allclient_number = $db->getAllClientNumber();
-//         $frmpopup = new Application_Form_FrmPopupGlobal();
-//      $this->view->frmpupoploantype = $frmpopup->frmPopupLoanTye();
-//      $this->view->frmPopupZone = $frmpopup->frmPopupZone();
         $db_keycode = new Application_Model_DbTable_DbKeycode();
         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-//         $this->view->graiceperiod = $db_keycode->getSystemSetting(9);
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
 	}
-	
 	function getloanRescheduleAction(){
 		if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();
@@ -212,4 +162,3 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 		}
 	}
 }
-

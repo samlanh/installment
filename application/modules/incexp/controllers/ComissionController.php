@@ -52,7 +52,6 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 					$dbgb->reloadPageExpireSession();
 					exit();
 				}
-				
 				if(isset($_data['save'])){
 					$_dbmodel->addSaleComission($_data);
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/comission/add");

@@ -85,10 +85,9 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 					'user_id'		=>$this->getUserId(),
 					'create_date'	=>date('Y-m-d'),
 					'property_id'=>	$data['property_id'],
-						
-						'cheque'=>	$data['cheque'],
-						'payment_id'=>	$data['payment_type'],
-						'cheque_issuer'=>	$data['cheque_issuer']
+					'cheque'=>	$data['cheque'],
+					'payment_id'=>	$data['payment_type'],
+					'cheque_issuer'=>	$data['cheque_issuer']
 						);
 				$this->_name="ln_comission";
 				$this->insert($arr1);

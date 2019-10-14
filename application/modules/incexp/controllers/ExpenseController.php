@@ -8,7 +8,6 @@ class Incexp_ExpenseController extends Zend_Controller_Action
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     }
-
     public function indexAction()
     {
     	try{
@@ -90,7 +89,6 @@ class Incexp_ExpenseController extends Zend_Controller_Action
     	$result = $db->getAllChequeIssue();
     	array_unshift($result, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
     	$this->view->cheque_issue = $result;
-    	
     	
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
