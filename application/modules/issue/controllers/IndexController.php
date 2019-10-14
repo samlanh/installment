@@ -1,7 +1,6 @@
 <?php
 class Issue_indexController extends Zend_Controller_Action {
 	
-	const REDIRECT_URL='/project';
 	protected $tr;
 	public function init()
 	{
@@ -64,14 +63,13 @@ class Issue_indexController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-	
 		$fm = new Issue_Form_FrmGivehouse();
 		$frm = $fm->FrmGivehouse();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
 	}
 	
-public function editAction(){
+	public function editAction(){
 		$id = $this->getRequest()->getParam('id');
 		if(empty($id)){
 			Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/issue/index");
@@ -103,51 +101,5 @@ public function editAction(){
 		$frm = $fm->FrmGivehouse($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
-	}
-	
-	public function addbranchajaxAction(){//ajax
-		if($this->getRequest()->isPost()){
-			$db = new Project_Model_DbTable_DbProject();
-			$data = $this->getRequest()->getPost();
-			$id = $db->addbranchajax($data);
-			print_r(Zend_Json::encode($id));
-			exit();
-		}
-	}
-	public function viewAction(){
-		$id=$this->getRequest()->getParam("id");
-		$db= new Project_Model_DbTable_DbProject();
-		$this->view->rs = $db->getBranchById($id);
-		$this->view->shareholder = $db->getBranchHolderById($id);
-	}
-	function copyAction()
-	{
-		$_dbmodel = new Project_Model_DbTable_DbProject();
-		$allpro = $_dbmodel->countProject();
-		if ($allpro>=10){
-			$this->_redirect("/project/index");
-		}
-		$id=$this->getRequest()->getParam("id");
-		if($this->getRequest()->isPost()){//check condition return true click submit button
-			$_data = $this->getRequest()->getPost();
-			$_dbmodel = new Project_Model_DbTable_DbProject();
-			$_dbmodel->addbranch($_data);
-			try {
-				Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL . "/index");
-			}catch (Exception $e) {
-				Application_Form_FrmMessage::message($this->tr->translate("INSERT_FAIL"));
-				$err =$e->getMessage();
-				Application_Model_DbTable_DbUserLog::writeMessageError($err);
-			}
-		}
-		$db=new Project_Model_DbTable_DbProject();
-		$row=$db->getBranchById($id);
-		$this->view->row = $row;
-		
-		$fm = new Project_Form_FrmProject();
-		$frm = $fm->Frmbranch($row,"1");
-		Application_Model_Decorator::removeAllDecorator($frm);
-		$this->view->frm_branch = $frm;
-		$this->view->rsshare = $db->getBranchHolderById($id);
 	}
 }

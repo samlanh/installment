@@ -15,15 +15,13 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 		$statement = $dbp->soldreportSqlStatement();
 		$sql= $statement['sql'];
 		$sql.="
-		 
-		,(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount,
-		(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid,
-		(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid,
-		(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times,
-		(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
-		(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
-		(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id
-		 
+			,(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount,
+			(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid,
+			(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid,
+			(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times,
+			(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
+			(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
+			(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id
 		";
 		$where = $statement['where'];
 // 		$where.=" AND s.is_cancel=0 ";

@@ -118,7 +118,7 @@ class IndexController extends Zend_Controller_Action
 		$this->view->rslang = $session_lang->lang_id;
     }
     protected function sortMenu($menus){
-    	$menus_order = Array ( 'home','project','group','loan','incexp','property','invest','other','report','rsvacl','setting');
+    	$menus_order = Array ( 'home','project','group','loan','issue','incexp','property','invest','other','report','rsvacl','setting');
     	$temp_menu = Array();
     	$menus=array_unique($menus);
     	foreach ($menus_order as $i => $val){
