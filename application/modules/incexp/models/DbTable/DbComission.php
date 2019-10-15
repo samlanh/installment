@@ -54,7 +54,8 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 		}
 		
 		$where.=$dbp->getAccessPermission("c.`branch_id`");
-		return $db->fetchAll($sql.$where);
+		$order=' ORDER BY c.id DESC ';
+		return $db->fetchAll($sql.$where.$order);
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}

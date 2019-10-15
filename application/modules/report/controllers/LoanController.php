@@ -574,7 +574,6 @@ class Report_LoanController extends Zend_Controller_Action {
   
 
   function rptUpdatestatusAction(){
-  	
   	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
   	$id =$this->getRequest()->getParam('id');
   	$id = empty($id)?0:$id;
@@ -600,13 +599,49 @@ class Report_LoanController extends Zend_Controller_Action {
   			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
   		}
   	}
-  	
-  
-  
+
   	$this->view->client =$rs;
   	$frm = new Application_Form_FrmSearchGlobal();
   	$form = $frm->FrmSearchLoadSchedule();
   
+  	$day_inkhmer = $db->getDayInkhmerBystr(null);
+  	$this->view->day_inkhmer = $day_inkhmer;
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	$this->view->id=$id;
+  }
+  function saleAuthorizeAction(){
+  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
+  	$id =$this->getRequest()->getParam('id');
+  	$id = empty($id)?0:$id;
+  	if($this->getRequest()->isPost()){
+  		$_data = $this->getRequest()->getPost();
+  		try {
+  			$_dbmodel = new Report_Model_DbTable_DbLandreport();
+  			$_dbmodel->AuthorizeSchedule($_data);
+  			Application_Form_FrmMessage::Sucessfull("Authorize Successful","/report/loan/rpt-soldsummary");
+  		}catch (Exception $e) {
+  			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+  		}
+  	}
+  	
+  	$row = $db->getPaymentScheduleById($id);
+  	$this->view->tran_schedule=$row;
+  	if(empty($row) or $row==''){
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-soldsummary');
+  		exit();
+  	}
+  	$db = new Application_Model_DbTable_DbGlobal();
+  	$rs = $db->getClientByMemberId($id);
+  	if(empty($rs)){
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-soldsummary');
+  		exit();
+  	}
+  	
+  	$this->view->client =$rs;
+  	$frm = new Application_Form_FrmSearchGlobal();
+  	$form = $frm->FrmSearchLoadSchedule();
+  	
   	$day_inkhmer = $db->getDayInkhmerBystr(null);
   	$this->view->day_inkhmer = $day_inkhmer;
   	$key = new Application_Model_DbTable_DbKeycode();

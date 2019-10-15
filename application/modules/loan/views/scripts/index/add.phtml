@@ -344,6 +344,19 @@
 				                    	<?php echo $frm->getElement('full_commission');?>
 				                   </div>
 				                </div>
+				                <div style="display:<?php echo(AUTO_PAYCOMMISSION==1)?'block':'none'; ?>">
+					                <div class="form-group">
+					                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMMISSION_COLLECT");?> :</label>
+					                   <div class="col-md-7 col-sm-7 col-xs-12">
+					                   		<div class="col-md-6 col-sm-6 col-xs-12">
+					                    		<?php echo $frm->getElement('times_commission');?>
+					                    	</div>
+					                    	 <div class="col-md-6 col-sm-6 col-xs-12">
+					                    		<?php echo $frm->getElement('commission_amt');?>
+					                   		</div>
+					                   </div>
+					                </div>
+				                </div>
 				                <div class="form-group">
 				                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate("AGREEMENT");?> 
 				                   </label>
@@ -362,19 +375,21 @@
 				                    	<?php echo $frm->getElement('agreement_date');?>
 				                   </div>
 				                </div>
-								<div class="form-group">
-				                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BUILD_PERIOD");?> <span class="required">*</span> :
-				                   </label>
-				                   <div class="col-md-7 col-sm-7 col-xs-12">
-				                    	<?php echo $frm->getElement('amount_build');?>
-				                   </div>
-				                </div>
-				                <div class="form-group">
-				                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BUILD_START");?> <span class="required">*</span> :
-				                   </label>
-				                   <div class="col-md-7 col-sm-7 col-xs-12">
-				                    	<?php echo $frm->getElement('start_building');?>
-				                   </div>
+				                <div style="display:<?php echo($this->data['showhouseinfo']==1)?'block':'none'; ?>">
+									<div class="form-group">
+					                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BUILD_PERIOD");?> <span class="required">*</span> :
+					                   </label>
+					                   <div class="col-md-7 col-sm-7 col-xs-12">
+					                    	<?php echo $frm->getElement('amount_build');?>
+					                   </div>
+					                </div>
+					                <div class="form-group">
+					                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BUILD_START");?> <span class="required">*</span> :
+					                   </label>
+					                   <div class="col-md-7 col-sm-7 col-xs-12">
+					                    	<?php echo $frm->getElement('start_building');?>
+					                   </div>
+					                </div>
 				                </div>
 				            </div>
 				           	
@@ -581,6 +596,24 @@
 <script type="text/javascript">	
 dojo.require("dojo.data.ItemFileWriteStore");  
 dojo.require("dijit.form.Textarea");
+function revertCommission(revert){
+	times_commission = dijit.byId('times_commission').get('value');
+	if(isNaN(times_commission)){times_commission=0;}
+
+	commission_amt = dijit.byId('commission_amt').get('value');
+	if(isNaN(commission_amt)){commission_amt=0;}
+
+	full_commission = dijit.byId('full_commission').get('value');
+	if(isNaN(full_commission)){full_commission=0;}
+	if(revert==1){
+		commision = full_commission/times_commission;	
+		dijit.byId('commission_amt').attr('value',parseInt(commision));
+	}else{
+		commision = Math.ceil(full_commission/commission_amt);	
+		dijit.byId('times_commission').attr('value',commision);
+	}
+}
+
 var interestStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->rs_interest));?> );
 function addinterest(){
 	if(dijit.byId('form_interestrate').validate()){

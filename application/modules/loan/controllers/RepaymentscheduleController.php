@@ -45,13 +45,13 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
   }
   function addAction()
   {
-  	$rightclick = $this->getRequest()->getParam('rightclick');
-  	$rightclick = empty($rightclick)?"":$rightclick;
-  	$this->view->rightclick = $rightclick;
-  	$id = $this->getRequest()->getParam('id');
-  	if(empty($id)){
-  		$this->_redirect('/loan/index');
-  	}
+	  	$rightclick = $this->getRequest()->getParam('rightclick');
+	  	$rightclick = empty($rightclick)?"":$rightclick;
+	  	$this->view->rightclick = $rightclick;
+	  	$id = $this->getRequest()->getParam('id');
+	  	if(empty($id)){
+	  		$this->_redirect('/loan/index');
+	  	}
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {

@@ -410,21 +410,19 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 		
 		$times_commission = new Zend_Dojo_Form_Element_NumberTextBox('times_commission');
 		$times_commission->setAttribs(array(
-				'data-dojo-Type'=>'dijit.form.NumberTextBox',
-				'class'=>'fullside',
-				'placeHolder'=>'ចំ.ដង',
-				'onkeyup'=>'revertCommission(1);'
+			'data-dojo-Type'=>'dijit.form.NumberTextBox',
+			'class'=>'fullside',
+			'placeHolder'=>'ចំ.ដង',
+			'onkeyup'=>'revertCommission(1);'
 		));
 		
 		$commision_amt = new Zend_Dojo_Form_Element_NumberTextBox('commission_amt');
 		$commision_amt->setAttribs(array(
-				'dojoType'=>'dijit.form.NumberTextBox',
-				'class'=>'fullside',
-				'required'=>true,
-				'placeHolder'=>'ចំ.ប្រាក់',
-				'onkeyup'=>'revertCommission(2);'
+			'dojoType'=>'dijit.form.NumberTextBox',
+			'class'=>'fullside',
+			'placeHolder'=>'ចំ.ប្រាក់',
+			'onkeyup'=>'revertCommission(2);'
 		));
-		
 		
 		if($data!=null){
 			$agreementdate->setValue($data['agreement_date']);
@@ -437,10 +435,8 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			$paid->setValue($data["paid_amount"]);
 			$balance->setValue($data['balance']);
 			$paid_date->setValue($data['date_input']);
-			
 			$_period->setValue($data['total_duration']);
 			$_first_payment->setValue($data['first_payment']);
-			
 			$_rate->setValue($data['interest_rate']);//
 			$_releasedate->setValue($data['startcal_date']);
 			$other_fee->setValue($data['other_fee']);

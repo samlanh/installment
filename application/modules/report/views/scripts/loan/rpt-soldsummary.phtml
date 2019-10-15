@@ -13,6 +13,7 @@
 		}
 		$branch_title = $branch['project_name'];
 	}
+	$is_showhouse = $this->data['showhouseinfo'];
 ?>
 <meta charset="utf-8">
 <script>
@@ -168,7 +169,9 @@ table.tb-footer tr.style-head {
 	                    <td><?php echo $tr->translate("END_DATE");?></td>
 	                    <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 	                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-	                    <!-- <td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td> -->
+	                    <?php if($is_showhouse==0){?>
+	                    	<td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
+	                    <?php }?>
 	                    <td><?php echo $tr->translate("PRICE_BEFORE");?></td>
 	                    <td><?php echo $tr->translate("DISCOUNT");?>$</td>
 	                    <td><?php echo $tr->translate("DISCOUNT_PERCENT");?></td>
@@ -178,6 +181,7 @@ table.tb-footer tr.style-head {
 	                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
 	                    <td><?php echo $tr->translate("TOTAL_PENELIZE");?></td>
 	                    <td><?php echo $tr->translate("TYPE");?></td>
+	                    <td><?php echo $tr->translate("STATUS");?></td>
 	                </tr>
 	              </thead>
 	               <?php 
@@ -290,7 +294,9 @@ table.tb-footer tr.style-head {
 						<td style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format("d-m-Y"); ?>&nbsp;</td>
 						<td style="width: 100px; !important"><?php echo $row['name_kh'];?>&nbsp;</td>
 						<td>&nbsp;<?php echo $row['land_address'].",".$row['street']; ?>&nbsp;</td>
-						<!-- <td align="center">&nbsp;<?php echo $countland." ".$notupdateLock; ?>&nbsp;</td> -->
+						 <?php if($is_showhouse==0){?>
+						 <td align="center">&nbsp;<?php echo $countland." ".$notupdateLock; ?>&nbsp;</td>
+						<?php }?>
 						<td align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span>&nbsp;</td>
 						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['discount_amount'],2); ?></td>	
 						<td align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>	
@@ -300,16 +306,19 @@ table.tb-footer tr.style-head {
 						<td align="right"><?php echo number_format($row['total_interest_permonthpaid'],2);?></td>
 						<td align="right"><?php echo number_format($row['penalize_amountpaid'],2);?></td>
 						<td><?php echo $row['paymenttype']; ?></td>
+						<td align="center"><img title='<?php echo ($row['verify_by']>0 ? 'Authorized':'Unauthorized');?>' src="<?php echo $this->baseUrl().'/images/icon/'.($row['verify_by']>0 ? 'apply2.png':'none.png'); ?>" /></td>
 						<?php 
-							$percent = $db->getFirstDepositBySaleID($row['id'],$row['payment_id']);
-							$percent =$percent['percent'];
+// 							$percent = $db->getFirstDepositBySaleID($row['id'],$row['payment_id']);
+// 							$percent =$percent['percent'];
 						?>
 					</tr>
 					<?php }?>
 					<tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
 						<td colspan="4"></td>
 						<td><?php echo $key>0?$key+1:0;?></td>
-						<!-- <td><?php echo $amount_property;?></td> -->
+						<?php if($is_showhouse==0){?>
+							<td><?php echo $amount_property;?></td>
+						<?php }?>
 						<td><?php echo number_format($price_before,2);?></td>
 						<td><?php echo number_format($discount_amount,2);?></td>
 						<td><?php echo number_format($disc_percent,0);?></td>
@@ -318,7 +327,7 @@ table.tb-footer tr.style-head {
 						<td><?php echo number_format($balace_price,2);?></td>
 						<td><?php echo number_format($total_interest,2);?></td>
 						<td><?php echo number_format($total_panelty,2);?></td>
-						<td></td>
+						<td colspan="2" ></td>
 					</tr>
             		<tr>
             			<td colspan="17" style="border: #fff solid 1px;border-top: solid 1px #000;"><br />
@@ -329,27 +338,21 @@ table.tb-footer tr.style-head {
 			                    <td align="right"><span class="border_bottom"><?php echo $tr->translate("ប្រភេទបង់");?></span>&nbsp;&nbsp;</td>
 			                    <td><span class="border_bottom">លក់បាន</span></td>
 			                    <?php 
-			                    $showhouseinfo=1;
-			                    if($showhouseinfo==0){?>
-			                     <td><span class="border_bottom">ចំនួនអចលនទ្រព្យ</span></td>
+			                   	 if($is_showhouse==0){?>
+			                     	<td><span class="border_bottom"><?php echo $tr->translate("AMOUNT_PROPERTY");?></span></td>
 			                    <?php }?>
 			                    <td align="left"><span class="border_bottom">ដាច់</span></td>
 			                    <td align="left"><span class="border_bottom">នៅសល់</span></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right">
-			                    	<?php if($showhouseinfo==1){?>
-			                    		<?php echo $tr->translate("PROPERTY");?>&nbsp;&nbsp;&nbsp;&nbsp;
-			                    	<?php }?>
+			                    	<?php echo $tr->translate("PROPERTY");?>&nbsp;&nbsp;&nbsp;&nbsp;
 			                    </td>
-			                    <td>
-			                    	<?php if($showhouseinfo==1){
-			                    		echo $amount_property;
-			                    	}?>
+			                    <td><?php echo $amount_property; ?>
 			                    </td>
 			                    <td align="right"><?php echo $tr->translate("កក់ទ្រនាប់ដៃ");?></td>
 			                    <td><?php echo ($payment_1);?></td>
-			                    <?php if($showhouseinfo==0){?>
+			                    <?php if($is_showhouse==0){?>
 			                    	<td><?php echo $property_deposit;?></td>
 			                    <?php }?>
 			                    <td><?php echo ($payment_0_completed);?></td>
@@ -360,7 +363,7 @@ table.tb-footer tr.style-head {
 			                    <td><?php echo number_format($sold_price,2);?></td>
 			                    <td align="right"><?php echo $tr->translate("បង់ផ្តាច់");?>&nbsp;&nbsp;</td>
 			                    <td><?php echo $payment_2;?></td>
-			                     <?php if($showhouseinfo==0){?>
+			                     <?php if($is_showhouse==0){?>
 			                    	<td><?php echo $property_payoff;?></td>
 			                    <?php }?>
 			                    <td><?php echo $payment_2_completed;?></td>
@@ -371,7 +374,7 @@ table.tb-footer tr.style-head {
 			                    <td><?php echo number_format($paid_price,2);?></td>
 			                    <td align="right"><?php echo $tr->translate("រំលស់");?>&nbsp;&nbsp;</td>
 			                    <td><?php echo $payment_3;?></td>
-			                     <?php if($showhouseinfo==0){?>
+			                    <?php if($is_showhouse==0){?>
 			                    	<td><?php echo $property_install;?></td>
 			                    <?php }?>
 			                    <td><?php echo $payment_3_completed;?></td>
@@ -382,7 +385,7 @@ table.tb-footer tr.style-head {
 			                    <td><?php echo number_format($balace_price,2);?>&nbsp;&nbsp;</td>
 			                    <td align="right"><?php echo $tr->translate("PAYWITH_BANK");?>&nbsp;&nbsp;</td>
 			                    <td style="border-bottom: 4px double #000;"><?php echo $payment_5;?></td>
-			                 	 <?php if($showhouseinfo==0){?>
+			                 	 <?php if($is_showhouse==0){?>
 			                    	<td style="border-bottom: 4px double #000;"><?php echo $property_paybank;?></td>
 			                    <?php }?>
 			                 	<td style="border-bottom: 4px double #000;"><?php echo $payment_5_completed;?></td>
@@ -393,7 +396,7 @@ table.tb-footer tr.style-head {
 			                    <td></td>
 			                    <td align="right"><?php echo $tr->translate("លក់សរុប");?>&nbsp;&nbsp;</td>
 			                    <td style="border-bottom: 4px double #000;"><?php echo $payment_1+$payment_2+$payment_3+$payment_5;?></td>
-			                 	 <?php if($showhouseinfo==0){?>
+			                 	<?php if($is_showhouse==0){?>
 			                    	<td style="border-bottom: 4px double #000;"><?php echo $amount_property;?></td>
 			                    <?php }?>
 			                 	<td style="border-bottom: 4px double #000;"><?php echo $payment_0_completed+$payment_2_completed+$payment_3_completed+$payment_5_completed;?></td>
@@ -477,6 +480,9 @@ $(function(){
 			else if(key=="editstatus"){
 				url='<?php echo $this->baseUrl()."/report/loan/rpt-updatestatus/id/";?>';
 			}
+			else if(key=="authorize"){
+				url='<?php echo $this->baseUrl()."/report/loan/sale-authorize/id/";?>';
+			}
 			else if(key=="payment"){
 				url='<?php echo $this->baseUrl()."/report/loan/paymenthistory/id/";?>';
 			}
@@ -486,7 +492,8 @@ $(function(){
 			"agreement": {name: "<?php echo $tr->translate("AGREEMENT");?>", icon: "fa-file-text", accesskey: "c"},
 			"reschedule": {name: "<?php echo $tr->translate("SCHEDULE_PAYMENT");?>", icon: "fa-calendar"},
 			"edit": {name: "<?php echo $tr->translate("EDIT_SCHEDULE");?>", icon: "fa-money", accesskey: "c o p y"},
-			"editstatus": {name: "<?php echo $tr->translate("កែស្ថានការណ៍");?>", icon: "fa-money", accesskey: "c o p y"},
+			//"editstatus": {name: "<?php echo $tr->translate("កែស្ថានការណ៍");?>", icon: "fa-money", accesskey: "c o p y"},
+			"authorize": {name: "<?php echo $tr->translate("Authorize");?>", icon: "fa-users", accesskey: "c o p y"},
 			"payment": {name: "<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>", icon: "fa-money", accesskey: "c o p y"},
 		}
 	});

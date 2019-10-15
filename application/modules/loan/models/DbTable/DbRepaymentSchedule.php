@@ -90,6 +90,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	try{
     		$dbtable = new Application_Model_DbTable_DbGlobal();
     		$sale = $this->getSaleInfo($data['loan_number']);
+    		$data['co_id'] = $sale['staff_id'];
     		$array = array(
     				'branch_id'				=>$data['branch_id'],
     				'sale_id'				=>$data['loan_number'],
@@ -116,7 +117,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				'start_date_after'		=>$data['release_date'],
     				'first_payment_after'	=>$data['first_payment'],
     				'end_date_after'		=>$data['date_line'],
-    				'date'=>date("Y-m-d"),
+    				'date'					=>date("Y-m-d"),
     				'status'				=>1,
     				'note'					=>$data['note'],
     				'user_id'				=>$this->getUserId(),
@@ -134,14 +135,12 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				$dbp = new Loan_Model_DbTable_DbLandpayment();
     				$row = $dbp->getTranLoanByIdWithBranch($data['id'],null);
     				
-    				
     				$key = new Application_Model_DbTable_DbKeycode();
     				$setting = $key->getKeyCodeMiniInv(TRUE);
-    				$note_agreement = '';
+    					$note_agreement = '';
     				if($setting['note_agreement']==1){
     					$note_agreement = $data['note_agreement'];
     				}
-    				
     				$arr = array(
     						'paid_amount'=>$row['paid_amount']+$data['deposit'],
     						'balance'=>$data['sold_price']-($data['deposit']+$data['paid_before']),
@@ -169,7 +168,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     						'amount_build'=>$data['amount_build'],
     						'is_reschedule'=>$is_schedule,
     						'is_completed'=>($data['schedule_opt']==2)?1:0,
-    						'amount_daydelay'=>$data['delay_day']
+    						'amount_daydelay'=>$data['delay_day'],
+    						'commission_times'=>$data['times_commission'],
+    						'commission_amt'=>$data['commission_amt'],
     				);
     				$where= " id = ".$data['id'];
     				$this->update($arr, $where);
@@ -566,26 +567,26 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    		
 			    		$cum_interest = $cum_interest+$old_interest_paymonth;
 			    		$old_amount_day =$old_amount_day+ $amount_day;
-			    		          $this->_name="ln_saleschedule";
-			    			        $datapayment = array(
-			    			        	'branch_id'=>$data['branch_id'],
-			    			        	'sale_id'=>$id,//good
-			    			        	'begining_balance'=> $old_remain_principal,//good
-			    			        	'begining_balance_after'=> $old_remain_principal,//good
-			    			        	'principal_permonth'=> $old_pri_permonth,//good
-			    			        	'principal_permonthafter'=>$old_pri_permonth,//good
-			    			        	'total_interest'=>$old_interest_paymonth,//good
-			    			        	'total_interest_after'=>$old_interest_paymonth,//good
-			    			        	'total_payment'=>$old_pri_permonth+$old_interest_paymonth,//good
-			    			        	'total_payment_after'=>$old_pri_permonth+$old_interest_paymonth,//good
-			    			        	'ending_balance'=>$old_remain_principal-$old_pri_permonth,
-			    			        	'cum_interest'=>$cum_interest,
-			    			        	'amount_day'=>$old_amount_day,
-			    			        	'is_completed'=>0,
-			    			        	'date_payment'=>$next_payment,
-			    			        	'no_installment'=>$i+$j,
-			    			        	'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0
-			    			        );
+			    		    $this->_name="ln_saleschedule";
+	    			        $datapayment = array(
+	    			        	'branch_id'=>$data['branch_id'],
+	    			        	'sale_id'=>$id,//good
+	    			        	'begining_balance'=> $old_remain_principal,//good
+	    			        	'begining_balance_after'=> $old_remain_principal,//good
+	    			        	'principal_permonth'=> $old_pri_permonth,//good
+	    			        	'principal_permonthafter'=>$old_pri_permonth,//good
+	    			        	'total_interest'=>$old_interest_paymonth,//good
+	    			        	'total_interest_after'=>$old_interest_paymonth,//good
+	    			        	'total_payment'=>$old_pri_permonth+$old_interest_paymonth,//good
+	    			        	'total_payment_after'=>$old_pri_permonth+$old_interest_paymonth,//good
+	    			        	'ending_balance'=>$old_remain_principal-$old_pri_permonth,
+	    			        	'cum_interest'=>$cum_interest,
+	    			        	'amount_day'=>$old_amount_day,
+	    			        	'is_completed'=>0,
+	    			        	'date_payment'=>$next_payment,
+	    			        	'no_installment'=>$i+$j,
+	    			        	'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0
+	    			        );
 		            		 
 			    		$idsaleid = $this->insert($datapayment);
 			    		$old_remain_principal = 0;
@@ -674,7 +675,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	}//បញ្ចាក់ថាប្រាក់កក
     	
     	$all_paidbefore = $dbtable->getAllPaidBefore($data['sale_id']);
-    	
     	$array = array(
     			'branch_id'			=>$data['branch_id'],
     			'client_id'			=>$data['member'],
@@ -683,10 +683,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'sale_id'			=>$data['sale_id'],
     			'date_pay'			=>$data['paid_date'],
     			'date_input'		=>$data['paid_date'],
-    			
     			'allpaid_before'	=>($data['deposit']-$data['paid_before'])+$all_paidbefore,
     			'selling_price'     =>$data['sold_price'],
-    			
     			'outstanding'		=> $data['sold_price']-$data['paid_before'],//ok for id=3 បង់ថេ
     			'principal_amount'	=> $data['sold_price']-($data['deposit']),//ok for 3
     			'total_principal_permonth'	=>$data['deposit']-$data['paid_before'],//ok
@@ -752,6 +750,28 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			$where = " id = ".$row['id'];
     			$this->_name="ln_saleschedule";
     			$this->update($arra, $where);
+    			
+    			if(AUTO_PAYCOMMISSION==1 AND $statuscomplete==1 AND $row['commission']>0){
+    				$__data = array(
+    						'branch_id'      => $data['branch_id'],
+    						'sale_id'	     => $data['loan_number'],
+    						'sale_no' 		=> $data['loan_number'],
+    						'title'	         => '',
+    						'return_back'    => $row['commission'],
+    						'cheque'	     => '',
+    						'cheque_issuer'  => '',
+    						'other_invoice'  => '',
+    						'property_id'    => $data['land_code'],
+    						'income_category'=> 16,
+    						'staff_id'		 => $data['co_id'],
+    						'payment_type'   => 1,
+    						'note'           => '',
+    						'date'           => $data['paid_date'],
+    						'supplier_id'    => '',
+    				);
+    				$db_exp = new Incexp_Model_DbTable_DbComission();
+    				$db_exp->addSaleComission($__data);
+    			}
     			
     			$this->_name='ln_client_receipt_money_detail';
     			$array = array(

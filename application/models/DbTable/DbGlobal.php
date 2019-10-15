@@ -621,6 +621,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  s.land_price ,
 		  s.discount_percent,
 		  s.agreement_date,
+		  s.full_commission,
+		  s.commission_amt,
+		  s.commission_times,
 		  `s`.`admin_fee`       AS `admin_fee`,
 		  `s`.`other_fee`       AS `other_fee`,
 		  `s`.`paid_amount`     AS `paid_amount`,
@@ -1806,6 +1809,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`price_sold`       AS `price_sold`,
 		  `s`.`discount_amount`  AS `discount_amount`,
 		  `s`.`discount_percent` AS `discount_percent`,
+		  s.verify_by,
 		  (SELECT
 		     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
 		   FROM `ln_client_receipt_money` `cr`

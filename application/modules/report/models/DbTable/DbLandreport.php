@@ -2365,6 +2365,38 @@ function updatePaymentStatus($data){
 	  		return $e->getMessage();
 	  	}
 	  }
+	  function AuthorizeSchedule($data){
+	  	$db = $this->getAdapter();
+	  	$db->beginTransaction();
+	  	try{
+	  		
+	  		$arr = array(
+	  			'full_commission'=>$data['full_commission'],
+	  			'commission_amt'=>$data['commission_amt'],
+	  			'commission_times'=>$data['times_commission'],
+	  		);
+	  		$this->_name="ln_sale";
+	  		$where = "id = ".$data['id'];
+	  		$this->update($arr, $where);
+	  		
+	  		$ids =explode(',', $data['identity']);
+	  		$this->_name="ln_saleschedule";
+	  		foreach ($ids as $i){
+	  			$date= new DateTime($data['payment_date'.$i]);
+	  			$next_payment = $date->format("Y-m-d");
+	  			$datapayment = array(
+	  					'commission'=>$data['commission_'.$i],
+	  					'date_payment'=>$next_payment,
+	  			);
+	  			$where = "id = ".$data['fundid_'.$i];
+	  			$this->update($datapayment, $where);
+	  		}
+	  		$db->commit();
+	  	}catch (Exception $e){
+	  		$db->rollBack();
+	  		return $e->getMessage();
+	  	}
+	  }
 	  public function getALLLoanPayoff($search=null){
       	$db = $this->getAdapter();
       	$sql = " SELECT *,

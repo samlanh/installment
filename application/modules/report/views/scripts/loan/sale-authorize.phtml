@@ -4,9 +4,10 @@
 	$dayin_khmer = $this->day_inkhmer;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
-<title><?php echo $tr->translate('Payment Schedule');?></title>
+<title><?php echo $tr->translate('Sale Authorize');?></title>
 <script>
 	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.NumberTextBox");
 </script>
 <style>
 td p{ margin-top:0px !important;}
@@ -14,8 +15,8 @@ td p{ margin-top:0px !important;}
 <div style="margin:0 auto; padding: 0 40px;">
 	<div id="divPrint">
 	<style type="text/css">
-	.style{
-		line-height: 20px;font-size: 11px;
+	.style,label{
+		line-height: 20px;font-size: 12px !important;
 		font-family: 'Khmer OS Battambang';
 	}
 	.font_bold{
@@ -24,13 +25,24 @@ td p{ margin-top:0px !important;}
 		
 	}
 	td p{ margin-top:-12px;}
-table { page-break-inside:auto }
-  tr{ page-break-inside:avoid; page-break-after:auto; }
-#header {
-  display: table-header-group;
-  page-break-inside:avoid; page-break-after:auto;
-}
+	table { page-break-inside:auto }
+  	tr{ page-break-inside:avoid; page-break-after:auto; }
+	#header {
+	  display: table-header-group;
+	  page-break-inside:avoid; page-break-after:auto;
+	}
 	</style>
+	<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'sale-authorize')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+					<script type="dojo/method" event="onSubmit">			
+					if(this.validate()) {
+            			dijit.byId('btn_save').set('disabled',true);
+						return true;
+					}else {
+						return false;
+					}
+				</script>
+				
 	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
 		<tr>
 	    	<td align="center">
@@ -38,7 +50,7 @@ table { page-break-inside:auto }
 	            	<tr>
 	                	<td width="30%" ></td>
 	                	<td width="47%" valign="top">
-	                	<h2 style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><label><?php echo $tr->translate("BRAND_TITLE");?></label></h2>
+	                	<h2 style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></h2>
 	                	<h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BRANCH_NAME");?> : <?php echo  $client['branch_name']; ;?></h2>
 	                	<h2 style="text-align:center; font-size:13px; font-family:'Khmer OS Muol Light'"> <?php echo $tr->translate('RPT_ILLOAN');?></h2>
 	                	</td>
@@ -67,6 +79,23 @@ table { page-break-inside:auto }
 					                     <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-m-Y',strtotime($client['buy_date']));?> </p>
 					                     <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-m-Y',strtotime($client['first_payment'])); ?></p>
 					                     <p><?php echo $tr->translate("LIFE_LOAN");?> : <?php echo date('d-m-Y',strtotime($client['end_line'])); ?></p>
+					                    <div class="form-group">
+						                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMISSION_EXPECTED");?> :</label>
+						                   <div class="col-md-7 col-sm-7 col-xs-12">
+						                    	<input class="fullside" required="1" onkeyup="revertCommission(1);" value="<?php echo $client['full_commission'];?>" dojoType="dijit.form.NumberTextBox" type="text" name="full_commission" id="full_commission"/>
+						                   </div>
+						                </div>
+					                    <div class="form-group">
+						                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("COMMISSION_COLLECT");?> :</label>
+						                   <div class="col-md-7 col-sm-7 col-xs-12">
+						                   		<div class="col-md-6 col-sm-6 col-xs-12">
+						                    		<input class="fullside" placeHolder="ចំ.ដង" value="<?php echo $client['commission_times'];?>" required="1" onkeyup="revertCommission(1);" dojoType="dijit.form.NumberTextBox" type="text" name="times_commission" id="times_commission"/>
+						                    	</div>
+						                    	<div class="col-md-6 col-sm-6 col-xs-12">
+						                    		<input class="fullside" required="1" value="<?php echo $client['commission_amt'];?>" placeHolder="ចំ.ប្រាក់" onkeyup="revertCommission(2);" dojoType="dijit.form.NumberTextBox" type="text" name="commission_amt" id="commission_amt"/>
+						                   		</div>
+						                   </div>
+						                </div>
 				                    </td>
 				                </tr>
 			                </table>
@@ -77,16 +106,6 @@ table { page-break-inside:auto }
 	    </tr>
 	    <tr>
 	    	<td>
-	    		<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-updatestatus')); ?>" 
-				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-					<script type="dojo/method" event="onSubmit">			
-					if(this.validate()) {
-            			dijit.byId('btn_save').set('disabled',true);
-						return true;
-					}else {
-						return false;
-					}
-				</script>
 	            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%">
 	                 <thead>
 		                 <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
@@ -95,8 +114,8 @@ table { page-break-inside:auto }
 		                    <td rowspan="2"><?php echo $tr->translate("PRINCIPLE");?></td>
 		                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("COMMISSION");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("OTHER");?></td>
-		                    <td rowspan="2">ស្ថានការបង់</td>
 		                </tr>
 	                <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
 	                    <td><?php echo $tr->translate("PRINCIPAL");?></td>
@@ -135,30 +154,42 @@ table { page-break-inside:auto }
 	                   		$remain = $row['ending_balance'];
 	                    ?>
 	                    <td><?php echo number_format($remain,(!strrpos($remain,"."))? 0 : 2);?></td>
+	                    <td width="150px"><input class="fullside" dojoType="dijit.form.NumberTextBox" type="text" name="commission_<?php echo $key+1;?>" id="commission_<?php echo $key+1;?>"  value="<?php echo $row['commission'];?>"/></td>
 	                    <td><?php echo ($row['is_completed']==1)?$tr->translate("COMPLETED"):""; ?></td>
-	                	<td style="width:120px;">
-	                	<select dojoType="dijit.form.FilteringSelect"  style="width:120px;border:1px solid #fff;height: 30px;"  name="payment_option<?php echo $key+1;?>" id="payment_option<?php echo $key+1;?>">
-		                    <option value="0" <?php if($row['is_completed']==0){ echo "selected='selected'"; }?>>មិនទាន់គ្រប់</option>
-		                    <option value="1" <?php if($row['is_completed']==1){ echo "selected='selected'"; }?>>បង់ដាច់</option>
-	                    </select>
-	                    </td>
 	                </tr>
 	               <?php }
 	               ?>
 	            </table>
-	            <table width="100%" cellpadding="3">
-	            	<tr class="font_bold" style="height:25px;">
-	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol Light'">
-	            		 <input type="hidden" name="id" id="id" value="<?php echo $this->id;?>" />
-					     <input type="hidden" name="identity" id="identity" value="<?php echo $str;?>" />
-					     <input type="submit" value="រក្សាទុក & ចាកចេញ"  id="btn_save" name="btn_save" label="<?php echo $tr->translate('SAVECLOSE');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
-					    </td>
-	            	</tr>
-	            </table>
-	            </form>
-	            
+		             <div class="card-box">
+	               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+			    		 	<input type="hidden" name="id" id="id" value="<?php echo $this->id;?>" />
+						    <input type="hidden" name="identity" id="identity" value="<?php echo $str;?>" />
+							<input type="submit" value="save_new" id="btn_save" name="btn_save" label="Authorize" dojoType="dijit.form.Button" 
+								iconClass="dijitEditorIcon dijitEditorIconSave" />
+		    			</div>
+		    		</div>
 	    	</td>
 	    </tr>
 	</table>
+	</form>
 	</div>
 </div>
+<script>
+function revertCommission(revert){
+	times_commission = dijit.byId('times_commission').get('value');
+	if(isNaN(times_commission)){times_commission=0;}
+
+	commission_amt = dijit.byId('commission_amt').get('value');
+	if(isNaN(commission_amt)){commission_amt=0;}
+
+	full_commission = dijit.byId('full_commission').get('value');
+	if(isNaN(full_commission)){full_commission=0;}
+	if(revert==1){
+		commision = full_commission/times_commission;	
+		dijit.byId('commission_amt').attr('value',parseInt(commision));
+	}else{
+		commision = Math.ceil(full_commission/commission_amt);	
+		dijit.byId('times_commission').attr('value',commision);
+	}
+}
+</script>
