@@ -15,6 +15,11 @@
 		<form id='add_client' action=" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 			<script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
+				if(checkhouse_title==1){
+					alert("លេខផ្ទះ/ឡូតិ៍នេះមានរួចរាល់ហើយ");
+					dijit.byId('land_address').focus();
+					return false;
+				}
 				loadingBlock();
 				return true;
 			} else {
@@ -326,6 +331,12 @@ dojo.ready(function(){
 				}  
 			}, "property_type");
 		getPropertyNo();
+		checkTitle();
+		dijit.byId('land_address').set('readOnly',false);
+		dijit.byId('street').set('readOnly',false);
+		dijit.byId('land_price').set('readOnly',false);
+		dijit.byId('house_price').set('readOnly',false);
+		dijit.byId('buy_status').set('value',0);
 });
 function showPopupForm(){
 	dijit.byId('save_property').set('disabled',false);
@@ -399,6 +410,7 @@ function calCulateFullSize(){
 	totalsize = width*height;
 	dijit.byId("full_size").attr('value',totalsize);
 }
+var checkhouse_title=0;
 var old_title = '<?php echo $this->row['land_address'];?>';
 url_CheckTitle = '<?php echo $this->url(array('module'=>'project','controller'=>'land','action'=>'check-title'));?>';
 function checkTitle(){
@@ -414,10 +426,12 @@ function checkTitle(){
 		handleAs:"json",
 		load: function(data) {	
 			if(data !== false ){
+				checkhouse_title=1;
 		   		document.getElementById('message').innerHTML ='លេខផ្ទះ/ឡូតិ៍នេះមានរួចរាល់ហើយ';
 		   		dijit.byId('land_address').focus();
 		   		return false;
 			}else{
+				checkhouse_title=0;
 				document.getElementById('message').innerHTML ='';
 				return true;
 			}
