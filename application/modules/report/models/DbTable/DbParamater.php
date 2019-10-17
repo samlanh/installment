@@ -838,6 +838,71 @@ function getAllBranch($search=null){
     		
     		return $db->fetchRow($sql);
     }
+    function getIssueHouseAgreement($id=null){//bppt,natha,longny,moul mith
+    	$db = $this->getAdapter();
+    	$sql="
+    	SELECT
+    	s.buy_date,
+    	s.agreement_date,
+    	(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id = ih.user_id LIMIT 1 ) AS user_name,
+    	(SELECT co_khname FROM `ln_staff` WHERE co_id=s.staff_id LIMIT 1) AS staff_name,
+    	`p`.`project_name`,
+    	 p.p_sex,
+    	`p`.`br_address` AS `project_location`,
+    	`p`.`p_manager_namekh` AS `project_manager_namekh`,
+    	`p`.`p_manager_nation_id` AS `project_manager_nation_id`,
+    	`p`.`p_current_address` AS `project_manager_p_current_address`,
+    	`c`.`name_kh` AS `client_namekh`,
+    	c.hname_kh,
+    	`c`.`nationality` AS `client_nationality`,
+    	`c`.`nation_id` AS `client_nation_id`,
+    	`c`.`house` AS `client_house_no`,
+    	`c`.`street` AS `client_street`,
+    	c.phone,
+    	c.dstreet AS w_street,
+    	(SELECT
+    	`comm`.`commune_namekh` FROM `ln_commune` `comm`
+    	WHERE (`comm`.`com_id` = `c`.`com_id`)
+    	LIMIT 1) AS `client_commune_kh`,
+    	(SELECT
+    	`provi`.`province_kh_name`
+    	FROM `ln_province` `provi`
+    	WHERE (`provi`.`province_id` = `c`.`pro_id`)
+    	LIMIT 1) AS `client_province_kh`,
+    	
+    	(SELECT
+				     `dist`.`district_namekh`
+				   FROM `ln_district` `dist`
+				   WHERE (`dist`.`dis_id` = `c`.`dis_id`)
+				   LIMIT 1) AS `client_districtkh`,
+    	(SELECT
+    	`prope_type`.`type_nameen`
+    	FROM `ln_properties_type` `prope_type`
+    	WHERE (`prope_type`.`id` =`pp`.`property_type`)
+    	LIMIT 1) AS `property_type_en`,
+    	`pp`.`property_type`,
+    	`pp`.`land_address` AS `property_title`,
+    	pp.`street` AS `property_street`,
+    	ih.*
+    	
+    	FROM
+	    	`ln_sale` AS `s`,
+	    	ln_issue_house as ih,
+	    	ln_project AS p ,
+	    	`ln_client` AS c,
+	    	ln_properties as pp
+    	WHERE
+	    	`p`.`br_id` = `s`.`branch_id`
+	    	AND `c`.`client_id` = `s`.`client_id`
+	    	AND `pp`.`id` = `s`.`house_id`
+	    	AND ih.sale_id = s.id
+	    	AND ih.id=".$id;
+    
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("`s`.`branch_id`");
+    
+    	return $db->fetchRow($sql);
+    }
 //     function getAgreementBySaleID($id=null){//tbongkhmom
 //     	$db = $this->getAdapter();
 //     	$sql="
