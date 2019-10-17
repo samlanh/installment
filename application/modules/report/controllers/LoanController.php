@@ -1113,4 +1113,32 @@ class Report_LoanController extends Zend_Controller_Action {
 		$db_keycode = new Application_Model_DbTable_DbKeycode();
 		$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
 	}
+	function rptReceivehouseAction(){
+		if($this->getRequest()->isPost()){
+			$search=$this->getRequest()->getPost();
+		}else{
+			$search = array(
+				'txt_search'=>'',
+				'client_name'=> -1,
+				'branch_id' => -1,
+				'streetlist'=>'',
+				'status' => -1,
+				'land_id'=>-1,
+				'payment_id'=>0,
+				'start_date'=> date('Y-m-d'),
+				'end_date'=>date('Y-m-d'));
+		}
+		$this->view->rssearch = $search;
+		$db  = new Loan_Model_DbTable_DdReceived();
+		$this->view->row = $db->getAllIssueHouse($search);
+		
+		$frm_search = new Loan_Form_FrmSearchLoan();
+		$frm = $frm_search->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		$this->view->rssearch = $search;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+	}
 }

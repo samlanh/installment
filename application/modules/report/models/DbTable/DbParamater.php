@@ -883,6 +883,7 @@ function getAllBranch($search=null){
     	`pp`.`property_type`,
     	`pp`.`land_address` AS `property_title`,
     	pp.`street` AS `property_street`,
+    	ih.payment_id as installment_type,
     	ih.*
     	
     	FROM

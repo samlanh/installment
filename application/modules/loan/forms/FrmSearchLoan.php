@@ -183,10 +183,6 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 				'queryExpr'=>'*${0}*',
 				'class'=>'fullside',
 		));
-// 		$opt= $db->getVewOptoinTypeByType(12,1,null,null);
-// 		if($request->getActionName()!='add' OR $request->getActionName()!='edit'){
-// 			unset($opt[-1]);
-// 		}
 		$cateIncome = $db->getAllCategoryIncomeExpens(12);
 		$opt=array(''=>$this->tr->translate("SELECT_CATEGORY"));
 		if(!empty($cateIncome))foreach($cateIncome AS $row){
@@ -322,13 +318,25 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$cheque_issuer_search->setMultiOptions($opt1);
 		$cheque_issuer_search->setValue($request->getParam("cheque_issuer_search"));
 		
+		$payment_id = new Zend_Dojo_Form_Element_FilteringSelect('payment_id');
+		$payment_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$options = array();
+		$options= array(0=>$this->tr->translate("SELECT_TYPE"));
+		$options['1']=$this->tr->translate("IS_PAYOFF");
+		$options['2']=$this->tr->translate("PAY_INSTALLMENT");
+		$payment_id->setMultiOptions($options);
+		$payment_id->setValue($request->getParam("payment_id"));
+		
 		if($data!=null){
-// 			$_member->setValue($data['client_id']);
 			$_coid->setValue($data['co_id']);
 			$_releasedate->setValue($data['date_release']);
 			$client_name->setValue($data['client_name']);
 		}
-		$this->addElements(array($sale_status,$status_plong,$payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
+		$this->addElements(array($payment_id,$sale_status,$status_plong,$payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
 				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist,$cheque_issuer_search));
 		return $this;
 		

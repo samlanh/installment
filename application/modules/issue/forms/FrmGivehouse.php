@@ -68,7 +68,6 @@ Class Issue_Form_FrmGivehouse extends Zend_Dojo_Form {
 		$note = new Zend_Dojo_Form_Element_NumberTextBox('note');
 		$note->setAttribs(array(
 			'dojoType'=>'dijit.form.Textarea',
-			'required' =>'true',
 			'class'=>'fullside',
 			'style'=>'min-height: 60px;'
 		));
@@ -80,6 +79,12 @@ Class Issue_Form_FrmGivehouse extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'style'=>'min-height: 60px;'
 		));
+		$str_value='ទំនាក់ទំនងខាងការដ្ឋាន :
+១.ឈឹម រដ្ធធានី (M44): 012 515 601
+២.ឌុយ យូឡាយ (M2): 017 788 567
+៣.ថន ប៊ុនថេន (E1): 011 800 789';
+		$contact_contruction->setValue($str_value);
+		
 	
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
