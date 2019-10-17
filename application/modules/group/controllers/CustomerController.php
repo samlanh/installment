@@ -78,7 +78,13 @@ class Group_CustomerController extends Zend_Controller_Action {
 		$fm = new Group_Form_FrmCustomer();
 		$frm = $fm->FrmAddCustomer();
 		Application_Model_Decorator::removeAllDecorator($frm);
-		$this->view->frm_customer = $frm;		
+		$this->view->frm_customer = $frm;
+
+		$dbpop = new Application_Form_FrmPopupGlobal();
+		$this->view->frm_popupOther = $dbpop->frmPopupOther();
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$this->view->knowby = $db->getAllKnowBy(null,1);
 	}
 	public function editAction(){
 
@@ -122,6 +128,9 @@ class Group_CustomerController extends Zend_Controller_Action {
 		$frm = $fm->FrmAddCustomer($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_customer = $frm;
+		
+		$dbpop = new Application_Form_FrmPopupGlobal();
+		$this->view->frm_popupOther = $dbpop->frmPopupOther();
 	}
 	
 	public function contactAction(){
@@ -160,5 +169,15 @@ class Group_CustomerController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_crmhistory = $frm;
 	}
+	
+	public function addnewdataAction(){
+	   	if($this->getRequest()->isPost()){
+	   		$data = $this->getRequest()->getPost();
+	   		$db_co = new Group_Model_DbTable_DbCustomer();
+	   		$id = $db_co->addKnowBy($data);
+	   		print_r(Zend_Json::encode($id));
+	   		exit();
+	   	}
+   }
 
 }

@@ -26,10 +26,11 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
+				'onChange' => 'popUpKnowBy()'
 		
 		));
 		$db = new Application_Model_DbTable_DbGlobal();
-		$opt_know = $db->getAllKnowBy(1);
+		$opt_know = $db->getAllKnowBy(1,1);
 		$know_by->setMultiOptions($opt_know);
 
 		$_date = new Zend_Dojo_Form_Element_DateTextBox('date');

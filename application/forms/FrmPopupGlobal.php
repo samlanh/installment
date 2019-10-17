@@ -2100,4 +2100,47 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 	';
 		return $str;
 	}
+	
+	public function frmPopupOther(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	
+		$frm = new Other_Form_FrmOther();
+		$frm=$frm->FrmaddOther();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$string='
+		<div class="dijitHidden">
+			<div data-dojo-type="dijit.Dialog"  id="frm_datapop" data-dojo-props="title:'."'".$tr->translate("ADD_NEW_DATA")."'".'">
+				<form id="form_popup" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+					<div class="card-box">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<div class="form-group">
+								<label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name">
+									<i class="fa fa-hand-o-right" aria-hidden="true"></i>
+									<span id="title_form"></span>
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">'.$tr->translate('TITLE').' :
+								</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+								'.$frm->getElement("title").'
+								</div>
+							</div>
+							
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+							<input type="button"  label="'.$tr->translate("SAVE").'" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addData();"/>
+						</div>
+					</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		';
+		return $string;
+	
+	}
 }

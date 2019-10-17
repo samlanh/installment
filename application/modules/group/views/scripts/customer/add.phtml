@@ -130,7 +130,55 @@ dojo.require("dijit.form.TextArea");
 		</form>
 	</div>
 </div>
+<?php 
+echo $this->frm_popupOther;
+?>
+
 <script type="text/javascript">
+var other_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->knowby));?> );
+require(["dojo/ready"], function(ready){
+	new dijit.form.FilteringSelect({
+		name: "know_by",
+		id: "know_by",
+		autoComplete: false,
+		queryExpr: "*${0}*",     
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+			popUpKnowBy();
+	    }
+	}, "know_by");
+});
+function popUpKnowBy(){
+	var know_by =  dijit.byId('know_by').get('value');
+	if(know_by==-1){
+		dijit.byId("frm_datapop").show();
+	}
+}
+var url_branch = '<?php echo $this->url(array('module'=>'group','controller'=>'customer','action'=>'addnewdata')); ?>';
+function addData(){
+	if(dijit.byId('form_popup').validate()){
+		loadingBlock();
+		dojo.xhrPost({
+			url:url_branch,
+			form: dojo.byId("form_popup"),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = {					
+						id: data,
+						name: dijit.byId('title').get('value')
+				};
+				addDataToSelectbox(dijit.byId('know_by'),other_store , Itemmake, data);	
+				dijit.byId('form_popup').reset();
+				dijit.byId("frm_datapop").hide();
+				HideloadingBlock();
+			},
+			error: function(err) {
+				HideloadingBlock();
+			}
+		});
+	}
+}
 function showstatusreq(){
 	statusreq = dijit.byId('statusreq').get('value');
 	if(statusreq==''){

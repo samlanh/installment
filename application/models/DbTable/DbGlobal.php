@@ -1525,18 +1525,25 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$sql="SELECT s.`id`,s.`name` FROM `ln_supplier` AS s WHERE s.`status`=1 AND s.`name`!=''";
   	return $db->fetchAll($sql);
   }
-  function getAllKnowBy($option=1){
+  function getAllKnowBy($option=1,$_add_new=null){
   	$db = $this->getAdapter();
-  	$sql="SELECT id,title FROM `rms_know_by` WHERE `status`=1 AND `title`!='' ";
+  	$sql="SELECT id,title,title as name FROM `rms_know_by` WHERE `status`=1 AND `title`!='' ";
   	$result=$db->fetchAll($sql);
+  	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	if($option!=null){
-  		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-  		$options=array(-1=>$tr->translate("SELCT_TYPE"));
+  		
+  		$options=array(''=>$tr->translate("SELCT_TYPE"));
+  		if (!empty($_add_new)){
+  			$options[-1]=$tr->translate("ADD_NEW");
+  		}
   		if(!empty($result))foreach($result as $rs){
   			$options[$rs['id']]=$rs['title'];
   		}
   		return $options;
   	}else{
+  		if (!empty($_add_new)){
+  			array_unshift($result, array('id'=>'','name' => $tr->translate("SELCT_TYPE")), array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW")));
+  		}
   		return $result ;
   	}
   }

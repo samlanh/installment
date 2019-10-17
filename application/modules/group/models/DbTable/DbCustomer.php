@@ -134,4 +134,31 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 			echo $e->getMessage();
 		}
 	}
+	public function addKnowBy($_data){
+		$db = $this->getAdapter();
+		$db->beginTransaction();
+		try{
+			$_arr=array(
+					'title'	  => $_data['title'],
+					'create_date' => date('Y-m-d H:i:s'),
+					'user_id'	  => $this->getUserId()
+			);
+			$this->_name = "rms_know_by";
+			if(!empty($_data['id'])){
+				$id = $_data['id'];
+				$_arr['status'] = $_data['status'];
+				$where = 'id = '.$id;
+				$this->update($_arr, $where);
+			}else{
+				$_arr['status'] = 1;
+				$id =  $this->insert($_arr);
+			}
+			$db->commit();
+			return $id;
+		}catch (Exception $e){
+			Application_Form_FrmMessage::message("Application Error");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+		}
+	}
 }
