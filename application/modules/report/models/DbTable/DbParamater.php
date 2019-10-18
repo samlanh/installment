@@ -185,7 +185,8 @@ function getAllBranch($search=null){
     			$where.= " AND street ='".$search['streetlist']."'";
     		}
 
-    		$where.=" ORDER BY p.`property_type`,p.`street` ASC, cast(land_address as unsigned) "; 
+//     		$where.=" ORDER BY p.`property_type`,p.`street` ASC, cast(land_address as unsigned) "; 
+    		$where.= " ORDER BY p.`property_type`,p.`street` ASC, IF(land_address RLIKE '^[a-z]', 1, 2), land_address ASC ";
     		return $db->fetchAll($sql.$where);
     	}
     	function getCancelSale($search=null){

@@ -53,7 +53,9 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	
     	$where.=$dbp->getAccessPermission("ln_properties.branch_id");
     	
-    	$order=" ORDER BY cast(land_address as unsigned) , id DESC ";
+//     	$order=" ORDER BY cast(land_address as unsigned) , id DESC ";
+    	
+    	$order = " ORDER BY IF(land_address RLIKE '^[a-z]', 1, 2), land_address DESC , id DESC ";
     	return $db->fetchAll($sql.$where.$order);
     }
     public function addLandinfoAuto($_data){
