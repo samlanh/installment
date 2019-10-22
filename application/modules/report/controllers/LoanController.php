@@ -1141,4 +1141,35 @@ class Report_LoanController extends Zend_Controller_Action {
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
 	}
+	function rptTransferCashAction(){//release all loan
+		$db  = new Report_Model_DbTable_DbLandreport();
+		if($this->getRequest()->isPost()){
+ 				$search = $this->getRequest()->getPost();
+ 				
+ 			}else{
+				$search = array(
+						'adv_search'=>'',
+						'client_name'=> -1,
+						'branch_id' => -1,
+						'status' => -1,
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+						 );
+			}
+		$this->view->row = $db->getAllTransferCash($search);
+		$this->view->list_end_date=$search;
+		$this->view->search = $search;
+		$this->view->branch_id = $search['branch_id'];
+			
+		$frm = new Loan_Form_FrmSearchLoan();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+			
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+	
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+	}
 }
