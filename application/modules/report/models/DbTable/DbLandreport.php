@@ -3323,9 +3323,7 @@ function updatePaymentStatus($data){
       }
       
       function getAllTransferCash($search){
-      	$from_date =(empty($search['start_date']))? '1': " s.change_date >= '".$search['start_date']." 00:00:00'";
-      	$to_date = (empty($search['end_date']))? '1': " s.change_date <= '".$search['end_date']." 23:59:59'";
-      	$where = " AND ".$from_date." AND ".$to_date;
+      
       	$sql="SELECT cp.id,
       	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.branch_id LIMIT 1) AS from_branch,
       	c.name_kh,
@@ -3343,17 +3341,12 @@ function updatePaymentStatus($data){
       	$where = " AND ".$from_date." AND ".$to_date;
       	if(!empty($search['adv_search'])){
       		$s_where = array();
-      		//    		$s_search = addslashes(trim($search['adv_search']));
-      		//    		$s_where[] = " cp.receipt_no LIKE '%{$s_search}%'";
-      		//    		$s_where[] = " p.land_code LIKE '%{$s_search}%'";
-      		//    		$s_where[] = " p.land_address LIKE '%{$s_search}%'";
-      		//    		$s_where[] = " c.client_number LIKE '%{$s_search}%'";
-      		//    		$s_where[] = " c.name_en LIKE '%{$s_search}%'";
-      		//    		$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
-      		//    		$s_where[] = " s.price_sold LIKE '%{$s_search}%'";
-      		//    		$s_where[] = " s.comission LIKE '%{$s_search}%'";
-      		//    		$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
-      		//    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+      		   	$s_search = addslashes(trim($search['adv_search']));
+      		   	$s_where[] = " (SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.from_property LIMIT 1) LIKE '%{$s_search}%'";
+      		   	$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
+      		   	$s_where[] = " (SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.to_property LIMIT 1) LIKE '%{$s_search}%'";
+      		   	$s_where[] = " cp.from_paid LIKE '%{$s_search}%'";
+      		$where .=' AND ( '.implode(' OR ',$s_where).')';
       	}
       	if($search['status']>-1){
       		$where.= " AND cp.status = ".$search['status'];
