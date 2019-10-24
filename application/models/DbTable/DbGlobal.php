@@ -755,12 +755,24 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	   }else{
   	   		$sql.=" AND  status Not IN (-1,0) ";
   	   }
-  	   
+  	   $key = new Application_Model_DbTable_DbKeycode();
+  	   $_setting = $key->getKeyCodeMiniInv(TRUE);
+  	   $is_show = empty($_setting['showhouseinfo'])?0:$_setting['showhouseinfo'];
+  	   if($is_show==0){
+  	   }else{
+  	   	$sql.=" AND `is_lock`=0  ";
+  	   }
   	   //just concate
 //   	   $sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE status!=0 AND `land_address`!='' ";//just concate
   	   $request=Zend_Controller_Front::getInstance()->getRequest();
+//   	   if($action==null){
+//   	   	$sql.=" AND `is_lock`=0  ";
+//   	   }
   	   if($action==null){
-  	   	$sql.=" AND `is_lock`=0  ";
+	  	   	if($is_show==0){
+	  	   	}else{
+	  	   		$sql.=" AND `is_lock`=0  ";
+	  	   	}
   	   }
   	   if($branch_id!=null){
   	   	$sql.=" AND `branch_id`=$branch_id ";
