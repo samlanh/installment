@@ -44,6 +44,7 @@
 					dijit.byId('toloan_number').focus();
 					return false;
 				}
+				loadingBlock();
 				dijit.byId('savenew').set('disabled',true);
 				dijit.byId('saveclose').set('disabled',true);
 				return true;
@@ -121,6 +122,13 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('paid_before');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("INTEREST_PAID");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('from_interest_rate');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -361,6 +369,7 @@ function getInfoByLoanNumber(){
 		dijit.byId('paid_before').attr('value',"");
 		dijit.byId("member").attr('value',"");
 		dijit.byId('land_code').attr('value',"");
+		dijit.byId('from_interest_rate').attr('value',"");
 		return false;
 	}
 	dojo.xhrPost({
@@ -378,6 +387,10 @@ function getInfoByLoanNumber(){
 			dijit.byId('paid_before').attr('value',total_principal);
 			dijit.byId("member").attr('value',data.client_id);
 			dijit.byId('land_code').attr('value',data.house_id)
+			
+			dijit.byId('from_interest_rate').attr('value',data.total_interest_paid);
+			dijit.byId('from_interest_rate').set('readOnly',true);
+			
 			dijit.byId('member').set('readOnly',true);
 
 			dijit.byId('land_code').set('readOnly',true);

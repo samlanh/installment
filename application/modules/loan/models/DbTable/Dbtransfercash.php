@@ -76,6 +76,7 @@ class Loan_Model_DbTable_Dbtransfercash extends Zend_Db_Table_Abstract
     				'from_saleprice'=>$data['total_sold'],
     				'from_paid'=>$data['paid_before'],
     				'from_balance'=>$data['balance_before'],
+    				'from_interest_rate'=>$data['from_interest_rate'],
     				
     				'to_branch'=>$data['to_branch_id'],
     				'to_sale'=>$data['toloan_number'],

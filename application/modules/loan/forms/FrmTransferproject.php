@@ -285,6 +285,12 @@ public function init()
 				'class'=>'fullside',
 		));
 		
+		$from_interest_rate = new Zend_Dojo_Form_Element_NumberTextBox('from_interest_rate');
+		$from_interest_rate->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+		));
+		
 		$agreementdate = new Zend_Dojo_Form_Element_DateTextBox('agreement_date');
 		$agreementdate->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
@@ -353,7 +359,8 @@ public function init()
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id,
-				$typesale
+				$typesale,
+				$from_interest_rate
 				));
 		return $this;
 		

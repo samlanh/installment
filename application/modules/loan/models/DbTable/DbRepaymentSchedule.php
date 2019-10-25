@@ -858,6 +858,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     	$sql=" SELECT
     	(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) AS total_principal,
     	(SELECT (total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 ORDER BY date_input DESC,id DESC  LIMIT 1) AS extra_payment,
+    	(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) AS total_interest_paid,
+    	
     	(SELECT date_input FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 ORDER BY date_input DESC LIMIT 1) AS date_input,
     	(SELECT date_payment FROM `ln_saleschedule` WHERE is_completed = 0 AND status=1 AND sale_id=$id ORDER BY date_payment ASC LIMIT 1 ) AS date_payment,
     	(SELECT date_payment FROM `ln_saleschedule` WHERE is_completed = 1 AND status=1 AND sale_id=$id ORDER BY date_payment DESC LIMIT 1 ) AS startdate_calcualte,
