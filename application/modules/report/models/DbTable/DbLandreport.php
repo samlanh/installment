@@ -3348,9 +3348,6 @@ function updatePaymentStatus($data){
       		   	$s_where[] = " cp.from_paid LIKE '%{$s_search}%'";
       		$where .=' AND ( '.implode(' OR ',$s_where).')';
       	}
-      	if($search['status']>-1){
-      		$where.= " AND cp.status = ".$search['status'];
-      	}
       	if(($search['client_name'])>0){
       		$where.= " AND cp.from_clientid=".$search['client_name'];
       	}
