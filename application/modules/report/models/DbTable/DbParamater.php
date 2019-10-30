@@ -1894,8 +1894,8 @@ function getAllBranch($search=null){
     	function getCustomerRequirement($search=null){
     		$db = $this->getAdapter();
     		$sql="SELECT c.*,
-    			(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=c.know_by LIMIT 1) as know_by,			
-				(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name,
+	    			(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=c.know_by LIMIT 1) as know_by,			
+					(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name,
 				STATUS FROM in_customer AS c WHERE c.`status`=1 ";
     		$where ="";
     		$from_date =(empty($search['start_date']))? '1': " c.`date` >= '".$search['start_date']." 00:00:00'";
@@ -1933,10 +1933,9 @@ function getAllBranch($search=null){
     		
     		$dbgb = new Application_Model_DbTable_DbGlobal();
     		$userinfo = $dbgb->getUserInfo();
-    		if($userinfo['level']!=1){
+    		if($userinfo['level']!=1 AND $userinfo['level']!=2){
     			$where.= " AND user_id = ".$userinfo['user_id'];
     		}
-    		
     		$where.=" ORDER BY c.id DESC ";
     		return $db->fetchAll($sql.$where);
     	}

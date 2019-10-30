@@ -201,6 +201,8 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			$request=Zend_Controller_Front::getInstance()->getRequest();
 			if($request->getControllerName()=='income'){
 				$_status->setValue($data['is_beginning']);
+			}else{
+				$_other_invoice->setValue($data['other_invoice']);
 			}
 			if (!empty($data['supplier_id'])){
 			$_supplier_id->setValue($data['supplier_id']);
@@ -209,7 +211,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			if (!empty($data['cheque_issuer'])){
 				$cheque_issuer->setValue($data['cheque_issuer']);
 			}
-			$_other_invoice->setValue($data['other_invoice']);
+			
 		}
 		$this->addElements(array($_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
