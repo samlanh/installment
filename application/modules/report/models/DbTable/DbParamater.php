@@ -1814,6 +1814,7 @@ function getAllBranch($search=null){
     		$sql="SELECT 
 						(SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` AND c.status=1 LIMIT 1) AS totoal_comminssion,
 						SUM(s.`comission`) AS total_sale_commission,
+						s.id AS sale_id,
 						s.`full_commission`,
 						s.`branch_id`,
 						s.buy_date,

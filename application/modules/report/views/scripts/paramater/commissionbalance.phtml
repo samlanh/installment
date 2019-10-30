@@ -1,6 +1,7 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_staff;
+	$url_commissionbalance = $this->url(array('module'=>'report','controller'=>'paramater','action'=>'commissionreceipt'));
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -104,9 +105,9 @@
 			            	<tr>
 			                	<td width="30%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="max-height:85px;max-width:100%;"></td>
 			                	<td width="40%" valign="top">
-			                	<h2 style="white-space:nowrap;line-height: 20px; font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></h2>
-			                	<h2 style="line-height: 20px; font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_COMISSION_BALANCE");?></h2>
-			                	<h2 style="line-height: 20px;font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></h2>
+				                	<h2 style="white-space:nowrap;line-height: 20px; font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></h2>
+				                	<h2 style="line-height: 20px; font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_COMISSION_BALANCE");?></h2>
+				                	<h2 style="line-height: 20px;font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></h2>
 			                	</td>
 			                    <td width="30%"></td>
 			                </tr> 
@@ -144,18 +145,18 @@
 			       		$balance = 0;
 			       		$key=0; 
 			       	   if(!empty($this->row))foreach($this->row as $key =>$row){
-					   $total = $total +$row['full_commission'];	
-					   $paidcommision = $row['totoal_comminssion']+$row['total_sale_commission'];
-					   $remain = $row['full_commission'] - $paidcommision;
-					   $balance = $balance+$remain;
-					   $totalpaid_com = $totalpaid_com+$paidcommision;
-					   if($row['price_sold']>0){
-					   	$percentpaid = @($row['total_sale_paid']*100)/$row['price_sold'];
-			       	   }else{
-			       	   	$percentpaid=100;
-			       	   }
+					   	   $total = $total +$row['full_commission'];	
+						   $paidcommision = $row['totoal_comminssion']+$row['total_sale_commission'];
+						   $remain = $row['full_commission'] - $paidcommision;
+						   $balance = $balance+$remain;
+						   $totalpaid_com = $totalpaid_com+$paidcommision;
+						   if($row['price_sold']>0){
+						   		$percentpaid = @($row['total_sale_paid']*100)/$row['price_sold'];
+				       	   }else{
+				       	   		$percentpaid=100;
+				       	   }
 					  ?>
-					   <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
+					   <tr oncontextmenu="setrowdata(<?php echo $row['sale_id'];?>);return false;" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover context-menu-one">
 					     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 					     <td align="left" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name']?>&nbsp;</td>
 						 <td style="white-space: nowrap;">&nbsp;<?php echo $row['co_khname'];?>&nbsp;</td>
@@ -182,42 +183,41 @@
 	    	</td>
 	    </tr>
 	</table>
-	<br />
+	   <br />
 	   <?php echo $this->footerReport;?>
 </div>
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <script>
-dojo.require("dojo.data.ItemFileWriteStore"); 
-var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
-require(["dojo/ready"], function(ready){
-	ready(function(){
-		 getAllPropertyBranch();
-	});
-	new dijit.form.FilteringSelect({
-		store: property_store,
-		required: false,
-		autoComplete: false,
-		queryExpr: "*${0}*",
-		name: "land_id",
-		id: "land_id",
-		value:-1,
-		searchAttr: "name",
-		class: 'fullside',
-		onChange: function() {
-			land_id=-1;
-	}
-		}, "land_id");
-	new dijit.form.FilteringSelect({
-		name: "branch_id",
-		id: "branch_id",
-		class: 'fullside',
-		autoComplete: false,
-		onChange: function() {
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+	require(["dojo/ready"], function(ready){
+		ready(function(){
 			 getAllPropertyBranch();
-		}
+		});
+		new dijit.form.FilteringSelect({
+			store: property_store,
+			required: false,
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			name: "land_id",
+			id: "land_id",
+			value:-1,
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function(){
+				land_id=-1;
+			}
+		}, "land_id");
+		new dijit.form.FilteringSelect({
+			name: "branch_id",
+			id: "branch_id",
+			class: 'fullside',
+			autoComplete: false,
+			onChange: function() {
+				 getAllPropertyBranch();
+			}
 		}, "branch_id");
-	 
 });
 land_id = '<?php echo $this->search['land_id']?>';
 var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
@@ -234,7 +234,7 @@ function getAllPropertyBranch(branch_id){
 		    'action':1
 		},		    
 		handleAs:"json",
-		load: function(data) {
+		load:function(data){
 			property_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('land_id').set('store', property_store);
 		    dijit.byId('land_id').reset();
@@ -242,8 +242,34 @@ function getAllPropertyBranch(branch_id){
 		    	dijit.byId('land_id').attr('value',land_id);
 			 }
 		},
-		error: function(err) {
+		error: function(err){
 		}
 	});
 } 
+
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="commission_detail"){
+				url='<?php echo $this->baseUrl()."/report/paramater/commissionreceipt/id/";?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"commission_detail": {name: "<?php echo $tr->translate("DETAIL");?>", icon: "fa-calendar"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
 </script>

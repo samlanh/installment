@@ -51,16 +51,12 @@ class RsvAcl_AclController extends Zend_Controller_Action
     
     public function viewAclAction()
     {   
-    	/* Initialize action controller here */
     	if($this->getRequest()->getParam('id')){
     		$db = new RsvAcl_Model_DbTable_DbAcl();
     		$acl_id = $this->getRequest()->getParam('id');
-    		//echo $acl_id; exit;
     		$rs=$db->getAcl($acl_id);
-    		//print_r($rs); exit;
     		$this->view->acl_data=$rs;
     	}  	 
-    	
     }
 	public function addAction()
 		{
@@ -71,20 +67,8 @@ class RsvAcl_AclController extends Zend_Controller_Action
 			{
 				$db=new RsvAcl_Model_DbTable_DbAcl();	
 				$post=$this->getRequest()->getPost();
-							
-// 				if(!$db->isActionExist($post['action'])){
-					  
-						$id=$db->insertAcl($post);
-						 //write log file 
-				             $userLog= new Application_Model_Log();
-				    		 $userLog->writeUserLog($id);
-				     	  //End write log file
-				
-						Application_Form_FrmMessage::message('INSERT_SUCCESS');
-// 						Application_Form_FrmMessage::redirector('/rsvAcl/acl/index');																			
-// 				}else {
-// 					Application_Form_FrmMessage::message('Action had existed already');
-// 				}
+				$id=$db->insertAcl($post);
+				Application_Form_FrmMessage::message('INSERT_SUCCESS');
 			}
 		}
     public function editAction()

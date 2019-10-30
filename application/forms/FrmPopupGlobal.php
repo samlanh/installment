@@ -2103,7 +2103,6 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 	
 	public function frmPopupOther(){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	
 		$frm = new Other_Form_FrmOther();
 		$frm=$frm->FrmaddOther();
 		Application_Model_Decorator::removeAllDecorator($frm);
