@@ -1,0 +1,98 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('TRANSFER_DETAIL'));
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$frm = $this->form_search;
+?>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<style>
+		#footer{display: none;}
+	</style>	
+	<div style="min-height:22cm; margin:0 auto;">
+		<div id="divPrint">
+			<table cellspacing="20" width="100%" style="margin: 0 auto; font-family:'Khmer OS Battambang';">
+				<tr>
+					<td align="center">
+						<table width="100%">
+							<tr>
+								<td width="15%">
+									<img style="width: 60%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"></td>
+								<td width="70%" align="center">
+								<strong style=" font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><?php echo $tr->translate('CUSTOMER_BRANCH');?></strong><br />
+									<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><?php echo $tr->translate('TRANSFER_DETAIL')?></strong><br />
+									<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';"><?php if(!empty($this->search['start_date'])){?>For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));}?></strong>
+								</td>
+								<td width="15%"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table cellspacing="2" width="100%" >
+							<tr>
+								<td align="center" valign="top">
+									<table style="margin: 0 auto; width:100%;font-size:13px;" cellspacing="2">
+										<tr>
+											<td width="25%"><?php echo $tr->translate("TRANSFER_NUMBER");?> : </td>
+											<td width="25%"><?php echo $this->rs['transfer_no']; ?></td>
+											<td width="25%"><?php echo $tr->translate("TRANSFER_DATE");?> : </td>
+											<td width="25%"><?php echo $this->rs['transfer_date']; ?></td>
+										</tr>
+										<tr>
+											<td width="25%"><?php echo $tr->translate("FROM_LOCATION");?> : </td>
+											<td width="25%"><?php echo $this->rs['f_branch']; ?></td>
+											<td width="25%"><?php echo $tr->translate("TO_LOCATION");?>: </td>
+											<td width="25%"><?php echo $this->rs['t_branch']; ?></td>
+										</tr>
+										<tr>
+											<td width="25%"><?php echo $tr->translate("NOTE");?> : </td>
+											<td width="75%" style="min-height:70px;" colspan="3">
+												<?php echo $this->rs['note']; ?>
+											</td>
+										</tr>
+										<tr>
+										    <td colspan="4">
+											    <table width="100%" style="border-collapse: collapse; white-space: nowrap;border:1px solid #000;">
+												    <tr style="background:#ccd9ff;font-size:13px;text-align: center;font-weight: bold;">
+													    <td  style="border:1px solid #000;"><?php echo $tr->translate("N_O");?></td>
+														<td  style="border:1px solid #000;"><?php echo $tr->translate("PRODUCT_NAME");?></td>
+														<td  style="border:1px solid #000;"><?php echo $tr->translate("QTY_TRANSFER");?></td>
+														<td  style="border:1px solid #000;"><?php echo $tr->translate("REMARK");?></td>
+													</tr>
+													<?php if(!empty($this->rsdetail)){
+														foreach($this->rsdetail as $key=> $row){ $key=$key+1;
+													?>	
+														<tr style="font-size: 12px;">
+														    <td align="center" style="border:1px solid #000;"><?php echo $key; ?></td>
+															<td style="border:1px solid #000;">&nbsp;&nbsp;<?php echo $row['pro_name']; ?></td>
+														    <td align="center" style="border:1px solid #000;">&nbsp;<?php echo $row['qty']; ?></td>
+															<td style="border:1px solid #000;">&nbsp;<?php echo $row['note']; ?></td>
+														</tr>
+													<?php }} ?>	
+												</table>
+											</td>
+										</tr>					
+									</table>
+									<table width="100%" style="font-family:'Khmer OS Battambang';">
+										<tr>
+											<td  width="25%" align="center">
+												<span style=" font-size: 14px;"><?php echo $tr->translate('VERIFIED_BY')?></span>
+											</td>
+											<td  width="50%">
+												&nbsp;
+											</td>
+											<td align="center"  width="25%">
+												<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate('PREPARED_BY')?></span>
+											</td>
+										</tr>
+									</table>
+								</td>							
+							</tr>
+						</table>	
+					</td>			
+				</tr>
+		</table>
+		</div>	
+	</div>
+</div>

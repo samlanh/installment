@@ -1,0 +1,172 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('RPT_REQUEST_PRODUCT')); 
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$frm =  $this->form_search;
+	$rows=$this->rows;
+?>
+<style>
+.hover:hover{ background:#ccc;}
+table.content-data tr.style-head,
+table.tb-footer tr.style-head {
+   font-weight: bold !important;
+}
+</style>	
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+		   	<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_REQUEST_PRODUCT');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form action="" dojoType="dijit.form.Form" method="post">
+		 <div class="form-group">
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('title');?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('branch_id');?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<select name="request_for" id="request_for" dojoType="dijit.form.FilteringSelect" class="fullside" >
+					<option value="-1"><?php echo $tr->translate('SELECT_REQUEST_FOR')?></option>
+					<?php if(!empty($this->rq_for)){foreach($this->rq_for as $req_for){?>
+						<option value="<?php echo $req_for['id']?>" <?php if($req_for['id']==$this->search['request_for']){echo "selected='selected'";}?> ><?php echo $req_for['name']?></option>
+					<?php }}?>
+				</select>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<select name="for_section" id="for_section" dojoType="dijit.form.FilteringSelect" class="fullside" >
+					<option value="-1"><?php echo $tr->translate('SELECT_REQUEST_FOR_DEPT')?></option>
+					<?php if(!empty($this->for_section)){foreach($this->for_section as $for_sec){?>
+						<option value="<?php echo $for_sec['id']?>" <?php if($for_sec['id']==$this->search['for_section']){echo "selected='selected'";}?> ><?php echo $for_sec['name']?></option>
+					<?php }}?>
+				</select>
+        	</div>
+        </div>
+         <div class="form-group">
+         	<div class="col-md-3 col-sm-3 col-xs-12">
+         		<?php echo $frm->getElement('start_date');?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('end_date');?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('status_search');?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        	<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+        	</div>
+         </div>
+	</form>
+	<style>
+	#footer{display: none;}
+	</style>	
+	<div style="min-height:22cm; margin:0 auto;">
+		<div id="divPrint">
+			<style>
+				a{text-decoration: none;color: 000;}
+				.hover:hover{background: #ddd;}
+				tr.line td{ border-bottom: 2px solid #000;padding-top: 5px; }
+				
+				table.content-data{
+					border-collapse:collapse;
+					width:100%;
+					border:1px solid #000; 
+					font-family:'Times New Roman','Khmer OS Battambang';
+					font-size:13px;
+					white-space: nowrap;
+					margin:0 auto;
+					color:#000;
+					margin:0 auto;
+				}
+				table.content-data  tr.style-head {
+				   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #CCD9FF;
+					text-align: center;
+				}
+				table.content-data tr td{
+					padding: 2px;
+				}
+				table.content-data tr.style-rowdata {
+					font-size:12px; 
+					height: 23px;
+				}
+			</style>
+			<table width="100%">
+				<tr>
+					<td colspan="3"><?php echo $this->rsheader;?></td>
+				</tr>
+				<tr class="line"><td colspan="3"></td></tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td width="15%" align="center">
+					</td>
+					<td align="center" width="70%">
+						<span <?php echo TITLE_REPORT;?>><?php echo $tr->translate('RPT_REQUEST_PRODUCT');?></span> <br/>
+						<span style="color:#000; font-size: 12px;"><?php if(!empty($this->search['start_date'])){?><?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> &nbsp;<?php echo $tr->translate('TO');?> &nbsp;<?php echo date("d-M-Y",strtotime($this->search["end_date"]));}?></span> 
+					</td>
+					<td width="15%" align="center">
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<table class="content-data" cellpadding="5"​ border="1" >
+							<thead>
+								<tr class="style-head" align="center">
+									<td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+									<td rowspan="2">&nbsp;<?php echo $tr->translate("BRANCH");?>&nbsp;</td>
+									<td colspan="5">&nbsp;<?php echo $tr->translate("REQUEST_INFO");?>&nbsp;</td>
+									<td rowspan="2">&nbsp;<?php echo $tr->translate("USER");?>&nbsp;</td>
+									<td rowspan="2">&nbsp;<?php echo $tr->translate("STATUS");?>&nbsp;</td>
+								</tr>
+								<tr class="style-head" align="center">
+									<td><?php echo $tr->translate("REQUEST_NO");?></td>
+									<td><?php echo $tr->translate("REQUEST_FOR");?></td>
+									<td><?php echo $tr->translate("FOR_SECTION");?></td>
+									<td><?php echo $tr->translate("PURPOSE");?></td>
+									<td><?php echo $tr->translate("REQUEST_DATE");?></td>
+								</tr>
+							</thead>
+							<?php 
+							$gender=array(1=>"Male",2=>"Female");
+							$i=0;
+							if(!empty($rows)) foreach($rows As $key=> $rs_row){	$i++;
+							?>
+								<tr class="style-rowdata hover" align="center">
+									<td >&nbsp;<?php echo $i; ?>&nbsp;</td>
+									<td >&nbsp;<?php echo $rs_row['branch_name'];; ?>&nbsp;</td>
+									<td >&nbsp;<a style="color: #000;" target="_blank" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'reprint-request-product','id'=>$rs_row['id']))?>"><strong><?php echo $rs_row['request_no']; ?></strong></a>&nbsp;</td>
+									<td >&nbsp;<a style="color: #000;" target="_blank" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'reprint-request-product','id'=>$rs_row['id']))?>"><?php echo $rs_row['request_for']; ?></a>&nbsp;</td>
+									<td >&nbsp;<a style="color: #000;" target="_blank" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'reprint-request-product','id'=>$rs_row['id']))?>"><?php echo $rs_row['for_section']; ?></a>&nbsp;</td>   
+									<td >&nbsp;<?php echo $rs_row['purpose']; ?>&nbsp;</td>
+									<td >&nbsp;<?php echo date("d-M-Y",strtotime($rs_row['request_date'])); ?>&nbsp;</td>
+									<td >&nbsp;<?php echo $rs_row['user']; ?>&nbsp;</td>
+									<td >&nbsp;<?php if ($rs_row['status']==1){ echo $tr->translate("ACTIVE"); }else{ echo $tr->translate("DEACTIVE"); }?>&nbsp;</td>
+								</tr>
+							<?php
+							}
+							?>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<?php echo $this->footer;?>
+					</td>
+				</tr>
+			</table>
+		</div>	
+	</div>
+</div>

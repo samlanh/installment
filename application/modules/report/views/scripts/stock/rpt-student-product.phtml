@@ -1,0 +1,289 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('RPT_STUDENT_GET_PRODUCT')); 
+	$frm =  $this->form_search;
+?>	
+<style>
+.hover:hover{ background:#ccc;}</style>
+<div style="min-height:10cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+		   	<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_STUDENT_GET_PRODUCT');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form  id='foundation_class' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<div class="form-group">
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("title");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("branch_id");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php //echo $frm->getElement("study_year");?>
+        		<input id="study_year" />
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<input id="group" />
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("degree");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("grade_all");?>
+        	</div>
+        </div>
+        <div class="form-group">
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("end_date");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        	</div>
+        </div>
+	</form>
+	<div id="divPrint">
+		<table border="0" style="background:#fff; margin: 0 auto; width: 100%; ">
+			<tr>
+				<td colspan="3"><?php echo $this->rsheader;?></td>
+			</tr>
+			<tr class="line"><td colspan="3"></td></tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td width="15%" align="center">
+				</td>
+				<td width="70%"  align="center">
+					<ul>
+						<li><strong​​ style=" font-weight:bold;font-family: Arial Black;color:#000; font-size: 17px;font-family:'Khmer MEF2';"><?php echo $tr->translate("RPT_STUDENT_GET_PRODUCT");?></strong></li>
+					</ul>
+				</td>
+				<td width="15%" align="center">
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+		<style>
+			table tr th{
+				border: 1px solid #000;	
+				text-align: center;
+				padding: 5px 2px;
+			}
+			ul li{list-style: none;}
+			table {page-break-inside:auto }
+			tr{ page-break-inside:avoid; page-break-after:auto; }
+			#header {
+			  display: table-header-group;
+			  page-break-inside:avoid; page-break-after:auto;
+			}
+			thead tr td {
+				font-weight: bold;
+				padding: 6px 2px;
+			}
+			tr.line td{ border-bottom: 2px solid #000;padding-top: 5px; }
+		</style>
+			<tr>
+				<td colspan="3">
+				<div id="exportExcel">
+					<table cellpadding="4"​ style="font-family:'Khmer OS Battambang' ; margin:0 auto;width:100%;border:1px solid #000; border-collapse: collapse;white-space: nowrap;"  border="1" >
+						<thead>
+							<tr style="font-size:12px; height: 20px;background: #ccd9ff;" align="center" >
+								<td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate("BRANCH");?>&nbsp;</td>
+								<td colspan="6">&nbsp;<?php echo $tr->translate("STUDENT_INFO");?>&nbsp;</td>
+								<td colspan="4">&nbsp;<?php echo $tr->translate("PRODUCT_INFO");?>&nbsp;</td>
+								
+							</tr>
+							<tr style="font-size:12px; height: 20px;background: #ccd9ff;" align="center" >
+								<td>&nbsp;<?php echo $tr->translate("ACADEMIC_YEAR");?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("STUDENT_CODE");?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("STUDENT_NAME");?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("DEGREE");?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("GRADE");?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("PHONE");?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("PRODUCT_NAME");?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("QTY_BALANCE");?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("LATE");?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("DATE_GIVE");?>&nbsp;</td>
+							</tr>
+						</thead>
+						<?php $i=0; if (!empty($this->rsnew)) foreach ($this->rsnew as $key=> $row){$i++;?>
+							<?php $end_dat=date("Y-m-d");
+                          	$total_day=strtotime($end_dat)-strtotime($row['remide_date']);
+                          	$total_late_day=$total_day/(60*60*24);
+                          	?>
+						<tr style="font-size:12px; height: 23px;" class="hover" >
+							<td align="center">&nbsp;<?php echo $i;?>&nbsp;</td>
+							<td >&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+							<td >&nbsp;<?php echo $row['academic'];?></td>
+							<td align="center">&nbsp;<?php echo $row['stu_code'];?></td>
+							<td align="left">&nbsp;&nbsp;&nbsp;<?php echo $row['student_name'];?>&nbsp;</td>
+							<td >&nbsp;<?php echo $row['degree'];?>&nbsp;</td>	
+							<td >&nbsp;<?php echo $row['grade'];?>&nbsp;</td>
+							<td >&nbsp;<?php echo $row['tel'];?>&nbsp;</td>
+							<td align="left">&nbsp;<?php echo $row['items_name'];?>&nbsp;</td>
+							<td align="center">&nbsp;<?php echo $row['qty_balance'];?>&nbsp;</td>
+							<td align="center">&nbsp;-&nbsp;</td>
+							<td align="center">&nbsp;-&nbsp;</td>
+						</tr>
+						<?php }?>
+						<?php if (!empty($this->rs)) foreach ($this->rs as $key=> $row){$i++?>
+						<?php $end_dat=date("Y-m-d");
+                          	$total_day=strtotime($end_dat)-strtotime($row['remide_date']);
+                          	$total_late_day=$total_day/(60*60*24);
+                          	?>
+						<tr style="font-size:14px; height: 23px;" class="hover" >
+							<td align="center" >&nbsp;<?php echo $i;?>&nbsp;</td>
+							<td >&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+							<td >&nbsp;<?php echo $row['academic'];?></td>
+							<td align="center">&nbsp;<?php echo $row['stu_code'];?></td>
+							<td align="left">&nbsp;&nbsp;&nbsp;<?php echo $row['student_name'];?>&nbsp;</td>
+							<td >&nbsp;<?php echo $row['degree'];?>&nbsp;</td>	
+							<td >&nbsp;<?php echo $row['grade'];?>&nbsp;</td>
+							<td >&nbsp;<?php echo $row['tel'];?>&nbsp;</td>
+							<td align="left">&nbsp;<?php echo $row['items_name'];?>&nbsp;</td>
+							<td align="center">&nbsp;<?php echo $row['qty_balance'];?>&nbsp;</td>
+							<td align="center">&nbsp;<?php if ($total_late_day>0){ echo $total_late_day." ".$tr->translate("DAY");}else{ echo "-";}?>&nbsp;</td>
+							<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($row['remide_date']));?>&nbsp;</td>
+						</tr>
+						<?php }?>
+					</table>	
+				</div>	
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="3">&nbsp;</td>
+			</tr>
+			<tr >
+				<td colspan="3" width="100%">
+					<table width="100%" style="font-family:'Khmer OS Battambang';">
+						<tr>
+							<td  width="25%" align="center">
+								<span style=" font-size: 14px;"><?php echo $tr->translate('VERIFIED_BY')?></span>
+							</td>
+							<td  width="50%">
+								&nbsp;
+							</td>
+							<td align="center"  width="25%">
+								<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate('PREPARED_BY')?></span>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>	
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script type="text/javascript">
+dojo.require("dojo.data.ItemFileWriteStore"); 
+
+var academic_store= getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+var group_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+dojo.ready(function(){
+	new dijit.form.FilteringSelect({
+		store: academic_store,
+		queryExpr: "*${0}*",
+		autoComplete: false,                     
+		required: false,                     
+		id: "study_year",
+		name: "study_year",
+		class: "fullside", 		
+		placeHolder:"<?php echo $tr->translate("SELECT_ACADEMIC_YEAR");?>",          
+		onChange: function() {  
+			academic_year = dijit.byId('study_year').get('value');
+		}
+	}, "study_year");
+	new dijit.form.FilteringSelect({
+		store: group_store,
+	    queryExpr: "*${0}*",
+		autoComplete: false,                     
+		required: true,                      
+	    id: "group",
+	    name: "group",  
+	    class: 'fullside', 
+	    readonly:false,
+	    required:false,
+	    placeHolder:"<?php echo $tr->translate("SELECT_GROUP");?>",          
+	    onChange: function() {  
+		    
+	    }
+	}, "group");
+	
+	 var branch_id = dijit.byId('branch_id');
+	 branch_id.on('change', function(evt) {
+		 getAllAcademicByBranch();
+		 getAllGroupByBranch();
+    });
+	 getAllAcademicByBranch();
+	 getAllGroupByBranch();
+});
+url_getacademic= '<?php echo $this->url(array('module'=>'foundation','controller'=>'group','action'=>'getacademic'));?>';
+var oldBranch = "<?php echo $this->search['branch_id']?>";
+function getAllAcademicByBranch(){
+	dijit.byId('study_year').reset();
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id=='' || branch_id==-1){
+		var academic_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('study_year').set('store',academic_store);  
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_getacademic,
+		content:{
+			'branch_id':branch_id,'showall':1
+			},
+		handleAs:"json",
+		load: function(data) {
+			academic_store  = getDataStorefromJSON('id','name', data);
+		    dijit.byId('study_year').set('store',academic_store);  
+		    if(oldBranch==branch_id){
+		    	dijit.byId('study_year').set('value','<?php echo $this->search['study_year']?>');  
+		    }
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+url_getgroup = '<?php echo $this->url(array('module'=>'global','controller'=>'group','action'=>'getgroupbybranch'));?>';
+function getAllGroupByBranch(){
+	dijit.byId('group').reset();
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id=='' || branch_id==-1){
+		var group_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('group').set('store',group_store);  
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_getgroup,
+		content:{
+			'branch_id':branch_id
+			},
+		handleAs:"json",
+		load: function(data) {
+		    group_store  = getDataStorefromJSON('id','name', data);
+		    dijit.byId('group').set('store',group_store);   
+		    if(oldBranch==branch_id){
+		    	dijit.byId('group').set('value','<?php echo $this->search['group']?>');  
+		    }
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+</script>

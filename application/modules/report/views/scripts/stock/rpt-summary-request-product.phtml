@@ -1,0 +1,212 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('RPT_REQUEST_PRODUCT_DETAIL'));
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$frm =  $this->form_search;
+	$frm_pro =  $this->form_search_pro;
+	$rows=$this->rows;
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+.hover:hover{ background:#ccc;}
+table.content-data tr.style-head,
+table.tb-footer tr.style-head {
+   font-weight: bold !important;
+}
+</style>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+		   	<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_REQUEST_PRODUCT_DETAIL');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form action="" dojoType="dijit.form.Form" method="post">
+		<div class="form-group">
+			<div class="col-md-2 col-sm-3 col-xs-12">
+				<?php echo $frm->getElement('branch_id');?>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-12">
+				<select name="request_for" id="request_for" dojoType="dijit.form.FilteringSelect" class="fullside" >
+					<option value="-1"><?php echo $tr->translate('SELECT_REQUEST_FOR')?></option>
+					<?php if(!empty($this->rq_for)){foreach($this->rq_for as $req_for){?>
+						<option value="<?php echo $req_for['id']?>" <?php if($req_for['id']==$this->search['request_for']){echo "selected='selected'";}?> ><?php echo $req_for['name']?></option>
+					<?php }}?>
+				</select>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-12">
+				<select name="for_section" id="for_section" dojoType="dijit.form.FilteringSelect" class="fullside" >
+					<option value="-1"><?php echo $tr->translate('SELECT_REQUEST_FOR_DEPT')?></option>
+					<?php if(!empty($this->for_section)){foreach($this->for_section as $for_sec){?>
+						<option value="<?php echo $for_sec['id']?>" <?php if($for_sec['id']==$this->search['for_section']){echo "selected='selected'";}?> ><?php echo $for_sec['name']?></option>
+					<?php }}?>
+				</select>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-12">
+				<?php echo $frm_pro->getElement("category_id");?>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-12">
+				<input id="product" />
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-12">
+				<?php echo $frm_pro->getElement('product_type');?>
+			</div>
+		</div>	
+		<div class="form-group">
+		   <div class="col-md-2 col-sm-3 col-xs-12">
+				<?php echo $frm->getElement('start_date');?>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-12">
+				<?php echo $frm->getElement('end_date');?>
+			</div>
+			<div class="col-md-3 col-sm-3 col-xs-12">
+				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> 
+			</div>
+		</div>
+	</form>
+<style>
+#footer{display: none;}
+</style>	
+	<div id="divPrint">
+		<style>
+			a{text-decoration: none;color: 000;}
+			.hover:hover{background: #ddd;}
+			tr.line td{ border-bottom: 2px solid #000;padding-top: 5px; }
+			
+			table.content-data{
+				border-collapse:collapse;
+				width:100%;
+				border:1px solid #000; 
+				font-family:'Times New Roman','Khmer OS Battambang';
+				font-size:13px;
+				white-space: nowrap;
+				margin:0 auto;
+				color:#000;
+				margin:0 auto;
+			}
+			table.content-data  tr.style-head {
+			   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+				background: #CCD9FF;
+				text-align: center;
+			}
+			table.content-data tr td{
+				padding: 2px;
+			}
+			table.content-data tr.style-rowdata {
+				font-size:12px; 
+				height: 23px;
+			}
+		</style>
+		<table width="100%">
+			<tr>
+				<td colspan="3"><?php echo $this->rsheader;?></td>
+			</tr>
+			<tr class="line"><td colspan="3"></td></tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td width="15%" align="center">
+				</td>
+				<td align="center" width="70%">
+					<span <?php echo TITLE_REPORT;?>><?php echo $tr->translate('RPT_REQUEST_PRODUCT_DETAIL');?></span> <br/>
+					<span style="color:#000; font-size: 12px;"><?php if(!empty($this->search['start_date'])){?><?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> &nbsp;<?php echo $tr->translate('TO');?> &nbsp;<?php echo date("d-M-Y",strtotime($this->search["end_date"]));}?></span>
+				</td>
+				<td width="15%" align="center">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<table border="1" class="content-data">
+						<tr class="style-head" align="center">
+							<td><?php echo $tr->translate("N_O");?></td>
+							<td><?php echo $tr->translate("BRANCH");?></td>
+							<td nowrap><?php echo $tr->translate("REQUEST_FOR");?></td>
+							<td nowrap><?php echo $tr->translate("REQUEST_QTY");?></td>
+							<td nowrap><?php echo $tr->translate("PRODUCT_CODE");?></td>
+							<td nowrap><?php echo $tr->translate("PRODUCT_NAME");?></td>
+							<td nowrap><?php echo $tr->translate("TOTAL_REQUEST");?></td>
+							<td><?php echo $tr->translate("TOTAL_RECEIVED");?></td>
+							<td ><?php echo $tr->translate("TOTAL_PRICE");?></td>
+						</tr>
+						<?php 
+						$i=0;$total_amount =0;
+						if(!empty($rows)) foreach($rows As $key=> $rs_row){	$i++;
+						?>
+							<tr class="style-rowdata hover">
+								<td align="center"><?php echo $i; ?></td>
+								<td><?php echo $rs_row['branch_name'];; ?></td>
+								<td><?php echo $rs_row['request_for']; ?></td>
+								<td><?php echo $rs_row['for_section']; ?></td>
+								<td><?php echo $rs_row['pro_code']; ?></td>
+								<td><?php echo $rs_row['pro_name']; ?></td>
+								<td><?php echo $rs_row['total_request']; ?></td>
+								<td><?php echo $rs_row['total_receive']; ?></td>
+								<td><?php echo "$ ".number_format($rs_row['total_price'],2); ?></td>
+							</tr>
+						<?php
+						$total_amount=$total_amount+$rs_row['total_price'];
+						}
+						?>
+						<tr style="font-size: 14px;" class="hover">
+							<td colspan="7" style="border-left: 1px solid #fff; border-bottom: 1px solid #fff; border-right: 1px solid #fff;"></td>
+							<td style="border-bottom: 2px double #000; border-right: 1px solid #fff;" ><?php echo $tr->translate('TOTLE_AMOUNT');?></td>
+							<td style="border-bottom: 2px double #000;border-right: 1px solid #fff;"><strong><?php echo number_format($total_amount,2);?></strong></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<?php echo $this->footer;?>
+				</td>
+			</tr>
+		</table>
+	</div>	
+</div>
+
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	///dojo.require("dojo.NodeList-manipulate");
+	
+	require(["dojo/ready"], function(ready){
+		ready(function(){
+			getProductByCate();
+		});
+		new dijit.form.FilteringSelect({
+			store: item_store,
+			autoComplete: false,
+			queryExpr: "*${0}*",                     
+			id: "product",
+			name: "product",   
+			required:false,        
+			class: 'fullside', 
+		}, "product");
+	});
+	
+	var item_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+	var url_dept = '<?php echo $this->url(array('module'=>'report','controller'=>'stock','action'=>'get-productbycate')); ?>';
+	function getProductByCate(){
+		cate_id = dijit.byId("category_id").get("value");
+		dojo.xhrPost({
+			url:url_dept,
+			content:{
+				'cate_id':cate_id,
+				},
+			handleAs:"json",
+			load: function(data) {
+				item_store  = getDataStorefromJSON('id','name', data);
+				dijit.byId('product').set('store',item_store);  	
+				dijit.byId('product').attr('value',"<?php echo $this->search['product']?>");
+			},
+			error: function(err) {
+			}
+		});
+	}
+</script>

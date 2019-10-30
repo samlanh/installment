@@ -1,0 +1,60 @@
+<?php 
+	 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	 echo $this->headTitle($tr->translate("RPT_PRODUCT_LOCATION"));
+ ?>
+<style>
+  ul.link-rpt li a {
+	color: #3A3939;
+    height: 50px;
+  	width:180px;
+    display: block;
+    padding: 10px;
+    background: #D6D6D6;
+  	font-family: 'Kh Battambang','Khmer Battambang' !important;
+  	text-align: center;
+  	word-wrap: break-word;
+  } 
+    ul.link-rpt li {
+	float:left; margin:10px;
+    list-style: none;
+    border:1px solid #B1B0AF;
+    word-wrap: break-word;
+  } 
+  .dijitReset, .dijitInline  ,.dijitButton {
+	width: 200px !important;
+  }
+  </style>
+  <div class="card">
+		<div class="card-content collapse show">
+			<div class="card-box report-list">
+				<h3 style="font-family:'khmer os muol light';font-size:14px;text-align: center; color: #666;padding:2px 0;"><i style="font-size:25px;margin-right:10px;" class="fa fa-suitcase" aria-hidden="true"></i><?php echo $tr->translate("STOCK");?></h3><hr>
+				<div class="row top_tiles">
+					 <?php
+					   $db_user=new Application_Model_DbTable_DbUsers();
+					   $report_url=$db_user->getArrAclReport(1,'stock');	  		
+					   if(!empty($report_url)){
+						   foreach($report_url as $url){
+						   if($url['controller']=='stock' AND $url['action']!='index' 
+						   		AND $url['action']!='rpt-paymentrecieptdetail' 
+						   		AND $url['action']!='rpt-request-product-detail' 
+						   		AND $url['action']!='rpt-request-productdetail' AND $url['action']!='rpt-transferdetail' 
+						   		AND $url['action']!='reprint-request-product'
+						   		AND $url['action']!='rpt-purchase-supplier'){
+					  ?>
+				   <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+						<a href="<?php echo $this->url(array('module'=>$url['module'],'controller'=>$url['controller'],'action'=>$url['action'])); ?>">
+						<div title="<?php echo $tr->translate($url['label']);?>" class="tile-stats report-list">
+							<div class="icon"><i class="fa fa-book"></i></div>
+							<div class="count">&nbsp;</div>
+			                 	<h3><?php echo $tr->translate($url['label']);?></h3>
+						</div>
+						</a>
+			        </div>
+					<?php }?>
+			   <?php }
+			  }?>
+				</div>
+			</div>
+		</div>
+	</div>
+  <div style="clear: both;"></div>

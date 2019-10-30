@@ -1,0 +1,270 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('RPT_PRODUCT_SELLOUT')); 
+	$frm = $this->form_search;
+?>	
+<meta charset="utf-8">
+<style>
+	.hover:hover{ background:#ccc;}
+	table.content-data tr.style-head,
+	table.tb-footer tr.style-head {
+	   font-weight: bold !important;
+	}
+</style>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+		   	<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_PRODUCT_SELLOUT');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form dojoType="dijit.form.Form" method="post">
+		<div class="form-group">
+        	<div class="col-md-3 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("title");?>
+        	</div>
+        	<div class="col-md-3 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("branch_id");?>
+        	</div>
+        	<div class="col-md-3 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("category_id");?>
+        	</div>
+        	<div class="col-md-3 col-sm-2 col-xs-12">
+        		<input id="product" />
+        	</div>
+        </div>
+        <div class="form-group">
+        	<div class="col-md-3 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("start_date");?>
+        	</div>
+        	<div class="col-md-3 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("end_date");?>
+        	</div>
+			<div class="col-md-3 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("user");?>
+        	</div>
+        	<div class="col-md-3 col-sm-2 col-xs-12">
+        		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button"
+					showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+        	</div>
+        </div>
+	</form>
+	<div style="min-height:22cm; margin:0 auto;">
+		<div id="divPrint">
+			<table style="background:#fff;width:90%; margin: 0 auto;white-space: nowrap;width: 100%;font-family:'Times New Roman','Khmer OS Battambang';" >
+				<tr>
+					<td colspan="3"><?php echo $this->rsheader;?></td>
+				</tr>
+				<tr class="line"><td colspan="3"></td></tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td width="15%" align="center">
+					</td>
+					<td align="center"  width="70%">
+						<span <?php echo TITLE_REPORT;?>><?php echo $tr->translate('RPT_PRODUCT_SELLOUT');?></span><br />
+						<span style="color:#000; font-size: 12px;"><?php if(!empty($this->search['start_date'])){?><?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> <?php echo $tr->translate('TO');?> <?php echo date("d-M-Y",strtotime($this->search["end_date"]));}?></span> 
+					</td>
+					<td width="15%" align="center">
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="3" id="exportExcel">
+					<style>
+							table{ page-break-inside:auto;font-family:'Times New Roman','Khmer OS Battambang'; }
+							tr{ page-break-inside:avoid; page-break-after:auto }
+							#header {
+							  display: table-header-group;
+							  page-break-inside:avoid; page-break-after:auto;
+							}
+							tr.line td{ border-bottom: 2px solid #000;padding-top: 5px; }	
+							table.content-data{
+								border-collapse:collapse;
+								width:100%;
+								border:1px solid #000; 
+								font-family:'Times New Roman','Khmer OS Battambang';
+								font-size:13px;
+								white-space: nowrap;
+								margin:0 auto;
+								color:#000;
+								margin:0 auto;
+							}
+							table.content-data  tr.style-head {
+							   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+								background: #CCD9FF;
+								text-align: center;
+							}
+							table.content-data tr td{
+								padding: 2px;
+							}
+							table.content-data tr.style-rowdata {
+								font-size:12px; 
+								height: 23px;
+							}								
+						</style>
+						<table class="content-data" cellpadding="5"​  border="1" >
+							<thead>
+								<tr class="style-head"  align="center">
+									<td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+									<td rowspan="2">&nbsp;<?php echo $tr->translate("BRANCH");?>&nbsp;</td>
+									<td colspan="2">&nbsp;<?php echo $tr->translate("STUDENT_INFO");?>&nbsp;</td>
+									<td colspan="2">&nbsp;<?php echo $tr->translate("PRODUCT_INFO");?>&nbsp;</td>
+									<td colspan="8">&nbsp;<?php echo $tr->translate("PRODUCT_INFO");?>&nbsp;</td>
+								</tr>
+								<tr class="style-head" align="center">
+									<td>&nbsp;<?php echo $tr->translate('STUDENT_ID');?></td>
+									<td>&nbsp;<?php echo $tr->translate('STUDENT_NAME');?></td>
+									<td>&nbsp;<?php echo $tr->translate('PRODUCT_CATEGORY');?></td>
+									<td>&nbsp;<?php echo $tr->translate('PRODUCT_NAME');?></td>
+									<td>&nbsp;<?php echo $tr->translate('QTY');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('UNIT_COST');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('SELL_PRICE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('TOTAL');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PAID_AMOUNT');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('RECEIPT_NO');?></td>
+									<td>&nbsp;<?php echo $tr->translate('CREATED_DATE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('USER');?>&nbsp;</td>
+							   </tr>
+						   </thead>
+						<?php $i=0;
+							$grand_total=0;$profit=0; 
+							$total_cost=0;
+						if(!empty($this->product_sold)){ foreach ($this->product_sold AS $rs) { $i++;
+						?>
+							<tr class="style-rowdata hover" align="left">
+							    <td><?php echo $i; ?></td>
+							    <td><?php echo $rs['branch_name'];?></td>
+							    <td><?php echo $rs['stu_code'];?></td>
+							    <td style="text-align: left;"><?php echo $rs['student_name'];?></td>
+							    <td><?php echo $rs['category'];?></td>
+							    <td style="text-align: left;">&nbsp;<?php echo $rs['items_name'];?></td>
+							    <td><?php echo number_format($rs['qty'],0);?></td>
+							    <td><?php echo "$ ".$rs['cost'];?></td>
+							    <td><?php echo "$ ".$rs['fee'];?></td>
+							    <td>&nbsp;$&nbsp;<?php echo $rs['subtotal'];?>&nbsp;</td>
+							    <td>&nbsp;$&nbsp;<?php echo $rs['paidamount'];?>&nbsp;</td>
+							    <td><strong><?php echo $rs['receipt_number'];?></strong></td>
+							    <td><?php echo date('d/m/Y',strtotime($rs['create_date']));?></td>
+							    <td><?php echo $rs['user']; ?></td>
+							 </tr>
+						  		<?php 
+						  			$grand_total=$grand_total+$rs['subtotal'];
+						  			$profit = $profit + (($rs['fee']-$rs['cost'])*$rs['qty']);
+						  			$total_cost = $total_cost+($rs['cost']*$rs['qty']);
+								}}
+								?>	  
+						</table>
+						<table width="40%" border="1" style="font-family:'Times New Roman','Khmer OS Battambang'; margin-top:15px;border: 1px solid #000;border-collapse: collapse;float:right"  >
+						   <tr align="center" style="font-size:12px; height: 20px;background-color: #ccd9ff;line-height: 30px; " align="center">
+							   <td width="33%"><?php echo $tr->translate('GRAND_TOTAL')?></td>
+							   <td width="33%"><?php echo $tr->translate('TOTAL_UNIT_PRICE')?></td>
+							   <td width="33%"><?php echo $tr->translate('PROFIT')?></td>
+						   </tr>
+						   <tr align="center" style="font-size:12px; height: 20px;line-height: 30px;font-weight: bold;" align="center">
+							   <td>&nbsp;$&nbsp;<?php echo number_format($grand_total,2);?>&nbsp;</td>
+							   <td>&nbsp;$&nbsp;<?php echo number_format($total_cost,2);?>&nbsp;</td>
+							   <td>&nbsp;$&nbsp;<?php echo number_format($profit,2);?>&nbsp;</td>
+						   </tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<?php echo $this->rsfooteracc;?>
+					</td>
+				</tr>
+			</table>
+		</div>		
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+
+	var academic_store= getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+	var group_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+	dojo.ready(function(){
+		getProductByCate();
+		new dijit.form.FilteringSelect({
+			store: academic_store,
+			queryExpr: "*${0}*",
+			autoComplete: false,                     
+			required: false,                     
+			id: "study_year",
+			name: "study_year",
+			class: "fullside", 		
+			placeHolder:"<?php echo $tr->translate("SELECT_ACADEMIC_YEAR");?>",          
+			onChange: function() {  
+				academic_year = dijit.byId('study_year').get('value');
+			}
+		}, "study_year");
+		
+		new dijit.form.FilteringSelect({
+			store: item_store,
+			autoComplete: false,
+			queryExpr: "*${0}*",                     
+			id: "product",
+			name: "product",   
+			required:false,        
+			class: 'fullside', 
+		}, "product");
+		
+		var branch_id = dijit.byId('branch_id');
+		branch_id.on('change', function(evt) {
+		});
+	});
+	url_getacademic= '<?php echo $this->url(array('module'=>'foundation','controller'=>'group','action'=>'getacademic'));?>';
+	var oldBranch = "<?php echo $this->search['branch_id']?>";
+	function getAllAcademicByBranch(){
+		dijit.byId('study_year').reset();
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id==-1){
+			var academic_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+			dijit.byId('study_year').set('store',academic_store);  
+			dijit.byId('branch_id').focus();
+			return false;
+		}
+		dojo.xhrPost({
+			url: url_getacademic,
+			content:{
+				'branch_id':branch_id,'showall':1
+				},
+			handleAs:"json",
+			load: function(data) {
+				academic_store  = getDataStorefromJSON('id','name', data);
+				dijit.byId('study_year').set('store',academic_store);  
+				if(oldBranch==branch_id){
+					dijit.byId('study_year').set('value','');  
+				}
+			},
+			error: function(err) {
+			}
+		});
+	}
+	var item_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+	var url_dept = '<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'get-productbycate')); ?>';
+	function getProductByCate(){
+		cate_id = dijit.byId("category_id").get("value");
+			dojo.xhrPost({
+				url:url_dept,
+				content:{
+					'cate_id':cate_id,
+					},
+				handleAs:"json",
+				load: function(data) {
+					item_store  = getDataStorefromJSON('id','name', data);
+					dijit.byId('product').set('store',item_store);  	
+					dijit.byId('product').attr('value',"<?php echo $this->search['product']?>");
+				},
+				error: function(err) {
+				}
+			});
+	}
+</script>

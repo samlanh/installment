@@ -1,0 +1,159 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("បញ្ជីការបញ្ជារទិញ")); 
+	$frm =  $this->form_search;
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$frm = $this->form_search;
+?>
+<style>
+.hover:hover{ background:#ccc;}
+table.content-data tr.style-head,
+table.tb-footer tr.style-head {
+   font-weight: bold !important;
+}
+div#divPrint tr td {
+    padding: 3px 0;
+}
+</style>	
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div style="min-height:22cm; margin:0 auto;">
+		<div id="divPrint">
+			<style>
+				span.label-title {
+				    min-width: 100px;
+				    display: inline-block;
+				}
+				table.content-data{
+					border-collapse:collapse;
+					width:100%;
+					border:1px solid #000; 
+					font-family:'Times New Roman','Khmer OS Battambang';
+					font-size:13px;
+					white-space: nowrap;
+					margin:0 auto;
+					color:#000;
+					margin:0 auto;
+				}
+				table.content-data  tr.style-head {
+				   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #CCD9FF;
+					text-align: center;
+				}
+				table.content-data tr td{
+					padding: 2px;
+				}
+				table.content-data tr.style-rowdata {
+					font-size:12px; 
+					height: 23px;
+				}
+			</style>
+			<table style="font-family:'Times New Roman','Khmer OS Battambang'; background:#fff;width:90%; margin: 0 auto;white-space: nowrap;width: 100%;">
+				<tr>
+					<td colspan="3">
+						<div class="lbl_header"></div>
+					</td>
+				</tr>
+				<tr>
+					<td width="25%" align="left">
+					</td>
+					<td align="center" width="50%">
+						<span style="color:#000; font-size: 14px;font-family:'Times New Roman','Khmer OS Muol Light';">បញ្ជីការបញ្ជារទិញ</span><br />
+						<span style="color:#000; font-size: 16px;font-family:'Times New Roman','Khmer OS Muol Light';">Purchase Order List</span>
+					</td>
+					<td width="25%" align="right">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<ul style="line-height: 18px; list-style: none;font-size: 13px;margin: 0;padding: 0;">
+							<li><span class="label-title"><?php echo $tr->translate('SUPPLIER_NAME');?></span> : <?php echo $this->purchase['sup_name'];?></li>
+							<li><span class="label-title"><?php echo $tr->translate('PHONE');?></span> : <?php echo $this->purchase['tel'];?></li>
+							<li><span class="label-title"><?php echo $tr->translate('EMAIL');?></span> : <?php echo $this->purchase['email'];?></li>
+						</ul>
+					</td>
+					<td>
+						<ul style="line-height: 18px; list-style: none;font-size: 13px;margin: 0;padding: 0;">
+							<li><span class="label-title"><?php echo $tr->translate('BRANCH');?></span> : <?php echo $this->purchase['branch_name'];?></li>
+							<li><span class="label-title"><?php echo $tr->translate('PURCHASE_NO');?></span> : <?php echo $this->purchase['supplier_no'];?></li>
+							<li><span class="label-title"><?php echo $tr->translate('DATE');?></span> : <?php echo date("d/m/Y",strtotime($this->purchase['date']));?></li>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<table class="content-data" cellpadding="5"​ border="1" >
+							<tr class="style-head" align="center">
+								<td>&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate('PRODUCT_NAME');?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate('QTY');?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate('COST');?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate('TOTAL');?>&nbsp;</td>
+						   </tr>
+						<?php $i=0;$totalpaid=0;$totalbalance=0; if(!empty($this->pur_detail)) foreach ($this->pur_detail AS $rs) { $i++;
+						  ?>
+							<tr class="style-rowdata hover" align="center">
+							    <td><?php echo $i; ?></td>
+							    <td align="left">&nbsp;<?php echo $rs['pro_id'];?>&nbsp;</td>
+							    <td align="center">&nbsp;<?php echo number_format($rs['qty'],0);?>&nbsp;</td>
+							    <td align="right">&nbsp;$&nbsp;<?php echo $rs['cost'];?>&nbsp;</td>
+							    <td align="right">&nbsp;$&nbsp;<?php echo $rs['amount'];?>&nbsp;</td>
+							 </tr>
+							<?php $totalbalance=$totalbalance+$rs['amount'];}?>	 
+						</table>	
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" align="right">
+					     <table width="30%"  style="border: 0px solid #000;border-collapse: collapse;"  ><!-- background-color: #ccc; -->
+					           <tr align="center" style="font-size:12px; height: 20px;line-height: 30px;" align="center">
+					              <td>Total Amount :</td>
+					              <td><strong>&nbsp;$&nbsp;<?php echo number_format($totalbalance,2);?>&nbsp; </strong></td>
+					           </tr>
+					     </table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr >
+					<td align="center" width="25%">
+						<span style=" font-size: 14px;">Verified by</span>
+					</td>
+					<td  width="50%">
+						&nbsp;
+					</td>
+					<td align="center"  width="25%">
+						<span style="font-size: 14px;text-align: right;">Prepared by</span>
+					</td>
+				</tr>
+				
+			</table>
+		</div>		
+	</div>
+</div>
+<script type="text/javascript">
+dojo.ready(function(){
+	getbranchinfo();
+});
+var url_getbranch = "<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'getbranchinfo')); ?>";
+function getbranchinfo(){
+		branch_id = '<?php echo $this->purchase['branch_id'];?>';
+		if(branch_id != ""){
+			loadingBlock();
+			dojo.xhrPost({
+				url:url_getbranch,
+				content:{
+					'branch_id':branch_id,
+					},
+				handleAs:"json",
+				load: function(data){
+					$(".lbl_header").html(data);
+					
+				},
+				error: function(err) {
+				}
+			});	
+			HideloadingBlock();
+		} 
+	}
+</script>

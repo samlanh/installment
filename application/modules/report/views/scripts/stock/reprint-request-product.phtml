@@ -1,0 +1,205 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('ប័ណ្ណស្នើស្តុក'); 
+	echo $this->headTitle();
+?>
+<style>
+	#footer{display: none;}
+</style>	
+
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div style="min-height:22cm; margin:0 auto;">
+		<div id="divPrint">
+			<style>
+				a{text-decoration: none;color: 000;}
+			</style>
+			<table width="100%" style="margin-top: -5px;">
+				<tr>
+				    <td colspan="10"  style="" align="center">
+						<table width="100%" style="font-size: 10px;margin-bottom: 0px;">
+							<tr>
+								<td colspan="3"><div class="lbl_header"></div></td>
+							</tr>
+							<tr>
+								<td width="30%">
+								</td>
+								<td width="40%" align="center" valign="top" style="">
+									<div style="font-size: 13px;font-family: khmer OS Muol Light;">ប័ណ្ណស្នើស្តុក</div> 
+									<div style="font-size: 13px;font-family:Battambang,Arial,Helvetica,sans-serif;margin-top:2px;">REQUEST STOCK VOUCHER</div> 
+									<br />
+								</td>
+								<td width="30%">
+									<div style="font-size: 16px;font-weight:bold;text-align:center;">
+										N<sup>o</sup> : <?php echo $this->req['request_no']?>
+									</div>
+								</td>
+							</tr>
+						</table>
+				    </td>
+				</tr>
+				<tr>
+					<td colspan="10">
+						<table width="100%" style="font-family: Khmer OS Battambang;font-size:14px;white-space:nowrap;margin-top:-8px;line-height: 17px;">
+							<tr >
+								<td width="10%"></td>
+								<td width="18%"></td>
+								<td width="9%"></td>
+								<td width="18%"></td>
+								<td width="4%"></td>
+								<td width="8%"></td>
+								<td width="4%"></td>
+								<td width="5%"></td>
+								<td width="3%"></td>
+								<td width="8%"></td>
+							</tr>
+							<tr style="line-height:15px;">
+								<td align="left">សាខា <br /><small>(Branch)</small></td>
+								<td valign="top"> :&nbsp; <?php echo $this->req['branch_name']?> </td>
+								<td class="one ">ស្នើសម្រាប់<br /><small>(Request for)</small></td>
+								<td valign="top"> :&nbsp; <?php echo $this->req['request_for']?> </td>
+								<td colspan="2">សម្រាប់ផ្នែក <br /><small>(For Department)</small></td>
+								<td colspan="4" valign="top">:&nbsp;<?php echo $this->req['for_section'];?></td>
+							</tr>
+							<tr style="line-height:15px;">
+								<td colspan="1">ថ្ងៃស្នើ <br /><small>(Request Date)</small></td>
+								<td colspan="1" valign="top">:&nbsp;<?php echo date("d-M-Y",strtotime($this->req['request_date']));?></td>
+								<td>គោលបំណង<br /><small>(Purpose)</small></td>
+								<td colspan="7" valign="top"> :&nbsp; <?php echo $this->req['purpose']?></td>
+							</tr>
+							<tr>
+								<td colspan="10">
+									<table width="100%" border="1" style="white-space: nowrap;border: 1px solid #000;border-collapse: collapse;line-height: 19px;">
+										<tr style=" font-size:13px; text-align:center; height:25px;">
+											<td style="border:1px solid #000;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14;">ល.រ</strong></td>
+											<td style="border:1px solid #000;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ឈ្មោះផលិតផល</strong></td>
+											<td style="border:1px solid #000;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ចំនួននៅសល់</strong></td>
+											<td style="border:1px solid #000;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">តម្លៃរាយ</strong></td>
+											<td style="border:1px solid #000;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ចំនួនស្នើ</strong></td>
+											<td style="border:1px solid #000;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">ចំនួនទទួលបាន</strong></td>
+											<td style="border:1px solid #000;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 14px;">សម្គាល់</strong></td>
+										</tr>
+										<?php $i=0;if(!empty($this->req_detail)){foreach ($this->req_detail as $detail){$i++;?>
+											<tr style=" font-size:12px; text-align:center; height:20px;">
+												<td style="border:1px solid #000;"><?php echo $i;?></td>
+												<td style="border:1px solid #000;"><?php echo $detail['pro_name'];?></td>
+												<td style="border:1px solid #000;"><?php echo $detail['qty_curr'];?></td>
+												<td style="border:1px solid #000;"><?php echo $detail['price'];?></td>
+												<td style="border:1px solid #000;"><?php echo $detail['qty_request'];?></td>
+												<td style="border:1px solid #000;"><?php echo $detail['qty_receive'];?></td>
+												<td style="border:1px solid #000;"><?php echo $detail['remark'];?></td>
+											</tr>
+										<?php }}?>
+										<?php for($i++;$i<=5;$i++){?>
+											<tr style=" font-size:12px; text-align:center; height:20px;">
+												<td><?php echo $i;?></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+											</tr>
+										<?php }?>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="10">
+									&nbsp;
+								</td>
+							</tr>
+							<tr>
+								<td colspan="10" valign="bottom">
+									<table width="100%"   style="font-family:'Khmer OS Battambang';font-size:14px; line-height:18px;margin-top:0px;">
+										<tr>
+											<td width="33%"></td>
+											<td width="33%"></td>
+											<td width="33%"></td>
+										</tr>
+										<tr >
+											<td align="center" valign="top">
+												<div style="font-weight:bold;color:#000; font-size: 14px;margin-top:-10px;"> 
+													<?php 
+													   // $session_user=new Zend_Session_Namespace(SYSTEM_SES);
+													   // $last_name=$session_user->last_name;
+													   // $username = $session_user->first_name;
+													   echo "រៀបចំ​ដោយ";
+													?>
+												</div>
+											</td>
+											<td align="center" valign="top">
+												<div style="font-weight:bold;color:#000; font-size: 14px;margin-top:-10px;"> 
+													<?php 
+													   echo"ទទួលដោយ";
+													?>
+												</div>
+											</td>
+											<td align="center" valign="top">
+												<div style="font-weight:bold;color:#000; font-size: 14px;margin-top:-10px;"> 
+													<?php 
+													   echo"ពិនិត្យ និង អនុម័តដោយ";
+													?>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="3">
+												&nbsp;
+											</td>
+										</tr>
+										<tr>
+											<td colspan="3">
+												&nbsp;
+											</td>
+										</tr>
+										<tr>
+											<td colspan="3">
+												&nbsp;
+											</td>
+										</tr>
+										<tr>
+											<td align="center" >
+												<div style="width:70%;border-bottom:1px solid #000;"></div>
+												<div style="margin-top:0px;font-size: 12px;">Date : <?php echo date('d / M / Y ',strtotime($this->req['request_date']));?></div>
+											</td>
+											<td colspan="2" align="center">
+											
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>	
+</div>
+<script type="text/javascript">
+dojo.ready(function(){
+	getbranchinfo();
+});
+var url_getbranch = "<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'getbranchinfo')); ?>";
+function getbranchinfo(){
+		branch_id = '<?php echo $this->req['branch_id'];?>';
+		
+		if(branch_id != ""){
+			loadingBlock();
+			dojo.xhrPost({
+				url:url_getbranch,
+				content:{
+					'branch_id':branch_id,
+					},
+				handleAs:"json",
+				load: function(data){
+					$(".lbl_header").html(data);
+					HideloadingBlock();
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});	
+		} 
+	}
+</script>

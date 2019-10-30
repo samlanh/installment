@@ -11,8 +11,8 @@ class Report_Model_DbTable_Dbcrm extends Zend_Db_Table_Abstract
         (SELECT name_en FROM rms_view where type=21 and key_code=nationality LIMIT 1) AS nationality,
     	(SELECT name_en FROM rms_view where type=21 and key_code=nation LIMIT 1) AS nation,
     			
-		(SELECT i.title FROM `rms_items` AS i WHERE i.id = degree AND i.type=1 LIMIT 1) AS degree,
-		(SELECT idd.title FROM `rms_itemsdetail` AS idd WHERE idd.id = grade AND idd.items_type=1 LIMIT 1) AS grade,
+		(SELECT i.title FROM `rms_product_cate` AS i WHERE i.id = degree AND i.type=1 LIMIT 1) AS degree,
+		(SELECT idd.title FROM `rms_product_catedetail` AS idd WHERE idd.id = grade AND idd.items_type=1 LIMIT 1) AS grade,
 					
 		(SELECT `name_kh` FROM `rms_view` WHERE TYPE=4 AND key_code =session)as session ,
 		(SELECT (SELECT `title` FROM`rms_program_name` WHERE `service_id` = `level`) FROM `rms_study_history` WHERE `stu_id` = rms_student.stu_id) as level
@@ -203,10 +203,10 @@ class Report_Model_DbTable_Dbcrm extends Zend_Db_Table_Abstract
 	
 			$sql=" SELECT st.*,
 					(SELECT name_en FROM rms_view WHERE TYPE=2 AND key_code=st.sex LIMIT 1) AS sex,
-					(SELECT i.title FROM `rms_items` AS i WHERE i.id = str.degree AND i.type=1 LIMIT 1) AS degree_title,
-					(SELECT idd.title FROM `rms_itemsdetail` AS idd WHERE idd.id = str.grade AND idd.items_type=1 LIMIT 1) AS grade_title,
-					(SELECT i.title FROM `rms_items` AS i WHERE i.id = str.degree_result AND i.type=1 LIMIT 1) AS degree_result_title,
-					(SELECT idd.title FROM `rms_itemsdetail` AS idd WHERE idd.id = str.grade_result AND idd.items_type=1 LIMIT 1) AS grade_result_title,
+					(SELECT i.title FROM `rms_product_cate` AS i WHERE i.id = str.degree AND i.type=1 LIMIT 1) AS degree_title,
+					(SELECT idd.title FROM `rms_product_catedetail` AS idd WHERE idd.id = str.grade AND idd.items_type=1 LIMIT 1) AS grade_title,
+					(SELECT i.title FROM `rms_product_cate` AS i WHERE i.id = str.degree_result AND i.type=1 LIMIT 1) AS degree_result_title,
+					(SELECT idd.title FROM `rms_product_catedetail` AS idd WHERE idd.id = str.grade_result AND idd.items_type=1 LIMIT 1) AS grade_result_title,
 					(SELECT first_name FROM rms_users WHERE rms_users.id = str.user_id LIMIT 1) AS user_id,
 					(SELECT name_kh FROM rms_view WHERE TYPE=15 AND key_code = str.updated_result LIMIT 1) AS result_status,
 					(SELECT first_name FROM rms_users WHERE rms_users.id = str.result_by LIMIT 1) AS result_by,

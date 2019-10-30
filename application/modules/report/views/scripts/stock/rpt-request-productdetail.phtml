@@ -1,0 +1,100 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('RPT_REQUEST_PRODUCT_DETAIL'));
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$frm =  $this->form_search;
+	$rows=$this->rows;
+?>
+<form action="" dojoType="dijit.form.Form" method="post">
+	 <table width="100%" >
+	    <tr>
+	         <td><?php echo $frm->getElement('title');?></td>
+	        <td><?php echo $frm->getElement('branch_id');?></td>
+	    	<td><?php echo $frm->getElement('start_date');?></td>
+	    	<td><?php echo $frm->getElement('end_date');?></td>
+	    	<td><?php echo $frm->getElement('status_search');?></td>
+	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
+	    </tr>
+	</table>
+</form>
+<style>
+#footer{display: none;}
+</style>	
+
+<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm;">
+	<div id="divPrint">
+		<style>
+			a{text-decoration: none;color: 000;}
+		</style>
+		<table width="100%">
+			<tr>
+				<td width="15%" align="center">
+					<img style="width:60%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>"> 
+				</td>
+				<td align="center" width="70%">
+					<strong style=" font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><?php echo $tr->translate('CUSTOMER_BRANCH');?></strong><br />
+					<strong style="padding-left: 10px;font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><?php echo $tr->translate('RPT_REQUEST_PRODUCT_DETAIL');?></strong><br>
+					<span style="font-weight: bold;font-size: 12px; "><?php if(!empty($this->search['start_date'])){?>&nbsp;<?php echo date("d-M-Y",strtotime($this->search['start_date']));?> &nbsp;ដល់&nbsp; <?php echo date("d-M-Y",strtotime($this->search['end_date']));}?></span>
+				</td>
+				<td width="15%" align="center">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<table class="table" style="width:100%; border:1px solid #ddd; border-collapse: collapse;font-family:'Khmer OS Battambang';" >
+						<tr style="background: #CCD9FF;font-size: 12px; line-height: 30px;font-weight: bold;" align="center">
+							<td style="border:1px solid #000;text-align: center;"><?php echo $tr->translate("N_O");?></td>
+							<td style="border:1px solid #000;text-align: center;" nowrap><?php echo $tr->translate("BRANCH");?></td>
+							<td style="border:1px solid #000;text-align: center;" nowrap><?php echo $tr->translate("REQUEST_NO");?></td>
+							<td style="border:1px solid #000;text-align: center;" nowrap><?php echo $tr->translate("REQUEST_NAME");?></td>
+							<td style="border:1px solid #000;text-align: center;" nowrap><?php echo $tr->translate("PRODUCT_NAME");?></td>
+							<td style="border:1px solid #000;text-align: center;"><?php echo $tr->translate("QTY_REQUEST");?></td>
+							<td style="border:1px solid #000;text-align: center;"><?php echo $tr->translate("PURPOSE");?></td>
+							<td style="border:1px solid #000;text-align: center;" ><?php echo $tr->translate("REQUEST_DATE");?></td>
+							<td style="border:1px solid #000;text-align: center;" nowrap><?php echo $tr->translate("USER");?></td>
+							<td style="border:1px solid #000;text-align: center;" nowrap><?php echo $tr->translate("STATUS");?></td>
+						</tr>
+						<?php 
+						$gender=array(1=>"Male",2=>"Female");
+						if(!empty($rows)) foreach($rows As $key=> $rs_row){
+						?>
+							<tr style="font-size: 12px;">
+								<td style="border:1px solid #000;text-align: center;"><?php echo $key+1; ?></td>
+								<td style="border:1px solid #000;text-align: center;"><?php echo $rs_row['branch_name']; ?></td>
+								<td style="border:1px solid #000;text-align: center;"><?php echo $rs_row['request_no']; ?></td>
+								<td style="border:1px solid #000;text-align: center;"><?php echo $rs_row['request_name']; ?></td>
+								<td style="border:1px solid #000;text-align: center;"><?php echo $rs_row['pro_name']; ?><?php //echo date("d/m/Y",strtotime($rs['invoice_date'])); ?></td>
+								<td style="border:1px solid #000;text-align: center;"><?php echo $rs_row['qty']; ?> </td>
+								<td style="border:1px solid #000;text-align: center;"><?php echo $rs_row['purpose']; ?></td>
+								<td style="border:1px solid #000;text-align: center;"><?php echo date("d/m/Y",strtotime($rs_row['request_date'])); ?></td>
+								<td style="border:1px solid #000;text-align: center;"><?php echo $rs_row['user_name']; ?> </td>
+								<td style="border:1px solid #000;text-align: center;"><?php echo $rs_row['status']; ?> </td>
+							</tr>
+						<?php
+						}
+						?>
+					</table>
+					<table width="100%" style="font-family:'Khmer OS Battambang';">
+					<tr>
+						<td colspan="3">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="3">&nbsp;</td>
+					</tr>
+					<tr>
+						<td  width="25%" align="center">
+							<span style=" font-size: 14px;"><?php echo $tr->translate('VERIFIED_BY')?></span>
+						</td>
+						<td  width="50%">
+							&nbsp;
+						</td>
+						<td align="center"  width="25%">
+							<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate('PREPARED_BY')?></span>
+						</td>
+					</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>	
+</div>

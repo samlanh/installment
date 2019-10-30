@@ -1,0 +1,212 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('RPT_PURCHASE')); 
+	$frm = $this->form_search;
+?>	
+<meta charset="utf-8">
+<style>
+.hover:hover{ background:#ccc;}
+table.content-data tr.style-head,
+table.tb-footer tr.style-head {
+   font-weight: bold !important;
+}
+</style>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+		   	<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_PURCHASE');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form action="" dojoType="dijit.form.Form" method="post">
+		<div class="form-group">
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("title");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("location");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("supplier_id");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("start_date");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("end_date");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+             	<div class="col-md-7 col-sm-7 col-xs-12">
+			    	<select name="status" id="status" dojoType="dijit.form.FilteringSelect" class="fullside" >
+						<option value=""><?php echo $tr->translate('STATUS')?></option>
+						<option value="1" <?php if ($this->search['status']==1){ echo 'selected=selected';}?>><?php echo $tr->translate('VOID')?></option>
+						<option value="2" <?php if ($this->search['status']==2){ echo 'selected=selected';}?>><?php echo $tr->translate('SOME_PAID')?></option>
+						<option value="3" <?php if ($this->search['status']==2){ echo 'selected=selected';}?>><?php echo $tr->translate('FULL_PAID')?></option>
+					</select>
+				</div>
+				<div class="col-md-5 col-sm-5 col-xs-12">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button"
+						showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+        	</div>
+        </div>
+	</form>
+ 
+	<div style="min-height:22cm; margin:0 auto;">
+		<div id="divPrint">
+			<table style="background:#fff;width:90%; margin: 0 auto;white-space: nowrap;width: 100%; font-family:'Times New Roman','Khmer OS Battambang';">
+				<tr>
+					<td colspan="3"><?php echo $this->rsheader;?></td>
+				</tr>
+				<tr class="line"><td colspan="3"></td></tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td width="15%" align="center">
+					</td>
+					<td align="center" width="70%">
+						<span <?php echo TITLE_REPORT;?>><?php echo $tr->translate('RPT_PURCHASE');?></span><br>
+						<span style="font-size: 12px; "><?php if(!empty($this->search['start_date'])){?><?php echo date("d-M-Y",strtotime($this->search['start_date']));?> &nbsp;<?php echo $tr->translate('TO');?>&nbsp; <?php echo date("d-M-Y",strtotime($this->search['end_date']));}?></span>
+					</td>
+					<td width="15%" align="center">
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+					<style>
+						table tr th{
+							border: 1px solid #000;	
+						}
+						table {page-break-inside:auto }
+						tr{ page-break-inside:avoid; page-break-after:auto; }
+						#header {
+						  display: table-header-group;
+						  page-break-inside:avoid; page-break-after:auto;
+						}			
+						thead tr rd {
+							font-weight: bold;				
+						}
+						tr.line td{ border-bottom: 2px solid #000;padding-top: 5px; }
+						table.content-data{
+								border-collapse:collapse;
+								width:100%;
+								border:1px solid #000; 
+								font-family:'Times New Roman','Khmer OS Battambang';
+								font-size:13px;
+								white-space: nowrap;
+								margin:0 auto;
+								color:#000;
+								margin:0 auto;
+							}
+							table.content-data  tr.style-head {
+							   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+								background: #CCD9FF;
+								text-align: center;
+							}
+							table.content-data tr td{
+								padding: 2px;
+							}
+							table.content-data tr.style-rowdata {
+								font-size:12px; 
+								height: 23px;
+							}
+					</style>
+					<tr>
+					<td colspan="3" id="exportExcel">
+						<table class="content-data" cellpadding="5"​ border="1" >
+							<thead>
+								<tr class="style-head" align="center">
+									<td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+									<td rowspan="2">&nbsp;<?php echo $tr->translate("BRANCH");?>&nbsp;</td>
+									<td colspan="2">&nbsp;<?php echo $tr->translate("SUPPLIER_INFO");?>&nbsp;</td>
+									<td colspan="6">&nbsp;<?php echo $tr->translate("PURCHASE_INFO");?>&nbsp;</td>
+									<td rowspan="2">&nbsp;<?php echo $tr->translate("USER");?>&nbsp;</td>
+									<td rowspan="2">&nbsp;<?php echo $tr->translate("PRINT");?>&nbsp;</td>
+								</tr>
+								<tr class="style-head" align="center">
+									<td>&nbsp;<?php echo $tr->translate('SUPPLIER_NAME');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PHONE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PURCHASE_NO');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('INVOICE_NO');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('TOTAL_AMOUNT');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PURCHASE_DATE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('STATUS');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('REMAIN_BALANCE');?>&nbsp;</td>
+							   </tr>
+							</thead>
+						<?php $i=0;
+							$totalpaid=0;
+							$totalremain =0;
+							$totalbalance=0; if(!empty($this->pur_code))foreach ($this->pur_code AS $rs) { $i++;
+						  ?>
+							<tr class="style-rowdata hover" align="left" style="<?php if($rs['status']==0){echo'background:#fceeee;';}?>">
+								<td><?php echo $i; ?></td>
+								<td align="left">&nbsp;<?php echo $rs['branch_name'];?>&nbsp;</td>
+								<td>&nbsp;<?php echo $rs['sup_name'];?>&nbsp;</td>
+								<td>&nbsp;<?php echo $rs['tel'];?>&nbsp;</td>
+								<td >&nbsp;
+								   	<a target="_blank" style="text-decoration: none;color:#000;" href="<?php echo $this->baseUrl();?>/report/stock/rpt-purchase-supplier/id/<?php echo $rs['id'];?>">
+								     		<strong><?php echo $rs['supplier_no'];?></strong>
+								   	</a>&nbsp;
+								</td>
+								<td align="right">&nbsp;<?php echo $rs['invoice_no'];?>&nbsp;</td>
+								<td align="right">&nbsp;$&nbsp;<?php echo number_format($rs['amount_due'],2);?>&nbsp;</td>
+								<td>&nbsp;<?php echo date("d/m/Y",strtotime($rs['date']));?>&nbsp;</td>
+								<td>&nbsp;<?php if($rs['status']==0){ echo $tr->translate('VOID');}else if($rs['amount_due']>$rs['amount_due_after'] AND $rs['amount_due_after']>0){ echo $tr->translate('SOME_PAID'); }else if($rs['is_paid']==1){ echo $tr->translate('FULL_PAID');}else{ echo "-";} ?>&nbsp;</td>
+								<td align="right">&nbsp;$&nbsp;<?php echo number_format($rs['amount_due_after'],2); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $rs['user_name']; ?>&nbsp;</td>
+								<td>&nbsp;
+									<a target="_blank" style="text-decoration: none;color:#000;" href="<?php echo $this->baseUrl();?>/report/stock/rpt-purchase-supplier/id/<?php echo $rs['id'];?>"><?php echo $tr->translate('PRINT');?></a>
+									&nbsp;
+								</td>
+							 </tr>
+							<?php 
+								if($rs['status']!=0){
+									$totalbalance=$totalbalance+$rs['amount_due'];
+									$totalremain = $totalremain+$rs['amount_due_after'];
+								}
+							}?>	 
+						</table>	
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<?php if(!empty($this->pur_code)){?>
+				<tr>
+					<td colspan="3" align="right">
+					     <table width="25%"  style="font-family:'Times New Roman','Khmer OS Battambang'; border: 1px solid #000; border-collapse: collapse;white-space: nowrap;"  border="1"  >
+					           <tr align="center" style="font-size:12px; height: 20px;background-color: #ccd9ff;line-height: 30px;" align="center">
+					               <td><?php echo $tr->translate('TOTAL_AMOUNT');?> :</td>
+					               <td align="right"><strong>&nbsp;$&nbsp;<?php echo number_format($totalbalance,2);?>&nbsp;</strong></td>
+					           </tr>
+					           <tr align="center" style="font-size:12px; height: 20px;background-color: #ccd9ff;line-height: 30px;" align="center">
+					               <td><?php echo $tr->translate('Total Remain');?> :</td>
+					               <td align="right"><strong>&nbsp;$&nbsp;<?php echo number_format($totalremain,2);?>&nbsp;</strong></td>
+					           </tr>
+					     </table>
+					</td>
+				</tr>
+				<?php }?>
+				<tr >
+					<td colspan="3" width="100%">
+						<?php echo $this->footer;?>
+					</td>
+				</tr>
+			</table>
+		</div>		
+	</div>
+</div>
+
+
+
+
+

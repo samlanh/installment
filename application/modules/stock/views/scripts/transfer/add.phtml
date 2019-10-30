@@ -1,0 +1,313 @@
+<?php 
+     $url_save = $this->url(array('module'=>'stock','controller'=>'transfer','action'=>'add'));
+     $status_view=$this->status_view;
+     $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	 $baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+?>
+<style>
+	#table tr td{
+		border:1px solid #cccccc;
+		text-align: center;
+	}
+	#table tr th{
+		background: #cccccc;
+		border:1px solid #ddd;
+	}
+	.center{border:1px solid #000;}
+</style>
+<title><?php echo $tr->translate("ADD_TRANSFER_PRODUCT")?></title>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-exchange " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD_TRANSFER_PRODUCT');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right"></div>
+    		</div>
+    	</div>
+		<form id="add_province" action="<?php echo $url_save;?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			 <script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					ids = dijit.byId('identity').get('value');
+                	if(ids==''){
+						alert("សូមជ្រើសរើសផលិតផលដើម្បី ផ្ទេរ");
+						dijit.byId('pro_id').focus();
+                		return false;
+					}
+					from_location = dijit.byId('f_branch').get('value');
+					to_location = dijit.byId('branch').get('value');
+             		if(to_location==from_location){
+						alert("ទីតាំងដែលត្រូវផ្ទេរទៅមិនអាចដូចគ្នាបានទេ !");
+						dijit.byId('branch').focus();
+               			return false;
+					}
+					loadingBlock();
+					return true;
+				} else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+	        	<div class="col-md-4 col-sm-4 col-xs-12">
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("FROM_LOCATION");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<input id="f_branch" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TO_LOCATION");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   	<input id="branch" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TRANSFER_NUMBER");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<input dojoType="dijit.form.ValidationTextBox"  readonly="readonly" class="fullside" id="transfer_no" name="transfer_no" type="text" value="<?php echo $this->tran_no;?>" required="required" >
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<input dojoType="dijit.form.DateTextBox" value="<?php echo date("Y-m-d");?>" constraints="{datePattern:'dd/MM/yyyy'}"  class="fullside" id="date" name="date" value="" type="text" required="required" >
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("REMARK");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<input dojoType="dijit.form.TextBox" class="fullside" id="remark" name="remark" value="" type="text"  >
+	                   </div>
+	                </div>
+	            </div>
+	            <div class="col-md-8 col-sm-8 col-xs-12">
+	            	<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SELECT_PRODUCT");?></label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<select onchange="chcekcProductLocation();"queryExpr="*${0}*" autoComplete="false"  name="pro_id" id="pro_id" dojoType="dijit.form.FilteringSelect" required="true" missingMessage="Invalid Module!" class="fullside">
+								<option value=""><?php echo $tr->translate("SELECT_PRODUCT");?> </option>
+								<?php 
+							    if(!empty($this->rsproduct)){
+							   	 foreach($this->rsproduct as $rs){?>
+							    	<option value="<?php echo $rs['id']?>"><?php echo $rs['name']?></option>
+							    <?php }}
+							  	?>
+							</select>
+	                   </div>
+	                   <div class="clearfix"></div>
+	                </div>
+	                <div class="form-group">
+	                	<table id="table_row" border="1px" style="width:100%; border-collapse: collapse; border:1px solid #ccc;">
+							<tr id="head-title" class="head-td" align="center" style="height: 30px;"></tr>
+						</table>
+						<input type="hidden" dojoType="dijit.form.TextBox" id="identity" name="identity" />
+	                </div>
+	            </div>
+	       </div>
+	       <div class="clearfix"></div>
+	         <div class="card-box mt-20">
+               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		<input type="submit" value="save_new" id="save_new" name="save_close" label="<?php echo $tr->translate("SAVE_NEW");?>" dojoType="dijit.form.Button" 
+						iconClass="dijitEditorIcon dijitEditorIconSave" />
+               	</div>
+             </div>  
+		</form>
+	</div>
+</div>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<script type="text/javascript">
+    dojo.require("dojo.NodeList-manipulate");
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require('dijit.form.NumberTextBox');
+	
+	index=0;
+	function getProductName() {
+		grade=dijit.byId("pro_id").get("value");
+		if(grade==''){return false;}
+		location_id = dijit.byId("f_branch").get("value");
+		if(location_id<0 || location_id==''){
+			alert("Please select from branch");
+			dijit.byId("f_branch").focus();
+			return false;}
+		if(location_id=='' || location_id==-1){
+			alert("Please Select Branch");
+			dijit.byId("f_branch").focus()();
+			return false;}
+		
+		pro_id=dijit.byId("pro_id").get("value");
+
+		var iden = $("#identity").val();
+		var arrays = iden.split(',');
+		 if(arrays!=""){
+			 for(var i=0;i< arrays.length;i++) {
+				 readychoose = dijit.byId('pro_id_'+arrays[i]).get('value');
+				 if(readychoose==pro_id){
+					 alert("<?php echo $tr->translate("Choosen ready")?>");
+					 return false;
+				 }
+			}
+		}
+		index++;
+		getcurrentproduct(pro_id,location_id,index);
+				if(index==1){
+					temp='';
+					temp+='<td ><?php echo $tr->translate("NUM");?></td>';
+					temp+='<td ><?php echo $tr->translate("PRODUCT_NAME");?></td>';
+					temp+='<td ><?php echo $tr->translate("CURR_QTY");?></td>';
+					temp+='<td ><?php echo $tr->translate("QTY_TRANSFER");?></td>';
+					temp+='<td ><?php echo $tr->translate("OTHER");?></td>';
+					temp+='<td ><?php echo $tr->translate("DELETE");?></td>';
+					dojo.query("#head-title").append(temp);
+				}
+				pro_name = dijit.byId("pro_id").attr('displayedValue')
+				template='<td width="2%" align="center">'+index+'</td>';
+				template+='<td >'+pro_name+'<input dojoType="dijit.form.TextBox" type="hidden"  id="pro_id_'+index+'" name="pro_id_'+index+'" ></td>';
+				template+='<td width="100px"><input dojoType="dijit.form.NumberTextBox" readonly="readonly" class="fullside" type="text"  id="currqty_'+index+'" name="currqty_'+index+'" ></td>';
+				template+='<td width="100px"><input onkeyup="checkCurrentStock('+index+')" dojoType="dijit.form.NumberTextBox" required="1" class="fullside" type="text" id="qty_'+index+'" name="qty_'+index+'" ></td>';
+				template+='<td width="100px"><input dojoType="dijit.form.TextBox" class="fullside" type="text" id="remark_'+index+'" name="remark_'+index+'" ></td>';
+				template+='<td align="center"><img onClick="deleteRecord('+index+');" src="<?php echo BASE_URL; ?>/images/Delete_16.png" /></td>';
+			tmp='<tr id="row'+index+'">';
+			tmp+="</tr>";
+			dojo.query("#table_row").append(tmp);
+			dojo.html.set(dojo.byId("row"+index),template , {
+				 parseContent: true,
+			});
+			dijit.byId("pro_id_"+index).attr("value",pro_id);
+			if($('#identity').val()!="") {
+				var identity = $('#identity').val();
+				$('#identity').val(identity+','+index);
+			} else {$('#identity').val(index);}
+			var inp = '';
+	}
+	function checkCurrentStock(index){
+		currqty = dijit.byId("currqty_"+index).get("value");
+		qty = dijit.byId("qty_"+index).get("value");
+		if(qty>currqty){
+		 alert("ចំនួនទំនិញដែលត្រូវផ្ទេរមិនអាច លើសកំណត់បានទេ !");
+		 dijit.byId("qty_"+index).attr("value",currqty);
+		 dijit.byId("qty_"+index).focus();
+		}
+	}
+	var url_getproduct = '<?php echo $this->url(array('module'=>'stock','controller'=>'transfer','action'=>'getcurrentproduct')); ?>';
+	function chcekcProductLocation(){
+		pro_id=dijit.byId("pro_id").get("value");
+		location_id = dijit.byId("f_branch").get("value");
+		if(location_id<0 || location_id==''){
+			alert("Please select from branch");
+			dijit.byId("f_branch").focus();
+			return false;}
+		dojo.xhrPost({
+			url:url_getproduct,
+			content:{
+				'pro_id':pro_id,
+				'location_id':location_id
+				},
+			handleAs:"json",
+			load: function(data) {
+				if(data.pro_qty==0){
+					alert("<?php echo $tr->translate("This product unavailable transfer from this location");?>");
+					return false;
+				}
+				getProductName();
+			},
+			error: function(err) {
+			}
+		});
+	}
+	function getcurrentproduct(pro_id,location_id,index){
+		if(location_id=='' || location_id==-1){
+			return false;}
+			dojo.xhrPost({
+				url:url_getproduct,
+				content:{
+					'pro_id':pro_id,
+					'location_id':location_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					dijit.byId("currqty_"+index).attr("value",data.pro_qty);
+				},
+				error: function(err) {
+				}
+			});
+	}
+	function deleteRecord(index) {
+		var identity = $('#identity').val();
+		var arrays = identity.split(',');
+		for(var i=0;i<arrays.length;i++) {
+		if(arrays[i] == index) arrays.splice(i,1);
+		}
+		var strings = arrays.join(',');
+		$('#identity').val(strings);
+		dojo.query("#row"+index).remove();
+	}
+	var branch_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->branchopt));?> );
+	var to_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->branchopt));?> );
+	dojo.ready(function(){
+		new dijit.form.FilteringSelect({
+		store: branch_store,
+		autoComplete: false,
+		queryExpr: "*${0}*",                         
+		required: true,
+		id: "branch",
+		name: "branch",           
+		class: "fullside", 
+		placeHolder:"<?php echo $tr->translate("SELECT_LOCATION");?>",          
+		onChange: function() {  
+			branch_id = dijit.byId('branch').get('value');
+			if(branch_id==-1){
+				dijit.byId("popup_add_branch").show();
+				}
+			}
+		}, "branch");	
+		
+		new dijit.form.FilteringSelect({
+		store: to_store,
+		autoComplete: false,
+		queryExpr: "*${0}*",                          
+		required: true,
+		id: "f_branch",
+		name: "f_branch",           
+		class: "fullside", 
+		placeHolder:"<?php echo $tr->translate("SELECT_LOCATION");?>",          
+		onChange: function(){  
+			branch_id = dijit.byId('f_branch').get('value');
+			if(branch_id==-1){
+				dijit.byId("popup_add_branch").show();
+				}
+			}
+		}, "f_branch");
+		
+	});
+var url_addbranch = '<?php echo $this->url(array('module'=>'global','controller'=>'branch','action'=>'addbranch')); ?>';
+function addBranch(){
+		dojo.xhrPost({
+				url:url_addbranch,
+				form: dojo.byId("frm_add_tran"),
+				handleAs:"json",
+				load: function(data) {
+					var Itemmake = { 
+							 id: data,
+							 name: dijit.byId('branch_nameen').get('value')
+						   };	
+					var Itemmake1 = { 
+							 id: data,
+							 name: dijit.byId('branch_nameen').get('value')
+						   };
+			    addDataToSelectbox(dijit.byId('branch'), branch_store, Itemmake, data);
+				addDataToSelectbox(dijit.byId('f_branch'), to_store, Itemmake, data);
+			    dijit.byId('frm_add_tran').reset();
+			    dijit.byId("popup_add_branch").hide();	
+			},
+			error: function(err) {
+			}
+	});
+}
+</script>

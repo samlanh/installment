@@ -1,0 +1,213 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('RPT_SUMMARY_STOCK')); 
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$frm =  $this->form_search;
+	
+	$db=new Allreport_Model_DbTable_DbRptSummaryStock();
+	
+?>
+<style>
+.hover:hover{ background:#ccc;}
+table.content-data tr.style-head,
+table.tb-footer tr.style-head {
+   font-weight: bold !important;
+}
+</style>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+		   	<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_SUMMARY_STOCK');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form action="" dojoType="dijit.form.Form" method="post">
+		 <div class="form-group">
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('title');?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('branch_id');?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+           		<?php echo $frm->getElement("category_id");?>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-12">
+           		<input id="product" />
+            </div>
+        </div>
+         <div class="form-group">
+         	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('start_date');?>
+        	</div>
+        	<div class="col-md-3 col-sm-3 col-xs-12">
+        		<?php echo $frm->getElement('end_date');?>
+        	</div>
+			<div class="col-md-3 col-sm-3 col-xs-12">
+           		<?php echo $frm->getElement("product_type");?>
+            </div>
+			<div class="col-md-2 col-sm-3 col-xs-12">
+           		<?php echo $frm->getElement("sort_by");?>
+            </div>
+        	<div class="col-md-1 col-sm-3 col-xs-12">
+        		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+        	</div>
+        </div>
+	</form>
+	<style>
+	#footer{display: none;}
+	</style>	
+	<div id="divPrint">
+		<style>
+			a{text-decoration: none;color: 000;}
+			tr.line td{ border-bottom: 2px solid #000;padding-top: 5px; }
+			table.content-data{
+				border-collapse:collapse;
+				width:100%;
+				border:1px solid #000; 
+				font-family:'Times New Roman','Khmer OS Battambang';
+				font-size:13px;
+				white-space: nowrap;
+				margin:0 auto;
+				color:#000;
+				margin:0 auto;
+			}
+			table.content-data  tr.style-head {
+			   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+				background: #CCD9FF;
+				text-align: center;
+			}
+			table.content-data tr td{
+				padding: 2px;
+			}
+			table.content-data tr.style-rowdata {
+				font-size:12px; 
+				height: 23px;
+			}
+		</style>
+		<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';">
+			<tr>
+				<td colspan="3"><?php echo $this->rsheader;?></td>
+			</tr>
+			<tr class="line"><td colspan="3"></td></tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td width="15%" align="center">
+				</td>
+				<td align="center" width="70%">
+					<span <?php echo TITLE_REPORT;?>><?php echo $tr->translate('RPT_SUMMARY_STOCK');?></span> 
+					<div style="font-size:12px;"><?php if(!empty($this->search['start_date'])){echo date("d/m/Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';}?><?php echo date("d/m/Y",strtotime($this->search['end_date']));?></div>
+				</td>
+				<td width="15%" align="center">
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<table class="content-data" cellpadding="5"​ border="1" >
+						<thead>
+							<tr class="style-head" align="center">
+								<td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate("BRANCH");?>&nbsp;</td>
+								<td colspan="3">&nbsp;<?php echo $tr->translate("PRODUCT_INFO");?>&nbsp;</td>
+								<td colspan="7">&nbsp;<?php echo $tr->translate("IN_OUT_STOCK_PROCESS");?>&nbsp;</td>
+							</tr>
+							<tr class="style-head"  align="center">
+								<td><?php echo $tr->translate("CATEGORY");?></td>
+								<td><?php echo $tr->translate("PRODUCT_CODE");?></td>
+								<td><?php echo $tr->translate("PRODUCT_NAME");?></td>
+								<td><?php echo $tr->translate("PURCHASE_IN");?></td>
+								<td><?php echo $tr->translate("SELL_OUT");?></td>
+								<td><?php echo $tr->translate("REQUEST_QTY");?></td>
+								<td><?php echo $tr->translate("TRANSFER_IN");?></td>
+								<td><?php echo $tr->translate("TRANSFER_OUT");?></td>
+								<td><?php echo $tr->translate("ADJUST_STOCK");?></td>
+								<td><?php echo $tr->translate("CURR_QTY");?></td>
+							</tr>
+						</thead>
+						
+						<?php 
+						$gender=array(1=>"Male",2=>"Female");
+						$i=0;
+						if(!empty($this->rows)) foreach($this->rows As $key=> $rs_row){	$i++;
+						$transfer = $rs_row['tran_in'] - $rs_row['tran_out'];
+						?>
+							<tr class="style-rowdata hover" align="center">
+								<td>&nbsp;<?php echo $i; ?>&nbsp;</td>
+								<td align="left">&nbsp;<?php echo $rs_row['branch_name']; ?>&nbsp;</td>
+								<td align="left">&nbsp;<?php echo $rs_row['category']; ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $rs_row['code']; ?>&nbsp;</td>
+								<td align="left">&nbsp;<?php echo $rs_row['pro_name']; ?>&nbsp;</td>
+								<td>&nbsp;<?php if($rs_row['purchaseQty']>0){echo number_format($rs_row['purchaseQty']);}else{ echo "-";} ?>&nbsp;</td>
+								<td>&nbsp;<?php if($rs_row['saleqty']>0){echo number_format($rs_row['saleqty']);}else{ echo "-";} ?>&nbsp;</td>
+								<td>&nbsp;<?php if($rs_row['request']>0){echo number_format($rs_row['request']);}else{ echo "-";} ?>&nbsp;</td>
+								<td>&nbsp;<?php if(!empty($rs_row['tran_in'])){echo number_format($rs_row['tran_in']);}else{ echo "-";} ?>&nbsp;</td>
+								<td>&nbsp;<?php if(!empty($rs_row['tran_out'])){echo number_format(-1*$rs_row['tran_out']);}else{ echo "-";} ?>&nbsp;</td>
+								<td>&nbsp;<?php if(!empty($rs_row['adjustQty'])){echo number_format(-1*$rs_row['adjustQty']);}else{ echo "-";} ?>&nbsp;</td>
+								<td>&nbsp;<?php if($rs_row['pro_qty']>0){echo number_format($rs_row['pro_qty']);}else{ echo "-";} ?>&nbsp;</td>
+								
+							</tr>
+						<?php
+							}
+						?>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<?php echo $this->rsfooteracc;?>
+				</td>
+			</tr>
+		</table>
+	</div>	
+</div>
+
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dojo.NodeList-manipulate");
+	
+	require(["dojo/ready"], function(ready){
+		ready(function(){
+			getProductByCate();
+		});
+		new dijit.form.FilteringSelect({
+			store: item_store,
+			autoComplete: false,
+			queryExpr: "*${0}*",                     
+			id: "product",
+			name: "product",   
+			required:false,        
+			class: 'fullside', 
+		}, "product");
+	});
+	
+	var item_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+	var url_dept = '<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'get-productbycate')); ?>';
+	function getProductByCate(){
+		cate_id = dijit.byId("category_id").get("value");
+		//if(cate_id>0){
+			dojo.xhrPost({
+				url:url_dept,
+				content:{
+					'cate_id':cate_id,
+					},
+				handleAs:"json",
+				load: function(data) {
+					item_store  = getDataStorefromJSON('id','name', data);
+					dijit.byId('product').set('store',item_store);  	
+					dijit.byId('product').attr('value',"<?php echo $this->search['product']?>");
+				},
+				error: function(err) {
+				}
+			});
+		//}
+	}
+</script>

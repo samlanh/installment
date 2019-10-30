@@ -1,0 +1,183 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('SUPPLIER_BALANCE_REPORT')); 
+	$frm =  $this->form_search;
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$frm = $this->form_search;
+?>	
+<meta charset="utf-8">
+<style>
+.hover:hover{ background:#ccc;}
+table.content-data tr.style-head,
+table.tb-footer tr.style-head {
+   font-weight: bold !important;
+}
+</style>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+		   	<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('SUPPLIER_BALANCE_REPORT');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form action="" dojoType="dijit.form.Form" method="post">
+		<div class="form-group">
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("title");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("location");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("supplier_id");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">	
+        		<?php echo $frm->getElement("start_date");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<?php echo $frm->getElement("end_date");?>
+        	</div>
+        	<div class="col-md-2 col-sm-2 col-xs-12">
+        		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button"
+						showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+        	</div>
+        </div>
+	</form>
+	<div style="min-height:22cm; margin:0 auto;">
+		<div id="divPrint">
+			<style>
+				table tr th{
+					border: 1px solid #000;	
+				}
+				table {page-break-inside:auto;font-family:'Times New Roman','Khmer OS Battambang'; }
+				tr{ page-break-inside:avoid; page-break-after:auto; }
+				#header {
+				  display: table-header-group;
+				  page-break-inside:avoid; page-break-after:auto;
+				}
+				tr.line td{ border-bottom: 2px solid #000;padding-top: 5px; }	
+				table.content-data{
+						border-collapse:collapse;
+						width:100%;
+						border:1px solid #000; 
+						font-family:'Times New Roman','Khmer OS Battambang';
+						font-size:13px;
+						white-space: nowrap;
+						margin:0 auto;
+						color:#000;
+						margin:0 auto;
+					}
+					table.content-data  tr.style-head {
+					   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+						background: #CCD9FF;
+						text-align: center;
+					}
+					table.content-data tr td{
+						padding: 2px;
+					}
+					table.content-data tr.style-rowdata {
+						font-size:12px; 
+						height: 23px;
+					}						
+			</style>
+			<table style="background:#fff;width:90%; margin: 0 auto;white-space: nowrap;width: 100%;">
+				<tr>
+					<td colspan="3"><?php echo $this->rsheader;?></td>
+				</tr>
+				<tr class="line"><td colspan="3"></td></tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td width="15%" align="center">
+					</td>
+					<td align="center" width="70%">
+						<span <?php echo TITLE_REPORT;?>><?php echo $tr->translate('SUPPLIER_BALANCE_REPORT');?></span><br>
+						<span style="font-size: 12px; "><?php if(!empty($this->search['start_date'])){?><?php echo date("d-M-Y",strtotime($this->search['start_date']));?> &nbsp;<?php echo $tr->translate('TO');?>&nbsp; <?php echo date("d-M-Y",strtotime($this->search['end_date']));}?></span>
+					</td>
+					<td width="15%" align="center">
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="3" id="exportExcel">
+						<table class="content-data" cellpadding="5"​  border="1" >
+							<thead>
+								<tr class="style-head" align="center">
+									<td>&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('BRANCH');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PURCHASE_NO');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('SUPPLIER_NAME');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('TOTAL_AMOUNT');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PAID_AMOUNT');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('REMAIN_BALANCE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('DATE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PRINT');?>&nbsp;</td>
+							   </tr>
+							</thead>
+						<?php 
+							$i=0;
+							$totalpaid=0;
+							$totalremainbalance=0;
+							$totalbalance=0; 
+							if(!empty($this->pur_code))foreach ($this->pur_code AS $rs) { 
+								$i++;
+								$totalpaid = $totalpaid+$rs['paid_amount'];
+								$balance = $rs['amount_due']-$rs['paid_amount'];
+								$totalbalance=$totalbalance+$rs['amount_due'];
+								$totalremainbalance=$totalremainbalance+$balance;
+						  ?>
+							<tr class="style-rowdata hover" align="center">
+							    <td>&nbsp;<?php echo $i; ?>&nbsp;</td>
+							    <td align="left">&nbsp;<?php echo $rs['branch_name'];?></td>
+							    <td >&nbsp;<a target="_blank" style="text-decoration: none;color:#000;" href="<?php echo $this->baseUrl();?>/allreport/stock/rpt-purchase-supplier/id/<?php echo $rs['id'];?>"><?php echo $rs['supplier_no'];?></a>&nbsp;</td>
+							    <td><?php echo $rs['sup_name'];?></td>
+							    <td align="right">&nbsp;$&nbsp;<?php echo number_format($rs['amount_due'],2);?>&nbsp;</td>
+							    <td align="right">&nbsp;$&nbsp;<?php echo number_format($rs['paid_amount'],2);?>&nbsp;</td>
+							    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balance,2);?>&nbsp;</td>
+							    <td><?php echo date("d/m/Y",strtotime($rs['date']));?></td>
+							    <td><a target="_blank" style="text-decoration: none;color:#000;" href="<?php echo $this->baseUrl();?>/allreport/stock/rpt-purchase-supplier/id/<?php echo $rs['id'];?>"><?php echo $tr->translate('PRINT');?></a></td>
+							 </tr>
+							<?php 
+							}
+							?>	 
+						</table>	
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" align="right">
+					     <table width="20%"  style="border: 0px solid #000;border-collapse: collapse;"  >
+					           <tr align="center" style="font-size:12px; height: 20px;background-color: #ccc;line-height: 30px;" align="center">
+					               <td><?php echo $tr->translate('TOTAL_AMOUNT');?> :</td>
+					               <td><strong>&nbsp;$&nbsp;<?php echo number_format($totalbalance,2);?>&nbsp;</strong></td>
+					           </tr>
+					           <tr align="center" style="font-size:12px; height: 20px;background-color: #ccc;line-height: 30px;" align="center">
+					               <td><?php echo $tr->translate('PAID_AMOUNT');?> :</td>
+					               <td><strong>&nbsp;$&nbsp;<?php echo number_format($totalpaid,2);?>&nbsp;</strong></td>
+					           </tr>
+					           <tr align="center" style="font-size:12px; height: 20px;background-color: #ccc;line-height: 30px;" align="center">
+					               <td><?php echo $tr->translate('REMAIN_BALANCE');?> :</td>
+					               <td><strong>&nbsp;$&nbsp;<?php echo number_format($totalremainbalance,2);?>&nbsp;</strong></td>
+					           </tr>
+					     </table>
+					</td>
+				</tr>
+				<tr >
+					<td colspan="3" width="100%">
+						<?php echo $this->rsfooteracc;?>
+					</td>
+				</tr>
+			</table>
+		</div>		
+	</div>
+</div>
+
+
+
+
+

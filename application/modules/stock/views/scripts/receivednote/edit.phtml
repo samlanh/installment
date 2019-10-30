@@ -1,0 +1,285 @@
+<?php 
+     $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	 $baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+	 $frm= $this->frm;
+?>
+<style>
+	#table tr td{
+		border:1px solid #cccccc;
+		text-align: center;
+	}
+	#table tr th{
+		background: #cccccc;
+		border:1px solid #ddd;
+	}
+	.center{border:1px solid #000;}
+</style>
+<title><?php echo $tr->translate("EDIT_RECEIVED_NOTE")?></title>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-edit " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_RECEIVED_NOTE');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right"></div>
+    		</div>
+    	</div>
+		<form id="add_province" action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			 <script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					branch_id = dijit.byId('branch_id').get('value');
+             		if(branch_id=="" && branch_id==-1){
+						alert("<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>");
+						dijit.byId('branch_id').focus();
+               			return false;
+					}
+					transfer_id = dijit.byId('transfer_id').get('value');
+             		if(transfer_id=="" && transfer_id==-1){
+						alert("<?php echo $tr->translate("PLEASE_SELECT_TRANSFER_NUMBER")?>");
+						dijit.byId('transfer_id').focus();
+               			return false;
+					}
+					loadingBlock();
+					return true;
+				} else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+	        	<div class="col-md-4 col-sm-4 col-xs-12">
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement("branch_id");?>
+	                   		<?php echo $frm->getElement("id");?>
+	                   </div>
+	                </div>
+	                 <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("RECEIVED_NUMBER");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement("receive_no");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TRANSFER_NUMBER");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<input id="transfer_id" />
+	                   		<?php echo $frm->getElement("f_branch");?>
+	                   		<?php echo $frm->getElement("branch");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement("receive_date");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement("note");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> 
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement("status");?>
+	                   </div>
+	                </div>
+	            </div>
+	            <div class="col-md-8 col-sm-8 col-xs-12">
+	            	
+	                <div class="form-group">
+	                	<table  border="1px" style="width:100%; border-collapse: collapse; border:1px solid #ccc;">
+	                		<thead>
+	                			<tr id="head-title" class="head-td" align="center" style="height: 30px;"></tr>
+	                		</thead>
+	                		<tbody id="table_row">
+	                		</tbody>
+						</table>
+						<input type="hidden" dojoType="dijit.form.TextBox" id="identity" name="identity" />
+	                </div>
+	            </div>
+	       </div>
+	       <div class="clearfix"></div>
+	         <div class="card-box mt-20">
+               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		<input type="submit" value="save_new" id="save_new" name="save_close" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button" 
+						iconClass="dijitEditorIcon dijitEditorIconSave" />
+               	</div>
+             </div>  
+		</form>
+	</div>
+</div>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<script type="text/javascript">
+    dojo.require("dojo.NodeList-manipulate");
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require('dijit.form.NumberTextBox');
+	dojo.require("dijit.form.Textarea");
+	
+	var transfer_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+	dojo.ready(function(){
+		new dijit.form.FilteringSelect({
+			store: transfer_store,
+			autoComplete: false,
+			queryExpr: "*${0}*",                    
+			required: false,
+			id: "transfer_id",
+			name: "transfer_id",           
+			class: "fullside", 
+			placeHolder:"<?php echo $tr->translate("TRANSFER_NUMBER");?>",          
+			onChange: function() {  
+				getTransferInfo();
+				getProductTransfer();
+			}
+		}, "transfer_id");
+		getAllTransferByToBranch();
+	});
+	function getReceivedNo(){
+		
+	}
+	url_getalltransfer = '<?php echo $this->url(array('module'=>'stock','controller'=>'receivednote','action'=>'gealltransfer'));?>';
+	var transfer_idold = '<?php echo empty($this->row['transfer_id'])?0:$this->row['transfer_id'];?>';
+	function getAllTransferByToBranch(){
+		dijit.byId('transfer_id').reset();
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id==-1){
+			var transfer_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+			dijit.byId('transfer_id').set('store',transfer_store);  
+			dijit.byId('branch_id').focus();
+			return false;
+		}
+		dojo.xhrPost({
+			url: url_getalltransfer,
+			content:{
+				'branch_id':branch_id,'transfer_id':transfer_idold
+				},
+			handleAs:"json",
+			load: function(data){
+				transfer_store  = getDataStorefromJSON('id','name', data);
+				dijit.byId('transfer_id').set('store',transfer_store);  
+				<?php if (!empty($this->row['transfer_id'])){?>
+				dijit.byId('transfer_id').set('value','<?php echo $this->row['transfer_id'];?>');  
+				<?php }?>
+				
+			},
+			error: function(err) {
+			}
+		});
+	}
+	url_getTransferInfo = '<?php echo $this->url(array('module'=>'stock','controller'=>'receivednote','action'=>'gettransferinfo'));?>';
+	function getTransferInfo(){
+		transfer_id = dijit.byId('transfer_id').get('value');
+		if(transfer_id=='' || transfer_id==-1){
+			dijit.byId('transfer_id').focus();
+			return false;
+		}
+		dojo.xhrPost({
+			url: url_getTransferInfo,
+			content:{
+				'transfer_id':transfer_id
+				},
+			handleAs:"json",
+			load: function(data){
+				dijit.byId('f_branch').set('value',data.from_location);
+				dijit.byId('branch').set('value',data.to_location);
+			},
+			error: function(err) {
+			}
+		});
+	}
+	var index=0;
+	function initailize(){
+		<?php if (!empty($this->detail)) {?>
+			$('#identity').val("");
+			dojo.query("#head-title").append("");
+			dojo.query("#table_row").append("");
+			temp='';
+			temp+='<td>&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>';
+			temp+='<td><?php echo $tr->translate("PRODUCT_NAME");?></td>';
+			temp+='<td><?php echo $tr->translate("QTY_TRANSFER");?></td>';
+			temp+='<td><?php echo $tr->translate("OTHER");?></td>';
+			dojo.query("#head-title").append(temp);
+			<?php $index=0; foreach ($this->detail as $rs){ $index++?>
+			 index++;
+			  template='<td width="2%" align="center"><?php echo $index;?></td>';
+			  template+='<td>&nbsp;<?php echo $rs['product_name'];?>&nbsp;<input value="<?php echo $rs['pro_id'];?>" dojoType="dijit.form.TextBox" type="hidden"  id="pro_id_'+index+'" name="pro_id_'+index+'" ></td>';
+			  template+='<td width="100px"><input dojoType="dijit.form.NumberTextBox" value="<?php echo $rs['qty'];?>" required="true" class="fullside" type="text" id="qty_'+index+'" name="qty_'+index+'" ></td>';
+			  template+='<td width="100px"><input dojoType="dijit.form.TextBox" class="fullside" value="<?php echo $rs['note'];?>" type="text" id="remark_'+index+'" name="remark_'+index+'" ></td>';
+			  	tmp='<tr id="row'+index+'">';
+				tmp+="</tr>";
+				dojo.query("#table_row").append(tmp);
+				dojo.html.set(dojo.byId("row"+index),template , {
+					 parseContent: true,
+				});
+
+				if($('#identity').val()!="") {
+					var identity = $('#identity').val();
+					$('#identity').val(identity+','+index);
+				} else {$('#identity').val(index);}
+			<?php }?>
+		<?php }?>
+	}
+	url_getalltransferdetail = '<?php echo $this->url(array('module'=>'stock','controller'=>'receivednote','action'=>'gealltransferdetail'));?>';
+	function getProductTransfer() {
+		transfer_id = dijit.byId('transfer_id').get('value');
+		if(transfer_id=='' || transfer_id==-1){
+			dijit.byId('transfer_id').focus();
+			return false;
+		}
+		if(transfer_idold==transfer_id){
+			initailize();
+			return false;
+		}
+		dojo.xhrPost({
+			url: url_getalltransferdetail,
+			content:{
+				'transfer_id':transfer_id
+				},
+			handleAs:"json",
+			load: function(data){
+				$('#identity').val("");
+				dojo.query("#head-title").append("");
+				dojo.query("#table_row").append("");
+				temp='';
+				temp+='<td>&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>';
+				temp+='<td><?php echo $tr->translate("PRODUCT_NAME");?></td>';
+				temp+='<td><?php echo $tr->translate("QTY_TRANSFER");?></td>';
+				temp+='<td><?php echo $tr->translate("OTHER");?></td>';
+				dojo.query("#head-title").append(temp);
+				
+				var i;
+				var keyno=0;
+				for (i = 0; i < data.length; i++) { index++; keyno++;
+				  template='<td width="2%" align="center">'+keyno+'</td>';
+				  template+='<td>&nbsp;'+data[i].product_name+'&nbsp;<input value="'+data[i].pro_id+'" dojoType="dijit.form.TextBox" type="hidden"  id="pro_id_'+index+'" name="pro_id_'+index+'" ></td>';
+				  template+='<td width="100px"><input dojoType="dijit.form.NumberTextBox" value="'+data[i].qty_after+'" required="true" class="fullside" type="text" id="qty_'+index+'" name="qty_'+index+'" ></td>';
+				  template+='<td width="100px"><input dojoType="dijit.form.TextBox" class="fullside" type="text" id="remark_'+index+'" name="remark_'+index+'" ></td>';
+				  	tmp='<tr id="row'+index+'">';
+					tmp+="</tr>";
+					dojo.query("#table_row").append(tmp);
+					dojo.html.set(dojo.byId("row"+index),template , {
+						 parseContent: true,
+					});
+
+					if($('#identity').val()!="") {
+						var identity = $('#identity').val();
+						$('#identity').val(identity+','+index);
+					} else {$('#identity').val(index);}
+				}
+				
+			},
+			error: function(err) {
+			}
+		});
+	}
+</script>

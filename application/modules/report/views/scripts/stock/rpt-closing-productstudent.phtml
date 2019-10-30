@@ -1,0 +1,216 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate('CLOSING_STUDENT_GOT_PRODUCT')); 
+	echo $this->headTitle(''); 
+	$frm = $this->frm_payment;
+?>	
+<style>
+.hover:hover{ background:#ccc;}</style>
+<div style="min-height:10cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+		   	<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CLOSING_STUDENT_GOT_PRODUCT');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<div class="card-box">
+			<form action=""	dojoType="dijit.form.Form" method="post">
+				<div class="form-group">
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<?php echo $frm->getElement("adv_search");?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<?php echo $frm->getElement("branch_search");?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<input id="student_id" />
+                   </div>
+                	<div class="col-md-2 col-sm-2 col-xs-12">
+                   		<?php echo $frm->getElement("start_date");?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<?php echo $frm->getElement("end_date");?>
+                   </div>
+                    <div class="col-md-2 col-sm-2 col-xs-12">
+                    	 <div class="col-md-7 col-sm-7 col-xs-12">
+                   			<?php echo $frm->getElement("user_id");?>
+                   		</div>
+                   		<div class="col-md-5 col-sm-5 col-xs-12">
+                   			<button iconclass="dijitIconSearch" dojoType="dijit.form.Button"
+								showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+                   		</div>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   </div>
+                </div>
+			</form>
+		</div>
+	<div id="divPrint">
+		<table border="0" style="background:#fff; margin: 0 auto; width: 100%;font-family:'Times New Roman','Khmer OS Battambang' ">
+			<tr>
+				<td colspan="3"><?php echo $this->rsheader;?></td>
+			</tr>
+			<tr class="line"><td colspan="3"></td></tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td width="15%" align="center">
+				</td>
+				<td width="70%"  align="center">
+					<span <?php echo TITLE_REPORT;?>><?php echo $tr->translate('CLOSING_STUDENT_GOT_PRODUCT');?></span><br>
+					<span style="font-size: 12px; "><?php if(!empty($this->search['start_date'])){?><?php echo date("d-M-Y",strtotime($this->search['start_date']));?> &nbsp;<?php echo $tr->translate('TO');?>&nbsp; <?php echo date("d-M-Y",strtotime($this->search['end_date']));}?></span>
+				</td>
+				<td width="15%" align="center">
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+		<style>
+			table tr th{
+				border: 1px solid #000;	
+				text-align: center;
+				padding: 5px 2px;
+			}
+			ul li{list-style: none;}
+			table {page-break-inside:auto }
+			tr{ page-break-inside:avoid; page-break-after:auto; }
+			#header {
+			  display: table-header-group;
+			  page-break-inside:avoid; page-break-after:auto;
+			}
+			thead tr td {
+				font-weight: bold;
+				padding: 6px 2px;
+			}
+			tr.line td{ border-bottom: 2px solid #000;padding-top: 5px; }
+		</style>
+			<tr>
+				<td colspan="3">
+					<form id="list" name="list" action="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'closingstuproduct')); ?>" dojoType="dijit.form.Form" method="post">
+						<div id="exportExcel">
+							<table cellpadding="4"​ style="font-family:'Khmer OS Battambang' ; margin:0 auto;width:100%;border:1px solid #000; border-collapse: collapse;white-space: nowrap;"  border="1" >
+								<thead>
+									<tr style="font-size:12px; height: 20px;background: #ccd9ff;" align="center" >
+										<td rowspan="2">
+											<input  onchange="checkall();" type="checkbox"  class="checkbox" id="check_all"  name="check_all"/>
+										</td>
+										<td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+										<td rowspan="2">&nbsp;<?php echo $tr->translate("BRANCH");?>&nbsp;</td>
+										<td colspan="4">&nbsp;<?php echo $tr->translate("GETPRODUCT_INFO");?>&nbsp;</td>
+										<td colspan="5">&nbsp;<?php echo $tr->translate("STUDENT_INFO");?>&nbsp;</td>
+										<td rowspan="2">&nbsp;<?php echo $tr->translate("USER");?>&nbsp;</td>
+									</tr>
+									<tr style="font-size:12px; height: 20px;background: #ccd9ff;" align="center" >
+										<td>&nbsp;<?php echo $tr->translate("Ref Receipt No");?>&nbsp;</td>
+										<td>&nbsp;<?php echo $tr->translate("Received Date");?>&nbsp;</td>
+										<td>&nbsp;<?php echo $tr->translate("Total Received");?>&nbsp;</td>
+										<td>&nbsp;<?php echo $tr->translate("Total Remain");?>&nbsp;</td>
+										<td>&nbsp;<?php echo $tr->translate("STUDENT_CODE");?>&nbsp;</td>
+										<td>&nbsp;<?php echo $tr->translate("STUDENT_NAME");?>&nbsp;</td>
+										<td>&nbsp;<?php echo $tr->translate("DEGREE");?>&nbsp;</td>
+										<td>&nbsp;<?php echo $tr->translate("GRADE");?>&nbsp;</td>
+										<td>&nbsp;<?php echo $tr->translate("PHONE");?>&nbsp;</td>
+										
+									</tr>
+								</thead>
+								<?php $i=0; if (!empty($this->rs)) foreach ($this->rs as $key=> $row){$i++;?>
+								<tr style="font-size:11px; height: 20px;" class="hover" >
+									<td align="center">
+										<input  style="height: 15px;margin-top: 5px;"  type="checkbox"  class="checkbox" id="close_<?php echo $row['id'];?>" value="<?php echo $row['id'];?>"  name="selector[]"/>
+									</td>
+									<td align="center">&nbsp;<?php echo $i;?>&nbsp;</td>
+									<td >&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+									<td align="center"><a style="text-decoration: none; color: #000;" href="<?php echo $this->baseUrl()."/stock/cutstock/receipt/id/".$row['id'];?>">&nbsp;<?php echo $row['serailno'];?>&nbsp;</a></td>
+									<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($row['received_date']))?>&nbsp;</td>
+									<td align="center">&nbsp;<?php echo $row['total_received'];?>&nbsp;</td>
+									<td align="center">&nbsp;<?php echo $row['total_qty_due'];?>&nbsp;</td>
+									
+									<td align="center">&nbsp;<?php echo $row['stu_code'];?></td>
+									<td align="left">&nbsp;&nbsp;&nbsp;<?php echo $row['student_name'];?>&nbsp;</td>
+									<td >&nbsp;<?php echo $row['degree'];?>&nbsp;</td>	
+									<td >&nbsp;<?php echo $row['grade'];?>&nbsp;</td>
+									<td >&nbsp;<?php echo $row['tel'];?>&nbsp;</td>
+									<td align="center">&nbsp;<?php echo $row['user_enter']; ?>&nbsp;</td>
+								</tr>
+								<?php }?>
+							</table>	
+						</div>	
+						<div class="card-box">
+							<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+								<button iconclass="dijitIconSave" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("Closing Entry");?></button>
+							</div>
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr >
+				<td colspan="3" width="100%">
+					<?php echo $this->rsfooteracc;?>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>	
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dojo.NodeList-manipulate");
+	dojo.require("dijit.form.Textarea");
+	dojo.ready(function(){
+		new dijit.form.FilteringSelect({
+			autoComplete: false,
+			queryExpr: "*${0}*",                     
+			id: "student_id",
+			name: "student_id",   
+			value:"<?php echo $this->search['student_id'];?>",
+			required:false,        
+			class: 'fullside', 
+			placeHolder:"<?php echo $tr->translate("SELECT_STUDENT_NAME");?>",          
+		}, "student_id");
+		getallstudentname();
+		 var branch_id = dijit.byId('branch_search');
+		 	branch_id.on('change', function(evt) {
+				getallstudentname();
+		    });
+	});
+	function getallstudentname(){//
+		var url_data = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'getallstudent')); ?>';
+		branch_id = dijit.byId("branch_search").attr("value");
+		if(branch_id==''){
+			dijit.byId("branch_search").focus();
+			return false;
+		}
+		dojo.xhrPost({
+			url:url_data,
+			content:{
+				'student_name':1,
+				'branch_id':branch_id,
+			},
+			handleAs:"json",
+			load: function(data) {
+				student_store  = getDataStorefromJSON('id','name', data);
+			    dijit.byId('student_id').set('store',student_store);  
+			    <?php if (!empty($this->search['student_id'])){?>
+			    dijit.byId('student_id').set('value','<?php echo $this->search['student_id'];?>'); 
+			   
+			    <?php }?>
+			},
+			error: function(err){
+			}
+		});
+	}
+
+
+	function checkall(){
+		if ($('#check_all').is(':checked')) {
+			$(".checkbox").prop('checked', true);
+		}else{
+			$(".checkbox").prop('checked', false);
+		}
+	}
+</script>

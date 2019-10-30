@@ -1,0 +1,40 @@
+<?php
+$request = Zend_Controller_Front::getInstance ()->getRequest ();
+$tr = Application_Form_FrmLanguages::getCurrentlanguage ();
+$frm = $this->form_search;
+$formList = new Application_Form_Frmtable();
+$frm =  $this->frm_search;
+?>
+<title><?php echo $tr->translate("LIST_CUSTOMER");?></title>
+<style>
+ .table{
+	width:100%; border:1px solid #ddd; 
+	border-collapse: collapse;
+ }
+ .table tr td{
+	border:1px solid #ddd;
+	text-align: center;
+ }
+</style>
+<meta charset="utf-8">
+<form action="" dojoType="dijit.form.Form" method="post">
+	<table width="100%" >
+	    <tr>
+	         <td><?php echo $frm->getElement('title');?></td>
+	        <td><?php echo $frm->getElement('cus_name');?></td>
+	    	<td><?php echo $frm->getElement('start_date');?></td>
+	    	<td><?php echo $frm->getElement('end_date');?></td>
+	    	<td><?php echo $frm->getElement('status_search');?></td>
+	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
+	    </tr>
+	</table>
+</form>
+<style>
+		.btn-action{
+			background: rgba(165, 188, 193, 0.36);
+			padding: 3px 10px;
+   			border-radius: 5px;
+		}
+	
+	</style>
+<?php echo $this->list; ?>

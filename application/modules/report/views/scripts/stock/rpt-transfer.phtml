@@ -1,0 +1,151 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('TRANSFER'));
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$frm =  $this->form_search;
+	$formList = new Application_Form_Frmtable();
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+.hover:hover{ background:#ccc;}
+table.content-data tr.style-head,
+table.tb-footer tr.style-head {
+   font-weight: bold !important;
+}
+</style>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">	
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+		   	<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('TRANSFER');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form action="" dojoType="dijit.form.Form" method="post">
+		<div class="form-group">
+			<div class="col-md-2 col-sm-2 col-xs-12">
+				<?php echo $frm->getElement("title");?>
+			</div>
+			<div class="col-md-2 col-sm-2 col-xs-12">
+				<?php echo $frm->getElement("start_date");?>
+			</div>
+			<div class="col-md-2 col-sm-2 col-xs-12">
+				<?php echo $frm->getElement("end_date");?>
+			</div>
+			<div class="col-md-2 col-sm-2 col-xs-12">
+				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+			</div>
+			<div class="col-md-2 col-sm-2 col-xs-12">
+			</div>
+			<div class="col-md-2 col-sm-2 col-xs-12">
+			</div>
+		</div>
+	</form>
+	<style>
+		#footer{display: none;}
+	</style>	
+	<div style="min-height:22cm; margin:0 auto;">
+		<div id="divPrint">
+			<table  style="background:#fff; margin: 0 auto; ;white-space: nowrap;width: 100%">
+				<tr>
+					<td colspan="3"><?php echo $this->rsheader;?></td>
+				</tr>
+				<tr class="line"><td colspan="3"></td></tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<tr >
+					<td width="15%" align="center">
+					</td>
+					<td width="70%" align="center">
+					    <span <?php echo TITLE_REPORT;?>><?php echo $tr->translate('TRANSFER')?></span><br />					
+						<span style="color:#000; font-size: 12px;"><?php if(!empty($this->search['start_date'])){?><?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> &nbsp;<?php echo $tr->translate('TO');?> &nbsp;<?php echo date("d-M-Y",strtotime($this->search["end_date"]));}?></span> 
+					</td>
+					<td width="15%" align="center">
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+					<style>
+						table tr th{
+						border: 1px solid #000;	
+						}
+						table {page-break-inside:auto }
+						tr{ page-break-inside:avoid; page-break-after:auto; }
+						#header {
+						  display: table-header-group;
+						  page-break-inside:avoid; page-break-after:auto;
+						}
+						.hover:hover{background:#eee;}
+						tr.line td{ border-bottom: 2px solid #000;padding-top: 5px; }	
+						
+						table.content-data{
+							border-collapse:collapse;
+							width:100%;
+							border:1px solid #000; 
+							font-family:'Times New Roman','Khmer OS Battambang';
+							font-size:13px;
+							white-space: nowrap;
+							margin:0 auto;
+							color:#000;
+							margin:0 auto;
+						}
+						table.content-data  tr.style-head {
+						   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+							background: #CCD9FF;
+							text-align: center;
+						}
+						table.content-data tr td{
+							padding: 2px;
+						}
+						table.content-data tr.style-rowdata {
+							font-size:12px; 
+							height: 23px;
+						}				
+					</style>
+				<tr >
+					<td colspan="3" id="exportExcel" >
+						<table class="content-data" cellpadding="5"​ border="1" >
+							<thead>
+								<tr class="style-head" align="center">
+									<td><?php echo $tr->translate("N_O");?></td>
+									<td><?php echo $tr->translate("TRANSFER_NUMBER");?></td>
+									<td><?php echo $tr->translate("TRANSFER_DATE");?></td>
+									<td><?php echo $tr->translate("FROM_LOCATION");?></td>
+									<td><?php echo $tr->translate("TO_LOCATION");?></td>
+									<td><?php echo $tr->translate("NOTE");?></td>
+									<td><?php echo $tr->translate("BY_USER");?></td>
+									<td><?php echo $tr->translate("STATUS");?></td>
+								</tr>
+							</thead>
+							<?php if(!empty($this->all_transfer)){ foreach($this->all_transfer as $key=>$rs){ $key=$key+1; ?>
+							<tr class="style-rowdata hover" >
+								<td><?php echo $key; ?></td>
+								<td><a target="_blank" style="color:#000;" href="<?php echo $this->baseurl();?>/report/stock/rpt-transferdetail/id/<?php echo $rs['id'];?>"><?php echo $rs['transfer_no']; ?></a></td>
+								<td><a target="_blank" style="color:#000;" href="<?php echo $this->baseurl();?>/report/stock/rpt-transferdetail/id/<?php echo $rs['id'];?>"><?php echo $rs['transfer_date']; ?></a></td>
+								<td><?php echo $rs['fromlocation']; ?></td>
+								<td><?php echo $rs['tolocation']; ?></td>
+								<td><?php echo $rs['note']; ?></td>
+								<td><?php echo $rs['user_name']; ?></td>
+								<td><?php echo $rs['status']; ?></td>
+							</tr>
+							<?php
+							}}
+							?>
+						</table>
+					</td>	
+				</tr>
+				<tr>
+					<td colspan="3">
+						<?php echo $this->footer;?>
+					</td>
+				</tr>
+			</table>
+		</div>	
+	</div>
+</div>
