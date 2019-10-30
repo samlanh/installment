@@ -279,6 +279,17 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
+		
+		$contact_contruction = new Zend_Dojo_Form_Element_NumberTextBox('contact_contruction');
+		$contact_contruction->setAttribs(array(
+				'dojoType'=>'dijit.form.Textarea',
+				'required' =>'true',
+				'class'=>'fullside',
+				'style'=>'min-height: 60px;font-size:12px;'
+		));
+		$str_value='';
+		$contact_contruction->setValue($str_value);
+		
 		if(!empty($data)){
 			$br_id->setValue($data['br_id']);
 			$prefix_code->setValue($data['prefix']);
@@ -318,10 +329,11 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 			
 			$position->setValue($data['position']);
 			$w_position->setValue($data['w_position']);
+			$contact_contruction->setValue($data['contact_contruction']);
 		}
 		
 		
-		$this->addElements(array($map,$prefix_code,$_btn_search,$_title,$_status,$br_id,$branch_namekh,
+		$this->addElements(array($contact_contruction,$map,$prefix_code,$_btn_search,$_title,$_status,$br_id,$branch_namekh,
 		$branch_nameen,$br_address,$branch_code,$branch_tel,$_fax ,$branch_note,
 				$current_addres,$project_manager_nameen,$project_manager_namekh,$project_manager_nation_id,$project_manager_nationality,
 				$sc_project_manager_nameen,$sc_project_manager_namekh,$sc_project_manager_nation_id,$sc_project_manager_nationality,

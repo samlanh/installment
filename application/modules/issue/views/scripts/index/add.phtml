@@ -138,8 +138,28 @@ function getSaleClie(){
 		load: function(data) {	
 			sale_no_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('sale_no').set('store', sale_no_store);
+		    getBranchInfo();
 		},
 		error: function(err) {
+		}
+	});
+}
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			dijit.byId('contact_contruction').attr('value',arr.contact_contruction);
+		},
+		error: function(e) {
 		}
 	});
 }

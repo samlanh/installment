@@ -68,6 +68,8 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			
     			'position'=>$_data['position'],
     			'w_position'=>$_data['w_position'],
+    			'contact_contruction'=>$_data['contact_contruction'],
+    			
     			);
 		    	if (!empty($_data['budget_amount'])){
 		    		$_arr['budget_amount']=$_data['budget_amount'];
@@ -149,6 +151,8 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'logo'=>$photo,
     			'position'=>$_data['position'],
     			'w_position'=>$_data['w_position'],
+    			
+    			'contact_contruction'=>$_data['contact_contruction'],
     			);
 		    	if (!empty($_data['budget_amount'])){
 		    		$_arr['budget_amount']=$_data['budget_amount'];
