@@ -49,6 +49,7 @@ class Project_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     				'west'      => $data[$i]['K'],
     				'east'      => $data[$i]['L'],
     				
+    				'status'      => 1,
     				'create_date' 	=> date("Y-m-d H:i:s"),
     				'user_id'	 	=> $this->getUserId()
     		);
