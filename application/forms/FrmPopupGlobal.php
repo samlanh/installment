@@ -420,42 +420,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		return $str;
 	}
 	
-	public function frmPopupDepartment(){
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$frm = new Group_Form_FrmDepartment();
-		$frm = $frm->FrmAddDepartment();
-		Application_Model_Decorator::removeAllDecorator($frm);
-		$str='<div class="dijitHidden">
-				<div data-dojo-type="dijit.Dialog"  id="department" >
-					<form id="frm_department" >';
-		$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
-					<tr>
-						<td>'.$tr->translate("DEPARTMENT_EN").'</td>
-						<td>'.$frm->getElement('department_en').'</td>
-					</tr>
-					<tr>
-						<td>'.$tr->translate("DEPARTMENT_KH").'</td>
-						<td>'.$frm->getElement('department_kh').'</td>
-					</tr>
-					<tr>
-						<td>'.$tr->translate("DISPAY").'</td>
-						<td>'.$frm->getElement('display_pop').'</td>
-					</tr>
-					<tr>
-						<td>'.$tr->translate("STATUS").'</td>
-						<td>'.$frm->getElement('status_pop').'</td>
-					</tr>
-					<tr>
-						<td colspan="2" align="center">
-						<input type="button" value="Save" label="'.$tr->translate('GO_SAVE').'" dojoType="dijit.form.Button"
-						iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewDepartment();"/>
-						</td>
-					</tr>
-				</table>';
-		$str.='</form></div>
-			</div>';
-		return $str;
-	}
+	
 	public function frmPopupPropertyType(){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$str='<div class="dijitHidden">

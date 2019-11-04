@@ -100,7 +100,6 @@ Class Other_Form_Frmcallecterall extends Zend_Dojo_Form {
 			$_display->setValue($data['displayby']);
 			$_status->setValue($data['status']);
 			$date_call->setValue($data['date']);
-			//$key_code->setValue($data['key_code']);
 		    $_id->setValue($data['id']);
 			
 		}

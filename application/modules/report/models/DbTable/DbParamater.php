@@ -4,7 +4,6 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
       public function getAllHoliday($search=null){
     	$db = $this->getAdapter();		
           $sql="SELECT id,holiday_name,amount_day,start_date,end_date,status,modify_date,note FROM ln_holiday ";
-//           $where = '';
           $from_date =(empty($search['start_date']))? '1': "start_date >= '".$search['start_date']." 00:00:00'";
           $to_date = (empty($search['end_date']))? '1': "end_date <= '".$search['end_date']." 23:59:59'";
           $where = " WHERE ".$from_date." AND ".$to_date;
@@ -27,10 +26,10 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
 //     	$sql="SELECT sale_id,(SELECT ln_sale.price_sold FROM `ln_sale` WHERE ln_sale.id=sale_id ) AS sold_price,
 //     		begining_balance FROM `ln_saleschedule` GROUP BY sale_id ";
-$sql=" SELECT s.id,price_sold,SUM(sl.`principal_permonth`) AS principal_permonth FROM `ln_sale` AS s,`ln_saleschedule` AS sl WHERE s.id=sl.sale_id 
-GROUP BY sl.sale_id ";
-    	$Other =" ";
-    	$where = '';
+			$sql=" SELECT s.id,price_sold,SUM(sl.`principal_permonth`) AS principal_permonth FROM `ln_sale` AS s,`ln_saleschedule` AS sl WHERE s.id=sl.sale_id 
+					GROUP BY sl.sale_id ";
+	    	$Other =" ";
+	    	$where = '';
 //     	if($search['search_status']>-1){
 //     		$where.= " AND status = ".$search['search_status'];
 //     	}

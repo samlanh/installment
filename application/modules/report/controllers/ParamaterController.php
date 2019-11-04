@@ -33,59 +33,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
- 
-  public function exportFileToExcel($table,$data,$thead){
-  	$this->_helper->layout->disableLayout();
-  	$db = new Report_Model_DbTable_DbExportfile();
-  	$finalData = $db->getFileby($table,$data,$thead);
-  	$filename = APPLICATION_PATH . "/tmp/$table-" . date( "m-d-Y" ) . ".xlsx";
-  	$realPath = realpath( $filename );
-  	if ( false === $realPath ){
-  		touch( $filename );
-  		chmod( $filename, 0777 );
-  	}
-  	$filename = realpath( $filename );
-  	$handle = fopen( $filename, "w" );
-  	fputcsv( $handle, $thead, "\t" );
-  	 
-  	$this->getResponse()->setRawHeader( "Content-Type: application/vnd.ms-excel; charset=utf-8" )
-  	->setRawHeader( "Content-Disposition: attachment; filename=excel.xls" )
-  	->setRawHeader( "Content-Transfer-Encoding: binary" )
-  	->setRawHeader( "Expires: 0" )
-  	->setRawHeader( "Cache-Control: must-revalidate, post-check=0, pre-check=0" )
-  	->setRawHeader( "Pragma: public" )
-  	->setRawHeader( "Content-Length: " . filesize( $filename ) )
-  	->sendResponse();
-  	 
-  	foreach ( $finalData AS $finalRow )
-  	{
-  		fputcsv( $handle,$finalRow, "\t" );
-  	}
-  	fclose( $handle );
-  	$this->_helper->viewRenderer->setNoRender();
-  	readfile( $filename );//exit();
-    
-  }
-  function rptBranchAction(){
-  	$db  = new Report_Model_DbTable_DbParamater();
-  	$this->view->branch_list = $db->getAllBranch();
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	$fm = new Other_Form_Frmbranch();
-  	$frm = $fm->Frmbranch();
-  	Application_Model_Decorator::removeAllDecorator($frm);
-  	$this->view->frm_branch = $frm;
-  	if($this->getRequest()->isPost()){
-  		$search = $this->getRequest()->getPost();
-  		if(isset($search['btn_search'])){	
-	  		$this->view->branch_list = $db->getAllBranch($search);
-  		}else {
-  			$collumn = array("br_id","branch_namekh","branch_nameen","br_address","branch_code","branch_tel",
-  				"status","fax","other","displayby");
-  			$this->exportFileToExcel('ln_branch',$db->getAllBranch(),$collumn);
-  		}
-  	}else $data = array('adv_search' => '');
-  }
+
   function rptPropertiesAction(){ // by Vandy
   	if($this->getRequest()->isPost()){
   		$search = $this->getRequest()->getPost();

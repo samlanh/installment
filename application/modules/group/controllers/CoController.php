@@ -113,15 +113,7 @@ class Group_CoController extends Zend_Controller_Action {
    		exit();
    	}
    }
-   public function addnewdepartmentAction(){
-   	if($this->getRequest()->isPost()){
-   		$db = new Group_Form_FrmDepartment();
-   		$_data = $this->getRequest()->getPost();
-   		$id = $db->addDepartmentPop($_data);
-   		print_r(Zend_Json::encode($id));
-   		exit();
-   	}
-   }
+   
    function getstaffcodeAction(){
    	if($this->getRequest()->isPost()){
    		$db = new Application_Model_DbTable_DbGlobal();

@@ -2987,26 +2987,25 @@ function updatePaymentStatus($data){
    }
    
    function UpdatePaytimeBooking(){
-   	$db = $this->getAdapter();
+   		$db = $this->getAdapter();
 	   	$sql="SELECT crm.sale_id,crm.id,crm.payment_times
-	FROM `ln_client_receipt_money` AS crm WHERE crm.field3 =1
-	ORDER BY crm.sale_id,crm.id ASC";
-	$row = $db->fetchAll($sql);
-	   	$sale=""; $i=0;
-   	if (!empty($row)) foreach ($row as $ddd){
-   		if ($sale!=$ddd['sale_id']){
-   			$i=0;
-   		}
-   		$i++;
-   		$array =  array(
-   				'payment_times'	=>$i,
-   		);
-   		$where=" id = ".$ddd['id'];
-   		$this->_name="ln_client_receipt_money";
-   		$this->update($array, $where);
-   		
-   		$sale = $ddd['sale_id'];
-   	}
+			FROM `ln_client_receipt_money` AS crm WHERE crm.field3 =1
+			ORDER BY crm.sale_id,crm.id ASC";
+		$row = $db->fetchAll($sql);
+		   	$sale=""; $i=0;
+	   	if (!empty($row)) foreach ($row as $ddd){
+	   		if ($sale!=$ddd['sale_id']){
+	   			$i=0;
+	   		}
+	   		$i++;
+	   		$array =  array(
+	   				'payment_times'	=>$i,
+	   		);
+	   		$where=" id = ".$ddd['id'];
+	   		$this->_name="ln_client_receipt_money";
+	   		$this->update($array, $where);
+	   		$sale = $ddd['sale_id'];
+	   	}
    }
    public function getAllRemainMonth($search = null){//rpt-loan-released/
 	   	$db = $this->getAdapter();
@@ -3031,16 +3030,16 @@ function updatePaymentStatus($data){
 	   	$where ='';
 	   	$str = 'buy_date';
 	   	if($search['buy_type']>0 AND $search['buy_type']!=2){
-	   	$str = ' agreement_date ';
+	   		$str = ' agreement_date ';
 	   	}
 	   	if($search['buy_type']==2){
-	   	$where.=" AND v_soldreport.payment_id = 1";
+	   		$where.=" AND v_soldreport.payment_id = 1";
 	   	}
 	   	if($search['buy_type']==1){
-	   	$where.=" AND v_soldreport.payment_id != 1";
+	   		$where.=" AND v_soldreport.payment_id != 1";
 	   	}
 	   		
-	   		if(!empty($search['adv_search'])){
+	   	if(!empty($search['adv_search'])){
 	   		$s_where = array();
 	   		$s_search = addslashes(trim($search['adv_search']));
 	   		$s_where[] = " receipt_no LIKE '%{$s_search}%'";
@@ -3066,80 +3065,18 @@ function updatePaymentStatus($data){
 	   		$where.=" AND house_id = ".$search['land_id'];
 	   }
 	   if($search['property_type']>0 AND $search['property_type']>0){
-	   	$where.=" AND v_soldreport.property_type = ".$search['property_type'];
+	   		$where.=" AND v_soldreport.property_type = ".$search['property_type'];
 	   }
 	   if($search['client_name']!='' AND $search['client_name']>0){
-	   $where.=" AND client_id = ".$search['client_name'];
+	   		$where.=" AND client_id = ".$search['client_name'];
 	   }
 	   if($search['schedule_opt']>0){
-	   $where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
+	   		$where.=" AND v_soldreport.payment_id = ".$search['schedule_opt'];
 	   }
 	   $order = " ORDER BY times_remain DESC,payment_id DESC ";
 	   return $db->fetchAll($sql.$where.$order);
    } 
-   
-//    function getAllIncomeOther($search=null){
-//    	$db = $this->getAdapter();
-//    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
-//    	$from_date =(empty($search['start_date']))? '1': " oin.date >= '".$search['start_date']." 00:00:00'";
-//    	$to_date = (empty($search['end_date']))? '1': " oin.date <= '".$search['end_date']." 23:59:59'";
-//    	$where ="";
-//    	$where.= " AND ".$from_date." AND ".$to_date;
-   	 
-//    	$sql=" SELECT
-// 	   	oin.id,
-// 	   	oin.branch_id,
-// 	   	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =oin.branch_id LIMIT 1) AS branch_name,
-// 	   	oin.client_id,
-// 	   	oin.date,
-// 	   	oin.invoice,
-// 	   	oin.total_amount,
-// 	   	oin.description,
-// 	   	s.sale_number,
-// 	   	p.land_address,
-// 	   	p.street,
-// 	   	(SELECT v.name_kh FROM `ln_view`  AS v WHERE v.type =13 AND v.key_code = oin.category_id LIMIT 1) AS category,
-// 	   	c.name_kh,
-// 	   	c.sex,
-// 	   	c.tel
-// 	   	FROM
-// 	   	`ln_otherincome` AS oin,
-// 	   	`ln_sale` AS s,
-// 	   	`ln_client` AS c,
-// 	   	`ln_properties` AS p
-// 	   	WHERE
-// 	   	s.id = oin.sale_id
-// 	   	AND p.id = oin.house_id
-// 	   	AND c.client_id = oin.client_id
-// 	   	AND oin.status=1
-//    	";
-   	 
-//    	if (!empty($search['adv_search'])){
-//    		$s_where = array();
-//    		$s_search = trim(addslashes($search['adv_search']));
-//    		$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
-//    		$s_where[] = " oin.invoice LIKE '%{$s_search}%'";
-//    		$s_where[] = " p.land_address LIKE '%{$s_search}%'";
-//    		$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
-//    		$where .=' AND ('.implode(' OR ',$s_where).')';
-//    	}
-//    	//    	if(!empty($search['payment_method'])){
-//    	//    		$where.= " AND payment_method = ".$search['payment_method'];
-//    	//    	}
-//    	if(!empty($search['category_id'])){
-//    		$where.= " AND oin.category_id = ".$search['category_id'];
-//    	}
-//    	if($search['client_name']>0){
-//    		$where.= " AND oin.client_id = ".$search['client_name'];
-//    	}
-//    	if($search['branch_id']>-0){
-//    		$where.= " AND oin.branch_id = ".$search['branch_id'];
-//    	}
-//    	$order=" ORDER BY oin.client_id,oin.id DESC ";
-//    	return $db->fetchAll($sql.$where.$order);
-//    }
-
-      function getAllIncomeOtherPayment($search=null,$typeRecord=null){
+   function getAllIncomeOtherPayment($search=null,$typeRecord=null){
       	$db = $this->getAdapter();
       	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
       	$from_date =(empty($search['start_date']))? '1': " op.for_date >= '".$search['start_date']." 00:00:00'";
@@ -3364,4 +3301,3 @@ function updatePaymentStatus($data){
       	return $db->fetchAll($sql.$where.$order);
       }
  }
-

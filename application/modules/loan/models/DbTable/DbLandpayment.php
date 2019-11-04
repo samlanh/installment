@@ -1272,9 +1272,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'agreement_date'=>$data['agreement_date'],
     				'staff_id'=>$data['staff_id'],
     				'comission'=>0,
-    				//'full_commission'=>$data['full_commission'],
     				'user_id'=>$this->getUserId(),
-    				'status'=>$data['status_using']
+    				'status'=>$data['status_using'],
+    				//'full_commission'=>$data['full_commission'],
     		);
     		$dbg = new Application_Model_DbTable_DbGlobal();
     		$rs_user = $dbg->getUserInfo();
