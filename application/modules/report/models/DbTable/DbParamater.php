@@ -812,6 +812,7 @@ function getAllBranch($search=null){
  			 pp.dinnerroom,
  			 pp.buidingyear,
  			 pp.`parkingspace`,
+ 			  pp.`note` as `property_note`,
 (SELECT
     	`property`.`land_size`
     	FROM `ln_properties` `property`
