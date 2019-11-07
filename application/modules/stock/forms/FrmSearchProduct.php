@@ -186,7 +186,21 @@ class Stock_Form_FrmSearchProduct extends Zend_Dojo_Form
 		$product_type->setMultiOptions($_opt);
 		$product_type->setValue($request->getParam("product_type"));
 		
-		$this->addElements(array($_sort_by,$product_type,$supplier_id,$cate,$branch_id,$location,$product,$category,$start_date,$end_date,$_title,$_status,$service));
+		$user = new Zend_Dojo_Form_Element_FilteringSelect('user');
+		$user->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>"false",
+				'queryExpr'=>'*${0}*',
+				'required'=>false
+		));
+		$user->setValue($request->getParam('user'));
+		$opt_user = array(''=>$this->tr->translate("LASTNAME_FIRSTNAME"));
+		$all_user=$_dbg->getAllUser();
+		if(!empty($all_user))foreach ($all_user As $row)$opt_user[$row['id']]=$row['by_user'];
+		$user->setMultiOptions($opt_user);
+		
+		$this->addElements(array($user,$_sort_by,$product_type,$supplier_id,$cate,$branch_id,$location,$product,$category,$start_date,$end_date,$_title,$_status,$service));
 		return $this;
 	} 
 

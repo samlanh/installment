@@ -24,7 +24,7 @@ fieldset{  background:none;}
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
                 	dijit.byId("save_close").attr("disabled",true);
-					dijit.byId("save_new").attr("disabled",true);
+					loadingBlock();
 					return true;
 				} else {
 					return false;
@@ -123,7 +123,7 @@ fieldset{  background:none;}
 	var pro_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->product));?> );
 	var pro_cate_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->cat_rows));?> );
 	var branch_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->branchopt));?> );
-	dojo.ready(function(){ 
+	dojo.ready(function(){
 		getProByBranch();
 		new dijit.form.FilteringSelect({
 			store: pro_store,
@@ -169,6 +169,7 @@ fieldset{  background:none;}
 				}
 			}
 		}, "pro_id");
+		dijit.byId("branch").set('readOnly',true);
 	});	
 </script>
 <script type="text/javascript">

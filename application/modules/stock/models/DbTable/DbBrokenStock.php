@@ -91,7 +91,7 @@ class Stock_Model_DbTable_DbBrokenStock extends Zend_Db_Table_Abstract
 					"broken_no"    	=> 	$brokenNo,
 					"request_name"  => 	$data["request_name"],
 					"note"     		=> 	$data["note"],
-					"request_date"  => 	date("Y-m-d"),
+					"request_date"  => 	$data["create_date"],
 					"create_date"   => 	date("Y-m-d H:i:s"),
 					"user_id"       => 	$this->getUserId(),
 					"status"        =>  1,
@@ -122,7 +122,7 @@ class Stock_Model_DbTable_DbBrokenStock extends Zend_Db_Table_Abstract
 					$rows=$this->getProQtyByLocation($data['branch_id_'.$i], $data['product_name_'.$i]); 
 					if($rows){
 						$datatostock= array(
-							'pro_qty' 	=> $data['remain_qty'.$i],
+							'pro_qty' 	=> $rows['pro_qty'] - $data['broken_qty'.$i],
 							'date'		=> date("Y-m-d H:i:s"),
 							'user_id'	=> $this->getUserId()
 						);
@@ -153,7 +153,7 @@ class Stock_Model_DbTable_DbBrokenStock extends Zend_Db_Table_Abstract
 	 				$qty=$this->getProQtyByLocation($row['branch_id'], $row['pro_id']);
 	 				if($qty){
 	 					$curr= array(
-	 						'pro_qty' 	=>$qty['pro_qty']+$row['difference'],
+	 						'pro_qty' 	=>$qty['pro_qty']+$row['qty_broken'],
 	 						'date'		=> date("Y-m-d H:i:s"),
 	 						'user_id'	=> $this->getUserId()
 	 					);
@@ -164,11 +164,12 @@ class Stock_Model_DbTable_DbBrokenStock extends Zend_Db_Table_Abstract
 	 			}
  			}
  			$arr=array(
- 				"adjust_no"    	=> 	$data["adjust_no"],
+ 				"branch_id"    	=> 	$data["branch"],
+ 				"broken_no"    	=> 	$data["adjust_no"],
  				"request_name"  => 	$data["request_name"],
  				"note"     		=> 	$data["note"],
- 				"request_date"  => 	date("Y-m-d"),
- 				"create_date"   => 	date("Y-m-d H:i:s"),
+ 				"request_date"  => 	$data["create_date"],
+ 				//"create_date"   => 	date("Y-m-d H:i:s"),
  				"user_id"       => 	$this->getUserId(),
  				"status"        => 	$data['status'],
  			);
@@ -189,9 +190,9 @@ class Stock_Model_DbTable_DbBrokenStock extends Zend_Db_Table_Abstract
  							'brokenstock_id'=>  $data['id'],
  							'branch_id'		=> 	$data['branch_id_'.$i],
  							'pro_id'		=>  $data['product_name_'.$i],
- 							'qty_befor'		=> 	$data['curr_qty'.$i],
- 							'qty_after'		=>  $data['request_qty'.$i],
- 							'difference'	=> 	$data['spacing_qty'.$i],
+ 							'qty_before'	=> 	$data['curr_qty'.$i],
+ 							'qty_broken'	=>  $data['broken_qty'.$i],
+ 							'qty_after'		=> 	$data['remain_qty'.$i],
  							'create_date'	=>  date("Y-m-d H:i:s"),
  							'remark'  		=> 	$data['note_'.$i],
  							'last_usermod'	=> 	$this->getUserId(),
@@ -204,7 +205,7 @@ class Stock_Model_DbTable_DbBrokenStock extends Zend_Db_Table_Abstract
 	 					$rows=$this->getProQtyByLocation($data['branch_id_'.$i], $data['product_name_'.$i]);
 	 					if($rows){
 	 						$datatostock= array(
-	 								'pro_qty' 	=>$data['request_qty'.$i],
+	 								'pro_qty' 	=> $rows['pro_qty'] - $data['broken_qty'.$i],
 	 								'date'		=> date("Y-m-d H:i:s"),
 	 								'user_id'	=> $this->getUserId()
 	 						);
@@ -219,7 +220,7 @@ class Stock_Model_DbTable_DbBrokenStock extends Zend_Db_Table_Abstract
  		}catch(Exception $e){
  			$db->rollBack();
  			Application_Form_FrmMessage::message('INSERT_FAIL');
- 			$err =$e->getMessage();
+ 			$err = $e->getMessage();
  			Application_Model_DbTable_DbUserLog::writeMessageError($err);
  		}
  	}

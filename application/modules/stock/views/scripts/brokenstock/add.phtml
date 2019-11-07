@@ -27,8 +27,9 @@ fieldset{  background:none;}
 						dijit.byId("pro_id").focus();
 						return false;
 					}
-                	dijit.byId("save_close").attr("disabled",true);
-					dijit.byId("save_new").attr("disabled",true);
+					loadingBlock();
+                	//dijit.byId("save_close").attr("disabled",true);
+					//dijit.byId("save_new").attr("disabled",true);
 					return true;
 				} else {
 					return false;
@@ -102,7 +103,7 @@ fieldset{  background:none;}
 			 <div class="clearfix"></div>
 	         <div class="card-box mt-20">
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               		<input type="button" onclick="submitDataClose()" name="save_close" id="save_close" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+               		<input type="submit" name="save_close" id="save_close" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
 					 	iconClass="dijitEditorIcon dijitEditorIconSave" />
 					 <input type="submit" name="save_new" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_NEW');?>"  dojoType="dijit.form.Button" 
 						iconClass="dijitEditorIcon dijitEditorIconSave" />
@@ -253,28 +254,7 @@ function deleteRecord(index) {
 		$('#identity').val(strings);
 		dojo.query("#row"+index).remove();
 }
-function submitDataClose(){
-	pro_id=dijit.byId("pro_id").get('value');
-	if(pro_id=='' || pro_id==null){
-		dijit.byId("pro_id").focus();
-		return false;
-	}
-	if(dijit.byId('suspend_service').validate()) {
-		dijit.byId('save_close').set('disabled',true);
-		dijit.byId('save_new').set('disabled',true);
-		var url_submit = '<?php echo $this->url(array('module'=>'stock','controller'=>'adjuststock','action'=>'add')); ?>';
-		dojo.xhrPost({
-		    url: url_submit,	
-			form: dojo.byId("suspend_service"),		    
-			load: function(data) {
-				alert('<?php echo $tr->translate('INSERT_SUCCESS');?> !');
-				window.location.href ="<?php echo $this->baseUrl();?>/stock/adjuststock";
-			},
-			error: function(e) {
-			}
-		});
-	}
-}
+
 var url_qty = '<?php echo $this->url(array('module'=>'stock','controller'=>'requestproduct','action'=>'get-productqty')); ?>';
 function getQtyById(index){
 	pro_id = dijit.byId('pro_id').get('value');
