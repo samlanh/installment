@@ -394,9 +394,40 @@ class Report_StockController extends Zend_Controller_Action {
 		}catch(Exception $e){
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
 		}
-		$form=new Stock_Form_FrmSearchProduct();
-		$form=$form->FrmSearchProduct();
+		$frm=new Stock_Form_FrmSearchProduct();
+		$form=$frm->FrmSearchProduct();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	function rptBrokenStockdetailAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search = array(
+						'title'	        =>	'',
+						'branch_id'		=>  '',
+						'start_date'	=>	date('Y-m-d'),
+						'end_date'		=>	date('Y-m-d'),
+						'category_id'	=> "",
+						'product'		=> "",
+						'product_type'	=> "",
+						'user'			=> "",
+				);
+			}
+			$this->view->search = $search;
+			$db=new Report_Model_DbTable_DbRequestStock();
+			$this->view->rows=$db->getAllBrokenStockDetail($search);
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+		$frm=new Stock_Form_FrmSearchProduct();
+		$form=$frm->FrmSearchProduct();
 		Application_Model_Decorator::removeAllDecorator($form);
 		$this->view->form_search=$form;
 	}

@@ -1,6 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('RPT_ADJUST_STOCK'));
+	echo $this->headTitle($tr->translate('RPT_BROKEN_STOCK'));
 	$base_url = Application_Form_FrmMessage::getUrl("/");
 	$frm =  $this->form_search;
 	$rows=$this->rows;
@@ -13,7 +13,7 @@
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 		   	<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_ADJUST_STOCK');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_BROKEN_STOCK');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -73,7 +73,7 @@
 					<td width="15%" align="center">
 					</td>
 					<td align="center" width="70%">
-						<span <?php echo TITLE_REPORT;?>><?php echo $tr->translate('RPT_ADJUST_STOCK');?></span><br>
+						<span <?php echo TITLE_REPORT;?>><?php echo $tr->translate('RPT_BROKEN_STOCK');?></span><br>
 						<span style="font-size: 12px; "><?php if(!empty($this->search['start_date'])){?><?php echo date("d-M-Y",strtotime($this->search['start_date']));?> &nbsp;<?php echo $tr->translate('TO');?>&nbsp; <?php echo date("d-M-Y",strtotime($this->search['end_date']));}?></span>
 					</td>
 					<td width="15%" align="center">
@@ -106,7 +106,7 @@
 									<td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
 									<td rowspan="2">&nbsp;<?php echo $tr->translate("BRANCH");?>&nbsp;</td>
 									<td colspan="2">&nbsp;<?php echo $tr->translate("PRODUCT_INFO");?>&nbsp;</td>
-									<td colspan="7">&nbsp;<?php echo $tr->translate("ADJUST_INFO");?>&nbsp;</td>
+									<td colspan="7">&nbsp;<?php echo $tr->translate("BROKEN_INFO");?>&nbsp;</td>
 									<td rowspan="2">&nbsp;<?php echo $tr->translate("USER");?>&nbsp;</td>
 									<td rowspan="2">&nbsp;<?php echo $tr->translate("STATUS");?>&nbsp;</td>
 								</tr>
@@ -115,13 +115,13 @@
 									<td><?php echo $tr->translate("CATEGORY");?></td>
 									<td><?php echo $tr->translate("PRODUCT_NAME");?></td>
 									
-									<td><?php echo $tr->translate("ADJUST_NO");?></td>
+									<td><?php echo $tr->translate("BROKEN_NO");?></td>
 									<td><?php echo $tr->translate("TITLE");?></td>
 									<td><?php echo $tr->translate("QTY_BEFOR");?></td>
 									<td><?php echo $tr->translate("QUANTITY_NEW");?></td>
 									<td><?php echo $tr->translate("STOCK_SPACING");?></td>
 									<td><?php echo $tr->translate("NOTE");?></td>
-									<td><?php echo $tr->translate("ADJUST_DATE");?></td>
+									<td><?php echo $tr->translate("CREATED_DATE");?></td>
 								</tr>
 							</thead>
 							<?php 
@@ -134,12 +134,12 @@
 								<td >&nbsp;<?php echo $rs_row['category']; ?>&nbsp;</td>
 								<td >&nbsp;<?php echo $rs_row['pro_name']; ?>&nbsp;</td>
 								
-								<td align="center">&nbsp;<strong><?php echo $rs_row['adjust_no']; ?></strong>&nbsp;</td>
+								<td align="center">&nbsp;<strong><?php echo $rs_row['broken_no']; ?></strong>&nbsp;</td>
 								<td >&nbsp;<?php echo $rs_row['request_name']; ?>&nbsp;</td>
 								
-								<td align="center">&nbsp;<?php if($rs_row['qty_befor']!=0) echo $rs_row['qty_befor']; ?>&nbsp;</td>
+								<td align="center">&nbsp;<?php if($rs_row['qty_before']!=0) echo $rs_row['qty_before']; ?>&nbsp;</td>
+								<td align="center">&nbsp;<?php if($rs_row['qty_broken']!=0) echo $rs_row['qty_broken']; ?>&nbsp;</td>
 								<td align="center">&nbsp;<?php if($rs_row['qty_after']!=0) echo $rs_row['qty_after']; ?>&nbsp;</td>
-								<td align="center">&nbsp;<?php if($rs_row['difference']!=0) echo $rs_row['difference']; ?>&nbsp;</td>
 								<td >&nbsp;<?php echo $rs_row['note']; ?></td>
 								<td align="center">&nbsp;<?php echo date("d/m/Y",strtotime($rs_row['request_date'])); ?>&nbsp;</td>
 								<td align="center">&nbsp;<?php echo $rs_row['user_name']; ?>&nbsp;</td>
