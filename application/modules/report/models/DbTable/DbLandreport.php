@@ -2374,6 +2374,7 @@ function updatePaymentStatus($data){
 	  			'full_commission'=>$data['full_commission'],
 	  			'commission_amt'=>$data['commission_amt'],
 	  			'commission_times'=>$data['times_commission'],
+	  			'is_verify'=>1,
 	  		);
 	  		$this->_name="ln_sale";
 	  		$where = "id = ".$data['id'];
