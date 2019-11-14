@@ -113,6 +113,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    				'north'	      => $north,
 	    				'west'	      => $west,
 	    				'east'	      => $east,
+	    				'note'        => $_data['desc'],
 	    				'create_date'=>date('Y-m-d')
 	    		);
 	    		

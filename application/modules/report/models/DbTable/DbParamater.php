@@ -185,7 +185,9 @@ function getAllBranch($search=null){
     		}
 
 //     		$where.=" ORDER BY p.`property_type`,p.`street` ASC, cast(land_address as unsigned) "; 
-    		$where.= " ORDER BY p.`property_type`,p.`street` ASC, IF(land_address RLIKE '^[a-z]', 1, 2), land_address ASC ";
+// 			$where.=" IF(land_address RLIKE '^[a-z]', 1, 2), land_address ASC";
+    		$where.= " ORDER BY p.branch_id,p.`property_type`,p.`street` ASC, LENGTH(land_address), land_address ASC  ";
+    		
     		return $db->fetchAll($sql.$where);
     	}
     	function getCancelSale($search=null){
@@ -197,7 +199,7 @@ function getAllBranch($search=null){
     		    c.`id`,c.return_back,
     		    (SELECT project_name FROM `ln_project` WHERE br_id=c.`branch_id` LIMIT 1) AS `project_name`,
     		    c.paid_amount,c.installment_paid,c.reason,c.`create_date`,
-				s.`sale_number`,
+				s.`sale_number`,,
 				s.price_sold,s.other_fee,
 				clie.`client_number`,
 				(clie.`name_kh`) AS client_name,
@@ -1520,7 +1522,7 @@ function getAllBranch($search=null){
 			(SELECT  first_name FROM rms_users WHERE id = s.user_id LIMIT 1 ) AS user_name
 			FROM ln_sale AS s ,
     		`ln_staff` AS st 
-    	WHERE s.`comission` !=0 AND st.`co_id` = s.`staff_id`";
+    	WHERE s.`comission` !=0 AND st.`co_id` = s.`staff_id` ";
     	
     	$dbp = new Application_Model_DbTable_DbGlobal();
     	$sql.=$dbp->getAccessPermission("st.`branch_id`");

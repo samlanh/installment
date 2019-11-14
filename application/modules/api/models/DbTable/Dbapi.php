@@ -8,22 +8,43 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
-    function getAllSold(){
+    function getAllSold($search){
     	$sql="SELECT * ,
-		FORMAT(price_before,2) AS price_before,
-		FORMAT(price_sold,2) AS price_sold,
-		FORMAT(balance,2) AS balance,
-		FORMAT(paid_amount,2) AS paid_amount,
-		DATE_FORMAT(buy_date, '%d-%m-%Y') AS  buy_date,
-		DATE_FORMAT(validate_date, '%d-%m-%Y') AS  validate_date,
-		DATE_FORMAT(agreement_date, '%d-%m-%Y') AS  agreement_date,
-		
-    	FORMAT((price_before-price_sold),2) AS total_discount,
-      	(SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
-      	(SELECT name_kh FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
-      FROM v_soldreport WHERE 1 ORDER BY id DESC limit 100 ";
+				FORMAT(price_before,2) AS price_before,
+				FORMAT(price_sold,2) AS price_sold,
+				FORMAT(balance,2) AS balance,
+				FORMAT(paid_amount,2) AS paid_amount,
+				DATE_FORMAT(buy_date, '%d-%m-%Y') AS  buy_date,
+				DATE_FORMAT(validate_date, '%d-%m-%Y') AS  validate_date,
+				DATE_FORMAT(agreement_date, '%d-%m-%Y') AS  agreement_date,
+		    	FORMAT((price_before-price_sold),2) AS total_discount,
+		      	(SELECT first_name FROM `rms_users` WHERE id=v_soldreport.user_id LIMIT 1) AS user_name,
+		      	(SELECT name_kh FROM `ln_view` WHERE key_code =v_soldreport.payment_id AND type = 25 limit 1) AS paymenttype
+      	FROM v_soldreport WHERE 1  ";
+    	$where='';
+    	$from_date =(empty($search['start_date']))? '1': " buy_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " buy_date <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = (trim($search['adv_search']));
+//     		$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
+//     		$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
+    		$s_where[] = " land_address LIKE '%{$s_search}%'";
+//     		$s_where[] = " c.client_number LIKE '%{$s_search}%'";
+//     		$s_where[] = " c.name_en LIKE '%{$s_search}%'";
+//     		$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
+//     		$s_where[] = " c.phone LIKE '%{$s_search}%'";
+//     		$s_where[] = " s.price_sold LIKE '%{$s_search}%'";
+//     		$s_where[] = " s.comission LIKE '%{$s_search}%'";
+//     		$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	 $where.=' ORDER BY id DESC limit 100 ';
+    	
     	$db = $this->getAdapter();
-    	return $db->fetchAll($sql);
+//     	echo $sql.$where;exit();
+    	return $db->fetchAll($sql.$where);
     }
    	function getSalebyType(){
    		$sql_sale=" SELECT
@@ -340,6 +361,154 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     	 
     	return $db->fetchAll($sql.$where.$order);
     }
+    public function getAllSaleAgreement($search=null){
+    	$db = $this->getAdapter();
+		$session_lang=new Zend_Session_Namespace('lang');
+		$lang = $session_lang->lang_id;
+		$str = 'name_en';
+		if($lang==1){
+			$str = 'name_kh';
+		}
+		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
+		
+		$sql=" SELECT
+		  `s`.`id`               AS `id`,
+		  (SELECT
+		     `ln_project`.`project_name`
+		   FROM `ln_project`
+		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+		   LIMIT 1) AS `branch_name`,
+		  FORMAT(`s`.`price_sold`,2)       AS `price_sold`,
+		  DATE_FORMAT(s.buy_date,'%d-%m-%Y') AS buy_date,
+		  DATE_FORMAT(s.validate_date,'%d-%m-%Y') AS validate_date,
+		  `p`.`land_address`     AS `land_address`,
+		  `p`.`street`           AS `street`,
+		  `c`.`name_kh`          AS `name_kh`,
+		  `c`.`name_en`          AS `name_en`,
+		  `c`.`phone`            AS `phone` 
+		   FROM ((`ln_sale` `s`
+		    JOIN `ln_client` `c`)
+		   JOIN `ln_properties` `p`)
+	  				WHERE ((`c`.`client_id` = `s`.`client_id`)
+			       	AND (`p`.`id` = `s`.`house_id`)
+			       	AND (`s`.`status` = 1)) 
+					AND s.payment_id=1 AND s.is_cancel=0";
+	
+		
+		$to_date = (empty($search['end_date']))? '1': " s.end_line <= '".$search['end_date']." 23:59:59'";
+		$where= " AND ".$to_date;
+		
+		if(!empty($search['adv_search'])){
+// 			$s_where = array();
+// 			$s_search = addslashes(trim($search['adv_search']));
+// 			$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
+// 			$s_where[] = " `p`.`land_code`  LIKE '%{$s_search}%'";
+// 			$s_where[] = " `p`.`land_address` LIKE '%{$s_search}%'";
+// 			$s_where[] = " `c`.`client_number`  LIKE '%{$s_search}%'";
+// 			$s_where[] = " `c`.`name_en`  LIKE '%{$s_search}%'";
+// 			$s_where[] = " `c`.`name_kh`  LIKE '%{$s_search}%'";
+// 			$s_where[] = " (SELECT
+// 			`ln_staff`.`co_khname`
+// 			FROM `ln_staff`
+// 			WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
+// 			LIMIT 1) LIKE '%{$s_search}%'";
+// 			$s_where[] = " `s`.`price_sold` LIKE '%{$s_search}%'";
+// 			$s_where[] = " `s`.`comission` LIKE '%{$s_search}%'";
+// 			$s_where[] = " `s`.`total_duration` LIKE '%{$s_search}%'";
+// 			$s_where[] = " `p`.`street` LIKE '%{$s_search}%'";
+// 			$where .=' AND ( '.implode(' OR ',$s_where).')';
+		}
+// 		if($search['branch_id']>0){
+// 			$where.=" AND s.branch_id = ".$search['branch_id'];
+// 		}
+// 		if(!empty($search['co_id']) AND $search['co_id']>-1){
+// 			$where.=" AND `s`.`staff_id` = ".$search['co_id'];
+// 		}
+// 		if($search['land_id']>0){
+// 			$where.=" AND ( s.house_id = ".$search['land_id']." OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) LIKE '%".$search['land_id']."%' )";
+// 		}
+// 		if($search['property_type']>0 AND $search['property_type']>0){
+// 				$where.=" AND p.property_type = ".$search['property_type'];
+// 		}
+// 		if($search['client_name']!='' AND $search['client_name']>0){
+// 			$where.=" AND `s`.`client_id` = ".$search['client_name'];
+// 		}
+		$order = " ORDER BY s.id ASC,s.payment_id DESC ";
+		return $db->fetchAll($sql.$where.$order);
+    }
+    function getAllCommission($search=null){
+    	$db = $this->getAdapter();
+    	$from_date =(empty($search['start_date']))? '1': "c.`for_date` >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': "c.`for_date` <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	$sql ='SELECT 
+			    	c.`id`,
+			    	s.id AS saleid,
+			    	p.`project_name`,
+			    	clie.`name_kh` AS client_name,
+			    	pro.`land_address`,pro.`street`,
+			    	(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name,
+			    	(SELECT sex FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS sex,
+			    	(SELECT tel FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS tel,
+			    	FORMAT(c.total_amount,2) as total_amount,
+			    	DATE_FORMAT(c.for_date,"%d-%m-%Y") as create_date,
+			    	c.invoice,
+			    	(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
+		    	FROM `ln_comission` AS c ,
+			    	`ln_sale` AS s,
+			    	`ln_project` AS p,
+			    	`ln_properties` AS pro,
+			    	`ln_client` AS clie
+		    	WHERE
+	    	s.`id` = c.`sale_id`
+	    	AND p.`br_id` = c.`branch_id`
+	    	AND pro.`id` = s.`house_id`
+	    	AND clie.`client_id` = s.`client_id`
+	    	AND c.status=1
+	    	AND c.total_amount>0 ';
     
-    
+//     	if($search['branch_id']>0){
+//     		$where.= " AND c.branch_id = ".$search['branch_id'];
+//     	}
+//     	if(!empty($search['co_khname']) AND $search['co_khname']>0){
+//     		$where.= " AND c.staff_id = ".$search['co_khname'];
+//     	}
+//     	if(!empty($search['land_id']) AND $search['land_id']>0){
+//     		$where.= " AND s.house_id = ".$search['land_id'];
+//     	}
+//     	if(!empty($search['category_id_expense']) AND $search['category_id_expense']>0){
+//     		$where.= " AND c.category_id = ".$search['category_id_expense'];
+//     	}
+//     	if(!empty($search['adv_search'])){
+//     		$s_where = array();
+//     		$s_search = addslashes(trim($search['adv_search']));
+//     		$s_where[] = " clie.`client_number` LIKE '%{$s_search}%'";
+//     		$s_where[] = " clie.`name_kh` LIKE '%{$s_search}%'";
+//     		$s_where[] = " c.`description` LIKE '%{$s_search}%'";
+//     		$s_where[] = " s.`sale_number` LIKE '%{$s_search}%'";
+//     		$s_where[] = " pro.`land_address` LIKE '%{$s_search}%'";
+//     		$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
+//     		$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
+//     		$where .=' AND ('.implode(' OR ',$s_where).')';
+//     	}
+    	$rsd_commission = $db->fetchAll($sql.$where);
+    	
+    	$from_date =(empty($search['start_date']))? '1': "c.`for_date` >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': "c.`for_date` <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	$sql ='
+    	SELECT
+	    	FORMAT(SUM(c.total_amount),2) as total_amount
+	    		FROM `ln_comission` AS c
+	    	WHERE
+		    	c.status=1
+	    		AND c.total_amount>0 ';
+    	$rst_commision = $db->fetchRow($sql.$where);
+    	return array('rsd_commission'=>$rsd_commission,'rst_commision'=>$rst_commision);
+    }
+    function otherdata(){
+    	$db = new Application_Model_DbTable_DbGlobal();
+    	return $db->getAllBranchByUser($branch_id=null,$opt=null);
+    }
 }
