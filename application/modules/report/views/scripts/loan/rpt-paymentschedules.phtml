@@ -94,10 +94,14 @@
 				                    <td width="30%" valign="top">
 				                      <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-m-Y',strtotime($client['buy_date']));?> </p>
 				                      <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-m-Y',strtotime($client['first_payment'])); ?></p>
-				                      <p><?php echo $tr->translate("LIFE_LOAN");?> : <?php 
+				                      <p><?php echo $tr->translate("LIFE_LOAN");?> : 
+				                      <span id="life_date">
+				                      <?php 
 				                      	$date= new DateTime($client['end_line']);
-				                      	echo $next_payment = $date->format("d-m-Y");
-				                       ?></p>
+				                      	echo $LIFE_LOAN = $date->format("d-m-Y");
+				                       ?>
+				                       </span>
+				                       </p>
 				                    </td>
 				                </tr>
 			                </table>
@@ -146,15 +150,19 @@
 		                    	if($row['last_optiontype']==1){//by date
 		                    		if($row['ispay_bank']==0){
 		                    			$date= new DateTime($row['date_payment']);
-		                    			echo $date->format("d-m-Y");
+		                    			$LIFE_LOAN =  $date->format("d-m-Y");
+		                    			echo $LIFE_LOAN;
 		                    		}else{
-		                    			echo $row['payment_type'];
+		                    			$LIFE_LOAN = $row['payment_type'];
+		                    			echo $LIFE_LOAN;
 		                    		}
 		                    	}else{//by last payment
 		                    		if($row['ispay_bank']==0){
-		                    			echo $tr->translate("RECEIVED_PROPERTY");
+		                    			$LIFE_LOAN = $tr->translate("RECEIVED_PROPERTY");
+		                    			echo $LIFE_LOAN;
 		                    		}else{
-		                    			echo $row['payment_type'];
+		                    			$LIFE_LOAN = $row['payment_type'];
+		                    			echo $LIFE_LOAN;
 		                    		}
 		                    	}
 	                    		
@@ -222,3 +230,16 @@
 	</table>
 	</div>
 </div>
+<script>
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 printSave();
+		 
+	 });
+});	 
+
+function printSave(){
+	symbal=" $";
+	dojo.byId("life_date").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", strip_tags(htmlspecialchars($LIFE_LOAN)));?>';
+}
+</script>

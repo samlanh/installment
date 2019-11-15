@@ -276,8 +276,8 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     			);
     			$this->insert($datapayment);
     		}
-    		
     		for($i=1;$i<=$loop_payment;$i++){
+    			
     			if($payment_method==1){
     				break;
     			}elseif($payment_method==2){
@@ -343,6 +343,10 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     									'is_installment'=>1,
 			    						'no_installment'=>$key+$start_id,
 			    					);
+			    					if($i==$loop_payment){//for end of record only
+			    						$datapayment['last_optiontype'] = $data['paid_receivehouse'];
+			    					}
+			    					
 			    					$key = $key+1;
 			    					$this->insert($datapayment);
 			    					$from_date = $data['date_payment'.$j];
@@ -448,7 +452,9 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 	    			        	'date_payment'=>$next_payment,
 	    			        	'no_installment'=>$i+$j+$start_id,
 	    			        );
-		            		 
+	    			        if($i==$loop_payment){//for end of record only
+	    			        	$datapayment['last_optiontype'] = $data['paid_receivehouse'];
+	    			        }	 
 			    		$idsaleid = $this->insert($datapayment);
 	// 		    		$amount_collect=0;
 			    		$old_remain_principal = 0;
