@@ -759,7 +759,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	   $_setting = $key->getKeyCodeMiniInv(TRUE);
   	   $is_show = empty($_setting['showhouseinfo'])?0:$_setting['showhouseinfo'];
   	   if($is_show==0){
-	  	   	if($action=="changehouse"){
+	  	   	if($action=="changehouse" OR $action !=""){
 	  	   	}else{
 	  	   		$sql.=" AND `is_lock`=0 ";
 	  	   	}
