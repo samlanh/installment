@@ -30,9 +30,11 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 	     (SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id AND ln_saleschedule.collect_by=2 AND ln_saleschedule.status=0 LIMIT 1) AS extra_principal,
 	     (SELECT SUM(ss.principal_permonth-principal_permonthafter) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND ss.status=1 AND principal_permonth!=principal_permonthafter LIMIT 1) AS principal_remain,
 	     (SELECT (ss.principal_permonth-ss.principal_permonthafter) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 order by ss.no_installment ASC  LIMIT 1  ) AS printcipal_permonthlast,
-	     (SELECT COUNT(ss.id) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=1 AND STATUS=1 LIMIT 1) AS countpaid
+	     (SELECT COUNT(ss.id) FROM `ln_saleschedule` AS ss WHERE ss.sale_id = `s`.`id` AND ss.is_completed=1 AND ss.status=1 LIMIT 1) AS countpaid
 	     
-	  	FROM `ln_sale` AS s WHERE is_completed=0 AND STATUS=1 AND is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2 ";
+	  	FROM `ln_sale` AS s WHERE s.is_completed=0 AND s.status=1 AND s.is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2 ";
+      	//New codiction make query fastest than before
+      	 $sql.=" AND s.price_sold != (SELECT SUM(COALESCE(`principal_permonth`,0)) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id  GROUP BY ln_saleschedule.sale_id LIMIT 1)";
       	return $db->fetchAll($sql);
       }
       function getScheduleCompletednotUpdate(){
@@ -54,7 +56,8 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 			      	 AND ss.principal_permonth<=0 
       				 AND ss.total_payment_after=0 
       				 AND ss.is_completed=0 
-      				GROUP BY s.id  ";
+      				";
+      	$sql.=" GROUP BY s.id ";
       	return $db->fetchAll($sql);
       }
       function getBeginingBalance(){

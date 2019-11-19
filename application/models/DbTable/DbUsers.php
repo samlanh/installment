@@ -339,5 +339,11 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 					$rows = $db->fetchAll($sql);
 	    return $rows;
 	}
+	
+	public function CheckTitle($data){
+		$db =$this->getAdapter();
+		$sql = "SELECT id FROM `rms_users` WHERE user_name = '".$data['user_name']."' limit 1 ";
+		return $db->fetchRow($sql);
+	}
 }
 

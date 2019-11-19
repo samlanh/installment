@@ -24,13 +24,19 @@ ul.opt-school {
 		<form action="<?php echo $this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">				
 			if(this.validate()) {
+				is_duplicate = dijit.byId('is_duplicate').get('value');
+				if(is_duplicate==1){
+					dijit.byId('user_name').focus();
+					return false;
+				}
 				if(dojo.byId('password').value != dojo.byId('con_password').value ){
 					alert('សូម​ពិនិត្រ ពាក្យ​​សំងាត់​ទាំង​ 2 របស់​អ្នក មិន​ដូច​គ្នា​ទេ, សូម​បញ្ចូល ​ម្តង​ទៀត..');
 					dojo.byId('password').value = '';
 					dojo.byId('con_password').value = '';
 					dijit.byId('password').focus();
 					return false;
-				}				
+				}	
+				loadingBlock();			
 				dijit.byId('save_new').set('disabled',true);
 				return true;
 			}
@@ -41,6 +47,7 @@ ul.opt-school {
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
 		    			<h4 class="m-b-0"><i class="fa fa-user-plus " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CREATE_USER');?></h4>
+	    				<span id="message" style="color: red; display: block;"></span>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -68,8 +75,9 @@ ul.opt-school {
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("USER_NAME");?> <span class="required">*</span> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<input type="text" required="true" name="user_name" id="user_name" placeholder="<?php echo $tr->translate("USER_NAME");?>" 
+	                   		<input type="text" onKeyup="checkTitle();" required="true" name="user_name" id="user_name" placeholder="<?php echo $tr->translate("USER_NAME");?>" 
 											dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ​អ្នក​ប្រើ​ប្រាស់!" class='fullside'/>
+							<input type="hidden" name="is_duplicate" id="is_duplicate" dojoType="dijit.form.TextBox" />
 	                   </div>
 	                </div>
 	                
@@ -241,5 +249,31 @@ function CheckAllTotal(index){
 	    	 identity[i] = $(this).val();
 	     });
 	}
+}
+
+url_CheckTitle = '<?php echo $this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'check-title'));?>';
+function checkTitle(){
+	user_name = dijit.byId('user_name').get('value');
+	if(user_name==''){ return false;}
+	dojo.xhrPost({
+		url:url_CheckTitle,	
+		content:{ 
+			'user_name': user_name ,
+		},
+		handleAs:"json",
+		load: function(data) {	
+			if(data !== false ){
+				document.getElementById('message').innerHTML ='<?php echo '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '.$tr->translate("USER_EXISTING_READY");?>';
+				dijit.byId('user_name').focus();
+				dijit.byId('is_duplicate').attr('value',1);
+			}else{
+				document.getElementById('message').innerHTML ='';
+				dijit.byId('is_duplicate').attr('value',0);
+			}
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
 }
 </script>

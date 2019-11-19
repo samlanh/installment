@@ -200,5 +200,15 @@ class RsvAcl_UserController extends Zend_Controller_Action
 		}
 		
 	}
+	
+	function checkTitleAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbUsers();
+			$return=$db->CheckTitle($data);
+			print_r(Zend_Json::encode($return));
+			exit();
+		}
+	}
 
 }
