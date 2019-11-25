@@ -1656,6 +1656,10 @@ function getAllBranch($search=null){
     	if($search['branch_id']>0){
     		$where.=" AND branch_id=".$search['branch_id'];
     	}
+    	if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){
+    		$where.= " AND category_id = ".$search['category_id_expense'];
+    	}
+    	
     	return $db->fetchAll($sql.$where.$order);
     }
     function geIncomeFromSale($search,$money_type=-1){

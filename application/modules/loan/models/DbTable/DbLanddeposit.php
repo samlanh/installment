@@ -611,7 +611,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 //     							'width'=>$width,
 //     							'height'=>$height,
 //     							'land_size'=>$size,
-    							
     							'width'=>$data['width'],
     							'height'=>$data['height'],
     							'land_size'=>$data['land_size'],
@@ -619,7 +618,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     							'north'=>$data['north'],
     							'west'=>$data['west'],
     							'east'=>$data['east'],
-    							
     							"is_lock"=>1,
     							"status"=>-2,
     							"create_date"=>date("Y-m-d"),
@@ -633,13 +631,13 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					$this->_name="ln_properties";//ប្តូរពីទិញច្រើនមកទិញតែមួយ Error
     					$where = "id =".$data["old_landid"];
     					$arr = array(
-    							"is_lock"=>0);
+    						"is_lock"=>0);
     					$this->update($arr, $where);
     					
     					$this->_name="ln_properties";
     					$where = "id =".$data["land_code"];
     					$arr = array(
-    							"is_lock"=>1
+    						"is_lock"=>1
     					);
     					$this->update($arr, $where);
     					$land_id = $data["land_code"];
@@ -653,7 +651,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		if($setting['note_agreement']==1){
     			$note_agreement = $data['note_agreement'];
     		}
-    		
     		$arr = array(
     				'branch_id'=>$data['branch_id'],
     			   	'receipt_no'=>$data['receipt'],
@@ -702,41 +699,41 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				$pay_off = 1;
     			}
     			$array = array(
-    					'branch_id'			=>$data['branch_id'],
-    					'client_id'			=>$data['member'],
-    					'payment_method'	=>  $data['payment_method'],
-    					'cheque'			=>	$data['cheque'],
-    					'date_pay'			=>$data['paid_date'],
-    					'land_id'			=>$data['land_code'],
-    					'date_input'		=>$data['paid_date'],//paid_date
-    					'outstanding'		=>$data['sold_price'],
-    					'principal_amount'	=> $data['balance'],
-    					'selling_price'=>$data['sold_price'],
-    					'allpaid_before'=>$data['deposit'],
-    					'total_principal_permonth'=>$data['deposit'],
-    					'total_principal_permonthpaid'=>$data['deposit'],
-    					'total_interest_permonth'	=>0,
-    					'total_interest_permonthpaid'=>0,
-    					'penalize_amount'			=>0,
-    					'penalize_amountpaid'		=>0,
-    					'service_charge'	=>0,
-    					'service_chargepaid'=>0,
-    					'total_payment'		=>$data['deposit'],//$data['sold_price'],
-    					'amount_payment'	=>$data['deposit'],
-    					'recieve_amount'	=>$data['deposit'],
-    					'balance'			=>$data['balance'],
-    					'payment_option'	=>($data['schedule_opt']==2)?4:1,//4 payoff,1normal
-    					'is_completed'		=>($data['schedule_opt']==2)?1:0,
-    					'status'			=>1,
-    					'note'				=>$data['note'],
-    					'user_id'			=>$this->getUserId(),
-    					'field3'			=>1,// ជាប្រាក់កក់
-    					'field2'=>1,
-    					'is_payoff'=>$pay_off,
-    					'payment_times'=>1,
+    				'branch_id'			=>$data['branch_id'],
+    				'client_id'			=>$data['member'],
+    				'payment_method'	=>  $data['payment_method'],
+    				'cheque'			=>	$data['cheque'],
+    				'date_pay'			=>$data['paid_date'],
+    				'land_id'			=>$data['land_code'],
+    				'date_input'		=>$data['paid_date'],//paid_date
+    				'outstanding'		=>$data['sold_price'],
+    				'principal_amount'	=> $data['balance'],
+    				'selling_price'=>$data['sold_price'],
+    				'allpaid_before'=>$data['deposit'],
+    				'total_principal_permonth'=>$data['deposit'],
+    				'total_principal_permonthpaid'=>$data['deposit'],
+    				'total_interest_permonth'	=>0,
+    				'total_interest_permonthpaid'=>0,
+    				'penalize_amount'			=>0,
+    				'penalize_amountpaid'		=>0,
+    				'service_charge'	=>0,
+    				'service_chargepaid'=>0,
+    				'total_payment'		=>$data['deposit'],//$data['sold_price'],
+    				'amount_payment'	=>$data['deposit'],
+    				'recieve_amount'	=>$data['deposit'],
+    				'balance'			=>$data['balance'],
+    				'payment_option'	=>($data['schedule_opt']==2)?4:1,//4 payoff,1normal
+    				'is_completed'		=>($data['schedule_opt']==2)?1:0,
+    				'status'			=>1,
+    				'note'				=>$data['note'],
+    				'user_id'			=>$this->getUserId(),
+    				'field3'			=>1,// ជាប្រាក់កក់
+    				'field2'=>1,
+    				'is_payoff'=>$pay_off,
+    				'payment_times'=>1,
     			);
     			$this->_name='ln_client_receipt_money';
-    			$where="receipt_no='".$data['receipt']."'";
+    			$where="receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id'];
     			$this->update($array, $where);
     				
     			$this->_name='ln_client_receipt_money_detail';
@@ -759,7 +756,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'status'		=>1,
     			);
     			if(!empty($data['receipt'])){
-    				$sql="SELECT id FROM `ln_client_receipt_money` WHERE receipt_no='".$data['receipt']."'";
+    				$sql="SELECT id FROM `ln_client_receipt_money` WHERE receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id'];
     				$crm_id = $db->fetchOne($sql);
     				if(!empty($crm_id)){
     					$where="crm_id=".$crm_id;

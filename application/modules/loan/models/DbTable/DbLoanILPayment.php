@@ -219,12 +219,12 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    						'begining_balance' 	     => $rs['capital'],
 	    						'begining_balance_after' => $rs['capital'],
 	    						'ending_balance'         => $rs['remain_capital'],
-	    						"principal_permonth"	 => $rs['old_principal_permonth'],
+	    						//"principal_permonth"	 => $rs['old_principal_permonth'],
+	    						//'total_interest'   	 => $rs['old_interest'],
+	    						//'total_payment'    	 => $rs['old_total_payment'],
 	    						"principal_permonthafter"=> $rs['old_principal_permonth'],
 	    						'total_interest_after'   => $rs['old_interest'],
-	    						'total_interest'   		 => $rs['old_interest'],
 	    						'total_payment_after'    => $rs['old_total_payment'],
-	    						'total_payment'    		 => $rs['old_total_payment'],
 	    						'is_completed'           => 0,
 	    						'received_userid'=>		0
 	    				);
