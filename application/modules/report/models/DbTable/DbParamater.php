@@ -657,10 +657,12 @@ function getAllBranch($search=null){
                    p.w_manager_nation_id,
 			    	p.w_manager_position,
 			    	p.w_manager_tel,
+			    	p.w_manager_tel AS manager_tel,
     	
                    p.w_managername1,
 			    	p.w_manager_position1,
 			    	p.w_manager_tel1,
+			    	p.w_manager_tel1 AS with_manager_tel,
     	
                    (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=p.`w_sex` LIMIT 1) AS sc_manager_sex,
 	                  p.`w_dob`,

@@ -283,12 +283,24 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 		$contact_contruction = new Zend_Dojo_Form_Element_NumberTextBox('contact_contruction');
 		$contact_contruction->setAttribs(array(
 				'dojoType'=>'dijit.form.Textarea',
-				'required' =>'true',
 				'class'=>'fullside',
 				'style'=>'min-height: 60px;font-size:12px;'
 		));
 		$str_value='';
 		$contact_contruction->setValue($str_value);
+		
+		
+		$gm_phone = new Zend_Dojo_Form_Element_NumberTextBox('gm_phone');
+		$gm_phone->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
+		$w_phone = new Zend_Dojo_Form_Element_NumberTextBox('w_phone');
+		$w_phone->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
 		
 		if(!empty($data)){
 			$br_id->setValue($data['br_id']);
@@ -330,6 +342,9 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 			$position->setValue($data['position']);
 			$w_position->setValue($data['w_position']);
 			$contact_contruction->setValue($data['contact_contruction']);
+			
+			$gm_phone->setValue($data['w_manager_tel']);
+			$w_phone->setValue($data['w_manager_tel1']);
 		}
 		
 		
@@ -348,7 +363,10 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 				$cs_manager_current_address,
 				$budget_amount,
 				$position,
-				$w_position
+				$w_position,
+				
+				$gm_phone,
+				$w_phone
 				));
 		
 		return $this;
