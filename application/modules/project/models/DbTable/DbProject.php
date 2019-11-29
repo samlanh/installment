@@ -73,6 +73,11 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'w_manager_tel'=>$_data['gm_phone'],
     			'w_manager_tel1'=>$_data['w_phone'],
     			
+    			'office_tel'=>$_data['office_tel'],
+    			'office_email'=>$_data['office_email'],
+    			'office_website'=>$_data['office_website'],
+    			'office_address'=>$_data['office_address'],
+    			
     			);
 		    	if (!empty($_data['budget_amount'])){
 		    		$_arr['budget_amount']=$_data['budget_amount'];
@@ -159,6 +164,12 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			
     			'w_manager_tel'=>$_data['gm_phone'],
     			'w_manager_tel1'=>$_data['w_phone'],
+    			
+    			'office_tel'=>$_data['office_tel'],
+    			'office_email'=>$_data['office_email'],
+    			'office_website'=>$_data['office_website'],
+    			'office_address'=>$_data['office_address'],
+    			
     			);
 		    	if (!empty($_data['budget_amount'])){
 		    		$_arr['budget_amount']=$_data['budget_amount'];

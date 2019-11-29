@@ -302,6 +302,32 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 		
+		$office_tel = new Zend_Dojo_Form_Element_NumberTextBox('office_tel');
+		$office_tel->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
+		$office_email = new Zend_Dojo_Form_Element_NumberTextBox('office_email');
+		$office_email->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
+		 
+		$office_website = new Zend_Dojo_Form_Element_NumberTextBox('office_website');
+		$office_website->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		$office_address = new Zend_Dojo_Form_Element_NumberTextBox('office_address');
+		$office_address->setAttribs(array(
+				'dojoType'=>'dijit.form.Textarea',
+				'class'=>'fullside',
+				'style'=>'min-height: 60px;font-size:12px;'
+		));
+		
+		
 		if(!empty($data)){
 			$br_id->setValue($data['br_id']);
 			$prefix_code->setValue($data['prefix']);
@@ -345,6 +371,11 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 			
 			$gm_phone->setValue($data['w_manager_tel']);
 			$w_phone->setValue($data['w_manager_tel1']);
+			
+			$office_tel->setValue($data['office_tel']);
+			$office_email->setValue($data['office_email']);
+			$office_website->setValue($data['office_website']);
+			$office_address->setValue($data['office_address']);
 		}
 		
 		
@@ -366,7 +397,12 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 				$w_position,
 				
 				$gm_phone,
-				$w_phone
+				$w_phone,
+				
+				$office_tel,
+				$office_email,
+				$office_website,
+				$office_address
 				));
 		
 		return $this;

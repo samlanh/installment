@@ -84,8 +84,22 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	}
 	function  getAllBranchInfoByID($id){
 		$db = $this->getAdapter();
-		$sql = "select * from ln_project where 1 and project_name!='' AND br_id = $id ORDER BY br_id DESC ";
-		return $db->fetchRow($sql);
+		$sql = "SELECT *,project_name AS footer_title FROM ln_project where 1 and project_name!='' AND br_id = $id ORDER BY br_id DESC ";
+		$row = $db->fetchRow($sql);
+		
+		$footer_reciept_type=FOOTER_RECEIPT_OPT;
+		if ($footer_reciept_type!=2){
+			$key = new Application_Model_DbTable_DbKeycode();
+			$data=$key->getKeyCodeMiniInv(TRUE);
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			$row['footer_title'] = $tr->translate("BRAND_FOOTER_TITLE");
+			$row['office_website'] = $data["website"];
+			$row['office_email'] = $data["email_client"];
+			$row['office_tel'] = $data["tel-client"];
+			$row['office_address'] = $data["footer_branch"];
+		}
+		
+		return $row;
 	}
 	public function getReceiptnumber($branch_id=1){
 		$this->_name='ln_client_receipt_money';

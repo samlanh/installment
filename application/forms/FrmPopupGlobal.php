@@ -616,20 +616,20 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$str='<table width="100%" celpadding="0" cellspacing="0" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'; font-size:11px;line-height: 15px;margin-top: 4px;">
 				<tr>
 					<td width="22%">';
-						$str.='<span style="font-family:'."'Khmer OS Muol Light'".'; font-size:16px;white-space:nowrap;padding-top:5px;">'.$tr->translate("BRAND_FOOTER_TITLE").'</span>
+						$str.='<span id="ft_branch_title_lb" style="font-family:'."'Khmer OS Muol Light'".'; font-size:16px;white-space:nowrap;padding-top:5px;">'.$tr->translate("BRAND_FOOTER_TITLE").'</span>
 					</td>
 					<td width="40%">
-						<span>'.$data["website"].'</span>
+						<span id="ft_website_lb">'.$data["website"].'</span>
 					</td>
 					<td width="40%" align="right">
-						<span style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';">'.$data["email_client"].'</span>
+						<span id="ft_email_client_lb" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';">'.$data["email_client"].'</span>
 					</td>
 				</tr>
 				<tr style="white-space:nowrap;">
-					<td colspan="2">'.$data["footer_branch"].'
+					<td colspan="2" id="ft_address_lb">'.$data["footer_branch"].'
 					</td>
 					<td width="40%" align="right">
-						<span style="font-weight:bold;font-family:arial,Khmer OS Battambang;">'.$data["tel-client"].'</span>
+						<span id="ft_phone_lb" style="font-weight:bold;font-family:arial,Khmer OS Battambang;">'.$data["tel-client"].'</span>
 					</td>
 				</tr>
 			</table>';
@@ -1077,7 +1077,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<span id="lbl_total_paid1"></span>
 					<span id="lbl_balance"></span>
 					<span id="lb_noted"></span>
-					
+					<label id="lbl_phone" class="value"></label>
+				<label id="lbl_pricelabel" class="value" ></label>
 					
 					<span id="lb_amount"></span>
 					<span id="lbl_paidtimes"></span>
@@ -1089,7 +1090,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<span id=lbl_paid_date1></span>
 					<span id="lbl_paymenttype"></span>
 					<span id="lbl_cheque"></span>
-					
+					'.$footer.'
 				</div>
 				<span class="postingdate">Posting Date: <span id=lblpaid_date></span></span>
 				<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
@@ -1100,8 +1101,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<span id="lable_chartotalreceipt"></span>
 				<span id="lb_hourseno"></span>
 				<span id="lb_descriptionall"></span>
-				<label id="lbl_phone" class="value"></label>
-				<label id="lbl_pricelabel" class="value" ></label>
+				
 				<span id="lbl_customer"></span>
 				<span id="lbl_usersale">'.$last_name." ".$username.'</span>
 			</div>
@@ -1352,6 +1352,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<span id="lblpaid_date"></span>
 				<span id="lb_descriptionall"></span>
 				<span id="lb_customercode"></span>	
+				'.$footer.'
 			</div>
 			</div>';
 			/*<tr style="font-size: 11px;">
