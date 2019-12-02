@@ -331,13 +331,30 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$payment_id->setMultiOptions($options);
 		$payment_id->setValue($request->getParam("payment_id"));
 		
+		
+		$_agency_id = new Zend_Dojo_Form_Element_FilteringSelect('agency_id');
+		$_agency_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				
+		));
+		
+		$options = $db->getAllCOName(1);
+		$_agency_id->setMultiOptions($options);
+		$_agency_id->setValue($request->getParam("agency_id"));
+		
 		if($data!=null){
 			$_coid->setValue($data['co_id']);
 			$_releasedate->setValue($data['date_release']);
 			$client_name->setValue($data['client_name']);
 		}
 		$this->addElements(array($payment_id,$sale_status,$status_plong,$payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
-				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist,$cheque_issuer_search));
+				$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist,$cheque_issuer_search,
+				$_agency_id
+				
+				));
 		return $this;
 		
 	}	

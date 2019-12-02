@@ -644,6 +644,9 @@ public function getAllOutstadingLoan($search=null){
 		if (!empty($search['streetlist'])){
 			$where.=" AND `l`.`street` = '".$search['streetlist']."'";
 		}
+		if (!empty($search['agency_id'])){
+			$where.=" AND `sl`.`staff_id` = '".$search['agency_id']."'";
+		}
 		if ($search['is_closed']!=""){
 			$where.=" AND `crm`.`is_closed` = '".$search['is_closed']."'";
 		}

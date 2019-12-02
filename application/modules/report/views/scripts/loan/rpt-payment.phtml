@@ -52,6 +52,9 @@
 				</div>
 				<div class="form-group"> 
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('agency_id');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement('start_date');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
@@ -130,7 +133,8 @@
 					                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light';"><?php echo $branch_title;?></li>
 					                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light';"><?php echo $tr->translate("RPT_CLIENT_PAYMENT");?></li>
 					                			<li style="text-align:center; font-size:16px;"><?php if($this->list_end_date['start_date']){echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
-					                		</ul>
+												<li style="text-align:center; font-size:16px;" id="staff_lbl"></li>
+											</ul>
 					                   </td>
 					                    <td width="30%"></td>
 					                </tr> 
@@ -328,6 +332,12 @@
 	require(["dojo/ready"], function(ready){
 		ready(function(){
 			 getAllPropertyBranch();
+			 agency_id = dijit.byId('agency_id').get('value');
+			 
+			 if(agency_id !="" && agency_id !="-1"){
+				 dojo.byId("staff_lbl").innerHTML = '<?php echo $tr->translate("AGENTCY");?> : '+dijit.byId('agency_id').attr('displayedValue');
+			 }
+			 
 		});
 		new dijit.form.FilteringSelect({
 			store: property_store,
