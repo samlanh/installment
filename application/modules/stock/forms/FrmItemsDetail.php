@@ -83,7 +83,7 @@ class Stock_Form_FrmItemsDetail extends Zend_Dojo_Form
     			'missingMessage'=>'Invalid Module!',
     			'class'=>'fullside height-text',));
     	
-    	$_arr = array(1=>$this->tr->translate("PRODUCT_FOR_SELL"),2=>$this->tr->translate("OFFICE_MATERIAL"));
+    	$_arr = array(1=>$this->tr->translate("COUNT_STOCK"),2=>$this->tr->translate("NOT_COUNT_STOCK"));
     	$_product_type = new Zend_Dojo_Form_Element_FilteringSelect("product_type");
     	$_product_type->setMultiOptions($_arr);
     	$_product_type->setAttribs(array(
