@@ -61,6 +61,17 @@ class Stock_Form_FrmItemsDetail extends Zend_Dojo_Form
     			'missingMessage'=>'Invalid Module!',
     			'class'=>'fullside',));
     	
+    	$_arr_opt = array(""=>$this->tr->translate("PLEASE_SELECT"));
+    	$Option = $_dbgb_pro->getMeasure();
+    	if(!empty($Option))foreach($Option AS $row) $_arr_opt[$row['id']]=$row['title'];
+    	$_measure = new Zend_Dojo_Form_Element_FilteringSelect("measure");
+    	$_measure->setMultiOptions($_arr_opt);
+    	$_measure->setAttribs(array(
+    			'dojoType'=>'dijit.form.FilteringSelect',
+    			'autoComplete'=>'false',
+    			'queryExpr'=>'*${0}*',
+    			'class'=>'fullside',));
+    	
     	$_ordering = new Zend_Dojo_Form_Element_NumberTextBox('ordering');
     	$_ordering->setAttribs(array(
     			'dojoType'=>'dijit.form.NumberTextBox',
@@ -282,9 +293,11 @@ class Stock_Form_FrmItemsDetail extends Zend_Dojo_Form
     		$_total_score->setValue($data["total_score"]);
     		$_amount_subject->setValue($data["amount_subject"]);
     		$_max_average->setValue($data["max_average"]);
+    		$_measure->setValue($data["measure"]);
     	}
     	$this->addElements(array(
     			$auto_payment,
+    			$_measure,
     			$_total_score,
     			$_amount_subject,
     			$_max_average,

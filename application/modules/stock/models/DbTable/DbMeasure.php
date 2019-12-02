@@ -1,8 +1,8 @@
 <?php
-class Stock_Model_DbTable_DbRequestfor extends Zend_Db_Table_Abstract
+class Stock_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'rms_request_for';
+    protected $_name = 'rms_measure';
     
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
@@ -14,10 +14,10 @@ class Stock_Model_DbTable_DbRequestfor extends Zend_Db_Table_Abstract
     				id,
     				title,
     				create_date,
-    				(select name_en from ln_view where type=1 and key_code = rms_request_for.status) AS status,
+    				(select name_en from ln_view where type=1 and key_code = rms_measure.status) AS status,
     				(select first_name from rms_users as u where u.id = user_id) as user 
     			FROM 
-    				rms_request_for 
+    				rms_measure 
     			WHERE 
     				title!='' 
     		";
@@ -33,7 +33,7 @@ class Stock_Model_DbTable_DbRequestfor extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql.$where.$order);
     }
     
-    public function addNewRequestFor($_data){
+    public function addMeasure($_data){
     	$db = $this->getAdapter();
     	$_arr = array(
     		'title'=>$_data['title'],
@@ -44,7 +44,7 @@ class Stock_Model_DbTable_DbRequestfor extends Zend_Db_Table_Abstract
     	return $this->insert($_arr);
     } 
     
-    public function updateNewRequestFor($_data,$id){
+    public function updateMeasure($_data,$id){
     	$db = $this->getAdapter();
     	$_arr = array(
     		'title'=>$_data['title'],
@@ -55,9 +55,9 @@ class Stock_Model_DbTable_DbRequestfor extends Zend_Db_Table_Abstract
     	return $this->update($_arr, $where);
     }
     
-    public function getRequestforById($id){
+    public function getMeasureById($id){
     	$db = $this->getAdapter();
-    	$sql = "SELECT * FROM rms_request_for WHERE id = $id limit 1 ";
+    	$sql = "SELECT * FROM rms_measure WHERE id = $id limit 1 ";
     	return $db->fetchRow($sql);
     }	
     

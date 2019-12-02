@@ -14,13 +14,12 @@ class Stock_Model_DbTable_DbForSection extends Zend_Db_Table_Abstract
     				id,
     				title,
     				create_date,
-    				(select name_en from ln_view where type=1 and key_code = status) AS status,
+    				(select name_en from ln_view where type=1 and key_code = rms_for_section.status) AS status,
     				(select first_name from rms_users as u where u.id = user_id) as user 
     			FROM 
     				rms_for_section 
     			WHERE 
     				title!='' 
-    				AND status=1 
     		";
     	$where = "";
     	if(!empty($search['title'])){

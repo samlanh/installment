@@ -2,7 +2,7 @@
 class Stock_Model_DbTable_DbGlobalProduct extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'rms_tuitionfee';
+    protected $_name = 'rms_product';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
@@ -109,5 +109,10 @@ class Stock_Model_DbTable_DbGlobalProduct extends Zend_Db_Table_Abstract
 		</tr>
 		</table>";
 		return $str;
+	}
+	function getMeasure(){
+		$db = $this->getAdapter();
+		$sql="SELECT * FROM rms_measure WHERE status=1 ";
+		return $db->fetchAll($sql);
 	}
 } 
