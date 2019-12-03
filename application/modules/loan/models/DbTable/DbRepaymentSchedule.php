@@ -587,6 +587,11 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    			        	'no_installment'=>$i+$j,
 	    			        	'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0
 	    			        );
+	    			        
+	    			        if($i==$loop_payment){//for end of record only
+	    			        	$datapayment['last_optiontype'] = $data['paid_receivehouse'];
+	    			        }
+	    			        
 		            		 
 			    		$idsaleid = $this->insert($datapayment);
 			    		$old_remain_principal = 0;
