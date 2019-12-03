@@ -2759,7 +2759,9 @@ function updatePaymentStatus($data){
    	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times,
    	(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
    	(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
-   	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id
+   	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id,
+   	
+   	(SELECT sta.co_khname FROM ln_staff AS sta WHERE sta.co_id=`s`.`staff_id` LIMIT 1 ) AS agency_name
    	 
    	";
    	$where = $statement['where'];
@@ -2827,6 +2829,10 @@ function updatePaymentStatus($data){
    		else{
    			$where.=" AND s.price_sold > paid_amount ";
    		}
+   	}
+   	
+   	if (!empty($search['agency_id'])){
+   		$where.=" AND `s`.`staff_id` = '".$search['agency_id']."'";
    	}
 	   	$order = " ORDER BY s.buy_date DESC ";
 	   	return $db->fetchAll($sql.$where.$order);
