@@ -139,8 +139,8 @@ dojo.require("dijit.form.DateTextBox");
 	             				<td >&nbsp;</td>
 	             			</tr>
 	             			<?php 
-	             			
-	             			foreach ($this->income as $income_cate){ 
+	             			$total_sub_cateIncome=0;
+	             			foreach ($this->income as $indexKey => $income_cate){ 
 		             				if($income_cate['is_beginning']==1){
 		             					$beginingbalance = $beginingbalance+$income_cate['total_amount']; 
 		             					continue;
@@ -148,6 +148,17 @@ dojo.require("dijit.form.DateTextBox");
 	             					$total_other_income = $total_other_income+$income_cate['total_amount'];
 	             				?>
 	             				<?php if ( $income_cate['parent']!=0 AND $parent != $income_cate['parent']){?>
+	             					<?php if ($indexKey>0 && $total_sub_cateIncome>0){?>
+		             				<tr height="21px">
+			             				<td style="width: 20%;">&nbsp;</td>
+			             				<td>&nbsp;&nbsp;</td>
+			             				<td class="" align="right"></td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td class="" align="right">&nbsp;<strong><?php echo number_format($total_sub_cateIncome,2);?></strong>&nbsp;</td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td>&nbsp;</td>
+			             			</tr>
+		             			<?php }?>
 	             					<tr height="21px">
 			             				<td style="width: 20%;">&nbsp;</td>
 			             				<td>&nbsp;<strong><?php echo $income_cate['parent_title'];?></strong>&nbsp;</td>
@@ -156,8 +167,8 @@ dojo.require("dijit.form.DateTextBox");
 			             				<td></td>
 			             				<td style="width:10px;">&nbsp;</td>
 			             				<td>&nbsp;</td>
-			             				<?php $parent = $income_cate['parent'];?>
 			             			</tr>
+			             			<?php $parent = $income_cate['parent']; $total_sub_cateIncome=0;?>
 	             				<?php }?>
 	             				<?php if ( $income_cate['parent']==0){?>
 	             					<tr height="21px">
@@ -169,7 +180,7 @@ dojo.require("dijit.form.DateTextBox");
 			             				<td style="width:10px;">&nbsp;</td>
 			             				<td>&nbsp;</td>
 			             			</tr>
-	             				<?php }else{?>
+	             				<?php }else{ $total_sub_cateIncome = $total_sub_cateIncome + $income_cate['total_amount'];?>
 			             			<tr height="21px">
 			             				<td style="width: 20%;">&nbsp;</td>
 			             				<td >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $income_cate['category_name'];?>&nbsp;</td>
@@ -183,6 +194,17 @@ dojo.require("dijit.form.DateTextBox");
 	             			<?php } 
 							}
 	             			$total_income = $total_other_income+$this->saleicome['recieve_amount'];?>
+	             			<?php if ($total_sub_cateIncome>0){?>
+	             				<tr height="21px">
+		             				<td style="width: 20%;">&nbsp;</td>
+		             				<td>&nbsp;&nbsp;</td>
+		             				<td class="" align="right"></td>
+		             				<td style="width:10px;">&nbsp;</td>
+		             				<td class="" align="right">&nbsp;<strong><?php echo number_format($total_sub_cateIncome,2);?></strong>&nbsp;</td>
+		             				<td style="width:10px;">&nbsp;</td>
+		             				<td>&nbsp;</td>
+		             			</tr>
+	             			<?php }?>
 	             			<tr>
 	             				<td style="width: 20%;">&nbsp;</td>
 	             				<td >&nbsp;</td>
@@ -198,9 +220,24 @@ dojo.require("dijit.form.DateTextBox");
 	             			</tr>
 	             			<?php 
 	             			$parent="";
-	             			if (!empty($this->expense)) foreach ($this->expense as $expense_cate){ 
-	             					$total_expense = $total_expense +$expense_cate['total_amount'];?>
+	             			$total_sub_cate=0;
+	             			if (!empty($this->expense)) foreach ($this->expense AS $keyIndex => $expense_cate){ 
+	             					$total_expense = $total_expense +$expense_cate['total_amount'];
+	             			?>
+	             			
+	             			
 	             			<?php if ( $expense_cate['parent']!=0 AND $parent != $expense_cate['parent']){?>
+	             				<?php if ($keyIndex>0 && $total_sub_cate>0){?>
+		             				<tr height="21px">
+			             				<td style="width: 20%;">&nbsp;</td>
+			             				<td>&nbsp;&nbsp;</td>
+			             				<td class="" align="right"></td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td class="" align="right">&nbsp;<strong><?php echo number_format($total_sub_cate,2);?></strong>&nbsp;</td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td>&nbsp;</td>
+			             			</tr>
+		             			<?php }?>
 	             				<tr height="21px">
 		             				<td style="width: 20%;">&nbsp;</td>
 		             				<td>&nbsp;<strong><?php echo $expense_cate['parent_title'];?></strong>&nbsp;</td>
@@ -209,8 +246,8 @@ dojo.require("dijit.form.DateTextBox");
 		             				<td></td>
 		             				<td style="width:10px;">&nbsp;</td>
 		             				<td>&nbsp;</td>
-		             				<?php $parent = $expense_cate['parent'];?>
 		             			</tr>
+		             			<?php $parent = $expense_cate['parent']; $total_sub_cate=0;?>
 		             		<?php }?>
 		             		<?php if ( $expense_cate['parent']==0){?>
 		             			<tr height="21px">
@@ -222,7 +259,7 @@ dojo.require("dijit.form.DateTextBox");
 		             				<td style="width:10px;">&nbsp;</td>
 		             				<td>&nbsp;</td>
 		             			</tr>
-		             		<?php }else{?>
+		             		<?php }else{ $total_sub_cate = $total_sub_cate+$expense_cate['total_amount'];?>
 		             			<tr height="21px">
 		             				<td style="width: 20%;">&nbsp;</td>
 		             				<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
@@ -233,7 +270,20 @@ dojo.require("dijit.form.DateTextBox");
 		             				<td>&nbsp;</td>
 		             			</tr>
 	             			<?php }?>
-	             			<?php }?>	             			
+	             			<?php }?>
+	             			
+	             			<?php if ($total_sub_cate>0){?>
+		             				<tr height="21px">
+			             				<td style="width: 20%;">&nbsp;</td>
+			             				<td>&nbsp;&nbsp;</td>
+			             				<td class="" align="right"></td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td class="" align="right">&nbsp;<strong><?php echo number_format($total_sub_cate,2);?></strong>&nbsp;</td>
+			             				<td style="width:10px;">&nbsp;</td>
+			             				<td>&nbsp;</td>
+			             			</tr>
+		             			<?php }?>
+		             				             			
 	             			<!-- for expense from commission -->
 	             			<?php if (!empty($this->expense_comission)) foreach ($this->expense_comission as $comission){ $total_expense = $total_expense + $comission['total_amount'];?>
 	             			<tr height="21px">
