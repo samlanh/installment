@@ -717,8 +717,11 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    							);
 	    					$where = "id = ".$row['id'];
 	    					$this->_name="ln_saleschedule";
-	    					$this->update($arra, $where);
-
+	    					if($begining_balance>0){
+	    						$this->update($arra, $where);
+	    					}else{//if រំលស់ដើមអស់ប្រាក់
+	    						$this->delete($where);
+	    					}
 	    					if($last_record==1){
 	    						$last_record=2;
 	    					}
@@ -839,7 +842,11 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     					);
     					$where = "id = ".$row['id'];
     					$this->_name="ln_saleschedule";
-    					$this->update($arra, $where);
+    					if($begining_balance>0){
+    						$this->update($arra, $where);
+    					}else{//if រំលស់ដើមអស់ប្រាក់
+    						$this->delete($where);
+    					}
     	
     					if($last_record==1){
     						$last_record=2;

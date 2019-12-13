@@ -55,7 +55,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
 			$db = new Incexp_Model_DbTable_DbExpense();	
-			$test = $db->getBranchId();
+// 			$test = $db->getBranchId();
 			try {
 				// Check Session Expire
 				$dbgb = new Application_Model_DbTable_DbGlobal();

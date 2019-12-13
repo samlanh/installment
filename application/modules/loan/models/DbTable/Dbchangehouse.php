@@ -169,28 +169,27 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     		}
     		
     		$arr = array(
-    				'sale_id'=>$id,
-    				'client_id'=>$data['member'],
-    				'from_branchid'=>$data['branch_id'],
-    				'from_houseid'=>$rows['house_id'],
-    				'soldprice_before'=>$data['total_sold'],
-    				'paid_before'=>$data['paid_before'],
-    				'balance_before'=>$data['balance_before'],
-    				'to_branchid'=>$data['to_branch_id'],
-    				'to_houseid'=>$data['to_land_code'],
-    				'house_priceafter'=>$data['house_price'],
-    				'discount_percentafter'=>$data['discount_percent'],
-    				'discount_amountafter'=>$data['discount'],
-    				'sold_priceafter'=>$data['to_total_sold'],    				
-    				'balance_after'=>$data['balance'],
-    				'change_date'=>$data['release_date'],//$data['date_buy'],
-    				'note'=>$data['note'],
-    				'user_id'=>$this->getUserId(),
-    				'typesale'=>$data['typesale'],
-    				);
-	    		$this->_name="ln_change_house";
-	    		$changeid = $this->insert($arr);
-	    		
+    			'sale_id'=>$id,
+    			'client_id'=>$data['member'],
+    			'from_branchid'=>$data['branch_id'],
+    			'from_houseid'=>$rows['house_id'],
+    			'soldprice_before'=>$data['total_sold'],
+    			'paid_before'=>$data['paid_before'],
+    			'balance_before'=>$data['balance_before'],
+    			'to_branchid'=>$data['to_branch_id'],
+    			'to_houseid'=>$data['to_land_code'],
+    			'house_priceafter'=>$data['house_price'],
+    			'discount_percentafter'=>$data['discount_percent'],
+    			'discount_amountafter'=>$data['discount'],
+    			'sold_priceafter'=>$data['to_total_sold'],    				
+    			'balance_after'=>$data['balance'],
+    			'change_date'=>$data['release_date'],//$data['date_buy'],
+    			'note'=>$data['note'],
+    			'user_id'=>$this->getUserId(),
+    			'typesale'=>$data['typesale'],
+    		);
+    		$this->_name="ln_change_house";
+    		$changeid = $this->insert($arr);
 
     			$arr = array(
     				'branch_id'=>$data['to_branch_id'],

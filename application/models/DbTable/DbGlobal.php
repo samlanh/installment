@@ -98,7 +98,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			$row['office_tel'] = $data["tel-client"];
 			$row['office_address'] = $data["footer_branch"];
 		}
-		
 		return $row;
 	}
 	public function getReceiptnumber($branch_id=1){
