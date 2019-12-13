@@ -81,6 +81,7 @@ input.btn_borwse_image {
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
 		    			<h4 class="m-b-0"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD_CLIENT');?></h4>
+	    				<span id="message" style="color: red; display: block;"></span>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -664,6 +665,12 @@ dojo.ready(function(){
 			}
 		}, "qvillage");
 		getClientNo();
+
+		var name_kh = dijit.byId('name_kh');
+		name_kh.on('keyup', function(evt) {
+			checkDuplicate();
+		});
+		
 	}catch(e){
 	}
 	dijit.byId('client_d_type').attr('value',4);
@@ -1068,6 +1075,32 @@ function getClientNo(){
 }
 function hideDialog1(){
 	dijit.byId('popup_doc_type').hide();
+}
+
+
+url_CheckTitle = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'check-title'));?>';
+function checkDuplicate(){
+	name_kh = dijit.byId('name_kh').get('value');
+	if(name_kh==''){ return false;}
+	dojo.xhrPost({
+		url:url_CheckTitle,	
+		content:{ 
+			'name_kh': name_kh ,
+		},
+		handleAs:"json",
+		load: function(data) {	
+			if(data !== false ){
+				document.getElementById('message').innerHTML ='<?php echo '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '.$tr->translate("CUSTOMER_EXISTING_READY");?>';
+				alert('<?php echo $tr->translate("CUSTOMER_EXISTING_READY");?>');
+				dijit.byId('name_kh').focus();
+			}else{
+				document.getElementById('message').innerHTML ='';
+			}
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
 }
 </script>
 <div class="dijitHidden">

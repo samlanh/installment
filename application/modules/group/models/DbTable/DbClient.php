@@ -407,4 +407,10 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		$number = $db->fetchOne($sql);
 		return $number+1;
 	}
+	
+	public function CheckTitle($data){
+		$db =$this->getAdapter();
+		$sql = "SELECT client_id FROM `ln_client` WHERE name_kh = '".$data['name_kh']."' LIMIT 1 ";
+		return $db->fetchRow($sql);
+	}
 }

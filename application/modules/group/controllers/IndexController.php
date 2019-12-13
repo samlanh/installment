@@ -306,4 +306,14 @@ class Group_indexController extends Zend_Controller_Action {
 			exit();
 		}
 	}	
+	
+	function checkTitleAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Group_Model_DbTable_DbClient();
+			$return=$db->CheckTitle($data);
+			print_r(Zend_Json::encode($return));
+			exit();
+		}
+	}
 }
