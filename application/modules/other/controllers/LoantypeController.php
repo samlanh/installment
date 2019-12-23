@@ -3,7 +3,7 @@
 class Other_LoanTypeController extends Zend_Controller_Action
 {
 	protected $tr;
-public function init()
+	public function init()
     {
     	$this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
     	header('content-type: text/html; charset=utf8');

@@ -416,7 +416,6 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     			   		);
     			   		
     			   		$datapayment['ispay_bank']= $data['pay_with'.$i];
-    			   	
     			   		$sale_currid = $this->insert($datapayment);
     			   		$from_date = $data['date_payment'.$i];
     			   			
@@ -454,9 +453,11 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 	    			        );
 	    			        if($i==$loop_payment){//for end of record only
 	    			        	$datapayment['last_optiontype'] = $data['paid_receivehouse'];
+	    			        	if($data['paid_receivehouse']>1){
+	    			        		$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+	    			        	}
 	    			        }	 
 			    		$idsaleid = $this->insert($datapayment);
-	// 		    		$amount_collect=0;
 			    		$old_remain_principal = 0;
 			    		$old_pri_permonth = 0;
 			    		$old_interest_paymonth = 0;
@@ -472,10 +473,9 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		  $db->commit();
 	          return 1;
 	        }catch (Exception $e){
-	            	$db->rollBack();
-	            	echo $e->getMessage();
-	            	Application_Form_FrmMessage::message("INSERT_FAIL");
-	            	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+            	$db->rollBack();
+            	Application_Form_FrmMessage::message("INSERT_FAIL");
+            	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	        }
     }
     function getSaleScheduleById($id,$payment_id){

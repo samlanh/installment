@@ -42,7 +42,7 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql="SELECT COUNT(p.`id`) AS total,SUM(p.`price_sold`) AS totalAmount
 			FROM `ln_sale` AS p 
-			WHERE p.`status` =1 ";
+			WHERE p.`status` =1 AND p.is_cancel=0 ";
 		return $db->fetchRow($sql);
 	}
 	

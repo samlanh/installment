@@ -1821,8 +1821,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			   JOIN `ln_client` `c`)
 			WHERE ((`crm`.`client_id` = `c`.`client_id`)
 			       AND (`sl`.`id` = `crm`.`sale_id`)
-			       AND (`l`.`id` = `sl`.`house_id`))
-  	";
+			       AND (`l`.`id` = `sl`.`house_id`)
+			        	";
   	return $sql;
   }
   

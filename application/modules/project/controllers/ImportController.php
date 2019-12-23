@@ -24,6 +24,7 @@ class Project_importController extends Zend_Controller_Action {
 				$adapter->receive();
 				$file = $adapter->getFileInfo();
 				$inputFileName = $file['file_excel']['tmp_name'];
+				
  				try {
 					$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 				} catch(Exception $e) {

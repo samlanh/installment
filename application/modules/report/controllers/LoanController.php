@@ -254,13 +254,15 @@ class Report_LoanController extends Zend_Controller_Action {
 	  	}
 	  	$this->view->fordate = $search['end_date'];
 	  	$this->view->search = $search;
-	  	$rs= $db->getAllOutstadingLoan($search);
+	  
 	  	$frm = new Loan_Form_FrmSearchLoan();
 	  	$frms = $frm->AdvanceSearch();
-	  	$key = new Application_Model_DbTable_DbKeycode();
-	  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+// 	  	$key = new Application_Model_DbTable_DbKeycode();
+// 	  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	  	Application_Model_Decorator::removeAllDecorator($frms);
 	  	$this->view->frm_search = $frms;
+	  	
+	  	$rs= $db->getAllOutstadingLoan($search);
 	  	$this->view->outstandloan = $rs;
 	  	
 	  	$frmpopup = new Application_Form_FrmPopupGlobal();

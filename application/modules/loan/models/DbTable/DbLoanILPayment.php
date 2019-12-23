@@ -401,31 +401,31 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    				}
 		    			if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
 		    				$arr_money_detail = array(
-    								'crm_id'				=>	$client_pay,
-    								'land_id'			    =>	$data['property_id'],//ok
-    								'lfd_id'				=>	$row["id"],//ok
-    								'date_payment'			=>	$row["date_payment"], // ថ្ងៃដែលត្រូវបង់
-    								'principal_permonth'	=>	0,
-    								'total_interest'		=>	0,
-    								'total_payment'			=>	0,
-    								'total_recieve'			=>	0,
-    								'pay_after'				=>	0,
-    								'penelize_amount'		=>	0,
-    								'service_charge'		=>	0,
-    								'penelize_new'			=>	0,
-    								'service_charge_new'	=>	0,
-    								'capital'				=>  $row["begining_balance_after"],
-    								'remain_capital'		=>	$row["ending_balance"], // remain balance after paid
-    								'old_principal_permonth'=>	$row['principal_permonthafter'],
-    								'old_total_priciple'	=>	$row["principal_permonthafter"],
-    								'old_interest'			=>	$row["total_interest_after"],
-    								'old_total_payment'		=>	$row['total_payment_after'],
-    								'old_penelize'			=>	$row['penelize'],
-    								'old_service_charge'	=>	$row['service_charge'],
-    								'last_pay_date'			=>	$row["date_payment"],
-    								'paid_date'				=>	$data["collect_date"],
-    								'is_completed'			=>	1,
-    								'status'				=>	1);
+    							'crm_id'				=>	$client_pay,
+    							'land_id'			    =>	$data['property_id'],//ok
+    							'lfd_id'				=>	$row["id"],//ok
+    							'date_payment'			=>	$row["date_payment"], // ថ្ងៃដែលត្រូវបង់
+    							'principal_permonth'	=>	0,
+    							'total_interest'		=>	0,
+    							'total_payment'			=>	0,
+    							'total_recieve'			=>	0,
+    							'pay_after'				=>	0,
+    							'penelize_amount'		=>	0,
+    							'service_charge'		=>	0,
+    							'penelize_new'			=>	0,
+    							'service_charge_new'	=>	0,
+    							'capital'				=>  $row["begining_balance_after"],
+    							'remain_capital'		=>	$row["ending_balance"], // remain balance after paid
+    							'old_principal_permonth'=>	$row['principal_permonthafter'],
+    							'old_total_priciple'	=>	$row["principal_permonthafter"],
+    							'old_interest'			=>	$row["total_interest_after"],
+    							'old_total_payment'		=>	$row['total_payment_after'],
+    							'old_penelize'			=>	$row['penelize'],
+    							'old_service_charge'	=>	$row['service_charge'],
+    							'last_pay_date'			=>	$row["date_payment"],
+    							'paid_date'				=>	$data["collect_date"],
+    							'is_completed'			=>	1,
+    							'status'				=>	1);
 		    				$this->_name='ln_client_receipt_money_detail';
 		    				$this->insert($arr_money_detail);
 		    			}			
@@ -874,7 +874,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$this->_name='ln_client_receipt_money';
     	$where = " id =".$receipt_id;
     	$data= array(
-    			"is_payoff"=>1
+    			"is_payoff"=>1,
+    			'option_pay'=>4
     	);
     	$this->update($data, $where);
     }

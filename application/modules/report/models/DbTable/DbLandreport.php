@@ -16,8 +16,8 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 		$sql= $statement['sql'];
 		$sql.="
 			,(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount,
-			(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid,
-			(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid,
+			(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE status=1 AND $from_date AND $to_date  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid,
+			(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE status=1 AND $from_date AND $to_date  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid,
 			(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times,
 			(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
 			(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
@@ -180,7 +180,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 		if($lang==1){
 			$str = 'name_kh';
 		}
-		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
+// 		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$statement = $dbp->soldreportSqlStatement();
@@ -397,11 +397,7 @@ public function getAllOutstadingLoan($search=null){
       		$s_search = addslashes(trim($search['adv_search']));
       		$s_where[] = " land_address LIKE '%{$s_search}%'";
       		$s_where[] = " client_number LIKE '%{$s_search}%'";
-      		$s_where[] = " client_number LIKE '%{$s_search}%'";
       		$s_where[] = " client_kh LIKE '%{$s_search}%'";
-      		$s_where[] = " co_name LIKE '%{$s_search}%'";
-      		$s_where[] = " total_capital LIKE '%{$s_search}%'";
-      		$s_where[] = " total_duration LIKE '%{$s_search}%'";
       	   $where .=' AND ('.implode(' OR ',$s_where).')';
       	}
       	return $db->fetchAll($sql.$where);
@@ -616,8 +612,7 @@ public function getAllOutstadingLoan($search=null){
       	
 		$dbp = new Application_Model_DbTable_DbGlobal();
       	$sql = $dbp->getCollectPaymentSqlSt();
-      	$sql.=" AND crm.status= 1
-		 ";
+      	$sql.=" AND crm.status= 1 ";
 			
       	$from_date =(empty($search['start_date']))? '1': " `crm`.`date_pay` >= '".$search['start_date']." 00:00:00'";
       	$to_date = (empty($search['end_date']))? '1': " `crm`.`date_pay` <= '".$search['end_date']." 23:59:59'";
@@ -673,10 +668,11 @@ public function getAllOutstadingLoan($search=null){
       		$s_where[] = " `crm`.`receipt_no` LIKE '%{$s_search}%'";
       		$where .=' AND ('.implode(' OR ',$s_where).')';
       	}
-		$order = " ORDER BY `crm`.id DESC ";
+		$order =" ORDER BY `crm`.id DESC ";
 		if($order11==1){//for history
-			$order = " ORDER BY `crm`.`client_id` DESC ,`crm`.`sale_id` DESC , crm.id ASC";
+			$order =" ORDER BY `crm`.`client_id` DESC ,`crm`.`sale_id` DESC , crm.id ASC";
 		}
+		echo $sql.$where.$order;exit();
       	return $db->fetchAll($sql.$where.$order);
       }
       function submitClosingEngry($data){
@@ -2753,16 +2749,16 @@ function updatePaymentStatus($data){
    	$sql= $statement['sql'];
    	$sql.="
    
-   	,(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount,
-   	(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid,
-   	(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE STATUS=1  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid,
+   	,(SELECT SUM(rm.total_principal_permonthpaid+rm.extra_payment) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) AS paid_amount,
+   	(SELECT SUM(rm.total_interest_permonthpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1  AND sale_id = s.id AND $from_date AND $to_date LIMIT 1) AS total_interest_permonthpaid,
+   	(SELECT SUM(rm.penalize_amountpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1 AND sale_id = s.id AND $from_date AND $to_date LIMIT 1) AS penalize_amountpaid,
+   	
    	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times,
    	(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
    	(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
    	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id,
-   	
    	(SELECT sta.co_khname FROM ln_staff AS sta WHERE sta.co_id=`s`.`staff_id` LIMIT 1 ) AS agency_name
-   	 
+   	
    	";
    	$where = $statement['where'];
    	$where.=" AND s.is_cancel=0 ";

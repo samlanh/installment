@@ -21,7 +21,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    	$first_payment=0;
 	    	$n=0;
 	    	for($i=2; $i<=$count; $i++){
-	    		if(empty($data[$i]['C'])){
+	    		if(($data[$i]['A']==0)){
 	    			$first_pay=1;
 	    			continue;
 	    		}
@@ -30,7 +30,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 		    		$client_id = $db->fetchOne($sql);
 		    		if(empty($client_id)){
 			    		$_arr=array(
-			    				'client_number' => $data[$i]['J'],//$_data['client_no'],
+			    				'client_number' => $data[$i]['J'],
 			    				'name_kh'	  => $data[$i]['I'],
 			    				'sex'	      => 1,
 			    				'pro_id'      => 12,

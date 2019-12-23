@@ -90,14 +90,6 @@ class Api_IndexController extends Zend_Controller_Action {
 		print_r(Zend_Json::encode($rs_expense));
 		exit();
 	}
-// 	function expensedetailAction(){
-// 		$db = new Api_Model_DbTable_Dbapi();
-// 		$rs_expense = $db->getAllDetailExpense();
-// 		$rs_comission = $db->getAllComissionDetail();
-// 		$rs = array_merge($rs_expense,$rs_comission);
-// 		print_r(Zend_Json::encode($rs));
-// 		exit();
-// 	}
 	function expectincomeAction(){
 		$db = new Api_Model_DbTable_Dbapi();
 		print_r(Zend_Json::encode($db->getALLLoanExpectIncome()));
@@ -105,12 +97,38 @@ class Api_IndexController extends Zend_Controller_Action {
 	}
 	function outstandingAction(){
 		$db = new Api_Model_DbTable_Dbapi();
-		print_r(Zend_Json::encode($db->getAllOutstadingLoan()));
+		$search = $this->getRequest()->getParam('issearch');
+		if(!empty($search)){
+			$data = $this->getRequest()->getParams();
+		}
+		else{
+			$data = array(
+					'adv_search'=>'',
+					'branch_id'=>-1,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'),
+			);
+		}
+		print_r(Zend_Json::encode($db->getAllOutstadingLoan($data)));
 		exit();
 	}
 	function cancelsaleAction(){
 		$db = new Api_Model_DbTable_Dbapi();
-		print_r(Zend_Json::encode($db->getAllSaleCancel()));
+		$search = $this->getRequest()->getParam('issearch');
+		
+		if(!empty($search)){
+			$data = $this->getRequest()->getParams();
+		}
+		else{
+			$data = array(
+				'adv_search'=>'',
+				'branch_id'=>-1,
+				'start_date'=> date('Y-m-d'),
+				'end_date'=>date('Y-m-d'),
+			);
+		}
+		
+		print_r(Zend_Json::encode($db->getAllSaleCancel($data)));
 		exit();
 	}
 	function getdailyincomeAction(){
@@ -130,7 +148,19 @@ class Api_IndexController extends Zend_Controller_Action {
 	}
 	function agreementAction(){//ត្រូវបង់
 		$db = new Api_Model_DbTable_Dbapi();
-		print_r(Zend_Json::encode($db->getAllSaleAgreement()));
+		$search = $this->getRequest()->getParam('issearch');
+		if(!empty($search)){
+			$data = $this->getRequest()->getParams();
+		}
+		else{
+			$data = array(
+					'adv_search'=>'',
+					'branch_id'=>-1,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'),
+			);
+		}
+		print_r(Zend_Json::encode($db->getAllSaleAgreement($data)));
 		exit();
 	}
 	function commissionAction(){//ត្រូវបង់

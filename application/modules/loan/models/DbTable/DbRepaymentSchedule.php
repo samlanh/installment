@@ -503,28 +503,28 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    			   				 
 	    			   				$this->_name="ln_saleschedule";
 	    			   				$datapayment = array(
-	    			   						'branch_id'=>$data['branch_id'],
-	    			   						'sale_id'=>$id,//good
-	    			   						'begining_balance'=> $old_remain_principal,//good
-	    			   						'begining_balance_after'=> $old_remain_principal,//good
-	    			   						'principal_permonth'=> $data['total_payment'.$j],//good
-	    			   						'principal_permonthafter'=>$old_pri_permonth,//good
-	    			   						'total_interest'=>$old_interest_paymonth,//good
-	    			   						'total_interest_after'=>$old_interest_paymonth,//good
-	    			   						'total_payment'=>$old_interest_paymonth+$old_pri_permonth,//good
-	    			   						'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth,//good
-	    			   						'ending_balance'=>$old_remain_principal-$old_pri_permonth,
-	    			   						'cum_interest'=>$cum_interest,
-	    			   						'amount_day'=>$amount_day,
-	    			   						'is_completed'=>0,
-	    			   						'date_payment'=>$data['date_payment'.$j],
-	    			   						'percent'=>$data['percent'.$j],
-	    			   						'percent_agree'=>$data['percent_agree'.$j],
-	    			   						'ispay_bank'=>$data['pay_with'.$j],
-	    			   						'note'=>$data['remark'.$j],
-	    			   						'is_installment'=>1,
-	    			   						'no_installment'=>$key,
-	    			   						'commission'=>($data['times_commission']>=$j)?$data['commission_amt']:0
+    			   						'branch_id'=>$data['branch_id'],
+    			   						'sale_id'=>$id,//good
+    			   						'begining_balance'=> $old_remain_principal,//good
+    			   						'begining_balance_after'=> $old_remain_principal,//good
+    			   						'principal_permonth'=> $data['total_payment'.$j],//good
+    			   						'principal_permonthafter'=>$old_pri_permonth,//good
+    			   						'total_interest'=>$old_interest_paymonth,//good
+    			   						'total_interest_after'=>$old_interest_paymonth,//good
+    			   						'total_payment'=>$old_interest_paymonth+$old_pri_permonth,//good
+    			   						'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth,//good
+    			   						'ending_balance'=>$old_remain_principal-$old_pri_permonth,
+    			   						'cum_interest'=>$cum_interest,
+    			   						'amount_day'=>$amount_day,
+    			   						'is_completed'=>0,
+    			   						'date_payment'=>$data['date_payment'.$j],
+    			   						'percent'=>$data['percent'.$j],
+    			   						'percent_agree'=>$data['percent_agree'.$j],
+    			   						'ispay_bank'=>$data['pay_with'.$j],
+    			   						'note'=>$data['remark'.$j],
+    			   						'is_installment'=>1,
+    			   						'no_installment'=>$key,
+    			   						'commission'=>($data['times_commission']>=$j)?$data['commission_amt']:0
 	    			   				);
 	    			   				$key = $key+1;
 	    			   				$this->insert($datapayment);
@@ -590,6 +590,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    			        
 	    			        if($i==$loop_payment){//for end of record only
 	    			        	$datapayment['last_optiontype'] = $data['paid_receivehouse'];
+	    			        	if($data['paid_receivehouse']>1){
+ 	    			        		$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+	    			        	}
 	    			        }
 	    			        
 		            		 
