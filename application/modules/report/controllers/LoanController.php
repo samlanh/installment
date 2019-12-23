@@ -789,7 +789,7 @@ class Report_LoanController extends Zend_Controller_Action {
   		}else{
   			$search=array(
   					'txtsearch' =>'',
-  					'branch_id'	=>'',
+  					'branch_id'	=>0,
   					'user'	=>'',
   					'start_date'=>date('Y-m-d'),
   					'end_date'=>date('Y-m-d'),
@@ -799,6 +799,8 @@ class Report_LoanController extends Zend_Controller_Action {
   		$this->view->search = $search;
   		$db  = new Report_Model_DbTable_DbParamater();
   		$this->view->row = $db->getAllExpensebyCate($search);
+  		
+  		$this->view->expense_changehouse = $db->getIncomeRepairhouse($search,13);
   		
   		
   		$key = new Application_Model_DbTable_DbKeycode();

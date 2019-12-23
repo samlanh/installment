@@ -430,9 +430,16 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		return $db->fetchAll($sql.$where.$order);
 	}
 	
-	function getTotalHouseRepaireIncome(){
+	function getTotalHouseRepaireIncome($typeRecord=null){
 		$db = $this->getAdapter();
 		$sql="SELECT SUM(total_paid) AS total FROM `ln_otherincomepayment` WHERE status=1 ";
+		
+		if (!empty($typeRecord)){
+			// $typeRecord 12 = income,$typeRecord 13 = Expense
+			$sql.= " AND cate_type =$typeRecord ";
+		}else{
+			//     		$where.= " AND op.cate_type =12 ";
+		}
 		return $db->fetchOne($sql);
 	}
 }
