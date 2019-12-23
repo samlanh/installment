@@ -19,68 +19,75 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    	$first_pay = 0;
 	    	$cum_interest=0;
 	    	$first_payment=0;
+	    	$branch_id=1;
 	    	$n=0;
+	    	$oldland_str='';
+	    	$payment_id = array('រំលស់'=>4,'ផ្តាច់'=>6,'ដំណាក់កាល'=>3);
 	    	for($i=2; $i<=$count; $i++){
-	    		if(($data[$i]['A']==0)){
-	    			$first_pay=1;
-	    			continue;
-	    		}
-	    		if($a_time==0){
+// 	    		echo $data[$i]['A'];exit();
+// 	    		if(($data[$i]['A']==0)){
+// 	    			$first_pay=1;
+// 	    			continue;
+// 	    		}
+	    		if($oldland_str!=$data[$i]['J']){
 		    		$sql="SELECT `client_id` FROM `ln_client` WHERE name_kh='".$data[$i]['I']."'";
 		    		$client_id = $db->fetchOne($sql);
 		    		if(empty($client_id)){
+		    			$dbg = new Application_Model_DbTable_DbGlobal();
+		    			$client_code = $dbg->getNewClientIdByBranch();
+		    			
 			    		$_arr=array(
-			    				'client_number' => $data[$i]['J'],
-			    				'name_kh'	  => $data[$i]['I'],
-			    				'sex'	      => 1,
-			    				'pro_id'      => 12,
-			    				'dis_id'      => 0,
-			    				'com_id'      => 0,
-			    				'village_id'  => 0,
-			    				'street'	  => 0,
-			    				'house'	      => 0,
-			    				'nationality' => 'ខ្មែរ',
-			    				'phone'	      => '',
-			    				'create_date' => date("Y-m-d"),
-			    				'status'      => 1,
-			    				'client_d_type'=> 4,
-			    				'user_id'	  => $this->getUserId(),
-			    				'p_nationality'=> 'ខ្មែរ',
-			    				'ksex'        => 1,
-			    				'adistrict'   => 0,
-			    				'cprovince'   => 12,
-			    				'dcommune'    => 0,
-			    				'qvillage'    => 0,
-			    				'dstreet'     => 0,
-			    				'branch_id'   => 1,
-			    				'joint_doc_type' => 4,
+		    				'client_number'=> $client_code,
+		    				'name_kh'	  => $data[$i]['I'],
+		    				'sex'	      => 1,
+		    				'pro_id'      => 12,
+		    				'dis_id'      => 0,
+		    				'com_id'      => 0,
+		    				'village_id'  => 0,
+		    				'street'	  => 0,
+		    				'house'	      => 0,
+		    				'nationality' => 'ខ្មែរ',
+		    				'phone'	      => '',
+		    				'create_date' => date("Y-m-d"),
+		    				'status'      => 1,
+		    				'client_d_type'=> 4,
+		    				'user_id'	  => $this->getUserId(),
+		    				'p_nationality'=> 'ខ្មែរ',
+		    				'ksex'        => 1,
+		    				'adistrict'   => 0,
+		    				'cprovince'   => 12,
+		    				'dcommune'    => 0,
+		    				'qvillage'    => 0,
+		    				'dstreet'     => 0,
+		    				'branch_id'   => 1,
+		    				'joint_doc_type' => 4,
 			    		);
 			    		$this->_name='ln_client';
 			    		$client_id = $this->insert($_arr);
 		    		}
 		    		
-		    		$sql="SELECT id FROM `ln_properties` WHERE land_address = '".$data[$i]['J']."'";
+		    		$sql="SELECT id FROM `ln_properties` WHERE branch_id = $branch_id AND land_address = '".$data[$i]['J']."'";
 		    		$land_id = $db->fetchOne($sql);
 		    		if(empty($land_id)){
 		    			$_arr=array(
-		    					'branch_id'	  => 1,
-		    					'land_code'	  => '',
-		    					'land_address'=> $data[$i]['J'],
-		    					'street'	  => '',
-		    					'price'	      => $data[$i]['L'],
-		    					'land_price'  => $data[$i]['L'],
-		    					'house_price' => 0,
-		    					'land_size'	  => '',
-		    					'width'       => '',
-		    					'height'      => '',
-		    					'is_lock'     => 1,
-		    					'status'	  => 1,
-		    					'user_id'	  => $this->getUserId(),
-		    					'property_type'=> '',
-		    					'south'	      => '',
-		    					'north'	      => '',
-		    					'west'	      => '',
-		    					'east'	      => '',
+	    					'branch_id'	  => $branch_id,
+	    					'land_code'	  => '',
+	    					'land_address'=> $data[$i]['J'],
+	    					'street'	  => '',
+	    					'price'	      => $data[$i]['L'],
+	    					'land_price'  => $data[$i]['L'],
+	    					'house_price' => 0,
+	    					'land_size'	  => '',
+	    					'width'       => '',
+	    					'height'      => '',
+	    					'is_lock'     => 1,
+	    					'status'	  => 1,
+	    					'user_id'	  => $this->getUserId(),
+	    					'property_type'=> '',
+	    					'south'	      => '',
+	    					'north'	      => '',
+	    					'west'	      => '',
+	    					'east'	      => '',
 		    			);
 		    			$this->_name='ln_properties';
 		    			$land_id = $this->insert($_arr);
@@ -93,61 +100,62 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 		    		
 		    		$dbtable = new Application_Model_DbTable_DbGlobal();
 		    		$loan_number = $dbtable->getLoanNumber();
-		    			   $arr = array(
-		    				'branch_id'=>1,
-		    			    'house_id'=>$land_id,
-		    			   	'receipt_no'=>'',
-		    				'sale_number'=>$loan_number,
-		    			   	'payment_id'=>4,
-		    				'client_id'=>$client_id,
-		    				'price_before'=>$data[$i]['L'],
-		    				'discount_amount'=>$data[$i]['M'],
-		    			   	'discount_percent'=>0,
-		    				'price_sold'=>($data[$i]['L']-$data[$i]['M']),
-		    				'other_fee'=>0,
-		    				'paid_amount'=>$data[$i]['O'],
-		    				'balance'=>($data[$i]['L']-$data[$i]['M'])-$data[$i]['O'],
-		    				'interest_rate'=>$data[$i]['P'],
-		    				'total_duration'=>$data[$i]['U'],
-		    			   	'validate_date'=>$data[$i]['R'],
-		    				'payment_method'=>1,
-		    				'note'=>'',
-		    			   	'land_price'=>0,//$data['house_price'],
-		    			   	'total_installamount'=>$data[$i]['O'],
-		    			   	'typesale'=>1,
-		    				'build_start'=>'',
-		    				'amount_build'=>0,
-		    				'is_reschedule'=>1,
-		    				'staff_id'=>0,
-		    				'comission'=>0,
-		    			   	'full_commission'=>0,
-		    				'create_date'=>date("Y-m-d"),
-		    			   	'startcal_date'=>date("Y-m-d",strtotime($data[$i]['Q'])),
-		    			   	'first_payment'=>date("Y-m-d",strtotime($data[$i]['Q'])),
-		    			   	'agreement_date'=>date("Y-m-d",strtotime($data[$i]['S'])),
-	    			   		'buy_date'=>date("Y-m-d",strtotime($data[$i]['Q'])),
-	    			   		'end_line'=>date("Y-m-d",strtotime($data[$i]['R'])),
-		    			   	'validate_date'=>date("Y-m-d",strtotime($data[$i]['R'])),
-		    				'user_id'=>$this->getUserId(),
-		    			   	'amount_daydelay'=>0
-		    			);
+		    		$arr = array(
+	    				'branch_id'=>$branch_id,
+	    			    'house_id'=>$land_id,
+	    			   	'receipt_no'=>'',
+	    				'sale_number'=>$loan_number,
+	    			   	'payment_id'=>4,
+		    			'note'=>$data[$i]['G'],
+	    				'client_id'=>$client_id,
+	    				'price_before'=>$data[$i]['L'],
+	    				'discount_amount'=>$data[$i]['M'],
+	    			   	'discount_percent'=>0,
+	    				'price_sold'=>($data[$i]['L']),
+	    				'other_fee'=>0,
+	    				'paid_amount'=>$data[$i]['E'],
+	    				'balance'=>($data[$i]['L'])-$data[$i]['E'],
+	    				'interest_rate'=>$data[$i]['P'],
+	    				'total_duration'=>$data[$i]['U'],
+	    			   	'validate_date'=>$data[$i]['R'],
+	    				'payment_method'=>1,
+	    				'note'=>'',
+	    			   	'land_price'=>0,//$data['house_price'],
+	    			   	'total_installamount'=>$data[$i]['F'],
+	    			   	'typesale'=>1,
+	    				'build_start'=>'',
+	    				'amount_build'=>0,
+	    				'is_reschedule'=>1,
+	    				'staff_id'=>0,
+	    				'comission'=>0,
+	    			   	'full_commission'=>0,
+	    				'create_date'=>date("Y-m-d"),
+	    			   	'startcal_date'=>date("Y-m-d",strtotime($data[$i]['Q'])),
+	    			   	'first_payment'=>date("Y-m-d",strtotime($data[$i]['Q'])),
+	    			   	'agreement_date'=>date("Y-m-d",strtotime($data[$i]['S'])),
+    			   		'buy_date'=>date("Y-m-d",strtotime($data[$i]['Q'])),
+    			   		'end_line'=>date("Y-m-d",strtotime($data[$i]['R'])),
+	    			   	'validate_date'=>date("Y-m-d",strtotime($data[$i]['R'])),
+	    				'user_id'=>$this->getUserId(),
+	    			   	'amount_daydelay'=>0
+		    		);
 		    			   
 		    		$this->_name='ln_sale';
 		    		$sale_id = $this->insert($arr);//add group loan
 		    		$a_time=1;
 	    		}
 	    		
-	    		if($first_pay==1 AND $first_payment==0){
-		    		$this->_name='ln_sale';
-		    		$where=" id =".$sale_id;
-		    		$arr = array(
-		    			'first_payment'=>date("Y-m-d",strtotime($data[$i]['B']))
-		    			);
-		    	   $this->update($arr, $where);
-		    	   $first_payment=1;
-	    		}
+// 	    		if($first_pay==1 AND $first_payment==0){
+// 		    		$this->_name='ln_sale';
+// 		    		$where=" id =".$sale_id;
+// 		    		$arr = array(
+// 		    			'first_payment'=>date("Y-m-d",strtotime($data[$i]['B']))
+// 		    		);
+// 		    	   $this->update($arr, $where);
+// 		    	   $first_payment=1;
+// 	    		}
 	    		
-	    		$is_completed =($data[$i]['G']=='Y')?1:0;
+	    		$is_completed =($data[$i]['A']==0)?1:0;
 	    		$cum_interest = $cum_interest+$data[$i]['E'];
 	    		$this->_name="ln_saleschedule";
 	    		if($n==0){
@@ -159,34 +167,35 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    		}
 	    		$n++;
 	    		$datapayment = array(
-	    				'branch_id'=>1,
-	    				'sale_id'=>$sale_id,//good
-	    				'begining_balance'=>$begining,//$data[$i]['F']+$data[$i]['C'],//good
-	    				'begining_balance_after'=>$begining,//$data[$i]['F']+$data[$i]['C'],//good
-	    				'principal_permonth'=> $data[$i]['C'],//good
-	    				'principal_permonthafter'=>$data[$i]['C'],//good
-	    				'total_interest'=>$data[$i]['D'],//good
-	    				'total_interest_after'=>$data[$i]['D'],//good
-	    				'total_payment'=>$data[$i]['E'],//good
-	    				'total_payment_after'=>$data[$i]['E'],//good
-	    				'ending_balance'=>$data[$i]['F'],
-	    				'cum_interest'=>$cum_interest,
-	    				'amount_day'=>30,
-	    				'is_completed'=>$is_completed,
-	    				'date_payment'=>date("Y-m-d",strtotime($data[$i]['B'])),
-	    				'paid_date'=>date("Y-m-d",strtotime($data[$i]['B'])),
-	    				'note'=>'',
-	    				'percent'=>($first_pay==0)?$data[$i]['N']:0,
-	    				'percent_agree'=>($first_pay==0)?$data[$i]['N']:0,
-	    				'is_installment'=>($first_pay==0)?1:0,
-	    				'no_installment'=>$install,
-	    				'last_optiontype'=>1,
+    				'branch_id'=>1,
+    				'sale_id'=>$sale_id,//good
+    				'begining_balance'=>$begining,//$data[$i]['F']+$data[$i]['C'],//good
+    				'begining_balance_after'=>$begining,//$data[$i]['F']+$data[$i]['C'],//good
+    				'principal_permonth'=> $data[$i]['C'],//good
+    				'principal_permonthafter'=>$data[$i]['C'],//good
+    				'total_interest'=>$data[$i]['D'],//good
+    				'total_interest_after'=>$data[$i]['D'],//good
+    				'total_payment'=>$data[$i]['E'],//good
+    				'total_payment_after'=>$data[$i]['E'],//good
+    				'ending_balance'=>$data[$i]['F'],
+    				'cum_interest'=>$cum_interest,
+    				'amount_day'=>30,
+    				'is_completed'=>$is_completed,
+    				'date_payment'=>date("Y-m-d",strtotime($data[$i]['B'])),
+    				'paid_date'=>date("Y-m-d",strtotime($data[$i]['B'])),
+    				'note'=>'',
+    				'percent'=>($first_pay==0)?$data[$i]['N']:0,
+    				'percent_agree'=>($first_pay==0)?$data[$i]['N']:0,
+    				'is_installment'=>($first_pay==0)?1:0,
+    				'no_installment'=>$install,
+    				'last_optiontype'=>1,
+	    			'note'=>$data[$i]['B'],
 	    		);
 	    		$saledetailid = $this->insert($datapayment);
 	    		
-	    		if(!empty($data[$i]['H'])){
+	    		if($oldland_str!=$data[$i]['J']){
 	    			$arr_client_pay = array(
-	    					'branch_id'						=>	1,//$data["branch_id"],
+	    					'branch_id'						=>	$branch_id,//$data["branch_id"],
 	    					'receipt_no'					=>	$data[$i]['H'],
 	    					'date_pay'					    =>	date("Y-m-d",strtotime($data[$i]['B'])),
 	    					'date_input'					=>	date("Y-m-d",strtotime($data[$i]['B'])),
@@ -256,6 +265,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    			$this->insert($arr);
 	    			
 	    		}
+	    		$oldland_str=$data[$i]['J'];
 	    		$install = $install+1;
 	    	}
 // 	    	exit();

@@ -672,7 +672,7 @@ public function getAllOutstadingLoan($search=null){
 		if($order11==1){//for history
 			$order =" ORDER BY `crm`.`client_id` DESC ,`crm`.`sale_id` DESC , crm.id ASC";
 		}
-		echo $sql.$where.$order;exit();
+// 		echo $sql.$where;exit();
       	return $db->fetchAll($sql.$where.$order);
       }
       function submitClosingEngry($data){
