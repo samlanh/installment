@@ -23,6 +23,8 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    	$n=0;
 	    	$oldland_str='';
 	    	$payment_id = array('រំលស់'=>4,'ផ្តាច់'=>6,'ដំណាក់កាល'=>3);
+			
+			$SaleIdGenerate =0;
 	    	for($i=2; $i<=$count; $i++){
 // 	    		echo $data[$i]['A'];exit();
 	    		if(empty($data[$i]['E'])){
@@ -88,6 +90,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    					'north'	      => '',
 	    					'west'	      => '',
 	    					'east'	      => '',
+							'create_date'	  =>	date("Y-m-d"),
 		    			);
 		    			$this->_name='ln_properties';
 		    			$land_id = $this->insert($_arr);
@@ -143,6 +146,9 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 		    		$this->_name='ln_sale';
 		    		$sale_id = $this->insert($arr);//add group loan
 		    		$a_time=1;
+					
+					$SaleIdGenerate = $SaleIdGenerate +1;
+					$sale_id = $SaleIdGenerate;
 	    		}
 	    		
 // 	    		if($first_pay==1 AND $first_payment==0){
