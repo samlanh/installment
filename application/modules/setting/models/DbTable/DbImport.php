@@ -25,10 +25,10 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    	$payment_id = array('រំលស់'=>4,'ផ្តាច់'=>6,'ដំណាក់កាល'=>3);
 	    	for($i=2; $i<=$count; $i++){
 // 	    		echo $data[$i]['A'];exit();
-// 	    		if(($data[$i]['A']==0)){
+	    		if(empty($data[$i]['E'])){
 // 	    			$first_pay=1;
-// 	    			continue;
-// 	    		}
+	    			continue;
+	    		}
 	    		if($oldland_str!=$data[$i]['J']){
 		    		$sql="SELECT `client_id` FROM `ln_client` WHERE name_kh='".$data[$i]['I']."'";
 		    		$client_id = $db->fetchOne($sql);
@@ -36,34 +36,34 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 		    			$dbg = new Application_Model_DbTable_DbGlobal();
 		    			$client_code = $dbg->getNewClientIdByBranch();
 		    			
-			    		$_arr=array(
-		    				'client_number'=> $client_code,
-		    				'name_kh'	  => $data[$i]['I'],
-		    				'sex'	      => 1,
-		    				'pro_id'      => 12,
-		    				'dis_id'      => 0,
-		    				'com_id'      => 0,
-		    				'village_id'  => 0,
-		    				'street'	  => 0,
-		    				'house'	      => 0,
-		    				'nationality' => 'ខ្មែរ',
-		    				'phone'	      => '',
-		    				'create_date' => date("Y-m-d"),
-		    				'status'      => 1,
-		    				'client_d_type'=> 4,
-		    				'user_id'	  => $this->getUserId(),
-		    				'p_nationality'=> 'ខ្មែរ',
-		    				'ksex'        => 1,
-		    				'adistrict'   => 0,
-		    				'cprovince'   => 12,
-		    				'dcommune'    => 0,
-		    				'qvillage'    => 0,
-		    				'dstreet'     => 0,
-		    				'branch_id'   => 1,
-		    				'joint_doc_type' => 4,
-			    		);
-			    		$this->_name='ln_client';
-			    		$client_id = $this->insert($_arr);
+				    		$_arr=array(
+			    				'client_number'=> $client_code,
+			    				'name_kh'	  => $data[$i]['I'],
+			    				'sex'	      => 1,
+			    				'pro_id'      => 12,
+			    				'dis_id'      => 0,
+			    				'com_id'      => 0,
+			    				'village_id'  => 0,
+			    				'street'	  => 0,
+			    				'house'	      => 0,
+			    				'nationality' => 'ខ្មែរ',
+			    				'phone'	      => '',
+			    				'create_date' => date("Y-m-d"),
+			    				'status'      => 1,
+			    				'client_d_type'=> 4,
+			    				'user_id'	  => $this->getUserId(),
+			    				'p_nationality'=> 'ខ្មែរ',
+			    				'ksex'        => 1,
+			    				'adistrict'   => 0,
+			    				'cprovince'   => 12,
+			    				'dcommune'    => 0,
+			    				'qvillage'    => 0,
+			    				'dstreet'     => 0,
+			    				'branch_id'   => 1,
+			    				'joint_doc_type' => 4,
+				    		);
+				    		$this->_name='ln_client';
+				    		$client_id = $this->insert($_arr);
 		    		}
 		    		
 		    		$sql="SELECT id FROM `ln_properties` WHERE branch_id = $branch_id AND land_address = '".$data[$i]['J']."'";
@@ -194,6 +194,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    		$saledetailid = $this->insert($datapayment);
 	    		
 	    		if($oldland_str!=$data[$i]['J']){
+	    			
 	    			$arr_client_pay = array(
 	    					'branch_id'						=>	$branch_id,//$data["branch_id"],
 	    					'receipt_no'					=>	$data[$i]['H'],
