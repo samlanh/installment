@@ -875,7 +875,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$where = " id =".$receipt_id;
     	$data= array(
     			"is_payoff"=>1,
-    			'option_pay'=>4
+    			'payment_option'=>4
     	);
     	$this->update($data, $where);
     }

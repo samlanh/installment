@@ -11,7 +11,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     }
     public function updateItemsByImport($data){
     	$db = $this->getAdapter();
-    	$db->beginTransaction();
+//     	$db->beginTransaction();
     	try{
 	    	$count = count($data);
 	    	$a_time= 0;
@@ -26,9 +26,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 			
 			$SaleIdGenerate =0;
 	    	for($i=2; $i<=$count; $i++){
-// 	    		echo $data[$i]['A'];exit();
 	    		if(empty($data[$i]['E'])){
-// 	    			$first_pay=1;
 	    			continue;
 	    		}
 	    		if($oldland_str!=$data[$i]['J']){
@@ -164,13 +162,17 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    		$is_completed =($data[$i]['A']==0)?1:0;
 	    		$cum_interest = $cum_interest+$data[$i]['E'];
 	    		$this->_name="ln_saleschedule";
-	    		if($n==0){
+// 	    		if($n==0){
 	    			$begining = $data[$i]['F']+$data[$i]['C'];
 	    			$ending=$data[$i]['F'];
-	    		}else{
-	    			$begining = $ending;
-	    			$ending = $data[$i]['F'];
-	    		}
+	    			$is_completed=0;
+// 	    		}else{
+// 	    			$begining = $ending;
+// 	    			$ending = $data[$i]['F'];
+// 	    		}
+	    			if($oldland_str!=$data[$i]['J']){
+	    				$is_completed=1;
+	    			}
 	    		$n++;
 	    		$datapayment = array(
     				'branch_id'=>1,
@@ -276,10 +278,10 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    		$install = $install+1;
 	    	}
 // 	    	exit();
-	    	$db->commit();	    	
+// 	    	$db->commit();	    	
 	   }catch(Exception $e){
-	   		$db->rollBack();	
-	   		echo $e->getMessage();
+// 	   		$db->rollBack();	
+// 	   		echo $e->getMessage();
 	   		exit();   		 
        } 
     }   	  
