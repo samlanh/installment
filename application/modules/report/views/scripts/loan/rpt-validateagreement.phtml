@@ -290,6 +290,9 @@ var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php e
 require(["dojo/ready"], function(ready){
 	ready(function(){
 		 getAllPropertyBranch();
+		 <?php if(!empty($this->search['end_date'])){?>
+		 dijit.byId('end_date').attr('value','<?php echo date('Y-m-d',strtotime($this->search['end_date'])); ?>');
+		 <?php }?>
 	});
 	new dijit.form.FilteringSelect({
 		store: property_store,

@@ -840,6 +840,13 @@ class Report_LoanController extends Zend_Controller_Action {
   		$search = $this->getRequest()->getPost();
   	}
   	else{
+		$dbgb = new Setting_Model_DbTable_DbGeneral();
+    	$alert = $dbgb->geLabelByKeyName('agree_day_alert');
+		$amt_day = 0;
+    	if (!empty($alert['keyValue'])){
+    		$amt_day = $alert['keyValue'];
+    	}
+		
   		$search = array(
   				'adv_search'=>'',
   				'branch_id'=>-1,
@@ -848,7 +855,8 @@ class Report_LoanController extends Zend_Controller_Action {
   				'land_id'=>-1,
   				'co_id'=>-1,
   				'start_date'=> date('Y-m-d'),
-  				'end_date'=>date('Y-m-d'));
+  				'end_date'=>date('Y-m-d',strtotime("+$amt_day day"))
+				);
   	}
   	$this->view->loanrelease_list=$db->getValidationAgreement($search);
   	$this->view->list_end_date=$search;
