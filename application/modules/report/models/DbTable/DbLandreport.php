@@ -1243,7 +1243,9 @@ function round_up_currency($curr_id, $value,$places=-2){
 		return $this->round_up($value, $places);
 	}
 	else{
-		return round($value,2);
+		$digit_value = DIGIT_VALUE_SCHEDULE;// default =2;
+		return round($value,$digit_value);
+// 		return round($value,2);
 	}
 }
 function updateReceipt($data){

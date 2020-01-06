@@ -75,7 +75,9 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		return $this->round_up($value, $places);
     	}
     	else{
-    		return round($value,2);
+    		$digit_value = DIGIT_VALUE_SCHEDULE;// default =2;
+    		return round($value,$digit_value);
+//     		return round($value,2);
     	}
     }
     function getSaleInfo($sale_id){
