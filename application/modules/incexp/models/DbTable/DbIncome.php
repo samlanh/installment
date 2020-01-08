@@ -257,13 +257,17 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			$type=13;
 		}
 		$key_code = $this->getNewKeyCode($type);
-		
 		$this->_name = "ln_view" ;
+		
+		$status = empty($data['status_j'])?1:$data['status_j'];
+		$parent = empty($data['parent_id'])?0:$data['parent_id'];
 		$array = array(
+				'parent_id'		=>$parent,
 				'name_kh'	=>$data['cate_name'],
+				'name_en'	=>$data['cate_name'],
 				'type'		=>$type,
 				'key_code'	=>$key_code,
-				'status'	=>$data['status_j'],
+				'status'	=>$status,
 				);
 		$this->insert($array);
 		return $key_code; // to set key_code value to added new field

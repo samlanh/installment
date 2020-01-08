@@ -156,7 +156,9 @@ class Incexp_IncomeController extends Zend_Controller_Action
     	}
     }
     function getparentbyidAction(){
+    	
     	if($this->getRequest()->isPost()){
+    		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     		$data = $this->getRequest()->getPost();
     		$db = new Incexp_Model_DbTable_DbIncome();
     		$cate_id = "";
@@ -164,6 +166,9 @@ class Incexp_IncomeController extends Zend_Controller_Action
     			$cate_id = $data['cateid'];
     		}
     		$parentrs = $db->getAllIncomeCategoryParent($data['type'],$cate_id);
+    		if (!empty($data['with_add_new'])){
+    			array_unshift($parentrs, array ( 'id' => -1, 'name' => $tr->translate("ADD_NEW")) );
+    		}
     		print_r(Zend_Json::encode($parentrs));
     		exit();
     	}

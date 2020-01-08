@@ -175,12 +175,45 @@ $frm = $this->frm_expense;
 		</form>
 	</div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_category" data-dojo-props="title:'<?php echo $tr->translate("ADD_CATEGORY")?>'" >
+		<form style="width:100%;" id='frm_category' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<div class="card-box">
+	    		<div class="col-md-12 col-sm-12 col-xs-12">
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PARENT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="parent_id" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("EXPENSE_TITLE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input dojoType="dijit.form.ValidationTextBox" required="true"  class="fullside" id="cate_name" name="cate_name" value="" type="text">
+	                   </div>
+	                </div>
+	         	</div>
+	         </div>
+	         <div class="card-box">
+             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+					<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button" 
+						​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
+						<input type="button" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button" 
+						 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
+    			</div>
+    		</div>
+		</form>
+	</div>
+</div>
 <script type="text/javascript">
 dojo.require("dijit.form.Textarea");
 dojo.require("dojo.data.ItemFileWriteStore");  
 dojo.require("dojo.html");
 var supplierStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array($this->cheque_issue)));?> );
+var parent_id_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 require(["dojo/ready"], function(ready){
 	new dijit.form.FilteringSelect({
 		name: "supplier_id",
@@ -194,10 +227,29 @@ require(["dojo/ready"], function(ready){
 			Addsupplier()
 	    }
 		}, "supplier_id");
-		ready(function(){
-			enablePayment();
-		});
+
+	new dijit.form.FilteringSelect({
+		store: parent_id_store,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		required: false,		           
+		name: "parent_id",
+		id: "parent_id",
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+	    }
+	}, "parent_id");
+
+	ready(function(){
+		enablePayment();
+		getParentbytype();
+	});
 });
+
+		
+
+		
 function enablePayment(){
 	payment_method = dijit.byId('payment_type').get('value');
 	dijit.byId("cheque").set("readOnly",false);
@@ -331,29 +383,7 @@ new dijit.form.FilteringSelect({
     } 
 }, "income_category");
 
-var url_add_category = '<?php echo $this->url(array("module"=>"incexp","controller"=>"expense","action"=>"add-category")); ?>';
-function addCategory(){
-	if(dijit.byId('frm_category').validate()){
-		dijit.byId('save').set('disabled',true);
-		dojo.xhrPost({
-			url:url_add_category,
-			form: dojo.byId("frm_category"),
-			handleAs:"json",
-			load: function(data) {
-				var Itemmake = { 
-		    		id: data,
-			        name: dijit.byId('cate_name').get('value')
-			    };
-		 		addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
-			    dijit.byId('frm_category').reset();
-			    dijit.byId("popup_category").hide();
-			    dijit.byId('save').set('disabled',false);
-			},
-			error: function(err) {
-			}
-		});
-	}
-}
+
 function printSave(new_invoice_no){
 /////////////////// check Validate /////////////////////////////////////////
 	branch_id = dijit.byId('branch_id').get('value');
@@ -428,47 +458,70 @@ function printSubmit(){
 function hideDialog1(){
 	dijit.byId('popup_category').hide();
 }
+
+var url_add_category = '<?php echo $this->url(array("module"=>"incexp","controller"=>"expense","action"=>"add-category")); ?>';
+function addCategory(){
+	if(dijit.byId('frm_category').validate()){
+		dijit.byId('save').set('disabled',true);
+		dojo.xhrPost({
+			url:url_add_category,
+			form: dojo.byId("frm_category"),
+			handleAs:"json",
+			load: function(data) {
+				//var Itemmake = { 
+		    		//id: data,
+			       // name: dijit.byId('cate_name').get('value')
+			   // };
+		 		//addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
+
+		 		resetStoreCategory(data);
+			    dijit.byId('frm_category').reset();
+			    dijit.byId("popup_category").hide();
+			    dijit.byId('save').set('disabled',false);
+			},
+			error: function(err) {
+			}
+		});
+	}
+}
+var url_getland = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getparentbyid')); ?>';
+function getParentbytype(){
+	account_type = 13
+	dijit.byId('parent_id').reset();
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'type':account_type
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			acc_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('parent_id').set('store', acc_store);
+		},
+		error: function(err) {
+		}
+	});
+}
+var url_getland = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getparentbyid')); ?>';
+function resetStoreCategory(keyValue){
+	account_type = 13
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'type':account_type,'with_add_new':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			income_category_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('income_category').set('store', income_category_store);
+		    dijit.byId('income_category').set('value', keyValue);
+		},
+		error: function(err) {
+		}
+	});
+}
 </script>
-<div class="dijitHidden">
-	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_category" >
-		<form style="background-color: buttonface; width:100%;" id='frm_category' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-			<table cellspacing="10" width="100%" style="margin: 0 auto;">
-				<tr>
-					<td>
-						<fieldset style="background-color: buttonface;">
-						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend>
-							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
-								<tr>
-									<td><?php echo $tr->translate('EXPENSE_TITLE');?></td>
-									<td>
-										<input dojoType="dijit.form.ValidationTextBox" required="true"  class="fullside" id="cate_name" name="cate_name" value="" type="text">
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('STATUS');?></td>
-									<td>
-										<select name="status_j" id="status_j" dojoType="dijit.form.FilteringSelect"   class="fullside">
-		    								<option value="1" label="active"><?php echo $tr->translate("ACTIVE");?></option>
-		    								<option value="0" label="deactive"><?php echo $tr->translate("DEACTIVE");?></option>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="4" align="center">
-										<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button" 
-										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
-										<input type="button" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button" 
-										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
-									</td>
-								</tr>
-							</table>
-					</fieldset>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-</div>
+
 <div class="dijitHidden" style="width: 23cm !important; height: 11cm ; padding: 0px; margin: 0px;">
 	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_expense" >
 		<div id="divPrint" style="width: 100% !important; height: 13cm ; padding: 0px; margin: 0px;">
