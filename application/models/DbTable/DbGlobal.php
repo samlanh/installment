@@ -1814,7 +1814,13 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			   WHERE ((`ln_view`.`key_code` = `crm`.`payment_option`)
 			          AND (`ln_view`.`type` = 7))
 			   LIMIT 1) AS `paymentoption`,
-			   (SELECT first_name FROM `rms_users` WHERE id=crm.user_id LIMIT 1) AS user_name
+			   (SELECT first_name FROM `rms_users` WHERE id=crm.user_id LIMIT 1) AS user_name,
+			    (SELECT
+		     `ln_staff`.`co_khname`
+		   FROM `ln_staff`
+		   WHERE (`ln_staff`.`co_id` = `sl`.`staff_id`)
+		   LIMIT 1) AS `staff_name`
+		   
 			FROM (((`ln_client_receipt_money` `crm`
 			     JOIN `ln_properties` `l`)
 			    JOIN `ln_sale` `sl`)
