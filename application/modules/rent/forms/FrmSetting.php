@@ -8,7 +8,7 @@ class Rent_Form_FrmSetting extends Zend_Dojo_Form
     {
     	$this->tr=Application_Form_FrmLanguages::getCurrentlanguage();	
     }
-    function FrmAddMetionSetting($data){
+    function FrmAddSetting($data){
     	
     	$request=Zend_Controller_Front::getInstance()->getRequest();
     	
@@ -23,6 +23,14 @@ class Rent_Form_FrmSetting extends Zend_Dojo_Form
     			'missingMessage'=>$this->tr->translate("Forget Enter Title")
     	));
     	
+    	$times_deposite = new Zend_Dojo_Form_Element_NumberTextBox('times_deposite');
+    	$times_deposite->setAttribs(array(
+    			'dojoType'=>'dijit.form.NumberTextBox',
+    			'required'=>'true',
+    			'class'=>'fullside height-text',
+    			'placeholder'=>$this->tr->translate("TIME_DEPOSIT"),
+    			'missingMessage'=>$this->tr->translate("Forget Enter Times Deposite")
+    	));
     	
     	$note=  new Zend_Form_Element_Textarea('note');
     	$note->setAttribs(array(
@@ -65,6 +73,7 @@ class Rent_Form_FrmSetting extends Zend_Dojo_Form
     			
     	if(!empty($data)){
     		$title->setValue($data["title"]);
+    		$times_deposite->setValue($data["times_deposite"]);
     		$note->setValue($data["note"]);
     		$_status->setValue($data["status"]);
     		$id->setValue($data["id"]);
@@ -73,6 +82,7 @@ class Rent_Form_FrmSetting extends Zend_Dojo_Form
     	
     	$this->addElements(array(
     			$title,
+    			$times_deposite,
 				$note,
     			$_status,
     			$id,

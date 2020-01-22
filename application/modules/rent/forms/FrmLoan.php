@@ -47,7 +47,8 @@ Class Rent_Form_FrmLoan extends Zend_Dojo_Form {
 			'style'=>'color:red; font-weight: bold;'
 		));
 		
-		$receipt_no = $db->getReceiptByBranch();
+		$_dbRent = new Rent_Model_DbTable_DbLanddeposit();
+		$receipt_no = $_dbRent->getRentReceiptByBranch();
 		$receipt->setValue($receipt_no);
 		
 		$_house_price = new Zend_Dojo_Form_Element_NumberTextBox('house_price');
@@ -194,7 +195,7 @@ Class Rent_Form_FrmLoan extends Zend_Dojo_Form {
 			'dojoType'=>'dijit.form.NumberTextBox',
 			'required' =>'true',
 			'class'=>'fullside',
-			'onkeyup'=>'checkScheduleOption();CalculateDate();'
+			'onkeyup'=>'CalculateDate();'
 		));
 		
 		$last_payment = new Zend_Dojo_Form_Element_NumberTextBox('last_payment');
@@ -424,6 +425,26 @@ Class Rent_Form_FrmLoan extends Zend_Dojo_Form {
 			'onkeyup'=>'revertCommission(2);'
 		));
 		
+		
+		$_setting_opt = new Zend_Dojo_Form_Element_FilteringSelect('setting_opt');
+		$_setting_opt->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'required' =>'true',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'changePolicy();'
+		));
+		$dbSetting = new Rent_Model_DbTable_DbSetting();
+		$options = $dbSetting->getAllSettingOpt(1);
+		$_setting_opt->setMultiOptions($options);
+		
+		$_times_deposite = new Zend_Form_Element_Hidden("times_deposite");
+		$_times_deposite->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
 		if($data!=null){
 			$agreementdate->setValue($data['agreement_date']);
 			$_branch_id->setValue($data['branch_id']);
@@ -469,7 +490,10 @@ Class Rent_Form_FrmLoan extends Zend_Dojo_Form {
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id,
 				$second_depostit,
-				$propertiestype
+				$propertiestype,
+				
+				$_setting_opt,
+				$_times_deposite
 				));
 		return $this;
 		

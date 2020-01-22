@@ -144,4 +144,22 @@ class Rent_DepositController extends Zend_Controller_Action {
 		$this->view->footer = $frmpopup->getFooterReceipt();
 		$this->view->officailreceipt = $frmpopup->getOfficailReceipt();
 	}
+	function getReceiptNumberAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Rent_Model_DbTable_DbLanddeposit();
+			$loan_number = $db->getRentReceiptByBranch($data);
+			print_r(Zend_Json::encode($loan_number));
+			exit();
+		}
+	}
+	function addschedultestAction(){
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			$_dbmodel = new Rent_Model_DbTable_DbLanddeposit();
+			$rows_return = $_dbmodel->addScheduleTestPayment($_data);
+			print_r(Zend_Json::encode($rows_return));
+			exit();
+		}
+	}
 }

@@ -26,11 +26,12 @@ class Rent_Model_DbTable_DbSetting extends Zend_Db_Table_Abstract
     	$order=" ORDER BY id DESC";
     	return $db->fetchAll($sql.$where.$order);
     }
-	public function addMetionSetting($data){
+	public function addSetting($data){
     	$db= $this->getAdapter();
     	try{
     		$arr = array(
-    				'title'			=>$data['title'],
+    				'title'				=>$data['title'],
+    				'times_deposite'	=>$data['times_deposite'],
     				'note'			=>$data['note'],
     				'status'		=>1,
     				'create_date'	=>date("Y-m-d H:i:s"),
@@ -59,11 +60,12 @@ class Rent_Model_DbTable_DbSetting extends Zend_Db_Table_Abstract
     	}
 	}
 	
-	public function editMentionSettingID($data){
+	public function editSettingID($data){
 		$db= $this->getAdapter();
 		try{
 			$arr = array(
     				'title'			=>$data['title'],
+					'times_deposite'	=>$data['times_deposite'],
     				'note'			=>$data['note'],
     				'status'		=>1,
     				'modify_date'	=>date("Y-m-d H:i:s"),
@@ -91,7 +93,7 @@ class Rent_Model_DbTable_DbSetting extends Zend_Db_Table_Abstract
 				}
 			}
 			$this->_name='rn_rentsetting_detail';
-			$where = 'metion_score_id = '.$id;
+			$where = 'settin_id = '.$id;
 			if (!empty($detailId)){
 				$where.=" AND id NOT IN ($detailId) ";
 			}
@@ -127,7 +129,7 @@ class Rent_Model_DbTable_DbSetting extends Zend_Db_Table_Abstract
 	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
 	}
-	function getMentionSettingById($id=null){
+	function getSettingById($id=null){
 		$db = $this->getAdapter();
 		$sql=" SELECT * FROM rn_rentsetting WHERE 1 ";
 		if (!empty($id)){
@@ -135,12 +137,32 @@ class Rent_Model_DbTable_DbSetting extends Zend_Db_Table_Abstract
 		}
 		return $db->fetchRow($sql);
 	}
-	function getMentionSettingDetailById($id=null){
+	function getSettingDetailById($id=null){
 		$db = $this->getAdapter();
 		$sql=" SELECT * FROM `rn_rentsetting_detail` WHERE 1 ";
 		if (!empty($id)){
 			$sql.=" AND settin_id = $id";
 		}
 		return $db->fetchAll($sql);
+	}
+	
+	
+	public function getAllSettingOpt($_ispot=null){
+		$db= $this->getAdapter();
+		$sql="
+		SELECT ms.id,
+			ms.title,
+			ms.title AS name
+			FROM `rn_rentsetting` AS ms
+		WHERE ms.status =1 ";
+		$sql.=" ORDER BY ms.title ASC";
+		$row =  $db->fetchAll($sql);
+		if (!empty($_ispot)) {
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		  	$options=array(0=> $tr->translate("PLEASE_SELECT"));
+		  	if(!empty($row)) foreach($row as $read) $options[$read['id']]=$read['name'];
+		  	return $options;
+		}
+		return $row;
 	}
 }

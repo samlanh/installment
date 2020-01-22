@@ -3,7 +3,7 @@
 class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'ln_sale';
+    protected $_name = 'ln_rent_property';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
@@ -44,7 +44,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
  		`s`.`price_sold`     AS `price_sold`,
  		(SELECT
 	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
-	   FROM `ln_client_receipt_money` `cr`
+	   FROM `ln_rent_receipt_money` `cr`
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
         `s`.`balance`         AS `balance`,
         `s`.`buy_date`        AS `buy_date`,
@@ -54,7 +54,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 				WHEN  `s`.`is_cancel` = 0 THEN ' '
 				WHEN  `s`.`is_cancel` = 1 THEN '".$tr->translate("CANCELED")."'
 				END AS cancel
-		FROM ((`ln_sale` `s`
+		FROM ((`ln_rent_property` `s`
 		    JOIN `ln_client` `c`)
 		   JOIN `ln_properties` `p`)
 		WHERE ((`c`.`client_id` = `s`.`client_id`)
@@ -104,78 +104,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	
     	return $db->fetchAll($sql.$where.$order);
     }
-//     function getTranLoanByIdWithBranch($id,$is_newschedule=null){//group id
-//     	$sql = " SELECT * FROM `ln_sale` AS s
-// 			WHERE s.id = ".$id;
-//     	$where="";
-//     	if($is_newschedule!=null){
-//     		$where.=" AND s.is_reschedule = 2 ";
-//     	}
-    	
-//     	$where.=" LIMIT 1 ";
-//     	$db = $this->getAdapter();
-//     	return $db->fetchRow($sql.$where);
-//     }
-//     function getSaleScheduleById($id,$payment_id){
-//     	$sql=" SELECT * FROM ln_saleschedule WHERE sale_id =$id AND status=1 AND is_completed=0 ";
-//     	if($payment_id==4){$sql.=" AND is_installment=1 ";};
-//     	$db = $this->getAdapter();
-//     	return $db->fetchAll($sql);
-//     }
-//     function getSalePaidExist($id,$payment_id){
-//     	$sql=" SELECT * FROM ln_saleschedule WHERE sale_id =$id AND status=1 AND is_completed=1 ";
-//     	$db = $this->getAdapter();
-//     	return $db->fetchAll($sql);
-//     }
-//     public function getLoanviewById($id){
-//     	$sql = "SELECT
-//     	lg.g_id
-//     	,(SELECT branch_nameen FROM `ln_branch` WHERE br_id =lg.branch_id LIMIT 1) AS branch_name
-//     	,lg.level,
-//     	(SELECT name_en FROM `ln_view` WHERE status =1 and type=24 and key_code=lg.for_loantype) AS for_loantype
-//     	,(select concat(zone_name,'-',zone_num)as dd from `ln_zone` where zone_id = lg.zone_id ) AS zone_name
-//     	,(SELECT name_en FROM `ln_view` WHERE status =1 and type=14 and key_code=lg.pay_term) AS pay_term
-//     	,(SELECT name_en FROM `ln_view` WHERE status =1 and type=14 and key_code=lg.collect_typeterm) AS collect_typeterm
-//     	,lg.date_release
-//     	,lg.total_duration
-//     	,lg.first_payment
-//     	,lg.time_collect
-//     	,(SELECT name_en FROM `ln_view` WHERE status =1 and type=2 and key_code=lg.holiday) AS holiday
-//     	,lg.date_line
-//     	,lm.pay_after, lm.pay_before
-//     	,(SELECT curr_nameen FROM `ln_currency` WHERE id=lm.currency_type) AS currency_type
-//     	,lm.graice_period,
-//     	lm.loan_number,lm.interest_rate,lm.amount_collect_principal,lm.semi,
-//     	lm.client_id,lm.admin_fee,
-//     	lm.pay_after,lm.pay_before,lm.other_fee
-//     	,(SELECT name_kh FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_kh,
-//     	(SELECT name_en FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_en,
-//     	(SELECT group_code FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS group_code,
-//     	(SELECT client_number FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_number,
-//     	lm.total_capital,lm.interest_rate,lm.payment_method,
-//     	lg.time_collect,
-//     	lg.zone_id,
-//     	(SELECT co_firstname FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS co_enname,
-//     	lg.status AS str ,lg.status FROM `ln_loan_group` AS lg,`ln_loan_member` AS lm
-//     	WHERE lg.g_id = lm.group_id AND lm.member_id = $id LIMIT 1 ";
-//     	return $this->getAdapter()->fetchRow($sql);
-//     }
 
-//     function round_up($value, $places)
-//     {
-//     	$mult = pow(10, abs($places));
-//     	return $places < 0 ?
-//     	ceil($value / $mult) * $mult :
-//     	ceil($value * $mult) / $mult;
-//     }
-//     function round_up_currency($curr_id, $value,$places=-2){
-//     	if ($curr_id==1){
-//     		return $this->round_up($value, $places);
-//     	}
-//     	else{
-//     		return round($value,0);
-//     	}
-//     }
     function getProperty($id){
     	$db = $this->getAdapter();
     	$sql="SELECT * FROM `ln_properties` AS p WHERE p.`id`=".$id;
@@ -212,7 +141,6 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				$house_price = $house_price+$newpro['house_price'];
     				
     				if(!empty($land_address)){
-    					//$land_address= $land_address.'&'.$newpro['land_address'];
     					$land_address= $land_address.','.$newpro['land_address'];
     				}else{ 
     					$land_address =$newpro['land_address'];
@@ -233,9 +161,6 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'land_price'=>$land_price,
     					'house_price'=>$house_price,
     					'property_type'=>$property_type,
-//     					'width'=>$width,
-//     					'height'=>$height,
-//     					'land_size'=>$size,
     					'width'=>$data['width'],
     					'height'=>$data['height'],
     					'land_size'=>$data['land_size'],
@@ -267,7 +192,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$loan_number = $dbtable->getLoanNumber($data);
     		
     		$receipt = $data['receipt'];
-    		$sql="SELECT id FROM ln_client_receipt_money WHERE receipt_no='$receipt' ORDER BY id DESC LIMIT 1 ";
+    		$sql="SELECT id FROM ln_rent_receipt_money WHERE receipt_no='$receipt' ORDER BY id DESC LIMIT 1 ";
     		$acc_no = $db->fetchOne($sql);
     		if($acc_no){
     			$dbc = new Application_Model_DbTable_DbGlobal();
@@ -319,7 +244,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'create_date'=>date("Y-m-d"),
     				'user_id'=>$this->getUserId()
     				);
-    		$this->_name='ln_sale';
+    		$this->_name='ln_rent_property';
     		$id = $this->insert($arr);//add group loan
     		$data['sale_id']=$id;
     		
@@ -327,7 +252,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$term_types=1;
     		$payment_method = $data["schedule_opt"];
     	    if($payment_method==2){//pay off
-    			$this->_name="ln_saleschedule";
+    			$this->_name="ln_rentschedule";
     			$datapayment = array(
     					'branch_id'=>$data['branch_id'],
     					'sale_id'=>$id,//good
@@ -395,10 +320,10 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				    	'is_payoff'=>$pay_off,
     				    	'payment_times'=>1,
     				    	);
-    		    	$this->_name='ln_client_receipt_money';
+    		    	$this->_name='ln_rent_receipt_money';
     		    	$crm_id = $this->insert($array);
     		    	
-    		        $this->_name='ln_client_receipt_money_detail';
+    		        $this->_name='ln_rent_receipt_money_detail';
     		    	$array = array(
     		    		  'crm_id'			=> $crm_id,
     		    		  'client_id'		=> $data['member'],
@@ -449,14 +374,14 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		}
     		
     		if($data['status_using']==0){//cancel
-    			$this->_name="ln_sale";
+    			$this->_name="ln_rent_property";
     			$arr_update = array(
     					'status'=>0
     			);
     			$where = ' status = 1 AND id = '.$data['id'];
     			$this->update($arr_update, $where);
     			 
-    			$this->_name = 'ln_saleschedule';
+    			$this->_name = 'ln_rentschedule';
     			$where = ' is_completed = 0 AND status = 1 AND sale_id = '.$data['id'];
     			$this->delete($where);
     			
@@ -467,7 +392,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				$this->update($arr,$where);
     			}
     			
-    			$this->_name="ln_client_receipt_money";
+    			$this->_name="ln_rent_receipt_money";
     			$where = ' status = 1 AND land_id ='.$data["old_landid"].' AND sale_id = '.$data['id'];   		
     			$this->update($arr_update, $where);
     			$db->commit();
@@ -688,7 +613,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			);
     		
     		$id = $data['id'];
-    		$this->_name='ln_sale';
+    		$this->_name='ln_rent_property';
     		$where = $db->quoteInto('id=?', $id);
     		$this->update($arr, $where);
     		
@@ -732,11 +657,11 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'is_payoff'=>$pay_off,
     				'payment_times'=>1,
     			);
-    			$this->_name='ln_client_receipt_money';
+    			$this->_name='ln_rent_receipt_money';
     			$where="receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id'];
     			$this->update($array, $where);
     				
-    			$this->_name='ln_client_receipt_money_detail';
+    			$this->_name='ln_rent_receipt_money_detail';
     			$array = array(
     					'client_id'		=>$data['member'],
     					'land_id'		=>$data['land_code'],
@@ -756,7 +681,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'status'		=>1,
     			);
     			if(!empty($data['receipt'])){
-    				$sql="SELECT id FROM `ln_client_receipt_money` WHERE receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id'];
+    				$sql="SELECT id FROM `ln_rent_receipt_money` WHERE receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id'];
     				$crm_id = $db->fetchOne($sql);
     				if(!empty($crm_id)){
     					$where="crm_id=".$crm_id;
@@ -785,39 +710,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	
     	if (!empty($_data['id'])){
     
-//     		$row=$this->getCancelById($_data['id']);
-//     		$project = $db_pro->getBranchById($row['branch_id']);
-//     		$rowsale = $dbsale->getTranLoanByIdWithBranch($row['sale_id'],null);
-//     		$client = $dbclient->getClientById($rowsale['client_id']);
-//     		$land = $dbproper->getClientById($rowsale['house_id']);
-    			
-//     		$stringold="Project : ID:".$row['branch_id']."-".$project['project_name']."<br />";
-//     		$stringold.="SALE : ID:".$row['sale_id']."-".$rowsale['sale_number']."<br />";
-//     		$stringold.="Customer : id=".$rowsale['client_id']."-".$client['name_kh']."<br />";
-//     		$stringold.="Property : id=".$rowsale['house_id']."-".$land['land_address']." Street ".$land['street']."<br />";
-    			
-//     		$stringold.="Reason : ".$row['reason']."<br />";
-//     		$stringold.="Paid Amount : ".$row['paid_amount']."<br />";
-//     		$stringold.="Installment Paid : ".$row['installment_paid']."<br />";
-//     		$stringold.="Return Amount : ".$row['return_back']."<br />";
-    
-    
-//     		$project = $db_pro->getBranchById($_data['branch_id']);
-//     		$rowsale = $dbsale->getTranLoanByIdWithBranch($sale_id,null);
-//     		$client = $dbclient->getClientById($rowsale['client_id']);
-//     		$land = $dbproper->getClientById($rowsale['house_id']);
-    
-//     		$string="Project : ID:".$_data['branch_id']."-".$project['project_name']."<br />";
-//     		$string.="SALE : ID:".$sale_id."-".$rowsale['sale_number']."<br />";
-//     		$string.="Customer : id=".$rowsale['client_id']."-".$client['name_kh']."<br />";
-//     		$string.="Property : id=".$rowsale['house_id']."-".$land['land_address']." Street ".$land['street']."<br />";
-    
-//     		$string.="Reason : ".$_data['reason']."<br />";
-//     		$string.="Paid Amount : ".$_data['paid_amount']."<br />";
-//     		$string.="Installment Paid : ".$_data['installment_paid']."<br />";
-//     		$string.="Return Amount : ".$_data['return_back']."<br />";
-    			
-//     		$labelactivity="Edit Cancel ";
+
     	}else{
     		$string="";
     			
@@ -888,5 +781,127 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	$dbgb->addActivityUser($_datas);
     
     	return $arr;
+    }
+    
+    public function getRentReceiptByBranch($data=array('branch_id'=>1)){
+    	$this->_name='ln_rent_receipt_money';
+    	$db = $this->getAdapter();
+    
+    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 ";
+    	$pre='№ ';
+    	$acc_no = $db->fetchOne($sql);
+    	$new_acc_no= (int)$acc_no+1;
+    	$acc_no= strlen((int)$acc_no+1);
+    	for($i = $acc_no;$i<6;$i++){
+    		$pre.='0';
+    	}
+    	return $pre.$new_acc_no;
+    }
+    
+    function getRowSettingDetail($setting_id,$month){
+    	$db = $this->getAdapter();
+    	$sql="SELECT * FROM `rn_rentsetting_detail` WHERE  settin_id =$setting_id AND max_month >=$month ORDER BY max_month ASC LIMIT 1";
+    	return $db->fetchRow($sql);
+    }
+    public function addScheduleTestPayment($_data){
+    	$db = $this->getAdapter();
+    	
+    	$sql=" TRUNCATE TABLE ln_rent_property_test ";
+    	$db->query($sql);
+    	$sql = "TRUNCATE TABLE ln_rentschedule_test";
+    	$db->query($sql);
+    	
+    	$dbtable = new Application_Model_DbTable_DbGlobal();
+    	$loan_number = $dbtable->getLoanNumber($_data);
+    	$arr = array(
+    			'branch_id'=>$_data['branch_id'],
+    			'client_id'=>$_data['member'],
+    			'price_before'=>$_data['total_sold'],
+    			'discount_amount'=>$_data['discount'],
+    			'price_sold'=>$_data['sold_price'],
+    			'other_fee'=>0,
+    			'balance'=>$_data['balance'],
+    			'end_line'=>$_data['date_line'],
+    			'total_duration'=>$_data['period'],
+    			'first_payment'=>$_data['first_payment'],
+    			'validate_date'=>$_data['first_payment'],
+    			'payment_method'=>1,
+    			'create_date'=>date("Y-m-d"),
+    			'user_id'=>$this->getUserId()
+    	);
+    	$this->_name="ln_rent_property_test";
+    	$id = $this->insert($arr);//add group loan
+    	
+    	$setting_id = $_data['setting_opt'];
+    	$dbtable = new Application_Model_DbTable_DbGlobal();
+    	$dbSetting = new Rent_Model_DbTable_DbSetting();
+    	$_row = $dbSetting->getSettingDetailById($setting_id);
+    	
+    	$soldPrice = $_data['sold_price'];
+    	$period = $_data['period'];
+    	$from_date =  $_data['release_date'];
+    	$next_payment = $_data['first_payment'];
+    	$str_next = '+1 month';
+    	
+    	for ($i=1; $i<=$period; $i++){
+    		$settingDetail = $this->getRowSettingDetail($setting_id, $i);
+    		$rentPerMonth = ($soldPrice * $settingDetail['percent_value'])/100;
+    		
+    		if($i!=1){
+    			$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$_data['first_payment']);
+    		}else{
+    			$next_payment = $_data['first_payment'];
+    		}
+    		
+    		$this->_name="ln_rentschedule_test";
+    		$datapayment = array(
+//     				'begining_balance'=> $old_remain_principal,//good
+    				'sale_id'=>$id,//good
+    				'principal_permonth'=> $rentPerMonth,//good
+    				'principal_permonthafter'=>$rentPerMonth,//good
+    				'total_interest'=>0,//good
+    				'total_interest_after'=>0,//good
+    				'total_payment'=>$rentPerMonth,//good
+    				'total_payment_after'=>$rentPerMonth,//good
+//     				'ending_balance'=>$old_remain_principal-$old_pri_permonth,
+//     				'cum_interest'=>$cum_interest,
+//     				'amount_day'=>$old_amount_day,
+    				'is_completed'=>0,
+    				'date_payment'=>$next_payment,
+    		);
+    		$this->insert($datapayment);
+    	}
+    	
+    	$sql = " SELECT t.* , DATE_FORMAT(t.date_payment, '%d-%m-%Y') AS date_payments,
+    		DATE_FORMAT(t.date_payment, '%Y-%m-%d') AS date_name FROM
+    		ln_rentschedule_test AS t WHERE t.sale_id = ".$id;
+    	$rows = $db->fetchAll($sql);
+    	
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	$string = "";
+    	$string.='
+    		<table id="table_row" border="1" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">
+    			<tr id="head-title" class="head-td" style="color: #fff;background: #060679;font-size: 12px;height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center">
+    				<th>'.$tr->translate("NUM").'</th>
+    				<th>'.$tr->translate("DATE_PAYMENT").'</th>
+    				<th>'.$tr->translate("TOTAL_PAYMENT").'</th>
+    				<th>'.$tr->translate("NOTE").'</th>
+    			</tr>
+    	';
+    	if (!empty($rows)) foreach ($rows as $key => $re){
+    		$index = $key+1;
+    		$string.='
+    			<tr class="hover" style="border-bottom:1px solid #ccc;" >
+    				<td width="2%" align="center">'.($index).'</td>
+    				<td>'.date("d/M/Y",strtotime($re['date_payment'])).'</td>
+    				<td>'.number_format($re['total_payment'],2).'</td>
+    				<td>'.$re['note'].'</td>
+    			</tr>
+    		';
+    	}
+    	$string.='</table>';
+    	
+    	return array('template'=>$string);
+    	
     }
 }

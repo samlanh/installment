@@ -14,8 +14,6 @@ class Rent_SettingController extends Zend_Controller_Action {
     		else{
     			$search=array(
 					'search'=>"",
-    				'degree'=>"",
-    				'academic_year'=>"",
 				);
     		}
     		$this->view->search = $search;
@@ -41,7 +39,7 @@ class Rent_SettingController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
-	    		$db->addMetionSetting($data);
+	    		$db->addSetting($data);
 	    		if(isset($data['save_close'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 				}else{
@@ -53,7 +51,7 @@ class Rent_SettingController extends Zend_Controller_Action {
 	    	}
     	}
     	$frm = new Rent_Form_FrmSetting();
-    	$frm->FrmAddMetionSetting(null);
+    	$frm->FrmAddSetting(null);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
     }
@@ -64,23 +62,23 @@ class Rent_SettingController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
-	    		$db->editMentionSettingID($data);
+	    		$db->editSettingID($data);
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 	    	}catch(Exception $e){
 	    		Application_Form_FrmMessage::message("APPLICATION_ERROR");
 	    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	    	}
     	}
-    	$row = $db->getMentionSettingById($id);
+    	$row = $db->getSettingById($id);
     	if (empty($row)){
     		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
     		exit();
     	}
     	$this->view->row = $row;
-    	$this->view->rowdetail = $db->getMentionSettingDetailById($id);
+    	$this->view->rowdetail = $db->getSettingDetailById($id);
     	
     	$frm = new Rent_Form_FrmSetting();
-    	$frm->FrmAddMetionSetting($row);
+    	$frm->FrmAddSetting($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
 	}
@@ -91,32 +89,32 @@ class Rent_SettingController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			try{
 				$data = $this->getRequest()->getPost();
-				$db->addMetionSetting($data);
+				$db->addSetting($data);
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("APPLICATION_ERROR");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		$row = $db->getMentionSettingById($id);
+		$row = $db->getSettingById($id);
 		if (empty($row)){
 			Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
 			exit();
 		}
 		$this->view->row = $row;
-		$this->view->rowdetail = $db->getMentionSettingDetailById($id);
+		$this->view->rowdetail = $db->getSettingDetailById($id);
 		 
 		$frm = new Rent_Form_FrmSetting();
-		$frm->FrmAddMetionSetting($row);
+		$frm->FrmAddSetting($row);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm = $frm;
 	}
-	function checkMentionExistingAction(){
+	function getsettingAction(){
 		if($this->getRequest()->isPost()){
-			$data=$this->getRequest()->getPost();
+			$data = $this->getRequest()->getPost();
 			$db = new Rent_Model_DbTable_DbSetting();
-			$row = $db->checkMentionAlreayExist($data);
-			print_r(Zend_Json::encode($row));
+			$_row =$db->getSettingById($data['setting_id']);
+			print_r(Zend_Json::encode($_row));
 			exit();
 		}
 	}
