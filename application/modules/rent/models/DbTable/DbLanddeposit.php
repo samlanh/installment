@@ -189,14 +189,13 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$is_schedule = 0;
     		$dbtable = new Application_Model_DbTable_DbGlobal();
     		
-    		$loan_number = $dbtable->getLoanNumber($data);
+    		$loan_number = $this->getRentNumber($data);
     		
     		$receipt = $data['receipt'];
     		$sql="SELECT id FROM ln_rent_receipt_money WHERE receipt_no='$receipt' ORDER BY id DESC LIMIT 1 ";
     		$acc_no = $db->fetchOne($sql);
     		if($acc_no){
-    			$dbc = new Application_Model_DbTable_DbGlobal();
-    			$receipt = $dbc->getReceiptByBranch(array("branch_id"=>$data["branch_id"]));
+    			$receipt = $this->getRentReceiptByBranch(array("branch_id"=>$data["branch_id"]));
     		}else{
     			$receipt = $data['receipt'];
     		}
@@ -216,6 +215,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			   	'house_id'=>$data["land_code"],
     			   	'payment_id'=>$data["schedule_opt"],
     				'client_id'=>$data['member'],
+    			 	
     				'price_before'=>$data['total_sold'],
     				'discount_amount'=>$data['discount'],
     			   	'discount_percent'=>$data['discount_percent'],
@@ -223,128 +223,149 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'other_fee'=>0,
     				'paid_amount'=>$data['deposit'],
     				'balance'=>$data['balance'],
+    			 		
+    			 	//date
     				'buy_date'=>$data['date_buy'],
-    				'end_line'=>($data['schedule_opt']==1)?$data['date_line']:$data['paid_date'],
+    			 	'startcal_date'=>$data['release_date'],
+    			 	'first_payment'=>$data['first_payment'],
+    			 	'validate_date'=>$data['first_payment'],
+    				'end_line'=>$data['date_line'],
+    			 	'agreement_date'=>$data['agreement_date'],
+    			 		
     				'interest_rate'=>0,
     				'total_duration'=>1,
-    			   	'startcal_date'=>$data['date_buy'],
-    				'first_payment'=>$data['date_buy'],
-    			   	'validate_date'=>$data['date_line'],
     				'payment_method'=>1,//$data['loan_type'],
+    				
     				'note'=>$data['note'],
     			   	'land_price'=>$property_info['house_price'],
     				'note_agreement'=>$note_agreement,
     				'typesale'=>$data['typesale'],
     				'is_reschedule'=>$is_schedule,
-    			    'agreement_date'=>$data['agreement_date'],
+    			    
+    			 	// Agency Commission	
     				'staff_id'=>$data['staff_id'],
     			   	'full_commission'=>$data['full_commission'],
     				'comission'=>0,//$data['commission'],
     			   	'second_depostit'=>$data['second_depostit'],
-    				'create_date'=>date("Y-m-d"),
+
+    			 		
+    			 	//Policy Rent
+    			 	'setting_opt'=>$data['setting_opt'],
+    			 	'total_duration'=>$data['period'],
+    			 		
+    			 	//user create
+    				'create_date'=>date("Y-m-d H:i:s"),
+    			 	'modify_date'=>date("Y-m-d H:i:s"),
     				'user_id'=>$this->getUserId()
     				);
     		$this->_name='ln_rent_property';
     		$id = $this->insert($arr);//add group loan
     		$data['sale_id']=$id;
     		
-    		$curr_type = 2;//$data['currency_type'];
-    		$term_types=1;
-    		$payment_method = $data["schedule_opt"];
-    	    if($payment_method==2){//pay off
+    		$setting_id = $data['setting_opt'];
+	    	$dbtable = new Application_Model_DbTable_DbGlobal();
+	    	$dbSetting = new Rent_Model_DbTable_DbSetting();
+	    	$_row = $dbSetting->getSettingDetailById($setting_id);
+	    	
+	    	$soldPrice = $data['sold_price'];
+	    	$period = $data['period'];
+	    	$from_date =  $data['release_date'];
+	    	$next_payment = $data['first_payment'];
+	    	$str_next = '+1 month';
+    		 
+    		for ($i=1; $i<=$period; $i++){
+    			$settingDetail = $this->getRowSettingDetail($setting_id, $i);
+    			$rentPerMonth = ($soldPrice * $settingDetail['percent_value'])/100;
+    		
+    			if($i!=1){
+    				$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+    			}else{
+    				$next_payment = $data['first_payment'];
+    			}
+    		
     			$this->_name="ln_rentschedule";
     			$datapayment = array(
-    					'branch_id'=>$data['branch_id'],
     					'sale_id'=>$id,//good
-    					'begining_balance'=>$data['sold_price'],//good
-    					'begining_balance_after'=>0,//good
-    					'principal_permonth'=>$data['sold_price'],//good
-    					'principal_permonthafter'=>0,//good
+    					'no_installment'=>$i,
+    					'principal_permonth'=> $rentPerMonth,//good
+    					'principal_permonthafter'=>$rentPerMonth,//good
     					'total_interest'=>0,//good
     					'total_interest_after'=>0,//good
-    					'total_payment'=>$data['sold_price'],//good
-    					'total_payment_after'=>0,//good
-    					'ending_balance'=>0,
-    					'cum_interest'=>0,
-    					'amount_day'=>0,
-    					'is_completed'=>1,
-    					'date_payment'=>$data['date_buy'],
-    					'percent'=>100,
-    					'is_installment'=>1,
-    					'no_installment'=>1,
-    					'received_date'=>$data['date_buy'],
-    					'received_userid'=> $this->getUserId(),
-    				);
+    					'total_payment'=>$rentPerMonth,//good
+    					'total_payment_after'=>$rentPerMonth,//good
+    					'is_completed'=>0,
+    					'date_payment'=>$next_payment,
+    			);
     			$this->insert($datapayment);
-    	    }
+    		}
     		
-	    	if($data['deposit']>0){//insert payment
-	    			$data['date_buy']=$data['paid_date'];
-    		    	$pay_off = 0;
-    		    	if($data["schedule_opt"]==2){
-    		    		$pay_off = 1;
-    		    	}
-    		    	$array = array(
-    		    			'branch_id'			=> $data['branch_id'],
-    		    			'client_id'			=> $data['member'],
-    		    			'receipt_no'		=> $receipt,
-    		    			'date_pay'			=> $data['paid_date'],
-    		    			'land_id'			=> $data['land_code'],
-    		    			'sale_id'			=> $data['sale_id'],
-    		    			'date_input'		=> $data['paid_date'],//paid_date
-    		    			'outstanding'		=> $data['sold_price'],
-    		    			'principal_amount'	=> $data['balance'],
-    		    			'selling_price'     => $data['sold_price'],
-    		    			'allpaid_before'=>$data['deposit'],
-    		    			'total_principal_permonth'=>$data['deposit'],
-    		    	    	'total_principal_permonthpaid'=>$data['deposit'],
-    		    			'total_interest_permonth'	=>0,
-    		    			'total_interest_permonthpaid'=>0,
-    		    			'penalize_amount'			=>0,
-    				    	'penalize_amountpaid'		=>0,
-    				    	'service_charge'	=>0,
-    				    	'service_chargepaid'=>0,
-    				    	'total_payment'		=> $data['deposit'],//$data['sold_price'],
-    				    	'amount_payment'	=> $data['deposit'],
-    				    	'recieve_amount'	=> $data['deposit'],
-    				    	'balance'			=> $data['balance'],
-    				    	'payment_option'	=>($data['schedule_opt']==2)?4:1,//4 payoff,1normal
-    				    	'is_completed'		=>($data['schedule_opt']==2)?1:0,
-    		    			'payment_method'	=> $data['payment_method'],
-    		    			'cheque'			=> $data['cheque'],
-    				    	'status'			=> 1,
-    				    	'note'				=> $data['note'],
-    				    	'user_id'			=> $this->getUserId(),
-    				    	'field3'			=> 1,// ជាប្រាក់កក់
-    				    	'field2'=>1,
-    				    	'is_payoff'=>$pay_off,
-    				    	'payment_times'=>1,
-    				    	);
-    		    	$this->_name='ln_rent_receipt_money';
-    		    	$crm_id = $this->insert($array);
-    		    	
-    		        $this->_name='ln_rent_receipt_money_detail';
-    		    	$array = array(
-    		    		  'crm_id'			=> $crm_id,
-    		    		  'client_id'		=> $data['member'],
-    		    		  'land_id'			=> $data['land_code'],
-    		    		  'date_payment'	=> $data['date_buy'],
-    		    		  'paid_date'       => $data['date_buy'],
-    		    		  'last_pay_date'   => $data['date_buy'],
-    		    		  'capital'			=> $data['sold_price'],
-    		    		  'remain_capital'	=> $data['balance'],
-    		    		  'principal_permonth'=>$data['deposit'],
-    		    		  'old_principal_permonth'=>$data['deposit'],
-    		    		  'total_interest'	=> 0,
-    		    		  'total_payment'	=> $data['sold_price'],
-    		    		  'total_recieve'	=> $data['deposit'],
-    		    		  'service_charge'	=> 0,
-    		    		  'penelize_amount'	=> 0,
-    		    		  'is_completed'	=> ($data['schedule_opt']==2)?1:0,
-    		    		  'status'			=> 1,
-    		    		);
-    		     $this->insert($array);
-	    	}
+    		if($data['deposit']>0){//insert payment
+    			$data['date_buy']=$data['paid_date'];
+    			$pay_off = 0;
+    			if($data["schedule_opt"]==2){
+    				$pay_off = 1;
+    			}
+    			$array = array(
+    					'branch_id'			=> $data['branch_id'],
+    					'client_id'			=> $data['member'],
+    					'receipt_no'		=> $receipt,
+    					'date_pay'			=> $data['paid_date'],
+    					'land_id'			=> $data['land_code'],
+    					'sale_id'			=> $data['sale_id'],
+    					'date_input'		=> $data['paid_date'],//paid_date
+    					'outstanding'		=> $data['sold_price'],
+    					'principal_amount'	=> $data['balance'],
+    					'selling_price'     => $data['sold_price'],
+    					'allpaid_before'=>$data['deposit'],
+    					'total_principal_permonth'=>$data['deposit'],
+    					'total_principal_permonthpaid'=>$data['deposit'],
+    					'total_interest_permonth'	=>0,
+    					'total_interest_permonthpaid'=>0,
+    					'penalize_amount'			=>0,
+    					'penalize_amountpaid'		=>0,
+    					'service_charge'	=>0,
+    					'service_chargepaid'=>0,
+    					'total_payment'		=> $data['deposit'],//$data['sold_price'],
+    					'amount_payment'	=> $data['deposit'],
+    					'recieve_amount'	=> $data['deposit'],
+    					'balance'			=> $data['balance'],
+    					'payment_option'	=>($data['schedule_opt']==2)?4:1,//4 payoff,1normal
+    					'is_completed'		=>($data['schedule_opt']==2)?1:0,
+    					'payment_method'	=> $data['payment_method'],
+    					'cheque'			=> $data['cheque'],
+    					'status'			=> 1,
+    					'note'				=> $data['note'],
+    					'user_id'			=> $this->getUserId(),
+    					'field3'			=> 1,// ជាប្រាក់កក់
+    					'field2'=>1,
+    					'is_payoff'=>$pay_off,
+    					'payment_times'=>1,
+    			);
+    			$this->_name='ln_rent_receipt_money';
+    			$crm_id = $this->insert($array);
+    				
+    			$this->_name='ln_rent_receipt_money_detail';
+    			$array = array(
+    					'crm_id'			=> $crm_id,
+    					'client_id'		=> $data['member'],
+    					'land_id'			=> $data['land_code'],
+    					'date_payment'	=> $data['date_buy'],
+    					'paid_date'       => $data['date_buy'],
+    					'last_pay_date'   => $data['date_buy'],
+    					'capital'			=> $data['sold_price'],
+    					'remain_capital'	=> $data['balance'],
+    					'principal_permonth'=>$data['deposit'],
+    					'old_principal_permonth'=>$data['deposit'],
+    					'total_interest'	=> 0,
+    					'total_payment'	=> $data['sold_price'],
+    					'total_recieve'	=> $data['deposit'],
+    					'service_charge'	=> 0,
+    					'penelize_amount'	=> 0,
+    					'is_completed'	=> ($data['schedule_opt']==2)?1:0,
+    					'status'			=> 1,
+    			);
+    			$this->insert($array);
+    		}
 	        $db->commit();
 	        return $id;
         }catch (Exception $e){
@@ -797,6 +818,20 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	}
     	return $pre.$new_acc_no;
     }
+    public function getRentNumber($data=array('branch_id'=>1,'is_group'=>0)){
+    	$this->_name='ln_rent_property';
+    	$db = $this->getAdapter();
+    	$dbtable = new Application_Model_DbTable_DbGlobal();
+    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." LIMIT 1 ";
+    	$pre = $dbtable->getPrefixCode($data['branch_id'])."-R";
+    	$acc_no = $db->fetchOne($sql);
+    	$new_acc_no= (int)$acc_no+1;
+    	$acc_no= strlen((int)$acc_no+1);
+    	for($i = $acc_no;$i<3;$i++){
+    		$pre.='0';
+    	}
+    	return $pre.$new_acc_no;
+    }
     
     function getRowSettingDetail($setting_id,$month){
     	$db = $this->getAdapter();
@@ -812,7 +847,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	$db->query($sql);
     	
     	$dbtable = new Application_Model_DbTable_DbGlobal();
-    	$loan_number = $dbtable->getLoanNumber($_data);
+    	$loan_number = $this->getRentNumber($_data);
     	$arr = array(
     			'branch_id'=>$_data['branch_id'],
     			'client_id'=>$_data['member'],
@@ -900,8 +935,19 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		';
     	}
     	$string.='</table>';
-    	
     	return array('template'=>$string);
-    	
+    }
+    
+    function getAllRentNumber(){//type ==1 is ilPayment, type==2 is group payment
+    	$db = $this->getAdapter();
+    	$sql ="SELECT id,
+    	CONCAT((SELECT CONCAT(name_kh,'-',name_en) FROM ln_client WHERE ln_client.client_id=ln_rent_property.`client_id` ),' - ',sale_number) AS sale_number
+    	FROM
+    	ln_rent_property
+    	WHERE `is_completed` = 0
+    	AND `is_reschedule` != 1
+    	";
+    	 
+    	return $db->fetchAll($sql);
     }
 }

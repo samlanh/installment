@@ -1,0 +1,217 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$url_receipt = $this->url(array('module'=>'report','controller'=>'rent','action'=>'receipt'),null, true)."/id/";
+	$url_receiptupdate = $this->url(array('module'=>'rent','controller'=>'payment','action'=>'updatereceipt'),null, true)."/id/";
+?>
+<title><?php echo $tr->translate("REPORT_RENT_PAYMENT_HISTORY");?></title>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT_RENT_PAYMENT_HISTORY');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+    <div class="card-box">
+    	<style>
+			.hideblog{display: block !important;;border: 1px solid #fff;border-bottom: 1px solid #000;}
+			.hiddenblog{display: block !important;}
+		</style>
+		<div id="divPrint">
+			<style type="text/css">
+				.style{
+					line-height: 20px;font-size: 12px !important;
+					font-family: 'Khmer OS Battambang';
+				}
+				.hideblog{display: none;}
+				.hiddenblog{display: block !important;}
+				.style1:hover{ background: #ccc; }
+				table tr td ul li{text-align: center;list-style: none;line-height: 25px;}
+				table { page-break-inside:auto }
+				tr{ page-break-inside:avoid; page-break-after:auto; }
+				#header {
+				  display: table-header-group;
+				  page-break-inside:avoid; page-break-after:auto;
+				  margin-top: 100px;
+				}
+				.hide{visibility: hidden;}
+				@media print {
+				  div.divFooter {
+				    position: fixed;
+				    top: 0;
+				  	width: 100%;
+				  	height: 100px;
+				  	bottom:0px;
+					margin:0;
+				  }
+					.hide{visibility: visible; height: 110px;}
+				}
+			</style>
+			<table width="100%">
+				<tr>
+			    	<td align="center" valign="top">
+			        	<div class="divFooter">
+				        	<table border="0" width="100%" style="font-family: 'Khmer OS Battambang';margin:0;padding:0;">
+				            	<tr>
+				                	<td width="20%" style="border:1px solid #fff;"></td>
+				                	<td width="60%" valign="top">
+				                		<ul>
+				                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+				                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_RENT_PAYMENT_HISTORY");?></li>
+				                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;"><?php echo date("d-M-Y");?></li>
+				                		</ul>
+				                   </td>
+				                    <td width="20%"></td>
+				                </tr> 
+				            </table>
+			            </div>
+			        </td>
+			    </tr>
+			    <tr>
+			    	<td id="exportExcel">
+			            <table width="100%" border="1" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
+				                <thead>
+				                <tr class="hide" style="border:1px solid #000;">
+				                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+				                </tr>
+				                <tr bgcolor="#c1d0f3" class="style" align="center" style="padding:0px 2px;white-space: nowrap;">
+				                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("CLIENT_NUM");?></td>                  
+				                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
+				                    <td rowspan="2"><?php echo $tr->translate("បង់ជា");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("AMOUNT_COLLECT");?></td>		
+				                    <td colspan="5"><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>    
+				                    <td rowspan="2" style="white-space:nowrap; border-right:3px double black; "><?php echo $tr->translate("PAY_DATE");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("RECIEPT_NO");?></td>
+				                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
+				                    <td rowspan="2" class=""><?php echo $tr->translate("BY_USER");?></td>
+				                </tr>
+				                <tr class="style" style="white-space: nowrap;text-align: center;">
+				                	<td><?php echo $tr->translate("PRINCIPAL");?></td>                   
+				                    <td><?php echo $tr->translate("INTEREST");?></td>
+				                    <td><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+				                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>	                    
+				                    <td><?php echo $tr->translate("TOTAL");?></td>
+				                </tr>
+				            </thead>
+			                <?php 
+			                	$total_cash = 0;$total_cheque = 0;$total_bank = 0;                	 
+			                	 $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;$amt_d5 = 0;
+			                	 $i=1;$oldloan_number='';
+			                	 $total_d=0;$total_b=0;$total_r=0;
+			                	 
+			                ?>
+			                <?php 
+			                $is_set =0; if(!empty($this->loantotalcollect_list)) foreach ($this->loantotalcollect_list as $index => $rs){ ?>
+			               <?php 
+									$amt_d1 = $amt_d1+$rs['total_principal_permonthpaid'];
+									$amt_d2 = $amt_d2+$rs['total_interest_permonthpaid'];
+									$amt_d3 = $amt_d3+$rs['penalize_amountpaid'];
+									$amt_d5 = $amt_d5+$rs['extra_payment'];
+									$total_d=$amt_d1+$amt_d2+$amt_d3+$amt_d5;
+									if($rs['payment_methodid']==1){
+										$total_cash = $total_cash + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+									}elseif($rs['payment_methodid']==2){
+										$total_bank = $total_bank  + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+									}else{
+										$total_cheque = $total_cheque + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+									}
+			               ?>
+			                <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class="style style1 context-menu-one" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["client_number"];?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
+			               		<td>&nbsp;<?php echo $rs["land_address"].",".$rs["street"];?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["payment_method"];?>&nbsp;</td>
+			               		<td>&nbsp;<?php if ($rs['field3']==1){ echo "ប្រាក់កក់";}else{ echo $rs["payment_times"];}?>&nbsp;</td>
+			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['total_principal_permonthpaid'],2);?>&nbsp;</td>               		
+			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['total_interest_permonthpaid'],2);?>&nbsp;</td>
+			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['penalize_amountpaid'],2);?>&nbsp;</td>
+			               		<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['extra_payment'],2);?>&nbsp;</td>
+			               		<td style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['amount_payment'],2);?>&nbsp;</td>
+			               		<td style="white-space:nowrap; border-right:3px double black; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date_payment"]));?>&nbsp;</td>
+			               		<td style="white-space:nowrap; ">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["receipt_no"];?>&nbsp;</td>
+			               		<td style="white-space: nowrap;font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;
+								<?php echo $rs["paymentoption"];?>
+								</td>
+			               		<td class="" style="font:bolder 11px 'Khmer OS Battambang',Arial;text-align: center;"><?php echo $rs['user_name']?></td>
+			                </tr>
+			                <?php }?>
+			            </table>
+			            <br />
+			             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
+			                 <tr bgcolor="#c1d0f3" class="style" style="line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
+			                    <td><?php echo $tr->translate("PRINCIPAL");?></td>                    
+			                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+			                    <td><?php echo $tr->translate("TOTAL_PENILIZE_AMOUNT");?></td>
+			                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
+			                    <td><?php echo $tr->translate("TOTAL");?></td>
+			                    <td rowspan="2">ចំណូលតាមប្រភេទ</td>
+			                    <td><?php echo $tr->translate("សាច់ប្រាក់សរុប");?></td>
+			                    <td><?php echo $tr->translate("តាមធនាគារ");?></td>
+			                    <td><?php echo $tr->translate("សែកសរុប");?></td>
+			                </tr>
+			                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
+			                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
+			                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d2,2);?>&nbsp;</td>
+			                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d3,2);?>&nbsp;</td>
+			                    <td>&nbsp;&nbsp;<?php echo number_format($amt_d5,2);?>&nbsp;</td>
+			                    <td>&nbsp;&nbsp;<?php echo number_format($total_d,2);?>&nbsp;</td>
+			                    <td>&nbsp;&nbsp;<?php echo number_format($total_cash,2);?>&nbsp;</td>
+			                    <td>&nbsp;&nbsp;<?php echo number_format($total_bank,2);?>&nbsp;</td>
+			                    <td>&nbsp;&nbsp;<?php echo number_format($total_cheque,2);?>&nbsp;</td>
+			                </tr>
+			              </table>
+			              <br />
+			               <table align="center" width="100%">
+							   <tr style="font-size: 14px;">
+							        <td style="width:20%;text-align:center;  font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
+							        <td></td>
+							        <td style="width:20%;text-align:center; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
+							        <td></td>
+							        <td style="width:20%;text-align:center;font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
+							   </tr>
+						</table>
+			    	</td>
+			    </tr>
+			</table>
+			</div>
+    </div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="reciept"){
+				url='<?php echo $url_receipt;?>';
+			}else if(key=="edit"){
+				url='<?php echo $url_receiptupdate;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-file-text", accesskey: "c"},
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-edit", accesskey: "c o p y"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
+ </script>

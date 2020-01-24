@@ -40,7 +40,7 @@ class IndexController extends Zend_Controller_Action
 				exit();
 			}
 			
-			if(date('Y-m-d')>='2020-01-15'){
+			if(date('Y-m-d')>='2030-01-15'){
  				$this->view->msg = 'System Expired';
  				return false;
 			}

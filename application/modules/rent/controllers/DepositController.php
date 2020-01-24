@@ -78,8 +78,7 @@ class Rent_DepositController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
-		$this->view->footer = $frmpopup->getFooterReceipt();
-		$this->view->officailreceipt = $frmpopup->getOfficailReceipt();
+		$this->view->officailreceipt = $frmpopup->getOfficailReceiptRent();
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();

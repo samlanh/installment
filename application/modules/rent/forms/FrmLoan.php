@@ -7,6 +7,8 @@ Class Rent_Form_FrmLoan extends Zend_Dojo_Form {
 	}
 	public function FrmAddLoan($data=null){
 		$db = new Application_Model_DbTable_DbGlobal();
+		$_dbRent = new Rent_Model_DbTable_DbLanddeposit();
+		
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$_branch_id->setAttribs(array(
 			'dojoType'=>'dijit.form.FilteringSelect',
@@ -36,7 +38,7 @@ Class Rent_Form_FrmLoan extends Zend_Dojo_Form {
 			'class'=>'fullside',
 			'style'=>'color:red; font-weight: bold;'
 		));
-		$loan_number = $db->getLoanNumber();
+		$loan_number = $_dbRent->getRentNumber();
 		$_loan_code->setValue($loan_number);
 		
 		$receipt = new Zend_Dojo_Form_Element_TextBox('receipt');
@@ -47,7 +49,7 @@ Class Rent_Form_FrmLoan extends Zend_Dojo_Form {
 			'style'=>'color:red; font-weight: bold;'
 		));
 		
-		$_dbRent = new Rent_Model_DbTable_DbLanddeposit();
+		
 		$receipt_no = $_dbRent->getRentReceiptByBranch();
 		$receipt->setValue($receipt_no);
 		

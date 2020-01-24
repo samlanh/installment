@@ -1,0 +1,219 @@
+<?php 
+	$frm = $this->frm_search;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<meta charset="utf-8">
+<script>
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dijit.form.Textarea");	
+</script>
+<style>
+.hover:hover{background: #ccc;}
+img.view{height: 85px !important;}
+</style>
+<title><?php echo $tr->translate("RECEIPT");?></title>
+ <form dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded" >
+ <script type="dojo/method" event="onSubmit">			
+if(this.validate()) {
+			printcipal = parseFloat(dijit.byId('total_principal_permonth').get("value").toFixed(2));
+		    total_interest_permonthpaid = parseFloat(dijit.byId('total_interest_permonthpaid').get("value").toFixed(2));
+		    penalize_amountpaid	 = parseFloat(dijit.byId('penalize_amountpaid').get("value").toFixed(2));
+			extra_payment = parseFloat(dijit.byId('extra_payment').get("value").toFixed(2));
+
+			all_total = parseFloat(printcipal+total_interest_permonthpaid+penalize_amountpaid+extra_payment).toFixed(2);
+			total_payment = parseFloat(dijit.byId('total_payment').get("value").toFixed(2));
+if(all_total!=total_payment){
+	alert("ប្រាក់ត្រូវបង់សរុបមិនត្រឹមត្រូវទេ !សូមត្រួតពិនិត្យឡើងវិញ");
+	dijit.byId('total_payment').focus();
+    return false;
+}
+
+all_paid = dijit.byId('all_paid').get('value');
+if(all_paid<0){
+	alert("ប្រាក់បានបង់សរុបមិនអាចតូចជាង សូន្យបានទេ !សូមត្រួតពិនិត្យឡើងវិញ");
+	dijit.byId('all_paid').focus();
+    return false;
+}
+balance = dijit.byId('balance').get("value");
+if(balance<0){
+	alert("ប្រាក់នៅសល់មិនអាចតូចជាង សូន្យបានទេ !សូមត្រួតពិនិត្យឡើងវិញ");
+	dijit.byId('balance').focus();
+    return false;
+}
+	dijit.byId('btn_save_close').set('disabled',true);
+	return true;
+}else {
+	return false;
+}
+</script>
+<div style=" width:29cm;min-height:23cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+	<div id="divPrint" style="width: 100%;">
+			<style>
+				.fontbig{
+					font-size: 16px;	
+				}
+				.fonttel{
+					font-size: 18px;	
+				}
+				.pleft{
+					width: 110px;	
+				}
+
+				.label{ font-size: 22px;}
+				.value{ font:16px 'Khmer OS Battambang';border: 1px solid #000; height: 30px; padding: 0 2px;width: 100%;margin-right:5px; display: block;
+						line-height: 30px;
+					    text-align: center;
+						}
+				.values{ border: 1px solid #000; height: 30px; padding: 0 10px;display: block;
+						line-height: 30px;}
+				.h{}
+				.print tr td{
+					padding:2px 2px; 
+				}
+			   .khmerbold{font:14px 'Khmer OS Battambang';}
+			   .khmer{font:14px 'Khmer OS Battambang';}
+			   .one{white-space:nowrap;}
+			   .h{ margin-top: -10px;}
+			</style>
+			<?php //for($i=0; $i<2; $i++){ ?>			
+			<table width="100%" style="white-space: nowrap;font-size:14px;  padding:5px 10px 0px 5px;margin-top: -10px;" class="print" cellspacing="0"  cellpadding="0" >
+				<tr>
+					<td colspan="6">
+						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
+							<tr>
+								<td width="25%">
+									<img class="view" style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+								</td>					
+								<td width="50%" style="font:18px 'Kh Muol';" valign="top" align="center"><u><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃទទួលប្រាក់</strong></u>
+									<div style="line-height:10px;"><strong style="font-size: 18px;">OFFICIAL RECEIPT</strong></div>
+								</td>
+								<td width="25%">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<table style="width:100%;white-space: nowrap;font-size:16px;padding:-10px 10px 0px 5px; margin-top: -30px;margin-bottom:10px;font-family: 'Khmer OS Battambang';" class="print" cellspacing="3px"  cellpadding="0" >
+				<tr height="1px">
+					<td width="10%" ></td>
+					<td width="30%" ></td>
+					<td width="15%" ></td>
+					<td width="15%" ></td>
+					<td width="10%" ></td>
+					<td width="20%" ></td>
+				</tr>
+				<tr style="white-space: nowrap;font-size: 14px;margin-top: -10px;" >
+				    <td colspan="5"></td>
+					<td align="right"><strong><label><input dojoType="dijit.form.TextBox" class="fullside" id="receipt_no" name="receipt_no" value="<?php echo $this->rs['receipt_no'];?>" type="text">
+					<input dojoType="dijit.form.TextBox" class="fullside" id="id" name="id" value="<?php echo $this->rs['id'];?>" type="hidden">
+					</label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+				    <td>លេខកូដលក់</td>
+				    <td><input readonly dojoType="dijit.form.TextBox"  class="fullside" id="sale_number" name="sale_number" value="<?php  echo $this->rs['sale_number'];?>" type="text"></td>
+					<td>&nbsp;&nbsp;ប្រាក់ដើមត្រូវបង់</td>
+                    <td><strong><input onkeyup="calculateTotal();" dojoType="dijit.form.NumberTextBox" required="1" class="fullside" id="total_principal_permonth" name="total_principal_permonth" value="<?php echo $this->rs['total_principal_permonth'];?>" type="text"></strong></td>
+					<td>&nbsp;បង់លើកទី</td>
+					<td><strong><input dojoType="dijit.form.NumberTextBox" class="fullside" id="paid_times" name="paid_times" value="<?php echo $this->rs['payment_times'];?>" type="text"></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+				    <td>ឈ្មោះ​អតិថិជន </td>
+				    <td><select class="fullside" id='customer_id' name='customer_id' dojoType="dijit.form.FilteringSelect">
+	                   			<?php 
+	                   			if(!empty($this->customer)){
+		                   			foreach($this->customer as $rs){?>
+	   								 <option value="<?php echo $rs['id']?>" <?php if($rs['id']==$this->rs['client_id']){echo 'selected';}?>><?php echo $rs['name']?></option>               				
+	                   			<?php }
+		                   			}
+	                   			?>
+	                   	</select>
+                   	</td>
+                   	<td>&nbsp;&nbsp;ប្រាក់ការ</td>
+                    <td><strong><input onkeyup="calculateTotal();" dojoType="dijit.form.NumberTextBox" required="1" class="fullside" id="total_interest_permonthpaid" name="total_interest_permonthpaid" value="<?php echo $this->rs['total_interest_permonthpaid'];?>" type="text"></strong></td>
+					<td>&nbsp;ប្រាក់ពិន័យ</td>
+					<td><strong><input onkeyup="calculateTotal();" dojoType="dijit.form.NumberTextBox" class="fullside" id="penalize_amountpaid" name="penalize_amountpaid" value="<?php echo $this->rs['penalize_amountpaid'];?>" type="text"></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+                    <td><input readonly dojoType="dijit.form.TextBox"  class="fullside" id="house_no" name="house_no" value="<?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; } echo ' '.$this->rs['property_type'];?>" type="text"></td>
+				    <td>&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
+					<td colspan="3"><input onkeyup="calculateTotal();" dojoType="dijit.form.NumberTextBox"  class="fullside" id="extra_payment" name="extra_payment" value="<?php echo $this->rs['extra_payment'];?>" type="text"></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td width="10%"><?php echo $tr->translate("HOUSE_PRICE");?></td>
+				    <td width="40%"><input dojoType="dijit.form.TextBox"  class="fullside" id="price_sold" name=price_sold value="<?php echo $this->rs['selling_price'];?>" type="text"></td>
+					<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
+                    <td colspan="3"><strong><input dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="total_payment" name="total_payment" value="<?php echo $this->rs['total_payment'];?>" type="text"></strong></td>
+				</tr>
+				<tr>
+					<td>ប្រាក់បានបង់សរុប</td>
+					<td><input onkeyup="calculateBalance();" dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="all_paid" name="all_paid" value="<?php echo $this->rs['allpaid_before'];//$this->rs['price_sold']-($this->rs['outstanding']-$this->rs['total_principal_permonth']-$this->rs['extra_payment']);?>" type="text"/></td>
+					<td>&nbsp;&nbsp;ប្រាក់បានបង់</td>
+				    <td colspan="3"><strong><input dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="recieve_amount" name="recieve_amount" value="<?php echo $this->rs['recieve_amount'];?>" type="text"></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td>ប្រាក់នៅសល់</td>
+				    <td><strong style="white-space: nowrap;"><input dojoType="dijit.form.NumberTextBox" required="1" class="fullside" id="balance" name="balance" value="<?php echo $this->rs['selling_price']-$this->rs['allpaid_before'];//$this->rs['outstanding']-($this->rs['total_principal_permonth']-$this->rs['extra_payment']);?>" type="text"></strong></td>
+					<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
+				    <td><strong><input constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="date_pay" name="date_pay" value="<?php echo $this->rs['date_payment'];?>" type="text"></strong></td>
+					<td>&nbsp;ថ្ងៃទទួល</td>
+					<td><strong><input constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="date_input" name="date_input" value="<?php echo $this->rs['date_pay'];?>" type="text"></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td>សម្គាល់</td>
+				    <td><input dojoType="dijit.form.Textarea"  class="fullside" id="note" name="note" value="<?php echo $this->rs['note'];?>" type="text"/></td>
+					<td>&nbsp;&nbsp;បង់ជា</td>
+					<td colspan="3">
+						<select name="payment_method" id="payment_method" class="fullside" dojoType="dijit.form.FilteringSelect" >
+						<option value="1" <?php if($this->rs['payment_methodid']==1){ echo"selected";}?>><?php echo $tr->translate("CASH");?></option>
+				    	<option value="3" <?php if($this->rs['payment_methodid']==3){ echo"selected";}?>><?php echo $tr->translate("CHEQUE");?></option>
+				    	<option value="2" <?php if($this->rs['payment_methodid']==2){ echo"selected";}?>><?php echo $tr->translate("PAYWITH_BANK");?></option>
+				    </select>
+					</td>	
+				</tr>
+				<tr>
+					<td >ប្រភេទបង់</td>
+				    <td ><select name="pay_type" id="pay_type" class="fullside" dojoType="dijit.form.FilteringSelect" ><option value="3" <?php if($this->rs['field3']==3){ echo"selected";}?>>បង់ធម្មតា</option>
+				    <option value="1" <?php if($this->rs['field2']==1){ echo"selected";}?>>ដាក់ប្រាក់កក់</option></select></td>
+					<td >&nbsp;&nbsp;លេខ</td>
+					<td colspan="3"><input dojoType="dijit.form.TextBox" class="fullside" id="cheque" name="cheque" value="<?php echo $this->rs['cheque'];?>" type="text"></td>
+				
+				</tr>
+				<tr>
+					<td colspan="6" style="border-top:2px dashed #000;" >
+					</td>
+				</tr>
+				<tr style="white-space: nowrap;" height="35px;">
+					<td colspan="6" align="center">
+						<input type="submit" value="រក្សាទុក & ចាកចេញ" name="btn_save_close" id="btn_save_close" label="<?php echo $tr->translate('GO_EDIT');?>" id="submitButton_Save" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	</form>
+<script>
+function calculateTotal(){
+	principal  = dijit.byId("total_principal_permonth").get("value");
+	if(isNaN(principal)){principal=0}
+	interest  = dijit.byId("total_interest_permonthpaid").get("value");
+	if(isNaN(interest)){interest=0}
+	penelty  = dijit.byId("penalize_amountpaid").get("value");
+	if(isNaN(penelty)){penelty=0}
+	extra_paymet  = dijit.byId("extra_payment").get("value");
+	if(isNaN(extra_paymet)){extra_paymet=0}
+	total_paid = principal+interest+penelty+extra_paymet;
+	 dijit.byId("total_payment").attr("value",total_paid);
+	 dijit.byId("recieve_amount").attr("value",total_paid);
+}
+function calculateBalance(){
+	price_sold  = dijit.byId("price_sold").get("value");
+	if(isNaN(price_sold)){price_sold=0}
+	all_paid  = dijit.byId("all_paid").get("value");
+	if(isNaN(all_paid)){all_paid=0}
+	 dijit.byId("balance").attr("value",price_sold-all_paid);
+}
+	                   			
+</script>
