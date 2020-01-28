@@ -22,14 +22,12 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 					(SELECT street FROM `ln_properties` WHERE ln_properties.id=lcrm.land_id limit 1) AS street,
 					lcrm.`receipt_no`,
 					lcrm.`total_principal_permonth`,
-					lcrm.`total_interest_permonth`,
 					lcrm.`penalize_amount`,
 					lcrm.service_charge,
 					lcrm.`total_payment`,
 					lcrm.`recieve_amount`,
 				    (SELECT lcrmd.`date_payment` from ln_rent_receipt_money_detail AS lcrmd WHERE lcrm.id=lcrmd.`crm_id` ORDER BY lcrmd.id DESC LIMIT 1 ) AS date_payment,
 					lcrm.`date_input`,
-					(SELECT name_kh FROM `ln_view` WHERE type=7 AND key_code=lcrm.`payment_option`) AS payment_method,
 					(SELECT  first_name FROM rms_users WHERE id=lcrm.user_id limit 1 ) AS user_name,
 					lcrm.status
 				FROM `ln_rent_receipt_money` AS lcrm WHERE 1 ";
@@ -181,6 +179,7 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     				'user_id'						=>	$user_id,
     				'status'						=>	1,
     				'extra_payment' =>0,
+    				'modify_date'=>date("Y-m-d H:i:s"),
     		);
     		$this->_name = "ln_rent_receipt_money";
     		$where="id =".$receipt_id;
@@ -345,6 +344,7 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$arr_client_pay = array(
     			'branch_id'						=>	$data["to_branch_id"],//$data["branch_id"],
     			'receipt_no'					=>	$reciept_no,
+    			'date_payment'					=>	$data["date_payment"], // ថ្ងៃដែលត្រូវបង់
     			'date_pay'					    =>	$data['collect_date'],
     			'date_input'					=>	$data['collect_date'],
     			'from_date'						=>	$data['date_payment'],//check more
@@ -379,6 +379,8 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 
     			'payment_times'					=>  $data['paid_times'],
     			'payment_method'				=>  $data['payment_method'],
+    			'create_date'=>date("Y-m-d H:i:s"),
+    			'modify_date'=>date("Y-m-d H:i:s"),
     		);
     		
 			$this->_name = "ln_rent_receipt_money";

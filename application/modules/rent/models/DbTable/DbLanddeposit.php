@@ -37,7 +37,6 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 	    `c`.`phone`         AS `phone`,
 	    `p`.`land_address`    AS `land_address`,
 	    `p`.`street`          AS `street`,
-	    (SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
   		`s`.`price_before`    AS `price_before`,
  		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
         `s`.`discount_amount` AS `discount_amount`,
@@ -46,7 +45,6 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
 	   FROM `ln_rent_receipt_money` `cr`
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
-        `s`.`balance`         AS `balance`,
         `s`.`buy_date`        AS `buy_date`,
         (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
          s.status,
@@ -309,6 +307,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'branch_id'			=> $data['branch_id'],
     					'client_id'			=> $data['member'],
     					'receipt_no'		=> $receipt,
+    					'date_payment'		=> $data['date_buy'],
     					'date_pay'			=> $data['paid_date'],
     					'land_id'			=> $data['land_code'],
     					'sale_id'			=> $data['sale_id'],
@@ -340,6 +339,8 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'field2'=>1,
     					'is_payoff'=>$pay_off,
     					'payment_times'=>1,
+    					'create_date'=>date("Y-m-d H:i:s"),
+    					'modify_date'=>date("Y-m-d H:i:s"),
     			);
     			$this->_name='ln_rent_receipt_money';
     			$crm_id = $this->insert($array);

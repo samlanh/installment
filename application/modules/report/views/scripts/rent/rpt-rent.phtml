@@ -1,7 +1,6 @@
 <?php 
 	$filter = $this->frm_search;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	$url = $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-groupmember'));
 	
 	$dbGB = new Application_Model_DbTable_DbGlobal();
 	$logo = $this->baseUrl()."/images/logo.jpg";
@@ -159,7 +158,7 @@ dojo.require("dijit.form.DateTextBox");
 	                    <td rowspan="2">&nbsp;<span><?php echo $tr->translate("CUSTOMER_NAME");?></span>&nbsp;</td>
 	                    <td colspan="4">&nbsp;<span><?php echo $tr->translate("PROPERTY_INFO");?></span>&nbsp;</td>
 	                    <td colspan="3">&nbsp;<span><?php echo $tr->translate("INFO_INDILOAN");?></span>&nbsp;</td>
-	                    <td colspan="8">&nbsp;<span><?php echo $tr->translate("PAYMENT_INFO");?></span>&nbsp;</td>
+	                    <td colspan="6">&nbsp;<span><?php echo $tr->translate("PAYMENT_INFO");?></span>&nbsp;</td>
 	                    <td rowspan="2">&nbsp;<span><?php echo $tr->translate("BY_USER");?></span>&nbsp;</td>
 	                </tr>
 	                <tr bgcolor="#c1d0f3" class="style" align="center" >
@@ -167,16 +166,14 @@ dojo.require("dijit.form.DateTextBox");
 	                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
 	                    <td><?php echo $tr->translate("STREET");?></td>
 	                    <td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
-	                    <td><?php echo $tr->translate("PRICE_BEFORE");?></td>
+	                    <td><?php echo $tr->translate("RENT_PRICE_BEFORE");?></td>
 	                    <td><?php echo $tr->translate("DISCOUNT");?>%</td>
 	                    <td><?php echo $tr->translate("DISCOUNT");?></td>
-	                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>
+	                    <td><?php echo $tr->translate("RENT_PRICE");?></td>
 	                    <td><?php echo $tr->translate("PAID");?></td>
-	                    <td><?php echo $tr->translate("BALANCE");?></td>
 	                    <td><?php echo $tr->translate("PERIIOD");?></td>
-	                    <td ><?php echo $tr->translate("INTEREST");?>(%<?php echo $tr->translate("YEAR");?>)</td>
-	                    <td><?php echo $tr->translate("BUY_DATE");?></td>
-	                    <td><?php echo $tr->translate("FIRST_PAYMENT");?></td>
+	                    <td><?php echo $tr->translate("RENT_DATE");?></td>
+	                    <td><?php echo $tr->translate("FIRST_RENT_PAYMENT");?></td>
 	                    <td><?php echo $tr->translate("END_DATE");?></td>
 	                </tr>
 	              </thead>
@@ -203,99 +200,38 @@ dojo.require("dijit.form.DateTextBox");
 	               $db  = new Report_Model_DbTable_DbParamater();
 	               if(!empty($this->loanrelease_list)) foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
-	               if(!empty($row['old_land_id'])){
-	               	$idse = explode(",", $row['old_land_id']);
-	               	$countland = count($idse);
-	               	$amount_property = $amount_property+$countland;
-	               	if($row['is_cancel']==0){
-	               		if($row['payment_id']==1){
-	               			$amt_pro_payment_1 = $amt_pro_payment_1 + $countland;
-	               		}elseif($row['payment_id']==2){
-	               			$amt_pro_payment_2 = $amt_pro_payment_2 + $countland;
-	               		}elseif($row['payment_id']==3){
-	               			$amt_pro_payment_3 = $amt_pro_payment_3 + $countland;
-	               		}elseif($row['payment_id']==4){
-	               			$amt_pro_payment_4 = $amt_pro_payment_4 + $countland;
-	               		}elseif($row['payment_id']==5){
-	               			$amt_pro_payment_5 = $amt_pro_payment_5 + $countland;
-	               		}elseif($row['payment_id']==6){
-	               			$amt_pro_payment_6 = $amt_pro_payment_6 + $countland;
-	               		}
-	               	}else{
-	               		$amt_pro_payment_cancel = $amt_pro_payment_cancel + $countland;
-	               	}
-	               }else{
-	               	$countland = 1;
-	               	$amount_property = $amount_property+$countland;
-	               	if($row['is_cancel']==0){
-	               		if($row['payment_id']==1){
-	               			$amt_pro_payment_1 = $amt_pro_payment_1 + $countland;
-	               		}elseif($row['payment_id']==2){
-	               			$amt_pro_payment_2 = $amt_pro_payment_2 + $countland;
-	               		}elseif($row['payment_id']==3){
-	               			$amt_pro_payment_3 = $amt_pro_payment_3 + $countland;
-	               		}elseif($row['payment_id']==4){
-	               			$amt_pro_payment_4 = $amt_pro_payment_4 + $countland;
-	               		}elseif($row['payment_id']==5){
-	               			$amt_pro_payment_5 = $amt_pro_payment_5 + $countland;
-	               		}elseif($row['payment_id']==6){
-	               			$amt_pro_payment_6 = $amt_pro_payment_6 + $countland;
-	               		}
-	               	}else{
-	               		$amt_pro_payment_cancel = $amt_pro_payment_cancel + $countland;
-	               	}
-	               }
+		               if(!empty($row['old_land_id'])){
+			               	$idse = explode(",", $row['old_land_id']);
+			               	$countland = count($idse);
+			               	$amount_property = $amount_property+$countland;
+			               	if($row['is_cancel']==0){
+			               		$amt_pro_payment_1 = $amt_pro_payment_1 + $countland;
+			               	}else{
+			               		$amt_pro_payment_cancel = $amt_pro_payment_cancel + $countland;
+			               	}
+		               }else{
+			               	$countland = 1;
+			               	$amount_property = $amount_property+$countland;
+			               	if($row['is_cancel']==0){
+			               		$amt_pro_payment_1 = $amt_pro_payment_1 + $countland;
+			               	}else{
+			               		$amt_pro_payment_cancel = $amt_pro_payment_cancel + $countland;
+			               	}
+		               }
 	               
 	             if($row['is_cancel']==0){
-// 	             	if (!empty($row['old_land_id'])){
-// 	             		$idse = explode(",", $row['old_land_id']);
-// 	             		$countland = count($idse);
-// 	             		$amount_property = $amount_property+$countland;
-// 	             	}else{
-// 	             		$amount_property = $amount_property+1;
-// 	             	}
-	             	
-	               if($row['payment_id']==1){
-	               	 $payment_1=$payment_1+1;
-	               	 $sold_price1=$sold_price1+$row['price_sold'];
-	               	 $paid_price1=$paid_price1+$row['paid_amount'];
-	               	 $balace_price1=$balace_price1+($row['price_sold']-$row['paid_amount']);
-	               }elseif($row['payment_id']==2){
-	               	 $payment_2=$payment_2+1;
-	               	 $sold_price2=$sold_price2+$row['price_sold'];
-	               	 $paid_price2=$paid_price2+$row['paid_amount'];
-	               	 $balace_price2=$balace_price2+($row['price_sold']-$row['paid_amount']);
-	               }elseif($row['payment_id']==3){
-	               	 $payment_3=$payment_3+1;
-	               	 $sold_price3=$sold_price3+$row['price_sold'];
-	               	 $paid_price3=$paid_price3+$row['paid_amount'];
-	               	 $balace_price3=$balace_price3+($row['price_sold']-$row['paid_amount']);
-	               }elseif($row['payment_id']==4){
-	               	 $payment_4=$payment_4+1;
-	               	 $sold_price4=$sold_price4+$row['price_sold'];
-	               	 $paid_price4=$paid_price4+$row['paid_amount'];
-	               	 $balace_price4=$balace_price4+($row['price_sold']-$row['paid_amount']);
-	               }elseif($row['payment_id']==5){
-	               	 $payment_5=$payment_5+1;
-	               	 $sold_price5=$sold_price5+$row['price_sold'];
-	               	 $paid_price5=$paid_price5+$row['paid_amount'];
-	               	 $balace_price5=$balace_price5+($row['price_sold']-$row['paid_amount']);
-	               }
-	               elseif($row['payment_id']==6){
-	               	$payment_6=$payment_6+1;
-	               	$sold_price6=$sold_price6+$row['price_sold'];
-	               	$paid_price6=$paid_price6+$row['paid_amount'];
-	               	$balace_price6=$balace_price6+($row['price_sold']-$row['paid_amount']);
-	               }
+	             	$payment_1=$payment_1+1;
+	             	$sold_price1=$sold_price1+$row['price_sold'];
+	             	$paid_price1=$paid_price1+$row['paid_amount'];
+	             	$balace_price1=$balace_price1+($row['price_sold']-$row['paid_amount']);
+	               
 	              	$total=$total+$row['paid_amount'];
 	              	$total_paid=$total_paid+$row['paid_amount'];
 	              	$balance=$balance+($row['price_sold']-$row['paid_amount']);
 	              
-	              if($row['payment_id']!=$payment_id){?>
-	              	<tr>
-	              		<td colspan="17" style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $row['paymenttype']; ?></td>
-	              	</tr>
-	              <?php } 
+	            ?>
+	              	
+	              <?php
 	             }else{
 	             	$payment_0=$payment_0+1;
 	             	$paid_price0=$paid_price0+$row['paid_amount'];
@@ -304,15 +240,13 @@ dojo.require("dijit.form.DateTextBox");
 	             	<tr>
 	              		<td colspan="17" style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'">បោះបង់<?php //echo $row['paymenttype']; ?></td>
 	              	</tr>
-	             <?php }}
-	              	$payment_id = $row['payment_id']?>
+	             <?php }
+	             }
+	             ?>
 	              	<tr oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" style="line-height: 20px; white-space: nowrap;" class="hover context-menu-one">
 						<td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-						<!-- <td ><a target="_blank" style="color:#000; text-decoration: none;" href="<?php //echo $link;?>"><?php //echo $row['branch_name']; ?></a>&nbsp;</td> -->
-						<!--<td >&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php //echo $link;?>"><?php //echo $row['client_number']; ?></a>&nbsp;</td> -->
 						<td width="100px">&nbsp;<?php echo $row['name_kh'];?>&nbsp;</td>
 						<td>&nbsp;<?php echo $row['propertype']; ?>&nbsp;</td>
-						<!--<td>&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>">&nbsp;<?php echo $row['land_code']; ?></a>&nbsp;</td> -->	
 						<td align="left">&nbsp;<?php echo $row['land_address']; ?>&nbsp;</td>
 						<td>&nbsp;<?php echo $row['street'];?>&nbsp;</td>
 						<td align="center">&nbsp;<?php echo $countland; ?>&nbsp;</td>
@@ -321,30 +255,13 @@ dojo.require("dijit.form.DateTextBox");
 						<td style="white-space:nowrap;">&nbsp;<?php echo number_format($row['discount_percent'],2); ?>&nbsp;</td>	
 						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['discount_amount'],2); ?>&nbsp;</td>	
 						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold'],2); ?>&nbsp;</td>	
-						<!-- <td align="left"><span style="line-height:15px;">&nbsp;<?php //echo $row['other_fee']; ?></span>&nbsp;</td>-->
-						<?php 
-// 							$percent = $db->getFirstDepositBySaleID($row['id'],$row['payment_id']);
-// 							$percent =$percent['percent'];
-						?>
 						<td style="white-space:nowrap; text-align: right;">
-						<?php 
-							if($row['payment_id']==4){
-								echo number_format($row['paid_amount'],2);
-							}elseif($row['payment_id']==1){
-								echo number_format($row['paid_amount'],2);
-							}else{
-								echo number_format($row['paid_amount'],2);
-							}
-						?>&nbsp;</td>
-						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold']-$row['paid_amount'],2); ?>&nbsp;</td>
-						<!-- <td style="white-space:nowrap; font-size:10px;text-align: left;">&nbsp;<?php //echo $row['paymenttype']; ?>&nbsp;</td> -->
-						<td style="white-space:nowrap; text-align: center;"><?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['total_duration']; }
-						if($row['payment_id']==6){ echo $row['times']."ដង";}?>&nbsp;</td>
-						<td style="white-space:nowrap;">&nbsp;<?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['interest_rate']; }?>&nbsp;</td>
+						<?php echo number_format($row['paid_amount'],2);?>&nbsp;
+						</td>
+						<td style="white-space:nowrap; text-align: center;"><?php  echo number_format($row['total_duration'],0)." ".$tr->translate("MONTH");?>&nbsp;</td>
 						<td style="white-space:nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['buy_date'])); ?>&nbsp;</td>
-						<!--<td>&nbsp;<?php //if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['startcal_date']));}?>&nbsp;</td> -->
-						<td style="max-width:120px;white-space: normal;"><?php if($row['payment_id']==1){echo "<span style='font-size:10px;line-height:15px;'>".$row['note']."</span>"; } if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['first_payment'])); }?>&nbsp;</td>
-						<td style="white-space:nowrap;" ><?php 
+						<td align="center"><?php echo date("d-m-Y",strtotime($row['first_payment']));?>&nbsp;</td>
+						<td align="center"><?php 
 							$date= new DateTime($row['end_line']);
 							echo $date->format("d-m-Y");
 						?>&nbsp;</td>
@@ -358,10 +275,8 @@ dojo.require("dijit.form.DateTextBox");
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                 	<td>&nbsp;</td>
 			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TYPE");?></span>&nbsp;&nbsp;</td>
-			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("SALE_AMOUNT");?></span></td>
-			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_INCASH");?></span></td>
+			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("RENT_AMOUNT");?></span></td>
 			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_PAYMENTED");?></span></td>
-			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("LOANOUTSTADING");?></span></td>
 			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("ចំនួនអចលនទ្រព្យ");?></span></td>
 			                    <td>&nbsp;</td>
 			                 </tr>
@@ -369,79 +284,24 @@ dojo.require("dijit.form.DateTextBox");
 			                 	<td>&nbsp;</td>
 			                    <td align="right"><?php echo $tr->translate("SALE_CANCEL");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			                    <td align="center"><?php echo $payment_0;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format(0,2);//number_format($paid_price0,2);?>&nbsp;</td>
 			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price0,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format(0,2);?>&nbsp;</td>
 			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_cancel,0);?>&nbsp;</td>
 			                    <td>&nbsp;</td>
 			                 </tr>
-			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                 <tr bgcolor="#a0baf5" class="style" style=" border-bottom: 4px double #000; line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("DEPOSIT");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("ជួល");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			                    <td align="center"><?php echo $payment_1;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price1,2);?>&nbsp;</td>
 			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price1,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price1,2);?>&nbsp;</td>
 			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_1,0);?>&nbsp;</td>
 			                    <td>&nbsp;</td>
 			                 </tr>
-			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("PAYOFF_PAID");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			                    <td align="center"><?php echo $payment_2;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price2,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price2,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price2,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_2,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                 </tr>
-			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("FIXED_PAYMENT");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			                    <td align="center"><?php echo $payment_3;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price3,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price3,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price3,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_3,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                 </tr>
-			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("FIXIBLE");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			                    <td align="center"><?php echo $payment_6;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price6,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price6,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price6,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_6,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                 </tr>
-			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("INSTALLMENT");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			                    <td align="center"><?php echo $payment_4;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price4,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price4,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price4,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_4,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                 </tr>
-			                 <tr bgcolor="#a0baf5" class="style" style="border-bottom: 4px double #000; line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("PAYWITH_BANK");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			                    <td align="center"><?php echo $payment_5;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price5,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price5,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price5,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_5,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                 </tr>
+			                 
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px;  font-weight: bold; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"><?php echo $tr->translate("ALL_TOTAL");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			                    <td>&nbsp;</td>
-			                    <td align="center" ><?php echo $payment_0+$payment_1+$payment_2+$payment_3+$payment_4+$payment_5+$payment_6;?></td>
-			                    <td align="right" >&nbsp;$&nbsp;<?php echo number_format($paid_price0+$sold_price1+$sold_price2+$sold_price3+$sold_price4+$sold_price5+$sold_price6,2);?>&nbsp;</td>
-			                    <td align="right" >&nbsp;$&nbsp;<?php echo number_format($paid_price0+$paid_price1+$paid_price2+$paid_price3+$paid_price4+$paid_price5+$paid_price6,2);?>&nbsp;</td>
-			                    <td align="right" >&nbsp;$&nbsp;<?php echo number_format($balace_price1+$balace_price2+$balace_price3+$balace_price4+$balace_price5+$balace_price6,2);?>&nbsp;</td>
+			                    <td align="center" ><?php echo $payment_1;?></td>
+			                    <td align="right" >&nbsp;$&nbsp;<?php echo number_format($paid_price1+$paid_price0,2);?>&nbsp;</td>
 			                 	 <td align="right">&nbsp;<?php echo number_format($amount_property,0);?>&nbsp;</td>
 			                 	<td>&nbsp;</td>
 			                 </tr>

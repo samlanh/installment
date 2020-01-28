@@ -21,7 +21,7 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
 		s.verify_by,
 		(SELECT
 		SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
-		FROM `ln_client_receipt_money` `cr`
+		FROM `ln_rent_receipt_money` `cr`
 		WHERE (`cr`.`sale_id` = `s`.`id`)
 		LIMIT 1) AS `paid_amount`,
 		`s`.`create_date`      AS `create_date`,
@@ -87,9 +87,9 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
 		$statement = $this->soldreportSqlStatement();
 		$sql= $statement['sql'];
 		$sql.="
-		,(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount,
-		(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE status=1 AND $from_date AND $to_date  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid,
-		(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE status=1 AND $from_date AND $to_date  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid,
+		,(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_rent_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount,
+		(SELECT SUM(total_interest_permonthpaid) FROM `ln_rent_receipt_money` WHERE status=1 AND $from_date AND $to_date  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid,
+		(SELECT SUM(penalize_amountpaid) FROM `ln_rent_receipt_money` WHERE status=1 AND $from_date AND $to_date  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid,
 		(SELECT COUNT(id) FROM `ln_rentschedule` WHERE sale_id=s.id AND status=1 ) AS times,
 		(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
 		(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
@@ -170,6 +170,7 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
 		`crm`.`sale_id`                      AS `sale_id`,
 		`crm`.`branch_id`                    AS `branch_id`,
 		`crm`.`receipt_no`                   AS `receipt_no`,
+		`crm`.`date_payment`                 AS `date_payment`,
 		`crm`.`date_pay`                     AS `date_pay`,
 		`crm`.`date_input`                   AS `date_input`,
 		`crm`.`note`                         AS `note`,
@@ -206,12 +207,8 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
 		`l`.`land_size`                      AS `land_size`,
 		`l`.`street`                         AS `street`,
 		`l`.`id`                             AS `hous_id`,
-		(SELECT
-		`d`.`date_payment`
-		FROM `ln_rent_receipt_money_detail` `d`
-		WHERE (`crm`.`id` = `d`.`crm_id`)
-		ORDER BY `d`.`date_payment` DESC
-		LIMIT 1) AS `date_payment`,
+		
+		
 		`crm`.`payment_method`               AS `payment_methodid`,
 		(SELECT
 		`ln_view`.`name_kh`
@@ -318,6 +315,69 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
     		$order =" ORDER BY `crm`.`client_id` DESC ,`crm`.`sale_id` DESC , crm.id ASC";
     	}
     	return $db->fetchAll($sql.$where.$order);
+    }
+    public function getClientByMemberId($id){
+    	$sql="SELECT
+	    	`s`.`branch_id`       AS `branch_id`,
+	    	`s`.`client_id`       AS `client_id`,
+	    	`s`.`house_id`        AS `house_id`,
+	    	`s`.`price_before`    AS `price_before`,
+	    	`s`.`price_sold`      AS `price_sold`,
+	    	s.lastpayment_amount,
+	    	`s`.`discount_amount` AS `discount_amount`,
+	    	s.land_price ,
+	    	s.discount_percent,
+	    	s.agreement_date,
+	    	s.full_commission,
+	    	s.commission_amt,
+	    	s.commission_times,
+	    	`s`.`admin_fee`       AS `admin_fee`,
+	    	`s`.`other_fee`       AS `other_fee`,
+	    	`s`.`paid_amount`     AS `paid_amount`,
+	    	`s`.`balance`         AS `balance`,
+	    	`s`.`create_date`     AS `create_date`,
+	    	`s`.`buy_date`        AS `buy_date`,
+	    	`s`.`startcal_date`   AS `startcal_date`,
+	    	`s`.`first_payment`   AS `first_payment`,
+	    	`s`.`validate_date`   AS `validate_date`,
+	    	`s`.`end_line`        AS `end_line`,
+	    	`s`.`interest_rate`   AS `interest_rate`,
+	    	`s`.`total_duration`  AS `total_duration`,
+	    	`s`.`payment_id`      AS `payment_id`,
+	    	`s`.`staff_id`        AS `staff_id`,
+	    	`s`.`comission`       AS `comission`,
+	    	`s`.`receipt_no`      AS `receipt_no`,
+	    	s.total_installamount,
+	    	(SELECT project_name FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS branch_name,
+	    	(SELECT p_manager_namekh FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS project_manager_namekh,
+	    	(SELECT w_manager_namekh FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS w_manager_namekh,
+	    	(SELECT logo FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS project_logo,
+	    	(SELECT client_number FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_number,
+	    	(SELECT name_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_kh,
+	    	(SELECT hname_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS hname_kh,
+	    	(SELECT name_en FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_en,
+	    	(SELECT phone FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS tel,
+	    	(SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = s.user_id LIMIT 1) AS user_name,
+	    	`p`.`land_code`       AS `land_code`,
+	    	`p`.`land_address`    AS `land_address`,
+	    	`p`.`land_size`       AS `land_size`,
+	    	`p`.`street`           AS `stree`,
+	    	(SELECT
+	    	`ln_properties_type`.`type_nameen`
+	    	FROM `ln_properties_type`
+	    	WHERE (`ln_properties_type`.`id` = `p`.`property_type`)
+	    	LIMIT 1) AS `propertype`
+	    	FROM
+	    	`ln_rent_property` AS s,
+	    	`ln_properties` AS p
+	    	WHERE `p`.`id` = `s`.`house_id` AND s.id=$id ";
+    	 
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("`s`.`branch_id`");
+    	$sql.=" LIMIT 1 ";
+    	 
+    	$db=$this->getAdapter();
+    	return $db->fetchRow($sql);
     }
     public function getPaymentSchedule($id,$payment_id=null){
     	$db=$this->getAdapter();

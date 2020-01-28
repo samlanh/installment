@@ -64,7 +64,7 @@
 		                	<h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BRANCH_NAME");?> : <?php echo  $client['branch_name']; ;?></h2>
 		                	<h2 style="text-align:center;  font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light'"> <?php echo $tr->translate('RPT_ILLOAN');?></h2>
 	                	</td>
-	                    <td width="25%" ><h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light';white-space:nowrap;"> <?php echo $tr->translate('ARTICLE_1');?></h2></td>
+	                    <td width="25%" ><h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light';white-space:nowrap;"> </h2></td>
 	                </tr>
 	                <?php $db = new Application_Model_DbTable_DbGlobal();
 	                	  $row = $db->getClientByType(null,$client['client_id'],1);
@@ -75,25 +75,18 @@
 			                	<tr class='style'>
 				                   <td width="35%" valign="top">
 				                	    <p><?php echo $tr->translate('CUSTOMER_NAME');?>: <?php echo $client['client_name_kh'];echo !empty($client['hname_kh'])?"/".$client['hname_kh']:"";?> </p>
-				                		<p><?php echo $tr->translate("ADDRESS");?>:<?php echo $row['village_name'];?> ,<?php echo $row['commune_name'];?> <br /><?php echo $row['district_name'];?> ,  <?php echo $row['province_en_name'];?>
 				                		<p><?php echo $tr->translate("TEL");?>  : <?php echo $client['tel'];?></p>  
+				                		<p><?php echo $tr->translate("ADDRESS");?>:<?php echo $row['village_name'];?> ,<?php echo $row['commune_name'];?> <br /><?php echo $row['district_name'];?> ,  <?php echo $row['province_en_name'];?>
+				                		
 				                	</td>
 				                    <td valign="top" style="" width="33%">
 				                      <p class="lblhousecode"><?php echo $tr->translate("PROPERTY_CODE");?> : <?php echo $client['land_address'].",".$client['stree'];?></p>
-				                      <p><?php echo $tr->translate("SOLD_PRICE");?>  : $ <strong><?php echo number_format($client['price_sold'],2);?></strong></p>
-				                	  <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : $ <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?></p>
-				                      <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php echo $client['interest_rate'];?>&nbsp;%</p>
-									  <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo number_format($client['total_duration'],0);?>&nbsp;
-										<?php if($client['payment_id']!=4){
-											echo $tr->translate("MONTH");
-										}else{
-											echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
-										}?>
-									  </p>
+				                      <p><?php echo $tr->translate("RENT_PRICE");?>  : $ <strong><?php echo number_format($client['price_sold'],2);?></strong></p>
+									  <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo number_format($client['total_duration'],0)." ".$tr->translate("MONTH");?>&nbsp;</p>
 				                    </td>
 				                    <td width="30%" valign="top">
-				                      <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-m-Y',strtotime($client['buy_date']));?> </p>
-				                      <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-m-Y',strtotime($client['first_payment'])); ?></p>
+				                      <p><?php echo $tr->translate("DATE_RENT");?> : <?php echo date('d-m-Y',strtotime($client['buy_date']));?> </p>
+				                      <p><?php echo $tr->translate("FIRST_RENT_PAYMENT");?> : <?php echo date('d-m-Y',strtotime($client['first_payment'])); ?></p>
 				                      <p><?php echo $tr->translate("LIFE_LOAN");?> : 
 				                      <span id="life_date">
 				                      <?php 
@@ -118,17 +111,10 @@
 		                 <tr class="style" align="center" style=" line-height: 20px;">
 		                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
-		                    <td rowspan="2"><?php echo $tr->translate("PRINCIPLE");?></td>
-		                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
-		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("RENT_AMOUNT");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("OTHER");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("RECEIVED_BY");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("PAID_DATE");?></td>
-		                </tr>
-		                <tr class="style" align="center" style="line-height: 20px;">
-		                    <td><?php echo $tr->translate("PRINCIPAL");?></td>
-		                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
-		                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 		                </tr>
 	                </thead>
 	               <?php $set=1; 
@@ -168,14 +154,7 @@
 	                    		
 	                    	?>
 	                    </td>
-	                    <td><?php echo str_replace('.00', '', number_format($row['begining_balance'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['principal_permonth'],2));?></td>
-	                    <td><?php echo str_replace('.00', '', number_format($row['total_interest'],2));?></td>
-	                    <td ><?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></td>
-	                    <?php 
-	                   		$remain = $row['ending_balance'];
-	                    ?>
-	                    <td><?php echo number_format($remain,(!strrpos($remain,"."))? 0 : 2);?></td>
 	                    <td><?php echo $row['note']; echo ($row['is_completed']==1)?$tr->translate("COMPLETED"):""; ?></td>
 	                    <td><?php if($row['is_completed']==1){ echo empty($row['received_by'])?"-":$row['received_by'];} ?></td>
 	                    <td><?php  

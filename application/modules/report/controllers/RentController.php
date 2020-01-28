@@ -95,7 +95,6 @@ class Report_RentController extends Zend_Controller_Action {
   	if(empty($row) or $row==''){
   		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/rent/rpt-rent');
   	}
-  	$db = new Application_Model_DbTable_DbGlobal();
   	$rs = $db->getClientByMemberId($id);
   	if(empty($rs)){
   		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/rent/rpt-rent');
@@ -106,8 +105,11 @@ class Report_RentController extends Zend_Controller_Action {
   	$form = $frm->FrmSearchLoadSchedule();
   	Application_Model_Decorator::removeAllDecorator($form);
   	$this->view->form_filter = $form;
-  	$day_inkhmer = $db->getDayInkhmerBystr(null);
+  	
+  	$dbp = new Application_Model_DbTable_DbGlobal();
+  	$day_inkhmer = $dbp->getDayInkhmerBystr(null);
   	$this->view->day_inkhmer = $day_inkhmer;
+  	
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   }
