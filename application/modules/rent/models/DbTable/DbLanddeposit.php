@@ -42,7 +42,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
         `s`.`discount_amount` AS `discount_amount`,
  		`s`.`price_sold`     AS `price_sold`,
  		(SELECT
-	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
+	     SUM((`cr`.`total_principal_permonthpaid`))
 	   FROM `ln_rent_receipt_money` `cr`
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
         `s`.`buy_date`        AS `buy_date`,
@@ -312,22 +312,16 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'land_id'			=> $data['land_code'],
     					'sale_id'			=> $data['sale_id'],
     					'date_input'		=> $data['paid_date'],//paid_date
-    					'outstanding'		=> $data['sold_price'],
-    					'principal_amount'	=> $data['balance'],
-    					'selling_price'     => $data['sold_price'],
-    					'allpaid_before'=>$data['deposit'],
+    					
     					'total_principal_permonth'=>$data['deposit'],
     					'total_principal_permonthpaid'=>$data['deposit'],
-    					'total_interest_permonth'	=>0,
-    					'total_interest_permonthpaid'=>0,
-    					'penalize_amount'			=>0,
     					'penalize_amountpaid'		=>0,
-    					'service_charge'	=>0,
-    					'service_chargepaid'=>0,
+    					
     					'total_payment'		=> $data['deposit'],//$data['sold_price'],
     					'amount_payment'	=> $data['deposit'],
     					'recieve_amount'	=> $data['deposit'],
     					'balance'			=> $data['balance'],
+    					
     					'payment_option'	=>($data['schedule_opt']==2)?4:1,//4 payoff,1normal
     					'is_completed'		=>($data['schedule_opt']==2)?1:0,
     					'payment_method'	=> $data['payment_method'],
@@ -336,7 +330,6 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'note'				=> $data['note'],
     					'user_id'			=> $this->getUserId(),
     					'field3'			=> 1,// ជាប្រាក់កក់
-    					'field2'=>1,
     					'is_payoff'=>$pay_off,
     					'payment_times'=>1,
     					'create_date'=>date("Y-m-d H:i:s"),
@@ -929,7 +922,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$string.='
     			<tr class="hover" style="border-bottom:1px solid #ccc;" >
     				<td width="2%" align="center">'.($index).'</td>
-    				<td>'.date("d/M/Y",strtotime($re['date_payment'])).'</td>
+    				<td>'.date("d/m/Y",strtotime($re['date_payment'])).'</td>
     				<td>'.number_format($re['total_payment'],2).'</td>
     				<td>'.$re['note'].'</td>
     			</tr>

@@ -1059,9 +1059,9 @@ function getLaonPayment(type){//tab ទី១
 					+'<thead><tr><th class="tdheader"></th><th class="tdheader"><?php echo $tr->translate('NUM');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate("AMOUNT_COLLECT");?></th>'
 					+'<th class="tdheader" colspan="2"><?php echo $tr->translate('PAY_DATE');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('PRINCIPLE');?></th>'
+					
 					+'<th class="tdheader"><?php echo $tr->translate('OS_AMOUNT');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('INTEREST');?></th>'
+					
 					+'<th class="tdheader"><?php echo $tr->translate('AMOUNT_PAYMENT');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate('STATUS');?></th>'
 				+'</thead>';
@@ -1177,10 +1177,8 @@ function getLaonPayment(type){//tab ទី១
 							tem += '<td align="center">&nbsp;'+num+'</td>';
 							tem += '<td style="white-space: nowrap;text-align:center;">&nbsp;'+respone[indexs].no_installment+'&nbsp;</td>';
 						    tem += '<td style="white-space: nowrap;text-align:center;">&nbsp;'+date_pay+'&nbsp;<input type="hidden" name="date_payment_'+inx+'" id="date_payment_'+inx+'" value="'+respone[indexs].date_payment+'" /></td>';
-						    tem += '<td style="white-space: nowrap;">&nbsp;'+str_day+'&nbsp;</td>';
-						    tem += '<td>&nbsp;'+dojo.number.format(begining_balance_after)+'&nbsp;<input type="hidden" name="total_priciple_'+inx+'" id="total_priciple_'+inx+'" value="'+begining_balance_after+'" /></td>';
-						    tem += '<td>&nbsp;'+dojo.number.format(principal_permonth)+'&nbsp;<input type="hidden" name="principal_permonth_'+inx+'" id="principal_permonth_'+inx+'" value="'+principal_permonth+'" /></td>';
-						    tem += '<td>&nbsp;<label id="lb_interest_'+inx+'">'+dojo.number.format(interest)+'</label>&nbsp;&nbsp;<input type="hidden" name="interest_'+inx+'" id="interest_'+inx+'" value="'+interest+'" /></td>';
+						    tem += '<td style="white-space: nowrap;">&nbsp;'+str_day+'&nbsp; <input type="hidden" name="total_priciple_'+inx+'" id="total_priciple_'+inx+'" value="'+begining_balance_after+'" /> </td>';
+						    tem += '<td>&nbsp;'+dojo.number.format(principal_permonth)+'&nbsp;<input type="hidden" name="principal_permonth_'+inx+'" id="principal_permonth_'+inx+'" value="'+principal_permonth+'" /><input type="hidden" name="interest_'+inx+'" id="interest_'+inx+'" value="'+interest+'" /></td>';
 						    tem += '<td>&nbsp;<label id="lb_payment_'+inx+'">'+dojo.number.format(total_payment,2)+'</label>&nbsp;<input type="hidden" name="payment_'+inx+'" id="payment_'+inx+'" value="'+total_payment+'" /></td>';
 							if(respone[indexs].is_completed==1){
 								status = '<label style="color:blue;"><?php echo $tr->translate('COMPLETED');?></label>';
@@ -1520,9 +1518,9 @@ function getAllLaonPayment(){//get schedule Tab ទី២
 				tmp='<table class="collape tablesorter" style="font-size:12px;" id="table" width="100%">'
 					+'<thead><tr><th class="tdheader"><?php echo $tr->translate('NUM');?></th>'
 						+'<th class="tdheader"><?php echo $tr->translate('PAY_DATE');?></th>'
-						+'<th class="tdheader"><?php echo $tr->translate('PRINCIPLE');?></th>'
-						+'<th class="tdheader"><?php echo $tr->translate('PRINCIPAL');?></th>'
-						+'<th class="tdheader"><?php echo $tr->translate('INTEREST');?></th>'
+						
+						+'<th class="tdheader"><?php echo $tr->translate('RENT_PRICE');?></th>'
+						
 						+'<th class="tdheader"><?php echo $tr->translate('AMOUNT_PAYMENT');?></th>'
 						+'<th class="tdheader"><?php echo $tr->translate('STATUS');?></th>'
 						+'</tr>'
@@ -1550,10 +1548,10 @@ function getAllLaonPayment(){//get schedule Tab ទី២
 						tmp+= '<tr style="background: #ffffff;">';
 						    tmp += '<td>&nbsp;'+nums+'</td>';
 						    tmp += '<td style="white-space: nowrap;">&nbsp;'+date_pay+'&nbsp;</td>';
-						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].begining_balance)+'&nbsp;</td>';
-						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].principal_permonth)+'&nbsp;</td>';
-						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].total_interest)+'&nbsp;</td>';
-						    tmp += '<td>&nbsp;'+dojo.number.format(data[j].total_payment)+'&nbsp;</td>';
+						    
+						    tmp += '<td align="right">&nbsp;'+dojo.number.format(data[j].principal_permonth)+'&nbsp;</td>';
+						   
+						    tmp += '<td align="right">&nbsp;'+dojo.number.format(data[j].total_payment)+'&nbsp;</td>';
 							if(data[j].is_completed==1){
 								statuss = '<label style="color:blue;"><?php echo $tr->translate('COMPLETED');?></label>';
 							}else{
@@ -1591,17 +1589,16 @@ function getLaonHasPayByLoanNumber(){//tab3 ប្រវត្តបានបង
 					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('RECIEPT_NO');?></th>'
 					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('PAY_DATE');?></th>'
 					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('DATE_INPUT');?></th>'
-					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('PRINCIPLE');?></th>'
+					
 					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('AMOUNT_PAYMENT');?></th>'
-					+'<th class="tdheader" colspan="5"><?php echo $tr->translate('TOTAL_PAYMENTED');?></th>'
-					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('ALL_PRINCIPAL_PAID');?></th>'
+					+'<th class="tdheader" colspan="3"><?php echo $tr->translate('TOTAL_PAYMENTED');?></th>'
+					
 					+'<th class="tdheader" rowspan="2"><?php echo $tr->translate('Balance');?></th>'
 					+'</tr>'
 					+'<tr>'
-					+'<th class="tdheader"><?php echo $tr->translate('PRINCIPAL');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('INTEREST');?></th>'
+					+'<th class="tdheader"><?php echo $tr->translate('RENT_PRICE');?></th>'
 					+'<th class="tdheader"><?php echo $tr->translate('PENALIZE');?></th>'
-					+'<th class="tdheader"><?php echo $tr->translate('EXTRA_PAYMENT');?></th>'
+					
 					+'<th class="tdheader"><?php echo $tr->translate('PAID_AMOUNT');?></th>'
 					+'<tr>'
 					+'</thead>';
@@ -1622,14 +1619,11 @@ function getLaonHasPayByLoanNumber(){//tab3 ប្រវត្តបានបង
 								temp += '<td>&nbsp;'+data_loan[k].receipt_no+'&nbsp;</td>';
 								temp += '<td style="white-space: nowrap;">&nbsp;'+data_loan[k].date_payment+'&nbsp;</td>';
 								temp += '<td style="white-space: nowrap;">&nbsp;'+data_loan[k].date_input+'&nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].outstanding)+'&nbsp;</td>';
+								
 								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].total_payment)+'&nbsp;</td>';
 								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].permonthpaid)+' &nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].total_interest_permonthpaid)+' &nbsp;</td>';
 								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].penalize_amountpaid)+'&nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].extra_payment)+' &nbsp;</td>';
 								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].amount_payment)+'&nbsp;</td>';
-								temp += '<td>&nbsp;'+dojo.number.format(data_loan[k].allpaid_before)+'</td>';
 								temp += '<td>&nbsp;'+dojo.number.format(balance_amount)+'</td>';//used before
 								principal_paid = principal_paid+parseFloat(data_loan[k].total_principal_permonthpaid);
 								if(data_loan[k].is_completed==1){

@@ -23,7 +23,6 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 					lcrm.`receipt_no`,
 					lcrm.`total_principal_permonth`,
 					lcrm.`penalize_amount`,
-					lcrm.service_charge,
 					lcrm.`total_payment`,
 					lcrm.`recieve_amount`,
 				    (SELECT lcrmd.`date_payment` from ln_rent_receipt_money_detail AS lcrmd WHERE lcrm.id=lcrmd.`crm_id` ORDER BY lcrmd.id DESC LIMIT 1 ) AS date_payment,
@@ -76,7 +75,6 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				  rm.id AS paymentid,
 				  rm.status as status_parent,
 				  rm.total_payment as total_payment_parent,
-				  rm.service_charge as service_charge_parent,
 				  rm.penalize_amount as penalize_amount_parent,
 				  rm.total_interest_permonth as total_interest_permonth_parent
 				FROM
@@ -143,11 +141,7 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$sql = "SELECT
     			crm.receipt_no,
 	    		crm.sale_id,
-				crm.total_principal_permonthpaid,
-				crm.extra_payment,
-				crm.selling_price,
-				crm.allpaid_before,
-				crm.outstanding
+				crm.total_principal_permonthpaid
 			
     		 FROM ln_rent_receipt_money AS crm
     		 WHERE  crm.`id` = $receipt_id ";
@@ -159,26 +153,18 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$user_id = $session_user->user_id;
     		
     		$arr_client_pay = array(
-    				//'outstanding'                 =>  0,//ប្រាក់ដើមមុនបង់
     				'total_principal_permonth'		=>	0,//ប្រាក់ដើមត្រូវបង់
     				'total_interest_permonth'		=>	0,
-    				'penalize_amount'				=>	0,
-    				'service_charge'				=>	0,
-    				'principal_amount'				=>	0,//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
     				'total_principal_permonthpaid'	=>	0,//ok ប្រាក់ដើមបានបង
     				'total_interest_permonthpaid'	=>	0,//ok ការប្រាក់បានបង
     				'penalize_amountpaid'			=>	0,// ok បានបង
-    				'service_chargepaid'			=>	0,// okបានបង
     				'balance'						=>	0,
     				'total_payment'					=>	0,//ប្រាក់ត្រូវបង់ok
     				'recieve_amount'				=>	0,//ok
     				'amount_payment'				=>	0,//brak ban borng
-    				'allpaid_before'				=>  $rsreceipt['allpaid_before']-$rsreceipt['total_principal_permonthpaid']-$rsreceipt['extra_payment'],
-    				'return_amount'					=>	0,//ok
     				'note'							=>	"លុប",
     				'user_id'						=>	$user_id,
     				'status'						=>	1,
-    				'extra_payment' =>0,
     				'modify_date'=>date("Y-m-d H:i:s"),
     		);
     		$this->_name = "ln_rent_receipt_money";
@@ -351,23 +337,14 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			'client_id'                     =>	$data['client_id'],
     			'sale_id'						=>	$data['loan_number'],
     			'land_id'						=>	$data['property_id'],
-    				
-//     			'outstanding'                   =>	$data['outstanding_balance'],//ប្រាក់ដើមមុនបង់
-//     			'principal_amount'				=>	$data['priciple_amount'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
-
-//     			'total_interest_permonth'		=>	$data["total_interest"],
-//     			'extra_payment' 				=>  $data["extrapayment"],
-    		
-    			'selling_price'    				=>  $data['sold_price'],
     			'total_principal_permonth'		=>	$data["os_amount"],//+$data["extrapayment"] ប្រាក់ដើមត្រូវបង់
     			'penalize_amount'				=>	$data["penalize_amount"],
     			'total_payment'					=>	$data["total_payment"],//ប្រាក់ត្រូវបង់ok
-    			'service_charge'				=>	$data["service_charge"],
 
     			'balance'						=>	$data["remain"],
     			'recieve_amount'				=>	$amount_receive,//ok
     			'amount_payment'				=>	$amount_payment,//brak ban borng
-    			'return_amount'					=>	$return,//ok
+    			
     			'note'							=>	$data['note'],
     			'cheque'						=>	$data['cheque'],
     			'user_id'						=>	$user_id,
@@ -386,7 +363,6 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 			$this->_name = "ln_rent_receipt_money";
     		$client_pay = $this->insert($arr_client_pay);
     		
-    		//$date_collect = $data["collect_date"];
     		$paid_principalall = 0;// ត្រូវទាំងអស់ព្រោះការពារបង់២ record ទី៣ វាបូកបញ្ចូល Paid អោយដែ
     		$paid_interestall = 0;
     		$paid_penaltyall = 0;
@@ -507,7 +483,7 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    						}
 		    						if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
 	    								 $arra = array(
-	    								 		'begining_balance_after'=>$after_outstanding-$paid_principal,
+// 	    								 		'begining_balance_after'=>$after_outstanding-$paid_principal,
 	    								    	"principal_permonthafter"=>$after_principal,
 	    								    	'total_interest_after'=>$after_interest,
 	    								 		'total_payment_after'=>	$after_principal+$after_interest,
@@ -531,23 +507,17 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    		}//end foreach 
 		    	}
     		//}
+    		
     		$all_paidbefore = $this->getAllPaidBefore($data['loan_number']);
     		$arr = array(
-    				'allpaid_before'				=> $all_paidbefore+$paid_principalall+$data["extrapayment"],
     				'total_principal_permonthpaid'	=> $paid_principalall,//ok ប្រាក់ដើមបានបង
-    				'total_interest_permonthpaid'	=> $paid_interestall,//ok ការប្រាក់បានបង
+    				'total_interest_permonthpaid'	=> 0,//ok ការប្រាក់បានបង
     				'penalize_amountpaid'			=> $paid_penaltyall,// ok បានបង
-    				'service_chargepaid'			=> $paid_serviceall,// okបានបង
     		);
     		$this->_name="ln_rent_receipt_money";
     		$where = $db->quoteInto("id=?", $client_pay);
     		$this->update($arr, $where);
     		
-    		////////////////////////////////////start extra payment///////////////////////////////////////
-    		if($data['option_pay']==3){
-    			$data['extrapayment'] = $data['amount_receive']-$data['total_interest']-$data['penalize_amount']-$data['service_charge'];
-    		}
-    		////////////////////////// end of extra payment ////////////////////////////
     		$rows = $this->getSaleScheduleById($loan_number, 1);
     		if(empty($rows)){
     			$this->updatePayoff($data['loan_number'],$client_pay);
@@ -964,7 +934,6 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     								'total_payment'					=>	$data["total_payment"],//ប្រាក់ត្រូវបង់ok
     								'recieve_amount'				=>	$data['amount_receive'],//ok
     								'amount_payment'				=>	$amount_payment,//brak ban borng
-    								'return_amount'					=>	$return,//ok
     								'note'							=>	$data['note'],
     								'cheque'						=>	$data['cheque'],
     								//     							'user_id'						=>	$user_id,
@@ -972,7 +941,6 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     								'status'						=>	1,
     								'is_completed'					=>	$is_compleated,
     								'field3'			=>3,
-    								'extra_payment' =>$data["extrapayment"],
     						);
     						$this->_name = "ln_rent_receipt_money";
     						$where = "id = ".$id;
@@ -1069,7 +1037,7 @@ class Rent_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				  (SELECT phone FROM `ln_client` WHERE ln_client.client_id=s.client_id LIMIT 1) as phone,
 				  (SELECT hname_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1) as buy_with,
 				  (SELECT crm.`from_date` FROM `ln_rent_receipt_money` AS crm WHERE crm.sale_id=s.id ORDER BY crm.id DESC LIMIT 1) AS from_date,
-				  (SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_rent_receipt_money` AS crm WHERE crm.sale_id=s.id AND crm.status=1 LIMIT 1) AS total_principal_permonthpaid,
+				  (SELECT SUM(crm.total_principal_permonthpaid) FROM `ln_rent_receipt_money` AS crm WHERE crm.sale_id=s.id AND crm.status=1 LIMIT 1) AS total_principal_permonthpaid,
 				  ss.*,
 				   DATE_FORMAT(ss.date_payment, '%d-%m-%Y') AS date_payments
 				FROM
@@ -1217,28 +1185,21 @@ function getLoanPaymentByLoanNumberEdit($data){
 			  crm.`receipt_no`,
 			  crm.`land_id`,
 			  DATE_FORMAT(crm.date_input, '%d-%m-%Y') AS `date_input`,
-			  crm.outstanding,
-			  crm.`principal_amount`,
 			  crm.`total_principal_permonth`,
-			  (total_principal_permonthpaid+extra_payment) AS total_principal_permonthpaid,
+			  (total_principal_permonthpaid) AS total_principal_permonthpaid,
 			  total_principal_permonthpaid AS permonthpaid,
 			  total_interest_permonthpaid ,
 			  penalize_amountpaid,
-			  extra_payment,
-			  crm.allpaid_before,
-			  crm.selling_price,
 			  crm.payment_times,
 			  crm.`total_payment`,
 			  crm.`total_interest_permonth`,
 			  crm.`amount_payment`,
 			  crm.`recieve_amount`,
-			  crm.`return_amount`,
-			  crm.`service_charge`,
 			  crm.`penalize_amount`,
-			  crm.`group_id`,
 			  crm.`is_completed`,
+			   crm.`field3`,
 			  (SELECT ln_rent_property.price_sold FROM `ln_rent_property` WHERE ln_rent_property.id=crm.sale_id LIMIT 1) AS price_sold,
-			  (SELECT DATE_FORMAT(crmd.date_payment, '%d-%m-%Y') FROM `ln_rent_receipt_money_detail` AS crmd WHERE crm.`id` = crmd.`crm_id` ORDER BY crmd.date_payment ASC LIMIT 1) AS `date_payment`
+			   crm.`date_payment`
 			FROM
 			  `ln_rent_receipt_money` AS crm
 			WHERE 
@@ -1401,14 +1362,11 @@ function getLoanPaymentByLoanNumberEdit($data){
 			$stringold.="Property Code : ".$row['land_id']."<br />";
 			$stringold.="បង់លើកទី : ".$row['payment_times']."<br />";
 	
-			$stringold.="តម្លៃផ្ទះ : ".$row['selling_price']."<br />";
-			$stringold.="ប្រាក់បានបង់សរុប : ".$row['allpaid_before']."<br />";
 			$stringold.="ប្រាក់នៅសល់ : ".$row['balance']."<br />";
 	
 			$stringold.="ប្រាក់ដើមត្រូវបង់ : ".$row['total_principal_permonthpaid']."<br />";
 			$stringold.="ប្រាក់ការ : ".$row['total_interest_permonthpaid']."<br />";
 			$stringold.="ប្រាក់ពិន័យ : ".$row['penalize_amountpaid']."<br />";
-			$stringold.="ប្រាក់បង់បន្ថែម : ".$row['extra_payment']."<br />";
 			$stringold.="ប្រាក់ត្រូវបង់ : ".$row['total_payment']."<br />";
 			$stringold.="ប្រាក់បានបង់ : ".$row['recieve_amount']."<br />";
 			$payment="";
@@ -1438,8 +1396,6 @@ function getLoanPaymentByLoanNumberEdit($data){
 			$string.="បង់លើកទី : ".$row['payment_times']."<br />";
 	
 	
-			$string.="តម្លៃផ្ទះ : ".$row['selling_price']."<br />";
-			$string.="ប្រាក់បានបង់សរុប : ".$row['allpaid_before']."<br />";
 			$string.="ប្រាក់នៅសល់ : ".$row['balance']."<br />";
 	
 			$string.="ប្រាក់ដើមត្រូវបង់ : 0<br />";
@@ -1506,7 +1462,7 @@ function getLoanPaymentByLoanNumberEdit($data){
 	}
 	function getAllPaidBefore($sale_id){
 		$db = $this->getAdapter();
-		$sql=" SELECT SUM(total_principal_permonthpaid+extra_payment) AS paid_before FROM ln_rent_receipt_money
+		$sql=" SELECT SUM(total_principal_permonthpaid) AS paid_before FROM ln_rent_receipt_money
 		WHERE sale_id = $sale_id AND status =1 LIMIT 1";
 		return $db->fetchOne($sql);
 	}
@@ -1528,13 +1484,10 @@ function getLoanPaymentByLoanNumberEdit($data){
 					'date_pay'					    =>	$data['date_input'],
 					'date_input'					=>	$data['date_input'],
 					'client_id'                     =>	$data['customer_id'],
-					'outstanding'                   =>	$data['balance']+$data['total_principal_permonth'],//ប្រាក់ដើមមុនបង់
 					'total_principal_permonth'		=>	$data["total_principal_permonth"],//ប្រាក់ដើមត្រូវបង់
 					'total_interest_permonth'		=>	$data["total_interest_permonthpaid"],
 					'penalize_amount'				=>	$data["penalize_amountpaid"],
 					'principal_amount'				=>	$data['balance'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
-					'selling_price'					=>	$data['price_sold'],
-					'allpaid_before'				=>	$data['all_paid'],
 					'total_principal_permonthpaid'	=>	$data['total_principal_permonth'],//ok ប្រាក់ដើមបានបង
 					'total_interest_permonthpaid'	=>	$data["total_interest_permonthpaid"],//ok ការប្រាក់បានបង
 					'penalize_amountpaid'			=>	$data["penalize_amountpaid"],// ok បានបង
@@ -1542,7 +1495,6 @@ function getLoanPaymentByLoanNumberEdit($data){
 					'total_payment'					=>	$data["total_payment"],//ប្រាក់ត្រូវបង់ok
 					'recieve_amount'				=>	$data["recieve_amount"],//ok
 					'amount_payment'				=>	$data["recieve_amount"],//brak ban borng
-					'return_amount'					=>	0,//ok
 					'note'							=>	$data['note'],
 					'cheque'						=>	$data['cheque'],
 					'status'						=>	1,

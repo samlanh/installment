@@ -32,7 +32,7 @@ class Rent_PaymentController extends Zend_Controller_Action {
 			$result = array();
 			$list = new Application_Form_Frmtable();
 			
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","STREET","RECIEPT_NO","RENT_PRICE","PENALIZE AMOUNT","SERVICE",
+			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","STREET","RECIEPT_NO","RENT_PRICE","PENALIZE AMOUNT",
 							  "TOTAL_PAYMENT","RECEIVE_AMOUNT","PAY_DATE","DATE","BY_USER","STATUS");
 			
 			$link=array('module'=>'rent','controller'=>'payment','action'=>'edit',);

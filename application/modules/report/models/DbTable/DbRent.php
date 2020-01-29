@@ -20,7 +20,7 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
 		`s`.`discount_percent` AS `discount_percent`,
 		s.verify_by,
 		(SELECT
-		SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
+		SUM((`cr`.`total_principal_permonthpaid`))
 		FROM `ln_rent_receipt_money` `cr`
 		WHERE (`cr`.`sale_id` = `s`.`id`)
 		LIMIT 1) AS `paid_amount`,
@@ -87,7 +87,7 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
 		$statement = $this->soldreportSqlStatement();
 		$sql= $statement['sql'];
 		$sql.="
-		,(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_rent_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount,
+		,(SELECT SUM(total_principal_permonthpaid) FROM `ln_rent_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount,
 		(SELECT SUM(total_interest_permonthpaid) FROM `ln_rent_receipt_money` WHERE status=1 AND $from_date AND $to_date  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid,
 		(SELECT SUM(penalize_amountpaid) FROM `ln_rent_receipt_money` WHERE status=1 AND $from_date AND $to_date  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid,
 		(SELECT COUNT(id) FROM `ln_rentschedule` WHERE sale_id=s.id AND status=1 ) AS times,
@@ -175,10 +175,8 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
 		`crm`.`date_input`                   AS `date_input`,
 		`crm`.`note`                         AS `note`,
 		`crm`.`user_id`                      AS `user_id`,
-		`crm`.`return_amount`                AS `return_amount`,
 		`crm`.`status`                       AS `status`,
 		`crm`.`payment_option`               AS `payment_option`,
-		`crm`.`principal_amount`             AS `principal_amount`,
 		`crm`.`is_payoff`                    AS `is_payoff`,
 		`crm`.`total_principal_permonth`     AS `total_principal_permonth`,
 		`crm`.`total_principal_permonthpaid` AS `total_principal_permonthpaid`,
@@ -186,14 +184,10 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
 		`crm`.`total_interest_permonthpaid`  AS `total_interest_permonthpaid`,
 		`crm`.`penalize_amount`              AS `penalize_amount`,
 		`crm`.`penalize_amountpaid`          AS `penalize_amountpaid`,
-		`crm`.`service_chargepaid`           AS `service_chargepaid`,
-		`crm`.`service_charge`               AS `service_charge`,
 		`crm`.`amount_payment`               AS `amount_payment`,
 		`crm`.`total_payment`                AS `total_payment`,
 		`crm`.`recieve_amount`               AS `amount_recieve`,
 		`crm`.`penalize_amount`              AS `penelize`,
-		`crm`.`service_charge`               AS `service`,
-		`crm`.`extra_payment`                AS `extra_payment`,
 		`crm`.`payment_times`                AS `payment_times`,
 		`crm`.`field3`                       AS `field3`,
 		`crm`.`is_closed`                    AS `is_closed`,
@@ -399,28 +393,25 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
     }
     function getRentReceiptByID($id){//total_principal_permonth
     	$db = $this->getAdapter();
-    	$sql="SELECT *,
-    	(SELECT s.payment_id FROM `ln_rent_property` AS s WHERE s.id=crm.sale_id LIMIT 1 ) AS payment_option,
-    	(SELECT project_name FROM `ln_project` WHERE br_id=crm.branch_id LIMIT 1) AS project_name,
-    	(SELECT p.land_address  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS land_address,
-    	(SELECT p.old_land_id  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS landlot_amount,
-    	(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = (SELECT p.property_type  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) LIMIT 1)AS property_type,
-    	(SELECT p.street  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS street,
-    	(SELECT s.sale_number FROM `ln_rent_property` AS s WHERE s.id = crm.sale_id LIMIT 1) AS sale_number,
-    	(SELECT s.land_price FROM `ln_rent_property` AS s WHERE s.id = crm.sale_id LIMIT 1) AS land_price,
-    	(SELECT s.price_sold FROM `ln_rent_property` AS s WHERE s.id = crm.sale_id LIMIT 1) AS price_sold,
-    	(SELECT s.total_duration FROM `ln_rent_property` AS s WHERE s.id = crm.sale_id LIMIT 1) AS total_duration,
-    	(SELECT date_payment FROM `ln_rentschedule` WHERE sale_id= crm.sale_id AND status=1 AND no_installment>payment_times ORDER BY date_payment ASC LIMIT 1) as nextdate_payment,
-    	(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS name_kh,
-    	(SELECT c.client_number FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS client_number,
-    	(SELECT c.phone FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS phone,
-    	(SELECT
-    	`d`.`date_payment`
-    	FROM `ln_rent_receipt_money_detail` `d`
-    	WHERE (`crm`.`id` = `d`.`crm_id`)
-    	ORDER BY `d`.`date_payment` ASC
-    	LIMIT 1) AS `date_payment`,
-    	crm.payment_method as payment_methodid,
+    	$sql="
+    	SELECT *,
+	    	(SELECT s.payment_id FROM `ln_rent_property` AS s WHERE s.id=crm.sale_id LIMIT 1 ) AS payment_option,
+	    	(SELECT project_name FROM `ln_project` WHERE br_id=crm.branch_id LIMIT 1) AS project_name,
+	    	(SELECT p.land_address  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS land_address,
+	    	(SELECT p.old_land_id  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS landlot_amount,
+	    	(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = (SELECT p.property_type  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) LIMIT 1)AS property_type,
+	    	(SELECT p.street  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS street,
+	    	(SELECT s.sale_number FROM `ln_rent_property` AS s WHERE s.id = crm.sale_id LIMIT 1) AS sale_number,
+	    	(SELECT s.land_price FROM `ln_rent_property` AS s WHERE s.id = crm.sale_id LIMIT 1) AS land_price,
+	    	(SELECT s.price_sold FROM `ln_rent_property` AS s WHERE s.id = crm.sale_id LIMIT 1) AS price_sold,
+	    	(SELECT s.total_duration FROM `ln_rent_property` AS s WHERE s.id = crm.sale_id LIMIT 1) AS total_duration,
+	    	(SELECT date_payment FROM `ln_rentschedule` WHERE sale_id= crm.sale_id AND status=1 AND no_installment>payment_times ORDER BY date_payment ASC LIMIT 1) as nextdate_payment,
+	    	(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS name_kh,
+	    	(SELECT c.client_number FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS client_number,
+	    	(SELECT c.phone FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS phone,
+	    	
+	    	crm.date_payment as date_payment,
+    		crm.payment_method as payment_methodid,
     	(SELECT `ln_view`.`name_kh` FROM `ln_view` WHERE ((`ln_view`.`key_code` = `crm`.`payment_method`)
     	AND (`ln_view`.`type` = 2))LIMIT 1) AS `payment_method`,
     	(SELECT c.hname_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS hname_kh,
