@@ -53,7 +53,7 @@ class Group_CustomerController extends Zend_Controller_Action {
 	public function addAction(){
 		$db = new Group_Model_DbTable_DbCustomer();
 		if($this->getRequest()->isPost()){
-				$data = $this->getRequest()->getPost();
+			$data = $this->getRequest()->getPost();
 			try{
 				// Check Session Expire
 				$dbgb = new Application_Model_DbTable_DbGlobal();
@@ -63,8 +63,8 @@ class Group_CustomerController extends Zend_Controller_Action {
 					exit();
 				}
 				
-					$id= $db->add($data);
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/customer/add");
+				$id= $db->add($data);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/customer/add");
 
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
@@ -179,5 +179,4 @@ class Group_CustomerController extends Zend_Controller_Action {
 	   		exit();
 	   	}
    }
-
 }

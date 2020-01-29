@@ -1564,7 +1564,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	if($option!=null){
   		
-  		$options=array(''=>$tr->translate("SELCT_TYPE"));
+  		$options=array(''=>$tr->translate("SELECT_TYPE"));
   		if (!empty($_add_new)){
   			$options[-1]=$tr->translate("ADD_NEW");
   		}
@@ -1574,7 +1574,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		return $options;
   	}else{
   		if (!empty($_add_new)){
-  			array_unshift($result, array('id'=>'','name' => $tr->translate("SELCT_TYPE")), array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW")));
+  			array_unshift($result, array('id'=>'','name' => $tr->translate("SELECT_TYPE")), array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW")));
   		}
   		return $result ;
   	}

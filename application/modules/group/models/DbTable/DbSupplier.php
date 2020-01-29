@@ -79,8 +79,8 @@ class Group_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql = "SELECT id,
 		(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
-		supplier_code,name,address,
-					phone,email ";
+		supplier_code,name,phone,address,
+					email ";
 		
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$sql.=$dbp->caseStatusShowImage("status");
@@ -97,7 +97,7 @@ class Group_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
 		}
 		if(!empty($search['adv_search'])){
 			$s_where = array();
-			$s_search = ($search['adv_search']);
+			$s_search = trim($search['adv_search']);
 			$s_where[] = " supplier_code LIKE '%{$s_search}%'";
 			$s_where[] = " name LIKE '%{$s_search}%'";
 			$s_where[] =" phone LIKE '%{$s_search}%'";

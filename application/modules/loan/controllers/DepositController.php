@@ -118,8 +118,7 @@ class Loan_DepositController extends Zend_Controller_Action {
 		$row = $db->getTranLoanByIdWithBranch($id,null);
 		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/deposit");}
 		
-		 if($row['payment_id']!=1 AND $row['payment_id']!=2){
-		 }
+		 
 		$frm = new Loan_Form_FrmLoan();
 		$frm_loan=$frm->FrmAddLoan($row);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);

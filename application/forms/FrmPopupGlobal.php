@@ -2074,7 +2074,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$string='
 		<div class="dijitHidden">
-			<div data-dojo-type="dijit.Dialog"  id="frm_datapop" data-dojo-props="title:'."'".$tr->translate("ADD_NEW_DATA")."'".'">
+			<div data-dojo-type="dijit.Dialog"  id="frm_datapop" data-dojo-props="title:'."'".$tr->translate("ADD_NEW")."'".'">
 				<form id="form_popup" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 					<div class="card-box">
 						<div class="col-md-12 col-sm-12 col-xs-12">

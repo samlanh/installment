@@ -24,7 +24,7 @@ class Group_CoController extends Zend_Controller_Action {
 			$rs_rows= $db->getAllCreditOfficer($search);
 			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","STAFF_CODE","NAME_KH","SEX","NATIONAL_ID","ADDRESS","PHONE","EMAIL","BY_USER","STATUS");
+			$collumns = array("BRANCH_NAME","STAFF_CODE","CO_NAME","SEX","NATIONAL_ID","ADDRESS","PHONE","EMAIL","BY_USER","STATUS");
 			$link=array('module'=>'group','controller'=>'co','action'=>'edit',);
 			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'co_code'=>$link,'co_khname'=>$link,'co_engname'=>$link));
 		}catch (Exception $e){

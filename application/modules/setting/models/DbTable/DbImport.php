@@ -24,7 +24,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    	$oldland_str='';
 	    	$payment_id = array('រំលស់'=>4,'ផ្តាច់'=>6,'ដំណាក់កាល'=>3);
 			
-			$SaleIdGenerate =0;
+			$SaleIdGenerate =1;
 	    	for($i=2; $i<=$count; $i++){
 	    		if(empty($data[$i]['E'])){
 	    			continue;
@@ -120,7 +120,6 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    				'total_duration'=>$data[$i]['U'],
 	    			   	'validate_date'=>$data[$i]['R'],
 	    				'payment_method'=>1,
-	    				'note'=>'',
 	    			   	'land_price'=>0,//$data['house_price'],
 	    			   	'total_installamount'=>$data[$i]['F'],
 	    			   	'typesale'=>1,
@@ -190,6 +189,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     				'amount_day'=>30,
     				'is_completed'=>$is_completed,
     				'date_payment'=>date("Y-m-d",strtotime($data[$i]['B'])),
+					//'ispay_bank'=>($data[$i]['B']=='បានប្លង់រឹង'?2:0),
     				'paid_date'=>date("Y-m-d",strtotime($data[$i]['B'])),
     				'note'=>'',
     				'percent'=>($first_pay==0)?$data[$i]['N']:0,

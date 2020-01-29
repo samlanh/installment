@@ -105,11 +105,16 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql.$where.$order);
     }
     function getTranLoanByIdWithBranch($id,$is_newschedule=null){//group id
-    	$sql = " SELECT s.*,
+    	
+    	$db = $this->getAdapter();
+    	$sql="SELECT branch_id FROM ln_sale WHERE id = ".$id;
+    	$branch_id = $db->fetchOne($sql);
+    	
+    	$sql = "SELECT s.*,
     	(SELECT total_principal_permonthpaid  FROM `ln_client_receipt_money` 
-    		WHERE ln_client_receipt_money.receipt_no=s.receipt_no LIMIT 1) AS paid_amount,
+    		WHERE ln_client_receipt_money.receipt_no=s.receipt_no AND ln_client_receipt_money.branch_id = $branch_id LIMIT 1) AS paid_amount,
     	(SELECT date_input  FROM `ln_client_receipt_money` 
-    		WHERE ln_client_receipt_money.receipt_no=s.receipt_no LIMIT 1) AS date_input,
+    		WHERE ln_client_receipt_money.receipt_no=s.receipt_no AND ln_client_receipt_money.branch_id = $branch_id LIMIT 1) AS date_input,
     		
     	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id=s.house_id) AS old_land_id,
     	(SELECT CASE WHEN p.old_land_id  IS NULL THEN p.id ELSE p.old_land_id 	END  FROM `ln_properties` AS p WHERE p.id=s.house_id) AS all_land_id  
@@ -122,9 +127,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	
     	$dbp = new Application_Model_DbTable_DbGlobal();
     	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
-    	
     	$where.=" LIMIT 1 ";
-    	$db = $this->getAdapter();
+    	
     	return $db->fetchRow($sql.$where);
     }
     function getSaleScheduleById($id,$payment_id){
