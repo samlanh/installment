@@ -260,16 +260,7 @@
 				                    	<?php echo $frm->getElement('second_depostit');?>
 				                   </div>
 				                </div>
-				                <?php if($this->data['note_agreement']==1){?>
-				                <div class="form-group">
-				                   <label id="lbl_dateline" class="control-label   col-md-5 col-sm-5 col-xs-12" for="first-name">
-				                   <?php echo $tr->translate("AGREEMENT_NOTE")?> <span class="required">*</span> :
-				                   </label>
-				                   <div class="col-md-7 col-sm-7 col-xs-12">
-				                    	<?php echo $frm->getElement('note_agreement');?>
-				                   </div>
-				                </div>
-				                <?php }?>
+				               
 				                <div class="form-group">
 				                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate("POLICY_TERM");?> 
 				                   </label>
@@ -290,13 +281,13 @@
 				                   </div>
 				                </div>
 				                <div class="form-group">
-		                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
-		                  	 	<span id="lbl_release"><?php echo $tr->translate("LOAN_RELEASE");?></span>  :
-		                   </label>
-		                   <div class="col-md-7 col-sm-7 col-xs-12">
-		                   		<?php echo $frm->getElement('release_date');?>
-		                   </div>
-		                </div>
+				                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">
+				                  	 	<span id="lbl_release"><?php echo $tr->translate("LOAN_RELEASE");?></span>  :
+				                   </label>
+				                   <div class="col-md-7 col-sm-7 col-xs-12">
+				                   		<?php echo $frm->getElement('release_date');?>
+				                   </div>
+				                </div>
 				                <div class="form-group">
 				                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("FIRST_RENT_PAYMENT");?>  :
 				                   </label>
@@ -951,22 +942,12 @@ function printSave(new_stu_id,new_receipt_no){
 		new_receipt_no = dijit.byId("receipt").get("value");
 	<?php }?>
 	getBranchInfo();
-	schedule_opt = dijit.byId("schedule_opt").get("value");
-	if(schedule_opt==2){//បង់ផ្តាច់
-		  sold_price = dijit.byId("sold_price").get("value");
-		  deposit = dijit.byId("deposit").get("value");
-		  if(sold_price!=deposit){
-			alert("បង់ផ្តាច់ តម្លៃលក់ ត្រូវស្មើរ នឹងប្រាក់ដែលត្រូវទទួល!");
-			dijit.byId("deposit").focus();
-			return false;
-		  }
+	setting_opt = dijit.byId('setting_opt').get('value');
+	if (setting_opt=='' || setting_opt==-1){
+		alert('<?php echo $tr->translate("PLEASE_SELECT_POLICY_OPT");?>!');
+		dijit.byId('setting_opt').focus();
+		return false;
 	}
-
-    date_agreement = dijit.byId("date_line").get("value");
-    if(schedule_opt==1 && date_agreement==null){ 
-		alert("សូមបញ្ចូលថ្ងៃត្រូវមកធ្វើកិច្ចសន្យា");
-		dijit.byId("date_line").focus();return false;
-    }
     
 	deposit = dijit.byId('deposit').get('value');
 	if (deposit=='' || deposit==-1){

@@ -93,6 +93,7 @@ class Rent_DepositController extends Zend_Controller_Action {
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}	
 	public function editAction(){
+		$_dbmodel = new Rent_Model_DbTable_DbLanddeposit();
 		if($this->getRequest()->isPost()){
 			// Check Session Expire
 			$dbgb = new Application_Model_DbTable_DbGlobal();
@@ -103,7 +104,6 @@ class Rent_DepositController extends Zend_Controller_Action {
 			}
 			$_data = $this->getRequest()->getPost();
 			try{
-				$_dbmodel = new Rent_Model_DbTable_DbLanddeposit();
 				$_dbmodel->updateLoanById($_data);
 				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCCESS","/rent/deposit/index");
 			}catch (Exception $e) {
@@ -112,12 +112,14 @@ class Rent_DepositController extends Zend_Controller_Action {
 			}
 		}
 		$id = $this->getRequest()->getParam('id');
-		$db = new Loan_Model_DbTable_DbLandpayment();
-		$row = $db->getTranLoanByIdWithBranch($id,null);
-		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/rent/deposit");}
+		$row = $_dbmodel->getTranLoanByIdWithBranch($id,null);
+		$check = $_dbmodel->checkRentNotPaymentSchedule($id);
 		
-		 if($row['payment_id']!=1 AND $row['payment_id']!=2){
-		 }
+		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/rent/deposit");}
+		if (!empty($check)){
+			Application_Form_FrmMessage::Sucessfull("UNABLE_TO_EDIT","/rent/deposit");
+		}
+		
 		$frm = new Rent_Form_FrmLoan();
 		$frm_loan=$frm->FrmAddLoan($row);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
@@ -140,8 +142,7 @@ class Rent_DepositController extends Zend_Controller_Action {
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
-		$this->view->footer = $frmpopup->getFooterReceipt();
-		$this->view->officailreceipt = $frmpopup->getOfficailReceipt();
+		$this->view->officailreceipt = $frmpopup->getOfficailReceiptRent();
 	}
 	function getReceiptNumberAction(){
 		if($this->getRequest()->isPost()){
@@ -158,6 +159,15 @@ class Rent_DepositController extends Zend_Controller_Action {
 			$_dbmodel = new Rent_Model_DbTable_DbLanddeposit();
 			$rows_return = $_dbmodel->addScheduleTestPayment($_data);
 			print_r(Zend_Json::encode($rows_return));
+			exit();
+		}
+	}
+	function getloannumberAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Rent_Model_DbTable_DbLanddeposit();
+			$loan_number = $db->getRentNumber($data);
+			print_r(Zend_Json::encode($loan_number));
 			exit();
 		}
 	}

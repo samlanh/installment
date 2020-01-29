@@ -471,7 +471,6 @@ Class Rent_Form_FrmLoan extends Zend_Dojo_Form {
 			$commission->setValue($data['comission']);
 			$rs = $db->getUserInfo();
 			if($rs['level']!=1){
-				//$data['full_commission'] = 0;
 			}
 			$full_commission->setValue($data['full_commission']);
 			
@@ -479,13 +478,14 @@ Class Rent_Form_FrmLoan extends Zend_Dojo_Form {
 			
 			$start_building->setValue($data['build_start']);
 			$amount_build->setValue($data['amount_build']);
-			$note_agreement->setValue($data['note_agreement']);
 			if (!empty($data['buy_date'])){
 				$_date_buy->setValue($data['buy_date']);
 			}
 			if (!empty($data['second_depostit'])){
 				$second_depostit->setValue($data['second_depostit']);
 			}
+			
+			$_setting_opt->setValue($data['setting_opt']);
 		}
 		$this->addElements(array($commision_amt,$times_commission,$last_payment,$paid_date,$note_agreement,$total_discount,$delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,

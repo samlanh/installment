@@ -201,10 +201,6 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$property_info = $this->getProperty($data["land_code"]);
     		$key = new Application_Model_DbTable_DbKeycode();
     		$setting=$key->getKeyCodeMiniInv(TRUE);
-    		$note_agreement = '';
-    		if($setting['note_agreement']==1){
-    			$note_agreement = $data['note_agreement'];
-    		}
     		
     			 $arr = array(
     				'branch_id'=>$data['branch_id'],
@@ -236,7 +232,6 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				
     				'note'=>$data['note'],
     			   	'land_price'=>$property_info['house_price'],
-    				'note_agreement'=>$note_agreement,
     				'typesale'=>$data['typesale'],
     				'is_reschedule'=>$is_schedule,
     			    
@@ -587,57 +582,108 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		
     		$key = new Application_Model_DbTable_DbKeycode();
     		$setting=$key->getKeyCodeMiniInv(TRUE);
-    		$note_agreement = '';
-    		if($setting['note_agreement']==1){
-    			$note_agreement = $data['note_agreement'];
-    		}
+    		
+    		$property_info = $this->getProperty($land_id);
     		$arr = array(
     				'branch_id'=>$data['branch_id'],
-    			   	'receipt_no'=>$data['receipt'],
+    				'receipt_no'=>$data['receipt'],
     				'sale_number'=>$data['sale_code'],
-    			   	'house_id'=>$land_id,
-    			   	'payment_id'=>$data["schedule_opt"],
+    				'house_id'=>$land_id,
+    				'payment_id'=>$data["schedule_opt"],
     				'client_id'=>$data['member'],
+    					
     				'price_before'=>$data['total_sold'],
     				'discount_amount'=>$data['discount'],
-    			   	'discount_percent'=>$data['discount_percent'],
+    				'discount_percent'=>$data['discount_percent'],
     				'price_sold'=>$data['sold_price'],
     				'other_fee'=>0,
     				'paid_amount'=>$data['deposit'],
     				'balance'=>$data['balance'],
+    				
+    				//date
     				'buy_date'=>$data['date_buy'],
+    				'startcal_date'=>$data['release_date'],
+    				'first_payment'=>$data['first_payment'],
+    				'validate_date'=>$data['first_payment'],
     				'end_line'=>$data['date_line'],
+    				'agreement_date'=>$data['agreement_date'],
+    				
     				'interest_rate'=>0,
     				'total_duration'=>1,
-    			   	'startcal_date'=>$data['date_buy'],
-    				'first_payment'=>$data['date_buy'],
-    			   	'validate_date'=>$data['date_line'],
-    				'payment_method'=>1,
+    				'payment_method'=>1,//$data['loan_type'],
+    				
     				'note'=>$data['note'],
+    				'land_price'=>$property_info['house_price'],
     				'typesale'=>$data['typesale'],
-    			   	'land_price'=>0,
     				'is_reschedule'=>0,
-    			    'agreement_date'=>$data['agreement_date'],
+    					
+    				// Agency Commission
     				'staff_id'=>$data['staff_id'],
     				'full_commission'=>$data['full_commission'],
     				'comission'=>0,//$data['commission'],
     				'second_depostit'=>$data['second_depostit'],
-    				'create_date'=>date("Y-m-d"),
-    				'user_id'=>$this->getUserId(),
-    				'note_agreement'=>$note_agreement,
+    				
+    				//Policy Rent
+    				'setting_opt'=>$data['setting_opt'],
+    				'total_duration'=>$data['period'],
+    				
+    				//user create
+    				'modify_date'=>date("Y-m-d H:i:s"),
+    				'user_id'=>$this->getUserId()
+    				
+    				
     			);
     		
-    		$id = $data['id'];
+    		$rent_id = $data['id'];
     		$this->_name='ln_rent_property';
-    		$where = $db->quoteInto('id=?', $id);
+    		$where = $db->quoteInto('id=?', $rent_id);
     		$this->update($arr, $where);
+    		
+    		
+    		$setting_id = $data['setting_opt'];
+    		$dbtable = new Application_Model_DbTable_DbGlobal();
+    		$dbSetting = new Rent_Model_DbTable_DbSetting();
+    		$_row = $dbSetting->getSettingDetailById($setting_id);
+    		
+    		$soldPrice = $data['sold_price'];
+    		$period = $data['period'];
+    		$from_date =  $data['release_date'];
+    		$next_payment = $data['first_payment'];
+    		$str_next = '+1 month';
+    		
+    		$wherese ="sale_id=".$rent_id;
+    		$this->_name="ln_rentschedule";
+    		$this->delete($wherese);
+    		
+    		for ($i=1; $i<=$period; $i++){
+    			$settingDetail = $this->getRowSettingDetail($setting_id, $i);
+    			$rentPerMonth = ($soldPrice * $settingDetail['percent_value'])/100;
+    		
+    			if($i!=1){
+    				$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+    			}else{
+    				$next_payment = $data['first_payment'];
+    			}
+    		
+    			$this->_name="ln_rentschedule";
+    			$datapayment = array(
+    					'sale_id'=>$rent_id,//good
+    					'no_installment'=>$i,
+    					'principal_permonth'=> $rentPerMonth,//good
+    					'principal_permonthafter'=>$rentPerMonth,//good
+    					'total_interest'=>0,//good
+    					'total_interest_after'=>0,//good
+    					'total_payment'=>$rentPerMonth,//good
+    					'total_payment_after'=>$rentPerMonth,//good
+    					'is_completed'=>0,
+    					'date_payment'=>$next_payment,
+    			);
+    			$this->insert($datapayment);
+    		}
     		
     		//if($data['deposit']>0){//insert payment
     			$data['date_buy']=$data['paid_date'];
     			$pay_off = 0;
-    			if($data["schedule_opt"]==2){
-    				$pay_off = 1;
-    			}
     			$array = array(
     				'branch_id'			=>$data['branch_id'],
     				'client_id'			=>$data['member'],
@@ -646,18 +692,15 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'date_pay'			=>$data['paid_date'],
     				'land_id'			=>$data['land_code'],
     				'date_input'		=>$data['paid_date'],//paid_date
-    				'outstanding'		=>$data['sold_price'],
-    				'principal_amount'	=> $data['balance'],
-    				'selling_price'=>$data['sold_price'],
-    				'allpaid_before'=>$data['deposit'],
+    				
+    				
     				'total_principal_permonth'=>$data['deposit'],
     				'total_principal_permonthpaid'=>$data['deposit'],
     				'total_interest_permonth'	=>0,
     				'total_interest_permonthpaid'=>0,
     				'penalize_amount'			=>0,
     				'penalize_amountpaid'		=>0,
-    				'service_charge'	=>0,
-    				'service_chargepaid'=>0,
+    				
     				'total_payment'		=>$data['deposit'],//$data['sold_price'],
     				'amount_payment'	=>$data['deposit'],
     				'recieve_amount'	=>$data['deposit'],
@@ -668,12 +711,11 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'note'				=>$data['note'],
     				'user_id'			=>$this->getUserId(),
     				'field3'			=>1,// ជាប្រាក់កក់
-    				'field2'=>1,
     				'is_payoff'=>$pay_off,
     				'payment_times'=>1,
     			);
     			$this->_name='ln_rent_receipt_money';
-    			$where="receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id'];
+    			$where="receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id']." AND sale_id =".$rent_id;
     			$this->update($array, $where);
     				
     			$this->_name='ln_rent_receipt_money_detail';
@@ -696,7 +738,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					'status'		=>1,
     			);
     			if(!empty($data['receipt'])){
-    				$sql="SELECT id FROM `ln_rent_receipt_money` WHERE receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id'];
+    				$sql="SELECT id FROM `ln_rent_receipt_money` WHERE receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id']." AND sale_id =".$rent_id;
     				$crm_id = $db->fetchOne($sql);
     				if(!empty($crm_id)){
     					$where="crm_id=".$crm_id;
@@ -730,7 +772,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$string="";
     			
     		$project = $db_pro->getBranchById($_data['branch_id']);
-    		$rowsale = $dbsale->getTranLoanByIdWithBranch($sale_id,null);
+    		$rowsale = $this->getTranLoanByIdWithBranch($sale_id,null);
     		$client = $dbclient->getClientById($rowsale['client_id']);
     		$land = $dbproper->getClientById($rowsale['house_id']);
     		$rowco = $db_co->getCOById($_data['staff_id']);
@@ -943,5 +985,35 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	";
     	 
     	return $db->fetchAll($sql);
+    }
+    
+    function getTranLoanByIdWithBranch($id,$is_newschedule=null){//group id
+    	$sql = " SELECT s.*,
+    	(SELECT total_principal_permonthpaid  FROM `ln_rent_receipt_money`
+    	WHERE ln_rent_receipt_money.receipt_no=s.receipt_no LIMIT 1) AS paid_amount,
+    	(SELECT date_input  FROM `ln_rent_receipt_money`
+    	WHERE ln_rent_receipt_money.receipt_no=s.receipt_no LIMIT 1) AS date_input,
+    
+    	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id=s.house_id) AS old_land_id,
+    	(SELECT CASE WHEN p.old_land_id  IS NULL THEN p.id ELSE p.old_land_id 	END  FROM `ln_properties` AS p WHERE p.id=s.house_id) AS all_land_id
+    	FROM `ln_rent_property` AS s
+    	WHERE s.id = ".$id;
+    	$where="";
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
+    	$where.=" LIMIT 1 ";
+    	$db = $this->getAdapter();
+    	return $db->fetchRow($sql.$where);
+    }
+    function checkRentNotPaymentSchedule($rent_id){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT 
+    				rc.* 
+				FROM 
+					`ln_rent_receipt_money` AS rc 
+				WHERE 
+					rc.sale_id = $rent_id AND rc.field3!=1 AND rc.recieve_amount >0 LIMIT 1
+    	";
+    	return $db->fetchRow($sql);
     }
 }
