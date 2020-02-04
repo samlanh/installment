@@ -222,11 +222,12 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 			}	
 			$explode1 = explode("K", $licenseKey);
 			$meKun = end($explode1);
-			$explode2 = explode("C", $explode1[0]);
-			
 			if (strpos( $explode1[0], 'C') === false) {
 				return false;
 			}
+			$explode2 = explode("C", $explode1[0]);
+			
+			
 			$systenCode = $explode2[0];
 			if (($systenCode/$meKun)==ICODE){
 				if (strpos( end($explode2), 'P') === false) {
