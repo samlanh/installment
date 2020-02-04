@@ -266,12 +266,12 @@ class IndexController extends Zend_Controller_Action
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     	
-    	$dbglobal = new Application_Model_DbTable_DbGlobal();
-    	$exDate = $dbglobal->getExDate();
-    	if(date('Y-m-d')<=$exDate){
-    		$this->_redirect("/index");
-    		return false;
-    	}
+//     	$dbglobal = new Application_Model_DbTable_DbGlobal();
+//     	$exDate = $dbglobal->getExDate();
+//     	if(date('Y-m-d')<=$exDate){
+//     		$this->_redirect("/index");
+//     		return false;
+//     	}
     	if($this->getRequest()->isPost()){
     		try{
     			$data = $this->getRequest()->getPost();
