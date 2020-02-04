@@ -1940,5 +1940,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	//Insert the visitor's mac address to database
   	// " INSERT INTO `table_name` (`column_name`) VALUES('".$mac_address."') ";
   }
+  function getExDate(){
+  	$key = new Setting_Model_DbTable_DbLabel();
+  	$keyValue = $key->getAllSystemSetting();
+  	$time = $keyValue['lY']."-".$keyValue['lMM']."-".$keyValue['lDD'];
+  	$exDate = date("Y-m-d",strtotime($time));
+  	return $exDate;
+  }
 }
 ?>

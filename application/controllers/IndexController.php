@@ -261,4 +261,33 @@ class IndexController extends Zend_Controller_Action
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
+    function licenseAction(){
+    	$this->_helper->layout()->disableLayout();
+    	$key = new Application_Model_DbTable_DbKeycode();
+    	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+    	
+    	$dbglobal = new Application_Model_DbTable_DbGlobal();
+    	$exDate = $dbglobal->getExDate();
+    	if(date('Y-m-d')<=$exDate){
+    		$this->_redirect("/index");
+    		return false;
+    	}
+    	if($this->getRequest()->isPost()){
+    		try{
+    			$data = $this->getRequest()->getPost();
+    			$dbGn = new Setting_Model_DbTable_DbGeneral();
+    			if (empty($data['licenseKey'])){
+    				Application_Form_FrmMessage::Sucessfull("INVALID_lICENSE_KEY","/index");
+    			}
+    			$row = $dbGn->updatelicense($data);
+    			if (!$row){
+    				Application_Form_FrmMessage::Sucessfull("INVALID_lICENSE_KEY","/index");
+    			}
+    			Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/index");
+    		}catch (Exception $e){
+    			Application_Form_FrmMessage::message("Application Error");
+    			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		}
+    	}
+    }
 }

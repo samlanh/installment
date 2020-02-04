@@ -204,5 +204,91 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 		}
 	}
 	
+	
+	public function geCheckKeycode($keyName){
+		$db = $this->getAdapter();
+		$sql = " SELECT s.`id`
+		FROM `ln_system_setting` AS s
+		WHERE s.`keycode` ='$keyName' LIMIT 1";
+		return $db->fetchRow($sql);
+	}
+	public function updatelicense($data){
+		try{
+			$this->_name = "ln_system_setting";
+			$licenseKey = $data['licenseKey'];
+			
+			if (strpos($licenseKey, 'K') === false) {
+				return false;
+			}	
+			$explode1 = explode("K", $licenseKey);
+			$meKun = end($explode1);
+			$explode2 = explode("C", $explode1[0]);
+			
+			if (strpos( $explode1[0], 'C') === false) {
+				return false;
+			}
+			$systenCode = $explode2[0];
+			if (($systenCode/$meKun)==ICODE){
+				if (strpos( end($explode2), 'P') === false) {
+					return false;
+				}
+				$explode3 = explode("P", end($explode2));
+				$day = ($explode3[0]/$meKun);
+				
+				if (strpos( end($explode3), 'T') === false) {
+					return false;
+				}
+				$explode4 = explode("T", end($explode3));
+				$month = ($explode4[0]/$meKun);
+				$year = (end($explode4)/$meKun);
+				
+				
+				
+				$rows = $this->geCheckKeycode('lDD');
+				if (empty($rows)){
+					$arr = array('keycode'=>'lDD','value'=>$day);
+					$this->insert($arr);
+				}else{
+					$arr = array('value'=>$day,);
+					$where=" keycode= 'lDD'";
+					$this->update($arr, $where);
+				}
+				$rows = $this->geCheckKeycode('lMM');
+				if (empty($rows)){
+					$arr = array('keycode'=>'lMM','value'=>$month,);
+					$this->insert($arr);
+				}else{
+					$arr = array('value'=>$month,);
+					$where=" keycode= 'lMM'";
+					$this->update($arr, $where);
+				}
+				$rows = $this->geCheckKeycode('lY');
+				if (empty($rows)){
+					$arr = array('keycode'=>'lY','value'=>$year,);
+					$this->insert($arr);
+				}else{
+					$arr = array('value'=>$year,);
+					$where=" keycode= 'lY'";
+					$this->update($arr, $where);
+				}
+				
+				$rows = $this->geCheckKeycode('licenseKey');
+				if (empty($rows)){
+					$arr = array('keycode'=>'licenseKey','value'=>$licenseKey,'note'=>"license Key");
+					$this->insert($arr);
+				}else{
+					$arr = array('value'=>$licenseKey,);
+					$where=" keycode= 'licenseKey'";
+					$this->update($arr, $where);
+				}
+				return true;
+			}else{
+				return false;
+			}
+				
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+	}
 }
 
