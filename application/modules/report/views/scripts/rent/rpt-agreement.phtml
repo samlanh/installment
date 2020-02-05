@@ -216,15 +216,23 @@
 										 	 	<td>កាលបរិច្ឆេទបង់</td>
 										 	 	<td>កាលបរិច្ឆេទផុតកំណត់</td>
 										 	 </tr>
-										 	 <?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $re){?>
+										 	 <?php 
+										 	 $startDates =  date('Y-m-d',strtotime($this->agreement['first_payment']));
+										 	 $startDate =  date('Y-m-d',strtotime($this->agreement['first_payment']));
+										 	 if (!empty($this->rowdetail)) foreach ($this->rowdetail as $re){ 
+										 	 	$value = $re['max_month'];
+										 	 	$endDate = date('Y-m-d',strtotime(" $startDates +$value month"));
+										 	 ?>
 										 	 <tr>
 										 	 	<td>&nbsp;<?php echo $re['title']?>&nbsp;</td>
 										 	 	<td >&nbsp;<?php echo $re['percent_value']?>%&nbsp;</td>
-										 	 	<td align="right">&nbsp;<?php echo number_format(($this->agreement['price_sold']*$re['percent_value'])/100,2);?> ដុល្លារ&nbsp;</td>
-										 	 	<td>&nbsp;&nbsp;</td>
-										 	 	<td>&nbsp;&nbsp;</td>
+										 	 	<td align="right">&nbsp;<?php echo number_format(($this->agreement['price_sold']*$re['percent_value'])/100,2);?> ដុល្លារ/ខែ&nbsp;</td>
+										 	 	<td align="center">&nbsp;<?php echo $startDate;?>&nbsp;</td>
+										 	 	<td align="center">&nbsp;<?php echo $endDate;?>&nbsp;</td>
 										 	 </tr>
-										 	 <?php }?>
+										 	 <?php 
+										 	 $startDate = $endDate;
+										 	 }?>
 										</table>
 										<br />
 										<table width="100%" border="0">
