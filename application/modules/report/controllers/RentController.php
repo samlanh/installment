@@ -140,9 +140,12 @@ class Report_RentController extends Zend_Controller_Action {
   		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/rent/deposit");
   		exit();
   	}
-  
   	$this->view->agreement = $rsagreement;
+  	$this->view->deposit = $db->getDepositAgreement($id);
   	$db_keycode = new Application_Model_DbTable_DbKeycode();
   	$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
+  	
+  	$dbSet = new Rent_Model_DbTable_DbSetting();
+  	$this->view->rowdetail = $dbSet->getSettingDetailById($rsagreement['setting_opt']);
   }
 }

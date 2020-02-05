@@ -244,6 +244,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			 		
     			 	//Policy Rent
     			 	'setting_opt'=>$data['setting_opt'],
+    			 	'times_deposite'=>$data['times_deposite'],
     			 	'total_duration'=>$data['period'],
     			 		
     			 	//user create
@@ -625,6 +626,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				
     				//Policy Rent
     				'setting_opt'=>$data['setting_opt'],
+    				'times_deposite'=>$data['times_deposite'],
     				'total_duration'=>$data['period'],
     				
     				//user create

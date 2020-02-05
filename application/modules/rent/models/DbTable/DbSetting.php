@@ -46,6 +46,7 @@ class Rent_Model_DbTable_DbSetting extends Zend_Db_Table_Abstract
 				foreach ($ids as $i){
 					$arr = array(
 							'settin_id'	=>$id,
+							'title'			=>$data['title'.$i],
 							'max_month'			=>$data['max_month'.$i],
 							'percent_value'		=>$data['percent_value'.$i],
 							'note'	=>$data['note'.$i],
@@ -105,6 +106,7 @@ class Rent_Model_DbTable_DbSetting extends Zend_Db_Table_Abstract
 					if (!empty($data['detailid'.$i])){
 						$arr = array(
 							'settin_id'	=>$id,
+							'title'			=>$data['title'.$i],
 							'max_month'			=>$data['max_month'.$i],
 							'percent_value'		=>$data['percent_value'.$i],
 							'note'	=>$data['note'.$i],
@@ -115,6 +117,7 @@ class Rent_Model_DbTable_DbSetting extends Zend_Db_Table_Abstract
 					}else{
 						$arr = array(
 							'settin_id'	=>$id,
+							'title'			=>$data['title'.$i],
 							'max_month'			=>$data['max_month'.$i],
 							'percent_value'		=>$data['percent_value'.$i],
 							'note'	=>$data['note'.$i],

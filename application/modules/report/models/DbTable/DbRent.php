@@ -457,6 +457,8 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
     	s.note_agreement,
     	s.is_verify,
     	s.second_depostit,
+    	s.setting_opt,
+    	s.times_deposite,
     	(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE id = s.user_id LIMIT 1 ) AS user_name,
     	(SELECT co_khname FROM `ln_staff` WHERE co_id=s.staff_id LIMIT 1) AS staff_name,
     	(SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.payment_id limit 1) AS payment_type,
@@ -667,6 +669,14 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
     	$dbp = new Application_Model_DbTable_DbGlobal();
     	$sql.=$dbp->getAccessPermission("`s`.`branch_id`");
     
+    	return $db->fetchRow($sql);
+    }
+    function getDepositAgreement($sale_id){
+    	$db = $this->getAdapter();
+    	$sql="SELECT sum(crm.`recieve_amount`) AS recieve_amount,
+    	(SELECT validate_date FROM  ln_rent_property WHERE id = $sale_id ) AS  validate_date
+    	FROM `ln_rent_receipt_money` AS crm WHERE crm.status=1 AND crm.field3=1
+    	AND sale_id = $sale_id ORDER BY crm.id ASC";
     	return $db->fetchRow($sql);
     }
  }
