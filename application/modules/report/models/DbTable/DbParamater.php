@@ -1780,6 +1780,7 @@ function getAllBranch($search=null){
     			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
+    		$where.=" ORDER BY c.id DESC ";
     		return $db->fetchAll($sql.$where);
     	}
     	function getSumCommission($search){

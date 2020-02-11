@@ -300,17 +300,17 @@ class Report_LoanController extends Zend_Controller_Action {
  		$search = $this->getRequest()->getPost();
  	}else{
  		$search = array(
- 				'adv_search' => '',
- 				'client_name' => -1,
- 				'start_date'=> date('Y-m-d'),
- 				'end_date'=>date('Y-m-d'),
- 				'branch_id'		=>	-1,
- 				'co_id'			=>'',
- 				'schedule_opt'	=> -1,
- 				'stepoption'=>-1,
- 				'status'=>-1,
- 				'is_completed'=>-1
- 				);
+ 			'adv_search' => '',
+ 			'client_name' => -1,
+ 			'start_date'=> date('Y-m-d'),
+ 			'end_date'=>date('Y-m-d'),
+ 			'branch_id'		=>	-1,
+ 			'co_id'			=>'',
+ 			'schedule_opt'	=> -1,
+ 			'stepoption'=>-1,
+ 			'status'=>-1,
+ 			'is_completed'=>-1
+ 		);
  	}
  	$this->view->search=$search;
  	$db  = new Report_Model_DbTable_DbLandreport();

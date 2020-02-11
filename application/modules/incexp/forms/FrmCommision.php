@@ -213,6 +213,7 @@ public function init()
 			$payment_type->setValue($data['payment_id']);
 			$_cheque->setValue($data['cheque']);
 			$cheque_issuer->setValue($data['cheque_issuer']);
+			$date->setValue($data['for_date']);
 		}
 		$this->addElements(array(
 		$branch_id,$_property_id,$_old_sale_id,$_price_sold,$schedule_opt,$installment_paid,$paid_amount,$_balance,$_commision,$full_commission,$return_back,$date,$_status,
