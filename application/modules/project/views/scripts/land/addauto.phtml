@@ -51,7 +51,13 @@ dojo.require("dijit.form.Textarea");
 	                    	<?php echo $frm->getElement('landcode');?>
 	                   </div>
 	                </div>
-										
+					<div class="form-group">
+	                   <label class="control-label col-md-4 col-sm-4 col-xs-12" for="first-name"><?php echo $tr->translate("OPTION_COUNT");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-8 col-sm-8 col-xs-12">
+	                    	<?php echo $frm->getElement('optionCount');?>
+	                   </div>
+	                </div>					
 	                <div class="form-group">
 	                   <label class="control-label bold col-md-4 col-sm-4 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> <span class="required">*</span> :
 	                   <span id="message" style="color: red; display: block;"></span>
@@ -383,44 +389,88 @@ function Preview(){
 		  	if(isNaN(size)){size='';}
 		  price = dijit.byId('house_price').get('value');
 		  if(isNaN(price)){price='';}
-	for(i=dijit.byId('land_address').get("value");i<=dijit.byId('to_land_address').get("value");i++){
-		var southIncrease="";
-		var nothIncrease="";
-		var westhIncrease="";
-		var eastIncrease="";
-		if(dijit.byId('south').get('value')!=""){
-			southIncrease = (parseInt(dijit.byId('south').get('value'))+increase)
-		}
-		if(dijit.byId('north').get('value')!=""){
-			nothIncrease = (parseInt(dijit.byId('north').get('value'))+increase)
-		}
-		if(dijit.byId('west').get('value')!=""){
-			westhIncrease = (parseInt(dijit.byId('west').get('value'))+increase)
-		}
-		if(dijit.byId('east').get('value')!=""){
-			eastIncrease = (parseInt(dijit.byId('east').get('value'))+increase)
-		}
-		
-		var south = dijit.byId('south_prefix').get("value")+southIncrease+dijit.byId('postfix_south').get('value');
-		var noth =dijit.byId('north_prefix').get("value")+nothIncrease+dijit.byId('postfix_north').get('value');
-		var west = dijit.byId('west_prefix').get("value")+westhIncrease+dijit.byId('postfix_west').get('value');
-		var east = dijit.byId('east_prefix').get("value")+eastIncrease+dijit.byId('postfix_east').get('value');
 
-		temp+='<tr><td align="center">'+(increase+1)+'</td>';
-			 temp+='<td align="center">'+ dijit.byId('land_address_prefix').get("value")+i+dijit.byId('postfix_land_address').get('value')+'</td>';
-			 temp+='<td align="center">'+ dijit.byId('street').attr('displayedValue')+'</td>';
-			 temp+='<td align="center">'+ dijit.byId('property_type').attr('displayedValue')+'</td>';
-			 temp+='<td align="center">'+price+'</td>';
-			 temp+='<td align="center">'+width+'</td>';
-			 temp+='<td align="center">'+height+'</td>';
-			 temp+='<td align="center">'+size+'</td>';
-			 temp+='<td align="center">'+south+'</td>';
-			 temp+='<td align="center">'+noth+'</td>';
-			 temp+='<td align="center">'+west+'</td>';
-			 temp+='<td align="center">'+east+'</td>';
-			 increase++;
-			 temp+='<tr>';
-	}
+		  optionCount = dijit.byId('optionCount').get('value');
+		  if(optionCount==1){
+			  for( i=dijit.byId('land_address').get("value");i<=dijit.byId('to_land_address').get("value");i++){
+					var southIncrease="";
+					var nothIncrease="";
+					var westhIncrease="";
+					var eastIncrease="";
+					if(dijit.byId('south').get('value')!=""){
+						southIncrease = (parseInt(dijit.byId('south').get('value'))+increase)
+					}
+					if(dijit.byId('north').get('value')!=""){
+						nothIncrease = (parseInt(dijit.byId('north').get('value'))+increase)
+					}
+					if(dijit.byId('west').get('value')!=""){
+						westhIncrease = (parseInt(dijit.byId('west').get('value'))+increase)
+					}
+					if(dijit.byId('east').get('value')!=""){
+						eastIncrease = (parseInt(dijit.byId('east').get('value'))+increase)
+					}
+					
+					var south = dijit.byId('south_prefix').get("value")+southIncrease+dijit.byId('postfix_south').get('value');
+					var noth =dijit.byId('north_prefix').get("value")+nothIncrease+dijit.byId('postfix_north').get('value');
+					var west = dijit.byId('west_prefix').get("value")+westhIncrease+dijit.byId('postfix_west').get('value');
+					var east = dijit.byId('east_prefix').get("value")+eastIncrease+dijit.byId('postfix_east').get('value');
+
+					temp+='<tr><td align="center">'+(increase+1)+'</td>';
+						 temp+='<td align="center">'+ dijit.byId('land_address_prefix').get("value")+i+dijit.byId('postfix_land_address').get('value')+'</td>';
+						 temp+='<td align="center">'+ dijit.byId('street').attr('displayedValue')+'</td>';
+						 temp+='<td align="center">'+ dijit.byId('property_type').attr('displayedValue')+'</td>';
+						 temp+='<td align="center">'+price+'</td>';
+						 temp+='<td align="center">'+width+'</td>';
+						 temp+='<td align="center">'+height+'</td>';
+						 temp+='<td align="center">'+size+'</td>';
+						 temp+='<td align="center">'+south+'</td>';
+						 temp+='<td align="center">'+noth+'</td>';
+						 temp+='<td align="center">'+west+'</td>';
+						 temp+='<td align="center">'+east+'</td>';
+						 increase++;
+						 temp+='<tr>';
+				}
+		  }else{
+			  for( i=dijit.byId('land_address').get("value");i>=dijit.byId('to_land_address').get("value");i--){
+					var southIncrease="";
+					var nothIncrease="";
+					var westhIncrease="";
+					var eastIncrease="";
+					if(dijit.byId('south').get('value')!=""){
+						southIncrease = (parseInt(dijit.byId('south').get('value'))-increase)
+					}
+					if(dijit.byId('north').get('value')!=""){
+						nothIncrease = (parseInt(dijit.byId('north').get('value'))-increase)
+					}
+					if(dijit.byId('west').get('value')!=""){
+						westhIncrease = (parseInt(dijit.byId('west').get('value'))-increase)
+					}
+					if(dijit.byId('east').get('value')!=""){
+						eastIncrease = (parseInt(dijit.byId('east').get('value'))-increase)
+					}
+					
+					var south = dijit.byId('south_prefix').get("value")+southIncrease+dijit.byId('postfix_south').get('value');
+					var noth =dijit.byId('north_prefix').get("value")+nothIncrease+dijit.byId('postfix_north').get('value');
+					var west = dijit.byId('west_prefix').get("value")+westhIncrease+dijit.byId('postfix_west').get('value');
+					var east = dijit.byId('east_prefix').get("value")+eastIncrease+dijit.byId('postfix_east').get('value');
+
+					temp+='<tr><td align="center">'+(increase+1)+'</td>';
+						 temp+='<td align="center">'+ dijit.byId('land_address_prefix').get("value")+i+dijit.byId('postfix_land_address').get('value')+'</td>';
+						 temp+='<td align="center">'+ dijit.byId('street').attr('displayedValue')+'</td>';
+						 temp+='<td align="center">'+ dijit.byId('property_type').attr('displayedValue')+'</td>';
+						 temp+='<td align="center">'+price+'</td>';
+						 temp+='<td align="center">'+width+'</td>';
+						 temp+='<td align="center">'+height+'</td>';
+						 temp+='<td align="center">'+size+'</td>';
+						 temp+='<td align="center">'+south+'</td>';
+						 temp+='<td align="center">'+noth+'</td>';
+						 temp+='<td align="center">'+west+'</td>';
+						 temp+='<td align="center">'+east+'</td>';
+						 increase++;
+						 temp+='<tr>';
+				}
+		  }
+	
 	temp+='</table>';
 	dojo.byId('t_amountmoneytype').innerHTML = temp;
 	dijit.byId("lbl_properties").show();

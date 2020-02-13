@@ -55,100 +55,194 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	
 //     	$order=" ORDER BY cast(land_address as unsigned) , id DESC ";
     	
-    	$order = " ORDER BY IF(land_address RLIKE '^[a-z]', 1, 2), land_address DESC , id DESC ";
+//     	$order = " ORDER BY IF(land_address RLIKE '^[a-z]', 1, 2), land_address DESC , id DESC ";
+    	$order= " ORDER BY LENGTH(land_address), land_address ASC  ";
     	return $db->fetchAll($sql.$where.$order);
     }
     public function addLandinfoAuto($_data){
     	try{
     		$increase = 0;
-    		for($i=$_data['land_address'];$i<=$_data['to_land_address'];$i++){
-    			$db = new Application_Model_DbTable_DbGlobal();
-    			$land_code = $db->getNewLandByBranch($_data['branch_id']);
-	    		$south = '';
-	    		$north='';
-	    		$west='';
-	    		$east='';
-    			if($_data['south']!=-1 AND ($_data['south'] !='' AND ($_data['south_prefix']!='' OR $_data['postfix_south']!='' )))
-    			{
-    				$south = $_data['south_prefix'].($_data['south']+$increase).$_data['postfix_south'];
-    			}elseif($_data['south'] =='' AND $_data['postfix_south']==''){
-    				$south = $_data['south_prefix'];
+    		$optionCount = $_data['optionCount'];
+    		if ($optionCount==1){
+    			for($i=$_data['land_address'];$i<=$_data['to_land_address'];$i++){
+    				$db = new Application_Model_DbTable_DbGlobal();
+    				$land_code = $db->getNewLandByBranch($_data['branch_id']);
+    				$south = '';
+    				$north='';
+    				$west='';
+    				$east='';
+    				if($_data['south']!=-1 AND ($_data['south'] !='' AND ($_data['south_prefix']!='' OR $_data['postfix_south']!='' )))
+    				{
+    					$south = $_data['south_prefix'].($_data['south']+$increase).$_data['postfix_south'];
+    				}elseif($_data['south'] =='' AND $_data['postfix_south']==''){
+    					$south = $_data['south_prefix'];
+    				}
+    				 
+    				if($_data['north']!=-1 AND ($_data['north'] !='' AND ($_data['north_prefix']!='' OR $_data['postfix_north']!='' )))
+    				{
+    					$north = $_data['north_prefix'].($_data['north']+$increase).$_data['postfix_north'];
+    				}elseif($_data['north'] =='' AND $_data['postfix_north']==''){
+    					$north = $_data['north_prefix'];
+    				}
+    				if($_data['west']!=-1 AND ($_data['west'] !='' AND ($_data['west_prefix']!='' OR $_data['postfix_west']!='')))
+    				{
+    					$west = $_data['west_prefix'].($_data['west']+$increase).$_data['postfix_west'];
+    				}elseif($_data['west'] =='' AND $_data['postfix_west']==''){
+    					$west = $_data['west_prefix'];
+    				}
+    				if($_data['east']!=-1 AND ($_data['east'] !='' AND ($_data['east_prefix']!='' OR $_data['postfix_east']!='')))
+    				{
+    					$east = $_data['east_prefix'].($_data['east']+$increase).$_data['postfix_east'];
+    				}elseif($_data['east'] =='' AND $_data['postfix_east']==''){
+    					$east = $_data['east_prefix'];
+    				}
+    				 
+    				$_arr=array(
+    						'branch_id'	  => $_data['branch_id'],
+    						'land_code'	  => $land_code,
+    						'land_address'=> strtoupper($_data['land_address_prefix'].$i.$_data['postfix_land_address']),
+    						'street'	  => $_data['street'],
+    						'price'	      => $_data['house_price'],
+    						'land_price'  => 0,
+    						'house_price' => $_data['house_price'],
+    						'land_size'	  => $_data['size'],
+    						'width'       => $_data['width'],
+    						'height'      => $_data['height'],
+    						'is_lock'     => 0,
+    						'status'	  => 1,
+    						'user_id'	  => $this->getUserId(),
+    						'property_type'=> $_data['property_type'],
+    						'south'	      => $south,
+    						'north'	      => $north,
+    						'west'	      => $west,
+    						'east'	      => $east,
+    						'note'        => $_data['desc'],
+    						'create_date'=>date('Y-m-d')
+    				);
+    				 
+    				$key = new Application_Model_DbTable_DbKeycode();
+    				$setting=$key->getKeyCodeMiniInv(TRUE);
+    				$show_house = $setting['showhouseinfo'];
+    				if($show_house==1){
+    					$_arr['land_width'] = $_data['width_land'];
+    					$_arr['land_height'] = $_data['height_land'];
+    					$_arr['full_size'] = $_data['full_size'];
+    					$_arr['floor']	=$_data['floor'];
+    					$_arr['living']	 = $_data['living'];
+    					$_arr['bedroom']  = $_data['bedroom'];
+    					$_arr['dinnerroom']= $_data['dinnerroom'];
+    					$_arr['buidingyear']= $_data['buidingyear'];
+    					$_arr['parkingspace'] = $_data['parkingspace'];
+    				}
+    				 
+    				$arrayCheck = array(
+    						'branch_id'=>$_data['branch_id'],
+    						'land_address'=>strtoupper($_data['land_address_prefix'].$i.$_data['postfix_land_address']),
+    						'street'=>$_data['street'],
+    				);
+    				$check=0;
+    				if (!empty($arrayCheck['land_address']) AND !empty($arrayCheck['street'])){
+    					$ch_query=$this->CheckTitle($arrayCheck);
+    					if (!empty($ch_query)){
+    						$check=1;// already exits
+    					}
+    				}
+    				if ($check==0){
+    					$this->insert($_arr);
+    				}
+    				$increase++;
     			}
-    			
-    			if($_data['north']!=-1 AND ($_data['north'] !='' AND ($_data['north_prefix']!='' OR $_data['postfix_north']!='' )))
-    			{
-    				$north = $_data['north_prefix'].($_data['north']+$increase).$_data['postfix_north'];
-    			}elseif($_data['north'] =='' AND $_data['postfix_north']==''){
-    				$north = $_data['north_prefix'];
+    		}else{
+    			for($i=$_data['land_address'];$i>=$_data['to_land_address'];$i--){
+    				$db = new Application_Model_DbTable_DbGlobal();
+    				$land_code = $db->getNewLandByBranch($_data['branch_id']);
+    				$south = '';
+    				$north='';
+    				$west='';
+    				$east='';
+    				if($_data['south']!=-1 AND ($_data['south'] !='' AND ($_data['south_prefix']!='' OR $_data['postfix_south']!='' )))
+    				{
+    					$south = $_data['south_prefix'].($_data['south']-$increase).$_data['postfix_south'];
+    				}elseif($_data['south'] =='' AND $_data['postfix_south']==''){
+    					$south = $_data['south_prefix'];
+    				}
+    				 
+    				if($_data['north']!=-1 AND ($_data['north'] !='' AND ($_data['north_prefix']!='' OR $_data['postfix_north']!='' )))
+    				{
+    					$north = $_data['north_prefix'].($_data['north']-$increase).$_data['postfix_north'];
+    				}elseif($_data['north'] =='' AND $_data['postfix_north']==''){
+    					$north = $_data['north_prefix'];
+    				}
+    				if($_data['west']!=-1 AND ($_data['west'] !='' AND ($_data['west_prefix']!='' OR $_data['postfix_west']!='')))
+    				{
+    					$west = $_data['west_prefix'].($_data['west']-$increase).$_data['postfix_west'];
+    				}elseif($_data['west'] =='' AND $_data['postfix_west']==''){
+    					$west = $_data['west_prefix'];
+    				}
+    				if($_data['east']!=-1 AND ($_data['east'] !='' AND ($_data['east_prefix']!='' OR $_data['postfix_east']!='')))
+    				{
+    					$east = $_data['east_prefix'].($_data['east']-$increase).$_data['postfix_east'];
+    				}elseif($_data['east'] =='' AND $_data['postfix_east']==''){
+    					$east = $_data['east_prefix'];
+    				}
+    				 
+    				$_arr=array(
+    						'branch_id'	  => $_data['branch_id'],
+    						'land_code'	  => $land_code,
+    						'land_address'=> strtoupper($_data['land_address_prefix'].$i.$_data['postfix_land_address']),
+    						'street'	  => $_data['street'],
+    						'price'	      => $_data['house_price'],
+    						'land_price'  => 0,
+    						'house_price' => $_data['house_price'],
+    						'land_size'	  => $_data['size'],
+    						'width'       => $_data['width'],
+    						'height'      => $_data['height'],
+    						'is_lock'     => 0,
+    						'status'	  => 1,
+    						'user_id'	  => $this->getUserId(),
+    						'property_type'=> $_data['property_type'],
+    						'south'	      => $south,
+    						'north'	      => $north,
+    						'west'	      => $west,
+    						'east'	      => $east,
+    						'note'        => $_data['desc'],
+    						'create_date'=>date('Y-m-d')
+    				);
+    				 
+    				$key = new Application_Model_DbTable_DbKeycode();
+    				$setting=$key->getKeyCodeMiniInv(TRUE);
+    				$show_house = $setting['showhouseinfo'];
+    				if($show_house==1){
+    					$_arr['land_width'] = $_data['width_land'];
+    					$_arr['land_height'] = $_data['height_land'];
+    					$_arr['full_size'] = $_data['full_size'];
+    					$_arr['floor']	=$_data['floor'];
+    					$_arr['living']	 = $_data['living'];
+    					$_arr['bedroom']  = $_data['bedroom'];
+    					$_arr['dinnerroom']= $_data['dinnerroom'];
+    					$_arr['buidingyear']= $_data['buidingyear'];
+    					$_arr['parkingspace'] = $_data['parkingspace'];
+    				}
+    				 
+    				$arrayCheck = array(
+    						'branch_id'=>$_data['branch_id'],
+    						'land_address'=>strtoupper($_data['land_address_prefix'].$i.$_data['postfix_land_address']),
+    						'street'=>$_data['street'],
+    				);
+    				$check=0;
+    				if (!empty($arrayCheck['land_address']) AND !empty($arrayCheck['street'])){
+    					$ch_query=$this->CheckTitle($arrayCheck);
+    					if (!empty($ch_query)){
+    						$check=1;// already exits
+    					}
+    				}
+    				if ($check==0){
+    					$this->insert($_arr);
+    				}
+    				$increase++;
     			}
-    			if($_data['west']!=-1 AND ($_data['west'] !='' AND ($_data['west_prefix']!='' OR $_data['postfix_west']!='')))
-    			{
-    				$west = $_data['west_prefix'].($_data['west']+$increase).$_data['postfix_west'];
-    			}elseif($_data['west'] =='' AND $_data['postfix_west']==''){
-    				$west = $_data['west_prefix'];
-    			}
-    			if($_data['east']!=-1 AND ($_data['east'] !='' AND ($_data['east_prefix']!='' OR $_data['postfix_east']!='')))
-    			{
-    				$east = $_data['east_prefix'].($_data['east']+$increase).$_data['postfix_east'];
-    			}elseif($_data['east'] =='' AND $_data['postfix_east']==''){
-    				$east = $_data['east_prefix'];
-    			}
-    			
-	    		$_arr=array(
-	    				'branch_id'	  => $_data['branch_id'],
-	    				'land_code'	  => $land_code,
-	    				'land_address'=> strtoupper($_data['land_address_prefix'].$i.$_data['postfix_land_address']),
-	    				'street'	  => $_data['street'],
-	    				'price'	      => $_data['house_price'],
-	    				'land_price'  => 0,
-	    				'house_price' => $_data['house_price'],
-	    				'land_size'	  => $_data['size'],
-	    				'width'       => $_data['width'],
-	    				'height'      => $_data['height'],
-	    				'is_lock'     => 0,
-	    				'status'	  => 1,
-	    				'user_id'	  => $this->getUserId(),
-	    				'property_type'=> $_data['property_type'],
-	    				'south'	      => $south,
-	    				'north'	      => $north,
-	    				'west'	      => $west,
-	    				'east'	      => $east,
-	    				'note'        => $_data['desc'],
-	    				'create_date'=>date('Y-m-d')
-	    		);
-	    		
-	    		$key = new Application_Model_DbTable_DbKeycode();
-	    		$setting=$key->getKeyCodeMiniInv(TRUE);
-	    		$show_house = $setting['showhouseinfo'];
-	    		if($show_house==1){
-	    			$_arr['land_width'] = $_data['width_land'];
-	    			$_arr['land_height'] = $_data['height_land'];
-	    			$_arr['full_size'] = $_data['full_size'];
-	    			$_arr['floor']	=$_data['floor'];
-	    			$_arr['living']	 = $_data['living'];
-	    			$_arr['bedroom']  = $_data['bedroom'];
-	    			$_arr['dinnerroom']= $_data['dinnerroom'];
-	    			$_arr['buidingyear']= $_data['buidingyear'];
-	    			$_arr['parkingspace'] = $_data['parkingspace'];
-	    		}
-	    		
-	    		$arrayCheck = array(
-	    				'branch_id'=>$_data['branch_id'],
-	    				'land_address'=>strtoupper($_data['land_address_prefix'].$i.$_data['postfix_land_address']),
-	    				'street'=>$_data['street'],
-	    		);
-	    		$check=0;
-	    		if (!empty($arrayCheck['land_address']) AND !empty($arrayCheck['street'])){
-	    			$ch_query=$this->CheckTitle($arrayCheck);
-	    			if (!empty($ch_query)){
-	    				$check=1;// already exits
-	    			}
-	    		}
-	    		if ($check==0){
-	    	   	 	$this->insert($_arr);
-	    		}
-	    	    $increase++;
     		}
+    		
     	}catch(Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}

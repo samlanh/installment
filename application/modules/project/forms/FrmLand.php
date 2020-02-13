@@ -266,6 +266,17 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 // 		$_type_of_property->setMultiOptions($_type_of);
 // 		$_type_of_property->setValue($request->getParam("type_property_sale"));
 		
+		$optionCount = new Zend_Dojo_Form_Element_FilteringSelect('optionCount');
+		$optionCount->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$options= array(
+				1=>$this->tr->translate("Increase"),
+				2=>$this->tr->translate("Decrease"));
+		$optionCount->setMultiOptions($options);
+		
 		if($data!=null){
 			
 			$north->setValue($data['north']);
@@ -319,7 +330,10 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				));
 			}
 		}
-		$this->addElements(array($full_size,$status_using,$width_land,$height_land,$north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle));
+		$this->addElements(array($full_size,$status_using,$width_land,$height_land,$north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle,
+				$optionCount
+				
+				));
 		return $this;
 	}
 }
