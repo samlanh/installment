@@ -1703,4 +1703,10 @@ function getLoanPaymentByLoanNumberEdit($data){
 		
 		return $arr;
 	}
+	
+	function getOnlyReceiptNumber($receipt_id){
+		$db = $this->getAdapter();
+		$sql="SELECT crm.receipt_no FROM ln_client_receipt_money AS crm WHERE crm.id = $receipt_id LIMIT 1";
+		return $db->fetchOne($sql);
+	}
 }

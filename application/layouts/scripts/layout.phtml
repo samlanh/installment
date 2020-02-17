@@ -437,10 +437,12 @@ function changeLange(lang){
 $(document).ready(function(){
 	$("body").hover(function() {
 		updateTimeOut();
+		checkSessionExpire();
 	});
-	$("body").hover(function() {
-		updateTimeOut();
-	});
+	//$("body").hover(function() {
+		//updateTimeOut();
+	//});
+
 });
 
 var urlReload = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'reloadr'));?> ';
@@ -453,6 +455,29 @@ function updateTimeOut(){
 		success: function(data){
 			//location.reload();
 			//alert(data);
+		},
+		error:function(err){
+			
+		}
+	});
+}
+
+var urlCheckSession = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'sessioncheck'));?> ';
+function checkSessionExpire(){
+	var lang="";
+	jQuery.ajax({
+		url: urlCheckSession,
+		type: "post",
+		data:{'lange':lang},
+		success: function(data){
+			if(data == true){
+				loadingBlock();
+				setTimeout(function () {
+					alert("<?php echo $tr->translate("Session Expire");?>");
+				  	window.location = '<?php echo $this->baseUrl();?>';
+			    }, 1000);
+				
+			}
 		},
 		error:function(err){
 			

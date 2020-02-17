@@ -1217,6 +1217,10 @@ public function getAllOutstadingLoan($search=null){
 			   		crm.payment_method as payment_methodid,
 					(SELECT `ln_view`.`name_kh` FROM `ln_view` WHERE ((`ln_view`.`key_code` = `crm`.`payment_method`)
          		 	AND (`ln_view`.`type` = 2))LIMIT 1) AS `payment_method`,
+         		 CASE
+					WHEN  crm.field3 = 1 THEN 'កក់លើកទី'
+					ELSE  ''
+				END AS paymnetLabel,
 				(SELECT c.hname_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS hname_kh,
 				(SELECT CONCAT(last_name,' ',first_name) FROM `rms_users` WHERE rms_users.id=crm.`user_id` LIMIT 1) As by_user
 		FROM `ln_client_receipt_money` AS crm WHERE crm.`id`=".$id;

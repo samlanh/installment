@@ -449,4 +449,19 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$db = new Application_Model_DbTable_DbGlobal();
 		$this->view->customer =  $db->getAllClient();
 	}
+	function saveprintAction(){
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$receipt_id = $db->addILPayment($_data);
+			$db->recordHistoryReceipt($_data, $receipt_id);
+			
+			$receipt = $db->getOnlyReceiptNumber($receipt_id);
+			echo $receipt;
+// 			$dbReport  = new Report_Model_DbTable_DbLandreport();
+// 			$row = $dbReport->getReceiptByID($receipt_id);
+// 			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
 }

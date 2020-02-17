@@ -185,6 +185,16 @@ class IndexController extends Zend_Controller_Action
     		exit();
     	}
     }
+    public function sessioncheckAction(){
+    	if($this->getRequest()->isPost()){
+	    	$db_global = new Application_Model_DbTable_DbGlobal();
+	    	$checkses = $db_global->checkSessionExpire();
+	    	if (empty($checkses)){
+	    		echo true; exit();
+	    	}
+	    	echo false; exit();
+    	}
+    }
     public function errorAction()
     {
     }

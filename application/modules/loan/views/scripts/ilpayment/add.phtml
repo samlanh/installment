@@ -504,7 +504,7 @@ table.collape th.tdheader{padding:5px 0px;}
 			<input type="button" value="បិទ" label="បិទ" id="close" dojoType="dijit.form.Button" 
 							iconClass="dijitEditorIcon dijitEditorIconCancel" onclick="hideDialog();"/>
 			<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="print" dojoType="dijit.form.Button" 
-				iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="print();"/>
+				iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="getSavePrint();"/>
 		</div>
 		<div id="rpt_print" style="height: 13cm ; padding: 0px; margin: 0px;font-family:'Khmer OS Battambang';">
 			<?php 
@@ -1638,6 +1638,41 @@ function getLaonHasPayByLoanNumber(){//tab3 ប្រវត្តបានបង
 	}
 }
 function checkScheduleOption(){
+}
+
+function getSavePrint(){
+	var urlSavePrint = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'saveprint')); ?>';
+	branch_id = dijit.byId('branch_id').get('value');
+	amount_receive = dijit.byId('amount_receive').get('value');
+	if(amount_receive<=0){
+		alert("<?php echo $tr->translate("CANNOT_PRINTPAYMENT_ALERT");?>");
+		dijit.byId('amount_receive').focus();
+		return false;
+	}
+	branch_id = dijit.byId('to_branch_id').get("value");
+	if(branch_id==0 || branch_id==-1){
+		alert("Please Select Branch");
+		dijit.byId('to_branch_id').focus();
+		return false;
+	}
+	loadingBlock();
+	dojo.xhrPost({
+	    url: urlSavePrint,	
+		form: dojo.byId("frm_add_group_pay"),	
+		load: function(data) {
+			alert(data);
+			dojo.byId("lb_receipt").innerHTML = data;
+			HideloadingBlock();
+			dojo.byId("innerrpt_print1").innerHTML = dojo.byId('rpt_print').innerHTML;
+			window.frames["print_frame"].document.body.innerHTML=dojo.byId('rpt_print').innerHTML<?php if($this->data['showreceipt']>1){ ?> + dojo.byId('rpt_print1').innerHTML<?php }?>;
+			window.frames["print_frame"].window.focus();
+			window.frames["print_frame"].window.print();
+			alert('<?php echo $tr->translate('INSERT_SUCCESS');?> !');
+			window.location.href ="<?php echo $this->baseUrl();?>/loan/ilpayment";
+		},
+		error: function(e) {
+		}
+	});
 }
 </script>
 <style>	    
