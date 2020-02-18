@@ -1,0 +1,249 @@
+<?php  
+	$filter = $this->frm_search;
+	$dayin_khmer = $this->day_inkhmer;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();	
+	$db = new Report_Model_DbTable_DbLandreport();
+
+	$tran = $this->tran_schedule;
+	$end_dat=$this->date_show;
+	$db_keycode = new Application_Model_DbTable_DbKeycode();
+	$key_code= $db_keycode->getSystemSetting(9);
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}	
+
+	$dbLoanCollect = new Report_Model_DbTable_DbloanCollect();
+?>
+<style>
+.hover:hover{background: #ccc;}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><?php  echo $tr->translate("REPORT_LOAN_COLLECT");?></title>
+<script>
+     dojo.require("dijit.form.DateTextBox");
+</script>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT_LOAN_COLLECT');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+ 	<form method="post">
+ 		<div class="card-box">
+	 		<div class="form-group">
+	            <div class="col-md-2 col-sm-2 col-xs-12">
+	            	<?php echo $filter->getElement('adv_search');?>
+	            </div>
+	             <div class="col-md-2 col-sm-2 col-xs-12">
+	             	<?php echo $filter->getElement('branch_id');?>
+	            </div>
+	             <div class="col-md-2 col-sm-2 col-xs-12">
+	             	<?php echo $filter->getElement('client_name');?>
+	            </div>
+	            <div class="col-md-2 col-sm-2 col-xs-12">
+	            	<div class="col-md-8 col-sm-8 col-xs-12">
+	             	<?php echo $filter->getElement('end_date');?>
+	             	</div>
+	             	<div class="col-md-4 col-sm-4 col-xs-12">
+	             		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+	             	</div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <div class="col-md-2 col-sm-2 col-xs-12">
+	            </div>
+	            <div class="col-md-2 col-sm-2 col-xs-12">
+	            </div>
+	        </div>
+	     </div>
+	</form>
+<div style="min-height:25cm; margin:0 auto;">
+	<div id="divPrint">
+	<style>
+		.style{
+			line-height: 20px;font-size: 12px !important;
+			font-family: 'Times New Roman','Khmer OS Battambang';
+		}
+		  table { page-break-inside:auto }
+		  tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+		th{padding: 5px;}
+		.hover td{padding: 1px;}
+		.hide{visibility: hidden;}
+		@media print {
+		  div.divFooter {
+		    position: fixed;
+		    top: 0;
+		  	width: 100%;
+		  	height: 100px;
+		  	bottom:0px;
+			margin:0;
+		  }
+		.hide{visibility: visible; height: 110px;}
+		}
+	thead tr td{
+			text-align: center;
+		}
+		table.content-data{
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-size:13px;
+			font-family: 'Times New Roman','Khmer OS Battambang';
+			white-space: nowrap;
+			line-height: 22px;
+			width: 100%;
+		}
+		table.content-data thead tr.style {
+		   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+			background: #c1d0f3;
+		}
+		table.tb-footer{
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-family: 'Times New Roman','Khmer OS Battambang';
+			font-size:11px;
+		}
+		table.tb-footer tr{
+		 line-height: 14px;  padding:2px 0px; height: 25px;
+		}
+</style>
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	        	<div class="divFooter">
+	        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0 auto;padding:0px; border:none;">
+	            	<tr>
+	                	<td width="30%"><img src="<?php echo $logo;?>" style="max-height:85px;max-width:100%;"></td>
+	                	<td width="40%" valign="top">
+	                	<ul>
+                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
+                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_LOAN_COLLECT");?></li>
+                			<li style="text-align:center; font-size:14px;"><?php echo date("d-M-Y",strtotime($this->search['end_date']));?></li>
+                		</ul>
+                    </td>
+	                    <td width="30%"></td>
+	                </tr>
+	            </table>
+	            </div>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td id="exportExcel">
+	            <table class="content-data" border="1"​  width="100%">
+	                <thead>
+		                 <tr class="hide" style="border:1px solid #000;">
+			                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+			             </tr>
+		                 <tr class="style" align="center" style="font-weight: bold;" >
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("NUM");?></td>
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>
+		                    <td colspan="2" style="padding:0px 1px;"><?php echo $tr->translate("CLIENT_INFO");?></td>
+		                    <td colspan="2" style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_INFO");?></td>
+		                    <td colspan="3" style="padding:0px 1px;"><?php echo $tr->translate("PAYMENT");?></td>
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("DATE_PAYMENT");?></td>
+		                </tr>
+		                <tr class="style" bgcolor="#c1d0f3" style="font-weight: bold;" >
+	                        <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+	                        <td><?php echo $tr->translate("TEL");?></td>
+		                    <td style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+		                    <td style="padding:0px 1px;"><?php echo $tr->translate("STREET");?></td>
+	                        
+		                    <td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("AMOUNT");?></td>
+		                    <td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+		                 	<td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
+		                </tr>
+	                </thead>
+	                <?php 
+	                	 $amt_d1 = 0;$amt_d2 = 0;
+	                	 $penelize=0;$total_payment=0;
+	                	 $key=0;
+	                	 $free_day = $this->data["graice_pariod_late"];//រយៈអនុគ្រោះ
+	                	 $ps = $this->data["penalty_value"];//ការប្រាក់ពិន័យ
+	                	 $penalty_type = $this->data["penalty_type"];//ប្រភេទពិន័យ
+	                	 $total_penelize=0;
+		             ?>
+	               <?php if(!empty($tran)){foreach($tran as $key =>$row){
+	               	?>
+	               	<tr align="center" style="font-size:9px; height: 20px; white-space:nowrap;" class="style hover">
+	                    <td ><?php echo ($key+1<10)?"0":"";echo $key+1;?></td>
+	                    <td align="left">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+						<td>&nbsp;<a style="color:#000; text-decoration: none;" ><?php echo $row['client_name'];?>&nbsp;</a></td>
+						<td align="left" style="line-height: 12px;white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $row['phone_number'];?></td>
+						<td>&nbsp;&nbsp;<?php echo $row['land_address']; ?>&nbsp;</td>	
+						<td>&nbsp;<?php echo $row['street'];?>&nbsp;</td>
+	                   
+	                    <td align="left" style="white-space: nowrap;">&nbsp;<?php echo number_format($row['principal_permonthafter'],2) ;?>&nbsp;</td>
+	                    <?php $str_day = date('D',strtotime($row['date_payment']));
+	                    	$day_as_khmer = $dayin_khmer[$str_day];
+	                    ?>
+	                    <td align="center">&nbsp;<?php 
+	                    
+	                    $end_dat = $this->search['end_date'];
+	                    $total_pay=($row['principal_permonthafter']+$row['total_interest_after']);
+	                    
+// 	                    if($row['last_optiontype']==1 AND $row['ispay_bank']==0){
+// 	                    	$total_penelize = $dbLoanCollect->checkSalePenalty($row['sale_id'], $this->search['end_date']);
+// 	                    }else{
+// 	                    	$amount_lateday=0;
+//                     		$total_penelize=0;
+// 	                    }
+	                    	echo number_format($total_penelize,2);
+		                    $total_payment = $total_penelize+$row['principal_permonthafter']+$row['total_interest_after'];
+		                    $penelize = $total_penelize+$penelize;
+		                    ?>&nbsp;
+	                    </td>
+	                   	<td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($total_payment,2));?>&nbsp;</td>
+	                    <td><?php echo $row['no_installment']."/".number_format($row['total_duration'],0);?></td>
+	                   <td align="center" style="white-space: nowrap;">
+	                   		<?php 
+		                    	if($row['last_optiontype']==1){//by date
+		                    		if($row['ispay_bank']==0){
+		                    			$date= new DateTime($row['date_payment']);
+		                    			echo $date->format("d-m-Y");
+		                    		}else{
+		                    			echo $row['payment_type'];//." ".$row['ispay_bank'];
+		                    		}
+		                    	}else{//by last payment
+		                    		echo $tr->translate("RECEIVED_PROPERTY");
+		                    	}	                    		
+	                    	?>
+	                 &nbsp;</td>
+	                 </tr>
+		               <?php 
+							$amt_d1 = $amt_d1+$row['principal_permonthafter'];
+		               ?>
+	                <?php }}?>
+                <?php $i=1;?>
+	                <tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
+	                	<td colspan="6"></td>
+	                	<td><?php echo number_format($amt_d1,2);?></td>
+	                	<td><?php echo number_format($penelize,2);?></td>
+	                	<td><?php echo number_format($amt_d1+$amt_d2+$penelize,2);?></td>
+	                	<td colspan="2"></td>
+	                </tr>
+                </table>
+                 <br />
+	              <?php echo $this->footerReport;?>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+</div>

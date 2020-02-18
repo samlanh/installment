@@ -148,4 +148,69 @@ class Report_RentController extends Zend_Controller_Action {
   	$dbSet = new Rent_Model_DbTable_DbSetting();
   	$this->view->rowdetail = $dbSet->getSettingDetailById($rsagreement['setting_opt']);
   }
+  
+  function rptLoanLateAction(){
+  
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}else {
+  		$search = array(
+  				'adv_search' =>	"",
+  				'start_date' => '',
+  				'end_date'   => date('Y-m-d'),
+  				'branch_id'  => -1,
+  				'co_id'  => '',
+  				'client_name'=> 0
+  		);
+  	}
+  	$db  = new Report_Model_DbTable_DbRent();
+  	$this->view->loanlate_list =$db->getALLLoanlate($search);
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	$this->view->list_end_date = $search["end_date"];
+  	 
+  	$this->view->search = $search;
+  	 
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  	 
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
+  }
+  function rptLoancollectAction(){//list payment that collect from client
+  	$dbs = new Report_Model_DbTable_DbRent();
+  	$frm = new Application_Form_FrmSearchGlobal();
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}
+  	else{
+  		$search = array(
+  				'branch_id'=>-1,
+  				'client_name'=>'',
+  				'last_optiontype'=>-1,
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  				'stepoption'=>0,
+  				'status' => -1,);
+  	}
+  	$this->view->date_show=$search['end_date'];
+  	$this->view->search=$search;
+  	$row = $dbs->getAllLnClient($search);
+  	$this->view->tran_schedule=$row;
+  	 
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  
+  	$this->view->list_end_dates = $search["end_date"];
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  
+  	 
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
+  }
 }

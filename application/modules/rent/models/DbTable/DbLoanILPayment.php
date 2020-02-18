@@ -1223,7 +1223,7 @@ function getLoanPaymentByLoanNumberEdit($data){
    	$sql = "SELECT lc.`crm_id`,lc.`lfd_id`,lc.`land_id`,lc.`service_charge`,lc.`penelize_amount`,lc.`total_interest`,lc.`total_payment`,lc.`total_recieve`,lc.`principal_permonth`,old_penelize,old_service_charge FROM `ln_rent_receipt_money_detail` AS lc WHERE lc.`crm_id`=$id";
    	return $db->fetchAll($sql);
    }
-	public function getAllLoanNumberByBranch($branch_id,$is_issueplong=0){
+	public function getAllLoanNumberByBranch($branch_id,$is_completed=0){
 		$db = $this->getAdapter();
 		$sql= "SELECT id,
 				  CONCAT((SELECT name_kh FROM ln_client WHERE ln_client.client_id=ln_rent_property.`client_id` LIMIT 1),'-',
@@ -1233,8 +1233,8 @@ function getLoanPaymentByLoanNumberEdit($data){
 				WHERE status=1 
 				  AND branch_id=$branch_id ";
 		$sql.=" AND is_cancel=0";
-		if($is_issueplong!=0){
-			$sql.=" AND is_issueplong=0 ";
+		if($is_completed!=0){
+			$sql.=" AND is_completed=1 ";
 		}
 		return $db->fetchAll($sql);
 	}
@@ -1544,5 +1544,35 @@ function getLoanPaymentByLoanNumberEdit($data){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	
+	}
+	
+	function rentCheckUpdateComplete($receipt_id){
+		$db = $this->getAdapter();
+		$row = $this->getIlPaymentByID($receipt_id);
+		$sale_id = empty($row['sale_id'])?0:$row['sale_id'];
+		$totalReceive = $this->getTotalPayment($sale_id);
+		$totalReceive = empty($totalReceive)?0:$totalReceive;
+		
+		$totalExpectIncome = $this->getTotalExpectIncome($sale_id);
+		$totalExpectIncome = empty($totalExpectIncome)?0:$totalExpectIncome;
+		
+		if ($totalReceive>=$totalExpectIncome){
+			$array = array(
+					'is_completed'				=> 1,
+			);
+			$where = " id = ".$sale_id;
+			$this->_name="ln_rent_property";
+			$this->update($array, $where);
+		}
+	}
+	function getTotalPayment($sale_id){
+		$db = $this->getAdapter();
+		$sql="SELECT SUM(r.`recieve_amount`) AS totalRecieve FROM `ln_rent_receipt_money` AS r WHERE r.sale_id = $sale_id AND r.field3!=1 GROUP BY r.sale_id";
+		return $db->fetchOne($sql);
+	}
+	function getTotalExpectIncome($sale_id){
+		$db = $this->getAdapter();
+		$sql="SELECT SUM(r.`total_payment`) AS totalPayment FROM `ln_rentschedule` AS r WHERE r.sale_id = $sale_id GROUP BY r.sale_id";
+		return $db->fetchOne($sql);
 	}
 }

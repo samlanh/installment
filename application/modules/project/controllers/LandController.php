@@ -78,7 +78,12 @@ class Project_LandController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
+		
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+		$alltob = $db->getAllTypeTob();
+		array_unshift($alltob, array('id'=>'','name' => $tr->translate("SELECT_TYPE_STORE")), array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW")));
+		$this->view->alltobtype =$alltob;
 		
 		$property_type = $db->getPropertyType();
 		array_unshift($property_type, array('id'=>'','name' => $tr->translate("SELECT_PROPERTY")), array('id'=>'-1', 'name'=>$tr->translate("Add New Property Type")));
@@ -130,6 +135,10 @@ class Project_LandController extends Zend_Controller_Action {
 		}
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	
+		$alltob = $db->getAllTypeTob();
+		array_unshift($alltob, array('id'=>'','name' => $tr->translate("SELECT_TYPE_STORE")), array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW")));
+		$this->view->alltobtype =$alltob;
+		
 		$property_type = $db->getPropertyType();
 		array_unshift($property_type, array('id'=>'','name' => $tr->translate("SELECT_PROPERTY")), array('id'=>'-1', 'name'=>$tr->translate("Add New Property Type")));
 		$this->view->pro_type = $property_type;
@@ -182,6 +191,10 @@ class Project_LandController extends Zend_Controller_Action {
 			}
 		}
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+		$alltob = $db->getAllTypeTob();
+		array_unshift($alltob, array('id'=>'','name' => $tr->translate("SELECT_TYPE_STORE")), array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW")));
+		$this->view->alltobtype =$alltob;
 		
 		$property_type = $db->getPropertyType();
 		array_unshift($property_type, array('id'=>'','name' => $tr->translate("SELECT_PROPERTY")), array('id'=>'-1', 'name'=>$tr->translate("Add New Property Type")));
@@ -447,13 +460,18 @@ class Project_LandController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$alltob = $db->getAllTypeTob();
+		array_unshift($alltob, array('id'=>'','name' => $tr->translate("SELECT_TYPE_STORE")), array('id'=>'-1', 'name'=>$tr->translate("ADD_NEW")));
+		$this->view->alltobtype =$alltob;
+		
 		$row = $db->getClientById($id);
 		$this->view->row=$row;
 		if(empty($row)){
 			$this->_redirect("/project/land");
 		}
 		
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
 		$property_type = $db->getPropertyType();
 		array_unshift($property_type, array('id'=>'','name' => $tr->translate("SELECT_PROPERTY")), array('id'=>'-1', 'name'=>$tr->translate("Add New Property Type")));
 		$this->view->pro_type = $property_type;

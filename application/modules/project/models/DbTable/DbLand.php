@@ -112,6 +112,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     						'status'	  => 1,
     						'user_id'	  => $this->getUserId(),
     						'property_type'=> $_data['property_type'],
+    						'type_tob'	  => $_data['type_tob'],
     						'south'	      => $south,
     						'north'	      => $north,
     						'west'	      => $west,
@@ -201,6 +202,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     						'status'	  => 1,
     						'user_id'	  => $this->getUserId(),
     						'property_type'=> $_data['property_type'],
+    						'type_tob'	  => $_data['type_tob'],
     						'south'	      => $south,
     						'north'	      => $north,
     						'west'	      => $west,
@@ -281,6 +283,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				'status'	  => 1,//$_data['status'],
 				'user_id'	  => $this->getUserId(),
 		    	'property_type'	  => $_data['property_type'],
+		    	'type_tob'	  => $_data['type_tob'],
 	    		'south'	  => $_data['south'],
 	    		'north'	  => $_data['north'],
 	    		'west'	  => $_data['west'],
@@ -557,5 +560,11 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		$this->delete($where);
 		
 		return $land_id;
+	}
+	
+	function getAllTypeTob(){
+		$db = $this->getAdapter();
+		$sql = " SELECT DISTINCT type_tob as name,type_tob as id FROM `ln_properties` WHERE type_tob!='' ORDER BY type_tob ASC ";
+		return $db->fetchAll($sql);
 	}
 }

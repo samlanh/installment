@@ -1018,4 +1018,9 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	";
     	return $db->fetchRow($sql);
     }
+    function getDepositeByRentId($rent_id){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT SUM(crm.recieve_amount) AS totalReceive FROM `ln_rent_receipt_money` AS crm WHERE crm.sale_id =$rent_id AND crm.field3=1 LIMIT 1";
+    	return $db->fetchOne($sql);
+    }
 }

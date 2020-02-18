@@ -118,6 +118,9 @@ class Rent_PaymentController extends Zend_Controller_Action {
 			try{
 				$receipt = $db->addILPayment($_data);
 				$db->recordHistoryReceipt($_data, $receipt);
+				
+				$db->rentCheckUpdateComplete($receipt);//check update rent to completed
+				
 				if($rightclick=="true"){
 					Application_Form_FrmMessage::message('INSERT_SUCCESS');
 					echo "<script>window.close();</script>";exit();
@@ -279,11 +282,11 @@ class Rent_PaymentController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Rent_Model_DbTable_DbLoanILPayment();
-			$is_issueplong = 0;
-			if(!empty($data["is_issueplong"])){
-				$is_issueplong=$data["is_issueplong"];
+			$is_completed = 0;
+			if(!empty($data["is_completed"])){
+				$is_completed=$data["is_completed"];
 			}
-			$row = $db->getAllLoanNumberByBranch($data["branch_id"],$is_issueplong);
+			$row = $db->getAllLoanNumberByBranch($data["branch_id"],$is_completed);
 			print_r(Zend_Json::encode($row));
 			exit();
 		}

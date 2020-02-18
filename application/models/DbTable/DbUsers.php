@@ -319,7 +319,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		ON (ua.acl_id=aa.acl_id) WHERE aa.status=1
 		AND aa.module='report' ";
 		if($controller_name==null){
-			$sql.=" AND aa.controller!='invest'";
+			$sql.=" AND aa.controller!='invest' AND aa.controller!='rent'";
 		}else{
 			$sql.=" AND aa.controller='".$controller_name."'";
 		}

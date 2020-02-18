@@ -630,6 +630,7 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
     	pp.`land_size`,
     	 
     	`pp`.`property_type`,
+    	`pp`.`type_tob`,
     	`pp`.`land_code` AS `property_code`,
     	`pp`.`land_address` AS `property_title`,
     	pp.`street` AS `property_street`,
@@ -678,5 +679,198 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
     	FROM `ln_rent_receipt_money` AS crm WHERE crm.status=1 AND crm.field3=1
     	AND sale_id = $sale_id ORDER BY crm.id ASC";
     	return $db->fetchRow($sql);
+    }
+    
+    
+    public function getALLLoanlate($search = null){
+    	$db = $this->getAdapter();
+    	$sql=" 
+    	SELECT
+	    	c.`client_number`,
+	    	c.`name_kh`,
+	    	c.`phone`,
+	    	(SELECT project_name FROM `ln_project` WHERE br_id=s.branch_id LIMIT 1 ) As branch_name ,
+	    	`l`.`land_code`               AS `land_code`,
+	    	`l`.`land_address`            AS `land_address`,
+	    	`l`.`street`                  AS `street`,
+	    	`s`.`price_sold`              AS `price_sold`,
+	    	`s`.`end_line`                AS `end_line`,
+	    	`s`.`interest_rate`           AS `interest_rate`,
+	    	`s`.`payment_id`              AS `payment_id`,
+	    	`sd`.`id`                     AS `id`,
+	    	`sd`.`penelize`               AS `penelize`,
+	    	`sd`.`date_payment`           AS `date_payment`,
+	    	`sd`.`amount_day`             AS `amount_day`,
+	    	`sd`.`status`                 AS `status`,
+	    	`sd`.`is_completed`           AS `is_completed`,
+	    	SUM(`sd`.`principal_permonthafter`) AS `principal_permonthafter`,
+	    	SUM(`sd`.`total_interest_after`)   AS `total_interest_after`,
+	    	SUM(`sd`.`total_payment_after`)    AS `total_payment_after`,
+	    	`sd`.`service_charge`         AS `service_charge`,
+	    	sd.no_installment,
+	    	sd.last_optiontype,
+	    	sd.ispay_bank,
+	    	(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = sd.ispay_bank LIMIT 1) AS payment_type,
+	    	(SELECT date_input FROM `ln_rent_receipt_money` WHERE land_id=1 ORDER BY date_input DESC LIMIT 1)
+	    	As last_pay_date
+    	FROM
+	    	`ln_rent_property` AS s,
+	    	`ln_rentschedule` AS sd,
+	    	`ln_properties` AS l,
+	    	`ln_client` AS c
+    	WHERE
+	    	s.`id` = sd.`sale_id`
+	    	AND l.id=s.house_id
+	    	AND s.`status` = 1
+	    	AND sd.`is_completed` = 0
+	    	AND sd.`status` = 1
+	    	AND sd.last_optiontype=1
+	    	AND `s`.`is_cancel` = 0
+	    	AND c.`client_id` = s.`client_id`
+	    	AND sd.ispay_bank =0 ";
+    
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("s.branch_id");
+    
+    	$from_date =(empty($search['start_date']))? '1': " sd.date_payment >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " sd.date_payment < '".$search['end_date']."'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	 
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = trim(addslashes($search['adv_search']));
+    		$s_where[] = " `l`.`land_code` LIKE '%{$s_search}%'";
+    		$s_where[] = " `l`.`street` LIKE '%{$s_search}%'";
+    		$s_where[] = " `l`.`land_code` LIKE '%{$s_search}%'";
+    		$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
+    		$s_where[] = " c.`client_number` LIKE '%{$s_search}%'";
+    		$s_where[] = " c.`name_kh`  LIKE '%{$s_search}%'";
+    		$s_where[] = " c.`phone` LIKE '%{$s_search}%'";
+    		$where .=' AND ('.implode(' OR ',$s_where).')';
+    	}
+    	if(($search['branch_id']>0)){
+    		$where.=" AND s.branch_id =".$search['branch_id'];
+    	}
+    	if(!empty($search['co_id'])){
+    		$where.=" AND s.staff_id =".$search['co_id'];
+    	}
+    	if($search['client_name']>0){
+    		$where.=" AND s.`client_id` =".$search['client_name'];
+    	}
+    
+    	$group_by = " Group by s.id order by sd.date_payment ASC ";
+    	return $db->fetchAll($sql.$where.$group_by);
+    }
+    
+    public function getAllLnClient($search=null){
+    	$db=$this->getAdapter();
+    	$end_date = $search['end_date'];
+    	
+    	$sql="
+    	SELECT pd.*,
+	    	SUM(`pd`.principal_permonthafter) AS principal_permonthafter,
+	    	SUM(`pd`.total_interest_after) AS total_interest_after,
+	    	SUM(`pd`.total_payment_after) AS total_payment_after,
+	    	SUM(`pd`.service_charge) AS service_charge,
+	    	COUNT(pd.id) AS amount_late,
+    		s.total_duration,
+	    	(SELECT `ln_project`.`project_name` FROM `ln_project`  WHERE (`ln_project`.`br_id` = `s`.`branch_id`) LIMIT 1) AS `branch_name`,
+	    	`l`.`land_code`                AS `land_code`,
+	    	`l`.`land_address`             AS `land_address`,
+	    	`l`.`street`                   AS `street`,
+    	
+	    	(SELECT `c`.`client_number`  FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `client_number`,
+	    	(SELECT `c`.`name_kh` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `client_name`,
+	    	(SELECT `c`.`phone` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `phone_number`,
+	    	(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = pd.ispay_bank LIMIT 1) AS payment_type
+    	FROM ((`ln_rentschedule` `pd`
+	    	JOIN `ln_rent_property` `s`)
+	    	JOIN `ln_properties` `l`)
+    	WHERE `s`.`house_id` = `l`.`id`
+	    	AND `pd`.`is_completed` = 0
+	    	AND `s`.`status` = 1
+	    	AND `s`.`is_cancel` = 0
+	    	AND `pd`.`sale_id` = `s`.`id`
+	    	AND `pd`.`status` = 1
+	    	AND `pd`.`last_optiontype` = 1
+	    	AND `pd`.`is_completed` = 0
+    	";
+    	$where ='';
+    	 
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("s.branch_id");
+    	 
+    	$to_date = (empty($search['end_date']))? '1': " pd.date_payment <= '".$search['end_date']." 23:59:59'";
+    	$where.= " AND ".$to_date;
+    	if($search['client_name']>0){
+    		$where.=" AND s.client_id = ".$search['client_name'];
+    	}
+    	if($search['branch_id']>0){
+    		$where.=" AND s.branch_id = ".$search['branch_id'];
+    	}
+    	
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = trim(addslashes($search['adv_search']));
+    		$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT `c`.`client_number` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT `c`.`phone` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT `c`.`name_kh` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " `l`.land_code LIKE '%{$s_search}%'";
+    		$s_where[] = " `l`.`land_address` LIKE '%{$s_search}%'";
+    		$s_where[] = " `l`.`street`  LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	$order=" GROUP BY pd.sale_id,pd.ispay_bank ORDER BY  pd.date_payment ASC ";
+    	return $db->fetchAll($sql.$where.$order);
+    }
+    function getRentNearlyPayment(){
+    	$db=$this->getAdapter();
+    	$search['start_date'] = "";
+    	$search['end_date']= date('Y-m-d');
+    
+    	$dbgb = new Setting_Model_DbTable_DbGeneral();
+    	$alert = $dbgb->geLabelByKeyName('payment_day_alert');
+    	$search['end_date']= date('Y-m-d');
+    	if (!empty($alert['keyValue'])){
+    		$amt_day = $alert['keyValue'];
+    		$search['end_date']= date('Y-m-d',strtotime("+$amt_day day"));
+    	}
+    	$sql="
+    	SELECT pd.*,
+	    	SUM(`pd`.principal_permonthafter) AS principal_permonthafter,
+	    	SUM(`pd`.total_interest_after) AS total_interest_after,
+	    	SUM(`pd`.total_payment_after) AS total_payment_after,
+	    	SUM(`pd`.service_charge) AS service_charge,
+	    	COUNT(pd.id) AS amount_late,
+    	 
+	    	(SELECT `ln_project`.`project_name` FROM `ln_project`  WHERE (`ln_project`.`br_id` = `s`.`branch_id`) LIMIT 1) AS `branch_name`,
+	    	`l`.`land_code`                AS `land_code`,
+	    	`l`.`land_address`             AS `land_address`,
+	    	`l`.`street`                   AS `street`,
+    
+	    	(SELECT `c`.`client_number`  FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `client_number`,
+	    	(SELECT `c`.`name_kh` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `client_name`,
+	    	(SELECT `c`.`phone` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `phone`
+	    	FROM ((`ln_rentschedule` `pd`
+	    	JOIN `ln_rent_property` `s`)
+	    	JOIN `ln_properties` `l`)
+	    	WHERE `s`.`house_id` = `l`.`id`
+	    	AND `pd`.`is_completed` = 0
+	    	AND `s`.`status` = 1
+	    	AND `s`.`is_cancel` = 0
+	    	AND `pd`.`sale_id` = `s`.`id`
+	    	AND `pd`.`status` = 1
+	    	AND `pd`.`last_optiontype` = 1
+	    	AND `pd`.`is_completed` = 0
+    	";
+    	$where ='';
+    	$from_date =(empty($search['start_date']))? '1': " `pd`.date_payment <= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " `pd`.date_payment <= '".$search['end_date']." 23:59:59'";
+    	$where= " AND ".$from_date." AND ".$to_date;
+    	$where.= " AND pd.ispay_bank=0";
+    	$order=" GROUP BY sale_id ORDER BY date_payment DESC ,sale_id ASC, `pd`.id ASC";
+    
+    	return $db->fetchAll($sql.$where.$order);
     }
  }

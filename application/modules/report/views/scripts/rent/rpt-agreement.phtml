@@ -135,7 +135,7 @@
 		             			echo $dbparmeter->getNumberInkhmer($from->diff($to)->y);
 		             			?>ឆ្នាំ 
 		             			កាន់អត្តសញ្ញាណប័ណ្ណលេខ<span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> 
-		             			មានទីលំនៅបច្ចុប្បន្ន <?php echo $this->agreement['w_current_address'];?> 
+		             			មានទីលំនៅបច្ចុប្បន្ន <?php echo $this->agreement['project_manager_p_current_address'];?> 
 		             			តំណាងអោយម្ចាស់ផ្សារលន ស៊ីធី(ចោមចៅ)ហៅភាគី (ក)។ 
 		             			<?php if (!empty($this->agreement['w_manager_namekh'])){?>
 		             			និង ឈ្មោះ<span class="value" style="min-width:80px;font-family:'Khmer OS Battambang';font-weight:bold;">( <?php echo $this->agreement['w_manager_namekh'];?> )</span>
@@ -178,7 +178,7 @@
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">១-</span>
 											    	ភាគី (ក) យល់ព្រមជួល <span class="value" style="min-width:30px;font-weight: bold;"><?php echo $propertyType;?></span> លេខ <span class="value" style="min-width:30px;font-weight: bold;"><?php echo $this->agreement['property_title'];?></span> ដែលមានទីតាំង ក្នុងផ្សារ លន ស៊ីធី
-											    	ក្នុងតម្លៃ <span style="font-weight: bold;"><?php echo number_format($this->agreement['price_sold'],2);?> ($) (<label id="lable_pricekhmer1" style="font-family:'Khmer OS Battambang';padding-right: 20px;"></label>ដុល្លារអាមេរិក) </span> ក្នុងមួយខែទៅឲ្យភាគី (ខ) ។ ប្រភេទ<?php echo $propertyType;?> ................................ទំហំ <span class="value" style="text-align:center; min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_width'])." x ".$dbparmeter->getNumberInkhmer($this->agreement['property_height']);?></span>  ម៉ែត្រ ។
+											    	ក្នុងតម្លៃ <span style="font-weight: bold;"><?php echo number_format($this->agreement['price_sold'],2);?> ($) (<label id="lable_pricekhmer1" style="font-family:'Khmer OS Battambang';padding-right: 20px;"></label>ដុល្លារអាមេរិក) </span> ក្នុងមួយខែទៅឲ្យភាគី (ខ) ។ ប្រភេទ<?php echo $propertyType;?> <span class="value" style="min-width:30px;font-weight: bold;"><?php echo $this->agreement['type_tob'];?></span> ទំហំ <span class="value" style="text-align:center; min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_width'])." x ".$dbparmeter->getNumberInkhmer($this->agreement['property_height']);?></span>  ម៉ែត្រ ។
 											    	<script>
 														a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
 														money_khmersold=read_money_in_khmer(a_sold);
@@ -217,11 +217,11 @@
 										 	 	<td>កាលបរិច្ឆេទផុតកំណត់</td>
 										 	 </tr>
 										 	 <?php 
-										 	 $startDates =  date('Y-m-d',strtotime($this->agreement['first_payment']));
-										 	 $startDate =  date('Y-m-d',strtotime($this->agreement['first_payment']));
+										 	 $startDates =  date('d-m-Y',strtotime($this->agreement['first_payment']));
+										 	 $startDate =  date('d-m-Y',strtotime($this->agreement['first_payment']));
 										 	 if (!empty($this->rowdetail)) foreach ($this->rowdetail as $re){ 
 										 	 	$value = $re['max_month'];
-										 	 	$endDate = date('Y-m-d',strtotime(" $startDates +$value month"));
+										 	 	$endDate = date('d-m-Y',strtotime(" $startDates +$value month"));
 										 	 ?>
 										 	 <tr>
 										 	 	<td>&nbsp;<?php echo $re['title']?>&nbsp;</td>
@@ -299,13 +299,6 @@
 											</tr>
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
-											   		<span class="margin-left"></span>
-											   		<strong>បញ្ចាក់: ក្រុមហ៊ុនមិនយកថ្លៃជួលតូបរយះពេល ៤ខែ គិតចាប់ពីថ្ងៃដែលភាគី ក កំណត់អោយ ចូលលក់ក្នុងផ្សារ ប៉ុន្តែថ្លៃទឹក ភ្លើង និង ភាស៊ីក្រុមហ៊ុនគិតធម្មតា។
-											    	</strong>
-											    </td>
-											</tr>
-											<tr>
-											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											   		<span class="margin-left"></span><strong>សំគាល់ ៖ ករណីដែលភាគី (ខ) មិនបានអនុវត្ដតាមការណែនាំទាំងអស់ដូចខាងលើ នោះទេភាគី (ក) មានសិទ្ធដកហូត<?php echo $propertyType;?> វិញចំណែកប្រាក់កក់ត្រូវទុកជាប្រយោជន៍របស់ភាគី (ក) ដោយស្វ័យប្រវត្ដិ ។</strong>
 											    </td>
 											</tr>
@@ -329,10 +322,10 @@
 						           </tr>
 						           <tr style="font-size: 14px;">
 								        <td class="reff" align="center" style="">
-								        	ឈ្មោះ <?php echo $this->agreement['project_manager_namekh'];?>&nbsp;&nbsp;&nbsp;&nbsp;<?php //echo $this->agreement['w_manager_namekh'];?>
+								        	ឈ្មោះ <?php echo $this->agreement['user_name'];//$this->agreement['project_manager_namekh'];?>&nbsp;&nbsp;&nbsp;&nbsp;<?php //echo $this->agreement['w_manager_namekh'];?>
 								        	<br />
-								        	<?php if (!empty($this->agreement['manager_tel'])){?>
-								        	លេខទំនាក់ទំនងៈ <?php echo $dbparmeter->getNumberInkhmer($this->agreement['manager_tel']);?>
+								        	<?php if (!empty($this->agreement['branch_tel'])){?>
+								        	លេខទំនាក់ទំនងៈ <?php echo $dbparmeter->getNumberInkhmer($this->agreement['branch_tel']);?>
 								        	<?php }else{?>
 								        	លេខទំនាក់ទំនងៈ <span style="display: inline-block;width: 40%;border-bottom: 1px dashed;"></span>
 								        	<?php }?>

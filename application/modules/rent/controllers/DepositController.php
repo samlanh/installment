@@ -171,4 +171,17 @@ class Rent_DepositController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	
+	function getrentinfoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$id = $data['rent_id'];
+			$db = new Rent_Model_DbTable_DbLanddeposit();
+			$rs = $db->getTranLoanByIdWithBranch($id);
+			$deposite = $db->getDepositeByRentId($id);
+			$rs['depositRent'] = $deposite;
+			print_r(Zend_Json::encode($rs));
+			exit();
+		}
+	}
 }

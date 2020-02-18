@@ -277,6 +277,25 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				2=>$this->tr->translate("Decrease"));
 		$optionCount->setMultiOptions($options);
 		
+		
+		$type_tob = new Zend_Dojo_Form_Element_FilteringSelect('type_tob');
+		$type_tob->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'popupIssuer();'
+		));
+		
+		$dbe = new Project_Model_DbTable_DbLand();
+		$rscheque = $dbe->getAllTypeTob();
+		$opt1=array(''=>$this->tr->translate("SELECT_TYPE_STORE"),'-1'=>$this->tr->translate("ADD_NEW"));
+		if(!empty($rscheque))foreach($rscheque AS $row){
+			$opt1[$row['id']]=$row['name'];
+		}
+		$type_tob->setMultiOptions($opt1);
+		
+		
 		if($data!=null){
 			
 			$north->setValue($data['north']);
@@ -329,10 +348,12 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 						'readOnly' =>'true',
 				));
 			}
+			
+			$type_tob->setValue($data['type_tob']);
 		}
 		$this->addElements(array($full_size,$status_using,$width_land,$height_land,$north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle,
-				$optionCount
-				
+				$optionCount,
+				$type_tob
 				));
 		return $this;
 	}

@@ -87,6 +87,15 @@
 	                    	<input id="property_type" />
 	                   </div>
 	                </div>
+	                
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TYPE_STORE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('type_tob');?>
+	                   </div>
+	                </div>
+	                
 	                <div class="form-group">
 	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("LAND_PRICE");?> <span class="required">*</span> :
 	                   </label>
@@ -335,7 +344,60 @@
 		</form>
 	</div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("TYPE_STORE")?>'"  id="frm_cheque" >
+		<form id="form_cheque"​ dojoType="dijit.form.Form" >
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="addchequename" name="addchequename" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewCheque();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
 <script type="text/javascript">
+require(["dojo/ready"], function(ready){
+	new dijit.form.FilteringSelect({
+		name: "type_tob",
+		id: "type_tob",
+		autoComplete: false,
+		required: false,
+		queryExpr: "*${0}*",     
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+			popupIssuer();
+	    }
+	}, "type_tob");
+});
+function popupIssuer(){
+	cheque_issuer = dijit.byId('type_tob').get('value');
+	if(cheque_issuer==-1){
+		dijit.byId('save_cheque').set('disabled',false);
+		dijit.byId('frm_cheque').show();
+	}
+}
+var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->alltobtype));?> );
+function addNewCheque(){
+	if(dijit.byId('form_cheque').validate()){
+		var Itemmake = {					
+			id: dijit.byId('addchequename').get('value'),
+		    name: dijit.byId('addchequename').get('value')
+		};		
+		addDataToSelectbox(dijit.byId('type_tob'),chequeStore , Itemmake, dijit.byId('addchequename').get('value'));
+		dijit.byId('form_cheque').reset();
+		dijit.byId('frm_cheque').hide();
+		dijit.byId('save_cheque').set('disabled',true);
+	}
+}
 function showStreet(){
 	dijit.byId('save_street').set('disabled',false);
 	street = dijit.byId('street').get('value');
