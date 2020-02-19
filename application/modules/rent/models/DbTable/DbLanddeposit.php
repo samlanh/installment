@@ -51,6 +51,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
          CASE    
 				WHEN  `s`.`is_cancel` = 0 THEN ' '
 				WHEN  `s`.`is_cancel` = 1 THEN '".$tr->translate("CANCELED")."'
+				WHEN  `s`.`is_cancel` = 2 THEN '".$tr->translate("REFUND_COMPLETED")."'
 				END AS cancel
 		FROM ((`ln_rent_property` `s`
 		    JOIN `ln_client` `c`)
@@ -368,8 +369,8 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    		$dbl = new Loan_Model_DbTable_DbLandpayment();
-    		$row = $dbl->getTranLoanByIdWithBranch($data['id'],null);
+//     		$dbl = new Loan_Model_DbTable_DbLandpayment();
+    		$row = $this->getTranLoanByIdWithBranch($data['id'],null);
     		if(!empty($row)){
     			$ids = explode(',', $row['all_land_id']);
     			if (!empty($row['all_land_id'])){
@@ -762,7 +763,7 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	$string="";
     	$labelactivity="";
     	$db_pro = new Project_Model_DbTable_DbProject();
-    	$dbsale = new Loan_Model_DbTable_DbLandpayment();
+//     	$dbsale = new Loan_Model_DbTable_DbLandpayment();
     	$dbclient = new Group_Model_DbTable_DbClient();
     	$dbproper = new Project_Model_DbTable_DbLand();
     	$db_co = new Other_Model_DbTable_DbCreditOfficer();

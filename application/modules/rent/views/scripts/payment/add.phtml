@@ -513,7 +513,7 @@ table.collape th.tdheader{padding:5px 0px;}
 			<input type="button" value="បិទ" label="បិទ" id="close" dojoType="dijit.form.Button" 
 							iconClass="dijitEditorIcon dijitEditorIconCancel" onclick="hideDialog();"/>
 			<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="print" dojoType="dijit.form.Button" 
-				iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="print();"/>
+				iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="submitData();"/>
 		</div>
 		<div id="rpt_print" style="height: 13cm ; padding: 0px; margin: 0px;font-family:'Khmer OS Battambang';">
 			<?php 
@@ -600,39 +600,8 @@ function enablePayment(){
 		dijit.byId("cheque").set("readOnly",true);
 	}
 }
-function submitDataClose(){
-	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add')); ?>';
-	service_charge = dijit.byId('service_charge').get('value');
-	receive_amount = dijit.byId('amount_receive').get('value');
-	option_pay = dijit.byId('option_pay').get('value');
-	total_payments = dijit.byId('total_payment').get('value');
-	if(option_pay==2 || option_pay==3 || option_pay==4){
-		if(receive_amount<total_payments){
-			alert('You Can not pay in this option! Please Input Recieve Amount more than or equal Total Payment!');
-			dijit.byId('amount_receive').focus();
-			return false;
-		}
-	}
-	if(receive_amount<0){
-		alert('Please fill Recieve Amount');
-		dijit.byId('amount_receive').focus();
-		return false;
-	}
-		loading();
-		dojo.xhrPost({
-		    url: url_submit,	
-			form: dojo.byId("frm_add_group_pay"),		    
-			load: function(data) {
-				document.getElementsByClassName("overlay")[0].style.display="none";		
-				alert('<?php echo $tr->translate('INSERT_SUCCESS');?> !');
-				window.location.href ="<?php echo $this->baseUrl();?>/loan/ilpayment";
-			},
-			error: function(e) {
-			}
-		});
-}
 function submitData(){
-	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add')); ?>';
+	var url_submit = '<?php echo $this->url(array('module'=>'rent','controller'=>'payment','action'=>'add')); ?>';
 	service_charge = dijit.byId('service_charge').get('value');
 	receive_amount = dijit.byId('amount_receive').get('value');
 	option_pay = dijit.byId('option_pay').get('value');
@@ -654,9 +623,16 @@ function submitData(){
 	    url: url_submit,	
 		form: dojo.byId("frm_add_group_pay"),		    
 		load: function(data) {
+			
 			document.getElementsByClassName("overlay")[0].style.display="none";	
+
+			dojo.byId("innerrpt_print1").innerHTML = dojo.byId('rpt_print').innerHTML;
+			window.frames["print_frame"].document.body.innerHTML=dojo.byId('rpt_print').innerHTML<?php if($this->data['showreceipt']>1){ ?> + dojo.byId('rpt_print1').innerHTML<?php }?>;
+			window.frames["print_frame"].window.focus();
+			window.frames["print_frame"].window.print();
+			
 			alert('<?php echo $tr->translate('INSERT_SUCCESS');?> !');
-			window.location.href ="<?php echo $this->baseUrl();?>/loan/ilpayment/add";
+			window.location.href ="<?php echo $this->baseUrl();?>/rent/payment/add";
 		},
 		error: function(e) {
 		}
@@ -1013,16 +989,10 @@ function getAllSaleNumber(){
 		}
 	});
 }
-function print(){
-	dojo.byId("innerrpt_print1").innerHTML = dojo.byId('rpt_print').innerHTML;
-	window.frames["print_frame"].document.body.innerHTML=dojo.byId('rpt_print').innerHTML<?php if($this->data['showreceipt']>1){ ?> + dojo.byId('rpt_print1').innerHTML<?php }?>;
-	window.frames["print_frame"].window.focus();
-	window.frames["print_frame"].window.print();
-	submitData();
+
+function hideDialog() {		
+	dijit.byId("frm_client").hide();
 }
-	function hideDialog() {		
-		dijit.byId("frm_client").hide();
-	}
 function payOption(){
 	calculateTotal();
 }

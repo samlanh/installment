@@ -442,4 +442,15 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		}
 		return $db->fetchOne($sql);
 	}
+	
+	function getTotalRentPaymentIncome(){
+		$db = $this->getAdapter();
+		$sql="SELECT SUM(recieve_amount) AS total FROM `ln_rent_receipt_money` WHERE status=1 ";
+		return $db->fetchOne($sql);
+	}
+	function getTotalRefundRentDeposit(){
+		$db = $this->getAdapter();
+		$sql="SELECT SUM(rr.total_amount) AS total FROM `ln_rent_refund` AS rr WHERE rr.status=1 ";
+		return $db->fetchOne($sql);
+	}
 }

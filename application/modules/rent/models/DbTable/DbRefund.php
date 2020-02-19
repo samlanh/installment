@@ -64,6 +64,56 @@ class Rent_Model_DbTable_DbRefund extends Zend_Db_Table_Abstract
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     }
+    
+    function updateRefund($data){
+    	$_db= $this->getAdapter();
+    	$_db->beginTransaction();
+    	try{
+    		$id = $data['id'];
+    		//update old rent
+    		$row = $this->getRefundById($id);
+    		if (!empty($row)){
+    			$arr = array(
+    					'is_cancel'	=> 0,
+    			);
+    			$this->_name = "ln_rent_property";
+    			$where=" id = ".$row['rent_id'];
+    			$this->update($arr, $where);
+    		}
+    		
+    		$_arr= array(
+    				'branch_id'		=> $data['branch_id'],
+    				'rent_id'		=> $data['rent_id'],
+    				'customer_id'	=> $data['customer_id'],
+    
+    				'refund_date'		=> $data['refund_date'],
+    				'payment_method'	=> $data['payment_method'],
+    				'cheque'		=> $data['cheque'],
+    				'cheque_issuer'	=> $data['cheque_issuer'],
+    				'total_amount'	=> $data['total_amount'],
+    				'note'			=> $data['note'],
+    				'status'		=> $data['status'],
+    				'user_id'		=> $this->getUserId(),
+    				'modify_date'   => date('Y-m-d H:i:s'),
+    		);
+    		$this->_name = "ln_rent_refund";
+    		$where=" id = ".$id;
+    		$this->update($_arr, $where);
+    
+    		if ($data['status']==1){
+	    		$arr = array(
+	    				'is_cancel'	=> 2,// update rent property is already refund
+	    		);
+	    		$this->_name = "ln_rent_property";
+	    		$where=" id = ".$data['rent_id'];
+	    		$this->update($arr, $where);
+    		}
+    		$_db->commit();
+    	}catch(Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    	}
+    }
+    
     function getAllRefund($search=null){
     	$db = $this->getAdapter();
     	$dbp = new Application_Model_DbTable_DbGlobal();
@@ -115,8 +165,16 @@ class Rent_Model_DbTable_DbRefund extends Zend_Db_Table_Abstract
     	if (!empty($search['cheque_issuer'])){
     		$where.= " AND re.cheque_issuer = '".$search['cheque_issuer']."'";
     	}
+    	if($search['status']>-1){
+    		$where.= " AND `re`.`status` = ".$search['status'];
+    	}
     	$where.=$dbp->getAccessPermission("re.branch_id");
     	$order=" ORDER BY re.id DESC ";
     	return $db->fetchAll($sql.$where.$order);
+    }
+    function getRefundById($id){
+    	$db = $this->getAdapter();
+    	$sql = " SELECT * FROM `ln_rent_refund` WHERE id=$id ";
+    	return $db->fetchRow($sql);
     }
 }

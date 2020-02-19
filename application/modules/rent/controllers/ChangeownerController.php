@@ -1,5 +1,5 @@
 <?php
-class Rent_RefundController extends Zend_Controller_Action {
+class Rent_ChangeownerController extends Zend_Controller_Action {
     public function init()
     {    	
     	header('content-type: text/html; charset=utf8');
@@ -13,33 +13,29 @@ class Rent_RefundController extends Zend_Controller_Action {
 			else{
 				$search = array(
 						'adv_search'=>'',
-						'client_name'=> '',
-						'branch_id' => -1,
-						'status' => -1,
-						'payment_method'=>0,
+						'status'=> -1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						 );
 			}
-			$db = new Rent_Model_DbTable_DbRefund();
-			$rs_rows= $db->getAllRefund($search);
+			$db = new Rent_Model_DbTable_DbChangeOwner();
+			$rs_rows= $db->getAllChangeOwner($search);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","RENT_NO","REFUND_DATE","PAYMENT_TYPE","NUMBER","REFUND_AMOUNT",
-				"BY_USER","STATUS");
-			$link=array('module'=>'rent','controller'=>'refund','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link,'rent_no'=>$link,'refund_date'=>$link),0);
+			$collumns = array("BRANCH_NAME","PROPERTY","FROM_CUSTOMER","TO_CUSTOMER","CHANGE_DATE","BY_USER","STATUS");
+			$link=array('module'=>'rent','controller'=>'changeowner','action'=>'edit',);
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch_name'=>$link,'property'=>$link,'from_customer'=>$link),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
-		$frm_search = new Rent_Form_FrmRefund();
-		$frm = $frm_search->FrmSearchRefund();
+		$frm_search = new Rent_Form_FrmChangeOwner();
+		$frm = $frm_search->FrmSearchChangeOwner();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
   }
   function addAction()
   {
-  		$_dbmodel = new Rent_Model_DbTable_DbRefund();
+  		$_dbmodel = new Rent_Model_DbTable_DbChangeOwner();
 		if($this->getRequest()->isPost()){
 			// Check Session Expire
 			$dbgb = new Application_Model_DbTable_DbGlobal();
@@ -51,21 +47,20 @@ class Rent_RefundController extends Zend_Controller_Action {
 		   $_data = $this->getRequest()->getPost();
 		   try {
 				
-				$_dbmodel->addRefund($_data);
+				$_dbmodel->addChangeOwner($_data);
 				if(!empty($_data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/rent/refund");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/rent/changeowner");
 				}else{
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/rent/refund/add");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/rent/changeowner/add");
 				}
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		$this->cheque_issue = $_dbmodel->getAllChequeIssue();
 		
-		$frm = new Rent_Form_FrmRefund();
-		$frm_loan=$frm->FrmAddRefund();
+		$frm = new Rent_Form_FrmChangeOwner();
+		$frm_loan=$frm->FrmAddChangeOwner();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm = $frm_loan;
 		
@@ -73,7 +68,7 @@ class Rent_RefundController extends Zend_Controller_Action {
 	}
 	function editAction()
 	{
-		$_dbmodel = new Rent_Model_DbTable_DbRefund();
+		$_dbmodel = new Rent_Model_DbTable_DbChangeOwner();
 		if($this->getRequest()->isPost()){
 			// Check Session Expire
 			$dbgb = new Application_Model_DbTable_DbGlobal();
@@ -85,25 +80,24 @@ class Rent_RefundController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {
 	
-				$_dbmodel->updateRefund($_data);
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/rent/refund");
+				$_dbmodel->updateChangeOwner($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/rent/changeowner");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("EDIT_FAILE");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		$this->cheque_issue = $_dbmodel->getAllChequeIssue();
 		$id = $this->getRequest()->getParam("id");
 		$id = empty($id)?0:$id;
-		$row = $_dbmodel->getRefundById($id);
+		$row = $_dbmodel->getChangeOwnerById($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/rent/refund");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/rent/changeowner");
 			exit();
 		}
 		$this->view->row =$row;
 		
-		$frm = new Rent_Form_FrmRefund();
-		$frm_loan=$frm->FrmAddRefund($row);
+		$frm = new Rent_Form_FrmChangeOwner();
+		$frm_loan=$frm->FrmAddChangeOwner($row);
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm = $frm_loan;
 	

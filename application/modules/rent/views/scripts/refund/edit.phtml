@@ -2,8 +2,9 @@
 	$frm = $this->frm;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+	$row = $this->row;
 ?>
-<title><?php echo $tr->translate("RENT_REFUND");?></title>
+<title><?php echo $tr->translate("EDIT_REFUND_DEPOSIT");?></title>
 <style>
 .fullside50{ width:48%;}
 .agreement{
@@ -18,6 +19,15 @@
 </style>
 <div class="card">
 	<div class="card-content collapse show">
+		<div class="card-box">
+             <div class="col-sm-12 border-botom">
+		    	<div class="col-sm-8 pd-0">
+		    		<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_REFUND_DEPOSIT');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
 		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
@@ -45,15 +55,7 @@
 					return false;
 				}
 			</script>
-			<div class="card-box">
-               	<div class="col-sm-12 border-botom">
-		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RENT_REFUND');?></h4>
-	    			</div>
-	    			<div class="col-sm-4 text-right">
-	    			</div>
-	    		</div>
-	    	</div>
+			
 		    <div class="card-box">
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
@@ -65,6 +67,7 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('branch_id');?>
+	                    	<?php echo $frm->getElement('id');?>
 	                    	<?php echo $frm->getElement('customer_id');?>
 	                   </div>
 	                </div>
@@ -123,6 +126,13 @@
 	                    	<?php echo $frm->getElement('note');?>
 	                   </div>
 	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('status');?>
+	                   </div>
+	                </div>
 	            </div>
 	            <div class="col-md-4 col-sm-4 col-xs-12">
 	            </div>
@@ -131,8 +141,7 @@
 			    <div class="card-box">
                		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
 		    			<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
-						<input type="submit" label="<?php echo $tr->translate("SAVE_CLOSE")?>" id='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
-						<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+						<input type="submit" label="<?php echo $tr->translate("SAVE")?>" id='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
 	    		</div>
 	    	</div>
 		</form>
@@ -171,8 +180,8 @@ var rent_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::enc
 
 require(["dojo/ready"], function(ready){
 	 ready(function(){
-		 //getAllRentNumber();
 		 enablePayment();
+		 getAllRentNumber();
 	  });
 	new dijit.form.FilteringSelect({
 			store: rent_store,
@@ -209,6 +218,9 @@ function enablePayment(){
 	payment_method = dijit.byId('payment_method').get('value');
 	dijit.byId("cheque").set("readOnly",false);
 	dijit.byId("cheque").attr("value",'');
+	<?php if (!empty($row['cheque'])){?>
+	dijit.byId("cheque").attr("value",'<?php echo $row['cheque'];?>');
+	<?php }?>
 	dijit.byId("cheque_issuer").set("readOnly",false);
 	if(payment_method==1){
 		dijit.byId("cheque").attr("value",'N/A');
@@ -237,6 +249,7 @@ function addNewCheque(){
 		dijit.byId('save_cheque').set('disabled',true);
 	}
 }
+var oldRent = '<?php echo $row['rent_id'];?>';
 var url_getsalenumber = "<?php echo $this->url(array('module'=>'rent','controller'=>'payment','action'=>'get-sale-number')); ?>";
 function getAllRentNumber(){
 	branch_id = dijit.byId('branch_id').get('value');
@@ -250,12 +263,13 @@ function getAllRentNumber(){
 	dojo.xhrPost({
 		url:url_getsalenumber,	
 		content:{ 
-		    'branch_id':branch_id,'is_completed':1
+		    'branch_id':branch_id,'is_completed':1,'rent_id':oldRent
 		},		    
 		handleAs:"json",
 		load: function(data) {
 			rent_store  = getDataStorefromJSON('id','name', data);
 		    dijit.byId('rent_id').set('store',rent_store); 
+		    dijit.byId("rent_id").attr("value",oldRent);
 		},
 		error:  function(response, ioArgs) {
 		}

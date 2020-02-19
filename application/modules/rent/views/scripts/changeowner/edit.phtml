@@ -2,8 +2,9 @@
 	$frm = $this->frm;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+	$row = $this->row;
 ?>
-<title><?php echo $tr->translate("RENT_REFUND");?></title>
+<title><?php echo $tr->translate("EDIT_CHANGE_OWNER_STORE");?></title>
 <style>
 .fullside50{ width:48%;}
 .agreement{
@@ -18,6 +19,15 @@
 </style>
 <div class="card">
 	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_CHANGE_OWNER_STORE');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
 		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
@@ -33,10 +43,10 @@
 						dijit.byId('rent_id').focus();
 						return false;
 					}
-					total_amount = dijit.byId('total_amount').get('value');
-					if (total_amount<=0){
-						alert('<?php echo $tr->translate("TOTAL_AMOUNT_MUST_BE_BIGER_THAN_ZERO");?>!');
-						dijit.byId('total_amount').focus();
+					to_customer = dijit.byId('to_customer').get('value');
+					if (to_customer=='' || to_customer==-1){
+						alert('<?php echo $tr->translate("SELECT_TO_CUSTOMER");?>!');
+						dijit.byId('to_customer').focus();
 						return false;
 					}
               		loadingBlock();
@@ -45,15 +55,6 @@
 					return false;
 				}
 			</script>
-			<div class="card-box">
-               	<div class="col-sm-12 border-botom">
-		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RENT_REFUND');?></h4>
-	    			</div>
-	    			<div class="col-sm-4 text-right">
-	    			</div>
-	    		</div>
-	    	</div>
 		    <div class="card-box">
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
@@ -65,7 +66,7 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('branch_id');?>
-	                    	<?php echo $frm->getElement('customer_id');?>
+	                    	<?php echo $frm->getElement('id');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -75,45 +76,46 @@
 	                   		<input id="rent_id" />
 	                   </div>
 	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("FROM_CUSTOMER");?> <span class="required">*</span> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('from_customer');?>
+	                    	<?php echo $frm->getElement('property_id');?>
+	                   </div>
+	                </div>
 	            </div>
 	            <div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-map-marker" aria-hidden="true"></i> <?php echo $tr->translate("REFUND_INFO");?> 
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-map-marker" aria-hidden="true"></i> <?php echo $tr->translate("CHANGE_OWNER_STORE_INFO");?> 
 	                   </label>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("REFUND_DATE");?>  :
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TO_CUSTOMER");?>  :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('refund_date');?>
+	                    	<?php echo $frm->getElement('to_customer');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CHANGE_DATE");?>  :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('change_date');?>
 	                   </div>
 	                </div>
 	               <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> <span class="required">*</span> :
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("AGREEMENT_DATE");?> <span class="required">*</span> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('payment_method');?>
+	                    	<?php echo $frm->getElement('agreement_date');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("NUMBER");?> <span class="required">*</span> :
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("REASON");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('cheque');?>
-	                   </div>
-	                </div>
-	               <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CHEQUE_ISSUER");?>:
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('cheque_issuer');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("REFUND_AMOUNT");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('total_amount');?>
+	                    	<?php echo $frm->getElement('reason');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -121,6 +123,13 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('note');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('status');?>
 	                   </div>
 	                </div>
 	            </div>
@@ -132,28 +141,8 @@
                		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
 		    			<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
 						<input type="submit" label="<?php echo $tr->translate("SAVE_CLOSE")?>" id='saveclose' value='saveclose' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
-						<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
 	    		</div>
 	    	</div>
-		</form>
-	</div>
-</div>
-<div class="dijitHidden">
-	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("CHEQUE_ISSUER")?>'"  id="frm_cheque" >
-		<form id="form_cheque"​ dojoType="dijit.form.Form" >
-			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
-				<tr>
-					<td>
-						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="addchequename" name="addchequename" value="" type="text">
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" align="center">
-						<input type="button" id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
-							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewCheque();"/>
-					</td>
-				</tr>
-			</table>
 		</form>
 	</div>
 </div>
@@ -171,8 +160,8 @@ var rent_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::enc
 
 require(["dojo/ready"], function(ready){
 	 ready(function(){
-		 //getAllRentNumber();
-		 enablePayment();
+		 getAllRentNumber();
+		 dijit.byId("from_customer").set("readOnly",true);
 	  });
 	new dijit.form.FilteringSelect({
 			store: rent_store,
@@ -192,51 +181,8 @@ require(["dojo/ready"], function(ready){
 				}
 		}
 	}, "rent_id");
-	new dijit.form.FilteringSelect({
-		name: "cheque_issuer",
-		id: "cheque_issuer",
-		autoComplete: false,
-		required: false,
-		queryExpr: "*${0}*",     
-		searchAttr: "name",
-		class: 'fullside',
-		onChange: function() {
-			popupIssuer();
-	    }
-	}, "cheque_issuer");
 });
-function enablePayment(){
-	payment_method = dijit.byId('payment_method').get('value');
-	dijit.byId("cheque").set("readOnly",false);
-	dijit.byId("cheque").attr("value",'');
-	dijit.byId("cheque_issuer").set("readOnly",false);
-	if(payment_method==1){
-		dijit.byId("cheque").attr("value",'N/A');
-		dijit.byId("cheque").set("readOnly",true);
-		dijit.byId('cheque_issuer').reset();
-		dijit.byId("cheque_issuer").set("readOnly",true);
-	}
-}
-function popupIssuer(){
-	cheque_issuer = dijit.byId('cheque_issuer').get('value');
-	if(cheque_issuer==-1){
-		dijit.byId('save_cheque').set('disabled',false);
-		dijit.byId('frm_cheque').show();
-	}
-}
-var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->cheque_issue));?> );
-function addNewCheque(){
-	if(dijit.byId('form_cheque').validate()){
-		var Itemmake = {					
-			id: dijit.byId('addchequename').get('value'),
-		    name: dijit.byId('addchequename').get('value')
-		};		
-		addDataToSelectbox(dijit.byId('cheque_issuer'),chequeStore , Itemmake, dijit.byId('addchequename').get('value'));
-		dijit.byId('form_cheque').reset();
-		dijit.byId('frm_cheque').hide();
-		dijit.byId('save_cheque').set('disabled',true);
-	}
-}
+var oldRent = '<?php echo $row['rent_id'];?>';
 var url_getsalenumber = "<?php echo $this->url(array('module'=>'rent','controller'=>'payment','action'=>'get-sale-number')); ?>";
 function getAllRentNumber(){
 	branch_id = dijit.byId('branch_id').get('value');
@@ -250,12 +196,13 @@ function getAllRentNumber(){
 	dojo.xhrPost({
 		url:url_getsalenumber,	
 		content:{ 
-		    'branch_id':branch_id,'is_completed':1
+		    'branch_id':branch_id,
 		},		    
 		handleAs:"json",
 		load: function(data) {
 			rent_store  = getDataStorefromJSON('id','name', data);
-		    dijit.byId('rent_id').set('store',rent_store); 
+		    dijit.byId('rent_id').set('store',rent_store);
+		    dijit.byId("rent_id").attr("value",oldRent); 
 		},
 		error:  function(response, ioArgs) {
 		}
@@ -274,8 +221,12 @@ function getRentInfo(){
 		},		    
 		handleAs:"json",
 		load: function(data) {
-			dijit.byId('total_amount').attr('value',data.depositRent);
-			dijit.byId('customer_id').attr('value',data.client_id);
+			dijit.byId('from_customer').attr('value',data.client_id);
+			if(rent_id==oldRent){
+				dijit.byId('from_customer').attr('value','<?php echo $row['from_customer'];?>');
+			}
+			dijit.byId("from_customer").set("readOnly",true);
+			dijit.byId('property_id').attr('value',data.house_id);
 		},
 		error:  function(response, ioArgs) {
 		}

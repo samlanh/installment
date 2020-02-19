@@ -98,15 +98,6 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
 		$where = $statement['where'];
 		$where.=$dbp->getAccessPermission("s.`branch_id`");
 		$str = '`s`.`buy_date`';
-		if($search['buy_type']>0 AND $search['buy_type']!=2){
-		$str = ' `s`.`agreement_date` ';
-		}
-		if($search['buy_type']==2){
-		$where.=" AND s.payment_id = 1";
-		}
-		if($search['buy_type']==1){
-			$where.=" AND s.payment_id != 1";
-		}
 		$from_date =(empty($search['start_date']))? '1': " $str >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " $str <= '".$search['end_date']." 23:59:59'";
 		$where.= " AND ".$from_date." AND ".$to_date;
@@ -143,13 +134,6 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
 		}
 		if($search['client_name']!='' AND $search['client_name']>0){
 			$where.=" AND `s`.`client_id` = ".$search['client_name'];
-		}
-		if($search['schedule_opt']>0){
-			if ($search['schedule_opt']==2 OR $search['schedule_opt']==6){
-				$where.=" AND s.payment_id IN (2,6) ";
-			}else{
-				$where.=" AND s.payment_id = ".$search['schedule_opt'];
-			}
 		}
 		$order = " ORDER BY s.is_cancel ASC,s.payment_id DESC ";
 		return $db->fetchAll($sql.$where.$order);
@@ -871,6 +855,151 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
     	$where.= " AND pd.ispay_bank=0";
     	$order=" GROUP BY sale_id ORDER BY date_payment DESC ,sale_id ASC, `pd`.id ASC";
     
+    	return $db->fetchAll($sql.$where.$order);
+    }
+    
+    function getAllChangeOwner($search=null){
+    	$db = $this->getAdapter();
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    
+    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+    	$from_date =(empty($search['start_date']))? '1': " rc.change_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " rc.change_date <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    
+    	$sql=" SELECT
+    	rc.*,
+    	(SELECT `p`.`project_name` FROM `ln_project` AS p WHERE `p`.`br_id` = `rc`.`branch_id` LIMIT 1) AS `branch_name`,
+    	CONCAT(p.land_address,',',p.street) AS property,
+    	(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id=rc.`from_customer` LIMIT 1) AS from_customer,
+    	(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id=rc.`to_customer` LIMIT 1) AS to_customer,
+    	(SELECT  first_name FROM rms_users WHERE id=rc.user_id LIMIT 1 ) AS user_name
+    	";
+    	$sql.=" FROM `ln_rent_changeowner` AS rc,
+    	`ln_rent_property` AS rp,
+    	ln_properties AS p
+    	WHERE
+    	rc.rent_id = rp.id
+    	AND p.id = rc.property_id 
+    	AND rc.status=1  ";
+    
+    	if (!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = trim(addslashes($search['adv_search']));
+    		$s_where[] = " (SELECT c.name_kh FROM ln_client AS c WHERE c.client_id=rc.`from_customer` LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT c.name_kh FROM ln_client AS c WHERE c.client_id=rc.`to_customer` LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " `p`.`land_address` LIKE '%{$s_search}%'";
+    		$s_where[] = " `p`.`street` LIKE '%{$s_search}%'";
+    		$where .=' AND ('.implode(' OR ',$s_where).')';
+    	}
+    
+    	if(!empty($search['branch_id'])){
+    		$where.= " AND `rc`.`branch_id` = ".$search['branch_id'];
+    	}
+    	if(!empty($search['from_customer'])){
+    		$where.= " AND `rc`.`from_customer` = ".$search['from_customer'];
+    	}
+    	if(!empty($search['to_customer'])){
+    		$where.= " AND `rc`.`to_customer` = ".$search['to_customer'];
+    	}
+    	$where.=$dbp->getAccessPermission("rc.branch_id");
+    	$order=" ORDER BY rc.id DESC ";
+    	return $db->fetchAll($sql.$where.$order);
+    }
+    function getCollectPayment($search=null){
+    	$db= $this->getAdapter();
+    	
+    	$sql = $this->getCollectPaymentSqlSt();
+    	$sql.= " AND crm.status= 1 ";
+    	$from_date =(empty($search['start_date']))? '1': " `crm`.`date_pay` >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " `crm`.`date_pay` <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	 
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("`crm`.branch_id");
+    	if($search['branch_id']>0){
+    		$where.= " AND `crm`.branch_id = ".$search['branch_id'];
+    	}
+    	if(!empty($search['user_id']) AND $search['user_id']>0){
+    		$where.= " AND `crm`.user_id = ".$search['user_id'];
+    	}
+    	if($search['client_name']>0){
+    		$where.=" AND `crm`.client_id = ".$search['client_name'];
+    	}
+    	if($search['payment_method']>0){
+    		$where.=" AND `crm`.`payment_method` = ".$search['payment_method'];
+    	}
+    	 
+    	if (!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = trim(addslashes($search['adv_search']));
+    		$s_where[] = " `c`.`client_number`  LIKE '%{$s_search}%'";
+    		$s_where[] = " `c`.`name_kh`   LIKE '%{$s_search}%'";
+    		$s_where[] = " `c`.`name_en` LIKE '%{$s_search}%'";
+    		$s_where[] = " `crm`.`receipt_no` LIKE '%{$s_search}%'";
+    		$where .=' AND ('.implode(' OR ',$s_where).')';
+    	}
+    	if (!empty($search['land_id']) AND $search['land_id']>0){
+    		$where.=" AND `sl`.`house_id` = '".$search['land_id']."'";
+    	}
+    	if (!empty($search['streetlist'])){
+    		$where.=" AND `l`.`street` = '".$search['streetlist']."'";
+    	}
+    	return $db->fetchAll($sql.$where);
+    }
+    function getAllRefund($search=null){
+    	$db = $this->getAdapter();
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    
+    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+    	$from_date =(empty($search['start_date']))? '1': " re.refund_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " re.refund_date <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    
+    	$sql=" SELECT
+    	re.*,
+    	(SELECT `p`.`project_name` FROM `ln_project` AS p WHERE `p`.`br_id` = `re`.`branch_id` LIMIT 1) AS `branch_name`,
+    	CONCAT((SELECT `c`.`name_kh` FROM ln_client AS c WHERE c.client_id = `re`.`customer_id` LIMIT 1),' ',`p`.`land_address`,'-',`p`.`street`) AS rent_no,
+    	(SELECT name_kh FROM `ln_view` WHERE TYPE=26 AND key_code=re.payment_method LIMIT 1) AS payment_type,
+    	(SELECT  first_name FROM rms_users WHERE id=re.user_id LIMIT 1 ) AS user_name
+    	";
+    	$sql.=" FROM
+    	`ln_rent_refund` AS re,
+    	`ln_rent_property` AS rp,
+    	ln_properties AS p
+    	WHERE
+    	rp.id = re.rent_id
+    	AND rp.house_id = p.id  
+    	AND `re`.`status`=1 ";
+    
+    	if (!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = trim(addslashes($search['adv_search']));
+    		$s_where[] = " (SELECT `c`.`name_kh` FROM ln_client AS c WHERE c.client_id = `rp`.`client_id` LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " `p`.`land_address` LIKE '%{$s_search}%'";
+    		$s_where[] = " `p`.`street` LIKE '%{$s_search}%'";
+    		$s_where[] = " re.total_amount LIKE '%{$s_search}%'";
+    		$s_where[] = " re.cheque LIKE '%{$s_search}%'";
+    		$where .=' AND ('.implode(' OR ',$s_where).')';
+    	}
+    
+    	if($search['branch_id']>0){
+    		$where.= " AND `re`.`branch_id` = ".$search['branch_id'];
+    	}
+    	if(!empty($search['land_id'])){
+    		$where.= " AND rp.house_id = ".$search['land_id'];
+    	}
+    	if(!empty($search['client_name'])){
+    		$where.= " AND `re`.`customer_id` = ".$search['client_name'];
+    	}
+    	if($search['payment_method']>0){
+    		$where.= " AND re.payment_method = ".$search['payment_method'];
+    	}
+    	if (!empty($search['cheque_issuer_search'])){
+    		$where.= " AND re.cheque_issuer = '".$search['cheque_issuer_search']."'";
+    	}
+    	$where.=$dbp->getAccessPermission("re.branch_id");
+    	$order=" ORDER BY re.id DESC ";
     	return $db->fetchAll($sql.$where.$order);
     }
  }

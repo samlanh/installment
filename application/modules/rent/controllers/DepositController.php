@@ -30,7 +30,7 @@ class Rent_DepositController extends Zend_Controller_Action {
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","RENT_PRICE_BEFORE","DISCOUNT_PERCENT","DISCOUNT","RENT_PRICE","PAID","DATE_RENT",
-				"BY_USER","STATUS","IS_CANCEL");
+				"BY_USER","STATUS","PROCCESSING");
 			$link_info=array('module'=>'rent','controller'=>'deposit','action'=>'edit',);
 
 			$agreement=array('module'=>'report','controller'=>'rent','action'=>'rpt-agreement',);

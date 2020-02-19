@@ -136,6 +136,10 @@ class Rent_PaymentController extends Zend_Controller_Action {
 		if(!empty($id)){
 			$rs = $db->getTranLoanByIdWithBranch($id,null);
 			$this->view->rsresult =  $rs;
+			if($rs['is_completed']==1){
+				Application_Form_FrmMessage::message('COMPLETED_PAYMENT');
+				echo "<script>window.close();</script>";
+			}
 			if($rs['is_cancel']==1){//$rs['payment_id']==1 || 
 				Application_Form_FrmMessage::message('មិនមានទិន្នន័យសម្រាប់បង់ប្រាក់ទេ!');
 				echo "<script>window.close();</script>";
@@ -286,7 +290,9 @@ class Rent_PaymentController extends Zend_Controller_Action {
 			if(!empty($data["is_completed"])){
 				$is_completed=$data["is_completed"];
 			}
-			$row = $db->getAllLoanNumberByBranch($data["branch_id"],$is_completed);
+			$data["rent_id"] = empty($data["rent_id"])?null:$data["rent_id"];
+			
+			$row = $db->getAllLoanNumberByBranch($data["branch_id"],$is_completed,$data["rent_id"]);
 			print_r(Zend_Json::encode($row));
 			exit();
 		}

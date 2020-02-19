@@ -213,4 +213,71 @@ class Report_RentController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
+  function rptChangeownerAction(){
+  	try{
+  		if($this->getRequest()->isPost()){
+  			$search = $this->getRequest()->getPost();
+  		}
+  		else{
+  			$search = array(
+  					'adv_search'=>'',
+  					'start_date'=> date('Y-m-d'),
+  					'end_date'=>date('Y-m-d'),
+  			);
+  		}
+  		$this->view->search = $search;
+  		$db = new Report_Model_DbTable_DbRent();
+  		$rs_rows= $db->getAllChangeOwner($search);
+  		$this->view->row = $rs_rows;
+  	}catch (Exception $e){
+  		Application_Form_FrmMessage::message("Application Error");
+  		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+  	}
+  	$frm_search = new Rent_Form_FrmChangeOwner();
+  	$frm = $frm_search->FrmSearchChangeOwner();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
+  }
+  function rptDailyCashAction(){
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}
+  	else{
+  		$search = array(
+  				"adv_search"=>'',
+  				"branch_id"=>-1,
+  				"status"=>-1,
+  				'land_id'=>-1,
+  				"ordering"=>1,
+  				'client_name' => -1,
+  				'streetlist'=>'',
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  				'payment_type'=>-1,
+  				'payment_method'=>-1,
+  				'user_id'=>-1,
+  				"cheque_issuer_search"=>"",
+  		);
+  	}
+  	$this->view->search=$search;
+  	$db = new Report_Model_DbTable_DbRent();
+  	$this->view->collectMoney = $db->getCollectPayment($search);
+  	$this->view->refund = $db->getAllRefund($search);
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->row = $db->getAllIncome($search);
+  	$this->view->rowExpense = $db->getAllExpense($search);
+  	
+  	 
+  	 
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  	 
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
+  }
 }

@@ -27,6 +27,9 @@ public function init()
 		$TotalSaleIncome = $db->getTotalSaleIncome();
 		$houseRepaireIncome = $db->getTotalHouseRepaireIncome(12);
 		
+		$totalRentIncome = $db->getTotalRentPaymentIncome();
+		$totalRefundRentExpense = $db->getTotalRefundRentDeposit();
+		
 		$houseRepaireExpense = abs($db->getTotalHouseRepaireIncome(13));
 		
 		$this->view->allProperty =$db->getAllProperty();
@@ -42,10 +45,10 @@ public function init()
 		$this->view->CountCanceledSale = $db->CountCanceledSale();
 		$this->view->CancelPropertyAmount = $db->TotalExpense(1);
 		
-		$TotalExpense = $db->TotalExpense()+$db->getAllComission()+$houseRepaireExpense;
+		$TotalExpense = $db->TotalExpense()+$db->getAllComission()+$houseRepaireExpense+$totalRefundRentExpense;
 		$this->view->totalExpense = $TotalExpense;
 		
-		$totalIncome = $TotalSaleIncome+$TotalOtherIncome+$houseRepaireIncome;
+		$totalIncome = $TotalSaleIncome+$TotalOtherIncome+$houseRepaireIncome+$totalRentIncome;
 		$this->view->totalIncome = $totalIncome;
 		
 		$netincome = $totalIncome-$TotalExpense;

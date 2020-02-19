@@ -1,11 +1,11 @@
 <?php 
-Class Rent_Form_FrmRefund extends Zend_Dojo_Form {
+Class Rent_Form_FrmChangeOwner extends Zend_Dojo_Form {
 	protected $tr;
 	public function init()
 	{
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
-	public function FrmAddRefund($data=null){
+	public function FrmAddChangeOwner($data=null){
 		$db = new Application_Model_DbTable_DbGlobal();
 		$_dbRent = new Rent_Model_DbTable_DbLanddeposit();
 		
@@ -20,61 +20,69 @@ Class Rent_Form_FrmRefund extends Zend_Dojo_Form {
 		));
 		$branch_id->setMultiOptions($options);
 		
+		$_from_customer = new Zend_Dojo_Form_Element_FilteringSelect("from_customer");
+		$opt_client = array(''=>$this->tr->translate("CHOOSE_CUSTOEMR"));
+		$rows = $db->getAllClient();
+		if(!empty($rows))foreach($rows AS $row){
+			$opt_client[$row['id']]=$row['name'];
+		}
+		$_from_customer->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside',
+				'required'=>'false'));
+		$_from_customer->setMultiOptions($opt_client);
+		
+		$_property_id = new Zend_Form_Element_Hidden("property_id");
+		$_property_id->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
+		$_to_customer = new Zend_Dojo_Form_Element_FilteringSelect("to_customer");
+		$opt_client = array(''=>$this->tr->translate("CHOOSE_CUSTOEMR"));
+		$rows = $db->getAllClient();
+		if(!empty($rows))foreach($rows AS $row){
+			$opt_client[$row['id']]=$row['name'];
+		}
+		$_to_customer->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside',
+				'required'=>'false'));
+		$_to_customer->setMultiOptions($opt_client);
+		
 		$c_date = date('Y-m-d');
 		$next_payment = $c_date;
 		if(date('H')>=16){
 			$next_payment = date("Y-m-d", strtotime("$c_date +1 day"));
 		}
-		$refund_date = new Zend_Dojo_Form_Element_DateTextBox('refund_date');
-		$refund_date->setAttribs(array(
+		$change_date = new Zend_Dojo_Form_Element_DateTextBox('change_date');
+		$change_date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
 				'required' =>true,
 				'constraints'=>'{datePattern:"dd-MM-yyyy"}'
 		));
-		$refund_date->setValue($c_date);
+		$change_date->setValue($c_date);
 		
-		$payment_method = new Zend_Dojo_Form_Element_FilteringSelect('payment_method');
-		$payment_method->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
+		$_agreement_date = new Zend_Dojo_Form_Element_DateTextBox('agreement_date');
+		$_agreement_date->setAttribs(array(
+				'dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
-				'onchange'=>'enablePayment();'
+				'required' =>true,
+				'constraints'=>'{datePattern:"dd-MM-yyyy"}'
 		));
-		$opt = $db->getVewOptoinTypeByType(2,1,3,1);
-		$payment_method->setMultiOptions($opt);
+		$_agreement_date->setValue($c_date);
 		
-		$_cheque = new Zend_Dojo_Form_Element_TextBox('cheque');
-		$_cheque->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+		
+		$_reason = new Zend_Dojo_Form_Element_TextBox('reason');
+		$_reason->setAttribs(array(
+				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
+				'style'=>'min-height:50px;'
 				//'required' =>'true'
 		));
-		
-		$cheque_issuer = new Zend_Dojo_Form_Element_FilteringSelect('cheque_issuer');
-		$cheque_issuer->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-				'autoComplete'=>'false',
-				'queryExpr'=>'*${0}*',
-				'onchange'=>'popupIssuer();'
-		));
-		
-		$dbe = new Rent_Model_DbTable_DbRefund();
-		$rscheque = $dbe->getAllChequeIssue();
-		$opt1=array(''=>$this->tr->translate("SELECT_CHEQUE_ISSUE"),'-1'=>$this->tr->translate("ADD_NEW"));
-		if(!empty($rscheque))foreach($rscheque AS $row){
-			$opt1[$row['id']]=$row['name'];
-		}
-		$cheque_issuer->setMultiOptions($opt1);
-		
-		$_total_amount = new Zend_Dojo_Form_Element_NumberTextBox('total_amount');
-		$_total_amount->setAttribs(array(
-				'dojoType'=>'dijit.form.NumberTextBox',
-				'class'=>'fullside',
-				'style'=>'color:red;',
-				'readOnly' =>true,
-		));
-		$_total_amount->setValue(0);
 		
 		$_note = new Zend_Dojo_Form_Element_TextBox('note');
 		$_note->setAttribs(array(
@@ -84,17 +92,12 @@ Class Rent_Form_FrmRefund extends Zend_Dojo_Form {
 				//'required' =>'true'
 		));
 		
-		$refund_no = new Zend_Form_Element_Hidden("refund_no");
-		$refund_no->setAttribs(array(
+		$change_no = new Zend_Form_Element_Hidden("change_no");
+		$change_no->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
 		
-		$customer_id = new Zend_Form_Element_Hidden("customer_id");
-		$customer_id->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
-				'class'=>'fullside',
-		));
 		
 		$id = new Zend_Form_Element_Hidden("id");
 		$id->setAttribs(array(
@@ -114,36 +117,35 @@ Class Rent_Form_FrmRefund extends Zend_Dojo_Form {
 		
 		if($data!=""){
 			$id->setValue($data["id"]);
-			$refund_no->setValue($data["refund_no"]);
 			$branch_id->setValue($data["branch_id"]);
-			$customer_id->setValue($data["customer_id"]);
-			
-			$refund_date->setValue($data["refund_date"]);
-			$payment_method->setValue($data["payment_method"]);
-			$_cheque->setValue($data["cheque"]);
-			$cheque_issuer->setValue($data["cheque_issuer"]);
-			$_total_amount->setValue($data["total_amount"]);
+			$_from_customer->setValue($data["from_customer"]);
+			$_property_id->setValue($data["property_id"]);
+			$_to_customer->setValue($data["to_customer"]);
+			$change_date->setValue($data["change_date"]);
+			$_agreement_date->setValue($data["agreement_date"]);
+			$_reason->setValue($data["reason"]);
 			$_note->setValue($data["note"]);
+			$change_no->setValue($data["change_no"]);
 			$_status->setValue($data["status"]);
 		}
 		$this->addElements(array(
-				$id,
-				$refund_no,
 				$branch_id,
-				$customer_id,
-				$refund_date,
-				$payment_method,
-				$_cheque,
-				$cheque_issuer,
-				$_total_amount,
+				$_from_customer,
+				$_property_id,
+				$_to_customer,
+				$change_date,
+				$_agreement_date,
+				$_reason,
 				$_note,
-				$_status
+				$change_no,
+				$id,
+				$_status,
 				));
 		return $this;
 		
 	}
 	
-	public function FrmSearchRefund($data=null){
+	public function FrmSearchChangeOwner($data=null){
 		$db = new Application_Model_DbTable_DbGlobal();
 		$_dbRent = new Rent_Model_DbTable_DbLanddeposit();
 		$request=Zend_Controller_Front::getInstance()->getRequest();
@@ -158,7 +160,7 @@ Class Rent_Form_FrmRefund extends Zend_Dojo_Form {
 		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$rows = $db ->getAllBranchByUser();
-		$options=array(''=>$this->tr->translate("SELECT_PROJECT"));;
+		$options=array(''=>$this->tr->translate("SELECT_PROJECT"));
 		if(!empty($rows)){
 			foreach($rows AS $row) $options[$row['id']]=$row['name'];
 		}
@@ -169,52 +171,33 @@ Class Rent_Form_FrmRefund extends Zend_Dojo_Form {
 		$branch_id->setMultiOptions($options);
 		$branch_id->setValue($request->getParam("branch_id"));
 		
-		$customer_id = new Zend_Dojo_Form_Element_FilteringSelect("customer_id");
-		$opt_client = array(''=>$this->tr->translate("CHOOSE_CUSTOEMR"));
+		$from_customer = new Zend_Dojo_Form_Element_FilteringSelect("from_customer");
+		$opt_client = array(''=>$this->tr->translate("SELECT_FROM_CUSTOMER"));
 		$rows = $db->getAllClient();
 		if(!empty($rows))foreach($rows AS $row){
 			$opt_client[$row['id']]=$row['name'];
 		}
-		$customer_id->setMultiOptions($opt_client);
-		$customer_id->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+		$from_customer->setMultiOptions($opt_client);
+		$from_customer->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 				'class'=>'fullside',
 				'required'=>'false'));
-		$customer_id->setValue($request->getParam("customer_id"));
+		$from_customer->setValue($request->getParam("from_customer"));
 	
-		$payment_method = new Zend_Dojo_Form_Element_FilteringSelect('payment_method');
-		$payment_method->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-		));
-		$rec = $db->getVewOptoinTypeByType(2,null,3,1);
-		$opt=array(''=>$this->tr->translate("SELECT_TYPE"));
-		if(!empty($rec))foreach($rec AS $row){
-			$opt[$row['key_code']]=$row['name_en'];
+		$to_customer = new Zend_Dojo_Form_Element_FilteringSelect("to_customer");
+		$opt_client = array(''=>$this->tr->translate("SELECT_TO_CUSTOMER"));
+		$rows = $db->getAllClient();
+		if(!empty($rows))foreach($rows AS $row){
+			$opt_client[$row['id']]=$row['name'];
 		}
-		$payment_method->setMultiOptions($opt);
-		$payment_method->setValue($request->getParam("payment_method"));
-	
-	
-		$cheque_issuer = new Zend_Dojo_Form_Element_FilteringSelect('cheque_issuer');
-		$cheque_issuer->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
+		$to_customer->setMultiOptions($opt_client);
+		$to_customer->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
-				'onchange'=>'popupIssuer();'
-		));
-	
-		$dbe = new Rent_Model_DbTable_DbRefund();
-		$rscheque = $dbe->getAllChequeIssue();
-		$opt1=array(''=>$this->tr->translate("SELECT_CHEQUE_ISSUE"));
-		if(!empty($rscheque))foreach($rscheque AS $row){
-			$opt1[$row['id']]=$row['name'];
-		}
-		$cheque_issuer->setMultiOptions($opt1);
-		$cheque_issuer->setValue($request->getParam("cheque_issuer"));
-	
+				'class'=>'fullside',
+				'required'=>'false'));
+		$to_customer->setValue($request->getParam("to_customer"));
 	
 		$_start_date = new Zend_Dojo_Form_Element_DateTextBox('start_date');
 		$_start_date->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
@@ -254,15 +237,16 @@ Class Rent_Form_FrmRefund extends Zend_Dojo_Form {
 				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		$_status->setValue($request->getParam("status"));
+		
 		if($data!=""){
 				
 		}
 		$this->addElements(array(
 				$_adv_search,
 				$branch_id,
-				$customer_id,
-				$payment_method,
-				$cheque_issuer,
+				$from_customer,
+				$to_customer,
+// 				$cheque_issuer,
 				$_start_date,
 				$_end_date,
 				$_status

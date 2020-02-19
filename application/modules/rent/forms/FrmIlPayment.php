@@ -203,7 +203,7 @@ Class Rent_Form_FrmIlPayment extends Zend_Dojo_Form {
 		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$rows = $db ->getAllBranchByUser();
-		$options=array('');
+		$options=array(''=>$this->tr->translate("SELECT_PROJECT"));;
 		
 		if(!empty($rows)){foreach($rows AS $row) $options[$row['id']]=$row['name'];}
 		$branch_id->setAttribs(array(

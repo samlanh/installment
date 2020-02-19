@@ -1223,7 +1223,7 @@ function getLoanPaymentByLoanNumberEdit($data){
    	$sql = "SELECT lc.`crm_id`,lc.`lfd_id`,lc.`land_id`,lc.`service_charge`,lc.`penelize_amount`,lc.`total_interest`,lc.`total_payment`,lc.`total_recieve`,lc.`principal_permonth`,old_penelize,old_service_charge FROM `ln_rent_receipt_money_detail` AS lc WHERE lc.`crm_id`=$id";
    	return $db->fetchAll($sql);
    }
-	public function getAllLoanNumberByBranch($branch_id,$is_completed=0){
+	public function getAllLoanNumberByBranch($branch_id,$is_completed=0,$rend_id=null){
 		$db = $this->getAdapter();
 		$sql= "SELECT id,
 				  CONCAT((SELECT name_kh FROM ln_client WHERE ln_client.client_id=ln_rent_property.`client_id` LIMIT 1),'-',
@@ -1235,6 +1235,9 @@ function getLoanPaymentByLoanNumberEdit($data){
 		$sql.=" AND is_cancel=0";
 		if($is_completed!=0){
 			$sql.=" AND is_completed=1 ";
+			if (!empty($rend_id)){//rent edit
+				$sql.=" OR id IN ('$rend_id') ";
+			}
 		}
 		return $db->fetchAll($sql);
 	}

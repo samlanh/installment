@@ -43,17 +43,13 @@ dojo.require("dijit.form.DateTextBox");
 				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $filter->getElement('client_name');?>
 				</div>
-				<div class="col-md-2 col-sm-2 col-xs-12">
-					<?php echo $filter->getElement('schedule_opt');?>
-				</div>
+				
 				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $filter->getElement('co_id');?>
 				</div>
 			</div>
 			<div class="form-group"> 
-				<div class="col-md-2 col-sm-2 col-xs-12">
-					<?php echo $filter->getElement('buy_type');?>
-				</div>
+				
 				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $filter->getElement('property_type');?>
 				</div>
@@ -172,31 +168,31 @@ dojo.require("dijit.form.DateTextBox");
 	                    <td><?php echo $tr->translate("RENT_PRICE");?></td>
 	                    <td><?php echo $tr->translate("PAID");?></td>
 	                    <td><?php echo $tr->translate("PERIIOD");?></td>
-	                    <td><?php echo $tr->translate("RENT_DATE");?></td>
+	                    <td><?php echo $tr->translate("DATE_RENT");?></td>
 	                    <td><?php echo $tr->translate("FIRST_RENT_PAYMENT");?></td>
 	                    <td><?php echo $tr->translate("END_DATE");?></td>
 	                </tr>
 	              </thead>
 	               <?php 
-	               $amount_property=0;
+	          
 	               $link="#";
 	               $total_paid = 0;$total=0;$balance=0;$set_cancel=0;
 	               $payment_0=0;$sold_price0=0;$paid_price0=0;$balace_price0=0;
-	               $payment_1=0;$payment_2=0;$payment_3=0;$payment_4=0;$payment_5=0;$payment_6=0;
+	               $payment_1=0;
+	               $payment_2=0;$payment_3=0;$payment_4=0;$payment_5=0;$payment_6=0;
 	               $sold_price1=0;$sold_price2=0;$sold_price3=0;$sold_price4=0;$sold_price5=0;$sold_price6=0;
 	               $paid_price1=0;$paid_price2=0;$paid_price3=0;$paid_price4=0;$paid_price5=0;$paid_price6=0;
 	               $balace_price1=0;$balace_price2=0;$balace_price3=0;$balace_price4=0;$balace_price5=0;$balace_price6=0;
 	               $payment_id='';
 	               
 	               $amount_property=0;
-	               $amt_pro_payment_cancel=0;
-	               $amt_pro_payment_1=0;
-	               $amt_pro_payment_2=0;
-	               $amt_pro_payment_3=0;
-	               $amt_pro_payment_4=0;
-	               $amt_pro_payment_5=0;
-	               $amt_pro_payment_6=0;
+	               $qtyProCancel=0;
+	               $qtyProRent=0;
 	               
+	               
+	               $countRefund=0;
+	               $paid_priceRF=0;
+	               $qtyProRF=0;
 	               $db  = new Report_Model_DbTable_DbParamater();
 	               if(!empty($this->loanrelease_list)) foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
@@ -205,17 +201,21 @@ dojo.require("dijit.form.DateTextBox");
 			               	$countland = count($idse);
 			               	$amount_property = $amount_property+$countland;
 			               	if($row['is_cancel']==0){
-			               		$amt_pro_payment_1 = $amt_pro_payment_1 + $countland;
+			               		$qtyProRent = $qtyProRent + $countland;
+			               	}else if($row['is_cancel']==2){
+			               			$qtyProRF = $qtyProRF +$countland;
 			               	}else{
-			               		$amt_pro_payment_cancel = $amt_pro_payment_cancel + $countland;
+			               		$qtyProCancel = $qtyProCancel + $countland;
 			               	}
 		               }else{
 			               	$countland = 1;
 			               	$amount_property = $amount_property+$countland;
 			               	if($row['is_cancel']==0){
-			               		$amt_pro_payment_1 = $amt_pro_payment_1 + $countland;
+			               		$qtyProRent = $qtyProRent + $countland;
+			               	}else if($row['is_cancel']==2){
+			               		$qtyProRF = $qtyProRF +$countland;
 			               	}else{
-			               		$amt_pro_payment_cancel = $amt_pro_payment_cancel + $countland;
+			               		$qtyProCancel = $qtyProCancel + $countland;
 			               	}
 		               }
 	               
@@ -228,9 +228,13 @@ dojo.require("dijit.form.DateTextBox");
 	              	$total=$total+$row['paid_amount'];
 	              	$total_paid=$total_paid+$row['paid_amount'];
 	              	$balance=$balance+($row['price_sold']-$row['paid_amount']);
-	              
+	             }else if($row['is_cancel']==2){//refund deposit  
+	             	$countRefund = $countRefund+1;
+	             	$paid_priceRF=$paid_priceRF+$row['paid_amount'];
 	            ?>
-	              	
+	              <tr>
+	              		<td colspan="17" style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("REFUND_COMPLETED");?></td>
+	              	</tr>	
 	              <?php
 	             }else{
 	             	$payment_0=$payment_0+1;
@@ -238,7 +242,7 @@ dojo.require("dijit.form.DateTextBox");
 	             	if($set_cancel==0){$set_cancel=1;
 	             	?>
 	             	<tr>
-	              		<td colspan="17" style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'">បោះបង់<?php //echo $row['paymenttype']; ?></td>
+	              		<td colspan="17" style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("CANCELED");?></td>
 	              	</tr>
 	             <?php }
 	             }
@@ -282,10 +286,18 @@ dojo.require("dijit.form.DateTextBox");
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("SALE_CANCEL");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("REFUND_COMPLETED");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                    <td align="center"><?php echo $countRefund;?></td>
+			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_priceRF,2);?>&nbsp;</td>
+			                    <td align="right">&nbsp;<?php echo number_format($qtyProRF,0);?>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                 </tr>
+			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+			                 	<td>&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("CANCELED");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			                    <td align="center"><?php echo $payment_0;?></td>
 			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price0,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_cancel,0);?>&nbsp;</td>
+			                    <td align="right">&nbsp;<?php echo number_format($qtyProCancel,0);?>&nbsp;</td>
 			                    <td>&nbsp;</td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style=" border-bottom: 4px double #000; line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
@@ -293,15 +305,15 @@ dojo.require("dijit.form.DateTextBox");
 			                    <td align="right"><?php echo $tr->translate("ជួល");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			                    <td align="center"><?php echo $payment_1;?></td>
 			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price1,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_1,0);?>&nbsp;</td>
+			                    <td align="right">&nbsp;<?php echo number_format($qtyProRent,0);?>&nbsp;</td>
 			                    <td>&nbsp;</td>
 			                 </tr>
 			                 
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px;  font-weight: bold; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"><?php echo $tr->translate("ALL_TOTAL");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			                    <td>&nbsp;</td>
-			                    <td align="center" ><?php echo $payment_1;?></td>
-			                    <td align="right" >&nbsp;$&nbsp;<?php echo number_format($paid_price1+$paid_price0,2);?>&nbsp;</td>
+			                    <td align="center" ><?php echo count($this->loanrelease_list);?></td>
+			                    <td align="right" >&nbsp;$&nbsp;<?php echo number_format($paid_price1+$paid_price0+$paid_priceRF,2);?>&nbsp;</td>
 			                 	 <td align="right">&nbsp;<?php echo number_format($amount_property,0);?>&nbsp;</td>
 			                 	<td>&nbsp;</td>
 			                 </tr>
