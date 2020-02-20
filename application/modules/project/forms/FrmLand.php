@@ -6,6 +6,10 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
 	public function FrmLandInfo($data=null){
+		
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+		$level = $session_user->level;
+		
 		$clienttype_nameen= new Zend_Dojo_Form_Element_DateTextBox('clienttype_nameen');
 		$clienttype_nameen->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside'
 		));
@@ -304,7 +308,9 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 			$west->setValue($data['west']);
 			
 			$branch_id->setValue($data['branch_id']);
-			$branch_id->setAttribs(array("readonly"=>true));
+			if ($level!=1){
+				$branch_id->setAttribs(array("readonly"=>true));
+			}
 			$_id_no->setValue($data['id']);
 			$_desc->setValue($data['note']);
 			$_status->setValue($data['status']);

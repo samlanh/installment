@@ -1235,9 +1235,9 @@ function getLoanPaymentByLoanNumberEdit($data){
 		$sql.=" AND is_cancel=0";
 		if($is_completed!=0){
 			$sql.=" AND is_completed=1 ";
-			if (!empty($rend_id)){//rent edit
-				$sql.=" OR id IN ('$rend_id') ";
-			}
+		}
+		if (!empty($rend_id)){//rent edit
+			$sql.=" OR id IN ('$rend_id') ";
 		}
 		return $db->fetchAll($sql);
 	}
