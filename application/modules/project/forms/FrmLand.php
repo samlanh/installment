@@ -338,6 +338,7 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 			$status_using->setValue($data['is_lock']);
 			
 			if ($data['is_lock']==1){
+				$branch_id->setAttribs(array("readonly"=>true)); 
 				$landaddress->setAttribs(array(
 						'readOnly' =>'true',
 				));
