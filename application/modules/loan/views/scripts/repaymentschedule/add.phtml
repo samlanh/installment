@@ -10,6 +10,7 @@
 	if (!empty($this->rightclick)){
 		$urlsubmit = array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add','rightclick'=>'true');
 	}
+	$showOtherDis = OTHER_DIS_OPTION;
 ?>
 <style>
 	.fullside50{ width:48%;}
@@ -217,6 +218,12 @@
 	                   		</div>
 	                   </div>
 	                </div>
+	                <div class="form-group" style="<?php if ($showOtherDis!=1){ echo "display:none;";}?>">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("OTHER_DISCOUNT");?> :</label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    <input readonly type="text" style="width: 90%;" dojoType="dijit.form.TextBox" name="bother_discount" id="bother_discount"  value="" > $
+	                   </div>
+	                </div>
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SOLD_PRICE");?> :</label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -333,10 +340,19 @@
 		                   </div>
 		                </div>
 		                <div class="form-group">
-		                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("LIFE_LOAN");?>  :
+		                   <label id="lblDateLine" class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name">
+		                   	<?php echo $tr->translate("LIFE_LOAN");?>  :
 		                   </label>
 		                   <div class="col-md-7 col-sm-7 col-xs-12">
 		                   		<?php echo $frm->getElement('date_line');?>
+		                   </div>
+		                </div>
+		                <div class="form-group" id="nextDeposit">
+		                   <label class="control-label   col-md-5 col-sm-5 col-xs-12" for="first-name">
+		                   <?php echo $tr->translate("NEXT_DEPOSIT_ATM")?> :
+		                   </label>
+		                   <div class="col-md-7 col-sm-7 col-xs-12">
+		                    	<?php echo $frm->getElement('second_depostit');?>
 		                   </div>
 		                </div>
 		                <div class="form-group">
@@ -601,6 +617,7 @@ function checkScheduleOption(){
 			dijit.byId('interest_rate').set("readOnly",true);
 		}
 	}
+	CheckAttrDeposit();
 }
 function calCulateFixedPeriod(){
 	last_payment = dijit.byId('last_payment').get('value');
@@ -666,10 +683,18 @@ function calculateDiscount(){
 	if(isNaN(bdiscount_fixed)){
 		bdiscount_fixed=0;
 	}
+
+
+	other_discount = dijit.byId('bother_discount').get('value');
+	if(isNaN(other_discount)){
+		other_discount=0;
+	}
+	
+	
 	discount = parseFloat(discount)+parseFloat(bdiscount_fixed);
 
 	discount_percent = parseInt(total_sold*discount_percent/100);
-	total_sold = total_sold-discount_percent-discount;
+	total_sold = total_sold-discount_percent-discount-other_discount;
 	
 	dijit.byId('sold_price').attr('value',total_sold);
 	Balance();
@@ -784,6 +809,7 @@ require(["dojo/ready"], function(ready){
 			dijit.byId("receipt").set("readOnly",false);
 		<?php }?>
 		dijit.byId("full_commission").set("readOnly",true);
+		CheckAttrDeposit();
 	  });
 	 
 	new dijit.form.FilteringSelect({
@@ -924,6 +950,8 @@ function getInfoByLoanNumber(){
 			
 			dijit.byId('bdiscount_percent').attr('value',data.discount_percent);
 			dijit.byId('bdiscount_fixed').attr('value',data.discount_amount);
+			dijit.byId('bother_discount').attr('value',data.other_discount);
+			
 			dijit.byId('paid_before').attr('value',data.total_principal);
 			
 			price_before = data.price_before;
@@ -1387,10 +1415,16 @@ function printSave(new_receipt_no){
 	if(isNaN(bdiscount_fixed)){
 		bdiscount_fixed=0;
 	}
+
+	other_discount = dijit.byId('bother_discount').get('value');
+	if(isNaN(other_discount)){
+		other_discount=0;
+	}
+	
 	discount = parseFloat(discount)+parseFloat(bdiscount_fixed);
 	discount_percent=parseFloat(discount_percent)+parseFloat(bdiscount_percent);
 	discount_percent = total_sold*discount_percent/100;
-	total_discount = discount_percent+discount;
+	total_discount = discount_percent+discount+other_discount;
 	
 	dojo.byId("lb_interest").innerHTML =symbal+"0.00";
 	dojo.byId("lb_penalty").innerHTML =symbal+"0.00";
@@ -1653,6 +1687,16 @@ function printSubmit(){
 }
 function loading(){
     document.getElementsByClassName("overlay")[0].style.display="block";
+}
+
+function CheckAttrDeposit(){
+	schedule_opt = dijit.byId('schedule_opt').get('value');
+	dojo.byId('lblDateLine').innerHTML="<?php echo $tr->translate("LIFE_LOAN");?>";
+	$("#nextDeposit").css("display", "none");
+	if(schedule_opt==1){
+		dojo.byId('lblDateLine').innerHTML="<?php echo $tr->translate("DATE_MAKE_AGREEEMNT");?>";
+		$("#nextDeposit").css("display", "flow-root");
+	}
 }
 </script>
 <style>

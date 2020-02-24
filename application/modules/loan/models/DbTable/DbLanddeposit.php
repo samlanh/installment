@@ -317,7 +317,9 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'comission'=>0,//$data['commission'],
     			   	'second_depostit'=>$data['second_depostit'],
     				'create_date'=>date("Y-m-d"),
-    				'user_id'=>$this->getUserId()
+    				'user_id'=>$this->getUserId(),
+    			 	
+    			 	'other_discount'=>$data['other_discount'],//Other Discount	
     				);
     		$this->_name='ln_sale';
     		$id = $this->insert($arr);//add group loan
@@ -394,6 +396,10 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				    	'field2'=>1,
     				    	'is_payoff'=>$pay_off,
     				    	'payment_times'=>1,
+    		    			
+    		    			//new for phnom penh tmey
+    		    			'next_date_deposit'=>$data['date_line'],
+    		    			'next_amount_deposit'=>$data['second_depostit'],
     				    	);
     		    	$this->_name='ln_client_receipt_money';
     		    	$crm_id = $this->insert($array);
@@ -685,6 +691,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'create_date'=>date("Y-m-d"),
     				'user_id'=>$this->getUserId(),
     				'note_agreement'=>$note_agreement,
+    				
+    				'other_discount'=>$data['other_discount'],//Other Discount
     			);
     		
     		$id = $data['id'];
@@ -731,6 +739,10 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'field2'=>1,
     				'is_payoff'=>$pay_off,
     				'payment_times'=>1,
+    					
+    				//new for phnom penh tmey
+    				'next_date_deposit'=>$data['date_line'],
+    				'next_amount_deposit'=>$data['second_depostit'],
     			);
     			$this->_name='ln_client_receipt_money';
     			$where="receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id'];

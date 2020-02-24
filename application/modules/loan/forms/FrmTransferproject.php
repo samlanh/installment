@@ -330,6 +330,16 @@ public function init()
 		$options= array(1=>$this->tr->translate("NORMAL_SALE"),2=>$this->tr->translate("MULTY_SALE"));
 		$typesale->setMultiOptions($options);
 		
+		$other_discount = new Zend_Dojo_Form_Element_NumberTextBox('other_discount');
+		$other_discount->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'onKeyup'=>'calculateDiscount();',
+				'class'=>'fullside',
+				'placeHolder'=>$this->tr->translate("OTHER_DISCOUNT"),
+				'invalidMessage'=>'អាចបញ្ជូលពី 1 ដល់ 99'
+		));
+		$other_discount->setValue(0);
+		
 		if($data!=null){
 // 			$_loan_code->setValue($data['sale_number']);
 // 			$receipt->setValue($data['receipt_no']);
@@ -360,7 +370,8 @@ public function init()
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id,
 				$typesale,
-				$from_interest_rate
+				$from_interest_rate,
+				$other_discount
 				));
 		return $this;
 		

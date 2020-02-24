@@ -10,6 +10,12 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$dbuser = new Application_Model_DbTable_DbUsers();
 	$usertype="";
+	$receipt_type = null;
+	if ($this->rs['field3']==1){
+		if (date("Y-m-d",strtotime($this->rs['date_pay']))>=date("Y-m-d",strtotime($this->dateLimit))){
+			$receipt_type=1;
+		}
+	}
 ?>
 <title><?php echo $tr->translate("RECEIPT");?></title>
  <style>
@@ -24,13 +30,17 @@
 			echo $this->officailreceipt;
 			?>
 		</div>
-		<?php if($this->data['showreceipt']>1){?>
+		<?php 
+		if (empty($receipt_type)){
+			if($this->data['showreceipt']>1){?>
 		<div id="divPrint2" style="width: 100%;height: 13cm ; padding: 0px; margin: 0px;">
 			<div style="border:2px dashed <?php echo $this->data['border_receiptcolor'];?>; vertical-align: middle; margin:100px 0px 40px 0px"></div>
 			<div id="printblog2"></div>
 		</div>
-		<?php }?>
+		<?php }
+		}?>
 	</div>
+	<div id="noteContent" style="display: none;"><?php echo $this->rs['note'];?></div>
  </div>
 <script src="<?php echo $this->baseUrl();?>/js/pdbs_js.js"  type="text/javascript"></script>
 <script>
@@ -40,9 +50,12 @@ require(["dojo/ready"], function(ready){
 		 getBranchInfo();
 		 printSave();
 		 setTimeout(function () {
-			 <?php if($this->data['showreceipt']>1){?>
+			 <?php 
+			 if (empty($receipt_type)){
+			 if($this->data['showreceipt']>1){?>
 			 dojo.byId('printblog2').innerHTML = dojo.byId('divPrint1').innerHTML;
-			 <?php }?>
+			 <?php }
+			}?>
 	        HideloadingBlock();
 	    }, 500);
 		 
@@ -83,7 +96,11 @@ function printSave(){
 	dojo.byId("lb_saleprice").innerHTML = '<?php echo "$ ".number_format($this->rs['selling_price'],2); //number_format($this->rs['price_sold'],2)." $";?>';
 	dojo.byId("lbl_total_paid1").innerHTML ='<?php echo "$ ".number_format($this->rs['allpaid_before'],2);//number_format(($this->rs['price_sold']-(($this->rs['outstanding'])-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid']))),2)." $";?>';
 	dojo.byId("lbl_balance").innerHTML ='<?php echo  "$ ".number_format($this->rs['selling_price']-$this->rs['allpaid_before'],2);//number_format(($this->rs['outstanding']-($this->rs['recieve_amount']-$this->rs['penalize_amountpaid']-$this->rs['total_interest_permonthpaid'])),2)." $";?>';
-	dojo.byId("lb_noted").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['note']))));?>';
+	var div = document.getElementById('noteContent');
+
+	var htmlString = $( '#noteContent' ).html();
+	$( '#lb_noted' ).text( htmlString );
+	//dojo.byId("lb_noted").innerHTML = div'<?php //echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['note']))));?>';
 
 	dojo.byId("lb_amount").innerHTML = '<?php echo  "$ ".number_format($this->rs['total_principal_permonth'],2);?>';
 	dojo.byId("lbl_paidtimes").innerHTML = '<?php if($this->rs['field3']==1){ echo "កក់លើកទី ";} echo $this->rs['payment_times'];?>';
@@ -97,6 +114,13 @@ function printSave(){
 	dojo.byId("lbl_paymenttype").innerHTML = "<?php echo $this->rs['payment_method'];?>";
 	dojo.byId("lbl_cheque").innerHTML = "<?php echo empty($this->rs['cheque'])?"N/A":$this->rs['cheque'];?>";
 
+	dojo.byId("lbl_priceSoldBefore").innerHTML = '<?php echo  "$ ".number_format($this->rs['price_before'],2);?>';
+	dojo.byId("lbl_discountAmount").innerHTML = '<?php echo  "$ ".number_format($this->rs['discount_amount'],2);?>';
+	dojo.byId("lbl_discountPercent").innerHTML = '<?php echo number_format($this->rs['discount_percent'],2)." %";?>';
+	dojo.byId("lbl_discountOther").innerHTML = '<?php echo  "$ ".number_format($this->rs['other_discount'],2);?>';
+	dojo.byId("lb_forCompletedAmount").innerHTML = '<?php echo "$ ".number_format($this->rs['next_amount_deposit'],2);?>';
+	dojo.byId("lb_completedDate").innerHTML = "<?php echo date("d-m-Y",strtotime($this->rs['next_date_deposit']));?>";
+	
 	dojo.byId("lbl_customer").innerHTML = '<?php echo $this->rs['name_kh'];echo (empty($this->rs['hname_kh'])?"":"/".$this->rs['hname_kh']); ?>';
 	dojo.byId("lbl_usersale").innerHTML = "<?php echo $this->rs['by_user'].$usertype;?>";
 

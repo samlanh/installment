@@ -568,10 +568,19 @@ class Report_LoanController extends Zend_Controller_Action {
 	 }else{
   		$this->_redirect("/report/paramater");
   	}
+  	
+  	$dateLimit=MAX_DATE_OLD_RECEIPT;
+  	$receiptType = null;
+  	if ($receipt['field3']==1){
+  		if (date("Y-m-d",strtotime($receipt['date_pay']))>=date("Y-m-d",strtotime($dateLimit))){
+  			$receiptType=1;
+  		}
+  	}
+  	$this->view->dateLimit = $dateLimit;
 //   	$rss = $db->UpdatePaytimeBooking();
   		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
-		$this->view->officailreceipt = $frmpopup->getOfficailReceipt();
+		$this->view->officailreceipt = $frmpopup->getOfficailReceipt($receiptType);
   }
   
 

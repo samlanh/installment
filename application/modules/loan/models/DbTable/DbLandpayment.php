@@ -323,7 +323,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'commission_amt'=>$data['commission_amt'],
     				'create_date'=>date("Y-m-d"),
     				'user_id'=>$this->getUserId(),
-    			   	'amount_daydelay'=>$data['delay_day']
+    			   	'amount_daydelay'=>$data['delay_day'],
+    			   	'other_discount'=>$data['other_discount'],//Other Discount
     				);
     		$this->_name='ln_sale';
     		$id = $this->insert($arr);//add group loan
@@ -1281,6 +1282,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'user_id'=>$this->getUserId(),
     				'status'=>$data['status_using'],
     				//'full_commission'=>$data['full_commission'],
+    				'other_discount'=>$data['other_discount'],//Other Discount
     		);
     		$dbg = new Application_Model_DbTable_DbGlobal();
     		$rs_user = $dbg->getUserInfo();

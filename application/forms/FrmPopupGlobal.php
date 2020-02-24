@@ -985,7 +985,9 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 // 		}
 // 		return $str;
 // 	}
-	function getOfficailReceipt(){//general
+	function getOfficailReceipt($_receipt_type=null){//general
+	
+		//$_receipt_type 1 = បង្កាន់ដៃទទួលប្រាក់កក់
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$key = new Application_Model_DbTable_DbKeycode();
 		$data=$key->getKeyCodeMiniInv(TRUE);
@@ -1078,7 +1080,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<span id="lbl_balance"></span>
 					<span id="lb_noted"></span>
 					<label id="lbl_phone" class="value"></label>
-				<label id="lbl_pricelabel" class="value" ></label>
+					<label id="lbl_pricelabel" class="value" ></label>
 					
 					<span id="lb_amount"></span>
 					<span id="lbl_paidtimes"></span>
@@ -1091,6 +1093,13 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<span id="lbl_paymenttype"></span>
 					<span id="lbl_cheque"></span>
 					'.$footer.'
+					
+					<span id="lbl_priceSoldBefore"></span>
+					<span id="lbl_discountAmount"></span>
+					<span id="lbl_discountPercent"></span>
+					<span id="lb_forCompletedAmount"></span>
+					<span id="lb_completedDate"></span>
+					<span id="lbl_discountOther"></span>
 				</div>
 				<span class="postingdate">Posting Date: <span id=lblpaid_date></span></span>
 				<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
@@ -1353,6 +1362,13 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<span id="lb_descriptionall"></span>
 				<span id="lb_customercode"></span>	
 				'.$footer.'
+				
+				<span id="lbl_priceSoldBefore"></span>
+				<span id="lbl_discountAmount"></span>
+				<span id="lbl_discountPercent"></span>
+				<span id="lb_forCompletedAmount"></span>
+				<span id="lb_completedDate"></span>
+				<span id="lbl_discountOther"></span>
 			</div>
 			</div>';
 			/*<tr style="font-size: 11px;">
@@ -1374,179 +1390,436 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 	        		//'.$data["tel-client"].'
 	        	//</div>
 		}else{// default
-		$str='
-		<div >
-			<style>
-				.label{ font-size: 22px;}
-				.value{font:16px '."Khmer OS Battambang".';border: 1px solid #000; min-height: 29px; padding: 0 2px;width: 100%;margin-right:2px; display: block;
+			if (!empty($_receipt_type)){
+				$str='
+				<div >
+					<style>
+						.label{ font-size: 22px;}
+						.value{font:16px '."Khmer OS Battambang".';border: 1px solid #000; min-height: 29px; padding: 0 2px;width: 100%;margin-right:2px; display: block;
 						line-height: 29px;
-					    text-align: left;
-				}
-				span#lb_hourseno {
-				    overflow-wrap: break-word;
-				    white-space: normal;
-				    width: 200px;
-				    display: inline-block;
-				    line-height: 24px;
-				}
-				.print tr td{
-					padding:1px 2px; 
-				}
-			   .khmer{font:14px '."Khmer OS Battambang".';}
-			   .one{white-space:nowrap;}
-			   .h{ margin-top: -10px;}
-			   .noted{white-space: pre-wrap;     
-						word-wrap: break-word;      
+						text-align: left;
+					}
+					span#lb_hourseno {
+						overflow-wrap: break-word;
+						white-space: normal;
+						width: 200px;
+						display: inline-block;
+						line-height: 24px;
+					}
+					.print tr td{
+						padding:1px 2px;
+					}
+					.khmer{font:14px '."Khmer OS Battambang".';}
+					.one{white-space:nowrap;}
+					.h{ margin-top: -10px;}
+					.noted{white-space: pre-wrap;
+						word-wrap: break-word;
 						word-break: break-all;
 						white-space: pre;
-					    font:12px '."Khmer OS Battambang".';
-					    border: 1px solid #000;
-                        line-height:20px;font-weight: normal !important;
-				}
-				table.receipt-titile tr td {
-					font-size:16px;
-				}
-				table.receipt-titile tr td span {
-					font-family: Arial Black;font-family:'."Khmer OS Muol Light".';
-				}
-				table.receipt-titile tr td div span {
-					line-height:10px;
-					font-weight: bold;
-				}
-				#lb_receipt {
-					font-weight: bold;
-				}
-				table.print.contentdata{
-					width:100%;
-					white-space: nowrap;
-					font-size:16px; 
-					margin-top: -28px;
-					font-family: Times New Roman,'."Khmer OS Battambang".';
-				}
-				table.print.contentdata tr{
-					white-space: nowrap;
-				}
-				tr.receipt-row {
-					white-space: nowrap;
-					font-size: 14px;
-					margin-top: -15px;
-				}
-				table.signature-table{
-					font-size:14px;line-height: 18px;
-				}
-				table.comment-footer{
-					margin-top:-5px
-				}
-				table.comment-footer tr td span.lbnote {
-					text-decoration:underline;
-					font-size: 12px; 
-					margin-top: -5px;
-				}
-				table.comment-footer tr td p.comment1{
-					font-size: 11px;
-					margin:-5px 0px -5px 0px !important;
-					padding:0 !important;
-				}
-				table.comment-footer tr td span.comment{
-					white-space: pre-line;
-					font-size: 11px;
-					margin-top: -5px;
-				}
-			</style>	
-			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
-				<tr>
-					<td colspan="6">
-						<table class="receipt-titile" width="100%" style="font-family:'."Khmer OS Muol Light".';white-space:nowrap;">
+						font:12px '."Khmer OS Battambang".';
+						border: 1px solid #000;
+						line-height:20px;font-weight: normal !important;
+					}
+					table.receipt-titile tr td {
+						font-size:16px;
+					}
+					table.receipt-titile tr td span {
+						font-family: Arial Black;font-family:'."Khmer OS Muol Light".';
+					}
+					table.receipt-titile tr td div span {
+						line-height:10px;
+						font-weight: bold;
+					}
+					#lb_receipt {
+						font-weight: bold;
+					}
+					table.print.contentdata{
+						width:100%;
+						white-space: nowrap;
+						font-size:16px;
+						margin-top: -28px;
+						font-family: Times New Roman,'."Khmer OS Battambang".';
+					}
+					table.print.contentdata tr{
+						white-space: nowrap;
+					}
+					tr.receipt-row {
+						white-space: nowrap;
+						font-size: 14px;
+						margin-top: -15px;
+					}
+					table.signature-table{
+						font-size:14px;line-height: 18px;
+					}
+					table.comment-footer{
+						margin-top:-5px
+					}
+					table.comment-footer tr td span.lbnote {
+						text-decoration:underline;
+						font-size: 12px;
+						margin-top: -5px;
+					}
+					table.comment-footer tr td p.comment1{
+						font-size: 11px;
+						margin:-5px 0px -5px 0px !important;
+						padding:0 !important;
+					}
+					table.comment-footer tr td span.comment{
+						white-space: pre-line;
+						font-size: 11px;
+						margin-top: -5px;
+					}
+				</style>
+				<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
+					<tr>
+						<td colspan="6">
+							<table class="receipt-titile" width="100%" style="font-family:'."Khmer OS Muol Light".';white-space:nowrap;">
+								<tr>
+									<td id="projectlogo" width="35%">
+										<img style="height:80px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
+									</td>
+									<td width="30%" valign="top" align="center"><u><span>បង្កាន់ដៃទទួលប្រាក់</span></u>
+										<div ><span >OFFICIAL RECEIPT</span></div>
+									</td>
+									<td width="35%"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<table  class="print contentdata" cellspacing="3px"  cellpadding="0" >
+					<tr class="receipt-row"  >
+						<td colspan="5"></td>
+						<td align="right">
+							<span id="lb_receipt" ></span>
+						</td>
+					</tr>
+					<tr >
+						<td style="display: none;">លេខកូដលក់</td>
+						<td style="display: none;"><strong><label class="value"></label></strong></td>
+						<td>គម្រោង</td>
+						<td><strong><strong><label id="lbl_project" class="value">3</label></strong></td>
+						<td>&nbsp;&nbsp;បង់លើកទី</td>
+						<td colspan="3"><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
+					</tr>
+					<tr >
+						<td>ឈ្មោះ​អតិថិជន </td>
+						<td><strong><label id="lb_customer" class="value"></label></strong></td>
+						<td>&nbsp;&nbsp; ប្រាក់ត្រូវបង់</td>
+						<td><strong><label id="lbl_totalpayment" class="value">0.00</label></strong></td>
+						<td>&nbsp; ប្រាក់ពិន័យ</td>
+						<td><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
+					</tr>
+					<tr >
+						<td>'.$tr->translate("PROPERTY_CODE").'</td>
+						<td><strong><label class="value"><span id="lb_hourseno"></span></label></strong></td>
+						<td>&nbsp;&nbsp;ប្រាក់បានទទួល</td>
+						<td colspan="3"><strong><label id="lbl_total_receive" class="value">0.00</label></strong></td>
+					</tr>
+					<tr>
+						<td>តម្លៃដើម</td>
+						<td valign="top">
+							<table width="100%" cellpadding="0" cellspacing="0">
+								<tr>
+									<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_priceSoldBefore" class="value">$ 0.00</label></td>
+									<td width="33%" style="white-space: nowrap;">បញ្ចុះជាសាច់ប្រាក់</td>
+									<td width="33.5%"><label style="white-space: nowrap;margin-right: -4px;" class="value" id="lbl_discountAmount">$ 0.00</label></td>
+								</tr>
+							</table>
+						</td>
+						<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
+						<td><strong><label id="lb_buydate1" class="value"></label></strong></td>
+						<td>&nbsp;ថ្ងៃទទួល</td>
+						<td><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
+					</tr>
+					<tr>
+						<td>បញ្ចុះជាភាគរយ</td>
+						<td valign="top">
+							<table width="100%" cellpadding="0" cellspacing="0">
+								<tr>
+									<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_discountPercent" class="value">$ 0.00</label></td>
+									<td width="33%" style="white-space: nowrap;">បញ្ចុះផ្សេងៗ</td>
+									<td width="33.5%"><label style="white-space: nowrap;margin-right: -4px;" class="value" id="lbl_discountOther">$ 0.00</label></td>
+								</tr>
+							</table>
+						</td>
+						<td>&nbsp;&nbsp;ប្រភេទទូទាត់</td>
+						<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
+						<td>&nbsp;លេខ</td>
+						<td><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
+					</tr>
+					<tr >
+						<td width="10%">'.$tr->translate("SOLD_PRICE").'</td>
+						<td width="40%"><strong><label id="lb_saleprice" class="value"></label></strong></td>
+						<td>&nbsp;&nbsp;សន្យាបង់បង្គ្រប់</td>
+						<td colspan="3"><strong><label id="lb_forCompletedAmount" class="value"></label></strong></td>
+					</tr>
+					<tr>
+						<td>ប្រាក់បានបង់សរុប</td>
+						<td valign="top">
+							<table width="100%" cellpadding="0" cellspacing="0">
+								<tr>
+									<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"></label></td>
+									<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
+									<td width="33.5%"><label style="white-space: nowrap;margin-right: -4px;" class="value" id="lbl_balance"></label></td>
+								</tr>
+							</table>
+						</td>
+						<td>&nbsp;&nbsp;នៅថ្ងៃទី</td>
+						<td colspan="3"><label  class="value" style="font-family: Arial,Helvetica,sans-serif;" id="lb_completedDate"></label></td>
+					</tr>
+					<tr >
+						<td valign="top">របៀបទូទាត់</td>
+						<td colspan="5" class="noted" valign="top"><label id="lb_noted" style="min-height: 120px;display: block;   white-space: pre-line;"></label></td>
+					</tr>
+					<tr >
+						<td colspan="6" valign="top">
+							&nbsp;
+						</td>
+					</td>
+					<tr >
+						<td colspan="6" valign="top">
+							<table class="signature-table" width="100%" border="0">
+								<tr>
+									<td align="center" width="40%">
+									'.$data['customer_sign'].'
+									</td>
+									<td align="center" width="30%">
+									'.$data['teller_sign'].'
+									</td>
+								</tr>
+								<tr height="85px">
+									<td colspan="2">&nbsp;
+									</td>
+								</tr>
+								<tr>
+									<td align="center" width="40%">
+										<label id="lbl_customer" ></label>
+									</td>
+									<td align="center" width="30%">
+										<label id="lbl_usersale" >'.$last_name." ".$username.$usertype.'</label>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr style="font-size: 11px;">
+						<td colspan="6" valign="top">
+							<table class="comment-footer" width="100%" border="0" >
+								<tr>
+									<td width="10%" valign="top">
+										<span class="lbnote" style="">សម្គាល់ ៖</span>
+									</td>
+								</tr>
+								<tr>
+									<td width="10%" valign="top">
+									</td>
+									<td colspan="5" valign="top">
+										<span class="comment">'.$data['comment'].'</span><br />
+										<span class="comment">'.$data['comment1'].'</span>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr style="line-height: 15px;font-size: 10px;">
+						<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)"></td>
+					</tr>
+					<tr style="line-height: 18px;font-size: 10px;">
+						<td colspan="6" >
+						'.$footer.'
+						</td>
+					</tr>
+				</table>
+				<div style="display: none;">
+					<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
+					<label id="lbl_phone" class="value"></label>
+					<label id="lbl_pricelabel" class="value" ></label>
+					<span id="lable_chartotalreceipt"></span>
+					<span id="lblpaid_date"></span>
+					<span id="lb_descriptionall"></span>
+					<span id="lb_customercode"></span>
+					
+					<span id="lb_amount"></span>
+					<span id="lb_extrapayment"></span>
+					<span id="lb_interest"></span>
+				</div>
+				</div>
+				';
+			}else{
+				$str='
+				<div >
+				<style>
+					.label{ font-size: 22px;}
+					.value{font:16px '."Khmer OS Battambang".';border: 1px solid #000; min-height: 29px; padding: 0 2px;width: 100%;margin-right:2px; display: block;
+						line-height: 29px;
+						text-align: left;
+					}
+					span#lb_hourseno {
+						overflow-wrap: break-word;
+						white-space: normal;
+						width: 200px;
+						display: inline-block;
+						line-height: 24px;
+					}
+					.print tr td{
+						padding:1px 2px;
+					}
+					.khmer{font:14px '."Khmer OS Battambang".';}
+					.one{white-space:nowrap;}
+					.h{ margin-top: -10px;}
+					.noted{white-space: pre-wrap;
+						word-wrap: break-word;
+						word-break: break-all;
+						white-space: pre;
+						font:12px '."Khmer OS Battambang".';
+						border: 1px solid #000;
+						line-height:20px;font-weight: normal !important;
+					}
+					table.receipt-titile tr td {
+						font-size:16px;
+					}
+					table.receipt-titile tr td span {
+						font-family: Arial Black;font-family:'."Khmer OS Muol Light".';
+					}
+					table.receipt-titile tr td div span {
+						line-height:10px;
+						font-weight: bold;
+					}
+					#lb_receipt {
+						font-weight: bold;
+					}
+					table.print.contentdata{
+						width:100%;
+						white-space: nowrap;
+						font-size:16px;
+						margin-top: -28px;
+						font-family: Times New Roman,'."Khmer OS Battambang".';
+					}
+					table.print.contentdata tr{
+						white-space: nowrap;
+					}
+					tr.receipt-row {
+						white-space: nowrap;
+						font-size: 14px;
+						margin-top: -15px;
+					}
+					table.signature-table{
+						font-size:14px;line-height: 18px;
+					}
+					table.comment-footer{
+						margin-top:-5px
+					}
+					table.comment-footer tr td span.lbnote {
+						text-decoration:underline;
+						font-size: 12px;
+						margin-top: -5px;
+					}
+					table.comment-footer tr td p.comment1{
+						font-size: 11px;
+						margin:-5px 0px -5px 0px !important;
+						padding:0 !important;
+					}
+					table.comment-footer tr td span.comment{
+						white-space: pre-line;
+						font-size: 11px;
+						margin-top: -5px;
+					}
+				</style>
+				<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
+					<tr>
+						<td colspan="6">
+							<table class="receipt-titile" width="100%" style="font-family:'."Khmer OS Muol Light".';white-space:nowrap;">
 							<tr>
 								<td id="projectlogo" width="35%">
 									<img style="height:80px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
-								</td>			
+								</td>
 								<td width="30%" valign="top" align="center"><u><span>បង្កាន់ដៃទទួលប្រាក់</span></u>
 									<div ><span >OFFICIAL RECEIPT</span></div>
 								</td>
 								<td width="35%"></td>
 							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-			<table  class="print contentdata" cellspacing="3px"  cellpadding="0" >
-				<tr class="receipt-row"  >
-				    <td colspan="5"></td>
-					<td align="right">
-						<span id="lb_receipt" ></span>
-					</td>
-				</tr>
-				<tr >
-				    <td style="display: none;">លេខកូដលក់</td>
-				    <td style="display: none;"><strong><label class="value"></label></strong></td>
-				    <td>គម្រោង</td>
-				    <td><strong><strong><label id="lbl_project" class="value">3</label></strong></td>
-					<td>&nbsp;&nbsp;ប្រាក់ដើម</td>
-                    <td><strong><label id="lb_amount" class="value"></label></strong></td>
-					<td>&nbsp;បង់លើកទី</td>
-					<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
-				</tr>
-				<tr >
-				    <td>ឈ្មោះ​អតិថិជន </td>
-				    <td><strong><label id="lb_customer" class="value"></label></strong></td>
-					<td>&nbsp;&nbsp; ការប្រាក់</td>
-                    <td><strong><label id="lb_interest" class="value">0.00</label></strong></td>
-					<td>&nbsp; ប្រាក់ពិន័យ</td>
-					<td><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
-                </tr>
-				<tr >
-					<td>'.$tr->translate("PROPERTY_CODE").'</td>
-                    <td><strong><label class="value"><span id="lb_hourseno"></span></label></strong></td>
-				   <td>&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
-					<td colspan="3"><strong><label id="lb_extrapayment" class="value">0.00</label></strong></td>
-				</tr>
-				<tr >
-					<td width="10%">'.$tr->translate("SOLD_PRICE").'</td>
-				    <td width="40%"><strong><label id="lb_saleprice" class="value"></label></strong></td>
-					<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
-                    <td colspan="3"><strong><label id="lbl_totalpayment" class="value"></label></strong></td>
-				</tr>
-				<tr>
-					<td>ប្រាក់បានបង់សរុប</td>
-					<td valign="top">
-						<table width="100%" cellpadding="0" cellspacing="0">
-							<tr>
-								<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"></label></td>
-								<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
-								<td width="33.5%"><label style="white-space: nowrap;margin-right: -4px;" class="value" id="lbl_balance"></label></td>
-							</tr>
-						</table>
-					</td>
-					<td>&nbsp;&nbsp;ប្រាក់បានទទួល</td>
-				    <td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;" id="lbl_total_receive"></label></strong></td>
-				</tr>
-				<tr >
-					<td rowspan="2">សម្គាល់</td>
-				    <td rowspan="2" class="noted" valign="top"><label id="lb_noted"></label></td>
-					<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
-				    <td><strong><label id="lb_buydate1" class="value"></label></strong></td>
-					<td>&nbsp;ថ្ងៃទទួល</td>
-					<td><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
-				</tr>
-				<tr >
-					<td>&nbsp;បង់ជា</td>
-					<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
-					<td>&nbsp;&nbsp;លេខ</td>
-					<td><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
-				</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<table  class="print contentdata" cellspacing="3px"  cellpadding="0" >
+					<tr class="receipt-row"  >
+						<td colspan="5"></td>
+						<td align="right">
+							<span id="lb_receipt" ></span>
+						</td>
+					</tr>
+					<tr >
+						<td style="display: none;">លេខកូដលក់</td>
+						<td style="display: none;"><strong><label class="value"></label></strong></td>
+						<td>គម្រោង</td>
+						<td><strong><strong><label id="lbl_project" class="value">3</label></strong></td>
+						<td>&nbsp;&nbsp;ប្រាក់ដើម</td>
+						<td><strong><label id="lb_amount" class="value"></label></strong></td>
+						<td>&nbsp;បង់លើកទី</td>
+						<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
+					</tr>
+					<tr >
+						<td>ឈ្មោះ​អតិថិជន </td>
+						<td><strong><label id="lb_customer" class="value"></label></strong></td>
+						<td>&nbsp;&nbsp; ការប្រាក់</td>
+						<td><strong><label id="lb_interest" class="value">0.00</label></strong></td>
+						<td>&nbsp; ប្រាក់ពិន័យ</td>
+						<td><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
+					</tr>
+					<tr >
+						<td>'.$tr->translate("PROPERTY_CODE").'</td>
+						<td><strong><label class="value"><span id="lb_hourseno"></span></label></strong></td>
+						<td>&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
+						<td colspan="3"><strong><label id="lb_extrapayment" class="value">0.00</label></strong></td>
+					</tr>
+					<tr >
+						<td width="10%">'.$tr->translate("SOLD_PRICE").'</td>
+						<td width="40%"><strong><label id="lb_saleprice" class="value"></label></strong></td>
+						<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
+						<td colspan="3"><strong><label id="lbl_totalpayment" class="value"></label></strong></td>
+					</tr>
+					<tr>
+						<td>ប្រាក់បានបង់សរុប</td>
+						<td valign="top">
+							<table width="100%" cellpadding="0" cellspacing="0">
+								<tr>
+									<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"></label></td>
+									<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
+									<td width="33.5%"><label style="white-space: nowrap;margin-right: -4px;" class="value" id="lbl_balance"></label></td>
+								</tr>
+							</table>
+						</td>
+						<td>&nbsp;&nbsp;ប្រាក់បានទទួល</td>
+						<td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;" id="lbl_total_receive"></label></strong></td>
+					</tr>
+					<tr >
+						<td rowspan="2">សម្គាល់</td>
+						<td rowspan="2" class="noted" valign="top"><label id="lb_noted"></label></td>
+						<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
+						<td><strong><label id="lb_buydate1" class="value"></label></strong></td>
+						<td>&nbsp;ថ្ងៃទទួល</td>
+						<td><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
+					</tr>
+					<tr >
+						<td>&nbsp;បង់ជា</td>
+						<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
+						<td>&nbsp;&nbsp;លេខ</td>
+						<td><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
+					</tr>
 				<tr >
 					<td colspan="6" valign="top">
 						<table class="signature-table" width="100%" border="0">
 							<tr>
 								<td width="30%">&nbsp;
-									'.$data['account_sign'].'
+								'.$data['account_sign'].'
 								</td>
 								<td align="center" width="40%">
-									'.$data['customer_sign'].'
+								'.$data['customer_sign'].'
 								</td>
 								<td align="center" width="30%">
-									'.$data['teller_sign'].'
+								'.$data['teller_sign'].'
 								</td>
 							</tr>
 							<tr height="85px">
@@ -1556,7 +1829,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 							<tr>
 								<td width="30%">&nbsp;</td>
 								<td align="center" width="40%">
-									<label id="lbl_customer" ></label>
+								<label id="lbl_customer" ></label>
 								</td>
 								<td align="center" width="30%">
 								<label id="lbl_usersale" >'.$last_name." ".$username.$usertype.'</label>
@@ -1567,18 +1840,18 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</td>
 				</tr>
 				<tr style="font-size: 11px;">
-						<td colspan="6" valign="top">
-							<table class="comment-footer" width="100%" border="0" >
-								<tr>
-									<td width="10%">
-										<span class="lbnote" style="">សម្គាល់ ៖</span>
-									</td>
-									<td colspan="5">
-										<p class="comment1">'.$data['comment'].'</p>
-										<span class="comment">'.$data['comment1'].'</span>
-									</td>
-								</tr>
-							</table>
+					<td colspan="6" valign="top">
+						<table class="comment-footer" width="100%" border="0" >
+							<tr>
+								<td width="10%">
+									<span class="lbnote" style="">សម្គាល់ ៖</span>
+								</td>
+								<td colspan="5">
+									<p class="comment1">'.$data['comment'].'</p>
+									<span class="comment">'.$data['comment1'].'</span>
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
@@ -1586,21 +1859,29 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</tr>
 				<tr style="line-height: 18px;font-size: 10px;">
 					<td colspan="6" >
-						'.$footer.'
+					'.$footer.'
 					</td>
 				</tr>
-			</table>
-			<div style="display: none;">
-				<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
-				<label id="lbl_phone" class="value"></label>
-				<label id="lbl_pricelabel" class="value" ></label>
-				<span id="lable_chartotalreceipt"></span>
-				<span id="lblpaid_date"></span>
-				<span id="lb_descriptionall"></span>
-				<span id="lb_customercode"></span>
-			</div>
-		</div>
-		';
+				</table>
+					<div style="display: none;">
+						<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
+						<label id="lbl_phone" class="value"></label>
+						<label id="lbl_pricelabel" class="value" ></label>
+						<span id="lable_chartotalreceipt"></span>
+						<span id="lblpaid_date"></span>
+						<span id="lb_descriptionall"></span>
+						<span id="lb_customercode"></span>
+						
+						<span id="lbl_priceSoldBefore"></span>
+						<span id="lbl_discountAmount"></span>
+						<span id="lbl_discountPercent"></span>
+						<span id="lb_forCompletedAmount"></span>
+						<span id="lb_completedDate"></span>
+						<span id="lbl_discountOther"></span>
+					</div>
+				</div>
+				';
+			}
 		}
 		return $str;
 	}

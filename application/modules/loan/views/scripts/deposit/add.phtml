@@ -2,6 +2,7 @@
 	$frm = $this->frm_loan;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+	$showOtherDis = OTHER_DIS_OPTION;
 ?>
 <title><?php echo $tr->translate("SALE_DEPOSIT");?></title>
 <style>
@@ -207,6 +208,13 @@
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
 				                    	<?php echo $frm->getElement('discount_percent');?><?php echo $frm->getElement('discount');?>
+				                   </div>
+				                </div>
+				                <div class="form-group" style="<?php if ($showOtherDis!=1){ echo "display:none;";}?>">
+				                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("OTHER_DISCOUNT");?> :
+				                   </label>
+				                   <div class="col-md-7 col-sm-7 col-xs-12">
+				                    	<?php echo $frm->getElement('other_discount');?>
 				                   </div>
 				                </div>
 				                 <div class="form-group">
@@ -517,7 +525,11 @@ function calculateDiscount(){
 	total_sold = dijit.byId('total_sold').get('value');
 	discount = dijit.byId('discount').get('value');
 	discount_percent = dijit.byId('discount_percent').get('value');
-	
+
+	other_discount = dijit.byId('other_discount').get('value');
+	if(isNaN(other_discount)){
+		other_discount=0;
+	}
 	if(isNaN(discount)){
 		discount=0;
 	}
@@ -525,8 +537,8 @@ function calculateDiscount(){
 		discount_percent=0;
 	}
 	discount_percent = parseInt(total_sold*discount_percent/100);
-	total_sold = total_sold - discount_percent-discount;
-	total_discount = discount_percent+discount;
+	total_sold = total_sold - discount_percent-discount-other_discount;
+	total_discount = discount_percent+discount+other_discount;
 	dijit.byId('total_discount').attr('value',total_discount);
 	dijit.byId('sold_price').attr('value',total_sold);
 	Balance();

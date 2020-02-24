@@ -145,6 +145,7 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				'price_sold'=>$data['to_total_sold'],
     				'paid_amount'=>$paid_amount,
     				'is_reschedule'=>3,
+    				'other_discount'=>$data['other_discount'],
     		);
     		$where = " id = ".$data['loan_number'];
     		$this->_name="ln_sale";
@@ -187,6 +188,7 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     			'note'=>$data['note'],
     			'user_id'=>$this->getUserId(),
     			'typesale'=>$data['typesale'],
+    			'other_discount'=>$data['other_discount'],
     		);
     		$this->_name="ln_change_house";
     		$changeid = $this->insert($arr);

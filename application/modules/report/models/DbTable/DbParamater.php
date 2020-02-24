@@ -802,6 +802,7 @@ function getAllBranch($search=null){
 		     pp.`land_size`,
 		     
 		    `pp`.`property_type`,
+		    `pp`.`type_tob`,
 		    `pp`.`land_code` AS `property_code`,
 		    `pp`.`land_address` AS `property_title`,
  			 pp.`street` AS `property_street`,

@@ -1202,6 +1202,12 @@ public function getAllOutstadingLoan($search=null){
 				(SELECT p.street  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS street,
 				(SELECT s.sale_number FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS sale_number,
 				(SELECT s.land_price FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS land_price,
+				
+				(SELECT s.price_before FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS price_before,
+				(SELECT s.discount_amount FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS discount_amount,
+				(SELECT s.discount_percent FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS discount_percent,
+				(SELECT s.other_discount FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS other_discount,
+				
 				(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS price_sold,
 				(SELECT s.total_duration FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS total_duration,
 				(SELECT date_payment FROM `ln_saleschedule` WHERE sale_id= crm.sale_id AND status=1 AND no_installment>payment_times ORDER BY date_payment ASC LIMIT 1) as nextdate_payment,

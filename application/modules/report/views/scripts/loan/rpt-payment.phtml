@@ -196,6 +196,13 @@
 									}else{
 										$total_cheque = $total_cheque + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
 									}
+									
+									$stringPaid = $rs["payment_times"];
+									if ($rs["field3"]==1){
+										if (date("Y-m-d",strtotime($rs['date_pay']))>=date("Y-m-d",strtotime(MAX_DATE_OLD_RECEIPT))){
+											$stringPaid = "កក់លើកទី".$rs["payment_times"];
+										}
+									}
 				               ?>
 				                <tr class="style style1" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
 				               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
@@ -203,7 +210,7 @@
 				               		<td>&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
 				               		<td style="max-width:170px;white-space: pre-wrap;word-wrap: break-word;white-space: normal;">&nbsp;<?php echo $rs["land_address"].",".$rs["street"];?>&nbsp;</td>
 				               		<td>&nbsp;<?php echo $rs["payment_method"];?>&nbsp;</td>
-				               		<td align="center">&nbsp;<?php echo $rs["payment_times"];?>&nbsp;</td>
+				               		<td align="center">&nbsp;<?php echo $stringPaid;//$rs["payment_times"];?>&nbsp;</td>
 				               		<td align="right" style="font:bolder 11px Arial;padding:0px 1px;">&nbsp;<?php echo number_format($rs['total_principal_permonthpaid'],2);?>&nbsp;</td>               		
 				               		<td align="right" style="font:bolder 11px Arial;padding:0px 1px;">&nbsp;<?php echo number_format($rs['total_interest_permonthpaid'],2);?>&nbsp;</td>
 				               		<td align="right" style="font:bolder 11px Arial;padding:0px 1px;">&nbsp;<?php echo number_format($rs['penalize_amountpaid'],2);?>&nbsp;</td>

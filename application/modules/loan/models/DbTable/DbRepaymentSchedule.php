@@ -719,6 +719,11 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'cheque'=>$data['cheque'],
     			'payment_times'=>($data['schedule_opt']==1)?($times):1,
     	);
+    	
+    	if($data['schedule_opt']==1){
+    		$array['next_date_deposit'] = $data['date_line'];
+    		$array['next_amount_deposit'] = $data['second_depostit'];
+    	}
     	$crm_id=0;
     	if($data['new_deposit']>0){
 	    	$this->_name='ln_client_receipt_money';
