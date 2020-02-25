@@ -23,19 +23,18 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 	
 		$_landcode = new Zend_Dojo_Form_Element_TextBox('landcode');
 		$_landcode->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
-				'class'=>'fullside',
-				'readonly'=>'readonly',
-				'required' =>'true'
+			'dojoType'=>'dijit.form.ValidationTextBox',
+			'class'=>'fullside',
+			'readonly'=>'readonly',
+			'required' =>'true'
 		));
 	
 		$streetlist = new Zend_Dojo_Form_Element_FilteringSelect('streetlist');
 		$streetlist->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-				'autoComplete'=>'false',
-				'queryExpr'=>'*${0}*',
-				
+			'dojoType'=>'dijit.form.FilteringSelect',
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
 		));
 		$streetopt = $db->getAllStreet();
 		$streetlist->setMultiOptions($streetopt);
@@ -43,18 +42,17 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 		
 		$landaddress = new Zend_Dojo_Form_Element_ValidationTextBox('land_address');
 		$landaddress->setAttribs(array(
-				'dojoType'=>'dijit.form.ValidationTextBox',
-				'class'=>'fullside',
-				'required' =>'true',
-				'onkeyup'=>'checkTitle();',
+			'dojoType'=>'dijit.form.ValidationTextBox',
+			'class'=>'fullside',
+			'required' =>'true',
+			'onkeyup'=>'checkTitle();',
 		));
 		
-// 		$street = new Zend_Dojo_Form_Element_TextBox('street');
-// 		$street->setAttribs(array(
-// 				'dojoType'=>'dijit.form.TextBox',
-// 				'class'=>'fullside',
-// 				'onkeyup'=>'checkTitle();',
-// 		));
+		if($request->getActionName()=='addauto'){
+			$landaddress->setAttribs(array(
+				'placeHolder'=>$this->tr->translate('FROM')
+			));
+		}		
 		
 		$street = new Zend_Dojo_Form_Element_FilteringSelect('street');
 		$street->setAttribs(array(
@@ -269,18 +267,42 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 // 				'0'=>$this->tr->translate("NOT_YET_SALE"));
 // 		$_type_of_property->setMultiOptions($_type_of);
 // 		$_type_of_property->setValue($request->getParam("type_property_sale"));
+
+		$options= array(
+				1=>$this->tr->translate("Increase"),
+				-1=>$this->tr->translate("Decrease"));
 		
-		$optionCount = new Zend_Dojo_Form_Element_FilteringSelect('optionCount');
-		$optionCount->setAttribs(array(
+		$option_south = new Zend_Dojo_Form_Element_FilteringSelect('option_south');
+		$option_south->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required' =>'true'
 		));
-		$options= array(
-				1=>$this->tr->translate("Increase"),
-				2=>$this->tr->translate("Decrease"));
-		$optionCount->setMultiOptions($options);
+		$option_south->setMultiOptions($options);
 		
+		$option_north = new Zend_Dojo_Form_Element_FilteringSelect('option_north');
+		$option_north->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$option_north->setMultiOptions($options);
+		
+		$option_west = new Zend_Dojo_Form_Element_FilteringSelect('option_west');
+		$option_west->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$option_west->setMultiOptions($options);
+		
+		$option_east = new Zend_Dojo_Form_Element_FilteringSelect('option_east');
+		$option_east->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$option_east->setMultiOptions($options);
 		
 		$type_tob = new Zend_Dojo_Form_Element_FilteringSelect('type_tob');
 		$type_tob->setAttribs(array(
@@ -359,7 +381,7 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 			$type_tob->setValue($data['type_tob']);
 		}
 		$this->addElements(array($full_size,$status_using,$width_land,$height_land,$north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle,
-				$optionCount,
+				$option_north,$option_south,$option_west,$option_east,
 				$type_tob
 				));
 		return $this;

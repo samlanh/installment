@@ -9,7 +9,6 @@ class Issue_StepoptionController extends Zend_Controller_Action
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     }
-
     public function indexAction()
     {
     	try{
@@ -26,7 +25,7 @@ class Issue_StepoptionController extends Zend_Controller_Action
     		
 			$rs_rows= $db->getAllStepOption($formdata);//call frome model
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("TITLE","​STATUS");
+    		$collumns = array("TITLE","STATUS");
     		$link=array(
     				'module'=>'issue','controller'=>'stepoption','action'=>'edit',
     		);

@@ -706,9 +706,9 @@ class Report_LoanController extends Zend_Controller_Action {
   					'end_date'=>date('Y-m-d'),
   			);
   		}
-//   		$this->view->rs_sold= $db->getRealDatescheduleandSoldprice($formdata);//call frome model
-//   		$this->view->rs_paid = $db->getRealPaid($formdata);
-//   		$this->view->rs_schedule = $db->getScheduleCompletednotUpdate($formdata);
+  		$this->view->rs_sold= $db->getRealDatescheduleandSoldprice($formdata);//call frome model
+  		$this->view->rs_paid = $db->getRealPaid($formdata);
+  		$this->view->rs_schedule = $db->getScheduleCompletednotUpdate($formdata);
   		$this->view->rs_begining = $db->getBeginingBalance($formdata);
   }
   function paymenthistoryAction(){
