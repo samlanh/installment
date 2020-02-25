@@ -6,6 +6,7 @@
 	echo $this->headTitle();
 	
 	$showOtherDis = OTHER_DIS_OPTION;
+	$receiptType = RECEIPT_TYPE;
 ?>
 <style>
 .fullside50{ width:48%;}
@@ -675,7 +676,12 @@ function getReceiptByBranch(new_sale_id){
 	}
 	function doPrint() {
 		dojo.byId("printblog2").innerHTML = dojo.byId('divPrint').innerHTML;
+		<?php if ($receiptType == 3){?>
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+		<?php }else{?>
 		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML<?php if($this->data['showreceipt']>1){ ?> + dojo.byId('divPrint1').innerHTML<?php }?>;
+		<?php }?>
+		
 	    window.frames["print_frame"].window.focus();
 	    window.frames["print_frame"].window.print();
 	    printSubmit();
@@ -1255,7 +1261,25 @@ function printSave(new_stu_id,new_receipt_no){
 		if(is_showinstallment==1){
 			dojo.byId("lb_amount").innerHTML = " 0.00";
 		}
-				
+
+
+		date_line = dijit.byId("date_line").get('value');
+		var a = new Date(date_line);
+		mm = a.getMonth()+1;
+		var dd = a.getDate();
+		 if(dd<10){
+			 dd = "0"+dd;
+		}
+		var y = a.getFullYear();
+		var completedDate = dd +'-'+mm+'-'+y ;
+		
+		dojo.byId("lbl_priceSoldBefore").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
+		dojo.byId("lbl_discountAmount").innerHTML = "$ "+dojo.number.format(dijit.byId("discount").get('value'),{places:2});
+		dojo.byId("lbl_discountPercent").innerHTML = dojo.number.format(dijit.byId("discount_percent").get('value'),{places:2})+" %";
+		dojo.byId("lbl_discountOther").innerHTML = "$ "+dojo.number.format(dijit.byId("other_discount").get('value'),{places:2});
+		dojo.byId("lb_forCompletedAmount").innerHTML = "$ "+dojo.number.format(dijit.byId("second_depostit").get('value'),{places:2});
+		dojo.byId("lb_completedDate").innerHTML = completedDate;
+		
 		dijit.byId("terms").show();	
   }
 }

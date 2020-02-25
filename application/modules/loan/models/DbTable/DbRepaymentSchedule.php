@@ -650,7 +650,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		  $dbpayment = new Loan_Model_DbTable_DbLoanILPayment();
     		  $rows = $dbpayment->getSaleScheduleById($data['id'], 1);
     		  if(empty($rows)){
-    		  	$dbpayment->updatePayoff($data['loan_number'],$client_pay);
+    		  	if ($data["schedule_opt"]!=1){//ខុសពីទ្រនាប់ដៃ
+    		  		$dbpayment->updatePayoff($data['loan_number'],$client_pay);
+    		  	}
     		  }
     		  $db->commit();
 	          return $reschedule_id;

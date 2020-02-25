@@ -80,7 +80,7 @@ class Loan_DepositController extends Zend_Controller_Action {
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
-		$this->view->officailreceipt = $frmpopup->getOfficailReceipt();
+		$this->view->officailreceipt = $frmpopup->getOfficailReceipt(1);
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -141,6 +141,6 @@ class Loan_DepositController extends Zend_Controller_Action {
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
-		$this->view->officailreceipt = $frmpopup->getOfficailReceipt();
+		$this->view->officailreceipt = $frmpopup->getOfficailReceipt(1);
 	}
 }
