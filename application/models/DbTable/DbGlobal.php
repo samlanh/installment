@@ -1854,6 +1854,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`price_sold`       AS `price_sold`,
 		  `s`.`discount_amount`  AS `discount_amount`,
 		  `s`.`discount_percent` AS `discount_percent`,
+		  `s`.`other_discount` AS `other_discount`,
 		  s.verify_by,
 		  (SELECT
 		     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))

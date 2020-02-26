@@ -14,6 +14,7 @@
 		$branch_title = $branch['project_name'];
 	}
 	$is_showhouse = $this->data['showhouseinfo'];
+	$showOtherDis = OTHER_DIS_OPTION;
 ?>
 <meta charset="utf-8">
 <script>
@@ -180,6 +181,9 @@ table.tb-footer tr.style-head {
 	                    <td><?php echo $tr->translate("PRICE_BEFORE");?></td>
 	                    <td><?php echo $tr->translate("DISCOUNT");?>$</td>
 	                    <td><?php echo $tr->translate("DISCOUNT_PERCENT");?></td>
+	                    <?php if ($showOtherDis==1){?>
+	                    <td><?php echo $tr->translate("OTHER_DISCOUNT");?>$</td>
+	                    <?php }?>
 	                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>
 	                    <td><?php echo $tr->translate("PAID_PRINCIPAL");?></td>
 	                    <td><?php echo $tr->translate("REMAIN");?></td>
@@ -216,6 +220,7 @@ table.tb-footer tr.style-head {
 	               $db  = new Report_Model_DbTable_DbParamater();
 	               $key=0;
 	              
+	               $other_discount=0;
 	               if(!empty($this->loanrelease_list))foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
 	               		$notupdateLock="";
@@ -257,9 +262,11 @@ table.tb-footer tr.style-head {
 		               		$countland = 1;
 		               		//$notupdateLock = $db->checkLandSaleNotUpdateLock($row['house_id']);
 		               }
+		               
+		               $other_discount = $other_discount+$row['other_discount'];
 		               $price_before = $price_before+$row['price_before'];
 		               $discount_amount = $discount_amount+$row['discount_amount'];
-		               $disc_percent = $disc_percent+($row['price_before']-$row['price_sold']-$row['discount_amount']);
+		               $disc_percent = $disc_percent+($row['price_before']-$row['price_sold']-$row['discount_amount']-$row['other_discount']);
 		               $sold_price=$sold_price+$row['price_sold'];
 		               $paid_price=$paid_price+$row['paid_amount'];
 		               $total_interest = $total_interest+$row['total_interest_permonthpaid'];
@@ -305,7 +312,10 @@ table.tb-footer tr.style-head {
 						<?php }?>
 						<td align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span>&nbsp;</td>
 						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['discount_amount'],2); ?></td>	
-						<td align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>	
+						<td align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>
+						<?php if ($showOtherDis==1){?>
+	                    <td align="right"><?php echo number_format($row['other_discount'],2); ?></td>
+	                    <?php }?>	
 						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
 						<td align="right" style="white-space:nowrap; text-align: right;"><?php echo number_format($row['paid_amount'],2);?></td>
 						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
@@ -329,6 +339,9 @@ table.tb-footer tr.style-head {
 						<td><?php echo number_format($price_before,2);?></td>
 						<td><?php echo number_format($discount_amount,2);?></td>
 						<td><?php echo number_format($disc_percent,0);?></td>
+						<?php if ($showOtherDis==1){?>
+	                    <td align="right"><?php echo number_format($other_discount,2); ?></td>
+	                    <?php }?>
 						<td><?php echo number_format($sold_price,2);?></td>
 						<td><?php echo number_format($paid_price,2);?></td>
 						<td><?php echo number_format($balace_price,2);?></td>
