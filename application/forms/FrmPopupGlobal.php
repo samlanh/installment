@@ -2750,59 +2750,39 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<td style="display: none;"><strong><label class="value"></label></strong></td>
 				<td>គម្រោង</td>
 				<td><strong><strong><label id="lbl_project" class="value">3</label></strong></td>
-				<td>&nbsp;&nbsp;ប្រាក់ដើម</td>
-				<td><strong><label id="lb_amount" class="value"></label></strong></td>
-				<td>&nbsp;បង់លើកទី</td>
-				<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
+				<td>&nbsp;&nbsp;បង់លើកទី</td>
+				<td colspan="3"><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
 			</tr>
 			<tr >
 				<td>ឈ្មោះ​អតិថិជន </td>
 				<td><strong><label id="lb_customer" class="value"></label></strong></td>
-				<td>&nbsp;&nbsp; ការប្រាក់</td>
-				<td><strong><label id="lb_interest" class="value">0.00</label></strong></td>
-				<td>&nbsp; ប្រាក់ពិន័យ</td>
-				<td><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
+				<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
+				<td><strong><label id="lbl_totalpayment" class="value"></label></strong></td>
+				<td>&nbsp;ប្រាក់ពិន័យ</td>
+				<td><strong><label id="lb_penalty" class="value">$ 0.00</label></strong></td>
 			</tr>
 			<tr >
 				<td>'.$tr->translate("PROPERTY_CODE").'</td>
 				<td><strong><label class="value"><span id="lb_hourseno"></span></label></strong></td>
-				<td>&nbsp;&nbsp;ប្រាក់បង់បន្ថែម</td>
-				<td colspan="3"><strong><label id="lb_extrapayment" class="value">0.00</label></strong></td>
-			</tr>
-			<tr >
-				<td width="10%">'.$tr->translate("RENT_PRICE").'</td>
-				<td width="40%"><strong><label id="lb_saleprice" class="value"></label></strong></td>
-				<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
-				<td colspan="3"><strong><label id="lbl_totalpayment" class="value"></label></strong></td>
-			</tr>
-			<tr>
-				<td>ប្រាក់បានបង់សរុប</td>
-				<td valign="top">
-					<table width="100%" cellpadding="0" cellspacing="0">
-						<tr>
-							<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_total_paid1" class="value"></label></td>
-							<td width="33%" style="white-space: nowrap;">ប្រាក់នៅសល់</td>
-							<td width="33.5%"><label style="white-space: nowrap;margin-right: -4px;" class="value" id="lbl_balance"></label></td>
-						</tr>
-					</table>
-				</td>
 				<td>&nbsp;&nbsp;ប្រាក់បានទទួល</td>
 				<td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;" id="lbl_total_receive"></label></strong></td>
 			</tr>
 			<tr >
-				<td rowspan="2">សម្គាល់</td>
-				<td rowspan="2" class="noted" valign="top"><label id="lb_noted"></label></td>
+				<td width="10%">'.$tr->translate("RENT_PRICE").'</td>
+				<td width="40%"><strong><label id="lb_saleprice" class="value"></label></strong></td>
 				<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
 				<td><strong><label id="lb_buydate1" class="value"></label></strong></td>
 				<td>&nbsp;ថ្ងៃទទួល</td>
 				<td><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
 			</tr>
 			<tr >
-				<td>&nbsp;បង់ជា</td>
-				<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
-				<td>&nbsp;&nbsp;លេខ</td>
-				<td><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
-				</tr>
+				<td  valign="top">សម្គាល់</td>
+				<td class="noted" valign="top"><label id="lb_noted" style="min-height: 60px;display: block;   white-space: pre-line;"></label></td>
+				<td valign="top">&nbsp;&nbsp;បង់ជា</td>
+				<td valign="top"><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
+				<td valign="top">&nbsp;&nbsp;លេខ</td>
+				<td valign="top"><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
+			</tr>
 			<tr >
 				<td colspan="6" valign="top">
 					<table class="signature-table" width="100%" border="0">
@@ -2865,6 +2845,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			<span id="lblpaid_date"></span>
 			<span id="lb_descriptionall"></span>
 			<span id="lb_customercode"></span>
+			
+			<span id="lb_amount"></span>
+			<span id="lb_penalty"></span>
+			<span id="lb_interest"></span>
+			<span id="lb_extrapayment"></span>
+			
+			<span id="lbl_total_paid1"></span>
+			<span id="lbl_balance"></span>
 		</div>
 	</div>';
 		return $str;

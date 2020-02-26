@@ -31,6 +31,7 @@
 		</div>
 		<?php }?>
 	</div>
+	<div id="noteContent" style="display: none;"><?php echo $this->rs['note'];?></div>
  </div>
 <script src="<?php echo $this->baseUrl();?>/js/pdbs_js.js"  type="text/javascript"></script>
 <script>
@@ -80,16 +81,17 @@ function printSave(){
 	dojo.byId("lbl_project").innerHTML = '<?php echo $this->rs['project_name'];?>';
 	dojo.byId("lb_customer").innerHTML = '<?php echo $this->rs['name_kh'];echo !empty($this->rs['hname_kh'])?" /".$this->rs['hname_kh']:"";?>';
 	dojo.byId("lb_hourseno").innerHTML = '<?php echo $this->rs['land_address']; if(!empty($this->rs['street'])){echo ' , '.$this->rs['street']; } echo ' '.$this->rs['property_type'];?>';
-	dojo.byId("lb_saleprice").innerHTML = '<?php echo "$ 0";?>';
-	dojo.byId("lbl_total_paid1").innerHTML ='<?php echo "$ 0";?>';
-	dojo.byId("lbl_balance").innerHTML ='<?php echo  "$ 0";?>';
-	dojo.byId("lb_noted").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['note']))));?>';
+	dojo.byId("lb_saleprice").innerHTML = '<?php echo  "$ ".number_format($this->rs['price_sold'],2);?>';
+
+	var div = document.getElementById('noteContent');
+	var htmlString = $( '#noteContent' ).html();
+	$( '#lb_noted' ).text( htmlString );
+	//dojo.byId("lb_noted").innerHTML = '<?php //echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['note']))));?>';
 
 	dojo.byId("lb_amount").innerHTML = '<?php echo  "$ ".number_format($this->rs['total_principal_permonth'],2);?>';
-	dojo.byId("lbl_paidtimes").innerHTML = '<?php if($this->rs['field3']==1){ echo "កក់លើកទី ";} echo $this->rs['payment_times'];?>';
+	dojo.byId("lbl_paidtimes").innerHTML = '<?php if($this->rs['field3']==1){ echo "ប្រាក់កក់ ";}else{ echo $this->rs['payment_times'];}?>';
 	dojo.byId("lb_interest").innerHTML ="<?php echo "$ ".number_format($this->rs['total_interest_permonthpaid'],2);?>";
 	dojo.byId("lb_penalty").innerHTML ="<?php echo "$ ".number_format($this->rs['penalize_amountpaid'],2);?>";
-	dojo.byId("lb_extrapayment").innerHTML ="<?php echo "$ 0";?>";
 	dojo.byId("lbl_totalpayment").innerHTML = '<?php echo  "$ ".number_format($this->rs['total_payment'],2);?>';
 	dojo.byId("lbl_total_receive").innerHTML = '<?php echo "$ ".number_format($this->rs['recieve_amount'],2);?>';
 	dojo.byId("lb_buydate1").innerHTML = "<?php echo date("d-m-Y",strtotime($this->rs['date_payment']));?>";
