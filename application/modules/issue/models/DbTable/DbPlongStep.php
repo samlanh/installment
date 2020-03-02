@@ -238,11 +238,11 @@ class Issue_Model_DbTable_DbPlongStep extends Zend_Db_Table_Abstract
 	    				if (!empty($rs)){
 		    				$this->_name="ln_issueplong";
 		    				$arr = array(
-		    						'sale_id'=>$rs['sale_id'],
-		    						'issue_date'=>$data['date'],
-		    						'layout_number'=>"",
-		    						'note'=>$data['note'],
-		    						'is_receivedplong'=>0,
+	    						'sale_id'=>$rs['sale_id'],
+	    						'issue_date'=>$data['date'],
+	    						'layout_number'=>"",
+	    						'note'=>$data['note'],
+	    						'is_receivedplong'=>0,
 		    				);
 		    				$this->insert($arr);
 	    				}
