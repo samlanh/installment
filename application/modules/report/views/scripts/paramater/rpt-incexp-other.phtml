@@ -1,0 +1,429 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_search;
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}
+?>
+	<script>
+		dojo.require("dijit.form.DateTextBox");
+	</script>
+	<style>
+		.hover:hover{background: #ccc;}
+	</style>
+<meta charset="utf-8">
+<title><?php echo $tr->translate("REPORT_DAILY_CASH");?></title>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT_INC_EXP_OTHER');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form name="frm_rptstaff" action="" dojoType="dijit.form.Form" method="post">
+		<div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("adv_search");?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('branch_id');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('land_id');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('streetlist');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('client_name');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('user_id');?>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('payment_method');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+			   		<?php echo $frm->getElement('cheque_issuer_search');?>
+			   	</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('start_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('end_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+				</div>
+			</div>
+		</div>
+	 </form> 
+<div style="min-height:22cm; margin:0 auto;">
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	    	 <div id="divPrint">
+	    	 	<style>
+						.style{
+							line-height: 20px;font-size: 12px !important;
+							font-family: 'Times New Roman','Khmer OS Battambang';
+							}
+							th{padding: 5px;}
+							table { page-break-inside:auto }
+							tr{ page-break-inside:avoid; page-break-after:auto; }
+							
+							
+							table.content-data{
+								border-collapse:collapse;
+								border:1px solid #000; 
+								font-size:13px;
+								font-family: 'Times New Roman','Khmer OS Battambang';
+								white-space: nowrap;
+								line-height: 22px;
+							}
+							table.content-data tr.style,
+							table.content-data thead tr.style {
+							   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+								background: #c1d0f3;
+							}
+							table.tb-footer{
+								border-collapse:collapse;
+								border:1px solid #000; 
+								font-family: 'Times New Roman','Khmer OS Battambang';
+								font-size:11px;
+							}
+							table.tb-footer tr{
+							 line-height: 14px;  padding:2px 0px; height: 25px;
+							}
+							td.h2{
+								font-weight:normal;
+						}
+						</style>
+			        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
+			        	<tr>
+			        		<td colspan="3" style="border:1px solid #fff;">
+				        		<div class="divFooter">
+					        		<table  width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;" >
+						                <tr>
+							                <td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
+							                <td width="60%" valign="top">
+								                <h2 style="text-align:center; font-weight:200; font-size:18px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></h2>
+								                <h2 style="text-align:center; font-weight:200; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_INC_EXP_OTHER");?></h2>
+								                <p style="text-align:center; font-weight:200; font-size:13px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if (!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
+							                </td>
+						                	<td width="20%"></td>
+					                	</tr>
+					               </table>
+				               </div>
+			               </td>
+			             </tr>
+			            <tr>
+			        <?php 
+			            $category_id=0; $category_id_expense=0; 
+			        ?>
+			         <?php 
+	                	 $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;$amt_d5 = 0;
+	                	 $i=1;
+	                	 $total_d=0;
+	                	 $total_cash = 0;
+	                	 $total_cheque = 0;
+	                	 $total_bank = 0;
+	                	 $principal=0;
+	                	 $total_other_income=0;
+	                	 $total_expese=0;
+	                	 $total_extra=0;
+	                	 $houserepair=0;
+	                ?>
+	            	<td colspan="3" id="exportExcel">
+	            			<table class="content-data" width="100%" border="1" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
+			                
+			                <?php 
+				            	if (!empty($this->houserepair)){
+				            ?>
+				            <tr>
+				            	<td colspan="14" align="center" style="border-top:2px solid #000; ">
+				            		<h2 style="font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light';padding: 0;margin: 0;">
+						             	<span><?php echo $tr->translate("REPAIR_HOUSE_INCOME");?></span>
+						             </h2>
+				            	</td>
+				            </tr>
+				            
+				            <tr class="style" align="center" >
+								<td><?php echo $tr->translate("NUM");?></td>
+								    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+								    <td><?php echo $tr->translate("INCOME_TITLE");?></td>
+								    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
+								    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
+								    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+								    <td><?php echo $tr->translate("CATEGORY");?></td>
+								    <td><?php echo $tr->translate("TOTAL_INCOME");?></td>
+								    <td><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+								    <td><?php echo $tr->translate("NUMBER");?></td>
+								    <td colspan="2"><?php echo $tr->translate("NOTE");?></td>
+								    <td><?php echo $tr->translate("DATE");?></td>
+								    <td><?php echo $tr->translate("BY_USER");?></td>
+							</tr>
+					   		<?php foreach ($this->houserepair as $index => $rs){?>
+					   		<tr class=" stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;<?php if($rs['status']==0){echo'background:#f7c6c6';}?>" width="100%">
+			               		<td style="text-align: center;">&nbsp;<?php echo $index+1; ?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["title_income"];?>&nbsp;</td> 
+			               		<td align="center">&nbsp;<?php echo $rs["invoice"];?> <?php if($rs['status']==0){ echo ' ('.$tr->translate("VOID").')';}?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td> 
+			               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
+			               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<strong><?php echo number_format($rs["total_amount"],2);?></strong>&nbsp;</td>
+			               		<td valign="top">&nbsp;<?php echo $rs["payment_type"];?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
+			               		<td colspan="2" style="white-space: normal !important;max-width:180px;text-align: left;">&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo date("d-m-Y",strtotime($rs["date"]));?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
+			                </tr>
+			                <?php 
+			                	if($rs['status']==1){
+			                		$houserepair = $houserepair+$rs["total_amount"];
+			                	}
+			                ?>
+					   		<?php }
+				             }?>
+				            
+				            
+				            <?php if (!empty($this->row)){?>
+				            <tr>
+				            	<td colspan="14" align="center" style="border-top:2px solid #000; ">
+				            		<h2 style="font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light';padding: 0;margin: 0;">
+						             	<span><?php echo $tr->translate("OTHER_INCOME");?></span>
+						             </h2>
+				            	</td>
+				            </tr>
+				            <tr class="style" align="center" >
+								<td><?php echo $tr->translate("NUM");?></td>
+							    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+							    <td><?php echo $tr->translate("INCOME_TITLE");?></td>
+							    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
+							    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
+							    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+							    <td><?php echo $tr->translate("CATEGORY");?></td>
+							    <td><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+							    <td><?php echo $tr->translate("NUMBER");?></td>
+							    <td><?php echo $tr->translate("TOTAL_INCOME");?></td>
+							    <td colspan="2"><?php echo $tr->translate("NOTE");?></td>
+							    <td><?php echo $tr->translate("DATE");?></td>
+							    <td><?php echo $tr->translate("BY_USER");?></td>
+							</tr>
+					       <?php $branch_id=''; $i=0;  foreach($this->row as $key =>$row){ $i++;?>
+							<tr style="font-size: 12px; line-height:20px; white-space: nowrap;" align="left">
+							   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+							   <td align="center" style="white-space: normal !important;max-width:180px;text-align: left;">&nbsp;<?php echo $row['title'];?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo $row['invoice'];?>&nbsp;</td>
+							   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_name'];?></td>
+							   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['house_name'];?></td>
+							   <td>&nbsp;<?php echo $row['category_name'];?>&nbsp;</td>
+							   <td>&nbsp;<?php echo $row['payment_type'];?>&nbsp;</td>
+							   <td>&nbsp;<?php echo $row['cheque'];?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo number_format($row['total_amount'],2);?>&nbsp;</td>
+							   <td colspan="2" align="center" style="white-space: normal !important;max-width:180px;text-align: left;">&nbsp;<?php echo $row['description'];?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo date("d-m-Y",strtotime($row['date']));?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo $row["user_name"];?>&nbsp;</td>
+							</tr>
+								<?php $total_other_income = $total_other_income +$row['total_amount'];?>
+							<?php }
+				           }?>
+				           
+				           <?php 
+				           $houserepairExpesnse = 0;
+				           if (!empty($this->houserepairExpense)){?>
+				            <tr>
+				            	<td colspan="14" align="center" style="border-top:2px solid #000; ">
+				            		<h2 style="font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light';padding: 0;margin: 0;">
+						             	<span><?php echo $tr->translate("REPAIR_HOUSE_EXPENSE");?></span>
+						             </h2>
+				            	</td>
+				            </tr>
+				            <tr class="style" align="center" >
+								<td><?php echo $tr->translate("NUM");?></td>
+								    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+								    <td><?php echo $tr->translate("INCOME_TITLE");?></td>
+								    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
+								    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
+								    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+								    <td><?php echo $tr->translate("CATEGORY");?></td>
+								    <td><?php echo $tr->translate("TOTAL_INCOME");?></td>
+								    <td><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+								    <td><?php echo $tr->translate("NUMBER");?></td>
+								    <td colspan="2"><?php echo $tr->translate("NOTE");?></td>
+								    <td><?php echo $tr->translate("DATE");?></td>
+								    <td><?php echo $tr->translate("BY_USER");?></td>
+							</tr>
+					   		<?php foreach ($this->houserepairExpense as $index => $rs){?>
+					   		<tr class=" stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;<?php if($rs['status']==0){echo'background:#f7c6c6';}?>" width="100%">
+			               		<td style="text-align: center;">&nbsp;<?php echo $index+1; ?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["title_income"];?>&nbsp;</td> 
+			               		<td align="center">&nbsp;<?php echo $rs["invoice"];?> <?php if($rs['status']==0){ echo ' ('.$tr->translate("VOID").')';}?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td> 
+			               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
+			               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<strong><?php echo number_format(abs($rs["total_amount"]),2);?></strong>&nbsp;</td>
+			               		<td valign="top">&nbsp;<?php echo $rs["payment_type"];?>&nbsp;</td>
+			               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
+			               		<td colspan="2" style="white-space: normal !important;max-width:180px;text-align: left;">&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo date("d-m-Y",strtotime($rs["date"]));?>&nbsp;</td>
+			               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
+			                </tr>
+			                <?php 
+			                	if($rs['status']==1){
+			                		$houserepairExpesnse = $houserepairExpesnse+abs($rs["total_amount"]);
+			                		$total_expese = $total_expese + abs($rs["total_amount"]);
+			                	}
+			                ?>
+					   		<?php }
+				           }?>
+				           
+				           <?php 
+				           if (!empty($this->rowExpense)){?>
+				            <tr>
+				            	<td colspan="14" align="center" style="border-top:2px solid #000; ">
+				            		<h2 style="font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light';padding: 0;margin: 0;">
+						             	<span><?php echo $tr->translate("OTHER_EXPENSE");?></span>
+						             </h2>
+				            	</td>
+				            </tr>
+				            <tr class="style" align="center">
+								<td><?php echo $tr->translate("NUM");?></td>
+							    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+							    <td colspan="2"><?php echo $tr->translate("EXPENSE_TITLE");?></td>
+							    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
+							    <td><?php echo $tr->translate("CATEGORY");?></td>
+							    <td><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+							    <td><?php echo $tr->translate("NUMBER");?></td>
+							    <td><?php echo $tr->translate("CHEQUE_ISSUER");?></td>
+							    <td><?php echo $tr->translate("TOTAL_EXPENSE");?></td>
+							    <td colspan="2"><?php echo $tr->translate("NOTE");?></td>
+							    <td><?php echo $tr->translate("DATE");?></td>
+							    <td><?php echo $tr->translate("BY_USER");?></td>
+							</tr>
+					       <?php $branch_id=''; $i=0; 
+					       foreach($this->rowExpense as $key =>$rows){ $i++;
+					       ?>
+							<tr style="font-size: 12px; line-height:20px; white-space: nowrap;" align="left">
+							   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo $rows['branch_name'];?>&nbsp;</td>
+							   <td colspan="2" align="center" style="white-space: normal !important;max-width:180px;text-align: left;">&nbsp;<?php echo $rows['title'];?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo $rows['invoice'];?>&nbsp;</td>
+							   <td>&nbsp;<?php echo $rows['category_name'];?></td>
+							   <td>&nbsp;<?php echo $rows['payment_type'];?></td>
+							   <td>&nbsp;<?php echo $rows['cheque'];?></td>
+							   <td>&nbsp;<?php echo $rows['cheque_issuer'];?></td>
+							   <td align="center">&nbsp;<?php echo number_format($rows['total_amount'],2);?>&nbsp;</td>
+							   <td colspan="2" align="center" style="white-space: normal !important;max-width:120px;text-align: left;">&nbsp;<?php echo $rows['description'];?></td>
+							   <td align="center">&nbsp;<?php echo date("d-m-Y",strtotime($rows['date']));?>&nbsp;</td>
+							   <td align="center">&nbsp;<?php echo $rows["user_name"];?>&nbsp;</td>
+							</tr>
+								<?php $total_expese = $total_expese +$rows['total_amount'];?>
+							<?php }}?>
+				            
+				            <?php 
+				            $total_commission = 0;
+	            			if(!empty($this->rscomisison)){?>
+				            <tr>
+				            	<td colspan="14" align="center" style="border-top:2px solid #000; ">
+				            		<h2 style="font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light';padding: 0;margin: 0;">
+						             	<span><?php echo $tr->translate("COMMISSION");?></span>
+						             </h2>
+				            	</td>
+				            </tr>
+					    		<tr class="style" align="center" >
+						        	<td><?php echo $tr->translate("NUM");?></td>
+							        <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+							        <td><?php echo $tr->translate("STAFF_NAME");?></td>
+							        <td><?php echo $tr->translate("TEL");?></td>
+							        <td><?php echo $tr->translate("SEX");?></td>
+							        <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+							        
+							        <td><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+								    <td colspan="2"><?php echo $tr->translate("NUMBER");?></td>
+								    <td colspan="2"><?php echo $tr->translate("CHEQUE_ISSUER");?></td>
+							    
+							        <td><?php echo $tr->translate("COMISSION");?></td>
+							        <td><?php echo $tr->translate("DATE");?></td>
+							        <td><?php echo $tr->translate("BY_USER");?></td>
+					         	</tr>
+						       <?php  
+						       	$key=0; 
+								$record = $key;
+								foreach($this->rscomisison as $key => $rscom){?>
+								<?php 
+									$total_commission = $total_commission +$rscom['total_amount'];
+								?>
+								 <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
+								     <td align="center">&nbsp;<?php echo $key+1+$record; ?>&nbsp;</td>
+								     <td align="center">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
+									 <td>&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
+									 <td align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
+									 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
+									 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
+									 
+									 <td>&nbsp;<?php echo $rscom['payment_type'];?></td>
+									 <td colspan="2">&nbsp;<?php echo $rscom['cheque'];?></td>
+									 <td colspan="2">&nbsp;<?php echo $rscom['cheque_issuer'];?></td>
+							   
+									 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
+									 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
+									 <td align="center">&nbsp;<?php echo $rscom['user_name'];?></td>
+								</tr>
+								<?php } ?>
+				            <?php }?>
+			            </table>
+	            	</td>
+	            </tr>
+	            
+	            	<?php $total = ($total_d + $total_other_income +$houserepair) - ($total_expese+$total_commission) ;?>
+	            <tr>
+	            	<td colspan="3">
+	            		<br />
+	            		<table class="tb-footer" border="1"​  width="100%" cellspacing="0">
+		                 <tr bgcolor="#c1d0f3" class="style" align="center" >
+		                 	<td >&nbsp;<?php echo $tr->translate("OTHER_INCOME");?>&nbsp;</td>
+		                 	<td>&nbsp;<?php echo $tr->translate("OTHER_EXPENSE");?>&nbsp;</td>
+		                 	<td >&nbsp;<?php echo $tr->translate("COMMISSION");?>&nbsp;</td>
+		                 	<td >&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+		                 </tr>
+		                 <tr class="style" >
+		                    <td align="right">&nbsp;<?php echo number_format($total_other_income,2);?>&nbsp;</td>
+		                    <td align="right">&nbsp;<?php echo number_format($total_expese,2);?>&nbsp;</td>
+		                    <td align="right">&nbsp;<?php echo number_format($total_commission,2);?>&nbsp;</td>
+		                    <td align="center">&nbsp;<strong><?php echo number_format($total,2);?></strong>&nbsp;</td>
+		                </tr>
+		              </table>
+	            	</td>
+	            </tr>
+	           </table>
+	           <br />
+			   <?php echo $this->footerReport;?>
+	          </div>
+	       </td>
+	    </tr>
+	</table>
+  
+	</div>
+</div>
