@@ -1799,7 +1799,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			     `d`.`date_payment`
 			   FROM `ln_client_receipt_money_detail` `d`
 			   WHERE (`crm`.`id` = `d`.`crm_id`)
-			   ORDER BY `d`.`date_payment` DESC
+			   ORDER BY `d`.`date_payment` ASC
 			   LIMIT 1) AS `date_payment`,
 			  `crm`.`payment_method`               AS `payment_methodid`,
 			  (SELECT
