@@ -133,7 +133,8 @@ dojo.require("dijit.form.DateTextBox");
 							<?php 
 							$address = str_replace("អាសយដ្ឋាន", "", $address);
 							?>
-								<strong>អ្នកលក់ដីឡូតិ៍៖ </strong> <strong><?php echo $branch_title?></strong> មានអាសយដ្ឋាន <?php echo $address;?> ហៅថា <strong>ភាគី”ក”</strong> មានតំណាងចុះកិច្ចសន្យាដោយឈ្មោះ  <span class="value" style="min-width:135px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh']; if (!empty($this->agreement['w_manager_namekh'])){ echo " ឬ ".$this->agreement['w_manager_namekh'];}?></span> <i><strong>និង</strong></i>
+								<strong>អ្នកលក់ដីឡូតិ៍៖ </strong> <strong><?php echo $branch_title?></strong> មានអាសយដ្ឋាន <?php echo $address;?> ហៅថា <strong>ភាគី”ក”</strong> មានតំណាងចុះកិច្ចសន្យាដោយឈ្មោះ <span class="value" style="min-width:135px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh']; if (!empty($this->agreement['w_manager_namekh'])){ echo " ឬ ".$this->agreement['w_manager_namekh'];}?></span> 
+								<i><strong>និង</strong></i>
 							</td>
 						</tr>
 						<tr>
@@ -168,7 +169,7 @@ dojo.require("dijit.form.DateTextBox");
              					  <?php if(!empty($this->agreement['hname_kh'])){?>
              					  និងឈ្មោះ <span class="value" style="min-width:70px;font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['hname_kh'];?></span> ភេទ <?php echo $with_sex;?> 
              					  អាយុ <span class="value" style="min-width:30px;"><?php 
-		             			if (!empty($this->dob_buywith['dob'])){ 
+		             			if (!empty($this->agreement['dob_buywith'])){ 
 		             				$from = new DateTime($this->agreement['dob_buywith']);
 		             				$to   = new DateTime($this->agreement['buy_date']);
 		             				echo $dbparmeter->getNumberInkhmer($from->diff($to)->y);
@@ -229,10 +230,6 @@ dojo.require("dijit.form.DateTextBox");
 								<span style="font-weight:600;">ប្រការ២៖</span>
 							</td>
 							<td align="justify" style="padding-left:5px">
-							<!-- 
-							-<strong>ភាគី”ខ”</strong> បានយល់ព្រមបង់ប្រាក់ជូន<strong>ភាគី“ក”</strong> ទៅតាមគោលការណ៍តារាងបង់ប្រាក់ក្នុង<strong><?php //echo $tr->translate("ARTICLE_1");?></strong>។ 
-							<br />
-							 -->
 							<?php $dbs = new Loan_Model_DbTable_DbLandpayment();
 		             			$resultdeposit = $dbs->getDepositFirstPaymentMoney($this->agreement['id']);
 		             			$start_id=0;
@@ -245,12 +242,12 @@ dojo.require("dijit.form.DateTextBox");
 		             		<?php if(!empty($resultdeposit) AND $this->agreement['is_reschedule']==1){?><!-- ប្រាក់កក់ -->
 	             				<?php foreach($resultdeposit as $keydeposite =>$rsdeposite){ $keytime++;?>
 	             				<?php if ($keydeposite>0){?>
-	             				<div style="white-space: nowrap;">-	បង់ប្រាក់កក់ជូន<strong>ភាគី “ក”</strong> លើកទី<?php echo $dbparmeter->getNumberInkhmer($keytime);?> ចំនួន
+	             				<div style="white-space: nowrap;">-	បង់ប្រាក់<?php if($keytime<=1){echo"កក់";}?>ជូន<strong>ភាគី “ក”</strong> លើកទី<?php echo $dbparmeter->getNumberInkhmer($keytime);?> ចំនួន
 		             				<span class="value" style="font-weight: bold;">$ <?php echo @number_format($rsdeposite['total_principal_permonthpaid'],2);?> (<label id="lable_depositpaid<?php echo $keydeposite+1;?>" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក)</span> 
 		             				<span>នៅថ្ងៃទី  <?php echo date("d",strtotime($rsdeposite['date_input']));?>  ខែ  <?php echo date("m",strtotime($rsdeposite['date_input']));?>  ឆ្នាំ  <?php echo date("Y",strtotime($rsdeposite['date_input']));?></span>
 	             				</div>
 	             				<?php }else{?>
-	             				<div style="white-space: nowrap;">-<strong>ភាគី”ខ”</strong> បានយល់ព្រមបង់ប្រាក់កក់ជូន<strong>ភាគី“ក”</strong>លើកទី<?php echo $dbparmeter->getNumberInkhmer($keytime);?> ចំនួន
+	             				<div style="white-space: nowrap;">-<strong>ភាគី”ខ”</strong> បានយល់ព្រមបង់ប្រាក់<?php if($keytime<=1){echo"កក់";}?>ជូន<strong>ភាគី“ក”</strong>លើកទី<?php echo $dbparmeter->getNumberInkhmer($keytime);?> ចំនួន
 		             				<span class="value" style="font-weight: bold;">$ <?php echo @number_format($rsdeposite['total_principal_permonthpaid'],2);?> (<label id="lable_depositpaid<?php echo $keydeposite+1;?>" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក)</span> 
 		             				<span>នៅថ្ងៃទី  <?php echo date("d",strtotime($rsdeposite['date_input']));?>  ខែ  <?php echo date("m",strtotime($rsdeposite['date_input']));?>  ឆ្នាំ  <?php echo date("Y",strtotime($rsdeposite['date_input']));?></span>
 	             				</div>
@@ -293,10 +290,10 @@ dojo.require("dijit.form.DateTextBox");
 		             			}$keytime++;?>
 		             			<?php 
 		             				$numrow=$numrow+1;?>
-		             				<div>-	បង់ប្រាក់កក់ជូន<strong>ភាគី “ក”</strong>លើកទី<?php echo $dbparmeter->getNumberInkhmer($keytime);?>  ចំនួន
+		             				<div>-	បង់ប្រាក់<?php if($keytime<=1){echo"កក់";}?>ជូន<strong>ភាគី “ក”</strong>លើកទី<?php echo $dbparmeter->getNumberInkhmer($keytime);?>  ចំនួន
 			             				<span class="value" style="font-weight: bold;">$ <?php echo @number_format($row['principal_permonth'],2);?> </span> <strong>(<label id="lable_depositkhmer<?php echo $i;?>" style="font-family:'Khmer os battambang';"></label>ដុល្លារអាមេរិក)</strong>
 			             				<?php if($row['ispay_bank']==0){?><span>នៅថ្ងៃទី<?php echo date("d",strtotime($row['date_payment']));?>  ខែ <?php echo date("m",strtotime($row['date_payment']));?>  ឆ្នាំ   <?php echo date("Y",strtotime($row['date_payment']));?></span><?php }?>
-			             				<?php if($row['ispay_bank']!=0){//received plong?><span>បង់បង្គ្រាប់ពេលប្រគល់ប្លង់</span><?php }?>
+			             				<?php if($row['ispay_bank']!=0){//received plong?><span>បង់បង្គ្រប់ពេលប្រគល់ប្លង់រឹង</span><?php }?>
 			             			</div>	
 		             				 <script>
 										a ='<?php echo ($row['principal_permonth']) ?>';
@@ -312,17 +309,17 @@ dojo.require("dijit.form.DateTextBox");
 										dojo.byId('lable_depositkhmer<?php echo $i;?>').innerHTML=money_khmer;
 									</script>
 	             					<?php if($row['ispay_bank']==1){?>
-				             				<span class="padding-left"  >&nbsp;&nbsp;&nbsp;<?php echo $this->keyValue['bank_info'];?></span>
+				             				<!--<span class="padding-left"  >&nbsp;&nbsp;&nbsp;<?php echo $this->keyValue['bank_info'];?></span>-->
 				             			<?php break;
 				             			}?>
 				             			
 		             		<?php  }?>
 		             		<?php if(!empty($this->agreement['note_agreement'])){?>
-			             		<p>
+			             		<p>សម្គាល់ ៖
 			             			<?php echo $this->agreement['note_agreement'];?>
 			             		</p>
 		             		<?php }?>
-							-<strong>ភាគី”ក”</strong> នឹងជូនដំណឹងទៅ <strong>ភាគី”ខ”</strong> ដើម្បីមកទូទាត់ផ្តាច់ និងទទួលប្លង់កម្មសិទ្ធិ ដោយមានរយៈពេលកំណត់ចំនួនដប់ប្រាំ (១៥)ថ្ងៃ ។ ក្នុងករណីលើសកំណត់១៥ថ្ងៃ <strong>ភាគី”ខ”</strong> យល់ព្រមបង់ប្រាក់ពិន័យចំនួន <strong>មួយភាគរយ (១%) ក្នុងមួយថ្ងៃ</strong> នៃទឹកប្រាក់ដែលនៅសល់ មកអោយ<strong>ភាគី”ក”</strong> <strong><i>ដោយមិនមានការតវ៉ាឡើយ </i></strong>។ បើ<strong>ភាគី”ខ”</strong> ខកខានក្នុងការមិនមកទូទាត់ផ្តាច់លើសពី ៤៥ (សែសិបប្រាំ)ថ្ងៃ នោះទឹកប្រាក់ដែល <strong>ភាគី”ខ”</strong> បានបង់ទាំងអស់នឹងត្រូវបានជាកម្មសិទ្ធិរបស់ <strong>ភាគី”ក”</strong> ហើយកិច្ចសន្យានេះ នឹងត្រូវរំលាយចោលជាស្វ័យប្រវត្តិ។ ក្នុងករណីនេះ <strong>ភាគី”ក”</strong> មានសិទ្ធិចាត់ចែងលក់ដីឡូតិ៍កំណត់ក្នុងប្រការ១ខាងលើ អោយទៅអ្នកដទៃបានគ្រប់ពេលវេលា ដោយ<strong>ភាគី”ខ”</strong>គ្មានសិទ្ធិតវ៉ាឡើយ។
+							- នៅពេលធ្លាក់ប្លង់កម្មសិទ្ធិ (ប្លង់រឹង) <strong>ភាគី”ក”</strong> នឹងជូនដំណឹងទៅ <strong>ភាគី”ខ”</strong> ដើម្បីមកទូទាត់ផ្តាច់ និងប្លង់ទទួលកម្មសិទ្ធិ ដោយមានរយៈពេលកំណត់ចំនួនដប់ប្រាំ (១៥)ថ្ងៃ ។ ក្នុងករណីលើសកំណត់១៥ថ្ងៃ <strong>ភាគី”ខ”</strong> យល់ព្រមបង់ប្រាក់ពិន័យចំនួន <strong>មួយភាគរយ (១%) ក្នុងមួយថ្ងៃ</strong> នៃទឹកប្រាក់ដែលនៅសល់ មកអោយ<strong>ភាគី”ក”</strong> <strong><i>ដោយមិនមានការតវ៉ាឡើយ </i></strong>។ បើ<strong>ភាគី”ខ”</strong> ខកខានក្នុងការមិនមកទូទាត់ផ្តាច់លើសពី ៤៥ (សែសិបប្រាំ)ថ្ងៃ នោះទឹកប្រាក់ដែល <strong>ភាគី”ខ”</strong> បានបង់ទាំងអស់នឹងត្រូវបានជាកម្មសិទ្ធិរបស់ <strong>ភាគី”ក”</strong> ហើយកិច្ចសន្យានេះ នឹងត្រូវរំលាយចោលជាស្វ័យប្រវត្តិ។ ក្នុងករណីនេះ <strong>ភាគី”ក”</strong> មានសិទ្ធិចាត់ចែងលក់ដីឡូតិ៍កំណត់ក្នុងប្រការ១ខាងលើ អោយទៅអ្នកដទៃបានគ្រប់ពេលវេលា ដោយ<strong>ភាគី”ខ”</strong>គ្មានសិទ្ធិតវ៉ាឡើយ។
 							</td>
 						</tr>
 						<tr>
@@ -330,7 +327,7 @@ dojo.require("dijit.form.DateTextBox");
 							<span style="font-weight:600;">ប្រការ៣៖</span>
 							</td>
 							<td align="justify" style="padding-left:5px">
-							-<strong>ភាគី”ខ”</strong> អាចមានសិទ្ធិក្នុងការសាងសង់ ឬអាចអាស្រ័យផលលើដីឡូតិ៍នេះបាន ប៉ុន្តែការសាងសង់សំណង់ត្រូវតែរក្សាទុកកំពស់និងដែកតោងជញ្ជាំងតាមស្ដង់ដារ កំណត់របស់ក្រុមហ៊ុន និងចន្លោះផ្លូវថ្មើរជើងចំនួន <strong>០៥ (ប្រាំ)ម៉ែត្រ</strong> ពីចិញ្ចើមផ្លូវ និងទុកចន្លោះខាងក្រោយយ៉ាងតិច <strong>០២ (ពីរ)ម៉ែត្រ</strong>  ចៀសវាងការសាង់សង់សំណង់អាណាធិបតេយ្យដែលធ្វើអោយប៉ះប៉ាល់ដល់សោភ័ណ្ឌភាពទីតាំងទាំងមូល ។ ក្នុងករណីដែលការសាងសង់ផ្ទុយពីការបញ្ជាក់ដូចមានចែងក្នុងកិច្ចសន្យានេះ និងមិនត្រូវបានអនុញ្ញាតិអោយសាងសង់ឡើយ ។
+							-<strong>ភាគី”ខ”</strong>មានសិទ្ធិក្នុងការសាងសង់ ឬអាចអាស្រ័យផលលើដីឡូតិ៍នេះបាន ប៉ុន្តែការសាងសង់សំណង់ត្រូវតែរក្សាទុកកំពស់និងដែកតោងជញ្ជាំងតាមស្ដង់ដារ កំណត់របស់ក្រុមហ៊ុន និងដោយទុកចន្លោះផ្លូវថ្មើរជើងចំនួន <strong>០៥ (ប្រាំ)ម៉ែត្រ</strong> ពីចិញ្ចើមផ្លូវ និងទុកចន្លោះខាងក្រោយយ៉ាងតិច <strong>០២ (ពីរ)ម៉ែត្រ</strong>  ចៀសវាងការសាង់សង់សំណង់អាណាធិបតេយ្យដែលធ្វើអោយប៉ះពាល់ដល់សោភ័ណ្ឌភាពទីតាំងទាំងមូល ។ ក្នុងករណីដែលការសាងសង់ផ្ទុយពីការបញ្ជាក់ដូចមានចែងក្នុងកិច្ចសន្យានេះ និងមិនត្រូវបានអនុញ្ញាតិអោយសាងសង់ឡើយ ។
 							</td>
 						</tr>
 						<tr>
@@ -338,11 +335,11 @@ dojo.require("dijit.form.DateTextBox");
 							<span style="font-weight:600;">ប្រការ៤៖</span>
 							</td>
 							<td align="justify" style="padding-left:5px">
-							-<strong>ភាគី”ក”</strong> សូមសន្យាថា ក្រោយពីទទួលប្រាក់កក់ហើយ មិនកែរប្រែតម្លៃ ឬ ប្រែថាមិនលក់ឡើយ ។ បើការអនុវត្តន៍ផ្ទុយពីនេះ ខ្ញុំបាទ/នាងខ្ញុំ សុខចិត្តសងប្រាក់ X2(គុណនឹងពីរ) ដងនៃប្រាក់កក់កន្លងមក ម្យ៉ាងវិញទៀតបើថ្ងៃក្រោយមានជនដ៏ទៃណាទោះក្នុងគ្រួសារ ឬក្រៅគ្រួសារ មកតវ៉ាថាដីនេះជាសម្បត្តិរបស់ខ្លួន  ខ្ញុំបាទ/នាងខ្ញុំ សូមទទួលខុសត្រូវទាំងស្រុងចំពោះមុខច្បាប់ជាធរមាន។
+							-<strong>ភាគី”ក”</strong> សូមសន្យាថា ក្រោយពីទទួលប្រាក់កក់ហើយ មិនកែប្រែតម្លៃ ឬ ប្រែថាមិនលក់ឡើយ ។ បើការអនុវត្តន៍ផ្ទុយពីនេះ ខ្ញុំបាទ/នាងខ្ញុំ សុខចិត្តសងប្រាក់ X2(គុណនឹងពីរ) ដងនៃប្រាក់កក់កន្លងមក ម្យ៉ាងវិញទៀតបើថ្ងៃក្រោយមានជនដ៏ទៃណាទោះក្នុងគ្រួសារ ឬក្រៅគ្រួសារ មកតវ៉ាថាដីនេះជាសម្បត្តិរបស់ខ្លួន  ខ្ញុំបាទ/នាងខ្ញុំ សូមទទួលខុសត្រូវទាំងស្រុងចំពោះមុខច្បាប់ជាធរមាន។
 							</td>
 						</tr>
 					</table>
-					<span style="margin-top:10px; text-align:center; width: 100%; display: block; font-size: 10px;">ជាការធានាដល់សុក្រិតភាពនៃកិច្ចសន្យានេះ ភាគីទាំងពីរបានព្រមព្រៀងផ្តិតមេដៃស្តាំ ដើម្បីទុកជាភស្តុតាងក្នុងការទទួលខុសត្រូវចំពោះមុខច្បាប់៕</span>
+					<span style="margin-top:10px; text-align:center; width: 100%; display: block; font-size: 12px;">ជាការធានាដល់សុក្រិតភាពនៃកិច្ចសន្យានេះ ភាគីទាំងពីរបានព្រមព្រៀងផ្តិតមេដៃស្តាំ ដើម្បីទុកជាភស្តុតាងក្នុងការទទួលខុសត្រូវចំពោះមុខច្បាប់៕</span>
 					<span style="font-style:italic; text-align:center; width: 100%; display: block; font-size: 8px;">(ឯកសារនេះមិនមែនជាកម្មវត្ថុដែលអាចអនុញ្ញាតឲ្យ <strong>ភាគី”ខ”</strong> យកទៅដាក់បញ្ចាំបានឡើយ)</span>
 					<br />
 					<div>
