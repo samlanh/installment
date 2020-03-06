@@ -1289,6 +1289,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		if($rs_user['level']==1){
     			$arr['full_commission']=$data['full_commission'];
     		}
+    		if(!empty($data['note_agreement'])){
+    			$arr['note_agreement']=$data['note_agreement'];
+    		}
+    		
     		$id = $data['id'];
     		$this->_name='ln_sale';
     		$where = $db->quoteInto('id=?', $id);
