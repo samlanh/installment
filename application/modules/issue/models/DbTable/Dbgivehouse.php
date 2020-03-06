@@ -87,5 +87,23 @@ class Issue_Model_DbTable_Dbgivehouse extends Zend_Db_Table_Abstract
 		$sql="SELECT * FROM ln_issue_house WHERE id = $id LIMIT 1";
 		return $db->fetchRow($sql);
 	}
+	
+	public function getSaleNoByProjectNotYetReceiveHouse($branch_id){
+		$db = $this->getAdapter();
+		$sql="SELECT *, s.`id`,
+		CONCAT((SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = s.`client_id` LIMIT 1),' (',
+		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=s.`house_id` LIMIT 1),')' ) AS `name`
+		FROM `ln_sale` AS s
+		WHERE (s.`is_cancel` =0 ) AND s.`branch_id` =".$branch_id;
+		$houseGive = $this->getHouseGiveReady();
+		$sql.=" AND s.`id` NOT IN ($houseGive)";
+		return $db->fetchAll($sql);
+	}
+	function getHouseGiveReady(){
+		$db = $this->getAdapter();
+		$sql=" SELECT GROUP_CONCAT(DISTINCT ish.sale_id) FROM `ln_issue_house` AS ish WHERE ish.status=1 ";
+		$row = $db->fetchOne($sql);
+		return $row;
+	}
     
 }

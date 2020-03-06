@@ -102,4 +102,14 @@ class Issue_indexController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_loan = $frm;
 	}
+	
+	function getSaleclieAction(){// by vandy get property code
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Issue_Model_DbTable_Dbgivehouse();
+			$dataclient=$db->getSaleNoByProjectNotYetReceiveHouse($data['branch_id']);
+			print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	}
 }
