@@ -137,10 +137,7 @@
 		             			កាន់អត្តសញ្ញាណប័ណ្ណលេខ<span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> 
 		             			មានទីលំនៅបច្ចុប្បន្ន <?php echo $this->agreement['project_manager_p_current_address'];?> 
 		             			តំណាងអោយម្ចាស់ផ្សារលន ស៊ីធី(ចោមចៅ)ហៅភាគី (ក)។ 
-		             			<?php if (!empty($this->agreement['w_manager_namekh'])){?>
-		             			និង ឈ្មោះ<span class="value" style="min-width:80px;font-family:'Khmer OS Battambang';font-weight:bold;">( <?php echo $this->agreement['w_manager_namekh'];?> )</span>
-		             			ភេទ <?php echo $arrgender[$this->agreement['w_sex']];?> ឆ្នាំកំណើត <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['w_dob'])));?> សញ្ជាតិ <?php echo $this->agreement['w_manager_nationality'];?> កាន់អត្តសញ្ញាណប័ណ្ណលេខ <?php echo $dbparmeter->getNumberInkhmer($this->agreement['w_manager_nation_id']);?>
-		             			<?php }?> 
+		             			
 		             			<br />
 		             			<span style="font-weight:200;  text-align:center; min-width: 100%; display: inline-block;">និង</span>
 		             			<span class="margin-left"></span>អតិថិជនឈ្មោះ <span class="value" style="min-width:50px;font-family:'Khmer OS Battambang';font-weight:bold;"><?php echo $this->agreement['client_namekh'];?></span> 
@@ -165,7 +162,7 @@
 								រាជធានី/ខេត្ត  <span class="value" style="min-width:50px;">&nbsp;<?php echo $this->agreement['client_province_kh'];?></span>
 		             			ហៅភាគី (ខ)។
 								</p>
-								<p style="font-weight:600;text-align: center;">ភាគីទាំងពីរបានព្រមព្រៀងលើកិច្ចសន្យាជួល<?php echo $propertyType;?>ផ្សារលន ស៊ីធី ដូចខាងក្រោមៈ</p>
+								<p style="font-weight:600;text-align: center;">ភាគីទាំងពីរបានព្រមព្រៀងលើកិច្ចសន្យាជួលតូប និងគ្រែផ្សារលន ស៊ីធី ដូចខាងក្រោមៈ</p>
 									<?php
 										$countland = 1;
 										if (!empty($this->agreement['old_land_id'])){
@@ -178,7 +175,7 @@
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">១-</span>
 											    	ភាគី (ក) យល់ព្រមជួល <span class="value" style="min-width:30px;font-weight: bold;"><?php echo $propertyType;?></span> លេខ <span class="value" style="min-width:30px;font-weight: bold;"><?php echo $this->agreement['property_title'];?></span> ដែលមានទីតាំង ក្នុងផ្សារ លន ស៊ីធី
-											    	ក្នុងតម្លៃ <span style="font-weight: bold;"><?php echo number_format($this->agreement['price_sold'],2);?> ($) (<label id="lable_pricekhmer1" style="font-family:'Khmer OS Battambang';padding-right: 20px;"></label>ដុល្លារអាមេរិក) </span> ក្នុងមួយខែទៅឲ្យភាគី (ខ) ។ ប្រភេទ<?php echo $propertyType;?> <span class="value" style="min-width:30px;font-weight: bold;"><?php echo $this->agreement['type_tob'];?></span> ទំហំ <span class="value" style="text-align:center; min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_width'])." x ".$dbparmeter->getNumberInkhmer($this->agreement['property_height']);?></span>  ម៉ែត្រ ។
+											    	ក្នុងតម្លៃ <span style="font-weight: bold;"><?php echo number_format($this->agreement['price_sold'],2);?> ($) (<label id="lable_pricekhmer1" style="font-family:'Khmer OS Battambang';padding-right: 20px;"></label>ដុល្លារអាមេរិក) </span> ក្នុងមួយខែទៅឲ្យភាគី (ខ) ។ ប្រភេទតូប នឹងគ្រែ <span class="value" style="min-width:30px;font-weight: bold;"><?php echo $this->agreement['type_tob'];?></span> ទំហំ <span class="value" style="text-align:center; min-width:60px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_width'])." x ".$dbparmeter->getNumberInkhmer($this->agreement['property_height']);?></span>  ម៉ែត្រ ។
 											    	<script>
 														a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
 														money_khmersold=read_money_in_khmer(a_sold);
@@ -197,8 +194,8 @@
 										  <tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">២-</span>
-											    	ភាគី (ខ) យល់ព្រមកក់ប្រាក់យកទីតាំង<?php echo $propertyType?> មុនចំនួន ៣ ខែ (<?php echo number_format($this->deposit['recieve_amount'],2)?> ដុល្លារ) ឲ្យទៅភាគី (ក) 
-											    	ដែលមានរយៈពេលកំណត់ ៣ ឆ្នាំដោយគិតចាប់ពីថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['first_payment'])));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['first_payment']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['first_payment'])));?> ចុះកិច្ចសន្យា ដល់ថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['end_line'])));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['end_line']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['end_line'])));?> ។ ក្នុងករណីផុតរយៈពេលកំណត់ ជួល<?php echo $propertyType?> ប្រាក់កក់ នឹងត្រូវប្រគល់ជូនភាគី (ខ) វិញ។ តែបើភាគី (ខ) ចង់ឈប់ជួល<?php echo $propertyType?>មុនពេល កំណត់ នោះប្រាក់កក់ត្រូវទុកជាប្រយោជន៍របស់ភាគី (ក) ។
+											    	ភាគី (ខ) យល់ព្រមកក់ប្រាក់យកទីតាំងតូប ឬគ្រែ មុនចំនួន ៣ ខែ (<?php echo number_format($this->deposit['recieve_amount'],2)?> ដុល្លារ) ឲ្យទៅភាគី (ក) ដែលមានរយៈពេលកំណត់ 
+													៣ ឆ្នាំដោយគិតចាប់ពីថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['first_payment'])));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['first_payment']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['first_payment'])));?> ចុះកិច្ចសន្យា ដល់ថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['end_line'])));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['end_line']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['end_line'])));?> ។ ក្នុងករណីផុតរយៈពេលកំណត់ ជួលតូប និងគ្រែ ប្រាក់កក់ នឹងត្រូវប្រគល់ជូនភាគី (ខ) វិញ។ តែបើភាគី (ខ) ចង់ឈប់ជួលតូប និងគ្រែមុនពេល កំណត់ នោះប្រាក់កក់ត្រូវទុកជាប្រយោជន៍របស់ភាគី (ក) ។
 											    </td>  
 										  </tr>
 										  <tr>
@@ -239,67 +236,69 @@
 										  	<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">៣-</span>
-											    	ក្នុងករណីដែលភាគី (ខ) មិនបង់ថ្លៃជួល<?php echo $propertyType;?> តាមការកំណត់នោះភាគី (ខ) ត្រូវបង់ប្រាក់ពិន័យ ១ ដុល្លារ គុណទៅតាមចំនួនថ្ងៃដែលលើស ជូនភាគី (ក) (បើយឺតរយៈពេល ៧ថ្ងៃ) ។
+													ក្នុងករណីដែលភាគី (ខ) មិនបង់ថ្លៃជួលតូប និងគ្រែ តាមការកំណត់នោះភាគី (ខ) ត្រូវបង់ប្រាក់ពិន័យ ១ ដុល្លារ គុណទៅតាមចំនួនថ្ងៃដែលលើស ជូនភាគី (ក) ។ ក្នុងករណីភាគី (ខ) មិនបានបង់ប្រាក់រយះពេលមួយខែ ជូនភាគី (ក) ទេ នោះភាគី (ក) មានសិទ្ធដកហូតតូបនិង គ្រែវិញដោយស្វ័យប្រវត្តិ ចំណែកប្រាក់កក់ទុកជាប្រយោជន៍របស់ភាគី (ក) ។
 											    </td>
 											</tr>
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">៤-</span>
-											    	ភាគី (ខ) យល់ព្រមបង់ថ្លៃភាស៊ី <?php echo $propertyType;?> ប្រចាំថ្ងៃចំនួន ៥០០ រៀល ក្នុងមួយថ្ងៃ (សម្រាម អនាម័យ និង សន្ដិសុខ ) ថ្លៃភ្លើង ១,០០០ រៀល/Kw , ថ្លៃទឹក ១,០០០ រៀល/M3 , ទឹកមួយធុង ៣០០ រៀល។ 
+											    	ភាគី (ខ) យល់ព្រមបង់ថ្លៃភាស៊ី តូប នឹងគ្រែ ប្រចាំថ្ងៃចំនួន ៥០០ រៀល ក្នុងមួយថ្ងៃ (សម្រាម អនាម័យ និង សន្ដិសុខ ) ថ្លៃភ្លើង ១,០០០ រៀល/Kw , ថ្លៃទឹក ១,០០០ រៀល/M3 , ទឹកមួយធុង ៣០០ រៀល។ 
 											    </td>
 											</tr>
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">៥-</span>
-											    	ភាគី (ខ) មិនអាចជួល ឬផ្ទេរសិទ្ធិកាន់កាប់<?php echo $propertyType;?> ឲ្យទៅតតិយជនបានឡើយ លុះត្រាតែមាន ការឯកភាពពីភាគី (ក) ហើយត្រូវបង់សេវាកាត់ឈ្មោះតូបចំនួន$៥០០ (ប្រាំរយ ដុល្លារ) , គ្រែចំនួន $៣០០(បីរយ ដុល្លារ) ជូនភាគី (ក) ។ ក្នុងករណីដែលភាគី (ខ) ជួលឬ ផ្ទេរសិទ្ធកាន់កាប់<?php echo $propertyType;?> ទៅអោយតតិយជន ដោយគ្មានការយល់ស្របពីភាគី (ក) នោះភាគី (ក) មានសិទ្ធ ដកហូតយក<?php echo $propertyType;?> វិញដោយស្វ័យប្រវត្ដិ ចំណែកប្រាក់កក់ទុកជាប្រយោជន៍របស់ភាគី (ក) ។
+											    	ភាគី (ខ) មិនអាចជួល ឬផ្ទេរសិទ្ធិកាន់កាប់ តូប និងគ្រែ ឲ្យទៅតតិយជនបានឡើយ លុះត្រាតែមាន ការឯកភាពពីភាគី (ក) ហើយត្រូវបង់សេវាកាត់ឈ្មោះតូបចំនួន$៥០០ (ប្រាំរយ ដុល្លារ) , គ្រែចំនួន $៣០០(បីរយ ដុល្លារ) ជូនភាគី (ក) ។ ក្នុងករណីដែលភាគី (ខ) ជួលឬ ផ្ទេរសិទ្ធកាន់កាប់តូប និងគ្រែ ទៅអោយតតិយជន ដោយគ្មានការយល់ស្របពីភាគី (ក) នោះភាគី (ក) មានសិទ្ធ ដកហូតយកតូប និងគ្រែ វិញដោយស្វ័យប្រវត្ដិ ចំណែកប្រាក់កក់ទុកជាប្រយោជន៍របស់ភាគី (ក) ។
 											    </td>
 											</tr>
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">៦-</span>
-											    	ក្នុងករណីភាគី (ខ) មានធុរៈមិនបានប្រកបអាជីវកម្ម ចាប់ពីរយៈពេល ៧ថ្ងៃ ឡើងទៅនោះភាគី (ខ) ត្រូវផ្ដល់ដំណឹងដល់ភ្នាក់ងារផ្សារឲ្យដឹងជាមុន ក៏ប៉ុន្តែភាគី (ខ) ពុំអាចមានធុរៈក្នុងខែដដែលលើសពី ៧ថ្ងៃ ម្ដងហើយម្ដងទៀតនោះទេ ។ បើពុំដូច្នោះទេភាគី (ខ) យល់ព្រមឲ្យភាគី (ក) ធ្វើការផាកពិន័យ ១ថ្ងៃ ៥ ដុល្លារ នឹងចំនួនថ្ងៃដែលបានឈប់ ហើយប្រសិនបើភាគី (ខ) មិនបានបើកលក់រយ:ពេល ១ខែនោះភាគី (ក) នឹងដកហូតយក<?php echo $propertyType;?> ដោយស្វ័យប្រវត្ដិ ហើយភាគី (ខ) ឯកភាពមិនទទួលយកប្រាក់កក់ វិញឡើយ ។
+													ក្នុងករណីភាគី (ខ) មានធុរៈមិនបានប្រកបអាជីវកម្ម ចាប់ពីរយៈពេល ៧ថ្ងៃ ឡើងទៅនោះភាគី (ខ) ត្រូវផ្ដល់ដំណឹងដល់ភ្នាក់ងារផ្សារឲ្យដឹងជាមុន ក៏ប៉ុន្តែភាគី (ខ) ពុំអាចមានធុរៈក្នុងខែដដែលលើសពី ៧ថ្ងៃ ម្ដងហើយម្ដងទៀតនោះទេ ។ បើពុំដូច្នោះទេភាគី (ខ) យល់ព្រមឲ្យភាគី (ក) ធ្វើការផាកពិន័យ ១ថ្ងៃ ៥ ដុល្លារ នឹងចំនួនថ្ងៃដែលបានឈប់ ហើយប្រសិនបើភាគី (ខ) មិនបានបើកលក់រយ:ពេល ១ខែនោះភាគី (ក) នឹងដកហូតយកតូប និងគ្រែ ដោយស្វ័យប្រវត្ដិ ហើយភាគី (ខ) ឯកភាពមិនទទួលយកប្រាក់កក់ វិញឡើយ ។
 											    </td>
 											</tr>
 											
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">៧-</span>
-											    	ភាគី (ខ) ត្រូវគោរពនូវបទបញ្ជាផ្ទៃក្នុង លិខិតជូនដំណឹងនិង សេចក្ដីណែនាំផ្សេងៗ របស់អ្នក គ្រប់គ្រងផ្សារ ដើម្បីរក្សាបាននូវសណ្ដាប់ធ្នាប់ អនាម័យ សោភណ្ឌភាពនិង ការអធ្យាស្រ័យគ្នា ទៅវិញ ទៅមកក្នុងការធ្វើអាជីវកម្ម ។ ក្នុងករណីដែលភាគី (ខ) ចង់ប្ដូរប្រភេទអាជីរកម្មដោយមិនបាន សុំការ អនុញ្ញាតនិង ឯកភាពពីភាគី (ក) ជាមុននោះភាគី (ខ) យល់ព្រមឲ្យភាគី (ក) ពិន័យឬ បញ្ឈប់ អាជីវកម្មជា ស្ថាពរដោយគ្មានលក្ខខណ្ឌអ្វីទាំងអស់ ។
+													ភាគី (ខ) ត្រូវគោរពនូវបទបញ្ជាផ្ទៃក្នុង លិខិតជូនដំណឹងនិង សេចក្ដីណែនាំផ្សេងៗ របស់អ្នក គ្រប់គ្រងផ្សារ ដើម្បីរក្សាបាននូវសណ្ដាប់ធ្នាប់ អនាម័យ សោភណ្ឌភាពនិង ការអធ្យាស្រ័យគ្នា ទៅវិញ ទៅមកក្នុងការធ្វើអាជីវកម្ម ។ ក្នុងករណីដែលភាគី (ខ) ចង់ប្ដូរប្រភេទអាជីរកម្មដោយមិនបាន សុំការ អនុញ្ញាតនិង ឯកភាពពីភាគី (ក) ជាមុននោះភាគី (ខ) យល់ព្រមឲ្យភាគី (ក) ពិន័យឬ បញ្ឈប់ អាជីវកម្មជា ស្ថាពរដោយគ្មានលក្ខខណ្ឌអ្វីទាំងអស់ ។
 											    </td>
 											</tr>
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">៨-</span>
-											    	រាល់ការចំណាយ ដែលពាក់ព័ន្ធនឹងអាជីវកម្មរបស់ភាគី (ខ) ទាំងអស់ គឺជាបន្ទុករបស់ភាគី (ខ) មានដូចជា ពន្ធនាំចូល ពន្ធចល័ត ពន្ធអាជីវកម្ម ពន្ធបន្ថែម ប៉ាតង់ លិខិតអនុញ្ញាតប្រកបអាជីវកម្ម ចំណាយ ទិញធានរ៉ាប់រង ពន្ធផ្សេងៗ ការរៀបចំលម្អតូប និង ចំណាយថ្លៃទឹកភ្លើង ។ល។
+													រាល់ការចំណាយ ដែលពាក់ព័ន្ធនឹងអាជីវកម្មរបស់ភាគី (ខ) ទាំងអស់ គឺជាបន្ទុករបស់ភាគី (ខ) មានដូចជា ពន្ធនាំចូល ពន្ធចល័ត ពន្ធអាជីវកម្ម ពន្ធបន្ថែម ប៉ាតង់ លិខិតអនុញ្ញាតប្រកបអាជីវកម្ម ចំណាយ ទិញធានរ៉ាប់រង ពន្ធផ្សេងៗ ការរៀបចំលម្អតូប និង ចំណាយថ្លៃទឹកភ្លើង ។ល។
 											    </td>
 											</tr>
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">៩-</span>
-											    	រាល់ការខូចខាតឬ បាត់បង់ដែលកើតឡើងដោយ ចោរកម្ម អគ្គីភ័យ គ្រោះធម្មជាតិ សង្រ្គាម ឧបទ្ទវហេតុ ហេតុការណ៍ផ្សេងៗ គ្រប់យ៉ាងដែលបណ្ដាលអោយ ទ្រព្យសម្បត្ដិ សម្ភារៈត្រូវខូតខាត ឬបាត់បង់និង មនុស្សមានគ្រោះថ្នាក់នោះភាគី (ខ) ជាអ្នកទទួលខុសត្រូវនិង ដោះស្រាយ ចំពោះមុខច្បាប់ ដោយខ្លួនឯង ដោយគ្មានទាក់ទងជាមួយភាគី (ក) ឡើយ។
+													រាល់ការខូចខាតឬ បាត់បង់ដែលកើតឡើងដោយ ចោរកម្ម អគ្គីភ័យ គ្រោះធម្មជាតិ សង្រ្គាម ឧបទ្ទវហេតុ ហេតុការណ៍ផ្សេងៗ គ្រប់យ៉ាងដែលបណ្ដាលអោយ ទ្រព្យសម្បត្ដិ សម្ភារៈត្រូវខូតខាត ឬបាត់បង់និង មនុស្សមានគ្រោះថ្នាក់នោះភាគី (ខ) ជាអ្នកទទួលខុសត្រូវនិង ដោះស្រាយ ចំពោះមុខច្បាប់ ដោយខ្លួនឯង ដោយគ្មានទាក់ទងជាមួយភាគី (ក) ឡើយ។
 											    </td>
 											</tr>
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">១០-</span>
-											    	ភាគី (ក) មានសិទ្ធកែប្រែ លើកិច្ចសន្យា ទីតាំងជួលតម្លៃឈ្នួល<?php echo $propertyType;?> ទៅតាមតម្លៃទីផ្សារ ក្រោយពេលកិច្ចព្រមព្រៀង ខាងលើត្រូវបានបញ្ចប់ ។ ក្នុងករណីភាគី (ខ) មិនយល់ព្រមឲ្យភាគី (ក) តំឡើងថ្លៃឈ្នួលតាមកិច្ចសន្យាជួលខាងលើនោះភាគី (ក) មានសិទ្ធបញ្ឈប់ការជួល<?php echo $propertyType;?> ជូនភាគី(ខ) ដោយតម្រូវឲ្យភាគី(ខ) រុះរើសម្ភារៈចេញយ៉ាងយូរ៧ថ្ងៃ។
+													ភាគី (ក) មានសិទ្ធកែប្រែ លើកិច្ចសន្យា ទីតាំងជួលតម្លៃឈ្នួលតូបនិង គ្រែ ទៅតាមតម្លៃទីផ្សារ ក្រោយពេលកិច្ចព្រមព្រៀង ខាងលើត្រូវបានបញ្ចប់ ។ ក្នុងករណីភាគី (ខ) មិនយល់ព្រមឲ្យភាគី (ក) តំឡើងថ្លៃឈ្នួលតាមកិច្ចសន្យាជួលខាងលើនោះភាគី (ក) មានសិទ្ធបញ្ឈប់ការជួលតូប និងគ្រែ ជូនភាគី (ខ) ដោយតម្រូវឲ្យភាគី (ខ) រុះរើសម្ភារៈចេញយ៉ាងយូរ ៧ថ្ងៃ ។
 											    </td>
 											</tr>
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">១១-</span>
-											    	ភាគី (ខ) ត្រូវប្រគល់<?php echo $propertyType;?> ជូនភាគី (ក) ដោយរក្សានៅទ្រង់ទ្រាយដើម មុនបញ្ចប់កិច្ចសន្យា ឬដល់ពេលកំណត់កិច្ចសន្យា ក្នុងករណីមានការខូចខាត ឬទ្រង់ទ្រាយខុសពីស្តង់ដារ នោះភាគី (ខ) ត្រូវបង់ថ្លៃខូចខាតទៅតាមស្ថានភាពខូចខាតជាក់ស្ដែងមកអោយភាគី (ក) ។
+													ភាគី (ខ) ត្រូវប្រគល់តូប នឹងគ្រែ ជូនភាគី (ក) ដោយរក្សានៅទ្រង់ទ្រាយដើម មុនបញ្ចប់កិច្ចសន្យា ឬដល់ពេលកំណត់កិច្ចសន្យា ក្នុងករណីមានការខូចខាត ឬទ្រង់ទ្រាយខុសពីស្តង់ដារ នោះភាគី (ខ) ត្រូវបង់ថ្លៃខូចខាតទៅតាមស្ថានភាពខូចខាតជាក់ស្ដែងមកអោយភាគី (ក) ។
 											    </td>
 											</tr>
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
 											    	<span style="font-family:'Khmer OS Battambang';padding-right: 20px;">១២-</span>
-											    	កិច្ចព្រមព្រៀងនេះចាប់អនុវត្ដពី ថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?> ផ្ដិតមេដៃរវាងភាគី (ក) និងភាគី (ខ) ។ ភាគីទាំង សងខាងត្រូវរក្សាទុកនូវច្បាប់ដើមម្នាក់មួយច្បាប់ទុកជាភស្ដុ័តាង ។
-											    </td>
+											    	កិច្ចព្រមព្រៀងនេះចាប់អនុវត្ដពី ថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?> ផ្ដិតមេដៃរវាងភាគី (ក) និងភាគី (ខ) ។ 
+													<br />
+													ភាគីទាំង សងខាងត្រូវរក្សាទុកនូវច្បាប់ដើមម្នាក់មួយច្បាប់ទុកជាភស្ដុ័តាង ។
+												</td>
 											</tr>
 											<tr>
 											    <td colspan="2" align="justify" style="padding-left:15px; vertical-align:top;">
-											   		<span class="margin-left"></span><strong>សំគាល់ ៖ ករណីដែលភាគី (ខ) មិនបានអនុវត្ដតាមការណែនាំទាំងអស់ដូចខាងលើ នោះទេភាគី (ក) មានសិទ្ធដកហូត<?php echo $propertyType;?> វិញចំណែកប្រាក់កក់ត្រូវទុកជាប្រយោជន៍របស់ភាគី (ក) ដោយស្វ័យប្រវត្ដិ ។</strong>
+											   		<span class="margin-left"></span><strong>សំគាល់ ៖ ករណីដែលភាគី (ខ) មិនបានអនុវត្ដតាមការណែនាំទាំងអស់ដូចខាងលើ នោះទេភាគី (ក) មានសិទ្ធដកហូតតូប និងគ្រែ វិញចំណែកប្រាក់កក់ត្រូវទុកជាប្រយោជន៍របស់ភាគី (ក) ដោយស្វ័យប្រវត្ដិ ។</strong>
 											    </td>
 											</tr>
 										</table>
