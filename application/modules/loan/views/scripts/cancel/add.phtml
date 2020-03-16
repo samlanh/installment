@@ -40,8 +40,7 @@
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CLIENT_NAME");?> <span class="required">*</span> :
-	                   </label>
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> <span class="required">*</span> :</label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id="sale_client" />
 	                   </div>
@@ -492,11 +491,7 @@ function getLandAndClientDetail(inds){
 				if(isNaN(total_principal) || total_principal==null){
 					total_principal=0;
 				}
-			    paid_amount = data.paid_amount;
-				if(isNaN(paid_amount) || paid_amount==null)
-				{
-					paid_amount=0;
-				}
+			    
 				total_principal = parseFloat(total_principal);
 				dijit.byId('paid_amount').attr('value',total_principal);
 				balance = data.price_sold-total_principal;
@@ -636,8 +631,10 @@ function getLandAndClientDetail(inds){
 			},	
 			load: function(data) {
 				var arr = JSON.parse(data);
-				var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
-				document.getElementById('projectlogo').innerHTML = imagesUrl;
+				if(!empty(arr.logo)){
+					var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+					document.getElementById('projectlogo').innerHTML = imagesUrl;
+				}
 			},
 			error: function(e) {
 			}

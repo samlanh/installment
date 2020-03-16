@@ -761,4 +761,31 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
+  function rptPlonglistAction(){
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+  				'adv_search'=>'',
+  				'property_type'=>'',
+  				"branch_id"=> -1,
+  				'type_property_sale'=>-1,
+  				'date_type'=>1,
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+  				'streetlist'=>'',
+  				'process_status'=>0,
+  				'plong_type'=>'',
+  				'plong_processtype'=>0
+  				);
+  	}
+  	$this->view->list_end_date = $search;
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$this->view->row = $db->getAllHeadproperties($search);
+  	
+  	$frm=new Other_Form_FrmProperty();
+  	$row=$frm->FrmFrmProperty();
+  	Application_Model_Decorator::removeAllDecorator($row);
+  	$this->view->frm_property=$row;
+  }
 }

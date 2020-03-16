@@ -116,8 +116,58 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		$_type_of_property->setMultiOptions($_type_of);
 		$_type_of_property->setValue($request->getParam("type_property_sale"));
 		
+		$_dbStepOpt = new Loan_Model_DbTable_DbStepOption();
+		$allStep = $_dbStepOpt->getAllStepOptions();
+		$options_pro= array(0=>$this->tr->translate("PLEASE_SELECT"));
+		if (!empty($allStep)) foreach ($allStep as $ss){
+			$options_pro[$ss['id']]=$ss['name'];
+		}
+		
+		
+		$_process_status = new Zend_Dojo_Form_Element_FilteringSelect('process_status');
+		$_process_status->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$allStep = $_dbStepOpt->getAllStepOptions();
+		$options_pro= array(0=>$this->tr->translate("PLEASE_SELECT"));
+		if (!empty($allStep)) foreach ($allStep as $ss){
+			$options_pro[$ss['id']]=$ss['name'];
+		}
+		
+		$_process_status->setMultiOptions($options_pro);
+		$_process_status->setValue($request->getParam("process_status"));
+		
+		$plong_type = new Zend_Dojo_Form_Element_FilteringSelect("plong_type");
+		$opt_plong = array(''=>$this->tr->translate('PLEASE_SELECT'));
+		$rows = $db->getAllPlong();
+		if(!empty($rows))foreach($rows AS $row){
+			$opt_plong[$row['id']]=$row['name'];
+		}
+		$plong_type->setMultiOptions($opt_plong);
+		$plong_type->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+		));
+		$plong_type->setValue($request->getParam("plong_type"));
+		
+		$plong_processtype =  new Zend_Dojo_Form_Element_FilteringSelect('plong_processtype');
+		$plong_processtype->setAttribs(array('dojoType'=>$this->filter,	'class'=>'fullside',));
+		$_type_of = array(
+			-1=>$this->tr->translate("SELECT_PLONGPROCESS"),
+			1=>$this->tr->translate("ប្លង់មិនទាន់រត់"),
+			2=>$this->tr->translate("ប្លង់កំពុងរត់មិនទាន់ប្រគល់"),
+			3=>$this->tr->translate("ប្លង់ប្រគល់អោយអតិថិជន")
+		);
+		$plong_processtype->setMultiOptions($_type_of);
+		$plong_processtype->setValue($request->getParam("plong_processtype"));
+		
+		
 		$_id = new Zend_Form_Element_Hidden('id');
-		$this->addElements(array($date_type,$streetlist,$_branch_id,$_btn_search,$_status_search,$_title,$_id,$property,$_type_of_property,$from_date,$to_date));
+		$this->addElements(array($plong_processtype,$plong_type,$_process_status,$date_type,$streetlist,$_branch_id,$_btn_search,$_status_search,$_title,$_id,$property,$_type_of_property,$from_date,$to_date));
 		return $this;
 	}
 	

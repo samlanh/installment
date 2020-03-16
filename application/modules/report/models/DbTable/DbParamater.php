@@ -2286,4 +2286,68 @@ function getAllBranch($search=null){
 		return $db->fetchOne($sql);
 		
 	}
+	function getAllHeadproperties($search=null){
+		$db = $this->getAdapter();
+		$to_enddate = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";
+		$sql = "SELECT p.`id`,
+			(SELECT project_name FROM ln_project WHERE br_id = p.`branch_id` limit 1) AS branch_name,
+			p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,p.hardtitle ,
+			(SELECT ps.title FROM `ln_plongstep_option` AS ps,ln_processing_plong AS pr WHERE ps.id = pr.process_status AND `p`.`id` = `pr`.`property_id` LIMIT 1) AS processing,
+			(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
+			rp.layout_type,rp.date AS received_date,
+			(SELECT cl.name_kh FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS client_name,
+			(SELECT cl.phone FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS tel, ";
+		$sql.=" (SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
+			FROM 
+				`ln_properties` AS p
+			    LEFT JOIN ln_receiveplong AS rp
+			ON p.`id` = rp.`house_id` WHERE p.`status`=1 ";
+	
+		$from_date =(empty($search['start_date']))? '1': " p.create_date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " p.create_date <= '".$search['end_date']." 23:59:59'";
+		$where=" AND ".$from_date." AND ".$to_date;
+	
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("p.`branch_id`");
+	
+		if(!empty($search['property_type'])){
+			$where.= " AND p.`property_type` = ".$search['property_type'];
+		}
+			if($search['type_property_sale']>-1){
+			$where.= " AND p.`is_lock` = ".$search['type_property_sale'];
+		}
+		if($search['branch_id']>0){
+			$where.= " AND p.`branch_id` = ".$search['branch_id'];
+		}
+		if(!empty($search['adv_search'])){
+			$s_where=array();
+			$s_search= addslashes(trim($search['adv_search']));
+			$s_where[]=" p.`land_address` LIKE '%{$s_search}%'";
+			$s_where[]=" p.street LIKE '%{$s_search}%'";
+			$where.=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if(!empty($search['streetlist'])){
+			$where.= " AND street ='".$search['streetlist']."'";
+		}
+		if(!empty($search['plong_type'])){
+			$where.= " AND rp.`layout_type` = '".$search['plong_type']."'";
+		}
+		if($search['process_status']>0){
+			$where.=" AND (SELECT pr.process_status FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id` AND pr.process_status LIMIT 1) = ".$search['process_status'];
+		}
+		if($search['plong_processtype']>0){
+			
+			if($search['plong_processtype']==1){
+				$where.=" AND p.`hardtitle` !='' AND p.id NOT IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id`)";
+			}elseif($search['plong_processtype']==2){
+				$where.=" AND p.id NOT IN (SELECT rp.house_id FROM ln_receiveplong AS pr WHERE `p`.`id` = rp.`house_id` ) ";
+				$where.=" AND p.`hardtitle` !='' AND p.id IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id`) ";
+			}else{
+				$where.=" AND p.id IN (SELECT rp.house_id FROM ln_receiveplong AS pr WHERE `p`.`id` = rp.`house_id` ) ";
+			}
+		}
+		
+		$where.= " ORDER BY p.branch_id,p.`property_type`,p.`street` ASC, LENGTH(land_address), land_address ASC  ";
+		return $db->fetchAll($sql.$where);
+	}
 }
