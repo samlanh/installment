@@ -65,7 +65,10 @@ dojo.require("dijit.form.DateTextBox");
 			                <ul style="list-style: none;">
 				                <li style="white-space:nowrap;line-height:25px;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></li>
 				                <li style="line-height:20px;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("របាយការណ៍ចំណូលចំណាយ");?></li>
-				                <li style="line-height:25px;text-align:center; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if (!empty($this->list_end_date['start_date'])){ echo  date("d-m-Y",strtotime($this->list_end_date['start_date']))." To ".date("d-m-Y",strtotime($this->list_end_date['end_date']));}?></li>
+				                <li style="line-height:25px;text-align:center; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
+				                	<span id="projectName"></span>
+				                	<?php if (!empty($this->list_end_date['start_date'])){ echo  date("d-m-Y",strtotime($this->list_end_date['start_date']))." To ".date("d-m-Y",strtotime($this->list_end_date['end_date']));}?>
+				                </li>
 			                </ul>
 			                </td>
 			                <td width="30%"></td>
@@ -551,6 +554,11 @@ input#e15 {
 require(["dojo/ready"], function(ready){
 	ready(function(){
 		 $("#e15").select2({tags:[<?php echo $tags;?>],placeholder: "<?php echo $tr->translate("CHOOSE_STREET");?>",allowClear: true});
+		 branch_id = dijit.byId("branch_id").get("value");
+		 if(branch_id!=-1 && branch_id!=0){
+			 document.getElementById('projectName').innerHTML = dijit.byId('branch_id').attr('displayedValue');
+		 }	 
+		 
 	});
 });
 </script>
