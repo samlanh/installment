@@ -12,7 +12,7 @@ class Group_indexController extends Zend_Controller_Action {
 			if($this->getRequest()->isPost()){
 				$formdata=$this->getRequest()->getPost();
 				$search = array(
-					'branch_id'=>$formdata['branch_id'],
+// 					'branch_id'=>$formdata['branch_id'],
 					'adv_search' => $formdata['adv_search'],
 					'province_id'=>$formdata['province'],
 					'comm_id'=>$formdata['commune'],
@@ -24,7 +24,7 @@ class Group_indexController extends Zend_Controller_Action {
 					'customer_id'=>$formdata['customer_id']);
 			}else{
 				$search = array(
-					'branch_id'=>-1,
+// 					'branch_id'=>-1,
 					'adv_search' => '',
 					'status' => -1,
 					'province_id'=>0,

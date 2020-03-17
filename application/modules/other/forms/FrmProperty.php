@@ -62,6 +62,7 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		$from_date = new Zend_Dojo_Form_Element_DateTextBox('start_date');
 		$from_date->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
 				//'required'=>'true',
+				'placeholder'=>$this->tr->translate('START_DATE'),
 				'class'=>'fullside',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'onchange'=>'CalculateDate();'));

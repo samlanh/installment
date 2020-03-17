@@ -38,7 +38,7 @@ public function init()
 		
 		$start_date_search = new Zend_Dojo_Form_Element_DateTextBox('from_date_search');
 		$start_date_search->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
-				//'required'=>'true',
+				'placeHolder'=>$this->tr->translate('START_DATE'),
 				'class'=>'fullside',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				));
@@ -49,6 +49,7 @@ public function init()
 		
 		$to_date_search = new Zend_Dojo_Form_Element_DateTextBox('to_date_search');
 		$to_date_search->setAttribs(array(
+				'placeHolder'=>$this->tr->translate('END_DATE'),
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'dojoType'=>'dijit.form.DateTextBox','class'=>'fullside',
 		));

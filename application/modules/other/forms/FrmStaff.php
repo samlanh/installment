@@ -66,10 +66,11 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 		$_co->setMultiOptions($opt_co);
 		$_co->setValue($request->getParam('co_khname'));
 		
-		$_startdate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
-		$_startdate->setAttribs(array('dojoType'=>$this->date,'class'=>'fullside',
-				//'class'=>'fullside',
-				'onchange'=>'CalculateDate();'));
+// 		$_startdate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
+// 		$_startdate->setAttribs(array('dojoType'=>$this->date,'class'=>'fullside',
+// 				'placeholder'=>$this->tr->translate('START_DATE'),
+// 				'onchange'=>'CalculateDate();'));
+		
 		$_date = $request->getParam("start_date");
 		$_salary = new Zend_Dojo_Form_Element_TextBox('salary');
 		$_salary->setAttribs(array('dojoType'=>$this->tnumber,'required'=>'true','class'=>'fullside',));
@@ -79,6 +80,7 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 		$_startdate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
 		$_startdate->setAttribs(array('dojoType'=>$this->date,
 				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate('START_DATE'),
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'onchange'=>'CalculateDate();'));
 		$_date = $request->getParam("start_date");

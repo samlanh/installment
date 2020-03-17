@@ -5,8 +5,7 @@ class Loan_Model_DbTable_Dbtransferowner extends Zend_Db_Table_Abstract
 
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
-    	return $session_user->user_id;
-    	 
+    	return $session_user->user_id;	 
     }
    function getAllTranferOwner($search){
 	  
@@ -80,7 +79,8 @@ class Loan_Model_DbTable_Dbtransferowner extends Zend_Db_Table_Abstract
 	    		
 	    		$arra = array(
 	    				'client_id' => $data['to_customer'],
-	    				'agreement_date'=>$data['agreement_date']
+	    				'agreement_date'=>$data['agreement_date'],
+	    				'buy_date'=>$data['date_buy']
 	    		);
 	    		$this->_name="ln_sale";
 	    		$where="id=".$data['loan_number'];
@@ -91,13 +91,7 @@ class Loan_Model_DbTable_Dbtransferowner extends Zend_Db_Table_Abstract
     		}catch (Exception $e){
     			$db->rollBack();
     			$err =$e->getMessage();
-    			echo $err;exit();
     			Application_Model_DbTable_DbUserLog::writeMessageError($err);
     		}
     }
-//     function getTransferProject($id){
-//     	$sql=" select * from ln_change_house where id= $id limit 1";
-//     	$db = $this->getAdapter();
-//     	return $db->fetchRow($sql);
-//     }
 }

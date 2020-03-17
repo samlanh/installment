@@ -116,7 +116,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$_releasedate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
 		$_releasedate->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
-				'placeHolder'=>'Start Date',
+				'placeHolder'=>$this->tr->translate('START_DATE'),
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'onchange'=>'CalculateDate();'));
 		$_date = $request->getParam("start_date");

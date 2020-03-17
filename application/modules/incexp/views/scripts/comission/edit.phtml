@@ -331,7 +331,7 @@
 				 </tr>
 				<tr>
 					 <td rowspan="2" valign="top" class="one khmerbold">សម្គាល់</td>
-				     <td rowspan="2"  valign="top"  align="center" class="noted"><strong style="white-space: nowrap;"><label style="white-space: nowrap;text-align: center; " id="lb_description"></label></strong>
+				     <td rowspan="2"  valign="top"  class="noted"><strong style="white-space: nowrap;"><label style="white-space: nowrap;white-space: pre-line; " id="lb_description"></label></strong>
 				</td>					
 				</tr>
 				<tr >
@@ -395,7 +395,7 @@
 								<tr>
 									<td><?php echo $tr->translate('NAME_KH');?></td>
 									<td>
-										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="kh_name" name="kh_name" value="" type="text">
+										<input dojoType="dijit.form.ValidationTextBox" required="true"  class="fullside" id="kh_name" name="kh_name" value="" type="text">
 									</td>
 								</tr>
 								<tr>
@@ -422,8 +422,6 @@
 								</tr>
 								<tr>
 									<td colspan="4" align="center">
-										<input type="button" value="ចាកចេញ" label="Close"  name="close" dojoType="dijit.form.Button" 
-										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
 										<input type="button" value="save" label="SAVE" name="save" dojoType="dijit.form.Button" 
 										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addStaff();"/>
 									</td>
@@ -550,23 +548,26 @@ function hideDialog1(){
 }
 var url_add_staff = '<?php echo $this->url(array("module"=>"loan","controller"=>"index","action"=>"add-staff")); ?>';
 function addStaff(){
-	dojo.xhrPost({
-		url:url_add_staff,
-		form: dojo.byId("frm_staff"),
-		handleAs:"json",
-		load: function(data) {
-			var Itemmake = { 
-	    	  	id: data,
-		        name: dijit.byId('kh_name').get('value')
-		    };
-	 		addDataToSelectbox(dijit.byId('staff_id'), staff_store, Itemmake, data);
-		    dijit.byId('frm_staff').reset();
-		    dijit.byId("popup_staff").hide();
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
+	if(dijit.byId('frm_staff').validate()){
+		dijit.byId('save_staff').set('disabled',true);
+		dojo.xhrPost({
+			url:url_add_staff,
+			form: dojo.byId("frm_staff"),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = { 
+		    	  	id: data,
+			        name: dijit.byId('kh_name').get('value')
+			    };
+		 		addDataToSelectbox(dijit.byId('staff_id'), staff_store, Itemmake, data);
+			    dijit.byId('frm_staff').reset();
+			    dijit.byId("popup_staff").hide();
+			    dijit.byId('save_staff').set('disabled',false);
+			},
+			error: function(err) {
+			}
+		});
+	}
 }
 
 var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->all_category));?> );

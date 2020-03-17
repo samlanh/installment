@@ -1,10 +1,10 @@
 <?php 
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-echo $this->headTitle($tr->translate("CUSTOMER_LIST"));
-$frm = $this->frm_search;
-$frms=$this->frm_client;
-$urlEdit = $this->baseUrl()."/group/index/edit/id/";
-$urlProfile = $this->baseUrl()."/group/index/view/id/";
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("CUSTOMER_LIST"));
+	$frm = $this->frm_search;
+	$frms=$this->frm_client;
+	$urlEdit = $this->baseUrl()."/group/index/edit/id/";
+	$urlProfile = $this->baseUrl()."/group/index/view/id/";
 ?>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
@@ -13,8 +13,8 @@ $urlProfile = $this->baseUrl()."/group/index/view/id/";
 				<table width="100%">
 				   <tr>  
 				      <td><?php echo $frm->getElement("adv_search");?></td>
-				      <td><?php echo $frm->getElement("branch_id");?></td>
 				      <td><?php echo $frms->getElement('customer_id');?></td>
+				      <td><?php echo $frm->getElement('status');?></td>
 				      <td><?php echo $frm->getElement('start_date');?></td>
 				      <td><?php echo $frm->getElement('end_date');?></td>
 				   </tr>
@@ -23,7 +23,6 @@ $urlProfile = $this->baseUrl()."/group/index/view/id/";
 				      <td><input id="district" ></td>
 				      <td><input id="commune" ></td>
 				      <td><input id="village" ></td>
-				      <td><?php echo $frm->getElement('status');?></td>
 				      <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 					  </td>
 				   </tr>
@@ -54,6 +53,7 @@ dojo.ready(function(){
 		id: "district",
 		searchAttr: "name",
 		class: 'fullside',
+		placeholder:'<?php echo $tr->translate("DISTRICT");?>',
 		missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ ស្រុក/ខ័ណ្ឌ!",	
 			onChange: function() {
 				district = dijit.byId('district').get('value');
@@ -72,6 +72,7 @@ dojo.ready(function(){
 		name: "commune",
 		id: "commune",
 		searchAttr: "name",
+		placeholder:'<?php echo $tr->translate("COMMUNE");?>',
 		class: 'fullside',
 		missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឃុំ/សង្កាត់",	
 			onChange: function() {
@@ -92,6 +93,7 @@ dojo.ready(function(){
 		required: false,		           
 		name: "village",
 		id: "village",
+		placeholder:'<?php echo $tr->translate("VILLAGE");?>',
 		searchAttr: "name",
 		class: 'fullside',
 		missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះភូមិ!",	

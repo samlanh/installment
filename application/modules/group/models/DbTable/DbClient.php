@@ -273,7 +273,7 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			SELECT client_id,
 			client_number,
 			name_kh,
-			(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND sex=key_code LIMIT 1) AS sex
+			(SELECT name_en FROM `ln_view` WHERE type =11 AND sex=key_code LIMIT 1) AS sex
 			,phone,house,street,
 				(SELECT village_namekh FROM `ln_village` WHERE vill_id= village_id LIMIT 1) AS village_name,
 			    create_date,
@@ -287,20 +287,23 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 				$s_where = array();
 				$s_search = addslashes(trim($search['adv_search']));
 				$s_search = str_replace(' ', '', addslashes(trim($search['adv_search'])));
-				$s_where[] = " client_number LIKE '%{$s_search}%'";
-				$s_where[] = " name_kh LIKE '%{$s_search}%'";
-				$s_where[] = " phone LIKE '%{$s_search}%'";
-				$s_where[] = " tel LIKE '%{$s_search}%'";
-				$s_where[] = " house LIKE '%{$s_search}%'";
-				$s_where[] = " street LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(client_number,' ','') LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(client_number,' ','') LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(name_kh,' ','') LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(hname_kh,' ','') LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(phone,' ','') LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(lphone,' ','') LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(tel,' ','') LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(street,' ','') LIKE '%{$s_search}%'";
+				
 				$where .=' AND ('.implode(' OR ',$s_where).')';
 			}
 			if($search['status']>-1){
 				$where.= " AND status = ".$search['status'];
 			}
-			if($search['branch_id']>-1){
-				$where.= " AND branch_id = ".$search['branch_id'];
-			}
+// 			if($search['branch_id']>-1){
+// 				$where.= " AND branch_id = ".$search['branch_id'];
+// 			}
 			if($search['province_id']>0){
 				$where.=" AND pro_id= ".$search['province_id'];
 			}
