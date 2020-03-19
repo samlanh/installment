@@ -13,7 +13,8 @@ class Project_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
 				  	(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
 				  	street AS street_name,
 	  				(SELECT type_nameen FROM `ln_properties_type` WHERE id=ln_properties.property_type) AS properties_type,
-				  	price
+				  	price,
+				  	branch_id
 	  		 FROM `ln_properties` WHERE street!="" ';
 	  	$where="";
 	  	if(!empty($search['adv_search'])){
@@ -37,6 +38,9 @@ class Project_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
 				(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
 				(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type limit 1) AS  pro_type
     	FROM $this->_name WHERE is_buy=0 AND street = ".$db->quote($street);
+    	if (!empty($branch_id)){
+    		$sql.=" AND branch_id =".$branch_id;
+    	}
     	$sql.=" ORDER BY price DESC, cast(land_address as unsigned) ";
     	return $db->fetchAll($sql);
     }

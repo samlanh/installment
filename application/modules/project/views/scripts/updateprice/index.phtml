@@ -18,18 +18,56 @@
     	</div>
 		<div class="card-box">
 			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
-				<table width="50%">
-				   <tr>
-				      <td><?php echo $frm->getElement("adv_search");?></td>
-				      <td><?php echo $frm->getElement("branch_id");?></td>
-				      <td><?php echo $frms->getElement("streetlist");?></td>
-				      <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
-				     <td><input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" /></td>
-				   </tr>
-				</table>  
+				<div class="form-group">
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement("branch_id");?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frms->getElement("streetlist");?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+						<input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" />
+					</div>
+				</div>
 			</form>
 		</div>
 		<div class="card-box">
+			 <!-- start project list -->
+             <table border="1" id="datatable-responsive" style="  border-collapse: collapse;   border-color: #ddd;"  class="display nowrap dataTable dtr-inline collapsed table-striped projects" cellspacing="0" width="100%" >
+             	<thead>
+                     <tr>
+                         <th style="width: 1%"><?php echo $tr->translate("NUM");?></th>
+                         <th style="width: 20%"><?php echo $tr->translate("BRANCH_NAME");?></th>
+                         <th><?php echo $tr->translate("STREET");?></th>
+                         <th><?php echo $tr->translate("PROPERTY_TYPE");?></th>
+                         <th><?php echo $tr->translate("PRICE");?></th>
+                     </tr>
+                </thead>
+                <tbody>
+                	<?php if (!empty($this->rs)) foreach ($this->rs as $key => $rs){?>
+                	<tr>
+                		<td><?php echo $key+1;?></td>
+                        <td>
+                           <a href="<?php echo $this->baseUrl()."/project/updateprice/edit?id=".$rs['street']."&branch_id=".$rs['branch_id'];?>"><?php echo $rs['branch_name']?></a>
+                        </td>
+                        <td>
+                           <a href="<?php echo $this->baseUrl()."/project/updateprice/edit?id=".$rs['street']."&branch_id=".$rs['branch_id'];?>"><?php echo $rs['street_name']?></a>
+                        </td>
+                        <td>
+                           <?php echo $rs['properties_type']?>
+                        </td>
+                        <td>
+                           <a href="<?php echo $this->baseUrl()."/project/updateprice/edit?id=".$rs['street']."&branch_id=".$rs['branch_id'];?>"><?php echo number_format($rs['price'],2)?></a>
+                        </td>
+                	</tr>
+                	<?php }?>
+                </tbody>
+             </table>
+                   
 			<?php echo $this->list;?> 
 		</div>
 	</div>
