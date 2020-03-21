@@ -718,7 +718,7 @@ function getAllBranch($search=null){
     			(SELECT
 				     `provi`.`province_kh_name`
 				   FROM `ln_province` `provi`
-				   WHERE (`provi`.`province_id` = `c`.`pro_id`) LIMIT 1) AS `join_province`,	
+				   WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `join_province`,	
     				
 				  (SELECT
 					     `village`.`village_namekh`
