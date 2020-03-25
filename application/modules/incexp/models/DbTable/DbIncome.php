@@ -243,7 +243,8 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	}
 	function getNewKeyCode($type){
 		$db = $this->getAdapter();
-		$sql="SELECT COUNT(id) FROM ln_view WHERE type = $type ORDER BY key_code DESC LIMIT 1";
+		//$sql="SELECT COUNT(id) FROM ln_view WHERE type = $type ORDER BY key_code DESC LIMIT 1";
+		$sql="SELECT key_code FROM ln_view WHERE type = $type ORDER BY key_code DESC LIMIT 1";
 		$result = $db->fetchOne($sql);
 		$key_code = $result + 1;
 		return $key_code;
