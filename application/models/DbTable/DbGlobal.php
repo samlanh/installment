@@ -1948,5 +1948,19 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$exDate = date("Y-m-d",strtotime($time));
   	return $exDate;
   }
+  function getChildType($id,$idetity=null){
+  	$where='';
+  	$db = $this->getAdapter();
+  	$sql=" SELECT c.`key_code` FROM `ln_view` AS c WHERE c.`parent_id` = $id AND c.`status`=1 ";
+  	$child = $db->fetchAll($sql);
+  	foreach ($child as $va) {
+  		if (empty($idetity)){
+  			$idetity=$id.",".$va['key_code'];
+  		}else{$idetity=$idetity.",".$va['key_code'];
+  		}
+  		$idetity = $this->getChildType($va['key_code'],$idetity);
+  	}
+  	return $idetity;
+  }
 }
 ?>

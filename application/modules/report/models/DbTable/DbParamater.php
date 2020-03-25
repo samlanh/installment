@@ -294,8 +294,16 @@ function getAllBranch($search=null){
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
     		}
+//     		if(@$search['category_id']>-1 AND !@empty($search['category_id'])){
+//     			$where.= " AND category_id = ".$search['category_id'];
+//     		}
     		if(@$search['category_id']>-1 AND !@empty($search['category_id'])){
-    			$where.= " AND category_id = ".$search['category_id'];
+    			$condiction = $dbp->getChildType($search['category_id']);
+    			if (!empty($condiction)){
+    				$where.=" AND category_id IN ($condiction)";
+    			}else{
+    				$where.=" AND category_id=".$search['category_id'];
+    			}
     		}
     		if (!empty($search['streetlist'])){
     			$where.=" AND (SELECT street FROM `ln_properties` WHERE id =ln_income.house_id) = '".$search['streetlist']."'";
@@ -367,8 +375,16 @@ function getAllBranch($search=null){
     			$s_where[] = " other_invoice LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
+//     		if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){
+//     			$where.= " AND category_id = ".$search['category_id_expense'];
+//     		}
     		if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){
-    			$where.= " AND category_id = ".$search['category_id_expense'];
+    			$condiction = $dbp->getChildType($search['category_id_expense']);
+    			if (!empty($condiction)){
+    				$where.=" AND category_id IN ($condiction)";
+    			}else{
+    				$where.=" AND category_id=".$search['category_id_expense'];
+    			}
     		}
     		if(!empty($search['user_id']) AND $search['user_id']>0){
     			$where.= " AND ln_expense.user_id = ".$search['user_id'];
@@ -419,8 +435,16 @@ function getAllBranch($search=null){
     			$s_where[] = " invoice LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
+//     		if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){
+//     			$where.= " AND category_id = ".$search['category_id_expense'];
+//     		}
     		if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){
-    			$where.= " AND category_id = ".$search['category_id_expense'];
+    			$condiction = $dbp->getChildType($search['category_id_expense']);
+    			if (!empty($condiction)){
+    				$where.=" AND category_id IN ($condiction)";
+    			}else{
+    				$where.=" AND category_id=".$search['category_id_expense'];
+    			}
     		}
     		if(!empty($search['user_id']) AND $search['user_id']>0){
     			$where.= " AND ln_expense.user_id = ".$search['user_id'];

@@ -97,30 +97,39 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		$sql.=" FROM ln_income ";
 		
 		if (!empty($search['adv_search'])){
-				$s_where = array();
-				$s_search = trim(addslashes($search['adv_search']));
-				$s_where[] = " description LIKE '%{$s_search}%'";
-				$s_where[] = " title LIKE '%{$s_search}%'";
-				$s_where[] = " total_amount LIKE '%{$s_search}%'";
-				$s_where[] = " invoice LIKE '%{$s_search}%'";
-				$where .=' AND ('.implode(' OR ',$s_where).')';
+			$s_where = array();
+			$s_search = trim(addslashes($search['adv_search']));
+			$s_where[] = " description LIKE '%{$s_search}%'";
+			$s_where[] = " title LIKE '%{$s_search}%'";
+			$s_where[] = " total_amount LIKE '%{$s_search}%'";
+			$s_where[] = " invoice LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if($search['client_name']>0){
+			$where.= " AND ln_income.client_id = ".$search['client_name'];
+		}
+		if($search['land_id']>0){
+			$where.= " AND ln_income.house_id = ".$search['land_id'];
+		}
+// 		if(!empty($search['category_id'])){
+// 			$where.= " AND category_id = ".$search['category_id'];
+// 		}
+		if($search['branch_id']>-0){
+			$where.= " AND branch_id = ".$search['branch_id'];
+		}
+		
+		if(!empty($search['category_id'])){
+			$condiction = $dbp->getChildType($search['category_id']);
+			if (!empty($condiction)){
+				$where.=" AND category_id IN ($condiction)";
+			}else{
+				$where.=" AND category_id=".$search['category_id'];
 			}
-			if($search['client_name']>0){
-				$where.= " AND ln_income.client_id = ".$search['client_name'];
-			}
-			if($search['land_id']>0){
-				$where.= " AND ln_income.house_id = ".$search['land_id'];
-			}
-			if(!empty($search['category_id'])){
-				$where.= " AND category_id = ".$search['category_id'];
-			}
-			if($search['branch_id']>-0){
-				$where.= " AND branch_id = ".$search['branch_id'];
-			}
-			$where.=$dbp->getAccessPermission("branch_id");
-			
-	       $order=" order by id desc ";
-			return $db->fetchAll($sql.$where.$order);
+		}
+		
+		$where.=$dbp->getAccessPermission("branch_id");
+		$order=" order by id desc ";
+		return $db->fetchAll($sql.$where.$order);
 	}
 	function getAllExpenseReport($search=null){
 		$db = $this->getAdapter();
