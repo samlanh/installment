@@ -1281,13 +1281,13 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'comission'=>0,
     				'user_id'=>$this->getUserId(),
     				'status'=>$data['status_using'],
-    				//'full_commission'=>$data['full_commission'],
+    				'full_commission'=>$data['full_commission'],
     				'other_discount'=>$data['other_discount'],//Other Discount
     		);
     		$dbg = new Application_Model_DbTable_DbGlobal();
     		$rs_user = $dbg->getUserInfo();
     		if($rs_user['level']==1){
-    			$arr['full_commission']=$data['full_commission'];
+    			//$arr['full_commission']=$data['full_commission'];
     		}
     		if(!empty($data['note_agreement'])){
     			$arr['note_agreement']=$data['note_agreement'];

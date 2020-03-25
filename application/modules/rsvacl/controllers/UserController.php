@@ -60,6 +60,8 @@ class RsvAcl_UserController extends Zend_Controller_Action
         		'module'=>'rsvacl','controller'=>'user','action'=>'edit',
         );
         $this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('user_name'=>$link,'name'=>$link));
+        $this->view->user_type = $_data['user_type'];
+        $this->view->active = $_data['active'];
     }
 //     public function viewUserAction()
 //     {   
