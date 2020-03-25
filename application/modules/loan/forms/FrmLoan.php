@@ -277,7 +277,7 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 		$discount_percent = new Zend_Dojo_Form_Element_NumberTextBox('discount_percent');
 		$discount_percent->setAttribs(array(
 			'data-dojo-Type'=>'dijit.form.NumberTextBox',
-			'data-dojo-props'=>"regExp:'[0-9]{1,2}',
+			'data-dojo-props'=>"constraints:{min:0,max:100},
 			'name':'discount_percent',
 			'id':'discount_percent',
 			'onKeyup':'calculateDiscount();',

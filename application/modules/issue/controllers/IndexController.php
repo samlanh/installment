@@ -16,7 +16,7 @@ class Issue_indexController extends Zend_Controller_Action {
    		}else{
 	   		 $search = array(
 				'txt_search'=>'',
-				'client_name'=> -1,
+				'client_name'=> '',
 				'branch_id' => -1,
 				'streetlist'=>'',
 				'status' => -1,

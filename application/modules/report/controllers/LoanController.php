@@ -1114,7 +1114,6 @@ class Report_LoanController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/paramater/rpt-expense');
 			exit();
 		}
-	
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		 
@@ -1140,11 +1139,11 @@ class Report_LoanController extends Zend_Controller_Action {
 		}else{
 			$search = array(
 				'txt_search'=>'',
-				'client_name'=> -1,
 				'branch_id' => -1,
 				'streetlist'=>'',
 				'status' => -1,
 				'land_id'=>-1,
+				'client_name'=>'',
 				'payment_id'=>0,
 				'start_date'=> date('Y-m-d'),
 				'end_date'=>date('Y-m-d'));

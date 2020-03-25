@@ -66,7 +66,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		$sql = "SELECT rs.id,
 		(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = rs.branch_id LIMIT 1) AS branch_name,
 		(SELECT name_kh FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) customer_name,
-		(SELECT tel FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) AS tel,
+		(SELECT phone FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) AS tel,
 		p.land_address ,
 		p.street  AS street,
 		CASE
@@ -100,6 +100,9 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		}
 		if($search['payment_id']>0){
 			$where.= " AND rs.payment_id = ".$search['payment_id'];
+		}
+		if(!empty($search['client_name'])){
+			$where.= " AND `s`.`client_id` = ".$search['client_name'];
 		}
 		
 		$where.=$dbp->getAccessPermission("rs.branch_id");

@@ -4,7 +4,6 @@
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 	$install_month = $this->data['install_by'];
 	$autocalcualte = $this->data['autocalcualte_period'];
-	
 	$showOtherDis = OTHER_DIS_OPTION;
 ?>
 <title><?php echo $tr->translate("IL_DISBURSE");?></title>
@@ -212,11 +211,19 @@
 				                    	<?php echo $frm->getElement('discount');?>
 				                   </div>
 				                </div>
+				                
 				                <div class="form-group" style="<?php if ($showOtherDis!=1){ echo "display:none;";}?>">
 				                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("OTHER_DISCOUNT");?> :
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
 				                    	<?php echo $frm->getElement('other_discount');?>
+				                   </div>
+				                </div>
+				                <div class="form-group">
+				                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_DISCOUNT");?>
+				                   </label>
+				                   <div class="col-md-7 col-sm-7 col-xs-12">
+				                    	<?php echo $frm->getElement('total_discount');?>
 				                   </div>
 				                </div>
 				                <div class="form-group">
@@ -852,8 +859,13 @@ function calculateDiscount(){
 	}
 	
 	discount_percent = parseInt(total_sold*discount_percent/100);
+
+	total_discount = discount_percent+discount+other_discount;
+	dijit.byId('total_discount').attr('value',total_discount);
+	
 	total_sold = total_sold-discount_percent-discount+other_fee-other_discount;
 	dijit.byId('sold_price').attr('value',total_sold);
+	
 	dijit.byId('remain_balance').attr('value',total_sold);
 	Balance();
 }

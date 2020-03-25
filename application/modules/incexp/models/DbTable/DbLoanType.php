@@ -23,7 +23,7 @@ class Incexp_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     	}
     }
     function getLastKeycodeByType($type){
-    	$sql = "SELECT count(key_code) FROM `ln_view` WHERE type=$type ORDER BY key_code DESC LIMIT 1 ";
+    	$sql = "SELECT key_code FROM `ln_view` WHERE type=$type ORDER BY key_code DESC LIMIT 1 ";
     	$db =$this->getAdapter();
     	$number = $db->fetchOne($sql);
     	return $number+1;
