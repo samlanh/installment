@@ -250,12 +250,12 @@ function getAllBranch($search=null){
     	
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
-    		title, invoice,branch_id,
+    		 title, invoice,branch_id,
     		(SELECT CONCAT(land_address,',',street)FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) as house_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) AS category_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id LIMIT 1) AS payment_type,
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
-    		cheque,total_amount,description,date,is_closed,
+    		 cheque,total_amount,description,date,is_closed,
     		(SELECT  first_name FROM rms_users WHERE rms_users.id=ln_income.user_id LIMIT 1 ) AS user_name,
     		status FROM ln_income WHERE status=1 ";
     		
@@ -272,7 +272,7 @@ function getAllBranch($search=null){
     		if(empty($search)){
     			return $db->fetchAll($sql.$order);
     		}
-    		if (!empty($search['adv_search'])){
+    		if(!empty($search['adv_search'])){
     			$s_where = array();
     			$s_search = trim(addslashes($search['adv_search']));
     			$s_where[] = " description LIKE '%{$s_search}%'";
@@ -287,7 +287,6 @@ function getAllBranch($search=null){
     		if(!empty($search['user_id']) AND $search['user_id']>0){
     			$where.= " AND ln_income.user_id = ".$search['user_id'];
     		}
-    		
     		if($search['land_id']>0){
     			$where.= " AND ln_income.house_id = ".$search['land_id'];
     		}
@@ -380,7 +379,7 @@ function getAllBranch($search=null){
 //     		}
     		if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){
     			$condiction = $dbp->getChildType($search['category_id_expense']);
-    			if (!empty($condiction)){
+    			if(!empty($condiction)){
     				$where.=" AND category_id IN ($condiction)";
     			}else{
     				$where.=" AND category_id=".$search['category_id_expense'];

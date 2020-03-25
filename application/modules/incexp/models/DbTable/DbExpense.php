@@ -114,7 +114,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 // 		if($search['category_id_expense']>0){
 // 			$where.= " AND category_id = ".$search['category_id_expense'];
 // 		}
-		if(!empty($search['category_id_expense'])){
+		if($search['category_id_expense']>0){
 			$condiction = $dbp->getChildType($search['category_id_expense']);
 			if (!empty($condiction)){
 				$where.=" AND category_id IN ($condiction)";
