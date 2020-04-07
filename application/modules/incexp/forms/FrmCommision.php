@@ -93,6 +93,11 @@ public function init()
 				'class'=>'fullside',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'required' =>'true'));
+		if (DISABLE_PAYMENT_DATE==1){
+			$date->setAttribs(array(
+					'readonly'=>true,
+			));
+		}
 		$date->setValue(date("Y-m-d"));
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');

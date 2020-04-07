@@ -5,6 +5,11 @@
 	$install_month = $this->data['install_by'];
 	$autocalcualte = $this->data['autocalcualte_period'];
 	$showOtherDis = OTHER_DIS_OPTION;
+	
+	$paymentDateEnable="";
+	if (DISABLE_PAYMENT_DATE==1){
+		$paymentDateEnable = 'readOnly="readOnly"';
+	}
 ?>
 <title><?php echo $tr->translate("IL_DISBURSE");?></title>
 <style>
@@ -496,7 +501,7 @@
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DAY_PAYMENT");?> <span class="required">*</span> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input constraints="{datePattern:'dd/MM/yyyy'}" type="text" class="fullside" dojoType="dijit.form.DateTextBox" name="paid_date" id="paid_date"  value="<?php echo date("Y-m-d");?>" >
+	                    	<input <?php echo $paymentDateEnable;?> constraints="{datePattern:'dd/MM/yyyy'}" type="text" class="fullside" dojoType="dijit.form.DateTextBox" name="paid_date" id="paid_date"  value="<?php echo date("Y-m-d");?>" >
 	                   </div>
 	                </div>
 	                <div class="form-group">

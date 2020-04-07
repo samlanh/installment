@@ -1,6 +1,11 @@
 <?php 
 	$frm = $this->frm_search;
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	
+	$paymentDateEnable="";
+	if (DISABLE_PAYMENT_DATE==1){
+		$paymentDateEnable = 'readOnly="readOnly"';
+	}
 ?>
 <meta charset="utf-8">
 <script>
@@ -159,7 +164,7 @@ if(balance<0){
 					<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
 				    <td><strong><input constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="date_pay" name="date_pay" value="<?php echo $this->rs['date_payment'];?>" type="text"></strong></td>
 					<td>&nbsp;ថ្ងៃទទួល</td>
-					<td><strong><input constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="date_input" name="date_input" value="<?php echo $this->rs['date_pay'];?>" type="text"></strong></td>
+					<td><strong><input <?php echo $paymentDateEnable;?> constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="date_input" name="date_input" value="<?php echo $this->rs['date_pay'];?>" type="text"></strong></td>
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td>សម្គាល់</td>

@@ -41,6 +41,11 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
 		));
+		if (DISABLE_PAYMENT_DATE==1){
+			$_Date->setAttribs(array(
+					'readonly'=>true,
+			));
+		}
 		$_Date->setValue(date('Y-m-d'));
 		
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');

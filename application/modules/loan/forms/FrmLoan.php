@@ -7,6 +7,9 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 	}
 	public function FrmAddLoan($data=null){
 		$db = new Application_Model_DbTable_DbGlobal();
+		$userInfo = $db->getUserInfo();
+		$userLevel = empty($userInfo['level'])?0:$userInfo['level'];
+		
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$_branch_id->setAttribs(array(
 			'dojoType'=>'dijit.form.FilteringSelect',
@@ -231,7 +234,13 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			'class'=>'fullside',
 			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
 		));
+		if (DISABLE_PAYMENT_DATE==1){
+			$paid_date->setAttribs(array(
+					'readonly'=>true,
+			));
+		}
 		$paid_date->setValue(date("Y-m-d"));
+		
 		
 		$_date = date("Y-m-d");
 		$_date_buy = new Zend_Dojo_Form_Element_DateTextBox('date_buy');

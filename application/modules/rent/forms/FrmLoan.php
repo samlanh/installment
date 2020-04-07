@@ -234,6 +234,11 @@ Class Rent_Form_FrmLoan extends Zend_Dojo_Form {
 			'class'=>'fullside',
 			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
 		));
+		if (DISABLE_PAYMENT_DATE==1){
+			$paid_date->setAttribs(array(
+					'readonly'=>true,
+			));
+		}
 		$paid_date->setValue(date("Y-m-d"));
 		
 		$_date = date("Y-m-d");

@@ -340,7 +340,11 @@ Class Rent_Form_FrmIlPayment extends Zend_Dojo_Form {
 				//'constraints'=>"{min:'$next_payment',datePattern:'dd/MM/yyyy'}",
 				'constraints'=>'{datePattern:"dd-MM-yyyy"}'
 		));
-		
+		if (DISABLE_PAYMENT_DATE==1){
+			$_collect_date->setAttribs(array(
+					'readonly'=>true,
+			));
+		}
 		$_collect_date->setValue($c_date);
 		
 		$date_payment = new Zend_Dojo_Form_Element_DateTextBox('date_payment');

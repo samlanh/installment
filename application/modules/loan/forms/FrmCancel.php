@@ -178,6 +178,11 @@ public function init()
 				'class'=>'fullside',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 		));
+		if (DISABLE_PAYMENT_DATE==1){
+			$expense_date->setAttribs(array(
+					'readonly'=>true,
+			));
+		}
 		$expense_date->setValue(date("Y-m-d"));
 		
 		$_price_sold = new Zend_Dojo_Form_Element_NumberTextBox('price_sold');
