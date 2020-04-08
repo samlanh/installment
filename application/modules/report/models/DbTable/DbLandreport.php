@@ -666,6 +666,7 @@ public function getAllOutstadingLoan($search=null){
       		$s_where[] = " `crm`.`service_chargepaid` LIKE '%{$s_search}%'";
       		$s_where[] = " `crm`.`amount_payment` LIKE '%{$s_search}%'";
       		$s_where[] = " `crm`.`receipt_no` LIKE '%{$s_search}%'";
+      		$s_where[] = " `crm`.`cheque` LIKE '%{$s_search}%'";
       		$where .=' AND ('.implode(' OR ',$s_where).')';
       	}
 		$order =" ORDER BY `crm`.id DESC ";

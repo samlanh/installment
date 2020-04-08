@@ -83,7 +83,4 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       	";
       	return $db->fetchAll($sql);
       }
-      
-      
  }
-

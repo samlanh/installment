@@ -147,12 +147,12 @@ function getAllBranch($search=null){
     		$sql = "SELECT p.`id`,
     		   (SELECT project_name FROM ln_project WHERE br_id = p.`branch_id` limit 1) AS branch_name,
     		    p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,p.note,
-				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type`) AS pro_type,
+				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
 				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`, ";
     			$sql.="CASE
-					WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE s.house_id =  p.`id`  AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
-					ELSE  0
-					END AS is_lock,";
+				WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE s.house_id =  p.`id`  AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
+				ELSE  0
+				END AS is_lock,";
     		
     		$sql.="(SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
 			 FROM `ln_properties` AS p WHERE p.`status`=1 ";

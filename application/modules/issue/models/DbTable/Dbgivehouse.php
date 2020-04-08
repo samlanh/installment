@@ -98,15 +98,15 @@ class Issue_Model_DbTable_Dbgivehouse extends Zend_Db_Table_Abstract
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=s.`house_id` LIMIT 1),')' ) AS `name`
 		FROM `ln_sale` AS s
 		WHERE (s.`is_cancel` =0 ) AND s.`branch_id` =".$branch_id;
-		$houseGive = $this->getHouseGiveReady();
-		$sql.=" AND s.`id` NOT IN ($houseGive)";
+// 		$houseGive = $this->getHouseGiveReady();
+		$sql.=" AND s.`id` NOT IN (SELECT ish.sale_id FROM `ln_issue_house` AS ish WHERE ish.status=1 AND ish.branch_id =$branch_id ) ";
 		return $db->fetchAll($sql);
 	}
-	function getHouseGiveReady(){
-		$db = $this->getAdapter();
-		$sql=" SELECT GROUP_CONCAT(DISTINCT ish.sale_id) FROM `ln_issue_house` AS ish WHERE ish.status=1 ";
-		$row = $db->fetchOne($sql);
-		return $row;
-	}
+// 	function getHouseGiveReady(){
+// 		$db = $this->getAdapter();
+// 		$sql=" SELECT ish.sale_id FROM `ln_issue_house` AS ish WHERE ish.status=1 ";
+// 		$row = $db->fetchOne($sql);
+// 		return $row;
+// 	}
     
 }
