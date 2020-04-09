@@ -1621,13 +1621,14 @@ function getAllBranch($search=null){
     function getExpenseCategory($search){
     	$db = $this->getAdapter();
     	$sql="SELECT ex.`category_id`,
-    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) as parent,
-    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = 
-    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) LIMIT 1) as parent_title,
-    	SUM(total_amount) AS total_amount,
-    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) AS category_name,
-    	ex.`date` FROM `ln_expense` AS ex WHERE 1 AND ex.status=1
-    	";
+			    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) as parent,
+			    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = 
+			    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) LIMIT 1) as parent_title,
+			    	SUM(total_amount) AS total_amount,
+			    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) AS category_name,
+			    	ex.`date` 
+    		FROM `ln_expense` AS ex WHERE 1 AND ex.status=1 ";
+    	$sql.=" AND (SELECT v.capital_widthdrawal FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) = 0 ";
     	
     	$dbp = new Application_Model_DbTable_DbGlobal();
     	$sql.=$dbp->getAccessPermission("branch_id");

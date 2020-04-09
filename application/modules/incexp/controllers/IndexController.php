@@ -3,10 +3,9 @@
 class Incexp_IndexController extends Zend_Controller_Action
 {
 	protected $tr;
-public function init()
+	public function init()
     {
     	$this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
-        /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     }
@@ -38,7 +37,6 @@ public function init()
     {
     	if($this->getRequest()->isPost()){
     		
-    		// Check Session Expire
     		$dbgb = new Application_Model_DbTable_DbGlobal();
     		$checkses = $dbgb->checkSessionExpire();
     		if (empty($checkses)){
