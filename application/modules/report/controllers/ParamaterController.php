@@ -331,7 +331,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->list_end_date=$search;
   	$db  = new Report_Model_DbTable_DbParamater();
   
-  	$this->view->expense = $db->getExpenseCategory($search);
+  	$this->view->expense = $db->getExpenseCategory($search,2);
+  	$this->view->withdraw_capital = $db->getExpenseCategory($search,1);
   	$this->view->expense_comission = $db->getAllComissionExpense($search);
   	
   	$this->view->saleicome = $db->geIncomeFromSale($search,null);  	

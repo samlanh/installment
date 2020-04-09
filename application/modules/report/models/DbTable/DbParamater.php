@@ -1618,7 +1618,7 @@ function getAllBranch($search=null){
 //     	}
 //     	return $db->fetchAll($sql.$where.$order);
 //     }
-    function getExpenseCategory($search){
+    function getExpenseCategory($search,$withdraw=null){
     	$db = $this->getAdapter();
     	$sql="SELECT ex.`category_id`,
 			    	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) as parent,
@@ -1628,7 +1628,7 @@ function getAllBranch($search=null){
 			    	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) AS category_name,
 			    	ex.`date` 
     		FROM `ln_expense` AS ex WHERE 1 AND ex.status=1 ";
-    	$sql.=" AND (SELECT v.capital_widthdrawal FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) = 0 ";
+    	//$sql.=" AND (SELECT v.capital_widthdrawal FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1) = 0 ";
     	
     	$dbp = new Application_Model_DbTable_DbGlobal();
     	$sql.=$dbp->getAccessPermission("branch_id");
@@ -1643,6 +1643,14 @@ function getAllBranch($search=null){
     	if($search['branch_id']>0){
     		$where.=" AND branch_id=".$search['branch_id'];
     	}
+		if(!empty($withdraw)){
+			if($withdraw==1){
+				$where.=" AND (SELECT v.capital_widthdrawal FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1)=1";
+			}else if($withdraw==2){
+				$where.=" AND (SELECT v.capital_widthdrawal FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ex.`category_id` LIMIT 1)=0";
+			}
+		}
+	
     	return $db->fetchAll($sql.$where.$order);
     }
     function getAllComissionExpense($search){//for income statement
