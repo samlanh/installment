@@ -337,20 +337,27 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 			$next_payment = date("Y-m-d", strtotime("$c_date +1 day"));
 		}
 		
+		$cdate=date("Y-m-d");
+		$paymentDateEnable="false";
+		$constraintsDate="";
+		if (DISABLE_PAYMENT_DATE==1){
+			$paymentDateEnable = "true";
+		}else if (DISABLE_PAYMENT_DATE==2){
+			$constraintsDate="min:'$cdate',";
+		}else if (DISABLE_PAYMENT_DATE==3){
+			$constraintsDate="max:'$cdate',";
+		}else if (DISABLE_PAYMENT_DATE==4){
+			$constraintsDate="min:'$cdate',max:'$cdate',";
+		}
 		$_collect_date = new Zend_Dojo_Form_Element_DateTextBox('collect_date');
 		$_collect_date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
 				'required' =>'true',
 				'Onchange'	=>'calculateTotal();',
-				//'constraints'=>"{min:'$next_payment',datePattern:'dd/MM/yyyy'}",
-				'constraints'=>'{datePattern:"dd-MM-yyyy"}'
+				'constraints'=>"{".$constraintsDate."datePattern:'dd/MM/yyyy'}",
+				'readOnly' =>$paymentDateEnable,
 		));
-		if (DISABLE_PAYMENT_DATE==1){
-			$_collect_date->setAttribs(array(
-					'readonly'=>true,
-			));
-		}
 		$_collect_date->setValue($c_date);
 		
 		$date_payment = new Zend_Dojo_Form_Element_DateTextBox('date_payment');

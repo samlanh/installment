@@ -171,18 +171,29 @@ public function init()
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 		));
 		
+		$cdate=date("Y-m-d");
+		if (!empty($data['create_date'])){
+			$cdate=date("Y-m-d",strtotime($data['create_date']));
+		}
+		$paymentDateEnable="false";
+		$constraintsDate="";
+		if (DISABLE_PAYMENT_DATE==1){
+			$paymentDateEnable = "true";
+		}else if (DISABLE_PAYMENT_DATE==2){
+			$constraintsDate="min:'$cdate',";
+		}else if (DISABLE_PAYMENT_DATE==3){
+			$constraintsDate="max:'$cdate',";
+		}else if (DISABLE_PAYMENT_DATE==4){
+			$constraintsDate="min:'$cdate',max:'$cdate',";
+		}
 		$expense_date = new Zend_Dojo_Form_Element_DateTextBox('expense_date');
 		$expense_date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'required' =>'false',
 				'class'=>'fullside',
-				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				'constraints'=>"{".$constraintsDate."datePattern:'dd/MM/yyyy'}",
+				'readOnly' =>$paymentDateEnable,
 		));
-		if (DISABLE_PAYMENT_DATE==1){
-			$expense_date->setAttribs(array(
-					'readonly'=>true,
-			));
-		}
 		$expense_date->setValue(date("Y-m-d"));
 		
 		$_price_sold = new Zend_Dojo_Form_Element_NumberTextBox('price_sold');

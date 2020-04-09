@@ -87,17 +87,29 @@ public function init()
 		));
 		$return_back->setValue(0);
 		
+		$cdate=date("Y-m-d");
+		if (!empty($data['for_date'])){
+			$cdate=date("Y-m-d",strtotime($data['for_date']));
+		}
+		$paymentDateEnable="false";
+		$constraintsDate="";
+		if (DISABLE_PAYMENT_DATE==1){
+			$paymentDateEnable = "true";
+		}else if (DISABLE_PAYMENT_DATE==2){
+			$constraintsDate="min:'$cdate',";
+		}else if (DISABLE_PAYMENT_DATE==3){
+			$constraintsDate="max:'$cdate',";
+		}else if (DISABLE_PAYMENT_DATE==4){
+			$constraintsDate="min:'$cdate',max:'$cdate',";
+		}
 		$date = new Zend_Dojo_Form_Element_TextBox("date");
 		$date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
-				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
-				'required' =>'true'));
-		if (DISABLE_PAYMENT_DATE==1){
-			$date->setAttribs(array(
-					'readonly'=>true,
+				'required' =>'true',
+				'constraints'=>"{".$constraintsDate."datePattern:'dd/MM/yyyy'}",
+				'readOnly' =>$paymentDateEnable,
 			));
-		}
 		$date->setValue(date("Y-m-d"));
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');

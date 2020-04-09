@@ -11,9 +11,17 @@
 		$urlsubmit = array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add','rightclick'=>'true');
 	}
 	$showOtherDis = OTHER_DIS_OPTION;
+	$cdate=date("Y-m-d");
 	$paymentDateEnable="";
+	$constraintsDate="";
 	if (DISABLE_PAYMENT_DATE==1){
 		$paymentDateEnable = 'readOnly="readOnly"';
+	}else if (DISABLE_PAYMENT_DATE==2){
+		$constraintsDate="min:'$cdate',";
+	}else if (DISABLE_PAYMENT_DATE==3){
+		$constraintsDate="max:'$cdate',";
+	}else if (DISABLE_PAYMENT_DATE==4){
+		$constraintsDate="min:'$cdate',max:'$cdate',";
 	}
 ?>
 <style>
@@ -404,7 +412,7 @@
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DAY_PAYMENT");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input <?php echo $paymentDateEnable;?> constraints="{datePattern:'dd/MM/yyyy'}" type="text" class="fullside" dojoType="dijit.form.DateTextBox" name="paid_date" id="paid_date"  value="<?php echo date("Y-m-d");?>" >
+	                    	<input <?php echo $paymentDateEnable;?> constraints="{<?php echo $constraintsDate;?>datePattern:'dd/MM/yyyy'}" type="text" class="fullside" dojoType="dijit.form.DateTextBox" name="paid_date" id="paid_date"  value="<?php echo date("Y-m-d");?>" >
 	                   </div>
 	                </div>
 	                <div class="form-group">

@@ -15,18 +15,29 @@ Class Incexp_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 				'required'=>false,
 		));
 		
+		$cdate=date("Y-m-d");
+		if (!empty($data['for_date'])){
+			$cdate=date("Y-m-d",strtotime($data['for_date']));
+		}
+		$paymentDateEnable="false";
+		$constraintsDate="";
+		if (DISABLE_PAYMENT_DATE==1){
+			$paymentDateEnable = "true";
+		}else if (DISABLE_PAYMENT_DATE==2){
+			$constraintsDate="min:'$cdate',";
+		}else if (DISABLE_PAYMENT_DATE==3){
+			$constraintsDate="max:'$cdate',";
+		}else if (DISABLE_PAYMENT_DATE==4){
+			$constraintsDate="min:'$cdate',max:'$cdate',";
+		}
 		$_Date = new Zend_Dojo_Form_Element_DateTextBox('for_date');
 		$_Date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'required'=>true,
 				'class'=>'fullside',
-				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+				'constraints'=>"{".$constraintsDate."datePattern:'dd/MM/yyyy'}",
+				'readOnly' =>$paymentDateEnable,
 		));
-		if (DISABLE_PAYMENT_DATE==1){
-			$_Date->setAttribs(array(
-					'readonly'=>true,
-			));
-		}
 		$_Date->setValue(date('Y-m-d'));
 	
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');

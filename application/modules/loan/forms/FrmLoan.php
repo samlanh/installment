@@ -227,18 +227,30 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
 		));
 		
+		
+		$cdate=date("Y-m-d");
+		if (!empty($data['date_input'])){
+			$cdate=date("Y-m-d",strtotime($data['date_input']));
+		}
+		$paymentDateEnable="false";
+		$constraintsDate="";
+		if (DISABLE_PAYMENT_DATE==1){
+			$paymentDateEnable = "true";
+		}else if (DISABLE_PAYMENT_DATE==2){
+			$constraintsDate="min:'$cdate',";
+		}else if (DISABLE_PAYMENT_DATE==3){
+			$constraintsDate="max:'$cdate',";
+		}else if (DISABLE_PAYMENT_DATE==4){
+			$constraintsDate="min:'$cdate',max:'$cdate',";
+		}
 		$paid_date = new Zend_Dojo_Form_Element_DateTextBox('paid_date');
 		$paid_date->setAttribs(array(
 			'dojoType'=>'dijit.form.DateTextBox',
 			'required' =>'true',
 			'class'=>'fullside',
-			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+			'constraints'=>"{".$constraintsDate."datePattern:'dd/MM/yyyy'}",
+			'readOnly' =>$paymentDateEnable,
 		));
-		if (DISABLE_PAYMENT_DATE==1){
-			$paid_date->setAttribs(array(
-					'readonly'=>true,
-			));
-		}
 		$paid_date->setValue(date("Y-m-d"));
 		
 		
