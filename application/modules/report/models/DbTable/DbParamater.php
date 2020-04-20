@@ -2382,4 +2382,96 @@ function getAllBranch($search=null){
 		$where.= " ORDER BY p.branch_id,p.`property_type`,p.`street` ASC, LENGTH(land_address), land_address ASC  ";
 		return $db->fetchAll($sql.$where);
 	}
+	
+	
+	
+	function getAllIssueHouse($search = null){
+		$db = $this->getAdapter();
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			
+		$from_date =(empty($search['start_date']))? '1': " rs.issue_date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " rs.issue_date <= '".$search['end_date']." 23:59:59'";
+		$where="";
+	
+		if (!empty($search['start_date'])){
+			$where = " AND ".$from_date." AND ".$to_date;
+		}
+		// 		$sql = "SELECT rs.id,
+		// 		(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = rs.branch_id LIMIT 1) AS branch_name,
+		// 		(SELECT name_kh FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) customer_name,
+		// 		(SELECT phone FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) AS tel,
+		// 		p.land_address ,
+		// 		p.street  AS street,
+		// 		CASE
+		// 		WHEN  `rs`.`payment_id` = 1 THEN '".$tr->translate("IS_PAYOFF")."'
+		// 		WHEN  `rs`.`payment_id` = 2 THEN '".$tr->translate("PAY_INSTALLMENT")."'
+		// 		END AS payment_id,
+		// 		rs.electric_start,rs.water_start,rs.issue_date,
+		// 		(SELECT  first_name FROM rms_users WHERE rms_users.id=rs.user_id LIMIT 1) AS user_name,
+		// 		rs.note
+		// 		FROM
+		// 		ln_sale AS s,
+		// 		`ln_properties` `p`,
+		// 		ln_issue_house AS rs
+		// 		WHERE s.id = rs.sale_id AND p.id = s.house_id AND rs.status=1 ";
+		$sql = "SELECT
+		s.id AS sale_id,
+		rs.id,
+		(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = p.branch_id LIMIT 1) AS branch_name,
+		(SELECT name_kh FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) customer_name,
+		(SELECT phone FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) AS tel,
+		p.land_address ,
+		p.street  AS street,
+		CASE
+		WHEN  `rs`.`payment_id` = 1 THEN '".$tr->translate("IS_PAYOFF")."'
+		WHEN  `rs`.`payment_id` = 2 THEN '".$tr->translate("PAY_INSTALLMENT")."'
+		END AS payment_id,
+		rs.electric_start,rs.water_start,rs.issue_date,
+		(SELECT  first_name FROM rms_users WHERE rms_users.id=rs.user_id LIMIT 1) AS user_name,
+		rs.note
+		FROM ln_properties AS p
+		LEFT JOIN ln_sale AS s
+		ON  p.id  = s.house_id
+		LEFT JOIN ln_issue_house AS rs
+		ON s.id = rs.sale_id AND rs.status=1
+		WHERE 1 ";
+	
+		$string="";
+		if(!empty($search['give_status'])){
+			if ($search['give_status']==1){
+				$sql.=" AND rs.id IS NULL";
+			}else if ($search['give_status']==2){
+				$sql.=" AND  rs.status=1";
+			}
+		}
+		$sql.=$string;
+	
+		if(!empty($search['adv_search'])){
+			$s_where = array();
+			$s_search = addslashes(trim($search['adv_search']));
+			$s_where[] = " p.land_address LIKE '%{$s_search}%'";
+			$s_where[] = " p.street LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if(!empty($search['streetlist'])){
+			$where.= " AND street ='".$search['streetlist']."'";
+		}
+		if(!empty($search['land_id']) AND $search['land_id']>-1){
+			$where.= " AND (s.house_id = ".$search['land_id']." OR p.old_land_id LIKE '%".$search['land_id']."%')";
+		}
+		if($search['branch_id']>0){
+			$where.= " AND rs.branch_id = ".$search['branch_id'];
+		}
+		if($search['payment_id']>0){
+			$where.= " AND rs.payment_id = ".$search['payment_id'];
+		}
+		if(!empty($search['client_name'])){
+			$where.= " AND `s`.`client_id` = ".$search['client_name'];
+		}
+	
+		$where.=$dbp->getAccessPermission("rs.branch_id");
+		$order=" ORDER BY s.id DESC ";
+		return $db->fetchAll($sql.$where.$order);
+	}
 }

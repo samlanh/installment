@@ -1145,11 +1145,12 @@ class Report_LoanController extends Zend_Controller_Action {
 				'land_id'=>-1,
 				'client_name'=>'',
 				'payment_id'=>0,
+					'give_status'=>0,
 				'start_date'=> date('Y-m-d'),
 				'end_date'=>date('Y-m-d'));
 		}
 		$this->view->rssearch = $search;
-		$db  = new Loan_Model_DbTable_DdReceived();
+		$db  = new Report_Model_DbTable_DbParamater();
 		$this->view->row = $db->getAllIssueHouse($search);
 		
 		$frm_search = new Loan_Form_FrmSearchLoan();
