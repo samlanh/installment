@@ -2461,7 +2461,7 @@ function getAllBranch($search=null){
 			$where.= " AND (s.house_id = ".$search['land_id']." OR p.old_land_id LIKE '%".$search['land_id']."%')";
 		}
 		if($search['branch_id']>0){
-			$where.= " AND rs.branch_id = ".$search['branch_id'];
+			$where.= " AND p.branch_id = ".$search['branch_id'];
 		}
 		if($search['payment_id']>0){
 			$where.= " AND rs.payment_id = ".$search['payment_id'];
