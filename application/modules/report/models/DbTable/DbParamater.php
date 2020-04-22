@@ -2515,6 +2515,7 @@ function getAllBranch($search=null){
 			$s_search = addslashes(trim($search['adv_search']));
 			$s_where[] = " clie.`name_kh` LIKE '%{$s_search}%'";
 			$s_where[] = " c.`note` LIKE '%{$s_search}%'";
+			$s_where[] = " pro.`hardtitle` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		$dbp = new Application_Model_DbTable_DbGlobal();
