@@ -682,7 +682,7 @@ class Report_LoanController extends Zend_Controller_Action {
 				'to_date_search'=>date('Y-m-d'));
   	}
   	$this->view->rssearch = $search;
-  	$db  = new Loan_Model_DbTable_DdReceived();
+  	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getCustomerReceivedPlong($search);
   	
   	$fm = new Loan_Form_FrmCancel();

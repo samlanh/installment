@@ -2474,4 +2474,53 @@ function getAllBranch($search=null){
 		$order=" ORDER BY s.id DESC ";
 		return $db->fetchAll($sql.$where.$order);
 	}
+	public function getCustomerReceivedPlong($search=null){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$plogtitle = $tr->translate('PLONG_TITLE');
+		
+		$from_date =(empty($search['from_date_search']))? '1': "c.`create_date` >= '".$search['from_date_search']." 00:00:00'";
+		$to_date = (empty($search['to_date_search']))? '1': "c.`create_date` <= '".$search['to_date_search']." 23:59:59'";
+		$where = " AND ".$from_date." AND ".$to_date;
+		$sql ='SELECT c.`id`,
+				    p.`project_name` as branch_name,
+					clie.`name_kh` AS client_name,
+				    (SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
+					pro.`land_address`,pro.`street`,`layout_type`,c.date,
+					c.create_date,c.note,c.`status`,"'.$plogtitle.'",
+					pro.`hardtitle`,
+					(SELECT first_name FROM `rms_users` WHERE  id=c.user_id LIMIT 1) AS user_name
+			FROM `ln_receiveplong` AS c ,`ln_project` AS p,`ln_properties` AS pro,
+				`ln_client` AS clie
+			WHERE p.`br_id` = c.`branch_id` AND pro.`id` = c.`house_id` AND
+				clie.`client_id` = c.`customer_id` AND c.`status`=1';
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("c.`branch_id`");
+		
+		if($search['branch_id']>0){
+			$where.= " AND c.branch_id = ".$search['branch_id'];
+		}
+		if($search['land_id']>0){
+			$where.= " AND c.house_id = ".$search['land_id'];
+		}
+		if($search['client_name']>0){
+			$where.= " AND c.customer_id = ".$search['client_name'];
+		}
+		if(!empty($search['plong_type'])){
+			$where.= " AND c.layout_type = '".$search['plong_type']."'";
+		}
+		if(!empty($search['adv_search'])){
+			$s_where = array();
+			$s_search = addslashes(trim($search['adv_search']));
+			$s_where[] = " clie.`name_kh` LIKE '%{$s_search}%'";
+			$s_where[] = " c.`note` LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("c.`branch_id`");
+		
+		$where.=" ORDER BY c.`id` DESC ";
+		return $db->fetchAll($sql.$where);
+	}
 }
