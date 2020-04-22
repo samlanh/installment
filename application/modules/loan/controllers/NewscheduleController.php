@@ -3,7 +3,6 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
-     /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
@@ -52,11 +51,8 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			try {
 				$_dbmodel = new Loan_Model_DbTable_DbNewSchedule();
 				$_dbmodel->addNewSchedule($_data);
-				if(!empty($_data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/newschedule");
-				}else{
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
-				}
+				Application_Form_FrmMessage::message('INSERT_SUCCESS');
+				echo "<script>window.close();</script>";exit();
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
@@ -74,8 +70,8 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
         $this->view->stepoption = $db->getOptionStepPayment();
         
         $frmpopup = new Application_Form_FrmPopupGlobal();
-        $db_keycode = new Application_Model_DbTable_DbKeycode();
-        $this->view->keycode = $db_keycode->getKeyCodeMiniInv();        
+//         $db_keycode = new Application_Model_DbTable_DbKeycode();
+//         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();        
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
 		$key = new Application_Model_DbTable_DbKeycode();

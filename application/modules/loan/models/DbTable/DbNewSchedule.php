@@ -218,6 +218,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		
     		$payment_method = $data["schedule_opt"];
     		$j=0;
+    		$index=0;
     		$pri_permonth=0;
     		
     		$str_next = '+1 month';
@@ -279,12 +280,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     			$this->insert($datapayment);
     		}
     		for($i=1;$i<=$loop_payment;$i++){
-    			
-    			if($payment_method==1){
-    				break;
-    			}elseif($payment_method==2){
-    				break;
-    			}elseif($payment_method==3){//pay by times//check date payment
+    			if($payment_method==3){//pay by times//check date payment
     				if($i!=1){
     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
     					$start_date = $next_payment;
@@ -306,6 +302,45 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 			    			$start_date = $next_payment;
 			    			$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
 			    		}else{
+			    			$grace_period = $data['grace_period'];
+			    			if($grace_period>0){
+			    				$old_interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
+			    				$old_interest_paymonth = $this->round_up_currency($curr_type, $old_interest_paymonth);
+			    			
+			    				for($index=1;$index<=$grace_period;$index++){
+			    					if($index!=1){
+			    						$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+			    					}
+			    					
+			    					$this->_name="ln_saleschedule";
+			    					$datapayment = array(
+		    							'branch_id'=>$data['branch_id'],
+		    							'sale_id'=>$id,//good
+		    							'begining_balance'=> $remain_principal,//good
+		    							'begining_balance_after'=> $remain_principal,//good
+		    							'principal_permonth'=> 0,//good
+		    							'principal_permonthafter'=>0,//good
+		    							'total_interest'=>$old_interest_paymonth,//good
+		    							'total_interest_after'=>$old_interest_paymonth,//good
+		    							'total_payment'=>$old_interest_paymonth,//good
+		    							'total_payment_after'=>$old_interest_paymonth,//good
+		    							'ending_balance'=>$remain_principal,
+		    							'cum_interest'=>0,
+		    							'amount_day'=>0,
+		    							'is_completed'=>0,
+		    							'date_payment'=>$next_payment,
+		    							'no_installment'=>$index+$start_id,
+			    					);
+			    					$this->insert($datapayment);
+			    						
+			    					$from_date=$next_payment;
+			    					if($grace_period==$index){//to continue new date for installment
+			    						$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+			    						$data['first_payment'] = $next_payment;
+			    					}
+			    				}
+			    			}
+			    			
 			    			//​​បញ្ចូលចំនូនត្រូវបង់ដំបូងសិន
 			    			if(!empty($data['identity'])){
 			    				$ids = explode(',', $data['identity']);
@@ -343,7 +378,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     									'percent'=>$data['percent'.$j],
     									'note'=>$data['remark'.$j],
     									'is_installment'=>1,
-			    						'no_installment'=>$key+$start_id,
+			    						'no_installment'=>$index+$key+$start_id,
 			    					);
 			    					if($i==$loop_payment){//for end of record only
 			    						$datapayment['last_optiontype'] = $data['paid_receivehouse'];
@@ -451,7 +486,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 	    			        	'amount_day'=>$old_amount_day,
 	    			        	'is_completed'=>0,
 	    			        	'date_payment'=>$next_payment,
-	    			        	'no_installment'=>$i+$j+$start_id,
+	    			        	'no_installment'=>$index+$i+$j+$start_id,
 	    			        );
 	    			        if($i==$loop_payment){//for end of record only
 	    			        	$datapayment['last_optiontype'] = $data['paid_receivehouse'];
@@ -574,7 +609,6 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    
     		$sql=" TRUNCATE TABLE ln_sale_test ";
     		$db->query($sql);
     		$sql = "TRUNCATE TABLE ln_saleschedule_test";
@@ -589,10 +623,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				'price_before'=>$data['total_sold'],
     				'discount_amount'=>$data['discount'],
     				'price_sold'=>$data['sold_price'],
-    				//'other_fee'=>$data['other_fee'],
-    				//'paid_amount'=>$data['deposit'],
     				'balance'=>$data['balance'],
-    				//'buy_date'=>$data['date_buy'],
     				'end_line'=>$data['date_line'],
     				'interest_rate'=>$data['interest_rate'],
     				'total_duration'=>$data['period'],
@@ -600,8 +631,11 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				'validate_date'=>$data['first_payment'],
     				'payment_method'=>1,//$data['loan_type'],
     				'note'=>$data['note'],
-    				//     				'staff_id'=>$data['staff_id'],
-    		//     				'comission'=>$data['commission'],
+    				//'staff_id'=>$data['staff_id'],
+    		        //'comission'=>$data['commission'],
+    				//'other_fee'=>$data['other_fee'],
+    				//'paid_amount'=>$data['deposit'],
+    				//'buy_date'=>$data['date_buy'],
     				'create_date'=>date("Y-m-d"),
     				'user_id'=>$this->getUserId()
     		);
@@ -631,14 +665,11 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$loop_payment = $data['period']*1;
     		$borrow_term = $data['period']*1;
     		$payment_method = $data["schedule_opt"];
+    		$data['grace_period'] =empty($data['grace_period'])?0:$data['grace_period'];
     
     		$str_next = '+1 month';
     		for($i=1;$i<=$data['period'];$i++){
-    			if($payment_method==1){//booking
-    
-    			}elseif($payment_method==2){//payoff
-    
-    			}elseif($payment_method==3){//pay by times//check date payment
+    			if($payment_method==3){//pay by times//check date payment
     				if($i!=1){
     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
     					$start_date = $next_payment;
@@ -659,6 +690,41 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     					$start_date = $next_payment;
     					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
     				}else{
+    					$grace_period = $data['grace_period'];
+    					if($grace_period>0){
+    						$old_interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
+    						$old_interest_paymonth = $this->round_up_currency($curr_type, $old_interest_paymonth);
+    						
+    						for($index=1;$index<=$grace_period;$index++){
+    							if($index!=1){
+    								$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+    							}
+    							$this->_name="ln_saleschedule_test";
+    							$datapayment = array(
+    									'branch_id'=>$data['branch_id'],
+    									'sale_id'=>$id,//good
+    									'begining_balance'=> $remain_principal,//good
+    									'principal_permonth'=> 0,//good
+    									'principal_permonthafter'=>0,//good
+    									'total_interest'=>$old_interest_paymonth,//good
+    									'total_interest_after'=>$old_interest_paymonth,//good
+    									'total_payment'=>$old_interest_paymonth,//good
+    									'total_payment_after'=>$old_interest_paymonth,//good
+    									'ending_balance'=>$remain_principal,
+    									'cum_interest'=>0,
+    									'amount_day'=>0,
+    									'is_completed'=>0,
+    									'date_payment'=>$next_payment,
+    							);
+    							$this->insert($datapayment);
+    							
+    							$from_date=$next_payment;
+    							if($grace_period==$index){
+    								$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+    								$data['first_payment'] = $next_payment;
+    							}
+    						}
+    					}
     					//​​បញ្ចូលចំនូនត្រូវបង់ដំបូងសិន
     					if(!empty($data['identity'])){
     						$ids = explode(',', $data['identity']);

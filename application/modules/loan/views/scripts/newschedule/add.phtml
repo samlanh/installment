@@ -116,9 +116,7 @@
 							 		iconClass="dijitIconEditProperty" onclick="addRow();" />
 				                   </div>
 				                </div>
-				                
 				            </div>
-						
 				            <div class="col-md-4 col-sm-4 col-xs-12">
 								<div class="form-group">
 				                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
@@ -190,6 +188,16 @@
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
 				                    	<input readonly type="text" class="fullside" dojoType="dijit.form.NumberTextBox" name="for_installamount" id="for_installamount"  value="" >
+				                   </div>
+				                </div>
+				                <div class="form-group">
+				                   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name">
+				                  	 <span >
+				                  	 <?php echo $tr->translate("GRACE_PEROID")?><?php echo $tr->translate("MONTH")?>
+				                  	 </span>
+				                   </label>
+				                   <div class="col-md-7 col-sm-7 col-xs-12">
+				                    	<?php echo $frm->getElement('grace_period');?>
 				                   </div>
 				                </div>
 				                <div class="form-group">
@@ -760,9 +768,7 @@ require(["dojo/ready"], function(ready){
 	onChange: function() {
 		member = dijit.byId('member').get('value');
 		if(member==-1){
-			showPopupclient();
 		}else{
-			//dijit.byId('customer_code').attr('value',member);
 			getcustomerinfo(member);
 		}
 }
@@ -987,9 +993,7 @@ function addRow(){
 				temp+='<th><?php echo $tr->translate("DATE_PAYMENT");?></th>';
 				temp+='<th id="lbl_titlemetion" width="40px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
 				temp+='<th id="lbl_titlemetion" width="60px"><?php echo $tr->translate("OS_AMOUNT");?></th>';
-				//if(payment_method==5){
-					temp+='<th><?php echo $tr->translate("TYPE");?></th>';
-				//}
+				temp+='<th><?php echo $tr->translate("TYPE");?></th>';
 				temp+='<th><?php echo $tr->translate("NOTE");?></th>';
 				dojo.query("#head-title").append(temp);
 				title=1;
@@ -1014,9 +1018,7 @@ function addRow(){
 				template+="<td width='100px'><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='date_payment"+col+"' name='date_payment"+col+"' /></td>";
 				template+='<td><input type="text" onkeyup="calCulateAmount('+col+')" class="fullside" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';			
 				template+='<td><input class="fullside"  onkeyup="calCulateAmount('+col+',2)" type="text" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
-				//if(payment_method==5){
-					template+='<td width="90px"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="pay_with'+col+'" name="pay_with'+col+'" >'+steppayoption+'</select></td>';			
-				//}
+				template+='<td width="90px"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="pay_with'+col+'" name="pay_with'+col+'" >'+steppayoption+'</select></td>';			
 				template+='<td <input class="fullside" type="text"  name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"/><label id="subsub"></label></td>';
 			tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
 			tmp+="</tr>";
@@ -1046,7 +1048,6 @@ function addInstallment(){
 				tmp+='<tr id="head-title" class="head-td" style="color:#000 !important;background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
 				tmp+='</table>';
 				dojo.query("#showrecord").append(tmp);
-				
 				temp+='<th><?php echo $tr->translate("DEL");?></th>';
 				temp+='<th><?php echo $tr->translate("NUM");?></th>';
 				temp+='<th><?php echo $tr->translate("DATE_PAYMENT");?></th>';
@@ -1090,8 +1091,7 @@ function addInstallment(){
 				template+='<td <input class="fullside" type="text"  name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"/><label id="subsub"></label></td>';
 			tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
 			tmp+="</tr>";
-			dojo.query("#table_row").append(tmp);
-		
+			dojo.query("#table_row").append(tmp);		
 			if($("#identity").val()!="") {
 				var identity = $("#identity").val();
 				$("#identity").val(identity+','+col);
@@ -1103,7 +1103,6 @@ function addInstallment(){
 }
 
 function calCulateAmount(index,revers=1){
-	//balance = dijit.byId('sold_price').get('value');
 	balance = dijit.byId('balance').get('value');
 	if(revers==1){//% to value
 	    percent = dijit.byId('percent'+index).get('value');
@@ -1116,7 +1115,7 @@ function calCulateAmount(index,revers=1){
 	   percent = amount_payment*100/balance;
 	   dijit.byId('percent'+index).attr('value',percent);
      }
-	calCulateSchedulePayment();
+	 calCulateSchedulePayment();
 	 if(dijit.byId('percent'+index).get('value')>100){
 		 alert("តម្លៃត្រូវបង់មិនអាចធំជាង ១០០ ភាគរយបានទេ !");
 		 dijit.byId('percent'+index).focus();
@@ -1233,22 +1232,6 @@ function calCulateFirstPayment(){
 	var epx_date = y + '-'+ mm + '-'+dd ;
 	dijit.byId('first_payment').attr('value',epx_date);
 }
-function returnMOnth(monthnum){
-	var month = new Array();
-	month[1] = "Jan";
-	month[2] = "Feb";
-	month[3] = "Mar";
-	month[4] = "Apr";
-	month[5] = "May";
-	month[6] = "Jun";
-	month[7] = "Jul";
-	month[8] = "Aug";
-	month[9] = "Sep";
-	month[10] = "Oct";
-	month[11] = "Nov";
-	month[12] = "Dec";
-	return month[monthnum];
-}
 var url_previewloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'newschedule','action'=>'previewreschedul')); ?>';
 function addPreviewLoan(){
 	r=0;
@@ -1311,8 +1294,7 @@ function addPreviewLoan(){
 				
 			},
 			error: function(response, ioArgs) {
-				alert(ioArgs);
-				//alert("មិនអាចមើលតារាងបាន");
+				alert("មិនអាចមើលតារាងបាន");
 				document.getElementsByClassName("overlay")[0].style.display="none";
 			}
 	   });
@@ -1331,33 +1313,6 @@ function getDayName(day){
 }
 function hideDialog() {		
 	dijit.byId("lbl_schedule").hide();
-}
-function showPopupclient(){
-	dijit.byId("frmpop_client").show();
-}
-var individual_client_url = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'insert-client'));?>';
-function addNewindividual(){
-	if(dijit.byId('addclient').validate()){
-	dojo.xhrPost({
-		url:individual_client_url,	
-		form:dojo.byId('addclient'),
-		content:{
-			'branch_id':1
-			},
-		handleAs:"json",
-		load: function(response) {
-			dijit.byId('frmpop_client').hide();	
-			var myNewItem = {					
-					id: response.id,
-					name: dijit.byId('name_en').get('value')+' - '+dijit.byId('name_kh').get('value'),
-			};			
-			addDataToSelectbox(dijit.byId('member'), client_store, myNewItem, response.id);
-			dijit.byId('addclient').reset();
-		},
-		error: function(err) {
-		}
-	});
- }	
 }
 function calculateDuration(type=null){
 	if(type==1){

@@ -43,7 +43,7 @@ dojo.require("dijit.form.DateTextBox");
 	#printfooter{display: none !important;}
 </style>
 <?php 
-	if(date("Y-m-d",strtotime($this->agreement['agreement_date']))<='2010-04-07'){
+	if(date("Y-m-d",strtotime($this->agreement['agreement_date']))<='2020-04-07'){
 ?>
 <div style=" width:28cm;min-height:22cm; margin:0 auto; padding:0px 0.5cm">
 	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
@@ -990,9 +990,10 @@ dojo.require("dijit.form.DateTextBox");
 								             			<?php echo $this->agreement['note_agreement'];?>
 								             		</p>
 							             		<?php }?>
+												<!--
 							             		<span>កក់លើកទី<?php echo ($keytime+1);?>ចំនួន</span> 
 							             		<?php if ($this->agreement['second_depostit']>0){
-							             			$paid = $paid + $this->agreement['second_depostit'];
+							             			//$paid = $paid + $this->agreement['second_depostit'];
 							             		?>
 							             		<span class="value"><strong>$ <?php echo @number_format($this->agreement['second_depostit'],0);?></strong> </span>
 								             	<span style="font-weight:bold;">(<span id="lable_seconddepositkhmer" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</span>
@@ -1012,8 +1013,10 @@ dojo.require("dijit.form.DateTextBox");
 												<?php }else{?>
 												<span class="value" style="display: inline-block; width: 350px; border-bottom: dashed 1px #000;">&nbsp;</span>
 												<?php }?>
+												
 							             		<span> នៅថ្ងៃទី  <?php echo (date("d",strtotime($this->agreement['validate_date'])));?></span> <span style="width: 100px;"></span> ខែ  <?php echo $month[date("m",strtotime($this->agreement['validate_date']))];?> ឆ្នាំ <?php echo (date("Y",strtotime($this->agreement['validate_date'])));?> ។
-							             		<?php if($this->agreement['price_sold']-$paid>0){?>
+							             		-->
+												<?php if($this->agreement['price_sold']-$paid>0){?>
 							             		<span>ហើយប្រាក់ដែលនៅសល់ចំនួន</span>
 												<span class="" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-@$paid),0);//echo number_format(($this->agreement['price_sold']-@$rsdeposite['total_principal_permonthpaid']-$this->agreement['second_depostit']),0);
 												?></strong></span>
@@ -1191,6 +1194,13 @@ dojo.require("dijit.form.DateTextBox");
 										list-style: none;
 									}
 	    			</style>
+					<?php 
+					$agreementTitle="កិច្ចសន្យាទិញលក់ដី";
+					$stringInstallment="";
+					if ($this->agreement['payment_id']==4){
+						$agreementTitle="កិច្ចសន្យាទិញលក់ដី";
+						$stringInstallment='<strong>ភាគី “ខ”</strong> យល់ព្រមបង់ប្រាក់រំលស់ទៅតាមតារាងបង់ប្រាក់ប្រចាំខែរបស់ <strong>ភាគី “ក”</strong>។';
+					}?>
 				        <div class="pages-break">
 				        	<div class="watermark"></div>
 					        <table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';padding:0;margin:0;border:0px;" >
@@ -1207,7 +1217,7 @@ dojo.require("dijit.form.DateTextBox");
 							                <span style="text-align:center; line-height:22px; font-size:17px;font-family:'Khmer OS Muol Light';">ព្រះរាជាណាចក្រកម្ពុជា</span>
 							                <span style="text-align:center; line-height:22px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></span>
 							                <span style="text-align:center; line-height:22px; width: 100%; display: block; font-size:16px; font-family: 'Tacteing';"><img src="<?php echo $this->baseUrl();?>/images/agreementsign.jpg" height="25px"></span>
-							                <span style="margin-bottom:10px;text-align:center; line-height:22px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("កិច្ចសន្យាលក់ដី");?></span>
+							                <span style="margin-bottom:10px;text-align:center; line-height:22px; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'"><?php echo $agreementTitle;?></span>
 							                <span style="margin-bottom:10px;text-align:center; line-height:22px; width: 100%; display: block; font-size:16px;white-space: nowrap;">កិច្ចសន្យានេះធ្វើឡើងនៅថ្ងៃទី <?php echo (date("d",strtotime($this->agreement['agreement_date'])));?> ខែ  <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo (date("Y",strtotime($this->agreement['agreement_date'])));?></span>
 							                <span style="margin-bottom:10px;text-align:center; width: 100%; display: block; font-size:16px; font-family:'Khmer OS Muol Light'">រវាង</span>
 						                <td width="20%" valign="top" align="right"></td>
@@ -1351,7 +1361,11 @@ dojo.require("dijit.form.DateTextBox");
 																		$keytime++;
 																	?>
 										             				<span style="">
-										             						កក់ប្រាក់លើកទី<?php echo ($keytime); ?>  ចំនួន
+										             						
+										             						<?php if($this->agreement['payment_id']==4 OR ($key+1)<count($this->sale_schedule)){//if install?>
+										             							កក់ប្រាក់លើកទី<?php echo ($keytime); ?>
+										             						<?php }else{?>ហើយប្រាក់ដែលនៅសល់<?php }?>
+										             						  ចំនួន
 											             				<span class="value"><strong> $ <?php echo @number_format($row['principal_permonth'],0);?></strong> </span>
 											             				<span style="font-weight:bold;">(<span id="lable_depositkhmer<?php echo $i;?>" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក )</span>
 											             				<?php  echo $stringLastDate."។";?>
@@ -1379,8 +1393,10 @@ dojo.require("dijit.form.DateTextBox");
 										             		<span>ហើយប្រាក់ដែលនៅសល់ចំនួន</span>
 										             		<span class="value" style="min-width:20px;"><strong>$ <?php echo number_format(($this->agreement['price_sold']-$paid),0);?></strong></span>
 															(<span  style="min-width: 50px;font-weight:bold;"><label id="lable_remainkhmer1" style="overflow-wrap: break-word;white-space: normal;font-family: 'Times New Roman','Khmer OS Battambang'"></label> ដុល្លារអាមេរិក) ។</span>
-								             			<?php }?>
-								             			<strong>ភាគី “ខ”</strong> យល់ព្រមបង់ប្រាក់រំលស់ទៅតាមតារាងបង់ប្រាក់ប្រចាំខែរបស់ <strong>ភាគី “ក”</strong>។
+								             			<?php }
+														echo $stringInstallment;
+														?>
+								             			
 														</td>
 													</tr>
 													<?php
@@ -1432,7 +1448,7 @@ dojo.require("dijit.form.DateTextBox");
 																	<span style="font-weight:600;">ប្រការ៤៖</span>
 																</td>
 																<td align="justify" style="padding-left:5px">
-																	ករណីប្លង់បំបែក្បាលដី ឬលិខិតផ្ទេរសិទ្ធិកាន់កាប់បានផ្ទេរកម្មសិទ្ធិរួចរាល់ហើយ<strong>ភាគី “ខ”</strong> ត្រូវមកយកក្នុងរយៈពេលមិនឲ្យលើសពី ១៥ ថ្ងៃ គិតចាប់ពីថ្ងៃដែលបានទទួលដំណឹងពី <strong>ភាគី “ក”</strong> ។ បើ <strong>ភាគី “ខ”</strong> មិនបានមកយកតាមពេលវេលាកំណត់ដូចមានចែងក្នុងប្រការ៤ នេះទេ <strong>ភាគី “ខ”</strong> យល់ព្រមប្រគល់ ដី និងប្រាក់ ដែលបានបង់ទាំងអស់ទុកជាប្រយោជន៏របស់ <strong>ភាគី“ក”</strong>។ ក្នុងប្រការ៤ នេះមិនត្រូវយកមកអនុវត្តទេចំពោះអ្នកដែលបានបង់ប្រាក់គ្រប់ចំនួន ប៉ុន្តែពេលប្លង់បំបែកក្បាលដី ឬលិខិតផ្ទេរសិទ្ធិកាន់កាប់ បានផ្ទេរសិទ្ធិរួចរាល់ហើយ <strong>ភាគី “ខ”</strong>  ត្រូវមកយក មិនឲ្យលើសពី ៣០ ថ្ងៃ។ បើហួសរយៈពេលដែលបានកំណត់ <strong>ភាគី “ក”</strong> មិនទទួលខុសត្រូវរាល់ការបាត់បង់ឡើយ។ 
+																	ករណីប្លង់បំបែក្បាលដី ឬលិខិតផ្ទេរសិទ្ធិកាន់កាប់បានផ្ទេរកម្មសិទ្ធិរួចរាល់ហើយ<strong>ភាគី “ខ”</strong> ត្រូវមកយកក្នុងរយៈពេលមិនឲ្យលើសពី ១៥ ថ្ងៃ គិតចាប់ពីថ្ងៃដែលបានទទួលដំណឹងពី <strong>ភាគី “ក”</strong> ។ បើ <strong>ភាគី “ខ”</strong> មិនបានមកយកតាមពេលវេលាកំណត់ដូចមានចែងក្នុងប្រការ៤ នេះទេ <strong>ភាគី “ខ”</strong> យល់ព្រមប្រគល់ ដី និងប្រាក់ ដែលបានបង់ទាំងអស់ទុកជាប្រយោជន៏របស់ <strong>ភាគី“ក”</strong>។ ក្នុងប្រការ៤ នេះមិនត្រូវយកមកអនុវត្តទេចំពោះអ្នកដែលបានបង់ប្រាក់គ្រប់ចំនួន100% ប៉ុន្តែពេលប្លង់បំបែកក្បាលដី ឬលិខិតផ្ទេរសិទ្ធិកាន់កាប់ បានផ្ទេរសិទ្ធិរួចរាល់ហើយ <strong>ភាគី “ខ”</strong>  ត្រូវមកយក មិនឲ្យលើសពី ៣០ ថ្ងៃ។ បើហួសរយៈពេលដែលបានកំណត់ <strong>ភាគី “ក”</strong> មិនទទួលខុសត្រូវរាល់ការបាត់បង់ឡើយ។ 
 																</td>
 															</tr>
 															<tr>
@@ -1530,7 +1546,7 @@ dojo.require("dijit.form.DateTextBox");
 	<?php $remain = $this->agreement['price_sold']-$paid;
 			if(empty($remain)){
 				$remain=0;
-			}
+			} 
 		?>
 		a ='<?php echo $remain; ?>';
 		money_khmer=read_money_in_khmer(a);

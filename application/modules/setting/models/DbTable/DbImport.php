@@ -2,7 +2,6 @@
 
 class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 {
-
     protected $_name = 'ln_sale';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace('auth');
@@ -24,7 +23,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    	$oldland_str='';
 	    	$payment_id = array('រំលស់'=>4,'ផ្តាច់'=>6,'ដំណាក់កាល'=>3);
 			
-			$SaleIdGenerate =0;
+			$SaleIdGenerate =90;
 	    	for($i=2; $i<=$count; $i++){
 	    		if(empty($data[$i]['E'])){
 	    			continue;
@@ -300,7 +299,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		$oldland_str='';
     		$payment_id = array('រំលស់'=>4,'ផ្តាច់'=>6,'ដំណាក់កាល'=>3);
     			
-    		$SaleIdGenerate =69;
+    		$SaleIdGenerate =90;
     		for($i=2; $i<=$count; $i++){
     			if(empty($data[$i]['O'])){
     				continue;
@@ -416,6 +415,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     						'user_id'=>$this->getUserId(),
     						'amount_daydelay'=>0,
     						'receipt_no'=>$data[$i]['I'],
+							'excel_note'=>$data[$i]['AC'],
     				);
     
     				$this->_name='ln_sale';
@@ -472,7 +472,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     					'percent'=>0,
     					'percent_agree'=>0,
     					'is_installment'=>($oldland_str!=$data[$i]['O'])?1:0,
-    					'no_installment'=>$install,
+    					'no_installment'=>$data[$i]['A'],
     					'last_optiontype'=>1,
     					'note'=>$data[$i]['L'],
     					
@@ -502,7 +502,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     						'percent'=>0,
     						'percent_agree'=>0,
     						'is_installment'=>($oldland_str!=$data[$i]['O'])?1:0,
-    						'no_installment'=>$install,
+    						'no_installment'=>$data[$i]['A'],
     						'last_optiontype'=>1,
     						'note'=>$data[$i]['L'],
     						'collect_by'=>2,
