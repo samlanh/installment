@@ -6,6 +6,7 @@ class Group_CoController extends Zend_Controller_Action {
      /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
+    	$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
 	public function indexAction(){
 		try{
@@ -22,11 +23,11 @@ class Group_CoController extends Zend_Controller_Action {
 						'degree' => '');
 			}
 			$rs_rows= $db->getAllCreditOfficer($search);
-			
-			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","STAFF_CODE","CO_NAME","SEX","NATIONAL_ID","ADDRESS","PHONE","EMAIL","BY_USER","STATUS");
-			$link=array('module'=>'group','controller'=>'co','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'co_code'=>$link,'co_khname'=>$link,'co_engname'=>$link));
+			$this->view->row = $rs_rows;
+// 			$list = new Application_Form_Frmtable();
+// 			$collumns = array("BRANCH_NAME","STAFF_CODE","CO_NAME","SEX","NATIONAL_ID","ADDRESS","PHONE","EMAIL","BY_USER","STATUS");
+// 			$link=array('module'=>'group','controller'=>'co','action'=>'edit',);
+// 			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'co_code'=>$link,'co_khname'=>$link,'co_engname'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -128,6 +129,29 @@ class Group_CoController extends Zend_Controller_Action {
    		$db = new Other_Model_DbTable_DbCreditOfficer();
    		$_data = $this->getRequest()->getPost();
    		$id = $db->checkusername($_data['user_name']);
+   		print_r(Zend_Json::encode($id));
+   		exit();
+   	}
+   }
+   
+   function getallstaffAction(){
+   	if($this->getRequest()->isPost()){
+   		$data=$this->getRequest()->getPost();
+   		$db = new Application_Model_DbTable_DbGlobal();
+   		$group = $db->getAllCOName($data);
+   		if(empty($data['noaddnew'])){
+   			array_unshift($group, array ('id' => -1,'name' =>$this->tr->translate("ADD_NEW")));
+   		}
+   		array_unshift($group, array ( 'id' =>'','name' =>$this->tr->translate("SELECT_SALE_AGENT")));
+   		print_r(Zend_Json::encode($group));
+   		exit();
+   	}
+   }
+   function addStaffAction(){
+   	if($this->getRequest()->isPost()){
+   		$data = $this->getRequest()->getPost();
+   		$db = new Other_Model_DbTable_DbCreditOfficer();
+   		$id = $db->addStaff($data);
    		print_r(Zend_Json::encode($id));
    		exit();
    	}

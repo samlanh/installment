@@ -159,7 +159,12 @@ public function init()
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 		));
-		$staff_opt = $db->getAllCOName(1);
+// 		$staff_opt = $db->getAllCOName(1);
+		$rowss = $db->getAllCOName();
+		$staff_opt=array(''=>$this->tr->translate("SELECT_SALE_AGENT"));
+		if(!empty($rowss))foreach($rowss AS $row){
+			$staff_opt[$row['id']]=$row['name'];
+		}
 		$staff_id->setMultiOptions($staff_opt);
 		$staff_id->setValue($request->getParam("staff_id"));
 		

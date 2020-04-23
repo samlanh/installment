@@ -65,7 +65,13 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 // 			$where.=" AND `p`.`street` = '".$search['streetlist']."'";
 // 		}
 		if(!empty($search['co_id']) AND $search['co_id']>-1){
-			$where.=" AND `s`.`staff_id` = ".$search['co_id'];
+// 			$where.=" AND `s`.`staff_id` = ".$search['co_id'];
+			$condiction = $dbp->getChildAgency($search['co_id']);
+			if (!empty($condiction)){
+				$where.=" AND s.staff_id IN ($condiction)";
+			}else{
+				$where.=" AND s.staff_id=".$search['co_id'];
+			}
 		}
 		if($search['land_id']>0){
 			$where.=" AND ( s.house_id = ".$search['land_id']." OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) LIKE '%".$search['land_id']."%' )";
@@ -2841,7 +2847,13 @@ function updatePaymentStatus($data){
    	}
    	
    	if (!empty($search['agency_id'])){
-   		$where.=" AND `s`.`staff_id` = '".$search['agency_id']."'";
+//    		$where.=" AND `s`.`staff_id` = '".$search['agency_id']."'";
+   		$condiction = $dbp->getChildAgency($search['agency_id']);
+   		if (!empty($condiction)){
+   			$where.=" AND s.staff_id IN ($condiction)";
+   		}else{
+   			$where.=" AND s.staff_id=".$search['agency_id'];
+   		}
    	}
 	   	$order = " ORDER BY s.buy_date DESC ";
 	   	return $db->fetchAll($sql.$where.$order);

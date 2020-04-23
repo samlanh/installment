@@ -2,23 +2,85 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate("STAFF"));
 	$frm = $this->frm_co;
+	$url = $this->baseUrl()."/group/co/edit/id/";
 ?>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
 		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('STAFF');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<div class="card-box">
 			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'group','controller'=>'co','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
-			   <table width="100%" >
-			   	<tr>
-				   <td><?php echo $frm->getElement("adv_search");?></td>
-				   <td><?php echo $frm->getElement("branch_id");?></td>
-				   <td><?php echo $frm->getElement('status_search');?></td>
-				   <td><?php echo $frm->getElement("btn_search");?></td>
-				</tr>
-			   </table>
-			    <?php echo $this->list;?>
+			   <div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("branch_id");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">	
+						<?php echo $frm->getElement('status_search');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("btn_search");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+					</div>
+				</div>
 			</form>
 		</div>
 		<div class="card-box">
+			<div class="card-box">
+    		<div class="dataTables_scrollBody" style="position: relative;  width: 100%; background:#fff;   ">
+    			<table border="1" id="datatable-responsive" style="  border-collapse: collapse;   border-color: #ddd;"  class="display nowrap dataTable dtr-inline collapsed" cellspacing="0" width="100%" >
+    				<thead>
+    					<tr>
+    						<th class="tdheader text-center"><?php echo $tr->translate("NUM");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("BRANCH_NAME");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("PARENT");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("CO_NAME");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("SEX");?></th>
+    						
+    						<th class="tdheader text-center"><?php echo $tr->translate("NATIONAL_ID");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("ADDRESS");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("PHONE");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("EMAIL");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("BY_USER");?></th>
+    						<th class="tdheader text-center"><?php echo $tr->translate("STATUS");?></th>
+    						
+    					</tr>
+    				</thead>
+    				<tbody>
+    					<?php $r=0; if (!empty($this->row)) foreach ($this->row as $rs){ 
+    						if($r%2==0)$attb='normal';
+    						else $attb='alternate';
+    						$r++?>
+    					<tr class="context-menu-one" oncontextmenu="setrowdata(<?php echo $rs['co_id']?>);return false;">
+    						<td style="text-align:center;" ><?php echo $r;?></td>
+    						<td class="itesms" ><a class="edit" href="<?php echo $url.$rs['co_id'];?> "><?php echo $rs['branch_name']?></a></td>
+    						<td class="itesms" ><a class="edit" href="<?php echo $url.$rs['co_id'];?> "><?php echo $rs['parent'];?></a></td>
+    						<td class="itesms" ><a class="edit" href="<?php echo $url.$rs['co_id'];?> "><?php echo $rs['co_khname'];?></a></td>
+    						<td class="itesms text-center" ><?php echo $rs['gender']?></td>
+    						<td class="itesms"><?php echo $rs['national_id']?></td>
+    						
+    						<td class="itesms"><?php echo $rs['address']?></td>
+    						<td class="itesms"><?php echo $rs['tel']?></td>
+    						<td class="itesms"><?php echo $rs['email']?></td>
+    						<td class="itesms"><?php echo $rs['user_name']?></td>
+    						<td class="itesms"><?php echo $rs['status']?></td>
+    						
+    					</tr>
+    					<?php }?>
+    				</tbody>
+    			</table>
+    		</div>	
+    	</div>
 		</div>
 	</div>
 </div>

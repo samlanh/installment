@@ -89,11 +89,11 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$db = new Application_Model_DbTable_DbGlobal();
 		$co_name = $db->getAllCoNameOnly();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		array_unshift($co_name,array(
-		        'id' => -1,
-		        'name' =>$tr->translate("ADD_NEW"),
-		) );
-	    $this->view->co_name=$co_name;
+// 		array_unshift($co_name,array(
+// 		        'id' => -1,
+// 		        'name' =>$tr->translate("ADD_NEW"),
+// 		) );
+// 	    $this->view->co_name=$co_name;
 	    
 	    $this->view->stepoption = $db->getOptionStepPayment();
 	    

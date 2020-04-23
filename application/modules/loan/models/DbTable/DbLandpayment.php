@@ -77,8 +77,15 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
       	 	$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
       	 	$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
+    	$dbp = new Application_Model_DbTable_DbGlobal();
     	if($search['co_id']>0){
-    		$where.= " AND s.staff_id = ".$search['co_id'];
+//     		$where.= " AND s.staff_id = ".$search['co_id'];
+    		$condiction = $dbp->getChildAgency($search['co_id']);
+    		if (!empty($condiction)){
+    			$where.=" AND s.staff_id IN ($condiction)";
+    		}else{
+    			$where.=" AND s.staff_id=".$search['co_id'];
+    		}
     	}
     	if($search['status']>-1){
     		$where.= " AND s.status = ".$search['status'];
@@ -100,7 +107,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	}	
     	$order = " ORDER BY s.id DESC";
     	
-    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	
     	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
     	return $db->fetchAll($sql.$where.$order);
     }

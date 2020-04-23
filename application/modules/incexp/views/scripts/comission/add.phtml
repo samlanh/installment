@@ -444,33 +444,6 @@
 	</div>
 </div>
 <script type="text/javascript">
-var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->co_name));?> );
-new dijit.form.FilteringSelect({
-	store: staff_store,
-	autoComplete: false,  
-	queryExpr: "*${0}*",                   
-    id: "staff_id",
-    name: "staff_id",    
-    class: 'fullside',  
-    required:true,
-    placeHolder:"<?php echo $tr->translate("SELECT_SALE_AGENT");?>", 
-    onChange: function() {        
-    	branch_id = dijit.byId('branch_id').get('value');
-    	staff_id = dijit.byId('staff_id').get('value');
-    	if(branch_id==0){
-    		if(staff_id==-1){
-    			alert('<?php echo $tr->translate("Please select project");?>');
-    			dijit.byId('branch_id').focus();
-    			return false;
-        	}
-    	}else{
-		    if(staff_id==-1){
-		    	dijit.byId('branch_id_pop').attr('value',branch_id);
-		   		dijit.byId("popup_staff").show();
-		    }
-    	}
-    } 
-}, "staff_id");
 
 function popupIssuer(){
 	cheque_issuer = dijit.byId('cheque_issuer').get('value');
@@ -597,8 +570,37 @@ function addCategory(){
 }
 var sale_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+
 dojo.ready(function(){
 	try{
+		new dijit.form.FilteringSelect({
+			store: staff_store,
+			autoComplete: false,  
+			queryExpr: "*${0}*",                   
+		    id: "staff_id",
+		    name: "staff_id",    
+		    class: 'fullside',  
+		    required:true,
+		    placeHolder:"<?php echo $tr->translate("SELECT_SALE_AGENT");?>", 
+		    onChange: function() {        
+		    	branch_id = dijit.byId('branch_id').get('value');
+		    	staff_id = dijit.byId('staff_id').get('value');
+		    	if(branch_id==0){
+		    		if(staff_id==-1){
+		    			alert('<?php echo $tr->translate("Please select project");?>');
+		    			dijit.byId('branch_id').focus();
+		    			return false;
+		        	}
+		    	}else{
+				    if(staff_id==-1){
+				    	dijit.byId('branch_id_pop').attr('value',branch_id);
+				   		dijit.byId("popup_staff").show();
+				    }
+		    	}
+		    } 
+		}, "staff_id");
+		
 		new dijit.form.FilteringSelect({
 		store: sale_store,
 		autoComplete: false,
@@ -628,9 +630,16 @@ dojo.ready(function(){
 			}, "sale_client");
 		getSaleClie();
 		getSaleNo();
-		
-		}catch(e){
-		}
+
+
+		getAllStaffByBranch();
+		 var branch_id = dijit.byId('branch_id');
+		 branch_id.on('change', function(evt) {
+			 getAllStaffByBranch();
+		});
+			
+	}catch(e){
+	}
 });
 var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-sale'));?>';
 function getSaleNo(){
@@ -858,4 +867,29 @@ function getSaleClie(){
 			}
 		});
 	}
+
+url_getgroup = '<?php echo $this->url(array('module'=>'group','controller'=>'co','action'=>'getallstaff'));?>';
+function getAllStaffByBranch(staff_id=null){
+	dijit.byId('staff_id').reset();
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id=='' || branch_id==-1){
+		var group_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('staff_id').set('store',group_store);  
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	dojo.xhrPost({
+		url: url_getgroup,
+		content:{
+			'branch_id':branch_id
+			},
+		handleAs:"json",
+		load: function(data) {
+			group_store  = getDataStorefromJSON('id','name', data);
+			dijit.byId('staff_id').set('store',group_store);
+		},
+		error: function(err) {
+		}
+	});
+}
 </script>

@@ -327,20 +327,33 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	}
    	return $rows;
    }
-   public function getAllCOName($option=null){
-   	$this->_name='ln_staff';
-   	$sql = " SELECT co_id AS id, co_firstname AS name ,co_id ,co_firstname,co_khname,co_code FROM 
-   	        ln_staff WHERE status=1 AND co_khname!='' AND `position_id`=1 ";
-   	$db = $this->getAdapter();
-   	$rows =  $db->fetchAll($sql);
-   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-   	$options = array(''=>$tr->translate("SELECT_SALE_AGENT"));
-   	if($option!=null){
-   		if(!empty($rows))foreach($rows as $rs){
-   				$options[$rs['co_id']]=$rs['co_khname'];}
-   				return $options;
-   	}
-   	return $rows;
+   public function getAllCOName($data=null,$parent = 0,$spacing = '', $cate_tree_array = ''){
+	   	$this->_name='ln_staff';
+	   	$sql = " SELECT co_id AS id, 
+	   					co_khname AS name ,
+	   					co_id ,
+	   					co_firstname,
+	   					co_khname,co_code,
+						parent_id AS parent
+	   	 FROM 
+	   	        ln_staff WHERE status=1 AND co_khname!='' AND `position_id`=1 ";
+	   	$sql.=" AND parent_id=$parent";
+	   	if (!empty($data['branch_id'])){
+	   		$sql.=" AND branch_id=".$data['branch_id'];
+	   	}
+	   	$db = $this->getAdapter();
+	   	$rows =  $db->fetchAll($sql);
+	   
+	   	if (!is_array($cate_tree_array))
+	   		$cate_tree_array = array();
+	   	if (count($rows) > 0) {
+	   		foreach ($rows as $row){
+	   			$cate_tree_array[] = array("id" => $row['id'],"parent" => $row['parent'], "name" => $spacing . $row['name'], "co_id" => $row['co_id'], "co_firstname" =>$row['co_firstname'], "co_khname" =>$row['co_khname'], "co_code" =>$row['co_code']);
+	   			$cate_tree_array = $this->getAllCOName($data,$row['id'], $spacing . ' - ', $cate_tree_array);
+	   		}
+	   	}
+	   	$rows = $cate_tree_array;
+	   	return $rows;
    }
    public function getAllCoNameOnly(){
    	$db= $this->getAdapter();
@@ -1959,6 +1972,21 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		}else{$idetity=$idetity.",".$va['key_code'];
   		}
   		$idetity = $this->getChildType($va['key_code'],$idetity);
+  	}
+  	return $idetity;
+  }
+  
+  function getChildAgency($id,$idetity=null){
+  	$where='';
+  	$db = $this->getAdapter();
+  	$sql=" SELECT c.`co_id` FROM `ln_staff` AS c WHERE c.`parent_id` = $id AND c.`status`=1 ";
+  	$child = $db->fetchAll($sql);
+  	foreach ($child as $va) {
+  		if (empty($idetity)){
+  			$idetity=$id.",".$va['co_id'];
+  		}else{$idetity=$idetity.",".$va['co_id'];
+  		}
+  		$idetity = $this->getChildAgency($va['co_id'],$idetity);
   	}
   	return $idetity;
   }

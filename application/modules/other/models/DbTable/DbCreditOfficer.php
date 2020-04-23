@@ -35,6 +35,7 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 				'branch_id'	  => $_data['branch_id'],
 				'co_code'	  => $_data['co_id'],
 				'co_khname'	  => $_data['name_kh'],
+				'parent_id'	  => $_data['parent_id'],
 				//'co_lastname' => '',//$_data['last_name'],
 				'sex'		  => $_data['co_sex'],
 				'national_id'	  => $_data['national_id'],
@@ -146,36 +147,30 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 		return $db->fetchRow($sql);
 		
 	}
-	function getAllCreditOfficer($search=null){
+	function getAllCreditOfficer($search=null,$parent = 0, $spacing = '', $cate_tree_array = ''){
 		$db = $this->getAdapter();
 		$sql = "SELECT co_id,
 			(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
+			(SELECT s.co_khname FROM ln_staff AS s WHERE s.co_id = ln_staff.parent_id LIMIT 1) AS parent,
 			co_code,co_khname,(select name_kh FROM `ln_view` WHERE type=11 and key_code =sex LIMIT 1) as gender,
 			national_id,address,
 			tel,email,
 			(SELECT  CONCAT(first_name) FROM rms_users WHERE id=user_id ) AS user_name
 		 ";
-		
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$sql.=$dbp->caseStatusShowImage("status");
 		$sql.=" FROM $this->_name WHERE 1 ";
 		
-// 		(SELECT first_name FROM rms_users WHERE id=user_id) As user_name
+// 		$sql.=" AND parent_id=$parent";
+		
 		$order=" ORDER BY co_id DESC";
 		$where = '';
-		
 		if($search['status_search']>-1){
 			$where.= " AND status = ".$search['status_search'];
 		}
-// 		if(!empty($search['degree'])){
-// 			$where.=" AND degree = ".$search['degree'];
-// 		}
 		if(!empty($search['branch_id'])){
 			$where.=" AND branch_id = ".$search['branch_id'];
 		}
-// 		if(!empty($search['position'])){
-// 			$where.=" AND position_id = ".$search['position'];
-// 		}
 		if(!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = ($search['adv_search']);
@@ -191,7 +186,18 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 // 			$s_where[]="annual_lives LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
-		return $db->fetchAll($sql.$where.$order);	
+		$rows = $db->fetchAll($sql.$where.$order);	
+		
+// 		if (!is_array($cate_tree_array))
+// 			$cate_tree_array = array();
+// 		if (count($rows) > 0) {
+// 			foreach ($rows as $row){
+// 				$cate_tree_array[] = array("co_id" => $row['co_id'],"branch_name" => $row['branch_name'], "co_khname" => $spacing . $row['co_khname'],"gender" => $row['gender'],"national_id" => $row['national_id'],"address" => $row['address'],"tel" => $row['tel'],"email" => $row['email'],"user_name" => $row['user_name'],"parent" => $row['parent'],"status" => $row['status']);
+// 				$cate_tree_array = $this->getAllCreditOfficer($search,$row['co_id'], $spacing . ' - ', $cate_tree_array);
+// 			}
+// 		}
+// 		$rows = $cate_tree_array;
+		return $rows;
 	}	
 	
 	function checkusername($user_name){
@@ -202,6 +208,30 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 			return 1;
 		}
 		return 2;
+	}
+	
+	public function addStaff($data){
+		 
+		$db = $this->getAdapter();
+		 
+		$_db = new Application_Model_DbTable_DbGlobal();
+		$staff_id = $_db->getStaffNumberByBranch($data['branch_id_pop']);  // get new staff code by branch
+		$this->_name="ln_staff";
+		$array = array(
+				'branch_id'		=>$data['branch_id_pop'],
+				'position_id'	=>1, // 1 => sale agent
+				'co_khname'		=>$data['kh_name'],
+				'sex'			=>$data['sex'],
+				'tel'			=>$data['phone'],
+				'note'			=>$data['note_pop'],
+				'create_date'	=>date('Y-m-d'),
+				 
+		);
+		if (!empty($data['parent_id'])){
+			$array['parent_id']=$data['parent_id'];
+		}
+		return $this->insert($array);
+	   
 	}
 }
 

@@ -54,14 +54,18 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 		
-		$rows=$_db->getAllCOName();
-		//print_r($rows);exit();
-		$opt_co = array(''=>$this->tr->translate("SELECT_CO_NAME"));
-		if(!empty($rows))foreach($rows AS $row) $opt_co[$row['co_id']]=$row['co_khname'];
+// 		$rows=$_db->getAllCOName();
+// 		$opt_co = array(''=>$this->tr->translate("SELECT_CO_NAME"));
+// 		if(!empty($rows))foreach($rows AS $row) $opt_co[$row['co_id']]=$row['co_khname'];
 		$_co = new Zend_Dojo_Form_Element_FilteringSelect('co_khname');
 		$_co->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',
 				//'class'=>'fullside',
 		));
+		$rowss = $_db->getAllCOName();
+		$opt_co=array(''=>$this->tr->translate("SELECT_SALE_AGENT"));
+		if(!empty($rowss))foreach($rowss AS $row){
+			$opt_co[$row['id']]=$row['name'];
+		}
 		
 		$_co->setMultiOptions($opt_co);
 		$_co->setValue($request->getParam('co_khname'));

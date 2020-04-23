@@ -1558,7 +1558,13 @@ function getAllBranch($search=null){
 	    $to_date = (empty($search['end_date']))? '1': " s.`buy_date` <= '".$search['end_date']." 23:59:59'";
 	    $where.= " AND ".$from_date." AND ".$to_date;
     	if($search['co_khname']>0){
-    		$where.= " AND s.`staff_id` = ".$search['co_khname'];
+//     		$where.= " AND s.`staff_id` = ".$search['co_khname'];
+    		$condiction = $dbp->getChildAgency($search['co_khname']);
+    		if (!empty($condiction)){
+    			$where.=" AND s.staff_id IN ($condiction)";
+    		}else{
+    			$where.=" AND s.staff_id=".$search['co_khname'];
+    		}
     	}
     	if($search['branch_id']>0){
     		$where.= " AND st.`branch_id` = ".$search['branch_id'];
@@ -1882,7 +1888,13 @@ function getAllBranch($search=null){
     		$to_date = (empty($search['end_date']))? '1': " s.`buy_date` <= '".$search['end_date']." 23:59:59'";
     		$where.= " AND ".$from_date." AND ".$to_date;
     		if($search['co_khname']>0){
-    			$where.= " AND s.`staff_id` = ".$search['co_khname'];
+//     			$where.= " AND s.`staff_id` = ".$search['co_khname'];
+    			$condiction = $dbp->getChildAgency($search['co_khname']);
+    			if (!empty($condiction)){
+    				$where.=" AND s.staff_id IN ($condiction)";
+    			}else{
+    				$where.=" AND s.staff_id=".$search['co_khname'];
+    			}
     		}
     		if($search['branch_id']>0){
     			$where.= " AND s.`branch_id` = ".$search['branch_id'];
@@ -2283,7 +2295,13 @@ function getAllBranch($search=null){
 		$to_date = (empty($search['end_date']))? '1': " s.`buy_date` <= '".$search['end_date']." 23:59:59'";
 		$where.= " AND ".$from_date." AND ".$to_date;
 		if($search['co_khname']>0){
-			$where.= " AND s.`staff_id` = ".$search['co_khname'];
+// 			$where.= " AND s.`staff_id` = ".$search['co_khname'];
+			$condiction = $dbp->getChildAgency($search['co_khname']);
+			if (!empty($condiction)){
+				$where.=" AND s.staff_id IN ($condiction)";
+			}else{
+				$where.=" AND s.staff_id=".$search['co_khname'];
+			}
 		}
 		if($search['branch_id']>0){
 			$where.= " AND s.`branch_id` = ".$search['branch_id'];

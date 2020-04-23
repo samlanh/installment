@@ -123,7 +123,12 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			'queryExpr'=>'*${0}*', 
 			'onchange'=>'popupCheckCO();'
 		));
-		$options = $db->getAllCOName(1);
+// 		$options = $db->getAllCOName(1);
+		$rowss = $db->getAllCOName();
+		$optionsCo=array(''=>$this->tr->translate("SELECT_SALE_AGENT"));
+		if(!empty($rowss))foreach($rowss AS $row){
+			$optionsCo[$row['id']]=$row['name'];
+		}
 		$staff_id->setMultiOptions($options);
 		
 		$receivedopt = array(1=>$this->tr->translate("BY_SCHEDULE_DATE"),0=>$this->tr->translate("RECEIVED_PROPERTY"),2=>$this->tr->translate("RECEIVED_HOUSE"));

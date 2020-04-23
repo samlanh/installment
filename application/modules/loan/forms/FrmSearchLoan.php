@@ -109,8 +109,14 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 				'queryExpr'=>'*${0}*',
 				'onchange'=>'popupCheckCO();'
 		));
-		$options = $db ->getAllCOName(1);
-		$_coid->setMultiOptions($options);
+// 		$options = $db ->getAllCOName(1);
+		
+		$rowss = $db->getAllCOName();
+		$optionsCo=array(''=>$this->tr->translate("SELECT_SALE_AGENT"));
+		if(!empty($rowss))foreach($rowss AS $row){
+			$optionsCo[$row['id']]=$row['name'];
+		}
+		$_coid->setMultiOptions($optionsCo);
 		$_coid->setValue($request->getParam("co_id"));
 		
 		$_releasedate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
@@ -341,8 +347,13 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 				
 		));
 		
-		$options = $db->getAllCOName(1);
-		$_agency_id->setMultiOptions($options);
+// 		$options = $db->getAllCOName(1);
+		$rowss = $db->getAllCOName();
+		$staff_opt=array(''=>$this->tr->translate("SELECT_SALE_AGENT"));
+		if(!empty($rowss))foreach($rowss AS $row){
+			$staff_opt[$row['id']]=$row['name'];
+		}
+		$_agency_id->setMultiOptions($staff_opt);
 		$_agency_id->setValue($request->getParam("agency_id"));
 		
 		if($data!=null){

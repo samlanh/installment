@@ -38,7 +38,13 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 			$where.= " AND c.branch_id = ".$search['branch_id_search'];
 		}
 		if($search['staff_id']>0){
-			$where.= " AND c.staff_id = ".$search['staff_id'];
+// 			$where.= " AND c.staff_id = ".$search['staff_id'];
+			$condiction = $dbp->getChildAgency($search['staff_id']);
+			if (!empty($condiction)){
+				$where.=" AND c.staff_id IN ($condiction)";
+			}else{
+				$where.=" AND c.staff_id=".$search['staff_id'];
+			}
 		}
 		if(!empty($search['adv_search'])){
 			$s_where = array();

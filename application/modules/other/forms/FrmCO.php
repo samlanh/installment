@@ -64,6 +64,21 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 		}
 		$_branch_id->setMultiOptions($options);
 		
+		
+		$parent_id = new Zend_Dojo_Form_Element_FilteringSelect('parent_id');
+		$parent_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>false,
+				'queryExpr'=>'*${0}*',
+		));
+		$rowss = $db->getAllCOName();
+		$optionsCo=array(''=>$this->tr->translate("SELECT_SALE_AGENT"));
+		if(!empty($rowss))foreach($rowss AS $row){
+			$optionsCo[$row['id']]=$row['name'];
+		}
+		$parent_id->setMultiOptions($optionsCo);
+		
 		$_name_kh = new Zend_Dojo_Form_Element_TextBox('name_kh');
 		$_name_kh->setAttribs(array(
 				'dojoType'=>$this->tvalidate,
@@ -259,10 +274,14 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 			$_user_name->setValue($_data['user_name']);
 			$_user_type->setValue($_data['user_type']);
 			
+			$parent_id->setValue($_data['parent_id']);
+			
 		}
 		$this->addElements(array($_figer_print_id,$_department,$_photo,$_annual_lives,$_btn_search,$_status_search,$_title,$_id,$_co_id,$_name_kh,$_branch_id,$_national_id,$_display,$_enname,$_lname,
 				$_sex,$_tel,$_email,$_pob,$_address,$_shift,$_workingtime,$_status,$_position,$_basic_salary,$_start_work,$_end_work,$_contract,$_note,
-				$_user_name,$_user_type
+				$_user_name,$_user_type,
+				
+				$parent_id
 				));
 		
 		return $this;
