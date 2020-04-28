@@ -125,6 +125,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				'date'=>date("Y-m-d"),
     				'status'				=>1,
     				'note'					=>$data['note'],
+    				'grace_period'			=>$data['grace_period'],
     				'user_id'				=>$this->getUserId(),
     				
     				);
@@ -220,6 +221,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$j=0;
     		$index=0;
     		$pri_permonth=0;
+    		$is_graceperiod=0;
     		
     		$str_next = '+1 month';
     		/*សម្រាប់បញ្ចូលថាប្រាក់ដើមប្រានរំលស់*/
@@ -280,6 +282,48 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     			$this->insert($datapayment);
     		}
     		for($i=1;$i<=$loop_payment;$i++){
+    			
+    			$grace_period = $data['grace_period'];
+    			if($grace_period>0 AND $is_graceperiod==0){
+    				$old_interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
+    				$old_interest_paymonth = $this->round_up_currency($curr_type, $old_interest_paymonth);
+    			
+    				for($index=1;$index<=$grace_period;$index++){
+    					$is_graceperiod=1;
+    					if($index!=1){
+    						$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+    					}
+    			
+    					$this->_name="ln_saleschedule";
+    					$datapayment = array(
+    							'branch_id'=>$data['branch_id'],
+    							'sale_id'=>$id,//good
+    							'begining_balance'=> $remain_principal,//good
+    							'begining_balance_after'=> $remain_principal,//good
+    							'principal_permonth'=> 0,//good
+    							'principal_permonthafter'=>0,//good
+    							'total_interest'=>$old_interest_paymonth,//good
+    							'total_interest_after'=>$old_interest_paymonth,//good
+    							'total_payment'=>$old_interest_paymonth,//good
+    							'total_payment_after'=>$old_interest_paymonth,//good
+    							'ending_balance'=>$remain_principal,
+    							'cum_interest'=>0,
+    							'amount_day'=>0,
+    							'is_completed'=>0,
+    							'date_payment'=>$next_payment,
+    							'no_installment'=>$index+$start_id,
+    					);
+    					$this->insert($datapayment);
+    					 
+    					$from_date=$next_payment;
+    					if($grace_period==$index){//to continue new date for installment
+    						$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+    						$data['first_payment'] = $next_payment;
+    					}
+    				}
+    				$old_interest_paymonth=0;
+    			}
+    			
     			if($payment_method==3){//pay by times//check date payment
     				if($i!=1){
     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
@@ -302,44 +346,6 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 			    			$start_date = $next_payment;
 			    			$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
 			    		}else{
-			    			$grace_period = $data['grace_period'];
-			    			if($grace_period>0){
-			    				$old_interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
-			    				$old_interest_paymonth = $this->round_up_currency($curr_type, $old_interest_paymonth);
-			    			
-			    				for($index=1;$index<=$grace_period;$index++){
-			    					if($index!=1){
-			    						$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
-			    					}
-			    					
-			    					$this->_name="ln_saleschedule";
-			    					$datapayment = array(
-		    							'branch_id'=>$data['branch_id'],
-		    							'sale_id'=>$id,//good
-		    							'begining_balance'=> $remain_principal,//good
-		    							'begining_balance_after'=> $remain_principal,//good
-		    							'principal_permonth'=> 0,//good
-		    							'principal_permonthafter'=>0,//good
-		    							'total_interest'=>$old_interest_paymonth,//good
-		    							'total_interest_after'=>$old_interest_paymonth,//good
-		    							'total_payment'=>$old_interest_paymonth,//good
-		    							'total_payment_after'=>$old_interest_paymonth,//good
-		    							'ending_balance'=>$remain_principal,
-		    							'cum_interest'=>0,
-		    							'amount_day'=>0,
-		    							'is_completed'=>0,
-		    							'date_payment'=>$next_payment,
-		    							'no_installment'=>$index+$start_id,
-			    					);
-			    					$this->insert($datapayment);
-			    						
-			    					$from_date=$next_payment;
-			    					if($grace_period==$index){//to continue new date for installment
-			    						$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
-			    						$data['first_payment'] = $next_payment;
-			    					}
-			    				}
-			    			}
 			    			
 			    			//​​បញ្ចូលចំនូនត្រូវបង់ដំបូងសិន
 			    			if(!empty($data['identity'])){
@@ -668,7 +674,45 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$data['grace_period'] =empty($data['grace_period'])?0:$data['grace_period'];
     
     		$str_next = '+1 month';
+    		$is_graceperiod=0;
     		for($i=1;$i<=$data['period'];$i++){
+    			$grace_period = $data['grace_period'];
+    			if($grace_period>0 AND $is_graceperiod==0){
+    				$old_interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
+    				$old_interest_paymonth = $this->round_up_currency($curr_type, $old_interest_paymonth);
+    				$is_graceperiod=1;
+    				for($index=1;$index<=$grace_period;$index++){
+    					if($index!=1){
+    						$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+    					}
+    					$this->_name="ln_saleschedule_test";
+    					$datapayment = array(
+    							'branch_id'=>$data['branch_id'],
+    							'sale_id'=>$id,//good
+    							'begining_balance'=> $remain_principal,//good
+    							'principal_permonth'=> 0,//good
+    							'principal_permonthafter'=>0,//good
+    							'total_interest'=>$old_interest_paymonth,//good
+    							'total_interest_after'=>$old_interest_paymonth,//good
+    							'total_payment'=>$old_interest_paymonth,//good
+    							'total_payment_after'=>$old_interest_paymonth,//good
+    							'ending_balance'=>$remain_principal,
+    							'cum_interest'=>0,
+    							'amount_day'=>0,
+    							'is_completed'=>0,
+    							'date_payment'=>$next_payment,
+    					);
+    					$this->insert($datapayment);
+    						
+    					$from_date=$next_payment;
+    					if($grace_period==$index){
+    						$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+    						$data['first_payment'] = $next_payment;
+    					}
+    				}
+    				$old_interest_paymonth=0;
+    			}
+    			
     			if($payment_method==3){//pay by times//check date payment
     				if($i!=1){
     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
@@ -690,41 +734,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     					$start_date = $next_payment;
     					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
     				}else{
-    					$grace_period = $data['grace_period'];
-    					if($grace_period>0){
-    						$old_interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
-    						$old_interest_paymonth = $this->round_up_currency($curr_type, $old_interest_paymonth);
-    						
-    						for($index=1;$index<=$grace_period;$index++){
-    							if($index!=1){
-    								$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
-    							}
-    							$this->_name="ln_saleschedule_test";
-    							$datapayment = array(
-    									'branch_id'=>$data['branch_id'],
-    									'sale_id'=>$id,//good
-    									'begining_balance'=> $remain_principal,//good
-    									'principal_permonth'=> 0,//good
-    									'principal_permonthafter'=>0,//good
-    									'total_interest'=>$old_interest_paymonth,//good
-    									'total_interest_after'=>$old_interest_paymonth,//good
-    									'total_payment'=>$old_interest_paymonth,//good
-    									'total_payment_after'=>$old_interest_paymonth,//good
-    									'ending_balance'=>$remain_principal,
-    									'cum_interest'=>0,
-    									'amount_day'=>0,
-    									'is_completed'=>0,
-    									'date_payment'=>$next_payment,
-    							);
-    							$this->insert($datapayment);
-    							
-    							$from_date=$next_payment;
-    							if($grace_period==$index){
-    								$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
-    								$data['first_payment'] = $next_payment;
-    							}
-    						}
-    					}
+    					
     					//​​បញ្ចូលចំនូនត្រូវបង់ដំបូងសិន
     					if(!empty($data['identity'])){
     						$ids = explode(',', $data['identity']);
