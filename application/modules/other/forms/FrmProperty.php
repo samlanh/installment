@@ -160,8 +160,8 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		$_type_of = array(
 			-1=>$this->tr->translate("SELECT_PLONGPROCESS"),
 			1=>$this->tr->translate("ប្លង់មិនទាន់រត់"),
-			2=>$this->tr->translate("ប្លង់កំពុងរត់មិនទាន់ប្រគល់"),
-			3=>$this->tr->translate("ប្លង់ប្រគល់អោយអតិថិជន")
+			2=>$this->tr->translate("ប្លង់ប្រគល់អោយអតិថិជន(មិនរត់ការ)"),
+			3=>$this->tr->translate("ប្លង់ប្រគល់អោយអតិថិជន(បានរត់ការ)")
 		);
 		$plong_processtype->setMultiOptions($_type_of);
 		$plong_processtype->setValue($request->getParam("plong_processtype"));

@@ -466,6 +466,25 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			'class'=>'fullside',
 		));
 		$grace_period->setValue(0);
+		
+		
+		
+		$_interest_policy = new Zend_Dojo_Form_Element_FilteringSelect('interest_policy');
+		$_interest_policy->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'required' =>'true',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'filterClient();'
+		));
+		$Rs = $db->getInterestPolicy();
+		$optionsInterst=array(0=>$this->tr->translate("NORMAL_INTEREST"));
+		if(!empty($Rs))foreach($Rs AS $row){
+			$optionsInterst[$row['id']]=$row['name'];
+		}
+		$_interest_policy->setMultiOptions($optionsInterst);
+		
 		if($data!=null){
 			$agreementdate->setValue($data['agreement_date']);
 			$_branch_id->setValue($data['branch_id']);
@@ -515,7 +534,8 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id,
 				$second_depostit,
 				$propertiestype,
-				$other_discount
+				$other_discount,
+				$_interest_policy
 				));
 		return $this;
 		

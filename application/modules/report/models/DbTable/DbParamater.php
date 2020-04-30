@@ -2351,7 +2351,7 @@ function getAllBranch($search=null){
 			FROM 
 				`ln_properties` AS p
 			    LEFT JOIN ln_receiveplong AS rp
-			ON p.`id` = rp.`house_id` WHERE p.`status`=1 ";
+			ON p.`id` = rp.`house_id` AND rp.`status`=1 WHERE p.`status`=1 ";
 	
 		$from_date =(empty($search['start_date']))? '1': " p.create_date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " p.create_date <= '".$search['end_date']." 23:59:59'";
@@ -2386,14 +2386,17 @@ function getAllBranch($search=null){
 			$where.=" AND (SELECT pr.process_status FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id` AND pr.process_status LIMIT 1) = ".$search['process_status'];
 		}
 		if($search['plong_processtype']>0){
-			
 			if($search['plong_processtype']==1){
-				$where.=" AND p.`hardtitle` !='' AND p.id NOT IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id`)";
+				//AND p.`hardtitle` !=''
+				$where.="  AND p.id NOT IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id`)";
+				$where.="  AND p.id NOT IN (SELECT rps.house_id FROM ln_receiveplong AS rps WHERE `p`.`id` = rps.`house_id` AND rps.status=1 ) " ;
 			}elseif($search['plong_processtype']==2){
-				$where.=" AND p.id NOT IN (SELECT rp.house_id FROM ln_receiveplong AS pr WHERE `p`.`id` = rp.`house_id` ) ";
-				$where.=" AND p.`hardtitle` !='' AND p.id IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id`) ";
-			}else{
 				$where.=" AND p.id IN (SELECT rp.house_id FROM ln_receiveplong AS pr WHERE `p`.`id` = rp.`house_id` ) ";
+				$where.=" AND p.id NOT IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id`) ";
+			}else{
+				$where.=" AND p.id IN (SELECT rps.house_id FROM ln_receiveplong AS rps WHERE `p`.`id` = rps.`house_id` AND rps.status=1 ) ";
+				$where.=" AND p.id IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id`) ";
+				//AND p.`hardtitle` !='' 
 			}
 		}
 		

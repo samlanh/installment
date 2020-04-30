@@ -1990,5 +1990,16 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}
   	return $idetity;
   }
+  
+  
+  public function getInterestPolicy(){
+  	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  	$db = $this->getAdapter();
+  	$sql= " SELECT id,title AS name
+  	FROM `rms_interestsetting` WHERE title !='' AND status=1 ";
+  	$sql.=" ORDER BY id DESC";
+  	$row = $db->fetchAll($sql);
+  	return $row;
+  }
 }
 ?>
