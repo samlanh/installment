@@ -18,6 +18,7 @@
 	}else if (DISABLE_PAYMENT_DATE==4){
 		$constraintsDate="min:'$cdate',max:'$cdate',";
 	}
+	$interestSetting = SETTING_INTEREST;
 ?>
 <title><?php echo $tr->translate("IL_DISBURSE");?></title>
 <style>
@@ -305,6 +306,12 @@
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
 				                   		<input style="color:red" readonly="readonly" type="text" class="fullside" dojoType="dijit.form.NumberTextBox" name="remain_balance" id="remain_balance"  value="" >
+				                   </div>
+				                </div>
+				                <div class="form-group" style="<?php if ($interestSetting==0){ echo "display: none;";}?>">
+				                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("INTEREST_POLICY");?></label>
+				                   <div class="col-md-7 col-sm-7 col-xs-12">
+				                   		<?php echo $frm->getElement('interest_policy');?>
 				                   </div>
 				                </div>
 				                <div class="form-group">
