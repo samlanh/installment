@@ -174,6 +174,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     						'commission_times'=>$data['times_commission'],
     						'commission_amt'=>$data['commission_amt'],
     				);
+    				if(!empty($data['interest_policy'])){
+    					$arr['interest_policy']=$data['interest_policy'];
+    				}
     				$where= " id = ".$data['id'];
     				$this->update($arr, $where);
     			}
@@ -301,6 +304,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$old_amount_day = 0;
     		$cum_interest=0;
     		$amount_collect = 1;
+    		$old_interestrate=0;
     		$remain_principal = $data['balance'];
     		if($data["old_paymentmethod"]==1 AND $data['deposit']>0){
     			$remain_principal = $data['sold_price'];
@@ -334,11 +338,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		
     		$str_next = '+1 month';
     		for($i=1;$i<=$loop_payment;$i++){
-    			if($payment_method==1){
-    				break;
-    			}elseif($payment_method==2){
-    				break;
-    			}elseif($payment_method==3){//pay by times//check date payment
+    			if($payment_method==3){//pay by times//check date payment
     				if($i!=1){
     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
     					$start_date = $next_payment;
@@ -419,8 +419,23 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 			    		}
 			    		$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
 			    		$total_day = $amount_day;
-			    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
-			    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);//
+			    		if(!empty($data['interest_policy'])){//lorn city
+			    			$interst_rate = $dbtable->getInterestRatebySetting($data['interest_policy'],$i);
+			    			$newperiod=$data['period'];
+			    			if($old_interestrate!=$interst_rate){
+			    				if($i>1){
+			    					$newperiod = $data['period']-$i+1;
+			    				}
+			    				$rsfixed = $dbtable->getFixePaymentbyInterest($interst_rate,$remain_principal,$newperiod);
+			    				$data['fixed_payment']=$rsfixed;
+			    			}
+			    			$interest_paymonth = $remain_principal*$interst_rate/12/100;
+			    			$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
+			    			$old_interestrate = $interst_rate;
+			    		}else{
+				    		$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
+				    		$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);//
+			    		}
 			    		if($data['install_type']==2){//ថយ
 			    			$pri_permonth=$data['for_installamount']/($data['period']*$term_types);
 			    			$pri_permonth = round($pri_permonth,0); 
@@ -587,7 +602,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    			        	'is_completed'=>0,
 	    			        	'date_payment'=>$next_payment,
 	    			        	'no_installment'=>$i+$j,
-	    			        	'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0
+	    			        	'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0,
+	    			        	'interest_rate'=>$old_interestrate
 	    			        );
 	    			        
 	    			        if($i==$loop_payment){//for end of record only

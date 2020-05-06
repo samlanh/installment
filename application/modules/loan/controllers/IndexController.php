@@ -14,17 +14,17 @@ class Loan_IndexController extends Zend_Controller_Action {
  			}
 			else{
 				$search = array(
-						'txt_search'=>'',
-						'client_name'=> -1,
-						'schedule_opt' => -1,
-						'branch_id' => -1,
-						'streetlist'=>'',
-						'status' => -1,
-						'co_id' => -1,
-						'land_id'=>-1,
-						'start_date'=> date('Y-m-d'),
-						'end_date'=>date('Y-m-d'),
-						 );
+					'txt_search'=>'',
+					'client_name'=> -1,
+					'schedule_opt' => -1,
+					'branch_id' => -1,
+					'streetlist'=>'',
+					'status' => -1,
+					'co_id' => -1,
+					'land_id'=>-1,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'),
+				);
 			}
 			$db = new Loan_Model_DbTable_DbLandpayment();
 			$rs_rows= $db->getAllIndividuleLoan($search);
@@ -357,10 +357,10 @@ class Loan_IndexController extends Zend_Controller_Action {
 	function addschedultestAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-				$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
-				$rows_return=$_dbmodel->addScheduleTestPayment($_data);
-				print_r(Zend_Json::encode($rows_return));
-				exit();
+			$_dbmodel = new Loan_Model_DbTable_DbLandpayment();
+			$rows_return=$_dbmodel->addScheduleTestPayment($_data);
+			print_r(Zend_Json::encode($rows_return));
+			exit();
 		}
 	}
 	function demoscheduleAction(){

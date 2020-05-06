@@ -67,7 +67,6 @@ dojo.require("dijit.form.DateTextBox");
 				                <li style="line-height:20px;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("របាយការណ៍ចំណូលចំណាយ");?></li>
 				                <li style="line-height:25px;text-align:center; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
 				                	<span id="projectName"></span>
-				                	<?php if (!empty($this->list_end_date['start_date'])){ echo  date("d-m-Y",strtotime($this->list_end_date['start_date']))." To ".date("d-m-Y",strtotime($this->list_end_date['end_date']));}?>
 				                </li>
 			                </ul>
 			                </td>
@@ -623,4 +622,10 @@ require(["dojo/ready"], function(ready){
 		 
 	});
 });
+function getAllPropertyBranch(){
+	branch_id = dijit.byId('branch_id').get( 'value');
+	if(branch_id>0){
+		dojo.byId("lb_branchname").innerHTML = dijit.byId('branch_id').attr('displayedValue');;
+	}
+}
 </script>

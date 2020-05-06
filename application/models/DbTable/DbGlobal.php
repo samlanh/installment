@@ -2001,5 +2001,26 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$row = $db->fetchAll($sql);
   	return $row;
   }
+  function getInterestRatebySetting($inter_settingid,$current_time){
+  	$db = $this->getAdapter();
+  	$sql="SELECT
+  	percent_value AS interest_rate FROM `rms_interestsetting` AS ist,`rms_interestsetting_detail` AS istd
+  	WHERE
+  	ist.id=istd.settin_id
+  	AND $current_time <= max_month
+  	AND ist.id=$inter_settingid LIMIT 1";
+  	return $db->fetchOne($sql);
+  }
+  function getFixePaymentbyInterest($interst_rate,$begining_fixepayment,$times){
+  	$db = $this->getAdapter();
+  	$fixed_payment=0;
+  	if(!empty($interst_rate)){
+  		$interst_rate=$interst_rate/12/100;
+  		$top = pow(1+$interst_rate,$times);
+  		$bottom = pow(1+$interst_rate,$times)-1;
+  		$fixed_payment = round(($begining_fixepayment*$interst_rate*$top/$bottom),0,PHP_ROUND_HALF_UP);//always round up
+  	}
+  	return $fixed_payment;
+  }
 }
 ?>
