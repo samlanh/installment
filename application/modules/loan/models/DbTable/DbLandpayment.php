@@ -397,11 +397,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		
     		for($i=1;$i<=$loop_payment;$i++){
     			$paid_receivehouse=1;
-    			if($payment_method==1){
-    				break;
-    			}elseif($payment_method==2){
-    				break;
-    			}elseif($payment_method==3){//pay by times//check date payment
+    			if($payment_method==3){//pay by times//check date payment
     				if($i!=1){
     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
     					$start_date = $next_payment;

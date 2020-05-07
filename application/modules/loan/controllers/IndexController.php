@@ -440,6 +440,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  	$db = new Application_Model_DbTable_DbGlobal();
 	  	$rs = $db->getClientByMemberId($id);
 	  	$this->view->client =$rs;
+	  	$this->view->rsinterestpolicy = $db->getInterestPolicy();
 	  	
 	  	$this->view->stepoption = $db->getOptionStepPayment();
 	  	

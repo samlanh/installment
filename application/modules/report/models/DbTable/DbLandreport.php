@@ -1391,6 +1391,10 @@ function updatePaymentStatus($data){
 	  				'land_price'=>$data['land_price'],
 	  		);
 	  		
+	  		if(!empty($data['interest_policy'])){
+	  			$arr['interest_policy']=$data['interest_policy'];
+	  		}
+	  		
 	  		$this->_name="ln_sale";
 	  		$where = " id = ".$data['id'];
 	  		$this->update($arr, $where);
@@ -1434,6 +1438,7 @@ function updatePaymentStatus($data){
 	  		$pri_permonth=0;
 	  		$paid_principal=0;
 	  		$paid_interest=0;
+	  		$old_interestrate=0;
 	  		
 	  		$str_next = '+1 month';
 	  		$ids =explode(',', $data['identity']);
@@ -1561,8 +1566,23 @@ function updatePaymentStatus($data){
 	  				
 	  				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
 	  				$total_day = $amount_day;
-	  				$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
-	  				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
+	  				if(!empty($data['interest_policy'])){//lorn city
+	  					$interst_rate = $dbtable->getInterestRatebySetting($data['interest_policy'],$i);
+	  					$newperiod=$data['period'];
+	  					if($old_interestrate!=$interst_rate){
+	  						if($i>1){
+	  							$newperiod = $data['period']-$i+1;
+	  						}
+	  						$rsfixed = $dbtable->getFixePaymentbyInterest($interst_rate,$remain_principal,$newperiod);
+	  						$data['fixed_payment']=$rsfixed;
+	  					}
+	  					$interest_paymonth = $remain_principal*$interst_rate/12/100;
+	  					$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
+	  					$old_interestrate = $interst_rate;
+	  				}else{
+		  				$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
+		  				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
+	  				}
 	  				if($data['install_type']==2){
 	  					$pri_permonth=$data['total_remain']/($data['period']*$term_types);
 	  					$pri_permonth = round($pri_permonth,0);
@@ -1800,6 +1820,7 @@ function updatePaymentStatus($data){
 	  						'date_payment'=>$next_payment,
 	  						'no_installment'=>$i+$j,
 	  						'last_optiontype'=>$paid_receivehouse,
+	  						'interest_rate'=>$old_interestrate
 	  				);
 	  				if($payment_method==3){//បង់ថេរ
 	  					if($old_remain_principal-$old_pri_permonth<0){
@@ -1934,16 +1955,12 @@ function updatePaymentStatus($data){
 	  		$pri_permonth=0;
 	  		$paid_principal=0;
 	  		$paid_interest=0;
-	  		 
+	  		$old_interestrate=0;
 	  		$str_next = '+1 month';
 	  		$ids =explode(',', $data['identity']);
 	  		for($i=1;$i<=$loop_payment;$i++){
 	  			$paid_receivehouse=1;
-	  			if($payment_method==1){
-	  				break;
-	  			}elseif($payment_method==2){
-	  				break;
-	  			}elseif($payment_method==3){//បង់ថេរ
+	  			if($payment_method==3){//បង់ថេរ
 	  				if($i!=1){
 	  					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
 	  					$start_date = $next_payment;
@@ -2052,8 +2069,25 @@ function updatePaymentStatus($data){
 	  				
 	  				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
 	  				$total_day = $amount_day;
-	  				$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
-	  				$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
+	  				
+	  				if(!empty($data['interest_policy'])){//lorn city
+	  					$interst_rate = $dbtable->getInterestRatebySetting($data['interest_policy'],$i);
+	  					$newperiod=$data['period'];
+	  					if($old_interestrate!=$interst_rate){
+	  						if($i>1){
+	  							$newperiod = $data['period']-$i+1;
+	  						}
+	  						$rsfixed = $dbtable->getFixePaymentbyInterest($interst_rate,$remain_principal,$newperiod);
+	  						$data['fixed_payment']=$rsfixed;
+	  					}
+	  					$interest_paymonth = $remain_principal*$interst_rate/12/100;
+	  					$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
+	  					$old_interestrate = $interst_rate;
+	  				}else{
+	  					$interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
+	  					$interest_paymonth = $this->round_up_currency($curr_type, $interest_paymonth);
+	  				}
+	  				
 	  				if($data['install_type']==2){
 	  					$pri_permonth=$data['total_remain']/($data['period']*$term_types);
 	  					$pri_permonth = round($pri_permonth,0);
