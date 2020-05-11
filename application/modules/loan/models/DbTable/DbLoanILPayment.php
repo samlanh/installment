@@ -567,6 +567,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			$extrapayment = $data['extrapayment'];
     			$extrapayment_after=$extrapayment;
     			$order=0;
+//     			echo $data['schedule_opt'];exit();
     			if($data['schedule_opt']==4 OR $data['schedule_opt']==7){
     				$order=1;
     			}//ករណីរំលស់
@@ -1247,6 +1248,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				 (SELECT ln_properties.land_code  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_code,
 				 (SELECT t.type_nameen FROM `ln_properties_type` as t WHERE t.id=(SELECT p.property_type FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1)) As property_type,
 				  s.*,
+				  s.interest_rate AS sale_interest_rate,
 				  s.buy_date AS sold_date,
 				  DATE_FORMAT(s.buy_date, '%d-%m-%Y') AS `buy_date`,
 				  (SELECT name_kh FROM ln_view WHERE type =29 AND key_code = ss.ispay_bank LIMIT 1) AS payment_type,

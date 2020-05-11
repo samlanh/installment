@@ -4,6 +4,8 @@
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 	$install_month = $this->data['install_by'];
 	$autocalcualte = $this->data['autocalcualte_period'];
+	
+	$interestSetting = SETTING_INTEREST;
 ?>
 <title><?php echo $tr->translate("PREVIEW_INSTALLMENT_CALCUATE");?></title>
 <style>
@@ -116,7 +118,6 @@ div#t_amountmoneytype tr.regurlar {
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                   		 <div class="col-md-6 col-sm-6 col-xs-12">
-	                   		 	<?php //echo $frm->getElement('typesale');?>
 	                   		 	<input type="hidden" name="typesale" id="typesale" dojoType="dijit.form.TextBox" value="1" >
 	                   		 </div>
 	                   		  <div class="col-md-6 col-sm-6 col-xs-12">
@@ -130,7 +131,6 @@ div#t_amountmoneytype tr.regurlar {
 	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRICE_BEFORE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php //echo $frm->getElement('total_sold');?>
 	                    	<input type="hidden" name="total_sold" id="total_sold" dojoType="dijit.form.TextBox" value="0" >
 	                   </div>
 	                </div>
@@ -209,7 +209,12 @@ div#t_amountmoneytype tr.regurlar {
 	                   		<input style="color:red" readonly="readonly" type="text" class="fullside" dojoType="dijit.form.NumberTextBox" name="remain_balance" id="remain_balance"  value="" >
 	                   </div>
 	                </div>
-	                
+	                 <div class="form-group" style="<?php if ($interestSetting==0){ echo "display: none;";}?>">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("INTEREST_POLICY");?></label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm->getElement('interest_policy');?>
+	                   </div>
+	                </div>
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("INTEREST_RATE")."/". $tr->translate("YEAR");?> :
 	                   </label>

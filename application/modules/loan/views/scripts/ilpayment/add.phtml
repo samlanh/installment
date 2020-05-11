@@ -1031,6 +1031,7 @@ function clearhistory(){
 }
 var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-illoandetail')); ?>';
 function getLaonPayment(type){//tab ទី១
+	
 	try{
 	tem='';	
 	is_set=0;
@@ -1059,6 +1060,7 @@ function getLaonPayment(type){//tab ទី១
 					num=0;
 					pay_option = dijit.byId('option_pay').get('value');
 					for(indexs=0;indexs<respone.length;indexs++){
+						//alert(respone[indexs].interest_rate);
 						inx = indexs+1;
 						num++;
 						date = new Date(respone[indexs].date_payment);
@@ -1118,7 +1120,7 @@ function getLaonPayment(type){//tab ទី១
 							dijit.byId('total_pricipalpaid').attr("value",respone[indexs].total_principal_permonthpaid);
 							dijit.byId('loan_period').attr('value',respone[indexs].total_duration);
 							dijit.byId('loan_period').set("readOnly",true);
-							dijit.byId('interest_rate').attr('value',respone[indexs].interest_rate);
+							dijit.byId('interest_rate').attr('value',respone[indexs].sale_interest_rate);
 							dijit.byId('interest_rate').set("readOnly",true);
 							dijit.byId('total_amount_loan').attr('value',respone[indexs].price_before);
 							dijit.byId('loan_period').attr('value',respone[indexs].amount_month);
@@ -1338,7 +1340,7 @@ function calculateTotal(index){//គណនាបង់
 							total_penelize_peryear = roundhundred((parseFloat(ps)*parseFloat(total_late_day)));
 						}
 						 total_penelize = total_penelize+parseFloat(total_penelize_peryear);
-						 alert(ps);
+						 
 						 condition=1;
 					}
 				}
