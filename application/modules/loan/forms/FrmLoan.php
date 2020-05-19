@@ -485,6 +485,53 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 		}
 		$_interest_policy->setMultiOptions($optionsInterst);
 		
+		
+		$pre_schedule = new Zend_Dojo_Form_Element_FilteringSelect('pre_schedule_opt');
+		$pre_schedule->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>'checkPreScheduleOption();'
+		));
+		$opt = $db->getVewOptoinTypeByType(25,1,null,1);
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		unset($opt[1]);unset($opt[2]);
+		$pre_schedule->setMultiOptions($opt);
+		
+		$_pre_percent_payment = new Zend_Dojo_Form_Element_TextBox("pre_percent_payment");
+		$_pre_percent_payment->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+		));
+		
+		$_pre_percent_installment = new Zend_Dojo_Form_Element_TextBox("pre_percent_installment");
+		$_pre_percent_installment->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+		));
+		
+		$_pre_amount_month = new Zend_Dojo_Form_Element_TextBox("pre_amount_month");
+		$_pre_amount_month->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+		));
+		
+		$_pre_amount_year = new Zend_Dojo_Form_Element_TextBox("pre_amount_year");
+		$_pre_amount_year->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+		));
+		
+		$_pre_fix_payment = new Zend_Dojo_Form_Element_TextBox("pre_fix_payment");
+		$_pre_fix_payment->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+		));
+		
 		if($data!=null){
 			$agreementdate->setValue($data['agreement_date']);
 			$_branch_id->setValue($data['branch_id']);
@@ -527,6 +574,13 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			if (!empty($data['other_discount'])){
 				$other_discount->setValue($data['other_discount']);
 			}
+			
+			$pre_schedule->setValue($data['pre_schedule_opt']);
+			$_pre_percent_payment->setValue($data['pre_percent_payment']);
+			$_pre_percent_installment->setValue($data['pre_percent_installment']);
+			$_pre_amount_month->setValue($data['pre_amount_month']);
+			$_pre_amount_year->setValue($data['pre_amount_year']);
+			$_pre_fix_payment->setValue($data['pre_fix_payment']);
 		}
 		$this->addElements(array($grace_period,$commision_amt,$times_commission,$last_payment,$paid_date,$note_agreement,$total_discount,$delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,
@@ -535,7 +589,14 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 				$second_depostit,
 				$propertiestype,
 				$other_discount,
-				$_interest_policy
+				$_interest_policy,
+				
+				$pre_schedule,
+				$_pre_percent_payment,
+				$_pre_percent_installment,
+				$_pre_amount_month,
+				$_pre_amount_year,
+				$_pre_fix_payment
 				));
 		return $this;
 		

@@ -327,6 +327,13 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'user_id'=>$this->getUserId(),
     			 	
     			 	'other_discount'=>$data['other_discount'],//Other Discount	
+    			 	
+    			 	'pre_schedule_opt'=>$data['pre_schedule_opt'],
+    			 	'pre_percent_payment'=>$data['pre_percent_payment'],
+    			 	'pre_percent_installment'=>$data['pre_percent_installment'],
+    			 	'pre_amount_month'=>$data['pre_amount_month'],
+    			 	'pre_amount_year'=>$data['pre_amount_year'],
+    			 	'pre_fix_payment'=>$data['pre_fix_payment'],
     				);
     		$this->_name='ln_sale';
     		$id = $this->insert($arr);//add group loan
@@ -700,6 +707,13 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'note_agreement'=>$note_agreement,
     				
     				'other_discount'=>$data['other_discount'],//Other Discount
+    				
+    				'pre_schedule_opt'=>$data['pre_schedule_opt'],
+    				'pre_percent_payment'=>$data['pre_percent_payment'],
+    				'pre_percent_installment'=>$data['pre_percent_installment'],
+    				'pre_amount_month'=>$data['pre_amount_month'],
+    				'pre_amount_year'=>$data['pre_amount_year'],
+    				'pre_fix_payment'=>$data['pre_fix_payment'],
     			);
     		
     		$id = $data['id'];

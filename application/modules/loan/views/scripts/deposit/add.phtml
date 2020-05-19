@@ -260,7 +260,56 @@
 				                    	<label id="land_information" style="max-width:100%;"></label>
 				                   </div>
 				                </div>
-				               
+				                
+				                <div style="<?php if (SETTING_PRE_SCHEDULE==0){ echo "display:none;";}?>">
+				                	<div class="form-group">
+					                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRE_PAYMENT_TYPE");?> :
+					                   </label>
+					                   <div class="col-md-7 col-sm-7 col-xs-12">
+					                    	<?php echo $frm->getElement('pre_schedule_opt');?>
+					                   </div>
+					                </div>
+					               <div id="schedule_installment">
+						                <div class="form-group">
+						                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRE_PERCENT_PAYMENT");?> :
+						                   </label>
+						                   <div class="col-md-7 col-sm-7 col-xs-12">
+						                    	<?php echo $frm->getElement('pre_percent_payment');?>
+						                   </div>
+						                </div>
+						                <div class="form-group">
+						                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRE_AMOUNT_MONTH");?> :
+						                   </label>
+						                   <div class="col-md-7 col-sm-7 col-xs-12">
+						                    	<?php echo $frm->getElement('pre_amount_month');?>
+						                   </div>
+						                </div>
+						                <div class="form-group">
+						                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRE_PERCENT_INSTALLMENT");?> :
+						                   </label>
+						                   <div class="col-md-7 col-sm-7 col-xs-12">
+						                    	<?php echo $frm->getElement('pre_percent_installment');?>
+						                   </div>
+						                </div>
+						                <div class="form-group">
+						                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRE_AMOUNT_YEAR");?> :
+						                   </label>
+						                   <div class="col-md-7 col-sm-7 col-xs-12">
+						                    	<?php echo $frm->getElement('pre_amount_year');?>
+						                   </div>
+						                </div>
+					                </div>
+					                <div id="schedule_step">
+						               <div class="form-group">
+						                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRE_FIX_PAYMENT");?> :
+						                   </label>
+						                   <div class="col-md-7 col-sm-7 col-xs-12">
+						                    	<?php echo $frm->getElement('pre_fix_payment');?>
+						                   </div>
+						                </div>
+						             </div>
+				                </div>
+				                
 				            </div>
 				            <div class="col-md-4 col-sm-4 col-xs-12">
 								<div class="form-group">
@@ -764,6 +813,8 @@ require(["dojo/ready"], function(ready){
 		 branch_id.on('change', function(evt) {
 			 getAllStaffByBranch();
 		});
+
+		 checkPreScheduleOption();
 	  });
 	 new dijit.form.FilteringSelect({
 	 	store: staff_store,
@@ -1314,10 +1365,21 @@ function getAllStaffByBranchPop(){
 function hideDialog1(){
 	 dijit.byId("popup_staff").hide();
 }
-</script>
-
-
-<script>
+function checkPreScheduleOption(){
+	payment_option = dijit.byId("pre_schedule_opt").get("value");
+	if(payment_option==4){
+		document.getElementById('schedule_step').style.display="none";
+		document.getElementById('schedule_installment').style.display="block";
+		dijit.byId('pre_fix_payment').set('value',"");
+	}else{
+		document.getElementById('schedule_step').style.display="block";
+		document.getElementById('schedule_installment').style.display="none";
+		dijit.byId('pre_percent_payment').set('value',"");
+		dijit.byId('pre_percent_installment').set('value',"");
+		dijit.byId('pre_amount_month').set('value',"");
+		dijit.byId('pre_amount_year').set('value',"");
+	}
+}
 function returnMOnth(monthnum){
 	var month = new Array();
 	month[1] = "Jan";
