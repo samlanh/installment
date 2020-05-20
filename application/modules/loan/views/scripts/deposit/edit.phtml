@@ -1414,6 +1414,26 @@ function printSave(new_stu_id,new_receipt_no){
 		dojo.byId("lbl_discountOther").innerHTML = "$ "+dojo.number.format(dijit.byId("other_discount").get('value'),{places:2});
 		dojo.byId("lb_forCompletedAmount").innerHTML = "$ "+dojo.number.format(dijit.byId("second_depostit").get('value'),{places:2});
 		dojo.byId("lb_completedDate").innerHTML = completedDate;
+
+
+		date_line = dijit.byId("date_line").get('value');
+		var a = new Date(date_line);
+		mm = a.getMonth()+1;
+		var dd = a.getDate();
+		 if(dd<10){
+			 dd = "0"+dd;
+		}
+		var y = a.getFullYear();
+		var agreementDate = dd +'-'+mm+'-'+y ;
+		
+		dojo.byId("lb_agreement_date").innerHTML = agreementDate;
+		dojo.byId("lb_pre_schedule_opt").innerHTML = dijit.byId("pre_schedule_opt").attr('displayedValue');
+		dojo.byId("lbl_pre_percent_payment").innerHTML = dijit.byId("pre_percent_payment").get('value');
+		dojo.byId("lbl_pre_amount_month").innerHTML = dijit.byId("pre_amount_month").get('value');
+		dojo.byId("lbl_pre_percent_installment").innerHTML = dijit.byId("pre_percent_installment").get('value');
+		dojo.byId("lbl_pre_amount_year").innerHTML = dijit.byId("pre_amount_year").get('value');
+		dojo.byId("lbl_pre_fix_payment").innerHTML = dijit.byId("pre_fix_payment").get('value');
+		
 		
 		dijit.byId("terms").show();	
   }
@@ -1542,10 +1562,18 @@ function checkPreScheduleOption(){
 	if(payment_option==4){
 		document.getElementById('schedule_step').style.display="none";
 		document.getElementById('schedule_installment').style.display="block";
+
+		$(".schedule_step").css("display", "none");
+		$(".schedule_installment").css("display", "table-row");
+		
 		dijit.byId('pre_fix_payment').set('value',"");
 	}else{
 		document.getElementById('schedule_step').style.display="block";
 		document.getElementById('schedule_installment').style.display="none";
+		
+		$(".schedule_step").css("display", "table-row");
+		$(".schedule_installment").css("display", "none");
+		
 		dijit.byId('pre_percent_payment').set('value',"");
 		dijit.byId('pre_percent_installment').set('value',"");
 		dijit.byId('pre_amount_month').set('value',"");

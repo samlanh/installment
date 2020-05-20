@@ -41,6 +41,20 @@
 		</div>
 		<?php }
 		}?>
+		
+		<style>
+			
+			<?php if ($this->rs['pre_schedule_opt']==4){?>
+			tr.schedule_step{
+				display: none;
+			}
+			<?php }else{?>
+			tr.schedule_installment{
+				display: none;
+			}
+			<?php }?>
+		</style>
+		
 	</div>
 	<div id="noteContent" style="display: none;"><?php echo $this->rs['note'];?></div>
  </div>
@@ -159,5 +173,14 @@ function printSave(){
 	if(is_showinstallment==1 && schedule_opt!=4){
 		dojo.byId("lb_amount").innerHTML = "$ 0.00";
 	}
+
+	dojo.byId("lb_agreement_date").innerHTML = "<?php echo date("d/m/Y",strtotime($this->rs['agreement_date']));?>";
+	dojo.byId("lb_pre_schedule_opt").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['pre_paymenttype']))));?>';
+	dojo.byId("lbl_pre_percent_payment").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['pre_percent_payment']))));?>';
+	dojo.byId("lbl_pre_amount_month").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['pre_amount_month']))));?>';
+	dojo.byId("lbl_pre_percent_installment").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['pre_percent_installment']))));?>';
+	dojo.byId("lbl_pre_amount_year").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['pre_amount_year']))));?>';
+	dojo.byId("lbl_pre_fix_payment").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['pre_fix_payment']))));?>';
+
 }
 </script>

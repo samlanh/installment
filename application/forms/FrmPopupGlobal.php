@@ -1100,6 +1100,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<span id="lb_forCompletedAmount"></span>
 					<span id="lb_completedDate"></span>
 					<span id="lbl_discountOther"></span>
+					
+					<span id="lb_agreement_date"></span>
+					<span id="lb_pre_schedule_opt"></span>
+					<span id="lbl_pre_percent_payment"></span>
+					<span id="lbl_pre_amount_month"></span>
+					<span id="lbl_pre_percent_installment"></span>
+					<span id="lbl_pre_amount_year"></span>
+					<span id="lbl_pre_fix_payment"></span>
 				</div>
 				<span class="postingdate">Posting Date: <span id=lblpaid_date></span></span>
 				<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
@@ -1369,6 +1377,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<span id="lb_forCompletedAmount"></span>
 				<span id="lb_completedDate"></span>
 				<span id="lbl_discountOther"></span>
+				
+				<span id="lb_agreement_date"></span>
+				<span id="lb_pre_schedule_opt"></span>
+				<span id="lbl_pre_percent_payment"></span>
+				<span id="lbl_pre_amount_month"></span>
+				<span id="lbl_pre_percent_installment"></span>
+				<span id="lbl_pre_amount_year"></span>
+				<span id="lbl_pre_fix_payment"></span>
 			</div>
 			</div>';
 			/*<tr style="font-size: 11px;">
@@ -1469,6 +1485,11 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						font-size: 11px;
 						margin-top: -5px;
 					}
+					tr.schedule_installment td label,
+					tr.schedule_step td label {
+					    display: block;
+					    white-space: pre-line;
+					}
 				</style>
 				<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 					<tr>
@@ -1551,8 +1572,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<tr >
 						<td width="10%">'.$tr->translate("SOLD_PRICE").'</td>
 						<td width="40%"><strong><label id="lb_saleprice" class="value"></label></strong></td>
-						<td>&nbsp;&nbsp;សន្យាបង់បង្គ្រប់</td>
-						<td colspan="3"><strong><label id="lb_forCompletedAmount" class="value"></label></strong></td>
+						<td>&nbsp;&nbsp;'.$tr->translate("DATE_MAKE_AGREEEMNT").'</td>
+						<td colspan="3"><strong><label id="lb_agreement_date" class="value"></label></strong></td>
 					</tr>
 					<tr>
 						<td>ប្រាក់បានបង់សរុប</td>
@@ -1565,12 +1586,58 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 								</tr>
 							</table>
 						</td>
-						<td>&nbsp;&nbsp;នៅថ្ងៃទី</td>
-						<td colspan="3"><label  class="value" style="font-family: Arial,Helvetica,sans-serif;" id="lb_completedDate"></label></td>
+						<td>&nbsp;&nbsp;'.$tr->translate("TERM_CODITION").'</td>
+						<td colspan="3"><label  class="value" id="lb_pre_schedule_opt"></label></td>
 					</tr>
 					<tr >
-						<td valign="top">របៀបទូទាត់</td>
-						<td colspan="5" class="noted" valign="top"><label id="lb_noted" style="min-height: 120px;display: block;   white-space: pre-line;"></label></td>
+						<td rowspan="4" valign="top">'.$tr->translate("NOTE").'</td>
+						<td rowspan="4" class="noted" valign="top"><label id="lb_noted" style="min-height: 80px;display: block;   white-space: pre-line;"></label></td>
+					</tr>
+					<tr class="schedule_installment">
+						<td valign="top">&nbsp;&nbsp;'.$tr->translate("PRE_PERCENT_PAYMENT").'</td>
+						<td colspan="3" valign="top">
+							<table  width="100%" cellpadding="0" cellspacing="0">
+								<tr>
+									<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_pre_percent_payment" class="value"></label></td>
+									<td width="33%" style="white-space: nowrap;">'.$tr->translate("PRE_AMOUNT_MONTH").'</td>
+									<td width="33.5%"><label style="white-space: nowrap;margin-right: -4px;" class="value" id="lbl_pre_amount_month"></label></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr class="schedule_installment">
+						<td valign="top">&nbsp;&nbsp;'.$tr->translate("PRE_PERCENT_INSTALLMENT").'</td>
+						<td colspan="3" valign="top">
+							<table  width="100%" cellpadding="0" cellspacing="0">
+								<tr>
+									<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_pre_percent_installment" class="value"></label></td>
+									<td width="33%" style="white-space: nowrap;">'.$tr->translate("PRE_AMOUNT_YEAR").'</td>
+									<td width="33.5%"><label style="white-space: nowrap;margin-right: -4px;" class="value" id="lbl_pre_amount_year"></label></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr class="schedule_installment">
+						<td colspan="4" valign="top">
+						&nbsp;
+						</td>
+					</tr>
+					
+					<tr valign="top" class="schedule_step">
+						<td valign="top">&nbsp;&nbsp;'.$tr->translate("PRE_FIX_PAYMENT").'</td>
+						<td colspan="3" valign="top">
+							<label style="margin-left: -4px;" id="lbl_pre_fix_payment" class="value"></label>
+						</td>
+					</tr>
+					<tr class="schedule_step">
+						<td colspan="4" valign="top">
+						&nbsp;
+						</td>
+					</tr>
+					<tr class="schedule_step">
+						<td colspan="4" valign="top">
+						&nbsp;
+						</td>
 					</tr>
 					<tr >
 						<td colspan="6" valign="top">
@@ -1643,6 +1710,9 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<span id="lb_amount"></span>
 					<span id="lb_extrapayment"></span>
 					<span id="lb_interest"></span>
+					
+					<span id="lb_forCompletedAmount"></span>
+					<span id="lb_completedDate"></span>
 				</div>
 				</div>
 				';
@@ -1878,6 +1948,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						<span id="lb_forCompletedAmount"></span>
 						<span id="lb_completedDate"></span>
 						<span id="lbl_discountOther"></span>
+						
+						<span id="lb_agreement_date"></span>
+						<span id="lb_pre_schedule_opt"></span>
+						<span id="lbl_pre_percent_payment"></span>
+						<span id="lbl_pre_amount_month"></span>
+						<span id="lbl_pre_percent_installment"></span>
+						<span id="lbl_pre_amount_year"></span>
+						<span id="lbl_pre_fix_payment"></span>
 					</div>
 				</div>
 				';
@@ -2113,6 +2191,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			<span id="lb_forCompletedAmount"></span>
 			<span id="lb_completedDate"></span>
 			<span id="lbl_discountOther"></span>
+			
+			<span id="lb_agreement_date"></span>
+			<span id="lb_pre_schedule_opt"></span>
+			<span id="lbl_pre_percent_payment"></span>
+			<span id="lbl_pre_amount_month"></span>
+			<span id="lbl_pre_percent_installment"></span>
+			<span id="lbl_pre_amount_year"></span>
+			<span id="lbl_pre_fix_payment"></span>
 			</div>
 			</div>
 			';

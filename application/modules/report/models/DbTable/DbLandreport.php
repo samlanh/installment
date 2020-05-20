@@ -1235,7 +1235,17 @@ public function getAllOutstadingLoan($search=null){
 					ELSE  ''
 				END AS paymnetLabel,
 				(SELECT c.hname_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS hname_kh,
-				(SELECT CONCAT(last_name,' ',first_name) FROM `rms_users` WHERE rms_users.id=crm.`user_id` LIMIT 1) As by_user
+				(SELECT CONCAT(last_name,' ',first_name) FROM `rms_users` WHERE rms_users.id=crm.`user_id` LIMIT 1) As by_user,
+				
+				(SELECT s.agreement_date FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS agreement_date,
+				(SELECT name_kh FROM `ln_view` WHERE key_code =(SELECT s.pre_schedule_opt FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AND type = 25 limit 1) AS pre_paymenttype,
+				(SELECT s.pre_schedule_opt FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_schedule_opt,
+				(SELECT s.pre_percent_payment FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_percent_payment,
+				(SELECT s.pre_amount_month FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_amount_month,
+				(SELECT s.pre_percent_installment FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_percent_installment,
+				(SELECT s.pre_amount_year FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_amount_year,
+				(SELECT s.pre_fix_payment FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_fix_payment
+				
 		FROM `ln_client_receipt_money` AS crm WHERE crm.`id`=".$id;
 	 $rs = $db->fetchRow($sql);
 	 $rs['property_type']=ltrim(strstr($rs['property_type'], '('), '.');
