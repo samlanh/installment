@@ -2456,7 +2456,7 @@ function getAllBranch($search=null){
 		ON  p.id  = s.house_id
 		LEFT JOIN ln_issue_house AS rs
 		ON s.id = rs.sale_id AND rs.status=1
-		WHERE 1 ";
+		WHERE s.is_cancel=0 ";
 	
 		$string="";
 		if(!empty($search['give_status'])){

@@ -69,11 +69,22 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
         
         $this->view->stepoption = $db->getOptionStepPayment();
         
-        $frmpopup = new Application_Form_FrmPopupGlobal();
-//         $db_keycode = new Application_Model_DbTable_DbKeycode();
-//         $this->view->keycode = $db_keycode->getKeyCodeMiniInv();        
+        $interest = $db->getAllInterestratestore();
+        $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+        array_unshift($interest,array(
+        		'id' => -1,
+        		'name' =>$tr->translate("ADD_NEW"),
+        ) );
+        $this->view->rs_interest = $interest;
+        
+        $frmpopup = new Application_Form_FrmPopupGlobal();       
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
+		
+		
+		
+		
+		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		$id = $this->getRequest()->getParam('id');
@@ -88,6 +99,9 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			}
 		}
 		$this->view->id = $id;
+		
+		
+		
 	}	
 	
 	public function editAction(){
