@@ -8,6 +8,7 @@
 	
 	$dbGb = new Application_Model_DbTable_DbGlobal();
 	$Rs = $dbGb->getInterestPolicy();
+	$receivedopt = $dbGb->getArrayLastPayment();
 	
 ?>
 <title><?php echo $tr->translate('REPORT WEEK');?></title>
@@ -320,8 +321,9 @@ td p{ margin-top:0px !important;}
 				                   	<div class="col-md-5"><?php echo $tr->translate("paid_receivehouse");?></div>
 				                   	<div class="col-md-7 col-sm-7 col-xs-12">
 					                	<select name="paid_receivehouse" id="paid_receivehouse" dojoType="dijit.form.FilteringSelect">
-									    	<option value="0" label="បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ"><?php echo $tr->translate("RECEIVED_PROPERTY");?></option>
-										    	<option value="1" label="យកតាមកាលបរិច្ឆេទបង់"><?php echo $tr->translate("BY_SCHEDULE_DATE");?></option>
+					                		<?php if (!empty($receivedopt)) foreach ($receivedopt as $keyIndex => $last){?>
+									    	<option value="<?php echo $keyIndex;?>" label="<?php echo $last;?>"><?php echo $last;?></option>
+									    	<?php }?>
 										</select>
 									</div>
 				                </div>

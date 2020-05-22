@@ -2022,5 +2022,15 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}
   	return $fixed_payment;
   }
+  
+  function getArrayLastPayment(){
+  	$arr = array(
+  			1=>$this->tr->translate("BY_SCHEDULE_DATE"),
+  			0=>$this->tr->translate("RECEIVED_PROPERTY"),
+  			2=>$this->tr->translate("RECEIVED_HOUSE")
+  		);
+  	return $arr;
+  	 
+  }
 }
 ?>

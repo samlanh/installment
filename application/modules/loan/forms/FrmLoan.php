@@ -131,7 +131,8 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 		}
 		$staff_id->setMultiOptions($options);
 		
-		$receivedopt = array(1=>$this->tr->translate("BY_SCHEDULE_DATE"),0=>$this->tr->translate("RECEIVED_PROPERTY"),2=>$this->tr->translate("RECEIVED_HOUSE"));
+		$receivedopt = $db->getArrayLastPayment();
+// 		$receivedopt = array(1=>$this->tr->translate("BY_SCHEDULE_DATE"),0=>$this->tr->translate("RECEIVED_PROPERTY"),2=>$this->tr->translate("RECEIVED_HOUSE"));
 		$paid_receivehouse = new Zend_Dojo_Form_Element_FilteringSelect('paid_receivehouse');
 		$paid_receivehouse->setAttribs(array(
 			'dojoType'=>'dijit.form.FilteringSelect',
