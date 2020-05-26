@@ -611,10 +611,21 @@ function calculateDiscount(){
 	if(isNaN(bdiscount_fixed)){
 		bdiscount_fixed=0;
 	}
+
+	discount = parseFloat(discount)+parseFloat(bdiscount_fixed);
+	total_sold = total_sold-discount;
+	discount_percent = parseInt(total_sold*discount_percent/100);
+	total_discount = discount_percent+discount;
+	total_sold = total_sold-discount_percent;
+	
+	//old condiction discount % first
+	/*
 	discount = parseFloat(discount)+parseFloat(bdiscount_fixed);
 
 	discount_percent = parseInt(total_sold*discount_percent/100);
 	total_sold = total_sold-discount_percent-discount;
+	*/
+	
 	
 	if(dijit.byId('old_paymentmethod').get('value')==1){
 	}

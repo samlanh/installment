@@ -709,12 +709,20 @@ function calculateDiscount(){
 	if(isNaN(other_discount)){
 		other_discount=0;
 	}
-	
-	
-	discount = parseFloat(discount)+parseFloat(bdiscount_fixed);
 
+	discount = parseFloat(discount)+parseFloat(bdiscount_fixed);
+	total_sold = total_sold-discount-other_discount;
+	discount_percent = parseInt(total_sold*discount_percent/100);
+	total_discount = discount_percent+discount+other_discount;
+	total_sold = total_sold-discount_percent;
+	
+	//old condiction discount % first
+	/*
+	discount = parseFloat(discount)+parseFloat(bdiscount_fixed);
 	discount_percent = parseInt(total_sold*discount_percent/100);
 	total_sold = total_sold-discount_percent-discount-other_discount;
+	*/
+	
 	
 	dijit.byId('sold_price').attr('value',total_sold);
 	Balance();
