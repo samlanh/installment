@@ -1411,9 +1411,15 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<div >
 					<style>
 						.label{ font-size: 22px;}
-						.value{font:16px '."Khmer OS Battambang".';border: 1px solid #000; min-height: 29px; padding: 0 2px;width: 100%;margin-right:2px; display: block;
-						line-height: 29px;
-						text-align: left;
+						.value{font: 16px Khmer OS Battambang;
+    border: 1px solid #000;
+    min-height: 40px;
+    padding: 0 2px;
+    width: 100%;
+    margin-right: 2px;
+    display: block;
+    line-height: 38px;
+    text-align: left;
 					}
 					span#lb_hourseno {
 						overflow-wrap: break-word;
@@ -1423,7 +1429,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						line-height: 24px;
 					}
 					.print tr td{
-						padding:1px 2px;
+						padding:2px 2px;
 					}
 					.khmer{font:14px '."Khmer OS Battambang".';}
 					.one{white-space:nowrap;}
@@ -1453,7 +1459,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						width:100%;
 						white-space: nowrap;
 						font-size:16px;
-						margin-top: -28px;
+						margin-top: -18px;
 						font-family: Times New Roman,'."Khmer OS Battambang".';
 					}
 					table.print.contentdata tr{
@@ -1526,10 +1532,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<tr >
 						<td>ឈ្មោះ​អតិថិជន </td>
 						<td><strong><label id="lb_customer" class="value"></label></strong></td>
-						<td>&nbsp;&nbsp; ប្រាក់ត្រូវបង់</td>
-						<td><strong><label id="lbl_totalpayment" class="value">0.00</label></strong></td>
-						<td>&nbsp; ប្រាក់ពិន័យ</td>
-						<td><strong><label id="lb_penalty" class="value">0.00</label></strong></td>
+						<td>&nbsp;&nbsp;ប្រាក់ត្រូវបង់</td>
+						<td colspan="3"><strong><label id="lbl_totalpayment" class="value">0.00</label></strong></td>
 					</tr>
 					<tr >
 						<td>'.$tr->translate("PROPERTY_CODE").'</td>
@@ -1548,10 +1552,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 								</tr>
 							</table>
 						</td>
-						<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
-						<td><strong><label id="lb_buydate1" class="value"></label></strong></td>
-						<td>&nbsp;ថ្ងៃទទួល</td>
-						<td><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
+						<td>&nbsp;&nbsp;ថ្ងៃទទួល</td>
+						<td colspan="3" ><strong><label id="lbl_paid_date1" class="value"></label></strong></td>
 					</tr>
 					<tr>
 						<td>បញ្ចុះជាភាគរយ</td>
@@ -1682,8 +1684,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 									<td width="10%" valign="top">
 									</td>
 									<td colspan="5" valign="top">
-										<span class="comment">'.$data['comment'].'</span><br />
-										<span class="comment">'.$data['comment1'].'</span>
+										ក្នុងករណីដែលអ្នកទិញមិនបានបង់ប្រាក់បន្ថែមតាមការសន្យាខាងលើនោះប្រាក់ដែលបានបង់នឹងទៅជាកម្មសិទ្ធរបស់អ្នកលក់ដោយស្វ័យប្រវត្តិ។
 									</td>
 								</tr>
 							</table>
@@ -1713,6 +1714,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					
 					<span id="lb_forCompletedAmount"></span>
 					<span id="lb_completedDate"></span>
+					<span id="lb_buydate1"></span>
+					<span id="lb_penalty"></span>
 				</div>
 				</div>
 				';

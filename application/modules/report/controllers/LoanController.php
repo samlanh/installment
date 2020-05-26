@@ -573,7 +573,9 @@ class Report_LoanController extends Zend_Controller_Action {
   	$receiptType = null;
   	if ($receipt['field3']==1){
   		if (date("Y-m-d",strtotime($receipt['date_pay']))>=date("Y-m-d",strtotime($dateLimit))){
-  			$receiptType=1;
+  			if ($receipt['payment_times']==1){
+  				$receiptType=1;
+  			}
   		}
   	}
   	$this->view->dateLimit = $dateLimit;
