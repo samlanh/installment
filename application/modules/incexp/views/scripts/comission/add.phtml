@@ -377,53 +377,7 @@
 		</div>
 	</div>
 </div>
-<div class="dijitHidden">
-	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_staff" >
-		<form style="background-color: buttonface; width:100%;" id='frm_staff' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-			<table cellspacing="10" width="100%" style="margin: 0 auto;">
-				<tr>
-					<td>
-						<fieldset style="background-color: buttonface;">
-						<legend align="center" ><?php echo $tr->translate('ADD_STAFF');?></legend>
-							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
-								<tr>
-									<td><?php echo $tr->translate('NAME_KH');?></td>
-									<td><input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="kh_name" name="kh_name" value="" type="text"></td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('SEX');?></td>
-									<td>
-										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="sex" name="sex" value="" type="text">
-											<option value="1" selected="selected">Male</option>
-											<option value="2">Female</option>
-										</select>
-										<input type="hidden" name="branch_id_pop" id="branch_id_pop" dojoType="dijit.form.TextBox" />
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('PHONE');?></td>
-									<td><input type="text" name="phone" id="phone" class="fullside" dojoType="dijit.form.TextBox" /></td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('NOTE');?></td>
-									<td>
-										<input type="text" name="note_pop" id="note_pop" class="fullside" dojoType="dijit.form.TextBox" />
-									</td>
-								</tr>
-								<tr>
-									<td colspan="4" align="center">
-										<input type="button" id='save_staff' value="save" label="SAVE" name="save" dojoType="dijit.form.Button" 
-										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addStaff();"/>
-									</td>
-								</tr>
-							</table>
-					</fieldset>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-</div>
+
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("CHEQUE_ISSUER")?>'"  id="frm_cheque" >
 		<form id="form_cheque"​ dojoType="dijit.form.Form" >
@@ -440,6 +394,69 @@
 					</td>
 				</tr>
 			</table>
+		</form>
+	</div>
+</div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_staff" >
+		<form style="background-color: buttonface; width:100%;" id='frm_staff' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+				<tr>
+					<td>
+						<fieldset style="background-color: buttonface;">
+						<legend align="center" ><?php echo $tr->translate('ADD_STAFF');?></legend>
+							<table style="margin: 0 auto; width: 100%;  padding:10px; line-height: 32px;" cellspacing="7" >
+								<tr>
+									<td><?php echo $tr->translate('PARENT');?></td>
+									<td>
+										<input id="parent_id" />
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate('NAME_KH');?></td>
+									<td>
+										<input dojoType="dijit.form.ValidationTextBox"   class="fullside" id="kh_name" name="kh_name" value="" type="text">
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate('SEX');?></td>
+									<td>
+										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="sex" name="sex" value="" type="text">
+											<option value="1">Male</option>
+											<option value="2">Female</option>
+										</select>
+									</td>
+								</tr>
+								<input type="hidden" name="branch_id_pop" id="branch_id_pop" dojoType="dijit.form.TextBox" />
+								<tr>
+									<td><?php echo $tr->translate('PHONE');?></td>
+									<td>
+										<input type="text" name="phone" id="phone" class="fullside" dojoType="dijit.form.TextBox" />
+									</td>
+									
+								</tr>
+								
+								<tr>
+									<td><?php echo $tr->translate('NOTE');?></td>
+									<td>
+										<input type="text" name="note_pop" id="note_pop" class="fullside" dojoType="dijit.form.TextBox" />
+									</td>
+									
+								</tr>
+								
+								<tr>
+									<td colspan="4" align="center">
+										<input type="button" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="savePopUp" name="save" dojoType="dijit.form.Button" 
+										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addStaff();"/>
+									</td>
+								</tr>
+								
+							</table>
+					</fieldset>
+					</td>
+				</tr>
+			</table>
+
 		</form>
 	</div>
 </div>
@@ -503,29 +520,6 @@ function printSubmit(){
 function hideDialog1(){
 	dijit.byId('popup_category').hide();
 }
-var url_add_staff = '<?php echo $this->url(array("module"=>"loan","controller"=>"index","action"=>"add-staff")); ?>';
-function addStaff(){
-	if(dijit.byId('frm_staff').validate()){
-		dijit.byId('save_staff').set('disabled',true);
-		dojo.xhrPost({
-			url:url_add_staff,
-			form: dojo.byId("frm_staff"),
-			handleAs:"json",
-			load: function(data) {
-				var Itemmake = { 
-		    	  	id: data,
-			        name: dijit.byId('kh_name').get('value')
-			    };
-		 		addDataToSelectbox(dijit.byId('staff_id'), staff_store, Itemmake, data);
-			    dijit.byId('frm_staff').reset();
-			    dijit.byId("popup_staff").hide();
-			    dijit.byId('save_staff').set('disabled',false);
-			},
-			error: function(err) {
-			}
-		});
-	}
-}
 
 var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->all_category));?> );
 new dijit.form.FilteringSelect({
@@ -574,6 +568,20 @@ var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::enc
 
 dojo.ready(function(){
 	try{
+		 new dijit.form.FilteringSelect({
+			 	store: staff_store,
+			 	autoComplete: false,
+			 	queryExpr: "*${0}*",                       
+			     id: "parent_id",
+			     name: "parent_id",  
+			     class: 'fullside',  
+			     required:false,
+			     placeHolder:"<?php echo $tr->translate("SELECT_SALE_AGENT");?>", 
+			     onChange: function() {        
+			     	
+			     } 
+			 }, "parent_id");
+		 
 		new dijit.form.FilteringSelect({
 			store: staff_store,
 			autoComplete: false,  
@@ -871,25 +879,84 @@ function getSaleClie(){
 url_getgroup = '<?php echo $this->url(array('module'=>'group','controller'=>'co','action'=>'getallstaff'));?>';
 function getAllStaffByBranch(staff_id=null){
 	dijit.byId('staff_id').reset();
-	branch_id = dijit.byId('branch_id').get('value');
+	/*branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id=='' || branch_id==-1){
-		var group_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+		var group_store  = getDataStorefromJSON('id','name',<?php //print_r(Zend_Json::encode(array()));?> );
 		dijit.byId('staff_id').set('store',group_store);  
 		dijit.byId('branch_id').focus();
 		return false;
-	}
+	}*/
+	branch_id = null
 	dojo.xhrPost({
 		url: url_getgroup,
 		content:{
-			'branch_id':branch_id
+			'branch_id':branch_id,
 			},
 		handleAs:"json",
 		load: function(data) {
 			group_store  = getDataStorefromJSON('id','name', data);
 			dijit.byId('staff_id').set('store',group_store);
+			if(staff_id!=null){
+				dijit.byId('staff_id').set('value',staff_id);
+			}
+			getAllStaffByBranchPop(); 
 		},
 		error: function(err) {
 		}
 	});
+}
+
+function getAllStaffByBranchPop(){
+	dijit.byId('parent_id').reset();
+	/*
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id=='' || branch_id==-1){
+		var group_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('parent_id').set('store',group_store);  
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	*/
+	branch_id=null;
+	dojo.xhrPost({
+		url: url_getgroup,
+		content:{
+			'branch_id':branch_id,'noaddnew':1
+			},
+		handleAs:"json",
+		load: function(data) {
+			group_store  = getDataStorefromJSON('id','name', data);
+			dijit.byId('parent_id').set('store',group_store);
+		},
+		error: function(err) {
+		}
+	});
+}
+var url_add_staff = '<?php echo $this->url(array("module"=>"group","controller"=>"co","action"=>"add-staff")); ?>';
+function addStaff(){
+	 if(dijit.byId('frm_staff').validate()){
+		dijit.byId("save").attr("disabled",true);
+		dojo.xhrPost({
+			url:url_add_staff,
+			form: dojo.byId("frm_staff"),
+			handleAs:"json",
+			load: function(data) {
+				/*var Itemmake = { 
+		    	  	id: data,
+			        name: dijit.byId('kh_name').get('value')
+			    };
+		 		addDataToSelectbox(dijit.byId('staff_id'), staff_store, Itemmake, data);
+				*/
+				getAllStaffByBranch(data);
+			    dijit.byId('frm_staff').reset();
+			    dijit.byId("popup_staff").hide();
+
+			    
+			},
+			error: function(err) {
+			
+			}
+		});
+   }
 }
 </script>
