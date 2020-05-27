@@ -1695,7 +1695,26 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</tr>
 					<tr style="line-height: 18px;font-size: 10px;">
 						<td colspan="6" >
-						'.$footer.'
+						<table width="100%" celpadding="0" cellspacing="0" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'; font-size:11px;line-height: 15px;margin-top: 4px;">
+							<tr>
+								<td width="22%">';
+									$str.='<span id="ft_branch_title_lb" style="font-family:'."'Khmer OS Muol Light'".'; font-size:16px;white-space:nowrap;padding-top:5px;">'.$tr->translate("BRAND_FOOTER_TITLE").'</span>
+								</td>
+								<td width="40%">
+									<span id="ft_website_lb">'.$data["website"].'</span>
+								</td>
+								<td width="40%" align="right">
+									<span id="ft_email_client_lb" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';">'.$data["email_client"].'</span>
+								</td>
+							</tr>
+							<tr style="white-space:nowrap;">
+								<td colspan="2" id="ft_address_lb">'.$data["footer_branch"].'
+								</td>
+								<td width="40%" align="right">
+								<span>H/P: 012 250 123 / 010 240 123</span>
+								</td>
+							</tr>
+						</table>
 						</td>
 					</tr>
 				</table>
@@ -1716,6 +1735,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<span id="lb_completedDate"></span>
 					<span id="lb_buydate1"></span>
 					<span id="lb_penalty"></span>
+					<span id="ft_phone_lb"></span>
 				</div>
 				</div>
 				';

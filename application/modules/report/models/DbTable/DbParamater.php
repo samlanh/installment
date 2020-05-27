@@ -2453,7 +2453,7 @@ function getAllBranch($search=null){
 		rs.note
 		FROM ln_properties AS p
 		LEFT JOIN ln_sale AS s
-		ON  p.id  = s.house_id
+		ON  p.id  = s.house_id AND s.is_cancel=0 AND s.status=1
 		LEFT JOIN ln_issue_house AS rs
 		ON s.id = rs.sale_id AND rs.status=1
 		WHERE s.is_cancel=0 ";

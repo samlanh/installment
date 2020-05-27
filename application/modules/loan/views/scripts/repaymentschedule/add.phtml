@@ -259,7 +259,7 @@
 	                <div class="form-group">
 	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Discount");?>  :</label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement('discount_percent');?><?php echo $frm->getElement('discount');?>
+	                   		<?php echo $frm->getElement('discount');?><?php echo $frm->getElement('discount_percent');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -711,11 +711,11 @@ function calculateDiscount(){
 	}
 
 	discount = parseFloat(discount)+parseFloat(bdiscount_fixed);
-	total_sold = total_sold-discount-other_discount;
-	discount_percent = parseInt(total_sold*discount_percent/100);
+	total_sold = total_sold-discount;
+	discount_percent = parseFloat(total_sold*discount_percent/100);
 	total_discount = discount_percent+discount+other_discount;
 	total_sold = total_sold-discount_percent;
-	
+	total_sold = (total_sold-other_discount).toFixed(2);
 	//old condiction discount % first
 	/*
 	discount = parseFloat(discount)+parseFloat(bdiscount_fixed);
@@ -1467,7 +1467,14 @@ function printSave(new_receipt_no){
 	var format_date_payment = new Date(date_payment);
 	day = format_date_payment.getDate();
 	mm = format_date_payment.getMonth() + 1;
+	//month = returnMOnth(mm);
+	month=mm;
+	if(mm<10){
+		 month = "0"+mm;
+	}
+	<?php if(MONTH_FORMATE_DATE_RECEIPT==1){?>
 	month = returnMOnth(mm);
+	<?php }?>
 	year = format_date_payment.getFullYear();
 	collect_payment = day+'-'+month+'-'+year;
 

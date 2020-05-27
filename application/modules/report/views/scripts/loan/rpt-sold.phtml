@@ -152,9 +152,6 @@ dojo.require("dijit.form.DateTextBox");
 	    	<td id="exportExcel">
 	    		<?php 
 	    		$colspanDIS=3;
-	    		if ($showOtherDis==1){
-	    			$colspanDIS=4;
-	    		}
 	    		?>
 	            <table class="content-data" border="1"​ width="100%" cellspacing="0">
 	               <thead>
@@ -177,9 +174,6 @@ dojo.require("dijit.form.DateTextBox");
 	                    <td><?php echo $tr->translate("PRICE_BEFORE");?></td>
 	                    <td><?php echo $tr->translate("DISCOUNT");?>%</td>
 	                    <td><?php echo $tr->translate("DISCOUNT");?></td>
-	                    <?php if ($showOtherDis==1){?>
-	                    <td><?php echo $tr->translate("OTHER_DISCOUNT");?></td>
-	                    <?php }?>
 	                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>
 	                    <td><?php echo $tr->translate("PAID");?></td>
 	                    <td><?php echo $tr->translate("BALANCE");?></td>
@@ -329,10 +323,9 @@ dojo.require("dijit.form.DateTextBox");
 						
 						<td align="right">&nbsp;<span style="line-height:15px;">&nbsp;<?php echo number_format($row['price_before'],2); ?></span>&nbsp;</td>
 						<td style="white-space:nowrap;">&nbsp;<?php echo number_format($row['discount_percent'],2); ?>&nbsp;</td>	
-						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['discount_amount'],2); ?>&nbsp;</td>
-						<?php if ($showOtherDis==1){?>
-	                    <td align="right" style="white-space:nowrap;" >&nbsp;<?php echo number_format($row['other_discount'],2); ?>&nbsp;</td>
-	                    <?php }?>		
+						<td align="right" style="white-space:nowrap;">&nbsp;<?php 
+						$other_discount = empty($row['other_discount'])?0:$row['other_discount'];
+						echo number_format($row['discount_amount']+$other_discount,2); ?>&nbsp;</td>
 						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold'],2); ?>&nbsp;</td>	
 						<!-- <td align="left"><span style="line-height:15px;">&nbsp;<?php //echo $row['other_fee']; ?></span>&nbsp;</td>-->
 						<?php 

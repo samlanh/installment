@@ -221,7 +221,7 @@
 				                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Discount");?>  :
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
-				                    	<?php echo $frm->getElement('discount_percent');?><?php echo $frm->getElement('discount');?>
+				                    	<?php echo $frm->getElement('discount');?><?php echo $frm->getElement('discount_percent');?>
 				                   </div>
 				                </div>
 				                <div class="form-group" style="<?php if ($showOtherDis!=1){ echo "display:none;";}?>">
@@ -631,11 +631,11 @@ function calculateDiscount(){
 		discount_percent=0;
 	}
 
-	total_sold = total_sold-discount-other_discount;
-	discount_percent = parseInt(total_sold*discount_percent/100);
-	total_discount = discount_percent+discount+other_discount;
-	total_sold = total_sold-discount_percent;
-
+	total_sold = total_sold-discount;
+	discount_percent = parseFloat(total_sold*discount_percent/100);
+	total_discount = (discount_percent+discount+other_discount).toFixed(2);
+	total_sold = (total_sold-discount_percent).toFixed(2);
+	total_sold = (total_sold-other_discount).toFixed(2);
 	//old condiction discount % first
 	/*
 	discount_percent = parseInt(total_sold*discount_percent/100);
@@ -1180,7 +1180,14 @@ function printSave(new_stu_id,new_receipt_no){
 		 if(dd<10){
 			 dd = "0"+dd;
 		}
+		//month = returnMOnth(mm);
+		 month =mm;
+		if(mm<10){
+			 month = "0"+mm;
+		}
+		<?php if(MONTH_FORMATE_DATE_RECEIPT==1){?>
 		month = returnMOnth(mm);
+		<?php }?>
 		var y = a.getFullYear();
 		var date_payment = dd +'-'+month+'-'+y ;
 		var short_y = y.toString().substr(-2);
@@ -1270,30 +1277,52 @@ function printSave(new_stu_id,new_receipt_no){
 		date_line = dijit.byId("date_line").get('value');
 		var a = new Date(date_line);
 		mm = a.getMonth()+1;
+		month=mm;
+		if(mm<10){
+			 month = "0"+mm;
+		}
+		<?php if(MONTH_FORMATE_DATE_RECEIPT==1){?>
+		month = returnMOnth(mm);
+		<?php }?>
 		var dd = a.getDate();
 		 if(dd<10){
 			 dd = "0"+dd;
 		}
 		var y = a.getFullYear();
-		var completedDate = dd +'-'+mm+'-'+y ;
-		
-		dojo.byId("lbl_priceSoldBefore").innerHTML = "$ "+dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
-		dojo.byId("lbl_discountAmount").innerHTML = "$ "+dojo.number.format(dijit.byId("discount").get('value'),{places:2});
-		dojo.byId("lbl_discountPercent").innerHTML = dojo.number.format(dijit.byId("discount_percent").get('value'),{places:2})+" %";
-		dojo.byId("lbl_discountOther").innerHTML = "$ "+dojo.number.format(dijit.byId("other_discount").get('value'),{places:2});
-		dojo.byId("lb_forCompletedAmount").innerHTML = "$ "+dojo.number.format(dijit.byId("second_depostit").get('value'),{places:2});
+		var completedDate = dd +'-'+month+'-'+y ;
+
+		other_discount = dijit.byId('other_discount').get('value');
+		if(isNaN(other_discount)){
+			other_discount=0;
+		}
+		second_depostit = dijit.byId('second_depostit').get('value');
+		if(isNaN(second_depostit)){
+			second_depostit=0;
+		}
+		dojo.byId("lbl_priceSoldBefore").innerHTML = "$ "+dojo.number.format(total_sold,{places:2});
+		dojo.byId("lbl_discountAmount").innerHTML = "$ "+dojo.number.format(discount,{places:2});
+		dojo.byId("lbl_discountPercent").innerHTML = dojo.number.format(discount_percent,{places:2})+" %";
+		dojo.byId("lbl_discountOther").innerHTML = "$ "+dojo.number.format(other_discount,{places:2});
+		dojo.byId("lb_forCompletedAmount").innerHTML = "$ "+dojo.number.format(second_depostit,{places:2});
 		dojo.byId("lb_completedDate").innerHTML = completedDate;
 
 
 		date_line = dijit.byId("date_line").get('value');
 		var a = new Date(date_line);
 		mm = a.getMonth()+1;
+		month=mm;
+		if(mm<10){
+			 month = "0"+mm;
+		}
+		<?php if(MONTH_FORMATE_DATE_RECEIPT==1){?>
+		month = returnMOnth(mm);
+		<?php }?>
 		var dd = a.getDate();
 		 if(dd<10){
 			 dd = "0"+dd;
 		}
 		var y = a.getFullYear();
-		var agreementDate = dd +'-'+mm+'-'+y ;
+		var agreementDate = dd +'-'+month+'-'+y ;
 		
 		dojo.byId("lb_agreement_date").innerHTML = agreementDate;
 		dojo.byId("lb_pre_schedule_opt").innerHTML = dijit.byId("pre_schedule_opt").attr('displayedValue');
@@ -1409,13 +1438,13 @@ function checkPreScheduleOption(){
 		document.getElementById('schedule_installment').style.display="block";
 
 		$(".schedule_step").css("display", "none");
-		$(".schedule_installment").css("display", "block");
+		$(".schedule_installment").css("display", "table-row");
 		
 		dijit.byId('pre_fix_payment').set('value',"");
 	}else{
 		document.getElementById('schedule_step').style.display="block";
 		document.getElementById('schedule_installment').style.display="none";
-		$(".schedule_step").css("display", "block");
+		$(".schedule_step").css("display", "table-row");
 		$(".schedule_installment").css("display", "none");
 		
 		dijit.byId('pre_percent_payment').set('value',"");

@@ -143,14 +143,8 @@
 	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("Discount");?>  :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('discount_percent');?><?php echo $frm->getElement('discount');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_DISCOUNT");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('total_discount');?>
+	                   		<?php echo $frm->getElement('discount');?>
+	                    	<?php echo $frm->getElement('discount_percent');?>
 	                   </div>
 	                </div>
 	                <div class="form-group" style="<?php if ($showOtherDis!=1){ echo "display:none;";}?>">
@@ -160,6 +154,14 @@
 	                    	<?php echo $frm->getElement('other_discount');?>
 	                   </div>
 	                </div>
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_DISCOUNT");?>  :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('total_discount');?>
+	                   </div>
+	                </div>
+	                
 	                <div class="form-group">
 	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("SOLD_PRICE");?> <span class="required">*</span> :
 	                   </label>
@@ -450,10 +452,11 @@ function calculateDiscount(){
 		other_discount=0;
 	}
 
-	total_sold = total_sold-discount-other_discount;
-	discount_percent = parseInt(total_sold*discount_percent/100);
-	total_discount = discount_percent+discount+other_discount;
-	total_sold = total_sold-discount_percent;
+	total_sold = total_sold-discount;
+	discount_percent = parseFloat(total_sold*discount_percent/100);
+	total_discount = (discount_percent+discount+other_discount).toFixed(2);
+	total_sold = (total_sold-discount_percent).toFixed(2);
+	total_sold = (total_sold-other_discount).toFixed(2);
 	//old condiction discount % first
 	/*
 	discount_percent = parseInt(total_sold*discount_percent/100);
@@ -468,7 +471,8 @@ function calculateDiscount(){
 }
 function Balance(){
 	price = dijit.byId('sold_price').get('value');
-	deposit =dijit.byId('deposit').get('value');
+	//deposit =dijit.byId('deposit').get('value');
+	deposit=0;
 	if(isNaN(deposit)){
 		deposit=0;
 	}
@@ -485,7 +489,7 @@ function Balance(){
 			if(schedule_opt==3){
 				dijit.byId('for_installamount').attr('value',price-deposit);
 			}
-			dijit.byId('balance').attr('value',price-deposit);
+			//dijit.byId('balance').attr('value',price-deposit);
 		}
 		checkScheduleOption();
 	}
@@ -658,7 +662,10 @@ require(["dojo/ready"], function(ready){
 		 branch_id.on('change', function(evt) {
 			 getAllStaffByBranch();
 		});
-			
+
+		 setTimeout(function () {
+			 calculateDiscount();
+		 }, 1000);
 	  });
 
 	 var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
@@ -959,4 +966,5 @@ function getAllStaffByBranchPop(){
 function hideDialog1(){
 	 dijit.byId("popup_staff").hide();
 }
+
 </script>
