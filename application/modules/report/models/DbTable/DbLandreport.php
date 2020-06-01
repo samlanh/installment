@@ -3399,7 +3399,12 @@ function updatePaymentStatus($data){
       	(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
       	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id,
       	(SELECT sta.co_khname FROM ln_staff AS sta WHERE sta.co_id=`s`.`staff_id` LIMIT 1 ) AS agency_name,
-      	(SELECT $str FROM `ln_view` WHERE key_code =s.pre_schedule_opt AND type = 25 limit 1) AS pre_schedule_opt_title
+      	(SELECT $str FROM `ln_view` WHERE key_code =s.pre_schedule_opt AND type = 25 limit 1) AS pre_schedule_opt_title,
+      	s.pre_fix_payment,
+      	s.pre_percent_payment,
+      	s.pre_amount_month,
+      	s.pre_percent_installment,
+      	s.pre_amount_year
       	";
       	$where = $statement['where'];
       	$where.=" AND s.is_cancel=0 ";

@@ -192,6 +192,11 @@ dojo.require("dijit.form.DateTextBox");
 	               $db  = new Report_Model_DbTable_DbParamater();
 	               if(!empty($this->loanrelease_list)) foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
+	               
+	               $other_discount = empty($row['other_discount'])?0:$row['other_discount'];
+	               $amountDiscountPercent=	($row['price_before']-$row['discount_amount'])*$row['discount_percent']/100;
+	               $totalAmountDiscount=	$other_discount+$amountDiscountPercent+$row['discount_amount'];
+	               
 	             if($row['is_cancel']==0){
 	               if($row['payment_id']==1){
 	               	 $payment_1=$payment_1+1;
@@ -229,9 +234,7 @@ dojo.require("dijit.form.DateTextBox");
 	              	$total_paid=$total_paid+$row['paid_amount'];
 	              	$balance=$balance+($row['price_sold']-$row['paid_amount']);
 	              
-	              	$other_discount = empty($row['other_discount'])?0:$row['other_discount'];
-	              	$amountDiscountPercent=	($row['price_before']-$row['discount_amount'])*$row['discount_percent']/100;
-	              $totalAmountDiscount=	$other_discount+$amountDiscountPercent+$row['discount_amount'];
+	              	
 	              if($row['payment_id']!=$payment_id){?>
 	              	<tr>
 	              		<td colspan="18" style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $row['paymenttype']; ?></td>
