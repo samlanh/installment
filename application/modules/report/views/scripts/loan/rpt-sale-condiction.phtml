@@ -14,6 +14,11 @@
 	}
 	$is_showhouse = $this->data['showhouseinfo'];
 	$showOtherDis = OTHER_DIS_OPTION;
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
 ?>
 <meta charset="utf-8">
 <script>
@@ -163,7 +168,7 @@ table.tb-footer tr.style-head {
 	               	<tr class="style-head">
 	                    <td><?php echo $tr->translate("NUM");?>&nbsp;</td>
 	                    <td><?php echo $tr->translate("ថ្ងៃកក់ប្រាក់");?></td>
-	                    <td><?php echo $tr->translate("AGREEMENT_DATE");?></td>
+	                    <td><?php echo $tr->translate("ថ្ងៃមកកិច្ចសន្យា");?></td>
 	                    <td><?php echo $tr->translate("PRICE_BEFORE");?></td>
 	                    <td><?php echo $tr->translate("DISCOUNT_AS_AMOUNT");?></td>
 	                    <td><?php echo $tr->translate("DISCOUNT_AS_PERCENT");?></td>
@@ -176,8 +181,8 @@ table.tb-footer tr.style-head {
 	                </tr>
 	              	<tr class="style-rowdata hover context-menu-one" >
 						<td align="center"><?php echo $key+1; ?></td>
-						<td align="center" style="white-space:nowrap;"><?php echo date("d-M-Y",strtotime($row['buy_date'])); ?>&nbsp;</td>
-						<td align="center" style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format("d-M-Y"); ?>&nbsp;</td>
+						<td align="center" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?>&nbsp;</td>
+						<td align="center" style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format($montFomat); ?>&nbsp;</td>
 						<td align="right">$ <span class="amount-value" ><?php echo number_format($row['price_before'],2); ?></span>&nbsp;</td>
 						<td align="right" style="white-space:nowrap;">
 						$ <span class="amount-value" >
@@ -209,10 +214,8 @@ table.tb-footer tr.style-head {
 	               		</td>
 	               	</tr>
 	               	<tr class="style-rowdata hover " >
-	               		<td colspan="2"><?php echo $tr->translate("NOTE");?></td>
-	               		<td colspan="10">
-	               		<?php echo $row['note'];?>
-	               		</td>
+	               		<td colspan="2" style="vertical-align: top;"><?php echo $tr->translate("NOTE");?></td>
+	               		<td colspan="10" style="white-space: pre-line;"><?php echo $row['note'];?></td>
 	               	</tr>
 	               	<tr class="style-rowdata hover " >
 	               		<td colspan="12" style="<?php if ($allRecord==($key+1)){?>border-bottom: solid 1px #ffff;<?php }?> border-left: solid 1px #ffff; border-right: solid 1px #ffff;">

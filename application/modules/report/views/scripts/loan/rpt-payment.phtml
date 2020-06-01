@@ -13,6 +13,11 @@
 		}
 		$branch_title = $branch['project_name'];
 	}
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
 ?>
 <title><?php echo $tr->translate("RPT_CLIENT_PAYMENT");?></title>
 <script>
@@ -216,8 +221,8 @@
 				               		<td align="right" style="font:bolder 11px Arial;padding:0px 1px;">&nbsp;<?php echo number_format($rs['penalize_amountpaid'],2);?>&nbsp;</td>
 				               		<td align="right" style="font:bolder 11px Arial;padding:0px 1px;">&nbsp;<?php echo number_format($rs['extra_payment'],2);?>&nbsp;</td>
 				               		<td align="right" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rs['amount_payment'],2);?>&nbsp;</td>
-				               		<td align="center" style="white-space:nowrap; border-right:3px double black; ">&nbsp;<?php echo date("d-m-Y",strtotime($rs["date_payment"]));?>&nbsp;</td>
-				               		<td align="center" style="white-space:nowrap; ">&nbsp;<?php echo date("d-m-Y",strtotime($rs["date_pay"]));?>&nbsp;</td>
+				               		<td align="center" style="white-space:nowrap; border-right:3px double black; ">&nbsp;<?php echo date($montFomat,strtotime($rs["date_payment"]));?>&nbsp;</td>
+				               		<td align="center" style="white-space:nowrap; ">&nbsp;<?php echo date($montFomat,strtotime($rs["date_pay"]));?>&nbsp;</td>
 				               		<td>&nbsp;<?php echo $rs["receipt_no"];?>&nbsp;</td>
 				               		<td style="white-space: nowrap;font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;
 									<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
@@ -300,7 +305,7 @@
 											   <td align="center">&nbsp;<strong><?php echo number_format($row['total_amount'],2);?></strong>&nbsp;</td>
 											   <td align="center">&nbsp;<?php echo $row['cheque'];?>&nbsp;</td>
 											   <td align="center">&nbsp;<?php echo $row['description'];?>&nbsp;</td>
-											   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['date']));?>&nbsp;</td>
+											   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date($montFomat,strtotime($row['date']));?>&nbsp;</td>
 											    <td align="center">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
 											</tr>
 												<?php $total = $total +$row['total_amount'];?>

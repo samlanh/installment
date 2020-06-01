@@ -212,7 +212,7 @@ function getAllBranch($search=null){
 				`ln_properties` AS pro,
 				`ln_client` AS clie
 				WHERE s.`id` = c.`sale_id` AND pro.`id` = c.`property_id` AND
-				clie.`client_id` = s.`client_id`';
+				clie.`client_id` = s.`client_id` AND c.status=1';
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("c.branch_id");

@@ -15,6 +15,11 @@
 	}
 	$is_showhouse = $this->data['showhouseinfo'];
 	$showOtherDis = OTHER_DIS_OPTION;
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
 ?>
 <meta charset="utf-8">
 <script>
@@ -300,8 +305,8 @@ table.tb-footer tr.style-head {
 	              	$payment_id = $row['payment_id']?>
 	              	<tr class="style-rowdata hover context-menu-one" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
 						<td align="center"><?php echo $key+1; ?></td>
-						<td style="white-space:nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date'])); ?>&nbsp;</td>
-						<td style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format("d-m-Y"); ?>&nbsp;</td>
+						<td style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?>&nbsp;</td>
+						<td style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format($montFomat); ?>&nbsp;</td>
 						<td style="width: 100px; !important"><?php echo $row['name_kh'];?>&nbsp;</td>
 						<td>&nbsp;<?php echo $row['land_address'].",".$row['street']; ?>&nbsp;</td>
 						 <?php if($is_showhouse==0){?>
@@ -396,7 +401,7 @@ table.tb-footer tr.style-head {
 			                 <tr bgcolor="#a0baf5" class="style"  style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"><?php echo $tr->translate("ប្រាក់នៅសល់");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
 			                    <td><?php echo number_format($balace_price,2);?>&nbsp;&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("PAYWITH_BANK");?>&nbsp;&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("BANK_SCHEDULE");?>&nbsp;&nbsp;</td>
 			                    <td style="border-bottom: 4px double #000;"><?php echo $payment_5;?></td>
 			                 	 <?php if($is_showhouse==0){?>
 			                    	<td style="border-bottom: 4px double #000;"><?php echo $property_paybank;?></td>

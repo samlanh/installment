@@ -280,6 +280,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				}
 			}
 			
+			$dbLand = new Project_Model_DbTable_DbLand();
 			if ($data['sale_no']==$data['old_sale_id']){
 				if ($data['status_using']==0){
 					$arr_1 = array(
@@ -288,6 +289,16 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					$this->_name="ln_properties";
 					$where1 =" id = ".$data['property_id'];
 					$this->update($arr_1, $where1);
+					
+					$landInfo = $dbLand->getClientById($data['property_id']);
+					if (!empty($landInfo['old_land_id'])){
+						$arr_child = array(
+								'is_lock'=>1, //property can't sell
+						);
+						$this->_name="ln_properties";
+						$where_child =" id IN (".$landInfo['old_land_id'].")";
+						$this->update($arr_child, $where_child);
+					}
 					
 					$arr_ = array(
 							'is_cancel'=>0,// sale not cancel
@@ -303,6 +314,16 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					$where1 =" id = ".$data['property_id'];
 					$this->update($arr_1, $where1);
 						
+					$landInfo = $dbLand->getClientById($data['property_id']);
+					if (!empty($landInfo['old_land_id'])){
+						$arr_child = array(
+								'is_lock'=>0, //property can sell
+						);
+						$this->_name="ln_properties";
+						$where_child =" id IN (".$landInfo['old_land_id'].")";
+						$this->update($arr_child, $where_child);
+					}
+					
 					$arr_ = array(
 							'is_cancel'=>1,// sale cancel
 					);
