@@ -1337,6 +1337,17 @@ function printSave(new_stu_id,new_receipt_no){
 		dojo.byId("lbl_pre_fix_payment").innerHTML = dijit.byId("pre_fix_payment").get('value');
 
 		
+
+		a_recieve_amount =dojo.number.format(dijit.byId("deposit").get('value'),{places:2}).replace(",", "");
+		money_khmer_recieve_amount=read_money_in_khmer(a_recieve_amount);
+		
+		decimalmoney_khmer_recieve_amount=dojo.number.format(dijit.byId("deposit").get('value'),{places:2}).replace(",", "").substr(-2);
+		str_cent_sold = 'សេន';
+		if(decimalmoney_khmer_recieve_amount>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
+		last_number_sold=dojo.number.format(dijit.byId("deposit").get('value'),{places:2}).replace(",", "").substr(-1);
+		if(last_number_sold<=0){last_number_sold='';}
+		money_khmer_recieve_amount = money_khmer_recieve_amount+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer_recieve_amount)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
+		dojo.byId('lable_chartotalreceipt_in_kh').innerHTML=money_khmer_recieve_amount+" ដុល្លារអាមេរិក";
 		
 		dijit.byId("terms").show();	
   }
