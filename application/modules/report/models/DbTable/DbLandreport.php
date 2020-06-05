@@ -891,6 +891,8 @@ public function getAllOutstadingLoan($search=null){
       	$db = $this->getAdapter();
       	$sql = "SELECT *,
       		(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1 ) AS ispay_bank,
+      		(SELECT sch.sale_id FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1 ) AS sale_id,
+      		(SELECT s.expect_income_note FROM ln_sale AS s WHERE s.id =(SELECT sch.sale_id FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1 ) LIMIT 1) AS expect_income_note,
 			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) LIMIT 1) AS payment_type
       	FROM `v_getexpectincome` WHERE 1 ";
       	
@@ -3462,4 +3464,25 @@ function updatePaymentStatus($data){
       			$order = " ORDER BY s.buy_date DESC ";
       			return $db->fetchAll($sql.$where.$order);
       		}
+      		
+      	public function updateNoteExpectIncome($data){
+      			$db = $this->getAdapter();
+      			$db->beginTransaction();
+      			try{
+      		
+      				$arr = array(
+      						'expect_income_note'=>$data['noted'],
+      				);
+      				$where=" id = ".$data['id'];
+      				$this->_name="ln_sale";
+      				$this->update($arr, $where);
+      		
+      				$db->commit();
+      				return 1;
+      			}catch (Exception $e){
+      				$err =$e->getMessage();
+      				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+      				$db->rollBack();
+      			}
+      	}
  }

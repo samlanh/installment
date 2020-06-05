@@ -1232,4 +1232,14 @@ class Report_LoanController extends Zend_Controller_Action {
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
 	}
+	
+	function updatenoteExpectIncomeAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Report_Model_DbTable_DbLandreport();
+			$row = $db->updateNoteExpectIncome($data);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
 }

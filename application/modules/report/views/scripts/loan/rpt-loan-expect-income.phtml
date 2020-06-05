@@ -161,6 +161,7 @@ dojo.require("dijit.form.DateTextBox");
 			                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 			                    <td colspan="5" style="text-align: center;"><?php echo $tr->translate("PAID_INFO");?></td>
 			                    <td colspan="3" style="text-align: center;"><?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?></td>
+			                    <td rowspan="2"><?php echo $tr->translate("NOTE");?></td>
 			                </tr>
 			                <tr  class="style" align="center"  style="font-weight: bold;background: #ccd9ff">
 			                    <td><?php echo $tr->translate("DAY_PAYMENT");?></td>
@@ -200,7 +201,7 @@ dojo.require("dijit.form.DateTextBox");
 								 	$paid++;
 								 }
 			               ?>
-			                <tr class="style hover" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';<?php if($total_paid>0){echo 'background:#fdf1f4;';}?>">
+			                <tr oncontextmenu="setrowdata(<?php echo $rs['sale_id'];?>);return false;" class="style hover context-menu-one" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';<?php if($total_paid>0){echo 'background:#fdf1f4;';}?>">
 			               		<td style="font-size: 12px; text-align: center;">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 			               		<td >&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 			               		<td >&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>
@@ -221,6 +222,7 @@ dojo.require("dijit.form.DateTextBox");
 			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?>&nbsp;</td>
 			               		<td align="right">&nbsp;<?php echo number_format($rs["total_interest_after"],2);?>&nbsp;</td>
 			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonthafter"]+$rs["total_interest_after"],2);?>&nbsp;</td>
+			               		<td align="center">&nbsp;<span class="note_<?php echo $rs['sale_id'];?>"><?php echo $rs["expect_income_note"];?></span>&nbsp;</td>
 			                </tr>
 			                <?php }?>
 			                <tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
@@ -241,3 +243,75 @@ dojo.require("dijit.form.DateTextBox");
 		</div>
 	</div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate('NOTE');?>'"  id="updateForm" style="width:350px;" >
+		<div class="card pb-10 pt-10 pl-10 pr-10">
+			<form id="updateFormInfo"  name="data" action="" dojoType="dijit.form.Form" method="post">
+				<div class="card-box">
+					<div class="form-group">
+					   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate('NOTE');?> :
+					   </label>
+					   <div class="col-md-7 col-sm-7 col-xs-12">
+							<input class="fullside" type="text" dojoType="dijit.form.TextBox" name="noted" id="noted" placeholder="<?php echo $tr->translate("NOTE");?>" />
+							<input type="hidden" dojoType="dijit.form.TextBox" name="id" id="id"  />
+					   </div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+							<button onclick="upDateCustomerInfo();" iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("SAVE");?></button>
+						</div>
+					</div>
+				</div>
+				
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+var urlUpdateInfo = '<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'updatenote-expect-income')); ?>';
+function upDateCustomerInfo(){
+	if(dijit.byId('updateFormInfo').validate()){
+		loadingBlock();
+		dojo.xhrPost({
+			url: urlUpdateInfo,
+			form: dojo.byId("updateFormInfo"),
+			handleAs:"json",
+			load: function(data) {
+				var noted = dijit.byId('noted').get('value');
+				$(".note_"+row).html(noted);
+				dijit.byId('updateFormInfo').reset();
+				dijit.byId('updateForm').hide();
+				
+				HideloadingBlock();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+}
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="stepup"){
+				dijit.byId('id').set('value',row);
+				dijit.byId('updateForm').show();
+			}
+		},
+		items: {
+			"stepup": {name: "<?php echo $tr->translate("UPDATE_NOTE");?>", icon: "fa-file-text"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row);
+}
+</script>

@@ -597,6 +597,46 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     	    echo $e->getMessage();
     		exit();
     	}
-    } 	  
+    } 
+
+    /*
+     * 
+     public function ImportPPLand($data){
+    	$count = count($data);
+    	$branch_id=11;
+    	$dbEx = new Incexp_Model_DbTable_DbExpense();
+    	for($i=2; $i<=$count; $i++){
+    		$payment_id=1;
+			if ($data[$i]['H']=="សែក"){
+				$payment_id=2;
+			}
+			$invoice = $dbEx->getInvoiceNo($branch_id);
+    		$arr_ = array(
+    		    	'branch_id'			=>	$branch_id,//$data["branch_id"],
+    		    	'title'             =>	$data[$i]['C'],
+    		    	'invoice'			=>	$invoice,//$data[$i]['G'],
+    		    	'total_amount'		=>	$data[$i]['F'],
+    				'category_id'			=>	3,
+    				
+    		    	'for_date'			=>	date("Y-m-d",strtotime($data[$i]['I'])),
+    				'date'				=>	date("Y-m-d",strtotime($data[$i]['I'])),
+    				'create_date'		=>	date("Y-m-d"),
+    				'status'			=>	1,
+    				'user_id'			=>	1,
+    				
+    				'desc'				=>	$data[$i]['D']." ".$data[$i]['E'],
+    				'description'		=>	$data[$i]['D']." ".$data[$i]['E'],
+    				'payment_id'		=>	$payment_id,
+    				
+    				'cheque'			=>	"",
+    				'cheque_issuer'		=>	"",
+    				'other_invoice'		=>	$data[$i]['G'],
+    				);
+    		$this->_name='ln_expense';
+    		$this->insert($arr_);
+    	}
+    }
+     * 
+     * */
 }   
 
