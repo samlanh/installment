@@ -208,12 +208,27 @@ dojo.require("dijit.form.DateTextBox");
 			               		<td style="font-size: 12px; line-height: 18px;white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $rs["phone"];?></td>
 			               		<td >&nbsp;<?php echo $rs["land_address"].','.$rs["street"];?>&nbsp;</td>
 			               		<td align="center">&nbsp;
-			               		<?php if($rs['ispay_bank']==0){
+			               		
+			               		<?php 
+		                    	if($rs['last_optiontype']==1){//by date
+		                    		if($rs['ispay_bank']==0){
+		                    			$date= new DateTime($rs['date_payment']);
+		                    			echo $date->format("d-m-Y");
+		                    		}else{
+		                    			echo $rs['payment_type'];//." ".$row['ispay_bank'];
+		                    		}
+		                    	}else{//by last payment
+		                    		echo $tr->translate("RECEIVED_PROPERTY");
+		                    	}	                    		
+	                    	?>
+			               		<?php 
+			               			/*if($rs['ispay_bank']==0){
 		                    			$date= new DateTime($rs['date_payment']);
 		                    			echo $date->format("d-m-Y");
 		                    		}else{
 		                    			echo $rs['payment_type'];
-		                    		}?>&nbsp;
+		                    		}*/
+		                    	?>&nbsp;
 			               		</td>
 								<td align="center">&nbsp;<?php echo $rs["no_installment"];?>&nbsp;</td>
 			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonth"],2);?>&nbsp;</td>
@@ -233,6 +248,7 @@ dojo.require("dijit.form.DateTextBox");
 			                    <td>&nbsp;$&nbsp;<?php echo number_format($p_d,2);?>&nbsp;</td>
 			                    <td>&nbsp;$&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
 			                    <td style="background:#f9a3a3;">&nbsp;$&nbsp;<?php echo number_format($amt_d1+$p_d,2);?>&nbsp;</td>
+			                    <td align="center">&nbsp;</td>
 			                </tr>
 			            </table>
 			            	<br />

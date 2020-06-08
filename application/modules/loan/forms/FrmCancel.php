@@ -376,7 +376,7 @@ public function init()
 				'class'=>'fullside',
 				'required' =>'true'
 		));
-		$options= array(1=>"Active",0=>"Cancel");
+		$options= array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("CANCEL"));
 		$_status->setMultiOptions($options);
 		
 		$_interest = new Zend_Dojo_Form_Element_TextBox("interest");

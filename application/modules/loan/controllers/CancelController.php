@@ -17,6 +17,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 					    'adv_search'=>'',
 						'client_name'=> -1,
 						'branch_id_search' => -1,
+						'land_id'=>-1,
 						'from_date_search'=> date('Y-m-d'),
 						'to_date_search'=>date('Y-m-d'));
 			}
@@ -30,6 +31,8 @@ class Loan_CancelController extends Zend_Controller_Action {
 					'module'=>'loan','controller'=>'cancel','action'=>'edit',
 			);
 			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('client_name'=>$link,'project_name'=>$link,'land_address'=>$link,));
+			
+			$this->view->rssearch = $search;
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

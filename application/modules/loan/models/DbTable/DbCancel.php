@@ -69,6 +69,10 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		
+		if(!empty($search['land_id']) AND $search['land_id']>-1){
+			$where.= " AND (c.`property_id` = ".$search['land_id']." OR pro.old_land_id LIKE '%".$search['land_id']."%')";
+		}
+		
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$where.=$dbp->getAccessPermission("c.`branch_id`");
 		

@@ -892,6 +892,7 @@ public function getAllOutstadingLoan($search=null){
       	$sql = "SELECT *,
       		(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1 ) AS ispay_bank,
       		(SELECT sch.sale_id FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1 ) AS sale_id,
+      		(SELECT sch.last_optiontype FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) AS last_optiontype,
       		(SELECT s.expect_income_note FROM ln_sale AS s WHERE s.id =(SELECT sch.sale_id FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1 ) LIMIT 1) AS expect_income_note,
 			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) LIMIT 1) AS payment_type
       	FROM `v_getexpectincome` WHERE 1 ";
@@ -3410,7 +3411,8 @@ function updatePaymentStatus($data){
       	";
       	$where = $statement['where'];
       	$where.=" AND s.is_cancel=0 ";
-      	$where.=" AND s.payment_id = 1";
+//       	$where.=" AND s.payment_id = 1 ";
+      	$where.=" AND s.pre_schedule_opt > 0 ";
       	$where.=$dbp->getAccessPermission("s.`branch_id`");
       	
       $str = '`s`.`buy_date`';
@@ -3460,6 +3462,9 @@ function updatePaymentStatus($data){
       			}else{
       				$where.=" AND s.staff_id=".$search['agency_id'];
       			}
+      		}
+      		if($search['schedule_opt']>0){
+      				$where.=" AND s.pre_schedule_opt = ".$search['schedule_opt'];
       		}
       			$order = " ORDER BY s.buy_date DESC ";
       			return $db->fetchAll($sql.$where.$order);
