@@ -190,7 +190,13 @@ $frm = $this->frm_income;
 		</form>
 	</div>
 </div> 
-
+<div style="display: none;">
+<?php if(!empty($this->rows)){ 
+		foreach($this->rows as $key => $row){ ?>
+		<span id="description_from_php_<?php echo $key+1;?>"><?php echo $row['description'];?></span>
+		<span id="worknote_from_php_<?php echo $key+1;?>"><?php echo $row['work_note'];?></span>
+<?php }}?>
+</div>
 <script type="text/javascript">
 dojo.require("dijit.form.Textarea");
 dojo.require("dojo.data.ItemFileWriteStore");  
@@ -293,7 +299,7 @@ function addRowexpense(){
 	    }
 		template+='<td width="47px" align="center"><img onclick="deleteRecords('+col+');calculateTotal('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td width="50px" align="center">'+noo+'</td>';
-		template+='<td width="25%"><input dojoType="dijit.form.ValidationTextBox" class="fullside" onkeyup="typethisamename('+col+');" required="required" id="description_'+col+'" name="description_'+col+'" value="" type="text" style="height:40px;"></td>';	
+		template+='<td width="25%"><input dojoType="dijit.form.Textarea" class="fullside" onkeyup="typethisamename('+col+');" required="required" id="description_'+col+'" name="description_'+col+'" value="" type="text" style="height:40px;"></td>';	
 		template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+');" name="price_'+col+'" id="price_'+col+'"  dojoType="dijit.form.NumberTextBox" style="width:100px; height:40px;" /></td>';	
 		template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+',1);" value="1" name="qty_'+col+'" id="qty_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:100px; height:40px;" /></td>';
 		template+='<td><input type="text" onkeyup="calculateTotal('+col+');" readonly="readonly" name="total_'+col+'" id="total_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:150px;height:40px; text-align: center;" /></td>';		
@@ -328,7 +334,7 @@ function oldRowexpense(){
     }
 	template+='<td width="47px" align="center"><img onclick="deleteRecords('+col+');calculateTotal('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 	template+='<td width="50px" align="center">'+noo+'</td>';
-	template+='<td width="25%"><input dojoType="dijit.form.ValidationTextBox" onkeyup="typethisamename('+col+');" class="fullside" required="required" id="description_'+col+'" name="description_'+col+'" value="" type="text" style="height:40px;" ></td>';	
+	template+='<td width="25%"><input dojoType="dijit.form.Textarea" onkeyup="typethisamename('+col+');" class="fullside" required="required" id="description_'+col+'" name="description_'+col+'" value="" type="text" style="height:40px;" ></td>';	
 	template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+');" name="price_'+col+'" id="price_'+col+'"  dojoType="dijit.form.NumberTextBox" style="height:40px; width:100px;" /></td>';	
 	template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+',1);" name="qty_'+col+'" id="qty_'+col+'" dojoType="dijit.form.NumberTextBox" style="height:40px; width:100px;" /></td>';
 	template+='<td><input type="text" onkeyup="calculateTotal('+col+');" readonly="readonly" name="total_'+col+'" id="total_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:150px; height:40px; text-align: center;" /></td>';		
@@ -343,11 +349,14 @@ function oldRowexpense(){
 	dojo.html.set(dojo.byId("row"+col),template , {
 	     parseContent: true,
 	});
-	dijit.byId('description_'+col).attr('value',"<?php echo $row['description'];?>");
+	//dijit.byId('description_'+col).attr('value',"<?php //echo $row['description'];?>");
+	dijit.byId('description_'+col).attr('value',$( '#description_from_php_'+col).html());
+	
 	dijit.byId('price_'+col).attr('value',"<?php echo $row['price'];?>");
 	dijit.byId('qty_'+col).attr('value',"<?php echo $row['qty'];?>");
 	dijit.byId('total_'+col).attr('value',"<?php echo $row['total'];?>");
-	dijit.byId('remark_'+col).attr('value',"<?php echo $row['work_note'];?>");
+	//dijit.byId('remark_'+col).attr('value',"<?php //echo $row['work_note'];?>");
+	dijit.byId('remark_'+col).attr('value',$( '#worknote_from_php_'+col).html());
 	<?php }}?>
 }
 function typethisamename(index,type){
@@ -648,7 +657,7 @@ function printSave(new_invoice_no){
 			  i=1; 
 		   for(var n = 0; n < rowIDArray.length; n++) {
 			  temp+='<tr style="line-height: 23px;"​ ><td align="center" style="border:1px solid #000;">'+i+'</td>';
-			  temp+='<td style="border:1px solid #000;white-space:normal;max-width:150px;"><span style="color:#000;">'+dijit.byId("description_"+rowIDArray[n]).get('value')+'</td>';
+			  temp+='<td style="border:1px solid #000;white-space:pre-line;max-width:150px;"><span style="color:#000;">'+dijit.byId("description_"+rowIDArray[n]).get('value')+'</td>';
 			  temp+='<td align="center" style="border:1px solid #000;"><span style="color:#000;">'+dojo.number.format(dijit.byId("qty_"+rowIDArray[n]).get('value'),{places:2})+'</td>';
 			  temp+='<td align="center" style="border:1px solid #000;"><span style="color:#000;">'+dojo.number.format(dijit.byId("price_"+rowIDArray[n]).get('value'),{places:2})+'</td>';
 			  temp+='<td align="center" style="border:1px solid #000;"><span style="color:#000;">'+dojo.number.format(dijit.byId("total_"+rowIDArray[n]).get('value'),{places:2})+'</td>';

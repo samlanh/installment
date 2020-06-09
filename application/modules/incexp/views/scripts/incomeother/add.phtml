@@ -281,7 +281,7 @@ function addRowexpense(){
 	    }
 		template+='<td width="47px" align="center"><img onclick="deleteRecords('+col+');calculateTotal('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td width="50px" align="center">'+noo+'</td>';
-		template+='<td width="25%"><input dojoType="dijit.form.ValidationTextBox" class="fullside" onKeyup="typethisamename('+col+');" required="required" id="description_'+col+'" name="description_'+col+'" value="" type="text" style="height:40px;"></td>';	
+		template+='<td width="25%"><input dojoType="dijit.form.Textarea" class="fullside" onKeyup="typethisamename('+col+');" required="required" id="description_'+col+'" name="description_'+col+'" value="" type="text" style="height:40px;"></td>';	
 		template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+');" name="price_'+col+'" id="price_'+col+'"  dojoType="dijit.form.NumberTextBox" style="width:100px; height:40px;" /></td>';	
 		template+='<td><input type="text" required="1" value="1" onkeyup="calculateTotal('+col+',1);" name="qty_'+col+'" id="qty_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:100px; height:40px;" /></td>';
 		template+='<td><input type="text" onkeyup="calculateTotal('+col+');" readonly="readonly" name="total_'+col+'" id="total_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:150px; height:40px; text-align: center;" /></td>';		
@@ -511,7 +511,7 @@ function printSave(new_invoice_no){
 			  n=0;
 			i=1;  for(var n = 0; n < rowIDArray.length; n++) {
 			  temp+='<tr style=" height: 23px;"​ align="center"><td align="center" style="border:1px solid #000;">'+i+'</td>';
-			  temp+='<td style="border:1px solid #000;white-space:normal;max-width:150px;"><span style="color:#000;">'+dijit.byId("description_"+rowIDArray[n]).get('value')+'<span></td>';
+			  temp+='<td style="border:1px solid #000;white-space:pre-line;max-width:150px;"><span style="color:#000;">'+dijit.byId("description_"+rowIDArray[n]).get('value')+'<span></td>';
 			  temp+='<td align="center" style="border:1px solid #000;"><span style="color:#000;">'+dojo.number.format(dijit.byId("qty_"+rowIDArray[n]).get('value'),{places:2})+'</td>';
 			  temp+='<td align="center" style="border:1px solid #000;"><span style="color:#000;">'+dojo.number.format(dijit.byId("price_"+rowIDArray[n]).get('value'),{places:2})+'</td>';
 			  temp+='<td align="center" style="border:1px solid #000;"><span style="color:#000;">'+dojo.number.format(dijit.byId("total_"+rowIDArray[n]).get('value'),{places:2})+'</td>';
