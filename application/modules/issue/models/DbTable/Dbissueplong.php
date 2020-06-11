@@ -25,7 +25,7 @@ class Issue_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
 	    CONCAT(COALESCE(`p`.`land_address`,''),' ',COALESCE(`p`.`street`,'')) AS land_address,
 	    
 	    s.price_sold,
-	    (s.price_sold - (SELECT SUM(cr.total_principal_permonthpaid) FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id = sp.sale_id LIMIT 1) ) AS balance,
+	    (s.price_sold - (SELECT SUM(cr.total_principal_permonthpaid+cr.extra_payment) FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id = sp.sale_id LIMIT 1) ) AS balance,
 	     sp.issue_date,
 	     sp.note,
          s.status
@@ -221,6 +221,84 @@ class Issue_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
     		$err =$e->getMessage();
     		Application_Model_DbTable_DbUserLog::writeMessageError($err);
     		$db->rollBack();
+    	}
+    }
+    function getAllissueCompleted($search){
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$from_date =(empty($search['start_date']))? '1': " pr.date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " pr.date <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	$sql="SELECT `pr`.`id` AS `id`,
+    	
+    	(SELECT `ln_project`.`project_name`   	FROM `ln_project`  	WHERE (`ln_project`.`br_id` = `pr`.`branch_id`)	LIMIT 1) AS `branch_name`,
+    	CASE    
+		WHEN  (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 AND rec.sale_id = pr.sale_id ORDER BY rec.id DESC LIMIT 1 ) IS NOT NULL  THEN 'បានប្រគល់'
+		WHEN  (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 AND rec.sale_id = pr.sale_id ORDER BY rec.id DESC LIMIT 1 ) IS NULL THEN 'មិនទាន់ប្រគល់'
+		END AS ask_for,
+    	`c`.`name_kh`         AS `name_kh`,
+    	c.phone,
+    	`p`.`land_address`    AS `land_address`,
+    	`p`.`street`          AS `street`,
+    	 p.hardtitle,
+    	 s.price_sold,
+	    (s.price_sold - (SELECT SUM(cr.total_principal_permonthpaid+cr.extra_payment) FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id = s.id LIMIT 1) ) AS balance,
+    	pr.note_payment ";
+    	$sql.="
+    		FROM (
+    		`ln_processing_plong` `pr`,
+    		`ln_sale` `s`,
+		    `ln_client` `c`,
+		   	 `ln_properties` `p`)
+    	    WHERE 
+    	    	pr.sale_id = s.id
+    	      AND `c`.`client_id` = `pr`.`customer_id`
+              AND `p`.`id` = `pr`.`property_id`
+    		  AND pr.process_status=4 ";
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['adv_search']));
+    		$s_where[] = " `c`.`name_kh` LIKE '%{$s_search}%'";
+    		$s_where[] = " p.`hardtitle` LIKE '%{$s_search}%'";
+    		$s_where[] = " p.`land_address` LIKE '%{$s_search}%'";
+    		$s_where[] = " p.`street` LIKE '%{$s_search}%'";
+    		$where .=' AND ('.implode(' OR ',$s_where).')';
+    	}
+    	
+    	if($search['status_plong']==1){
+    		$where.= " AND s.id = (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 AND rec.sale_id = s.id ORDER BY rec.id DESC LIMIT 1) ";
+    	}
+    	if($search['status_plong']==2){
+    		$where.= " AND s.id  NOT IN (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 ) ";
+    	}
+    	
+    	if(!empty($search['client_name']) AND ($search['client_name'])>0){
+    		$where.= " AND `c`.`client_id`=".$search['client_name'];
+    	}
+    	if(($search['branch_id'])>0){
+    		$where.= " AND pr.branch_id = ".$search['branch_id'];
+    	}
+    	if(($search['land_id'])>0){
+    		$where.= " AND pr.property_id = ".$search['land_id'];
+    	}
+    	$where.=$dbp->getAccessPermission("`pr`.`branch_id`");
+    
+    	$order = " ORDER BY pr.id DESC";
+    	$db = $this->getAdapter();
+    	return $db->fetchAll($sql.$where.$order);
+    }
+    public function updateNotePaymentforPlongStep($data){
+    	$db = $this->getAdapter();
+    	try{
+    			$arr = array(
+    				'note_payment'=>$data['noted'],
+    			);
+    			$where=" id = ".$data['id'];
+    			$this->_name="ln_processing_plong";
+    			$this->update($arr, $where);
+    		    return 1;
+    	}catch (Exception $e){
+    		$err =$e->getMessage();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($err);
     	}
     }
 }

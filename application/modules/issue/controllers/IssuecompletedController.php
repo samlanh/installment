@@ -1,5 +1,5 @@
 <?php
-class Issue_IssueplongController extends Zend_Controller_Action {
+class Issue_IssuecompletedController extends Zend_Controller_Action {
     public function init()
     {    	
      /* Initialize action controller here */
@@ -25,14 +25,10 @@ class Issue_IssueplongController extends Zend_Controller_Action {
 						 );
 			}
 			$db = new Issue_Model_DbTable_Dbissueplong();
-			$rs_rows= $db->getAllissueplong($search,1);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
+			$rs_rows= $db->getAllissueCompleted($search,1);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROCESS","BRANCH_NAME","CUSTOMER_NAME","PHONE","PROPERTY_CODE","SOLD_PRICE","BALANCE","DATE","NOTE","STATUS");
-			$link_info=array('module'=>'issue','controller'=>'issueplong','action'=>'edit',);
-			$this->view->list=$list->getCheckList(12, $collumns, $rs_rows,array('ask_for'=>$link_info,'branch_name'=>$link_info,'name_kh'=>$link_info,
-					'land_address'=>$link_info,'street'=>$link_info,'phone'=>$link_info),0);
+			$collumns = array("BRANCH_NAME","PROCESS","CUSTOMER_NAME","PHONE","PROPERTY_CODE","STREET","HEAD_TITLE_NO","SOLD_PRICE","BALANCE","NOTE");
+			$this->view->list=$list->getCheckList(12, $collumns, $rs_rows,array(),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -48,7 +44,6 @@ class Issue_IssueplongController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				// Check Session Expire
 				$dbgb = new Application_Model_DbTable_DbGlobal();
 				$checkses = $dbgb->checkSessionExpire();
 				if (empty($checkses)){
@@ -75,47 +70,12 @@ class Issue_IssueplongController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm_loan;
 	}	
 	
-	public function editAction(){
-		$_dbmodel = new Issue_Model_DbTable_Dbissueplong();
-		if($this->getRequest()->isPost()){
-			$_data = $this->getRequest()->getPost();
-			try {
-				// Check Session Expire
-				$dbgb = new Application_Model_DbTable_DbGlobal();
-				$checkses = $dbgb->checkSessionExpire();
-				if (empty($checkses)){
-					$dbgb->reloadPageExpireSession();
-					exit();
-				}
-				
-				$_dbmodel->EditIssuePlong($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/issue/issueplong");
-			}catch (Exception $e) {
-				Application_Form_FrmMessage::message("INSERT_FAIL");
-				$err =$e->getMessage();
-				Application_Model_DbTable_DbUserLog::writeMessageError($err);
-			}
-		}
-		$id = $this->getRequest()->getParam('id');
-		$id = empty($id)?0:$id;
-		$rs = $_dbmodel->getPlongbyId($id);
-		$this->view->rs = $rs;
-		if(empty($rs)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/issueplong");
-			exit();
-		}
-		
-		$frm = new Issue_Form_FrmIssuePlong();
-		$frm_loan=$frm->FrmIssuePlong($rs);
-		Application_Model_Decorator::removeAllDecorator($frm_loan);
-		$this->view->frm_loan = $frm_loan;
-	}
 	
-	function updatenoteAction(){
+	function updatenotepaymentAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Issue_Model_DbTable_Dbissueplong();
-			$row = $db->updateNote($data);
+			$row = $db->updateNotePaymentforPlongStep($data);
 			print_r(Zend_Json::encode($row));
 			exit();
 		}
