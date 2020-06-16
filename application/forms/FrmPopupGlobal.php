@@ -2616,10 +2616,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<tr >
 						<td>ឈ្មោះអ្នកវិនិយោគ <br /><small>Investor Name</small></td>
 						<td><strong><label id="lb_customer" class="value"></label></strong></td>
-						<td>&nbsp;&nbsp;ចំនួនទឹកប្រាក់វិនិយោគ<br />&nbsp;&nbsp;<small>Amount Investment</small></td>
-						<td><strong><label id="lb_amount" class="value"></label></strong></td>
-						<td>&nbsp;ដកលើកទី<br />&nbsp;<small>Time(s)</small></td>
-						<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
+						<td>&nbsp;&nbsp;ដកលើកទី<br />&nbsp;&nbsp;<small>Time(s)</small></td>
+						<td colspan="3"><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
 					</tr>
 					<tr >
 						<td>លេខវិនិយោគ<br /><small>Investment No</small></td>
@@ -2648,7 +2646,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						<td colspan="3"><strong><label  class="value" style="font-weight:700; font-family: Arial,Helvetica,sans-serif;" id="lbl_total_receive"></label></strong></td>
 					</tr>
 					<tr >
-						<td>&nbsp;&nbsp;ប្រភេទ<br /><small>Paid Type</small></td>
+						<td>&nbsp;&nbsp;ប្រភេទ<br /><small>&nbsp;&nbsp;Paid Type</small></td>
 						<td><strong><label id="lbl_paymenttype" class="value"></label></strong></td>
 						<td>&nbsp;&nbsp;លេខ<br />&nbsp;&nbsp;<small>code</small></td>
 						<td><strong><label id="lbl_cheque" class="value">N/A</label></strong></td>
@@ -2664,7 +2662,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 									ស្នាមមេដៃអ្នកវិនិយោគ<br />Investor Sign
 									</td>
 									<td align="center" width="30%">
-									'.$data['teller_sign'].'<br />Receiver Sign
+									ស្នាមមេដៃអ្នកប្រគល់<br />Giver Sign
 									</td>
 								</tr>
 								<tr height="85px">
@@ -2703,6 +2701,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		<span id="lblpaid_date"></span>
 		<span id="lb_descriptionall"></span>
 		<span id="lb_customercode"></span>
+		<span id="lb_amount"></span>
 		</div>
 		</div>
 		';
