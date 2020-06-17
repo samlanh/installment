@@ -2656,16 +2656,16 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 							<table class="signature-table" width="100%" border="0">
 								<tr>
 									<td width="30%" align="center">&nbsp;
-									'.$data['account_sign'].'<br />Accountant Sign
+									ហត្ថលេខាប្រធានផ្នែកហិរញ្ញវត្ថុ<br />Financial Manager
 									</td>
 									<td align="center" width="40%">
-									ស្នាមមេដៃអ្នកវិនិយោគ<br />Investor Sign
+									ហត្ថលេខាអ្នកវិនិយោគ<br />Investor Sign
 									</td>
 									<td align="center" width="30%">
-									ស្នាមមេដៃអ្នកប្រគល់<br />Giver Sign
+									សហត្ថលេខាអ្នកប្រគល់<br />Giver Sign
 									</td>
 								</tr>
-								<tr height="85px">
+								<tr height="75px">
 									<td colspan="3">&nbsp;
 									</td>
 								</tr>
