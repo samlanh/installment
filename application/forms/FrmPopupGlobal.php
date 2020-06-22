@@ -2662,7 +2662,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 									ហត្ថលេខាអ្នកវិនិយោគ<br />Investor Sign
 									</td>
 									<td align="center" width="30%">
-									សហត្ថលេខាអ្នកប្រគល់<br />Giver Sign
+									ហត្ថលេខាអ្នកប្រគល់<br />Giver Sign
 									</td>
 								</tr>
 								<tr height="75px">
