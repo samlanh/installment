@@ -2886,10 +2886,10 @@ function updatePaymentStatus($data){
    	}
    	if($search['sale_status']>0){
    		if($search['sale_status']==1){//full paid
-   			$where.=" AND s.price_sold <= paid_amount ";
+   			$where.=" AND s.price_sold <= (SELECT SUM(rm.total_principal_permonthpaid+rm.extra_payment) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) ";
    		}
    		else{
-   			$where.=" AND s.price_sold > paid_amount ";
+   			$where.=" AND s.price_sold > (SELECT SUM(rm.total_principal_permonthpaid+rm.extra_payment) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) ";
    		}
    	}
    	
