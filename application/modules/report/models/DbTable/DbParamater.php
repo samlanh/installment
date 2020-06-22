@@ -350,7 +350,8 @@ function getAllBranch($search=null){
     		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
     		status 
     			FROM ln_expense WHERE status=1 AND total_amount>0 ";
-    		
+    		$sql.=" AND (SELECT v.capital_widthdrawal FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ln_expense.`category_id` LIMIT 1)=0 ";
+			
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("branch_id");
     		
