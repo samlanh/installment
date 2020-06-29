@@ -685,6 +685,7 @@ function getAllBranch($search=null){
     	
                    p.w_managername1,
 			    	p.w_manager_position1,
+			    	p.w_position,
 			    	p.w_manager_tel1,
 			    	p.w_manager_tel1 AS with_manager_tel,
     	
