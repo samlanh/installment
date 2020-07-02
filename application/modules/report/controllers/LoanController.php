@@ -1111,7 +1111,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		$db  = new Report_Model_DbTable_DbParamater();
 		$row =$db->getExpensebyid($id);
 		
-		$this->view->rsexpense = $row;
+		$this->view->rs = $row;
 		if(empty($row)){
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/paramater/rpt-expense');
 			exit();
@@ -1121,6 +1121,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		 
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
+		$this->view->officailreceipt = $frmpopup->templateExpenseReceipt();
 	}
 	function issueAgreementAction(){
 		$db  = new Report_Model_DbTable_DbParamater();

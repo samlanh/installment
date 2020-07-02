@@ -3199,4 +3199,157 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 	</div>';
 		return $str;
 	}
+	
+	function templateExpenseReceipt(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$key = new Application_Model_DbTable_DbKeycode();
+		$data=$key->getKeyCodeMiniInv(TRUE);
+		
+		$footer = $this->getFooterReceipt();
+		
+		$baseurl=Zend_Controller_Front::getInstance()->getBaseUrl();
+		
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+		$last_name=$session_user->last_name;
+		$username = $session_user->first_name;
+		$user_id = $session_user->user_id;
+		$usertype="";
+		
+		$str='
+			<style>
+				.label{ font-weight: bold;font-size: 22px;}
+				.value{ font:16px  '."'Times New Roman'".','."'Khmer OS Battambang'".';border: 1px solid #000; height: 30px; width: 100%;margin-right:5px; display: block;
+						line-height: 28px;
+					    text-align: left;
+						padding-left: 5px;
+						}
+				.print tr td{
+					padding:2px 2px; 
+				}
+				
+				.khmerbold{font:16px '."'Times New Roman'".','."'Khmer OS Battambang'".';}
+			   .khmer{font:14px '."'Times New Roman'".','."'Khmer OS Battambang'".';}
+			   .one{white-space:nowrap;}
+			   .h{ margin-top: -10px;}
+			   .noted{
+					white-space: pre-wrap;     
+					word-wrap: break-word;      
+					word-break: break-all;
+					white-space: pre;
+					font:12px '."'Times New Roman'".','."'Khmer OS Battambang'".';
+					border: 1px solid #000;
+                   line-height:20px;font-weight: normal !important;
+                }
+				label{margin-bottom: 0px !important}
+				#lb_receipt {
+					font-weight: bold;
+				}
+				
+			</style>
+		';
+		$str.='
+			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
+				<tr>
+					<td colspan="6">
+						<table width="100%" style="font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".';white-space:nowrap;">
+							<tr>
+								<td width="25%">
+									
+									<span id="projectlogo"></span>
+								</td>					
+								<td width="50%" style="font:18px '."'Times New Roman'".','."'Khmer OS Muol Light'".';" valign="top" align="center">
+									<span style=" text-decoration:underline; font-family: '."'Times New Roman'".','."'Khmer OS Muol Light'".';"> បង្កាន់ដៃចំណាយ </span>
+									<div style="line-height:10px;"><span style="font-size: 18px;font-weight:bold">PAYMENT VOUCHER</span></div>
+								</td>
+								<td width="25%">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		';
+		$str.='
+			<table  width="100%" style="font-family: '."'Times New Roman'".','."'Khmer OS Battambang'".'; white-space: nowrap;font-size:14px;margin-top:-30px;" class="print" cellspacing="3px"  cellpadding="0">
+				<tr class="receipt-row"  >
+					<td colspan="3"></td>
+					<td align="right">
+						<span id="lb_receipt" ></span>
+					</td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td width="15%" class="one khmerbold">'.$tr->translate("BRANCH_NAME").'</td>
+                    <td width="35%" ><strong><label id="lb_branch" class="value"></label></strong></td>
+				    <td width="15%" class="one khmerbold">&nbsp;&nbsp;&nbsp;'.$tr->translate("INVOICE").'</td>
+                    <td width="35%"><strong><label id="lb_invoice" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">'.$tr->translate("SUPPLIER").'</td>
+                    <td ><strong><label id="lb_supplier" class="value"></label></strong></td>
+                    <td class="one khmerbold">&nbsp;&nbsp;&nbsp;ថ្ងៃចំណាយ</td>
+				    <td ><strong><label id="lb_date" class="value"></label></strong></td>
+				</tr>
+				<tr>
+					<td class="one khmerbold">ប្រភេទចំណាយ</td>
+					<td ><strong><label id="lb_expense_category" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;'.$tr->translate("PAYMENT_TYPE").'</td>
+				    <td >
+						<table width="100%" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_paymenttype" class="value"></label></td>
+								<td width="33%" style="white-space: nowrap;">&nbsp;'.$tr->translate("CHEQUE").'</td>
+								<td width="33.5%"><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"></label></strong></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">ពណ៌នាចំនាយ</td>
+				    <td><strong><label id="lb_expense_title" class="value"></label></strong></td>
+				    <td class="one khmerbold" rowspan="2">&nbsp;&nbsp;&nbsp;សម្គាល់</td>
+				    <td colspan="1" align="left" rowspan="2" style="vertical-align: top; border: 1px solid #000 !important;text-align: left;" class="noted"><label style="text-align: left;display: inline-block;max-width: 100%;font-weight: 700;" id="lb_description" ></label></td>
+				</tr>
+				<tr>
+					<td class="one khmerbold">ចំណាយសរុប</td>
+					<td><strong><label id="lb_total_amount" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+				    <td class="khmerbold" style="line-height: 14px;"colspan="2"  align="center" >&nbsp;&nbsp;
+						<span style=" font-family: Arial Black;font-family:'."'Khmer OS Muol Light'".';">
+						'.$data['customer_sign'].'
+						</span>
+					</td>
+				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" >
+						<span style=" font-family: Arial Black;font-family:'."'Khmer OS Muol Light'".';">
+						'.$data['teller_sign'].'
+						</span>
+					</td>
+				</tr>
+				<tr style="white-space: nowrap;" height="70px;">
+					<td class="one khmerbold" colspan="2" align="center" valign="bottom">
+					</td>
+				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
+				  		<h4 style="font-weight:normal; padding-right: 5px ! important;margin-bottom: -10px  !important;">
+
+					    </h4>  
+					</td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 10px;">
+					<td colspan="4" valign="top" >
+					</td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 10px;">
+					<td colspan="4" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
+					</td>
+				</tr>
+				<tr style="line-height: 20px;font-size: 10px;">
+					<td colspan="6" >
+						'.$footer.'
+					</td>
+				</tr>
+			</table>
+		';
+		
+		return $str;
+	}
 }

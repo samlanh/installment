@@ -95,6 +95,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
     	
     	$frmpopup = new Application_Form_FrmPopupGlobal();
     	$this->view->footer = $frmpopup->getFooterReceipt();
+		$this->view->officailreceipt = $frmpopup->templateExpenseReceipt();
     }
     public function editAction()
     {
@@ -149,6 +150,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
     	
     	$frmpopup = new Application_Form_FrmPopupGlobal();
     	$this->view->footer = $frmpopup->getFooterReceipt();
+		$this->view->officailreceipt = $frmpopup->templateExpenseReceipt();
     }
 
     
