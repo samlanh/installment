@@ -60,7 +60,9 @@ dojo.require("dijit.form.DateTextBox");
 					</style>
 		        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
 		        		<tr>
-			                <td width="30%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="height:80px;max-width: 100%;"></td>
+			                <td width="30%">
+								<span id="projectlogo"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="height:80px;max-width: 100%;"></span>
+							</td>
 			                <td width="40%" valign="top">
 			                <ul style="list-style: none;">
 				                <li style="white-space:nowrap;line-height:25px;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></li>
@@ -628,11 +630,14 @@ input#e15 {
 
 require(["dojo/ready"], function(ready){
 	ready(function(){
-		 $("#e15").select2({tags:[<?php echo $tags;?>],placeholder: "<?php echo $tr->translate("CHOOSE_STREET");?>",allowClear: true});
-		 branch_id = dijit.byId("branch_id").get("value");
+		branch_id = dijit.byId("branch_id").get("value");
 		 if(branch_id!=-1 && branch_id!=0){
 			 document.getElementById('projectName').innerHTML = dijit.byId('branch_id').attr('displayedValue')+"<br />";
-		 }	 
+		 }
+		getBranchInfo();
+		
+		 $("#e15").select2({tags:[<?php echo $tags;?>],placeholder: "<?php echo $tr->translate("CHOOSE_STREET");?>",allowClear: true});
+		 		 
 		 
 	});
 });
@@ -641,5 +646,26 @@ function getAllPropertyBranch(){
 	if(branch_id>0){
 		dojo.byId("lb_branchname").innerHTML = dijit.byId('branch_id').attr('displayedValue');;
 	}
+}
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->list_end_date['branch_id'])?0:$this->list_end_date['branch_id'];?>';
+	if(branch_id==""|| branch_id==0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;
+
+		},
+		error: function(e) {
+		}
+	});
 }
 </script>
