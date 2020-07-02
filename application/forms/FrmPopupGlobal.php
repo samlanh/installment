@@ -3307,7 +3307,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td class="one khmerbold">ពណ៌នាចំនាយ</td>
 				    <td><strong><label id="lb_expense_title" class="value"></label></strong></td>
 				    <td class="one khmerbold" rowspan="2">&nbsp;&nbsp;&nbsp;សម្គាល់</td>
-				    <td colspan="1" align="left" rowspan="2" style="vertical-align: top; border: 1px solid #000 !important;text-align: left;" class="noted"><label style="text-align: left;display: inline-block;max-width: 100%;font-weight: 700;" id="lb_description" ></label></td>
+				    <td colspan="1" align="left" rowspan="2" style="vertical-align: top; border: 1px solid #000 !important;text-align: left;" class="noted"><label style="text-align: left;display: inline-block;max-width: 100%;font-weight: 600;" id="lb_description" ></label></td>
 				</tr>
 				<tr>
 					<td class="one khmerbold">ចំណាយសរុប</td>
@@ -3349,6 +3349,179 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</tr>
 			</table>
 		';
+		
+		return $str;
+	}
+	function templateIncomeReceipt(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$key = new Application_Model_DbTable_DbKeycode();
+		$data=$key->getKeyCodeMiniInv(TRUE);
+		
+		$footer = $this->getFooterReceipt();
+		
+		$baseurl=Zend_Controller_Front::getInstance()->getBaseUrl();
+		
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+		$last_name=$session_user->last_name;
+		$username = $session_user->first_name;
+		$user_id = $session_user->user_id;
+		$usertype="";
+		$str='
+			<style>
+				.fontbig{
+					font-size: 15px;	
+				}
+				.fonttel{
+					font-size: 18px;	
+				}
+				.pleft{
+					width: 110px;	
+				}
+
+				.label{ font-size: 22px;}
+				.value {
+				    font: 16px '."'Times New Roman'".','."'Khmer OS Battambang'".';
+				    border: 1px solid #000;
+				    height: 30px;
+				    width: 100%;
+				    margin-right: 5px;
+				    display: block;
+				    line-height: 28px;
+				    text-align: left;
+					padding-left:5px;
+				}
+				.print tr td{
+					padding:2px 2px; 
+				}
+			   .khmerbold{font:14px '."'Times New Roman'".','."'Khmer OS Battambang'".';}
+			   .khmer{font:12px '."'Times New Roman'".','."'Khmer OS Battambang'".';}
+			   .one{white-space:nowrap;}
+			   .h{ margin-top: -10px;/*margin-left:4px;*/}
+				.noted{
+					white-space: pre-wrap;     
+					word-wrap: break-word;      
+					word-break: break-all;
+					white-space: pre;
+					font:12px '."'Times New Roman'".','."'Khmer OS Battambang'".';
+					border: 1px solid #000;
+                   line-height:20px;font-weight: normal !important;
+                }
+			</style>
+		';
+		$str.='
+			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
+				<tr>
+					<td colspan="6">
+						<table width="100%" style="font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".';white-space:nowrap;">
+							<tr>
+								<td width="25%">
+									<span id="projectlogo"></span>
+								</td>					
+								<td width="50%" style="font:18px '."'Times New Roman'".','."'Khmer OS Muol Light'".';" valign="top" align="center"><u>
+									<div id="titleReceipt">
+									</div>
+									
+								</td>
+								<td width="25%">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		';
+		$str.='
+			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: -8px;" class="print" cellspacing="2px"  cellpadding="0">
+				<tr>
+					<td width="15%" ></td>
+					<td width="35%" ></td>
+					<td width="15%" ></td>
+					<td width="35%" ></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">'.$tr->translate("BRANCH_NAME").'</td>
+                    <td><strong><label class="value" id="lb_branch" ></label></strong></td>
+				    <td class="one khmerbold">&nbsp;&nbsp;'.$tr->translate("RECEIPT_NO").'</td>
+                    <td ><strong><label class="value" id="lb_receipt" ></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold" width="10%">អតិថិជន</td>
+				    <td width="40%"><strong><label id="lb_client_name" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;ប្រភេទចំនូល</td>
+				    <td ><strong><label id="lb_category" class="value"></label></strong></td>
+				</tr>
+
+				<tr>
+					<td class="one khmerbold">ពណ៌នាចំនូល</td>
+					<td ><strong><label class="value" id="lb_title"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;ចំនូលសរុប</td>
+					<td ><strong><label id="lb_total_amount" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td rowspan="2" valign="top" class="one khmerbold">សម្គាល់</td>
+				    <td rowspan="2" style="border: 1px solid #000 !important;text-align: left; vertical-align: top;" class="noted"><label id="lb_description" style="text-align: left;display: inline-block;max-width: 100%;font-weight: 600;"></label></td>
+					<td class="one khmerbold">&nbsp;&nbsp;'.$tr->translate("PAYMENT_TYPE").'</td>
+				    <td >
+						<table width="100%" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_paymenttype" class="value"></label></td>
+								<td width="33%" style="white-space: nowrap;">&nbsp;'.$tr->translate("CHEQUE").'</td>
+								<td width="33.5%"><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"></label></strong></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr style="white-space:normal;">
+					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃទទួល</td>
+				    <td ><strong><label class="value" id="lb_date"></label></strong></td>
+				</tr>
+				
+				<tr style="white-space: nowrap;">
+				    <td colspan="2" class="khmerbold" style="line-height: 14px;"  align="center" >&nbsp;&nbsp;<span style=" font-family: Arial Black;font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".';">'.$data['customer_sign'].'</span></td>
+				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><span style=" font-family: Arial Black;font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".';">'.$data['teller_sign'].'</span></td>
+				</tr>
+				<tr style="white-space: nowrap;" height="60px;">
+					<td class="one khmerbold" colspan="2" align="center" valign="bottom">
+						<h4 style="font-weight:normal; padding-right: 5px ! important;margin-bottom: -10px  !important;">
+							<span id="lb_customer_name"></span>
+						</h4>
+					</td>
+				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
+				  	  <h4 style="font-weight:normal; padding-right: 5px ! important;margin-bottom: -10px  !important;">
+						<span id="lb_user_name">'.$last_name." ".$username.$usertype.'</span>
+					  
+					  </h4>  
+					</td>
+				</tr>
+				
+				<tr style="line-height: 15px;font-size: 12px;">
+					<td colspan="4" valign="top" >
+						
+					</td>
+				</tr>
+				<tr style="line-height: 20px;font-size: 11px;font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'">
+					<td valign="top" >
+						<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
+					</td>
+					<td colspan="3">
+						<span style="font-size: 12px;">'.$data['comment'].'</span><br />
+						<span style="white-space: pre-line;font-size: 12px;">'.$data['comment1'].'</span><br />
+					</td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 12px;">
+					<td colspan="4" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
+						
+					</td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 12px;">
+					<td colspan="4" >
+						'.$footer.'
+					</td>
+				</tr>
+			</table>
+		';
+		$str.='';
 		
 		return $str;
 	}

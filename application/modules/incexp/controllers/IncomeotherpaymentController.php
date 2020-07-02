@@ -88,6 +88,7 @@ class Incexp_IncomeOtherpaymentController extends Zend_Controller_Action
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     	$frmpopup = new Application_Form_FrmPopupGlobal();
     	$this->view->footer = $frmpopup->getFooterReceipt();
+		$this->view->officailreceipt = $frmpopup->templateIncomeReceipt();
     }
  
     public function editAction()
@@ -128,6 +129,7 @@ class Incexp_IncomeOtherpaymentController extends Zend_Controller_Action
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     	$frmpopup = new Application_Form_FrmPopupGlobal();
     	$this->view->footer = $frmpopup->getFooterReceipt();
+		$this->view->officailreceipt = $frmpopup->templateIncomeReceipt();
     }
     public function getAllotherincomeAction(){
    		if($this->getRequest()->isPost()){

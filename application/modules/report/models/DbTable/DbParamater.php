@@ -321,6 +321,7 @@ function getAllBranch($search=null){
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
     		cheque,total_amount,description,date,
     		(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id=ln_income.user_id LIMIT 1) AS user_name,
+			(SELECT v.name_kh FROM ln_view AS v WHERE v.type=2 AND key_code=payment_id LIMIT 1) AS payment_method,
     		status
     		FROM ln_income 
     		WHERE status=1 AND id =".$income_id;

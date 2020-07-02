@@ -92,6 +92,7 @@ class Incexp_IncomeController extends Zend_Controller_Action
     	
     	$frmpopup = new Application_Form_FrmPopupGlobal();
     	$this->view->footer = $frmpopup->getFooterReceipt();
+    	$this->view->officailreceipt = $frmpopup->templateIncomeReceipt();
     }
  
     public function editAction()
@@ -143,6 +144,7 @@ class Incexp_IncomeController extends Zend_Controller_Action
     	
     	$frmpopup = new Application_Form_FrmPopupGlobal();
     	$this->view->footer = $frmpopup->getFooterReceipt();
+		$this->view->officailreceipt = $frmpopup->templateIncomeReceipt();
     }
     
     function getRateAction(){
@@ -150,7 +152,6 @@ class Incexp_IncomeController extends Zend_Controller_Action
     		$data = $this->getRequest()->getPost();
 	    	$db = new Incexp_Model_DbTable_DbIncome();
 	    	$ex_rate = $db->getExchangeRate();
-	    	//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
 	    	print_r(Zend_Json::encode($ex_rate));
 	    	exit();
     	}

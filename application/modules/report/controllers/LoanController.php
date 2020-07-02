@@ -224,7 +224,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	}else{
   		$row =$db->getIncomeById($id);
   	}
-  	$this->view->rsincome = $row;
+  	$this->view->rs = $row;
   	if(empty($row)){
   		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/paramater/rpt-income');
   		exit();
@@ -236,6 +236,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footer = $frmpopup->getFooterReceipt();
+  	$this->view->officailreceipt = $frmpopup->templateIncomeReceipt();
   }
   function rptLoanOutstandingAction(){//loand out standing with /collection
 	    $db  = new Report_Model_DbTable_DbLandreport();
