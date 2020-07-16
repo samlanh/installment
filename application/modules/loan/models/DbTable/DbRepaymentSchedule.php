@@ -606,7 +606,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    			        	'interest_rate'=>$old_interestrate
 	    			        );
 	    			        
-	    			        if($i==$loop_payment){//for end of record only
+	    			        if($i==$loop_payment ANd $payment_method!=7){//for end of record only
 	    			        	$datapayment['last_optiontype'] = $data['paid_receivehouse'];
 	    			        	if($data['paid_receivehouse']>1){
  	    			        		$datapayment['ispay_bank'] = $data['paid_receivehouse'];
@@ -648,7 +648,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    		  			'date_payment'=>$next_payment,
 	    		  			'no_installment'=>$i+$j,
 	    		  			'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0,
+	    		  			'ispay_bank'=>$paid_receivehouse,
 	    		  			'last_optiontype'=>$paid_receivehouse,
+	    		  			
 	    		  	);
 	    		  	$this->insert($datapayment);
     		  }

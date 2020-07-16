@@ -90,16 +90,18 @@ class Report_LoanController extends Zend_Controller_Action {
 		$search = $this->getRequest()->getPost();
 	}else {
 		$search = array(
-				'adv_search' => '',
-				'status_search' => -1,
-				'status' => -1,
-				'client_name' => "",
-				'branch_id' => -2,
-				'land_id'=>-1,
-				'user_id'=>'',
-				'start_date'=> date('Y-m-d'),
-	  			'end_date'=>date('Y-m-d'),
-				'payment_method'=>-1,
+			'adv_search' => '',
+			'status_search' => -1,
+			'status' => -1,
+			'client_name' => "",
+			'branch_id' => -2,
+			'land_id'=>-1,
+			'option_pay'=>-1,
+			'receipt_type'=>-1,
+			'user_id'=>'',
+			'start_date'=> date('Y-m-d'),
+  			'end_date'=>date('Y-m-d'),
+			'payment_method'=>-1,
 		);
 	}
 	$search['is_closed']='';

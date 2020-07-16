@@ -651,6 +651,16 @@ public function getAllOutstadingLoan($search=null){
 		if ($search['is_closed']!=""){
 			$where.=" AND `crm`.`is_closed` = '".$search['is_closed']."'";
 		}
+		if($search['option_pay']>0){
+			$where.=" AND `crm`.`payment_option` = ".$search['option_pay'];
+		}
+		if($search['receipt_type']>0){
+			if($search['receipt_type']==1){
+				$where.=" AND `crm`.`field3` = ".$search['receipt_type'];
+			}else{
+				$where.=" AND `crm`.`field3` !=1 ";
+			}
+		}
 		
       	if(!empty($search['adv_search'])){
       		$s_where = array();
@@ -679,7 +689,7 @@ public function getAllOutstadingLoan($search=null){
 		if($order11==1){//for history
 			$order =" ORDER BY `crm`.`client_id` DESC ,`crm`.`sale_id` DESC , crm.id ASC";
 		}
-// 		echo $sql.$where;exit();
+// 		echo $sql.$where.$order;exit();
       	return $db->fetchAll($sql.$where.$order);
       }
       function submitClosingEngry($data){

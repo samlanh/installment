@@ -645,6 +645,7 @@ function getAllBranch($search=null){
 				  `s`.`interest_rate`   AS `interest_rate`,
 				  `s`.`total_duration`  AS `total_duration`,
 				  `s`.`first_payment`  AS `first_payment`,
+				  s.lastpayment_amount,
 				   s.is_reschedule,
 				   s.land_price,
 				   s.amount_build,

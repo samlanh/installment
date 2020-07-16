@@ -12,15 +12,15 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
  				$search = $this->getRequest()->getPost();
  			}else{
 				$search = array(
-					    'txt_search'=>'',
-						'client_name'=> -1,
-						'schedule_opt' => -1,
-						'branch_id' => -1,
-						'land_id' => -1,
-						'status' => -1,
-						'start_date'=> date('Y-m-d'),
-						'end_date'=>date('Y-m-d'),
-						 );
+				    'txt_search'=>'',
+					'client_name'=> -1,
+					'schedule_opt' => -1,
+					'branch_id' => -1,
+					'land_id' => -1,
+					'status' => -1,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'),
+				);
 			}
 			$db = new Loan_Model_DbTable_DbRepaymentSchedule();
 			$rs_rows= $db->getAllReschedule($search,1);

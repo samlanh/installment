@@ -559,12 +559,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   	break;
     			   }elseif($payment_method==7){//បង់រំលស់ខ្លះ
     				//$last_payment = 0;
-    				$data['sold_price'] = $data['sold_price']-$data['last_payment'];
-    				if($i!=1){
-			    			$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
-			    			$start_date = $next_payment;
-			    			$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
-			    		}else{
+	    				$data['sold_price'] = $data['sold_price']-$data['last_payment'];
+	    				if($i!=1){
+				    			$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
+				    			$start_date = $next_payment;
+				    			$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+				    	}else{
 			    			//​​បញ្ចូលចំនូនត្រូវបង់ដំបូងសិន
 			    			if(!empty($data['identity'])){
 			    				$ids = explode(',', $data['identity']);
@@ -666,10 +666,18 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			        	'is_completed'=>0,
     			        	'date_payment'=>$next_payment,
     			        	'no_installment'=>$i+$j,
-    			        	'last_optiontype'=>$paid_receivehouse,
+    			        	//'last_optiontype'=>$paid_receivehouse,
     			        	'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0,
     			        	'interest_rate'=>$old_interestrate
     			        );
+    			        
+    			        if($i==$loop_payment AND $payment_method!=7){//for end of record only
+    			        	$datapayment['last_optiontype'] = $data['paid_receivehouse'];
+    			        	if($data['paid_receivehouse']>1){
+    			        		$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+    			        	}
+    			        }
+    			        
 		            		 
 			    		$idsaleid = $this->insert($datapayment);
 			    		$old_remain_principal = 0;
@@ -704,6 +712,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'date_payment'=>$next_payment,
     					'no_installment'=>$i+$j,
     					'last_optiontype'=>$paid_receivehouse,
+    					'ispay_bank'=>$paid_receivehouse,
     					'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0
     			);
     			$this->insert($datapayment);
