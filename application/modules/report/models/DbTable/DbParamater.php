@@ -254,10 +254,13 @@ function getAllBranch($search=null){
     		(SELECT CONCAT(land_address,',',street)FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) as house_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) AS category_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id LIMIT 1) AS payment_type,
+			payment_id,
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
     		 cheque,total_amount,description,date,is_closed,
     		(SELECT  first_name FROM rms_users WHERE rms_users.id=ln_income.user_id LIMIT 1 ) AS user_name,
-    		status FROM ln_income WHERE status=1 ";
+    		status 
+			
+			FROM ln_income WHERE status=1 ";
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("branch_id");
@@ -344,6 +347,7 @@ function getAllBranch($search=null){
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		(SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) AS supplier_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
+			payment_id,
     		title,invoice,is_closed,
     		cheque_issuer,other_invoice,
     		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
@@ -1780,6 +1784,7 @@ function getAllBranch($search=null){
 	    		(SELECT tel FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS tel,
 	    		c.total_amount,
 	    		c.invoice,
+	    		c.payment_id,
 	    		for_date AS `create_date`, c.`status`,c.is_closed,
 	    		(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
 	    		FROM `ln_comission` AS c ,

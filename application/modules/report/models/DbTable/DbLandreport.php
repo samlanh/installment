@@ -3178,6 +3178,7 @@ function updatePaymentStatus($data){
    	   	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS branch_name,
    	   	(SELECT `ln_view`.`name_kh` FROM `ln_view` WHERE `key_code` = `op`.`payment_method`
          		 AND `type` = 2 LIMIT 1) AS `payment_method`,
+		`op`.`payment_method` AS payment_id,
    	   	oi.client_id,
    	   	op.for_date AS date,
    	   	op.receipt_no AS invoice,
