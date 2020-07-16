@@ -156,6 +156,8 @@ class Report_LoanController extends Zend_Controller_Action {
   				'branch_id' => -2,
   				'land_id'=>-1,
   				'user_id'=>'',
+  				'option_pay'=>-1,
+  				'receipt_type'=>-1,
   				'start_date'=> date('Y-m-d'),
   				'end_date'=>date('Y-m-d'),
   				'payment_method'=>-1,
