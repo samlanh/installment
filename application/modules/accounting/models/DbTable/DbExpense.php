@@ -49,8 +49,8 @@ function getAllExpenseReport($search=null){
 	$where = " WHERE ".$from_date." AND ".$to_date;
 
 	$sql=" SELECT id,
-	account_id,invoice,
-	total_amount,disc,date,status FROM $this->_name ";
+			account_id,invoice,
+			total_amount,disc,date,status FROM $this->_name ";
 
 	if (!empty($search['adv_search'])){
 		$s_where = array();
@@ -66,6 +66,7 @@ function getAllExpenseReport($search=null){
 		$where.= " AND status = ".$search['status'];
 	}
 	$order=" order by id desc ";
+	
 	return $db->fetchAll($sql.$where.$order);
 }
 

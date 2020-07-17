@@ -344,6 +344,8 @@ class Report_LoanController extends Zend_Controller_Action {
  				'status' => -1,
  				'branch_id' => "",
  				'client_name' => -1,
+ 				'option_pay'=>-1,
+ 				'receipt_type'=>-1,
  				'co_id' => "",
  				'streetlist'=> "",
  				'land_id'=>-1,
