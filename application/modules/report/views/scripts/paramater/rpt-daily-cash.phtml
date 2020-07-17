@@ -198,6 +198,13 @@
 								}else{
 									$total_bank = $total_bank + + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
 								}
+								if($rs['payment_methodid']==1){
+									$total_cash = $total_cash + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+								}elseif($rs['payment_methodid']==2){
+									$total_bank = $total_bank  + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+								}else{
+									$total_cheque = $total_cheque + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+								}
 			               ?>
 			                <tr class="hover style1" style="font-family: 'Times New Roman','Khmer OS Battambang'; white-space:nowrap; ">
 			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
@@ -285,9 +292,9 @@
 									if($rs['payment_id']==1){
 										$total_cash = $total_cash + $rs["total_amount"];
 									}elseif($rs['payment_id']==2){
-										$total_cheque = $total_cheque + $rs["total_amount"];
-									}else{
 										$total_bank = $total_bank + $rs["total_amount"];
+									}else{
+										$total_cheque = $total_cheque + $rs["total_amount"];
 									}
 			                	}
 			                ?>
@@ -394,9 +401,9 @@
 									if($rs['payment_id']==1){
 										$total_cash = $total_cash + $rs["total_amount"];
 									}elseif($rs['payment_id']==2){
-										$total_cheque = $total_cheque + $rs["total_amount"];
-									}else{
 										$total_bank = $total_bank + $rs["total_amount"];
+									}else{
+										$total_cheque = $total_cheque + $rs["total_amount"];
 									}
 			                	}
 			                ?>
