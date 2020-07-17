@@ -651,15 +651,21 @@ public function getAllOutstadingLoan($search=null){
 		if ($search['is_closed']!=""){
 			$where.=" AND `crm`.`is_closed` = '".$search['is_closed']."'";
 		}
-		if($search['option_pay']>0){
-			$where.=" AND `crm`.`payment_option` = ".$search['option_pay'];
-		}
-		if($search['receipt_type']>0){
-			if($search['receipt_type']==1){
-				$where.=" AND `crm`.`field3` = ".$search['receipt_type'];
-			}else{
-				$where.=" AND `crm`.`field3` !=1 ";
+		if (!empty($search['option_pay'])){
+			if($search['option_pay']>0){
+				$where.=" AND `crm`.`payment_option` = ".$search['option_pay'];
 			}
+		}
+		if (!empty($search['receipt_type'])){
+			if($search['receipt_type']>0){
+				if($search['receipt_type']==1){
+					$where.=" AND `crm`.`field3` = ".$search['receipt_type'];
+				}else{
+					$where.=" AND `crm`.`field3` !=1 ";
+				}
+			}
+		}else{
+			$where.=" AND `crm`.`field3` !=1 ";
 		}
 		
       	if(!empty($search['adv_search'])){
