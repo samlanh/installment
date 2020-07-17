@@ -1283,7 +1283,7 @@ function calculateTotal(index){//គណនាបង់
 		var collect_date = new Date(dijit.byId("collect_date").attr("value"));
 		var date_payment = new Date(dijit.byId("date_payment").attr("value"));
 		
-		graice_period = '<?php echo $this->data["graice_pariod_late"]?>';//រយៈអនុគ្រោះ
+		graice_period = '<?php echo empty($this->data["graice_pariod_late"])?0:$this->data["graice_pariod_late"];?>';//រយៈអនុគ្រោះ
 		var ps ='<?php echo $this->data["penalty_value"]?>';//ការប្រាក់ពិន័យ
 		var penalty_type ='<?php echo $this->data["penalty_type"]?>';//ប្រភេទពិន័យ
 		
@@ -1357,7 +1357,9 @@ function calculateTotal(index){//គណនាបង់
 						}
 					}*/
 				}/*end of checked*/
-				if(total_late_day>0){ //ករណីអតិថិជនបង់យឺត
+				//if(total_late_day>0){ //ករណីអតិថិជនបង់យឺត
+				if(total_late_day>graice_period){ //ករណីអតិថិជនបង់យឺត
+					graice_period
 					if(payOption==1 && condition==0){//បង់ធម្មតា
 						if(penalty_type==1){//for percent
 						 	total_penelize_peryear = roundhundred((parseFloat(principal_permonth+total_interest)*(parseFloat(ps/100)/30)*parseFloat(total_late_day)));
