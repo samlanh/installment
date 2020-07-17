@@ -3408,6 +3408,8 @@ function updatePaymentStatus($data){
       	(SELECT SUM(rm.total_interest_permonthpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1  AND sale_id = s.id AND $from_date AND $to_date LIMIT 1) AS total_interest_permonthpaid,
       	(SELECT SUM(rm.penalize_amountpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1 AND sale_id = s.id AND $from_date AND $to_date LIMIT 1) AS penalize_amountpaid,
       
+      	(SELECT next_date_deposit FROM `ln_client_receipt_money` AS rm WHERE rm.status=1 AND sale_id = s.id AND field3=1 AND payment_times=1 ORDER BY payment_times ASC LIMIT 1) AS next_date_deposit_agreement,
+      	
       	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times,
       	(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
       	(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,

@@ -190,7 +190,9 @@ function printSave(){
 		dojo.byId("lb_amount").innerHTML = "$ 0.00";
 	}
 
-	dojo.byId("lb_agreement_date").innerHTML = "<?php echo date($montFomat,strtotime($this->rs['agreement_date']));?>";
+	<?php if (!empty($this->rs['next_date_deposit'])){?>
+	dojo.byId("lb_agreement_date").innerHTML = "<?php echo date($montFomat,strtotime($this->rs['next_date_deposit']));?>";
+	<?php }?>
 	dojo.byId("lb_pre_schedule_opt").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['pre_paymenttype']))));?>';
 	dojo.byId("lbl_pre_percent_payment").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['pre_percent_payment']))));?>';
 	dojo.byId("lbl_pre_amount_month").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($this->rs['pre_amount_month']))));?>';
