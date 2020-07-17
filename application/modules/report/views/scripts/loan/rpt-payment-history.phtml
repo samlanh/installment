@@ -31,31 +31,34 @@ if ($this->search['branch_id'] >0 ){
 	<form method="post">
 		<div class="card-box">
 	    	<div class="form-group"> 
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement("adv_search");?>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('branch_id');?>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('client_name');?>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('streetlist');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('option_pay');?>
 				</div>
 				
 			</div>
 			<div class="form-group"> 
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('start_date');?>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('end_date');?>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 				</div>
 			</div>
 		</div>
@@ -274,7 +277,7 @@ if ($this->search['branch_id'] >0 ){
 			               		<td>&nbsp;&nbsp;<?php echo $rs["receipt_no"];?></td>
 			               		<td>&nbsp;&nbsp;<?php echo number_format($rs["amount_payment"],2);?></td>
 			               		<td>&nbsp;&nbsp;<?php echo date("d-m-Y",strtotime($rs['date_pay']));?></td>
-			               		<td style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;<?php echo @$opt[$rs["payment_option"]];?>&nbsp;</td>
+			               		<td style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >&nbsp;<?php echo $rs["paymentoption"]; //echo @$opt[$rs["payment_option"]];?>&nbsp;</td>
 			               		<td>&nbsp;&nbsp;<?php echo $rs["user_name"];?></td>
 			                </tr>
 			                <?php if ($client_id!=$rs["client_id"]) {
