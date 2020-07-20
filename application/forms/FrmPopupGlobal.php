@@ -1009,41 +1009,41 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<style>
 					span.postingdate {
 					    position: absolute;
-					    top: 237px;
+					    top: 160px;
 					    left: 14px;
 					}
 					span#lb_receipt {
 					    position: absolute;
-					    top: 204px;
+					    top: 142px;
 					    right: 106px;
 					    font-weight: bold;
 					}
 					span#lb_customer {
 					    position: absolute;
-					    top: 270px;
+					    top: 190px;
 					    left: 215px;
 					    font-family: '."'Times New Roman'".','."'Khmer OS Muol Light'".';
 					}
 					span#lb_customercode {
 					    position: absolute;
-					    top: 300px;
+					    top: 212px;
 					    left: 215px;
 					}
 					span#lbl_total_receive {
 					    position: absolute;
-					    top: 270px;
+					    top: 190px;
 					    right: 132px;
 					    font-weight: bold;
 					}
 					span#lable_chartotalreceipt {
 					    position: absolute;
-					    top: 326px;
+					    top: 235px;
 					    left: 215px;
 					    font-weight: bold;
 					}
 					span#lb_hourseno {
 					    position: absolute;
-					    top: 384px;
+					    top: 277px;
 					    right: -10px;
 					    display: block;
 					    min-width: 200px;
@@ -1051,13 +1051,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					}
 					span#lb_descriptionall {
 					    position: absolute;
-					    top: 382px;
-					    left: 120px;
+					    top: 280px;
+					    left: 80px;
+					    font-size: 15px;
 					}
 					
 					span#lbl_customer,span#lbl_usersale {
 					    position: absolute;
-					    top: 525px;
+					    top: 470px;
 					    display: block;
 					    min-width: 215px;
 					    text-align: center;

@@ -1508,10 +1508,10 @@ function updatePaymentStatus($data){
 	  						foreach ($ids as $j){
 	  							if($key==1){
 	  								$old_remain_principal = $data['price_sold'];
-	  								$old_pri_permonth = $data['total_payment'.$j];
+	  								$old_pri_permonth = $data['principal_permonth_'.$j];
 	  							}else{
 	  								$old_remain_principal = $old_remain_principal-$old_pri_permonth;
-	  								$old_pri_permonth = $data['total_payment'.$j];
+	  								$old_pri_permonth = $data['principal_permonth_'.$j];
 	  							}
 	  							$old_interest_paymonth = 0;
 	  							$cum_interest = $cum_interest+$data['total_interest_'.$j];
@@ -2020,10 +2020,10 @@ function updatePaymentStatus($data){
 	  						foreach ($ids as $j){
 	  							if($key==1){
 	  								$old_remain_principal = $data['price_sold'];
-	  								$old_pri_permonth = $data['total_payment'.$j];
+	  								$old_pri_permonth = $data['principal_permonth_'.$j];
 	  							}else{
 	  								$old_remain_principal = $old_remain_principal-$old_pri_permonth;
-	  								$old_pri_permonth = $data['total_payment'.$j];
+	  								$old_pri_permonth = $data['principal_permonth_'.$j];
 	  							}
 	  							$old_interest_paymonth = 0;
 	  							$cum_interest = $cum_interest+$data['total_interest_'.$j];
