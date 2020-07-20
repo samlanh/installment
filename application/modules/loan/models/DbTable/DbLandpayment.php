@@ -211,7 +211,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    		if ($data['typesale']==2){//លក់ម្តងច្រើន
+    		if($data['typesale']==2){//លក់ម្តងច្រើន
     			$ids_land = explode(',', $data['identity_land']);
     			$size = 0; $width=''; $height='';
     			$land_address='';
@@ -224,7 +224,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				$this->_name="ln_properties";
     				$where = "id =".$ids_land[$key];
     				$arr = array(
-    						"is_lock"=>1,
+    					"is_lock"=>1,
     				);
     				$this->update($arr, $where);
     				$newpro = $this->getProperty($ids_land[$key]);
@@ -460,7 +460,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     									'is_installment'=>1,
 			    						'no_installment'=>$key,
 			    						'commission'=>($data['times_commission']>=$j)?$data['commission_amt']:0
-			    							
 			    					);
 			    					$key = $key+1;
 			    					$this->insert($datapayment);
