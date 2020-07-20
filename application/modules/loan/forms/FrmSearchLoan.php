@@ -219,13 +219,19 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
 		));
-		$options= array(-1=>$this->tr->translate("PAYMENT_TYPE"),
-			1=>$this->tr->translate("CASH"),
-			2=>$this->tr->translate("CHEQUE"),
-			3=>$this->tr->translate("PAYWITH_BANK")
-		);
+// 		$options= array(-1=>$this->tr->translate("PAYMENT_TYPE"),
+// 			1=>$this->tr->translate("CASH"),
+// 			2=>$this->tr->translate("CHEQUE"),
+// 			3=>$this->tr->translate("PAYWITH_BANK")
+// 		);
+// 		$payment_type->setMultiOptions($options);
+// 		$payment_type->setValue($request->getParam("payment_type"));
+		$options=array('-1'=>$this->tr->translate("SELECT_TYPE"));
+		$optsPayType = $db->getVewOptoinTypeByType(2,null,3,1);
+		if(!empty($optsPayType))foreach($optsPayType AS $row){
+			$options[$row['key_code']]=$row['name_en'];
+		}
 		$payment_type->setMultiOptions($options);
-		$payment_type->setValue($request->getParam("payment_type"));
 		
 		$buy_type = new Zend_Dojo_Form_Element_FilteringSelect('buy_type');
 		$buy_type->setAttribs(array(

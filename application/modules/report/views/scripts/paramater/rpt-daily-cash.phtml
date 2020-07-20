@@ -345,7 +345,16 @@
 							   <td align="center">&nbsp;<?php echo date("d-m-Y",strtotime($row['date']));?>&nbsp;</td>
 							   <td align="center">&nbsp;<?php echo $row["user_name"];?>&nbsp;</td>
 							</tr>
-								<?php $total_other_income = $total_other_income +$row['total_amount'];?>
+								<?php $total_other_income = $total_other_income +$row['total_amount'];
+								
+								if($row['payment_id']==1){
+									$total_cash = $total_cash + $row["total_amount"];
+								}elseif($row['payment_id']==2){
+									$total_bank = $total_bank + $row["total_amount"];
+								}else{
+									$total_cheque = $total_cheque + $row["total_amount"];
+								}
+								?>
 							<?php }
 				           }?>
 				           
