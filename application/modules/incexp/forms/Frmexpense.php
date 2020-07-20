@@ -7,6 +7,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 	}
 	public function FrmAddExpense($data=null){
 		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$dbgb = new Application_Model_DbTable_DbGlobal();
 		
 		$title = new Zend_Dojo_Form_Element_ValidationTextBox('title');
 		$title->setAttribs(array(
@@ -28,10 +29,13 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'onChange'=>'enablePayment();'
 		));
-		$options= array(
-				1=>$this->tr->translate("CASH"),
-				2=>$this->tr->translate("CHEQUE"),
-				3=>$this->tr->translate("PAYWITH_BANK"));
+// 		$options= array(
+// 				1=>$this->tr->translate("CASH"),
+// 				2=>$this->tr->translate("CHEQUE"),
+// 				3=>$this->tr->translate("PAYWITH_BANK"));
+// 		$payment_type->setMultiOptions($options);
+		
+		$options = $dbgb->getVewOptoinTypeByType(2,1,3,1);
 		$payment_type->setMultiOptions($options);
 		
 		$cdate=date("Y-m-d");
@@ -237,6 +241,9 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 	}
 	
 	public function FrmAddIncomeother($data=null){
+		
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		
 		$for_date = new Zend_Dojo_Form_Element_FilteringSelect('for_date');
 		$for_date->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -250,7 +257,10 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside'
 		));
-		$options= array(1=>$this->tr->translate("CASH"),2=>$this->tr->translate("CHEQUE"));
+// 		$options= array(1=>$this->tr->translate("CASH"),2=>$this->tr->translate("CHEQUE"));
+// 		$payment_type->setMultiOptions($options);
+		
+		$options = $dbgb->getVewOptoinTypeByType(2,1,3,1);
 		$payment_type->setMultiOptions($options);
 	
 		$_Date = new Zend_Dojo_Form_Element_DateTextBox('Date');

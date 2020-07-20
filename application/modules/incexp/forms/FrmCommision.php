@@ -197,10 +197,13 @@ public function init()
 				'class'=>'fullside',
 				'onChange'=>'enablePayment();'
 		));
-		$options= array(
-				1=>$this->tr->translate("CASH"),
-				2=>$this->tr->translate("CHEQUE"),
-				3=>$this->tr->translate("PAYWITH_BANK"));
+// 		$options= array(
+// 				1=>$this->tr->translate("CASH"),
+// 				2=>$this->tr->translate("CHEQUE"),
+// 				3=>$this->tr->translate("PAYWITH_BANK"));
+// 		$payment_type->setMultiOptions($options);
+		
+		$options = $db->getVewOptoinTypeByType(2,1,3,1);
 		$payment_type->setMultiOptions($options);
 		
 		$_cheque = new Zend_Dojo_Form_Element_TextBox('cheque');
