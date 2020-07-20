@@ -253,7 +253,7 @@ function getAllBranch($search=null){
     		 title, invoice,branch_id,
     		(SELECT CONCAT(land_address,',',street)FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) as house_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) AS category_name,
-    		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id LIMIT 1) AS payment_type,
+    		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id LIMIT 1) AS payment_type,
 			payment_id,
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
     		 cheque,total_amount,description,date,is_closed,
@@ -346,7 +346,7 @@ function getAllBranch($search=null){
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
     		(SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) AS supplier_name,
-    		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
+    		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id limit 1) AS payment_type,
 			payment_id,
     		title,invoice,is_closed,
     		cheque_issuer,other_invoice,
@@ -1777,7 +1777,7 @@ function getAllBranch($search=null){
 	    		s.price_sold,
 	    		c.cheque,
 	    		c.cheque_issuer,
-	    		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=c.payment_id limit 1) AS payment_type,
+	    		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=c.payment_id limit 1) AS payment_type,
 	    		(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name,
 	    		(SELECT co_code FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS co_code,
 	    		(SELECT sex FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS sex,
@@ -1942,7 +1942,7 @@ function getAllBranch($search=null){
 			(SELECT p.land_address FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_address,
 			(SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) AS co_khname,
 			
-	    		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=c.payment_id limit 1) AS payment_type,
+	    		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=c.payment_id limit 1) AS payment_type,
 	    		
 			(SELECT CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
 			 FROM 

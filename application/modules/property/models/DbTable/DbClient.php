@@ -93,7 +93,7 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		 c.`remark`,c.`status`,
 		 c.bname_kh,c.`hname_kh`,c.`lphone`,c.`ksex`,c.`p_age`,
 		c.`nationality`,c.`p_nationality`,c.`p_nation_issue_date`,c.`rid_no`,c.`arid_no`,c.refe_nation_id,
-		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=26 AND v.key_code = c.`is_relevant_type`) AS relevent,
+		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=2 AND v.key_code = c.`is_relevant_type`) AS relevent,
 		 c.photo_name FROM `ln_client_property` AS c WHERE client_id = ".$db->quote($id);
 		$sql.=" LIMIT 1 ";
 		$row=$db->fetchRow($sql);

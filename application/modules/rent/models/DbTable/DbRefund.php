@@ -128,7 +128,7 @@ class Rent_Model_DbTable_DbRefund extends Zend_Db_Table_Abstract
 					(SELECT `p`.`project_name` FROM `ln_project` AS p WHERE `p`.`br_id` = `re`.`branch_id` LIMIT 1) AS `branch_name`,
 					CONCAT((SELECT `c`.`name_kh` FROM ln_client AS c WHERE c.client_id = `re`.`customer_id` LIMIT 1),' ',`p`.`land_address`,'-',`p`.`street`) AS rent_no,
 					re.refund_date,
-					(SELECT name_kh FROM `ln_view` WHERE TYPE=26 AND key_code=re.payment_method LIMIT 1) AS payment_type,
+					(SELECT name_kh FROM `ln_view` WHERE type=2 AND key_code=re.payment_method LIMIT 1) AS payment_type,
 					cheque,
 					re.total_amount,
 					(SELECT  first_name FROM rms_users WHERE id=re.user_id LIMIT 1 ) AS user_name

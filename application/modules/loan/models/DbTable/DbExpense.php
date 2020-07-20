@@ -71,7 +71,7 @@ class Loan_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
 		(SELECT sup.name FROM `ln_supplier` AS sup WHERE sup.id = supplier_id LIMIT 1) AS supplier,
 		title,invoice,
-		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
+		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id limit 1) AS payment_type,
 		(SELECT name_en FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
 		total_amount,description,date,
 		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,

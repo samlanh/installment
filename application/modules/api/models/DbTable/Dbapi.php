@@ -297,7 +297,7 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
 					WHEN supplier_id=0 THEN 'N/A'
 					WHEN supplier_id!=0 THEN (SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) 
 				END as supplier_name,
-    		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id limit 1) AS payment_type,
+    		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id limit 1) AS payment_type,
     		title,invoice,
 	    		CASE 
 					WHEN other_invoice IS NULL THEN 'N/A'

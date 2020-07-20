@@ -87,7 +87,7 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) as house_no,
 		title, invoice,
 		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) AS category_name,
-		(SELECT name_kh FROM `ln_view` WHERE type=26 and key_code=payment_id LIMIT 1) AS payment_type,
+		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id LIMIT 1) AS payment_type,
 		total_amount,description,date,
 		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name
 		 ";

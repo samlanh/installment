@@ -1291,20 +1291,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		return $result;
   	}
   }
-//   public function ClassifiedLoan($type=26){
-//   	$db = $this->getAdapter();
-//   	$sql="SELECT id,key_code,name_en FROM `ln_view` WHERE status =1 ";//just concate
-//   	if($type!=null){
-//   		$sql.=" AND type = $type ";
-//   	}
-//   	 $rows = $db->fetchAll($sql);
-//   	$opt = array();
-//   	if(!empty($rows))foreach($rows AS $row){
-//   		$opt[$row['key_code']]=$row['name_en'];
-//   	}
-//   	return $opt;
 
-//   }
 
 
 
