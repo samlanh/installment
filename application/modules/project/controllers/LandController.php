@@ -475,5 +475,22 @@ class Project_LandController extends Zend_Controller_Action {
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$this->view->street = $db->getAllStreetForOpt();
-	}	
+	}
+
+	function getpropertyamountAction(){
+		if($this->getRequest()->isPost()){
+			echo 1;
+			exit();
+			$data = $this->getRequest()->getPost();
+			$db = new Project_Model_DbTable_DbLand();
+			$maxProperty=50;
+			$rs=$db->countAmountProperty($data);
+			if($rs>=$maxProperty){
+				echo 0;
+				exit();
+			}
+			echo 1;
+			exit();
+		}
+	}
 }

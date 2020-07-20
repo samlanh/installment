@@ -20,6 +20,11 @@
 					dijit.byId('land_address').focus();
 					return false;
 				}
+				if(checkAmountHouse==1){
+						alert("<?php echo $tr->translate('PROPERTY_IS_LIMIT_BY_BRANCH');?>");
+						dijit.byId('branch_id').focus();
+						return false;
+					}
 				loadingBlock();
 				return true;
 			} else {
@@ -401,6 +406,12 @@ dojo.ready(function(){
 		dijit.byId('land_price').set('readOnly',false);
 		dijit.byId('house_price').set('readOnly',false);
 		dijit.byId('buy_status').set('value',0);
+		
+		var branch_id = dijit.byId('branch_id');
+		 branch_id.on('change', function(evt) {
+			 getAllAmountPrpertyByBranch();
+		});
+		getAllAmountPrpertyByBranch();
 });
 function showPopupForm(){
 	dijit.byId('save_property').set('disabled',false);
@@ -499,6 +510,33 @@ function checkTitle(){
 				document.getElementById('message').innerHTML ='';
 				return true;
 			}
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+
+var checkAmountHouse=0;
+url_getPropertyByBranch = '<?php echo $this->url(array('module'=>'project','controller'=>'land','action'=>'getpropertyamount'));?>';
+function getAllAmountPrpertyByBranch(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0 || branch_id==-1){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getPropertyByBranch,	
+		content:{ 
+			'branch_id': branch_id
+		},
+		handleAs:"json",
+		load: function(data) {	
+			
+		   if(data==1){
+			   checkAmountHouse=0;
+		   }else{
+			   checkAmountHouse=1;
+		   }
 		},
 		error: function(err) {
 			alert(err);

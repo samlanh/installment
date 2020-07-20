@@ -21,6 +21,11 @@
 						dijit.byId('land_address').focus();
 						return false;
 					}
+					if(checkAmountHouse==1){
+						alert("<?php echo $tr->translate('PROPERTY_IS_LIMIT_BY_BRANCH');?>");
+						dijit.byId('branch_id').focus();
+						return false;
+					}
 					loadingBlock();
 					return true;
 				} else {
@@ -375,6 +380,9 @@ require(["dojo/ready"], function(ready){
 	    }
 	}, "type_tob");
 });
+
+
+
 function popupIssuer(){
 	cheque_issuer = dijit.byId('type_tob').get('value');
 	if(cheque_issuer==-1){
@@ -458,6 +466,12 @@ dojo.ready(function(){
 					}
 				}  
 			}, "branch_id");
+			
+			var branch_id = dijit.byId('branch_id');
+			 branch_id.on('change', function(evt) {
+				 getAllAmountPrpertyByBranch();
+			});
+			getAllAmountPrpertyByBranch();
 	}catch(e){
 	}
 });
@@ -578,6 +592,33 @@ function checkTitle(){
 				checkhouse_title=0;
 				document.getElementById('message').innerHTML ='';
 			}
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+
+var checkAmountHouse=0;
+url_getPropertyByBranch = '<?php echo $this->url(array('module'=>'project','controller'=>'land','action'=>'getpropertyamount'));?>';
+function getAllAmountPrpertyByBranch(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==0 || branch_id==-1){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getPropertyByBranch,	
+		content:{ 
+			'branch_id': branch_id
+		},
+		handleAs:"json",
+		load: function(data) {	
+			
+		   if(data==1){
+			   checkAmountHouse=0;
+		   }else{
+			   checkAmountHouse=1;
+		   }
 		},
 		error: function(err) {
 			alert(err);

@@ -566,4 +566,10 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		$sql = " SELECT DISTINCT type_tob as name,type_tob as id FROM `ln_properties` WHERE type_tob!='' ORDER BY type_tob ASC ";
 		return $db->fetchAll($sql);
 	}
+	
+	public function countAmountProperty($data){
+		$db =$this->getAdapter();
+		$sql = "SELECT  count(p.id) FROM `ln_properties` AS p WHERE p.`branch_id` = ".$data['branch_id'];
+		return $db->fetchOne($sql);
+	}
 }
