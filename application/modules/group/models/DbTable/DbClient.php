@@ -163,8 +163,8 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			}
 			$stringold.="With Name : ".$row['hname_kh']."<br />";
 			$stringold.="sex : ".$sex."<br />";
-			$stringold.="phone : ".$row['lphone']."<br />";
-			$stringold.="Email: ".$$row['email']."<br />";
+// 			$stringold.="phone : ".$row['lphone']."<br />";
+// 			$stringold.="Email: ".$$row['email']."<br />";
 			$stringold.="Nationality : ".$row['p_nationality']."<br />";
 	
 			
