@@ -132,7 +132,7 @@ class Project_indexController extends Zend_Controller_Action {
 	{
 		$_dbmodel = new Project_Model_DbTable_DbProject();
 		$allpro = $_dbmodel->countProject();
-		if ($allpro>=3){
+		if ($allpro>=30){
 			$this->_redirect("/project/index");
 		}
 		$id=$this->getRequest()->getParam("id");
