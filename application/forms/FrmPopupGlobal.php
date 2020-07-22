@@ -2937,13 +2937,13 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<div class="card-box">
 						<div class="col-md-12 col-sm-12 col-xs-12">
 							<div class="form-group">
-								<label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name">
+								<label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" >
 									<i class="fa fa-hand-o-right" aria-hidden="true"></i>
 									<span id="title_form"></span>
 								</label>
 							</div>
 							<div class="form-group">
-								<label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name">'.$tr->translate('TITLE').' :
+								<label class="control-label col-md-5 col-sm-5 col-xs-12" >'.$tr->translate('TITLE').' :
 								</label>
 								<div class="col-md-7 col-sm-7 col-xs-12">
 								'.$frm->getElement("title").'

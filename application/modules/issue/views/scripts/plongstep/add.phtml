@@ -20,18 +20,20 @@
 		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
-				process_status = dijit.byId('process_status').get('value');
-            		if (process_status=='' || branch_id==-1){
-						alert('<?php echo $tr->translate("PLEASE_SELECT_PROCCESSING");?>');
-						dijit.byId('process_status').focus();
-						return false;
-					}
 				identity= $("#identity").val();
 				if(identity=='' || identity==null){
-					alert("<?php echo $tr->translate("PLEASE_SELECT_PROPERTY");?>");
+					alert("<?php echo $tr->translate("PLEASE_SELECT");?>");
 					dijit.byId("loan_number").focus();
 					return false;
 				}
+
+				process_status = dijit.byId('process_status').get('value');
+            	if (process_status==0){
+					alert('<?php echo $tr->translate("PLEASE_SELECT_PROCCESSING");?>');
+					dijit.byId('process_status').focus();
+					return false;
+				}
+				
 				loadingBlock();
 				return true;
 			}else {
@@ -50,19 +52,19 @@
 	    	<div class="card-box">
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
 	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-map" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-map" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
 	                   </label>
 	                </div>
 	                
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BRANCH_NAME");?> <span class="required">*</span>:
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?> <span class="required">*</span>:
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('branch_id')?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROPERTY_CODE");?> <span class="required">*</span>:
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?> <span class="required">*</span>:
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id='loan_number' />
@@ -70,32 +72,32 @@
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("PROCESS_INFO");?> 
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("PROCESS_INFO");?> 
 	                   </label>
 	                </div>
 	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("DATE");?>:
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?>:
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('date')?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PROCCESSING");?>:
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROCCESSING");?>:
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('process_status')?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("GIVE_BY");?>:
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("GIVE_BY");?>:
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('give_by')?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("RECEIVE_BY");?>:
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIVE_BY");?>:
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('receive_by')?>
@@ -104,7 +106,7 @@
 	    		</div>
 	    		<div class="col-md-8 col-sm-8 col-xs-12">
 	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" for="first-name"><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
 	                   </label>
 	                </div>
 	                <div  id="showrecord"></div>
