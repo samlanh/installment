@@ -112,7 +112,6 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				'end_datebefore'		=>$sale['end_line'],
     				'discount_after'		=>$data['discount'],    				
     				'total_payment'			=>$data['sold_price'],
-    				//'other_fee'				=>$data['other_fee'],
     				'payment_method_after'	=>$data['schedule_opt'],
     				'paid_amount_after'		=>0,//$data['deposit'],
     				'balance_after'			=>$data['balance'],
@@ -235,26 +234,26 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$this->_name="ln_saleschedule";
     		if($data['principal_paid']>0){
 	    		$datapayment = array(
-	    				'branch_id'=>$data['branch_id'],
-	    				'sale_id'=>$id,//good
-	    				'begining_balance'=> $data['sold_price'],//good
-	    				'begining_balance_after'=> $data['sold_price'],//good
-	    				'principal_permonth'=> $data['principal_paid'],//good
-	    				'principal_permonthafter'=>$data['principal_paid'],//good
-	    				'total_interest'=>0,//good
-	    				'total_interest_after'=>0,//good
-	    				'total_payment'=>$data['principal_paid'],//good
-	    				'total_payment_after'=>$data['principal_paid'],//good
-	    				'ending_balance'=>$data['principal_paid'],
-	    				'cum_interest'=>0,
-	    				'amount_day'=>0,
-	    				'is_completed'=>0,
-	    				'date_payment'=>$data['paid_pricipaldate'],
-	    				'percent'=>0,
-	    				'is_installment'=>0,
-	    				'no_installment'=>$start_id,
-	    				'status'=>0,
-	    				'collect_by'=>2,
+    				'branch_id'=>$data['branch_id'],
+    				'sale_id'=>$id,//good
+    				'begining_balance'=> $data['sold_price'],//good
+    				'begining_balance_after'=> $data['sold_price'],//good
+    				'principal_permonth'=> $data['principal_paid'],//good
+    				'principal_permonthafter'=>$data['principal_paid'],//good
+    				'total_interest'=>0,//good
+    				'total_interest_after'=>0,//good
+    				'total_payment'=>$data['principal_paid'],//good
+    				'total_payment_after'=>$data['principal_paid'],//good
+    				'ending_balance'=>$data['principal_paid'],
+    				'cum_interest'=>0,
+    				'amount_day'=>0,
+    				'is_completed'=>0,
+    				'date_payment'=>$data['paid_pricipaldate'],
+    				'percent'=>0,
+    				'is_installment'=>0,
+    				'no_installment'=>$start_id,
+    				'status'=>0,
+    				'collect_by'=>2,
 	    		);
 	    		$this->insert($datapayment);
 	    		$start_id=$start_id+1;
@@ -389,9 +388,9 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     									'is_installment'=>1,
 			    						'no_installment'=>$index+$key+$start_id,
 			    					);
-			    					if($i==$loop_payment){//for end of record only
-			    						$datapayment['last_optiontype'] = $data['paid_receivehouse'];
-			    					}
+// 			    					if($i==$loop_payment){//for end of record only
+// 			    						$datapayment['last_optiontype'] = $data['paid_receivehouse'];
+// 			    					}
 			    					
 			    					$key = $key+1;
 			    					$this->insert($datapayment);
@@ -564,7 +563,14 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 	    			   	}
 	    			   	if($i==$loop_payment){//for end of record only
 	    			   		$pri_permonth = $remain_principal;
+	    			   		
 	    			   		$paid_receivehouse = $data['paid_receivehouse'];
+	    			   		if($data['paid_receivehouse']==1){
+	    			   			$paid_receivehouse=0;
+	    			   		}
+	    			   		if($data['paid_receivehouse']==0){
+	    			   			$paid_receivehouse=1;
+	    			   		}
 	    			   	}
     			   }
     			   if($payment_method==3 OR $payment_method==4 OR $payment_method==7){//កាលថេរ or រំលស់	
@@ -598,10 +604,15 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 	    			        );
 	    			        
 	    			        if($i==$loop_payment AND $payment_method!=7){//for end of record only
-	    			        	$datapayment['last_optiontype'] = $data['paid_receivehouse'];
-	    			        	if($data['paid_receivehouse']>1){
-	    			        		$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+	    			        	
+	    			        	$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+	    			        	if($data['paid_receivehouse']==1){
+	    			        		$datapayment['ispay_bank']=0;
 	    			        	}
+	    			        	if($data['paid_receivehouse']==0){
+	    			        		$datapayment['ispay_bank']=1;
+	    			        	}
+	    			        	
 	    			        }	 
 			    		$idsaleid = $this->insert($datapayment);
 			    		$old_remain_principal = 0;
@@ -620,24 +631,23 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		  	$old_amount_day=0;
     		  	$cum_interest=0;
     		  	$datapayment = array(
-    		  			'branch_id'=>$data['branch_id'],
-    		  			'sale_id'=>$id,//good
-    		  			'begining_balance'=> $old_remain_principal,//good
-    		  			'begining_balance_after'=> $old_remain_principal,//good
-    		  			'principal_permonth'=> $old_pri_permonth,//good
-    		  			'principal_permonthafter'=>$old_pri_permonth,//good
-    		  			'total_interest'=>$old_interest_paymonth,//good
-    		  			'total_interest_after'=>$old_interest_paymonth,//good
-    		  			'total_payment'=>$old_pri_permonth+$old_interest_paymonth,//good
-    		  			'total_payment_after'=>$old_pri_permonth+$old_interest_paymonth,//good
-    		  			'ending_balance'=>$old_remain_principal-$old_pri_permonth,
-    		  			'cum_interest'=>$cum_interest,
-    		  			'amount_day'=>$old_amount_day,
-    		  			'is_completed'=>0,
-    		  			'date_payment'=>$next_payment,
-    		  			'no_installment'=>$i+$j,
-    		  			'last_optiontype'=>$paid_receivehouse,
-    		  			'ispay_bank'=>$paid_receivehouse,
+    		  		'branch_id'=>$data['branch_id'],
+    		  		'sale_id'=>$id,//good
+    		  		'begining_balance'=> $old_remain_principal,//good
+    		  		'begining_balance_after'=> $old_remain_principal,//good
+    		  		'principal_permonth'=> $old_pri_permonth,//good
+    		  		'principal_permonthafter'=>$old_pri_permonth,//good
+    		  		'total_interest'=>$old_interest_paymonth,//good
+    		  		'total_interest_after'=>$old_interest_paymonth,//good
+    		  		'total_payment'=>$old_pri_permonth+$old_interest_paymonth,//good
+    		  		'total_payment_after'=>$old_pri_permonth+$old_interest_paymonth,//good
+    		  		'ending_balance'=>$old_remain_principal-$old_pri_permonth,
+    		  		'cum_interest'=>$cum_interest,
+    		  		'amount_day'=>$old_amount_day,
+    		  		'is_completed'=>0,
+    		  		'date_payment'=>$next_payment,
+    		  		'no_installment'=>$i+$j,
+    		  		'ispay_bank'=>$paid_receivehouse,
     		  	);
     		  	$this->insert($datapayment);
     		  }

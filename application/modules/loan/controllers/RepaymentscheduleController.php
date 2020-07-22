@@ -54,7 +54,7 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 	  	}
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			try {
+			try{
 				$dbgb = new Application_Model_DbTable_DbGlobal();
 				$checkses = $dbgb->checkSessionExpire();
 				if (empty($checkses)){

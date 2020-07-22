@@ -1664,8 +1664,7 @@ function updatePaymentStatus($data){
 	  							'last_optiontype'=>$paid_receivehouse,
 	  							'ispay_bank'=>$data['pay_with'.$i],
 	  					);
-	  					if($payment_method==5){//with bank
-	  					}
+	  					
 	  					
 	  					$from_date = $data['date_payment'.$i];
 	  					$key = $key+1;
@@ -1909,23 +1908,22 @@ function updatePaymentStatus($data){
 	  			$cum_interest = $cum_interest+$old_interest_paymonth;
 	  			$old_amount_day =$old_amount_day+ $amount_day;
 	  			$datapayment = array(
-	  					'sale_id'=>$data['id'],//good
-	  					'begining_balance'=> $old_remain_principal,//good
-	  					'begining_balance_after'=> $old_remain_principal,//good
-	  					'principal_permonth'=> $old_pri_permonth,//good
-	  					'principal_permonthafter'=>$old_pri_permonth,//good
-	  					'total_interest'=>0,//good
-	  					'total_interest_after'=>0,//good
-	  					'total_payment'=>$old_pri_permonth+$old_interest_paymonth,//good
-	  					'total_payment_after'=>$old_pri_permonth+$old_interest_paymonth,
-	  					'ending_balance'=>0,
-	  					'cum_interest'=>$cum_interest,
-	  					'amount_day'=>$old_amount_day,
-	  					'is_completed'=>0,
-	  					'date_payment'=>$next_payment,
-	  					'no_installment'=>$i+$j+1,
-	  					'last_optiontype'=>0
-	  					
+  					'sale_id'=>$data['id'],//good
+  					'begining_balance'=> $old_remain_principal,//good
+  					'begining_balance_after'=> $old_remain_principal,//good
+  					'principal_permonth'=> $old_pri_permonth,//good
+  					'principal_permonthafter'=>$old_pri_permonth,//good
+  					'total_interest'=>0,//good
+  					'total_interest_after'=>0,//good
+  					'total_payment'=>$old_pri_permonth+$old_interest_paymonth,//good
+  					'total_payment_after'=>$old_pri_permonth+$old_interest_paymonth,
+  					'ending_balance'=>0,
+  					'cum_interest'=>$cum_interest,
+  					'amount_day'=>$old_amount_day,
+  					'is_completed'=>0,
+  					'date_payment'=>$next_payment,
+  					'no_installment'=>$i+$j+1,
+  					'last_optiontype'=>0
 	  			);
 	  			$this->insert($datapayment);
 	  		}
@@ -2437,10 +2435,14 @@ function updatePaymentStatus($data){
   						'is_completed'=>$data['payment_option'.$i],
   						'date_payment'=>$next_payment,
   					);
+  					if($data['pay_with'.$i]>0){
+  						$datapayment['ispay_bank']= $data['pay_with'.$i];
+  					}
+  					
   					$where = "id = ".$data['fundid_'.$i];
   					$this->update($datapayment, $where);
 	  		}	
-		$db->commit();
+			$db->commit();
 	  	}catch (Exception $e){
 	  		$db->rollBack();
 	  		return $e->getMessage();

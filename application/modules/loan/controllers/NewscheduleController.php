@@ -1,12 +1,10 @@
 <?php
 class Loan_NewscheduleController extends Zend_Controller_Action {
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
-	private $sex=array(1=>'M',2=>'F');
 	public function indexAction(){
 		try{
 		    if($this->getRequest()->isPost()){
@@ -51,8 +49,8 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			try {
 				$_dbmodel = new Loan_Model_DbTable_DbNewSchedule();
 				$_dbmodel->addNewSchedule($_data);
-// 				Application_Form_FrmMessage::message('INSERT_SUCCESS');
-// 				echo "<script>window.close();</script>";exit();
+				Application_Form_FrmMessage::message('INSERT_SUCCESS');
+				echo "<script>window.close();</script>";exit();
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();

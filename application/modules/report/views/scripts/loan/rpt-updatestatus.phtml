@@ -92,6 +92,7 @@ table { page-break-inside:auto }
 		                 <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
 		                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("TYPE");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("PRINCIPLE");?></td>
 		                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
@@ -127,6 +128,14 @@ table { page-break-inside:auto }
 	                    $next_payment = $date->format("Y-m-d");
 	                    ?>
 	                    <input dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="<?php echo $next_payment;?>" name="payment_date<?php echo $key+1;?>" id="payment_date<?php echo $key+1;?>" /></td>
+	                    <td width="140px">
+		                    <select class="fullside" dojoType="dijit.form.FilteringSelect" id="pay_with<?php echo $key+1;?>" name="pay_with<?php echo $key+1;?>" >
+		                   		<option value="0"><?php echo $tr->translate("PLEASE_SELECT");?></option>
+		                   		<?php if (!empty($this->steppay)) foreach ($this->steppay as $stt){?>
+		                   		<option value="<?php echo $stt['key_code']?>" <?php if($row['ispay_bank']==$stt['key_code']){ echo "selected='selected'"; }?>><?php echo $stt['name_en']?></option>
+		                   		<?php }?>
+		                    </select>
+	                    </td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['begining_balance'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['principal_permonth'],2));?></td>
 	                    <td><?php echo str_replace('.00', '', number_format($row['total_interest'],2));?></td>

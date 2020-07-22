@@ -251,26 +251,26 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			}//end loop
     			
     			$newproperty = array(
-    					'branch_id'=>$data['branch_id'],
-    					'land_code'=>$land_code,
-    					'land_address'=>$land_address,
-    					'street'=>$newpro['street'],
-    					'price'=>$price,
-    					'land_price'=>$land_price,
-    					'house_price'=>$house_price,
-    					'property_type'=>$property_type,
-    					'width'=>$data['width'],
-    					'height'=>$data['height'],
-    					'land_size'=>$data['land_size'],
-    					'south'=>$data['south'],
-    					'north'=>$data['north'],
-    					'west'=>$data['west'],
-    					'east'=>$data['east'],
-    					"is_lock"=>1,
-    					"status"=>-2,
-    					"create_date"=>date("Y-m-d"),
-    					"user_id"=>$this->getUserId(),
-    					"old_land_id"=>$data['identity_land']
+    				'branch_id'=>$data['branch_id'],
+    				'land_code'=>$land_code,
+    				'land_address'=>$land_address,
+    				'street'=>$newpro['street'],
+    				'price'=>$price,
+    				'land_price'=>$land_price,
+    				'house_price'=>$house_price,
+    				'property_type'=>$property_type,
+    				'width'=>$data['width'],
+    				'height'=>$data['height'],
+    				'land_size'=>$data['land_size'],
+    				'south'=>$data['south'],
+    				'north'=>$data['north'],
+    				'west'=>$data['west'],
+    				'east'=>$data['east'],
+    				"is_lock"=>1,
+    				"status"=>-2,
+    				"create_date"=>date("Y-m-d"),
+    				"user_id"=>$this->getUserId(),
+    				"old_land_id"=>$data['identity_land']
     			);
     			$this->_name="ln_properties";
     			$land_id = $this->insert($newproperty);
@@ -502,6 +502,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    		}else{//ថេរ
 			    			$pri_permonth = $data['fixed_payment']-$interest_paymonth;
 			    		}
+			    		
 			    		if($i==$loop_payment){//for end of record only
 			    			$pri_permonth = $remain_principal;
 			    			$paid_receivehouse = $data['paid_receivehouse'];
@@ -526,29 +527,29 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   		
 	    			   		$this->_name="ln_saleschedule";
 	    			   		$datapayment = array(
-	    			   				'branch_id'=>$data['branch_id'],
-	    			   				'sale_id'=>$id,//good
-	    			   				'begining_balance'=> $old_remain_principal,//good
-	    			   				'begining_balance_after'=> $old_remain_principal,//good
-	    			   				'principal_permonth'=> $data['total_payment'.$i],//good
-	    			   				'principal_permonthafter'=>$data['total_payment'.$i],//good
-	    			   				'total_interest'=>$old_interest_paymonth,//good
-	    			   				'total_interest_after'=>$old_interest_paymonth,//good
-	    			   				'total_payment'=>$old_interest_paymonth+$old_pri_permonth,//good
-	    			   				'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth,//good
-	    			   				'ending_balance'=>$old_remain_principal-$old_pri_permonth,
-	    			   				'cum_interest'=>$cum_interest,
-	    			   				'amount_day'=>$old_amount_day,
-	    			   				'is_completed'=>0,
-	    			   				'date_payment'=>$data['date_payment'.$i],
-	    			   				'note'=>$data['remark'.$i],
-	    			   				'percent'=>$data['percent'.$i],
-	    			   				'percent_agree'=>$data['percent_agree'.$i],
-	    			   				'is_installment'=>1,
-	    			   				'no_installment'=>$key,
-	    			   				'last_optiontype'=>$paid_receivehouse,
-	    			   				'ispay_bank'=>$data['pay_with'.$i],
-	    			   				'commission'=>($data['times_commission']>=$i)?$data['commission_amt']:0
+    			   				'branch_id'=>$data['branch_id'],
+    			   				'sale_id'=>$id,//good
+    			   				'begining_balance'=> $old_remain_principal,//good
+    			   				'begining_balance_after'=> $old_remain_principal,//good
+    			   				'principal_permonth'=> $data['total_payment'.$i],//good
+    			   				'principal_permonthafter'=>$data['total_payment'.$i],//good
+    			   				'total_interest'=>$old_interest_paymonth,//good
+    			   				'total_interest_after'=>$old_interest_paymonth,//good
+    			   				'total_payment'=>$old_interest_paymonth+$old_pri_permonth,//good
+    			   				'total_payment_after'=>$old_interest_paymonth+$old_pri_permonth,//good
+    			   				'ending_balance'=>$old_remain_principal-$old_pri_permonth,
+    			   				'cum_interest'=>$cum_interest,
+    			   				'amount_day'=>$old_amount_day,
+    			   				'is_completed'=>0,
+    			   				'date_payment'=>$data['date_payment'.$i],
+    			   				'note'=>$data['remark'.$i],
+    			   				'percent'=>$data['percent'.$i],
+    			   				'percent_agree'=>$data['percent_agree'.$i],
+    			   				'is_installment'=>1,
+    			   				'no_installment'=>$key,
+    			   				'last_optiontype'=>$paid_receivehouse,
+    			   				'ispay_bank'=>$data['pay_with'.$i],
+    			   				'commission'=>($data['times_commission']>=$i)?$data['commission_amt']:0
 	    			   		);
 	    			   		
 	    			   		$sale_currid = $this->insert($datapayment);
@@ -560,9 +561,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				//$last_payment = 0;
 	    				$data['sold_price'] = $data['sold_price']-$data['last_payment'];
 	    				if($i!=1){
-				    			$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
-				    			$start_date = $next_payment;
-				    			$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
+			    			$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
+			    			$start_date = $next_payment;
+			    			$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
 				    	}else{
 			    			//​​បញ្ចូលចំនូនត្រូវបង់ដំបូងសិន
 			    			if(!empty($data['identity'])){
@@ -605,7 +606,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     									'is_installment'=>1,
 			    						'no_installment'=>$key,
 			    						'commission'=>($data['times_commission']>=$j)?$data['commission_amt']:0
-			    							
 			    					);
 			    					$key = $key+1;
 			    					$this->insert($datapayment);
@@ -636,6 +636,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			    		if($i==$loop_payment){//for end of record only
 			    			$pri_permonth = $remain_principal;
 			    			$paid_receivehouse = $data['paid_receivehouse'];
+			    			if($data['paid_receivehouse']==1){
+			    				$paid_receivehouse=0;
+			    			}
+			    			if($data['paid_receivehouse']==0){
+			    				$paid_receivehouse=1;
+			    			}
 			    		}
     			   }
     			   if($payment_method==3 OR $payment_method==4 OR $payment_method==7){
@@ -671,12 +677,14 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			        );
     			        
     			        if($i==$loop_payment AND $payment_method!=7){//for end of record only
-    			        	$datapayment['last_optiontype'] = $data['paid_receivehouse'];
-    			        	if($data['paid_receivehouse']>1){
-    			        		$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+    			        	$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+    			        	if($data['paid_receivehouse']==1){
+    			        		$datapayment['ispay_bank']=0;
+    			        	}
+    			        	if($data['paid_receivehouse']==0){
+    			        		$datapayment['ispay_bank']=1;
     			        	}
     			        }
-    			        
 		            		 
 			    		$idsaleid = $this->insert($datapayment);
 			    		$old_remain_principal = 0;
@@ -710,10 +718,13 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					'is_completed'=>0,
     					'date_payment'=>$next_payment,
     					'no_installment'=>$i+$j,
-    					'last_optiontype'=>$paid_receivehouse,
     					'ispay_bank'=>$paid_receivehouse,
     					'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0
     			);
+    				
+//     				if($data['paid_receivehouse']>0){
+//     					$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+//     				}
     			$this->insert($datapayment);
     		}
 	    	if($data['deposit']>0){//insert payment

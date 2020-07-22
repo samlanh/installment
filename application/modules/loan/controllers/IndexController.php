@@ -6,7 +6,6 @@ class Loan_IndexController extends Zend_Controller_Action {
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
-	private $sex=array(1=>'M',2=>'F');
 	public function indexAction(){
 		try{
 		    if($this->getRequest()->isPost()){
@@ -51,7 +50,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$this->view->frm_search = $frm;
 		$this->view->rssearch = $search;
 // 		$db = new Application_Model_DbTable_DbGlobal();
-		//$db->resetBegeningLoan();
+//      $db->resetBegeningLoan();
   }
   function addAction()
   {

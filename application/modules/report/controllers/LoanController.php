@@ -615,7 +615,7 @@ class Report_LoanController extends Zend_Controller_Action {
   			$_dbmodel = new Report_Model_DbTable_DbLandreport();
   			$_dbmodel->updateScheculeStatus($_data);
   			Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/rpt-sold");
-  		}catch (Exception $e) {
+  		}catch (Exception $e){
   			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
   		}
   	}
@@ -629,6 +629,9 @@ class Report_LoanController extends Zend_Controller_Action {
   	$key = new Application_Model_DbTable_DbKeycode();
   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
   	$this->view->id=$id;
+  	
+  	$steppay = $db->getVewOptoinTypeByType(29);
+  	$this->view->steppay =$steppay;
   }
   function saleAuthorizeAction(){
   	$db = new Report_Model_DbTable_DbRptPaymentSchedule();

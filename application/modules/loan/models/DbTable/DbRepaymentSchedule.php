@@ -571,7 +571,14 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    			   	}
 	    			   	if($i==$loop_payment){//for end of record only
 	    			   		$pri_permonth = $remain_principal;
+	    			   		
 	    			   		$paid_receivehouse = $data['paid_receivehouse'];
+			    			if($data['paid_receivehouse']==1){
+			    				$paid_receivehouse=0;
+			    			}
+			    			if($data['paid_receivehouse']==0){
+			    				$paid_receivehouse=1;
+			    			}
 	    			   	}
     			   }
     			   if($payment_method==3 OR $payment_method==4 OR $payment_method==7){// រំលស់និងដំណាក់កាលថេរ	
@@ -607,13 +614,15 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    			        );
 	    			        
 	    			        if($i==$loop_payment ANd $payment_method!=7){//for end of record only
-	    			        	$datapayment['last_optiontype'] = $data['paid_receivehouse'];
-	    			        	if($data['paid_receivehouse']>1){
- 	    			        		$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+	    			        	$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+	    			        	if($data['paid_receivehouse']==1){
+	    			        		$datapayment['ispay_bank']=0;
+	    			        	}
+	    			        	if($data['paid_receivehouse']==0){
+	    			        		$datapayment['ispay_bank']=1;
 	    			        	}
 	    			        }
 	    			        
-		            		 
 			    		$idsaleid = $this->insert($datapayment);
 			    		$old_remain_principal = 0;
 			    		$old_pri_permonth = 0;
@@ -649,8 +658,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 	    		  			'no_installment'=>$i+$j,
 	    		  			'commission'=>($data['times_commission']>=($i+$j))?$data['commission_amt']:0,
 	    		  			'ispay_bank'=>$paid_receivehouse,
-	    		  			'last_optiontype'=>$paid_receivehouse,
-	    		  			
 	    		  	);
 	    		  	$this->insert($datapayment);
     		  }
