@@ -401,6 +401,10 @@ class Report_Model_DbTable_DbRent extends Zend_Db_Table_Abstract
     	(SELECT c.hname_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS hname_kh,
     	(SELECT CONCAT(last_name,' ',first_name) FROM `rms_users` WHERE rms_users.id=crm.`user_id` LIMIT 1) As by_user
     	FROM `ln_rent_receipt_money` AS crm WHERE crm.`id`=".$id;
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("crm.branch_id");
+    	
     	$rs = $db->fetchRow($sql);
     	$rs['property_type']=ltrim(strstr($rs['property_type'], '('), '.');
     	if(empty($rs)){

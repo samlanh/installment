@@ -85,7 +85,12 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				  `ln_client_receipt_money` AS rm ,
 				  `ln_client_receipt_money_detail` AS rmd
 				WHERE rm.id = $id
-				AND rm.id=rmd.`crm_id`";
+				AND rm.id=rmd.`crm_id` ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("rm.branch_id");
+		$sql.=" LIMIT 1 ";
+		
 		return $db->fetchRow($sql);
 	}
 	public function getIlDetail($id){

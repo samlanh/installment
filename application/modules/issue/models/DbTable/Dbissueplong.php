@@ -155,7 +155,12 @@ class Issue_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
     	$sql="SELECT *,
 			(SELECT branch_id FROM ln_sale WHERE ln_sale.id=ln_issueplong.sale_id LIMIT 1) AS branch_id
     	 FROM 
-    		ln_issueplong WHERE id=$record_id LIMIT 1";
+    		ln_issueplong WHERE id=$record_id ";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("(SELECT branch_id FROM ln_sale WHERE ln_sale.id=ln_issueplong.sale_id LIMIT 1)");
+    	$sql.=" LIMIT 1 ";
+    	
     	return $db->fetchRow($sql);
     }
     public function EditIssuePlong($data){

@@ -1266,6 +1266,9 @@ public function getAllOutstadingLoan($search=null){
 				(SELECT s.pre_fix_payment FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_fix_payment
 				
 		FROM `ln_client_receipt_money` AS crm WHERE crm.`id`=".$id;
+		  $dbp = new Application_Model_DbTable_DbGlobal();
+		  $sql.=$dbp->getAccessPermission("crm.branch_id");
+		  
 	 $rs = $db->fetchRow($sql);
 	 $rs['property_type']=ltrim(strstr($rs['property_type'], '('), '.');
 	 if(empty($rs)){return ''; }else{

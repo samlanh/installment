@@ -83,6 +83,10 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
     	$where= " AND ".$from_date." AND ".$to_date;
     	$where.= " AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_newloancolect.id LIMIT 1  )=0";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("branch_id");
+    	
     	$order=" GROUP BY sale_id ORDER BY date_payment DESC ,sale_id ASC, id ASC";
     	return $db->fetchAll($sql.$where.$order);
     }
@@ -116,6 +120,10 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$where ='';
     	$to_date = (empty($search['end_date']))? '1': " end_line <= '".$search['end_date']." 23:59:59'";
     	$where= " AND ".$to_date;
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("s.branch_id");
+    	
     	$order=" ORDER BY end_line ASC";
     	return $db->fetchAll($sql.$where.$order);
     }

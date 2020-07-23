@@ -407,7 +407,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		(SELECT e.invoice FROM `ln_expense` AS e WHERE e.id = c.expense_id) AS reciept FROM `ln_sale_cancel` AS c WHERE c.`id`=".$id;
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$sql.=$dbp->getAccessPermission("`c`.`branch_id`");
-		
+		$sql.=" LIMIT 1 ";
 		return $db->fetchRow($sql);
 	}
 	

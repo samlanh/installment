@@ -61,7 +61,8 @@ class Invest_Model_DbTable_DbWithdraw extends Zend_Db_Table_Abstract
 	    	if(!empty($search['investor_search'])){
 	    		$where.=" AND w.investor_id = ".$search['investor_search'];
 	    	}
-    	
+	    	$where.=$dbp->getAccessPermission("w.branch_id");
+	    	
     		$order=" ORDER BY w.id DESC ";
     		return $db->fetchAll($sql.$where.$order);
     		 
@@ -355,6 +356,11 @@ class Invest_Model_DbTable_DbWithdraw extends Zend_Db_Table_Abstract
     	function getReceiptByID($receipt_id){
     		$db = $this->getAdapter();
     		$sql="SELECT * FROM rms_investor_withdraw WHERE id =$receipt_id ";
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("branch_id");
+    		$sql.=" LIMIT 1 ";
+    		
     		return $db->fetchRow($sql);
     	}
     	function checkifExistingDelete($id){

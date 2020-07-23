@@ -120,6 +120,9 @@ class Report_RentController extends Zend_Controller_Action {
   	$id = $this->getRequest()->getParam('id');
   	if(!empty($id)){
   		$receipt = $db->getRentReceiptByID($id);
+  		if(empty($receipt) or $receipt==''){
+  			Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/rent/rpt-payment');
+  		}
   		$this->view->rs = $receipt;
   		if(empty($receipt['name_kh'])){
   			$this->_redirect("/report/paramater");

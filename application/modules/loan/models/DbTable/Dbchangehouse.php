@@ -352,7 +352,11 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     	}
     }
     function getTransferProject($id){
-    	$sql=" SELECT * FROM ln_change_house WHERE id= $id limit 1";
+    	$sql=" SELECT * FROM ln_change_house WHERE id= $id ";
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("from_branchid");
+    	$sql.=" LIMIT 1 ";
+    	
     	$db = $this->getAdapter();
     	return $db->fetchRow($sql);
     }

@@ -47,6 +47,8 @@ class Invest_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
     		if(!empty($search['broker_id'])){
     			$where.=" AND i.broker_id = ".$search['broker_id'];
     		}
+    		$where.=$dbp->getAccessPermission("i.branch_id");
+    		
     		$order=" ORDER BY i.id DESC ";
     		return $db->fetchAll($sql.$where.$order);
     		 
@@ -168,7 +170,12 @@ class Invest_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
     public function getInvestmentById($id){
     	$this->_name='rms_investment';
     	$db = $this->getAdapter();
-    	$sql=" SELECT *  FROM $this->_name WHERE id = $id LIMIT 1 ";
+    	$sql=" SELECT *  FROM $this->_name WHERE id = $id ";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("branch_id");
+    	$sql.=" LIMIT 1 ";
+    	
     	$row = $db->fetchRow($sql);
     	return $row;
     }

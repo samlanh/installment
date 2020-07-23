@@ -568,6 +568,9 @@ class Report_LoanController extends Zend_Controller_Action {
 	 $id = $this->getRequest()->getParam('id');
 	 if(!empty($id)){
 		 $receipt = $db->getReceiptByID($id);
+		 if(empty($receipt) or $receipt==''){
+		 	Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/loan/rpt-payment');
+		 }
 			$this->view->rs = $receipt;
 			if(empty($receipt['name_kh'])){
 				$this->_redirect("/report/paramater");

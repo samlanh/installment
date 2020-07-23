@@ -1551,6 +1551,10 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		s.id=sp.sale_id
 		AND (`c`.`client_id` = `s`.`client_id`)
        AND (`p`.`id` = `s`.`house_id`)) AND s.is_issueplong=1 AND s.is_receivedplong=0 ";
+  	
+  	$dbp = new Application_Model_DbTable_DbGlobal();
+  	$sql.=$dbp->getAccessPermission("s.branch_id");
+  	
   	$order=" ORDER BY end_line ASC ";
   	return $db->fetchAll($sql.$order);
   }

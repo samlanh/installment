@@ -87,7 +87,12 @@ class Issue_Model_DbTable_Dbgivehouse extends Zend_Db_Table_Abstract
 	}
 	function getIssueHousebyId($id){
 		$db = $this->getAdapter();
-		$sql="SELECT * FROM ln_issue_house WHERE id = $id LIMIT 1";
+		$sql="SELECT * FROM ln_issue_house WHERE id = $id ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("branch_id");
+		$sql.=" LIMIT 1 ";
+		
 		return $db->fetchRow($sql);
 	}
 	

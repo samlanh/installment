@@ -92,6 +92,10 @@ class Invest_WithdrawbrokerController extends Zend_Controller_Action {
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$db = new Invest_Model_DbTable_DbWithdrawBroker();
 		$payment_il = $db->getReceiptByID($id);
+		if (empty($payment_il)){
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/invest/withdrawbroker");
+			exit();
+		}
 		if (!empty($payment_il)){
 			if ($payment_il['is_closed']==1){
 				Application_Form_FrmMessage::Sucessfull("Can not delete this record","/invest/withdrawbroker");

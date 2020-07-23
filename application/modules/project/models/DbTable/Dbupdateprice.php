@@ -29,6 +29,9 @@ class Project_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
 	  	if($search['branch_id']>-1){
 	  		$where.= " AND branch_id = ".$search['branch_id'];
 	  	}
+	  	$dbp = new Application_Model_DbTable_DbGlobal();
+	  	$where.=$dbp->getAccessPermission("branch_id");
+	  	
 	  	$where.=" GROUP BY branch_id,street,property_type ORDER BY branch_id DESC,street ASC";
 	  	return  $db->fetchAll($sql.$where);
     }

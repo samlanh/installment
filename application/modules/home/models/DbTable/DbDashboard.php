@@ -19,6 +19,9 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		if (!empty($available)){
 			$sql.=" AND p.`is_lock` =0";
 		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("p.branch_id");
+		
 		return $db->fetchOne($sql);
 	}
 	
@@ -43,6 +46,10 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$sql="SELECT COUNT(p.`id`) AS total,SUM(p.`price_sold`) AS totalAmount
 			FROM `ln_sale` AS p 
 			WHERE p.`status` =1 AND p.is_cancel=0 ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("p.branch_id");
+		
 		return $db->fetchRow($sql);
 	}
 	
@@ -51,6 +58,10 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$sql="SELECT COUNT(p.`id`) AS total,SUM(p.`price_sold`) AS totalAmount
 			FROM `ln_sale` AS p 
 			WHERE p.`status` =1 AND p.is_completed =1 ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("p.branch_id");
+		
 		return $db->fetchRow($sql);
 	}
 	
@@ -59,6 +70,10 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$sql="SELECT COUNT(p.`id`) AS total
 		FROM `ln_sale` AS p
 		WHERE p.`status` =1 AND p.is_cancel =1";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("p.branch_id");
+		
 		return $db->fetchOne($sql);
 	}
 	
@@ -70,6 +85,10 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		if (!empty($cancelProperty)){
 			$sql.=" AND p.`category_id`=4";
 		}
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("p.branch_id");
+		
 		return $db->fetchOne($sql);
 	}
 	function getAllComission(){

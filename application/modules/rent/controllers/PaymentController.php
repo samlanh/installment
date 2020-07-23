@@ -55,6 +55,10 @@ class Rent_PaymentController extends Zend_Controller_Action {
   		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   		$db = new Rent_Model_DbTable_DbLoanILPayment();
   		$payment_il = $db->getIlPaymentByID($id);
+  		if(empty($payment_il)){
+  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/rent/payment");
+  			exit();
+  		}
   		if (!empty($payment_il)){
   			if ($payment_il['is_closed']==1){
   				Application_Form_FrmMessage::Sucessfull("Can not delete this record","/rent/payment");

@@ -90,6 +90,10 @@ class Loan_TransfercashController extends Zend_Controller_Action {
 		}
 		$id = $this->getRequest()->getParam('id');
 		$rs = $_dbmodel->getTransferProject($id);
+		if(empty($rs)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/changproperty");
+			exit();
+		}
 		$this->view->rs = $rs;
 		
 		$frm = new Loan_Form_FrmTransferproject();

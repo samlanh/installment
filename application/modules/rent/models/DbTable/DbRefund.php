@@ -175,6 +175,11 @@ class Rent_Model_DbTable_DbRefund extends Zend_Db_Table_Abstract
     function getRefundById($id){
     	$db = $this->getAdapter();
     	$sql = " SELECT * FROM `ln_rent_refund` WHERE id=$id ";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("branch_id");
+    	$sql.=" LIMIT 1 ";
+    	
     	return $db->fetchRow($sql);
     }
 }
