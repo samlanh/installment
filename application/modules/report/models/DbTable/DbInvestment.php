@@ -16,7 +16,12 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 				WHERE 
 				i.investor_id = iv.id
 				AND
-			i.id= $id LIMIT 1";
+			i.id= $id ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("i.branch_id");
+		$sql.=" LIMIT 1 ";
+		
 		return $db->fetchRow($sql);
 	}
 	public function getInvestorSchedule($id){
@@ -40,7 +45,12 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 		WHERE
 		i.broker_id = iv.id
 		AND
-		i.id= $id LIMIT 1";
+		i.id= $id ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("i.branch_id");
+		$sql.=" LIMIT 1 ";
+		
 		return $db->fetchRow($sql);
 	}
 	public function getBrokerSchedule($id){
@@ -73,7 +83,12 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 				WHERE
 					crm.investor_id = v.id
 					AND crm.status=1
-					AND crm.`investment_id` =$investment_id ORDER BY crm.`id` DESC ";
+					AND crm.`investment_id` =$investment_id ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("crm.branch_id");
+		$sql.=" ORDER BY crm.`id` DESC ";
+		
 		return $db->fetchAll($sql);
 	}
 	
@@ -101,7 +116,12 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 				WHERE
 					crm.broker_id = v.id
 					AND crm.status=1
-					AND crm.`investment_id` =$investment_id ORDER BY crm.`id` DESC ";
+					AND crm.`investment_id` =$investment_id ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("crm.branch_id");
+		$sql.=" ORDER BY crm.`id` DESC ";
+		
 		return $db->fetchAll($sql);
 	}
 	
@@ -144,6 +164,9 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 		if(!empty($search['broker_id'])){
 			$where.=" AND i.broker_id = ".$search['broker_id'];
 		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("i.branch_id");
+		
 		$order=" ORDER BY i.id DESC ";
 		
 		return $db->fetchAll($sql.$where.$order);
@@ -179,6 +202,10 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 		if(!empty($search['investor_id'])){
 			$where.=" AND i.investor_id = ".$search['investor_id'];
 		}
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("i.branch_id");
+		
 		$order=" ORDER BY i.id DESC ";
 	
 		return $db->fetchAll($sql.$where.$order);
@@ -213,6 +240,9 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 						`rms_investor` AS v 
 					WHERE v.id = w.investor_id AND w.status=1 AND w.id=$id
 			";
+			$dbp = new Application_Model_DbTable_DbGlobal();
+			$sql.=$dbp->getAccessPermission("w.branch_id");
+			
 			return $db->fetchRow($sql);
 			 
 		}catch (Exception $e){
@@ -243,6 +273,8 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 			`rms_broker` AS v
 			WHERE v.id = w.broker_id AND w.status=1 AND w.id=$id
 			";
+			$dbp = new Application_Model_DbTable_DbGlobal();
+			$sql.=$dbp->getAccessPermission("w.branch_id");
 			return $db->fetchRow($sql);
 	
 		}catch (Exception $e){
@@ -294,6 +326,10 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 		if(!empty($search['investor_id'])){
 			$where.=" AND crm.investor_id = ".$search['investor_id'];
 		}
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("crm.branch_id");
+		
 		$order=" ORDER BY crm.`id` DESC ";
 		
 		return $db->fetchAll($sql.$where.$order);
@@ -343,6 +379,10 @@ class Report_Model_DbTable_DbInvestment extends Zend_Db_Table_Abstract
 		if(!empty($search['broker_id'])){
 			$where.=" AND crm.broker_id = ".$search['broker_id'];
 		}
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("crm.branch_id");
+		
 		$order=" ORDER BY crm.`id` DESC ";
 		
 		return $db->fetchAll($sql.$where.$order);
