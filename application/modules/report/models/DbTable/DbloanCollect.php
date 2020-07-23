@@ -96,7 +96,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     		$search['end_date']= date('Y-m-d',strtotime("+$amt_day day"));
     	}
     	
-    	$sql = "SELECT
+    	$sql="SELECT
 			  `s`.`id`               AS `id`,
 			  `s`.`price_sold`       AS `price_sold`,
 			  `s`.`second_depostit`         AS `second_depostit`,

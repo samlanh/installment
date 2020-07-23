@@ -3,21 +3,6 @@
 	session_cache_limiter('private_no_expire'); // works
 	//session_start();
 
-	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
-	$base_url = Application_Form_FrmMessage::getUrl("/");
-	$request=Zend_Controller_Front::getInstance()->getRequest();
-	$action=$request->getActionName();
-	
-	$controller=$request->getControllerName();
-	$module=$request->getModuleName();
-	
-	$db_user=new Application_Model_DbTable_DbUsers();
-	$vdgb = new Application_Model_DbTable_DbGlobal();
-	$alllang =  $vdgb->getLaguage();
-	$currentlang = $vdgb->currentlang();
-	
-	$rsplong = $vdgb->getAllplongissue();
-	
 	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 	$username = $session_user->first_name;
 	$user_id = $session_user->user_id;
@@ -25,8 +10,6 @@
 		Application_Form_FrmMessage::redirectUrl("/");
 		exit();
 	}
-	$user_info = $db_user->getUserInfo($user_id);
-	$them_style = 'soria'; 
 	
 	$db = new Report_Model_DbTable_DbloanCollect();
 	$rs = $db->getCustomerNearlyPayment();
@@ -49,27 +32,44 @@
 		$session_user->lock();
 	}
 	
+	$db_user=new Application_Model_DbTable_DbUsers();
+	$user_info = $db_user->getUserInfo($user_id);
+	$them_style = 'soria';
+	
+	$request=Zend_Controller_Front::getInstance()->getRequest();
+	$action=$request->getActionName();
+	$controller=$request->getControllerName();
+	$module=$request->getModuleName();
+	
+	$vdgb = new Application_Model_DbTable_DbGlobal();
+	$alllang =  $vdgb->getLaguage();
+	$currentlang = $vdgb->currentlang();
+	$rsplong = $vdgb->getAllplongissue();
+	
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>js/dojo-1.6.1/dijit/themes/<?php echo $them_style."/".$them_style?>.css" />
     <script src="<?php echo $this->baseUrl()."/contextMenu/1.11.3/"?>jquery.min.js"></script>
+	
 	<!-- export library -->
 	<?php if($module=='report'){?>
-	 <script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/tableExport.js"></script>
-	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jquery.base64.js"></script>
-	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/html2canvas.js"></script>
-	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jspdf/libs/sprintf.js"></script>
-	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jspdf/jspdf.js"></script>
-	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jspdf/libs/base64.js"></script> 
+	 	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/tableExport.js"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jquery.base64.js"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/html2canvas.js"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jspdf/libs/sprintf.js"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jspdf/jspdf.js"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jspdf/libs/base64.js"></script> 
 	<?php } ?>
     <!-- Bootstrap -->
     <link href="<?php echo $base_url;?>admin/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -99,7 +99,6 @@
 	<?php }?>
     <!-- Custom Theme Style -->
     <link href="<?php echo $base_url;?>admin/build/css/custom.min.css" rel="stylesheet">
-     <!-- Favicon Icon -->
     <style>
 		.fullside {
 		    width: 98%;
@@ -114,7 +113,7 @@
 		.five-startreceipt{
 			background-image: url('<?php echo $this->baseUrl()."/images/fivestar-receipt.png";?>');background-size: 100%;
 		}
-		div.reportblog {
+		div.reportblog{
     		overflow-x: auto;
 		    overflow-y: hidden;
 			min-height:26cm; 
@@ -145,7 +144,6 @@
             		<?php echo $this->render('menuleft.phtml')?>
             	</div>
             </div>
-            <!-- top navigation -->
 		        <div class="top_nav">
 		          	<div class="nav_menu">
 		            	<nav>
@@ -170,20 +168,19 @@
 	                 						</li>
 	                 					 <?php }?>
 	                	                </ul>
-              					</li>
-			                	<li class="">
+	              					</li>
+				                	<li class="">
 				                  	<a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                        	<img src="<?php echo $this->baseUrl()?>/images/user.png" alt="">
 				                    <?php echo $username;?> <span class=" fa fa-angle-down"></span>
 					                 </a>
-				                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+					                  <ul class="dropdown-menu dropdown-usermenu pull-right">
 					                    <li><a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'changepassword')); ?>"> <i class="fa fa-key pull-right"></i> <?php echo $tr->translate("Change Password");?></a></li>
 					                    <li><a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'logout','value'=>'1')); ?>">
 					                    <i class="fa fa-sign-out pull-right"></i> <?php echo $tr->translate("SIGN_OUT");?></a>
 					                    </li>
-				                  </ul>
+					                  </ul>
 				                </li>
-				               
 				               <?php if (empty($user_info['staff_id'])){?>
 				                <li role="presentation" class="dropdown">
 				                  <a title="<?php echo $tr->translate("MAKE_AGREEMENTLIST");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
@@ -195,7 +192,7 @@
 					                  	<h4><a style="color: #fff;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-validateagreement'), null, true);?>"><?php echo $tr->translate("MAKE_AGREEMENTLIST");?></a></h4>
 					                  </li>
 					                   <?php if(!empty($rsagree)){?>
-				                  	<?php 
+				                  		<?php 
 				                  		foreach($rsagree as $key=> $result){
 				                          	$url = $this->url(array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add'), null, true)."/id/".$result['id'];
 				                          	$end_dat=date("Y-m-d");
@@ -208,20 +205,19 @@
 				                              <img src="<?php echo $this->baseUrl()."/images/no-profile.png";?>" />
 				                            </div>
 				                            <div class="media-body">
-				                            	<small><?php echo $result['branch_name'];?></small><br />
+				                              <small><?php echo $result['branch_name'];?></small><br />
 				                              <span class="title" ><?php echo $result['name_kh'];?> (<?php echo $result['land_address'].' '.$result['street'];?>)</span>
 				                              <p style="white-space: nowrap;"><strong><i class="fa fa-phone"></i> <?php echo $result['phone'];?></strong>  </p>
 				                              <p><strong>$ <?php echo number_format($result['second_depostit'],2);?></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['end_line']));?></p>
-				                              <p> <small><?php echo $tr->translate("AMOUNT_LATE")." : ".$total_late_day."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?></small>
+				                              <p><small><?php echo $tr->translate("AMOUNT_LATE")." : ".$total_late_day."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?></small>
 				                              </p>
 				                            </div>
 			                            </a>
 			                          </li>
 			                          <?php }?>
-			                           <?php }?>
+			                          <?php }?>
 				                  </ul>
 				              </li>
-				             
 				              <li role="presentation" class="dropdown">
 				                  <a title="<?php echo $tr->translate("CUSTOMER_PAYMENTLIST");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 				                    <i class="fa fa-money"></i>
@@ -257,7 +253,7 @@
 			                          <?php }?>
 			                          <?php }?>
 			                        </ul>
-				              </li>
+				             </li>
 				             <li role="presentation" class="dropdown">
 				                  <a title="<?php echo $tr->translate("ISSUE_PLONGNOTYET_RECEIPT");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 				                    <i class="fa fa-newspaper-o"></i>

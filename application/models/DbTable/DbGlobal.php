@@ -22,8 +22,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$session_lang=new Zend_Session_Namespace('lang');
 		return $session_lang->lang_id;
 	}
-	function getUserIP()
-	{ // get current ip
+	public function getLaguage(){
+		$db = $this->getAdapter();
+		$sql="SELECT * FROM `ln_language` AS l WHERE l.`status`=1 ORDER BY l.ordering ASC";
+		return $db->fetchAll($sql);
+	}
+	function getUserIP(){ // get current ip
 		$client  = @$_SERVER['HTTP_CLIENT_IP'];
 		$forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
 		$remote  = $_SERVER['REMOTE_ADDR'];
@@ -62,11 +66,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}
-	public function getLaguage(){
-		$db = $this->getAdapter();
-		$sql="SELECT * FROM `ln_language` AS l WHERE l.`status`=1 ORDER BY l.ordering ASC";
-		return $db->fetchAll($sql);
-	}
+	
 	public  function caseStatusShowImage($status="status"){
 		$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
 		$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
