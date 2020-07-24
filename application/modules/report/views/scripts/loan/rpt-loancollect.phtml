@@ -173,6 +173,7 @@
 		                    <td colspan="3" style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_INFO");?></td>
 		                    <td colspan="4" style="padding:0px 1px;"><?php echo $tr->translate("PAYMENT");?></td>
 		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
+		                     <td rowspan="2"><?php echo $tr->translate("LATE_DAY");?></td>
 		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("DATE_PAYMENT");?></td>
 		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("NOTE");?></td>
 		                </tr>
@@ -198,6 +199,17 @@
 	                	 $total_penelize=0;
 		             ?>
 	               <?php if(!empty($tran)){foreach($tran as $key =>$row){
+	               	
+	               	if ($row['last_pay_date']==null or $row['last_pay_date']==""){
+	               		$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+	               		$amount_lateday=$total_day/(60*60*24)-$free_day;
+	               		$total_late_day=$total_day/(60*60*24);
+	               	}else {
+	               		$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+	               		$total_late_day=$total_day/(60*60*24);
+	               		$amount_lateday=$total_day/(60*60*24);
+	               	}
+	               	
 	               	?>
 	               	<tr align="center" style="font-size:9px; height: 20px; white-space:nowrap;" class="style hover">
 	                    <td ><?php echo ($key+1<10)?"0":"";echo $key+1;?></td>
@@ -256,6 +268,37 @@
 	                    </td>
 	                   	<td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($total_payment,2));?>&nbsp;</td>
 	                    <td><?php echo $row['no_installment']."/".number_format($row['total_duration'],0);?></td>
+	                    
+	                    <?php 
+		               		$color='';
+							if($row['last_optiontype']==1){//by date
+								
+							if($row['ispay_bank']==0){
+								if ($total_late_day<=13){
+									$color="style='background-color:#ccccff;'";
+								}else if($total_late_day<=29){
+									$color="style='background-color:#b3ffb3;'";
+								}else{
+									$color="style='background-color:#ffd0d0;'";
+								}
+							}
+						}else{//by last payment
+						}	
+	               		?>
+	                    <td align="center" <?php echo $color;?> >&nbsp;
+							<?php 
+		                    	if($row['last_optiontype']==1){//by date
+		                    		if($row['ispay_bank']==0){
+		                    			echo $total_late_day." Days";
+		                    		}else{
+		                    			echo "-";
+		                    		}
+		                    	}else{//by last payment
+		                    		echo "-";
+		                    	}	                    		
+	                    	?>	
+							&nbsp;
+						</td>
 	                   <td align="center" style="white-space: nowrap;">
 	                   		<?php 
 		                    	if($row['last_optiontype']==1){//by date
@@ -284,7 +327,7 @@
 	                	<td><?php echo number_format($amt_d2,2);?></td>
 	                	<td><?php echo number_format($penelize,2);?></td>
 	                	<td><?php echo number_format($amt_d1+$amt_d2+$penelize,2);?></td>
-	                	<td colspan="3"></td>
+	                	<td colspan="4"></td>
 	                </tr>
                 </table>
                  <br />
