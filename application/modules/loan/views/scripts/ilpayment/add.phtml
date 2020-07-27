@@ -1303,7 +1303,6 @@ function calculateTotal(index){//គណនាបង់
 				total_late_day=0;
 			}else{//for installment for date
 				   var total_late_day = Math.round((collect_date - date_payment)/(oneDay));
-					total_late_day = total_late_day - graice_period;
 					if(total_late_day<0){total_late_day=0;}
 			}
 			   
@@ -1359,7 +1358,8 @@ function calculateTotal(index){//គណនាបង់
 				}/*end of checked*/
 				//if(total_late_day>0){ //ករណីអតិថិជនបង់យឺត
 				if(total_late_day>graice_period){ //ករណីអតិថិជនបង់យឺត
-					graice_period
+					//graice_period
+					total_late_day = total_late_day - graice_period;
 					if(payOption==1 && condition==0){//បង់ធម្មតា
 						if(penalty_type==1){//for percent
 						 	total_penelize_peryear = roundhundred((parseFloat(principal_permonth+total_interest)*(parseFloat(ps/100)/30)*parseFloat(total_late_day)));
