@@ -574,6 +574,7 @@ function getAllBranch($search=null){
     		if (!empty($search['streetlist'])){
     			$where.=" AND `l`.`street` = '".$search['streetlist']."'";
     		}
+    		$where.=" ORDER BY  `crm`.`date_pay` DESC ";
     		return $db->fetchAll($sql.$where);
     	}
     	function getTermCodiction(){
