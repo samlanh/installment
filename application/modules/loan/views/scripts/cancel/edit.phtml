@@ -178,26 +178,17 @@
 </table>
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_category" >
-		<form style="background-color: buttonface; width:100%;" id='frm_category' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<form width:100%;" id='frm_category' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<table cellspacing="10" width="100%" style="margin: 0 auto;">
 				<tr>
 					<td>
-						<fieldset style="background-color: buttonface;">
+						<fieldset >
 						<legend align="center" ><?php echo $tr->translate('ADD_CATEGORY');?></legend>
 							<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
 								<tr>
-									<td><?php echo $tr->translate('EXPENSE_TITLE');?></td>
+									<td><?php echo $tr->translate('TITLE');?></td>
 									<td>
 										<input dojoType="dijit.form.ValidationTextBox" required="1" class="fullside" id="cate_name" name="cate_name" value="" type="text">
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('STATUS');?></td>
-									<td>
-										<select name="status_j" id="status_j" dojoType="dijit.form.FilteringSelect"   class="fullside">
-		    								<option value="1" label="active"><?php echo $tr->translate("ACTIVE");?></option>
-		    								<option value="0" label="deactive"><?php echo $tr->translate("DEACTIVE");?></option>
-										</select>
 									</td>
 								</tr>
 								<tr>
@@ -415,7 +406,7 @@ dojo.ready(function(){
 		}
 });
 
-var url_add_category = '<?php echo $this->url(array("module"=>"loan","controller"=>"expense","action"=>"add-category")); ?>';
+var url_add_category = '<?php echo $this->url(array("module"=>"incexp","controller"=>"expense","action"=>"add-category")); ?>';
 function addCategory(){
 	if(dijit.byId('frm_category').validate()){
 		dijit.byId('save').set('disabled',true);
@@ -627,7 +618,7 @@ function printSave(new_invoice_no){
 			function getBranchinfo(){
 				var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
 				branch_id = dijit.byId('branch_id').get('value');
-				if(branch_id==""){
+				if(branch_id==-1 || branch_id==""){
 					return false;
 				}
 				dojo.xhrPost({

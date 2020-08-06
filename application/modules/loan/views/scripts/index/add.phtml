@@ -85,13 +85,13 @@
 					}
            			branch_id = dijit.byId('branch_id').get('value');
             		if (branch_id=='' || branch_id==-1){
-						alert('Please Select Branch!');
+						alert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>!');
 						dijit.byId('branch_id').focus();
 						return false;
 					}
 					client = dijit.byId('member').get('value');
 					if (client=='' || client==-1){
-						alert('Please Select Client Name !');
+						alert('<?php echo $tr->translate("PLEASE_SELECT_CUSTOMER")?> !');
 						dijit.byId('member').focus();
 						return false;
 					}
@@ -630,11 +630,11 @@
 </div>
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_staff" >
-		<form style="background-color: buttonface; width:100%;" id='frm_staff' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<form style="width:100%;" id='frm_staff' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<table cellspacing="10" width="100%" style="margin: 0 auto;">
 				<tr>
 					<td>
-						<fieldset style="background-color: buttonface;">
+						<fieldset>
 						<legend align="center" ><?php echo $tr->translate('ADD_STAFF');?></legend>
 							<table style="margin: 0 auto; width: 100%;  padding:10px; line-height: 32px;" cellspacing="7" >
 								<tr>
@@ -1110,13 +1110,13 @@ require(["dojo/ready"], function(ready){
 	     name: "staff_id",  
 	     class: 'fullside',  
 	     required:false,
-	     placeHolder:"Selected Agent", 
+	     placeHolder:"<?php echo $tr->translate("SELECT_SALE_AGENT")?>", 
 	     onChange: function() {        
 	     	branch_id = dijit.byId('branch_id').get('value');
 	     	staff_id = dijit.byId('staff_id').get('value');
 	     	if(branch_id==0){
 	     		if(staff_id==-1){
-	     			alert('Please select branch');
+	     			alert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>');
 	     			dijit.byId('branch_id').focus();
 	     			return false;
 	         	}
@@ -1835,7 +1835,7 @@ function addPreviewLoan(){
 	if(dijit.byId('frm_add_tran').validate()){
 		client = dijit.byId('member').get('value');
 		if (client=='' || client==-1){
-			alert('Please Select Client Name !');
+			alert('<?php echo $tr->translate("PLEASE_SELECT_CUSTOMER")?> !');
 			dijit.byId('customer_code').focus();
 			return false;
 		}

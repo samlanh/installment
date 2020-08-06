@@ -4,12 +4,13 @@ class RsvAcl_UserTypeController extends Zend_Controller_Action
 {
 	
 	const REDIRECT_URL = '/rsvacl/usertype';
-	
+	protected $tr;
     public function init()
     {
         /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
+    	$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
     }
 
     public function indexAction()
@@ -69,7 +70,7 @@ class RsvAcl_UserTypeController extends Zend_Controller_Action
 			}
 			$db=new Application_Model_DbTable_DbGlobal();
 			$rs=$db->getGlobalDb('SELECT user_type_id,user_type FROM rms_acl_user_type WHERE status=1');
-			$options=array(''=>'Please select');
+			$options=array(''=>$this->tr->translate("PLEASE_SELECT"));
 			foreach($rs as $read) $options[$read['user_type_id']]=$read['user_type'];
 			$this->view->usertype_list= $options;
 				
@@ -85,7 +86,7 @@ class RsvAcl_UserTypeController extends Zend_Controller_Action
     		$this->view->usertype=$rs;
     		$db1=new Application_Model_DbTable_DbGlobal();
     		$allusertype=$db1->getGlobalDb('SELECT user_type_id,user_type FROM rms_acl_user_type WHERE status=1 AND user_type_id <> '.$user_type_id);
-    		$options=array(''=>'Please select');
+    		$options=array(''=>$this->tr->translate("PLEASE_SELECT"));
     		foreach($allusertype as $read) $options[$read['user_type_id']]=$read['user_type'];
     		$this->view->usertype_list= $options;
     	

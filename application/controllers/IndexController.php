@@ -186,7 +186,18 @@ class IndexController extends Zend_Controller_Action
     	}
     }
     public function sessioncheckAction(){
+		
     	if($this->getRequest()->isPost()){
+			$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+			$t = time();
+			$t0 = $session_user->timeout;
+			$diff = $t - $t0;
+			//500 = 5 min
+			if ($diff > 1000 || !isset($t0))
+			{
+				$session_user->unsetAll();
+			}
+			
 	    	$db_global = new Application_Model_DbTable_DbGlobal();
 	    	$checkses = $db_global->checkSessionExpire();
 	    	if (empty($checkses)){

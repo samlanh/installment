@@ -1176,9 +1176,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   public function getGroupCodeById($diplayby=1,$group_type,$opt=null){
   	$db = $this->getAdapter();
+  	
+  	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  	
   	$sql = " CALL `stGetAllClientType`($group_type)";
   	$result = $db->fetchAll($sql);
-  	$options=array(''=>"------Select Client Code-Name------");
+  	$options=array(''=>$tr->translate("CHOOSE_CUSTOEMR"));
   	if($opt!=null){
 		if(!empty($result))foreach($result AS $row){
 				$label =$row['client_number'];	
@@ -1260,13 +1263,14 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   
   function getAllViewType($opt=null,$filter=null){
-  		$db = $this->getAdapter();
+  	$db = $this->getAdapter();
+  	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	$sql ="SELECT * FROM `ln_view_type`";
   	if($filter!=null){
   		$sql.=" WHERE id=12 OR id=13";
   	}
   	$result = $db->fetchAll($sql);
-  	$options=array('-1'=>"ជ្រើសរើសប្រភេទ");
+  	$options=array('-1'=>$tr->translate("SELECT_TYPE"));
   	if($opt!=null){
   		if(!empty($result))foreach($result AS $row){
   			    $options[$row['id']]=$row['name'];
@@ -1336,7 +1340,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db= $this->getAdapter();
   	$sql="SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
   	$rows =  $db->fetchAll($sql);
-  	$options=array(''=>"-----ជ្រើសរើស-----",-1=>"Add New",);
+  	
+  	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  	$options=array(''=>$tr->translate("PLEASE_SELECT"),-1=>$tr->translate("ADD_NEW"),);
   	if(!empty($rows))foreach($rows AS $row){
   		$options[$row['id']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
   	}
@@ -1346,7 +1352,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db= $this->getAdapter();
   	$sql="SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
   	$rows =  $db->fetchAll($sql);
-  	$options=array(''=>$this->tr->translate("PROPERTY_TYPE"));
+  	
+  	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  	$options=array(''=>$tr->translate("PROPERTY_TYPE"));
   	if(!empty($rows))foreach($rows AS $row){
   		$options[$row['id']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
   	}
@@ -1379,7 +1387,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db = $this->getAdapter();
   	$sql = 'SELECT DISTINCT street FROM `ln_properties` WHERE street!="" ORDER BY street ASC ';
   	$rows =  $db->fetchAll($sql);
-  	$options=array(''=>$this->tr->translate("CHOOSE_STREET"));
+  	
+  	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  	$options=array(''=>$tr->translate("CHOOSE_STREET"));
   	if(!empty($rows))foreach($rows AS $row){
   		$options[$row['street']]=$row['street'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
   	}
