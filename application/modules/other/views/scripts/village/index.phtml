@@ -1,3 +1,50 @@
+
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("VILLAGE_LIST"));
+$frm = $this->frm_village;
+$urlEdit = $this->baseUrl()."/other/village/edit/id/";
+?>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-map" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('VILLAGE_LIST');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<div class="card-box">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
+			   <div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<?php echo $frm->getElement("province_name");?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<input id="district_name" >
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<input id="commune_name" >
+                   </div>
+                  <div class="col-md-2 col-sm-2 col-xs-12">
+                    <?php echo $frm->getElement('search_status');?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+                   </div>
+                </div>
+			</form>
+		</div>
+		<div class="card-box">
+			<?php echo $this->list;?>
+		</div>
+	</div>
+</div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <script>
 dojo.require("dojo.data.ItemFileWriteStore");  
@@ -17,7 +64,6 @@ dojo.ready(function(){
 		searchAttr: "name",
 		class: 'fullside',
 		value:"<?php echo $this->result['district_name'];?>",
-		missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
 			onChange: function() {
 					filterCommune();
 		    }
@@ -32,7 +78,6 @@ dojo.ready(function(){
 		searchAttr: "name",
 		class: 'fullside',
 		value:"<?php echo $this->result['commune_name'];?>",
-		missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
 			onChange: function() {
 	        }
 		}, "commune_name");
@@ -47,7 +92,7 @@ function filterDistrict(){
 	dojo.xhrPost({
 		url:url_getdistrict,	
 		content:{ 
-			'pro_id': pro_id
+			'pro_id': pro_id,'no_addnew':1
 		},
 		handleAs:"json",
 		load: function(data) {	
@@ -68,7 +113,7 @@ function filterCommune(){
 	dojo.xhrPost({
 		url:url_getcommune,	
 		content:{ 
-			'district_id': distict_id
+			'district_id': distict_id,'no_addnew':1
 		},
 		handleAs:"json",
 		load: function(data) {	
@@ -81,30 +126,33 @@ function filterCommune(){
 		}
 	});
 }
+
+function setValue(index){
+	var recordcopy = $('input[name=copy]:checked').val();
+	dijit.byId('recordcopy').attr('value',recordcopy);
+}
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row+'?rightclick=true', '_blank');
+}
 </script>
-<?php 
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-echo $this->headTitle($tr->translate("VILLAGE_LIST"));
-$frm = $this->frm_village;
-?>
-<div class="card pb-10 pt-10 pl-10 pr-10">
-	<div class="card-content collapse show">
-		<div class="card-box">
-			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
-			   <table>
-			   		<tr>
-					   	<td><?php echo $frm->getElement("adv_search");?></td>
-					   	<td><?php  echo $frm->getElement('province_name');?></td>
-					   	<td><input id="district_name" ></td>
-					   	<td><input id="commune_name" ></td>
-					    <td><?php echo $frm->getElement('search_status');?></td>
-					    <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
-			   	   </tr>
-			   </table>
-			</form>
-		</div>
-		<div class="card-box">
-			<?php echo $this->list;?>
-		</div>
-	</div>
-</div>

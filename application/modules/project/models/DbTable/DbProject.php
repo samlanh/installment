@@ -298,13 +298,19 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     
  function getBranchById($id){
     	$db = $this->getAdapter();
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$currentLang = $dbp->currentlang();
+    	$title="name_en";
+    	if ($currentLang==1){
+    		$title="name_kh";
+    	}
     	$sql = "SELECT * ,
-    		(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND p_sex=key_code LIMIT 1) AS sex,
-    		(SELECT name_en FROM `ln_view` WHERE TYPE =11 AND w_sex=key_code LIMIT 1) AS sex_w
+    		(SELECT $title FROM `ln_view` WHERE TYPE =11 AND p_sex=key_code LIMIT 1) AS sex,
+    		(SELECT $title FROM `ln_view` WHERE TYPE =11 AND w_sex=key_code LIMIT 1) AS sex_w
     		FROM		
     	$this->_name ";
     	$where = " WHERE `br_id`= $id" ;
-    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	
     	$where.=$dbp->getAccessPermission("br_id");
    		return $db->fetchRow($sql.$where);
     }

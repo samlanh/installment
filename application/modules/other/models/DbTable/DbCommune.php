@@ -51,8 +51,15 @@ class Other_Model_DbTable_DbCommune extends Zend_Db_Table_Abstract
 	function getAllCommune($search=null){
 		$db = $this->getAdapter();
 		$sql = " SELECT com.com_id,com.code,com.commune_namekh,com.commune_name,com.district_name, 
-			com.modify_date,com.status_name,com.user_name
-			FROM v_getallcommune AS com";
+			com.modify_date
+		";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->caseStatusShowImage("status");
+		$sql.=",
+			com.user_name
+			FROM v_getallcommune AS com 
+		";
 		//$sql = " SELECT * FROM v_getallcommune ";
 		
 		$where = ' WHERE 1 ';
@@ -80,7 +87,15 @@ class Other_Model_DbTable_DbCommune extends Zend_Db_Table_Abstract
 	}
         public function getCommuneBydistrict($distict_id){
 		$db = $this->getAdapter();
-		$sql = "SELECT com_id AS id ,commune_namekh AS name FROM $this->_name WHERE status=1 AND commune_namekh!='' AND  $this->_name.district_id=".$db->quote($distict_id); 
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$currentLang=$dbp->currentlang();
+		$title="commune_name";
+		if ($currentLang==1){
+			$title="commune_namekh";
+		}
+		
+		$sql = "SELECT com_id AS id ,$title AS name FROM $this->_name WHERE status=1 AND commune_namekh!='' AND  $this->_name.district_id=".$db->quote($distict_id); 
 		$rows=$db->fetchAll($sql);
 		return $rows;
 	}	

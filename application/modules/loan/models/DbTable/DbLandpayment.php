@@ -35,8 +35,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    `p`.`street`          AS `street`,
 	    (SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
   		`s`.`price_before`    AS `price_before`,
+  		 `s`.`discount_amount` AS `discount_amount`,
  		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
-        `s`.`discount_amount` AS `discount_amount`,
+       
  		`s`.`price_sold`     AS `price_sold`,
  		(SELECT
 	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))

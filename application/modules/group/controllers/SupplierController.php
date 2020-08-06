@@ -27,7 +27,7 @@ class Group_SupplierController extends Zend_Controller_Action {
 			$link=array(
 					'module'=>'group','controller'=>'supplier','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch_name'=>$link,'supplier_code'=>$link,'name'=>$link));
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('branch_name'=>$link,'supplier_code'=>$link,'name'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

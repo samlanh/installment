@@ -59,11 +59,17 @@ class Other_Model_DbTable_DbVillage extends Zend_Db_Table_Abstract
 		$sql =" SELECT
 				v.vill_id,v.village_namekh,v.village_name,
 				(SELECT commune_namekh FROM ln_commune WHERE v.commune_id=com_id LIMIT 1) AS commune_name,
-				d.district_namekh,p.province_kh_name,
-				v.modify_date,(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code=v.status LIMIT 1) AS status, 
+				d.district_namekh,p.province_kh_name,v.modify_date
+				";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->caseStatusShowImage("v.status");
+		$sql.=",
 				(SELECT first_name FROM rms_users WHERE id=v.user_id LIMIT 1) AS user_name
-				FROM ln_village AS v,`ln_commune` AS c, `ln_district` AS d , `ln_province` AS p
-				WHERE v.commune_id = c.com_id AND c.district_id = d.dis_id AND d.pro_id = p.province_id ";
+			FROM ln_village AS v,`ln_commune` AS c, `ln_district` AS d , `ln_province` AS p
+			WHERE v.commune_id = c.com_id AND c.district_id = d.dis_id AND d.pro_id = p.province_id 
+		";
+		
 		$where = '';
         if($search['province_name']>=0){
         	$where.= " AND p.province_id = ".$search['province_name'];
@@ -90,7 +96,15 @@ class Other_Model_DbTable_DbVillage extends Zend_Db_Table_Abstract
 	}
        public function getAllvillagebyCommune($village_id){
 		$db = $this->getAdapter();
-		$sql = "SELECT vill_id AS id,village_namekh AS name FROM $this->_name WHERE village_namekh!='' AND status=1 AND commune_id=".$db->quote($village_id);
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$currentLang=$dbp->currentlang();
+		$title="village_name";
+		if ($currentLang==1){
+			$title="village_namekh";
+		}
+		
+		$sql = "SELECT vill_id AS id,$title AS name FROM $this->_name WHERE village_namekh!='' AND status=1 AND commune_id=".$db->quote($village_id);
 		$rows=$db->fetchAll($sql);
 		return $rows;
 	}	

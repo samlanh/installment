@@ -53,10 +53,15 @@ class Other_Model_DbTable_DbDistrict extends Zend_Db_Table_Abstract
 					district_namekh,district_name,
 					
 				    (SELECT province_kh_name FROM ln_province WHERE province_id=pro_id limit 1) As province_name
-					,modify_date,
-					(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = status LIMIT 1) AS status_name,
-				(SELECT first_name FROM rms_users WHERE id=user_id LIMIT 1) As user_name
-		 FROM $this->_name ";
+					,modify_date
+				 ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->caseStatusShowImage("status");
+		$sql.=",
+		(SELECT first_name FROM rms_users WHERE id=user_id LIMIT 1) As user_name
+		 FROM $this->_name
+		";
 		$where = ' WHERE 1 ';
 		
 		if($search['search_status']>-1){
@@ -78,7 +83,14 @@ class Other_Model_DbTable_DbDistrict extends Zend_Db_Table_Abstract
 	}	
 	public function getDistrictByIdProvince($pro_id){
 		$db = $this->getAdapter();
-		$sql = "SELECT dis_id AS id ,district_namekh AS name FROM $this->_name WHERE district_namekh!='' AND status=1 AND pro_id = ".$db->quote($pro_id);
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$currentLang=$dbp->currentlang();
+		$title="district_name";
+		if ($currentLang==1){
+			$title="district_namekh";
+		}
+		$sql = "SELECT dis_id AS id ,$title AS name FROM $this->_name WHERE district_namekh!='' AND status=1 AND pro_id = ".$db->quote($pro_id);
 		$rows=$db->fetchAll($sql);
 		return $rows;
 	}

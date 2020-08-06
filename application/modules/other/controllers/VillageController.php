@@ -28,7 +28,7 @@ class Other_VillageController extends Zend_Controller_Action {
 			$link=array(
 					'module'=>'other','controller'=>'village','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('village_name'=>$link,'village_namekh'=>$link));
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array('village_name'=>$link,'village_namekh'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			echo $e->getMessage();
@@ -121,7 +121,10 @@ class Other_VillageController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			$db = new Other_Model_DbTable_Dbvillage();
 			$rows = $db->getAllvillagebyCommune($data['commune_id']);
-			array_unshift($rows, array ( 'id' => -1, 'name' => 'បន្ថែម​ថ្មី') );
+			
+			if (empty($data['no_addnew'])){
+				array_unshift($rows, array ( 'id' => -1, 'name' => $this->tr->translate("ADD_NEW") ) );
+			}
 			print_r(Zend_Json::encode($rows));
 			exit();
 		}

@@ -44,13 +44,18 @@ class Other_Model_DbTable_DbProvince extends Zend_Db_Table_Abstract
     function getAllProvince($search=null){
     	$db = $this->getAdapter();
     	$sql = " SELECT province_id AS id,code,province_en_name,province_kh_name,    	
-    	modify_date,
-    	     (SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = status LIMIT 1) AS status_name,
+    	modify_date
+    	 ";
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->caseStatusShowImage("status");
+    	$sql.=",
     	(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE id=user_id )AS user_name
     	FROM $this->_name
-    	WHERE 1 ";
-    	$order=" order by province_id DESC";
+    	WHERE 1
+    	";
+    	$order=" ORDER BY province_id DESC";
     	$where = '';
+    	
     	if(!empty($search['title'])){
     		$s_where=array();
     		$s_search=addslashes(trim($search['title']));

@@ -427,9 +427,9 @@ function initailize(){
 			template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 			template+='<td width="2%" align="center">'+no+'</td>';
 			template+='<td><input class="fullside" type="text" required="true" data-dojo-type="dijit.form.ValidationTextBox" id="shareholdername'+col+'" name="shareholdername'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
-			template+='<td width="50px;"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="gender'+col+'" name="gender'+col+'" > <option value="ប្រុស">ប្រុស</option><option  value="ស្រី">ស្រី</option></select></td>';			
+			template+='<td width="50px;"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="gender'+col+'" name="gender'+col+'" > <option value="<?php echo $tr->translate('MALE');?>"><?php echo $tr->translate('MALE');?></option><option  value="<?php echo $tr->translate('FEMALE');?>"><?php echo $tr->translate('FEMALE');?></option></select></td>';			
 			template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='' id='dob"+col+"' name='dob"+col+"' /></td>";
-			template+='<td><input class="fullside" type="text"  name="id_card'+col+'" id="id_card'+col+'" dojoType="dijit.form.TextBox" placeholder="លេខអត្តសញ្ញាណប័ណ្ណ"/></td>';
+			template+='<td><input class="fullside" type="text"  name="id_card'+col+'" id="id_card'+col+'" dojoType="dijit.form.TextBox" placeholder="<?php echo $tr->translate("NATIONALITY_NO");?>"/></td>';
 			template+='<td  width="250px;"><input class="fullside" type="text"  name="pob'+col+'" id="pob'+col+'" dojoType="dijit.form.TextBox" /></td>';
 			template+='<td><input class="fullside" type="text"  name="phonenumber'+col+'" id="phonenumber'+col+'" dojoType="dijit.form.TextBox" /></td>';
 			template+='<td width="80px;"><input class="fullside" type="text" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';
@@ -468,13 +468,14 @@ function addRow(){
 		dojo.query("#showrecord").append(tmp);
 		temp+='<th><?php echo $tr->translate("DEL");?></th>';
 		temp+='<th><?php echo $tr->translate("NUM");?></th>';
-		temp+='<th><?php echo $tr->translate("ឈ្មោះម្ចាស់ភាគហ៊ុន");?></th>';
-		temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("ភេទ");?></th>';
-		temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("ថ្ងៃខែឆ្នាំកំណើត");?></th>';
-		temp+='<th><?php echo $tr->translate("លេខអត្តសញ្ញាណប័ណ្ណ");?></th>';
-		temp+='<th><?php echo $tr->translate("អាសយដ្ឋាន");?></th>';
-		temp+='<th><?php echo $tr->translate("លេខទូរស័ព្ទ");?></th>';
-		temp+='<th><?php echo $tr->translate("ចំនួនភាគហ៊ុន");?></th>';
+		temp+='<th><?php echo $tr->translate("NAME_OFSHAREHOLDER");?></th>';
+		temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("SEX");?></th>';
+		temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("DOB");?></th>';
+		temp+='<th><?php echo $tr->translate("NATIONALITY_NO");?></th>';
+		temp+='<th><?php echo $tr->translate("ADDRESS");?></th>';
+		temp+='<th><?php echo $tr->translate("Phone");?></th>';
+		temp+='<th><?php echo $tr->translate("QTY_OFSHAREHOLDER");?></th>';
+		
 		dojo.query("#head-title").append(temp);
 		title=1;
 		epx_date ='<?php echo date('Y-m-d');?>';
@@ -484,9 +485,9 @@ function addRow(){
 		template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td width="2%" align="center">'+no+'</td>';
 		template+='<td><input class="fullside" type="text" required="true" data-dojo-type="dijit.form.ValidationTextBox" id="shareholdername'+col+'" name="shareholdername'+col+'" /></td>';	
-		template+='<td width="50px;"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="gender'+col+'" name="gender'+col+'" > <option value="ប្រុស">ប្រុស</option><option  value="ស្រី">ស្រី</option></select></td>';			
+		template+='<td width="50px;"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="gender'+col+'" name="gender'+col+'" > <option value="<?php echo $tr->translate('MALE');?>"><?php echo $tr->translate('MALE');?></option><option  value="<?php echo $tr->translate('FEMALE');?>"><?php echo $tr->translate('FEMALE');?></option></select></td>';			
 		template+="<td><input class='fullside' type='text' constraints="+"{datePattern:'dd/MM/yyyy'}"+" dojoType='dijit.form.DateTextBox' value='"+epx_date+"' id='dob"+col+"' name='dob"+col+"' /></td>";
-		template+='<td><input class="fullside" type="text"  name="id_card'+col+'" id="id_card'+col+'" dojoType="dijit.form.TextBox" placeholder="លេខអត្តសញ្ញាណប័ណ្ណ"/></td>';
+		template+='<td><input class="fullside" type="text"  name="id_card'+col+'" id="id_card'+col+'" dojoType="dijit.form.TextBox" placeholder="<?php echo $tr->translate("NATIONALITY_NO");?>"/></td>';
 		template+='<td  width="250px;"><input class="fullside" type="text"  name="pob'+col+'" id="pob'+col+'" dojoType="dijit.form.TextBox" /></td>';
 		template+='<td><input class="fullside" type="text"  name="phonenumber'+col+'" id="phonenumber'+col+'" dojoType="dijit.form.TextBox" /></td>';
 		template+='<td width="80px;"><input class="fullside" type="text" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';

@@ -279,25 +279,49 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 //    }
    public function getAllProvince(){
    	$this->_name='ln_province';
-   	$sql = " SELECT province_id,(province_kh_name) province_en_name FROM $this->_name WHERE status=1 AND province_en_name!='' ORDER BY province_id DESC";
+   	$currentLang = $this->currentlang();
+   	$title="province_en_name";
+   	if ($currentLang==1){
+   		$title="province_kh_name";
+   	}
+   	$sql = " SELECT province_id,$title AS province_en_name FROM $this->_name WHERE status=1 AND province_en_name!='' ORDER BY province_id DESC";
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql);
    }
    public function getAllDistrict(){
    	$this->_name='ln_district';
-   	$sql = " SELECT dis_id,pro_id,CONCAT(district_name,'-',district_namekh) district_name FROM $this->_name WHERE status=1 AND district_name!='' ";
+   	
+   	$currentLang = $this->currentlang();
+   	$title="district_name";
+   	if ($currentLang==1){
+   		$title="district_namekh";
+   	}
+   	
+   	$sql = " SELECT dis_id,pro_id,$title AS district_name FROM $this->_name WHERE status=1 AND district_name!='' ";
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql);
    }
    public function getAllDistricts(){
    	$this->_name='ln_district';
-   	$sql = " SELECT dis_id AS id,pro_id,CONCAT(district_name,'-',district_namekh) name FROM $this->_name WHERE status=1 AND district_name!='' ";
+   	
+   	$currentLang = $this->currentlang();
+   	$title="district_name";
+   	if ($currentLang==1){
+   		$title="district_namekh";
+   	}
+   	
+   	$sql = " SELECT dis_id AS id,pro_id,$title AS name FROM $this->_name WHERE status=1 AND district_name!='' ";
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql);
    }
    public function getCommune(){
    	$this->_name='ln_commune';
-   	$sql = " SELECT com_id,com_id AS id,commune_name,CONCAT(commune_name,'-',commune_namekh) AS name,district_id FROM $this->_name WHERE status=1 AND commune_name!='' ";
+   	$currentLang = $this->currentlang();
+   	$title="commune_name";
+   	if ($currentLang==1){
+   		$title="commune_namekh";
+   	}
+   	$sql = " SELECT com_id,com_id AS id,commune_name,$title AS name,district_id FROM $this->_name WHERE status=1 AND commune_name!='' ";
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql);
    }
@@ -311,7 +335,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    
    public function getVillage(){
    	$this->_name='ln_village';
-   	$sql = " SELECT vill_id,vill_id AS id,village_name,CONCAT(village_namekh,'-',village_name) AS name,commune_id FROM $this->_name WHERE status=1 AND village_name!='' ";
+   	$currentLang = $this->currentlang();
+   	$title="village_name";
+   	if ($currentLang==1){
+   		$title="village_namekh";
+   	}
+   	$sql = " SELECT vill_id,vill_id AS id,village_name,$title AS name,commune_id FROM $this->_name WHERE status=1 AND village_name!='' ";
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql);
    }

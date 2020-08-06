@@ -17,12 +17,14 @@ Class Other_Form_FrmSearch extends Zend_Dojo_Form{
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 	
 		$_title = new Zend_Dojo_Form_Element_TextBox('title');
-		$_title->setAttribs(array('dojoType'=>$this->text,
+		$_title->setAttribs(array(
+				'dojoType'=>$this->text,
+				'class'=>"fullside",
 				'placeholder'=>$this->tr->translate("SEARCH_PROVINCE_TITLE")));
 		$_title->setValue($request->getParam("title"));
 	
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status_search');
-		$_status->setAttribs(array('dojoType'=>$this->filter,));
+		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>"fullside",));
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL_STATUS"),
 				1=>$this->tr->translate("ACTIVE"),

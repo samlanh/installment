@@ -25,7 +25,7 @@ class Other_DistrictController extends Zend_Controller_Action {
 			$link=array(
 					'module'=>'other','controller'=>'district','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('code'=>$link,'district_name'=>$link,'district_namekh'=>$link));
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array('code'=>$link,'district_name'=>$link,'district_namekh'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -97,7 +97,10 @@ class Other_DistrictController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			$db_district = new Other_Model_DbTable_DbDistrict();
 			$rows = $db_district->getDistrictByIdProvince($data['pro_id']);
-			array_unshift($rows, array ( 'id' => -1, 'name' => 'បន្ថែម​ថ្មី') );
+			
+			if (empty($data['no_addnew'])){
+				array_unshift($rows, array ( 'id' => -1, 'name' => $this->tr->translate("ADD_NEW") ) );
+			}
 			print_r(Zend_Json::encode($rows));
 			exit();
 		}

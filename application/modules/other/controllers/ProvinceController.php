@@ -32,7 +32,7 @@ class Other_ProvinceController extends Zend_Controller_Action {
 			$link=array(
 					'module'=>'other','controller'=>'province','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('code'=>$link,'province_kh_name'=>$link,'province_en_name'=>$link));
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array('code'=>$link,'province_kh_name'=>$link,'province_en_name'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

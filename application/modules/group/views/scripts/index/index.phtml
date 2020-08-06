@@ -9,24 +9,54 @@
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
 		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-map" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CUSTOMER_LIST');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<div class="card-box">
 			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
-				<table width="100%">
-				   <tr>  
-				      <td><?php echo $frm->getElement("adv_search");?></td>
-				      <td><?php echo $frms->getElement('customer_id');?></td>
-				      <td><?php echo $frm->getElement('status');?></td>
-				      <td><?php echo $frm->getElement('start_date');?></td>
-				      <td><?php echo $frm->getElement('end_date');?></td>
-				   </tr>
-				   <tr>
-				   	  <td><?php echo $frms->getElement('province');?> </td>
-				      <td><input id="district" ></td>
-				      <td><input id="commune" ></td>
-				      <td><input id="village" ></td>
-				      <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
-					  </td>
-				   </tr>
-				</table>  
+				<div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<?php echo $frms->getElement('customer_id');?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<?php echo $frm->getElement('status');?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<?php echo $frm->getElement('start_date');?>
+                   </div>
+                  <div class="col-md-2 col-sm-2 col-xs-12">
+                   		<?php echo $frm->getElement('end_date');?>
+                   </div>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                   </div>
+                </div>
+                <div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frms->getElement('province');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input id="district" >
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input id="commune" >
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input id="village" >
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+					</div>
+				</div>
 			</form>
 		</div>
 		<div class="card-box">
@@ -113,7 +143,7 @@ function filterDistrict(){
 		dojo.xhrPost({
 			url:url_getdistrict,	
 			content:{ 
-				'pro_id': pro_id
+				'pro_id': pro_id,'no_addnew':1
 			},
 			handleAs:"json",
 			load: function(data) {	
@@ -132,7 +162,7 @@ function filterCommune(){
 	dojo.xhrPost({
 		url:url_getcommune,	
 		content:{ 
-			'district_id': distict_id
+			'district_id': distict_id,'no_addnew':1
 		},
 		handleAs:"json",
 		load: function(data) {	
@@ -151,7 +181,7 @@ function filterVillage(){
 		dojo.xhrPost({
 			url:url_getvillage,	
 			content:{ 
-				'commune_id': commune_id
+				'commune_id': commune_id,'no_addnew':1
 			},
 			handleAs:"json",
 			load: function(data) {	
