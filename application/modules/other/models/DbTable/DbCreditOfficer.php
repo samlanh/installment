@@ -149,15 +149,22 @@ class Other_Model_DbTable_DbCreditOfficer extends Zend_Db_Table_Abstract
 	}
 	function getAllCreditOfficer($search=null,$parent = 0, $spacing = '', $cate_tree_array = ''){
 		$db = $this->getAdapter();
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$currentLang=$dbp->currentlang();
+		$title="name_en";
+		if ($currentLang==1){
+			$title="name_kh";
+		}
+		
 		$sql = "SELECT co_id,
 			(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = branch_id limit 1) AS branch_name,
 			(SELECT s.co_khname FROM ln_staff AS s WHERE s.co_id = ln_staff.parent_id LIMIT 1) AS parent,
-			co_code,co_khname,(select name_kh FROM `ln_view` WHERE type=11 and key_code =sex LIMIT 1) as gender,
+			co_code,co_khname,(select $title FROM `ln_view` WHERE type=11 and key_code =sex LIMIT 1) as gender,
 			national_id,address,
 			tel,email,
 			(SELECT  CONCAT(first_name) FROM rms_users WHERE id=user_id ) AS user_name
 		 ";
-		$dbp = new Application_Model_DbTable_DbGlobal();
+		
 		$sql.=$dbp->caseStatusShowImage("status");
 		$sql.=" FROM $this->_name WHERE 1 ";
 		

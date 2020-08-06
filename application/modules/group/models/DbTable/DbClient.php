@@ -268,18 +268,26 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 			$db = $this->getAdapter();
 			$from_date =(empty($search['start_date']))? '1': "create_date >= '".$search['start_date']." 00:00:00'";
 			$to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 23:59:59'";
-			$where = " WHERE  ".$from_date." AND ".$to_date;		
+			$where = " WHERE  ".$from_date." AND ".$to_date;	
+
+			$dbp = new Application_Model_DbTable_DbGlobal();
+			$currentLang=$dbp->currentlang();
+			$title="name_en";
+			if ($currentLang==1){
+				$title="name_kh";
+			}
+		
 			$sql = "
 			SELECT client_id,
 			client_number,
 			name_kh,
-			(SELECT name_en FROM `ln_view` WHERE type =11 AND sex=key_code LIMIT 1) AS sex
+			(SELECT $title FROM `ln_view` WHERE type =11 AND sex=key_code LIMIT 1) AS sex
 			,phone,house,street,
 				(SELECT village_namekh FROM `ln_village` WHERE vill_id= village_id LIMIT 1) AS village_name,
 			    create_date,
 			    (SELECT first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name ";
 			
-			$dbp = new Application_Model_DbTable_DbGlobal();
+			
 			$sql.=$dbp->caseStatusShowImage("status");
 			$sql.=" FROM $this->_name ";
 			
