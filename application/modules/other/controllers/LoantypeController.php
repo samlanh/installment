@@ -55,7 +55,7 @@ class Other_LoanTypeController extends Zend_Controller_Action
     		$link=array(
     				'module'=>'other','controller'=>'loantype','action'=>'edit',
     		);
-    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('name_en'=>$link,'name_kh'=>$link));
+    		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('name_en'=>$link,'name_kh'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
