@@ -235,7 +235,8 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		
 		$_coid = new Zend_Dojo_Form_Element_FilteringSelect('co_id');
 		$rows = $db ->getAllCOName();
-		$options=array(0=>"------Select------",-1=>"Add New");
+		$options=array(0=>$this->tr->translate("SELECT_SALE_AGENT"));
+// 		,-1=>$this->tr->translate("ADD_NEW")
 		if(!empty($rows))foreach($rows AS $row) $options[$row['co_id']]=$row['co_khname'];
 		$_coid->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -246,7 +247,8 @@ Class Loan_Form_FrmIlPayment extends Zend_Dojo_Form {
 		
 		$_cocode = new Zend_Dojo_Form_Element_FilteringSelect('co_code');
 		$rows = $db ->getAllCOName();
-		$options=array(0=>"------Select------",-1=>"Add New");
+		$options=array(0=>$this->tr->translate("SELECT_SALE_AGENT"));
+		//,-1=>$this->tr->translate("ADD_NEW")
 		if(!empty($rows))foreach($rows AS $row) $options[$row['co_id']]=$row['co_code'];
 		$_cocode->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',

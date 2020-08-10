@@ -60,7 +60,7 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 		}
 		
 		$where.=$dbp->getAccessPermission("c.`branch_id`");
-		$order=' ORDER BY c.id DESC ';
+		$order=' ORDER BY c.`for_date` DESC,c.id DESC ';
 		return $db->fetchAll($sql.$where.$order);
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
