@@ -14,8 +14,14 @@
 	<form id="add_cancel" action="<?php echo $this->url(array('module'=>'issue','controller'=>'receivplong','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 		<script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
+					plong_type = dijit.byId('plong_type').get('value');
+					if(plong_type==-1 || plong_type==""){
+						alert("<?php echo $tr->translate("PLEASE_LAYOUT_TYPE")?>");
+						dijit.byId('plong_type').focus();
+						return false;
+					}
 				loadingBlock();
-     		   dijit.byId('save_close').set('disabled',true);
+     		   	dijit.byId('save_close').set('disabled',true);
     			return true;
    			}else {
     			return false;
@@ -298,7 +304,7 @@ function displayNone(){
 var	url_getSaleInfo = '<?php echo $this->url(array('module'=>'issue','controller'=>'receivplong','action'=>'getsaleinfo'));?>';
 function getSaleInfo(){
 	plong_type = dijit.byId('plong_type').get('value');
-	if(plong_type==-1){dijit.byId('plong_type').focus();return false;}
+	if(plong_type==-1 || plong_type==""){ alert("<?php echo $tr->translate("PLEASE_LAYOUT_TYPE")?>"); dijit.byId('plong_type').focus();return false;}
 	sale_client = dijit.byId('sale_client').get('value');
 	if(sale_client==0){
 		return false;}
