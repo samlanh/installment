@@ -296,6 +296,13 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					
 					$landInfo = $dbLand->getClientById($data['property_id']);
 					if (!empty($landInfo['old_land_id'])){
+						$arr_1 = array(
+								'status'=>-2,
+						);
+						$this->_name="ln_properties";
+						$where1 =" id = ".$data['property_id'];
+						$this->update($arr_1, $where1);
+						
 						$arr_child = array(
 								'is_lock'=>1, //property can't sell
 						);
