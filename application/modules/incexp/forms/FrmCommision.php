@@ -133,6 +133,7 @@ public function init()
 		
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
 		$_title->setAttribs(array('dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 		));
 		$_title->setValue($request->getParam("adv_search"));

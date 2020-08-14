@@ -23,22 +23,27 @@
 		<div class="card-box">
 			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post"> 
 				<div class="form-group">
-			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   		<div class="col-md-3 col-sm-3 col-xs-12">
 			   			<?php echo $frm->getElement('adv_search');?>
 			   		</div>
-			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   		<div class="col-md-3 col-sm-3 col-xs-12">
 			   			<?php echo $frm->getElement('branch_id_search');?>
 			   		</div>
-			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   		<div class="col-md-3 col-sm-3 col-xs-12">
+						<input id="land_id" />
+					</div>
+			   		<div class="col-md-3 col-sm-3 col-xs-12">
 			   			<?php echo $frm->getElement('staff_id');?>
 			   		</div>
-			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   	</div>
+			   	<div class="form-group">	
+			   		<div class="col-md-3 col-sm-3 col-xs-12">
 			   			<?php echo $frm->getElement('from_date_search');?>
 			   		</div>
-			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   		<div class="col-md-3 col-sm-3 col-xs-12">
 			   			<?php echo $frm->getElement('to_date_search');?>
 			   		</div>
-			   		<div class="col-md-2 col-sm-2 col-xs-12">
+			   		<div class="col-md-3 col-sm-3 col-xs-12">
 			   			<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 			   		</div>
 			   	</div>  
@@ -47,7 +52,67 @@
 		</div>
 	</div>
 </div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+require(["dojo/ready"], function(ready){
+	new dijit.form.FilteringSelect({
+		store: property_store,
+		required: false,
+		autoComplete: true,
+		queryExpr: "*${0}*",
+		name: "land_id",
+		id: "land_id",
+		value:-1,
+		searchAttr: "name",
+		class: 'fullside fullside50',
+		onChange: function() {
+			land_id=-1;
+	}
+		}, "land_id");
+	ready(function(){
+		
+		getProperty();
+		var branch_id = dijit.byId('branch_id_search');
+		 branch_id.on('change', function(evt) {
+			 getProperty();
+		});
+	});
+	
+	 
+});
+land_id = '<?php echo $this->search['land_id']?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getProperty(){
+	dijit.byId('land_id').reset();
+	property_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+	dijit.byId('land_id').set('store', property_store);
+	
+	branch_id = dijit.byId('branch_id_search').get('value');
+	if(branch_id<0){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'action':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_id').set('store', property_store);
+		    
+		    if(land_id>0){
+		    	dijit.byId('land_id').attr('value',land_id);
+			 }
+		},
+		error: function(err) {
+		}
+	});
+} 
+
 var row=0;
 var url="";
 $(function(){

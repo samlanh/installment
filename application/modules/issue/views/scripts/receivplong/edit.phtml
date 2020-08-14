@@ -446,6 +446,12 @@ dojo.ready(function(){
 });
 
 function addPlongType(){
+	newplong_type = dijit.byId('newplong_type').get('value');
+	if(newplong_type==""){
+		alert("<?php echo $tr->translate("PLEASE_ENTER_TITLE")?>");
+		dijit.byId('newplong_type').focus();
+		return false;
+	}
 	var Itemmake = {					
 			id: dijit.byId('newplong_type').get('value'),
 		    name: dijit.byId('newplong_type').get('value')
@@ -457,9 +463,14 @@ function addPlongType(){
 }
 	var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
 	function getSaleClie(){
+		dijit.byId('sale_client').reset();
+		sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('sale_client').set('store', sale_client_store);
+		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id==0){
-			return false;}
+			return false;
+		}
 		dojo.xhrPost({
 			url:url_getSaleClien,	
 			content:{ 

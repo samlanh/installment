@@ -18,6 +18,7 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 				$search = array(
 					    'adv_search'=>'',
 						'staff_id'=>-1,
+						'land_id'=>0,
 						'branch_id_search' => -1,
 						'from_date_search'=> date('Y-m-d'),
 						'to_date_search'=>date('Y-m-d'));
@@ -30,6 +31,8 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 					'module'=>'incexp','controller'=>'comission','action'=>'edit',
 			);
 			$this->view->list=$list->getCheckList(10,$collumns,$rs_rows,array());
+			$this->view->search = $search;
+			
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

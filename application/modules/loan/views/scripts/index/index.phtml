@@ -111,6 +111,11 @@ require(["dojo/ready"], function(ready){
 land_id = '<?php echo $this->rssearch['land_id']?>';
 var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
 function getAllPropertyBranch(branch_id){
+
+	dijit.byId('land_id').reset();
+	property_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+	dijit.byId('land_id').set('store', property_store);
+	
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id<0){
 		return false;
