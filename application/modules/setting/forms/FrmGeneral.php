@@ -265,6 +265,14 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				'placeholder'=>$this->tr->translate("signatur_agree")
 		));
 		
+		
+		$_autocalcualte_period=  new Zend_Dojo_Form_Element_FilteringSelect('autocalcualte_period');
+		$_autocalcualte_period->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_auto_cal_opt = array(
+				1=>$this->tr->translate("AUTO_CALCULATE_PERIOD"),
+				0=>$this->tr->translate("NO_AUTO_CALCULATE_PERIOD"));
+		$_autocalcualte_period->setMultiOptions($_auto_cal_opt);
+		
 		if($data!=null){
 			$_label_animation->setValue($data['label_animation']['keyValue']);
 // 			$_smsWarnning->setValue($data['sms-warnning-kh']['keyValue']);
@@ -307,6 +315,8 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 			$_agree_day_alert->setValue($data['agree_day_alert']['keyValue']);
 			$_payment_day_alert->setValue($data['payment_day_alert']['keyValue']);
 			$_signatur_agree->setValue($data['signatur_agree']['keyValue']);
+			
+			$_autocalcualte_period->setValue($data['autocalcualte_period']['keyValue']);
 		}
 		$this->addElements(array(
 				$account_sign,
@@ -347,7 +357,9 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				
 				$_agree_day_alert,
 				$_payment_day_alert,
-				$_signatur_agree
+				$_signatur_agree,
+				
+				$_autocalcualte_period
 				));
 		
 		return $this;

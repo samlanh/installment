@@ -65,6 +65,8 @@ public function init()
 		$row['payment_day_alert'] = $db_gs->geLabelByKeyName('payment_day_alert');
 		$row['signatur_agree'] = $db_gs->geLabelByKeyName('signatur_agree');
 		
+		$row['autocalcualte_period'] = $db_gs->geLabelByKeyName('autocalcualte_period');
+		
 		$fm = new Setting_Form_FrmGeneral();
 		$frm = $fm->FrmGeneral($row);
 		Application_Model_Decorator::removeAllDecorator($frm);

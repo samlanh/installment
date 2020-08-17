@@ -199,6 +199,18 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 				$this->update($arr, $where);
 			}
 			
+			
+			$rows = $this->geLabelByKeyName('autocalcualte_period');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['autocalcualte_period'],'keyName'=>"autocalcualte_period",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['autocalcualte_period'],);
+				$where=" keyName= 'autocalcualte_period'";
+				$this->update($arr, $where);
+			}
+			
+			
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
