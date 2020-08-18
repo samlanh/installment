@@ -1,10 +1,12 @@
 <?php
 class Loan_IndexController extends Zend_Controller_Action {
+	
+	protected $tr;
     public function init()
     {    	
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
-    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
 	public function indexAction(){
 		try{
@@ -133,7 +135,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$co_name = $db->getAllCoNameOnly();
 		array_unshift($co_name,array(
 				'id' => -1,
-				'name' => '---Add New ---',
+				'name' => $this->tr->translate("ADD_NEW"),
 		) );
 		$this->view->co_name=$co_name;
 		 
@@ -193,7 +195,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$co_name = $db->getAllCoNameOnly();
 		array_unshift($co_name,array(
 				'id' => -1,
-				'name' => '---Add New ---',
+				'name' => $this->tr->translate("ADD_NEW"),
 		) );
 		$this->view->co_name=$co_name;
 		
@@ -254,7 +256,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$co_name = $db->getAllCoNameOnly();
 		array_unshift($co_name,array(
 				'id' => -1,
-				'name' => '---Add New ---',
+				'name' => $this->tr->translate("ADD_NEW"),
 		) );
 		$this->view->co_name=$co_name;
 		$key = new Application_Model_DbTable_DbKeycode();
