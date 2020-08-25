@@ -5,7 +5,7 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       	 $db = $this->getAdapter();
       	 $sql = " SELECT s.id,
 				(SELECT name_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1 )AS client_name,
-				(SELECT  CONCAT(`land_address`,',',`street`) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
+				(SELECT  CONCAT(COALESCE(`land_address`,''),',',COALESCE(`street`,'')) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
 				s.house_id,
 				s.price_sold,
 				(SELECT SUM(`principal_permonth`) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id AND status=1 GROUP BY ln_saleschedule.sale_id LIMIT 1) AS sold_schedule,
@@ -23,7 +23,7 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 		  (SELECT name_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1 )AS client_name,
 		  s.payment_id,
 		  s.client_id,s.price_sold,s.house_id,
-	     (SELECT  CONCAT(`land_address`,',',`street`) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
+	     (SELECT  CONCAT(COALESCE(`land_address`,''),',',COALESCE(`street`,'')) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
 	     (SELECT SUM(`cr`.`total_principal_permonthpaid`+`cr`.`extra_payment`) FROM `ln_client_receipt_money` `cr` WHERE `cr`.`sale_id` = `s`.`id` AND status=1 LIMIT 1) AS `paid_amount`,
 	     (SELECT `cr`.`id` FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`) ORDER BY `cr`.`id` DESC LIMIT 1) AS `crm_id`,	     
 	     (SELECT SUM(ss.principal_permonth) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND  is_completed=1 AND status=1 LIMIT 1) AS realpaid,
@@ -41,7 +41,7 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       	$db = $this->getAdapter();
       	$sql="SELECT s.id,
 				(SELECT name_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1 )AS client_name,
-				(SELECT  CONCAT(`land_address`,',',`street`) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
+				(SELECT  CONCAT(COALESCE(`land_address`,''),',',COALESCE(`street`,'')) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
 				s.house_id,
 				ss.id AS schedule_id,
 				s.price_sold

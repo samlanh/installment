@@ -28,7 +28,8 @@ class Setting_importController extends Zend_Controller_Action {
 					die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
 				}
 				$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-				$db->ImportPPLand($sheetData);
+// 				$db->ImportPPLand($sheetData);
+				$db->ImportADLand($sheetData);
 				Application_Form_FrmMessage::message("Import Successfully");
 			}
 		}catch (Exception $e){
