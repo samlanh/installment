@@ -211,6 +211,24 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 			}
 			
 			
+			$rows = $this->geLabelByKeyName('bank_account_name1');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['bank_account_name1'],'keyName'=>'bank_account_name1','note'=>"",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['bank_account_name1'],);
+				$where=" keyName= 'bank_account_name1'";
+				$this->update($arr, $where);
+			}
+			$rows = $this->geLabelByKeyName('bank_account_name2');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['bank_account_name2'],'keyName'=>'bank_account_name2','note'=>"",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['bank_account_name2'],);
+				$where=" keyName= 'bank_account_name2'";
+				$this->update($arr, $where);
+			}
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}

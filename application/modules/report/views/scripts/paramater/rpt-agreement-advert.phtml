@@ -20,8 +20,11 @@ $companynameAddress="ផ្ទះស្ថិតនៅហ្គ្រែនភ�
 $projectName = str_replace("គម្រោង", "", $this->agreement['project_name']);
 $project_location=$this->agreement['project_location'];
 
-
-$isPromotionWithTop=1;
+$amountStore=empty($this->agreement['store_number'])?0:$this->agreement['store_number'];
+$isPromotionWithTop=0;
+if ($amountStore>0){
+	$isPromotionWithTop=1;
+}
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -130,7 +133,7 @@ dojo.require("dijit.form.DateTextBox");
 	                <br /><br />
 	                <span style="line-height:26px; font-family:'Times New Roman','Khmer OS Muol Light';"><?php echo $projectName;?></span>
 	                <br />
-	                <span style="font-size:14px; display: inline-block; font-family:'Times New Roman','Khmer OS Battambang';">លេខ: <span style="display: inline-block;width: 80px; "><?php echo $this->agreement['sale_number'];?></span></span> 
+	                <span style="font-size:14px; display: inline-block; font-family:'Times New Roman','Khmer OS Battambang';">លេខ: <span style="display: inline-block;width: 80px; "><?php echo $this->agreement['id'];?></span></span> 
                 </td>
                 <td width="40%" align="center">
                 <span style="text-align:center; font-size:20px; line-height:26px; font-family:'Khmer OS'; font-weight: 600;">ព្រះរាជាណាចក្រកម្ពុជា</span>
@@ -292,12 +295,18 @@ dojo.require("dijit.form.DateTextBox");
 									</tr>
 									<?php 
 										$bankName="ABA Bank";
+										$bankName = empty($this->keyValue['bank_account1'])?$bankName:$this->keyValue['bank_account1'];
 										$bankAccName="HUOT SOMNIA";
+										$bankAccName = empty($this->keyValue['bank_account_name1'])?$bankAccName:$this->keyValue['bank_account_name1'];
 										$bankAccNo="001757776";
+										$bankAccNo = empty($this->keyValue['bank_account1number'])?$bankAccNo:$this->keyValue['bank_account1number'];
 										
 										$bankNameI="Wing";
+										$bankNameI = empty($this->keyValue['bank_account2'])?$bankNameI:$this->keyValue['bank_account2'];
 										$bankAccNameI="HUOT SOMNIA";
+										$bankAccNameI = empty($this->keyValue['bank_account_name2'])?$bankAccNameI:$this->keyValue['bank_account_name2'];
 										$bankAccNoI="03568989";
+										$bankAccNoI = empty($this->keyValue['bank_account2number'])?$bankAccNoI:$this->keyValue['bank_account2number'];
 										?>
 									<tr>
 										<td valign="top">-</td>
@@ -435,7 +444,7 @@ dojo.require("dijit.form.DateTextBox");
 								<table width="100%" border="0" style="text-align: justify;">
 									<tr>
 										<?php $marketName="ផ្សារសហគមន៍ ទំនប់ធំ";?>
-										<td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ភាគី(ក) យល់ព្រមជួលតូបចំនួន 01 ដែលមានលេខ……….ទំហំ <strong>2ម x 2.5ម</strong> ដែលមានទីតាំងក្នុង<strong><?php echo $marketName;?></strong> អោយទៅ ភាគី(ខ) រយ:ពេល០៣ឆ្នាំ ដោយមិនគិតថ្លៃឈ្នួល ។ ក្នុងករណីផុតរយ:ពេល ០៣ឆ្នាំ ភាគី(ក)មានសិទិ្ធយកតូបខាងលើមកគ្រប់គ្រង់វិញ ហើយ ភាគី(ខ) គ្មានសិទ្ធិតវាឡើយ ។ ភាគីទាំងពីរអាចពិភាក្សាគ្នា បន្តកិច្ចសន្យាជួលតូប ទៅ តាមស្ថានភាពជាក់ស្តែង នៅពេលបញ្ចប់កិច្ចសន្យា។</td>
+										<td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ភាគី(ក) យល់ព្រមជួលតូបចំនួន <?php echo sprintf('%02d', $amountStore);?> ដែលមានលេខ……….ទំហំ <strong>2ម x 2.5ម</strong> ដែលមានទីតាំងក្នុង<strong><?php echo $marketName;?></strong> អោយទៅ ភាគី(ខ) រយ:ពេល០៣ឆ្នាំ ដោយមិនគិតថ្លៃឈ្នួល ។ ក្នុងករណីផុតរយ:ពេល ០៣ឆ្នាំ ភាគី(ក)មានសិទិ្ធយកតូបខាងលើមកគ្រប់គ្រង់វិញ ហើយ ភាគី(ខ) គ្មានសិទ្ធិតវាឡើយ ។ ភាគីទាំងពីរអាចពិភាក្សាគ្នា បន្តកិច្ចសន្យាជួលតូប ទៅ តាមស្ថានភាពជាក់ស្តែង នៅពេលបញ្ចប់កិច្ចសន្យា។</td>
 									</tr>
 									<tr>
 										<td valign="top">-</td>

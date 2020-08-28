@@ -191,6 +191,14 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("Bank Account")." 1"
 		));
+		
+		$_bank_account_name1 = new Zend_Dojo_Form_Element_TextBox('bank_account_name1');
+		$_bank_account_name1->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Account Name")." 1"
+		));
+		
 		$_bank_account1number = new Zend_Dojo_Form_Element_TextBox('bank_account1number');
 		$_bank_account1number->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
@@ -203,6 +211,14 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("Bank Account")." 2"
 		));
+		
+		$_bank_account_name2 = new Zend_Dojo_Form_Element_TextBox('bank_account_name2');
+		$_bank_account_name2->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Account Name")." 2"
+		));
+		
 		$_bank_account2number = new Zend_Dojo_Form_Element_TextBox('bank_account2number');
 		$_bank_account2number->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
@@ -308,6 +324,9 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 			$_cheque_receiver->setValue($data['cheque_receiver']['keyValue']);
 			$_showhouseinfo->setValue($data['showhouseinfo']['keyValue']);
 			
+			$_bank_account_name1->setValue($data['bank_account_name1']['keyValue']);
+			$_bank_account_name2->setValue($data['bank_account_name2']['keyValue']);
+			
 			$_penalty_type->setValue($data['penalty_type']['keyValue']);
 			$_penalty_value->setValue($data['penalty_value']['keyValue']);
 			$_graice_pariod_late->setValue($data['graice_pariod_late']['keyValue']);
@@ -359,7 +378,9 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				$_payment_day_alert,
 				$_signatur_agree,
 				
-				$_autocalcualte_period
+				$_autocalcualte_period,
+				$_bank_account_name1,
+				$_bank_account_name2
 				));
 		
 		return $this;

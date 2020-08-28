@@ -51,9 +51,12 @@ public function init()
 		
 		$row['show_propertyprice'] = $db_gs->geLabelByKeyName('show_propertyprice');
 		$row['bank_account1'] = $db_gs->geLabelByKeyName('bank_account1');
+		$row['bank_account_name1'] = $db_gs->geLabelByKeyName('bank_account_name1');
 		$row['bank_account1number'] = $db_gs->geLabelByKeyName('bank_account1number');
 		$row['bank_account2'] = $db_gs->geLabelByKeyName('bank_account2');
+		$row['bank_account_name2'] = $db_gs->geLabelByKeyName('bank_account_name2');
 		$row['bank_account2number'] = $db_gs->geLabelByKeyName('bank_account2number');
+		
 		$row['cheque_receiver'] = $db_gs->geLabelByKeyName('cheque_receiver');
 		$row['showhouseinfo'] = $db_gs->geLabelByKeyName('showhouseinfo');
 		
