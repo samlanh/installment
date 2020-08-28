@@ -1257,13 +1257,14 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				  s.buy_date AS sold_date,
 				  DATE_FORMAT(s.buy_date, '%d-%m-%Y') AS `buy_date`,
 				  (SELECT name_kh FROM ln_view WHERE type =29 AND key_code = ss.ispay_bank LIMIT 1) AS payment_type,
-				  ss.last_optiontype,
-				  ss.ispay_bank,
+				  (SELECT SUM(total_payment) FROM `ln_saleschedule` WHERE  total_payment<0 AND sale_id=".$data['loan_number']." LIMIT 1 ) AS total_discountafter, 
 				  (SELECT phone FROM `ln_client` WHERE ln_client.client_id=s.client_id LIMIT 1) as phone,
 				  (SELECT hname_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1) as buy_with,
 				  (SELECT crm.`from_date` FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id ORDER BY crm.id DESC LIMIT 1) AS from_date,
 				  (SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id AND crm.status=1 LIMIT 1) AS total_principal_permonthpaid,
-				  ss.*,
+				   ss.last_optiontype,
+				   ss.ispay_bank,
+				   ss.*,
 				   DATE_FORMAT(ss.date_payment, '%d-%m-%Y') AS date_payments
 				FROM
 				  `ln_sale` AS s,

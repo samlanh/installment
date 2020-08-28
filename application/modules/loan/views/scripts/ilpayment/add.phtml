@@ -155,6 +155,7 @@ table.collape th.tdheader{padding:5px 0px;}
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
 				                    	<?php echo $frm->getElement('priciple_amount');?>
+				                    	<input dojoType="dijit.form.TextBox"  id="total_discountafter" name="total_discountafter" value="0" type="hidden">
 				                   </div>
 				                </div>
 				                 <div class="form-group">
@@ -768,7 +769,10 @@ function showReciept(receipt_number){
 		
 		if(option_pay==1){ //រំលស់ប្រាក់ដើម 100%work
 			ending_balance = dijit.byId('priciple_amount').get('value');
-			total_paid = parseFloat(dijit.byId('sold_price').get('value')) - parseFloat(ending_balance);
+			total_discountafter = dijit.byId("total_discountafter").get("value");
+			total_discountafter = isNaN(total_discountafter)?0:total_discountafter;
+			
+			total_paid = parseFloat(dijit.byId('sold_price').get('value'))+total_discountafter - parseFloat(ending_balance);
 		}else if(option_pay==3){ //រំលស់ប្រាក់ដើម 100%work
 			ending_balance = dijit.byId('priciple_amount').get('value');
 			total_paid = parseFloat(dijit.byId('total_pricipalpaid').get('value')) + parseFloat(dijit.byId('amount_receive').get('value')-penelize-service_charge);
@@ -1063,7 +1067,6 @@ function clearhistory(){
 }
 var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-illoandetail')); ?>';
 function getLaonPayment(type){//tab ទី១
-	
 	try{
 	tem='';	
 	is_set=0;
@@ -1126,7 +1129,7 @@ function getLaonPayment(type){//tab ទី១
 						id = respone[indexs].id;
 						if(indexs==0){
 							clearhistory();
-							
+							dijit.byId('total_discountafter').attr('value',respone[indexs].total_discountafter);
 							dijit.byId('last_optiontype').attr('value',respone[indexs].last_optiontype);
 							dijit.byId('ispay_bank').attr('value',respone[indexs].ispay_bank);
 							
@@ -1290,7 +1293,11 @@ function calculateTotal(index){//គណនាបង់
 		sold_price = dijit.byId("sold_price").get("value");
 		total_pricipalpaid = dijit.byId("total_pricipalpaid").get("value");
 		total_pricipalpaid=isNaN(total_pricipalpaid)?0:total_pricipalpaid;//បើបើកវានឹងចេញខុស
-		dijit.byId("outstanding_balance").attr("value",sold_price-total_pricipalpaid);
+
+		total_discountafter = dijit.byId("total_discountafter").get("value");
+		total_discountafter = isNaN(total_discountafter)?0:total_discountafter;
+		
+		dijit.byId("outstanding_balance").attr("value",sold_price+total_discountafter-total_pricipalpaid);
 	   ids = dijit.byId("record_id").get('value');
 
 	   last_optiontype = dijit.byId("last_optiontype").get("value");
@@ -1492,6 +1499,9 @@ function totalReturn(){
 			dijit.byId('os_amount').attr('value',paid_principalall);
 			dijit.byId('total_interest').attr('value',paid_interestall);
 			paid_principalall = paid_principalall + extrapayment; 
+			total_discountafter = dijit.byId("total_discountafter").get("value");
+			total_discountafter = isNaN(total_discountafter)?0:total_discountafter;
+			
 			dijit.byId('priciple_amount').attr('value',dijit.byId("outstanding_balance").get("value")-paid_principalall);//អោយរកប្រាក់ដើមនៅសល់ពីបង់ត្រូវគឺត្រូវហើយ
 			total_amount = receive_amount ;
 

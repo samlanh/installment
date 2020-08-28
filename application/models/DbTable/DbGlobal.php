@@ -452,7 +452,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	$this->_name='ln_sale';
    	$db = $this->getAdapter();
    		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." LIMIT 1 ";
-   		$pre = $this->getPrefixCode($data['branch_id'])."-S";
+   		$pre = $this->getPrefixCode($data['branch_id']);
 	   	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+1;
    	$acc_no= strlen((int)$acc_no+1);

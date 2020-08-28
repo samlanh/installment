@@ -79,10 +79,6 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 		$db = new Setting_Model_DbTable_DbLabel();
 		$this->view->setting=$db->getAllSystemSetting();
 		
-		
-		
-		
-		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		$id = $this->getRequest()->getParam('id');
@@ -97,9 +93,6 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			}
 		}
 		$this->view->id = $id;
-		
-		
-		
 	}	
 	
 	public function editAction(){
