@@ -94,7 +94,16 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     				}elseif($_data['east'] =='' AND $_data['postfix_east']==''){
     					$east = $_data['east_prefix'];
     				}
-    				 
+    				
+    				$dbStreet = new Project_Model_DbTable_DbStreet();
+    				$titleStreet = empty($_data['street'])?"":$_data['street'];
+    				$streetInfo = $dbStreet->getStreetByTitle($titleStreet);
+    				$streetId = empty($streetInfo['id'])?0:$streetInfo['id'];
+    				if (empty($streetInfo)){
+    					$streetId = $dbStreet->addStreet($_data);
+    					$streetId = empty($streetId)?0:$streetId;
+    				}
+    				
     				$_arr=array(
     						'branch_id'	  => $_data['branch_id'],
     						'land_code'	  => $land_code,
@@ -116,7 +125,9 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     						'west'	      => $west,
     						'east'	      => $east,
     						'note'        => $_data['desc'],
-    						'create_date'=>date('Y-m-d')
+    						'create_date'=>date('Y-m-d'),
+    						
+    						'street_id'	      => $streetId,
     				);
     				 
     				$key = new Application_Model_DbTable_DbKeycode();
@@ -264,6 +275,16 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 				$db = new Application_Model_DbTable_DbGlobal();
 				$land_code = $db->getNewLandByBranch($_data['branch_id']);
 			}
+			
+			$dbStreet = new Project_Model_DbTable_DbStreet();
+			$titleStreet = empty($_data['street'])?"":$_data['street'];
+			$streetInfo = $dbStreet->getStreetByTitle($titleStreet);
+			$streetId = empty($streetInfo['id'])?0:$streetInfo['id'];
+			if (empty($streetInfo)){
+				$streetId = $dbStreet->addStreet($_data);
+				$streetId = empty($streetId)?0:$streetId;
+			}
+			
 		    $_arr=array(
 		    	'branch_id'	  => $_data['branch_id'],
 				'land_code'	  => $land_code,
@@ -286,6 +307,8 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    		'north'	  => $_data['north'],
 	    		'west'	  => $_data['west'],
 	    		'east'	  => $_data['east'],
+		    		
+		    	'street_id'	  => $streetId,
 			);
 	    $key = new Application_Model_DbTable_DbKeycode();
 	    $setting=$key->getKeyCodeMiniInv(TRUE);

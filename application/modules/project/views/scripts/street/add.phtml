@@ -81,7 +81,6 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('street');?>
-	                    	<?php echo $frm->getElement('streetCode');?>
 	                   </div>
 	                </div>
 	                
@@ -278,18 +277,7 @@
 			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
 				<tr>
 					<td>
-						<?php echo $tr->translate("STREET_CODE")?>
-					</td>
-					<td>
-						<input dojoType="dijit.form.TextBox" placeholder="<?php echo $tr->translate("STREET_CODE")?>" class="fullside" id="streetNewCode" name="streetNewCode" value="" type="text">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<?php echo $tr->translate("STREET_NAME")?>
-					</td>
-					<td>
-						<input dojoType="dijit.form.ValidationTextBox" placeholder="<?php echo $tr->translate("STREET_NAME")?>" required="true" class="fullside" id="newStreet" name="newStreet" value="" type="text">
+						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="newStreet" name="newStreet" value="" type="text">
 					</td>
 				</tr>
 				<tr>
@@ -380,13 +368,9 @@ function addNewStreet(){
 		};		
 		addDataToSelectbox(dijit.byId('street'), StreetStore, Itemmake, dijit.byId('newStreet').get('value'));	
 		dijit.byId('newStreet').attr('value',dijit.byId('newStreet').get('value'));
-		dijit.byId('streetCode').attr('value',dijit.byId('streetNewCode').get('value'));
-		
 		dijit.byId('frm_street').reset();
 		dijit.byId('frm_street').hide();
 		dijit.byId('save_street').set('disabled',true);
-
-		
 	}
 }
 var propertyType_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->pro_type));?> );

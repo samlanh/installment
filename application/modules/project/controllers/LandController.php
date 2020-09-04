@@ -101,7 +101,7 @@ class Project_LandController extends Zend_Controller_Action {
 		$this->view->branch_opt = $branch_opt;
 		
 		$rs_street = $db->getAllStreetForOpt();
-		array_unshift($rs_street, array('id'=>-1,'name' => $tr->translate("Add New Property Type")));
+		array_unshift($rs_street, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
 		$this->view->street = $rs_street;
 		
 		$key = new Application_Model_DbTable_DbKeycode();
@@ -148,7 +148,7 @@ class Project_LandController extends Zend_Controller_Action {
 		$this->view->branch_opt = $branch_opt;
 	
 		$rs_street = $db->getAllStreetForOpt();
-		array_unshift($rs_street, array('id'=>-1,'name' => $tr->translate("Add New Property Type")));
+		array_unshift($rs_street, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
 		$this->view->street = $rs_street;
 	
 		$key = new Application_Model_DbTable_DbKeycode();

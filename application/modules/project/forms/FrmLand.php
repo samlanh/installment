@@ -322,6 +322,12 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 		$type_tob->setMultiOptions($opt1);
 		
 		
+		$_streetCode = new Zend_Form_Element_Hidden('streetCode');
+		$_streetCode->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
 		if($data!=null){
 			
 			$north->setValue($data['north']);
@@ -382,7 +388,9 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 		}
 		$this->addElements(array($full_size,$status_using,$width_land,$height_land,$north,$east,$south,$west,$streetlist,$street,$propertiestype_search,$land_price,$house_price,$branch_id,$photo,$BuidingYear,$ParkingSpace,$dinnerroom,$living,$bedroom,$propertiestype,$floor,$_id_no,$_desc,$_status,$_landcode,$landaddress,$_price,$_size,$width,$height,$hardtitle,
 				$option_north,$option_south,$option_west,$option_east,
-				$type_tob
+				$type_tob,
+				
+				$_streetCode
 				));
 		return $this;
 	}
