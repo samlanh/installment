@@ -62,6 +62,16 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     public function addLandinfoAuto($_data){
     	try{
     			$increase = 0;
+    			
+    			$dbStreet = new Project_Model_DbTable_DbStreet();
+    			$titleStreet = empty($_data['street'])?"":$_data['street'];
+    			$streetInfo = $dbStreet->getStreetByTitle($titleStreet);
+    			$streetId = empty($streetInfo['id'])?0:$streetInfo['id'];
+    			if (empty($streetInfo)){
+    				$streetId = $dbStreet->addStreet($_data);
+    				$streetId = empty($streetId)?0:$streetId;
+    			}
+    			
     			for($i=$_data['land_address'];$i<=$_data['to_land_address'];$i++){
     				$db = new Application_Model_DbTable_DbGlobal();
     				$land_code = $db->getNewLandByBranch($_data['branch_id']);
@@ -93,15 +103,6 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     					$east = $_data['east_prefix'].($_data['east']+$_data['option_east']*$increase).$_data['postfix_east'];
     				}elseif($_data['east'] =='' AND $_data['postfix_east']==''){
     					$east = $_data['east_prefix'];
-    				}
-    				
-    				$dbStreet = new Project_Model_DbTable_DbStreet();
-    				$titleStreet = empty($_data['street'])?"":$_data['street'];
-    				$streetInfo = $dbStreet->getStreetByTitle($titleStreet);
-    				$streetId = empty($streetInfo['id'])?0:$streetInfo['id'];
-    				if (empty($streetInfo)){
-    					$streetId = $dbStreet->addStreet($_data);
-    					$streetId = empty($streetId)?0:$streetId;
     				}
     				
     				$_arr=array(
