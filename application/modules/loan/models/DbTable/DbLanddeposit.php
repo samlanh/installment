@@ -679,7 +679,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		}
     		
     		$dbGlobal = new Application_Model_DbTable_DbGlobal();
-    		if (CONTRAC_NO_SETING==1){
+    		if (CONTRACT_NO_SETING==1){
     			$data['sale_code'] = $dbGlobal->getLoanNumber($data);
     		}
     		$arr = array(

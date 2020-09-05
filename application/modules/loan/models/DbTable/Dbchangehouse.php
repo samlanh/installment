@@ -205,7 +205,7 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     			);
     			
     			$dbGlobal = new Application_Model_DbTable_DbGlobal();
-    			if (CONTRAC_NO_SETING==1){
+    			if (CONTRACT_NO_SETING==1){
     				$arrSale = array(
     						'branch_id'=>$data['to_branch_id'],
     						'land_code'=>$data['to_land_code'],
@@ -343,7 +343,7 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				'typesale'=>$data['typesale'],
     		);
     		$dbGlobal = new Application_Model_DbTable_DbGlobal();
-    		if (CONTRAC_NO_SETING==1){
+    		if (CONTRACT_NO_SETING==1){
     			$arrSale = array(
     					'branch_id'=>$data['to_branch_id'],
     					'land_code'=>$data['to_land_code'],

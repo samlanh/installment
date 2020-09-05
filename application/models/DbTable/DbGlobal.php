@@ -460,7 +460,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    		$pre.='0';
    	}
    	$saleNo =$pre.$new_acc_no;
-   	if (CONTRAC_NO_SETING==1){
+   	if (CONTRACT_NO_SETING==1){
    		$dbLand = new Project_Model_DbTable_DbLand();
    		$landId = empty($data['land_code'])?0:$data['land_code'];
    		$property = $dbLand->getClientById($landId);
