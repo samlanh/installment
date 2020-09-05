@@ -63,14 +63,14 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	try{
     			$increase = 0;
     			
-    			$dbStreet = new Project_Model_DbTable_DbStreet();
-    			$titleStreet = empty($_data['street'])?"":$_data['street'];
-    			$streetInfo = $dbStreet->getStreetByTitle($titleStreet);
-    			$streetId = empty($streetInfo['id'])?0:$streetInfo['id'];
-    			if (empty($streetInfo)){
-    				$streetId = $dbStreet->addStreet($_data);
-    				$streetId = empty($streetId)?0:$streetId;
-    			}
+		    		$dbStreet = new Project_Model_DbTable_DbStreet();
+					$titleStreet = empty($_data['street'])?"":$_data['street'];
+					$streetInfo = $dbStreet->getStreetByTitle($titleStreet);
+					$street_code = empty($streetInfo['code'])?0:$streetInfo['code'];
+					if (empty($streetInfo)){
+						$streetId = $dbStreet->addStreet($_data);
+						$street_code = empty($_data['streetCode'])?"":$_data['streetCode'];
+					}
     			
     			for($i=$_data['land_address'];$i<=$_data['to_land_address'];$i++){
     				$db = new Application_Model_DbTable_DbGlobal();
@@ -127,8 +127,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     						'east'	      => $east,
     						'note'        => $_data['desc'],
     						'create_date'=>date('Y-m-d'),
-    						
-    						'street_id'	      => $streetId,
+    						'street_code'	      => $street_code,
     				);
     				 
     				$key = new Application_Model_DbTable_DbKeycode();
@@ -280,10 +279,10 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 			$dbStreet = new Project_Model_DbTable_DbStreet();
 			$titleStreet = empty($_data['street'])?"":$_data['street'];
 			$streetInfo = $dbStreet->getStreetByTitle($titleStreet);
-			$streetId = empty($streetInfo['id'])?0:$streetInfo['id'];
+			$street_code = empty($streetInfo['code'])?0:$streetInfo['code'];
 			if (empty($streetInfo)){
 				$streetId = $dbStreet->addStreet($_data);
-				$streetId = empty($streetId)?0:$streetId;
+				$street_code = empty($_data['streetCode'])?"":$_data['streetCode'];
 			}
 			
 		    $_arr=array(
@@ -309,7 +308,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    		'west'	  => $_data['west'],
 	    		'east'	  => $_data['east'],
 		    		
-		    	'street_id'	  => $streetId,
+		    	'street_code'	  => $street_code,
 			);
 	    $key = new Application_Model_DbTable_DbKeycode();
 	    $setting=$key->getKeyCodeMiniInv(TRUE);

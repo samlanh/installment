@@ -24,6 +24,7 @@ Class Project_Form_FrmStreet extends Zend_Dojo_Form {
 			'dojoType'=>'dijit.form.ValidationTextBox',
 			'class'=>'fullside',
 			'required' =>'true',
+			'readOnly' =>'readOnly',
 		));
 		
 		$_note = new Zend_Dojo_Form_Element_TextBox('note');
@@ -41,7 +42,7 @@ Class Project_Form_FrmStreet extends Zend_Dojo_Form {
 			$_id->setValue($data['id']);
 			$_code->setValue($data['code']);
 			$_title->setValue($data['title']);
-			$_note->setValue($data['note']);
+// 			$_note->setValue($data['note']);
 		}
 		$this->addElements(array(
 				$_id,

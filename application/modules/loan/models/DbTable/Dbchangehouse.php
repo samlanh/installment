@@ -122,7 +122,9 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     					"status"=>-2,
     					"create_date"=>date("Y-m-d"),
     					"user_id"=>$this->getUserId(),
-    					"old_land_id"=>$data['identity_land']
+    					"old_land_id"=>$data['identity_land'],
+    					
+    					'street_code'=>$newpro['street_code'],
     			);
     			$this->_name="ln_properties";
     			$land_id = $this->insert($newproperty);
@@ -138,6 +140,8 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     		$sql=" SELECT SUM(total_principal_permonthpaid) AS total_permonth FROM `ln_client_receipt_money` WHERE sale_id =".$data['loan_number']." AND status=1 ";
     		$paid_amount = $db->fetchOne($sql);
     		
+    		
+    		
     		$arr = array(
     				'price_before'=>$data['house_price'],
     				'discount_amount'=>$data['discount'],
@@ -147,6 +151,7 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				'is_reschedule'=>3,
     				'other_discount'=>$data['other_discount'],
     		);
+    		
     		$where = " id = ".$data['loan_number'];
     		$this->_name="ln_sale";
     		$this->update($arr, $where);//add group loan
@@ -198,6 +203,16 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				'house_id'=>$data["to_land_code"],
     				'typesale'=>$data['typesale'],
     			);
+    			
+    			$dbGlobal = new Application_Model_DbTable_DbGlobal();
+    			if (CONTRAC_NO_SETING==1){
+    				$arrSale = array(
+    						'branch_id'=>$data['to_branch_id'],
+    						'land_code'=>$data['to_land_code'],
+    				);
+    				$arr['sale_number'] = $dbGlobal->getLoanNumber($arrSale);
+    			}
+    			
 	    		$where = " id = ".$data['loan_number'];
 	    		$this->_name="ln_sale";
 	    		$id = $this->update($arr, $where);
@@ -267,7 +282,9 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     					"status"=>-2,
     					"create_date"=>date("Y-m-d"),
     					"user_id"=>$this->getUserId(),
-    					"old_land_id"=>$data['identity_land']
+    					"old_land_id"=>$data['identity_land'],
+    					
+    					'street_code'=>$newpro['street_code'],
     			);
     			$this->_name="ln_properties";
     			$land_id = $this->insert($newproperty);
@@ -325,6 +342,14 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				'house_id'=>$data["to_land_code"],
     				'typesale'=>$data['typesale'],
     		);
+    		$dbGlobal = new Application_Model_DbTable_DbGlobal();
+    		if (CONTRAC_NO_SETING==1){
+    			$arrSale = array(
+    					'branch_id'=>$data['to_branch_id'],
+    					'land_code'=>$data['to_land_code'],
+    			);
+    			$arr['sale_number'] = $dbGlobal->getLoanNumber($arrSale);
+    		}
     		$where = " id = ".$data['loan_number'];
     		$this->_name="ln_sale";
     		$id = $this->update($arr, $where);//add group loan

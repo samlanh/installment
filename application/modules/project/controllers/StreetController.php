@@ -22,14 +22,11 @@ class Project_StreetController extends Zend_Controller_Action {
 			}
 			$rs_rows= $db->getAllStreet($search);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CODE","STREET","DATE","BY_USER");
+			$collumns = array("STREET_NAME","STREET_CODE",);
 			$link=array(
 					'module'=>'project','controller'=>'street','action'=>'edit',
 			);
-			$link1=array(
-					'module'=>'project','controller'=>'street','action'=>'view',
-			);
-			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array('code'=>$link1,'title'=>$link));
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array('street'=>$link,'street_code'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

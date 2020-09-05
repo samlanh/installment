@@ -254,7 +254,9 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					"status"=>-2,
     					"create_date"=>date("Y-m-d"),
     					"user_id"=>$this->getUserId(),
-    					"old_land_id"=>$data['identity_land']
+    					"old_land_id"=>$data['identity_land'],
+    					
+    					'street_code'=>$newpro['street_code'],
     			);
     			$this->_name="ln_properties";
     			$land_id = $this->insert($newproperty);
@@ -559,6 +561,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     							"status"=>-2,
     							"create_date"=>date("Y-m-d"),
     							"user_id"=>$this->getUserId(),
+    							
+    							'street_code'=>$newpro['street_code'],
     					);
     					if($data['identity_land']!=$row['house_id']){
     						$newproperty["old_land_id"]=$data['identity_land'];
@@ -642,7 +646,9 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     							"status"=>-2,
     							"create_date"=>date("Y-m-d"),
     							"user_id"=>$this->getUserId(),
-    							"old_land_id"=>$data['identity_land']
+    							"old_land_id"=>$data['identity_land'],
+    							
+    							'street_code'=>$newpro['street_code'],
     					);
     					$this->_name="ln_properties";
     					$land_id = $this->insert($newproperty);
@@ -670,6 +676,11 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$note_agreement = '';
     		if($setting['note_agreement']==1){
     			$note_agreement = $data['note_agreement'];
+    		}
+    		
+    		$dbGlobal = new Application_Model_DbTable_DbGlobal();
+    		if (CONTRAC_NO_SETING==1){
+    			$data['sale_code'] = $dbGlobal->getLoanNumber($data);
     		}
     		$arr = array(
     				'branch_id'=>$data['branch_id'],

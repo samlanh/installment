@@ -459,7 +459,16 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	for($i = $acc_no;$i<3;$i++){
    		$pre.='0';
    	}
-   	return $pre.$new_acc_no;
+   	$saleNo =$pre.$new_acc_no;
+   	if (CONTRAC_NO_SETING==1){
+   		$dbLand = new Project_Model_DbTable_DbLand();
+   		$landId = empty($data['land_code'])?0:$data['land_code'];
+   		$property = $dbLand->getClientById($landId);
+   		$streetCode = empty($property['street_code'])?"":$property['street_code'];
+   		$landAddress = empty($property['land_address'])?"":$property['land_address'];
+   		$saleNo =$pre.$streetCode.$landAddress;
+   	}
+   	return $saleNo;
    }
    function getPrefixCode($branch_id){
    	$db  = $this->getAdapter();

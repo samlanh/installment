@@ -11,46 +11,24 @@ class Project_Model_DbTable_DbStreet extends Zend_Db_Table_Abstract
     function getAllStreet($search = null){
     	$db = $this->getAdapter();
     	$dbp = new Application_Model_DbTable_DbGlobal();
-    	
-    	$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
-    	$where = " WHERE ".$from_date." AND ".$to_date;
-    	$sql = "SELECT id,
-    	code,title,
-    	modify_date,
-    	(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name";
-    	
-    	$sql.=" FROM $this->_name ";
-    	if(!empty($search['adv_search'])){
-    		$s_where = array();
-    		$s_search = addslashes(trim($search['adv_search']));
-    		$s_where[] = " code LIKE '%{$s_search}%'";
-    		$s_where[] = " title LIKE '%{$s_search}%'";
-    		$s_where[] = " note LIKE '%{$s_search}%'";
-    		$where .=' AND ('.implode(' OR ',$s_where).')';
-    	}
-    	$order= " ORDER BY code ASC";
-    	return $db->fetchAll($sql.$where.$order);
+    	$sql = "SELECT DISTINCT street AS id,street, 
+    	(SELECT s.code FROM ln_street AS s WHERE s.title=street ORDER BY s.id DESC LIMIT 1) as street_code
+    	 FROM ln_properties 
+				GROUP BY street ORDER BY street ASC";
+    	return $db->fetchAll($sql);
     }
     
     function getStreetByTitle($title){
     	$db = $this->getAdapter();
     	$sql="SELECT s.* FROM ln_street AS s WHERE s.title='$title' ORDER BY s.id DESC LIMIT 1 ";
     	$row = $db->fetchRow($sql);
-    	if (!empty($row)){
-    		$_arr = array(
-    				'street_id'=>$row['id'],
-    		);
-    		$this->_name="ln_properties";
-    		$where="street = '$title'";
-    		$this->update($_arr, $where);
-    	}
     	return $row;
     }
     
     function getStreetById($id){
     	$db = $this->getAdapter();
-    	$sql="SELECT s.* FROM ln_street AS s WHERE s.id='$id' LIMIT 1 ";
+    	$sql="SELECT DISTINCT s.street AS id,s.street as title,
+    	(SELECT ss.code FROM ln_street AS ss WHERE ss.title=street ORDER BY ss.id DESC LIMIT 1) AS code FROM ln_properties AS s WHERE s.street='$id' LIMIT 1 ";
     	$row = $db->fetchRow($sql);
     	return $row;
     }
@@ -58,27 +36,35 @@ class Project_Model_DbTable_DbStreet extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
+    		
+    		$streetInfo = $this->getStreetByTitle($_data['title']);
+    		
 	    	$_arr = array(
 	    			'title'=>$_data['title'],
 	    			'code'      =>      $_data['code'],
-	    			'note'=>$_data['note'],
+// 	    			'note'=>$_data['note'],
 	    			'status'=>1,
 	    			'modify_date'=>date("Y-m-d H:i:s"),
 	    			'user_id'=>$this->getUserId(),
 	    			 
 	    	);
-	    	
 	    	$id= empty($_data['id'])?0:$_data['id'];
-	    	$where="id = ".$id;
-	    	$this->_name="ln_street";
-	    	$this->update($_arr, $where);
 	    	
+	    	if (!empty($streetInfo)){
+		    	$where="title = '".$id."'";
+		    	$this->_name="ln_street";
+		    	$this->update($_arr, $where);
+	    	}else{
+	    		$this->_name="ln_street";
+	    		$_arr['create_date']=date("Y-m-d H:i:s");
+	    		$this->insert($_arr);
+	    	}
 	    	if (!empty($_data['id'])){
 		    	$_arrA = array(
-		    			'street'=>$_data['title'],
+		    			'street_code'=>$_data['code'],
 		    	);
 		    	$this->_name="ln_properties";
-		    	$where1="street_id = ".$id;
+		    	$where1="street = '".$id."'";
 		    	$this->update($_arrA, $where1);
 	    	}
 	    	$db->commit();
@@ -101,21 +87,10 @@ class Project_Model_DbTable_DbStreet extends Zend_Db_Table_Abstract
     				'create_date'=>date("Y-m-d H:i:s"),
     				'modify_date'=>date("Y-m-d H:i:s"),
     				'user_id'=>$this->getUserId(),
-    	    
     		);
     		$this->_name="ln_street";
     		$id = $this->insert($_arr);
     
-    		if (!empty($_data['street'])){
-    			$title = $_data['street'];
-    			$_arrs = array(
-    					'street_id'=>$id,
-    			);
-    			$this->_name="ln_properties";
-    			$where="street = '$title'";
-    			$this->update($_arrs, $where);
-    		}
-    		
     		$db->commit();
     		return $id;
     	}catch(Exception $e){
