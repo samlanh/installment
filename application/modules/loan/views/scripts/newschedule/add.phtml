@@ -3,6 +3,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 	$interestSetting = SETTING_INTEREST;
+	$autocalcualte = $this->data['autocalcualte_period'];
 ?>
 <style>
 	.fullside50{ width:48%;}
@@ -1389,6 +1390,7 @@ function hideDialog() {
 	dijit.byId("lbl_schedule").hide();
 }
 function calculateDuration(type=null){
+	<?php if($autocalcualte==1){// 1 auto calculate date ,0 no calculate?>
 	if(type==1){
 		var total_paid_install = dijit.byId('for_installamount').get('value');
 		var other_fee = dijit.byId('other_fee').get('value');
@@ -1416,6 +1418,7 @@ function calculateDuration(type=null){
 		}
 		dijit.byId('period').attr('value',duration);
 	}
+	<?php }?>
 }
 function printSubmit(){
 	 $('#frm_add_tran').submit();

@@ -148,6 +148,7 @@ dojo.require("dijit.form.DateTextBox");
 			                    <td style="padding:2px 0px;">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
 			                    <td style="">&nbsp;<?php echo $tr->translate("CUSTOMER_NAME");?>&nbsp;</td>
 			                    <td style="">&nbsp;<?php echo $tr->translate("TEL");?>&nbsp;</td>
+			                    <td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
 			                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
 			                    <td style="">&nbsp;<?php echo $tr->translate("DATE_BUY");?>&nbsp;</td>
 			                    <td style="">&nbsp;<?php echo $tr->translate("PAMENT_METHOD");?>&nbsp;</td>
@@ -175,6 +176,7 @@ dojo.require("dijit.form.DateTextBox");
 				               	$amount_property = $amount_property+$countland;
 			               }else{
 			               		$amount_property = $amount_property+1;
+			               		$countland = 1;
 			               }
 		               
 		               		$total_receive = $db->getAmountReceiveByLoanNumber($row['id'],$row['client_id']);
@@ -193,6 +195,7 @@ dojo.require("dijit.form.DateTextBox");
 								<td>&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 								<td align="left" style="font-size:11px; line-height: 13px; white-space: nowrap;">&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['client_kh']; ?></a>&nbsp;</td>
 								<td align="left" style="line-height: 12px;white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $row['phone']; ?></td>
+								<td align="center">&nbsp;<?php echo $countland; ?>&nbsp;</td>
 								<td align="left">&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['land_address'].",".$row['street'];?></a>&nbsp;</td>
 								<td>&nbsp;<?php echo date("d-m-Y",strtotime($row['first_payment']));?>&nbsp;</td>
 								<td>&nbsp;<?php echo $row['paymenttype'];?>&nbsp;</td>
@@ -220,7 +223,9 @@ dojo.require("dijit.form.DateTextBox");
 							</tr>
 						<?php }?>
 							<tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
-								<td colspan="7"><?php echo $tr->translate("TOTAL");?></td>
+								<td colspan="3"><?php echo $tr->translate("TOTAL");?></td>
+								<td>&nbsp;<?php echo $amount_property;?>&nbsp;</td>
+								<td colspan="4">&nbsp;</td>
 								<td>&nbsp;<?php echo number_format($amt_d,2);?>&nbsp;</td>
 								<td>&nbsp;<?php echo number_format($amn_d,2);?>&nbsp;</td>
 								<td>&nbsp;<?php echo $result_d;?>&nbsp;</td>
