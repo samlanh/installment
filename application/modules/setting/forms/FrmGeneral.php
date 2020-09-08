@@ -225,6 +225,29 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("Bank Account Number")." 2"
 		));
+		
+		$_bank_account3 = new Zend_Dojo_Form_Element_TextBox('bank_account3');
+		$_bank_account3->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Account")." 3"
+		));
+		
+		$_bank_account_name3 = new Zend_Dojo_Form_Element_TextBox('bank_account_name3');
+		$_bank_account_name3->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Account Name")." 3"
+		));
+		
+		$_bank_account3number = new Zend_Dojo_Form_Element_TextBox('bank_account3number');
+		$_bank_account3number->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Account Number")." 3"
+		));
+		
+		
 		$_cheque_receiver = new Zend_Dojo_Form_Element_TextBox('cheque_receiver');
 		$_cheque_receiver->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
@@ -327,6 +350,10 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 			$_bank_account_name1->setValue($data['bank_account_name1']['keyValue']);
 			$_bank_account_name2->setValue($data['bank_account_name2']['keyValue']);
 			
+			$_bank_account_name3->setValue($data['bank_account_name3']['keyValue']);
+			$_bank_account3->setValue($data['bank_account3']['keyValue']);
+			$_bank_account3number->setValue($data['bank_account3number']['keyValue']);
+			
 			$_penalty_type->setValue($data['penalty_type']['keyValue']);
 			$_penalty_value->setValue($data['penalty_value']['keyValue']);
 			$_graice_pariod_late->setValue($data['graice_pariod_late']['keyValue']);
@@ -380,7 +407,11 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 				
 				$_autocalcualte_period,
 				$_bank_account_name1,
-				$_bank_account_name2
+				$_bank_account_name2,
+				
+				$_bank_account_name3,
+				$_bank_account3,
+				$_bank_account3number,
 				));
 		
 		return $this;

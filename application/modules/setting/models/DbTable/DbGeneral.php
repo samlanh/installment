@@ -229,6 +229,37 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 				$where=" keyName= 'bank_account_name2'";
 				$this->update($arr, $where);
 			}
+			
+			$rows = $this->geLabelByKeyName('bank_account3');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['bank_account3'],'keyName'=>'bank_account3','note'=>"",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['bank_account3'],);
+				$where=" keyName= 'bank_account3'";
+				$this->update($arr, $where);
+			}
+			
+			$rows = $this->geLabelByKeyName('bank_account_name3');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['bank_account_name3'],'keyName'=>'bank_account_name3','note'=>"",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['bank_account_name3'],);
+				$where=" keyName= 'bank_account_name3'";
+				$this->update($arr, $where);
+			}
+			
+			$rows = $this->geLabelByKeyName('bank_account3number');
+			if (empty($rows)){
+				$arr = array('keyValue'=>$data['bank_account3number'],'keyName'=>'bank_account3number','note'=>"",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$data['bank_account3number'],);
+				$where=" keyName= 'bank_account3number'";
+				$this->update($arr, $where);
+			}
+			
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}

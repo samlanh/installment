@@ -200,25 +200,25 @@
 	            	<div style="border: solid 1px #000; padding: 2px; margin-top: 10px;">
 	            		<table width="100%" cellpadding="0"  border="0" style=" font-family:'Times New Roman','Khmer OS Battambang';  font-size:12px;">
 						<?php 
-							$bankName="ABA Bank";
-							$bankName = empty($this->keyValue['bank_account1'])?$bankName:$this->keyValue['bank_account1'];
-							$bankAccName="HUOT SOMNIA";
-							$bankAccName = empty($this->keyValue['bank_account_name1'])?$bankAccName:$this->keyValue['bank_account_name1'];
-							$bankAccNo="001757776";
-							$bankAccNo = empty($this->keyValue['bank_account1number'])?$bankAccNo:$this->keyValue['bank_account1number'];
+							$bankName="";
+							$bankName = empty($this->data['bank_account1'])?$bankName:$this->data['bank_account1'];
+							$bankAccName="";
+							$bankAccName = empty($this->data['bank_account_name1'])?$bankAccName:$this->data['bank_account_name1'];
+							$bankAccNo="";
+							$bankAccNo = empty($this->data['bank_account1number'])?$bankAccNo:$this->data['bank_account1number'];
 							
-							$bankNameI="Wing";
-							$bankNameI = empty($this->keyValue['bank_account2'])?$bankNameI:$this->keyValue['bank_account2'];
-							$bankAccNameI="HUOT SOMNIA";
-							$bankAccNameI = empty($this->keyValue['bank_account_name2'])?$bankAccNameI:$this->keyValue['bank_account_name2'];
-							$bankAccNoI="03568989";
-							$bankAccNoI = empty($this->keyValue['bank_account2number'])?$bankAccNoI:$this->keyValue['bank_account2number'];
+							$bankNameI="";
+							$bankNameI = empty($this->data['bank_account2'])?$bankNameI:$this->data['bank_account2'];
+							$bankAccNameI="";
+							$bankAccNameI = empty($this->data['bank_account_name2'])?$bankAccNameI:$this->data['bank_account_name2'];
+							$bankAccNoI="";
+							$bankAccNoI = empty($this->data['bank_account2number'])?$bankAccNoI:$this->data['bank_account2number'];
 							?>
 						<tr>
 							<td valign="top" colspan="4">មធ្យោយបាយបង់ប្រាក់</td>
 						</tr>
 						<tr>
-							<td valign="top" colspan="4">- រាល់ការបង់ប្រាក់ថ្លៃដី ត្រូវធ្វើឡើងតាមរយៈការបង់ប្រាក់ដោយផ្ទាល់នៅការិយាល័យក្រុមហ៊ុន ឬតាមរយៈគណនីធនាគារដែលបានផ្ដល់ជូនខាងក្រោម</td>
+							<td valign="top" colspan="4">- <?php echo $tr->translate('SCHEDULE_INSTRUCTION_NOTE');?></td>
 						</tr>
 						<tr>
 							<td>- ឈ្មោះធនាគារៈ </td>
@@ -253,8 +253,67 @@
 	            		</td>
 	            	</tr>
 	            	</table>
+	            <?php }else if($paymentCondiction==2){?>
+				<div style="border: solid 1px #000; padding: 2px; margin-top: 10px;">
+	            		<table width="100%" cellpadding="0"  border="0" style=" font-family:'Times New Roman','Khmer OS Battambang';  font-size:11.5px;">
+						<?php 
+							$bankName="";
+							$bankName = empty($this->data['bank_account1'])?$bankName:$this->data['bank_account1'];
+							$bankAccName="";
+							$bankAccName = empty($this->data['bank_account_name1'])?$bankAccName:$this->data['bank_account_name1'];
+							$bankAccNo="";
+							$bankAccNo = empty($this->data['bank_account1number'])?$bankAccNo:$this->data['bank_account1number'];
+							
+							$bankNameI="";
+							$bankNameI = empty($this->data['bank_account2'])?$bankNameI:$this->data['bank_account2'];
+							$bankAccNameI="";
+							$bankAccNameI = empty($this->data['bank_account_name2'])?$bankAccNameI:$this->data['bank_account_name2'];
+							$bankAccNoI="";
+							$bankAccNoI = empty($this->data['bank_account2number'])?$bankAccNoI:$this->data['bank_account2number'];
+							
+							$bankNameIII="";
+							$bankNameIII = empty($this->data['bank_account3'])?$bankNameI:$this->data['bank_account3'];
+							$bankAccNameIII="";
+							$bankAccNameIII = empty($this->data['bank_account_name3'])?$bankAccNameI:$this->data['bank_account_name3'];
+							$bankAccNoIII="";
+							$bankAccNoIII = empty($this->data['bank_account3number'])?$bankAccNoI:$this->data['bank_account3number'];
+							?>
+						<tr>
+							<td valign="top" colspan="6">មធ្យោយបាយបង់ប្រាក់</td>
+						</tr>
+						<tr>
+							<td valign="top" colspan="6">- <?php echo $tr->translate('SCHEDULE_INSTRUCTION_NOTE');?></td>
+						</tr>
+						<tr style="white-space:nowrap">
+							<td>- ឈ្មោះធនាគារៈ </td>
+							<td width="22%" align="left"><?php echo $bankName;?></td>
+							<td >- ឈ្មោះធនាគារៈ </td>
+							<td width="22%" align="left"><?php echo $bankNameI;?></td>
+							<td >- ឈ្មោះធនាគារៈ </td>
+							<td width="22%" align="left"><?php echo $bankNameIII;?></td>
+						</tr>
+						<tr style="white-space:nowrap">
+							<td>- ឈ្មោះគណនីៈ</td>
+							<td align="left"><?php echo $bankAccName;?></td>
+							<td>- ឈ្មោះគណនីៈ</td>
+							<td align="left"><?php echo $bankAccNameI;?></td>
+							<td>- ឈ្មោះគណនីៈ</td>
+							<td align="left"><?php echo $bankAccNameIII;?></td>
+						</tr>
+						<tr style="white-space:nowrap">
+							<td>- លេខគណនីៈ </td>
+							<td align="left"><?php echo $bankAccNo;?></td>
+							<td>- លេខគណនីៈ </td>
+							<td align="left"><?php echo $bankAccNoI;?></td>
+							<td>- លេខគណនីៈ </td>
+							<td align="left"><?php echo $bankAccNoIII;?></td>
+						</tr>
+						<tr>
+							<td colspan="6" style="font-family:'Times New Roman','Khmer OS Muol Light'">* រាល់ការទូទាត់តាមគណនីធនាគារសូមអតិថិជនវាយលេខសម្គាល់: <strong><?php echo $client['sale_number'];?></strong></td>
+						</tr>
+					</table>	
+					</div>
 	            <?php }?>
-	            
 	            <table width="100%" cellpadding="3" style="font-family:'Khmer OS Muol Light'">
 	            	<tr class="font_bold" style="height:25px;">
 	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol Light'"><?php echo $tr->translate('ACCOUNTING_SIGN');?></td>

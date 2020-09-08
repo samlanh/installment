@@ -679,6 +679,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`client_id`       AS `client_id`,
 		  `s`.`house_id`        AS `house_id`,
 		  `s`.`price_before`    AS `price_before`,
+		  `s`.`sale_number`      AS `sale_number`,
 		  `s`.`price_sold`      AS `price_sold`,
 		   s.lastpayment_amount,
 		  `s`.`discount_amount` AS `discount_amount`,
