@@ -16,7 +16,8 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 			(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) AS ispay_bank,
 			(SELECT date_input FROM `ln_client_receipt_money` WHERE sale_id=v.sale_id ORDER BY date_input DESC LIMIT 1) As last_pay_date,
 			(SELECT s.expect_income_note FROM ln_sale AS s WHERE s.id = v.sale_id LIMIT 1) AS expect_income_note,
-			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) LIMIT 1) AS payment_type
+			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) LIMIT 1) AS payment_type,
+			(SELECT p.old_land_id FROM ln_properties AS p WHERE p.id = v.house_id LIMIT 1) AS old_land_id
 			 FROM v_newloancolect AS v WHERE 1 ";
     	$where ='';
     	

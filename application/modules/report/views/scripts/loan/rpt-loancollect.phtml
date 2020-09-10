@@ -170,7 +170,7 @@
 		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("NUM");?></td>
 		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>
 		                    <td colspan="2" style="padding:0px 1px;"><?php echo $tr->translate("CLIENT_INFO");?></td>
-		                    <td colspan="3" style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_INFO");?></td>
+		                    <td colspan="4" style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_INFO");?></td>
 		                    <td colspan="4" style="padding:0px 1px;"><?php echo $tr->translate("PAYMENT");?></td>
 		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
 		                     <td rowspan="2"><?php echo $tr->translate("LATE_DAY");?></td>
@@ -180,9 +180,12 @@
 		                <tr class="style" bgcolor="#c1d0f3" style="font-weight: bold;" >
 	                        <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 	                        <td><?php echo $tr->translate("TEL");?></td>
+							
+							<td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
 		                    <td style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 		                    <td style="padding:0px 1px;"><?php echo $tr->translate("STREET");?></td>
 	                        <td style="padding:0px 1px;"><?php echo $tr->translate("SOLD_PRICE");?></td>
+							
 		                    <td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("PRINCIPAL");?></td>
 		                    <td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("INTEREST");?></td>
 		                    <td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
@@ -190,6 +193,7 @@
 		                </tr>
 	                </thead>
 	                <?php 
+						$amount_property =0;
 	                	 $amt_d1 = 0;$amt_d2 = 0;
 	                	 $penelize=0;$total_payment=0;
 	                	 $key=0;
@@ -200,15 +204,24 @@
 		             ?>
 	               <?php if(!empty($tran)){foreach($tran as $key =>$row){
 	               	
-	               	if ($row['last_pay_date']==null or $row['last_pay_date']==""){
-	               		$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
-	               		$amount_lateday=$total_day/(60*60*24)-$free_day;
-	               		$total_late_day=$total_day/(60*60*24);
-	               	}else {
-	               		$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
-	               		$total_late_day=$total_day/(60*60*24);
-	               		$amount_lateday=$total_day/(60*60*24);
-	               	}
+						if ($row['last_pay_date']==null or $row['last_pay_date']==""){
+							$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+							$amount_lateday=$total_day/(60*60*24)-$free_day;
+							$total_late_day=$total_day/(60*60*24);
+						}else {
+							$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+							$total_late_day=$total_day/(60*60*24);
+							$amount_lateday=$total_day/(60*60*24);
+						}
+						
+						if(!empty($row['old_land_id'])){
+								$idse = explode(",", $row['old_land_id']);
+								$countland = count($idse);
+								$amount_property = $amount_property+$countland;
+						   }else{
+								$amount_property = $amount_property+1;
+								$countland = 1;
+					   }
 	               	
 	               	?>
 	               	<tr align="center" style="font-size:9px; height: 20px; white-space:nowrap;" class="style hover">
@@ -216,6 +229,7 @@
 	                    <td align="left">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
 						<td>&nbsp;<a style="color:#000; text-decoration: none;" ><?php echo $row['client_name'];?>&nbsp;</a></td>
 						<td align="left" style="line-height: 12px;white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $row['phone_number'];?></td>
+						<td>&nbsp;<?php echo $countland; ?>&nbsp;</td>	
 						<td>&nbsp;&nbsp;<?php echo $row['land_address']; ?>&nbsp;</td>	
 						<td>&nbsp;<?php echo $row['street'];?>&nbsp;</td>
 	                    <td align="left">&nbsp;<?php echo $row['price_sold'];?>&nbsp;</td>
@@ -322,7 +336,9 @@
 	                <?php }}?>
                 <?php $i=1;?>
 	                <tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
-	                	<td colspan="7"></td>
+	                	<td colspan="4"><?php echo $tr->translate("TOTAL");?></td>
+						<td>&nbsp;<?php echo $amount_property;?>&nbsp;</td>
+						<td colspan="3">&nbsp;</td>
 	                	<td><?php echo number_format($amt_d1,2);?></td>
 	                	<td><?php echo number_format($amt_d2,2);?></td>
 	                	<td><?php echo number_format($penelize,2);?></td>
