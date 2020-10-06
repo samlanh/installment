@@ -533,6 +533,12 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 				'autoComplete'=>'false',
 		));
 		
+		$free_tob = new Zend_Dojo_Form_Element_TextBox("store_number");
+		$free_tob->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+		));
+		
 		if($data!=null){
 			$agreementdate->setValue($data['agreement_date']);
 			$_branch_id->setValue($data['branch_id']);
@@ -583,7 +589,7 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			$_pre_amount_year->setValue($data['pre_amount_year']);
 			$_pre_fix_payment->setValue($data['pre_fix_payment']);
 		}
-		$this->addElements(array($grace_period,$commision_amt,$times_commission,$last_payment,$paid_date,$note_agreement,$total_discount,$delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
+		$this->addElements(array($free_tob,$grace_period,$commision_amt,$times_commission,$last_payment,$paid_date,$note_agreement,$total_discount,$delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id,

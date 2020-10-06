@@ -336,6 +336,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			 	'pre_amount_month'=>$data['pre_amount_month'],
     			 	'pre_amount_year'=>$data['pre_amount_year'],
     			 	'pre_fix_payment'=>$data['pre_fix_payment'],
+    			 	'store_number'=>$data['store_number'],
     				);
     		$this->_name='ln_sale';
     		$id = $this->insert($arr);//add group loan

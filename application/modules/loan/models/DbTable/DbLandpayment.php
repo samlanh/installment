@@ -1328,6 +1328,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'status'=>$data['status_using'],
     				'full_commission'=>$data['full_commission'],
     				'other_discount'=>$data['other_discount'],//Other Discount
+    				'store_number'=>$data['store_number'],
     		);
     		$dbg = new Application_Model_DbTable_DbGlobal();
     		$rs_user = $dbg->getUserInfo();

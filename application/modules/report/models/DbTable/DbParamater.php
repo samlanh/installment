@@ -138,7 +138,6 @@ function getAllBranch($search=null){
     		$where.=' AND ('.implode(' OR ',$s_where).')';
     	}
     	$order=' ORDER BY b.br_id DESC';
-   //echo $sql.$where;
    return $db->fetchAll($sql.$where.$order);
     	}
     function getAllProperties($search=null){
@@ -148,6 +147,12 @@ function getAllBranch($search=null){
     		   (SELECT project_name FROM ln_project WHERE br_id = p.`branch_id` limit 1) AS branch_name,
     		    p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,p.note,
 				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
+				p.south,p.north,p.west,p.east,
+				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`, ";
+    			$sql.="CASE
+				WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE s.house_id =  p.`id`  AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
+				ELSE  0
+				END AS is_lock,
 				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`, ";
 //     			$sql.="CASE
 // 				WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE s.house_id =  p.`id`  AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
@@ -1601,7 +1606,7 @@ function getAllBranch($search=null){
     	(SELECT v.parent_id FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) LIMIT 1) as parent_title,
     	SUM(ic.`total_amount`) AS total_amount,ic.is_beginning,
     	(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type =12 AND v.key_code = ic.`category_id` LIMIT 1) AS category_name,
-    	ic.`date` FROM `ln_income` AS ic WHERE 1 ";
+    	ic.`date` FROM `ln_income` AS ic WHERE ic.status=1 ";
     	
     	$dbp = new Application_Model_DbTable_DbGlobal();
     	$sql.=$dbp->getAccessPermission("branch_id");

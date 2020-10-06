@@ -251,7 +251,6 @@
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
 				                    	<select name="schedule_opt" id="schedule_opt" dojoType="dijit.form.FilteringSelect" class="fullside" onchange="checkScheduleOption();">
 										    <option value="1" ><?php echo $tr->translate("DEPOSIT");?></option>
-										    <option value="2" ><?php echo $tr->translate("DEPOSITE_PAYOFF");?></option>
 										</select>
 				                   </div>
 				                </div>
@@ -336,6 +335,14 @@
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
 				                    	<?php echo $frm->getElement('date_line');?>
+				                   </div>
+				                </div>
+				                <div class="form-group">
+				                   <label id="lbl_store" class="control-label   col-md-5 col-sm-5 col-xs-12" >
+				                   <?php echo $tr->translate("FREE_TOP")?>  :
+				                   </label>
+				                   <div class="col-md-7 col-sm-7 col-xs-12">
+				                    	<?php echo $frm->getElement('store_number');?>
 				                   </div>
 				                </div>
 				                <div class="form-group">
@@ -1121,15 +1128,6 @@ function printSave(new_stu_id,new_receipt_no){
 	<?php }?>
 	getBranchInfo();
 	schedule_opt = dijit.byId("schedule_opt").get("value");
-	if(schedule_opt==2){//បង់ផ្តាច់
-		  sold_price = dijit.byId("sold_price").get("value");
-		  deposit = dijit.byId("deposit").get("value");
-		  if(sold_price!=deposit){
-			alert("បង់ផ្តាច់ តម្លៃលក់ ត្រូវស្មើរ នឹងប្រាក់ដែលត្រូវទទួល!");
-			dijit.byId("deposit").focus();
-			return false;
-		  }
-	}
 
     date_agreement = dijit.byId("date_line").get("value");
     if(schedule_opt==1 && date_agreement==null){ 
@@ -1340,8 +1338,6 @@ function printSave(new_stu_id,new_receipt_no){
 		dojo.byId("lbl_pre_percent_installment").innerHTML = dijit.byId("pre_percent_installment").get('value');
 		dojo.byId("lbl_pre_amount_year").innerHTML = dijit.byId("pre_amount_year").get('value');
 		dojo.byId("lbl_pre_fix_payment").innerHTML = dijit.byId("pre_fix_payment").get('value');
-
-		
 
 		a_recieve_amount =dojo.number.format(dijit.byId("deposit").get('value'),{places:2}).replace(",", "");
 		money_khmer_recieve_amount=read_money_in_khmer(a_recieve_amount);
