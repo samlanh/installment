@@ -117,10 +117,15 @@ public function init()
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 				'class'=>'fullside',));
-		$_status_opt = array(
-				1=>$this->tr->translate("ACTIVE"),
-				0=>$this->tr->translate("DEACTIVE"));
+		$_status_opt=array();
+		if($request->getActionName()=='index'){
+			$_status_opt[-1]=$this->tr->translate("SELECT_TYPE");
+		}
+		$_status_opt[1]=$this->tr->translate("ACTIVE");
+		$_status_opt[0]=$this->tr->translate("DEACTIVE");
+		
 		$_status->setMultiOptions($_status_opt);
+		$_status->setValue($request->getParam("status"));
 		
 		$_discount = new Zend_Dojo_Form_Element_NumberTextBox('discount');
 		$_discount->setAttribs(array(

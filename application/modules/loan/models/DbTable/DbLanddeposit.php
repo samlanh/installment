@@ -255,8 +255,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     					"create_date"=>date("Y-m-d"),
     					"user_id"=>$this->getUserId(),
     					"old_land_id"=>$data['identity_land'],
-    					
-    					'street_code'=>$newpro['street_code'],
+    					'store_number'=>$data['store_number'],
     			);
     			$this->_name="ln_properties";
     			$land_id = $this->insert($newproperty);
@@ -726,6 +725,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'pre_amount_month'=>$data['pre_amount_month'],
     				'pre_amount_year'=>$data['pre_amount_year'],
     				'pre_fix_payment'=>$data['pre_fix_payment'],
+    				'store_number'=>$data['store_number'],
     			);
     		
     		$id = $data['id'];

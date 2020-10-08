@@ -38,6 +38,9 @@
 			   	</div>
 			   	<div class="form-group">	
 			   		<div class="col-md-3 col-sm-3 col-xs-12">
+		   				<?php echo $frm->getElement('status');?>
+		   			</div>
+			   		<div class="col-md-3 col-sm-3 col-xs-12">
 			   			<?php echo $frm->getElement('from_date_search');?>
 			   		</div>
 			   		<div class="col-md-3 col-sm-3 col-xs-12">
@@ -117,23 +120,21 @@ var row=0;
 var url="";
 $(function(){
 	$.contextMenu({
-		selector: '.context-menu-one', 
-		callback: function(key, options) {
-		
-			var m = "clicked: " + key;
-			if(key=="edit"){
-				url='<?php echo $urlEdit;?>';
-			}else if(key=="receipt"){
-				url='<?php echo $urlReciept;?>';
-			}
-			
-			gotoAction();
-			//window.console && console.log(m) || alert(m); 
-		},
-		items: {
-			"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
-			"receipt": {name: "<?php echo $tr->translate("PAYMENT_VOUCHER");?>", icon: "fa-money", accesskey: "h"},
-		}
+	selector: '.context-menu-one', 
+	callback: function(key, options) {
+	var m = "clicked: " + key;
+	if(key=="edit"){
+		url='<?php echo $urlEdit;?>';
+	}else if(key=="receipt"){
+		url='<?php echo $urlReciept;?>';
+	}
+	gotoAction();
+		//window.console && console.log(m) || alert(m); 
+	},
+	items: {
+		"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
+		"receipt": {name: "<?php echo $tr->translate("PAYMENT_VOUCHER");?>", icon: "fa-money", accesskey: "h"},
+	}
 	});
 });
 function setrowdata(index){

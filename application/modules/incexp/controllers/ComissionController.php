@@ -20,6 +20,7 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 						'staff_id'=>-1,
 						'land_id'=>0,
 						'branch_id_search' => -1,
+						'status' => -1,
 						'from_date_search'=> date('Y-m-d'),
 						'to_date_search'=>date('Y-m-d'));
 			}

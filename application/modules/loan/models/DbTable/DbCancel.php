@@ -101,7 +101,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'description'	=>$data['reason'],
 					'user_id'		=>$this->getUserId(),
 					'create_date'	=>$data['expense_date'],
-						);
+					);
 				$this->_name="ln_expense";
 				$expenid = $this->insert($arr1);
 			}

@@ -335,6 +335,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'user_id'=>$this->getUserId(),
     			   	'amount_daydelay'=>$data['delay_day'],
     			   	'other_discount'=>$data['other_discount'],//Other Discount
+    			   	'street_code'=>$newpro['street_code'],
     			);   
     		if(!empty($data['interest_policy'])){
     			 $arr['interest_policy']=$data['interest_policy'];

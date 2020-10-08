@@ -62,6 +62,9 @@ class Incexp_Model_DbTable_DbComission extends Zend_Db_Table_Abstract
 		if($search['land_id']>0){
 			$where.= " AND (pro.`id` = ".$search['land_id']." OR pro.old_land_id LIKE '%".$search['land_id']."%')";
 		}
+		if($search['status']>-1){
+			$where.= " AND c.status = ".$search['status'];
+		}
 		
 		$where.=$dbp->getAccessPermission("c.`branch_id`");
 		$order=' ORDER BY c.`for_date` DESC,c.id DESC ';

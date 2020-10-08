@@ -22,6 +22,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
      					"category_id_expense"=>-1,
     					'payment_type'=>-1,
     					'supplier_id'=>'',
+    					'status'=>-1,
     					'cheque_issuer_search'=>'',
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),

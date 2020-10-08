@@ -25,6 +25,7 @@ class Incexp_IncomeController extends Zend_Controller_Action
     					'end_date'=>date('Y-m-d'),
     					'land_id'=>-1,
     					'client_name'=>-1,
+    					"status"=>-1,
     			);
     		}
     		$this->view->adv_search = $search;
