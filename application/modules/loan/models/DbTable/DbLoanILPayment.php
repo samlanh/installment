@@ -1717,4 +1717,23 @@ function getLoanPaymentByLoanNumberEdit($data){
 		$sql="SELECT crm.receipt_no FROM ln_client_receipt_money AS crm WHERE crm.id = $receipt_id LIMIT 1";
 		return $db->fetchOne($sql);
 	}
+	
+	
+	function getLastPaymentRecord($sale_id){
+		$db = $this->getAdapter();
+		$sql="SELECT
+		rm.*
+		FROM
+			`ln_client_receipt_money` AS rm
+		WHERE rm.sale_id = $sale_id 
+		AND rm.total_payment>0
+		 ";
+	
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("rm.branch_id");
+		$sql.=" ORDER BY rm.id DESC ";
+		$sql.=" LIMIT 1 ";
+	
+		return $db->fetchRow($sql);
+	}
 }
