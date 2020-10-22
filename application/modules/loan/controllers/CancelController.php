@@ -30,7 +30,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 			$link=array(
 					'module'=>'loan','controller'=>'cancel','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('client_name'=>$link,'project_name'=>$link,'land_address'=>$link,));
+			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('client_name'=>$link,'project_name'=>$link,'property_type'=>$link,'land_address'=>$link));
 			
 			$this->view->rssearch = $search;
 		}catch (Exception $e){

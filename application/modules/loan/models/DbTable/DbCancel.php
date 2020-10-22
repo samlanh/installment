@@ -411,7 +411,9 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 	public function getCancelById($id){
 		$db = $this->getAdapter();
 		$sql= "SELECT *,
-		(SELECT e.invoice FROM `ln_expense` AS e WHERE e.id = c.expense_id) AS reciept FROM `ln_sale_cancel` AS c WHERE c.`id`=".$id;
+		(SELECT create_date FROM ln_expense WHERE ln_expense.id=c.expense_id LIMIT 1) as expense_date,
+		(SELECT e.invoice FROM `ln_expense` AS e WHERE e.id = c.expense_id LIMIT  1) AS reciept
+		 FROM `ln_sale_cancel` AS c WHERE c.`id`=".$id;
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$sql.=$dbp->getAccessPermission("`c`.`branch_id`");
 		$sql.=" LIMIT 1 ";

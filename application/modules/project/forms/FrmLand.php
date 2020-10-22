@@ -162,8 +162,8 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				0=>$this->tr->translate("DEACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		
-		$_desc = new Zend_Dojo_Form_Element_TextBox('desc');
-		$_desc->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside',
+		$_desc = new Zend_Dojo_Form_Element_Textarea('desc');
+		$_desc->setAttribs(array('dojoType'=>'dijit.form.Textarea','class'=>'fullside',
 				'style'=>'width:96%;min-height:50px;'));
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
