@@ -134,6 +134,7 @@ dojo.ready(function(){
 				}
 			}
 		}, "village");
+		filterDistrict();
 });
 url_getdistrict = '<?php echo $this->url(array('module'=>'other','controller'=>'district','action'=>'get-district'));?>';
 function filterDistrict(){
@@ -149,6 +150,9 @@ function filterDistrict(){
 			load: function(data) {	
 				district_store  = getDataStorefromJSON('id','name', data);		
 			    dijit.byId('district').set('store', district_store);
+			    <?php if(!empty($this->result['district_id'])){?>
+			    	dijit.byId('district').attr('value',<?php echo $this->result['district_id'];?>);
+			    <?php }?>
 			},
 			error: function(err) {
 			}
@@ -168,6 +172,9 @@ function filterCommune(){
 		load: function(data) {	
 			commune_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('commune').set('store', commune_store);
+		    <?php if(!empty($this->result['comm_id'])){?>
+	    		dijit.byId('commune').attr('value',<?php echo $this->result['comm_id'];?>);
+	    	<?php }?>
 		},
 		error: function(err) {
 		}
@@ -187,9 +194,11 @@ function filterVillage(){
 			load: function(data) {	
 				village_store  = getDataStorefromJSON('id','name', data);		
 			    dijit.byId('village').set('store', village_store);
+			    <?php if(!empty($this->result['village'])){?>
+	    			dijit.byId('village').attr('value',<?php echo $this->result['village'];?>);
+	    		<?php }?>
 			},
 			error: function(err) {
-				alert(err);
 			}
 		});
 }

@@ -254,7 +254,7 @@ function getAllBranch($search=null){
     		$where = " AND ".$from_date." AND ".$to_date;
     	
     		$sql=" SELECT id,
-    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id = branch_id LIMIT 1) AS branch_name,
     		 title, invoice,branch_id,
     		(SELECT CONCAT(land_address,',',street)FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) as house_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) AS category_name,
@@ -264,7 +264,6 @@ function getAllBranch($search=null){
     		 cheque,total_amount,description,date,is_closed,
     		(SELECT  first_name FROM rms_users WHERE rms_users.id=ln_income.user_id LIMIT 1 ) AS user_name,
     		status 
-			
 			FROM ln_income WHERE status=1 ";
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();

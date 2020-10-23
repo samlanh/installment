@@ -392,7 +392,6 @@ function printSave(){
 		dojo.byId("lb_fromhouse").innerHTML = dijit.byId("land_code").attr('displayedValue');
 		dojo.byId("lb_fromprice").innerHTML = dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 		dojo.byId("lb_paid").innerHTML = dojo.number.format(dijit.byId("paid_before").get('value'),{places:2});
-		
 		dojo.byId("lb_changedate").innerHTML = dijit.byId("release_date").attr('displayedValue');
 		dojo.byId("lb_tobranch").innerHTML = dijit.byId("to_branch_id").attr('displayedValue');
 		dojo.byId("lb_tohouse").innerHTML = dijit.byId("to_land_code").attr('displayedValue');
@@ -788,6 +787,8 @@ function getInfoByLoanNumber(){
 			if(isNaN(paid_amount) || paid_amount==null){paid_amount=0;}
 			
 			dijit.byId('paid_before').attr('value',total_principal);
+			dijit.byId('total_sold').attr('value',data.price_sold);
+			dijit.byId('balance_before').attr('value',data.price_sold-total_principal);
 			
 			dijit.byId("member").attr('value',data.client_id);
 			dijit.byId('customer_code').set('readOnly',true);
@@ -824,7 +825,6 @@ function checkScheduleOption(){
 }
 var url_getlandinfodetail = '<?php echo $this->url(array('module'=>'group','controller'=>'land','action'=>'getlandinfo')); ?>';
 function getlandinfo(){
-	dijit.byId('total_sold').attr('value',0);
 	property_id = dijit.byId('land_code').get('value');
 	if(property_id==''){
 		return false;
@@ -839,12 +839,11 @@ function getlandinfo(){
 			dijit.byId('land_code').set('readOnly',true);
 			dijit.byId('paid_before').set('readOnly',true);
 			dijit.byId('balance_before').set('readOnly',true);
-
-			dijit.byId('total_sold').attr('value',data.price);
-			paid_before = dijit.byId('paid_before').get('value');
-			dijit.byId('balance_before').attr('value',data.price-paid_before);
+			//dijit.byId('total_sold').attr('value',data.price);
+			//paid_before = dijit.byId('paid_before').get('value');
+			//dijit.byId('balance_before').attr('value',data.price-paid_before);
 		},
-		error: function(err) {
+		error: function(err){
 		}
 	});
 }

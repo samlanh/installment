@@ -67,8 +67,7 @@
                 	<?php }?>
                 </tbody>
              </table>
-                   
-			<?php echo $this->list;?> 
+			<?php //echo $this->list;?> 
 		</div>
 	</div>
 </div>
@@ -86,7 +85,19 @@
 			    border-radius: 5px;
 		}
 	</style>
+	<?php 
+	$urlEdit = $this->baseUrl()."/project/land/edit/id/";
+?>
 <script type="text/javascript">
+	/*function copyRecord(url){
+		 id = dijit.byId('recordcopy').get('value');
+		 window.location.href = url+'/id/'+id;
+	}
+
+	function setValue(index){
+		var recordcopy = $('input[name=copy]:checked').val();
+		dijit.byId('recordcopy').attr('value',recordcopy);
+	}
 	function copyRecord(url){
 		 id = dijit.byId('recordcopy').get('value');
 		 window.location.href = url+'/id/'+id;
@@ -95,5 +106,30 @@
 	function setValue(index){
 		var recordcopy = $('input[name=copy]:checked').val();
 		dijit.byId('recordcopy').attr('value',recordcopy);
+	}*/
+
+	var row=0;
+	var url="";
+	$(function(){
+		$.contextMenu({
+			selector: '.context-menu-one', 
+			callback: function(key, options) {
+				var m = "clicked: " + key;
+				if(key=="edit"){
+					url='<?php echo $urlEdit;?>';
+				}
+				gotoAction();
+			},
+			items: {
+				"edit": {name: "<?php echo $tr->translate("UPDATE");?>", icon: "edit", accesskey: "e"},
+			}
+		});
+	});
+	function setrowdata(index){
+		row = index;
+	}
+	var recordid ='';
+	function gotoAction(){
+		 window.open(url+row+'?rightclick=true', '_blank');
 	}
 </script>
