@@ -207,6 +207,7 @@ dojo.require("dijit.form.DateTextBox");
 	               $db  = new Report_Model_DbTable_DbParamater();
 	               if(!empty($this->loanrelease_list)) foreach($this->loanrelease_list as $key =>$row){?>
 	               <?php 
+	               $row['totalAmountCreadit'] = empty($row['totalAmountCreadit'])?0:$row['totalAmountCreadit'];
 	               if(!empty($row['old_land_id'])){
 	               	$idse = explode(",", $row['old_land_id']);
 	               	$countland = count($idse);
@@ -262,38 +263,60 @@ dojo.require("dijit.form.DateTextBox");
 	               if($row['payment_id']==1){
 	               	 $payment_1=$payment_1+1;
 	               	 $sold_price1=$sold_price1+$row['price_sold'];
-	               	 $paid_price1=$paid_price1+$row['paid_amount'];
-	               	 $balace_price1=$balace_price1+($row['price_sold']-$row['paid_amount']);
+// 	               	 $paid_price1=$paid_price1+$row['paid_amount'];
+// 	               	 $balace_price1=$balace_price1+($row['price_sold']-$row['paid_amount']);
+	               	 
+	               	 $paid_price1=$paid_price1+$row['paid_amount']+$row['totalAmountCreadit'];
+	               	 $balace_price1=$balace_price1+($row['price_sold']-($row['paid_amount']+$row['totalAmountCreadit']));
 	               }elseif($row['payment_id']==2){
 	               	 $payment_2=$payment_2+1;
 	               	 $sold_price2=$sold_price2+$row['price_sold'];
-	               	 $paid_price2=$paid_price2+$row['paid_amount'];
-	               	 $balace_price2=$balace_price2+($row['price_sold']-$row['paid_amount']);
+// 	               	 $paid_price2=$paid_price2+$row['paid_amount'];
+// 	               	 $balace_price2=$balace_price2+($row['price_sold']-$row['paid_amount']);
+	               	 
+	               	 $paid_price2=$paid_price2+$row['paid_amount']+$row['totalAmountCreadit'];
+	               	 $balace_price2=$balace_price2+($row['price_sold']-($row['paid_amount']+$row['totalAmountCreadit']));
 	               }elseif($row['payment_id']==3){
 	               	 $payment_3=$payment_3+1;
 	               	 $sold_price3=$sold_price3+$row['price_sold'];
-	               	 $paid_price3=$paid_price3+$row['paid_amount'];
-	               	 $balace_price3=$balace_price3+($row['price_sold']-$row['paid_amount']);
+// 	               	 $paid_price3=$paid_price3+$row['paid_amount'];
+// 	               	 $balace_price3=$balace_price3+($row['price_sold']-$row['paid_amount']);
+
+	               	 $paid_price3=$paid_price3+$row['paid_amount']+$row['totalAmountCreadit'];
+	               	 $balace_price3=$balace_price3+($row['price_sold']-($row['paid_amount']+$row['totalAmountCreadit']));
 	               }elseif($row['payment_id']==4){
 	               	 $payment_4=$payment_4+1;
 	               	 $sold_price4=$sold_price4+$row['price_sold'];
-	               	 $paid_price4=$paid_price4+$row['paid_amount'];
-	               	 $balace_price4=$balace_price4+($row['price_sold']-$row['paid_amount']);
+// 	               	 $paid_price4=$paid_price4+$row['paid_amount'];
+// 	               	 $balace_price4=$balace_price4+($row['price_sold']-$row['paid_amount']);
+	               	 
+	               	 $paid_price4=$paid_price4+$row['paid_amount']+$row['totalAmountCreadit'];
+	               	 $balace_price4=$balace_price4+($row['price_sold']-($row['paid_amount']+$row['totalAmountCreadit']));
 	               }elseif($row['payment_id']==5){
 	               	 $payment_5=$payment_5+1;
 	               	 $sold_price5=$sold_price5+$row['price_sold'];
-	               	 $paid_price5=$paid_price5+$row['paid_amount'];
-	               	 $balace_price5=$balace_price5+($row['price_sold']-$row['paid_amount']);
+// 	               	 $paid_price5=$paid_price5+$row['paid_amount'];
+// 	               	 $balace_price5=$balace_price5+($row['price_sold']-$row['paid_amount']);
+
+	               	 $paid_price5=$paid_price5+$row['paid_amount']+$row['totalAmountCreadit'];
+	               	 $balace_price5=$balace_price5+($row['price_sold']-($row['paid_amount']+$row['totalAmountCreadit']));
 	               }
 	               elseif($row['payment_id']==6){
 	               	$payment_6=$payment_6+1;
 	               	$sold_price6=$sold_price6+$row['price_sold'];
-	               	$paid_price6=$paid_price6+$row['paid_amount'];
-	               	$balace_price6=$balace_price6+($row['price_sold']-$row['paid_amount']);
+// 	               	$paid_price6=$paid_price6+$row['paid_amount'];
+// 	               	$balace_price6=$balace_price6+($row['price_sold']-$row['paid_amount']);
+	               	
+	               	$paid_price6=$paid_price6+$row['paid_amount']+$row['totalAmountCreadit'];
+	               	$balace_price6=$balace_price6+($row['price_sold']-($row['paid_amount']+$row['totalAmountCreadit']) );
 	               }
-	              	$total=$total+$row['paid_amount'];
-	              	$total_paid=$total_paid+$row['paid_amount'];
-	              	$balance=$balance+($row['price_sold']-$row['paid_amount']);
+// 	              	$total=$total+$row['paid_amount'];
+// 	              	$total_paid=$total_paid+$row['paid_amount'];
+// 	              	$balance=$balance+($row['price_sold']-$row['paid_amount']);
+	              	
+	              	$total=$total+$row['paid_amount']+$row['totalAmountCreadit'];
+	              	$total_paid=$total_paid+$row['paid_amount']+$row['totalAmountCreadit'];
+	              	$balance=$balance+($row['price_sold']-($row['paid_amount']+$row['totalAmountCreadit']) );
 	              
 	              if($row['payment_id']!=$payment_id){?>
 	              	<tr>
@@ -302,7 +325,8 @@ dojo.require("dijit.form.DateTextBox");
 	              <?php } 
 	             }else{
 	             	$payment_0=$payment_0+1;
-	             	$paid_price0=$paid_price0+$row['paid_amount'];
+// 	             	$paid_price0=$paid_price0+$row['paid_amount'];
+	             	$paid_price0=$paid_price0+$row['paid_amount']+$row['totalAmountCreadit'];
 	             	if($set_cancel==0){$set_cancel=1;
 	             	?>
 	             	<tr>
@@ -335,14 +359,20 @@ dojo.require("dijit.form.DateTextBox");
 						<td style="white-space:nowrap; text-align: right;">
 						<?php 
 							if($row['payment_id']==4){
-								echo number_format($row['paid_amount'],2);
+// 								echo number_format($row['paid_amount'],2);
+								$paidAmoutn = $row['paid_amount']+$row['totalAmountCreadit'];
+								echo number_format($paidAmoutn,2);
 							}elseif($row['payment_id']==1){
-								echo number_format($row['paid_amount'],2);
+// 								echo number_format($row['paid_amount'],2);
+								$paidAmoutn = $row['paid_amount']+$row['totalAmountCreadit'];
+								echo number_format($paidAmoutn,2);
 							}else{
-								echo number_format($row['paid_amount'],2);
+// 								echo number_format($row['paid_amount'],2);
+								$paidAmoutn = $row['paid_amount']+$row['totalAmountCreadit'];
+								echo number_format($paidAmoutn,2);
 							}
 						?>&nbsp;</td>
-						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold']-$row['paid_amount'],2); ?>&nbsp;</td>
+						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold']-$paidAmoutn,2);//echo number_format($row['price_sold']-$row['paid_amount'],2); ?>&nbsp;</td>
 						<!-- <td style="white-space:nowrap; font-size:10px;text-align: left;">&nbsp;<?php //echo $row['paymenttype']; ?>&nbsp;</td> -->
 						<td style="white-space:nowrap; text-align: center;"><?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['total_duration']; }
 						if($row['payment_id']==6){ echo $row['times']."ដង";}?>&nbsp;</td>

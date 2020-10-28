@@ -1232,4 +1232,16 @@ class Report_LoanController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	
+	function credithistoryAction(){
+		$db  = new Report_Model_DbTable_DbLandreport();
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		$rs=$db->getCreditBySaleid($id);
+		$this->view->loantotalcollect_list =$rs;
+		if(empty($rs)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+			exit();
+		}
+	}
 }

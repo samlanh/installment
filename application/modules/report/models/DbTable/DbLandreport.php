@@ -11,6 +11,10 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 		}
 		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
+		
+		$from_dateCredit =(empty($search['start_date']))? '1': " for_date >= '".$search['start_date']." 00:00:00'";
+		$to_dateCredit = (empty($search['end_date']))? '1': " for_date <= '".$search['end_date']." 23:59:59'";
+		
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$statement = $dbp->soldreportSqlStatement();
 		$sql= $statement['sql'];
@@ -18,6 +22,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 			,(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) AS paid_amount,
 			(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE status=1 AND $from_date AND $to_date  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid,
 			(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE status=1 AND $from_date AND $to_date  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid,
+			(SELECT SUM(total_amount) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) AS totalAmountCreadit,
 			(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times,
 			(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
 			(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
@@ -2831,6 +2836,10 @@ function updatePaymentStatus($data){
    	}
    	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
    	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
+   	
+   	$from_dateCredit =(empty($search['start_date']))? '1': " for_date >= '".$search['start_date']." 00:00:00'";
+   	$to_dateCredit = (empty($search['end_date']))? '1': " for_date <= '".$search['end_date']." 23:59:59'";
+   	
    	$dbp = new Application_Model_DbTable_DbGlobal();
    	$statement = $dbp->soldreportSqlStatement();
    	$sql= $statement['sql'];
@@ -2839,6 +2848,8 @@ function updatePaymentStatus($data){
    	,(SELECT SUM(rm.total_principal_permonthpaid+rm.extra_payment) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) AS paid_amount,
    	(SELECT SUM(rm.total_interest_permonthpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1  AND sale_id = s.id AND $from_date AND $to_date LIMIT 1) AS total_interest_permonthpaid,
    	(SELECT SUM(rm.penalize_amountpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1 AND sale_id = s.id AND $from_date AND $to_date LIMIT 1) AS penalize_amountpaid,
+   	
+   	(SELECT SUM(total_amount) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) AS totalAmountCreadit,
    	
    	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times,
    	(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
@@ -3513,5 +3524,45 @@ function updatePaymentStatus($data){
       				Application_Model_DbTable_DbUserLog::writeMessageError($err);
       				$db->rollBack();
       			}
+      	}
+      	
+      	public function getCreditBySaleid($sale_id){
+      		$db = $this->getAdapter();
+      		$dbp = new Application_Model_DbTable_DbGlobal();
+      		$sql=" 
+      			SELECT
+					cd.*,
+					(SELECT
+			     `ln_project`.`project_name`
+			   FROM `ln_project`
+			   WHERE (`ln_project`.`br_id` = `cd`.`branch_id`)
+			   LIMIT 1) AS `branch_name`,
+					`c`.`client_id`                      AS `client_id`,
+					`c`.`client_number`                  AS `client_number`,
+					`c`.`name_kh`                        AS `name_kh`,
+					`c`.`name_en`                        AS `client_name`,
+					`l`.`land_code`                      AS `land_code`,
+					`l`.`land_address`                   AS `land_address`,
+					`l`.`land_size`                      AS `land_size`,
+					`l`.`street`                         AS `street`,
+					`l`.`id`                             AS `hous_id`,
+					 (SELECT
+			     `ln_view`.`name_kh`
+			   FROM `ln_view`
+			   WHERE ((`ln_view`.`key_code` = `cd`.`payment_id`)
+			          AND (`ln_view`.`type` = 2))
+			   LIMIT 1) AS `payment_method`,
+					(SELECT first_name FROM `rms_users` WHERE id=cd.user_id LIMIT 1) AS user_name
+					FROM ln_credit AS cd,
+						ln_sale AS sl,
+						ln_properties AS l,
+						ln_client AS c
+					WHERE sl.id = cd.sale_id 
+					AND cd.client_id = c.client_id
+					AND l.id = sl.house_id
+      				AND cd.sale_id= $sale_id ";
+      		$sql.=$dbp->getAccessPermission("cd.branch_id");
+      		$order=" ORDER BY cd.id DESC ";
+      		return $db->fetchAll($sql.$order);
       	}
  }
