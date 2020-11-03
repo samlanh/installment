@@ -472,4 +472,10 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		$sql="SELECT SUM(rr.total_amount) AS total FROM `ln_rent_refund` AS rr WHERE rr.status=1 ";
 		return $db->fetchOne($sql);
 	}
+	
+	function getTotalSaleAmountCreditPayment(){
+		$db = $this->getAdapter();
+		$sql="SELECT SUM(total_amount) AS total FROM `ln_credit` WHERE status=1 ";
+		return $db->fetchOne($sql);
+	}
 }
