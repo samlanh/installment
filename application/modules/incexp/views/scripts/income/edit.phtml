@@ -447,25 +447,19 @@ function printSubmit(){
 }
 var url_add_category = '<?php echo $this->url(array("module"=>"incexp","controller"=>"income","action"=>"add-category")); ?>';
 function addCategory(){
-	dojo.xhrPost({
-		url:url_add_category,
-		form: dojo.byId("frm_category"),
-		handleAs:"json",
-		load: function(data) {
-			//var Itemmake = { 
-	    	//	id: data,
-		    //  name: dijit.byId('cate_enname').get('value')
-		   // };
-	 		// addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
-
-	 		resetStoreCategory(data);
-	 		
-		    dijit.byId('frm_category').reset();
-		    dijit.byId("popup_category").hide();
-		},
-		error: function(err) {
-		}
-	});
+	if(dijit.byId('frm_category').validate()){
+		dojo.xhrPost({
+			url:url_add_category,
+			form: dojo.byId("frm_category"),
+			handleAs:"json",
+			load: function(data) {
+		 		resetStoreCategory(data);
+			    dijit.byId('frm_category').reset();
+			    dijit.byId("popup_category").hide();
+			},
+			error: function(err) {
+			}
+		});
 }
 var url_getland = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getparentbyid')); ?>';
 function getParentbytype(){

@@ -33,7 +33,6 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			$this->insert($array);
 			$_db->commit();
 		}catch(Exception $e){
-			echo $e->getMessage();exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
  	 }
@@ -42,27 +41,26 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	 	$_db->beginTransaction();
 	 	try{
 			$arr = array(
-						'sale_id'	=>$data['sale_client'],
-						'house_id'	=>$data['house_id'],
-						'branch_id'=>$data['branch_id'],
-						'client_id'=>$data['customer'],
-						'title'=>$data['title'],
-						'total_amount'=>$data['total_amount'],
-						'invoice'=>$data['invoice'],
-						'category_id'=>$data['income_category'],
-						'payment_id'=>$data['payment_type'],
-						'cheque'=>$data['cheque'],
-						'description'=>$data['Description'],
-						'date'=>$data['Date'],
-						'status'=>$data['Stutas'],
-					   'is_beginning'=>$data['is_beginning'],
-						'user_id'=>$this->getUserId(),
-					);
+				'sale_id'	=>$data['sale_client'],
+				'house_id'	=>$data['house_id'],
+				'branch_id'=>$data['branch_id'],
+				'client_id'=>$data['customer'],
+				'title'=>$data['title'],
+				'total_amount'=>$data['total_amount'],
+				'invoice'=>$data['invoice'],
+				'category_id'=>$data['income_category'],
+				'payment_id'=>$data['payment_type'],
+				'cheque'=>$data['cheque'],
+				'description'=>$data['Description'],
+				'date'=>$data['Date'],
+				'status'=>$data['Stutas'],
+			   'is_beginning'=>$data['is_beginning'],
+				'user_id'=>$this->getUserId(),
+			);
 			$where=" id =  $id " ;
 			$this->update($arr, $where);
 			$_db->commit();
 		}catch(Exception $e){
-			echo $e->getMessage();exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}
@@ -262,6 +260,9 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		if($type==1){
 			$type=12;
+			if(!empty($data['type'])){
+				$type=$data['type'];
+			}
 		}else{
 			$type=13;
 		}

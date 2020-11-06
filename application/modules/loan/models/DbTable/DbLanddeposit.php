@@ -271,7 +271,6 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		}
     		$is_schedule = 0;
     		$dbtable = new Application_Model_DbTable_DbGlobal();
-    		
     		$loan_number = $dbtable->getLoanNumber($data);
     		
     		$receipt = $data['receipt'];

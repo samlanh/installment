@@ -1,8 +1,8 @@
 <?php
-	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	$frm = $this->frm_expense;
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_expense;
 ?>
-<title><?php echo $tr->translate('ADDINCOME');?></title>
+<title><?php echo $tr->translate("EDIT_CREDIT");?></title>
 <style>	
 .fullside {
 	width: 100%;
@@ -12,8 +12,7 @@
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
  <script>
 		require(["dojo/number","dijit/Dialog"]);
- </script>
- 
+</script>
  <div class="card">
 	<div class="card-content collapse show">
 		<form id='frm_add_tran' action=""	dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -28,7 +27,7 @@
 			<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADDINCOME');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_CREDIT');?></h4>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -47,21 +46,7 @@
 	                    	<?php echo $frm->getElement('branch_id');?>
 	                   </div>
 	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIPT_NO");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('invoice');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('Date');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
+	                 <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -74,6 +59,20 @@
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id="customer" />
 						<input type="hidden" id="house_id" name="house_id" dojoType="dijit.form.TextBox"/>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIPT_NO");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('invoice');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('Date');?>
 	                   </div>
 	                </div>
 	             </div>
@@ -131,10 +130,10 @@
 	                   </label>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INCOME_TYPE");?> :
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('is_beginning');?>
+	                    	<?php echo $frm->getElement('Stutas');?>
 	                   </div>
 	                </div>
 	             </div>
@@ -142,11 +141,9 @@
 	        <div class="clearfix"></div>
 			 <div class="card-box">
              	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-					<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button"
+					<input type="submit" label="<?php echo $tr->translate("GO_EDIT");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button"
 						 iconClass="dijitIconDelete"/>
-					<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' name='savenew' value='savenew' dojoType="dijit.form.Button"
-						 iconClass="dijitIconNewTask"/>
-					<input type="button" label="<?php echo $tr->translate("SAVEPRINT")?>" name='print' value='print' dojoType="dijit.form.Button"
+					<input type="button" label="<?php echo $tr->translate("PRINT")?>" name='print' value=''print'' dojoType="dijit.form.Button"
 						 iconClass="dijitIconNewTask" onClick="printSave('');displayNone();" />
     			</div>
     		</div>
@@ -163,6 +160,7 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id="parent_id" />
+	                    	<input type="hidden" id="type" name="type" value="30" />
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -193,19 +191,35 @@ dojo.require("dijit.form.DateTextBox");
 var parent_id_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 
 dojo.ready(function(){
-	getInvoiceNo('');
-	enablePayment();
 	new dijit.form.FilteringSelect({
-	    autoComplete: false,
-		queryExpr: "*${0}*",
+		autoComplete: false,
+		queryExpr: "*${0}*",                      
 	    id: "customer",
 	    name: "customer",  
+	    readOnly:true,
 	    tabindex: "16",  
 	    class: 'fullside',  
 	    placeHolder:"<?php echo $tr->translate("CHOOSE_CUSTOEMR")?>",          
 	    onChange: function() {  
 	    }
 	}, "customer");
+	getallCustomer();
+	dijit.byId('income_category').attr('value',<?php echo $this->row['category_id'];?>); 
+
+	new dijit.form.FilteringSelect({
+		store: sale_client_store,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		required: false,		           
+		name: "sale_client",
+		id: "sale_client",
+		searchAttr: "name",
+		class: 'fullside',
+			onChange: function() {
+				getLandAndClientDetail();
+			}
+	}, "sale_client"); 
+	
 	new dijit.form.FilteringSelect({
 		store: parent_id_store,
 		autoComplete: false,
@@ -218,7 +232,9 @@ dojo.ready(function(){
 		onChange: function() {
 	    }
 	}, "parent_id");
+	
 	getParentbytype();
+	getSaleClie();
 });
 function enablePayment(){
 	payment_method = dijit.byId('payment_type').get('value');
@@ -233,84 +249,6 @@ function enablePayment(){
 function displayNone(){
 	//document.getElementById('divPrint1').style.display="none";
 }
-
-var customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
-var url_customer = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'get-all-customer')); ?>';
-function getallCustomer(){
-		getSaleClie();
-		getBranchinfo();
-		branch_id = dijit.byId('branch_id').get('value');
-		dojo.xhrPost({
-			url:url_customer,
-			content:{
-				'branch_id':branch_id
-				},
-			handleAs:"json",
-			load: function(data) {
-				customer_store  = getDataStorefromJSON('id','name', data);
-			    dijit.byId('customer').set('store',customer_store);   
-			},
-			error: function(err){
-			}
-		});
-}
-var url_get_invoice = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'get-invoice-no')); ?>';
-function getInvoiceNo(condition){
-	branch_id = dijit.byId('branch_id').get('value');
-	if(branch_id==0){
-		branch_id=1;
-	}
-	dojo.xhrPost({
-		url:url_get_invoice,
-		content:{
-			'branch_id':branch_id
-			},
-		handleAs:"json",
-		load: function(data) {
-		    dijit.byId('invoice').attr('value',data);   
-			if(condition==1){
-				printSave(data);
-			}
-		},
-		error: function(err) {
-		}
-	});
-}
-	
-
-var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->all_category));?> );
-
-new dijit.form.FilteringSelect({
-	store: income_category_store,
-	autoComplete: false,
-	queryExpr: "*${0}*",
-    id: "income_category",
-    name: "income_category",  
-    class: 'fullside',  
-    placeHolder:"<?php echo $tr->translate("SELECT_CATEGORY")?>", 
-    onChange: function() {          
-	   	fa_job = dijit.byId('income_category').get('value');
-	    if(fa_job==-1){
-	   	 dijit.byId("popup_category").show();
-	    }
-    } 
-}, "income_category");
-
-new dijit.form.FilteringSelect({
-	store: sale_client_store,
-	autoComplete: false,
-	queryExpr: "*${0}*",
-	required: false,		           
-	name: "sale_client",
-	id: "sale_client",
-	searchAttr: "name",
-	class: 'fullside',
-		onChange: function() {
-			getLandAndClientDetail();
-		}
-	}, "sale_client");
-	
-
 var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
 function getSaleClie(){
 	branch_id = dijit.byId('branch_id').get('value');
@@ -322,13 +260,14 @@ function getSaleClie(){
 	dojo.xhrPost({
 		url:url_getSaleClien,	
 		content:{ 
-			'branch_id': branch_id,'sale_id':'',
+			'branch_id': branch_id, 'sale_id':'',
 			'is_completed':1,
 		},
 		handleAs:"json",
-		load: function(data){	
-			sale_client_store = getDataStorefromJSON('id','name', data);		
+		load: function(data) {	
+			sale_client_store  = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('sale_client').set('store', sale_client_store);
+		    dijit.byId('sale_client').attr('value',<?php echo $this->row['sale_id'];?>); 
 		},
 		error: function(err) {
 			
@@ -337,9 +276,11 @@ function getSaleClie(){
 }
 var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
 function getLandAndClientDetail(){
-		sale_id = dijit.byId('sale_client').get('value');
-		if(sale_id==''){return false;}
-		dojo.xhrPost({
+	sale_id = dijit.byId('sale_client').get('value');
+	if(sale_id==''){
+		return false;
+	}
+	dojo.xhrPost({
 		url:url_land,	
 		content:{ 
 		    'sale_id':sale_id
@@ -351,45 +292,93 @@ function getLandAndClientDetail(){
 			
 		},
 		error: function(err) {
-			
 		}
 	});
 }
 
+var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+var url_customer = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'get-all-customer')); ?>';
+	function getallCustomer(){
+		getBranchinfo();
+		branch_id = dijit.byId('branch_id').get('value');
+		dojo.xhrPost({
+			url:url_customer,
+			content:{
+				'branch_id':branch_id
+				},
+			handleAs:"json",
+			load: function(data) {
+				customer_store  = getDataStorefromJSON('id','name', data);
+			    dijit.byId('customer').set('store',customer_store);   
+			    dijit.byId('customer').attr('value',<?php echo $this->row['client_id'];?>);  
+			},
+			error: function(err) {
+			}
+		});
+	}
+var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->all_category));?> );
+new dijit.form.FilteringSelect({
+	store: income_category_store,
+	autoComplete: false,
+	queryExpr: "*${0}*",                    
+    id: "income_category",
+    name: "income_category",  
+    class: 'fullside',  
+    placeHolder:"<?php echo $tr->translate("SELECT_CATEGORY")?>", 
+    onChange: function() {          
+	   	fa_job = dijit.byId('income_category').get('value');
+	    if(fa_job==-1){
+	   	 dijit.byId("popup_category").show();
+	    }
+    } 
+}, "income_category");
+function getBranchinfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;
+		},
+		error: function(e) {
+		}
+	});
+}
+
+function getInvoiceNo(condition){
+	getSaleClie();
+}
 function printSave(new_invoice_no){
 	getBranchinfo();
-	symbal = "$ ";
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
 		alert('Select branch');
 		dijit.byId('branch_id').focus();
 		return false;
 	}
+	
 	cate = dijit.byId('income_category').get('value');
 	if(cate=='' ||cate==-1){
 		alert('Select Category');
 		dijit.byId('income_category').focus();
 		return false;
 	}
+	symbal = "$ ";
 	total_amount = dijit.byId('total_amount').get('value');
 	if(isNaN(total_amount)){
 		alert('Income can not be null');
 		dijit.byId('total_amount').focus();
 		return false;
 	}
-//////////////////////////////////////////////////////////////////	
-	if(new_invoice_no==''){
-		getInvoiceNo(1);
-	}else{
-		dojo.byId("lb_receipt").innerHTML = new_invoice_no;
-	}
-	cus_id = dijit.byId('customer').get('value');
-	if(cus_id==-1){
-		customer_name = '';
-	}else{
-		customer_name = dijit.byId("sale_client").attr('displayedValue');
-	}
-	
 	dojo.byId("lb_receipt").innerHTML = dijit.byId("invoice").attr('displayedValue');
 	cus_id = dijit.byId('customer').get('value');
 	if(cus_id==-1){
@@ -450,10 +439,6 @@ function doPrint() {
 function printSubmit(){
 	 $('#frm_add_tran').submit();
 }
-function hideDialog1(){
-	dijit.byId('popup_category').hide();
-}
-var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var url_add_category = '<?php echo $this->url(array("module"=>"incexp","controller"=>"income","action"=>"add-category")); ?>';
 function addCategory(){
 	if(dijit.byId('frm_category').validate()){
@@ -467,14 +452,13 @@ function addCategory(){
 			    dijit.byId("popup_category").hide();
 			},
 			error: function(err) {
-				
 			}
 		});
 	}
 }
 var url_getland = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getparentbyid')); ?>';
 function getParentbytype(){
-	account_type = 12
+	account_type = 30;
 	dijit.byId('parent_id').reset();
 	dojo.xhrPost({
 		url:url_getland,	
@@ -492,7 +476,7 @@ function getParentbytype(){
 }
 var url_getland = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getparentbyid')); ?>';
 function resetStoreCategory(keyValue){
-	account_type = 12
+	account_type = 30;
 	dojo.xhrPost({
 		url:url_getland,	
 		content:{ 
@@ -508,10 +492,28 @@ function resetStoreCategory(keyValue){
 		}
 	});
 }
-
+function returnMOnth(monthnum){
+	var month = new Array();
+	month[1] = "Jan";
+	month[2] = "Feb";
+	month[3] = "Mar";
+	month[4] = "Apr";
+	month[5] = "May";
+	month[6] = "Jun";
+	month[7] = "Jul";
+	month[8] = "Aug";
+	month[9] = "Sep";
+	month[10] = "Oct";
+	month[11] = "Nov";
+	month[12] = "Dec";
+	return month[monthnum];
+}
 </script>
+
+
 <div class="dijitHidden" style="width: 22cm !important; height: 11cm ; padding: 0px; margin: 0px;">
 	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_income" >
+		
 		<table>
 			<tr>
 				<td>
@@ -533,41 +535,3 @@ function resetStoreCategory(keyValue){
 		
 	</div>
 </div>
-<script>
-function getBranchinfo(){
-	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
-	branch_id = dijit.byId('branch_id').get('value');
-	if(branch_id==""){
-		return false;
-	}
-	dojo.xhrPost({
-	    url: url_submit,	
-	    content:{ 
-		    'branch_id':branch_id
-		},	
-		load: function(data) {
-			var arr = JSON.parse(data);
-			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
-			document.getElementById('projectlogo').innerHTML = imagesUrl;
-		},
-		error: function(e) {
-		}
-	});
-}
-function returnMOnth(monthnum){
-	var month = new Array();
-	month[1] = "Jan";
-	month[2] = "Feb";
-	month[3] = "Mar";
-	month[4] = "Apr";
-	month[5] = "May";
-	month[6] = "Jun";
-	month[7] = "Jul";
-	month[8] = "Aug";
-	month[9] = "Sep";
-	month[10] = "Oct";
-	month[11] = "Nov";
-	month[12] = "Dec";
-	return month[monthnum];
-}
-</script>

@@ -1,9 +1,7 @@
 <?php
 
-class Incexp_IncomeController extends Zend_Controller_Action
+class Incexp_CreditController extends Zend_Controller_Action
 {
-	//const REDIRECT_URL = '/incexp/expense';
-	
     public function init()
     {
     	header('content-type: text/html; charset=utf8');
@@ -12,7 +10,7 @@ class Incexp_IncomeController extends Zend_Controller_Action
     public function indexAction()
     {
     	try{
-    		$db = new Incexp_Model_DbTable_DbIncome();
+    		$db = new Incexp_Model_DbTable_DbCredit();
     		if($this->getRequest()->isPost()){
     			$search=$this->getRequest()->getPost();
     		}
@@ -29,22 +27,17 @@ class Incexp_IncomeController extends Zend_Controller_Action
     			);
     		}
     		$this->view->adv_search = $search;
-			$rs_rows= $db->getAllIncome($search);//call frome model
+			$rs_rows= $db->getAllCredit($search);//call frome model
     		
     		$list = new Application_Form_Frmtable();
     		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","INCOME_TITLE","RECEIPT_NO","CATEGORY","PAYMENT_TYPE","TOTAL_INCOME","NOTE","DATE","BY_USER","STATUS");
-    		$link=array('module'=>'incexp','controller'=>'income','action'=>'edit');
+    		$link=array('module'=>'incexp','controller'=>'credit','action'=>'edit');
     		$link1=array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome');
     		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('បោះពុម្ភ'=>$link1,'branch_name'=>$link,'client_name'=>$link,'title'=>$link,'invoice'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		echo $e->getMessage();
     	}
-//     	$frm = new Incexp_Form_Frmexpense();
-//     	Application_Model_Decorator::removeAllDecorator($frm);
-//     	$this->view->frm_search = $frm;
-    	
     	$frm = new Loan_Form_FrmSearchLoan();
     	$frm = $frm->AdvanceSearch();
     	Application_Model_Decorator::removeAllDecorator($frm);
@@ -55,22 +48,19 @@ class Incexp_IncomeController extends Zend_Controller_Action
     {
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
-			$db = new Incexp_Model_DbTable_DbIncome();				
+			$db = new Incexp_Model_DbTable_DbCredit();				
 			try {
-				
-				// Check Session Expire
 				$dbgb = new Application_Model_DbTable_DbGlobal();
 				$checkses = $dbgb->checkSessionExpire();
 				if (empty($checkses)){
 					$dbgb->reloadPageExpireSession();
 					exit();
 				}
-				
-				$db->addIncome($data);
+				$db->addCredit($data);
 				if(!empty($data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/income");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/credit");
 				}else{
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/income/add");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/credit/add");
 				}				
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -78,7 +68,7 @@ class Incexp_IncomeController extends Zend_Controller_Action
 			}
 		}
 		$db = new Incexp_Model_DbTable_DbIncome();
-		$result = $db->getAllIncomeCategory();
+		$result = $db->getAllIncomeCategory(30);
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
 		$this->view->all_category = $result;
@@ -102,7 +92,7 @@ class Incexp_IncomeController extends Zend_Controller_Action
     	$id = empty($id)?0:$id;
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
-			$db = new Incexp_Model_DbTable_DbIncome();				
+			$db = new Incexp_Model_DbTable_DbCredit();				
 			try {
 				// Check Session Expire
 				$dbgb = new Application_Model_DbTable_DbGlobal();
@@ -111,22 +101,21 @@ class Incexp_IncomeController extends Zend_Controller_Action
 					$dbgb->reloadPageExpireSession();
 					exit();
 				}
-				
 				$db->updateIncome($data,$id);				
-				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', "/incexp/income");		
+				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', "/incexp/credit");		
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("UPDATE_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
 		
-		$db = new Incexp_Model_DbTable_DbIncome();
-		$row  = $db->getexpensebyid($id);
+		$db = new Incexp_Model_DbTable_DbCredit();
+		$row  = $db->getCreditbyId($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/income");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/credit");
 			exit();
 		}
-// 		$row['payment_id']=0;
+		$row['other_invoice']='';
 		$this->view->row = $row;
 		
     	$pructis=new Incexp_Form_Frmexpense();
@@ -136,7 +125,7 @@ class Incexp_IncomeController extends Zend_Controller_Action
     	
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$db = new Incexp_Model_DbTable_DbIncome();
-    	$result = $db->getAllIncomeCategory();
+    	$result = $db->getAllIncomeCategory(30);
     	array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
     	$this->view->all_category = $result;
     	
@@ -146,77 +135,5 @@ class Incexp_IncomeController extends Zend_Controller_Action
     	$frmpopup = new Application_Form_FrmPopupGlobal();
     	$this->view->footer = $frmpopup->getFooterReceipt();
 		$this->view->officailreceipt = $frmpopup->templateIncomeReceipt();
-    }
-    
-    function getRateAction(){
-    	if($this->getRequest()->isPost()){
-    		$data = $this->getRequest()->getPost();
-	    	$db = new Incexp_Model_DbTable_DbIncome();
-	    	$ex_rate = $db->getExchangeRate();
-	    	print_r(Zend_Json::encode($ex_rate));
-	    	exit();
-    	}
-    }
-    function getparentbyidAction(){
-    	if($this->getRequest()->isPost()){
-    		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-    		$data = $this->getRequest()->getPost();
-    		$db = new Incexp_Model_DbTable_DbIncome();
-    		$cate_id = "";
-    		if(!empty($data['cateid'])){
-    			$cate_id = $data['cateid'];
-    		}
-    		$parentrs = $db->getAllIncomeCategoryParent($data['type'],$cate_id);
-    		if (!empty($data['with_add_new'])){
-    			array_unshift($parentrs, array ( 'id' => -1, 'name' => $tr->translate("ADD_NEW")) );
-    		}
-    		print_r(Zend_Json::encode($parentrs));
-    		exit();
-    	}
-    }
-    function addCategoryAction(){
-    	if($this->getRequest()->isPost()){
-    		$data = $this->getRequest()->getPost();
-    		$db = new Incexp_Model_DbTable_DbIncome();
-    		$ex_rate = $db->AddNewCategory($data,1);
-    		//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
-    		print_r(Zend_Json::encode($ex_rate));
-    		exit();
-    	}
-    }
-    
-    function getAllCustomerAction(){
-    	if($this->getRequest()->isPost()){
-    		$data = $this->getRequest()->getPost();
-    		$db = new Incexp_Model_DbTable_DbIncome();
-    		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-    		$result = $db->getAllCustomer($data['branch_id']);
-    		array_unshift($result, array ( 'id' => -1, 'name' => $tr->translate("CHOOSE_CUSTOEMR")) );
-    		print_r(Zend_Json::encode($result));
-    		exit();
-    	}
-    }
-
-    function getInvoiceNoAction(){
-    	
-    	if($this->getRequest()->isPost()){
-    		$data = $this->getRequest()->getPost();
-    		$db = new Incexp_Model_DbTable_DbIncome();
-    		$result = $db->getInvoiceNo($data['branch_id']);
-    		//array_unshift($result, array ( 'id' => -1, 'name' => 'Select Customer') );
-    		print_r(Zend_Json::encode($result));
-    		exit();
-    	}
-    	
-    }
-    
-    
-    
+    }    
 }
-
-
-
-
-
-
-

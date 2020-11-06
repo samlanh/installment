@@ -129,7 +129,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$reschedule_id=$id;//for return
     		
     		$is_schedule=0;
-    		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==4 OR $data["schedule_opt"]==6){//
+    		if($data["schedule_opt"]==3 OR $data["schedule_opt"]==4 OR $data["schedule_opt"]==5 OR $data["schedule_opt"]==6){//
     			$is_schedule=1;
     		}
     			if($data['old_paymentmethod']==1){
