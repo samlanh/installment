@@ -649,7 +649,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     					
     					if($data['schedule_opt']==4 OR $data['schedule_opt']==7){//សម្រាប់រំលស់
 	    					if($index==0){						
-	    						$begining_balance = $row['begining_balance_after']-$extrapayment;
+	    						//$begining_balance = $row['begining_balance_after']-$extrapayment;
+								$begining_balance =  bcsub($row['begining_balance_after'],$extrapayment,2); 
 	    						$remain_afterextrapayment = $begining_balance;//ប្រាក់ដើមនៅសល់ពីបង់រំលស់ដើម
 	    						$interst_rate = ($data['interest_rate']/12/100);
 							   if($interst_rate!=0){
