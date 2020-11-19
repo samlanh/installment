@@ -27,8 +27,8 @@ public function init()
 		$TotalSaleIncome = $db->getTotalSaleIncome();
 		$houseRepaireIncome = $db->getTotalHouseRepaireIncome(12);
 		
-		$TotalCreditPayment = $db->getTotalSaleAmountCreditPayment();
-		$TotalCreditPayment = empty($TotalCreditPayment)?0:$TotalCreditPayment;
+		//$TotalCreditPayment = $db->getTotalSaleAmountCreditPayment();
+		//$TotalCreditPayment = empty($TotalCreditPayment)?0:$TotalCreditPayment;
 		
 		$totalRentIncome = $db->getTotalRentPaymentIncome();
 		$totalRefundRentExpense = $db->getTotalRefundRentDeposit();
@@ -51,7 +51,7 @@ public function init()
 		$TotalExpense = $db->TotalExpense()+$db->getAllComission()+$houseRepaireExpense+$totalRefundRentExpense;
 		$this->view->totalExpense = $TotalExpense;
 		
-		$totalIncome = $TotalSaleIncome+$TotalOtherIncome+$houseRepaireIncome+$totalRentIncome+$TotalCreditPayment;
+		$totalIncome = $TotalSaleIncome+$TotalOtherIncome+$houseRepaireIncome+$totalRentIncome;//+$TotalCreditPayment
 		$this->view->totalIncome = $totalIncome;
 		
 		$netincome = $totalIncome-$TotalExpense;
