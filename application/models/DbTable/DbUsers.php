@@ -323,6 +323,13 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		}else{
 			$sql.=" AND aa.controller='".$controller_name."'";
 		}
+		
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+		$user_typeid = $session_user->level;
+		$user_typeid = empty($user_typeid)?0:$user_typeid;
+		if ($user_typeid!=1){
+		$sql.=" AND ua.user_type_id='".$user_typeid."' ";
+		}
 		//
 		$order =" GROUP BY  aa.module ,aa.controller,aa.action
 		ORDER BY aa.module ,aa.rank ASC ";
