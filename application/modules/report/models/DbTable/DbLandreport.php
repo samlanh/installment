@@ -3546,6 +3546,7 @@ function updatePaymentStatus($data){
 					`l`.`land_size`                      AS `land_size`,
 					`l`.`street`                         AS `street`,
 					`l`.`id`                             AS `hous_id`,
+					`cd`.`payment_id`,
 					 (SELECT
 			     `ln_view`.`name_kh`
 			   FROM `ln_view`

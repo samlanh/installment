@@ -708,6 +708,9 @@ class Report_LoanController extends Zend_Controller_Action {
   	$id = empty($id)?0:$id;
   	$rs=$db->getPaymentSaleid($id);
   	$this->view->loantotalcollect_list =$rs;
+	
+	$this->view->creaditHistory=$db->getCreditBySaleid($id);
+	
   	if(empty($rs)){
   		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
   		exit();

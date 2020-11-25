@@ -142,7 +142,42 @@ tr{ page-break-inside:avoid; page-break-after:auto; }
                		<td class="" style="font:bolder 11px 'Khmer OS Battambang',Arial;text-align: center;"><?php echo $rs['user_name']?></td>
                 </tr>
                 <?php }?>
-            </table>
+				<?php if(!empty($this->creaditHistory)) {?>
+				<tr  bgcolor="#c1d0f3"  class="style style1 " style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+					<td colspan="17" style="text-align: left; font-weight:bold;">
+					&nbsp;<?php echo $tr->translate("CREDIT_HISTORY");?>&nbsp;
+					</td>
+				</tr>
+				<?php  foreach ($this->creaditHistory as $index => $rsCredit){ 
+				$amt_d1 = $amt_d1+$rsCredit['total_amount'];
+				$total_d=$total_d+$rsCredit['total_amount'];
+				if($rsCredit['payment_id']==1){
+					$total_cash = $total_cash + $rsCredit['total_amount'];
+				}elseif($rsCredit['payment_id']==2){
+					$total_bank = $total_bank  + $rsCredit['total_amount'];
+				}else{
+					$total_cheque = $total_cheque + $rsCredit['total_amount'];
+				}
+				?>
+				<tr  class="style style1 " style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+					<td>&nbsp;<?php echo $rsCredit["branch_name"];?>&nbsp;</td>
+               		<td>&nbsp;<?php echo $rsCredit["client_number"];?>&nbsp;</td>
+               		<td>&nbsp;<?php echo $rsCredit["name_kh"];?>&nbsp;</td>                 		
+               		<td>&nbsp;<?php echo $rsCredit["land_address"].",".$rsCredit["street"];?>&nbsp;</td>
+               		<td>&nbsp;<?php echo $rsCredit["payment_method"];?>&nbsp;</td>
+					<td>&nbsp;&nbsp;</td>
+					<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rsCredit['total_amount'],2);?>&nbsp;</td>
+					<td colspan="3">&nbsp;&nbsp;</td>
+					<td align="center" style="font:bolder 11px Arial;">&nbsp;<?php echo number_format($rsCredit['total_amount'],2);?>&nbsp;</td>
+					
+					<td colspan="2" align="center" style="white-space:nowrap; border-right:3px double black; ">&nbsp;<?php echo date("d-M-Y",strtotime($rsCredit["for_date"]));?>&nbsp;</td>
+               		<td  colspan="2" >&nbsp;<?php echo $rsCredit["invoice"];?>&nbsp;</td>
+               		<td class="" style="font:bolder 11px 'Khmer OS Battambang',Arial;text-align: center;"><?php echo $rsCredit['user_name']?></td>
+				</tr>
+				<?php }?>
+				<?php }?>
+			</table>
             <br />
              <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
                  <tr bgcolor="#c1d0f3" class="style" style="line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
