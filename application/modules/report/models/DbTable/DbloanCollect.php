@@ -241,6 +241,15 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 		$graice_pariod_late = $data["graice_pariod_late"];//ប្រភេទពិន័យ
 		$db = $this->getAdapter();
 		
+		$sql="SELECT
+				branch_id
+			FROM `ln_sale` AS s
+				WHERE s.id = $sale_id LIMIT 1";
+			$branch_id = $db->fetchOne($sql);
+		if($branch_id==2){
+			$graice_pariod_late=6;
+		}
+		
 		$sql="SELECT 
 				DATEDIFF('$end_date',sh.date_payment) AS total_latedate
 			FROM `ln_saleschedule` AS sh 
