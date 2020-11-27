@@ -30,7 +30,7 @@ class Loan_ChangpropertyController extends Zend_Controller_Action {
 					"BRANCH_NAME","PROPERTY_CODE","SOLD_PRICE","DISCOUNT_PERCENT","Discount","SOLD_PRICE","BALANCE",
 					"CHANGE_DATE","BY_USER","STATUS");
 			$link_info=array('module'=>'loan','controller'=>'changproperty','action'=>'edit',);
-			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('sale_number'=>$link_info,'client_number'=>$link_info,'name_kh'=>$link_info,'from_property'=>$link_info),0);
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array('sale_number'=>$link_info,'client_number'=>$link_info,'name_kh'=>$link_info,'from_property'=>$link_info),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -133,6 +133,25 @@ class Loan_ChangpropertyController extends Zend_Controller_Action {
 			print_r(Zend_Json::encode($row));
 			exit();
 		}
+	}
+	
+	function reprintAction(){
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		$_dbmodel = new Loan_Model_DbTable_Dbchangehouse();
+		$rs = $_dbmodel->getTransferProject($id);
+
+		if(empty($rs)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/changproperty");
+			exit();
+		}
+		$this->view->rs = $rs;
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+        $this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		
+		 $frmpopup = new Application_Form_FrmPopupGlobal();
+        $this->view->footer = $frmpopup->getFooterReceipt();
 	}
 	
 }

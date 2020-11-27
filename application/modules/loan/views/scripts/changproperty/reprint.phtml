@@ -1,0 +1,281 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
+
+?>
+<title>ប័ណ្ណប្តូរ<?php echo $tr->translate("PROPERTY_CODE");?></title>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+	.hover:hover{background: #ccc;}
+	img.view{height: 70px !important;}
+</style>
+
+
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;ប័ណ្ណប្តូរ<?php echo $tr->translate("PROPERTY_CODE");?></h4>
+			</div>
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+	<div id="divPrint" style="width: 100%; padding-top: 30px;">
+		<div id="divPrint1" style="width: 100%; height: 13cm ; padding: 0px; margin: 0px;">
+			<style>
+				#divPrint table{ font-family: 'Times New Roman','Khmer OS Battambang'; }
+				.label{ font-size: 22px;}
+				.value{ font:16px 'Times New Roman','Khmer OS Battambang';border: 1px solid #000; height: 30px; width: 100%;
+						margin-right:5px; display: block;
+						line-height: 28px;
+					    text-align: left;padding-left:3px;
+				}
+				.print tr td{
+					padding:2px 2px; 
+				}
+			   .khmerbold{font:16px 'Khmer OS Battambang';}
+			   .khmer{font:12px 'Khmer OS Battambang';}
+			   .one{white-space:nowrap;}
+				label{margin-bottom: 0px !important}
+			</style>	
+			<table style="width: 21cm !important;white-space: nowrap;font-size:16px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
+				<tr>
+					<td colspan="6">
+						<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
+							<tr>
+								<td id="projectlogo" width="25%">
+									<img style="height:75px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+								</td>						
+								<td width="50%" style="font:bold 18px 'Kh Muol';" valign="top" align="center">
+									<u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">ប័ណ្ណប្តូរ<?php echo $tr->translate("PROPERTY_CODE");?></strong></b></u>
+									<div><img src="<?php echo $this->baseUrl();?>/images/style.png" height="12px" /></div>
+								</td>
+								<td width="25%">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: -5px;" class="print" cellspacing="2px"  cellpadding="0">
+				<tr style="white-space: nowrap;">
+					<td width="10%" class="one khmerbold">ពីគម្រោង</td>
+                    <td width="26.6%"><strong><label id="lb_frombranch" class="value"></label></strong></td>
+				    <td width="10%" class="one khmerbold">&nbsp;&nbsp;&nbsp;មកគម្រោង</td>
+                    <td width="26.6%"><strong><label id="lb_tobranch" class="value"></label></strong></td>
+                    <td></td>
+                    <td width="26.6%" class="one khmerbold">សម្គាល់</td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold" width="10%">អតិថិជន</td>
+				    <td><strong><label id="lb_customer" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;<?php echo $tr->translate("PROPERTY_CODE");?></td>
+				    <td><strong><label id="lb_tohouse" class="value"></label></strong></td>
+				    <td></td>
+				    <td rowspan="5" style="border: 1px solid #000 !important;text-align: left;vertical-align: top;font-family: inherit;">
+					<span style="font-weight: normal; font-family: 'Times New Roman','Khmer OS Battambang'; white-space: pre-wrap; vertical-align: top; line-height: 20px;" id="lb_description"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="one khmerbold"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					<td ><strong><label id="lb_fromhouse" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;តម្លៃមុនលក់</td>
+					<td><strong><label id="lb_topricebefore" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">តម្លៃលក់</td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_fromprice" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;បញ្ចុះតម្លៃ</td>
+				    <td>
+				    	<table width="100%" cellpadding="0" cellspacing="0">
+				    		<tr>
+				    			<td width="50%">
+				    				<label id="lb_discountpercent" class="value"></label>
+				    			</td>
+				    			<td width="50%">
+				    				<label id="lb_discountamount" class="value"></label>
+				    			</td>
+				    		</tr>
+				    	</table>
+				    </td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">បានបង់</td>
+				    <td><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_paid" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;តម្លៃលក់</td>
+				    <td><strong><label id="lb_toprice" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td class="one khmerbold">ថ្ងៃប្តូរ</td>
+				    <td ><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_changedate" class="value"></label></strong></td>
+					<td class="one khmerbold">&nbsp;&nbsp;&nbsp;នៅជំពាក់សរុប</td>
+				    <td><strong><label id="lb_balance" class="value"></label></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+				    <td class="khmerbold" style="line-height: 14px;"   align="center" >&nbsp;&nbsp;<strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php //cho $this->data['customer_sign'];?></strong></td>
+				    <td class="khmerbold" style="line-height: 14px;" align="center" ><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';"><?php //echo $this->data['teller_sign'];?></strong></td>
+				</tr>
+				<tr style="white-space: nowrap;">
+					<td colspan="3" class="one khmerbold" align="center" valign="bottom" style="height:120px;">
+						<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+						</h4>
+					</td>
+				    <td colspan="3" class="one khmerbold" align="center" valign="bottom">&nbsp;
+				  			<h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
+				              <?php 
+				              	 
+						           echo $this->rs['userName'];?></h4>  
+					</td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 12px;">
+					<td colspan="6" valign="top" ></td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 12px;">
+					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
+					</td>
+				</tr>
+				<tr style="line-height:20px;font-size: 10px;">
+					<td colspan="6" >
+						<?php echo $this->footer;?>
+					</td>
+				</tr>
+			</table>
+		
+		</div>
+		
+		<?php if($this->data['showreceipt']>1){ ?>
+		<div id="divPrint2" style="width: 100%;height: 13cm ; padding: 0px; margin: 0px;">
+			<div style="border:2px dashed <?php echo $this->data['border_receiptcolor'];?>; vertical-align: middle; margin:100px 0px 40px 0px"></div>
+			<div id="printblog2"></div>
+		</div>
+		<?php } ?>
+	</div>
+	<div id="noteContent" style="display: none;"><?php echo $this->rs['note'];?></div>
+ </div>
+ 
+ <div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+								<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+									<i class="fa fa-print"></i>
+								</div>
+								<div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+								<div class="ptss__settings">
+									<div class="ptss__single-setting" id="ptss__layout">
+										<div class="ptss__setting-control">
+											<div class="ptss__layout-wrapper">
+												<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
+												<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+												<a class="qButton excel" href="#"  title="<?php echo $tr->translate("Export");?>"  onclick="exportExcel();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+											</div>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+							<div style="clear:both;"></div>
+ <script src="<?php echo $this->baseUrl();?>/js/pdbs_js.js"  type="text/javascript"></script>
+<script>
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 loadingBlock();
+		 getBranchInfo();
+		 printSave();
+		 setTimeout(function () {
+			 <?php if($this->data['showreceipt']>1){?>
+			 dojo.byId('printblog2').innerHTML = dojo.byId('divPrint1').innerHTML;
+			 <?php	}?>
+	        HideloadingBlock();
+	    }, 500);
+		 
+	 });
+});	 
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->rs['from_branchid'])?0:$this->rs['from_branchid'];?>';
+	if(branch_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;
+
+		},
+		error: function(e) {
+		}
+	});
+}
+function printSave(){
+	symbal=" $";
+	
+		dojo.byId("lb_customer").innerHTML = "<?php echo $this->rs['clientName'];?>";
+		
+		dojo.byId("lb_frombranch").innerHTML = '<?php echo $this->rs['fromBranchName'];?>';
+		dojo.byId("lb_fromhouse").innerHTML = '<?php echo $this->rs['fromPropertyTitle'];?>';
+		dojo.byId("lb_fromprice").innerHTML = "<?php echo number_format($this->rs['soldprice_before'],2);?>";
+		dojo.byId("lb_paid").innerHTML = "<?php echo number_format($this->rs['paid_before'],2);?>";
+		
+		dojo.byId("lb_changedate").innerHTML = '<?php echo date($montFomat,strtotime($this->rs['change_date']));?>';
+		
+		dojo.byId("lb_tobranch").innerHTML = '<?php echo $this->rs['toBranchTitle'];?>';
+		dojo.byId("lb_tohouse").innerHTML = '<?php echo $this->rs['toPropertyTitle'];?>';
+		dojo.byId("lb_topricebefore").innerHTML = '<?php echo number_format($this->rs['house_priceafter'],2);?>';
+		dojo.byId("lb_toprice").innerHTML = '<?php echo number_format($this->rs['sold_priceafter'],2);?>';
+		
+		discount_percent = '<?php echo empty($this->rs['discount_percentafter'])?0:$this->rs['discount_percentafter'];?>';
+		if(isNaN(discount_percent)){
+			discount_percent=0;
+		}
+		discount_amount = '<?php echo empty($this->rs['discount_amountafter'])?0:$this->rs['discount_amountafter'];?>';;
+		if(isNaN(discount_amount)){
+			discount_amount=0;
+		}
+		dojo.byId("lb_discountpercent").innerHTML = '<?php echo number_format($this->rs['discount_percentafter'],2);?>'+' %';
+		dojo.byId("lb_discountamount").innerHTML = '<?php echo number_format($this->rs['discount_amountafter'],2);?>'+' $';
+		
+		dojo.byId("lb_balance").innerHTML = "<?php echo number_format($this->rs['balance_after'],2);?>";
+		var div = document.getElementById('noteContent');
+
+		var htmlString = $( '#noteContent' ).html();
+		$( '#lb_description' ).text( htmlString );
+}
+
+
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    //hideDialog();
+}
+function hideleft(){
+	(dojo.style("leftmenu","display") == "none") ? 'show':'hide'();
+}
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,fullscreen=yes, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
+}
+</script>

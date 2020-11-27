@@ -377,7 +377,17 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     	}
     }
     function getTransferProject($id){
-    	$sql=" SELECT * FROM ln_change_house WHERE id= $id ";
+    	$sql=" SELECT cp.*,
+			(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.from_branchid LIMIT 1) AS fromBranchName,
+			(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.from_houseid LIMIT 1) fromPropertyTitle,
+			
+			(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.to_branchid LIMIT 1) AS toBranchTitle,
+			(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.to_houseid LIMIT 1) toPropertyTitle,
+			
+			c.name_kh as clientName,
+			(SELECT  	CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=cp.user_id limit 1 ) AS userName
+	
+		FROM `ln_change_house` AS cp,`ln_client` c WHERE c.client_id=cp.client_id AND cp.id= $id ";
     	$dbp = new Application_Model_DbTable_DbGlobal();
     	$sql.=$dbp->getAccessPermission("from_branchid");
     	$sql.=" LIMIT 1 ";

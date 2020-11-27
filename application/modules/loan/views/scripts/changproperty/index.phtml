@@ -2,6 +2,9 @@
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 echo $this->headTitle($tr->translate("CHANGPROPERTY"));
 $frm = $this->frm_search;
+
+$urlEdit = $this->baseUrl()."/loan/changproperty/edit/id/";
+$urlReprint = $this->baseUrl()."/loan/changproperty/reprint/id/";
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -49,3 +52,35 @@ dojo.require("dijit.form.DateTextBox");
 		<div class="card-box"><?php echo $this->list;?></div>
 	</div>
 </div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+			}else if(key=="reprint"){
+				url='<?php echo $urlReprint;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
+			"reprint": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-file-text", accesskey: "c"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row+'?rightclick=true', '_blank');
+}
+</script>
