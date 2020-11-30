@@ -42,6 +42,10 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$s_where = array();
     		$s_search = addslashes(trim($search['advance_search']));
     		$s_where[] = " lcrm.`receipt_no` LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lcrm.`client_id` limit 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT c.`phone` FROM `ln_client` AS c WHERE c.`client_id`=lcrm.`client_id` limit 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT land_address FROM `ln_properties` WHERE ln_properties.id=lcrm.land_id limit 1) LIKE '%{$s_search}%'";
+      	 	$s_where[] = " (SELECT street FROM `ln_properties` WHERE ln_properties.id=lcrm.land_id limit 1) LIKE '%{$s_search}%'";
     		$where .=' AND ('.implode(' OR ',$s_where).')';
     	}
     	if($search['branch_id']>0){
