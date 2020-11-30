@@ -177,7 +177,12 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 	    		if(!empty($data['interest_policy'])){//lorn city
 	    			 $arr['interest_policy']=$data['interest_policy'];
 	    		}
-    			 
+    			
+				$sale['total_duration'] = empty($sale['total_duration'])?0:$sale['total_duration'];
+				$arr['total_duration']=empty($data['period'])?$sale['total_duration']:$data['period'];
+				//$arr['total_installamount']=empty($data['total_installamount'])?0:$data['total_installamount'];
+				$arr['interest_rate']=empty($data['interest_rate'])?0:$data['interest_rate'];
+				
     	    $this->_name='ln_sale';
     	    $where = "id =".$data["loan_number"];
     		$id = $this->update($arr, $where);//add group loan

@@ -394,8 +394,15 @@ function printSave(){
 		dojo.byId("lb_fromprice").innerHTML = dojo.number.format(dijit.byId("total_sold").get('value'),{places:2});
 		dojo.byId("lb_paid").innerHTML = dojo.number.format(dijit.byId("paid_before").get('value'),{places:2});
 		dojo.byId("lb_changedate").innerHTML = dijit.byId("release_date").attr('displayedValue');
+		
+		lbl_landaddress = dijit.byId("to_land_code").attr('displayedValue');
+		sale_type = dijit.byId("typesale").get('value');
+		if(sale_type==2){
+			lbl_landaddress =  dijit.byId("land_label").get('value');
+		}
+		
 		dojo.byId("lb_tobranch").innerHTML = dijit.byId("to_branch_id").attr('displayedValue');
-		dojo.byId("lb_tohouse").innerHTML = dijit.byId("to_land_code").attr('displayedValue');
+		dojo.byId("lb_tohouse").innerHTML = lbl_landaddress;
 		dojo.byId("lb_topricebefore").innerHTML = dojo.number.format(dijit.byId("house_price").get('value'),{places:2});
 		dojo.byId("lb_toprice").innerHTML = dojo.number.format(dijit.byId("to_total_sold").get('value'),{places:2});
 		discount_percent = dijit.byId("discount_percent").get('value');
