@@ -214,7 +214,10 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		$sql3 = " select count(id) from ln_otherincomepayment where branch_id = $branch_id AND cate_type=13 ";
 		$amount2 = $db->fetchOne($sql3);
 		
-		$amount = $amount+$amount1+$amount2;
+		$sql4 = " select count(id) from rms_commission_payment where branch_id = $branch_id ";
+		$amount4 = $db->fetchOne($sql4);
+		
+		$amount = $amount+$amount1+$amount2+$amount4;
 		$pre = 'inc1:';
 		$result = $amount + 1;
 		$length = strlen((int)$result);
