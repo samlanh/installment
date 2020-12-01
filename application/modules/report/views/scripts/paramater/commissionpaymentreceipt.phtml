@@ -1,0 +1,265 @@
+<?php 
+	$frm = $this->frm_search;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$commission = $this->row;
+	$currencySymble ="$ ";
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
+?>
+<meta charset="utf-8">
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+.hover:hover{background: #ccc;}
+img.view{height: 85px !important;}
+</style>
+<title><?php echo $tr->translate("RECEIPT");?></title>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('PAYMENT_VOUCHER');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<div id="divPrint" style="width: 100%;">
+		<div id="divPrint1" style="width: 100%; height: 13cm ; padding: 0px; margin: 0px;">
+			<style>
+				table{
+					font-family:'Times New Roman','Khmer OS Battambang';
+				}
+				.fontbig{
+					font-size: 15px;	
+				}
+				.fonttel{
+					font-size: 18px;	
+				}
+				.pleft{
+					width: 110px;	
+				}
+
+				.label{ font-weight: bold;font-size: 22px;}
+				.value{ font:16px 'Times New Roman','Khmer OS Battambang';border: 1px solid #000; height: 29px; width: 100%;margin-right:5px; display: block;
+						line-height: 28px;
+						text-align: center;
+						}
+					.print tr td{
+						padding:2px 2px; 
+					}
+			   .khmerbold{font:14px 'Times New Roman','Khmer OS Battambang';}
+			   .khmer{font:16px 'Khmer OS Battambang';}
+			   .one{white-space:nowrap;}
+			   .h{ margin-top: -10px;}
+			   .noted{
+						white-space: pre-wrap;     
+						word-wrap: break-word;      
+						word-break: break-all;
+						white-space: pre;
+						font:12px 'Khmer OS Battambang';
+						border: 1px solid #000;
+					   line-height:20px;font-weight: normal !important;
+					}
+					
+				ul.listHeader {
+					list-style: none;
+					padding: 0;
+					font-size:13px;
+				}
+				ul.listHeader li span {
+					line-height: 20px;
+				}
+				li span.titleLb {
+					min-width: 120px;
+					display: inline-block;
+				}
+				li span.valueLb {
+					display: inline-block;
+					min-width: 140px;
+				}
+				
+				ul.listHeader.rightHeader {
+					text-align:right;
+				}
+				ul.listHeader.rightHeader li span.valueLb {
+					text-align: left;
+				}
+				ul.listHeader.rightHeader li span.titleLb {
+					text-align: left;
+				}
+				table.printData tr th {
+					padding:2px 0;
+				}
+			</style>
+			<table width="100%" style="font-family:'Times New Roman','Khmer OS Muol Light';white-space:nowrap;" >
+				<tr>
+					<td width="25%" id="projectlogo">
+						<img style="height:80px;" src="<?php echo $this->baseUrl().'/images/bppt_logo.png'?>">
+					</td>					
+					<td width="50%" style="font: 18px 'Times New Roman','Khmer OS Muol Light';" valign="top" align="center"><u><span style="ont-family:'Times New Roman','Khmer OS Muol Light';">បង្កាន់ដៃចំណាយ</span></u>
+						<div style="line-height:25px;"><strong style="font-size: 18px;font-weight:bold">PAYMENT VOUCHER</strong></div>
+					</td>
+					<td width="25%">
+					</td>
+				</tr>
+			</table>
+			<table width="100%" style="white-space: nowrap;font-size:14px; margin-top:10px;" cellspacing="2px"  cellpadding="0">
+				<tr>
+					<td width="50%" valign="top">
+						<ul class="listHeader leftHeader">
+							<li>
+								<span class="titleLb"><?php echo $tr->translate("AGENCY_NAME");?></span>
+								<span class="valueLb">: <?php echo $commission['agencyNname'];?></span>
+							</li>
+							<li>
+								<span class="titleLb"><?php echo $tr->translate("PAYMENT_TYPE");?></span>
+								<span class="valueLb">: <?php echo $commission['paymentType'];?></span>
+							</li>
+							<li>
+								<span class="titleLb"><?php echo $tr->translate("CHEQUE");?></span>
+								<span class="valueLb">: <?php echo $commission['cheque_no'];?></span>
+							</li>
+						</ul>
+					</td>
+					<td width="50%" valign="top">
+						<ul class="listHeader rightHeader">
+							<li>
+								<span class="titleLb"><?php echo $tr->translate("RECEIPT_NO");?></span>
+								<span class="valueLb">: <?php echo $commission['receipt_no'];?></span>
+							</li>
+							<li>
+								<span class="titleLb"><?php echo $tr->translate("DATE");?></span>
+								<span class="valueLb">: <?php echo date($montFomat,strtotime($commission['date_payment']));?></span>
+							</li>
+						</ul>
+					</td>
+				</tr>
+			<table>
+			<table class="printData"  width="100%" border="1" style="border-collapse: collapse; white-space: nowrap;font-size:12px; margin-top:-10px; " cellspacing="2px"  cellpadding="0">
+				<thead>
+					<tr class="head-td" align="center" style="background: none;  color: #000;">
+						<th><?php echo $tr->translate("NUM");?></th>
+						<th style=" min-width: 105px;"><?php echo $tr->translate("CUSTOMER_NAME");?></th>
+						<th ><?php echo $tr->translate("PROPERTY_CODE");?></th>
+						<th ><?php echo $tr->translate("COMMISSION_AMOUNT");?></th>
+						<th ><?php echo $tr->translate("DUE");?></th>
+						<th ><?php echo $tr->translate("PAYMENT_AMOUNT");?></th>
+						<th ><?php echo $tr->translate("REMAIN");?></th>
+					</tr>
+				</thead>
+				<tbody id="tableRowReceipt">
+					
+				<?php $k=0; if(!empty($this->rs)){ ?>
+					<?php  foreach($this->rs as $rs){ $k++; ?>
+					<tr style="font-size:12px; line-height: 18px;" >
+						<td align="center">&nbsp;<?php echo $k;?>&nbsp;</td>
+						<td align="left">&nbsp;<?php echo $rs['customerName'];?>&nbsp;</td>
+						<td align="left">&nbsp;<?php echo $rs['landCode']." , ".$rs['street'];?>&nbsp;</td>
+						<td align="right">&nbsp;<?php echo $currencySymble.number_format($rs['full_commission'],2);?>&nbsp;</td>
+						
+						<td align="right">&nbsp;<?php echo $currencySymble.number_format($rs['due_amount'],2);?>&nbsp;</td>
+						<td align="right">&nbsp;<?php echo $currencySymble.number_format($rs['payment_amount'],2);?>&nbsp;</td>
+						<td align="right">&nbsp;<?php echo $currencySymble.number_format($rs['remain'],2);?>&nbsp;</td>
+					</tr>
+					<?php }  ?>
+					<tr>
+						<td colspan="4" rowspan="2" style=" border-right: solid 1px #fff; border-left: solid 1px #fff;  border-bottom: solid 1px #fff;">
+							<div style="border: solid 1px #000; margin-top:4px; padding: 2px 4px;">
+							<strong style=" text-decoration: underline;">
+								<?php echo $tr->translate("NOTE");?>
+							</strong> :
+							<span style="display:block;font-weight: normal;font-family: 'Times New Roman','Khmer OS Battambang';white-space: pre-wrap;vertical-align: top;line-height: 14px; font-size: 11px;"><?php echo $commission['note'];?></span>
+							</div>
+						</td>
+						<td align="right" style="font-weight:bold; border-bottom: solid 1px #fff;">&nbsp;<?php echo $tr->translate("TOTAL_PAID");?>&nbsp;</td>
+						<td colspan="2" align="right">&nbsp;<?php echo $currencySymble.number_format($commission['total_paid'],2);?>&nbsp;</td>
+					</tr>
+					
+					<!--
+					<tr>
+						
+						<td align="right" style="font-weight:bold;">&nbsp;<?php echo $tr->translate("TOTAL_DUE");?>&nbsp;</td>
+						<td colspan="2" align="right">&nbsp;<?php echo $currencySymble.number_format($commission['total_due'],2);?>&nbsp;</td>
+					</tr>
+					-->
+				<?php }  ?>
+				<tbody>
+			</table>
+			<table width="100%" style="white-space: nowrap;font-size:12px;" cellspacing="2px"  cellpadding="0">
+				<tr style="white-space: nowrap;">
+				    <td class="khmerbold" style="line-height: 14px;"colspan="4"  align="center" >&nbsp;&nbsp;<span style=" font-family:'Times New Roman','Khmer OS Muol Light';"><?php echo $this->data['teller_sign'];?></span></td>
+				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><span style=" font-family:'Times New Roman','Khmer OS Muol Light';"><?php echo $this->data['customer_sign'];?></span></td>
+				</tr>
+				<tr style="white-space: nowrap;" height="85px;">
+					<td class="one khmerbold" colspan="4" align="center" valign="bottom">
+						<h4 id="agent-sign" style="padding-right: 5px ! important;margin-bottom: -5px  !important;">
+						<?php echo $commission['agencyNname']; ?>
+						</h4>
+					</td>
+				    <td class="one khmerbold" colspan="2" align="center" valign="bottom">&nbsp;
+			  			<h4 style="padding-right: 5px ! important;margin-bottom: -5px  !important;">
+			              <?php 
+							echo $commission['userName'];
+					      ?>
+					     </h4>  
+					</td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 10px;">
+					<td colspan="6" >
+						&nbsp;
+					</td>
+				</tr>
+				<tr style="line-height: 15px;font-size: 10px;">
+					<td colspan="6" style="border-top: 2px solid rgba(255, 235, 59, 0.88)">
+					</td>
+				</tr>
+				
+			</table>
+			<?php echo $this->footer;?>
+			
+		</div>
+		<div id="divPrint2" style="width: 100%;height: 13cm ; padding: 0px; margin: 0px;">
+			<div style="border:2px dashed <?php echo $this->data['border_receiptcolor'];?>; vertical-align: middle; margin:20px 0px 20px 0px"></div>
+			<div id="printblog2"></div>
+		</div>
+		
+		
+	</div>
+</div>
+<script>
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 getBranchInfo();
+		  setTimeout(function () {
+			 dojo.byId('printblog2').innerHTML = dojo.byId('divPrint1').innerHTML;
+	        HideloadingBlock();
+	    }, 500);
+	 });
+});	
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($commission['branch_id'])?0:$commission['branch_id'];?>';
+	if(branch_id==""){
+		return false;
+	}
+	
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

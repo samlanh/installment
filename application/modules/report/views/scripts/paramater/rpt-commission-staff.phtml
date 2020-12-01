@@ -157,7 +157,7 @@
 						 $record = $key;
 						 $expect_comission=0;
 						 $old_sale = '';
-						if(!empty($this->rscomisison))foreach($this->rscomisison as $key => $rscom){?>
+						if(!empty($this->rscomisison))foreach($this->rscomisison as $key => $rscom){ $record++;?>
 						<?php 
 							$total = $total +$rscom['total_amount'];
 							if($this->search['land_id']>0 AND $old_sale!=$rscom['saleid']){
@@ -165,8 +165,8 @@
 							}
 							$old_sale=$rscom['saleid'];
 						?>
-						 <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
-						     <td align="center">&nbsp;<?php echo $key+1+$record; ?>&nbsp;</td>
+						 <tr oncontextmenu="setrowdata(<?php echo $rscom['payment_id'];?>,1);return false;" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover context-menu-one">
+						     <td align="center">&nbsp;<?php echo $record; ?>&nbsp;</td>
 						     <td align="left">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
 							 <td>&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
 							 <td align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
@@ -174,9 +174,40 @@
 							 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
 							 <td align="right">&nbsp;<?php echo $rscom['invoice'];?>&nbsp;</td>
 							 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
-							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
+							 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
 							 <td>&nbsp;<?php echo $rscom['user_name'];?>&nbsp;</td>
 						</tr>
+						<?php } ?>
+						<?php  $old_sale = '';
+						if(!empty($this->rsCommissinPaymentDetail)) { ?>
+						<?php if(!empty($this->rscomisison)) {?>
+						<tr>
+							<td colspan="10" align="center" style="font-weight: bold;font-size: 14px;"><?php echo $tr->translate("COMMISSION_PAYMENT");?></td>
+						</tr>
+						<?php }?>
+							<?php 
+						
+							foreach($this->rsCommissinPaymentDetail as $key => $rscom){ $record++;?>
+							<?php 
+								$total = $total +$rscom['payment_amount'];
+								if($this->search['land_id']>0 AND $old_sale!=$rscom['sale_id']){
+									$expect_comission  = $expect_comission+$rscom['full_commission'];
+								}
+								$old_sale=$rscom['sale_id'];
+							?>
+							<tr oncontextmenu="setrowdata(<?php echo $rscom['payment_id'];?>,2);return false;" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover context-menu-one">
+								 <td align="center">&nbsp;<?php echo $record; ?>&nbsp;</td>
+								 <td align="left">&nbsp;<?php echo $rscom['branchName']?>&nbsp;</td>
+								 <td>&nbsp;<?php echo $rscom['agencyNname'];?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo $rscom['agencyTel'];?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
+								 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['landCode'].', '.$rscom['street'];?>&nbsp;</td>
+								 <td align="right">&nbsp;<?php echo $rscom['receipt_no'];?>&nbsp;</td>
+								 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['payment_amount'],2);?>&nbsp;</td>
+								 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($rscom['date_payment']));?>&nbsp;</td>
+								 <td>&nbsp;<?php echo $rscom['userName'];?>&nbsp;</td>
+							</tr>
+							<?php } ?>
 						<?php } ?>
 						<tr style="border:1px solid #fff;">
 							<td colspan="7" align="right" style="font-weight: bold;font-size: 14px;"><?php echo $tr->translate("TOTAL");?></td>
@@ -204,6 +235,12 @@
 		</div>
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+
+<?php 
+$urlprint = $this->baseUrl()."/report/paramater/commissionreceipt/id/";
+$urlprint1 = $this->baseUrl()."/report/paramater/commissionpaymentreceipt/id/";
+
+?>
 <script>
 	dojo.require("dojo.data.ItemFileWriteStore"); 
 	var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
@@ -263,4 +300,37 @@
 			}
 		});
 	} 
+	
+	var row=0;
+ var url="";
+ var typeprint=0;
+ $(function(){
+ 	$.contextMenu({
+ 		selector: '.context-menu-one', 
+ 		callback: function(key, options) {
+ 			var m = "clicked: " + key;
+ 			if(key=="print"){
+ 				
+				if(typeprint==1){
+					 url='<?php echo $urlprint;?>';
+				 }else{
+					url='<?php echo $urlprint1;?>';
+				 }
+ 			
+ 			}
+ 			gotoAction();
+ 		},
+ 		items: {
+ 			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
+ 		}
+ 	});
+ });
+ function setrowdata(index,typeri){
+ 	row = index;
+ 	typeprint = typeri;
+ }
+ var recordid ='';
+ function gotoAction(){
+	 window.open(url+row, '_blank');
+ }
 </script>

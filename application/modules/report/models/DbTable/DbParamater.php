@@ -1559,7 +1559,7 @@ function getAllBranch($search=null){
     		(SELECT street FROM `ln_properties` WHERE id=s.house_id) AS street,
 			st.`branch_id`,(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = st.`branch_id`) AS project_name
 			,st.`co_khname`,st.`co_lastname`,st.`co_code`,st.`sex`,
-			(SELECT  first_name FROM rms_users WHERE id = s.user_id LIMIT 1 ) AS user_name
+			(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id = s.user_id LIMIT 1 ) AS user_name
 			FROM ln_sale AS s ,
     		`ln_staff` AS st 
     	WHERE s.`comission` !=0 AND st.`co_id` = s.`staff_id` ";
@@ -2597,4 +2597,89 @@ function getAllBranch($search=null){
 		}
 		return $db->fetchOne($sql.$where);
 	}
+	
+	function getCommissionPaymentById($id){
+    	$db=$this->getAdapter();
+    	$sql="SELECT cp.*,
+		(SELECT  p.`project_name` FROM `ln_project` AS p WHERE (p.`br_id` = cp.`branch_id`) LIMIT 1) AS branchName,
+		(SELECT co_khname FROM `ln_staff` WHERE co_id=cp.agency_id LIMIT 1) AS agencyNname,
+		(SELECT name_kh FROM `ln_view` WHERE TYPE=13 AND key_code=cp.category LIMIT 1) AS categoryName,
+		(SELECT name_kh FROM `ln_view` WHERE TYPE=2 AND key_code=cp.payment_method LIMIT 1) AS paymentType,
+		(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=cp.user_id LIMIT 1 ) AS userName
+    	FROM rms_commission_payment AS cp
+    	WHERE cp.id=$id ";
+		$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("cp.`branch_id`");
+    	$sql.=" LIMIT 1 ";
+		
+    	return $db->fetchRow($sql);
+    }
+	function getCommissionPaymentDetail($payment_id){
+    	$db = $this->getAdapter();
+    	$sql="SELECT pd.*,
+				(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=s.`client_id` LIMIT 1) AS customerName,
+				(SELECT land_address FROM `ln_properties` WHERE ln_properties.id=s.house_id LIMIT 1) AS landCode,
+				(SELECT street FROM `ln_properties` WHERE ln_properties.id=s.house_id LIMIT 1) AS street,
+				(SELECT co_khname FROM `ln_staff` WHERE co_id=s.staff_id LIMIT 1) AS agencyNname,
+				(SELECT tel FROM `ln_staff` WHERE co_id=s.staff_id LIMIT 1) AS agencyTel,
+				s.full_commission
+			 FROM `rms_commission_payment_detail` AS pd,
+					ln_sale AS s
+			 WHERE s.id = pd.sale_id AND pd.payment_id =$payment_id ";
+    	return $db->fetchAll($sql);
+    }
+	
+	function getCommissionPaymentDetailList($search){
+    	$db = $this->getAdapter();
+    	$sql="SELECT pd.*,
+				(SELECT  p.`project_name` FROM `ln_project` AS p WHERE (p.`br_id` = p.`branch_id`) LIMIT 1) AS branchName,
+				(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=s.`client_id` LIMIT 1) AS customerName,
+				(SELECT land_address FROM `ln_properties` WHERE ln_properties.id=s.house_id LIMIT 1) AS landCode,
+				(SELECT street FROM `ln_properties` WHERE ln_properties.id=s.house_id LIMIT 1) AS street,
+				(SELECT co_khname FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) AS agencyNname,
+				(SELECT tel FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) AS agencyTel,
+				(SELECT sex FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) AS sex,
+				s.full_commission,
+				p.date_payment,
+				p.receipt_no,
+				(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=p.user_id LIMIT 1 ) AS userName
+			 FROM `rms_commission_payment_detail` AS pd,
+					rms_commission_payment AS p,
+					ln_sale AS s
+			 WHERE s.id = pd.sale_id 
+					AND p.id = pd.payment_id
+			 ";
+			 
+			 $Other =" ORDER BY p.id DESC ";
+		$where="";
+		$from_date =(empty($search['start_date']))? '1': " p.`date_payment` >= '".$search['start_date']." 00:00:00'";
+	    $to_date = (empty($search['end_date']))? '1': " p.`date_payment` <= '".$search['end_date']." 23:59:59'";
+	    $where.= " AND ".$from_date." AND ".$to_date;
+    	if($search['co_khname']>0){
+//     		$where.= " AND s.`staff_id` = ".$search['co_khname'];
+    		$condiction = $dbp->getChildAgency($search['co_khname']);
+    		if (!empty($condiction)){
+    			$where.=" AND p.agency_id IN ($condiction)";
+    		}else{
+    			$where.=" AND p.agency_id=".$search['co_khname'];
+    		}
+    	}
+    	if($search['branch_id']>0){
+    		$where.= " AND p.`branch_id` = ".$search['branch_id'];
+    	}
+    	if($search['land_id']>0){
+    		$where.= " AND pd.house_id = ".$search['land_id'];
+    	}
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['adv_search']));
+    		$s_where[] =" p.`receipt_no` LIKE '%{$s_search}%'";
+    		$s_where[] =" (SELECT land_address FROM `ln_properties` WHERE ln_properties.id=s.house_id LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] =" (SELECT street FROM `ln_properties` WHERE ln_properties.id=s.house_id LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[]=" (SELECT co_khname FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[]=" (SELECT co_code FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	return $db->fetchAll($sql);
+    }
 }

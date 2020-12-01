@@ -310,6 +310,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_staff=$row;
   	$this->view->rscomisison = $db->getAllCommission($search);
+  	$this->view->rsCommissinPaymentDetail = $db->getCommissionPaymentDetailList($search);
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
@@ -393,7 +394,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$id = empty($id)?0:$id;
   	$row = $db->getComissionById($id);
   	if (empty($row)){
-  		Application_Form_FrmMessage::Sucessfull("NO RECORD","/loan/comission");
+  		Application_Form_FrmMessage::Sucessfull("NO RECORD","/incexp/comission");
   		exit();
   	}
   	$this->view->row = $row;
@@ -790,5 +791,24 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$row=$frm->FrmFrmProperty();
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_property=$row;
+  }
+  
+  function commissionpaymentreceiptAction(){
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	$id = $this->getRequest()->getParam('id');
+  	$id = empty($id)?0:$id;
+  	$row = $db->getCommissionPaymentById($id);
+  	if (empty($row)){
+  		Application_Form_FrmMessage::Sucessfull("NO RECORD","/incexp/comissionpayment");
+  		exit();
+  	}
+  	$this->view->row = $row;
+  	$this->view->rs =  $db->getCommissionPaymentDetail($id);;
+  	
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footer = $frmpopup->getFooterReceipt();
   }
 }
