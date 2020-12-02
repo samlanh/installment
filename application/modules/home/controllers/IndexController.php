@@ -32,6 +32,7 @@ public function init()
 		
 		$totalRentIncome = $db->getTotalRentPaymentIncome();
 		$totalRefundRentExpense = $db->getTotalRefundRentDeposit();
+		$totalRefundRentExpense = empty($totalRefundRentExpense)?0:$totalRefundRentExpense;
 		
 		$houseRepaireExpense = abs($db->getTotalHouseRepaireIncome(13));
 		
@@ -48,7 +49,10 @@ public function init()
 		$this->view->CountCanceledSale = $db->CountCanceledSale();
 		$this->view->CancelPropertyAmount = $db->TotalExpense(1);
 		
-		$TotalExpense = $db->TotalExpense()+$db->getAllComission()+$houseRepaireExpense+$totalRefundRentExpense;
+		$totalComissionPayment = $db->getTotalComissionPayment();
+		$totalComissionPayment = empty($totalComissionPayment)?0:$totalComissionPayment;
+		
+		$TotalExpense = $db->TotalExpense()+$db->getAllComission()+$houseRepaireExpense+$totalRefundRentExpense+$totalComissionPayment;
 		$this->view->totalExpense = $TotalExpense;
 		
 		$totalIncome = $TotalSaleIncome+$TotalOtherIncome+$houseRepaireIncome+$totalRentIncome;//+$TotalCreditPayment

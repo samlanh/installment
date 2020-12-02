@@ -218,6 +218,47 @@
 							<?php }
 							?>
 					 <?php }?>
+					 <?php if(!empty($this->rowCommissionPayment)){?>
+						 <tr  style="font-size: 12px; line-height:20px;">
+						   <td align="center" colspan="14">
+							<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("COMMISSION_PAYMENT");?></span>
+						   </td>
+						 </tr>
+						 <tr class="style" align="center" >
+				        	<td><?php echo $tr->translate("NUM");?></td>
+					        <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+					        <td colspan="2"><?php echo $tr->translate("STAFF_NAME");?></td>
+					        <td>&nbsp;<?php echo $tr->translate("RECIEPT_NO");?>&nbsp;</td>
+					        <td colspan="2"><?php echo $tr->translate("CATEGORY");?></td>
+					        
+					        <td ><?php echo $tr->translate("COMISSION");?></td>
+					        <td>&nbsp;<?php echo $tr->translate("PAYMENT_TYPE");?>&nbsp;</td>
+						    <td>&nbsp;<?php echo $tr->translate("NUMBER");?>&nbsp;</td>
+						    <td>&nbsp;<?php echo $tr->translate("CHEQUE_ISSUER");?>&nbsp;</td>
+						    
+					        
+					        <td colspan="2"><?php echo $tr->translate("DATE");?></td>
+					        <td><?php echo $tr->translate("BY_USER");?></td>
+			         	</tr>
+						 <?php $c=0; foreach ($this->rowCommissionPayment AS $rs){ $c++; $total = $total +$rs['total_paid']; ?>
+							<tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
+							     <td align="center">&nbsp;<?php echo $c; ?>&nbsp;</td>
+							     <td align="center">&nbsp;<?php echo $rs['branch_name']?>&nbsp;</td>
+								 <td colspan="2" >&nbsp;<?php echo $rs['staff_name'];?> <?php if($rscom['sex']==1){ echo "(ប្រុស)";}else{ echo '(ស្រី)';} echo empty($rs['tel'])?"":" ".$rs['tel'];?> &nbsp;</td>
+								 <td align="center">&nbsp;<?php echo $rs['receipt_no'];?>&nbsp;</td>
+								 <td colspan="2">&nbsp;<?php echo $rs['category_name'];?>&nbsp;</td>
+								 
+								 <td align="right">&nbsp;<?php echo number_format($rs['total_paid'],2);?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo $rs['payment_type'];?></td>
+								 <td align="center">&nbsp;<?php echo $rs['cheque_no'];?></td>
+								 <td align="center">&nbsp;<?php echo $rs['cheque_issuer'];?></td>
+					   
+								 
+								 <td align="center" colspan="2" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($rs['date_payment']));?>&nbsp;</td>
+								 <td align="center">&nbsp;<?php echo $rs['user_name'];?></td>
+							</tr>
+						 <?php }?>
+					 <?php }?>
 					 <?php 
 		            	if (!empty($this->houserepair)){
 		            	?> 

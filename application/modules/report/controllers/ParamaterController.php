@@ -135,6 +135,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
     $this->view->search=$search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllExpense($search);
+  	$this->view->rowCommissionPayment = $db->getAllCommissionPayment($search);
   
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
@@ -335,6 +336,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->expense = $db->getExpenseCategory($search,2);
   	$this->view->withdraw_capital = $db->getExpenseCategory($search,1);
   	$this->view->expense_comission = $db->getAllComissionExpense($search);
+	$this->view->totalComissionPay = $db->getTotalComissionPayment($search);
   	
   	$this->view->saleicome = $db->geIncomeFromSale($search,null);  	
   	

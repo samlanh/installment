@@ -1875,7 +1875,7 @@ function getAllBranch($search=null){
     	function getCommissionBalance($search=null){
     		$db = $this->getAdapter();
     		$sql="SELECT 
-						(SELECT SUM(c.`total_amount`) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` AND c.status=1 LIMIT 1) AS totoal_comminssion,
+						((SELECT COALESCE(SUM(c.`total_amount`),0) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` AND c.status=1 LIMIT 1)+(SELECT COALESCE(SUM(cpd.payment_amount),0) FROM `rms_commission_payment_detail` as cpd, rms_commission_payment AS cp WHERE cp.id = cpd.payment_id AND cpd.sale_id=s.id AND cp.status=1 LIMIT 1)) AS totoal_comminssion,
 						SUM(s.`comission`) AS total_sale_commission,
 						s.id AS sale_id,
 						s.`full_commission`,
@@ -2283,7 +2283,7 @@ function getAllBranch($search=null){
 	function getSaleCommission($search=null){
 		$db = $this->getAdapter();
 		$sql="SELECT
-		(SELECT CASE WHEN SUM(c.`total_amount`)  IS NULL THEN 0 ELSE SUM(c.`total_amount`) END FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` AND c.status=1 ) AS totoal_comminssion,
+		((SELECT COALESCE(SUM(c.`total_amount`),0) FROM `ln_comission` AS c WHERE s.`id` = c.`sale_id` AND c.status=1 )+(SELECT COALESCE(SUM(cpd.payment_amount),0) FROM `rms_commission_payment_detail` as cpd, rms_commission_payment AS cp WHERE cp.id = cpd.payment_id AND cpd.sale_id=s.id AND cp.status=1 LIMIT 1)) AS totoal_comminssion,
 		SUM(s.`comission`) AS total_sale_commission,
 		s.`full_commission`,
 		s.`branch_id`,
@@ -2680,6 +2680,87 @@ function getAllBranch($search=null){
     		$s_where[]=" (SELECT co_code FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	return $db->fetchAll($sql);
+    	return $db->fetchAll($sql.$where.$Other);
     }
+	
+	function getTotalComissionPayment($search){//for income statement
+    	$db = $this->getAdapter();
+    	$sql="SELECT SUM(total_paid) FROM `rms_commission_payment` WHERE status=1 ";
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("branch_id");
+    	
+    	$from_date =(empty($search['start_date']))? '1': " date_payment >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	
+    	if($search['branch_id']>0){
+    		$where.=" AND branch_id=".$search['branch_id'];
+    	}    	
+    	return $db->fetchOne($sql.$where);
+    }
+	
+	function getAllCommissionPayment($search=null){
+    		if(empty($search['ordering'])){
+    			$search['ordering']=2;
+    		}
+    		$db = $this->getAdapter();
+    		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+    		$from_date =(empty($search['start_date']))? '1': " cp.date_payment >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " cp.date_payment <= '".$search['end_date']." 23:59:59'";
+    		$where = " AND ".$from_date." AND ".$to_date;
+    	
+    		$sql=" SELECT 
+					cp.*,
+					(SELECT  p.`project_name` FROM `ln_project` AS p WHERE (p.`br_id` = cp.`branch_id`) LIMIT 1) AS branch_name,
+					(SELECT co_khname FROM `ln_staff` WHERE co_id=cp.agency_id LIMIT 1) AS staff_name,
+					(SELECT sex FROM `ln_staff` WHERE co_id=cp.agency_id LIMIT 1) AS sex,
+					(SELECT tel FROM `ln_staff` WHERE co_id=cp.agency_id LIMIT 1) AS tel,
+					(SELECT name_kh FROM `ln_view` WHERE TYPE=13 AND key_code=cp.category LIMIT 1) AS category_name,
+					(SELECT name_kh FROM `ln_view` WHERE TYPE=2 AND key_code=cp.payment_method LIMIT 1) AS payment_type,
+					(SELECT  first_name FROM rms_users WHERE id=cp.user_id LIMIT 1 ) AS user_name 
+				FROM `rms_commission_payment` AS cp WHERE 1
+					";
+			
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("branch_id");
+    		
+    		$order="";
+    		if($search['ordering']==1){
+    			$order.=" order by cp.date_payment DESC";
+    		}
+    		if($search['ordering']==2){
+    			$order.=" order by cp.id DESC";
+    		}
+    		if(empty($search)){
+    			return $db->fetchAll($sql.$order);
+    		}
+    		if (!empty($search['adv_search'])){
+    			$s_where = array();
+    			$s_search = trim(addslashes($search['adv_search']));
+    			$s_where[] = " cp.receipt_no LIKE '%{$s_search}%'";
+				$s_where[] = " cp.total_paid LIKE '%{$s_search}%'";
+				$s_where[] = " cp.total_due LIKE '%{$s_search}%'";
+				$s_where[] = " cp.cheque_no LIKE '%{$s_search}%'";
+				$s_where[] = " cp.cheque_issuer LIKE '%{$s_search}%'";
+    			$where .=' AND ('.implode(' OR ',$s_where).')';
+    		}
+    		if(!empty($search['user_id']) AND $search['user_id']>0){
+    			$where.= " AND cp.user_id = ".$search['user_id'];
+    		}
+    		if($search['branch_id']>0){
+    			$where.= " AND cp.branch_id = ".$search['branch_id'];
+    		}
+    		if(@$search['payment_type']>0){
+    			$where.= " AND cp.payment_method = ".$search['payment_type'];
+    		}
+    		if (!empty($search['supplier_id'])){
+    			$where.= " AND cp.agency_id = ".$search['supplier_id'];
+    		}
+    		if (!empty($search['cheque_issuer_search'])){
+    			$where.= " AND cp.cheque_issuer = '".$search['cheque_issuer_search']."'";
+    		}
+    		
+    		return $db->fetchAll($sql.$where.$order);
+    	}
 }

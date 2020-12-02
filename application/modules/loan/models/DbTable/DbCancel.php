@@ -25,7 +25,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			s.staff_id,
 			s.`comission`,
 			s.full_commission,
-			(SELECT SUM(total_amount) FROM `ln_comission` WHERE sale_id=s.id AND status=1 LIMIT 1) as comission_paid,
+			((SELECT COALESCE(SUM(total_amount),0) FROM `ln_comission` WHERE sale_id=s.id AND status=1 LIMIT 1) + (SELECT COALESCE(SUM(cpd.payment_amount),0) FROM `rms_commission_payment_detail` as cpd, rms_commission_payment AS cp WHERE cp.id = cpd.payment_id AND cpd.sale_id=s.id AND cp.status=1 LIMIT 1)) AS comission_paid,
 			(SELECT category_id FROM `ln_comission` WHERE sale_id=s.id AND status=1 LIMIT 1) as category_id,
 			
 			s.`create_date`,s.`note` AS sale_note
