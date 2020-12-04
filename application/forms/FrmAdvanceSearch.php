@@ -186,7 +186,21 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$know_by->setMultiOptions($opt_know);
 		$know_by->setValue($request->getParam('know_by'));
 		
-		$this->addElements(array($know_by,$statusreq,$position_,$from_date,$to_date,$type,$employee,$_title,$_title,$_status,$_btn_search,$branch_id,$approve_by,$user));
+		$_arr = array(-1=>$this->tr->translate("PLEASE_SELECT"),0=>$this->tr->translate("DROPPED"),1=>$this->tr->translate("PROCCESSING"),2=>$this->tr->translate("WAITING_RESPONSE"),3=>$this->tr->translate("COMPLETED_CONTACT"));
+    	$_proccessSearch = new Zend_Dojo_Form_Element_FilteringSelect("proccessSearch");
+    	$_proccessSearch->setMultiOptions($_arr);
+    	$_proccessSearch->setAttribs(array(
+    			'dojoType'=>'dijit.form.FilteringSelect',
+    			'required'=>'true',
+    			'missingMessage'=>'Invalid Module!',
+    			'class'=>'fullside height-text',));
+		$_proccessSearch->setValue($request->getParam('proccessSearch'));
+		
+		$this->addElements(array($know_by,$statusreq,$position_,$from_date,$to_date,$type,$employee,$_title,$_title,$_status,$_btn_search,$branch_id,
+		$approve_by,$user,
+		$_proccessSearch
+		
+		));
 		return $this;
 	}
 	
