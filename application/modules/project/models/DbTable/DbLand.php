@@ -299,7 +299,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 // 	    		'is_lock'     => $_data['buy_status'],
 				'hardtitle'   => $_data['hardtitle'],
 				'note'        => $_data['desc'],
-				'status'	  => 1,//$_data['status'],
+				//'status'	  => 1,//$_data['status'],
 				'user_id'	  => $this->getUserId(),
 		    	'property_type'	  => $_data['property_type'],
 		    	'type_tob'	  => $_data['type_tob'],
@@ -331,6 +331,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 			}else{
 				$_arr['status']= $_data['status'];
 			}
+			
 			$_arr['is_lock']=$_data['buy_status'];
 			$where = 'id = '.$_data['id'];
 			$this->update($_arr, $where);
@@ -338,6 +339,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 			$label_new = 'Edit Property '.$land_code; 
 		}else{
 			$_arr['is_lock']=0;
+			$_arr['status']=1;
 			$_arr['create_date']=date('Y-m-d');
 			$id= $this->insert($_arr);
 		}
