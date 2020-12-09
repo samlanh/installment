@@ -870,7 +870,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
 	  $this->view->footerReport = $frmpopup->getFooterReport();
   }
   
-  function rptPropertyAction(){ // by Vandy
+  function rptPropertyAction(){ 
   	if($this->getRequest()->isPost()){
   		$search = $this->getRequest()->getPost();
   	}else{
