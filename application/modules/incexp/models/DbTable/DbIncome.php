@@ -207,7 +207,7 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		if (!is_array($cate_tree_array))
 			$cate_tree_array = array();
 		$db = $this->getAdapter();
-		$sql = " SELECT key_code AS id,name_kh AS name FROM ln_view WHERE type=$type AND status=1 AND name_kh!='' AND `parent_id` = $parent ";
+		$sql = " SELECT key_code AS id,name_kh AS name FROM ln_view WHERE type=$type AND status=1 AND name_kh!='' AND `parent_id` = $parent AND status=1";
 		$query= $db->fetchAll($sql);
 		
 		$rowCount = count($query);
@@ -231,7 +231,7 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		$db=$this->getAdapter();
 		if (!is_array($cate_tree_array))
 			$cate_tree_array = array();
-		$sql = " SELECT key_code AS id,name_kh as name FROM ln_view where type=$type AND name_kh!='' AND `parent_id` = $parent ";
+		$sql = " SELECT key_code AS id,name_kh as name FROM ln_view where type=$type AND name_kh!='' AND `parent_id` = $parent AND status=1 ";
 		if (!empty($cate_id)){
 			$sql.=" AND id != $cate_id";
 		}
