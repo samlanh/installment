@@ -60,7 +60,7 @@ body{
 										margin-top:-10px !important;
 									}
 									tr td,tr td h2,p,pre,span{ 
-										font-size: 14px ; line-height:24px !important;
+										font-size: 14px ; line-height:22px !important;
 									}
 									#padding-left{
 										padding-left: 18px;
@@ -123,10 +123,12 @@ body{
 									body {
 										margin:0.4cm 0.4cm 0cm 0.4cm;
 									}
-								
+								@media print {
+								  table.breakPage {page-break-after: always;}
+								}
 								</style>
-								<div id="mainbody" style="position: absolute;z-index: 5;height: 100%;">
-							        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang'; padding:0; margin:0;border:0px;" >
+								
+							       	<table class="breakPage" width="100%" style="font-family:'Times New Roman','Khmer OS Battambang'; padding:0; margin:0;border:0px;" >
 								        	<tr>
 								                <td width="30%" rowspan="2" valign="top" style="text-align: center;">
 												<?php $imagelogo = $this->baseUrl()."/images/logo.jpg";
@@ -134,13 +136,15 @@ body{
 														$imagelogo = $this->baseUrl()."/images/projects/".$this->agreement['project_logo'];
 													}
 													?>
-													<img src="<?php echo $imagelogo;?>" style="max-width:100%; height: 85px; margin-top: 20px;">
+													<img src="<?php echo $imagelogo;?>" style="max-width:100%; height: 80px; margin-top: 10px;">
+													<br />
+													ល.រ............................ក.ស៥២/២០២០
 												</td>
 								                <td width="40%" align="center" valign="top">
 								                	<span style="text-align:center; line-height:28px; font-size:18px;">ព្រះរាជាណាចក្រកម្ពុជា</span>
 									                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:15px; "><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></span>
 									                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:15px; font-family: 'Tacteing';"><img src="<?php echo $this->baseUrl();?>/images/style.png" height="12px"></span>
-									                <span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:14px; "><?php echo $tr->translate("កិច្ចសន្យាទិញ-លក់ដីឡូត៍ និង ទទួលប្រាក់កក់");?></span>
+									                <span style="padding:2px 0; text-align:center; line-height:28px; width: 100%; display: block; font-size:14px; "><?php echo $tr->translate("កិច្ចសន្យាទិញ-លក់ដីឡូត៍ និង ទទួលប្រាក់កក់");?></span>
 						              			</td>
 								                <td width="30%"></td>
 								             </tr>
@@ -168,14 +172,14 @@ body{
 														$address=$tr->translate("ADDRESS_COMPANY");//"ផ្ទះលេខ ៥សេ ផ្លូវជាតិលេខ៤ ភូមិកន្ទោកជើង សង្កាត់កន្ទោក ខណ្ឌពោធិ៍សែនជ័យ រាជធានី ភ្នំពេញ";
 														$wing_phone_getMoney="070 924 701";
 													?>
-													<br />
+													
 								             		<span style="margin:0 auto;font-family:'Times New Roman','Khmer OS Battambang';text-align: justify; text-justify: inter-word;font-weight: normal !important;">
 														<span style="text-align:left; min-width: 100%; display: inline-block;">
 															<span class="margin-left">&nbsp;</span>
 															<?php echo $title;?> <span style=" font-weight:600;"><?php echo $this->agreement['project_manager_namekh'];?></span>
 															ភេទ <span class="value" ><?php echo empty($arrgender[$this->agreement['p_sex']])?"":$arrgender[$this->agreement['p_sex']];?></span> 
 															សញ្ជាតិ <span class="value" ><?php echo $this->agreement['project_manager_nationality'];?></span> 
-															 កាន់អត្តសញ្ញាណប័ណ្ណលេខ  <span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> 
+															 កាន់អត្តសញ្ញាណប័ណ្ណលេខ  <span class="value" style="min-width:30px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['project_manager_nation_id']);?></span> 
 															ទីលំនៅបច្ចុប្បន្ន <?php echo $this->agreement['project_manager_p_current_address'];?> 
 															<?php if(!empty($this->agreement['w_manager_namekh'])){?>
 															និង<?php echo $titleWithManager;?> <span style=" font-weight:600;"><?php echo $this->agreement['w_manager_namekh'];?></span>
@@ -205,9 +209,9 @@ body{
 															<span class="margin-left">&nbsp;</span>
 															<?php echo $titleClient;?> <span class="value" style="min-width:30px; font-weight:600;"><?php echo $this->agreement['client_namekh'];?></span>
 															ភេទ <span class="value" style="min-width:30px;"><?php echo $this->agreement['sexKh'];?></span>
-															ថ្ងៃខែឆ្នាំកំណើត <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['dob'])){ echo date("d",strtotime($this->agreement['dob']))." ".$month[date("m",strtotime($this->agreement['dob']))]." ".date("Y",strtotime($this->agreement['dob']));}?></span>
+															ថ្ងៃខែឆ្នាំកំណើត <span class="value" style="min-width:30px;">ថ្ងៃទី<?php if (!empty($this->agreement['dob'])){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob'])))." ខែ ".$month[date("m",strtotime($this->agreement['dob']))]." ឆ្នាំ ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob'])));}?></span>
 															សញ្ជាតិ<?php echo $this->agreement['client_nationality'];?> 
-															កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:30px;"> <?php echo $this->agreement['client_nation_id'];?></span>	
+															កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:30px;"> <?php echo $dbparmeter->getNumberInkhmer($this->agreement['client_nation_id']);?></span>	
 															ទីលំនៅបច្ចុប្បន្ន<?php  if(!empty($this->agreement['client_house_no'])){ ?>ផ្ទះលេខ <span ><?php echo $this->agreement['client_house_no'];?></span><?php } ?>
 															<?php  if(!empty($this->agreement['client_street'])){ ?> ផ្លូវ <span ><?php echo $this->agreement['client_street'];?></span><?php } ?>
 															 ភូមិ <span ><?php echo str_replace("ភូមិ", "", $this->agreement['client_village_kh']);?></span>
@@ -217,9 +221,9 @@ body{
 															<?php if(!empty($this->agreement['hname_kh'])){?>
 															និងឈ្មោះ  <span style="font-weight:600;"><?php echo $this->agreement['hname_kh'];?></span> 
 															ភេទ <span class="value" style="min-width:30px;"><?php echo $this->agreement['partner_gender'];?></span>
-															ថ្ងៃខែឆ្នាំកំណើត <span class="value" style="min-width:30px;"><?php if (!empty($this->agreement['dob_buywith'])){ echo date("d",strtotime($this->agreement['dob_buywith']))." ".$month[date("m",strtotime($this->agreement['dob_buywith']))]." ".date("Y",strtotime($this->agreement['dob_buywith']));}?></span>
+															ថ្ងៃខែឆ្នាំកំណើត<span class="value" style="min-width:30px;">ថ្ងៃទី <?php if (!empty($this->agreement['dob_buywith'])){ echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob_buywith'])))." ខែ ".$month[date("m",strtotime($this->agreement['dob_buywith']))]." ឆ្នាំ ".$dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob_buywith'])));}?></span>
 															សញ្ជាតិ<?php echo $this->agreement['with_client_nationlity'];?> 
-															កាន់<?php echo $this->agreement['joint_doc_type'];?>លេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['rid_no'];?></span>  
+															កាន់<?php echo $this->agreement['joint_doc_type'];?>លេខ <span class="value" style="min-width:30px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['rid_no']);?></span>  
 															<!-- ត្រូវជា<span class="value" style="min-width:30px;"><?php //echo $this->agreement['join_type'];?></span>   -->
 															ទីលំនៅបច្ចុប្បន្ន<?php  if(!empty($this->agreement['w_client_house'])){ ?> ផ្ទះលេខ<span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_house'];?></span><?php } ?>
 															<?php  if(!empty($this->agreement['w_street'])){ ?>ផ្លូវលេខ<span class="value" style="min-width:30px;"><?php echo $this->agreement['w_street'];?></span><?php } ?>
@@ -245,20 +249,20 @@ body{
 																	ដែលមានទំហំស្មើនិង <?php echo $this->agreement['land_size'];?> ម៉ែត្រក្រឡា ក្នុងតម្លៃសរុប <strong><?php echo number_format($this->agreement['price_sold'],2);?></strong> ជាអក្សរ(<strong><span id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក</strong> ) ដីខាងលើស្ថិតនៅ <?php echo $this->agreement['project_location'];?> ។																	
 																	<br />
 																	<strong>មានព្រំប្រទល់ដូចខាងក្រោម:</strong>
-																	<table width="100%" border="0" style="  line-height: 28px;">
+																	<table width="100%" border="0" >
 																		<tr>
 																			<td width="5%">&nbsp;</td>
 																			<td width="20%">ខាងជើងទល់នឹង </td>
-																			<td><strong><?php echo $this->agreement['border_north'];?></strong></td>
+																			<td><span><?php echo $this->agreement['border_north'];?></span></td>
 																			<td width="20%">ខាងត្បូងទល់នឹង</td>
-																			<td><strong><?php echo $this->agreement['border_south'];?></strong></td>
+																			<td><span><?php echo $this->agreement['border_south'];?></span></td>
 																		</tr>
 																		<tr>
 																			<td width="5%">&nbsp;</td>
 																			<td width="20%">ខាងលិចទល់នឹង</td>
-																			<td><strong><?php echo $this->agreement['border_west'];?></strong></td>
+																			<td><span><?php echo $this->agreement['border_west'];?></span></td>
 																			<td width="20%">ខាងកើតទល់នឹង</td>
-																			<td><strong><?php echo $this->agreement['border_east'];?></strong></td>
+																			<td><span><?php echo $this->agreement['border_east'];?></span></td>
 																		</tr>
 																	</table>
 																</td>  
@@ -277,9 +281,7 @@ body{
 																dojo.byId('lable_pricekhmer').innerHTML=money_khmersold+" ";
 														</script>
 													</table>
-											
 													<span style="width: 100%; display: block; ">
-						             			
 													<span class="padding-buttom">
 							             				<span style="font-weight:600; display:inline-block;">ប្រការ២: <span id="padding-left-2">លក្ខខណ្ឌនៃការទូទាត់</span></span>
 							             			</span>
@@ -300,21 +302,17 @@ body{
 							             				<table width="100%" border="0"> 
 														  <tr>
 															    <td align="justify" style="padding-left:5px">
-																	<span class="margin-left">&nbsp;</span>
-																	<strong>៣.១</strong> ភាគី(ក)ជាម្ចាស់អចលនវត្ថុពេញច្បាប់តែមួយគត់ពុំមានបុគ្គល ឬ អង្គភាពណាមួយមានផលប្រយោជន៍លើកម្មសិទ្ធលើអចលនទ្រព្យនេះឡើយ។ភាគី(ក)នឹងប្រគល់ដីឡូត៍និងប័ណ្ណកម្មសិទ្ធិ ជូនទៅភាកី(ខ)ក្រោយពីភាគី(ខ)បានបង់ប្រាក់គ្រប់ចំនួន។
+																	<span class="margin-left">&nbsp;</span><strong>៣.១</strong> ភាគី(ក)ជាម្ចាស់អចលនវត្ថុពេញច្បាប់តែមួយគត់ពុំមានបុគ្គល ឬ អង្គភាពណាមួយមានផលប្រយោជន៍លើកម្មសិទ្ធលើអចលនទ្រព្យនេះឡើយ។ភាគី(ក)នឹងប្រគល់ដីឡូត៍និងប័ណ្ណកម្មសិទ្ធិ ជូនទៅភាកី(ខ)ក្រោយពីភាគី(ខ)បានបង់ប្រាក់គ្រប់ចំនួន។
 															   </td>  
 														  </tr>
-														
 														   <tr>
 															    <td align="justify" style="padding-left:5px">
-																	<span class="margin-left">&nbsp;</span>
-																	<strong>៣.២</strong> ភាគី(ខ)មានសិទ្ធធ្វើរបងដី ដាំដើមឈើផ្សេងៗ ក្រោយបង់ប្រាក់បានចាប់ពី30%ឡើងទៅ។
+																	<span class="margin-left">&nbsp;</span><strong>៣.២</strong> ភាគី(ខ)មានសិទ្ធធ្វើរបងដី ដាំដើមឈើផ្សេងៗ ក្រោយបង់ប្រាក់បានចាប់ពី30%ឡើងទៅ។
 															   </td>  
 														  </tr>
 														  <tr>
 															    <td align="justify" style="padding-left:5px">
-																	<span class="margin-left">&nbsp;</span>
-																	<strong>៣.៣</strong> ភាគី(ក)និងធ្វើការអភិវឌ្ឍន៍ទៅលើគម្រោងជូនអតិថិជន មានហេដ្ឋារចនាសម្ព័ន្ធដូចជា: ចាក់ដីបំពេញ ដាក់ប្រព័ន្ធលូ ប្រព័ន្ធទឹក ធ្វើផ្លូវបេតុង ដាំបង្គោលភ្លើង អូសខ្សែរភ្លើង និងដាំបង្គោលឡូត៍អោយបានត្រឹមត្រូវ។
+																	<span class="margin-left">&nbsp;</span><strong>៣.៣</strong> ភាគី(ក)នឹងធ្វើការអភិវឌ្ឍន៍​ ទៅលើគម្រោងជូនអតិថិជន មានហេដ្ឋារចនាសម្ព័ន្ធដូចជា:ចាក់ដីបំពេញ ដាក់ប្រព័ន្ធលូ ប្រព័ន្ធទឹក ធ្វើផ្លូវបេតុង ដាំបង្គោលភ្លើង អូសខ្សែរភ្លើង និងដាំបង្គោលឡូត៍អោយបានត្រឹមត្រូវ។
 															   </td>  
 														  </tr>
 													</table>
@@ -347,7 +345,10 @@ body{
 														  </tr>
 													</table>
 							             		</span>
-												
+									</table>
+									<table class="breakPage" width="100%" style="font-family:'Times New Roman','Khmer OS Battambang'; padding:0; margin:0;border:0px;" >
+								         <tr>
+								             <td colspan="3" style="text-align: justify;">								
 												<span style="width: 100%; display: block; ">
 													<span class="padding-buttom">
 							             				<span style="font-weight:600; display:inline-block;">ប្រការ៦: <span id="padding-left-2">សិទ្ធិស្នងរបស់ទាយាទ</span></span>
@@ -398,7 +399,7 @@ body{
 									<tr>
 					             	<td colspan="3" valign="top">
 										<p style=" text-align: right;">
-											ធ្វើនៅភ្នំពេញថ្ងៃទី<span class="value" style="min-width:50px;"> <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:50px;"> <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:50px;"> <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
+											ធ្វើនៅភ្នំពេញថ្ងៃទី<span class="value" style="min-width:50px;"> <?php //echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?></span>ខែ <span class="value" style="min-width:50px;"> <?php //echo $month[date("m",strtotime($this->agreement['agreement_date']))];?></span> ឆ្នាំ <span class="value" style="min-width:50px;"> <?php //echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
 										</p>
 										<br />
 					             		<table align="center" width="100%" style="font-weight:600; font-family: 'Times New Roman','Khmer OS Battambang';margin-top:-10px;">
@@ -431,9 +432,9 @@ body{
 										</table>
 					             	</td>
 					             </tr>
-								         </table>
+								</table>
 								         
-							      </div>
+							     
 								  <div id="printfooter" style=" font-size: 8px;font-family:'Khmer OS Battambang';width:100%;">
 										<span style=" font-size: 10px;"></span>
 								  </div> 

@@ -3359,7 +3359,6 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$data=$key->getKeyCodeMiniInv(TRUE);
 		
 		$footer = $this->getFooterReceipt();
-		
 		$baseurl=Zend_Controller_Front::getInstance()->getBaseUrl();
 		
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
@@ -3380,10 +3379,10 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				}
 
 				.label{ font-size: 22px;}
-				.value {
+				.value{
 				    font: 16px '."'Times New Roman'".','."'Khmer OS Battambang'".';
 				    border: 1px solid #000;
-				    height: 30px;
+				    min-height: 30px;
 				    width: 100%;
 				    margin-right: 5px;
 				    display: block;
@@ -3405,8 +3404,15 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					white-space: pre;
 					font:12px '."'Times New Roman'".','."'Khmer OS Battambang'".';
 					border: 1px solid #000;
-                   line-height:20px;font-weight: normal !important;
+                    line-height:20px;font-weight: normal !important;
                 }
+                span#lb_client_name {
+				    overflow-wrap: break-word;
+				    white-space: normal;
+				    width: 200px;
+				    display: inline-block;
+				    line-height: 24px;
+				}
 			</style>
 		';
 		$str.='
@@ -3419,9 +3425,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 									<span id="projectlogo"></span>
 								</td>					
 								<td width="50%" style="font:18px '."'Times New Roman'".','."'Khmer OS Muol Light'".';" valign="top" align="center"><u>
-									<div id="titleReceipt">
-									</div>
-									
+									<div id="titleReceipt"></div>
 								</td>
 								<td width="25%">
 								</td>
@@ -3447,7 +3451,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td class="one khmerbold" width="10%">អតិថិជន</td>
-				    <td width="40%"><strong><label id="lb_client_name" class="value"></label></strong></td>
+				    <td width="40%"><strong><label class="value"><span id="lb_client_name"></span></label></strong></td>
 					<td class="one khmerbold">&nbsp;&nbsp;ប្រភេទចំនូល</td>
 				    <td ><strong><label id="lb_category" class="value"></label></strong></td>
 				</tr>
