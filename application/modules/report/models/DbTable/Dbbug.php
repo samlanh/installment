@@ -4,6 +4,7 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       public function getRealDatescheduleandSoldprice($search = null){//ផ្ទៀងផ្ទាត់ រវាងប្រាក់លក់និង ប្រាក់ដើមក្នុងតារាងត្រូវបង់ប្រាក់សរុប
       	 $db = $this->getAdapter();
       	 $sql = " SELECT s.id,
+				(SELECT p.`project_name`  FROM `ln_project` AS p   WHERE p.`br_id` = `s`.`branch_id` LIMIT 1) AS branch_name,
 				(SELECT name_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1 )AS client_name,
 				(SELECT  CONCAT(COALESCE(`land_address`,''),',',COALESCE(`street`,'')) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
 				s.house_id,
@@ -20,6 +21,7 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       	$db = $this->getAdapter();
       	$sql="
       	SELECT s.id,
+			(SELECT p.`project_name`  FROM `ln_project` AS p   WHERE p.`br_id` = `s`.`branch_id` LIMIT 1) AS branch_name,
 		  (SELECT name_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1 )AS client_name,
 		  s.payment_id,
 		  s.client_id,s.price_sold,s.house_id,
@@ -40,6 +42,7 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       function getScheduleCompletednotUpdate(){
       	$db = $this->getAdapter();
       	$sql="SELECT s.id,
+				(SELECT p.`project_name`  FROM `ln_project` AS p   WHERE p.`br_id` = `s`.`branch_id` LIMIT 1) AS branch_name,
 				(SELECT name_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1 )AS client_name,
 				(SELECT  CONCAT(COALESCE(`land_address`,''),',',COALESCE(`street`,'')) FROM `ln_properties` WHERE ln_properties.id=s.house_id  LIMIT 1 )AS land_name,
 				s.house_id,
@@ -62,7 +65,9 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       }
       function getBeginingBalance(){
       	$db = $this->getAdapter();
-      	$sql="SELECT s.id,
+      	$sql="SELECT 
+		(SELECT p.`project_name`  FROM `ln_project` AS p   WHERE p.`br_id` = `s`.`branch_id` LIMIT 1) AS branch_name,
+		s.id,
       (SELECT name_kh FROM `ln_client` WHERE client_id=s.client_id LIMIT 1 )AS client_name,
       s.payment_id,
       s.client_id,s.price_sold,s.house_id,

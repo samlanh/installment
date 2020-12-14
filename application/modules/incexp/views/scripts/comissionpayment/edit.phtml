@@ -105,7 +105,7 @@ tr.head-td th {
 	                    	<?php echo $frm->getElement('cheque_issuer');?>
 	                   </div>
 	                </div>
-	                <div class="form-group">
+	                <div class="form-group" style="display:none;">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("COMMISSION");?> :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -693,15 +693,29 @@ function addCategory(){
 					$('#check_all').attr('checked', true); // checks it
 				}
 			if($('#mfdid_'+index).is(":checked")){
-				
 			}else{
 				dijit.byId('payment_amount'+index).set('value',0);
 				calculateAmountCheckByKeyup();
 				ResetPayment();
 			}
 		}
+		disabledAndEnableRecord();
 		calculateAmountCheck();
 		calBalance();
+	}
+	
+	function disabledAndEnableRecord(){
+		var old_identity = $("#old_identity").val();
+		var rowIDArray = old_identity.split(',');
+		for(var n = 0; n < rowIDArray.length; n++) {
+			
+			if($('#mfdid_'+rowIDArray[n]).is(":checked")){
+				dijit.byId('payment_amount'+rowIDArray[n]).set("readOnly",false);
+			}else{
+				dijit.byId('payment_amount'+rowIDArray[n]).set("readOnly",true);
+				dijit.byId('payment_amount'+rowIDArray[n]).set('value',0);
+			}
+		}
 	}
 
 	function ResetPayment(){

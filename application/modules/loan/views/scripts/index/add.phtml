@@ -19,6 +19,7 @@
 		$constraintsDate="min:'$cdate',max:'$cdate',";
 	}
 	$interestSetting = SETTING_INTEREST;
+	$freeStoreSetting = SETTING_FREE_STORE;
 ?>
 <title><?php echo $tr->translate("IL_DISBURSE");?></title>
 <style>
@@ -35,6 +36,9 @@
     padding: 10px !important;
     background: #f9f7f7;
 }
+.hiddenControl{
+	  display:none;
+  }
 </style>
 <div class="overlay">
 	<div class="overlay-load">
@@ -411,7 +415,7 @@
 				                   </div>
 				                </div>
 				                <div style="display:<?php echo($this->data['showhouseinfo']==1)?'block':'none'; ?>">
-									<div class="form-group">
+									<div class="form-group <?php if($freeStoreSetting==0){ echo "hiddenControl"; } ?>" >
 					                   <label id="lbl_store" class="control-label   col-md-5 col-sm-5 col-xs-12" >
 					                   		<strong><?php echo $tr->translate("FREE_TOP")?> </strong>
 					                   </label>

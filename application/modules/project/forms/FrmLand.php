@@ -164,7 +164,7 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 		
 		$_desc = new Zend_Dojo_Form_Element_Textarea('desc');
 		$_desc->setAttribs(array('dojoType'=>'dijit.form.Textarea','class'=>'fullside',
-				'style'=>'width:96%;min-height:50px;'));
+				'style'=>'width:96%;min-height:50px; font-size: 11px;'));
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
 		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',

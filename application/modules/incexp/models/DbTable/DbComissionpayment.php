@@ -194,7 +194,7 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
 					<label id="duelabel'.$no.'">'.number_format($row['full_commission_after'],2).'</label>
 					<input type="hidden" dojoType="dijit.form.TextBox" name="due_val'.$no.'" id="due_val'.$no.'" value="'.$row['full_commission_after'].'" >
     			</td>
-    			<td><input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="payment_amount'.$no.'" id="payment_amount'.$no.'" value="0" style="text-align: center;" ></td>
+    			<td><input type="text" readonly="readonly" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="payment_amount'.$no.'" id="payment_amount'.$no.'" value="0" style="text-align: center;" ></td>
     			<td><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="remain'.$no.'" id="remain'.$no.'" value="'.$row['full_commission_after'].'" style="text-align: center;" ></td>
     			</tr>
     			';$no++;
@@ -392,7 +392,7 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
 							<label id="duelabel'.$no.'">'.number_format($row['full_commission_after'],2).'</label>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="due_val'.$no.'" id="due_val'.$no.'" value="'.$row['full_commission_after'].'" >
 						</td>
-						<td><input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="payment_amount'.$no.'" id="payment_amount'.$no.'" value="0" style="text-align: center;" ></td>
+						<td><input type="text" readonly="readonly" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="payment_amount'.$no.'" id="payment_amount'.$no.'" value="0" style="text-align: center;" ></td>
 						<td><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="remain'.$no.'" id="remain'.$no.'" value="'.$row['full_commission_after'].'" style="text-align: center;" ></td>
 						</tr>
 						';
