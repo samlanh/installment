@@ -603,6 +603,8 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			$_pre_amount_year->setValue($data['pre_amount_year']);
 			$_pre_fix_payment->setValue($data['pre_fix_payment']);
 			
+			$data['witness_i'] = empty($data['witness_i'])?"":$data['witness_i'];
+			$data['witness_ii'] = empty($data['witness_ii'])?"":$data['witness_ii'];
 			$_witness_i->setValue($data['witness_i']);
 			$_witness_ii->setValue($data['witness_ii']);
 		}
