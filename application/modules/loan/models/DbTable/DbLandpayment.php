@@ -335,6 +335,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			   	'amount_daydelay'=>$data['delay_day'],
     			   	'other_discount'=>$data['other_discount'],//Other Discount
     			   	'street_code'=>$newpro['street_code'],
+					
+    			   	'witness_i'=>$data['witness_i'],
+    			   	'witness_ii'=>$data['witness_ii'],
+    			   	'date_setcommission'=>$data['date_buy'],
     			);   
     		if(!empty($data['interest_policy'])){
     			 $arr['interest_policy']=$data['interest_policy'];
@@ -1043,7 +1047,11 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		  		'create_date'=>date("Y-m-d"),
     		  		'user_id'=>$this->getUserId(),
     		  		'is_reschedule'=>$is_schedule,
-    		  		'status'=>$data['status_using']
+    		  		'status'=>$data['status_using'],
+					
+					'witness_i'=>empty($data['witness_i'])?"":$data['witness_i'],
+    			   	'witness_ii'=>empty($data['witness_ii'])?"":$data['witness_ii'],
+    			   	'date_setcommission'=>$data['date_buy'],
     		  );
     		  
     		$id = $data['id'];
@@ -1329,6 +1337,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'full_commission'=>$data['full_commission'],
     				'other_discount'=>$data['other_discount'],//Other Discount
     				'store_number'=>$data['store_number'],
+					
+					'witness_i'=>empty($data['witness_i'])?"":$data['witness_i'],
+    			   	'witness_ii'=>empty($data['witness_ii'])?"":$data['witness_ii'],
+    			   	'date_setcommission'=>$data['date_buy'],
     		);
     		$dbg = new Application_Model_DbTable_DbGlobal();
     		$rs_user = $dbg->getUserInfo();

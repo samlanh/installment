@@ -335,6 +335,10 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     			 	'pre_amount_year'=>$data['pre_amount_year'],
     			 	'pre_fix_payment'=>$data['pre_fix_payment'],
     			 	'store_number'=>$data['store_number'],
+					
+					'witness_i'=>$data['witness_i'],
+    			   	'witness_ii'=>$data['witness_ii'],
+    			   	'date_setcommission'=>$data['date_buy'],
     				);
     		$this->_name='ln_sale';
     		$id = $this->insert($arr);//add group loan
@@ -725,6 +729,10 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'pre_amount_year'=>$data['pre_amount_year'],
     				'pre_fix_payment'=>$data['pre_fix_payment'],
     				'store_number'=>$data['store_number'],
+					
+					'witness_i'=>$data['witness_i'],
+    			   	'witness_ii'=>$data['witness_ii'],
+    			   	'date_setcommission'=>$data['date_buy'],
     			);
     		
     		$id = $data['id'];

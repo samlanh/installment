@@ -539,6 +539,20 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 		
+		$_witness_i = new Zend_Dojo_Form_Element_TextBox('witness_i');
+		$_witness_i->setAttribs(array(
+			'dojoType'=>'dijit.form.TextBox',
+			'class'=>'fullside',
+			'placeHolder'=>$this->tr->translate("WITNESS")." I",
+		));
+		
+		$_witness_ii = new Zend_Dojo_Form_Element_TextBox('witness_ii');
+		$_witness_ii->setAttribs(array(
+			'dojoType'=>'dijit.form.TextBox',
+			'class'=>'fullside',
+			'placeHolder'=>$this->tr->translate("WITNESS")." II",
+		));
+		
 		if($data!=null){
 			$agreementdate->setValue($data['agreement_date']);
 			$_branch_id->setValue($data['branch_id']);
@@ -588,6 +602,9 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			$_pre_amount_month->setValue($data['pre_amount_month']);
 			$_pre_amount_year->setValue($data['pre_amount_year']);
 			$_pre_fix_payment->setValue($data['pre_fix_payment']);
+			
+			$_witness_i->setValue($data['witness_i']);
+			$_witness_ii->setValue($data['witness_ii']);
 		}
 		$this->addElements(array($free_tob,$grace_period,$commision_amt,$times_commission,$last_payment,$paid_date,$note_agreement,$total_discount,$delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,
@@ -603,7 +620,10 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 				$_pre_percent_installment,
 				$_pre_amount_month,
 				$_pre_amount_year,
-				$_pre_fix_payment
+				$_pre_fix_payment,
+				
+				$_witness_i,
+				$_witness_ii
 				));
 		return $this;
 		

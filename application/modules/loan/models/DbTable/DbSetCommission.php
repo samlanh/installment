@@ -19,8 +19,8 @@ class Loan_Model_DbTable_DbSetCommission extends Zend_Db_Table_Abstract
     		$str = 'name_kh';
     	}
     	
-    	$from_date =(empty($search['start_date']))? '1': " s.buy_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";
+    	$from_date =(empty($search['start_date']))? '1': " s.date_setcommission >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " s.date_setcommission <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
     	$sql=" 
     	SELECT `s`.`id` AS `id`,
@@ -45,7 +45,7 @@ class Loan_Model_DbTable_DbSetCommission extends Zend_Db_Table_Abstract
 	     (`s`.`price_sold`-SUM(`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`) - ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1)) )
 	   FROM `ln_client_receipt_money` `cr`
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance_remain`,   
-        `s`.`buy_date`        AS `buy_date`,
+        `s`.`date_setcommission`        AS `date_setcommission`,
         (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
          s.status,
          CASE    
@@ -139,7 +139,7 @@ class Loan_Model_DbTable_DbSetCommission extends Zend_Db_Table_Abstract
 						$arr = array(
 							'staff_id'=>$data['staff_id'],
 							'full_commission'=>$data['commission_amount'.$i],
-							'holiday'=>date("Y-m-d")//date set commission
+							'date_setcommission'=>date("Y-m-d")//date set commission
 							);
 						$where="id = ".$data['sale_id'.$i];
 						$this->_name="ln_sale";
