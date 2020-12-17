@@ -10,7 +10,7 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		$branch_title = $branch['branch_name'];
 	}
 ?>
 <script>
@@ -116,7 +116,7 @@
 										<tr style=" border-top: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;">
 											<td colspan="7">
 												<span style="font-family: Arial Black;color:#000; font-size: 14px;font-family:'Times New Roman','Khmer OS Muol Light'; padding:5px;" >
-												<?php echo $tr->translate("PROPERTY_TYPE")." : ".$row['property_type_name']; ?>
+												<?php echo $tr->translate("PROPERTY_TYPE")." : ".$row['propertyTypeName']; ?>
 												</span>
 											</td>
 										</tr>
@@ -127,8 +127,8 @@
 						                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 						                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 						                    <td rowspan="2"><?php echo $tr->translate("STREET");?></td>	  
-						                    <td colspan="6"><?php echo $tr->translate("PAYMENT_INFO");?></td>    
-						                    <td rowspan="2"><?php echo $tr->translate("INPUT_DATE");?></td>
+						                    <td colspan="5"><?php echo $tr->translate("PAYMENT_INFO");?></td>    
+						                    <td rowspan="2"><?php echo $tr->translate("BUY_DATE");?></td>
 						                    <td rowspan="2"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
 						                    <td rowspan="2"><?php echo $tr->translate("STATUS");?></td>
 						                    <td rowspan="2"><?php echo $tr->translate("BY_USER");?></td>
@@ -136,27 +136,27 @@
 							              <tr class="style" style="background:#c1d0f3;white-space: nowrap;text-align: center;">
 						                	<td><?php echo $tr->translate("PRINCIPLE_PICE");?></td> 
 						                    <td><?php echo $tr->translate("DISCOUNT");?></td>
-						                    <td><?php echo $tr->translate("DISCOUNT");?>%</td>                  
 						                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>	                    
 						                    <td><?php echo $tr->translate("PAID_AMOUNT");?></td>
 						                    <td><?php echo $tr->translate("BALANCE");?></td>
 							               </tr>
 							             </thead>
-									<?php }?>
+									<?php } 
+									$other_discount = empty($row['other_discount'])?0:$row['other_discount'];
+									?>
 									   <tr style="font-size: 12px;" align="left">
 									     <td align="center">&nbsp;<?php echo $i; ?></td>
-									     <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['project_name'];?>&nbsp;</td>
-									     <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_code'];?>&nbsp;</td>
-										 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_name_kh'];?>&nbsp;</td>
-										 <td align="center">&nbsp;<?php echo $row['property_name'];?>&nbsp;</td>
+									     <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+									     <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_number'];?>&nbsp;</td>
+										 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['name_kh'];?>&nbsp;</td>
+										 <td align="center">&nbsp;<?php echo $row['propertyTypeName'];?>&nbsp;</td>
 										 <td align="center">&nbsp;<?php echo $row['street'];?>&nbsp;</td>
 										 <td align="center">&nbsp;<?php echo number_format($row['price_before'],2);?>&nbsp;</td>
-										 <td align="center">&nbsp;<?php echo number_format($row['discount_amount'],2);?>&nbsp;</td>
-										 <td align="center">&nbsp;<?php echo number_format($row['discount_percent'],2);?>&nbsp;</td>
+										 <td align="center">&nbsp;<?php echo number_format($row['discount_amount']+$other_discount,2);;?>&nbsp;</td>
 										 <td align="center">&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
-										 <td align="center">&nbsp;<?php echo number_format($row['paid_amount'],2);?>&nbsp;</td>
-										 <td align="center">&nbsp;<?php echo number_format($row['price_sold']-$row['paid_amount'],2); //number_format($row['balance'],2);?>&nbsp;</td>
-										 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['create_date']));?>&nbsp;</td>
+										 <td align="center">&nbsp;<?php echo number_format($row['totalpaid_amount'],2);?>&nbsp;</td>
+										 <td align="center">&nbsp;<?php echo number_format($row['price_sold']-$row['totalpaid_amount'],2); //number_format($row['balance'],2);?>&nbsp;</td>
+										 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['buy_date']));?>&nbsp;</td>
 										 <td align="center">&nbsp;<?php echo $row['paymenttype'];?></td>
 										 <td align="center">&nbsp;<?php if ($row['is_cancel']==1){ echo $tr->translate("CANCELED");}else{ echo $tr->translate(""); }?></td>
 										 <td align="center">&nbsp;<?php echo $row['user_name'];?></td>
