@@ -12,8 +12,8 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 		$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
 		
-		$from_dateCredit =(empty($search['start_date']))? '1': " for_date >= '".$search['start_date']." 00:00:00'";
-		$to_dateCredit = (empty($search['end_date']))? '1': " for_date <= '".$search['end_date']." 23:59:59'";
+		$from_dateCredit =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+		$to_dateCredit = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
 		
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$statement = $dbp->soldreportSqlStatement();
@@ -2837,8 +2837,8 @@ function updatePaymentStatus($data){
    	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
    	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
    	
-   	$from_dateCredit =(empty($search['start_date']))? '1': " for_date >= '".$search['start_date']." 00:00:00'";
-   	$to_dateCredit = (empty($search['end_date']))? '1': " for_date <= '".$search['end_date']." 23:59:59'";
+   	$from_dateCredit =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+   	$to_dateCredit = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
    	
    	$dbp = new Application_Model_DbTable_DbGlobal();
    	$statement = $dbp->soldreportSqlStatement();
