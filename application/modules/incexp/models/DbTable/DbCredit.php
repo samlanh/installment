@@ -24,6 +24,7 @@ class Incexp_Model_DbTable_DbCredit extends Zend_Db_Table_Abstract
 				'cheque'		=>$data['cheque'],
 				'description'	=>$data['Description'],
 				'date'			=>$data['Date'],
+				'for_date'			=>$data['Date'],
 				'status'		=>1,
 				'user_id'		=>$this->getUserId(),
 				'create_date'	=>date('Y-m-d'),
@@ -51,6 +52,7 @@ class Incexp_Model_DbTable_DbCredit extends Zend_Db_Table_Abstract
 						'cheque'=>$data['cheque'],
 						'description'=>$data['Description'],
 						'date'=>$data['Date'],
+						'for_date'=>$data['Date'],
 						'status'=>$data['Stutas'],
 						'user_id'=>$this->getUserId(),
 					);

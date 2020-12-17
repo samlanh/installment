@@ -901,7 +901,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     public function getLoanInfoById($id){
     	$db=$this->getAdapter();
     	$sql=" SELECT
-    	(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) AS total_principal,
+    	((SELECT SUM(COALESCE(total_principal_permonthpaid,0)+COALESCE(extra_payment,0)) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = $id LIMIT 1))) AS total_principal,
     	(SELECT (total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 ORDER BY date_input DESC,id DESC  LIMIT 1) AS extra_payment,
     	(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) AS total_interest_paid,
     	(SELECT date_input FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 ORDER BY date_input DESC LIMIT 1) AS date_input,
