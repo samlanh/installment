@@ -870,6 +870,7 @@ function getlandinfotransfer(){
 		},		    
 		handleAs:"json",
 		load: function(data) {
+			var  streetData="";
 			var typesale =dijit.byId('typesale').get('value');
 			if(typesale==2){
 				var had = 0;
@@ -883,12 +884,14 @@ function getlandinfotransfer(){
 		 				}
 		 			}
 		 			if(had==1){}else{
+						streetData = data.street;
 		 				var identity = $("#identity_land").val();
 						var price = oldprice + parseFloat(data.price);
 						
 						oldland_code =  oldland_code+","+data.land_code;
 						//address = address+"&"+data.land_address+','+data.street;
-						address = address+","+data.land_address+','+data.street;
+						//address = address+","+data.land_address+','+data.street;
+						address = address+","+data.land_address;//+','+data.street;
 						size = parseFloat(size)+parseFloat(data.land_size);
 						height = height+" , "+data.height;
 						width = width+" , "+data.width;
@@ -905,6 +908,7 @@ function getlandinfotransfer(){
 						dijit.byId('land_label').attr('value',address);
 		 			}
 			 	}else {
+					streetData = data.street;
 			 		$("#identity_land").val(data.id);
 
 					dijit.byId('to_total_sold').attr('value',data.price);
@@ -920,13 +924,18 @@ function getlandinfotransfer(){
 		            dijit.byId('balance').attr('value',data.price-paid_before);   
 
 					oldland_code = data.land_code;
-					address = data.land_address+','+data.street;
+					//address = data.land_address+','+data.street;
+					address = data.land_address;//+','+data.street;
 					size = data.land_size;
 					height = data.height;
 					width = data.width;
 					dijit.byId('land_label').attr('value',address);
 					dojo.byId('land_information').innerHTML ="លេខដី/ផ្ទះ  "+address+","+" ទំហំ "+size+" ម៉ែត្រការ៉េ ";
 			 	}
+				addressLBB = dijit.byId('land_label').get('value',address);
+				addressLBB = addressLBB+','+streetData;
+				dijit.byId('land_label').attr('value',addressLBB);
+				dojo.byId('land_information').innerHTML ="<?php echo $tr->translate("PROPERTY_CODE");?> "+addressLBB;
 			}else{
 				dijit.byId('house_price').attr('value',data.house_price);
 				dijit.byId('to_total_sold').attr('value',data.price);

@@ -1005,12 +1005,14 @@ function getlandinfosew(landCode){
 		load: function(data) {
 			var had = 0;
 	 		var rowId = $('#identity_land').val();
+			var  streetData="";
 		 	if($("#identity_land").val()!='') {
 			 	if(had==1){}else{
 					var identity = $("#identity_land").val();
-					
+					streetData = data.street;
 					oldland_code =  oldland_code+","+data.land_code;
-					address = address+"&"+data.land_address+','+data.street;
+					//address = address+","+data.land_address+','+data.street;
+					address = address+","+data.land_address;
 					size = parseFloat(size)+parseFloat(data.land_size);
 					height = height+" , "+data.height;
 					width = width+" , "+data.width;
@@ -1045,9 +1047,11 @@ function getlandinfosew(landCode){
 					
 					}
 		 	}else {
+				streetData = data.street;
 				$("#identity_land").val(data.id);
 				oldland_code = data.land_code;
-				address = data.land_address+','+data.street;
+				//address = data.land_address+','+data.street;
+				address = data.land_address;//+','+data.street;
 				size = data.land_size;
 				height = data.height;
 				width = data.width;
@@ -1078,6 +1082,12 @@ function getlandinfosew(landCode){
 				dijit.byId("west").set("readOnly",false);
 				dijit.byId("east").set("readOnly",false);
 			}
+			
+			addressLBB = dijit.byId('land_label').get('value',address);
+			addressLBB = addressLBB+','+streetData;
+			
+			dijit.byId('land_label').attr('value',addressLBB);
+			dojo.byId('land_information').innerHTML ="<?php echo $tr->translate("PROPERTY_CODE");?> "+addressLBB;
 		 	calculateDiscount();
 		},
 		error: function(err) {
@@ -1123,6 +1133,7 @@ function getlandinfo(){
 		},		    
 		handleAs:"json",
 		load: function(data) {
+			var  streetData="";
 			if(typesale==2){//multi
 				var had = 0;
 		 		var landcode= dijit.byId('land_code').get('value');
@@ -1139,11 +1150,13 @@ function getlandinfo(){
 		 				}
 		 			}
 				 	if(had==1){}else{
+						streetData = data.street;
 						var identity = $("#identity_land").val();
 						var price = oldprice + parseFloat(data.price);
 						
 						oldland_code =  oldland_code+","+data.land_code;
-						address = address+"&"+data.land_address+','+data.street;
+						//address = address+","+data.land_address+','+data.street;
+						address = address+","+data.land_address;
 						size = parseFloat(size)+parseFloat(data.land_size);
 						height = height+" , "+data.height;
 						width = width+" , "+data.width;
@@ -1181,12 +1194,14 @@ function getlandinfo(){
 						dijit.byId("east").set("readOnly",false);
 						}
 				}else {
+						streetData = data.street;
 						$("#identity_land").val(data.id);
 						dijit.byId('total_sold').attr('value',data.price);
 						dijit.byId('sold_price').attr('value',data.price);
 
 						oldland_code = data.land_code;
-						address = data.land_address+','+data.street;
+						//address = data.land_address+','+data.street;
+						address = data.land_address;//+','+data.street;
 						size = data.land_size;
 						height = data.height;
 						width = data.width;
@@ -1217,6 +1232,10 @@ function getlandinfo(){
 						dijit.byId("west").set("readOnly",false);
 						dijit.byId("east").set("readOnly",false);
 				}
+				addressLBB = dijit.byId('land_label').get('value',address);
+				addressLBB = addressLBB+','+streetData;
+				dijit.byId('land_label').attr('value',addressLBB);
+				dojo.byId('land_information').innerHTML ="<?php echo $tr->translate("PROPERTY_CODE");?> "+addressLBB;
 				
 			}else{//normal
 				dijit.byId('total_sold').attr('value',data.price);
