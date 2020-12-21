@@ -2,6 +2,8 @@
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 echo $this->headTitle($tr->translate("CHANGE_OWNER"));
 $frm = $this->frm_search;
+$aggreeement = $tr->translate("AGREEMENT");
+$urlAgreement = $this->baseUrl()."/report/paramater/rpt-agreement-changeowner/id/";
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -54,3 +56,39 @@ dojo.require("dijit.form.DateTextBox");
 		</div>
 	</div>
 </div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+require(["dojo/ready"], function(ready){
+	ready(function(){
+	});
+	
+});
+
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="agreement"){
+				url='<?php echo $urlAgreement;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"agreement": {name: "<?php echo $aggreeement;?>", icon: "fa-file-text", accesskey: "c"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row+'?rightclick=true', '_blank');
+}
+</script>

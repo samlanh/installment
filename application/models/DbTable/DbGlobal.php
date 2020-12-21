@@ -84,7 +84,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	}
 	function  getAllBranchInfoByID($id){
 		$db = $this->getAdapter();
-		$sql = "SELECT *,project_name AS footer_title FROM ln_project where 1 and project_name!='' AND br_id = $id ORDER BY br_id DESC ";
+		$sql = "SELECT *,project_name AS branch_name,project_name AS footer_title FROM ln_project where 1 and project_name!='' AND br_id = $id ORDER BY br_id DESC ";
 		$row = $db->fetchRow($sql);
 		
 		$footer_reciept_type=FOOTER_RECEIPT_OPT;

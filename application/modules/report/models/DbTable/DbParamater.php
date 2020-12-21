@@ -2890,4 +2890,312 @@ function getAllBranch($search=null){
 		$order=" ORDER BY c.contact_date DESC,c.id DESC ";
 		return $db->fetchAll($sql.$where.$order);
 	}
+	function getAgreementByChangeOwnerSaleID($id=null){
+    		$db = $this->getAdapter();
+    		$sql="
+    		SELECT
+				  `s`.`id`              AS `id`,
+				  `s`.`sale_number`     AS `sale_number`,
+				  `s`.`payment_id`      AS `payment_id`,
+				  `s`.`branch_id`       AS `branch_id`,
+				  `s`.`client_id`       AS `client_id`,
+				  `s`.`price_before`    AS `price_before`,
+				  `s`.`discount_amount` AS `discount_amount`,
+				   s.discount_percent,
+				  `s`.`price_sold`      AS `price_sold`,
+				  `s`.`other_fee`       AS `other_fee`,
+				  `s`.`admin_fee`       AS `admin_fee`,
+				  `s`.`paid_amount`     AS `paid_amount`,
+				  `s`.`balance`         AS `balance`,
+				  `s`.`amount_collect`  AS `amount_collect`,
+				  `s`.`interest_rate`   AS `interest_rate`,
+				  `s`.`total_duration`  AS `total_duration`,
+				  `s`.`first_payment`  AS `first_payment`,
+				   s.lastpayment_amount,
+				   s.is_reschedule,
+				   s.land_price,
+				   s.amount_build,
+				   s.build_start,
+				   s.buy_date,
+				   s.`end_line`,
+    			   s.validate_date,
+				   s.agreement_date,
+				   s.note_agreement,
+				   s.is_verify,
+				   s.store_number,
+				    s.second_depostit,
+				    s.witness_i,
+				    s.witness_ii,
+				   (SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE id = s.user_id LIMIT 1 ) AS user_name,
+				   (SELECT co_khname FROM `ln_staff` WHERE co_id=s.staff_id LIMIT 1) AS staff_name,
+				   (SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.payment_id limit 1) AS payment_type,
+				  `p`.`project_name`,
+				   `p`.`logo` AS project_logo,
+				  `p`.`branch_tel`,
+				  `p`.`other` as p_other,
+				   p.p_sex,
+			      `p`.`br_address` AS `project_location`,
+			      `p`.`p_manager_namekh` AS `project_manager_namekh`,
+			      `p`.`p_manager_nationality` AS `project_manager_nationality`,
+				  `p`.`p_manager_nation_id` AS `project_manager_nation_id`,
+                  `p`.`p_current_address` AS `project_manager_p_current_address`,
+                   p.w_manager_namekh ,
+                   p.`position`,
+                   p.w_manager_nation_id,
+                   p.p_dob as manager_dob,
+                   p.`p_nationid_issue`,
+                    p.w_manager_namekh ,
+                   p.w_manager_nation_id,
+                   p.`w_manager_nationality`,
+                   p.`w_sex`,
+                   
+                   p.w_manager_nation_id,
+			    	p.w_manager_position,
+			    	p.w_manager_tel,
+			    	p.w_manager_tel AS manager_tel,
+    	
+                   p.w_managername1,
+			    	p.w_manager_position1,
+			    	p.w_position,
+			    	p.w_manager_tel1,
+			    	p.w_manager_tel1 AS with_manager_tel,
+			    	cho.change_date AS changeDate,
+    	
+                   (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=p.`w_sex` LIMIT 1) AS sc_manager_sex,
+	                  p.`w_dob`,
+	                  p.`w_current_address`,
+	                  p.`w_nation_id_issue`,
+                   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=p.p_sex limit 1) AS manager_sex ,
+				   
+                  `c`.`client_number` AS `client_code`,
+     			  `c`.`name_kh` AS `client_namekh`,
+     			  `c`.`name_en` AS `client_nameen`,
+     			   c.dob,
+     			   c.dob AS client_dob ,
+     			   c.hname_kh,
+     			   c.hname_kh AS with_client_name,
+     			   c.sex,
+    			   c.ksex,
+    			    c.join_type,
+    			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=c.ksex limit 1) AS partner_gender,
+     			   c.dob_buywith,
+     			   c.rid_no,
+     			   c.rid_no AS with_client_nation_id,
+     			   (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=c.`sex` LIMIT 1) AS client_sex,
+     			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=c.sex limit 1) AS sexKh,
+     			   (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=c.joint_doc_type limit 1) AS joint_doc_type,
+     			   (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=c.client_d_type limit 1) AS client_d_type,
+     			   
+     			   c.p_nationality,
+     			   c.p_nationality AS with_client_nationlity ,
+  				  `c`.`nationality` AS `client_nationality`,
+     			  `c`.`nation_id` AS `client_nation_id`,
+     			   c.client_issuedateid,
+     			   c.join_issuedateid,
+                  `c`.`phone` AS `client_phone`,
+  				  `c`.`house` AS `client_house_no`,
+                  `c`.`street` AS `client_street`,
+                  c.phone,
+                  c.lphone as with_phone,
+                  c.ghouse as with_house,
+                  c.dstreet AS w_street,
+                   c.arid_no AS witnesses,
+				  (SELECT
+				     `village`.`village_namekh`
+				   FROM `ln_village` `village`
+				   WHERE (`village`.`vill_id` = `c`.`qvillage`)
+				   LIMIT 1) AS `joint_village`,
+    			  (SELECT
+				     `comm`.`commune_namekh` FROM `ln_commune` `comm`
+				   WHERE (`comm`.`com_id` = `c`.`dcommune`)
+				   LIMIT 1) AS `join_commune`,
+    			 (SELECT
+				     `dist`.`district_namekh`
+				   FROM `ln_district` `dist`
+				   WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `join_district`,
+    			(SELECT
+				     `provi`.`province_kh_name`
+				   FROM `ln_province` `provi`
+				   WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `join_province`,	
+    				
+				  (SELECT
+					     `village`.`village_namekh`
+					   FROM `ln_village` `village`
+					   WHERE (`village`.`vill_id` = `c`.`village_id`
+					                                 )
+					   LIMIT 1) AS `client_village_kh`,
+				   (SELECT
+				     `comm`.`commune_namekh` FROM `ln_commune` `comm`
+				   WHERE (`comm`.`com_id` = `c`.`com_id`)
+				   LIMIT 1) AS `client_commune_kh`,
+				  (SELECT
+				     `dist`.`district_namekh`
+				   FROM `ln_district` `dist`
+				   WHERE (`dist`.`dis_id` = `c`.`dis_id`)
+				   LIMIT 1) AS `client_districtkh`,
+				  (SELECT
+				     `provi`.`province_kh_name`
+				   FROM `ln_province` `provi`
+				   WHERE (`provi`.`province_id` = `c`.`pro_id`)
+				   LIMIT 1) AS `client_province_kh`,
+				   (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=c.`ksex` LIMIT 1) AS client_buywith_sex,
+				    (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=c.`ksex` LIMIT 1) AS with_client_sex ,
+				   c.hname_kh AS w_client_namekh,
+				   c.dob_buywith AS w_client_dob_buywith,
+				   c.p_nationality AS w_client_nationality,
+				   c.`ghouse` AS w_client_house,
+					c.lphone AS w_client_phone,
+				  (SELECT
+				     `village`.`village_name`
+				   FROM `ln_village` `village`
+				   WHERE (`village`.`vill_id` = `c`.`qvillage`)
+				   LIMIT 1) AS `w_client_village_en`,
+					  (SELECT
+					     `village`.`village_namekh`
+					   FROM `ln_village` `village`
+					   WHERE (`village`.`vill_id` = `c`.`qvillage`
+					                                 )
+					   LIMIT 1) AS `w_client_village_kh`,
+				  (SELECT
+				     `comm`.`commune_name` FROM `ln_commune` `comm`
+				   WHERE (`comm`.`com_id` = `c`.`dcommune`)
+				   LIMIT 1) AS `w_client_commune_en`,
+				   
+				   (SELECT
+				     `comm`.`commune_namekh` FROM `ln_commune` `comm`
+				   WHERE (`comm`.`com_id` = `c`.`dcommune`)
+				   LIMIT 1) AS `w_client_commune_kh`,
+				  (SELECT
+				     `dist`.`district_name`
+				   FROM `ln_district` `dist`
+				   WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `w_client_district`,
+				  (SELECT
+				     `dist`.`district_namekh`
+				   FROM `ln_district` `dist`
+				   WHERE (`dist`.`dis_id` = `c`.`adistrict`)
+				   LIMIT 1) AS `w_client_districtkh`,
+				  (SELECT
+				     `provi`.`province_en_name`
+				   FROM `ln_province` `provi`
+				   WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `w_client_province_en`,
+				  (SELECT
+				     `provi`.`province_kh_name`
+				   FROM `ln_province` `provi`
+				   WHERE (`provi`.`province_id` = `c`.`cprovince`)
+				   LIMIT 1) AS `w_client_province_kh`,
+				   
+				   toc.`client_number` 			AS `to_client_code`,
+				   toc.`name_kh` 				AS `to_client_namekh`,
+				   toc.`name_en` 				AS `to_client_nameen`,
+     			   toc.dob						AS `to_dob`,
+     			   toc.dob 						AS 	to_client_dob ,
+     			   toc.hname_kh					AS 	to_hname_kh,
+     			   toc.hname_kh 				AS 	to_with_client_name,
+     			   toc.sex						AS 	to_sex,
+    			   toc.ksex						AS 	to_ksex,
+    			   toc.join_type				AS 	to_join_type,
+    			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=toc.ksex limit 1) AS to_partner_gender,
+     			   toc.dob_buywith				AS to_dob_buywith,
+     			   toc.rid_no					AS to_rid_no,
+     			   toc.rid_no 					AS to_with_client_nation_id,
+     			   (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=toc.`sex` LIMIT 1) 			AS to_client_sex,
+     			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=toc.sex limit 1) 				AS to_sexKh,
+     			   (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=toc.joint_doc_type limit 1) 	AS to_joint_doc_type,
+     			   (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=toc.client_d_type limit 1) 	AS to_client_d_type,
+				   
+				   toc.p_nationality  		AS to_p_nationality,
+     			   toc.p_nationality 		AS to_with_client_nationlity ,
+  				   toc.`nationality` 		AS to_client_nationality,
+     			   toc.`nation_id` 			AS to_client_nation_id,
+     			   toc.client_issuedateid	AS to_client_issuedateid,
+     			   toc.join_issuedateid		AS to_join_issuedateid,
+                   toc.phone 				AS to_client_phone,
+  				   toc.house 				AS to_client_house_no,
+                   toc.street 				AS to_client_street,
+                   toc.lphone 				AS to_with_phone,
+                   toc.ghouse 				AS to_with_house,
+                   toc.dstreet 				AS to_w_street,
+                   toc.arid_no 				AS to_witnesses,
+				   
+				  (SELECT `village`.`village_namekh` FROM `ln_village` `village` WHERE (`village`.`vill_id` = toc.qvillage)  LIMIT 1) 		AS to_joint_village,
+    			  (SELECT `comm`.`commune_namekh`    FROM `ln_commune` `comm`    WHERE (`comm`.`com_id` = toc.dcommune) LIMIT 1) 			AS to_join_commune,
+    			  (SELECT `dist`.`district_namekh`   FROM `ln_district` `dist`   WHERE (`dist`.`dis_id` = toc.adistrict) LIMIT 1) 			AS to_join_district,
+    			  (SELECT `provi`.`province_kh_name` FROM `ln_province` `provi`  WHERE (`provi`.`province_id` = toc.cprovince) LIMIT 1) 	AS to_join_province,	
+    				
+				  (SELECT `village`.`village_namekh` FROM `ln_village` `village` WHERE (`village`.`vill_id` = toc.village_id) LIMIT 1) 	AS to_client_village_kh,
+				  (SELECT `comm`.`commune_namekh` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = toc.com_id) LIMIT 1) 				AS to_client_commune_kh,
+				  (SELECT `dist`.`district_namekh` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = toc.dis_id) LIMIT 1) 				AS to_client_districtkh,
+				  (SELECT `provi`.`province_kh_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = toc.pro_id) LIMIT 1) 	AS to_client_province_kh,
+				  
+				  (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=toc.`ksex` LIMIT 1) AS to_client_buywith_sex,
+				  (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=toc.`ksex` LIMIT 1) AS to_with_client_sex ,
+				  
+				   toc.hname_kh 			AS to_w_client_namekh,
+				   toc.dob_buywith 			AS to_w_client_dob_buywith,
+				   toc.p_nationality 		AS to_w_client_nationality,
+				   toc.`ghouse` 			AS to_w_client_house,
+				   toc.lphone 				AS to_w_client_phone,
+				   
+				  (SELECT `village`.`village_name` FROM `ln_village` `village` WHERE (`village`.`vill_id` = toc.qvillage)  LIMIT 1) 	AS `to_w_client_village_en`,
+				  (SELECT `village`.`village_namekh` FROM `ln_village` `village` WHERE (`village`.`vill_id` = toc.qvillage)  LIMIT 1) 	AS `to_w_client_village_kh`,
+				  (SELECT `comm`.`commune_name` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = toc.`dcommune`)  LIMIT 1) 			AS `to_w_client_commune_en`,
+				   
+				  (SELECT `comm`.`commune_namekh` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = toc.`dcommune`) LIMIT 1) 			 				AS `to_w_client_commune_kh`,
+				  (SELECT `dist`.`district_name` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = toc.`adistrict`) LIMIT 1) 			 				AS `to_w_client_district`,
+				  (SELECT `dist`.`district_namekh` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = toc.`adistrict`) LIMIT 1) 		 				AS `to_w_client_districtkh`,
+				  (SELECT `provi`.`province_en_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = toc.`cprovince`) LIMIT 1) 				AS `to_w_client_province_en`,
+				  (SELECT `provi`.`province_kh_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = toc.`cprovince`) LIMIT 1) 				AS `to_w_client_province_kh`,
+				  
+				  (SELECT `prope_type`.`type_nameen` FROM `ln_properties_type` `prope_type` WHERE (`prope_type`.`id` =`pp`.`property_type`) LIMIT 1) 	AS `property_type_en`,
+				  (SELECT `prope_type`.`type_namekh` FROM `ln_properties_type` `prope_type` WHERE `prope_type`.`id` = `pp`.`property_type` LIMIT 1) AS `property_type_kh`,
+				
+				`pp`.`land_size` AS `property_land_size`,
+				
+				`pp`.`width` AS `property_width`,
+				`pp`.`height` AS `property_height`,
+				 pp.`land_size`,
+				 
+				`pp`.`property_type`,
+				`pp`.`type_tob`,
+				`pp`.`land_code` AS `property_code`,
+				`pp`.`land_address` AS `property_title`,
+				 pp.`street` AS `property_street`,
+				 
+				 pp.land_width,
+				 pp.land_height,
+				 pp.`full_size`,
+				 
+				 pp.floor,
+				 pp.living,
+				 pp.`bedroom`,
+				 pp.dinnerroom,
+				 pp.buidingyear,
+				 pp.`parkingspace`,
+				 pp.`note` as `property_note`,
+				(SELECT `property`.`land_size` FROM `ln_properties` `property` WHERE (`property`.`id` = `s`.`house_id`) LIMIT 1) AS `property_size`,
+				 pp.`north` AS border_north,
+				 pp.`south` AS border_south,
+				 pp.`east` AS border_east,
+				 pp.`west` AS border_west,
+				 pp.`old_land_id`
+			FROM 
+				ln_change_owner 	AS cho,
+				ln_sale 			AS `s`,
+				ln_project 			AS p ,
+				ln_client 			AS c,
+				ln_client 			AS toc,
+				ln_properties 		AS pp
+			WHERE 
+				cho.sale_id = s.id
+				AND `p`.`br_id` = cho.branch_id
+				AND `c`.`client_id` = cho.from_customer
+				AND  toc.`client_id` = cho.to_customer
+				AND `pp`.`id` = `s`.`house_id`
+				AND cho.id=".$id;
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$sql.=$dbp->getAccessPermission("cho.branch_id");
+    		
+    		return $db->fetchRow($sql);
+    }
 }
