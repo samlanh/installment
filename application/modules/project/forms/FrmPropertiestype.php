@@ -54,9 +54,9 @@ Class Project_Form_FrmPropertiestype extends Zend_Dojo_Form {
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				));
 		
-		$note=new Zend_Dojo_Form_Element_TextBox('note');
+		$note=new Zend_Dojo_Form_Element_Textarea('note');
 		$note->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
 		));
 	
