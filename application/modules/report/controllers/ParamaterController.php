@@ -904,15 +904,36 @@ class Report_ParamaterController extends Zend_Controller_Action {
   			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
   			exit();
   		}
-	  	$this->view->termcodiction = $db->getTermCodiction();
-	  	
 	  	$this->view->agreement = $rsagreement;
-	  	$this->view->sale_schedule = $db->getScheduleBySaleID($id,$rsagreement['payment_id']);
-	  	$this->view->first_deposit = $db->getFirstDepositAgreement($id);
 	  	
-		$this->view->totalpaid = $db->getTotalPrinciplePaidById($id);
-		$this->view->lastpaiddate = $db->getLastDatePaidById($id);
 	  	$db_keycode = new Application_Model_DbTable_DbKeycode();
 	  	$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
+  }
+  
+  function rptUseractivityAction(){
+  	$db  = new Report_Model_DbTable_DbParamater();
+  	if($this->getRequest()->isPost()){
+  		$search = $this->getRequest()->getPost();
+  	}else{
+  		$search = array(
+  				"adv_search"=>'',
+  				"branch_id"=>-1,
+  				'user_id'=>-1,
+  				'start_date'=> date('Y-m-d'),
+  				'end_date'=>date('Y-m-d'),
+				"keyword"=>'',
+				);
+  	}
+  	$this->view->search =$search;
+  	$row = $db->getUserActivity($search);
+  	$this->view->row = $row;
+  	
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  	
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
   }
 }

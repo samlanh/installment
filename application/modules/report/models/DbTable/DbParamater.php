@@ -3202,4 +3202,43 @@ function getAllBranch($search=null){
     		
     		return $db->fetchRow($sql);
     }
+	
+	function getUserActivity($search=null){
+    		$db = $this->getAdapter();
+    		$sql="SELECT 
+					u.*
+				 FROM 
+					`rns_user_activity` AS u
+				WHERE 1 ";
+    		$where ="";
+    		
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$where.=$dbp->getAccessPermission("s.`branch_id`");
+    		
+    		$from_date =(empty($search['start_date']))? '1': " u.`date_time` >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " u.`date_time` <= '".$search['end_date']." 23:59:59'";
+    		$where.= " AND ".$from_date." AND ".$to_date;
+    		
+    		//if($search['branch_id']>0){
+    		//	$where.= " AND u.`branch_id` = ".$search['branch_id'];
+    		//}
+    		
+    		if(!empty($search['adv_search'])){
+    			$s_where = array();
+				$s_search = str_replace(' ', '', addslashes(trim($search['adv_search'])));
+    			$s_where[] =" REPLACE(u.`description`,' ','') LIKE '%{$s_search}%'";
+    			$where .=' AND ( '.implode(' OR ',$s_where).')';
+    		}
+			if(!empty($search['keyword'])){
+    			$s_where = array();
+				$s_search = str_replace(' ', '', addslashes(trim($search['keyword'])));
+    			$s_where[] =" REPLACE(u.`description`,' ','') LIKE '%{$s_search}%'";
+    			$where .=' AND ( '.implode(' OR ',$s_where).')';
+    		}
+    		if($search['user_id']>0){
+    			$where.= " AND u.`user_id` = ".$search['user_id'];
+    		}
+    		$groupby =" GROUP BY u.`id` DESC";
+    		return $db->fetchAll($sql.$where.$groupby);
+    	}
 }

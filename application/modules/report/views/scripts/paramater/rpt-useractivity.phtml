@@ -1,0 +1,178 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_search;
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<meta charset="utf-8">
+<title><?php echo $tr->translate("REPORT_USER_ACTICVITY");?></title>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT_USER_ACTICVITY');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<form name="frm_rptstaff" action="" dojoType="dijit.form.Form" method="post">
+		<div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("adv_search");?>
+				</div>
+				<!--
+				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php //echo $frm->getElement("branch_id");?>
+				</div>
+				-->
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("start_date");?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("end_date");?>
+				</div>
+				
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("user_id");?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<select class="fullside" id="keyword" name="keyword" dojoType="dijit.form.FilteringSelect">
+						<option value="" ><?php echo $tr->translate("Please Select Keyword");?></option>
+						<option value="Login to System" <?php if ($this->search['keyword']=="Login to System"){ echo 'selected=selected';}?>>Login to System</option>
+						<option value="Log out From System" <?php if ($this->search['keyword']=="Log out From System"){ echo 'selected=selected';}?>>Log out From System</option>
+						<option value="Add" <?php if ($this->search['keyword']=="Add"){ echo 'selected=selected';}?>>Add</option>
+						<option value="Edit" <?php if ($this->search['keyword']=="Edit"){ echo 'selected=selected';}?>>Edit</option>
+						<option value="Issue" <?php if ($this->search['keyword']=="Issue"){ echo 'selected=selected';}?>>Issue</option>
+						<option value="Issue Deposit Sale" <?php if ($this->search['keyword']=="Issue Deposit Sale"){ echo 'selected=selected';}?>>Issue Deposit Sale</option>
+						<option value="Issue OFFICIAL RECEIPT" <?php if ($this->search['keyword']=="Issue OFFICIAL RECEIPT"){ echo 'selected=selected';}?>>Issue OFFICIAL RECEIPT</option>
+						<option value="VOID" <?php if ($this->search['keyword']=="VOID"){ echo 'selected=selected';}?>>VOID</option>
+						<option value="VOID OFFICIAL RECEIPT" <?php if ($this->search['keyword']=="VOID OFFICIAL RECEIPT"){ echo 'selected=selected';}?>>VOID OFFICIAL RECEIPT</option>
+					</select>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+			</div>
+			
+		</div>
+	</form> 
+<div id="divPrint">
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	    	 	<style>
+					.style{
+						line-height: 20px;font-size: 12px !important;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+						}
+						th{padding: 5px;}
+					.hide{visibility: hidden;}
+						@media print {
+						  div.divFooter {
+						    position: fixed;
+						    top: 0;
+						  	width: 100%;
+						  	height: 100px;
+						  	bottom:0px;
+							margin:0;
+						  }
+					.hide{visibility: visible; height: 110px;}
+					}
+					.hover:hover{background: #ccc;}
+					table.content-data{
+							border-collapse:collapse;
+							border:1px solid #000; 
+							font-size:13px;
+							font-family: 'Times New Roman','Khmer OS Battambang';
+							white-space: nowrap;
+							line-height: 22px;
+							width: 100%;
+						}
+						table.content-data thead tr.style {
+						   line-height: 25px;
+						   font-size:12px !important;
+						   padding:1px 0px;
+						   white-space: nowrap;
+						   height: 22px; 
+						   background:#ccd9ff;
+						   font-weight: bolder;
+						}
+						table.tb-footer{
+							border-collapse:collapse;
+							border:1px solid #000; 
+							font-family: 'Times New Roman','Khmer OS Battambang';
+							font-size:11px;
+						}
+						table.tb-footer tr{
+						 line-height: 14px;  padding:2px 0px; height: 25px;
+						}
+				</style>
+					<div class="divFooter">
+			        	<table width="100%" style="margin:0; padding:0;border:none;" >
+			            	<tr>
+			                	<td width="30%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="max-height:85px;max-width:100%;"></td>
+			                	<td width="40%" valign="top">
+				                	<h2 style="white-space:nowrap;line-height: 20px; font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></h2>
+				                	<h2 style="line-height: 20px; font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_USER_ACTICVITY");?></h2>
+				                	<h2 style="line-height: 20px;font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></h2>
+			                	</td>
+			                    <td width="30%"></td>
+			                </tr> 
+			            </table>
+		            </div>
+				<table id="exportExcel" class="content-data" width="100%" border="1" bordercolor="black">  
+			    	<thead>
+				    	<tr class="hide" >
+		                	<td colspan="4" style="border-top:1px solid #fff;border-right:1px solid #fff;border-left:1px solid #fff;border-botom:1px solid #000;"></td>
+		             	</tr>
+				    	
+				         <tr class="style" align="center"  >
+				            <td><?php echo $tr->translate("NUM");?></td>
+				         	<td><?php echo $tr->translate("TITLE");?></td>
+				         	<td><?php echo $tr->translate("USER_NAME");?></td>
+				         	<td><?php echo $tr->translate("DATA");?></td>
+				         	<td><?php echo $tr->translate("DATA_AFTER_EDIT");?></td>
+				         	<td><?php echo $tr->translate("DATE");?></td>
+				         	
+				         </tr>
+			         </thead>
+			       <?php  
+			       		$total = 0;
+			       		$totalpaid_com = 0;
+			       		$balance = 0;
+			       		$key=0; 
+			       	   if(!empty($this->row))foreach($this->row as $key =>$row){
+					   	   
+					  ?>
+					   <tr  style="font-size: 12px;font-family: 'Times New Roman','Khmer OS Battambang';vertical-align: top;" align="left" class="hover">
+					     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+					     <td align="left" style="white-space: nowrap; font-weight: 600;">&nbsp;<?php echo $row['description']?>&nbsp;</td>
+						 <td style="white-space: nowrap;">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
+						 <td style="white-space: nowrap;padding: 0 5px;"><?php echo $row['activityold'];?></td>
+						 <td style="white-space: nowrap;padding: 0 5px;"><?php echo $row['after_edit_info'];?></td>
+						 <td align="center">&nbsp;<?php echo date("d-m-Y H:i:s",strtotime($row['date_time']));?>&nbsp;</td>
+					</tr>
+					<?php }?>
+					
+			    </table>
+	    	</td>
+	    </tr>
+	</table>
+	   <br />
+	   <?php echo $this->footerReport;?>
+</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+	require(["dojo/ready"], function(ready){
+		ready(function(){
+		});
+		
+});
+
+</script>
