@@ -148,7 +148,7 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
     				'discount_percent'=>$data['discount_percent'],
     				'price_sold'=>$data['to_total_sold'],
     				'paid_amount'=>$paid_amount,
-    				'is_reschedule'=>3,
+    				//'is_reschedule'=>3,
     				'other_discount'=>$data['other_discount'],
     		);
     		
