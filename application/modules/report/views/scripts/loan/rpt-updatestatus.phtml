@@ -97,7 +97,13 @@ table { page-break-inside:auto }
 		                    <td colspan="3"><?php echo $tr->translate("AMOUNT");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("OS");?></td>
 		                    <td rowspan="2"><?php echo $tr->translate("OTHER");?></td>
+							
+							<td rowspan="2"><?php echo $tr->translate("ថ្ងៃបានបង់");?></td>
+							<td rowspan="2"><?php echo $tr->translate("USER_NAME");?></td>
+							
 		                    <td rowspan="2">ស្ថានការបង់</td>
+							
+							
 		                </tr>
 	                <tr class="style" align="center" style="font-weight:bold; line-height: 20px;">
 	                    <td><?php echo $tr->translate("PRINCIPAL");?></td>
@@ -145,13 +151,25 @@ table { page-break-inside:auto }
 	                    ?>
 	                    <td><?php echo number_format($remain,(!strrpos($remain,"."))? 0 : 2);?></td>
 	                    <td><?php echo ($row['is_completed']==1)?$tr->translate("COMPLETED"):""; ?></td>
-	                	<td style="width:120px;">
+	                	<td style="width:100px;">
+							<input style="border:1px solid #fff;" class="fullside" type="text" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" name="paid_date_<?php echo $key+1;?>" id="paid_date_<?php echo $key+1;?>" value="<?php echo $row['received_date'];?>" />
+						</td>
+						<td width="100px">
+		                    <select class="fullside" dojoType="dijit.form.FilteringSelect" id="user_id<?php echo $key+1;?>" name="user_id<?php echo $key+1;?>" >
+		                   		<option value="0"><?php echo $tr->translate("PLEASE_SELECT");?></option>
+		                   		<?php if (!empty($this->userlist)) foreach ($this->userlist as $stt){?>
+		                   		<option value="<?php echo $stt['id'];?>" <?php if($row['received_userid']==$stt['id']){ echo "selected='selected'"; } ?> ><?php echo $stt['name']?></option>
+		                   		<?php }?>
+		                    </select>
+	                    </td>
+						<td style="width:120px;">
 	                	<select dojoType="dijit.form.FilteringSelect"  style="width:120px;border:1px solid #fff;height: 30px;"  name="payment_option<?php echo $key+1;?>" id="payment_option<?php echo $key+1;?>">
 		                    <option value="0" <?php if($row['is_completed']==0){ echo "selected='selected'"; }?>>មិនទាន់គ្រប់</option>
 		                    <option value="1" <?php if($row['is_completed']==1){ echo "selected='selected'"; }?>>បង់ដាច់</option>
 	                    </select>
 	                    </td>
-	                </tr>
+						
+					</tr>
 	               <?php }
 	               ?>
 	            </table>

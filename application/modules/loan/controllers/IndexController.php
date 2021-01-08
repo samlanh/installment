@@ -459,5 +459,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  	$this->view->payment_option = $db->getVewOptoinTypeByType(25,null,null,1);
 	  	$db = new Application_Model_DbTable_DbGlobal();
 	  	$this->view->customer =  $db->getAllClient();
+	  	$this->view->userlist =  $db->getAllUser();
 	}
 }

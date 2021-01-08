@@ -611,6 +611,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	
   	$steppay = $db->getVewOptoinTypeByType(29);
   	$this->view->steppay =$steppay;
+	$this->view->userlist =  $db->getAllUser();
   }
   function saleAuthorizeAction(){
   	$db = new Report_Model_DbTable_DbRptPaymentSchedule();

@@ -1549,7 +1549,10 @@ function updatePaymentStatus($data){
 	  									'ispay_bank'=>$data['pay_with'.$j],
 	  									'last_optiontype'=>$paid_receivehouse,
 	  							);
-	  							
+	  							$datapayment['paid_date']=empty($data['paid_date_'.$j])?null:$data['paid_date_'.$j];
+								$datapayment['received_date']=empty($data['paid_date_'.$j])?null:$data['paid_date_'.$j];
+	  							$datapayment['received_userid']=empty($data['user_id'.$j])?null:$data['user_id'.$j];
+								
 	  							$key = $key+1;
 	  							$installment_paid = $installment_paid+$data['principal_permonth_'.$j];
 	  							if($data['payment_option'.$j]==1 OR !empty($data['paid_amount_'.$j])){//complete or paid
@@ -1672,7 +1675,9 @@ function updatePaymentStatus($data){
 	  							'last_optiontype'=>$paid_receivehouse,
 	  							'ispay_bank'=>$data['pay_with'.$i],
 	  					);
-	  					
+	  					$datapayment['paid_date']=empty($data['paid_date_'.$i])?null:$data['paid_date_'.$i];
+						$datapayment['received_date']=empty($data['paid_date_'.$i])?null:$data['paid_date_'.$i];
+						$datapayment['received_userid']=empty($data['user_id'.$i])?null:$data['user_id'.$i];
 	  					
 	  					$from_date = $data['date_payment'.$i];
 	  					$key = $key+1;
@@ -1760,7 +1765,10 @@ function updatePaymentStatus($data){
 	  									'ispay_bank'=>$data['pay_with'.$j],
 	  									'last_optiontype'=>$paid_receivehouse,
 	  							);
-	  			
+								$datapayment['paid_date']=empty($data['paid_date_'.$j])?null:$data['paid_date_'.$j];
+								$datapayment['received_date']=empty($data['paid_date_'.$j])?null:$data['paid_date_'.$j];
+	  							$datapayment['received_userid']=empty($data['user_id'.$j])?null:$data['user_id'.$j];
+								
 	  							$key = $key+1;
 	  							$installment_paid = $installment_paid+$data['principal_permonth_'.$j];
 	  							if($data['payment_option'.$j]==1 OR !empty($data['paid_amount_'.$j])){//complete or paid
@@ -2446,7 +2454,10 @@ function updatePaymentStatus($data){
   					if($data['pay_with'.$i]>0){
   						$datapayment['ispay_bank']= $data['pay_with'.$i];
   					}
-  					
+  					$datapayment['paid_date']=empty($data['paid_date_'.$i])?null:$data['paid_date_'.$i];
+					$datapayment['received_date']=empty($data['paid_date_'.$i])?null:$data['paid_date_'.$i];
+					$datapayment['received_userid']=empty($data['user_id'.$i])?null:$data['user_id'.$i];
+								
   					$where = "id = ".$data['fundid_'.$i];
   					$this->update($datapayment, $where);
 	  		}	

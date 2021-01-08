@@ -183,7 +183,8 @@ td p{ margin-top:0px !important;}
 	                    <td>បានបង់សរុប</td>
 	                    <td>ថ្ងៃបានបង់</td>
 	                    <td>ស្ថានការបង់</td>
-	                     <td><?php echo $tr->translate("TYPE");?></td>
+	                    <td><?php echo $tr->translate("USER_NAME");?></td>
+						<td><?php echo $tr->translate("TYPE");?></td>
 	                </tr>
 	               <?php
 					   $indentity = "";
@@ -215,11 +216,20 @@ td p{ margin-top:0px !important;}
 	                   	 	<input class="fullside" style="border:1px solid #fff;" type="text" onkeyup="calculatePaid(<?php echo $key+1;?>)" name="paid_principal<?php echo $key+1;?>" dojoType="dijit.form.NumberTextBox"  id="paid_principal<?php echo $key+1;?>" value="<?php echo $row['principal_paid'];?>" /></td>
 	                    <td style="width:100px;"><input class="fullside" style="border:1px solid #fff;"  type="text" onkeyup="calculatePaid(<?php echo $key+1;?>)" dojoType="dijit.form.NumberTextBox" name="interest_paid<?php echo $key+1;?>" id="interest_paid<?php echo $key+1;?>" value="<?php echo $row['total_interestpaid'];?>" /></td>
 	                    <td><input readonly style="border:1px solid #fff;" class="fullside" type="text" dojoType="dijit.form.NumberTextBox" name="paid_amount_<?php echo $key+1;?>" id="paid_amount_<?php echo $key+1;?>" value="<?php echo $row['total_recieve'];?>" /></td>
-	                    <td style="width:100px;"><input style="border:1px solid #fff;" class="fullside" type="text" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" name="paid_date_<?php echo $key+1;?>" id="paid_date_<?php echo $key+1;?>" value="<?php echo $row['paid_date'];?>" />
+	                    <td style="width:100px;"><input style="border:1px solid #fff;" class="fullside" type="text" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" name="paid_date_<?php echo $key+1;?>" id="paid_date_<?php echo $key+1;?>" value="<?php echo $row['received_date'];?>" />
 	                    <td style="width:120px;"><select dojoType="dijit.form.FilteringSelect" class="fullside"  style="border:1px solid #fff;height: 30px;"  name="payment_option<?php echo $key+1;?>" id="payment_option<?php echo $key+1;?>">
 	                    <option value="0" <?php if($row['is_completed']==0){ echo "selected='selected'"; }?>>មិនទាន់គ្រប់</option>
 	                    <option value="1" <?php if($row['is_completed']==1){ echo "selected='selected'"; }?>>បង់ដាច់</option></select></td>
-	                    <td width="140px">
+	                    
+						<td width="240px">
+		                    <select class="fullside" dojoType="dijit.form.FilteringSelect" id="user_id<?php echo $key+1;?>" name="user_id<?php echo $key+1;?>" >
+		                   		<option value="0"><?php echo $tr->translate("PLEASE_SELECT");?></option>
+		                   		<?php if (!empty($this->userlist)) foreach ($this->userlist as $stt){?>
+		                   		<option value="<?php echo $stt['id'];?>" <?php if($row['received_userid']==$stt['id']){ echo "selected='selected'"; } ?> ><?php echo $stt['name']?></option>
+		                   		<?php }?>
+		                    </select>
+	                    </td>
+						<td width="140px">
 		                    <select class="fullside" dojoType="dijit.form.FilteringSelect" id="pay_with<?php echo $key+1;?>" name="pay_with<?php echo $key+1;?>" >
 		                   		<option value="0"><?php echo $tr->translate("PLEASE_SELECT");?></option>
 		                   		<?php if (!empty($this->steppay)) foreach ($this->steppay as $stt){?>
