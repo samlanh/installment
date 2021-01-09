@@ -1248,4 +1248,45 @@ class Report_LoanController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	
+	
+	function rptMaterialinludeAction(){
+		$db  = new Report_Model_DbTable_DbLandreport();	
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		if($this->getRequest()->isPost()){
+			$search = $this->getRequest()->getPost();
+		}else {
+			$search = array(
+				"adv_search"=>'',
+				"branch_id"=>-1,
+				'land_id'=>-1,
+				'client_name'=>-1,
+				'start_date'=> date('Y-m-d'),
+				'end_date'=>date('Y-m-d'),
+			);
+		}
+		$this->view->search = $search;
+		$this->view->row = $db->getAllIncludeMaterial($search);
+		
+		$frm = new Loan_Form_FrmSearchLoan();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+  }
+  public function rptMaterialinludeDetailAction(){
+	$id=$this->getRequest()->getParam("id");
+	$id = empty($id)?0:$id;
+	$db= new Loan_Model_DbTable_DbMaterialInclude();
+	$row = $db->getMaterialIncludebyid($id);
+	if(empty($row)){
+		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/materialinc");
+		exit();
+	}
+	$this->view->rows = $db->getMaterialIncludeDetailbyid($id);
+	$this->view->rs = $row;
+}
 }

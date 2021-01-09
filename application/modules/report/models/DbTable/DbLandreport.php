@@ -3577,4 +3577,49 @@ function updatePaymentStatus($data){
       		$order=" ORDER BY cd.id DESC ";
       		return $db->fetchAll($sql.$order);
       	}
+		
+	function getAllIncludeMaterial($search=null){
+		$db = $this->getAdapter();
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+		$from_date =(empty($search['start_date']))? '1': " for_date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " for_date <= '".$search['end_date']." 23:59:59'";
+		$where = " WHERE ".$from_date." AND ".$to_date;
+		
+		$sql=" SELECT *,
+		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =client_id LIMIT 1) AS client_name,
+		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) AS house_no,
+		(SELECT  first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name  ";
+		
+		$sql.=" FROM ln_material_include ";
+		
+		if (!empty($search['adv_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['adv_search']));
+			$s_where[] = " description LIKE '%{$s_search}%'";
+			$s_where[] = " house_id LIKE '%{$s_search}%'";
+			$s_where[] = " invoice LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =client_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT land_address FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT street FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		
+		if(!empty($search['land_id']) AND $search['land_id']>-1){
+			$where.= " AND house_id = ".$search['land_id'];
+		}
+		if($search['client_name']>0){
+			$where.= " AND client_id = ".$search['client_name'];
+		}
+		if($search['branch_id']>-0){
+			$where.= " AND branch_id = ".$search['branch_id'];
+		}
+		$where.=$dbp->getAccessPermission("branch_id");
+		
+		$order=" ORDER by id desc ";
+		return $db->fetchAll($sql.$where.$order);
+	}
  }

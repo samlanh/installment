@@ -1,0 +1,116 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_search;
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$format = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
+	
+	$images = $this->baseUrl().'/images/logo.png';
+	if (!empty($this->rs['photo'])){
+		$images = $this->baseUrl().'/images/projects/'.$this->rs['photo'];
+	}
+?>
+<title><?php echo $tr->translate("MATERIAL_INCLUDE_DETAIL");?></title>
+<script>
+     dojo.require("dijit.form.DateTextBox");
+</script>
+	<div class="reportblog">
+		<div class="card-box">
+	       	<div class="col-sm-12 border-botom">
+		   		<div class="col-sm-8 pd-0">
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('MATERIAL_INCLUDE_DETAIL');?></h4>
+	    		</div>
+	    		<div class="col-sm-4 text-right">
+	    		</div>
+	    	</div>
+	    </div>
+		
+		<div style="width:100%; margin:0 auto;">
+		<div style="min-height:22cm; margin:0 auto;">
+			<style>
+				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
+				.hiddenblog{display: block !important;}
+			</style>
+			<div id="divPrint">
+			<style>
+				
+				
+				tr.style {
+					   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						background: #c1d0f3;
+					}
+			</style>
+				<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
+					<tr>	
+						<td colspan="6">
+							<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
+								<tr>
+									<td width="25%">
+										<img style="height:75px;"  src="<?php echo $images;?>" alt="">
+									</td>						
+									<td width="50%" style="font:bold 16px 'Kh Muol';" valign="top" align="center"><u><b><strong style="font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:22px;"><?php echo $tr->translate('MATERIAL_INCLUDE_DETAIL');?></strong></b></u>
+									</td>
+									<td width="25%">
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr style="line-height: 35px; font-family: Khmer OS Battambang;">
+						<td valign="top"> &nbsp;  </td>
+					</tr>
+				</table>
+				<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:23px;border:none;" >
+		            	<tr style="line-height: 20px; font-size: 16px; font-family: Khmer OS Battambang;white-space: nowrap;">
+							<td colspan="2">ឈ្មោះ&nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['client_name'];?></strong></td>
+							<td colspan="2">លេខផ្ទះ &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['land_address'];?></strong></td>
+							<td colspan="3">លេខផ្លូវ &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['street'];?></strong></td>
+						</tr>
+						<tr>
+							<td colspan="2"><?php echo $tr->translate("PROPERTY_TYPE");?> &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['property_type'];?></strong></td>
+							<td colspan="4">គម្រោង &nbsp;: <strong style="font-size:16px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['branch_name'];?></strong></td>
+						</tr>
+						<tr style="line-height: 15px; font-family: Khmer OS Battambang;">
+							<td valign="top" colspan="7"></td>
+						</tr>
+		            	<tr>
+		            	<td colspan="7" id="exportExcel">
+							<table border="1" width="100%" style="margin-top:10px; border-collapse:collapse; line-height: 24px; font-size: 14px; " >  
+							   <thead>
+									<tr class="style" align="center"  >
+										<td><?php echo $tr->translate("NUM");?></td>
+										<td><?php echo $tr->translate("ITEMS");?></td>
+										<td><?php echo $tr->translate("DESCRIPTION");?></td>
+									</tr>
+								</thead>
+							   <?php  $i=0; $n=0; if(!empty($this->rows)){foreach($this->rows as $key =>$row) {$i++?>
+								<tr style="font-size: 14px; line-height:26px; white-space: pre-line;" align="left">
+								   <td align="center" width="5%" valign="top"><?php echo $i; ?>&nbsp;.</td>
+								   <td align="left" valign="top">&nbsp;<?php echo $row['itmesTitle'];?></td>
+								   <td align="left" valign="top">&nbsp;<?php echo $row['description'];?></td>
+								</tr>
+								<?php }}?>
+							</table>
+		            	</td>
+		           		</tr>
+		           		<tr class="head" style="font-weight: initial;font-family:'Khmer OS Muol Light';" >
+						   <td colspan="7" align="center" >
+						   		<label style=" margin-left: 55%; font-size:14px; line-height: 16px; font-weight: initial; font-family:'Khmer OS Muol Light';">រាជធានីភ្នំពេញ ថ្ងៃទី <?php echo $format->getNumberInkhmer(date('d',strtotime($this->rs['for_date'])));?> ខែ <?php echo $format->getNumberInkhmer(date('m',strtotime($this->rs['for_date'])));?> ឆ្នាំ <?php echo $format->getNumberInkhmer(date('Y',strtotime($this->rs['for_date'])));?> </label><br>
+						   		<label style=" margin-left: 55%; font-size:14px; line-height: 16px; font-weight: initial; font-family:'Khmer OS Muol Light';">ហត្ថលេខា</label><br>
+						  		<label>&nbsp;</label><br>
+						  		<label>&nbsp;</label><br>
+						  		<label>&nbsp;</label><br>
+						  		<label style=" margin-left: 55%; font-size:16px; line-height: 16px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['client_name'];?></label>
+						   </td>
+						</tr>
+						
+		          </table>
+			</div>
+		</div>
+	</div>
+</div>

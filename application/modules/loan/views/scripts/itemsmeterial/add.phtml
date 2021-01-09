@@ -1,0 +1,59 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('ADD_ITEMS'));
+?>	
+<?php  $property= $this->frm_property_type;?>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-map" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD_ITEMS');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<div class="card-box">
+	    	<form  id='add_techer' action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+				<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					loadingBlock();
+					return true;
+				} else {
+					return false;
+				}
+			</script>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TITLE");?><span>*</span>  :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $property->getElement('title');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $property->getElement('note');?>
+	                   </div>
+	                </div>
+	                <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+						<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVECLOSE");?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+						<input type="submit" value="save_new" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW");?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+		    		</div>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+	dojo.require("dijit.form.Textarea");
+</script>
