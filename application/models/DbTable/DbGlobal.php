@@ -489,16 +489,46 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id <=2 LIMIT 1 ";
    	}*/
    
+   
    	//For General
-	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1 "; 
+	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 "; 
    	$pre='№ ';
-   	
+	$lenghtReceipt=6;
+	$currentDate = date("Y-m-d");
+	
+	$oldNumber=0;
+	$receiptForCompany = 1; //1=general,2=fiveStar,3=for Svayrieng
+	if($receiptForCompany==2){
+		$dateSetting = "2021-01-01";
+		if($currentDate>=date("Y-m-d",strtotime($dateSetting))){
+			$lenghtReceipt=6;
+			$pre=date("y")."-";
+			
+			$year=date("Y");
+			$startDate=date("Y-m-d",strtotime($year."-01-01"));
+			$endDate=date("Y-m-d",strtotime($year."-12-31"));
+			$from_date =(empty($startDate))? '1': " date_input >= '".$startDate." 00:00:00'";
+			$to_date = (empty($endDate))? '1': " date_input <= '".$endDate." 23:59:59'";
+			$sql.= " AND ".$from_date." AND ".$to_date;
+		}
+		
+	}else if ($receiptForCompany==3){
+		$dateSetting = "2021-01-18";
+		if($currentDate>=date("Y-m-d",strtotime($dateSetting))){
+			if ($data['branch_id']>=3){
+				$sql.=" AND branch_id =".$data['branch_id']." ";
+			}else{
+				$sql.= " AND branch_id !=3 ";
+				$oldNumber=358;
+			}
+		}
+	}
+	$sql.=" LIMIT 1 ";
    	
    	$acc_no = $db->fetchOne($sql);
-   	$new_acc_no= (int)$acc_no+1;
-   	$acc_no= strlen((int)$acc_no+1);
-   	//for($i = $acc_no;$i<6;$i++){
-  	for($i = $acc_no;$i<6;$i++){//phnom penh thmey
+   	$new_acc_no= (int)$acc_no+$oldNumber+1;
+   	$acc_no= strlen((int)$acc_no+$oldNumber+1);
+  	for($i = $acc_no;$i<$lenghtReceipt;$i++){//phnom penh thmey
    		$pre.='0';
    	}
    	return $pre.$new_acc_no;
@@ -2076,5 +2106,35 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	return $arr;
   	 
   }
+  
+  public function updateReceiptByBranch(){
+		$this->_name='ln_client_receipt_money';
+		$db = $this->getAdapter();
+   
+		//For General
+		$sql=" SELECT * FROM ln_client_receipt_money WHERE 1 AND branch_id =3 ORDER BY id ASC "; 
+		$row = $db->fetchAll($sql);
+		if(!empty($row)){
+			$lenghtReceipt=6;
+			foreach($row as $key => $rs){
+				
+				$new_acc_no= (int)$key+1;
+				$acc_no= strlen((int)$key+1);
+				$pre='№ ';
+				
+				   
+					for($i = $acc_no;$i<$lenghtReceipt;$i++){
+						$pre.='0';
+					}
+				
+				$data=array(
+						'receipt_no'	=> $pre.$new_acc_no,
+						
+				);
+				$where = "id = ".$rs["id"];
+				$this->update($data, $where);
+			}
+		}
+   }
 }
 ?>
