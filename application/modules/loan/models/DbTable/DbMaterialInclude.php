@@ -162,6 +162,7 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 			$s_where[] = " house_id LIKE '%{$s_search}%'";
 			$s_where[] = " invoice LIKE '%{$s_search}%'";
 			$s_where[] = " (SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =client_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT phone FROM `ln_client` WHERE ln_client.client_id =client_id LIMIT 1) LIKE '%{$s_search}%'";
 			$s_where[] = " (SELECT land_address FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
 			$s_where[] = " (SELECT street FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
