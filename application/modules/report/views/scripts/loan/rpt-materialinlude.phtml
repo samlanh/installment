@@ -1,6 +1,7 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
+	$frmMaterial = $this->frmMaterial;
 	$urlDetail = $this->baseUrl()."/report/loan/rpt-materialinlude-detail/id/";
 	
 	$dbGB = new Application_Model_DbTable_DbGlobal();
@@ -56,6 +57,9 @@
 			   		</div> -->
 			   	</div>
 			   	<div class="form-group">
+					<div class="col-md-3 col-sm-3 col-xs-12">
+			   			<?php echo $frmMaterial->getElement('items_id');?>
+			   		</div>
 			   		<div class="col-md-3 col-sm-3 col-xs-12">
 			   			<?php echo $frm->getElement('start_date');?>
 			   		</div>
@@ -159,6 +163,7 @@
 											    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
 											    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
 											    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+											    <td><?php echo $tr->translate("ITEMS");?></td>
 											    <td><?php echo $tr->translate("NOTE");?></td>
 											    <td><?php echo $tr->translate("DATE");?></td>
 											    <td><?php echo $tr->translate("BY_USER");?></td>
@@ -170,7 +175,8 @@
 											   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
 											   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['client_name'];?>&nbsp;</td>
 											   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['house_no'];?>&nbsp;</td>
-											   <td align="center">&nbsp;<?php echo $row['description'];?>&nbsp;</td>
+											   <td align="center">&nbsp;<?php echo $row['itmesTitle'];?>&nbsp;</td>
+											   <td>&nbsp;<?php echo $row['description'];?>&nbsp;</td>
 											   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date($montFomat,strtotime($row['for_date']));?>&nbsp;</td>
 											    <td align="center">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
 											</tr>

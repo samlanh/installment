@@ -34,7 +34,9 @@ Class Loan_Form_FrmMaterialInclude extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
-				'onchange'=>'getInvoiceNo("");getallCustomer();'
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'getSaleClie();getallCustomer();'
 		));
 	
 		$db = new Application_Model_DbTable_DbGlobal();
@@ -78,6 +80,8 @@ Class Loan_Form_FrmMaterialInclude extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onChange'=>'setValueToRow();',
 		));
 		
@@ -108,5 +112,29 @@ Class Loan_Form_FrmMaterialInclude extends Zend_Dojo_Form {
 				$_branch_id,$for_date,$id,$_items_id));
 		return $this;
 	
-	}	
+	}
+	public function FrmAddMaterialIncludeSearch($data=null){
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$db = new Loan_Model_DbTable_DbItems();
+		
+		$_items_id = new Zend_Dojo_Form_Element_FilteringSelect('items_id');
+		$_items_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'required' =>'true',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onChange'=>'setValueToRow();',
+		));
+		$rows = $db->getAllItemsMaterial();
+		$options=array(''=>$this->tr->translate("SELECT_ITEMS"));
+		if(!empty($rows))foreach($rows AS $row){
+			$options[$row['id']]=$row['name'];
+		}
+		$_items_id->setMultiOptions($options);
+		$_items_id->setValue($request->getParam('items_id'));
+		
+		$this->addElements(array($_items_id));
+		return $this;
+	}		
 }

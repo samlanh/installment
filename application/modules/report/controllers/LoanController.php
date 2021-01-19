@@ -1264,6 +1264,7 @@ class Report_LoanController extends Zend_Controller_Action {
 				'client_name'=>-1,
 				'start_date'=> date('Y-m-d'),
 				'end_date'=>date('Y-m-d'),
+				"items_id"=>'',
 			);
 		}
 		$this->view->search = $search;
@@ -1273,6 +1274,11 @@ class Report_LoanController extends Zend_Controller_Action {
 		$frm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
+		
+		$frmMaterial = new Loan_Form_FrmMaterialInclude();
+		$frmMaterial = $frmMaterial->FrmAddMaterialIncludeSearch();
+		Application_Model_Decorator::removeAllDecorator($frmMaterial);
+		$this->view->frmMaterial = $frmMaterial;
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();

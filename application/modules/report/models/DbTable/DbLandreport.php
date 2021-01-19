@@ -3588,38 +3588,48 @@ function updatePaymentStatus($data){
 		$to_date = (empty($search['end_date']))? '1': " for_date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;
 		
-		$sql=" SELECT *,
-		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
-		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =client_id LIMIT 1) AS client_name,
-		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) AS house_no,
-		(SELECT  first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name  ";
+		$sql=" SELECT ic.*,
+		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =ic.branch_id LIMIT 1) AS branch_name,
+		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ic.client_id LIMIT 1) AS client_name,
+		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=ic.house_id LIMIT 1) AS house_no,
+		(SELECT  first_name FROM rms_users WHERE id=ic.user_id LIMIT 1 ) AS user_name,
+		(SELECT title FROM `ln_items_material` WHERE ln_items_material.id =icd.items_id LIMIT 1) AS itmesTitle,
+		icd.description as descriptionDetailrow
+		";
 		
-		$sql.=" FROM ln_material_include ";
+		$sql.=" FROM ln_material_include AS ic,
+			ln_material_include_detail AS icd
+		";
+		
+		$where.=" AND icd.materailinc_id=ic.id ";
 		
 		if (!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = trim(addslashes($search['adv_search']));
-			$s_where[] = " description LIKE '%{$s_search}%'";
-			$s_where[] = " house_id LIKE '%{$s_search}%'";
-			$s_where[] = " invoice LIKE '%{$s_search}%'";
-			$s_where[] = " (SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =client_id LIMIT 1) LIKE '%{$s_search}%'";
-			$s_where[] = " (SELECT land_address FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
-			$s_where[] = " (SELECT street FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " ic.description LIKE '%{$s_search}%'";
+			$s_where[] = " ic.house_id LIKE '%{$s_search}%'";
+			$s_where[] = " ic.invoice LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ic.client_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT land_address FROM `ln_properties` WHERE id=ic.house_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT street FROM `ln_properties` WHERE id=ic.house_id LIMIT 1) LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		
 		if(!empty($search['land_id']) AND $search['land_id']>-1){
-			$where.= " AND house_id = ".$search['land_id'];
+			$where.= " AND ic.house_id = ".$search['land_id'];
 		}
 		if($search['client_name']>0){
-			$where.= " AND client_id = ".$search['client_name'];
+			$where.= " AND ic.client_id = ".$search['client_name'];
 		}
 		if($search['branch_id']>-0){
-			$where.= " AND branch_id = ".$search['branch_id'];
+			$where.= " AND ic.branch_id = ".$search['branch_id'];
 		}
-		$where.=$dbp->getAccessPermission("branch_id");
+		if(!empty($search['items_id'])){
+			$where.= " AND icd.items_id = ".$search['items_id'];
+		}
+		$where.=$dbp->getAccessPermission("ic.branch_id");
 		
-		$order=" ORDER by id desc ";
+		$order=" ORDER by ic.id desc ";
 		return $db->fetchAll($sql.$where.$order);
 	}
  }

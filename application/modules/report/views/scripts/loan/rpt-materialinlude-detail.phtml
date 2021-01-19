@@ -44,6 +44,28 @@
 					   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
 						background: #c1d0f3;
 					}
+					.style th {
+						text-align:center;
+						font-family: 'Times New Roman','Khmer OS Muol Light';
+						font-weight:normal;
+					}
+			ul.listData {
+				padding: 0;
+				margin: 0;
+				list-style: none;
+				font-family: 'Times New Roman','Khmer OS Battambang';
+				font-size:14px;
+			}
+			ul.listData span.labelTitle {
+				display: inline-block;
+				min-width: 100px;
+			}
+			ul.listData span.valueData {
+				display: inline-block;
+				min-width: 100px;
+				padding-left: 4px;
+				font-weight: 600;
+			}
 			</style>
 				<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
 					<tr>	
@@ -61,31 +83,52 @@
 							</table>
 						</td>
 					</tr>
-					<tr style="line-height: 35px; font-family: Khmer OS Battambang;">
-						<td valign="top"> &nbsp;  </td>
-					</tr>
+					
 				</table>
 				<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:23px;border:none;" >
 		            	<tr style="line-height: 20px; font-size: 16px; font-family: Khmer OS Battambang;white-space: nowrap;">
-							<td colspan="2">ឈ្មោះ&nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['client_name'];?></strong></td>
-							<td colspan="2">លេខផ្ទះ &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['land_address'];?></strong></td>
-							<td colspan="3">លេខផ្លូវ &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['street'];?></strong></td>
+							<td colspan="2" valign="top">
+								<ul class="listData">
+									<li>
+										<span class="labelTitle">ឈ្មោះអតិថិជន</span>
+										:<span class="valueData"><?php echo $this->rs['client_name'];?></span>
+									</li>
+									<li>
+										<span class="labelTitle"><?php echo $tr->translate("PHONE");?></span>
+										:<span class="valueData"><?php echo $this->rs['clientPhone'];?></span>
+									</li>
+								</ul>
+							</td>
+							<td colspan="2" valign="top">
+								<ul class="listData">
+									<li>
+										<span class="labelTitle">គម្រោង</span>
+										:<span class="valueData"><?php echo $this->rs['branch_name'];?></span>
+									</li>
+									<li>
+										<span class="labelTitle"><?php echo $tr->translate("PROPERTY_TYPE");?></span>
+										:<span class="valueData"><?php echo $this->rs['property_type'];?></span>
+									</li>
+									<li>
+										<span class="labelTitle"><?php echo $tr->translate("លេខផ្ទះ");?></span>
+										:<span class="valueData"><?php echo $this->rs['land_address']." ".$this->rs['street'];?></span>
+									</li>
+								</ul>
+							</td>
+							<td colspan="3">&nbsp;</td>
 						</tr>
-						<tr>
-							<td colspan="2"><?php echo $tr->translate("PROPERTY_TYPE");?> &nbsp;: <strong style="font-size:16px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['property_type'];?></strong></td>
-							<td colspan="4">គម្រោង &nbsp;: <strong style="font-size:16px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php echo $this->rs['branch_name'];?></strong></td>
-						</tr>
+						
 						<tr style="line-height: 15px; font-family: Khmer OS Battambang;">
 							<td valign="top" colspan="7"></td>
 						</tr>
 		            	<tr>
 		            	<td colspan="7" id="exportExcel">
-							<table border="1" width="100%" style="margin-top:10px; border-collapse:collapse; line-height: 24px; font-size: 14px; " >  
+							<table border="1" width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang'; margin-top:10px; border-collapse:collapse; line-height: 24px; font-size: 14px; " >  
 							   <thead>
-									<tr class="style" align="center"  >
-										<td><?php echo $tr->translate("NUM");?></td>
-										<td><?php echo $tr->translate("ITEMS");?></td>
-										<td><?php echo $tr->translate("DESCRIPTION");?></td>
+									<tr class="style"   >
+										<th align="center"><?php echo $tr->translate("NUM");?></th>
+										<th align="center"><?php echo $tr->translate("ITEMS");?></th>
+										<th align="center"><?php echo $tr->translate("DESCRIPTION");?></th>
 									</tr>
 								</thead>
 							   <?php  $i=0; $n=0; if(!empty($this->rows)){foreach($this->rows as $key =>$row) {$i++?>
@@ -100,7 +143,8 @@
 		           		</tr>
 		           		<tr class="head" style="font-weight: initial;font-family:'Khmer OS Muol Light';" >
 						   <td colspan="7" align="center" >
-						   		<label style=" margin-left: 55%; font-size:14px; line-height: 16px; font-weight: initial; font-family:'Khmer OS Muol Light';">រាជធានីភ្នំពេញ ថ្ងៃទី <?php echo $format->getNumberInkhmer(date('d',strtotime($this->rs['for_date'])));?> ខែ <?php echo $format->getNumberInkhmer(date('m',strtotime($this->rs['for_date'])));?> ឆ្នាំ <?php echo $format->getNumberInkhmer(date('Y',strtotime($this->rs['for_date'])));?> </label><br>
+						   <br />
+						   		<label style=" margin-left: 55%; font-size:14px; line-height: 16px; font-weight: initial; font-family: 'Times New Roman','Khmer OS Battambang';">រាជធានីភ្នំពេញ ថ្ងៃទី <?php echo $format->getNumberInkhmer(date('d',strtotime($this->rs['for_date'])));?> ខែ <?php echo $format->getNumberInkhmer(date('m',strtotime($this->rs['for_date'])));?> ឆ្នាំ <?php echo $format->getNumberInkhmer(date('Y',strtotime($this->rs['for_date'])));?> </label><br>
 						   		<label style=" margin-left: 55%; font-size:14px; line-height: 16px; font-weight: initial; font-family:'Khmer OS Muol Light';">ហត្ថលេខា</label><br>
 						  		<label>&nbsp;</label><br>
 						  		<label>&nbsp;</label><br>
