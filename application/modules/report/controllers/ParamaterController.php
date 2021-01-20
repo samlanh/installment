@@ -211,7 +211,17 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
   function rptAgreementAction(){
-  	$db  = new Report_Model_DbTable_DbParamater();
+  	
+  	$db = new Report_Model_DbTable_DbParamater();
+  	if($this->getRequest()->isPost()){
+  		$data=$this->getRequest()->getPost();
+	  	try {
+	  		$db->addOversoldPrice($data);
+	  	} catch (Exception $e) {
+	  		Application_Form_FrmMessage::message("INSERT_FAIL");
+	  	}
+  	}
+  		
   	$id = $this->getRequest()->getParam("id");
   	$id = empty($id)?0:$id;
   		

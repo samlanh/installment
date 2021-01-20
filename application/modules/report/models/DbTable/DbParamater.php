@@ -578,7 +578,7 @@ function getAllBranch($search=null){
     		if (!empty($search['streetlist'])){
     			$where.=" AND `l`.`street` = '".$search['streetlist']."'";
     		}
-    		$where.=" ORDER BY  `crm`.`date_pay` DESC ";
+    		$where.=" ORDER BY  `crm`.`date_pay` DESC, crm.id DESC";
     		return $db->fetchAll($sql.$where);
     	}
     	function getTermCodiction(){
@@ -710,6 +710,7 @@ function getAllBranch($search=null){
 				  `s`.`discount_amount` AS `discount_amount`,
 				   s.discount_percent,
 				  `s`.`price_sold`      AS `price_sold`,
+				   s.oversold_price,
 				  `s`.`other_fee`       AS `other_fee`,
 				  `s`.`admin_fee`       AS `admin_fee`,
 				  `s`.`paid_amount`     AS `paid_amount`,
@@ -950,6 +951,19 @@ function getAllBranch($search=null){
     		$sql.=$dbp->getAccessPermission("`s`.`branch_id`");
     		
     		return $db->fetchRow($sql);
+    }
+    function addOversoldPrice($data){
+    	$_db = $this->getAdapter();
+    	$this->_name='ln_sale';
+    	try{
+    		$_arr = array(
+    			'oversold_price' =>$data['oversold_price'],
+    		);
+    		$where="id = ".$data['sale_id'];
+    		$this->update($_arr, $where);
+    	}catch(Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    	}
     }
     function getIssueHouseAgreement($id=null){//bppt,natha,longny,moul mith
     	$db = $this->getAdapter();

@@ -696,7 +696,7 @@ public function getAllOutstadingLoan($search=null){
       		$s_where[] = " `crm`.`cheque` LIKE '%{$s_search}%'";
       		$where .=' AND ('.implode(' OR ',$s_where).')';
       	}
-		$order =" ORDER BY `crm`.id DESC ";
+		$order =" ORDER BY `crm`.date_pay DESC,`crm`.id DESC ";
 		if($order11==1){//for history
 			$order =" ORDER BY `crm`.`client_id` DESC ,`crm`.`sale_id` DESC , crm.id ASC";
 		}
