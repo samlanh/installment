@@ -3,6 +3,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm_expense = $this->frm_expense;
 	$urlprint = $this->baseUrl()."/report/loan/receipt-expense/id/";
+	$urlDetail = $this->baseUrl()."/report/loan/expense-detail/id/";
 	$urledit = $this->baseUrl()."/incexp/expense/edit/id/";
 ?>
 <title><?php echo $tr->translate('OTHER_EXPENSE');?></title>
@@ -77,14 +78,23 @@ $(function(){
 			var m = "clicked: " + key;
 			if(key=="print"){
 				url='<?php echo $urlprint;?>';
-			}
-			if(key=="edit"){
+			}else if(key=="detail"){
+				url='<?php echo $urlDetail;?>';
+			}else if(key=="edit"){
 				url='<?php echo $urledit;?>';
 			}
 			gotoAction();
 		},
 		items: {
 			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
+			<?php 
+			$settingDoc = SETTING_EXPENSE_DOC;
+			if($settingDoc==1){
+			?>
+			"detail": {name: "<?php echo $tr->translate("PAYMENT_VOUCHER​_DETAIL");?>", icon: "fa-print", accesskey: "c o p y"},
+			<?php 
+			}
+			?>
 			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-edit", accesskey: "edit"},
 		}
 	});

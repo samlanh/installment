@@ -153,7 +153,9 @@ class Incexp_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 												'document_name'=>$photo,
 												'item_type'=>2,
 										);
-										$this->insert($arr);
+										$where=" id=".$data['detailid'.$i];
+										$this->update($arr, $where);
+										//$this->insert($arr);
 									}
 								}else{
 									$name = $_FILES['attachment'.$i]['name'];

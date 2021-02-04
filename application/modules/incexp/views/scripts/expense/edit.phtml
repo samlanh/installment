@@ -16,7 +16,7 @@ $frm = $this->frm_expense;
  
 <div class="card">
 	<div class="card-content collapse show">
-		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
                		branch_id = dijit.byId('branch_id').get('value');
@@ -39,118 +39,165 @@ $frm = $this->frm_expense;
 	    			</div>
 	    		</div>
 	    	</div>
-	    	<div class="card-box">
-	    		<div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PROJECT_INFO");?> 
-	                   </label>
-	                </div>
-	                
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('branch_id');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIPT_NO");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('invoice');?>
-	                   </div>
-	                </div>
-	                 <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVOICE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('other_invoice');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('Date');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("EXPENSE_TITLE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('title');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CATEGORY");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="income_category" />
-	                   </div>
-	                </div>
-	            </div>
-	            <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("AMOUNT_INFO");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SUPPLIER");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('supplier_id');?>
-	                    	</div>
-	                    	 <div class="col-md-3 col-sm-3 col-xs-12">
-	                   		  	<input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getSupplier()"/>
-	                   		 </div>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_EXPENSE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('total_amount');?>
-	                   </div>
-	                </div>
-	                
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_TYPE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('payment_type');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('cheque');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE_ISSUER");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('cheque_issuer');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('Description');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('Stutas');?>
-	                   </div>
-	                </div>
-	            </div>
-	        </div>
+			<?php 
+			$settingDoc = SETTING_EXPENSE_DOC;
+			if($settingDoc==1){
+			?>
+			<div class="card-box">
+					 <ul class="nav  md-pills pills-primary nav-tab" role="tablist">
+					<li class="nav-item active">
+				 <a class="nav-link " data-toggle="tab" href="#panel211" role="tab">
+				 <i class="fa fa-pie-chart"></i> <?php echo $tr->translate("EXPENSE_INFO");?></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#panel213" role="tab">
+					<i class="fa fa-file-text"></i> <?php echo $tr->translate("DOCUMENT");?>
+					</a>
+				</li>
+				</ul>
+			 </div>
+			<?php 
+			}
+			?>
+			<!-- Tab panels -->
+			<div class="tab-content vertical">
+				<!--Schedule Panel 1-->
+				<div class="tab-pane fade in active" id="panel211" role="tabpanel">
+					<div class="card-box">
+						<div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+							   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PROJECT_INFO");?> 
+							   </label>
+							</div>
+							
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('branch_id');?>
+							   </div>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIPT_NO");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('invoice');?>
+							   </div>
+							</div>
+							 <div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVOICE");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('other_invoice');?>
+							   </div>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('Date');?>
+							   </div>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("EXPENSE_TITLE");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('title');?>
+							   </div>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CATEGORY");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<input id="income_category" />
+							   </div>
+							</div>
+						</div>
+						<div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+							   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("AMOUNT_INFO");?> 
+							   </label>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SUPPLIER");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('supplier_id');?>
+									</div>
+									 <div class="col-md-3 col-sm-3 col-xs-12">
+										<input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getSupplier()"/>
+									 </div>
+							   </div>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_EXPENSE");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('total_amount');?>
+							   </div>
+							</div>
+							
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_TYPE");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('payment_type');?>
+							   </div>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('cheque');?>
+							   </div>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE_ISSUER");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('cheque_issuer');?>
+							   </div>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('Description');?>
+							   </div>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('Stutas');?>
+							   </div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--End Schedule Panel 1-->
+				<!--Schedule Panel 2-->
+				<div class="tab-pane fade in " id="panel213" role="tabpanel">
+					<div class="card-box">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<div class="form-group">
+								 <div class="col-md-10 col-sm-10 col-xs-10" >
+									<table style="white-space: nowrap;width:100%; margin-top: 8px;">
+										<tr id="fileList"></tr>
+									</table>
+								 </div>
+							 </div>
+							 <div class="form-group">
+								<button class="btn btn-default addfile" onclick="addRow();" type="button"><?php echo $tr->translate('Add More Doc')?></button>
+								<input type="hidden" name="identity1" id="identity1"  value="" >
+							 </div>
+						</div>
+					</div>
+				</div>
+				<!--End Schedule Panel 2-->
+			</div>
+	    	
 	        
 	        <div class="clearfix"></div>
 			 <div class="card-box">
@@ -217,6 +264,37 @@ $frm = $this->frm_expense;
 		</form>
 	</div>
 </div>
+<style>
+.input-group-title {
+    display: inline-block;
+    width: 60%;
+    float: left;
+}
+input-group-addon, .input-group-btn {
+    width: 0% !important;
+}
+input.fullside.control-rec {
+    border: solid 1px #6aa1dc;
+    border-radius: 2px;
+    height: 34px;
+}
+input.fullside.control-rec::placeholder {
+	font-style:italic;
+	color: #ccc;
+}
+.input-group.input-file button.btn.btn-default.btn-choose {
+    background: #0077c5;
+    color: #fff;
+}
+.input-group.input-file button.btn.btn-error.btn-reset {
+    background: #c50000;
+    color: #fff;
+}
+.input-group.input-file a.btn.btn-error.btn-reset {
+    background: #00c5bc;
+    color: #fff;
+}
+</style>
 <script type="text/javascript">
 dojo.require("dijit.form.Textarea");
 dojo.require("dojo.data.ItemFileWriteStore");  
@@ -232,6 +310,8 @@ require(["dojo/ready"], function(ready){
 	ready(function(){
 		getallCustomer();
 		getParentbytype();
+		
+		initialize();
 	  });
 	  
 	new dijit.form.FilteringSelect({
@@ -522,6 +602,120 @@ function returnMOnth(monthnum){
 	month[12] = "Dec";
 	return month[monthnum];
 }
+
+
+var coll = 0;
+var no = 0;
+func='';
+tmp = '';
+var temp='';
+function addRow() {
+		coll++;no++;
+		template='';
+			template+='<div id="attachment'+coll+'" class="form-group" style=" margin-bottom: 5px !important;">';
+				template+='<div class="input-group-title">';
+					template+='<input dojoType="dijit.form.TextBox" type="text" class="fullside control-rec" id="title_'+coll+'" name="title_'+coll+'" placeHolder="<?php echo $tr->translate('TITLE');?>">';
+				template+='</div>';
+				template+='<div class="input-group input-file" name="attachment'+coll+'">';
+					
+					
+	 				template+='<span class="input-group-btn">';
+	 					template+='<button class="btn btn-default btn-choose" type="button"><?php echo $tr->translate('CHOOSE_FILE');?></button>';
+	 				template+='</span>';
+					template+='<input style="display:none;" type="text" class="form-control" placeholder="<?php echo $tr->translate('CHOOSE_FILE');?>..." />';
+					template+='<span class="input-group-btn">';
+						template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+coll+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+					template+='</span>';
+				template+='</div>';
+			template+='</div> <div class="clearfix"></div>';
+			$("#fileList").append(template);
+		if($("#identity1").val()!='') {
+			var identity = $("#identity1").val();
+			$("#identity1").val(identity+','+coll);
+		} else {$("#identity1").val(coll);}
+
+		bs_input_file();
+}
+
+function initialize() {
+	<?php if (!empty($this->document)) foreach ($this->document as $rs){?>
+	coll++;no++;
+	template='';
+		template+='<div id="attachment'+coll+'" class="form-group" style=" margin-bottom: 5px !important;">';
+				template+='<div class="input-group-title">';
+					template+='<input dojoType="dijit.form.TextBox" type="text" class="fullside control-rec" id="title_'+coll+'" name="title_'+coll+'" value="<?php echo $rs['title'];?>" placeHolder="<?php echo $tr->translate('TITLE');?>">';
+				template+='</div>';
+				
+			template+='<div class="input-group input-file" name="attachment'+coll+'">';
+ 				template+='<span class="input-group-btn">';
+ 					template+='<button class="btn btn-default btn-choose" type="button"><?php echo $tr->translate('CHOOSE_FILE');?></button>';
+ 				template+='</span>';
+				template+='<input  style="display:none;"  type="text" class="form-control" placeholder="<?php echo $tr->translate('CHOOSE_FILE');?>..." value="<?php echo $rs['document_name'];?>" />';
+				template+='<span class="input-group-btn">';
+					template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+coll+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+					template+='<a title="<?php echo $tr->translate('VIEW_DOCUMENT');?>" href="<?php echo $this->baseUrl()."/images/document/expense/".$rs['document_name'];?>" target="_blank" class="btn btn-error btn-reset" ><i class="fa fa-eye" aria-hidden="true"></i></button></a>';
+				template+='</span>';
+				template+='<input type="hidden" id="detailid'+coll+'" name="detailid'+coll+'"  value="<?php echo $rs['id'];?>" />';
+				template+='<input type="hidden" id="old_file'+coll+'" name="old_file'+coll+'"  value="<?php echo $rs['document_name'];?>" />';
+			template+='</div>';
+		template+='</div> <div class="clearfix"></div>';
+
+		$("#fileList").append(template);
+	
+	if($("#identity1").val()!='') {
+		var identity = $("#identity1").val();
+		$("#identity1").val(identity+','+coll);
+	} else {$("#identity1").val(coll);}
+	bs_input_file();
+	<?php }?>
+}
+
+function bs_input_file() {
+	$(".input-file").before(
+		function() {
+		if ( ! $(this).prev().hasClass('input-ghost') ) {
+			var element = $("<input  type='file' accept='.xlsx,.xls,image/*,.doc, .docx,.txt,.pdf' class='input-ghost' style='visibility:hidden; height:0'>");
+			element.attr("name",$(this).attr("name"));
+			element.change(function(){
+				
+				//element.next(element).find('input').val((element.val()).split('\\').pop());
+				
+				indexRow = $(this).attr("name").replace('attachment','');
+				$("#title_"+indexRow).val( (element.val()).split('\\').pop() );
+							
+			});
+			$(this).find("button.btn-choose").click(function(){
+
+				element.click();
+			});
+			
+			$(this).find('input').css("cursor","pointer");
+			$(this).find('input').mousedown(function() {
+				
+				$(this).parents('.input-file').prev().click();
+				
+			
+				return false;
+			});
+			return element;
+		}
+	}
+	);
+}
+function deleteRecord(index){
+	var identity1 = $('#identity1').val();
+	var arrays = identity1.split(',');
+	for(var i=0;i<arrays.length;i++) {
+	if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity1').val(strings);
+	$("#attachment"+index).remove();
+	bs_input_file();
+}
+$(function() {
+	bs_input_file();
+});
 </script>
 
 

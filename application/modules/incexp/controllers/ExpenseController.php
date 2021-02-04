@@ -65,6 +65,12 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 					$dbgb->reloadPageExpireSession();
 					exit();
 				}
+				
+				if (empty($data)){
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/expense");
+					exit();
+				}
+			
 				$db->addExpense($data);
 				if(!empty($data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/incexp/expense");
@@ -116,6 +122,11 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 			$data['id'] = $id;
 			$db = new Incexp_Model_DbTable_DbExpense();				
 			try {
+				if (empty($data)){
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/expense");
+					exit();
+				}
+				
 				$db->updatExpense($data);				
 				Application_Form_FrmMessage::Sucessfull('UPDATE_SUCESS', self::REDIRECT_URL);		
 			} catch (Exception $e) {
@@ -130,6 +141,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 			exit();
 		}
 		$this->view->row = $row;
+		$this->view->document=$db->getExpenseDocumentbyid($id);
 		
     	$pructis=new Incexp_Form_Frmexpense();
     	$frm = $pructis->FrmAddExpense($row);

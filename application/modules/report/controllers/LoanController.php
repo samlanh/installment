@@ -1284,15 +1284,38 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->footerReport = $frmpopup->getFooterReport();
   }
   public function rptMaterialinludeDetailAction(){
-	$id=$this->getRequest()->getParam("id");
-	$id = empty($id)?0:$id;
-	$db= new Loan_Model_DbTable_DbMaterialInclude();
-	$row = $db->getMaterialIncludebyid($id);
-	if(empty($row)){
-		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/materialinc");
-		exit();
+		$id=$this->getRequest()->getParam("id");
+		$id = empty($id)?0:$id;
+		$db= new Loan_Model_DbTable_DbMaterialInclude();
+		$row = $db->getMaterialIncludebyid($id);
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/materialinc");
+			exit();
+		}
+		$this->view->rows = $db->getMaterialIncludeDetailbyid($id);
+		$this->view->rs = $row;
 	}
-	$this->view->rows = $db->getMaterialIncludeDetailbyid($id);
-	$this->view->rs = $row;
-}
+	function expenseDetailAction(){
+		$id =$this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		
+		$db  = new Report_Model_DbTable_DbParamater();
+		$row =$db->getExpensebyid($id);
+		
+		$this->view->rs = $row;
+		
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/paramater/rpt-expense');
+			exit();
+		}
+		$dbExpense = new Incexp_Model_DbTable_DbExpense();
+		$this->view->document=$dbExpense->getExpenseDocumentbyid($id);
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		 
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footer = $frmpopup->getFooterReceipt();
+		$this->view->officailreceipt = $frmpopup->templateExpenseReceipt();
+	}
 }

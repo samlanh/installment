@@ -18,7 +18,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		$_db->beginTransaction();
 		try{
 			$invoice = $this->getInvoiceNo($data['branch_id']);
-			$data = array(
+			$dataRss = array(
 				'branch_id'		=> $data['branch_id'],
 				'title'			=> $data['title'],
 				'total_amount'	=> $data['total_amount'],
@@ -35,7 +35,41 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'user_id'		=> $this->getUserId(),
 				'create_date'   => date('Y-m-d'),
 			);
-			$this->insert($data);
+			$expense_id  = $this->insert($dataRss);
+			
+			$part= PUBLIC_PATH.'/images/document/expense/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			if (!empty($data['identity1'])){
+				$identity = $data['identity1'];
+				$ids = explode(',', $identity);
+				$image_name="";
+				$photo="";
+				foreach ($ids as $i){
+					$name = $_FILES['attachment'.$i]['name'];
+					if (!empty($name)){
+						$ss = 	explode(".", $name);
+						$image_name = "document_exp_".date("Y").date("m").date("d").time().$i.".".end($ss);
+						$tmp = $_FILES['attachment'.$i]['tmp_name'];
+						if(move_uploaded_file($tmp, $part.$image_name)){
+							$photo = $image_name;
+							$arr = array(
+									'exspense_id'=>$expense_id ,
+									'document_name'=>$photo,
+									'title'=>$data['title_'.$i],
+									'date'   => date('Y-m-d H:i:s'),
+							);
+							$this->_name = "ln_expense_document";
+							$this->insert($arr);
+						}
+						else
+							$string = "Image Upload failed";
+						//     				}
+					}
+				}
+			}
+				
 			$_db->commit();
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -62,6 +96,99 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			);
 			$where=" id = ".$data['id'];
 			$this->update($arr, $where);
+			
+			$expense_id =$data['id'];
+			$part= PUBLIC_PATH.'/images/document/expense/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			
+			if (!empty($data['identity1'])){
+				
+				$identity = $data['identity1'];
+				$ids = explode(',', $identity);
+				
+				$detailidlist="";
+				$this->_name='ln_expense_document';
+				foreach ($ids as $i){
+					if (empty($detailidlist)){
+	    				if (!empty($data['detailid'.$i])){
+	    					$detailidlist= $data['detailid'.$i];
+	    				}
+	    			}else{
+	    				if (!empty($data['detailid'.$i])){
+	    					$detailidlist = $detailidlist.",".$data['detailid'.$i];
+	    				}
+	    			}
+				}
+				$where = " exspense_id = ".$expense_id;
+				if (!empty($detailidlist)){ // check if has old payment detail  detail id
+					$where.=" AND id NOT IN (".$detailidlist.")";
+				}
+				$this->delete($where);
+						
+				$this->_name = "ln_expense_document";
+				$image_name="";
+				$photo="";
+				foreach ($ids as $i){
+					if (!empty($data['detailid'.$i])){
+						$name = $_FILES['attachment'.$i]['name'];
+						if (!empty($name)){
+							
+							$ss = 	explode(".", $name);
+							$image_name = "document_exp_".date("Y").date("m").date("d").time().$i.".".end($ss);
+							$tmp = $_FILES['attachment'.$i]['tmp_name'];
+							if(move_uploaded_file($tmp, $part.$image_name)){
+								$photo = $image_name;
+								$arr = array(
+										'exspense_id'=>$expense_id,
+										'document_name'=>$photo,
+										'title'=>$data['title_'.$i],
+										'date'   => date('Y-m-d H:i:s'),
+								);
+								$where=" id=".$data['detailid'.$i];
+								$this->update($arr, $where);
+							}else{
+								$string = "Image Upload failed";
+							}
+							
+							
+						}else{
+							$photo = $data['old_file'.$i];
+							$arr = array(
+									'exspense_id'=>$expense_id,
+									'document_name'=>$photo,
+									'title'=>$data['title_'.$i],
+									'date'   => date('Y-m-d H:i:s'),
+							);
+							$where=" id=".$data['detailid'.$i];
+							$this->update($arr, $where);
+						}
+					}else{
+						$name = $_FILES['attachment'.$i]['name'];
+						if (!empty($name)){
+							$ss = 	explode(".", $name);
+							$image_name = "document_exp_".date("Y").date("m").date("d").time().$i.".".end($ss);
+							$tmp = $_FILES['attachment'.$i]['tmp_name'];
+							if(move_uploaded_file($tmp, $part.$image_name)){
+								$photo = $image_name;
+								$arr = array(
+										'exspense_id'=>$expense_id,
+										'document_name'=>$photo,
+										'title'=>$data['title_'.$i],
+										'date'   => date('Y-m-d H:i:s'),
+								);
+								$this->_name = "ln_expense_document";
+								$this->insert($arr);
+							}
+							else
+								$string = "Image Upload failed";
+							//     				}
+						}
+					}
+				}
+			}
+			
 			$_db->commit();
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -229,6 +356,12 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 	function getAllChequeIssue(){
 		$db = $this->getAdapter();
 		$sql = " SELECT DISTINCT cheque_issuer as name,cheque_issuer as id FROM `ln_expense` WHERE cheque_issuer!='' ORDER BY cheque_issuer ASC ";
+		return $db->fetchAll($sql);
+	}
+	
+	function getExpenseDocumentbyid($id){
+		$db = $this->getAdapter();
+		$sql=" SELECT * FROM ln_expense_document WHERE exspense_id=$id ";
 		return $db->fetchAll($sql);
 	}
 }

@@ -325,7 +325,10 @@
 		</div>
 		<!-- end of print -->
 	</div>
-<?php $urlprint = $this->baseUrl()."/report/loan/receipt-expense/id/";?>
+<?php 
+$urlprint = $this->baseUrl()."/report/loan/receipt-expense/id/";
+$urlDetail = $this->baseUrl()."/report/loan/expense-detail/id/";
+?>
 <script type="text/javascript">
 var row=0;
 var url="";
@@ -336,12 +339,21 @@ $(function(){
 			var m = "clicked: " + key;
 			if(key=="print"){
 				url='<?php echo $urlprint;?>';
-			
+			}else if(key=="detail"){
+				url='<?php echo $urlDetail;?>';
 			}
 			gotoAction();
 		},
 		items: {
 			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
+			<?php 
+			$settingDoc = SETTING_EXPENSE_DOC;
+			if($settingDoc==1){
+			?>
+			"detail": {name: "<?php echo $tr->translate("PAYMENT_VOUCHER​_DETAIL");?>", icon: "fa-print", accesskey: "c o p y"},
+			<?php 
+			}
+			?>
 		}
 	});
 });
