@@ -3256,4 +3256,16 @@ function getAllBranch($search=null){
     		$groupby =" GROUP BY u.`id` DESC";
     		return $db->fetchAll($sql.$where.$groupby);
     	}
+	function getExpenseDocumentbyid($search){
+		$db = $this->getAdapter();
+		$id = empty($search['id'])?0:$search['id'];
+		$sql=" SELECT * FROM ln_expense_document WHERE exspense_id=$id ";
+		if(!empty($search['adv_search'])){
+			$s_where = array();
+			$s_search = str_replace(' ', '', addslashes(trim($search['adv_search'])));
+			$s_where[]=" REPLACE(title,' ','')   	LIKE '%{$s_search}%'";
+			$sql .=' AND ( '.implode(' OR ',$s_where).')';
+		}
+		return $db->fetchAll($sql);
+	}
 }

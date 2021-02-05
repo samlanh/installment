@@ -1308,8 +1308,10 @@ class Report_LoanController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/paramater/rpt-expense');
 			exit();
 		}
-		$dbExpense = new Incexp_Model_DbTable_DbExpense();
-		$this->view->document=$dbExpense->getExpenseDocumentbyid($id);
+		$search = array(
+				'id'=>$id
+		);
+		$this->view->document=$db->getExpenseDocumentbyid($search);
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
