@@ -94,14 +94,14 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 				$where.=" AND s.payment_id = ".$search['schedule_opt'];
 			}
 		}
-// 		if($search['sale_status']>0){
-// 			if($search['sale_status']==1){//full paid
-// 			$where.=" AND s.price_sold <= paid_amount ";
-// 			}
-// 				else{
-// 			$where.=" AND s.price_sold > paid_amount ";
-// 			}
-// 		}
+		$search['sale_status'] = empty($search['sale_status'])?0:$search['sale_status'];
+		if($search['sale_status']>0){
+ 			if($search['sale_status']==1){//full paid
+				$where.=" AND s.price_sold <= (SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) ";
+ 			}else{
+				$where.=" AND s.price_sold > (SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) ";
+ 			}
+ 		}
 		$order = " ORDER BY s.is_cancel ASC,s.payment_id DESC ";
 	
 		return $db->fetchAll($sql.$where.$order);
@@ -2927,6 +2927,7 @@ function updatePaymentStatus($data){
    			$where.=" AND s.payment_id = ".$search['schedule_opt'];
    		}
    	}
+	$search['sale_status'] = empty($search['sale_status'])?0:$search['sale_status'];
    	if($search['sale_status']>0){
    		if($search['sale_status']==1){//full paid
    			$where.=" AND s.price_sold <= (SELECT SUM(rm.total_principal_permonthpaid+rm.extra_payment) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) ";
