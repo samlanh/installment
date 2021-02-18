@@ -2239,13 +2239,15 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				.khmer{font:14px '."Khmer OS Battambang".';}
 				.one{white-space:nowrap;}
 				.h{ margin-top: -10px;}
-				.noted{white-space: pre-wrap;
+				.noted{
+					white-space: pre-wrap;
 					word-wrap: break-word;
 					word-break: break-all;
-					white-space: pre;
-					font:12px '."Khmer OS Battambang".';
+					/*white-space: pre;*/
+					font:11px '."Khmer OS Battambang".';
 					border: 1px solid #000;
-					line-height:20px;font-weight: normal !important;
+					line-height:14px;font-weight: normal !important;
+					padding: 4px 2px !important;				 
 				}
 				table.receipt-titile tr td {
 					font-size:16px;

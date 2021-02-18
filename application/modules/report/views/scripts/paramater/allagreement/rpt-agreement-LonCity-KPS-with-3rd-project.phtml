@@ -749,7 +749,7 @@ dojo.require("dijit.form.DateTextBox");
 		   				</style>
 						<?php 
 						$companyName ="លន ស៊ីធី ឡូតធឺសស៊ីថោន";  
-						$companyAddress ="ភូមិពូធឿង ឃុំបិតត្រាំង ក្រុងព្រះសីហនុ ខេត្ដព្រះសីហនុ";  
+						$companyAddress =$this->agreement['project_location'];//"ភូមិចំណោតរាម ឃុំបិតត្រាំង ស្រុកព្រៃនប់ ខេត្តព្រះសីហនុ";
 						$projectName =$this->agreement['project_name']; 
 						$projectAddress =$this->agreement['project_location']; 
 						?>
@@ -828,14 +828,14 @@ dojo.require("dijit.form.DateTextBox");
 										ឆ្នាំកំណើត <strong><?php echo date("Y",strtotime($this->agreement['manager_dob']));?></strong> 
 										កាន់អត្ដសញ្ញាណប័ណ្ណសញ្ជាតិខ្មែរលេខ <?php echo $this->agreement['project_manager_nation_id'];?> 
 										ចុះថ្ងៃទី <?php echo date("d",strtotime($this->agreement['p_nationid_issue']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['p_nationid_issue']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['p_nationid_issue']));?> 
-										តួនាទី <strong><?php echo $this->agreement['position'];?></strong>  
+										<?php if(!empty($this->agreement['position'])){?>តួនាទី <strong><?php echo $this->agreement['position'];?></strong>  <?php }?>
 										<?php if(!empty($this->agreement['w_manager_namekh']) ){?>
 										និងឈ្មោះ <span style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['w_manager_namekh']?></span> 
 										ភេទ <span class="value" ><?php echo $sexWithManager;?></span>  
 										ឆ្នាំកំណើត <strong><?php echo date("Y",strtotime($this->agreement['w_dob']));?></strong> 
 										កាន់អត្ដសញ្ញាណប័ណ្ណសញ្ជាតិខ្មែរលេខ <?php echo $this->agreement['w_manager_nation_id'];?> 
 										ចុះថ្ងៃទី <?php echo date("d",strtotime($this->agreement['w_nation_id_issue']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['w_nation_id_issue']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['w_nation_id_issue']));?> 
-										តួនាទី <strong><?php echo $this->agreement['w_position'];?></strong>  
+										<?php if(!empty($this->agreement['w_position'])){?>តួនាទី <strong><?php echo $this->agreement['w_position'];?></strong>  <?php }?>
 										<?php }?>
 										ហៅកាត់ថា <strong>ភាគី‍‍ “ក”</strong> ។
 										</td>
@@ -984,7 +984,7 @@ dojo.require("dijit.form.DateTextBox");
 											៤.៥
 										</td>
 										<td class="rightContent">
-											ការសាងសង់ផ្ទះនឹងត្រូវបញ្ចប់ក្នុងកំឡុងពេល <strong><?php echo $this->agreement['amount_build'];?></strong> ខែ 
+											ការសាងសង់ផ្ទះនឹងត្រូវបញ្ចប់ក្នុងកំឡុងពេល <strong><?php echo number_format($this->agreement['amount_build'],0);?></strong> ខែ 
 											គិតចាប់ពីថ្ងៃទី <?php echo date("d",strtotime($this->agreement['build_start']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['build_start']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['build_start']));?> តទៅ និងមានថិរវេលា អនុគ្រោះពន្យាពេល ០៦ (ប្រាំមួយ)ខែ ដោយមិនគិតសំណងពិន័យលើការពន្យាពេលសំណងនេះទេ។ ករណីការសាងសង់ផ្ទះមានការយឺតយ៉ាវលើសពី ០៦(ប្រាំមួយ) ខែ ឡើងទៅ ទើបភាគី‍‍ “ក” ត្រូវផ្ដល់សំណងលើការយឺតយ៉ាវនេះ ជូនភាគី‍‍ “ខ” វិញ ដោយគិតក្នុង ០១(មួយ)ខែ ចំនួន ១.៥% (មួយចុច   ប្រាំភាគរយ) គុណនឹង ៥% (ប្រាំភាគរយ) នៃទឹកប្រាក់ដែលបានបង់រួច ហើយការទូទាត់សងនេះត្រូវគណនា និងផ្ដល់ជូនចាប់ពីខែទី០៦ នៃការយឺតយ៉ាវតទៅតែប៉ុណ្ណោះ។ ប៉ុន្តែបើអ្នកទិញមិនបានបង់ប្រាក់ទៀងទាត់តាមការកំណត់ក្នុងប្រការ២ ឬករណីប្រធានសក្តិ ដូចជាទឹកជំនន់ រញ្ជួយដី វិបត្តិនយោបាយ    អស្ថេរភាពសង្គម ឬ        ក៏ជម្ងឺរាតត្បាតផ្សេងៗ កើតឡើងដែលអាចបណ្ដាលឲ្យមានការរាំងស្ទះដល់ដំណើរការសាងសង់នោះភាគី “ក” មិនទូទាត់សំណងលើការយឺតយ៉ាវសំណង់ផ្ទះនោះឡើយ ។
 										</td>
 									</tr>
