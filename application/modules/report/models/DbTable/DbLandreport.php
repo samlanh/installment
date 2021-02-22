@@ -717,7 +717,6 @@ public function getAllOutstadingLoan($search=null){
       				$arr['closing_note']=$data['note_'.$i];
       			}
       			$where="id= ".$data['id_'.$i];
-//       			$where="id= ".$i;
       			$this->update($arr, $where);
       		}
       	}

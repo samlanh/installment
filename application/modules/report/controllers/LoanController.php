@@ -1294,8 +1294,8 @@ class Report_LoanController extends Zend_Controller_Action {
 		}
 		$this->view->rows = $db->getMaterialIncludeDetailbyid($id);
 		$this->view->rs = $row;
-	}
-	
+    }
+
 	function expenseDetailAction(){
 		$id =$this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
