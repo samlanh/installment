@@ -1,0 +1,444 @@
+
+<?php 
+if ( isset( $_POST['submit'] ) ) { 
+
+ } 
+?>
+https://sandbox.mekongsms.com/api/postsms.aspx
+<form method="post" action="" >
+  <input type="text" name="username" value="camapp_free@apitest"><br />
+  <input type="text" name="pass" value="d5c5d91288a32cad367ae7170f54860c"><br />
+  <input type="text" name="cd" value="Cust001"><br />
+  <input type="text" name="sender" value="CAM APP"><br />
+  <input type="text" name="smstext" value="Hello Channy"><br />
+  <input type="text" name="gsm" value="070418002;"><br />
+  <input type="text" name="int" value="1"><br />
+  <input type="submit" value="submit">
+</form>
+<?php  
+	$filter = $this->frm_search;
+	$dayin_khmer = $this->day_inkhmer;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();	
+	$db = new Report_Model_DbTable_DbLandreport();
+
+	$tran = $this->tran_schedule;
+	$end_dat=$this->date_show;
+	$db_keycode = new Application_Model_DbTable_DbKeycode();
+	$key_code= $db_keycode->getSystemSetting(9);
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}	
+
+	$dbLoanCollect = new Report_Model_DbTable_DbloanCollect();
+?>
+<style>
+.hover:hover{background: #ccc;}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><?php  echo $tr->translate("REPORT_LOAN_COLLECT");?></title>
+<script>
+     dojo.require("dijit.form.DateTextBox");
+</script>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('SEND SMS');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+ 	<form method="post">
+ 		<div class="card-box">
+	 		<div class="form-group">
+	            <div class="col-md-2 col-sm-2 col-xs-12">
+	            	<?php echo $filter->getElement('adv_search');?>
+	            </div>
+	             <div class="col-md-2 col-sm-2 col-xs-12">
+	             	<?php echo $filter->getElement('branch_id');?>
+	            </div>
+	             <div class="col-md-2 col-sm-2 col-xs-12">
+	             	<?php echo $filter->getElement('client_name');?>
+	            </div>
+	             <div class="col-md-2 col-sm-2 col-xs-12">
+	             	<select class="fullside" id="last_optiontype" name="last_optiontype" dojoType="dijit.form.FilteringSelect">
+							<option value="-1" <?php if ($this->search['last_optiontype']==-1){echo "selected";} ?>>ទាំងអស់</option>
+							<option value="1" <?php if ($this->search['last_optiontype']==1){echo "selected";} ?>>យកតាមកាលបរិច្ឆេទបង់</option>
+							<option value="0" <?php if ($this->search['last_optiontype']==0){echo "selected";} ?>>បង់បញ្ចាប់ពេលប្រគល់ផ្ទះ</option>
+						</select>
+	            </div>
+	             <div class="col-md-2 col-sm-2 col-xs-12">
+	             	<select class="fullside" id="stepoption" name="stepoption" dojoType="dijit.form.FilteringSelect">
+						<option value="-1" <?php if ($this->search['stepoption']==-1){ echo 'selected=selected';}?>><?php  echo $tr->translate("ALL");?></option>
+						<option value="0" <?php if ($this->search['stepoption']==0){ echo 'selected=selected';}?>><?php  echo $tr->translate("DATE_PAYMENT");?></option>
+						<?php if (!empty($this->stepoption)) foreach ($this->stepoption as $rs){?>
+						<option value="<?php echo $rs['key_code']?>" <?php if ($this->search['stepoption']==$rs['key_code']){ echo 'selected=selected';}?>><?php echo $rs['name_en']?></option>
+						<?php }?>
+					</select>
+	            </div>
+	            <div class="col-md-2 col-sm-2 col-xs-12">
+	            	<div class="col-md-8 col-sm-8 col-xs-12">
+	             	<?php echo $filter->getElement('end_date');?>
+	             	</div>
+	             	<div class="col-md-4 col-sm-4 col-xs-12">
+	             		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+	             	</div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <div class="col-md-2 col-sm-2 col-xs-12">
+	            </div>
+	            <div class="col-md-2 col-sm-2 col-xs-12">
+	            </div>
+	        </div>
+	     </div>
+	</form>
+<div style="min-height:25cm; margin:0 auto;">
+	<div id="divPrint">
+	<style>
+		.style{
+			line-height: 20px;font-size: 12px !important;
+			font-family: 'Times New Roman','Khmer OS Battambang';
+		}
+		  table { page-break-inside:auto }
+		  tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+		th{padding: 5px;}
+		.hover td{padding: 1px;}
+		.hide{visibility: hidden;}
+		@media print {
+		  div.divFooter {
+		    position: fixed;
+		    top: 0;
+		  	width: 100%;
+		  	height: 100px;
+		  	bottom:0px;
+			margin:0;
+		  }
+		.hide{visibility: visible; height: 110px;}
+		}
+	thead tr td{
+			text-align: center;
+		}
+		table.content-data{
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-size:13px;
+			font-family: 'Times New Roman','Khmer OS Battambang';
+			/*white-space: nowrap;*/
+			line-height: 22px;
+			
+		}
+		table.content-data thead tr.style {
+		   line-height: 25px; font-size:13px !important;
+		   padding:1px 0px; height: 22px; 
+		   background: #c1d0f3;
+		}
+		table.tb-footer{
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-family: 'Times New Roman','Khmer OS Battambang';
+			font-size:11px;
+		}
+		table.tb-footer tr{
+		 line-height: 14px;  padding:2px 0px; height: 25px;
+		}
+</style>
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	        	<div class="divFooter">
+	        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0 auto;padding:0px; border:none;">
+	            	<tr>
+	                	<td width="30%"><img src="<?php echo $logo;?>" style="max-height:85px;max-width:100%;"></td>
+	                	<td width="40%" valign="top">
+	                	<ul>
+                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
+                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("SEND SMS");?></li>
+                			<li style="text-align:center; font-size:14px;"><?php echo date("d-M-Y",strtotime($this->search['end_date']));?></li>
+                		</ul>
+                    </td>
+	                    <td width="30%"></td>
+	                </tr>
+	            </table>
+	            </div>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td id="exportExcel">
+	    	<form method="post">
+	    	<div class="form-group">
+	          <div class="col-md-8 col-sm-8 col-xs-8">
+	            <table class="content-data" border="1"​ >
+	                <thead>
+		                 <tr class="hide" style="border:1px solid #000;">
+			                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+			             </tr>
+		                 <tr class="style" align="center" style="font-weight: bold;" >
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("NUM");?>
+		                     <input type="checkBox" onclick="checkAll('<?php echo count($tran);?>');" name="checkall" id="checkall" />
+		                     <input type="hidden" name="id_selected" id="id_selected" dojoType="dijit.form.TextBox" />
+		                    </td>
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>
+		                    <td colspan="2" style="padding:0px 1px;"><?php echo $tr->translate("CLIENT_INFO");?></td>
+		                    <td colspan="2" style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_INFO");?></td>
+		                    <td style="padding:0px 1px;"><?php echo $tr->translate("PAYMENT");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("LATE_DAY");?></td>
+		                    <td rowspan="2" style="padding:0px 1px;"><?php echo $tr->translate("DATE_PAYMENT");?></td>
+		                </tr>
+		                <tr class="style" bgcolor="#c1d0f3" style="font-weight: bold;" >
+	                        <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+	                        <td><?php echo $tr->translate("TEL");?></td>
+		                    <td style="padding:0px 1px;"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+		                    <td style="padding:0px 1px;"><?php echo $tr->translate("STREET");?></td>
+		                    <!-- 
+		                    <td style="text-align:center ;padding:0px 1px;"><?php //echo $tr->translate("PRINCIPAL");?></td>
+		                    <td style="text-align:center ;padding:0px 1px;"><?php //echo $tr->translate("INTEREST");?></td>
+		                    <td style="text-align:center ;padding:0px 1px;"><?php //echo $tr->translate("PENALIZE AMOUNT");?></td>
+		                     -->
+		                 	<td style="text-align:center ;padding:0px 1px;"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
+		                </tr>
+	                </thead>
+	                <?php 
+						$amount_property =0;
+	                	 $amt_d1 = 0;$amt_d2 = 0;
+	                	 $penelize=0;$total_payment=0;
+	                	 $key=0;
+	                	 $free_day = $this->data["graice_pariod_late"];//រយៈអនុគ្រោះ
+	                	 $ps = $this->data["penalty_value"];//ការប្រាក់ពិន័យ
+	                	 $penalty_type = $this->data["penalty_type"];//ប្រភេទពិន័យ
+	                	 $total_penelize=0;
+		             ?>
+	               <?php if(!empty($tran)){foreach($tran as $key =>$row){
+	               	
+						if ($row['last_pay_date']==null or $row['last_pay_date']==""){
+							$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+							$amount_lateday=$total_day/(60*60*24)-$free_day;
+							$total_late_day=$total_day/(60*60*24);
+						}else {
+							$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
+							$total_late_day=$total_day/(60*60*24);
+							$amount_lateday=$total_day/(60*60*24);
+						}
+						
+						if(!empty($row['old_land_id'])){
+								$idse = explode(",", $row['old_land_id']);
+								$countland = count($idse);
+								$amount_property = $amount_property+$countland;
+						   }else{
+								$amount_property = $amount_property+1;
+								$countland = 1;
+					   }
+	               	
+	               	?>
+	               	<tr align="center" style="font-size:9px; height: 20px; white-space:nowrap;" class="style hover">
+	                    <td ><?php echo ($key+1<10)?"0":"";echo $key+1;?>
+	                   		   <input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $key+1;?>)" name="check_box<?php echo $key+1;?>" id="check_box<?php echo $key+1;?>" />
+							   <input type="hidden" id="sale_id<?php echo $key+1;?>" name="sale_id<?php echo $key+1;?>" value="<?php echo $row['sale_id'];?>" dojoType="dijit.form.TextBox" />
+	                    </td>
+	                    <td align="left">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+						<td align="left">&nbsp;<a style="color:#000; text-decoration: none;" ><?php echo $row['client_name'];?>&nbsp;</a></td>
+						<td align="left" style="line-height: 12px;white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;<?php if(empty($row['phone_number'])){echo"background:red;";}?>"><?php echo $row['phone_number'];?><input type="hidden" id="phone_num<?php echo $key+1;?>" name="phone_num<?php echo $key+1;?>" value="<?php echo $row['phone_number'];?>" dojoType="dijit.form.TextBox" /></td>
+						<td>&nbsp;&nbsp;<?php echo $row['land_address']; ?>&nbsp;</td>	
+						<td><?php echo $row['street'];?></td>
+	                    <!-- 
+	                    <td align="left" style="white-space: nowrap;">&nbsp;<?php //echo number_format($row['principal_permonthafter'],2) ;?>&nbsp;</td>
+	                    <?php 
+	                    	$str_day = date('D',strtotime($row['date_payment']));
+	                    	$day_as_khmer = $dayin_khmer[$str_day];
+	                    ?>
+	                   
+	                    <td align="center">&nbsp;<?php //echo str_replace('.00', '', number_format($row['total_interest_after'],2));?>&nbsp;</td>
+	                    <td align="center">&nbsp;<?php 
+	                    
+// 	                    $end_dat = $this->search['end_date'];
+// 	                    $total_pay=($row['principal_permonthafter']+$row['total_interest_after']);
+	                    
+// // 	                   
+// 	                    if($row['last_optiontype']==1 AND $row['ispay_bank']==0){
+// 	                    	$total_penelize = $dbLoanCollect->checkSalePenalty($row['sale_id'], $this->search['end_date']);
+// 	                    }else{
+// 	                    	$amount_lateday=0;
+//                     		$total_penelize=0;
+// 	                    }
+// 	                    	echo number_format($total_penelize,2);
+		                    $total_payment = $total_penelize+$row['principal_permonthafter']+$row['total_interest_after'];
+// 		                    $penelize = $total_penelize+$penelize;
+		                    ?>&nbsp;
+	                    </td> -->
+	                    
+	                   	<td align="center">&nbsp;<?php echo str_replace('.00', '', number_format($total_payment,2));?>&nbsp;</td>
+	                    <?php 
+		               		$color='';
+							if($row['last_optiontype']==1){//by date
+								
+							if($row['ispay_bank']==0){
+								if ($total_late_day<=13){
+									$color="style='background-color:#ccccff;'";
+								}else if($total_late_day<=29){
+									$color="style='background-color:#b3ffb3;'";
+								}else{
+									$color="style='background-color:#ffd0d0;'";
+								}
+							}
+						}else{//by last payment
+							
+						}	
+	               		?>
+	                    <td align="center" <?php echo $color;?> >&nbsp;
+							<?php 
+		                    	if($row['last_optiontype']==1){//by date
+		                    		if($row['ispay_bank']==0){
+		                    			echo $total_late_day." Days";
+		                    		}else{
+		                    			echo "-";
+		                    		}
+		                    	}else{//by last payment
+		                    		echo "-";
+		                    	}	                    		
+	                    	?>	
+							&nbsp;
+						</td>
+	                   <td align="center" style="white-space: nowrap;">
+	                   		<?php 
+		                    	if($row['last_optiontype']==1){//by date
+		                    		if($row['ispay_bank']==0){
+		                    			$date= new DateTime($row['date_payment']);
+		                    			echo $date->format("d-m-Y");
+		                    		}else{
+		                    			echo $row['payment_type'];//." ".$row['ispay_bank'];
+		                    		}
+		                    	}else{//by last payment
+		                    		echo $tr->translate("RECEIVED_PROPERTY");
+		                    	}	                    		
+	                    	?>
+	                 &nbsp;</td>
+	                 </tr>
+		               <?php 
+							$amt_d1 = $amt_d1+$row['principal_permonthafter'];
+							$amt_d2 = $amt_d2+$row['total_interest_after'];
+		               ?>
+	                <?php }}?>
+                <?php $i=1;?>
+	                <tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
+	                	<td colspan="6"><?php echo $tr->translate("TOTAL");?></td>
+	                	<!-- <td><?php //echo number_format($amt_d1,2);?></td>
+	                	<td><?php //echo number_format($amt_d2,2);?></td>
+	                	<td><?php //echo number_format($penelize,2);?></td> -->
+	                	<td><?php echo number_format($amt_d1+$amt_d2+$penelize,2);?></td>
+	                	<td colspan="4"></td>
+	                </tr>
+                </table>
+               </div>
+	            <div class="col-md-4 col-sm-4 col-xs-4">
+			            	<div class="card">
+								<div class="card-content collapse show">
+									<div class="card-box">
+							               	<div class="col-sm-12 border-botom">
+									    		<div class="col-sm-8 pd-0">
+									    			<h4 class="m-b-0"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;ផ្ញើសារទៅអតិថិជន</h4>
+							    			</div>
+							    			<div class="col-sm-4 text-right">
+							    			</div>
+							    		</div>
+							    	</div>
+	            					<div class="card-box">
+						            	<div class="form-group">
+							            	<label  class="col-md-3 col-sm-3 col-xs-3 control-label">ប្រភេទផ្ញើចេញ</label>
+							            	<div class="col-md-9 col-sm-9 col-xs-9">
+							            		<select name="opt_sms" id="opt_sms" class="fullside" onChange="checkOptionSendType();" dojoType="dijit.form.FilteringSelect" >
+													<option value="1">សម្រាប់អ្នកត្រូវបង់</option>
+													<option value="2">គ្រប់អតិថិជនទាំងអស់</option>
+													<option value="3">សម្រាប់តែលេខខាងក្រោម</option>
+												</select>
+											</div>
+										</div>
+										<div class="form-group">
+							            	<label  class="col-md-3 col-sm-3 col-xs-3 control-label">លេខទទួលសារ</label>
+							            	<div class="col-md-9 col-sm-9 col-xs-9">
+							            		<textarea dojoType="dijit.form.Textarea" class="fullside" style="width:98%;min-height:60px; font-size:inherit; font-family:Kh Battambang" id="receiver" name="receiver"></textarea>
+					            			</div>
+					            		</div>
+										<div class="form-group">
+							            	<label  class="col-md-3 col-sm-3 col-xs-3 control-label">សារ</label>
+							            	<div class="col-md-9 col-sm-9 col-xs-9">
+							            		<textarea dojoType="dijit.form.Textarea" class="fullside" style="width:98%;min-height:60px; font-size:inherit; font-family:Kh Battambang" id="smscontance" name="smscontance"></textarea>
+								            </div>
+							            </div>
+						            	<div class="form-group">
+						            		<label  class="col-md-3 col-sm-3 col-xs-2 control-label"></label>
+						            		<div class="col-md-9 col-sm-9 col-xs-9">
+						            			<button iconclass="dijitIconMail" name="sendSMS" value="sendSMS" dojoType="dijit.form.Button" showLabel="true" type="submit">ផ្ញើសារ</button>
+						            		</div>
+						            	</div>
+	            					</div>
+			            			</div>
+	            				</div>
+	            			</div>
+              			</div>
+              		</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+</div>
+<script>
+dojo.require("dijit.form.TextArea");
+function checkOptionSendType(){
+     optionType = dijit.byId('opt_sms').get('value');	
+     dijit.byId('receiver').set('readOnly',false);
+     if(optionType!=3){
+    	 dijit.byId('receiver').set('readOnly',true);	
+        }
+}
+function checkAll(array_length){
+		dijit.byId('id_selected').attr('value','');
+		if(dojo.byId('checkall').checked){
+			for(var j=1;j<=array_length;j++){
+				$('#check_box'+j).each(function() { 
+					this.checked = true;  
+				});
+				checked_id(j);
+			}
+		}else{
+			for(var j=1;j<=array_length;j++){
+				$("#check_box"+j).removeAttr("checked");
+				checked_id(j);
+			}
+		}
+	}
+
+	function checked_id(index){
+		row_id = index;//dijit.byId('id_'+index).get('value');
+		if(dojo.byId('check_box'+index).checked){
+			if($("#id_selected").val()!="") {
+				var identity = $("#id_selected").val();
+				$("#id_selected").val(identity+','+row_id);
+			}else{
+				$("#id_selected").val(row_id);
+			}
+		}else{
+			var identity = $('#id_selected').val();
+			var arrays = identity.split(',');
+			for(var i=0;i<arrays.length;i++) {
+			if(arrays[i] == row_id) arrays.splice(i,1);
+			}
+			var strings = arrays.join(',');
+			$('#id_selected').val(strings);
+		}
+	}
+</script>

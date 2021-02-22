@@ -146,11 +146,11 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 		$where = " WHERE ".$from_date." AND ".$to_date;
 		
 		$sql=" SELECT id,
-		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
-		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =client_id LIMIT 1) AS client_name,
-		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) AS house_no,
+		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =ln_material_include.branch_id LIMIT 1) AS branch_name,
+		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_material_include.client_id LIMIT 1) AS client_name,
+		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=ln_material_include.house_id LIMIT 1) AS house_no,
 		description,for_date,
-		(SELECT  first_name FROM rms_users WHERE id=user_id LIMIT 1 ) AS user_name  ";
+		(SELECT  first_name FROM rms_users WHERE id=ln_material_include.user_id LIMIT 1 ) AS user_name  ";
 		
 		$sql.=$dbp->caseStatusShowImage("status");
 		$sql.=" FROM ln_material_include ";
