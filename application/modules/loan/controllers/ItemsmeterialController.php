@@ -88,4 +88,22 @@ class Loan_ItemsmeterialController extends Zend_Controller_Action {
    		Application_Model_Decorator::removeAllDecorator($frm_pro);
    		$this->view->frm_property_type = $frm_pro;
    }
+   
+   function getitemsAction(){
+	   if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$db = new Loan_Model_DbTable_DbItems();
+    		$rows = $db->getAllItemsMaterial();
+			
+			$data['addNew'] = empty($data['addNew'])?0:$data['addNew'];
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			if($data['addNew']==1){
+				array_unshift($rows, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
+    		}
+			array_unshift($rows,array ( 'id' => "",'name' => $tr->translate("SELECT_ITEMS")));
+			
+			print_r(Zend_Json::encode($rows));
+    		exit();
+    	}
+   }
 }

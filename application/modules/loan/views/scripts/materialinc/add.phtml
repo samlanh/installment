@@ -122,9 +122,12 @@
 						<div class="form-group">
 						   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("ITEMS");?> :
 						   </label>
-						   <div class="col-md-7 col-sm-7 col-xs-12">
+						   <div class="col-md-5 col-sm-5 col-xs-12">
 								<?php echo $frm->getElement('items_id');?>
 						   </div>
+						   <div class="col-md-2 col-sm-2 col-xs-12">
+								<input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getRefreshItems();"/>
+							</div>
 						</div>
 					</div>
 					<div class="card-box mb-20">
@@ -161,6 +164,25 @@ dojo.require("dijit.form.DateTextBox");
 function displayNone(){
 	document.getElementById('divPrint1').style.display="none";
 }
+require(["dojo/ready"], function(ready){
+	new dijit.form.FilteringSelect({
+		name: "items_id",
+		id: "items_id",
+		autoComplete: false,
+		queryExpr: "*${0}*", 
+		required: false,
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+			items_id = dijit.byId('items_id').get('value');
+			if(items_id==-1){
+				window.open('<?php echo Zend_Controller_Front::getInstance()->getBaseUrl()."/loan/itemsmeterial/add?rightclick=true";?>','_blank');
+				return false;
+			}
+			setValueToRow();
+	    }
+		}, "items_id");
+});
 var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 dojo.ready(function(){
 	
@@ -175,6 +197,7 @@ dojo.ready(function(){
 	    onChange: function() {  
 	    }
 	}, "customer");
+	
 });
 dojo.ready(function(){
 	<?php if(!empty($this->rsresult)){?>
@@ -183,6 +206,8 @@ dojo.ready(function(){
 		getSaleClie();
 	<?php }?>
 });
+
+
 var customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
 var url_customer = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'get-all-customer')); ?>';
 	function getallCustomer(){
@@ -215,10 +240,11 @@ tmp = '';
 temp='';
 function setValueToRow(){
 	items_id = dijit.byId('items_id').get('value');
-	if(items_id==''){
+	if(items_id=='' || items_id==-1){
 		dijit.byId('items_id').focus();
 		return false;
 	}
+	
     itemslabel = dijit.byId("items_id").attr('displayedValue');
 	
 	col++;noo++;
@@ -363,5 +389,24 @@ function returnMOnth(monthnum){
 	month[11] = "Nov";
 	month[12] = "Dec";
 	return month[monthnum];
+}
+
+var urlGetItems = '<?php echo $this->url(array('module'=>'loan','controller'=>'itemsmeterial','action'=>'getitems')); ?>';
+function getRefreshItems(){
+	loadingBlock();
+	dojo.xhrPost({
+		url: urlGetItems,	
+		content:{ 
+		    'addNew':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			itemesStore  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('items_id').set('store', itemesStore);
+		    HideloadingBlock();
+		},
+		error: function(err) {
+		}
+	});
 }
 </script>

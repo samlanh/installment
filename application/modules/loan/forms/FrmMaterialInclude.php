@@ -88,7 +88,7 @@ Class Loan_Form_FrmMaterialInclude extends Zend_Dojo_Form {
 	
 		$db = new Loan_Model_DbTable_DbItems();
 		$rows = $db->getAllItemsMaterial();
-		$options=array(''=>$this->tr->translate("SELECT_ITEMS"));
+		$options=array(''=>$this->tr->translate("SELECT_ITEMS"),-1=>$this->tr->translate("ADD_NEW"));
 		if(!empty($rows))foreach($rows AS $row){
 			$options[$row['id']]=$row['name'];
 		}
