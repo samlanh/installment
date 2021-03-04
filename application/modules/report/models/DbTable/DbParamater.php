@@ -973,7 +973,8 @@ function getAllBranch($search=null){
     	s.agreement_date,
     	(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id = ih.user_id LIMIT 1 ) AS user_name,
     	(SELECT co_khname FROM `ln_staff` WHERE co_id=s.staff_id LIMIT 1) AS staff_name,
-    	`p`.`project_name`,
+    	 `p`.`logo` AS project_logo,
+		`p`.`project_name`,
     	 p.p_sex,
     	`p`.`br_address` AS `project_location`,
     	`p`.`p_manager_namekh` AS `project_manager_namekh`,
@@ -985,8 +986,18 @@ function getAllBranch($search=null){
     	`c`.`nation_id` AS `client_nation_id`,
     	`c`.`house` AS `client_house_no`,
     	`c`.`street` AS `client_street`,
+    	`c`.`sex` AS `clientSex`,
+    	`c`.`ksex` AS `withClientSex`,
+    	c.dob,
+    	c.dob_buywith,
     	c.phone,
     	c.dstreet AS w_street,
+		(SELECT
+    	`village`.`village_namekh`
+    	FROM `ln_village` `village`
+    	WHERE (`village`.`vill_id` = `c`.`village_id`
+    	)
+    	LIMIT 1) AS `client_village_kh`,
     	(SELECT
     	`comm`.`commune_namekh` FROM `ln_commune` `comm`
     	WHERE (`comm`.`com_id` = `c`.`com_id`)

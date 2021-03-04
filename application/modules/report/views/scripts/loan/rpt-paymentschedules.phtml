@@ -86,8 +86,10 @@
 				                    <td valign="top" style="" width="33%">
 				                      <p class="lblhousecode"><?php echo $tr->translate("PROPERTY_CODE");?> : <?php echo $client['land_address'].",".$client['stree'];?></p>
 				                      <p><?php echo $tr->translate("SOLD_PRICE");?>  : $ <strong><?php echo number_format($client['price_sold'],2);?></strong></p>
-				                	  <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : $ <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?></p>
-				                      <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php if ($client['interest_policy']>0){ echo $client['interest_policy_title'];}else{ echo $client['interest_rate']."&nbsp;%";}?></p>
+									  <?php if($client['payment_id']==4){?>				                	 
+									  <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : $ <?php echo number_format($client['price_sold']-$client['total_installamount'],2);?></p>
+									  <?php }?>				                     
+									  <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php if ($client['interest_policy']>0){ echo $client['interest_policy_title'];}else{ echo $client['interest_rate']."&nbsp;%";}?></p>
 									  <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo number_format($client['total_duration'],0);?>&nbsp;
 										<?php if($client['payment_id']!=4){
 											echo $tr->translate("MONTH");
