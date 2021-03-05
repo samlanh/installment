@@ -13,7 +13,7 @@ $month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីន�
 $titleAgreement = "កិច្ចព្រមព្រៀងបន្ថែម និងការប្រគល់-ទទួលផ្ទះ";
 $issueAgreementType=1;//0=default,1= tholon pp
 if($issueAgreementType==1){
-	$titleAgreement = "លិខិតទទួលឯកសារ";
+	//$titleAgreement = "លិខិតទទួលឯកសារ";
 }
 $dbparmeter = new Report_Model_DbTable_DbParamater();
 
@@ -30,148 +30,6 @@ $dbparmeter = new Report_Model_DbTable_DbParamater();
 <table style="font-family: 'Khmer OS Content'; width:100%;"  >
 	<tr>
     	<td align="center">
-			<?php if($issueAgreementType==1){ 
-				$projectName ="បុរី លន ស៊ីធី    ឡូតធឺសសាណា"; //$this->agreement['project_name']
-				$projectLocation = "ផ្លូវបេតុង ភូមិព្រៃព្រីងខាងត្បូង សង្កាត់ចោមចៅ ខណ្ឌ ពោធិ៍សែនជ័យ ក្រុង ភ្នំពេញ";//$this->agreement['project_location']
-				
-				$imagelogo = $this->baseUrl()."/images/logo.jpg";
-				if (!empty($this->agreement['project_logo'])){
-					$imagelogo = $this->baseUrl()."/images/projects/".$this->agreement['project_logo'];
-				}
-			?>
-				<div id="divPrint">
-		    	 	<style>
-						tr td{padding:0; margin:0;}
-						th{padding: 5px;}
-						span.value{ line-height:12px;display: inline-block; text-align: center;}
-						span.child {display:block; margin-left:25px; line-height: 25px;}
-						span{line-height: 26px;}
-						.noted{white-space: pre-wrap;     
-							word-wrap: break-word;      
-							word-break: break-all;
-							white-space: pre;
-						    font:12px 'Times New Roman','Khmer OS Battambang';
-	                        line-height:10px !important;font-weight: normal !important;
-						}
-						span.marginLeft {
-							margin-left: 45px;
-						}
-						tr td,tr td h2,p,pre,span{ 
-								font-size: 16px ; line-height:30px !important;
-							}
-					</style>
-		        	<table width="100%" cellpadding="0" style="font-family:'Times New Roman','Khmer OS Battambang';" style="padding:0;margin:0;border:0px;" >
-		        	<tr>
-		                <td width="25%" valign="top"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="max-width:100%"></td>
-		                <td width="50%" align="center">
-							<span style="text-align:center; line-height:28px; font-size:16px;font-family:'Khmer OS Muol Light';">ព្រះរាជាណាចក្រកម្ពុជា</span>
-							<span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("ជាតិ សាសនា ព្រះមហាក្សត្រ");?></span>
-							<span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:14px; font-family: 'Tacteing';"><img src="<?php echo $this->baseUrl();?>/images/agreementsign.JPG" height="25px"></span>
-		                </td>
-						<td width="25%">
-						</td>
-		             </tr> 
-					 <tr>
-		                <td width="25%" valign="top"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="max-width:100%"></td>
-		                <td width="50%" align="center">
-							<div style="margin-top: -55px;">
-							<img src="<?php echo $imagelogo;?>" style="max-width:100%;height: 80px;display: inline-block;margin-left: -45px;"><span style="text-align:center;line-height:28px;display: inline-block;font-size:14px;font-family:'Khmer OS Muol Light';vertical-align: bottom;"><?php echo $titleAgreement;?></span>
-							</div>
-						</td>
-		                <td width="25%">
-						</td>
-		             </tr> 
-		             <tr>
-		             	<td colspan="3">
-		             		<p style="font-family: 'Times New Roman','Khmer OS Battambang'; text-align:justify; line-height:24px; font-size:14px; font-weight: normal !important;">
-								<?php 
-											$cussex="ប្រុស";
-											$cusTitle="ខ្ញុំបាទ";
-											if($this->agreement['clientSex']==2){
-												$cussex="ស្រី";
-												$cusTitle="នាងខ្ញុំ";
-											}
-											$with_sex="ប្រុស";
-											if($this->agreement['withClientSex']==2){
-												$with_sex="ស្រី";
-											}
-											
-											$cusAge=0;
-											if (!empty($this->agreement['dob'])){ 
-												$from = new DateTime($this->agreement['dob']);
-												$to   = new DateTime($this->agreement['buy_date']);
-												$cusAge= $dbparmeter->getNumberInkhmer($from->diff($to)->y);
-											}
-											$withCusAge=0;
-											if (!empty($this->agreement['dob_buywith'])){ 
-												$from = new DateTime($this->agreement['dob_buywith']);
-												$to   = new DateTime($this->agreement['buy_date']);
-												$withCusAge= $dbparmeter->getNumberInkhmer($from->diff($to)->y);
-											}
-												
-										
-													
-											?>
-											
-		             			<span style="margin-top:20px; width:100%; display: block;">
-								<span class="marginLeft">&nbsp;</span><?php echo $cusTitle;?>ឈ្មោះ 
-								<span class="value" style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span> 
-								ភេទ <?php echo $cussex;?> អាយុ <?php echo $cusAge;?> ឆ្នាំ 
-								<?php if(!empty($this->agreement['hname_kh'])){?>
-								និងឈ្មោះ <span class="value" style="min-width:50px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['hname_kh']; ?></span> 
-								ភេទ <?php echo $with_sex;?> អាយុ <?php echo $withCusAge;?> ឆ្នាំ 
-								<?php } ?>
-		             			ដែលមានទីលំនៅបច្ចុប្បន្នផ្ទះលេខ<span class="value" style="min-width:55px;"><?php echo $this->agreement['client_house_no'];?></span> 
-								<?php if(!empty($this->agreement['client_street'])){ ?>
-								ផ្លូវលេខ  <span class="value" style="min-width:55px;"><?php echo $this->agreement['client_street'];?></span> 
-								<?php }?>
-		             			ភូមិ  <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_village_kh'];?></span> 
-		             			សង្កាត់  <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_commune_kh'];?></span> 
-		             			ខណ្ឌ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_districtkh'];?></span>
-		             			ខេត្ត-រាជធានី <span class="value" style="min-width:50px;">&nbsp;<?php echo $this->agreement['client_province_kh'];?></span> 
-								ដែលបានទិញផ្ទះលេខ <strong><?php echo $this->agreement['property_title'];?></strong> <?php echo $projectLocation;?> ។
-								</span>
-		             			
-			             		<span style="margin-top:20px; width: 100%; display: block;line-height: 32px;">
-				             		<span class="marginLeft">&nbsp;</span>*បញ្ជាក់ៈ ខ្ញុំបាទ/នាងខ្ញុំ បានទទួល លិខិតលក់ផ្តាច់ លិខិតបង់ពន្ធ និងកាតបង់ពន្ធ រួចរាល់ពី <span style="font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $projectName;?></span> ។   រាល់ការបាត់បង់ ឬខូចខាតក្នុងប្រការណាមួយ   ខ្ញុំបាទ/នាងខ្ញុំជាអ្នកទទួលខុសត្រូវទាំងស្រុង។
-			             		</span>
-		             		</p>
-		             	</td>
-		             </tr>
-		             <tr>
-		             	<td colspan="3">
-		             		<table align="center" width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';">
-								   <tr style="font-size: 14px;">
-								        <td class="reff" style="width:40%;text-align:center; font-family:'Khmer OS Muol Light';font-weight:200;"></td>
-								        <td>&nbsp;</td>
-										<td class="reff" style="width:40%;text-align:center;font-weight:200;white-space: nowrap;">
-											ភ្នំពេញថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['issue_date'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['issue_date']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['issue_date'])));?></span>
-										</td>
-								   </tr>
-								   <tr style="font-size: 14px;">
-								        <td class="reff" style="width:40%;text-align:center; font-family:'Khmer OS Muol Light';font-weight:200;"></td>
-								        <td>&nbsp;</td>
-										<td class="reff" style="width:40%;text-align:center;font-weight:200;">ស្នាមមេដៃអ្នកទទួល</td>
-								   </tr>
-								   <tr height="60px">
-						             	<td>&nbsp;</td>
-						           </tr>
-						           <tr style="font-size: 14px;">
-								        <td class="reff" style="text-align:center;font-weight:200;"><?php //echo $this->agreement['user_name'];?></td>
-								        <td>&nbsp;</td>
-								        <td class="reff" style="text-align:center; font-family:'Khmer OS Muol Light'; font-weight:200;white-space:nowrap;"><?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?" និង ".$this->agreement['hname_kh']:"";?></td>
-								   </tr>
-							</table>
-		             	</td>
-		             </tr>
-		             <tr>
-		             	<td colspan="3"><br /><br /><br /><br />
-		             		<span style="width:100%;display:block;line-height:17px !important;font-size:10px !important;" class="noted"><?php //echo ($this->agreement['contact_construction']);?></span>
-		             	</td>
-		             </tr>
-		            </table>
-		         </div>
-			<?php }else{?>
 			<?php if($this->agreement['installment_type']==2){//installment?>
 		    	<div id="divPrint">
 		    	 	<style>
@@ -365,7 +223,6 @@ $dbparmeter = new Report_Model_DbTable_DbParamater();
 		            </table>
 		         </div>
 		      <?php }?>
-			<?php }?>
     		
     	</td>
     </tr>
