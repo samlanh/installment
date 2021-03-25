@@ -507,6 +507,8 @@ public function getAllOutstadingLoan($search=null){
 				  `s`.`end_line`                AS `end_line`,
 				  `s`.`interest_rate`           AS `interest_rate`,
 				  `s`.`payment_id`              AS `payment_id`,
+				  `s`.`expect_income_note`      AS `expect_income_note`,
+				  `s`.`id`                     AS `sale_id`,
 				  `sd`.`id`                     AS `id`,
 				  `sd`.`penelize`               AS `penelize`,
 				  `sd`.`date_payment`           AS `date_payment`,
@@ -521,8 +523,7 @@ public function getAllOutstadingLoan($search=null){
 				  sd.last_optiontype,
 				  sd.ispay_bank,
 				  (SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = sd.ispay_bank LIMIT 1) AS payment_type,
-				  (SELECT date_input FROM `ln_client_receipt_money` WHERE land_id=1 ORDER BY date_input DESC LIMIT 1) 
-				  	As last_pay_date
+					(SELECT cr.date_input FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id = s.id AND cr.recieve_amount>0 ORDER BY cr.id DESC LIMIT 1) AS last_pay_date
 				  FROM
 				 `ln_sale` AS s,
 				 `ln_saleschedule` AS sd,
