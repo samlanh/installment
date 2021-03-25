@@ -254,6 +254,7 @@ function setValueToRow(){
 			temp+='<th><?php echo $tr->translate("NUM");?></th>';
 			temp+='<th><?php echo $tr->translate("ITEMS");?></th>';
 			temp+='<th><?php echo $tr->translate("DESCRIPTION");?></th>';
+			temp+='<th width="120px"><?php echo $tr->translate("STATUS");?></th>';
 			dojo.query("#head-title1").append(temp);
 			title=1;
 	    }
@@ -261,6 +262,10 @@ function setValueToRow(){
 		template+='<td width="50px" align="center">'+noo+'</td>';
 		template+='<td width="25%">'+itemslabel+'<input dojoType="dijit.form.TextBox" class="fullside" required="required" id="items_id'+col+'" name="items_id'+col+'" value="'+items_id+'" type="hidden" ></td>';	
 		template+='<td><input type="text" name="description_'+col+'" id="description_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" style="width:100%;" /></td>';
+		template+='<td><select name="is_gived_'+col+'" id="is_gived_'+col+'" dojoType="dijit.form.FilteringSelect"   class="fullside">';
+	    		template+='<option value="0" ><?php echo $tr->translate('NOT_YET_GIVE');?></option>';
+				template+='<option value="1" ><?php echo $tr->translate('GIVED_TO_CUSTOMER');?></option>';
+		template+='</select></td>';
 		tmp='<tr id="row'+col+'">';
 		tmp+="</tr>";
 		dojo.query("#table_row").append(tmp);

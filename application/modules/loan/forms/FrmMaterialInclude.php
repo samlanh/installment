@@ -134,7 +134,24 @@ Class Loan_Form_FrmMaterialInclude extends Zend_Dojo_Form {
 		$_items_id->setMultiOptions($options);
 		$_items_id->setValue($request->getParam('items_id'));
 		
-		$this->addElements(array($_items_id));
+		$_is_gived = new Zend_Dojo_Form_Element_FilteringSelect('is_gived');
+		$_is_gived->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'required' =>'true',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onChange'=>'setValueToRow();',
+		));
+		$rows = $db->getAllItemsMaterial();
+		$options=array('-1'=>$this->tr->translate("SELECT_STATUS"),'0'=>$this->tr->translate("NOT_YET_GIVE"),'1'=>$this->tr->translate("GIVED_TO_CUSTOMER"));
+		
+		$_is_gived->setMultiOptions($options);
+		$_is_gived->setValue($request->getParam('is_gived'));
+		
+		$this->addElements(array($_items_id,
+					$_is_gived
+		));
 		return $this;
 	}		
 }

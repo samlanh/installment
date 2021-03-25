@@ -3582,6 +3582,9 @@ function updatePaymentStatus($data){
 		$db = $this->getAdapter();
 		
 		$dbp = new Application_Model_DbTable_DbGlobal();
+		$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+    	$givedLabel = $tr->translate("GIVED_TO_CUSTOMER");
+		$notYerGiveLabel = $tr->translate("NOT_YET_GIVE");
 		
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$from_date =(empty($search['start_date']))? '1': " for_date >= '".$search['start_date']." 00:00:00'";
@@ -3594,7 +3597,12 @@ function updatePaymentStatus($data){
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=ic.house_id LIMIT 1) AS house_no,
 		(SELECT  first_name FROM rms_users WHERE id=ic.user_id LIMIT 1 ) AS user_name,
 		(SELECT title FROM `ln_items_material` WHERE ln_items_material.id =icd.items_id LIMIT 1) AS itmesTitle,
-		icd.description as descriptionDetailrow
+		icd.description as descriptionDetailrow,
+		icd.is_gived,
+		CASE    
+					WHEN  is_gived = 0 THEN '".$notYerGiveLabel."'
+					WHEN  is_gived = 1 THEN '".$givedLabel."'
+				END AS isGiveLabel
 		";
 		
 		$sql.=" FROM ln_material_include AS ic,
@@ -3626,6 +3634,9 @@ function updatePaymentStatus($data){
 		}
 		if(!empty($search['items_id'])){
 			$where.= " AND icd.items_id = ".$search['items_id'];
+		}
+		if($search['is_gived']>-1){
+			$where.= " AND icd.is_gived = ".$search['is_gived'];
 		}
 		$where.=$dbp->getAccessPermission("ic.branch_id");
 		

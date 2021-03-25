@@ -146,6 +146,7 @@ $frm = $this->frm_income;
 											<th><?php echo $tr->translate("NUM");?></th>
 											<th><?php echo $tr->translate("ITEMS");?></th>
 											<th><?php echo $tr->translate("DESCRIPTION");?></th>
+											<th width="120px"><?php echo $tr->translate("STATUS");?></th>
 										</tr>
 									</table>
 								</div>
@@ -278,6 +279,7 @@ if(items_id=='' || items_id==-1){
 			temp+='<th><?php echo $tr->translate("NUM");?></th>';
 			temp+='<th><?php echo $tr->translate("ITEMS");?></th>';
 			temp+='<th><?php echo $tr->translate("DESCRIPTION");?></th>';
+			temp+='<th><?php echo $tr->translate("STATUS");?></th>';
 			dojo.query("#head-title1").append(temp);
 			title=1;
 	    }
@@ -285,6 +287,10 @@ if(items_id=='' || items_id==-1){
 		template+='<td width="50px" align="center">'+noo+'</td>';
 		template+='<td width="25%">'+itemslabel+'<input dojoType="dijit.form.TextBox" class="fullside" required="required" id="items_id'+col+'" name="items_id'+col+'" value="'+items_id+'" type="hidden" ></td>';	
 		template+='<td><input type="text" name="description_'+col+'" id="description_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" style="width:100%;" /></td>';
+		template+='<td><select name="is_gived_'+col+'" id="is_gived_'+col+'" dojoType="dijit.form.FilteringSelect"   class="fullside">';
+	    		template+='<option value="0" ><?php echo $tr->translate('NOT_YET_GIVE');?></option>';
+				template+='<option value="1" ><?php echo $tr->translate('GIVED_TO_CUSTOMER');?></option>';
+		template+='</select></td>';
 		tmp='<tr id="row'+col+'">';
 		tmp+="</tr>";
 		dojo.query("#table_row").append(tmp);
@@ -307,13 +313,18 @@ function initialize(){
 		temp+='<th><?php echo $tr->translate("NUM");?></th>';
 		temp+='<th><?php echo $tr->translate("ITEMS");?></th>';
 		temp+='<th><?php echo $tr->translate("DESCRIPTION");?></th>';
+		temp+='<th><?php echo $tr->translate("STATUS");?></th>';
 		dojo.query("#head-title").append(temp);
 		title=1;
     }
-	template+='<td width="47px" align="center"><img onclick="deleteRecords('+col+');calculateTotal('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+	template+='<td width="47px" align="center"><?php if($row['is_gived']!=1){?><img onclick="deleteRecords('+col+');calculateTotal('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"><?php }?></td>';
 	template+='<td width="50px" align="center">'+noo+'<input dojoType="dijit.form.TextBox" class="fullside" required="required" id="detailid'+col+'" name="detailid'+col+'" value="" type="hidden" ></td>';
 	template+='<td width="25%"><?php echo $row['itmesTitle'];?><input dojoType="dijit.form.TextBox" class="fullside" required="required" id="items_id'+col+'" name="items_id'+col+'" value="" type="hidden" ></td>';	
 	template+='<td><input type="text" name="description_'+col+'" id="description_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" style="width:100%;" /></td>';
+	template+='<td><select name="is_gived_'+col+'" id="is_gived_'+col+'" dojoType="dijit.form.FilteringSelect"   class="fullside">';
+	    		template+='<option value="0" ><?php echo $tr->translate('NOT_YET_GIVE');?></option>';
+				template+='<option value="1" ><?php echo $tr->translate('GIVED_TO_CUSTOMER');?></option>';
+	template+='</select></td>';
 	tmp='<tr id="row'+col+'">';
 	tmp+="</tr>";
 		
@@ -329,6 +340,7 @@ function initialize(){
 	dijit.byId('description_'+col).attr('value',$( '#description_from_php_'+col).html());
 	dijit.byId('items_id'+col).attr('value',"<?php echo $row['items_id'];?>");
 	dijit.byId('detailid'+col).attr('value',"<?php echo $row['id'];?>");
+	dijit.byId('is_gived_'+col).attr('value',"<?php echo $row['is_gived'];?>");
 
 	<?php }}?>
 }

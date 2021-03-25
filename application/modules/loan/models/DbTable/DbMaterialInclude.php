@@ -35,6 +35,7 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 						'materailinc_id'	=>$materailinc_id,
 						'items_id'	=>$data['items_id'.$j],
 						'description'		=>$data['description_'.$j],
+						'is_gived'		=>empty($data['is_gived_'.$j])?0:$data['is_gived_'.$j],
 				);
 				$this->insert($arr);
 			}
@@ -92,6 +93,7 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 									'materailinc_id'	=>$id,
 									'items_id'			=>$data['items_id'.$j],
 									'description'		=>$data['description_'.$j],
+									'is_gived'		=>empty($data['is_gived_'.$j])?0:$data['is_gived_'.$j],
 									);
 							$whereUpdate=" id=".$data['detailid'.$j];
 							$this->update($arr, $whereUpdate);
@@ -100,6 +102,7 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 									'materailinc_id'	=>$id,
 									'items_id'	=>$data['items_id'.$j],
 									'description'		=>$data['description_'.$j],
+									'is_gived'		=>empty($data['is_gived_'.$j])?0:$data['is_gived_'.$j],
 									);
 							$this->insert($arr);
 						}

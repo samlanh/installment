@@ -1262,6 +1262,7 @@ class Report_LoanController extends Zend_Controller_Action {
 				"branch_id"=>-1,
 				'land_id'=>-1,
 				'client_name'=>-1,
+				'is_gived'=>-1,
 				'start_date'=> date('Y-m-d'),
 				'end_date'=>date('Y-m-d'),
 				"items_id"=>'',
