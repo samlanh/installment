@@ -343,6 +343,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		if(!empty($data['interest_policy'])){
     			 $arr['interest_policy']=$data['interest_policy'];
     		}
+			if(!empty($data['agreement_for'])){
+    			 $arr['agreement_for']=$data['agreement_for'];
+    		}
     		$this->_name='ln_sale';
     		$id = $this->insert($arr);//add group loan
     		$data['sale_id']=$id;
@@ -1350,7 +1353,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		if(!empty($data['note_agreement'])){
     			$arr['note_agreement']=$data['note_agreement'];
     		}
-    		
+    		if(!empty($data['agreement_for'])){
+    			 $arr['agreement_for']=$data['agreement_for'];
+    		}
     		$id = $data['id'];
     		$this->_name='ln_sale';
     		$where = $db->quoteInto('id=?', $id);

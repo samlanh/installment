@@ -553,6 +553,17 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			'placeHolder'=>$this->tr->translate("WITNESS")." II",
 		));
 		
+		
+		$agreement_for = new Zend_Dojo_Form_Element_FilteringSelect('agreement_for');
+		$agreement_for->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>'checkPreScheduleOption();'
+		));
+		$optForAgr = $db->getVewOptoinTypeByType(31,1,null,1);
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$agreement_for->setMultiOptions($optForAgr);
+		
 		if($data!=null){
 			$agreementdate->setValue($data['agreement_date']);
 			$_branch_id->setValue($data['branch_id']);
@@ -607,6 +618,8 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			$data['witness_ii'] = empty($data['witness_ii'])?"":$data['witness_ii'];
 			$_witness_i->setValue($data['witness_i']);
 			$_witness_ii->setValue($data['witness_ii']);
+			
+			$agreement_for->setValue($data['agreement_for']);
 		}
 		$this->addElements(array($free_tob,$grace_period,$commision_amt,$times_commission,$last_payment,$paid_date,$note_agreement,$total_discount,$delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,
@@ -625,7 +638,9 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 				$_pre_fix_payment,
 				
 				$_witness_i,
-				$_witness_ii
+				$_witness_ii,
+				
+				$agreement_for
 				));
 		return $this;
 		

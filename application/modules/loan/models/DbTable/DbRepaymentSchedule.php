@@ -180,6 +180,9 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				if(!empty($data['interest_policy'])){
     					$arr['interest_policy']=$data['interest_policy'];
     				}
+					if(!empty($data['agreement_for'])){
+    					$arr['agreement_for']=$data['agreement_for'];
+    				}
     				$where= " id = ".$data['id'];
     				$this->update($arr, $where);
     			}
