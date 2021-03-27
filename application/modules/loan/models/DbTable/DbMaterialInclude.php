@@ -117,17 +117,17 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 	}
 	function getMaterialIncludebyid($id){
 		$db = $this->getAdapter();
-		$sql=" SELECT *,
-				(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
-				(SELECT logo FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS photo,
-		 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =client_id LIMIT 1) AS client_name,
-				(SELECT phone FROM `ln_client` WHERE ln_client.client_id =client_id LIMIT 1) AS clientPhone,
-		 		(SELECT land_address FROM `ln_properties` WHERE id=house_id LIMIT 1) AS land_address,
-		 		(SELECT street FROM `ln_properties` WHERE id=house_id LIMIT 1) AS street,
-		 		(SELECT type_nameen FROM `ln_properties_type` WHERE id=(SELECT property_type FROM `ln_properties` WHERE id=house_id LIMIT 1)) AS property_type
-		FROM ln_material_include where id=$id ";
+		$sql=" SELECT m.*,
+				(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =m.branch_id LIMIT 1) AS branch_name,
+				(SELECT logo FROM `ln_project` WHERE ln_project.br_id =m.branch_id LIMIT 1) AS photo,
+		 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =m.client_id LIMIT 1) AS client_name,
+				(SELECT phone FROM `ln_client` WHERE ln_client.client_id =m.client_id LIMIT 1) AS clientPhone,
+		 		(SELECT land_address FROM `ln_properties` WHERE id=m.house_id LIMIT 1) AS land_address,
+		 		(SELECT street FROM `ln_properties` WHERE id=m.house_id LIMIT 1) AS street,
+		 		(SELECT type_nameen FROM `ln_properties_type` WHERE id=(SELECT property_type FROM `ln_properties` WHERE id=m.house_id LIMIT 1)) AS property_type
+		FROM ln_material_include AS m where m.id=$id ";
 		$dbp = new Application_Model_DbTable_DbGlobal();
-		$sql.=$dbp->getAccessPermission("branch_id");
+		$sql.=$dbp->getAccessPermission("m.branch_id");
 		return $db->fetchRow($sql);
 	}
 	function getMaterialIncludeDetailbyid($id){
