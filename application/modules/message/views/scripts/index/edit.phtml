@@ -1,0 +1,67 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('ផ្ញើសារទៅអតិថិជន'));
+	$rs = $this->rsMessage;
+?>	
+<script>
+</script>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ផ្ញើសារទៅអតិថិជន');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<div class="card-box">
+    		<form id='add_customer' action="<?php echo $this->url(array('module'=>'message','controller'=>'index','action'=>'add')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+				<script type="dojo/method" event="onSubmit">			
+					if(this.validate()){
+						dijit.byId('save_new').set('disabled',true);
+						return true;
+					} else {
+						return false;
+					}
+				</script>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+	                <div class="form-group">
+		            	<label  class="col-md-3 col-sm-3 col-xs-3 control-label">ប្រភេទផ្ញើចេញ</label>
+		            	<div class="col-md-9 col-sm-9 col-xs-9">
+		            		<select readonly name="opt_sms" id="opt_sms" class="fullside" onChange="checkOptionSendType();" dojoType="dijit.form.FilteringSelect" >
+								<option value="1">សម្រាប់អ្នកត្រូវបង់</option>
+								<option value="2">គ្រប់អតិថិជនទាំងអស់</option>
+								<option value="3" selected>សម្រាប់តែលេខខាងក្រោម</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+		            	<label  class="col-md-3 col-sm-3 col-xs-3 control-label">លេខទទួលសារ</label>
+		            	<div class="col-md-9 col-sm-9 col-xs-9">
+		            		<textarea dojoType="dijit.form.Textarea" class="fullside" style="width:98%;min-height:60px; font-size:inherit; font-family:Kh Battambang" id="receiver" name="receiver"><?php echo $rs['phone_number'];?></textarea>
+            			</div>
+            		</div>
+					<div class="form-group">
+		            	<label  class="col-md-3 col-sm-3 col-xs-3 control-label">សារ</label>
+		            	<div class="col-md-9 col-sm-9 col-xs-9">
+		            		<textarea dojoType="dijit.form.Textarea" class="fullside" style="width:98%;min-height:60px; font-size:inherit; font-family:Kh Battambang" id="smscontance" name="smscontance"><?php echo $rs['contance'];?></textarea>
+			            </div>
+		            </div>
+	                <div class="form-group">
+		                <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+							<input type="button" onclick="window.location.href='<?php echo $this->url(array('module'=>'message','controller'=>'index','action'=>'index'),null,true);?>'" value="CANCEL" tabindex="1" label="<?php echo $tr->translate('CANCEL');?>"  dojoType="dijit.form.Button" name="save_new"
+								iconClass="dijitEditorIcon dijitEditorIconCancel"/> 
+							<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
+								iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+			    		</div>
+	                </div>
+	            </div>
+			</form>
+    	</div>
+    </div>
+</div>
+<script>
+dojo.require("dijit.form.TextArea");
+</script>

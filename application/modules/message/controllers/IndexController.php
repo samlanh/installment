@@ -8,10 +8,12 @@ class Message_IndexController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
+		$db = new Message_Model_DbTable_Dbapi();
 // 		try{
 		$db = new Message_Model_DbTable_Dbapi();
 		if(!empty($this->getRequest()->isPost())){
 			$search=$this->getRequest()->getPost();
+			
 		}
 		else{
 			$search = array(
@@ -42,6 +44,8 @@ class Message_IndexController extends Zend_Controller_Action {
 		$frm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
+		$this->view->creditBalance =  $db->checkBalance();
+		
 	}
 	function addAction(){//list payment that collect from client
 		$dbs = new Report_Model_DbTable_DbloanCollect();
@@ -81,9 +85,6 @@ class Message_IndexController extends Zend_Controller_Action {
 		$this->view->search=$search;
 		$row = $dbs->getAllLnClient($search);
 		$this->view->tran_schedule=$row;
-		 
-		$key = new Application_Model_DbTable_DbKeycode();
-		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	
 		$this->view->list_end_dates = $search["end_date"];
 		$frm = new Loan_Form_FrmSearchLoan();
@@ -91,18 +92,11 @@ class Message_IndexController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
 	
-		$db = new Application_Model_DbTable_DbGlobal();
-		$this->view->stepoption = $db->getVewOptoinTypeByType(29);
-		 
-		$frmpopup = new Application_Form_FrmPopupGlobal();
-		$this->view->footerReport = $frmpopup->getFooterReport();
 	}
-// 	public function salebytypeAction(){
-// 		$this->_helper->layout()->disableLayout();
-// 		$db = new Api_Model_DbTable_Dbapi();
-// 		print_r(Zend_Json::encode($db->getSalebyType()));
-// 		exit();
-// 	}
-	
+	function editAction(){//list payment that collect from client
+		$db = new Message_Model_DbTable_Dbapi();
+		$id = $this->getRequest()->getParam('id');
+		$this->view->rsMessage = $db->getMessageById($id);
+	}
 }
 

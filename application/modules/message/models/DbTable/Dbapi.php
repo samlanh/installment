@@ -96,7 +96,6 @@ class Message_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     					}
     				}
     				if($count>0){
-    					$this->sendSMS($message,$phone);
     					$this->insertMessage($message,$phone,$data['opt_sms']);
     				}
     				
@@ -114,7 +113,7 @@ class Message_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     	}
     }
     function insertMessage($message,$phone,$opt){
-    	$this->sendSMS($message,$phone);
+    	echo $this->sendSMS($message,$phone);
     	$arr = array(
     			'contance'=>$message,
     			'phone_number'=>$phone,
@@ -146,5 +145,45 @@ class Message_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     	    	$respone = curl_exec($curl);
     	$err = curl_error($curl);//you can echo curl error
     	curl_close($curl);//you need to close curl connection
+    	return $respone;
+    }
+    function getMessageById($id){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT id,
+		    	  contance,
+		    	  phone_number,
+		    	  send_date,
+		    	  send_opttype,
+		    	 (SELECT first_name FROM `rms_users` WHERE id=sms.user_id LIMIT 1) AS user_name
+		    	 FROM `ln_sendsms` AS sms WHERE id=".$id;
+    	return $db->fetchRow($sql);
+    }
+    function checkBalance(){
+    
+    	$url="http://sandbox.mekongsms.com/api/postcheckbalance.aspx";
+    	 
+    	$username='camapp_free@apitest';
+    	$pass='d5c5d91288a32cad367ae7170f54860c';
+    	$sender='CAM APP';
+    	$message='';
+    	$phone='';
+    	 
+    	//create fields array
+    	//for param cd is optional param that allow customers insert some data to our database ex:transactionid
+    	$fields =('username='.$username.'&pass='.$pass);
+    	$headers = array('Content-Type: application/x-www-form-urlencoded');
+    	//open curl
+    	$curl = curl_init();
+    	curl_setopt_array($curl, array(
+    			CURLOPT_URL => $url,
+    			CURLOPT_RETURNTRANSFER => true,
+    			CURLOPT_TIMEOUT => 300000,
+    			CURLOPT_POST => true,
+    			CURLOPT_POSTFIELDS =>$fields,
+    			CURLOPT_HTTPHEADER => $headers ,));
+    	$respone = curl_exec($curl);
+    	$err = curl_error($curl);//you can echo curl error
+    	curl_close($curl);//you need to close curl connection
+    	return $respone;
     }
 }
