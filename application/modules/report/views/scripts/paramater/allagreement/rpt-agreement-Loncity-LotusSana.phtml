@@ -15,6 +15,10 @@
 	$dataterm = $key->getKeyCodeMiniInv(TRUE);
 	
 	$branch_title = $tr->translate("BRAND_TITLE");
+	
+	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+		$lastName=$session_user->last_name;
+		$firstName=$session_user->first_name;
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -471,7 +475,7 @@ dojo.require("dijit.form.DateTextBox");
 									<td >&nbsp;</td>
 									<td align="center"><span style="width: 90%; display: block; border-bottom: dashed 1px #000;" >&nbsp;</span></td>
 									<td >&nbsp;</td>
-									<td class="reff" align="center" style="white-space:nowrap;">&nbsp;<span><?php echo $this->agreement['project_manager_namekh']; echo (!empty($this->agreement['w_manager_namekh']))?" និង ".$this->agreement['w_manager_namekh']:"";?></span></td>
+									<td class="reff" align="center" style="white-space:nowrap;">&nbsp;<span><?php echo $lastName." ".$firstName;//echo $this->agreement['project_manager_namekh']; echo (!empty($this->agreement['w_manager_namekh']))?" និង ".$this->agreement['w_manager_namekh']:"";?></span></td>
 							 </tr>
 							 
 						</table>

@@ -993,6 +993,7 @@ function getAllBranch($search=null){
     	c.dob,
     	c.dob_buywith,
     	c.phone,
+		c.lphone AS w_client_phone,
     	c.dstreet AS w_street,
 		(SELECT
     	`village`.`village_namekh`
