@@ -1,0 +1,206 @@
+<?php
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate("REVENUE_GRAPHICS"));
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+	$level = $session_user->level;
+	
+//$stringLin  = "070418002/085911912";
+//$explode = explode("/", $stringLin);
+//echo $explode[0]."<br />"; // piece1
+//echo $explode[1]; // piece2
+
+?>
+<style>
+	.dijitHidden{
+	 	display: none;
+	}
+</style>
+<link rel="stylesheet" href="<?php echo $this->baseUrl()."/"?>dashboard/plugins/morris/morris.css">
+<link href="<?php echo $this->baseUrl()."/"?>dashboard/css/icons.css" rel="stylesheet">
+<link href="<?php echo $this->baseUrl()."/"?>dashboard/css/style.css" rel="stylesheet">
+
+<div id="page-wrapper" style="    background: #fff;">
+	<!-- Page content start -->
+	<div class="page-contentbar">
+		<!-- START PAGE CONTENT -->
+		<div id="page-right-content">
+			<div class="container">
+				 <div class="row">
+					<div class="col-lg-12">
+						<div class="card-box">
+								<div class="col-sm-12 border-botom">
+									<div class="col-sm-8 pd-0">
+										<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REVENUE_GRAPHICS');?></h4>
+									</div>
+									<div class="col-sm-4 text-right">
+									</div>
+								</div>
+							</div>
+						<div class="reportblog">
+							
+							<form name="frm_rptstaff" action=""  method="post">
+								<div class="card-box">
+									<div class="form-group"> 
+										<div class="col-md-2 col-sm-2 col-xs-12">
+											<select id="start_date" name="start_date" class="fullside">
+												<?php if(!empty($this->yearOption)) foreach($this->yearOption As $y){?>
+												<option value="<?php echo $y['yearIndex'];?>" <?php if($this->search['start_date']==$y['yearIndex']){ echo 'selected';}?>><?php echo $y['yearIndex'];?></option>
+												<?php }?>
+											  </select>
+										</div>
+										
+										<div class="col-md-2 col-sm-2 col-xs-12">
+											<input type="submit" value="<?php echo $tr->translate("SEARCH");?>" class="btn btn-primary">
+											
+										</div>
+									</div>		
+								</div>
+							</form> 
+							<div id="divPrint">
+								<style>
+									tr td.border_bottom{border-bottom: solid 1px #000;}
+									tr td.border_double{border-bottom: double #000;}
+									.style{
+										line-height: 20px;font-size: 14px !important;
+										font-family: 'Times New Roman','Khmer OS Battambang';
+									}
+									th{padding: 5px;}
+									hover:hover{background: #ccc;}
+								</style>
+								<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
+									<tr>
+										<td width="30%">
+											<span id="projectlogo"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="height:80px;max-width: 100%;"></span>
+										</td>
+										<td width="40%" valign="top">
+										<ul style="list-style: none;">
+											<li style="white-space:nowrap;line-height:25px;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></li>
+											<li style="line-height:20px;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REVENUE_GRAPHICS");?></li>
+											<li style="line-height:25px;text-align:center; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
+												<span id="projectName"></span>
+											</li>
+											<li style="line-height:20px;text-align:center;">
+											<?php if (!empty($this->search['start_date'])){ echo $this->search['start_date'];} ////echo date("Y",strtotime($this->search['start_date']));?>							     
+											 </li>
+										</ul>
+										</td>
+										<td width="30%"></td>
+								 </tr> 
+									<tr>
+										<td colspan="3">
+											<div id="dashboard-bar-stacked" style="height: 300px;"></div>
+										</td>
+									</tr>
+							</table>
+							<br />
+							   <?php echo $this->footerReport;?>
+							</div>
+						</div> 
+					</div> <!-- end col -->	  
+					 
+				</div> <!-- end row -->
+                 <div class="row-fluid">
+					<div style="margin-top: 10px; margin-left: 0;" align="center">
+					</div>	
+				</div>       
+			</div>
+		</div>
+		<!-- END PAGE CONTENT -->
+	</div>
+</div>
+<!--Morris Chart-->
+<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+	<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+		<i class="fa fa-print"></i>
+	</div>
+	<div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+	<div class="ptss__settings">
+		<div class="ptss__single-setting" id="ptss__layout">
+			<div class="ptss__setting-control">
+				<div class="ptss__layout-wrapper">
+					<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<div style="clear:both;"></div>
+<script src="<?php echo $this->baseUrl()."/"?>dashboard/plugins/morris/morris.min@0.6.8.js"></script>
+<script src="<?php echo $this->baseUrl()."/"?>dashboard/plugins/raphael/raphael-min.js"></script>
+<?php 
+$dbLanreport  = new Report_Model_DbTable_DbLandreport();	
+$search = $this->search;
+$start_year = $search['start_date']."-01-01";//date("Y-01-01",strtotime($search['start_date']));
+  
+?>
+<script>
+var $stckedData  = [];
+//creating Stacked chart
+var $stckedData  = [
+    <?php for ($i=0; $i<=11; $i++ ){ 
+    	$year = date("Y-m",strtotime("$start_year+$i month"));
+    	$yearLb = date("M",strtotime("$start_year+$i month"));
+		$search['start_date'] = $year;
+    	$paymentAmount = $dbLanreport->getTotalPaymentByYear($search);
+    	$otherIncome = $dbLanreport->getTotalOtherIncomeByYear($search);
+		
+		$Amount = empty($paymentAmount['totalAmount'])?0:$paymentAmount['totalAmount'];
+		$otherAmount = empty($otherIncome['totalAmount'])?0:$otherIncome['totalAmount'];
+		
+		$total = 0;
+		$total = $Amount+$otherAmount;
+    ?>
+    { y: '<?php echo $yearLb;?>', a: <?php echo $total;?>},
+    <?php }?>
+];
+/**
+* Theme: SimpleAdmin Admin Template
+* Author: Coderthemes
+* Morris Chart
+*/
+!function($) {
+    "use strict";
+    var Dashboard = function() {};
+    //creates Stacked chart
+    Dashboard.prototype.createStackedChart  = function(element, data, xkey, ykeys, labels, lineColors) {
+        Morris.Bar({
+            element: element,
+            data: data,
+            xkey: xkey,
+            ykeys: ykeys,
+            stacked: true,
+            labels: labels,
+            hideHover: 'always',
+            resize: true, //defaulted to true
+            gridLineColor: '#000',
+            barColors: lineColors,
+			dataLabelsPosition:'inside'
+
+        });
+    },
+    Dashboard.prototype.init = function() {
+        this.createStackedChart('dashboard-bar-stacked', $stckedData, 'y', ['a'], ['<?php echo $tr->translate("TOTAL_AMOUNT")?>'], ['#02014a']);
+    },
+    //init
+    $.Dashboard = new Dashboard, $.Dashboard.Constructor = Dashboard
+	
+	
+    
+}(window.jQuery),
+
+//initializing
+function($) {
+    "use strict";
+    $.Dashboard.init();
+}(window.jQuery);
+
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=document.getElementById("divPrint").innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    //hideDialog();
+}
+</script>
