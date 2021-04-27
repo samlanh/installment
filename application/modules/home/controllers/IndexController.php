@@ -226,5 +226,27 @@ public function init()
 			exit();
 		}
 	}
+	
+	function rptIncomeGraphicAction(){
+		if($this->getRequest()->isPost()){
+			$search=$this->getRequest()->getPost();
+		}
+		else{
+			$search = array(
+					'branch_id'=>0,
+					'start_date'=> date('Y'),
+			);
+		}
+		$this->view->search=$search;
+		$dbLanreport  = new Report_Model_DbTable_DbLandreport();
+		$year = $dbLanreport->groupByYear();
+		$this->view->yearOption = $year;
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+	
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+	}
 }
 

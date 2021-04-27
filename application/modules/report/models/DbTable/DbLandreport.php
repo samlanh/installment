@@ -3644,4 +3644,67 @@ function updatePaymentStatus($data){
 		$order=" ORDER by ic.id desc ";
 		return $db->fetchAll($sql.$where.$order);
 	}
+	
+	public function getTotalPaymentByYear($search=null){
+      	$year = date("Y-m",strtotime($search['start_date']));
+      	$db = $this->getAdapter();
+    	
+    	$sql = "SELECT SUM(cr.recieve_amount) AS totalAmount,
+				DATE_FORMAT(cr.date_pay,'%m') AS monthIndex 
+				 FROM `ln_client_receipt_money` AS cr 
+				WHERE 1 
+				";    	
+
+		$startDate=date("Y-m-d",strtotime($year."-01"));
+		$endDate=date("Y-m-t",strtotime($year));
+		
+		$from_date	=" cr.date_pay >= '".$startDate." 00:00:00'";
+		$to_date	=" cr.date_pay <= '".$endDate." 23:59:59'";
+		$sql.= " AND ".$from_date." AND ".$to_date;
+		
+    	if(!empty($search['branch_id'])){
+    		$sql.=" AND cr.branch_id = ".$search['branch_id'];
+    	}
+    	$sql.=" GROUP BY DATE_FORMAT(cr.date_pay,'%m') ";
+    	return $db->fetchRow($sql);
+      }
+	 public function getTotalOtherIncomeByYear($search=null){
+      	$year = date("Y-m",strtotime($search['start_date']));
+      	$db = $this->getAdapter();
+    	
+    	$sql = "SELECT SUM(cr.total_amount) AS totalAmount,
+				DATE_FORMAT(cr.date,'%m') AS monthIndex 
+				 FROM `ln_income` AS cr 
+				WHERE 1 
+				";    	
+
+		$startDate=date("Y-m-d",strtotime($year."-01"));
+		$endDate=date("Y-m-t",strtotime($year));
+		
+		$from_date	=" cr.date >= '".$startDate." 00:00:00'";
+		$to_date	=" cr.date <= '".$endDate." 23:59:59'";
+		$sql.= " AND ".$from_date." AND ".$to_date;
+		
+    	if(!empty($search['branch_id'])){
+    		$sql.=" AND cr.branch_id = ".$search['branch_id'];
+    	}
+    	$sql.=" GROUP BY DATE_FORMAT(cr.date,'%m') ";
+    	return $db->fetchRow($sql);
+     }
+	 function groupByYear($search=null){
+		 $db = $this->getAdapter();
+		 $sql = "	SELECT
+						DATE_FORMAT(cr.date_pay,'%Y') AS yearIndex 
+					FROM `ln_client_receipt_money` AS cr 
+					GROUP BY DATE_FORMAT(cr.date_pay,'%y') ORDER BY DATE_FORMAT(cr.date_pay,'%y') DESC
+				";    
+    	$row = $db->fetchAll($sql);
+		if(empty($row)){
+			$row = array('yearIndex'=>date("Y"));
+		}else{
+			$newYear = $row[0]['yearIndex']+1;
+     		array_unshift($row, array ( 'yearIndex' => $newYear) );
+		}
+		return $row;
+	 }
  }

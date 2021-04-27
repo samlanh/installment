@@ -1322,4 +1322,8 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->footer = $frmpopup->getFooterReceipt();
 		$this->view->officailreceipt = $frmpopup->templateExpenseReceipt();
 	}
+	function rptIncomeGraphicAction(){
+		$this->_redirect("/home/index/rpt-income-graphic");
+		exit();
+	}
 }
