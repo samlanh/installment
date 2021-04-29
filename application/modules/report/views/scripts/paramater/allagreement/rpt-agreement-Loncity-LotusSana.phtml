@@ -209,7 +209,7 @@ dojo.require("dijit.form.DateTextBox");
 								</td>
 								<td class="rightContent">
 								<?php $companyNameI = str_replace("បុរី", "",str_replace("គម្រោង", "", $companyName)); ?>
-								ក្រុមហ៊ុន <span style="font-family:'Khmer OS Muol Light';"><?php echo $companyNameI?></span> អាសយដ្ឋាន នៅ<?php echo $companyAddress?>។ 
+								ក្រុមហ៊ុន <span style="font-family:'Khmer OS Muol Light';"><?php echo $companyNameI?></span> អាសយដ្ឋាន នៅ<?php echo $companyAddress?>។ <br />
 								តំណាងចុះកិច្ចសន្យា ដោយឈ្មោះ <span style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh']?></span> 
 								ភេទ <span class="value" ><?php echo $sex;?></span>  
 								អាយុ <strong>
@@ -421,7 +421,7 @@ dojo.require("dijit.form.DateTextBox");
 									<span>ប្រការ១០៖</span>
 								</td>
 								<td class="rightContent">
-									ភាគី (ក) សូមរក្សាសិទ្ធិនៃរូបរាងដើមរបស់សំណង់ ហើយភាគី (ខ) ពុំមានសិទ្ធិក្នុងការសាងសង់ ឬកែប្រែរូបរាងសំណង់ខាងក្រៅឡើយ ។ ផ្ទៃក្រាលការ៉ូនៅមុខផ្ទះឬចំហៀងផ្ទះនីមួយៗ ភាគី (ក) មានសិទ្ធិប្រើប្រាស់គ្រប់ពេលវេលាតាមតម្រូវការដូចជា៖ ការរៀបចំបណ្តាញលូ ទឹក ភ្លើង ។ល។ ដោយគ្រាន់តែរៀបចំឲ្យវបានល្អ វិញទុកជាការស្រេច ។
+									ភាគី (ក) សូមរក្សាសិទ្ធិនៃរូបរាងដើមរបស់សំណង់ ភាគី (ខ) មិនត្រូវសាងសង់ជារបង ម្ចាស់ផ្ទះមិនត្រូវសាងសង់សំយ៉ាប ឬរោងហ៊ុមព័ន្ធគ្រប់ប្រភេទ និងមិនត្រូវធ្វើការសាងសង់គ្រប់ប្រភេទណាប៉ះពាល់ដល់សោភ័ណ្ឌភាពបុរីឡើយ។ ករណីនេះត្រូវអនុវត្ដផងដែរចំពោះអ្នកទិញបន្ត និងអ្នកទទួលសិទ្ធិបន្ដពីភាគីអ្នកទិញជាបន្ដបន្ទាប់។ ភាគី (ខ) មិនអាចកែប្រែទម្រង់នៃផ្ទះផ្នែកខាងក្រៅបានឡើយ លុះត្រាតែមានការឯកភាពជាលាយលក្ខណ៍អក្សរពីផ្នែកគ្រប់គ្រង បុរី លន ស៊ីធីឡូតធឺសសាណា ជាមុនសិន ដើម្បីរក្សានូវសោភ័ណភាព និងស្តង់ដាសំណង់របស់បុរី។ ផ្ទៃក្រាលការ៉ូនៅមុខផ្ទះឬចំហៀងផ្ទះនីមួយៗ ភាគី (ក) មានសិទ្ធិប្រើប្រាស់គ្រប់ពេលវេលាតាមតម្រូវការដូចជា៖ ការរៀបចំបណ្តាញលូ ទឹក ភ្លើង ។ល។ ដោយគ្រាន់តែរៀបចំឲ្យវបានល្អ វិញទុកជាការស្រេច ។
 								</td>
 							</tr>
 							<tr>
@@ -471,11 +471,11 @@ dojo.require("dijit.form.DateTextBox");
 							   <tr style="font-size: 16px;">
 									<td  style="text-align:center;">&nbsp;<span><?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?" និង ".$this->agreement['hname_kh']:"";?></span></td>
 									<td >&nbsp;</td>
-									<td align="center"><span style="width: 90%; display: block; border-bottom: dashed 1px #000;" >&nbsp;</span></td>
+									<td align="center"><?php if(!empty($this->agreement['witnesses'])){ echo $this->agreement['witnesses'];?><?php }else{?><span style="width: 90%; display: block; border-bottom: dashed 1px #000;" >&nbsp;</span><?php }?></td>
 									<td >&nbsp;</td>
-									<td align="center"><span style="width: 90%; display: block; border-bottom: dashed 1px #000;" >&nbsp;</span></td>
+									<td align="center"><?php if(!empty($this->agreement['w_manager_namekh'])){ echo $this->agreement['w_manager_namekh'];?><?php }else{?><span style="width: 90%; display: block; border-bottom: dashed 1px #000;" >&nbsp;</span><?php }?></td>
 									<td >&nbsp;</td>
-									<td class="reff" align="center" style="white-space:nowrap;">&nbsp;<span><?php echo $lastName." ".$firstName;//echo $this->agreement['project_manager_namekh']; echo (!empty($this->agreement['w_manager_namekh']))?" និង ".$this->agreement['w_manager_namekh']:"";?></span></td>
+									<td class="reff" align="center" style="white-space:nowrap;">&nbsp;<span><?php echo $this->agreement['project_manager_namekh'];//$lastName." ".$firstName;//echo $this->agreement['project_manager_namekh']; echo (!empty($this->agreement['w_manager_namekh']))?" និង ".$this->agreement['w_manager_namekh']:"";?></span></td>
 							 </tr>
 							 
 						</table>
