@@ -290,5 +290,49 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 		$penalty = $db->fetchOne($sql);
 		return $penalty;
 	}
+	
+	function getSalePreparedScheduleInLimitDay(){
+    	$db=$this->getAdapter();
+    	
+    	$limitDay=3;
+    	$search['end_date']= date('Y-m-d',strtotime("-$limitDay day"));
+    	
+    	$sql = "SELECT s.*,
+					(SELECT pr.project_name FROM ln_project AS pr WHERE pr.br_id = s.branch_id lIMIT 1) as branch_name,
+					rs.reschedule_date,
+					p.land_address,
+					p.land_address AS landAddress,
+					p.street,
+					c.name_kh AS clientNamekh,
+					c.phone AS clientPhone,
+					c.hname_kh AS withClientNamekh,
+					c.lphone AS withClientPhone,
+					(SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = s.staff_id LIMIT 1) AS staffName,
+					(SELECT st.tel FROM `ln_staff` AS st WHERE st.co_id = s.staff_id LIMIT 1) AS staffPhone,
+					(SELECT st.email FROM `ln_staff` AS st WHERE st.co_id = s.staff_id LIMIT 1) AS staffEmail
+				FROM 
+					`ln_sale` AS s,
+					`ln_client` AS c,
+					`ln_properties` AS p,
+					`ln_reschedule` AS rs
+				WHERE 
+					rs.sale_id = s.id 
+					AND c.client_id = s.client_id
+					AND p.id = s.house_id
+					AND s.is_reschedule =1 
+					AND s.staff_id >0
+				";
+    	$where ='';
+    	$from_date =(empty($search['end_date']))? '1': " rs.reschedule_date >= '".$search['end_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " rs.reschedule_date <= '".$search['end_date']." 23:59:59'";
+    	$where= " AND ".$from_date." AND ".$to_date;
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$where.=$dbp->getAccessPermission("s.branch_id");
+    	
+    	$order=" ORDER BY rs.reschedule_date DESC ,s.id ASC ";
+		
+    	return $db->fetchAll($sql.$where.$order);
+    }
 }
 
