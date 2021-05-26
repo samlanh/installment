@@ -269,13 +269,28 @@ function getAllBranch($search=null){
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("branch_id");
     		
-    		$order=" order by branch_id DESC ";
+    		/*
+			$order=" order by branch_id DESC ";
     		if($search['ordering']==1){
     			$order.=" , date DESC";
     		}
     		if($search['ordering']==2){
     			$order.=" , id DESC";
     		}
+			*/
+			
+			$order=" order by branch_id DESC, date DESC";
+			if(!empty($search['queryOrdering'])){
+				if($search['queryOrdering']==1){
+					$order =" ORDER BY branch_id DESC, date ASC ";
+				}else if($search['queryOrdering']==2){
+					$order =" ORDER BY branch_id DESC, date DESC ";
+				}else if($search['queryOrdering']==3){
+					$order =" ORDER BY branch_id DESC, id ASC ";
+				}else if($search['queryOrdering']==4){
+					$order =" ORDER BY branch_id DESC, id DESC ";
+				}
+			}
     		if(empty($search)){
     			return $db->fetchAll($sql.$order);
     		}
@@ -364,13 +379,29 @@ function getAllBranch($search=null){
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("branch_id");
     		
-    		$order="";
+    		/*
+			$order="";
     		if($search['ordering']==1){
     			$order.=" order by date DESC";
     		}
     		if($search['ordering']==2){
     			$order.=" order by id DESC";
     		}
+			*/
+			
+			$order=" order by branch_id DESC, date DESC";
+			if(!empty($search['queryOrdering'])){
+				if($search['queryOrdering']==1){
+					$order =" ORDER BY branch_id DESC, date ASC ";
+				}else if($search['queryOrdering']==2){
+					$order =" ORDER BY branch_id DESC, date DESC ";
+				}else if($search['queryOrdering']==3){
+					$order =" ORDER BY branch_id DESC, id ASC ";
+				}else if($search['queryOrdering']==4){
+					$order =" ORDER BY branch_id DESC, id DESC ";
+				}
+			}
+			
     		if(empty($search)){
     			return $db->fetchAll($sql.$order);
     		}
@@ -578,8 +609,21 @@ function getAllBranch($search=null){
     		if (!empty($search['streetlist'])){
     			$where.=" AND `l`.`street` = '".$search['streetlist']."'";
     		}
-    		$where.=" ORDER BY  `crm`.`date_pay` DESC, crm.id DESC";
-    		return $db->fetchAll($sql.$where);
+    		//$where.=" ORDER BY  `crm`.`date_pay` DESC, crm.id DESC";
+    		$order=" ORDER BY  `crm`.`date_pay` DESC, crm.id DESC";
+			if(!empty($search['queryOrdering'])){
+				if($search['queryOrdering']==1){
+					$order =" ORDER BY `crm`.date_pay ASC ";
+				}else if($search['queryOrdering']==2){
+					$order =" ORDER BY `crm`.date_pay DESC ";
+				}else if($search['queryOrdering']==3){
+					$order =" ORDER BY `crm`.id ASC ";
+				}else if($search['queryOrdering']==4){
+					$order =" ORDER BY `crm`.id DESC ";
+				}
+			}
+		
+    		return $db->fetchAll($sql.$where.$order);
     	}
     	function getTermCodiction(){
     		$db =$this->getAdapter();
@@ -1932,8 +1976,20 @@ function getAllBranch($search=null){
     			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
-    		$where.=" ORDER BY c.id DESC ";
-    		return $db->fetchAll($sql.$where);
+    		//$where.=" ORDER BY c.id DESC ";
+			$order=" ORDER BY c.id DESC ";
+			if(!empty($search['queryOrdering'])){
+				if($search['queryOrdering']==1){
+					$order =" ORDER BY c.for_date ASC ";
+				}else if($search['queryOrdering']==2){
+					$order =" ORDER BY  c.for_date DESC ";
+				}else if($search['queryOrdering']==3){
+					$order =" ORDER BY c.id ASC ";
+				}else if($search['queryOrdering']==4){
+					$order =" ORDER BY c.id DESC ";
+				}
+			}
+    		return $db->fetchAll($sql.$where.$order);
     	}
     	function getSumCommission($search){
     		$db = $this->getAdapter();
@@ -2824,13 +2880,28 @@ function getAllBranch($search=null){
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("branch_id");
     		
-    		$order="";
+    		/*
+			$order="";
     		if($search['ordering']==1){
     			$order.=" order by cp.date_payment DESC";
     		}
     		if($search['ordering']==2){
     			$order.=" order by cp.id DESC";
     		}
+			*/
+			
+			$order=" order by branch_id DESC, date_payment DESC";
+			if(!empty($search['queryOrdering'])){
+				if($search['queryOrdering']==1){
+					$order =" ORDER BY cp.date_payment ASC ";
+				}else if($search['queryOrdering']==2){
+					$order =" ORDER BY  cp.date_payment DESC ";
+				}else if($search['queryOrdering']==3){
+					$order =" ORDER BY cp.id ASC ";
+				}else if($search['queryOrdering']==4){
+					$order =" ORDER BY cp.id DESC ";
+				}
+			}
     		if(empty($search)){
     			return $db->fetchAll($sql.$order);
     		}

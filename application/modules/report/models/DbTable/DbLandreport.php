@@ -103,7 +103,18 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
  			}
  		}
 		$order = " ORDER BY s.is_cancel ASC,s.payment_id DESC ";
-	
+		if(!empty($search['queryOrdering'])){
+			if($search['queryOrdering']==1){
+				$order =" ORDER BY s.is_cancel ASC,s.payment_id DESC, `s`.buy_date ASC ";
+			}else if($search['queryOrdering']==2){
+				$order =" ORDER BY s.is_cancel ASC,s.payment_id DESC, `s`.buy_date DESC ";
+			}else if($search['queryOrdering']==3){
+				$order =" ORDER BY s.is_cancel ASC,s.payment_id DESC, `s`.id ASC ";
+			}else if($search['queryOrdering']==4){
+				$order =" ORDER BY s.is_cancel ASC,s.payment_id DESC, `s`.id DESC ";
+			}
+		}
+		
 		return $db->fetchAll($sql.$where.$order);
 	
 	}
@@ -701,7 +712,17 @@ public function getAllOutstadingLoan($search=null){
 		if($order11==1){//for history
 			$order =" ORDER BY `crm`.`client_id` DESC ,`crm`.`sale_id` DESC , crm.id ASC";
 		}
-// 		echo $sql.$where.$order;exit();
+		if(!empty($search['queryOrdering'])){
+			if($search['queryOrdering']==1){
+				$order =" ORDER BY `crm`.date_pay ASC ";
+			}else if($search['queryOrdering']==2){
+				$order =" ORDER BY `crm`.date_pay DESC ";
+			}else if($search['queryOrdering']==3){
+				$order =" ORDER BY `crm`.id ASC ";
+			}else if($search['queryOrdering']==4){
+				$order =" ORDER BY `crm`.id DESC ";
+			}
+		}
       	return $db->fetchAll($sql.$where.$order);
       }
       function submitClosingEngry($data){
@@ -2947,6 +2968,17 @@ function updatePaymentStatus($data){
    		}
    	}
 	   	$order = " ORDER BY s.buy_date DESC ";
+		if(!empty($search['queryOrdering'])){
+			if($search['queryOrdering']==1){
+				$order =" ORDER BY `s`.buy_date ASC ";
+			}else if($search['queryOrdering']==2){
+				$order =" ORDER BY `s`.buy_date DESC ";
+			}else if($search['queryOrdering']==3){
+				$order =" ORDER BY `s`.id ASC ";
+			}else if($search['queryOrdering']==4){
+				$order =" ORDER BY `s`.id DESC ";
+			}
+		}
 	   	return $db->fetchAll($sql.$where.$order);
    }
 //    public function getSaleSummary($search = null){//rpt-loan-released/
@@ -3279,7 +3311,8 @@ function updatePaymentStatus($data){
 	      		}
       		}
       	}
-      	$order=" ORDER BY oi.branch_id DESC ";
+      	/*
+		$order=" ORDER BY oi.branch_id DESC ";
       	if(!empty($search['ordering'])){
 	      	if($search['ordering']==1){
 	      		$order.=" , op.for_date DESC";
@@ -3288,6 +3321,19 @@ function updatePaymentStatus($data){
 	      		$order.=" , op.id DESC";
 	      	}
       	}
+		*/
+		$order=" ORDER BY oi.branch_id DESC, op.for_date DESC ";
+		if(!empty($search['queryOrdering'])){
+			if($search['queryOrdering']==1){
+				$order =" ORDER BY oi.branch_id DESC, `op`.for_date ASC ";
+			}else if($search['queryOrdering']==2){
+				$order =" ORDER BY oi.branch_id DESC, `op`.for_date DESC ";
+			}else if($search['queryOrdering']==3){
+				$order =" ORDER BY oi.branch_id DESC, `op`.id ASC ";
+			}else if($search['queryOrdering']==4){
+				$order =" ORDER BY oi.branch_id DESC, `op`.id DESC ";
+			}
+		}
       	return $db->fetchAll($sql.$where.$order);
       }
       
