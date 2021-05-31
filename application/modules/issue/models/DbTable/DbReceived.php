@@ -208,6 +208,7 @@ class Issue_Model_DbTable_DbReceived extends Zend_Db_Table_Abstract
 			(SELECT com.commune_namekh FROM `ln_commune` AS com WHERE com.com_id = cl.`com_id` LIMIT 1) AS commune_namekh,
 			(SELECT vil.village_namekh FROM `ln_village` AS vil WHERE vil.vill_id = cl.`village_id` LIMIT 1) AS village_namekh,
 			CONCAT(p.land_address,'-',p.street) AS propertyInfo,
+			cl.arid_no AS witnesses,
 			s.* 
 			FROM `ln_sale` AS s,
 			`ln_client` AS cl,

@@ -233,6 +233,8 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		(SELECT vil.village_namekh FROM `ln_village` AS vil WHERE vil.vill_id = cl.`village_id` LIMIT 1) AS village_namekh,
 		(SELECT CONCAT(pro.land_address,'-',pro.street) FROM `ln_properties` AS pro WHERE pro.id = s.`house_id` LIMIT 1) AS propertyinfo,
 		(SELECT pro.hardtitle FROM `ln_properties` AS pro WHERE pro.id = s.`house_id` LIMIT 1) AS hardtitle,
+		(SELECT  CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id=c.user_id LIMIT 1) AS userNameInput,
+		 cl.arid_no AS witnesses,
 		c.*
 		 FROM `ln_receiveplong` AS c,
 			`ln_sale` AS s,
@@ -260,6 +262,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 			(SELECT com.commune_namekh FROM `ln_commune` AS com WHERE com.com_id = cl.`com_id` LIMIT 1) AS commune_namekh,
 			(SELECT vil.village_namekh FROM `ln_village` AS vil WHERE vil.vill_id = cl.`village_id` LIMIT 1) AS village_namekh,
 			CONCAT(p.land_address,'-',p.street) AS propertyInfo,
+			 cl.arid_no AS witnesses,
 			s.* 
 			FROM `ln_sale` AS s,
 			`ln_client` AS cl,
