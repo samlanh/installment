@@ -558,6 +558,7 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 		$agreement_for->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'required'=>"false",
 				'onchange'=>'checkPreScheduleOption();'
 		));
 		$optForAgr = $db->getVewOptoinTypeByType(31,1,null,1);
