@@ -22,6 +22,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'branch_id'		=> $data['branch_id'],
 				'title'			=> $data['title'],
 				'total_amount'	=> $data['total_amount'],
+				'total_amount_after'	=> $data['total_amount'],//new 2021-6-02
 				'invoice'		=> $invoice,
 				'cheque'		=> $data['cheque'],
 				'cheque_issuer'	=> $data['cheque_issuer'],
@@ -69,7 +70,22 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 					}
 				}
 			}
-				
+			if (!empty($data['identity'])){
+				$ids = explode(',', $data['identity']);
+				foreach ($ids as $i){
+					$this->_name='ln_expense_detail';
+						$_arr = array(
+								'expense_id'=>$expense_id,
+								'pro_id'=>$data['product_name_'.$i],
+								'qty'	=>$data['qty_'.$i],
+								'cost'	=>$data['cost_'.$i],
+								'date'	=>date("Y-m-d"),
+								'amount'=>$data['amount_'.$i],
+								'note'	=>$data['note_'.$i],
+						);
+						$this->insert($_arr);
+				}
+			}				
 			$_db->commit();
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -83,6 +99,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'branch_id'		=> $data['branch_id'],
 				'title'			=> $data['title'],
 				'total_amount'	=> $data['total_amount'],
+				'total_amount_after'	=> $data['total_amount'],//new 2021-6-02
 				'payment_id'	=> $data['payment_type'],
 				'cheque'		=> $data['cheque'],
 				'cheque_issuer'	=> $data['cheque_issuer'],
@@ -185,6 +202,60 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 								$string = "Image Upload failed";
 							//     				}
 						}
+					}
+				}
+			}
+			
+			
+			$ids = explode(',', $data['identity']);
+			$detailid="";
+			if (!empty($ids)){
+				foreach ($ids as $i){
+					if (empty($detailid)){
+						$detailid = $data['detailid'.$i];
+					}else{
+						if (!empty($data['detailid'.$i])){
+							$detailid = $detailid.",".$data['detailid'.$i];
+						}
+					}
+				}
+			}
+			$whereDetail=" expense_id =".$data['id'];
+			if(!empty($detailid)){
+				$whereDetail.=" AND id NOT IN ($detailid)";
+			}
+			$this->_name='ln_expense_detail';
+			$this->delete($whereDetail);
+			
+			$ids = explode(',', $data['identity']);
+			if (!empty($ids)){
+				foreach ($ids as $i){
+					if (!empty($data['detailid'.$i])){
+						$_arr = array(
+								'expense_id'	=>$data['id'],
+								'pro_id'		=>$data['product_name_'.$i],
+								'qty'			=>$data['qty_'.$i],
+								'cost'			=>$data['cost_'.$i],
+								'date'			=>date("Y-m-d"),
+								'amount'		=>$data['amount_'.$i],
+								'note'			=>$data['note_'.$i],
+						);
+						$wheresee=" id = ".$data['detailid'.$i];
+						$this->_name='ln_expense_detail';
+						$this->update($_arr, $wheresee);
+
+					}else{
+						$_arr = array(
+								'expense_id'	=>$data['id'],
+								'pro_id'		=>$data['product_name_'.$i],
+								'qty'			=>$data['qty_'.$i],
+								'cost'			=>$data['cost_'.$i],
+								'date'			=>date("Y-m-d"),
+								'amount'		=>$data['amount_'.$i],
+								'note'			=>$data['note_'.$i],
+						);
+						$this->_name='ln_expense_detail';
+						$this->insert($_arr);
 					}
 				}
 			}
@@ -364,4 +435,12 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		$sql=" SELECT * FROM ln_expense_document WHERE exspense_id=$id ";
 		return $db->fetchAll($sql);
 	}
+	
+	function getExpenseDetail($id){
+    	$db=$this->getAdapter();
+    	$sql="SELECT *,
+		(SELECT ide.title FROM `rms_product` AS ide WHERE ide.id = pro_id LIMIT 1) AS pro_name
+    	FROM ln_expense_detail WHERE expense_id=$id";
+    	return $db->fetchAll($sql);
+    }
 }

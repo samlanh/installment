@@ -1,0 +1,251 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("ADD_PRODUCT"));
+	$baseurl = $this->baseUrl();
+	$frm_items= $this->frm_items;
+?>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<script type="text/javascript">
+    dojo.require("dojo.NodeList-manipulate");
+    dojo.require("dojo.parser");
+    dojo.require("dijit.form.Textarea");
+	 dojo.require("dijit.form.NumberTextBox");
+</script>
+<style>
+.dijitTextArea[cols].dijitTextArea[cols]{
+	width: 99%;
+}
+.image-box {
+    text-align: center;
+    width: 215px;
+    height: 215px;
+}
+.image-box img {
+    width: 215px;
+    height: 215px;
+}
+
+.button_browse {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    width: 101%;
+    height: 42px;
+    background: #fbf9f9;
+    border: 1px solid #e8e8e8;
+}
+.button_browse span {
+    line-height: 33px;
+    font-weight: 600;
+    cursor: pointer;
+}
+input.btn_borwse_image {
+    position: absolute;
+    width: 100%;
+    height: 38px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+.account-image {
+    border: solid 1px #eee;
+    width: 215px;
+    margin: 0 auto;
+}
+</style>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+       		<div class="col-sm-12 border-botom">
+		    	<div class="col-sm-8 pd-0">
+	    			<h4 class="m-b-0"><i class="fa fa-cubes " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD_PRODUCT');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<form  id='edit-major' action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					items_id = dijit.byId('items_id').get('value');
+					if(items_id=="" || items_id==-1){
+						alert("<?php echo $tr->translate("PLEASE_PRODUCT_CATEGORY");?>");
+						return false;
+					}
+					loadingBlock();
+                	//dijit.byId("save_new").attr("disabled",true);
+					//dijit.byId("save_close").attr("disabled",true);
+					return true;
+				}else {
+					return false;
+				}
+			</script>
+			<div class="card-box">
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRODUCT_CODE");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm_items->getElement("code");?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PRODUCT_NAME");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm_items->getElement("title");?>
+		                	
+		                </div>
+		             </div>
+					<div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PRODUCT_CATEGORY");?> </label>
+		                <div class="col-md-4 col-sm-4 col-xs-12">
+		                	<?php echo $frm_items->getElement("items_id");?>
+		                </div>
+		                <div class="col-md-2 col-sm-2 col-xs-12">
+		                <input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getRefreshItems();"/>
+		            	</div>
+		             </div>
+		             
+	                <div class="form-group">
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRICE");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<?php echo $frm_items->getElement("price");?>
+	                   </div>
+	                </div>
+					<div class="form-group">
+		                <label class="control-label  col-md-12 col-sm-12 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
+		             </div>
+		             <div class="form-group">
+		                <div class="col-md-12 col-sm-12 col-xs-12">
+		                	<?php echo $frm_items->getElement("note");?>
+		                </div>
+		             </div>
+		            
+		         </div>
+		         <div class="col-md-8 col-sm-8 col-xs-12">
+		         	<div class="form-group">
+		                <div class="col-md-12 col-sm-12 col-xs-12 text-center" >
+		                	<?php 
+							$images = $this->baseUrl().'/images/no-photo.png';
+							?>
+							<input name="old_photo"  value="<?php echo $this->photo;?>" type="hidden" />
+							<div class="account-image" style=" margin-top: -130px;">
+								<div class="image-box">
+									<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
+								</div>
+								<div class="button_browse">
+								<div id='preview'></div>	
+										<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+										<input class="btn_borwse_image" type="file" id="images" name="images" />
+								</div>
+							</div>
+		                </div>
+		                <div class="clearfix"></div>
+		             </div>
+	             	
+		         </div>
+		         <div class="clearfix"></div>
+			         <div class="card-box mt-20">
+		               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+		               		<input iconClass="dijitIconClear" type="reset" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+							<input type="submit"  value="save_close" name="save_close" id="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+							<input type="submit" value="save_new" name="save_new" id="save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+		               	</div>
+		             </div>
+			</div>
+		</form>
+    </div>
+</div>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dojo.NodeList-manipulate");
+	dojo.ready(function(){ 
+		
+		
+	});	
+
+	
+	function readURL(input) {
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	        
+	        reader.onload = function (e) {
+	            $('#profile_wiew').attr('src', e.target.result);
+	        }
+	        reader.readAsDataURL(input.files[0]);
+	    }
+	}
+	var maxSize = 0;
+	$("#images").change(function(){
+		var iSize = ($("#images")[0].files[0].size / 1024); 
+		
+	    if (iSize / 1024 > 1) 
+	    { 
+	       if (((iSize / 1024) / 1024) > 1) 
+	       { 
+	           iSize = (Math.round(((iSize / 1024) / 1024) * 100) / 100);
+	           alert('<?php echo $tr->translate("Image size more than 5Mb can not upload");?>');
+	     	   maxSize = 1;
+	           return false;
+	           //$("#lblSize").html( iSize + "Gb"); 
+	       }else{ 
+	           iSize = (Math.round((iSize / 1024) * 100) / 100);
+	           if(iSize>5){
+	               alert('<?php echo $tr->translate("Image size more than 5Mb can not upload");?>');
+	         	   maxSize = 1;
+	               return false;
+	           }
+	       } 
+	    } 
+	    else 
+	    {
+	       iSize = (Math.round(iSize * 100) / 100);
+	       maxSize = 0;
+	    }
+	    maxSize = 0;
+	    readURL(this);
+	   
+	});
+
+	var dept_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+    require(["dojo/ready"], function(ready){
+    	
+    	new dijit.form.FilteringSelect({
+    		name: "items_id",
+    		id: "items_id",
+    		searchAttr: "name",
+    		class: 'fullside',
+    		onChange: function() {
+    			checkaddItems();
+    	    }
+    		}, "items_id");
+    	
+    });
+    function checkaddItems(){
+    	dept_id = dijit.byId('items_id').get('value');
+    	if(dept_id==-1){
+    		window.open('<?php echo Zend_Controller_Front::getInstance()->getBaseUrl()."/group/productcate/add?rightclick=true";?>','_blank');
+	    }
+    }
+function getRefreshItems(){
+	var url_getItems = '<?php echo $this->url(array("module"=>"group","controller"=>"productcate","action"=>"refreshitems"));?>';										
+		loadingBlock();
+		dojo.xhrPost({
+			url: url_getItems,
+			handleAs:"json",
+			load: function(data) {
+				dept_store  = getDataStorefromJSON('id','name', data);
+			    dijit.byId('items_id').set('store',dept_store);  
+			   document.getElementsByClassName("overlay")[0].style.display="none";
+			},
+			error: function(err) {
+				document.getElementsByClassName("overlay")[0].style.display="none";
+			}
+		});
+}
+</script>

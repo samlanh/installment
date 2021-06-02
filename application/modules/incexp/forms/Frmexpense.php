@@ -204,6 +204,18 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 		
+		$_arr_opt = array(""=>$this->tr->translate("PLEASE_SELECT"));
+    	$Option = $db->getAllItems();
+    	if(!empty($Option))foreach($Option AS $row) $_arr_opt[$row['id']]=$row['name'];
+    	$_items_id = new Zend_Dojo_Form_Element_FilteringSelect("items_id");
+    	$_items_id->setMultiOptions($_arr_opt);
+    	$_items_id->setAttribs(array(
+    			'dojoType'=>'dijit.form.FilteringSelect',
+    			'required'=>'true',
+    			'onChange'=>'getRefreshProduct();',
+    			'missingMessage'=>'Invalid Module!',
+    			'class'=>'fullside height-text',));
+		
 		if($data!=null){
 			$_currency_type->setValue($data['category_id']);
 			$category_id_expense->setValue($data['category_id']);
@@ -235,7 +247,10 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 		}
 		$this->addElements(array($_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
-				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id,$cheque_issuer,$_other_invoice));
+				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id,$cheque_issuer,$_other_invoice,
+				$_items_id
+				
+				));
 		return $this;
 		
 	}

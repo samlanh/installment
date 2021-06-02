@@ -190,7 +190,7 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 		$_rate =  new Zend_Dojo_Form_Element_FilteringSelect("interest_rate");
 		$_rate->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
-				'required'=>false,
+				'required'=>"false",
 				'name'=>'interest_rate',
 				'class'=>'fullside',
 				'onchange'=>'checkScheduleOption();',
@@ -427,7 +427,7 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
 		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
-			'required'=>false,
+			'required'=>"false",
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
 			'class'=>'fullside','onChange'=>'filterClient();'

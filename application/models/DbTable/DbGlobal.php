@@ -2136,5 +2136,31 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			}
 		}
    }
+   
+   function getAllItems($type=null,$branch=null,$schooloption=null){
+  	$db = $this->getAdapter();
+  	$this->_name = "rms_category";
+  	$sql="SELECT m.id, m.title AS name FROM $this->_name AS m WHERE m.status=1 ";
+  	if (!empty($type)){
+  		$sql.=" AND m.type=$type";
+  	}
+  	$sql .=' ORDER BY m.type DESC, m.title ASC';
+  	return $db->fetchAll($sql);
+  }
+  function getViewById($type,$is_opt=null){
+   	$db=$this->getAdapter();
+   	$sql="SELECT key_code,name_kh AS view_name FROM ln_view WHERE `type`=$type AND `status`=1 ";
+   	$rows = $db->fetchAll($sql);
+   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+   	$options= array(-1=>$tr->translate("CHOOSE"));
+   	if($is_opt!=null){
+   		if(!empty($rows))foreach($rows AS $row){
+   			$options[$row['key_code']]=$row['view_name'];
+   		}
+   	}else{
+   		return $rows;
+   	}
+   	return $options;
+   }
 }
 ?>

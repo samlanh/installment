@@ -134,6 +134,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 			}
 		}
 		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
 		$db = new Incexp_Model_DbTable_DbExpense();
 		$row  = $db->getexpensebyid($id);
 		if(empty($row)){
@@ -142,6 +143,8 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 		}
 		$this->view->row = $row;
 		$this->view->document=$db->getExpenseDocumentbyid($id);
+
+		$this->view->row_pur_detai=$db->getExpenseDetail($id);	
 		
     	$pructis=new Incexp_Form_Frmexpense();
     	$frm = $pructis->FrmAddExpense($row);
