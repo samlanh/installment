@@ -329,6 +329,9 @@
 <?php 
 $urlprint = $this->baseUrl()."/report/loan/receipt-expense/id/";
 $urlDetail = $this->baseUrl()."/report/loan/expense-detail/id/";
+$urlExpensDetailItems = $this->baseUrl()."/report/paramater/rpt-expense-detail/id/";
+$settingDoc = SETTING_EXPENSE_DOC;
+$expenseFeatureList = EXPENSE_FEATURE_LIST;
 ?>
 <script type="text/javascript">
 var row=0;
@@ -342,16 +345,24 @@ $(function(){
 				url='<?php echo $urlprint;?>';
 			}else if(key=="detail"){
 				url='<?php echo $urlDetail;?>';
+			}else if(key=="detailList"){
+				url='<?php echo $urlExpensDetailItems;?>';
 			}
 			gotoAction();
 		},
 		items: {
 			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
 			<?php 
-			$settingDoc = SETTING_EXPENSE_DOC;
 			if($settingDoc==1){
 			?>
-			"detail": {name: "<?php echo $tr->translate("PAYMENT_VOUCHER​_DETAIL");?>", icon: "fa-print", accesskey: "c o p y"},
+			"detail": {name: "<?php echo $tr->translate("PAYMENT_VOUCHER​_DOCUMENT");?>", icon: "fa-print", accesskey: "c o p y"},
+			<?php 
+			}
+			?>
+			<?php 
+			if($expenseFeatureList==1){
+			?>
+			"detailList": {name: "<?php echo $tr->translate("PAYMENT_VOUCHER​_LIST");?>", icon: "fa-print", accesskey: "c o p y"},
 			<?php 
 			}
 			?>

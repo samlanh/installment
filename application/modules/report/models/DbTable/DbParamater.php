@@ -2387,6 +2387,7 @@ function getAllBranch($search=null){
 		(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id=ln_expense.user_id LIMIT 1) AS user_name,
 		(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = ln_expense.supplier_id LIMIT 1) AS supplier_name,
 		(SELECT s.phone FROM `ln_supplier` AS s WHERE s.id = ln_expense.supplier_id LIMIT 1) AS supplierPhone,
+		(SELECT s.email FROM `ln_supplier` AS s WHERE s.id = ln_expense.supplier_id LIMIT 1) AS supplierEmail,
 		(SELECT v.name_kh FROM ln_view AS v WHERE v.type=2 AND key_code=payment_id LIMIT 1) AS payment_method
 		FROM ln_expense where id=$id ";
 		$dbp = new Application_Model_DbTable_DbGlobal();
@@ -3353,4 +3354,85 @@ function getAllBranch($search=null){
 		}
 		return $db->fetchAll($sql);
 	}
+	
+	function getAllPurchasePayment($search){
+    	$db = $this->getAdapter();
+    	try{
+    		$sql="
+    		SELECT
+    		pp.*,
+    		(SELECT b.project_name FROM `ln_project` AS b  WHERE b.br_id = pp.branch_id LIMIT 1) AS branch_name,
+    		pp.receipt_no,
+    		(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS supplier_name,
+    		pp.balance,
+    		pp.total_paid,pp.total_due,
+    		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = pp.paid_by AND v.type=26 LIMIT 1) AS paid_by,
+    		pp.date_payment,
+    		pp.status
+    		FROM `rms_expense_payment` AS pp WHERE pp.status=1 
+    		";
+    		$from_date =(empty($search['start_date']))? '1': " pp.date_payment >= '".date("Y-m-d",strtotime($search['start_date']))." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " pp.date_payment <= '".date("Y-m-d",strtotime($search['end_date']))." 23:59:59'";
+    		$sql.= " AND  ".$from_date." AND ".$to_date;
+    		$where="";
+    		if(!empty($search['adv_search'])){
+    			$s_where=array();
+    			$s_search=addslashes(trim($search['adv_search']));
+    			$s_where[]= " pp.receipt_no LIKE '%{$s_search}%'";
+    			$s_where[]= " pp.balance LIKE '%{$s_search}%'";
+    			$s_where[]= " pp.total_paid LIKE '%{$s_search}%'";
+    			$s_where[]= " pp.total_due LIKE '%{$s_search}%'";
+    
+    			$where.=' AND ('.implode(' OR ', $s_where).')';
+    		}
+    		if(!empty($search['supplier_search'])){
+    			$where.=" AND pp.supplier_id=".$search['supplier_search'];
+    		}
+    		if(!empty($search['status_search'])){
+    			$where.=" AND pp.status=".$search['status_search'];
+    		}
+    		if(!empty($search['branch_id'])){
+    			$where.=" AND pp.branch_id=".$search['branch_id'];
+    		}
+    		$dbp = new Application_Model_DbTable_DbGlobal();
+    		$where.=$dbp->getAccessPermission('pp.branch_id');
+			$order=" ORDER BY pp.id DESC";
+			if(!empty($search['queryOrdering'])){
+				if($search['queryOrdering']==1){
+					$order =" ORDER BY pp.date_payment ASC ";
+				}else if($search['queryOrdering']==2){
+					$order =" ORDER BY pp.date_payment DESC ";
+				}else if($search['queryOrdering']==3){
+					$order =" ORDER pp.id ASC ";
+				}else if($search['queryOrdering']==4){
+					$order =" ORDER pp.id DESC ";
+				}
+			}
+    
+    		return $db->fetchAll($sql.$where.$order);
+    
+    	}catch(Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    	}
+    }
+	function getPurchasePaymentDetail($payment_id){
+    	$db = $this->getAdapter();
+    	$sql="SELECT pd.*,
+    	(SELECT p.invoice FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS supplier_no,
+    	(SELECT p.other_invoice FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS other_invoice
+    	FROM `rms_expense_payment_detail` AS pd WHERE pd.payment_id =$payment_id ";
+    	return $db->fetchAll($sql);
+    }
+	function getPurchasePaymentById($id){
+    	$db=$this->getAdapter();
+    	$sql="SELECT pp.*,
+    	(SELECT b.project_name FROM `ln_project` AS b  WHERE b.br_id = pp.branch_id LIMIT 1) AS branch_name,
+		(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS supplier_name,
+		(SELECT s.phone FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS tel,
+		(SELECT s.email FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS email
+    	FROM `rms_expense_payment` AS pp WHERE pp.id = $id ";
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission('pp.branch_id');
+    	return $db->fetchRow($sql);
+    }
 }

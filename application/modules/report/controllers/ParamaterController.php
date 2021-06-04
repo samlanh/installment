@@ -946,4 +946,76 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
+  
+  public function rptExpensePaymentAction(){
+		try{
+		if($this->getRequest()->isPost()){
+    			$search = $this->getRequest()->getPost();
+    		}
+    		else{
+    			$search=array(
+    							'branch_id' => '',
+    							'adv_search' => '',
+    					        'supplier_search'=>'',
+    							'paid_by_search'=>'',
+    							'start_date'=> date('Y-m-d'),
+    							'end_date'=>date('Y-m-d'),
+    					);
+    		}
+			$this->view->search = $search;
+			$db = new Report_Model_DbTable_DbParamater();
+			$this->view->row = $db->getAllPurchasePayment($search);
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("Application Error");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+		$frm = new Incexp_Form_FrmExpensePayment();
+		$frm->FrmAddPurchasePayment(null);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_payment = $frm;
+		
+		$frm = new Loan_Form_FrmSearchLoan();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+	}
+	
+	public function rptExpenseDetailAction(){
+		try{
+			$id=$this->getRequest()->getParam('id');
+			
+			$db = new Report_Model_DbTable_DbParamater();
+			$row = $db->getexpensebyid($id);
+			if (empty($row)){
+				Application_Form_FrmMessage::Sucessfull("No Record","/report/paramater/rpt-expense");
+				exit();
+			}
+			$this->view->row = $row;
+			$this->view->rowDetail = $db->getPurchasePaymentDetail($id);;
+			
+			$db = new Incexp_Model_DbTable_DbExpense();
+			$this->view->row_pur_detai=$db->getExpenseDetail($id);
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("Application Error");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+	}
+	public function rptExpenseReceiptAction(){
+		try{
+			$id=$this->getRequest()->getParam('id');
+			
+			$db = new Report_Model_DbTable_DbParamater();
+			$row = $db->getPurchasePaymentById($id);
+			if (empty($row)){
+				Application_Form_FrmMessage::Sucessfull("No Record","/report/paramater/rpt-expense-payment");
+				exit();
+			}
+			$this->view->row = $row;
+			$this->view->rowDetail = $db->getPurchasePaymentDetail($id);;
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("Application Error");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+	}
 }

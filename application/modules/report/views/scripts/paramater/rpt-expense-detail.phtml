@@ -1,0 +1,138 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate('PAYMENT_VOUCHER​_LIST')); 
+	echo $this->headTitle(''); 
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$frm = $this->frm_payment;
+	
+		$branch_title = $tr->translate("BRAND_TITLE");
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	if (!empty($this->row['branch_id'])){
+		$branch = $dbGB->getAllBranchInfoByID($this->row['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}
+?>	
+<meta charset="utf-8">
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('PAYMENT_VOUCHER​_LIST');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<div style="min-height:22cm; margin:0 auto;">
+		<div id="divPrint">
+			<style>
+				span.label-title {
+				    min-width: 100px;
+				    display: inline-block;
+				    font-weight: 600;
+				}
+			</style>
+			<table style="font-family: 'Times New Roman','Khmer OS Battambang'; background:#fff;width:90%; margin: 0 auto;white-space: nowrap;width: 100%;">
+				
+				<tr>
+					<td width="25%" align="left">
+						<img src="<?php echo $logo;?>" height="85px">
+					</td>
+					<td align="center" width="50%">
+						<strong style="font-weight:Normal; color:#000; font-size: 16px; font-family:'Times New Roman','Khmer OS Muol Light';">ប័ណ្ណចំណាយ</strong><br />
+						<strong style="font-weight:bold; color:#000; font-size: 16px; font-family:'Times New Roman','Khmer OS Muol Light';">Expense Voucher</strong>
+					</td>
+					<td width="25%" align="right">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<ul style="line-height: 18px; list-style: none;font-size: 13px;margin: 0;padding: 0;">
+							<li><span class="label-title"><?php echo $tr->translate('SUPPLIER_NAME');?></span> : <?php echo $this->row['supplier_name'];?></li>
+							<li><span class="label-title"><?php echo $tr->translate('PHONE');?></span> : <?php echo $this->row['supplierPhone'];?></li>
+							<li><span class="label-title"><?php echo $tr->translate('EMAIL');?></span> : <?php echo $this->row['supplierEmail'];?></li>
+						</ul>
+					</td>
+					<td>
+						<ul style="line-height: 18px; list-style: none;font-size: 13px;margin: 0;padding: 0;">
+							<li><span class="label-title"><?php echo $tr->translate('BRANCH_NAME');?></span> : <?php echo $this->row['branch_name'];?></li>
+							<li><span class="label-title"><?php echo $tr->translate('RECEIPT_NO');?></span> : <?php echo $this->row['invoice'];?></li>
+							<li><span class="label-title"><?php echo $tr->translate('DATE');?></span> : <?php echo date("d/M/Y",strtotime($this->row['date']));?></li>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+				 
+					<td colspan="3">
+						<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;"  border="1" >
+							<tr style="font-size:12px; height: 18px;background-color: #CCD9FF;line-height: 30px;font-weight: bold;" align="center">
+									<td>&nbsp;<?php echo $tr->translate('NUM');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PRODUCT_NAME');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('Qty');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('UNIT_PRICE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('SUBTOTAL');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('NOTE');?>&nbsp;</td>
+						   </tr>
+							
+						<?php $i=0;
+						$totalremain=0;
+						$totalpaid=0;$totalbalance=0; if(!empty($this->row_pur_detai)) 
+							foreach ($this->row_pur_detai AS $rs) { $i++;
+						  ?>
+							<tr class="hover" style="font-size:12px; line-height: 14px"​ align="center">
+								    <td> <?php echo $i; ?></td>
+								    <td align="left">&nbsp;<?php echo $rs['pro_name'];?>&nbsp;</td>
+								    <td align="center">&nbsp;$&nbsp;<?php echo $rs['qty'];?>&nbsp;</td>
+								    <td align="right">&nbsp;$&nbsp;<?php echo number_format($rs['cost'],2);?>&nbsp;</td>
+								    <td align="right">&nbsp;$&nbsp;<?php echo number_format($rs['amount'],2);?>&nbsp;</td>
+									 <td align="left">&nbsp;<?php echo $rs['note'];?>&nbsp;</td>
+							 </tr>
+							<?php 
+								$totalpaid=$totalpaid+$rs['amount'];
+								
+						
+						}?>	 
+							
+						</table>	
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" align="right">
+					     <table width="30%"  style="border: 0px solid #000;border-collapse: collapse;"  ><!-- background-color: #ccc; -->
+					           
+					           <tr align="center" style="font-size:12px;line-height: 18px;font-weight: bold;" >
+					               <td><?php echo $tr->translate('TOTAL');?> :</td>
+					               <td align="right">&nbsp;$&nbsp;<?php echo number_format($totalpaid,2);?>&nbsp; </td>
+					           </tr>
+					           
+					     </table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr >
+					<td align="center" width="25%">
+						<span style=" font-size: 14px;">Verified by</span>
+					</td>
+					<td  width="50%">
+						&nbsp;
+					</td>
+					<td align="center"  width="25%">
+						<span style="font-size: 14px;text-align: right;">Prepared by</span>
+					</td>
+				</tr>
+				
+			</table>
+		</div>			
+	</div>
+</div>
+
+
+
+
+
