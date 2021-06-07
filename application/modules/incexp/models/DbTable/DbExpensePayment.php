@@ -308,6 +308,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     				'date_payment'      => $_data['date_payment'],
     				'paid_by'      => $_data['paid_by'],
 					'cheque_no'      => $_data['cheque_no'],
+					'cheque_issuer'      => $_data['cheque_issuer'],
     				'create_date'=> date("Y-m-d H:i:s"),
     				'modify_date'	  => date("Y-m-d H:i:s"),
     				'status'=> 1,
@@ -377,6 +378,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     				'date_payment'      => $_data['date_payment'],
     				'paid_by'      => $_data['paid_by'],
 					'cheque_no'      => $_data['cheque_no'],
+					'cheque_issuer'      => $_data['cheque_issuer'],
 //     				'create_date'=> date("Y-m-d H:i:s"),
     				'modify_date'	  => date("Y-m-d H:i:s"),
     				'status'=> 1,
@@ -570,6 +572,12 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     	$sql.=$dbp->getAccessPermission('pp.branch_id');
     	return $db->fetchRow($sql);
     }
+	
+	function getAllChequeIssue(){
+		$db = $this->getAdapter();
+		$sql = " SELECT DISTINCT cheque_issuer as name,cheque_issuer as id FROM `rms_expense_payment` WHERE cheque_issuer!='' ORDER BY cheque_issuer ASC ";
+		return $db->fetchAll($sql);
+	}
     
     
     

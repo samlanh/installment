@@ -3366,8 +3366,10 @@ function getAllBranch($search=null){
     		(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS supplier_name,
     		pp.balance,
     		pp.total_paid,pp.total_due,
+			 pp.paid_by as paid_by_id,
     		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = pp.paid_by AND v.type=26 LIMIT 1) AS paid_by,
     		pp.date_payment,
+			(SELECT  first_name FROM rms_users WHERE id=pp.user_id limit 1 ) AS user_name,
     		pp.status
     		FROM `rms_expense_payment` AS pp WHERE pp.status=1 
     		";
@@ -3435,4 +3437,23 @@ function getAllBranch($search=null){
     	$sql.=$dbp->getAccessPermission('pp.branch_id');
     	return $db->fetchRow($sql);
     }
+	
+	function totalExpensePayment($search=null){
+		$db = $this->getAdapter();
+		$sql="SELECT SUM(p.`total_paid`) AS totalAmount
+			FROM `rms_expense_payment` AS p 
+			WHERE p.`status` =1 ";
+			
+    	$from_date =(empty($search['start_date']))? '1': " p.`date_payment` >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " p.`date_payment` <= '".$search['end_date']." 23:59:59'";
+    	$sql.= " AND ".$from_date." AND ".$to_date;
+    	if($search['branch_id']>0){
+    		$sql.=" AND p.branch_id=".$search['branch_id'];
+    	}
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("p.branch_id");
+		
+		return $db->fetchOne($sql);
+	}
 }

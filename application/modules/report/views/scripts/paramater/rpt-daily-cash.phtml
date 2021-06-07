@@ -12,6 +12,8 @@
 		}
 		$branch_title = $branch['project_name'];
 	}
+	
+	$expenseFeatureList = EXPENSE_FEATURE_LIST;
 ?>
 	<script>
 		dojo.require("dijit.form.DateTextBox");
@@ -421,7 +423,59 @@
 					   		<?php }
 				           }?>
 				           
-				           <?php 
+				   <?php if($expenseFeatureList==1){?>
+							<?php 
+				           if (!empty($this->rowExpensePayment)){?>
+								<tr>
+									<td colspan="14" align="center" style="border-top:2px solid #000; ">
+										<h2 style="font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light';padding: 0;margin: 0;">
+											<span><?php echo $tr->translate("OTHER_EXPENSE");?></span>
+										 </h2>
+									</td>
+								</tr>
+								<tr class="style" align="center">
+									<td>&nbsp;<?php echo $tr->translate('NUM');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('BRANCH_NAME');?>&nbsp;</td>
+									<td colspan="2">&nbsp;<?php echo $tr->translate('SUPPLIER_NAME');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PAYMENT_TYPE');?>&nbsp;</td>
+									<td colspan="2">&nbsp;<?php echo $tr->translate('CHEQUE_ISSUER');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('NUMBER');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('TOTAL_PAID');?>&nbsp;</td>
+									<td colspan="2">&nbsp;<?php echo $tr->translate('NOTE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('RECEIPT_NO');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('DATE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('BY_USER');?>&nbsp;</td>
+								 </tr>
+								 <?php $branch_id=''; $i=0; 
+									foreach($this->rowExpensePayment as $key =>$rows){ $i++;
+									?>
+									<tr style="font-size: 12px; line-height:20px; white-space: nowrap;" align="left">
+									   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
+									   <td align="center">&nbsp;<?php echo $rows['branch_name'];?>&nbsp;</td>
+									   <td colspan="2" align="left">&nbsp;<?php echo $rows['supplier_name'];?>&nbsp;</td>
+									   <td align="center">&nbsp;<?php echo $rows['paid_by'];?>&nbsp;</td>
+									   <td colspan="2" align="left">&nbsp;<?php echo $rows['cheque_issuer'];?>&nbsp;</td>
+									   <td align="center">&nbsp;<?php echo $rows['cheque_no'];?>&nbsp;</td>
+									   <td align="center">&nbsp;<?php echo number_format($rows['total_paid'],2);?>&nbsp;</td>
+									    <td colspan="2" align="left">&nbsp;<?php echo $rows['note'];?>&nbsp;</td>
+										<td align="center">&nbsp;<?php echo $rows['receipt_no'];?>&nbsp;</td>
+										<td align="center">&nbsp;<?php echo date("d-m-Y",strtotime($rows['date_payment']));?>&nbsp;</td>
+										<td align="center">&nbsp;<?php echo $rows['user_name'];?>&nbsp;</td>
+									 </tr>
+									 <?php 
+											$total_expese = $total_expese +$rows['total_paid'];
+											if($rows['paid_by_id']==1){
+												$total_cash = $total_cash + $rows["total_paid"];
+											}elseif($rows['paid_by_id']==2){
+												$total_bank = $total_bank + $rows["total_paid"];
+											}else{
+												$total_cheque = $total_cheque + $rows["total_paid"];
+											}
+										?>
+							   <?php }?>
+						   <?php }?>
+				   <?php }else{?>
+						<?php 
 				           if (!empty($this->rowExpense)){?>
 				            <tr>
 				            	<td colspan="14" align="center" style="border-top:2px solid #000; ">
@@ -475,6 +529,8 @@
 									}
 								?>
 							<?php }}?>
+				   <?php }?>
+				           
 				            
 				            <?php 
 				            $total_commission = 0;

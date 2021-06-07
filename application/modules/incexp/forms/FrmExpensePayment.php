@@ -146,7 +146,9 @@ Class Incexp_Form_FrmExpensePayment extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required'=>'true',
 				'missingMessage'=>'Invalid Module!',
-				'class'=>'fullside height-text',));
+				'class'=>'fullside height-text',
+				'onChange'=>'enablePayment();'
+				));
 		
 		$_cheque_no = new Zend_Dojo_Form_Element_TextBox('cheque_no');
 		$_cheque_no->setAttribs(array(
@@ -272,6 +274,23 @@ Class Incexp_Form_FrmExpensePayment extends Zend_Dojo_Form {
 		$_status_search->setValue($request->getParam("status_search"));
 		
 		
+		$cheque_issuer = new Zend_Dojo_Form_Element_FilteringSelect('cheque_issuer');
+		$cheque_issuer->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'popupIssuer();'
+		));
+		
+		$dbe = new Incexp_Model_DbTable_DbExpensePayment();
+		$rscheque = $dbe->getAllChequeIssue();
+		$opt1=array(''=>$this->tr->translate("SELECT_CHEQUE_ISSUE"),'-1'=>$this->tr->translate("ADD_NEW"));
+		if(!empty($rscheque))foreach($rscheque AS $row){
+			$opt1[$row['id']]=$row['name'];
+		}
+		$cheque_issuer->setMultiOptions($opt1);
+		
 		if(!empty($data)){
 			$_branch_id->setValue($data["branch_id"]);
 			$_receipt_no->setValue($data["receipt_no"]);
@@ -290,6 +309,7 @@ Class Incexp_Form_FrmExpensePayment extends Zend_Dojo_Form {
 			$_status->setValue($data["status"]);
 			$id->setValue($data["id"]);
 			$note->setValue($data["note"]);
+			$cheque_issuer->setValue($data["cheque_issuer"]);
 			
 			$_supplier_id->setAttribs(array(
 				'readonly'=>'readonly',
@@ -314,6 +334,7 @@ Class Incexp_Form_FrmExpensePayment extends Zend_Dojo_Form {
 				$id,
 				$_amount,
 				$note,
+				$cheque_issuer,
 				
 				$_branch_search,
 				$start_date,

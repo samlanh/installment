@@ -2,6 +2,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
 	$db  = new Report_Model_DbTable_DbParamater();
+	$expenseFeatureList = EXPENSE_FEATURE_LIST;
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -261,7 +262,22 @@ dojo.require("dijit.form.DateTextBox");
 	             				<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណាយផ្សេងៗ");?> </td>
 	             				<td align="right">&nbsp;&nbsp;</td>
 	             			</tr>
-	             			<?php 
+					<?php 
+							if($expenseFeatureList==1){
+					?>
+						<?php if(!empty($this->totalExpensePayment)){ $total_expense = $total_expense +$this->totalExpensePayment;?>
+							<tr height="21px" class='hover'>
+	             				<td style="width: 20%;">&nbsp;</td>
+	             				<td >&nbsp;<?php echo $tr->translate("TOTAL_EXPENSE_PAYMENT");?>&nbsp;</td>
+	             				<td class="" align="right">&nbsp;<?php echo  number_format($this->totalExpensePayment,2);?>&nbsp;</td>
+	             				<td style="width:10px;">&nbsp;</td>
+	             				<td>&nbsp;</td>
+	             				<td style="width:10px;">&nbsp;</td>
+	             				<td>&nbsp;</td>
+	             			</tr>
+						<?php }?>
+					<?php }else {?>
+					<?php 
 	             			$parent="";
 	             			$total_sub_cate=0;
 	             			if (!empty($this->expense)) foreach ($this->expense AS $keyIndex => $expense_cate){ 
@@ -326,6 +342,8 @@ dojo.require("dijit.form.DateTextBox");
 			             				<td>&nbsp;</td>
 			             			</tr>
 		             			<?php }?>
+							<?php }?>
+	             			
 		             
 	             			
 								
@@ -370,65 +388,67 @@ dojo.require("dijit.form.DateTextBox");
 	             			<?php
 									}
 								}?>
+							<?php if($expenseFeatureList!=1){ ?>
 								<?php if (!empty($this->withdraw_capital)) {?>	
-							<tr>
-	             				<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ដកដើមទុន");?> </td>
-	             				<td align="right">&nbsp;&nbsp;</td>
-	             			</tr>
-	             			<?php 
-	             			$parent="";
-	             			$total_sub_withdraw_cate=0;
-	             			 foreach ($this->withdraw_capital AS $keyIndex => $expense_cate){ 
-	             					$total_expense = $total_expense +$expense_cate['total_amount'];
-	             			?>
-	             			
-	             			
-	             			<?php if ( $expense_cate['parent']!=0 AND $parent != $expense_cate['parent']){?>
-	             				<?php if ($keyIndex>0 && $total_sub_withdraw_cate>0){?>
-		             				<tr height="21px" class='hover'>
-			             				<td style="width: 20%;">&nbsp;</td>
-			             				<td >&nbsp;&nbsp;</td>
-			             				<td class="" align="right" style="background:#ccc;">&nbsp;<strong><?php echo number_format($total_sub_withdraw_cate,2);?></strong>&nbsp;</td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td class="" align="right"></td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td>&nbsp;</td>
-			             			</tr>
-		             			<?php }?>
-	             				<tr height="21px" class='hover'>
-		             				<td style="width: 20%;">&nbsp;</td>
-		             				<td>&nbsp;<strong><?php echo $expense_cate['parent_title'];?></strong>&nbsp;</td>
-		             				<td class="" align="right"></td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td></td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td>&nbsp;</td>
-		             			</tr>
-		             			<?php $parent = $expense_cate['parent']; $total_sub_withdraw_cate=0;?>
-		             		<?php }?>
-		             		<?php if ( $expense_cate['parent']==0){?>
-		             			<tr height="21px" class='hover'>
-		             				<td style="width: 20%;">&nbsp;</td>
-		             				<td>&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
-		             				<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td></td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td>&nbsp;</td>
-		             			</tr>
-		             		<?php }else{ $total_sub_withdraw_cate = $total_sub_withdraw_cate+$expense_cate['total_amount'];?>
-		             			<tr height="21px" class='hover'>
-		             				<td style="width: 20%;">&nbsp;</td>
-		             				<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
-		             				<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td></td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td>&nbsp;</td>
-		             			</tr>
-	             			<?php }?>
-	             			<?php }?>
-							
+								<tr>
+									<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ដកដើមទុន");?> </td>
+									<td align="right">&nbsp;&nbsp;</td>
+								</tr>
+								<?php 
+								$parent="";
+								$total_sub_withdraw_cate=0;
+								 foreach ($this->withdraw_capital AS $keyIndex => $expense_cate){ 
+										$total_expense = $total_expense +$expense_cate['total_amount'];
+								?>
+								
+								
+								<?php if ( $expense_cate['parent']!=0 AND $parent != $expense_cate['parent']){?>
+									<?php if ($keyIndex>0 && $total_sub_withdraw_cate>0){?>
+										<tr height="21px" class='hover'>
+											<td style="width: 20%;">&nbsp;</td>
+											<td >&nbsp;&nbsp;</td>
+											<td class="" align="right" style="background:#ccc;">&nbsp;<strong><?php echo number_format($total_sub_withdraw_cate,2);?></strong>&nbsp;</td>
+											<td style="width:10px;">&nbsp;</td>
+											<td class="" align="right"></td>
+											<td style="width:10px;">&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									<?php }?>
+									<tr height="21px" class='hover'>
+										<td style="width: 20%;">&nbsp;</td>
+										<td>&nbsp;<strong><?php echo $expense_cate['parent_title'];?></strong>&nbsp;</td>
+										<td class="" align="right"></td>
+										<td style="width:10px;">&nbsp;</td>
+										<td></td>
+										<td style="width:10px;">&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+									<?php $parent = $expense_cate['parent']; $total_sub_withdraw_cate=0;?>
+								<?php }?>
+								<?php if ( $expense_cate['parent']==0){?>
+									<tr height="21px" class='hover'>
+										<td style="width: 20%;">&nbsp;</td>
+										<td>&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
+										<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
+										<td style="width:10px;">&nbsp;</td>
+										<td></td>
+										<td style="width:10px;">&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+								<?php }else{ $total_sub_withdraw_cate = $total_sub_withdraw_cate+$expense_cate['total_amount'];?>
+									<tr height="21px" class='hover'>
+										<td style="width: 20%;">&nbsp;</td>
+										<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
+										<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
+										<td style="width:10px;">&nbsp;</td>
+										<td></td>
+										<td style="width:10px;">&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+								<?php }?>
+								<?php }?>
+								
+								<?php }?>
 							<?php }?>
 							
 	             			<tr height="22px" class='hover'>

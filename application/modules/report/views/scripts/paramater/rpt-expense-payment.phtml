@@ -101,16 +101,19 @@ dojo.require("dijit.form.DateTextBox");
 						<table cellpadding="5"​ style="font-family: 'Times New Roman','Khmer OS Battambang'; margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;"  border="1" >
 							<thead>
 							<tr style="font-size:12px; height: 20px;background-color: #CCD9FF;line-height: 30px;font-weight: bold;" align="center">
-									<th>&nbsp;<?php echo $tr->translate('NUM');?>&nbsp;</th>
-									<th>&nbsp;<?php echo $tr->translate('BRANCH_NAME');?>&nbsp;</th>
-									<th>&nbsp;<?php echo $tr->translate('RECEIPT_NO');?>&nbsp;</th>
-									<th>&nbsp;<?php echo $tr->translate('SUPPLIER_NAME');?>&nbsp;</th>
-									
-									<th>&nbsp;<?php echo $tr->translate('BALANCE');?>&nbsp;</th>
-									<th>&nbsp;<?php echo $tr->translate('TOTAL_PAID');?>&nbsp;</th>
-									<th>&nbsp;<?php echo $tr->translate('TOTAL_DUE');?>&nbsp;</th>
-									<th>&nbsp;<?php echo $tr->translate('PAID_BY');?>&nbsp;</th>
-									<th>&nbsp;<?php echo $tr->translate('DATE');?>&nbsp;</th>
+									<td>&nbsp;<?php echo $tr->translate('NUM');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('BRANCH_NAME');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('RECEIPT_NO');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('SUPPLIER_NAME');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('BALANCE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('TOTAL_PAID');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('TOTAL_DUE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PAYMENT_TYPE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('NUMBER');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('CHEQUE_ISSUER');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('DATE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('NOTE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('BY_USER');?>&nbsp;</td>
 						   </tr>
 							</thead>
 						<?php $i=0;$totalpaid=0;$totalbalance=0; if(!empty($this->row))foreach ($this->row AS $rs) { $i++;
@@ -125,7 +128,11 @@ dojo.require("dijit.form.DateTextBox");
 								    <td>&nbsp;$&nbsp;<?php echo number_format($rs['total_paid'],2);?>&nbsp;</td>
 								    <td>&nbsp;$&nbsp;<?php echo number_format($rs['total_due'],2);?>&nbsp;</td>
 								    <td>&nbsp;<?php echo $rs['paid_by']; ?>&nbsp;</td>
+								    <td>&nbsp;<?php echo $rs['cheque_no']; ?>&nbsp;</td>
+								    <td>&nbsp;<?php echo $rs['cheque_issuer']; ?>&nbsp;</td>
 								    <td>&nbsp;<?php echo date("d-m-Y",strtotime($rs['date_payment']));?>&nbsp;</td>
+									<td>&nbsp;<?php echo $rs['note']; ?>&nbsp;</td>
+									<td>&nbsp;<?php echo $rs['user_name']; ?>&nbsp;</td>
 							 </tr>
 							<?php 
 							$totalpaid=$totalpaid+$rs['total_paid'];

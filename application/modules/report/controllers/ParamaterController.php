@@ -197,10 +197,14 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->collectMoney = $db->getCollectPayment($search);
   	
   	$this->view->rscomisison = $db->getAllCommission($search);
-  	
+	
+  	$this->view->rowExpensePayment = $db->getAllPurchasePayment($search);
+	
   	$db  = new Report_Model_DbTable_DbLandreport();
   	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,12);
   	$this->view->houserepairExpense =$db->getAllIncomeOtherPayment($search,13);
+	
+	
   	
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
@@ -347,6 +351,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->withdraw_capital = $db->getExpenseCategory($search,1);
   	$this->view->expense_comission = $db->getAllComissionExpense($search);
 	$this->view->totalComissionPay = $db->getTotalComissionPayment($search);
+	
+	$this->view->totalExpensePayment = $db->totalExpensePayment($search);
   	
   	$this->view->saleicome = $db->geIncomeFromSale($search,null);  	
   	

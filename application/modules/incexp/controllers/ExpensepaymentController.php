@@ -46,13 +46,18 @@ class Incexp_ExpensepaymentController extends Zend_Controller_Action {
 			$frm->FrmAddPurchasePayment(null);
 			Application_Model_Decorator::removeAllDecorator($frm);
 			$this->view->frm_payment = $frm;
+			
+			$frm = new Loan_Form_FrmSearchLoan();
+			$frm = $frm->AdvanceSearch();
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frm_search = $frm;
 		
 	}
 	public function addAction(){
+		$db = new Incexp_Model_DbTable_DbExpensePayment();
 		if($this->getRequest()->isPost()){
 		$_data = $this->getRequest()->getPost();
 			try{
-				$db = new Incexp_Model_DbTable_DbExpensePayment();
 				$row = $db->addPaymentReceipt($_data);
 				
 				if(isset($_data['save_close'])){
@@ -68,6 +73,7 @@ class Incexp_ExpensepaymentController extends Zend_Controller_Action {
 			}
 		}
 		
+		$this->view->cheque_issue  = $db->getAllChequeIssue();
 		
 		$frm = new Incexp_Form_FrmExpensePayment();
 		$frm->FrmAddPurchasePayment(null);
@@ -106,7 +112,7 @@ class Incexp_ExpensepaymentController extends Zend_Controller_Action {
 				echo $e->getMessage();
 			}
 		}
-		
+		$this->view->cheque_issue  = $db->getAllChequeIssue();
 		$frm = new Incexp_Form_FrmExpensePayment();
 		$frm->FrmAddPurchasePayment($row);
 		Application_Model_Decorator::removeAllDecorator($frm);

@@ -52,7 +52,13 @@ public function init()
 		$totalComissionPayment = $db->getTotalComissionPayment();
 		$totalComissionPayment = empty($totalComissionPayment)?0:$totalComissionPayment;
 		
-		$TotalExpense = $db->TotalExpense()+$db->getAllComission()+$houseRepaireExpense+$totalRefundRentExpense+$totalComissionPayment;
+		$otherExpense = $db->TotalExpense();
+		$expenseFeatureList = EXPENSE_FEATURE_LIST;
+		if($expenseFeatureList==1){
+			$otherExpense = $db->TotalExpensePayment();
+		}
+		
+		$TotalExpense = $otherExpense+$db->getAllComission()+$houseRepaireExpense+$totalRefundRentExpense+$totalComissionPayment;
 		$this->view->totalExpense = $TotalExpense;
 		
 		$totalIncome = $TotalSaleIncome+$TotalOtherIncome+$houseRepaireIncome+$totalRentIncome;//+$TotalCreditPayment
