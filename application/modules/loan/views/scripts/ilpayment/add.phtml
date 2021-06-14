@@ -903,6 +903,7 @@ function returnMOnth(monthnum){
 	return month[monthnum];
 }
 dojo.ready(function(){	
+		loadingBlock();
 		new dijit.form.FilteringSelect({
 			autoComplete: false,
 			queryExpr: "*${0}*",  
@@ -919,6 +920,9 @@ dojo.ready(function(){
 				dijit.byId("amount_receive").focus();
 			}
 		}, "loan_number");
+		setTimeout(function () {
+	        HideloadingBlock();
+	    }, 1000);
 		
 	var client_data = new dojo.store.Memory({
 	       data: <?php print_r(Zend_Json::encode($this->client));?>
