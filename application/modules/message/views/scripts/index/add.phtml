@@ -381,12 +381,18 @@
 </div>
 <script>
 dojo.require("dijit.form.TextArea");
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 checkOptionSendType();
+	 });
+});
+
 function checkOptionSendType(){
      optionType = dijit.byId('opt_sms').get('value');	
      dijit.byId('receiver').set('readOnly',false);
      if(optionType!=3){
     	 dijit.byId('receiver').set('readOnly',true);	
-        }
+     }
 }
 function checkAll(array_length){
 		dijit.byId('id_selected').attr('value','');

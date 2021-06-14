@@ -49,28 +49,36 @@ class Message_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     		$phone ='';
     		$count =0;
     		$saleids ='';
-    		$amtphonenumber=2;
+    		$amtphonenumber=50;
     		if($data['opt_sms']==1){//only selected id
     			if(!empty($data['id_selected'])){
     				$ids = explode(',', $data['id_selected']);
     				$key = 1;
     				foreach ($ids as $i){
-    					$count++;
-    					if(!empty($saleids) AND $count>1){
-    						$saleids.=','.$data['sale_id'.$i];
-    						$phone.=';'.str_replace(' ', '', $data['phone_num'.$i]);
-    					}else{
-    						$saleids = $data['sale_id'.$i];
-    						$phone=str_replace(' ', '', $data['phone_num'.$i]);
+    					if(!empty($data['phone_num'.$i])){
+    						$stringLin  = $data['phone_num'.$i];
+    						$explode = explode("/", $stringLin);
+    						$data['phone_num'.$i]=$explode[0];
+	    					$count++;
+	    					if(!empty($saleids) AND $count>1){
+	    						$saleids.=','.$data['sale_id'.$i];
+	    						$phone.=';'.str_replace(' ', '', $data['phone_num'.$i]);
+	    					}else{
+	    						$saleids = $data['sale_id'.$i];
+	    						$phone=str_replace(' ', '', $data['phone_num'.$i]);
+	    					}
+	    					if($count%$amtphonenumber==0){
+								$this->insertMessage($message,$phone,$data['opt_sms']);
+	    						$phone='';
+	    						$count=0;
+	    					}
     					}
-    					if($count%$amtphonenumber==0){
-							$this->insertMessage($message,$phone,$data['opt_sms']);
+    				}
+    					if(!empty($phone)){
+    						$this->insertMessage($message,$phone,$data['opt_sms']);
     						$phone='';
     						$count=0;
     					}
-    				}
-    				if($count>0){
-    				}
     			}
     		}elseif($data['opt_sms']==2){//all clients
     			$sql="SELECT DISTINCT(`phone`) AS phone_nums,s.id AS sale_id
@@ -81,24 +89,28 @@ class Message_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     			$result = $db->fetchAll($sql);
     			if(!empty($result)){
     				foreach ($result as $key => $rs){
-    					$count++;
-    					if(!empty($saleids) AND $count>1){
-    						$saleids.=','.$rs['sale_id'];
-    						$phone.=';'.str_replace(' ', '', $rs['phone_nums']);
-    					}else{
-    						$saleids = $rs['sale_id'];
-    						$phone=str_replace(' ', '', $rs['phone_nums']);
-    					}
-    					if($count%$amtphonenumber==0){
-    						$this->insertMessage($message,$phone,$data['opt_sms']);
-    						$phone='';
-    						$count=0;
+    					if(!empty($rs['phone_nums'])){
+    						$stringLin  = $rs['phone_nums'];
+    						$explode = explode("/", $stringLin);
+    						$rs['phone_nums']=$explode[0];
+    						$count++;
+    						if(!empty($saleids) AND $count>1){
+    							$saleids.=','.$rs['sale_id'];
+    							$phone.=';'.str_replace(' ', '', $rs['phone_nums']);
+    						}else{
+    							$saleids = $rs['sale_id'];
+    							$phone=str_replace(' ', '', $rs['phone_nums']);
+    						}
+    						if($count%$amtphonenumber==0){
+    							$this->insertMessage($message,$phone,$data['opt_sms']);
+    							$phone='';
+    							$count=0;
+    						}
     					}
     				}
     				if($count>0){
     					$this->insertMessage($message,$phone,$data['opt_sms']);
     				}
-    				
     			}
     		}
     		elseif($data['opt_sms']==3){//all phone number input
@@ -107,9 +119,9 @@ class Message_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     		}
 //     		return $respone;
     	}
-    	catch (Exception $ex)
+    	catch (Exception $e)
     	{
-    		echo $ex;
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     }
     function insertMessage($message,$phone,$opt){
@@ -125,6 +137,7 @@ class Message_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     }
     function sendSMS($message,$phone){
     	$url="http://sandbox.mekongsms.com/api/postsms.aspx";
+    	//$url="http://api.mekongsms.com/api/postsms.aspx"; //production
     	$username='camapp_free@apitest';
     	$pass='d5c5d91288a32cad367ae7170f54860c';
     	$sender='CAM APP';
@@ -160,8 +173,9 @@ class Message_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     }
     function checkBalance(){
     
-    	$url="http://sandbox.mekongsms.com/api/postcheckbalance.aspx";
-    	 
+    	//$url="http://sandbox.mekongsms.com/api/postcheckbalance.aspx";//test
+    	$url="http://api.mekongsms.com/api/postcheckbalance.aspx";//production
+    	
     	$username='camapp_free@apitest';
     	$pass='d5c5d91288a32cad367ae7170f54860c';
     	$sender='CAM APP';
@@ -180,7 +194,7 @@ class Message_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     			CURLOPT_TIMEOUT => 300000,
     			CURLOPT_POST => true,
     			CURLOPT_POSTFIELDS =>$fields,
-    			CURLOPT_HTTPHEADER => $headers ,));
+    			CURLOPT_HTTPHEADER => $headers));
     	$respone = curl_exec($curl);
     	$err = curl_error($curl);//you can echo curl error
     	curl_close($curl);//you need to close curl connection

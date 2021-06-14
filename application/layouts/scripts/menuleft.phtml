@@ -41,6 +41,7 @@
       		'accounting'=>'<i class="fa fa-money" aria-hidden="true"></i>',
 			'invest'=>'<i class="fa fa-paper-plane-o" aria-hidden="true"></i>',
 			'incexp'=>'<i class="fa fa-money" aria-hidden="true"></i>',
+			'message'=>'<i class="fa fa-envelope" aria-hidden="true"></i>',
 			'rent'=>'<i class="fa fa-money" aria-hidden="true"></i>',
       		'other'=>'<i class="fa fa-book" aria-hidden="true"></i>',
 			'stock'=>'<i class="fa fa-cubes" aria-hidden="true"></i>',
@@ -67,9 +68,15 @@
 				</div>
 				<?php }?>
                 <ul class="nav side-menu">
-                	<?php if(!empty($arr_module)){ foreach ($arr_module as $rs){
+                	<?php 
+                	if(!empty($arr_module)){ foreach ($arr_module as $rs){
                 		$url =$this->url(array('module'=>$rs,'controller'=>'index','action'=>'index'), null, true);
-                		if($rs=='issue'){$title=$tr->translate('ISSUE_PROPERTY_PLONG');}else{
+                		if($rs=='issue'){
+                			$title=$tr->translate('ISSUE_PROPERTY_PLONG');
+                		}elseif($rs=='message'){
+                			$title=$tr->translate('MESSAGE');
+                		}
+                		else{
                 			$title=$tr->translate(strtoupper($rs));
                 		}
                 	?>

@@ -54,7 +54,11 @@ class Message_IndexController extends Zend_Controller_Action {
 			$submit = $this->getRequest()->getPost();
 			if(!empty($submit['sendSMS'])){
 				$db = new Message_Model_DbTable_Dbapi();
-				echo $db->SendSMSAPI($submit);
+				try{
+					echo $db->SendSMSAPI($submit);
+				}catch(Exception $e){
+					Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+				}
 				
 				$search = array(
 						'branch_id'=>-1,
