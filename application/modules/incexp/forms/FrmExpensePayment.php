@@ -64,7 +64,7 @@ Class Incexp_Form_FrmExpensePayment extends Zend_Dojo_Form {
 		$_supplier_id->setMultiOptions($_arr_opt);
 		$_supplier_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
-				'required'=>'true',
+				'required'=>'false',
 				'missingMessage'=>'Invalid Module!',
 				'onChange'=>'getSupplierInfo()',
 				'class'=>'fullside height-text',));

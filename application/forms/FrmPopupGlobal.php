@@ -1796,11 +1796,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						font-size: 11px;
 						margin:-5px 0px -5px 0px !important;
 						padding:0 !important;
+						line-height: 14px;
 					}
 					table.comment-footer tr td span.comment{
 						white-space: pre-line;
 						font-size: 11px;
-						margin-top: -5px;
+						margin-top: 5px;
+						display: block;
+						line-height: 14px;
 					}
 				</style>
 				<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >

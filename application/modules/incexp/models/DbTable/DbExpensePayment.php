@@ -82,15 +82,27 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     }
     function getPurchaseBySupplier($data){
     	$db = $this->getAdapter();
-    	$supplier_id = $data['supplier_id'];
+		
+    	$supplier_id = empty($data['supplier_id'])?0:$data['supplier_id'];
     	$branch_id = $data['branch_id'];
-    	$sql="SELECT * FROM `ln_expense` AS p  WHERE p.supplier_id =$supplier_id AND p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id ";
-    	
+    	$sql="SELECT * FROM `ln_expense` AS p  WHERE  p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id ";
+    	if(!empty($data['supplier_id'])){
+			$sql.=" AND p.supplier_id =$supplier_id ";
+		}
+		
     	$from_date =(empty($data['start_date']))? '1': " p.date >= '".date("Y-m-d",strtotime($data['start_date']))." 00:00:00'";
     	$to_date = (empty($data['end_date']))? '1': " p.date <= '".date("Y-m-d",strtotime($data['end_date']))." 23:59:59'";
     	$sql.= " AND  ".$from_date." AND ".$to_date;
     	if (!empty($data['bypuchase_no'])){
-    		$sql.=" AND p.invoice ='".addslashes(trim($data['bypuchase_no']))."'";
+    		//$sql.=" AND p.invoice ='".addslashes(trim($data['bypuchase_no']))."'";
+			
+			$s_where = array();
+			$s_search = trim(addslashes($data['bypuchase_no']));
+			$s_where[] = " p.title LIKE '%{$s_search}%'";
+			$s_where[] = " p.invoice LIKE '%{$s_search}%'";
+			$s_where[] = " p.other_invoice LIKE '%{$s_search}%'";
+			$sql .=' AND ('.implode(' OR ',$s_where).')';
+				
     	}
     	$rs = $db->fetchAll($sql);
     	
@@ -112,7 +124,10 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 	    				<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($row['date'])).'</label>
 	    				<input type="hidden" dojoType="dijit.form.TextBox" name="purchase_id'.$no.'" id="purchase_id'.$no.'" value="'.$row['id'].'" >
     				</td>
-    			<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+					<td style="vertical-align: top; font-size:11px; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">
+	    				<label id="titleExpense'.$no.'">'.$row['title'].'</label>
+    				</td>
+    			<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">
     			<label id="invoicelabel'.$no.'">'.$row['other_invoice'].' ('.$row['invoice'].')</label>
     			<input type="hidden" dojoType="dijit.form.TextBox" name="invoice_hidden'.$no.'" id="invoice_hidden'.$no.'" value="'.$row['invoice'].'" >
     			</td>
@@ -153,6 +168,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     function getPaymentReceiptDetailByPaymentIdAndPurchaseId($payment_id,$purchase_id){
     	$db = $this->getAdapter();
     	$sql="SELECT pd.*,
+    	(SELECT p.title FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS title,
     	(SELECT p.invoice FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS supplier_no,
 		(SELECT p.other_invoice FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS other_invoice,
     	(SELECT p.total_amount_after FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS total_amount_after,
@@ -179,14 +195,23 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     	}
     	
     	$db = $this->getAdapter();
-    	$supplier_id = $data['supplier_id'];
+    	$supplier_id = empty($data['supplier_id'])?0:$data['supplier_id'];
     	$branch_id = $data['branch_id'];
-    	$sql="SELECT * FROM `ln_expense` AS p  WHERE p.supplier_id =$supplier_id AND p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id ";
+    	$sql="SELECT * FROM `ln_expense` AS p  WHERE  p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id ";
+		if(!empty($data['supplier_id'])){
+			$sql.=" AND p.supplier_id =$supplier_id ";
+		}
     	$from_date =(empty($data['start_date']))? '1': " p.date >= '".date("Y-m-d",strtotime($data['start_date']))." 00:00:00'";
     	$to_date = (empty($data['end_date']))? '1': " p.date <= '".date("Y-m-d",strtotime($data['end_date']))." 23:59:59'";
     	//$sql.= " AND  ".$from_date." AND ".$to_date;
     	if (!empty($data['bypuchase_no'])){
-    		$sql.=" AND p.supplier_no ='".addslashes(trim($data['bypuchase_no']))."'";
+    		//$sql.=" AND p.supplier_no ='".addslashes(trim($data['bypuchase_no']))."'";
+			$s_where = array();
+			$s_search = trim(addslashes($data['bypuchase_no']));
+			$s_where[] = " p.title LIKE '%{$s_search}%'";
+			$s_where[] = " p.invoice LIKE '%{$s_search}%'";
+			$s_where[] = " p.other_invoice LIKE '%{$s_search}%'";
+			$sql .=' AND ('.implode(' OR ',$s_where).')';
     	}
     	
     	if (!empty($listSaleidpaid)){
@@ -227,7 +252,10 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 		    				<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($rowpaymentdetail['date'])).'</label>
 		    				<input type="hidden" dojoType="dijit.form.TextBox" name="purchase_id'.$no.'" id="purchase_id'.$no.'" value="'.$rowpaymentdetail['purchase_id'].'" >
 	    				</td>
-	    				<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+						<td style="vertical-align: top; font-size:11px; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">
+							<label id="titleExpense'.$no.'">'.$rowpaymentdetail['title'].'</label>
+						</td>
+	    				<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">
 		    				<label id="invoicelabel'.$no.'">'.$rowpaymentdetail['other_invoice'].' ('.$rowpaymentdetail['supplier_no'].')</label>
 		    				<input type="hidden" dojoType="dijit.form.TextBox" name="invoice_hidden'.$no.'" id="invoice_hidden'.$no.'" value="'.$rowpaymentdetail['supplier_no'].'" >
 	    				</td>
@@ -255,7 +283,10 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 								<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($row['date'])).'</label>
 								<input type="hidden" dojoType="dijit.form.TextBox" name="purchase_id'.$no.'" id="purchase_id'.$no.'" value="'.$row['id'].'" >
 							</td>
-						<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+							<td style="vertical-align: top; font-size:11px; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">
+								<label id="titleExpense'.$no.'">'.$row['title'].'</label>
+							</td>
+						<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">
 						<label id="invoicelabel'.$no.'">'.$row['other_invoice'].' ('.$row['invoice'].')</label>
 						<input type="hidden" dojoType="dijit.form.TextBox" name="invoice_hidden'.$no.'" id="invoice_hidden'.$no.'" value="'.$row['invoice'].'" >
 						</td>
