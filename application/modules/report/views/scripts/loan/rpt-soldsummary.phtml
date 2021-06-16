@@ -148,6 +148,9 @@ table.tb-footer tr.style-head {
 		.border_bottom{
 			border-bottom:2px solid #000;
 		}
+		tr.style-rowdata.hover.context-menu-one.completedCss {
+			background: #00e01c26;
+		}
 	</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 		<tr>
@@ -289,23 +292,27 @@ table.tb-footer tr.style-head {
 		               		$row['paid_amount']=0;
 		               }
 		               $paidAmount = $row['paid_amount']+$row['totalAmountCreadit'];
+					   $classComplete="";
 		               if($row['payment_id']==1){//កក់
 		               	 $payment_1=$payment_1+1;
 // 		               	 if($row['price_sold']<=$row['paid_amount']){
 		               	 if($row['price_sold']<=$paidAmount){
 		               	 	$payment_0_completed=$payment_0_completed+1;
+							$classComplete="completedCss";
 		               	 }
 		               }elseif($row['payment_id']==2 OR $row['payment_id']==6){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
 		               	 	$payment_2=$payment_2+1;
 // 		               	 if($row['price_sold']<=$row['paid_amount']){
 		               	 if($row['price_sold']<=$paidAmount){
 		               	 	$payment_2_completed=$payment_2_completed+1;
+							$classComplete="completedCss";
 		               	 }
 		               }elseif($row['payment_id']==5){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
 			               	$payment_5=$payment_5+1;
 // 			               	if($row['price_sold']<=$row['paid_amount']){
 			               	if($row['price_sold']<=$paidAmount){
 			               		$payment_5_completed =$payment_5_completed+1;
+								$classComplete="completedCss";
 			               	}
 		               }
 		               elseif($row['payment_id']==3 OR $row['payment_id']==4 || $row['payment_id']==7){//រំលស់ និងបង់ដំណាក់កាល់ថេរ
@@ -313,13 +320,14 @@ table.tb-footer tr.style-head {
 // 		               	 if($row['price_sold']<=$row['paid_amount']){
 		               	 if($row['price_sold']<=$paidAmount){
 		               	 	$payment_3_completed=$payment_3_completed+1;
+							$classComplete="completedCss";
 		               	 }
 		               }         
 		             ?>
 	             <?php 
 	              	$payment_id = $row['payment_id'];
 	              	?>
-	              	<tr class="style-rowdata hover context-menu-one" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
+	              	<tr class="style-rowdata hover context-menu-one <?php echo $classComplete; ?>" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
 						<td align="center"><?php echo $key+1; ?></td>
 						<td style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?>&nbsp;</td>
 						<td style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format($montFomat); ?>&nbsp;</td>
