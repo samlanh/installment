@@ -736,6 +736,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`comission`       AS `comission`,
 		  `s`.`receipt_no`      AS `receipt_no`,
 		  s.total_installamount,
+		  s.for_installamount,
 		    s.interest_policy,
 		    (SELECT st.title FROM rms_interestsetting as st WHERE st.id=s.interest_policy LIMIT 1 ) AS interest_policy_title,
 		 (SELECT project_name FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS branch_name,

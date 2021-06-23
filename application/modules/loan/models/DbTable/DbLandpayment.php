@@ -338,6 +338,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			   	'witness_i'=>$data['witness_i'],
     			   	'witness_ii'=>$data['witness_ii'],
     			   	'date_setcommission'=>$data['date_buy'],
+					
+    			   	'for_installamount'=>$data['for_installamount'],
     			);   
     		if(!empty($data['interest_policy'])){
     			 $arr['interest_policy']=$data['interest_policy'];
@@ -1343,6 +1345,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 					'witness_i'=>empty($data['witness_i'])?"":$data['witness_i'],
     			   	'witness_ii'=>empty($data['witness_ii'])?"":$data['witness_ii'],
     			   	'date_setcommission'=>$data['date_buy'],
+					
+    			   	'for_installamount'=>$data['for_installamount'],
     		);
     		$dbg = new Application_Model_DbTable_DbGlobal();
     		$rs_user = $dbg->getUserInfo();

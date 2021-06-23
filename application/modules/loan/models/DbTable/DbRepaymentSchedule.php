@@ -176,6 +176,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 							
 							'witness_i'=>empty($data['witness_i'])?"":$data['witness_i'],
 							'witness_ii'=>empty($data['witness_ii'])?"":$data['witness_ii'],
+							
+							'for_installamount'=>$data['for_installamount'],
     				);
     				if(!empty($data['interest_policy'])){
     					$arr['interest_policy']=$data['interest_policy'];
