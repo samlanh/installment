@@ -55,12 +55,15 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 	
 	function CountCompletedSale(){
 		$db = $this->getAdapter();
-		$sql="SELECT COUNT(p.`id`) AS total,SUM(p.`price_sold`) AS totalAmount
-			FROM `ln_sale` AS p 
-			WHERE p.`status` =1 AND p.is_completed =1 ";
+		$sql="SELECT COUNT(s.`id`) AS total,SUM(s.`price_sold`) AS totalAmount,
+		SUM(((SELECT COALESCE(SUM(total_principal_permonthpaid+extra_payment),0) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1  AND sale_id = s.id LIMIT 1) )) AS totalAmount
+			FROM `ln_sale` AS s 
+			WHERE s.`status` =1  ";//AND s.is_completed =1
+			
+		$sql.=" AND s.price_sold <= ((SELECT COALESCE(SUM(total_principal_permonthpaid+extra_payment),0) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1  AND sale_id = s.id LIMIT 1) ) ";
 		
 		$dbp = new Application_Model_DbTable_DbGlobal();
-		$sql.=$dbp->getAccessPermission("p.branch_id");
+		$sql.=$dbp->getAccessPermission("s.branch_id");
 		
 		return $db->fetchRow($sql);
 	}
