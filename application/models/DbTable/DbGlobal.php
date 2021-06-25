@@ -748,7 +748,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		(SELECT hname_kh FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS hname_kh,
   		(SELECT name_en FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS client_name_en,
   		(SELECT phone FROM `ln_client` WHERE client_id = s.client_id LIMIT 1) AS tel,
-  		(SELECT CONCAT(last_name ,' ',first_name)  FROM `rms_users` WHERE id = s.user_id LIMIT 1) AS user_name,
+  		(SELECT CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,''))  FROM `rms_users` WHERE id = s.user_id LIMIT 1) AS user_name,
 	  	  `p`.`land_code`       AS `land_code`,
 		  `p`.`land_address`    AS `land_address`,
 		  `p`.`land_size`       AS `land_size`,
@@ -847,7 +847,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   public function getAllLandInfo($branch_id=null,$option=null,$action=null,$propertytype=null,$foreditsale=null){
   	   $db = $this->getAdapter();
   	   $tr = Application_Form_FrmLanguages::getCurrentlanguage();
-  	   $sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE `land_address`!='' ";
+  	   $sql="SELECT `id`,CONCAT(COALESCE(`land_address`,''),',',COALESCE(street,'')) AS name FROM `ln_properties` WHERE `land_address`!='' ";
   	   if (!empty($foreditsale)){
   	   		$sql.=" AND  status Not IN (-2,-1,0) ";
   	   }else{

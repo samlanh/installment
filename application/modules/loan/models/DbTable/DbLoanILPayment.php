@@ -1254,7 +1254,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	if($data['type']==1){
 	    		$sql ="SELECT 
-				 (SELECT CONCAT(ln_properties.land_address,',',ln_properties.street) AS land_address  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_address,
+				 (SELECT CONCAT(COALESCE(ln_properties.land_address,''),',',COALESCE(ln_properties.street,'')) AS land_address  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_address,
 				 (SELECT ln_properties.land_code  FROM `ln_properties` WHERE ln_properties.id=s.`house_id` LIMIT 1) AS property_code,
 				 (SELECT t.type_nameen FROM `ln_properties_type` as t WHERE t.id=(SELECT p.property_type FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1)) As property_type,
 				  s.*,
@@ -1356,7 +1356,7 @@ function getLoanPaymentByLoanNumberEdit($data){
 
    function getAllCo(){
    			$db = $this->getAdapter();
-   			$sql="SELECT `co_id` AS id,CONCAT(`co_firstname`,' ',`co_lastname`,'- ',`co_khname`) AS `name`,`branch_id` FROM `ln_staff` WHERE `position_id`=1 AND (`co_khname`!=''  OR `co_firstname`!='')" ;
+   			$sql="SELECT `co_id` AS id,CONCAT(COALESCE(`co_firstname`,''),' ',COALESCE(`co_lastname`,''),'- ',COALESCE(`co_khname`,'')) AS `name`,`branch_id` FROM `ln_staff` WHERE `position_id`=1 AND (`co_khname`!=''  OR `co_firstname`!='')" ;
    			return $db->fetchAll($sql);
    		
    }
@@ -1500,7 +1500,7 @@ function getLoanPaymentByLoanNumberEdit($data){
 		$db = $this->getAdapter();
 		$sql= "SELECT id,
 				  CONCAT((SELECT name_kh FROM ln_client WHERE ln_client.client_id=ln_sale.`client_id` LIMIT 1),'-',
-				  (SELECT CONCAT(p.land_address,',',p.street) FROM ln_properties AS p WHERE p.id = ln_sale.house_id LIMIT 1)) AS name
+				  (SELECT CONCAT(COALESCE(p.land_address,''),',',COALESCE(p.street,'')) FROM ln_properties AS p WHERE p.id = ln_sale.house_id LIMIT 1)) AS name
 				FROM
 				  ln_sale 
 				WHERE status=1 
