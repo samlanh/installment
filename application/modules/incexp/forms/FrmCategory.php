@@ -59,8 +59,8 @@ class Incexp_Form_FrmCategory extends Zend_Dojo_Form
     	$advance_search->setAttribs(array(
     			'dojoType'=>'dijit.form.TextBox',
     			'class'=>'fullside height-text',
-    			'placeholder'=>$this->tr->translate("SEARCH_HERE"),
-    			'missingMessage'=>$this->tr->translate("SEARCH_HERE")
+    			'placeholder'=>$this->tr->translate("SEARCH"),
+    			'missingMessage'=>$this->tr->translate("SEARCH")
     	));
     	$advance_search->setValue($request->getParam("advance_search"));
     	
