@@ -477,4 +477,60 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	
+	function voidreceiptAction(){
+	 	$db = new Loan_Model_DbTable_DbLoanILPayment();
+	 	try {
+	 		if($this->getRequest()->isPost()){
+				$data = $this->getRequest()->getPost();
+				$id = empty($data['id'])?0:$data['id'];	
+				
+				$payment_il = $db->getIlPaymentByID($id);
+				if(empty($payment_il)){
+					print_r(Zend_Json::encode(2));
+					exit();//RECORD_NOTFUND
+					//Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/ilpayment");
+					
+				}
+				if (!empty($payment_il)){
+					if ($payment_il['is_closed']==1){
+						print_r(Zend_Json::encode(3));
+						exit();//Receipt Closed
+						//Application_Form_FrmMessage::Sucessfull("Can not delete this record","/loan/ilpayment");
+					}
+					if ($payment_il['total_payment']<=0){
+						print_r(Zend_Json::encode(5));
+						exit();//Void Ready
+					}
+					
+					$sale_id = empty($payment_il['sale_id'])?0:$payment_il['sale_id'];
+					$lastPaymentRecord = $db->getLastPaymentRecord($sale_id);
+					$lastPayId = empty($lastPaymentRecord['id'])?0:$lastPaymentRecord['id'];
+					if ($lastPayId!=$id){
+						print_r(Zend_Json::encode(4));
+						exit();//Only Last Payment Receipt Can Delete
+						//Application_Form_FrmMessage::Sucessfull("Only Last Payment Receipt Can Delete","/loan/ilpayment");
+					}
+				}
+				
+				$row = $db->checkifExistingDelete($id);
+				if(!empty($row)){
+					$db->deleteReceipt($id);
+					$db->recordhistory($id);
+					$db->setVoidReceiptReason($data);
+					print_r(Zend_Json::encode(1));
+					exit();//Void Success
+					
+				}else{
+					print_r(Zend_Json::encode(0));
+					exit();//Void Failed
+				}
+			}
+	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/loan/ilpayment");
+			exit();
+	 	}catch (Exception $e) {
+	 		Application_Form_FrmMessage::message("INSERT_FAIL");
+	 		echo $e->getMessage();
+	 	}
+  }
 }

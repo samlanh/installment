@@ -1741,4 +1741,27 @@ function getLoanPaymentByLoanNumberEdit($data){
 	
 		return $db->fetchRow($sql);
 	}
+	
+		public function setVoidReceiptReason($data){
+      			$db = $this->getAdapter();
+      			$db->beginTransaction();
+      			try{
+      		
+      				$arr = array(
+      						'void_reason'	=>$data['reason'],
+      						'void_by'		=>$this->getUserId(),
+      						'void_date'		=>date("Y-m-d H:i:s"),
+      				);
+      				$where=" id = ".$data['id'];
+      				$this->_name="ln_client_receipt_money";
+      				$this->update($arr, $where);
+      		
+      				$db->commit();
+      				return 1;
+      			}catch (Exception $e){
+      				$err =$e->getMessage();
+      				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+      				$db->rollBack();
+      			}
+      	}
 }
