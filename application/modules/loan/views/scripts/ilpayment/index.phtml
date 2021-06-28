@@ -88,7 +88,7 @@
 					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate('REASON');?> :
 					   </label>
 					   <div class="col-md-7 col-sm-7 col-xs-12">
-							<input style="min-height:70px;" class="fullside" type="text" dojoType="dijit.form.Textarea" name="reason" id="reason" placeholder="<?php echo $tr->translate("NOTE");?>" />
+							<input style="min-height:70px;" class="fullside" type="text" dojoType="dijit.form.Textarea" name="reason" id="reason" placeholder="<?php echo $tr->translate("REASON");?>" />
 							<input type="hidden" dojoType="dijit.form.TextBox" name="id" id="id"  />
 					   </div>
 					</div>
@@ -224,7 +224,14 @@ var row=0;
 	
 var urlUpdateInfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'voidreceipt')); ?>';
 function upDateCustomerInfo(){
+	
 	if(dijit.byId('updateFormInfo').validate()){
+			if (confirm("<?php echo $tr->translate("Do you want to void this reciept");?>")) {
+		    } else {
+				dijit.byId('updateFormInfo').reset();
+				dijit.byId('updateForm').hide();
+		    	 return false;
+		    }
 		loadingBlock();
 		dojo.xhrPost({
 			url: urlUpdateInfo,
