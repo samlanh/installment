@@ -136,10 +136,23 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 							</tr>
 						</thead>
 					   <?php  $i=0; $n=0; if(!empty($this->document)){foreach($this->document as $key =>$row) {$i++?>
-						<tr style="font-size: 14px; line-height:26px; white-space: pre-line;" align="left">
+						<tr style="font-size: 14px; line-height:26px; " align="left">
 						   <td align="center" width="5%" valign="top"><?php echo $i; ?>&nbsp;.</td>
 						   <td align="left" valign="top">&nbsp;<?php echo $row['title'];?></td>
-						   <td align="center" valign="top">&nbsp;<a title="<?php echo $tr->translate('VIEW_DOCUMENT');?>" href="<?php echo $this->baseUrl()."/images/document/expense/".$row['document_name'];?>" target="_blank" class="btn btn-error btn-reset" ><i class="fa fa-eye" aria-hidden="true"></i></button></a></td>
+						   
+						   
+						   <td align="center" valign="top"><?php 
+						   $linkDoc ="#";
+						   if (!empty($row['document_name'])){
+								if (file_exists(PUBLIC_PATH."/images/document/expense/".$row['document_name'])){
+									$linkDoc = $this->baseUrl().'/images/document/expense/'.$row['document_name'];
+							
+						   ?>
+							<a title="<?php echo $tr->translate('VIEW_DOCUMENT');?>" href="<?php echo $linkDoc;?>" target="_blank" class="btn btn-error btn-reset" ><i class="fa fa-eye" aria-hidden="true"></i></button></a>
+							<?php 	}
+							 }?>
+						   
+						   </td>
 						</tr>
 						<?php }}?>
 					</table>

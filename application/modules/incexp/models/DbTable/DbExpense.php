@@ -212,10 +212,10 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			if (!empty($ids)){
 				foreach ($ids as $i){
 					if (empty($detailid)){
-						$detailid = $data['detailid'.$i];
+						$detailid = $data['detailidItem'.$i];
 					}else{
-						if (!empty($data['detailid'.$i])){
-							$detailid = $detailid.",".$data['detailid'.$i];
+						if (!empty($data['detailidItem'.$i])){
+							$detailid = $detailid.",".$data['detailidItem'.$i];
 						}
 					}
 				}
@@ -230,7 +230,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			$ids = explode(',', $data['identity']);
 			if (!empty($ids)){
 				foreach ($ids as $i){
-					if (!empty($data['detailid'.$i])){
+					if (!empty($data['detailidItem'.$i])){
 						$_arr = array(
 								'expense_id'	=>$data['id'],
 								'pro_id'		=>$data['product_name_'.$i],
@@ -240,7 +240,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 								'amount'		=>$data['amount_'.$i],
 								'note'			=>$data['note_'.$i],
 						);
-						$wheresee=" id = ".$data['detailid'.$i];
+						$wheresee=" id = ".$data['detailidItem'.$i];
 						$this->_name='ln_expense_detail';
 						$this->update($_arr, $wheresee);
 
