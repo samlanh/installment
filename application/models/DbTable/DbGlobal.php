@@ -1890,6 +1890,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			   LIMIT 1) AS `date_payment`,
 			  `crm`.`payment_method`               AS `payment_methodid`,
 			  `crm`.`payment_method`               AS `payment_id`,
+			  
+			  `crm`.`void_reason`           AS `void_reason`,
+			  `crm`.`void_date`             AS `void_date`,
+			  `crm`.`void_by`               AS `void_by`,
+			  (SELECT first_name FROM `rms_users` WHERE id=`crm`.`void_by` LIMIT 1) AS voidByUserName,
+			  
 			  (SELECT
 			     `ln_view`.`name_kh`
 			   FROM `ln_view`

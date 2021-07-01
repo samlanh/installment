@@ -136,6 +136,10 @@
 					table.tb-footer tr{
 					 line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
 					}
+					
+					tr.voidclass {
+						background: #fff7f7;
+					}
 				</style>
 				<table width="100%">
 					<tr>
@@ -177,8 +181,11 @@
 					                    <td rowspan="2" class="center">&nbsp;<?php echo $tr->translate("INPUT_DATE");?>&nbsp;</td>
 					                    <td rowspan="2" class="center">&nbsp;<?php echo $tr->translate("RECIEPT_NO");?>&nbsp;</td>
 					                    <td rowspan="2" class="center">&nbsp;<?php echo $tr->translate("PAYMENT_OPTION");?>&nbsp;</td>
-					                    <td rowspan="2" class="center">&nbsp;<?php echo $tr->translate("AGENTCY");?>&nbsp;</td>
+					                    <!--
+										<td rowspan="2" class="center">&nbsp;<?php //echo $tr->translate("AGENTCY");?>&nbsp;</td>
+										-->
 					                    <td rowspan="2" class="center">&nbsp;<?php echo $tr->translate("BY_USER");?>&nbsp;</td>
+										<td colspan="3" class="center">&nbsp;<?php echo $tr->translate("VOID_INFO");?>&nbsp;</td> 
 					                </tr>
 					                <tr class="style" align="center">
 					                	<td style="padding:1px;">&nbsp;<?php echo $tr->translate("PRINCIPAL");?>&nbsp;</td>                   
@@ -186,6 +193,10 @@
 					                    <td style="padding:1px;">&nbsp;<?php echo $tr->translate("PENALIZE AMOUNT");?>&nbsp;</td>
 					                    <td style="padding:1px;">&nbsp;<?php echo $tr->translate("EXTRA_PAYMENT");?>&nbsp;</td>	                    
 					                    <td style="padding:1px;">&nbsp;<?php echo $tr->translate("TOTAL");?>&nbsp;</td>
+										
+					                    <td style="padding:1px;">&nbsp;<?php echo $tr->translate("REASON");?>&nbsp;</td>
+					                    <td style="padding:1px;">&nbsp;<?php echo $tr->translate("DATE");?>&nbsp;</td>
+					                    <td style="padding:1px;">&nbsp;<?php echo $tr->translate("VOID_BY");?>&nbsp;</td>
 					                </tr>
 					            </thead>
 				                <?php 
@@ -221,7 +232,23 @@
 										}
 									}
 				               ?>
-				                <tr class="style style1" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+							   
+							   <?php 
+									$voidReason="";
+									$voidDate="";
+									$voidByUserName="";
+									$classVoid="";
+									if($rs['total_payment']<=0){
+										$voidReason=$rs['void_reason'];
+										if(!empty($rs["void_date"])){
+										$voidDate=date($montFomat,strtotime($rs["void_date"]));
+										}
+										$voidByUserName=$rs['voidByUserName'];
+										$classVoid="voidclass";
+									}
+									?>
+									
+				                <tr class="<?php echo $classVoid;?> style style1" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
 				               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
 				               		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 				               		<td>&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
@@ -240,8 +267,15 @@
 									<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
 									<?php echo $rs["paymentoption"];?></a>
 									</td>
+									<!--
 									<td>&nbsp;<?php echo $rs["staff_name"];?>&nbsp;</td>
+									-->
 				               		<td align="center">&nbsp;<?php echo $rs['user_name']?>&nbsp;</td>
+									
+									
+				               		<td class="<?php echo $classVoid;?>"><span style="max-width: 190px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $voidReason;?></span></td>
+				               		<td class="<?php echo $classVoid;?>" align="center">&nbsp;<?php echo $voidDate;?>&nbsp;</td>
+				               		<td class="<?php echo $classVoid;?>" align="center">&nbsp;<?php echo $voidByUserName;?>&nbsp;</td>
 				                </tr>
 				                <?php }?>
 				                <tr class="style style1" style="font-weight: 600; background: #c1d0f3;">
