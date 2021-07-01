@@ -120,14 +120,13 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				mkdir($part, 0777, true);
 			}
 			
-			if (!empty($data['identity1'])){
-				
-				$identity = $data['identity1'];
-				$ids = explode(',', $identity);
-				
+			$identity = $data['identity1'];
+			$ids = explode(',', $identity);
+			if (!empty($ids)){
 				$detailidlist="";
 				$this->_name='ln_expense_document';
 				foreach ($ids as $i){
+					$data['detailid'.$i] = empty($data['detailid'.$i])?"":$data['detailid'.$i];
 					if (empty($detailidlist)){
 	    				if (!empty($data['detailid'.$i])){
 	    					$detailidlist= $data['detailid'.$i];
@@ -143,6 +142,10 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 					$where.=" AND id NOT IN (".$detailidlist.")";
 				}
 				$this->delete($where);
+			}
+				
+			if (!empty($data['identity1'])){
+				
 						
 				$this->_name = "ln_expense_document";
 				$image_name="";
@@ -211,6 +214,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			$detailid="";
 			if (!empty($ids)){
 				foreach ($ids as $i){
+					$data['detailidItem'.$i] = empty($data['detailidItem'.$i])?"":$data['detailidItem'.$i];
 					if (empty($detailid)){
 						$detailid = $data['detailidItem'.$i];
 					}else{
@@ -227,38 +231,41 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			$this->_name='ln_expense_detail';
 			$this->delete($whereDetail);
 			
-			$ids = explode(',', $data['identity']);
-			if (!empty($ids)){
-				foreach ($ids as $i){
-					if (!empty($data['detailidItem'.$i])){
-						$_arr = array(
-								'expense_id'	=>$data['id'],
-								'pro_id'		=>$data['product_name_'.$i],
-								'qty'			=>$data['qty_'.$i],
-								'cost'			=>$data['cost_'.$i],
-								'date'			=>date("Y-m-d"),
-								'amount'		=>$data['amount_'.$i],
-								'note'			=>$data['note_'.$i],
-						);
-						$wheresee=" id = ".$data['detailidItem'.$i];
-						$this->_name='ln_expense_detail';
-						$this->update($_arr, $wheresee);
+			if (!empty($data['identity1'])){
+				$ids = explode(',', $data['identity']);
+				if (!empty($ids)){
+					foreach ($ids as $i){
+						if (!empty($data['detailidItem'.$i])){
+							$_arr = array(
+									'expense_id'	=>$data['id'],
+									'pro_id'		=>$data['product_name_'.$i],
+									'qty'			=>$data['qty_'.$i],
+									'cost'			=>$data['cost_'.$i],
+									'date'			=>date("Y-m-d"),
+									'amount'		=>$data['amount_'.$i],
+									'note'			=>$data['note_'.$i],
+							);
+							$wheresee=" id = ".$data['detailidItem'.$i];
+							$this->_name='ln_expense_detail';
+							$this->update($_arr, $wheresee);
 
-					}else{
-						$_arr = array(
-								'expense_id'	=>$data['id'],
-								'pro_id'		=>$data['product_name_'.$i],
-								'qty'			=>$data['qty_'.$i],
-								'cost'			=>$data['cost_'.$i],
-								'date'			=>date("Y-m-d"),
-								'amount'		=>$data['amount_'.$i],
-								'note'			=>$data['note_'.$i],
-						);
-						$this->_name='ln_expense_detail';
-						$this->insert($_arr);
+						}else{
+							$_arr = array(
+									'expense_id'	=>$data['id'],
+									'pro_id'		=>$data['product_name_'.$i],
+									'qty'			=>$data['qty_'.$i],
+									'cost'			=>$data['cost_'.$i],
+									'date'			=>date("Y-m-d"),
+									'amount'		=>$data['amount_'.$i],
+									'note'			=>$data['note_'.$i],
+							);
+							$this->_name='ln_expense_detail';
+							$this->insert($_arr);
+						}
 					}
 				}
 			}
+			
 			
 			$_db->commit();
 		}catch(Exception $e){

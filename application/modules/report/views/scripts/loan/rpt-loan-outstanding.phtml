@@ -168,6 +168,8 @@ dojo.require("dijit.form.DateTextBox");
 			               $total_interest = 0;
 			               $result_d=0;
 			               $url_client = $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-paymentschedules'));
+						   
+						   $i=0;
 			               if(!empty($this->outstandloan))foreach($this->outstandloan as $key =>$row){?>
 		               <?php 
 			               if(!empty($row['old_land_id'])){
@@ -180,9 +182,7 @@ dojo.require("dijit.form.DateTextBox");
 			               }
 		               
 		               		$total_receive = $db->getAmountReceiveByLoanNumber($row['id'],$row['client_id']);
-		               		$amt_d = $amt_d+$row['price_sold'];
-		               		$amn_d = $amn_d+$total_receive;
-		               		$result_d=number_format(($amn_d/$amt_d)*100,2).' %';
+		               		
 		               		$link="#";
 		               		if($row['payment_id']==2 OR $row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==6){
 		               			$link = $url_client."/id/".$row['id'];
@@ -190,9 +190,14 @@ dojo.require("dijit.form.DateTextBox");
 		               		if ($total_receive>=$row['price_sold']){
 		               			continue;
 		               		}
+							
+							$amt_d = $amt_d+$row['price_sold'];
+		               		$amn_d = $amn_d+$total_receive;
+		               		$result_d=number_format(($amn_d/$amt_d)*100,2).' %';
+							$i = $i+1;
 		               ?>
 							<tr align="center" class="hover">
-								<td>&nbsp;<?php echo $key+1; ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $i+1; ?>&nbsp;</td>
 								<td align="left" style="font-size:11px; line-height: 13px; white-space: nowrap;">&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['client_kh']; ?></a>&nbsp;</td>
 								<td align="left" style="line-height: 12px;white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $row['phone']; ?></td>
 								<td align="center">&nbsp;<?php echo $countland; ?>&nbsp;</td>
