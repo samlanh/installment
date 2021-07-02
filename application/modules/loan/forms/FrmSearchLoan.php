@@ -396,6 +396,22 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$_queryOrdering->setMultiOptions($_ordering_opt);
 		$_queryOrdering->setValue($request->getParam("queryOrdering"));
 		
+		
+		
+		$_receiptStatus=  new Zend_Dojo_Form_Element_FilteringSelect('receiptStatus');
+		$_receiptStatus->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+			'class'=>'fullside'));
+		
+		$_optStatusReceipt = array(
+			0=>$this->tr->translate("ALL"),
+			1=>$this->tr->translate("NORMAL_STATUS"),
+			2=>$this->tr->translate("VOID_STATUS"),
+			);
+		$_receiptStatus->setMultiOptions($_optStatusReceipt);
+		$_receiptStatus->setValue($request->getParam("receiptStatus"));
+		
 		if($data!=null){
 			$_coid->setValue($data['co_id']);
 			$_releasedate->setValue($data['date_release']);
@@ -404,7 +420,9 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$this->addElements(array($receipt_type,$option_pay,$payment_id,$sale_status,$status_plong,$payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
 			$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist,$cheque_issuer_search,
 			$_agency_id,
-			$_queryOrdering
+			$_queryOrdering,
+			
+			$_receiptStatus
 		));
 		return $this;
 		
