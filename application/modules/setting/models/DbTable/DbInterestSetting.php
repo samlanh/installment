@@ -153,7 +153,7 @@ class Setting_Model_DbTable_DbInterestSetting extends Zend_Db_Table_Abstract
 			ms.title,
 			ms.title AS name
 			FROM `rms_interestsetting` AS ms
-		WHERE ms.status =1 AND ms.type =1";
+		WHERE ms.status =1 AND ms.type =1 ";
 		$sql.=" ORDER BY ms.title ASC";
 		$row =  $db->fetchAll($sql);
 		if (!empty($_ispot)) {
