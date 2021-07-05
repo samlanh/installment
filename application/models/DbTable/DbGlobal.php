@@ -738,7 +738,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  s.total_installamount,
 		  s.for_installamount,
 		    s.interest_policy,
-		    (SELECT st.title FROM rms_interestsetting as st WHERE st.id=s.interest_policy LIMIT 1 ) AS interest_policy_title,
+		    (SELECT st.title FROM rms_interestsetting as st WHERE st.id=s.interest_policy AND st.type=1 LIMIT 1 ) AS interest_policy_title,
 		 (SELECT project_name FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS branch_name,
 		  (SELECT p_manager_namekh FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS project_manager_namekh,
 		  (SELECT w_manager_namekh FROM `ln_project` WHERE br_id =s.branch_id LIMIT 1) AS w_manager_namekh,
@@ -2077,7 +2077,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	$db = $this->getAdapter();
   	$sql= " SELECT id,title AS name
-  	FROM `rms_interestsetting` WHERE title !='' AND status=1 ";
+  	FROM `rms_interestsetting` WHERE title !='' AND status=1 AND type=1 ";
   	$sql.=" ORDER BY id DESC";
   	$row = $db->fetchAll($sql);
   	return $row;
@@ -2088,6 +2088,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	percent_value AS interest_rate FROM `rms_interestsetting` AS ist,`rms_interestsetting_detail` AS istd
   	WHERE
   	ist.id=istd.settin_id
+  	AND ist.type =1
   	AND $current_time <= max_month
   	AND ist.id=$inter_settingid LIMIT 1";
   	return $db->fetchOne($sql);

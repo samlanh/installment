@@ -14,13 +14,13 @@
 	border:1px solid #ddd;
 }
 </style>
-<title><?php echo $this->tr->translate("POLICY_INTEREST_SETTING")?></title>
+<title><?php echo $this->tr->translate("POLICY_PENALTY_SETTING")?></title>
  <div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('POLICY_INTEREST_SETTING');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('POLICY_PENALTY_SETTING');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
@@ -68,9 +68,8 @@
 			<div class="clearfix"></div>
 	       	<div class="card-box mt-20">
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE");?>" dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />
-					<input type="submit" value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW");?>" dojoType="dijit.form.Button" 
+               		<input type="reset" value="Clear" label="Clear"dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+					<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE");?>" dojoType="dijit.form.Button" 
 						iconClass="dijitEditorIcon dijitEditorIconSave" />
                	</div>
              </div>
@@ -85,8 +84,10 @@
     
     var dept_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 	dojo.ready(function(){ 
-		addRow();
+		 initailize();
 	});
+
+	
 	
 	var col= 0; var no=0;
 	var title = 0;
@@ -98,8 +99,8 @@
 		if(title!=1){
 			temp+='<td><?php echo $tr->translate("DEL");?></td>';
 			temp+='<td><?php echo $tr->translate("N_O");?></td>';
-			temp+='<td><?php echo $tr->translate("AMOUNT_MONTH");?></td>';
-			temp+='<td><?php echo $tr->translate("INTEREST_VALUE");?></td>';
+			temp+='<td><?php echo $tr->translate("AMOUNT_DAY");?></td>';
+			temp+='<td><?php echo $tr->translate("PENALTY_VALUE");?></td>';
 			temp+='<td><?php echo $tr->translate("NOTE");?></td>';
 			dojo.query("#head-title").append(temp);
 			title=1;
@@ -107,9 +108,9 @@
 			
 		template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td align="center" width="2%">'+no+'</td>';
-		template+='<td width="10%"><input required="required" dojoType="dijit.form.NumberTextBox" class="fullside" id="max_month'+col+'" name="max_month'+col+'" placeholder="'+'<?php echo $tr->translate("AMOUNT_MONTH");?>" value="" type="text"  ></td>';	
-		template+='<td width="10%"><input dojoType="dijit.form.TextBox" class="fullside" id="percent_value'+col+'" name="percent_value'+col+'" placeholder="'+'<?php echo $tr->translate("INTEREST_VALUE");?> " value="" type="text"  ></td>';	
-		template+='<td width="10%"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
+		template+='<td width="10%"><input required="required" dojoType="dijit.form.NumberTextBox" class="fullside" id="max_month'+col+'" name="max_month'+col+'" placeholder="'+'<?php echo $tr->translate("AMOUNT_DAY")." ";?> " value="" type="text"  ></td>';	
+		template+='<td width="10%"><input dojoType="dijit.form.TextBox" class="fullside" id="percent_value'+col+'" name="percent_value'+col+'" placeholder="'+'<?php echo $tr->translate("PENALTY_VALUE")." ";?> " value="" type="text"  ></td>';	
+		template+='<td width="10%"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE")." ";?> " value="" type="text"  ></td>';	
 		
 		tmp='<tr id="row'+col+'">';
 		tmp+="</tr>";
@@ -122,15 +123,50 @@
 		     parseContent: true,
 		});
 	}
+	function initailize() {
+		<?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $rs){?>
+		col++;no++;
+		template='';
+		temp = "";
+	
+		if(title!=1){
+			temp+='<td><?php echo $tr->translate("DEL");?></td>';
+			temp+='<td><?php echo $tr->translate("N_O");?></td>';
+			temp+='<td><?php echo $tr->translate("AMOUNT_DAY");?></td>';
+			temp+='<td><?php echo $tr->translate("PENALTY_VALUE");?></td>';
+			temp+='<td><?php echo $tr->translate("NOTE");?></td>';
+			dojo.query("#head-title").append(temp);
+			title=1;
+		}
+			
+		template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		template+='<td align="center" width="2%">'+no+'</td>';
+		template+='<td width="10%"><input required="required" dojoType="dijit.form.NumberTextBox" class="fullside" id="max_month'+col+'" name="max_month'+col+'" placeholder="'+'<?php echo $tr->translate("AMOUNT_DAY")." ";?> " value="<?php echo $rs['max_month'];?>" type="text"  ></td>';	
+		template+='<td width="10%"><input dojoType="dijit.form.TextBox" class="fullside" id="percent_value'+col+'" name="percent_value'+col+'" placeholder="'+'<?php echo $tr->translate("PENALTY_VALUE")." ";?> " value="<?php echo $rs['percent_value'];?>" type="text"  ></td>';	
+		template+='<td width="10%"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE")." ";?> " value="<?php echo $rs['note'];?>" type="text"  ></td>';	
+		
+		tmp='<tr id="row'+col+'">';
+		tmp+="</tr>";
+		dojo.query("#table_row").append(tmp);
+		if($("#identity").val()!="") {
+			var identity = $("#identity").val();
+			$("#identity").val(identity+','+col);
+		} else {$("#identity").val(col);}
+		dojo.html.set(dojo.byId("row"+col),template , {
+		     parseContent: true,
+		});
+		<?php }?>
+	}
 	function deleteRecord(index) {
 		var identity = $('#identity').val();
 		var arrays = identity.split(',');
 		for(var i=0;i<arrays.length;i++) {
-			if(arrays[i] == index) arrays.splice(i,1);
+		
+		if(arrays[i] == index) arrays.splice(i,1);
+			
 		}
 		var strings = arrays.join(',');
 		$('#identity').val(strings);
 		dojo.query("#row"+index).remove();
 	}
-	
 </script>

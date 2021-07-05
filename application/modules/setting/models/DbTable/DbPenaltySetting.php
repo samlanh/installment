@@ -1,5 +1,5 @@
 <?php
-class Setting_Model_DbTable_DbInterestSetting extends Zend_Db_Table_Abstract
+class Setting_Model_DbTable_DbPenaltySetting extends Zend_Db_Table_Abstract
 {
 	protected $_name = 'rms_interestsetting';
 	
@@ -14,7 +14,7 @@ class Setting_Model_DbTable_DbInterestSetting extends Zend_Db_Table_Abstract
 			ms.status,
 			(SELECT first_name FROM `rms_users` WHERE id=ms.user_id LIMIT 1) as user_name 
 			 FROM `rms_interestsetting` AS ms
-    	WHERE 1 AND ms.type =1 ";
+    	WHERE 1 AND ms.type =2 ";
     	$where = "";
     	if(!empty($search['search'])){
     		$s_where=array();
@@ -33,7 +33,7 @@ class Setting_Model_DbTable_DbInterestSetting extends Zend_Db_Table_Abstract
     				'title'			=>$data['title'],
     				'note'			=>$data['note'],
     				'status'		=>1,
-    				'type'			=>1,
+    				'type'			=>2,
     				'create_date'	=>date("Y-m-d H:i:s"),
     				'modify_date'	=>date("Y-m-d H:i:s"),
     				'user_id'		=>$this->getUserId(),
@@ -130,7 +130,7 @@ class Setting_Model_DbTable_DbInterestSetting extends Zend_Db_Table_Abstract
 	}
 	function getSettingById($id=null){
 		$db = $this->getAdapter();
-		$sql=" SELECT * FROM rms_interestsetting WHERE 1 AND type =1 ";
+		$sql=" SELECT * FROM rms_interestsetting WHERE 1 AND type =2 ";
 		if (!empty($id)){
 			$sql.=" AND id = $id LIMIT 1";
 		}
@@ -153,7 +153,7 @@ class Setting_Model_DbTable_DbInterestSetting extends Zend_Db_Table_Abstract
 			ms.title,
 			ms.title AS name
 			FROM `rms_interestsetting` AS ms
-		WHERE ms.status =1 AND ms.type =1";
+		WHERE ms.status =1 AND ms.type =2";
 		$sql.=" ORDER BY ms.title ASC";
 		$row =  $db->fetchAll($sql);
 		if (!empty($_ispot)) {
