@@ -36,6 +36,11 @@
 			        </div> 
 			        <?php }
 				}?>
+				<?php 
+				$dbacc = new Application_Model_DbTable_DbUsers();
+				$rs = $dbacc->getAccessUrl("report","loan",'bug');
+				if(!empty($rs)){
+				?>
 					<div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
 						<a style="color:red;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'bug')); ?>">
 						<div title="<?php echo $tr->translate("CHECK_MISTACK");?>" class="tile-stats report-list error">
@@ -45,6 +50,8 @@
 						</div>
 						</a>
 			        </div> 
+				<?php }?>
+				
 			   </div>
 		  </div>
 		</div>
