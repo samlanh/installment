@@ -435,8 +435,8 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$this->addElements(array($receipt_type,$option_pay,$payment_id,$sale_status,$status_plong,$payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
 			$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist,$cheque_issuer_search,
 			$_agency_id,
-			$_queryOrdering,
 			
+			$_queryOrdering,
 			$_receiptStatus,
 			$credit_category
 			
