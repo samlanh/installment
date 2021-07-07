@@ -105,12 +105,12 @@ class Incexp_Model_DbTable_DbCredit extends Zend_Db_Table_Abstract
 			$where.= " AND branch_id = ".$search['branch_id'];
 		}
 		
-		if(!empty($search['category_id'])){
-			$condiction = $dbp->getChildType($search['category_id']);
+		if(!empty($search['credit_category'])){
+			$condiction = $dbp->getChildType($search['credit_category']);
 			if (!empty($condiction)){
 				$where.=" AND category_id IN ($condiction)";
 			}else{
-				$where.=" AND category_id=".$search['category_id'];
+				$where.=" AND category_id=".$search['credit_category'];
 			}
 		}
 		

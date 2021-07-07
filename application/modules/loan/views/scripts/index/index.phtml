@@ -22,7 +22,11 @@
 	$urleditschedule = $this->baseUrl()."/loan/index/rpt-updatepayment/id/";
 	$urlCreditHistory = $this->baseUrl()."/report/loan/credithistory/id/";
 	
+	
 	$urlAddMaterialInclude = $this->baseUrl()."/loan/materialinc/add/id/";
+	
+	$urlIssueCredit = $this->baseUrl()."/incexp/credit/add/id/";
+	$creditSetting = CREDIT_SETTING;
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -181,6 +185,8 @@ $(function(){
 				url='<?php echo $urlpaymenthistory;?>';
 			}else if(key=="credithistory"){
 				url='<?php echo $urlCreditHistory;?>';
+			}else if(key=="issueCredit"){
+				url='<?php echo $urlIssueCredit;?>';
 			}else if(key=="addmeterial"){
 				url='<?php echo $urlAddMaterialInclude;?>';
 			}
@@ -197,6 +203,9 @@ $(function(){
 			"payhistory": {name: "<?php echo $payment_history;?>", icon: "fa-dollar", accesskey: "h"},
 			//"credithistory": {name: "<?php echo $tr->translate("CREDIT_HISTORY");?>", icon: "fa-dollar", accesskey: "h"},
 			"addmeterial": {name: "<?php echo $tr->translate("SET_MATERIAL_INCLUDE");?>", icon: "fa-book", accesskey: "h"},
+			<?php if($creditSetting==1){?>
+			"issueCredit": {name: "<?php echo $tr->translate("ISSUE_CREDIT");?>", icon: "fa-dollar", accesskey: "h"},
+			<?php }?>
 		}
 	});
 });

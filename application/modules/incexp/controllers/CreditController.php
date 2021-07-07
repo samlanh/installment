@@ -18,7 +18,7 @@ class Incexp_CreditController extends Zend_Controller_Action
     			$search = array(
     					"adv_search"=>'',
     					"branch_id"=>-1,
-    					"category_id"=>'',
+    					"credit_category"=>'',
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
     					'land_id'=>-1,
@@ -30,10 +30,9 @@ class Incexp_CreditController extends Zend_Controller_Action
 			$rs_rows= $db->getAllCredit($search);//call frome model
     		
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","INCOME_TITLE","RECEIPT_NO","CATEGORY","PAYMENT_TYPE","TOTAL_CREDIT","NOTE","DATE","BY_USER","STATUS");
+    		$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","TITLE","RECEIPT_NO","CATEGORY","PAYMENT_TYPE","TOTAL_CREDIT","NOTE","DATE","BY_USER","STATUS");
     		$link=array('module'=>'incexp','controller'=>'credit','action'=>'edit');
-    		$link1=array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome');
-    		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('house_no'=>$link1,'branch_name'=>$link,'client_name'=>$link,'title'=>$link,'invoice'=>$link));
+    		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('house_no'=>$link,'branch_name'=>$link,'client_name'=>$link,'title'=>$link,'invoice'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -67,6 +66,18 @@ class Incexp_CreditController extends Zend_Controller_Action
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
+		
+		$id = $this->getRequest()->getParam('id');
+		if(!empty($id)){
+			$dbp = new Loan_Model_DbTable_DbLandpayment();
+			$rs = $dbp->getTranLoanByIdWithBranch($id,null);
+			$this->view->rsresult =  $rs;
+			if($rs['is_cancel']==1){
+				Application_Form_FrmMessage::message('THIS_SALE_CANNOT_ISSUE_CREDIT');
+				echo "<script>window.close();</script>";
+			}
+		}
+		
 		$db = new Incexp_Model_DbTable_DbIncome();
 		$result = $db->getAllIncomeCategory(30);
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();

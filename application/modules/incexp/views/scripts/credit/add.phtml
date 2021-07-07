@@ -132,8 +132,10 @@
 						 iconClass="dijitIconDelete"/>
 					<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' name='savenew' value='savenew' dojoType="dijit.form.Button"
 						 iconClass="dijitIconNewTask"/>
-					<input type="button" label="<?php echo $tr->translate("SAVEPRINT")?>" name='print' value='print' dojoType="dijit.form.Button"
+					<!--
+					<input type="button" label="<?php //echo $tr->translate("SAVEPRINT")?>" name='print' value='print' dojoType="dijit.form.Button"
 						 iconClass="dijitIconNewTask" onClick="printSave('');displayNone();" />
+					-->
     			</div>
     		</div>
 		</form>
@@ -207,6 +209,10 @@ dojo.ready(function(){
 	    }
 	}, "parent_id");
 	getParentbytype();
+	
+	<?php if(!empty($this->rsresult)){?>
+		dijit.byId('branch_id').attr('value','<?php echo $this->rsresult['branch_id'];?>');
+	<?php }?>
 });
 function enablePayment(){
 	payment_method = dijit.byId('payment_type').get('value');
@@ -315,6 +321,9 @@ function getSaleClie(){
 		load: function(data){	
 			sale_client_store = getDataStorefromJSON('id','name', data);		
 		    dijit.byId('sale_client').set('store', sale_client_store);
+			<?php if(!empty($this->rsresult)){?>
+		    	dijit.byId('sale_client').attr('value','<?php echo $this->rsresult['id'];?>');	
+		    <?php }?>
 		},
 		error: function(err) {
 		}

@@ -412,6 +412,21 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$_receiptStatus->setMultiOptions($_optStatusReceipt);
 		$_receiptStatus->setValue($request->getParam("receiptStatus"));
 		
+		$credit_category = new Zend_Dojo_Form_Element_FilteringSelect('credit_category');
+		$credit_category->setAttribs(array(
+			'dojoType'=>'dijit.form.FilteringSelect',
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+		));
+		$cateEx = $db->getAllCategoryIncomeExpens(30);
+		$opt1=array(''=>$this->tr->translate("SELECT_CATEGORY"));
+		if(!empty($cateEx))foreach($cateEx AS $row){
+			$opt1[$row['id']]=$row['name'];
+		}
+		$credit_category->setMultiOptions($opt1);
+		$credit_category->setValue($request->getParam("credit_category"));
+		
 		if($data!=null){
 			$_coid->setValue($data['co_id']);
 			$_releasedate->setValue($data['date_release']);
@@ -422,7 +437,9 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			$_agency_id,
 			$_queryOrdering,
 			
-			$_receiptStatus
+			$_receiptStatus,
+			$credit_category
+			
 		));
 		return $this;
 		
