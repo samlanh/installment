@@ -450,4 +450,13 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
     	FROM ln_expense_detail WHERE expense_id=$id";
     	return $db->fetchAll($sql);
     }
+	
+	function checkHaspayment($purchase_id){
+    	$db = $this->getAdapter();
+    	$sql="SELECT * FROM `rms_expense_payment_detail` AS pr WHERE pr.`purchase_id`=$purchase_id
+    	AND (SELECT p.`status` FROM `rms_expense_payment` AS p WHERE p.`id` = pr.`payment_id` LIMIT 1) =1 LIMIT 1";
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission('(SELECT p.`branch_id` FROM `rms_expense_payment` AS p WHERE p.`id` = pr.`payment_id` LIMIT 1)');
+    	return $db->fetchRow($sql);
+    }
 }
