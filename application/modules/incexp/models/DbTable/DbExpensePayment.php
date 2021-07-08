@@ -357,7 +357,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 				
     			$purchase = $this->getPruchaseById($_data['purchase_id'.$i],$_data['branch_id']);
 				
-    			$paid = $_data['payment_amount'.$i]+(float)$_data['discount_amount'.$i];
+    			$paid = (float)$_data['payment_amount'.$i]+(float)$_data['discount_amount'.$i];
     			
     			if (!empty($purchase)){
     				$dueafter = $purchase['total_amount_after']-$paid;
@@ -590,9 +590,13 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     }
     function getPruchaseById($id,$branch_id){
     	$db=$this->getAdapter();
-    	$sql="SELECT sp.*,s.name as sup_name,s.supplier_code as purchase_no,s.email,s.address
-    	FROM ln_supplier AS s,ln_expense AS sp
-    	WHERE s.id=sp.supplier_id AND sp.status=1 AND sp.id=$id AND sp.branch_id =$branch_id";
+    	$sql="SELECT sp.*,
+		(SELECT s.name FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1)as sup_name,
+		(SELECT s.supplier_code FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1) as purchase_no,
+		(SELECT s.email FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1)as email,
+		(SELECT s.address FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1)as address
+		 FROM ln_expense AS sp
+    	WHERE  sp.status=1 AND sp.id=$id AND sp.branch_id =$branch_id";
     	return $db->fetchRow($sql);
     }
     
