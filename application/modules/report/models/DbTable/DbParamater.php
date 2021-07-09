@@ -3456,4 +3456,12 @@ function getAllBranch($search=null){
 		
 		return $db->fetchOne($sql);
 	}
+	
+	function getExpenseDetail($id){
+    	$db=$this->getAdapter();
+    	$sql="SELECT *,
+		(SELECT ide.title FROM `rms_product` AS ide WHERE ide.id = pro_id LIMIT 1) AS pro_name
+    	FROM ln_expense_detail WHERE expense_id=$id";
+    	return $db->fetchAll($sql);
+    }
 }

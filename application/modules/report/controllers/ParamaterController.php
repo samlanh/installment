@@ -998,10 +998,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
 				exit();
 			}
 			$this->view->row = $row;
-			$this->view->rowDetail = $db->getPurchasePaymentDetail($id);;
+			$this->view->row_pur_detai = $db->getExpenseDetail($id);
 			
-			$db = new Incexp_Model_DbTable_DbExpense();
-			$this->view->row_pur_detai=$db->getExpenseDetail($id);
+			
 		}catch(Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
