@@ -1034,6 +1034,8 @@ function checkFirstRecord(){
 		}
   }
 }
+
+
 col=0;no=0;title=0;temp='';
 function addRow(){
 	result = checkFirstRecord();
@@ -1110,6 +1112,7 @@ function addRow(){
 	
 	dijit.byId("date_line").attr('value',epx_date);
 }
+var steppayoption = '<?php echo $this->stepoption;?>';
 function addInstallment(){
 	result = checkFirstRecord();
 	if(result==false){return false;}
@@ -1137,7 +1140,9 @@ function addInstallment(){
 				temp+='<th id="lbl_titlemetion" style="display:none;" width="130px"><?php echo $tr->translate("PERCENT_AGREE");?></th>';
 				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("PERCENT_PAID");?></th>';
 				temp+='<th id="lbl_titlemetion" width="130px"><?php echo $tr->translate("OS_AMOUNT");?></th>';
+				temp+='<th style="display:none;"><?php echo $tr->translate("TYPE");?></th>';
 				temp+='<th style="display:none;"><?php echo $tr->translate("NOTE");?></th>';
+				
 				dojo.query("#head-title").append(temp);
 				title=1;
 				epx_date ='<?php echo date('Y-m-d');?>';
@@ -1170,6 +1175,7 @@ function addInstallment(){
 				template+='<td style="display:none;"><input type="text" class="fullside" data-dojo-type="dijit.form.NumberTextBox" id="percent_agree'+col+'" name="percent_agree'+col+'" /></td>';
 				template+='<td><input onkeyup="calCulateAmount('+col+')" class="fullside" type="text" required="true" data-dojo-type="dijit.form.NumberTextBox" id="percent'+col+'" name="percent'+col+'" /></td>';	//data-dojo-props='+'regExp:"[0-9]{1,2}"'+'		
 				template+='<td><input class="fullside" type="text" onkeyup="calCulateAmount('+col+',2)" required="true"  dojoType="dijit.form.NumberTextBox" id="total_payment'+col+'" name="total_payment'+col+'" /></td>';			
+				template+='<td style="display:none;" width="90px"><select class="fullside" dojoType="dijit.form.FilteringSelect" id="pay_with'+col+'" name="pay_with'+col+'" >'+steppayoption+'</select></td>';			
 				template+='<td style="display:none;"> <input class="fullside" type="text"  name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"/><label id="subsub"></label></td>';
 			tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
 			tmp+="</tr>";

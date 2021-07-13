@@ -41,6 +41,8 @@ class Other_TestsaleController extends Zend_Controller_Action {
 		) );
 	    $this->view->co_name=$co_name;
 	    
+		$this->view->stepoption = $db->getOptionStepPayment();
+		
 	    $interest = $db->getAllInterestratestore();
 	    array_unshift($interest,array(
 	    'id' => -1,
