@@ -3250,7 +3250,16 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				#lb_receipt {
 					font-weight: bold;
 				}
-				
+				table.mainBody{
+					white-space: nowrap;
+					font-size:14px;
+					margin-top:-30px;
+					font-family: '."'Times New Roman'".','."'Khmer OS Battambang'".'; 
+				}
+				table.mainBody span,
+				table.mainBody label{
+					font-size:14px;
+				}
 			</style>
 		';
 		$str.='
@@ -3276,7 +3285,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			</table>
 		';
 		$str.='
-			<table  width="100%" style="font-family: '."'Times New Roman'".','."'Khmer OS Battambang'".'; white-space: nowrap;font-size:14px;margin-top:-30px;" class="print" cellspacing="3px"  cellpadding="0">
+			<table class="mainBody print" width="100%"  cellspacing="0"  cellpadding="0">
 				<tr class="receipt-row"  >
 					<td colspan="3"></td>
 					<td align="right">
@@ -3341,7 +3350,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
-					<td colspan="4" valign="top" >
+					<td colspan="4" valign="top" style="height: 75px;" >
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 10px;">
@@ -3418,6 +3427,33 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				    display: inline-block;
 				    line-height: 24px;
 				}
+				table.mainBody{
+					white-space: nowrap;
+					font-size:14px;
+					margin-top: -8px;
+				}
+				table.mainBody span,
+				table.mainBody label{
+					font-size:14px;
+				}
+				table.comment-footer{
+					margin-top:20px;
+				}
+				table.comment-footer tr td span.lbnote {
+					text-decoration:underline;
+					font-size: 12px;
+					margin-top: -5px;
+				}
+				table.comment-footer tr td p.comment1{
+					font-size: 11px;
+					margin:-5px 0px -5px 0px !important;
+					padding:0 !important;
+				}
+				table.comment-footer tr td span.comment{
+					white-space: pre-line;
+					font-size: 11px;
+					margin-top: -5px;
+				}
 			</style>
 		';
 		$str.='
@@ -3441,7 +3477,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			</table>
 		';
 		$str.='
-			<table width="100%" style="white-space: nowrap;font-size:14px;margin-top: -8px;" class="print" cellspacing="2px"  cellpadding="0">
+			<table class="mainBody" width="100%" class="print" cellspacing="2px"  cellpadding="0">
 				<tr>
 					<td width="15%" ></td>
 					<td width="35%" ></td>
@@ -3469,12 +3505,12 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</tr>
 				<tr style="white-space: nowrap;">
 					<td rowspan="2" valign="top" class="one khmerbold">សម្គាល់</td>
-				    <td rowspan="2" style="border: 1px solid #000 !important;text-align: left; vertical-align: top;" class="noted"><label id="lb_description" style="text-align: left;display: inline-block;max-width: 100%;font-weight: 600;"></label></td>
+				    <td rowspan="2" style="border: 1px solid #000 !important;text-align: left; vertical-align: top;" class="noted"><label id="lb_description" style="text-align: left;display: block;width: 100%;font-weight: 600;">&nbsp;</label></td>
 					<td class="one khmerbold">&nbsp;&nbsp;'.$tr->translate("PAYMENT_TYPE").'</td>
 				    <td >
-						<table width="100%" cellpadding="0" cellspacing="0">
+						<table width="100%" cellpadding="0" cellspacing="0" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'">
 							<tr>
-								<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -4px;" id="lbl_paymenttype" class="value"></label></td>
+								<td width="33.5%" style="white-space: nowrap;"><label style="margin-left: -1px;" id="lbl_paymenttype" class="value"></label></td>
 								<td width="33%" style="white-space: nowrap;">&nbsp;'.$tr->translate("CHEQUE").'</td>
 								<td width="33.5%"><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_cheque" class="value"></label></strong></td>
 							</tr>
@@ -3486,12 +3522,14 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td class="one khmerbold">&nbsp;&nbsp;ថ្ងៃទទួល</td>
 				    <td ><strong><label class="value" id="lb_date"></label></strong></td>
 				</tr>
-				
+				<tr>
+					<td style="">&nbsp;</td>
+				</tr>
 				<tr style="white-space: nowrap;">
 				    <td colspan="2" class="khmerbold" style="line-height: 14px;"  align="center" >&nbsp;&nbsp;<span style=" font-family: Arial Black;font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".';">'.$data['customer_sign'].'</span></td>
 				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" ><span style=" font-family: Arial Black;font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".';">'.$data['teller_sign'].'</span></td>
 				</tr>
-				<tr style="white-space: nowrap;" height="60px;">
+				<tr style="white-space: nowrap;" height="70px;">
 					<td class="one khmerbold" colspan="2" align="center" valign="bottom">
 						<h4 style="font-weight:normal; padding-right: 5px ! important;margin-bottom: -10px  !important;">
 							<span id="lb_customer_name"></span>
@@ -3505,18 +3543,19 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					</td>
 				</tr>
 				
-				<tr style="line-height: 15px;font-size: 12px;">
-					<td colspan="4" valign="top" >
-						
-					</td>
-				</tr>
 				<tr style="line-height: 20px;font-size: 11px;font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'">
-					<td valign="top" >
-						<span style="text-decoration:underline;font-size: 14px;">សំគាល់ ៖</span>
-					</td>
-					<td colspan="3">
-						<span style="font-size: 12px;">'.$data['comment'].'</span><br />
-						<span style="white-space: pre-line;font-size: 12px;">'.$data['comment1'].'</span><br />
+					<td colspan="4" valign="top">
+						<table class="comment-footer" width="100%" border="0" >
+							<tr>
+								<td width="10%">
+									<span class="lbnote" style="">សម្គាល់ ៖</span>
+								</td>
+								<td colspan="5">
+									<p class="comment1">'.$data['comment'].'</p>
+									<span class="comment">'.$data['comment1'].'</span>
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 12px;">
