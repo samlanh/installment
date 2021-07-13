@@ -182,6 +182,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 				$arr['total_duration']=empty($data['period'])?$sale['total_duration']:$data['period'];
 				//$arr['total_installamount']=empty($data['total_installamount'])?0:$data['total_installamount'];
 				$arr['interest_rate']=empty($data['interest_rate'])?0:$data['interest_rate'];
+				$arr['payment_id']=empty($data['schedule_opt'])?0:$data['schedule_opt'];
 				
     	    $this->_name='ln_sale';
     	    $where = "id =".$data["loan_number"];
