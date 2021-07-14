@@ -1355,7 +1355,11 @@ function addPreviewLoan(){
 						  
 						var datePaymentForShow = getDayName(d.getDay())+'-'+data[i].date_payments;
 						if(data[i].last_optiontype==1){
-							datePaymentForShow = getDayName(d.getDay())+'-'+data[i].date_payments;
+							if(data[i].ispay_bank==0){
+								datePaymentForShow = getDayName(d.getDay())+'-'+data[i].date_payments;
+							}else{
+								datePaymentForShow = data[i].payment_type;
+							}
 						}else{
 							if(data[i].ispay_bank==0){
 								datePaymentForShow='<?php echo $tr->translate("RECEIVED_PROPERTY");?>';

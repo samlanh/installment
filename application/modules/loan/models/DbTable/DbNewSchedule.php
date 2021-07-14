@@ -1120,7 +1120,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     						'amount_day'=>$old_amount_day,
     						'is_completed'=>0,
     						'date_payment'=>$next_payment,
-							'last_optiontype'=>$paid_receivehouse,
+							//'last_optiontype'=>$paid_receivehouse,
     				);
 					if($i==$loop_payment AND $payment_method!=7){//for end of record only
 						$datapayment['ispay_bank'] = $data['paid_receivehouse'];
