@@ -1698,14 +1698,26 @@ function addPreviewLoan(){
 						  temp+='<th><?php echo $tr->translate("ប្រាក់ដើមនៅសល់");?></th>';
 						  principal_permonth=0;total_interest=0;total_payment_after=0;
 						for(i=0;i<data.length;i++){
+							var myDate = new Date(data[i].date_payment);
+							d = new Date(data[i].date_name);
+							var datePaymentForShow = getDayName(d.getDay())+'-'+data[i].date_payments;
+							if(data[i].last_optiontype==1){
+								datePaymentForShow = getDayName(d.getDay())+'-'+data[i].date_payments;
+							}else{
+								if(data[i].ispay_bank==0){
+									datePaymentForShow='<?php echo $tr->translate("RECEIVED_PROPERTY");?>';
+								}else{
+									datePaymentForShow = data[i].payment_type;
+								}
+							}
 							principal_permonth=principal_permonth+parseFloat(data[i].principal_permonth);
 							total_interest=total_interest+parseFloat(data[i].total_interest);
 							total_payment_after=total_payment_after+parseFloat(data[i].total_payment_after);
 					      r++;
 						  temp+='<tr><td align="center">'+r+'</td>';
-						  var myDate = new Date(data[i].date_payment);
-						  d = new Date(data[i].date_name);
-						  temp+='<td>'+getDayName(d.getDay())+'-'+data[i].date_payments+'</td>';
+						  
+						  //temp+='<td>'+getDayName(d.getDay())+'-'+data[i].date_payments+'</td>';
+						  temp+='<td>'+datePaymentForShow+'</td>';
 						  temp+='<td>'+dojo.number.format(data[i].begining_balance,2)+'</td>';
 						  temp+='<td>'+dojo.number.format(data[i].principal_permonth,2)+'</td>';
 						  temp+='<td>'+dojo.number.format(data[i].total_interest,2)+'</td>';

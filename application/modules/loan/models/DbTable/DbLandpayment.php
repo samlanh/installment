@@ -1446,6 +1446,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$old_interestrate=0;
     		$str_next = '+1 month';
     		for($i=1;$i<=$loop_payment;$i++){
+				$paid_receivehouse=1;
     			if($payment_method==3){//pay by times//check date payment
     				if($i!=1){
     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
@@ -1460,7 +1461,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				$pri_permonth = round($data['sold_price']/$borrow_term,0);
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
+						$paid_receivehouse = $data['paid_receivehouse'];
     				}
+					
     			}elseif($payment_method==4){
     				if($i!=1){
     					$remain_principal = $remain_principal-$pri_permonth;//OSប្រាក់ដើមគ្រា
@@ -1501,6 +1504,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    								'amount_day'=>$old_amount_day,
 	    								'is_completed'=>0,
 	    								'date_payment'=>$data['date_payment'.$j],
+										'ispay_bank'=>$data['pay_with'.$j],
 	    						);
 	    						$this->insert($datapayment);
 	    						$from_date = $data['date_payment'.$j];
@@ -1542,6 +1546,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				}
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
+						$paid_receivehouse = $data['paid_receivehouse'];
     				}
     				
     			}elseif($payment_method==6 OR $payment_method==5){
@@ -1563,6 +1568,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			   	 	$amount_day = $dbtable->CountDayByDate($from_date,$data['date_payment'.$i]);
     			   	 	
     			   	 	$this->_name="ln_saleschedule_test";
+						
+						if(end($ids)==$i){
+							$paid_receivehouse = $data['paid_receivehouse'];
+						}
     			   	 	$datapayment = array(
     			   	 			'branch_id'=>$data['branch_id'],
     			   	 			'sale_id'=>$id,//good
@@ -1579,9 +1588,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			   	 			'amount_day'=>$old_amount_day,
     			   	 			'is_completed'=>0,
     			   	 			'date_payment'=>$data['date_payment'.$i],
+								'ispay_bank'=>$data['pay_with'.$i],
+								'last_optiontype'=>$paid_receivehouse,
     			   	 	);
     			   	 	$this->insert($datapayment);
     			   	 	$from_date = $data['date_payment'.$i];
+						
     			   	 }
     			   	 break;
     			   }elseif($payment_method==7){
@@ -1595,6 +1607,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   			$ids = explode(',', $data['identity']);
 	    			   			$key = 1;
 	    			   			foreach ($ids as $j){
+									
+									if(end($ids)==$j){
+										$paid_receivehouse=$data['paid_receivehouse'];
+									}
+									
+
 	    			   				if($key==1){
 	    			   					$remain_principal=$data['sold_price'];
 	    			   					$old_pri_permonth = $data['total_payment'.$j];
@@ -1624,6 +1642,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    			   						'amount_day'=>$old_amount_day,
 	    			   						'is_completed'=>0,
 	    			   						'date_payment'=>$data['date_payment'.$j],
+											'ispay_bank'=>$data['pay_with'.$j],
+											'last_optiontype'=>$paid_receivehouse,
 	    			   				);
 	    			   				$this->insert($datapayment);
 	    			   				$from_date = $data['date_payment'.$j];
@@ -1680,7 +1700,17 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    					'amount_day'=>$old_amount_day,
 	    					'is_completed'=>0,
 	    					'date_payment'=>$next_payment,
-	    			);    
+	    					'last_optiontype'=>$paid_receivehouse,
+	    			);  
+					if($i==$loop_payment AND $payment_method!=7){//for end of record only
+						$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+						if($data['paid_receivehouse']==1){
+							$datapayment['ispay_bank']=0;
+						}
+						if($data['paid_receivehouse']==0){
+							$datapayment['ispay_bank']=1;
+						}
+					}
 	    			$this->insert($datapayment);
 	    			$old_remain_principal = 0;
 	    			$old_pri_permonth = 0;
@@ -1719,11 +1749,13 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		
     		if($payment_method==3 OR $payment_method==4 OR $payment_method==6 OR $payment_method==7){
 	    		$sql = " SELECT t.* , DATE_FORMAT(t.date_payment, '%d-%m-%Y') AS date_payments,
-	    		DATE_FORMAT(t.date_payment, '%Y-%m-%d') AS date_name FROM
+	    		DATE_FORMAT(t.date_payment, '%Y-%m-%d') AS date_name,
+				(SELECT name_kh FROM ln_view WHERE type =29 AND key_code = t.ispay_bank LIMIT 1) AS payment_type
+				FROM
 	    		ln_saleschedule_test AS t WHERE t.sale_id = ".$id;
 	    		$rows = $db->fetchAll($sql);
     		}else{
-    			$sql = " SELECT *,'row_id' FROM ln_sale_test WHERE id = ".$id;
+    			$sql = " SELECT *,'row_id',(SELECT name_kh FROM ln_view WHERE type =29 AND key_code = ln_sale_test.ispay_bank LIMIT 1) AS payment_type FROM ln_sale_test WHERE id = ".$id;
     			$rows = $db->fetchRow($sql);
     		}
     		$db->commit();

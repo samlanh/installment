@@ -1954,7 +1954,20 @@ function addPreviewLoan(){
 						  temp+='<tr><td align="center">'+r+'</td>';
 						  var myDate = new Date(data[i].date_payment);
 						  d = new Date(data[i].date_name);
-						  temp+='<td>'+getDayName(d.getDay())+'-'+data[i].date_payments+'</td>';
+						  
+						  var datePaymentForShow = getDayName(d.getDay())+'-'+data[i].date_payments;
+							if(data[i].last_optiontype==1){
+								datePaymentForShow = getDayName(d.getDay())+'-'+data[i].date_payments;
+							}else{
+								if(data[i].ispay_bank==0){
+									datePaymentForShow='<?php echo $tr->translate("RECEIVED_PROPERTY");?>';
+								}else{
+									datePaymentForShow = data[i].payment_type;
+								}
+							}
+							
+						  //temp+='<td>'+getDayName(d.getDay())+'-'+data[i].date_payments+'</td>';
+						  temp+='<td>'+datePaymentForShow+'</td>';
 						  temp+='<td>'+dojo.number.format(data[i].begining_balance,2)+'</td>';
 						  temp+='<td>'+dojo.number.format(data[i].principal_permonth,2)+'</td>';
 						  temp+='<td>'+dojo.number.format(data[i].total_interest,2)+'</td>';

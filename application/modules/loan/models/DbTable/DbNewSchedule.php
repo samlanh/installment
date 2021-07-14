@@ -826,6 +826,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$is_graceperiod=0;
     		$old_interestrate=0;
     		for($i=1;$i<=$data['period'];$i++){
+				$paid_receivehouse=1;
     			$grace_period = $data['grace_period'];
     			if($grace_period>0 AND $is_graceperiod==0){
     				$old_interest_paymonth = $remain_principal*(($data['interest_rate']/12)/100);//fixed 30day
@@ -877,6 +878,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				$pri_permonth = round($data['sold_price']/$borrow_term,0);
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
+						$paid_receivehouse = $data['paid_receivehouse'];
     				}
     			}elseif($payment_method==4){//រំលស់
     				if($i!=1){
@@ -919,6 +921,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     									'amount_day'=>$old_amount_day,
     									'is_completed'=>0,
     									'date_payment'=>$data['date_payment'.$j],
+										'ispay_bank'=>$data['pay_with'.$j],
     							);
     							$this->insert($datapayment);
     							$from_date = $data['date_payment'.$j];
@@ -965,6 +968,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				
     				if($i==$loop_payment){//for end of record only
     					$pri_permonth = $remain_principal;
+						$paid_receivehouse = $data['paid_receivehouse'];
     				}
     			}elseif($payment_method==6){
     				$ids = explode(',', $data['identity']);
@@ -984,6 +988,10 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     					$cum_interest = $cum_interest+$old_interest_paymonth;
     					$amount_day = $dbtable->CountDayByDate($from_date,$data['date_payment'.$i]);
     						
+						if(end($ids)==$i){
+							$paid_receivehouse = $data['paid_receivehouse'];
+						}
+						
     					$this->_name="ln_saleschedule_test";
     					$datapayment = array(
     							'branch_id'=>$data['branch_id'],
@@ -1000,6 +1008,8 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     							'amount_day'=>$old_amount_day,
     							'is_completed'=>0,
     							'date_payment'=>$data['date_payment'.$i],
+								'ispay_bank'=>$data['pay_with'.$i],
+    							'last_optiontype'=>$paid_receivehouse,
     					);
     					$this->insert($datapayment);
     					$from_date = $data['date_payment'.$i];
@@ -1025,6 +1035,11 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     								$remain_principal = $remain_principal-$old_pri_permonth;
     								$old_pri_permonth = $data['total_payment'.$j];
     							}
+								
+								if(end($ids)==$j){
+									$paid_receivehouse=$data['paid_receivehouse'];
+								}
+									
     							$key = $key+1;
     							$old_interest_paymonth = 0;
     								
@@ -1047,6 +1062,8 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     									'amount_day'=>$old_amount_day,
     									'is_completed'=>0,
     									'date_payment'=>$data['date_payment'.$j],
+										'ispay_bank'=>$data['pay_with'.$j],
+    									'last_optiontype'=>$paid_receivehouse,
     							);
     							$this->insert($datapayment);
     							$from_date = $data['date_payment'.$j];
@@ -1103,7 +1120,18 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     						'amount_day'=>$old_amount_day,
     						'is_completed'=>0,
     						'date_payment'=>$next_payment,
+							'last_optiontype'=>$paid_receivehouse,
     				);
+					if($i==$loop_payment AND $payment_method!=7){//for end of record only
+						$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+						if($data['paid_receivehouse']==1){
+							$datapayment['ispay_bank']=0;
+						}
+						if($data['paid_receivehouse']==0){
+							$datapayment['ispay_bank']=1;
+						}
+					}
+						
     				$this->insert($datapayment);
     				$old_remain_principal = 0;
     				$old_pri_permonth = 0;
@@ -1141,11 +1169,12 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		
     		if($payment_method==3 OR $payment_method==4 OR $payment_method==6 OR $payment_method==7){
     			$sql = " SELECT t.* , DATE_FORMAT(t.date_payment, '%d-%m-%Y') AS date_payments,
-    			DATE_FORMAT(t.date_payment, '%Y-%m-%d') AS date_name FROM
+    			DATE_FORMAT(t.date_payment, '%Y-%m-%d') AS date_name,
+				(SELECT name_kh FROM ln_view WHERE type =29 AND key_code = t.ispay_bank LIMIT 1) AS payment_type FROM
     			ln_saleschedule_test AS t WHERE t.sale_id = ".$id;
     			$rows = $db->fetchAll($sql);
     		}else{
-    			$sql = " SELECT *,'row_id' FROM ln_sale_test WHERE id = ".$id;
+    			$sql = " SELECT *,'row_id',(SELECT name_kh FROM ln_view WHERE type =29 AND key_code = ln_sale_test.ispay_bank LIMIT 1) AS payment_type FROM ln_sale_test WHERE id = ".$id;
     			$rows = $db->fetchRow($sql);
     		}
     		$db->commit();
