@@ -41,6 +41,19 @@
 .hiddenControl{
 	  display:none;
   }
+  tr.trHeadTile th {
+		background: #085d94;
+		padding: 5px;
+		text-align: center;
+		color: #fff;
+	}
+	tr.regurlar {
+		background: #eee;
+	}
+	td.preFooterTotal {
+		background: #085d94;
+		color: #fff;
+	}
 </style>
 <div class="overlay">
 	<div class="overlay-load">
@@ -621,7 +634,7 @@
 		padding:5px 2px; 
 	}
 	</style>
-	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'កាលវិភាគត្រូវបង់ប្រាក់'" id="lbl_schedule" style="width: 25cm !important;">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'កាលវិភាគត្រូវបង់ប្រាក់'" id="lbl_schedule" style="width:1000px;z-index: 1000 !important">
 		<div id="rpt_print" class="print" style="text-align: center;">
 			<input style="text-align: center;" type="button" onclick="printSave('','');" label="<?php echo $tr->translate("បោះពុម្ភបង្កាន់ដៃ");?>" name='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
 			<div id="t_amountmoneytype" name="t_amountmoneytype">
@@ -1935,7 +1948,7 @@ function addPreviewLoan(){
 						  temp='';	
 						  fund_title=0;thead='';fund_title=0;
 						  temp='<table class="collape tablesorter" style="font-size:13px; width:1000px !important; " id="table">'
-						  temp+='<tr style="background:#ccc;"><th><?php echo $tr->translate("NUM");?></th>';
+						  temp+='<tr class="trHeadTile" style="background:#ccc;"><th><?php echo $tr->translate("NUM");?></th>';
 						  temp+='<th><?php echo $tr->translate("ថ្ងៃបង់ប្រាក់");?></th>';
 						  temp+='<th><?php echo $tr->translate("ប្រាក់ដើមគ្រា");?></th>';
 						  temp+='<th><?php echo $tr->translate("ប្រាក់ដើម");?></th>';
@@ -1951,7 +1964,14 @@ function addPreviewLoan(){
 							total_interest=total_interest+parseFloat(data[i].total_interest);
 							total_payment_after=total_payment_after+parseFloat(data[i].total_payment_after);
 					      r++;
-						  temp+='<tr><td align="center">'+r+'</td>';
+						  
+						  var odd="odd";
+					      var styless ="";
+					      if((r%2)==0){
+					    	  var odd="regurlar";
+					      }
+						  
+						  temp+='<tr class="'+odd+'" ><td align="center">'+r+'</td>';
 						  var myDate = new Date(data[i].date_payment);
 						  d = new Date(data[i].date_name);
 						  
@@ -1978,10 +1998,10 @@ function addPreviewLoan(){
 						  temp+='<td><b>'+dojo.number.format(data[i].total_payment_after,2)+'<b></td>';
 						  temp+='<td><b>'+dojo.number.format((data[i].ending_balance),2)+'<b></td>';
 						 }
-						  temp+='<tr><td align="right" colspan="3" style="border-left:1px solid #fff;border-bottom:1px solid #fff;">&nbsp;សរុប -Total</td>';
-						  temp+='<td>'+dojo.number.format(principal_permonth,2)+'</td>';
-						  temp+='<td>'+dojo.number.format(total_interest,2)+'</td>';
-						  temp+='<td><b>'+dojo.number.format(total_payment_after,2)+'<b></td>';
+						  temp+='<tr><td colspan="2">&nbsp;</td><td align="right" class="preFooterTotal" style="border-left:1px solid #fff;border-bottom:1px solid #fff;">&nbsp;សរុប -Total</td>';
+						  temp+='<td class="preFooterTotal">'+dojo.number.format(principal_permonth,2)+'</td>';
+						  temp+='<td class="preFooterTotal">'+dojo.number.format(total_interest,2)+'</td>';
+						  temp+='<td class="preFooterTotal"><b>'+dojo.number.format(total_payment_after,2)+'</b></td>';
 						  temp+='<td></td>';
 						temp+='</table>';
 						dojo.byId('t_amountmoneytype').innerHTML = temp;
