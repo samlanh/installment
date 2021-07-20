@@ -427,6 +427,20 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$credit_category->setMultiOptions($opt1);
 		$credit_category->setValue($request->getParam("credit_category"));
 		
+		$_is_closed=  new Zend_Dojo_Form_Element_FilteringSelect('is_closed');
+		$_is_closed->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+			'class'=>'fullside'));
+		
+		$_optStatusClosed = array(
+			0=>$this->tr->translate("ALL"),
+			1=>$this->tr->translate("Closed"),
+			2=>$this->tr->translate("Unclosed"),
+			);
+		$_is_closed->setMultiOptions($_optStatusClosed);
+		$_is_closed->setValue($request->getParam("is_closed"));
+		
 		if($data!=null){
 			$_coid->setValue($data['co_id']);
 			$_releasedate->setValue($data['date_release']);
@@ -438,7 +452,8 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			
 			$_queryOrdering,
 			$_receiptStatus,
-			$credit_category
+			$credit_category,
+			$_is_closed
 			
 		));
 		return $this;

@@ -12,6 +12,7 @@
 		}
 		$branch_title = $branch['project_name'];
 	}
+	$expenseFeatureList = EXPENSE_FEATURE_LIST;
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -55,13 +56,16 @@
         		<?php echo $frm->getElement('end_date');?>
         	</div>
         	<div class="col-md-2 col-sm-2 col-xs-12">
-				<?php echo $frm->getElement('ordering');?>
+				<?php echo $frm->getElement('queryOrdering');?>
+				<?php //echo $frm->getElement('ordering');?>
+        	</div>
+			<div class="col-md-2 col-sm-2 col-xs-12">
+				<?php echo $frm->getElement('is_closed');?>
         	</div>
         	<div class="col-md-2 col-sm-2 col-xs-12">
         		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
         	</div>
-        	<div class="col-md-2 col-sm-2 col-xs-12">
-        	</div>
+        	
         	<div class="col-md-2 col-sm-2 col-xs-12">
         	</div>
         	<div class="col-md-2 col-sm-2 col-xs-12">
@@ -150,16 +154,73 @@
 						        </tr>
 						        <?php 
 								$countRow = count($this->row);
+								if($expenseFeatureList==1){
+								$countRow = count($this->rowExpensePayment);
+								}
+								
 								$countCommission = count($this->rscomisison);
-								$count = $countRow+$countCommission;
+								$countRowCommissionPayment = count($this->rowCommissionPayment);
+								$countHouserepair = count($this->houserepair);
+								
+								$count = $countRow+$countCommission+$countRowCommissionPayment+$countHouserepair;
 								$k=0;
+								$branch_id=''; $i=0; $total=0; 
 							?>
 								<tr>
-									<td style="  border-top: solid 1px #fff;  border-left: solid 1px #fff;  border-right: solid 1px #fff;">
+									<td colspan="13" style="  border-top: solid 1px #fff;  border-left: solid 1px #fff;  border-right: solid 1px #fff;">
 										<input type="checkBox" onclick="checkAll('<?php echo $count;?>');" name="checkall" id="checkall" />
 										<input type="hidden" name="id_selected" id="id_selected" dojoType="dijit.form.TextBox" />
 									</td>
 								</tr>
+								
+							
+							<?php if($expenseFeatureList==1){?>
+							<?php 
+				           if (!empty($this->rowExpensePayment)){?>
+								<tr class="style" align="center">
+									<td>&nbsp;<?php echo $tr->translate('NUM');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('BRANCH_NAME');?>&nbsp;</td>
+									<td >&nbsp;<?php echo $tr->translate('SUPPLIER_NAME');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('PAYMENT_TYPE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('CHEQUE_ISSUER');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('NUMBER');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('TOTAL_PAID');?>&nbsp;</td>
+									<td colspan="2">&nbsp;<?php echo $tr->translate('NOTE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('RECEIPT_NO');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('DATE');?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate('BY_USER');?>&nbsp;</td>
+									<td><?php echo $tr->translate("STATUS");?></td>
+								 </tr>
+								 <?php $branch_id=''; $i=0; 
+									foreach($this->rowExpensePayment as $key =>$rows){ $i++; $k++;
+									?>
+									<tr align="left" class="stylehover">
+										<td align="center">
+										<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
+										<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $rows['id'];?>" dojoType="dijit.form.TextBox" />
+										<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="5" dojoType="dijit.form.TextBox" /><!-- 1= Other Expense payment -->
+									
+									
+									   <?php echo $i; ?>&nbsp;</td>
+										<td align="center">&nbsp;<?php echo $rows['branch_name'];?>&nbsp;</td>
+										<td align="left">&nbsp;<?php echo $rows['supplier_name'];?>&nbsp;</td>
+										<td align="center">&nbsp;<?php echo $rows['paid_by'];?>&nbsp;</td>
+										<td align="left">&nbsp;<?php echo $rows['cheque_issuer'];?>&nbsp;</td>
+										<td align="center">&nbsp;<?php echo $rows['cheque_no'];?>&nbsp;</td>
+										<td align="center">&nbsp;<?php echo number_format($rows['total_paid'],2);?>&nbsp;</td>
+										<td colspan="2" align="left">&nbsp;<?php echo $rows['note'];?>&nbsp;</td>
+										<td align="center">&nbsp;<?php echo $rows['receipt_no'];?>&nbsp;</td>
+										<td align="center">&nbsp;<?php echo date("d-m-Y",strtotime($rows['date_payment']));?>&nbsp;</td>
+										<td align="center">&nbsp;<?php echo $rows['user_name'];?>&nbsp;</td>
+										<td class="">&nbsp;<?php echo($rows['is_closed']==0)?"Unclose":"Closed";?>&nbsp;</td>
+									</tr>
+									 <?php 
+											$total = $total +$rows['total_paid'];
+										?>
+							   <?php }?>
+						   <?php }?>
+				   <?php }else{?>
+							<?php if(!empty($this->row)){?>
 						    	<tr bgcolor="#c1d0f3" class="style" align="center"  >
 									<td>&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
 								    <td>&nbsp;<?php echo $tr->translate("BRANCH_NAME");?>&nbsp;</td>
@@ -176,8 +237,8 @@
 								    <td><?php echo $tr->translate("STATUS");?></td>
 								</tr>
 							</thead>
-					       <?php  $branch_id=''; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++; $k++;?>
-							<tr class="context-menu-one" oncontextmenu="setrowdata('<?php echo $row['id'];?>');return false;" style="font-size: 12px; line-height:20px;" align="left">
+					       <?php  foreach($this->row as $key =>$row){ $i++; $k++;?>
+							<tr align="left" class="stylehover">
 							   <td align="center">&nbsp;
 							   		<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
 									<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $row['id'];?>" dojoType="dijit.form.TextBox" />
@@ -199,100 +260,157 @@
 							</tr>
 								<?php $total = $total +$row['total_amount'];?>
 							<?php }?>
-					    </table>
-					    <?php if(!empty($this->rscomisison)){?>
-					    កម្រៃជើងសា
-					    <table  class="content-data"  width="100%" border="1"  bordercolor="black">  
-				    		<thead>
-				    		<tr class="hide" style="border:1px solid #000;">
-					             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
-					        </tr>
-				    		<tr class="style" align="center" >
+							<?php }?>
+				   <?php }?>
+				   
+							<?php if(!empty($this->rscomisison)){?>
+							<tr  style="font-size: 12px; line-height:20px;">
+							   <td align="center" colspan="13">
+								<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("COMMISSION");?></span>
+							   </td>
+							 </tr>
+							 <tr class="style" align="center" >
 					        	<td><?php echo $tr->translate("NUM");?></td>
 						        <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-						        <td><?php echo $tr->translate("STAFF_NAME");?></td>
-						        <td><?php echo $tr->translate("TEL");?></td>
-						        <td><?php echo $tr->translate("SEX");?></td>
-						        <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+						        <td colspan="2"><?php echo $tr->translate("STAFF_NAME");?></td>
+								<td><?php echo $tr->translate("SEX");?></td>
+						        <td colspan="2"><?php echo $tr->translate("TEL");?></td>
+						        <td colspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 						        <td><?php echo $tr->translate("COMISSION");?></td>
 						        <td><?php echo $tr->translate("DATE");?></td>
 						        <td><?php echo $tr->translate("BY_USER");?></td>
 						        <td><?php echo $tr->translate("STATUS");?></td>
 				         	</tr>
-				         	</thead>
-				       <?php  
-				       	$key=0; 
-						$record = $key;
-						foreach($this->rscomisison as $key => $rscom){ $k++;?>
-						<?php 
-							$total = $total +$rscom['total_amount'];
-						?>
-						 <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
-						     <td align="center">&nbsp;
-						     		<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
-									<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $rscom['id'];?>" dojoType="dijit.form.TextBox" />
-									<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="2" dojoType="dijit.form.TextBox" /><!-- 1= Commssion -->
-						     
-						     <?php echo $key+1+$record; ?>&nbsp;</td>
-						     <td align="center">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
-							 <td>&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
-							 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
-							 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
-							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo $rscom['user_name'];?></td>
-							 <td class="">&nbsp;<?php echo($rscom['is_closed']==0)?"Unclose":"Closed";?>&nbsp;</td>
-						</tr>
-						<?php } ?>
-				    </table>
-				    <?php }?>
-				    <?php 
-			            	if (!empty($this->houserepair)){
-			            ?>
-				  	 ចំណាយពីការកែផ្ទះ
-				  	  <table  class="content-data" border="1" width="100%"  >
-					  	  <thead>  
-					    	<tr class="style" align="center"  >
-								<td><?php echo $tr->translate("NUM");?></td>
-							    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-							    <td><?php echo $tr->translate("EXPENSE_TITLE");?></td>
-							    <td><?php echo $tr->translate("RECEIPT_NO");?></td>
-							    <td><?php echo $tr->translate("CLIENT_NAME");?></td>
-							    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-							    <td><?php echo $tr->translate("CATEGORY");?></td>
-							    <td><?php echo $tr->translate("TOTAL");?></td>
-							    <td><?php echo $tr->translate("CHEQUE");?></td>
-							    <td><?php echo $tr->translate("NOTE");?></td>
-							    <td><?php echo $tr->translate("DATE");?></td>
-							    <td><?php echo $tr->translate("BY_USER");?></td>
-							</tr>
-						</thead>
-						
-			            <?php foreach ($this->houserepair as $index => $rs){?>
-				   		<tr class=" stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
-		               		<td style="text-align: center;">&nbsp;<?php echo $index+1; ?>&nbsp;</td>
-		               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-		               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
-		               		<td align="center">&nbsp;<a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a>&nbsp;</td>
-		               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a>&nbsp;</td> 
-		               		<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
-		               		<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
-		               		<td align="center">&nbsp;<strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format(abs($rs["total_amount"]),2);}?></strong>&nbsp;</td>
-		               		<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
-		               		<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
-		               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
-		               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
-		                </tr>
-		                 <?php 
-		                if ($rs['status']!=0){
-		                	$total = $total + abs($rs['total_amount']);
-		                }
-		               ?>
-				   		<?php }?>
-			            
-					</table>
-					<?php }?>
+							<?php  
+								$key=0; 
+								$record = $key;
+								foreach($this->rscomisison as $key => $rscom){ $k++;?>
+								<?php 
+									$total = $total +$rscom['total_amount'];
+								?>
+								 <tr align="left" class="stylehover">
+									 <td align="center">&nbsp;
+											<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
+											<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $rscom['id'];?>" dojoType="dijit.form.TextBox" />
+											<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="2" dojoType="dijit.form.TextBox" /><!-- 1= Commssion -->
+									 
+									 <?php echo $key+1+$record; ?>&nbsp;</td>
+									 <td align="center">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
+									 <td colspan="2">&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
+									 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
+									 <td colspan="2" align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
+									 <td colspan="2" style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
+									 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
+									 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
+									 <td align="center">&nbsp;<?php echo $rscom['user_name'];?></td>
+									 <td class="">&nbsp;<?php echo($rscom['is_closed']==0)?"Unclose":"Closed";?>&nbsp;</td>
+								</tr>
+								<?php } ?>
+							 <?php }?>
+							 <?php if(!empty($this->rowCommissionPayment)){?>
+								 <tr  style="font-size: 12px; line-height:20px;">
+								   <td align="center" colspan="13">
+									<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("COMMISSION_PAYMENT");?></span>
+								   </td>
+								 </tr>
+								 <tr class="style" align="center" >
+									<td><?php echo $tr->translate("NUM");?></td>
+									<td><?php echo $tr->translate("BRANCH_NAME");?></td>
+									<td colspan="2" ><?php echo $tr->translate("STAFF_NAME");?></td>
+									<td>&nbsp;<?php echo $tr->translate("RECIEPT_NO");?>&nbsp;</td>
+									<td ><?php echo $tr->translate("CATEGORY");?></td>
+									
+									<td ><?php echo $tr->translate("COMISSION");?></td>
+									<td>&nbsp;<?php echo $tr->translate("PAYMENT_TYPE");?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate("NUMBER");?>&nbsp;</td>
+									<td>&nbsp;<?php echo $tr->translate("CHEQUE_ISSUER");?>&nbsp;</td>
+									
+									
+									<td ><?php echo $tr->translate("DATE");?></td>
+									<td><?php echo $tr->translate("BY_USER");?></td>
+									<td><?php echo $tr->translate("STATUS");?></td>
+								</tr>
+								<?php $c=0; foreach ($this->rowCommissionPayment AS $rs){ $c++; $k++; $total = $total +$rs['total_paid']; ?>
+									<tr align="left" class="stylehover">
+										 <td align="center">&nbsp;<?php echo $c; ?>
+											<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
+											<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $rs['id'];?>" dojoType="dijit.form.TextBox" />
+											<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="3" dojoType="dijit.form.TextBox" />
+									
+										 </td>
+										 <td align="center">&nbsp;<?php echo $rs['branch_name']?>&nbsp;</td>
+										 <td colspan="2">&nbsp;<?php echo $rs['staff_name'];?> <?php //if($rs['sex']==1){ echo "(ប្រុស)";}else{ echo '(ស្រី)';} echo empty($rs['tel'])?"":" ".$rs['tel'];?> &nbsp;</td>
+										 <td align="center">&nbsp;<?php echo $rs['receipt_no'];?>&nbsp;</td>
+										 <td >&nbsp;<?php echo $rs['category_name'];?>&nbsp;</td>
+										 
+										 <td align="right">&nbsp;<?php echo number_format($rs['total_paid'],2);?>&nbsp;</td>
+										 <td align="center">&nbsp;<?php echo $rs['payment_type'];?></td>
+										 <td align="center">&nbsp;<?php echo $rs['cheque_no'];?></td>
+										 <td align="center">&nbsp;<?php echo $rs['cheque_issuer'];?></td>
+							   
+										 
+										 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($rs['date_payment']));?>&nbsp;</td>
+										 <td align="center">&nbsp;<?php echo $rs['user_name'];?></td>
+										 <td class="">&nbsp;<?php echo($rs['is_closed']==0)?"Unclose":"Closed";?>&nbsp;</td>
+									</tr>
+								 <?php }?>
+						 
+							<?php }?>
+							 <?php 
+									if (!empty($this->houserepair)){
+								?>
+								<tr  style="font-size: 12px; line-height:20px;">
+								   <td align="center" colspan="13">
+									<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("ចំណាយពីការកែផ្ទះ");?></span>
+								   </td>
+								 </tr>
+								 <tr class="style" align="center"  >
+									<td><?php echo $tr->translate("NUM");?></td>
+									<td><?php echo $tr->translate("BRANCH_NAME");?></td>
+									<td ><?php echo $tr->translate("EXPENSE_TITLE");?></td>
+									<td><?php echo $tr->translate("RECEIPT_NO");?></td>
+									<td><?php echo $tr->translate("CLIENT_NAME");?></td>
+									<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+									<td><?php echo $tr->translate("CATEGORY");?></td>
+									<td><?php echo $tr->translate("TOTAL");?></td>
+									<td><?php echo $tr->translate("CHEQUE");?></td>
+									<td><?php echo $tr->translate("NOTE");?></td>
+									<td><?php echo $tr->translate("DATE");?></td>
+									<td><?php echo $tr->translate("BY_USER");?></td>
+									<td><?php echo $tr->translate("STATUS");?></td>
+								</tr>
+								 <?php foreach ($this->houserepair as $index => $rs){ $k++;?>
+								
+								<tr class=" stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+									<td style="text-align: center;">&nbsp;<?php echo $index+1; ?>&nbsp;
+									
+											<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
+											<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $rs['id'];?>" dojoType="dijit.form.TextBox" />
+											<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="4" dojoType="dijit.form.TextBox" />
+											
+									</td>
+									<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+									<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
+									<td align="center">&nbsp;<a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a>&nbsp;</td>
+									<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a>&nbsp;</td> 
+									<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
+									<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+									<td align="center">&nbsp;<strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format(abs($rs["total_amount"]),2);}?></strong>&nbsp;</td>
+									<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
+									<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+									<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
+									<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
+									<td class="">&nbsp;<?php echo($rs['is_close']==0)?"Unclose":"Closed";?>&nbsp;</td>
+								</tr>
+								 <?php 
+								if ($rs['status']!=0){
+									$total = $total + abs($rs['total_amount']);
+								}
+							   ?>
+								<?php }?>
+							<?php }?>
+					    </table>
+				    
 	            	</td>
 	            </tr>
 	            <tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;">

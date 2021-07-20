@@ -441,10 +441,17 @@ function getAllBranch($search=null){
     		if (!empty($search['cheque_issuer_search'])){
     			$where.= " AND cheque_issuer = '".$search['cheque_issuer_search']."'";
     		}
+			
+			$search['is_closed'] = empty($search['is_closed'])?0:$search['is_closed'];
+			if (!empty($search['is_closed'])){
+				if($search['is_closed']!=1){
+					$search['is_closed']=0;
+				}
+    			$where.= " AND is_closed = ".$search['is_closed']."";
+    		}
     		if($group_by!=null){
     			$where.=" group by category_id ";
     		}
-    		
     		return $db->fetchAll($sql.$where.$order);
     	}
     	function getAllExpensebyCate($search=null){
@@ -1989,6 +1996,13 @@ function getAllBranch($search=null){
 					$order =" ORDER BY c.id DESC ";
 				}
 			}
+			$search['is_closed'] = empty($search['is_closed'])?0:$search['is_closed'];
+			if (!empty($search['is_closed'])){
+				if($search['is_closed']!=1){
+					$search['is_closed']=0;
+				}
+    			$where.= " AND c.is_closed = ".$search['is_closed']."";
+    		}
     		return $db->fetchAll($sql.$where.$order);
     	}
     	function getSumCommission($search){
@@ -2412,11 +2426,16 @@ function getAllBranch($search=null){
 	}
 	function submitClosingEngryExpense($data){
 		$db = $this->getAdapter();
+		
+		$dbgb = new Application_Model_DbTable_DbGlobal();
 		if(!empty($data['id_selected'])){
 			$ids = explode(',', $data['id_selected']);
 			$arr = array(
 					"is_closed"=>1,
 			);
+			$arrEE = array(
+								"is_close"=>1,
+						);
 			foreach ($ids as $i){
 				if ($data['type_record'.$i]==1){ //1= Other Expense
 					if (!empty($data['id_'.$i])){
@@ -2427,6 +2446,27 @@ function getAllBranch($search=null){
 				}else if ($data['type_record'.$i]==2){ //2= Commission
 					if (!empty($data['id_'.$i])){
 						$this->_name="ln_comission";
+						$where=" id= ".$data['id_'.$i];
+						$this->update($arr, $where);
+					}
+				}else if ($data['type_record'.$i]==3){ //3= Commission Payment
+					if (!empty($data['id_'.$i])){
+						$arr['closed_by']=$dbgb->getUserId();
+						$this->_name="rms_commission_payment";
+						$where=" id= ".$data['id_'.$i];
+						$this->update($arr, $where);
+					}
+				}else if ($data['type_record'.$i]==4){ //4= otherincomepayment expense
+					if (!empty($data['id_'.$i])){
+						
+						$this->_name="ln_otherincomepayment";
+						$where=" id= ".$data['id_'.$i];
+						$this->update($arrEE, $where);
+					}
+				}else if ($data['type_record'.$i]==5){ //5= Expense Payment
+					if (!empty($data['id_'.$i])){
+						$arr['closed_by']=$dbgb->getUserId();
+						$this->_name="rms_expense_payment";
 						$where=" id= ".$data['id_'.$i];
 						$this->update($arr, $where);
 					}
@@ -2931,7 +2971,14 @@ function getAllBranch($search=null){
     		if (!empty($search['cheque_issuer_search'])){
     			$where.= " AND cp.cheque_issuer = '".$search['cheque_issuer_search']."'";
     		}
-    		
+			
+    		$search['is_closed'] = empty($search['is_closed'])?0:$search['is_closed'];
+			if (!empty($search['is_closed'])){
+				if($search['is_closed']!=1){
+					$search['is_closed']=0;
+				}
+    			$where.= " AND cp.is_closed = ".$search['is_closed']."";
+    		}
     		return $db->fetchAll($sql.$where.$order);
     }
 	public function getCustomerRequirmentById($id){
@@ -3410,7 +3457,13 @@ function getAllBranch($search=null){
 					$order =" ORDER pp.id DESC ";
 				}
 			}
-    
+			$search['is_closed'] = empty($search['is_closed'])?0:$search['is_closed'];
+			if (!empty($search['is_closed'])){
+				if($search['is_closed']!=1){
+					$search['is_closed']=0;
+				}
+				$where.=" AND pp.is_closed = '".$search['is_closed']."'";
+			}
     		return $db->fetchAll($sql.$where.$order);
     
     	}catch(Exception $e){

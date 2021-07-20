@@ -622,7 +622,7 @@ public function getAllOutstadingLoan($search=null){
 		return $db->fetchAll($sql.$where.$order);
       }
       public function getALLLoanPayment($search=null,$order11=0){
-      	$search['is_closed']='';
+      	//$search['is_closed']='';
       	$db = $this->getAdapter();
       	/*
 		$sql="SELECT *,
@@ -665,7 +665,13 @@ public function getAllOutstadingLoan($search=null){
 		if (!empty($search['agency_id'])){
 			$where.=" AND `sl`.`staff_id` = '".$search['agency_id']."'";
 		}
-		if ($search['is_closed']!=""){
+		
+		$search['is_closed'] = empty($search['is_closed'])?0:$search['is_closed'];
+		if (!empty($search['is_closed'])){
+			if($search['is_closed']!=1){
+				$search['is_closed']=0;
+			}
+			//if ($search['is_closed']!=""){
 			$where.=" AND `crm`.`is_closed` = '".$search['is_closed']."'";
 		}
 		if (!empty($search['option_pay'])){
@@ -3270,7 +3276,8 @@ function updatePaymentStatus($data){
    	   	(SELECT ln_client.tel FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS tel,
    	   	(SELECT  first_name FROM rms_users WHERE id=op.user_id LIMIT 1 ) AS user_name,
    	   	(SELECT ln_view.name_kh FROM `ln_view` WHERE ln_view.type=2 and ln_view.key_code=op.payment_method LIMIT 1) AS payment_type,
-   	   	op.status
+   	   	op.status,
+   	   	op.is_close
    	   	FROM `ln_otherincomepayment` AS op,
 			`ln_otherincome` AS oi
 		WHERE oi.id = op.otherincome_id
@@ -3342,6 +3349,14 @@ function updatePaymentStatus($data){
 			}else if($search['queryOrdering']==4){
 				$order =" ORDER BY oi.branch_id DESC, `op`.id DESC ";
 			}
+		}
+		
+		$search['is_closed'] = empty($search['is_closed'])?0:$search['is_closed'];
+		if (!empty($search['is_closed'])){
+			if($search['is_closed']!=1){
+				$search['is_closed']=0;
+			}
+			$where.= " AND op.is_close = ".$search['is_closed']."";
 		}
       	return $db->fetchAll($sql.$where.$order);
       }
