@@ -614,7 +614,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   }
   
   
-  function rptClosingincomeAction(){ // by Vandy
+  function rptClosingincomeAction(){ // 
   	if($this->getRequest()->isPost()){
   		$search=$this->getRequest()->getPost();
   	}
@@ -638,6 +638,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
   
 //   	$db  = new Report_Model_DbTable_DbLandreport();
 //   	$this->view->houserepair =$db->getAllIncomeOtherPayment($search);
+
+	$db  = new Report_Model_DbTable_DbLandreport();
+  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,12);
   	 
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
@@ -648,7 +651,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
-  function rptClosingexpenseAction(){ // by Vandy
+  function rptClosingexpenseAction(){ // 
   	if($this->getRequest()->isPost()){
   		$search=$this->getRequest()->getPost();
   	}else{

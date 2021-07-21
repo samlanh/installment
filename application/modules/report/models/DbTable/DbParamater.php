@@ -329,6 +329,16 @@ function getAllBranch($search=null){
     		if (!empty($search['streetlist'])){
     			$where.=" AND (SELECT street FROM `ln_properties` WHERE id =ln_income.house_id) = '".$search['streetlist']."'";
     		}
+			
+			$search['is_closed'] = empty($search['is_closed'])?0:$search['is_closed'];
+			if (!empty($search['is_closed'])){
+				if($search['is_closed']!=1){
+					$search['is_closed']=0;
+				}
+				$where.= " AND is_closed = ".$search['is_closed']."";
+			}
+		
+		
     		return $db->fetchAll($sql.$where.$order);
     	}
     	function getIncomeById($income_id){
@@ -2411,16 +2421,31 @@ function getAllBranch($search=null){
 	
 	function submitClosingEngryIncome($data){
 		$db = $this->getAdapter();
+		
+		
+		$dbgb = new Application_Model_DbTable_DbGlobal();
 		if(!empty($data['id_selected'])){
 			$ids = explode(',', $data['id_selected']);
 			$key = 1;
 			$arr = array(
 					"is_closed"=>1,
 			);
+			$arrEE = array(
+							"is_close"=>1,
+					);
 			foreach ($ids as $i){
-				$this->_name="ln_income";
-				$where="id= ".$i;
-				$this->update($arr, $where);
+				if ($data['type_record'.$i]==1){ //1= Other Income
+					$this->_name="ln_income";
+					$where="id= ".$i;
+					$this->update($arr, $where);
+				}else if ($data['type_record'.$i]==2){ //2= otherincomepayment Income
+					if (!empty($data['id_'.$i])){
+						
+						$this->_name="ln_otherincomepayment";
+						$where=" id= ".$data['id_'.$i];
+						$this->update($arrEE, $where);
+					}
+				}
 			}
 		}
 	}

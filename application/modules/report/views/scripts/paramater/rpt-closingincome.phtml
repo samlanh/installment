@@ -58,10 +58,12 @@
 					<?php echo $frm->getElement('end_date');?>
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
-					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					<?php echo $frm->getElement('is_closed');?>
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 				</div>
+				
 				<div class="col-md-2 col-sm-2 col-xs-12">
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
@@ -92,6 +94,9 @@
 					  }
 						.hide{visibility: visible; height: 110px;}
 					}
+					td span {
+					line-height: 16px;
+				}
 				table.content-data{
 					border-collapse:collapse;
 					border:1px solid #000; 
@@ -113,6 +118,7 @@
 				table.tb-footer tr{
 				 line-height: 14px;  padding:2px 0px; height: 25px;
 				}
+				
 					</style>
 					<div class="divFooter">
 		        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
@@ -147,7 +153,12 @@
 						        </tr>
 						    	<tr class="style" align="center"  >
 									<td>
-										<input type="checkBox" onclick="checkAll('<?php echo count($this->row);?>');" name="checkall" id="checkall" />
+										<?php 
+											$countOtherInc = count($this->row);
+											$countHouserepairInc = count($this->houserepair);
+											$totalCouunt = $countOtherInc+$countHouserepairInc;
+										?>
+										<input type="checkBox" onclick="checkAll('<?php echo $totalCouunt;?>');" name="checkall" id="checkall" />
 										<input type="hidden" name="id_selected" id="id_selected" dojoType="dijit.form.TextBox" />
 										<?php echo $tr->translate("NUM");?>
 									</td>
@@ -166,10 +177,11 @@
 								</tr>
 								</thead>
 						       <?php $branch_id=''; $n=0; $i=0; $total=0; if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
-								<tr class="context-menu-one" oncontextmenu="setrowdata('<?php echo $row['id'];?>');return false;" align="left">
+								<tr class=""  align="left">
 								   <td align="center">&nbsp;
-								   <input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $i;?>)" name="check_box<?php echo $i;?>" id="check_box<?php echo $i;?>" />
-							               			<input type="hidden" id="id_<?php echo $i;?>" name="id_<?php echo $i;?>" value="<?php echo $row['id'];?>" dojoType="dijit.form.TextBox" />
+										<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $i;?>)" name="check_box<?php echo $i;?>" id="check_box<?php echo $i;?>" />
+							            <input type="hidden" id="id_<?php echo $i;?>" name="id_<?php echo $i;?>" value="<?php echo $row['id'];?>" dojoType="dijit.form.TextBox" />
+										<input type="hidden" id="type_record<?php echo $i;?>" name="type_record<?php echo $i;?>" value="1" dojoType="dijit.form.TextBox" />
 								   <?php echo $i; ?>&nbsp;
 								   </td>
 								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
@@ -209,9 +221,15 @@
 							             </h2>
 					                </td>
 					             </tr>
-					            <?php foreach ($this->houserepair as $index => $rs){?>
-						   		<tr oncontextmenu="setrowdata('<?php echo $rs['id'];?>',1);return false;" class=" context-menu-one stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
-				               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+					            <?php foreach ($this->houserepair as $index => $rs){ $i++;?>
+						   		<tr  class=" stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
+				               		<td style="text-align: center;">
+										<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $i;?>)" name="check_box<?php echo $i;?>" id="check_box<?php echo $i;?>" />
+							            <input type="hidden" id="id_<?php echo $i;?>" name="id_<?php echo $i;?>" value="<?php echo $rs['id'];?>" dojoType="dijit.form.TextBox" />
+										<input type="hidden" id="type_record<?php echo $i;?>" name="type_record<?php echo $i;?>" value="2" dojoType="dijit.form.TextBox" />
+									<?php echo $index+1; ?>&nbsp;
+									
+									</td>
 				               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 				               		<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
 				               		<td align="center">&nbsp;<a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a>&nbsp;</td>
@@ -223,6 +241,7 @@
 				               		<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
 				               		<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
 				               		<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
+									<td class="">&nbsp;<?php echo($rs['is_close']==0)?"Unclose":"Closed";?>&nbsp;</td>
 				                </tr>
 				                <?php 
 				                if ($rs['status']==0){
@@ -343,40 +362,41 @@
  }
 
 
- function checkAll(array_length){
-		dijit.byId('id_selected').attr('value','');
-		if(dojo.byId('checkall').checked){
-			for(var j=1;j<=array_length;j++){
-				$('#check_box'+j).each(function() { 
-					this.checked = true;  
-				});
-				checked_id(j);
-			}
-		}else{
-			for(var j=1;j<=array_length;j++){
-				$("#check_box"+j).removeAttr("checked");
-				checked_id(j);
-			}
+ 
+function checkAll(array_length){
+	dijit.byId('id_selected').attr('value','');
+	if(dojo.byId('checkall').checked){
+		for(var j=1;j<=array_length;j++){
+			$('#check_box'+j).each(function() { 
+				this.checked = true;  
+			});
+			checked_id(j);
+		}
+	}else{
+		for(var j=1;j<=array_length;j++){
+			$("#check_box"+j).removeAttr("checked");
+			checked_id(j);
 		}
 	}
+}
 
-	function checked_id(index){
-		row_id = dijit.byId('id_'+index).get('value');
-		if(dojo.byId('check_box'+index).checked){
-			if($("#id_selected").val()!="") {
-				var identity = $("#id_selected").val();
-				$("#id_selected").val(identity+','+row_id);
-			}else{
-				$("#id_selected").val(row_id);
-			}
+function checked_id(index){
+	row_id = index;//dijit.byId('id_'+index).get('value');
+	if(dojo.byId('check_box'+index).checked){
+		if($("#id_selected").val()!="") {
+			var identity = $("#id_selected").val();
+			$("#id_selected").val(identity+','+row_id);
 		}else{
-			var identity = $('#id_selected').val();
-			var arrays = identity.split(',');
-			for(var i=0;i<arrays.length;i++) {
-			if(arrays[i] == row_id) arrays.splice(i,1);
-			}
-			var strings = arrays.join(',');
-			$('#id_selected').val(strings);
+			$("#id_selected").val(row_id);
 		}
+	}else{
+		var identity = $('#id_selected').val();
+		var arrays = identity.split(',');
+		for(var i=0;i<arrays.length;i++) {
+		if(arrays[i] == row_id) arrays.splice(i,1);
+		}
+		var strings = arrays.join(',');
+		$('#id_selected').val(strings);
 	}
+}
  </script>
