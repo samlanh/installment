@@ -189,7 +189,7 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 		$_bank_account1->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'placeholder'=>$this->tr->translate("Bank Account")." 1"
+				'placeholder'=>$this->tr->translate("Bank Name")." 1"
 		));
 		
 		$_bank_account_name1 = new Zend_Dojo_Form_Element_TextBox('bank_account_name1');
@@ -203,13 +203,13 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 		$_bank_account1number->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'placeholder'=>$this->tr->translate("Bank Account Number")." 1"
+				'placeholder'=>$this->tr->translate("Bank Acc Name")." 1"
 		));
 		$_bank_account2 = new Zend_Dojo_Form_Element_TextBox('bank_account2');
 		$_bank_account2->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'placeholder'=>$this->tr->translate("Bank Account")." 2"
+				'placeholder'=>$this->tr->translate("Bank Name")." 2"
 		));
 		
 		$_bank_account_name2 = new Zend_Dojo_Form_Element_TextBox('bank_account_name2');
@@ -223,14 +223,14 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 		$_bank_account2number->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'placeholder'=>$this->tr->translate("Bank Account Number")." 2"
+				'placeholder'=>$this->tr->translate("Bank Acc Name")." 2"
 		));
 		
 		$_bank_account3 = new Zend_Dojo_Form_Element_TextBox('bank_account3');
 		$_bank_account3->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'placeholder'=>$this->tr->translate("Bank Account")." 3"
+				'placeholder'=>$this->tr->translate("Bank Name")." 3"
 		));
 		
 		$_bank_account_name3 = new Zend_Dojo_Form_Element_TextBox('bank_account_name3');
@@ -244,7 +244,7 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 		$_bank_account3number->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'placeholder'=>$this->tr->translate("Bank Account Number")." 3"
+				'placeholder'=>$this->tr->translate("Bank Acc Name")." 3"
 		));
 		
 		
