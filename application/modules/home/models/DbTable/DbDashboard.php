@@ -499,4 +499,24 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		
 		return $db->fetchOne($sql);
 	}
+	
+	function getCommissionPaymentPaidByAgent(){
+	
+// 		$dbglobal = new Application_Model_DbTable_DbGlobal();
+// 		$userid = $dbglobal->getUserId();
+// 		$db_user=new Application_Model_DbTable_DbUsers();
+// 		$user_info = $db_user->getUserInfo($userid);
+// 		$user_id = $user_info['staff_id'];
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+		$user_id = $session_user->user_id;
+		$db = $this->getAdapter();
+		$sql="SELECT staff_id FROM `rms_users` WHERE id=$user_id limit 1 ";
+		$user_id  = $db->fetchOne($sql);
+	
+			$sql="
+			SELECT 
+				SUM(s.`total_paid`) AS total_commission
+			 	FROM `rms_commission_payment` AS s WHERE s.`agency_id` =$user_id ";
+			return $db->fetchRow($sql);
+	}
 }

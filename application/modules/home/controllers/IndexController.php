@@ -103,6 +103,7 @@ public function init()
 		
 		$this->view->totalFullCommission = $db->getTotalFullCommission();
 		$this->view->commissionpaid = $db->getCommissionPiadByAgent();
+		$this->view->commissionPayment = $db->getCommissionPaymentPaidByAgent();
 		$this->view->totalSale = $db->getTotalSaleByAgent();
 		
 		$param = $this->getRequest()->getParams();
