@@ -798,6 +798,15 @@ function getAllBranch($search=null){
 				   (SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE id = s.user_id LIMIT 1 ) AS user_name,
 				   (SELECT co_khname FROM `ln_staff` WHERE co_id=s.staff_id LIMIT 1) AS staff_name,
 				   (SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.payment_id limit 1) AS payment_type,
+				   
+				   (SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.pre_schedule_opt limit 1) AS preScheduleOptTitle,
+				   s.pre_schedule_opt,
+				   s.pre_percent_payment,
+				   s.pre_percent_installment,
+				   s.pre_amount_month,
+				   s.pre_amount_year,
+				   s.pre_fix_payment,
+				   
 				   s.agreement_for,
 				   (SELECT name_kh FROM `ln_view` WHERE type=31 and key_code=s.agreement_for limit 1) AS titlePlong,
 				  `p`.`project_name`,
@@ -869,6 +878,7 @@ function getAllBranch($search=null){
                   c.ghouse as with_house,
                   c.dstreet AS w_street,
                    c.arid_no AS witnesses,
+                   c.remark AS clientNote,
 				  (SELECT
 				     `village`.`village_namekh`
 				   FROM `ln_village` `village`
@@ -981,6 +991,10 @@ function getAllBranch($search=null){
  			 pp.land_width,
  			 pp.land_height,
  			 pp.`full_size`,
+			 
+			 pp.land_width AS houseWidth,
+ 			 pp.land_height AS houseHeight,
+ 			 pp.`full_size` AS houseFullSize,
  			 
  			 pp.floor,
  			 pp.living,

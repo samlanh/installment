@@ -66,6 +66,8 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$s_where[] = " c.`installment_paid` LIKE '%{$s_search}%'";
 			$s_where[] = " p.`project_name` LIKE '%{$s_search}%'";
 			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
+			$s_where[] = " pro.`land_address` LIKE '%{$s_search}%'";
+			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		
