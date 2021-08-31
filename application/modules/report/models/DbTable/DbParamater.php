@@ -2890,7 +2890,9 @@ function getAllBranch($search=null){
 		$from_date =(empty($search['start_date']))? '1': " p.`date_payment` >= '".$search['start_date']." 00:00:00'";
 	    $to_date = (empty($search['end_date']))? '1': " p.`date_payment` <= '".$search['end_date']." 23:59:59'";
 	    $where.= " AND ".$from_date." AND ".$to_date;
-    	if($search['co_khname']>0){
+    	
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		if($search['co_khname']>0){
 //     		$where.= " AND s.`staff_id` = ".$search['co_khname'];
     		$condiction = $dbp->getChildAgency($search['co_khname']);
     		if (!empty($condiction)){

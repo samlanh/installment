@@ -52,7 +52,7 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
 				if (!empty($condiction)){
 					$where.=" AND cp.agency_id IN ($condiction)";
 				}else{
-					$where.=" AND cp.staff_id=".$search['staff_id'];
+					$where.=" AND cp.agency_id=".$search['staff_id'];
 				}
 			}
 			if($search['status']>-1){
