@@ -150,12 +150,12 @@
 								
 									<tr>
 	             						<td  style="text-align: justify;">
-										<?php echo $title;?> <span class="value" style="min-width:150px; font-weight:200; font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span> 
+										<?php echo $title;?> <span class="value" style="font-weight:200; font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['project_manager_namekh'];?></span> 
 										ជនជាតិ <?php echo $this->agreement['project_manager_nationality'];?> 
 										សញ្ជាតិ <?php echo $this->agreement['project_manager_nationality'];?> 
 										ភេទ <?php echo $sex;?> 
-										កើតថ្ងៃទី<?php echo date("d",strtotime($this->agreement['manager_dob']));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['manager_dob']))];?> ឆ្នាំ<?php echo date("Y",strtotime($this->agreement['manager_dob']));?>
-										កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:30px;"><?php echo $this->agreement['project_manager_nation_id'];?></span> ចុះថ្ងៃទី <?php echo date("d",strtotime($this->agreement['p_nationid_issue']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['p_nationid_issue']))];?> ឆ្នំា <?php echo date("Y",strtotime($this->agreement['p_nationid_issue']));?> 
+										កើតថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['manager_dob'])));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['manager_dob']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['manager_dob'])));?>
+										កាន់អត្តសញ្ញាណប័ណ្ណលេខ <span class="value" style="min-width:30px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['project_manager_nation_id']);?></span> ចុះថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['p_nationid_issue'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['p_nationid_issue']))];?> ឆ្នំា <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['p_nationid_issue'])));?> 
 										មានទីលំនៅបច្ចុប្បន្នស្ថិតនៅ <?php echo $this->agreement['project_manager_p_current_address'];?> 
 										<?php if(!empty($this->agreement['w_manager_namekh'])){?>
 										និង
@@ -172,34 +172,36 @@
 										
 										<span style="display:block; text-align:center; width:100%; font-weight:600;">និង</span>
 										ឈ្មោះ <span class="value" style="min-width:50px; font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['client_namekh'];?></span>
-						             				ភេទ <span class="value" style="min-width:30px;"><?php echo $sexClient;?></span>
-						             				ជនជាតិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span>
-						             				សញ្ជាតិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span>
+						             				ភេទ<?php echo $sexClient;?>
+						             				ជនជាតិ<?php echo $this->agreement['client_nationality'];?>
+						             				សញ្ជាតិ<?php echo $this->agreement['client_nationality'];?>
 						             				កើតថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['dob']))];?>   ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob'])));?>
-						             				កាន់<?php echo $this->agreement['client_d_type'];?>លេខ<span class="value" style="min-width:50px;"><?php echo $this->agreement['client_nation_id'];?></span> 
-						             				<?php if(!empty($this->agreement['client_issuedateid'])){ ?>ចុះថ្ងៃទី<?php echo date("d",strtotime($this->agreement['client_issuedateid']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['client_issuedateid']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['client_issuedateid'])); }?> 
+						             				កាន់<?php echo $this->agreement['client_d_type'];?>លេខ <span class="value" style="min-width:50px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['client_nation_id']);?></span> 
+						             				<?php if(!empty($this->agreement['client_issuedateid'])){ ?>ចុះថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['client_issuedateid'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['client_issuedateid']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['client_issuedateid']))); }?> 
 													
-						             		    មានទីលំនៅបច្ចុប្បន្នស្ថិតនៅផ្ទះលេខ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_house_no'];?></span> 
-												ផ្លូវលេខ  <span class="value" style=""><?php echo $this->agreement['client_street'];?></span> 
-											     ភូមិ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_village_kh'];?></span>       
-											      ឃុំ/សង្កាត់  <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_commune_kh'];?></span> 
+						             		    មានទីលំនៅបច្ចុប្បន្នស្ថិតនៅ
+												<?php if(!empty($this->agreement['client_house_no'])){ ?>ផ្ទះលេខ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_house_no'];?></span> <?php } ?> 
+												<?php if(!empty($this->agreement['client_street'])){ ?> ផ្លូវលេខ  <span  class="value" style=""><?php echo $this->agreement['client_street'];?></span> <?php } ?> 
+												<?php if(!empty($this->agreement['client_village_kh'])){ ?> ភូមិ <span  class="value" style="min-width:50px;"><?php echo str_replace("ភូមិ", "",$this->agreement['client_village_kh']);?></span> <?php } ?> 												 
+											      
+												  ឃុំ/សង្កាត់  <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_commune_kh'];?></span> 
 											       ស្រុក/ខណ្ឌ <span class="value" style="min-width:50px;"><?php echo $this->agreement['client_districtkh'];?></span>
 			             					       ខេត្ត/ក្រុង <span class="value" style="min-width:50px;">&nbsp;<?php echo $this->agreement['client_province_kh'];?></span>
 					             			   <?php if(!empty($this->agreement['hname_kh'])){?> 
-											 <br />  
 											   និងឈ្មោះ  <span class="value" style="min-width:50px;font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['hname_kh'];?></span>  
-												ភេទ <span class="value" style="width:30px;"><?php echo $sexWithClient;?></span> 
-												ជនជាតិ <span class="value" style="width:30px;"><?php echo $this->agreement['p_nationality'];?></span> 
-												សញ្ជាតិ <span class="value" style="width:30px;"><?php echo $this->agreement['p_nationality'];?></span> 
+												ភេទ<?php echo $sexWithClient;?> 
+												ជនជាតិ<?php echo $this->agreement['w_client_nationality'];?> 
+												សញ្ជាតិ<?php echo $this->agreement['w_client_nationality'];?> 
 												កើតថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob_buywith'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['dob_buywith']))];?>   ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob_buywith'])));?>
-					             			          កាន់<?php echo $this->agreement['joint_doc_type'];?> លេខ <span class="value" style="min-width:50px;"><?php echo $this->agreement['rid_no'];?></span>
-			             						<?php if(!empty($this->agreement['join_issuedateid'])){ ?> ចុះថ្ងៃទី<?php echo date("d",strtotime($this->agreement['join_issuedateid']));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['join_issuedateid']))];?> ឆ្នាំ <?php echo date("Y",strtotime($this->agreement['join_issuedateid'])); }?> 
-													មានទីលំនៅបច្ចុប្បន្នស្ថិតនៅផ្ទះលេខ<span class="value" style="min-width:45px;"><?php echo $this->agreement['client_house_no'];?></span> 
-											          ផ្លូវលេខ  <span class="value" style="min-width:45px;"><?php echo $this->agreement['w_street'];?></span>
-												ភូមិ <span class="value" style="min-width:50px;"><?php echo $this->agreement['w_client_village_kh'];?></span>    													  
-											          ឃុំ-សង្កាត់  <span class="value" style="min-width:70px;"><?php echo $this->agreement['w_client_commune_kh'];?></span> 
-											          ស្រុក-ខណ្ឌ <span class="value" style="min-width:80px;"><?php echo $this->agreement['w_client_districtkh'];?></span>
-												ខេត្ត-ក្រុង <span class="value" style="min-width:100px;"><?php echo $this->agreement['w_client_province_kh'];?></span>
+					             			          កាន់<?php echo $this->agreement['joint_doc_type'];?>លេខ <span class="value" style="min-width:50px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['rid_no']);?></span>
+			             						<?php if(!empty($this->agreement['join_issuedateid'])){ ?> ចុះថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['join_issuedateid'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['join_issuedateid']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['join_issuedateid']))); }?> 
+													មានទីលំនៅបច្ចុប្បន្នស្ថិតនៅ
+												<?php if(!empty($this->agreement['w_client_house'])){ ?>ផ្ទះលេខ<span class="value" style="min-width:45px;"><?php echo $this->agreement['w_client_house'];?></span> <?php } ?> 	
+												<?php if(!empty($this->agreement['w_street'])){ ?>ផ្លូវលេខ  <span class="value" style="min-width:45px;"><?php echo $this->agreement['w_street'];?></span> <?php } ?> 	
+												<?php if(!empty($this->agreement['w_client_village_kh'])){ ?>ភូមិ <span class="value" style="min-width:50px;"><?php echo str_replace("ភូមិ", "",$this->agreement['w_client_village_kh']);?></span> <?php } ?> 													
+											         ឃុំ/សង្កាត់  <span class="value" style="min-width:50px;"><?php echo $this->agreement['w_client_commune_kh'];?></span> 
+											          ស្រុក/ខណ្ឌ  <span class="value" style="min-width:50px;"><?php echo $this->agreement['w_client_districtkh'];?></span>
+												 ខេត្ត/ក្រុង <span class="value" style="min-width:50px;"><?php echo $this->agreement['w_client_province_kh'];?></span>
 												<?php }?> ។​ លេខទូរស័ព្ទទំនាក់ទំនង <span class="value" style="min-width:20px;"><?php echo $this->agreement['phone']; empty($this->agreement['with_phone'])?"":" ".$this->agreement['with_phone']?></span> ជាអ្នកទិញហៅថាភាគី (ខ)។
 
 										<td>
@@ -225,7 +227,7 @@
 											}
 											
 											?>
-											ភាគី (ក) យល់ព្រមលក់ ហើយភាគី (ខ) យល់ព្រមទិញនូវដីចំនួន <?php echo number_format($propertyAmt,0);?> ឡូតិ៍ លេខ <span class="value" style="min-width:50px;"><?php echo $this->agreement['property_title'];?></span> 
+											ភាគី (ក) យល់ព្រមលក់ហើយ ភាគី (ខ) យល់ព្រមទិញនូវដីចំនួន <?php echo $dbparmeter->getNumberInkhmer(number_format($propertyAmt,0));?> ឡូតិ៍ លេខ <span class="value" style="min-width:50px;"><?php echo $this->agreement['property_title'];?></span> 
 											ដែលមានក្បាល <?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_width']);?> ម៉ែត្រ ជម្រៅ<?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_height']);?> ម៉ែត្រ និងទំហំ<?php echo $dbparmeter->getNumberInkhmer($this->agreement['land_size']);?>ម៉ែត្រការេ ក្នុងគម្រោង  <span style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo str_replace("គម្រោង", "",$projectName);?></span> <br />
 											
 											<span style=" margin-left: 50px;"></span>- ខាងជើងទល់នឹង <span class="value" style="min-width:150px;"><?php echo $this->agreement['border_north'];?></span> - ខាងត្បូងទល់នឹង 	<span class="value" style="min-width:150px;"><?php echo $this->agreement['border_south'];?></span>
@@ -261,13 +263,13 @@
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">២.១</span></td>
 									    <td align="justify" style="padding-left:5px">
-											ភាគី (ខ) យល់ព្រមបង់ប្រាក់មុនជូនភាគី (ក) តាមគោលការណ៍បង់ប្រាក់របស់ក្រុមហ៊ុន ដូចបានចែងលំអិតនៅក្នុងតារាងប្រាក់នៃឯការ <span style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo $tr->translate('ARTICLE_1');?></span> ។
+											ភាគី (ខ) យល់ព្រមបង់ប្រាក់មុនជូន ភាគី (ក) តាមគោលការណ៍បង់ប្រាក់របស់គម្រោង ដូចបានចែងលំអិតនៅក្នុងតារាងប្រាក់នៃឯការ <span style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo $tr->translate('ARTICLE_1');?></span> ។
 									    </td>
 									  </tr>	
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">២.២</span></td>
 									  	<td align="justify" style="padding-left:5px">
-											ភាគី (ក) ជាអ្នកទទួលបន្ទុកលើការងារផ្តល់ប័ណ្ណបំបែកក្បាលដីជូនភាគី (ខ) បន្ទាប់ពីភាគី (ខ) បានទូរទាត់ប្រាក់ថ្លៃទិញដីគ្រប់ចំនួន 90% ជូនភាគី (ក) ទៅតាមឧបសម្ព័ន១ ដោយសន្តិវិធី និងពុំមានការរំខានពីតតីយជនណាមួយ។
+											ភាគី (ក) ជាអ្នកទទួលបន្ទុកលើការងារផ្តល់ប័ណ្ណបំបែកក្បាលដីជូន ភាគី (ខ) បន្ទាប់ពី ភាគី (ខ) បានទូរទាត់ប្រាក់ថ្លៃទិញដីគ្រប់ចំនួន 90% ជូន ភាគី (ក) ទៅតាម <span style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo $tr->translate('ARTICLE_1');?></span> ដោយសន្តិវិធី និងពុំមានការរំខានពីតតិយជនណាមួយ។
 									  	</td> 	
 									  </tr>		
 									  <tr>
@@ -281,7 +283,7 @@
 													$bankAccNo="";
 													$bankAccNo = empty($this->keyValue['bank_account1number'])?$bankAccNo:$this->keyValue['bank_account1number'];
 												?>
-												នៅពេលដែលភាគី (ក) បានកំណត់យកធនាគា <?php echo $bankName;?> គណនីឈ្មោះ <span style="font-weight:600;"><?php echo $bankAccName;?></span> ដែលមានលេខគណនី <span style="font-weight:600;"><?php echo $bankAccNo;?></span> ជាមធ្យោបាយទទួលប្រាក់ពីអតិថិជនក្នុងការបង់ថ្លៃដីប្រចាំខែ។
+												នៅពេលដែល ភាគី (ក) បានកំណត់យកធនាគា <?php echo $bankName;?> គណនីឈ្មោះ <span style="font-weight:600;"><?php echo $bankAccName;?></span> ដែលមានលេខគណនី <span style="font-weight:600;"><?php echo $bankAccNo;?></span> ជាមធ្យោបាយទទួលប្រាក់ពីអតិថិជនក្នុងការបង់ថ្លៃដីប្រចាំខែ។
 									  	</td> 	
 									  </tr>
 																	  
@@ -295,25 +297,25 @@
 									  <tr>
 										    <td align="justify" style="vertical-align:top; text-align:right; width:9%;"><span style="">៣.១ </span></td>
 										    <td align="justify" style="padding-left:5px">
-											ក្នុងករណីភាគី (ខ) បង់ប្រាក់យឺតយ៉ាវ ចាប់ពី១៥ (ដប់ប្រាំ)ថ្ងៃឡើងទៅ នឹងត្រូវពិន័យ ៣០ (សាមសិប)ដុល្លាក្នុង១ថ្ងៃ។
+											ក្នុងករណី ភាគី (ខ) បង់ប្រាក់យឺតយ៉ាវចាប់ពី១៥ (ដប់ប្រាំ)ថ្ងៃឡើងទៅនឹងត្រូវពិន័យ ៣០ (សាមសិប)ដុល្លាក្នុង១ថ្ងៃ។
 											</td>  
 									  </tr>
 									  <tr>
 										    <td align="justify" style="vertical-align:top; text-align:right; width:9%;"><span style="">៣.២ </span></td>
 										    <td align="justify" style="padding-left:5px">
-												ក្នុងករណីភាគី (ខ) មិនបានបង់រយៈពេល៣ខែជាប់គ្នានោះចាត់ទុកថាភាគី (ខ) បោះបង់ការទិញជាស្វ័យប្រវត្តិ ហើយប្រាក់ដែលបានបង់ហើយ នឹងបានជាប្រយោជន៍ដល់ភាគី (ក) ដោយភាគី (ខ) សន្យាថាមិនប្តឹងទាមទារ ឬតវ៉ាអ្វីទាំងអស់។
+												ក្នុងករណី ភាគី (ខ) មិនបានបង់រយៈពេល៣ខែជាប់គ្នានោះចាត់ទុកថា ភាគី (ខ) បោះបង់ការទិញជាស្វ័យប្រវត្តិ ហើយប្រាក់ដែលបានបង់ហើយនឹងបានជាប្រយោជន៍ដល់ ភាគី (ក) ដោយ ភាគី (ខ) សន្យាថាមិនប្តឹងទាមទារ ឬតវ៉ាអ្វីទាំងអស់។
 											</td>  
 									  </tr>
 									  <tr>
 										    <td align="justify" style="vertical-align:top; text-align:right; width:9%;"><span style="">៣.៣  </span></td>
 										    <td align="justify" style="padding-left:5px">
-												ក្នុងករណីបំពានខាងលើ តម្រូវអោយភាគី (ក) មានសិទ្ធិលក់ និងផ្ទេរសិទិ្ធដីខាងអោយទៅតតីយជនបាន ដោយភាគី (ក) មិនចាំបាច់ជូនដំណឹងទៅភាគី (ខ)នោះឡើយ។
+												ក្នុងករណីបំពានខាងលើ តម្រូវអោយ ភាគី (ក) មានសិទ្ធិលក់និងផ្ទេរសិទិ្ធដីខាងលើអោយទៅតតិយជនបានដោយ ភាគី (ក) មិនចាំបាច់ជូនដំណឹងទៅ ភាគី (ខ) នោះឡើយ។
 											</td>  
 									  </tr>
 									  <tr>
 										    <td align="justify" style="vertical-align:top; text-align:right; width:9%;"><span style="">៣.៤ </span></td>
 										    <td align="justify" style="padding-left:5px">
-												ក្រោយថ្ងៃចុះកិច្ចសន្យានេះរួច បែរជាភាគី (ក) កែប្រែចិត្តមិនលក់ដីខាងលើទៅអោយភាគី (ខ) ឬអនុវត្តផ្ទុយពីកិច្ចសន្យាតម្រូវអោយភាគ (ក)ទទួលខុសត្រូវសំណងអោយភាគី (ខ) ស្មើនឹងចំនួន២(ពីរ)ដងនៃប្រាក់កក់ដែលទទួលបានទាំងអស់។
+												ក្រោយថ្ងៃចុះកិច្ចសន្យានេះរួចបែរជា ភាគី (ក) កែប្រែចិត្តមិនលក់ដីខាងលើទៅអោយ ភាគី (ខ) ឬអនុវត្តផ្ទុយពីកិច្ចសន្យាតម្រូវអោយ ភាគី (ក) ទទួលខុសត្រូវសំណងអោយ ភាគី (ខ) ស្មើនឹងចំនួន ២(ពីរ) ដង នៃប្រាក់កក់ដែលទទួលបានទាំងអស់។
 											</td>  
 									  </tr>
 									  
@@ -328,19 +330,19 @@
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">៤.១</span></td>
 									    <td align="justify" style="padding-left:5px">
-											ភាគី (ក) ត្រូវទទួលខុសត្រូវទាំងស្រុងថា ដីដែលលក់ខាងលើនេះ ខ្លួនមានសិទ្ធផ្តាច់ 100% ដើម្បីចាត់ចែងលក់ដូរ ផ្ទេសិទ្ធ គ្មានបន្ទុកបញ្ចាំ និង គ្មានទំនាស់ជាមួយតតីយជន ឬបណ្តឹងទប់ស្កាត់ហាមឃាត់អ្វីទាំងអស់។
+											ភាគី (ក) ត្រូវទទួលខុសត្រូវទាំងស្រុងថាដីដែលលក់ខាងលើនេះខ្លួនមានសិទ្ធផ្តាច់ 100% ដើម្បីចាត់ចែង លក់ដូរ ផ្ទេសិទ្ធ គ្មានបន្ទុកបញ្ចាំ និងគ្មានទំនាស់ជាមួយតតិយជន ឬបណ្តឹងទប់ស្កាត់ហាមឃាត់អ្វីទាំងអស់។
 									    </td>
 									  </tr>	
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">៤.២</span></td>
 									  	<td align="justify" style="padding-left:5px">
-											ភាគី (ខ) ត្រូវផ្តល់ស្នាមមេដៃ ឬឯកសារពាក់ព័ន្ធ ដើម្បីដំណើរការលើការកាត់ឈ្មោះផ្ទេរសិទ្ធិ អោយបានទាន់ពេល។
+											ភាគី (ខ) ត្រូវផ្តល់ស្នាមមេដៃ ឬឯកសារពាក់ព័ន្ធ ដើម្បីដំណើរការលើការកាត់ឈ្មោះផ្ទេរសិទ្ធិអោយបានទាន់ពេល។
 									  	</td> 	
 									  </tr>		
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">៤.៣</span></td>
 									  	<td align="justify" style="padding-left:5px">
-											ក្រោយថ្ងៃចុះកិច្ចសន្យានេះរួច តទៅភាគី (ខ) មិនមានសិទិ្ធវាយទំលុះ ឬកំទេចរបងជញ្ជាំងដែលមានស្រាប់នោះឡើយ ទោះក្នុងរូបភាពណាក៏ដោយ លើកលែងតែមានការអនុញ្ញាតពីភាគី (ក) បើមិនដូច្នោះ ភាគី (ខ) នឹងទទួលខុសត្រូវនៅចំពោះមុខច្បាប់ជាធរមាន។
+											ក្រោយថ្ងៃចុះកិច្ចសន្យានេះរួចតទៅ ភាគី (ខ) មិនមានសិទិ្ធវាយទំលុះ ឬកំទេចរបងជញ្ជាំងដែលមានស្រាប់នោះឡើយ ទោះក្នុងរូបភាពណាក៏ដោយ លើកលែងតែមានការអនុញ្ញាតពី ភាគី (ក) បើមិនដូច្នោះ ភាគី (ខ) នឹងទទួលខុសត្រូវនៅចំពោះមុខច្បាប់ជាធរមាន។
 									  	</td> 	
 									  </tr>
 									  <tr>
@@ -363,13 +365,13 @@
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style=" ">៥.១</span></td>
 									    <td align="justify" style="padding-left:5px">
-									    	កិច្ចសន្យានេះ ស្ថិតនៅក្រោមច្បាប់ និងបទបញ្ញត្តិនៃព្រះរាជាណាចក្រកម្ពុជា ហើយគូភាគីយល់ព្រមគោរពតាមទាំងស្រុង និងមានសុពលភាពអនុវត្តគិតចាប់ពីថ្ងៃដែលគូភាគីចុះហត្ថលេខា ឬ ផ្តិតស្នាមមេដៃតទៅ។
+									    	កិច្ចសន្យានេះ ស្ថិតនៅក្រោមច្បាប់និងបទបញ្ញត្តិនៃព្រះរាជាណាចក្រកម្ពុជា ហើយគូភាគីយល់ព្រមគោរពតាមទាំងស្រុង និងមានសុពលភាពអនុវត្តគិតចាប់ពីថ្ងៃដែលគូភាគីចុះហត្ថលេខា ឬ ផ្តិតស្នាមមេដៃតទៅ។
 									    </td>  
 									  </tr>
 									   <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;"><span style="">៥.២</span></td>
 									    <td align="justify" style="padding-left:5px">
-										គូភាគីបានអានរួចរាល់ និងពិនិត្យយ៉ាងត្រឹមត្រូវ ហើយមានស្មារតីគ្រប់គ្រាន់ និងមានឆន្ទៈជាក់លាក់ក្នុងការយល់ព្រមផ្តិតស្នាមមេដៃទុកជាភស្តុតាងនៅចំពោះមុខច្បាប់តទៅ ដោយកិច្ចសន្យានេះ ត្រូវបានធ្វើឡើងជាភាសាខ្មែរមានចំនួន ៣ (បី)ច្បាប់ ប្រគល់ជូនគូភាគី ០១ច្បាប់ម្នាក់ និងរក្សាទុកនៅសាក្សី ០១ច្បាប់ ដោយមានតំលៃស្មើគ្នាទាំងអស់នៅចំពោះមុខច្បាប់។
+										គូភាគីបានអានរួចរាល់និងពិនិត្យយ៉ាងត្រឹមត្រូវ ហើយមានស្មារតីគ្រប់គ្រាន់ និងមានឆន្ទៈជាក់លាក់ក្នុងការយល់ព្រមផ្តិតស្នាមមេដៃទុកជាភស្តុតាងនៅចំពោះមុខច្បាប់តទៅ ដោយកិច្ចសន្យានេះត្រូវបានធ្វើឡើងជាភាសាខ្មែរមានចំនួន ៣ (បី)ច្បាប់ ប្រគល់ជូនគូភាគី ០១ច្បាប់ម្នាក់ និងរក្សាទុកនៅសាក្សី ០១ច្បាប់ ដោយមានតំលៃស្មើគ្នាទាំងអស់នៅចំពោះមុខច្បាប់។
 									    </td>  
 									  </tr>
 									  

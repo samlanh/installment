@@ -891,8 +891,13 @@
 	    window.frames["print_frame"].window.print();
 	}
 	function doPrint2() {
-		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint2').innerHTML;
-	    window.frames["print_frame"].window.focus();
-	    window.frames["print_frame"].window.print();
+		loadingBlock();
+		setTimeout(function () {
+	        window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint2').innerHTML;
+			window.frames["print_frame"].window.focus();
+			window.frames["print_frame"].window.print();
+	        HideloadingBlock();
+		}, 2000);
+		
 	}
 </script>
