@@ -236,9 +236,12 @@ function getAllBranch($search=null){
     			$s_where = array();
     			$s_search = addslashes(trim($search['adv_search']));
     			$s_where[] = " clie.`client_number` LIKE '%{$s_search}%'";
+    			$s_where[] = " clie.`name_kh` LIKE '%{$s_search}%'";
     			$s_where[] = " s.`sale_number` LIKE '%{$s_search}%'";
-    			//$s_where[] = " p.`project_name` LIKE '%{$s_search}%'";
     			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
+    			$s_where[] = " pro.`land_address` LIKE '%{$s_search}%'";
+    			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
+    			$s_where[] = " pro.`reason` LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
     		
@@ -256,7 +259,7 @@ function getAllBranch($search=null){
     		$sql=" SELECT id,
     		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id = branch_id LIMIT 1) AS branch_name,
     		 title, invoice,branch_id,
-    		(SELECT CONCAT(land_address,',',street)FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) as house_name,
+    		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) as house_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) AS category_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id LIMIT 1) AS payment_type,
 			payment_id,
@@ -301,6 +304,11 @@ function getAllBranch($search=null){
     			$s_where[] = " title LIKE '%{$s_search}%'";
     			$s_where[] = " total_amount LIKE '%{$s_search}%'";
     			$s_where[] = " invoice LIKE '%{$s_search}%'";
+    			$s_where[] = " (SELECT land_address FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) LIKE '%{$s_search}%'";
+    			$s_where[] = " (SELECT street FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) LIKE '%{$s_search}%'";
+    			$s_where[] = " (SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) LIKE '%{$s_search}%'";
+    			$s_where[] = " (SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) LIKE '%{$s_search}%'";
+    			$s_where[] = " (SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
     		if($search['client_name']>0){
@@ -423,6 +431,8 @@ function getAllBranch($search=null){
     			$s_where[] = " total_amount LIKE '%{$s_search}%'";
     			$s_where[] = " invoice LIKE '%{$s_search}%'";
     			$s_where[] = " other_invoice LIKE '%{$s_search}%'";
+    			$s_where[] = " (SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) LIKE '%{$s_search}%'";
+    			$s_where[] = " (SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
 //     		if(@$search['category_id_expense']>-1 AND !@empty($search['category_id_expense'])){
@@ -2005,6 +2015,7 @@ function getAllBranch($search=null){
     			$s_where[] = " pro.`land_address` LIKE '%{$s_search}%'";
     			$s_where[] = " pro.`land_code` LIKE '%{$s_search}%'";
     			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
+    			$s_where[] = " (SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
     		//$where.=" ORDER BY c.id DESC ";
@@ -2725,6 +2736,7 @@ function getAllBranch($search=null){
 			$s_search = addslashes(trim($search['adv_search']));
 			$s_where[] = " p.land_address LIKE '%{$s_search}%'";
 			$s_where[] = " p.street LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT name_kh FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		if(!empty($search['streetlist'])){
@@ -2787,6 +2799,8 @@ function getAllBranch($search=null){
 			$s_where = array();
 			$s_search = addslashes(trim($search['adv_search']));
 			$s_where[] = " clie.`name_kh` LIKE '%{$s_search}%'";
+			$s_where[] = " pro.`land_address` LIKE '%{$s_search}%'";
+			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
 			$s_where[] = " c.`note` LIKE '%{$s_search}%'";
 			$s_where[] = " pro.`hardtitle` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
@@ -2995,6 +3009,8 @@ function getAllBranch($search=null){
 				$s_where[] = " cp.total_due LIKE '%{$s_search}%'";
 				$s_where[] = " cp.cheque_no LIKE '%{$s_search}%'";
 				$s_where[] = " cp.cheque_issuer LIKE '%{$s_search}%'";
+				$s_where[] = " (SELECT co_khname FROM `ln_staff` WHERE co_id=cp.agency_id LIMIT 1) LIKE '%{$s_search}%'";
+				$s_where[] = " (SELECT name_kh FROM `ln_view` WHERE TYPE=13 AND key_code=cp.category LIMIT 1) LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
     		if(!empty($search['user_id']) AND $search['user_id']>0){
@@ -3472,6 +3488,7 @@ function getAllBranch($search=null){
     			$s_where[]= " pp.balance LIKE '%{$s_search}%'";
     			$s_where[]= " pp.total_paid LIKE '%{$s_search}%'";
     			$s_where[]= " pp.total_due LIKE '%{$s_search}%'";
+    			$s_where[]= " (SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) LIKE '%{$s_search}%'";
     
     			$where.=' AND ('.implode(' OR ', $s_where).')';
     		}

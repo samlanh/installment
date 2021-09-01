@@ -43,6 +43,7 @@ class Issue_Model_DbTable_Dbgivehouse extends Zend_Db_Table_Abstract
     		$s_search = addslashes(trim($search['adv_search']));
     		$s_where[] = " p.land_address LIKE '%{$s_search}%'";
     		$s_where[] = " p.street LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT name_kh FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) LIKE '%{$s_search}%'";
     		$where .=' AND ('.implode(' OR ',$s_where).')';
     	}
     	if($search['status']>-1){

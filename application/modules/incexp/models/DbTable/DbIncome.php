@@ -100,6 +100,11 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			$s_where[] = " title LIKE '%{$s_search}%'";
 			$s_where[] = " total_amount LIKE '%{$s_search}%'";
 			$s_where[] = " invoice LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT land_address FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT street FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ln_income.client_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		if($search['client_name']>0){

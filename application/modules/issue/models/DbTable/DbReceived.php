@@ -48,6 +48,8 @@ class Issue_Model_DbTable_DbReceived extends Zend_Db_Table_Abstract
 			$s_where = array();
 			$s_search = addslashes(trim($search['adv_search']));
 			$s_where[] = " clie.`name_kh` LIKE '%{$s_search}%'";
+			$s_where[] = " pro.`land_address` LIKE '%{$s_search}%'";
+			$s_where[] = " pro.`street` LIKE '%{$s_search}%'";
 			$s_where[] = " c.`note` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}

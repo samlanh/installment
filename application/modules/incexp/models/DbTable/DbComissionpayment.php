@@ -41,6 +41,8 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
 					$s_where[] = " cp.total_paid LIKE '%{$s_search}%'";
 					$s_where[] = " cp.total_due LIKE '%{$s_search}%'";
 					$s_where[] = " cp.cheque_no LIKE '%{$s_search}%'";
+					$s_where[] = " (SELECT name_kh FROM `ln_view` WHERE TYPE=13 AND key_code=cp.category LIMIT 1) LIKE '%{$s_search}%'";
+					$s_where[] = " (SELECT co_khname FROM `ln_staff` WHERE co_id=cp.agency_id LIMIT 1) LIKE '%{$s_search}%'";
 					$where .=' AND ('.implode(' OR ',$s_where).')';
 				}
 		

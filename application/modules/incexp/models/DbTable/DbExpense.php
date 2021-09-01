@@ -310,6 +310,8 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				$s_where[] = " total_amount LIKE '%{$s_search}%'";
 				$s_where[] = " invoice LIKE '%{$s_search}%'";
 				$s_where[] = " other_invoice LIKE '%{$s_search}%'";
+				$s_where[] = " (SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) LIKE '%{$s_search}%'";
+				$s_where[] = " (SELECT sup.name FROM `ln_supplier` AS sup WHERE sup.id = supplier_id LIMIT 1) LIKE '%{$s_search}%'";
 				$where .=' AND ('.implode(' OR ',$s_where).')';
 			}
 	

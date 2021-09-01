@@ -3297,7 +3297,9 @@ function updatePaymentStatus($data){
       		$s_search = trim(addslashes($search['adv_search']));
       		$s_where[] = " op.receipt_no LIKE '%{$s_search}%'";
       		$s_where[] = " op.total_paid LIKE '%{$s_search}%'";
+      		$s_where[] = " (SELECT v.name_kh FROM ln_view AS v WHERE v.type=op.cate_type AND v.key_code=op.category LIMIT 1) LIKE '%{$s_search}%'";
       		$s_where[] = " (SELECT p.land_address FROM `ln_properties` AS p WHERE p.id=oi.house_id LIMIT 1) LIKE '%{$s_search}%'";
+      		$s_where[] = " (SELECT p.street FROM `ln_properties` AS p WHERE p.id=oi.house_id LIMIT 1) LIKE '%{$s_search}%'";
       		$s_where[] = " (SELECT ln_client.name_kh FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) LIKE '%{$s_search}%'";
       		$where .=' AND ('.implode(' OR ',$s_where).')';
       	}

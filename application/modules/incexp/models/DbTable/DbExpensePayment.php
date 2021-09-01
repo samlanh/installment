@@ -58,6 +58,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     			$s_where[]= " pp.balance LIKE '%{$s_search}%'";
     			$s_where[]= " pp.total_paid LIKE '%{$s_search}%'";
     			$s_where[]= " pp.total_due LIKE '%{$s_search}%'";
+    			$s_where[]= " (SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) LIKE '%{$s_search}%'";
     			 
     			$where.=' AND ('.implode(' OR ', $s_where).')';
     		}
