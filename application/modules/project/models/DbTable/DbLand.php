@@ -149,6 +149,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     						'branch_id'=>$_data['branch_id'],
     						'land_address'=>strtoupper($_data['land_address_prefix'].$i.$_data['postfix_land_address']),
     						'street'=>$_data['street'],
+    						'property_type'=>$_data['property_type'],
     				);
     				$check=0;
     				if (!empty($arrayCheck['land_address']) AND !empty($arrayCheck['street'])){
@@ -549,6 +550,9 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	public function CheckTitle($data){
 		$db =$this->getAdapter();
 		$sql = "SELECT  * FROM `ln_properties` AS p WHERE p.`land_address` = '".$data['land_address']."' AND p.`branch_id` = ".$data['branch_id']." AND p.`street` = '".$data['street']."'" ;
+		if(!empty($data['property_type'])){
+			$sql.=" AND p.`property_type` ='".$data['property_type']."'";
+		}
 		return $db->fetchRow($sql);
 	}
 	public function getPropertyType(){
