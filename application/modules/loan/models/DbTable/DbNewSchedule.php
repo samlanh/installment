@@ -612,8 +612,10 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
 	    			        if($i==$loop_payment AND $payment_method!=7){//for end of record only
 	    			        	
 	    			        	$datapayment['ispay_bank'] = $data['paid_receivehouse'];
+								
 	    			        	if($data['paid_receivehouse']==1){
 	    			        		$datapayment['ispay_bank']=0;
+	    			        		
 	    			        	}
 	    			        	if($data['paid_receivehouse']==0){
 	    			        		$datapayment['ispay_bank']=1;
@@ -652,7 +654,8 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		  		'amount_day'=>$old_amount_day,
     		  		'is_completed'=>0,
     		  		'date_payment'=>$next_payment,
-    		  		'no_installment'=>$i+$j,
+    		  		//'no_installment'=>$i+$j,
+    		  		'no_installment'=>$index+$i+$j+$start_id+1,
     		  		'ispay_bank'=>$paid_receivehouse,
     		  	);
     		  	$this->insert($datapayment);
