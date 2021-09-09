@@ -104,9 +104,19 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 	}
 	public function AllHistoryContact($crm_id){
 		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$sql="SELECT c.*,
 		(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE c.user_contact=id LIMIT 1 ) AS user_contact_name
-		FROM `ln_history_contact` AS c WHERE customer_id = $crm_id ORDER BY c.id DESC";
+		";
+		$sql.=", CASE
+		WHEN  c.proccess = 0 THEN '".$tr->translate("DROPPED")."'
+		WHEN c.proccess = 1 THEN '".$tr->translate("PROCCESSING")."'
+		WHEN c.proccess = 2 THEN '".$tr->translate("WAITING_RESPONSE")."'
+		WHEN c.proccess = 3 THEN '".$tr->translate("COMPLETED_CONTACT")."'
+		
+		END AS proccessTitle ";
+		$sql.=" FROM `ln_history_contact` AS c WHERE customer_id = $crm_id ORDER BY c.id DESC";
+		
 		return $db->fetchAll($sql);
 	}
 	public function addContactHistory($_data){
