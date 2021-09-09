@@ -2170,5 +2170,41 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	}
    	return $options;
    }
+   
+   
+  public function getAllCustomerRequireNextContact($search=array()){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+		$day = 1;
+		$end_date = date('Y-m-d',strtotime(" +$day day"));
+		
+		$sql="SELECT c.*,
+				(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE c.user_contact=id LIMIT 1 ) AS user_contact_name,
+				name, phone,
+				(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=know_by LIMIT 1) as know_by,
+				 from_price,to_price,requirement,type,description,	
+				statusreq
+			
+		";
+		$sql.=", CASE
+		WHEN  c.proccess = 0 THEN '".$tr->translate("DROPPED")."'
+		WHEN c.proccess = 1 THEN '".$tr->translate("PROCCESSING")."'
+		WHEN c.proccess = 2 THEN '".$tr->translate("WAITING_RESPONSE")."'
+		WHEN c.proccess = 3 THEN '".$tr->translate("COMPLETED_CONTACT")."'
+		
+		END AS proccess ";
+		$sql.=" FROM `ln_history_contact` AS c,
+				in_customer AS ct WHERE c.proccess IN (1,2) ";
+		
+		
+		$to_date = (empty($end_date))? '1': " c.next_contact <= '".$end_date." 23:59:59'";
+		$sql.= " AND ".$to_date;
+		
+		$sql.=" AND ct.id = c.customer_id ";
+		
+		$order=" ORDER BY c.next_contact DESC,c.id DESC ";
+		return $db->fetchAll($sql.$order);
+	}
 }
 ?>
