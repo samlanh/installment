@@ -6,6 +6,11 @@
 	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 	$username = $session_user->first_name;
 	$user_id = $session_user->user_id;
+	$userTypeId = $session_user->level;
+	$styleNotif="";
+	if($userTypeId>2){
+		$styleNotif="hiddentNotif";
+	}
 	if(empty($user_id)){
 		Application_Form_FrmMessage::redirectUrl("/");
 		exit();
@@ -182,7 +187,7 @@
 					                  </ul>
 				                </li>
 				               <?php if (empty($user_info['staff_id'])){?>
-				                <li role="presentation" class="dropdown">
+				                <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
 				                  <a title="<?php echo $tr->translate("MAKE_AGREEMENTLIST");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 				                    <i class="fa fa-newspaper-o"></i>
 				                    <span id="countNews" class="badge bg-green"><?php if (count($rsagree)>0){ echo count($rsagree);}?></span>
@@ -218,7 +223,7 @@
 			                          <?php }?>
 				                  </ul>
 				              </li>
-				              <li role="presentation" class="dropdown">
+				              <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
 				                  <a title="<?php echo $tr->translate("CUSTOMER_PAYMENTLIST");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 				                    <i class="fa fa-money"></i>
 				                    <span id="countNews" class="badge bg-green"><?php if (count($rs)>0){ echo count($rs);}?></span>
@@ -254,7 +259,7 @@
 			                          <?php }?>
 			                        </ul>
 				             </li>
-				             <li role="presentation" class="dropdown">
+				             <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
 				                  <a title="<?php echo $tr->translate("ISSUE_PLONGNOTYET_RECEIPT");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 				                    <i class="fa fa-newspaper-o"></i>
 				                    <span id="countNews" class="badge bg-green"><?php if (count($rsplong)>0){ echo count($rsplong);}?></span>
@@ -289,7 +294,7 @@
 				                  </ul>
 				              </li>
 							  
-							  <li role="presentation" class="dropdown">
+							  <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
 				                  <a title="<?php echo $tr->translate("CUTOMER_REQURED_FOR_CONTACT");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 				                    <i class="fa fa-tty"></i>
 				                    <span id="countNews" class="badge bg-green"><?php if (count($rsCusRequire)>0){ echo count($rsCusRequire);}?></span>
@@ -369,7 +374,7 @@
                                         <i class="fa fa-calculator"></i>
 					                 </a>
 				                </li>
-				                <li class="">
+				                <li class="<?php echo $styleNotif;?>">
 				                  	<a  href="<?php echo $this->baseUrl()."/other/testsale/index"?>" title="<?php echo $tr->translate("PREVIEW_INSTALLMENT_CALCUATE");?>"  class="user-profile " >
                                         <i class="fa fa-keyboard-o"></i>
 					                 </a>
