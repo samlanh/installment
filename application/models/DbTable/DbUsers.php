@@ -136,9 +136,10 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			return $sql.$orderby;
 		}
 		$where = '';
-		
+		$where.= ' AND u.`user_name` != "system" ';
 		if ($search['active'] >= 0){
 			$where = 'AND u.`active` = '.$search['active'];
+			
 		}
 		
 		if (!empty($search['txtsearch'])){
