@@ -352,15 +352,25 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	    	if($data["option_pay"]==4){//payoff
 	    		$pay_off = 1;
 	    	}
+			
+			$rs_sale = $this->getSalebyId($loan_number);//get sale by id
+			$propertyId = empty($data['property_id'])?$rs_sale['house_id']:$data['property_id'];
+			$clientId 	= empty($data['client_id'])?$rs_sale['client_id']:$data['client_id'];
+			
     		$arr_client_pay = array(
     			'branch_id'						=>	$data["to_branch_id"],//$data["branch_id"],
     			'receipt_no'					=>	$reciept_no,
     			'date_pay'					    =>	$data['collect_date'],
     			'date_input'					=>	$data['collect_date'],
     			'from_date'						=>	$data['date_payment'],//check more
-    			'client_id'                     =>	$data['client_id'],
     			'sale_id'						=>	$data['loan_number'],
-    			'land_id'						=>	$data['property_id'],
+				
+				//'client_id'                   =>	$data['client_id'],
+    			//'land_id'						=>	$data['property_id'],
+				
+				'client_id'                     =>	$clientId,
+    			'land_id'						=>	$propertyId,
+				
     			'outstanding'                   =>	$data['outstanding_balance'],//ប្រាក់ដើមមុនបង់
     			'selling_price'    				=>  $data['sold_price'],
     			'total_principal_permonth'		=>	$data["os_amount"]+$data["extrapayment"],//ប្រាក់ដើមត្រូវបង់
