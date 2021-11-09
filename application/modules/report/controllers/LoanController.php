@@ -1326,4 +1326,52 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->_redirect("/home/index/rpt-income-graphic");
 		exit();
 	}
+	
+	
+	function rptUnclosingentryAction(){
+		$db  = new Report_Model_DbTable_DbLandreport();
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		if($this->getRequest()->isPost()){
+			$search = $this->getRequest()->getPost();
+		}else {
+			$search = array(
+					'adv_search' => '',
+					'status_search' => -1,
+					'status' => -1,
+					'client_name' => "",
+					'branch_id' => -2,
+					'land_id'=>-1,
+					'user_id'=>'',
+					'option_pay'=>-1,
+					'receipt_type'=>-1,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'),
+					'payment_method'=>-1,
+					'is_closed' => "",
+			);
+		}
+		$this->view->rssearch = $search;
+		$this->view->loantotalcollect_list =$rs=$db->getALLLoanPayment($search);
+		$this->view->list_end_date = $search;
+	  
+		$frm = new Loan_Form_FrmSearchLoan();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+  }
+   function submitentryunclosedAction(){
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$key = new Application_Model_DbTable_DbKeycode();
+  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+  	if($this->getRequest()->isPost()){
+  		$data = $this->getRequest()->getPost();
+  		$db = new Report_Model_DbTable_DbLandreport();
+  		$db->submitUnclosingEngry($data);
+  		Application_Form_FrmMessage::Sucessfull("Unclosing Entry Success", "/report/loan/rpt-unclosingentry");
+  	}
+  }
 }

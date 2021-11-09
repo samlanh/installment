@@ -3779,4 +3779,24 @@ function updatePaymentStatus($data){
 		}
 		return $row;
 	 }
+	 
+	 
+	 function submitUnclosingEngry($data){
+      	$db = $this->getAdapter();
+      	if(!empty($data['id_selected'])){
+      		$ids = explode(',', $data['id_selected']);
+      		$key = 1;
+      		$arr = array(
+      				"is_closed"=>0,
+      		);
+      		foreach ($ids as $i){
+      			$this->_name="ln_client_receipt_money";
+      			if (!empty($data['note_'.$i])){
+      				$arr['closing_note']=$data['note_'.$i];
+      			}
+      			$where="id= ".$data['id_'.$i];
+      			$this->update($arr, $where);
+      		}
+      	}
+      }
  }
