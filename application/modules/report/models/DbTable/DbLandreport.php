@@ -428,7 +428,7 @@ public function getAllOutstadingLoan($search=null){
       	 $db = $this->getAdapter();
       	 $sql="
       	     SELECT 
-				SUM(`crm`.`total_principal_permonthpaid`+crm.extra_payment)
+				SUM(`crm`.`total_principal_permonthpaid`+crm.extra_payment+ ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = crm.`sale_id` LIMIT 1)))
 				 FROM  `ln_client_receipt_money` AS crm
       	 	WHERE crm.`sale_id`='".$land_id."' AND crm.status=1 LIMIT 1 ";
       	 $row =  $db->fetchOne($sql);
