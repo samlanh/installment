@@ -101,6 +101,17 @@ class Loan_Model_DbTable_Dbtransfercash extends Zend_Db_Table_Abstract
 	    		$where="sale_id=".$data['loan_number'];
 	    		$this->update($arra, $where);
     		
+				$creditSetting = CREDIT_SETTING;
+				if($creditSetting==1){
+					$arrCredit = array(
+	    				'sale_id'   => $data['toloan_number'],
+	    				'house_id'	=> $rows['house_id']
+	    			);
+					$this->_name="ln_credit";
+					$whereCredit="sale_id=".$data['loan_number'];
+					$this->update($arrCredit, $whereCredit);
+				}
+				
     			$db->commit();
     			return 1;
     		}catch (Exception $e){
