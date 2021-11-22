@@ -186,7 +186,7 @@
 	               		<td>&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
 	               		<td style="white-space: nowrap;">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>
 	               		<td style="line-height: 18px; white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $rs["phone"];?></td>
-		                <td align="left">&nbsp;<?php echo $rs['land_address'];?>&nbsp;</td>
+		                <td align="left"><span style="max-width: 330px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $rs['land_address'];?><span></td>
 		                <td align="left">&nbsp;<?php echo $rs['street'];?>&nbsp;</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?>&nbsp;</td>
 	               		<td align="right" style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["total_interest_after"],2);?>&nbsp;</td>
@@ -266,7 +266,7 @@
 						&nbsp;</td>
 						
 						<td align="center">&nbsp;<?php if(!empty($rs['last_pay_date'])){ echo date("d-m-Y",strtotime($rs['last_pay_date']));}else{ echo "-";}?>&nbsp;</td>
-						<td align="center">&nbsp;<span class="note_<?php echo $rs['sale_id'];?>"><?php echo $rs["expect_income_note"];?></span>&nbsp;</td>
+						<td align="center"><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 200px;width: 200px;padding: 5px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note_<?php echo $rs['sale_id'];?>"><?php echo $rs["expect_income_note"];?></span></td>
 	                </tr>
 	                <?php 
 						$amt_d2 = $amt_d2+$rs['principal_permonthafter'];
@@ -304,7 +304,7 @@
 	</div>
 </div>
 <div class="dijitHidden">
-	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate('NOTE');?>'"  id="updateForm" style="width:350px;" >
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate('NOTE');?>'"  id="updateForm" style="width:550px; font-size:11px;" >
 		<div class="card pb-10 pt-10 pl-10 pr-10">
 			<form id="updateFormInfo"  name="data" action="" dojoType="dijit.form.Form" method="post">
 				<div class="card-box">
@@ -371,6 +371,9 @@ $(function(){
 			var m = "clicked: " + key;
 			if(key=="stepup"){
 				dijit.byId('id').set('value',row);
+				
+				var oldNote = $(".note_"+row).html();
+				dijit.byId('noted').set('value',oldNote);
 				dijit.byId('updateForm').show();
 			}
 		},
