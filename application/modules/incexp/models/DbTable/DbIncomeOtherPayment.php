@@ -43,12 +43,12 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 			$s_where[] = " op.receipt_no LIKE '%{$s_search}%'";
 			$s_where[] = " op.balance LIKE '%{$s_search}%'";
 			$s_where[] = " op.total_paid LIKE '%{$s_search}%'";
-			$s_where[] = " payment_method LIKE '%{$s_search}%'";
+			$s_where[] = " op.payment_method LIKE '%{$s_search}%'";
 			$s_where[] = " op.remain LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		if(!empty($search['payment_method'])){
-			$where.= " AND payment_method = ".$search['payment_method'];
+			$where.= " AND op.payment_method = ".$search['payment_method'];
 		}
 		if(!empty($search['category_id'])){
 			$where.= " AND op.category = ".$search['category_id'];

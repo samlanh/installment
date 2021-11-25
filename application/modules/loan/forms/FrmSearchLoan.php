@@ -392,6 +392,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			2=>$this->tr->translate("ORD_BY_DATE_DESC"),
 			3=>$this->tr->translate("ORD_BY_NUMBER_ASC"),
 			4=>$this->tr->translate("ORD_BY_NUMBER_DESC"),
+			5=>$this->tr->translate("ORD_BY_CLIENT"),
 			);
 		$_queryOrdering->setMultiOptions($_ordering_opt);
 		$_queryOrdering->setValue($request->getParam("queryOrdering"));

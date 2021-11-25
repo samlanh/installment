@@ -1013,6 +1013,7 @@ class Report_LoanController extends Zend_Controller_Action {
 				'branch_id'=>-1,
 				'schedule_opt'=>-1,
 				'property_type'=>0,
+				'queryOrdering'=>0,
 				'client_name'=>'',
 				'buy_type'=>-1,
 				'land_id'=>-1,

@@ -2921,26 +2921,35 @@ function updatePaymentStatus($data){
    	$from_date =(empty($search['start_date']))? '1': " $str >= '".$search['start_date']." 00:00:00'";
    	$to_date = (empty($search['end_date']))? '1': " $str <= '".$search['end_date']." 23:59:59'";
    	$where.= " AND ".$from_date." AND ".$to_date;
-   	if(!empty($search['adv_search'])){
-   		$s_where = array();
-   		$s_search = addslashes(trim($search['adv_search']));
-   		$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
-   		$s_where[] = " `p`.`land_code`  LIKE '%{$s_search}%'";
-   		$s_where[] = " `p`.`land_address` LIKE '%{$s_search}%'";
-   		$s_where[] = " `c`.`client_number`  LIKE '%{$s_search}%'";
-   		$s_where[] = " `c`.`name_en`  LIKE '%{$s_search}%'";
-   		$s_where[] = " `c`.`name_kh`  LIKE '%{$s_search}%'";
-   		$s_where[] = " (SELECT
-		     `ln_staff`.`co_khname`
-		   FROM `ln_staff`
-		   WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
-		   LIMIT 1) LIKE '%{$s_search}%'";
-   		$s_where[] = " `s`.`price_sold` LIKE '%{$s_search}%'";
-   		$s_where[] = " `s`.`comission` LIKE '%{$s_search}%'";
-   		$s_where[] = " `s`.`total_duration` LIKE '%{$s_search}%'";
-   		$s_where[] = " `p`.`street` LIKE '%{$s_search}%'";
-   		$where .=' AND ( '.implode(' OR ',$s_where).')';
+   	
+   	$s_search = addslashes(trim($search['adv_search']));
+   	
+   	$find = strpos($s_search,">");
+   	if ($find === false){//
+	   	if(!empty($search['adv_search'])){
+	   		$s_where = array();
+	   		$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
+	   		$s_where[] = " `p`.`land_code`  LIKE '%{$s_search}%'";
+	   		$s_where[] = " `p`.`land_address` LIKE '%{$s_search}%'";
+	   		$s_where[] = " `c`.`client_number`  LIKE '%{$s_search}%'";
+	   		$s_where[] = " `c`.`name_en`  LIKE '%{$s_search}%'";
+	   		$s_where[] = " `c`.`name_kh`  LIKE '%{$s_search}%'";
+	   		$s_where[] = " (SELECT
+			     `ln_staff`.`co_khname`
+			   FROM `ln_staff`
+			   WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
+			   LIMIT 1) LIKE '%{$s_search}%'";
+	   		$s_where[] = " `s`.`price_sold` LIKE '%{$s_search}%'";
+	   		$s_where[] = " `s`.`comission` LIKE '%{$s_search}%'";
+	   		$s_where[] = " `s`.`total_duration` LIKE '%{$s_search}%'";
+	   		$s_where[] = " `p`.`street` LIKE '%{$s_search}%'";
+	   		$where .=' AND ( '.implode(' OR ',$s_where).')';
+	   	}
+	   	
+   	}else{
+   		//$where.=" AND (SELECT  COUNT(s.id) FROM `ln_sale` AS s WHERE s.status=1  AND s.is_cancel=0 LIMIT 1)  $s_search";
    	}
+   	
    	if($search['branch_id']>0){
    		$where.=" AND s.branch_id = ".$search['branch_id'];
    	}
