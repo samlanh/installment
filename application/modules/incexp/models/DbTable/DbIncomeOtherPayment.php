@@ -40,6 +40,7 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 		if (!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = trim(addslashes($search['adv_search']));
+			$s_where[] = " op.title_income LIKE '%{$s_search}%'";
 			$s_where[] = " op.receipt_no LIKE '%{$s_search}%'";
 			$s_where[] = " op.balance LIKE '%{$s_search}%'";
 			$s_where[] = " op.total_paid LIKE '%{$s_search}%'";
