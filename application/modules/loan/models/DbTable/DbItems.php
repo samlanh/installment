@@ -48,7 +48,7 @@ class Loan_Model_DbTable_DbItems extends Zend_Db_Table_Abstract
 		if(!empty($search['adv_search'])){
 			$s_where=array();
 			$s_search=$search['adv_search'];
-			$s_where[]="t.`type_nameen` LIKE'%{$s_search}%'";
+			$s_where[]="t.`title` LIKE'%{$s_search}%'";
 			$s_where[]="t.`note` LIKE'%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
