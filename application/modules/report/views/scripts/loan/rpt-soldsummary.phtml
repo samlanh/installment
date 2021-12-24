@@ -38,7 +38,7 @@ table.tb-footer tr.style-head {
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_SOLDSUMMARY');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_SOLDSUMMARY');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -152,6 +152,9 @@ table.tb-footer tr.style-head {
 		tr.style-rowdata.hover.context-menu-one.completedCss {
 			background: #00e01c0d;
 		}
+		table tr td{
+			padding:0 2px;
+		}
 	</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 		<tr>
@@ -182,7 +185,7 @@ table.tb-footer tr.style-head {
 		                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 		             </tr>
 	                 <tr class="style-head">
-	                    <td><?php echo $tr->translate("NUM");?>&nbsp;</td>
+	                    <td><?php echo $tr->translate("NUM");?></td>
 	                    <td><?php echo $tr->translate("BUY_DATE");?></td>
 	                    <td><?php echo $tr->translate("END_DATE");?></td>
 	                    <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
@@ -330,14 +333,14 @@ table.tb-footer tr.style-head {
 	              	?>
 	              	<tr class="style-rowdata hover context-menu-one <?php echo $classComplete; ?>" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
 						<td align="center"><?php echo $key+1; ?></td>
-						<td style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?>&nbsp;</td>
-						<td style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format($montFomat); ?>&nbsp;</td>
-						<td style="width: 100px; !important"><?php echo $row['name_kh'];?>&nbsp;</td>
+						<td style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?></td>
+						<td style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format($montFomat); ?></td>
+						<td style="width: 100px; !important"><?php echo $row['name_kh'];?></td>
 						<td><span style="max-width: 330px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $row['land_address'].",".$row['street']; ?></span></td>
 						 <?php if($is_showhouse==0){?>
-						 <td align="center">&nbsp;<?php echo $countland." ".$notupdateLock; ?>&nbsp;</td>
+						 <td align="center"><?php echo $countland." ".$notupdateLock; ?></td>
 						<?php }?>
-						<td align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span>&nbsp;</td>
+						<td align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span></td>
 						<td align="right" style="white-space:nowrap;"><?php 
 						$other_discount = empty($row['other_discount'])?0:$row['other_discount'];
 						echo number_format($row['discount_amount']+$other_discount,2); ?></td>	
@@ -379,7 +382,7 @@ table.tb-footer tr.style-head {
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"></td>
 			                    <td></td>
-			                    <td align="right"><span class="border_bottom"><?php echo $tr->translate("ប្រភេទបង់");?></span>&nbsp;&nbsp;</td>
+			                    <td align="right"><span class="border_bottom"><?php echo $tr->translate("ប្រភេទបង់");?></span></td>
 			                    <td><span class="border_bottom">លក់បាន</span></td>
 			                    <?php 
 			                   	 if($is_showhouse==0){?>
@@ -390,7 +393,7 @@ table.tb-footer tr.style-head {
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right">
-			                    	<?php echo $tr->translate("PROPERTY");?>&nbsp;&nbsp;&nbsp;&nbsp;
+			                    	<?php echo $tr->translate("PROPERTY");?>
 			                    </td>
 			                    <td><?php echo $amount_property; ?>
 			                    </td>
@@ -403,9 +406,9 @@ table.tb-footer tr.style-head {
 			                    <td><?php echo ($payment_1-$payment_0_completed);?></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                    <td align="right">តម្លៃដី/ផ្ទះសរុប&nbsp;&nbsp;$&nbsp;&nbsp;</td>
+			                    <td align="right">តម្លៃដី/ផ្ទះសរុប$</td>
 			                    <td><?php echo number_format($sold_price,2);?></td>
-			                    <td align="right"><?php echo $tr->translate("បង់ផ្តាច់");?>&nbsp;&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("បង់ផ្តាច់");?></td>
 			                    <td><?php echo $payment_2;?></td>
 			                     <?php if($is_showhouse==0){?>
 			                    	<td><?php echo $property_payoff;?></td>
@@ -414,9 +417,9 @@ table.tb-footer tr.style-head {
 			                    <td><?php echo $payment_2-$payment_2_completed; ?></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                    <td align="right"><?php echo $tr->translate("ប្រាក់ដើមបានបង់សរុប");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("ប្រាក់ដើមបានបង់សរុប");?>$</td>
 			                    <td><?php echo number_format($paid_price,2);?></td>
-			                    <td align="right"><?php echo $tr->translate("រំលស់");?>&nbsp;&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("រំលស់");?></td>
 			                    <td><?php echo $payment_3;?></td>
 			                    <?php if($is_showhouse==0){?>
 			                    	<td><?php echo $property_install;?></td>
@@ -425,9 +428,9 @@ table.tb-footer tr.style-head {
 			                    <td><?php echo $payment_3-$payment_3_completed;?></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style"  style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                    <td align="right"><?php echo $tr->translate("ប្រាក់នៅសល់");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
-			                    <td><?php echo number_format($balace_price,2);?>&nbsp;&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("BANK_SCHEDULE");?>&nbsp;&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("ប្រាក់នៅសល់");?>$</td>
+			                    <td><?php echo number_format($balace_price,2);?></td>
+			                    <td align="right"><?php echo $tr->translate("BANK_SCHEDULE");?></td>
 			                    <td style="border-bottom: 4px double #000;"><?php echo $payment_5;?></td>
 			                 	 <?php if($is_showhouse==0){?>
 			                    	<td style="border-bottom: 4px double #000;"><?php echo $property_paybank;?></td>
@@ -438,7 +441,7 @@ table.tb-footer tr.style-head {
 			                  <tr bgcolor="#a0baf5" class="style"  style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 			                    <td align="right"></td>
 			                    <td></td>
-			                    <td align="right"><?php echo $tr->translate("លក់សរុប");?>&nbsp;&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("លក់សរុប");?></td>
 			                    <td style="border-bottom: 4px double #000;"><?php echo $payment_1+$payment_2+$payment_3+$payment_5;?></td>
 			                 	<?php if($is_showhouse==0){?>
 			                    	<td style="border-bottom: 4px double #000;"><?php echo $amount_property;?></td>

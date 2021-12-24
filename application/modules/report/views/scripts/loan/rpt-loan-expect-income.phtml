@@ -21,7 +21,7 @@ dojo.require("dijit.form.DateTextBox");
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT_EXPECT_INCOME');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('REPORT_EXPECT_INCOME');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -125,6 +125,9 @@ dojo.require("dijit.form.DateTextBox");
 				table.tb-footer tr{
 				 line-height: 14px;  padding:2px 0px; height: 25px;
 				}
+				table tr td{
+					padding:0 2px;
+				}
 			</style>
 			<table width="100%">
 				<tr>
@@ -154,7 +157,7 @@ dojo.require("dijit.form.DateTextBox");
 				                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				             </tr>
 			                <tr class="style" align="center" style="font-weight: bold;background: #ccd9ff" >
-			                    <td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+			                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
@@ -202,12 +205,12 @@ dojo.require("dijit.form.DateTextBox");
 								 }
 			               ?>
 			                <tr oncontextmenu="setrowdata(<?php echo $rs['sale_id'];?>);return false;" class="style hover context-menu-one" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';<?php if($total_paid>0){echo 'background:#fdf1f4;';}?>">
-			               		<td style="font-size: 12px; text-align: center;">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-			               		<td >&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-			               		<td >&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>
+			               		<td style="font-size: 12px; text-align: center;"><?php echo $key+1; ?></td>
+			               		<td ><?php echo $rs["branch_name"];?></td>
+			               		<td ><?php echo $rs["name_kh"];?></td>
 			               		<td style="font-size: 12px; line-height: 18px;white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $rs["phone"];?></td>
-			               		<td >&nbsp;<?php echo $rs["land_address"].','.$rs["street"];?>&nbsp;</td>
-			               		<td align="center">&nbsp;
+			               		<td ><?php echo $rs["land_address"].','.$rs["street"];?></td>
+			               		<td align="center">
 			               		
 			               		<?php 
 		                    	if($rs['last_optiontype']==1){//by date
@@ -228,27 +231,27 @@ dojo.require("dijit.form.DateTextBox");
 		                    		}else{
 		                    			echo $rs['payment_type'];
 		                    		}*/
-		                    	?>&nbsp;
+		                    	?>
 			               		</td>
-								<td align="center">&nbsp;<?php echo $rs["no_installment"];?>&nbsp;</td>
-			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonth"],2);?>&nbsp;</td>
-			               		<td align="right">&nbsp;<?php echo number_format($rs["total_interest"],2);?>&nbsp;</td>
-			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonth"]+$rs["total_interest"],2);?>&nbsp;</td>
-			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonthafter"],2);?>&nbsp;</td>
-			               		<td align="right">&nbsp;<?php echo number_format($rs["total_interest_after"],2);?>&nbsp;</td>
-			               		<td align="right">&nbsp;<?php echo number_format($rs["principal_permonthafter"]+$rs["total_interest_after"],2);?>&nbsp;</td>
-			               		<td align="center">&nbsp;<span class="note_<?php echo $rs['sale_id'];?>"><?php echo $rs["expect_income_note"];?></span>&nbsp;</td>
+								<td align="center"><?php echo $rs["no_installment"];?></td>
+			               		<td align="right"><?php echo number_format($rs["principal_permonth"],2);?></td>
+			               		<td align="right"><?php echo number_format($rs["total_interest"],2);?></td>
+			               		<td align="right"><?php echo number_format($rs["principal_permonth"]+$rs["total_interest"],2);?></td>
+			               		<td align="right"><?php echo number_format($rs["principal_permonthafter"],2);?></td>
+			               		<td align="right"><?php echo number_format($rs["total_interest_after"],2);?></td>
+			               		<td align="right"><?php echo number_format($rs["principal_permonthafter"]+$rs["total_interest_after"],2);?></td>
+			               		<td align="center"><span class="note_<?php echo $rs['sale_id'];?>"><?php echo $rs["expect_income_note"];?></span></td>
 			                </tr>
 			                <?php }?>
 			                <tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
-			                	<td colspan="7"><?php echo $tr->translate("PAID");?>&nbsp;<?php echo $paid;?>&nbsp;&nbsp;<?php echo $tr->translate("NOT_PAID");?>&nbsp;&nbsp;<?php echo $i-$paid;?>&nbsp;</td>
-			                	<td>&nbsp;$&nbsp;<?php echo number_format($principal,2);?>&nbsp;</td>
-			                    <td>&nbsp;$&nbsp;<?php echo number_format($interest,2);?>&nbsp;</td>
-			                    <td style="background:#688de0;">&nbsp;$&nbsp;<?php echo number_format($principal+$interest,2);?>&nbsp;</td>
-			                    <td>&nbsp;$&nbsp;<?php echo number_format($p_d,2);?>&nbsp;</td>
-			                    <td>&nbsp;$&nbsp;<?php echo number_format($amt_d1,2);?>&nbsp;</td>
-			                    <td style="background:#f9a3a3;">&nbsp;$&nbsp;<?php echo number_format($amt_d1+$p_d,2);?>&nbsp;</td>
-			                    <td align="center">&nbsp;</td>
+			                	<td colspan="7"><?php echo $tr->translate("PAID");?><?php echo $paid;?><?php echo $tr->translate("NOT_PAID");?><?php echo $i-$paid;?></td>
+			                	<td>$<?php echo number_format($principal,2);?></td>
+			                    <td>$<?php echo number_format($interest,2);?></td>
+			                    <td style="background:#688de0;">$<?php echo number_format($principal+$interest,2);?></td>
+			                    <td>$<?php echo number_format($p_d,2);?></td>
+			                    <td>$<?php echo number_format($amt_d1,2);?></td>
+			                    <td style="background:#f9a3a3;">$<?php echo number_format($amt_d1+$p_d,2);?></td>
+			                    <td align="center"></td>
 			                </tr>
 			            </table>
 			            	<br />

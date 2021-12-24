@@ -3274,7 +3274,7 @@ function updatePaymentStatus($data){
    	   	(SELECT ln_client.name_kh FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS name_kh,
    	   	(SELECT ln_client.sex FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS sex,
    	   	(SELECT ln_client.tel FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS tel,
-   	   	(SELECT  first_name FROM rms_users WHERE id=op.user_id LIMIT 1 ) AS user_name,
+   	   	(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=op.user_id LIMIT 1 ) AS user_name,
    	   	(SELECT ln_view.name_kh FROM `ln_view` WHERE ln_view.type=2 and ln_view.key_code=op.payment_method LIMIT 1) AS payment_type,
    	   	op.status,
    	   	op.is_close
