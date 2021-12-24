@@ -23,7 +23,7 @@
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('MAKE_AGREEMENTLIST');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('MAKE_AGREEMENTLIST');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -98,6 +98,9 @@
 		  }
 		.hide{visibility: visible; height: 110px;}
 		}
+		table tr td{
+			padding:0 2px;
+		}
 	</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 		<tr>
@@ -127,13 +130,13 @@
 		                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 		             </tr>
 	                 <tr bgcolor="#c1d0f3" class="style" align="center" style=" line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; ">
-	                    <td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+	                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
 	                    <td colspan="2"><?php echo $tr->translate("PROPERTY_INFO");?></td>
 	                    <td colspan="5"><?php echo $tr->translate("INFO_INDILOAN");?></td>
-	                    <td rowspan="2">&nbsp;<?php echo $tr->translate("LATE_DAY");?>&nbsp;</td>
-	                    <td rowspan="2">&nbsp;<?php echo $tr->translate("BY_USER");?>&nbsp;</td>
+	                    <td rowspan="2"><?php echo $tr->translate("LATE_DAY");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("BY_USER");?></td>
 	                </tr>
 	                <tr bgcolor="#c1d0f3" class="style" align="center" style=" line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; ">
 	                    <td><?php echo $tr->translate("TYPE");?></td>
@@ -182,12 +185,12 @@
 	             <?php 
 	              	$payment_id = $row['payment_id']?>
 	              	<tr oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" style="font-size: 12px; line-height: 20px; white-space: nowrap;" class="hover context-menu-one">
-						<td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-						<td style="width: 100px; !important">&nbsp;<?php echo $row['name_kh'];?></td>
+						<td align="center"><?php echo $key+1; ?></td>
+						<td style="width: 100px; !important"><?php echo $row['name_kh'];?></td>
 						<td style="line-height: 16px; white-space: normal !important;max-width: 100px;width: 120px;padding: 5px;overflow-wrap: break-word;"><?php echo $row['phone'];?></td>
-						<td align="center">&nbsp;<?php echo $row['propertype']; ?>&nbsp;</td>
-						<td align="left">&nbsp;<?php echo $row['land_address']."(".$row['street'].")"; ?>&nbsp;</td>
-						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold'],2); ?>&nbsp;</td>	
+						<td align="center"><?php echo $row['propertype']; ?></td>
+						<td align="left"><?php echo $row['land_address']."(".$row['street'].")"; ?></td>
+						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
 						<?php 
 							$percent = $db->getFirstDepositBySaleID($row['id'],$row['payment_id']);
 							$percent =$percent['percent'];
@@ -206,12 +209,12 @@
 							$total_day=strtotime($end_dat)-strtotime($row['end_line']);
 							$total_late_day=$total_day/(60*60*24);
 							
-						?>&nbsp;</td>
-						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold']-$row['paid_amount'],2); ?>&nbsp;</td>
-						<td align="center" style="white-space:nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['buy_date'])); ?>&nbsp;</td>
-						<td align="center" style="white-space:nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['end_line']));?>&nbsp;</td>
-						<td align="center" style="white-space:nowrap;">&nbsp;<?php echo $total_late_day;?>&nbsp;</td>
-						<td style="white-space:nowrap;">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
+						?></td>
+						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
+						<td align="center" style="white-space:nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date'])); ?></td>
+						<td align="center" style="white-space:nowrap;"><?php echo date("d-m-Y",strtotime($row['end_line']));?></td>
+						<td align="center" style="white-space:nowrap;"><?php echo $total_late_day;?></td>
+						<td style="white-space:nowrap;"><?php echo $row['user_name'];?></td>
 						</tr>
 					<?php }?>
 	            		<tr>
@@ -219,7 +222,7 @@
 				             <br />
 				             <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
 				                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-				                    <td align="right"><?php echo $tr->translate("PROPERTY");?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				                    <td align="right"><?php echo $tr->translate("PROPERTY");?></td>
 				                    <td><?php echo $amount_property;?></td>
 				                    <td align="right"></td>
 				                    <td></td>
@@ -227,33 +230,33 @@
 				                    <td></td>
 				                 </tr>
 				                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-				                    <td align="right"><?php echo $tr->translate("SALE_AMOUNT");?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				                    <td align="right"><?php echo $tr->translate("SALE_AMOUNT");?></td>
 				                    <td><?php echo $payment_1;?></td>
-				                    <td align="right">&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
+				                    <td align="right"></td>
+				                    <td></td>
+				                    <td></td>
+				                    <td></td>
 				                 </tr>
 				                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-				                    <td align="right"><?php echo $tr->translate("TOTAL_INCASH");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
+				                    <td align="right"><?php echo $tr->translate("TOTAL_INCASH");?>$</td>
 				                    <td><?php echo number_format($sold_price1,2);?></td>
-				                    <td align="right">&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
+				                    <td align="right"></td>
+				                    <td></td>
+				                    <td></td>
+				                    <td></td>
 				                 </tr>
 				                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-				                    <td align="right"><?php echo $tr->translate("TOTAL_PAYMENTED");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
+				                    <td align="right"><?php echo $tr->translate("TOTAL_PAYMENTED");?>$</td>
 				                    <td><?php echo number_format($paid_price1,2);?></td>
-				                    <td align="right"><?php //echo $tr->translate("រំលស់");?>&nbsp;&nbsp;</td>
+				                    <td align="right"><?php //echo $tr->translate("រំលស់");?></td>
 				                    <td><?php //echo $payment_3;?></td>
 				                    <td><?php //echo $payment_3_completed;?></td>
 				                    <td><?php //echo $payment_3-$payment_3_completed;?></td>
 				                 </tr>
 				                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-				                    <td align="right"><?php echo $tr->translate("LOANOUTSTADING");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
+				                    <td align="right"><?php echo $tr->translate("LOANOUTSTADING");?>$</td>
 				                    <td><?php echo number_format($balace_price1,2);?></td>
-				                    <td align="right"><?php //echo $tr->translate("រំលស់");?>&nbsp;&nbsp;</td>
+				                    <td align="right"><?php //echo $tr->translate("រំលស់");?></td>
 				                    <td><?php //echo $payment_3;?></td>
 				                    <td><?php //echo $payment_3_completed;?></td>
 				                    <td><?php //echo $payment_3-$payment_3_completed;?></td>
@@ -264,11 +267,11 @@
 				             <table style="font-family: 'Times New Roman','Khmer OS Battambang'; border-collapse:collapse; font-size:14px;" width="100%" cellspacing="0">
 				                <tr style=" line-height: 24px; ">
 				                    <td>
-				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("PROPERTY");?></span>&nbsp;:&nbsp;<strong><?php //echo $amount_property;?></strong></div>
-				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("SALE_AMOUNT");?></span>&nbsp;:&nbsp;<strong><?php //echo $payment_1;?></strong></div>
-				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("TOTAL_INCASH");?></span>&nbsp;:&nbsp;<strong><?php //echo number_format($sold_price1,2);?></strong></div>
-				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("TOTAL_PAYMENTED");?></span>&nbsp;:&nbsp;<strong><?php //echo number_format($paid_price1,2);?></strong></div>
-				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("LOANOUTSTADING");?></span>&nbsp;:&nbsp;<strong><?php //echo number_format($balace_price1,2);?></strong></div>
+				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("PROPERTY");?></span>:<strong><?php //echo $amount_property;?></strong></div>
+				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("SALE_AMOUNT");?></span>:<strong><?php //echo $payment_1;?></strong></div>
+				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("TOTAL_INCASH");?></span>:<strong><?php //echo number_format($sold_price1,2);?></strong></div>
+				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("TOTAL_PAYMENTED");?></span>:<strong><?php //echo number_format($paid_price1,2);?></strong></div>
+				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("LOANOUTSTADING");?></span>:<strong><?php //echo number_format($balace_price1,2);?></strong></div>
 				                    </td>
 				                </tr>
 				              </table>

@@ -22,7 +22,7 @@
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CANCEL_SALE_REPORT');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('CANCEL_SALE_REPORT');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -102,6 +102,9 @@
 						table.tb-footer tr{
 						 line-height: 14px;  padding:2px 0px; height: 25px;
 						}
+						table tr td{
+							padding:0 2px;
+						}
 					</style>
 	        		<div class="divFooter">
 	        			<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0 auto;padding:0px; border:none;">
@@ -145,26 +148,26 @@
 									$property_type= $row['property_type'];
 								?>
 								   <tr style="font-size: 12px;white-space: nowrap;" align="left">
-								     <td align="center">&nbsp;<?php echo $i; ?></td>
-								     <td>&nbsp;<?php echo $row['project_name'];?></td>
-								     <td align="left">&nbsp;<?php echo $row['client_name'];?></td>
-									 <td align="left">&nbsp;<?php echo $row['type_name'];?></td>
-									 <td align="left">&nbsp;<?php echo $row['land_address'].','.$row['street'];?></td>
-									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo number_format($row['price_sold'],2); ?>$</td>
-									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo number_format($row['paid_amount']);?> $</td>
-									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo number_format($row['price_sold']-$row['paid_amount']);?> $</td>
-									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo (empty($row['installment_paid'])?"កក់ដំបូង":$row['installment_paid']);?> </td>
-									 <td align="center" >&nbsp;<?php echo $row['return_back'];?>&nbsp;</td>
-									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['create_date']));?> </td>
-									 <td align="left" style="font-size: 10px;max-width:180px;white-space: pre-line;">&nbsp;<?php echo $row['reason'];?></td>
-									 <td align="center" >&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
+								     <td align="center"><?php echo $i; ?></td>
+								     <td><?php echo $row['project_name'];?></td>
+								     <td align="left"><?php echo $row['client_name'];?></td>
+									 <td align="left"><?php echo $row['type_name'];?></td>
+									 <td align="left"><?php echo $row['land_address'].','.$row['street'];?></td>
+									 <td align="right" style="white-space: nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>
+									 <td align="right" style="white-space: nowrap;"><?php echo number_format($row['paid_amount'],2);?></td>
+									 <td align="right" style="white-space: nowrap;"><?php echo number_format($row['price_sold']-$row['paid_amount'],2);?></td>
+									 <td align="center" style="white-space: nowrap;"><?php echo (empty($row['installment_paid'])?"កក់ដំបូង":$row['installment_paid']);?></td>
+									 <td align="right" ><?php echo number_format($row['return_back'],2);?></td>
+									 <td align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($row['create_date']));?></td>
+									 <td align="left" style="font-size: 10px;max-width:180px;white-space: pre-line;"><?php echo $row['reason'];?></td>
+									 <td align="center" ><?php echo $row['user_name'];?></td>
 								  </tr>
 								<?php 
 								$total = $total+$row['return_back'];
 						       }?>
 						       <tr style="height: 30px; font-weight:bold; text-align: center;background:#87acff;">
-									<td colspan="9" align="right">&nbsp;<?php echo $tr->translate("ប្រាក់ប្រគល់សរុប");?>&nbsp;</td>
-									<td>&nbsp;<?php echo number_format($total,2);?>&nbsp;</td>
+									<td colspan="9" align="right"><?php echo $tr->translate("ប្រាក់ប្រគល់សរុប");?></td>
+									<td><?php echo number_format($total,2);?></td>
 									<td colspan="3">
 									</td>
 								</tr>

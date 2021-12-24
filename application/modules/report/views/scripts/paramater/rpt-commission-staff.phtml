@@ -22,7 +22,7 @@
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT_COMISSION');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('REPORT_COMISSION');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -106,6 +106,9 @@
 						table.tb-footer tr{
 						 line-height: 14px;  padding:2px 0px; height: 25px;
 						}
+						table tr td{
+							padding:0 2px;
+						}
 					</style>
 					<div class="divFooter">
 			        	<table width="100%" style="margin:0; padding:0;border:none;" >
@@ -143,15 +146,15 @@
 				       	   if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){
 						   $total = $total +$row['comission'];				   ?>
 						<tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
-						     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-						     <td align="center">&nbsp;<?php echo $row['project_name']?>&nbsp;</td>
-							 <td>&nbsp;<?php echo $row['co_khname'];?>&nbsp;</td>
-							 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['tel'];?>&nbsp;</td>
-							 <td align="center" style="white-space: nowrap;">&nbsp;<?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
-							 <td style="white-space: nowrap;">&nbsp;<?php echo $row['land_name'].', '.$row['street'];?>&nbsp;</td>
-							 <td align="right">&nbsp;<?php echo '$ '.number_format($row['comission'],2);?>&nbsp;</td>
-							 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['buy_date']));?>&nbsp;</td>
-							 <td>&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
+						     <td align="center"><?php echo $key+1; ?></td>
+						     <td align="center"><?php echo $row['project_name']?></td>
+							 <td><?php echo $row['co_khname'];?></td>
+							 <td align="center" style="white-space: nowrap;"><?php echo $row['tel'];?></td>
+							 <td align="center" style="white-space: nowrap;"><?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?></td>
+							 <td style="white-space: nowrap;"><?php echo $row['land_name'].', '.$row['street'];?></td>
+							 <td align="right"><?php echo number_format($row['comission'],2);?></td>
+							 <td style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date']));?></td>
+							 <td><?php echo $row['user_name'];?></td>
 						</tr>
 						<?php }
 						 $record = $key;
@@ -166,16 +169,16 @@
 							$old_sale=$rscom['saleid'];
 						?>
 						 <tr oncontextmenu="setrowdata(<?php echo $rscom['payment_id'];?>,1);return false;" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover context-menu-one">
-						     <td align="center">&nbsp;<?php echo $record; ?>&nbsp;</td>
-						     <td align="left">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
-							 <td>&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
-							 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
-							 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
-							 <td align="right">&nbsp;<?php echo $rscom['invoice'];?>&nbsp;</td>
-							 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
-							 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
-							 <td>&nbsp;<?php echo $rscom['user_name'];?>&nbsp;</td>
+						     <td align="center"><?php echo $record; ?></td>
+						     <td align="left"><?php echo $rscom['project_name']?></td>
+							 <td><?php echo $rscom['staff_name'];?></td>
+							 <td align="center"><?php echo $rscom['tel'];?></td>
+							 <td align="center"><?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?></td>
+							 <td style="white-space: nowrap;"><?php echo $rscom['land_address'].', '.$rscom['street'];?></td>
+							 <td align="right"><?php echo $rscom['invoice'];?></td>
+							 <td align="right"><?php echo number_format($rscom['total_amount'],2);?></td>
+							 <td align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($rscom['create_date']));?></td>
+							 <td><?php echo $rscom['user_name'];?></td>
 						</tr>
 						<?php } ?>
 						<?php  $old_sale = '';
@@ -196,16 +199,16 @@
 								$old_sale=$rscom['sale_id'];
 							?>
 							<tr oncontextmenu="setrowdata(<?php echo $rscom['payment_id'];?>,2);return false;" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover context-menu-one">
-								 <td align="center">&nbsp;<?php echo $record; ?>&nbsp;</td>
-								 <td align="left">&nbsp;<?php echo $rscom['branchName']?>&nbsp;</td>
-								 <td>&nbsp;<?php echo $rscom['agencyNname'];?>&nbsp;</td>
-								 <td align="center">&nbsp;<?php echo $rscom['agencyTel'];?>&nbsp;</td>
-								 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
-								 <td style="white-space: nowrap;">&nbsp;<?php echo $rscom['landCode'].', '.$rscom['street'];?>&nbsp;</td>
-								 <td align="right">&nbsp;<?php echo $rscom['receipt_no'];?>&nbsp;</td>
-								 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['payment_amount'],2);?>&nbsp;</td>
-								 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($rscom['date_payment']));?>&nbsp;</td>
-								 <td>&nbsp;<?php echo $rscom['userName'];?>&nbsp;</td>
+								 <td align="center"><?php echo $record; ?></td>
+								 <td align="left"><?php echo $rscom['branchName']?></td>
+								 <td><?php echo $rscom['agencyNname'];?></td>
+								 <td align="center"><?php echo $rscom['agencyTel'];?></td>
+								 <td align="center"><?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?></td>
+								 <td style="white-space: nowrap;"><?php echo $rscom['landCode'].', '.$rscom['street'];?></td>
+								 <td align="right"><?php echo $rscom['receipt_no'];?></td>
+								 <td align="right"><?php echo number_format($rscom['payment_amount'],2);?></td>
+								 <td align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($rscom['date_payment']));?></td>
+								 <td><?php echo $rscom['userName'];?></td>
 							</tr>
 							<?php } ?>
 						<?php } ?>
