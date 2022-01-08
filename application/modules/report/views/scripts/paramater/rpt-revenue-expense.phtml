@@ -3,6 +3,13 @@
 	$frm = $this->frm_search;
 	$db  = new Report_Model_DbTable_DbParamater();
 	$expenseFeatureList = EXPENSE_FEATURE_LIST;
+	
+	$branch_title = $tr->translate("BRAND_TITLE");
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="150px";
+	}
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
@@ -43,371 +50,284 @@ dojo.require("dijit.form.DateTextBox");
 				</div>
 			</div>		
 		</div>
-	</form> 
-	<div style="min-height:22cm; margin:0 auto;">
-	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
-		<tr>
-	    	<td align="center">
-	    	 <div id="divPrint">
-	    	 		<style>
-						tr td.border_bottom{border-bottom: solid 1px #000;}
-						tr td.border_double{border-bottom: double #000;}
-						.style{
-							line-height: 20px;font-size: 14px !important;
-							font-family: 'Times New Roman','Khmer OS Battambang';
+	</form>
+	<div style="width:100%; margin:0 auto;">
+		<div style="min-height:22cm; margin:0 auto;">
+			<div id="divPrint" style="margin: 0 auto;">
+				<style>
+					tr td.border_bottom{border-bottom: solid 1px #000;}
+					tr td.border_double{border-bottom: double #000;}
+					
+					.center{text-align: center !important;}
+					table.content-data{
+						border-collapse:collapse;
+						font-size:13px;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					table.content-data thead tr.style {
+					   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						background: #c1d0f3;
+					}
+					table.tb-footer{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size:13px;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					table.tb-footer tr{
+					 line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
+					}
+					table tr td{
+						padding:0 2px;
+					}
+					tr.voidclass {
+						background: #fff7f7;
+					}
+					
+					.hide{visibility: hidden;}
+					@media print {
+						div.divFooter {
+							position: fixed;
+							top: 0;
+							width: 100%;
+							height: 100px;
+							bottom:0px;
+							margin:0;
 						}
-						th{padding: 5px;}
-						hover:hover{background: #ccc;}
-					</style>
-		        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
-		        		<tr>
-			                <td width="30%">
-								<span id="projectlogo"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="height:80px;max-width: 100%;"></span>
-							</td>
-			                <td width="40%" valign="top">
-			                <ul style="list-style: none;">
-				                <li style="white-space:nowrap;line-height:25px;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></li>
-				                <li style="line-height:20px;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("របាយការណ៍ចំណូលចំណាយ");?></li>
-				                <li style="line-height:25px;text-align:center; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'">
-				                	<span id="projectName"></span>
-				                </li>
-								<li style="line-height:20px;text-align:center;">
-								<?php if (!empty($this->list_end_date['start_date'])){ echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->list_end_date['end_date']));}?>							     
-								 </li>
-							</ul>
-			                </td>
-			                <td width="30%"></td>
-		             </tr> 
-	             <?php $total_income = 0; $total_expense = 0; $net_income =0;?>
-	             <tr>
-	             	<td colspan="3">
-	             		<table  width="100%" style="border-collapse:collapse; font-size: 14px; line-height: 18px;" >  
-	             			<tr>
-	             				<td colspan="3" style="font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណូលពីការលក់");?> </td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;">&nbsp;</strong></td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             			</tr>
-	             			<!-- 
-	             			<tr height="21px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;កក់ប្រាក់&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo  number_format($this->money_deposit['recieve_amount'],2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td >&nbsp;</td>
-	             			</tr>
-	             			<tr height="21px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;កក់បង្គ្រប់&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo number_format($this->money_schedule['recieve_amount'],2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td >&nbsp;</td>
-	             			</tr>
-	             			<tr height="21px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;រំលស់ប្រចាំខែ&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo  number_format($this->money_install['recieve_amount'],2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             			</tr>
-	             			 -->
-	             			 <?php 
-	             			 $totalIncomeFromSale=0;
-	             			 $totalIncomeFromSale = $this->money_deposit['recieve_amount']+$this->money_schedule['recieve_amount']+$this->money_install['recieve_amount'];
-	             			 ?>
-	             			<tr height="21px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;<?php echo $tr->translate("TOTAL_INCOME_FROM_SALE");?>&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo  number_format($totalIncomeFromSale,2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             			</tr>
-	             			
-	             			<?php 
-	             			$totalCredit = 0;
-	             			//if (!empty($this->moneyCredit)){ 
-	             				//$totalCredit  = empty($this->moneyCredit)?0:$this->moneyCredit;
-	             				?>
-	             			<!--
-							<tr height="21px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;<?php //echo $tr->translate("TOTAL_INCOME_FROM_CREDIT_PAYMENT");?>&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php //echo  number_format($totalCredit,2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             			</tr>
-							-->
-							<?php //}?>
-							
-	             			<?php 
-	             			$total_other_income=0;
-	             			
-	             			if (!empty($this->income_changehouse)){ foreach ($this->income_changehouse as $rs){//ចំណូលកែផ្ទះ
-	             				$total_other_income=$total_other_income+$rs['total_amount'];
-	             				?>
-	             			<tr height="21px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;- <?php echo $rs['category_name'];?>&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo  number_format($rs['total_amount'],2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             			</tr>
-	             			<?php
-									}
-								}?>
-								
-							
-	             			<?php 
-		             			$beginingbalance = 0;
-		             			$parent=0;
-		             			$total_sub_cateIncome=0;
-	             			if (!empty($this->income)){ ?>
-	             			<tr>
-	             				<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណូលផ្សេងៗ");?> </td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td align="right">&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td >&nbsp;</td>
-	             			</tr>
-	             			<?php 
-	             			$total_sub_cateIncome=0;
-	             			foreach ($this->income as $indexKey => $income_cate){ 
-		             				if($income_cate['is_beginning']==1){
-		             					$beginingbalance = $beginingbalance+$income_cate['total_amount']; 
-		             					continue;
-		             				}
-	             					$total_other_income = $total_other_income+$income_cate['total_amount'];
-	             				?>
-	             				<?php if ( $income_cate['parent']!=0 AND $parent != $income_cate['parent']){?>
-	             					<?php if ($indexKey>0 && $total_sub_cateIncome>0){?>
-		             				<tr height="21px" class='hover'>
-			             				<td style="width: 20%;">&nbsp;</td>
-			             				<td >&nbsp;&nbsp;</td>
-			             				<td class="" align="right"></td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td class="" align="right">&nbsp;<strong><?php echo number_format($total_sub_cateIncome,2);?></strong>&nbsp;</td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td>&nbsp;</td>
-			             			</tr>
-		             			<?php }?>
-	             					<tr height="21px" class='hover'>
-			             				<td style="width: 20%;">&nbsp;</td>
-			             				<td>&nbsp;<strong><?php echo $income_cate['parent_title'];?></strong>&nbsp;</td>
-			             				<td class="" align="right">&nbsp;&nbsp;</td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td></td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td>&nbsp;</td>
-			             			</tr>
-			             			<?php $parent = $income_cate['parent']; $total_sub_cateIncome=0;?>
-	             				<?php }?>
-	             				<?php if ( $income_cate['parent']==0){?>
-	             					<tr height="21px" class='hover'>
-			             				<td style="width: 20%;">&nbsp;</td>
-			             				<td >&nbsp;<?php echo $income_cate['category_name'];?>&nbsp;</td>
-			             				<td class="" align="right">&nbsp;<?php echo  number_format($income_cate['total_amount'],2);?>&nbsp;</td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td>&nbsp;</td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td>&nbsp;</td>
-			             			</tr>
-	             				<?php }else{ $total_sub_cateIncome = $total_sub_cateIncome + $income_cate['total_amount'];?>
-			             			<tr height="21px" class='hover'>
-			             				<td style="width: 20%;">&nbsp;</td>
-			             				<td >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $income_cate['category_name'];?>&nbsp;</td>
-			             				<td class="" align="right">&nbsp;<?php echo  number_format($income_cate['total_amount'],2);?>&nbsp;</td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td>&nbsp;</td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td >&nbsp;</td>
-			             			</tr>
-	             				<?php }?>
-	             			<?php } 
-							}
-	             			$total_income = $total_other_income+$this->saleicome['recieve_amount']+$totalCredit;?>
-	             			<?php if ($total_sub_cateIncome>0){?>
-	             				<tr height="21px" class='hover'>
-		             				<td style="width: 20%;">&nbsp;</td>
-		             				<td style="border-botom:2px solid #ccc;">&nbsp;&nbsp;</td>
-		             				<td class="" align="right"></td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td class="" align="right">&nbsp;<strong><?php echo number_format($total_sub_cateIncome,2);?></strong>&nbsp;</td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td>&nbsp;</td>
-		             			</tr>
-	             			<?php }?>
-	             			<tr>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;</td>
-	             				<td style="text-align:right ;font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណូលសរុប");?>  </td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td class="border_bottom" align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;"><?php echo number_format($total_income,2);;?></strong>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td >&nbsp;</td>
-	             			</tr>
-	             			<tr>
-	             				<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណាយផ្សេងៗ");?> </td>
-	             				<td align="right">&nbsp;&nbsp;</td>
-	             			</tr>
-					<?php 
-							if($expenseFeatureList==1){
-					?>
-						<?php if(!empty($this->totalExpensePayment)){ $total_expense = $total_expense +$this->totalExpensePayment;?>
-							<tr height="21px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;<?php echo $tr->translate("TOTAL_EXPENSE_PAYMENT");?>&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo  number_format($this->totalExpensePayment,2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             			</tr>
-						<?php }?>
-					<?php }else {?>
-					<?php 
-	             			$parent="";
-	             			$total_sub_cate=0;
-	             			if (!empty($this->expense)) foreach ($this->expense AS $keyIndex => $expense_cate){ 
-	             					$total_expense = $total_expense +$expense_cate['total_amount'];
-	             			?>
-	             			
-	             			
-	             			<?php if ( $expense_cate['parent']!=0 AND $parent != $expense_cate['parent']){?>
-	             				<?php if ($keyIndex>0 && $total_sub_cate>0){?>
-		             				<tr height="21px" class='hover'>
-			             				<td style="width: 20%;">&nbsp;</td>
-			             				<td >&nbsp;&nbsp;</td>
-			             				<td class="" align="right" style="background:#ccc;">&nbsp;<strong><?php echo number_format($total_sub_cate,2);?></strong>&nbsp;</td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td class="" align="right"></td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td>&nbsp;</td>
-			             			</tr>
-		             			<?php }?>
-	             				<tr height="21px" class='hover'>
-		             				<td style="width: 20%;">&nbsp;</td>
-		             				<td>&nbsp;<strong><?php echo $expense_cate['parent_title'];?></strong>&nbsp;</td>
-		             				<td class="" align="right"></td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td></td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td>&nbsp;</td>
-		             			</tr>
-		             			<?php $parent = $expense_cate['parent']; $total_sub_cate=0;?>
-		             		<?php }?>
-		             		<?php if ( $expense_cate['parent']==0){?>
-		             			<tr height="21px" class='hover'>
-		             				<td style="width: 20%;">&nbsp;</td>
-		             				<td>&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
-		             				<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td></td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td>&nbsp;</td>
-		             			</tr>
-		             		<?php }else{ $total_sub_cate = $total_sub_cate+$expense_cate['total_amount'];?>
-		             			<tr height="21px" class='hover'>
-		             				<td style="width: 20%;">&nbsp;</td>
-		             				<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
-		             				<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td></td>
-		             				<td style="width:10px;">&nbsp;</td>
-		             				<td>&nbsp;</td>
-		             			</tr>
-	             			<?php }?>
-	             			<?php }?>
-	             			
-	             			<?php if ($total_sub_cate>0){?>
-		             				<tr height="21px" class='hover'>
-			             				<td style="width: 20%;">&nbsp;</td>
-			             				<td>&nbsp;&nbsp;</td>
-			             				<td class="" align="right" style="background:#ccc;">&nbsp;<strong><?php echo number_format($total_sub_cate,2);?></strong>&nbsp;</td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td ></td>
-			             				<td style="width:10px;">&nbsp;</td>
-			             				<td>&nbsp;</td>
-			             			</tr>
-		             			<?php }?>
-							<?php }?>
-	             			
-		             
-	             			
-								
-	             			<!-- for expense from commission -->
-	             			<?php if (!empty($this->expense_comission)) foreach ($this->expense_comission as $comission){ $total_expense = $total_expense + $comission['total_amount'];?>
-	             			<tr height="21px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;<?php echo $comission['category_name'];?>&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo number_format($comission['total_amount'],2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             			</tr>
-	             			<?php }?>
-							<?php if (!empty($this->totalComissionPay)){ $total_expense = $total_expense + $this->totalComissionPay;?>
-	             			<tr height="21px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;<?php echo $tr->translate("COMMISSION_PAYMENT");?>&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo number_format($this->totalComissionPay,2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             			</tr>
-	             			<?php }?>
-							
-	             			<?php 
-	             			
-	             			if (!empty($this->expense_changehouse)){ foreach ($this->expense_changehouse as $rs){//ចំណាយកែផ្ទះ
-	             				$total_expense=$total_expense+abs($rs['total_amount']);
-	             				?>
-	             			<tr height="21px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td >&nbsp;<?php echo $rs['category_name'];?>&nbsp;</td>
-	             				<td class="" align="right">&nbsp;<?php echo  number_format(abs($rs['total_amount']),2);?>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             			</tr>
-	             			<?php
-									}
-								}?>
-							<?php if($expenseFeatureList!=1){ ?>
-								<?php if (!empty($this->withdraw_capital)) {?>	
+						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+					}
+					@page {
+					margin-left: 5px;
+					margin-right: 5px;
+				 }
+					
+					
+				</style>
+				<table width="100%">
+					<tr>
+				    	<td align="center" valign="top">
+				        	<div class="divFooter">
+					        	<?php echo $this->headerReport;?>
+				            </div>
+				        </td>
+				    </tr>
+					<tr>
+				    	<td >
+							<?php $total_income = 0; $total_expense = 0; $net_income =0;?>
+							<table class="content-data" width="100%"   cellspacing="0" cellpadding="0">
 								<tr>
-									<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ដកដើមទុន");?> </td>
-									<td align="right">&nbsp;&nbsp;</td>
+										<td class="hide" >	            
+										</td >	            
+									</tr>
+								<tr>
+									<td colspan="3" style="font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណូលពីការលក់");?> </td>
+									<td style="width:10px;">&nbsp;</td>
+									<td align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;">&nbsp;</strong></td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<!-- 
+								<tr height="21px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;កក់ប្រាក់&nbsp;</td>
+									<td class="" align="right">&nbsp;<?php echo  number_format($this->money_deposit['recieve_amount'],2);?>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td >&nbsp;</td>
+								</tr>
+								<tr height="21px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;កក់បង្គ្រប់&nbsp;</td>
+									<td class="" align="right">&nbsp;<?php echo number_format($this->money_schedule['recieve_amount'],2);?>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td >&nbsp;</td>
+								</tr>
+								<tr height="21px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;រំលស់ប្រចាំខែ&nbsp;</td>
+									<td class="" align="right">&nbsp;<?php echo  number_format($this->money_install['recieve_amount'],2);?>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								 -->
+								 <?php 
+								 $totalIncomeFromSale=0;
+								 $totalIncomeFromSale = $this->money_deposit['recieve_amount']+$this->money_schedule['recieve_amount']+$this->money_install['recieve_amount'];
+								 ?>
+								<tr height="21px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;<?php echo $tr->translate("TOTAL_INCOME_FROM_SALE");?>&nbsp;</td>
+									<td class="" align="right">&nbsp;<?php echo  number_format($totalIncomeFromSale,2);?>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								
+								<?php 
+								$totalCredit = 0;
+								//if (!empty($this->moneyCredit)){ 
+									//$totalCredit  = empty($this->moneyCredit)?0:$this->moneyCredit;
+									?>
+								<!--
+								<tr height="21px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;<?php //echo $tr->translate("TOTAL_INCOME_FROM_CREDIT_PAYMENT");?>&nbsp;</td>
+									<td class="" align="right">&nbsp;<?php //echo  number_format($totalCredit,2);?>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								-->
+								<?php //}?>
+								
+								<?php 
+								$total_other_income=0;
+								
+								if (!empty($this->income_changehouse)){ foreach ($this->income_changehouse as $rs){//ចំណូលកែផ្ទះ
+									$total_other_income=$total_other_income+$rs['total_amount'];
+									?>
+								<tr height="21px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;- <?php echo $rs['category_name'];?>&nbsp;</td>
+									<td class="" align="right">&nbsp;<?php echo  number_format($rs['total_amount'],2);?>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<?php
+										}
+									}?>
+									
+								
+								<?php 
+									$beginingbalance = 0;
+									$parent=0;
+									$total_sub_cateIncome=0;
+								if (!empty($this->income)){ ?>
+								<tr>
+									<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណូលផ្សេងៗ");?> </td>
+									<td style="width:10px;">&nbsp;</td>
+									<td align="right">&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td >&nbsp;</td>
 								</tr>
 								<?php 
+								$total_sub_cateIncome=0;
+								foreach ($this->income as $indexKey => $income_cate){ 
+										if($income_cate['is_beginning']==1){
+											$beginingbalance = $beginingbalance+$income_cate['total_amount']; 
+											continue;
+										}
+										$total_other_income = $total_other_income+$income_cate['total_amount'];
+									?>
+									<?php if ( $income_cate['parent']!=0 AND $parent != $income_cate['parent']){?>
+										<?php if ($indexKey>0 && $total_sub_cateIncome>0){?>
+										<tr height="21px" class='hover'>
+											<td style="width: 20%;">&nbsp;</td>
+											<td >&nbsp;&nbsp;</td>
+											<td class="" align="right"></td>
+											<td style="width:10px;">&nbsp;</td>
+											<td class="" align="right">&nbsp;<strong><?php echo number_format($total_sub_cateIncome,2);?></strong>&nbsp;</td>
+											<td style="width:10px;">&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									<?php }?>
+										<tr height="21px" class='hover'>
+											<td style="width: 20%;">&nbsp;</td>
+											<td>&nbsp;<strong><?php echo $income_cate['parent_title'];?></strong>&nbsp;</td>
+											<td class="" align="right">&nbsp;&nbsp;</td>
+											<td style="width:10px;">&nbsp;</td>
+											<td></td>
+											<td style="width:10px;">&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<?php $parent = $income_cate['parent']; $total_sub_cateIncome=0;?>
+									<?php }?>
+									<?php if ( $income_cate['parent']==0){?>
+										<tr height="21px" class='hover'>
+											<td style="width: 20%;">&nbsp;</td>
+											<td >&nbsp;<?php echo $income_cate['category_name'];?>&nbsp;</td>
+											<td class="" align="right">&nbsp;<?php echo  number_format($income_cate['total_amount'],2);?>&nbsp;</td>
+											<td style="width:10px;">&nbsp;</td>
+											<td>&nbsp;</td>
+											<td style="width:10px;">&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									<?php }else{ $total_sub_cateIncome = $total_sub_cateIncome + $income_cate['total_amount'];?>
+										<tr height="21px" class='hover'>
+											<td style="width: 20%;">&nbsp;</td>
+											<td >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $income_cate['category_name'];?>&nbsp;</td>
+											<td class="" align="right">&nbsp;<?php echo  number_format($income_cate['total_amount'],2);?>&nbsp;</td>
+											<td style="width:10px;">&nbsp;</td>
+											<td>&nbsp;</td>
+											<td style="width:10px;">&nbsp;</td>
+											<td >&nbsp;</td>
+										</tr>
+									<?php }?>
+								<?php } 
+								}
+								$total_income = $total_other_income+$this->saleicome['recieve_amount']+$totalCredit;?>
+								<?php if ($total_sub_cateIncome>0){?>
+									<tr height="21px" class='hover'>
+										<td style="width: 20%;">&nbsp;</td>
+										<td style="border-botom:2px solid #ccc;">&nbsp;&nbsp;</td>
+										<td class="" align="right"></td>
+										<td style="width:10px;">&nbsp;</td>
+										<td class="" align="right">&nbsp;<strong><?php echo number_format($total_sub_cateIncome,2);?></strong>&nbsp;</td>
+										<td style="width:10px;">&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+								<?php }?>
+								<tr>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;</td>
+									<td style="text-align:right ;font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណូលសរុប");?>  </td>
+									<td style="width:10px;">&nbsp;</td>
+									<td class="border_bottom" align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;"><?php echo number_format($total_income,2);;?></strong>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td >&nbsp;</td>
+								</tr>
+								<tr>
+									<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណាយផ្សេងៗ");?> </td>
+									<td align="right">&nbsp;&nbsp;</td>
+								</tr>
+						<?php 
+								if($expenseFeatureList==1){
+						?>
+							<?php if(!empty($this->totalExpensePayment)){ $total_expense = $total_expense +$this->totalExpensePayment;?>
+								<tr height="21px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;<?php echo $tr->translate("TOTAL_EXPENSE_PAYMENT");?>&nbsp;</td>
+									<td class="" align="right">&nbsp;<?php echo  number_format($this->totalExpensePayment,2);?>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+							<?php }?>
+						<?php }else {?>
+						<?php 
 								$parent="";
-								$total_sub_withdraw_cate=0;
-								 foreach ($this->withdraw_capital AS $keyIndex => $expense_cate){ 
+								$total_sub_cate=0;
+								if (!empty($this->expense)) foreach ($this->expense AS $keyIndex => $expense_cate){ 
 										$total_expense = $total_expense +$expense_cate['total_amount'];
 								?>
 								
 								
 								<?php if ( $expense_cate['parent']!=0 AND $parent != $expense_cate['parent']){?>
-									<?php if ($keyIndex>0 && $total_sub_withdraw_cate>0){?>
+									<?php if ($keyIndex>0 && $total_sub_cate>0){?>
 										<tr height="21px" class='hover'>
 											<td style="width: 20%;">&nbsp;</td>
 											<td >&nbsp;&nbsp;</td>
-											<td class="" align="right" style="background:#ccc;">&nbsp;<strong><?php echo number_format($total_sub_withdraw_cate,2);?></strong>&nbsp;</td>
+											<td class="" align="right" style="background:#ccc;">&nbsp;<strong><?php echo number_format($total_sub_cate,2);?></strong>&nbsp;</td>
 											<td style="width:10px;">&nbsp;</td>
 											<td class="" align="right"></td>
 											<td style="width:10px;">&nbsp;</td>
@@ -423,7 +343,7 @@ dojo.require("dijit.form.DateTextBox");
 										<td style="width:10px;">&nbsp;</td>
 										<td>&nbsp;</td>
 									</tr>
-									<?php $parent = $expense_cate['parent']; $total_sub_withdraw_cate=0;?>
+									<?php $parent = $expense_cate['parent']; $total_sub_cate=0;?>
 								<?php }?>
 								<?php if ( $expense_cate['parent']==0){?>
 									<tr height="21px" class='hover'>
@@ -435,7 +355,7 @@ dojo.require("dijit.form.DateTextBox");
 										<td style="width:10px;">&nbsp;</td>
 										<td>&nbsp;</td>
 									</tr>
-								<?php }else{ $total_sub_withdraw_cate = $total_sub_withdraw_cate+$expense_cate['total_amount'];?>
+								<?php }else{ $total_sub_cate = $total_sub_cate+$expense_cate['total_amount'];?>
 									<tr height="21px" class='hover'>
 										<td style="width: 20%;">&nbsp;</td>
 										<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
@@ -448,55 +368,172 @@ dojo.require("dijit.form.DateTextBox");
 								<?php }?>
 								<?php }?>
 								
+								<?php if ($total_sub_cate>0){?>
+										<tr height="21px" class='hover'>
+											<td style="width: 20%;">&nbsp;</td>
+											<td>&nbsp;&nbsp;</td>
+											<td class="" align="right" style="background:#ccc;">&nbsp;<strong><?php echo number_format($total_sub_cate,2);?></strong>&nbsp;</td>
+											<td style="width:10px;">&nbsp;</td>
+											<td ></td>
+											<td style="width:10px;">&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									<?php }?>
 								<?php }?>
-							<?php }?>
-							
-	             			<tr height="22px" class='hover'>
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="text-align:right;font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណាយសរុប");?> </td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td class="border_bottom" align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;"><?php echo number_format($total_expense,2);?>&nbsp;</strong></td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             			</tr>
-	             			<?php $net_income = $total_income-$total_expense;
-	             			?>
-	             			<tr style="padding-top: 100px;">
-	             				<td style="width: 20%;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="text-align:right ;font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("ប្រាក់ចំណេញសរុប");?> </td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td>&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td class="border_bottom" align="right"><strong style="font-family: Helvetica;font-weight: bold;">&nbsp;<?php if ($net_income<0){echo "(".number_format(abs($net_income),2).")";}else{ echo number_format($net_income,2);}?>&nbsp;</strong></td>
-	             			</tr>
-	             			<tr>
-	             				<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("សមតុល្យដើមគ្រា")." (Beginning Balance)";?> </td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td align="right">&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td class="border_bottom" align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;"><?php echo number_format($beginingbalance,2);?></strong></td>
-	             			</tr>
-	             			<tr>
-	             				<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("សមតុល្យចុងក្រោយ")." (Ending Balance)"?> </td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<td align="right">&nbsp;</td>
-	             				<td style="width:10px;">&nbsp;</td>
-	             				<?php $ending_balance = $beginingbalance+$net_income;?>
-	             				<td class="border_double" align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;"><?php if ($ending_balance<0){echo "(".number_format(abs($ending_balance),2).")";}else{ echo number_format($ending_balance,2);}?></strong></td>
-	             			</tr>
-	             		</table>
-	             	</td>
-	             </tr>
-	            </table>
-	            <br />
-				   <?php echo $this->footerReport;?>
-	            </div>
-	    	</td>
-	    </tr>
-	</table>
+								
+						 
+								
+									
+								<!-- for expense from commission -->
+								<?php if (!empty($this->expense_comission)) foreach ($this->expense_comission as $comission){ $total_expense = $total_expense + $comission['total_amount'];?>
+								<tr height="21px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;<?php echo $comission['category_name'];?>&nbsp;</td>
+									<td class="" align="right">&nbsp;<?php echo number_format($comission['total_amount'],2);?>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<?php }?>
+								<?php if (!empty($this->totalComissionPay)){ $total_expense = $total_expense + $this->totalComissionPay;?>
+								<tr height="21px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;<?php echo $tr->translate("COMMISSION_PAYMENT");?>&nbsp;</td>
+									<td class="" align="right">&nbsp;<?php echo number_format($this->totalComissionPay,2);?>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<?php }?>
+								
+								<?php 
+								
+								if (!empty($this->expense_changehouse)){ foreach ($this->expense_changehouse as $rs){//ចំណាយកែផ្ទះ
+									$total_expense=$total_expense+abs($rs['total_amount']);
+									?>
+								<tr height="21px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td >&nbsp;<?php echo $rs['category_name'];?>&nbsp;</td>
+									<td class="" align="right">&nbsp;<?php echo  number_format(abs($rs['total_amount']),2);?>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<?php
+										}
+									}?>
+								<?php if($expenseFeatureList!=1){ ?>
+									<?php if (!empty($this->withdraw_capital)) {?>	
+									<tr>
+										<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ដកដើមទុន");?> </td>
+										<td align="right">&nbsp;&nbsp;</td>
+									</tr>
+									<?php 
+									$parent="";
+									$total_sub_withdraw_cate=0;
+									 foreach ($this->withdraw_capital AS $keyIndex => $expense_cate){ 
+											$total_expense = $total_expense +$expense_cate['total_amount'];
+									?>
+									
+									
+									<?php if ( $expense_cate['parent']!=0 AND $parent != $expense_cate['parent']){?>
+										<?php if ($keyIndex>0 && $total_sub_withdraw_cate>0){?>
+											<tr height="21px" class='hover'>
+												<td style="width: 20%;">&nbsp;</td>
+												<td >&nbsp;&nbsp;</td>
+												<td class="" align="right" style="background:#ccc;">&nbsp;<strong><?php echo number_format($total_sub_withdraw_cate,2);?></strong>&nbsp;</td>
+												<td style="width:10px;">&nbsp;</td>
+												<td class="" align="right"></td>
+												<td style="width:10px;">&nbsp;</td>
+												<td>&nbsp;</td>
+											</tr>
+										<?php }?>
+										<tr height="21px" class='hover'>
+											<td style="width: 20%;">&nbsp;</td>
+											<td>&nbsp;<strong><?php echo $expense_cate['parent_title'];?></strong>&nbsp;</td>
+											<td class="" align="right"></td>
+											<td style="width:10px;">&nbsp;</td>
+											<td></td>
+											<td style="width:10px;">&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<?php $parent = $expense_cate['parent']; $total_sub_withdraw_cate=0;?>
+									<?php }?>
+									<?php if ( $expense_cate['parent']==0){?>
+										<tr height="21px" class='hover'>
+											<td style="width: 20%;">&nbsp;</td>
+											<td>&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
+											<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
+											<td style="width:10px;">&nbsp;</td>
+											<td></td>
+											<td style="width:10px;">&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									<?php }else{ $total_sub_withdraw_cate = $total_sub_withdraw_cate+$expense_cate['total_amount'];?>
+										<tr height="21px" class='hover'>
+											<td style="width: 20%;">&nbsp;</td>
+											<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $expense_cate['category_name'];?>&nbsp;</td>
+											<td class="" align="right">&nbsp;<?php echo number_format($expense_cate['total_amount'],2);?>&nbsp;</td>
+											<td style="width:10px;">&nbsp;</td>
+											<td></td>
+											<td style="width:10px;">&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									<?php }?>
+									<?php }?>
+									
+									<?php }?>
+								<?php }?>
+								
+								<tr height="22px" class='hover'>
+									<td style="width: 20%;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="text-align:right;font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("ចំណាយសរុប");?> </td>
+									<td style="width:10px;">&nbsp;</td>
+									<td class="border_bottom" align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;"><?php echo number_format($total_expense,2);?>&nbsp;</strong></td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<?php $net_income = $total_income-$total_expense;
+								?>
+								<tr style="padding-top: 100px;">
+									<td style="width: 20%;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="text-align:right ;font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("ប្រាក់ចំណេញសរុប");?> </td>
+									<td style="width:10px;">&nbsp;</td>
+									<td>&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td class="border_bottom" align="right"><strong style="font-family: Helvetica;font-weight: bold;">&nbsp;<?php if ($net_income<0){echo "(".number_format(abs($net_income),2).")";}else{ echo number_format($net_income,2);}?>&nbsp;</strong></td>
+								</tr>
+								<tr>
+									<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("សមតុល្យដើមគ្រា")." (Beginning Balance)";?> </td>
+									<td style="width:10px;">&nbsp;</td>
+									<td align="right">&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<td class="border_bottom" align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;"><?php echo number_format($beginingbalance,2);?></strong></td>
+								</tr>
+								<tr>
+									<td colspan="3" style=" font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light'"> <?php echo $tr->translate("សមតុល្យចុងក្រោយ")." (Ending Balance)"?> </td>
+									<td style="width:10px;">&nbsp;</td>
+									<td align="right">&nbsp;</td>
+									<td style="width:10px;">&nbsp;</td>
+									<?php $ending_balance = $beginingbalance+$net_income;?>
+									<td class="border_double" align="right">&nbsp;<strong style="font-family: Helvetica;font-weight: bold;"><?php if ($ending_balance<0){echo "(".number_format(abs($ending_balance),2).")";}else{ echo number_format($ending_balance,2);}?></strong></td>
+								</tr>
+							</table>
+							<br />
+						   <?php echo $this->footerReport;?>
+						</td>
+				    </tr>
+				</table>			
+					   
+			</div>
+		</div>
 	</div>
+	
 </div>
 <style>
 
@@ -691,10 +728,13 @@ require(["dojo/ready"], function(ready){
 			 document.getElementById('projectName').innerHTML = dijit.byId('branch_id').attr('displayedValue')+"<br />";
 		 }
 		getBranchInfo();
-		
+		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("របាយការណ៍ចំណូលចំណាយ");?>';
+		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	
 		 $("#e15").select2({tags:[<?php echo $tags;?>],placeholder: "<?php echo $tr->translate("CHOOSE_STREET");?>",allowClear: true});
 		 		 
-		 
+		
 	});
 });
 function getAllPropertyBranch(){
@@ -705,8 +745,8 @@ function getAllPropertyBranch(){
 }
 function getBranchInfo(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
-	branch_id = '<?php echo empty($this->list_end_date['branch_id'])?0:$this->list_end_date['branch_id'];?>';
-	if(branch_id==""|| branch_id==0){
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
 		return false;
 	}
 	dojo.xhrPost({
@@ -716,9 +756,14 @@ function getBranchInfo(){
 		},	
 		load: function(data) {
 			var arr = JSON.parse(data);
-			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
-			document.getElementById('projectlogo').innerHTML = imagesUrl;
-
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
 		},
 		error: function(e) {
 		}

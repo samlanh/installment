@@ -70,6 +70,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptGroupmemberAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -94,7 +95,7 @@ class Report_LoanController extends Zend_Controller_Action {
 			'status_search' => -1,
 			'status' => -1,
 			'client_name' => "",
-			'branch_id' => -2,
+			'branch_id' => -1,
 			'land_id'=>-1,
 			'option_pay'=>-1,
 			'receipt_type'=>-1,
@@ -106,6 +107,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	}
 	$search['is_closed']='';
 	$this->view->rssearch = $search;
+	$this->view->search = $search;
 	$this->view->loantotalcollect_list = $db->getALLLoanPayment($search);
 	$this->view->list_end_date = $search;	
 	
@@ -116,6 +118,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	
 	$frmpopup = new Application_Form_FrmPopupGlobal();
 	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptClosingentryAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -406,6 +409,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	
  	$frmpopup = new Application_Form_FrmPopupGlobal();
  	$this->view->footerReport = $frmpopup->getFooterReport();
+ 	$this->view->headerReport = $frmpopup->getLetterHeadReport();
  }
 //  function rptDepositalertAction(){
 //  	$db  = new Report_Model_DbTable_DbLandreport();
@@ -1037,6 +1041,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
 	
 	function rptOtherincomedetailAction(){

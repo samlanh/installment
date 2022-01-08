@@ -17,10 +17,17 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
 	}	
 
 	$dbLoanCollect = new Report_Model_DbTable_DbloanCollect();
+	
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="150px";
+	}
 ?>
 <style>
 .hover:hover{background: #ccc;}
@@ -111,7 +118,7 @@
 		  	bottom:0px;
 			margin:0;
 		  }
-		.hide{visibility: visible; height: 110px;}
+		.hide{visibility: visible; height:  <?php echo $classHideHeight;?>;}
 		}
 	thead tr td{
 			text-align: center;
@@ -146,19 +153,7 @@
 		<tr>
 	    	<td align="center">
 	        	<div class="divFooter">
-	        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0 auto;padding:0px; border:none;">
-	            	<tr>
-	                	<td width="30%"><img src="<?php echo $logo;?>" style="max-height:85px;max-width:100%;"></td>
-	                	<td width="40%" valign="top">
-	                	<ul>
-                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
-                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_LOAN_COLLECT");?></li>
-                			<li style="text-align:center; font-size:14px;"><?php echo date("d-M-Y",strtotime($this->search['end_date']));?></li>
-                		</ul>
-                    </td>
-	                    <td width="30%"></td>
-	                </tr>
-	            </table>
+					<?php echo $this->headerReport;?>
 	            </div>
 	        </td>
 	    </tr>
@@ -332,7 +327,7 @@
 	                    	?>
 	                 </td>
 	                 <td align="center"><span ><?php if(!empty($row["last_pay_date"])){ echo date("Y-m-d",strtotime($row["last_pay_date"]));}else{ echo "-";} ?></span></td>
-	                 <td align="center"><span <span style="line-height: 18px;white-space: pre-wrap !important;max-width: 200px;width: 200px;padding: 5px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note_<?php echo $row['sale_id'];?>"><?php echo $row["expect_income_note"];?></span></td>
+	                 <td align="center"><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 200px;width: 200px;padding: 5px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note_<?php echo $row['sale_id'];?>"><?php echo $row["expect_income_note"];?></span></td>
 	                 </tr>
 		               <?php 
 							$amt_d1 = $amt_d1+$row['principal_permonthafter'];
@@ -386,7 +381,11 @@
 <script>
 dojo.require("dijit.form.Textarea");
 require(["dojo/ready"], function(ready){
-
+	 getBranchInfo();
+	 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+	 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_LOAN_COLLECT");?>';
+	 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	
 });
 
 
@@ -437,5 +436,33 @@ function setrowdata(index){
 var recordid ='';
 function gotoAction(){
 	 window.open(url+row);
+}
+
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
 }
 </script>

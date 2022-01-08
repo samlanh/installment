@@ -345,6 +345,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		);
   	}
   	$this->view->list_end_date=$search;
+  	$this->view->search=$search;
   	$db  = new Report_Model_DbTable_DbParamater();
   
   	$this->view->expense = $db->getExpenseCategory($search,2);
@@ -378,6 +379,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function commissionbalanceAction(){
   	$db  = new Report_Model_DbTable_DbParamater();

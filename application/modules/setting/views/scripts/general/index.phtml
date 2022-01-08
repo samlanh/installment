@@ -3,6 +3,14 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $this->headTitle($tr->translate('GENERAL_SETTING')); 
 echo $this->headTitle();
 $frm = $this->frm_general;
+
+$defaultLogo = $this->baseUrl()."/images/logo.jpg";
+if(!empty($this->row['logo']['keyValue'])){
+	if (file_exists(PUBLIC_PATH."/images/photo/logo/".$this->row['logo']['keyValue'])){
+		$defaultLogo = $this->baseUrl().'/images/photo/logo/'.$this->row['logo']['keyValue'];
+	}
+}
+
 ?>
 <style>
 div.cke_contents.cke_reset {
@@ -78,7 +86,7 @@ tr.header td {
 		    			<div class="form-group">
 		    				<div class="col-sm-4"><?php echo $tr->translate('Logo')?></div>
 		    				<div class="col-sm-8">
-		    					<img class="image_view" id="image_view" src="<?php //echo $this->baseUrl().'/images/'.$profile;?>" alt=""  />
+		    					<img class="image_view" id="image_view" src="<?php echo $defaultLogo;?>" alt=""  />
 								<div class="button_browse">
 									<span><?php echo $tr->translate('Change Logo')?><span><i class="fa fa-camera" aria-hidden="true"></i></span></span>
 									<input class="btn_borwse_image"  type="file" id="photo" name="photo" onchange="loadImage()">
