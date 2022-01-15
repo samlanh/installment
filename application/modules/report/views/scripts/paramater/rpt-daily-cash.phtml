@@ -10,17 +10,19 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
 	}
 	
 	$expenseFeatureList = EXPENSE_FEATURE_LIST;
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
 ?>
-	<script>
-		dojo.require("dijit.form.DateTextBox");
-	</script>
-	<style>
-		.hover:hover{background: #ccc;}
-	</style>
+<style>
+	.hover:hover{background: #ccc;}
+</style>
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT_DAILY_CASH");?></title>
 <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
@@ -86,68 +88,73 @@
 	    	<td align="left">
 	    	 <div id="divPrint">
 	    	 	<style>
-						.style{
-							line-height: 20px;font-size: 12px !important;
-							font-family: 'Times New Roman','Khmer OS Battambang';
-							}
-							th{padding: 5px;}
-							table { page-break-inside:auto }
-							tr{ page-break-inside:avoid; page-break-after:auto; }
-							
-							
-							table.content-data{
-								border-collapse:collapse;
-								border:1px solid #000; 
-								font-size:13px;
-								font-family: 'Times New Roman','Khmer OS Battambang';
-								white-space: nowrap;
-								line-height: 22px;
-							}
-							table.content-data tr.style,
-							table.content-data thead tr.style {
-							   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
-								background: #c1d0f3;
-							}
-							table.tb-footer{
-								border-collapse:collapse;
-								border:1px solid #000; 
-								font-family: 'Times New Roman','Khmer OS Battambang';
-								font-size:11px;
-							}
-							table.tb-footer tr{
-							 line-height: 14px;  padding:2px 0px; height: 25px;
-							}
-							td.h2{
-								font-weight:normal;
-						}
-						table tr td{
-							padding:0 2px;
-						}
-						</style>
-			        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
-			        	<tr>
-			        		<td colspan="3" style="border:1px solid #fff;">
-				        		<div class="divFooter">
-					        		<table  width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;" >
-						                <tr>
-							                <td width="20%"><img src="<?php echo $logo;?>" height="85px"></td>
-							                <td width="60%" valign="top">
-								                <h2 style="text-align:center; font-weight:200; font-size:18px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></h2>
-								                <h2 style="text-align:center; font-weight:200; font-size:16px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_DAILY_CASH");?></h2>
-								                <p style="text-align:center; font-weight:200; font-size:13px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if (!empty($this->search['start_date'])){ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
-							                </td>
-						                	<td width="20%"></td>
-					                	</tr>
-					               </table>
-				               </div>
-			               </td>
-			             </tr>
-			            <tr>
+					.style{
+						line-height: 20px;font-size: 12px !important;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					th{padding: 5px;}
+					table { page-break-inside:auto }
+					tr{ page-break-inside:avoid; page-break-after:auto; }
+						
+						
+					table.content-data{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size:13px;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+						white-space: nowrap;
+						line-height: 22px;
+					}
+					table.content-data tr.style,
+					table.content-data thead tr.style {
+						line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						background: #c1d0f3;
+					}
+					table.tb-footer{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-family: 'Times New Roman','Khmer OS Battambang';
+						font-size:11px;
+					}
+					table.tb-footer tr{
+						line-height: 14px;  padding:2px 0px; height: 25px;
+					}
+					td.h2{
+						font-weight:normal;
+					}
+					table tr td{
+						padding:0 2px;
+					}
+					.hide{visibility: hidden;}
+					@media print {
+					 div.divFooter {
+						position: absolute;
+						top: 0;
+						width: 100%;
+						height: 100px;
+						bottom:0px;
+						margin:0;
+					  }
+					  .hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+					}
+				</style>
+			    <table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
+					<tr>
+						<td colspan="3" style="border:1px solid #fff;">
+							<div class="divFooter">
+								<?php echo $this->headerReport;?>
+						   </div>
+					   </td>
+					 </tr>
+					
+					 <tr>
+						<td colspan="3" class="hide" >							
+						</td>
+					</tr>
+					<tr>
 			        <?php 
 					
 			            $category_id=0; $category_id_expense=0; 
-			        
-					
 	                	 $amt_d1 = 0;$amt_d2 = 0;$amt_d3 = 0;$amt_d4 = 0;$amt_d5 = 0;
 	                	 $i=1;
 	                	 $total_d=0;
@@ -163,31 +170,33 @@
 	                	 $houserepair=0;
 	                ?>
 	            	<td colspan="3" id="exportExcel">
-	            			<table class="content-data" width="100%" border="1" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
-						         <?php if(!empty($this->collectMoney)){?>
-						             <tr>
-						            	<td colspan="14" align="center" >
-						            		<h2 style=" font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light';padding: 0;margin: 0;">
-								             	<span><?php echo $tr->translate("COLLECT_MONEY_INCOME");?></span>
-								             </h2>
-						            	</td>
-						            </tr>
-					                <tr class="style" align="center">
-					                    <td><?php echo $tr->translate("NUM");?></td>
-					                    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-					                    <td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-					                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-					                    <td><?php echo $tr->translate("PAYMENT_TYPE");?></td>   
-					                    <td><?php echo $tr->translate("PAID_PRINCIPAL");?></td>
-					                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
-					                    <td><?php echo $tr->translate("INTEREST");?></td>
-					                    <td><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
-					                    <td><?php echo $tr->translate("TOTAL");?></td>    
-					                    <td><?php echo $tr->translate("INPUT_DATE");?></td>
-					                    <td><?php echo $tr->translate("RECIEPT_NO");?></td>
-					                    <td><?php echo $tr->translate("PAYMENT_OPTION");?></td>
-					                    <td><?php echo $tr->translate("BY_USER");?></td>
-					                </tr>
+						<table class="content-data" width="100%" border="1" style="border-collapse:collapse; border:1px solid #000; " cellspacing="0">
+							
+									
+							<?php if(!empty($this->collectMoney)){?>
+								 <tr>
+									<td colspan="14" align="center" >
+										<h2 style=" font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light';padding: 0;margin: 0;">
+											<span><?php echo $tr->translate("COLLECT_MONEY_INCOME");?></span>
+										 </h2>
+									</td>
+								</tr>
+								<tr class="style" align="center">
+									<td><?php echo $tr->translate("NUM");?></td>
+									<td><?php echo $tr->translate("BRANCH_NAME");?></td>
+									<td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+									<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+									<td><?php echo $tr->translate("PAYMENT_TYPE");?></td>   
+									<td><?php echo $tr->translate("PAID_PRINCIPAL");?></td>
+									<td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
+									<td><?php echo $tr->translate("INTEREST");?></td>
+									<td><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+									<td><?php echo $tr->translate("TOTAL");?></td>    
+									<td><?php echo $tr->translate("INPUT_DATE");?></td>
+									<td><?php echo $tr->translate("RECIEPT_NO");?></td>
+									<td><?php echo $tr->translate("PAYMENT_OPTION");?></td>
+									<td><?php echo $tr->translate("BY_USER");?></td>
+								</tr>
 			               
 			                <?php $is_set =0; if(!empty($this->collectMoney)) foreach ($this->collectMoney as $index => $rs){ ?>
 			               <?php 
@@ -665,3 +674,44 @@
   
 	</div>
 </div>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	require(["dojo/ready"], function(ready){
+		ready(function(){
+			 getBranchInfo();
+			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_DAILY_CASH");?>';
+			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+		});
+		
+	});
+	
+	
+	function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

@@ -12,7 +12,12 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
+	}
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
 	}
 ?>
 <meta charset="utf-8">
@@ -89,7 +94,7 @@ dojo.require("dijit.form.DateTextBox");
 		  	bottom:0px;
 			margin:0;
 		  }
-		.hide{visibility: visible; height: 110px;}
+		.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
 		}
 		thead tr td{
 			text-align: center;
@@ -124,19 +129,7 @@ dojo.require("dijit.form.DateTextBox");
 			<tr>
 		    	<td align="center">
 		        	<div class="divFooter">
-			        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;">
-			            	<tr>
-			                	<td width="30%"><img src="<?php echo $logo;?>" height="85px"></td>
-			                	<td width="40%" valign="top">
-			                	    <ul>
-			                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
-			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("LOAN_OUTSTADING");?></li>
-			                			<li style="text-align:center; font-size:14px;"><?php echo date('D-d-m-Y',strtotime($this->fordate));?></li>
-			                		</ul>
-			                	</td>
-			                    <td width="30%"></td>
-			                </tr> 
-			            </table>
+			        	<?php echo $this->headerReport;?>
 		            </div>
 		        </td>
 		    </tr>
@@ -255,11 +248,21 @@ dojo.require("dijit.form.DateTextBox");
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <script>
+
+
+
 	dojo.require("dojo.data.ItemFileWriteStore"); 
 	var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
 	require(["dojo/ready"], function(ready){
 		ready(function(){
 			 getAllPropertyBranch();
+			 
+			 getBranchInfo();
+			document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+			document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("LOAN_OUTSTADING");?>';
+			document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	
+	
 		});
 		new dijit.form.FilteringSelect({
 			store: property_store,
@@ -301,4 +304,31 @@ dojo.require("dijit.form.DateTextBox");
 			}
 		});
 	}
+	
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
 </script>

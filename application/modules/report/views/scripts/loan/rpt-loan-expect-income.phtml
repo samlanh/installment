@@ -11,7 +11,12 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
+	}
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
 	}
 ?>
 <script>
@@ -100,7 +105,7 @@ dojo.require("dijit.form.DateTextBox");
 				  	bottom:0px;
 					margin:0;
 				  }
-				.hide{visibility: visible; height: 110px;}
+				.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
 				}
 				.hover:hover{background:#ccc;}
 				table.content-data{
@@ -133,19 +138,7 @@ dojo.require("dijit.form.DateTextBox");
 				<tr>
 			    	<td align="center">
 			        	<div class="divFooter">
-				        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;">
-				            	<tr>
-				                	<td width="30%"><img src="<?php echo $logo;?>" style="height:80px;max-width:100%;"></td>
-				                	<td width="40%" valign="top" align="center">
-				                		<ul>
-				                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></li>
-				                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_EXPECT_INCOME");?></li>
-				                			<li style="text-align:center; font-size:14px;"><?php if (!empty($this->search['start_date'])) { echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';}echo date("D-d-M-Y",strtotime($this->search['end_date']));?></li>
-				                		</ul>
-				                	</td>
-				                    <td width="30%"></td>
-				                </tr> 
-				            </table>
+							<?php echo $this->headerReport;?>
 			           </div>
 			        </td>
 			    </tr>
@@ -160,7 +153,6 @@ dojo.require("dijit.form.DateTextBox");
 			                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
 			                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 			                    <td colspan="5" style="text-align: center;"><?php echo $tr->translate("PAID_INFO");?></td>
 			                    <td colspan="3" style="text-align: center;"><?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?></td>
@@ -207,9 +199,8 @@ dojo.require("dijit.form.DateTextBox");
 			                <tr oncontextmenu="setrowdata(<?php echo $rs['sale_id'];?>);return false;" class="style hover context-menu-one" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';<?php if($total_paid>0){echo 'background:#fdf1f4;';}?>">
 			               		<td style="font-size: 12px; text-align: center;"><?php echo $key+1; ?></td>
 			               		<td ><?php echo $rs["branch_name"];?></td>
-			               		<td ><?php echo $rs["name_kh"];?></td>
-			               		<td style="font-size: 12px; line-height: 18px;white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $rs["phone"];?></td>
-			               		<td ><?php echo $rs["land_address"].','.$rs["street"];?></td>
+			               		<td ><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" ><?php echo $rs["name_kh"]; if(!empty($rs["phone"])){ echo "<br />".$rs["phone"]; }?></span></td>
+			               		<td ><span style="max-width: 330px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $rs["land_address"].','.$rs["street"];?></span></td>
 			               		<td align="center">
 			               		
 			               		<?php 
@@ -240,7 +231,7 @@ dojo.require("dijit.form.DateTextBox");
 			               		<td align="right"><?php echo number_format($rs["principal_permonthafter"],2);?></td>
 			               		<td align="right"><?php echo number_format($rs["total_interest_after"],2);?></td>
 			               		<td align="right"><?php echo number_format($rs["principal_permonthafter"]+$rs["total_interest_after"],2);?></td>
-			               		<td align="center"><span class="note_<?php echo $rs['sale_id'];?>"><?php echo $rs["expect_income_note"];?></span></td>
+			               		<td align="center"><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 200px;width: 200px;padding: 5px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note_<?php echo $rs['sale_id'];?>"><?php echo $rs["expect_income_note"];?></span></td>
 			                </tr>
 			                <?php }?>
 			                <tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
@@ -288,6 +279,16 @@ dojo.require("dijit.form.DateTextBox");
 </div>
 <script>
 dojo.require("dijit.form.Textarea");
+require(["dojo/ready"], function(ready){
+		ready(function(){
+			 getBranchInfo();
+			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_EXPECT_INCOME");?>';
+			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+		});
+		
+});
+	
 var urlUpdateInfo = '<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'updatenote-expect-income')); ?>';
 function upDateCustomerInfo(){
 	if(dijit.byId('updateFormInfo').validate()){
@@ -333,5 +334,32 @@ function setrowdata(index){
 var recordid ='';
 function gotoAction(){
 	 window.open(url+row);
+}
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
 }
 </script>

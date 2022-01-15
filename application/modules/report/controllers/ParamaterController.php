@@ -115,6 +115,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptExpenseAction(){ // by Vandy
  	 if($this->getRequest()->isPost()){
@@ -168,6 +169,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptDailyCashAction(){ 
   	if($this->getRequest()->isPost()){
@@ -213,6 +215,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptAgreementAction(){
   	
@@ -300,6 +303,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function  rptCommissionStaffAction(){
   	$db  = new Report_Model_DbTable_DbParamater();
@@ -965,7 +969,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   
   public function rptExpensePaymentAction(){
 		try{
-		if($this->getRequest()->isPost()){
+			if($this->getRequest()->isPost()){
     			$search = $this->getRequest()->getPost();
     		}
     		else{
@@ -995,6 +999,11 @@ class Report_ParamaterController extends Zend_Controller_Action {
 		$frm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+  		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
+		
 	}
 	
 	public function rptExpenseDetailAction(){

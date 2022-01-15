@@ -10,7 +10,13 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
+	}
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
 	}
 ?>
 <script>
@@ -87,7 +93,7 @@
 					  	bottom:0px;
 						margin:0;
 					  }
-						.hide{visibility: visible; height: 110px;}
+						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
 					}
 					table tr td{
 						padding: 1px;
@@ -118,18 +124,8 @@
 					}
 					</style>
 					<div class="divFooter">
-		        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
-			        	<tr>
-			                <td width="25%"><img src="<?php echo $logo;?>" style="max-height:85px;max-width:100%;"></td>
-			                <td width="50%" valign="top">
-			                <h2 style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-weight:200; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;//$tr->translate("BRAND_TITLE");?></h2>
-			                <h2 style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-weight:200;font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_INCOME");?></h2>
-			                <p style="text-align:center; font-size:14px; font-weight:200; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("d-M-Y",strtotime($this->search['end_date']));}?></p>
-			                </td>
-			                <td width="25%"></td>
-			             </tr> 
-			          </table>
-			          </div>
+						<?php echo $this->headerReport;?>
+					</div>
 			         <table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:0;border:none;" >
 		            	<tr>	
 		            	<td colspan="3" id="exportExcel">
@@ -243,6 +239,12 @@
  require(["dojo/ready"], function(ready){
  	ready(function(){
  		 getAllPropertyBranch();
+		 
+		getBranchInfo();
+		document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_INCOME");?>';
+		document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	
  	});
  	new dijit.form.FilteringSelect({
  		store: property_store,
@@ -317,4 +319,30 @@
 	 }
  }
  
+ function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
  </script>
