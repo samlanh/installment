@@ -32,6 +32,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
 
   function rptPropertiesAction(){ // by Vandy
@@ -49,7 +50,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'streetlist'=>''
   				);
   	}
-  	$this->view->list_end_date = $search;
+  	$this->view->search = $search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllProperties($search);
   	
@@ -57,6 +58,10 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$row=$frm->FrmFrmProperty();
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_property=$row;
+	
+	$frmpopup = new Application_Form_FrmPopupGlobal();
+	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptCancelSaleAction(){ // by Vandy
   	if($this->getRequest()->isPost()){
@@ -81,6 +86,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
+  
   }
   function rptIncomeAction(){ // by Vandy
   	if($this->getRequest()->isPost()){
@@ -333,6 +340,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptRevenueExpenseAction(){
   	if($this->getRequest()->isPost()){
@@ -455,6 +463,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   
   function verifyagreementAction(){
@@ -597,6 +606,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	}
   
   	$this->view->result=$search;
+  	$this->view->search=$search;
   
   	$db  = new Report_Model_DbTable_DbLnClient();
   	$this->view->client_list =$db->getAllLnClient($search);
@@ -617,6 +627,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	 
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   
   
@@ -797,6 +808,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	 
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptPlonglistAction(){
   	if($this->getRequest()->isPost()){
@@ -871,33 +883,34 @@ class Report_ParamaterController extends Zend_Controller_Action {
 	  $this->view->footerReport = $frmpopup->getFooterReport();
   }
   
-  function rptContactListAction(){
-	  
-		if($this->getRequest()->isPost()){
-			$formdata=$this->getRequest()->getPost();
-			$search = $formdata;
-		}else{
-			$search = array(
-				'adv_search' => '',
-				'status' => -1,		
-				'proccessSearch'=>-1,
-				'know_by'=>-1,			
-				'start_date'=> date('Y-m-d'),
-				'end_date'=>date('Y-m-d')								
-				);
-		}
-		$db  = new Report_Model_DbTable_DbParamater();
-		$row = $db->AllHistoryContactList($search);
-		$this->view->row = $row;
-	  
-		$frm = new Application_Form_FrmAdvanceSearch();
-		$frm = $frm->AdvanceSearch();
-		Application_Model_Decorator::removeAllDecorator($frm);
-		$this->view->frm_search = $frm;
-		$this->view->search=$search;
-		
-		$frmpopup = new Application_Form_FrmPopupGlobal();
-	  $this->view->footerReport = $frmpopup->getFooterReport();
+function rptContactListAction(){
+  
+	if($this->getRequest()->isPost()){
+		$formdata=$this->getRequest()->getPost();
+		$search = $formdata;
+	}else{
+		$search = array(
+			'adv_search' => '',
+			'status' => -1,		
+			'proccessSearch'=>-1,
+			'know_by'=>-1,			
+			'start_date'=> date('Y-m-d'),
+			'end_date'=>date('Y-m-d')								
+			);
+	}
+	$db  = new Report_Model_DbTable_DbParamater();
+	$row = $db->AllHistoryContactList($search);
+	$this->view->row = $row;
+  
+	$frm = new Application_Form_FrmAdvanceSearch();
+	$frm = $frm->AdvanceSearch();
+	Application_Model_Decorator::removeAllDecorator($frm);
+	$this->view->frm_search = $frm;
+	$this->view->search=$search;
+	
+	$frmpopup = new Application_Form_FrmPopupGlobal();
+	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   
   function rptPropertyAction(){ 

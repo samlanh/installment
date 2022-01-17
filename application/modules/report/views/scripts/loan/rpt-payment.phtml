@@ -427,12 +427,9 @@
 				 dojo.byId("staff_lbl").innerHTML = '<?php echo $tr->translate("AGENTCY");?> : '+dijit.byId('agency_id').attr('displayedValue');
 			 }
 			 
-		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_CLIENT_PAYMENT");?>';
-		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
-		 
-	
-			 
+			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_CLIENT_PAYMENT");?>';
+			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
 		});
 		new dijit.form.FilteringSelect({
 			store: property_store,
@@ -475,7 +472,7 @@
 		});
 	}
 	
-	function getBranchInfo(){
+function getBranchInfo(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
 	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
 	if(branch_id=="" || branch_id<=0){

@@ -3662,7 +3662,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					}
 					ul.headReport li span,
 					ul.headReport li{
-						line-height: 20px;
+						line-height: 18px;
 						text-align:center; 
 						font-size:14px;
 						font-family:'.'"Times New Roman"'.','.'"Khmer OS Muol Light"'.';
@@ -3670,16 +3670,16 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					}
 					ul.headReport li.small-text,
 					ul.headReport li.small-text span{
-						line-height: 16px;
+						line-height: 14px;
 						text-align:center; 
-						font-size:12px;
+						font-size:11px;
 						font-family:'.'"Times New Roman"'.','.'"Khmer OS Battambang"'.';
 						
 					}
 					ul.reportTitle {
 						background: #ffffff;
 						display: block;
-						margin-top: -20px;
+						margin-top: -40px;
 						
 					}
 					ul.reportTitle li,
@@ -3695,7 +3695,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<table class="tableTop" width="100%" style="border-bottom: double 5px #337ab7;">
 					<tr>
 						<td width="20%" id="projectlogo"><img src="'.$defaultLogo.'" style=" height:85px; max-width: 100%; " ></td>
-						<td width="60%" valign="top" style=" padding-bottom: 35px;">
+						<td width="60%" valign="top" style=" padding-bottom: 40px;">
 							<ul class="headReport">
 								<li style="font-size:'.FONTSIZE_REPORT.'; " id="companyTitle">'.$companyName.'</li>
 								<li><span id="companyTitleEn">'.$companyNameEn.'</span></li>
@@ -3714,8 +3714,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						<td width="60%" valign="top">
 							<ul class="reportTitle">
 								<li style="font-size:'.FONTSIZE_REPORT.'; font-family:'."'Khmer OS Muol Light'".'"><span id="reportTitle"></span></li>
-								<li style="font-size:'.FONTSIZE_REPORT.';"><span id="dateReport"></span></li>
-								<li style="font-size:'.FONTSIZE_REPORT.';"><span id="staff_lbl"></span></li>
+								<li style="font-size:12px;"><span id="dateReport"></span></li>
+								<li style="font-size:12px;"><span id="staff_lbl"></span></li>
 							</ul>
 						</td>
 						<td width="20%"></td>
