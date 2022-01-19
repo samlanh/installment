@@ -27,13 +27,6 @@ class Project_UpdatepriceController extends Zend_Controller_Action {
 			$rs_rows= $db->getAllRoad($search);
 			$this->view->rs = $rs_rows;
 			
-// 			$glClass = new Application_Model_GlobalClass();
-// 			$list = new Application_Form_Frmtable();
-// 			$collumns = array("BRANCH_NAME","STREET","PROPERTY_TYPE","PRICE");
-// 			$link=array(
-// 					'module'=>'project','controller'=>'updateprice','action'=>'edit',
-// 			);
-// 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('street_name'=>$link,'price'=>$link,'branch_name'=>$link));
 		}catch(Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -57,10 +50,15 @@ class Project_UpdatepriceController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$branch_id = $this->getRequest()->getParam("branch_id");
 		$branch_id = empty($branch_id)?null:$branch_id;
+		
+		$property_type = $this->getRequest()->getParam("pro_type");
+		$property_type = empty($property_type)?null:$property_type;
+		
 		$db = new Project_Model_DbTable_Dbupdateprice();
 		if($this->getRequest()->isPost()){
 			try{
 				$data = $this->getRequest()->getPost();
+				$data['branch_id']=$branch_id;
 				$db->updatePrice($data);
 				Application_Form_FrmMessage::Sucessfull('EDIT_SUCCESS',"/project/updateprice");
 			}catch (Exception $e){
@@ -68,7 +66,7 @@ class Project_UpdatepriceController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		$row = $db->getPropertiesByStreet($id,$branch_id);
+		$row = $db->getPropertiesByStreet($id,$branch_id,$property_type);
 	    $this->view->result=$row;
 		if(empty($row)){
 			$this->_redirect("/group/updateprice");
