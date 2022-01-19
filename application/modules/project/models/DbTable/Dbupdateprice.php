@@ -13,6 +13,7 @@ class Project_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
 				  	(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
 				  	street AS street_name,
 	  				(SELECT type_nameen FROM `ln_properties_type` WHERE id=ln_properties.property_type) AS properties_type,
+	  				property_type as pro_type,
 				  	price,
 				  	branch_id
 	  		 FROM `ln_properties` WHERE street!="" ';
@@ -35,17 +36,21 @@ class Project_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
 	  	$where.=" GROUP BY branch_id,street,property_type ORDER BY branch_id DESC,street ASC";
 	  	return  $db->fetchAll($sql.$where);
     }
-    public function getPropertiesByStreet($street,$branch_id){
+    public function getPropertiesByStreet($street,$branch_id,$property_type){
     	$db = $this->getAdapter();
     	$sql = "SELECT *,
 				(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
 				(SELECT name_kh FROM `ln_view` WHERE type = 28 AND key_code=is_lock LIMIT 1) sale_type,
 				(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type limit 1) AS  pro_type
-    	FROM $this->_name WHERE is_buy=0 AND street = ".$db->quote($street);
+    	FROM $this->_name WHERE is_lock=0 AND street = ".$db->quote($street);
     	if (!empty($branch_id)){
     		$sql.=" AND branch_id =".$branch_id;
     	}
+    	if(!empty($property_type)){
+    		$sql.=" AND property_type =".$property_type;
+    	}
     	$sql.=" ORDER BY price DESC, cast(land_address as unsigned) ";
+//     	echo $sql;exit();
     	return $db->fetchAll($sql);
     }
     function updatePrice($data){
@@ -65,24 +70,24 @@ class Project_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
     				$row['land_price']=0;$row['house_price']=0;$row['price']=0;
     			}
     			$arr_price = array(
-    					'property_id'=>$i,
-    					"old_landprice"=>$row['land_price'],
-    					'old_houseprice'=>$row['house_price'],
-    					'old_price'=>$row['price'],
+    				'property_id'=>$i,
+    				"branch_id"=>$row['branch_id'],
+    				"old_landprice"=>$row['land_price'],
+    				'old_houseprice'=>$row['house_price'],
+    				'old_price'=>$row['price'],
     						
-    					"land_price"=>$data['land_price'],
-    					'house_price'=>$data['house_price'],
-    					'price'=>$data['sold_price'],
-    					'user_id'=>$this->getUserId(),
-    					'note'=>$data['note'],
-    					'update_date'=>date("Y-m-d h:i:s")
+    				"land_price"=>$data['land_price'],
+    				'house_price'=>$data['house_price'],
+    				'price'=>$data['sold_price'],
+    				'user_id'=>$this->getUserId(),
+    				'note'=>$data['note'],
+    				'update_date'=>date("Y-m-d h:i:s")
     			);
     			$this->insert($arr_price);
     			
     			$this->_name="ln_properties";
-    			$where=" is_buy=0 AND id=".$i;
+    			$where=" is_lock=0 AND id=".$i;
     			$this->update($arr, $where);
-    			
     		}
     	}
     }

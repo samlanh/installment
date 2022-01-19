@@ -9,7 +9,7 @@ class Report_Model_DbTable_DbLnClient extends Zend_Db_Table_Abstract
     	 $from_date =(empty($search['start_date']))? '1': "create_date >= '".$search['start_date']." 00:00:00'";
     	 $to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 23:59:59'";
     	 $where = " AND ".$from_date." AND ".$to_date;
-    	 
+
          $sql=" SELECT *,
          (SELECT 
 			CONCAT(COALESCE(p.land_address,''),',',COALESCE(p.street,''))
@@ -18,6 +18,7 @@ class Report_Model_DbTable_DbLnClient extends Zend_Db_Table_Abstract
 			AND s.client_id=v_getallclient.client_id LIMIT 1 )  AS house_name 
 
          FROM v_getallclient WHERE 1";
+
           if(!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = trim(addslashes($search['adv_search']));
