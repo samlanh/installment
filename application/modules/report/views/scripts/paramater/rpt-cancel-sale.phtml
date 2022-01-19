@@ -10,19 +10,23 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
+	}
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
 	}
 ?>
-<script>
-	dojo.require("dijit.form.DateTextBox");
-</script>
+
 <meta charset="utf-8">
 <title><?php echo $tr->translate("CANCEL_SALE_REPORT");?></title>
 <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CANCEL_SALE_REPORT');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('CANCEL_SALE_REPORT');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -69,17 +73,17 @@
 						}
 						th{padding: 2px;}
 						.hide{visibility: hidden;}
-								@media print {
-								  div.divFooter {
-								    position: fixed;
-								    top: 0;
-								  	width: 100%;
-								  	height: 100px;
-								  	bottom:0px;
-									margin:0;
-								  }
-								.hide{visibility: visible; height: 110px;}
-								}
+						@media print {
+						  div.divFooter {
+							position: fixed;
+							top: 0;
+							width: 100%;
+							height: 100px;
+							bottom:0px;
+							margin:0;
+						  }
+							.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+						}
 						table.content-data{
 							border-collapse:collapse;
 							border:1px solid #000; 
@@ -102,23 +106,14 @@
 						table.tb-footer tr{
 						 line-height: 14px;  padding:2px 0px; height: 25px;
 						}
+						table tr td{
+							padding:0 2px;
+						}
 					</style>
 	        		<div class="divFooter">
-	        			<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0 auto;padding:0px; border:none;">
-				        	<tr>
-				                <td width="30%"><img src="<?php echo $logo;?>" style="height:80px;max-width:100%;"></td>
-				                <td width="40%" valign="top">
-				                <h2 style="white-space:nowrap;text-align:center; font-size:14px; font-weight:normal; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></h2>
-				                <h2 style="text-align:center; font-size:14px; font-weight:normal; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("CANCEL_SALE_REPORT");?></h2>
-				                <h2 style="text-align:center; font-size:14px; font-weight:normal;"><?php if(!empty($this->search['from_date_search'])){echo date("d-M-Y",strtotime($this->search['from_date_search'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['to_date_search']));}?></h2>
-				                <td width="30%"></td>
-				             </tr> 
-			             </table>
+	        			<?php echo $this->headerReport;?>
 			          </div>
-		          <table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="margin:0; padding:0; border:none;" >
-		            <tr>
-		            	<td colspan="3">
-		            		<table id="exportExcel" class="content-data" width="100%"  border="1" >  
+		          <table id="exportExcel" class="content-data" width="100%"  border="1" >  
 						      	 <thead>
 					                <tr class="hide" style="border:1px solid #000;">
 						                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
@@ -145,34 +140,31 @@
 									$property_type= $row['property_type'];
 								?>
 								   <tr style="font-size: 12px;white-space: nowrap;" align="left">
-								     <td align="center">&nbsp;<?php echo $i; ?></td>
-								     <td>&nbsp;<?php echo $row['project_name'];?></td>
-								     <td align="left">&nbsp;<?php echo $row['client_name'];?></td>
-									 <td align="left">&nbsp;<?php echo $row['type_name'];?></td>
-									 <td align="left">&nbsp;<?php echo $row['land_address'].','.$row['street'];?></td>
-									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo number_format($row['price_sold'],2); ?>$</td>
-									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo number_format($row['paid_amount']);?> $</td>
-									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo number_format($row['price_sold']-$row['paid_amount']);?> $</td>
-									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo (empty($row['installment_paid'])?"កក់ដំបូង":$row['installment_paid']);?> </td>
-									 <td align="center" >&nbsp;<?php echo $row['return_back'];?>&nbsp;</td>
-									 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['create_date']));?> </td>
-									 <td align="left" style="font-size: 10px;max-width:180px;white-space: pre-line;">&nbsp;<?php echo $row['reason'];?></td>
-									 <td align="center" >&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
+								     <td align="center"><?php echo $i; ?></td>
+								     <td><?php echo $row['project_name'];?></td>
+								     <td align="left"><?php echo $row['client_name'];?></td>
+									 <td align="left"><?php echo $row['type_name'];?></td>
+									 <td align="left"><?php echo $row['land_address'].','.$row['street'];?></td>
+									 <td align="right" style="white-space: nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>
+									 <td align="right" style="white-space: nowrap;"><?php echo number_format($row['paid_amount'],2);?></td>
+									 <td align="right" style="white-space: nowrap;"><?php echo number_format($row['price_sold']-$row['paid_amount'],2);?></td>
+									 <td align="center" style="white-space: nowrap;"><?php echo (empty($row['installment_paid'])?"កក់ដំបូង":$row['installment_paid']);?></td>
+									 <td align="right" ><?php echo number_format($row['return_back'],2);?></td>
+									 <td align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($row['create_date']));?></td>
+									 <td align="left" style="font-size: 10px;max-width:180px;white-space: pre-line;"><?php echo $row['reason'];?></td>
+									 <td align="center" ><?php echo $row['user_name'];?></td>
 								  </tr>
 								<?php 
 								$total = $total+$row['return_back'];
 						       }?>
 						       <tr style="height: 30px; font-weight:bold; text-align: center;background:#87acff;">
-									<td colspan="9" align="right">&nbsp;<?php echo $tr->translate("ប្រាក់ប្រគល់សរុប");?>&nbsp;</td>
-									<td>&nbsp;<?php echo number_format($total,2);?>&nbsp;</td>
+									<td colspan="9" align="right"><?php echo $tr->translate("ប្រាក់ប្រគល់សរុប");?></td>
+									<td><?php echo number_format($total,2);?></td>
 									<td colspan="3">
 									</td>
 								</tr>
 								
 						    </table>
-		            	</td>
-		             </tr>
-		           </table>
 			          <br />
 			          <?php echo $this->footerReport;?>
 	            </div>
@@ -180,3 +172,45 @@
 	    </tr>
 	</table>
 </div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	require(["dojo/ready"], function(ready){
+		ready(function(){
+			getBranchInfo();
+			document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+			document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("CANCEL_SALE_REPORT");?>';
+			document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['from_date_search'])){ if( date("Y-m-d",strtotime($this->search['from_date_search']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['to_date_search'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['to_date_search']));} }else{ echo date("d-M-Y",strtotime($this->search['to_date_search'])); }?>'; 
+		});
+		
+	});
+	
+	
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

@@ -11,10 +11,17 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
 	}
+	
 	$showOtherDis = OTHER_DIS_OPTION;
 	$showEditSchedule = SHOW_EDIT_SCHEDULE;
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
 ?>
 <meta charset="utf-8">
 <script>
@@ -25,7 +32,7 @@ dojo.require("dijit.form.DateTextBox");
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('LOAN_DISBURSE');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('LOAN_DISBURSE');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -108,7 +115,7 @@ dojo.require("dijit.form.DateTextBox");
 		  	bottom:0px;
 			margin:0;
 		  }
-		.hide{visibility: visible; height: 110px;}
+			.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
 		}
 		.divFooter table{
 			font-family: 'Times New Roman','Khmer OS Battambang';
@@ -132,28 +139,21 @@ dojo.require("dijit.form.DateTextBox");
 		table.tb-footer tr{
 		 line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;
 		}
-.border_bottom {
-    border-bottom: 2px solid #000;
-}
+		.border_bottom {
+			border-bottom: 2px solid #000;
+		}
+		table tr td{
+			padding:0 2px;
+		}
+		
+		
+		
 	</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 		<tr>
 	    	<td align="center">
 	        	<div class="divFooter">
-		        	<table width="100%">
-		            	<tr>
-		                	<td width="30%"><img src="<?php echo $logo;?>" height="85px" ></td>
-		                	<td width="40%" valign="top">
-		                		<ul>
-		                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;?></li>
-		                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("LOAN_DISBURSE");?></li>
-		                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;"><?php if(!empty($this->list_end_date['start_date'])){echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
-		                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;"><?php if($this->branch_id>0){ echo $tr->translate("BRANCH_NAME").' '.@$this->loanrelease_list[0]['branch_name']; }?></li>
-		                		</ul>
-		                	</td>
-		                    <td width="30%"></td>
-		                </tr> 
-		            </table>
+		        	<?php echo $this->headerReport;?>
 	            </div>
 	        </td>
 	    </tr>
@@ -168,12 +168,12 @@ dojo.require("dijit.form.DateTextBox");
 		                <td colspan="18" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 		             </tr>
 	                 <tr bgcolor="#c1d0f3" class="style" align="center" >
-	                    <td rowspan="2">&nbsp;<span><?php echo $tr->translate("NUM");?></span>&nbsp;</td>
-	                    <td rowspan="2">&nbsp;<span><?php echo $tr->translate("CUSTOMER_NAME");?></span>&nbsp;</td>
-	                    <td colspan="4">&nbsp;<span><?php echo $tr->translate("PROPERTY_INFO");?></span>&nbsp;</td>
-	                    <td colspan="<?php echo $colspanDIS;?>">&nbsp;<span><?php echo $tr->translate("INFO_INDILOAN");?></span>&nbsp;</td>
-	                    <td colspan="8">&nbsp;<span><?php echo $tr->translate("PAYMENT_INFO");?></span>&nbsp;</td>
-	                    <td rowspan="2">&nbsp;<span><?php echo $tr->translate("BY_USER");?></span>&nbsp;</td>
+	                    <td rowspan="2"><span><?php echo $tr->translate("NUM");?></span></td>
+	                    <td rowspan="2"><span><?php echo $tr->translate("CUSTOMER_NAME");?></span></td>
+	                    <td colspan="4"><span><?php echo $tr->translate("PROPERTY_INFO");?></span></td>
+	                    <td colspan="<?php echo $colspanDIS;?>"><span><?php echo $tr->translate("INFO_INDILOAN");?></span></td>
+	                    <td colspan="8"><span><?php echo $tr->translate("PAYMENT_INFO");?></span></td>
+	                    <td rowspan="2"><span><?php echo $tr->translate("BY_USER");?></span></td>
 	                </tr>
 	                <tr bgcolor="#c1d0f3" class="style" align="center" >
 	                    <td><?php echo $tr->translate("TYPE");?></td>
@@ -344,23 +344,23 @@ dojo.require("dijit.form.DateTextBox");
 	             <?php }}
 	              	$payment_id = $row['payment_id']?>
 	              	<tr oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" style="line-height: 20px; white-space: nowrap;" class="hover context-menu-one">
-						<td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-						<!-- <td ><a target="_blank" style="color:#000; text-decoration: none;" href="<?php //echo $link;?>"><?php //echo $row['branch_name']; ?></a>&nbsp;</td> -->
-						<!--<td >&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php //echo $link;?>"><?php //echo $row['client_number']; ?></a>&nbsp;</td> -->
-						<td width="100px">&nbsp;<?php echo $row['name_kh'];?>&nbsp;</td>
-						<td>&nbsp;<?php echo $row['propertype']; ?>&nbsp;</td>
-						<!--<td>&nbsp;<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>">&nbsp;<?php echo $row['land_code']; ?></a>&nbsp;</td> -->	
+						<td align="center"><?php echo $key+1; ?></td>
+						<!-- <td ><a target="_blank" style="color:#000; text-decoration: none;" href="<?php //echo $link;?>"><?php //echo $row['branch_name']; ?></a></td> -->
+						<!--<td ><a target="_blank" style="color:#000; text-decoration: none;" href="<?php //echo $link;?>"><?php //echo $row['client_number']; ?></a></td> -->
+						<td width="100px"><?php echo $row['name_kh'];?></td>
+						<td><?php echo $row['propertype']; ?></td>
+						<!--<td><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['land_code']; ?></a></td> -->	
 						<td align="left"><span style="max-width: 330px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $row['land_address']; ?></span></td>
-						<td>&nbsp;<?php echo $row['street'];?>&nbsp;</td>
-						<td align="center">&nbsp;<?php echo $countland; ?>&nbsp;</td>
+						<td><?php echo $row['street'];?></td>
+						<td align="center"><?php echo $countland; ?></td>
 						
-						<td align="right">&nbsp;<span style="line-height:15px;">&nbsp;<?php echo number_format($row['price_before'],2); ?></span>&nbsp;</td>
-						<td style="white-space:nowrap;">&nbsp;<?php echo number_format($row['discount_percent'],2); ?>&nbsp;</td>	
-						<td align="right" style="white-space:nowrap;">&nbsp;<?php 
+						<td align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span></td>
+						<td align="center"><?php echo number_format($row['discount_percent'],2); ?></td>	
+						<td align="right" style="white-space:nowrap;"><?php 
 						$other_discount = empty($row['other_discount'])?0:$row['other_discount'];
-						echo number_format($row['discount_amount']+$other_discount,2); ?>&nbsp;</td>
-						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold'],2); ?>&nbsp;</td>	
-						<!-- <td align="left"><span style="line-height:15px;">&nbsp;<?php //echo $row['other_fee']; ?></span>&nbsp;</td>-->
+						echo number_format($row['discount_amount']+$other_discount,2); ?></td>
+						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
+						<!-- <td align="left"><span style="line-height:15px;"><?php //echo $row['other_fee']; ?></span></td>-->
 						<?php 
 // 							$percent = $db->getFirstDepositBySaleID($row['id'],$row['payment_id']);
 // 							$percent =$percent['percent'];
@@ -380,20 +380,16 @@ dojo.require("dijit.form.DateTextBox");
 								$paidAmoutn = $row['paid_amount']+$row['totalAmountCreadit'];
 								echo number_format($paidAmoutn,2);
 							}
-						?>&nbsp;</td>
-						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold']-$paidAmoutn,2);//echo number_format($row['price_sold']-$row['paid_amount'],2); ?>&nbsp;</td>
-						<!-- <td style="white-space:nowrap; font-size:10px;text-align: left;">&nbsp;<?php //echo $row['paymenttype']; ?>&nbsp;</td> -->
-						<td style="white-space:nowrap; text-align: center;"><?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['total_duration']; }
-						if($row['payment_id']==6){ echo $row['times']."ដង";}?>&nbsp;</td>
-						<td style="white-space:nowrap;">&nbsp;<?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['interest_rate']; }?>&nbsp;</td>
-						<td style="white-space:nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['buy_date'])); ?>&nbsp;</td>
-						<!--<td>&nbsp;<?php //if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['startcal_date']));}?>&nbsp;</td> -->
-						<td style="max-width:120px;white-space: normal;"><?php if($row['payment_id']==1){echo "<span style='font-size:10px;line-height:15px;'>".$row['note']."</span>"; } if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['first_payment'])); }?>&nbsp;</td>
-						<td style="white-space:nowrap;" ><?php 
-							$date= new DateTime($row['end_line']);
-							echo $date->format("d-m-Y");
-						?>&nbsp;</td>
-						<td style="white-space:nowrap;" ><?php echo $row['user_name'];?>&nbsp;</td>
+						?></td>
+						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$paidAmoutn,2);//echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
+						<!-- <td style="white-space:nowrap; font-size:10px;text-align: left;"><?php //echo $row['paymenttype']; ?></td> -->
+						<td align="center"><?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['total_duration']; } if($row['payment_id']==6){ echo $row['times']."ដង";}?></td>
+						<td align="center"><?php if($row['payment_id']==3 OR $row['payment_id']==4){ echo $row['interest_rate']; }?></td>
+						<td align="center" style="white-space:nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date'])); ?></td>
+						<!--<td><?php //if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['startcal_date']));}?></td> -->
+						<td style="max-width:120px;white-space: normal;"><?php if($row['payment_id']==1){echo "<span style='font-size:10px;line-height:15px;'>".$row['note']."</span>"; } if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['first_payment'])); }?></td>
+						<td align="center" style="white-space:nowrap;" ><?php 	$date= new DateTime($row['end_line']);	echo $date->format("d-m-Y");?></td>
+						<td align="center" style="white-space:nowrap;" ><?php echo $row['user_name'];?></td>
 						</tr>
 					<?php }?>
 	            		<tr>
@@ -401,94 +397,94 @@ dojo.require("dijit.form.DateTextBox");
 				             <br />
 				             <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TYPE");?></span>&nbsp;&nbsp;</td>
+			                 	<td></td>
+			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TYPE");?></span></td>
 			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("SALE_AMOUNT");?></span></td>
 			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_INCASH");?></span></td>
 			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_PAYMENTED");?></span></td>
 			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("LOANOUTSTADING");?></span></td>
 			                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("ចំនួនអចលនទ្រព្យ");?></span></td>
-			                    <td>&nbsp;</td>
+			                    <td></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("SALE_CANCEL");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                 	<td></td>
+			                    <td align="right"><?php echo $tr->translate("SALE_CANCEL");?></td>
 			                    <td align="center"><?php echo $payment_0;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format(0,2);//number_format($paid_price0,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price0,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format(0,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_cancel,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
+			                    <td align="right">$<?php echo number_format(0,2);//number_format($paid_price0,2);?></td>
+			                    <td align="right">$<?php echo number_format($paid_price0,2);?></td>
+			                    <td align="right">$<?php echo number_format(0,2);?></td>
+			                    <td align="right"><?php echo number_format($amt_pro_payment_cancel,0);?></td>
+			                    <td></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("DEPOSIT");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                 	<td></td>
+			                    <td align="right"><?php echo $tr->translate("DEPOSIT");?></td>
 			                    <td align="center"><?php echo $payment_1;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price1,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price1,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price1,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_1,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
+			                    <td align="right">$<?php echo number_format($sold_price1,2);?></td>
+			                    <td align="right">$<?php echo number_format($paid_price1,2);?></td>
+			                    <td align="right">$<?php echo number_format($balace_price1,2);?></td>
+			                    <td align="right"><?php echo number_format($amt_pro_payment_1,0);?></td>
+			                    <td></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("PAYOFF_PAID");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                 	<td></td>
+			                    <td align="right"><?php echo $tr->translate("PAYOFF_PAID");?></td>
 			                    <td align="center"><?php echo $payment_2;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price2,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price2,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price2,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_2,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
+			                    <td align="right">$<?php echo number_format($sold_price2,2);?></td>
+			                    <td align="right">$<?php echo number_format($paid_price2,2);?></td>
+			                    <td align="right">$<?php echo number_format($balace_price2,2);?></td>
+			                    <td align="right"><?php echo number_format($amt_pro_payment_2,0);?></td>
+			                    <td></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("FIXED_PAYMENT");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                 	<td></td>
+			                    <td align="right"><?php echo $tr->translate("FIXED_PAYMENT");?></td>
 			                    <td align="center"><?php echo $payment_3;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price3,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price3,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price3,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_3,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
+			                    <td align="right">$<?php echo number_format($sold_price3,2);?></td>
+			                    <td align="right">$<?php echo number_format($paid_price3,2);?></td>
+			                    <td align="right">$<?php echo number_format($balace_price3,2);?></td>
+			                    <td align="right"><?php echo number_format($amt_pro_payment_3,0);?></td>
+			                    <td></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("FIXIBLE");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                 	<td></td>
+			                    <td align="right"><?php echo $tr->translate("FIXIBLE");?></td>
 			                    <td align="center"><?php echo $payment_6;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price6,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price6,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price6,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_6,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
+			                    <td align="right">$<?php echo number_format($sold_price6,2);?></td>
+			                    <td align="right">$<?php echo number_format($paid_price6,2);?></td>
+			                    <td align="right">$<?php echo number_format($balace_price6,2);?></td>
+			                    <td align="right"><?php echo number_format($amt_pro_payment_6,0);?></td>
+			                    <td></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("INSTALLMENT");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                	<td></td>
+			                    <td align="right"><?php echo $tr->translate("INSTALLMENT");?></td>
 			                    <td align="center"><?php echo $payment_4;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price4,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price4,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price4,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_4,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
+			                    <td align="right">$<?php echo number_format($sold_price4,2);?></td>
+			                    <td align="right">$<?php echo number_format($paid_price4,2);?></td>
+			                    <td align="right">$<?php echo number_format($balace_price4,2);?></td>
+			                    <td align="right"><?php echo number_format($amt_pro_payment_4,0);?></td>
+			                    <td></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="border-bottom: 4px double #000; line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-			                 	<td>&nbsp;</td>
-			                    <td align="right"><?php echo $tr->translate("BANK_SCHEDULE");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			                 	<td></td>
+			                    <td align="right"><?php echo $tr->translate("BANK_SCHEDULE");?></td>
 			                    <td align="center"><?php echo $payment_5;?></td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($sold_price5,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($paid_price5,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;$&nbsp;<?php echo number_format($balace_price5,2);?>&nbsp;</td>
-			                    <td align="right">&nbsp;<?php echo number_format($amt_pro_payment_5,0);?>&nbsp;</td>
-			                    <td>&nbsp;</td>
+			                    <td align="right">$<?php echo number_format($sold_price5,2);?></td>
+			                    <td align="right">$<?php echo number_format($paid_price5,2);?></td>
+			                    <td align="right">$<?php echo number_format($balace_price5,2);?></td>
+			                    <td align="right"><?php echo number_format($amt_pro_payment_5,0);?></td>
+			                    <td></td>
 			                 </tr>
 			                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px;  font-weight: bold; font-size:14px; padding:2px 0px; height: 25px;">
-			                    <td align="right"><?php echo $tr->translate("ALL_TOTAL");?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			                    <td>&nbsp;</td>
+			                    <td align="right"><?php echo $tr->translate("ALL_TOTAL");?></td>
+			                    <td></td>
 			                    <td align="center" ><?php echo $payment_0+$payment_1+$payment_2+$payment_3+$payment_4+$payment_5+$payment_6;?></td>
-			                    <td align="right" >&nbsp;$&nbsp;<?php echo number_format($paid_price0+$sold_price1+$sold_price2+$sold_price3+$sold_price4+$sold_price5+$sold_price6,2);?>&nbsp;</td>
-			                    <td align="right" >&nbsp;$&nbsp;<?php echo number_format($paid_price0+$paid_price1+$paid_price2+$paid_price3+$paid_price4+$paid_price5+$paid_price6,2);?>&nbsp;</td>
-			                    <td align="right" >&nbsp;$&nbsp;<?php echo number_format($balace_price1+$balace_price2+$balace_price3+$balace_price4+$balace_price5+$balace_price6,2);?>&nbsp;</td>
-			                 	 <td align="right">&nbsp;<?php echo number_format($amount_property,0);?>&nbsp;</td>
-			                 	<td>&nbsp;</td>
+			                    <td align="right" >$<?php echo number_format($paid_price0+$sold_price1+$sold_price2+$sold_price3+$sold_price4+$sold_price5+$sold_price6,2);?></td>
+			                    <td align="right" >$<?php echo number_format($paid_price0+$paid_price1+$paid_price2+$paid_price3+$paid_price4+$paid_price5+$paid_price6,2);?></td>
+			                    <td align="right" >$<?php echo number_format($balace_price1+$balace_price2+$balace_price3+$balace_price4+$balace_price5+$balace_price6,2);?></td>
+			                 	 <td align="right"><?php echo number_format($amount_property,0);?></td>
+			                 	<td></td>
 			                 </tr>
 			              </table>
 			             </td>
@@ -508,6 +504,11 @@ var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php e
 require(["dojo/ready"], function(ready){
 	ready(function(){
 		 getAllPropertyBranch();
+		 getBranchInfo();
+		 
+		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("LOAN_DISBURSE");?>';
+		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
 	});
 	new dijit.form.FilteringSelect({
 		store: property_store,
@@ -589,5 +590,32 @@ function setrowdata(index){
 var recordid ='';
 function gotoAction(){
 	 window.open(url+row, '_blank');
+}
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
 }
 </script>

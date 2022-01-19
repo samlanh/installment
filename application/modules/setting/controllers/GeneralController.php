@@ -73,6 +73,8 @@ public function init()
 		$row['signatur_agree'] = $db_gs->geLabelByKeyName('signatur_agree');
 		
 		$row['autocalcualte_period'] = $db_gs->geLabelByKeyName('autocalcualte_period');
+		$row['logo'] = $db_gs->geLabelByKeyName('logo');
+		$this->view->row = $row;
 		
 		$fm = new Setting_Form_FrmGeneral();
 		$frm = $fm->FrmGeneral($row);

@@ -11,7 +11,13 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
+	}
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
 	}
 	
 ?>	
@@ -74,29 +80,27 @@
 	 <div id="divPrint">
 	<style>
 		table {page-break-inside:auto }
-		      tr{ page-break-inside:avoid; page-break-after:auto; }
-		      #header {
-		        display: table-header-group;
-		        page-break-inside:avoid; page-break-after:auto;
-		      }
+	  tr{ page-break-inside:avoid; page-break-after:auto; }
+	  #header {
+		display: table-header-group;
+		page-break-inside:avoid; page-break-after:auto;
+	  }
+	  table tr th{background-color: #ccc;}		
+	  @page {
+		margin-left: 5px;
+		margin-right: 5px;
+	 }
 	</style>
-		<div id="exportExcel">
+		<div>
 			<table  style="background:#fff; margin: 0 auto; ;white-space: nowrap;width: 100%">
 				<tr>
-					<td width="30%" align="center">
-						<img src="<?php echo $logo;?>" style="max-height:85px;max-width:100%;">
-					</td>
-					<td width="40%" align="center">
-						<span style=" font-family: Arial Black;color:#000; font-size: <?php echo FONTSIZE_REPORT;?>;font-family:'Times New Roman','Khmer OS Muol Light';"><?php echo $tr->translate('BRAND_TITLE');?></span><br />
-						<span style=" font-family: Arial Black;color:#000; font-size: <?php echo FONTSIZE_REPORT;?>;font-family:'Times New Roman','Khmer OS Muol Light';"><?php echo $tr->translate('RPT_CATE_EXPENSE')?></span><br />
-						<span style=" font-family: Arial Black;color:#000; font-size: 13px;font-family:'Times New Roman','Khmer OS Muol Light';"><?php if(!empty($this->search["start_date"])){?>For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));}?></span>
-					</td>
-					<td width="30%" align="center">
+					<td colspan="3">
+						<div class="divFooter">
+							<?php echo $this->headerReport;?>
+						</div>
 					</td>
 				</tr>
-				<style>
-					table tr th{background-color: #ccc;}										
-				</style>
+				
 				<tr>
 					<td colspan="3" id="exportExcel" valign="top">
 						<table cellpadding="0"​ style="font-family:'Times New Roman','Khmer OS Battambang';margin:0 auto;width:100%; " >
@@ -211,3 +215,44 @@
 			</div>
 	</div>	
 </div>
+<script>
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		
+		getBranchInfo();
+		document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_CATE_EXPENSE");?>';
+		document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	
+		 		 
+		
+	});
+});
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

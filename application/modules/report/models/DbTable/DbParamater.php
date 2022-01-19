@@ -389,7 +389,7 @@ function getAllBranch($search=null){
     		cheque_issuer,other_invoice,
     		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
     		cheque,total_amount,description,date,
-    		(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
+    		(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
     		status 
     			FROM ln_expense WHERE status=1 AND total_amount>0 ";
     		$sql.=" AND (SELECT v.capital_widthdrawal FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ln_expense.`category_id` LIMIT 1)=0 ";
@@ -2969,7 +2969,7 @@ function getAllBranch($search=null){
 					(SELECT tel FROM `ln_staff` WHERE co_id=cp.agency_id LIMIT 1) AS tel,
 					(SELECT name_kh FROM `ln_view` WHERE TYPE=13 AND key_code=cp.category LIMIT 1) AS category_name,
 					(SELECT name_kh FROM `ln_view` WHERE TYPE=2 AND key_code=cp.payment_method LIMIT 1) AS payment_type,
-					(SELECT  first_name FROM rms_users WHERE id=cp.user_id LIMIT 1 ) AS user_name 
+					(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=cp.user_id LIMIT 1 ) AS user_name 
 				FROM `rms_commission_payment` AS cp WHERE 1
 					";
 			

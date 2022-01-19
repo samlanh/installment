@@ -11,7 +11,12 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
+	}
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
 	}
 ?>
 <meta charset="utf-8">
@@ -23,7 +28,7 @@
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('MAKE_AGREEMENTLIST');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('MAKE_AGREEMENTLIST');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -96,26 +101,17 @@
 		  	bottom:0px;
 			margin:0;
 		  }
-		.hide{visibility: visible; height: 110px;}
+		.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+		}
+		table tr td{
+			padding:0 2px;
 		}
 	</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 		<tr>
 	    	<td align="center">
 	        	<div class="divFooter">
-		        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;">
-		            	<tr>
-		                	<td width="30%"><img src="<?php echo $logo;?>" style="max-height:85px;max-width:100%;"></td>
-		                	<td width="40%" valign="top">
-		                		<ul>
-		                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
-		                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("MAKE_AGREEMENTLIST");?></li>
-		                			<li style="text-align:center; font-size:16px;"><?php if(!empty($this->list_end_date['start_date'])){echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
-		                		</ul>
-		                	</td>
-		                    <td width="30%"></td>
-		                </tr> 
-		            </table>
+		        	<?php echo $this->headerReport;?>
 	            </div>
 	        </td>
 	    </tr>
@@ -127,13 +123,13 @@
 		                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 		             </tr>
 	                 <tr bgcolor="#c1d0f3" class="style" align="center" style=" line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; ">
-	                    <td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+	                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 	                    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
 	                    <td colspan="2"><?php echo $tr->translate("PROPERTY_INFO");?></td>
 	                    <td colspan="5"><?php echo $tr->translate("INFO_INDILOAN");?></td>
-	                    <td rowspan="2">&nbsp;<?php echo $tr->translate("LATE_DAY");?>&nbsp;</td>
-	                    <td rowspan="2">&nbsp;<?php echo $tr->translate("BY_USER");?>&nbsp;</td>
+	                    <td rowspan="2"><?php echo $tr->translate("LATE_DAY");?></td>
+	                    <td rowspan="2"><?php echo $tr->translate("BY_USER");?></td>
 	                </tr>
 	                <tr bgcolor="#c1d0f3" class="style" align="center" style=" line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; ">
 	                    <td><?php echo $tr->translate("TYPE");?></td>
@@ -182,12 +178,12 @@
 	             <?php 
 	              	$payment_id = $row['payment_id']?>
 	              	<tr oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" style="font-size: 12px; line-height: 20px; white-space: nowrap;" class="hover context-menu-one">
-						<td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-						<td style="width: 100px; !important">&nbsp;<?php echo $row['name_kh'];?></td>
+						<td align="center"><?php echo $key+1; ?></td>
+						<td style="width: 100px; !important"><?php echo $row['name_kh'];?></td>
 						<td style="line-height: 16px; white-space: normal !important;max-width: 100px;width: 120px;padding: 5px;overflow-wrap: break-word;"><?php echo $row['phone'];?></td>
-						<td align="center">&nbsp;<?php echo $row['propertype']; ?>&nbsp;</td>
-						<td align="left">&nbsp;<?php echo $row['land_address']."(".$row['street'].")"; ?>&nbsp;</td>
-						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold'],2); ?>&nbsp;</td>	
+						<td align="center"><?php echo $row['propertype']; ?></td>
+						<td align="left"><?php echo $row['land_address']."(".$row['street'].")"; ?></td>
+						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
 						<?php 
 							$percent = $db->getFirstDepositBySaleID($row['id'],$row['payment_id']);
 							$percent =$percent['percent'];
@@ -206,12 +202,12 @@
 							$total_day=strtotime($end_dat)-strtotime($row['end_line']);
 							$total_late_day=$total_day/(60*60*24);
 							
-						?>&nbsp;</td>
-						<td align="right" style="white-space:nowrap;">&nbsp;<?php echo number_format($row['price_sold']-$row['paid_amount'],2); ?>&nbsp;</td>
-						<td align="center" style="white-space:nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['buy_date'])); ?>&nbsp;</td>
-						<td align="center" style="white-space:nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['end_line']));?>&nbsp;</td>
-						<td align="center" style="white-space:nowrap;">&nbsp;<?php echo $total_late_day;?>&nbsp;</td>
-						<td style="white-space:nowrap;">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
+						?></td>
+						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
+						<td align="center" style="white-space:nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date'])); ?></td>
+						<td align="center" style="white-space:nowrap;"><?php echo date("d-m-Y",strtotime($row['end_line']));?></td>
+						<td align="center" style="white-space:nowrap;"><?php echo $total_late_day;?></td>
+						<td style="white-space:nowrap;"><?php echo $row['user_name'];?></td>
 						</tr>
 					<?php }?>
 	            		<tr>
@@ -219,7 +215,7 @@
 				             <br />
 				             <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
 				                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-				                    <td align="right"><?php echo $tr->translate("PROPERTY");?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				                    <td align="right"><?php echo $tr->translate("PROPERTY");?></td>
 				                    <td><?php echo $amount_property;?></td>
 				                    <td align="right"></td>
 				                    <td></td>
@@ -227,33 +223,33 @@
 				                    <td></td>
 				                 </tr>
 				                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-				                    <td align="right"><?php echo $tr->translate("SALE_AMOUNT");?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				                    <td align="right"><?php echo $tr->translate("SALE_AMOUNT");?></td>
 				                    <td><?php echo $payment_1;?></td>
-				                    <td align="right">&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
+				                    <td align="right"></td>
+				                    <td></td>
+				                    <td></td>
+				                    <td></td>
 				                 </tr>
 				                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-				                    <td align="right"><?php echo $tr->translate("TOTAL_INCASH");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
+				                    <td align="right"><?php echo $tr->translate("TOTAL_INCASH");?>$</td>
 				                    <td><?php echo number_format($sold_price1,2);?></td>
-				                    <td align="right">&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
-				                    <td>&nbsp;&nbsp;</td>
+				                    <td align="right"></td>
+				                    <td></td>
+				                    <td></td>
+				                    <td></td>
 				                 </tr>
 				                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-				                    <td align="right"><?php echo $tr->translate("TOTAL_PAYMENTED");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
+				                    <td align="right"><?php echo $tr->translate("TOTAL_PAYMENTED");?>$</td>
 				                    <td><?php echo number_format($paid_price1,2);?></td>
-				                    <td align="right"><?php //echo $tr->translate("រំលស់");?>&nbsp;&nbsp;</td>
+				                    <td align="right"><?php //echo $tr->translate("រំលស់");?></td>
 				                    <td><?php //echo $payment_3;?></td>
 				                    <td><?php //echo $payment_3_completed;?></td>
 				                    <td><?php //echo $payment_3-$payment_3_completed;?></td>
 				                 </tr>
 				                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-				                    <td align="right"><?php echo $tr->translate("LOANOUTSTADING");?>&nbsp;&nbsp;$&nbsp;&nbsp;</td>
+				                    <td align="right"><?php echo $tr->translate("LOANOUTSTADING");?>$</td>
 				                    <td><?php echo number_format($balace_price1,2);?></td>
-				                    <td align="right"><?php //echo $tr->translate("រំលស់");?>&nbsp;&nbsp;</td>
+				                    <td align="right"><?php //echo $tr->translate("រំលស់");?></td>
 				                    <td><?php //echo $payment_3;?></td>
 				                    <td><?php //echo $payment_3_completed;?></td>
 				                    <td><?php //echo $payment_3-$payment_3_completed;?></td>
@@ -264,11 +260,11 @@
 				             <table style="font-family: 'Times New Roman','Khmer OS Battambang'; border-collapse:collapse; font-size:14px;" width="100%" cellspacing="0">
 				                <tr style=" line-height: 24px; ">
 				                    <td>
-				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("PROPERTY");?></span>&nbsp;:&nbsp;<strong><?php //echo $amount_property;?></strong></div>
-				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("SALE_AMOUNT");?></span>&nbsp;:&nbsp;<strong><?php //echo $payment_1;?></strong></div>
-				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("TOTAL_INCASH");?></span>&nbsp;:&nbsp;<strong><?php //echo number_format($sold_price1,2);?></strong></div>
-				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("TOTAL_PAYMENTED");?></span>&nbsp;:&nbsp;<strong><?php //echo number_format($paid_price1,2);?></strong></div>
-				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("LOANOUTSTADING");?></span>&nbsp;:&nbsp;<strong><?php //echo number_format($balace_price1,2);?></strong></div>
+				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("PROPERTY");?></span>:<strong><?php //echo $amount_property;?></strong></div>
+				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("SALE_AMOUNT");?></span>:<strong><?php //echo $payment_1;?></strong></div>
+				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("TOTAL_INCASH");?></span>:<strong><?php //echo number_format($sold_price1,2);?></strong></div>
+				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("TOTAL_PAYMENTED");?></span>:<strong><?php //echo number_format($paid_price1,2);?></strong></div>
+				                    <div><span style="display: inline-block; min-width: 120px"><?php //echo $tr->translate("LOANOUTSTADING");?></span>:<strong><?php //echo number_format($balace_price1,2);?></strong></div>
 				                    </td>
 				                </tr>
 				              </table>
@@ -293,6 +289,12 @@ require(["dojo/ready"], function(ready){
 		 <?php if(!empty($this->search['end_date'])){?>
 		 dijit.byId('end_date').attr('value','<?php echo date('Y-m-d',strtotime($this->search['end_date'])); ?>');
 		 <?php }?>
+		 
+		  getBranchInfo();
+		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("MAKE_AGREEMENTLIST");?>';
+		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	
 	});
 	new dijit.form.FilteringSelect({
 		store: property_store,
@@ -334,5 +336,31 @@ function getAllPropertyBranch(branch_id){
 		error: function(err) {
 		}
 	});
-} 
+}
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
 </script>

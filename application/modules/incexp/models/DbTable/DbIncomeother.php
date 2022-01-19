@@ -236,6 +236,8 @@ class Incexp_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 		if (!empty($search['adv_search'])){
 				$s_where = array();
 				$s_search = trim(addslashes($search['adv_search']));
+				$s_where[] = " (SELECT land_address FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
+				$s_where[] = " (SELECT street FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
 				$s_where[] = " description LIKE '%{$s_search}%'";
 				$s_where[] = " house_id LIKE '%{$s_search}%'";
 				$s_where[] = " payment_method LIKE '%{$s_search}%'";

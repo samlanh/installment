@@ -70,6 +70,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptGroupmemberAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -94,7 +95,7 @@ class Report_LoanController extends Zend_Controller_Action {
 			'status_search' => -1,
 			'status' => -1,
 			'client_name' => "",
-			'branch_id' => -2,
+			'branch_id' => -1,
 			'land_id'=>-1,
 			'option_pay'=>-1,
 			'receipt_type'=>-1,
@@ -106,6 +107,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	}
 	$search['is_closed']='';
 	$this->view->rssearch = $search;
+	$this->view->search = $search;
 	$this->view->loantotalcollect_list = $db->getALLLoanPayment($search);
 	$this->view->list_end_date = $search;	
 	
@@ -116,6 +118,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	
 	$frmpopup = new Application_Form_FrmPopupGlobal();
 	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptClosingentryAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -141,6 +144,7 @@ class Report_LoanController extends Zend_Controller_Action {
   		);
   	}
   	$this->view->rssearch = $search;
+  	$this->view->search = $search;
   	$this->view->loantotalcollect_list =$rs=$db->getALLLoanPayment($search);
   	$this->view->list_end_date = $search;
   
@@ -151,6 +155,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function submitentryAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -248,6 +253,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	  	
 	  	$frmpopup = new Application_Form_FrmPopupGlobal();
 	  	$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
   } 
  function rptLoanPayoffAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
@@ -268,6 +274,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	}
  	$this->view->LoanCollectionco_list =$db->getALLLoanPayoff($search);
  	$this->view->list_end_date=$search;
+ 	$this->view->search=$search;
  	$frm = new Loan_Form_FrmSearchLoan();
  	$frm = $frm->AdvanceSearch();
  	Application_Model_Decorator::removeAllDecorator($frm);
@@ -275,6 +282,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	
  	$frmpopup = new Application_Form_FrmPopupGlobal();
  	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
  }
  function rptLoanExpectIncomeAction(){
  	if($this->getRequest()->isPost()){
@@ -307,6 +315,8 @@ class Report_LoanController extends Zend_Controller_Action {
  	
  	$frmpopup = new Application_Form_FrmPopupGlobal();
  	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
+  
  }
  
   function rptPaymentHistoryAction(){
@@ -345,6 +355,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	
  	$frmpopup = new Application_Form_FrmPopupGlobal();
  	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
  }
  function rptLoanClientcoAction()
  {
@@ -406,6 +417,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	
  	$frmpopup = new Application_Form_FrmPopupGlobal();
  	$this->view->footerReport = $frmpopup->getFooterReport();
+ 	$this->view->headerReport = $frmpopup->getLetterHeadReport();
  }
 //  function rptDepositalertAction(){
 //  	$db  = new Report_Model_DbTable_DbLandreport();
@@ -673,7 +685,7 @@ class Report_LoanController extends Zend_Controller_Action {
 				'from_date_search'=> date('Y-m-d'),
 				'to_date_search'=>date('Y-m-d'));
   	}
-  	$this->view->rssearch = $search;
+  	$this->view->search = $search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getCustomerReceivedPlong($search);
   	
@@ -683,6 +695,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	$this->view->frm_cancel = $frm;
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function bugAction(){
   		$db = new Report_Model_DbTable_Dbbug();
@@ -744,8 +757,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	}
 	$rs_rows= $db->getAllTranferOwner($search,1);
 	$this->view->row = $rs_rows;
-  	$this->view->rssearch = $search;
-  	$this->view->list_end_date = $search;
+  	$this->view->search = $search;
   	
   	$frm = new Loan_Form_FrmSearchLoan();
 	$frm = $frm->AdvanceSearch();
@@ -754,6 +766,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	
 	$frmpopup = new Application_Form_FrmPopupGlobal();
 	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function rptChangepropertyAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();
@@ -775,8 +788,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	}
   	$rs_rows= $db->getAllChangeHouse($search,1);
   	$this->view->row = $rs_rows;
-  	$this->view->rssearch = $search;
-  	$this->view->list_end_date = $search;
+  	$this->view->search = $search;
   	 
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
@@ -785,6 +797,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   public function rptExpenseBycateAction(){
   	try{
@@ -828,6 +841,7 @@ class Report_LoanController extends Zend_Controller_Action {
   		
   		$frmpopup = new Application_Form_FrmPopupGlobal();
   		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
   		
   	}catch(Exception $e){
   		Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -877,6 +891,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function samplereceiptAction(){
   	$key = new Application_Model_DbTable_DbKeycode();
@@ -1038,6 +1053,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
 	
 	function rptOtherincomedetailAction(){
@@ -1146,7 +1162,7 @@ class Report_LoanController extends Zend_Controller_Action {
 				'start_date'=> date('Y-m-d'),
 				'end_date'=>date('Y-m-d'));
 		}
-		$this->view->rssearch = $search;
+		$this->view->search = $search;
 		$db  = new Report_Model_DbTable_DbParamater();
 		$this->view->row = $db->getAllIssueHouse($search);
 		
@@ -1154,10 +1170,10 @@ class Report_LoanController extends Zend_Controller_Action {
 		$frm = $frm_search->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
-		$this->view->rssearch = $search;
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
 	function rptTransferCashAction(){//release all loan
 		$db  = new Report_Model_DbTable_DbLandreport();
