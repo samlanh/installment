@@ -3574,4 +3574,157 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		
 		return $str;
 	}
+	
+	function getLetterHeadReport(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$key = new Application_Model_DbTable_DbKeycode();
+		$data=$key->getKeyCodeMiniInv(TRUE);
+	
+	
+		$baseurl=Zend_Controller_Front::getInstance()->getBaseUrl();
+	
+		$defaultLogo = $baseurl."/images/logo.jpg";
+		if(!empty($data['logo'])){
+			if (file_exists(PUBLIC_PATH."/images/photo/logo/".$data['logo'])){
+				$defaultLogo = $baseurl.'/images/photo/logo/'.$data['logo'];
+			}
+		}
+		
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+		$last_name=$session_user->last_name;
+		$username = $session_user->first_name;
+		$user_id = $session_user->user_id;
+		$headerReportType=REPORT_LETER_HEAD;
+		
+		
+		$branch_title = $tr->translate("BRAND_TITLE");
+		$companyName=$tr->translate("BRAND_TITLE");
+		$companyNameEn=$tr->translate("BRAND_TITLE_EN");
+		$companyAddress=$data['footer_branch'];
+		$companyTel="&#9743; ".$data['tel-client'];
+		$companyEmail="";
+		if(!empty($data['email_client'])){
+			$companyEmail=" &#x2709; ".$data['email_client'];
+		}
+		$companyContact=$companyTel.$companyEmail;
+		
+		$string="";
+		if($headerReportType==1){
+			$string.='
+				<style>
+					ul.headReport,
+					ul.reportTitle{
+						margin: 0;
+						padding: 0;
+						list-style: none;
+					}
+					ul.headReport li span,
+					ul.headReport li{
+						line-height: 24px;
+						text-align:center; 
+						font-size:'.FONTSIZE_REPORT.';
+						font-family:'.'"Times New Roman"'.','.'"Khmer OS Muol Light"'.';
+						
+					}
+					ul.headReport li.small-text,
+					ul.headReport li.small-text span{
+						font-family:'.'"Times New Roman"'.','.'"Khmer OS Battambang"'.';
+					}
+					
+					
+					
+				</style>
+				
+					<table width="100%">
+		            	<tr>
+		                	<td width="30%" id="projectlogo"><img src="'.$defaultLogo.'" style=" height:85px; max-width: 100%;" ></td>
+		                	<td width="40%" valign="top">
+		                		<ul class="headReport">
+		                			<li ><span id="companyTitle"></span></li>
+		                			<li ><span id="reportTitle"></span></li>
+		                			<li class="small-text"><span id="dateReport"></span></li>
+		                			<li class="small-text"><span id="projectName"></span></li>
+									<li class="small-text"><span id="staff_lbl"></span></li>
+		                		</ul>
+		                	</td>
+		                    <td width="30%"></td>
+		                </tr> 
+		            </table>
+			';
+		}else if($headerReportType==2){
+			$string.='
+				<style>
+					ul.headReport,
+					ul.reportTitle{
+						margin: 0;
+						padding: 0;
+						list-style: none;
+					}
+					ul.headReport li span,
+					ul.headReport li{
+						line-height: 18px;
+						text-align:center; 
+						font-size:14px;
+						font-family:'.'"Times New Roman"'.','.'"Khmer OS Muol Light"'.';
+						
+					}
+					ul.headReport li.small-text,
+					ul.headReport li.small-text span{
+						line-height: 14px;
+						text-align:center; 
+						font-size:11px;
+						font-family:'.'"Times New Roman"'.','.'"Khmer OS Battambang"'.';
+						
+					}
+					ul.reportTitle {
+						background: #ffffff;
+						display: block;
+						margin-top: -40px;
+						
+					}
+					ul.reportTitle li,
+					ul.reportTitle li span{
+						line-height: 20px;
+						text-align:center;
+					}
+					table.tableTop tr td span.project-name{
+						font-size:12px ;
+						font-family:'.'"Times New Roman"'.','.'"Khmer OS Muol Light"'.';
+					}
+				</style>
+				<table class="tableTop" width="100%" style="border-bottom: double 5px #337ab7;">
+					<tr>
+						<td width="20%" id="projectlogo"><img src="'.$defaultLogo.'" style=" height:85px; max-width: 100%; " ></td>
+						<td width="60%" valign="top" style=" padding-bottom: 40px;">
+							<ul class="headReport">
+								<li style="font-size:'.FONTSIZE_REPORT.'; " id="companyTitle">'.$companyName.'</li>
+								<li><span id="companyTitleEn">'.$companyNameEn.'</span></li>
+								<li class="small-text"><span id="companyAddress">'.$companyAddress.'</span></li>
+								<li class="small-text" ><span id="companyPhone">'.$companyContact.'</span></li>
+							</ul>
+						</td>
+						<td width="20%">
+							<span class="project-name" id="projectName"></span>
+						</td>
+					</tr> 
+				</table>
+				<table width="100%" style="margin-bottom:10px;">
+					<tr>
+						<td width="20%" ></td>
+						<td width="60%" valign="top">
+							<ul class="reportTitle">
+								<li style="font-size:'.FONTSIZE_REPORT.'; font-family:'."'Khmer OS Muol Light'".'"><span id="reportTitle"></span></li>
+								<li style="font-size:12px;"><span id="dateReport"></span></li>
+								<li style="font-size:12px;"><span id="staff_lbl"></span></li>
+							</ul>
+						</td>
+						<td width="20%"></td>
+					</tr> 
+				</table>
+			';
+		}
+		
+		return $string;
+		
+	}
 }

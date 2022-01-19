@@ -98,6 +98,16 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			$row['office_tel'] = $data["tel-client"];
 			$row['office_address'] = $data["footer_branch"];
 		}
+		$phblicpart = PUBLIC_PATH;
+		$baseURl = Zend_Controller_Front::getInstance()->getBaseUrl();
+		$photo = $baseURl.'/images/logo.png';
+		if (!empty($row['logo'])){
+			if (file_exists($phblicpart."/images/projects/".$row['logo'])){
+				$photo = $baseURl.'/images/projects/'.$row['logo'];
+			}
+		}
+		$row['url_logo'] = $photo;
+			
 		return $row;
 	}
 	public function getReceiptnumber($branch_id=1){

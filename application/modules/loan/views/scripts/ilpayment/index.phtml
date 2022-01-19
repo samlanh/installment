@@ -277,17 +277,23 @@ $(function(){
 			}else if(key=="reciept"){
 					url='<?php echo $urlReciept;?>';
 					gotoAction();
+			}else if(key=="update"){
+					url='<?php echo $updateReciept;?>';
+					gotoAction();
+					
 			}
 		},
 		items: {
+			"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-print", accesskey: "c o p y"},
+			"update": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit"},
 			<?php 
 			$dbacc = new Application_Model_DbTable_DbUsers();
 	 		$rs = $dbacc->getAccessUrl($module,$controller,'delete');
 	 		if(!empty($rs)){
 			?>
-			"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-print", accesskey: "c o p y"},
 			"stepup": {name: "<?php echo $tr->translate("VOID");?>", icon: "fa-file-text"},
 			<?php } ?>
+			
 		}
 	});
 });

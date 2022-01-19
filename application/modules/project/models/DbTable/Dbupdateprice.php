@@ -39,6 +39,7 @@ class Project_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql = "SELECT *,
 				(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = ln_properties.branch_id LIMIT 1) AS branch_name,
+				(SELECT name_kh FROM `ln_view` WHERE type = 28 AND key_code=is_lock LIMIT 1) sale_type,
 				(SELECT t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.id = property_type limit 1) AS  pro_type
     	FROM $this->_name WHERE is_buy=0 AND street = ".$db->quote($street);
     	if (!empty($branch_id)){

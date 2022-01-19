@@ -8,12 +8,18 @@
 	$dbGB = new Application_Model_DbTable_DbGlobal();
 	$logo = $this->baseUrl()."/images/logo.jpg";
 	$branch_title = $tr->translate("BRAND_TITLE");
-	if ($this->rssearch['branch_id'] >0 ){
-		$branch = $dbGB->getAllBranchInfoByID($this->rssearch['branch_id']);
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
+	}
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
 	}
 ?>
 <title><?php echo $tr->translate("RPT_CHANGE_OWNER");?></title>
@@ -94,26 +100,14 @@
 				  	bottom:0px;
 					margin:0;
 				  }
-					.hide{visibility: visible; height: 110px;}
+				  .hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
 				}
 			</style>
 				<table width="100%">
 					<tr>
 				    	<td align="center" valign="top">
 				        	<div class="divFooter">
-					        	<table border="0" width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';"style="margin:0;padding:0;">
-					            	<tr>
-					                	<td width="30%" style="border:1px solid #fff;"><img src="<?php echo $logo;?>" style="height:80px;max-width: 100%;"></td>
-					                	<td width="40%" valign="top">
-					                		<ul>
-					                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
-					                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("RPT_CHANGE_OWNER");?></li>
-					                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;"><?php if($this->list_end_date['start_date']){echo date("d-M-Y",strtotime($this->list_end_date['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->list_end_date['end_date']));}?></li>
-					                		</ul>
-					                   </td>
-					                    <td width="30%"></td>
-					                </tr> 
-					            </table>
+					        	<?php echo $this->headerReport;?>
 				            </div>
 				        </td>
 				    </tr>
@@ -179,6 +173,12 @@
 	require(["dojo/ready"], function(ready){
 		ready(function(){
 			 getAllPropertyBranch();
+			 
+			getBranchInfo();
+			document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+			document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_CHANGE_OWNER");?>';
+			document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+				 
 		});
 		new dijit.form.FilteringSelect({
 			store: property_store,
@@ -195,7 +195,7 @@
 		}
 			}, "land_id");
 	});
-	land_id = '<?php echo empty($this->rssearch['land_id'])?0:$this->rssearch['land_id'];?>';
+	land_id = '<?php echo empty($this->search['land_id'])?0:$this->search['land_id'];?>';
 	var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
 	function getAllPropertyBranch(branch_id){
 		branch_id = dijit.byId('branch_id').get('value');
@@ -217,6 +217,33 @@
 				 }
 			},
 			error: function(err) {
+			}
+		});
+	}
+	
+	function getBranchInfo(){
+		var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+		branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+		if(branch_id=="" || branch_id<=0){
+			return false;
+		}
+		dojo.xhrPost({
+			url: url_submit,	
+			content:{ 
+				'branch_id':branch_id
+			},	
+			load: function(data) {
+				var arr = JSON.parse(data);
+				var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+				document.getElementById('projectlogo').innerHTML = imagesUrl;	
+				
+				<?php if($headerReportType==2){?>
+				document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+				<?php }else{?>
+				document.getElementById('projectName').innerHTML = arr.project_name;
+				<?php }?>
+			},
+			error: function(e) {
 			}
 		});
 	}

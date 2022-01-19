@@ -40,11 +40,15 @@ class Incexp_Model_DbTable_DbIncomeOtherPayment extends Zend_Db_Table_Abstract
 		if (!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = trim(addslashes($search['adv_search']));
+			$s_where[] = " op.title_income LIKE '%{$s_search}%'";
 			$s_where[] = " op.receipt_no LIKE '%{$s_search}%'";
 			$s_where[] = " op.balance LIKE '%{$s_search}%'";
 			$s_where[] = " op.total_paid LIKE '%{$s_search}%'";
 			$s_where[] = " op.payment_method LIKE '%{$s_search}%'";
 			$s_where[] = " op.remain LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT p.land_address FROM `ln_properties` AS p WHERE p.id=oi.house_id LIMIT 1) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT p.street FROM `ln_properties` AS p WHERE p.id=oi.house_id LIMIT 1) LIKE '%{$s_search}%'";
+			
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		if(!empty($search['payment_method'])){

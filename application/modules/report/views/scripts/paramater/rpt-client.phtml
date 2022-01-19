@@ -14,7 +14,12 @@
 		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
 			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
 		}
-		$branch_title = $branch['project_name'];
+		//$branch_title = $branch['project_name'];
+	}
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
 	}
 ?>
 <meta charset="utf-8">
@@ -23,7 +28,7 @@
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT_CLIENT');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('REPORT_CLIENT');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -95,7 +100,7 @@
 				  	bottom:0px;
 					margin:0;
 				 }
-			.hide{visibility: visible; height: 110px;}
+			.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
 			}
 			table.content-data{
 				border-collapse:collapse;
@@ -119,34 +124,15 @@
 			table.tb-footer tr{
 			 line-height: 14px;  padding:2px 0px; height: 25px;
 			}
+			table tr td{
+				padding:0 2px;
+			}
 		</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
 		<tr>
 	    	<td align="center">
 		    	<div class="divFooter">
-		        	<table width="100%" style="font-family:khmer;margin:0; padding:0;border:none;" >
-		            	<tr>
-		                	<td width="20%"><img src="<?php echo $logo;?>" height="80px"></td>
-		                	<td width="60%" valign="top">
-		                	<h2 style="white-space:nowrap;text-align:center;font-weight:normal; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></h2>
-		                	<h2 style="white-space:nowrap;text-align:center;font-weight:normal; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_CLIENT");?></h2>
-		                	<h2 style="text-align:center; font-weight:normal; font-size:13px;"><?php if(!empty($this->result['start_date'])){ echo date("d-M-Y",strtotime($this->result['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->result['end_date']));}?></h2>
-		                	</td>
-		                    <td width="20%"></td>
-		                </tr> 
-		                <tr>
-		                	<td colspan="3">
-		                		<table width="100%">
-		                			<tr >
-		                				<td width="45%" style="font-size: 10px;">
-		                				</td>
-		                				<td></td>
-		                				<td></td>
-		                			</tr>
-				                </table>
-				              </td>
-				        </tr>   
-		            </table>
+					<?php echo $this->headerReport;?>
 		         </div>
 			</td>
 		</tr>
@@ -154,7 +140,7 @@
 		<table id="exportExcel" class="content-data"  width="100%" border="1"  bordercolor="black">   
 	    	<thead>
 	    		<tr class="hide" style="border:1px solid #fff;">
-		             <td colspan="12" style="border:1px solid #fff;"></td>
+		             <td colspan="12" style="border:1px solid #fff; border-bottom:1px solid #000;"></td>
 		        </tr>
 		    	<tr class="style" align="center" style="border: 1px solid #000;">
 		    		<td colspan="9"><?php echo $tr->translate("CLIENT_INFO");?></td>
@@ -185,15 +171,23 @@
 				   <td align="left" style="white-space: nowrap;"><?php echo $row['client_name'];?></td>
 				   <td ><?php echo $row['sex']?></td>
 				   <td style="min-width:75px !important;"><?php echo $row['phone']?></td>
+<<<<<<< HEAD
 				   <td style="min-width:75px !important;"><?php echo $row['house_name']?></td>
 				   <td>&nbsp;<?php echo date("d/m/Y",strtotime($row['dob']));?></td>
 				   <td>&nbsp;<?php echo $row['nationality']?></td>
 		           <td style="white-space: nowrap;">&nbsp;<?php echo $row['doc_name']?></td>
 		           <td>&nbsp;<?php echo $row['nation_id']?></td>
 				   <td style="line-height:15px;text-align: left">&nbsp;<?php echo "#".$row['house'].",St".$row['street'].", ".$row['village_name'].", ".$row['com_name'].", ".$row['dis_name'].", ".$row['pro_name']?></td>
+=======
+				   <td><?php echo date("d/m/Y",strtotime($row['dob']));?></td>
+				   <td><?php echo $row['nationality']?></td>
+		           <td style="white-space: nowrap;"><?php echo $row['doc_name']?></td>
+		           <td><?php echo $row['nation_id']?></td>
+				   <td style="line-height:15px;text-align: left"><?php echo "#".$row['house'].",St".$row['street'].", ".$row['village_name'].", ".$row['com_name'].", ".$row['dis_name'].", ".$row['pro_name']?></td>
+>>>>>>> e8661e232e6644d6faf83dadc39415b33d6156b9
 				   
-				   <td>&nbsp;<?php echo $row['hname_kh']?></td>
-				   <td style="line-height:15px;text-align: left">&nbsp;<?php echo $row['ksex'];?></td>
+				   <td><?php echo $row['hname_kh']?></td>
+				   <td style="line-height:15px;text-align: left"><?php echo $row['ksex'];?></td>
 				   <td><?php echo ($row['lphone'])?></td>
 				   <td style="white-space: nowrap;"><?php echo $row['joindoc_name'];?></td>
 				   <td><?php echo $row['rid_no'];?></td>
@@ -209,75 +203,81 @@
 	dojo.require("dojo.data.ObjectStore");
 	dojo.require("dijit.form.DateTextBox");
 	dojo.ready(function(){
-	dijit.byId('province').attr('value',<?php echo $this->result['province'];?>);	
-	var district_data = new dojo.store.Memory({
-	       data: <?php print_r(Zend_Json::encode($this->district));?>
-	});
+		dijit.byId('province').attr('value',<?php echo $this->result['province'];?>);	
+		var district_data = new dojo.store.Memory({
+			   data: <?php print_r(Zend_Json::encode($this->district));?>
+		});
 	 
-	new dijit.form.FilteringSelect({
-	store: dojo.data.ObjectStore({objectStore: district_data}),
-	autoComplete: true,
-	query: {
-		pro_id:"<?php echo $this->result['province'];?>"
-	},            
-	required: false,		           
-	name: "district",
-	id: "district",
-	searchAttr: "name",
-	value: "<?php echo $this->result['district'];?>",
-	placeholder:"<?php echo $tr->translate('DISTRICT');?>",
-	class: 'fullside',
-	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
-		onChange: function() {
-				filterCommune();
-	    }
-	}, "district");
+		new dijit.form.FilteringSelect({
+			store: dojo.data.ObjectStore({objectStore: district_data}),
+			autoComplete: true,
+			query: {
+				pro_id:"<?php echo $this->result['province'];?>"
+			},            
+			required: false,		           
+			name: "district",
+			id: "district",
+			searchAttr: "name",
+			value: "<?php echo $this->result['district'];?>",
+			placeholder:"<?php echo $tr->translate('DISTRICT');?>",
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+				onChange: function() {
+					filterCommune();
+			}
+		}, "district");
 	
 
-	var commune_data = new dojo.store.Memory({
-	       data: <?php print_r(Zend_Json::encode($this->commune));?>
-	});
+		var commune_data = new dojo.store.Memory({
+			   data: <?php print_r(Zend_Json::encode($this->commune));?>
+		});
 	 
-	new dijit.form.FilteringSelect({
-	store: dojo.data.ObjectStore({objectStore: commune_data}),
-	autoComplete: true,
-	query: {
-		district_id: "<?php echo $this->result['district'];?>"
-	},            
-	required: false,		           
-	name: "commune",
-	id: "commune",
-	searchAttr: "name",
-	placeholder:"<?php echo $tr->translate('COMMUNE');?>",
-	value: "<?php echo $this->result['commune'];?>",
-	class: 'fullside',
-	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
-		onChange: function() {
-			filterVillage();
-  }
-	}, "commune");
+		new dijit.form.FilteringSelect({
+			store: dojo.data.ObjectStore({objectStore: commune_data}),
+			autoComplete: true,
+			query: {
+				district_id: "<?php echo $this->result['district'];?>"
+			},            
+			required: false,		           
+			name: "commune",
+			id: "commune",
+			searchAttr: "name",
+			placeholder:"<?php echo $tr->translate('COMMUNE');?>",
+			value: "<?php echo $this->result['commune'];?>",
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+				onChange: function() {
+				filterVillage();
+			}
+		}, "commune");
 
-	var village_data = new dojo.store.Memory({
-	       data: <?php print_r(Zend_Json::encode($this->village));?>
-	});
+		var village_data = new dojo.store.Memory({
+			   data: <?php print_r(Zend_Json::encode($this->village));?>
+		});
 	 
-	new dijit.form.FilteringSelect({
-	store: dojo.data.ObjectStore({objectStore: village_data}),
-	autoComplete: true,
-	query: {
-		commune_id:"<?php echo $this->result['commune'];?>"
-	},            
-	required: false,	
-	placeholder:"<?php echo $tr->translate('VILLAGE');?>",	           
-	name: "village",
-	id: "village",
-	searchAttr: "name",
-	value: "<?php echo $this->result['village'];?>",
-	class: 'fullside',
-	missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
-		onChange: function() {
-}
-	}, "village");
+		new dijit.form.FilteringSelect({
+			store: dojo.data.ObjectStore({objectStore: village_data}),
+			autoComplete: true,
+			query: {
+				commune_id:"<?php echo $this->result['commune'];?>"
+			},            
+			required: false,	
+			placeholder:"<?php echo $tr->translate('VILLAGE');?>",	           
+			name: "village",
+			id: "village",
+			searchAttr: "name",
+			value: "<?php echo $this->result['village'];?>",
+			class: 'fullside',
+			missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះសាខា​កូន!",	
+				onChange: function() {
+			}
+		}, "village");
+		
+		getBranchInfo();
+		document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_CLIENT");?>';
+		document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['end_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>'; 
+		
 	
 });
 function filterDistrict(){
@@ -289,5 +289,31 @@ function filterCommune(){
 function filterVillage(){
 	id =dijit.byId('commune').get('value');
 	dijit.byId('village').query.commune_id = dijit.byId('commune').get('value');
+}
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
 }
 </script>
