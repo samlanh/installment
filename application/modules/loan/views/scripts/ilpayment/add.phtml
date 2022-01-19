@@ -771,7 +771,9 @@ function showReciept(receipt_number){
 			ending_balance = dijit.byId('priciple_amount').get('value');
 			total_discountafter = dijit.byId("total_discountafter").get("value");
 			total_discountafter = isNaN(total_discountafter)?0:total_discountafter;
-			total_discountafter = parseFloat(total_discountafter);
+			if(total_discountafter<0){
+				total_discountafter =parseFloat(total_discountafter);
+			}
 			
 			total_paid = parseFloat(dijit.byId('sold_price').get('value'))+total_discountafter - parseFloat(ending_balance);
 		}else if(option_pay==3){ //រំលស់ប្រាក់ដើម 100%work
@@ -1309,7 +1311,9 @@ function calculateTotal(index){//គណនាបង់
 
 		total_discountafter = dijit.byId("total_discountafter").get("value");
 		total_discountafter = isNaN(total_discountafter)?0:total_discountafter;
-		total_discountafter = parseFloat(total_discountafter);
+		if(total_discountafter<0){
+			total_discountafter =parseFloat(total_discountafter);
+		}
 		
 		dijit.byId("outstanding_balance").attr("value",sold_price+total_discountafter-total_pricipalpaid);
 	   ids = dijit.byId("record_id").get('value');
@@ -1515,6 +1519,9 @@ function totalReturn(){
 			paid_principalall = paid_principalall + extrapayment; 
 			total_discountafter = dijit.byId("total_discountafter").get("value");
 			total_discountafter = isNaN(total_discountafter)?0:total_discountafter;
+			if(total_discountafter<0){
+				total_discountafter =parseFloat(total_discountafter);
+			}
 			
 			dijit.byId('priciple_amount').attr('value',dijit.byId("outstanding_balance").get("value")-paid_principalall);//អោយរកប្រាក់ដើមនៅសល់ពីបង់ត្រូវគឺត្រូវហើយ
 			total_amount = receive_amount ;
