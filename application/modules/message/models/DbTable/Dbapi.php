@@ -173,8 +173,8 @@ class Message_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
     }
     function checkBalance(){
     
-    	//$url="http://sandbox.mekongsms.com/api/postcheckbalance.aspx";//test
-    	$url="http://api.mekongsms.com/api/postcheckbalance.aspx";//production
+    	$url="http://sandbox.mekongsms.com/api/postcheckbalance.aspx";//test
+    	//$url="http://api.mekongsms.com/api/postcheckbalance.aspx";//production
     	
     	$username='camapp_free@apitest';
     	$pass='d5c5d91288a32cad367ae7170f54860c';

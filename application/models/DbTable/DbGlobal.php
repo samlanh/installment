@@ -488,52 +488,72 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    public function getReceiptByBranch($data=array('branch_id'=>1,'is_group'=>0)){
    	$this->_name='ln_client_receipt_money';
    	$db = $this->getAdapter();
+   	$receipt_type_count=RECEIPT_TYPE_COUNT;
    	
-   	//phnom penh thmey
-   	/*$pre='N1:'; //phnom penh thmey
-   	if ($data['branch_id']>=5){
-   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id =".$data['branch_id']." LIMIT 1 ";
-   	}else if ($data['branch_id']>2){
-   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id >2 AND  branch_id < 5 LIMIT 1 ";
-   	}else{
-   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id <=2 LIMIT 1 ";
-   	}*/
+   	$lenghtReceipt=6;
+   	$oldNumber=0;
+   	
+   	if($receipt_type_count==0){
+	   	//phnom penh thmey
+	   	$pre='N1:'; //phnom penh thmey
+	   	if ($data['branch_id']>=5){
+	   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id =".$data['branch_id']." LIMIT 1 ";
+	   	}else if ($data['branch_id']>2){
+	   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id >2 AND  branch_id < 5 LIMIT 1 ";
+	   	}else{
+	   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id <=2 LIMIT 1 ";
+	   	}
+   	}elseif($receipt_type_count==1){
+   		//For General
+//    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 ";
+   		$pre='№ ';
+   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id =".$data['branch_id'];
+   	}elseif($receipt_type_count==2){
+   		$pre='№ ';
+   		$currentDate = date("Y-m-d");
+   		$dateSetting = "2021-01-01";
+   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 ";
+   		if($currentDate>=date("Y-m-d",strtotime($dateSetting))){
+   			$lenghtReceipt=6;
+   			$pre=date("y")."-";
+   				
+   			$year=date("Y");
+   			$startDate=date("Y-m-d",strtotime($year."-01-01"));
+   			$endDate=date("Y-m-d",strtotime($year."-12-31"));
+   			$from_date =(empty($startDate))? '1': " date_input >= '".$startDate." 00:00:00'";
+   			$to_date = (empty($endDate))? '1': " date_input <= '".$endDate." 23:59:59'";
+   			$sql.= " AND ".$from_date." AND ".$to_date;
+   		}
+   		$sql.=" LIMIT 1 ";
+   	}elseif($receipt_type_count==3){//svr
+   		$pre='№ ';
+   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 ";
+   		$currentDate = date("Y-m-d");
+   		$dateSetting = "2021-01-18";
+   		if($currentDate>=date("Y-m-d",strtotime($dateSetting))){
+   			if ($data['branch_id']>=3){
+   				$sql.=" AND branch_id =".$data['branch_id']." ";
+   			}else{
+   				$sql.= " AND branch_id !=3 ";
+   				$oldNumber=358;
+   			}
+   		}
+   		$sql.=" LIMIT 1 ";
+   	}elseif($receipt_type_count==4){//count all branch
+   		$pre='№ ';
+   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1";
+   	}
+   	
+   	
    
-   
-   	//For General
-	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 "; 
-   	$pre='№ ';
-	$lenghtReceipt=6;
-	$currentDate = date("Y-m-d");
-	
-	$oldNumber=0;
 	$receiptForCompany = 1; //1=general,2=fiveStar,3=for Svayrieng
-	if($receiptForCompany==2){
-		$dateSetting = "2021-01-01";
-		if($currentDate>=date("Y-m-d",strtotime($dateSetting))){
-			$lenghtReceipt=6;
-			$pre=date("y")."-";
-			
-			$year=date("Y");
-			$startDate=date("Y-m-d",strtotime($year."-01-01"));
-			$endDate=date("Y-m-d",strtotime($year."-12-31"));
-			$from_date =(empty($startDate))? '1': " date_input >= '".$startDate." 00:00:00'";
-			$to_date = (empty($endDate))? '1': " date_input <= '".$endDate." 23:59:59'";
-			$sql.= " AND ".$from_date." AND ".$to_date;
-		}
+// 	if($receiptForCompany==2){
 		
-	}else if ($receiptForCompany==3){
-		$dateSetting = "2021-01-18";
-		if($currentDate>=date("Y-m-d",strtotime($dateSetting))){
-			if ($data['branch_id']>=3){
-				$sql.=" AND branch_id =".$data['branch_id']." ";
-			}else{
-				$sql.= " AND branch_id !=3 ";
-				$oldNumber=358;
-			}
-		}
-	}
-	$sql.=" LIMIT 1 ";
+		
+// 	}else if ($receiptForCompany==3){
+		
+// 	}
+	
    	
    	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+$oldNumber+1;

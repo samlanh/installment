@@ -52,84 +52,21 @@
                 	<tr>
                 		<td><?php echo $key+1;?></td>
                         <td>
-                           <a href="<?php echo $this->baseUrl()."/project/updateprice/edit?id=".$rs['street']."&branch_id=".$rs['branch_id'];?>"><?php echo $rs['branch_name']?></a>
+                           <a href="<?php echo $this->baseUrl()."/project/updateprice/edit?id=".$rs['street']."&branch_id=".$rs['branch_id']."&pro_type=".$rs['pro_type'];?>"><?php echo $rs['branch_name']?></a>
                         </td>
                         <td>
-                           <a href="<?php echo $this->baseUrl()."/project/updateprice/edit?id=".$rs['street']."&branch_id=".$rs['branch_id'];?>"><?php echo $rs['street_name']?></a>
+                           <a href="<?php echo $this->baseUrl()."/project/updateprice/edit?id=".$rs['street']."&branch_id=".$rs['branch_id']."&pro_type=".$rs['pro_type'];?>"><?php echo $rs['street_name']?></a>
                         </td>
                         <td>
                            <?php echo $rs['properties_type']?>
                         </td>
                         <td>
-                           <a href="<?php echo $this->baseUrl()."/project/updateprice/edit?id=".$rs['street']."&branch_id=".$rs['branch_id'];?>"><?php echo number_format($rs['price'],2)?></a>
+                           <a href="<?php echo $this->baseUrl()."/project/updateprice/edit?id=".$rs['street']."&branch_id=".$rs['branch_id']."&pro_type=".$rs['pro_type'];?>"><?php echo number_format($rs['price'],2)?></a>
                         </td>
                 	</tr>
                 	<?php }?>
                 </tbody>
              </table>
-			<?php //echo $this->list;?> 
 		</div>
 	</div>
 </div>
-<style>
-		.btn-action{
-			padding: 3px 10px;
-   			    background: #3a3a5d;
-			    border: none;
-			    font-size: 10pt;
-			    float: left;
-			    color: #fff;
-			    padding-left: 15px;
-			    -webkit-border-radius: 5px;
-			    -moz-border-radius: 5px;
-			    border-radius: 5px;
-		}
-	</style>
-	<?php 
-	$urlEdit = $this->baseUrl()."/project/land/edit/id/";
-?>
-<script type="text/javascript">
-	/*function copyRecord(url){
-		 id = dijit.byId('recordcopy').get('value');
-		 window.location.href = url+'/id/'+id;
-	}
-
-	function setValue(index){
-		var recordcopy = $('input[name=copy]:checked').val();
-		dijit.byId('recordcopy').attr('value',recordcopy);
-	}
-	function copyRecord(url){
-		 id = dijit.byId('recordcopy').get('value');
-		 window.location.href = url+'/id/'+id;
-	}
-
-	function setValue(index){
-		var recordcopy = $('input[name=copy]:checked').val();
-		dijit.byId('recordcopy').attr('value',recordcopy);
-	}*/
-
-	var row=0;
-	var url="";
-	$(function(){
-		$.contextMenu({
-			selector: '.context-menu-one', 
-			callback: function(key, options) {
-				var m = "clicked: " + key;
-				if(key=="edit"){
-					url='<?php echo $urlEdit;?>';
-				}
-				gotoAction();
-			},
-			items: {
-				"edit": {name: "<?php echo $tr->translate("UPDATE");?>", icon: "edit", accesskey: "e"},
-			}
-		});
-	});
-	function setrowdata(index){
-		row = index;
-	}
-	var recordid ='';
-	function gotoAction(){
-		 window.open(url+row+'?rightclick=true', '_blank');
-	}
-</script>

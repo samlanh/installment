@@ -2947,7 +2947,7 @@ function updatePaymentStatus($data){
 	   	}
 	   	
    	}else{
-   		//$where.=" AND (SELECT  COUNT(s.id) FROM `ln_sale` AS s WHERE s.status=1  AND s.is_cancel=0 LIMIT 1)  $s_search";
+   		$where.=" AND (SELECT  COUNT(s.id) FROM `ln_sale` AS s WHERE s.status=1  AND s.is_cancel=0 LIMIT 1)  $s_search";
    	}
    	
    	if($search['branch_id']>0){
@@ -3001,6 +3001,9 @@ function updatePaymentStatus($data){
 				$order =" ORDER BY `s`.id ASC ";
 			}else if($search['queryOrdering']==4){
 				$order =" ORDER BY `s`.id DESC ";
+			}
+			else if($search['queryOrdering']==5){
+				$order =" ORDER BY `s`.client_id DESC ";
 			}
 		}
 	   	return $db->fetchAll($sql.$where.$order);
@@ -3788,7 +3791,58 @@ function updatePaymentStatus($data){
 		}
 		return $row;
 	 }
+	 function getAllPropertiesprice($search=null){
+	 	$db = $this->getAdapter();
+	 	$to_enddate = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";
+	 	$sql = "SELECT p.`id`,
+			 	(SELECT project_name FROM ln_project WHERE br_id = pr.`branch_id` limit 1) AS branch_name,
+			 	p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,
+			 	(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
+			 	
+			 	pr.`old_landprice`,
+	 			pr.old_houseprice,
+	 	pr.old_price,
+	 	pr.land_price,pr.house_price,pr.price,pr.note,pr.update_date, ";
 	 
+	 	$sql.=" (SELECT first_name FROM `rms_users` WHERE id=pr.user_id LIMIT 1) AS user_name
+	 			FROM `ln_properties` AS p,
+	 			`ln_property_price` AS pr
+				 	 WHERE 
+	 			p.id=pr.property_id
+	 			AND p.`status`=1 ";
+	 
+	 			$from_date =(empty($search['start_date']))? '1': " update_date >= '".$search['start_date']." 00:00:00'";
+	 			$to_date = (empty($search['end_date']))? '1': " update_date <= '".$search['end_date']." 23:59:59'";
+	 			$where=" AND ".$from_date." AND ".$to_date;
+	 
+	 			$dbp = new Application_Model_DbTable_DbGlobal();
+	 			$sql.=$dbp->getAccessPermission("p.`branch_id`");
+	 
+	 			if(!empty($search['property_type'])){
+	 	$where.= " AND p.`property_type` = ".$search['property_type'];
+	 	}
+// 	 	if($search['type_property_sale']>-1){
+// 	 		$where.= " AND p.`is_lock` = ".$search['type_property_sale'];
+// 	 	}
+	 if($search['branch_id']>0){
+	 	$where.= " AND p.`branch_id` = ".$search['branch_id'];
+	 }
+	 if(!empty($search['adv_search'])){
+		 $s_where=array();
+		 $s_search= addslashes(trim($search['adv_search']));
+		 $s_where[]=" p.`land_address` LIKE '%{$s_search}%'";
+		 $s_where[]=" p.street LIKE '%{$s_search}%'";
+		 $where.=' AND ('.implode(' OR ',$s_where).')';
+	 }
+	 if(!empty($search['streetlist'])){
+	 	$where.= " AND street ='".$search['streetlist']."'";
+	 }
+	 
+	 $where.= " ORDER BY p.branch_id,p.`property_type`,p.`street` ASC, LENGTH(land_address), land_address ASC  ";
+// 	
+	 
+	 return $db->fetchAll($sql.$where);
+	 }
 	 
 	 function submitUnclosingEngry($data){
       	$db = $this->getAdapter();

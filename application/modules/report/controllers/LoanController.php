@@ -1343,7 +1343,32 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->_redirect("/home/index/rpt-income-graphic");
 		exit();
 	}
-	
+
+	function rptPropertypriceAction(){ // by Vandy
+		if($this->getRequest()->isPost()){
+			$search = $this->getRequest()->getPost();
+		}else{
+			$search = array(
+					'adv_search'=>'',
+					'property_type'=>'',
+					"branch_id"=> -1,
+					'type_property_sale'=>-1,
+					'date_type'=>1,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'),
+					'streetlist'=>''
+			);
+		}
+		$this->view->list_end_date = $search;
+		$db  = new Report_Model_DbTable_DbLandreport();
+		$this->view->row = $db->getAllPropertiesprice($search);
+		 
+		$frm=new Other_Form_FrmProperty();
+		$row=$frm->FrmFrmProperty();
+		Application_Model_Decorator::removeAllDecorator($row);
+		$this->view->frm_property=$row;
+	}
+
 	
 	function rptUnclosingentryAction(){
 		$db  = new Report_Model_DbTable_DbLandreport();
@@ -1391,4 +1416,5 @@ class Report_LoanController extends Zend_Controller_Action {
   		Application_Form_FrmMessage::Sucessfull("Unclosing Entry Success", "/report/loan/rpt-unclosingentry");
   	}
   }
+
 }
