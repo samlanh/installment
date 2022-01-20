@@ -75,7 +75,7 @@ class Issue_indexController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/issue/index");
 		}
 		$_dbmodel = new Issue_Model_DbTable_Dbgivehouse();
-		if($this->getRequest()->isPost()){//check condition return true click submit button
+		if($this->getRequest()->isPost()){/
 				$_data = $this->getRequest()->getPost();
 			try {
 				// Check Session Expire
