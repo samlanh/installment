@@ -2236,5 +2236,14 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$order=" ORDER BY c.next_contact DESC,c.id DESC ";
 		return $db->fetchAll($sql.$order);
 	}
+	function titleGender(){
+		$_gender_Opt = array(
+				0=>$this->tr->translate("MR"),
+				1=>$this->tr->translate("MRS"),
+				2=>$this->tr->translate("MSS")
+				);
+		return $_gender_Opt;
+	
+	}
 }
 ?>

@@ -319,6 +319,24 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				//'required' =>'true'
 		));
+		
+		$_genderTitle=  new Zend_Dojo_Form_Element_FilteringSelect('genderTitle');
+		$_genderTitle->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside',));
+		
+		$_gender_Opt = $db->titleGender();
+		$_genderTitle->setMultiOptions($_gender_Opt);
+		
+		$_genderTitle1=  new Zend_Dojo_Form_Element_FilteringSelect('genderTitle1');
+		$_genderTitle1->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'class'=>'fullside',));
+		
+		$_genderTitle1->setMultiOptions($_gender_Opt);
+		
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
 			//$branch_id->setAttribs(array("readonly"=>true));
@@ -361,8 +379,11 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			$referecce_national_id->setValue($data['refe_nation_id']);
 			$client_issuedateid->setValue($data['client_issuedateid']);
 			$join_issuedateid->setValue($data['join_issuedateid']);
+			
+			$_genderTitle->setValue($data['gendertitle']);
+			$_genderTitle1->setValue($data['gendertitle1']);
 		}
-		$this->addElements(array($join_issuedateid,$client_issuedateid,$dob_buywith,$_join_type,$referecce_national_id,$p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
+		$this->addElements(array($_genderTitle1,$_genderTitle,$join_issuedateid,$client_issuedateid,$dob_buywith,$_join_type,$referecce_national_id,$p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
 				$_join_with,$_id,$photo,$job,$national_id,$_member,$_namekh,$_nameen,$_sex,
 				$_province,$_house,$_street,$_id_no,$branch_id,$_email,
 				$_phone,$_desc,$_status,$_clientno,$_dob,$clienttype_namekh,$clienttype_nameen));

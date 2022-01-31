@@ -62,7 +62,9 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 // 		    	'branch_id'     => $_data['branch_id'],
 		    	'joint_doc_type'=> $_data['join_d_type'],
 		    	'refe_nation_id'=> $_data['reference_national_id'],
-		    	'join_type'     => $_data['join_type'],		    		
+		    	'join_type'     => $_data['join_type'],
+	    		'genderTitle'=> $_data['genderTitle'],
+	    		'genderTitle1'     => $_data['genderTitle1'],
 			); 
 		    
 		    $part= PUBLIC_PATH.'/images/';
