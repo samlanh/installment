@@ -974,7 +974,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     					$pri_permonth = $remain_principal;
 						$paid_receivehouse = $data['paid_receivehouse'];
     				}
-    			}elseif($payment_method==6){
+    			}elseif($payment_method==6 OR $payment_method==5){
     				$ids = explode(',', $data['identity']);
     				$key = 1;
     				foreach ($ids as $i){
@@ -1171,7 +1171,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     			$this->insert($datapayment);
     		}
     		
-    		if($payment_method==3 OR $payment_method==4 OR $payment_method==6 OR $payment_method==7){
+    		if($payment_method==3 OR $payment_method==4 OR $payment_method==5 OR $payment_method==6 OR $payment_method==7){
     			$sql = " SELECT t.* , DATE_FORMAT(t.date_payment, '%d-%m-%Y') AS date_payments,
     			DATE_FORMAT(t.date_payment, '%Y-%m-%d') AS date_name,
 				(SELECT name_kh FROM ln_view WHERE type =29 AND key_code = t.ispay_bank LIMIT 1) AS payment_type FROM
