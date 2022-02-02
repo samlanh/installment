@@ -770,8 +770,7 @@ function getAllBranch($search=null){
     }
    function getAgreementBySaleID($id=null){//bppt,natha,longny,moul mith
     		$db = $this->getAdapter();
-    		$sql="
-    		SELECT
+    		$sql="SELECT
 				  `s`.`id`              AS `id`,
 				  `s`.`sale_number`     AS `sale_number`,
 				  `s`.`payment_id`      AS `payment_id`,
@@ -789,8 +788,8 @@ function getAllBranch($search=null){
 				  `s`.`amount_collect`  AS `amount_collect`,
 				  `s`.`interest_rate`   AS `interest_rate`,
 				  `s`.`total_duration`  AS `total_duration`,
-				  `s`.`first_payment`  AS `first_payment`,
-				  s.lastpayment_amount,
+				  `s`.`first_payment`   AS `first_payment`,
+				   s.lastpayment_amount,
 				   s.is_reschedule,
 				   s.land_price,
 				   s.amount_build,
@@ -1013,7 +1012,7 @@ function getAllBranch($search=null){
  			 pp.buidingyear,
  			 pp.`parkingspace`,
  			 pp.`note` as `property_note`,
-(SELECT
+	(SELECT
     	`property`.`land_size`
     	FROM `ln_properties` `property`
     	WHERE (`property`.`id` = `s`.`house_id`)
@@ -1022,12 +1021,20 @@ function getAllBranch($search=null){
  			 pp.`south` AS border_south,
  			 pp.`east` AS border_east,
  			 pp.`west` AS border_west,
- 			 pp.`old_land_id`
+ 			 pp.`old_land_id`,
+ 	(SELECT
+	    	`a`.`description`
+	    	FROM `ln_sale_conditionagreement` `a`
+	    		WHERE (`a`.`saleId` = `s`.`id`)
+	    	LIMIT 1) AS `additinalContract`,
+	    	gendertitle,
+	    	gendertitle1 
 		FROM 
 			`ln_sale` AS `s`,
 			ln_project AS p ,
 			`ln_client` AS c,
 			ln_properties as pp
+			
 			WHERE 
 			`p`.`br_id` = `s`.`branch_id` 
 			AND `c`.`client_id` = `s`.`client_id`

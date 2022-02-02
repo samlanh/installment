@@ -1,0 +1,198 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('SALE_CONTRACT'));
+	$frm = $this->frm_loan;
+	$rs = $this->rs;
+?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.Textarea");
+</script>
+ <div class="card">
+	<div class="card-content collapse show">
+		<form id="add_agreement" action="<?php echo $this->url(array('module'=>'loan','controller'=>'agreement','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			 <script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					dijit.byId('savenew').set('disabled',true);
+    				return true;
+   				}else {
+    				return false;
+   				}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('SALE_CONTRACT');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right"></div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-4 col-sm-4 col-xs-12">
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('branch_id');?>
+	                    	<input type="hidden" value="<?php echo $rs['id'];?>" name="contractId" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?>  :</label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="sale_client" />
+	                   </div>
+	                </div>
+	                <div class="form-group" style="display: none;">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SALE_NO");?>  :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="sale_no" ><?php echo $frm->getElement('property_id');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TITLE");?>  :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input style="font-size:14px;font-family:'khmer os Battambang';min-height:230px;" dojoType="dijit.form.Textarea" class="fullside" id="title" name="title" value="" type="text">
+	                   </div>
+	                </div>
+	             </div>
+	             <div class="col-md-8 col-sm-8 col-xs-12">
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONDITION");?> :</label>
+	                </div>
+	                <div class="form-group">
+	                   <div class="col-md-12 col-sm-12 col-xs-12">
+	                   		<textarea style="width:100%;min-height:300px;max-height:600px;font-size:14px;font-family:'khmer os Battambang';" 
+	                   			dojoType="dijit.form.Textarea" class="fullside" id="condition" name="condition"><?php echo $rs['description'];?></textarea>
+	                   </div>
+	                </div>
+	             </div>
+	         </div>
+	    	<div class="clearfix"></div>
+			 <div class="card-box">
+             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+               		<input type="submit" name="savenew" id="savenew" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('EDIT');?>" id="submitButton" dojoType="dijit.form.Button"
+				 		iconClass="dijitEditorIcon dijitEditorIconSave"/>
+    			</div>
+    		</div>
+		</form>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+function printSubmit(){
+	 $('#frm_add_tran').submit();
+}
+var sale_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 saleId='';
+		 getSaleClie();
+		 getSaleNo();
+		 initilizeData();
+	 });
+		new dijit.form.FilteringSelect({
+		store: sale_store,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		required: false,		           
+		name: "sale_no",
+		id: "sale_no",
+		autoComplete: false,
+		queryExpr: "*${0}*",  
+		searchAttr: "name",
+		class: 'fullside',
+			onChange: function() {
+				getLandAndClientDetail("1");
+			}
+		}, "sale_no");
+
+		new dijit.form.FilteringSelect({
+			store: sale_client_store,
+			autoComplete: false,
+			queryExpr: "*${0}*",  
+			required: false,		           
+			name: "sale_client",
+			id: "sale_client",
+			searchAttr: "name",
+			class: 'fullside',
+				onChange: function() {
+					getLandAndClientDetail("2");
+				}
+			}, "sale_client");
+		
+});
+function initilizeData(){
+	dijit.byId('branch_id').attr('value','<?php echo $rs['branch_id'];?>');
+	dijit.byId('title').attr('value','<?php echo $rs['title'];?>');
+	//dijit.byId('condition').attr('value','<?php //echo $rs['discription'];?>');
+	saleId ='<?php echo $rs['saleId']?>';
+
+}
+var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-sale'));?>';
+function getSaleNo(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==0){
+			return false;
+		}
+		dojo.xhrPost({
+			url:url_getSaleNo,	
+			content:{ 
+				'branch_id': branch_id
+			},
+			handleAs:"json",
+			load: function(data) {	
+				sale_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('sale_no').set('store', sale_store);
+			},
+			error: function(err) {
+			}
+		});
+}
+	var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
+	function getSaleClie(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==-1 || branch_id==""){
+			return false;
+		}
+		dojo.xhrPost({
+			url:url_getSaleClien,	
+			content:{ 
+				'branch_id': branch_id, 'sale_id':'',
+			},
+			handleAs:"json",
+			load: function(data) {	
+				sale_client_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('sale_client').set('store', sale_client_store);
+			    dijit.byId('sale_client').attr('value',saleId);
+			    dijit.byId('sale_no').attr('value',saleId);
+			},
+			error: function(err) {
+			}
+		});
+	}
+	var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
+	function getLandAndClientDetail(inds){
+		if(inds == "2"){
+			sale_id = dijit.byId('sale_client').get('value');
+			dijit.byId('sale_no').set("value",sale_id)
+		}else{
+			sale_id = dijit.byId('sale_no').get('value');
+			dijit.byId('sale_client').set("value",sale_id);
+		}
+	}
+	
+	function displayNone(){
+		document.getElementById('divPrint1').style.display="none";
+	}
+	function printSubmit(){
+		 $('#add_agreement').submit();
+	}
+	
+</script>

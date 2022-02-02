@@ -139,6 +139,13 @@ dojo.require("dijit.form.DateTextBox");
 									strong {
 										font-weight:bold !important;
 									}
+									.noted{
+										white-space: pre-wrap;
+										word-wrap: break-word;
+										word-break: break-all;
+										line-height:14px;font-weight: normal !important;
+										padding: 4px 2px !important;				 
+									}
 									@media print {
 									  table.breakPage {page-break-after: always;}
 										@page {
@@ -180,8 +187,18 @@ dojo.require("dijit.form.DateTextBox");
 											 <tr>
 								             	<td colspan="3" style="text-align: justify;">
 													<?php 
+														function getGenderTitle($genderId){
+															$genderTitle = array(
+																	0=>'លោក',
+																	1=>'លោកស្រី',
+																	2=>'កញ្ញា'
+																);
+															return $genderTitle[$genderId];
+															
+														}
 														$sex="ប្រុស";
 														$title="លោក";
+														
 														if($this->agreement['p_sex']==2){
 															$sex="ស្រី";
 															$title="លោកស្រី";
@@ -254,7 +271,7 @@ dojo.require("dijit.form.DateTextBox");
 															}
 														?>
 															<span class="margin-left">&nbsp;</span>
-															<?php echo $titleClient;?> <span class="value" style="min-width:30px; font-weight:600;"><?php echo $this->agreement['client_namekh'];?></span>
+															<?php echo getGenderTitle($this->agreement['gendertitle']); //echo $titleClient;?> <span class="value" style="min-width:30px; font-weight:600;"><?php echo $this->agreement['client_namekh'];?></span>
 															ភេទ <span class="value" style="min-width:30px;"><?php echo $this->agreement['sexKh'];?></span> 
 															អាយុ  
 																<?php 
@@ -273,7 +290,7 @@ dojo.require("dijit.form.DateTextBox");
 															 ខេត្ដ/រាជធានី  <span >&nbsp;<?php echo $this->agreement['client_province_kh'];?></span> 
 															 ដែលមានលេខទូរស័ព្ទ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_phone'];?></span>
 															<?php if(!empty($this->agreement['hname_kh'])){?>
-															<strong>និង</strong> <?php echo $titleWithClient;?> <span style="font-weight:600;"><?php echo $this->agreement['hname_kh'];?></span> 
+															<strong>និង</strong> <?php echo getGenderTitle($this->agreement['gendertitle1']);//echo $titleWithClient;?> <span style="font-weight:600;"><?php echo $this->agreement['hname_kh'];?></span> 
 															ភេទ <span class="value" style="min-width:30px;"><?php echo $this->agreement['partner_gender'];?></span> 
 															អាយុ  
 																<?php 
@@ -399,6 +416,10 @@ dojo.require("dijit.form.DateTextBox");
 													<br />
 													<span class="margin-left">&nbsp;</span>- បើមានការកែប្រែតម្លៃ ឬសម្រេចចិត្តឈប់លក់ពី <strong>ភាគី(ក)</strong> ត្រូវសងប្រាក់ទៅ <strong>ភាគី(ខ)</strong> ចំនួនពីរដង នៃប្រាក់ដែល <strong>ភាគី(ខ)</strong> បានទូទាត់រួច។
 													<br />
+													<?php if(!empty($this->agreement['additinalContract'])){?>
+														<span class="margin-left noted">&nbsp;<?php echo $this->agreement['additinalContract'];?></span>
+														<br />
+													<?php }?>
 													<span class="margin-left">&nbsp;</span>- បើ <strong>ភាគី(ខ)</strong> កែប្រែឈប់ទិញ  ឬប្រព្រឹត្តផ្ទុយពីលក្ខខណ្ឌខាងលើនេះ  ប្រាក់ដែលបានបង់ត្រូវចាត់ទុកជាអសារបង់។
 													<br />
 													<span class="margin-left">&nbsp;</span>- <strong>ភាគី(ក)</strong> ធានាក្នុងការជួសជុល ផ្ទះរយៈពេល 1ឆ្នាំ ជូន <strong>ភាគី(ខ)</strong> បន្ទាប់ពី <strong>ភាគី(ក)</strong> ប្រគល់ផ្ទះជូន ។ ករណីបើមានប្រធានសក្តិ និង គ្រោះធម្មជាតិមិនមែនជាការទទួលខុសត្រូវរបស់<strong>ភាគី(ក)</strong> ទេ។
