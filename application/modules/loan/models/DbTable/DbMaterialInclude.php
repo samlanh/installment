@@ -117,6 +117,7 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 	}
 	function getMaterialIncludebyid($id){
 		$db = $this->getAdapter();
+		
 		$sql=" SELECT m.*,
 				(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =m.branch_id LIMIT 1) AS branch_name,
 				(SELECT logo FROM `ln_project` WHERE ln_project.br_id =m.branch_id LIMIT 1) AS photo,
@@ -132,7 +133,14 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 	}
 	function getMaterialIncludeDetailbyid($id){
 		$db = $this->getAdapter();
+		$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+		$givedLabel = $tr->translate("GIVED_TO_CUSTOMER");
+		$notYerGiveLabel = $tr->translate("NOT_YET_GIVE");
 		$sql="SELECT *,
+		CASE    
+					WHEN  is_gived = 0 THEN '".$notYerGiveLabel."'
+					WHEN  is_gived = 1 THEN '".$givedLabel."'
+				END AS isGiveLabel,
 			(SELECT title FROM `ln_items_material` WHERE ln_items_material.id =items_id LIMIT 1) AS itmesTitle
 		FROM ln_material_include_detail WHERE materailinc_id=".$id;
 		return $db->fetchAll($sql);

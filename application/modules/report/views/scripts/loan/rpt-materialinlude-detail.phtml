@@ -14,6 +14,11 @@
 	if (!empty($this->rs['photo'])){
 		$images = $this->baseUrl().'/images/projects/'.$this->rs['photo'];
 	}
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
 ?>
 <title><?php echo $tr->translate("MATERIAL_INCLUDE_DETAIL");?></title>
 <script>
@@ -68,22 +73,13 @@
 			}
 			</style>
 				<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
-					<tr>	
-						<td colspan="6">
-							<table width="100%" style="font-family:'Khmer MEF2';white-space:nowrap;">
-								<tr>
-									<td width="25%">
-										<img style="height:75px;"  src="<?php echo $images;?>" alt="">
-									</td>						
-									<td width="50%" style="font:bold 16px 'Kh Muol';" valign="top" align="center"><u><b><strong style="font-weight: initial; font-family:'Khmer OS Muol Light'; font-size:22px;"><?php echo $tr->translate('MATERIAL_INCLUDE_DETAIL');?></strong></b></u>
-									</td>
-									<td width="25%">
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					
+					<tr>
+				    	<td align="center" >
+				        	<div class="divFooter">
+					        	<?php echo $this->headerReport;?>
+				            </div>
+				        </td>
+				    </tr>
 				</table>
 				<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:23px;border:none;" >
 		            	<tr style="line-height: 20px; font-size: 16px; font-family: Khmer OS Battambang;white-space: nowrap;">
@@ -129,13 +125,15 @@
 										<th align="center"><?php echo $tr->translate("NUM");?></th>
 										<th align="center"><?php echo $tr->translate("ITEMS");?></th>
 										<th align="center"><?php echo $tr->translate("DESCRIPTION");?></th>
+										<th align="center"><?php echo $tr->translate("STATUS");?></th>
 									</tr>
 								</thead>
 							   <?php  $i=0; $n=0; if(!empty($this->rows)){foreach($this->rows as $key =>$row) {$i++?>
 								<tr style="font-size: 14px; line-height:26px; white-space: pre-line;" align="left">
 								   <td align="center" width="5%" valign="top"><?php echo $i; ?>&nbsp;</td>
-								   <td align="left" valign="top">&nbsp;<?php echo $row['itmesTitle'];?></td>
+								   <td align="left" valign="top">&nbsp;<?php echo $row['itmesTitle']; ?></td>
 								   <td align="left" valign="top">&nbsp;<?php echo $row['description'];?></td>
+								   <td align="left" valign="top">&nbsp;<?php echo '<span style="float:right;">&nbsp;'.$row['isGiveLabel'].'</span>';?></td>
 								</tr>
 								<?php }}?>
 							</table>
@@ -158,3 +156,40 @@
 		</div>
 	</div>
 </div>
+<script>
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getBranchInfo();
+		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("MATERIAL_INCLUDE_DETAIL");?>';
+		 document.getElementById('dateReport').innerHTML = '&nbsp;';
+	});
+});
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->rs['branch_id'])?0:$this->rs['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

@@ -132,7 +132,6 @@ class Loan_Model_DbTable_DbSetCommission extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
-    		
 				$ids = explode(',', $data['identity']);
 	    		if(!empty($data['identity'])){
 	    			foreach ($ids as $i){

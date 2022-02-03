@@ -61,7 +61,6 @@ class Loan_SetcommissionController extends Zend_Controller_Action {
 					$dbgb->reloadPageExpireSession();
 					exit();
 				}
-				
 				$_dbmodel = new Loan_Model_DbTable_DbSetCommission();
 				$_dbmodel->setCommissionAgency($_data);
 				if(!empty($_data['saveclose'])){

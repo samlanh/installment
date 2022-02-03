@@ -1312,6 +1312,9 @@ class Report_LoanController extends Zend_Controller_Action {
 		}
 		$this->view->rows = $db->getMaterialIncludeDetailbyid($id);
 		$this->view->rs = $row;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
     }
 
 	function expenseDetailAction(){
