@@ -41,6 +41,8 @@ class Issue_IssuecompletedController extends Zend_Controller_Action {
   }
   function addAction()
   {
+		$this->_redirect("/issue/issuecompleted");
+		exit();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
