@@ -1055,4 +1055,38 @@ function rptContactListAction(){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}
+	
+	function rptRefundLetterAction(){
+  	
+		$db = new Report_Model_DbTable_DbParamater();
+			
+		$cancelId = $this->getRequest()->getParam("id");
+		$cancelId = empty($cancelId)?0:$cancelId;
+  		
+  		$rsagreement = $db->getRefundLetterByID($cancelId);
+  		if (empty($rsagreement)){
+  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+  			exit();
+  		}
+		
+		$rsagreement['amountReturnBack'] = empty($rsagreement['amountReturnBack'])?0:$rsagreement['amountReturnBack'];
+		if ($rsagreement['amountReturnBack']<=0){
+  			Application_Form_FrmMessage::Sucessfull("NO_REFUND_LETTER_FOR_THIS_RECORD","/loan/cancel");
+  			exit();
+  		}
+		
+		
+		
+	  	$this->view->termcodiction = $db->getTermCodiction();
+	  	
+		$id = empty($rsagreement['id'])?0:$rsagreement['id'];
+	  	$this->view->agreement = $rsagreement;
+	  	$this->view->sale_schedule = $db->getScheduleBySaleID($id,$rsagreement['payment_id']);
+	  	$this->view->first_deposit = $db->getFirstDepositAgreement($id);
+	  	
+		$this->view->totalpaid = $db->getTotalPrinciplePaidById($id);
+		$this->view->lastpaiddate = $db->getLastDatePaidById($id);
+	  	$db_keycode = new Application_Model_DbTable_DbKeycode();
+	  	$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
+	}
 }
