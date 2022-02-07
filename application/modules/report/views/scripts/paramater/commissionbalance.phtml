@@ -2,6 +2,24 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_staff;
 	$url_commissionbalance = $this->url(array('module'=>'report','controller'=>'paramater','action'=>'commissionreceipt'));
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		//$branch_title = $branch['project_name'];
+	}
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
+	
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -103,14 +121,12 @@
 					<div class="divFooter">
 			        	<table width="100%" style="margin:0; padding:0;border:none;" >
 			            	<tr>
-			                	<td width="30%"><img src="<?php echo $this->baseUrl();?>/images/logo.jpg" style="max-height:85px;max-width:100%;"></td>
-			                	<td width="40%" valign="top">
-				                	<h2 style="white-space:nowrap;line-height: 20px; font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("BRAND_TITLE");?></h2>
-				                	<h2 style="line-height: 20px; font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_COMISSION_BALANCE");?></h2>
-				                	<h2 style="line-height: 20px;font-weight:normal; text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php if(!empty($this->search['start_date'])){echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));}?></h2>
-			                	</td>
-			                    <td width="30%"></td>
-			                </tr> 
+						    	<td align="center">
+							    	<div class="divFooter">
+										<?php echo $this->headerReport;?>
+							         </div>
+								</td>
+							</tr>
 			            </table>
 		            </div>
 				<table id="exportExcel" class="content-data" width="100%" border="1" bordercolor="black">  
@@ -164,7 +180,7 @@
 						 <td align="center" style="white-space: nowrap;">&nbsp;<?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
 						 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($row['buy_date']));?>&nbsp;</td>
 						 <td style="white-space: nowrap;">&nbsp;<?php echo $row['cutomer_name'];?>&nbsp;</td>
-						 <td style="white-space: nowrap;">&nbsp;<?php echo $row['land_address'].', '.$row['street'];?>&nbsp;</td>
+						 <td style="white-space:normal;width:200px;">&nbsp;<?php echo $row['land_address'].', '.$row['street'];?>&nbsp;</td>
 						 <td style="white-space: nowrap;">&nbsp;<?php echo number_format($row['price_sold'],2);?>&nbsp;</td>
 						 <td style="white-space: nowrap;">&nbsp;<?php echo number_format($row['total_sale_paid'],2);?>&nbsp;</td>
 						 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo number_format($percentpaid,2)."%";?>&nbsp;</td>
@@ -218,6 +234,12 @@
 				 getAllPropertyBranch();
 			}
 		}, "branch_id");
+
+		getBranchInfo();
+		document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_CLIENT");?>';
+		document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>'; 
+		
 });
 land_id = '<?php echo $this->search['land_id']?>';
 var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
@@ -271,5 +293,32 @@ function setrowdata(index){
 var recordid ='';
 function gotoAction(){
 	 window.open(url+row, '_blank');
+}
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
 }
 </script>

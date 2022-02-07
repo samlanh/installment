@@ -21,6 +21,7 @@
 	if($headerReportType==2){
 		$classHideHeight="125px";
 	}
+	echo $this->search['start_date'];
 ?>
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT_CLIENT");?></title>
@@ -127,6 +128,7 @@
 			table tr td{
 				padding:0 2px;
 			}
+			@media print{@page {size: landscape}}
 		</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
 		<tr>
@@ -144,7 +146,7 @@
 		        </tr>
 		    	<tr class="style" align="center" style="border: 1px solid #000;">
 		    		<td colspan="9"><?php echo $tr->translate("CLIENT_INFO");?></td>
-		    		<td colspan="5"><?php echo $tr->translate("RELEVANT_STAKEHOLDER");?></td>
+		    		<td colspan="6"><?php echo $tr->translate("RELEVANT_STAKEHOLDER");?></td>
 		    		<td rowspan="2"><?php echo $tr->translate("DATE");?></td>
 		    	</tr>
 		    	<tr class="style" align="center">
@@ -166,26 +168,17 @@
 		          </tr>
 	          </thead>
 	          <?php if(!empty($this->client_list)) foreach($this->client_list as $key =>$row){?>
-			   <tr style="font-size: 12px;line-height: 14px;font-family: 'Times New Roman','Khmer OS Battambang';" align="center" class="hover">
+			   <tr style="font-size: 12px;line-height:22px;font-family: 'Times New Roman','Khmer OS Battambang';" align="center" class="hover">
 				   <td><?php echo $key+1; ?></td>
 				   <td align="left" style="white-space: nowrap;"><?php echo $row['client_name'];?></td>
 				   <td ><?php echo $row['sex']?></td>
-				   <td style="min-width:75px !important;"><?php echo $row['phone']?></td>
-<<<<<<< HEAD
-				   <td style="min-width:75px !important;"><?php echo $row['house_name']?></td>
+				   <td align="left"><?php echo $row['phone']?></td>
+				   <td style="white-space:normal;max-width:200px !important;text-align: left;"><?php echo $row['house_name']?></td>
 				   <td>&nbsp;<?php echo date("d/m/Y",strtotime($row['dob']));?></td>
 				   <td>&nbsp;<?php echo $row['nationality']?></td>
 		           <td style="white-space: nowrap;">&nbsp;<?php echo $row['doc_name']?></td>
 		           <td>&nbsp;<?php echo $row['nation_id']?></td>
 				   <td style="line-height:15px;text-align: left">&nbsp;<?php echo "#".$row['house'].",St".$row['street'].", ".$row['village_name'].", ".$row['com_name'].", ".$row['dis_name'].", ".$row['pro_name']?></td>
-=======
-				   <td><?php echo date("d/m/Y",strtotime($row['dob']));?></td>
-				   <td><?php echo $row['nationality']?></td>
-		           <td style="white-space: nowrap;"><?php echo $row['doc_name']?></td>
-		           <td><?php echo $row['nation_id']?></td>
-				   <td style="line-height:15px;text-align: left"><?php echo "#".$row['house'].",St".$row['street'].", ".$row['village_name'].", ".$row['com_name'].", ".$row['dis_name'].", ".$row['pro_name']?></td>
->>>>>>> e8661e232e6644d6faf83dadc39415b33d6156b9
-				   
 				   <td><?php echo $row['hname_kh']?></td>
 				   <td style="line-height:15px;text-align: left"><?php echo $row['ksex'];?></td>
 				   <td><?php echo ($row['lphone'])?></td>
@@ -276,8 +269,7 @@
 		getBranchInfo();
 		document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
 		document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_CLIENT");?>';
-		document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['end_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>'; 
-		
+		document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>'; 
 	
 });
 function filterDistrict(){

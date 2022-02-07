@@ -408,7 +408,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'commission_type'=>'',
   				'search_status'=>-1);
   	}
-  	$this->view->search =$search;
+  	$this->view->search=$search;
   	$row = $db->getCommissionBalance($search);
   	$this->view->row = $row;
   	
@@ -419,6 +419,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
+  	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   function commissionreceiptAction(){
   	$db  = new Report_Model_DbTable_DbParamater();
@@ -594,7 +595,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	if($this->getRequest()->isPost()){
   		$search = $this->getRequest()->getPost();
   	}else{
-  		$search = array('adv_search' => '',
+  		$search = array(
+  				'adv_search' => '',
   				'status' => -1,
   				'branch_id' => 0,
   				'province'=>0,
@@ -602,7 +604,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'commune'=>'',
   				'village'=>'',
   				'start_date'=> date('Y-m-d'),
-  				'end_date'=>date('Y-m-d'));
+  				'end_date'=>date('Y-m-d')
+  			);
   	}
   
   	$this->view->result=$search;

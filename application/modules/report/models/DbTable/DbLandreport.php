@@ -3679,6 +3679,7 @@ function updatePaymentStatus($data){
 		$sql=" SELECT ic.*,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =ic.branch_id LIMIT 1) AS branch_name,
 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =ic.client_id LIMIT 1) AS client_name,
+		(SELECT phone FROM `ln_client` WHERE ln_client.client_id =ic.client_id LIMIT 1) AS tel,
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=ic.house_id LIMIT 1) AS house_no,
 		(SELECT  first_name FROM rms_users WHERE id=ic.user_id LIMIT 1 ) AS user_name,
 		(SELECT title FROM `ln_items_material` WHERE ln_items_material.id =icd.items_id LIMIT 1) AS itmesTitle,
