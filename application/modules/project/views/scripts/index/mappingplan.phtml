@@ -1,0 +1,223 @@
+<?php 
+	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+	$username = $session_user->first_name;
+	$user_id = $session_user->user_id;
+	$userTypeId = $session_user->level;
+	
+	if(empty($user_id)){
+		Application_Form_FrmMessage::redirectUrl("/");
+		exit();
+	}
+	
+	$t = time();
+	$t0 = $session_user->timeout;
+	$diff = $t - $t0;
+	//500 = 5 min
+	if ($diff > 1000 || !isset($t0))
+	{
+		$session_user->unsetAll();
+		Application_Form_FrmMessage::redirectUrl("/");
+		exit();
+	}else{
+		$session_user->unlock();
+		$session_user->timeout = time();
+		$session_user->lock();
+	}
+
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('MAPPING_PROPERTY')); 
+	
+?>
+<html><head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title></title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="<?php echo $this->baseUrl()."/";?>images/icon.ico" type="image/x-icon"/>
+	<script src="<?php echo $this->baseUrl()."/";?>dashboard/js/jquery-2.1.4.min.js"></script>
+	<script src="<?php echo $this->baseUrl()."/";?>admin/mapping/jquery-ui.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl()."/";?>admin/mapping/jquery-ui.css">
+
+
+</head>
+<body style="">
+    <div class="left">
+		<div id="tar" style="background: #e3e3e3; background-image: url('<?php echo $this->baseUrl()."/"?>images/projects/projectMasterplan.jpg'); background-position: center center;background-repeat: no-repeat;background-size: 100%;position: relative;width: 1000px;height: 874px;" class="ui-selectable">
+		</div>
+	</div>
+	<div class="right">
+		<div class="form-group">
+		   <label class="control-label" ><?php echo $tr->translate("WIDTH");?><span class="required">*</span>  :
+		   </label>
+		   <div class="control-box">
+				<input onKeyup="doCss();" type="number" id="width" name="width" value="0" placeholder="<?php echo $tr->translate("WIDTH");?>">
+		   </div>
+	   </div>
+	   <div class="form-group">
+		   <label class="control-label" ><?php echo $tr->translate("HEIGHT");?><span class="required">*</span>  :
+		   </label>
+		   <div class="control-box">
+				<input onKeyup="doCss();" type="number" id="height" name="height" value="0" placeholder="<?php echo $tr->translate("HEIGHT");?>">
+		   </div>
+	   </div>
+	   <div class="form-group">
+		   <label class="control-label " ><?php echo $tr->translate("TRANSFORM");?><span class="required">*</span>  :
+		   </label>
+		    <div class="control-box">
+				<input onKeyup="doCss();" type="number" id="transform" name="transform" value="0" placeholder="<?php echo $tr->translate("TRANSFORM");?>">
+		   </div>
+	   </div>
+	   <div class="form-group">
+		   <label class="control-label " ><?php echo $tr->translate("TOP");?><span class="required">*</span>  :
+		   </label>
+		    <div class="control-box">
+				<input onKeyup="doCss();" type="number" id="top" name="top" value="0" placeholder="<?php echo $tr->translate("TOP");?>">
+		   </div>
+	   </div>
+	   <div class="form-group">
+		   <label class="control-label " ><?php echo $tr->translate("LEFT");?><span class="required">*</span>  :
+		   </label>
+		    <div class="control-box">
+				<input onKeyup="doCss();" type="number" id="left" name="left" value="0" placeholder="<?php echo $tr->translate("LEFT");?>">
+		   </div>
+	   </div>
+	</div>
+</div>
+
+<style>
+div.right, div.left {
+    display: inline-block;
+    vertical-align: top;
+}
+div.right {
+    width: 235px;
+}
+div.right input {
+    width: 100%;
+}
+.form-group label.control-label, .form-group .control-box {
+    display: inline-block;
+}
+.form-group label.control-label {
+    width: 60%;
+}
+.form-group .control-box {
+    width: 37%;
+}
+
+</style>
+
+    <script type="text/javascript">//<![CDATA[
+function doCss(){
+	width = $("#width").val();
+	height = $("#height").val();
+	transform = $("#transform").val();
+	
+	topSide =$("#top").val();
+	leftSide =$("#left").val();
+	$('#demo').css({
+          'width': width,
+          'height': height,
+		  'left': leftSide,
+          'top': topSide,
+		   'transform' : 'rotate(' + transform + 'deg)'
+        });
+}
+
+$(function() {
+	$("body").hover(function() {
+		updateTimeOut();
+		checkSessionExpire();
+	});
+
+    var beginX, beginY, endX, endY, width, height;
+
+    $('#tar').selectable({
+
+      start: function(e) {
+        var posX = $(this).position().left, posY = $(this).position().top;
+
+        beginX = e.pageX - posX;
+        beginY = e.pageY - posY;
+
+      },
+
+      stop: function(e) {
+        var posX = $(this).offset().left, posY = $(this).offset().top;
+
+        endX = e.pageX - posX;
+        endY = e.pageY - posY;
+
+        if(beginX > endX) { var tmp = beginX; beginX = endX; endX = tmp; }
+        if(beginY > endY) { var tmp = beginY; beginY = endY; endY = tmp; }
+
+        width = endX - beginX;
+        height = endY - beginY;
+
+        $(this).html('<div id="demo"></div>');
+        $('#demo').css({
+          'position': 'relative',
+          'width': width,
+          'height': height,
+          'left': beginX,
+          'top': beginY,
+          'background': '#0064f9',
+		  'opacity': '0.5'
+        });
+		$("#width").val(width);
+		$("#height").val(height);
+		$("#top").val(beginY);
+		$("#left").val(beginX);
+      }
+    });
+  });
+
+
+  //]]>
+var urlReload = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'reloadr'));?> ';
+function updateTimeOut(){
+	var lang="";
+	jQuery.ajax({
+		url: urlReload,
+		type: "post",
+		data:{'lange':lang},
+		success: function(data){
+			//location.reload();
+			//alert(data);
+		},
+		error:function(err){
+			
+		}
+	});
+}
+  var urlCheckSession = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'sessioncheck'));?> ';
+function checkSessionExpire(){
+	var lang="";
+	jQuery.ajax({
+		url: urlCheckSession,
+		type: "post",
+		data:{'lange':lang},
+		success: function(data){
+			if(data == true){
+				loadingBlock();
+				setTimeout(function () {
+					alert("<?php echo $tr->translate("Session Expire");?>");
+				  	window.location = '<?php echo $this->baseUrl();?>';
+			    }, 1000);
+				
+			}
+		},
+		error:function(err){
+			
+		}
+	});
+}
+  
+  </script>
+
+
+
+
+</body></html>

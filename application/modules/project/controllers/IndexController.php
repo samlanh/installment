@@ -158,4 +158,8 @@ class Project_indexController extends Zend_Controller_Action {
 		$this->view->frm_branch = $frm;
 		$this->view->rsshare = $db->getBranchHolderById($id);
 	}
+	
+	function mappingplanAction(){
+		$this->_helper->layout()->disableLayout();
+	}
 }
