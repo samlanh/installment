@@ -1,0 +1,248 @@
+<?php 
+	echo $this->render('siteheader.phtml');
+
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('HOME')); 
+	$baseUrl = $this->baseUrl();
+	
+	$dbSiteFront = new Application_Model_DbTable_DbSiteFront();
+	$search = $this->search;
+?>
+	<!-- Head Logo
+   ================================================== -->
+    <section id="headerSection">
+		
+		<div class="row companylogo">
+			<div class="container">
+				<div class="twelve columns">
+					<img src="<?php echo $baseUrl; ?>/images/logo.png" />
+				</div>
+			</div>
+		</div>
+	</section>
+   <!-- About Section
+   ================================================== -->
+   
+   <section id="resume">
+		
+		<div class="row awards">
+			<div class="container">
+				 <div class="nine columns header-col">
+					<div class="row infoHouseRowTitle">
+						<div class="three columns">
+							<div class="head-title-blog">
+								<h2><span><i class="fa fa-pie-chart " aria-hidden="true"></i> <?php echo $tr->translate('TOTAL_SUMMARY'); ?></span></h2>
+							 </div>
+						</div>
+						<div class="nine columns">
+							
+						</div>
+					</div>
+					<?php  
+					$search['isToday']=0;
+					if(!empty($this->allProperty)) foreach($this->allProperty as $property){ 
+					
+						$search['propertyStatus']=1;
+						$search['property_type']=$property['property_type'];
+						$remainProperty = $dbSiteFront->getCountPropertyByType($search);
+						
+						$search['payment_id']=null;
+						$allSale = $dbSiteFront->getCountSaleByPropertyType($search);
+						$search['payment_id']=1;
+						$saleDeposite = $dbSiteFront->getCountSaleByPropertyType($search);
+						
+						
+						$saleCancel = $dbSiteFront->getCountSaleCancelByPropertyType($search);
+						
+						
+					?>
+					<div title="<?php echo $property['propertyTypeTitle'];?>" class="row infoHouseRow">
+						<div class="three columns img-feature">
+							<div class="house-image">
+								<img src="<?php echo $baseUrl; ?>/images/photo/property/sample-house.jpg" alt="sample Image">
+								<span class="title-house" >
+									<i class="fa fa-home" aria-hidden="true"></i> <?php echo $property['propertyTypeTitle'];?>
+								</span>
+							</div>
+						</div>
+						<div class="nine columns row-feature-right">
+							<div class="two columns detailInfo total">
+								<div class="content-row">
+									<span class="value-row"><?php echo sprintf('%02d',$property['total']);?></span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('TOTAL'); ?></span>
+								</div>
+							</div>
+							<div class="two columns detailInfo remain">
+								<div class="content-row">
+									<span class="value-row"><?php echo sprintf('%02d',$remainProperty['total']);?></span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('REMAINING'); ?></span>
+								</div>
+							</div>
+							<div class="two columns detailInfo blocked">
+								<div class="content-row">
+									<span class="value-row">00</span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('BLOCK'); ?></span>
+								</div>
+							</div>
+							<div class="two columns detailInfo deposit">
+								<div class="content-row">
+									<span class="value-row"><?php echo sprintf('%02d',$saleDeposite['totalSale']);?></span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('DEPOSITE'); ?></span>
+								</div>
+							</div>
+							<div class="two columns detailInfo sold">
+								<div class="content-row">
+									<span class="value-row"><?php echo sprintf('%02d',$allSale['totalSale']);?></span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('SOLDS'); ?></span>
+								</div>
+							</div>
+							<div class="two columns detailInfo cancel">
+								<div class="content-row">
+									<span class="value-row"><?php echo sprintf('%02d',$saleCancel['total']);?></span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('CANCEL'); ?></span>
+								</div>
+							</div>
+							
+							
+							
+						</div>
+					</div>
+					<?php } ?>
+					
+					<div class="row mapping-view" style="background: #000000;  background-image: url(/camappgit/installment/public/images/photo/image-mapping.jpg); background-position: center center; background-repeat: no-repeat; background-size: cover;  position: relative; text-align: center;">
+						<span>
+							<a title="<?php echo $tr->translate('VIEW_MAPPING'); ?>" href="<?php echo $this->baseUrl()."/site/mapping?project=";?>"><i class="fa fa-search "></i> <?php echo $tr->translate('VIEW_MAPPING'); ?></a>
+						</span>
+					</div>
+					
+					
+					<div class="row infoHouseRowTitle">
+						<div class="three columns">
+							<div class="head-title-blog">
+								<h2><span><i class="fa fa-pie-chart " aria-hidden="true"></i> <?php echo $tr->translate('DAILY_SUMMARY'); ?></span></h2>
+							 </div>
+						</div>
+						<div class="nine columns">
+							
+						</div>
+					</div>
+					
+					<?php  
+					$search['isToday']=1;
+					if(!empty($this->allProperty)) foreach($this->allProperty as $property){ 
+					
+						$search['propertyStatus']=1;
+						$search['property_type']=$property['property_type'];
+						$remainProperty = $dbSiteFront->getCountPropertyByType($search);
+						
+						$search['payment_id']=null;
+						$allSale = $dbSiteFront->getCountSaleByPropertyType($search);
+						$search['payment_id']=1;
+						$saleDeposite = $dbSiteFront->getCountSaleByPropertyType($search);
+						
+						
+						$saleCancel = $dbSiteFront->getCountSaleCancelByPropertyType($search);
+						
+						
+					?>
+					<div title="<?php echo $property['propertyTypeTitle'];?>" class="row infoHouseRow">
+						<div class="three columns img-feature">
+							<div class="house-image">
+								<img src="<?php echo $baseUrl; ?>/images/photo/property/sample-house.jpg" alt="sample Image">
+								<span class="title-house" >
+									<i class="fa fa-home" aria-hidden="true"></i> <?php echo $property['propertyTypeTitle'];?>
+								</span>
+							</div>
+						</div>
+						<div class="nine columns row-feature-right">
+							<div class="two columns detailInfo total">
+								<div class="content-row">
+									<span class="value-row"><?php echo sprintf('%02d',$property['total']);?></span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('TOTAL'); ?></span>
+								</div>
+							</div>
+							<div class="two columns detailInfo remain">
+								<div class="content-row">
+									<span class="value-row"><?php echo sprintf('%02d',$remainProperty['total']);?></span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('SOLDS'); ?></span>
+								</div>
+							</div>
+							<div class="two columns detailInfo blocked">
+								<div class="content-row">
+									<span class="value-row">00</span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('BLOCK'); ?></span>
+								</div>
+							</div>
+							<div class="two columns detailInfo deposit">
+								<div class="content-row">
+									<span class="value-row"><?php echo sprintf('%02d',$saleDeposite['totalSale']);?></span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('DEPOSITE'); ?></span>
+								</div>
+							</div>
+							<div class="two columns detailInfo sold">
+								<div class="content-row">
+									<span class="value-row"><?php echo sprintf('%02d',$allSale['totalSale']);?></span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('SOLDS'); ?></span>
+								</div>
+							</div>
+							<div class="two columns detailInfo cancel">
+								<div class="content-row">
+									<span class="value-row"><?php echo sprintf('%02d',$saleCancel['total']);?></span>
+									<span class="head-title-row mobile"><?php echo $tr->translate('CANCEL'); ?></span>
+								</div>
+							</div>
+							
+							
+							
+						</div>
+					</div>
+					<?php } ?>
+					
+				 </div>
+				 <div class="three columns ">
+					 <div class="head-title-blog">
+						<h2><span><i class="fa fa-bell" aria-hidden="true"></i> <?php echo $tr->translate('ANNOUNCEMENT'); ?></span></h2>
+					 </div>
+					<div class="award-list">
+					   <ul>
+							<?php $class=''; if (!empty($this->lastestnews)) foreach ($this->lastestnews as $news){ 
+								//$result = $db->checkReadNewfeed($news['id']);
+								//if ($result['is_read']==1){
+								//	$class="read";
+									$read = $tr->translate("Read");
+								//}else{
+								//	$class="";
+								//	$read = $tr->translate("Unread");
+								//}
+								
+								$image = $this->baseUrl()."/images/no-photo.png";
+								if (!empty($news['image_feature'])){
+									if (file_exists(PUBLIC_PATH."/images/news/".$news['image_feature'])){
+										$image = $this->baseUrl()."/images/news/".$news['image_feature'];
+									}
+									
+								}
+						
+								?>
+							 <li class="wow fadeIn">
+								<span class="image">
+									<img src="<?php echo $image;?>" alt="Article Image">
+								</span>
+								<h3><a href="<?php echo $this->baseUrl()."/site/article/news?detail=".$news['id']?>"><?php echo $news['title'];?></a></h3>
+								<small><i class="fa fa-calendar "></i> <?php if (date("Y-m-d",strtotime($news['publish_date']))==date("Y-m-d")){ echo $tr->translate("Today"); }else{ echo date("Y-M-d",strtotime($news['publish_date']));}?> | <?php echo $news['user_name']; ?> | <span class="statu-read"><?php echo $read;?></span></small>  
+							 </li>
+							 <?php }?>
+							
+							 
+						</ul>
+					</div>
+				</div>
+			  </div>
+		</div>
+		
+      
+   </section>
+   
+   <?php 
+		echo $this->render('sitefooter.phtml');
+	?>

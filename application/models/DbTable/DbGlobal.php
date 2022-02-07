@@ -20,7 +20,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	}
 	function currentlang(){
 		$session_lang=new Zend_Session_Namespace('lang');
-		return $session_lang->lang_id;
+		$lang = empty($session_lang->lang_id)?1:$session_lang->lang_id;
+		return $lang;
 	}
 	public function getLaguage(){
 		$db = $this->getAdapter();
