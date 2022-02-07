@@ -327,6 +327,84 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 				'style'=>'min-height: 60px;font-size:12px;'
 		));
 		
+		$_bank_info = new Zend_Dojo_Form_Element_TextBox('bank_info');
+		$_bank_info->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Information")
+		));
+		
+		
+		$_bank_account1 = new Zend_Dojo_Form_Element_TextBox('bank_account1');
+		$_bank_account1->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Name")." 1"
+		));
+		
+		$_bank_account_name1 = new Zend_Dojo_Form_Element_TextBox('bank_account_name1');
+		$_bank_account_name1->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Account Name")." 1"
+		));
+		
+		$_bank_account1number = new Zend_Dojo_Form_Element_TextBox('bank_account1number');
+		$_bank_account1number->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Acc Name")." 1"
+		));
+		$_bank_account2 = new Zend_Dojo_Form_Element_TextBox('bank_account2');
+		$_bank_account2->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Name")." 2"
+		));
+		
+		$_bank_account_name2 = new Zend_Dojo_Form_Element_TextBox('bank_account_name2');
+		$_bank_account_name2->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Account Name")." 2"
+		));
+		
+		$_bank_account2number = new Zend_Dojo_Form_Element_TextBox('bank_account2number');
+		$_bank_account2number->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Acc Name")." 2"
+		));
+		
+		$_bank_account3 = new Zend_Dojo_Form_Element_TextBox('bank_account3');
+		$_bank_account3->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Name")." 3"
+		));
+		
+		$_bank_account_name3 = new Zend_Dojo_Form_Element_TextBox('bank_account_name3');
+		$_bank_account_name3->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Account Name")." 3"
+		));
+		
+		$_bank_account3number = new Zend_Dojo_Form_Element_TextBox('bank_account3number');
+		$_bank_account3number->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Bank Acc Name")." 3"
+		));
+		
+		
+		$_cheque_receiver = new Zend_Dojo_Form_Element_TextBox('cheque_receiver');
+		$_cheque_receiver->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("Cheque Receiver")
+		));
+		
 		
 		if(!empty($data)){
 			$br_id->setValue($data['br_id']);
@@ -379,7 +457,10 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 		}
 		
 		
-		$this->addElements(array($contact_contruction,$map,$prefix_code,$_btn_search,$_title,$_status,$br_id,$branch_namekh,
+		$this->addElements(array(
+				$_bank_info,$_bank_account_name1,$_bank_account1,$_bank_account1number,$_bank_account2,$_bank_account_name2,$_bank_account2number,
+				$_bank_account3,$_bank_account_name3,$_bank_account3number,$_cheque_receiver,
+				$contact_contruction,$map,$prefix_code,$_btn_search,$_title,$_status,$br_id,$branch_namekh,
 		$branch_nameen,$br_address,$branch_code,$branch_tel,$_fax ,$branch_note,
 				$current_addres,$project_manager_nameen,$project_manager_namekh,$project_manager_nation_id,$project_manager_nationality,
 				$sc_project_manager_nameen,$sc_project_manager_namekh,$sc_project_manager_nation_id,$sc_project_manager_nationality,

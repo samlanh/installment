@@ -11,6 +11,10 @@
 	
 	$key = new Application_Model_DbTable_DbKeycode();
 	$data =$key->getKeyCodeMiniInv(TRUE);
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
 ?>	
 <style>
 .border-cover {
@@ -68,7 +72,7 @@ label.value {
 		</div>
 	 </div>
 </div>
-<div style="background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+<div style="background: #fff;width: 31cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
 			<div id="divPrint">
 				<style>
 		   			label.value{
@@ -93,6 +97,37 @@ label.value {
 					    height: 1px;
 					    margin-bottom: 10px;
 					}
+					
+						table.content-data{
+									border-collapse:collapse;
+									width:100%;
+									border:1px solid #000; 
+									font-family:'Times New Roman','Khmer OS Battambang';
+									font-size:12px !important;
+									white-space: nowrap;
+									margin:0 auto;
+								}
+								table.content-data tr.style-head {
+								   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+									background: #ccd9ff;
+									text-align: center;
+								}
+								table.content-data tr.style-rowdata {
+									font-size:12px; 
+									height: 23px;
+								}
+								table.content-data td {
+									padding: 2px;
+								}
+								.border_bottom{
+									border-bottom:2px solid #000;
+								}
+								tr.style-rowdata.hover.context-menu-one.completedCss {
+									background: #00e01c0d;
+								}
+								table tr td{
+									padding:0 2px;
+								}
 		  		 </style>
 				<table width="100%" style="font-size:12px; font-family:Tahoma,'Khmer OS Battambang';"> 
 					<tr class="head">
@@ -115,7 +150,7 @@ label.value {
 					</tr>
 					<tr>
 					   <td colspan="3">
-					   		<table id="exportExcel" style="font-family:'Khmer OS Battambang'; border-collapse:collapse;  font-size:14px; white-space: nowrap;" width="100%" cellspacing="0">
+					   		<table style="font-family:'Khmer OS Battambang'; border-collapse:collapse;  font-size:14px; white-space: nowrap;" width="100%" cellspacing="0">
 						    	<tr>
 						    		<td align="center" style="font-size:14px; font-weight: initial; font-family:'Khmer OS Muol Light';">
 						    			<img src="<?php echo $this->baseUrl();?>/images/<?php echo $photo;?>" style="width: 120px;/* max-height: 120px; */border: solid 1px #a29f9f;height: 130px;"/>
@@ -136,7 +171,7 @@ label.value {
 						    			 <label class="title">អត្តលេខ</label> : <label class="value"><?php echo $rs['client_number'];?></label> <label class="title">ថ្ងៃ ខែ ឆ្នាំកំណើត</label> : <label class="value"><?php echo date("d M Y",strtotime($rs['dob']));?></label>  <label class="title">មុខរបរ</label> : <label class="value"><?php //echo $rs['job'];?></label>
 						    			</p>
 						    			<p class="padding-left">
-						    			<label class="title">ប្រភេទឯកសារ</label> : <label class="value"><?php echo $rs['doc_name'];?></label> <label class="title">លេខសម្គាល់</label> : <label class="value"><?php echo $rs['nation_id'];?></label> <label class="title">លេខទូរស័ព្ទ</label> : <label class="value"><?php echo $rs['phone'];?></label>
+						    			<label class="title">ប្រភេទឯកសារ</label> : <label class="value"><?php echo $rs['doc_name'];?></label> <label class="title">លេខសម្គាល់</label> : <label class="value"><?php echo $rs['nation_id'];?></label> <label class="title">លេខទូរសព្ទ</label> : <label class="value"><?php echo $rs['phone'];?></label>
 						    			</p>
 						    					
 						    			<p class="padding-left">
@@ -157,7 +192,7 @@ label.value {
 						    			<label class="title">ឈ្មោះ </label> : <label class="value"><?php echo $rs['hname_kh'];?></label> <label class="title">ភេទ</label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo $rs['ksex'];?></label> <label class="title">សញ្ជាតិ</label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo $rs['p_nationality'];?></label>
 						    			</p>
 						    			<p class="padding-left">
-						    			<label class="title">ត្រូវជា</label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo $rs['join_type'];?></label> <label class="title">ថ្ងៃ ខែ ឆ្នាំកំណើត</label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo date("d M Y",strtotime($rs['dob_buywith']));?></label> <label class="title">លេខទូរស័ព្ទ </label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo $rs['lphone'];?></label>
+						    			<label class="title">ត្រូវជា</label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo $rs['join_type'];?></label> <label class="title">ថ្ងៃ ខែ ឆ្នាំកំណើត</label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo date("d M Y",strtotime($rs['dob_buywith']));?></label> <label class="title">លេខទូរសព្ទ </label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo $rs['lphone'];?></label>
 						    			</p>
 						    			<p class="padding-left">
 						    			<label class="title">ប្រភេទឯកសារ</label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo $rs['doc_name'];?></label> <label class="title">លេខសម្គាល់</label> : <label class="value"><?php if(!empty($rs['hname_kh'])) echo $rs['rid_no'];?></label>
@@ -179,6 +214,87 @@ label.value {
 						    			<p class="padding-left">
 						    				<label class="title">ឈ្មោះ </label> : <label class="value"><?php echo $rs['arid_no']; ?></label> <label class="title">លេខអត្តសញ្ញាណប័ណ្ណ</label> : <label class="value"><?php echo $rs['refe_nation_id'];?></label> 
 						    			</p>
+						    		</td>
+						    	</tr>
+						    	<tr>
+						    		<td style="font-size:14px; font-weight: initial; font-family:'Khmer OS Muol Light';">
+						    			IV. ព័ត៌មានការលក់
+						    			<div class="border"></div>
+						    		</td>
+						    	</tr>
+						    	<tr>
+						    		<td >
+						    			<table class="content-data" border="1"​ cellspacing="0" style="font-size:12px !important; font-family:'Khmer OS Battambang';">
+						    				<tr class="style-head">
+											  <?php 
+											 ?>
+												<td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+												<td colspan="10"><?php echo $tr->translate("SALE_INFO");?></td>
+												<td colspan="2"><?php echo $tr->translate("PAYMENT_INFO");?></td>
+												<td rowspan="2"><?php echo $tr->translate("AGENTCY");?></td>
+												<td rowspan="2"><?php echo $tr->translate("STATUS");?></td> 
+											 </tr>
+							                 <tr class="style-head">
+							                    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
+							                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+							                    <td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
+							                    <td><?php echo $tr->translate("BUY_DATE");?></td>
+							                    <td><?php echo $tr->translate("END_DATE");?></td>
+							                    <td><?php echo $tr->translate("TYPE");?></td>
+							                    <td><?php echo $tr->translate("PRICE_BEFORE");?></td>
+							                    <td><?php echo $tr->translate("DISCOUNT");?>$</td>
+							                    <td><?php echo $tr->translate("DISCOUNT_PERCENT");?></td>
+							                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>
+							                    <td><?php echo $tr->translate("PAID_PRINCIPAL");?></td>
+							                    <td><?php echo $tr->translate("REMAIN");?></td>
+							                </tr>
+							                <?php 
+							                $totalSale = 0;
+							                $paid=0;
+							                $paidAmount=0;
+							                if(!empty($this->saleList)) foreach($this->saleList as $key=> $row){
+							                	if(!empty($row['old_land_id'])){
+							                		$idse = explode(",", $row['old_land_id']);
+							                		$countland = count($idse);
+							                	}else{
+							                		$countland = 1;
+							                	}
+							                	if($row['is_cancel']!=1){
+								                	$paidAmount = $row['totalpaid_amount']+$row['totalAmountCreadit'];
+								                	$paid = $paid+$paidAmount;
+								                	$totalSale = $totalSale+$row['price_sold'];
+							                	}
+							                	?>
+							                	<tr class="style-rowdata hover context-menu-one" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
+														<td align="center"><?php echo $key+1; ?></td>
+														<td><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; font-weight: 600;" ><?php echo $row['branch_name']; ?></span></td>
+														<td><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; font-weight: 600;" ><?php echo $row['land_address']." ".$row['street']; ?></span></td>
+														<td align="center"><?php echo $countland ?></td>
+														<td style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?></td>
+														<td style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format($montFomat); ?></td>
+														<td><?php echo $row['paymenttype']; ?></td>
+														<td align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span></td>
+														<td align="right" style="white-space:nowrap;">
+														<?php 
+															$other_discount = empty($row['other_discount'])?0:$row['other_discount'];
+															echo number_format($row['discount_amount']+$other_discount,2);
+															
+														?></td>	
+														<td align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>
+														<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
+														<td align="right" style="white-space:nowrap; text-align: right;"><?php echo number_format($paidAmount,2);//echo number_format($row['paid_amount'],2);?></td>
+														<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$paidAmount,2); //echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
+														<td><?php echo $row['staff_name']; ?></td>
+														<td><?php echo $row['isCancel']; ?></td>
+													</tr>
+							                <?php }?>
+							                <tr style="border: 1px solid #fff;border-top: 1px solid #000;font-weight: bold;">
+							                	<td colspan="11" align="right"><?php echo number_format($totalSale,2); ?></td>
+							                	<td align="right"><?php echo number_format($paid,2); ?></td>
+							                	<td align="right"><?php echo number_format($totalSale-$paid,2); ?></td>
+							                	<td colspan=" 2"></td>
+							                </tr>
+						    			</table>
 						    		</td>
 						    	</tr>
 						    </table>

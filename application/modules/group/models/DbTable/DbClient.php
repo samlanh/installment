@@ -252,6 +252,60 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		$row=$db->fetchRow($sql);
 		return $row;
 	}
+	function getSaleByClients($clientId){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$session_lang=new Zend_Session_Namespace('lang');
+		$lang = $session_lang->lang_id;
+			
+		$str = 'name_en';
+		if($lang==1){
+			$str = 'name_kh';
+		}
+		
+		$sql="
+		SELECT `s`.`id` AS `id`,
+	    	(SELECT
+			     `ln_project`.`project_name`
+			   FROM `ln_project`
+			   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+			   LIMIT 1) AS `branch_name`,
+		    `p`.`land_address`    AS `land_address`,
+		    `p`.`street`          AS `street`,
+		    (SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
+	  		`s`.`price_before`    AS `price_before`,
+	  		 `s`.`discount_amount` AS `discount_amount`,
+	 		 `s`.`discount_percent` AS `discount_percent`,
+	 		`s`.`price_sold`     AS `price_sold`,
+	 		
+	 		(SELECT
+		     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`)) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1))
+		   FROM `ln_client_receipt_money` `cr`
+		   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,  
+		   (SELECT SUM(total_amount) FROM `ln_credit` WHERE status=1 AND sale_id = s.id LIMIT 1) AS totalAmountCreadit, 
+		   (SELECT
+		     (`s`.`price_sold`-SUM(`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`) - ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1)) )
+		   FROM `ln_client_receipt_money` `cr`
+		   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance_remain`,   
+	        `s`.`buy_date`        AS `buy_date`,
+	        s.end_line,
+        (SELECT
+		     `ln_staff`.`co_khname`
+		   FROM `ln_staff`
+		   WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
+		   LIMIT 1) AS `staff_name`,
+	        (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
+	        s.is_cancel,
+	         CASE    
+					WHEN  `s`.`is_cancel` = 0 THEN ' '
+					WHEN  `s`.`is_cancel` = 1 THEN '".$tr->translate("CANCELED")."'
+					END AS isCancel
+			FROM `ln_sale` `s`
+			   JOIN `ln_properties` `p`
+			WHERE 
+	        (`p`.`id` = `s`.`house_id`) AND s.client_id= ".$clientId;
+		return $this->getAdapter()->fetchAll($sql);
+		
+	}
 	public function getClientCallateralBYId($client_id){
 		$db = $this->getAdapter();
 		$sql = " SELECT cc.id AS client_coll ,cd.* FROM `ln_client_callecteral` AS cc , `ln_client_callecteral_detail` AS cd WHERE  

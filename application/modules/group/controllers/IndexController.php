@@ -156,6 +156,8 @@ class Group_indexController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam("id");
 		$db = new Group_Model_DbTable_DbClient();
 		$this->view->client_list = $db->getClientDetailInfo($id);
+		$this->view->saleList = $db->getSaleByClients($id);
+		
 	}
 	public function addNewclientAction(){//ajax
 		if($this->getRequest()->isPost()){
