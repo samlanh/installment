@@ -19,6 +19,12 @@
 
 
  jQuery(document).ready(function($) {
+	 
+	 $(".js-select2").select2({
+	  placeholder: "",
+	  width: '100%'
+	 
+	});
 
 /*----------------------------------------------------*/
 /* Initializing jQuery Nice Scroll
