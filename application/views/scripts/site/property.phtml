@@ -2,11 +2,19 @@
 	echo $this->render('siteheader.phtml');
 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('HOME')); 
+	echo $this->headTitle($tr->translate('PROPERTY_LIST')); 
 	$baseUrl = $this->baseUrl();
 	
 	$dbSiteFront = new Application_Model_DbTable_DbSiteFront();
 	$search = $this->search;
+	
+	$parameterserch =  basename($_SERVER['REQUEST_URI']);
+	$urlsting = str_replace("&pages=".$this->currentPage,"",$parameterserch);
+	
+	$sign="?";
+	if (!empty($urlsting)){
+		$sign="&";
+	}
 ?>
 	<!-- Head Logo
    ================================================== -->
@@ -35,7 +43,7 @@
 							 </div>
 						</div>
 						<div class="nine columns content-search">
-							<form action=""  method="post" enctype="application/x-www-form-urlencoded">
+							<form action=""  method="get"  enctype="application/x-www-form-urlencoded">
 								<div class="row ">
 									<div class="two columns search-blog">
 										<input type="text" class="form-group fullsize" id="adv_search" name="adv_search" value="<?php echo $search['adv_search']?>" placeholder="<?php echo $tr->translate("SEARCH");?>">
@@ -65,7 +73,7 @@
 										</select>
 									</div>
 									<div class="two columns search-blog">
-										<button type="submit" class="btn btn-primary"><?php echo $tr->translate('SEARCH'); ?></button>
+										<button type="submit" id="search" name="search" class="btn btn-primary"><?php echo $tr->translate('SEARCH'); ?></button>
 									</div>
 								</div>
 							</form>
@@ -118,7 +126,38 @@
 					
 					</div>
 					
-				
+			<?php 
+             	if($this->countPages>1){ 
+					$statpage = $this->currentPage - 5;
+					$endpage = $this->currentPage + 5;
+				 	if ($this->currentPage<=5){
+				 		$statpage = 1;
+				 		$endpage =10;
+				 	}
+                 if (!empty($this->countPages)){
+			 ?>
+				<div class="clearfix"></div>
+				<div class="pagin text-center">
+					<nav aria-label="Page navigation example">
+					  <ul class="pagination">
+						<?php if($this->currentPage!=1){ ?>
+						<li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->previousPage;?>"><?php echo $tr->translate('Previous');?></a></li>
+						<?php }?>
+						 <?php  $i=0; for( $i=1; $i<=$this->countPages; $i++){?>
+							<?php if ($statpage<=$i && $endpage>=$i){?>
+								<li class="page-item <?php if($i==$this->currentPage){ echo "active";}?>">
+									<a class="page-link" href="<?php echo $urlsting.$sign."pages=".$i;?>"><?php echo $i;?></a>
+								</li>
+							<?php }
+						}?>
+						<?php if($this->countPages!= $this->currentPage){ ?>
+						<li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->nextPage;?>"><?php echo $tr->translate('Next');?></a></li>
+						<?php }?>
+					  </ul>
+					</nav>
+					<span><?php echo $tr->translate('Total Pages')." : ".$this->countPages." ".$tr->translate('Pages');?></span>
+				</div>
+             <?php }}?>
 					
 				 </div>
 				 
