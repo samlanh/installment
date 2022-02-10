@@ -16,7 +16,7 @@ class SiteController extends Zend_Controller_Action
 		$db = new Home_Model_DbTable_DbDashboard();
 		$lastest = $db->getAllNews(9);
 		$this->view->lastestnews = $lastest;
-		$this->view->allnews = $db->getAllNews();
+		
 		
 		
 		$db = new Application_Model_DbTable_DbSiteFront();
@@ -38,6 +38,37 @@ class SiteController extends Zend_Controller_Action
 		//$search['propertyStatus']=1;
 		//$remainProperty = $db->getCountPropertyByType($search);
 		//$this->view->remainProperty =$remainProperty;
+	}
+	
+	function propertyAction(){
+		$this->_helper->layout()->disableLayout();
+		
+		$db = new Application_Model_DbTable_DbSiteFront();
+		
+		$allProject = $db->getAllBranchName();
+		$this->view->allProject =$allProject;
+		$this->view->allPropertyType = $db->getAllPropertyType();
+		
+		$search = array(
+			'branch_id'=>1,
+			'propertyStatus'=>'',
+			'property_type'=>'',
+			'adv_search'=>'',
+		);
+		if($this->getRequest()->isPost()){
+			$search=$this->getRequest()->getPost();
+		}
+		$allProperty = $db->getAllProperty($search);
+		$this->view->allProperty =$allProperty;
+		
+		$this->view->search =$search;
+	}
+	function newsAction(){
+		$this->_helper->layout()->disableLayout();
+		
+		$db = new Home_Model_DbTable_DbDashboard();
+		$this->view->allnews = $db->getAllNews();
+		
 	}
 }
 
