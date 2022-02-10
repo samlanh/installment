@@ -1,0 +1,433 @@
+<?php 
+	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+	$username = $session_user->first_name;
+	$user_id = $session_user->user_id;
+	
+	if(empty($user_id)){
+		Application_Form_FrmMessage::redirectUrl("/");
+		exit();
+	}
+	
+	$t = time();
+	$t0 = $session_user->timeout;
+	$diff = $t - $t0;
+	//500 = 5 min
+	if ($diff > 1000 || !isset($t0))
+	{
+		$session_user->unsetAll();
+		Application_Form_FrmMessage::redirectUrl("/");
+		exit();
+	}else{
+		$session_user->unlock();
+		$session_user->timeout = time();
+		$session_user->lock();
+	}
+
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('MAPPING_PROPERTY')); 
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	
+	$frm = $this->frm_map;
+	
+?>
+<html><head>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title></title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="<?php echo $this->baseUrl()."/";?>images/icon.ico" type="image/x-icon"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>js/dojo-1.6.1/dijit/themes/soria/soria.css" />
+	<script src="<?php echo $this->baseUrl()."/";?>dashboard/js/jquery-2.1.4.min.js"></script>
+	<script src="<?php echo $this->baseUrl()."/";?>admin/mapping/jquery-ui.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl()."/";?>admin/mapping/jquery-ui.css">
+	<script src="<?php echo $base_url;?>js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
+    <script>dojoConfig = {parseOnLoad: true}</script>
+	   <script>
+			require(["dijit/form/Form","dijit/form/FilteringSelect","dijit/form/Button","dijit/Dialog","dijit/form/NumberSpinner"]);
+      </script>
+      <style>
+      body{font-family: 'khmer os battambang';}
+      </style>
+</head>
+<body class="nav-md soria footer_fixed ">
+    <div class="left">
+		<div id="tar" style="background: #e3e3e3; background-image: url('<?php echo $this->baseUrl()."/"?>images/projects/projectMasterplan.jpg'); background-position: center center;background-repeat: no-repeat;background-size: 100%;position: relative;width: 1000px;height: 874px;" class="ui-selectable">
+		</div>
+	</div>
+	
+	<div class="right">
+	<form id="list" name="list" action="<?php echo $this->url(array('module'=>'project','controller'=>'mappingplan','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post">
+		<div class="form-group">
+		   <label class="control-label" ><?php echo $tr->translate("BRANCH_NAME");?><span class="required">*</span>  :
+		   </label>
+		   <div class="control-box">
+				<?php echo $frm->getElement('branch_id');?>
+		   </div>
+	   </div>
+	   <div class="form-group">
+		   <label class="control-label" ><?php echo $tr->translate("PROPERTY_CODE");?><span class="required">*</span>  :
+		   </label>
+		    <div class="control-box">
+				<input id="land_id" />
+				<input type="hidden" name="identity" id="identity"  value="" >
+		   </div>
+	   </div>
+		<div class="form-group">
+		   <label class="control-label" ><?php echo $tr->translate("WIDTH");?><span class="required">*</span>  :
+		   </label>
+		   <div class="control-box">
+				<?php echo $frm->getElement('width');?>
+		   </div>
+	   </div>
+	   <div class="form-group">
+		   <label class="control-label" ><?php echo $tr->translate("HEIGHT");?><span class="required">*</span>  :
+		   </label>
+		   <div class="control-box">
+		   		<?php echo $frm->getElement('height');?>
+		   </div>
+	   </div>
+	   <div class="form-group">
+		   <label class="control-label " ><?php echo $tr->translate("TRANSFORM");?><span class="required">*</span>  :
+		   </label>
+		    <div class="control-box">
+		    	<?php echo $frm->getElement('transform');?>
+		   </div>
+	   </div>
+	   <div class="form-group">
+		   <label class="control-label " ><?php echo $tr->translate("TOP");?><span class="required">*</span>  :
+		   </label>
+		    <div class="control-box">
+		    	<?php echo $frm->getElement('top');?>
+		   </div>
+	   </div>
+	   <div class="form-group">
+		   <label class="control-label"><?php echo $tr->translate("LEFT");?><span class="required">*</span>  :
+		   </label>
+		    <div class="control-box">
+		    	<?php echo $frm->getElement('left');?>
+		   </div>
+	   </div>
+	   <div class="form-group">
+		   <label class="control-label " >
+		   		<input type="button" onclick="addRow();" label="<?php echo $tr->translate("ADD_RECORD")?>" name='addRecord' id='addRecord' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+		   </label>
+		</div>
+		<div  id="showrecord" style="width: 100%;"></div>
+	   <input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+	   </form>
+</div>
+<style>
+div.right, div.left {
+    display: inline-block;
+    vertical-align: top;
+}
+div.right {
+    width: 235px;
+}
+div.right input {
+    width: 100%;
+}
+.form-group label.control-label, .form-group .control-box {
+    display: inline-block;
+}
+.form-group label.control-label {
+    width: 60%;
+}
+.form-group .control-box {
+    width: 37%;
+    margin-top:5px;
+}
+
+</style>
+<script type="text/javascript">//<![CDATA[
+    dojo.require("dojo.data.ItemFileWriteStore"); 
+    dojo.require("dojo.NodeList-manipulate");
+
+    var sale_store  = getDataStorefromJSON('id','name', null );
+
+    require(["dojo/ready"], function(ready){
+
+    	ready(function(){
+    		dijit.byId('branch_id').attr('value','<?php echo $this->branch_id; ?>');
+    	  });
+            
+    	new dijit.form.FilteringSelect({
+    		store: sale_store,
+    		required: false,		           
+    		name: "land_id",
+    		id: "land_id",
+    		autoComplete: false,
+    		queryExpr: "*${0}*",      
+    		searchAttr: "name",
+    		class: 'fullside',
+    		onChange: function(){
+    			//addRow();
+    	    }
+    		}, "land_id");
+
+			
+    	 
+    	});
+
+    
+    var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+    function getAllPropertyBranch(branch_id){
+
+    	dijit.byId('land_id').reset();
+    	property_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+    	dijit.byId('land_id').set('store', property_store);
+    	
+    	branch_id = dijit.byId('branch_id').get('value');
+    	if(branch_id<0){
+    		return false;
+    	}
+    	dojo.xhrPost({
+    		url:url_getland,	
+    		content:{ 
+    		    'branch_id':branch_id,
+    		    'action':1
+    		},		    
+    		handleAs:"json",
+    		load: function(data) {
+    			property_store  = getDataStorefromJSON('id','name', data);		
+    		    dijit.byId('land_id').set('store', property_store);
+    		    
+    		    if(land_id>0){
+    		    	dijit.byId('land_id').attr('value',land_id);
+    			 }
+    		},
+    		error: function(err) {
+    		}
+    	});
+ } 
+function doPinMap(){
+	width = $("#width").val();
+	height = $("#height").val();
+	transform = $("#transform").val();
+	
+	topSide =$("#top").val();
+	leftSide =$("#left").val();
+	$('#demo').css({
+          'width': width,
+          'height': height,
+		  'left': leftSide,
+          'top': topSide,
+		   'transform' : 'rotate(' + transform + 'deg)'
+        });
+}
+
+$(function() {
+	$("body").hover(function() {
+		updateTimeOut();
+		checkSessionExpire();
+	});
+
+    var beginX, beginY, endX, endY, width, height;
+
+    $('#tar').selectable({
+
+      start: function(e) {
+        var posX = $(this).position().left, posY = $(this).position().top;
+
+        beginX = e.pageX - posX;
+        beginY = e.pageY - posY;
+
+      },
+
+      stop: function(e) {
+        var posX = $(this).offset().left, posY = $(this).offset().top;
+
+        endX = e.pageX - posX;
+        endY = e.pageY - posY;
+
+        if(beginX > endX) { var tmp = beginX; beginX = endX; endX = tmp; }
+        if(beginY > endY) { var tmp = beginY; beginY = endY; endY = tmp; }
+
+        width = endX - beginX;
+        height = endY - beginY;
+
+        $(this).html('<div id="demo"></div>');
+        $('#demo').css({
+          'position': 'relative',
+          'width': width,
+          'height': height,
+          'left': beginX,
+          'top': beginY,
+          'background': '#0064f9',
+		  'opacity': '0.5'
+        });
+		$("#width").val(width);
+		$("#height").val(height);
+		$("#top").val(beginY);
+		$("#left").val(beginX);
+      }
+    });
+  });
+var urlReload = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'reloadr'));?> ';
+function updateTimeOut(){
+	var lang="";
+	jQuery.ajax({
+		url: urlReload,
+		type: "post",
+		data:{'lange':lang},
+		success: function(data){
+			//location.reload();
+			//alert(data);
+		},
+		error:function(err){
+			
+		}
+	});
+}
+ var urlCheckSession = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'sessioncheck'));?> ';
+function checkSessionExpire(){
+	var lang="";
+	jQuery.ajax({
+		url: urlCheckSession,
+		type: "post",
+		data:{'lange':lang},
+		success: function(data){
+			if(data == true){
+				loadingBlock();
+				setTimeout(function () {
+					alert("<?php echo $tr->translate("Session Expire");?>");
+				  	window.location = '<?php echo $this->baseUrl();?>';
+			    }, 1000);
+				
+			}
+		},
+		error:function(err){
+			
+		}
+	});
+}
+col=0;no=0;
+title=0;
+temp='';
+function addRow(){
+	
+	land_id=dijit.byId("land_id").get("value");
+	if(isNaN(land_id)){
+		land_id = '';
+	}
+	
+	width=dijit.byId("width").get("value");
+	if(isNaN(width)){
+		width = '';
+	}
+	
+	height=dijit.byId("height").get("value");
+	if(isNaN(height)){
+		height = '';
+	}
+	transform=dijit.byId("transform").get("value");
+	if(isNaN(transform)){
+		transform = '';
+	}
+	top=dijit.byId("top").get("value");
+	if(isNaN(top)){
+		top = '';
+	}
+	left=dijit.byId("left").get("value");
+	if(isNaN(left)){
+		left = '';
+	}
+	
+	if(land_id=='' || land_id==-1 || width=='' || height=='' || transform=='' || top=='' || left==''){
+		alert("Please fill in value in form");
+		return false;
+	}
+	var iden = $("#identity").val();
+	var arrays = iden.split(',');
+	 if(arrays!=""){
+		 for(var i=0;i< arrays.length;i++){
+			 readychoose = dijit.byId('land_id'+arrays[i]).get('value');
+			 if(readychoose==land_id){
+				 alert("<?php echo $tr->translate("Choosen ready")?>");
+				 return false;
+			 }
+		}
+	}
+	temp='';
+	col++;no++;
+	template='';
+	if(title!=1){    
+		tmp='<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
+		tmp+='<tr id="head-title" class="head-td" style="color:#000 !important;background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+		tmp+='</table>';
+		dojo.query("#showrecord").append(tmp);
+		temp+='<th><?php echo $tr->translate("DEL");?></th>';
+		temp+='<th><?php echo $tr->translate("NUM");?></th>';
+		temp+='<th><?php echo $tr->translate("PROPERTY_CODE");?></th>';
+		temp+='<th width="100px"><?php echo $tr->translate("HEAD_TITLE_NO");?></th>';
+		dojo.query("#head-title").append(temp);
+		title=1;
+	}
+		property_label = dijit.byId("land_id").attr("displayedValue");
+		land_id = dijit.byId("land_id").get("value");
+
+		width_label=dijit.byId("width").attr("displayedValue");
+		height_label=dijit.byId("height").attr("displayedValue");
+		transform_label=dijit.byId("transform").attr("displayedValue");
+		top_label=dijit.byId("top").attr("displayedValue");
+		left_label=dijit.byId("left").attr("displayedValue");
+		
+		template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		template+='<td width="2%" align="center">'+no+'</td>';
+		template+='<td style="white-space: nowrap"><input class="fullside" value="'+land_id+'" type="hidden" data-dojo-type="dijit.form.TextBox" id="land_id'+col+'" name="land_id'+col+'" />'+property_label+'</td>';	
+		template+='<td style="white-space: nowrap"><img onclick="editRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';	
+		template+='<td><input  class="fullside" value="'+width+'" type="hidden" name="width'+col+'" id="width'+col+'" dojoType="dijit.form.TextBox" /></td>';
+		template+='<td><input class="fullside" value="'+height+'" type="hidden" name="height'+col+'" id="height'+col+'" dojoType="dijit.form.TextBox" /></td>';
+		template+='<td><input class="fullside" value="'+transform+'" type="hidden" name="transform'+col+'" id="transform'+col+'" dojoType="dijit.form.TextBox" /></td>';
+		template+='<td><input class="fullside" value="'+top+'" type="hidden" name="top'+col+'" id="top'+col+'" dojoType="dijit.form.TextBox" /></td>';
+		template+='<td><input class="fullside" value="'+left+'" type="hidden" name="left'+col+'" id="left'+col+'" dojoType="dijit.form.TextBox" /></td>';
+	tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
+	tmp+="</tr>";
+	dojo.query("#table_row").append(tmp);
+
+	if($("#identity").val()!="") {
+		var identity = $("#identity").val();
+		$("#identity").val(identity+','+col);
+	} else {$("#identity").val(col);}
+	dojo.html.set(dojo.byId("row"+col),template , {
+	     parseContent: true,
+	});
+	//getInfoByLoanNumber(col);
+}
+function editRecord(index){
+	width=dijit.byId("width"+index).get("value");
+	dijit.byId('width').attr('value',width);
+	
+	height=dijit.byId("height"+index).get("value");
+	dijit.byId('height').attr('value',height);
+	
+	transform=dijit.byId("transform"+index).get("value");
+	dijit.byId('transform').attr('value',transform);
+	
+	top=dijit.byId("top"+index).get("value");
+	dijit.byId('top').attr('value',top);
+	
+	left=dijit.byId("left"+index).get("value");
+	dijit.byId('left').attr('value',left);
+
+	
+	land_id=dijit.byId("land_id"+index).get("value");
+	dijit.byId('land_id').attr('value',land_id);
+	deleteRecord(index);
+	
+}
+function deleteRecord(index) {
+	var identity = $('#identity').val();
+	var arrays = identity.split(',');
+	for(var i=0;i<arrays.length;i++) {
+	if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity').val(strings);
+	dojo.query("#row"+index).remove();
+}  
+</script>
+</body></html>
