@@ -5,8 +5,56 @@ class Application_Model_DbTable_DbSiteFront extends Zend_Db_Table_Abstract
 	public function setName($name){
 		$this->_name=$name;
 	}
-   
-   
+   public static function getUserId(){
+		$session_user=new Zend_Session_Namespace(FRONT_SES);
+		$userId = empty($session_user->user_id)?null:$session_user->user_id;
+		return $userId;
+	}
+	public function getAccessPermissionFront($branch_str='branch_id'){
+		$session_user=new Zend_Session_Namespace(FRONT_SES);
+		$userId = empty($session_user->user_id)?null:$session_user->user_id;
+		$result="";
+		if(!empty($userId)){
+			$branch_list = $session_user->branch_list;
+			if(!empty($branch_list)){
+				$level = $session_user->level;
+				$level = 1;
+				if($level==1 OR $level==2){
+					$result.= "";
+				}
+				else{
+					$result.= " AND $branch_str IN ($branch_list)";
+				}
+			}
+		}
+		return $result;
+	}
+	public function getAllBranchName($branch_id=null,$opt=null){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$db = $this->getAdapter();
+		$sql= " SELECT 
+			br_id,
+			br_id AS id,
+			project_name,
+			project_name AS title,
+		project_type,br_address,branch_code,branch_tel,displayby
+		FROM `ln_project` WHERE project_name !='' AND status=1 ";
+		$sql.= $this->getAccessPermissionFront('br_id');
+		
+		if($branch_id!=null){
+			$sql.=" AND br_id=$branch_id LIMIT 1";
+		}
+		$sql.=" ORDER BY br_id DESC";
+		$row = $db->fetchAll($sql);
+		if($opt==null){
+			return $row;
+		}else{
+			$options=array(0=> $tr->translate("SELECT_PROJECT"));
+			if(!empty($row)) foreach($row as $read) $options[$read['br_id']]=$read['project_name'];
+			return $options;
+		}
+	  }
+	
 	public function getCountPropertyByType($search=array()){
 		$db = $this->getAdapter();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();

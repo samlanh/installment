@@ -34,8 +34,28 @@
 								<h2><span><i class="fa fa-pie-chart " aria-hidden="true"></i> <?php echo $tr->translate('TOTAL_SUMMARY'); ?></span></h2>
 							 </div>
 						</div>
-						<div class="nine columns">
-							
+						<div class="nine columns content-search">
+							<form action=""  method="post" enctype="application/x-www-form-urlencoded">
+								<div class="row ">
+									<div class="two columns search-blog">
+									</div>
+									<div class="two columns search-blog">
+									</div>
+									<div class="three columns search-blog">
+									</div>
+									<div class="three columns search-blog">
+										<select class="form-group js-select2 fullsize" id="branch_id"  name="branch_id" data-placeholder="<?php echo $tr->translate("SELECT_BRANCH");?>">
+										  <option value="" ></option>
+										  <?php if (!empty($this->allProject)) foreach ($this->allProject as $rs){?>
+										  <option value="<?php echo $rs['id']?>" <?php if($rs['id']==$search['branch_id']){ echo 'selected="selected"';}?> ><?php echo $rs['title']?></option>
+										  <?php }?>
+										</select>
+									</div>
+									<div class="two columns search-blog">
+										<button type="submit" class="btn btn-primary"><?php echo $tr->translate('SEARCH'); ?></button>
+									</div>
+								</div>
+							</form>
 						</div>
 					</div>
 					<?php  
@@ -54,12 +74,18 @@
 						
 						$saleCancel = $dbSiteFront->getCountSaleCancelByPropertyType($search);
 						
-						
+						$imageFeature = $this->baseUrl()."/images/no-photo.png";
+						if (!empty($property['imagePropertyType'])){
+							if (file_exists(PUBLIC_PATH."/images/photo/property/".$property['imagePropertyType'])){
+								$imageFeature = $this->baseUrl()."/images/photo/property/".$property['imagePropertyType'];
+							}
+							
+						}
 					?>
 					<div title="<?php echo $property['propertyTypeTitle'];?>" class="row infoHouseRow">
 						<div class="three columns img-feature">
 							<div class="house-image">
-								<img src="<?php echo $baseUrl; ?>/images/photo/property/sample-house.jpg" alt="sample Image">
+								<img src="<?php echo $imageFeature; ?>" alt="sample Image">
 								<span class="title-house" >
 									<i class="fa fa-home" aria-hidden="true"></i> <?php echo $property['propertyTypeTitle'];?>
 								</span>
@@ -143,12 +169,18 @@
 						
 						$saleCancel = $dbSiteFront->getCountSaleCancelByPropertyType($search);
 						
-						
+						$imageFeature = $this->baseUrl()."/images/no-photo.png";
+						if (!empty($property['imagePropertyType'])){
+							if (file_exists(PUBLIC_PATH."/images/photo/property/".$property['imagePropertyType'])){
+								$imageFeature = $this->baseUrl()."/images/photo/property/".$property['imagePropertyType'];
+							}
+							
+						}
 					?>
 					<div title="<?php echo $property['propertyTypeTitle'];?>" class="row infoHouseRow">
 						<div class="three columns img-feature">
 							<div class="house-image">
-								<img src="<?php echo $baseUrl; ?>/images/photo/property/sample-house.jpg" alt="sample Image">
+								<img src="<?php echo $imageFeature; ?>" alt="sample Image">
 								<span class="title-house" >
 									<i class="fa fa-home" aria-hidden="true"></i> <?php echo $property['propertyTypeTitle'];?>
 								</span>

@@ -20,9 +20,17 @@ class SiteController extends Zend_Controller_Action
 		
 		
 		$db = new Application_Model_DbTable_DbSiteFront();
+		
+		$allProject = $db->getAllBranchName();
+		$this->view->allProject =$allProject;
+		
 		$search = array(
 			'branch_id'=>1
 		);
+		if($this->getRequest()->isPost()){
+			$search=$this->getRequest()->getPost();
+		}
+			
 		$allProperty = $db->getCountPropertyByType($search);
 		$this->view->allProperty =$allProperty;
 		$this->view->search =$search;
