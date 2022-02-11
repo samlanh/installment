@@ -64,7 +64,7 @@ class Application_Model_DbTable_DbSiteFront extends Zend_Db_Table_Abstract
 			p.property_type,
 			(SELECT pt.type_namekh FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1) AS propertyTypeTitle,
 			(SELECT pt.type_namekh FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1) AS propertyTypeTitleKH,
-			(SELECT pt.type_namekh FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1) AS propertyTypeTitleEn,
+			(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1) AS propertyTypeTitleEn,
 			(SELECT pt.image_feature FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1) AS imagePropertyType 
 		FROM `ln_properties` AS p 
 		WHERE p.status=1
@@ -79,7 +79,7 @@ class Application_Model_DbTable_DbSiteFront extends Zend_Db_Table_Abstract
 				$sql.=" AND p.is_lock=1"; //sold property
 			}
 		}
-		
+		$sql.= $this->getAccessPermissionFront('p.branch_id');
 		if(!empty($search['property_type'])){
 			$sql.=" AND p.property_type=".$search['property_type'];
 			 return $db->fetchRow($sql);
@@ -121,7 +121,7 @@ class Application_Model_DbTable_DbSiteFront extends Zend_Db_Table_Abstract
 		if(!empty($search['isToday'])){
 			$sql.=" AND s.buy_date=".$today;
 		}
-		
+		$sql.= $this->getAccessPermissionFront('s.branch_id');
 		$sql.=" GROUP BY p.property_type ";
 		return $db->fetchRow($sql);
 	}
@@ -153,9 +153,63 @@ class Application_Model_DbTable_DbSiteFront extends Zend_Db_Table_Abstract
 		if(!empty($search['isToday'])){
 			$sql.=" AND sc.create_date=".$today;
 		}
-		
+		$sql.= $this->getAccessPermissionFront('sc.branch_id');
 		$sql.=" GROUP BY p.property_type ";
 		return $db->fetchRow($sql);
+	}
+	
+	 public function getAllPropertyType(){
+		$db= $this->getAdapter();
+		$sql="SELECT t.`id`,t.`type_namekh` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1 ";
+		$rows =  $db->fetchAll($sql);
+		return $rows;
+	}
+	public function getAllProperty($search=array()){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+		$sql="
+		SELECT p.*,
+			CASE
+				WHEN  p.is_lock = 1 THEN '".$tr->translate('SOLD_OUT')."'
+				WHEN  p.is_lock = 0 THEN '".$tr->translate('AVAILABLE')."'
+			END AS saleStatusTitle,
+			(SELECT pt.type_namekh FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1) AS propertyTypeTitle,
+			(SELECT pt.type_namekh FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1) AS propertyTypeTitleKH,
+			(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1) AS propertyTypeTitleEn,
+			(SELECT pt.image_feature FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1) AS imagePropertyType,
+			(SELECT pt.note FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1) AS propertyTypeNote
+		FROM `ln_properties` AS p WHERE p.status=1 
+		";
+		if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['adv_search']));
+    		$s_where[] = " p.land_code LIKE '%{$s_search}%'";
+    		$s_where[] = " p.land_address LIKE '%{$s_search}%'";
+    		$s_where[] = " p.street LIKE '%{$s_search}%'";
+    		$s_where[] = " p.price LIKE '%{$s_search}%'";
+    		$s_where[] = " p.land_size LIKE '%{$s_search}%'";
+    		$s_where[] = " p.width LIKE '%{$s_search}%'";
+    		$s_where[] = " p.height LIKE '%{$s_search}%'";
+    		$sql .=' AND ('.implode(' OR ',$s_where).')';
+    	}
+		if(!empty($search['branch_id'])){
+			$sql.=" AND p.branch_id= ".$search['branch_id'];
+		}
+		if(!empty($search['propertyStatus'])){
+			if($search['propertyStatus']==1){ //available property
+				$sql.=" AND p.is_lock=0";
+			}else if($search['propertyStatus']==2){
+				$sql.=" AND p.is_lock=1"; //sold property
+			}
+		}
+		if(!empty($search['property_type'])){
+			$sql.=" AND p.property_type= ".$search['property_type'];
+		}
+		$sql.= $this->getAccessPermissionFront('p.branch_id');
+		
+		$order=" ORDER BY LENGTH(p.land_address), p.land_address ASC";
+		return $db->fetchAll($sql.$order);
 	}
 
 }

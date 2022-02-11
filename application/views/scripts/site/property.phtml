@@ -1,0 +1,161 @@
+<?php 
+	echo $this->render('siteheader.phtml');
+
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('PROPERTY_LIST')); 
+	$baseUrl = $this->baseUrl();
+	
+	$dbSiteFront = new Application_Model_DbTable_DbSiteFront();
+	$search = $this->search;
+	
+	$parameterserch =  basename($_SERVER['REQUEST_URI']);
+	$urlsting = str_replace("&pages=".$this->currentPage,"",$parameterserch);
+	
+	$sign="?";
+	if (!empty($urlsting)){
+		$sign="&";
+	}
+?>
+	
+   <!-- About Section
+   ================================================== -->
+   
+   <section id="resume">
+		
+		<div class="row property-list">
+			<div class="container">
+				 <div class="twelve columns header-col">
+					<div class="row infoHouseRowTitle">
+						<div class="three columns">
+							<div class="head-title-blog">
+								<h2><span><i class="fa fa-map-o " aria-hidden="true"></i> <?php echo $tr->translate('PROPERTY_LIST'); ?></span></h2>
+							 </div>
+						</div>
+						<div class="nine columns content-search">
+							<form action=""  method="get"  enctype="application/x-www-form-urlencoded">
+								<div class="row ">
+									<div class="two columns search-blog">
+										<input type="text" class="form-group fullsize" id="adv_search" name="adv_search" value="<?php echo $search['adv_search']?>" placeholder="<?php echo $tr->translate("SEARCH");?>">
+									</div>
+									
+									<div class="three columns search-blog">
+										<select class="form-group js-select2 fullsize" id="branch_id"  name="branch_id" data-placeholder="<?php echo $tr->translate("SELECT_BRANCH");?>">
+										  <option value="" ></option>
+										  <?php if (!empty($this->allProject)) foreach ($this->allProject as $rs){?>
+										  <option value="<?php echo $rs['id']?>" <?php if($rs['id']==$search['branch_id']){ echo 'selected="selected"';}?> ><?php echo $rs['title']?></option>
+										  <?php }?>
+										</select>
+									</div>
+									<div class="three columns search-blog">
+										<select class="form-group js-select2 fullsize" id="property_type"  name="property_type" data-placeholder="<?php echo $tr->translate("SELECT_PROPERTY_TYPE");?>">
+										  <option value="" ></option>
+										  <?php if (!empty($this->allPropertyType)) foreach ($this->allPropertyType as $rs){?>
+										  <option value="<?php echo $rs['id']?>" <?php if($rs['id']==$search['property_type']){ echo 'selected="selected"';}?> ><?php echo $rs['name']?></option>
+										  <?php }?>
+										</select>
+									</div>
+									<div class="two columns search-blog">
+										<select class="form-group js-select2 fullsize" id="propertyStatus"  name="propertyStatus" data-placeholder="<?php echo $tr->translate("SELECT_PROPERTY_STATUS");?>">
+										  <option value="" ></option>
+										  <option value="1" <?php if(1==$search['propertyStatus']){ echo 'selected="selected"';}?> ><?php echo $tr->translate('AVAILABLE');?></option>
+										  <option value="2" <?php if(2==$search['propertyStatus']){ echo 'selected="selected"';}?> ><?php echo $tr->translate('SOLD_OUT');?></option>
+										</select>
+									</div>
+									<div class="two columns search-blog">
+										<button type="submit" id="search" name="search" class="btn btn-primary"><?php echo $tr->translate('SEARCH'); ?></button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div  class="row property-row">
+						<?php  
+						if(!empty($this->allProperty)) foreach($this->allProperty as $property){ 
+						
+							$imageFeature = $this->baseUrl()."/images/photo/property/default-property-img.jpg";
+							if (!empty($property['imagePropertyType'])){
+								if (file_exists(PUBLIC_PATH."/images/photo/property/".$property['imagePropertyType'])){
+									$imageFeature = $this->baseUrl()."/images/photo/property/".$property['imagePropertyType'];
+								}
+								
+							}
+						?>
+					
+						<div title="<?php echo $property['propertyTypeTitle']." ".$property['land_address'];?>" class="two columns col-property-info">
+							<div class="property-info">
+								<div class="house-image">
+									<img src="<?php echo $imageFeature; ?>" alt="sample Image">
+									<span class="title-house" >
+										<i class="fa fa-home" aria-hidden="true"></i> <?php echo $property['propertyTypeTitle'];?>
+									</span>
+								</div>
+								<div class="content-info">
+									<ul class="property-info-bl">
+										<li>
+											<span class="titleLabel"><?php echo $tr->translate('HOUSE_NO'); ?></span> : 
+											<span class="valueLabel house-no"><?php echo $property['land_address']; ?></span> 
+										</li>
+										<li>
+											<span class="titleLabel"><?php echo $tr->translate('STREET'); ?></span> : 
+											<span class="valueLabel street"><?php echo $property['street']; ?></span> 
+										</li>
+										<li>
+											<span class="titleLabel"><?php echo $tr->translate('PRICE'); ?></span> : 
+											<span class="valueLabel price">USD <?php echo number_format($property['price'],2); ?></span> 
+										</li>
+									</ul>
+									<span class="statusLabel"><?php echo $property['saleStatusTitle']; ?></span> 
+								</div>
+							</div>
+						</div>
+					
+						
+					
+					<?php } ?>
+					
+					</div>
+					
+			<?php 
+             	if($this->countPages>1){ 
+					$statpage = $this->currentPage - 5;
+					$endpage = $this->currentPage + 5;
+				 	if ($this->currentPage<=5){
+				 		$statpage = 1;
+				 		$endpage =10;
+				 	}
+                 if (!empty($this->countPages)){
+			 ?>
+				<div class="clearfix"></div>
+				<div class="pagin text-center">
+					<nav aria-label="Page navigation example">
+					  <ul class="pagination">
+						<?php if($this->currentPage!=1){ ?>
+						<li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->previousPage;?>"><?php echo $tr->translate('Previous');?></a></li>
+						<?php }?>
+						 <?php  $i=0; for( $i=1; $i<=$this->countPages; $i++){?>
+							<?php if ($statpage<=$i && $endpage>=$i){?>
+								<li class="page-item <?php if($i==$this->currentPage){ echo "active";}?>">
+									<a class="page-link" href="<?php echo $urlsting.$sign."pages=".$i;?>"><?php echo $i;?></a>
+								</li>
+							<?php }
+						}?>
+						<?php if($this->countPages!= $this->currentPage){ ?>
+						<li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->nextPage;?>"><?php echo $tr->translate('Next');?></a></li>
+						<?php }?>
+					  </ul>
+					</nav>
+					<span><?php echo $tr->translate('Total Pages')." : ".$this->countPages." ".$tr->translate('Pages');?></span>
+				</div>
+             <?php }}?>
+					
+				 </div>
+				 
+			  </div>
+		</div>
+		
+      
+   </section>
+   
+   <?php 
+		echo $this->render('sitefooter.phtml');
+	?>
