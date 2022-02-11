@@ -182,18 +182,54 @@ class SiteController extends Zend_Controller_Action
 	function changepasswordAction(){
 		$this->_helper->layout()->disableLayout();
 		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$message = $this->getRequest()->getParam("message");
+		if(!empty($message)){
+			if($message==1){
+				$this->view->message = $tr->translate('OLD_PASSWORD_NOT_MATCH');
+			}else if($message==2){
+				$this->view->message = $tr->translate('PASSWORD_AND_COMFIRM_PASSWORD_NOT_MATCH');
+			}
+		}
+		
 		$session_user=new Zend_Session_Namespace(FRONT_SES);
 		$username = $session_user->first_name;
 		$user_id = $session_user->user_id;
+		$password = $session_user->pwd;
 		if(empty($user_id)){
 			$this->_redirect("/site/home");
 		}
 		
-		$id = $this->getRequest()->getParam("detail");
-		$db = new Home_Model_DbTable_DbDashboard();
-		if (!empty($id)) {
-			$detail =	$db->getNewsDetail($id);
-			$this->view->detail = $detail;
+		if($this->getRequest()->isPost())		
+		{
+			$formdata=$this->getRequest()->getPost();
+			$db_user=new Application_Model_DbTable_DbUsers();
+			$old_password=$formdata['old_password'];
+			$new_password =$formdata['new_password'];
+			$comfirm_password =$formdata['comfirm_password'];
+			
+			if($old_password!=$password){
+				Application_Form_FrmMessage::redirectUrl("/site/changepassword?message=1");	
+				exit();
+			}
+			
+			if($new_password!=$comfirm_password){	
+				Application_Form_FrmMessage::redirectUrl("/site/changepassword?message=2");	
+				exit();
+			}
+			try {
+				$db_user->changePassword($new_password, $user_id);
+				$session_user->unlock();	
+				$session_user->pwd=$new_password;
+				$session_user->lock();
+				
+			} catch (Exception $e) {
+				Application_Form_FrmMessage::message('ការផ្លាស់ប្តូរត្រូវបរាជ័យ');
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}		
+				
+			Application_Form_FrmMessage::redirectUrl("/site/home?message=1");	
+			exit();
 		}
 	}
 	
@@ -218,6 +254,34 @@ class SiteController extends Zend_Controller_Action
 		$user_id = $session_user->user_id;
 		if(!empty($user_id)){
 			$this->_redirect("/site/home");
+		}
+		
+		if($this->getRequest()->isPost())		
+		{
+			$formdata=$this->getRequest()->getPost();
+			$db_user=new Application_Model_DbTable_DbUsers();
+			$user_name=$formdata['user_name'];
+			$password =$formdata['password'];
+			if($db_user->userAuthenticate($user_name,$password)){
+				
+				$session_user=new Zend_Session_Namespace(FRONT_SES);
+				$user_id=$db_user->getUserID($user_name);
+				$user_info = $db_user->getUserInfo($user_id);
+				
+				$session_user->user_id=$user_id;
+				$session_user->user_name=$user_name;
+				$session_user->pwd=$password;		
+				$session_user->level= $user_info['user_type'];
+				$session_user->last_name= $user_info['last_name'];
+				$session_user->first_name= $user_info['first_name'];
+				$session_user->branch_list= $user_info['branch_list'];
+				$session_user->staff_id= $user_info['staff_id'];
+				$session_user->lock();
+				
+				Application_Form_FrmMessage::redirectUrl("/site/home");	
+				exit();
+					
+			}
 		}
     }
 }
