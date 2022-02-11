@@ -152,6 +152,74 @@ class SiteController extends Zend_Controller_Action
 		}
 		
 	}
+	function articleAction(){
+		$this->_helper->layout()->disableLayout();
+		
+		$id = $this->getRequest()->getParam("detail");
+		$db = new Home_Model_DbTable_DbDashboard();
+		if (!empty($id)) {
+			$detail =	$db->getNewsDetail($id);
+			$this->view->detail = $detail;
+		}
+	}
+	function myreportAction(){
+		$this->_helper->layout()->disableLayout();
+		
+		$session_user=new Zend_Session_Namespace(FRONT_SES);
+		$username = $session_user->first_name;
+		$user_id = $session_user->user_id;
+		if(empty($user_id)){
+			$this->_redirect("/site/home");
+		}
+		
+		$id = $this->getRequest()->getParam("detail");
+		$db = new Home_Model_DbTable_DbDashboard();
+		if (!empty($id)) {
+			$detail =	$db->getNewsDetail($id);
+			$this->view->detail = $detail;
+		}
+	}
+	function changepasswordAction(){
+		$this->_helper->layout()->disableLayout();
+		
+		$session_user=new Zend_Session_Namespace(FRONT_SES);
+		$username = $session_user->first_name;
+		$user_id = $session_user->user_id;
+		if(empty($user_id)){
+			$this->_redirect("/site/home");
+		}
+		
+		$id = $this->getRequest()->getParam("detail");
+		$db = new Home_Model_DbTable_DbDashboard();
+		if (!empty($id)) {
+			$detail =	$db->getNewsDetail($id);
+			$this->view->detail = $detail;
+		}
+	}
+	
+	public function logoutAction()
+    {
+        if($this->getRequest()->getParam('value')==1){        	
+        	$aut=Zend_Auth::getInstance();
+        	$aut->clearIdentity();  
+        	
+        	$session_user=new Zend_Session_Namespace(FRONT_SES);
+			
+        	$session_user->unsetAll();       	
+        	Application_Form_FrmMessage::redirectUrl("/site/home");
+        	exit();
+        } 
+    }
+	public function signInAction()
+    {
+		$this->_helper->layout()->disableLayout();
+        $session_user=new Zend_Session_Namespace(FRONT_SES);
+		$username = $session_user->first_name;
+		$user_id = $session_user->user_id;
+		if(!empty($user_id)){
+			$this->_redirect("/site/home");
+		}
+    }
 }
 
 
