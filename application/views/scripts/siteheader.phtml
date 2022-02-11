@@ -12,6 +12,12 @@
 	$action=$request->getActionName();
 	$controller=$request->getControllerName();
 	$module=$request->getModuleName();
+	
+	
+	$session_user=new Zend_Session_Namespace(FRONT_SES);
+	$username = $session_user->first_name;
+	$user_id = $session_user->user_id;
+	
 ?>
 <head>
    <meta charset="utf-8">
@@ -45,18 +51,44 @@
             <li <?php if($action=='home'){ echo 'class="current"';}?> >
               <a class="smoothscroll" href="<?php echo $baseUrl."/site/home";?>"><i class="fa fa-home fa-fw"></i><?php echo $tr->translate('HOME'); ?></a>
             </li>
+			<li <?php if($action=='property'){ echo 'class="current"';}?>>
+              <a class="smoothscroll" href="<?php echo $baseUrl."/site/property?";?>"><i class="fa fa-map-o fa-fw"></i><?php echo $tr->translate('PROPERTY_LIST'); ?></a>
+            </li>
+			
+			<?php if(!empty($user_id)){?>
             <li <?php if($action=='myreport'){ echo 'class="current"';}?>>
               <a class="smoothscroll" href="<?php echo $baseUrl."/site/myreport";?>"><i class="fa fa-file-text fa-fw"></i><?php echo $tr->translate('MY_REPORT'); ?></a>
             </li>
-			<li <?php if($action=='news'){ echo 'class="current"';}?>>
-              <a class="smoothscroll" href="<?php echo $baseUrl."/site/news";?>"><i class="fa fa-bell fa-fw"></i><?php echo $tr->translate('ANNOUNCEMENT'); ?></a>
+			<?php }?>
+			
+			<li <?php if($action=='news' || $action=='article' ){ echo 'class="current"';}?>>
+              <a class="smoothscroll" href="<?php echo $baseUrl."/site/news?";?>"><i class="fa fa-bell fa-fw"></i><?php echo $tr->translate('ANNOUNCEMENT'); ?></a>
             </li>
+			
+			<?php if(!empty($user_id)){?>
             <li <?php if($action=='changepassword'){ echo 'class="current"';}?>>
               <a class="smoothscroll" href="<?php echo $baseUrl."/site/changepassword";?>"><i class="fa fa-key  fa-fw"></i><?php echo $tr->translate('CHANGEPASSWORD'); ?></a>
             </li>
             <li <?php if($action=='logout'){ echo 'class="current"';}?>>
-              <a class="smoothscroll" href="<?php echo $baseUrl."/site/logout";?>"><i class="fa fa-sign-out fa-fw"></i><?php echo $tr->translate('SIGN_OUT'); ?></a>
+              <a class="smoothscroll" href="<?php echo $baseUrl."/site/logout?value=1";?>"><i class="fa fa-sign-out fa-fw"></i><?php echo $tr->translate('SIGN_OUT'); ?></a>
             </li>
-            
+            <?php }else{?>
+			<li <?php if($action=='sign-in'){ echo 'class="current"';}?>>
+              <a class="smoothscroll" href="<?php echo $baseUrl."/site/sign-in";?>"><i class="fa fa-sign-in fa-fw"></i><?php echo $tr->translate('LOGIN'); ?></a>
+            </li>
+			<?php }?>
          </ul>
       </nav>
+	  
+	<!-- Head Logo
+   ================================================== -->
+    <section id="headerSection">
+		
+		<div class="row companylogo">
+			<div class="container">
+				<div class="twelve columns">
+					<img src="<?php echo $baseUrl; ?>/images/logo.png" />
+				</div>
+			</div>
+		</div>
+	</section>
