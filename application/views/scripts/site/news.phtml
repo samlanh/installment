@@ -1,0 +1,122 @@
+<?php 
+	echo $this->render('siteheader.phtml');
+
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('ANNOUNCEMENT')); 
+	$baseUrl = $this->baseUrl();
+	
+	$dbSiteFront = new Application_Model_DbTable_DbSiteFront();
+	$search = $this->search;
+	
+	$parameterserch =  basename($_SERVER['REQUEST_URI']);
+	$urlsting = str_replace("&pages=".$this->currentPage,"",$parameterserch);
+	
+	$sign="?";
+	if (!empty($urlsting)){
+		$sign="&";
+	}
+?>
+	
+   <!-- About Section
+   ================================================== -->
+   
+   <section id="resume">
+		
+		<div class="row news-list">
+			<div class="container">
+				 <div class="nine columns header-col">
+					<div class="row infoHouseRowTitle">
+						<div class="three columns">
+							<div class="head-title-blog">
+								<h2><span><i class="fa fa-bell " aria-hidden="true"></i> <?php echo $tr->translate('ANNOUNCEMENT'); ?></span></h2>
+							 </div>
+						</div>
+						<div class="nine columns content-search">
+							
+						</div>
+					</div>
+					<?php $class=''; if (!empty($this->allnews)) foreach ($this->allnews as $news){ 
+						//$result = $db->checkReadNewfeed($news['id']);
+						//if ($result['is_read']==1){
+						//	$class="read";
+							$read = $tr->translate("Read");
+						//}else{
+						//	$class="";
+						//	$read = $tr->translate("Unread");
+						//}
+						
+						$image = $this->baseUrl()."/images/no-photo.png";
+						if (!empty($news['image_feature'])){
+							if (file_exists(PUBLIC_PATH."/images/news/".$news['image_feature'])){
+								$image = $this->baseUrl()."/images/news/".$news['image_feature'];
+							}
+							
+						}
+				
+						?>
+					<div  class="row news-row " title="<?php echo $news['title'];?>" >
+						
+						<div class="three columns img-feature">
+							<div class="news-image">
+								<img src="<?php echo $image; ?>" alt="sample Image">
+							</div>
+						</div>
+						<div class="nine columns col-news">
+							<div class="news-blog-list">
+								<a class="title" href="<?php echo $this->baseUrl()."/site/article/news?detail=".$news['id']?>"><?php echo $news['title'];?></a>
+								<small><i class="fa fa-calendar "></i> <?php if (date("Y-m-d",strtotime($news['publish_date']))==date("Y-m-d")){ echo $tr->translate("Today"); }else{ echo date("Y-M-d",strtotime($news['publish_date']));}?> | <?php echo $news['user_name']; ?> | <span class="statu-read"><?php echo $read;?></span></small> 
+								<p><?php echo  mb_substr(strip_tags($news['description']),0,150, "utf-8")."...";?></p>
+							</div>
+						</div>
+					</div>
+					<?php } ?>
+					
+					
+			 
+					
+				 </div>
+				 <div class="three columns">
+				 </div>
+				
+				<?php 
+					if($this->countPages>1){ 
+						$statpage = $this->currentPage - 5;
+						$endpage = $this->currentPage + 5;
+						if ($this->currentPage<=5){
+							$statpage = 1;
+							$endpage =10;
+						}
+					 if (!empty($this->countPages)){
+				 ?>
+					<div class="clearfix"></div>
+					<div class="pagin text-center">
+						<nav aria-label="Page navigation example">
+						  <ul class="pagination">
+							<?php if($this->currentPage!=1){ ?>
+							<li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->previousPage;?>"><?php echo $tr->translate('Previous');?></a></li>
+							<?php }?>
+							 <?php  $i=0; for( $i=1; $i<=$this->countPages; $i++){?>
+								<?php if ($statpage<=$i && $endpage>=$i){?>
+									<li class="page-item <?php if($i==$this->currentPage){ echo "active";}?>">
+										<a class="page-link" href="<?php echo $urlsting.$sign."pages=".$i;?>"><?php echo $i;?></a>
+									</li>
+								<?php }
+							}?>
+							<?php if($this->countPages!= $this->currentPage){ ?>
+							<li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->nextPage;?>"><?php echo $tr->translate('Next');?></a></li>
+							<?php }?>
+						  </ul>
+						</nav>
+						<span><?php echo $tr->translate('Total Pages')." : ".$this->countPages." ".$tr->translate('Pages');?></span>
+					</div>
+				 <?php }}?>
+					 
+			  </div>
+		</div>
+		
+      
+   </section>
+   
+   <?php 
+		echo $this->render('sitefooter.phtml');
+	?>

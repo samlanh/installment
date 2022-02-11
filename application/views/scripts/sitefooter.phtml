@@ -1,6 +1,11 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseUrl = $this->baseUrl();
+	
+	$request=Zend_Controller_Front::getInstance()->getRequest();
+	$action=$request->getActionName();
+	$controller=$request->getControllerName();
+	$module=$request->getModuleName();
 ?>
 
 		<footer>
@@ -23,7 +28,23 @@
 	   <script src="<?php echo $baseUrl; ?>/frontsite/js/wow.min.js"></script>
 	   <script src="<?php echo $baseUrl; ?>/frontsite/js/jquery.nicescroll.min.js"></script>
 	   
-	   
+		<?php if ($action=="myreport"){?>
+		<link href="<?php echo $this->baseUrl()."/datatable/"?>datatables.min.css" rel="stylesheet" type="text/css" />
+		<link href="<?php echo $this->baseUrl()."/datatable/"?>responsive.dataTables.min.css" rel="stylesheet" type="text/css" />
+		<script src="<?php echo $this->baseUrl()."/datatable/"?>datatables.min.js" type="text/javascript"></script>
+		<script src="<?php echo $this->baseUrl()."/datatable/"?>dataTables.responsive.min.js" type="text/javascript"></script>
+		
+		 <script>
+		$(document).ready(function() {
+			$('#datatable-responsive').DataTable( {
+				responsive: true,
+			 "dom": '<"top"i>rt<"bottom"flp><"clear">',
+				searching: false,
+				iDisplayLength: 50,
+			} );
+		} );
+		</script>
+		<?php }?>
 	   <script src="<?php echo $baseUrl."/templates/plugin/"?>select2/js/select2.min.js"></script>
 		
 	   <script src="<?php echo $baseUrl; ?>/frontsite/js/script.js"></script>

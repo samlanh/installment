@@ -1,0 +1,151 @@
+<?php 
+	echo $this->render('siteheader.phtml');
+
+	
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('MY_REPORT')); 
+	$baseUrl = $this->baseUrl();
+	
+	$dbSiteFront = new Application_Model_DbTable_DbSiteFront();
+	$search = $this->search;
+
+	
+	
+	$totalpaid =0;
+	if (!empty($this->commissionpaid)){
+		$totalpaid = $this->commissionpaid['total_commission'] + $this->commissionpaid['total_commission_get'];
+	}
+	if (!empty($this->commissionPayment)){
+		$totalpaid = $totalpaid + $this->commissionPayment['total_commission'];
+	}
+	$remain =$this->totalFullCommission - $totalpaid;
+?>
+   <!-- About Section
+   ================================================== -->
+   
+   <section id="resume">
+		
+		<div class="row news-list">
+			<div class="container">
+				 <div class="nine columns header-col">
+					<div class="row top_tiles">
+						<div class="animated flipInY three">
+							<div title="<?php echo $tr->translate("Expectation Commision Fee")?>" class="tile-stats dashboard">
+								<div class="icon"><i class="fa fa-money"></i></div>
+								<div class="small-count"><span><?php echo $tr->translate("SOLD_OUT")?> <strong><?php echo $this->totalSale; ?></strong></span></div>
+								<div class="count"><?php echo number_format($this->totalFullCommission,2);?> USD </div>
+								<h3><?php echo $tr->translate("Expectation Commision Fee")?></h3>
+							</div>
+						  </div>
+						  <div title="<?php echo $tr->translate("Commission Fee Received")?>" class="animated flipInY three">
+								<div class="tile-stats dashboard">
+								  <div class="icon"><i class="fa fa-exchange"></i></div>
+								  <div class="small-count"><span>&nbsp;</span></div>
+								  <div class="count"><?php echo number_format($totalpaid,2);?> USD</div>
+								  <h3><?php echo $tr->translate("Commission Fee Received")?></h3>
+								</div>
+						  </div>
+						  <div title="<?php echo $tr->translate("Commission Fee Remain")?>" class="animated flipInY three">
+							<div class="tile-stats dashboard">
+							  <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
+							  <div class="small-count"><span>&nbsp;</span></div>
+							  <div class="count"><?php echo number_format($remain,2);?> USD</div>
+							  <h3><?php echo $tr->translate("Commission Fee Remain")?></h3>
+							</div>
+						 </div>
+					</div>
+		  
+					<div class="row infoHouseRowTitle">
+						<div class="three columns">
+							<div class="head-title-blog">
+								<h2><span><i class="fa fa-file-text " aria-hidden="true"></i> <?php echo $tr->translate('MY_REPORT'); ?></span></h2>
+							 </div>
+						</div>
+						<div class="nine columns content-search">
+							<form action=""  method="post" enctype="application/x-www-form-urlencoded" autocomplete="off">
+								<div class="row ">
+									<div class="three columns search-blog">
+									
+										<input type="text" class="form-group fullsize" id="adv_search" name="adv_search" value="<?php echo $search['adv_search']?>" placeholder="<?php echo $tr->translate("SEARCH");?>...">
+									
+									</div>
+									<div class="two columns search-blog">
+										<input type="date" class="form-group fullsize"  name="start_date" id="start_date" value="<?php echo date("Y-m-d",strtotime($search['start_date']))?>"  />
+									</div>
+									<div class="two columns search-blog">
+										<input type="date" class="form-group fullsize"  name="end_date" id="end_date" value="<?php echo date("Y-m-d",strtotime($search['end_date']))?>" />
+									</div>
+									
+									<div class="three columns search-blog">
+										<select class="form-group js-select2 fullsize" id="branch_id"  name="branch_id" data-placeholder="<?php echo $tr->translate("SELECT_BRANCH");?>">
+										  <option value="" ></option>
+										  <?php if (!empty($this->allProject)) foreach ($this->allProject as $rs){?>
+										  <option value="<?php echo $rs['id']?>" <?php if($rs['id']==$search['branch_id']){ echo 'selected="selected"';}?> ><?php echo $rs['title']?></option>
+										  <?php }?>
+										</select>
+									</div>
+									<div class="two columns search-blog">
+										<button type="submit" class="btn btn-primary"><?php echo $tr->translate('SEARCH'); ?></button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div  class="row table-data">
+						<div class="dataTables_scrollBody" style="position: relative;  width: 100%; background:#fff;   ">
+							<table border="1" id="datatable-responsive" style="  border-collapse: collapse;   border-color: #ddd;"  class="display nowrap dataTable dtr-inline collapsed" cellspacing="0" width="100%" >
+								<thead>
+									<tr>
+										<td><?php echo $tr->translate('NUM'); ?></td>
+										<td><?php echo $tr->translate('PROJECT'); ?></td>
+										<td><?php echo $tr->translate('CUSTOMER_NAME'); ?></td>
+										<td><?php echo $tr->translate('PROPERTY_CODE'); ?></td>
+										<td><?php echo $tr->translate('PRICE'); ?></td>
+										<td><?php echo $tr->translate('COMISSION'); ?></td>
+										<td><?php echo $tr->translate('COMISSION_PAID'); ?></td>
+										<td><?php echo $tr->translate('REMAIN'); ?></td>
+										<td><?php echo $tr->translate('SALE_STATUS'); ?></td>
+									</tr>
+								</thead>
+								<tbody>
+									<?php $i=0; if(!empty($this->saleRow)) foreach($this->saleRow AS $rs){ 
+									
+										$i++;
+										$totalPaidComission = $rs['totalCommissionPaid']+$rs['totalCommissionPayment'];
+										$remainComission = $rs['fullCommission']-$totalPaidComission;
+									
+									?>
+									<tr>
+										<td><?php echo $i; ?></td>
+										<td><?php echo $rs['branch_name']; ?></td>
+										<td><?php echo $rs['clientName']; ?></td>
+										<td><?php echo $rs['propertyTitle']." ".$rs['propertyStreet']; ?></td>
+										<td><?php echo number_format($rs['price_sold'],2); ?></td>
+										<td><?php echo number_format($rs['fullCommission'],2); ?></td>
+										<td><?php echo number_format($totalPaidComission,2); ?></td>
+										<td><?php echo number_format($remainComission,2); ?></td>
+										<td><?php echo $rs['isCancelTitle']; ?></td>
+										
+									</tr>
+									<?php }?>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					
+				 </div>
+				 <div class="three columns">
+				 </div>
+				
+				
+					 
+			  </div>
+		</div>
+		
+      
+   </section>
+   
+   <?php 
+		echo $this->render('sitefooter.phtml');
+	?>
