@@ -454,6 +454,20 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 			$office_email->setValue($data['office_email']);
 			$office_website->setValue($data['office_website']);
 			$office_address->setValue($data['office_address']);
+			
+			
+			$_bank_account_name1->setValue($data['bank_account1']);
+			$_bank_account1->setValue($data['bank_account_name1']);
+			$_bank_account1number->setValue($data['bank_account1number']);
+			
+			$_bank_account2->setValue($data['bank_account2']);
+			$_bank_account_name2->setValue($data['bank_account_name2']);
+			$_bank_account2number->setValue($data['bank_account2number']);
+			
+			$_bank_account3->setValue($data['bank_account3']);
+			$_bank_account_name3->setValue($data['bank_account_name3']);
+			$_bank_account3number->setValue($data['bank_account3number']);
+			$_cheque_receiver->setValue($data['cheque_receiver']);
 		}
 		
 		
