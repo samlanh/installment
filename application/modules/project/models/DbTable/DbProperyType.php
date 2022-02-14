@@ -11,6 +11,15 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try{
+			
+			$part= PUBLIC_PATH.'/images/photo/property/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+		
+			
+			
+		
 	    	$arr = array(
 	    			'type_nameen'=>$data['type_nameen'],
 	    			'type_namekh'=>$data['type_nameen'],
@@ -18,6 +27,19 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 	    			'date'=>date("Y-m-d"),
 	    			'note'=>$data['note'],
 	    		);
+				
+			$name = $_FILES['logo']['name'];
+			$photo='';	
+			if (!empty($name)){
+				$tem =explode(".", $name);
+				$new_image_name = "property-type-img".date("Y").date("m").date("d").time().".".end($tem);
+				$tmp = $_FILES['logo']['tmp_name'];
+				if(move_uploaded_file($tmp, $part.$new_image_name)){
+					$photo = $new_image_name;
+					$arr['image_feature']= $photo;
+				}
+			}
+			
 	    	$this->_name='ln_properties_type';
 	    	if(!empty($data['id'])){
 	    		$where = 'id = '.$data['id'];

@@ -53,13 +53,93 @@
 		    		</div>
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-12">
+					<div class="form-group">
+		                   <div class="col-md-12 col-sm-12 col-xs-12">
+		                    	<?php 
+								$imageFeature = $this->baseUrl()."/images/photo/property/default-property-img.jpg";
+								if (!empty($this->row['image_feature'])){
+									if (file_exists(PUBLIC_PATH."/images/photo/property/".$this->row['image_feature'])){
+										$imageFeature = $this->baseUrl()."/images/photo/property/".$this->row['image_feature'];
+									}
+								}
+								?>
+								<input name="old_photo"  value="<?php echo $this->row['image_feature'];?>" type="hidden" />
+								<div class="account-image" >
+									<div class="image-box">
+										<img id="logo_wiew" src="<?php echo $imageFeature;?>" alt=""  />
+									</div>
+									<div class="button_browse">
+									<div id='preview'></div>	
+											<span>
+												<?php echo $tr->translate('Change IMAGE')?> 
+												<span ><i class="fa fa-camera" aria-hidden="true"></i></span><br />
+												(950px x 478px)
+											</span>
+											<input class="btn_borwse_image" type="file" id="logo" name="logo" />
+									</div>
+								</div>
+		                   </div>
+		                 </div>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
-				</div>
+				
 			</form>
 		</div>
 	</div>
 </div>
+<style>
+.image-box {
+    text-align: center;
+}
+.image-box img {
+    width: 100%;
+    height: 150px;
+    border: solid 1px #eee;
+}
+.button_browse {
+    /*margin-top: 10px; */
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+    height: 45px;
+    cursor: pointer;
+    background: #fbf9f9;
+    border: 1px solid #e8e8e8;
+}
+.button_browse span {
+    font-weight: 600;
+    cursor: pointer;
+}
+input.btn_borwse_image {
+    position: absolute;
+    width: 100%;
+    height: 45px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+.account-image {
+    border: solid 1px #eee;
+    width: 100%;
+}
+</style>
 <script>
 	dojo.require("dijit.form.Textarea");
+	
+	
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			
+			reader.onload = function (e) {
+				$('#logo_wiew').attr('src', e.target.result);
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+	$("#logo").change(function(){
+		readURL(this);
+	});
 </script>

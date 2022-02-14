@@ -58,6 +58,7 @@ Class Project_Form_FrmPropertiestype extends Zend_Dojo_Form {
 		$note->setAttribs(array(
 				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
+				'style'=>'min-height: 60px;font-size:12px;'
 		));
 	
 		$Date->setValue(date('Y-m-d'));
