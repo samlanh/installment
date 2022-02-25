@@ -498,7 +498,8 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 						exit();//Receipt Closed
 						//Application_Form_FrmMessage::Sucessfull("Can not delete this record","/loan/ilpayment");
 					}
-					if ($payment_il['total_payment']<=0){
+					//if ($payment_il['total_payment']<=0){
+					if ($payment_il['total_payment_parent']<=0){
 						print_r(Zend_Json::encode(5));
 						exit();//Void Ready
 					}
