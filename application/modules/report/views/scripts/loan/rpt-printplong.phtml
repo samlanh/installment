@@ -1,6 +1,14 @@
 <?php 
 $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 $row = $this->row;
+
+$imagelogo = $this->baseUrl()."/images/logo.jpg";
+if (!empty($this->row['project_logo'])){
+	if (file_exists(PUBLIC_PATH."/images/projects/".$this->row['project_logo'])){
+		$imagelogo = $this->baseUrl()."/images/projects/".$this->row['project_logo'];
+	}
+}
+
 ?>
 <title>ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ</title>
 <div class="card pb-10 pt-10 pl-10 pr-10">
@@ -11,6 +19,9 @@ $row = $this->row;
 					<style>
 						body {
 						    position: relative;
+						}
+						td span {
+							line-height: 22px;
 						}
 						.border {
 						        border: none;
@@ -37,7 +48,7 @@ $row = $this->row;
 					<table width="100%" style="font-size:12px; font-family:'Times New Roman','Khmer OS Battambang'; position: relative;"> 
 					<tr class="head">
 						<td colspan="2" valign="top" style="top: 40px;  position: absolute;">
-							<img alt="" src="<?php echo $this->baseUrl()."/images/logo.jpg"?>" style="max-height: 70px;display: inline-block;margin-right: 10px;">
+							<img alt="" src="<?php echo $imagelogo; ?>" style="max-width:100%; height: 70px; margin-top: 10px; margin-right: 10px;">
 					   </td>
 					</tr>
 					<tr class="head">
