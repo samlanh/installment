@@ -54,7 +54,7 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 	   				if(!empty($_data['save_new'])){
 						Application_Form_FrmMessage::message('INSERT_SUCCESS');
 					}else{
-						Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL . '/index');
+						Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL . '/propertiestype');
 					}
 	   		}catch(Exception $e){
 	   			Application_Form_FrmMessage::message("INSERT_FAIL");

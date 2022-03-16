@@ -23,6 +23,7 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 	    	$arr = array(
 	    			'type_nameen'=>$data['type_nameen'],
 	    			'type_namekh'=>$data['type_nameen'],
+	    			'serviceFee'=>$data['serviceFee'],
 	    			'user_id'=>$this->getUserId(),
 	    			'date'=>date("Y-m-d"),
 	    			'note'=>$data['note'],

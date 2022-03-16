@@ -985,6 +985,11 @@ function getAllBranch($search=null){
 			 `prope_type`.`note`
 		   FROM `ln_properties_type` `prope_type`
 		   WHERE `prope_type`.`id` = `pp`.`property_type` LIMIT 1) AS `propertyTypeNote`,
+		   (SELECT
+			 `prope_type`.`serviceFee`
+		   FROM `ln_properties_type` `prope_type`
+		   WHERE `prope_type`.`id` = `pp`.`property_type` LIMIT 1) AS `propertyTypeFee`,
+		   
 			`pp`.`land_size` AS `property_land_size`,
 			
 			`pp`.`width` AS `property_width`,

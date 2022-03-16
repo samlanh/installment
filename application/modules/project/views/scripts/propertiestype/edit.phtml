@@ -1,8 +1,14 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate('EDIT_PROPERTY_TYPE'));
-?>	
-<?php  $property = $this->frm_property_type;?>
+	
+	$serviceFee = SEVICEFEE_INPROPERTY_TYPE;
+	$classFee = "";
+	if($serviceFee==0){
+		$classFee = "hideClass";
+	}
+	$property = $this->frm_property_type;
+?>
 <div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box">
@@ -30,6 +36,13 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php  echo $property->getElement('type_nameen');?>
+	                   </div>
+	                </div>
+					<div class="form-group <?php echo $classFee;?>">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12 " ><?php echo $tr->translate("FEE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php  echo $property->getElement('serviceFee');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -124,10 +137,14 @@ input.btn_borwse_image {
     border: solid 1px #eee;
     width: 100%;
 }
+.hideClass{
+   display:none !important;
+  
+}
 </style>
 <script>
 	dojo.require("dijit.form.Textarea");
-	
+	dojo.require("dijit.form.NumberTextbox");
 	
 	function readURL(input) {
 		if (input.files && input.files[0]) {
