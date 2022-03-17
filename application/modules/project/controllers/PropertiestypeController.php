@@ -45,7 +45,11 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 	   				$dbgb->reloadPageExpireSession();
 	   				exit();
 	   			}
-	   			
+	   			if (empty($_data)){
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/propertiestype");
+					exit();
+				}
+				
 	   			$db->addPropery($_data);
 	   				if(!empty($_data['save_new'])){
 						Application_Form_FrmMessage::message('INSERT_SUCCESS');
@@ -75,6 +79,10 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 	   				$dbgb->reloadPageExpireSession();
 	   				exit();
 	   			}
+				if (empty($_data)){
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/propertiestype");
+					exit();
+				}
 	   			
 	   			$_data['id']= $id;
 	   			$db_co->addPropery($_data);
@@ -85,6 +93,7 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 	   		}
 	   	}
 	   	$row = $db_co->getPropertyTypeById($id);
+	   	$this->view->row = $row;
 	   	$frm = new Project_Form_FrmPropertiestype();
 	   	$frm_pro=$frm->FrmPropertiesType($row);
    		Application_Model_Decorator::removeAllDecorator($frm_pro);

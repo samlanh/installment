@@ -172,12 +172,29 @@ class SiteController extends Zend_Controller_Action
 			$this->_redirect("/site/home");
 		}
 		
-		$id = $this->getRequest()->getParam("detail");
-		$db = new Home_Model_DbTable_DbDashboard();
-		if (!empty($id)) {
-			$detail =	$db->getNewsDetail($id);
-			$this->view->detail = $detail;
+		$db = new Application_Model_DbTable_DbSiteFront();
+		
+		$allProject = $db->getAllBranchName();
+		$this->view->allProject =$allProject;
+		
+		$search = array(
+			'branch_id'=>1,
+			'adv_search'=>'',
+			'start_date'=> date('Y-m-d'),
+			'end_date'=>date('Y-m-d'),
+		);
+		if($this->getRequest()->isPost()){
+			$search=$this->getRequest()->getPost();
 		}
+		$this->view->search =$search;
+		$this->view->saleRow = $db->getAllSaleByAgent($search);
+		
+		
+		
+		$this->view->totalFullCommission = $db->getTotalFullCommission();
+		$this->view->commissionpaid = $db->getCommissionPiadByAgent();
+		$this->view->commissionPayment = $db->getCommissionPaymentPaidByAgent();
+		$this->view->totalSale = $db->getTotalSaleByAgent();
 	}
 	function changepasswordAction(){
 		$this->_helper->layout()->disableLayout();

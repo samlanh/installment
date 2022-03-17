@@ -77,11 +77,36 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'office_email'=>$_data['office_email'],
     			'office_website'=>$_data['office_website'],
     			'office_address'=>$_data['office_address'],
+				
+				'bank_account1'=>$_data['bank_account1'],
+    			'bank_account_name1'=>$_data['bank_account_name1'],
+    			'bank_account1number'=>$_data['bank_account1number'],
+				
+				'bank_account2'=>$_data['bank_account2'],
+    			'bank_account_name2'=>$_data['bank_account_name2'],
+    			'bank_account2number'=>$_data['bank_account2number'],
+				
+				'bank_account3'=>$_data['bank_account3'],
+    			'bank_account_name3'=>$_data['bank_account_name3'],
+    			'bank_account3number'=>$_data['bank_account3number'],
+    			'cheque_receiver'=>$_data['cheque_receiver'],
     			
     			);
 		    	if (!empty($_data['budget_amount'])){
 		    		$_arr['budget_amount']=$_data['budget_amount'];
 		    	}
+				
+			$nameImageProject = $_FILES['imageProject']['name'];
+			if (!empty($nameImageProject)){
+				$tem =explode(".", $nameImageProject);
+				$new_image_name = "projectMasterPlan".date("Y").date("m").date("d").time().".".end($tem);
+				$tmp = $_FILES['imageProject']['tmp_name'];
+				if(move_uploaded_file($tmp, $part.$new_image_name)){
+					$_arr['projectMasterPlanImage']=$new_image_name;
+				}
+				
+			}
+		
     	$branch_id = $this->insert($_arr);//insert data
     	$ids = explode(',', $_data['identity']);
     	$key = 1;
@@ -169,11 +194,37 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'office_email'=>$_data['office_email'],
     			'office_website'=>$_data['office_website'],
     			'office_address'=>$_data['office_address'],
+				
+				
+				'bank_account1'=>$_data['bank_account1'],
+    			'bank_account_name1'=>$_data['bank_account_name1'],
+    			'bank_account1number'=>$_data['bank_account1number'],
+				
+				'bank_account2'=>$_data['bank_account2'],
+    			'bank_account_name2'=>$_data['bank_account_name2'],
+    			'bank_account2number'=>$_data['bank_account2number'],
+				
+				'bank_account3'=>$_data['bank_account3'],
+    			'bank_account_name3'=>$_data['bank_account_name3'],
+    			'bank_account3number'=>$_data['bank_account3number'],
+    			'cheque_receiver'=>$_data['cheque_receiver'],
     			
     			);
 		    	if (!empty($_data['budget_amount'])){
 		    		$_arr['budget_amount']=$_data['budget_amount'];
 		    	}
+				
+			$nameImageProject = $_FILES['imageProject']['name'];
+			if (!empty($nameImageProject)){
+				$tem =explode(".", $nameImageProject);
+				$new_image_name = "projectMasterPlan".date("Y").date("m").date("d").time().".".end($tem);
+				$tmp = $_FILES['imageProject']['tmp_name'];
+				if(move_uploaded_file($tmp, $part.$new_image_name)){
+					$_arr['projectMasterPlanImage']=$new_image_name;
+				}
+				
+			}
+			
     	$where=$this->getAdapter()->quoteInto("br_id=?", $id);
     	$this->update($_arr, $where);
     	
