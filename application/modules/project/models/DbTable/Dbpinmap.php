@@ -8,7 +8,7 @@ class Project_Model_DbTable_Dbpinmap extends Zend_Db_Table_Abstract
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
-    function getAllLandInfo($search = null){
+    function getAllLandMap($search = null){
     	$db = $this->getAdapter();
     	$dbp = new Application_Model_DbTable_DbGlobal();
     	

@@ -91,6 +91,14 @@ Class Project_Form_FrmPropertiestype extends Zend_Dojo_Form {
 		));
 		$serviceFee->setValue(0);
 		
+		$serviceFeeYear=new Zend_Dojo_Form_Element_NumberTextBox('serviceFeeYear');
+		$serviceFeeYear->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'required'=>false
+		));
+		$serviceFeeYear->setValue(0);
+		
 		$id = new Zend_Form_Element_Hidden("id");
 		if($data!=null){
 			$property_type_nameen->setValue($data['type_nameen']);
@@ -99,12 +107,14 @@ Class Project_Form_FrmPropertiestype extends Zend_Dojo_Form {
 			$Date->setValue($data['date']);
 			$status->setValue($data['status']);
 			$serviceFee->setValue($data['serviceFee']);
+			$serviceFeeYear->setValue($data['serviceFeeYear']);
 			//$id->setValue($data['return_id']);
 		}
 		
 		$this->addElements(array($property_type_nameen,$property_type_namekh,$_btn_search,$_status_search,
 				$Date,$note,$Date,$id,$status,$_title
 				,$serviceFee
+				,$serviceFeeYear
 				));
 		return $this;
 		

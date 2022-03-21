@@ -29,7 +29,9 @@ class Setting_importController extends Zend_Controller_Action {
 				}
 				$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 // 				$db->ImportPPLand($sheetData);
-				$db->ImportADLand($sheetData);
+				//$db->ImportADLand($sheetData);
+				$db->updateItemsByImport($sheetData);
+				
 				Application_Form_FrmMessage::message("Import Successfully");
 			}
 		}catch (Exception $e){

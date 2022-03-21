@@ -10,7 +10,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     }
     public function updateItemsByImport($data){
     	$db = $this->getAdapter();
-//     	$db->beginTransaction();
+    	$db->beginTransaction();
     	try{
 	    	$count = count($data);
 	    	$a_time= 0;
@@ -28,7 +28,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    		if(empty($data[$i]['E'])){
 	    			continue;
 	    		}
-	    		if($oldland_str!=$data[$i]['J']){
+	    		if($oldland_str!=$data[$i]['L']){
 		    		$sql="SELECT `client_id` FROM `ln_client` WHERE name_kh='".$data[$i]['I']."'";
 		    		$client_id = $db->fetchOne($sql);
 		    		if(empty($client_id)){
@@ -37,7 +37,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 		    			
 				    		$_arr=array(
 			    				'client_number'=> $client_code,
-			    				'name_kh'	  => $data[$i]['I'],
+			    				'name_kh'	  => $data[$i]['K'],
 			    				'sex'	      => 1,
 			    				'pro_id'      => 12,
 			    				'dis_id'      => 0,
@@ -65,16 +65,16 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 				    		$client_id = $this->insert($_arr);
 		    		}
 		    		
-		    		$sql="SELECT id FROM `ln_properties` WHERE branch_id = $branch_id AND land_address = '".$data[$i]['J']."'";
+		    		$sql="SELECT id FROM `ln_properties` WHERE branch_id = $branch_id AND land_address = '".$data[$i]['L']."'";
 		    		$land_id = $db->fetchOne($sql);
 		    		if(empty($land_id)){
 		    			$_arr=array(
 	    					'branch_id'	  => $branch_id,
 	    					'land_code'	  => '',
-	    					'land_address'=> $data[$i]['J'],
-	    					'street'	  => '',
-	    					'price'	      => $data[$i]['L'],
-	    					'land_price'  => $data[$i]['L'],
+	    					'land_address'=> $data[$i]['L'],
+	    					'street'	  => $data[$i]['M'],
+	    					'price'	      => $data[$i]['O'],
+	    					'land_price'  => $data[$i]['O'],
 	    					'house_price' => 0,
 	    					'land_size'	  => '',
 	    					'width'       => '',
@@ -108,19 +108,19 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    			   	'payment_id'=>4,
 		    			'note'=>$data[$i]['G'],
 	    				'client_id'=>$client_id,
-	    				'price_before'=>$data[$i]['L'],
-	    				'discount_amount'=>$data[$i]['M'],
+	    				'price_before'=>$data[$i]['O'],
+	    				'discount_amount'=>$data[$i]['P'],
 	    			   	'discount_percent'=>0,
-	    				'price_sold'=>($data[$i]['L']),
+	    				'price_sold'=>($data[$i]['O']),
 	    				'other_fee'=>0,
-	    				'paid_amount'=>$data[$i]['E'],
-	    				'balance'=>($data[$i]['L'])-$data[$i]['E'],
-	    				'interest_rate'=>$data[$i]['P'],
+// 	    				'paid_amount'=>$data[$i]['E'],
+	    				'balance'=>0,//($data[$i]['0'])-$data[$i]['D'],
+// 	    				'interest_rate'=>$data[$i]['P'],
 	    				'total_duration'=>$data[$i]['U'],
 	    			   	'validate_date'=>$data[$i]['R'],
 	    				'payment_method'=>1,
 	    			   	'land_price'=>0,//$data['house_price'],
-	    			   	'total_installamount'=>$data[$i]['F'],
+	    			   	'total_installamount'=>$data[$i]['N'],
 	    			   	'typesale'=>1,
 	    				'build_start'=>'',
 	    				'amount_build'=>0,
@@ -129,11 +129,11 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    				'comission'=>0,
 	    			   	'full_commission'=>0,
 	    				'create_date'=>date("Y-m-d"),
-	    			   	'startcal_date'=>date("Y-m-d",strtotime($data[$i]['Q'])),
-	    			   	'first_payment'=>date("Y-m-d",strtotime($data[$i]['Q'])),
-	    			   	'agreement_date'=>date("Y-m-d",strtotime($data[$i]['S'])),
-    			   		'buy_date'=>date("Y-m-d",strtotime($data[$i]['Q'])),
-    			   		'end_line'=>date("Y-m-d",strtotime($data[$i]['R'])),
+	    			   	'startcal_date'=>date("Y-m-d",strtotime($data[$i]['R'])),
+	    			   	'first_payment'=>date("Y-m-d",strtotime($data[$i]['R'])),
+	    			   	'agreement_date'=>date("Y-m-d",strtotime($data[$i]['T'])),
+    			   		'buy_date'=>date("Y-m-d",strtotime($data[$i]['R'])),
+    			   		'end_line'=>date("Y-m-d",strtotime($data[$i]['S'])),
 	    			   	'validate_date'=>date("Y-m-d",strtotime($data[$i]['R'])),
 	    				'user_id'=>$this->getUserId(),
 	    			   	'amount_daydelay'=>0
@@ -157,18 +157,18 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 // 		    	   $first_payment=1;
 // 	    		}
 	    		
-	    		$is_completed =($data[$i]['A']==0)?1:0;
-	    		$cum_interest = $cum_interest+$data[$i]['E'];
+	    		$is_completed =($data[$i]['I']==0)?1:0;
+	    		$cum_interest = 0;//$cum_interest+$data[$i]['E'];
 	    		$this->_name="ln_saleschedule";
 // 	    		if($n==0){
-	    			$begining = $data[$i]['F']+$data[$i]['C'];
-	    			$ending=$data[$i]['F'];
+	    			$begining = $data[$i]['C'];
+	    			$ending=$data[$i]['E'];
 	    			$is_completed=0;
 // 	    		}else{
 // 	    			$begining = $ending;
 // 	    			$ending = $data[$i]['F'];
 // 	    		}
-	    			if($oldland_str!=$data[$i]['J']){
+	    			if($oldland_str!=$data[$i]['L']){
 	    				$is_completed=1;
 	    			}
 	    		$n++;
@@ -177,13 +177,13 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     				'sale_id'=>$sale_id,//good
     				'begining_balance'=>$begining,//$data[$i]['F']+$data[$i]['C'],//good
     				'begining_balance_after'=>$begining,//$data[$i]['F']+$data[$i]['C'],//good
-    				'principal_permonth'=> $data[$i]['C'],//good
-    				'principal_permonthafter'=>$data[$i]['C'],//good
-    				'total_interest'=>$data[$i]['D'],//good
-    				'total_interest_after'=>$data[$i]['D'],//good
-    				'total_payment'=>$data[$i]['E'],//good
-    				'total_payment_after'=>$data[$i]['E'],//good
-    				'ending_balance'=>$data[$i]['F'],
+    				'principal_permonth'=> $data[$i]['D'],//good
+    				'principal_permonthafter'=>$data[$i]['D'],//good
+    				'total_interest'=>0,//$data[$i]['D'],//good
+    				'total_interest_after'=>0,//$data[$i]['D'],//good
+    				'total_payment'=>$data[$i]['D'],//good
+    				'total_payment_after'=>$data[$i]['D'],//good
+    				'ending_balance'=>$data[$i]['E'],
     				'cum_interest'=>$cum_interest,
     				'amount_day'=>30,
     				'is_completed'=>$is_completed,
@@ -191,36 +191,36 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 					//'ispay_bank'=>($data[$i]['B']=='បានប្លង់រឹង'?2:0),
     				'paid_date'=>date("Y-m-d",strtotime($data[$i]['B'])),
     				'note'=>'',
-    				'percent'=>($first_pay==0)?$data[$i]['N']:0,
-    				'percent_agree'=>($first_pay==0)?$data[$i]['N']:0,
-    				'is_installment'=>($first_pay==0)?1:0,
+//     				'percent'=>($first_pay==0)?$data[$i]['N']:0,
+//     				'percent_agree'=>($first_pay==0)?$data[$i]['N']:0,
+    				'is_installment'=>1,//($first_pay==0)?1:0,
     				'no_installment'=>$install,
     				'last_optiontype'=>1,
-	    			'note'=>$data[$i]['B'],
+	    			'note'=>$data[$i]['V'],
 	    		);
 	    		$saledetailid = $this->insert($datapayment);
 	    		
-	    		if($oldland_str!=$data[$i]['J']){
+	    		if($oldland_str!=$data[$i]['L']){
 	    			
 	    			$arr_client_pay = array(
-	    					'branch_id'						=>	$branch_id,//$data["branch_id"],
-	    					'receipt_no'					=>	$data[$i]['H'],
+	    					'branch_id'						=>	$branch_id,
+	    					'receipt_no'					=>	$data[$i]['G'],
 	    					'date_pay'					    =>	date("Y-m-d",strtotime($data[$i]['B'])),
 	    					'date_input'					=>	date("Y-m-d",strtotime($data[$i]['B'])),
 	    					'from_date'						=>	date("Y-m-d",strtotime($data[$i]['B'])),//check more
 	    					'client_id'                     =>	$client_id,
 	    					'sale_id'						=>	$sale_id,
 	    					'land_id'						=>	$land_id,
-	    					'outstanding'                   =>	$data[$i]['F']+$data[$i]['C'],//ប្រាក់ដើមមុនបង់
-	    					'total_principal_permonth'		=>	$data[$i]['C'],//ប្រាក់ដើមត្រូវបង់
-	    					'total_interest_permonth'		=>	$data[$i]['D'],
+	    					'outstanding'                   =>	$data[$i]['C'],//ប្រាក់ដើមមុនបង់
+	    					'total_principal_permonth'		=>	$data[$i]['D'],//ប្រាក់ដើមត្រូវបង់
+	    					'total_interest_permonth'		=>	0,//$data[$i]['D'],
 	    					'penalize_amount'				=>	0,
-	    					'total_payment'					=>	$data[$i]['E'],//ប្រាក់ត្រូវបង់ok
+	    					'total_payment'					=>	$data[$i]['D'],//ប្រាក់ត្រូវបង់ok
 	    					'service_charge'				=>	0,
-	    					'principal_amount'				=>	$data[$i]['F'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
+	    					'principal_amount'				=>	$data[$i]['E'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
 	    					'balance'						=>	0,
-	    					'recieve_amount'				=>	$data[$i]['E'],//ok
-	    					'amount_payment'				=>	$data[$i]['E'],//brak ban borng
+	    					'recieve_amount'				=>	$data[$i]['D'],//ok
+	    					'amount_payment'				=>	$data[$i]['D'],//brak ban borng
 	    					'return_amount'					=>	0,//ok
 	    					'note'							=>	'',
 	    					'cheque'						=>	'',
@@ -234,8 +234,8 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    					'payment_times'					=>  $install,
 	    					'payment_method'				=>  1,
 	    					
-	    					'total_principal_permonthpaid'	=>	$data[$i]['C'],//ok ប្រាក់ដើមបានបង
-	    					'total_interest_permonthpaid'	=>	$data[$i]['D'],//ok ការប្រាក់បានបង
+	    					'total_principal_permonthpaid'	=>	$data[$i]['D'],//ok ប្រាក់ដើមបានបង
+	    					'total_interest_permonthpaid'	=>	0,//$data[$i]['D'],//ok ការប្រាក់បានបង
 	    					'penalize_amountpaid'			=>	0,// ok បានបង
 	    					'service_chargepaid'			=>	0,// okបានបង
 	    			);
@@ -257,12 +257,12 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    					'service_charge'		=>	0,
 	    					'penelize_new'			=>	0,
 	    					'service_charge_new'	=>	0,
-	    					'capital'				=>  $data[$i]['F']+$data[$i]['C'],
-	    					'remain_capital'		=>	$data[$i]['F'], // remain balance after paid
-	    					'old_principal_permonth'=>	$data[$i]['C'],
-	    					'old_total_priciple'	=>	$data[$i]['C'],
-	    					'old_interest'			=>	$data[$i]['D'],
-	    					'old_total_payment'		=>	$data[$i]['E'],
+	    					'capital'				=>  $data[$i]['C'],
+	    					'remain_capital'		=>	$data[$i]['E'], // remain balance after paid
+	    					'old_principal_permonth'=>	$data[$i]['D'],
+	    					'old_total_priciple'	=>	$data[$i]['D'],
+	    					'old_interest'			=>	0,//$data[$i]['D'],
+	    					'old_total_payment'		=>	0,//$data[$i]['E'],
 	    					'old_penelize'			=>	0,
 	    					'old_service_charge'	=>	0,
 	    					'last_pay_date'			=>	date("Y-m-d",strtotime($data[$i]['B'])),
@@ -273,11 +273,11 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    			$this->insert($arr);
 	    			
 	    		}
-	    		$oldland_str=$data[$i]['J'];
+	    		$oldland_str=$data[$i]['L'];
 	    		$install = $install+1;
 	    	}
 // 	    	exit();
-// 	    	$db->commit();	    	
+	    	$db->commit();	    	
 	   }catch(Exception $e){
 // 	   		$db->rollBack();	
 // 	   		echo $e->getMessage();
@@ -415,7 +415,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     						'user_id'=>$this->getUserId(),
     						'amount_daydelay'=>0,
     						'receipt_no'=>$data[$i]['I'],
-							'excel_note'=>$data[$i]['AC'],
+							'excel_note'=>$data[$i]['V'],
     				);
     
     				$this->_name='ln_sale';
@@ -591,7 +591,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     			$install = $install+1;
     		}
     		// 	    	exit();
-    		// 	    	$db->commit();
+    			    	$db->commit();
     	}catch(Exception $e){
 //     		$db->rollBack();
     	    echo $e->getMessage();
@@ -848,8 +848,8 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     						'discount_percent'=>0,
     						'price_sold'=>$data[$i]['N']-$data[$i]['O'],
     						'other_fee'=>0,
-    						// //     						'paid_amount'=>$data[$i]['E'],
-    				// //     						'balance'=>($data[$i]['N']-$data[$i]['E']),
+    				//     						'paid_amount'=>$data[$i]['E'],
+    				//     						'balance'=>($data[$i]['N']-$data[$i]['E']),
     						'interest_rate'=>0,//$data[$i]['V'],
     						'total_duration'=>$duration,
     						'validate_date'=>date("Y-m-d",strtotime($data[$i]['R'])),

@@ -326,9 +326,54 @@ ul.blogsub li{
 														    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"></td>
 														    <td align="justify" style="padding-left:5px">
 															    <ul class="blogsub">
-															    	<li>
-															    		<strong>ភាគី(ខ)</strong> មានកាតព្វកិច្ចបង់សេវាក្នុង០១ខែចំនួន $២០.00 (ម្ភៃដុល្លារអាមេរិចគត់) ឬក្នុង០១ឆ្នាំចំនួន $២០០.00(ពីររយដុល្លារអាមេរិកគត់)  លើផ្នែកសេវាដូចជា ភ្លើងបំភ្លឺផ្លូវ អនាម័យសាធារណៈ និង សន្តិសុខ ២៤ម៉ោង បន្ទាប់ពីថ្ងៃដែល <strong>ភាគី(ក)</strong> បានជូនដំណឹងប្រគល់ផ្ទះជូន <strong>ភាគី(ខ)</strong> ។ <strong>ភាគី(ក)</strong> មានសិទ្ធិកែប្រែតម្លៃខាងលើ ដោយនឹងជូនដំណឹងជាសាធារណៈ០១ខែមុន។ 
+															    	
+																<?php 
+																if($this->agreement['agreement_date']>='2022-03-21'){
+																	$boreyFee = 20;
+																	$boreyYearlyFee = 200;
+																	if($this->agreement['propertyTypeFee']>0){
+																		$boreyFee = $this->agreement['propertyTypeFee'];
+																	}
+																	if($this->agreement['propertyTypeFeeYearly']>0){
+																		$boreyYearlyFee = $this->agreement['propertyTypeFeeYearly'];
+																	}
+																?>
+																	<li>
+															    		<strong>ភាគី(ខ)</strong> មានកាតព្វកិច្ចបង់សេវាក្នុង០១ខែចំនួន $<?php echo $dbparmeter->getNumberInkhmer($boreyFee);?> (<span id="lbBoreyFeeMonth" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក) ឬក្នុង០១ឆ្នាំចំនួន $<?php echo $dbparmeter->getNumberInkhmer($boreyYearlyFee);?> (<span id="lbBoreyFeeYearly" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក)  លើផ្នែកសេវាដូចជា ភ្លើងបំភ្លឺផ្លូវ អនាម័យសាធារណៈ និង សន្តិសុខ ២៤ម៉ោង បន្ទាប់ពីថ្ងៃដែល <strong>ភាគី(ក)</strong> បានជូនដំណឹងប្រគល់ផ្ទះជូន <strong>ភាគី(ខ)</strong> ។ <strong>ភាគី(ក)</strong> មានសិទ្ធិកែប្រែតម្លៃខាងលើ ដោយនឹងជូនដំណឹងជាសាធារណៈ០១ខែមុន។ 
 															    	</li>
+																	<script>
+																			aBoreyFee ='<?php echo $boreyFee; ?>';
+																			money_khmerBoreyFee=read_money_in_khmer(aBoreyFee);
+																			
+																			decimalmoney_khmerBoreyFee='<?php echo substr(number_format($boreyFee,2),-2);?>';
+																			str_centBoreyFee = 'សេន';
+																			if(decimalmoney_khmerBoreyFee>0){stringBoreyFee='និង';}else{stringBoreyFee="";str_centBoreyFee='';}
+																			last_numberBoreyFee='<?php echo substr(number_format($boreyFee,2),-1);?>';
+																			
+																			if(last_numberBoreyFee<=0){last_numberBoreyFee='';}
+																			money_khmerBoreyFee = money_khmerBoreyFee+" "+stringBoreyFee+" "+read_in_khmer_from_10_to_99(decimalmoney_khmerBoreyFee)+''+read_in_khmer_from_0_to_9(last_numberBoreyFee)+''+str_centBoreyFee;
+																			money_khmerBoreyFee = money_khmerBoreyFee.split(' ').join('');
+																			dojo.byId('lbBoreyFeeMonth').innerHTML=money_khmerBoreyFee+" ";
+																			
+																			aBoreyYearlyFee ='<?php echo $boreyYearlyFee; ?>';
+																			money_khmerBoreyYearlyFee=read_money_in_khmer(aBoreyYearlyFee);
+																			
+																			decimalmoney_khmerBoreyYearlyFee='<?php echo substr(number_format($boreyYearlyFee,2),-2);?>';
+																			str_centBoreyYearlyFee = 'សេន';
+																			if(decimalmoney_khmerBoreyYearlyFee>0){stringBoreyFee='និង';}else{stringBoreyFee="";str_centBoreyYearlyFee='';}
+																			last_numberBoreyYearlyFee='<?php echo substr(number_format($boreyYearlyFee,2),-1);?>';
+																			
+																			if(last_numberBoreyYearlyFee<=0){last_numberBoreyYearlyFee='';}
+																			money_khmerBoreyYearlyFee = money_khmerBoreyYearlyFee+" "+stringBoreyFee+" "+read_in_khmer_from_10_to_99(decimalmoney_khmerBoreyYearlyFee)+''+read_in_khmer_from_0_to_9(last_numberBoreyYearlyFee)+''+str_centBoreyYearlyFee;
+																			money_khmerBoreyYearlyFee = money_khmerBoreyYearlyFee.split(' ').join('');
+																			dojo.byId('lbBoreyFeeYearly').innerHTML=money_khmerBoreyYearlyFee+" ";
+																	</script>
+																<?php }else{?>
+																	<li>
+															    		<strong>ភាគី(ខ)</strong> មានកាតព្វកិច្ចបង់សេវាក្នុង០១ខែចំនួន $២០.00 (ម្ភៃដុល្លារអាមេរិកគត់) ឬក្នុង០១ឆ្នាំចំនួន $២០០.00(ពីររយដុល្លារអាមេរិកគត់)  លើផ្នែកសេវាដូចជា ភ្លើងបំភ្លឺផ្លូវ អនាម័យសាធារណៈ និង សន្តិសុខ ២៤ម៉ោង បន្ទាប់ពីថ្ងៃដែល <strong>ភាគី(ក)</strong> បានជូនដំណឹងប្រគល់ផ្ទះជូន <strong>ភាគី(ខ)</strong> ។ <strong>ភាគី(ក)</strong> មានសិទ្ធិកែប្រែតម្លៃខាងលើ ដោយនឹងជូនដំណឹងជាសាធារណៈ០១ខែមុន។ 
+															    	</li>
+																<?php }?>
+																	
 															    	<li>
 															    		<strong>ភាគី(ខ)</strong> មានកាតព្វកិច្ចទៅលើការចំណាយកាត់ឈ្មោះផ្ទេរកម្មសិទ្ធិ បង់ពន្ធប្រថាប់ត្រា០៤% បន្ទាប់ពី <strong>ភាគី(ក)</strong> ប្រគល់ វិញ្ញាបនបត្រសម្គាល់ម្ចាស់អចលនវត្ថុជូន និង បង់ពន្ធអចលនទ្រព្យផ្សេងៗ បន្ទាប់ពី <strong>ភាគី(ក)</strong> ប្រគល់ផ្ទះជូនរួច។ 
 																		<?php if($this->agreement['agreement_date']>='2021-10-12'){?>

@@ -24,6 +24,7 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 	    			'type_nameen'=>$data['type_nameen'],
 	    			'type_namekh'=>$data['type_nameen'],
 	    			'serviceFee'=>$data['serviceFee'],
+	    			'serviceFeeYear'=>$data['serviceFeeYear'],
 	    			'user_id'=>$this->getUserId(),
 	    			'date'=>date("Y-m-d"),
 	    			'note'=>$data['note'],
