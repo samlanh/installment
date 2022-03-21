@@ -36,7 +36,7 @@ class Project_MappingplanController extends Zend_Controller_Action {
 						'streetlist'=>''
 				);
 			}
-			$rs_rows= $db->getAllLandInfo($search);
+			$rs_rows= $db->getAllLandMap($search);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","PROPERTY_CODE","STREET","PROPERTY_TYPE","MAP_WIDTH","MAP_HEIGHT","MAP_TRANSFORM","MAP_TOP","MAP_LEFT");
 			$link=array(
