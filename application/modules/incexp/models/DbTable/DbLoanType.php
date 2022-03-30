@@ -7,8 +7,10 @@ class Incexp_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     	try{
     	$db = $this->getAdapter();
     	$key_code = $this->getLastKeycodeByType($data['type']);
+		$title = $data['title_kh'];
+		$title_en = empty($data['title_en'])?$title:$data['title_en'];
     	$arr = array(
-    			'name_en'=>$data['title_en'],
+    			'name_en'=>$title_en,
     			'name_kh'=>$data['title_kh'],
     			'status'=>1,
     			'parent_id'=>$data['parent_id'],
@@ -29,8 +31,11 @@ class Incexp_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     	return $number+1;
     }
     function updatViewById($data){
+		
+		$title = $data['title_kh'];
+		$title_en = empty($data['title_en'])?$title:$data['title_en'];
     	$arr = array(
-    			'name_en'=>$data['title_en'],
+    			'name_en'=>$title_en,
     			'name_kh'=>$data['title_kh'],
     			'parent_id'=>$data['parent_id'],
     			'status'=>$data['status'],

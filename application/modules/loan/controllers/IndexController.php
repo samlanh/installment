@@ -415,7 +415,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 	function rptUpdatepaymentAction(){
 		$showEditSchedule = SHOW_EDIT_SCHEDULE;
 		if($showEditSchedule!=1){
-			Application_Form_FrmMessage::Sucessfull("NO_ENOUGH_PERMISSION","/loan/index/");
+			//Application_Form_FrmMessage::Sucessfull("NO_ENOUGH_PERMISSION","/loan/index/");
+			$this->_redirect("/loan/index");
 			exit();
 		}
 		if($this->getRequest()->isPost()){
