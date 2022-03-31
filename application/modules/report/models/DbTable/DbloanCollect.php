@@ -257,6 +257,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 			AND sh.sale_id = $sale_id 
 			AND sh.ispay_bank =0
 			AND sh.is_completed=0
+			AND sh.collect_by=1
 			GROUP BY sh.sale_id";
 		$total_latedate = $db->fetchOne($sql);
 		$latedate = $total_latedate - $graice_pariod_late;
@@ -272,6 +273,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 			AND sh.sale_id = $sale_id 
 			AND sh.ispay_bank =0
 			AND sh.is_completed=0
+			AND sh.collect_by=1
 			GROUP BY sh.sale_id";
 		}else{
 			$sql="SELECT
@@ -281,6 +283,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 			AND sh.sale_id = $sale_id
 			AND sh.ispay_bank =0
 			AND sh.is_completed=0
+			AND sh.collect_by=1
 			GROUP BY sh.sale_id";
 		}
 		/*
