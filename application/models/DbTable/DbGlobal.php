@@ -2001,6 +2001,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `s`.`agreement_date`   AS `agreement_date`,
 		  `s`.`is_cancel`        AS `is_cancel`,
 		  `s`.`user_id`          AS `user_id`,
+		  `s`.`build_start`      AS `build_start`,
+		  `s`.`amount_build`     AS `amount_build`, 
 		   s.note,
 		  `p`.`land_code`        AS `land_code`,
 		  `p`.`land_address`     AS `land_address`,
