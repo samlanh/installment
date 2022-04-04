@@ -462,12 +462,16 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    public function getLoanNumber($data=array('branch_id'=>1,'is_group'=>0)){
    	$this->_name='ln_sale';
    	$db = $this->getAdapter();
-   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." LIMIT 1 ";
-   		$pre = $this->getPrefixCode($data['branch_id']);
+   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id=".$data['branch_id']." ";
+		if (SET_SALENO_COUNT==1){
+			$sql.=" AND is_reschedule=1 ";
+		}
+		$sql.=" LIMIT 1 ";
+		$pre = $this->getPrefixCode($data['branch_id']);
 	   	$acc_no = $db->fetchOne($sql);
    	$new_acc_no= (int)$acc_no+1;
    	$acc_no= strlen((int)$acc_no+1);
-   	for($i = $acc_no;$i<3;$i++){
+   	for($i = $acc_no;$i<4;$i++){
    		$pre.='0';
    	}
    	$saleNo =$pre.$new_acc_no;
@@ -525,6 +529,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    			$to_date = (empty($endDate))? '1': " date_input <= '".$endDate." 23:59:59'";
    			$sql.= " AND ".$from_date." AND ".$to_date;
    		}
+   		$sql.=" AND branch_id = ".$data['branch_id'];
    		$sql.=" LIMIT 1 ";
    	}elseif($receipt_type_count==3){//svr
    		$pre='№ ';

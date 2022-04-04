@@ -93,6 +93,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$dbtable = new Application_Model_DbTable_DbGlobal();
     		$sale = $this->getSaleInfo($data['loan_number']);
     		$data['co_id'] = $sale['staff_id'];
+			
     		$array = array(
     				'branch_id'				=>$data['branch_id'],
     				'sale_id'				=>$data['loan_number'],
@@ -185,6 +186,13 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 					if(!empty($data['agreement_for'])){
     					$arr['agreement_for']=$data['agreement_for'];
     				}
+					
+					
+					if(SET_SALENO_COUNT==1){
+						$loan_number = $dbtable->getLoanNumber($data);
+						$arr['sale_number']=$loan_number;
+					}
+					
     				$where= " id = ".$data['id'];
     				$this->update($arr, $where);
     			}

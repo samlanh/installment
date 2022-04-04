@@ -273,6 +273,9 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		$dbtable = new Application_Model_DbTable_DbGlobal();
     		$loan_number = $dbtable->getLoanNumber($data);
     		
+			if(SET_SALENO_COUNT==1){
+				$loan_number="";
+			}
     		$receipt = $data['receipt'];
     		$sql="SELECT id FROM ln_client_receipt_money WHERE receipt_no='$receipt' ORDER BY id DESC LIMIT 1 ";
     		$acc_no = $db->fetchOne($sql);
