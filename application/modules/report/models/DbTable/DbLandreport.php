@@ -98,9 +98,14 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 		if($search['sale_status']>0){
  			if($search['sale_status']==1){//full paid
 				$where.=" AND s.price_sold <= ((SELECT COALESCE(SUM(total_principal_permonthpaid+extra_payment),0) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) ) ";
- 			}else{
+ 			}else if($search['sale_status']==2){
 				$where.=" AND s.price_sold > ((SELECT COALESCE(SUM(total_principal_permonthpaid+extra_payment),0) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date AND $to_date LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) ) ";
- 			}
+ 			}else if($search['sale_status']==3){
+				$where.=" AND s.is_cancel = 0 ";
+			}else if($search['sale_status']==4){
+				$where.=" AND s.is_cancel = 1 ";
+			}else{
+			}
  		}
 		$order = " ORDER BY s.is_cancel ASC,s.payment_id DESC ";
 		if(!empty($search['queryOrdering'])){
@@ -2906,7 +2911,7 @@ function updatePaymentStatus($data){
    	
    	";
    	$where = $statement['where'];
-   	$where.=" AND s.is_cancel=0 ";
+    $where.=" AND s.is_cancel=0 ";
    	$where.=$dbp->getAccessPermission("s.`branch_id`");
    	$str = '`s`.`buy_date`';
    	if($search['buy_type']>0 AND $search['buy_type']!=2){
@@ -2976,9 +2981,13 @@ function updatePaymentStatus($data){
    	if($search['sale_status']>0){
    		if($search['sale_status']==1){//full paid
    			$where.=" AND s.price_sold <= ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1)) ";
-   		}
-   		else{
-   			$where.=" AND s.price_sold > ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) ) ";
+   		}else if($search['sale_status']==2){
+			$where.=" AND s.price_sold > ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) ) ";
+   		}else if($search['sale_status']==3){
+			$where.=" AND s.is_cancel = 0 ";
+		}else if($search['sale_status']==4){
+			$where.=" AND s.is_cancel = 1 ";
+		}else{
    		}
    	}
    	

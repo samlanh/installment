@@ -252,7 +252,10 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			'queryExpr'=>'*${0}*',
 		));
 		$options= array(-1=>$this->tr->translate("CHOOSE_SALE_STATUS"),
-				1=>"ទូទាត់ដាច់",2=>$this->tr->translate("មិនទាន់ដាច់")
+				1=>"ទូទាត់ដាច់",
+				2=>$this->tr->translate("មិនទាន់ដាច់"),
+				3=>$this->tr->translate("Active Sale"),
+				4=>$this->tr->translate("Cancel Sale"),
 			);
 		$sale_status->setMultiOptions($options);
 		$sale_status->setValue($request->getParam("sale_status"));

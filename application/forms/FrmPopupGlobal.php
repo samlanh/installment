@@ -2482,7 +2482,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				        <td></td>
 				        <td style="width:20%; text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('VERIFYED BY').'</td>
 				        <td></td>
-				        <td style="width:20%; text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('PREPARE BY').'<br /><br />'.$last_name.$username.'</td>
+				        <td style="width:20%; text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('PREPARE BY').'<br /><br /><br /><br />'.$last_name." ".$username.'</td>
 				   </tr>';
 // 			$str.='<tr>
 // 					<td style="height: 60px;">&nbsp;</td>
