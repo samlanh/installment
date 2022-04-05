@@ -2911,7 +2911,7 @@ function updatePaymentStatus($data){
    	
    	";
    	$where = $statement['where'];
-    $where.=" AND s.is_cancel=0 ";
+	$where.=" AND s.is_cancel=0 ";
    	$where.=$dbp->getAccessPermission("s.`branch_id`");
    	$str = '`s`.`buy_date`';
    	if($search['buy_type']>0 AND $search['buy_type']!=2){
