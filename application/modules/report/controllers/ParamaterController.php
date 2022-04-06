@@ -598,7 +598,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		$search = array(
   				'adv_search' => '',
   				'status' => -1,
-  				'branch_id' => 0,
   				'province'=>0,
   				'district'=>'',
   				'commune'=>'',

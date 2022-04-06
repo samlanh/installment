@@ -58,9 +58,9 @@ class Report_Model_DbTable_DbLnClient extends Zend_Db_Table_Abstract
 			if($search['village']>0){
 				$where.=" AND village_id= ".$search['village'];
 			}
-			if($search['branch_id']>0){
-				$where.=" AND branch_id= ".$search['branch_id'];
-			}
+// 			if($search['branch_id']>0){
+// 				$where.=" AND branch_id= ".$search['branch_id'];
+// 			}
 			$order=" ORDER BY client_id DESC";
 	        return $db->fetchAll($sql.$where.$order);
     } 

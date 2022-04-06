@@ -39,5 +39,8 @@ class Setting_importController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
+		$land_string = 'A+B+C';
+		$str_arr = explode ("+", $land_string);
+		print_r(count($str_arr));
 	}
 }

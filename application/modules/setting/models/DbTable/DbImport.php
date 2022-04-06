@@ -23,10 +23,10 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    	$oldland_str='';
 	    	$payment_id = array('រំលស់'=>4,'ផ្តាច់'=>6,'ដំណាក់កាល'=>3);
 			
-			$SaleIdGenerate =90;
+			$SaleIdGenerate =1;
 	    	for($i=2; $i<=$count; $i++){
 	    		if(empty($data[$i]['E'])){
-	    			continue;
+// 	    			continue;
 	    		}
 	    		if($oldland_str!=$data[$i]['L']){
 		    		$sql="SELECT `client_id` FROM `ln_client` WHERE name_kh='".$data[$i]['I']."'";
@@ -68,6 +68,39 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 		    		$sql="SELECT id FROM `ln_properties` WHERE branch_id = $branch_id AND land_address = '".$data[$i]['L']."'";
 		    		$land_id = $db->fetchOne($sql);
 		    		if(empty($land_id)){
+		    			$land_string = $data[$i]['L'];
+		    			$str_arr = explode ("+", $land_string);
+		    			$oldlandid = '';
+		    			if(count($str_arr)>1){
+		    			foreach($str_arr as $land_address){
+		    				
+			    				$_arr=array(
+			    						'branch_id'	  => $branch_id,
+			    						'land_code'	  => '',
+			    						'land_address'=> $land_address,
+			    						'street'	  => $data[$i]['M'],
+			    						'price'	      => $data[$i]['O']/count($str_arr),
+			    						'land_price'  => $data[$i]['O']/count($str_arr),
+			    						'house_price' => 0,
+			    						'land_size'	  => '',
+			    						'width'       => '',
+			    						'height'      => '',
+			    						'is_lock'     => 1,
+			    						'status'	  => 1,
+			    						'user_id'	  => $this->getUserId(),
+			    						'property_type'=> '',
+			    						'south'	      => '',
+			    						'north'	      => '',
+			    						'west'	      => '',
+			    						'east'	      => '',
+			    						'create_date'	  =>	date("Y-m-d"),
+			    				);
+			    				$this->_name='ln_properties';
+			    				$land_id = $this->insert($_arr);
+			    				$oldlandid = $oldlandid.','.$land_id;
+		    				}
+		    			}
+		    			
 		    			$_arr=array(
 	    					'branch_id'	  => $branch_id,
 	    					'land_code'	  => '',
@@ -75,6 +108,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    					'street'	  => $data[$i]['M'],
 	    					'price'	      => $data[$i]['O'],
 	    					'land_price'  => $data[$i]['O'],
+		    				'old_land_id' => $oldlandid,
 	    					'house_price' => 0,
 	    					'land_size'	  => '',
 	    					'width'       => '',
@@ -143,8 +177,8 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 		    		$sale_id = $this->insert($arr);//add group loan
 		    		$a_time=1;
 					
-					$SaleIdGenerate = $SaleIdGenerate +1;
-					$sale_id = $SaleIdGenerate;
+// 					$SaleIdGenerate = $SaleIdGenerate +1;
+// 					$sale_id = $SaleIdGenerate;
 	    		}
 	    		
 // 	    		if($first_pay==1 AND $first_payment==0){
@@ -168,7 +202,8 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 // 	    			$begining = $ending;
 // 	    			$ending = $data[$i]['F'];
 // 	    		}
-	    			if($oldland_str!=$data[$i]['L']){
+	    			//if($oldland_str!=$data[$i]['L']){
+	    			if(!empty($data[$i]['G']) OR !empty($data[$i]['H']) OR !empty($data[$i]['I'])){
 	    				$is_completed=1;
 	    			}
 	    		$n++;
@@ -189,24 +224,27 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     				'is_completed'=>$is_completed,
     				'date_payment'=>date("Y-m-d",strtotime($data[$i]['B'])),
 					//'ispay_bank'=>($data[$i]['B']=='បានប្លង់រឹង'?2:0),
-    				'paid_date'=>date("Y-m-d",strtotime($data[$i]['B'])),
+    				'paid_date'=>date("Y-m-d",strtotime($data[$i]['H'])),
     				'note'=>'',
 //     				'percent'=>($first_pay==0)?$data[$i]['N']:0,
 //     				'percent_agree'=>($first_pay==0)?$data[$i]['N']:0,
     				'is_installment'=>1,//($first_pay==0)?1:0,
     				'no_installment'=>$install,
     				'last_optiontype'=>1,
-	    			'note'=>$data[$i]['V'],
+	    			'note'=>$data[$i]['I'],
 	    		);
 	    		$saledetailid = $this->insert($datapayment);
 	    		
-	    		if($oldland_str!=$data[$i]['L']){
+	    		$dbg->updateLateRecordSaleschedule($sale_id);
+	    		
+// 	    		if($oldland_str!=$data[$i]['L']){
+	    		if(!empty($data[$i]['G']) OR !empty($data[$i]['H']) OR !empty($data[$i]['I'])){
 	    			
 	    			$arr_client_pay = array(
 	    					'branch_id'						=>	$branch_id,
 	    					'receipt_no'					=>	$data[$i]['G'],
-	    					'date_pay'					    =>	date("Y-m-d",strtotime($data[$i]['B'])),
-	    					'date_input'					=>	date("Y-m-d",strtotime($data[$i]['B'])),
+	    					'date_pay'					    =>	date("Y-m-d",strtotime($data[$i]['H'])),
+	    					'date_input'					=>	date("Y-m-d",strtotime($data[$i]['H'])),
 	    					'from_date'						=>	date("Y-m-d",strtotime($data[$i]['B'])),//check more
 	    					'client_id'                     =>	$client_id,
 	    					'sale_id'						=>	$sale_id,
