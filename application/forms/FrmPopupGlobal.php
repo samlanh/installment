@@ -2530,7 +2530,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<div class="rowData row-two">
 						<div class="blogRow bgDescription">
 							<div class="rowDataTitle">
-								គោលបំណនៃការទូទាត់ / Purpose Of Payment
+								គោលបំណងនៃការទូទាត់ / Purpose Of Payment
 							</div>
 							<div class="rowDataValue">
 								<span id="lb_noted" class="valueDataRow"></span>
