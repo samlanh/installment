@@ -2300,7 +2300,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					
 					div.logoBlog {
 						text-align: center;
-						padding-top: 40px;
+						padding-top: 35px;
 					}
 					span.receptTitle {
 						POSITION: absolute;
@@ -2325,7 +2325,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						margin-top: 80px;
 					}
 					.border-seperate-two {
-						margin-top: 290px;
+						margin-top: 300px;
 					}
 					@page {
 						margin:0;
@@ -2377,10 +2377,13 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						min-height: 32px;
 					}
 					span.valueDataRow {
-						padding: 8px 2px;
+						padding: 8px 4px;
 						display: block;
 						line-height: 16px;
-						white-space: pre-line;
+						white-space: normal;
+					}
+					div.bgAmount span.valueDataRow {
+						font-weight: 600;
 					}
 					.blogRow.bgPaymentMethod{
 						width: 25%;
@@ -2404,7 +2407,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					}
 					.footerRecieptNew {
 						position: absolute;
-						bottom: 30px;
+						bottom: 38px;
 						color: #e56600;
 						width: 100%;
 					}
