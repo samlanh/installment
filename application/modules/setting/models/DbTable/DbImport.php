@@ -29,7 +29,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 // 	    			continue;
 	    		}
 	    		if($oldland_str!=$data[$i]['L']){
-		    		$sql="SELECT `client_id` FROM `ln_client` WHERE name_kh='".$data[$i]['I']."'";
+		    		$sql="SELECT `client_id` FROM `ln_client` WHERE name_kh='".$data[$i]['K']."'";
 		    		$client_id = $db->fetchOne($sql);
 		    		if(empty($client_id)){
 		    			$dbg = new Application_Model_DbTable_DbGlobal();
@@ -46,7 +46,8 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 			    				'street'	  => 0,
 			    				'house'	      => 0,
 			    				'nationality' => 'ខ្មែរ',
-			    				'phone'	      => '',
+			    				'phone'	      => $data[$i]['X'],
+				    			'remark'	      => $data[$i]['Y'],
 			    				'create_date' => date("Y-m-d"),
 			    				'status'      => 1,
 			    				'client_d_type'=> 4,
@@ -110,7 +111,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    					'land_price'  => $data[$i]['O'],
 		    				'old_land_id' => $oldlandid,
 	    					'house_price' => 0,
-	    					'land_size'	  => '',
+	    					'land_size'	  => $data[$i]['W'],
 	    					'width'       => '',
 	    					'height'      => '',
 	    					'is_lock'     => 1,
@@ -144,7 +145,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    				'client_id'=>$client_id,
 	    				'price_before'=>$data[$i]['O'],
 	    				'discount_amount'=>$data[$i]['P'],
-	    			   	'discount_percent'=>0,
+	    			   	'discount_percent'=>$data[$i]['Q'],
 	    				'price_sold'=>($data[$i]['O']),
 	    				'other_fee'=>0,
 // 	    				'paid_amount'=>$data[$i]['E'],
@@ -318,7 +319,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    	$db->commit();	    	
 	   }catch(Exception $e){
 // 	   		$db->rollBack();	
-// 	   		echo $e->getMessage();
+	   		echo $e->getMessage();
 	   		exit();   		 
        } 
     }  

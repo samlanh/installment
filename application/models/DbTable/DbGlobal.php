@@ -614,7 +614,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	$village_str='village_name';
    }
    $where='';
-   	$sql = " SELECT client_id,name_en,client_number,
+   	$sql = " SELECT client_id,name_en,client_number,remark,
    				(SELECT `ln_village`.$village_str FROM `ln_village` WHERE (`ln_village`.`vill_id` = `ln_client`.`village_id`)) AS `village_name`,
 				(SELECT `c`.$commune_str FROM `ln_commune` `c` WHERE (`c`.`com_id` = `ln_client`.`com_id`) LIMIT 1) AS `commune_name`,
 				(SELECT `d`.$district_str FROM `ln_district` `d` WHERE (`d`.`dis_id` = `ln_client`.`dis_id`) LIMIT 1) AS `district_name`,
