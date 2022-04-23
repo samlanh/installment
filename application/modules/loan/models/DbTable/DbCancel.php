@@ -86,6 +86,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$db= $this->getAdapter();
 			
 			$expenid='';
+			/*
 			if($data['return_back']>0){
 				$dbexpense = new Loan_Model_DbTable_DbExpense();
 				$invoice = $dbexpense->getInvoiceNo($data['branch_id']);
@@ -107,6 +108,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 				$this->_name="ln_expense";
 				$expenid = $this->insert($arr1);
 			}
+			*/
 			
 			 $arr = array(
 					'branch_id'=>$data['branch_id'],
@@ -120,6 +122,11 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					'installment_paid'=>$data['installment_paid'],
 					'return_back'=>$data['return_back'],
 					'expense_id'=>$expenid,
+					
+					'cancel_type'=>$data['cancel_type'],
+					'condition_return'=>$data['condition_return'],
+					'date_for_return'=>$data['expense_date'],
+					'return_back_aftter'=>$data['return_back'],
 					);
 			 $this->_name="ln_sale_cancel";
 			 $this->insert($arr);
@@ -248,6 +255,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$row = $dbsale->getTranLoanByIdWithBranch($data['sale_no'],null);
 			$title=" ត្រលប់ប្រាក់ទៅអោយអតិថិជនវិញ";
 			$expenid='';
+			/*
 			if(!empty($result['expense_id'])){
 				$arr1 = array(
 					'branch_id'		=>$data['branch_id'],
@@ -285,6 +293,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 					$expenid = $this->insert($arr1);
 				}
 			}
+			*/
 			
 			$dbLand = new Project_Model_DbTable_DbLand();
 			if ($data['sale_no']==$data['old_sale_id']){
@@ -356,6 +365,12 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'installment_paid'=>$data['installment_paid'],
 						'return_back'=>$data['return_back'],
 						'expense_id'=>$expenid,
+						
+						'cancel_type'=>$data['cancel_type'],
+						'condition_return'=>$data['condition_return'],
+						'date_for_return'=>$data['expense_date'],
+						'return_back_aftter'=>$data['return_back'],
+					
 				);
 				$this->_name="ln_sale_cancel";
 				$where ="id = ".$data['id'];
@@ -386,6 +401,12 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 						'installment_paid'=>$data['installment_paid'],
 						'return_back'=>$data['return_back'],
 						'expense_id'=>$expenid,
+						
+						'cancel_type'=>$data['cancel_type'],
+						'condition_return'=>$data['condition_return'],
+						'date_for_return'=>$data['expense_date'],
+						'return_back_aftter'=>$data['return_back'],
+					
 				);
 				$this->_name="ln_sale_cancel";
 				$where ="id = ".$data['id'];
@@ -443,6 +464,28 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 			$sql.=" AND s.full_commission >0 ";
 		}
 		//AND s.full_commission > (SELECT SUM(c.total_amount) FROM ln_comission AS c WHERE c.sale_id=s.id LIMIT 1)
+		return $db->fetchAll($sql);
+	}
+	
+	function getCancelSaleReturnBack($data){
+		$db = $this->getAdapter();
+		$sale='';
+		$cancelId = empty($data['cancelId'])?0:$data['cancelId'];
+		$branch_id = empty($data['branch_id'])?0:$data['branch_id'];
+		
+		$sql="SELECT 
+				sc.`id`,
+				CONCAT((SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = sc.sale_id LIMIT 1 ) LIMIT 1),' ',(SELECT CONCAT(p.land_address,',',p.street) FROM `ln_properties` AS p WHERE p.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE s.id = sc.sale_id LIMIT 1 ) LIMIT 1)) AS `name`
+				
+			FROM `ln_sale_cancel` AS sc
+				
+			WHERE sc.status=1
+			AND sc.cancel_type=2 
+			AND sc.return_back_aftter>0 
+			AND sc.branch_id=".$branch_id;
+		if(!empty($cancelId)){
+			$sql.=' OR sc.id IN ('.$cancelId.')';
+		}
 		return $db->fetchAll($sql);
 	}
 }

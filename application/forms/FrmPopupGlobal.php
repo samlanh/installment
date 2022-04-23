@@ -2220,6 +2220,391 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 			</div>
 			</div>
 			';
+		}elseif ($reciept_type==5){ //Vue Auston
+		$str='
+				<style>
+					span.titelTop, span.valueData {
+						font-size: 12px;
+					}
+					.rowDivTitle {
+						display: inline-block;
+						vertical-align: top;
+						min-width: 95px;
+					}
+					.rowDivTitle span.titelTop {
+						font-weight: bold;
+						color: #e56600;
+						display: block;
+						line-height: 16px;
+					}
+					.rowDivTitle span.titelTop.en {
+						font-weight: 200;
+					}
+					.rowValueBg {
+						display: inline-block;
+						vertical-align: top;
+						min-width: 160px;
+						background: #e5660087;
+						padding: 5px 0;
+					}
+					.rowValueBg span.valueData {
+						text-align: center;
+						display: block;
+						width: 100%;
+						padding: 0 2px;
+					}
+					span.postingdate,
+					div.customerName{
+						position: absolute;
+						top: 160px;
+					}
+					span.postingdate {
+					    left: 40px;
+					}
+					div.customerName {
+						right: 40px;
+					}
+					.receiptNoBlog {
+						position: absolute;
+						top: 70px;
+						right: 50px;
+						font-weight: bold;
+						vertical-align: top;
+					}
+					.receiptTl {
+						display: inline-block;
+						vertical-align: top;
+						min-width: 70px;
+						line-height: 14px;
+					}
+					.receiptTl span.titelTop {
+						display: block;
+						color: #e66c06;
+					}
+					.rowValue {
+						display: inline-block;
+						vertical-align: top;
+						min-width: 90px;
+					}
+					span.receipt-class {
+						color: #f00;
+						font-size: 18px;
+						vertical-align: top;
+						margin-top: -5px;
+						display: block;
+					}
+					
+					
+					
+					
+					
+					div.logoBlog {
+						text-align: center;
+						padding-top: 35px;
+					}
+					span.receptTitle {
+						POSITION: absolute;
+						top: 120px;
+						font-family: '."'Times New Roman'".','."'Khmer OS Muol Light'".';
+						width: 100%;
+						text-align: center;
+					}
+					span.receptTitle .enTitle{
+						font-weight:bold;
+					}
+					
+					
+					.border-seperate,
+					.border-seperate-two {
+						width: 91%;
+						height: 1px;
+						margin: 0 auto;
+						border-bottom: solid 1px #ccc;
+					}
+					.border-seperate {
+						margin-top: 80px;
+					}
+					.border-seperate-two {
+						margin-top: 300px;
+					}
+					@page {
+						margin:0;
+					}
+					
+					.rowData {
+						position: absolute;
+						left: 40px;
+						width: 100%;
+						margin: 0 2px;
+					}
+					.rowData.row-one {
+						top: 215px;
+						
+					}
+					.rowData.row-two {
+						top: 280px;
+						
+					}
+					.rowData.row-three {
+						top: 345px;
+						
+					}
+					div.blogRow {
+						display: inline-block;
+						vertical-align: top;
+					}
+					div.bgAmount {
+						width: 30%;
+					}
+					div.bgAmountChar {
+						width: 60%;
+					}
+					
+					div.bgDescription {
+						width: 60%;
+					}
+					div.bgPropertyNum {
+						width: 30%;
+					}
+
+					.rowDataTitle {
+						font-weight: 600;
+					}
+					.rowDataValue {
+						background: #d3d3d333;
+						margin: 4px 0;
+						line-height: 16px;
+						min-height: 32px;
+					}
+					span.valueDataRow {
+						padding: 8px 4px;
+						display: block;
+						line-height: 16px;
+						white-space: normal;
+					}
+					div.bgAmount span.valueDataRow {
+						font-weight: 600;
+					}
+					.blogRow.bgPaymentMethod{
+						width: 25%;
+					}
+					.blogRow.bgCustomerSign, 
+					.blogRow.bgReceiverSign {
+						width: 32.2%;
+					}
+					
+					.blogRow.bgCustomerSign .rowDataValue, 
+					.blogRow.bgReceiverSign .rowDataValue {
+						height: 120px;
+					}
+					span.nonrefundable {
+						position: absolute;
+						left: 40px;
+						bottom: 75px;
+						color: #e56600;
+						font-weight: 600;
+						font-size: 10px;
+					}
+					.footerRecieptNew {
+						position: absolute;
+						bottom: 38px;
+						color: #e56600;
+						width: 100%;
+					}
+					.blogFooter {
+						display: inline-block;
+					}
+					.blogFooter.footLeft {
+						width: 40%;
+						padding-left: 40px;
+					}
+					.blogFooter.footRight {
+						text-align: right;
+						width: 50%;
+					}
+					span.footerTitle {
+						font-family: '."'Times New Roman'".','."'Khmer OS Muol Light'".';
+						font-weight: 600;
+					}
+					span.footerAddress {
+						font-family: '."'Times New Roman'".','."'Khmer OS Battambang'".'; 
+						font-size: 11px;
+					}
+					
+					span.signatureBlog {
+						position: absolute;
+						bottom: 105px;
+					}
+					span.signatureBlog.userSingName {
+						right: 50px;
+					}
+					span.signatureBlog.CustomerSingName {
+						right: 305px;
+					}
+				</style>
+				<div class="" style=" background-image: url('.$baseurl."/images/vue-aston-receipt.jpg".');background-size: 100%; font-size: 14px; font-family: '."'Times New Roman'".','."'Khmer OS Battambang'".';  color: #000; width: 21cm; height: 15cm;padding: 0px;margin: 0 auto;position: relative; " >
+				<div id="projectlogo" class="logoBlog">
+					<img style="height:80px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
+				</div>
+				<span class="receptTitle">
+				បង្កាន់ដៃបង់ប្រាក់ <span class="enTitle"> RECEIPT</span>
+				</span>
+				<div style="display: none;">
+					<span id="lbl_project"></span>
+					
+					<span id="lb_saleprice"></span>
+					<span id="lbl_total_paid1"></span>
+					<span id="lbl_balance"></span>
+					<span id="lb_descriptionall"></span>
+					<label id="lbl_phone" class="value"></label>
+					<label id="lbl_pricelabel" class="value" ></label>
+					
+					<span id="lb_amount"></span>
+					<span id="lbl_paidtimes"></span>
+					<span id="lb_interest"></span>
+					<span id="lb_penalty"></span>
+					<span id="lb_extrapayment"></span>
+					<span id="lbl_totalpayment"></span>
+					<span id="lb_buydate1"></span>
+					<span id=lbl_paid_date1></span>
+					
+					'.$footer.'
+					
+					<span id="lbl_priceSoldBefore"></span>
+					<span id="lbl_discountAmount"></span>
+					<span id="lbl_discountPercent"></span>
+					<span id="lb_forCompletedAmount"></span>
+					<span id="lb_completedDate"></span>
+					<span id="lbl_discountOther"></span>
+					
+					<span id="lb_agreement_date"></span>
+					<span id="lb_pre_schedule_opt"></span>
+					<span id="lbl_pre_percent_payment"></span>
+					<span id="lbl_pre_amount_month"></span>
+					<span id="lbl_pre_percent_installment"></span>
+					<span id="lbl_pre_amount_year"></span>
+					<span id="lbl_pre_fix_payment"></span>
+					<span id="lable_chartotalreceipt_in_kh" ></span>
+					
+					<span id="lb_customercode"></span>
+					
+					
+				</div>
+				<span class="postingdate">
+						<div class="rowDivTitle">
+							<span class="titelTop">កាលបរិច្ឆេទ</span>
+							<span class="titelTop en">Date</span>
+						</div>
+						<div class="rowValueBg">
+							<span id="lblpaid_date" class="valueData"></span>
+						</div>
+				</span>
+				<div class="customerName">
+						<div class="rowDivTitle">
+							<span class="titelTop">បានទទួលពី</span>
+							<span class="titelTop en">Received From</span>
+						</div>
+						<div class="rowValueBg">
+							<span id="lb_customer" class="valueData"></span>
+						</div>
+				</div>
+				<div class="border-seperate"></div>
+				<div class="rowData row-one">
+						<div class="blogRow bgAmount">
+							<div class="rowDataTitle">
+								ចំនួន (ដុល្លា) / Amount (USD)
+							</div>
+							<div class="rowDataValue">
+								<span id="lbl_total_receive" class="valueDataRow"></span>
+							</div>
+						</div>
+						<div class="blogRow bgAmountChar">
+							<div class="rowDataTitle">
+								ចំនួនទឹកប្រាក់ជាអក្សរ / Amount In Words
+							</div>
+							<div class="rowDataValue">
+								<span id="lable_chartotalreceipt" class="valueDataRow"></span>
+							</div>
+						</div>
+				</div>
+				<div class="rowData row-two">
+						<div class="blogRow bgDescription">
+							<div class="rowDataTitle">
+								គោលបំណងនៃការទូទាត់ / Purpose Of Payment
+							</div>
+							<div class="rowDataValue">
+								<span id="lb_noted" class="valueDataRow"></span>
+							</div>
+						</div>
+						<div class="blogRow bgPropertyNum">
+							<div class="rowDataTitle">
+								លេខបន្ទប់ / Room Number
+							</div>
+							<div class="rowDataValue">
+								<span id="lb_hourseno" class="valueDataRow"></span>
+							</div>
+						</div>
+				</div>
+				<div class="rowData row-three">
+						<div class="blogRow bgPaymentMethod">
+							<div class="rowDataValue">
+								<span id="lbl_paymenttype" class="valueDataRow"></span>
+							</div>
+							
+							<div class="rowDataValue">
+								<span id="lbl_cheque" class="valueDataRow"></span>
+							</div>
+						</div>
+						<div class="blogRow bgCustomerSign">
+							
+							<div class="rowDataValue">
+								
+							</div>
+							<div class="rowDataTitle">
+								ហត្ថលេខាអតិថិជន / Purchaser Signature
+							</div>
+						</div>
+						<div class="blogRow bgReceiverSign">
+							<div class="rowDataValue">
+								
+							</div>
+							<div class="rowDataTitle">
+								ហត្ថលេខាបេឡាករ / Seller Signature
+							</div>
+							
+						</div>
+				</div>
+				
+				
+				<div class="receiptNoBlog">
+					<div class="receiptTl">
+						<span class="titelTop">លេខរៀង</span>
+						<span class="titelTop en">No</span>
+					</div>
+					<div class="rowValue">
+						<span id="lb_receipt" class="receipt-class"></span>
+					</div>
+				</div>	
+				
+				<span class="signatureBlog CustomerSingName" id="lbl_customer"></span>
+				<span class="signatureBlog userSingName" id="lbl_usersale">'.$last_name." ".$username.'</span>
+				
+				<span class="nonrefundable">មិនអាចដកវិញបាន / Non Refundable</span>
+				<div class="border-seperate-two"></div>
+				
+				<div class="footerRecieptNew">
+					<div class="blogFooter footLeft"><span class="footerTitle">'.$tr->translate("BRAND_FOOTER_TITLE").'</span></div>
+					<div class="blogFooter footRight"><span class="footerAddress">'.$data["footer_branch"].'</span></div>
+				</div>
+				<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
+				
+				
+				
+				
+				
+				
+			</div>
+			';
 		}else{
 			$str='
 			<div >

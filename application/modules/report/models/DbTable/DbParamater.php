@@ -380,17 +380,26 @@ function getAllBranch($search=null){
     		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
     	
-    		$sql=" SELECT id,
-    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
-    		(SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) AS supplier_name,
-    		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id limit 1) AS payment_type,
-			payment_id,
-    		title,invoice,is_closed,
-    		cheque_issuer,other_invoice,
-    		(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
-    		cheque,total_amount,description,date,
-    		(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
-    		status 
+    		$sql=" 
+				SELECT id,
+					(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
+					(SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) AS supplier_name,
+					(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id limit 1) AS payment_type,
+					payment_id,
+					title,invoice,is_closed,
+					cheque_issuer,other_invoice,
+					(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
+					cheque,total_amount,description,date,
+					(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
+					status,
+					cancelSale_id,
+					CASE
+						WHEN  cancelSale_id > 0 THEN (SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = (SELECT sc.sale_id FROM `ln_sale_cancel` AS sc WHERE sc.id =cancelSale_id LIMIT 1) LIMIT 1 ) LIMIT 1) 
+						ELSE  (SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1)
+					END AS supplierOrCustomer,
+					(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = (SELECT sc.sale_id FROM `ln_sale_cancel` AS sc WHERE sc.id =cancelSale_id LIMIT 1) LIMIT 1 ) LIMIT 1) AS cancelCustomer,
+					(SELECT CONCAT(p.land_address,',',p.street) FROM `ln_properties` AS p WHERE p.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE s.id = (SELECT sc.sale_id FROM `ln_sale_cancel` AS sc WHERE sc.id =cancelSale_id LIMIT 1) LIMIT 1 ) LIMIT 1) AS cancelProperty
+					
     			FROM ln_expense WHERE status=1 AND total_amount>0 ";
     		$sql.=" AND (SELECT v.capital_widthdrawal FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ln_expense.`category_id` LIMIT 1)=0 ";
 			
