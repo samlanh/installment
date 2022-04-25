@@ -485,6 +485,15 @@ public function init()
 		$optForCondition = $db->getVewOptoinTypeByType(32,1,null,1);
 		$condition_return->setMultiOptions($optForCondition);
 		
+		$cancelTypeSearch = new Zend_Dojo_Form_Element_FilteringSelect('cancelTypeSearch');
+		$cancelTypeSearch->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true',
+		));
+		$options= array(0=>$this->tr->translate('PLEASE_SELECT'),1=>$this->tr->translate('CANCEL_WITHOUT_RETURN'),2=>$this->tr->translate('CANCEL_WITH_RETURN_AMOUNT'));
+		$cancelTypeSearch->setMultiOptions($options);
+		
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
 			$_cancel_code->setValue($data['cancel_code']);
@@ -517,6 +526,7 @@ public function init()
 				
 				$cancel_type,
 				$condition_return,
+				$cancelTypeSearch
 			
 				));
 		return $this;

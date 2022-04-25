@@ -19,6 +19,25 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		try{
 			$invoice = $this->getInvoiceNo($data['branch_id']);
 			$cancelSale_id = empty($data['cancelSale_id'])?0:$data['cancelSale_id'];
+			$saleId = 0;
+			
+			if(!empty($cancelSale_id)){
+				$dbCancel = new Loan_Model_DbTable_DbCancel();
+				$rsCancel=$dbCancel->getCancelById($cancelSale_id);
+				if(!empty($rsCancel)){
+					$saleId =$rsCancel['sale_id'];
+					if (!empty($data['total_amount'])){
+						$dueafter = $rsCancel['return_back_aftter']-$data['total_amount'];
+						$arrSaleCancel = array(
+							'return_back_aftter'	=>$dueafter,
+						);
+						$whereSaleCancel="id=".$cancelSale_id;
+						$this->_name="ln_sale_cancel";
+						$this->update($arrSaleCancel, $whereSaleCancel);
+					}
+				}
+									
+			}
 			
 			$dataRss = array(
 				'branch_id'		=> $data['branch_id'],
@@ -39,23 +58,12 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'create_date'   => date('Y-m-d'),
 				
 				'cancelSale_id'   =>$cancelSale_id,
+				'sale_id'   =>$saleId,
 			);
 			$this->_name="ln_expense";
 			$expense_id  = $this->insert($dataRss);
 			
-			if(!empty($cancelSale_id)){
-				$dbCancel = new Loan_Model_DbTable_DbCancel();
-				$rsCancel=$dbCancel->getCancelById($cancelSale_id);
-				if (!empty($data['total_amount'])){
-    				$dueafter = $rsCancel['return_back_aftter']-$data['total_amount'];
-    				$arrSaleCancel = array(
-						'return_back_aftter'	=>$dueafter,
-					);
-					$whereSaleCancel="id=".$cancelSale_id;
-					$this->_name="ln_sale_cancel";
-					$this->update($arrSaleCancel, $whereSaleCancel);
-				}					
-			}
+			
 			
 			$part= PUBLIC_PATH.'/images/document/expense/';
 			if (!file_exists($part)) {
@@ -116,6 +124,33 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
  		try{
 			$oldData = $this->getexpensebyid($data['id']);
 			$cancelSale_id = empty($data['cancelSale_id'])?0:$data['cancelSale_id'];
+			$saleId = 0;
+			if(!empty($cancelSale_id)){
+				$dbCancel = new Loan_Model_DbTable_DbCancel();
+				$rsCancel=$dbCancel->getCancelById($cancelSale_id);
+				
+				$oldTotalAmount = $oldData['total_amount'];
+				if($oldData['status']==0){
+					$oldTotalAmount =0;
+				}
+				if(!empty($rsCancel)){
+					$saleId =$rsCancel['sale_id'];
+					
+					$totalAfter = $rsCancel['return_back_aftter']+$oldTotalAmount;//sum back Total after
+					if($data['Stutas']==0){
+						$data['total_amount']=0;
+					}
+					$dueafter = $totalAfter-$data['total_amount'];
+					$arrSaleCancel = array(
+						'return_back_aftter'	=>$dueafter,
+					);
+					$whereSaleCancel="id=".$cancelSale_id;
+					$this->_name="ln_sale_cancel";
+					$this->update($arrSaleCancel, $whereSaleCancel);
+				
+				}
+								
+			}
 			
 			$arr = array(
 				'branch_id'		=> $data['branch_id'],
@@ -134,30 +169,13 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'user_id'		=> $this->getUserId(),	
 				
 				'cancelSale_id'   =>$cancelSale_id,
+				'sale_id'   =>$saleId,
 			);
 			$where=" id = ".$data['id'];
+			$this->_name="ln_expense";
 			$this->update($arr, $where);
 			
-			if(!empty($cancelSale_id)){
-				$dbCancel = new Loan_Model_DbTable_DbCancel();
-				$rsCancel=$dbCancel->getCancelById($cancelSale_id);
-				
-				$oldTotalAmount = $oldData['total_amount'];
-				if($oldData['status']==0){
-					$oldTotalAmount =0;
-				}
-				$totalAfter = $rsCancel['return_back_aftter']+$oldTotalAmount;//sum back Total after
-				if($data['Stutas']==0){
-					$data['total_amount']=0;
-				}
-				$dueafter = $totalAfter-$data['total_amount'];
-				$arrSaleCancel = array(
-					'return_back_aftter'	=>$dueafter,
-				);
-				$whereSaleCancel="id=".$cancelSale_id;
-				$this->_name="ln_sale_cancel";
-				$this->update($arrSaleCancel, $whereSaleCancel);				
-			}
+			
 			
 			
 			$expense_id =$data['id'];

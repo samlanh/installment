@@ -200,24 +200,38 @@ function getAllBranch($search=null){
     		$from_date =(empty($search['from_date_search']))? '1': "c.`create_date` >= '".$search['from_date_search']." 00:00:00'";
     		$to_date = (empty($search['to_date_search']))? '1': "c.`create_date` <= '".$search['to_date_search']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
-    		$sql='SELECT 
-    		    c.`id`,c.return_back,
-    		    (SELECT project_name FROM `ln_project` WHERE br_id=c.`branch_id` LIMIT 1) AS `project_name`,
-    		    c.paid_amount,c.installment_paid,c.reason,c.`create_date`,
-				s.`sale_number`,
-				s.price_sold,
-				clie.`client_number`,
-				(clie.`name_kh`) AS client_name,
-				pro.`land_code`,
-				(SELECT pt.`type_nameen` FROM `ln_properties_type` AS pt WHERE pt.`id` = pro.`property_type` LIMIT 1) AS type_name,
-				pro.`property_type`,pro.`land_address`,pro.`street`,
-				(SELECT first_name FROM `rms_users` WHERE id=c.user_id LIMIT 1) AS user_name
+			
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    		$sql="
+				SELECT 
+					c.`id`,c.return_back,
+					(SELECT project_name FROM `ln_project` WHERE br_id=c.`branch_id` LIMIT 1) AS `project_name`,
+					c.paid_amount,c.installment_paid,c.reason,c.`create_date`,
+					s.`sale_number`,
+					s.price_sold,
+					clie.`client_number`,
+					(clie.`name_kh`) AS client_name,
+					pro.`land_code`,
+					(SELECT pt.`type_nameen` FROM `ln_properties_type` AS pt WHERE pt.`id` = pro.`property_type` LIMIT 1) AS type_name,
+					pro.`property_type`,pro.`land_address`,pro.`street`,
+					(SELECT first_name FROM `rms_users` WHERE id=c.user_id LIMIT 1) AS user_name,
+					c.cancel_type,
+					c.condition_return,
+					c.date_for_return,
+					CASE
+						WHEN  c.cancel_type =1 THEN '".$tr->translate('CANCEL_WITHOUT_RETURN')."'
+						WHEN  c.cancel_type =2 THEN '".$tr->translate('CANCEL_WITH_RETURN_AMOUNT')."'
+						ELSE  ''
+					END AS cancelTypeTitle,
+					(SELECT v.name_kh FROM `ln_view` AS v WHERE v.`type` = 32 AND v.key_code = c.condition_return LIMIT 1) AS conditionReturnTitle,
+					(SELECT SUM(e.total_amount) FROM ln_expense AS e WHERE e.cancelSale_id = c.id AND e.status=1 LIMIT 1) AS totalReturnPaid
+				
 				FROM `ln_sale_cancel` AS c, 
-				`ln_sale` AS s, 
-				`ln_properties` AS pro,
-				`ln_client` AS clie
+					`ln_sale` AS s, 
+					`ln_properties` AS pro,
+					`ln_client` AS clie
 				WHERE s.`id` = c.`sale_id` AND pro.`id` = c.`property_id` AND
-				clie.`client_id` = s.`client_id` AND c.status=1';
+					clie.`client_id` = s.`client_id` AND c.status=1";
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("c.branch_id");
@@ -244,7 +258,9 @@ function getAllBranch($search=null){
     			$s_where[] = " pro.`reason` LIKE '%{$s_search}%'";
     			$where .=' AND ('.implode(' OR ',$s_where).')';
     		}
-    		
+    		if(!empty($search['cancelTypeSearch'])){
+    			$where.= " AND c.cancel_type = ".$search['cancelTypeSearch'];
+    		}
     		return $db->fetchAll($sql.$where.$order);
     		
     	}
@@ -394,11 +410,11 @@ function getAllBranch($search=null){
 					status,
 					cancelSale_id,
 					CASE
-						WHEN  cancelSale_id > 0 THEN (SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = (SELECT sc.sale_id FROM `ln_sale_cancel` AS sc WHERE sc.id =cancelSale_id LIMIT 1) LIMIT 1 ) LIMIT 1) 
+						WHEN  cancelSale_id > 0 THEN (SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) 
 						ELSE  (SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1)
 					END AS supplierOrCustomer,
-					(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = (SELECT sc.sale_id FROM `ln_sale_cancel` AS sc WHERE sc.id =cancelSale_id LIMIT 1) LIMIT 1 ) LIMIT 1) AS cancelCustomer,
-					(SELECT CONCAT(p.land_address,',',p.street) FROM `ln_properties` AS p WHERE p.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE s.id = (SELECT sc.sale_id FROM `ln_sale_cancel` AS sc WHERE sc.id =cancelSale_id LIMIT 1) LIMIT 1 ) LIMIT 1) AS cancelProperty
+					(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) AS cancelCustomer,
+					(SELECT CONCAT(p.land_address,',',p.street) FROM `ln_properties` AS p WHERE p.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) AS cancelProperty
 					
     			FROM ln_expense WHERE status=1 AND total_amount>0 ";
     		$sql.=" AND (SELECT v.capital_widthdrawal FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ln_expense.`category_id` LIMIT 1)=0 ";
@@ -2462,7 +2478,14 @@ function getAllBranch($search=null){
 		(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = ln_expense.supplier_id LIMIT 1) AS supplier_name,
 		(SELECT s.phone FROM `ln_supplier` AS s WHERE s.id = ln_expense.supplier_id LIMIT 1) AS supplierPhone,
 		(SELECT s.email FROM `ln_supplier` AS s WHERE s.id = ln_expense.supplier_id LIMIT 1) AS supplierEmail,
-		(SELECT v.name_kh FROM ln_view AS v WHERE v.type=2 AND key_code=payment_id LIMIT 1) AS payment_method
+		(SELECT v.name_kh FROM ln_view AS v WHERE v.type=2 AND key_code=payment_id LIMIT 1) AS payment_method,
+		CASE
+			WHEN  cancelSale_id > 0 THEN (SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) 
+			ELSE  (SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1)
+		END AS supplierOrCustomer,
+		(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) AS cancelCustomer,
+		(SELECT CONCAT(p.land_address,',',p.street) FROM `ln_properties` AS p WHERE p.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) AS cancelProperty
+					
 		FROM ln_expense where id=$id ";
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$sql.=$dbp->getAccessPermission("branch_id");
