@@ -837,6 +837,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	if($this->currentlang()==2 OR $this->currentlang()==3){
   		$string = "name_en";
   	}
+	if(RECEIPT_TYPE==5){
+		if($type==2){
+			$string = " CONCAT(name_kh,' / ',name_en) ";
+		}
+	}
   	
   	$sql="SELECT id,key_code, $string AS name_en ,displayby FROM `ln_view` WHERE status =1 AND name_en!='' ";//just concate
   	if($type!=null){
