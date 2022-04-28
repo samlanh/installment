@@ -2258,5 +2258,17 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		return $_gender_Opt;
 	
 	}
+	 public function getAllAmountBuild(){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="
+			SELECT 
+				DISTINCT(s.amount_build) AS value
+			FROM `ln_sale` AS s 
+			WHERE s.amount_build IS NOT NULL AND s.amount_build >0 
+		";
+		$order=" ORDER BY s.amount_build ASC ";
+		return $db->fetchAll($sql.$order);
+	}
 }
 ?>
