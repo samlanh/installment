@@ -422,6 +422,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     		    			//new for phnom penh tmey
     		    			'next_date_deposit'=>$data['date_line'],
     		    			'next_amount_deposit'=>$data['second_depostit'],
+							
+							'date_payment'	=> $data['date_buy'],
     				    	);
     		    	$this->_name='ln_client_receipt_money';
     		    	$crm_id = $this->insert($array);
@@ -787,6 +789,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				//new for phnom penh tmey
     				'next_date_deposit'=>$data['date_line'],
     				'next_amount_deposit'=>$data['second_depostit'],
+					
+					'date_payment'	=> $data['date_buy'],
     			);
     			$this->_name='ln_client_receipt_money';
     			$where="receipt_no='".$data['receipt']."' AND branch_id = ".$data['branch_id'];

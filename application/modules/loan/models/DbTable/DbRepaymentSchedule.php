@@ -248,6 +248,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    				'payment_times'		=>1,
 		    				'is_payoff'			=>1,
 		    				'user_id'			=>$this->getUserId(),
+							'date_payment'=>$data['paid_date'],
 		    		);
 		    		$crm_id = $this->insert($array);
 		    		
@@ -726,7 +727,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$is_deposit=1;
     		$times = $this->countDepositTimes($data['sale_id']);//កក់ច្រើនដង
     	}//បញ្ចាក់ថាប្រាក់កក
-    	
+    	$datePaymentForReceipt = $data['paid_date']; // set defualt
     	$all_paidbefore = $dbtable->getAllPaidBefore($data['sale_id']);
     	$array = array(
     			'branch_id'			=>$data['branch_id'],
@@ -761,6 +762,8 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			'payment_method'	=>$data['payment_method'],
     			'cheque'=>$data['cheque'],
     			'payment_times'=>($data['schedule_opt']==1)?($times):1,
+				
+				'date_payment'			=> $datePaymentForReceipt,
     	);
     	
     	if($data['schedule_opt']==1){
@@ -832,6 +835,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			}
     			
     			$this->_name='ln_client_receipt_money_detail';
+				$datePaymentForReceipt = $row['date_payment'];
     			$array = array(
     					'crm_id'				=>$crm_id,
     					'lfd_id'				=>$row['id'],
@@ -858,6 +862,14 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				break;
     			}
     		}
+			
+			$arr = array(
+				'date_payment'			=> $datePaymentForReceipt,
+    		);
+    		
+    		$this->_name='ln_client_receipt_money';
+    		$where="id = ".$crm_id;
+    		$this->update($arr, $where);
     		
     	}else{
     		if($data["schedule_opt"]==1 OR $data["schedule_opt"]==5){

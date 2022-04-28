@@ -1265,6 +1265,7 @@ public function getAllOutstadingLoan($search=null){
       }
 	  function getReceiptByID($id){//total_principal_permonth
 		  $db = $this->getAdapter();
+		  //(SELECT `d`.`date_payment` FROM `ln_client_receipt_money_detail` `d` WHERE (`crm`.`id` = `d`.`crm_id`) ORDER BY `d`.`date_payment` ASC LIMIT 1) AS `date_payment`,
 		  $sql="SELECT *,
 		  		(SELECT s.payment_id FROM `ln_sale` AS s WHERE s.id=crm.sale_id LIMIT 1 ) AS payment_option,
 		  		(SELECT project_name FROM `ln_project` WHERE br_id=crm.branch_id LIMIT 1) AS project_name,
@@ -1286,12 +1287,8 @@ public function getAllOutstadingLoan($search=null){
 				(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS name_kh,
 				(SELECT c.client_number FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS client_number,
 				(SELECT c.phone FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS phone,
-				(SELECT
-			     	`d`.`date_payment`
-			   		FROM `ln_client_receipt_money_detail` `d`
-			   		WHERE (`crm`.`id` = `d`.`crm_id`)
-			   		ORDER BY `d`.`date_payment` ASC
-			   		LIMIT 1) AS `date_payment`,
+				crm.date_payment as date_payment,
+				
 			   		crm.payment_method as payment_methodid,
 					(SELECT `ln_view`.`name_kh` FROM `ln_view` WHERE ((`ln_view`.`key_code` = `crm`.`payment_method`) AND (`ln_view`.`type` = 2))LIMIT 1) AS `payment_method`,
 					(SELECT CONCAT(`ln_view`.`name_kh`,' / ',`ln_view`.`name_en`) FROM `ln_view` WHERE ((`ln_view`.`key_code` = `crm`.`payment_method`) AND (`ln_view`.`type` = 2))LIMIT 1) AS `payment_methodKhAndEng`,
@@ -1388,7 +1385,9 @@ function updateReceipt($data){
 // 			'service_charge'				=>	$data["service_charge"],
 // 			'service_chargepaid'			=>	$service,// okបានបង
 			'extra_payment' 				=> $data["extra_payment"],
-			'payment_times'					=>$data['paid_times']
+			'payment_times'					=>$data['paid_times'],
+			
+			'date_payment'          => $data['date_pay'],
 			);
 			if($data['pay_type']==1){
 				$arr_client_pay['field2']=1;
