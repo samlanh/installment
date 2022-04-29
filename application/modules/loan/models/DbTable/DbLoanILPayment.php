@@ -357,6 +357,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 			$propertyId = empty($data['property_id'])?$rs_sale['house_id']:$data['property_id'];
 			$clientId 	= empty($data['client_id'])?$rs_sale['client_id']:$data['client_id'];
 			
+			$datePaymentForReceipt = $data['date_payment']; // set defualt
+			
     		$arr_client_pay = array(
     			'branch_id'						=>	$data["to_branch_id"],//$data["branch_id"],
     			'receipt_no'					=>	$reciept_no,
@@ -394,6 +396,8 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			'extra_payment' 				=>  $data["extrapayment"],
     			'payment_times'					=>  $data['paid_times'],
     			'payment_method'				=>  $data['payment_method'],
+				
+    			'date_payment'				=>  $datePaymentForReceipt,
     		);
     		
 			$this->_name = "ln_client_receipt_money";
@@ -412,12 +416,12 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$total_interest = $data["total_interest"];//ត្រូវបង់សរុប
     		
     			$rows = $this->getSaleScheduleById($loan_number, 1);
-		    		if(!empty($rows)){
-		    			$remain_money = round($data['amount_receive']-$data['extrapayment'],2);
-		    			foreach ($rows AS $key => $row){
-		    				if($remain_money<=0){
-		    					break;
-		    				}
+				if(!empty($rows)){
+					$remain_money = round($data['amount_receive']-$data['extrapayment'],2);
+					foreach ($rows AS $key => $row){
+						if($remain_money<=0){
+							break;
+						}
 		    			if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
 		    				$arr_money_detail = array(
     							'crm_id'				=>	$client_pay,
@@ -449,120 +453,122 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    				$this->insert($arr_money_detail);
 		    			}			
 		    						
-		    						$after_outstanding = $row['begining_balance_after'];
-		    						$after_payment_after = $row['total_payment_after'];
-		    						$after_principal = $row['principal_permonthafter'];//$data["principal_permonth_".$i];
-		    						$total_principal = $after_principal;
-		    						$after_interest = $row['total_interest_after'];
-		    						
-		    						if($option_pay==1){
-		    							$total_interest = $after_interest;
-		    						}
-		    						$after_penalty = $row['penelize'];//$data["penelize_".$i];
-		    						$date_payment = $row['date_payment'];//$data["date_payment_".$i];
-		    						
-		    						$paid_principal = 0;
-		    						$paid_interest = 0;
-		    						$paid_penalty = 0;
-		    						$paid_service = 0;
-		    						$is_compleated_d=0;
-		    						
-		    						if($key!=0){
-		    							$penalize = 0;//ធ្លាប់បងហើយម្តង អោយ =0
-		    							$service_charge=0;
-		    							if($option_pay==4 OR $option_pay==3 ){
-		    								$total_interest=0;
-		    							}
-		    						}
-		    						if($option_pay==1){
-		    							$total_principal =$after_principal;
-		    						}elseif($option_pay==3){
-		    							$total_principal = $after_principal;//$data["principal_permonth_".$i];
-		    						}
-		    						
-		    						$remain_money = round($remain_money-$service_charge,2);
-		    						if($remain_money>=0){//ដកសេវាកម្ម
-		    							$paid_service=$service_charge;
-		    							$after_service=0;
-		    							$remain_money = round($remain_money - $penalize,2);
-		    								
-		    							if($remain_money>=0){//ដកផាគពិន័យ
-		    								$paid_penalty = $penalize;
-		    								$remain_money = round($remain_money - $total_interest,2);
-		    								if($remain_money>=0){
-		    									$paid_interest = $total_interest;
-		    									$after_interest = 0;
-		    									$remain_money = round($remain_money-$total_principal,2);
-		    									if($remain_money>=0){//check here of គេបង់លើសខ្លះ
-		    										$paid_principal = $total_principal;
-		    										$after_principal = 0;
-		    										$is_compleated_d=1;
-		    									}else{
-		    										$paid_principal = $total_principal-abs($remain_money);
-		    										$after_principal = abs($remain_money);
-		    										$is_compleated_d=0;
-		    									}
-		    								}else{
-		    									$paid_interest = $total_interest-abs($remain_money);
-		    									$after_interest =abs($remain_money);
-		    								}
-		    							}else{
-		    								$paid_penalty =$penalize -abs($remain_money);
-		    								$after_penalty = abs($remain_money);
-		    							}
-		    						}else{
-		    							$paid_service=$service_charge-abs($remain_money);
-		    							$after_service = abs($remain_money);
-		    						}		    						
-		    						
-		    						if($after_principal<=0){
-		    							$is_compleated_d=1;
-		    						}
-		    						if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
-	    								 $arra = array(
-	    								 		'begining_balance_after'=>$after_outstanding-$paid_principal,
-	    								    	"principal_permonthafter"=>$after_principal,
-	    								    	'total_interest_after'=>$after_interest,
-	    								 		'total_payment_after'=>	$after_principal+$after_interest,
-	    								    	'is_completed'=>$is_compleated_d,
-	    								    	'paid_date'	=>	$data['collect_date'],
-	    								    	'payment_option'	=>	$data["option_pay"],
-	    								    	'paid_date'			=> 	$data['collect_date'],
-	    								 		'received_userid'=> ($is_compleated_d==1)?$user_id:0,
-	    								 		'received_date'=> ($is_compleated_d==1)?$data['collect_date']:0
-	    								  );
-	    								  $where = " id = ".$row['id'];
-	    								  $this->_name="ln_saleschedule";
-	    								  $this->update($arra, $where);	
-	    								  
-	    								  
-	    								  if(AUTO_PAYCOMMISSION==1 AND $is_compleated_d==1 AND $row['commission']>0){
-	    								  	$__data = array(
-	    								  			'branch_id'      => $data['branch_id'],
-	    								  			'sale_id'	     => $data['loan_number'],
-	    								  			'sale_no' 		=> $data['loan_number'],
-	    								  			'title'	         => '',
-	    								  			'return_back'    => $row['commission'],
-	    								  			'cheque'	     => '',
-	    								  			'cheque_issuer'  => '',
-	    								  			'other_invoice'  => '',
-	    								  			'property_id'    => $data['property_id'],
-	    								  			'income_category'=> 16,
-	    								  			'staff_id'		 => $data['co_id'],
-	    								  			'payment_type'   => 1,
-	    								  			'note'           => '',
-	    								  			'date'           => $data['collect_date'],
-	    								  			'supplier_id'    => '',
-	    								  	);
-	    								  	$db_exp = new Incexp_Model_DbTable_DbComission();
-	    								  	$db_exp->addSaleComission($__data);
-	    								  }
-		    						}
-    								  
-    							$paid_principalall = $paid_principalall+$paid_principal;
-    							$paid_interestall = $paid_interestall+$paid_interest;
-    						    $paid_penaltyall = $paid_penaltyall+$paid_penalty;
-    						    $paid_serviceall = $paid_serviceall+$paid_service;
+							$after_outstanding = $row['begining_balance_after'];
+							$after_payment_after = $row['total_payment_after'];
+							$after_principal = $row['principal_permonthafter'];//$data["principal_permonth_".$i];
+							$total_principal = $after_principal;
+							$after_interest = $row['total_interest_after'];
+							
+							if($option_pay==1){
+								$total_interest = $after_interest;
+							}
+							$after_penalty = $row['penelize'];//$data["penelize_".$i];
+							$date_payment = $row['date_payment'];//$data["date_payment_".$i];
+							
+							$datePaymentForReceipt = $date_payment;
+							
+							$paid_principal = 0;
+							$paid_interest = 0;
+							$paid_penalty = 0;
+							$paid_service = 0;
+							$is_compleated_d=0;
+							
+							if($key!=0){
+								$penalize = 0;//ធ្លាប់បងហើយម្តង អោយ =0
+								$service_charge=0;
+								if($option_pay==4 OR $option_pay==3 ){
+									$total_interest=0;
+								}
+							}
+							if($option_pay==1){
+								$total_principal =$after_principal;
+							}elseif($option_pay==3){
+								$total_principal = $after_principal;//$data["principal_permonth_".$i];
+							}
+							
+							$remain_money = round($remain_money-$service_charge,2);
+							if($remain_money>=0){//ដកសេវាកម្ម
+								$paid_service=$service_charge;
+								$after_service=0;
+								$remain_money = round($remain_money - $penalize,2);
+									
+								if($remain_money>=0){//ដកផាគពិន័យ
+									$paid_penalty = $penalize;
+									$remain_money = round($remain_money - $total_interest,2);
+									if($remain_money>=0){
+										$paid_interest = $total_interest;
+										$after_interest = 0;
+										$remain_money = round($remain_money-$total_principal,2);
+										if($remain_money>=0){//check here of គេបង់លើសខ្លះ
+											$paid_principal = $total_principal;
+											$after_principal = 0;
+											$is_compleated_d=1;
+										}else{
+											$paid_principal = $total_principal-abs($remain_money);
+											$after_principal = abs($remain_money);
+											$is_compleated_d=0;
+										}
+									}else{
+										$paid_interest = $total_interest-abs($remain_money);
+										$after_interest =abs($remain_money);
+									}
+								}else{
+									$paid_penalty =$penalize -abs($remain_money);
+									$after_penalty = abs($remain_money);
+								}
+							}else{
+								$paid_service=$service_charge-abs($remain_money);
+								$after_service = abs($remain_money);
+							}		    						
+							
+							if($after_principal<=0){
+								$is_compleated_d=1;
+							}
+							if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
+								 $arra = array(
+										'begining_balance_after'=>$after_outstanding-$paid_principal,
+										"principal_permonthafter"=>$after_principal,
+										'total_interest_after'=>$after_interest,
+										'total_payment_after'=>	$after_principal+$after_interest,
+										'is_completed'=>$is_compleated_d,
+										'paid_date'	=>	$data['collect_date'],
+										'payment_option'	=>	$data["option_pay"],
+										'paid_date'			=> 	$data['collect_date'],
+										'received_userid'=> ($is_compleated_d==1)?$user_id:0,
+										'received_date'=> ($is_compleated_d==1)?$data['collect_date']:0
+								  );
+								  $where = " id = ".$row['id'];
+								  $this->_name="ln_saleschedule";
+								  $this->update($arra, $where);	
+								  
+								  
+								  if(AUTO_PAYCOMMISSION==1 AND $is_compleated_d==1 AND $row['commission']>0){
+									$__data = array(
+											'branch_id'      => $data['branch_id'],
+											'sale_id'	     => $data['loan_number'],
+											'sale_no' 		=> $data['loan_number'],
+											'title'	         => '',
+											'return_back'    => $row['commission'],
+											'cheque'	     => '',
+											'cheque_issuer'  => '',
+											'other_invoice'  => '',
+											'property_id'    => $data['property_id'],
+											'income_category'=> 16,
+											'staff_id'		 => $data['co_id'],
+											'payment_type'   => 1,
+											'note'           => '',
+											'date'           => $data['collect_date'],
+											'supplier_id'    => '',
+									);
+									$db_exp = new Incexp_Model_DbTable_DbComission();
+									$db_exp->addSaleComission($__data);
+								  }
+							}
+							  
+						$paid_principalall = $paid_principalall+$paid_principal;
+						$paid_interestall = $paid_interestall+$paid_interest;
+						$paid_penaltyall = $paid_penaltyall+$paid_penalty;
+						$paid_serviceall = $paid_serviceall+$paid_service;
 		    		}//end foreach 
 		    	}
     		//}
@@ -573,6 +579,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     				'total_interest_permonthpaid'	=> $paid_interestall,//ok ការប្រាក់បានបង
     				'penalize_amountpaid'			=> $paid_penaltyall,// ok បានបង
     				'service_chargepaid'			=> $paid_serviceall,// okបានបង
+    				'date_payment'			=> $datePaymentForReceipt,
     		);
     		$this->_name="ln_client_receipt_money";
     		$where = $db->quoteInto("id=?", $client_pay);

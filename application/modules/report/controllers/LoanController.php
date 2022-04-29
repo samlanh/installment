@@ -538,10 +538,10 @@ class Report_LoanController extends Zend_Controller_Action {
  	}
  
  	$this->view->LoanFee_list =$db->getAllLoan($search);
- 	$this->view->LoanCollectionco_list =$db->getALLLoanPayment($search);
+  	$this->view->LoanCollectionco_list =$db->getALLLoanPayment($search);
  	
  	$db = new Accounting_Model_DbTable_DbExpense();
- 	$this->view->rs = $db->getAllExpenseReport($search);
+ 	//$this->view->rs = $db->getAllExpenseReport($search);
  
  	$this->view->list_end_date=$search;
  	$frm = new Loan_Form_FrmSearchGroupPayment();

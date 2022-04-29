@@ -90,12 +90,32 @@ div.expenseItem.showFeature{
 									<?php echo $frm->getElement('invoice');?>
 							   </div>
 							</div>
-							 <div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVOICE");?> :
+							
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SUPPLIER");?> :
 							   </label>
 							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('other_invoice');?>
+									<div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('supplier_id');?>
+									</div>
+									 <div class="col-md-3 col-sm-3 col-xs-12">
+										<input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getSupplier()"/>
+									 </div>
 							   </div>
+							</div>
+							<div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CANCEL_SALE_FOR_RETURN");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<input id="cancelSale_id" />
+							   </div>
+							</div>
+							
+						</div>
+						<div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="form-group">
+							   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("AMOUNT_INFO");?> 
+							   </label>
 							</div>
 							<div class="form-group">
 							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?> :
@@ -111,6 +131,15 @@ div.expenseItem.showFeature{
 									<?php echo $frm->getElement('title');?>
 							   </div>
 							</div>
+							 <div class="form-group">
+							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVOICE");?> :
+							   </label>
+							   <div class="col-md-7 col-sm-7 col-xs-12">
+									<?php echo $frm->getElement('other_invoice');?>
+							   </div>
+							</div>
+							
+							
 							<div class="form-group">
 							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CATEGORY");?> :
 							   </label>
@@ -118,29 +147,12 @@ div.expenseItem.showFeature{
 									<input id="income_category" />
 							   </div>
 							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-12">
-							<div class="form-group">
-							   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("AMOUNT_INFO");?> 
-							   </label>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SUPPLIER");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('supplier_id');?>
-									</div>
-									 <div class="col-md-3 col-sm-3 col-xs-12">
-										<input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getSupplier()"/>
-									 </div>
-							   </div>
-							</div>
 							<div class="form-group">
 							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_EXPENSE");?> :
 							   </label>
 							   <div class="col-md-7 col-sm-7 col-xs-12">
 									<?php echo $frm->getElement('total_amount');?>
+									<input type="hidden" id="oldTotalAmount" name="oldTotalAmount" value="<?php echo $this->row['total_amount'];?>" />
 							   </div>
 							</div>
 							
@@ -165,6 +177,13 @@ div.expenseItem.showFeature{
 									<?php echo $frm->getElement('cheque_issuer');?>
 							   </div>
 							</div>
+							
+						</div>
+						<div class="col-md-4 col-sm-4 col-xs-12">	
+							<div class="form-group">
+							   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER");?> 
+							   </label>
+							</div>
 							<div class="form-group">
 							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
 							   </label>
@@ -180,6 +199,7 @@ div.expenseItem.showFeature{
 							   </div>
 							</div>
 						</div>
+							
 					</div>
 				</div>
 				<!--End Schedule Panel 1-->
@@ -337,12 +357,17 @@ function displayNone(){
 }
 var parent_id_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var supplierStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+
+var saleCancelstore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 require(["dojo/ready"], function(ready){
 	ready(function(){
 		getallCustomer();
 		getParentbytype();
 		
 		initialize();
+		enablePayment();
+		
+		getSaleCancel();
 	  });
 	  
 	new dijit.form.FilteringSelect({
@@ -381,7 +406,70 @@ require(["dojo/ready"], function(ready){
 		onChange: function() {
 	    }
 	}, "parent_id");
+	
+	new dijit.form.FilteringSelect({
+		store: saleCancelstore,
+		autoComplete: false,
+		queryExpr: "*${0}*",  
+		required: false,		           
+		readOnly: true,		           
+		name: "cancelSale_id",
+		id: "cancelSale_id",
+		searchAttr: "name",
+		class: 'fullside',
+			onChange: function() {
+				getCancelSaleInfo();
+			}
+	}, "cancelSale_id");
 });
+
+var cancelId = '<?php echo empty($this->row['cancelSale_id'])?0:$this->row['cancelSale_id'];?>';
+//var totalAmountRS = '<?php echo empty($this->row['total_amount'])?0:$this->row['total_amount'];?>';
+var	url_getSaleCancel = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-salecancle'));?>';
+function getSaleCancel(){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id==-1 || branch_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getSaleCancel,	
+		content:{ 
+			'branch_id': branch_id,
+			'cancelId': cancelId,
+		},
+		handleAs:"json",
+		load: function(data) {	
+			saleCancelstore  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('cancelSale_id').set('store', saleCancelstore);
+		    dijit.byId('cancelSale_id').set('value', cancelId);
+		},
+		error: function(err) {
+		}
+	});
+}
+var urlGetCancelInfo= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-cancelinfo'));?>';
+function getCancelSaleInfo(){
+	/*
+	cancelSale_id = dijit.byId('cancelSale_id').get('value');
+	if(cancelSale_id==-1 || cancelSale_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+		url:urlGetCancelInfo,	
+		content:{ 
+			'id':cancelSale_id
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('total_amount').attr('value',data.return_back_aftter);
+			dijit.byId('total_amount').attr('value',totalAmountRS);
+		},
+		error: function(err) {
+		}
+	});
+	*/
+}
+
 var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->cheque_issue));?> );
 function addNewCheque(){
 	if(dijit.byId('form_cheque').validate()){
