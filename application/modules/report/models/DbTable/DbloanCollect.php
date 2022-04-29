@@ -7,56 +7,54 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 //     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 //     	return $session_user->user_id;
 //     }
-    public function getAllLnClient($search=null){
+    
+	public function getAllLnClient($search=null){
     	$db=$this->getAdapter();
    		$end_date = $search['end_date'];
-    	$sql = "SELECT v.*,
-	    	SUM(v.principal_permonthafter) AS principal_permonthafter,
-	    	SUM(v.total_interest_after) AS total_interest_after,
-			(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) AS ispay_bank,
-			(SELECT cr.date_input FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id=v.sale_id AND cr.recieve_amount>0 ORDER BY cr.date_input DESC LIMIT 1) As last_pay_date,
-			(SELECT s.expect_income_note FROM ln_sale AS s WHERE s.id = v.sale_id LIMIT 1) AS expect_income_note,
-			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) LIMIT 1) AS payment_type,
-			(SELECT p.old_land_id FROM ln_properties AS p WHERE p.id = v.house_id LIMIT 1) AS old_land_id
-			 FROM v_newloancolect AS v WHERE 1 ";
-    	$where ='';
-    	
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$statement = $dbp->getSqlStLoanCollect();
+		$sql= $statement['sql'];
+		
+    	$where = $statement['where'];
+    	$where.="  AND `pd`.`is_completed` = 0 ";
+		
     	$dbp = new Application_Model_DbTable_DbGlobal();
-    	$where.=$dbp->getAccessPermission("v.branch_id");
+    	$where.=$dbp->getAccessPermission("s.branch_id");
     	
-    	$to_date = (empty($search['end_date']))? '1': " v.date_payment <= '".$search['end_date']." 23:59:59'";
+    	$to_date = (empty($search['end_date']))? '1': " pd.date_payment <= '".$search['end_date']." 23:59:59'";
     	
     	if($search['client_name']>0){
-    		$where.=" AND v.client_id = ".$search['client_name'];
+    		$where.=" AND s.client_id = ".$search['client_name'];
     	}
     	if($search['branch_id']>0){
-    		$where.=" AND v.branch_id = ".$search['branch_id'];
+    		$where.=" AND s.branch_id = ".$search['branch_id'];
     	}
     	if($search['stepoption']>0){
-    		$where.=" AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  ) = ".$search['stepoption'];
+    		$where.=" AND pd.ispay_bank = ".$search['stepoption'];
     	}else{
     		$where.= " AND ".$to_date;
     		if ($search['stepoption']==0){
-    			$where.= " AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1  )=0";
+    			$where.= " AND pd.ispay_bank=0";
     		}
     	}
     	
     	if($search['last_optiontype']>-1){
-    		$where.=" AND v.last_optiontype = ".$search['last_optiontype'];
+    		$where.=" AND pd.last_optiontype = ".$search['last_optiontype'];
     	}
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = trim(addslashes($search['adv_search']));
-    		$s_where[] = " v.sale_number LIKE '%{$s_search}%'";
-    		$s_where[] = " v.client_number LIKE '%{$s_search}%'";
-    		$s_where[] = " v.phone_number LIKE '%{$s_search}%'";
-    		$s_where[] = " v.client_name LIKE '%{$s_search}%'";
-    		$s_where[] = " v.land_code LIKE '%{$s_search}%'";
-    		$s_where[] = " v.land_address LIKE '%{$s_search}%'";
-    		$s_where[] = " v.street LIKE '%{$s_search}%'";
+    		$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT `c`.`client_number` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT `c`.`name_kh` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT `c`.`phone` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " l.land_code LIKE '%{$s_search}%'";
+    		$s_where[] = " l.land_address LIKE '%{$s_search}%'";
+    		$s_where[] = " l.street LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	$order=" GROUP BY v.sale_id,(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v.id LIMIT 1) ORDER BY  v.date_payment ASC ";
+    	$order=" GROUP BY pd.sale_id,pd.ispay_bank ORDER BY  pd.date_payment ASC ";
     	return $db->fetchAll($sql.$where.$order);
     }
     function getCustomerNearlyPayment(){
@@ -72,23 +70,23 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     		$search['end_date']= date('Y-m-d',strtotime("+$amt_day day"));
     	}
     	
-    	$sql = "SELECT *,
-    		SUM(principal_permonthafter) AS principal_permonthafter,
-			SUM(total_interest_after) AS total_interest_after,
-			SUM(service_charge) AS service_charge,
-			COUNT(id) AS amount_late,
-				(SELECT(c.phone) FROM `ln_client` c WHERE c.client_id =v_newloancolect.client_id LIMIT 1) AS phone
-    		FROM v_newloancolect WHERE last_optiontype=1 AND is_completed = 0 ";
-    	$where ='';
-    	$from_date =(empty($search['start_date']))? '1': " date_payment <= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
-    	$where= " AND ".$from_date." AND ".$to_date;
-    	$where.= " AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_newloancolect.id LIMIT 1  )=0";
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$statement = $dbp->getSqlStLoanCollect();
+		$sql= $statement['sql'];
+		$sql.="";
+    	$where = $statement['where'];
+    	$where.="  AND `pd`.`is_completed` = 0 AND pd.last_optiontype=1 ";
+		
+    	
+    	$from_date =(empty($search['start_date']))? '1': " pd.date_payment <= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " pd.date_payment <= '".$search['end_date']." 23:59:59'";
+    	$where.= " AND ".$from_date." AND ".$to_date;
+    	$where.= " AND pd.ispay_bank=0";
     	
     	$dbp = new Application_Model_DbTable_DbGlobal();
-    	$where.=$dbp->getAccessPermission("branch_id");
+    	$where.=$dbp->getAccessPermission("s.branch_id");
     	
-    	$order=" GROUP BY sale_id ORDER BY date_payment DESC ,sale_id ASC, id ASC";
+    	$order=" GROUP BY pd.sale_id ORDER BY pd.date_payment DESC ,pd.sale_id ASC, pd.id ASC";
     	return $db->fetchAll($sql.$where.$order);
     }
     function getCustomerNearAgreement(){
