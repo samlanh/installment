@@ -1,0 +1,690 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$day = array(
+		"Mon" =>'ច័ន្ទ',
+		"Tue" =>'អង្គារ',
+		"Wed" =>'ពុធ',
+		"Thu" =>'ព្រហស្បតិ៍',
+		"Fri" =>'សុក្រ',
+		"Sat" =>'សៅរ៍',
+		"Sun" =>'អាទិត្យ',
+	);
+	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
+	$dbparmeter = new Report_Model_DbTable_DbParamater();
+	$boreyName = $tr->translate("BRAND_TITLE");
+	$arrgender = array(1=>"ប្រុស",2=>"ស្រី");
+	$arrTitle = array(1=>"លោក",2=>"លោកស្រី");
+	
+	$imagelogo = $this->baseUrl()."/images/logo.jpg";
+	if (!empty($this->agreement['project_logo'])){
+		$imagelogo = $this->baseUrl()."/images/projects/".$this->agreement['project_logo'];
+	}
+	if (!empty($this->agreement['project_name'])){
+		$projectName = " ".$this->agreement['project_name'];
+	}else{ 
+		$projectName = " បុរី C&T VILLA (SHOP HOUSE)";
+	}
+	
+	$companyAddress=$this->keyValue['footer_branch'];
+	$companyTel="&#9743; ".$this->keyValue['tel-client'];
+	$companyEmail="";
+	if(!empty($this->keyValue['email_client'])){
+		$companyEmail=" &#x2709; ".$this->keyValue['email_client'];
+	}
+	$companyContact=$companyTel.$companyEmail;
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<script src="<?php echo $this->baseUrl();?>/js/pdbs_js.js"  type="text/javascript"></script>
+<meta charset="utf-8">
+<title><?php echo $tr->translate("ព័ត៌មានការលក់លម្អិត");?></title>
+
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ព័ត៌មានការលក់លម្អិត');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
+	<tr>
+    	<td align="center">
+    		<div id="divPrint" >
+				<style>		
+					tr td h2,td span,p,pre,span{ font-size: 12px ; line-height:20px;}
+					ul.headReport, ul.reportTitle {
+						margin: 0;
+						padding: 0;
+						list-style: none;
+					}
+					ul.headReport li span, ul.headReport li {
+						line-height: 18px;
+						text-align: center;
+						font-size: 14px;
+						font-family: "Times New Roman","Khmer OS Muol Light";
+					}
+					ul.headReport li.small-text, ul.headReport li.small-text span {
+						line-height: 14px;
+						text-align: center;
+						font-size: 11px;
+						font-family: "Times New Roman","Khmer OS Battambang";
+					}
+					ul.reportTitle {
+						background: #ffffff;
+						display: block;
+						position: absolute;
+						top: -20px;
+						width: 100%;
+					}
+					
+					table.content-data {
+						margin-top: 8px;
+						font-family: "Times New Roman","Khmer OS Battambang";
+						border-collapse:collapse;
+						
+						width: 100%;
+					}
+					tr.section-bg {
+						background: #337ab7;
+						color: #fff;
+					}
+					tr.section-bg td {
+						font-size: 12px;
+						font-weight: 600;
+						text-transform: uppercase;
+					}
+					table.content-data td {
+						padding: 1px 5px;
+						vertical-align: top;
+					}
+					ul.dataValue {
+						margin: 0;
+						padding: 0;
+						list-style: none;
+					}
+					
+					
+					.blgLeft, .blgRight {
+						display: inline-block;
+						vertical-align: top;
+						line-height: 14px;
+					}
+					.blgLeft {
+						min-width: 45px;
+					}
+					
+					.blgLeft small {
+						font-style: italic;
+						font-size: 10px;
+						display: block;
+						margin-top: -4px;
+					}
+					span.values-row.strongV {
+						font-weight: 600;
+					}
+					span.values-row-title {
+						display: block;
+						text-decoration: underline;
+						font-weight: 600;
+						text-transform: uppercase;
+					}
+					span#reportTitleEn {
+						text-transform: uppercase;
+						font-weight: 600;
+					}
+				</style>
+				<table class="tableTop" width="100%" style="border-bottom: double 5px #337ab7;">
+					<tbody>
+						<tr>
+							<td width="20%" id="projectlogo"><img src="<?php echo $imagelogo;?>" style=" height:85px; max-width: 100%; "></td>
+							<td width="60%" valign="top" style=" padding-bottom: 30px;">
+								<ul class="headReport">
+									<li style="font-size:16px; " id="companyTitle"><?php echo $tr->translate("BRAND_TITLE");?></li>
+									<li><span id="companyTitleEn"><?php echo $tr->translate("BRAND_TITLE_EN");?></span></li>
+									<li class="small-text"><span id="companyAddress"><?php echo $companyAddress;?></span></li>
+									<li class="small-text"><span id="companyPhone"><?php echo $companyContact;?></span></li>
+								</ul>
+							</td>
+							<td width="20%">
+								<span class="project-name" id="projectName"></span>
+							</td>
+						</tr> 
+						<tr>
+							<td> </td>
+							<td style="text-align: center;position: relative;">
+								<ul class="reportTitle">
+									<li style="font-size:16px; font-family:'Khmer OS Muol Light'"><span id="reportTitle"><?php echo "ព័ត៌មានការលក់លម្អិត";?></span></li>
+									<li style="font-size:12px;"><span id="reportTitleEn">Selling Profile Information</span></li>
+									<li style="font-size:12px;"><span id="staff_lbl"></span></li>
+								</ul>
+							</td>
+							<td></td>
+						</tr> 
+					</tbody>
+				</table>
+				<br />
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td><?php echo $tr->translate("ព័ត៌មានគម្រោង");?> / Project Information</td>
+					</tr>
+					<tr>
+						<td>
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("គម្រោង");?> :</span><br />
+										<small class="title-row">Project :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $projectName;?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("អាសយដ្ឋាន");?> :</span><br />
+										<small class="title-row">Address :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['project_location'];?></span></div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+				
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td colspan="3"><?php echo $tr->translate("ព័ត៌មានអតិថិជន");?> / Customer Information</td>
+					</tr>
+					<tr>
+						<td style="border-right: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("នាមត្រកូល-នាមខ្លួន");?> :</span><br />
+										<small class="title-row">Full Name :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['client_namekh'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("អត្តលេខ");?> :</span><br />
+										<small class="title-row">Number :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php //echo $this->agreement['client_namekh'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ប្រភេទឯកសារ");?> :</span><br />
+										<small class="title-row">Document :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['client_d_type'];?></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none;border-right: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ភេទ");?> :</span><br />
+										<small class="title-row">Gender :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php if (!empty($arrgender[$this->agreement['sex']])){ echo $arrgender[$this->agreement['sex']];}?> </span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ថ្ងៃ ខែ ឆ្នាំកំណើត");?> :</span><br />
+										<small class="title-row">Date Of Birth :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['client_dob'])));?> / <?php echo $month[date("m",strtotime($this->agreement['client_dob']))];?> / <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['client_dob']))); ?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("លេខ");?> :</span><br />
+										<small class="title-row">ID Number :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['client_nation_id'];?></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("សញ្ជាតិ");?> :</span><br />
+										<small class="title-row">Nationality :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['client_nationality'];?></span></div>
+								</li>
+								
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("លេខទូរសព្ទ");?> :</span><br />
+										<small class="title-row">Phone :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['client_phone'];?></span></div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+					<tr >
+						<td  colspan="3"style="border-top: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("អាសយដ្ឋាន");?> :</span><br />
+										<small class="title-row">Address :</small> 
+									</div>
+									<div class="blgRight">
+										<span class="values-row">
+										<?php if(!empty($this->agreement['client_house_no'])){ ?>ផ្ទះលេខ <?php echo $this->agreement['client_house_no'];?> <?php } ?> 
+										<?php if(!empty($this->agreement['client_street'])){ ?> ផ្លូវលេខ  <?php echo $this->agreement['client_street'];?> <?php } ?> 
+										<?php if(!empty($this->agreement['client_village_kh'])){ ?> ភូមិ <?php echo str_replace("ភូមិ", "",$this->agreement['client_village_kh']);?> <?php } ?> 												 
+											 ឃុំ/សង្កាត់ <?php echo $this->agreement['client_commune_kh'];?>
+											 ស្រុក/ខណ្ឌ/ក្រុង  <?php echo $this->agreement['client_districtkh'];?>
+											 ខេត្ដ/រាជធានី  <?php echo $this->agreement['client_province_kh'];?>
+										</span>
+									</div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+				
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td colspan="3"><?php echo $tr->translate("ព័ត៌មានអ្នកទិញជាមួយ");?>  / With Customer Information</td>
+					</tr>
+					<tr>
+						<td style="border-right: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("នាមត្រកូល-នាមខ្លួន");?> :</span><br />
+										<small class="title-row">Full Name :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['hname_kh'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("អត្តលេខ");?> :</span><br />
+										<small class="title-row">Number :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php //echo $this->agreement['client_namekh'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ប្រភេទឯកសារ");?> :</span><br />
+										<small class="title-row">Document :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['joint_doc_type'];?></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none;border-right: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ភេទ");?> :</span><br />
+										<small class="title-row">Gender :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php if (!empty($arrgender[$this->agreement['ksex']])){ echo $arrgender[$this->agreement['ksex']];}?> </span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ថ្ងៃ ខែ ឆ្នាំកំណើត");?> :</span><br />
+										<small class="title-row">Date Of Birth :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob_buywith'])));?> / <?php echo $month[date("m",strtotime($this->agreement['dob_buywith']))];?> / <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob_buywith']))); ?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("លេខ");?> :</span><br />
+										<small class="title-row">ID Number :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['rid_no'];?></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("សញ្ជាតិ");?> :</span><br />
+										<small class="title-row">Nationality :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['p_nationality'];?></span></div>
+								</li>
+								
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("លេខទូរសព្ទ");?> :</span><br />
+										<small class="title-row">Phone :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['with_phone'];?></span></div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+					<tr >
+						<td colspan="3" style="border-top: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("អាសយដ្ឋាន");?> :</span><br />
+										<small class="title-row">Address :</small> 
+									</div>
+									<div class="blgRight">
+										<span class="values-row">
+										<?php if(!empty($this->agreement['w_client_house'])){ ?>ផ្ទះលេខ <?php echo $this->agreement['w_client_house'];?> <?php } ?> 
+										<?php if(!empty($this->agreement['w_street'])){ ?> ផ្លូវលេខ  <?php echo $this->agreement['w_street'];?> <?php } ?> 
+										<?php if(!empty($this->agreement['w_client_village_kh'])){ ?> ភូមិ <?php echo str_replace("ភូមិ", "",$this->agreement['w_client_village_kh']);?> <?php } ?> 												 
+											 ឃុំ/សង្កាត់ <?php echo $this->agreement['w_client_commune_kh'];?>
+											 ស្រុក/ខណ្ឌ/ក្រុង  <?php echo $this->agreement['w_client_districtkh'];?>
+											 ខេត្ដ/រាជធានី  <?php echo $this->agreement['w_client_province_kh'];?>
+										</span>
+									</div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+				
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td colspan="3"><?php echo $tr->translate("ព័ត៌មានការលក់");?>  / Selling Information</td>
+					</tr>
+					<tr>
+						<td style="border-right: none; ">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("តម្លៃមុនលក់");?> :</span><br />
+										<small class="title-row">Pre-Sale Price :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row strongV">USD <?php echo number_format($this->agreement['price_before'],2);?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("បញ្ចុះតម្លៃជាសាច់ប្រាក់");?> :</span><br />
+										<small class="title-row">Discount (Cash) :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row ">USD <?php echo number_format($this->agreement['discount_amount'],2);?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("បញ្ចុះតម្លៃជាភាគរយ");?> :</span><br />
+										<small class="title-row">Discount (%) :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row "><?php echo number_format($this->agreement['discount_percent'],2);?> %</span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("តម្លៃលក់");?> :</span><br />
+										<small class="title-row">Selling Price :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row strongV">USD <?php echo number_format($this->agreement['price_sold'],2);?></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none;border-right: none; ">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("កាលបរិច្ឆេទលក់");?> :</span><br />
+										<small class="title-row">Date Of Sale :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['buy_date'])));?> / <?php echo $month[date("m",strtotime($this->agreement['buy_date']))];?> / <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['buy_date']))); ?> </span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("កាលបរិច្ឆេទចេញកិច្ចសន្យា");?> :</span><br />
+										<small class="title-row">Date oF Contract Issuance :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?> / <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> / <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date']))); ?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ប្រភេទបង់ប្រាក់");?> :</span><br />
+										<small class="title-row">Payment Type :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['payment_type'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("រយៈពេលបង់ប្រាក់");?> :</span><br />
+										<small class="title-row">Payment Period :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo number_format($this->agreement['total_duration'],0);?> (ខែ)</span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row">អត្រាការប្រាក់/(ឆ្នាំ) :</span><br />
+										<small class="title-row">Rate Per Year :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo number_format($this->agreement['interest_rate'],2);?> %</span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none;">
+	                    	<?php 
+								$LIFE_LOAN = $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['end_line'])));?> / <?php echo $month[date("m",strtotime($this->agreement['end_line']))];?> / <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['end_line'])));
+		                    	if($this->lastSchedule['last_optiontype']==1){//by date
+		                    		if($this->lastSchedule['ispay_bank']==0){
+		                    			$date= new DateTime($this->lastSchedule['date_payment']);
+		                    			$LIFE_LOAN = $dbparmeter->getNumberInkhmer(date("d",strtotime($this->lastSchedule['date_payment'])));?> / <?php echo $month[date("m",strtotime($this->lastSchedule['date_payment']))];?> / <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->lastSchedule['date_payment'])));
+		                    		}else{
+		                    			$LIFE_LOAN = $this->lastSchedule['lastPaymentTitle'];
+		                    			
+		                    		}
+		                    	}else{//by last payment
+		                    		if($this->lastSchedule['ispay_bank']==0){
+		                    			$LIFE_LOAN = $tr->translate("RECEIVED_PROPERTY");
+		                    		}else{
+		                    			$LIFE_LOAN = $this->lastSchedule['lastPaymentTitle'];
+		                    		}
+		                    	}
+	                    		
+	                    	?>
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("កាលបរិច្ឆេទរំលស់ដំបូង");?> :</span><br />
+										<small class="title-row">Date Of Installment :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['startcal_date'])));?> / <?php echo $month[date("m",strtotime($this->agreement['startcal_date']))];?> / <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['startcal_date']))); ?></span></div>
+								</li>
+								
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("កាលបរិច្ឆេទបង់បញ្ចប់");?> :</span><br />
+										<small class="title-row">Date Of Last Payment :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $LIFE_LOAN; ?></span></div>
+								</li>
+								
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("រយៈពេលសាងសង់");?> :</span><br />
+										<small class="title-row">Construction Period :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo number_format($this->agreement['amount_build'],0);?> (ខែ)</span></div>
+								</li>
+								
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("សាងសង់ចាប់ពី");?> :</span><br />
+										<small class="title-row">Construction Start :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['build_start'])));?> / <?php echo $month[date("m",strtotime($this->agreement['build_start']))];?> / <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['build_start']))); ?></span></div>
+								</li>
+								
+							</ul>
+						</td>
+					</tr>
+					
+				</table>
+				
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td colspan="3"><?php echo $tr->translate("ព័ត៌មានអចលនទ្រព្យ");?> / Property Information</td>
+					</tr>
+					<?php 
+					$amountProperty=1;
+					 if (!empty($this->agreement['old_land_id'])){
+						$idse = explode(",", $this->agreement['old_land_id']);
+						$amountProperty = count($idse);
+					}
+					?>
+					<tr>
+						<td style="border-right: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("លេខប្លង់");?> :</span><br />
+										<small class="title-row">Layout Number :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['layoutNumber'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("លេខអចលនទ្រព្យ");?> :</span><br />
+										<small class="title-row">Property Number :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['property_title'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ចំនួនអចលទ្រព្យ");?> :</span><br />
+										<small class="title-row">Amount Property(s) :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo number_format($amountProperty,0);?></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none;border-right: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ប្រភេទអចលទ្រព្យ");?> :</span><br />
+										<small class="title-row">Property Type :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['property_type_kh'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("លេខផ្លូវ");?> :</span><br />
+										<small class="title-row">Street :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['property_street'];?></span></div>
+								</li>
+								
+							</ul>
+						</td>
+						<td style="border-left: none; border-bottom: none;">
+							
+						</td>
+					</tr>
+					<tr>
+						<td style="border-right: none; border-top: none;">
+							<ul class="dataValue">
+								<li>
+									<span class="values-row-title">ព័ត៌មានដី / Land Information</span>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ទទឹង");?> :</span><br />
+										<small class="title-row">Width :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['property_width'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("បណ្ដោយ");?> :</span><br />
+										<small class="title-row">Length :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['property_height'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ទំហំ");?> :</span><br />
+										<small class="title-row">Size :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['land_size'];?> m<sup>2</sup></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none;border-right: none; border-top: none;">
+							<ul class="dataValue">
+								<li>
+									<span class="values-row-title">ព្រំប្រទល់ / Boundaries</span>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ខាងត្បូងជាប់");?> :</span><br />
+										<small class="title-row">South :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['border_south'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ខាងជើងជាប់");?> :</span><br />
+										<small class="title-row">North :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['border_north'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ខាងលិចជាប់");?> :</span><br />
+										<small class="title-row">West :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['border_west'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ខាងកើតជាប់");?> :</span><br />
+										<small class="title-row">East :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['border_east'];?></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none; border-top: none;">
+							<ul class="dataValue">
+								<li>
+									<span class="values-row-title">ព័ត៌មានផ្ទះ / House Information</span>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ទទឹង");?> :</span><br />
+										<small class="title-row">Width :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['houseWidth'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("បណ្ដោយ");?> :</span><br />
+										<small class="title-row">Length :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['houseHeight'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("ទំហំ");?> :</span><br />
+										<small class="title-row">Size :</small> 
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $this->agreement['houseFullSize'];?> m<sup>2</sup></span></div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+					
+				</table>
+							
+				
+			</div>
+    	</td>	
+</tr>
+</table>
+</div>

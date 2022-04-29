@@ -1091,4 +1091,23 @@ function rptContactListAction(){
 	  	$db_keycode = new Application_Model_DbTable_DbKeycode();
 	  	$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
 	}
+	
+	function rptSaleprofileAction()
+	{
+		$db  = new Report_Model_DbTable_DbParamater();
+		$id = $this->getRequest()->getParam("id");
+		$id = empty($id)?0:$id;
+  		
+  		$rsagreement = $db->getAgreementBySaleID($id);
+  		if (empty($rsagreement)){
+  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+  			exit();
+  		}
+	  	
+	  	$this->view->agreement = $rsagreement;
+	  	$this->view->lastSchedule =  $db->getLastRecordPaymentSchdule($id);
+	  	
+	  	$db_keycode = new Application_Model_DbTable_DbKeycode();
+	  	$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
+	}
 }

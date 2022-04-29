@@ -795,6 +795,11 @@ function getAllBranch($search=null){
     }
    function getAgreementBySaleID($id=null){//bppt,natha,longny,moul mith
     		$db = $this->getAdapter();
+			
+			$dbp = new Application_Model_DbTable_DbGlobal();
+			$currentUserId=$dbp->getUserId();
+			$currentUserId = empty($currentUserId)?0:$currentUserId;
+		
     		$sql="SELECT
 				  `s`.`id`              AS `id`,
 				  `s`.`sale_number`     AS `sale_number`,
@@ -820,6 +825,7 @@ function getAllBranch($search=null){
 				   s.amount_build,
 				   s.build_start,
 				   s.buy_date,
+				   s.`startcal_date`,
 				   s.`end_line`,
     			   s.validate_date,
 				   s.agreement_date,
@@ -830,6 +836,7 @@ function getAllBranch($search=null){
 				    s.witness_i,
 				    s.witness_ii,
 				   (SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE id = s.user_id LIMIT 1 ) AS user_name,
+				   (SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id = $currentUserId LIMIT 1 ) AS currentUserName,
 				   (SELECT co_khname FROM `ln_staff` WHERE co_id=s.staff_id LIMIT 1) AS staff_name,
 				   (SELECT name_kh FROM `ln_view` WHERE type=25 and key_code=s.payment_id limit 1) AS payment_type,
 				   
@@ -1021,9 +1028,13 @@ function getAllBranch($search=null){
 		   
 			`pp`.`land_size` AS `property_land_size`,
 			
+			 pp.`hardtitle`,
+			`pp`.`hardtitle` AS `layoutNumber`,
+			
 			`pp`.`width` AS `property_width`,
 		    `pp`.`height` AS `property_height`,
 		     pp.`land_size`,
+		    
 		     
 		    `pp`.`property_type`,
 		    `pp`.`type_tob`,
@@ -3912,4 +3923,22 @@ function getAllBranch($search=null){
     		
     		return $db->fetchRow($sql);
     }
+	
+	function getLastRecordPaymentSchdule($saleId){
+		$db=$this->getAdapter();
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$userId=$dbp->getUserId();
+		$sql = "SELECT 
+			sch.*,
+			(SELECT v.name_kh FROM ln_view AS v WHERE v.type =29 AND v.key_code = sch.ispay_bank LIMIT 1) AS lastPaymentTitle,
+			(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id = $userId LIMIT 1 ) AS currentUserName
+		FROM `ln_saleschedule` AS sch 
+		WHERE 
+			sch.sale_id = $saleId 
+			AND sch.status=1
+		ORDER BY sch.no_installment DESC 
+		LIMIT 1";
+		return $db->fetchRow($sql);
+	}
 }
