@@ -837,6 +837,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	if($this->currentlang()==2 OR $this->currentlang()==3){
   		$string = "name_en";
   	}
+	if(RECEIPT_TYPE==5){
+		if($type==2){
+			$string = " CONCAT(name_kh,' / ',name_en) ";
+		}
+	}
   	
   	$sql="SELECT id,key_code, $string AS name_en ,displayby FROM `ln_view` WHERE status =1 AND name_en!='' ";//just concate
   	if($type!=null){
@@ -1868,6 +1873,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   
   function getCollectPaymentSqlSt(){
+	  //(SELECT COUNT(ln_saleschedule.id) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=`crm`.`sale_id` LIMIT 1) As times,
   	$sql=" SELECT
 			  (SELECT
 			     `ln_project`.`project_name`
@@ -1911,21 +1917,17 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			  `crm`.`closing_note`                    AS `closing_note`,
 			  `sl`.`sale_number`                   AS `sale_number`,
 			  `sl`.`price_sold`                   AS `sold_price`,
-			  (SELECT COUNT(ln_saleschedule.id) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=`crm`.`sale_id` LIMIT 1) As times,
+			  `sl`.`total_duration`                   AS `times`,
 			  
 			  `l`.`land_code`                      AS `land_code`,
 			  `l`.`land_address`                   AS `land_address`,
 			  `l`.`land_size`                      AS `land_size`,
 			  `l`.`street`                         AS `street`,
 			  `l`.`id`                             AS `hous_id`,
-			  (SELECT
-			     `d`.`date_payment`
-			   FROM `ln_client_receipt_money_detail` `d`
-			   WHERE (`crm`.`id` = `d`.`crm_id`)
-			   ORDER BY `d`.`date_payment` ASC
-			   LIMIT 1) AS `date_payment`,
+			 
 			  `crm`.`payment_method`               AS `payment_methodid`,
 			  `crm`.`payment_method`               AS `payment_id`,
+			  `crm`.`date_payment`                 AS `date_payment`,
 			  
 			  `crm`.`void_reason`           AS `void_reason`,
 			  `crm`.`void_date`             AS `void_date`,
@@ -2252,6 +2254,18 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 				);
 		return $_gender_Opt;
 	
+	}
+	 public function getAllAmountBuild(){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="
+			SELECT 
+				DISTINCT(s.amount_build) AS value
+			FROM `ln_sale` AS s 
+			WHERE s.amount_build IS NOT NULL AND s.amount_build >0 
+		";
+		$order=" ORDER BY s.amount_build ASC ";
+		return $db->fetchAll($sql.$order);
 	}
 }
 ?>

@@ -765,6 +765,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	if($data['total_installamount']>0){
     		$field3 = 3;//monthly payment
     	}
+		$datePaymentForReceipt = $data['date_buy']; // set defualt
     	$array = array(
     			'branch_id'			=>$data['branch_id'],
     			'client_id'			=>$data['member'],
@@ -801,6 +802,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			//additional 26-Aug-2019
     			'payment_method'	=> empty($data['payment_method'])?1:$data['payment_method'],
     			'cheque'			=> empty($data['cheque'])?"N/A":$data['cheque'],
+				
+				'date_payment'			=> $datePaymentForReceipt,
     	);
     	
     	$this->_name='ln_client_receipt_money';
@@ -895,6 +898,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     			}
     			
     			$this->_name='ln_client_receipt_money_detail';
+				
+				$datePaymentForReceipt =$row['date_payment'];
     			$array = array(
     					'crm_id'				=>$crm_id,
     					'lfd_id'				=>$row['id'],
@@ -937,7 +942,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 	    		'total_principal_permonthpaid'=>$total_principal,
     			'allpaid_before'=>$total_principal,
 	    		'total_interest_permonth'	=>$total_interest,
-	    		'total_interest_permonthpaid'=>$total_interest
+	    		'total_interest_permonthpaid'=>$total_interest,
+				'date_payment'			=> $datePaymentForReceipt,
     			);
     		
     		$this->_name='ln_client_receipt_money';

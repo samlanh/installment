@@ -465,6 +465,35 @@ public function init()
 				'queryExpr'=>'*${0}*',));
 		$client_name->setValue($request->getParam("client_name"));
 		
+		$cancel_type = new Zend_Dojo_Form_Element_FilteringSelect('cancel_type');
+		$cancel_type->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true',
+				'onchange'=>'checkCancelType();'
+		));
+		$options= array(1=>$this->tr->translate('CANCEL_WITHOUT_RETURN'),2=>$this->tr->translate('CANCEL_WITH_RETURN_AMOUNT'));
+		$cancel_type->setMultiOptions($options);
+		
+		$condition_return = new Zend_Dojo_Form_Element_FilteringSelect('condition_return');
+		$condition_return->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>"false",
+				'onchange'=>'checkCondiction();'
+		));
+		$optForCondition = $db->getVewOptoinTypeByType(32,1,null,1);
+		$condition_return->setMultiOptions($optForCondition);
+		
+		$cancelTypeSearch = new Zend_Dojo_Form_Element_FilteringSelect('cancelTypeSearch');
+		$cancelTypeSearch->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true',
+		));
+		$options= array(0=>$this->tr->translate('PLEASE_SELECT'),1=>$this->tr->translate('CANCEL_WITHOUT_RETURN'),2=>$this->tr->translate('CANCEL_WITH_RETURN_AMOUNT'));
+		$cancelTypeSearch->setMultiOptions($options);
+		
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
 			$_cancel_code->setValue($data['cancel_code']);
@@ -478,6 +507,10 @@ public function init()
 			
 			$expense_date->setValue($data['expense_date']);
 			$cancel_date->setValue($data['create_date']);
+			
+			$cancel_type->setValue($data['cancel_type']);
+			$condition_return->setValue($data['condition_return']);
+			$expense_date->setValue($data['date_for_return']);
 		}
 		$this->addElements(array($plong_type,$cancel_date,$expense_date,$client_name,$land_id,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
@@ -489,7 +522,12 @@ public function init()
 				$_every_payamount,$_time,$_time_collect_pri,$_status,$_period
 				,$_pay_every,$_loan_code,$_collect_term,
 				$_customer_code,$_id,
-				$return_back
+				$return_back,
+				
+				$cancel_type,
+				$condition_return,
+				$cancelTypeSearch
+			
 				));
 		return $this;
 		

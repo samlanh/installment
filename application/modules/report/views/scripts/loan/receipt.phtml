@@ -25,6 +25,11 @@
 	if(MONTH_FORMATE_DATE_RECEIPT==1){
 		$montFomat="d-M-Y";
 	}
+	
+	$paymentMethod = $this->rs['payment_method'];
+	if(RECEIPT_TYPE==5){
+		$paymentMethod = $this->rs['payment_methodKhAndEng'];
+	}
 ?>
 <title><?php echo $tr->translate("RECEIPT");?></title>
  <style>
@@ -144,7 +149,7 @@ function printSave(){
 	dojo.byId("lbl_total_receive").innerHTML = '<?php echo "$ ".number_format($this->rs['recieve_amount'],2);?>';
 	dojo.byId("lb_buydate1").innerHTML = "<?php echo date($montFomat,strtotime($this->rs['date_payment']));?>";
 	dojo.byId("lbl_paid_date1").innerHTML = "<?php echo date($montFomat,strtotime($this->rs['date_pay']));?>";
-	dojo.byId("lbl_paymenttype").innerHTML = "<?php echo $this->rs['payment_method'];?>";
+	dojo.byId("lbl_paymenttype").innerHTML = "<?php echo $paymentMethod;?>";
 	dojo.byId("lbl_cheque").innerHTML = "<?php echo empty($this->rs['cheque'])?"N/A":$this->rs['cheque'];?>";
 
 	dojo.byId("lbl_priceSoldBefore").innerHTML = '<?php echo  "$ ".number_format($this->rs['price_before'],2);?>';

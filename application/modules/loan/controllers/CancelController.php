@@ -182,5 +182,26 @@ class Loan_CancelController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	
+	
+	function getSalecancleAction(){// by vandy get property code
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbCancel();
+			
+			$dataclient=$db->getCancelSaleReturnBack($data);
+			print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	}
+	function getCancelinfoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbCancel();
+			$dataclient=$db->getCancelById($data['id']);
+			print_r(Zend_Json::encode($dataclient));
+			exit();
+		}
+	}
 }
 

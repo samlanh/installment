@@ -50,6 +50,9 @@
 			</div>
 			<div class="form-group"> 
 				<div class="col-md-3 col-sm-3 col-xs-12">
+					<?php echo $frm->getElement('cancelTypeSearch');?>
+				</div>
+				<div class="col-md-3 col-sm-3 col-xs-12">
 					<?php echo $frm->getElement('from_date_search');?>
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-12">
@@ -119,19 +122,29 @@
 						                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 						            </tr>
 							      	<tr bgcolor="#a0baf5" class="style" align="center"  >
-										<td><?php echo $tr->translate("NUM");?></td>
+										<td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+										<td colspan="5"><?php echo $tr->translate("INFO_INDILOAN");?></td>
+										<td colspan="3"><?php echo $tr->translate("PAYMENT_INFO");?></td>
+										<td colspan="5"><?php echo $tr->translate("CANCEL_INFO");?></td>
+										
+									    <td rowspan="2"><?php echo $tr->translate("BY_USER");?></td>
+									</tr>
+									<tr bgcolor="#a0baf5" class="style" align="center"  >
 										<td><?php echo $tr->translate("PROJECT_NAME");?></td>
 										<td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 										<td><?php echo $tr->translate("PROPERTY_TYPE");?></td>
 										<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
 										<td><?php echo $tr->translate("SOLD_PRICE");?></td>
+										
 						                <td><?php echo $tr->translate("PAID");?></td>
 						                <td><?php echo $tr->translate("BALANCE");?></td>
 						                <td><?php echo $tr->translate("INSTALLMENT_PAID");?></td>
+										
+										<td><?php echo $tr->translate("DATE");?></td>
+										<td><?php echo $tr->translate("CANCEL_TYPE");?></td>
 						                <td><?php echo $tr->translate("RETURN_MONEY_BACK");?></td>
-									    <td><?php echo $tr->translate("DATE");?></td>
+						                <td><?php echo $tr->translate("PAID");?></td>
 									    <td><?php echo $tr->translate("REASON");?></td>
-									    <td><?php echo $tr->translate("BY_USER");?></td>
 									</tr>
 								</thead>
 						       <?php $property_type=''; $i=0; $total=0; 
@@ -149,16 +162,21 @@
 									 <td align="right" style="white-space: nowrap;"><?php echo number_format($row['paid_amount'],2);?></td>
 									 <td align="right" style="white-space: nowrap;"><?php echo number_format($row['price_sold']-$row['paid_amount'],2);?></td>
 									 <td align="center" style="white-space: nowrap;"><?php echo (empty($row['installment_paid'])?"កក់ដំបូង":$row['installment_paid']);?></td>
-									 <td align="right" ><?php echo number_format($row['return_back'],2);?></td>
+									
 									 <td align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($row['create_date']));?></td>
+									 <td align="left" ><?php echo $row['cancelTypeTitle'];?></td>
+									 <td align="right" ><?php if($row['cancel_type']==1){ echo "-";}else{ echo number_format($row['return_back'],2);}?></td>
+									 <td align="right" ><?php if($row['cancel_type']==1){ echo "-";}else{echo number_format($row['totalReturnPaid'],2);}?></td>
+									
 									 <td align="left" style="font-size: 10px;max-width:180px;white-space: pre-line;"><?php echo $row['reason'];?></td>
 									 <td align="center" ><?php echo $row['user_name'];?></td>
 								  </tr>
 								<?php 
-								$total = $total+$row['return_back'];
+								//$total = $total+$row['return_back'];
+								$total = $total+$row['totalReturnPaid'];
 						       }?>
 						       <tr style="height: 30px; font-weight:bold; text-align: center;background:#87acff;">
-									<td colspan="9" align="right"><?php echo $tr->translate("ប្រាក់ប្រគល់សរុប");?></td>
+									<td colspan="12" align="right"><?php echo $tr->translate("ប្រាក់ប្រគល់សរុប");?></td>
 									<td><?php echo number_format($total,2);?></td>
 									<td colspan="3">
 									</td>
