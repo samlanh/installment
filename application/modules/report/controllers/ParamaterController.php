@@ -1109,5 +1109,8 @@ function rptContactListAction(){
 	  	
 	  	$db_keycode = new Application_Model_DbTable_DbKeycode();
 	  	$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+  		$this->view->footerReport = $frmpopup->getFooterReport();
 	}
 }
