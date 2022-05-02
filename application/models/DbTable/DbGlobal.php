@@ -2255,6 +2255,160 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		return $_gender_Opt;
 	
 	}
+	function getSqlStLoanCollect(){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="
+		SELECT
+				  `pd`.`id`                      AS `id`,
+				  `pd`.`date_payment`            AS `date_payment`,
+				  `pd`.`amount_day`              AS `amount_day`,
+				  `pd`.`status`                  AS `status`,
+				  `pd`.`is_completed`            AS `is_completed`,
+				  `pd`.`begining_balance`        AS `begining_balance`,
+				  `pd`.`begining_balance_after`  AS `begining_balance_after`,
+				  SUM(`pd`.`principal_permonthafter`) AS `principal_permonthafter`,
+				  SUM(`pd`.`total_interest_after`)    AS `total_interest_after`,
+				  `pd`.`total_payment_after`     AS `total_payment_after`,
+				  `pd`.`ending_balance`          AS `ending_balance`,
+				  SUM(`pd`.`service_charge`)          AS `service_charge`,
+				  `pd`.`no_installment`          AS `no_installment`,
+				  `pd`.`last_optiontype`         AS `last_optiontype`,
+				  `pd`.`ispay_bank`         	 AS `ispay_bank`,
+				  COUNT(pd.id) 					AS amount_late,
+				  (SELECT p.`project_name` FROM `ln_project` AS p WHERE p.`br_id` = `s`.`branch_id` LIMIT 1) AS `branch_name`,
+				  
+				 
+				  `s`.`branch_id`                AS `branch_id`,
+				  `s`.`id`                       AS `sale_id`,
+				  `s`.`sale_number`              AS `sale_number`,
+				  `s`.`client_id`                AS `client_id`,
+				  `s`.`house_id`                 AS `house_id`,
+				  `s`.`price_before`             AS `price_before`,
+				  `s`.`price_sold`               AS `price_sold`,
+				  `s`.`discount_amount`          AS `discount_amount`,
+				  `s`.`admin_fee`                AS `admin_fee`,
+				  `s`.`other_fee`                AS `other_fee`,
+				  `s`.`paid_amount`              AS `paid_amount`,
+				  `s`.`balance`                  AS `balance`,
+				  `s`.`create_date`              AS `create_date`,
+				  `s`.`buy_date`                 AS `buy_date`,
+				  `s`.`startcal_date`            AS `startcal_date`,
+				  `s`.`first_payment`            AS `first_payment`,
+				  `s`.`validate_date`            AS `validate_date`,
+				  `s`.`end_line`                 AS `end_line`,
+				  `s`.`interest_rate`            AS `interest_rate`,
+				  `s`.`total_duration`           AS `total_duration`,
+				  `s`.`payment_id`               AS `payment_id`,
+				  `s`.`staff_id`                 AS `staff_id`,
+				  `s`.`expect_income_note`       AS `expect_income_note`,
+				  
+				  `l`.`land_code`                AS `land_code`,
+				  `l`.`land_address`             AS `land_address`,
+				  `l`.`street`                   AS `street`,
+				  `l`.`old_land_id`              AS `old_land_id`,
+				  
+				  (SELECT `c`.`phone` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `phone_number`,
+				  (SELECT `c`.`phone` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `phone`,
+				 
+				  (SELECT `c`.`client_number` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `client_number`,
+				  (SELECT `c`.`name_kh` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `client_name`,
+				  (SELECT `co`.`co_khname` FROM `ln_staff` `co` WHERE (`co`.`co_id` = `s`.`staff_id`) LIMIT 1) AS `co_name`,
+				  (SELECT cr.date_input FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id=pd.sale_id AND cr.recieve_amount>0 ORDER BY cr.date_input DESC LIMIT 1) As last_pay_date,
+				  (SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = pd.ispay_bank LIMIT 1) AS payment_type
+				   
+				
+		";
+		$where=" 
+				FROM ((`ln_saleschedule` `pd` JOIN `ln_sale` `s`) JOIN `ln_properties` `l`) 
+				WHERE `s`.`house_id` = `l`.`id`
+					   AND `s`.`status` = 1
+					   AND `s`.`is_cancel` = 0
+					   AND `pd`.`sale_id` = `s`.`id`
+					   AND `pd`.`status` = 1
+			";
+		$araa = array(
+				'sql'=>$sql,
+				'where'=>$where,
+				);
+		return $araa;
+			
+	}
+	function getSqlStExpectedIncome(){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="
+			SELECT
+			  `c`.`client_number`            AS `client_number`,
+			  `c`.`name_kh`                  AS `name_kh`,
+			  `c`.`phone`                    AS `phone`,
+			  
+			  (SELECT `ln_project`.`project_name` FROM `ln_project` WHERE (`ln_project`.`br_id` = `s`.`branch_id`) LIMIT 1) AS `branch_name`,
+			  
+			  `l`.`land_code`                AS `land_code`,
+			  `l`.`land_address`             AS `land_address`,
+			  `l`.`street`                   AS `street`,
+			  
+			  `s`.`sale_number`              AS `sale_number`,
+			  `s`.`branch_id`                AS `branch_id`,
+			  `s`.`client_id`                AS `client_id`,
+			  `s`.`price_before`             AS `price_before`,
+			  `s`.`price_sold`               AS `price_sold`,
+			  `s`.`discount_amount`          AS `discount_amount`,
+			  `s`.`other_fee`                AS `other_fee`,
+			  `s`.`paid_amount`              AS `paid_amount`,
+			  `s`.`buy_date`                 AS `buy_date`,
+			  `s`.`startcal_date`            AS `startcal_date`,
+			  `s`.`first_payment`            AS `first_payment`,
+			  `s`.`validate_date`            AS `validate_date`,
+			  `s`.`end_line`                 AS `end_line`,
+			  `s`.`interest_rate`            AS `interest_rate`,
+			  `s`.`total_duration`           AS `total_duration`,
+			  `s`.`payment_id`               AS `payment_id`,
+			  `s`.`expect_income_note`       AS `expect_income_note`,
+			  
+			  `sd`.`id`                      AS `id`,
+			  `sd`.`sale_id`                AS `sale_id`,
+			  `sd`.`penelize`                AS `penelize`,
+			  `sd`.`date_payment`            AS `date_payment`,
+			  `sd`.`amount_day`              AS `amount_day`,
+			  `sd`.`status`                  AS `status`,
+			  `sd`.`is_completed`            AS `is_completed`,
+			  `sd`.`begining_balance`        AS `begining_balance`,
+			  `sd`.`principal_permonthafter` AS `principal_permonthafter`,
+			  `sd`.`total_interest_after`    AS `total_interest_after`,
+			  `sd`.`total_payment_after`     AS `total_payment_after`,
+			  `sd`.`ending_balance`          AS `ending_balance`,
+			  `sd`.`principal_permonth`      AS `principal_permonth`,
+			  `sd`.`total_interest`          AS `total_interest`,
+			  `sd`.`total_payment`           AS `total_payment`,
+			  `sd`.`service_charge`          AS `service_charge`,
+			  `sd`.`no_installment`          AS `no_installment`,
+			  `sd`.`ispay_bank`          AS `ispay_bank`,
+			  `sd`.`last_optiontype`          AS `last_optiontype`,
+			  (SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = sd.ispay_bank LIMIT 1) AS payment_type,
+			(SELECT `ln_client_receipt_money`.`date_input`  FROM `ln_client_receipt_money` WHERE (`ln_client_receipt_money`.`land_id` = 1) ORDER BY `ln_client_receipt_money`.`date_input` DESC  LIMIT 1) AS `last_pay_date`
+			
+		";
+		$where=" 
+			FROM (((`ln_sale` `s` JOIN `ln_saleschedule` `sd`) JOIN `ln_properties` `l`) JOIN `ln_client` `c`)
+			WHERE `s`.`id` = `sd`.`sale_id`
+				   AND `l`.`id` = `s`.`house_id`
+				   AND `s`.`status` = 1
+				   AND `s`.`is_cancel` = 0
+				   AND `sd`.`status` = 1
+				   AND `c`.`client_id` = `s`.`client_id`
+			
+			";
+		$order = "GROUP BY `s`.`id`,`sd`.`date_payment`
+			ORDER BY `s`.`id`,`s`.`client_id`";
+		$araa = array(
+				'sql'=>$sql,
+				'where'=>$where,
+				'order'=>$order,
+				);
+		return $araa;
+	}
 	 public function getAllAmountBuild(){
 		$db = $this->getAdapter();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();

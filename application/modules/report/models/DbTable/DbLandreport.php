@@ -946,60 +946,63 @@ public function getAllOutstadingLoan($search=null){
       }
      
       public function getALLLoanExpectIncome($search=null){
-      	$from_date =(empty($search['start_date']))? '1': " date_payment >= '".$search['start_date']." 00:00:00'";
-      	$to_date = (empty($search['end_date']))? '1': " date_payment <= '".$search['end_date']." 23:59:59'";
-      	$where="";
+		  
+		  $dbp = new Application_Model_DbTable_DbGlobal();
+			$statement = $dbp->getSqlStExpectedIncome();
+			$sql= $statement['sql'];
+			$sql.="";
+			$where = $statement['where'];
+			
+      	$from_date =(empty($search['start_date']))? '1': " sd.date_payment >= '".$search['start_date']." 00:00:00'";
+      	$to_date = (empty($search['end_date']))? '1': " sd.date_payment <= '".$search['end_date']." 23:59:59'";
+      	$where.="";
       	
       	$db = $this->getAdapter();
-      	$sql = "SELECT *,
-      		(SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1 ) AS ispay_bank,
-      		(SELECT sch.sale_id FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1 ) AS sale_id,
-      		(SELECT sch.last_optiontype FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) AS last_optiontype,
-      		(SELECT s.expect_income_note FROM ln_sale AS s WHERE s.id =(SELECT sch.sale_id FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1 ) LIMIT 1) AS expect_income_note,
-			(SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) LIMIT 1) AS payment_type
-      	FROM `v_getexpectincome` WHERE 1 ";
+      
       	
       	$dbp = new Application_Model_DbTable_DbGlobal();
-      	$sql.=$dbp->getAccessPermission("branch_id");
+      	$sql.=$dbp->getAccessPermission("s.branch_id");
       	
       	if(!empty($search['adv_search'])){
 			$s_search = addslashes(trim($search['adv_search']));
-      	 	$s_where[] = " sale_number LIKE '%{$s_search}%'";
-      	 	$s_where[] = " land_code LIKE '%{$s_search}%'";
-      	 	$s_where[] = " land_address LIKE '%{$s_search}%'";
-      	 	$s_where[] = " street LIKE '%{$s_search}%'";
-      	 	$s_where[] = " client_number LIKE '%{$s_search}%'";
-      	 	$s_where[] = " phone LIKE '%{$s_search}%'";
-      	 	$s_where[] = " name_kh LIKE '%{$s_search}%'";
-      	 	$s_where[] = " price_sold LIKE '%{$s_search}%'";
-      	 	$s_where[] = " total_duration LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
+      	 	$s_where[] = " l.land_code LIKE '%{$s_search}%'";
+      	 	$s_where[] = " l.land_address LIKE '%{$s_search}
+			%'";
+      	 	$s_where[] = " l.street LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.client_number LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.phone LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
+			
+      	 	$s_where[] = " s.price_sold LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
       	 	$where .=' AND ( '.implode(' OR ',$s_where).')';
       	}
       	if($search['schedule_opt']>0){
-      		$where.= " AND payment_id = ".$search['schedule_opt'];
+      		$where.= " AND s.payment_id = ".$search['schedule_opt'];
       	}
       	if($search['client_name']>0){
-      		$where.= " AND client_id = ".$search['client_name'];
+      		$where.= " AND s.client_id = ".$search['client_name'];
       	}
       	if($search['branch_id']>0){
-      		$where.= " AND branch_id = ".$search['branch_id'];
+      		$where.= " AND s.branch_id = ".$search['branch_id'];
       	}
       	if(!empty($search['co_id'])){
-      		$where.= " AND staff_id = ".$search['co_id'];
+      		$where.= " AND s.staff_id = ".$search['co_id'];
       	}
       	if($search['is_completed']>-1){
-      		$where.= " AND is_completed = ".$search['is_completed'];
+      		$where.= " AND sd.is_completed = ".$search['is_completed'];
       	}
       	
       	if($search['stepoption']>0){
-      		$where.=" AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  ) = ".$search['stepoption'];
+      		$where.=" AND sd.ispay_bank = ".$search['stepoption'];
       	}else{
       		$where.= " AND ".$from_date." AND ".$to_date;
       		if ($search['stepoption']==0){
-      			$where.= " AND (SELECT sch.ispay_bank FROM `ln_saleschedule` AS sch WHERE sch.id = v_getexpectincome.id LIMIT 1  )=0";
+      			$where.= " AND sd.ispay_bank=0";
       		}
       	}
-      	$group_by = " GROUP BY id ORDER BY date_payment ASC ";
+      	$group_by = " GROUP BY sd.id ORDER BY sd.date_payment ASC ";
         $row = $db->fetchAll($sql.$where.$group_by);
         return $row;
       }
