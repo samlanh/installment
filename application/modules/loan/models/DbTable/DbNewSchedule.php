@@ -96,12 +96,22 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$data['date_buy']=date("Y-m-d");
     		$dbtable = new Application_Model_DbTable_DbGlobal();
     		$sale = $this->getSaleInfo($data['loan_number']);
+			
+			$propertyId = empty($data['land_code'])?$sale['house_id']:$data['land_code'];
+			$clientId 	= empty($data['member'])?$sale['client_id']:$data['member'];
+			
     		$array = array(
     				'branch_id'				=>$data['branch_id'],
     				'sale_id'				=>$data['loan_number'],
-    				'client_id'				=>$data['member'],
+					
+    				//'client_id'				=>$data['member'],
+					//'land_id'			    =>$data['land_code'],
+					
+					'client_id'				=>$clientId,
+					'land_id'			    =>$propertyId,
+					
     				'reschedule_date'		=>$data['date_buy'],
-    				'land_id'			    =>$data['land_code'],
+    				
     				'amount_before'			=>$data['total_sold'],
     				'paid_before'			=>$data['paid_before'],
     				'interestrate_before'	=>$sale['interest_rate'],

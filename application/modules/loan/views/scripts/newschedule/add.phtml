@@ -57,12 +57,7 @@
 						document.getElementById('table_row').style.background='#ff8a8a';
 						return false;
 					}
-					client = dijit.byId('member').get('value');
-					if (client=='' || client==-1){
-						alert('Please Select Client Name !');
-						dijit.byId('member').focus();
-						return false;
-					}
+					
 					rs = checkValidateDate();
 					if(rs==false){
              			 return false;			
@@ -337,24 +332,37 @@
 				                   </label>
 				                   <div class="col-md-7 col-sm-7 col-xs-12">
 				                    	<?php echo $frm->getElement('sale_code');?>
-				                   </div>
-				                </div>
-				                <div class="form-group">
-				                   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CUSTOMER_NAME");?> :
-				                   </label>
-				                   <div class="col-md-7 col-sm-7 col-xs-12">
-				                    	<input id="member" /> <?php //echo $frm->getElement('member');?>
+										<input dojoType="dijit.form.TextBox" class="fullside" id="member" name="member"  type="hidden">
 										<input dojoType="dijit.form.TextBox" class="fullside" id="joint_with" name="joint_with"  type="hidden">
-				                   </div>
-				                </div>
-				                <div class="form-group">
-				                   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?> :
-				                   </label>
-				                   <div class="col-md-7 col-sm-7 col-xs-12">
-				                    	<input id="land_code" />
+										
+										<input dojoType="dijit.form.TextBox"  id="land_code" name="land_code" type="hidden">
 										<input dojoType="dijit.form.TextBox"  id="propertype" name="propertype" type="hidden">
 				                   </div>
 				                </div>
+								<!--
+				                <div class="form-group">
+				                   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php //echo $tr->translate("CUSTOMER_NAME");?> :
+				                   </label>
+				                   <div class="col-md-7 col-sm-7 col-xs-12">
+				                    	<?php //echo $frm->getElement('member');?>
+										
+										<input id="member" /> 
+									
+										
+				                   </div>
+				                </div>
+								
+								<input id="land_code" />
+									
+				                <div class="form-group">
+				                   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php //echo $tr->translate("PROPERTY_CODE");?> :
+				                   </label>
+				                   <div class="col-md-7 col-sm-7 col-xs-12">
+				                    	
+										
+				                   </div>
+				                </div>
+								-->
 				                <div class="form-group">
 				                   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LAND_PRICE");?> :
 				                   </label>
@@ -688,10 +696,11 @@ function Balance(){
 }
 function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');
-	getAllPropertyBranch(branch_id);
-	getAllClientByBranch(branch_id);
+	//getAllPropertyBranch(branch_id);
+	//getAllClientByBranch(branch_id);
 	getAllSaleNumber(branch_id);
 }
+/*
 var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
 function getAllPropertyBranch(branch_id){//used
 	dojo.xhrPost({
@@ -709,6 +718,7 @@ function getAllPropertyBranch(branch_id){//used
 		}
 	});
 } 
+
 var url_getclient = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclientbybranch')); ?>';
 function getAllClientByBranch(branch_id){
 	dojo.xhrPost({
@@ -725,6 +735,7 @@ function getAllClientByBranch(branch_id){
 		}
 	});
 }
+*/
 var url_getloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloannumber')); ?>';
 function getLoanByBranch(){
 	branch_id = dijit.byId('branch_id').get('value');
@@ -741,6 +752,7 @@ function getLoanByBranch(){
 		},		    
 		handleAs:"json",
 		load: function(data) {
+			alert(data);
 			dijit.byId('sale_code').attr('value',data);
 		},
 		error: function(err) {
@@ -824,42 +836,10 @@ require(["dojo/ready"], function(ready){
 			checkScheduleOption();
 			dijit.byId('branch_id').set('readOnly',true);
 			dijit.byId('loan_number').set('readOnly',true);
+
 	});
-	new dijit.form.FilteringSelect({
-			store: property_store,//dojo.data.ObjectStore({objectStore: client_data}),
-			autoComplete: true,
-			required: false,		           
-			name: "land_code",
-			id: "land_code",
-			searchAttr: "name",
-			class: 'fullside',
-			required:true,
-			onChange: function() {
-				land_code = dijit.byId('land_code').get('value');
-				if(land_code==-1){
-				}else{
-					getlandinfo();
-				}
-		}
-			}, "land_code");
 	 
-	new dijit.form.FilteringSelect({
-	store: client_store,//dojo.data.ObjectStore({objectStore: client_data}),
-	autoComplete: true,
-	required: false,		           
-	name: "member",
-	id: "member",
-	searchAttr: "name",
-	required:true,
-	class: 'fullside',
-	onChange: function() {
-		member = dijit.byId('member').get('value');
-		if(member==-1){
-		}else{
-			getcustomerinfo(member);
-		}
-}
-	}, "member");
+	
 
 	new dijit.form.FilteringSelect({
 		store: co_store,//dojo.data.ObjectStore({objectStore: client_number}),
@@ -932,7 +912,6 @@ function getInfoByLoanNumber(){
 			discount_percent = parseFloat(data.discount_percent)*parseFloat(price_before)/100;
 			balance_before = parseFloat(price_before)-parseFloat(paid_amount)-parseFloat(discount_percent);
 			
-			
 			if(data.payment_id==1){
 				dijit.byId('sold_price').attr('value',data.price_sold);//ok
 				dijit.byId('balance_before').attr('value',data.price_sold);
@@ -944,6 +923,8 @@ function getInfoByLoanNumber(){
 			
 			dijit.byId('house_price').attr('value',parseFloat(data.paid_amount)+parseFloat(balance_before));
 			dijit.byId('land_price').attr('value',0);
+			
+			getlandinfo();
 		},
 		error: function(err) {
 			
@@ -1292,17 +1273,12 @@ var url_previewloan = '<?php echo $this->url(array('module'=>'loan','controller'
 function addPreviewLoan(){
 	r=0;
 	if(dijit.byId('frm_add_tran').validate()){
-		client = dijit.byId('member').get('value');
-		if (client=='' || client==-1){
-			alert('Please Select Client Name !');
-			dijit.byId('member').focus();
-			return false;
+		
+		schedule_opt = dijit.byId("schedule_opt").get("value");
+		if(schedule_opt==6){ 
+			identity = $("#identity").val(); if(identity==''){ alert("សូមបញ្ចូលប្រាក់ដែលអតិថិជននឹងត្រូវបង់!");addRow(); return false;}
 		}
-			schedule_opt = dijit.byId("schedule_opt").get("value");
-			if(schedule_opt==6){ 
-				identity = $("#identity").val(); if(identity==''){ alert("សូមបញ្ចូលប្រាក់ដែលអតិថិជននឹងត្រូវបង់!");addRow(); return false;}}
-			
-			loading();
+		loading();
 		dojo.xhrPost({
 		    url: url_previewloan,	
 			form: dojo.byId("frm_add_tran"),		    
