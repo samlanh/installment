@@ -2421,5 +2421,25 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$order=" ORDER BY s.amount_build ASC ";
 		return $db->fetchAll($sql.$order);
 	}
+	
+	 public function getAllContractIssuer(){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="
+			SELECT 
+				ci.id AS id,
+				CASE
+					WHEN  ci.nameKhWith IS NULL THEN ci.nameKh
+					WHEN  ci.nameKhWith ='' THEN ci.nameKh
+					ELSE CONCAT(COALESCE(ci.nameKh,''),' & ',COALESCE(ci.nameKhWith,'')) 
+					
+				END AS `name` 
+					
+			 FROM `ln_contract_issuer` AS ci 
+			 WHERE ci.status=1 
+		";
+		$order="  ORDER BY ci.id ASC ";
+		return $db->fetchAll($sql.$order);
+	}
 }
 ?>
