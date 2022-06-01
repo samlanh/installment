@@ -2666,7 +2666,10 @@ function getAllBranch($search=null){
 			(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
 			rp.layout_type,rp.date AS received_date,
 			(SELECT cl.name_kh FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS client_name,
-			(SELECT cl.phone FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS tel, ";
+			(SELECT cl.phone FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS tel, 
+			(SELECT s.price_sold FROM ln_sale AS s WHERE s.`id` = rp.`sale_id` LIMIT 1) AS price_sold, 
+			(SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=rp.sale_id LIMIT 1) AS totalPaid,
+			";
 		$sql.=" (SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
 			FROM 
 				`ln_properties` AS p

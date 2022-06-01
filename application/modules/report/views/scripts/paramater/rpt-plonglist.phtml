@@ -66,6 +66,9 @@
 				line-height: 22px;
 				width: 100%;
 			}
+			table.content-data tr td{
+				padding:0 1px;
+			}
 			table.content-data thead tr.style {
 			   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
 				background: #c1d0f3;
@@ -98,40 +101,55 @@
 	         </tr> 
 	   </table>
 	</div>
-     <table id="exportExcel" class="content-data" width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0; border:1px solid #000; border-collapse: collapse;" >
+     <table id="exportExcel" class="content-data" border="1"​ width="100%" cellspacing="0" >
 		     <thead>
 		     	<tr bgcolor="#c1d0f3" class="style hover" align="center">
-					<td style="border:1px solid #000;" rowspan="2"><?php echo $tr->translate("NUM");?></td>
-					<td style="border:1px solid #000;" rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-					<td style="border:1px solid #000;" rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-					<td style="border:1px solid #000;" rowspan="2"><?php echo $tr->translate("STREET_NO");?></td>
-					<td style="border:1px solid #000;" rowspan="2"><?php echo $tr->translate("PROPERTY_TYPE");?></td>
-					<td style="border:1px solid #000;" rowspan="2"><?php echo $tr->translate("HEAD_TITLE_NO");?></td>
-					<td style="border:1px solid #000;" rowspan="2"><?php echo $tr->translate("PLONG_STEP");?></td>
-					<td style="border:1px solid #000;" colspan="4"><?php echo $tr->translate("កិច្ចការការទទួល");?></td>
+					<td  rowspan="2"><?php echo $tr->translate("NUM");?></td>
+					<td  rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+					<td colspan="3"><span><?php echo $tr->translate("PROPERTY_INFO");?></span></td>
+					
+					<td colspan="2"><span><?php echo $tr->translate("INFO_INDILOAN");?></span></td>
+					<td colspan="2"><span><?php echo $tr->translate("HEAD_TITL_INFO");?></span></td>
+					
+					<td colspan="4"><?php echo $tr->translate("កិច្ចការការទទួល");?></td>
 				</tr>
 				<tr bgcolor="#c1d0f3" class="style hover" align="center">
-					<td style="border:1px solid #000;"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-					<td style="border:1px solid #000;"><?php echo $tr->translate("TEL");?></td>
-					<td style="border:1px solid #000;"><?php echo $tr->translate("LAYOUT_TYPE");?></td>
-					<td style="border:1px solid #000;"><?php echo $tr->translate("RECEIVED_DATE");?></td>
+					<td ><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					<td ><?php echo $tr->translate("STREET_NO");?></td>
+					<td ><?php echo $tr->translate("PROPERTY_TYPE");?></td>
+					
+					<td ><?php echo $tr->translate("SOLD_PRICE");?></td>
+					<td ><?php echo $tr->translate("PAID");?></td>
+					
+					<td><?php echo $tr->translate("HEAD_TITLE_NO");?></td>
+					<td><?php echo $tr->translate("PLONG_STEP");?></td>
+					
+					<td ><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+					<td ><?php echo $tr->translate("TEL");?></td>
+					<td ><?php echo $tr->translate("LAYOUT_TYPE");?></td>
+					<td ><?php echo $tr->translate("RECEIVED_DATE");?></td>
 				</tr>
 			</thead>
 			<?php 
 				$org_plong = 0;$processing_plong=0;$give_plong=0;
 				if(!empty($this->row))foreach($this->row as $key =>$row){?>
 					   <tr class="hover" style="font-size: 12px;border:1px solid #000; white-space: nowrap;line-height: 25px;" align="left">
-					     <td align="center" style="border:1px solid #000;">&nbsp;<?php echo $key+1; ?></td>
-					     <td align="center" style="border:1px solid #000;">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
-					     <td align="center" style="border:1px solid #000;">&nbsp;<?php echo $row['land_address'];?>&nbsp;</td>
-					     <td align="center" style="border:1px solid #000;">&nbsp;<?php echo $row['street'];?>&nbsp;</td>
-						 <td style="border:1px solid #000;">&nbsp;<?php echo $row['pro_type'];?></td>
-						 <td align="center" style="border:1px solid #000;">&nbsp;<?php echo $row['hardtitle'];?>&nbsp;</td>
-						 <td style="border:1px solid #000;">&nbsp;<?php echo $row['processing']; ?>&nbsp;</td>
-						 <td align="center" style="border:1px solid #000;">&nbsp;<?php echo $row['client_name'];?>&nbsp;</td>
-						 <td>&nbsp;<?php echo $row['tel']; ?></td>
-						 <td align="right" style="border:1px solid #000;">&nbsp;<?php echo $row['layout_type']; ?>&nbsp;</td>
-						 <td style="border:1px solid #000;" align="center">&nbsp;<?php echo empty($row['received_date'])?"":date("d-m-Y",strtotime($row['received_date'])); ?></td>
+					     <td align="center"><?php echo $key+1; ?></td>
+					     <td align="center"><?php echo $row['branch_name'];?></td>
+					     <td align="center"><?php echo $row['land_address'];?></td>
+					     <td align="center"><?php echo $row['street'];?></td>
+						
+						<td align="center"><?php echo $row['pro_type'];?></td>
+						<td align="center"><?php if(!empty($row['price_sold'])){ echo number_format($row['price_sold'],2);}else{ echo "-";} ?></td>
+					    
+						<td align="center"><?php if(!empty($row['totalPaid'])){ echo number_format($row['totalPaid'],2);}else{ echo "-";} ?></td>
+						
+						 <td align="center" style="border:1px solid #000;"><?php echo $row['hardtitle'];?></td>
+						 <td><?php echo $row['processing']; ?></td>
+						 <td><?php echo $row['client_name'];?></td>
+						 <td><?php echo $row['tel']; ?></td>
+						 <td align="center" ><?php echo $row['layout_type']; ?></td>
+						 <td align="center"><?php echo empty($row['received_date'])?"":date("d-m-Y",strtotime($row['received_date'])); ?></td>
 					 </tr>
 				<?php 
 					if(!empty($row['hardtitle']) AND empty($row['processing']) AND empty($row['layout_type'])){
