@@ -214,9 +214,13 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 		$dinnerroom = new Zend_Dojo_Form_Element_TextBox('dinnerroom');
 		$dinnerroom->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside',));
 		
-		$BuidingYear = new Zend_Dojo_Form_Element_TextBox('buidingyear');
-		$BuidingYear->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside',));
+		//$BuidingYear = new Zend_Dojo_Form_Element_TextBox('buidingyear');
+		//$BuidingYear->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside',));
 		
+		$BuidingYear = new Zend_Dojo_Form_Element_Textarea('buidingyear');
+		$BuidingYear->setAttribs(array('dojoType'=>'dijit.form.Textarea','class'=>'fullside',
+				'style'=>'width:96%;min-height:50px; font-size: 11px;'));
+				
 		$ParkingSpace = new Zend_Dojo_Form_Element_TextBox('parkingspace');
 		$ParkingSpace->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside',));
 		

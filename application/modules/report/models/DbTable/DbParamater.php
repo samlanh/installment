@@ -1053,6 +1053,7 @@ function getAllBranch($search=null){
  			 pp.`bedroom`,
  			 pp.dinnerroom,
  			 pp.buidingyear,
+ 			 pp.buidingyear AS periodBuildDescription,
  			 pp.`parkingspace`,
  			 pp.`note` as `property_note`,
 	(SELECT
