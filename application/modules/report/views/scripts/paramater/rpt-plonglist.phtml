@@ -16,7 +16,7 @@
 	dojo.require("dijit.form.DateTextBox");
 </script>
 <meta charset="utf-8">
-<title><?php echo $tr->translate("REPORT_PROPERTY");?></title>
+<title><?php echo $tr->translate("RPT_PLONG_LIST");?></title>
 <div class="reportblog">
 <form name="frm_rptstaff" action="" dojoType="dijit.form.Form" method="post">
 	<table style="margin: 0 auto;width: 100%;">
@@ -108,7 +108,7 @@
 					<td  rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
 					<td colspan="3"><span><?php echo $tr->translate("PROPERTY_INFO");?></span></td>
 					
-					<td colspan="2"><span><?php echo $tr->translate("INFO_INDILOAN");?></span></td>
+					<td colspan="3"><span><?php echo $tr->translate("INFO_INDILOAN");?></span></td>
 					<td colspan="2"><span><?php echo $tr->translate("HEAD_TITL_INFO");?></span></td>
 					
 					<td colspan="4"><?php echo $tr->translate("កិច្ចការការទទួល");?></td>
@@ -120,6 +120,7 @@
 					
 					<td ><?php echo $tr->translate("SOLD_PRICE");?></td>
 					<td ><?php echo $tr->translate("PAID");?></td>
+					<td ><?php echo $tr->translate("BALANCE");?></td>
 					
 					<td><?php echo $tr->translate("HEAD_TITLE_NO");?></td>
 					<td><?php echo $tr->translate("PLONG_STEP");?></td>
@@ -132,17 +133,29 @@
 			</thead>
 			<?php 
 				$org_plong = 0;$processing_plong=0;$give_plong=0;
-				if(!empty($this->row))foreach($this->row as $key =>$row){?>
+				if(!empty($this->row))foreach($this->row as $key =>$row){ 
+				$soldPrice = 0;
+				$totalPaid = 0;
+				$remain = 0;
+				if(!empty($row['price_sold'])){
+					$soldPrice = $row['price_sold'];
+				}
+				if(!empty($row['totalPaid'])){
+					$totalPaid = $row['totalPaid'];
+				}
+				$remain = $soldPrice-$totalPaid;
+			?>
 					   <tr class="hover" style="font-size: 12px;border:1px solid #000; white-space: nowrap;line-height: 25px;" align="left">
 					     <td align="center"><?php echo $key+1; ?></td>
 					     <td align="center"><?php echo $row['branch_name'];?></td>
+						 
 					     <td align="center"><?php echo $row['land_address'];?></td>
 					     <td align="center"><?php echo $row['street'];?></td>
-						
 						<td align="center"><?php echo $row['pro_type'];?></td>
-						<td align="center"><?php if(!empty($row['price_sold'])){ echo number_format($row['price_sold'],2);}else{ echo "-";} ?></td>
-					    
-						<td align="center"><?php if(!empty($row['totalPaid'])){ echo number_format($row['totalPaid'],2);}else{ echo "-";} ?></td>
+						
+						<td align="center"><?php if(!empty($soldPrice)){ echo number_format($soldPrice,2);}else{ echo "-";} ?></td>
+						<td align="center"><?php if(!empty($totalPaid)){ echo number_format($totalPaid,2);}else{ echo "-";} ?></td>
+						<td align="center"><?php if(!empty($totalPaid)){ if($remain<0){ echo "(".abs(number_format($remain,2)).")";}else{ echo number_format($remain,2);} }else{ echo "-";} ?></td>
 						
 						 <td align="center" style="border:1px solid #000;"><?php echo $row['hardtitle'];?></td>
 						 <td><?php echo $row['processing']; ?></td>
