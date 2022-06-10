@@ -1113,4 +1113,15 @@ function rptContactListAction(){
 		$frmpopup = new Application_Form_FrmPopupGlobal();
   		$this->view->footerReport = $frmpopup->getFooterReport();
 	}
+	
+	
+	function updatenoteLayoutpropertyAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Report_Model_DbTable_DbParamater();
+			$row = $db->updateNotePropertyLayoutNote($data);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
 }

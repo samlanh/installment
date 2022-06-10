@@ -2663,13 +2663,15 @@ function getAllBranch($search=null){
 		$sql = "SELECT p.`id`,
 			(SELECT project_name FROM ln_project WHERE br_id = p.`branch_id` limit 1) AS branch_name,
 			p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,p.hardtitle ,
+			p.noteForLayout ,
 			(SELECT ps.title FROM `ln_plongstep_option` AS ps,ln_processing_plong AS pr WHERE ps.id = pr.process_status AND `p`.`id` = `pr`.`property_id` LIMIT 1) AS processing,
 			(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
 			rp.layout_type,rp.date AS received_date,
 			(SELECT cl.name_kh FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS client_name,
 			(SELECT cl.phone FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS tel, 
-			(SELECT s.price_sold FROM ln_sale AS s WHERE s.`id` = rp.`sale_id` LIMIT 1) AS price_sold, 
-			(SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=rp.sale_id LIMIT 1) AS totalPaid,
+			
+			(SELECT s.price_sold FROM ln_sale AS s WHERE s.`house_id` = p.`id` AND s.`is_cancel`=0 AND s.`status`=1 ORDER BY s.id DESC LIMIT 1) AS price_sold, 
+			(SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=(SELECT s.id FROM ln_sale AS s WHERE s.`house_id` = p.`id` AND s.`is_cancel`=0 AND s.`status`=1 ORDER BY s.id DESC LIMIT 1) LIMIT 1) AS totalPaid,
 			";
 		$sql.=" (SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
 			FROM 
@@ -3942,5 +3944,27 @@ function getAllBranch($search=null){
 		ORDER BY sch.no_installment DESC 
 		LIMIT 1";
 		return $db->fetchRow($sql);
+	}
+	
+	
+	public function updateNotePropertyLayoutNote($data){
+		$db = $this->getAdapter();
+		$db->beginTransaction();
+		try{
+	
+			$arr = array(
+					'noteForLayout'=>$data['noted'],
+			);
+			$where=" id = ".$data['id'];
+			$this->_name="ln_properties";
+			$this->update($arr, $where);
+	
+			$db->commit();
+			return 1;
+		}catch (Exception $e){
+			$err =$e->getMessage();
+			Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			$db->rollBack();
+		}
 	}
 }
