@@ -261,7 +261,7 @@ class Issue_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
     	    	pr.sale_id = s.id
     	      AND `c`.`client_id` = `pr`.`customer_id`
               AND `p`.`id` = `pr`.`property_id`
-    		  AND pr.process_status=4 ";
+    		  AND pr.process_status=5 ";
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = addslashes(trim($search['adv_search']));
