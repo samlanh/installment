@@ -1118,6 +1118,10 @@ function getAllBranch($search=null){
     	`p`.`p_manager_namekh` AS `project_manager_namekh`,
     	`p`.`p_manager_nation_id` AS `project_manager_nation_id`,
     	`p`.`p_current_address` AS `project_manager_p_current_address`,
+		`p`.`branch_tel`,
+		`p`.`other` as p_other,
+		`p`.`p_dob` as pManagerDob,
+		`p`.`p_nationid_issue` as pManagerNationidIssue,
     	`c`.`name_kh` AS `client_namekh`,
     	c.hname_kh,
     	`c`.`nationality` AS `client_nationality`,
@@ -1129,8 +1133,13 @@ function getAllBranch($search=null){
     	c.dob,
     	c.dob_buywith,
     	c.phone,
+    	c.phone AS client_phone,
 		c.lphone AS w_client_phone,
     	c.dstreet AS w_street,
+    	c.client_issuedateid AS client_issuedateid,
+		
+		 (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=c.client_d_type limit 1) AS client_d_type,
+		 
 		(SELECT
     	`village`.`village_namekh`
     	FROM `ln_village` `village`
@@ -2663,7 +2672,7 @@ function getAllBranch($search=null){
 		$sql = "SELECT p.`id`,
 			(SELECT project_name FROM ln_project WHERE br_id = p.`branch_id` limit 1) AS branch_name,
 			p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,p.hardtitle ,
-			p.noteForLayout ,
+			p.noteForLayout,
 			(SELECT ps.title FROM `ln_plongstep_option` AS ps,ln_processing_plong AS pr WHERE ps.id = pr.process_status AND `p`.`id` = `pr`.`property_id` LIMIT 1) AS processing,
 			(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
 			rp.layout_type,rp.date AS received_date,
