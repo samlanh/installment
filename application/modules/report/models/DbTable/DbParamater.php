@@ -2679,14 +2679,14 @@ function getAllBranch($search=null){
 			(SELECT cl.name_kh FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS client_name,
 			(SELECT cl.phone FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS tel, 
 			
-			(SELECT s.price_sold FROM ln_sale AS s WHERE s.`house_id` = p.`id` AND s.`is_cancel`=0 AND s.`status`=1 ORDER BY s.id DESC LIMIT 1) AS price_sold, 
-			(SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=(SELECT s.id FROM ln_sale AS s WHERE s.`house_id` = p.`id` AND s.`is_cancel`=0 AND s.`status`=1 ORDER BY s.id DESC LIMIT 1) LIMIT 1) AS totalPaid,
+			s.price_sold,
+			(SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id LIMIT 1) AS totalPaid,
 			";
 		$sql.=" (SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
-			FROM 
-				`ln_properties` AS p
-			    LEFT JOIN ln_receiveplong AS rp
-			ON p.`id` = rp.`house_id` AND rp.`status`=1 WHERE p.`status`=1 ";
+			FROM `ln_properties` AS p
+			    LEFT JOIN ln_receiveplong AS rp ON p.`id` = rp.`house_id` AND rp.`status`=1 
+				LEFT JOIN ln_sale AS s ON s.`house_id` = p.`id` AND s.`is_cancel`=0 AND s.`status`=1 
+			WHERE p.`status`=1 ";
 	
 		$from_date =(empty($search['start_date']))? '1': " p.create_date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " p.create_date <= '".$search['end_date']." 23:59:59'";
