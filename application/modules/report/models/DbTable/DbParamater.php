@@ -2735,6 +2735,20 @@ function getAllBranch($search=null){
 			}
 		}
 		
+		$search['sale_status'] = empty($search['sale_status'])?0:$search['sale_status'];
+		if($search['sale_status']>0){
+			if($search['sale_status']==1){//full paid
+				$where.=" AND s.price_sold <= ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND rm.sale_id=s.id LIMIT 1)) ";
+			}else if($search['sale_status']==2){
+				$where.=" AND s.price_sold > ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND rm.sale_id=s.id LIMIT 1) ) ";
+			}else if($search['sale_status']==3){
+				$where.=" AND s.is_cancel = 0 ";
+			}else if($search['sale_status']==4){
+				$where.=" AND s.is_cancel = 1 ";
+			}else{
+			}
+		}
+		
 		$where.= " ORDER BY p.branch_id,p.`property_type`,p.`street` ASC, LENGTH(land_address), land_address ASC  ";
 		return $db->fetchAll($sql.$where);
 	}

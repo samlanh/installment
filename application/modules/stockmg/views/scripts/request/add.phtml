@@ -1,0 +1,275 @@
+<?php 
+     $this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
+     $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+     $frm = $this->frm;
+?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<style>
+#table tr td{
+	border:1px solid #cccccc;
+	text-align: center;
+}
+#table tr th{
+	background: #cccccc;
+	border:1px solid #ddd;
+}
+</style>
+<title><?php echo $this->tr->translate("CREATE_REQUEST_PO")?></title>
+ <div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CREATE_REQUEST_PO');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">   
+	  			 if(this.validate()) {
+					var rowId = $('#identity').val();
+					if(rowId==''){ 
+						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD_SETTING");?>");
+						return false;
+					}
+					loadingBlock();
+					return true;
+	  			 }else {
+					return false;
+	   			}
+			</script>
+			<div class="card-box">
+				<div class="col-md-4 col-sm-4 col-xs-12">
+		             <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("branch_id");?>
+		                </div>
+		             </div>
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_NO");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("requestNo");?>
+		                </div>
+		             </div>
+					  <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_NO_FROM");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("requestNoLetter");?>
+		                </div>
+		             </div>
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("date");?>
+		                </div>
+		             </div>
+					  <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PURPOSE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("purpose");?>
+		                </div>
+		             </div>
+		             <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("note");?>
+		                </div>
+		             </div>
+				</div>
+				<div class="col-md-8 col-sm-8 col-xs-12">
+					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
+						<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
+						 <div class="col-md-3 col-sm-3 col-xs-12">
+								<?php echo $frm->getElement("categoryId");?>
+						</div>
+						<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
+						<div class="col-md-3 col-sm-3 col-xs-12">
+							<input id="productId" />
+						</div>
+						
+					</div>
+						
+					<table class="collape tablesorter" id="table_row" style="width:100%; white-space: nowrap;border:1px solid #ddd;">
+				    	<tr id="head-title" class="head-td" align="center"></tr>
+					</table>
+					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
+					<input type="button" label="<?php echo $tr->translate('ADD_ROW');?>" dojoType="dijit.form.Button" 
+						iconClass="dijitIconEditProperty" onclick="addRow();" />
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="clearfix"></div>
+	       	<div class="card-box mt-20">
+               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE");?>" dojoType="dijit.form.Button" 
+						iconClass="dijitEditorIcon dijitEditorIconSave" />
+					<input type="submit" value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW");?>" dojoType="dijit.form.Button" 
+						iconClass="dijitEditorIcon dijitEditorIconSave" />
+               	</div>
+             </div>
+		</form>
+    </div>
+</div>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dojo.NodeList-manipulate");
+    dojo.require("dijit.form.Textarea");
+    dojo.require("dijit.form.NumberTextBox");
+    dojo.require("dijit.form.DateTextBox");
+	
+	var productStore  = getDataStorefromJSON('id','name', null );
+    require(["dojo/ready"], function(ready){
+		ready(function(){
+			onChageFunctionByBranch();
+		});
+
+	 
+	 
+		new dijit.form.FilteringSelect({
+			store: productStore,
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: false,		           
+			name: "productId",
+			placeHolder:'<?php echo $tr->translate('PRODUCT_NAME');?>',
+			id: "productId",
+			searchAttr: "name",
+			class: 'fullside',
+			required:true,
+			onChange: function() {
+				addRow();
+			}
+		}, "productId");
+	 });
+    
+	function onChageFunctionByBranch(){
+		getAllProduct();
+		getRequestNoByBranch();
+	}
+	var urlGetAllProduct = '<?php echo $this->url(array('module'=>'stockmg','controller'=>'request','action'=>'getallproduct')); ?>';
+	function getAllProduct(){
+		dijit.byId('productId').reset();
+		productStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('productId').set('store', productStore);
+		
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id<=0){
+			//alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+			//dijit.byId('branch_id').focus();
+			return false;
+		}
+		categoryId = dijit.byId('categoryId').get('value');
+		if(categoryId=='' || categoryId==0){
+			categoryId=0;
+		}
+		dojo.xhrPost({
+			url:urlGetAllProduct,	
+			content:{ 
+				'branch_id':branch_id,'categoryId':categoryId
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				productStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('productId').set('store', productStore);
+			},
+			error: function(err) {
+			}
+		});
+	}
+	var urlGetRequestNo = '<?php echo $this->url(array('module'=>'stockmg','controller'=>'request','action'=>'getrequestno')); ?>';
+	function getRequestNoByBranch(){
+		
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id<=0){
+			//alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+			//dijit.byId('branch_id').focus();
+			return false;
+		}
+		dateRequest = dijit.byId('date').get('value');
+		if(dateRequest==''){
+			alert('<?php echo $tr->translate('PLEASE_SELECT_DATE');?>');
+			dijit.byId('date').focus();
+			return false;
+		}
+			var a = new Date(dateRequest);
+			mm = a.getMonth()+1;
+			var dd = a.getDate();
+			 if(dd<10){
+				 dd = "0"+dd;
+			}
+			//month = returnMOnth(mm);
+			month=mm;
+			if(mm<10){
+				 month = "0"+mm;
+			}
+			
+			var y = a.getFullYear();
+			var dateRequest = dd +'-'+month+'-'+y ;
+	
+		dojo.xhrPost({
+			url:urlGetRequestNo,	
+			content:{ 
+				'branch_id':branch_id,'dateRequest':dateRequest
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				dijit.byId('requestNo').set('value', data);
+			},
+			error: function(err) {
+			}
+		});
+	} 	
+	
+	var dept_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+	dojo.ready(function(){ 
+		addRow();
+	});
+	var col= 0; var no=0;
+	var title = 0;
+	function addRow() {
+		col++;no++;
+		template='';
+		temp = "";
+	
+		if(title!=1){
+			temp+='<td><?php echo $tr->translate("DEL");?></td>';
+			temp+='<td><?php echo $tr->translate("N_O");?></td>';
+			temp+='<td><?php echo $tr->translate("AMOUNT_MONTH");?></td>';
+			temp+='<td><?php echo $tr->translate("INTEREST_VALUE");?></td>';
+			temp+='<td><?php echo $tr->translate("NOTE");?></td>';
+			dojo.query("#head-title").append(temp);
+			title=1;
+		}
+			
+		template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		template+='<td align="center" width="2%">'+no+'</td>';
+		template+='<td width="10%"><input required="required" dojoType="dijit.form.NumberTextBox" class="fullside" id="max_month'+col+'" name="max_month'+col+'" placeholder="'+'<?php echo $tr->translate("AMOUNT_MONTH");?>" value="" type="text"  ></td>';	
+		template+='<td width="10%"><input dojoType="dijit.form.TextBox" class="fullside" id="percent_value'+col+'" name="percent_value'+col+'" placeholder="'+'<?php echo $tr->translate("INTEREST_VALUE");?> " value="" type="text"  ></td>';	
+		template+='<td width="10%"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
+		
+		tmp='<tr id="row'+col+'">';
+		tmp+="</tr>";
+		dojo.query("#table_row").append(tmp);
+		if($("#identity").val()!="") {
+			var identity = $("#identity").val();
+			$("#identity").val(identity+','+col);
+		} else {$("#identity").val(col);}
+		dojo.html.set(dojo.byId("row"+col),template , {
+		     parseContent: true,
+		});
+	}
+	function deleteRecord(index) {
+		var identity = $('#identity').val();
+		var arrays = identity.split(',');
+		for(var i=0;i<arrays.length;i++) {
+			if(arrays[i] == index) arrays.splice(i,1);
+		}
+		var strings = arrays.join(',');
+		$('#identity').val(strings);
+		dojo.query("#row"+index).remove();
+	}
+	
+</script>
