@@ -22,6 +22,7 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		";
 		$sql.=$dbGb->caseStatusShowImage("rq.status");
 		$sql.=" FROM `st_request_po` AS rq WHERE 1 ";
+		
     	$where = "";
 		$from_date =(empty($search['start_date']))? '1': " rq.date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " rq.date <= '".$search['end_date']." 23:59:59'";
@@ -44,51 +45,72 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
     	$order=" ORDER BY rq.id DESC";
     	return $db->fetchAll($sql.$where.$order);
     }
-	public function addSetting($data){
+	public function addRequestPO($data){
     	$db= $this->getAdapter();
     	try{
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$data['dateRequest']=$data['date'];
+			$requestNo =$dbGBstock->generateRequestNo($data);
+			
     		$arr = array(
-    				'title'			=>$data['title'],
-    				'note'			=>$data['note'],
+    				'projectId'			=>$data['branch_id'],
+    				'requestNo'			=>$requestNo,
+    				'requestNoLetter'	=>$data['requestNoLetter'],
+    				'purpose'			=>$data['purpose'],
+    				'date'				=>$data['date'],
+    				'note'				=>$data['note'],
+										
     				'status'		=>1,
-    				'type'			=>1,
-    				'create_date'	=>date("Y-m-d H:i:s"),
-    				'modify_date'	=>date("Y-m-d H:i:s"),
-    				'user_id'		=>$this->getUserId(),
+    				'createDate'	=>date("Y-m-d H:i:s"),
+    				'modifyDate'	=>date("Y-m-d H:i:s"),
+    				'userId'		=>$this->getUserId(),
     		);
-    		$this->_name='rms_interestsetting';
+    		$this->_name='st_request_po';
     		$id = $this->insert($arr);
     		
     		if(!empty($data['identity'])){
 				$ids = explode(',', $data['identity']);
 				foreach ($ids as $i){
 					$arr = array(
-							'settin_id'	=>$id,
-							'max_month'			=>$data['max_month'.$i],
-							'percent_value'		=>$data['percent_value'.$i],
-							'note'	=>$data['note'.$i],
+							'requestId'		=>$id,
+							'proId'			=>$data['proId'.$i],
+							
+							'qtyRequest'	=>$data['qtyRequest'.$i],
+							'qtyAdjust'		=>$data['qtyRequest'.$i],
+							'qtyApproved'	=>$data['qtyRequest'.$i],
+							
+							'dateEntry'		=>$data['dateEntry'.$i],
+							'note'			=>$data['note'.$i],
+							
+							'createDate'	=>date("Y-m-d H:i:s"),
+							'modifyDate'	=>date("Y-m-d H:i:s"),
+							'userId'		=>$this->getUserId(),
 						);
-					$this->_name='rms_interestsetting_detail';	
+					$this->_name='st_request_po_detail';	
 					$this->insert($arr);
 				}
     		}
     	}catch(Exception $e){
-    		Application_Form_FrmMessage::message("APPLICATION_ERROR");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
     	}
 	}
 	
-	public function editSettingID($data){
+	public function editRequestPO($data){
 		$db= $this->getAdapter();
 		try{
 			$arr = array(
-    				'title'			=>$data['title'],
-    				'note'			=>$data['note'],
+    				'projectId'			=>$data['branch_id'],
+    				'requestNoLetter'	=>$data['requestNoLetter'],
+    				'purpose'			=>$data['purpose'],
+    				'date'				=>$data['date'],
+    				'note'				=>$data['note'],
+										
     				'status'		=>$data['status'],
-    				'modify_date'	=>date("Y-m-d H:i:s"),
-    				'user_id'		=>$this->getUserId(),
+    				'modifyDate'	=>date("Y-m-d H:i:s"),
+    				'userId'		=>$this->getUserId(),
     		);
-    		$this->_name='rms_interestsetting';
+    		$this->_name='st_request_po';
 			$where=" id = ".$data['id'];
 			$this->update($arr, $where);
 			
@@ -99,18 +121,18 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 			if (!empty($identitys)){
 				foreach ($identitys as $i){
 					if (empty($detailId)){
-						if (!empty($data['detailid'.$i])){
-							$detailId = $data['detailid'.$i];
+						if (!empty($data['detailId'.$i])){
+							$detailId = $data['detailId'.$i];
 						}
 					}else{
-						if (!empty($data['detailid'.$i])){
-							$detailId= $detailId.",".$data['detailid'.$i];
+						if (!empty($data['detailId'.$i])){
+							$detailId= $detailId.",".$data['detailId'.$i];
 						}
 					}
 				}
 			}
-			$this->_name='rms_interestsetting_detail';
-			$where = 'settin_id = '.$id;
+			$this->_name='st_request_po_detail';
+			$where = 'requestId = '.$id;
 			if (!empty($detailId)){
 				$where.=" AND id NOT IN ($detailId) ";
 			}
@@ -119,46 +141,71 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 			if(!empty($data['identity'])){
 				$ids = explode(',', $data['identity']);
 				foreach ($ids as $i){
-					if (!empty($data['detailid'.$i])){
+					if (!empty($data['detailId'.$i])){
 						$arr = array(
-							'settin_id'	=>$id,
-							'max_month'			=>$data['max_month'.$i],
-							'percent_value'		=>$data['percent_value'.$i],
-							'note'	=>$data['note'.$i],
+							'requestId'		=>$id,
+							'proId'			=>$data['proId'.$i],
+							
+							'qtyRequest'	=>$data['qtyRequest'.$i],
+							'qtyAdjust'		=>$data['qtyRequest'.$i],
+							'qtyApproved'	=>$data['qtyRequest'.$i],
+							
+							'dateEntry'		=>$data['dateEntry'.$i],
+							'note'			=>$data['note'.$i],
+							
+							'modifyDate'	=>date("Y-m-d H:i:s"),
+							'userId'		=>$this->getUserId(),
 						);
-						$this->_name='rms_interestsetting_detail';
-						$where =" id =".$data['detailid'.$i];
+						
+							
+							
+						$this->_name='st_request_po_detail';
+						$where =" id =".$data['detailId'.$i];
 						$this->update($arr, $where);
 					}else{
 						$arr = array(
-							'settin_id'	=>$id,
-							'max_month'			=>$data['max_month'.$i],
-							'percent_value'		=>$data['percent_value'.$i],
-							'note'	=>$data['note'.$i],
+							'requestId'		=>$id,
+							'proId'			=>$data['proId'.$i],
+							
+							'qtyRequest'	=>$data['qtyRequest'.$i],
+							'qtyAdjust'		=>$data['qtyRequest'.$i],
+							'qtyApproved'	=>$data['qtyRequest'.$i],
+							
+							'dateEntry'		=>$data['dateEntry'.$i],
+							'note'			=>$data['note'.$i],
+							
+							'createDate'	=>date("Y-m-d H:i:s"),
+							'modifyDate'	=>date("Y-m-d H:i:s"),
+							'userId'		=>$this->getUserId(),
 						);
-						$this->_name='rms_interestsetting_detail';
+						$this->_name='st_request_po_detail';
 						$this->insert($arr);
 					}
 				}
 			}
     	}catch(Exception $e){
-    		Application_Form_FrmMessage::message("APPLICATION_ERROR");
 	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
     	}
 	}
-	function getSettingById($id=null){
+	function getRequestPOById($id=null){
 		$db = $this->getAdapter();
-		$sql=" SELECT * FROM rms_interestsetting WHERE 1 AND type =1 ";
+		$sql=" SELECT * FROM st_request_po WHERE 1 ";
 		if (!empty($id)){
 			$sql.=" AND id = $id LIMIT 1";
 		}
 		return $db->fetchRow($sql);
 	}
-	function getSettingDetailById($id=null){
+	function getRequestPODetailById($id=null){
 		$db = $this->getAdapter();
-		$sql=" SELECT * FROM `rms_interestsetting_detail` WHERE 1 ";
+		$sql=" 	SELECT 
+					rqd.*,p.proCode,
+					p.proName,
+					0 AS currentQty,
+					'Kg' AS measureTitle 
+				FROM `st_request_po_detail` as rqd, `st_product` AS p WHERE p.proId = rqd.proId ";
 		if (!empty($id)){
-			$sql.=" AND settin_id = $id";
+			$sql.=" AND rqd.requestId = $id";
 		}
 		return $db->fetchAll($sql);
 	}

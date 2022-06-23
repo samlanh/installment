@@ -4,13 +4,13 @@
      $frm = $this->frm;
 ?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
-<title><?php echo $this->tr->translate("CREATE_REQUEST_PO")?></title>
+<title><?php echo $this->tr->translate("EDIT_REQUEST_PO")?></title>
  <div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CREATE_REQUEST_PO');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_REQUEST_PO');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
@@ -42,6 +42,7 @@
 		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
 		                <div class="col-md-7 col-sm-7 col-xs-12">
 		                	<?php echo $frm->getElement("branch_id");?>
+		                	<?php echo $frm->getElement("id");?>
 		                </div>
 		             </div>
 					 <div class="form-group">
@@ -74,6 +75,12 @@
 		                	<?php echo $frm->getElement("note");?>
 		                </div>
 		             </div>
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("status");?>
+		                </div>
+		             </div>
 				</div>
 				<div class="col-md-8 col-sm-8 col-xs-12">
 					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
@@ -99,16 +106,23 @@
 			<div class="clearfix"></div>
 	       	<div class="card-box mt-20">
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE");?>" dojoType="dijit.form.Button" 
+               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button" 
 						iconClass="dijitEditorIcon dijitEditorIconSave" />
-					<input type="submit" value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW");?>" dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />
+				
                	</div>
              </div>
 		</form>
     </div>
 </div>
 <style>
+#table tr td{
+	border:1px solid #cccccc;
+	text-align: center;
+}
+#table tr th{
+	background: #cccccc;
+	border:1px solid #ddd;
+}
 table#table_row td.productName {
     font-size: 12px;
     line-height: 14px;
@@ -122,14 +136,7 @@ table#table_row td.currentQty {
 tr.rowData {
     border-bottom: solid 2px #02014a;
 }
-#table tr td{
-	border:1px solid #cccccc;
-	text-align: center;
-}
-#table tr th{
-	background: #cccccc;
-	border:1px solid #ddd;
-}
+
 </style>
 <script type="text/javascript">
 	dojo.require("dojo.data.ItemFileWriteStore");  
@@ -141,6 +148,7 @@ tr.rowData {
 	var productStore  = getDataStorefromJSON('id','name', null );
     require(["dojo/ready"], function(ready){
 		ready(function(){
+			initailize();
 			onChageFunctionByBranch();
 		});
 
@@ -165,7 +173,7 @@ tr.rowData {
     
 	function onChageFunctionByBranch(){
 		getAllProduct();
-		getRequestNoByBranch();
+		//getRequestNoByBranch();
 	}
 	var urlGetAllProduct = '<?php echo $this->url(array('module'=>'stockmg','controller'=>'request','action'=>'getallproduct')); ?>';
 	function getAllProduct(){
@@ -328,5 +336,42 @@ tr.rowData {
 		$('#identity').val(strings);
 		dojo.query("#row"+index).remove();
 	}
-	
+	function initailize() {
+		<?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $rs){?>
+		col++;no++;
+		template='';
+		temp = "";
+		if(title!=1){
+			temp+='<td><?php echo $tr->translate("DEL");?></td>';
+			temp+='<td><?php echo $tr->translate("N_O");?></td>';
+			temp+='<td><?php echo $tr->translate("PRODUCT_NAME");?></td>';
+			temp+='<td class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></td>';
+			temp+='<td><?php echo $tr->translate("QTY_REQUEST");?></td>';
+			temp+='<td><?php echo $tr->translate("DATE_ENTRY");?></td>';
+			temp+='<td><?php echo $tr->translate("NOTE");?></td>';
+			dojo.query("#head-title").append(temp);
+			title=1;
+		}
+		
+		template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		template+='<td align="center" width="2%">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
+		template+='<td class="productName" ><?php echo $rs['proCode'];?><br /><?php echo $rs['proName'];?><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
+		template+='<td class="currentQty"  width="10%"><?php echo $rs['currentQty'];?> (<?php echo $rs['measureTitle'];?>)</td>';	
+		template+='<td width="20%"><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="<?php echo $rs['qtyRequest'];?>" type="text"  ></td>';	
+		template+='<td width="20%"><input dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateEntry'+col+'" name="dateEntry'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['dateEntry']));?>" type="text"  ></td>';	
+		template+='<td width="20%"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="<?php echo $rs['note'];?>" type="text"  ></td>';	
+				
+
+		tmp='<tr class="rowData" id="row'+col+'">';
+		tmp+="</tr>";
+		dojo.query("#table_row").append(tmp);
+		if($("#identity").val()!="") {
+			var identity = $("#identity").val();
+			$("#identity").val(identity+','+col);
+		} else {$("#identity").val(col);}
+		dojo.html.set(dojo.byId("row"+col),template , {
+		     parseContent: true,
+		});
+		<?php }?>
+	}
 </script>

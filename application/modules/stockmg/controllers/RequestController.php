@@ -23,8 +23,7 @@ class Stockmg_RequestController extends Zend_Controller_Action {
     		$this->view->search = $search;
 			$db = new Stockmg_Model_DbTable_DbRequest();
 			$rs_rows = $db->getAllRequestPO($search);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
+			
 			$list = new Application_Form_Frmtable();
     		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","DATE","USER","STATUS");
     		$link=array(
@@ -49,7 +48,7 @@ class Stockmg_RequestController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
-	    		$db->addSetting($data);
+	    		$db->addRequestPO($data);
 	    		if(isset($data['save_close'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 				}else{
@@ -72,20 +71,20 @@ class Stockmg_RequestController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
-	    		$db->editSettingID($data);
+	    		$db->editRequestPO($data);
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 	    	}catch(Exception $e){
 	    		Application_Form_FrmMessage::message("APPLICATION_ERROR");
 	    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	    	}
     	}
-    	$row = $db->getSettingById($id);
+    	$row = $db->getRequestPOById($id);
     	if (empty($row)){
     		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
     		exit();
     	}
     	$this->view->row = $row;
-    	$this->view->rowdetail = $db->getSettingDetailById($id);
+    	$this->view->rowdetail = $db->getRequestPODetailById($id);
     	
     	$frm = new Stockmg_Form_FrmRequest();
     	$frm->FrmRequestPO($row);
@@ -97,13 +96,24 @@ class Stockmg_RequestController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Application_Model_DbTable_DbGlobalStock();
-			$_row =$db->getAllProductByBranch($data);
+			$_row =$db->getAllProduct($data);
 			
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 			array_unshift($_row,array(
 					'id' => 0,
 					'name' => $tr->translate("SELECT_PRODUCT"),
 			) );
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
+	
+	function productinfoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$_row =$db->getProductInfoByLocation($data);
 			print_r(Zend_Json::encode($_row));
 			exit();
 			
@@ -120,4 +130,6 @@ class Stockmg_RequestController extends Zend_Controller_Action {
 			
 		}
 	}
+	
+	
 }
