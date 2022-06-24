@@ -25,7 +25,7 @@ class Stockmg_RequestController extends Zend_Controller_Action {
 			$rs_rows = $db->getAllRequestPO($search);
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","DATE","USER","STATUS");
+    		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","DATE","CHECKING_STATUS","CHECKING_BY","USER","STATUS");
     		$link=array(
     				'module'=>'stockmg','controller'=>'request','action'=>'edit',
     		);

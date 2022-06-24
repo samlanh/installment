@@ -80,6 +80,31 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
     			'required'=>'true',
     			'missingMessage'=>'Invalid Module!',
     			'class'=>'fullside height-text',));
+			
+
+		$checkingDate = new Zend_Dojo_Form_Element_DateTextBox('checkingDate');
+ 		$checkingDate->setAttribs(array(
+ 			'dojoType'=>'dijit.form.DateTextBox',
+ 			'class'=>'fullside',
+ 			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+ 		));
+		$checkingDate->setValue(date("Y-m-d"));
+		
+		$_arrSta = array(0=>$this->tr->translate("PENDING"),1=>$this->tr->translate("APPROVED"),2=>$this->tr->translate("REJECTED"));
+    	$checkingStatus = new Zend_Dojo_Form_Element_FilteringSelect("checkingStatus");
+    	$checkingStatus->setMultiOptions($_arrSta);
+    	$checkingStatus->setAttribs(array(
+    			'dojoType'=>'dijit.form.FilteringSelect',
+    			'required'=>'true',
+    			'missingMessage'=>'Invalid Module!',
+    			'class'=>'fullside height-text',));
+				
+		$checkingNote=  new Zend_Form_Element_Textarea('checkingNote');
+    	$checkingNote->setAttribs(array(
+    			'dojoType'=>'dijit.form.Textarea',
+    			'class'=>'fullside',
+    			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
+				
     	
     	$id = new Zend_Form_Element_Hidden('id');
     	$id->setAttribs(array(
@@ -103,13 +128,36 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
     	if(!empty($data)){
 			
 			$branch_id->setValue($data["projectId"]);
+			$branch_id->setAttribs(array(
+				'readOnly'=>'readOnly',
+			));
 			$requestNo->setValue($data["requestNo"]);
 			$requestNoLetter->setValue($data["requestNoLetter"]);
 			$purpose->setValue($data["purpose"]);
 			$note->setValue($data["note"]);
 			$date->setValue($data["date"]);
+			$date->setAttribs(array(
+				'readOnly'=>'readOnly',
+			));
 			$_status->setValue($data["status"]);
 			$id->setValue($data["id"]);
+			if(!empty($data["checkingRequest"])){
+				$requestNoLetter->setAttribs(array(
+				'readOnly'=>'readOnly',
+				));
+				$purpose->setAttribs(array(
+				'readOnly'=>'readOnly',
+				));
+				$note->setAttribs(array(
+				'readOnly'=>'readOnly',
+				));
+			}
+			if(!empty($data["checkingDate"])){
+			$checkingDate->setValue($data["checkingDate"]);
+			}
+			$checkingStatus->setValue($data["checkingStatus"]);
+			$checkingNote->setValue($data["checkingNote"]);
+			
     		
     	}
     	
@@ -123,7 +171,10 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
     			$_status,
     			$id,
 				
-				$categoryId
+				$categoryId,
+				$checkingDate,
+				$checkingStatus,
+				$checkingNote,
     			
     			));
     	return $this;

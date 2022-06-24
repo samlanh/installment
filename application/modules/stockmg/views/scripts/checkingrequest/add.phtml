@@ -4,13 +4,13 @@
      $frm = $this->frm;
 ?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
-<title><?php echo $this->tr->translate("EDIT_REQUEST_PO")?></title>
+<title><?php echo $this->tr->translate("CHEKING_REQUEST_PO")?></title>
  <div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_REQUEST_PO');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CHEKING_REQUEST_PO');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
@@ -58,7 +58,7 @@
 		                </div>
 		             </div>
 					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_DATE");?> </label>
 		                <div class="col-md-7 col-sm-7 col-xs-12">
 		                	<?php echo $frm->getElement("date");?>
 		                </div>
@@ -75,26 +75,32 @@
 		                	<?php echo $frm->getElement("note");?>
 		                </div>
 		             </div>
-					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("status");?>
-		                </div>
-		             </div>
+					 
 				</div>
 				<div class="col-md-8 col-sm-8 col-xs-12">
-					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
-						<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
-						 <div class="col-md-3 col-sm-3 col-xs-12">
-								<?php echo $frm->getElement("categoryId");?>
-						</div>
-						<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
-						<div class="col-md-3 col-sm-3 col-xs-12">
-							<input id="productId" />
-						</div>
-						
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<div class="form-group">
+							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("FEEDBACK");?> </label>
+							<div class="col-md-7 col-sm-7 col-xs-12">
+								<?php echo $frm->getElement("checkingNote");?>
+							</div>
+						 </div>
+						 <div class="form-group">
+							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
+							<div class="col-md-7 col-sm-7 col-xs-12">
+								<?php echo $frm->getElement("checkingDate");?>
+							</div>
+						 </div>	
+						<div class="form-group">
+							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
+							<div class="col-md-7 col-sm-7 col-xs-12">
+								<?php echo $frm->getElement("checkingStatus");?>
+							</div>
+						 </div>	
 					</div>
-						
+					<div class="col-md-6 col-sm-6 col-xs-12">
+					</div>
+					
 					<table class="collape tablesorter" id="table_row" style="width:100%; white-space: nowrap;border:1px solid #ddd;">
 				    	<tr id="head-title" class="head-td" align="center"></tr>
 					</table>
@@ -152,177 +158,20 @@ tr.rowData {
 			onChageFunctionByBranch();
 		});
 
-	 
-	 
-		new dijit.form.FilteringSelect({
-			store: productStore,
-			autoComplete: false,
-			queryExpr: "*${0}*",
-			required: false,		           
-			name: "productId",
-			placeHolder:'<?php echo $tr->translate('PRODUCT_NAME');?>',
-			id: "productId",
-			searchAttr: "name",
-			class: 'fullside',
-			required:true,
-			onChange: function() {
-				addRowProductRequest();
-			}
-		}, "productId");
 	 });
     
 	function onChageFunctionByBranch(){
-		getAllProduct();
+		//getAllProduct();
 		//getRequestNoByBranch();
 	}
-	var urlGetAllProduct = '<?php echo $this->url(array('module'=>'stockmg','controller'=>'request','action'=>'getallproduct')); ?>';
-	function getAllProduct(){
-		dijit.byId('productId').reset();
-		productStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
-		dijit.byId('productId').set('store', productStore);
-		
-		branch_id = dijit.byId('branch_id').get('value');
-		if(branch_id=='' || branch_id<=0){
-			//alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
-			//dijit.byId('branch_id').focus();
-			branch_id = 0;
-			//return false;
-		}
-		categoryId = dijit.byId('categoryId').get('value');
-		if(categoryId=='' || categoryId==0){
-			categoryId=0;
-		}
-		dojo.xhrPost({
-			url:urlGetAllProduct,	
-			content:{ 
-				'branch_id':branch_id,'categoryId':categoryId
-			},		    
-			handleAs:"json",
-			load: function(data) {
-				productStore  = getDataStorefromJSON('id','name', data);		
-				dijit.byId('productId').set('store', productStore);
-			},
-			error: function(err) {
-			}
-		});
-	}
-	var urlGetRequestNo = '<?php echo $this->url(array('module'=>'stockmg','controller'=>'request','action'=>'getrequestno')); ?>';
-	function getRequestNoByBranch(){
-		
-		branch_id = dijit.byId('branch_id').get('value');
-		if(branch_id=='' || branch_id<=0){
-			//alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
-			//dijit.byId('branch_id').focus();
-			return false;
-		}
-		dateRequest = dijit.byId('date').get('value');
-		if(dateRequest==''){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_DATE');?>');
-			dijit.byId('date').focus();
-			return false;
-		}
-			var a = new Date(dateRequest);
-			mm = a.getMonth()+1;
-			var dd = a.getDate();
-			 if(dd<10){
-				 dd = "0"+dd;
-			}
-			//month = returnMOnth(mm);
-			month=mm;
-			if(mm<10){
-				 month = "0"+mm;
-			}
-			
-			var y = a.getFullYear();
-			var dateRequest = dd +'-'+month+'-'+y ;
 	
-		dojo.xhrPost({
-			url:urlGetRequestNo,	
-			content:{ 
-				'branch_id':branch_id,'dateRequest':dateRequest
-			},		    
-			handleAs:"json",
-			load: function(data) {
-				dijit.byId('requestNo').set('value', data);
-			},
-			error: function(err) {
-			}
-		});
-	} 	
+	
 	var col= 0; var no=0;
 	var title = 0;
 	var urlGetProductInfo = '<?php echo $this->url(array('module'=>'stockmg','controller'=>'request','action'=>'productinfo')); ?>';
 	function addRowProductRequest(){
-		col++;no++;
-		template='';
-		temp = "";
-	
-		if(title!=1){
-			temp+='<td><?php echo $tr->translate("DEL");?></td>';
-			temp+='<td><?php echo $tr->translate("N_O");?></td>';
-			temp+='<td><?php echo $tr->translate("PRODUCT_NAME");?></td>';
-			temp+='<td class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></td>';
-			temp+='<td><?php echo $tr->translate("QTY_REQUEST");?></td>';
-			temp+='<td><?php echo $tr->translate("DATE_ENTRY");?></td>';
-			temp+='<td><?php echo $tr->translate("NOTE");?></td>';
-			dojo.query("#head-title").append(temp);
-			title=1;
-		}
 		
-		branch_id = dijit.byId('branch_id').get('value');
-		if(branch_id=='' || branch_id<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
-			dijit.byId('branch_id').focus();
-			return false;
-		}
-		productId = dijit.byId('productId').get('value');
-		if(productId=='' || productId<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>');
-			dijit.byId('productId').focus();
-			return false;
-		}
 		
-		var iden = $("#identity").val();
-		var arrays = iden.split(',');
-		 if(arrays!=""){
-			 for(var i=0;i< arrays.length;i++) {
-				 readychoose = dijit.byId('proId'+arrays[i]).get('value');
-				 if(readychoose==productId){
-					 alert("<?php echo $tr->translate("Choosen ready")?>");
-					 return false;
-				 }
-			}
-		}
-	
-		dojo.xhrPost({
-			url:urlGetProductInfo,	
-			content:{ 
-				'branch_id':branch_id,'productId':productId
-			},		    
-			handleAs:"json",
-			load: function(data) {
-				template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
-				template+='<td align="center" width="2%">'+no+'</td>';
-				template+='<td class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
-				template+='<td class="currentQty"  width="10%">'+data.currentQty+' ('+data.measureTitle+')</td>';	
-				template+='<td width="20%"><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="0" type="text"  ></td>';	
-				template+='<td width="20%"><input dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="now" type="text"  ></td>';	
-				template+='<td width="20%"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
-				
-				tmp='<tr class="rowData" id="row'+col+'">';
-				tmp+="</tr>";
-				dojo.query("#table_row").append(tmp);
-				if($("#identity").val()!="") {
-					var identity = $("#identity").val();
-					$("#identity").val(identity+','+col);
-				} else {$("#identity").val(col);}
-				dojo.html.set(dojo.byId("row"+col),template , {
-					 parseContent: true,
-				});
-			},
-			error: function(err) {
-			}
-		});
 	}
 	
 
@@ -342,25 +191,27 @@ tr.rowData {
 		template='';
 		temp = "";
 		if(title!=1){
-			temp+='<td><?php echo $tr->translate("DEL");?></td>';
 			temp+='<td><?php echo $tr->translate("N_O");?></td>';
 			temp+='<td><?php echo $tr->translate("PRODUCT_NAME");?></td>';
 			temp+='<td class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></td>';
 			temp+='<td><?php echo $tr->translate("QTY_REQUEST");?></td>';
+			temp+='<td><?php echo $tr->translate("QTY_APPROVED");?></td>';
 			temp+='<td><?php echo $tr->translate("DATE_ENTRY");?></td>';
 			temp+='<td><?php echo $tr->translate("NOTE");?></td>';
+			temp+='<td><?php echo $tr->translate("STATUS");?></td>';
 			dojo.query("#head-title").append(temp);
 			title=1;
 		}
 		
-		template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td align="center" width="2%">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
 		template+='<td class="productName" ><?php echo $rs['proCode'];?><br /><?php echo $rs['proName'];?><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
 		template+='<td class="currentQty"  width="10%"><?php echo $rs['currentQty'];?> (<?php echo $rs['measureTitle'];?>)</td>';	
-		template+='<td width="20%"><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="<?php echo $rs['qtyRequest'];?>" type="text"  ></td>';	
+		template+='<td width="10%"><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="<?php echo $rs['qtyRequest'];?>" type="text"  ></td>';	
+		template+='<td width="10%"><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyAdjust'+col+'" name="qtyAdjust'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_APPROVED");?> " value="<?php echo $rs['qtyAdjust'];?>" type="text"  ></td>';	
 		template+='<td width="20%"><input dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['dateReqStockIn']));?>" type="text"  ></td>';	
 		template+='<td width="20%"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="<?php echo $rs['note'];?>" type="text"  ></td>';	
-				
+		template+='<td width="10%" ><select class="fullside" name="adjustStatus'+col+'" id="adjustStatus'+col+'" dojoType="dijit.form.FilteringSelect" ><option value="1"><?php echo $tr->translate("APPROVED");?></option><option value="2"><?php echo $tr->translate("REJECTED");?></option></select></td>';
+					
 
 		tmp='<tr class="rowData" id="row'+col+'">';
 		tmp+="</tr>";
