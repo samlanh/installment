@@ -1,6 +1,6 @@
 <?php
-class Stockmg_CheckingrequestController extends Zend_Controller_Action {
-	const REDIRECT_URL = '/stockmg/checkingrequest';
+class Stockmg_ApprovedrequestController extends Zend_Controller_Action {
+	const REDIRECT_URL = '/stockmg/approvedrequest';
 	public function init()
     {    	
     	header('content-type: text/html; charset=utf8');
@@ -27,7 +27,7 @@ class Stockmg_CheckingrequestController extends Zend_Controller_Action {
 			$list = new Application_Form_Frmtable();
     		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","DATE","CHECKING_STATUS","CHECKING_BY","USER","STATUS");
     		$link=array(
-    				'module'=>'stockmg','controller'=>'checkingrequest','action'=>'edit',
+    				'module'=>'stockmg','controller'=>'approvedrequest','action'=>'edit',
     		);
     		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array());
     		
@@ -48,7 +48,7 @@ class Stockmg_CheckingrequestController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
-	    		$db->checkingRequestPO($data);
+	    		$db->approvedRequestPO($data);
 	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 				
 	    	}catch(Exception $e){
@@ -65,7 +65,7 @@ class Stockmg_CheckingrequestController extends Zend_Controller_Action {
     		exit();
     	}
     	$this->view->row = $row;
-		$row['checkingRequest']=1;
+		$row['approvedrequest']=1;
     	$this->view->rowdetail = $db->getRequestPODetailById($row);
     	
 		

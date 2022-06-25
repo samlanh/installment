@@ -105,6 +105,29 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
     			'class'=>'fullside',
     			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
 				
+		$approveDate = new Zend_Dojo_Form_Element_DateTextBox('approveDate');
+ 		$approveDate->setAttribs(array(
+ 			'dojoType'=>'dijit.form.DateTextBox',
+ 			'class'=>'fullside',
+ 			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+ 		));
+		$approveDate->setValue(date("Y-m-d"));
+		
+		$_arrSta = array(0=>$this->tr->translate("PENDING"),1=>$this->tr->translate("APPROVED"),2=>$this->tr->translate("REJECTED"));
+    	$approveStatus = new Zend_Dojo_Form_Element_FilteringSelect("approveStatus");
+    	$approveStatus->setMultiOptions($_arrSta);
+    	$approveStatus->setAttribs(array(
+    			'dojoType'=>'dijit.form.FilteringSelect',
+    			'required'=>'true',
+    			'missingMessage'=>'Invalid Module!',
+    			'class'=>'fullside height-text',));
+				
+		$approveNote=  new Zend_Form_Element_Textarea('approveNote');
+    	$approveNote->setAttribs(array(
+    			'dojoType'=>'dijit.form.Textarea',
+    			'class'=>'fullside',
+    			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
+				
     	
     	$id = new Zend_Form_Element_Hidden('id');
     	$id->setAttribs(array(
@@ -141,7 +164,7 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
 			));
 			$_status->setValue($data["status"]);
 			$id->setValue($data["id"]);
-			if(!empty($data["checkingRequest"])){
+			if(!empty($data["checkingRequest"]) OR !empty($data["approvedrequest"])){
 				$requestNoLetter->setAttribs(array(
 				'readOnly'=>'readOnly',
 				));
@@ -157,6 +180,12 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
 			}
 			$checkingStatus->setValue($data["checkingStatus"]);
 			$checkingNote->setValue($data["checkingNote"]);
+			
+			if(!empty($data["approveDate"])){
+			$approveDate->setValue($data["approveDate"]);
+			}
+			$approveStatus->setValue($data["approveStatus"]);
+			$approveNote->setValue($data["approveNote"]);
 			
     		
     	}
@@ -175,6 +204,11 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
 				$checkingDate,
 				$checkingStatus,
 				$checkingNote,
+				
+				$approveDate,
+				$approveStatus,
+				$approveNote
+				
     			
     			));
     	return $this;

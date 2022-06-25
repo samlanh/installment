@@ -203,8 +203,10 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		}
 		return $db->fetchRow($sql);
 	}
-	function getRequestPODetailById($id=null){
+	function getRequestPODetailById($rsData=null){
 		$db = $this->getAdapter();
+		
+		$id=empty($rsData['id'])?0:$rsData['id'];
 		$sql=" 	SELECT 
 					rqd.*,p.proCode,
 					p.proName,
@@ -214,28 +216,12 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		if (!empty($id)){
 			$sql.=" AND rqd.requestId = $id";
 		}
+		if (!empty($rsData['approvedrequest'])){
+			$sql.=" AND rqd.adjustStatus = 1 ";
+		}
 		return $db->fetchAll($sql);
 	}
 	
-	
-	public function getAllSettingOpt($_ispot=null){
-		$db= $this->getAdapter();
-		$sql="
-		SELECT ms.id,
-			ms.title,
-			ms.title AS name
-			FROM `rms_interestsetting` AS ms
-		WHERE ms.status =1 AND ms.type =1 ";
-		$sql.=" ORDER BY ms.title ASC";
-		$row =  $db->fetchAll($sql);
-		if (!empty($_ispot)) {
-			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		  	$options=array(0=> $tr->translate("PLEASE_SELECT"));
-		  	if(!empty($row)) foreach($row as $read) $options[$read['id']]=$read['name'];
-		  	return $options;
-		}
-		return $row;
-	}
 	
 	public function checkingRequestPO($data){
 		$db= $this->getAdapter();
@@ -275,6 +261,53 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 						
 							
 							
+						$this->_name='st_request_po_detail';
+						$where =" id =".$data['detailId'.$i];
+						$this->update($arr, $where);
+					}
+				}
+			}
+    	}catch(Exception $e){
+	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+    	}
+	}
+	
+	public function approvedRequestPO($data){
+		$db= $this->getAdapter();
+		try{
+			$id =$data['id'];
+			$thisRow = $this->getRequestPOById($id);
+			$arr = array(
+    				'approveNote'			=>$data['approveNote'],
+    				'approveDate'			=>$data['approveDate'],
+    				'approveStatus'		=>$data['approveStatus'],
+    				'approveModifyDate'	=>date("Y-m-d H:i:s"),
+    				'approveBy'			=>$this->getUserId(),
+    		);
+			if(empty($thisRow['approveBy'])){
+				$arr['approveCreateDate']=date("Y-m-d H:i:s");
+			}
+    		$this->_name='st_request_po';
+			$where=" id = ".$data['id'];
+			$this->update($arr, $where);
+			
+			
+			if(!empty($data['identity'])){
+				$ids = explode(',', $data['identity']);
+				foreach ($ids as $i){
+					if (!empty($data['detailId'.$i])){
+						$arr = array(
+							'requestId'		=>$id,
+							'proId'			=>$data['proId'.$i],
+							
+							'qtyApproved'	=>$data['qtyApproved'.$i],
+							'qtyApprovedAfter'	=>$data['qtyApproved'.$i],
+							
+							'note'			=>$data['note'.$i],
+							'approvedStatus'	=>$data['approvedStatus'.$i],
+						);
+
 						$this->_name='st_request_po_detail';
 						$where =" id =".$data['detailId'.$i];
 						$this->update($arr, $where);

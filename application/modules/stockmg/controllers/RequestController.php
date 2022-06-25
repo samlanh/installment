@@ -67,7 +67,7 @@ class Stockmg_RequestController extends Zend_Controller_Action {
 	public function editAction(){
 		$db = new Stockmg_Model_DbTable_DbRequest();
 		$id=$this->getRequest()->getParam('id');
-		 
+		$id = empty($id)?0:$id;
 		if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
@@ -84,7 +84,7 @@ class Stockmg_RequestController extends Zend_Controller_Action {
     		exit();
     	}
     	$this->view->row = $row;
-    	$this->view->rowdetail = $db->getRequestPODetailById($id);
+    	$this->view->rowdetail = $db->getRequestPODetailById($row);
     	
     	$frm = new Stockmg_Form_FrmRequest();
     	$frm->FrmRequestPO($row);

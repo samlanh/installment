@@ -1,0 +1,139 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate("REQUEST_LETTER")); 
+	echo $this->headTitle();
+?>
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('REQUEST_LETTER');?></h4>
+			</div>
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+	<div class="card-box">
+		<div id="divPrint">
+			<style>
+				table.tableTop tr td,span {
+					font-size:12px ;
+					font-family: 'Times New Roman','Khmer OS Battambang';
+				}
+				table.tableTop tr td span.project-name{
+					font-size:12px ;
+					font-family:"Times New Roman","Khmer OS Muol Light";
+				}
+				table tr td{
+					padding:0 2px;
+					line-height: 14px;
+				}
+				table.content-data{
+					border-collapse:collapse;
+					border:1px solid #000; 
+					font-size:13px;
+				}
+				table.content-data thead tr.style {
+				   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #c1d0f3;
+				}
+			</style>
+			<table class="tableTop" width="100%" >
+				<tr>
+					<td width="30%" id="projectlogo">
+						<br />
+						<img style="height:85px; max-width: 100%;" src="/camappgit/installment/public/images/projects/logo202206131655107725.png">
+					</td>
+					<td width="40%" valign="top" style=" padding-bottom: 40px;">
+					</td>
+					<td width="30%" align="right" style="vertical-align:top;">
+						<span class="project-name" id="projectName">(បុរី រំចេកក្រាំងពង្រ)</span>
+					</td>
+				</tr> 
+				<tr>
+					<td colspan="3" align="center">
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' ><?php echo $tr->translate("ប័ណ្ណស្នើសុំបញ្ជារទិញទំនិញ");?></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+						<table>
+							<tr>
+								<td><?php echo $tr->translate("REQUEST_NO");?> : <span style="color:red; font-weight:600;"><?php echo $this->row["requestNo"];?></span></td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("DATE");?> : <span><?php echo date("d-M-Y",strtotime($this->row["date"]));?></span></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+						<table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
+							<thead>
+								<tr class="style" align="center" >
+									<td class="center"><?php echo $tr->translate("NUM");?></td>
+									<td class="center" style="width:200px;"><?php echo $tr->translate("PRODUCT_NAME");?></td>
+									<td class="center"><?php echo $tr->translate("QTY_REQUEST");?></td>
+									<td class="center"><?php echo $tr->translate("QTY_APPROVED");?></td>  
+									<td class="center"><?php echo $tr->translate("UNIT");?></td>
+									<td class="center"><?php echo $tr->translate("DATE_ENTRY");?></td>		
+									<td class="center"><?php echo $tr->translate("OTHER");?></td>    
+								  
+								</tr>
+							</thead>
+							 <?php 
+							 $i=0;
+				                if(!empty($this->rowdetail)) foreach ($this->rowdetail as $index => $rs){ $i++;
+							?>
+							<tr class="style " style=" white-space:nowrap; ">
+				               	<td style="text-align: center;"><?php echo $i; ?></td>
+								<td>
+									<?php echo $rs["proCode"];?><br />
+									<?php echo $rs["proName"];?>
+								</td>
+								<td align="center"><?php echo $rs["qtyRequest"];?></td>
+								<td align="center"><?php echo $rs["qtyAdjust"];?></td>
+								<td align="center"><?php echo $rs["measureTitle"];?></td>
+								<td align="center"><?php echo date("d-M-Y",strtotime($rs["dateReqStockIn"]));?></td>
+								<td style="font-size: 10px;"><?php echo $rs["note"];?></td>
+							</tr>
+							<?php 
+								}
+							?>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getBranchInfo();
+	});
+});
+		
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->row['projectId'])?0:$this->row['projectId'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			document.getElementById('projectName').innerHTML = 'គម្រោង៖ '+arr.project_name;
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

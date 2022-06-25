@@ -28,7 +28,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		return $cate_tree_array;
 		
 	}
-	function getAllProductByBranch($_data=null){
+	function getAllProduct($_data=null){
 		//$dbgb = new Application_Model_DbTable_DbGlobal();
 		//$userId = $dbgb->getUserId();
 		//$currentLang = $dbgb->currentlang();
@@ -37,7 +37,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql="
 			SELECT 
 				p.proId AS id,
-				p.proName AS `name`
+				CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`
 			";
 		$sql.=" FROM `st_product` AS p  ";
 		$sql.=" WHERE p.status=1 ";
@@ -49,6 +49,35 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$sql.=" AND p.categoryId= ".$_data['categoryId'];
 		}
 		$row = $db->fetchAll($sql);
+		return $row;
+		
+	}
+	function getProductInfoByLocation($_data=null){
+		
+		$db=$this->getAdapter();
+		$sql="
+			SELECT 
+				p.proId AS id,
+				CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`,
+				p.proCode,
+				p.proName,
+				0 AS currentQty,
+				'Kg' AS measureTitle
+			";
+		$sql.=" FROM `st_product` AS p  ";
+		$sql.=" WHERE p.status=1 ";
+			
+		if(!empty($_data['branch_id'])){
+			$sql.="";
+		}
+		if(!empty($_data['categoryId'])){
+			$sql.=" AND p.categoryId= ".$_data['categoryId'];
+		}
+		if(!empty($_data['productId'])){
+			$sql.=" AND p.proId= ".$_data['productId'];
+		}
+		$sql.=" ORDER BY p.proId DESC LIMIT	1 ";
+		$row = $db->fetchRow($sql);
 		return $row;
 		
 	}
