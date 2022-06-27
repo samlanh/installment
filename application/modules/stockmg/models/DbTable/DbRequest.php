@@ -216,7 +216,7 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		if (!empty($id)){
 			$sql.=" AND rqd.requestId = $id";
 		}
-		if (!empty($rsData['approvedrequest'])){
+		if (!empty($rsData['pCheckingRequest']) OR !empty($rsData['approvedrequest'])){
 			$sql.=" AND rqd.adjustStatus = 1 ";
 		}
 		return $db->fetchAll($sql);
@@ -267,6 +267,31 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 					}
 				}
 			}
+    	}catch(Exception $e){
+	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+    	}
+	}
+	
+	public function pCheckingRequestPO($data){
+		$db= $this->getAdapter();
+		try{
+			$id =$data['id'];
+			$thisRow = $this->getRequestPOById($id);
+			$arr = array(
+    				'pCheckingNote'			=>$data['pCheckingNote'],
+    				'pCheckingDate'			=>$data['pCheckingDate'],
+    				'pCheckingStatus'		=>$data['pCheckingStatus'],
+    				'pCheckingModifyDate'	=>date("Y-m-d H:i:s"),
+    				'pCheckingBy'			=>$this->getUserId(),
+    		);
+			if(empty($thisRow['pCheckingBy'])){
+				$arr['pCheckingCreateDate']=date("Y-m-d H:i:s");
+			}
+    		$this->_name='st_request_po';
+			$where=" id = ".$data['id'];
+			$this->update($arr, $where);
+
     	}catch(Exception $e){
 	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");

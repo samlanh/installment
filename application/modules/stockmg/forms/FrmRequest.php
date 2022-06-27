@@ -128,7 +128,30 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
     			'class'=>'fullside',
     			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
 				
-    	
+    	$pCheckingDate = new Zend_Dojo_Form_Element_DateTextBox('pCheckingDate');
+ 		$pCheckingDate->setAttribs(array(
+ 			'dojoType'=>'dijit.form.DateTextBox',
+ 			'class'=>'fullside',
+ 			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+ 		));
+		$pCheckingDate->setValue(date("Y-m-d"));
+		
+		$_arrSta = array(0=>$this->tr->translate("PENDING"),1=>$this->tr->translate("APPROVED"),2=>$this->tr->translate("REJECTED"));
+    	$pCheckingStatus = new Zend_Dojo_Form_Element_FilteringSelect("pCheckingStatus");
+    	$pCheckingStatus->setMultiOptions($_arrSta);
+    	$pCheckingStatus->setAttribs(array(
+    			'dojoType'=>'dijit.form.FilteringSelect',
+    			'required'=>'true',
+    			'missingMessage'=>'Invalid Module!',
+    			'class'=>'fullside height-text',));
+		$pCheckingStatus->setValue(1);
+				
+		$pCheckingNote=  new Zend_Form_Element_Textarea('pCheckingNote');
+    	$pCheckingNote->setAttribs(array(
+    			'dojoType'=>'dijit.form.Textarea',
+    			'class'=>'fullside',
+    			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
+				
     	$id = new Zend_Form_Element_Hidden('id');
     	$id->setAttribs(array(
     			'dojoType'=>'dijit.form.TextBox',
@@ -164,7 +187,7 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
 			));
 			$_status->setValue($data["status"]);
 			$id->setValue($data["id"]);
-			if(!empty($data["checkingRequest"]) OR !empty($data["approvedrequest"])){
+			if(!empty($data["checkingRequest"]) OR !empty($data["approvedrequest"]) OR !empty($data["pCheckingRequest"])){
 				$requestNoLetter->setAttribs(array(
 				'readOnly'=>'readOnly',
 				));
@@ -180,6 +203,12 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
 			}
 			$checkingStatus->setValue($data["checkingStatus"]);
 			$checkingNote->setValue($data["checkingNote"]);
+			
+			if(!empty($data["pCheckingDate"])){
+			$pCheckingDate->setValue($data["pCheckingDate"]);
+			}
+			$pCheckingStatus->setValue($data["pCheckingStatus"]);
+			$pCheckingNote->setValue($data["pCheckingNote"]);
 			
 			if(!empty($data["approveDate"])){
 			$approveDate->setValue($data["approveDate"]);
@@ -204,6 +233,10 @@ class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
 				$checkingDate,
 				$checkingStatus,
 				$checkingNote,
+				
+				$pCheckingDate,
+				$pCheckingStatus,
+				$pCheckingNote,
 				
 				$approveDate,
 				$approveStatus,
