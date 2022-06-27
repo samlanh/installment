@@ -2,6 +2,9 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$this->headTitle($tr->translate("REQUEST_LETTER")); 
 	echo $this->headTitle();
+	
+	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
+	$dbparmeter = new Report_Model_DbTable_DbParamater();
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -36,6 +39,7 @@
 				table.content-data thead tr.style {
 				   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
 					background: #c1d0f3;
+					font-weight:600;
 				}
 			</style>
 			<table class="tableTop" width="100%" >
@@ -101,6 +105,74 @@
 							<?php 
 								}
 							?>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+						<br />
+						<table width="40%" border="1"  cellspacing="0" cellpadding="0">
+							<tr>
+								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;">
+									<span style="font-weight: 600; display: block;text-decoration: underline;"><?php echo $tr->translate("NOTE");?> ៖</span>
+									<span style="display: block; font-size:11px;"><?php echo $this->row["note"];?><span>
+								</td>
+							</tr>
+						</table>
+						<br />
+						<table width="100%" cellspacing="0" cellpadding="0">
+							<tr>
+								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("REQUEST_BY");?> </span>
+								</td>
+								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("CHECKING_BY");?> </span>
+								</td>
+								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("VIEW_BY");?> </span>
+								</td>
+								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("APPROVED_BY");?> </span>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3" style="height:80px;" >
+									&nbsp;
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align:center;">
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["user_name"];?></span>
+									<span style=" display: block; line-height: 16px;">ថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->row["date"])));?> ខែ<?php echo $month[date("m",strtotime($this->row["date"]))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->row["date"])));?></span>
+								</td>
+								<td style="text-align:center;">
+									<?php  if(!empty($this->row["checkingBy"])){?>
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php  echo $this->row["checkingByName"];?></span>
+									<span style=" display: block; line-height: 16px;">ថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->row["checkingDate"])));?> ខែ<?php echo $month[date("m",strtotime($this->row["checkingDate"]))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->row["checkingDate"])));?></span>
+									<?php }else{?>
+										<span style="font-weight: 600; display: block; line-height: 18px;">__________________________</span>
+										<span style=" display: block; line-height: 16px;">ថ្ងៃទី____ខែ______ ឆ្នាំ ______</span>
+									<?php }?>
+								</td>
+								<td style="text-align:center;">
+									<?php  if(!empty($this->row["pCheckingBy"])){?>
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php  echo $this->row["pCheckingByName"];?></span>
+									<span style=" display: block; line-height: 16px;">ថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->row["pCheckingDate"])));?> ខែ<?php echo $month[date("m",strtotime($this->row["pCheckingDate"]))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->row["pCheckingDate"])));?></span>
+									<?php }else{?>
+										<span style="font-weight: 600; display: block; line-height: 18px;">__________________________</span>
+										<span style=" display: block; line-height: 16px;">ថ្ងៃទី____ខែ______ ឆ្នាំ ______</span>
+									<?php }?>
+								</td>
+								<td style="text-align:center;">
+									<?php  if(!empty($this->row["approveBy"])){?>
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php  echo $this->row["approveByName"];?></span>
+									<span style=" display: block; line-height: 16px;">ថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->row["approveDate"])));?> ខែ<?php echo $month[date("m",strtotime($this->row["approveDate"]))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->row["approveDate"])));?></span>
+									<?php }else{?>
+										<span style="font-weight: 600; display: block; line-height: 18px;">__________________________</span>
+										<span style=" display: block; line-height: 16px;">ថ្ងៃទី____ខែ______ ឆ្នាំ ______</span>
+									<?php }?>
+								</td>
+							</tr>
 						</table>
 					</td>
 				</tr>
