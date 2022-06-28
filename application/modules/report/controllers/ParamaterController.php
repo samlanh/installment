@@ -838,6 +838,11 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$row=$frm->FrmFrmProperty();
   	Application_Model_Decorator::removeAllDecorator($row);
   	$this->view->frm_property=$row;
+	
+	$frm = new Loan_Form_FrmSearchLoan();
+	$frm = $frm->AdvanceSearch();
+	Application_Model_Decorator::removeAllDecorator($frm);
+	$this->view->frm_search = $frm;
   }
   
   function commissionpaymentreceiptAction(){

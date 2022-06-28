@@ -1118,6 +1118,10 @@ function getAllBranch($search=null){
     	`p`.`p_manager_namekh` AS `project_manager_namekh`,
     	`p`.`p_manager_nation_id` AS `project_manager_nation_id`,
     	`p`.`p_current_address` AS `project_manager_p_current_address`,
+		`p`.`branch_tel`,
+		`p`.`other` as p_other,
+		`p`.`p_dob` as pManagerDob,
+		`p`.`p_nationid_issue` as pManagerNationidIssue,
     	`c`.`name_kh` AS `client_namekh`,
     	c.hname_kh,
     	`c`.`nationality` AS `client_nationality`,
@@ -1129,8 +1133,13 @@ function getAllBranch($search=null){
     	c.dob,
     	c.dob_buywith,
     	c.phone,
+    	c.phone AS client_phone,
 		c.lphone AS w_client_phone,
     	c.dstreet AS w_street,
+    	c.client_issuedateid AS client_issuedateid,
+		
+		 (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=c.client_d_type limit 1) AS client_d_type,
+		 
 		(SELECT
     	`village`.`village_namekh`
     	FROM `ln_village` `village`
@@ -2663,21 +2672,21 @@ function getAllBranch($search=null){
 		$sql = "SELECT p.`id`,
 			(SELECT project_name FROM ln_project WHERE br_id = p.`branch_id` limit 1) AS branch_name,
 			p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,p.hardtitle ,
-			p.noteForLayout ,
+			p.noteForLayout,
 			(SELECT ps.title FROM `ln_plongstep_option` AS ps,ln_processing_plong AS pr WHERE ps.id = pr.process_status AND `p`.`id` = `pr`.`property_id` LIMIT 1) AS processing,
 			(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
 			rp.layout_type,rp.date AS received_date,
 			(SELECT cl.name_kh FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS client_name,
 			(SELECT cl.phone FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS tel, 
 			
-			(SELECT s.price_sold FROM ln_sale AS s WHERE s.`house_id` = p.`id` AND s.`is_cancel`=0 AND s.`status`=1 ORDER BY s.id DESC LIMIT 1) AS price_sold, 
-			(SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=(SELECT s.id FROM ln_sale AS s WHERE s.`house_id` = p.`id` AND s.`is_cancel`=0 AND s.`status`=1 ORDER BY s.id DESC LIMIT 1) LIMIT 1) AS totalPaid,
+			s.price_sold,
+			(SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id LIMIT 1) AS totalPaid,
 			";
 		$sql.=" (SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
-			FROM 
-				`ln_properties` AS p
-			    LEFT JOIN ln_receiveplong AS rp
-			ON p.`id` = rp.`house_id` AND rp.`status`=1 WHERE p.`status`=1 ";
+			FROM `ln_properties` AS p
+			    LEFT JOIN ln_receiveplong AS rp ON p.`id` = rp.`house_id` AND rp.`status`=1 
+				LEFT JOIN ln_sale AS s ON s.`house_id` = p.`id` AND s.`is_cancel`=0 AND s.`status`=1 
+			WHERE p.`status`=1 ";
 	
 		$from_date =(empty($search['start_date']))? '1': " p.create_date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " p.create_date <= '".$search['end_date']." 23:59:59'";
@@ -2723,6 +2732,20 @@ function getAllBranch($search=null){
 				$where.=" AND p.id IN (SELECT rps.house_id FROM ln_receiveplong AS rps WHERE `p`.`id` = rps.`house_id` AND rps.status=1 ) ";
 				$where.=" AND p.id IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id`) ";
 				//AND p.`hardtitle` !='' 
+			}
+		}
+		
+		$search['sale_status'] = empty($search['sale_status'])?0:$search['sale_status'];
+		if($search['sale_status']>0){
+			if($search['sale_status']==1){//full paid
+				$where.=" AND s.price_sold <= ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND rm.sale_id=s.id LIMIT 1)) ";
+			}else if($search['sale_status']==2){
+				$where.=" AND s.price_sold > ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND rm.sale_id=s.id LIMIT 1) ) ";
+			}else if($search['sale_status']==3){
+				$where.=" AND s.is_cancel = 0 ";
+			}else if($search['sale_status']==4){
+				$where.=" AND s.is_cancel = 1 ";
+			}else{
 			}
 		}
 		

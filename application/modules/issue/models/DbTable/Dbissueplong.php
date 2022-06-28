@@ -247,8 +247,9 @@ class Issue_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
     	 p.hardtitle,
     	 s.price_sold,
 	    (s.price_sold - (SELECT SUM(cr.total_principal_permonthpaid+cr.extra_payment) FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id = s.id LIMIT 1) ) AS balance,
-    	pr.note_payment, 
-    	p.noteForLayout 
+    	p.noteForLayout,
+		pr.note_payment
+    	 
 		
 		";
     	$sql.="

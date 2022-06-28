@@ -26,7 +26,7 @@ class Issue_IssuecompletedController extends Zend_Controller_Action {
 			$db = new Issue_Model_DbTable_Dbissueplong();
 			$rs_rows= $db->getAllissueCompleted($search,1);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","PROCESS","CUSTOMER_NAME","PHONE","PROPERTY_CODE","STREET","HEAD_TITLE_NO","SOLD_PRICE","BALANCE","NOTE","PROPERTY_LAYOUT_NOTE");
+			$collumns = array("BRANCH_NAME","PROCESS","CUSTOMER_NAME","PHONE","PROPERTY_CODE","STREET","HEAD_TITLE_NO","SOLD_PRICE","BALANCE","PROPERTY_LAYOUT_NOTE","NOTE");
 			$this->view->list=$list->getCheckList(12, $collumns, $rs_rows,array(),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");

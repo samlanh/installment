@@ -1,0 +1,85 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage ();
+	$urlEdit = $this->baseUrl()."/stockmg/request/edit/id/";
+	$urlReprint = $this->baseUrl()."/report/stockmg/request-letter/id/";
+	
+	$frm = $this->frm_search;
+	
+?>
+<title><?php echo $tr->translate("REQUEST_PO");?></title>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<meta charset="utf-8">
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+       		<div class="col-sm-12 border-botom">
+		    	<div class="col-sm-8 pd-0">
+	    			<h4 class="m-b-0"><i class="fa fa-server " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REQUEST_PO');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<div class="card-box">
+			<form action=" " dojoType="dijit.form.Form" method="post">
+				<div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("branch_id");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("start_date");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("end_date");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("status");?>
+					</div>
+					 <div class="col-md-2 col-sm-2 col-xs-12">
+					 	<?php echo $frm->getElement("btn_search");?>
+					 </div>
+				</div>
+			</form>
+		</div>
+		<div class="card-box">
+			<?php echo $this->list; ?>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+	
+	var row=0;
+	var url="";
+	$(function(){
+		$.contextMenu({
+			selector: '.context-menu-one', 
+			callback: function(key, options) {
+				var m = "clicked: " + key;
+				if(key=="edit"){
+					url='<?php echo $urlEdit;?>';
+				}else if(key=="reprint"){
+					url='<?php echo $urlReprint;?>';
+				}
+				gotoAction();
+			},
+			items: {
+				
+				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
+				"reprint": {name: "<?php echo $tr->translate("REQUEST_LETTER");?>", icon: "fa-file-text", accesskey: "e"},
+				
+			}
+		});
+	});
+	function setrowdata(index){
+		row = index;
+	}
+	var recordid ='';
+	function gotoAction(){
+		window.location.href =url+row;
+	}
+</script>

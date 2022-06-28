@@ -1,0 +1,224 @@
+<?php 
+     $this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
+     $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+     $frm = $this->frm;
+?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<title><?php echo $this->tr->translate("PCHEKING_REQUEST_PO")?></title>
+ <div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('PCHEKING_REQUEST_PO');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">   
+	  			 if(this.validate()) {
+					branch_id = dijit.byId('branch_id').get('value');
+					if(branch_id=='' || branch_id<=0){
+						alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+						dijit.byId('branch_id').focus();
+						return false;
+					}
+					var rowId = $('#identity').val();
+					if(rowId==''){ 
+						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
+						return false;
+					}
+					loadingBlock();
+					return true;
+	  			 }else {
+					return false;
+	   			}
+			</script>
+			<div class="card-box">
+				<div class="col-md-3 col-sm-3 col-xs-12">
+		             <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("branch_id");?>
+		                	<?php echo $frm->getElement("id");?>
+		                </div>
+		             </div>
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_NO");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("requestNo");?>
+		                </div>
+		             </div>
+					  <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_NO_FROM");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("requestNoLetter");?>
+		                </div>
+		             </div>
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_DATE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("date");?>
+		                </div>
+		             </div>
+					  <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PURPOSE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("purpose");?>
+		                </div>
+		             </div>
+		             <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("note");?>
+		                </div>
+		             </div>
+					 
+				</div>
+				<div class="col-md-9 col-sm-9 col-xs-12">
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<div class="form-group">
+							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("FEEDBACK");?> </label>
+							<div class="col-md-7 col-sm-7 col-xs-12">
+								<?php echo $frm->getElement("pCheckingNote");?>
+							</div>
+						 </div>
+						 <div class="form-group">
+							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
+							<div class="col-md-7 col-sm-7 col-xs-12">
+								<?php echo $frm->getElement("pCheckingDate");?>
+							</div>
+						 </div>	
+						<div class="form-group">
+							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
+							<div class="col-md-7 col-sm-7 col-xs-12">
+								<?php echo $frm->getElement("pCheckingStatus");?>
+							</div>
+						 </div>	
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+					</div>
+					
+					<table class="collape tablesorter" id="table_row" style="width:100%; white-space: nowrap;border:1px solid #ddd;">
+				    	<tr id="head-title" class="head-td" align="center"></tr>
+					</table>
+					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
+					
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="clearfix"></div>
+	       	<div class="card-box mt-20">
+               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button" 
+						iconClass="dijitEditorIcon dijitEditorIconSave" />
+				
+               	</div>
+             </div>
+		</form>
+    </div>
+</div>
+<style>
+#table tr td{
+	border:1px solid #cccccc;
+	text-align: center;
+}
+#table tr th{
+	background: #cccccc;
+	border:1px solid #ddd;
+}
+table#table_row td.productName {
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 600;
+}
+table#table_row td.currentQty {
+    text-align: center;
+    color: #f74545;
+    font-weight: 600;
+}
+tr.rowData {
+    border-bottom: solid 2px #02014a;
+}
+
+</style>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dojo.NodeList-manipulate");
+    dojo.require("dijit.form.Textarea");
+    dojo.require("dijit.form.NumberTextBox");
+    dojo.require("dijit.form.DateTextBox");
+	
+	var productStore  = getDataStorefromJSON('id','name', null );
+    require(["dojo/ready"], function(ready){
+		ready(function(){
+			initailize();
+			onChageFunctionByBranch();
+		});
+
+	 });
+    
+	function onChageFunctionByBranch(){
+		//getAllProduct();
+		//getRequestNoByBranch();
+	}
+	
+	
+	var col= 0; var no=0;
+	var title = 0;
+	var urlGetProductInfo = '<?php echo $this->url(array('module'=>'stockmg','controller'=>'request','action'=>'productinfo')); ?>';
+	function addRowProductRequest(){
+		
+		
+	}
+	
+
+	function deleteRecord(index) {
+		var identity = $('#identity').val();
+		var arrays = identity.split(',');
+		for(var i=0;i<arrays.length;i++) {
+			if(arrays[i] == index) arrays.splice(i,1);
+		}
+		var strings = arrays.join(',');
+		$('#identity').val(strings);
+		dojo.query("#row"+index).remove();
+	}
+	function initailize() {
+		<?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $rs){?>
+		col++;no++;
+		template='';
+		temp = "";
+		if(title!=1){
+			temp+='<td><?php echo $tr->translate("N_O");?></td>';
+			temp+='<td width="25%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
+			temp+='<td class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></td>';
+			temp+='<td width="10%"><?php echo $tr->translate("QTY");?></td>';
+			temp+='<td width="20%"><?php echo $tr->translate("DATE_ENTRY");?></td>';
+			temp+='<td width="20%"><?php echo $tr->translate("NOTE");?></td>';
+			dojo.query("#head-title").append(temp);
+			title=1;
+		}
+		
+		template+='<td align="center" width="2%">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
+		template+='<td class="productName" ><?php echo $rs['proCode'];?><br /><?php echo $rs['proName'];?><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
+		template+='<td class="currentQty"  width="10%"><?php echo $rs['currentQty'];?> (<?php echo $rs['measureTitle'];?>)</td>';	
+		template+='<td><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyAdjust'+col+'" name="qtyAdjust'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="<?php echo $rs['qtyAdjust'];?>" type="text"  ></td>';	
+		template+='<td><input readOnly dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['dateReqStockIn']));?>" type="text"  ></td>';	
+		template+='<td><input readOnly dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="<?php echo $rs['note'];?>" type="text"  ></td>';	
+					
+
+		tmp='<tr class="rowData" id="row'+col+'">';
+		tmp+="</tr>";
+		dojo.query("#table_row").append(tmp);
+		if($("#identity").val()!="") {
+			var identity = $("#identity").val();
+			$("#identity").val(identity+','+col);
+		} else {$("#identity").val(col);}
+		dojo.html.set(dojo.byId("row"+col),template , {
+		     parseContent: true,
+		});
+		<?php }?>
+	}
+</script>
