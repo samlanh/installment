@@ -67,10 +67,10 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
     				'date'				=>$data['date'],
     				'note'				=>$data['note'],
 										
-    				'status'		=>1,
-    				'createDate'	=>date("Y-m-d H:i:s"),
-    				'modifyDate'	=>date("Y-m-d H:i:s"),
-    				'userId'		=>$this->getUserId(),
+    				'status'			=>1,
+    				'createDate'		=>date("Y-m-d H:i:s"),
+    				'modifyDate'		=>date("Y-m-d H:i:s"),
+    				'userId'			=>$this->getUserId(),
     		);
     		$this->_name='st_request_po';
     		$id = $this->insert($arr);
@@ -113,9 +113,9 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
     				'date'				=>$data['date'],
     				'note'				=>$data['note'],
 										
-    				'status'		=>$data['status'],
-    				'modifyDate'	=>date("Y-m-d H:i:s"),
-    				'userId'		=>$this->getUserId(),
+    				'status'			=>$data['status'],
+    				'modifyDate'		=>date("Y-m-d H:i:s"),
+    				'userId'			=>$this->getUserId(),
     		);
     		$this->_name='st_request_po';
 			$where=" id = ".$data['id'];
@@ -150,18 +150,18 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 				foreach ($ids as $i){
 					if (!empty($data['detailId'.$i])){
 						$arr = array(
-							'requestId'		=>$id,
-							'proId'			=>$data['proId'.$i],
+							'requestId'			=>$id,
+							'proId'				=>$data['proId'.$i],
+								
+							'qtyRequest'		=>$data['qtyRequest'.$i],
+							'qtyAdjust'			=>$data['qtyRequest'.$i],
+							'qtyApproved'		=>$data['qtyRequest'.$i],
 							
-							'qtyRequest'	=>$data['qtyRequest'.$i],
-							'qtyAdjust'		=>$data['qtyRequest'.$i],
-							'qtyApproved'	=>$data['qtyRequest'.$i],
+							'dateReqStockIn'	=>$data['dateReqStockIn'.$i],
+							'note'				=>$data['note'.$i],
 							
-							'dateReqStockIn'		=>$data['dateReqStockIn'.$i],
-							'note'			=>$data['note'.$i],
-							
-							'modifyDate'	=>date("Y-m-d H:i:s"),
-							'userId'		=>$this->getUserId(),
+							'modifyDate'		=>date("Y-m-d H:i:s"),
+							'userId'			=>$this->getUserId(),
 						);
 						
 							
@@ -234,6 +234,7 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
     				'checkingStatus'		=>$data['checkingStatus'],
     				'checkingModifyDate'	=>date("Y-m-d H:i:s"),
     				'checkingBy'			=>$this->getUserId(),
+    				'processingStatus'		=>1,//Warehouse Step checking Approved/Rejected
     		);
 			if(empty($thisRow['checkingBy'])){
 				$arr['checkingCreateDate']=date("Y-m-d H:i:s");
@@ -248,15 +249,15 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 				foreach ($ids as $i){
 					if (!empty($data['detailId'.$i])){
 						$arr = array(
-							'requestId'		=>$id,
-							'proId'			=>$data['proId'.$i],
+							'requestId'			=>$id,
+							'proId'				=>$data['proId'.$i],
 							
-							'qtyAdjust'		=>$data['qtyAdjust'.$i],
-							'qtyApproved'	=>$data['qtyAdjust'.$i],
+							'qtyAdjust'			=>$data['qtyAdjust'.$i],
+							'qtyApproved'		=>$data['qtyAdjust'.$i],
 							
-							'dateReqStockIn'		=>$data['dateReqStockIn'.$i],
-							'note'			=>$data['note'.$i],
-							'adjustStatus'	=>$data['adjustStatus'.$i],
+							'dateReqStockIn'	=>$data['dateReqStockIn'.$i],
+							'note'				=>$data['note'.$i],
+							'adjustStatus'		=>$data['adjustStatus'.$i],
 						);
 						
 							
@@ -284,6 +285,7 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
     				'pCheckingStatus'		=>$data['pCheckingStatus'],
     				'pCheckingModifyDate'	=>date("Y-m-d H:i:s"),
     				'pCheckingBy'			=>$this->getUserId(),
+					'processingStatus'		=>2,//Purchase Dept Step checking Approved/Rejected
     		);
 			if(empty($thisRow['pCheckingBy'])){
 				$arr['pCheckingCreateDate']=date("Y-m-d H:i:s");
@@ -306,9 +308,10 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 			$arr = array(
     				'approveNote'			=>$data['approveNote'],
     				'approveDate'			=>$data['approveDate'],
-    				'approveStatus'		=>$data['approveStatus'],
-    				'approveModifyDate'	=>date("Y-m-d H:i:s"),
-    				'approveBy'			=>$this->getUserId(),
+    				'approveStatus'			=>$data['approveStatus'],
+    				'approveModifyDate'		=>date("Y-m-d H:i:s"),
+    				'approveBy'				=>$this->getUserId(),
+					'processingStatus'		=>3,//Admin/GM Step checking Approved/Rejected
     		);
 			if(empty($thisRow['approveBy'])){
 				$arr['approveCreateDate']=date("Y-m-d H:i:s");
@@ -323,13 +326,13 @@ class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 				foreach ($ids as $i){
 					if (!empty($data['detailId'.$i])){
 						$arr = array(
-							'requestId'		=>$id,
-							'proId'			=>$data['proId'.$i],
-							
-							'qtyApproved'	=>$data['qtyApproved'.$i],
+							'requestId'			=>$id,
+							'proId'				=>$data['proId'.$i],
+								
+							'qtyApproved'		=>$data['qtyApproved'.$i],
 							'qtyApprovedAfter'	=>$data['qtyApproved'.$i],
 							
-							'note'			=>$data['note'.$i],
+							'note'				=>$data['note'.$i],
 							'approvedStatus'	=>$data['approvedStatus'.$i],
 						);
 

@@ -64,6 +64,14 @@ class Stockmg_CheckingrequestController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
     		exit();
     	}
+		if ($row['status']==0){
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		if ($row['pCheckingStatus']>0){
+    		Application_Form_FrmMessage::Sucessfull("REQUEST_IS_ON_PROCCESING", self::REDIRECT_URL."/index");
+    		exit();
+    	}
     	$this->view->row = $row;
 		$row['checkingRequest']=1;
     	$this->view->rowdetail = $db->getRequestPODetailById($row);

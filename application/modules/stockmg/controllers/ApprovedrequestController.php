@@ -64,6 +64,15 @@ class Stockmg_ApprovedrequestController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
     		exit();
     	}
+		if ($row['status']==0){
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		if ($row['pCheckingStatus']!=1){
+    		Application_Form_FrmMessage::Sucessfull("RECORD_NEED_TO_COMPLETED_STEP_3", self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		
     	$this->view->row = $row;
 		$row['approvedrequest']=1;
     	$this->view->rowdetail = $db->getRequestPODetailById($row);

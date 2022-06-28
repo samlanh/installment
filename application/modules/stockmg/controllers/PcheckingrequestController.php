@@ -64,6 +64,19 @@ class Stockmg_PcheckingrequestController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
     		exit();
     	}
+		if ($row['status']==0){
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		
+		if ($row['checkingStatus']!=1){
+    		Application_Form_FrmMessage::Sucessfull("RECORD_NEED_TO_COMPLETED_STEP_2", self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		if ($row['approveStatus']>0){
+    		Application_Form_FrmMessage::Sucessfull("REQUEST_ALREADY_APPROVED_TO_PURCHASE", self::REDIRECT_URL."/index");
+    		exit();
+    	}
     	$this->view->row = $row;
 		$row['pCheckingRequest']=1;
     	$this->view->rowdetail = $db->getRequestPODetailById($row);
