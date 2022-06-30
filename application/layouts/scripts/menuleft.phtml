@@ -5,6 +5,7 @@
 	$baseurl  = $this->baseUrl();
 	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 	$arr_module = $session_user->arr_acl;
+	$systemType = $session_user->systemType;
 	$menu = array();
 	$module = '';
 	$controller=array();
@@ -45,6 +46,7 @@
 			'rent'=>'<i class="fa fa-money" aria-hidden="true"></i>',
       		'other'=>'<i class="fa fa-book" aria-hidden="true"></i>',
 			'stock'=>'<i class="fa fa-cubes" aria-hidden="true"></i>',
+			'stockmg'=>'<i class="fa fa-cubes" aria-hidden="true"></i>',
       		'report'=>'<i class="fa  fa-file-text" aria-hidden="true"></i>',
       		'rsvacl'=>'<i class="fa  fa-cog" aria-hidden="true"></i>',
       		'setting'=>'<i class="fa  fa-cogs" aria-hidden="true"></i>',
@@ -58,7 +60,12 @@
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
               &nbsp;
-                <?php 
+			  <?php if($systemType!=1){?>
+				<div class="button-make-loan mb-10">
+					<span class="welcome-class"><i class="fa fa-desktop" aria-hidden="true"></i> <?php echo $tr->translate("WELCOME");?></span>
+				</div>
+			  <?php }else{?>
+				<?php 
 					$db = new Application_Model_DbTable_DbUsers();
 					$rs = $db->getAccessUrl("loan","deposit","add");
 					if(!empty($rs)){
@@ -71,6 +78,8 @@
 					<span class="welcome-class"><i class="fa fa-desktop" aria-hidden="true"></i> <?php echo $tr->translate("WELCOME");?></span>
 				</div>
 				<?php }?>
+			  <?php }?>
+                
                 <ul class="nav side-menu">
                 	<?php 
                 	if(!empty($arr_module)){ foreach ($arr_module as $rs){
@@ -103,9 +112,22 @@
 			                    </ul>
 			                    <?php }?>
 		                    <?php }else{?>
-                			<a href="<?php echo $this->url(array('module'=>$rs,'controller'=>'index','action'=>'index'), null, true);;?>">
-                			<?php echo $array_icon[$rs];?> <?php echo $title;?> 
-	                		</a>
+									<?php if (!empty($arr_param_menu[$rs])){?>
+										 <?php  foreach ($arr_param_menu[$rs] as $key => $sub){
+												$urlsub = $this->url(array('module'=>$rs,'controller'=>$key,'action'=>'index'), null, true);
+											?>
+										<a href="<?php echo $urlsub;?>">
+										<?php echo $array_icon[$rs];?> <?php echo $title;?> 
+									
+										
+										</a>
+										<?php }?>
+									<?php }else{?>
+									<a href="<?php echo $this->url(array('module'=>$rs,'controller'=>'index','action'=>'index'), null, true);;?>">
+										<?php echo $array_icon[$rs];?> <?php echo $title;?> 
+									</a>
+									<?php }?>
+                			
                 		<?php }
                 			}else{?>
                 			<?php if (count($arr_param_menu[$rs])>1){?>
