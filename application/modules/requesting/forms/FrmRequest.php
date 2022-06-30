@@ -1,6 +1,6 @@
 <?php
 
-class Stockmg_Form_FrmRequest extends Zend_Dojo_Form
+class Requesting_Form_FrmRequest extends Zend_Dojo_Form
 {
 	protected  $tr;
 

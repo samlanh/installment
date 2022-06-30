@@ -1,5 +1,5 @@
 <?php
-class Stockmg_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
+class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 {
 	protected $_name = 'rms_interestsetting';
 	

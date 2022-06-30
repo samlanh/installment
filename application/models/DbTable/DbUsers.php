@@ -9,7 +9,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	public function getUserInfo($user_id)
 	{		
 		$select=$this->select();
-			$select->from($this,array('user_type', 'last_name' ,'first_name','staff_id','branch_list'))
+			$select->from($this,array('user_type', 'last_name' ,'first_name','staff_id','branch_list','systemAccess'))
 			->where('id=?',$user_id);			
 		$row=$this->fetchRow($select);		
 		if(!$row) return NULL;
@@ -189,7 +189,8 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 					u.`user_type`, 
 					u.`active`, 
 					u.`id`,
-					u.`branch_list` 
+					u.`branch_list`,
+					u.`systemAccess` 
 					
 				FROM `rms_users` AS u
 				WHERE u.id = ".$id;	
@@ -239,6 +240,10 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			if (!empty($data['selector'])){
 				$branchList = implode(',', $data['selector']);
 			}
+			$systemList="";
+			if (!empty($data['selectorSystem'])){
+				$systemList = implode(',', $data['selectorSystem']);
+			}
 			$_user_data=array(
 				'branch_id'=>$data['branch_id'],
 				'last_name'=>$data['last_name'],
@@ -248,6 +253,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 				'user_type'=> $data['user_type'],
 				'active'=> 1,
 				'branch_list'=>$branchList,
+				'systemAccess'=>$systemList,
 		    ); 
 			return  $this->insert($_user_data);
 		}catch (Exception $e){
@@ -268,6 +274,12 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			if (!empty($data['selector'])){
 				$branchList = implode(',', $data['selector']);
 			}
+			
+			$systemList="";
+			if (!empty($data['selectorSystem'])){
+				$systemList = implode(',', $data['selectorSystem']);
+			}
+			
 			$_user_data=array(
 				'branch_id'=>$data['branch_id'],
 		    	'last_name'=>$data['last_name'],
@@ -276,6 +288,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 				'user_type'=> $data['user_type'],
 				'active'=> $data['active'],
 				'branch_list'=>$branchList,
+				'systemAccess'=>$systemList,
 		    );    	   
 			if (!empty($data['check_change'])){
 				$_user_data['password']= md5($data['password']);
@@ -304,12 +317,16 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	 * To get all acl of a user type
 	 * @param string $user_type_id
 	 */
-	public function getArrAcl($user_type_id){
+	public function getArrAcl($user_type_id,$systemAccess=1){
 		$db = $this->getAdapter();
 		$sql = "SELECT aa.module, aa.controller, aa.action,aa.label FROM rms_acl_user_access AS ua  INNER JOIN rms_acl_acl AS aa 
 		ON (ua.acl_id=aa.acl_id) WHERE ua.user_type_id='".$user_type_id."' 
-		GROUP BY  aa.module ,aa.controller,aa.action 
-		ORDER BY aa.module ,aa.rank ASC, aa.is_menu ASC ";
+		 ";
+		$sql.=" AND aa.menuForSystem=$systemAccess ";
+		 $sql.=" 
+			GROUP BY  aa.module ,aa.controller,aa.action 
+			ORDER BY aa.module ,aa.rank ASC, aa.is_menu ASC 
+		";
 		$rows = $db->fetchAll($sql);
 		return $rows;
 	}
@@ -320,17 +337,19 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		ON (ua.acl_id=aa.acl_id) WHERE aa.status=1
 		AND aa.module='report' ";
 		if($controller_name==null){
-			$sql.=" AND aa.controller!='invest' AND aa.controller!='rent'";
+			$sql.=" AND aa.controller!='invest' AND aa.controller!='rent' AND aa.controller!='stockmg' ";
 		}else{
 			$sql.=" AND aa.controller='".$controller_name."'";
 		}
 		
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$user_typeid = $session_user->level;
+		$systemType = $session_user->systemType;
 		$user_typeid = empty($user_typeid)?0:$user_typeid;
 		if ($user_typeid!=1){
 		$sql.=" AND ua.user_type_id='".$user_typeid."' ";
 		}
+		$sql.=" AND aa.menuForSystem= ".$systemType;
 		//
 		$order =" GROUP BY  aa.module ,aa.controller,aa.action
 		ORDER BY aa.module ,aa.rank ASC ";
