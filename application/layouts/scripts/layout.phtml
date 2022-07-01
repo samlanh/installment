@@ -2,25 +2,35 @@
 	header('Cache-Control: no cache'); //no cache
 	session_cache_limiter('private_no_expire'); // works
 	//session_start();
-
+	$FOR_MULTISYSTEM = FOR_MULTISYSTEM;
 	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 	$username = $session_user->first_name;
 	$user_id = $session_user->user_id;
 	$userTypeId = $session_user->level;
+	$systemType = $session_user->systemType;
+
+	$systemAccess = $session_user->systemAccess;
+	$systemAccessCount=array();
+	if($FOR_MULTISYSTEM==1){
+		if(!empty($systemAccess)){
+			
+			$systemAccessCount =  explode(",",$systemAccess);
+		}
+<<<<<<< HEAD
+=======
+	}
+	
 	$styleNotif="";
 	if($userTypeId>2){
 		$styleNotif="hiddentNotif";
+>>>>>>> remotes/origin/master
 	}
+	
+	
 	if(empty($user_id)){
 		Application_Form_FrmMessage::redirectUrl("/");
 		exit();
 	}
-	
-	$db = new Report_Model_DbTable_DbloanCollect();
-	$rs = $db->getCustomerNearlyPayment();
-	$rsagree = $db->getCustomerNearAgreement();
-	$slPreparedSch = $db->getSalePreparedScheduleInLimitDay();
-	
 	$t = time();
 	$t0 = $session_user->timeout;
 	$diff = $t - $t0;
@@ -37,6 +47,32 @@
 		$session_user->timeout = time();
 		$session_user->lock();
 	}
+	
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	
+	$vdgb = new Application_Model_DbTable_DbGlobal();
+	$alllang =  $vdgb->getLaguage();
+	$currentlang = $vdgb->currentlang();
+	if($systemType==1){
+		$systemSwitchTo = $tr->translate("Stock System");
+<<<<<<< HEAD
+=======
+		$db = new Report_Model_DbTable_DbloanCollect();
+		$rs = $db->getCustomerNearlyPayment();
+		$rsagree = $db->getCustomerNearAgreement();
+		$slPreparedSch = $db->getSalePreparedScheduleInLimitDay();
+		
+		$rsplong = $vdgb->getAllplongissue();
+		$rsCusRequire = $vdgb->getAllCustomerRequireNextContact();
+	
+>>>>>>> remotes/origin/master
+	}else{
+		$systemSwitchTo = $tr->translate("Installment System");
+	}
+	
+	
+	
 	$db_user=new Application_Model_DbTable_DbUsers();
 	$user_info = $db_user->getUserInfo($user_id);
 	$them_style = 'soria';
@@ -46,14 +82,8 @@
 	$controller=$request->getControllerName();
 	$module=$request->getModuleName();
 	
-	$vdgb = new Application_Model_DbTable_DbGlobal();
-	$alllang =  $vdgb->getLaguage();
-	$currentlang = $vdgb->currentlang();
-	$rsplong = $vdgb->getAllplongissue();
-	$rsCusRequire = $vdgb->getAllCustomerRequireNextContact();
+
 	
-	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
-	$base_url = Application_Form_FrmMessage::getUrl("/");
 	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -118,6 +148,14 @@
 			margin:0 auto; 
 			padding:0.5cm 0.5cm 0cm 0.5cm;
 		}
+		<?php if($systemType!=1){?>
+		.left_col.scroll-view .navbar.nav_title {
+			background: #333944 !important;
+		}
+		.nav_menu {
+			 background: #333944 !important;
+		}
+		<?php } ?>
     </style>
    <?php if($module=='home' AND $controller=="index" AND $action=="index"){?>	
    <?php }else if($module=='home' AND $controller=="index" AND $action=="rpt-income-graphic"){?>	
@@ -175,11 +213,25 @@
 					                 </a>
 					                  <ul class="dropdown-menu dropdown-usermenu pull-right">
 					                    <li><a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'changepassword')); ?>"> <i class="fa fa-key pull-right"></i> <?php echo $tr->translate("Change Password");?></a></li>
-					                    <li><a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'logout','value'=>'1')); ?>">
-					                    <i class="fa fa-sign-out pull-right"></i> <?php echo $tr->translate("SIGN_OUT");?></a>
+										<?php if(count($systemAccessCount)>1){?>
+										<li>
+											<a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'switching-system','value'=>'1')); ?>">
+											<i class="fa fa-exchange pull-right"></i> <?php echo $tr->translate("SWICHING_TO");?> : <strong><?php echo $systemSwitchTo;?></strong>
+											</a>
+					                    </li>
+										<?php }?>
+									   <li><a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'logout','value'=>'1')); ?>">
+					                    
+										<i class="fa fa-sign-out pull-right"></i> <?php echo $tr->translate("SIGN_OUT");?></a>
 					                    </li>
 					                  </ul>
 				                </li>
+<<<<<<< HEAD
+							<?php 
+								echo $this->render('notificationbar.phtml');
+            				 ?>
+=======
+						<?php if($systemType==1){?>
 				               <?php if (empty($user_info['staff_id'])){?>
 				                <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
 				                  <a title="<?php echo $tr->translate("MAKE_AGREEMENTLIST");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
@@ -373,6 +425,9 @@
                                         <i class="fa fa-keyboard-o"></i>
 					                 </a>
 				                </li>
+						<?php }else{?>
+						<?php }?>
+>>>>>>> remotes/origin/master
              				</ul>
             			</nav>
           			</div>
