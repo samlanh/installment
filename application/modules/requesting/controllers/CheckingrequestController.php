@@ -1,6 +1,6 @@
 <?php
-class Stockmg_CheckingrequestController extends Zend_Controller_Action {
-	const REDIRECT_URL = '/stockmg/checkingrequest';
+class Requesting_CheckingrequestController extends Zend_Controller_Action {
+	const REDIRECT_URL = '/requesting/checkingrequest';
 	public function init()
     {    	
     	header('content-type: text/html; charset=utf8');
@@ -21,13 +21,13 @@ class Stockmg_CheckingrequestController extends Zend_Controller_Action {
 				);
     		}
     		$this->view->search = $search;
-			$db = new Stockmg_Model_DbTable_DbRequest();
+			$db = new Requesting_Model_DbTable_DbRequest();
 			$rs_rows = $db->getAllRequestPO($search);
 			
 			$list = new Application_Form_Frmtable();
     		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","DATE","CHECKING_STATUS","CHECKING_BY","USER","STATUS");
     		$link=array(
-    				'module'=>'stockmg','controller'=>'checkingrequest','action'=>'edit',
+    				'module'=>'requesting','controller'=>'checkingrequest','action'=>'edit',
     		);
     		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array());
     		
@@ -44,7 +44,7 @@ class Stockmg_CheckingrequestController extends Zend_Controller_Action {
 	}
     public function addAction()
     {	
-    	$db = new Stockmg_Model_DbTable_DbRequest();
+    	$db = new Requesting_Model_DbTable_DbRequest();
     	if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
@@ -64,12 +64,20 @@ class Stockmg_CheckingrequestController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
     		exit();
     	}
+		if ($row['status']==0){
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		if ($row['pCheckingStatus']>0){
+    		Application_Form_FrmMessage::Sucessfull("REQUEST_IS_ON_PROCCESING", self::REDIRECT_URL."/index");
+    		exit();
+    	}
     	$this->view->row = $row;
 		$row['checkingRequest']=1;
     	$this->view->rowdetail = $db->getRequestPODetailById($row);
     	
 		
-    	$frm = new Stockmg_Form_FrmRequest();
+    	$frm = new Requesting_Form_FrmRequest();
     	$frm->FrmRequestPO($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;

@@ -62,7 +62,20 @@ class IndexController extends Zend_Controller_Action
 					$user_id=$db_user->getUserID($user_name);
 					$user_info = $db_user->getUserInfo($user_id);
 					
-					$arr_acl=$db_user->getArrAcl($user_info['user_type']);
+					$systemAccess='';
+					if(!empty($user_info['systemAccess'])){
+						$systemAccess =  explode(",",$user_info['systemAccess']);
+					}
+					$systemType=1;
+					if (!empty($systemAccess)) {
+						foreach ($systemAccess as $ss) {
+							$systemType = $ss;
+							break;
+						}
+					}
+					$session_user->systemType=$systemType;
+					$session_user->systemAccess=$user_info['systemAccess'];
+					$arr_acl=$db_user->getArrAcl($user_info['user_type'],$systemType);
 					//$session_user->url_report=$db_user->getArrAclReport($user_info['user_type']);
 					$session_user->user_id=$user_id;
 					$session_user->user_name=$user_name;
@@ -121,7 +134,11 @@ class IndexController extends Zend_Controller_Action
 		$this->view->rslang = $session_lang->lang_id;
     }
     protected function sortMenu($menus){
-    	$menus_order = Array ( 'home','project','group','loan','issue','incexp','message','property','rent','invest','other','stock','report','rsvacl','setting');
+<<<<<<< HEAD
+    	$menus_order = Array ( 'home','project','group','loan','issue','incexp','message','property','rent','invest','other','stock','requesting','report','rsvacl','setting');
+=======
+    	$menus_order = Array ( 'home','project','group','loan','issue','incexp','message','property','rent','invest','other','stock','stockmg','report','rsvacl','setting');
+>>>>>>> remotes/origin/master
     	$temp_menu = Array();
     	$menus=array_unique($menus);
     	foreach ($menus_order as $i => $val){
@@ -135,6 +152,43 @@ class IndexController extends Zend_Controller_Action
     	}
     	return $temp_menu;    	
     }
+	public function switchingSystemAction(){
+		if($this->getRequest()->getParam('value')==1){        	
+        	
+			$db_user=new Application_Model_DbTable_DbUsers();
+			$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+			$user_id = $session_user->user_id;
+			$systemType = $session_user->systemType;
+			
+			$user_info = $db_user->getUserInfo($user_id);
+			
+			if($systemType==1){
+				$systemType=2;
+			}else{
+				$systemType=1;
+			}
+			
+			$session_user->systemType=$systemType;
+			$arr_acl=$db_user->getArrAcl($user_info['user_type'],$systemType);
+			
+			$arr_actin = array();	
+			for($i=0; $i<count($arr_acl);$i++){
+				$arr_module[$i]=$arr_acl[$i]['module'];
+			}
+			$arr_module=(array_unique($arr_module));
+			$arr_actin=(array_unique($arr_actin));
+			$arr_module=$this->sortMenu($arr_module);
+			
+			$session_user->arr_acl = $arr_acl;
+			$session_user->arr_module = $arr_module;
+			$session_user->arr_actin = $arr_actin;
+				
+			$session_user->lock();
+					
+        	Application_Form_FrmMessage::redirectUrl("/");
+        	exit();
+        } 
+	}
     public function logoutAction()
     {
         if($this->getRequest()->getParam('value')==1){        	
