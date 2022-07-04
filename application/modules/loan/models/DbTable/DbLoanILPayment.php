@@ -1513,6 +1513,7 @@ function getLoanPaymentByLoanNumberEdit($data){
    	$sql = "SELECT lf.`is_completed` FROM `ln_loanmember_funddetail` AS lf WHERE lf.id =$id";
    	return $db->fetchOne($sql);
    }
+	/*
 	public function getAllLoanNumberByBranch($branch_id,$is_issueplong=0){
 		$db = $this->getAdapter();
 		$sql= "SELECT id,
@@ -1527,6 +1528,26 @@ function getLoanPaymentByLoanNumberEdit($data){
 		
 		if($is_issueplong!=0){
 			$sql.=" AND is_issueplong=0 ";
+		}
+		return $db->fetchAll($sql);
+	}
+	*/
+	public function getAllLoanNumberByBranch($branch_id,$data){
+		$db = $this->getAdapter();
+		$sql= "SELECT id,
+				  CONCAT((SELECT name_kh FROM ln_client WHERE ln_client.client_id=ln_sale.`client_id` LIMIT 1),'-',
+				  (SELECT CONCAT(COALESCE(p.land_address,''),',',COALESCE(p.street,'')) FROM ln_properties AS p WHERE p.id = ln_sale.house_id LIMIT 1)) AS name
+				FROM
+				  ln_sale 
+				WHERE status=1 
+				  AND branch_id=$branch_id ";
+		//new check is cancel 17-08-2018
+		$sql.=" AND is_cancel=0";
+		if($data["is_issueplong"]!=0){
+			$sql.=" AND is_issueplong=0 ";
+		}
+		if($data["notInPlongStep"]!=0){
+			$sql.=" AND ln_sale.house_id NOT IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE ln_sale.house_id = `pr`.`property_id`) ";
 		}
 		return $db->fetchAll($sql);
 	}
