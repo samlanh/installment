@@ -1371,6 +1371,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			if(!empty($data['contract_issuer_id'])){
     			 $arr['contract_issuer_id']=$data['contract_issuer_id'];
     		}
+			if(!empty($data['interest_policy'])){
+    			 $arr['interest_policy']=$data['interest_policy'];
+    		}
     		$id = $data['id'];
     		$this->_name='ln_sale';
     		$where = $db->quoteInto('id=?', $id);
