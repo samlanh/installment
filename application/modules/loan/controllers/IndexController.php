@@ -259,6 +259,14 @@ class Loan_IndexController extends Zend_Controller_Action {
 				'name' => $this->tr->translate("ADD_NEW"),
 		) );
 		$this->view->co_name=$co_name;
+		
+		$interest = $db->getAllInterestratestore();
+	    array_unshift($interest,array(
+		    'id' => -1,
+		    'name' =>$this->tr->translate("ADD_NEW"),
+	    ) );
+	    $this->view->rs_interest = $interest;
+		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}

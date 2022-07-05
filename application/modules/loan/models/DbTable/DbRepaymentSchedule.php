@@ -191,8 +191,10 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     				}
 					
 					if(SET_SALENO_COUNT==1){
-						$loan_number = $dbtable->getLoanNumber($data);
-						$arr['sale_number']=$loan_number;
+						if($sale['is_reschedule']!=1){
+							$loan_number = $dbtable->getLoanNumber($data);
+							$arr['sale_number']=$loan_number;
+						}
 					}
 					
     				$where= " id = ".$data['id'];
