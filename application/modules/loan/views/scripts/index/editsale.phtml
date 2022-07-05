@@ -13,6 +13,8 @@
 	$freeStoreSetting = SETTING_FREE_STORE;
 	$showWitnessSetting = SETTING_SHOW_WITNESS;
 	$showAgreementPlongSetting = AGREEMENT_FOR_PLONG;
+	
+	$interestSetting = SETTING_INTEREST;
 ?>
 <title><?php echo $tr->translate("EDITSALE");?></title>
 <style>
@@ -220,6 +222,12 @@
 	                    	<?php echo $frm->getElement('period');?>
 	                   </div>
 	                </div>
+					 <div class="form-group" style="<?php if ($interestSetting==0){ echo "display: none;";}?>">
+					   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INTEREST_POLICY");?></label>
+					   <div class="col-md-7 col-sm-7 col-xs-12">
+							<?php echo $frm->getElement('interest_policy');?>
+					   </div>
+					</div>
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INTEREST_RATE");?>/<?php echo $tr->translate("YEAR");?>
 	                   </label>
@@ -451,14 +459,51 @@
 		</form>
 	</div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("INTEREST_RATE")?>'"  id="frm_interest" >
+		<form id="form_interestrate" dojoType="dijit.form.Form">
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<input dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="interest_ratenew" name="interest_ratenew" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addinterest();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
 <script type="text/javascript">	
 dojo.require("dojo.data.ItemFileWriteStore");  
 dojo.require("dijit.form.Textarea");	
 
+var interestStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->rs_interest));?> );
+function addinterest(){
+	if(dijit.byId('form_interestrate').validate()){
+		var Itemmake = {					
+				id: dijit.byId('interest_ratenew').get('value'),
+			    name: dijit.byId('interest_ratenew').get('value')
+		};		
+		addDataToSelectbox(dijit.byId('interest_rate'), interestStore, Itemmake, dijit.byId('interest_ratenew').get('value'));	
+		dijit.byId('interest_rate').attr('value',dijit.byId('interest_ratenew').get('value'));
+		dijit.byId('frm_interest').reset();
+		dijit.byId('frm_interest').hide();
+	}
+}
 function displayNone(){
 	document.getElementById('divPrint1').style.display="none";
 }
 function checkScheduleOption(){
+	interest_rate = dijit.byId("interest_rate").get("value");
+  	if(interest_rate==-1){
+  		dijit.byId('frm_interest').show();
+  		return false;
+	}
 	dijit.byId("install_type").set("readOnly",true);
 	dijit.byId('first_payment').set("readOnly",false);
 	dijit.byId('period').set("readOnly",false);
@@ -573,6 +618,7 @@ function getAllPropertyBranch(branch_id){
 			    dijit.byId('land_code').attr('value',house_id);
 			    firstload=1;
 		    }
+			dijit.byId('land_code').attr('value',house_id);
 		},
 		error: function(err) {
 		}

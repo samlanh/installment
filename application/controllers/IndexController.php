@@ -134,8 +134,7 @@ class IndexController extends Zend_Controller_Action
 		$this->view->rslang = $session_lang->lang_id;
     }
     protected function sortMenu($menus){
-    	$menus_order = Array ( 'home','project','group','loan','issue','incexp','message','property','rent','invest','other','stock','requesting','report','rsvacl','setting');
-
+    	$menus_order = Array ('home','project','group','loan','issue','incexp','message','property','rent','invest','other','stock','requesting','report','rsvacl','setting');
     	$temp_menu = Array();
     	$menus=array_unique($menus);
     	foreach ($menus_order as $i => $val){
@@ -169,6 +168,7 @@ class IndexController extends Zend_Controller_Action
 			$arr_acl=$db_user->getArrAcl($user_info['user_type'],$systemType);
 			
 			$arr_actin = array();	
+			$arr_module= array();
 			for($i=0; $i<count($arr_acl);$i++){
 				$arr_module[$i]=$arr_acl[$i]['module'];
 			}
