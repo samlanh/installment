@@ -6,73 +6,62 @@ class Product_MeasureController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		//$db = new ();
+		$db = new Product_Model_DbTable_DbMeasure();
 		try{
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
 			}
 			else{
 				$search = array(
-					'adv_search'=>'',
-					'branch_id'=>-1,
-					'start_date'=> date('Y-m-d'),
-					'end_date'=>date('Y-m-d'),
+					'title'=>'',
 				);
 			}
-			$rs_rows=array();
-			//$rs_rows= $db->getAllSentSMS($search);//
+			$rs_rows= $db->getAllMeasure($search);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+			$collumns = array("MEASURE_TITLE","BY_USER","CREATE_DATE","STATUS");
+			$link=array('module'=>'product','controller'=>'measure','action'=>'edit');
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('name'=>$link));
+			$this->view->search = $search;
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
+			
 		
 	}
 	function addAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
+				$db = new Product_Model_DbTable_DbMeasure();
+				$db->addMeasure($_data);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/product/measure/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$db = new Product_Model_DbTable_DbMeasure();
+		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->updateMeasure($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/product/measure/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/measure/index");
 		}
+		$this->view->rs = $db->getMeasureById($id);
 	}
 }
 

@@ -6,7 +6,8 @@ class Product_CategoryController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		//$db = new ();
+		$db = new Product_Model_DbTable_DbCategory();
+		$rs_rows= array();
 		try{
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -14,22 +15,22 @@ class Product_CategoryController extends Zend_Controller_Action {
 			else{
 				$search = array(
 					'adv_search'=>'',
-					'branch_id'=>-1,
+					'status'	=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
-			}
-			$rs_rows=array();
-			//$rs_rows= $db->getAllSentSMS($search);//
-			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
-			
+				}
+				$rs_rows = $db->getAllCategory($search);//
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
+			
+			$list = new Application_Form_Frmtable();
+			$collumns = array("PARENT_CATEGORY","CATEOGRY_TITLE","CREATE_DATE","BY_USER","STATUS");
+			$link=array('module'=>'product','controller'=>'category','action'=>'edit');
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('parentTitle'=>$link,'categoryName'=>$link));
+			
 // 			$frm = new Application_Form_FrmAdvanceSearch();
 // 			$frm = $frm->AdvanceSearch();
 // 			Application_Model_Decorator::removeAllDecorator($frm);
@@ -40,39 +41,46 @@ class Product_CategoryController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
+				$db = new Product_Model_DbTable_DbCategory();
+				$db->addCategory($_data);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/product/category/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		$fm = new Product_Form_FrmCategory();
+		$frm = $fm->FrmAddCategory();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmCategory = $frm;
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$db = new Product_Model_DbTable_DbCategory();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->updateCategory($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/product/category/index");
 			}catch(Exception $e){
-				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Form_FrmMessage::message("UPDATE_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/category");
 		}
+		
+		$result = $db->getDataRow($id);
+		
+		$fm = new Product_Form_FrmCategory();
+		$frm = $fm->FrmAddCategory($result);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmCategory = $frm;
+		
+		
 	}
 }
 

@@ -3,7 +3,7 @@
 class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 {
 	
-	public function getAllCategoryProduct($parent = 0, $spacing = '', $cate_tree_array = ''){
+	public function getAllCategoryProduct($parent = 0, $spacing = '', $cate_tree_array = '',$option=null){
 
 		$db=$this->getAdapter();
 			if (!is_array($cate_tree_array))
@@ -23,6 +23,15 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			foreach ($query as $row){
 				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
 				$cate_tree_array = $this->getAllCategoryProduct($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		if($option!=null){
+			if(!empty($cate_tree_array)){
+				$optionList= array();
+				foreach ($cate_tree_array as $rs){
+					$optionList[$rs['id']]=$rs['name'];
+				}
+				return $optionList;
 			}
 		}
 		return $cate_tree_array;
@@ -104,6 +113,11 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$pre.='0';
 		}
 		return $pre.$new_acc_no;
+	}
+	function dataExisting($tbName,$where){
+			$db = $this->getAdapter();
+			$sql=" SELECT * FROM $tbName WHERE $where LIMIT 1";
+			return $db->fetchRow($sql);
 	}
 	
 	
