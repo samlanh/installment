@@ -31,15 +31,21 @@
 	}else{
 		$systemSwitchTo = $tr->translate("Installment System");
 		$db = new Application_Model_DbTable_DbStockSystemNotify();
-		$arrNotify = array('forWarehouse'=>1);
+		//$arrNotify = array('forWarehouse'=>1);
+		$arrNotify = array();
 		$notifyForWarehouse = $db->getNotifyRequest($arrNotify);
 		
+		/*
 		$arrNotify = array('forPurchaseDept'=>1);
 		$notifyForPurchaseDept = $db->getNotifyRequest($arrNotify);
 		
 		$arrNotify = array('forApproved'=>1);
 		$notifyForApproved = $db->getNotifyRequest($arrNotify);
+		*/
 	}
+	
+	$db_user=new Application_Model_DbTable_DbUsers();
+	$user_info = $db_user->getUserInfo($user_id);
 	?>
 	<?php if($systemType==1){?>
 			   <?php if (empty($user_info['staff_id'])){?>
@@ -238,17 +244,29 @@
 		<?php }else{?>
 		
 				<li role="presentation" class="dropdown ">
-					<a title="<?php echo $tr->translate("REQUESTING_TO_WAREHOUSE");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
+					<a title="<?php echo $tr->translate("REQUEST_PO");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 						<i class="fa fa-file-text"></i>
 						<span id="countNews" class="badge bg-green"><?php if (count($notifyForWarehouse)>0){ echo count($notifyForWarehouse);}?></span>
 					</a>
-					<ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
+					<ul id="menu1" class="notify-main dropdown-menu list-unstyled " role="menu">
 						<li class=" event title">
-							<h4><i class="fa fa-file-text"></i> <?php echo $tr->translate("REQUESTING_TO_WAREHOUSE");?></h4>
+							<h4><i class="fa fa-file-text"></i> <?php echo $tr->translate("REQUEST_PO");?></h4>
 						</li>
 					   <?php if(!empty($notifyForWarehouse)){?>
 						<?php 
 							foreach($notifyForWarehouse as $key=> $result){
+							$url="";
+							$title="";
+							if($result['processingStatus']==0){
+								$url=$this->baseUrl()."/requesting/checkingrequest/add/id/".$result['id'];
+								$title=$tr->translate("MAKE_CHECKING_REQUEST_PO");
+							}elseif($result['processingStatus']==1){
+								$url=$this->baseUrl()."/requesting/pcheckingrequest/add/id/".$result['id'];
+								$title=$tr->translate("MAKE_PCHECKING_REQUEST_PO");
+							}elseif($result['processingStatus']==2){
+								$url=$this->baseUrl()."/requesting/approvedrequest/add/id/".$result['id'];
+								$title=$tr->translate("MAKE_APPROVED_REQUEST_PO");
+							}
 						?>
 						  <li class=" event">
 								<div class="media-body">
@@ -257,62 +275,13 @@
 									<p><strong><i class="fa fa-newspaper-o"></i> <?php echo $result['purpose'];?> </strong>  </p>
 									<p><strong></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['date'])); ?></p>
 									<p><strong></strong> <i class="fa fa-user"></i> <?php echo $result['user_name'];?></p>
+									<p class="proccessingStatus"><i class="fa fa-sliders"></i> <?php echo $result['processingStatusTitle'];?></p>
+									<a class="btn-go" href="<?php echo $url;?>"><i class="fa fa-location-arrow" aria-hidden="true"></i> <?php echo $title;?></a>
 								</div>
 						  </li>
 						  <?php }?>
 					   <?php }?>
 				    </ul>
 				</li>
-				<li role="presentation" class="dropdown ">
-					<a title="<?php echo $tr->translate("REQUESTING_TO_PURCHASING");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
-						<i class="fa fa-file-text"></i>
-						<span id="countNews" class="badge bg-green"><?php if (count($notifyForPurchaseDept)>0){ echo count($notifyForPurchaseDept);}?></span>
-					</a>
-					<ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
-						<li class=" event title">
-							<h4><i class="fa fa-file-text"></i> <?php echo $tr->translate("REQUESTING_TO_PURCHASING");?></h4>
-						</li>
-					   <?php if(!empty($notifyForPurchaseDept)){?>
-						<?php 
-							foreach($notifyForPurchaseDept as $key=> $result){
-						?>
-						  <li class=" event">
-								<div class="media-body">
-									<small><?php echo $result['branch_name'];?></small><br />
-									<span class="title" ><?php echo $result['requestNo'];?> </span>
-									<p><strong><i class="fa fa-newspaper-o"></i> <?php echo $result['purpose'];?> </strong>  </p>
-									<p><strong></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['date'])); ?></p>
-									<p><strong></strong> <i class="fa fa-user"></i> <?php echo $result['user_name'];?></p>
-								</div>
-						  </li>
-						  <?php }?>
-					   <?php }?>
-				    </ul>
-				</li>
-				<li role="presentation" class="dropdown ">
-					<a title="<?php echo $tr->translate("REQUESTING_TO_APPROVEMENT");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
-						<i class="fa fa-file-text"></i>
-						<span id="countNews" class="badge bg-green"><?php if (count($notifyForApproved)>0){ echo count($notifyForApproved);}?></span>
-					</a>
-					<ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
-						<li class=" event title">
-							<h4><i class="fa fa-file-text"></i> <?php echo $tr->translate("REQUESTING_TO_APPROVEMENT");?></h4>
-						</li>
-					   <?php if(!empty($notifyForApproved)){?>
-						<?php 
-							foreach($notifyForApproved as $key=> $result){
-						?>
-						  <li class=" event">
-								<div class="media-body">
-									<small><?php echo $result['branch_name'];?></small><br />
-									<span class="title" ><?php echo $result['requestNo'];?> </span>
-									<p><strong><i class="fa fa-newspaper-o"></i> <?php echo $result['purpose'];?> </strong>  </p>
-									<p><strong></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['date'])); ?></p>
-									<p><strong></strong> <i class="fa fa-user"></i> <?php echo $result['user_name'];?></p>
-								</div>
-						  </li>
-						  <?php }?>
-					   <?php }?>
-				    </ul>
-				</li>
+				
 		<?php }?>

@@ -146,6 +146,17 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					4=>$tr->translate("STEP_PURCHASING"),
 					5=>$tr->translate("STEP_RECEIVING"),
 				);
+			}else if($typeStep==3){//for Sql Query
+				
+				$string=", CASE
+					WHEN  $stepNum = 0 THEN '".$tr->translate("STEP_REQUESTING")."'
+					WHEN  $stepNum = 1 THEN '".$tr->translate("STEP_CHECKING_REQUEST")."'
+					WHEN  $stepNum = 2 THEN '".$tr->translate("STEP_PURCHASE_CHECKING_REQUEST")."'
+					WHEN  $stepNum = 3 THEN '".$tr->translate("STEP_PURCHASE_CHECKING_REQUEST")."'
+					WHEN  $stepNum = 4 THEN '".$tr->translate("STEP_APPROVED_REQUEST")."'
+					WHEN  $stepNum = 5 THEN '".$tr->translate("STEP_RECEIVING")."'
+					END AS processingStatusTitle ";
+				return $string;
 			}
 		}
 		$value = empty($arrKey[$stepNum])?0:$arrKey[$stepNum];
