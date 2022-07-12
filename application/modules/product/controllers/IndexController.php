@@ -40,8 +40,9 @@ class Product_IndexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
+				$db = new Product_Model_DbTable_DbProduct();
+				$db->addNewProduct($_data);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/product/index/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

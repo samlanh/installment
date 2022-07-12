@@ -52,7 +52,7 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 				);
 		$isService->setMultiOptions($optProduct);
 		
-		$cutStock = new Zend_Dojo_Form_Element_FilteringSelect('isCutStock');
+		$cutStock = new Zend_Dojo_Form_Element_FilteringSelect('isCountStock');
 		$cutStock->setAttribs(array(
 				'dojoType'=>$filter,
 				'class'=>'fullside',
@@ -77,6 +77,18 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		
 		$dbp = new Product_Model_DbTable_DbMeasure();
 		$measureId->setMultiOptions($dbp->getAllMeasureList(1));
+		
+		$budgetItem = new Zend_Dojo_Form_Element_FilteringSelect('budgetItem');
+		$budgetItem->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+// 				'onchange'=>'ConvertMeasure();'
+		));
+		
+		$dbp = new Budget_Model_DbTable_DbbudgetItem();
+		$budgetItem->setMultiOptions($dbp->getAllBudgetItem(1));
 		
 		
 		$productName = new Zend_Dojo_Form_Element_ValidationTextBox('productName');
@@ -120,9 +132,9 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		
 		$note = new Zend_Dojo_Form_Element_Textarea("note");
 		$note->setAttribs(array(
-			'dojoType'=>$tarea,
+			'dojoType'=>$tbox,
 			'class'=>'fullside',
-			'style'=>'width:100%;min-height:103px; font-size:14px; font-family:khmer os Battambang'
+			//'style'=>'width:100%;min-height:103px; font-size:14px; font-family:khmer os Battambang'
 		));
 		
 		$convert = new Zend_Dojo_Form_Element_CheckBox("isConvert");
@@ -149,9 +161,11 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			$id->setValue($data['id']);
 			//$convert
 			//$cutStock
+			//$budgetItem
 		}
 		
 		$this->addElements(array(
+				$budgetItem,
 				$cutStock,
 				$convert,
 				$qtyMeasure,
