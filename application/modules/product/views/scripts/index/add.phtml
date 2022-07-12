@@ -111,9 +111,13 @@ input.btn_borwse_image {
 	                </div>
 	            </div>
 	            <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-clone" aria-hidden="true"></i> <?php echo $tr->translate("CONVERT_MEASURE");?> 
+					<div class="form-group title-blog">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12 bold" >
+	                   		<i class="fa fa-clone" aria-hidden="true"></i> <?php echo $tr->translate("CONVERT_MEASURE");?>
 	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<input type="button" dojoType="dijit.form.Button" onclick="getRefreshData();" label="Get Data" iconClass="dijitEditorIcon dijitEditorIconUndo" /> 
+	                   </div>
 	                </div>
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("MEASURE");?>
@@ -188,7 +192,6 @@ input.btn_borwse_image {
 	                   <?php 
 						$images = $this->baseUrl().'/images/no-photo.png';
 						?>
-						<input name="old_photo"  value="<?php echo $this->photo;?>" type="hidden" />
 						<div class="account-image" >
 							<div class="image-box">
 								<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
@@ -221,6 +224,7 @@ input.btn_borwse_image {
 <script type="text/javascript">
 dojo.require('dijit.form.CheckBox');
 dojo.require('dijit.form.NumberTextBox');
+dojo.require("dojo.data.ItemFileWriteStore"); 
 
 	function ConvertMeasure(){
 		measure = dijit.byId('measureId');
@@ -285,6 +289,53 @@ dojo.require('dijit.form.NumberTextBox');
 	$(function() {
 		bs_input_file();
 	});
+
+	function getRefreshData(){
+		getAllCategory();
+		getAllMeasure();
+		getAllBudgetItem();
+	}
+	function getAllCategory(){
+		urlGetCategory = '<?php echo $this->url(array('module'=>'product','controller'=>'category','action'=>'get-allcategory'));?>';
+		dojo.xhrPost({
+			url:urlGetCategory,	
+			handleAs:"json",
+			load: function(data) {
+				categoryStore  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('categoryId').set('store',categoryStore);
+			},
+			error: function(err){
+			}
+		});
+	}
+	function getAllMeasure(){
+		urlGetMeasure = '<?php echo $this->url(array('module'=>'product','controller'=>'measure','action'=>'get-allmeasure'));?>';
+		dojo.xhrPost({
+			url:urlGetMeasure,	
+			handleAs:"json",
+			load: function(data) {
+				alert(data);	
+				measureStore  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('measureId').set('store',measureStore);
+			},
+			error: function(err){
+			}
+		});
+	}
+	function getAllBudgetItem(){
+		urlGetBudgetItem = '<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'get-allbudgetitem'));?>';
+		dojo.xhrPost({
+			url:urlGetBudgetItem,	
+			handleAs:"json",
+			load: function(data) {
+				ItemStore  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('budgetItem').set('store',ItemStore);
+			},
+			error: function(err){
+			}
+		});
+	}
+	
 	/*								
 		var d_datastore  = getDataStorefromJSON('id','name', <?php //print_r(Zend_Json::encode($this->clienttype));?> );
 		dojo.ready(function(){

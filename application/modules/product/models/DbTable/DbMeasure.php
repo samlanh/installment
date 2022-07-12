@@ -72,7 +72,7 @@ class Product_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
     }
     function getAllMeasureList($option=null){
     	$db = $this->getAdapter();
-    	$sql = "SELECT id,name FROM $this->_name WHERE status = 1 ";
+    	$sql = "SELECT id,name FROM $this->_name WHERE status = 1 ORDER BY id ASC ";
     	$results =  $db->fetchAll($sql);
     	if(!empty($option)){
     			$tr = Application_Form_FrmLanguages::getCurrentlanguage();

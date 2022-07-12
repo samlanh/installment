@@ -78,7 +78,7 @@ class Budget_Model_DbTable_DbbudgetItem extends Zend_Db_Table_Abstract
     }
     function getAllBudgetItem($option=null){
     	$db = $this->getAdapter();
-    	$sql = "SELECT id,budgeTitle AS name FROM $this->_name WHERE status = 1 ";
+    	$sql = "SELECT id,budgeTitle AS name FROM $this->_name WHERE status = 1 Order by id ASC";
     	$results =  $db->fetchAll($sql);
     	if(!empty($option)){
     		$tr = Application_Form_FrmLanguages::getCurrentlanguage();

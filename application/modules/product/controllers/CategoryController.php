@@ -79,8 +79,15 @@ class Product_CategoryController extends Zend_Controller_Action {
 		$frm = $fm->FrmAddCategory($result);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frmCategory = $frm;
-		
-		
+	}
+	function getAllcategoryAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$results=$db->getAllCategoryProduct();
+			print_r(Zend_Json::encode($results));
+			exit();
+		}
 	}
 }
 

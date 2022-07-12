@@ -63,5 +63,14 @@ class Product_MeasureController extends Zend_Controller_Action {
 		}
 		$this->view->rs = $db->getMeasureById($id);
 	}
+	function getAllmeasureAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Product_Model_DbTable_DbMeasure();
+			$results=$db->getAllMeasureList();
+			print_r(Zend_Json::encode($results));
+			exit();
+		}
+	}
 }
 

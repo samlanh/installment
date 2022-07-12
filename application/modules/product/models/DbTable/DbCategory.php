@@ -18,7 +18,6 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
     		WHERE 1
     	";
     	
-    	
     	$from_date =(empty($search['start_date']))? '1': " c.createDate >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " c.createDate <= '".$search['end_date']." 23:59:59'";
     	

@@ -74,5 +74,14 @@ class Budget_ItemController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
 		}
 	}
+	function getAllbudgetitemAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Budget_Model_DbTable_DbbudgetItem();
+			$results=$db->getAllBudgetItem();
+			print_r(Zend_Json::encode($results));
+			exit();
+		}
+	}
 }
 

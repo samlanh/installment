@@ -67,7 +67,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     			if(move_uploaded_file($tmp, $part.$image_name)){
     				move_uploaded_file($tmp, $part.$image_name);
     				$photo = $image_name;
-    				$arr['photo_name']=$photo;
+    				$arr['image']=$photo;
     			}
     		}
     		//$this->_name='';
