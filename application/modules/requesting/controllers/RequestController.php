@@ -149,5 +149,33 @@ class Requesting_RequestController extends Zend_Controller_Action {
 		}
 	}
 	
+	function getallapprovedrequestAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$_row =$db->getAllApprovedRequest($data);
+			
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			array_unshift($_row,array(
+					'id' => 0,
+					'name' => $tr->translate("SELECT_REQUEST_NO"),
+			) );
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
+	
+	function getRequestinfoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Requesting_Model_DbTable_DbRequest();
+			$_row =$db->getRequestPOInfoById($data);
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
+	
 	
 }

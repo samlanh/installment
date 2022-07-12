@@ -57,10 +57,14 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(!empty($_data['categoryId'])){
 			$sql.=" AND p.categoryId= ".$_data['categoryId'];
 		}
+		if(!empty($_data['requestId'])){
+			$sql.=" AND p.proId IN (SELECT rqd.proId FROM `st_request_po_detail` AS rqd  WHERE rqd.requestId=".$_data['requestId']." GROUP BY rqd.proId )";
+		}
 		$row = $db->fetchAll($sql);
 		return $row;
 		
 	}
+	
 	function getProductInfoByLocation($_data=null){
 		
 		$db=$this->getAdapter();
@@ -114,6 +118,30 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		return $pre.$new_acc_no;
 	}
+	function generatePurchaseNo($_data=null){
+		
+		$this->_name='st_purchasing';
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$pre = "";
+		
+		$branch_id = empty($_data['branch_id'])?0:$_data['branch_id'];
+		$pre = $dbgb->getPrefixCode($branch_id);
+		
+		$db = $this->getAdapter();
+		$sql=" SELECT rq.id  FROM $this->_name AS rq WHERE rq.projectId = $branch_id  ORDER BY rq.id DESC LIMIT 1 ";
+		$acc_no = $db->fetchOne($sql);
+		$new_acc_no= (int)$acc_no+1;
+		
+		$dateRequest = empty($_data['dateRequest'])?date("Y-m-d"):$_data['dateRequest'];
+		
+		$pre=$pre.date("Ymd",strtotime($dateRequest));
+		$pre=$pre."-PO";
+		$numberLenght= strlen((int)$new_acc_no);
+		for($i = $numberLenght;$i<4;$i++){
+			$pre.='0';
+		}
+		return $pre.$new_acc_no;
+	}
 	function dataExisting($tbName,$where){
 			$db = $this->getAdapter();
 			$sql=" SELECT * FROM $tbName WHERE $where LIMIT 1";
@@ -161,6 +189,29 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		$value = empty($arrKey[$stepNum])?0:$arrKey[$stepNum];
 		return $value;
+	}
+	
+	function getAllApprovedRequest($_data=null){
+		//$dbgb = new Application_Model_DbTable_DbGlobal();
+		//$userId = $dbgb->getUserId();
+		//$currentLang = $dbgb->currentlang();
+		
+		$db=$this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+    	$sql="
+			SELECT 
+				rq.id,
+				CONCAT(COALESCE(rq.requestNo,'')) AS name			
+		";
+		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 AND rq.approveStatus=1 AND rq.processingStatus=3 ";	
+		if(!empty($_data['branch_id'])){
+			$sql.=" AND rq.projectId=".$_data['branch_id'];
+		}
+		
+		$row = $db->fetchAll($sql);
+		return $row;
+		
 	}
 	
 }
