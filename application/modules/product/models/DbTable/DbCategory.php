@@ -38,7 +38,7 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
     	$order=' ORDER BY c.id DESC  ';
     	
     	$db = $this->getAdapter();
-    	return $db->fetchAll($sql.$where_date.$order);
+    	return $db->fetchAll($sql.$where_date.$where.$order);
     }
    
     function addCategory($data){

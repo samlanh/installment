@@ -31,10 +31,10 @@ class Product_CategoryController extends Zend_Controller_Action {
 			$link=array('module'=>'product','controller'=>'category','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('parentTitle'=>$link,'categoryName'=>$link));
 			
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
+			$frm = new Application_Form_FrmAdvanceSearchStock();
+			$frm = $frm->AdvanceSearch();
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frm_search = $frm;
 		
 	}
 	function addAction(){

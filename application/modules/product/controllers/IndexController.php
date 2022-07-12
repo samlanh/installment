@@ -47,10 +47,10 @@ class Product_IndexController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		$frm = new Product_Form_Frmproduct();
+		$frm = $frm->FrmAddProduct();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmProduct = $frm;
 	}
 	function editAction(){
 		//$db = new Loan_Model_DbTable_DbCancel();

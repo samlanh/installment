@@ -69,5 +69,21 @@ class Product_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql = "SELECT * FROM $this->_name WHERE id = $id limit 1 ";
     	return $db->fetchRow($sql);
+    }
+    function getAllMeasureList($option=null){
+    	$db = $this->getAdapter();
+    	$sql = "SELECT id,name FROM $this->_name WHERE status = 1 ";
+    	$results =  $db->fetchAll($sql);
+    	if(!empty($option)){
+    			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    			$optionList= array(-1=>$tr->translate("PLEASE_SELECT_MEASURE"));
+    			if(!empty($results)){
+	    			foreach ($results as $rs){
+	    				$optionList[$rs['id']]=$rs['name'];
+	    			}
+    			}
+    			return $optionList;
+    	}
+    	return $results;
     }	
 }
