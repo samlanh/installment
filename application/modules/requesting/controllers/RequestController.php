@@ -25,7 +25,7 @@ class Requesting_RequestController extends Zend_Controller_Action {
 			$rs_rows = $db->getAllRequestPO($search);
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","DATE","CHECKING_STATUS","CHECKING_BY","USER","STATUS");
+    		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","DATE","CHECKING_STATUS","CHECKING_BY","PCHECKING_STATUS","PCHECKING_BY","APPROVED_STATUS","APPROVED_BY","USER","STATUS");
     		$link=array(
     				'module'=>'requesting','controller'=>'request','action'=>'edit',
     		);
@@ -65,6 +65,7 @@ class Requesting_RequestController extends Zend_Controller_Action {
     	$this->view->frm = $frm;
     }
 	public function editAction(){
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		$db = new Requesting_Model_DbTable_DbRequest();
 		$id=$this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
@@ -83,11 +84,23 @@ class Requesting_RequestController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
     		exit();
     	}
+		
+		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+		$arrStep = array(
+			'stepNum'=>$row['processingStatus'],
+			'typeStep'=>2,
+		);
+		$processingStatusTitle = $dbGbSt->requestingProccess($arrStep);
+		if ($row['processingStatus']>0){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('REQUEST_IS_ON_PROCCESING')." ".$processingStatusTitle, self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		/*
 		if ($row['checkingStatus']>0){
     		Application_Form_FrmMessage::Sucessfull("REQUEST_IS_ON_PROCCESING", self::REDIRECT_URL."/index");
     		exit();
     	}
-		
+		*/
     	$this->view->row = $row;
     	$this->view->rowdetail = $db->getRequestPODetailById($row);
     	

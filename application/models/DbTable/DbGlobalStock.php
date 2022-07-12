@@ -120,6 +120,37 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			return $db->fetchRow($sql);
 	}
 	
+	function requestingProccess($data=array()){
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$stepNum=0;
+		if(!empty($data['stepNum'])){
+			$stepNum=$data['stepNum'];
+		}
+		$typeStep=1;//keyValue
+		$arrKey = array(
+			0=>0,
+			1=>1,
+			2=>2,
+			3=>3,
+			4=>4,
+			5=>5,
+		);
+		if(!empty($data['typeStep'])){
+			$typeStep=$data['typeStep'];
+			if($typeStep==2){//keyTitle
+				$arrKey = array(
+					0=>$tr->translate("STEP_REQUESTING"),
+					1=>$tr->translate("STEP_CHECKING_REQUEST"),
+					2=>$tr->translate("STEP_PURCHASE_CHECKING_REQUEST"),
+					3=>$tr->translate("STEP_APPROVED_REQUEST"),
+					4=>$tr->translate("STEP_PURCHASING"),
+					5=>$tr->translate("STEP_RECEIVING"),
+				);
+			}
+		}
+		$value = empty($arrKey[$stepNum])?0:$arrKey[$stepNum];
+		return $value;
+	}
 	
 }
 ?>

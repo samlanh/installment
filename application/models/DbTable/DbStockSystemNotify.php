@@ -33,14 +33,22 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 		";
 		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 ";
 		if(!empty($_data['forWarehouse'])){
-			$sql.=" AND rq.checkingStatus=0 ";
+			$sql.=" AND rq.processingStatus=0 ";
 		}
+		if(!empty($_data['forPurchaseDept'])){
+			$sql.=" AND rq.processingStatus=1 AND rq.checkingStatus=1 ";
+		}
+		if(!empty($_data['forApproved'])){
+			$sql.=" AND rq.processingStatus=2 AND rq.pCheckingStatus=1 ";
+		}
+		/*
 		if(!empty($_data['forPurchaseDept'])){
 			$sql.=" AND rq.checkingStatus=1 AND rq.pCheckingStatus=0 ";
 		}
 		if(!empty($_data['forApproved'])){
 			$sql.=" AND rq.pCheckingStatus=1 AND rq.approveStatus=0 ";
 		}
+		*/
 		$sql.=$dbGb->getAccessPermission("rq.projectId");
     	$sql.=" ORDER BY rq.id DESC";
     	return $db->fetchAll($sql);

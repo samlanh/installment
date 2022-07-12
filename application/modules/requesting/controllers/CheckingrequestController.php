@@ -1,6 +1,7 @@
 <?php
 class Requesting_CheckingrequestController extends Zend_Controller_Action {
 	const REDIRECT_URL = '/requesting/checkingrequest';
+	const STEP_REQUEST = 1;
 	public function init()
     {    	
     	header('content-type: text/html; charset=utf8');
@@ -21,11 +22,11 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 				);
     		}
     		$this->view->search = $search;
-			$db = new Requesting_Model_DbTable_DbRequest();
-			$rs_rows = $db->getAllRequestPO($search);
+			$db = new Requesting_Model_DbTable_DbCheckingRequest();
+			$rs_rows = $db->getAllCheckingRequestPO($search);
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","DATE","CHECKING_STATUS","CHECKING_BY","USER","STATUS");
+    		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","REQUEST_DATE","DATE","PCHECKING_STATUS","PCHECKING_BY","CHECKING_STATUS","CHECKING_BY");
     		$link=array(
     				'module'=>'requesting','controller'=>'checkingrequest','action'=>'edit',
     		);
@@ -44,10 +45,14 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 	}
     public function addAction()
     {	
-    	$db = new Requesting_Model_DbTable_DbRequest();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	
+    	$db = new Requesting_Model_DbTable_DbCheckingRequest();
     	if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
+				
+				$data['stepNum']=self::STEP_REQUEST;
 	    		$db->checkingRequestPO($data);
 	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 				
@@ -59,7 +64,9 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 		
 		$id=$this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
-    	$row = $db->getRequestPOById($id);
+		
+		$dbReq = new Requesting_Model_DbTable_DbRequest();
+    	$row = $dbReq->getRequestPOById($id);
     	if (empty($row)){
     		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
     		exit();
@@ -68,13 +75,20 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
     		exit();
     	}
-		if ($row['pCheckingStatus']>0){
-    		Application_Form_FrmMessage::Sucessfull("REQUEST_IS_ON_PROCCESING", self::REDIRECT_URL."/index");
+		
+		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+		$arrStep = array(
+			'stepNum'=>$row['processingStatus'],
+			'typeStep'=>2,
+		);
+		$processingStatusTitle = $dbGbSt->requestingProccess($arrStep);
+		if ($row['processingStatus']>1){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('REQUEST_IS_ON_PROCCESING')." ".$processingStatusTitle, self::REDIRECT_URL."/index");
     		exit();
     	}
     	$this->view->row = $row;
 		$row['checkingRequest']=1;
-    	$this->view->rowdetail = $db->getRequestPODetailById($row);
+    	$this->view->rowdetail = $dbReq->getRequestPODetailById($row);
     	
 		
     	$frm = new Requesting_Form_FrmRequest();

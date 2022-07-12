@@ -25,6 +25,22 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 					WHEN  rq.checkingStatus = 2 THEN '".$tr->translate("REJECTED")."'
 				END AS checkingStatus,
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
+				
+				CASE
+					WHEN  rq.pCheckingStatus= 0 THEN '".$tr->translate("PENDING")."'
+					WHEN  rq.pCheckingStatus = 1 THEN '".$tr->translate("APPROVED")."'
+					WHEN  rq.pCheckingStatus = 2 THEN '".$tr->translate("REJECTED")."'
+				END AS pCheckingStatus,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
+				
+				CASE
+					WHEN  rq.approveStatus= 0 THEN '".$tr->translate("PENDING")."'
+					WHEN  rq.approveStatus = 1 THEN '".$tr->translate("APPROVED")."'
+					WHEN  rq.approveStatus = 2 THEN '".$tr->translate("REJECTED")."'
+				END AS approveStatus,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
+				
+				
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS user_name
 		";
 		$sql.=$dbGb->caseStatusShowImage("rq.status");
@@ -41,6 +57,15 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
     		$s_where[]= " rq.requestNoLetter LIKE '%{$s_search}%'";
     		$s_where[]= " rq.purpose LIKE '%{$s_search}%'";
     		$where.=' AND ('.implode(' OR ', $s_where).')';
+    	}
+		if(!empty($search['checkingStatus'])){
+    		$where.= " AND rq.checkingStatus = ".$search['checkingStatus'];
+    	}
+		if(!empty($search['pCheckingStatus'])){
+    		$where.= " AND rq.pCheckingStatus = ".$search['pCheckingStatus'];
+    	}
+		if(!empty($search['approveStatus'])){
+    		$where.= " AND rq.approveStatus = ".$search['approveStatus'];
     	}
 		if($search['status']>-1){
     		$where.= " AND rq.status = ".$search['status'];
@@ -223,128 +248,5 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 	}
 	
 	
-	public function checkingRequestPO($data){
-		$db= $this->getAdapter();
-		try{
-			$id =$data['id'];
-			$thisRow = $this->getRequestPOById($id);
-			$arr = array(
-    				'checkingNote'			=>$data['checkingNote'],
-    				'checkingDate'			=>$data['checkingDate'],
-    				'checkingStatus'		=>$data['checkingStatus'],
-    				'checkingModifyDate'	=>date("Y-m-d H:i:s"),
-    				'checkingBy'			=>$this->getUserId(),
-    				'processingStatus'		=>1,//Warehouse Step checking Approved/Rejected
-    		);
-			if(empty($thisRow['checkingBy'])){
-				$arr['checkingCreateDate']=date("Y-m-d H:i:s");
-			}
-    		$this->_name='st_request_po';
-			$where=" id = ".$data['id'];
-			$this->update($arr, $where);
-			
-			
-			if(!empty($data['identity'])){
-				$ids = explode(',', $data['identity']);
-				foreach ($ids as $i){
-					if (!empty($data['detailId'.$i])){
-						$arr = array(
-							'requestId'			=>$id,
-							'proId'				=>$data['proId'.$i],
-							
-							'qtyAdjust'			=>$data['qtyAdjust'.$i],
-							'qtyApproved'		=>$data['qtyAdjust'.$i],
-							
-							'dateReqStockIn'	=>$data['dateReqStockIn'.$i],
-							'note'				=>$data['note'.$i],
-							'adjustStatus'		=>$data['adjustStatus'.$i],
-						);
-						
-							
-							
-						$this->_name='st_request_po_detail';
-						$where =" id =".$data['detailId'.$i];
-						$this->update($arr, $where);
-					}
-				}
-			}
-    	}catch(Exception $e){
-	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-			Application_Form_FrmMessage::message("APPLICATION_ERROR");
-    	}
-	}
 	
-	public function pCheckingRequestPO($data){
-		$db= $this->getAdapter();
-		try{
-			$id =$data['id'];
-			$thisRow = $this->getRequestPOById($id);
-			$arr = array(
-    				'pCheckingNote'			=>$data['pCheckingNote'],
-    				'pCheckingDate'			=>$data['pCheckingDate'],
-    				'pCheckingStatus'		=>$data['pCheckingStatus'],
-    				'pCheckingModifyDate'	=>date("Y-m-d H:i:s"),
-    				'pCheckingBy'			=>$this->getUserId(),
-					'processingStatus'		=>2,//Purchase Dept Step checking Approved/Rejected
-    		);
-			if(empty($thisRow['pCheckingBy'])){
-				$arr['pCheckingCreateDate']=date("Y-m-d H:i:s");
-			}
-    		$this->_name='st_request_po';
-			$where=" id = ".$data['id'];
-			$this->update($arr, $where);
-
-    	}catch(Exception $e){
-	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-			Application_Form_FrmMessage::message("APPLICATION_ERROR");
-    	}
-	}
-	
-	public function approvedRequestPO($data){
-		$db= $this->getAdapter();
-		try{
-			$id =$data['id'];
-			$thisRow = $this->getRequestPOById($id);
-			$arr = array(
-    				'approveNote'			=>$data['approveNote'],
-    				'approveDate'			=>$data['approveDate'],
-    				'approveStatus'			=>$data['approveStatus'],
-    				'approveModifyDate'		=>date("Y-m-d H:i:s"),
-    				'approveBy'				=>$this->getUserId(),
-					'processingStatus'		=>3,//Admin/GM Step checking Approved/Rejected
-    		);
-			if(empty($thisRow['approveBy'])){
-				$arr['approveCreateDate']=date("Y-m-d H:i:s");
-			}
-    		$this->_name='st_request_po';
-			$where=" id = ".$data['id'];
-			$this->update($arr, $where);
-			
-			
-			if(!empty($data['identity'])){
-				$ids = explode(',', $data['identity']);
-				foreach ($ids as $i){
-					if (!empty($data['detailId'.$i])){
-						$arr = array(
-							'requestId'			=>$id,
-							'proId'				=>$data['proId'.$i],
-								
-							'qtyApproved'		=>$data['qtyApproved'.$i],
-							'qtyApprovedAfter'	=>$data['qtyApproved'.$i],
-							
-							'note'				=>$data['note'.$i],
-							'approvedStatus'	=>$data['approvedStatus'.$i],
-						);
-
-						$this->_name='st_request_po_detail';
-						$where =" id =".$data['detailId'.$i];
-						$this->update($arr, $where);
-					}
-				}
-			}
-    	}catch(Exception $e){
-	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-			Application_Form_FrmMessage::message("APPLICATION_ERROR");
-    	}
-	}
 }

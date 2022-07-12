@@ -90,7 +90,8 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
  		));
 		$checkingDate->setValue(date("Y-m-d"));
 		
-		$_arrSta = array(0=>$this->tr->translate("PENDING"),1=>$this->tr->translate("APPROVED"),2=>$this->tr->translate("REJECTED"));
+		//0=>$this->tr->translate("PENDING"),
+		$_arrSta = array(1=>$this->tr->translate("APPROVED"),2=>$this->tr->translate("REJECTED"));
     	$checkingStatus = new Zend_Dojo_Form_Element_FilteringSelect("checkingStatus");
     	$checkingStatus->setMultiOptions($_arrSta);
     	$checkingStatus->setAttribs(array(
@@ -113,7 +114,8 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
  		));
 		$approveDate->setValue(date("Y-m-d"));
 		
-		$_arrSta = array(0=>$this->tr->translate("PENDING"),1=>$this->tr->translate("APPROVED"),2=>$this->tr->translate("REJECTED"));
+		//0=>$this->tr->translate("PENDING"),
+		$_arrSta = array(1=>$this->tr->translate("APPROVED"),2=>$this->tr->translate("REJECTED"));
     	$approveStatus = new Zend_Dojo_Form_Element_FilteringSelect("approveStatus");
     	$approveStatus->setMultiOptions($_arrSta);
     	$approveStatus->setAttribs(array(
@@ -136,7 +138,8 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
  		));
 		$pCheckingDate->setValue(date("Y-m-d"));
 		
-		$_arrSta = array(0=>$this->tr->translate("PENDING"),1=>$this->tr->translate("APPROVED"),2=>$this->tr->translate("REJECTED"));
+		//0=>$this->tr->translate("PENDING"),
+		$_arrSta = array(1=>$this->tr->translate("APPROVED"),2=>$this->tr->translate("REJECTED"));
     	$pCheckingStatus = new Zend_Dojo_Form_Element_FilteringSelect("pCheckingStatus");
     	$pCheckingStatus->setMultiOptions($_arrSta);
     	$pCheckingStatus->setAttribs(array(

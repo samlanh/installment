@@ -94,7 +94,35 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		}
 		$to_date->setValue($_date);
 		
+		$checkingStatus=  new Zend_Dojo_Form_Element_FilteringSelect('checkingStatus');
+		$checkingStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_opts = array(
+				0=>$this->tr->translate("CHECKING_STATUS"),
+				1=>$this->tr->translate("APPROVED"),
+				2=>$this->tr->translate("REJECTED"),
+				);
+		$checkingStatus->setMultiOptions($_opts);
+		$checkingStatus->setValue($request->getParam("checkingStatus"));
 		
+		$pCheckingStatus=  new Zend_Dojo_Form_Element_FilteringSelect('pCheckingStatus');
+		$pCheckingStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_opts = array(
+				0=>$this->tr->translate("PCHECKING_STATUS"),
+				1=>$this->tr->translate("APPROVED"),
+				2=>$this->tr->translate("REJECTED"),
+				);
+		$pCheckingStatus->setMultiOptions($_opts);
+		$pCheckingStatus->setValue($request->getParam("pCheckingStatus"));
+		
+		$approveStatus=  new Zend_Dojo_Form_Element_FilteringSelect('approveStatus');
+		$approveStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_opts = array(
+				0=>$this->tr->translate("APPROVED_STATUS"),
+				1=>$this->tr->translate("APPROVED"),
+				2=>$this->tr->translate("REJECTED"),
+				);
+		$approveStatus->setMultiOptions($_opts);
+		$approveStatus->setValue($request->getParam("approveStatus"));
 		
 		
 		$this->addElements(
@@ -104,7 +132,11 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				$_btn_search,
 				$branch_id,
 				$from_date,
-				$to_date,			
+				$to_date,
+				
+				$checkingStatus,			
+				$pCheckingStatus,			
+				$approveStatus,			
 			)
 		);
 		return $this;
