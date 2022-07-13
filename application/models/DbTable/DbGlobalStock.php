@@ -81,6 +81,17 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				0 AS currentQty,
 				'Kg' AS measureTitle
 			";
+		if(!empty($_data['requestId'])){
+			$sql.="
+				,
+				(SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS isCompletedPO,
+				(SELECT rqd.dateReqStockIn FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS dateReqStockIn,
+				(SELECT rqd.note FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS requestItemsNote,
+				(SELECT rqd.qtyApproved FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS qtyApproved,
+				(SELECT rqd.qtyApprovedAfter FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS qtyApprovedAfter
+			";
+		}
+		
 		$sql.=" FROM `st_product` AS p  ";
 		$sql.=" WHERE p.status=1 ";
 			
@@ -115,7 +126,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		
 		$dateRequest = empty($_data['dateRequest'])?date("Y-m-d"):$_data['dateRequest'];
 		
-		$pre=$pre.date("Ymd",strtotime($dateRequest));
+		$pre=$pre.date("dmy",strtotime($dateRequest));
+		$pre=$pre."R";
 		$numberLenght= strlen((int)$new_acc_no);
 		for($i = $numberLenght;$i<4;$i++){
 			$pre.='0';
@@ -136,10 +148,10 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$acc_no = $db->fetchOne($sql);
 		$new_acc_no= (int)$acc_no+1;
 		
-		$dateRequest = empty($_data['dateRequest'])?date("Y-m-d"):$_data['dateRequest'];
+		$dateRequest = empty($_data['dateRequest'])?date("y-m-d"):$_data['dateRequest'];
 		
-		$pre=$pre.date("Ymd",strtotime($dateRequest));
-		$pre=$pre."-PO";
+		$pre=$pre.date("dmy",strtotime($dateRequest));
+		$pre=$pre."P";
 		$numberLenght= strlen((int)$new_acc_no);
 		for($i = $numberLenght;$i<4;$i++){
 			$pre.='0';
@@ -154,13 +166,12 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	
 	function requestingProccess($data=array()){
 		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
-		$stepNum=0;
+		$stepNum=1;
 		if(!empty($data['stepNum'])){
 			$stepNum=$data['stepNum'];
 		}
 		$typeStep=1;//keyValue
 		$arrKey = array(
-			0=>0,
 			1=>1,
 			2=>2,
 			3=>3,
@@ -171,22 +182,22 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$typeStep=$data['typeStep'];
 			if($typeStep==2){//keyTitle
 				$arrKey = array(
-					0=>$tr->translate("STEP_REQUESTING"),
-					1=>$tr->translate("STEP_CHECKING_REQUEST"),
-					2=>$tr->translate("STEP_PURCHASE_CHECKING_REQUEST"),
-					3=>$tr->translate("STEP_APPROVED_REQUEST"),
-					4=>$tr->translate("STEP_PURCHASING"),
-					5=>$tr->translate("STEP_RECEIVING"),
+					1=>$tr->translate("STEP_REQUESTING"),
+					2=>$tr->translate("STEP_CHECKING_REQUEST"),
+					3=>$tr->translate("STEP_PURCHASE_CHECKING_REQUEST"),
+					4=>$tr->translate("STEP_APPROVED_REQUEST"),
+					5=>$tr->translate("STEP_PURCHASING"),
+					6=>$tr->translate("STEP_RECEIVING"),
 				);
 			}else if($typeStep==3){//for Sql Query
 				
 				$string=", CASE
-					WHEN  $stepNum = 0 THEN '".$tr->translate("STEP_REQUESTING")."'
-					WHEN  $stepNum = 1 THEN '".$tr->translate("STEP_CHECKING_REQUEST")."'
-					WHEN  $stepNum = 2 THEN '".$tr->translate("STEP_PURCHASE_CHECKING_REQUEST")."'
+					WHEN  $stepNum = 1 THEN '".$tr->translate("STEP_REQUESTING")."'
+					WHEN  $stepNum = 2 THEN '".$tr->translate("STEP_CHECKING_REQUEST")."'
 					WHEN  $stepNum = 3 THEN '".$tr->translate("STEP_PURCHASE_CHECKING_REQUEST")."'
 					WHEN  $stepNum = 4 THEN '".$tr->translate("STEP_APPROVED_REQUEST")."'
-					WHEN  $stepNum = 5 THEN '".$tr->translate("STEP_RECEIVING")."'
+					WHEN  $stepNum = 5 THEN '".$tr->translate("STEP_PURCHASING")."'
+					WHEN  $stepNum = 6 THEN '".$tr->translate("STEP_RECEIVING")."'
 					END AS processingStatusTitle ";
 				return $string;
 			}
@@ -208,7 +219,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				rq.id,
 				CONCAT(COALESCE(rq.requestNo,'')) AS name			
 		";
-		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 AND rq.approveStatus=1 AND rq.processingStatus=3 ";	
+		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 AND rq.approveStatus=1 AND rq.processingStatus=4 ";	
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND rq.projectId=".$_data['branch_id'];
 		}
@@ -216,6 +227,41 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$row = $db->fetchAll($sql);
 		return $row;
 		
+	}
+	
+	function getAllSupplier($_data=null){
+		$db=$this->getAdapter();
+		$sql="
+			SELECT 
+				sp.id AS id,
+				sp.name AS `name`
+			";
+		$sql.=" FROM `st_supplier` AS sp  ";
+		$sql.=" WHERE sp.status=1 ";
+			
+		if(!empty($_data['branch_id'])){
+			$sql.="";
+		}
+		
+		$row = $db->fetchAll($sql);
+		return $row;
+		
+	}
+	function initilizeProductType(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$optProduct = array(
+			'0'=>$tr->translate("PRODUCT"),
+			'1'=>$tr->translate('SERVICE')
+		);
+		return $optProduct;
+	}
+	function initilizeStockType(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$optStockType = array(
+			1=>$tr->translate("COUNTSTOCK"),
+			0=>$tr->translate('NONSTOCK')
+		);
+		return $optStockType;
 	}
 	
 }

@@ -1,7 +1,7 @@
 <?php
 class Requesting_ApprovedrequestController extends Zend_Controller_Action {
 	const REDIRECT_URL = '/requesting/approvedrequest';
-	const STEP_REQUEST = 3;
+	const STEP_REQUEST = 4;
 	public function init()
     {    	
     	header('content-type: text/html; charset=utf8');

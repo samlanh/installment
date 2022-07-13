@@ -1,7 +1,7 @@
 <?php
 class Requesting_CheckingrequestController extends Zend_Controller_Action {
 	const REDIRECT_URL = '/requesting/checkingrequest';
-	const STEP_REQUEST = 1;
+	const STEP_REQUEST = 2;
 	public function init()
     {    	
     	header('content-type: text/html; charset=utf8');
