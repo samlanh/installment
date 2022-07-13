@@ -1,5 +1,9 @@
 <?php
 class Po_IndexController extends Zend_Controller_Action {
+	
+	const REDIRECT_URL = '/po/index';
+	const STEP_REQUEST = 5;
+	const PURCHASE_TYPE = 1;//From Requesting
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -37,11 +41,16 @@ class Po_IndexController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
+		$db = new Po_Model_DbTable_DbPurchasing();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
+				
+				
+				$_data['stepNum']=self::STEP_REQUEST;
+				$_data['purchaseType']=self::PURCHASE_TYPE;
+				$db->addPurchasingRequest($_data);
+	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
