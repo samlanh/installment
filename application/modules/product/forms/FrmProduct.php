@@ -21,7 +21,7 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			'queryExpr'=>'*${0}*',
 		));
 		$options = $db->getAllCategoryProduct(0,'','',1);
-		$options['-1']=$tr->translate("SELECT");
+// 		$options['-1']=$tr->translate("SELECT");
 		$categoryId->setMultiOptions($options);
 		
 		$status = new Zend_Dojo_Form_Element_FilteringSelect('status');
