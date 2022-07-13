@@ -47,6 +47,18 @@ input.btn_borwse_image {
 		<form id='frm_add' action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
+					measureId = dijit.byId('measureId').get('value');
+					if(measureId<1){
+						alert('<?php echo $tr->translate('PLEASE_SELECT_MEASURE');?>');
+						dijit.byId('measureId').focus();
+						return false;
+					}
+					budgetItem = dijit.byId('budgetItem').get('value');
+					if(budgetItem<1){
+						alert('<?php echo $tr->translate('PLEASE_SELECT_BUDGET');?>');
+						dijit.byId('budgetItem').focus();
+						return false;
+					}
 					return true;
 				}else{
 					return false;
@@ -75,7 +87,7 @@ input.btn_borwse_image {
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("IS_CUT_STOCK");?>
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("IS_COUNT_STOCK");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('isCountStock');?>
@@ -191,15 +203,20 @@ input.btn_borwse_image {
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                   <?php 
 						$images = $this->baseUrl().'/images/no-photo.png';
+						if (!empty($this->photo)){
+							$images = $this->baseUrl().'/images/'.$this->photo;
+						}
 						?>
 						<div class="account-image" >
 							<div class="image-box">
 								<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
 							</div>
 							<div class="button_browse">
-							<div id='preview'></div>	
+								<div id='preview'></div>	
 								<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
 								<input class="btn_borwse_image" type="file" id="photo" name="photo" />
+								<?php echo $frm->getElement('oldPhoto');?>
+								<?php echo $frm->getElement('id');?>
 							</div>
 						</div>
 	                   </div>
@@ -229,6 +246,12 @@ $("#photo").change(function(){
 });
 $(function(){
 	bs_input_file();
+});
+
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		ConvertMeasure();
+	 });
 });
 
 function readURL(input) {
@@ -279,9 +302,16 @@ function bs_input_file() {
 			dijit.byId('isConvert').set("checked", false);
 			window.open('<?php echo $this->url(array('module'=>'product','controller'=>'measure','action'=>'add'))?>');
 		}
+		
+		measureLable = measure.attr('displayedValue');
+		dijit.byId('labelMeasure').attr('value',measureLable);
+		dijit.byId('qtyMeasure').attr('value',1);
+
 		isConvert = dijit.byId('isConvert').get('value');
 		if(isConvert==1){
-			measureLable = measure.attr('displayedValue');
+			dijit.byId('labelMeasure').attr('value','');
+			dijit.byId('qtyMeasure').attr('value','');
+			
 			dojo.byId('convert').innerHTML ="1 "+measureLable+" = ";
 			dojo.byId('measureLabel').innerHTML ="("+measureLable+")";
 		}

@@ -36,8 +36,8 @@ class Product_IndexController extends Zend_Controller_Action {
 			$list = new Application_Form_Frmtable();
 			$collumns = array("PRODUCT_NAME","PRODUCT_CODE","BAR_CODE","PRODUCT_CATEGORY","MEASURE","SERVICE_PRODUCT",
 							  "IS_COUNT_STOCK","COSTING","BUDGET_ITEM","BY_USER","CREATE_DATE","STATUS");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+			$link=array('module'=>'product','controller'=>'index','action'=>'edit');
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('proName'=>$link,'proCode'=>$link,'barCode'=>$link,'categoryName'=>$link));
 			
 			$frm = new Application_Form_FrmAdvanceSearchStock();
 			$frm = $frm->AdvanceSearch();
@@ -67,26 +67,30 @@ class Product_IndexController extends Zend_Controller_Action {
 		$this->view->frmProduct = $frm;
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$db = new Product_Model_DbTable_DbProduct();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->updateProductData($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/product/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
-		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+		$result = $db->getProductbyId($id);
+		if(empty($id) OR empty($result)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index");
 		}
+		$this->view->photo = $result['image'];
+		$frm = new Product_Form_Frmproduct();
+		$frm = $frm->FrmAddProduct($result);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmProduct = $frm;
+		
 	}
 }
 

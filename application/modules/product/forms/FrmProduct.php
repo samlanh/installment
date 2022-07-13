@@ -46,11 +46,8 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			'queryExpr'=>'*${0}*',
 			'onchange'=>'checkCutStock();'
 		));
-		
-		$optProduct = array(
-			'0'=>$tr->translate("PRODUCT"),
-			'1'=>$tr->translate('SERVICE')
-			);
+		$optProduct = $db->initilizeProductType();
+		unset($optProduct[-1]);
 		$isService->setMultiOptions($optProduct);
 		
 		$cutStock = new Zend_Dojo_Form_Element_FilteringSelect('isCountStock');
@@ -61,10 +58,8 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			'queryExpr'=>'*${0}*',
 		));
 		
-		$optProduct = array(
-			1=>$tr->translate("COUNTSTOCK"),
-			0=>$tr->translate('NONSTOCK')
-		);
+		$optProduct = $db->initilizeStockType();
+		unset($optProduct[-1]);
 		$cutStock->setMultiOptions($optProduct);
 		
 		$measureId = new Zend_Dojo_Form_Element_FilteringSelect('measureId');
@@ -103,8 +98,11 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		$productCode->setAttribs(array(
 			'dojoType'=>$tvalidate,
 			'class'=>'fullside',
+			'readonly'=>true,
 			'required'=>true,
 		));
+		$dbp = new Product_Model_DbTable_DbProduct();
+		$productCode->setValue($dbp->generateProductCode());
 		
 		$barCode = new Zend_Dojo_Form_Element_TextBox('barCode');
 		$barCode->setAttribs(array(
@@ -119,16 +117,18 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			'required'=>true,
 		));
 		
-		$labelMeasure = new Zend_Dojo_Form_Element_TextBox('labelMeasure');
+		$labelMeasure = new Zend_Dojo_Form_Element_ValidationTextBox('labelMeasure');
 		$labelMeasure->setAttribs(array(
-			'dojoType'=>$tbox,
+			'dojoType'=>$tvalidate,
 			'class'=>'fullside',
+			'required'=>true,
 		));
 		
 		$qtyMeasure = new Zend_Dojo_Form_Element_TextBox('qtyMeasure');
 		$qtyMeasure->setAttribs(array(
 			'dojoType'=>$numbox,
 			'class'=>'fullside',
+			'required'=>true,
 		));
 		
 		$note = new Zend_Dojo_Form_Element_Textarea("note");
@@ -136,6 +136,8 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			'dojoType'=>$tbox,
 			'class'=>'fullside',
 		));
+		
+		$oldPhoto = new Zend_Form_Element_Hidden("oldPhoto");
 		
 		$convert = new Zend_Dojo_Form_Element_CheckBox("isConvert");
 		$convert->setAttribs(array(
@@ -146,6 +148,7 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		$id = new Zend_Form_Element_Hidden('id');
 		
 		if(!empty($data)){
+			$oldPhoto->setValue($data['image']);
 			$categoryId->setValue($data['categoryId']);
 			$status->setValue($data['status']);
 			$productName->setValue($data['proName']);
@@ -158,13 +161,14 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			$measureId->setValue($data['measureId']);
 			$labelMeasure->setValue($data['measureLabel']);
 			$qtyMeasure->setValue($data['measureValue']);
-			$id->setValue($data['id']);
+			$id->setValue($data['proId']);
 			$convert->setValue($data['isConvertMeasure']);
 			$cutStock->setValue($data['isCountStock']);
 			$budgetItem->setValue($data['budgetId']);
 		}
 		
 		$this->addElements(array(
+				$oldPhoto,
 				$budgetItem,
 				$cutStock,
 				$convert,
@@ -212,10 +216,8 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			'queryExpr'=>'*${0}*',
 		));
 	
-		$optProduct = array(
-				'0'=>$tr->translate("PRODUCT"),
-				'1'=>$tr->translate('SERVICE')
-		);
+		$optProduct = $db->initilizeProductType();
+		
 		$isService->setMultiOptions($optProduct);
 		$isService->setValue($request->getParam('isService'));
 	
@@ -227,10 +229,8 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			'queryExpr'=>'*${0}*',
 		));
 	
-		$optProduct = array(
-			1=>$tr->translate("COUNTSTOCK"),
-			0=>$tr->translate('NONSTOCK')
-		);
+		$optProduct = $db->initilizeStockType();
+		
 		$cutStock->setMultiOptions($optProduct);
 		$cutStock->setValue($request->getParam('isCountStock'));
 	

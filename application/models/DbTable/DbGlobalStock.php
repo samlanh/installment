@@ -250,6 +250,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	function initilizeProductType(){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$optProduct = array(
+			-1=>$tr->translate("SELECT_PRODUCT_TYPE"),
 			'0'=>$tr->translate("PRODUCT"),
 			'1'=>$tr->translate('SERVICE')
 		);
@@ -258,6 +259,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	function initilizeStockType(){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$optStockType = array(
+			-1=>$tr->translate("SELECT_STOCK_TYPE"),
 			1=>$tr->translate("COUNTSTOCK"),
 			0=>$tr->translate('NONSTOCK')
 		);
