@@ -47,10 +47,13 @@ class Po_IndexController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
+		
+    	$frm = new Po_Form_FrmPurchase();
+    	$frm->FrmPurchase(null);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
+		
 	}
 	function editAction(){
 		//$db = new Loan_Model_DbTable_DbCancel();
@@ -72,6 +75,17 @@ class Po_IndexController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		if(empty($id)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+		}
+	}
+	
+	function getpurchasenoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$_row =$db->generatePurchaseNo($data);
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
 		}
 	}
 }

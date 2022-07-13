@@ -246,7 +246,42 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		}
 		return $db->fetchAll($sql);
 	}
-	
+	function getRequestPOInfoById($data=null){
+		$db = $this->getAdapter();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="
+			SELECT 
+				rq.*,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = rq.projectId LIMIT 1) AS branch_name,
+				CASE
+					WHEN  rq.checkingStatus= 0 THEN '".$tr->translate("PENDING")."'
+					WHEN  rq.checkingStatus = 1 THEN '".$tr->translate("APPROVED")."'
+					WHEN  rq.checkingStatus = 2 THEN '".$tr->translate("REJECTED")."'
+				END AS checkingStatusTitle,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
+				
+				CASE
+					WHEN  rq.pCheckingStatus= 0 THEN '".$tr->translate("PENDING")."'
+					WHEN  rq.pCheckingStatus = 1 THEN '".$tr->translate("APPROVED")."'
+					WHEN  rq.pCheckingStatus = 2 THEN '".$tr->translate("REJECTED")."'
+				END AS pCheckingStatusTitle,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
+				
+				CASE
+					WHEN  rq.approveStatus= 0 THEN '".$tr->translate("PENDING")."'
+					WHEN  rq.approveStatus = 1 THEN '".$tr->translate("APPROVED")."'
+					WHEN  rq.approveStatus = 2 THEN '".$tr->translate("REJECTED")."'
+				END AS approveStatusTitle,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestByname
+		";
+		$sql.=" FROM st_request_po AS rq WHERE 1 ";
+		if (!empty($data['requestId'])){
+			$sql.=" AND rq.id = ".$data['requestId'] ;
+		}
+		$sql.=" LIMIT 1";
+		return $db->fetchRow($sql);
+	}
 	
 	
 }
