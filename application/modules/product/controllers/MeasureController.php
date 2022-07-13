@@ -68,6 +68,12 @@ class Product_MeasureController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			$db = new Product_Model_DbTable_DbMeasure();
 			$results=$db->getAllMeasureList();
+			
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			
+			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("PLEASE_SELECT_MEASURE")));
+			array_unshift($results, array ('id' => -1,'name' =>$tr->translate("ADD_NEW")));
+			
 			print_r(Zend_Json::encode($results));
 			exit();
 		}

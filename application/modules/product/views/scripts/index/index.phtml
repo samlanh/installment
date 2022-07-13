@@ -1,31 +1,54 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate(""));
+	echo $this->headTitle($tr->translate("PRODUCT_LIST"));
 	$frm = $this->frm_search;
+	$frmProduct = $this->frmSearchProduct;
 ?>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa fa-cubes" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('PRODUCT_LIST');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
     		</div>
     	</div>
 		<div class="card-box">
-			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'message','controller'=>'index','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
 			   <div class="form-group">
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('adv_search');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frmProduct->getElement('isService');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frmProduct->getElement('isCountStock');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frmProduct->getElement('categoryId');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frmProduct->getElement('budgetItem');?>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frmProduct->getElement('measureId');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('status');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('start_date');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('end_date');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('btn_search');?>
 					</div>
 				</div>
 			</form>
@@ -36,13 +59,17 @@
 		</div>
 	</div>
 </div>
-<script>
+
 <?php 
-	/*$edit_Text = $tr->translate("RESENT");
-	$urlEdit = $this->baseUrl()."/message/index/edit/id/";
-	*/
+		$edit_Text = $tr->translate("EDIT");
+		$CopyText = $tr->translate("COPY");
+		$urlEdit = $this->baseUrl()."/product/index/edit/id/";
+		$urlCopy = $this->baseUrl()."/product/index/copy/id/";
+		
 ?>
-/*
+<script>	
+dojo.require("dijit.form.DateTextBox");
+
 function checked_id(index){
 	$("#id_selected").val('');
 	 var searchIDs = $('input:checked').map(function(){
@@ -59,12 +86,16 @@ $(function(){
 		callback: function(key, options) {
 			var m = "clicked: " + key;
 			if(key=="edit"){
-				url='<?php //echo $urlEdit;?>';
+				url='<?php echo $urlEdit;?>';
+			}
+			else if(key=="copy"){
+				url='<?php echo $urlCopy;?>';
 			}
 			gotoAction();
 		},
 		items: {
-			"edit": {name: "<?php //echo $edit_Text;?>", icon: "edit", accesskey: "e"},
+			"edit": {name: "<?php echo $edit_Text;?>", icon: "edit", accesskey: "e"},
+			"copy": {name: "<?php echo $CopyText;?>", icon: "copy", accesskey: "e"},
 		}
 	});
 });
@@ -75,5 +106,4 @@ var recordid ='';
 function gotoAction(){
 	 window.open(url+row+'?rightclick=true', '_blank');
 }
-*/
 </script>

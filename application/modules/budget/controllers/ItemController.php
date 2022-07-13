@@ -79,6 +79,12 @@ class Budget_ItemController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			$db = new Budget_Model_DbTable_DbbudgetItem();
 			$results=$db->getAllBudgetItem();
+			
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+				
+			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("PLEASE_SELECT_BUDGET")));
+			array_unshift($results, array ('id' => -1,'name' =>$tr->translate("ADD_NEW")));
+			
 			print_r(Zend_Json::encode($results));
 			exit();
 		}

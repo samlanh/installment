@@ -76,7 +76,10 @@ class Product_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
     	$results =  $db->fetchAll($sql);
     	if(!empty($option)){
     			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-    			$optionList= array(-1=>$tr->translate("PLEASE_SELECT_MEASURE"));
+    			$optionList= array(
+    					0=>$tr->translate("PLEASE_SELECT_MEASURE"),
+    					-1=>$tr->translate("ADD_NEW")
+    				);
     			if(!empty($results)){
 	    			foreach ($results as $rs){
 	    				$optionList[$rs['id']]=$rs['name'];

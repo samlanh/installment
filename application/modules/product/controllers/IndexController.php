@@ -6,7 +6,8 @@ class Product_IndexController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		//$db = new ();
+		$db = new Product_Model_DbTable_DbProduct();
+		$rs_rows=array();
 		try{
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -14,27 +15,39 @@ class Product_IndexController extends Zend_Controller_Action {
 			else{
 				$search = array(
 					'adv_search'=>'',
-					'branch_id'=>-1,
+					'isService'=>-1,
+					'isCountStock'=>-1,
+					'categoryId'=>0,
+					'budgetItem'=>0,
+					'measureId'=>0,
+						
+					'status'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
 			}
-			$rs_rows=array();
-			//$rs_rows= $db->getAllSentSMS($search);//
+			$rs_rows= $db->getAllProductData($search);
+			
+		}catch (Exception $e){
+			Application_Form_FrmMessage::message("Application Error");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
+			$collumns = array("PRODUCT_NAME","PRODUCT_CODE","BAR_CODE","PRODUCT_CATEGORY","MEASURE","SERVICE_PRODUCT",
+							  "IS_COUNT_STOCK","COSTING","BUDGET_ITEM","BY_USER","CREATE_DATE","STATUS");
 			$link=array('module'=>'','controller'=>'','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
 			
-			}catch (Exception $e){
-				Application_Form_FrmMessage::message("Application Error");
-				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-			}
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
-		
+			$frm = new Application_Form_FrmAdvanceSearchStock();
+			$frm = $frm->AdvanceSearch();
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frm_search = $frm;
+			
+			$frm = new Product_Form_Frmproduct();
+			$frm = $frm->FrmSearchProduct();
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frmSearchProduct = $frm;
 	}
 	function addAction(){
 		if($this->getRequest()->isPost()){

@@ -30,7 +30,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 				$optionList= array(
 						0=>$tr->translate("SELECT_CATEGORY"),
-						-1=>$tr->translate("ADD_NEW_CATEGORY")
+						-1=>$tr->translate("ADD_NEW")
 						);
 				foreach ($cate_tree_array as $rs){
 					$optionList[$rs['id']]=$rs['name'];

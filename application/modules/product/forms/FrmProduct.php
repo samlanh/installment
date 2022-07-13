@@ -19,9 +19,9 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			'class'=>'fullside',
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
+			'onchange'=>'addNewCategory();'
 		));
 		$options = $db->getAllCategoryProduct(0,'','',1);
-// 		$options['-1']=$tr->translate("SELECT");
 		$categoryId->setMultiOptions($options);
 		
 		$status = new Zend_Dojo_Form_Element_FilteringSelect('status');
@@ -48,22 +48,22 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		));
 		
 		$optProduct = array(
-				'0'=>$tr->translate("PRODUCT"),
-				'1'=>$tr->translate('SERVICE')
-				);
+			'0'=>$tr->translate("PRODUCT"),
+			'1'=>$tr->translate('SERVICE')
+			);
 		$isService->setMultiOptions($optProduct);
 		
 		$cutStock = new Zend_Dojo_Form_Element_FilteringSelect('isCountStock');
 		$cutStock->setAttribs(array(
-				'dojoType'=>$filter,
-				'class'=>'fullside',
-				'autoComplete'=>'false',
-				'queryExpr'=>'*${0}*',
+			'dojoType'=>$filter,
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
 		));
 		
 		$optProduct = array(
-				1=>$tr->translate("CUTSTOCK"),
-				0=>$tr->translate('NONSTOCK')
+			1=>$tr->translate("COUNTSTOCK"),
+			0=>$tr->translate('NONSTOCK')
 		);
 		$cutStock->setMultiOptions($optProduct);
 		
@@ -81,11 +81,11 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		
 		$budgetItem = new Zend_Dojo_Form_Element_FilteringSelect('budgetItem');
 		$budgetItem->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-				'autoComplete'=>'false',
-				'queryExpr'=>'*${0}*',
-// 				'onchange'=>'ConvertMeasure();'
+			'dojoType'=>'dijit.form.FilteringSelect',
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+ 			'onchange'=>'addNewBudgetItem();'
 		));
 		
 		$dbp = new Budget_Model_DbTable_DbbudgetItem();
@@ -101,41 +101,40 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		
 		$productCode = new Zend_Dojo_Form_Element_ValidationTextBox('productCode');
 		$productCode->setAttribs(array(
-				'dojoType'=>$tvalidate,
-				'class'=>'fullside',
-				'required'=>true,
+			'dojoType'=>$tvalidate,
+			'class'=>'fullside',
+			'required'=>true,
 		));
 		
 		$barCode = new Zend_Dojo_Form_Element_TextBox('barCode');
 		$barCode->setAttribs(array(
-				'dojoType'=>$tbox,
-				'class'=>'fullside',
+			'dojoType'=>$tbox,
+			'class'=>'fullside',
 		));
 		
 		$costing = new Zend_Dojo_Form_Element_TextBox('costing');
 		$costing->setAttribs(array(
-				'dojoType'=>$numbox,
-				'class'=>'fullside',
-				'required'=>true,
+			'dojoType'=>$numbox,
+			'class'=>'fullside',
+			'required'=>true,
 		));
 		
 		$labelMeasure = new Zend_Dojo_Form_Element_TextBox('labelMeasure');
 		$labelMeasure->setAttribs(array(
-				'dojoType'=>$tbox,
-				'class'=>'fullside',
+			'dojoType'=>$tbox,
+			'class'=>'fullside',
 		));
 		
 		$qtyMeasure = new Zend_Dojo_Form_Element_TextBox('qtyMeasure');
 		$qtyMeasure->setAttribs(array(
-				'dojoType'=>$numbox,
-				'class'=>'fullside',
+			'dojoType'=>$numbox,
+			'class'=>'fullside',
 		));
 		
 		$note = new Zend_Dojo_Form_Element_Textarea("note");
 		$note->setAttribs(array(
 			'dojoType'=>$tbox,
 			'class'=>'fullside',
-			//'style'=>'width:100%;min-height:103px; font-size:14px; font-family:khmer os Battambang'
 		));
 		
 		$convert = new Zend_Dojo_Form_Element_CheckBox("isConvert");
@@ -160,9 +159,9 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			$labelMeasure->setValue($data['measureLabel']);
 			$qtyMeasure->setValue($data['measureValue']);
 			$id->setValue($data['id']);
-			//$convert
-			//$cutStock
-			//$budgetItem
+			$convert->setValue($data['isConvertMeasure']);
+			$cutStock->setValue($data['isCountStock']);
+			$budgetItem->setValue($data['budgetId']);
 		}
 		
 		$this->addElements(array(
@@ -181,6 +180,94 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 				$note,
 				$categoryId,
 				$status
+		));
+		return $this;
+	}
+	public function FrmSearchProduct($data=null){
+	
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$filter = 'dijit.form.FilteringSelect';
+		$tbox = 'dijit.form.TextBox';
+	
+		$db = new Application_Model_DbTable_DbGlobalStock();
+	
+		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
+		$categoryId->setAttribs(array(
+			'dojoType'=>$filter,
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+		));
+		$options = $db->getAllCategoryProduct(0,'','',1);
+		unset($options[-1]);
+		$categoryId->setMultiOptions($options);
+		$categoryId->setValue($request->getParam('categoryId'));
+		
+		$isService = new Zend_Dojo_Form_Element_FilteringSelect('isService');
+		$isService->setAttribs(array(
+			'dojoType'=>$filter,
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+		));
+	
+		$optProduct = array(
+				'0'=>$tr->translate("PRODUCT"),
+				'1'=>$tr->translate('SERVICE')
+		);
+		$isService->setMultiOptions($optProduct);
+		$isService->setValue($request->getParam('isService'));
+	
+		$cutStock = new Zend_Dojo_Form_Element_FilteringSelect('isCountStock');
+		$cutStock->setAttribs(array(
+			'dojoType'=>$filter,
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+		));
+	
+		$optProduct = array(
+			1=>$tr->translate("COUNTSTOCK"),
+			0=>$tr->translate('NONSTOCK')
+		);
+		$cutStock->setMultiOptions($optProduct);
+		$cutStock->setValue($request->getParam('isCountStock'));
+	
+		$measureId = new Zend_Dojo_Form_Element_FilteringSelect('measureId');
+		$measureId->setAttribs(array(
+			'dojoType'=>'dijit.form.FilteringSelect',
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+		));
+	
+		$dbp = new Product_Model_DbTable_DbMeasure();
+		$options = $dbp->getAllMeasureList(1);
+		unset($options[-1]);
+		$measureId->setMultiOptions($options);
+		$measureId->setValue($request->getParam('measureId'));
+	
+		$budgetItem = new Zend_Dojo_Form_Element_FilteringSelect('budgetItem');
+		$budgetItem->setAttribs(array(
+			'dojoType'=>'dijit.form.FilteringSelect',
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+		));
+	
+		$dbp = new Budget_Model_DbTable_DbbudgetItem();
+		$options = $dbp->getAllBudgetItem(1);
+		unset($options[-1]);
+		$budgetItem->setMultiOptions($options);
+		$budgetItem->setValue($request->getParam('budgetItem'));
+	
+		$this->addElements(array(
+				$categoryId,
+				$budgetItem,
+				$cutStock,
+				$measureId,
+				$isService,
 		));
 		return $this;
 	}

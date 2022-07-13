@@ -7,29 +7,72 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
-    function getAllDataRows($search){
-    	$sql="";
+    function getAllProductData($search){
+    	
+    	$session_lang=new Zend_Session_Namespace('lang');
+    	$lang_id=$session_lang->lang_id;
+    	$strLable ='name_kh' ;
+    	if($lang_id==2){
+    		$strLable ='name_en' ;
+    	}
+    	
+    	$sql=" SELECT 
+					
+					p.proId,
+					p.proName,
+					p.proCode,
+					p.barCode,
+					(SELECT c.categoryName from `st_category` as c WHERE c.id=p.categoryId LIMIT 1) categoryName,
+					(SELECT m.name FROM `st_measure` as m WHERE m.id=p.measureId LIMIT 1) MeasureName,
+					(SELECT $strLable FROM `st_view` WHERE type=2 AND key_code=p.isService LIMIT 1) isService,
+					(SELECT $strLable FROM `st_view` WHERE type=1 AND key_code=p.isCountStock LIMIT 1) isCountStock,
+					p.costing,
+					(SELECT i.budgetTitle FROM `st_budget_item` AS i WHERE i.id=p.budgetId LIMIT 1) budgetTitle,
+					(SELECT first_name FROM rms_users as u WHERE u.id = p.userId LIMIT 1) AS user ,
+					p.createDate,
+					(SELECT name_en FROM ln_view WHERE type=3 and key_code = p.status LIMIT 1) AS status
+					
+				FROM $this->_name AS p  ";
     	
     	
-    	$from_date =(empty($search['start_date']))? '1': " send_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " send_date <= '".$search['end_date']." 23:59:59'";
-    	$where='';
+    	$from_date =(empty($search['start_date']))? '1': " createDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " createDate <= '".$search['end_date']." 23:59:59'";
+    	$where=" WHERE proName!='' ";
     	$where_date = " AND ".$from_date." AND ".$to_date;
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = (trim($search['adv_search']));
-    		//$s_where[] = " sms.contance LIKE '%{$s_search}%'";
+    		$s_where[] = " P.proName LIKE '%{$s_search}%'";
+    		$s_where[] = " P.proCode LIKE '%{$s_search}%'";
+    		$s_where[] = " P.barCode LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
+    	
     	if($search['status']>-1){
-    		$where.= " AND s.status = ".$search['status'];
+    		$where.= " AND p.status = ".$search['status'];
     	}
     	
-    	$order.=' ORDER BY id DESC  ';
+    	if($search['isService']>-1){
+    		$where.= " AND p.isService = ".$search['isService'];
+    	}
+    	if($search['isCountStock']>-1){
+    		$where.= " AND p.isCountStock = ".$search['isCountStock'];
+    	}
+    	if($search['categoryId']>0){
+    		$where.= " AND p.categoryId = ".$search['categoryId'];
+    	}
+    	if($search['budgetItem']>0){
+    		$where.= " AND p.budgetId = ".$search['budgetItem'];
+    	}
+    	if($search['measureId']>0){
+    		$where.= " AND p.budgetId = ".$search['measureId'];
+    	}
+    	
+    	$order=' ORDER BY proId DESC  ';
     	
     	$db = $this->getAdapter();
-    	return $db->fetchAll($sql.$where_date.$order);
+    	return $db->fetchAll($sql.$where.$where_date.$order);
     }
    
     function addNewProduct($data){
@@ -37,7 +80,6 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try
     	{
-    		
     		$arr = array(
     				'proName'=>$data['productName'],
     				'proCode'=>$data['productCode'],
@@ -49,7 +91,6 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     				'measureId'=>$data['measureId'],
     				'measureLabel'=>$data['labelMeasure'],
     				'measureValue'=>$data['qtyMeasure'],
-//     				'image'=>$data[''],
     				'userId'=>$this->getUserId(),
     				'createDate'=>date("Y-m-d"),
     				'isCountStock'=>$data['isCountStock'],
@@ -70,7 +111,6 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     				$arr['image']=$photo;
     			}
     		}
-    		//$this->_name='';
     		$id = $this->insert($arr);
     		$db->commit();
     	}catch (Exception $e){
