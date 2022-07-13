@@ -12,6 +12,7 @@ class Po_IndexController extends Zend_Controller_Action {
 	public function indexAction(){
 		//$db = new ();
 		try{
+			$db = new Po_Model_DbTable_DbPurchasing();
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
 			}
@@ -19,25 +20,32 @@ class Po_IndexController extends Zend_Controller_Action {
 				$search = array(
 					'adv_search'=>'',
 					'branch_id'=>-1,
+					'status'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
 			}
+			$search['purchaseType']=self::PURCHASE_TYPE;
 			$rs_rows=array();
-			//$rs_rows= $db->getAllSentSMS($search);//
+			$rs_rows= $db->getAllPO($search);//
+			
+			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+    		$collumns = array("PROJECT_NAME","PO_NO","SUPPLIER","DATE","REQUEST_NO","REQUEST_DATE","REQUEST_BY","TOTAL","STATUS","BY");
+    		$link=array(
+    				'module'=>'po','controller'=>'index','action'=>'edit',
+    		);
+    		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('branch_name'=>$link,'purchaseNo'=>$link,));
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
+			
+		$frm_search = new Application_Form_FrmAdvanceSearchStock();
+		$frm = $frm_search->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
 		
 	}
 	function addAction(){

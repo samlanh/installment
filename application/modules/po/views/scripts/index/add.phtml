@@ -31,6 +31,12 @@
 						dijit.byId('requestId').focus();
 						return false;
 					}
+					supplierId = dijit.byId('supplierId').get('value');
+					if(supplierId=='' || supplierId<=0){
+						alert('<?php echo $tr->translate('PLEASE_SELECT_SUPPLIER');?>');
+						dijit.byId('supplierId').focus();
+						return false;
+					}
 					var rowId = $('#identity').val();
 					if(rowId==''){ 
 						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
@@ -64,17 +70,18 @@
 		                </div>
 		             </div>  
 					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("date");?>
-		                </div>
-		             </div>
-					 <div class="form-group">
 		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("SUPPLIER");?> </label>
 		                <div class="col-md-7 col-sm-7 col-xs-12">
 		                	<?php echo $frm->getElement("supplierId");?>
 		                </div>
 		             </div>
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("date");?>
+		                </div>
+		             </div>
+					 
 		             <div class="form-group">
 		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
 		                <div class="col-md-7 col-sm-7 col-xs-12">
@@ -212,7 +219,7 @@ div#request-info .form-group ul li {
 			searchAttr: "name",
 			class: 'fullside',
 			onChange: function() {
-				addRowProductRequest();
+				addRowProductPO();
 			}
 		}, "productId");
 	 });
@@ -332,11 +339,10 @@ div#request-info .form-group ul li {
 	var col= 0; var no=0;
 	var title = 0;
 	var urlGetProductInfo = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'productinfo')); ?>';
-	function addRowProductRequest(){
-		col++;no++;
+	function addRowProductPO(){
+		
 		template='';
 		temp = "";
-	
 		if(title!=1){
 			temp+='<td><?php echo $tr->translate("DEL");?></td>';
 			temp+='<td><?php echo $tr->translate("N_O");?></td>';
@@ -367,7 +373,8 @@ div#request-info .form-group ul li {
 		}
 		productId = dijit.byId('productId').get('value');
 		if(productId=='' || productId<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>');
+			//alert('<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>');
+			dijit.byId('productId').reset();
 			dijit.byId('productId').focus();
 			return false;
 		}
@@ -379,11 +386,14 @@ div#request-info .form-group ul li {
 				 readychoose = dijit.byId('proId'+arrays[i]).get('value');
 				 if(readychoose==productId){
 					 alert("<?php echo $tr->translate("Choosen ready")?>");
+					 dijit.byId('productId').reset();
 					 return false;
 				 }
 			}
 		}
-	
+		col++;no++;
+		
+		
 		dojo.xhrPost({
 			url:urlGetProductInfo,	
 			content:{ 
@@ -413,6 +423,7 @@ div#request-info .form-group ul li {
 				dojo.html.set(dojo.byId("row"+col),template , {
 					 parseContent: true,
 				});
+				dijit.byId('productId').reset();
 			},
 			error: function(err) {
 			}

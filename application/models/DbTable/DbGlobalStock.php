@@ -238,7 +238,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql="
 			SELECT 
 				sp.id AS id,
-				sp.name AS `name`
+				sp.supplierName AS `name`
 			";
 		$sql.=" FROM `st_supplier` AS sp  ";
 		$sql.=" WHERE sp.status=1 ";

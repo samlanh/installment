@@ -7,29 +7,54 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
-    function getAllDataRows($search){
-    	$sql="";
+    function getAllPO($search){
+    	$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$sql="
+			SELECT 
+				po.id,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = po.projectId LIMIT 1) AS branch_name,
+				po.purchaseNo,
+				spp.supplierName,
+				po.date,
+				rq.requestNo,
+				rq.date AS requestId,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestName,
+				po.total
+		";
+    	$sql.=$dbGb->caseStatusShowImage("po.status");
+		$sql.=",(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS byUser";
+		$sql.=" FROM `st_purchasing` AS po 
+					JOIN `st_supplier` AS spp 
+					LEFT JOIN st_request_po AS rq ON rq.id =po.requestId 
+				WHERE spp.id = po.supplierId 
+					AND po.purchaseType=".$search['purchaseType']."
+		";
+    	$where = "";
+    	$from_date =(empty($search['start_date']))? '1': " po.date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " po.date <= '".$search['end_date']." 23:59:59'";
     	
-    	
-    	$from_date =(empty($search['start_date']))? '1': " send_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " send_date <= '".$search['end_date']." 23:59:59'";
-    	$where='';
-    	$where_date = " AND ".$from_date." AND ".$to_date;
+    	$where.= " AND ".$from_date." AND ".$to_date;
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = (trim($search['adv_search']));
-    		//$s_where[] = " sms.contance LIKE '%{$s_search}%'";
+    		$s_where[] = " po.purchaseNo LIKE '%{$s_search}%'";
+    		$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
+    		$s_where[] = " rq.requestNo LIKE '%{$s_search}%'";
+    		$s_where[] = " po.total LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	if($search['status']>-1){
-    		$where.= " AND s.status = ".$search['status'];
+    		$where.= " AND po.status = ".$search['status'];
     	}
-    	
-    	$order.=' ORDER BY id DESC  ';
-    	
-    	$db = $this->getAdapter();
-    	return $db->fetchAll($sql.$where_date.$order);
+    	if(($search['branch_id'])>0){
+    		$where.= " AND po.projectId = ".$search['branch_id'];
+    	}
+    	$order=' ORDER BY po.id DESC  ';
+    	$where.=$dbGb->getAccessPermission("po.projectId");
+    	//echo $sql.$where.$order;exit();
+    	return $db->fetchAll($sql.$where.$order);
     }
    
     function addPurchasingRequest($data){

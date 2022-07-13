@@ -252,7 +252,7 @@ tr.rowData {
 	var title = 0;
 	var urlGetProductInfo = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'productinfo')); ?>';
 	function addRowProductRequest(){
-		col++;no++;
+		
 		template='';
 		temp = "";
 	
@@ -276,7 +276,8 @@ tr.rowData {
 		}
 		productId = dijit.byId('productId').get('value');
 		if(productId=='' || productId<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>');
+			//alert('<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>');
+			dijit.byId('productId').reset();
 			dijit.byId('productId').focus();
 			return false;
 		}
@@ -288,11 +289,13 @@ tr.rowData {
 				 readychoose = dijit.byId('proId'+arrays[i]).get('value');
 				 if(readychoose==productId){
 					 alert("<?php echo $tr->translate("Choosen ready")?>");
+					 dijit.byId('productId').reset();
 					 return false;
 				 }
 			}
 		}
 	
+		col++;no++;
 		dojo.xhrPost({
 			url:urlGetProductInfo,	
 			content:{ 
@@ -318,6 +321,7 @@ tr.rowData {
 				dojo.html.set(dojo.byId("row"+col),template , {
 					 parseContent: true,
 				});
+				dijit.byId('productId').reset();
 			},
 			error: function(err) {
 			}

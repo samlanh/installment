@@ -80,7 +80,7 @@ class Requesting_ApprovedrequestController extends Zend_Controller_Action {
 			'typeStep'=>2,
 		);
 		$processingStatusTitle = $dbGbSt->requestingProccess($arrStep);
-		if ($row['processingStatus']>3){
+		if ($row['processingStatus']>4){
     		Application_Form_FrmMessage::Sucessfull($tr->translate('REQUEST_IS_ON_PROCCESING')." ".$processingStatusTitle, self::REDIRECT_URL."/index");
     		exit();
     	}

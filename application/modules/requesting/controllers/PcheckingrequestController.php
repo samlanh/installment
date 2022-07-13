@@ -81,7 +81,7 @@ class Requesting_PcheckingrequestController extends Zend_Controller_Action {
 			'typeStep'=>2,
 		);
 		$processingStatusTitle = $dbGbSt->requestingProccess($arrStep);
-		if ($row['processingStatus']>2){
+		if ($row['processingStatus']>3){
     		Application_Form_FrmMessage::Sucessfull($tr->translate('REQUEST_IS_ON_PROCCESING')." ".$processingStatusTitle, self::REDIRECT_URL."/index");
     		exit();
     	}
