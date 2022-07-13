@@ -57,7 +57,7 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 		$rs = $dbUser->getAccessUrl("requesting","checkingrequest","add");
 		if(!empty($rs)){
 			if(is_null($processingStatus)){
-				$processingStatus =0; //forWarehouse
+				$processingStatus =1; //forWarehouse
 			}
 			
 		}
@@ -65,9 +65,9 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 		if(!empty($rs)){
 			//forPurchaseDept
 			if(is_null($processingStatus)){
-				$processingStatus =1; 
+				$processingStatus =2; 
 			}else{
-				$processingStatus =$processingStatus.",1";
+				$processingStatus =$processingStatus.",2";
 			}
 			$sql.=" AND rq.checkingStatus!=2 ";
 		}
@@ -75,9 +75,9 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 		if(!empty($rs)){
 			//forApproved
 			if(is_null($processingStatus)){
-				$processingStatus =2; 
+				$processingStatus =3; 
 			}else{
-				$processingStatus =$processingStatus.",2";
+				$processingStatus =$processingStatus.",3";
 			}
 			$sql.=" AND rq.pCheckingStatus!=2 ";
 		}

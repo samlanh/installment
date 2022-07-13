@@ -63,7 +63,12 @@
 		                	<?php echo $frm->getElement("date");?>
 		                </div>
 		             </div>
-					  
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("SUPPLIER");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("supplierId");?>
+		                </div>
+		             </div>
 		             <div class="form-group">
 		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
 		                <div class="col-md-7 col-sm-7 col-xs-12">
@@ -84,7 +89,12 @@
 						</div>
 						
 					</div>
-						
+					<div class="form-group" style="margin-bottom: 0;">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12" style="text-align:right;"><?php echo $tr->translate("TOTAL");?> (USD) </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("total");?>
+		                </div>
+		             </div>	
 					<table class="collape tablesorter" id="table_row" style="width:100%; white-space: nowrap;border:1px solid #ddd;">
 				    	<tr id="head-title" class="head-td" align="center"></tr>
 					</table>
@@ -116,8 +126,16 @@ table#table_row td.currentQty {
     color: #f74545;
     font-weight: 600;
 }
+table#table_row td.currentQty small {
+    font-size: 10px;
+    display: block;
+    line-height: 8px;
+}
 tr.rowData {
     border-bottom: solid 2px #02014a;
+}
+tr.rowData td {
+    padding: 5px 0;
 }
 #table tr td{
 	border:1px solid #cccccc;
@@ -318,9 +336,13 @@ div#request-info .form-group ul li {
 			temp+='<td><?php echo $tr->translate("N_O");?></td>';
 			temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
 			temp+='<td class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("QTY_REQUEST");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("DATE_ENTRY");?></td>';
+			temp+='<td width="10%"><?php echo $tr->translate("QTY_APPROVED");?></td>';
+			temp+='<td width="10%"><?php echo $tr->translate("QTY");?></td>';
+			temp+='<td width="10%"><?php echo $tr->translate("UNIT_PRICE");?></td>';
+			temp+='<td width="10%"><?php echo $tr->translate("DISCOUNT");?></td>';
+			temp+='<td width="10%"><?php echo $tr->translate("SUB_TOTAL");?></td>';
 			temp+='<td width="20%"><?php echo $tr->translate("NOTE");?></td>';
+			temp+='<td width="20%"><?php echo $tr->translate("STATUS");?></td>';
 			dojo.query("#head-title").append(temp);
 			title=1;
 		}
@@ -329,6 +351,12 @@ div#request-info .form-group ul li {
 		if(branch_id=='' || branch_id<=0){
 			alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
 			dijit.byId('branch_id').focus();
+			return false;
+		}
+		requestId = dijit.byId('requestId').get('value');
+		if(requestId=='' || requestId<=0){
+			alert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
+			dijit.byId('requestId').focus();
 			return false;
 		}
 		productId = dijit.byId('productId').get('value');
@@ -353,18 +381,22 @@ div#request-info .form-group ul li {
 		dojo.xhrPost({
 			url:urlGetProductInfo,	
 			content:{ 
-				'branch_id':branch_id,'productId':productId
+				'branch_id':branch_id,'productId':productId,'requestId':requestId
 			},		    
 			handleAs:"json",
 			load: function(data) {
 				template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td align="center" width="2%">'+no+'</td>';
 				template+='<td class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
-				template+='<td class="currentQty"  width="10%">'+data.currentQty+' ('+data.measureTitle+')</td>';	
-				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="0" type="text"  ></td>';	
-				template+='<td><input dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="now" type="text"  ></td>';	
+				template+='<td class="currentQty"  width="5%">'+data.currentQty+' ('+data.measureTitle+')</td>';	
+				template+='<td class="currentQty"  width="15%">'+data.qtyApproved+'<small><?php echo $tr->translate("QTY_REMAIN");?> : '+data.qtyApprovedAfter+'</small><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="qtyApprovedAfter'+col+'" name="qtyApprovedAfter'+col+'" value="'+data.qtyApprovedAfter+'" type="text"  ></td>';	
+				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="checkingQtyPO('+col+'); calculateTotal('+col+');" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?>" value="'+data.qtyApprovedAfter+'" type="text"  ></td>';	
+				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?> " value="0" type="text"  ></td>';	
+				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="discountAmount'+col+'" name="discountAmount'+col+'" placeholder="'+'<?php echo $tr->translate("DISCOUNT");?> " value="0" type="text"  ></td>';	
+				template+='<td><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"  id="subTotal'+col+'" name="subTotal'+col+'" placeholder="'+'<?php echo $tr->translate("SUB_TOTAL");?> " value="0" type="text"  ></td>';	
 				template+='<td><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
-				
+				template+='<td><select class="fullside" name="isCompletedPO'+col+'" id="isCompletedPO'+col+'" dojoType="dijit.form.FilteringSelect" ><option value="0"><?php echo $tr->translate("UNCOMPLETE_PO");?></option><option value="1"><?php echo $tr->translate("COMPLETE_PO");?></option></select></td>';
+		
 				tmp='<tr class="rowData" id="row'+col+'">';
 				tmp+="</tr>";
 				dojo.query("#table_row").append(tmp);
@@ -380,8 +412,51 @@ div#request-info .form-group ul li {
 			}
 		});
 	}
-	
-
+	function checkingQtyPO(index){
+		qtyApprovedAfter = dijit.byId('qtyApprovedAfter'+index).get('value');
+		qty = dijit.byId('qty'+index).get('value');
+		if(qty>qtyApprovedAfter){
+			dijit.byId('qty'+index).set('value',qtyApprovedAfter);
+			alert("<?php echo $tr->translate("MAXIMUM_QTY_OF_THIS_ITEMS_IS_ONLY")?>"+" "+qtyApprovedAfter);
+		}
+	}
+	function calculateTotal(index){
+		unitPrice = dijit.byId('unitPrice'+index).get('value');
+		unitPrice=isNaN(unitPrice)?0:unitPrice;
+		
+		discountAmount = dijit.byId('discountAmount'+index).get('value');
+		discountAmount=isNaN(discountAmount)?0:discountAmount;
+		
+		qty = dijit.byId('qty'+index).get('value');
+		qty=isNaN(qty)?0:qty;
+		
+		var subtotal=0;
+		subtotal = (qty*unitPrice);
+		
+		if(discountAmount>subtotal){
+			dijit.byId('subTotal'+index).set('value',0);
+			dijit.byId('discountAmount'+index).set('value',subtotal);
+			alert("<?php echo $tr->translate("DISCOUNT_CAN_NOT_BIGER_THAN_TOTAL")?>"+" "+subtotal);
+			return false;
+		}
+		subtotal=subtotal-discountAmount;
+		dijit.byId('subTotal'+index).set('value',subtotal);
+		netTotal();
+	}
+	function netTotal(){
+		var netTotal=0;
+		var rowId = $('#identity').val();
+		var rowIDArray = rowId.split(',');
+		if(rowId==''){
+			alert("<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>");
+			dijit.byId("productId").focus();
+			return false;
+		}
+		for(var n = 0; n < rowIDArray.length; n++) {
+			netTotal += dijit.byId('subTotal'+rowIDArray[n]).get('value');
+		}
+		dijit.byId('total').attr('value',netTotal.toFixed(2));
+	}
 	function deleteRecord(index) {
 		var identity = $('#identity').val();
 		var arrays = identity.split(',');

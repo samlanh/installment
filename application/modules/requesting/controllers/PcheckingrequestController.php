@@ -1,7 +1,7 @@
 <?php
 class Requesting_PcheckingrequestController extends Zend_Controller_Action {
 	const REDIRECT_URL = '/requesting/pcheckingrequest';
-	const STEP_REQUEST = 2;
+	const STEP_REQUEST = 3;
 	public function init()
     {    	
     	header('content-type: text/html; charset=utf8');
