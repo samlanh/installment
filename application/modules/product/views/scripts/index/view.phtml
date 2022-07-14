@@ -1,0 +1,322 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$dbparmeter = new Report_Model_DbTable_DbParamater();
+	$boreyName = $tr->translate("BRAND_TITLE");
+	
+	
+	$imagelogo = $this->baseUrl()."/images/logo.jpg";
+	if (!empty($this->agreement['project_logo'])){
+		$imagelogo = $this->baseUrl()."/images/projects/".$this->agreement['project_logo'];
+	}
+	if (!empty($this->agreement['project_name'])){
+		$projectName = " ".$this->agreement['project_name'];
+	}else{ 
+		$projectName = " បុរី C&T VILLA (SHOP HOUSE)";
+	}
+	
+	$companyAddress=$this->keyValue['footer_branch'];
+	$companyTel="&#9743; ".$this->keyValue['tel-client'];
+	$companyEmail="";
+	if(!empty($this->keyValue['email_client'])){
+		$companyEmail=" &#x2709; ".$this->keyValue['email_client'];
+	}
+	$companyContact=$companyTel.$companyEmail;
+	
+	$rs = $this->rsProduct;
+?>
+<meta charset="utf-8">
+<title><?php echo $tr->translate("PRODUCT_DETAIL_INFO");?></title>
+<style>
+	#printfooter{display: none !important;}
+</style>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('PRODUCT_DETAIL_INFO');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
+	<tr>
+    	<td align="center">
+    		<div id="divPrint" >
+				<style>		
+					tr td h2,td span,p,pre,span{ font-size: 12px ; line-height:18px; font-family: "Times New Roman","Khmer OS Battambang";}
+					ul.headReport, ul.reportTitle {
+						margin: 0;
+						padding: 0;
+						list-style: none;
+					}
+					ul.headReport li span, ul.headReport li {
+						line-height: 18px;
+						text-align: center;
+						font-size: 14px;
+						font-family: "Times New Roman","Khmer OS Muol Light";
+					}
+					ul.headReport li.small-text, ul.headReport li.small-text span {
+						line-height: 14px;
+						text-align: center;
+						font-size: 11px;
+						font-family: "Times New Roman","Khmer OS Battambang";
+					}
+					ul.reportTitle {
+						background: #ffffff;
+						display: block;
+						position: absolute;
+						top: -20px;
+						width: 100%;
+					}
+					
+					table.content-data {
+						margin-top: 5px;
+						font-family: "Times New Roman","Khmer OS Battambang";
+						border-collapse:collapse;
+						
+						width: 100%;
+					}
+					tr.section-bg {
+						background: #337ab7;
+						color: #fff;
+					}
+					tr.section-bg td {
+						font-size: 12px;
+						font-weight: 600;
+						text-transform: uppercase;
+					}
+					table.content-data td {
+						padding: 1px 5px;
+						vertical-align: top;
+					}
+					ul.dataValue {
+						margin: 0;
+						padding: 0;
+						list-style: none;
+					}
+					
+					
+					.blgLeft, .blgRight {
+						display: inline-block;
+						vertical-align: top;
+						line-height: 14px;
+					}
+					.blgLeft {
+						min-width: 60px;
+					}
+					
+					.blgLeft small {
+						font-style: italic;
+						font-size: 10px;
+						display: block;
+						margin-top: -3px;
+					}
+					span.sectionPoint {
+						font-weight: normal;
+					}
+					span.values-row.strongV {
+						font-weight: 600;
+					}
+					span.values-row-title {
+						display: block;
+						text-decoration: underline;
+						font-weight: 600;
+						text-transform: uppercase;
+					}
+					span#reportTitleEn {
+						text-transform: uppercase;
+						font-weight: 600;
+					}
+					
+					body {
+						position: relative;
+					}
+					@page  
+					{ 
+					   
+						margin: 1mm 5mm 5mm 5mm;  
+					} 
+				</style>
+				<table class="tableTop" width="100%" style="border-bottom: double 5px #337ab7;">
+					<tbody>
+						<tr>
+							<td width="20%" id="projectlogo"><img src="<?php echo $imagelogo;?>" style=" height:85px; max-width: 100%; "></td>
+							<td width="60%" valign="top" style=" padding-bottom: 30px;">
+								<ul class="headReport">
+									<li style="font-size:16px; " id="companyTitle"><?php echo $tr->translate("BRAND_TITLE");?></li>
+									<li><span id="companyTitleEn"><?php echo $tr->translate("BRAND_TITLE_EN");?></span></li>
+									<li class="small-text"><span id="companyAddress"><?php echo $companyAddress;?></span></li>
+									<li class="small-text"><span id="companyPhone"><?php echo $companyContact;?></span></li>
+								</ul>
+							</td>
+							<td width="20%">
+								<span class="project-name" id="projectName"></span>
+							</td>
+						</tr> 
+						<tr>
+							<td> </td>
+							<td style="text-align: center;position: relative;">
+								<ul class="reportTitle">
+									<li style="font-size:16px; "><span id="reportTitle" style="font-family:'Khmer OS Muol Light';";><?php echo $tr->translate("PRODUCT_DETAIL_INFO");?></span></li>
+									<li style="font-size:12px;"><span id="staff_lbl"></span></li>
+								</ul>
+							</td>
+							<td></td>
+						</tr> 
+					</tbody>
+				</table>
+				<br />
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td colspan="3"><i class="fa fa-cubes" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_INFO");?> </td>
+					</tr>
+					<tr>
+						<td style="border-right: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><strong><?php echo $tr->translate("PRODUCT_NAME");?></strong> :</span><br />
+									</div>
+									<div class="blgRight"><strong><span class="values-row"><?php echo $rs['proName'];?></span></strong></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("PRODUCT_CODE");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['proCode'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("BAR_CODE");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['barCode'];?></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none;border-right: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"></span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("CREATE_DATE");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo date('d-m-Y',strtotime($rs['createDate']));?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("CREATE_BY");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['user'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("MODIFY_BY");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo empty($rs['modifyDate'])?"N/A": date('d-m-Y',strtotime($rs['modifyDate']));?></span></div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+				
+				
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td colspan="3"><i class="fa fa-th-list" aria-hidden="true"></i> <?php echo $tr->translate("SERVICE_PRODUCT");?> </td>
+					</tr>
+					<tr>
+						<td style="border-right: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("SERVICE_PRODUCT");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['isService'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("IS_COUNT_STOCK");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['isCountStock'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("CATEGORY_NAME");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['categoryName'];?></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none;border-right: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("MEASURE");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['MeasureName'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("QTY");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['measureValue'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("labelMeasure");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['measureLabel'];?></span></div>
+								</li>
+							</ul>
+						</td>
+						<td style="border-left: none; border-bottom: none;">
+							<ul class="dataValue">
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("COSTING");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['costing'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("BUDGET_ITEM");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['budgetTitle'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"><?php echo $tr->translate("NOTE");?> :</span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['note'];?></span></div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+				
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td colspan="3"><i class="fa fa-th-large" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_LOCATION");?> </td>
+					</tr>
+				</table>
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td colspan="3"><i class="fa fa-list-alt" aria-hidden="true"></i><i class="fa fa-th-large" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_MOMENT");?> </td>
+					</tr>
+				</table>
+				<?php //echo $this->footerReport;?>
+			</div>
+    	</td>	
+</tr>
+</table>
+</div>

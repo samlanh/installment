@@ -3,33 +3,55 @@
 class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstract
 {
     protected $_name = 'st_product_location';
-    public function getUserId(){
+    /*public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
-    }
-    function getAllDataRows($search){
-    	$sql="";
+    }*/
+    function getAllProductLocation($search){
+    	$sql=" SELECT 
+					p.proId AS id,
+					(SELECT project_name from `ln_project` where br_id=l.projectId LIMIT 1) as projectName,
+					CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`,
+					p.barCode,
+					l.qty AS currentQty,
+					p.measureLabel AS measureTitle,
+					(SELECT c.categoryName FROM `st_category` as c WHERE c.id=p.categoryId LIMIT 1) categoryName
+				FROM 
+					`st_product` AS p ,
+					$this->_name AS l
+					WHERE 
+						 p.proId=l.proId ";
     	
-    	
-    	$from_date =(empty($search['start_date']))? '1': " send_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " send_date <= '".$search['end_date']." 23:59:59'";
     	$where='';
-    	$where_date = " AND ".$from_date." AND ".$to_date;
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = (trim($search['adv_search']));
-    		//$s_where[] = " sms.contance LIKE '%{$s_search}%'";
+    		$s_where[] = " p.proName LIKE '%{$s_search}%'";
+    		$s_where[] = " p.proCode LIKE '%{$s_search}%'";
+    		$s_where[] = " p.barCode LIKE '%{$s_search}%'";
+    		$s_where[] = " p.measureLabel LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	if($search['status']>-1){
-    		$where.= " AND s.status = ".$search['status'];
+    	
+    	 
+    	if($search['isCountStock']>-1){
+    		$where.= " AND p.isCountStock = ".$search['isCountStock'];
+    	}
+    	if($search['categoryId']>0){
+    		$where.= " AND p.categoryId = ".$search['categoryId'];
+    	}
+    	if($search['branch_id']>0){
+    		$where.= " AND l.projectId = ".$search['branch_id'];
+    	}
+    	if($search['measureId']>0){
+    		$where.= " AND p.budgetId = ".$search['measureId'];
     	}
     	
-    	$order.=' ORDER BY id DESC  ';
+    	$order=' ORDER BY p.proName ASC  ';
     	
     	$db = $this->getAdapter();
-    	return $db->fetchAll($sql.$where_date.$order);
+    	return $db->fetchAll($sql.$where.$order);
     }
    
     function addProductInitQty($data){

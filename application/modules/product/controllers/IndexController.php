@@ -20,7 +20,6 @@ class Product_IndexController extends Zend_Controller_Action {
 					'categoryId'=>0,
 					'budgetItem'=>0,
 					'measureId'=>0,
-						
 					'status'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
@@ -91,6 +90,16 @@ class Product_IndexController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frmProduct = $frm;
 		
+	}
+	function viewAction(){
+		$db = new Product_Model_DbTable_DbProduct();
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		$result = $db->getProductDetailbyId($id);
+		if(empty($id) OR empty($result)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index");
+		}
+		$this->view->rsProduct = $result;
 	}
 }
 
