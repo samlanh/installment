@@ -62,7 +62,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$sql.=" AND p.categoryId= ".$_data['categoryId'];
 		}
 		if(!empty($_data['requestId'])){
-			$sql.=" AND p.proId IN (SELECT rqd.proId FROM `st_request_po_detail` AS rqd  WHERE rqd.requestId=".$_data['requestId']." GROUP BY rqd.proId )";
+			$sql.=" AND p.proId IN (SELECT rqd.proId FROM `st_request_po_detail` AS rqd  WHERE rqd.requestId=".$_data['requestId']." AND rqd.approvedStatus=1 GROUP BY rqd.proId )";
 		}
 		if(!empty($_data['notExistingProjectid'])){
 			$sql.=" AND p.proId NOT IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=".$_data['notExistingProjectid']." )";
@@ -87,7 +87,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				p.proCode,
 				p.proName,
 				(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty,
-				measureLabel AS measureTitle
+				p.measureLabel AS measureTitle
 			";
 		if(!empty($_data['requestId'])){
 			$sql.="

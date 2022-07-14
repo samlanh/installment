@@ -222,10 +222,13 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 	}
 	function getRequestPOById($id=null){
 		$db = $this->getAdapter();
-		$sql=" SELECT * FROM st_request_po WHERE 1 ";
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$sql=" SELECT rq.* FROM st_request_po AS rq WHERE 1 ";
 		if (!empty($id)){
-			$sql.=" AND id = $id LIMIT 1";
+			$sql.=" AND id = $id ";
 		}
+		$sql.=$dbGb->getAccessPermission("rq.projectId");
+		$sql.=" LIMIT 1 ";
 		return $db->fetchRow($sql);
 	}
 	function getRequestPODetailById($rsData=null){
@@ -235,12 +238,18 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		$sql=" 	SELECT 
 					rqd.*,p.proCode,
 					p.proName,
-					0 AS currentQty,
-					'Kg' AS measureTitle 
-				FROM `st_request_po_detail` as rqd, `st_product` AS p WHERE p.proId = rqd.proId ";
-		if (!empty($id)){
-			$sql.=" AND rqd.requestId = $id";
-		}
+					
+					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= rq.projectId LIMIT 1) AS currentQty,
+					p.measureLabel AS measureTitle
+				";
+				
+		$sql.="		FROM 
+					`st_request_po_detail` as rqd
+					JOIN `st_request_po` AS rq ON rq.id = rqd.requestId
+					LEFT JOIN `st_product` AS p  ON p.proId = rqd.proId 
+				
+			";
+		$sql.="WHERE 1 AND rqd.requestId = $id";
 		if (!empty($rsData['pCheckingRequest']) OR !empty($rsData['approvedrequest'])){
 			$sql.=" AND rqd.adjustStatus = 1 ";
 		}

@@ -185,10 +185,14 @@ div#request-info .form-group ul li {
     dojo.require("dijit.form.NumberTextBox");
     dojo.require("dijit.form.DateTextBox");
 	
+	currentProjectId ='<?php echo empty($this->reqResult['projectId'])?0:$this->reqResult['projectId']; ?>';
+	currentRequestId ='<?php echo empty($this->reqResult['id'])?0:$this->reqResult['id']; ?>';
+	
 	var productStore  = getDataStorefromJSON('id','name', null );
 	var requestStore  = getDataStorefromJSON('id','name', null );
     require(["dojo/ready"], function(ready){
 		ready(function(){
+			dijit.byId('branch_id').set('value', currentProjectId);
 			onChageFunctionByBranch();
 		});
 
@@ -237,10 +241,7 @@ div#request-info .form-group ul li {
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
-			//alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
-			//dijit.byId('branch_id').focus();
 			branch_id = 0;
-			//return false;
 		}
 		dojo.xhrPost({
 			url:urlGetAllApprovedRequest,	
@@ -251,6 +252,7 @@ div#request-info .form-group ul li {
 			load: function(data) {
 				requestStore  = getDataStorefromJSON('id','name', data);		
 				dijit.byId('requestId').set('store', requestStore);
+				dijit.byId('requestId').set('value', currentRequestId);
 			},
 			error: function(err) {
 			}
@@ -264,10 +266,7 @@ div#request-info .form-group ul li {
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
-			//alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
-			//dijit.byId('branch_id').focus();
 			branch_id = 0;
-			//return false;
 		}
 		categoryId = dijit.byId('categoryId').get('value');
 		if(categoryId=='' || categoryId==0){
@@ -298,8 +297,6 @@ div#request-info .form-group ul li {
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
-			//alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
-			//dijit.byId('branch_id').focus();
 			return false;
 		}
 		dateRequest = dijit.byId('requestDate').get('value');

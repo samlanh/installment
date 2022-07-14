@@ -116,7 +116,13 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 		$categoryId->setMultiOptions($optCatePro);
 		
 		if(!empty($data)){
-			//$_branch_id->setValue($data['branch_id']);
+			$branch_id->setValue($data['projectId']);
+			$purchaseNo->setValue($data['purchaseNo']);
+			$supplierId->setValue($data['supplierId']);
+			$date->setValue($data['date']);
+			$note->setValue($data['note']);
+			$total->setValue($data['total']);
+			$_status->setValue($data['status']);
 		}
 		
 		$this->addElements(array(

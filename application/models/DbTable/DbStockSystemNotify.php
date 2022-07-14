@@ -40,17 +40,6 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 		$sql.= $dbGbSt->requestingProccess($arrStep);
 		
 		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 ";
-	/*
-		if(!empty($_data['forWarehouse'])){
-			$sql.=" AND rq.processingStatus=0 ";
-		}
-		if(!empty($_data['forPurchaseDept'])){
-			$sql.=" AND rq.processingStatus=1 AND rq.checkingStatus=1 ";
-		}
-		if(!empty($_data['forApproved'])){
-			$sql.=" AND rq.processingStatus=2 AND rq.pCheckingStatus=1 ";
-		}
-	*/
 		
 		$dbUser = new Application_Model_DbTable_DbUsers();
 		$processingStatus=null;
@@ -82,20 +71,24 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 			$sql.=" AND rq.pCheckingStatus!=2 ";
 		}
 		
+		$rs = $dbUser->getAccessUrl("po","index","add");
+		if(!empty($rs)){
+			//forPurchasing
+			if(is_null($processingStatus)){
+				$processingStatus =4; 
+			}else{
+				$processingStatus =$processingStatus.",4";
+			}
+			$sql.=" AND rq.approveStatus!=2 ";
+		}
+		
 		if(is_null($processingStatus)){
 			return array();
 		}else{
 			$sql.=" AND rq.processingStatus IN ($processingStatus) ";
 		}
 	
-		/*
-		if(!empty($_data['forPurchaseDept'])){
-			$sql.=" AND rq.checkingStatus=1 AND rq.pCheckingStatus=0 ";
-		}
-		if(!empty($_data['forApproved'])){
-			$sql.=" AND rq.pCheckingStatus=1 AND rq.approveStatus=0 ";
-		}
-		*/
+
 		$sql.=$dbGb->getAccessPermission("rq.projectId");
     	$sql.=" ORDER BY rq.id DESC";
 		//echo $sql;exit();
