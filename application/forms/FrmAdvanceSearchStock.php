@@ -19,6 +19,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 	public function AdvanceSearch($data=null,$type=null){
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$dbGB = new Application_Model_DbTable_DbGlobal(); 
+		$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
 		
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
 		$_title->setAttribs(array('dojoType'=>$this->text,
@@ -66,6 +67,13 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		}
 		$branch_id->setMultiOptions($options_branch);
 		$branch_id->setValue($request->getParam("branch_id"));
+		
+		if (count($rows)==1){
+			$branch_id->setAttribs(array('readonly'=>'readonly'));
+			if(!empty($rows)) foreach($rows AS $row){
+				$branch_id->setValue($row['br_id']);
+			}
+		}
 		
 		
 		$from_date = new Zend_Dojo_Form_Element_DateTextBox('start_date');
@@ -124,6 +132,22 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$approveStatus->setMultiOptions($_opts);
 		$approveStatus->setValue($request->getParam("approveStatus"));
 		
+		$supplierId = new Zend_Dojo_Form_Element_FilteringSelect('supplierId');
+		$supplierId->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'false',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+		));
+		$rowSupplier = $dbGBStock->getAllSupplier();
+		$optionsSupplier=array(0=>$this->tr->translate("SELECT_SUPPLIER"));
+		if(!empty($rowSupplier))foreach($rowSupplier AS $row){
+			$optionsSupplier[$row['id']]=$row['name'];
+		}
+		$supplierId->setMultiOptions($optionsSupplier);
+		$supplierId->setValue($request->getParam("supplierId"));
+
 		
 		$this->addElements(
 			array(
@@ -136,7 +160,9 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				
 				$checkingStatus,			
 				$pCheckingStatus,			
-				$approveStatus,			
+				$approveStatus,	
+				
+				$supplierId,			
 			)
 		);
 		return $this;

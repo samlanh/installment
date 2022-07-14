@@ -31,6 +31,12 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
 		}
 		$branch_id->setMultiOptions($options_branch);
 		$branch_id->setValue($request->getParam("branch_id"));
+		if (count($rows)==1){
+			$branch_id->setAttribs(array('readonly'=>'readonly'));
+			if(!empty($rows)) foreach($rows AS $row){
+				$branch_id->setValue($row['br_id']);
+			}
+		}
 		
     	$requestNo = new Zend_Dojo_Form_Element_TextBox('requestNo');
     	$requestNo->setAttribs(array(

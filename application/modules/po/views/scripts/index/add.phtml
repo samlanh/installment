@@ -192,7 +192,9 @@ div#request-info .form-group ul li {
 	var requestStore  = getDataStorefromJSON('id','name', null );
     require(["dojo/ready"], function(ready){
 		ready(function(){
+			<?php if(!empty($this->reqResult['projectId'])){?>
 			dijit.byId('branch_id').set('value', currentProjectId);
+			<?php } ?>
 			onChageFunctionByBranch();
 		});
 
@@ -229,7 +231,9 @@ div#request-info .form-group ul li {
 	 });
     
 	function onChageFunctionByBranch(){
+		
 		getAllApprovedRequest();
+		
 		//getAllProduct();
 		//getPurchaseNoByBranch();
 	}
@@ -252,7 +256,9 @@ div#request-info .form-group ul li {
 			load: function(data) {
 				requestStore  = getDataStorefromJSON('id','name', data);		
 				dijit.byId('requestId').set('store', requestStore);
+				<?php if(!empty($this->reqResult['projectId'])){?>
 				dijit.byId('requestId').set('value', currentRequestId);
+				<?php } ?>
 			},
 			error: function(err) {
 			}

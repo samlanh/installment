@@ -51,6 +51,9 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
     	if(($search['branch_id'])>0){
     		$where.= " AND po.projectId = ".$search['branch_id'];
     	}
+		if(!empty($search['supplierId'])){
+    		$where.= " AND po.supplierId = ".$search['supplierId'];
+    	}
     	$order=' ORDER BY po.id DESC  ';
     	$where.=$dbGb->getAccessPermission("po.projectId");
     	return $db->fetchAll($sql.$where.$order);
