@@ -121,7 +121,7 @@ tr.rowData {
 			searchAttr: "name",
 			class: 'fullside',
 			onChange: function() {
-				addRowProductRequest();
+				addRowProduct();
 			}
 		}, "productId");
 	 });
@@ -146,7 +146,8 @@ tr.rowData {
 		dojo.xhrPost({
 			url:urlGetAllProduct,	
 			content:{ 
-				'branch_id':branch_id,'categoryId':categoryId
+				'notExistingProjectid':branch_id,
+				'categoryId':categoryId
 			},		    
 			handleAs:"json",
 			load: function(data) {
@@ -161,7 +162,7 @@ tr.rowData {
 	var col= 0; var no=0;
 	var title = 0;
 	var urlGetProductInfo = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'productinfo')); ?>';
-	function addRowProductRequest(){
+	function addRowProduct(){
 		col++;
 		template='';
 		temp = "";
@@ -185,11 +186,9 @@ tr.rowData {
 		}
 		productId = dijit.byId('productId').get('value');
 		if(productId=='' || productId<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>');
 			dijit.byId('productId').focus();
 			return false;
 		}
-		dijit.byId('productId').attr('value','');
 		
 		var iden = $("#identity").val();
 		var arrays = iden.split(',');
@@ -202,18 +201,21 @@ tr.rowData {
 				 }
 			}
 		}
+		 dijit.byId('productId').attr('value','');
+		 
 		no++;
 		dojo.xhrPost({
 			url:urlGetProductInfo,	
 			content:{ 
-				'branch_id':branch_id,'productId':productId
+				'productId':productId
 			},		    
 			handleAs:"json",
 			load: function(data) {
 				template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td align="center" width="2%">'+no+'</td>';
 				template+='<td class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
-				template+='<td class="currentQty"  width="10%">'+data.currentQty+' ('+data.measureTitle+')</td>';	
+				measureTitle = (data.measureTitle=='')?'':data.measureTitle;
+				template+='<td class="currentQty"  width="10%">'+measureTitle+'</td>';	
 				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_BEGIN");?> " value="0" type="text"  ></td>';	
 				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyAlert'+col+'" name="qtyAlert'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_ALERT");?> "  type="text"  ></td>';	
 				

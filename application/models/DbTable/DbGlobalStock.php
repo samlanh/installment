@@ -64,6 +64,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(!empty($_data['requestId'])){
 			$sql.=" AND p.proId IN (SELECT rqd.proId FROM `st_request_po_detail` AS rqd  WHERE rqd.requestId=".$_data['requestId']." GROUP BY rqd.proId )";
 		}
+		if(!empty($_data['notExistingProjectid'])){
+			$sql.=" AND p.proId NOT IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=".$_data['notExistingProjectid']." )";
+		}
 		$row = $db->fetchAll($sql);
 		return $row;
 		
@@ -72,14 +75,19 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	function getProductInfoByLocation($_data=null){
 		
 		$db=$this->getAdapter();
+		
+		$projectId=0;
+		if(!empty($_data['branch_id'])){
+			$projectId = $_data['branch_id'];
+		}
 		$sql="
 			SELECT 
 				p.proId AS id,
 				CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`,
 				p.proCode,
 				p.proName,
-				0 AS currentQty,
-				'Kg' AS measureTitle
+				(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty,
+				measureLabel AS measureTitle
 			";
 		if(!empty($_data['requestId'])){
 			$sql.="
@@ -92,11 +100,16 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			";
 		}
 		
-		$sql.=" FROM `st_product` AS p  ";
-		$sql.=" WHERE p.status=1 ";
+		$sql.=" FROM 
+					`st_product` AS p ";
 			
-		if(!empty($_data['branch_id'])){
-			$sql.="";
+		if(!empty($projectId)){
+			$sql.=" ,st_product_location AS l";
+			$sql.=" WHERE p.status=1
+						AND p.proId=l.proId ";
+				$sql.=" AND l.projectId=".$projectId;
+		}else{
+			$sql.=" WHERE p.status=1 ";
 		}
 		if(!empty($_data['categoryId'])){
 			$sql.=" AND p.categoryId= ".$_data['categoryId'];
@@ -268,6 +281,18 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			0=>$tr->translate('NONSTOCK')
 		);
 		return $optStockType;
+	}
+	function addProductHistoryQty($projectId,$proId,$tranType,$Qty){
+		$this->_name='st_product_story';
+		$arr = array(
+				'projectId'=>$projectId,
+				'proId'=>$proId,
+				'tranType'=>$tranType,//1=+init,2 +receive,3 -usage,4 -sale,5 -transfer out ,5 +receiv tran,7 +- adjust
+				'qty'=>$Qty,
+				'userId'=>$this->getUserId(),
+				'transDate'=>date("Y-m-d"),
+		);
+		$this->insert($arr);
 	}
 	
 }

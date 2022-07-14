@@ -38,16 +38,12 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
-		$db = new Requesting_Model_DbTable_DbRequest();
+		$db = new Product_Model_DbTable_DbinitilizeQtybyProject();
     	if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
-	    		$db->addRequestPO($data);
-	    		if(isset($data['save_close'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
-				}else{
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/add");
-				}
+	    		$db->addProductInitQty($data);
+	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/add");
 	    	}catch(Exception $e){
 	    		Application_Form_FrmMessage::message("APPLICATION_ERROR");
 	    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
