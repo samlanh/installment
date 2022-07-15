@@ -8,10 +8,9 @@
 	if (!empty($this->agreement['project_logo'])){
 		$imagelogo = $this->baseUrl()."/images/projects/".$this->agreement['project_logo'];
 	}
+	$projectName="";
 	if (!empty($this->agreement['project_name'])){
 		$projectName = " ".$this->agreement['project_name'];
-	}else{ 
-		$projectName = " បុរី C&T VILLA (SHOP HOUSE)";
 	}
 	
 	$companyAddress=$this->keyValue['footer_branch'];
@@ -96,7 +95,6 @@
 						list-style: none;
 					}
 					
-					
 					.blgLeft, .blgRight {
 						display: inline-block;
 						vertical-align: top;
@@ -106,29 +104,7 @@
 						min-width: 60px;
 					}
 					
-					.blgLeft small {
-						font-style: italic;
-						font-size: 10px;
-						display: block;
-						margin-top: -3px;
-					}
-					span.sectionPoint {
-						font-weight: normal;
-					}
-					span.values-row.strongV {
-						font-weight: 600;
-					}
-					span.values-row-title {
-						display: block;
-						text-decoration: underline;
-						font-weight: 600;
-						text-transform: uppercase;
-					}
-					span#reportTitleEn {
-						text-transform: uppercase;
-						font-weight: 600;
-					}
-					
+]					
 					body {
 						position: relative;
 					}
@@ -308,10 +284,25 @@
 					<tr class="section-bg">
 						<td colspan="3"><i class="fa fa-th-large" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_LOCATION");?> </td>
 					</tr>
+					<tr >
+						<td colspan="3">
+							<ul class="dataValue">
+								<?php if(!empty($this->productLocation))foreach($this->productLocation as $row){?>
+									<li>
+										<div class="blgLeft">
+											<span class="title-row"><strong><i class="fa fa-university" aria-hidden="true"></i> <?php echo $row['projectName'];?></strong></span><br />
+										</div>
+										<div class="blgRight"><span class="values-row"><strong><?php echo $row['currentQty'].' '.$rs['measureLabel'];?></strong></span></div>
+									</li>
+								<?php }?>
+							</ul>
+						</td>
+					</tr>
 				</table>
+				
 				<table class="content-data" border="1"​  width="100%">
 					<tr class="section-bg">
-						<td colspan="3"><i class="fa fa-list-alt" aria-hidden="true"></i><i class="fa fa-th-large" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_MOMENT");?> </td>
+						<td colspan="3"><i class="fa fa-list-alt" aria-hidden="true"></i><i class="fa fa-th-large" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_MOVEMENT");?> Uncompleted Work</td>
 					</tr>
 				</table>
 				<?php //echo $this->footerReport;?>

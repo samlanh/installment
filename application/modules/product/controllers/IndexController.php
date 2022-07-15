@@ -100,6 +100,10 @@ class Product_IndexController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index");
 		}
 		$this->view->rsProduct = $result;
+		
+		
+		$dbs = new Application_Model_DbTable_DbGlobalStock();
+		$this->view->productLocation = $dbs->getProductLocationbyProId(array('productId'=>$id));
 	}
 }
 
