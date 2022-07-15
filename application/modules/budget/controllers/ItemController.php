@@ -46,6 +46,7 @@ class Budget_ItemController extends Zend_Controller_Action {
 			try {		
 				$db = new Budget_Model_DbTable_DbbudgetItem();
 				$db->addBudgetItem($_data);
+
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/budget/type/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
