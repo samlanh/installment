@@ -24,15 +24,45 @@ function getAllCategory(urlGetCategory){
 			}
 		});
 	}
-	function getAllBudgetItem(urlGetBudgetItem){
+	function getAllBudgetItem(urlGetBudgetItem,contentData){
 		dojo.xhrPost({
 			url:urlGetBudgetItem,	
 			handleAs:"json",
+			content:contentData,
 			load: function(data) {
 				ItemStore  = getDataStorefromJSON('id','name', data);		
 			    dijit.byId('budgetItem').set('store',ItemStore);
 			},
 			error: function(err){
+			}
+		});
+	}
+	function getAllBudgetType(urlGetBudgetType,contentData){
+		dojo.xhrPost({
+			url:urlGetBudgetType,	
+			handleAs:"json",
+			content:contentData,
+			load: function(data) {
+				budgetTypeStore  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('budgetType').set('store',budgetTypeStore);
+			},
+			error: function(err){
+			}
+		});
+	}
+	function getAllProductStoreFunction(urlGetAllProduct,objectContentFilter){
+		dijit.byId('productId').reset();
+		productStore  = getDataStorefromJSON('id','name', [] );
+		dijit.byId('productId').set('store', productStore);
+		dojo.xhrPost({
+			url:urlGetAllProduct,	
+			content:objectContentFilter,		    
+			handleAs:"json",
+			load: function(data) {
+				productStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('productId').set('store', productStore);
+			},
+			error: function(err) {
 			}
 		});
 	}
