@@ -18,7 +18,7 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
 				spp.supplierName,
 				po.date,
 				rq.requestNo,
-				rq.date AS requestId,
+				rq.date AS requestDate,
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestName,
 				po.total
 		";
