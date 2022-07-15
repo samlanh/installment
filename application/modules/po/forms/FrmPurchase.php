@@ -32,6 +32,13 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 		$branch_id->setMultiOptions($options_branch);
 		$branch_id->setValue($request->getParam("branch_id"));
 		
+		if (count($rows)==1){
+			$branch_id->setAttribs(array('readonly'=>'readonly'));
+			if(!empty($rows)) foreach($rows AS $row){
+				$branch_id->setValue($row['br_id']);
+			}
+		}
+		
 		$purchaseNo = new Zend_Dojo_Form_Element_TextBox('purchaseNo');
     	$purchaseNo->setAttribs(array(
     			'dojoType'=>'dijit.form.ValidationTextBox',
@@ -116,7 +123,13 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 		$categoryId->setMultiOptions($optCatePro);
 		
 		if(!empty($data)){
-			//$_branch_id->setValue($data['branch_id']);
+			$branch_id->setValue($data['projectId']);
+			$purchaseNo->setValue($data['purchaseNo']);
+			$supplierId->setValue($data['supplierId']);
+			$date->setValue($data['date']);
+			$note->setValue($data['note']);
+			$total->setValue($data['total']);
+			$_status->setValue($data['status']);
 		}
 		
 		$this->addElements(array(
