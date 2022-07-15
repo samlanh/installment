@@ -2,9 +2,9 @@
 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate('ADD'));
+	$frm = $this->frmBudget;
 	
 ?>	
-<script src="<?php //echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <div class="card">
 	<div class="card-content collapse show">
 		<form id='frm_add' action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
@@ -18,8 +18,7 @@
 			<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD');?></h4>
-	    				<span id="message" style="color: red; display: block;"></span>
+		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD');?></h4>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -28,40 +27,17 @@
 		    <div class="col-md-12">
 	        	<div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CUSTOMER_INFO");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("");?>
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PARENT_BUDGET_TYPE");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php //echo $frm->getElement('client_no');?>
+	                   		<?php echo $frm->getElement('parent_id');?>
 	                   </div>
 	                </div>
-	            </div>
-	            <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CUSTOMER_INFO");?> 
-	                   </label>
-	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("");?>
+	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BUDGET_TYPE_TITLE");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php //echo $frm->getElement('client_no');?>
-	                   </div>
-	                </div>
-	            </div>
-	            <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CUSTOMER_INFO");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php //echo $frm->getElement('client_no');?>
+	                   		<?php echo $frm->getElement('budgetTitle');?>
 	                   </div>
 	                </div>
 	            </div>
@@ -69,33 +45,17 @@
 			<div class="clearfix"></div>
 			  <div class="card-box">
                	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-					<input type="reset" value="CLEAR" tabindex="2" label="<?php echo $tr->translate('CLEAR');?>" id="save_close" dojoType="dijit.form.Button" name="save_close"
-					 iconClass="dijitIconClear" /> 
-					<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
-						 iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="reset" value="CLEAR" tabindex="2" label="<?php echo $tr->translate('CLEAR');?>" id="save_close" dojoType="dijit.form.Button" name="save_close"
+						 	iconClass="dijitIconClear" /> 
+						<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
+							iconClass="dijitEditorIcon dijitEditorIconSave" /> 
+					</div>
     			</div>
 	    	</div>
 		</form>
 	</div>
 </div>
 <script type="text/javascript">
-	/*								
-		var d_datastore  = getDataStorefromJSON('id','name', <?php //print_r(Zend_Json::encode($this->clienttype));?> );
-		dojo.ready(function(){
-			
-		});
-
-		url_getClientNo = '<?php //echo $this->url(array('module'=>'group','controller'=>'index','action'=>'get-client-no'));?>';
-		function getClientNo(){
-			dojo.xhrPost({
-				url:url_getClientNo,	
-				handleAs:"json",
-				load: function(data) {	
-				    dijit.byId('client_no').attr('value',data);
-				},
-				error: function(err){
-				}
-			});
-		}
-	*/
+	dojo.require("dijit.form.Textarea");
 </script>
