@@ -25,10 +25,10 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
     	$sql.=$dbGb->caseStatusShowImage("po.status");
 		$sql.=",(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS byUser";
 		$sql.=" FROM `st_purchasing` AS po 
-					JOIN `st_supplier` AS spp 
+					JOIN `st_supplier` AS spp ON spp.id = po.supplierId 
 					LEFT JOIN st_request_po AS rq ON rq.id =po.requestId 
-				WHERE spp.id = po.supplierId 
-					AND po.purchaseType=".$search['purchaseType']."
+				WHERE 
+					 po.purchaseType=".$search['purchaseType']."
 		";
     	$where = "";
     	$from_date =(empty($search['start_date']))? '1': " po.date >= '".$search['start_date']." 00:00:00'";
@@ -51,9 +51,11 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
     	if(($search['branch_id'])>0){
     		$where.= " AND po.projectId = ".$search['branch_id'];
     	}
+		if(!empty($search['supplierId'])){
+    		$where.= " AND po.supplierId = ".$search['supplierId'];
+    	}
     	$order=' ORDER BY po.id DESC  ';
     	$where.=$dbGb->getAccessPermission("po.projectId");
-    	//echo $sql.$where.$order;exit();
     	return $db->fetchAll($sql.$where.$order);
     }
    
@@ -169,9 +171,40 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
     }
     function getDataRow($recordId){
     	$db = $this->getAdapter();
-    	
-    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
+		$dbGb = new Application_Model_DbTable_DbGlobal();		
+			$this->_name='st_purchasing';
+			$sql=" SELECT po.* FROM $this->_name AS po WHERE po.id=".$recordId;
+			$sql.=$dbGb->getAccessPermission("po.projectId");
+			$sql.=" LIMIT 1 ";
     	return $db->fetchRow($sql);
     }
+	function getPODetailById($recordId){
+		$db = $this->getAdapter();
+		$sql=" 	SELECT 
+					pod.*,p.proCode,
+					p.proName,
+					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= po.projectId LIMIT 1) AS currentQty,
+					p.measureLabel AS measureTitle
+					";
+		$sql.="
+				,
+				rqd.isCompletedPO,
+				rqd.dateReqStockIn,
+				rqd.note AS requestItemsNote,
+				rqd.qtyApproved AS qtyApproved,
+				(COALESCE(pod.qty,0)+COALESCE(rqd.qtyApprovedAfter,0)) AS qtyApprovedAfter
+			";
+			
+		$sql.="		FROM 
+					`st_purchasing_detail` as pod
+					JOIN `st_purchasing` AS po ON po.id = pod.purchaseId
+					LEFT JOIN `st_product` AS p  ON p.proId = pod.proId 
+					LEFT JOIN `st_request_po_detail` AS rqd  ON rqd.proId = pod.proId AND rqd.requestId=po.requestId
+			";
+		
+			
+		$sql.=" WHERE pod.purchaseId = $recordId";
+		return $db->fetchAll($sql);
+	}
    
 }

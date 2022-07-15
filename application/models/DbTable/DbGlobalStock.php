@@ -62,7 +62,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$sql.=" AND p.categoryId= ".$_data['categoryId'];
 		}
 		if(!empty($_data['requestId'])){
-			$sql.=" AND p.proId IN (SELECT rqd.proId FROM `st_request_po_detail` AS rqd  WHERE rqd.requestId=".$_data['requestId']." GROUP BY rqd.proId )";
+			$sql.=" AND p.proId IN (SELECT rqd.proId FROM `st_request_po_detail` AS rqd  WHERE rqd.requestId=".$_data['requestId']." AND rqd.approvedStatus=1 GROUP BY rqd.proId )";
 		}
 		if(!empty($_data['notExistingProjectid'])){
 			$sql.=" AND p.proId NOT IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=".$_data['notExistingProjectid']." )";
@@ -87,7 +87,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				p.proCode,
 				p.proName,
 				(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty,
-				measureLabel AS measureTitle
+				p.measureLabel AS measureTitle
 			";
 		if(!empty($_data['requestId'])){
 			$sql.="
@@ -118,8 +118,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$sql.=" AND p.proId= ".$_data['productId'];
 		}
 		$sql.=" ORDER BY p.proId DESC LIMIT	1 ";
-		$row = $db->fetchRow($sql);
-		return $row;
+		
+		return $db->fetchRow($sql);
 		
 	}
 	
@@ -293,6 +293,115 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				'transDate'=>date("Y-m-d"),
 		);
 		$this->insert($arr);
+	}
+	function getProductLocationbyProId($_data=null){
+		$db=$this->getAdapter();
+		
+		$projectId=0;
+		if(!empty($_data['branch_id'])){
+			$projectId = $_data['branch_id'];
+		}
+		$sql="
+			SELECT 
+				p.proId AS id,
+				CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`,
+				p.proCode,
+				p.proName,
+				l.qty AS currentQty,
+				(SELECT project_name from `ln_project` where br_id=l.projectId LIMIT 1) as projectName,
+				p.measureLabel AS measureTitle
+			";
+		
+		$sql.=" FROM 
+					`st_product` AS p,
+					 st_product_location AS l
+				WHERE p.status=1
+						AND p.proId=l.proId
+		 ";
+			
+		if(!empty($projectId)){
+				$sql.=" AND l.projectId=".$projectId;
+		}
+		
+		if(!empty($_data['productId'])){
+			$sql.=" AND p.proId= ".$_data['productId'];
+		}
+		
+		$rows = $db->fetchAll($sql);
+		return $rows;
+	}
+	public function getAllBudgetType($parent = 0, $spacing = '', $cate_tree_array = '',$option=null){
+	
+		$db=$this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+	
+		$sql="
+			SELECT
+				bt.id AS id,
+				bt.budgetTitle AS `name` ";
+		$sql.=" FROM `st_budget_type` AS bt  ";
+		$sql.=" WHERE bt.status=1 AND bt.parentId = $parent ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id='';
+		if ($rowCount > 0) {
+			foreach ($query as $row){
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllBudgetType($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		if($option!=null){
+			if(!empty($cate_tree_array)){
+				$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+				$optionList= array(
+						0=>$tr->translate("SELECT_BUDGET_TYPE"),
+						-1=>$tr->translate("ADD_NEW")
+				);
+				foreach ($cate_tree_array as $rs){
+					$optionList[$rs['id']]=$rs['name'];
+				}
+				return $optionList;
+			}
+		}
+		return $cate_tree_array;
+	
+	}
+	public function getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',$option=null){
+	
+		$db=$this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+	
+		$sql="SELECT
+					bi.id AS id,
+					bi.budgetTitle AS `name` ";
+		$sql.=" FROM `st_budget_item` AS bi  ";
+		$sql.=" WHERE bi.status=1 AND bi.parentId = $parent ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id='';
+		if ($rowCount > 0) {
+			foreach ($query as $row){
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllBudgetItem($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		if($option!=null){
+			if(!empty($cate_tree_array)){
+				$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+				$optionList= array(
+						0=>$tr->translate("SELECT_BUDGET_ITEM"),
+						-1=>$tr->translate("ADD_NEW")
+				);
+				foreach ($cate_tree_array as $rs){
+					$optionList[$rs['id']]=$rs['name'];
+				}
+				return $optionList;
+			}
+		}
+		return $cate_tree_array;
+	
 	}
 	
 }

@@ -114,6 +114,12 @@
 		</form>
     </div>
 </div>
+<?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $key=> $rs){?>
+	<div id="proCode<?php echo $key?>" style="display: none;"><?php echo $rs['proCode'];?></div>
+	<div id="productName<?php echo $key?>" style="display: none;"><?php echo $rs['proName'];?></div>
+	<div id="measureTitle<?php echo $key?>" style="display: none;"><?php echo $rs['measureTitle'];?></div>
+	<div id="itemsNote<?php echo $key?>" style="display: none;"><?php echo $rs['note'];?></div>
+<?php } ?>
 <style>
 #table tr td{
 	border:1px solid #cccccc;
@@ -340,7 +346,7 @@ tr.rowData {
 		dojo.query("#row"+index).remove();
 	}
 	function initailize() {
-		<?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $rs){?>
+		<?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $key=> $rs){?>
 		col++;no++;
 		template='';
 		temp = "";
@@ -356,13 +362,18 @@ tr.rowData {
 			title=1;
 		}
 		
+		var proCodeString = $( '#proCode'+'<?php echo $key;?>').html();
+		var productNameString = $( '#productName'+'<?php echo $key;?>').html();
+		var measureTitleString = $( '#measureTitle'+'<?php echo $key;?>').html();
+		var itemsNoteString = $( '#itemsNote'+'<?php echo $key;?>').html();
+		
 		template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td align="center" width="2%">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
-		template+='<td class="productName" ><?php echo $rs['proCode'];?><br /><?php echo $rs['proName'];?><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
-		template+='<td class="currentQty"  width="10%"><?php echo $rs['currentQty'];?> (<?php echo $rs['measureTitle'];?>)</td>';	
+		template+='<td class="productName" >'+proCodeString+'<br />'+productNameString+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
+		template+='<td class="currentQty"  width="10%"><?php echo $rs['currentQty'];?> ('+measureTitleString+')</td>';	
 		template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="<?php echo $rs['qtyRequest'];?>" type="text"  ></td>';	
 		template+='<td><input dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['dateReqStockIn']));?>" type="text"  ></td>';	
-		template+='<td><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="<?php echo $rs['note'];?>" type="text"  ></td>';	
+		template+='<td><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="'+itemsNoteString+'" type="text"  ></td>';	
 				
 
 		tmp='<tr class="rowData" id="row'+col+'">';
