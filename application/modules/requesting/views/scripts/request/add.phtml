@@ -3,6 +3,7 @@
      $tr = Application_Form_FrmLanguages::getCurrentlanguage();
      $frm = $this->frm;
 ?>
+
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <title><?php echo $this->tr->translate("CREATE_REQUEST_PO")?></title>
  <div class="card">
@@ -131,6 +132,7 @@ tr.rowData {
 	border:1px solid #ddd;
 }
 </style>
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
 <script type="text/javascript">
 	dojo.require("dojo.data.ItemFileWriteStore");  
 	dojo.require("dojo.NodeList-manipulate");
@@ -142,10 +144,7 @@ tr.rowData {
     require(["dojo/ready"], function(ready){
 		ready(function(){
 			onChageFunctionByBranch();
-		});
-
-	 
-	 
+		}); 
 		new dijit.form.FilteringSelect({
 			store: productStore,
 			autoComplete: false,
@@ -166,37 +165,20 @@ tr.rowData {
 		getAllProduct();
 		getRequestNoByBranch();
 	}
-	var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
 	function getAllProduct(){
-		dijit.byId('productId').reset();
-		productStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
-		dijit.byId('productId').set('store', productStore);
-		
+		var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
-			//alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
-			//dijit.byId('branch_id').focus();
 			branch_id = 0;
-			//return false;
 		}
 		categoryId = dijit.byId('categoryId').get('value');
 		if(categoryId=='' || categoryId==0){
 			categoryId=0;
 		}
-		dojo.xhrPost({
-			url:urlGetAllProduct,	
-			content:{ 
-				'branch_id':branch_id,'categoryId':categoryId
-			},		    
-			handleAs:"json",
-			load: function(data) {
-				productStore  = getDataStorefromJSON('id','name', data);		
-				dijit.byId('productId').set('store', productStore);
-			},
-			error: function(err) {
-			}
-		});
+		objectContentFilter = {'branch_id':branch_id,'categoryId':categoryId};
+		getAllProductStoreFunction(urlGetAllProduct,objectContentFilter);
 	}
+	
 	var urlGetRequestNo = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getrequestno')); ?>';
 	function getRequestNoByBranch(){
 		

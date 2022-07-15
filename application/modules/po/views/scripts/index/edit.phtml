@@ -189,6 +189,7 @@ div#request-info .form-group ul li {
 	width: 50%;
 }
 </style>
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
 <script type="text/javascript">
 	dojo.require("dojo.data.ItemFileWriteStore");  
 	dojo.require("dojo.NodeList-manipulate");
@@ -273,18 +274,11 @@ div#request-info .form-group ul li {
 			}
 		});
 	}
-	var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
 	function getAllProduct(){
-		dijit.byId('productId').reset();
-		productStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
-		dijit.byId('productId').set('store', productStore);
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
-			//alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
-			//dijit.byId('branch_id').focus();
 			branch_id = 0;
-			//return false;
 		}
 		categoryId = dijit.byId('categoryId').get('value');
 		if(categoryId=='' || categoryId==0){
@@ -300,19 +294,9 @@ div#request-info .form-group ul li {
 		if(purchaseId=='' || purchaseId<=0){
 			purchaseId=0;
 		}
-		dojo.xhrPost({
-			url:urlGetAllProduct,	
-			content:{ 
-				'branch_id':branch_id,'categoryId':categoryId,'requestId':requestId,'purchaseId':purchaseId
-			},		    
-			handleAs:"json",
-			load: function(data) {
-				productStore  = getDataStorefromJSON('id','name', data);		
-				dijit.byId('productId').set('store', productStore);
-			},
-			error: function(err) {
-			}
-		});
+		var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
+		objectContentFilter = {'branch_id':branch_id,'categoryId':categoryId,'requestId':requestId,'purchaseId':purchaseId};
+		getAllProductStoreFunction(urlGetAllProduct,objectContentFilter);
 	}
 	
 	var col= 0; var no=0;
