@@ -36,3 +36,19 @@ function getAllCategory(urlGetCategory){
 			}
 		});
 	}
+	function getAllProductStoreFunction(urlGetAllProduct,objectContentFilter){
+		dijit.byId('productId').reset();
+		productStore  = getDataStorefromJSON('id','name', [] );
+		dijit.byId('productId').set('store', productStore);
+		dojo.xhrPost({
+			url:urlGetAllProduct,	
+			content:objectContentFilter,		    
+			handleAs:"json",
+			load: function(data) {
+				productStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('productId').set('store', productStore);
+			},
+			error: function(err) {
+			}
+		});
+	}
