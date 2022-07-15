@@ -77,23 +77,25 @@ class Budget_Model_DbTable_DbbudgetItem extends Zend_Db_Table_Abstract
     	return $db->fetchRow($sql);
     }
     function getAllBudgetItem($option=null){
-    	$db = $this->getAdapter();
-    	$sql = "SELECT id,budgetTitle AS name FROM $this->_name WHERE status = 1 Order by id ASC";
-    	$results =  $db->fetchAll($sql);
-    	if(!empty($option)){
-    		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-    		$optionList= array(
-    			0=>$tr->translate("PLEASE_SELECT_BUDGET"),
-    			-1=>$tr->translate("ADD_NEW"),
-    		);
-    		if(!empty($results)){
-    			foreach ($results as $rs){
-    				$optionList[$rs['id']]=$rs['name'];
-    			}
-    		}
-    		return $optionList;
-    	}
-    	return $results;
+    	$db = new  Application_Model_DbTable_DbGlobalStock();
+    	return $db->getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',$option);
+    	
+//     	$sql = "SELECT id,budgetTitle AS name FROM $this->_name WHERE status = 1 Order by id ASC";
+//     	$results =  $db->fetchAll($sql);
+//     	if(!empty($option)){
+//     		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+//     		$optionList= array(
+//     			0=>$tr->translate("PLEASE_SELECT_BUDGET"),
+//     			-1=>$tr->translate("ADD_NEW"),
+//     		);
+//     		if(!empty($results)){
+//     			foreach ($results as $rs){
+//     				$optionList[$rs['id']]=$rs['name'];
+//     			}
+//     		}
+//     		return $optionList;
+//     	}
+//     	return $results;
     }
     
    
