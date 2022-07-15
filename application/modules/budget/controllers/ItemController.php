@@ -47,7 +47,7 @@ class Budget_ItemController extends Zend_Controller_Action {
 				$db = new Budget_Model_DbTable_DbbudgetItem();
 				$db->addBudgetItem($_data);
 
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/budget/type/add");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/budget/item/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -63,7 +63,7 @@ class Budget_ItemController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				$db->updateBudgetType($_data);
+				$db->updateBudgetItem($_data);
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/budget/item/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("UPDATE_FAIL");
@@ -87,8 +87,9 @@ class Budget_ItemController extends Zend_Controller_Action {
 	function getAllbudgetitemAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
-			$db = new Budget_Model_DbTable_DbbudgetItem();
-			$results=$db->getAllBudgetItem();
+			
+			$db = new  Application_Model_DbTable_DbGlobalStock();
+			$results =  $db->getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',null,$data);
 			
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 				

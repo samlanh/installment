@@ -50,7 +50,7 @@ class Budget_Model_DbTable_DbbudgetItem extends Zend_Db_Table_Abstract
 	    		if(empty($result)){
 		    		$arr = array(
 	    				'budgetTypeId'=>$data['budgetType'],
-	    				'parentId'=>$data['parent_id'],
+	    				'parentId'=>$data['budgetItem'],
 	    				'budgetTitle'=>$data['budgetTitle'],
 	    				'createDate'=>date("Y-m-d"),
 	    				'status'=>1,
@@ -71,7 +71,7 @@ class Budget_Model_DbTable_DbbudgetItem extends Zend_Db_Table_Abstract
     	{
     		$arr = array(
     				'budgetTypeId'=>$data['budgetType'],
-    				'parentId'=>$data['parent_id'],
+    				'parentId'=>$data['budgetItem'],
     				'budgetTitle'=>$data['budgetTitle'],
     				'createDate'=>date("Y-m-d"),
     				'status'=>1,
@@ -88,28 +88,5 @@ class Budget_Model_DbTable_DbbudgetItem extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
     	return $db->fetchRow($sql);
-    }
-    function getAllBudgetItem($option=null){
-    	$db = new  Application_Model_DbTable_DbGlobalStock();
-    	return $db->getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',$option);
-    	
-//     	$sql = "SELECT id,budgetTitle AS name FROM $this->_name WHERE status = 1 Order by id ASC";
-//     	$results =  $db->fetchAll($sql);
-//     	if(!empty($option)){
-//     		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-//     		$optionList= array(
-//     			0=>$tr->translate("PLEASE_SELECT_BUDGET"),
-//     			-1=>$tr->translate("ADD_NEW"),
-//     		);
-//     		if(!empty($results)){
-//     			foreach ($results as $rs){
-//     				$optionList[$rs['id']]=$rs['name'];
-//     			}
-//     		}
-//     		return $optionList;
-//     	}
-//     	return $results;
-    }
-    
-   
+    }   
 }

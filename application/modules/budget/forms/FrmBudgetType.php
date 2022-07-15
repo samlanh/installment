@@ -85,12 +85,12 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
-				'onchange'=>'addNewBudgetItem();'
+				'onchange'=>'getBudgetItem();'
 		));
 		$options = $db->getAllBudgetType(0,'','',1);
 		$budgetType->setMultiOptions($options);
 		
-		$parentId = new Zend_Dojo_Form_Element_FilteringSelect('parent_id');
+		$parentId = new Zend_Dojo_Form_Element_FilteringSelect('budgetItem');
 		$parentId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
@@ -98,7 +98,7 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 				'queryExpr'=>'*${0}*',
 				'required'=>'false',
 		));
-		$options = $db->getAllBudgetItem(0,'','',1);
+		$options = $db->getAllBudgetItem(0,'','',1,null);
 		unset($options[-1]);
 		$parentId->setMultiOptions($options);
 	

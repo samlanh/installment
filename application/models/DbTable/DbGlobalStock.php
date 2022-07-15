@@ -378,7 +378,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		return $cate_tree_array;
 	
 	}
-	public function getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',$option=null){
+	public function getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',$option=null,$data=null){
 	
 		$db=$this->getAdapter();
 		if (!is_array($cate_tree_array))
@@ -389,6 +389,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					bi.budgetTitle AS `name` ";
 		$sql.=" FROM `st_budget_item` AS bi  ";
 		$sql.=" WHERE bi.status=1 AND bi.parentId = $parent ";
+		if(!empty($data['budgetType'])){
+			$sql.=" AND bi.budgetTypeId=".$data['budgetType'];
+		}
 		$query = $db->fetchAll($sql);
 		$rowCount = count($query);
 		$id='';

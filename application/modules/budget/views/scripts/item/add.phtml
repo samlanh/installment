@@ -4,6 +4,7 @@
 	$frm = $this->frmBudget;
 
 ?>	
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <div class="card">
 	<div class="card-content collapse show">
 		<form id='frm_add' action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
@@ -51,7 +52,7 @@
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PARENT_BUDGET_ITEM");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement('parent_id');?>
+	                   		<?php echo $frm->getElement('budgetItem');?>
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -77,15 +78,23 @@
 		</form>
 	</div>
 </div>
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
 <script type="text/javascript">
-	function addNewBudgetItem(){
+	dojo.require("dojo.data.ItemFileWriteStore");
+
+	function getBudgetItem(){
 		budgetType = dijit.byId('budgetType').get('value');
 		if(budgetType==-1){
 			window.open('<?php echo $this->url(array('module'=>'budget','controller'=>'type','action'=>'add'))?>');
+		}else if(budgetType>0){
+			urlGetBudgetItem = '<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'get-allbudgetitem'));?>';
+			contentData = {'budgetType':budgetType};
+			getAllBudgetItem(urlGetBudgetItem,contentData);
 		}
 	}
 	function getRefreshData(){
-	
+		urlGetBudgetType ='<?php echo $this->url(array('module'=>'budget','controller'=>'type','action'=>'getbudgettype'))?>';
+		getAllBudgetType(urlGetBudgetType);
 	}
 	dojo.require("dijit.form.Textarea");
 </script>
