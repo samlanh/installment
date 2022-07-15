@@ -62,7 +62,10 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$sql.=" AND p.categoryId= ".$_data['categoryId'];
 		}
 		if(!empty($_data['requestId'])){
-			$sql.=" AND p.proId IN (SELECT rqd.proId FROM `st_request_po_detail` AS rqd  WHERE rqd.requestId=".$_data['requestId']." GROUP BY rqd.proId )";
+			$sql.=" AND p.proId IN (SELECT rqd.proId FROM `st_request_po_detail` AS rqd  WHERE rqd.requestId=".$_data['requestId']." AND rqd.approvedStatus=1 AND rqd.isCompletedPO=0 GROUP BY rqd.proId )";
+			if(!empty($_data['purchaseId'])){//Case Purchase Edit
+				$sql.=" OR p.proId IN (SELECT pod.proId FROM `st_purchasing_detail` AS pod  WHERE pod.purchaseId=".$_data['purchaseId']." GROUP BY pod.proId ) ";
+			}
 		}
 		if(!empty($_data['notExistingProjectid'])){
 			$sql.=" AND p.proId NOT IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=".$_data['notExistingProjectid']." )";
@@ -87,8 +90,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				p.proCode,
 				p.proName,
 				(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty,
-				measureLabel AS measureTitle
+				p.measureLabel AS measureTitle
 			";
+		
 		if(!empty($_data['requestId'])){
 			$sql.="
 				,
@@ -96,8 +100,13 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				(SELECT rqd.dateReqStockIn FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS dateReqStockIn,
 				(SELECT rqd.note FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS requestItemsNote,
 				(SELECT rqd.qtyApproved FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS qtyApproved,
-				(SELECT rqd.qtyApprovedAfter FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS qtyApprovedAfter
+				
 			";
+			if(!empty($_data['purchaseId'])){//Case Purchase Edit
+				$sql.=" (COALESCE((SELECT pod.qty FROM `st_purchasing_detail` as pod WHERE p.proId = pod.proId LIMIT 1),0)+COALESCE((SELECT rqd.qtyApprovedAfter FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ),0)) AS qtyApprovedAfter ";
+			}else{
+				$sql.=" (SELECT rqd.qtyApprovedAfter FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS qtyApprovedAfter ";
+			}
 		}
 		
 		$sql.=" FROM 
@@ -240,7 +249,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND rq.projectId=".$_data['branch_id'];
 		}
-		
+		if(!empty($_data['requestId'])){//For Get In Purchase Edit
+			$sql.=" OR rq.id=".$_data['requestId'];
+		}
 		$row = $db->fetchAll($sql);
 		return $row;
 		

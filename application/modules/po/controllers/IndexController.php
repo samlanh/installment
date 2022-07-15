@@ -49,11 +49,23 @@ class Po_IndexController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
+		
+		$id = $this->getRequest()->getParam('id');
+		if(!empty($id)){
+			$dbRq = new Requesting_Model_DbTable_DbRequest();
+			$row = $dbRq->getRequestPOById($id);
+			$this->view->reqResult =  $row;
+			if ($row['approveStatus']!=1 AND ($row['processingStatus']!=4 OR $row['processingStatus']!=5)){
+				Application_Form_FrmMessage::Sucessfull("NO_DATA", self::REDIRECT_URL."/index");
+				exit();
+			}
+			
+		}
+		
 		$db = new Po_Model_DbTable_DbPurchasing();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				
 				
 				$_data['stepNum']=self::STEP_REQUEST;
 				$_data['purchaseType']=self::PURCHASE_TYPE;
@@ -73,26 +85,42 @@ class Po_IndexController extends Zend_Controller_Action {
 		
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$db = new Po_Model_DbTable_DbPurchasing();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$_data['stepNum']=self::STEP_REQUEST;
+				$_data['purchaseType']=self::PURCHASE_TYPE;
+				$db->editPurchasingRequest($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL."/index");
+			exit();
 		}
+		
+		$row = $db->getDataRow($id);
+		$this->view->row = $row;
+		if ($row['status']==0){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		$this->view->rowdetail = $db->getPODetailById($id);
+		
+		
+		$frm = new Po_Form_FrmPurchase();
+    	$frm->FrmPurchase($row);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
 	}
 	
 	function getpurchasenoAction(){
