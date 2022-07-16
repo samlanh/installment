@@ -132,6 +132,23 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$approveStatus->setMultiOptions($_opts);
 		$approveStatus->setValue($request->getParam("approveStatus"));
 		
+		$processingStatus = new Zend_Dojo_Form_Element_FilteringSelect('processingStatus');
+		$processingStatus->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'false',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+		));
+		$arrProc = array('typeStep'=>4);
+		$rowProcess = $dbGBStock->requestingProccess($arrProc);
+		$optionsProcess=array(0=>$this->tr->translate("SELECT_PROCESSING"));
+		if(!empty($rowProcess))foreach($rowProcess AS $row){
+			$optionsProcess[$row['id']]=$row['name'];
+		}
+		$processingStatus->setMultiOptions($optionsProcess);
+		$processingStatus->setValue($request->getParam("processingStatus"));
+		
 		$supplierId = new Zend_Dojo_Form_Element_FilteringSelect('supplierId');
 		$supplierId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -162,6 +179,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				$pCheckingStatus,			
 				$approveStatus,	
 				
+				$processingStatus,
 				$supplierId,			
 			)
 		);

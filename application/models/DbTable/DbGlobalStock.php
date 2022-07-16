@@ -222,6 +222,17 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					WHEN  $stepNum = 6 THEN '".$tr->translate("STEP_RECEIVING")."'
 					END AS processingStatusTitle ";
 				return $string;
+			}else if($typeStep==4){//for Rerturn Array
+				$arrKey = array(
+					array('id'=>1,'name'=>$tr->translate("STEP_REQUESTING")),
+					array('id'=>2,'name'=>$tr->translate("STEP_CHECKING_REQUEST")),
+					array('id'=>3,'name'=>$tr->translate("STEP_PURCHASE_CHECKING_REQUEST")),
+					array('id'=>4,'name'=>$tr->translate("STEP_APPROVED_REQUEST")),
+					array('id'=>5,'name'=>$tr->translate("STEP_PURCHASING")),
+					array('id'=>6,'name'=>$tr->translate("STEP_RECEIVING")),
+					
+				);
+				return $arrKey;
 			}
 		}
 		$value = empty($arrKey[$stepNum])?0:$arrKey[$stepNum];

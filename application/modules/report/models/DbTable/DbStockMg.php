@@ -88,7 +88,7 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 					LEFT JOIN `st_product` AS p  ON p.proId = rqd.proId 
 				
 			";
-		$sql.="WHERE 1 AND rqd.requestId = $id";
+		$sql.="WHERE 1 AND rqd.requestId = $id ";//AND rqd.approvedStatus=1 
 		if (!empty($rsData['pCheckingRequest']) OR !empty($rsData['approvedrequest'])){
 			$sql.=" AND rqd.adjustStatus = 1 ";
 		}
