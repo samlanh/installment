@@ -244,7 +244,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 AND rq.approveStatus=1 AND rq.processingStatus IN (4,5) ";	
 		
 		//checking Items In Request For Available TO Purchasing
-		$sql.=" AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id ORDER BY rqd.isCompletedPO ASC LIMIT 1 )=0 ";
+		$sql.=" AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 )=0 ";
 		
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND rq.projectId=".$_data['branch_id'];

@@ -24,24 +24,24 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 					WHEN  rq.checkingStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.checkingStatus = 2 THEN '".$tr->translate("REJECTED")."'
 				END AS checkingStatus,
-				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
 				
 				CASE
 					WHEN  rq.pCheckingStatus= 0 THEN '".$tr->translate("PENDING")."'
 					WHEN  rq.pCheckingStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.pCheckingStatus = 2 THEN '".$tr->translate("REJECTED")."'
 				END AS pCheckingStatus,
-				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
 				
 				CASE
 					WHEN  rq.approveStatus= 0 THEN '".$tr->translate("PENDING")."'
 					WHEN  rq.approveStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.approveStatus = 2 THEN '".$tr->translate("REJECTED")."'
 				END AS approveStatus,
-				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
 				
 				
-				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS user_name
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS user_name
 		";
 		$sql.=$dbGb->caseStatusShowImage("rq.status");
 		$sql.=" FROM `st_request_po` AS rq WHERE 1 ";
@@ -50,9 +50,9 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		$from_date =(empty($search['start_date']))? '1': " rq.date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " rq.date <= '".$search['end_date']." 23:59:59'";
     	$where.= " AND ".$from_date." AND ".$to_date;
-    	if(!empty($search['search'])){
+    	if(!empty($search['adv_search'])){
     		$s_where=array();
-    		$s_search=addslashes(trim($search['search']));
+    		$s_search=addslashes(trim($search['adv_search']));
     		$s_where[]= " rq.requestNo LIKE '%{$s_search}%'";
     		$s_where[]= " rq.requestNoLetter LIKE '%{$s_search}%'";
     		$s_where[]= " rq.purpose LIKE '%{$s_search}%'";
@@ -223,7 +223,10 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 	function getRequestPOById($id=null){
 		$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();
-		$sql=" SELECT rq.* FROM st_request_po AS rq WHERE 1 ";
+		$sql=" 
+		SELECT rq.*,
+			(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = rq.projectId LIMIT 1) AS branch_name
+		FROM st_request_po AS rq WHERE 1 ";
 		if (!empty($id)){
 			$sql.=" AND id = $id ";
 		}
@@ -261,6 +264,7 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		$sql="
 			SELECT 
 				rq.*,
+				DATE_FORMAT(rq.date,'%d-%b-%Y') AS requestDateDMY,
 				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = rq.projectId LIMIT 1) AS branch_name,
 				CASE
 					WHEN  rq.checkingStatus= 0 THEN '".$tr->translate("PENDING")."'

@@ -37,47 +37,8 @@
 	   			}
 			</script>
 			<div class="card-box">
-				<div class="col-md-3 col-sm-3 col-xs-12">
-		             <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("branch_id");?>
-		                	<?php echo $frm->getElement("id");?>
-		                </div>
-		             </div>
-					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_NO");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("requestNo");?>
-		                </div>
-		             </div>
-					  <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_NO_FROM");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("requestNoLetter");?>
-		                </div>
-		             </div>
-					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_DATE");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("date");?>
-		                </div>
-		             </div>
-					  <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PURPOSE");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("purpose");?>
-		                </div>
-		             </div>
-		             <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("note");?>
-		                </div>
-		             </div>
-					 
-				</div>
-				<div class="col-md-9 col-sm-9 col-xs-12">
+				
+				<div class="col-md-12 col-sm-12 col-xs-12">
 					<div class="col-md-6 col-sm-6 col-xs-12">
 						<div class="form-group">
 							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("FEEDBACK");?> </label>
@@ -95,10 +56,24 @@
 							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
 							<div class="col-md-7 col-sm-7 col-xs-12">
 								<?php echo $frm->getElement("pCheckingStatus");?>
+								<?php echo $frm->getElement("id");?>
 							</div>
 						 </div>	
 					</div>
 					<div class="col-md-6 col-sm-6 col-xs-12">
+						<div id="request-info">
+							<div class="form-group" style=" padding: 10px; ">
+								<span class="note_score"><i class="fa fa-file-text-o" aria-hidden="true"></i> ព័ត៌មានសំណើបញ្ជាទិញទំនិញ</span>
+								<ul>
+									<li><span class="lbl-tt"><?php echo $tr->translate("BRANCH_NAME");?></span>: <span class="red"><?php echo $this->row['branch_name'];?></span></li>
+									<li><span class="lbl-tt"><?php echo $tr->translate("REQUEST_NO");?></span>: <span class="red"><?php echo $this->row['requestNo'];?></span></li>
+									<li><span class="lbl-tt"><?php echo $tr->translate("REQUEST_NO_FROM");?></span>: <span class="red"><?php echo $this->row['requestNoLetter'];?></span></li>
+									<li><span class="lbl-tt"><?php echo $tr->translate("REQUEST_DATE");?></span>: <span class="red"><?php echo date("d-M-Y",strtotime($this->row['date']));?></span></li>
+									<li><span class="lbl-tt"><?php echo $tr->translate("PURPOSE");?></span>: <span class="red"><?php echo $this->row['purpose'];?></span></li>
+									<li><span class="lbl-tt"><?php echo $tr->translate("NOTE");?></span>: <span class="red"><?php echo $this->row['note'];?></span></li>
+								</ul>
+							</div>
+						</div>
 					</div>
 					
 					<table class="collape tablesorter" id="table_row" style="width:100%; white-space: nowrap;border:1px solid #ddd;">
@@ -148,7 +123,32 @@ table#table_row td.currentQty {
 tr.rowData {
     border-bottom: solid 2px #02014a;
 }
-
+tr.rowData td {
+    padding: 5px 0;
+}
+div#request-info .form-group {
+	display: block;
+	font-size: 12px;
+	background: #fdfbbd;
+	border: solid 2px #dc0303;
+	border-radius: 5px;
+}
+div#request-info .form-group ul li span.lbl-tt {
+	color: #02014a;
+}
+span.red {
+	color: #f00;
+	font-weight: bold;
+}
+div#request-info .form-group ul {
+    margin: 0;
+    padding: 0px 5px;
+}
+div#request-info .form-group ul li {
+	display: inline-block;
+	width: 45%;
+	vertical-align: top;	
+}
 </style>
 <script type="text/javascript">
 	dojo.require("dojo.data.ItemFileWriteStore");  

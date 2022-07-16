@@ -19,11 +19,11 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
 				po.date,
 				rq.requestNo,
 				rq.date AS requestDate,
-				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestName,
 				po.total
 		";
     	$sql.=$dbGb->caseStatusShowImage("po.status");
-		$sql.=",(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS byUser";
+		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS byUser";
 		$sql.=" FROM `st_purchasing` AS po 
 					JOIN `st_supplier` AS spp ON spp.id = po.supplierId 
 					LEFT JOIN st_request_po AS rq ON rq.id =po.requestId 

@@ -74,7 +74,8 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
  		$date->setAttribs(array(
  			'dojoType'=>'dijit.form.DateTextBox',
  			'class'=>'fullside',
- 			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+ 			'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+			'readOnly'=>'readOnly ',
  		));
 		$date->setValue(date("Y-m-d"));
 		
@@ -92,7 +93,8 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
  		$checkingDate->setAttribs(array(
  			'dojoType'=>'dijit.form.DateTextBox',
  			'class'=>'fullside',
- 			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+ 			'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+			'readOnly'=>'readOnly ',
  		));
 		$checkingDate->setValue(date("Y-m-d"));
 		
@@ -116,7 +118,8 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
  		$approveDate->setAttribs(array(
  			'dojoType'=>'dijit.form.DateTextBox',
  			'class'=>'fullside',
- 			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+ 			'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+			'readOnly'=>'readOnly ',
  		));
 		$approveDate->setValue(date("Y-m-d"));
 		
@@ -140,7 +143,8 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
  		$pCheckingDate->setAttribs(array(
  			'dojoType'=>'dijit.form.DateTextBox',
  			'class'=>'fullside',
- 			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+ 			'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+			'readOnly'=>'readOnly ',
  		));
 		$pCheckingDate->setValue(date("Y-m-d"));
 		

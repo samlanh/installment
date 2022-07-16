@@ -25,13 +25,13 @@ class Requesting_Model_DbTable_DbCheckingRequest extends Zend_Db_Table_Abstract
 					WHEN  rq.pCheckingStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.pCheckingStatus = 2 THEN '".$tr->translate("REJECTED")."'
 				END AS pCheckingStatus,
-				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
 				CASE
 					WHEN  rq.checkingStatus= 0 THEN '".$tr->translate("PENDING")."'
 					WHEN  rq.checkingStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.checkingStatus = 2 THEN '".$tr->translate("REJECTED")."'
 				END AS checkingStatus,
-				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName
 		";
 		$sql.=" FROM `st_request_po` AS rq WHERE rq.checkingBy>0 AND rq.checkingStatus>0 ";
 		
@@ -39,9 +39,9 @@ class Requesting_Model_DbTable_DbCheckingRequest extends Zend_Db_Table_Abstract
 		$from_date =(empty($search['start_date']))? '1': " rq.checkingDate >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " rq.checkingDate <= '".$search['end_date']." 23:59:59'";
     	$where.= " AND ".$from_date." AND ".$to_date;
-    	if(!empty($search['search'])){
+    	if(!empty($search['adv_search'])){
     		$s_where=array();
-    		$s_search=addslashes(trim($search['search']));
+    		$s_search=addslashes(trim($search['adv_search']));
     		$s_where[]= " rq.requestNo LIKE '%{$s_search}%'";
     		$s_where[]= " rq.requestNoLetter LIKE '%{$s_search}%'";
     		$s_where[]= " rq.purpose LIKE '%{$s_search}%'";

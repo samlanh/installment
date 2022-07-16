@@ -25,7 +25,7 @@ class Requesting_Model_DbTable_DbApprovedRequest extends Zend_Db_Table_Abstract
 					WHEN  rq.approveStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.approveStatus = 2 THEN '".$tr->translate("REJECTED")."'
 				END AS approveStatus,
-				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName
 		";
 		$sql.=" FROM `st_request_po` AS rq WHERE rq.approveBy>0 AND rq.approveStatus>0 ";
 		
@@ -33,9 +33,9 @@ class Requesting_Model_DbTable_DbApprovedRequest extends Zend_Db_Table_Abstract
 		$from_date =(empty($search['start_date']))? '1': " rq.approveDate >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " rq.approveDate <= '".$search['end_date']." 23:59:59'";
     	$where.= " AND ".$from_date." AND ".$to_date;
-    	if(!empty($search['search'])){
+    	if(!empty($search['adv_search'])){
     		$s_where=array();
-    		$s_search=addslashes(trim($search['search']));
+    		$s_search=addslashes(trim($search['adv_search']));
     		$s_where[]= " rq.requestNo LIKE '%{$s_search}%'";
     		$s_where[]= " rq.requestNoLetter LIKE '%{$s_search}%'";
     		$s_where[]= " rq.purpose LIKE '%{$s_search}%'";
