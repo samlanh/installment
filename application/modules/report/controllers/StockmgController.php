@@ -76,7 +76,7 @@ class Report_StockmgController extends Zend_Controller_Action {
 					'status'=>-1,
 				);
     		}
-			$search['purchaseType']=1;
+			
     		$this->view->search = $search;
 			$db = new Report_Model_DbTable_DbStockMg();
 			$rs_rows = $db->getAllPurchasing($search);

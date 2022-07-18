@@ -165,6 +165,22 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$supplierId->setMultiOptions($optionsSupplier);
 		$supplierId->setValue($request->getParam("supplierId"));
 
+		$purchaseType = new Zend_Dojo_Form_Element_FilteringSelect('purchaseType');
+		$purchaseType->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'false',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+		));
+		$arrProc = array('typeKeyIndex'=>4);
+		$rowPurchasingType = $dbGBStock->purchasingTypeKey($arrProc);
+		$optionsPurchasingType=array(0=>$this->tr->translate("SELECT_PURCHASE_TYPE"));
+		if(!empty($rowPurchasingType))foreach($rowPurchasingType AS $row){
+			$optionsPurchasingType[$row['id']]=$row['name'];
+		}
+		$purchaseType->setMultiOptions($optionsPurchasingType);
+		$purchaseType->setValue($request->getParam("purchaseType"));
 		
 		$this->addElements(
 			array(
@@ -180,7 +196,8 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				$approveStatus,	
 				
 				$processingStatus,
-				$supplierId,			
+				$supplierId,
+				$purchaseType,				
 			)
 		);
 		return $this;

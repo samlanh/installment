@@ -1,0 +1,349 @@
+<?php
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate("Dashboard Property Management System"));
+	echo $this->headTitle();
+	$frm = $this->frm_search;
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
+?>
+<section class="inputmask">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card pb-10 pt-10 pl-10 pr-10">
+				<div class="card-content collapse show">
+					<div class="card-box">
+						<div class="col-sm-12 border-botom">
+							<div class="col-sm-8 pd-0">
+								<h4 class="m-b-0"><i class="fa fa-server " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REQUEST_PO');?></h4>
+							</div>
+							<div class="col-sm-4 text-right">
+							</div>
+						</div>
+					</div>
+					<div class="card-box">
+						<form action=" " dojoType="dijit.form.Form" method="post">
+							<div class="form-group">
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<?php echo $frm->getElement("adv_search");?>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<?php echo $frm->getElement("branch_id");?>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<?php echo $frm->getElement("start_date");?>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<?php echo $frm->getElement("end_date");?>
+								</div>
+								
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<?php echo $frm->getElement("btn_search");?>
+								 </div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<?php echo $frm->getElement("checkingStatus");?>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<?php echo $frm->getElement("pCheckingStatus");?>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<?php echo $frm->getElement("approveStatus");?>
+								</div>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<?php echo $frm->getElement("processingStatus");?>
+								</div>
+								 
+							</div>
+						</form>
+					</div>
+					<div class="card-box search-list">
+			<?php if (!empty($this->row)) foreach ($this->row as $key => $rs){ 
+			
+			$url="";
+							$title="";
+							if($rs['processingStatus']==1){
+								$url=$this->baseUrl()."/requesting/checkingrequest/add/id/".$rs['id'];
+								$title=$tr->translate("MAKE_CHECKING_REQUEST_PO");
+							}elseif($rs['processingStatus']==2){
+								$url=$this->baseUrl()."/requesting/pcheckingrequest/add/id/".$rs['id'];
+								$title=$tr->translate("MAKE_PCHECKING_REQUEST_PO");
+							}elseif($rs['processingStatus']==3){
+								$url=$this->baseUrl()."/requesting/approvedrequest/add/id/".$rs['id'];
+								$title=$tr->translate("MAKE_APPROVED_REQUEST_PO");
+							}elseif($rs['processingStatus']==4){
+								$url=$this->baseUrl()."/po/index/add/id/".$rs['id'];
+								$title=$tr->translate("MAKING_PURCHASE_REQUEST_PO");
+							}elseif($rs['processingStatus']==5){
+								if($rs['isCompletedPO']==0){
+									$url=$this->baseUrl()."/po/index/add/id/".$rs['id'];
+									$title=$tr->translate("MAKING_PURCHASE_REQUEST_PO");
+								}else{
+									$rs['processingStatusTitle']=$rs['processingStatusTitle']." (".$tr->translate('COMPLETED_LABEL').")";
+								}
+							}
+			?>
+			<div class="col-md-2">
+                <div class="text-center card-box-border">
+                   <div class="member-card">
+                      	<span class="user-badge bg-warning" ><?php echo ($key+1).".) ";echo $rs['processingStatusTitle'];?></span>
+                       	<ul class="nav navbar-right panel_toolbox stusearch">
+	                      <li class="dropdown">
+	                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+	                        <ul class="dropdown-menu" role="menu">
+								<?php if(!empty($url)){?>
+								<li>
+									<a target="_blank" href="<?php echo $url;?>"><i class="fa fa-print " aria-hidden="true"></i> <?php echo $title;?></a>
+								</li>
+								<?php }?>
+								<li>
+									<a target="_blank" href="<?php echo $this->baseUrl()."/report/stockmg/request-letter/id/".$rs['id'];?>"><i class="fa fa-print " aria-hidden="true"></i> <?php echo $tr->translate('REQUEST_LETTER');?></a>
+								</li>
+	                        </ul>
+	                      </li>
+	                    </ul>
+                       	<div class="thumb-icon center-block">
+                       		<i class="fa fa-file-text-o " aria-hidden="true"></i>
+                           
+                        </div>
+
+                       <div class="">
+                       		<h4 class="blue m-b-5"><i class="fa fa-map-marker " aria-hidden="true"></i> <?php echo $rs['branch_name'];?>&nbsp;</h4>
+                       		<h4 class="blue m-b-5"><i class="fa fa-file-text-o " aria-hidden="true"></i> <?php echo $rs['requestNo'];?>&nbsp;</h4>
+                       		<h4 class="m-b-5"><i class="fa fa-calendar " aria-hidden="true"></i> <?php echo date($montFomat,strtotime($rs["date"]));?>&nbsp;</h4>
+							<h4 class="m-b-5"><?php echo $rs['requestNoLetter'];?>&nbsp;</h4>
+                       		
+						<p class="text-muted requestPurpose">                           
+						   
+						   <small class="text-purpose">
+							<?php if(!empty($rs['purpose'])){ echo $rs['purpose'];}else{ echo "&nbsp;";} ?>
+							</small>
+						</p>
+                       </div>
+                       <p class="text-muted info-list font-13">
+							<span class="title-info"><?php echo $tr->translate('CHECKING_INFO');?></span>
+						</p>
+								<ul class="stepInfoList">
+									<li>
+										<?php echo !empty($rs['checkingStatus'])?$rs['checkingStatus']:"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['checkingByName'])?date($montFomat,strtotime($rs["checkingDate"])):"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['checkingByName'])?$rs['checkingByName']:"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['checkingNote'])?"<small>".$rs['checkingNote']."</small>":"_________";?>
+									</li>
+								</ul>
+						 <p class="text-muted info-list font-13">
+							<span class="title-info"><?php echo $tr->translate('VIEW_INFO');?></span>
+						 </p>
+								<ul class="stepInfoList">
+									<li>
+										<?php echo !empty($rs['pCheckingStatus'])?$rs['pCheckingStatus']:"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['pCheckingDate'])?date($montFomat,strtotime($rs["pCheckingDate"])):"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['pCheckingByName'])?$rs['pCheckingByName']:"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['pCheckingNote'])?"<small>".$rs['pCheckingNote']."</small>":"_________";?>
+									</li>
+								</ul>
+						 <p class="text-muted info-list font-13">
+							<span class="title-info"><?php echo $tr->translate('APPROVED_INFO');?></span>
+						 </p>
+								<ul class="stepInfoList">
+									<li>
+										<?php echo !empty($rs['approveStatus'])?$rs['approveStatus']:"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['approveDate'])?date($montFomat,strtotime($rs["approveDate"])):"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['approveByName'])?$rs['approveByName']:"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['approveNote'])?"<small>".$rs['approveNote']."</small>":"_________";?>
+									</li>
+								</ul>
+                       
+                     </div>
+                   
+               </div>
+            </div>
+            <?php }?>
+            <?php 
+             	if($this->countPages>1){ 
+					$statpage = $this->currentPage - 5;
+					$endpage = $this->currentPage + 5;
+				 	if ($this->currentPage<=5){
+				 		$statpage = 1;
+				 		$endpage =10;
+				 	}
+                 if (!empty($this->countPages)){
+						 ?>
+			<div class="clearfix"></div>
+            <div class="pagin text-center">
+            	<nav aria-label="Page navigation example">
+				  <ul class="pagination">
+				  	<?php if($this->currentPage!=1){ ?>
+				    <li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->previousPage;?>"><?php echo $tr->translate('Previous');?></a></li>
+				    <?php }?>
+				     <?php  $i=0; for( $i=1; $i<=$this->countPages; $i++){?>
+           			 	<?php if ($statpage<=$i && $endpage>=$i){?>
+				    <li class="page-item <?php if($i==$this->currentPage){ echo "active";}?>">
+				    	<a class="page-link" href="<?php echo $urlsting.$sign."pages=".$i;?>"><?php echo $i;?></a>
+				    </li>
+				    	<?php }
+					}?>
+					<?php if($this->countPages!= $this->currentPage){ ?>
+				    <li class="page-item"><a class="page-link" href="<?php echo $urlsting.$sign."pages=".$this->nextPage;?>"><?php echo $tr->translate('Next');?></a></li>
+				    <?php }?>
+				  </ul>
+				</nav>
+				<span><?php echo $tr->translate('Total Pages')." : ".$this->countPages." ".$tr->translate('Pages');?></span>
+            </div>
+             <?php }}?>
+		</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<style>
+.card-box-border {
+    background-color: #ffffff;
+    border: 1px solid rgba(98, 103, 115, 0.2);
+    padding: 10px;
+    margin-bottom: 20px;
+        color: #000;
+        box-shadow: 1px 1px 2px #ccc;
+}
+span.user-badge.bg-warning {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    padding: 2px 15px;
+    border-radius: 20px;
+    color: #ffffff;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: bold;
+    z-index: 1 !important;
+}
+.bg-warning {
+    background: #009bcc !important;
+}
+
+.member-card p.text-muted.info-list {
+    text-align: left;
+    color: #0f2a5b;
+	    margin: 0;
+}
+
+.member-card h4 {
+    margin: 0;
+    padding: 2px 0;
+    font-size: 14px;
+    line-height: 12px;
+}
+span.title-info {
+    font-size: 12px;
+    min-width: 30%;
+    display: inline-block;
+    font-weight: 600;
+    color: #0f2a5b;
+}
+span.inf-value {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: 63%;
+    overflow: hidden;
+    vertical-align: bottom;
+}
+
+.member-card .member-star {
+    position: absolute;
+    bottom: 10px;
+    right: 5px;
+    background-color: #ffffff;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    line-height: 26px;
+    text-align: center;
+    font-size: 18px;
+    border: solid 2px;
+}
+.text-active {
+    color: #009688;
+}
+.text-deactive {
+    color: #ff1203;
+}
+.card-box.search-list {
+    min-height: 400px;
+}
+a.btn.btn-default.btn-detail {
+    background: #009688;
+    padding: 10px;
+    color: #fff;
+}
+a.btn.btn-default.btn-detail:hover {
+    opacity: 0.8;
+}
+.blue{
+	color: #08086b;
+}
+
+ul.nav.navbar-right.panel_toolbox.stusearch {
+    min-width: 0;
+}
+ul.nav.navbar-right.panel_toolbox.stusearch li.dropdown a.dropdown-toggle {
+    padding: 10px;
+}
+
+.thumb-icon {
+    margin-bottom: 5px;
+}
+.thumb-icon i.fa {
+    font-size: 60px;
+}
+ul.stepInfoList {
+    margin: 0;
+    padding: 0;
+    padding-left: 20px;
+    margin-bottom: 5px;
+}
+ul.stepInfoList li {
+    text-align: left;
+    line-height: 16px;
+    font-size: 12px;
+    vertical-align: top;
+}
+ul.stepInfoList li {
+    text-align: left;
+    line-height: 16px;
+    font-size: 12px;
+    vertical-align: top;
+}
+p.text-muted.requestPurpose {text-align: left;min-height: 30px;line-height: 12px;}
+
+p.text-muted.requestPurpose small.text-purpose {
+    font-size: 70%;
+    color: #000;
+}
+</style>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+</script>	

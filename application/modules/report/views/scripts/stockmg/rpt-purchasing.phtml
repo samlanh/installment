@@ -15,8 +15,15 @@
 	}
 	
 	$branch_title = $tr->translate("BRAND_TITLE");
+	
+	$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+	$arrStep = array(
+			'keyIndex'=>1,//Purchase By Request
+			'typeKeyIndex'=>1,
+		);
+	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
 ?>
-<title><?php echo $tr->translate("RPT_PURCHASING");?></title>
+<title><?php echo $tr->translate("RPT_PURCHASING_LIST");?></title>
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
@@ -24,7 +31,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_PURCHASING');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_PURCHASING_LIST');?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -47,6 +54,9 @@
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement("supplierId");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("purchaseType");?>
 					</div>
 				</div>
 				<div class="form-group"> 
@@ -147,7 +157,7 @@
 										<td colspan="4" class="center"><?php echo $tr->translate("PURCHASING_INFO");?></td>    
 					                    <td colspan="6" class="center"><?php echo $tr->translate("REQUEST_INFO");?></td>    
 					                   
-					                    <td colspan="2" class="center"><?php echo $tr->translate("OTHER");?></td>    
+					                    <td colspan="3" class="center"><?php echo $tr->translate("OTHER");?></td>    
 					                 
 					                </tr>
 					                <tr class="style" align="center">
@@ -165,6 +175,7 @@
 										
 					                    
 					                    <td style="padding:1px;"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
+					                    <td style="padding:1px;"><?php echo $tr->translate("TYPE");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("BY");?></td>
 					                </tr>
 					            </thead>
@@ -189,14 +200,23 @@
 									<td class="centerText"><?php echo date($montFomat,strtotime($rs["date"]));?></td>
 									<td><?php echo $rs["supplierName"];?></td>
 									
+									<?php if($rs["purchaseType"]==$purchaseType){?>
 				               		<td><?php echo $rs["requestNo"];?></td>                 		
 				               		<td class="centerText"><?php echo date($montFomat,strtotime($rs["requestDate"]));?></td>
 				               		<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["purposeRequest"];?></span></td>
 				               		<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["requestNoLetter"];?></span></td>
 				               		<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["requestNote"];?></span></td>
 									<td class="centerText"><?php echo $rs["requestName"];?></td>
-									
+									<?php }else{?>
+									<td class="centerText">-</td>
+									<td class="centerText">-</td>
+									<td class="centerText">-</td>
+									<td class="centerText">-</td>
+									<td class="centerText">-</td>
+									<td class="centerText">-</td>
+									<?php }?>
 									<td class="centerText"><?php echo number_format($rs["total"],2);?></td>
+									<td class="centerText"><?php echo $rs["purchaseTypeTitle"];?></td>
 									<td class="centerText"><?php echo $rs["byUser"];?></td>
 								</tr>
 				                <?php }?>
@@ -220,7 +240,7 @@
 			 getBranchInfo();
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_REQUEST_LIST");?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_PURCHASING_LIST");?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
 		});
 		

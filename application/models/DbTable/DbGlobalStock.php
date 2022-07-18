@@ -429,5 +429,54 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	
 	}
 	
+	function purchasingTypeKey($data=array()){
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$keyIndex=1;
+		if(!empty($data['keyIndex'])){
+			$keyIndex=$data['keyIndex'];
+		}
+		$typeKeyIndex=1;//keyValue
+		$arrKey = array(
+			1=>1,
+			2=>2,
+			3=>3,
+
+		);
+		if(!empty($data['typeKeyIndex'])){
+			$typeKeyIndex=$data['typeKeyIndex'];
+			if($typeKeyIndex==2){//keyTitle
+				$arrKey = array(
+					1=>$tr->translate("PO_BY_REQUEST"),
+					2=>$tr->translate("DIRECTED_PO"),
+					3=>$tr->translate("PO_PETTY_CASH"),
+					4=>$tr->translate("OVERSEAS_PO"),
+					
+				);
+			}else if($typeKeyIndex==3){//for Sql Query
+				
+				$string=", CASE
+					WHEN  $keyIndex = 1 THEN '".$tr->translate("PO_BY_REQUEST")."'
+					WHEN  $keyIndex = 2 THEN '".$tr->translate("DIRECTED_PO")."'
+					WHEN  $keyIndex = 3 THEN '".$tr->translate("PO_PETTY_CASH")."'
+					WHEN  $keyIndex = 4 THEN '".$tr->translate("OVERSEAS_PO")."'
+				
+					END AS purchaseTypeTitle ";
+				return $string;
+			}else if($typeKeyIndex==4){//for Rerturn Array
+				$arrKey = array(
+					array('id'=>1,'name'=>$tr->translate("PO_BY_REQUEST")),
+					array('id'=>2,'name'=>$tr->translate("DIRECTED_PO")),
+					array('id'=>3,'name'=>$tr->translate("PO_PETTY_CASH")),
+					array('id'=>4,'name'=>$tr->translate("OVERSEAS_PO")),
+					
+					
+				);
+				return $arrKey;
+			}
+		}
+		$value = empty($arrKey[$keyIndex])?0:$arrKey[$keyIndex];
+		return $value;
+	}
+	
 }
 ?>

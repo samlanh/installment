@@ -63,6 +63,10 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
     		$s_where[]= " rq.requestNo LIKE '%{$s_search}%'";
     		$s_where[]= " rq.requestNoLetter LIKE '%{$s_search}%'";
     		$s_where[]= " rq.purpose LIKE '%{$s_search}%'";
+			$s_where[]= " rq.note LIKE '%{$s_search}%'";
+    		$s_where[]= " rq.checkingNote LIKE '%{$s_search}%'";
+    		$s_where[]= " rq.pCheckingNote LIKE '%{$s_search}%'";
+    		$s_where[]= " rq.approveNote LIKE '%{$s_search}%'";
     		$where.=' AND ('.implode(' OR ', $s_where).')';
     	}
 		if(!empty($search['checkingStatus'])){
