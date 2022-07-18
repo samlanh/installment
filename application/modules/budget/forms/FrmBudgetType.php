@@ -77,8 +77,31 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 		$tvalidate = 'dijit.form.ValidationTextBox';
 		$tarea = 'dijit.form.Textarea';
 	
-		$db = new Application_Model_DbTable_DbGlobalStock();
+		$dbGB = new Application_Model_DbTable_DbGlobal();
+		 
+		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
+		$branch_id->setAttribs(array(
+				'dojoType'=>$filter,
+				'class'=>'fullside',
+				'required' =>'false',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				//'onchange'=>'onChageFunctionByBranch();'
+		));
+		$rows = $dbGB->getAllBranchName();
+		$options_branch=array('-1'=>$tr->translate("SELECT_BRANCH"));
+		if(!empty($rows))foreach($rows AS $row){
+			$options_branch[$row['br_id']]=$row['project_name'];
+		}
+		$branch_id->setMultiOptions($options_branch);
+		if (count($rows)==1){
+			$branch_id->setAttribs(array('readonly'=>'readonly'));
+			if(!empty($rows)) foreach($rows AS $row){
+				$branch_id->setValue($row['br_id']);
+			}
+		}
 		
+		$db = new Application_Model_DbTable_DbGlobalStock();
 		$budgetType = new Zend_Dojo_Form_Element_FilteringSelect('budgetType');
 		$budgetType->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -141,6 +164,7 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 		}
 	
 		$this->addElements(array(
+				$branch_id,
 				$budgetType,
 				$id,
 				$budgetTitle,

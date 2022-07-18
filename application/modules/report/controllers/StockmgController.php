@@ -76,9 +76,9 @@ class Report_StockmgController extends Zend_Controller_Action {
 					'status'=>-1,
 				);
     		}
-			$search['purchaseType']=1;
+			
     		$this->view->search = $search;
-			$db = new Report_Model_DbTable_DbStockMg();
+			$db = new Report_Model_DbTable_DbPurchasing();
 			$rs_rows = $db->getAllPurchasing($search);
     		$this->view->row=$rs_rows;
     		$this->view->search=$search;
@@ -96,6 +96,27 @@ class Report_StockmgController extends Zend_Controller_Action {
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();
+	}
+	
+	public function purchaseLetterAction(){
+		try{
+			$db = new Report_Model_DbTable_DbPurchasing();
+			$id=$this->getRequest()->getParam('id');
+    		$id = empty($id)?0:$id;
+			$row = $db->getPurchasingById($id);
+			if (empty($row)){
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/stockmg/request");
+				exit();
+			}
+			$this->view->row = $row;
+			$this->view->rowdetail = $db->getPODetailById($id);
+		
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
+		
+		
 	}
 	
 }

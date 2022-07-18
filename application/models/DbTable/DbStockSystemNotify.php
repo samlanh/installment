@@ -90,7 +90,7 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 	
 
 		$sql.=$dbGb->getAccessPermission("rq.projectId");
-    	$sql.=" ORDER BY rq.id DESC";
+    	$sql.=" ORDER BY rq.processingStatus ASC, rq.id DESC";
     	return $db->fetchAll($sql);
 	}
 	
