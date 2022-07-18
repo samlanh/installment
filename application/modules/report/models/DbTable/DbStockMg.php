@@ -101,7 +101,7 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 		$sql=" 	SELECT 
 					rqd.*,p.proCode,
 					p.proName,
-					
+					(SELECT c.categoryName FROM st_category AS c WHERE c.id = p.categoryId LIMIT 1 ) AS categoryTitle,
 					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= rq.projectId LIMIT 1) AS currentQty,
 					p.measureLabel AS measureTitle
 				";
