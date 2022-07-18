@@ -43,6 +43,13 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 				
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS user_name
 		";
+		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+		$arrStep = array(
+			'stepNum'=>"rq.processingStatus",
+			'typeStep'=>3,
+		);
+		$sql.= $dbGbSt->requestingProccess($arrStep);
+		
 		$sql.=$dbGb->caseStatusShowImage("rq.status");
 		$sql.=" FROM `st_request_po` AS rq WHERE 1 ";
 		
@@ -56,6 +63,10 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
     		$s_where[]= " rq.requestNo LIKE '%{$s_search}%'";
     		$s_where[]= " rq.requestNoLetter LIKE '%{$s_search}%'";
     		$s_where[]= " rq.purpose LIKE '%{$s_search}%'";
+			$s_where[]= " rq.note LIKE '%{$s_search}%'";
+    		$s_where[]= " rq.checkingNote LIKE '%{$s_search}%'";
+    		$s_where[]= " rq.pCheckingNote LIKE '%{$s_search}%'";
+    		$s_where[]= " rq.approveNote LIKE '%{$s_search}%'";
     		$where.=' AND ('.implode(' OR ', $s_where).')';
     	}
 		if(!empty($search['checkingStatus'])){
@@ -72,6 +83,9 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
     	}
     	if(($search['branch_id'])>0){
     		$where.= " AND rq.projectId = ".$search['branch_id'];
+    	}
+		if(!empty($search['processingStatus'])){
+    		$where.= " AND rq.processingStatus = ".$search['processingStatus'];
     	}
 		$where.=$dbGb->getAccessPermission("rq.projectId");
     	$order=" ORDER BY rq.id DESC";

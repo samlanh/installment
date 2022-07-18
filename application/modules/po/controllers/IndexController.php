@@ -114,6 +114,17 @@ class Po_IndexController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
     		exit();
     	}
+		
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		$arrStep = array(
+				'keyIndex'=>self::PURCHASE_TYPE,
+				'typeKeyIndex'=>1,
+			);
+		$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+		if ($row['purchaseType']!=$purchaseType){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
 		$this->view->rowdetail = $db->getPODetailById($id);
 		
 		

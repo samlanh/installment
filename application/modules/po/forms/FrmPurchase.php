@@ -75,6 +75,12 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
     			'dojoType'=>'dijit.form.Textarea',
     			'class'=>'fullside',
     			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
+				
+		$purpose=  new Zend_Form_Element_Textarea('purpose');
+    	$purpose->setAttribs(array(
+    			'dojoType'=>'dijit.form.Textarea',
+    			'class'=>'fullside',
+    			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
     	
 		$total = new Zend_Dojo_Form_Element_TextBox('total');
     	$total->setAttribs(array(
@@ -129,6 +135,7 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 			$date->setValue($data['date']);
 			$note->setValue($data['note']);
 			$total->setValue($data['total']);
+			$purpose->setValue($data['purpose']);
 			$_status->setValue($data['status']);
 			$id->setValue($data['id']);
 		}
@@ -140,6 +147,7 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 				$date,
 				$note,
 				$total,
+				$purpose,
 				$_status,
 				$id,
 				

@@ -256,8 +256,7 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			'queryExpr'=>'*${0}*',
 		));
 	
-		$dbp = new Budget_Model_DbTable_DbbudgetItem();
-		$options = $dbp->getAllBudgetItem(1);
+		$options = $db->getAllBudgetItem(0,'', '',1);
 		unset($options[-1]);
 		$budgetItem->setMultiOptions($options);
 		$budgetItem->setValue($request->getParam('budgetItem'));
