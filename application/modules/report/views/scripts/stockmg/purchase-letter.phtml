@@ -41,11 +41,22 @@
 					background: #c1d0f3;
 					font-weight:600;
 				}
+				table.content-data  tr.regurlar {
+					background: #eee;
+				}
 				table.content-data tr td{
-					padding:5px 1px;
+					padding:5px 3px; 
+					border:none;
+					vertical-align:middle;
+				}
+				table.content-data tr.headRow td{
+					border:solid 1px #000;
+					padding:10px 2px; 
+					vertical-align:middle;
 				}
 				table.requestInfo {
 					width: 100%;
+					margin-top: 10px;
 				}
 				table.requestInfo tr td {
 					vertical-align: top;
@@ -55,6 +66,17 @@
 				}
 				tr.style.rejected {
 					background: #ffcece;
+				}
+				tr.rowFooter td span {
+					font-weight: 600;
+					font-size: 16px;
+				}
+				tr.rowFooter td span.gtotalVal {
+					color: #ff0500;
+					display: block;
+					width: 100%;
+					border-bottom: double 4px;
+					text-align: left;
 				}
 			</style>
 				
@@ -81,27 +103,45 @@
 						<table class="requestInfo">
 							<tr>
 								<td width="40%"><span class="lbTitle"><?php echo $tr->translate("SUPPLIER");?></span> : <span><?php echo $this->row["supplierName"];?></span></td>
-								<td width="30%">&nbsp;</td>
+								<td width="30%">
+									<?php if(!empty($this->row["requestId"])){?>
+									<span class="lbTitle"><?php echo $tr->translate("REQUEST_NO");?></span> : <span style="color:red; font-weight:600;"><?php echo $this->row["requestNo"];?></span>
+									<?php }else{?>
+									&nbsp;
+									<?php }?>
+								</td>
 								<td width="40%"><span class="lbTitle"><?php echo $tr->translate("PO_NO");?></span> : <span style="color:red; font-weight:600;"><?php echo $this->row["purchaseNo"];?></span></td>
 								
 							</tr>
 							<tr>
 								
 								<td><span class="lbTitle"><?php echo $tr->translate("CONTACT_NAME");?></span> : <span><?php echo $this->row["contactNumber"];?></span></td>
-								<td ></td>
+								<td >
+									<?php if(!empty($this->row["requestId"])){?>
+									<span class="lbTitle"><?php echo $tr->translate("REQUEST_DATE");?></span> : <span><?php echo date("d-M-Y",strtotime($this->row["date"]));?></span>
+									<?php }?>
+								</td>
 								<td ><span class="lbTitle"><?php echo $tr->translate("DATE");?></span> : <span><?php echo date("d-M-Y",strtotime($this->row["date"]));?></span></td>
 							</tr>
 							<tr>
 								
 								<td><span class="lbTitle"><?php echo $tr->translate("TEL");?></span> : <span><?php echo $this->row["supplierTel"];?></span></td>
-								<td ></td>
-								<td ></td>
+								<td >
+									<?php if(!empty($this->row["requestName"])){?>
+									<span class="lbTitle"><?php echo $tr->translate("REQUEST_BY");?></span> : <span ><?php echo $this->row["requestName"];?></span>
+									<?php }?>
+								</td>
+								<td >
+									
+								</td>
 							</tr>
 							<tr>
 								
 								<td><span class="lbTitle"><?php echo $tr->translate("ADDRESS");?></span> : <span><?php echo $this->row["address"];?></span></td>
 								<td ></td>
-								<td ></td>
+								<td >
+									
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -110,41 +150,60 @@
 					<td colspan="3" >
 						<table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
 							<thead>
-								<tr class="style" align="center" >
+								<tr class="style headRow" align="center" >
 									<td class="center"><?php echo $tr->translate("NUM");?></td>
 									<td class="center" style="width:200px;"><?php echo $tr->translate("PRODUCT_NAME");?></td>
-									<td class="center"><?php echo $tr->translate("CATEGORY");?></td>
 									<td class="center"><?php echo $tr->translate("QTY");?></td>
 									<td class="center"><?php echo $tr->translate("UNIT");?></td>
-									<td class="center" style="width:150px;"><?php echo $tr->translate("OTHER");?></td>    
+									<td class="center"><?php echo $tr->translate("UNIT_PRICE")."<br />".$tr->translate("CURRENCY_SIGN");?></td>
+									<td class="center"><?php echo $tr->translate("DISCOUNT")."<br />".$tr->translate("CURRENCY_SIGN");?></td>
+									<td class="center"><?php echo $tr->translate("SUB_TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
+									<td class="center" style="width:180px;"><?php echo $tr->translate("OTHER");?></td>    
 								</tr>
 							</thead>
 							 <?php 
 							 $i=0;
+							 $minimumRow=15;
+							 $gTotal=0;
 				                if(!empty($this->rowdetail)) foreach ($this->rowdetail as $index => $rs){ $i++;
-								
+								$classRowBg = "odd";
+								if(($i%2)==0){
+								$classRowBg = "regurlar";
+								}
+								$gTotal=$gTotal+$rs["subTotal"];
 							?>
-							<tr class="style <?php //echo $classRow; ?>" style=" white-space:nowrap;">
+							<tr class="style <?php echo $classRowBg; ?>" style=" white-space:nowrap;">
 				               	<td style="text-align: center;"><?php echo $i; ?></td>
 								<td>
 									<?php echo $rs["proCode"]." - ".$rs["proName"];?>
+									<?php echo empty($rs["categoryTitle"])?"":"<br />".$rs["categoryTitle"];?>
 									
 								</td>
-								<td align="center"><?php echo $rs["categoryTitle"];?></td>
 								<td align="center"><?php echo $rs["qty"];?></td>
 								<td align="center"><?php echo $rs["measureTitle"];?></td>
-								<td style="font-size: 10px;"><?php echo $rs["note"];?></td>
+								<td align="center"><?php echo $rs["unitPrice"];?></td>
+								<td align="center"><?php echo number_format($rs["discountAmount"],2);?></td>
+								<td align="right"><?php echo number_format($rs["subTotal"],2);?></td>
+								<td style="font-size: 9px;"><?php echo $rs["note"];?></td>
 							</tr>
-							<?php 
-								}
-							?>
+							<?php } ?>
+							<?php for ($i = $i; $i <= $minimumRow; $i++) { ?>
+							<tr class="style <?php //echo $classRow; ?>" style=" white-space:nowrap;">
+								<td style="border:none;" colspan="8">&nbsp;</td>
+							</tr>
+							<?php } ?>
+						</table>
+						<table style="width: 100%;">
+							<tr class="rowFooter" style=" white-space:nowrap;">
+								<td style="width:70%; text-align:right;" ><span><?php echo $tr->translate("GRAND_TOTAL")." ".$tr->translate("CURRENCY_SIGN");?> :</span></td>
+								<td style="border:none; " ><span class="gtotalVal"><?php echo number_format($gTotal,2);?></span></td>
+							</tr>
 						</table>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3" >
-						<br />
-						<table width="40%" border="1"  cellspacing="0" cellpadding="0">
+						<table style="width:50%; margin-top:-20px;" border="1"  cellspacing="0" cellpadding="0">
 							<tr>
 								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;">
 									<span style="font-weight: 600; display: block;text-decoration: underline;"><?php echo $tr->translate("NOTE");?> ៖</span>
@@ -214,7 +273,7 @@ function getBranchInfo(){
 		},	
 		load: function(data) {
 			var arr = JSON.parse(data);
-			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			var imagesUrl = '<img  style="height:65px; max-width: 100%;" src="'+arr.url_logo+'" />';
 			document.getElementById('projectlogo').innerHTML = imagesUrl;	
 			document.getElementById('projectName').innerHTML = 'គម្រោង៖ '+arr.project_name;
 		},

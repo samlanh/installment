@@ -79,8 +79,19 @@ class Report_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
 				spp.supplierTel,
 				spp.contactName,
 				spp.contactNumber,
+				rq.requestNo,
+				rq.purpose AS purposeRequest,
+				rq.requestNoLetter  AS requestNoLetter ,
+				rq.date AS requestDate,
+				rq.note AS requestNote,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestName,
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS byUser
-			FROM $this->_name AS po JOIN `st_supplier` AS spp ON spp.id = po.supplierId WHERE po.id=".$recordId;
+			FROM $this->_name AS po JOIN `st_supplier` AS spp ON spp.id = po.supplierId 
+					LEFT JOIN st_request_po AS rq ON rq.id =po.requestId 
+			WHERE po.id=".$recordId;
 			$sql.=$dbGb->getAccessPermission("po.projectId");
 			$sql.=" LIMIT 1 ";
     	return $db->fetchRow($sql);
