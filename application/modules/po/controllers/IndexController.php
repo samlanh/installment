@@ -144,5 +144,22 @@ class Po_IndexController extends Zend_Controller_Action {
 			
 		}
 	}
+	
+	function getallpoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$_row =$db->getAllPo($data);
+			
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			array_unshift($_row,array(
+					'id' => 0,
+					'name' => $tr->translate("SELECT_PO_NO"),
+			) );
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
 }
 

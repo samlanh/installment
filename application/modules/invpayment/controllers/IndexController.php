@@ -74,5 +74,17 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
 		}
 	}
+	
+	
+	function getinvoicenoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$_row =$db->generateInvoiceNo($data);
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
 }
 

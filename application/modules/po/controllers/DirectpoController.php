@@ -1,7 +1,7 @@
 <?php
 class Po_DirectpoController extends Zend_Controller_Action {
 	const REDIRECT_URL = '/po/directpo';
-	const PURCHASE_TYPE = 2;//From Requesting
+	const PURCHASE_TYPE = 2;//Direct PO
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -117,6 +117,18 @@ class Po_DirectpoController extends Zend_Controller_Action {
     	$frm->FrmPurchase($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
+	}
+	
+	function podetailAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Po_Model_DbTable_DbDirectPO();
+			$_row =$db->getPODetailHtml($data);
+			
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
 	}
 }
 

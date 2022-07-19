@@ -237,6 +237,7 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 		$sql=" 	SELECT 
 					pod.*,p.proCode,
 					p.proName,
+					p.isService AS serviceOrProType,
 					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= po.projectId LIMIT 1) AS currentQty,
 					p.measureLabel AS measureTitle
 					";
@@ -248,6 +249,46 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 			";
 		$sql.=" WHERE pod.purchaseId = $recordId";
 		return $db->fetchAll($sql);
+	}
+	
+	function getPODetailHtml($data){
+		$recordId = $data['purchaseId'];
+		$recordInfo = $this->getDataRow($recordId);
+		$rs = $this->getPODetailById($recordId);
+		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$string='';
+    	$no = $data['keyindex'];
+    	$identity='';
+		if(!empty($rs)){
+    		foreach ($rs as $key => $row){
+				if (empty($identity)){
+    				$identity=$no;
+    			}else{$identity=$identity.",".$no;
+    			}
+				$string.='
+				<tr id="row'.$no.'" class="rowData" style="background: #fff; border: solid 1px #bac;">
+					<td align="center" >'.($key+1).'</td>
+					<td class="productName" >'.$row['proCode'].' - '.$row['proName'].'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'.$no.'" name="proId'.$no.'" value="'.$row['proId'].'" type="text"  ><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="type'.$no.'" name="type'.$no.'" value="'.$row['serviceOrProType'].'" type="text"  ></td>
+					<td><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"  id="qty'.$no.'" name="qty'.$no.'" placeholder="'.$tr->translate("QTY").'" value="'.$row['qty'].'" type="text"  ></td>	
+					<td><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"  id="unitPrice'.$no.'" name="unitPrice'.$no.'" placeholder="'.$tr->translate("UNIT_PRICE").'" value="'.$row['unitPrice'].'" type="text"  ></td>	
+					<td><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"  id="discountAmount'.$no.'" name="discountAmount'.$no.'" placeholder="'.$tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN").'" value="'.$row['discountAmount'].'" type="text"  ></td>
+					<td><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"  id="total'.$no.'" name="total'.$no.'" placeholder="'.$tr->translate("SUB_TOTAL").'" value="'.$row['subTotal'].'" type="text"  ></td>	
+					<td><input readOnly dojoType="dijit.form.TextBox" class="fullside" id="note'.$no.'" name="note'.$no.'" placeholder="'.$tr->translate("NOTE").'" value="'.$row['note'].'" type="text"  ></td>
+				</tr>
+				';$no++;
+			}
+		}else{
+    		$no++;
+    	}
+		
+		$array = array(
+			'recordInfo'=>$recordInfo,
+			'stringrow'=>$string,
+			'keyindex'=>$no,
+			'identity'=>$identity
+			);
+    	return $array;
 	}
    
 }

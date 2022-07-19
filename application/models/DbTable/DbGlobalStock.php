@@ -54,7 +54,13 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			";
 		$sql.=" FROM `st_product` AS p  ";
 		$sql.=" WHERE p.status=1 ";
-			
+		
+		if(!empty($_data['isService'])){
+			$sql.=" AND p.isService=1 ";//Case Service Items
+		}else{
+			$sql.=" AND p.isService=0 ";
+		}
+		
 		if(!empty($_data['branch_id'])){
 			$sql.="";
 		}
@@ -89,6 +95,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`,
 				p.proCode,
 				p.proName,
+				p.isService,
 				(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty,
 				p.measureLabel AS measureTitle
 			";
@@ -174,6 +181,54 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		
 		$pre=$pre.date("dmy",strtotime($dateRequest));
 		$pre=$pre."P";
+		$numberLenght= strlen((int)$new_acc_no);
+		for($i = $numberLenght;$i<4;$i++){
+			$pre.='0';
+		}
+		return $pre.$new_acc_no;
+	}
+	function generateInvoiceNo($_data=null){
+		
+		$this->_name='st_invoice';
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$pre = "";
+		
+		$branch_id = empty($_data['branch_id'])?0:$_data['branch_id'];
+		$pre = $dbgb->getPrefixCode($branch_id);
+		
+		$db = $this->getAdapter();
+		$sql=" SELECT rq.id  FROM $this->_name AS rq WHERE rq.projectId = $branch_id  ORDER BY rq.id DESC LIMIT 1 ";
+		$acc_no = $db->fetchOne($sql);
+		$new_acc_no= (int)$acc_no+1;
+		
+		$receiveIvDate = empty($_data['receiveIvDate'])?date("y-m-d"):$_data['receiveIvDate'];
+		
+		$pre=$pre.date("dmy",strtotime($receiveIvDate));
+		$pre=$pre."INV";
+		$numberLenght= strlen((int)$new_acc_no);
+		for($i = $numberLenght;$i<4;$i++){
+			$pre.='0';
+		}
+		return $pre.$new_acc_no;
+	}
+	function generatePaymentNo($_data=null){
+		
+		$this->_name='st_payment';
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$pre = "";
+		
+		$branch_id = empty($_data['branch_id'])?0:$_data['branch_id'];
+		$pre = $dbgb->getPrefixCode($branch_id);
+		
+		$db = $this->getAdapter();
+		$sql=" SELECT rq.id  FROM $this->_name AS rq WHERE rq.projectId = $branch_id  ORDER BY rq.id DESC LIMIT 1 ";
+		$acc_no = $db->fetchOne($sql);
+		$new_acc_no= (int)$acc_no+1;
+		
+		$paymentDate = empty($_data['paymentDate'])?date("y-m-d"):$_data['paymentDate'];
+		
+		$pre=$pre.date("dmy",strtotime($paymentDate));
+		$pre=$pre."PM";
 		$numberLenght= strlen((int)$new_acc_no);
 		for($i = $numberLenght;$i<4;$i++){
 			$pre.='0';
@@ -474,6 +529,88 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					array('id'=>2,'name'=>$tr->translate("DIRECTED_PO")),
 					array('id'=>3,'name'=>$tr->translate("PO_PETTY_CASH")),
 					array('id'=>4,'name'=>$tr->translate("OVERSEAS_PO")),
+					
+					
+				);
+				return $arrKey;
+			}
+		}
+		$value = empty($arrKey[$keyIndex])?0:$arrKey[$keyIndex];
+		return $value;
+	}
+	
+	
+	function getAllPo($_data=null){
+		
+		$db=$this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+    	$sql="
+			SELECT 
+				po.id,
+				CONCAT(COALESCE(po.purchaseNo,''),' ',COALESCE(spp.supplierName,'')) AS name			
+		";
+		$sql.=" FROM `st_purchasing` AS po 
+					LEFT JOIN `st_supplier` AS spp ON spp.id = po.supplierId 
+		WHERE po.status=1 ";	
+			
+		if(!empty($_data['branch_id'])){
+			$sql.=" AND po.projectId=".$_data['branch_id'];
+		}
+		if(!empty($_data['purchaseType'])){//Type Of Purchase
+		
+			$arrStep = array(
+				'keyIndex'=>$_data['purchaseType'],
+				'typeKeyIndex'=>1,
+			);
+			$purchaseType = $this->purchasingTypeKey($arrStep);
+			$sql.=" AND po.purchaseType=".$purchaseType;
+		}
+		$row = $db->fetchAll($sql);
+		return $row;
+		
+	}
+	
+	
+	function invoiceTypeKey($data=array()){
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$keyIndex=1;
+		if(!empty($data['keyIndex'])){
+			$keyIndex=$data['keyIndex'];
+		}
+		$typeKeyIndex=1;//keyValue
+		$arrKey = array(
+			1=>1,
+			2=>2,
+			3=>3,
+
+		);
+		if(!empty($data['typeKeyIndex'])){
+			$typeKeyIndex=$data['typeKeyIndex'];
+			if($typeKeyIndex==2){//keyTitle
+				$arrKey = array(
+					1=>$tr->translate("INVOICE_BY_REQUEST"),
+					2=>$tr->translate("INVOICE_DEPOSIT"),
+					3=>$tr->translate("INVOICE_PETTY_CASH"),
+					4=>$tr->translate("INVOICE_OVERSEAS_PO"),
+					
+				);
+			}else if($typeKeyIndex==3){//for Sql Query
+				
+				$string=", CASE
+					WHEN  $keyIndex = 1 THEN '".$tr->translate("INVOICE_BY_REQUEST")."'
+					WHEN  $keyIndex = 2 THEN '".$tr->translate("INVOICE_DEPOSIT")."'
+					WHEN  $keyIndex = 3 THEN '".$tr->translate("INVOICE_PETTY_CASH")."'
+					WHEN  $keyIndex = 4 THEN '".$tr->translate("INVOICE_OVERSEAS_PO")."'
+				
+					END AS purchaseTypeTitle ";
+				return $string;
+			}else if($typeKeyIndex==4){//for Rerturn Array
+				$arrKey = array(
+					array('id'=>1,'name'=>$tr->translate("INVOICE_BY_REQUEST")),
+					array('id'=>2,'name'=>$tr->translate("INVOICE_DEPOSIT")),
+					array('id'=>3,'name'=>$tr->translate("INVOICE_PETTY_CASH")),
+					array('id'=>4,'name'=>$tr->translate("INVOICE_OVERSEAS_PO")),
 					
 					
 				);
