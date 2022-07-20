@@ -171,6 +171,15 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
     			'class'=>'fullside ',
     	));
 		
+		$_arr = array(1=>$tr->translate("ACTIVE"),0=>$tr->translate("DEACTIVE"));
+    	$_status = new Zend_Dojo_Form_Element_FilteringSelect("status");
+    	$_status->setMultiOptions($_arr);
+    	$_status->setAttribs(array(
+    			'dojoType'=>'dijit.form.FilteringSelect',
+    			'required'=>'true',
+    			'missingMessage'=>'Invalid Module!',
+    			'class'=>'fullside height-text',));
+				
 		$id = new Zend_Form_Element_Hidden('id');
     	$id->setAttribs(array(
     			'dojoType'=>'dijit.form.TextBox',
@@ -178,7 +187,23 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
     	));
 		
 		if(!empty($data)){
-			//$_branch_id->setValue($data['branch_id']);
+			$branch_id->setValue($data['projectId']);
+			$invoiceNo->setValue($data['invoiceNo']);
+			$supplierInvoiceNo->setValue($data['supplierInvoiceNo']);
+			$invoiceDate->setValue($data['invoiceDate']);
+			$receiveIvDate->setValue($data['receiveIvDate']);
+			$note->setValue($data['note']);
+			$totalInternal->setValue($data['totalInternal']);
+			$vatInternal->setValue($data['vatInternal']);
+			$totalAmount->setValue($data['totalAmount']);
+			$totalExternal->setValue($data['totalExternal']);
+			$vatExternal->setValue($data['vatExternal']);
+			$otherFeeExternal->setValue($data['otherFeeExternal']);
+			$totalAmountExternal->setValue($data['totalAmountExternal']);
+			
+			$supplierId->setValue($data['supplierId']);
+			$id->setValue($data['id']);
+			$_status->setValue($data['status']);
 		}
 		
 		$this->addElements(array(
@@ -198,6 +223,7 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
 				
 				$supplierId,
 				$id,
+				$_status,
 		));
 		return $this;
 	}

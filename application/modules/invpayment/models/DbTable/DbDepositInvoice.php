@@ -183,7 +183,8 @@ class Invpayment_Model_DbTable_DbDepositInvoice extends Zend_Db_Table_Abstract
 		$sql=" 	SELECT 
 					invd.*,p.proCode,
 					p.proName,
-					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= po.projectId LIMIT 1) AS currentQty,
+					p.isService AS serviceOrProType,
+					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= inv.projectId LIMIT 1) AS currentQty,
 					p.measureLabel AS measureTitle
 					";
 			
