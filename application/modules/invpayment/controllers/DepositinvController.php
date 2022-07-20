@@ -73,7 +73,7 @@ class Invpayment_DepositinvController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {
 				$_data['ivType']=self::INVOICE_TYPE;
-				$db->editPurchasingRequest($_data);
+				$db->editDepositInvoice($_data);
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");

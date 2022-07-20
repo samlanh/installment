@@ -502,17 +502,26 @@ span.deleteRecord:hover {
 		dojo.query("#rowService"+index).remove();
 		checkingDeposit();
 	}
-	function calculateTotal(index){
+	function netTotal(){
 		
 		totalInternal = dijit.byId('totalInternal').get('value');
 		totalInternal=isNaN(totalInternal)?0:totalInternal;
 		
-		totalService = dijit.byId('totalService'+index).get('value');
-		totalService=isNaN(totalService)?0:totalService;
+		var netTotal=0;
+		var rowId = $('#identityService').val();
+		var rowIDArray = rowId.split(',');
+		if(rowId!=''){
+			for(var n = 0; n < rowIDArray.length; n++) {
+				netTotal += isNaN(dijit.byId('totalService'+rowIDArray[n]).get('value'))?0:dijit.byId('totalService'+rowIDArray[n]).get('value');
+			}
+		}
+		netTotal += totalInternal;
+		dijit.byId('totalExternal').attr('value',netTotal.toFixed(2));
+	}
+	
+	function calculateTotal(index){
 		
-		grandTotal= totalInternal+totalService;
-		dijit.byId('totalExternal').attr('value',grandTotal.toFixed(2));
-		
+		netTotal();
 	
 	}
 	function checkingDeposit(){

@@ -158,9 +158,7 @@
 			<div class="clearfix"></div>
 	       	<div class="card-box mt-20">
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE");?>" dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />
-					<input type="submit" value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW");?>" dojoType="dijit.form.Button" 
+               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button" 
 						iconClass="dijitEditorIcon dijitEditorIconSave" />
                	</div>
              </div>
@@ -382,10 +380,10 @@ span.deleteRecord:hover {
 					parseContent: true,
 				});
 				
-				dijit.byId('totalInternal').set('value',data.recordInfo.total);
-				dijit.byId('totalExternal').set('value',data.recordInfo.total);
-				dijit.byId('totalAmountExternal').set('value',data.recordInfo.total);
-				dijit.byId('supplierId').set('value',data.recordInfo.supplierId);
+				//dijit.byId('totalInternal').set('value',data.recordInfo.total);
+				//dijit.byId('totalExternal').set('value',data.recordInfo.total);
+				//dijit.byId('totalAmountExternal').set('value',data.recordInfo.total);
+				//dijit.byId('supplierId').set('value',data.recordInfo.supplierId);
 			
 			},
 			error: function(err) {
@@ -502,19 +500,29 @@ span.deleteRecord:hover {
 		var strings = arrays.join(',');
 		$('#identityService').val(strings);
 		dojo.query("#rowService"+index).remove();
+		netTotal();
 		checkingDeposit();
 	}
-	function calculateTotal(index){
+	function netTotal(){
 		
 		totalInternal = dijit.byId('totalInternal').get('value');
 		totalInternal=isNaN(totalInternal)?0:totalInternal;
 		
-		totalService = dijit.byId('totalService'+index).get('value');
-		totalService=isNaN(totalService)?0:totalService;
+		var netTotal=0;
+		var rowId = $('#identityService').val();
+		var rowIDArray = rowId.split(',');
+		if(rowId!=''){
+			for(var n = 0; n < rowIDArray.length; n++) {
+				netTotal += isNaN(dijit.byId('totalService'+rowIDArray[n]).get('value'))?0:dijit.byId('totalService'+rowIDArray[n]).get('value');
+			}
+		}
+		netTotal += totalInternal;
+		dijit.byId('totalExternal').attr('value',netTotal.toFixed(2));
+	}
+	
+	function calculateTotal(index){
 		
-		grandTotal= totalInternal+totalService;
-		dijit.byId('totalExternal').attr('value',grandTotal.toFixed(2));
-		
+		netTotal();
 	
 	}
 	function checkingDeposit(){

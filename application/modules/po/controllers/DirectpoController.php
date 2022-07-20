@@ -98,7 +98,10 @@ class Po_DirectpoController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
     		exit();
     	}
-		
+		if (!empty($row['inDepositInvoice'])){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_DEPOSIT'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
 		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
 		$arrStep = array(
 				'keyIndex'=>self::PURCHASE_TYPE,

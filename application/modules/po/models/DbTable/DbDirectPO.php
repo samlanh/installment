@@ -227,7 +227,11 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();		
 			$this->_name='st_purchasing';
-			$sql=" SELECT po.* FROM $this->_name AS po WHERE po.id=".$recordId;
+			$sql=" SELECT po.*,
+						(SELECT inv.purId FROM st_invoice AS inv WHERE inv.purId=po.id AND inv.status=1 AND inv.ivType=2 ORDER BY inv.id DESC LIMIT 1) AS inDepositInvoice
+			FROM $this->_name
+				
+			AS po WHERE po.id=".$recordId;
 			$sql.=$dbGb->getAccessPermission("po.projectId");
 			$sql.=" LIMIT 1 ";
     	return $db->fetchRow($sql);

@@ -552,7 +552,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		";
 		$sql.=" FROM `st_purchasing` AS po 
 					LEFT JOIN `st_supplier` AS spp ON spp.id = po.supplierId 
-		WHERE po.status=1 ";	
+					LEFT JOIN `st_invoice` AS inv ON inv.purId = po.id AND inv.status=1					
+		WHERE po.status=1 AND inv.purId IS NULL ";	
 			
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND po.projectId=".$_data['branch_id'];
@@ -565,6 +566,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			);
 			$purchaseType = $this->purchasingTypeKey($arrStep);
 			$sql.=" AND po.purchaseType=".$purchaseType;
+			if(!empty($_data['purchaseId'])){
+				$sql.=" OR po.id=".$_data['purchaseId'];
+			}
 		}
 		$row = $db->fetchAll($sql);
 		return $row;
@@ -619,6 +623,22 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		$value = empty($arrKey[$keyIndex])?0:$arrKey[$keyIndex];
 		return $value;
+	}
+	
+	function getAllBank($data=array()){
+		$db=$this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+    	$sql="
+			SELECT 
+				ba.id,
+				CONCAT(COALESCE(ba.bank_name,'')) AS name			
+		";
+		$sql.=" FROM `st_bank` AS ba 				
+				WHERE ba.bank_name!='' ";	
+		$sql.=" ORDER BY ba.bank_name ASC ";	
+		$row = $db->fetchAll($sql);
+		return $row;
 	}
 	
 }

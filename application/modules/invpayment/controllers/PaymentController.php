@@ -1,5 +1,6 @@
 <?php
 class Invpayment_PaymentController extends Zend_Controller_Action {
+	const REDIRECT_URL = '/invpayment/payment';
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -8,6 +9,7 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 	public function indexAction(){
 		//$db = new ();
 		try{
+			$db = new Po_Model_DbTable_DbDirectPO();
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
 			}
@@ -15,63 +17,116 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 				$search = array(
 					'adv_search'=>'',
 					'branch_id'=>-1,
+					'status'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
 			}
+			$search['purchaseType']=self::PURCHASE_TYPE;
 			$rs_rows=array();
-			//$rs_rows= $db->getAllSentSMS($search);//
+			$rs_rows= $db->getAllDirectedPO($search);//
+			
+			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+    		$collumns = array("PROJECT_NAME","PO_NO","SUPPLIER","DATE","PURCHASING_PURPOSE","TOTAL","STATUS","BY");
+    		$link=array(
+    				'module'=>'invpayment','controller'=>'payment','action'=>'edit',
+    		);
+    		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('branch_name'=>$link,'purchaseNo'=>$link,));
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
+			
+		$frm_search = new Application_Form_FrmAdvanceSearchStock();
+		$frm = $frm_search->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
 		
 	}
 	function addAction(){
+		
+		$db = new Po_Model_DbTable_DbDirectPO();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
+				
+				$db->addDirectedPO($_data);
+	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
+		
+    	$frm = new Invpayment_Form_FrmPayment();
+    	$frm->FrmPayment(null);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
+		
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$db = new Po_Model_DbTable_DbDirectPO();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->editDirectedPO($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL."/index");
+			exit();
+		}
+		
+		$row = $db->getDataRow($id);
+		$this->view->row = $row;
+		if ($row['status']==0){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		if (!empty($row['inDepositInvoice'])){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_DEPOSIT'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		$arrStep = array(
+				'keyIndex'=>self::PURCHASE_TYPE,
+				'typeKeyIndex'=>1,
+			);
+		$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+		
+		if ($row['purchaseType']!=$purchaseType){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		$this->view->rowdetail = $db->getPODetailById($id);
+		
+		
+		$frm = new Po_Form_FrmPurchase();
+    	$frm->FrmPurchase($row);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
+	}
+	
+	function getpaymentnoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$_row =$db->generatePaymentNo($data);
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
 		}
 	}
 }

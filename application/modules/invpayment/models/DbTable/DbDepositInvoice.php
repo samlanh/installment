@@ -109,6 +109,7 @@ class Invpayment_Model_DbTable_DbDepositInvoice extends Zend_Db_Table_Abstract
     				'note'					=>$data['note'],
 					
 					'totalInternal'	=>$data['totalInternal'],
+    				'totalExternal'	=>$data['totalExternal'],
     				'totalAmountExternal'	=>$data['totalAmountExternal'],
     				'totalAmountExternalAfter'	=>$data['totalAmountExternal'],
     				
@@ -166,7 +167,159 @@ class Invpayment_Model_DbTable_DbDepositInvoice extends Zend_Db_Table_Abstract
     	}
     }
 
-    
+    function editDepositInvoice($data){
+    	
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try
+    	{
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$id = $data['id'];
+    		$arr = array(
+    				'projectId'			=>$data['branch_id'],
+
+    				'invoiceDate'				=>$data['invoiceDate'],
+    				'supplierInvoiceNo'			=>$data['supplierInvoiceNo'],
+    				'receiveIvDate'				=>$data['receiveIvDate'],
+    				'purId'					=>$data['purId'],
+    				'note'					=>$data['note'],
+					
+					'totalInternal'	=>$data['totalInternal'],
+    				'totalExternal'	=>$data['totalExternal'],
+    				'totalAmountExternal'	=>$data['totalAmountExternal'],
+    				'totalAmountExternalAfter'	=>$data['totalAmountExternal'],
+    				
+					'status'			=>$data['status'],
+    				'modifyDate'		=>date("Y-m-d H:i:s"),
+    				'userId'			=>$this->getUserId(),
+    				
+    				);
+    		$this->_name='st_invoice';
+    		$where = 'id = '.$id;
+			$this->update($arr, $where);
+			
+			
+			$identitys = explode(',',$data['identity']);
+			$detailId="";
+			if (!empty($identitys)){
+				foreach ($identitys as $i){
+					if (empty($detailId)){
+						if (!empty($data['detailId'.$i])){
+							$detailId = $data['detailId'.$i];
+						}
+					}else{
+						if (!empty($data['detailId'.$i])){
+							$detailId= $detailId.",".$data['detailId'.$i];
+						}
+					}
+				}
+			}
+			$this->_name='st_invoice_detail';
+			$whereDl = 'invId = '.$id.' AND type=0 ';
+			if (!empty($detailId)){
+				$whereDl.=" AND id NOT IN ($detailId) ";
+			}
+			$this->delete($whereDl);
+				
+			if(!empty($data['identity'])){
+				$ids = explode(',', $data['identity']);
+				foreach ($ids as $i){
+					if (!empty($data['detailId'.$i])){
+						$arr = array(
+							'invId'		=>$id,
+							'type'				=>$data['type'.$i],
+							'proId'				=>$data['proId'.$i],
+								
+							'qtyPo'				=>$data['qty'.$i],
+							'unitPrice'			=>$data['unitPrice'.$i],
+							'discountAmount'	=>$data['discountAmount'.$i],
+							'total'				=>$data['total'.$i],
+						);
+						$this->_name='st_invoice_detail';	
+						$where =" id =".$data['detailId'.$i];
+						$this->update($arr, $where);
+					}else{
+						$arr = array(
+							'invId'		=>$id,
+							'type'				=>$data['type'.$i],
+							'proId'				=>$data['proId'.$i],
+								
+							'qtyPo'				=>$data['qty'.$i],
+							'unitPrice'			=>$data['unitPrice'.$i],
+							'discountAmount'	=>$data['discountAmount'.$i],
+							'total'				=>$data['total'.$i],
+						);
+						$this->_name='st_invoice_detail';	
+						$this->insert($arr);
+					}
+					
+				}
+    		}
+			
+			$identityService = explode(',',$data['identityService']);
+			$detailId2="";
+			if (!empty($identityService)){
+				foreach ($identityService as $i){
+					if (empty($detailId2)){
+						if (!empty($data['serviceDetailId'.$i])){
+							$detailId2 = $data['serviceDetailId'.$i];
+						}
+					}else{
+						if (!empty($data['serviceDetailId'.$i])){
+							$detailId2= $detailId2.",".$data['serviceDetailId'.$i];
+						}
+					}
+				}
+			}
+			$this->_name='st_invoice_detail';
+			$whereDl2 = 'invId = '.$id.' AND type=1 ';
+			if (!empty($detailId2)){
+				$whereDl2.=" AND id NOT IN ($detailId2) ";
+			}
+			$this->delete($whereDl2);
+			
+			if(!empty($data['identityService'])){
+				$ids = explode(',', $data['identityService']);
+				foreach ($ids as $i){
+					if (!empty($data['serviceDetailId'.$i])){
+						$arr = array(
+							'invId'		=>$id,
+							'type'				=>$data['isService'.$i],
+							'proId'				=>$data['serviceId'.$i],
+								
+							'qtyPo'				=>1,
+							'unitPrice'			=>$data['totalService'.$i],
+							'discountAmount'	=>0,
+							'total'				=>$data['totalService'.$i],
+						);
+						$this->_name='st_invoice_detail';	
+						$where =" id =".$data['serviceDetailId'.$i];
+						$this->update($arr, $where);
+
+					}else{
+						$arr = array(
+							'invId'		=>$id,
+							'type'				=>$data['isService'.$i],
+							'proId'				=>$data['serviceId'.$i],
+								
+							'qtyPo'				=>1,
+							'unitPrice'			=>$data['totalService'.$i],
+							'discountAmount'	=>0,
+							'total'				=>$data['totalService'.$i],
+							);
+						$this->_name='st_invoice_detail';	
+						$this->insert($arr);
+					}
+				}
+    		}
+			
+    		$db->commit();
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		$db->rollBack();
+    	}
+    }
+	
     function getDataRow($recordId){
     	$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();		
