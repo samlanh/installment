@@ -34,7 +34,7 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		}
 			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","PRODUCT_NAME","BAR_CODE","CURRENT_QTY","MEASURE","CATEGORY_NAME");
+			$collumns = array("PROJECT_NAME","PRODUCT_NAME","BAR_CODE","CURRENT_QTY","MEASURE","PRODUCT_CATEGORY");
 			$link=array('module'=>'product','controller'=>'initqty','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
 			

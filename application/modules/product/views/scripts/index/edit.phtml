@@ -241,6 +241,33 @@ dojo.require('dijit.form.CheckBox');
 dojo.require('dijit.form.NumberTextBox');
 dojo.require("dojo.data.ItemFileWriteStore"); 
 
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		
+		var isService = dijit.byId('isService');
+		isService.on('change', function(evt){
+			dijit.byId('qtyMeasure').set('required',true);
+			dijit.byId('labelMeasure').set('required',true);
+			dijit.byId('costing').set('required',true);
+
+			dijit.byId('qtyMeasure').set('readOnly',false);
+			dijit.byId('labelMeasure').set('readOnly',false);
+			dijit.byId('costing').set('readOnly',false);
+			
+			isService = dijit.byId('isService').get("value");
+				if(isService==1){
+					dijit.byId('qtyMeasure').set('required',false);
+					dijit.byId('labelMeasure').set('required',false);
+					dijit.byId('costing').set('required',false);
+	
+					dijit.byId('qtyMeasure').set('readOnly',true);
+					dijit.byId('labelMeasure').set('readOnly',true);
+					dijit.byId('costing').set('readOnly',true);
+				}
+			});
+		});
+});
+
 $("#photo").change(function(){
     readURL(this);
 });
