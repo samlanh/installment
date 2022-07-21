@@ -2,8 +2,10 @@
      $this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
      $tr = Application_Form_FrmLanguages::getCurrentlanguage();
     $frm = $this->frmBudget;
+  	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 ?>
-<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
 <title><?php echo $this->tr->translate("INITIALIZE_BUGET_TEIM")?></title>
  <div class="card">
 	<div class="card-content collapse show">
@@ -100,27 +102,13 @@ tr.rowData {
 	border:1px solid #ddd;
 }
 </style>
-   <script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
+	
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
 <script type="text/javascript">
 	dojo.require("dojo.data.ItemFileWriteStore");  
 	dojo.require("dojo.NodeList-manipulate");
     dojo.require("dijit.form.NumberTextBox");
 
-    	function getBudgetItem(){
-    		budgetType = dijit.byId('budgetType').get('value');
-    		if(budgetType==-1){
-    			window.open('<?php echo $this->url(array('module'=>'budget','controller'=>'type','action'=>'add'))?>');
-    		}else if(budgetType>0){
-    			//urlGetBudgetItem = '<?php //echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'get-allbudgetitem'));?>';
-    			/*notinBranchId = dijit.byId('branch_id').get('value');
-    			contentData = {
-    	    			'budgetType':budgetType,
-    	    			'notinBranchId':notinBranchId
-    	    			};
-    			getAllBudgetItem(urlGetBudgetItem,contentData);*/
-    			getBudgetItem();
-    		}
-    	}
     	function getRefreshData(){
     		urlGetBudgetType ='<?php echo $this->url(array('module'=>'budget','controller'=>'type','action'=>'getbudgettype'))?>';
     		getAllBudgetType(urlGetBudgetType);
@@ -128,13 +116,13 @@ tr.rowData {
     	}
     	function getBudgetItem(){
     		budgetType = dijit.byId('budgetType').get('value');
-    		if(budgetType>0){
+    		if(budgetType){
 	    		urlGetBudgetItem = '<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'get-allbudgetitem'));?>';
 				notinBranchId = dijit.byId('branch_id').get('value');
 				contentData = {
 		    			'budgetType':budgetType,
 		    			'notinBranchId':notinBranchId
-		    			};
+		    		};
 				getAllBudgetItem(urlGetBudgetItem,contentData);
            }
 	}
@@ -142,7 +130,20 @@ tr.rowData {
 		ready(function(){
 			 var budgetItem = dijit.byId('budgetItem');
 			 budgetItem.on('change', function(evt) {
-				 addRowBudget();
+				 branch_id = dijit.byId('branch_id').get('value');
+				 if(branch_id=='' || branch_id==null){
+					 dijit.byId('budgetItem').attr('value','');
+					 dijit.byId('branch_id').focus();
+					 return false;
+				}
+				 budgetItem =  dijit.byId('budgetItem').get('value');
+				 if(budgetItem==-1){
+					 window.open('<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'add'))?>');
+				}
+				if(budgetItem>0){
+					 addRowBudget();
+				}
+				
 			});
 		});
 

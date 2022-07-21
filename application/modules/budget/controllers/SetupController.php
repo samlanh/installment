@@ -6,7 +6,9 @@ class Budget_SetupController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		//$db = new ();
+		$db = new Budget_Model_DbTable_DbInitilizeBudget();
+		$rs_rows=array();
+		
 		try{
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -15,25 +17,45 @@ class Budget_SetupController extends Zend_Controller_Action {
 				$search = array(
 					'adv_search'=>'',
 					'branch_id'=>-1,
+					'budgetItem'=>0,
+					'budgetType'=>0,
+					'status'	=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
 			}
-			$rs_rows=array();
-			//$rs_rows= $db->getAllSentSMS($search);//
-			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+			
+			$rs_rows= $db->getAllBudgetProject($search);
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
+			
+			$list = new Application_Form_Frmtable();
+			$collumns = array("BRANCH_NAME","BUDGET_TYPE","BUDGET_ITEM","INITIALIZE_BUDGET_AMOUNT","BUDGET_AMT_ALERT","CREATE_DATE","BY_USER","STATUS");
+			$link=array('module'=>'','controller'=>'','action'=>'edit');
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+			
+			$frm = new Application_Form_FrmAdvanceSearch();
+			$frm = $frm->AdvanceSearch();
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frm_search = $frm;
+			
+			$db = new  Application_Model_DbTable_DbGlobalStock();
+			$results =  $db->getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',null,null);
+				
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("PLEASE_SELECT_BUDGET")));
+				
+			$this->view->budgetItem = $results;
+			
+			$rsType =  $db->getAllBudgetType($parent = 0, $spacing = '', $cate_tree_array = '',null,null);
+			
+			array_unshift($rsType, array ('id' => 0,'name' =>$tr->translate("PLEASE_SELECT_BUDGET")));
+			$this->view->budgetType = $rsType;
+			
+			$this->view->datSearch = $search;
 		
 	}
 	function addAction(){

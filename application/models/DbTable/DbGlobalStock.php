@@ -459,10 +459,10 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$sql.=" AND bi.budgetTypeId=".$data['budgetType'];
 		}
 		if(!empty($data['notinBranchId'])){
-			$sql.=" bi.id NOT IN (SELECT budgetId FROM `st_budget_project` WHERE projectId=".$data['notinBranchId']." )";
+			$sql.=" AND bi.id NOT IN (SELECT budgetId FROM `st_budget_project` WHERE projectId=".$data['notinBranchId']." )";
 		}
 		if(!empty($data['BranchId'])){
-			$sql.=" bi.id IN (SELECT budgetId FROM `st_budget_project` WHERE projectId=".$data['BranchId'].")";
+			$sql.=" AND bi.id IN (SELECT budgetId FROM `st_budget_project` WHERE projectId=".$data['BranchId'].")";
 		}
 		$query = $db->fetchAll($sql);
 		$rowCount = count($query);

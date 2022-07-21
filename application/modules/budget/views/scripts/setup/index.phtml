@@ -1,31 +1,50 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate(""));
+	echo $this->headTitle($tr->translate("SETUP_BUDGET"));
 	$frm = $this->frm_search;
+	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 ?>
+<script src="<?php echo $this->baseUrl()."/js/help.js";?>"></script>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa fa-sitemap" aria-hidden="true"></i>&nbsp;<i class="fa fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate('SETUP_BUDGET');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
     		</div>
     	</div>
 		<div class="card-box">
-			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'message','controller'=>'index','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
 			   <div class="form-group">
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('adv_search');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('branch_id');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input id="budgetType" />
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input id="budgetItem" />
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('status');?>
+					</div>
+					
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('start_date');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('end_date');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('btn_search');?>
 					</div>
 				</div>
 			</form>
@@ -36,7 +55,53 @@
 		</div>
 	</div>
 </div>
+
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
 <script>
+
+	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dojo.data.ItemFileWriteStore");
+	var budgetItemStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->budgetItem));?> );
+	var budgetTypeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->budgetType));?> );
+
+require(["dojo/ready"], function(ready){
+
+	new dijit.form.FilteringSelect({
+	 	store: budgetTypeStore,
+	 	autoComplete: false,
+	 	queryExpr: "*${0}*",                       
+	     id: "budgetType",
+	     name: "budgetType",  
+	     class: 'fullside',  
+	     value:'<?php echo $this->datSearch['budgetType'];?>',
+	     required:false,
+	     placeHolder:"<?php echo $tr->translate("SELECT_BUDGET_TYPE");?>", 
+	     onChange: function() {        
+	    	 budgetType = dijit.byId('budgetType').get('value');
+    		if(budgetType!=0){
+	    		urlGetBudgetItem = '<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'get-allbudgetitem'));?>';
+				notinBranchId = dijit.byId('branch_id').get('value');
+				contentData = {
+		    			'budgetType':budgetType,
+		    			'noBtnNew':1
+		    		};
+				getAllBudgetItem(urlGetBudgetItem,contentData);
+           }
+	     } 
+	 }, "budgetType");
+	 
+	new dijit.form.FilteringSelect({
+	 	store: budgetItemStore,
+	 	autoComplete: false,
+	 	queryExpr: "*${0}*",                       
+	     id: "budgetItem",
+	     name: "budgetItem",  
+	     class: 'fullside',  
+	     value:'<?php echo $this->datSearch['budgetItem'];?>',
+	     required:false,
+	     placeHolder:"<?php echo $tr->translate("SELECT_BUDGET_ITEM");?>", 
+	 }, "budgetItem");
+});
 <?php 
 	/*$edit_Text = $tr->translate("RESENT");
 	$urlEdit = $this->baseUrl()."/message/index/edit/id/";
