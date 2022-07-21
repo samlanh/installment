@@ -22,7 +22,6 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 					'end_date'=>date('Y-m-d'),
 				);
 			}
-			$search['purchaseType']=self::PURCHASE_TYPE;
 			$rs_rows=array();
 			$rs_rows= $db->getAllDirectedPO($search);//
 			
@@ -47,12 +46,12 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 	}
 	function addAction(){
 		
-		$db = new Po_Model_DbTable_DbDirectPO();
+		$db = new Invpayment_Model_DbTable_DbPayment();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
 				
-				$db->addDirectedPO($_data);
+				$db->issuePaymentInvoice($_data);
 	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
