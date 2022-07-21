@@ -86,5 +86,15 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 			
 		}
 	}
+	
+	function getallsupplierinvAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db_com = new Invpayment_Model_DbTable_DbInvoice();
+			$id = $db_com->getAllInvoiceBySupplier($data);
+			print_r(Zend_Json::encode($id));
+			exit();
+		}
+	}
 }
 

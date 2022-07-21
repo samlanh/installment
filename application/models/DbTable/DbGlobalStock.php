@@ -607,7 +607,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					WHEN  $keyIndex = 3 THEN '".$tr->translate("INVOICE_PETTY_CASH")."'
 					WHEN  $keyIndex = 4 THEN '".$tr->translate("INVOICE_OVERSEAS_PO")."'
 				
-					END AS purchaseTypeTitle ";
+					END AS ivTypeTitle ";
 				return $string;
 			}else if($typeKeyIndex==4){//for Rerturn Array
 				$arrKey = array(

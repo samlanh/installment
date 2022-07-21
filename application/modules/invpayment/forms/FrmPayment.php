@@ -85,6 +85,7 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
 		$bankId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'required'=>'false',
 		));
 		$rsBank = $dbGBStock->getAllBank();
 		$optBank=array(''=>$tr->translate("SELECT_BANK"));
@@ -95,8 +96,8 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
 		
 		$accNameAndChequeNo = new Zend_Dojo_Form_Element_TextBox('accNameAndChequeNo');
     	$accNameAndChequeNo->setAttribs(array(
-    			'dojoType'=>'dijit.form.ValidationTextBox',
-    			'required'=>'true',
+    			'dojoType'=>'dijit.form.TextBox',
+    			'required'=>'false',
     			'class'=>'fullside ',
     			'readOnly'=>'readOnly ',
     			'placeholder'=>$tr->translate("ACCOUNT_AND_CHUQE_NO"),
@@ -109,18 +110,42 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
     			'dojoType'=>'dijit.form.Textarea',
     			'class'=>'fullside',
     			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
-				
+		
 		$totalAmount = new Zend_Dojo_Form_Element_TextBox('totalAmount');
     	$totalAmount->setAttribs(array(
     			'dojoType'=>'dijit.form.NumberTextBox',
     			'required'=>'true',
     			'class'=>'fullside ',
-    			'readOnly'=>'readOnly ',
     			'placeholder'=>$tr->translate("TOTAL"),
+				'onKeyup'=>'checkAmout()',
 				'style'=>'color:red;font-weight: 600;',
     			'missingMessage'=>$tr->translate("Forget Enter Data")
     	));
 		$totalAmount->setValue(0);
+		
+		$totalPaid = new Zend_Dojo_Form_Element_TextBox('totalPaid');
+    	$totalPaid->setAttribs(array(
+    			'dojoType'=>'dijit.form.NumberTextBox',
+    			'required'=>'true',
+    			'class'=>'fullside ',
+    			'readOnly'=>'readOnly ',
+    			'placeholder'=>$tr->translate("TOTAL_PAID"),
+				'style'=>'color:red;font-weight: 600;',
+    			'missingMessage'=>$tr->translate("Forget Enter Data")
+    	));
+		$totalPaid->setValue(0);
+		
+		$totalDue = new Zend_Dojo_Form_Element_TextBox('totalDue');
+    	$totalDue->setAttribs(array(
+    			'dojoType'=>'dijit.form.NumberTextBox',
+    			'required'=>'true',
+    			'class'=>'fullside ',
+    			'readOnly'=>'readOnly ',
+    			'placeholder'=>$tr->translate("TOTAL_DUE"),
+				'style'=>'color:red;font-weight: 600;',
+    			'missingMessage'=>$tr->translate("Forget Enter Data")
+    	));
+		$totalDue->setValue(0);
 		
 		
 		
@@ -138,6 +163,59 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
     			'dojoType'=>'dijit.form.TextBox',
     			'class'=>'fullside ',
     	));
+		
+		$balance = new Zend_Dojo_Form_Element_NumberTextBox('balance');
+		$balance->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>' fullside height-text',
+				'readonly'=>'readonly',
+				'placeholder'=>$tr->translate("BALANCE"),
+				'missingMessage'=>$tr->translate("Forget Enter Balance")
+		));
+		$balance->setValue(0);
+		
+		$gTotalBalance = new Zend_Dojo_Form_Element_NumberTextBox('gTotalBalance');
+		$gTotalBalance->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>' fullside height-text',
+				'readonly'=>'readonly',
+				'placeholder'=>$tr->translate("BALANCE"),
+				'missingMessage'=>$tr->translate("Forget Enter Balance")
+		));
+		$gTotalBalance->setValue(0);
+		
+		$advanceFilter = new Zend_Dojo_Form_Element_TextBox('advanceFilter');
+		$advanceFilter->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside height-text',
+				'placeholder'=>$tr->translate("SEARCH"),
+				'missingMessage'=>$tr->translate("Forget Enter Receipt No")
+		));
+		
+		$start_date= new Zend_Dojo_Form_Element_DateTextBox('start_date');
+		$start_date->setAttribs(array(
+				'dojoType'=>"dijit.form.DateTextBox",
+				'value'=>'now',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				'class'=>'fullside',));
+		$_date = $request->getParam("start_date");
+		if(empty($_date)){
+			$_date = date("Y-m-d");
+		}
+		$start_date->setValue($_date);
+		 
+		$end_date= new Zend_Dojo_Form_Element_DateTextBox('end_date');
+		$date = date("Y-m-d");
+		$end_date->setAttribs(array(
+				'dojoType'=>"dijit.form.DateTextBox",
+				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				'required'=>false));
+		$_date = $request->getParam("end_date");
+		if(empty($_date)){
+			$_date = date("Y-m-d");
+		}
+		$end_date->setValue($_date);
 		
 		if(!empty($data)){
 			$branch_id->setValue($data['projectId']);
@@ -164,7 +242,15 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
 				$note,
 				$totalAmount,
 				$_status,
-				$id
+				$id,
+				
+				$totalPaid,
+				$totalDue,
+				$balance,
+				$gTotalBalance,
+				$advanceFilter,
+				$start_date,
+				$end_date
 		));
 		return $this;
 	}
