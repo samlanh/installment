@@ -55,7 +55,6 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
 		$supplierInvoiceNo = new Zend_Dojo_Form_Element_TextBox('supplierInvoiceNo');
     	$supplierInvoiceNo->setAttribs(array(
     			'dojoType'=>'dijit.form.TextBox',
-    			'required'=>'false',
     			'class'=>'fullside ',
     			'placeholder'=>$tr->translate("INVOICE_NO"),
     			'missingMessage'=>$tr->translate("Forget Enter Data")
