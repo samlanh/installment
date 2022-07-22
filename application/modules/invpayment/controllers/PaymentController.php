@@ -9,7 +9,7 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 	public function indexAction(){
 		//$db = new ();
 		try{
-			$db = new Po_Model_DbTable_DbDirectPO();
+			$db = new Invpayment_Model_DbTable_DbPayment();
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
 			}
@@ -23,15 +23,15 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 				);
 			}
 			$rs_rows=array();
-			$rs_rows= $db->getAllDirectedPO($search);//
+			$rs_rows= $db->getAllPayment($search);//
 			
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","PO_NO","SUPPLIER","DATE","PURCHASING_PURPOSE","TOTAL","STATUS","BY");
+    		$collumns = array("PROJECT_NAME","PAYMENT_NO","SUPPLIER","DATE","PAYMENT_METHOD","BANK","ACCOUNT_AND_CHEQUE_NO","TOTAL_PAID","STATUS","BY");
     		$link=array(
     				'module'=>'invpayment','controller'=>'payment','action'=>'edit',
     		);
-    		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('branch_name'=>$link,'purchaseNo'=>$link,));
+    		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('branch_name'=>$link,'paymentNo'=>$link,));
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
@@ -69,11 +69,11 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 	function editAction(){
 		
 		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
-		$db = new Po_Model_DbTable_DbDirectPO();
+		$db = new Invpayment_Model_DbTable_DbPayment();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				$db->editDirectedPO($_data);
+				$db->editPaymentInvoice($_data);
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -88,34 +88,28 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 			exit();
 		}
 		
-		$row = $db->getDataRow($id);
+		$arrSearch = array(
+				'branch_id'=>1,
+				'supplierId'=>2,
+				'keyindex'=>1,
+			
+				'paymentId'=>1,
+		);
+		$db_com = new Invpayment_Model_DbTable_DbInvoice();
+		//$db_com->getAllInvoiceBySupplierEdit($arrSearch);
+			
+		$row = $db->getDataRowPayment($id);
 		$this->view->row = $row;
 		if ($row['status']==0){
     		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
     		exit();
     	}
-		if (!empty($row['inDepositInvoice'])){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_DEPOSIT'), self::REDIRECT_URL."/index");
-    		exit();
-    	}
-		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
-		$arrStep = array(
-				'keyIndex'=>self::PURCHASE_TYPE,
-				'typeKeyIndex'=>1,
-			);
-		$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
 		
-		if ($row['purchaseType']!=$purchaseType){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index");
-    		exit();
-    	}
-		$this->view->rowdetail = $db->getPODetailById($id);
-		
-		
-		$frm = new Po_Form_FrmPurchase();
-    	$frm->FrmPurchase($row);
+		$frm = new Invpayment_Form_FrmPayment();
+    	$frm->FrmPayment($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
+
 	}
 	
 	function getpaymentnoAction(){
