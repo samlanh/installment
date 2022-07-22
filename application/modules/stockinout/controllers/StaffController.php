@@ -6,8 +6,8 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		//$rs_rows=array();
-		//$db = new ();
+		$rs_rows=array();
+		$db = new Stockinout_Model_DbTable_DbWorker();
 		try{
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -16,64 +16,70 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 				$search = array(
 					'adv_search'=>'',
 					'branch_id'=>-1,
+					'status'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
 			}
 			
-			//$rs_rows= $db->getAllSentSMS($search);//
+			$rs_rows= $db->getAllStaffWorker($search);
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
-		
+			$collumns = array("BRANCH_NAME","WORKER_NAME","GENDER","ADDRESS","TEL","POSITION","CREATE_DATE","BY_USER","STATUS");
+			$link=array('module'=>'stockinout','controller'=>'staff','action'=>'edit');
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('branch_name'=>$link,'staffName'=>$link,'gender'=>$link));
+			
+			$frm = new Application_Form_FrmAdvanceSearch();
+			$frm = $frm->AdvanceSearch();
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frm_search = $frm;
 	}
 	function addAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
+				$db = new Stockinout_Model_DbTable_DbWorker();
+				$db->addWorker($_data);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/staff/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		$fm = new Stockinout_Form_FrmStaffWorker();
+		$frm = $fm->FrmWorker();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmWorker = $frm;
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$db = new Stockinout_Model_DbTable_DbWorker();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->updateWorker($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/stockinout/staff");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/staff/index");
 		}
+		
+		$row = $db->getDataRow($id);
+		
+		$fm = new Stockinout_Form_FrmStaffWorker();
+		$frm = $fm->FrmWorker($row);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmWorker = $frm;
+		
 	}
 }
 

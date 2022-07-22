@@ -84,7 +84,7 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		));
 		
 		$dbp = new Budget_Model_DbTable_DbbudgetItem();
-		$budgetItem->setMultiOptions($db->getAllBudgetItem(0,'', '',1,$data=null));
+		$budgetItem->setMultiOptions($db->getAllBudgetItem(0,'', '',1,null));
 		
 		
 		$productName = new Zend_Dojo_Form_Element_ValidationTextBox('productName');

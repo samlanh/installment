@@ -1,13 +1,13 @@
 <?php
 class Stockinout_WorktypeController extends Zend_Controller_Action {
-	public function init()
+public function init()
 	{
 		header('content-type: text/html; charset=utf8');
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		//$rs_rows=array();
-		//$db = new ();
+		$db = new Stockinout_Model_DbTable_DbWorkType();
+		$rs_rows= array();
 		try{
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -15,65 +15,84 @@ class Stockinout_WorktypeController extends Zend_Controller_Action {
 			else{
 				$search = array(
 					'adv_search'=>'',
-					'branch_id'=>-1,
+					'status'	=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
-			}
-			
-			//$rs_rows= $db->getAllSentSMS($search);//
-			
+				}
+				$rs_rows = $db->getAllWorkType($search);//
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
+			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
-		
+			$collumns = array("WORK_TYPE_TITLE","PARENT_WORKTYPE","CREATE_DATE","BY_USER","STATUS");
+			$link=array('module'=>'stockinout','controller'=>'worktype','action'=>'edit');
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('parentTitle'=>$link,'workTitle'=>$link));
+			
+			$frm = new Application_Form_FrmAdvanceSearchStock();
+			$frm = $frm->AdvanceSearch();
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frm_search = $frm;
 	}
 	function addAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
+				$db = new Stockinout_Model_DbTable_DbWorkType();
+				$db->addWorkType($_data);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/worktype/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		$fm = new Stockinout_Form_FrmWorkType();
+		$frm = $fm->FrmAddWorkType();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmWorkType = $frm;
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$db = new Stockinout_Model_DbTable_DbWorkType();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->updateWorkType($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/stockinout/worktype/index");
 			}catch(Exception $e){
-				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Form_FrmMessage::message("UPDATE_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/worktype");
 		}
+		
+		$result = $db->getDataRow($id);
+		
+		$fm = new Stockinout_Form_FrmWorkType();
+		$frm = $fm->FrmAddWorkType($result);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmWorkType = $frm;
 	}
+// 	function getbudgettypeAction(){
+// 		if($this->getRequest()->isPost()){
+// 			$data = $this->getRequest()->getPost();
+// 			$db = new Application_Model_DbTable_DbGlobalStock();
+// 			$results=$db->getAllBudgetType(0,  '', '');
+				
+// 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+// 			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("SELECT_BUDGET_TYPE")));
+// 			array_unshift($results, array ('id' => -1,'name' =>$tr->translate("ADD_NEW")));
+				
+// 			print_r(Zend_Json::encode($results));
+// 			exit();
+// 		}
+// 	}
 }
 

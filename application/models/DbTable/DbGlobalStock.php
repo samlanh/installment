@@ -62,7 +62,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		
 		if(!empty($_data['branch_id'])){
-			$sql.="";
+			$sql.=" AND p.proId IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=".$_data['branch_id']." )";
 		}
 		if(!empty($_data['categoryId'])){
 			$sql.=" AND p.categoryId= ".$_data['categoryId'];
@@ -639,6 +639,41 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql.=" ORDER BY ba.bank_name ASC ";	
 		$row = $db->fetchAll($sql);
 		return $row;
+	}
+	public function getAllWorkType($parent = 0, $spacing = '', $cate_tree_array = '',$option=null){
+	
+		$db=$this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+	
+		$sql="SELECT
+				wt.id AS id,
+				wt.workTitle AS `name` ";
+		$sql.=" FROM `st_work_type` AS wt  ";
+		$sql.=" WHERE wt.status=1 AND wt.parentId = $parent ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id='';
+		if ($rowCount > 0) {
+			foreach ($query as $row){
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllWorkType($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		if($option!=null){
+			if(!empty($cate_tree_array)){
+				$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+				$optionList= array(
+						0=>$tr->translate("SELECT_WORK_TYPE"),
+				);
+				foreach ($cate_tree_array as $rs){
+					$optionList[$rs['id']]=$rs['name'];
+				}
+				return $optionList;
+			}
+		}
+		return $cate_tree_array;
+	
 	}
 	
 }

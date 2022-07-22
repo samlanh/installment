@@ -87,6 +87,7 @@ class Product_IndexController extends Zend_Controller_Action {
 		$this->view->photo = $result['image'];
 		$frm = new Product_Form_Frmproduct();
 		$frm = $frm->FrmAddProduct($result);
+		
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frmProduct = $frm;
 		
