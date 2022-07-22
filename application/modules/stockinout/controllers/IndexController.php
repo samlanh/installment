@@ -48,10 +48,10 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		$fm = new Stockinout_Form_FrmReceiveStock();
+		$frm = $fm->FrmReceivStock();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmReceivStock = $frm;
 	}
 	function editAction(){
 		//$db = new Loan_Model_DbTable_DbCancel();
@@ -73,6 +73,15 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		if(empty($id)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+		}
+	}
+	function getallproductbypoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db_com = new Stockinout_Model_DbTable_DbReceiveStock();
+			$id = $db_com->getAllProductByPO($data);
+			print_r(Zend_Json::encode($id));
+			exit();
 		}
 	}
 }

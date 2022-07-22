@@ -4,6 +4,12 @@
      $frm = $this->frm;
 	 
 	 $purchaseType=2;//Directed PO
+	 $dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+	 $arrStep = array(
+	 		'keyIndex'=> $purchaseType,
+	 		'typeKeyIndex'=>1,
+	 );
+	 $purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
 ?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <title><?php echo $this->tr->translate("ISSUE_DEPOSIT_INVOICE")?></title>
@@ -305,31 +311,18 @@ span.deleteRecord:hover {
 		
 	}
 	
-	var urlGetAllPO = '<?php echo $this->url(array('module'=>'po','controller'=>'index','action'=>'getallpo')); ?>';
 	function getAllPO(){
+		var urlGetAllPO = '<?php echo $this->url(array('module'=>'po','controller'=>'index','action'=>'getallpo')); ?>';
 		dijit.byId('purId').reset();
 		purchaseStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 		dijit.byId('purId').set('store', purchaseStore);
-		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
 			branch_id = 0;
 		}
-		dojo.xhrPost({
-			url:urlGetAllPO,	
-			content:{ 
-				'branch_id':branch_id,
-				'purchaseType':'<?php echo $purchaseType;?>'
-			},		    
-			handleAs:"json",
-			load: function(data) {
-				purchaseStore  = getDataStorefromJSON('id','name', data);		
-				dijit.byId('purId').set('store', purchaseStore);
-
-			},
-			error: function(err) {
-			}
-		});
+		
+		objectContentFilter = {'branch_id':branch_id,'purchaseType':'<?php echo $purchaseType;?>'};
+		getAllPObyBranch(urlGetAllPO,);
 	}
 	
 	var urlGetRequestNo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'index','action'=>'getinvoiceno')); ?>';

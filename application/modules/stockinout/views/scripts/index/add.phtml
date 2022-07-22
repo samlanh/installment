@@ -1,10 +1,40 @@
 <?php
 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('ADD'));
+	echo $this->headTitle($tr->translate('RECEIVE_STOCK'));
+	$frm = $this->frmReceivStock;
 	
 ?>	
-<script src="<?php //echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<style>
+	div#request-info .form-group {
+		display: block;
+		font-size: 12px;
+		background: #fdfbbd;
+		border: solid 2px #dc0303;
+		border-radius: 5px;
+		padding:10px;
+	}
+	div#request-info .form-group ul li span.lbl-tt {
+		color: #02014a;
+		width: 50%;
+	    display: block;
+	    float: left;
+	}
+	span.red {
+		color: #f00;
+		font-weight: bold;
+	}
+	div#request-info .form-group ul {
+	    margin: 0;
+	    padding: 0px 5px;
+	}
+	div#request-info .form-group ul li {
+		display: inline-block;
+		width: 100%;
+		vertical-align: top;
+	}
+</style>
 <div class="card">
 	<div class="card-content collapse show">
 		<form id='frm_add' action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
@@ -18,7 +48,7 @@
 			<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-truck" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD');?></h4>
 	    				<span id="message" style="color: red; display: block;"></span>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
@@ -28,43 +58,143 @@
 		    <div class="col-md-12">
 	        	<div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CUSTOMER_INFO");?> 
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-bars" aria-hidden="true"></i> <?php echo $tr->translate("PURCHASE_INFO");?> 
 	                   </label>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("");?>
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php //echo $frm->getElement('client_no');?>
+	                    	<?php echo $frm->getElement('branch_id');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PO_NO");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="purId" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SUPPLIER");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('supplierId');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <div class="col-md-12 col-sm-12 col-xs-12">
+	                   		 <div id="request-info">
+	                   		 	<div class="form-group" style="padding: 4px !important;">
+	                   		 		<span class="note_score">&nbsp;&nbsp; <i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;
+	                   		 		ព័ត៌មានសំណើបញ្ជាទិញទំនិញ</span>
+                   		 			<ul>
+                   		 				<li><span class="lbl-tt">លេខសំណើ</span>: <span class="red">P1220722R0001</span></li>
+                   		 				<li><span class="lbl-tt">លេខសំណើពីគម្រោង</span>: <span class="red">Request01</span></li>
+                   		 				<li><span class="lbl-tt">កាលបរិច្ឆេទស្នើ</span>: <span class="red">22-Jul-2022</span></li>
+                   		 				<li><span class="lbl-tt">គោលបំណងស្នើ</span>: <span class="red">គោលបំណងស្នើ</span></li>
+                   		 			</ul>
+                   		 		</div>
+                   		 	</div>
+	                   </div>
+	               </div>
+	             </div>   
+	            <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("RECEIVE_INFO");?> 
+	                   </label>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIVE_DATE");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('dnDate');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DOCUMENT_RECEIV_TYPE");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('documentType');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DNORIV_NO");?>*</label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('dnTitle');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("COUNTER");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('counter');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DRIVER");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('driver');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TRUCK");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('truckNumber');?>
 	                   </div>
 	                </div>
 	            </div>
 	            <div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CUSTOMER_INFO");?> 
+	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-paperclip" aria-hidden="true"></i> <?php echo $tr->translate("FILE_ATTACHMENT");?> 
 	                   </label>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("");?>
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PICTURE_GOODS");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php //echo $frm->getElement('client_no');?>
+	                    	<?php echo $frm->getElement('photo');?>
 	                   </div>
-	                </div>
-	            </div>
-	            <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CUSTOMER_INFO");?> 
-	                   </label>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("");?>
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("FILE_DN");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php //echo $frm->getElement('client_no');?>
+	                    	<?php echo $frm->getElement('fileDn');?>
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<?php echo $frm->getElement('note');?>
 	                   </div>
 	                </div>
 	            </div>
+	        </div>
+	        <div>
+	        	<div class="form-group">
+					<table  style="margin: 0 auto; width: 100%; border-collapse: collapse; border: 1px #ccc solid;">
+						<thead>
+							<tr id="head-title" class="head-td" align="right">
+								<th>&nbsp;</th>
+								<th><?php echo $tr->translate("NUM");?></th>
+								<th style=" min-width: 105px;"><?php echo $tr->translate("PRODUCT_NAME");?></th>
+								<th><?php echo $tr->translate("QTY_PO");?></th>
+								<th><?php echo $tr->translate("QTY_REMAINING");?></th>
+								<th><?php echo $tr->translate("QTY_RECEIVE");?></th>
+								<th><?php echo $tr->translate("RECEIV_STATUS");?></th>
+								<th><?php echo $tr->translate("NOTE");?></th>
+							</tr>
+						</thead>
+						<tbody id="table_row">
+						<tbody>
+					</table>
+					<input type="hidden" id="identity" name="identity" />
+					<input type="hidden" name="old_identity" id="old_identity"  value="" >
+				 </div>
 	        </div>
 			<div class="clearfix"></div>
 			  <div class="card-box">
@@ -78,7 +208,75 @@
 		</form>
 	</div>
 </div>
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
 <script type="text/javascript">
+
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dojo.NodeList-manipulate");
+	dojo.require('dijit.form.DateTextbox');
+	dojo.require('dijit.form.Textarea');
+	dojo.require('dijit.form.NumberTextBox');
+	dojo.require("dijit.form.FilteringSelect");
+	
+	   require(["dojo/ready"], function(ready){
+			ready(function(){
+				var purchaseId = dijit.byId('purId');
+				purchaseId.on('change',function(evt){
+					purchaseId = purchaseId.get('value');
+					if(purchaseId>0){
+						getProductbypo(purchaseId);
+					}
+						
+				});
+			});
+	   });
+
+	 new dijit.form.FilteringSelect({
+	 	autoComplete: false,
+	 	queryExpr: "*${0}*",                       
+	     id: "purId",
+	     name: "purId",  
+	     class: 'fullside',  
+	     required:false,
+	     placeHolder:"<?php echo $tr->translate("SELECT_PO_NO");?>", 
+	     onChange: function() {        
+	     } 
+	 }, "purId");
+
+	function getAllPO(){
+		var urlGetAllPO = '<?php echo $this->url(array('module'=>'po','controller'=>'index','action'=>'getallpo')); ?>';
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id<=0){
+			branch_id = 0;
+		}
+		objectContentFilter = {'branch_id':branch_id,'purchaseType':'1'};
+		getAllPObyBranch(urlGetAllPO,objectContentFilter);
+	}
+
+	var urlGetPOItem = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'index','action'=>'getallproductbypo')); ?>';
+	function getProductbypo(purchaseId){
+		loadingBlock();
+		dojo.xhrPost({
+			url: urlGetPOItem,
+			content:{
+				'purchaseId':purchaseId,
+	 		},
+			handleAs:"json",
+			load: function(data){
+				//keyindex=data.keyindex;
+				//$("#old_identity").val(data.identity);
+				dojo.html.set(dojo.byId("table_row"),data.stringrow,{
+				     parseContent: true,
+				});
+				HideloadingBlock();
+			},
+			error: function(err) {
+				alert(err);
+				HideloadingBlock();
+			}
+		});
+	}
+
 	/*								
 		var d_datastore  = getDataStorefromJSON('id','name', <?php //print_r(Zend_Json::encode($this->clienttype));?> );
 		dojo.ready(function(){
