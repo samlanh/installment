@@ -1,5 +1,5 @@
 <?php
-class Stockinout_IndexController extends Zend_Controller_Action {
+class Stockinout_WorktypeController extends Zend_Controller_Action {
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
