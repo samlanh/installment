@@ -23,7 +23,7 @@
 		);
 	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
 ?>
-<title><?php echo $tr->translate("RPT_PURCHASING_LIST");?></title>
+<title><?php echo $tr->translate("RPT_CLOSING_PAYMENT");?></title>
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
@@ -31,7 +31,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_PURCHASING_LIST');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_CLOSING_PAYMENT');?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -39,7 +39,7 @@
 	    </div>
 		<form method="post">
 			<div class="card-box">
-		    	<div class="form-group"> 
+		    	<div class="form-group">
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement("adv_search");?>
 					</div>
@@ -53,17 +53,26 @@
 						<?php echo $frm->getElement("end_date");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("statusAcc");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("closingStatus");?>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement("supplierId");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("purchaseType");?>
+						<?php echo $frm->getElement("paymentMethod");?>
 					</div>
-				</div>
-				<div class="form-group"> 
-					
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+						<?php echo $frm->getElement("bankId");?>
 					</div>
+					
+					 <div class="col-md-2 col-sm-2 col-xs-12">
+					 	<?php echo $frm->getElement("btn_search");?>
+					 </div>
 				</div>
 				
 			</div>
@@ -74,6 +83,15 @@
 				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
 				.hiddenblog{display: block !important;}
 			</style>
+	<form id="list" name="list" action="<?php echo $this->url(array('module'=>'report','controller'=>'stockmg','action'=>'closingpayment')); ?>" dojoType="dijit.form.Form" method="post">
+		<script type="dojo/method" event="onSubmit" >			
+					id_selected = dijit.byId('id_selected').get('value');
+					if(id_selected==''){
+						alert('No record to close !!! ');
+						return false;
+					}
+					return true;
+			</script>
 			<div id="divPrint">
 				<style type="text/css">
 					.style{
@@ -153,11 +171,15 @@
 					                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 					                </tr>
 					                <tr class="style" align="center" >
+					                    <td rowspan="2" class="center">
+											<input type="checkBox" onclick="checkAll('<?php echo count($this->row);?>');" name="checkall" id="checkall" />
+											<input type="hidden" name="id_selected" id="id_selected" dojoType="dijit.form.TextBox" />
+										</td>
 					                    <td rowspan="2" class="center"><?php echo $tr->translate("NUM");?></td>
-										<td colspan="4" class="center"><?php echo $tr->translate("PURCHASING_INFO");?></td>    
-					                    <td colspan="6" class="center"><?php echo $tr->translate("REQUEST_INFO");?></td>    
+										<td colspan="4" class="center"><?php echo $tr->translate("PAYMENT_INFO");?></td>    
+					                    <td colspan="4" class="center"><?php echo $tr->translate("AMOUNT_INFO");?></td>    
 					                   
-					                    <td colspan="5" class="center"><?php echo $tr->translate("OTHER");?></td>    
+					                    <td colspan="4" class="center"><?php echo $tr->translate("OTHER");?></td>    
 					                 
 					                </tr>
 					                <tr class="style" align="center">
@@ -166,19 +188,15 @@
 					                    <td style="padding:1px;"><?php echo $tr->translate("DATE");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("SUPPLIER");?></td>
 										
-										<td style="padding:1px;"><?php echo $tr->translate("REQUEST_NO");?></td>
-										<td style="padding:1px;"><?php echo $tr->translate("REQUEST_DATE");?></td>
-					                    <td style="padding:1px;"><?php echo $tr->translate("PURPOSE");?></td>	                    
-					                    <td style="padding:1px;"><?php echo $tr->translate("REQUEST_NO_FROM");?></td>
-					                    <td style="padding:1px;"><?php echo $tr->translate("NOTE");?></td>
-					                    <td style="padding:1px;"><?php echo $tr->translate("REQUEST_BY");?></td>
+										<td style="padding:1px;"><?php echo $tr->translate("PAYMENT_METHOD");?></td>
+										<td style="padding:1px;"><?php echo $tr->translate("BANK");?></td>
+					                    <td style="padding:1px;"><?php echo $tr->translate("ACCOUNT_AND_CHEQUE_NO");?></td>	                    
+					                    <td style="padding:1px;"><?php echo $tr->translate("PAID")." ".$tr->translate("CURRENCY_SIGN");?></td>
 										
-					                    
-					                    <td style="padding:1px;"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
-					                    <td style="padding:1px;"><?php echo $tr->translate("PURCHASING_PURPOSE");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("NOTE");?></td>
-					                    <td style="padding:1px;"><?php echo $tr->translate("TYPE");?></td>
+					                    <td style="padding:1px;"><?php echo $tr->translate("STATUS");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("BY");?></td>
+					                    <td style="padding:1px;"><?php echo $tr->translate("CLOSING");?></td>
 					                </tr>
 					            </thead>
 				                <?php 
@@ -196,33 +214,26 @@
 									
 								?>
 				                <tr class=" style " style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+				               		<td style="text-align: center;">
+										<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $index+1;?>)" name="check_box<?php echo $index+1;?>" id="check_box<?php echo $index+1;?>" />
+							            <input type="hidden" id="id_<?php echo $index+1;?>" name="id_<?php echo $index+1;?>" value="<?php echo $rs['id'];?>" dojoType="dijit.form.TextBox" />
+									</td>
 				               		<td style="text-align: center;"><?php echo $i++; ?></td>
 				               		<td><?php echo $rs["branch_name"];?></td>
-				               		<td class="centerText redBold"><?php echo $rs["purchaseNo"];?></td>      
-									<td class="centerText"><?php echo date($montFomat,strtotime($rs["date"]));?></td>
+				               		<td class="centerText redBold"><?php echo $rs["paymentNo"];?></td>      
+									<td class="centerText"><?php echo date($montFomat,strtotime($rs["paymentDate"]));?></td>
 									<td><?php echo $rs["supplierName"];?></td>
 									
-									<?php if($rs["purchaseType"]==$purchaseType){?>
-				               		<td><?php echo $rs["requestNo"];?></td>                 		
-				               		<td class="centerText"><?php echo date($montFomat,strtotime($rs["requestDate"]));?></td>
-				               		<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["purposeRequest"];?></span></td>
-				               		<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["requestNoLetter"];?></span></td>
-				               		<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["requestNote"];?></span></td>
-									<td class="centerText"><?php echo $rs["requestName"];?></td>
-									<?php }else{?>
-									<td class="centerText">-</td>
-									<td class="centerText">-</td>
-									<td class="centerText">-</td>
-									<td class="centerText">-</td>
-									<td class="centerText">-</td>
-									<td class="centerText">-</td>
-									<?php }?>
-									<td class="centerText"><?php echo number_format($rs["total"],2);?></td>
-									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["purpose"];?></span></td>
-									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["note"];?></span></td>
 									
-									<td class="centerText"><?php echo $rs["purchaseTypeTitle"];?></td>
+									<td><?php echo $rs["paymentMethodTitle"];?></td>
+									<td><?php echo $rs["bankName"];?></td>
+									<td><?php echo $rs["accNameAndChequeNo"];?></td>
+									<td class="centerText"><?php echo number_format($rs["totalAmount"],2);?></td>
+									
+									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["note"];?></span></td>
+									<td class="centerText"><?php echo empty($rs["statusTitle"])?"-":$rs["statusTitle"];?></td>
 									<td class="centerText"><?php echo $rs["byUser"];?></td>
+									<td class="centerText"><?php echo $rs["isClosedTitle"];?></td>
 								</tr>
 				                <?php }?>
 				               
@@ -232,7 +243,15 @@
 				    	</td>
 				    </tr>
 				</table>
+				<table width="100%">
+					<tr>
+						<td align="center">
+							<br><button iconclass="dijitIconSave" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("CLOSING");?></button>
+						</td>
+					</tr>	
+				</table>
 			</div>
+	</form>
 		</div>
 	</div>
 </div>
@@ -245,7 +264,7 @@
 			 getBranchInfo();
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_PURCHASING_LIST");?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_CLOSING_PAYMENT");?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
 		});
 		
@@ -277,4 +296,42 @@ function getBranchInfo(){
 		}
 	});
 }
+
+
+function checkAll(array_length){
+		dijit.byId('id_selected').attr('value','');
+		if(dojo.byId('checkall').checked){
+			for(var j=1;j<=array_length;j++){
+				$('#check_box'+j).each(function() { 
+					this.checked = true;  
+				});
+				checked_id(j);
+			}
+		}else{
+			for(var j=1;j<=array_length;j++){
+				$("#check_box"+j).removeAttr("checked");
+				checked_id(j);
+			}
+		}
+	}
+
+	function checked_id(index){
+		row_id = index;//dijit.byId('id_'+index).get('value');
+		if(dojo.byId('check_box'+index).checked){
+			if($("#id_selected").val()!="") {
+				var identity = $("#id_selected").val();
+				$("#id_selected").val(identity+','+row_id);
+			}else{
+				$("#id_selected").val(row_id);
+			}
+		}else{
+			var identity = $('#id_selected').val();
+			var arrays = identity.split(',');
+			for(var i=0;i<arrays.length;i++) {
+			if(arrays[i] == row_id) arrays.splice(i,1);
+			}
+			var strings = arrays.join(',');
+			$('#id_selected').val(strings);
+		}
+	}
 </script>

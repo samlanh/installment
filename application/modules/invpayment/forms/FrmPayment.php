@@ -100,7 +100,7 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
     			'required'=>'false',
     			'class'=>'fullside ',
     			'readOnly'=>'readOnly ',
-    			'placeholder'=>$tr->translate("ACCOUNT_AND_CHUQE_NO"),
+    			'placeholder'=>$tr->translate("ACCOUNT_AND_CHEQUE_NO"),
 				'style'=>'color:red;font-weight: 600;',
     			'missingMessage'=>$tr->translate("Forget Enter Data")
     	));
@@ -229,6 +229,7 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
 			$totalAmount->setValue($data['totalAmount']);
 			$_status->setValue($data['status']);
 			$id->setValue($data['id']);
+			$start_date->setValue("");
 		}
 		
 		$this->addElements(array(

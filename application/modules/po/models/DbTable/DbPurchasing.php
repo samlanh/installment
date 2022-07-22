@@ -81,7 +81,7 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
 			
 			
 			$arrStep = array(
-					'keyIndex'=>$search['purchaseType'],
+					'keyIndex'=>$data['purchaseType'],
 					'typeKeyIndex'=>1,
 				);
 			$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
