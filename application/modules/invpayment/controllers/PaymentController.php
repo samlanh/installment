@@ -104,7 +104,10 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
     		exit();
     	}
-		
+		if ($row['isClosed']==1){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('PAYMENT_IS_ALREADY_CLOSED'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
 		$frm = new Invpayment_Form_FrmPayment();
     	$frm->FrmPayment($row);
     	Application_Model_Decorator::removeAllDecorator($frm);

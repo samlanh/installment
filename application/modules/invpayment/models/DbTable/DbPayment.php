@@ -182,6 +182,7 @@ class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
     		$where = " id = ".$paymentId;
     		$this->update($_arr, $where);
 			
+			//Revert To Old Data
 			$row = $this->getPaymentDetail($paymentId);
     		if (!empty($row)) foreach ($row as $payDetail){
 				$rowPaymentDetails = $this->getPaymentDetailByPaymentIdAndInvoiceId($paymentId, $payDetail['invoiceId']);
@@ -219,79 +220,87 @@ class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
 				}
 			}
 			
-			
-			$detailidlist = '';
-    		foreach ($ids as $i){
-    			if (empty($detailidlist)){
-    				if (!empty($_data['detailid'.$i])){
-    					$detailidlist= $_data['detailid'.$i];
-    				}
-    			}else{
-    				if (!empty($_data['detailid'.$i])){
-    					$detailidlist = $detailidlist.",".$_data['detailid'.$i];
-    				}
-    			}
-    		}
-			// Delete Old PaymentDetail that don't have For This Edit
-    		$this->_name="st_payment_detail";
-    		$where2=" paymentId = ".$payment_id;
-    		if (!empty($detailidlist)){ // check if has old payment detail  detailId
-    			$where2.=" AND id NOT IN (".$detailidlist.")";
-    		}
-    		$this->delete($where2);
-			
-    		$ids = explode(',', $_data['identity']);
-    		$dueafter=0;
-			if(!empty($_data['identity'])){
-				foreach ($ids as $i){
-					$is_payment =0;
-					$arrFilter = array(
-							'invoiceId'=>$_data['invoiceId'.$i],
-							'projectId'=>$_data['branch_id'],
-					);
-					$rsInvoice = $this->getInvoiceInfo($arrFilter);
-					$paid = (float)$_data['paymentAmount'.$i];
-					if (!empty($rsInvoice)){
-						$dueafter = $rsInvoice['totalAmountExternalAfter']-$paid;
-						if ($dueafter>0){
-							$is_payment=0;
+			if($data['status']==1){ //For Only Active Payment
+				
+				$ids = explode(',', $_data['identity']);
+				$detailidlist = '';
+				if(!empty($_data['identity'])){
+					foreach ($ids as $i){
+						if (empty($detailidlist)){
+							if (!empty($_data['detailid'.$i])){
+								$detailidlist= $_data['detailid'.$i];
+							}
 						}else{
-							$is_payment=1;
+							if (!empty($_data['detailid'.$i])){
+								$detailidlist = $detailidlist.",".$_data['detailid'.$i];
+							}
 						}
-						
-						// update Invoice Balance
-						$array=array(
-								'isPaid'=>$is_payment,
-								'totalAmountExternalAfter'=>$dueafter,
-						);
-						$where="id=".$_data['invoiceId'.$i]." AND projectId =".$_data['branch_id'];
-						$this->_name="st_invoice";
-						$this->update($array, $where);
-					}
-					if (!empty($_data['detailid'.$i])){
-						$arrs = array(
-								'paymentId'=>$paymentId,
-								'invoiceId'=>$_data['invoiceId'.$i],
-								'dueAmount'=>$_data['dueAmount'.$i],
-								'paymentAmount'=>$_data['paymentAmount'.$i],
-								'remain'=>$_data['remain'.$i],
-						);
-						$this->_name ='st_payment_detail';
-						$where=" id= ".$_data['detailid'.$i];
-						$this->update($arrs, $where);
-					}else{
-						$arrs = array(
-								'paymentId'=>$paymentId,
-								'invoiceId'=>$_data['invoiceId'.$i],
-								'dueAmount'=>$_data['dueAmount'.$i],
-								'paymentAmount'=>$_data['paymentAmount'.$i],
-								'remain'=>$_data['remain'.$i],
-						);
-						$this->_name ='st_payment_detail';
-						$this->insert($arrs);
 					}
 				}
+				// Delete Old PaymentDetail that don't have For This Edit
+				$this->_name="st_payment_detail";
+				$where2=" paymentId = ".$payment_id;
+				if (!empty($detailidlist)){ // check if has old payment detail  detailId
+					$where2.=" AND id NOT IN (".$detailidlist.")";
+				}
+				$this->delete($where2);
+				
+				
+				$dueafter=0;
+				if(!empty($_data['identity'])){
+					foreach ($ids as $i){
+						$is_payment =0;
+						$arrFilter = array(
+								'invoiceId'=>$_data['invoiceId'.$i],
+								'projectId'=>$_data['branch_id'],
+						);
+						$rsInvoice = $this->getInvoiceInfo($arrFilter);
+						$paid = (float)$_data['paymentAmount'.$i];
+						if (!empty($rsInvoice)){
+							$dueafter = $rsInvoice['totalAmountExternalAfter']-$paid;
+							if ($dueafter>0){
+								$is_payment=0;
+							}else{
+								$is_payment=1;
+							}
+							
+							// update Invoice Balance
+							$array=array(
+									'isPaid'=>$is_payment,
+									'totalAmountExternalAfter'=>$dueafter,
+							);
+							$where="id=".$_data['invoiceId'.$i]." AND projectId =".$_data['branch_id'];
+							$this->_name="st_invoice";
+							$this->update($array, $where);
+						}
+						if (!empty($_data['detailid'.$i])){
+							$arrs = array(
+									'paymentId'=>$paymentId,
+									'invoiceId'=>$_data['invoiceId'.$i],
+									'dueAmount'=>$_data['dueAmount'.$i],
+									'paymentAmount'=>$_data['paymentAmount'.$i],
+									'remain'=>$_data['remain'.$i],
+							);
+							$this->_name ='st_payment_detail';
+							$where=" id= ".$_data['detailid'.$i];
+							$this->update($arrs, $where);
+						}else{
+							$arrs = array(
+									'paymentId'=>$paymentId,
+									'invoiceId'=>$_data['invoiceId'.$i],
+									'dueAmount'=>$_data['dueAmount'.$i],
+									'paymentAmount'=>$_data['paymentAmount'.$i],
+									'remain'=>$_data['remain'.$i],
+							);
+							$this->_name ='st_payment_detail';
+							$this->insert($arrs);
+						}
+					}
+				}
+			
 			}
+			
+			
 			
 			$db->commit();
 			return $paymentId;
