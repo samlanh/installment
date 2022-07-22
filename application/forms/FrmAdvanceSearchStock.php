@@ -39,10 +39,26 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$_status->setMultiOptions($_status_opt);
 		$_status->setValue($request->getParam("status"));
 		
+		$statusAcc=  new Zend_Dojo_Form_Element_FilteringSelect('statusAcc');
+		$statusAcc->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_statusAccOpt = array(
+				-1=>$this->tr->translate("ALL"),
+				1=>$this->tr->translate("ACTIVE"),
+				0=>$this->tr->translate("VOID"));
+		$statusAcc->setMultiOptions($_statusAccOpt);
+		$statusAcc->setValue($request->getParam("statusAcc"));
 		
 		
+		$closingStatus=  new Zend_Dojo_Form_Element_FilteringSelect('closingStatus');
+		$closingStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$closingStatusOpt = array(
+				-1=>$this->tr->translate("ALL"),
+				0=>$this->tr->translate("UNCLOSE"),
+				1=>$this->tr->translate("CLOSED"),
+			);
+		$closingStatus->setMultiOptions($closingStatusOpt);
+		$closingStatus->setValue($request->getParam("closingStatus"));
 		
-
 		
 		$_btn_search = new Zend_Dojo_Form_Element_SubmitButton('btn_search');
 		$_btn_search->setAttribs(array(
@@ -186,7 +202,6 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$paymentMethod->setAttribs(array(
 			'dojoType'=>'dijit.form.FilteringSelect',
 			'class'=>'fullside',
-			'onchange'=>'enablePayment();'
 		));
 		$rsOption = $dbGB->getVewOptoinTypeByType(2);
 		$optMethod=array(''=>$this->tr->translate("PLEASE_SELECT"));
@@ -214,6 +229,8 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 			array(
 				$_title,
 				$_status,
+				$statusAcc,
+				$closingStatus,
 				$_btn_search,
 				$branch_id,
 				$from_date,

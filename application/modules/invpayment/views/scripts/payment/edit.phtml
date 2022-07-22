@@ -37,6 +37,12 @@
 						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
 						return false;
 					}
+					totalAmountCh = dijit.byId('totalAmount').get('value');
+					if(totalAmountCh<=0){
+						alert('<?php echo $tr->translate('PLEASE_ENTER_AMOUNT');?>');
+						dijit.byId('totalAmount').focus();
+						return false;
+					}
 					loadingBlock();
 					return true;
 	  			 }else {
@@ -239,7 +245,8 @@ tr.rowData td.invNoCol {
     dojo.require("dijit.form.NumberTextBox");
     dojo.require("dijit.form.DateTextBox");
 
-	
+	var currentAccNO ='<?php echo empty($this->row['accNameAndChequeNo'])?"N/A":$this->row['accNameAndChequeNo']; ?>';
+	var currentBankId ='<?php echo empty($this->row['bankId'])?"N/A":$this->row['bankId']; ?>';
 	var productStore  = getDataStorefromJSON('id','name', null );
     require(["dojo/ready"], function(ready){
 		ready(function(){
@@ -266,10 +273,11 @@ tr.rowData td.invNoCol {
 		paymentMethod = dijit.byId('paymentMethod').get('value');
 		dijit.byId("bankId").set("readOnly",false);
 		dijit.byId("bankId").reset();
+		dijit.byId("bankId").attr("value",currentBankId);
 		dijit.byId("accNameAndChequeNo").set("readOnly",false);
-		dijit.byId("accNameAndChequeNo").attr("value",'');
+		dijit.byId("accNameAndChequeNo").attr("value",currentAccNO);
 		if(paymentMethod==1){
-			
+			dijit.byId("bankId").attr("value",'');
 			dijit.byId("bankId").set("readOnly",true);
 			dijit.byId("accNameAndChequeNo").attr("value",'N/A');
 			dijit.byId("accNameAndChequeNo").set("readOnly",true);

@@ -51,8 +51,8 @@ class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
 			
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	if($search['status']>-1){
-    		$where.= " AND pt.status = ".$search['status'];
+    	if($search['statusAcc']>-1){
+    		$where.= " AND pt.status = ".$search['statusAcc'];
     	}
     	if(($search['branch_id'])>0){
     		$where.= " AND pt.projectId = ".$search['branch_id'];
@@ -220,7 +220,7 @@ class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
 				}
 			}
 			
-			if($data['status']==1){ //For Only Active Payment
+			if($_data['status']==1){ //For Only Active Payment
 				
 				$ids = explode(',', $_data['identity']);
 				$detailidlist = '';
@@ -239,12 +239,11 @@ class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
 				}
 				// Delete Old PaymentDetail that don't have For This Edit
 				$this->_name="st_payment_detail";
-				$where2=" paymentId = ".$payment_id;
+				$where2=" paymentId = ".$paymentId;
 				if (!empty($detailidlist)){ // check if has old payment detail  detailId
 					$where2.=" AND id NOT IN (".$detailidlist.")";
 				}
 				$this->delete($where2);
-				
 				
 				$dueafter=0;
 				if(!empty($_data['identity'])){
