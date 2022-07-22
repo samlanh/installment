@@ -1,79 +1,96 @@
-<?php 
-	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate(""));
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage ();
+	$urlEdit = $this->baseUrl()."/invpayment/payment/edit/id/";
+	$urlReprint = $this->baseUrl()."/report/stockmg/payment-letter/id/";
+	
 	$frm = $this->frm_search;
+	
 ?>
+<title><?php echo $tr->translate("INVOICE_PAYMENT");?></title>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<meta charset="utf-8">
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
 		<div class="card-box">
-               	<div class="col-sm-12 border-botom">
-		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('');?></h4>
+       		<div class="col-sm-12 border-botom">
+		    	<div class="col-sm-8 pd-0">
+	    			<h4 class="m-b-0"><i class="fa fa-money " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('INVOICE_PAYMENT');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
     		</div>
     	</div>
 		<div class="card-box">
-			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'message','controller'=>'index','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
-			   <div class="form-group">
+			<form action=" " dojoType="dijit.form.Form" method="post">
+				<div class="form-group">
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("branch_id");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("start_date");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("end_date");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("statusAcc");?>
 					</div>
 				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("supplierId");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("paymentMethod");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("bankId");?>
+					</div>
+					 <div class="col-md-2 col-sm-2 col-xs-12">
+					 	<?php echo $frm->getElement("btn_search");?>
+					 </div>
+				</div>
 			</form>
-			<input type="hidden" id="id_selected" name="id_selected" />
 		</div>
 		<div class="card-box">
-			<?php echo $this->list;?>
+			<?php echo $this->list; ?>
 		</div>
 	</div>
 </div>
-<script>
-<?php 
-	/*$edit_Text = $tr->translate("RESENT");
-	$urlEdit = $this->baseUrl()."/message/index/edit/id/";
-	*/
-?>
-/*
-function checked_id(index){
-	$("#id_selected").val('');
-	 var searchIDs = $('input:checked').map(function(){
-	      return $(this).val();
-	    });
-	    $("#id_selected").val(searchIDs.get());
-}
-
-var row=0;
-var url="";
-$(function(){
-	$.contextMenu({
-		selector: '.context-menu-one', 
-		callback: function(key, options) {
-			var m = "clicked: " + key;
-			if(key=="edit"){
-				url='<?php //echo $urlEdit;?>';
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+	
+	var row=0;
+	var url="";
+	$(function(){
+		$.contextMenu({
+			selector: '.context-menu-one', 
+			callback: function(key, options) {
+				var m = "clicked: " + key;
+				if(key=="edit"){
+					url='<?php echo $urlEdit;?>';
+				}else if(key=="reprint"){
+					url='<?php echo $urlReprint;?>';
+				}
+				gotoAction();
+			},
+			items: {
+				
+				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-edit", accesskey: "e"},
+				"reprint": {name: "<?php echo $tr->translate("PAYMENT_LETTER");?>", icon: "fa-print", accesskey: "e"},
+				
 			}
-			gotoAction();
-		},
-		items: {
-			"edit": {name: "<?php //echo $edit_Text;?>", icon: "edit", accesskey: "e"},
-		}
+		});
 	});
-});
-function setrowdata(index){
-	row = index;
-}
-var recordid ='';
-function gotoAction(){
-	 window.open(url+row+'?rightclick=true', '_blank');
-}
-*/
+	function setrowdata(index){
+		row = index;
+	}
+	var recordid ='';
+	function gotoAction(){
+		window.location.href =url+row;
+	}
 </script>

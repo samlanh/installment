@@ -1,5 +1,5 @@
 <?php
-class Report_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
+class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 {
 	
 	function getAllPurchasing($search){
@@ -46,6 +46,7 @@ class Report_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
     		$s_search = (trim($search['adv_search']));
     		$s_where[] = " po.purchaseNo LIKE '%{$s_search}%'";
     		$s_where[] = " po.purpose LIKE '%{$s_search}%'";
+    		$s_where[] = " po.note LIKE '%{$s_search}%'";
     		$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
     		$s_where[] = " rq.requestNo LIKE '%{$s_search}%'";
     		$s_where[] = " rq.purpose LIKE '%{$s_search}%'";
@@ -125,4 +126,97 @@ class Report_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
 		$sql.=" WHERE pod.purchaseId = $recordId";
 		return $db->fetchAll($sql);
 	}
+	
+	function getAllPayment($search){
+    	$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="
+			SELECT 
+				pt.*,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = pt.projectId LIMIT 1) AS branch_name,
+				spp.supplierName,
+				spp.address 		AS supplierAddress,
+				spp.supplierTel 	AS supplierTel,
+				spp.contactName 	AS supplierContactName,
+				spp.contactNumber 	AS supplierContactNumber,
+				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) AS paymentMethodTitle,
+				(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) AS bankName,
+				CASE
+					WHEN  pt.status = 1 THEN ''
+					WHEN  pt.status = 0 THEN '".$tr->translate("VOID")."'
+					END AS statusTitle,
+				CASE
+					WHEN  pt.isClosed = 1 THEN '".$tr->translate("CLOSED")."'
+					WHEN  pt.isClosed = 0 THEN '".$tr->translate("UNCLOSE")."'
+					END AS isClosedTitle
+			";
+		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=pt.userId LIMIT 1 ) AS byUser";
+		$sql.=" FROM `st_payment` AS pt
+					LEFT JOIN `st_supplier` AS spp ON spp.id = pt.supplierId 
+				WHERE 1 
+		";
+		
+    	$where = "";
+    	$from_date =(empty($search['start_date']))? '1': " pt.paymentDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " pt.paymentDate <= '".$search['end_date']." 23:59:59'";
+    	
+    	$where.= " AND ".$from_date." AND ".$to_date;
+    	
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = (trim($search['adv_search']));
+    		$s_where[] = " pt.paymentNo LIKE '%{$s_search}%'";
+    		$s_where[] = " pt.accNameAndChequeNo LIKE '%{$s_search}%'";
+    		$s_where[] = " pt.purchaseNo LIKE '%{$s_search}%'";
+    		$s_where[] = " pt.note LIKE '%{$s_search}%'";
+    		$s_where[] = " spp.totalAmount LIKE '%{$s_search}%'";
+			
+    		$s_where[] = " (SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) LIKE '%{$s_search}%'";
+			
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	if($search['statusAcc']>-1){
+    		$where.= " AND pt.status = ".$search['statusAcc'];
+    	}
+    	if(($search['branch_id'])>0){
+    		$where.= " AND pt.projectId = ".$search['branch_id'];
+    	}
+		if(!empty($search['supplierId'])){
+    		$where.= " AND pt.supplierId = ".$search['supplierId'];
+    	}
+		if(!empty($search['paymentMethod'])){
+    		$where.= " AND pt.paymentMethod = ".$search['paymentMethod'];
+    	}
+		if(!empty($search['bankId'])){
+    		$where.= " AND pt.bankId = ".$search['bankId'];
+    	}
+		if($search['closingStatus']>-1){
+    		$where.= " AND pt.isClosed = ".$search['closingStatus'];
+    	}
+    	$order=' ORDER BY pt.id DESC  ';
+    	$where.=$dbGb->getAccessPermission("pt.projectId");
+    	return $db->fetchAll($sql.$where.$order);
+    }
+	
+	 function submitClosingPayment($data){
+      	$db = $this->getAdapter();
+      	if(!empty($data['id_selected'])){
+      		$ids = explode(',', $data['id_selected']);
+      		$key = 1;
+      		$arr = array(
+      				"isClosed"=>1,
+      		);
+      		foreach ($ids as $i){
+      			$this->_name="st_payment";
+      			//if (!empty($data['note_'.$i])){
+      				//$arr['closing_note']=$data['note_'.$i];
+      			//}
+      			$where="id= ".$data['id_'.$i];
+      			$this->update($arr, $where);
+      		}
+      	}
+      }
 }
