@@ -78,6 +78,7 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 								'projectId'=>$data['branch_id'],
 								'proId'=>$data['proId'.$i],
 								'qty'=>$data['qtyRequest'.$i],
+								'costing'=>$data['costing'.$i],
 								'qtyAlert'=>$data['qtyAlert'.$i],
 						);
 						$this->_name='st_product_location';
