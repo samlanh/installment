@@ -359,11 +359,12 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		);
 		return $optStockType;
 	}
-	function addProductHistoryQty($projectId,$proId,$tranType,$Qty){
+	function addProductHistoryQty($projectId,$proId,$tranType,$Qty,$tranId=0){
 		$this->_name='st_product_story';
 		$arr = array(
 				'projectId'=>$projectId,
 				'proId'=>$proId,
+				'transId'=>$tranId,
 				'tranType'=>$tranType,//1=+init,2 +receive,3 -usage,4 -sale,5 -transfer out ,5 +receiv tran,7 +- adjust
 				'qty'=>$Qty,
 				'userId'=>$this->getUserId(),
@@ -674,6 +675,58 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		return $cate_tree_array;
 	
+	}
+		function getProductPOInfo($data){
+			$db = $this->getAdapter();
+			$sql="SELECT
+						p.id,
+						(SELECT r.requestNo from `st_request_po` r where r.id = p.requestId) as requestNo,
+						p.purchaseNo,
+						DATE_FORMAT(p.createDate,'%d-%m-%Y') createDate,
+						p.processingStatus,
+						p.supplierId,
+						p.requestId,
+						(SELECT s.supplierName FROM `st_supplier` s WHERE s.id=p.supplierId LIMIT 1) as supplierName,
+						pd.purchaseId,
+						pd.proId,
+						(SELECT proName FROM `st_product` WHERE st_product.proId=pd.proId LIMIT 1) AS proName,
+						(SELECT measureLabel FROM `st_product` WHERE st_product.proId=pd.proId LIMIT 1) AS measureLabel,
+						pd.qty,
+						pd.qtyAfter,
+						pd.unitPrice,
+						pd.subTotal,
+						pd.requestInDate,
+						pd.isClosed
+					FROM
+						`st_purchasing` p,
+						`st_purchasing_detail` pd
+					WHERE
+						p.id=pd.purchaseId ";
+			if(!empty($data['purchaseId'])){
+				$sql.=" AND pd.purchaseId = ".$data['purchaseId'];
+			}
+			
+			if(!empty($data['proId'])){
+				$sql.=" AND pd.proId = ".$data['proId'];
+			}
+			
+			if(!empty($data['fetchRow'])){
+				$rs = $db->fetchRow($sql);
+			}else{
+				$rs = $db->fetchAll($sql);
+			}
+			return $rs;
+	}
+	function updateStockbyBranchAndProductId($data){
+		$resultStock = $this->getProductInfoByLocation($data);
+		if(!empty($resultStock)){
+			$this->_name='st_product_location';
+			$arr = array(
+				'qty'=>$resultStock['currentQty']+$data['EntyQty']
+			);
+			$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'] ;
+			$this->insert($arr);
+		}
 	}
 	
 	function getAllPaymentRecord($_data=null){
