@@ -143,6 +143,8 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 				spp.contactNumber 	AS supplierContactNumber,
 				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) AS paymentMethodTitle,
 				(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) AS bankName,
+				(SELECT GROUP_CONCAT((SELECT inv.invoiceNo FROM `st_invoice` AS inv WHERE inv.id = pd.invoiceId LIMIT 1)) FROM `st_payment_detail` AS pd WHERE pd.paymentId =pt.id) AS invoiceNoList,
+				(SELECT GROUP_CONCAT((SELECT inv.supplierInvoiceNo FROM `st_invoice` AS inv WHERE inv.id = pd.invoiceId LIMIT 1)) FROM `st_payment_detail` AS pd WHERE pd.paymentId =pt.id) AS supplierInvoiceNoList,
 				CASE
 					WHEN  pt.status = 1 THEN ''
 					WHEN  pt.status = 0 THEN '".$tr->translate("VOID")."'
@@ -175,6 +177,9 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 			
     		$s_where[] = " (SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) LIKE '%{$s_search}%'";
     		$s_where[] = " (SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) LIKE '%{$s_search}%'";
+			
+			$s_where[] = " (SELECT GROUP_CONCAT((SELECT inv.invoiceNo FROM `st_invoice` AS inv WHERE inv.id = pd.invoiceId LIMIT 1)) FROM `st_payment_detail` AS pd WHERE pd.paymentId =pt.id) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT GROUP_CONCAT((SELECT inv.supplierInvoiceNo FROM `st_invoice` AS inv WHERE inv.id = pd.invoiceId LIMIT 1)) FROM `st_payment_detail` AS pd WHERE pd.paymentId =pt.id) LIKE '%{$s_search}%'";
 			
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}

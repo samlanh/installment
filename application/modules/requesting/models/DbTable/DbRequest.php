@@ -278,7 +278,7 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		$sql="
 			SELECT 
 				rq.*,
-				DATE_FORMAT(rq.date,'%d-%b-%Y') AS requestDateDMY,
+				DATE_FORMAT(rq.date,'%d-%m-%Y') AS requestDateDMY,
 				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = rq.projectId LIMIT 1) AS branch_name,
 				CASE
 					WHEN  rq.checkingStatus= 0 THEN '".$tr->translate("PENDING")."'

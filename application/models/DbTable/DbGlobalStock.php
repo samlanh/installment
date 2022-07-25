@@ -729,5 +729,70 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 	}
 	
+	function getAllPaymentRecord($_data=null){
+		$db=$this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+    	$sql="
+			SELECT 
+				pt.id,
+						
+		";
+		if(!empty($_data['paymentMethodCheque'])){
+			$sql.=" CONCAT(COALESCE(pt.accNameAndChequeNo,''),' ',COALESCE(spp.supplierName,'')) AS name	
+			";
+		}else{
+		$sql.=" 
+				CONCAT(COALESCE(pt.paymentNo,''),' ',COALESCE(spp.supplierName,'')) AS name	
+			";
+		}
+		$sql.=" FROM `st_payment` AS pt 
+				LEFT JOIN `st_supplier` AS spp ON spp.id = pt.supplierId
+		";	
+		$sql.=" WHERE pt.status=1  ";	
+		
+		
+		if(!empty($_data['branch_id'])){
+			$sql.=" AND pt.projectId=".$_data['branch_id'];
+		}
+		if(!empty($_data['paymentMethodCheque'])){
+			//checking Payment For Available TO IssueCheque
+			$sql.=" AND (SELECT COALESCE(reCh.paymentId,0) FROM `st_receive_cheque` AS reCh WHERE reCh.paymentId =pt.id AND reCh.status=1 ORDER BY reCh.id ASC LIMIT 1 ) IS NULL  ";
+			$sql.=" AND pt.paymentMethod=3 ";
+			if(!empty($_data['currentPaymentId'])){// edit IssueCheque
+				$sql.=" OR pt.id= ".$_data['currentPaymentId'];
+			}
+		}
+		$row = $db->fetchAll($sql);
+		return $row;
+		
+	}
+	
+	function getAllIssueChequeRecord($_data=null){
+		$db=$this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+    	$sql="
+			SELECT 
+				cheQ.id,
+				CONCAT(COALESCE(pt.accNameAndChequeNo,''),' ',COALESCE(spp.supplierName,'')) AS name			
+		";
+		$sql.=" FROM 
+					st_receive_cheque AS cheQ
+				JOIN `st_payment` AS pt ON pt.id = cheQ.paymentId
+				LEFT JOIN `st_supplier` AS spp ON spp.id = pt.supplierId
+		";	
+		$sql.=" WHERE cheQ.status=1  AND cheQ.drawUserId IS NULL ";	
+		
+		
+		if(!empty($_data['branch_id'])){
+			$sql.=" AND cheQ.projectId=".$_data['branch_id'];
+		}
+		
+		$row = $db->fetchAll($sql);
+		return $row;
+		
+	}
+	
 }
 ?>

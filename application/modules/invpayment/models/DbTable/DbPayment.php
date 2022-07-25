@@ -326,7 +326,13 @@ class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();		
 			$this->_name='st_payment';
-			$sql=" SELECT pt.* FROM $this->_name AS pt WHERE pt.id=".$recordId;
+			$sql=" SELECT pt.*,DATE_FORMAT(pt.paymentDate,'%d-%m-%Y') AS paymentDateDMY, ";
+			$sql.="
+				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) AS paymentMethodTitle,
+				(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) AS bankName,
+				(SELECT GROUP_CONCAT((SELECT inv.invoiceNo FROM `st_invoice` AS inv WHERE inv.id = pd.invoiceId LIMIT 1)) FROM `st_payment_detail` AS pd WHERE pd.paymentId =pt.id) AS invoiceNoList,
+				(SELECT GROUP_CONCAT((SELECT inv.supplierInvoiceNo FROM `st_invoice` AS inv WHERE inv.id = pd.invoiceId LIMIT 1)) FROM `st_payment_detail` AS pd WHERE pd.paymentId =pt.id) AS supplierInvoiceNoList ";
+			$sql.=" FROM $this->_name AS pt WHERE pt.id= ".$recordId;
 			$sql.=$dbGb->getAccessPermission("pt.projectId");
 			$sql.=" LIMIT 1 ";
     	return $db->fetchRow($sql);
