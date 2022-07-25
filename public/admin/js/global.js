@@ -66,3 +66,17 @@ function getAllCategory(urlGetCategory){
 			}
 		});
 	}
+	function getAllPObyBranch(urlGetAllPO,objectContentFilter){
+		dojo.xhrPost({
+			url:urlGetAllPO,	
+			content:objectContentFilter,		    
+			handleAs:"json",
+			load: function(data) {
+				purchaseStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('purId').set('store', purchaseStore);
+
+			},
+			error: function(err) {
+			}
+		});
+	}
