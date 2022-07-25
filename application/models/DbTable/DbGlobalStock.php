@@ -735,7 +735,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND cheQ.projectId=".$_data['branch_id'];
 		}
-		
+		if(!empty($_data['currentIssueId'])){
+			$sql.=" OR cheQ.id=".$_data['currentIssueId'];
+		}
 		$row = $db->fetchAll($sql);
 		return $row;
 		
