@@ -77,7 +77,7 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 						$arr = array(
 								'projectId'=>$data['branch_id'],
 								'proId'=>$data['proId'.$i],
-								'qty'=>$data['qtyRequest'.$i],
+								'qty'=>$data['qtyInit'.$i],
 								'costing'=>$data['costing'.$i],
 								'qtyAlert'=>$data['qtyAlert'.$i],
 						);
@@ -86,7 +86,7 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 						
 					}
 					
-					$dbs->addProductHistoryQty($data['branch_id'], $data['proId'.$i], 1, $data['qtyRequest'.$i]);
+					$dbs->addProductHistoryQty($data['branch_id'], $data['proId'.$i], 1, $data['qtyInit'.$i]);
 				}
     		}
     		

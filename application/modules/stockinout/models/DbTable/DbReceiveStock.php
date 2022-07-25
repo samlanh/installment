@@ -7,12 +7,23 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
-    function getAllDataRows($search){
-    	$sql="";
+    function getAllReceiveStock($search){
+    	$sql="SELECT r.id,
+				(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
+				(SELECT name_kh FROM `st_view` WHERE type=4 AND key_code=r.dnType LIMIT 1) dnType,
+				r.dnNumber,
+				r.receiveDate,
+				(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
+				(SELECT purchaseNo FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseNo,
+				(SELECT requestNo FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) AS requestNo,
+				(SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
+				(SELECT name_en FROM ln_view WHERE type=3 and key_code = r.status LIMIT 1) AS status
+				
+			FROM `st_receive_stock` r WHERE 1";
     	
     	
-    	$from_date =(empty($search['start_date']))? '1': " send_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " send_date <= '".$search['end_date']." 23:59:59'";
+    	$from_date =(empty($search['start_date']))? '1': " r.receiveDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " r.receiveDate <= '".$search['end_date']." 23:59:59'";
     	$where='';
     	$where_date = " AND ".$from_date." AND ".$to_date;
     	
@@ -23,27 +34,27 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	if($search['status']>-1){
-    		$where.= " AND s.status = ".$search['status'];
+    		$where.= " AND r.status = ".$search['status'];
     	}
     	
-    	$order.=' ORDER BY id DESC  ';
+    	$order=' ORDER BY r.id DESC  ';
     	
     	$db = $this->getAdapter();
-    	return $db->fetchAll($sql.$where_date.$order);
+    	return $db->fetchAll($sql.$where.$where_date.$order);
     }
    
     function addReceiveStock($data){
-    	
     	$db = $this->getAdapter();
     	$db->beginTransaction();
-    	$dbs = new Application_Model_DbTable_DbGlobalStock();
     	try
     	{
+    		$dbs = new Application_Model_DbTable_DbGlobalStock();
     		$param = array(
     				'fetchRow'=>1,
     				'purchaseId'=>$data['purId']
     				);
     		$rowData = $dbs->getProductPOInfo($param);
+    		
     		
     		$arr = array(
     				'projectId'=>$data['branch_id'],
@@ -60,16 +71,42 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     				'userId'=>$this->getUserId(),
     				'createDate'=>date('Y-m-d'),
     			);
+    		
+    		$part= PUBLIC_PATH.'/images/dndocument/';
+    		
+    		$photo_name = $_FILES['photo']['name'];
+    		if (!empty($photo_name)){
+    			$tem =explode(".", $photo_name);
+    			$image_name = "photoDn_".date("Y").date("m").date("d").time().".".end($tem);
+    			$tmp = $_FILES['photo']['tmp_name'];
+    			if(move_uploaded_file($tmp, $part.$image_name)){
+    				move_uploaded_file($tmp, $part.$image_name);
+    				$photo = $image_name;
+    				$arr['photoDn']=$photo;
+    			}
+    		}
+    		
+    		$photo_name = $_FILES['fileDn']['name'];
+    		if (!empty($photo_name)){
+    			$tem =explode(".", $photo_name);
+    			$image_name = "fileDn".date("Y").date("m").date("d").time().".".end($tem);
+    			$tmp = $_FILES['fileDn']['tmp_name'];
+    			if(move_uploaded_file($tmp, $part.$image_name)){
+    				move_uploaded_file($tmp, $part.$image_name);
+    				$photo = $image_name;
+    				$arr['fileDn']=$photo;
+    			}
+    		}
     		$receivedId = $this->insert($arr);
     		
-    		$ids = explode($data['identity'], ',');
+    		$ids = explode(',',$data['identity']);
     		if(!empty($ids)){
     			foreach($ids as $i){
     				$arr = array(
     					'receiveId'=>$receivedId,
     					'proId'=>$data['productId'.$i],
     					'qtyReceive'=>$data['qtyReceive'.$i],
-    					'qtyAfterReceive'=>$data['qtyAfter1'.$i]-$data['qtyReceive'.$i],
+    					'qtyAfterReceive'=>$data['qtyAfter'.$i]-$data['qtyReceive'.$i],
     					'price'=>$data['price'.$i],
     					'subTotal'=>$data['qtyReceive'.$i]*$data['price'.$i],
     					'isClosed'=>$data['receiveStatus'.$i],
@@ -79,25 +116,62 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     				$this->_name='st_receive_stock_detail';
     				$id = $this->insert($arr);
     				
-    				$param = array(
-    					'branch_id'=>$data['branch_id'],
-    					'productId'=>$data['productId'.$i],
-    					'EntyQty'=>$data['qtyReceive'.$i]
+    				$paramPro = array(
+    						'fetchRow'=>1,
+    						'purchaseId'=>$data['purId'],
+    						'proId'=>$data['productId'.$i]
     				);
     				
-    				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty 
+    				$poProduct = $dbs->getProductPOInfo($paramPro);
+    				
+    				if(!empty($poProduct)){//update po product detail
+    					
+    					$currentAfter = $poProduct['qtyAfter'];
+    					$Receiveqty = $data['qtyReceive'.$i];
+    					$arr =array(
+    						'qtyAfter'=>$currentAfter-$Receiveqty
+    					);
+    					if($currentAfter-$Receiveqty<=0 OR $data['receiveStatus'.$i]==1){
+    						$arr['isClosed']=1;
+    					}
+    					
+    					$where= "purchaseId = ".$poProduct['id']." AND proId=".$poProduct['proId'];
+    					
+    					$this->_name='st_purchasing_detail';
+    					$this->update($arr, $where);
+    					
+    					$paramPro = array(
+    							'fetchRow'=>1,
+    							'isClosed'=>1,
+    							'purchaseId'=>$data['purId'],
+    					);
+    					$dbs->updatePoStatusisClose($paramPro);//update PO Status
+    				}
+    				
+    				$param = array(
+    						'branch_id'	=> $data['branch_idss'],
+    						'productId'	=> $data['productId'.$i],
+    						'EntyQty'	=> $data['qtyReceive'.$i],
+    						'EntyPrice'	=> $data['price'.$i]
+    				);
+    				
+    				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty and new costing
     				
     				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],2,$data['qtyReceive'.$i],$id);//movement
     			}
     		}
     		
     		$db->commit();
-    	}catch (Exception $e){
+    	}catch(Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add");
     	}
     }
     function checkPOStatus($poId){
+    	
+    }
+    function updatePurchaseQtybyProId(){
     	
     }
     function updateData($data){
@@ -185,7 +259,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
                    		</ul>
              	</div>';
     	
-    	$array = array('stringrow'=>$string,'POInfoDataBlog'=>$strPOInfo);
+    	$array = array('stringrow'=>$string,'POInfoDataBlog'=>$strPOInfo,'identity'=>$identity);
     	return $array;
     }
     function getDataRow($recordId){

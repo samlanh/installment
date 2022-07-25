@@ -157,7 +157,6 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			$isService->setValue($data['isService']);
 			$productCode->setValue($data['proCode']);
 			$barCode->setValue($data['barCode']);
-			$costing->setValue($data['costing']);
 			$measureId->setValue($data['measureId']);
 			$labelMeasure->setValue($data['measureLabel']);
 			$qtyMeasure->setValue($data['measureValue']);

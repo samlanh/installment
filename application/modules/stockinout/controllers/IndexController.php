@@ -6,8 +6,8 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		//$rs_rows=array();
-		//$db = new ();
+		$rs_rows=array();
+		$db = new Stockinout_Model_DbTable_DbReceiveStock();
 		try{
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -16,25 +16,29 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 				$search = array(
 					'adv_search'=>'',
 					'branch_id'=>-1,
+					'status'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
 			}
 			
-			//$rs_rows= $db->getAllSentSMS($search);//
+			$rs_rows= $db->getAllReceiveStock($search);
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
+			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
+			$collumns = array("BRANCH_NAME","DOCUMENT_RECEIV_TYPE","DNORIV_NO","RECEIVE_DATE","SUPPLIER_NAME","PO_NO","REQUEST_NO","USER","STATUS");
+			$link=array('module'=>'stockinout','controller'=>'index','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
+			
+			
+			$frm = new Application_Form_FrmAdvanceSearch();
+			$frm = $frm->AdvanceSearch();
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frm_search = $frm;
 		
 	}
 	function addAction(){

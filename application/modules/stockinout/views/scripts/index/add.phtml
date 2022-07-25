@@ -40,6 +40,22 @@
 		<form id='frm_add' action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
+					branch_id = dijit.byId('branch_id').get('value');
+					if(branch_id=='' || branch_id==-1){
+						dijit.byId('branch_id').focus();
+						return false;
+					}
+					purId = dijit.byId('purId').get('value');
+					if(purId=='' || purId==-1){
+						alert('<?php echo $tr->translate('SELECT_PO_NO');?>');
+						dijit.byId('purId').focus();
+						return false;
+					}
+					identity = dijit.byId('identity').get('value');
+					if(identity=='' || identity==-1){
+						dijit.byId('identity').focus();
+						return false;
+					}
 					return true;
 				}else{
 					return false;
@@ -73,6 +89,7 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id="purId" />
+	                    	<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" >
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -175,8 +192,6 @@
 						<tbody id="table_row">
 						<tbody>
 					</table>
-					<input type="hidden" id="identity" name="identity" />
-					<input type="hidden" name="old_identity" id="old_identity"  value="" >
 				 </div>
 	        </div>
 			<div class="clearfix"></div>
@@ -205,7 +220,17 @@
 			ready(function(){
 				var purchaseId = dijit.byId('purId');
 				purchaseId.on('change',function(evt){
+					
+					$("#identity").val("");
+					dojo.html.set(dojo.byId("table_row"),"" , {
+						parseContent: true,
+					});
+					
 					purchaseId = purchaseId.get('value');
+					
+					if(purchaseId==''){
+						purchaseId=0;
+					}
 					if(purchaseId>0){
 						getProductbypo(purchaseId);
 					}
@@ -238,6 +263,7 @@
 
 	var urlGetPOItem = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'index','action'=>'getallproductbypo')); ?>';
 	function getProductbypo(purchaseId){
+		
 		loadingBlock();
 		dojo.xhrPost({
 			url: urlGetPOItem,
@@ -247,7 +273,7 @@
 			handleAs:"json",
 			load: function(data){
 				//keyindex=data.keyindex;
-				//$("#old_identity").val(data.identity);
+				$("#identity").val(data.identity);
 				dojo.html.set(dojo.byId("table_row"),data.stringrow,{
 				     parseContent: true,
 				});

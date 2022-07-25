@@ -2,7 +2,10 @@
 
 class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 {
-	
+	public function getUserId(){
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+		return $session_user->user_id;
+	}
 	public function getAllCategoryProduct($parent = 0, $spacing = '', $cate_tree_array = '',$option=null){
 
 		$db=$this->getAdapter();
@@ -97,6 +100,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				p.proName,
 				p.isService,
 				(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty,
+				(SELECT pl.costing FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentPrice,
 				p.measureLabel AS measureTitle
 			";
 		
@@ -709,6 +713,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			if(!empty($data['proId'])){
 				$sql.=" AND pd.proId = ".$data['proId'];
 			}
+			if(!empty($data['isClosed'])){
+				$sql.=" AND pd.isClosed = ".$data['isClosed'];
+			}
 			
 			if(!empty($data['fetchRow'])){
 				$rs = $db->fetchRow($sql);
@@ -721,11 +728,104 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$resultStock = $this->getProductInfoByLocation($data);
 		if(!empty($resultStock)){
 			$this->_name='st_product_location';
+			
+			$currentStock = $resultStock['currentQty'];
+			$currentPrice = $resultStock['currentPrice'];
+			$newQty = $data['EntyQty'];
+			$newPrice = $data['EntyPrice'];
+			$totalQty = $currentStock+$newQty;
+			$costing = (($currentStock*$currentPrice)+($newQty*$newPrice))/$totalQty;
+			
 			$arr = array(
-				'qty'=>$resultStock['currentQty']+$data['EntyQty']
+				'qty'=>$totalQty,
+				'costing'=>$costing
 			);
 			$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'] ;
 			$this->insert($arr);
+		}
+	}
+	
+	function getAllPaymentRecord($_data=null){
+		$db=$this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+    	$sql="
+			SELECT 
+				pt.id,
+						
+		";
+		if(!empty($_data['paymentMethodCheque'])){
+			$sql.=" CONCAT(COALESCE(pt.accNameAndChequeNo,''),' ',COALESCE(spp.supplierName,'')) AS name	
+			";
+		}else{
+		$sql.=" 
+				CONCAT(COALESCE(pt.paymentNo,''),' ',COALESCE(spp.supplierName,'')) AS name	
+			";
+		}
+		$sql.=" FROM `st_payment` AS pt 
+				LEFT JOIN `st_supplier` AS spp ON spp.id = pt.supplierId
+		";	
+		$sql.=" WHERE pt.status=1  ";	
+		
+		
+		if(!empty($_data['branch_id'])){
+			$sql.=" AND pt.projectId=".$_data['branch_id'];
+		}
+		if(!empty($_data['paymentMethodCheque'])){
+			//checking Payment For Available TO IssueCheque
+			$sql.=" AND (SELECT COALESCE(reCh.paymentId,0) FROM `st_receive_cheque` AS reCh WHERE reCh.paymentId =pt.id AND reCh.status=1 ORDER BY reCh.id ASC LIMIT 1 ) IS NULL  ";
+			$sql.=" AND pt.paymentMethod=3 ";
+			if(!empty($_data['currentPaymentId'])){// edit IssueCheque
+				$sql.=" OR pt.id= ".$_data['currentPaymentId'];
+			}
+		}
+		$row = $db->fetchAll($sql);
+		return $row;
+		
+	}
+	
+	function getAllIssueChequeRecord($_data=null){
+		$db=$this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+    	$sql="
+			SELECT 
+				cheQ.id,
+				CONCAT(COALESCE(pt.accNameAndChequeNo,''),' ',COALESCE(spp.supplierName,'')) AS name			
+		";
+		$sql.=" FROM 
+					st_receive_cheque AS cheQ
+				JOIN `st_payment` AS pt ON pt.id = cheQ.paymentId
+				LEFT JOIN `st_supplier` AS spp ON spp.id = pt.supplierId
+		";	
+		$sql.=" WHERE cheQ.status=1  AND cheQ.drawUserId IS NULL ";	
+		
+		
+		if(!empty($_data['branch_id'])){
+			$sql.=" AND cheQ.projectId=".$_data['branch_id'];
+		}
+		
+		$row = $db->fetchAll($sql);
+		return $row;
+		
+	}
+	function updatePoStatusisClose($data){
+		//if all po detail of product close update po to close also
+		/*$data= array(
+		 * purchaseId,
+		 * isClosed,
+		 * fetchRow=1
+		 * 
+		 */;
+		$poResult = $this->getProductPOInfo($data);
+		print_r($poResult);
+		if(empty($poResult)){
+			$where="id=".$data['purchaseId'];
+			$this->_name="st_purchasing";
+			$arr =array(
+				'processingStatus'=>1
+				);
+			$this->update($arr, $where);
 		}
 	}
 	
