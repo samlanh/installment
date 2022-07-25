@@ -155,9 +155,14 @@
 					}
 					table.totalBottom tr td{
 						padding:2px;
+						line-height: 14px;
+					}
+					table.totalBottom tr.rowHead td {
+						padding: 4px 0;
+						font-weight: 600;
 					}
 					tr.rowHead td.mainCol {
-						width: 28%;
+						width: 15%;
 						border-bottom: solid 2px #000;
 						border-top: solid 2px #000;
 						padding: 2px 0;
@@ -165,7 +170,12 @@
 					td.blankCol {
 						width: 2%;
 					}
+					td.sideCol {
+						width: 10%;
+					}
 					td.valueData {
+					}
+					td.valueData.totalVal {
 						font-weight: 600;
 					}
 				</style>
@@ -194,7 +204,7 @@
 					                </tr>
 					                <tr class="style" align="center">
 					                	<td style="padding:1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>                   
-					                    <td style="padding:1px;"><?php echo $tr->translate("PO_NO");?></td>
+					                    <td style="padding:1px;"><?php echo $tr->translate("PAYMENT_NO");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("DATE");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("SUPPLIER");?></td>
 										
@@ -222,6 +232,7 @@
 									$noBank = 0;
 									
 				                	$gTotal=0;
+				                	$totalVoid=0;
 				                	$i=1;
 				                ?>
 				                <?php 
@@ -229,6 +240,7 @@
 									$class="";
 									if($rs["status"]==0){
 										$class="void";
+										$totalVoid =$totalVoid+1;
 										if($rs["paymentMethod"]==1){
 											$voidCash =$voidCash+1;
 										}elseif($rs["paymentMethod"]==2){
@@ -275,36 +287,45 @@
 				            <table class="totalBottom" style="width:100%;">
 								
 								<tr class="rowHead">
-									<td></td>
+									<td class="sideCol"></td>
 									<td class="mainCol centerText"><?php echo $tr->translate("CASH");?></td>
 									<td class="blankCol">&nbsp;</td>
 									<td class="mainCol centerText"><?php echo $tr->translate("PAYWITH_BANK");?></td>
 									<td class="blankCol">&nbsp;</td>
 									<td class="mainCol centerText"><?php echo $tr->translate("CHEQUE");?></td>
+									<td class="blankCol">&nbsp;</td>
+									<td class="mainCol centerText"><?php echo $tr->translate("TOTAL");?></td>
+									<td class="sideCol"></td>
 								</tr>
 								<tr>
-									<td class="rightText"><?php echo $tr->translate("TOTAL");?></td>
+									<td class="rightText"><?php echo $tr->translate("CURRENCY_SIGN");?></td>
 									<td class="valueData centerText"><?php echo number_format($totalCash,2);?></td>
 									<td></td>
 									<td class="valueData centerText"><?php echo number_format($totalBank,2);?></td>
 									<td></td>
 									<td class="valueData centerText"><?php echo number_format($totalCheque,2);?></td>
+									<td></td>
+									<td class="valueData totalVal centerText"><?php echo number_format($gTotal,2);?></td>
 								</tr>
 								<tr>
-									<td class="rightText"><?php echo $tr->translate("NUMBERS_OF");?></td>
+									<td class="rightText"><?php echo $tr->translate("AMT_RECORD");?></td>
 									<td class="valueData centerText"><?php echo sprintf('%02d',$noCash);?></td>
 									<td></td>
 									<td class="valueData centerText"><?php echo sprintf('%02d',$noBank);?></td>
 									<td></td>
 									<td class="valueData centerText"><?php echo sprintf('%02d',$noCheque);?></td>
+									<td></td>
+									<td class="valueData totalVal centerText"><?php echo sprintf('%02d',count($this->row));?></td>
 								</tr>
 								<tr>
-									<td class="rightText"><?php echo $tr->translate("VOID");?></td>
+									<td class="rightText"><?php echo $tr->translate("AMT_VOID_RECORD");?></td>
 									<td class="valueData centerText"><?php echo sprintf('%02d',$voidCash);?></td>
 									<td></td>
 									<td class="valueData centerText"><?php echo sprintf('%02d',$voidBank);?></td>
 									<td></td>
 									<td class="valueData centerText"><?php echo sprintf('%02d',$voidCheque);?></td>
+									<td></td>
+									<td class="valueData totalVal centerText"><?php echo sprintf('%02d',$totalVoid);?></td>
 								</tr>
 				            </table>
 							
