@@ -312,7 +312,7 @@ span.deleteRecord:hover {
 		
 	}
 	
-	var urlGetAllPO = '<?php echo $this->url(array('module'=>'po','controller'=>'index','action'=>'getallpo')); ?>';
+	
 	function getAllPO(){
 		dijit.byId('purId').reset();
 		purchaseStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
@@ -322,24 +322,21 @@ span.deleteRecord:hover {
 		if(branch_id=='' || branch_id<=0){
 			branch_id = 0;
 		}
-		dojo.xhrPost({
-			url:urlGetAllPO,	
-			content:{ 
-				'branch_id':branch_id,
-				'purchaseType':'<?php echo $purchaseType;?>',
-				'purchaseId':currentPurchaseId
-				
-			},		    
-			handleAs:"json",
-			load: function(data) {
-				purchaseStore  = getDataStorefromJSON('id','name', data);		
-				dijit.byId('purId').set('store', purchaseStore);
-				dijit.byId('purId').set('value', currentPurchaseId);
 
-			},
-			error: function(err) {
-			}
-		});
+		var urlGetAllPO = '<?php echo $this->url(array('module'=>'po','controller'=>'index','action'=>'getallpo')); ?>';
+		purchaseStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('purId').set('store', purchaseStore);
+		
+		
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id<=0){
+			branch_id = 0;
+		}
+		
+		objectContentFilter = {'branch_id':branch_id,'purchaseType':'<?php echo $purchaseType;?>','purchaseId':currentPurchaseId};
+		getAllPObyBranch(urlGetAllPO,objectContentFilter);
+		dijit.byId('purId').set('value', currentPurchaseId);
+		
 	}
 	
 	
