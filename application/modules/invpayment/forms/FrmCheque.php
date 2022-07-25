@@ -81,7 +81,7 @@ Class Invpayment_Form_FrmCheque extends Zend_Dojo_Form {
     			'class'=>'fullside',
     			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
 				
-		$_arr = array(1=>$tr->translate("WITHDRAWN"),0=>$tr->translate("PENDING"));
+		$_arr = array(1=>$tr->translate("WITHDRAWN"),0=>$tr->translate("NOT_YET_WITHDRAW"));
     	$statusWithdraw = new Zend_Dojo_Form_Element_FilteringSelect("statusWithdraw");
     	$statusWithdraw->setMultiOptions($_arr);
     	$statusWithdraw->setAttribs(array(
@@ -105,6 +105,12 @@ Class Invpayment_Form_FrmCheque extends Zend_Dojo_Form {
     			'class'=>'fullside ',
     	));
 		
+		$paymentId = new Zend_Form_Element_Hidden('paymentId');
+    	$paymentId->setAttribs(array(
+    			'dojoType'=>'dijit.form.TextBox',
+    			'class'=>'fullside ',
+    	));
+		
 		if(!empty($data)){
 			$branch_id->setValue($data['projectId']);
 			
@@ -116,6 +122,7 @@ Class Invpayment_Form_FrmCheque extends Zend_Dojo_Form {
 			$statusWithdraw->setValue($data['statusWithdraw']);
 			$_status->setValue($data['status']);
 			$id->setValue($data['id']);
+			$paymentId->setValue($data['paymentId']);
 
 		}
 		
@@ -128,7 +135,8 @@ Class Invpayment_Form_FrmCheque extends Zend_Dojo_Form {
 				$noteWithdraw,
 				$statusWithdraw,
 				$_status,
-				$id
+				$id,
+				$paymentId
 		));
 		return $this;
 	}

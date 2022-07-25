@@ -65,26 +65,70 @@ class Invpayment_IssuechequeController extends Zend_Controller_Action {
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
 	}
+	
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$db = new Invpayment_Model_DbTable_DbIssueCheque();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			try {
+			try {		
 				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->editIssueChequePaymentInvoice($_data);
+	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+		}
+		$row = $db->getDataRowIsseueCheque($id);
+		$this->view->row = $row;
+		if ($row['status']==0){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		if (!empty($row['drawUserId'])){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_WITHDRAW'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		
+    	$frm = new Invpayment_Form_FrmCheque();
+    	$frm->FrmCheque($row);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
+	}
+	
+	function getallissuechequeAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$_row =$db->getAllIssueChequeRecord($data);
+			
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			array_unshift($_row,array(
+					'id' => 0,
+					'name' => $tr->translate("SELECT_ISSUECHEQUE"),
+			) );
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
+	
+	function getissueinfoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Invpayment_Model_DbTable_DbIssueCheque();
+			$issueId = empty($data['issueId'])?0:$data['issueId'];
+			$_row =$db->getDataRowIsseueCheque($issueId);
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
 		}
 	}
 }

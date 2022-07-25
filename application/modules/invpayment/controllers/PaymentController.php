@@ -9,7 +9,7 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 	public function indexAction(){
 		//$db = new ();
 		try{
-			$db = new Invpayment_Model_DbTable_DbIssueCheque();
+			$db = new Invpayment_Model_DbTable_DbPayment();
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
 			}
@@ -17,13 +17,13 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 				$search = array(
 					'adv_search'=>'',
 					'branch_id'=>-1,
-					'status'=>-1,
+					'statusAcc'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
 			}
 			$rs_rows=array();
-			$rs_rows= $db->getAllIssueChequePayment($search);//
+			$rs_rows= $db->getAllPayment($search);//
 			
 			
 			$list = new Application_Form_Frmtable();
