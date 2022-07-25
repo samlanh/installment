@@ -1,13 +1,13 @@
 <?php
 
-class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
+class Invpayment_Model_DbTable_DbIssueCheque extends Zend_Db_Table_Abstract
 {
-    protected $_name = 'st_payment';
+    protected $_name = 'st_receive_cheque';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
-    function getAllPayment($search){
+    function getAllIssueChequePayment($search){
     	$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();
 		
@@ -15,136 +15,78 @@ class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
 		
 		$sql="
 			SELECT 
-				pt.id,
-				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = pt.projectId LIMIT 1) AS branch_name,
+				reCh.id,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = reCh.projectId LIMIT 1) AS branch_name,
+				reCh.receiveDate,
+				reCh.receiverName,
 				pt.paymentNo,
-				spp.supplierName,
-				pt.paymentDate,
-				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) AS paymentMethod,
-				(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) AS bankName,
-				pt.accNameAndChequeNo,
-				pt.totalAmount
+				spp.supplierName
+				
 			";
-    	$sql.=$dbGb->caseStatusShowImage("pt.status");
-		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=pt.userId LIMIT 1 ) AS byUser";
-		$sql.=" FROM `st_payment` AS pt
+    	$sql.=$dbGb->caseStatusShowImage("reCh.status");
+		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=reCh.userId LIMIT 1 ) AS byUser";
+		$sql.=" FROM `st_receive_cheque` AS reCh
+					LEFT JOIN `st_payment` AS pt ON pt.id = reCh.paymentId 
 					LEFT JOIN `st_supplier` AS spp ON spp.id = pt.supplierId 
 				WHERE 1 
 		";
 		
     	$where = "";
-    	$from_date =(empty($search['start_date']))? '1': " pt.paymentDate >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " pt.paymentDate <= '".$search['end_date']." 23:59:59'";
+    	$from_date =(empty($search['start_date']))? '1': " reCh.receiveDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " reCh.receiveDate <= '".$search['end_date']." 23:59:59'";
     	
     	$where.= " AND ".$from_date." AND ".$to_date;
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = (trim($search['adv_search']));
+    		$s_where[] = " reCh.receiverName LIKE '%{$s_search}%'";
     		$s_where[] = " pt.paymentNo LIKE '%{$s_search}%'";
-    		$s_where[] = " pt.accNameAndChequeNo LIKE '%{$s_search}%'";
-    		$s_where[] = " pt.purchaseNo LIKE '%{$s_search}%'";
-    		$s_where[] = " spp.totalAmount LIKE '%{$s_search}%'";
-			
-    		$s_where[] = " (SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) LIKE '%{$s_search}%'";
-    		$s_where[] = " (SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) LIKE '%{$s_search}%'";
-			
+    		$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
+    		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	if($search['statusAcc']>-1){
-    		$where.= " AND pt.status = ".$search['statusAcc'];
+    	if($search['status']>-1){
+    		$where.= " AND reCh.status = ".$search['status'];
     	}
     	if(($search['branch_id'])>0){
-    		$where.= " AND pt.projectId = ".$search['branch_id'];
+    		$where.= " AND reCh.projectId = ".$search['branch_id'];
     	}
 		if(!empty($search['supplierId'])){
     		$where.= " AND pt.supplierId = ".$search['supplierId'];
     	}
-		if(!empty($search['paymentMethod'])){
-    		$where.= " AND pt.paymentMethod = ".$search['paymentMethod'];
-    	}
-		if(!empty($search['bankId'])){
-    		$where.= " AND pt.bankId = ".$search['bankId'];
-    	}
-    	$order=' ORDER BY pt.id DESC  ';
-    	$where.=$dbGb->getAccessPermission("pt.projectId");
+    	$order=' ORDER BY reCh.id DESC  ';
+    	$where.=$dbGb->getAccessPermission("reCh.projectId");
     	return $db->fetchAll($sql.$where.$order);
     }
 	
-    function issuePaymentInvoice($_data){
+    function issueChequePaymentInvoice($_data){
     	
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try
     	{
 			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
-			$_data['paymentDate']=$_data['paymentDate'];
-			$paymentNo =$dbGBstock->generatePaymentNo($_data);
 			
 			$_arr=array(
     				'projectId'	  			=> $_data['branch_id'],
-    				'paymentNo'	  			=> $paymentNo,
-    				'supplierId'	    	=> $_data['supplierId'],
-    				'paymentDate'			=> $_data['paymentDate'],
+    				'paymentId'	    		=> $_data['paymentId'],
+    				'receiveDate'			=> $_data['receiveDate'],
 					
-    				'paymentMethod'	  		=> $_data['paymentMethod'],
-    				'bankId'      			=> $_data['bankId'],
-    				'accNameAndChequeNo'    => $_data['accNameAndChequeNo'],
+    				'receiverName'	  		=> $_data['receiverName'],
     				'note'      			=> $_data['note'],
-					
-					'balance'      			=> $_data['balance'],
-					'totalDue'      		=> $_data['totalDue'],
-					'totalAmount'      		=> $_data['totalAmount'],
+    				
     				'createDate'			=> date("Y-m-d H:i:s"),
     				'modifyDate'	  		=> date("Y-m-d H:i:s"),
     				'status'				=> 1,
     				'userId'  				=>$this->getUserId(),
     		);	
-			$this->_name ='st_payment';
-    		$paymentId =  $this->insert($_arr);			
-    		$ids = explode(',', $_data['identity']);
-    		$dueafter=0;
-			if(!empty($_data['identity'])){
-				foreach ($ids as $i){
-					$is_payment =0;
-					$arrFilter = array(
-							'invoiceId'=>$_data['invoiceId'.$i],
-							'projectId'=>$_data['branch_id'],
-					);
-					$rsInvoice = $this->getInvoiceInfo($arrFilter);
-					$paid = (float)$_data['paymentAmount'.$i];
-					if (!empty($rsInvoice)){
-						$dueafter = $rsInvoice['totalAmountExternalAfter']-$paid;
-						if ($dueafter>0){
-							$is_payment=0;
-						}else{
-							$is_payment=1;
-						}
-						
-						// update Invoice Balance
-						$array=array(
-								'isPaid'=>$is_payment,
-								'totalAmountExternalAfter'=>$dueafter,
-						);
-						$where="id=".$_data['invoiceId'.$i]." AND projectId =".$_data['branch_id'];
-						$this->_name="st_invoice";
-						$this->update($array, $where);
-					}
-					
-					$arrs = array(
-							'paymentId'=>$paymentId,
-							'invoiceId'=>$_data['invoiceId'.$i],
-							'dueAmount'=>$_data['dueAmount'.$i],
-							'paymentAmount'=>$_data['paymentAmount'.$i],
-							'remain'=>$_data['remain'.$i],
-					);
-					$this->_name ='st_payment_detail';
-					$this->insert($arrs);
-				}
-			}
+			$this->_name ='st_receive_cheque';
+    		$issueId =  $this->insert($_arr);			
+    		
 			
 			$db->commit();
-			return $paymentId;
+			return $issueId;
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();

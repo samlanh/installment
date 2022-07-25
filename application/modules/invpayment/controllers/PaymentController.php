@@ -9,7 +9,7 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 	public function indexAction(){
 		//$db = new ();
 		try{
-			$db = new Invpayment_Model_DbTable_DbPayment();
+			$db = new Invpayment_Model_DbTable_DbIssueCheque();
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
 			}
@@ -17,13 +17,13 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 				$search = array(
 					'adv_search'=>'',
 					'branch_id'=>-1,
-					'statusAcc'=>-1,
+					'status'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
 			}
 			$rs_rows=array();
-			$rs_rows= $db->getAllPayment($search);//
+			$rs_rows= $db->getAllIssueChequePayment($search);//
 			
 			
 			$list = new Application_Form_Frmtable();
@@ -95,8 +95,6 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 			
 				'paymentId'=>1,
 		);
-		$db_com = new Invpayment_Model_DbTable_DbInvoice();
-		//$db_com->getAllInvoiceBySupplierEdit($arrSearch);
 			
 		$row = $db->getDataRowPayment($id);
 		$this->view->row = $row;
@@ -120,6 +118,34 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 			$data = $this->getRequest()->getPost();
 			$db = new Application_Model_DbTable_DbGlobalStock();
 			$_row =$db->generatePaymentNo($data);
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
+	
+	function getallpaymentAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$_row =$db->getAllPaymentRecord($data);
+			
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			array_unshift($_row,array(
+					'id' => 0,
+					'name' => $tr->translate("SELECT_PAYMENT_NO"),
+			) );
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
+	function getpaymentinfoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Invpayment_Model_DbTable_DbPayment();
+			$paymentId = empty($data['paymentId'])?0:$data['paymentId'];
+			$_row =$db->getDataRowPayment($paymentId);
 			print_r(Zend_Json::encode($_row));
 			exit();
 			

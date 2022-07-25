@@ -199,6 +199,7 @@
 										<td colspan="4" class="center"><?php echo $tr->translate("PAYMENT_INFO");?></td>    
 					                    <td colspan="4" class="center"><?php echo $tr->translate("AMOUNT_INFO");?></td>    
 					                   
+					                    <td colspan="2" class="center"><?php echo $tr->translate("INVOICE_INFO");?></td>    
 					                    <td colspan="3" class="center"><?php echo $tr->translate("OTHER");?></td>    
 					                 
 					                </tr>
@@ -212,6 +213,9 @@
 										<td style="padding:1px;"><?php echo $tr->translate("BANK");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("ACCOUNT_AND_CHEQUE_NO");?></td>	                    
 					                    <td style="padding:1px;"><?php echo $tr->translate("PAID")." ".$tr->translate("CURRENCY_SIGN");?></td>
+										
+					                    <td style="padding:1px;"><?php echo $tr->translate("INVOICE_NO");?></td>
+					                    <td style="padding:1px;"><?php echo $tr->translate("SUPPLIER_INVOICE");?></td>
 										
 					                    <td style="padding:1px;"><?php echo $tr->translate("NOTE");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("STATUS");?></td>
@@ -275,13 +279,61 @@
 									<td><?php echo $rs["accNameAndChequeNo"];?></td>
 									<td class="rightText"><?php echo number_format($rs["totalAmount"],2);?></td>
 									
-									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["note"];?></span></td>
+									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 9px;" ><?php echo $rs["invoiceNoList"];?></span></td>
+									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 9px;" ><?php echo $rs["supplierInvoiceNoList"];?></span></td>
+									
+									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 9px;" ><?php echo $rs["note"];?></span></td>
 									<td class="centerText"><?php echo empty($rs["statusTitle"])?"-":$rs["statusTitle"];?></td>
 									<td class="centerText"><?php echo $rs["byUser"];?></td>
 								</tr>
 				                <?php }?>
 				              
 								
+				            </table>
+							<br />
+				            <table class="totalBottom" style="width:100%;">
+								
+								<tr class="rowHead">
+									<td class="sideCol"></td>
+									<td class="mainCol centerText"><?php echo $tr->translate("CASH");?></td>
+									<td class="blankCol">&nbsp;</td>
+									<td class="mainCol centerText"><?php echo $tr->translate("PAYWITH_BANK");?></td>
+									<td class="blankCol">&nbsp;</td>
+									<td class="mainCol centerText"><?php echo $tr->translate("CHEQUE");?></td>
+									<td class="blankCol">&nbsp;</td>
+									<td class="mainCol centerText"><?php echo $tr->translate("TOTAL");?></td>
+									<td class="sideCol"></td>
+								</tr>
+								<tr>
+									<td class="rightText"><?php echo $tr->translate("CURRENCY_SIGN");?></td>
+									<td class="valueData centerText"><?php echo number_format($totalCash,2);?></td>
+									<td></td>
+									<td class="valueData centerText"><?php echo number_format($totalBank,2);?></td>
+									<td></td>
+									<td class="valueData centerText"><?php echo number_format($totalCheque,2);?></td>
+									<td></td>
+									<td class="valueData totalVal centerText"><?php echo number_format($gTotal,2);?></td>
+								</tr>
+								<tr>
+									<td class="rightText"><?php echo $tr->translate("AMT_RECORD");?></td>
+									<td class="valueData centerText"><?php echo sprintf('%02d',$noCash);?></td>
+									<td></td>
+									<td class="valueData centerText"><?php echo sprintf('%02d',$noBank);?></td>
+									<td></td>
+									<td class="valueData centerText"><?php echo sprintf('%02d',$noCheque);?></td>
+									<td></td>
+									<td class="valueData totalVal centerText"><?php echo sprintf('%02d',count($this->row));?></td>
+								</tr>
+								<tr>
+									<td class="rightText"><?php echo $tr->translate("AMT_VOID_RECORD");?></td>
+									<td class="valueData centerText"><?php echo sprintf('%02d',$voidCash);?></td>
+									<td></td>
+									<td class="valueData centerText"><?php echo sprintf('%02d',$voidBank);?></td>
+									<td></td>
+									<td class="valueData centerText"><?php echo sprintf('%02d',$voidCheque);?></td>
+									<td></td>
+									<td class="valueData totalVal centerText"><?php echo sprintf('%02d',$totalVoid);?></td>
+								</tr>
 				            </table>
 							<br />
 				            <table class="totalBottom" style="width:100%;">

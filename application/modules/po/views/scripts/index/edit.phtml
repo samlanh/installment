@@ -461,10 +461,8 @@ div#request-info .form-group ul li {
 	var urlGetRequestInfo = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'get-requestinfo')); ?>';
 	function getRequestInfo(){
 		requestId = dijit.byId('requestId').get('value');
-		if(requestId==''){
-			dojo.byId("score-info").innerHTML = '';
-			subject ='';
-			filterStudent();
+		if(requestId=='' || requestId==0){
+			dojo.byId("request-info").innerHTML = '';
 			return false;
 		}
 		dojo.xhrPost({
