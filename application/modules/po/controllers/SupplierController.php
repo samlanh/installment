@@ -1,5 +1,6 @@
 <?php
 class Po_SupplierController extends Zend_Controller_Action {
+	const REDIRECT_URL = '/po/supplier';
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -8,6 +9,7 @@ class Po_SupplierController extends Zend_Controller_Action {
 	public function indexAction(){
 		//$db = new ();
 		try{
+			$db = new Po_Model_DbTable_DbSupplier();
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
 			}
@@ -15,63 +17,94 @@ class Po_SupplierController extends Zend_Controller_Action {
 				$search = array(
 					'adv_search'=>'',
 					'branch_id'=>-1,
+					'status'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
 			}
 			$rs_rows=array();
-			//$rs_rows= $db->getAllSentSMS($search);//
+			$rs_rows= $db->getAllSupplier($search);//
+			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+    		$collumns = array("SUPPLIER_NAME","TEL","CONTACT_NAME","CONTACT_NUMBER","RECEIVER_NAME","BANK_NUMBER","EMAIL","SUPPLIER_TYPE","STATUS","BY");
+    		$link=array(
+    				'module'=>'po','controller'=>'supplier','action'=>'edit',
+    		);
+    		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('supplierName'=>$link,'supplierTel'=>$link,));
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
+			
+		$frm_search = new Application_Form_FrmAdvanceSearchStock();
+		$frm = $frm_search->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
 		
 	}
 	function addAction(){
+
+		$db = new Po_Model_DbTable_DbSupplier();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
+				
+				
+				$db->addSupplier($_data);
+	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
+    	$frm = new Po_Form_FrmSupplier();
+    	$frm->FrmSupplier(null);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
+		
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		
+		$db = new Po_Model_DbTable_DbSupplier();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			try {
+			try {		
 				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->addSupplier($_data);
+	    		Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL."/index");
+			exit();
+		}
+		
+		$row = $db->getDataRow($id);
+		$this->view->row = $row;
+
+    	$frm = new Po_Form_FrmSupplier();
+    	$frm->FrmSupplier($row);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
+		
+	}
+	
+	function getSupplierinfoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Po_Model_DbTable_DbSupplier();
+			$id = empty($data['supplierId'])?0:$data['supplierId'];
+			$_row =$db->getDataRow($id);
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
 		}
 	}
 }

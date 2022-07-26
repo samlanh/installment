@@ -23,7 +23,7 @@
 		);
 	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
 ?>
-<title><?php echo $tr->translate("RPT_PAYMENT_LIST");?></title>
+<title><?php echo $tr->translate("RPT_ISSUECHEQUE");?></title>
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
@@ -31,7 +31,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_PAYMENT_LIST');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_ISSUECHEQUE');?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -53,7 +53,7 @@
 						<?php echo $frm->getElement("end_date");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("statusAcc");?>
+						<?php echo $frm->getElement("statusWithdraw");?>
 					</div>
 				</div>
 				<div class="form-group">
@@ -63,9 +63,11 @@
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement("paymentMethod");?>
 					</div>
+					<!--
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("bankId");?>
+						<?php //echo $frm->getElement("bankId");?>
 					</div>
+					-->
 					 <div class="col-md-2 col-sm-2 col-xs-12">
 					 	<?php echo $frm->getElement("btn_search");?>
 					 </div>
@@ -196,29 +198,34 @@
 					                </tr>
 					                <tr class="style" align="center" >
 					                    <td rowspan="2" class="center"><?php echo $tr->translate("NUM");?></td>
-										<td colspan="4" class="center"><?php echo $tr->translate("PAYMENT_INFO");?></td>    
-					                    <td colspan="4" class="center"><?php echo $tr->translate("AMOUNT_INFO");?></td>    
+										<td colspan="3" class="center"><?php echo $tr->translate("ISSUE_CHEQUE_INFO");?></td>    
+					                    <td colspan="6" class="center"><?php echo $tr->translate("AMOUNT_INFO");?></td>    
 					                   
-					                    <td colspan="2" class="center"><?php echo $tr->translate("INVOICE_INFO");?></td>    
-					                    <td colspan="3" class="center"><?php echo $tr->translate("OTHER");?></td>    
+					                    <td colspan="4" class="center"><?php echo $tr->translate("RECEIVED_CHEQUE_INFO");?></td>    
+					                    <td colspan="2" class="center"><?php echo $tr->translate("OTHER");?></td>    
 					                 
 					                </tr>
 					                <tr class="style" align="center">
 					                	<td style="padding:1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>                   
-					                    <td style="padding:1px;"><?php echo $tr->translate("PAYMENT_NO");?></td>
-					                    <td style="padding:1px;"><?php echo $tr->translate("DATE");?></td>
+					                    <td style="padding:1px;"><?php echo $tr->translate("RECEIVED_CHEQUE_NAME");?></td>
+					                    <td style="padding:1px;"><?php echo $tr->translate("ISSUE_CHEQUE_DATE");?></td>
+										
+										
 					                    <td style="padding:1px;"><?php echo $tr->translate("SUPPLIER");?></td>
+										<td style="padding:1px;"><?php echo $tr->translate("PAYMENT_NO");?></td>
+										<td style="padding:1px;"><?php echo $tr->translate("PAYMENT_DATE");?></td>
 										
 										<td style="padding:1px;"><?php echo $tr->translate("PAYMENT_METHOD");?></td>
 										<td style="padding:1px;"><?php echo $tr->translate("BANK");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("ACCOUNT_AND_CHEQUE_NO");?></td>	                    
-					                    <td style="padding:1px;"><?php echo $tr->translate("PAID")." ".$tr->translate("CURRENCY_SIGN");?></td>
 										
-					                    <td style="padding:1px;"><?php echo $tr->translate("INVOICE_NO");?></td>
-					                    <td style="padding:1px;"><?php echo $tr->translate("SUPPLIER_INVOICE");?></td>
-										
+					                    <td style="padding:1px;"><?php echo $tr->translate("WITHDRAW_DATE");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("NOTE");?></td>
-					                    <td style="padding:1px;"><?php echo $tr->translate("STATUS");?></td>
+					                     <td style="padding:1px;"><?php echo $tr->translate("STATUS");?></td>
+										<td style="padding:1px;"><?php echo $tr->translate("BY");?></td>
+										
+					                   
+					                    <td style="padding:1px;"><?php echo $tr->translate("NOTE");?></td>
 					                    <td style="padding:1px;"><?php echo $tr->translate("BY");?></td>
 					                </tr>
 					            </thead>
@@ -242,99 +249,43 @@
 				                <?php 
 				                if(!empty($this->row)) foreach ($this->row as $index => $rs){
 									$class="";
-									if($rs["status"]==0){
-										$class="void";
-										$totalVoid =$totalVoid+1;
-										if($rs["paymentMethod"]==1){
-											$voidCash =$voidCash+1;
-										}elseif($rs["paymentMethod"]==2){
-											$voidBank =$voidBank+1;
-										}elseif($rs["paymentMethod"]==3){
-											$voidCheque =$voidCheque+1;
-										}
-									}else{
-										if($rs["paymentMethod"]==1){
-											$totalCash =$totalCash+$rs["totalAmount"];
-											$noCash =$noCash+1;
-										}elseif($rs["paymentMethod"]==2){
-											$totalBank =$totalBank+$rs["totalAmount"];
-											$noBank =$noBank+1;
-										}elseif($rs["paymentMethod"]==3){
-											$totalCheque =$totalCheque+$rs["totalAmount"];
-											$noCheque =$noCheque+1;
-										}
-										$gTotal =$gTotal+$rs["totalAmount"];
-									}
+									
 								?>
 				                <tr class=" style <?php echo $class;?>" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
 				               		<td style="text-align: center;"><?php echo $i++; ?></td>
 				               		<td><?php echo $rs["branch_name"];?></td>
-				               		<td class="centerText redBold"><?php echo $rs["paymentNo"];?></td>      
-									<td class="centerText"><?php echo date($montFomat,strtotime($rs["paymentDate"]));?></td>
+									<td><?php echo $rs["receiverName"];?></td>
+									<td class="centerText"><?php echo date($montFomat,strtotime($rs["receiveDate"]));?></td>
+									
 									<td><?php echo $rs["supplierName"];?></td>
+				               		<td class="centerText redBold"><?php echo $rs["paymentNo"];?></td>      
 									
 									
+									
+									<td class="centerText"><?php echo date($montFomat,strtotime($rs["paymentDate"]));?></td>
 									<td><?php echo $rs["paymentMethodTitle"];?></td>
 									<td><?php echo $rs["bankName"];?></td>
 									<td><?php echo $rs["accNameAndChequeNo"];?></td>
-									<td class="rightText"><?php echo number_format($rs["totalAmount"],2);?></td>
 									
-									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 9px;" ><?php echo $rs["invoiceNoList"];?></span></td>
-									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 9px;" ><?php echo $rs["supplierInvoiceNoList"];?></span></td>
-									
+									<?php if(!empty($rs["drawUserIdUser"])){?>
+									<td class="centerText"><?php echo date($montFomat,strtotime($rs["withdrawDate"]));?></td>
+									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 9px;" ><?php echo $rs["noteWithdraw"];?></span></td>
+									<td class="centerText"><?php echo empty($rs["statusWithdrawTitle"])?"-":$rs["statusWithdrawTitle"];?></td>
+									<td class="centerText"><?php echo $rs["drawUserIdUser"];?></td>
+									<?php }else{?>
+									<td class="centerText">-</td>
+									<td class="centerText">-</td>
+									<td class="centerText">-</td>
+									<td class="centerText">-</td>
+									<?php }?>
 									<td><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 9px;" ><?php echo $rs["note"];?></span></td>
-									<td class="centerText"><?php echo empty($rs["statusTitle"])?"-":$rs["statusTitle"];?></td>
 									<td class="centerText"><?php echo $rs["byUser"];?></td>
 								</tr>
 				                <?php }?>
 				              
 								
 				            </table>
-							<br />
-				            <table class="totalBottom" style="width:100%;">
-								
-								<tr class="rowHead">
-									<td class="sideCol"></td>
-									<td class="mainCol centerText"><?php echo $tr->translate("CASH");?></td>
-									<td class="blankCol">&nbsp;</td>
-									<td class="mainCol centerText"><?php echo $tr->translate("PAYWITH_BANK");?></td>
-									<td class="blankCol">&nbsp;</td>
-									<td class="mainCol centerText"><?php echo $tr->translate("CHEQUE");?></td>
-									<td class="blankCol">&nbsp;</td>
-									<td class="mainCol centerText"><?php echo $tr->translate("TOTAL");?></td>
-									<td class="sideCol"></td>
-								</tr>
-								<tr>
-									<td class="rightText"><?php echo $tr->translate("CURRENCY_SIGN");?></td>
-									<td class="valueData centerText"><?php echo number_format($totalCash,2);?></td>
-									<td></td>
-									<td class="valueData centerText"><?php echo number_format($totalBank,2);?></td>
-									<td></td>
-									<td class="valueData centerText"><?php echo number_format($totalCheque,2);?></td>
-									<td></td>
-									<td class="valueData totalVal centerText"><?php echo number_format($gTotal,2);?></td>
-								</tr>
-								<tr>
-									<td class="rightText"><?php echo $tr->translate("AMT_RECORD");?></td>
-									<td class="valueData centerText"><?php echo sprintf('%02d',$noCash);?></td>
-									<td></td>
-									<td class="valueData centerText"><?php echo sprintf('%02d',$noBank);?></td>
-									<td></td>
-									<td class="valueData centerText"><?php echo sprintf('%02d',$noCheque);?></td>
-									<td></td>
-									<td class="valueData totalVal centerText"><?php echo sprintf('%02d',count($this->row));?></td>
-								</tr>
-								<tr>
-									<td class="rightText"><?php echo $tr->translate("AMT_VOID_RECORD");?></td>
-									<td class="valueData centerText"><?php echo sprintf('%02d',$voidCash);?></td>
-									<td></td>
-									<td class="valueData centerText"><?php echo sprintf('%02d',$voidBank);?></td>
-									<td></td>
-									<td class="valueData centerText"><?php echo sprintf('%02d',$voidCheque);?></td>
-									<td></td>
-									<td class="valueData totalVal centerText"><?php echo sprintf('%02d',$totalVoid);?></td>
-								</tr>
-				            </table>
+							
 							
 							
 							<br />
@@ -355,7 +306,7 @@
 			 getBranchInfo();
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_PAYMENT_LIST");?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_ISSUECHEQUE");?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
 		});
 		
