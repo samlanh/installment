@@ -23,7 +23,7 @@
 		);
 	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
 ?>
-<title><?php echo $tr->translate("RPT_PAYMENT_LIST");?></title>
+<title><?php echo $tr->translate("RPT_ISSUECHEQUE");?></title>
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
@@ -31,7 +31,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_PAYMENT_LIST');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_ISSUECHEQUE');?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -53,7 +53,7 @@
 						<?php echo $frm->getElement("end_date");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("statusAcc");?>
+						<?php echo $frm->getElement("statusWithdraw");?>
 					</div>
 				</div>
 				<div class="form-group">
@@ -63,9 +63,11 @@
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement("paymentMethod");?>
 					</div>
+					<!--
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("bankId");?>
+						<?php //echo $frm->getElement("bankId");?>
 					</div>
+					-->
 					 <div class="col-md-2 col-sm-2 col-xs-12">
 					 	<?php echo $frm->getElement("btn_search");?>
 					 </div>
@@ -206,7 +208,7 @@
 					                <tr class="style" align="center">
 					                	<td style="padding:1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>                   
 					                    <td style="padding:1px;"><?php echo $tr->translate("RECEIVED_CHEQUE_NAME");?></td>
-					                    <td style="padding:1px;"><?php echo $tr->translate("ISSUE_DATE");?></td>
+					                    <td style="padding:1px;"><?php echo $tr->translate("ISSUE_CHEQUE_DATE");?></td>
 										
 										
 					                    <td style="padding:1px;"><?php echo $tr->translate("SUPPLIER");?></td>
@@ -304,7 +306,7 @@
 			 getBranchInfo();
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_PAYMENT_LIST");?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_ISSUECHEQUE");?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
 		});
 		

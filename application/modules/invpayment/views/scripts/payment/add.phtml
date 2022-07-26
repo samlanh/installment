@@ -115,7 +115,14 @@
 		                	<?php echo $frm->getElement("totalAmount");?>
 		                </div>
 		             </div>
-					
+					<div style="display: none;">
+						<span id="sppReceiverName"></span>
+						<span id="sppBankNumber"></span>
+						<span id="sppAddress"></span>
+						<span id="sppSupplierTel"></span>
+						<span id="sppContactNumber"></span>
+						<span id="sppContactName"></span>
+					</div>
 				</div>
 			</div>
 			<div class="card-box">
@@ -230,6 +237,16 @@ tr.rowData td.invNoCol {
     font-size: 11px;
     color: #c50000;
 }
+tr.rowData td.invNoCol span {
+    color: #02014a;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 12px;
+}
+tr.rowData td small {
+    color: #02014a;
+    font-size: 70%;
+}
 </style>
 <script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
 <script type="text/javascript">
@@ -248,6 +265,7 @@ tr.rowData td.invNoCol {
 			var supplierIdControl = dijit.byId('supplierId');
 			 supplierIdControl.on('change', function(evt) {
 				 getSupplierInvoice();
+				 getSupplierInfo();
 			});
 		});
 
@@ -265,10 +283,17 @@ tr.rowData td.invNoCol {
 		dijit.byId("accNameAndChequeNo").set("readOnly",false);
 		dijit.byId("accNameAndChequeNo").attr("value",'');
 		if(paymentMethod==1){
-			
 			dijit.byId("bankId").set("readOnly",true);
 			dijit.byId("accNameAndChequeNo").attr("value",'N/A');
 			dijit.byId("accNameAndChequeNo").set("readOnly",true);
+		}else{
+			supplierId = dijit.byId('supplierId').get('value');
+			if(supplierId !="" || supplierId!=0){
+				var sppBankNumber = $( '#sppBankNumber').html();
+				var sppReceiverName = $( '#sppReceiverName').html();
+				dijit.byId("accNameAndChequeNo").attr("value",sppReceiverName+' '+sppBankNumber);
+			}
+			
 		}
 	}
 	
@@ -561,5 +586,40 @@ tr.rowData td.invNoCol {
 		dijit.byId('totalPaid').attr('value',payment.toFixed(2));
 		dijit.byId('totalDue').attr('value',due.toFixed(2));
 		dijit.byId('totalAmount').attr('value',parseFloat(amount).toFixed(2));
+	}
+	
+	var urlGetSupplierInfo = '<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'get-supplierinfo')); ?>';
+	function getSupplierInfo(){
+		$("#sppReceiverName").text( "" );
+		$("#sppBankNumber").text( "" );
+		$("#sppAddress").text( "" );
+		$("#sppSupplierTel").text( "" );
+		$("#sppContactNumber").text( "" );
+					
+		supplierId = dijit.byId('supplierId').get('value');
+		if(supplierId=='' || supplierId==0){
+			
+			return false;
+		}
+		dojo.xhrPost({
+			url: urlGetSupplierInfo,
+			content:{
+				'supplierId':supplierId
+				},
+			handleAs:"json",
+			load: function(data) {
+				var string='';
+				if(data!=''){
+					$("#sppReceiverName").text( data.receiverName );
+					$("#sppBankNumber").text( data.bankNumber );
+					$("#sppAddress").text( data.address );
+					$("#sppSupplierTel").text( data.supplierTel );
+					$("#sppContactNumber").text( data.contactNumber );
+				}
+				enablePayment();
+			},
+			error: function(err) {
+			}
+		});
 	}
 </script>

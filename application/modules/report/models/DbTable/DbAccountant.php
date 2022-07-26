@@ -268,6 +268,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
     		$s_search = (trim($search['adv_search']));
     		$s_where[] = " reCh.receiverName LIKE '%{$s_search}%'";
     		$s_where[] = " pt.paymentNo LIKE '%{$s_search}%'";
+    		$s_where[] = " pt.accNameAndChequeNo LIKE '%{$s_search}%'";
     		$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
     		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
@@ -279,7 +280,15 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 		if(!empty($search['supplierId'])){
     		$where.= " AND pt.supplierId = ".$search['supplierId'];
     	}
+		
+		if(!empty($search['paymentMethod'])){
+    		$where.= " AND pt.paymentMethod = ".$search['paymentMethod'];
+    	}
+		if(!empty($search['bankId'])){
+    		$where.= " AND pt.bankId = ".$search['bankId'];
+    	}
 		if(!empty($search['statusWithdraw'])){
+			if($search['statusWithdraw']==2){$search['statusWithdraw']=0;}
     		$where.= " AND reCh.statusWithdraw = ".$search['statusWithdraw'];
     	}
     	$order=' ORDER BY reCh.id DESC  ';
