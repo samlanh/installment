@@ -563,6 +563,11 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND po.projectId=".$_data['branch_id'];
 		}
+		if(isset($_data['processingStatus'])){
+			$sql.=" AND po.processingStatus=".$_data['processingStatus'];
+		}
+		
+		
 		if(!empty($_data['purchaseType'])){//Type Of Purchase
 		
 			$arrStep = array(
@@ -713,8 +718,11 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			if(!empty($data['proId'])){
 				$sql.=" AND pd.proId = ".$data['proId'];
 			}
-			if(!empty($data['isClosed'])){
+			if($data['isClosed']>-1){
 				$sql.=" AND pd.isClosed = ".$data['isClosed'];
+			}
+			if(!empty($data['orderisClosedASC'])){
+				$sql.=" ORDER BY pd.isClosed ASC ";
 			}
 			
 			if(!empty($data['fetchRow'])){
@@ -722,12 +730,12 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			}else{
 				$rs = $db->fetchAll($sql);
 			}
+			
 			return $rs;
 	}
 	function updateStockbyBranchAndProductId($data){
 		$resultStock = $this->getProductInfoByLocation($data);
 		if(!empty($resultStock)){
-			$this->_name='st_product_location';
 			
 			$currentStock = $resultStock['currentQty'];
 			$currentPrice = $resultStock['currentPrice'];
@@ -737,11 +745,23 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$costing = (($currentStock*$currentPrice)+($newQty*$newPrice))/$totalQty;
 			
 			$arr = array(
+					'projectId'=>$data['branch_id'],
+					'productId'=>$data['productId'],
+					'costing'=>$currentPrice,
+					'date'=>date('Y-m-d')
+			);
+			
+			$this->_name='st_product_costing';
+			$this->insert($arr);
+			
+			$arr = array(
 				'qty'=>$totalQty,
 				'costing'=>$costing
 			);
-			$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'] ;
-			$this->insert($arr);
+			
+			$this->_name='st_product_location';
+			$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'];
+			$this->update($arr, $where);
 		}
 	}
 	
@@ -804,7 +824,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND cheQ.projectId=".$_data['branch_id'];
 		}
-		
+		if(!empty($_data['currentIssueId'])){
+			$sql.=" OR cheQ.id=".$_data['currentIssueId'];
+		}
 		$row = $db->fetchAll($sql);
 		return $row;
 		
@@ -817,16 +839,15 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		 * fetchRow=1
 		 * 
 		 */;
-		$poResult = $this->getProductPOInfo($data);
-		print_r($poResult);
-		if(empty($poResult)){
-			$where="id=".$data['purchaseId'];
-			$this->_name="st_purchasing";
-			$arr =array(
-				'processingStatus'=>1
-				);
-			$this->update($arr, $where);
-		}
+				$poResult = $this->getProductPOInfo($data);
+    			if($poResult['isClosed']==1){
+    				$where="id=".$data['purchaseId'];
+    				$this->_name="st_purchasing";
+    				$arr =array(
+    							'processingStatus'=>1
+    				);
+    				$this->update($arr, $where);
+    			}
 	}
 	
 }

@@ -19,11 +19,11 @@ class Invpayment_ReceivechequeController extends Zend_Controller_Action {
 				);
 			}
 			$rs_rows=array();
-			$rs_rows= $db->getAllIssueChequePayment($search);//
+			$rs_rows= $db->getAllReceiveChequePayment($search);//
 			
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","DATE","RECEIVED_CHEQUE_NAME","PAYMENT_NO","SUPPLIER","STATUS","BY");
+    		$collumns = array("PROJECT_NAME","WITHDRAW_DATE","RECEIVED_CHEQUE_NAME","PAYMENT_NO","SUPPLIER","STATUS","BY");
     		$link=array(
     				'module'=>'invpayment','controller'=>'receivecheque','action'=>'edit',
     		);
@@ -45,13 +45,14 @@ class Invpayment_ReceivechequeController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		$row = null;
-		print_r($id);exit();
-		if(empty($id)){
+		
+		if(!empty($id)){
+			
 			$rs = $db->getDataRowIsseueCheque($id);
+			
 			if(!empty($rs)){
 				$row = $rs;
 				$this->view->row = $rs;
-				
 			}
 		}
 		
@@ -81,7 +82,7 @@ class Invpayment_ReceivechequeController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {		
 				
-				$db->editIssueChequePaymentInvoice($_data);
+				$db->receiveChequePaymentInvoice($_data);
 	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -98,10 +99,6 @@ class Invpayment_ReceivechequeController extends Zend_Controller_Action {
 		$this->view->row = $row;
 		if ($row['status']==0){
     		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
-    		exit();
-    	}
-		if (!empty($row['drawUserId'])){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_WITHDRAW'), self::REDIRECT_URL."/index");
     		exit();
     	}
 		
