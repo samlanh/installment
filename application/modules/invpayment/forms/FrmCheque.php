@@ -144,4 +144,70 @@ Class Invpayment_Form_FrmCheque extends Zend_Dojo_Form {
 		));
 		return $this;
 	}
+	
+	public function FrmBank($data=null){
+		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$filter = 'dijit.form.FilteringSelect';
+		$tvalidate = 'dijit.form.ValidationTextBox';
+		$textbox = 'dijit.form.TextBox';
+		$numbertext='dijit.form.NumberTextBox';
+		$tarea = 'dijit.form.Textarea';
+		
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		
+		$dbGB = new Application_Model_DbTable_DbGlobal(); 
+    	$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
+    	
+		
+		$bank_name = new Zend_Dojo_Form_Element_TextBox('bank_name');
+    	$bank_name->setAttribs(array(
+    			'dojoType'=>'dijit.form.ValidationTextBox',
+    			'required'=>'true',
+    			'class'=>'fullside ',
+    			'placeholder'=>$tr->translate("BANK_NAME"),
+    			'missingMessage'=>$tr->translate("Forget Enter Data")
+    	));
+		
+		
+		
+		$note=  new Zend_Form_Element_Textarea('note');
+    	$note->setAttribs(array(
+    			'dojoType'=>'dijit.form.Textarea',
+    			'class'=>'fullside',
+    			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
+			
+		
+		$_arr = array(1=>$tr->translate("ACTIVE"),0=>$tr->translate("DEACTIVE"));
+    	$_status = new Zend_Dojo_Form_Element_FilteringSelect("status");
+    	$_status->setMultiOptions($_arr);
+    	$_status->setAttribs(array(
+    			'dojoType'=>'dijit.form.FilteringSelect',
+    			'required'=>'true',
+    			'missingMessage'=>'Invalid Module!',
+    			'class'=>'fullside height-text',));
+		
+		$id = new Zend_Form_Element_Hidden('id');
+    	$id->setAttribs(array(
+    			'dojoType'=>'dijit.form.TextBox',
+    			'class'=>'fullside ',
+    	));
+	
+
+		if(!empty($data)){
+			
+			$bank_name->setValue($data['bank_name']);
+			$note->setValue($data['note']);
+			$_status->setValue($data['status']);
+			$id->setValue($data['id']);
+		}
+		
+		$this->addElements(array(
+				$bank_name,
+				$note,
+				$_status,
+				$id
+		));
+		return $this;
+	}
 }

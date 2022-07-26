@@ -640,7 +640,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				CONCAT(COALESCE(ba.bank_name,'')) AS name			
 		";
 		$sql.=" FROM `st_bank` AS ba 				
-				WHERE ba.bank_name!='' ";	
+				WHERE ba.bank_name!='' AND ba.status=1 ";	
 		$sql.=" ORDER BY ba.bank_name ASC ";	
 		$row = $db->fetchAll($sql);
 		return $row;
