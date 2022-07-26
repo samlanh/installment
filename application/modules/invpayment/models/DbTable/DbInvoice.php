@@ -27,7 +27,7 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     }
 	function getAllInvoiceBySupplier($data){
     	$db = $this->getAdapter();
-		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
 		$arrStep = array(
 			'keyIndex'=>"inv.ivType",
@@ -38,9 +38,17 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 			
     	$supplier_id = empty($data['supplierId'])?0:$data['supplierId'];
     	$branch_id = $data['branch_id'];
-    	$sql="SELECT inv.* ";
+    	$sql="SELECT inv.*
+					,po.purchaseNo 
+					,po.date AS purchaseDate 
+					,rq.requestNo 
+					,rq.requestNoLetter 
+					,rq.purpose AS requestPurpose 
+			";
     	$sql.=$dbGBstock->invoiceTypeKey($arrStep);
-    	$sql.=" FROM `st_invoice` AS inv  
+    	$sql.=" FROM `st_invoice` AS inv 
+					LEFT JOIN st_purchasing AS po ON po.id = inv.purId 
+					LEFT JOIN st_request_po AS rq ON rq.id = po.requestId 
 				WHERE  inv.status=1 
 						AND inv.isPaid = 0 
 						AND inv.projectId =$branch_id  ";
@@ -81,10 +89,11 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     				<td align="center" style="  padding: 0 10px;"><input  OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
 	    			<td class="textCenter">'.($key+1).'</td>
 	    			<td class="textCenter">&nbsp;
-	    				<label id="billingdatelabel'.$no.'">'.$row['ivTypeTitle'].'<br />'.date("d-M-Y",strtotime($row['receiveIvDate'])).'</label>
+	    				<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($row['receiveIvDate'])).'<br /><small>'.$row['ivTypeTitle'].'</small></label>
 	    				<input type="hidden" dojoType="dijit.form.TextBox" name="invoiceId'.$no.'" id="invoiceId'.$no.'" value="'.$row['id'].'" >
     				</td>
 					<td class="invNoCol">
+						<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span><br />
 	    				<label id="titleInvoice'.$no.'">'.$row['invoiceNo'].'<br />'.$row['supplierInvoiceNo'].'</label>
     				</td>
     			
@@ -117,6 +126,7 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 	function getAllInvoiceBySupplierEdit($data){
     	$db = $this->getAdapter();
 		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$dbPayment = new Invpayment_Model_DbTable_DbPayment();
 		$rsPmtDetail = $dbPayment->getPaymentDetail($data['paymentId']);
     	
@@ -137,9 +147,17 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 			
     	$supplier_id = empty($data['supplierId'])?0:$data['supplierId'];
     	$branch_id = $data['branch_id'];
-    	$sql="SELECT inv.* ";
+    	$sql="SELECT inv.*
+				,po.purchaseNo 
+				,po.date AS purchaseDate 
+				,rq.requestNo 
+				,rq.requestNoLetter 
+				,rq.purpose AS requestPurpose
+		";
     	$sql.=$dbGBstock->invoiceTypeKey($arrStep);
-    	$sql.=" FROM `st_invoice` AS inv  
+    	$sql.=" FROM `st_invoice` AS inv 
+					LEFT JOIN st_purchasing AS po ON po.id = inv.purId 
+					LEFT JOIN st_request_po AS rq ON rq.id = po.requestId 
 				WHERE  inv.status=1 
 						AND inv.isPaid = 0 
 						AND inv.projectId =$branch_id  ";
@@ -202,13 +220,16 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 						<td align="center" style="  padding: 0 10px;"><input checked="checked" OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
 						<td class="textCenter">'.($key+1).'</td>
 						<td class="textCenter">&nbsp;
-							<label id="billingdatelabel'.$no.'">'.$rowPaymentdetail['ivTypeTitle'].'<br />'.date("d-M-Y",strtotime($rowPaymentdetail['receiveIvDate'])).'</label>
+							<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($rowPaymentdetail['receiveIvDate'])).'<br /><small>'.$rowPaymentdetail['ivTypeTitle'].'</small></label>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="paymentId'.$no.'" id="paymentId'.$no.'" value="'.$rowPaymentdetail['paymentId'].'" >
 							<input type="hidden" dojoType="dijit.form.TextBox" name="invoiceId'.$no.'" id="invoiceId'.$no.'" value="'.$rowPaymentdetail['invoiceId'].'" >
 							<input type="hidden" dojoType="dijit.form.TextBox" name="detailid'.$no.'" id="detailid'.$no.'" value="'.$rowPaymentdetail['id'].'" >
 						</td>
 						<td class="invNoCol">
-							<label id="titleInvoice'.$no.'">'.$rowPaymentdetail['invoiceNo'].'<br />'.$rowPaymentdetail['supplierInvoiceNo'].'</label>
+							<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span><br />
+							<label id="titleInvoice'.$no.'">
+							'.$rowPaymentdetail['invoiceNo'].'<br />'.$rowPaymentdetail['supplierInvoiceNo'].'
+							</label>
 						</td>
 					
 						<td class="textCenter">
@@ -229,11 +250,14 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 						<td align="center" style="  padding: 0 10px;"><input  OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
 						<td class="textCenter">'.($key+1).'</td>
 						<td class="textCenter">&nbsp;
-							<label id="billingdatelabel'.$no.'">'.$row['ivTypeTitle'].'<br />'.date("d-M-Y",strtotime($row['receiveIvDate'])).'</label>
+							<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($row['receiveIvDate'])).'<br /><small>'.$row['ivTypeTitle'].'</small></label>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="invoiceId'.$no.'" id="invoiceId'.$no.'" value="'.$row['id'].'" >
 						</td>
 						<td class="invNoCol">
-							<label id="titleInvoice'.$no.'">'.$row['invoiceNo'].'<br />'.$row['supplierInvoiceNo'].'</label>
+							<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span><br />
+							<label id="titleInvoice'.$no.'">
+								'.$row['invoiceNo'].'<br />'.$row['supplierInvoiceNo'].'	
+							</label>
 						</td>
 					
 						<td class="textCenter">
