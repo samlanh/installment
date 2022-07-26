@@ -116,6 +116,16 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		}
     		$receivedId = $this->insert($arr);
     		
+    		$dbb = new Budget_Model_DbTable_DbInitilizeBudget();
+    		
+    		$param = array(
+    			'branch_id'=>$data['branch_id'],
+    			'type'=>1,
+    			'transactionId'=>$receivedId,
+    		);
+    		
+    		$budgetExpenseId = $dbb->addBudgetExpense($param);
+    		
     		$ids = explode(',',$data['identity']);
     		if(!empty($ids)){
     			foreach($ids as $i){
@@ -142,7 +152,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     				
     				$poProduct = $dbs->getProductPOInfo($paramPro);
     				
-    				if(!empty($poProduct)){//update po product detail
+    				if(!empty($poProduct)){//update po product detail and po
     					
     					$currentAfter = $poProduct['qtyAfter'];
     					$Receiveqty = $data['qtyReceive'.$i];
@@ -177,7 +187,17 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     				
     				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty and new costing
     				
-    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],2,$data['qtyReceive'.$i],$id);//movement
+    				
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],2,$data['qtyReceive'.$i],$id);//movement'
+    				
+    				$param = array(
+    						'budgetExpenseId'=>$budgetExpenseId,
+    						'subtransactionId'=>$id,
+    						'productId'=>$data['productId'.$i],
+    						'price'=>$data['price'.$i],
+    						'qty'=>$data['qtyReceive'.$i],
+    						);
+    				$dbb->addBudgetExpenseDetail($param);
     			}
     		}
     		
