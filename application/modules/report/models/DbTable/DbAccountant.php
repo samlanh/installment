@@ -224,4 +224,66 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
       		}
       	}
       }
+	  
+	 function getAllIssueChequePayment($search){
+    	$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		
+		$sql="
+			SELECT 
+				reCh.*,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = reCh.projectId LIMIT 1) AS branch_name,
+				pt.paymentNo,
+				pt.paymentDate,
+				pt.accNameAndChequeNo ,
+				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) AS paymentMethodTitle,
+				(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) AS bankName,
+				(SELECT GROUP_CONCAT((SELECT inv.invoiceNo FROM `st_invoice` AS inv WHERE inv.id = pd.invoiceId LIMIT 1)) FROM `st_payment_detail` AS pd WHERE pd.paymentId =pt.id) AS invoiceNoList,
+				(SELECT GROUP_CONCAT((SELECT inv.supplierInvoiceNo FROM `st_invoice` AS inv WHERE inv.id = pd.invoiceId LIMIT 1)) FROM `st_payment_detail` AS pd WHERE pd.paymentId =pt.id) AS supplierInvoiceNoList,
+				spp.supplierName
+				,CASE
+					WHEN  reCh.statusWithdraw = 0 THEN '".$tr->translate("NOT_YET_WITHDRAW")."'
+					WHEN  reCh.statusWithdraw= 1 THEN '".$tr->translate("WITHDRAWN")."'
+					END AS statusWithdrawTitle 
+				
+			";
+		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=reCh.userId LIMIT 1 ) AS byUser";
+		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=reCh.drawUserId LIMIT 1 ) AS drawUserIdUser";
+		$sql.=" FROM `st_receive_cheque` AS reCh
+					LEFT JOIN `st_payment` AS pt ON pt.id = reCh.paymentId 
+					LEFT JOIN `st_supplier` AS spp ON spp.id = pt.supplierId 
+				WHERE reCh.status=1  
+		";
+		
+    	$where = "";
+    	$from_date =(empty($search['start_date']))? '1': " reCh.receiveDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " reCh.receiveDate <= '".$search['end_date']." 23:59:59'";
+    	
+    	$where.= " AND ".$from_date." AND ".$to_date;
+    	
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = (trim($search['adv_search']));
+    		$s_where[] = " reCh.receiverName LIKE '%{$s_search}%'";
+    		$s_where[] = " pt.paymentNo LIKE '%{$s_search}%'";
+    		$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
+    		
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	
+    	if(($search['branch_id'])>0){
+    		$where.= " AND reCh.projectId = ".$search['branch_id'];
+    	}
+		if(!empty($search['supplierId'])){
+    		$where.= " AND pt.supplierId = ".$search['supplierId'];
+    	}
+		if(!empty($search['statusWithdraw'])){
+    		$where.= " AND reCh.statusWithdraw = ".$search['statusWithdraw'];
+    	}
+    	$order=' ORDER BY reCh.id DESC  ';
+    	$where.=$dbGb->getAccessPermission("reCh.projectId");
+    	return $db->fetchAll($sql.$where.$order);
+    }
 }

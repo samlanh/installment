@@ -117,12 +117,16 @@ Class Invpayment_Form_FrmCheque extends Zend_Dojo_Form {
 			$receiveDate->setValue($data['receiveDate']);
 			$receiverName->setValue($data['receiverName']);
 			$note->setValue($data['note']);
-			$withdrawDate->setValue($data['withdrawDate']);
-			$noteWithdraw->setValue($data['noteWithdraw']);
-			$statusWithdraw->setValue($data['statusWithdraw']);
+			
 			$_status->setValue($data['status']);
 			$id->setValue($data['id']);
 			$paymentId->setValue($data['paymentId']);
+			
+			if(!empty($data['drawUserId'])){
+				$withdrawDate->setValue($data['withdrawDate']);
+				$noteWithdraw->setValue($data['noteWithdraw']);
+				$statusWithdraw->setValue($data['statusWithdraw']);
+			}
 
 		}
 		

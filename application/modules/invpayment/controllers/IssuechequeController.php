@@ -93,7 +93,7 @@ class Invpayment_IssuechequeController extends Zend_Controller_Action {
     		exit();
     	}
 		if (!empty($row['drawUserId'])){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_WITHDRAW'), self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_WITHDRAW_CHEQUE'), self::REDIRECT_URL."/index");
     		exit();
     	}
 		
