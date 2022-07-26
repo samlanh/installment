@@ -225,6 +225,28 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$bankId->setMultiOptions($optBank);
 		$bankId->setValue($request->getParam("bankId"));
 		
+		$statusWithdraw=  new Zend_Dojo_Form_Element_FilteringSelect('statusWithdraw');
+		$statusWithdraw->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_opts = array(
+				0=>$this->tr->translate("STATUS"),
+				1=>$this->tr->translate("WITHDRAWN"),
+				2=>$this->tr->translate("NOT_YET_WITHDRAW"),
+				);
+		$statusWithdraw->setMultiOptions($_opts);
+		$statusWithdraw->setValue($request->getParam("statusWithdraw"));
+		
+		
+		$_arr = array(0=>$this->tr->translate("ALL"),1=>$this->tr->translate("LOCAL"),2=>$this->tr->translate("OVER_SEA"));
+    	$supplierType = new Zend_Dojo_Form_Element_FilteringSelect("supplierType");
+    	$supplierType->setMultiOptions($_arr);
+    	$supplierType->setAttribs(array(
+    			'dojoType'=>'dijit.form.FilteringSelect',
+    			'required'=>'true',
+    			'missingMessage'=>'Invalid Module!',
+    			'class'=>'fullside height-text',)
+		);
+		$supplierType->setValue($request->getParam("supplierType"));
+		
 		$this->addElements(
 			array(
 				$_title,
@@ -244,7 +266,11 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				$supplierId,
 				$purchaseType,				
 				$paymentMethod,				
-				$bankId,				
+				$bankId,	
+				$statusWithdraw,	
+				
+				$supplierType
+				
 			)
 		);
 		return $this;
