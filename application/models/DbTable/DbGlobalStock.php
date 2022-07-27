@@ -99,6 +99,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				p.proCode,
 				p.proName,
 				p.isService,
+				p.budgetId,
 				(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty,
 				(SELECT pl.costing FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentPrice,
 				p.measureLabel AS measureTitle
