@@ -17,6 +17,7 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 					'adv_search'=>'',
 					'branch_id'=>-1,
 					'status'=>-1,
+					'supplierId'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
@@ -30,16 +31,14 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 			}
 			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","DOCUMENT_RECEIV_TYPE","DNORIV_NO","RECEIVE_DATE","SUPPLIER_NAME","PO_NO","REQUEST_NO","USER","STATUS");
+			$collumns = array("BRANCH_NAME","DOCUMENT_RECEIV_TYPE","DNORIV_NO","DELIVER","TRUCK_NUMBER","COUNTER","RECEIVE_DATE","SUPPLIER_NAME","PO_NO","REQUEST_NO","USER","STATUS");
 			$link=array('module'=>'stockinout','controller'=>'index','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
 			
-			
-			$frm = new Application_Form_FrmAdvanceSearch();
-			$frm = $frm->AdvanceSearch();
+			$frm_search = new Application_Form_FrmAdvanceSearchStock();
+			$frm = $frm_search->AdvanceSearch();
 			Application_Model_Decorator::removeAllDecorator($frm);
 			$this->view->frm_search = $frm;
-		
 	}
 	function addAction(){
 		if($this->getRequest()->isPost()){
@@ -47,7 +46,7 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 			try {		
 				$db = new Stockinout_Model_DbTable_DbReceiveStock();
 				$db->addReceiveStock($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/index/add");
+				//Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/index/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
