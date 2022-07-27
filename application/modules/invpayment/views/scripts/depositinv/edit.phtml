@@ -4,6 +4,12 @@
      $frm = $this->frm;
 	 
 	 $purchaseType=2;//Directed PO
+	 $dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+	 $arrStep = array(
+	 		'keyIndex'=> $purchaseType,
+	 		'typeKeyIndex'=>1,
+	 );
+	 $purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
 ?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <title><?php echo $this->tr->translate("EDIT_DEPOSIT_INVOICE")?></title>
@@ -255,6 +261,7 @@ span.deleteRecord:hover {
 			initailizeService();
 			dijit.byId("branch_id").set("readOnly",true);
 			dijit.byId("purId").set("readOnly",true);
+			
 		});
 
 		new dijit.form.FilteringSelect({
@@ -324,9 +331,6 @@ span.deleteRecord:hover {
 		}
 
 		var urlGetAllPO = '<?php echo $this->url(array('module'=>'po','controller'=>'index','action'=>'getallpo')); ?>';
-		purchaseStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
-		dijit.byId('purId').set('store', purchaseStore);
-		
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
@@ -335,7 +339,11 @@ span.deleteRecord:hover {
 		
 		objectContentFilter = {'branch_id':branch_id,'purchaseType':'<?php echo $purchaseType;?>','purchaseId':currentPurchaseId};
 		getAllPObyBranch(urlGetAllPO,objectContentFilter);
-		dijit.byId('purId').set('value', currentPurchaseId);
+		setTimeout(function () {
+			dijit.byId('purId').attr('value',currentPurchaseId);
+		}, 800);
+		
+		
 		
 	}
 	

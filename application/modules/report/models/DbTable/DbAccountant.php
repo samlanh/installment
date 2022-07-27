@@ -295,4 +295,57 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
     	$where.=$dbGb->getAccessPermission("reCh.projectId");
     	return $db->fetchAll($sql.$where.$order);
     }
+	
+	
+	 function getPaymentInvoiceById($paymentId){
+    	$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		$sql="
+			SELECT 
+				pt.*,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = pt.projectId LIMIT 1) AS branch_name,
+				spp.supplierName,
+				spp.contactNumber,
+				spp.address,
+				spp.supplierTel,
+				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) AS paymentMethod,
+				(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) AS bankName
+			";
+		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=pt.userId LIMIT 1 ) AS byUser";
+		$sql.=" FROM `st_payment` AS pt
+					LEFT JOIN `st_supplier` AS spp ON spp.id = pt.supplierId 
+				WHERE pt.id = $paymentId
+		";
+		
+    	$sql.= "";
+    	
+    	
+    	$sql.=$dbGb->getAccessPermission("pt.projectId");
+    	return $db->fetchRow($sql);
+    }
+	function getPaymentDetail($paymentId){
+		$db = $this->getAdapter();
+    	$sql="SELECT pd.*
+					,po.purchaseNo 
+					,po.date AS purchaseDate 
+					
+					,rq.requestNo 
+					,rq.requestNoLetter 
+					,rq.purpose AS requestPurpose 		
+					,inv.invoiceNo AS invoiceNo 		
+					,inv.invoiceDate AS invoiceDate 		
+					,inv.supplierInvoiceNo AS supplierInvoiceNo 		
+					,inv.receiveIvDate AS receiveIvDate
+					,inv.totalAmountExternal AS totalAmountExternal 
+					
+			FROM `st_payment_detail` AS pd 
+				LEFT JOIN `st_invoice` AS inv ON inv.id = pd.invoiceId
+				LEFT JOIN st_purchasing AS po ON po.id = inv.purId 
+				LEFT JOIN st_request_po AS rq ON rq.id = po.requestId 
+			WHERE pd.paymentId =$paymentId ";
+		$sql.=" LIMIT 1 ";
+		return $db->fetchAll($sql);
+	}
+
 }

@@ -1,0 +1,237 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate("VERIFY_DN")); 
+	echo $this->headTitle();
+	$rs = $this->rsRow;
+	print_r($rs);
+?>
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-check" aria-hidden="true"></i> <i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('VERIFY_DN');?></h4>
+			</div>
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+	<div class="card-box">
+		<div id="divPrint" style="border:1px solid #000;">
+			<style>
+				table tr td{
+					padding:0 2px;
+					line-height: 14px;
+					font-family:'khmer os battambang';
+				}
+				table.content-data{
+					border-collapse:collapse;
+					border:1px solid #000; 
+					font-size:12px;
+				}
+				table.content-data thead tr.style {
+				    line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #c1d0f3;
+					font-weight:600;
+				}
+				table.content-data tr td{
+					padding:5px 1px;
+				}
+					
+				div#request-info ul li span.lbl-tt {
+					color: #02014a;
+					width: 50%;
+				    display: block;
+				    float: left;
+				}
+				span.red {
+					color: #f00;
+					font-weight: bold;
+				}
+				div#request-info ul {
+				    margin: 0;
+				    padding: 0px 5px;
+				}
+				div#request-info ul li{
+					display: inline-block;
+					width: 100%;
+					vertical-align: top;
+					line-height:20px;
+					font-size:12px !important;
+				}
+				div#request-info ul li span {line-height: 20px;}
+				</style>
+			<table class="tableTop" width="100%" >
+				<tr>
+					<td colspan="3" align="center">
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' >
+							<?php echo $tr->translate("VERIFY_DN");?>
+						</span>
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' >
+							<br />
+							<?php echo $rs['projectName'];?>
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" style="position:relative;" >
+						<table class="requestInfo">
+							<tr>
+								<td width="40%">
+									<div id="request-info">
+										<ul>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("STATUS");?></span>: <span class="red"><?php echo ($rs['verified']==1)?'<i class="fa fa-check-square" aria-hidden="true"></i> '.$tr->translate("APPROVED"):'<i class="fa fa-times" aria-hidden="true"></i> '.$tr->translate("REJECTED");?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("REQUEST_NO");?></span>: <span><?php echo $rs['requestNo'];?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("REQUEST_DATE");?></span>: <span><?php echo $rs['requestDate'];?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("PO_NO");?></span>: <span><?php echo $rs['purchaseNo'];?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("PO_DATE");?></span>: <span><?php echo $rs['purchaseDate'];?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("SUPPLIER_NAME");?></span>: <span><?php echo $rs['supplierName'];?></span>
+											</li>
+										</ul>
+									</div>
+								</td>
+								<td width="20%">&nbsp;</td>
+								<td width="40%">
+									<div id="request-info">
+										<ul>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("DOCUMENT_RECEIV_TYPE");?></span>: <span class="red"><?php echo $rs['dnType'];?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("RECEIVE_DATE");?></span>: <span class="red"><?php echo $rs['receiveDate'];?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("DNORIV_NO");?></span>: <span class="red"><?php echo $rs['dnNumber'];?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("COUNTER");?></span>: <span><?php echo $rs['staffCounter'];?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("DELIVER");?></span>: <span><?php echo $rs['driverName'];?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("TRUCK_NUMBER");?></span>: <span><?php echo $rs['plateNo'];?></span>
+											</li>
+											<li>
+											</li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+						<table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
+							<thead>
+								<tr class="style" align="center" >
+									<td><?php echo $tr->translate("NUM");?></td>
+									<td style=" min-width: 105px;"><?php echo $tr->translate("PRODUCT_NAME");?></td>
+									<td><?php echo $tr->translate("QTY_RECEIVE");?></td>
+									<td><?php echo $tr->translate("STATUS");?></td>
+									<td><?php echo $tr->translate("NOTE");?></td> 
+								</tr>
+							</thead>
+							 <?php 
+							 $i=0;
+				                if(!empty($this->rowdetail)) foreach ($this->rowdetail as $index => $rs){ $i++;
+								
+								$qtyApproved=$rs["qtyAdjust"];								
+								$classRow="";
+								if($rs["adjustStatus"]==2){
+									$classRow="rejected";
+									$qtyApproved=0;
+								}
+								
+								if($rs["approvedStatus"]==2){
+									$classRow="rejected";
+									$qtyApproved=0;
+								}else if($rs["approvedStatus"]==1){
+									$qtyApproved=$rs["qtyApproved"];
+								}
+								
+								
+							?>
+							<tr class="style <?php echo $classRow; ?>" style=" white-space:nowrap;">
+				               	<td style="text-align: center;"><?php echo $i; ?></td>
+								<td>
+									<?php echo $rs["proCode"]." - ".$rs["proName"];?>
+									
+								</td>
+								<td align="center"><?php echo $rs["categoryTitle"];?></td>
+								<td align="center"><?php echo $rs["qtyRequest"];?></td>
+								<td align="center"><?php echo $qtyApproved;?></td>
+								<td align="center"><?php echo $rs["measureTitle"];?></td>
+								<td align="center"><?php echo date("d-M-Y",strtotime($rs["dateReqStockIn"]));?></td>
+								<td style="font-size: 10px;"><?php echo $rs["note"];?></td>
+							</tr>
+							<?php 
+								}
+							?>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+						<br />
+						<table width="40%" border="1"  cellspacing="0" cellpadding="0">
+							<tr>
+								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;font-size:12px;">
+									<span style="font-weight: 600; display: block;text-decoration: underline;"><?php echo $tr->translate("NOTE");?> ៖</span>
+									<span style="display: block; font-size:11px;"><?php echo $rs["note"];?><span>
+								</td>
+							</tr>
+						</table>
+						<br />
+						<table width="100%" cellspacing="0" cellpadding="0">
+							<tr>
+								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;font-size:12px;">
+									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("VERIFIED_BY");?> </span><br />
+									<?php echo $rs['verifiedBy'];?>
+								</td>
+								<td style="width:25%;">
+								</td>
+								<td style="width:25%;">
+								</td>
+								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;font-size:12px;">
+									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("PREPARED_BY");?> </span><br />
+									<?php echo $rs['user_name'];?>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+			<form id='frm_add' action="" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
+					 <?php $link = $this->url(array('module'=>'stockinout','controller'=>'index','action'=>'index'),null, true);?>
+				<input onclick="window.open('<?php echo $link;?>','_self');" tabindex="1" label="<?php echo $tr->translate('GO_BACK');?>"  dojoType="dijit.form.Button" name="save_close"
+					 iconClass="dijitEditorIcon dijitEditorIconUndo" /> 
+				<input type="submit" <?php if($rs['verified']==1)echo'Disabled="Disabled"';?> value="SAVE_NEW" tabindex="2" label="<?php echo $tr->translate('VERIFYED');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
+					 iconClass="dijitEditorIcon dijitEditorIconWikiword"/> 
+				<input type="button" onclick="doPrint();"  value="SAVE_NEW" tabindex="3" label="<?php echo $tr->translate('PRINT');?>"  dojoType="dijit.form.Button" name="save_new"
+					iconClass="dijitEditorIcon dijitEditorIconPrint"/> 
+					<input type="text" name="purchaseId" value="<?php echo $rs['id'];?>" />
+			</form>
+    	</div>
+	</div>
+</div>
+<script>
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+}
+</script>

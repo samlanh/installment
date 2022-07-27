@@ -306,8 +306,30 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     }
     function getDataRow($recordId){
     	$db = $this->getAdapter();
-    	
     	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
+    	return $db->fetchRow($sql);
+    }
+    function getDNById($recordId){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT r.id,
+				(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
+				(SELECT name_kh FROM `st_view` WHERE type=4 AND key_code=r.dnType LIMIT 1) dnType,
+				r.dnNumber,
+				r.plateNo,
+				r.driverName,
+				r.staffCounter,
+				r.note,
+				r.verified,
+				DATE_FORMAT(r.receiveDate,'%d-%m-%Y') receiveDate,
+				(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
+				(SELECT purchaseNo FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseNo,
+				(SELECT DATE_FORMAT(createDate,'%d-%m-%Y') FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseDate,
+				(SELECT requestNo FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) AS requestNo,
+				(SELECT DATE_FORMAT(createDate,'%d-%m-%Y') FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) requestDate,
+				(SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
+				(SELECT first_name FROM rms_users WHERE id=r.verifiedBy LIMIT 1 ) AS verifiedBy
+				
+			FROM `st_receive_stock` r WHERE r.id=".$recordId;
     	return $db->fetchRow($sql);
     }
    

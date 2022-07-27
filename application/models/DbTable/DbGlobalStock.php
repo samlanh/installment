@@ -834,11 +834,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	}
 	function updatePoStatusisClose($data){
 		//if all po detail of product close update po to close also
-		/*$data= array(
-		 * purchaseId,
-		 * isClosed,
-		 * fetchRow=1
-		 * 
+		/*$data= array(* purchaseId,* isClosed,* fetchRow=1)
 		 */;
 				$poResult = $this->getProductPOInfo($data);
     			if($poResult['isClosed']==1){
@@ -849,6 +845,30 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
     				);
     				$this->update($arr, $where);
     			}
+	}
+	function getViewById($type,$is_opt=null){
+		$session_lang=new Zend_Session_Namespace('lang');
+		$lang_id=$session_lang->lang_id;
+		$str = 'name_en';
+		if($lang_id==1){
+			$str = 'name_kh';
+		}
+		
+		$db=$this->getAdapter();
+		$sql="SELECT key_code AS id,$str AS name 
+				FROM st_view 
+					WHERE `type`=$type AND `status`=1 ";
+		$rows = $db->fetchAll($sql);
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$options= array(-1=>$tr->translate("CHOOSE"));
+		if($is_opt!=null){
+			if(!empty($rows))foreach($rows AS $row){
+				$options[$row['id']]=$row['name'];
+			}
+		}else{
+			return $rows;
+		}
+		return $options;
 	}
 	
 }
