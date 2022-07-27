@@ -155,6 +155,27 @@ class Report_StockmgController extends Zend_Controller_Action {
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
 	
+	public function paymentLetterAction(){
+		try{
+			$db = new Report_Model_DbTable_DbAccountant();
+			$id=$this->getRequest()->getParam('id');
+    		$id = empty($id)?0:$id;
+			$row = $db->getPaymentInvoiceById($id);
+			if (empty($row)){
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/stockmg/request");
+				exit();
+			}
+			$this->view->row = $row;
+			$this->view->rowdetail = $db->getPaymentDetail($id);
+		
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
+		
+		
+	}
+	
 	public function rptClosingPaymentAction(){
 		try{
 			if($this->getRequest()->isPost()){
