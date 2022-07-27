@@ -12,6 +12,9 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
 				(SELECT name_kh FROM `st_view` WHERE type=4 AND key_code=r.dnType LIMIT 1) dnType,
 				r.dnNumber,
+				r.plateNo,
+				r.driverName,
+				r.staffCounter,
 				r.receiveDate,
 				(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
 				(SELECT purchaseNo FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseNo,
@@ -29,12 +32,25 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
-    		$s_search = (trim($search['adv_search']));
-    		//$s_where[] = " sms.contance LIKE '%{$s_search}%'";
+    		$s_search = addslashes((trim($search['adv_search'])));
+    		$s_where[] = " r.dnNumber LIKE '%{$s_search}%'";
+    		$s_where[] = " r.driverName LIKE '%{$s_search}%'";
+    		$s_where[] = " r.plateNo LIKE '%{$s_search}%'";
+    		$s_where[] = " r.staffCounter LIKE '%{$s_search}%'";
+    		
+    		$s_where[] = " (SELECT p.id FROM `st_purchasing` AS p WHERE p.id=r.poId AND purchaseNo LIKE '%{$s_search}%')";
+    		$s_where[] = " (SELECT s.id FROM `st_request_po` AS s WHERE s.id=r.requestId AND requestNo LIKE '%{$s_search}%')";
+    		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	if($search['status']>-1){
     		$where.= " AND r.status = ".$search['status'];
+    	}
+    	if($search['branch_id']>0){
+    		$where.= " AND r.projectId = ".$search['branch_id'];
+    	}
+    	if($search['supplierId']>0){
+    		$where.= " AND r.supplierId = ".$search['supplierId'];
     	}
     	
     	$order=' ORDER BY r.id DESC  ';
@@ -51,6 +67,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		$dbs = new Application_Model_DbTable_DbGlobalStock();
     		$param = array(
     				'fetchRow'=>1,
+    				'isClosed'=>-1,
     				'purchaseId'=>$data['purId']
     				);
     		$rowData = $dbs->getProductPOInfo($param);
@@ -118,6 +135,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     				
     				$paramPro = array(
     						'fetchRow'=>1,
+    						'isClosed'=>-1,
     						'purchaseId'=>$data['purId'],
     						'proId'=>$data['productId'.$i]
     				);
@@ -142,14 +160,16 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     					
     					$paramPro = array(
     							'fetchRow'=>1,
-    							'isClosed'=>1,
+    							'isClosed'=>-1,
+    							'orderisClosedASC'=>1,
     							'purchaseId'=>$data['purId'],
     					);
     					$dbs->updatePoStatusisClose($paramPro);//update PO Status
+    					
     				}
     				
     				$param = array(
-    						'branch_id'	=> $data['branch_idss'],
+    						'branch_id'	=> $data['branch_id'],
     						'productId'	=> $data['productId'.$i],
     						'EntyQty'	=> $data['qtyReceive'.$i],
     						'EntyPrice'	=> $data['price'.$i]
@@ -165,7 +185,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	}catch(Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add");
+    		//Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add");
     	}
     }
     function checkPOStatus($poId){
@@ -201,7 +221,8 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	$rs = $db->getProductPOInfo($data);
     
     	$string='';
-    	$no = 1;
+    	//$no = 1;
+    	$no = $data['keyindex'];
     	$identity='';
     	
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -225,7 +246,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 			    		<td align="center" style="padding: 0 10px;"><input OnChange="CheckAllTotal('.$no.')" style="vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
 			    		<td class="textCenter">'.($key+1).'</td>
 			    		<td class="textCenter">'.$row['proName'].'('.$row['measureLabel'].')</td>
-		    			<td><input type="text" class="fullside" readonly dojoType="dijit.form.NumberTextBox" required="required" name="qtyPO'.$no.'" id="qtyPO'.$no.'" value="'.$row['qty'].'" style="text-align: center;" >
+		    			<td><input type="text" class="fullside" readonly dojoType="dijit.form.NumberTextBox" required="required" name="qtyPO'.$no.'"  value="'.$row['qty'].'" style="text-align: center;" >
 		    				<input type="hidden" class="fullside" name="productId'.$no.'" id="productId'.$no.'" value="'.$row['proId'].'" style="text-align: center;" >
 		    				<input type="hidden" class="fullside" name="price'.$no.'" id="price'.$no.'" value="'.$row['unitPrice'].'" style="text-align: center;" >
 		    			</td>
@@ -245,6 +266,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 	    		$no++;
 	    	}
 	    	$data['fetchRow']=1;
+	    	$data['isClosed']=-1;
 	    	$rowData = $db->getProductPOInfo($data);
 	    	
 	    	$strPOInfo = '
@@ -259,7 +281,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
                    		</ul>
              	</div>';
     	
-    	$array = array('stringrow'=>$string,'POInfoDataBlog'=>$strPOInfo,'identity'=>$identity);
+    	$array = array('stringrow'=>$string,'POInfoDataBlog'=>$strPOInfo,'keyindex'=>$no,'identity'=>$identity);
     	return $array;
     }
     function getDataRow($recordId){
