@@ -292,5 +292,110 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 					'gTotalBalance'=>$gTotalBalance);
     	return $array;
     }
+	
+	
+	
+	function getDnDetailTotalByPurchase($data){
+		
+		$db = $this->getAdapter();
+		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	
+    	$purchaseId = empty($data['purchaseId'])?0:$data['purchaseId'];
+    	$branchId = $data['branch_id'];
+    	$sql="SELECT rstd.*
+					,p.proName AS productName
+					,p.measureLabel AS measureTitle
+					,COALESCE(SUM(rstd.qtyReceive),0) AS totalQtyReceive,
+					COALESCE(SUM(rstd.qtyAfterReceive),0) AS totalQtyAfterReceive,
+					COALESCE(SUM(rstd.subTotal),0) AS totalSubTotal
+					,pod.qty AS purchaseQty
+					,pod.unitPrice AS purchaseUnitPrice
+					,pod.discountAmount AS purchaseDiscountAmount
+					,pod.discountPercent AS purchaseDiscountPercent
+					,pod.subTotal AS purchaseSubTotal
+		";
+    	$sql.=" FROM `st_receive_stock_detail` AS rstd
+					JOIN `st_receive_stock` AS rst ON rst.id = rstd.receiveId 
+					LEFT JOIN `st_product` AS p ON p.proId = rstd.proId
+					LEFT JOIN `st_purchasing_detail` AS pod ON rst.poId = pod.purchaseId AND pod.proId = rstd.proId 
+		";
+    	$sql.=" WHERE rst.status =1  ";
+    	//$sql.=" AND rst.verified =1 ";
+    	$sql.=" AND rst.projectId =$branchId ";
+    	$sql.=" AND rst.poId =$purchaseId ";
+	
+		
+		$sql.=" GROUP BY rstd.proId ORDER BY rstd.isClosed DESC,rstd.proId ASC ";
+    	$rs = $db->fetchAll($sql);
+		
+		$string='';
+    	$no = $data['keyindex'];
+    	$identity='';
+		$identityEdit='';
+    	$baseurl= Zend_Controller_Front::getInstance()->getBaseUrl();
+		
+		$gTotalInternal = 0;
+		$gTotalExternal = 0;
+    	if(!empty($rs)){
+    		foreach ($rs as $key => $row){
+    			if (empty($identity)){
+    				$identity=$no;
+    			}else{$identity=$identity.",".$no;
+    			}
+				
+				$classRowBg = "odd";
+				if(($key%2)==0){
+				$classRowBg = "regurlar";
+				}
+				
+				$gTotalInternal = $gTotalInternal+$row['purchaseSubTotal'];
+				$gTotalExternal = $gTotalExternal+$row['totalSubTotal'];
+			
+    			$string.='
+    			<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
+	    			<td class="textCenter">'.($key+1).'</td>
+	    			<td class="textCenter">&nbsp;
+	    				<label id="billingdatelabel'.$no.'">'.$row['productName'].'('.$row['measureTitle'].')</label>
+	    				<input type="hidden" dojoType="dijit.form.TextBox" name="proId'.$no.'" id="proId'.$no.'" value="'.$row['proId'].'" >
+    				</td>
+					<td class="invNoCol">
+						<span>'.$row['purchaseQty'].'</span><br />
+    				</td>
+					<td class="textCenter invNoCol">
+						<span>'.number_format($row['purchaseUnitPrice'],2).'</span><br />
+    				</td>
+					<td class="textCenter invNoCol">
+						<span>'.number_format($row['purchaseDiscountAmount'],2).'</span><br />
+    				</td>
+					<td class="textCenter invNoCol">
+						<span>'.number_format($row['purchaseSubTotal'],2).'</span><br />
+    				</td>
+					<td class="textCenter">
+						<input readOnly type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="totalQtyReceive'.$no.'" id="totalQtyReceive'.$no.'" value="'.$row['totalQtyReceive'].'" style="text-align: center;" >
+					</td>
+					<td class="textCenter">
+						<input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="discountAmount'.$no.'" id="discountAmount'.$no.'" value="0" style="text-align: center;" >
+					</td>
+					<td><input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="price'.$no.'" id="price'.$no.'" value="'.$row['price'].'" style="text-align: center;" ></td>
+					<td><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="subTotal'.$no.'" id="subTotal'.$no.'" value="'.$row['totalSubTotal'].'" style="text-align: center;" ></td>
+				</tr>
+    			';$no++;
+    		}
+    	}else{
+    		$no++;
+    	}
+		
+		$array = array(
+					'stringrow'=>$string,
+					'keyindex'=>$no,
+					'identity'=>$identity,
+					'identitycheck'=>$identityEdit,
+					'gTotalInternal'=>$gTotalInternal,
+					'gTotalExternal'=>$gTotalExternal,
+					
+					);
+    	return $array;
+	}
    
 }
