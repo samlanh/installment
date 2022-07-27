@@ -8,6 +8,233 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     	return $session_user->user_id;
     }
     
+	function issueInvoice($data){
+    	
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try
+    	{
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$data['receiveIvDate']=$data['receiveIvDate'];
+			$invoiceNo =$dbGBstock->generateInvoiceNo($data);
+
+			$arrStep = array(
+				'keyIndex'=>$data['ivType'],
+				'typeKeyIndex'=>1,
+			);
+			$ivType = $dbGBstock->invoiceTypeKey($arrStep);
+			
+			$dnId="";
+			if(!empty($data['dnIdentity'])){
+				$dnIdentityIds = explode(',', $data['dnIdentity']);
+				foreach ($dnIdentityIds as $i){
+					if(empty($dnId)){
+						$dnId = empty($data['deliveryId'.$i])?"":$data['deliveryId'.$i];
+					}else{
+						$dnId = empty($data['deliveryId'.$i])?$dnId:$dnId.",".$data['deliveryId'.$i];
+					}
+				}
+			}
+    		$arr = array(
+    				'projectId'			=>$data['branch_id'],
+    				'ivType'			=>$ivType,
+    				'invoiceNo'			=>$invoiceNo,
+    				'dnId'				=>$dnId,
+    				'supplierId'		=>$data['supplierId'],
+					
+    				'invoiceDate'				=>$data['invoiceDate'],
+    				'supplierInvoiceNo'			=>$data['supplierInvoiceNo'],
+    				'receiveIvDate'				=>$data['receiveIvDate'],
+    				'purId'						=>$data['purId'],
+    				'note'						=>$data['note'],
+					
+					'totalInternal'				=>$data['totalInternal'],
+    				'totalAmount'				=>$data['totalAmount'],
+					
+    				'totalExternal'				=>$data['totalExternal'],
+    				'totalAmountExternal'		=>$data['totalAmountExternal'],
+    				'totalAmountExternalAfter'	=>$data['totalAmountExternal'],
+    				
+					'status'			=>1,
+    				'createDate'		=>date("Y-m-d H:i:s"),
+    				'modifyDate'		=>date("Y-m-d H:i:s"),
+    				'userId'			=>$this->getUserId(),
+    				
+    				);
+    		$this->_name='st_invoice';
+    		$id = $this->insert($arr);
+			
+					
+			if(!empty($data['identity'])){
+				$ids = explode(',', $data['identity']);
+				foreach ($ids as $i){
+					
+					$arr = array(
+							'invId'		=>$id,
+							'type'				=>$data['type'.$i],
+							'proId'				=>$data['proId'.$i],
+							
+							'qtyPo'				=>$data['purchaseQty'.$i],
+							'unitPrice'			=>$data['purchaseUnitPrice'.$i],
+							'discountAmount'	=>$data['purchaseDiscountAmount'.$i],
+							'total'				=>$data['purchaseSubTotal'.$i],
+							
+							'totalQtyReceive'			=>$data['totalQtyReceive'.$i],
+							'unitPriceReceive'			=>$data['price'.$i],
+							'totalReceiveDiscount'		=>$data['discountAmount'.$i],
+							'totalReceive'				=>$data['subTotal'.$i],
+							
+						);
+					$this->_name='st_invoice_detail';	
+					$this->insert($arr);
+				}
+    		}
+			
+			if(!empty($data['identityService'])){
+				$ids = explode(',', $data['identityService']);
+				foreach ($ids as $i){
+					$arr = array(
+							'invId'				=>$id,
+							'type'				=>$data['isService'.$i],
+							'proId'				=>$data['serviceId'.$i],
+								
+							'qtyPo'				=>1,
+							'discountAmount'	=>0,
+							'unitPrice'			=>$data['totalServiceInternal'.$i],
+							'total'				=>$data['totalServiceInternal'.$i],
+							
+							//received
+							'totalQtyReceive'			=>1,
+							'unitPriceReceive'			=>$data['totalService'.$i],
+							'totalReceiveDiscount'		=>0,
+							'totalReceive'				=>$data['totalService'.$i],
+							
+						);
+					$this->_name='st_invoice_detail';	
+					$this->insert($arr);
+				}
+    		}
+			
+    		$db->commit();
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		$db->rollBack();
+    	}
+    }
+	
+	function editIssueInvoice($data){
+    	
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try
+    	{
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			
+			
+			$dnId="";
+			if(!empty($data['dnIdentity'])){
+				$dnIdentityIds = explode(',', $data['dnIdentity']);
+				foreach ($dnIdentityIds as $i){
+					if(empty($dnId)){
+						$dnId = empty($data['deliveryId'.$i])?"":$data['deliveryId'.$i];
+					}else{
+						$dnId = empty($data['deliveryId'.$i])?$dnId:$dnId.",".$data['deliveryId'.$i];
+					}
+				}
+			}
+    		$arr = array(
+    				
+    				'dnId'				=>$dnId,
+    				'supplierId'		=>$data['supplierId'],
+					
+    				'invoiceDate'				=>$data['invoiceDate'],
+    				'supplierInvoiceNo'			=>$data['supplierInvoiceNo'],
+    				'receiveIvDate'				=>$data['receiveIvDate'],
+    				'purId'						=>$data['purId'],
+    				'note'						=>$data['note'],
+					
+					'totalInternal'				=>$data['totalInternal'],
+    				'totalAmount'				=>$data['totalAmount'],
+					
+    				'totalExternal'				=>$data['totalExternal'],
+    				'totalAmountExternal'		=>$data['totalAmountExternal'],
+    				'totalAmountExternalAfter'	=>$data['totalAmountExternal'],
+    				
+					'status'			=>$data['status'],
+    				'modifyDate'		=>date("Y-m-d H:i:s"),
+    				'userId'			=>$this->getUserId(),
+    				
+    				);
+					
+			$id = $data['id'];
+    		$this->_name='st_invoice';
+			$where = 'id = '.$id;
+			$this->update($arr, $where);
+			
+			if($data['status']==1){
+				$this->_name='st_invoice_detail';
+				$whereDl2 = 'invId = '.$id;
+				$this->delete($whereDl2);
+			
+				if(!empty($data['identity'])){
+					$ids = explode(',', $data['identity']);
+					foreach ($ids as $i){
+						
+						$arr = array(
+								'invId'		=>$id,
+								'type'				=>$data['type'.$i],
+								'proId'				=>$data['proId'.$i],
+								
+								'qtyPo'				=>$data['purchaseQty'.$i],
+								'unitPrice'			=>$data['purchaseUnitPrice'.$i],
+								'discountAmount'	=>$data['purchaseDiscountAmount'.$i],
+								'total'				=>$data['purchaseSubTotal'.$i],
+								
+								'totalQtyReceive'			=>$data['totalQtyReceive'.$i],
+								'unitPriceReceive'			=>$data['price'.$i],
+								'totalReceiveDiscount'		=>$data['discountAmount'.$i],
+								'totalReceive'				=>$data['subTotal'.$i],
+								
+							);
+						$this->_name='st_invoice_detail';	
+						$this->insert($arr);
+					}
+				}
+				
+				if(!empty($data['identityService'])){
+					$ids = explode(',', $data['identityService']);
+					foreach ($ids as $i){
+						$arr = array(
+								'invId'				=>$id,
+								'type'				=>$data['isService'.$i],
+								'proId'				=>$data['serviceId'.$i],
+									
+								'qtyPo'				=>1,
+								'discountAmount'	=>0,
+								'unitPrice'			=>$data['totalServiceInternal'.$i],
+								'total'				=>$data['totalServiceInternal'.$i],
+								
+								//received
+								'totalQtyReceive'			=>1,
+								'unitPriceReceive'			=>$data['totalService'.$i],
+								'totalReceiveDiscount'		=>0,
+								'totalReceive'				=>$data['totalService'.$i],
+								
+							);
+						$this->_name='st_invoice_detail';	
+						$this->insert($arr);
+					}
+				}
+			}				
+			
+			
+    		$db->commit();
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		$db->rollBack();
+    	}
+    }
+	
 	
     function getDataRow($recordId){
     	$db = $this->getAdapter();
@@ -18,6 +245,30 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 			$sql.=" LIMIT 1 ";
     	return $db->fetchRow($sql);
     }
+	function getInvoiceDetailById($data){
+		$recordId = empty($data['id'])?0:$data['id'];
+		$isService = empty($data['isService'])?0:$data['isService'];
+		$db = $this->getAdapter();
+		$sql=" 	SELECT 
+					invd.*,p.proCode,
+					p.proName,
+					p.isService AS serviceOrProType,
+					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= inv.projectId LIMIT 1) AS currentQty,
+					p.measureLabel AS measureTitle
+					";
+			
+		$sql.="		FROM 
+					`st_invoice_detail` as invd
+					JOIN `st_invoice` AS inv ON inv.id = invd.invId
+					LEFT JOIN `st_product` AS p  ON p.proId = invd.proId 
+			";
+		$sql.=" WHERE invd.invId = $recordId";
+		if(empty($data['getAllRecord'])){
+			$sql.=" AND invd.type = $isService ";
+		}
+		
+		return $db->fetchAll($sql);
+	}
 	
 	
 	function getCurrentBalanceBySupplier($data){
@@ -293,8 +544,157 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     	return $array;
     }
 	
+	function getDnIDInInvoice($data){
+		$db = $this->getAdapter();
+		$purchaseId = empty($data['purchaseId'])?0:$data['purchaseId'];
+    	$branchId = $data['branch_id'];
+		$sql=" 
+		SELECT 
+			GROUP_CONCAT(inv.dnId) FROM `st_invoice` AS inv 
+			WHERE inv.status=1
+		";
+		if(!empty($data['currentInvoiceId'])){
+			$sql.=" AND inv.id!=".$data['currentInvoiceId'];
+		}
+		$sql.=" AND inv.projectId =$branchId ";
+		$sql.=" AND inv.purId =$purchaseId ";
+		$rs = $db->fetchOne($sql);
+		return $rs;
+	}
 	
+	function getDnList($data){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	
+    	$purchaseId = empty($data['purchaseId'])?0:$data['purchaseId'];
+    	$branchId = $data['branch_id'];
+		
+		$sql="
+			SELECT rst.*
+				,rq.requestNo
+				,rq.requestNoLetter
+				,rq.date AS requestDate
+				,rq.purpose AS requestPurpose
+				,po.purchaseNo AS purchaseNo
+				,po.date AS purchaseDate
+		";
+		$sql.="
+			FROM st_receive_stock AS rst 
+				JOIN `st_purchasing`AS po ON po.id = rst.poId 
+				LEFT JOIN `st_request_po` AS rq ON rq.id = po.requestId 
+		";
+		$sql.=" WHERE rst.status=1 ";
+		$sql.=" AND rst.verified =1 ";
+		$sql.=" AND rst.projectId =$branchId ";
+    	$sql.=" AND rst.poId =$purchaseId ";
+		
+		$DNListFromInvoice = $this->getDnIDInInvoice($data);
+		if(!empty($DNListFromInvoice)){ //For Only Available DN Of Purchase To Make Invoice
+			$sql.=" AND rst.id NOT IN ($DNListFromInvoice) ";
+		}
+		
+		$rs = $db->fetchAll($sql);
+		
+		
+		$string='';
+    	$no = $data['dnKeyIndex'];
+    	$dnIdentity='';
+		$dnIdentityChecked='';
+    	$baseurl= Zend_Controller_Front::getInstance()->getBaseUrl();
+		
+		$gTotalInternal = 0;
+		$gTotalExternal = 0;
+		$string.='<ul class="listDn">';
+    	if(!empty($rs)){
+    		foreach ($rs as $key => $row){
+    			if (empty($dnIdentity)){
+    				$dnIdentity=$no;
+    			}else{$dnIdentity=$dnIdentity.",".$no;
+    			}
+				if(!empty($data['dnId'])){
+					$currentInvoice = $data['dnId'];
+					if(!empty($currentInvoice)){
+						$dnIds = explode(",",$currentInvoice);
+						$true=0;
+						foreach ($dnIds as $iid){
+							if($iid==$row['id']){
+								if (empty($dnIdentityChecked)){
+									$dnIdentityChecked=$no;
+								}else{$dnIdentityChecked=$dnIdentityChecked.",".$no;
+								
+								}
+								$true=1;
+								$string.='
+									<li>
+										<span  class="dnNumber"><input checked="checked" OnChange="checkAllDn('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/> '.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+										<small class="poNumber">'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].' '.date("d-m-Y",strtotime($row['purchaseDate'])).'</small>
+										<small class="requestNumber">'.$tr->translate("REQUEST_NO").' : '.$row['requestNo'].' '.date("d-m-Y",strtotime($row['requestDate'])).'</small>
+										<input type="hidden" dojoType="dijit.form.TextBox" name="deliveryId'.$no.'" id="deliveryId'.$no.'" value="'.$row['id'].'" >
+									</li>
+								';
+								break;
+							}
+						}
+						if($true==0){
+							$string.='
+								<li>
+									<span  class="dnNumber"><input  OnChange="checkAllDn('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/> '.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+									<small class="poNumber">'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].' '.date("d-m-Y",strtotime($row['purchaseDate'])).'</small>
+									<small class="requestNumber">'.$tr->translate("REQUEST_NO").' : '.$row['requestNo'].' '.date("d-m-Y",strtotime($row['requestDate'])).'</small>
+									<input type="hidden" dojoType="dijit.form.TextBox" name="deliveryId'.$no.'" id="deliveryId'.$no.'" value="'.$row['id'].'" >
+								</li>
+							';
+						}
+					}else{
+						$string.='
+							<li>
+								<span  class="dnNumber"><input  OnChange="checkAllDn('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/> '.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+								<small class="poNumber">'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].' '.date("d-m-Y",strtotime($row['purchaseDate'])).'</small>
+								<small class="requestNumber">'.$tr->translate("REQUEST_NO").' : '.$row['requestNo'].' '.date("d-m-Y",strtotime($row['requestDate'])).'</small>
+								<input type="hidden" dojoType="dijit.form.TextBox" name="deliveryId'.$no.'" id="deliveryId'.$no.'" value="'.$row['id'].'" >
+							</li>
+						';
+					}
+				}else{
+					if (empty($dnIdentityChecked)){
+						$dnIdentityChecked=$no;
+					}else{$dnIdentityChecked=$dnIdentityChecked.",".$no;
+					
+					}
+					$string.='
+							<li>
+								<span  class="dnNumber"><input checked="checked" OnChange="checkAllDn('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/> '.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+								<small class="poNumber">'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].' '.date("d-m-Y",strtotime($row['purchaseDate'])).'</small>
+								<small class="requestNumber">'.$tr->translate("REQUEST_NO").' : '.$row['requestNo'].' '.date("d-m-Y",strtotime($row['requestDate'])).'</small>
+								<input type="hidden" dojoType="dijit.form.TextBox" name="deliveryId'.$no.'" id="deliveryId'.$no.'" value="'.$row['id'].'" >
+							</li>
+					';
+				}
+    			$no++;
+    		}
+    	}else{
+    		$no++;
+    	}
+		$string.='</ul>';
+		
+		$array = array(
+					'stringrow'=>$string,
+					'dnKeyIndex'=>$no,
+					'dnIdentity'=>$dnIdentity,
+					'dnIdentityChecked'=>$dnIdentityChecked,
+				);
+				
+    	return $array;
+		
+	}
+	function getRowInvoiceDetail($data){
+		$db = $this->getAdapter();
+		$sql="SELECT invd.* FROM st_invoice_detail AS invd ";
+		$sql.="WHERE invd.invId =".$data['currentInvoiceId'];
+		$sql.=" AND invd.proId =".$data['proId'];
+		$sql.=" LIMIT 1 ";
+		return $db->fetchRow($sql);
+	}
 	function getDnDetailTotalByPurchase($data){
 		
 		$db = $this->getAdapter();
@@ -302,9 +702,14 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	
     	$purchaseId = empty($data['purchaseId'])?0:$data['purchaseId'];
+		
+		$dbPo = new Po_Model_DbTable_DbPurchasing();
+		$recordInfo = $dbPo->getDataRow($purchaseId);
+		
     	$branchId = $data['branch_id'];
     	$sql="SELECT rstd.*
 					,p.proName AS productName
+					,p.isService AS serviceOrProType
 					,p.measureLabel AS measureTitle
 					,COALESCE(SUM(rstd.qtyReceive),0) AS totalQtyReceive,
 					COALESCE(SUM(rstd.qtyAfterReceive),0) AS totalQtyAfterReceive,
@@ -321,9 +726,12 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 					LEFT JOIN `st_purchasing_detail` AS pod ON rst.poId = pod.purchaseId AND pod.proId = rstd.proId 
 		";
     	$sql.=" WHERE rst.status =1  ";
-    	//$sql.=" AND rst.verified =1 ";
+    	$sql.=" AND rst.verified =1 ";
     	$sql.=" AND rst.projectId =$branchId ";
     	$sql.=" AND rst.poId =$purchaseId ";
+		if(!empty($data['DNIdKey'])){
+			$sql.=" AND rstd.receiveId IN (".$data['DNIdKey'].") ";
+		}
 	
 		
 		$sql.=" GROUP BY rstd.proId ORDER BY rstd.isClosed DESC,rstd.proId ASC ";
@@ -350,35 +758,53 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 				}
 				
 				$gTotalInternal = $gTotalInternal+$row['purchaseSubTotal'];
-				$gTotalExternal = $gTotalExternal+$row['totalSubTotal'];
-			
+				
+				$receivePrice = $row['price'];
+				$receiveDiscountAmount = $row['totalDiscount'];
+				$receiveTotalSubTotal = $row['totalSubTotal'];
+				if(!empty($data['currentInvoiceId'])){
+					$data['proId'] = $row['proId'];
+					$rowInvoiceDetail = $this->getRowInvoiceDetail($data);
+					if(!empty($rowInvoiceDetail)){
+						$receivePrice = $rowInvoiceDetail['unitPriceReceive'];
+						$receiveDiscountAmount = $rowInvoiceDetail['totalReceiveDiscount'];
+						$receiveTotalSubTotal = $rowInvoiceDetail['totalReceive'];
+					}
+				}
+				
+				$gTotalExternal = $gTotalExternal+$receiveTotalSubTotal;
     			$string.='
     			<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
-	    			<td class="textCenter">'.($key+1).'</td>
-	    			<td class="textCenter">&nbsp;
+	    			<td class="textCenter poInfoCol">'.($key+1).'</td>
+	    			<td class="textCenter poInfoCol">&nbsp;
 	    				<label id="billingdatelabel'.$no.'">'.$row['productName'].'('.$row['measureTitle'].')</label>
 	    				<input type="hidden" dojoType="dijit.form.TextBox" name="proId'.$no.'" id="proId'.$no.'" value="'.$row['proId'].'" >
-    				</td>
-					<td class="invNoCol">
+						<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="type'.$no.'" name="type'.$no.'" value="'.$row['serviceOrProType'].'" type="text"  >
+					</td>
+					<td class="textCenter poInfoCol">
 						<span>'.$row['purchaseQty'].'</span><br />
+						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseQty'.$no.'" id="purchaseQty'.$no.'" value="'.$row['purchaseQty'].'" >
+						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseUnitPrice'.$no.'" id="purchaseUnitPrice'.$no.'" value="'.$row['purchaseUnitPrice'].'" >
+						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseDiscountAmount'.$no.'" id="purchaseDiscountAmount'.$no.'" value="'.$row['purchaseUnitPrice'].'" >
+						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseSubTotal'.$no.'" id="purchaseSubTotal'.$no.'" value="'.$row['purchaseSubTotal'].'" >
     				</td>
-					<td class="textCenter invNoCol">
+					<td class="textCenter poInfoCol">
 						<span>'.number_format($row['purchaseUnitPrice'],2).'</span><br />
     				</td>
-					<td class="textCenter invNoCol">
+					<td class="textCenter poInfoCol">
 						<span>'.number_format($row['purchaseDiscountAmount'],2).'</span><br />
     				</td>
-					<td class="textCenter invNoCol">
+					<td class="textCenter poInfoCol">
 						<span>'.number_format($row['purchaseSubTotal'],2).'</span><br />
     				</td>
 					<td class="textCenter">
 						<input readOnly type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="totalQtyReceive'.$no.'" id="totalQtyReceive'.$no.'" value="'.$row['totalQtyReceive'].'" style="text-align: center;" >
 					</td>
+					<td><input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="price'.$no.'" id="price'.$no.'" value="'.$receivePrice.'" style="text-align: center;" ></td>
 					<td class="textCenter">
-						<input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="discountAmount'.$no.'" id="discountAmount'.$no.'" value="0" style="text-align: center;" >
+						<input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="discountAmount'.$no.'" id="discountAmount'.$no.'" value="'.$receiveDiscountAmount.'" style="text-align: center;" >
 					</td>
-					<td><input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="price'.$no.'" id="price'.$no.'" value="'.$row['price'].'" style="text-align: center;" ></td>
-					<td><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="subTotal'.$no.'" id="subTotal'.$no.'" value="'.$row['totalSubTotal'].'" style="text-align: center;" ></td>
+					<td><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="subTotal'.$no.'" id="subTotal'.$no.'" value="'.$receiveTotalSubTotal.'" style="text-align: center;" ></td>
 				</tr>
     			';$no++;
     		}
@@ -387,6 +813,7 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     	}
 		
 		$array = array(
+					'recordInfo'=>$recordInfo,
 					'stringrow'=>$string,
 					'keyindex'=>$no,
 					'identity'=>$identity,

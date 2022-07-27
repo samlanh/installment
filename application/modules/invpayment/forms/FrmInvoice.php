@@ -185,6 +185,12 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
     			'class'=>'fullside ',
     	));
 		
+		$dnId = new Zend_Form_Element_Hidden('dnId');
+    	$dnId->setAttribs(array(
+    			'dojoType'=>'dijit.form.TextBox',
+    			'class'=>'fullside ',
+    	));
+		
 		if(!empty($data)){
 			$branch_id->setValue($data['projectId']);
 			$invoiceNo->setValue($data['invoiceNo']);
@@ -195,6 +201,7 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
 			$totalInternal->setValue($data['totalInternal']);
 			$vatInternal->setValue($data['vatInternal']);
 			$totalAmount->setValue($data['totalAmount']);
+			
 			$totalExternal->setValue($data['totalExternal']);
 			$vatExternal->setValue($data['vatExternal']);
 			$otherFeeExternal->setValue($data['otherFeeExternal']);
@@ -203,6 +210,7 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
 			$supplierId->setValue($data['supplierId']);
 			$id->setValue($data['id']);
 			$_status->setValue($data['status']);
+			$dnId->setValue($data['dnId']);
 		}
 		
 		$this->addElements(array(
@@ -223,6 +231,7 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
 				$supplierId,
 				$id,
 				$_status,
+				$dnId,
 		));
 		return $this;
 	}
