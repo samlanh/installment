@@ -1,0 +1,276 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate("PAYMENT_LETTER")); 
+	echo $this->headTitle();
+	
+	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
+	$dbparmeter = new Report_Model_DbTable_DbParamater();
+?>
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('PAYMENT_LETTER');?></h4>
+			</div>
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+	<div class="card-box">
+		<div id="divPrint">
+			<style>
+				table.tableTop tr td,span {
+					font-size:12px ;
+					font-family: 'Times New Roman','Khmer OS Battambang';
+				}
+				table.tableTop tr td span.project-name{
+					font-size:12px ;
+					font-family:"Times New Roman","Khmer OS Muol Light";
+				}
+				table tr td{
+					padding:0 2px;
+					line-height: 14px;
+				}
+				table.content-data{
+					border-collapse:collapse;
+					border:1px solid #000; 
+					font-size:13px;
+				}
+				table.content-data thead tr.style {
+				   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #c1d0f3;
+					font-weight:600;
+				}
+				table.content-data  tr.regurlar {
+					background: #eee;
+				}
+				table.content-data tr td{
+					padding:5px 3px; 
+					border:none;
+					vertical-align:middle;
+				}
+				table.content-data tr.headRow td{
+					border:solid 1px #000;
+					padding:10px 2px; 
+					vertical-align:middle;
+				}
+				table.requestInfo {
+					width: 100%;
+					margin-top: 10px;
+				}
+				table.requestInfo tr td {
+					vertical-align: top;
+				}
+				table.requestInfo span.lbTitle {
+					font-weight: 600;
+				}
+				tr.style.rejected {
+					background: #ffcece;
+				}
+				tr.rowFooter td span {
+					font-weight: 600;
+					font-size: 16px;
+				}
+				tr.rowFooter td span.gtotalVal {
+					color: #ff0500;
+					display: block;
+					width: 100%;
+					border-bottom: double 4px;
+					text-align: left;
+				}
+			</style>
+				
+			<table class="tableTop" width="100%" >
+				<tr>
+					<td width="30%" id="projectlogo">
+						<br />
+						<img style="height:85px; max-width: 100%;" src="">
+					</td>
+					<td width="40%" valign="top" style=" padding-bottom: 40px;">
+					</td>
+					<td width="30%" align="right" style="vertical-align:top;">
+						<span class="project-name" id="projectName">(<?php echo $this->row["branch_name"];?>)</span>
+					</td>
+				</tr> 
+				<tr>
+					<td colspan="3" align="center">
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' ><?php echo $tr->translate("PAYMENT_LETTER");?></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" style="position:relative;" >
+					
+						<table class="requestInfo">
+							<tr>
+								<td width="40%"><span class="lbTitle"><?php echo $tr->translate("SUPPLIER");?></span> : <span><?php echo $this->row["supplierName"];?></span></td>
+								<td width="30%">
+									
+								</td>
+								<td width="40%"><span class="lbTitle"><?php echo $tr->translate("PAYMENT_NO");?></span> : <span style="color:red; font-weight:600;"><?php echo $this->row["paymentNo"];?></span></td>
+								
+							</tr>
+							<tr>
+								
+								<td><span class="lbTitle"><?php echo $tr->translate("CONTACT_NAME");?></span> : <span><?php echo $this->row["contactNumber"];?></span></td>
+								<td >
+									
+								</td>
+								<td ><span class="lbTitle"><?php echo $tr->translate("DATE");?></span> : <span><?php echo date("d-M-Y",strtotime($this->row["paymentDate"]));?></span></td>
+							</tr>
+							<tr>
+								
+								<td><span class="lbTitle"><?php echo $tr->translate("TEL");?></span> : <span><?php echo $this->row["supplierTel"];?></span></td>
+								<td >
+									
+								</td>
+								<td >
+									
+								</td>
+							</tr>
+							<tr>
+								
+								<td><span class="lbTitle"><?php echo $tr->translate("ADDRESS");?></span> : <span><?php echo $this->row["address"];?></span></td>
+								<td ></td>
+								<td >
+									
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+						<table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
+							<thead>
+								<tr class="style headRow" align="center" >
+									<td class="center"><?php echo $tr->translate("NUM");?></td>
+									<td class="center" style="width:220px;"><?php echo $tr->translate("INVOICE_NO");?></td>
+									<td class="center"><?php echo $tr->translate("RECEIVE_DATE");?></td>
+									<td class="center"><?php echo $tr->translate("ORIG")." ".$tr->translate("CURRENCY_SIGN");?></td>
+									<td class="center"><?php echo $tr->translate("DUE")."<br />".$tr->translate("CURRENCY_SIGN");?></td>
+									<td class="center"><?php echo $tr->translate("PAYMENT_AMOUNT")."<br />".$tr->translate("CURRENCY_SIGN");?></td>
+									<td class="center"><?php echo $tr->translate("REMAIN")." ".$tr->translate("CURRENCY_SIGN");?></td>
+								</tr>
+							</thead>
+							 <?php 
+							 $i=0;
+							 $minimumRow=15;
+							 $gTotal=0;
+				                if(!empty($this->rowdetail)) foreach ($this->rowdetail as $index => $rs){ $i++;
+								$classRowBg = "odd";
+								if(($i%2)==0){
+								$classRowBg = "regurlar";
+								}
+								$gTotal=$gTotal+$rs["paymentAmount"];
+							?>
+							<tr class="style <?php echo $classRowBg; ?>" style=" white-space:nowrap;">
+				               	<td style="text-align: center;"><?php echo $i; ?></td>
+								<td>
+									<?php echo empty($rs["purchaseNo"])?"":$tr->translate("PO_NO")." : ".$rs["purchaseNo"]."<br />";?>
+									<?php echo $rs["invoiceNo"]."<br />".$rs["supplierInvoiceNo"];?>
+									
+									
+								</td>
+								<td align="center"><?php echo date("d-m-Y",strtotime($rs["receiveIvDate"]));?></td>
+								<td align="right"><?php echo number_format($rs["totalAmountExternal"],2);?></td>
+								<td align="right"><?php echo number_format($rs["dueAmount"],2);?></td>
+								<td align="right"><?php echo number_format($rs["paymentAmount"],2);?></td>
+								<td align="right"><?php echo number_format($rs["remain"],2);?></td>
+								
+							</tr>
+							<?php } ?>
+							<?php for ($i = $i; $i <= $minimumRow; $i++) { ?>
+							<tr class="style <?php //echo $classRow; ?>" style=" white-space:nowrap;">
+								<td style="border:none;" colspan="7">&nbsp;</td>
+							</tr>
+							<?php } ?>
+						</table>
+						<table style="width: 100%;">
+							<tr class="rowFooter" style=" white-space:nowrap;">
+								<td style="width:70%; text-align:right;" ><span><?php echo $tr->translate("GRAND_TOTAL")." ".$tr->translate("CURRENCY_SIGN");?> :</span></td>
+								<td style="border:none; " ><span class="gtotalVal"><?php echo number_format($gTotal,2);?></span></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+						<table style="width:50%; margin-top:-20px;" border="1"  cellspacing="0" cellpadding="0">
+							<tr>
+								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;">
+									<span style="font-weight: 600; display: block;text-decoration: underline;"><?php echo $tr->translate("NOTE");?> ៖</span>
+									<span style="display: block; font-size:11px;"><?php echo $this->row["note"];?><span>
+								</td>
+							</tr>
+						</table>
+						<br />
+						<table width="100%" cellspacing="0" cellpadding="0">
+							<tr>
+								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("SUPPLIER");?> </span>
+								</td>
+								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;"><?php //echo $tr->translate("CHECKING_BY");?> </span>
+								</td>
+								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;"><?php //echo $tr->translate("PCHECKING_BY");?> </span>
+								</td>
+								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("COMPANY_REPRESENT");?> </span>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3" style="height:80px;" >
+									&nbsp;
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align:center;">
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["supplierName"];?></span>
+								</td>
+								<td style="text-align:center;">
+									
+								</td>
+								<td style="text-align:center;">
+									
+								</td>
+								<td style="text-align:center;">
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["byUser"];?></span>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getBranchInfo();
+	});
+});
+		
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->row['projectId'])?0:$this->row['projectId'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:65px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			document.getElementById('projectName').innerHTML = 'គម្រោង៖ '+arr.project_name;
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>
