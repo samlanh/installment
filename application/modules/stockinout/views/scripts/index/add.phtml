@@ -53,7 +53,7 @@
 					}
 					identity = dijit.byId('identity').get('value');
 					if(identity=='' || identity==-1){
-						dijit.byId('identity').focus();
+						alert('<?php echo $tr->translate('SELECT_CHECK_RECORD');?>');
 						return false;
 					}
 					loadingBlock();
@@ -90,7 +90,8 @@
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<input id="purId" />
-	                    	<input type="text" name="identity" id="identity" dojoType="dijit.form.TextBox" >
+	                    	<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" >
+	                    	<input type="hidden" name="old_identity" id="old_identity" dojoType="dijit.form.TextBox" >
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -174,6 +175,12 @@
 	                   </div>
 	                </div>
 	            </div>
+	        </div>
+	        <div class="col-md-12">
+	        	<div class="clearfix">
+					 <input type="checkbox" class="checkbox"  name="check_all" id="check_all" value="all" OnChange="CheckAllTotal(0);" style="display: inline-block;height: initial;"  />&nbsp;
+					 <span class="bold" style="vertical-align: top;"><?php echo $tr->translate('ALL');?></span>
+				</div>
 	        </div>
 	        <div>
 	        	<div class="form-group">
@@ -268,6 +275,40 @@
 		getAllPObyBranch(urlGetAllPO,objectContentFilter);
 	}
 
+	function CheckAllTotal(index){
+		var old_identity = $("#old_identity").val();
+		if(index==0){
+			if($('#check_all').is(":checked")){
+				$('.checkbox').each(function() { //loop through each checkbox
+		            this.checked = true;  
+				});
+				$("#identity").val(old_identity);
+			}else{
+				$('.checkbox').each(function() { //loop through each checkbox
+		            this.checked = false;  
+				});
+				$("#identity").val('');
+			}
+		}else{
+			 $('#check_all').attr('checked', false); // Unchecks it
+			 var a = $("input:checked").val();
+			 var identity = [];
+		     $(':checkbox:checked').each(function(i){
+		    	 identity[i] = $(this).val();
+		     });
+		    
+		     $("#identity").val(identity);
+		     var newIdentity = $("#identity").val();
+
+			if(old_identity == newIdentity ){
+				$('#check_all').attr('checked', true); // checks it
+			}
+			if($('#mfdid_'+index).is(":checked")){
+				
+			}
+		}
+	}
+
 	var urlGetPOItem = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'index','action'=>'getallproductbypo')); ?>';
 	var keyindex=1;
 	function getProductbypo(purchaseId){
@@ -285,7 +326,8 @@
 			handleAs:"json",
 			load: function(data){
 				keyindex=data.keyindex;
-				$("#identity").val(data.identity);
+				$("#old_identity").val(data.identity);
+				
 				stringrow = data.stringrow;
 
 				dojo.html.set(dojo.byId("table_row"),stringrow , {

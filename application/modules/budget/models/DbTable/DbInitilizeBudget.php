@@ -77,31 +77,63 @@ class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
     		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/budget/setup/add");
     	}
     }
-    function updateData($data){
+//     function updateData($data){
     	 
-    	$db = $this->getAdapter();
-    	$db->beginTransaction();
-    	try
-    	{
-    		$arr = array(
-    				''=>''
+//     	$db = $this->getAdapter();
+//     	$db->beginTransaction();
+//     	try
+//     	{
+//     		$arr = array(
+//     				''=>''
     
-    		);
+//     		);
     		
-    		//$this->_name='';
-    		$where = 'client_id = '.$data['id'];
-			$this->update($arr, $where);
-    		$db->commit();
-    	}catch (Exception $e){
-    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		$db->rollBack();
-    	}
-    }
-    function getDataRow($recordId){
-    	$db = $this->getAdapter();
+//     		//$this->_name='';
+//     		$where = 'client_id = '.$data['id'];
+// 			$this->update($arr, $where);
+//     		$db->commit();
+//     	}catch (Exception $e){
+//     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+//     		$db->rollBack();
+//     	}
+//     }
+//     function getDataRow($recordId){
+//     	$db = $this->getAdapter();
     	
-    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
-    	return $db->fetchRow($sql);
-    }
-   
+//     	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
+//     	return $db->fetchRow($sql);
+//     }
+		function addBudgetExpense($data){
+			$arr = array(
+					'projectId'=>$data['branch_id'],
+					'type'=>$data['type'],
+					'transactionId'=>$data['transactionId'],
+					'createDate'=>date('Y-m-d'),
+					'userId'=>$this->getUserId(),
+			);
+			$this->_name='st_budget_expense';
+			return $this->insert($arr);
+		}
+		
+		function addBudgetExpenseDetail($data){
+			
+			$dbs = new Application_Model_DbTable_DbGlobalStock();
+			$rsStock = $dbs->getProductInfoByLocation(array('productId'=>$data['productId']));
+			if(!empty($rsStock)){
+				$arr = array(
+					'budgetExpenseId'=>$data['budgetExpenseId'],
+					'subtransactionId'=>$data['subtransactionId'],
+					'productId'=>$data['productId'],
+					'budgetItemId'=>$rsStock['budgetId'],
+					'price'=>$data['price'],
+					'qty'=>$data['qty'],
+					'total'=>$data['price']*$data['qty'],
+				);
+					
+				$this->_name='st_budget_expense_detail';
+				$this->insert($arr);
+			}
+		}
+		
+		
 }
