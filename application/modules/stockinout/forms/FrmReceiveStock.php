@@ -58,7 +58,8 @@ Class Stockinout_Form_FrmReceiveStock extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 		));
-		$opt = array(1=>"DELIVERY_NOTE",2=>"INVOICE");
+		$opt = $dbGBStock->getViewById(4,1);//array(1=>"DELIVERY_NOTE",2=>"INVOICE");
+		unset($opt['-1']);
 		$documentType->setMultiOptions($opt);
 		
 		$dnDate = new Zend_Dojo_Form_Element_TextBox('dnDate');
