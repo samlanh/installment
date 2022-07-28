@@ -208,8 +208,14 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		//Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add");
     	}
     }
-    function checkPOStatus($poId){
-    	
+    function verifyDN($data){
+    	$arr = array(
+    			'verified'=>1,
+    			'verifiedBy'=>$this->getUserId(),
+    			'verifiedDate'=>date('Y-m-d')
+    			);
+    	$where= "id=".$data['purchaseId'];
+    	$this->update($arr, $where);
     }
     function updatePurchaseQtybyProId(){
     	
@@ -331,6 +337,19 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				
 			FROM `st_receive_stock` r WHERE r.id=".$recordId;
     	return $db->fetchRow($sql);
+    }
+    function getDNDetailById($recordId){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT 
+					(SELECT p.proName FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proName,
+					(SELECT p.proCode FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proCode,
+					(SELECT p.measureLabel FROM st_product p WHERE p.proId=sd.proId LIMIT 1) measureLabel,
+					sd.qtyReceive,
+					sd.isClosed,
+					sd.note
+				FROM `st_receive_stock_detail` AS sd
+				WHERE sd.receiveId=".$recordId;
+    	return $db->fetchAll($sql);
     }
    
 }

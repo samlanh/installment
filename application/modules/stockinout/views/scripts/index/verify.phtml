@@ -1,9 +1,7 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	$this->headTitle($tr->translate("VERIFY_DN")); 
-	echo $this->headTitle();
+	echo $this->headTitle($tr->translate("VERIFY_DN")); 
 	$rs = $this->rsRow;
-	print_r($rs);
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -16,7 +14,7 @@
 		</div>
 	</div>
 	<div class="card-box">
-		<div id="divPrint" style="border:1px solid #000;">
+		<div id="divPrint">
 			<style>
 				table tr td{
 					padding:0 2px;
@@ -38,7 +36,7 @@
 				}
 					
 				div#request-info ul li span.lbl-tt {
-					color: #02014a;
+					color: #000;
 					width: 50%;
 				    display: block;
 				    float: left;
@@ -65,10 +63,9 @@
 					<td colspan="3" align="center">
 						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' >
 							<?php echo $tr->translate("VERIFY_DN");?>
-						</span>
+						</span><br />
 						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' >
-							<br />
-							<?php echo $rs['projectName'];?>
+							<br /><?php echo $rs['projectName'];?>
 						</span>
 					</td>
 				</tr>
@@ -139,41 +136,18 @@
 									<td><?php echo $tr->translate("NUM");?></td>
 									<td style=" min-width: 105px;"><?php echo $tr->translate("PRODUCT_NAME");?></td>
 									<td><?php echo $tr->translate("QTY_RECEIVE");?></td>
-									<td><?php echo $tr->translate("STATUS");?></td>
 									<td><?php echo $tr->translate("NOTE");?></td> 
 								</tr>
 							</thead>
 							 <?php 
 							 $i=0;
-				                if(!empty($this->rowdetail)) foreach ($this->rowdetail as $index => $rs){ $i++;
-								
-								$qtyApproved=$rs["qtyAdjust"];								
-								$classRow="";
-								if($rs["adjustStatus"]==2){
-									$classRow="rejected";
-									$qtyApproved=0;
-								}
-								
-								if($rs["approvedStatus"]==2){
-									$classRow="rejected";
-									$qtyApproved=0;
-								}else if($rs["approvedStatus"]==1){
-									$qtyApproved=$rs["qtyApproved"];
-								}
-								
+				                if(!empty($this->dnDetail)) foreach ($this->dnDetail as $index => $rsDn){ $i++;
 								
 							?>
-							<tr class="style <?php echo $classRow; ?>" style=" white-space:nowrap;">
+							<tr class="style" style=" white-space:nowrap;">
 				               	<td style="text-align: center;"><?php echo $i; ?></td>
-								<td>
-									<?php echo $rs["proCode"]." - ".$rs["proName"];?>
-									
-								</td>
-								<td align="center"><?php echo $rs["categoryTitle"];?></td>
-								<td align="center"><?php echo $rs["qtyRequest"];?></td>
-								<td align="center"><?php echo $qtyApproved;?></td>
-								<td align="center"><?php echo $rs["measureTitle"];?></td>
-								<td align="center"><?php echo date("d-M-Y",strtotime($rs["dateReqStockIn"]));?></td>
+								<td><?php echo $rsDn["proCode"]." - ".$rsDn["proName"];?></td>
+								<td align="center"><?php echo $rsDn["qtyReceive"];?></td>
 								<td style="font-size: 10px;"><?php echo $rs["note"];?></td>
 							</tr>
 							<?php 
@@ -223,7 +197,7 @@
 					 iconClass="dijitEditorIcon dijitEditorIconWikiword"/> 
 				<input type="button" onclick="doPrint();"  value="SAVE_NEW" tabindex="3" label="<?php echo $tr->translate('PRINT');?>"  dojoType="dijit.form.Button" name="save_new"
 					iconClass="dijitEditorIcon dijitEditorIconPrint"/> 
-					<input type="text" name="purchaseId" value="<?php echo $rs['id'];?>" />
+					<input type="hidden" name="purchaseId" value="<?php echo $rs['id'];?>" />
 			</form>
     	</div>
 	</div>

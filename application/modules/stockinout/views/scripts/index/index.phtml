@@ -52,7 +52,10 @@
 </div>
 <?php 
 	$edit_Text = $tr->translate("EDIT");
-	$urlEdit = $this->baseUrl()."/stockinout/index/verify/id/";
+	$verifyText = $tr->translate("VERIFY");
+	$urlEdit = $this->baseUrl()."/stockinout/index/edit/id/";
+	$urlVerify = $this->baseUrl()."/stockinout/index/verify/id/";
+	
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -67,10 +70,14 @@ $(function(){
 			if(key=="edit"){
 				url='<?php echo $urlEdit;?>';
 			}
+			if(key=="verify"){
+				url='<?php echo $urlVerify;?>';
+			}
 			gotoAction();
 		},
 		items: {
 			"edit": {name: "<?php echo $edit_Text;?>", icon: "edit", accesskey: "e"},
+			"verify": {name: "<?php echo $verifyText;?>", icon: "fa-check-square", accesskey: "e"},
 		}
 	});
 });

@@ -79,14 +79,29 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		}
 	}
 	function verifyAction(){
+		$db = new Stockinout_Model_DbTable_DbReceiveStock();
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			try {
+				$db->verifyDN($_data);
+				Application_Form_FrmMessage::Sucessfull("VERIFIED_SUCCESSED","/stockinout/index");
+			}catch(Exception $e){
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
 		}
-		$db = new Stockinout_Model_DbTable_DbReceiveStock();
+		
 		$rs = $db->getDNById($id);
 		$this->view->rsRow = $rs;
+		
+		$this->view->dnDetail = $db->getDNDetailById($id);
+		
 	
 	}
 	function getallproductbypoAction(){

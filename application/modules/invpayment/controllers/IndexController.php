@@ -1,13 +1,12 @@
 <?php
 class Invpayment_IndexController extends Zend_Controller_Action {
-	public function init()
-	{
-		header('content-type: text/html; charset=utf8');
-		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
-	}
+	const REDIRECT_URL = '/invpayment/index';
+	const INVOICE_TYPE = 1;//DN Invoice
 	public function indexAction(){
 		//$db = new ();
 		try{
+			$db = new Invpayment_Model_DbTable_DbDepositInvoice();
+			
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
 			}
@@ -15,64 +14,100 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 				$search = array(
 					'adv_search'=>'',
 					'branch_id'=>-1,
+					'status'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
 			}
+			$search['ivType']=self::INVOICE_TYPE;
 			$rs_rows=array();
-			//$rs_rows= $db->getAllSentSMS($search);//
+			$rs_rows= $db->getAllDepositInvoice($search);//
+			
+			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+    		$collumns = array("PROJECT_NAME","INVOICE_NO","RECEIVE_DATE","SUPPLIER_INVOICE","INVOICE_DATE","PO_NO","SUPPLIER","TOTAL","STATUS","BY");
+    		$link=array(
+    				'module'=>'invpayment','controller'=>'index','action'=>'edit',
+    		);
+    		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('branch_name'=>$link,'purchaseNo'=>$link,));
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
+			
+			
+		
+			
+		$frm_search = new Application_Form_FrmAdvanceSearchStock();
+		$frm = $frm_search->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
 		
 	}
 	function addAction(){
+		
+	
+		$db = new Invpayment_Model_DbTable_DbDepositInvoice();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
+				
+				$_data['ivType']=self::INVOICE_TYPE;
+				$db->addDepositInvoice($_data);
+	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
+		
+    	$frm = new Invpayment_Form_FrmInvoice();
+    	$frm->FrmInvoices(null);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$db = new Invpayment_Model_DbTable_DbDepositInvoice();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$_data['ivType']=self::INVOICE_TYPE;
+				$db->editDepositInvoice($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL."/index");
+			exit();
 		}
+		
+		$row = $db->getDataRow($id);
+		$this->view->row = $row;
+		if ($row['status']==0){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		$arrFilter = array(
+						'id'=>$id,
+					);
+		$this->view->rowdetail = $db->getInvoiceDetailById($arrFilter);
+		$arrFilter['isService']=1;
+		$this->view->rowdetailServicce = $db->getInvoiceDetailById($arrFilter);
+		
+		
+		$frm = new Invpayment_Form_FrmInvoice();
+    	$frm->FrmInvoices($row);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
 	}
 	
 	
@@ -103,6 +138,19 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 			$id = $db_com->getAllInvoiceBySupplierEdit($data);
 			print_r(Zend_Json::encode($id));
 			exit();
+		}
+	}
+	
+	
+	function dndetailAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Invpayment_Model_DbTable_DbInvoice();
+			$_row =$db->getDnDetailTotalByPurchase($data);
+			
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
 		}
 	}
 }
