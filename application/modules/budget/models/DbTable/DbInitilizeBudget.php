@@ -125,14 +125,32 @@ class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
 					'subtransactionId'=>$data['subtransactionId'],
 					'productId'=>$data['productId'],
 					'budgetItemId'=>$rsStock['budgetId'],
-					'price'=>$data['price'],
 					'qty'=>$data['qty'],
-					'total'=>$data['price']*$data['qty'],
+					'price'=>$data['price'],
+					'totalDiscount'=>$data['totalDiscount'],
+					'total'=>($data['price']*$data['qty'])-$data['totalDiscount'],
 				);
 					
 				$this->_name='st_budget_expense_detail';
 				$this->insert($arr);
 			}
+		}
+		function reverBudgetExpense($transactionId){
+			$db = $this->getAdapter();
+			$sql="SELECT id FROM st_budget_expense WHERE transactionId=".$transactionId." LIMIT 1";
+			$id = $db->fetchOne($sql);
+			if(!empty($id)){
+				$this->_name='st_budget_expense_detail';
+				$where="budgetExpenseId=".$id;
+				$this->delete($where);
+					
+				$this->_name='st_budget_expense';
+				$where="id=".$transactionId;
+				$this->delete($where);
+				
+			}
+			
+			
 		}
 		
 		

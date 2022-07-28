@@ -559,7 +559,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql.=" FROM `st_purchasing` AS po 
 					LEFT JOIN `st_supplier` AS spp ON spp.id = po.supplierId 
 					LEFT JOIN `st_invoice` AS inv ON inv.purId = po.id AND inv.status=1					
-		WHERE po.status=1  ";	//AND inv.purId IS NULL
+		WHERE po.status=1  "; //AND inv.purId IS NULL
 			
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND po.projectId=".$_data['branch_id'];
@@ -567,7 +567,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(isset($_data['processingStatus'])){
 			$sql.=" AND po.processingStatus=".$_data['processingStatus'];
 		}
-		
 		
 		if(!empty($_data['purchaseType'])){//Type Of Purchase
 		
@@ -704,6 +703,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 						pd.qty,
 						pd.qtyAfter,
 						pd.unitPrice,
+						pd.discountAmount,
 						pd.subTotal,
 						pd.requestInDate,
 						pd.isClosed

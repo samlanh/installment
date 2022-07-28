@@ -1,5 +1,4 @@
 <?php
-
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate('RECEIVE_STOCK'));
 	$frm = $this->frmReceivStock;
@@ -224,34 +223,6 @@
 	dojo.require('dijit.form.DateTextbox');
 	dojo.require('dijit.form.Textarea');
 	dojo.require('dijit.form.NumberTextBox');
-	//dojo.require("dojo.html");
-	//dojo.require("dijit.registry");
-	
-	
-	   require(["dojo/ready"], function(ready){
-			ready(function(){
-				var purchaseId = dijit.byId('purId');
-				purchaseId.on('change',function(evt){
-					
-					$("#identity").val("");
-					stringrow = '';
-					dojo.html.set(dojo.byId("table_row"),"" , {
-						parseContent: true,
-					});
-					
-					purchaseId = dijit.byId('purId').get('value');
-					
-					if(purchaseId==''){
-						purchaseId=0;
-					}
-					if(purchaseId>0){
-						getProductbypo(purchaseId);
-					}
-						
-				});
-			});
-	   });
-
 
 	 new dijit.form.FilteringSelect({
 	 	autoComplete: false,
@@ -261,7 +232,21 @@
 	     class: 'fullside',  
 	     required:false,
 	     placeHolder:"<?php echo $tr->translate("SELECT_PO_NO");?>", 
-	     onChange: function() {        
+	     onChange: function() {
+    		 $("#identity").val("");
+			stringrow = '';
+			dojo.html.set(dojo.byId("table_row"),"" , {
+				parseContent: true,
+			});
+			
+			purchaseId = dijit.byId('purId').get('value');
+			
+			if(purchaseId==''){
+				purchaseId=0;
+			}
+			if(purchaseId>0){
+				getProductbypo(purchaseId);
+			}  
 	     } 
 	 }, "purId");
 
@@ -303,9 +288,6 @@
 			if(old_identity == newIdentity ){
 				$('#check_all').attr('checked', true); // checks it
 			}
-			if($('#mfdid_'+index).is(":checked")){
-				
-			}
 		}
 	}
 
@@ -333,13 +315,11 @@
 				dojo.html.set(dojo.byId("table_row"),stringrow , {
 					parseContent: true,
 				});
-
 				
 				dojo.byId('request-info').innerHTML = data.POInfoDataBlog;
 				HideloadingBlock();
 			},
 			error: function(err) {
-				alert(err);
 				HideloadingBlock();
 			}
 		});

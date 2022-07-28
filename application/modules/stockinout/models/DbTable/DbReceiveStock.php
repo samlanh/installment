@@ -75,7 +75,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		
     		$arr = array(
     				'projectId'=>$data['branch_id'],
-    				'dnType'=>1,
+    				'dnType'=>$data['documentType'],
     				'poId'=>$data['purId'],
     				'requestId'=>$rowData['requestId'],
     				'supplierId'=>$rowData['supplierId'],
@@ -135,6 +135,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     					'qtyReceive'=>$data['qtyReceive'.$i],
     					'qtyAfterReceive'=>$data['qtyAfter'.$i]-$data['qtyReceive'.$i],
     					'price'=>$data['price'.$i],
+    					'totalDiscount'=>$data['discountAmount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i],
     					'subTotal'=>$data['qtyReceive'.$i]*$data['price'.$i],
     					'isClosed'=>$data['receiveStatus'.$i],
     					'note'=>$data['note'.$i],
@@ -169,34 +170,33 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     					$this->update($arr, $where);
     					
     					$paramPro = array(
-    							'fetchRow'=>1,
-    							'isClosed'=>-1,
-    							'orderisClosedASC'=>1,
-    							'purchaseId'=>$data['purId'],
+    						'fetchRow'=>1,
+    						'isClosed'=>-1,
+    						'orderisClosedASC'=>1,
+    						'purchaseId'=>$data['purId'],
     					);
     					$dbs->updatePoStatusisClose($paramPro);//update PO Status
-    					
     				}
     				
     				$param = array(
-    						'branch_id'	=> $data['branch_id'],
-    						'productId'	=> $data['productId'.$i],
-    						'EntyQty'	=> $data['qtyReceive'.$i],
-    						'EntyPrice'	=> $data['price'.$i]
+    					'branch_id'	=> $data['branch_id'],
+    					'productId'	=> $data['productId'.$i],
+    					'EntyQty'	=> $data['qtyReceive'.$i],
+    					'EntyPrice'	=> $data['price'.$i]
     				);
     				
     				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty and new costing
     				
-    				
     				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],2,$data['qtyReceive'.$i],$id);//movement'
     				
     				$param = array(
-    						'budgetExpenseId'=>$budgetExpenseId,
-    						'subtransactionId'=>$id,
-    						'productId'=>$data['productId'.$i],
-    						'price'=>$data['price'.$i],
-    						'qty'=>$data['qtyReceive'.$i],
-    						);
+    					'budgetExpenseId'=>$budgetExpenseId,
+    					'subtransactionId'=>$id,
+    					'productId'=>$data['productId'.$i],
+    					'price'=>$data['price'.$i],
+    					'qty'=>$data['qtyReceive'.$i],
+    					'totalDiscount'=>$data['discountAmount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i]
+    				);
     				$dbb->addBudgetExpenseDetail($param);
     			}
     		}
@@ -205,8 +205,214 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	}catch(Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		//Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add");
     	}
+    }
+    function updateDataReceive($data){
+    
+    $db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try
+    	{
+    		$dbs = new Application_Model_DbTable_DbGlobalStock();
+    		$param = array(
+    			'fetchRow'=>1,
+    			'isClosed'=>-1,
+    			'purchaseId'=>$data['purId']
+    		);
+    		$rowData = $dbs->getProductPOInfo($param);
+    		
+    		$arr = array(
+    				'projectId'=>$data['branch_id'],
+    				'dnType'=>$data['documentType'],
+    				'poId'=>$data['purId'],
+    				'requestId'=>$rowData['requestId'],
+    				'supplierId'=>$rowData['supplierId'],
+    				'receiveDate'=>$data['dnDate'],
+    				'dnNumber'=>$data['dnTitle'],
+    				'staffCounter'=>$data['counter'],
+    				'driverName'=>$data['driver'],
+    				'plateNo'=>$data['truckNumber'],
+    				'note'=>$data['note'],
+    				'userId'=>$this->getUserId(),
+    				'createDate'=>date('Y-m-d'),
+    			);
+    		
+    		$part= PUBLIC_PATH.'/images/dndocument/';
+    		
+    		$photo_name = $_FILES['photo']['name'];
+    		if (!empty($photo_name)){
+    			//unset old file here
+    			$tem =explode(".", $photo_name);
+    			$image_name = "photoDn_".date("Y").date("m").date("d").time().".".end($tem);
+    			$tmp = $_FILES['photo']['tmp_name'];
+    			if(move_uploaded_file($tmp, $part.$image_name)){
+    				move_uploaded_file($tmp, $part.$image_name);
+    				$photo = $image_name;
+    				$arr['photoDn']=$photo;
+    			}
+    		}
+    		
+    		$photo_name = $_FILES['fileDn']['name'];
+    		if (!empty($photo_name)){
+    			//unset old file here
+    			$tem =explode(".", $photo_name);
+    			$image_name = "fileDn".date("Y").date("m").date("d").time().".".end($tem);
+    			$tmp = $_FILES['fileDn']['tmp_name'];
+    			if(move_uploaded_file($tmp, $part.$image_name)){
+    				move_uploaded_file($tmp, $part.$image_name);
+    				$photo = $image_name;
+    				$arr['fileDn']=$photo;
+    			}
+    		}
+    		$receivedId = $data['id'];
+    		$where="id=".$receivedId;
+    		
+    		$this->update($arr,$where);
+    		
+    		$this->reverseReceivedTransaction($receivedId,$data['purId']);//reverse po and po detail'
+    		
+    		$dbb = new Budget_Model_DbTable_DbInitilizeBudget();
+    		
+    		$dbb->reverBudgetExpense($receivedId);//delete old budget plan
+    		
+    		$param = array(
+    			'branch_id'=>$data['branch_id'],
+    			'type'=>1,
+    			'transactionId'=>$receivedId,
+    		);
+    		
+    		$budgetExpenseId = $dbb->addBudgetExpense($param);
+    		
+    		$ids = explode(',',$data['identity']);
+    		if(!empty($ids)){
+    			foreach($ids as $i){
+    				$arr = array(
+    					'receiveId'=>$receivedId,
+    					'proId'=>$data['productId'.$i],
+    					'qtyReceive'=>$data['qtyReceive'.$i],
+    					'qtyAfterReceive'=>$data['qtyAfter'.$i]-$data['qtyReceive'.$i],
+    					'price'=>$data['price'.$i],
+    					'totalDiscount'=>$data['discountAmount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i],
+    					'subTotal'=>$data['qtyReceive'.$i]*$data['price'.$i],
+    					'isClosed'=>$data['receiveStatus'.$i],
+    					'note'=>$data['note'.$i],
+    				);
+    				
+    				$this->_name='st_receive_stock_detail';
+    				$id = $this->insert($arr);
+    				
+    				$paramPro = array(
+    						'fetchRow'=>1,
+    						'isClosed'=>-1,
+    						'purchaseId'=>$data['purId'],
+    						'proId'=>$data['productId'.$i]
+    				);
+    				
+    				$poProduct = $dbs->getProductPOInfo($paramPro);
+    				
+    				if(!empty($poProduct)){//update po product detail and po
+    					
+    					$currentAfter = $poProduct['qtyAfter'];
+    					$Receiveqty = $data['qtyReceive'.$i];
+    					$arr =array(
+    						'qtyAfter'=>$currentAfter-$Receiveqty
+    					);
+    					if($currentAfter-$Receiveqty<=0 OR $data['receiveStatus'.$i]==1){
+    						$arr['isClosed']=1;
+    					}
+    					
+    					$where= "purchaseId = ".$poProduct['id']." AND proId=".$poProduct['proId'];
+    					
+    					$this->_name='st_purchasing_detail';
+    					$this->update($arr, $where);
+    					
+    					$paramPro = array(
+    						'fetchRow'=>1,
+    						'isClosed'=>-1,
+    						'orderisClosedASC'=>1,
+    						'purchaseId'=>$data['purId'],
+    					);
+    					$dbs->updatePoStatusisClose($paramPro);//update PO Status
+    				}
+    				
+    				$param = array(
+    					'branch_id'	=> $data['branch_id'],
+    					'productId'	=> $data['productId'.$i],
+    					'EntyQty'	=> $data['qtyReceive'.$i],
+    					'EntyPrice'	=> $data['price'.$i]
+    				);
+    				
+    				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty and new costing
+    				
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],2,$data['qtyReceive'.$i],$id);//movement'
+    				
+    				$param = array(
+    					'budgetExpenseId'=>$budgetExpenseId,
+    					'subtransactionId'=>$id,
+    					'productId'=>$data['productId'.$i],
+    					'price'=>$data['price'.$i],
+    					'qty'=>$data['qtyReceive'.$i],
+    					'totalDiscount'=>$data['discountAmount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i]
+    				);
+    				$dbb->addBudgetExpenseDetail($param);
+    			}
+    		}
+    		
+    		$db->commit();
+    	}catch(Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		$db->rollBack();
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add");
+    	}
+    }
+    function reverseReceivedTransaction($dnId,$poId){
+    	$dbs = new Application_Model_DbTable_DbGlobalStock();
+    	$results = $this->getDNDetailById($dnId);
+    	if(!empty($results)){foreach ($results as $result){
+	    		$paramPro = array(
+    				'fetchRow'=>1,
+    				'isClosed'=>-1,
+    				'purchaseId'=>$poId,
+    				'proId'=>$result['proId']
+	    		);
+	    		
+	    		$poProduct = $dbs->getProductPOInfo($paramPro);
+	    		if(!empty($poProduct)){//update po product detail and po
+	    				
+	    			$currentAfter = $poProduct['qtyAfter'];
+	    			$Receiveqty = $result['qtyReceive'];
+	    			
+	    			$arr =array(
+    					'qtyAfter'=>$currentAfter+$Receiveqty,
+    					'isClosed'=>0
+	    			);
+	    				
+	    			$where= "purchaseId = ".$poId." AND proId=".$poProduct['proId'];
+	    			$this->_name='st_purchasing_detail';
+	    			$this->update($arr, $where);
+	    		}
+	    		
+	    		$where= "id = ".$result['id'];
+	    		 
+	    		$this->_name='st_receive_stock_detail';
+	    		$this->delete($where);
+	    		
+	    		$where= "transId = ".$result['id'];
+	    		$this->_name='st_product_story';
+	    		$this->delete($where);
+	    		
+	    		
+	    	}
+	    	
+	    	$where="id=".$poId;
+	    	$this->_name="st_purchasing";
+		    	$arr =array(
+		    			'processingStatus'=>0
+		    	);
+	    	$this->update($arr, $where);
+    	}
+    				
     }
     function verifyDN($data){
     	$arr = array(
@@ -217,29 +423,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	$where= "id=".$data['purchaseId'];
     	$this->update($arr, $where);
     }
-    function updatePurchaseQtybyProId(){
-    	
-    }
-    function updateData($data){
-    	 
-    	$db = $this->getAdapter();
-    	$db->beginTransaction();
-    	try
-    	{
-    		$arr = array(
-    				''=>''
-    
-    		);
-    		
-    		//$this->_name='';
-    		$where = 'client_id = '.$data['id'];
-			$this->update($arr, $where);
-    		$db->commit();
-    	}catch (Exception $e){
-    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		$db->rollBack();
-    	}
-    }
+   
     function getAllProductByPO($data){
     	$db = $this->getAdapter();
     	
@@ -247,7 +431,6 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	$rs = $db->getProductPOInfo($data);
     
     	$string='';
-    	//$no = 1;
     	$no = $data['keyindex'];
     	$identity='';
     	
@@ -265,7 +448,24 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 	    	if(($key%2)==0){
 	    			$classRowBg = "regurlar";
 	    	}
-	    
+	    	
+	    	$qtyReceived=0;
+	    	$row['qtyReceive']=$row['qtyAfter'];
+	    	$note='';
+	    	if(!empty($data['dnId'])){
+	    		$param = array(
+	    			'proId'=>$row['proId'],
+	    			'dnId'=>$data['dnId']
+	    			);
+	    		$result = $this->getQtyReceivedByProId($param);
+	    		$qtyReceived = $result['qtyReceive'];
+	    		$note = $result['note'];
+	    		$row['qtyReceive'] = $qtyReceived;
+	    		$row['qtyAfter'] = $row['qtyAfter']+$qtyReceived;
+	    		
+	    		
+	    	}
+	    	
 	    	$Message="rangeMessage:'".$tr->translate('CAN_NOT_RECEIVE_OVER')."'";
 	    		$string.='
 		    		<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
@@ -275,15 +475,16 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 		    			<td><input type="text" class="fullside" readonly dojoType="dijit.form.NumberTextBox" required="required" name="qtyPO'.$no.'"  value="'.$row['qty'].'" style="text-align: center;" >
 		    				<input type="hidden" class="fullside" name="productId'.$no.'" id="productId'.$no.'" value="'.$row['proId'].'" style="text-align: center;" >
 		    				<input type="hidden" class="fullside" name="price'.$no.'" id="price'.$no.'" value="'.$row['unitPrice'].'" style="text-align: center;" >
+		    				<input type="hidden" class="fullside" name="discountAmount'.$no.'" id="discountAmount'.$no.'" value="'.$row['discountAmount'].'" style="text-align: center;" >
 		    			</td>
 		    			<td><input type="text" class="fullside" readonly dojoType="dijit.form.NumberTextBox" required="required" name="qtyAfter'.$no.'" id="qtyAfter'.$no.'" value="'.$row['qtyAfter'].'" style="text-align: center;" ></td>
-		    			<td><input type="text" class="fullside" data-dojo-props="constraints:{min:0,max:'.$row['qtyAfter'].'},'.$Message.'" dojoType="dijit.form.NumberTextBox" required="required" name="qtyReceive'.$no.'" id="qtyReceive'.$no.'" value="'.$row['qtyAfter'].'" style="text-align: center;" ></td>
+		    			<td><input type="text" class="fullside" data-dojo-props="constraints:{min:0,max:'.$row['qtyAfter'].'},'.$Message.'" dojoType="dijit.form.NumberTextBox" required="required" name="qtyReceive'.$no.'" id="qtyReceive'.$no.'" value="'.$row['qtyReceive'].'" style="text-align: center;" ></td>
 		    			<td><select dojoType="dijit.form.FilteringSelect" class="fullside" name="receiveStatus'.$no.'" id="receiveStatus'.$no.'" >
-		    					<option value="1">ទទួលគ្រប់</option>
 		    					<option value="0">ទទួលមិនគ្រប់</option>
+		    					<option value="1">ទទួលគ្រប់</option>
 		    				</select>
 		    			</td>
-		    			<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" name="note'.$no.'" id="note'.$no.'" /></td>
+		    			<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" name="note'.$no.'" id="note'.$no.'" value="'.$note.'" /></td>
 		    			</tr>
 	    			';
 	    		$no++;
@@ -309,6 +510,20 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	
     	$array = array('stringrow'=>$string,'POInfoDataBlog'=>$strPOInfo,'keyindex'=>$no,'identity'=>$identity);
     	return $array;
+    }
+    function getQtyReceivedByProId($data){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT rd.note,rd.qtyReceive 
+    					FROM `st_receive_stock` r,
+    						 `st_receive_stock_detail` rd
+					WHERE r.id=rd.receiveId ";
+    	if(!empty($data['proId'])){
+    		$sql.=" AND proId=".$data['proId'];
+    	}
+    	if(!empty($data['dnId'])){
+    		$sql.=" AND r.id=".$data['dnId'];
+    	}
+    	return $db->fetchRow($sql);
     }
     function getDataRow($recordId){
     	$db = $this->getAdapter();
@@ -341,6 +556,8 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     function getDNDetailById($recordId){
     	$db = $this->getAdapter();
     	$sql=" SELECT 
+    				sd.id,
+    				sd.proId,
 					(SELECT p.proName FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proName,
 					(SELECT p.proCode FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proCode,
 					(SELECT p.measureLabel FROM st_product p WHERE p.proId=sd.proId LIMIT 1) measureLabel,

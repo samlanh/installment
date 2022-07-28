@@ -58,25 +58,32 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 			$this->view->frmReceivStock = $frm;
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$db = new Stockinout_Model_DbTable_DbReceiveStock();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->updateDataReceive($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/stockinout/index/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
-		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+		$result = $db->getDataRow($id);
+		if(empty($id) OR empty($result) OR ($result['isIssueInvoice']==1)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/index/index");
 		}
+		
+		
+		$fm = new Stockinout_Form_FrmReceiveStock();
+		$frm = $fm->FrmReceivStock($result);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmReceivStock = $frm;
+		$this->view->rsDn = $result;
+		
 	}
 	function verifyAction(){
 		$db = new Stockinout_Model_DbTable_DbReceiveStock();
