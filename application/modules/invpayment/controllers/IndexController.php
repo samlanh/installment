@@ -5,7 +5,7 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 	public function indexAction(){
 		//$db = new ();
 		try{
-			$db = new Invpayment_Model_DbTable_DbDepositInvoice();
+			$db = new Invpayment_Model_DbTable_DbInvoice();
 			
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -21,7 +21,7 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 			}
 			$search['ivType']=self::INVOICE_TYPE;
 			$rs_rows=array();
-			$rs_rows= $db->getAllDepositInvoice($search);//
+			$rs_rows= $db->getAllInvoice($search);//
 			
 			
 			$list = new Application_Form_Frmtable();
