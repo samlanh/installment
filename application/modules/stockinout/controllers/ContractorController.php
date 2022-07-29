@@ -1,5 +1,5 @@
 <?php
-class Stockinout_StaffController extends Zend_Controller_Action {
+class Stockinout_ContractorController extends Zend_Controller_Action {
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -7,7 +7,7 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 	}
 	public function indexAction(){
 		$rs_rows=array();
-		$db = new Stockinout_Model_DbTable_DbWorker();
+		$db = new Stockinout_Model_DbTable_DbContractor();
 		try{
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -30,7 +30,7 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 			}
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","WORKER_NAME","GENDER","ADDRESS","TEL","POSITION","CREATE_DATE","BY_USER","STATUS");
-			$link=array('module'=>'stockinout','controller'=>'staff','action'=>'edit');
+			$link=array('module'=>'stockinout','controller'=>'contractor','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('branch_name'=>$link,'staffName'=>$link,'gender'=>$link));
 			
 			$frm = new Application_Form_FrmAdvanceSearch();
@@ -42,9 +42,9 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				$db = new Stockinout_Model_DbTable_DbWorker();
+				$db = new Stockinout_Model_DbTable_DbContractor();
 				$db->addWorker($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/staff/add");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/contractor/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -56,12 +56,12 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 		$this->view->frmWorker = $frm;
 	}
 	function editAction(){
-		$db = new Stockinout_Model_DbTable_DbWorker();
+		$db = new Stockinout_Model_DbTable_DbContractor();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
 				$db->updateWorker($_data);
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/stockinout/staff");
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/stockinout/contractor");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -70,7 +70,7 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/staff/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/contractor/index");
 		}
 		
 		$row = $db->getDataRow($id);
@@ -81,11 +81,11 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 		$this->view->frmWorker = $frm;
 		
 	}
-	function getallstaffAction(){
+	function getallcontractorAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db_com = new Application_Model_DbTable_DbGlobalStock();
-			$id = $db_com->getAllStaffbyBranch($data);
+			$id = $db_com->getAllContractorbyBranch($data);
 			print_r(Zend_Json::encode($id));
 			exit();
 		}

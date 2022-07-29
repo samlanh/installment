@@ -6,35 +6,46 @@ class Stockinout_UsageController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		//$rs_rows=array();
-		//$db = new ();
-		try{
-			if(!empty($this->getRequest()->isPost())){
-				$search=$this->getRequest()->getPost();
-			}
-			else{
-				$search = array(
-					'adv_search'=>'',
-					'branch_id'=>-1,
-					'start_date'=> date('Y-m-d'),
-					'end_date'=>date('Y-m-d'),
-				);
-			}
-			
-			//$rs_rows= $db->getAllSentSMS($search);//
-			
+		$rs_rows=array();
+		$db = new Stockinout_Model_DbTable_DbStockout();
+			try{
+				if(!empty($this->getRequest()->isPost())){
+					$search=$this->getRequest()->getPost();
+				}
+				else{
+					$search = array(
+						'adv_search'=>'',
+						'branch_id'=>-1,
+						'status'=>-1,
+						'propertyType'=>'',
+						'workType'=>0,
+						'contractor'=>0,
+						'staffWithdraw'=>0,
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+					);
+				}
+				$rs_rows = $db->getAllUsageStock($search);
+				
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
+			$this->view->search = $search;
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CREATE_DATE","BY_USER");
+			$collumns = array("BRANCH_NAME","REQUEST_NO_FROM","REQUEST_NO","REQUEST_DATE","STAFF_WITHDRAW",
+					"STAFF_MG","ConstructionWorker","PROPERTY_TYPE","LAND_CODE","USAGE_TYPE","WORK_TYPE","BY_USER","STATUS");
 			$link=array('module'=>'','controller'=>'','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
-// 			$frm = new Application_Form_FrmAdvanceSearch();
-// 			$frm = $frm->AdvanceSearch();
-// 			Application_Model_Decorator::removeAllDecorator($frm);
-// 			$this->view->frm_search = $frm;
+			$frm = new Application_Form_FrmAdvanceSearch();
+			$frm = $frm->AdvanceSearch();
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frm_search = $frm;
+			
+			$fm = new Stockinout_Form_FrmStockOut();
+			$frm = $fm->FrmWithdrawStock();
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frm_stock = $frm;
 		
 	}
 	function addAction(){

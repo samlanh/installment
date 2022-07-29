@@ -18,6 +18,7 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$dbGBStock = new Application_Model_DbTable_DbGlobalStock();
+		$request = Zend_Controller_Front::getInstance()->getRequest();
 		
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$_branch_id->setAttribs(array(
@@ -38,12 +39,13 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		$propertyType->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'onchange'=>'getAllPropertyBranch();'
+				'onchange'=>'getAllProperty();'
 		));
 		
 		$rsProtype = $db->getPropertyType();
 		unset($rsProtype['-1']);
 		$propertyType->setMultiOptions($rsProtype);
+		$propertyType->setValue($request->getParam('propertyType'));
 		
 		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
 		$categoryId->setAttribs(array(
@@ -78,6 +80,8 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		));
 		$opt = $dbGBStock->getAllWorkType(0,'','',1);
 		$workType->setMultiOptions($opt);
+		$workType->setValue($request->getParam('workType'));
+		
 		
 		$withdrawDate = new Zend_Dojo_Form_Element_TextBox('withdrawDate');
 		$withdrawDate->setAttribs(array(
@@ -100,9 +104,6 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		
 		$ConstructionWorker = new Zend_Dojo_Form_Element_TextBox('ConstructionWorker');
 		$ConstructionWorker->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
-		
-		
-		
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
 		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));

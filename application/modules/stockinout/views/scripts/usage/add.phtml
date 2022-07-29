@@ -65,7 +65,7 @@
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("WITHDRAW_DATE");?>
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REQUEST_DATE");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('withdrawDate');?>
@@ -75,14 +75,16 @@
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STAFF_WITHDRAW");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('staffWithdraw');?>
+	                    	<?php //echo $frm->getElement('staffWithdraw');?>
+	                    	<Input id="staffWithdraw" />
 	                   </div>
 	                </div>
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STAFF_MG");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('staffMg');?>
+	                    	<?php //echo $frm->getElement('staffMg');?>
+	                    	<Input id="contractor" />
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -106,7 +108,7 @@
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_TYPE");?>
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LAND_CODE");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                   		<Input id="houseId" />
@@ -207,18 +209,53 @@
     	 
 	     } 
 	 }, "houseId");
-	 function getDataByBranch(){
-		 getAllPropertyBranch();
-		 getAllProduct();
-		 getWithdrawRequestNo();
-	}
 
-	var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
-	function getAllPropertyBranch(){
-		branch_id = dijit.byId('branch_id').get('value');
+	new dijit.form.FilteringSelect({
+	 	autoComplete: false,
+	 	queryExpr: "*${0}*",                       
+	     id: "staffWithdraw",
+	     name: "staffWithdraw",  
+	     class: 'fullside',  
+	     required:false,
+	     placeHolder:"<?php echo $tr->translate("SELECT_STAFF");?>", 
+	     onChange: function() {
+	     } 
+	 }, "staffWithdraw");
+
+	new dijit.form.FilteringSelect({
+	 	autoComplete: false,
+	 	queryExpr: "*${0}*",                       
+	     id: "contractor",
+	     name: "contractor",  
+	     class: 'fullside',  
+	     required:false,
+	     placeHolder:"<?php echo $tr->translate("SELECT_CONTRACTOR");?>", 
+	     onChange: function() {
+    	 
+	     } 
+	 }, "contractor");
+
+	 function getDataByBranch(){
+		 branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id==0){
 			return false;
 		}
+			
+		 getAllPropertyBranch(branch_id);
+		 getAllProduct(branch_id);
+		 getWithdrawRequestNo(branch_id);
+		 getAllStaff(branch_id);
+		 getAllContractor(branch_id);
+	}
+	function getAllProperty(){
+		 branch_id = dijit.byId('branch_id').get('value');
+			if(branch_id=='' || branch_id==0){
+				return false;
+			}
+			getAllPropertyBranch(branch_id);
+	}
+	var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+	function getAllPropertyBranch(branch_id){
 		dijit.byId('houseId').reset();
 		property_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 		dijit.byId('houseId').set('store', property_store);
@@ -240,11 +277,7 @@
 		});
 	} 
 	var url_getrequest = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'usage','action'=>'getrequestno')); ?>';
-	function getWithdrawRequestNo(){
-		branch_id = dijit.byId('branch_id').get('value');
-		if(branch_id=='' || branch_id==0){
-			return false;
-		}
+	function getWithdrawRequestNo(branch_id){
 		dojo.xhrPost({
 			url:url_getrequest,	
 			content:{ 
@@ -258,12 +291,8 @@
 			}
 		});
 	} 
-	function getAllProduct(){
+	function getAllProduct(branch_id){
 		var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
-		branch_id = dijit.byId('branch_id').get('value');
-		if(branch_id=='' || branch_id<=0){
-			branch_id = 0;
-		}
 		categoryId = dijit.byId('categoryId').get('value');
 		if(categoryId=='' || categoryId==0){
 			categoryId=0;
@@ -271,6 +300,19 @@
 		objectContentFilter = {'branch_id':branch_id,'categoryId':categoryId};
 		getAllProductStoreFunction(urlGetAllProduct,objectContentFilter);
 	}
+	function getAllStaff(branch_id){
+		var urlGetAllStaff = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'staff','action'=>'getallstaff')); ?>';
+		
+		objectContentFilter = {'branch_id':branch_id};
+		getAllStaffbyBranch(urlGetAllStaff,objectContentFilter);
+	}
+	function getAllContractor(branch_id){
+		var urlGetAllContractor = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'contractor','action'=>'getallcontractor')); ?>';
+		objectContentFilter = {'branch_id':branch_id};
+		getAllContractorbyBranch(urlGetAllContractor,objectContentFilter);
+	}
+
+	
 	var col= 0; var no=0;
 	var title = 0;
 	var urlGetProductInfo = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'productinfo')); ?>';
@@ -328,7 +370,7 @@
 				template+='<td align="center" width="2%">'+no+'</td>';
 				template+='<td class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
 				template+='<td class="currentQty"  width="10%">'+data.currentQty+' ('+data.measureTitle+')</td>';	
-				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="0" type="text"  ></td>';	
+				template+='<td><input dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0000001}" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> "  type="text"  ></td>';	
 				template+='<td><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
 				tmp='<tr class="rowData" id="row'+col+'">';
 				tmp+="</tr>";
@@ -340,14 +382,12 @@
 				dojo.html.set(dojo.byId("row"+col),template , {
 					 parseContent: true,
 				});
-				
 				dijit.byId('productId').reset();
 			},
 			error: function(err) {
 			}
 		});
 	}
-	
 
 	function deleteRecord(index) {
 		var identity = $('#identity').val();

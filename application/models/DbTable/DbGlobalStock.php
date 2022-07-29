@@ -912,6 +912,46 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		return $options;
 	}
+	function getAllStaffbyBranch($data,$option=null){
+		$db=$this->getAdapter();
+		$sql="SELECT 
+					id,staffName AS name
+				FROM st_worker
+					WHERE `status`=1 ";
+		if(!empty($data['branch_id'])){
+			$sql.=" AND projectId=".$data['branch_id'];
+		}
+		$rows = $db->fetchAll($sql);
+		if($option!=null){
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			$options= array(-1=>$tr->translate("CHOOSE_STAFF"));
+				if(!empty($rows))foreach($rows AS $row){
+					$options[$row['id']]=$row['name'];
+				}
+				return $options;
+		}
+		return $rows;
+	}
+	function getAllContractorbyBranch($data,$option=null){
+		$db=$this->getAdapter();
+		$sql="SELECT
+		id,staffName AS name
+		FROM st_contractor
+		WHERE `status`=1 ";
+		if(!empty($data['branch_id'])){
+			$sql.=" AND projectId=".$data['branch_id'];
+		}
+		$rows = $db->fetchAll($sql);
+		if($option!=null){
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			$options= array(-1=>$tr->translate("CHOOSE_STAFF"));
+			if(!empty($rows))foreach($rows AS $row){
+				$options[$row['id']]=$row['name'];
+			}
+			return $options;
+		}
+		return $rows;
+	}
 	
 }
 ?>

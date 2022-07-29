@@ -30,43 +30,62 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	}
     	return $pre.$new_acc_no;
     }
-//     function getAllStaffWorker($search){
-//     	$sql="SELECT 
-// 		    		w.id,
-// 		    		(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = w.projectId LIMIT 1) AS branch_name,
-// 		    		w.staffName,
-// 		    		(SELECT name_kh FROM `ln_view` WHERE TYPE =11 AND w.gender=key_code LIMIT 1) AS gender,
-// 		    		w.address,
-// 		    		w.tel,
-// 		    		w.position,
-// 			    	w.createDate,
-// 			    	(SELECT first_name FROM rms_users AS u WHERE u.id = w.userId LIMIT 1) AS USER ,
-// 		    		(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = w.status LIMIT 1) AS STATUS
-// 		    	FROM $this->_name AS w
-// 		    		WHERE 1 ";
+    function getAllUsageStock($search){
+    	$sql="SELECT id,
+				(SELECT project_name FROM `ln_project` WHERE br_id=so.projectId LIMIT 1) AS projectName,
+				so.requestNo,
+				so.reqOutNo,
+				so.requestDate,
+				(SELECT w.staffName FROM `st_worker` w where w.id=so.staffId LIMIT 1) as staffName,
+				(SELECT c.staffName FROM `st_contractor` c where c.id=so.contractor LIMIT 1) as contractor,
+				so.workerName,
+				(SELECT pt.type_nameen FROM `ln_properties_type` pt where pt.id=so.houseType LIMIT 1) as houseType,
+				(SELECT p.land_address FROM `ln_properties` p where p.id=so.houseId LIMIT 1) as houseNo,
+				(SELECT w.workTitle FROM `st_work_type` w where w.id=so.workType LIMIT 1) workType,
+				so.typeofWork,
+				(SELECT first_name FROM rms_users WHERE id=so.userId LIMIT 1 ) AS user_name,
+				(SELECT name_en FROM ln_view WHERE type=3 and key_code = so.status LIMIT 1) AS status
+								
+			FROM `st_stockout` as so where so.tranType=1 ";
     	
-//     	$from_date =(empty($search['start_date']))? '1': "w.createDate >= '".$search['start_date']." 00:00:00'";
-//     	$to_date = (empty($search['end_date']))? '1': " w.createDate <= '".$search['end_date']." 23:59:59'";
+    	$from_date =(empty($search['start_date']))? '1': " so.createDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " so.createDate <= '".$search['end_date']." 23:59:59'";
     	
-//     	$where_date = " AND ".$from_date." AND ".$to_date;
-//     	$where='';
+    	$where_date = " AND ".$from_date." AND ".$to_date;
+    	$where='';
     	
-//     	if(!empty($search['adv_search'])){
-//     		$s_where = array();
-//     		$s_search = (trim($search['adv_search']));
-//     		$s_where[] = " w.staffName LIKE '%{$s_search}%'";
-//     		$where .=' AND ( '.implode(' OR ',$s_where).')';
-//     	}
-//     	if($search['status']>-1){
-//     		$where.= " AND w.status = ".$search['status'];
-//     	}
-//     	if($search['branch_id']>-1){
-//     		$where.= " AND w.projectId = ".$search['branch_id'];
-//     	}
-//     	$order=' ORDER BY w.id DESC  ';
-//     	$db = $this->getAdapter();
-//     	return $db->fetchAll($sql.$where_date.$where.$order);
-//     }
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = (trim($search['adv_search']));
+    		$s_where[] = " so.requestNo LIKE '%{$s_search}%'";
+    		$s_where[] = " so.reqOutNo LIKE '%{$s_search}%'";
+    		$s_where[] = " so.workerName LIKE '%{$s_search}%'";
+    		$s_where[] = " so.typeofWork LIKE '%{$s_search}%'";
+    		
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	if($search['branch_id']>-1){
+    		$where.= " AND so.projectId = ".$search['branch_id'];
+    	}
+    	if($search['workType']>0){
+    		$where.= " AND so.workType = ".$search['workType'];
+    	}
+    	if(!empty($search['propertyType'])){
+    		$where.= " AND so.houseType = ".$search['propertyType'];
+    	}
+    	if($search['contractor']>0){
+    		$where.= " AND so.contractor = ".$search['contractor'];
+    	}
+    	if($search['staffWithdraw']>0){
+    		$where.= " AND so.staffId = ".$search['staffWithdraw'];
+    	}
+    	if($search['status']>-1){
+    		$where.= " AND so.status = ".$search['status'];
+    	}
+    	$order=' ORDER BY so.id DESC  ';
+    	$db = $this->getAdapter();
+    	return $db->fetchAll($sql.$where_date.$where.$order);
+    }
    
     function addUsageStock($data){
     	$db = $this->getAdapter();
@@ -82,12 +101,13 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     				'reqOutNo'=>$data['requestNoProject'],
     				'requestDate'=>$data['withdrawDate'],
     				'staffId'=>$data['staffWithdraw'],
-    				'managerId'=>$data['staffMg'],
+    				'contractor'=>$data['contractor'],
     				'staffId'=>$data['staffWithdraw'],
     				'workerName'=>$data['ConstructionWorker'],
     				'houseType'=>$data['propertyType'],
     				'houseId'=>$data['houseId'],
     				'workType'=>$data['workType'],
+    				'typeofWork'=>$data['typeofWork'],
     				'note'=>$data['note'],
     				'createDate'=>$data['withdrawDate'],
     				'status'=>1,
