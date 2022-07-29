@@ -72,7 +72,6 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     				);
     		$rowData = $dbs->getProductPOInfo($param);
     		
-    		
     		$arr = array(
     				'projectId'=>$data['branch_id'],
     				'dnType'=>$data['documentType'],

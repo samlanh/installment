@@ -24,7 +24,7 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required' =>'true',
-				'onchange'=>'getAllPropertyBranch();'
+				'onchange'=>'getDataByBranch();'
 		));
 		
 		$rows = $db->getAllBranchName();
@@ -38,19 +38,30 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		$propertyType->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'onchange'=>'getAllPropertyBranch();'
 		));
-		$rsSpp = $dbGBStock->getAllSupplier();
-		$optSpp=array(''=>$this->tr->translate("SELECT_PROPERTY_TYPE"));
-		if(!empty($rsSpp))foreach($rsSpp AS $row){
-			$optSpp[$row['id']]=$row['name'];
-		}
-		$propertyType->setMultiOptions($optSpp);
+		
+		$rsProtype = $db->getPropertyType();
+		unset($rsProtype['-1']);
+		$propertyType->setMultiOptions($rsProtype);
+		
+		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
+		$categoryId->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>'getAllProduct();'
+		));
+		
+		$rsCate = $dbGBStock->getAllCategoryProduct(0,'','',1);
+		unset($rsCate['-1']);
+		$categoryId->setMultiOptions($rsCate);
 		
 		$requestNo = new Zend_Dojo_Form_Element_TextBox('requestNo');
 		$requestNo->setAttribs(array(
 			'dojoType'=>$this->tvalidate,
 			'required'=>'true',
 			'class'=>'fullside',
+			'readonly'=>true
 			));
 		
 		$requestNoFromProject = new Zend_Dojo_Form_Element_TextBox('requestNoProject');
@@ -65,8 +76,7 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 		));
-		$opt = $dbGBStock->getViewById(4,1);//array(1=>"DELIVERY_NOTE",2=>"INVOICE");
-		unset($opt['-1']);
+		$opt = $dbGBStock->getAllWorkType(0,'','',1);
 		$workType->setMultiOptions($opt);
 		
 		$withdrawDate = new Zend_Dojo_Form_Element_TextBox('withdrawDate');
@@ -125,8 +135,9 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 			$id->setValue($_data['id']);
 			$_note->setValue($_data['note']);
 			$withdrawDate->setValue($_data['receiveDate']);
+			//$categoryId
 		}
-		$this->addElements(array($ConstructionWorker,$requestNoFromProject,$propertyType,$fileDn,$photogoods,
+		$this->addElements(array($categoryId,$ConstructionWorker,$requestNoFromProject,$propertyType,$fileDn,$photogoods,
 				$staffMg,$staffWithdraw,$typeofWork,$withdrawDate,$_branch_id,
 				$workType,$requestNo,$_status,$id,$_note,
 			));

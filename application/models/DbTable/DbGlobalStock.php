@@ -240,6 +240,30 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		return $pre.$new_acc_no;
 	}
+	function generateRequestUsageNo($_data=null){
+		
+		$this->_name='st_stockout';
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$pre = "";
+	
+		$branch_id = empty($_data['branch_id'])?0:$_data['branch_id'];
+		$pre = $dbgb->getPrefixCode($branch_id);
+	
+		$db = $this->getAdapter();
+		$sql=" SELECT so.id  FROM $this->_name AS so WHERE so.projectId = $branch_id  ORDER BY so.id DESC LIMIT 1 ";
+		$acc_no = $db->fetchOne($sql);
+		$new_acc_no= (int)$acc_no+1;
+	
+		$dateRequest = empty($_data['createDate'])?date("Y-m-d"):$_data['createDate'];
+	
+		$pre=$pre.date("dmy",strtotime($dateRequest));
+		$pre=$pre."W";
+		$numberLenght= strlen((int)$new_acc_no);
+		for($i = $numberLenght;$i<4;$i++){
+			$pre.='0';
+		}
+		return $pre.$new_acc_no;
+	}
 	function dataExisting($tbName,$where){
 			$db = $this->getAdapter();
 			$sql=" SELECT * FROM $tbName WHERE $where LIMIT 1";
@@ -745,6 +769,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$totalQty = $currentStock+$newQty;
 			$costing = (($currentStock*$currentPrice)+($newQty*$newPrice))/$totalQty;
 			
+			
 			$arr = array(
 					'projectId'=>$data['branch_id'],
 					'productId'=>$data['productId'],
@@ -760,6 +785,23 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				'costing'=>$costing
 			);
 			
+			$this->_name='st_product_location';
+			$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'];
+			$this->update($arr, $where);
+		}
+	}
+	function updateProductLocation($data){
+		$resultStock = $this->getProductInfoByLocation($data);
+		if(!empty($resultStock)){
+				
+			$currentStock = $resultStock['currentQty'];
+			$newQty = $data['EntyQty'];
+			$totalQty = $currentStock+$newQty;
+				
+			$arr = array(
+					'qty'=>$totalQty,
+			);
+				
 			$this->_name='st_product_location';
 			$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'];
 			$this->update($arr, $where);
