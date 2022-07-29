@@ -309,7 +309,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 				spp.contactNumber,
 				spp.address,
 				spp.supplierTel,
-				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) AS paymentMethod,
+				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) AS paymentMethodTitle,
 				(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) AS bankName
 			";
 		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=pt.userId LIMIT 1 ) AS byUser";
@@ -346,6 +346,161 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 			WHERE pd.paymentId =$paymentId ";
 		$sql.=" LIMIT 1 ";
 		return $db->fetchAll($sql);
+	}
+	
+	function getAllInvoice($search){
+    	$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		
+		$sql="
+			SELECT 
+				inv.*,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = inv.projectId LIMIT 1) AS branch_name,
+				po.purchaseNo,
+				po.date AS purchaseDate,
+				spp.supplierName
+				,
+				po.requestId,
+				rq.requestNo,
+				rq.purpose AS purposeRequest,
+				rq.requestNoLetter  AS requestNoLetter ,
+				rq.date AS requestDate,
+				rq.note AS requestNote,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestName
+			";
+		
+		$arrStep = array(
+			'keyIndex'=>"inv.ivType",
+			'typeKeyIndex'=>3,
+		);
+		$sql.= $dbGBstock->invoiceTypeKey($arrStep);
+		
+		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=inv.userId LIMIT 1 ) AS byUser";
+		$sql.=" FROM `st_invoice` AS inv 
+					JOIN `st_purchasing` AS po ON po.id = inv.purId 
+					LEFT JOIN `st_supplier` AS spp ON spp.id = inv.supplierId 
+					LEFT JOIN `st_request_po` AS rq ON rq.id = po.requestId 
+				WHERE inv.status=1
+		";
+		
+    	$where = "";
+    	$from_date =(empty($search['start_date']))? '1': " inv.receiveIvDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " inv.receiveIvDate <= '".$search['end_date']." 23:59:59'";
+    	
+    	$where.= " AND ".$from_date." AND ".$to_date;
+    	
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = (trim($search['adv_search']));
+    		$s_where[] = " inv.invoiceNo LIKE '%{$s_search}%'";
+    		$s_where[] = " inv.supplierInvoiceNo LIKE '%{$s_search}%'";
+    		$s_where[] = " po.purchaseNo LIKE '%{$s_search}%'";
+    		$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
+    		$s_where[] = " po.purpose LIKE '%{$s_search}%'";
+			
+    		$s_where[] = " inv.totalInternal LIKE '%{$s_search}%'";
+    		$s_where[] = " inv.vatInternal LIKE '%{$s_search}%'";
+			
+    		$s_where[] = " inv.totalAmount LIKE '%{$s_search}%'";
+    		$s_where[] = " inv.vatExternal LIKE '%{$s_search}%'";
+    		$s_where[] = " inv.otherFeeExternal LIKE '%{$s_search}%'";
+			
+    		$s_where[] = " inv.totalExternal LIKE '%{$s_search}%'";
+    		$s_where[] = " inv.totalAmountExternal LIKE '%{$s_search}%'";
+			
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	
+    	if(($search['branch_id'])>0){
+    		$where.= " AND inv.projectId = ".$search['branch_id'];
+    	}
+		if(!empty($search['supplierId'])){
+    		$where.= " AND inv.supplierId = ".$search['supplierId'];
+    	}
+		if(!empty($search['invoiceType'])){
+    		$where.= " AND inv.ivType = ".$search['invoiceType'];
+    	}
+    	$order=' ORDER BY inv.id DESC  ';
+    	$where.=$dbGb->getAccessPermission("inv.projectId");
+		
+    	return $db->fetchAll($sql.$where.$order);
+    }
+	
+	
+	function getDataRowInvoice($recordId){
+    	$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();		
+			$this->_name='st_invoice';
+			$sql=" SELECT inv.*  ";
+			$sql.="
+				,(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = inv.projectId LIMIT 1) AS branch_name,
+				spp.supplierName,
+				spp.address,
+				spp.supplierTel,
+				spp.contactName,
+				spp.contactNumber,
+				po.requestId,
+				po.date AS purchaseDate,
+				po.purchaseNo,
+				po.date AS purchaseDate,
+				rq.requestNo,
+				rq.purpose AS purposeRequest,
+				rq.requestNoLetter  AS requestNoLetter ,
+				rq.date AS requestDate,
+				rq.note AS requestNote,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
+				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestName,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=inv.userId LIMIT 1 ) AS byUser
+			";
+			$sql.=" 
+				FROM $this->_name AS inv 
+					JOIN `st_purchasing` AS po ON po.id = inv.purId 
+					LEFT JOIN `st_supplier` AS spp ON spp.id = inv.supplierId 
+					LEFT JOIN `st_request_po` AS rq ON rq.id = po.requestId 
+			";
+			$sql.=" WHERE inv.id= ".$recordId;
+			$sql.=$dbGb->getAccessPermission("inv.projectId");
+			$sql.=" LIMIT 1 ";
+    	return $db->fetchRow($sql);
+    }
+	function getInvoiceDetailById($data){
+		$recordId = empty($data['id'])?0:$data['id'];
+		$isService = empty($data['isService'])?0:$data['isService'];
+		$db = $this->getAdapter();
+		$sql=" 	SELECT 
+					invd.*,p.proCode,
+					p.proName,
+					p.isService AS serviceOrProType,
+					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= inv.projectId LIMIT 1) AS currentQty,
+					p.measureLabel AS measureTitle
+					";
+			
+		$sql.="		FROM 
+					`st_invoice_detail` as invd
+					JOIN `st_invoice` AS inv ON inv.id = invd.invId
+					LEFT JOIN `st_product` AS p  ON p.proId = invd.proId 
+			";
+		$sql.=" WHERE invd.invId = $recordId";
+		if(empty($data['getAllRecord'])){
+			$sql.=" AND invd.type = $isService ";
+		}
+		
+		return $db->fetchAll($sql);
+	}
+	function getDNByListOfInvoice($dnList){
+		$db = $this->getAdapter();
+		$sql="SELECT GROUP_CONCAT(rst.dnNumber)	AS DNNumberList
+			FROM st_receive_stock AS rst 
+			 WHERE rst.status=1 
+			AND rst.id  IN ($dnList) LIMIT 1";
+		return $db->fetchRow($sql);
 	}
 
 }
