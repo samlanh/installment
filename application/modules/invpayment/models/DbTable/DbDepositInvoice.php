@@ -136,6 +136,12 @@ class Invpayment_Model_DbTable_DbDepositInvoice extends Zend_Db_Table_Abstract
 							'unitPrice'			=>$data['unitPrice'.$i],
 							'discountAmount'	=>$data['discountAmount'.$i],
 							'total'				=>$data['total'.$i],
+							
+							//received
+							'totalQtyReceive'				=>$data['qty'.$i],
+							'unitPriceReceive'			=>$data['unitPrice'.$i],
+							'totalReceiveDiscount'	=>$data['discountAmount'.$i],
+							'totalReceive'				=>$data['total'.$i],
 						);
 					$this->_name='st_invoice_detail';	
 					$this->insert($arr);
@@ -154,6 +160,13 @@ class Invpayment_Model_DbTable_DbDepositInvoice extends Zend_Db_Table_Abstract
 							'unitPrice'			=>$data['totalService'.$i],
 							'discountAmount'	=>0,
 							'total'				=>$data['totalService'.$i],
+							
+							//received
+							'totalQtyReceive'			=>1,
+							'unitPriceReceive'			=>$data['totalService'.$i],
+							'totalReceiveDiscount'		=>0,
+							'totalReceive'				=>$data['totalService'.$i],
+							
 						);
 					$this->_name='st_invoice_detail';	
 					$this->insert($arr);
@@ -234,6 +247,12 @@ class Invpayment_Model_DbTable_DbDepositInvoice extends Zend_Db_Table_Abstract
 							'unitPrice'			=>$data['unitPrice'.$i],
 							'discountAmount'	=>$data['discountAmount'.$i],
 							'total'				=>$data['total'.$i],
+							
+							//received
+							'totalQtyReceive'				=>$data['qty'.$i],
+							'unitPriceReceive'			=>$data['unitPrice'.$i],
+							'totalReceiveDiscount'	=>$data['discountAmount'.$i],
+							'totalReceive'				=>$data['total'.$i],
 						);
 						$this->_name='st_invoice_detail';	
 						$where =" id =".$data['detailId'.$i];
@@ -248,6 +267,12 @@ class Invpayment_Model_DbTable_DbDepositInvoice extends Zend_Db_Table_Abstract
 							'unitPrice'			=>$data['unitPrice'.$i],
 							'discountAmount'	=>$data['discountAmount'.$i],
 							'total'				=>$data['total'.$i],
+							
+							//received
+							'totalQtyReceive'				=>$data['qty'.$i],
+							'unitPriceReceive'			=>$data['unitPrice'.$i],
+							'totalReceiveDiscount'	=>$data['discountAmount'.$i],
+							'totalReceive'				=>$data['total'.$i],
 						);
 						$this->_name='st_invoice_detail';	
 						$this->insert($arr);
@@ -291,6 +316,12 @@ class Invpayment_Model_DbTable_DbDepositInvoice extends Zend_Db_Table_Abstract
 							'unitPrice'			=>$data['totalService'.$i],
 							'discountAmount'	=>0,
 							'total'				=>$data['totalService'.$i],
+							
+							//received
+							'totalQtyReceive'			=>1,
+							'unitPriceReceive'			=>$data['totalService'.$i],
+							'totalReceiveDiscount'		=>0,
+							'totalReceive'				=>$data['totalService'.$i],
 						);
 						$this->_name='st_invoice_detail';	
 						$where =" id =".$data['serviceDetailId'.$i];
@@ -306,6 +337,12 @@ class Invpayment_Model_DbTable_DbDepositInvoice extends Zend_Db_Table_Abstract
 							'unitPrice'			=>$data['totalService'.$i],
 							'discountAmount'	=>0,
 							'total'				=>$data['totalService'.$i],
+							
+							//received
+							'totalQtyReceive'			=>1,
+							'unitPriceReceive'			=>$data['totalService'.$i],
+							'totalReceiveDiscount'		=>0,
+							'totalReceive'				=>$data['totalService'.$i],
 							);
 						$this->_name='st_invoice_detail';	
 						$this->insert($arr);

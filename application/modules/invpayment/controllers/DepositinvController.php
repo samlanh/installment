@@ -94,6 +94,19 @@ class Invpayment_DepositinvController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
     		exit();
     	}
+		
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		$arrStep = array(
+				'keyIndex'=>self::INVOICE_TYPE,
+				'typeKeyIndex'=>1,
+			);
+		$invoiceType = $dbGBstock->invoiceTypeKey($arrStep);
+		
+		if ($row['ivType']!=$invoiceType){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		
 		$arrFilter = array(
 						'id'=>$id,
 					);

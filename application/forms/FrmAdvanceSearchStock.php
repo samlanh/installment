@@ -198,6 +198,24 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$purchaseType->setMultiOptions($optionsPurchasingType);
 		$purchaseType->setValue($request->getParam("purchaseType"));
 		
+		$invoiceType = new Zend_Dojo_Form_Element_FilteringSelect('invoiceType');
+		$invoiceType->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'false',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+		));
+		$arrProc = array('typeKeyIndex'=>4);
+		$rowInvoiceType = $dbGBStock->invoiceTypeKey($arrProc);
+		$optionsInvoiceType=array(0=>$this->tr->translate("SELECT_INVOICE_TYPE"));
+		if(!empty($rowInvoiceType))foreach($rowInvoiceType AS $row){
+			$optionsInvoiceType[$row['id']]=$row['name'];
+		}
+		$invoiceType->setMultiOptions($optionsInvoiceType);
+		$invoiceType->setValue($request->getParam("invoiceType"));
+		
+		
 		$paymentMethod = new Zend_Dojo_Form_Element_FilteringSelect('paymentMethod');
 		$paymentMethod->setAttribs(array(
 			'dojoType'=>'dijit.form.FilteringSelect',
@@ -264,6 +282,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				
 				$processingStatus,
 				$supplierId,
+				$invoiceType,				
 				$purchaseType,				
 				$paymentMethod,				
 				$bankId,	

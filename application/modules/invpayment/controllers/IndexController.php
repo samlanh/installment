@@ -5,7 +5,7 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 	public function indexAction(){
 		//$db = new ();
 		try{
-			$db = new Invpayment_Model_DbTable_DbDepositInvoice();
+			$db = new Invpayment_Model_DbTable_DbInvoice();
 			
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -21,7 +21,7 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 			}
 			$search['ivType']=self::INVOICE_TYPE;
 			$rs_rows=array();
-			$rs_rows= $db->getAllDepositInvoice($search);//
+			$rs_rows= $db->getAllInvoice($search);//
 			
 			
 			$list = new Application_Form_Frmtable();
@@ -46,15 +46,14 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
-		
-	
-		$db = new Invpayment_Model_DbTable_DbDepositInvoice();
+
+		$db = new Invpayment_Model_DbTable_DbInvoice();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
 				
 				$_data['ivType']=self::INVOICE_TYPE;
-				$db->addDepositInvoice($_data);
+				$db->issueInvoice($_data);
 	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -67,15 +66,29 @@ class Invpayment_IndexController extends Zend_Controller_Action {
     	$frm->FrmInvoices(null);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
+		
+				
+		/*
+		$data = array(
+				'branch_id'=>1,
+				'purchaseId'=>2,
+				'dnKeyIndex'=>1,
+		);
+		$db = new Invpayment_Model_DbTable_DbInvoice();
+		$_row =$db->getDnList($data);
+		print_r($_row);
+		exit();	
+		*/	
+		
 	}
 	function editAction(){
 		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
-		$db = new Invpayment_Model_DbTable_DbDepositInvoice();
+		$db = new Invpayment_Model_DbTable_DbInvoice();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
 				$_data['ivType']=self::INVOICE_TYPE;
-				$db->editDepositInvoice($_data);
+				$db->editIssueInvoice($_data);
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -96,6 +109,19 @@ class Invpayment_IndexController extends Zend_Controller_Action {
     		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
     		exit();
     	}
+		
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		$arrStep = array(
+				'keyIndex'=>self::INVOICE_TYPE,
+				'typeKeyIndex'=>1,
+			);
+		$invoiceType = $dbGBstock->invoiceTypeKey($arrStep);
+		
+		if ($row['ivType']!=$invoiceType){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index");
+    		exit();
+    	}
+		
 		$arrFilter = array(
 						'id'=>$id,
 					);
@@ -141,7 +167,17 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 		}
 	}
 	
-	
+	function dnlistAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Invpayment_Model_DbTable_DbInvoice();
+			$_row =$db->getDnList($data);
+			
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
 	function dndetailAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -153,5 +189,7 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 			
 		}
 	}
+	
+
 }
 
