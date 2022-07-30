@@ -61,6 +61,7 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     		$s_where[] = " so.reqOutNo LIKE '%{$s_search}%'";
     		$s_where[] = " so.workerName LIKE '%{$s_search}%'";
     		$s_where[] = " so.typeofWork LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT p.id FROM `ln_properties` p WHERE p.id=so.houseId AND p.land_address LIKE '%{$s_search}%' LIMIT 1)";
     		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
@@ -146,34 +147,100 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/usage/add");
     	}
     }
-//     function updateWorker($data){
-//     	try
-//     	{
-//     		$arr = array(
-//     				'projectId'=>$data['branch_id'],
-//     				'staffName'=>$data['staffName'],
-//     				'gender'=>$data['gender'],
-//     				'position'=>$data['position'],
-//     				'tel'=>$data['tel'],
-//     				'pob'=>$data['pob'],
-//     				'dob'=>$data['dob'],
-//     				'address'=>$data['address'],
-//     				'createDate'=>date("Y-m-d"),
-//     				'status'=>$data['status'],
-//     				'userId'=>$this->getUserId()
-//     			);	;
+    function upateUsageStock($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try
+    	{
+    		$dbs = new Application_Model_DbTable_DbGlobalStock();
+    		$requestStock = $dbs->generateRequestUsageNo($data['branch_id']);
+    
+    		$arr = array(
+    				'projectId'=>$data['branch_id'],
+    				'requestNo'=>$requestStock,
+    				'reqOutNo'=>$data['requestNoProject'],
+    				'requestDate'=>$data['withdrawDate'],
+    				'staffId'=>$data['staffWithdraw'],
+    				'contractor'=>$data['contractor'],
+    				'staffId'=>$data['staffWithdraw'],
+    				'workerName'=>$data['ConstructionWorker'],
+    				'houseType'=>$data['propertyType'],
+    				'houseId'=>$data['houseId'],
+    				'workType'=>$data['workType'],
+    				'typeofWork'=>$data['typeofWork'],
+    				'note'=>$data['note'],
+    				'createDate'=>$data['withdrawDate'],
+    				'status'=>1,
+    				'userId'=>$this->getUserId(),
+    				'tranType'=>1,
+    		);
+    		$stockId = $data['id'];
+    		$where="id=".$stockId;
+    		$this->update($arr, $where);
     		
-//     		$where = 'id = '.$data['id'];
-// 			$this->update($arr, $where);
-			
-//     	}catch (Exception $e){
-//     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-//     		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/stockinout/staff/index");
-//     	}
-//     }
+    		$this->resetUsageStock($stockId, $data['branch_id']);
+    
+    		$ids = explode(',',$data['identity']);
+    		if(!empty($ids)){
+    			foreach($ids as $i){
+    				$arr = array(
+    						'stockoutId'=>$stockId,
+    						'proId'=>$data['proId'.$i],
+    						'qtyRequest'=>$data['qtyRequest'.$i],
+    						'unitPrice'=>0,
+    						'totalPrice'=>0,
+    						'note'=>$data['note'.$i],
+    				);
+    				$this->_name='st_stockout_detail';
+    				$id = $this->insert($arr);
+    
+    				$param = array(
+    						'EntyQty'=> -$data['qtyRequest'.$i],
+    						'branch_id'=> $data['branch_id'],
+    						'productId'=> $data['proId'.$i],
+    				);
+    				$dbs->updateProductLocation($param);//Update Stock qty and new costing
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],3,$data['qtyRequest'.$i],$id);//movement'
+    			}
+    		}
+    		$db->commit();
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		$db->rollBack();
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/usage/add");
+    	}
+    }
+    function resetUsageStock($stockId,$branchId){
+    	$dbs = new Application_Model_DbTable_DbGlobalStock();
+    	$results = $this->getDataAllRow($stockId);
+    	if(!empty($results)){
+    		foreach($results as $row){
+    			$param = array(
+    				'EntyQty'=> $row['qtyRequest'],
+    				'branch_id'=> $branchId,
+    				'productId'=> $row['proId'],
+    			);
+    			$dbs->updateProductLocation($param);
+    			
+    			$dbs->DeleteProductHistoryQty($row['id']);
+    		}
+    		$where ='stockoutId='.$stockId;
+    		$this->delete($where);	
+    	}
+    }
     function getDataRow($recordId){
     	$db = $this->getAdapter();
     	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
     	return $db->fetchRow($sql);
+    }
+    function getDataAllRow($recordId){
+    	$db = $this->getAdapter();
+    	$this->_name='st_stockout_detail';
+    	$sql=" SELECT 
+    				 sd.*,
+    				 (SELECT `proCode` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proCode,
+					 (SELECT `proName` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proName
+    		FROM $this->_name as sd WHERE sd.stockoutId=".$recordId." ";
+    	return $db->fetchAll($sql);
     }
 }

@@ -94,13 +94,6 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		
 		$typeofWork = new Zend_Dojo_Form_Element_TextBox('typeofWork');
 		$typeofWork->setAttribs(array('dojoType'=>$this->tvalidate,'class'=>'fullside',));
-
-		
-		$staffWithdraw = new Zend_Dojo_Form_Element_TextBox('staffWithdraw');
-		$staffWithdraw->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
-		
-		$staffMg = new Zend_Dojo_Form_Element_TextBox('staffMg');
-		$staffMg->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
 		
 		$ConstructionWorker = new Zend_Dojo_Form_Element_TextBox('ConstructionWorker');
 		$ConstructionWorker->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
@@ -120,26 +113,23 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 			'style'=>'height:200px !important;'
 		));
 		
-		$photogoods =  new Zend_Form_Element_File('photo');
-		$fileDn =  new Zend_Form_Element_File('fileDn');
-		
 		$id =  new Zend_Form_Element_Hidden('id');
 		
 		if(!empty($_data)){
 			$_branch_id->setValue($_data['projectId']);
-			$staffMg->setValue($_data['plateNo']);
-			$staffWithdraw->setValue($_data['driverName']);
-			$typeofWork->setValue($_data['staffCounter']);
-			$requestNo->setValue($_data['dnNumber']);
-			$workType->setValue($_data['dnType']);
-			$_status->setValue($_data['status']);
+			$requestNo->setValue($_data['requestNo']);
+			$requestNoFromProject->setValue($_data['reqOutNo']);
+			$ConstructionWorker->setValue($_data['workerName']);
+			$propertyType->setValue($_data['houseType']);
+			$typeofWork->setValue($_data['typeofWork']);
+			$withdrawDate->setValue($_data['requestDate']);
 			$id->setValue($_data['id']);
+			$workType->setValue($_data['workType']);
+			$_status->setValue($_data['status']);
 			$_note->setValue($_data['note']);
-			$withdrawDate->setValue($_data['receiveDate']);
-			//$categoryId
 		}
-		$this->addElements(array($categoryId,$ConstructionWorker,$requestNoFromProject,$propertyType,$fileDn,$photogoods,
-				$staffMg,$staffWithdraw,$typeofWork,$withdrawDate,$_branch_id,
+		$this->addElements(array($categoryId,$ConstructionWorker,$requestNoFromProject,
+				$propertyType,$typeofWork,$withdrawDate,$_branch_id,
 				$workType,$requestNo,$_status,$id,$_note,
 			));
 		

@@ -392,17 +392,18 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 	    			$this->update($arr, $where);
 	    		}
 	    		
-	    		$where= "id = ".$result['id'];
-	    		 
-	    		$this->_name='st_receive_stock_detail';
-	    		$this->delete($where);
+	    		// 	    		$where= "transId = ".$result['id'];
+	    		// 	    		$this->_name='st_product_story';
+	    		// 	    		$this->delete($where);
 	    		
-	    		$where= "transId = ".$result['id'];
-	    		$this->_name='st_product_story';
-	    		$this->delete($where);
-	    		
+	    		$dbs->DeleteProductHistoryQty($result['id']);
 	    		
 	    	}
+	    	
+	    	$where= "receiveId = ".$dnId;
+	    	$this->_name='st_receive_stock_detail';
+	    	$this->delete($where);
+	    	
 	    	
 	    	$where="id=".$poId;
 	    	$this->_name="st_purchasing";

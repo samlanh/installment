@@ -29,7 +29,7 @@ class Stockinout_ContractorController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","WORKER_NAME","GENDER","ADDRESS","TEL","POSITION","CREATE_DATE","BY_USER","STATUS");
+			$collumns = array("BRANCH_NAME","CONTRACTOR_NAME","GENDER","ADDRESS","TEL","POSITION","CREATE_DATE","BY_USER","STATUS");
 			$link=array('module'=>'stockinout','controller'=>'contractor','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('branch_name'=>$link,'staffName'=>$link,'gender'=>$link));
 			
@@ -85,8 +85,17 @@ class Stockinout_ContractorController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db_com = new Application_Model_DbTable_DbGlobalStock();
-			$id = $db_com->getAllContractorbyBranch($data);
-			print_r(Zend_Json::encode($id));
+			$result = $db_com->getAllContractorbyBranch($data);
+			
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			if(isset($data['select'])){
+				array_unshift($result, array('id'=>0,'name'=>$tr->translate("SELECT_CONTRACTOR")));
+			}
+			
+			if(isset($data['addnew'])){
+				array_unshift($result, array('id'=>-1,'name'=>$tr->translate('ADD_NEW')));
+			}
+			print_r(Zend_Json::encode($result));
 			exit();
 		}
 	}

@@ -1,6 +1,7 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate("STOCK_USAGE"));
+	
 	$frm = $this->frm_search;
 	
 	$frm_stock=$this->frm_stock;
@@ -53,8 +54,6 @@
 						<?php echo $frm->getElement('btn_search');?>
 					</div>
 				</div>
-				
-				
 			</form>
 			<input type="hidden" id="id_selected" name="id_selected" />
 		</div>
@@ -108,7 +107,6 @@ function getDataByBranch(){
 	 if(branch_id=='' || branch_id==0){
 		return false;
 	 }
-		
 	 getAllStaff(branch_id);
 	 getAllContractor(branch_id);
 }
@@ -116,28 +114,26 @@ function getDataByBranch(){
 function getAllStaff(branch_id){
 	var urlGetAllStaff = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'staff','action'=>'getallstaff')); ?>';
 	
-	objectContentFilter = {'branch_id':branch_id};
+	objectContentFilter = {'branch_id':branch_id,'select':1};
 	getAllStaffbyBranch(urlGetAllStaff,objectContentFilter);
 
 	setTimeout(function () {
 		dijit.byId('staffWithdraw').attr('value','<?php echo $this->search['staffWithdraw']?>');
-	}, 200);
+	}, 500);
 }
 function getAllContractor(branch_id){
 	var urlGetAllContractor = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'contractor','action'=>'getallcontractor')); ?>';
-	objectContentFilter = {'branch_id':branch_id};
+	objectContentFilter = {'branch_id':branch_id,'select':1};
 	getAllContractorbyBranch(urlGetAllContractor,objectContentFilter);
 
 	setTimeout(function () {
 		dijit.byId('contractor').attr('value','<?php echo $this->search['contractor']?>');
-	}, 200);
+	}, 500);
 }
 <?php 
-	/*$edit_Text = $tr->translate("RESENT");
-	$urlEdit = $this->baseUrl()."/message/index/edit/id/";
-	*/
+	$edit_Text = $tr->translate("EDIT");
+	$urlEdit = $this->baseUrl()."/stockinout/usage/edit/id/";
 ?>
-/*
 
 var row=0;
 var url="";
@@ -147,12 +143,12 @@ $(function(){
 		callback: function(key, options) {
 			var m = "clicked: " + key;
 			if(key=="edit"){
-				url='<?php //echo $urlEdit;?>';
+				url='<?php echo $urlEdit;?>';
 			}
 			gotoAction();
 		},
 		items: {
-			"edit": {name: "<?php //echo $edit_Text;?>", icon: "edit", accesskey: "e"},
+			"edit": {name: "<?php echo $edit_Text;?>", icon: "edit", accesskey: "e"},
 		}
 	});
 });
@@ -163,5 +159,5 @@ var recordid ='';
 function gotoAction(){
 	 window.open(url+row+'?rightclick=true', '_blank');
 }
-*/
+
 </script>

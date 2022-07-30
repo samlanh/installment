@@ -401,6 +401,12 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		);
 		$this->insert($arr);
 	}
+	function DeleteProductHistoryQty($tranId){
+		$this->_name='st_product_story';
+		$where= "transId = ".$tranId;
+		$this->delete($where);
+		
+	}
 	function getProductLocationbyProId($_data=null){
 		$db=$this->getAdapter();
 		

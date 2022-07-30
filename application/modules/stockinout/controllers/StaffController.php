@@ -85,8 +85,18 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db_com = new Application_Model_DbTable_DbGlobalStock();
-			$id = $db_com->getAllStaffbyBranch($data);
-			print_r(Zend_Json::encode($id));
+			$result = $db_com->getAllStaffbyBranch($data);
+			
+			$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+			
+			if(isset($data['select'])){
+				array_unshift($result, array('id'=>0,'name'=>$tr->translate("SELECT_STAFF_WORKDER")));
+			}
+			
+			if(isset($data['addnew'])){
+				array_unshift($result, array('id'=>-1,'name'=>$tr->translate('ADD_NEW')));
+			}
+			print_r(Zend_Json::encode($result));
 			exit();
 		}
 	}

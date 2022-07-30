@@ -34,9 +34,12 @@ class Stockinout_UsageController extends Zend_Controller_Action {
 			$this->view->search = $search;
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","REQUEST_NO_FROM","REQUEST_NO","REQUEST_DATE","STAFF_WITHDRAW",
-					"STAFF_MG","ConstructionWorker","PROPERTY_TYPE","LAND_CODE","USAGE_TYPE","WORK_TYPE","BY_USER","STATUS");
-			$link=array('module'=>'','controller'=>'','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+					"CONTRACTOR_NAME","ConstructionWorker","PROPERTY_TYPE","LAND_CODE","USAGE_TYPE","WORK_TYPE","BY_USER","STATUS");
+			$link=array('module'=>'stockinout','controller'=>'usage','action'=>'edit');
+			
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('projectName'=>$link,'requestNo'=>$link,'reqOutNo'=>$link,
+					'requestDate'=>$link,'staffName'=>$link));
+			
 			$frm = new Application_Form_FrmAdvanceSearch();
 			$frm = $frm->AdvanceSearch();
 			Application_Model_Decorator::removeAllDecorator($frm);
@@ -46,7 +49,6 @@ class Stockinout_UsageController extends Zend_Controller_Action {
 			$frm = $fm->FrmWithdrawStock();
 			Application_Model_Decorator::removeAllDecorator($frm);
 			$this->view->frm_stock = $frm;
-		
 	}
 	function addAction(){
 		if($this->getRequest()->isPost()){
@@ -66,26 +68,30 @@ class Stockinout_UsageController extends Zend_Controller_Action {
 		$this->view->frm = $frm;
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$db = new Stockinout_Model_DbTable_DbStockout();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->upateUsageStock($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/stockinout/usage");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
 		}
+		$arr = $db->getDataRow($id);
+		
+		$fm = new Stockinout_Form_FrmStockOut();
+		$frm = $fm->FrmWithdrawStock($arr);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm = $frm;
+		$this->view->rs = $arr;
+		$this->view->results = $db->getDataAllRow($id);
 	}
 	function getrequestnoAction(){
 		if($this->getRequest()->isPost()){

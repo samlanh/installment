@@ -96,7 +96,6 @@ class Budget_ItemController extends Zend_Controller_Action {
 			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("PLEASE_SELECT_BUDGET")));
 			
 			if(!empty($data['noBtnNew'])){
-				
 			}else{
 				array_unshift($results, array ('id' => -1,'name' =>$tr->translate("ADD_NEW")));
 			}
