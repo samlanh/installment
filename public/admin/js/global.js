@@ -80,3 +80,31 @@ function getAllCategory(urlGetCategory){
 			}
 		});
 	}
+	function getAllStaffbyBranch(urlGetAllStaff,objectContentFilter){
+		dojo.xhrPost({
+			url:urlGetAllStaff,	
+			content:objectContentFilter,		    
+			handleAs:"json",
+			load: function(data) {
+				staffStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('staffWithdraw').set('store', staffStore);
+
+			},
+			error: function(err) {
+			}
+		});
+	}
+	function getAllContractorbyBranch(urlGetAllContractor,objectContentFilter){
+		dojo.xhrPost({
+			url:urlGetAllContractor,	
+			content:objectContentFilter,		    
+			handleAs:"json",
+			load: function(data) {
+				staffStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('contractor').set('store', staffStore);
+
+			},
+			error: function(err) {
+			}
+		});
+	}
