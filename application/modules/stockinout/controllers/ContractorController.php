@@ -69,11 +69,11 @@ class Stockinout_ContractorController extends Zend_Controller_Action {
 		}
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
-		if(empty($id)){
+		$row = $db->getDataRow($id);
+		if(empty($id) OR empty($row)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/contractor/index");
 		}
 		
-		$row = $db->getDataRow($id);
 		
 		$fm = new Stockinout_Form_FrmStaffWorker();
 		$frm = $fm->FrmWorker($row);

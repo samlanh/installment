@@ -45,6 +45,9 @@ class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
     		$where.= " AND bi.budgetTypeId = ".$search['budgetType'];
     	}
     	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$where.= $dbg->getAccessPermission('bp.projectId');
+    	
     	$order=' ORDER BY bp.id DESC  ';
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql.$where_date.$where.$order);

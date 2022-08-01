@@ -52,6 +52,8 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	if($search['supplierId']>0){
     		$where.= " AND r.supplierId = ".$search['supplierId'];
     	}
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$where.= $dbg->getAccessPermission('r.projectId');
     	
     	$order=' ORDER BY r.id DESC  ';
     	
@@ -527,7 +529,10 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     }
     function getDataRow($recordId){
     	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
+    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId;
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$sql.= $dbg->getAccessPermission('projectId');
+    	$sql.=" LIMIT 1";
     	return $db->fetchRow($sql);
     }
     function getDNById($recordId){

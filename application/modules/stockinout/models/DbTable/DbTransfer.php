@@ -1,8 +1,8 @@
 <?php
 
-class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
+class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 {
-    protected $_name = 'st_stockout';
+    protected $_name = 'st_transferstock';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
@@ -30,26 +30,24 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	}
     	return $pre.$new_acc_no;
     }
-    function getAllUsageStock($search){
-    	$sql="SELECT id,
-				(SELECT project_name FROM `ln_project` WHERE br_id=so.projectId LIMIT 1) AS projectName,
-				so.requestNo,
-				so.reqOutNo,
-				so.requestDate,
-				(SELECT w.staffName FROM `st_worker` w where w.id=so.staffId LIMIT 1) as staffName,
-				(SELECT c.staffName FROM `st_contractor` c where c.id=so.contractor LIMIT 1) as contractor,
-				so.workerName,
-				(SELECT pt.type_nameen FROM `ln_properties_type` pt where pt.id=so.houseType LIMIT 1) as houseType,
-				(SELECT p.land_address FROM `ln_properties` p where p.id=so.houseId LIMIT 1) as houseNo,
-				(SELECT w.workTitle FROM `st_work_type` w where w.id=so.workType LIMIT 1) workType,
-				so.typeofWork,
-				(SELECT first_name FROM rms_users WHERE id=so.userId LIMIT 1 ) AS user_name,
-				(SELECT name_en FROM ln_view WHERE type=3 and key_code = so.status LIMIT 1) AS status
-								
-			FROM `st_stockout` as so where so.tranType=1 ";
+    function getAllTransfer($search){
+    	$sql="SELECT t.id,
+					t.fromProjectId,
+					t.transferNo,
+					t.trasferDate,
+					t.deliverId,
+					t.driverName,
+					t.toProjectId,
+					t.receiverId,
+					t.userFor,
+					(SELECT first_name FROM rms_users AS u WHERE u.id = t.userId LIMIT 1) AS byUser ,
+					(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = t.status LIMIT 1) AS `status`,
+					t.isCompleted
+					
+				FROM `st_transferstock` t WHERE 1 ";
     	
-    	$from_date =(empty($search['start_date']))? '1': " so.createDate >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " so.createDate <= '".$search['end_date']." 23:59:59'";
+    	$from_date =(empty($search['start_date']))? '1': " t.trasferDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " t.trasferDate <= '".$search['end_date']." 23:59:59'";
     	
     	$where_date = " AND ".$from_date." AND ".$to_date;
     	$where='';
@@ -57,82 +55,120 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	if(!empty($search['adv_search'])){
     		$s_where = array();
     		$s_search = (trim($search['adv_search']));
-    		$s_where[] = " so.requestNo LIKE '%{$s_search}%'";
-    		$s_where[] = " so.reqOutNo LIKE '%{$s_search}%'";
-    		$s_where[] = " so.workerName LIKE '%{$s_search}%'";
-    		$s_where[] = " so.typeofWork LIKE '%{$s_search}%'";
-    		$s_where[] = " (SELECT p.id FROM `ln_properties` p WHERE p.id=so.houseId AND p.land_address LIKE '%{$s_search}%' LIMIT 1)";
+    		$s_where[] = " t.transferNo LIKE '%{$s_search}%'";
+    		$s_where[] = " t.deliverId LIKE '%{$s_search}%'";
+    		$s_where[] = " t.driverName LIKE '%{$s_search}%'";
+    		$s_where[] = " t.receiverId LIKE '%{$s_search}%'";
+    		$s_where[] = " t.userFor LIKE '%{$s_search}%'";
+    		
+    		//$s_where[] = " (SELECT p.id FROM `ln_properties` p WHERE p.id=so.houseId AND p.land_address LIKE '%{$s_search}%' LIMIT 1)";
     		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	if($search['branch_id']>-1){
-    		$where.= " AND so.projectId = ".$search['branch_id'];
+    		$where.= " AND t.fromProjectId = ".$search['branch_id'];
     	}
-    	if($search['workType']>0){
-    		$where.= " AND so.workType = ".$search['workType'];
-    	}
-    	if(!empty($search['propertyType'])){
-    		$where.= " AND so.houseType = ".$search['propertyType'];
-    	}
-    	if($search['contractor']>0){
-    		$where.= " AND so.contractor = ".$search['contractor'];
-    	}
-    	if($search['staffWithdraw']>0){
-    		$where.= " AND so.staffId = ".$search['staffWithdraw'];
-    	}
+//     	if($search['workType']>0){
+//     		$where.= " AND so.workType = ".$search['workType'];
+//     	}
+//     	if(!empty($search['propertyType'])){
+//     		$where.= " AND so.houseType = ".$search['propertyType'];
+//     	}
+//     	if($search['contractor']>0){
+//     		$where.= " AND so.contractor = ".$search['contractor'];
+//     	}
+//     	if($search['staffWithdraw']>0){
+//     		$where.= " AND so.staffId = ".$search['staffWithdraw'];
+//     	}
     	if($search['status']>-1){
     		$where.= " AND so.status = ".$search['status'];
     	}
     	$dbg = new Application_Model_DbTable_DbGlobal();
-    	$where.= $dbg->getAccessPermission('so.projectId');
+    	$where.= $dbg->getAccessPermission('t.fromProjectId');
     	
-    	$order=' ORDER BY so.id DESC  ';
+    	$order=' ORDER BY t.id DESC  ';
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql.$where_date.$where.$order);
     }
    
-    function addUsageStock($data){
+    function addTransferStock($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try
     	{
     		$dbs = new Application_Model_DbTable_DbGlobalStock();
-    		$requestStock = $dbs->generateRequestUsageNo($data['branch_id']);
+    		$requestStock = $dbs->generateTransferNo($data['branch_id']);
     		
     		$arr = array(
-    				'projectId'=>$data['branch_id'],
-    				'requestNo'=>$requestStock,
-    				'reqOutNo'=>$data['requestNoProject'],
-    				'requestDate'=>$data['withdrawDate'],
-    				'staffId'=>$data['staffWithdraw'],
-    				'contractor'=>$data['contractor'],
-    				'staffId'=>$data['staffWithdraw'],
-    				'workerName'=>$data['ConstructionWorker'],
-    				'houseType'=>$data['propertyType'],
-    				'houseId'=>$data['houseId'],
-    				'workType'=>$data['workType'],
-    				'typeofWork'=>$data['typeofWork'],
-    				'note'=>$data['note'],
-    				'createDate'=>$data['withdrawDate'],
-    				'status'=>1,
-    				'userId'=>$this->getUserId(),
-    				'tranType'=>1,
+    			'fromProjectId'=>$data['branch_id'],
+    			'transferNo'=>$requestStock,
+    			'driverName'=>$data['driver'],
+    			'deliverId'=>$data['transferer'],
+    			'trasferDate'=>$data['transferDate'],
+    				
+    			'toProjectId'=>$data['toProjectId'],
+    			'receiverId'=>$data['receiver'],
+    			'userFor'=>$data['useFor'],
+    			'note'=>$data['note'],
+    			'createDate'=>date('Y-m-d'),
+    			'status'=>1,
+    			'userId'=>$this->getUserId(),
     			);
-    		$stockId = $this->insert($arr);
+    		$transferId = $this->insert($arr);
+    		
+    		$dbb = new Budget_Model_DbTable_DbInitilizeBudget();
+    		
+    		$param = array(
+    			'branch_id'=>$data['branch_id'],
+    			'type'=>3,
+    			'transactionId'=>$transferId,
+    		);
+    		
+    		$budgetExpenseId = $dbb->addBudgetExpense($param);
+    		
+    		$param = array(
+    				'branch_id'=>$data['toProjectId'],
+    				'type'=>4,
+    				'transactionId'=>$transferId,
+    		);
+    		
+    		$budgetExpenseId1 = $dbb->addBudgetExpense($param);
+    		
     		
     		$ids = explode(',',$data['identity']);
     		if(!empty($ids)){
     			foreach($ids as $i){
     				$arr = array(
-    					'stockoutId'=>$stockId,
+    					'transferId'=>$transferId,
     					'proId'=>$data['proId'.$i],
     					'qtyRequest'=>$data['qtyRequest'.$i],
-    					'unitPrice'=>0,
-    					'totalPrice'=>0,
+    					'qtyAppAfter'=>$data['qtyRequest'.$i],
+    					'unitPrice'=>$data['costing'.$i],
     					'note'=>$data['note'.$i],
     				);
-    				$this->_name='st_stockout_detail';
+    				$this->_name='st_transferstock_detail';
     				$id = $this->insert($arr);
+    				
+    				$param = array(
+    					'budgetExpenseId'=>$budgetExpenseId,
+    					'subtransactionId'=>$id,
+    					'productId'=>$data['proId'.$i],
+    					'price'=>$data['costing'.$i],
+    					'qty'=>$data['qtyRequest'.$i],
+    					'totalDiscount'=>0
+    				);
+    				$dbb->addBudgetExpenseDetail($param);
+    				
+    				$param = array(
+    					'budgetExpenseId'=>$budgetExpenseId1,
+    					'subtransactionId'=>$id,
+    					'productId'=>$data['proId'.$i],
+    					'price'=>$data['costing'.$i],
+    					'qty'=>$data['qtyRequest'.$i],
+    					'totalDiscount'=>0
+    				);
+    				$dbb->addBudgetExpenseDetail($param);
+    				
     				
     				$param = array(
     					'EntyQty'=> -$data['qtyRequest'.$i],
@@ -140,14 +176,23 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     					'productId'=> $data['proId'.$i],
     				);
     				$dbs->updateProductLocation($param);//Update Stock qty and new costing
-    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],3,$data['qtyRequest'.$i],$id);//movement'
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],5,$data['qtyRequest'.$i],$id);//movement'
+    				
+    				$param = array(
+    					'EntyQty'=> $data['qtyRequest'.$i],
+    					'branch_id'=> $data['toProjectId'],
+    					'productId'=> $data['proId'.$i],
+    					'costing'=> $data['costing'.$i],
+    				);
+    				$dbs->updateProductLocation($param);//Update Stock qty and new costing
+    				$dbs->addProductHistoryQty($data['toProjectId'],$data['proId'.$i],5,$data['qtyRequest'.$i],$id);//movement'
     			}
     		}
     		$db->commit();
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/usage/add");
+    		//Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/transferout/add");
     	}
     }
     function upateUsageStock($data){
@@ -191,7 +236,6 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     						'proId'=>$data['proId'.$i],
     						'qtyRequest'=>$data['qtyRequest'.$i],
     						'unitPrice'=>0,
-    						'totalPrice'=>0,
     						'note'=>$data['note'.$i],
     				);
     				$this->_name='st_stockout_detail';

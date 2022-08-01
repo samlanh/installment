@@ -81,10 +81,11 @@ class Stockinout_UsageController extends Zend_Controller_Action {
 		}
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
-		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
-		}
 		$arr = $db->getDataRow($id);
+		
+		if(empty($id) OR empty($arr)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/usage");
+		}
 		
 		$fm = new Stockinout_Form_FrmStockOut();
 		$frm = $fm->FrmWithdrawStock($arr);

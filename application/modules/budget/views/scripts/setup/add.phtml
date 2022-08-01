@@ -144,6 +144,10 @@
 				}
 				
 			});
+			 var branch_id = dijit.byId('branch_id')
+			 branch_id.on('change',function(evt){
+				 getBudgetItem();
+			 });
 		});
 	 });
     
@@ -196,33 +200,23 @@
 		 budgetItem.attr('value','');
 		 
 		no++;
-		/*dojo.xhrPost({
-			url:urlGetProductInfo,	
-			content:{ 
-				'productId':productId
-			},		    
-			handleAs:"json",
-			load: function(data) {*/
-				template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
-				template+='<td align="center" width="2%">'+no+'</td>';
-				template+='<td class="budgetName" >'+budgetItemLable+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="budgetItem'+col+'" name="budgetItem'+col+'" value="'+budgetItemValue+'" type="text"  ></td>';	
-				template+='<td><input dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="budgetAmount'+col+'" name="budgetAmount'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_BEGIN");?> " value="0" type="text"  ></td>';	
-				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyAmount'+col+'" name="qtyAmount'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_ALERT");?> "  type="text"  ></td>';	
-				
-				tmp='<tr class="rowData" id="row'+col+'">';
-				tmp+="</tr>";
-				dojo.query("#table_row").append(tmp);
-				if($("#identity").val()!="") {
-					var identity = $("#identity").val();
-					$("#identity").val(identity+','+col);
-				} else {$("#identity").val(col);}
-				dojo.html.set(dojo.byId("row"+col),template , {
-					 parseContent: true,
-				});
-			/*},
-			error: function(err) {
-			}
-		});*/
+		
+		template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		template+='<td align="center" width="2%">'+no+'</td>';
+		template+='<td class="budgetName" >'+budgetItemLable+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="budgetItem'+col+'" name="budgetItem'+col+'" value="'+budgetItemValue+'" type="text"  ></td>';	
+		template+='<td><input dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="budgetAmount'+col+'" name="budgetAmount'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_BEGIN");?> " value="0" type="text"  ></td>';	
+		template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyAmount'+col+'" name="qtyAmount'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_ALERT");?> "  type="text"  ></td>';	
+		
+		tmp='<tr class="rowData" id="row'+col+'">';
+		tmp+="</tr>";
+		dojo.query("#table_row").append(tmp);
+		if($("#identity").val()!="") {
+			var identity = $("#identity").val();
+			$("#identity").val(identity+','+col);
+		} else {$("#identity").val(col);}
+		dojo.html.set(dojo.byId("row"+col),template , {
+			 parseContent: true,
+		});
 	}
 	
 	function deleteRecord(index) {

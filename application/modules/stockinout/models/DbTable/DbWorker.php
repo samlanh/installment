@@ -40,6 +40,9 @@ class Stockinout_Model_DbTable_DbWorker extends Zend_Db_Table_Abstract
     	if($search['branch_id']>-1){
     		$where.= " AND w.projectId = ".$search['branch_id'];
     	}
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$where.= $dbg->getAccessPermission('w.projectId');
+    	
     	$order=' ORDER BY w.id DESC  ';
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql.$where_date.$where.$order);
@@ -101,7 +104,12 @@ class Stockinout_Model_DbTable_DbWorker extends Zend_Db_Table_Abstract
     }
     function getDataRow($recordId){
     	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
+    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId;
+    	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$sql.= $dbg->getAccessPermission('projectId');
+    	
+    	$sql.=" LIMIT 1";
     	return $db->fetchRow($sql);
     }
 }

@@ -32,6 +32,12 @@ Class Stockinout_Form_FrmStaffWorker extends Zend_Dojo_Form {
 		}
 		$_branch_id->setMultiOptions($options);
 		
+		if(count($rows)==1){
+			$_branch_id->setAttribs(array('readonly'=>'readonly'));
+			if(!empty($rows)) foreach($rows AS $row){
+				$_branch_id->setValue($row['br_id']);
+			}
+		}
 		
 		$staffName = new Zend_Dojo_Form_Element_TextBox('staffName');
 		$staffName->setAttribs(array(

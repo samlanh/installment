@@ -10,7 +10,6 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		$db = new Product_Model_DbTable_DbinitilizeQtybyProject();
 		$rs_rows=array();
 		try{
-			
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
 			}
@@ -27,26 +26,25 @@ class Product_InitqtyController extends Zend_Controller_Action {
 			}
 			$rs_rows= $db->getAllProductLocation($search);
 			
-			
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 			
-			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","PRODUCT_NAME","BAR_CODE","CURRENT_QTY","MEASURE","PRODUCT_CATEGORY");
-			$link=array('module'=>'product','controller'=>'initqty','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
-			
-			$frm = new Application_Form_FrmAdvanceSearchStock();
-			$frm = $frm->AdvanceSearch();
-			Application_Model_Decorator::removeAllDecorator($frm);
-			$this->view->frm_search = $frm;
-			
-			$frm = new Product_Form_Frmproduct();
-			$frm = $frm->FrmSearchProduct();
-			Application_Model_Decorator::removeAllDecorator($frm);
-			$this->view->frmSearchProduct = $frm;
+		$list = new Application_Form_Frmtable();
+		$collumns = array("PROJECT_NAME","PRODUCT_NAME","BAR_CODE","CURRENT_QTY","MEASURE","PRODUCT_CATEGORY");
+		$link=array('module'=>'product','controller'=>'initqty','action'=>'edit');
+		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+		
+		$frm = new Application_Form_FrmAdvanceSearchStock();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		
+		$frm = new Product_Form_Frmproduct();
+		$frm = $frm->FrmSearchProduct();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmSearchProduct = $frm;
 	}
 	function addAction(){
 		$db = new Product_Model_DbTable_DbinitilizeQtybyProject();

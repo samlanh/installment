@@ -10,7 +10,7 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     function getAllProductLocation($search){
     	$sql=" SELECT 
 					p.proId AS id,
-					(SELECT project_name from `ln_project` where br_id=l.projectId LIMIT 1) as projectName,
+					(SELECT project_name from `ln_project` WHERE br_id=l.projectId LIMIT 1) as projectName,
 					CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`,
 					p.barCode,
 					l.qty AS currentQty,
@@ -34,7 +34,6 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	
-    	 
     	if($search['isCountStock']>-1){
     		$where.= " AND p.isCountStock = ".$search['isCountStock'];
     	}
@@ -47,6 +46,9 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     	if($search['measureId']>0){
     		$where.= " AND p.budgetId = ".$search['measureId'];
     	}
+    	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$where.= $dbg->getAccessPermission('l.projectId');
     	
     	$order=' ORDER BY p.proName ASC  ';
     	
@@ -83,7 +85,6 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 						);
 						$this->_name='st_product_location';
 						$this->insert($arr);
-						
 					}
 					
 					$dbs->addProductHistoryQty($data['branch_id'], $data['proId'.$i], 1, $data['qtyInit'.$i]);

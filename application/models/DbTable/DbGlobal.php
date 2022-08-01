@@ -78,7 +78,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		END AS status ";
 		return $string;
 	}
-	function  getAllBranchByUser(){
+	function  getAllBranchByUser(){//USAGE FOR ALL BRANCH (TRANFER)
 		$db = $this->getAdapter();
 		$sql = 'select br_id as id,project_name as name FROM ln_project where status=1 and project_name!="" ORDER BY br_id DESC ';
 		return $db->fetchAll($sql);

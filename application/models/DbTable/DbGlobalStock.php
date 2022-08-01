@@ -264,6 +264,30 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		return $pre.$new_acc_no;
 	}
+	function generateTransferNo($_data=null){
+	
+		$this->_name='st_transferstock';
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$pre = "";
+	
+		$branch_id = empty($_data['branch_id'])?0:$_data['branch_id'];
+		$pre = $dbgb->getPrefixCode($branch_id);
+	
+		$db = $this->getAdapter();
+		$sql=" SELECT t.id  FROM $this->_name AS t WHERE t.fromProjectId = $branch_id  ORDER BY t.id DESC LIMIT 1 ";
+		$acc_no = $db->fetchOne($sql);
+		$new_acc_no= (int)$acc_no+1;
+	
+		$dateRequest = empty($_data['createDate'])?date("Y-m-d"):$_data['createDate'];
+	
+		$pre=$pre.date("dmy",strtotime($dateRequest));
+		$pre=$pre."T";
+		$numberLenght= strlen((int)$new_acc_no);
+		for($i = $numberLenght;$i<4;$i++){
+			$pre.='0';
+		}
+		return $pre.$new_acc_no;
+	}
 	function dataExisting($tbName,$where){
 			$db = $this->getAdapter();
 			$sql=" SELECT * FROM $tbName WHERE $where LIMIT 1";
@@ -811,6 +835,16 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$this->_name='st_product_location';
 			$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'];
 			$this->update($arr, $where);
+		}else{//new stock
+			$arr = array(
+				'projectId'=>$data['branch_id'],
+				'qty'=>$data['EntyQty'],
+				'proId'=>$data['productId'],
+				'costing'=>empty($data['costing'])?0:$data['costing'],
+			);
+			
+			$this->_name='st_product_location';
+			$this->insert($arr);
 		}
 	}
 	

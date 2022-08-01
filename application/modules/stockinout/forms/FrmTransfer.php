@@ -1,5 +1,5 @@
 <?php 
-Class Stockinout_Form_FrmReceiveStock extends Zend_Dojo_Form {
+Class Stockinout_Form_FrmTransfer extends Zend_Dojo_Form {
 	protected $tr;
 	protected $tvalidate ;//text validate
 	protected $filter;
@@ -14,17 +14,18 @@ Class Stockinout_Form_FrmReceiveStock extends Zend_Dojo_Form {
 		$this->text = 'dijit.form.TextBox';
 		$this->tarea = 'dijit.form.Textarea';
 	}
-	public function FrmReceivStock($_data=null){
+	public function FrmTransfer($_data=null){
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$dbGBStock = new Application_Model_DbTable_DbGlobalStock();
+		$request = Zend_Controller_Front::getInstance()->getRequest();
 		
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$_branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required' =>'true',
-				'onchange'=>'getAllPO();'
+				'onchange'=>'getDataByBranch();'
 		));
 		
 		$rows = $db->getAllBranchName();
@@ -41,52 +42,68 @@ Class Stockinout_Form_FrmReceiveStock extends Zend_Dojo_Form {
 			}
 		}
 		
-		$supplierId = new Zend_Dojo_Form_Element_FilteringSelect('supplierId');
-		$supplierId->setAttribs(array(
+		$toProjectId = new Zend_Dojo_Form_Element_FilteringSelect('toProjectId');
+		$toProjectId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'required' =>'true',
 		));
-		$rsSpp = $dbGBStock->getAllSupplier();
-		$optSpp=array(''=>$this->tr->translate("SELECT_SUPPLIER"));
-		if(!empty($rsSpp))foreach($rsSpp AS $row){
-			$optSpp[$row['id']]=$row['name'];
-		}
-		$supplierId->setMultiOptions($optSpp);
 		
-		$dnTitle = new Zend_Dojo_Form_Element_TextBox('dnTitle');
-		$dnTitle->setAttribs(array(
+		$toProjectId->setMultiOptions($options);
+		
+		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
+		$categoryId->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>'getAllProduct();'
+		));
+		
+		$rsCate = $dbGBStock->getAllCategoryProduct(0,'','',1);
+		unset($rsCate['-1']);
+		$categoryId->setMultiOptions($rsCate);
+		
+		$requestNo = new Zend_Dojo_Form_Element_TextBox('requestNo');
+		$requestNo->setAttribs(array(
 			'dojoType'=>$this->tvalidate,
 			'required'=>'true',
 			'class'=>'fullside',
+			'readonly'=>true
 			));
 		
-		$documentType = new Zend_Dojo_Form_Element_FilteringSelect('documentType');
-		$documentType->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-		));
-		$opt = $dbGBStock->getViewById(4,1);//array(1=>"DELIVERY_NOTE",2=>"INVOICE");
-		unset($opt['-1']);
-		$documentType->setMultiOptions($opt);
-		
-		$dnDate = new Zend_Dojo_Form_Element_TextBox('dnDate');
-		$dnDate->setAttribs(array(
+		$transferDate = new Zend_Dojo_Form_Element_TextBox('transferDate');
+		$transferDate->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'readOnly'=>true,
 				'class'=>'fullside'));
-		$dnDate->setValue(date("Y-m-d"));
+		$transferDate->setValue(date("Y-m-d"));
 		
 		
-		$counter = new Zend_Dojo_Form_Element_TextBox('counter');
-		$counter->setAttribs(array('dojoType'=>$this->tvalidate,'class'=>'fullside',));
-
 		
 		$driver = new Zend_Dojo_Form_Element_TextBox('driver');
-		$driver->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
+		$driver->setAttribs(array(
+			'dojoType'=>$this->tvalidate,
+			'required'=>'true',
+			'class'=>'fullside',
+		));
 		
-		$truckNumber = new Zend_Dojo_Form_Element_TextBox('truckNumber');
-		$truckNumber->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
+		$transferer = new Zend_Dojo_Form_Element_TextBox('transferer');
+		$transferer->setAttribs(array(
+				'dojoType'=>$this->tvalidate,
+				'required'=>'true',
+				'class'=>'fullside',
+		));
+		
+		$receiver = new Zend_Dojo_Form_Element_TextBox('receiver');
+		$receiver->setAttribs(array(
+				'dojoType'=>$this->tvalidate,
+				'required'=>'true',
+				'class'=>'fullside',
+		));
+		
+		
+		$useFor = new Zend_Dojo_Form_Element_TextBox('useFor');
+		$useFor->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
 		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));
@@ -103,27 +120,24 @@ Class Stockinout_Form_FrmReceiveStock extends Zend_Dojo_Form {
 			'style'=>'height:200px !important;'
 		));
 		
-		$photogoods =  new Zend_Form_Element_File('photo');
-		$fileDn =  new Zend_Form_Element_File('fileDn');
-		
 		$id =  new Zend_Form_Element_Hidden('id');
-		$oldPhoto =  new Zend_Form_Element_Hidden('oldPhoto');
-		$oldfileDn =  new Zend_Form_Element_Hidden('oldfileDn');
 		
 		if(!empty($_data)){
 			$_branch_id->setValue($_data['projectId']);
-			$truckNumber->setValue($_data['plateNo']);
-			$driver->setValue($_data['driverName']);
-			$counter->setValue($_data['staffCounter']);
-			$dnTitle->setValue($_data['dnNumber']);
-			$documentType->setValue($_data['dnType']);
-			$_status->setValue($_data['status']);
+			$requestNo->setValue($_data['requestNo']);
+			$useFor->setValue($_data['reqOutNo']);
+			$transferDate->setValue($_data['workerName']);
+			$toProjectId->setValue($_data['houseType']);
+			$transferer->setValue($_data['typeofWork']);
+			$driver->setValue($_data['requestDate']);
 			$id->setValue($_data['id']);
+			$receiver->setValue($_data['workType']);
+			$_status->setValue($_data['status']);
 			$_note->setValue($_data['note']);
-			$dnDate->setValue($_data['receiveDate']);
 		}
-		$this->addElements(array($oldPhoto,$oldfileDn,$supplierId,$fileDn,$photogoods,$truckNumber,$driver,$counter,$dnDate,$_branch_id,
-				$documentType,$dnTitle,$_status,$id,$_note,
+		$this->addElements(array($categoryId,$useFor,$receiver,
+				$transferer,$driver,$transferDate,$_branch_id,
+				$toProjectId,$requestNo,$_status,$id,$_note,
 			));
 		
 		return $this;
