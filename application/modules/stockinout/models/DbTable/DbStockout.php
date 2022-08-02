@@ -212,12 +212,14 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     }
     function getDataRow($recordId){
     	$db = $this->getAdapter();
+    	$this->_name='st_stockout';
     	$sql=" SELECT * FROM $this->_name WHERE tranType=1 AND id=".$recordId;
     	
     	$dbg = new Application_Model_DbTable_DbGlobal();
     	$sql.= $dbg->getAccessPermission('projectId');
     	
     	$sql.=" LIMIT 1";
+    	
     	return $db->fetchRow($sql);
     }
     function getDataAllRow($recordId){

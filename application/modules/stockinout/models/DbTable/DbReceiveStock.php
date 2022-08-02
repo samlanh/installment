@@ -211,7 +211,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     }
     function updateDataReceive($data){
     
-    $db = $this->getAdapter();
+    	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try
     	{
@@ -271,7 +271,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		
     		$this->update($arr,$where);
     		
-    		$this->reverseReceivedTransaction($receivedId,$data['purId']);//reverse po and po detail'
+    		$this->reverseReceivedTransaction($receivedId,$data['purId'],$data['branch_id']);//reverse po and po detail'
     		
     		$dbb = new Budget_Model_DbTable_DbInitilizeBudget();
     		
@@ -367,7 +367,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add");
     	}
     }
-    function reverseReceivedTransaction($dnId,$poId){
+    function reverseReceivedTransaction($dnId,$poId,$branchId){
     	$dbs = new Application_Model_DbTable_DbGlobalStock();
     	$results = $this->getDNDetailById($dnId);
     	if(!empty($results)){foreach ($results as $result){
@@ -392,14 +392,17 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 	    			$where= "purchaseId = ".$poId." AND proId=".$poProduct['proId'];
 	    			$this->_name='st_purchasing_detail';
 	    			$this->update($arr, $where);
+	    			
+	    			$param = array(
+	    					'EntyQty'=> -$result['qtyReceive'],
+	    					'branch_id'=> $branchId,
+	    					'productId'=> $result['proId'],
+	    			);
+	    			$dbs->updateProductLocation($param);
+	    			
 	    		}
 	    		
-	    		// 	    		$where= "transId = ".$result['id'];
-	    		// 	    		$this->_name='st_product_story';
-	    		// 	    		$this->delete($where);
-	    		
 	    		$dbs->DeleteProductHistoryQty($result['id']);
-	    		
 	    	}
 	    	
 	    	$where= "receiveId = ".$dnId;

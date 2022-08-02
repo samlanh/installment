@@ -38,20 +38,25 @@ class Stockinout_AdjuststockController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
-		if($this->getRequest()->isPost()){
-			$_data = $this->getRequest()->getPost();
-			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
-			}catch(Exception $e){
-				Application_Form_FrmMessage::message("INSERT_FAIL");
-				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-			}
-		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		$db = new Requesting_Model_DbTable_DbRequest();
+    	if($this->getRequest()->isPost()){
+	    	try{
+	    		$data = $this->getRequest()->getPost();
+	    		$db->addRequestPO($data);
+	    		if(isset($data['save_close'])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/add");
+				}
+	    	}catch(Exception $e){
+	    		Application_Form_FrmMessage::message("APPLICATION_ERROR");
+	    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+	    	}
+    	}
+    	$frm = new Stockinout_Form_FrmAdjustStock();
+    	$frm->FrmAdjust(null);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
 	}
 	function editAction(){
 		//$db = new Loan_Model_DbTable_DbCancel();

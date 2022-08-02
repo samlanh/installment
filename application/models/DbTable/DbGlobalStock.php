@@ -99,6 +99,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				p.proCode,
 				p.proName,
 				p.isService,
+				p.isCountStock,
 				p.budgetId,
 				(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty,
 				(SELECT pl.costing FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentPrice,
@@ -807,50 +808,53 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	function updateStockbyBranchAndProductId($data){
 		$resultStock = $this->getProductInfoByLocation($data);
 		if(!empty($resultStock)){
+			if($resultStock['isCountStock']==1){//only for type product count stock only
 			
-			$currentStock = $resultStock['currentQty'];
-			$currentPrice = $resultStock['currentPrice'];
-			$newQty = $data['EntyQty'];
-			$newPrice = $data['EntyPrice'];
-			$totalQty = $currentStock+$newQty;
-			$costing = (($currentStock*$currentPrice)+($newQty*$newPrice))/$totalQty;
-			
-			
-			$arr = array(
-					'projectId'=>$data['branch_id'],
-					'productId'=>$data['productId'],
-					'costing'=>$currentPrice,
-					'date'=>date('Y-m-d')
-			);
-			
-			$this->_name='st_product_costing';
-			$this->insert($arr);
-			
-			$arr = array(
-				'qty'=>$totalQty,
-				'costing'=>$costing
-			);
-			
-			$this->_name='st_product_location';
-			$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'];
-			$this->update($arr, $where);
+				$currentStock = $resultStock['currentQty'];
+				$currentPrice = $resultStock['currentPrice'];
+				$newQty = $data['EntyQty'];
+				$newPrice = $data['EntyPrice'];
+				$totalQty = $currentStock+$newQty;
+				$costing = (($currentStock*$currentPrice)+($newQty*$newPrice))/$totalQty;
+				
+				
+				$arr = array(
+						'projectId'=>$data['branch_id'],
+						'productId'=>$data['productId'],
+						'costing'=>$currentPrice,
+						'date'=>date('Y-m-d')
+				);
+				
+				$this->_name='st_product_costing';
+				$this->insert($arr);
+				
+				$arr = array(
+					'qty'=>$totalQty,
+					'costing'=>$costing
+				);
+				
+				$this->_name='st_product_location';
+				$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'];
+				$this->update($arr, $where);
+			}
 		}
 	}
 	function updateProductLocation($data){
 		$resultStock = $this->getProductInfoByLocation($data);
 		if(!empty($resultStock)){
-				
-			$currentStock = $resultStock['currentQty'];
-			$newQty = $data['EntyQty'];
-			$totalQty = $currentStock+$newQty;
-				
-			$arr = array(
-					'qty'=>$totalQty,
-			);
-				
-			$this->_name='st_product_location';
-			$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'];
-			$this->update($arr, $where);
+			if($resultStock['isCountStock']==1){
+				$currentStock = $resultStock['currentQty'];
+				$newQty = $data['EntyQty'];
+				$totalQty = $currentStock+$newQty;
+					
+				$arr = array(
+						'qty'=>$totalQty,
+				);
+					
+				$this->_name='st_product_location';
+				$where = 'projectId='.$data['branch_id']." AND proId=".$data['productId'];
+				$this->update($arr, $where);
+			}
 		}else{//new stock
 			$arr = array(
 				'projectId'=>$data['branch_id'],

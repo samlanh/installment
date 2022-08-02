@@ -33,7 +33,8 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","DOCUMENT_RECEIV_TYPE","DNORIV_NO","DELIVER","TRUCK_NUMBER","COUNTER","RECEIVE_DATE","SUPPLIER_NAME","PO_NO","REQUEST_NO","USER","STATUS");
 			$link=array('module'=>'stockinout','controller'=>'index','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('projectName'=>$link,'dnType'=>$link,'dnNumber'=>$link,
+					'plateNo'=>$link,'driverName'=>$link));
 			
 			$frm_search = new Application_Form_FrmAdvanceSearchStock();
 			$frm = $frm_search->AdvanceSearch();
