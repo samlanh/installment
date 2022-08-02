@@ -430,6 +430,65 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 		
     	return $db->fetchAll($sql.$where.$order);
     }
+	function getAllInvoiceSomeByType($search){
+    	$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		
+		$sql="
+			SELECT 
+				COUNT(inv.id) AS amountRow,
+				SUM(inv.totalAmountExternal) AS totalAmount";
+		$sql.=" FROM `st_invoice` AS inv 
+					JOIN `st_purchasing` AS po ON po.id = inv.purId 
+					LEFT JOIN `st_supplier` AS spp ON spp.id = inv.supplierId 
+					LEFT JOIN `st_request_po` AS rq ON rq.id = po.requestId 
+				WHERE inv.status=1
+		";
+		
+    	$where = "";
+    	$from_date =(empty($search['start_date']))? '1': " inv.receiveIvDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " inv.receiveIvDate <= '".$search['end_date']." 23:59:59'";
+    	
+    	$where.= " AND ".$from_date." AND ".$to_date;
+    	
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = (trim($search['adv_search']));
+    		$s_where[] = " inv.invoiceNo LIKE '%{$s_search}%'";
+    		$s_where[] = " inv.supplierInvoiceNo LIKE '%{$s_search}%'";
+    		$s_where[] = " po.purchaseNo LIKE '%{$s_search}%'";
+    		$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
+    		$s_where[] = " po.purpose LIKE '%{$s_search}%'";
+			
+    		$s_where[] = " inv.totalInternal LIKE '%{$s_search}%'";
+    		$s_where[] = " inv.vatInternal LIKE '%{$s_search}%'";
+			
+    		$s_where[] = " inv.totalAmount LIKE '%{$s_search}%'";
+    		$s_where[] = " inv.vatExternal LIKE '%{$s_search}%'";
+    		$s_where[] = " inv.otherFeeExternal LIKE '%{$s_search}%'";
+			
+    		$s_where[] = " inv.totalExternal LIKE '%{$s_search}%'";
+    		$s_where[] = " inv.totalAmountExternal LIKE '%{$s_search}%'";
+			
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	
+    	if(($search['branch_id'])>0){
+    		$where.= " AND inv.projectId = ".$search['branch_id'];
+    	}
+		if(!empty($search['supplierId'])){
+    		$where.= " AND inv.supplierId = ".$search['supplierId'];
+    	}
+		if(!empty($search['invoiceType'])){
+    		$where.= " AND inv.ivType = ".$search['invoiceType'];
+    	}
+		$where.= " AND inv.ivType = ".$search['rowInvoiceType'];
+    	$order=' ORDER BY inv.id DESC  ';
+    	$where.=$dbGb->getAccessPermission("inv.projectId");
+    	return $db->fetchRow($sql.$where.$order);
+    }
 	
 	
 	function getDataRowInvoice($recordId){
