@@ -254,6 +254,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
     	}
     	$order=' ORDER BY pt.id DESC  ';
     	$where.=$dbGb->getAccessPermission("pt.projectId");
+		echo $sql.$where.$order;
     	return $db->fetchAll($sql.$where.$order);
     }
 	
@@ -419,6 +420,8 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 				rq.requestNoLetter  AS requestNoLetter ,
 				rq.date AS requestDate,
 				rq.note AS requestNote,
+				(SELECT  COALESCE(SUM(pmd.paymentAmount),0) FROM st_payment_detail AS pmd,st_payment AS pm WHERE pm.id=pmd.paymentId AND pm.status=1 AND pmd.invoiceId=inv.id LIMIT 1 ) AS totalPaid,
+				
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
@@ -490,7 +493,9 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 		$sql="
 			SELECT 
 				COUNT(inv.id) AS amountRow,
-				SUM(inv.totalAmountExternal) AS totalAmount";
+				SUM(inv.totalAmountExternal) AS totalAmount,
+				SUM((SELECT  COALESCE(SUM(pmd.paymentAmount),0) FROM st_payment_detail AS pmd,st_payment AS pm WHERE pm.id=pmd.paymentId AND pm.status=1 AND pmd.invoiceId=inv.id LIMIT 1 )) AS totalPaid
+			";
 		$sql.=" FROM `st_invoice` AS inv 
 					JOIN `st_purchasing` AS po ON po.id = inv.purId 
 					LEFT JOIN `st_supplier` AS spp ON spp.id = inv.supplierId 
@@ -611,6 +616,34 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 			 WHERE rst.status=1 
 			AND rst.id  IN ($dnList) LIMIT 1";
 		return $db->fetchRow($sql);
+	}
+	
+	function getInvoicePaymentHistory($invoiceId){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+		$sql="SELECT pmd.* 
+				,pm.paymentNo 
+				,pm.paymentDate 
+				,pm.accNameAndChequeNo 
+				,(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pm.`paymentMethod` LIMIT 1) AS paymentMethodTitle
+				,(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pm.`bankId` LIMIT 1) AS bankName			
+				,CASE 
+					WHEN pmd.remain=0 THEN '".$tr->translate("COMPLETED_PAID")."'
+					WHEN pmd.remain<0 THEN '".$tr->translate("COMPLETED_PAID")."'
+					WHEN pmd.remain>0 THEN '".$tr->translate("SOME_PAID")."'
+					ELSE '".$tr->translate("NOT_YET_PAID")."'
+				END AS paymentStatus
+				,CASE 
+					WHEN pm.status=0 THEN '".$tr->translate("VOID")."'
+					ELSE ''
+				END AS statusTitle
+			FROM `st_payment_detail` AS pmd 
+				JOIN `st_payment` AS pm ON pm.id = pmd.paymentId 
+			 AND pmd.invoiceId =$invoiceId 
+			 ORDER BY pmd.id DESC
+			";
+		return $db->fetchAll($sql);
 	}
 
 }
