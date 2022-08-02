@@ -307,6 +307,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = pt.projectId LIMIT 1) AS branch_name,
 				spp.supplierName,
 				spp.contactNumber,
+				spp.contactName,
 				spp.address,
 				spp.supplierTel,
 				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) AS paymentMethodTitle,
@@ -344,7 +345,6 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 				LEFT JOIN st_purchasing AS po ON po.id = inv.purId 
 				LEFT JOIN st_request_po AS rq ON rq.id = po.requestId 
 			WHERE pd.paymentId =$paymentId ";
-		$sql.=" LIMIT 1 ";
 		return $db->fetchAll($sql);
 	}
 	

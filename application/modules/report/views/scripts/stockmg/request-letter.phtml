@@ -5,6 +5,10 @@
 	
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
 	$dbparmeter = new Report_Model_DbTable_DbParamater();
+	
+	$dbGb = new Application_Model_DbTable_DbGlobal();
+	$userInfo = $dbGb->getUserInfo();
+	$currentUserName = $userInfo['user_name'];
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -41,20 +45,95 @@
 					background: #c1d0f3;
 					font-weight:600;
 				}
-				table.content-data tr td{
-					padding:5px 1px;
+				table.content-data  tr.regurlar {
+					background: #eee;
 				}
+				table.content-data tr td{
+					padding:5px 3px; 
+					border:1;
+					vertical-align:middle;
+				}
+				table.content-data tr.headRow td{
+					border:solid 1px #000;
+					padding:10px 2px; 
+					vertical-align:middle;
+				}
+				.content-data tr.headRow td span {
+					display: block;
+					line-height: 14px;
+				}
+				.content-data tr.headRow td small {
+					display: block;
+					line-height: 12px;
+					font-size: 10px;
+				}
+
 				table.requestInfo {
 					width: 100%;
+					margin-top: 10px;
 				}
 				table.requestInfo tr td {
 					vertical-align: top;
 				}
 				table.requestInfo span.lbTitle {
+					line-height: 14px;
+					float: left;
+					vertical-align: top;
+					min-width: 20%;
+				}
+				table.requestInfo span.lbTitle small {
+					display: block;
+					font-style: italic;
+					font-weight: 200;
+					line-height: 10px;
+				}
+				table.requestInfo tr td span {
+					line-height: 14px;
+					vertical-align: top;
+					min-width: 75%;
+				}
+				span.bold {
 					font-weight: 600;
+				}
+				span.redColor {
+					color: #ff0000;
 				}
 				tr.style.rejected {
 					background: #ffcece;
+				}
+				tr.rowFooter td span {
+					font-weight: 600;
+					font-size: 12px;
+				}
+				tr.rowFooter td span.gtotalVal {
+					color: #000000;
+					display: block;
+					width: 100%;
+					border-bottom: dashed 1px #959595;
+					text-align: right;
+				}
+				span.gtotalVal.mainTotal {
+					font-size: 14px;
+				}
+				
+				ul.printInfo {
+					position: absolute;
+					right: 0;
+					top: 35px;
+					list-style: none;
+					margin: 0;
+					padding: 0;
+					visibility: hidden;
+				}
+
+				ul.printInfo li {
+					font-family: 'Times New Roman','Khmer OS Battambang';
+					font-size: 9px;
+					text-align: left;
+					line-height:10px;
+				}
+				@media print {
+					ul.printInfo{visibility: visible;}
 				}
 			</style>
 				
@@ -66,13 +145,19 @@
 					</td>
 					<td width="40%" valign="top" style=" padding-bottom: 40px;">
 					</td>
-					<td width="30%" align="right" style="vertical-align:top;">
+					<td width="30%" align="right" style="vertical-align:top; position: relative;">
 						<span class="project-name" id="projectName">(<?php echo $this->row["branch_name"];?>)</span>
+						<ul class="printInfo">
+							<li>Date / Time : <?php echo date("d-m-Y H:i:s")?></li>
+							<li><?php echo $currentUserName;?></li>
+						<ul>
 					</td>
 				</tr> 
 				<tr>
 					<td colspan="3" align="center">
-						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' ><?php echo $tr->translate("REQUEST_LETTER");?></span>
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light"; display: block;line-height: 16px;' ><?php echo "ប័ណ្ណស្នើសុំទិញសម្ភារ";?></span>
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";display: block;line-height: 16px;text-transform: uppercase;font-weight: 600;' ><?php echo "Request Letter";?></span>
+					
 					</td>
 				</tr>
 				<tr>
@@ -94,15 +179,40 @@
 						<?php }?>
 						<table class="requestInfo">
 							<tr>
-								<td width="30%"><span class="lbTitle"><?php echo $tr->translate("REQUEST_NO");?></span> : <span style="color:red; font-weight:600;"><?php echo $this->row["requestNo"];?></span></td>
+								<td width="30%">
+									<span class="lbTitle">
+										លេខសំណើ : 
+										<small>Request N<sup>o</sup> : </small>
+									</span>
+									<span class="bold redColor"><?php echo $this->row["requestNo"];?></span>
+								</td>
 								<td width="40%">&nbsp;</td>
-								<td width="30%"><span class="lbTitle"><?php echo $tr->translate("REQUEST_NO_FROM");?></span> : <span><?php echo $this->row["requestNoLetter"];?></span></td>
+								<td width="30%">
+									<span class="lbTitle">
+										លេខសំណើពីគម្រោង : 
+										<small>Request N<sup>o</sup> From : </small>
+									</span>
+									<span>
+									<?php echo $this->row["requestNoLetter"];?></span>
+								</td>
 								
 							</tr>
 							<tr>
-								<td ><span class="lbTitle"><?php echo $tr->translate("DATE");?></span> : <span><?php echo date("d-M-Y",strtotime($this->row["date"]));?></span></td>
+								<td >
+									<span class="lbTitle">
+										កាលបរិច្ឆេទ : 
+										<small>Request Date : </small>
+									</span>
+									<span class="bold"><?php echo date("d-M-Y",strtotime($this->row["date"]));?></span>
+								</td>
 								<td></td>
-								<td ><span class="lbTitle"><?php echo $tr->translate("PURPOSE");?></span> : <span><?php echo $this->row["purpose"];?></span></td>
+								<td >
+									<span class="lbTitle">
+										គោលបំណងស្នើ : 
+										<small>Purpose : </small>
+									</span>
+									<span class="bold"><?php echo $this->row["purpose"];?></span>
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -111,16 +221,41 @@
 					<td colspan="3" >
 						<table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
 							<thead>
-								<tr class="style" align="center" >
-									<td class="center"><?php echo $tr->translate("NUM");?></td>
-									<td class="center" style="width:200px;"><?php echo $tr->translate("PRODUCT_NAME");?></td>
-									<td class="center"><?php echo $tr->translate("CATEGORY");?></td>
-									<td class="center"><?php echo $tr->translate("QTY_REQUEST");?></td>
-									<td class="center"><?php echo $tr->translate("QTY_APPROVED");?></td>  
-									<td class="center"><?php echo $tr->translate("UNIT");?></td>
-									<td class="center"><?php echo $tr->translate("DATE_ENTRY");?></td>		
-									<td class="center" style="width:150px;"><?php echo $tr->translate("OTHER");?></td>    
+								<tr class="style headRow" align="center" >
+									<td class="center">
+										<span>ល.រ</span>
+										<small>N<sup>o</sup></small>
+									</td>
+									<td class="center" style="width:200px;">
+										<span>ទំនិញ</span>
+										<small>Product</small>
+									</td>
+									<td class="center">
+										<span>ប្រភេទ</span>
+										<small>Category</small>
+									</td>
+									<td class="center">
+										<span>បរិមាណស្នើ</span>
+										<small>Request Qty</small>
+									</td>
+									<td class="center">
+										<span>បរិមាណយល់ព្រម</span>
+										<small>Approved Qty</small>
+									</td>
+									<td class="center">
+										<span>ឯកតា</span>
+										<small>Unit</small>
+									</td>
+									<td class="center">
+										<span>កាលបរិច្ឆេទសុំចូល</span>
+										<small>Incoming Date</small>
+									</td>
+									<td class="center" style="width:200px;">
+										<span>ផ្សេងៗ</span>
+										<small>Other</small>
+									</td>
 								</tr>
+								
 							</thead>
 							 <?php 
 							 $i=0;
@@ -164,10 +299,10 @@
 				<tr>
 					<td colspan="3" >
 						<br />
-						<table width="40%" border="1"  cellspacing="0" cellpadding="0">
+						<table width="50%" border="1"  cellspacing="0" cellpadding="0">
 							<tr>
 								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;">
-									<span style="font-weight: 600; display: block;text-decoration: underline;"><?php echo $tr->translate("NOTE");?> ៖</span>
+									<span style="font-weight: 600; display: block;text-decoration: underline;">សម្គាល់ / Note ៖</span>
 									<span style="display: block; font-size:11px;"><?php echo $this->row["note"];?><span>
 								</td>
 							</tr>
@@ -176,16 +311,16 @@
 						<table width="100%" cellspacing="0" cellpadding="0">
 							<tr>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
-									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("REQUEST_BY");?> </span>
+									<span style="font-weight: 600; display: block;">ស្នើសុំដោយ / Request By</span>
 								</td>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
-									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("CHECKING_BY");?> </span>
+									<span style="font-weight: 600; display: block;">ត្រួតពិនិត្យដោយ / Checking By</span>
 								</td>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
-									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("PCHECKING_BY");?> </span>
+									<span style="font-weight: 600; display: block;">យល់ព្រមដោយ / Agreed By</span>
 								</td>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
-									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("APPROVED_BY");?> </span>
+									<span style="font-weight: 600; display: block;">អនុម័តដោយ / Approved By</span>
 								</td>
 							</tr>
 							<tr>

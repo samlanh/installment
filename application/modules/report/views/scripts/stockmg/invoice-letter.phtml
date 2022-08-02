@@ -5,6 +5,10 @@
 	
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
 	$dbparmeter = new Report_Model_DbTable_DbParamater();
+	
+	$dbGb = new Application_Model_DbTable_DbGlobal();
+	$userInfo = $dbGb->getUserInfo();
+	$currentUserName = $userInfo['user_name'];
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -54,6 +58,16 @@
 					padding:10px 2px; 
 					vertical-align:middle;
 				}
+				.content-data tr.headRow td span {
+					display: block;
+					line-height: 14px;
+				}
+				.content-data tr.headRow td small {
+					display: block;
+					line-height: 12px;
+					font-size: 10px;
+				}
+
 				table.requestInfo {
 					width: 100%;
 					margin-top: 10px;
@@ -62,7 +76,27 @@
 					vertical-align: top;
 				}
 				table.requestInfo span.lbTitle {
+					line-height: 14px;
+					float: left;
+					vertical-align: top;
+					min-width: 20%;
+				}
+				table.requestInfo span.lbTitle small {
+					display: block;
+					font-style: italic;
+					font-weight: 200;
+					line-height: 10px;
+				}
+				table.requestInfo tr td span {
+					line-height: 14px;
+					vertical-align: top;
+					min-width: 75%;
+				}
+				span.bold {
 					font-weight: 600;
+				}
+				span.redColor {
+					color: #ff0000;
 				}
 				tr.style.rejected {
 					background: #ffcece;
@@ -72,11 +106,34 @@
 					font-size: 12px;
 				}
 				tr.rowFooter td span.gtotalVal {
-					color: #ff0500;
+					color: #000000;
 					display: block;
 					width: 100%;
-					border-bottom: double 4px;
+					border-bottom: dashed 1px #959595;
+					text-align: right;
+				}
+				span.gtotalVal.mainTotal {
+					font-size: 14px;
+				}
+				
+				ul.printInfo {
+					position: absolute;
+					right: 0;
+					top: 35px;
+					list-style: none;
+					margin: 0;
+					padding: 0;
+					visibility: hidden;
+				}
+
+				ul.printInfo li {
+					font-family: 'Times New Roman','Khmer OS Battambang';
+					font-size: 9px;
 					text-align: left;
+					line-height:10px;
+				}
+				@media print {
+					ul.printInfo{visibility: visible;}
 				}
 			</style>
 				
@@ -88,14 +145,20 @@
 					</td>
 					<td width="40%" valign="top" style=" padding-bottom: 40px;">
 					</td>
-					<td width="30%" align="right" style="vertical-align:top;">
+					<td width="30%" align="right" style="vertical-align:top; position:relative;">
 						<span class="project-name" id="projectName">(<?php echo $this->row["branch_name"];?>)</span>
+						<ul class="printInfo">
+							<li>Date / Time : <?php echo date("d-m-Y H:i:s")?></li>
+							<li><?php echo $currentUserName;?></li>
+						<ul>
 					</td>
 				</tr> 
 				<tr>
-					<td colspan="3" align="center">
+					<td colspan="3" align="center" style="position:relative;" >
 						<span style='font-family: "Times New Roman","Khmer OS Muol Light"; display: block;line-height: 16px;' ><?php echo "វិក័្កយប័ត្រ";?></span>
 						<span style='font-family: "Times New Roman","Khmer OS Muol Light";display: block;line-height: 16px;text-transform: uppercase;font-weight: 600;' ><?php echo "Invoice Letter";?></span>
+						
+						
 					</td>
 				</tr>
 				<tr>
@@ -103,51 +166,104 @@
 					
 						<table class="requestInfo">
 							<tr>
-								<td width="40%"><span class="lbTitle"><?php echo $tr->translate("SUPPLIER");?></span> : <span><?php echo $this->row["supplierName"];?></span></td>
+								<td width="40%">
+									<span class="lbTitle">
+										អ្នកផ្គត់ផ្គង់ : 
+										<small>Supplier : </small>
+									</span>
+									<span><?php echo $this->row["supplierName"];?></span>
+								</td>
 								<td width="30%">
-									<span class="lbTitle"><?php echo $tr->translate("PO_NO");?></span> : <span style="color:red; font-weight:600;"><?php echo $this->row["purchaseNo"];?></span>
+									<span class="lbTitle">
+										លេខបញ្ជាទិញ : 
+										<small>Purchase N<sup>o</sup> : </small>
+									</span>
+									<span class="bold redColor" ><?php echo $this->row["purchaseNo"];?></span>
 								</td>
 								<td width="40%">
-									<span class="lbTitle"><?php echo $tr->translate("INVOICE_NO");?></span> : <span style="color:red; font-weight:600;"><?php echo $this->row["invoiceNo"];?></span>
+									<span class="lbTitle">
+									លេខវិក័្កយប័ត្រ : 
+										<small>Invoice N<sup>o</sup> : </small>
+									</span>
+									<span class="bold redColor" ><?php echo $this->row["invoiceNo"];?></span>
 								</td>
 								
 							</tr>
 							<tr>
 								
-								<td><span class="lbTitle"><?php echo $tr->translate("CONTACT_NAME");?></span> : <span><?php echo $this->row["contactNumber"];?></span></td>
+								<td>
+									<span class="lbTitle">
+										ឈ្មោះទំនាក់ទំនង : 
+										<small>Contact Name : </small>
+									</span>
+									<span><?php echo $this->row["contactName"];?></span></td>
 								<td >
-									<span class="lbTitle"><?php echo $tr->translate("PO_DATE");?></span> : <span><?php echo date("d-M-Y",strtotime($this->row["purchaseDate"]));?></span>
+									<span class="lbTitle">
+										កាលបរិច្ឆេទបញ្ជាទិញ : 
+										<small>Purchase Date : </small>
+									</span>
+									<span class="bold"><?php echo date("d-M-Y",strtotime($this->row["purchaseDate"]));?></span>
 								</td>
 								<td >
-									<span class="lbTitle"><?php echo $tr->translate("RECEIVE_DATE");?></span> : <span><?php echo date("d-M-Y",strtotime($this->row["receiveIvDate"]));?></span>
+									<span class="lbTitle">
+										កាលបរិច្ឆេទទទួល : 
+										<small>Received Date : </small>
+									</span>
+									<span class="bold"><?php echo date("d-M-Y",strtotime($this->row["receiveIvDate"]));?></span>
 								</td>
 							</tr>
 							<tr>
 								
-								<td><span class="lbTitle"><?php echo $tr->translate("TEL");?></span> : <span><?php echo $this->row["supplierTel"];?></span></td>
+								<td>
+									<span class="lbTitle">
+										លេខទូរសព្ទ : 
+										<small>Tel : </small>
+									</span>
+									<span><?php echo $this->row["supplierTel"];?></span></td>
 								<td >
 									<?php if(!empty($this->row["requestId"])){?>
-									<span class="lbTitle"><?php echo $tr->translate("REQUEST_NO");?></span> : <span style="color:red; font-weight:600;"><?php echo $this->row["requestNo"];?></span>
+									<span class="lbTitle">
+										លេខសំណើ : 
+										<small>Request N<sup>o</sup> : </small>
+									</span>
+									<span class="bold redColor" ><?php echo $this->row["requestNo"];?></span>
 									<?php }else{?>
 									&nbsp;
 									<?php }?>
 									
 								</td>
 								<td >
-									<span class="lbTitle"><?php echo $tr->translate("SUPPLIER_INVOICE");?></span> : <span style="color:red; font-weight:600;"><?php echo $this->row["supplierInvoiceNo"];?></span>
+									<span class="lbTitle">
+										លេខវិក័្កយប័ត្រ(ក្រៅ) : 
+										<small>Supplier Invoice N<sup>o</sup> : </small>
+									</span>
+									<span class="bold redColor" ><?php echo $this->row["supplierInvoiceNo"];?></span>
 								</td>
 							</tr>
 							<tr>
 								
-								<td rowspan="2"><span class="lbTitle"><?php echo $tr->translate("ADDRESS");?></span> : <span><?php echo $this->row["address"];?></span></td>
+								<td rowspan="2">
+									<span class="lbTitle">
+										អាសយដ្ឋាន : 
+										<small>Address : </small>
+									</span>
+									<span><?php echo $this->row["address"];?></span></td>
 								<td >
 									
 										<?php if(!empty($this->row["requestId"])){?>
-										<span class="lbTitle"><?php echo $tr->translate("REQUEST_DATE");?></span> : <span><?php echo date("d-M-Y",strtotime($this->row["requestDate"]));?></span>
+										<span class="lbTitle">
+											កាលបរិច្ឆេទស្នើ : 
+											<small>Request Date : </small>
+										</span>
+										<span class="bold"><?php echo date("d-M-Y",strtotime($this->row["requestDate"]));?></span>
 										<?php }?>
 								</td>
 								<td >
-									<span class="lbTitle"><?php echo $tr->translate("INVOICE_DATE");?></span> : <span><?php echo date("d-M-Y",strtotime($this->row["invoiceDate"]));?></span>
+									<span class="lbTitle">
+										កាលបរិច្ឆេទក្នុងវិក័្កយប័ត្រ : 
+										<small>Invoice Date : </small>
+									</span>
+									<span class="bold"><?php echo date("d-M-Y",strtotime($this->row["invoiceDate"]));?></span>
 								</td>
 							</tr>
 							<tr>
@@ -155,7 +271,11 @@
 								</td>
 								<td>
 										<?php if(!empty($this->row["requestName"])){?>
-										<span class="lbTitle"><?php echo $tr->translate("REQUEST_BY");?></span> : <span ><?php echo $this->row["requestName"];?></span>
+										<span class="lbTitle">
+											ស្នើដោយ : 
+											<small>Request By : </small>
+										</span>
+										<span><?php echo $this->row["requestName"];?></span>
 										<?php }?>
 								</td>
 								<td>
@@ -170,13 +290,34 @@
 						<table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
 							<thead>
 								<tr class="style headRow" align="center" >
-									<td class="center"><?php echo $tr->translate("NUM");?></td>
-									<td class="center" style="width:200px;"><?php echo $tr->translate("PRODUCT_NAME");?></td>
-									<td class="center"><?php echo $tr->translate("QTY");?></td>
-									<td class="center"><?php echo $tr->translate("UNIT");?></td>
-									<td class="center"><?php echo $tr->translate("UNIT_PRICE")."<br />".$tr->translate("CURRENCY_SIGN");?></td>
-									<td class="center"><?php echo $tr->translate("DISCOUNT")."<br />".$tr->translate("CURRENCY_SIGN");?></td>
-									<td class="center"><?php echo $tr->translate("SUB_TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
+									<td class="center">
+										<span>ល.រ</span>
+										<small>N<sup>o</sup></small>
+									</td>
+									<td class="center" style="width:200px;">
+										<span>ទំនិញ</span>
+										<small>Product</small>
+									</td>
+									<td class="center">
+										<span>បរិមាណ</span>
+										<small>Qty</small>
+									</td>
+									<td class="center">
+										<span>ឯកតា (USD)</span>
+										<small>Unit</small>
+									</td>
+									<td class="center">
+										<span>តម្លៃ/ឯកតា (USD)</span>
+										<small>Unit Price</small>
+									</td>
+									<td class="center">
+										<span>បញ្ចុះតម្លៃ (USD)</span>
+										<small>Discount Amount</small>
+									</td>
+									<td class="center">
+										<span>សរុប (USD)</span>
+										<small>Sub Total</small>
+									</td>
 								</tr>
 							</thead>
 							 <?php 
@@ -220,7 +361,7 @@
 							<?php if(!empty($this->DNList)){?>
 							<tr>
 								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;">
-									<span style="font-weight: 600; display: block;text-decoration: underline;"><?php echo $tr->translate("DELIVERY_NOTE");?>៖</span>
+									<span style="font-weight: 600; display: block;text-decoration: underline;">ព៏ត៌មានការដឹញ្ជូន / Delivery Information ៖</span>
 									<span style="font-weight: 600; display: block; font-size:11px;"><?php echo $this->DNList['DNNumberList'];?><span>
 								</td>
 							</tr>
@@ -231,32 +372,32 @@
 							<?php } ?>
 							<tr>
 								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;">
-									<span style="font-weight: 600; display: block;text-decoration: underline;"><?php echo $tr->translate("NOTE");?> ៖</span>
+									<span style="font-weight: 600; display: block;text-decoration: underline;">សម្គាល់ / Note ៖</span>
 									<span style="display: block; font-size:11px;"><?php echo $this->row["note"];?><span>
 								</td>
 							</tr>
 						</table>
-						<table style="width: 50%;">
+						<table style="width: 55%;">
 							<tr class="rowFooter" style=" white-space:nowrap;">
-								<td style="width:70%; text-align:right;" ><span><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?> :</span></td>
+								<td style="width:70%; text-align:right;" ><span>សរុប / Total (USD):</span></td>
 								<td style="border:none; " ><span class="gtotalVal"><?php echo number_format($gTotal,2);?></span></td>
 							</tr>
 							<?php if(!empty($this->rowdetailServicce)) foreach ($this->rowdetailServicce as $index => $rs){ $gTotal=$gTotal+$rs["totalReceive"];?>
 							<tr class="rowFooter" style=" white-space:nowrap;">
-								<td style="width:70%; text-align:right;" ><span><?php echo $rs["proName"]." ".$tr->translate("CURRENCY_SIGN");?> :</span></td>
+								<td style="width:70%; text-align:right;" ><span><?php echo $rs["proName"]." (USD)";?> :</span></td>
 								<td style="border:none; " ><span class="gtotalVal"><?php echo number_format($rs["totalReceive"],2);?></span></td>
 							</tr>
 							<?php } ?>
 							<tr class="rowFooter" style=" white-space:nowrap;">
-								<td style="width:70%; text-align:right;" ><span><?php echo $tr->translate("GRAND_TOTAL")." ".$tr->translate("CURRENCY_SIGN");?> :</span></td>
-								<td style="border:none; " ><span class="gtotalVal"><?php echo number_format($gTotal,2);?></span></td>
+								<td style="width:70%; text-align:right;" ><span>សរុបរួម / Grand Total (USD):</span></td>
+								<td style="border:none; " ><span class="gtotalVal mainTotal"><?php echo number_format($gTotal,2);?></span></td>
 							</tr>
 						</table>
-						<br />
-						<table width="100%" cellspacing="0" cellpadding="0">
+						<div class="clearfix" style="clear: both !important;"></div>
+						<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:10px;" >
 							<tr>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
-									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("SUPPLIER");?> </span>
+									<span style="font-weight: 600; display: block;">អ្នកផ្គត់ផ្គង់ / Supplier </span>
 								</td>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
 									<span style="font-weight: 600; display: block;"><?php //echo $tr->translate("CHECKING_BY");?> </span>
@@ -265,7 +406,7 @@
 									<span style="font-weight: 600; display: block;"><?php //echo $tr->translate("PCHECKING_BY");?> </span>
 								</td>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
-									<span style="font-weight: 600; display: block;"><?php echo $tr->translate("COMPANY_REPRESENT");?> </span>
+									<span style="font-weight: 600; display: block;">អ្នកតំណាងក្រុមហ៊ុន / Company Represent</span>
 								</td>
 							</tr>
 							<tr>
