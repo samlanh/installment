@@ -297,10 +297,14 @@
 	} 
 	var url_getrequest = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'usage','action'=>'getrequestno')); ?>';
 	function getWithdrawRequestNo(branch_id){
+		if(branch_id=='<?php echo $result['projectId']?>'){
+			return false;
+		}
 		dojo.xhrPost({
 			url:url_getrequest,	
 			content:{ 
 			    'branch_id':branch_id,
+			    'tranType':1
 			},		    
 			handleAs:"json",
 			load: function(data){

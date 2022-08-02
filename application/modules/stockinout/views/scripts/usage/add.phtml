@@ -179,6 +179,13 @@
     require(["dojo/ready"], function(ready){
 		ready(function(){
 			getDataByBranch();
+			var workType = dijit.byId('workType');
+			workType.on('change',function(evt){
+				workType = dijit.byId('workType').get('value');
+		    	 if(workType==-1){
+			    	 window.open('<?php echo $this->url(array('module'=>'stockinout','controller'=>'worktype','action'=>'add'));?>');
+			     }
+			});
 		}); 
 		new dijit.form.FilteringSelect({
 			store: productStore,
@@ -204,9 +211,7 @@
 	     class: 'fullside',  
 	     required:false,
 	     placeHolder:"<?php echo $tr->translate("SELECT_PROPERTY");?>", 
-	     onChange: function() {
-    	 
-	     } 
+	     
 	 }, "houseId");
 
 	new dijit.form.FilteringSelect({
@@ -216,12 +221,12 @@
 	     name: "staffWithdraw",  
 	     class: 'fullside',  
 	     required:false,
-	     placeHolder:"<?php echo $tr->translate("SELECT_STAFF");?>", 
+	     placeHolder:"<?php echo $tr->translate("SELECT_WITHDRAWER");?>", 
 	     onChange: function() {
 	    	 staffWithdraw = dijit.byId('staffWithdraw').get('value');
 	    	 if(staffWithdraw==-1){
 		    	 window.open('<?php echo $this->url(array('module'=>'stockinout','controller'=>'staff','action'=>'add'));?>');
-		    }
+		     }
 	     } 
 	 }, "staffWithdraw");
 
@@ -241,7 +246,9 @@
 	     } 
 	 }, "contractor");
 
+
 	 function getDataByBranch(){
+		 getWorkType();
 		 branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id==0){
 			return false;
@@ -288,6 +295,7 @@
 			url:url_getrequest,	
 			content:{ 
 			    'branch_id':branch_id,
+			    'tranType':1
 			},		    
 			handleAs:"json",
 			load: function(data){
@@ -323,7 +331,11 @@
 		objectContentFilter = {'branch_id':branch_id,'addnew':1};
 		getAllContractorbyBranch(urlGetAllContractor,objectContentFilter);
 	}
-
+	function getWorkType(){
+		var urlGetAllWorkType = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'worktype','action'=>'getallworktype')); ?>';
+		objectContentFilter = {'addnew':1};
+		getAllWorkType(urlGetAllWorkType,objectContentFilter);
+	}
 	
 	var col= 0; var no=0;
 	var title = 0;

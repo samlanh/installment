@@ -1,13 +1,14 @@
 <?php
 
-class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
+class Stockinout_Model_DbTable_DbSaleStock extends Zend_Db_Table_Abstract
 {
     protected $_name = 'st_stockout';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
-    function getAllUsageStock($search){
+   
+    function getAllSaleStock($search){
     	$sql="SELECT id,
 				(SELECT project_name FROM `ln_project` WHERE br_id=so.projectId LIMIT 1) AS projectName,
 				so.requestNo,
@@ -18,12 +19,13 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
 				so.workerName,
 				(SELECT pt.type_nameen FROM `ln_properties_type` pt where pt.id=so.houseType LIMIT 1) as houseType,
 				(SELECT p.land_address FROM `ln_properties` p where p.id=so.houseId LIMIT 1) as houseNo,
+				(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=so.`clientId` limit 1) AS clientName,
 				(SELECT w.workTitle FROM `st_work_type` w where w.id=so.workType LIMIT 1) workType,
 				so.typeofWork,
 				(SELECT first_name FROM rms_users WHERE id=so.userId LIMIT 1 ) AS user_name,
 				(SELECT name_en FROM ln_view WHERE type=3 and key_code = so.status LIMIT 1) AS status
 								
-			FROM `st_stockout` as so WHERE so.tranType=1 ";
+			FROM `st_stockout` as so WHERE so.tranType=2 ";
     	
     	$from_date =(empty($search['start_date']))? '1': " so.createDate >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " so.createDate <= '".$search['end_date']." 23:59:59'";
@@ -51,6 +53,9 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	if(!empty($search['propertyType'])){
     		$where.= " AND so.houseType = ".$search['propertyType'];
     	}
+    	if(!empty($search['saleId'])){
+    		$where.= " AND so.saleId = ".$search['saleId'];
+    	}
     	if($search['contractor']>0){
     		$where.= " AND so.contractor = ".$search['contractor'];
     	}
@@ -68,14 +73,26 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql.$where_date.$where.$order);
     }
    
-    function addUsageStock($data){
+    function addSaleStock($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try
     	{
+    		$houseId='';
+    		$clientId='';
+    		if(!empty($data['saleId'])){
+    			$dbp = new Loan_Model_DbTable_DbLoanILPayment();
+    			$result = $dbp->getSalebyId($data['saleId']);
+    			if(!empty($result)){
+    				$houseId=$result['house_id'];
+    				$clientId=$result['client_id'];
+    			}
+    		}
+    		
+    		$dbs = new Application_Model_DbTable_DbGlobalStock();
     		$param = array(
     				'branch_id'=>$data['branch_id'],
-    				'tranType'=>1
+    				'tranType'=>2
     				);
     		$dbs = new Application_Model_DbTable_DbGlobalStock();
     		$requestStock = $dbs->generateRequestUsageNo($param);
@@ -90,14 +107,16 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     				'staffId'=>$data['staffWithdraw'],
     				'workerName'=>$data['ConstructionWorker'],
     				'houseType'=>$data['propertyType'],
-    				'houseId'=>$data['houseId'],
+    				'saleId'=>$data['saleId'],
+    				'houseId'=>$houseId,
+    				'clientId'=>$clientId,
     				'workType'=>$data['workType'],
     				'typeofWork'=>$data['typeofWork'],
     				'note'=>$data['note'],
     				'createDate'=>$data['withdrawDate'],
     				'status'=>1,
     				'userId'=>$this->getUserId(),
-    				'tranType'=>1,
+    				'tranType'=>2,
     			);
     		$stockId = $this->insert($arr);
     		
@@ -121,14 +140,14 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     					'productId'=> $data['proId'.$i],
     				);
     				$dbs->updateProductLocation($param);//Update Stock qty and new costing
-    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],3,$data['qtyRequest'.$i],$id);//movement'
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],4,$data['qtyRequest'.$i],$id);//movement'
     			}
     		}
     		$db->commit();
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/usage/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/saleout/add");
     	}
     }
     function upateUsageStock($data){
@@ -154,7 +173,7 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     				'createDate'=>$data['withdrawDate'],
     				'status'=>1,
     				'userId'=>$this->getUserId(),
-    				'tranType'=>1,
+    				'tranType'=>2,
     		);
     		$stockId = $data['id'];
     		$where="id=".$stockId;
@@ -182,14 +201,14 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     						'productId'=> $data['proId'.$i],
     				);
     				$dbs->updateProductLocation($param);//Update Stock qty and new costing
-    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],3,$data['qtyRequest'.$i],$id);//movement'
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],4,$data['qtyRequest'.$i],$id);//movement'
     			}
     		}
     		$db->commit();
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/usage/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/saleout/add");
     	}
     }
     function resetUsageStock($stockId,$branchId){
@@ -212,7 +231,7 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     }
     function getDataRow($recordId){
     	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE tranType=1 AND id=".$recordId;
+    	$sql=" SELECT * FROM $this->_name WHERE tranType=2 AND id=".$recordId;
     	
     	$dbg = new Application_Model_DbTable_DbGlobal();
     	$sql.= $dbg->getAccessPermission('projectId');

@@ -8,6 +8,9 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     	return $session_user->user_id;
     }*/
     function getAllProductLocation($search){
+    	if(!isset($search['btn_search'])){
+    		return array();
+    	}
     	$sql=" SELECT 
 					p.proId AS id,
 					(SELECT project_name from `ln_project` WHERE br_id=l.projectId LIMIT 1) as projectName,
@@ -15,6 +18,7 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 					p.barCode,
 					l.qty AS currentQty,
 					p.measureLabel AS measureTitle,
+					l.costing,
 					(SELECT c.categoryName FROM `st_category` as c WHERE c.id=p.categoryId LIMIT 1) categoryName
 				FROM 
 					`st_product` AS p ,
@@ -46,6 +50,7 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     	if($search['measureId']>0){
     		$where.= " AND p.budgetId = ".$search['measureId'];
     	}
+    	
     	
     	$dbg = new Application_Model_DbTable_DbGlobal();
     	$where.= $dbg->getAccessPermission('l.projectId');

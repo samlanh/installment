@@ -1,31 +1,60 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate(""));
+	echo $this->headTitle($tr->translate("SALE_STOCK"));
+	
 	$frm = $this->frm_search;
+	
+	$frm_stock=$this->frm_stock;
 ?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa fa-user" aria-hidden="true"></i>&nbsp;<i class="fa fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate('SALE_STOCK');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
     		</div>
     	</div>
 		<div class="card-box">
-			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'message','controller'=>'index','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
-			   <div class="form-group">
-					<div class="col-md-2 col-sm-2 col-xs-12">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
+		   		<div class="form-group">
+			   		<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('adv_search');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('branch_id');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm_stock->getElement('propertyType');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input id="saleId" />
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input id="staffWithdraw" />
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input id="contractor" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm_stock->getElement('workType');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('status');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('start_date');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('end_date');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('btn_search');?>
 					</div>
 				</div>
 			</form>
@@ -36,20 +65,118 @@
 		</div>
 	</div>
 </div>
-<script>
-<?php 
-	/*$edit_Text = $tr->translate("RESENT");
-	$urlEdit = $this->baseUrl()."/message/index/edit/id/";
-	*/
-?>
-/*
-function checked_id(index){
-	$("#id_selected").val('');
-	 var searchIDs = $('input:checked').map(function(){
-	      return $(this).val();
-	    });
-	    $("#id_selected").val(searchIDs.get());
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
+<script type="text/javascript">
+	dojo.require('dijit.form.DateTextBox');
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+
+new dijit.form.FilteringSelect({
+ 	autoComplete: false,
+ 	queryExpr: "*${0}*",                       
+     id: "staffWithdraw",
+     name: "staffWithdraw",  
+     class: 'fullside',  
+     required:false,
+     placeHolder:"<?php echo $tr->translate("SELECT_STAFF");?>", 
+     onChange: function() {
+     } 
+ }, "staffWithdraw");
+
+new dijit.form.FilteringSelect({
+ 	autoComplete: false,
+ 	queryExpr: "*${0}*",                       
+     id: "contractor",
+     name: "contractor",  
+     class: 'fullside',  
+     required:false,
+     placeHolder:"<?php echo $tr->translate("SELECT_CONTRACTOR");?>", 
+     onChange: function() {
+	 
+     } 
+ }, "contractor");
+
+new dijit.form.FilteringSelect({
+ 	autoComplete: false,
+ 	queryExpr: "*${0}*",                       
+     id: "saleId",
+     name: "saleId",  
+     class: 'fullside',  
+     required:false,
+     placeHolder:"<?php echo $tr->translate("SELECT_SALE");?>", 
+     onChange: function() {
+     } 
+ }, "saleId");
+
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		var branch_id = dijit.byId('branch_id');
+		branch_id.on('change',function(){
+			getDataByBranch();
+		});
+		getDataByBranch();
+	});
+});
+
+function getDataByBranch(){
+	 branch_id = dijit.byId('branch_id').get('value');
+	 if(branch_id=='' || branch_id==0){
+		return false;
+	 }
+	 getAllSaleBranch(branch_id);
+	 getAllStaff(branch_id);
+	 getAllContractor(branch_id);
+	 
 }
+
+function getAllStaff(branch_id){
+	var urlGetAllStaff = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'staff','action'=>'getallstaff')); ?>';
+	
+	objectContentFilter = {'branch_id':branch_id,'select':1};
+	getAllStaffbyBranch(urlGetAllStaff,objectContentFilter);
+
+	
+
+	setTimeout(function () {
+		dijit.byId('staffWithdraw').attr('value','<?php echo $this->search['staffWithdraw']?>');
+		dijit.byId('contractor').attr('value','<?php echo $this->search['contractor']?>');
+		dijit.byId('saleId').attr('value','<?php echo $this->search['saleId']?>');
+	}, 500);
+}
+function getAllContractor(branch_id){
+	var urlGetAllContractor = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'contractor','action'=>'getallcontractor')); ?>';
+	objectContentFilter = {'branch_id':branch_id,'select':1};
+	getAllContractorbyBranch(urlGetAllContractor,objectContentFilter);
+
+	setTimeout(function () {
+		//dijit.byId('contractor').attr('value','<?php //echo $this->search['contractor']?>');
+	}, 500);
+}
+
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-sale-number')); ?>';
+function getAllSaleBranch(branch_id){
+	dijit.byId('saleId').reset();
+	property_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+	dijit.byId('saleId').set('store', property_store);
+	
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id,
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('saleId').set('store', property_store);
+		},
+		error: function(err) {
+		}
+	});
+} 
+
+<?php 
+	$edit_Text = $tr->translate("EDIT");
+	$urlEdit = $this->baseUrl()."/stockinout/usage/edit/id/";
+?>
 
 var row=0;
 var url="";
@@ -59,12 +186,12 @@ $(function(){
 		callback: function(key, options) {
 			var m = "clicked: " + key;
 			if(key=="edit"){
-				url='<?php //echo $urlEdit;?>';
+				url='<?php echo $urlEdit;?>';
 			}
 			gotoAction();
 		},
 		items: {
-			"edit": {name: "<?php //echo $edit_Text;?>", icon: "edit", accesskey: "e"},
+			"edit": {name: "<?php echo $edit_Text;?>", icon: "edit", accesskey: "e"},
 		}
 	});
 });
@@ -75,5 +202,5 @@ var recordid ='';
 function gotoAction(){
 	 window.open(url+row+'?rightclick=true', '_blank');
 }
-*/
+
 </script>

@@ -115,7 +115,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				
 			";
 			if(!empty($_data['purchaseId'])){//Case Purchase Edit
-				$sql.=" (COALESCE((SELECT pod.qty FROM `st_purchasing_detail` as pod WHERE p.proId = pod.proId LIMIT 1),0)+COALESCE((SELECT rqd.qtyApprovedAfter FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ),0)) AS qtyApprovedAfter ";
+				$sql.=" (COALESCE((SELECT pod.qty FROM `st_purchasing_detail` as pod WHERE p.proId = pod.proId AND pod.purchaseId=".$_data['purchaseId']." LIMIT 1),0)+COALESCE((SELECT rqd.qtyApprovedAfter FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ),0)) AS qtyApprovedAfter ";
 			}else{
 				$sql.=" (SELECT rqd.qtyApprovedAfter FROM `st_request_po_detail` AS rqd WHERE rqd.proId =p.proId AND rqd.requestId=".$_data['requestId']." LIMIT 1 ) AS qtyApprovedAfter ";
 			}
@@ -248,16 +248,24 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	
 		$branch_id = empty($_data['branch_id'])?0:$_data['branch_id'];
 		$pre = $dbgb->getPrefixCode($branch_id);
+		$strTranType='';
+		$strTypePrefix = 'U';
+		if(!empty($_data['tranType'])){
+			if($_data['tranType']==2){
+				$strTypePrefix = 'S';
+			}
+			$strTranType=' AND tranType='.$_data['tranType'];
+		}
 	
 		$db = $this->getAdapter();
-		$sql=" SELECT so.id  FROM $this->_name AS so WHERE so.projectId = $branch_id  ORDER BY so.id DESC LIMIT 1 ";
+		$sql=" SELECT so.id  FROM $this->_name AS so WHERE so.projectId = $branch_id  $strTranType ORDER BY so.id DESC LIMIT 1 ";
 		$acc_no = $db->fetchOne($sql);
 		$new_acc_no= (int)$acc_no+1;
 	
 		$dateRequest = empty($_data['createDate'])?date("Y-m-d"):$_data['createDate'];
 	
 		$pre=$pre.date("dmy",strtotime($dateRequest));
-		$pre=$pre."W";
+		$pre=$pre.$strTypePrefix;
 		$numberLenght= strlen((int)$new_acc_no);
 		for($i = $numberLenght;$i<4;$i++){
 			$pre.='0';
@@ -727,9 +735,13 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if($option!=null){
 			if(!empty($cate_tree_array)){
 				$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+				$request = Zend_Controller_Front::getInstance()->getRequest();
 				$optionList= array(
-						0=>$tr->translate("SELECT_WORK_TYPE"),
+						0=>$tr->translate("SELECT_WORK_TYPE")
 				);
+				if($request->getActionName()=='add'){
+					$optionList[-1]=$tr->translate("ADD_NEW");
+				}
 				foreach ($cate_tree_array as $rs){
 					$optionList[$rs['id']]=$rs['name'];
 				}

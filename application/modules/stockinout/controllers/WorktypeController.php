@@ -79,20 +79,24 @@ public function init()
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frmWorkType = $frm;
 	}
-// 	function getbudgettypeAction(){
-// 		if($this->getRequest()->isPost()){
-// 			$data = $this->getRequest()->getPost();
-// 			$db = new Application_Model_DbTable_DbGlobalStock();
-// 			$results=$db->getAllBudgetType(0,  '', '');
-				
-// 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		
-// 			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("SELECT_BUDGET_TYPE")));
-// 			array_unshift($results, array ('id' => -1,'name' =>$tr->translate("ADD_NEW")));
-				
-// 			print_r(Zend_Json::encode($results));
-// 			exit();
-// 		}
-// 	}
+	function getallworktypeAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db_com = new Application_Model_DbTable_DbGlobalStock();
+			$result = $db_com->getAllWorkType(0, '','',null);
+			
+			$tr= Application_Form_FrmLanguages::getCurrentlanguage();
+			
+			if(isset($data['select'])){
+				array_unshift($result, array('id'=>0,'name'=>$tr->translate("SELECT_WORK_TYPE")));
+			}
+			
+			if(isset($data['addnew'])){
+				array_unshift($result, array('id'=>-1,'name'=>$tr->translate('ADD_NEW')));
+			}
+			print_r(Zend_Json::encode($result));
+			exit();
+		}
+	}
 }
 

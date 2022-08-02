@@ -46,7 +46,9 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		$propertyType->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'onchange'=>'getAllProperty();'
+				'onchange'=>'getAllProperty();',
+				'required'=>'false',
+				'placeHolder'=>$this->tr->translate('PROPERTY_TYPE')
 		));
 		
 		$rsProtype = $db->getPropertyType();
@@ -84,6 +86,7 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		$workType->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'required'=>'false'
 		));
 		$opt = $dbGBStock->getAllWorkType(0,'','',1);
 		$workType->setMultiOptions($opt);
