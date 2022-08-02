@@ -67,6 +67,57 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
     	$where.=$dbGb->getAccessPermission("po.projectId");
     	return $db->fetchAll($sql.$where.$order);
     }
+	function getAllPurchasingSumByType($search){
+    	$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+		$sql="
+			SELECT 
+				po.*,
+				
+				COUNT(po.id) AS amountRow,
+				SUM(po.total) AS totalAmount
+				
+		";
+		$sql.=" FROM `st_purchasing` AS po 
+					JOIN `st_supplier` AS spp ON spp.id = po.supplierId 
+					LEFT JOIN st_request_po AS rq ON rq.id =po.requestId 
+				WHERE 
+					1 
+		";
+    	$where = "";
+    	$from_date =(empty($search['start_date']))? '1': " po.date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " po.date <= '".$search['end_date']." 23:59:59'";
+    	
+    	$where.= " AND ".$from_date." AND ".$to_date;
+    	$where.= " AND po.status = 1 ";
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = (trim($search['adv_search']));
+    		$s_where[] = " po.purchaseNo LIKE '%{$s_search}%'";
+    		$s_where[] = " po.purpose LIKE '%{$s_search}%'";
+    		$s_where[] = " po.note LIKE '%{$s_search}%'";
+    		$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
+    		$s_where[] = " rq.requestNo LIKE '%{$s_search}%'";
+    		$s_where[] = " rq.purpose LIKE '%{$s_search}%'";
+    		$s_where[] = " po.total LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	
+    	if(($search['branch_id'])>0){
+    		$where.= " AND po.projectId = ".$search['branch_id'];
+    	}
+		if(!empty($search['supplierId'])){
+    		$where.= " AND po.supplierId = ".$search['supplierId'];
+    	}
+		if(!empty($search['purchaseType'])){
+    		$where.= " AND po.purchaseType = ".$search['purchaseType'];
+    	}
+		$where.= " AND po.purchaseType = ".$search['rowPurchaseType'];
+    	$order=' ORDER BY po.id DESC  ';
+    	$where.=$dbGb->getAccessPermission("po.projectId");
+    	return $db->fetchRow($sql.$where.$order);
+    }
 	
 	function getPurchasingById($recordId){
     	$db = $this->getAdapter();
@@ -430,7 +481,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 		
     	return $db->fetchAll($sql.$where.$order);
     }
-	function getAllInvoiceSomeByType($search){
+	function getAllInvoiceSumByType($search){
     	$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();
 		
