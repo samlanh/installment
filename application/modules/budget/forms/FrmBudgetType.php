@@ -146,6 +146,18 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'required'=>true,
 		));
+		
+		$settingType = new Zend_Dojo_Form_Element_FilteringSelect('settingType');
+		$settingType->setAttribs(array(
+				'dojoType'=>$filter,
+				'class'=>'fullside',
+		));
+		$arr = array(
+				2=>$tr->translate("BUDGET_ITEM"),
+				1=>$tr->translate("BUDGET_TYPE")
+				
+				);
+		$settingType->setMultiOptions($arr);
 	
 		$note = new Zend_Dojo_Form_Element_Textarea("note");
 		$note->setAttribs(array(
@@ -164,6 +176,7 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 		}
 	
 		$this->addElements(array(
+				$settingType,
 				$branch_id,
 				$budgetType,
 				$id,
