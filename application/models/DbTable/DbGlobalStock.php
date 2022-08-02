@@ -475,7 +475,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$rows = $db->fetchAll($sql);
 		return $rows;
 	}
-	public function getAllBudgetType($parent = 0, $spacing = '', $cate_tree_array = '',$option=null){
+	public function getAllBudgetType($parent = 0, $spacing = '', $cate_tree_array = '',$option=null,$data=array()){
 	
 		$db=$this->getAdapter();
 		if (!is_array($cate_tree_array))
@@ -487,6 +487,10 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				bt.budgetTitle AS `name` ";
 		$sql.=" FROM `st_budget_type` AS bt  ";
 		$sql.=" WHERE bt.status=1 AND bt.parentId = $parent ";
+		if(!empty($data['notinBranchId'])){
+			$sql.=" AND bt.id NOT IN (SELECT budgetTypeId FROM `st_budget_project` WHERE projectId=".$data['notinBranchId']." )";
+		}
+		
 		$query = $db->fetchAll($sql);
 		$rowCount = count($query);
 		$id='';

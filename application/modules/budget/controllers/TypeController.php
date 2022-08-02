@@ -83,7 +83,7 @@ class Budget_TypeController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Application_Model_DbTable_DbGlobalStock();
-			$results=$db->getAllBudgetType(0,  '', '');
+			$results=$db->getAllBudgetType(0,  '', '',null,$data);
 				
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		

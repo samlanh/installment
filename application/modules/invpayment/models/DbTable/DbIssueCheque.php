@@ -10,7 +10,7 @@ class Invpayment_Model_DbTable_DbIssueCheque extends Zend_Db_Table_Abstract
     function getAllIssueChequePayment($search){
     	$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();
-		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
 		
 		$sql="
@@ -21,7 +21,10 @@ class Invpayment_Model_DbTable_DbIssueCheque extends Zend_Db_Table_Abstract
 				reCh.receiverName,
 				pt.paymentNo,
 				spp.supplierName
-				
+				,CASE
+					WHEN  reCh.statusWithdraw = 0 THEN '".$tr->translate("NOT_YET_WITHDRAW")."'
+					WHEN  reCh.statusWithdraw= 1 THEN '".$tr->translate("WITHDRAWN")."'
+					END AS statusWithdrawTitle 
 			";
     	$sql.=$dbGb->caseStatusShowImage("reCh.status");
 		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=reCh.userId LIMIT 1 ) AS byUser";
@@ -48,6 +51,10 @@ class Invpayment_Model_DbTable_DbIssueCheque extends Zend_Db_Table_Abstract
     	}
     	if($search['status']>-1){
     		$where.= " AND reCh.status = ".$search['status'];
+    	}
+		if(!empty($search['statusWithdraw'])){
+			if($search['statusWithdraw']==2){$search['statusWithdraw']=0;}
+    		$where.= " AND reCh.statusWithdraw = ".$search['statusWithdraw'];
     	}
     	if(($search['branch_id'])>0){
     		$where.= " AND reCh.projectId = ".$search['branch_id'];

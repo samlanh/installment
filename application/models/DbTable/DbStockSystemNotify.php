@@ -94,6 +94,56 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
     	return $db->fetchAll($sql);
 	}
 	
+	function getNotifyRequestHtml($_data=array()){
+		$row = $this->getNotifyRequest($_data);
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$baseUrls = Zend_Controller_Front::getInstance()->getBaseUrl();
+		
+		$count = count($row);
+		$string='
+			<li class=" event title">
+				<h4><i class="fa fa-file-text"></i> '.$tr->translate("REQUEST_PO").'</h4>
+			</li>
+		';
+		if(!empty($row)) foreach($row as $key=> $result){
+			$url="";
+			$title="";
+			if($result['processingStatus']==1){
+				$url=$baseUrls."/requesting/checkingrequest/add/id/".$result['id'];
+				$title=$tr->translate("MAKE_CHECKING_REQUEST_PO");
+			}elseif($result['processingStatus']==2){
+				$url=$baseUrls."/requesting/pcheckingrequest/add/id/".$result['id'];
+				$title=$tr->translate("MAKE_PCHECKING_REQUEST_PO");
+			}elseif($result['processingStatus']==3){
+				$url=$baseUrls."/requesting/approvedrequest/add/id/".$result['id'];
+				$title=$tr->translate("MAKE_APPROVED_REQUEST_PO");
+			}elseif($result['processingStatus']==4){
+				$url=$baseUrls."/po/index/add/id/".$result['id'];
+				$title=$tr->translate("MAKING_PURCHASE_REQUEST_PO");
+			}
+			$string.='
+				<li class=" event">
+					<div class="media-body">
+						<small>'.$result['branch_name'].'</small><br />
+						<span class="title" >'.$result['requestNo'].'</span>
+						<p><strong><i class="fa fa-newspaper-o"></i> '.$result['purpose'].'</strong>  </p>
+						<p><strong></strong> <i class="fa fa-calendar"></i> '.date("d/m/Y",strtotime($result['date'])).'</p>
+						<p><strong></strong> <i class="fa fa-user"></i> '.$result['user_name'].'</p>
+						<p class="proccessingStatus"><i class="fa fa-sliders"></i> '.$result['processingStatusTitle'].'</p>
+						<a class="btn-go" href="'.$url.'"><i class="fa fa-location-arrow" aria-hidden="true"></i> '.$title.'</a>
+								
+					</div>
+				</li>
+			';
+		}
+		
+		$arrNoti = array(
+			'notification' => $string,
+			'counting'  => $count
+		);
+		return $arrNoti;
+	}
+	
 	
 }
 ?>

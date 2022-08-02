@@ -8,7 +8,6 @@ class Budget_SetupController extends Zend_Controller_Action {
 	public function indexAction(){
 		$db = new Budget_Model_DbTable_DbInitilizeBudget();
 		$rs_rows=array();
-		
 		try{
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();

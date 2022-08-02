@@ -10,16 +10,20 @@ class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
     function getAllBudgetProject($search){
     	$sql="SELECT bp.id,
 		    		 (SELECT project_name FROM `ln_project` WHERE br_id =bp.projectId LIMIT 1) AS branch_name,
-		    		 (SELECT b.budgetTitle FROM st_budget_type AS b WHERE b.id=bi.budgetTypeId LIMIT 1) AS budgetType,
+			    		(SELECT b.budgetTitle FROM st_budget_type AS b WHERE b.id=(
+		    		 	CASE WHEN bp.isMain=0 THEN bi.budgetTypeId
+		    		 	ELSE bp.budgetTypeId END 
+		    		 	)
+		    		  LIMIT 1) AS budgetType,
 		    		 bi.budgetTitle AS budgetTitle,
 		    		 bp.totalBudget,bp.budgetAlert,
 			    	 bp.createDate,
 			    	(SELECT first_name FROM rms_users AS u WHERE u.id = bp.userId LIMIT 1) AS user ,
 		    		(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = bp.status LIMIT 1) AS status
     			FROM 
-    				$this->_name AS bp,
+    				$this->_name AS bp LEFT JOIN
     				st_budget_item AS bi
-    	 WHERE bp.budgetId=bi.id ";
+    	 ON bp.budgetId=bi.id  WHERE 1";
     	
     	
     	$from_date =(empty($search['start_date']))? '1': " bp.createDate >= '".$search['start_date']." 00:00:00'";
@@ -62,15 +66,25 @@ class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
     		if(!empty($data['identity'])){
 				$ids = explode(',', $data['identity']);
 				foreach ($ids as $i){
-						$arr = array(
-								'projectId'=>$data['branch_id'],
-								'budgetId'=>$data['budgetItem'.$i],
-								'totalBudget'=>$data['budgetAmount'.$i],
-								'budgetAlert'=>$data['qtyAmount'.$i],
-								'createDate'=>date('Y-m-d'),
-								'userId'=>$this->getUserId(),
-						);
-						$this->insert($arr);
+						$isMain = 0;
+						$budgetItem = $data['budgetItem'.$i];
+						$budgetTypeId=0;
+					if($data['type'.$i]==1){
+						$isMain=1;
+						$budgetItem =0;
+						$budgetTypeId = $data['budgetItem'.$i];
+					}
+					$arr = array(
+						'projectId'=>$data['branch_id'],
+						'isMain'=>$isMain,
+						'budgetTypeId'=>$budgetTypeId,
+						'budgetId'=>$budgetItem,
+						'totalBudget'=>$data['budgetAmount'.$i],
+						'budgetAlert'=>$data['qtyAmount'.$i],
+						'createDate'=>date('Y-m-d'),
+						'userId'=>$this->getUserId(),
+					);
+					$this->insert($arr);
 				}
     		}
     		$db->commit();

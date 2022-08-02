@@ -365,4 +365,13 @@ class IndexController extends Zend_Controller_Action
     		}
     	}
     }
+	function notifRequestAction(){
+		if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$dbGn = new Application_Model_DbTable_DbStockSystemNotify();
+			$row = $dbGn->getNotifyRequestHtml($data);
+    		print_r(Zend_Json::encode($row));
+    		exit();
+    	}
+	}
 }
