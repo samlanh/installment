@@ -63,6 +63,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}else{
 			$sql.=" AND p.isService=0 ";
 		}
+		if(isset($_data['isCountStock'])){
+			$sql.=" AND p.isCountStock= ".$_data['isCountStock'];
+		}
 		
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND p.proId IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=".$_data['branch_id']." )";

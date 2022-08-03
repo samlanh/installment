@@ -99,23 +99,30 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 		
 		$id=empty($rsData['id'])?0:$rsData['id'];
 		$sql=" 	SELECT 
-					rqd.*,p.proCode,
-					p.proName,
-					(SELECT c.categoryName FROM st_category AS c WHERE c.id = p.categoryId LIMIT 1 ) AS categoryTitle,
-					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= rq.projectId LIMIT 1) AS currentQty,
-					p.measureLabel AS measureTitle
+					rqd.*
+					,p.proCode
+					,p.proName
+					,(SELECT c.categoryName FROM st_category AS c WHERE c.id = p.categoryId LIMIT 1 ) AS categoryTitle
+					,(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= rq.projectId LIMIT 1) AS currentQty
+					,p.measureLabel AS measureTitle
+					
+					,(SELECT SUM(pod1.qty) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS purchaseQty
+					,(SELECT GROUP_CONCAT(po.purchaseNo) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS purchaseNoList
+					
+					,(SELECT SUM(rsd1.qtyReceive) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = rqd.proId AND rqd.requestId=rs.requestId AND rs.status =1 ) AS totalReceiveQty
+					,(SELECT GROUP_CONCAT(rs.dnNumber) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = rqd.proId AND rqd.requestId=rs.requestId AND rs.status =1 ) AS dnNumberList
 				";
 				
 		$sql.="		FROM 
 					`st_request_po_detail` as rqd
 					JOIN `st_request_po` AS rq ON rq.id = rqd.requestId
 					LEFT JOIN `st_product` AS p  ON p.proId = rqd.proId 
-				
 			";
 		$sql.="WHERE 1 AND rqd.requestId = $id ";//AND rqd.approvedStatus=1 
 		if (!empty($rsData['pCheckingRequest']) OR !empty($rsData['approvedrequest'])){
 			$sql.=" AND rqd.adjustStatus = 1 ";
 		}
+			
 		return $db->fetchAll($sql);
 	}
 	

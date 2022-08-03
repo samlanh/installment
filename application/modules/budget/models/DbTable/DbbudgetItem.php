@@ -45,7 +45,8 @@ class Budget_Model_DbTable_DbbudgetItem extends Zend_Db_Table_Abstract
 	    try
 	    	{
 	    		$db = new Application_Model_DbTable_DbGlobalStock();
-	    		$result = $db->dataExisting($this->_name,"budgetTitle='".$data['budgetTitle']."'");
+	    		$where = "budgetTypeId=".$data['budgetType']." AND budgetTitle='".$data['budgetTitle']."'";
+	    		$result = $db->dataExisting($this->_name,$where);
 	    		
 	    		if(empty($result)){
 		    		$arr = array(
