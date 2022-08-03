@@ -328,4 +328,35 @@ class Report_StockmgController extends Zend_Controller_Action {
 		
 	}
 	
+	public function rptInvpaymenthistoryAction(){
+		try{
+			$db = new Report_Model_DbTable_DbAccountant();
+			$id=$this->getRequest()->getParam('id');
+    		$id = empty($id)?0:$id;
+			
+			$row = $db->getDataRowInvoice($id);
+			if (empty($row)){
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/invpayment/index");
+				exit();
+			}
+		
+			$this->view->row = $row;
+			$this->view->rowdetail = $db->getInvoicePaymentHistory($id);
+			
+    		
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
+		
+		$frm_search = new Application_Form_FrmAdvanceSearchStock();
+		$frm = $frm_search->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
+	}
+	
 }
