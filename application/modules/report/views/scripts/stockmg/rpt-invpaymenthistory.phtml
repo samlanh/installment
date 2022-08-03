@@ -48,6 +48,9 @@
 				table.content-data  tr.regurlar {
 					background: #eee;
 				}
+				tr.void {
+					background: #ffe5e5 !important;
+				}
 				table.content-data tr td{
 					padding:5px 3px; 
 					border:none;
@@ -343,21 +346,23 @@
 								}
 								$gTotal=$gTotal+$rs["paymentAmount"];
 								$paymentStatus=$rs["paymentStatus"];
+								$classVoid="";
 								if(!empty($rs["statusTitle"])){
 									$paymentStatus=$rs["statusTitle"];
+									$classVoid=" void";
 								}
 							?>
-							<tr class="style <?php echo $classRowBg; ?>" style=" white-space:nowrap;">
+							<tr class="style <?php echo $classRowBg; echo $classVoid;?>" style=" white-space:nowrap;">
 				               	<td style="text-align: center;"><?php echo $i; ?></td>
 								<td>
 									<?php echo $rs["paymentNo"];?>
 								</td>
 								<td align="center"><?php echo date("d-m-Y",strtotime($rs["paymentDate"]));?></td>
-								<td align="center"><?php echo $rs["paymentMethodTitle"];?></td>
-								<td align="center"><?php echo empty($rs["bankName"])?"N/A":$rs["bankName"];?></td>
-								<td align="center"><?php echo $rs["accNameAndChequeNo"];?></td>
+								<td ><?php echo $rs["paymentMethodTitle"];?></td>
+								<td ><?php echo empty($rs["bankName"])?"N/A":$rs["bankName"];?></td>
+								<td ><?php echo $rs["accNameAndChequeNo"];?></td>
 								<td align="right"><?php echo number_format($rs["paymentAmount"],2);?></td>
-								<td align="center"><?php echo $paymentStatus;?></td>
+								<td ><?php echo $paymentStatus;?></td>
 							</tr>
 							<?php } ?>
 							<?php for ($i = $i; $i <= $minimumRow; $i++) { ?>
