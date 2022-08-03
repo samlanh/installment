@@ -114,7 +114,7 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		$costing->setAttribs(array(
 			'dojoType'=>$numbox,
 			'class'=>'fullside',
-			'required'=>true,
+			'required'=>'false',
 		));
 		
 		$labelMeasure = new Zend_Dojo_Form_Element_ValidationTextBox('labelMeasure');
