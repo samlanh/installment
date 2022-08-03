@@ -1,5 +1,5 @@
 <?php
-class Po_ConfirmController extends Zend_Controller_Action {
+class Po_ConcretController extends Zend_Controller_Action {
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -40,17 +40,18 @@ class Po_ConfirmController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				//$db = new Loan_Model_DbTable_DbCancel();
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","");
+				$db = new Po_Model_DbTable_DbConcret();
+				$db->addReceiveStock($_data);
+				//Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","po/concret/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
+		$fm = new Po_Form_FrmConcretStock();
+		$frm = $fm->Frmconcret();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm = $frm;
 	}
 	function editAction(){
 		//$db = new Loan_Model_DbTable_DbCancel();
