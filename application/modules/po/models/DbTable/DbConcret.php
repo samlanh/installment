@@ -124,11 +124,16 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
 //     		);
     		
 //     		$budgetExpenseId = $dbb->addBudgetExpense($param);
+
+    		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+    		$data['dateRequest']=$data['date'];
+    		$purchaseNo =$dbGBstock->generatePurchaseNo($data);
+    		$purchaseNo=$purchaseNo."CC";
     		
     		$arr = array(
     				'projectId'			=>$data['branch_id'],
     				'purchaseType'		=>3,
-    				'purchaseNo'		=>'Concret01',
+    				'purchaseNo'		=>$purchaseNo,
     				'supplierId'		=>$data['supplierId'],
     				'date'				=>$data['date'],
     				'note'				=>$data['note'],
@@ -155,7 +160,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     						'unitPrice'			=>$data['unitPrice'.$i],
     						'discountAmount'	=>0,
     						'subTotal'			=>$data['total'.$i],
-    						'isCloused'			=>1,
+    						'isClosed'			=>1,
     						'note'				=>$data['note'.$i],
     				);
     				$this->_name='st_purchasing_detail';

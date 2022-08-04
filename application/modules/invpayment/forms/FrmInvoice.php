@@ -191,6 +191,22 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
     			'class'=>'fullside ',
     	));
 		
+		$purchaseType = new Zend_Dojo_Form_Element_FilteringSelect('purchaseType');
+		$purchaseType->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'false',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+		));
+		$arrProc = array('typeKeyIndex'=>4);
+		$rowPurchasingType = $dbGBStock->purchasingTypeKey($arrProc);
+		$optionsPurchasingType=array();
+		if(!empty($rowPurchasingType))foreach($rowPurchasingType AS $row){
+			$optionsPurchasingType[$row['id']]=$row['name'];
+		}
+		$purchaseType->setMultiOptions($optionsPurchasingType);
+		
 		if(!empty($data)){
 			$branch_id->setValue($data['projectId']);
 			$invoiceNo->setValue($data['invoiceNo']);
@@ -211,6 +227,7 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
 			$id->setValue($data['id']);
 			$_status->setValue($data['status']);
 			$dnId->setValue($data['dnId']);
+			$purchaseType->setValue($data['purchaseType']);
 		}
 		
 		$this->addElements(array(
@@ -232,6 +249,7 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
 				$id,
 				$_status,
 				$dnId,
+				$purchaseType,
 		));
 		return $this;
 	}

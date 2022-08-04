@@ -12,7 +12,7 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     		return array();
     	}
     	$sql=" SELECT 
-					p.proId AS id,
+					l.id,
 					(SELECT project_name from `ln_project` WHERE br_id=l.projectId LIMIT 1) as projectName,
 					CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`,
 					p.barCode,
@@ -110,12 +110,12 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     	try
     	{
     		$arr = array(
-    				''=>''
-    
-    		);
-    		
-    		//$this->_name='';
-    		$where = 'client_id = '.$data['id'];
+				'qty'=>$data['beginingQty'],
+				'costing'=>$data['costing'],
+				'qtyAlert'=>$data['qtyAlert'],
+			);
+			$this->_name='st_product_location';
+			$where="id=".$data['id'];
 			$this->update($arr, $where);
     		$db->commit();
     	}catch (Exception $e){
@@ -125,8 +125,11 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     }
     function getDataRow($recordId){
     	$db = $this->getAdapter();
-    	
-    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
+    	$sql=" SELECT l.*,
+    		(SELECT count(id) FROM `st_product_story` WHERE projectId=l.projectId AND proId=l.proId ) AS recordHistory,
+			(SELECT project_name FROM `ln_project` WHERE br_id=l.projectId LIMIT 1) as projectName,
+			(SELECT proName FROM `st_product` p WHERE p.proId=l.proId LIMIT 1) as proName
+    	FROM $this->_name l WHERE l.id=".$recordId." LIMIT 1";
     	return $db->fetchRow($sql);
     }
    

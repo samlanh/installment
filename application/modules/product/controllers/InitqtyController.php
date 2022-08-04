@@ -64,26 +64,27 @@ class Product_InitqtyController extends Zend_Controller_Action {
     	$this->view->frm = $frm;
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$db = new Product_Model_DbTable_DbinitilizeQtybyProject();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+				$db->updateData($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/product/initqty/");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
-		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+		$row = $db->getDataRow($id);
+		if(empty($id) OR empty($row)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/initqty/");
 		}
+		if($row['recordHistory']>1){
+			Application_Form_FrmMessage::Sucessfull("Can not edit this data","/product/initqty/");
+		}
+		$this->view->rs = $row;
 	}
 }
 
