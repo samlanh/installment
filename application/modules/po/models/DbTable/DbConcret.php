@@ -57,65 +57,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql.$where.$where_date.$order);
     }
-   
-//     $db = $this->getAdapter();
-//     $dbGb = new Application_Model_DbTable_DbGlobal();
-    
-//     $dbGBstock = new Application_Model_DbTable_DbGlobalStock();
-//     $arrStep = array(
-//     		'keyIndex'=>$search['purchaseType'],
-//     		'typeKeyIndex'=>1,
-//     );
-//     $purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
-    	
-//     $sql="
-//     SELECT
-//     po.id,
-//     (SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = po.projectId LIMIT 1) AS branch_name,
-//     po.purchaseNo,
-//     spp.supplierName,
-//     po.date,
-//     rq.requestNo,
-//     rq.date AS requestDate,
-//     (SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestName,
-//     po.total
-//     ";
-//     $sql.=$dbGb->caseStatusShowImage("po.status");
-//     $sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS byUser";
-//     $sql.=" FROM `st_purchasing` AS po
-//     JOIN `st_supplier` AS spp ON spp.id = po.supplierId
-//     LEFT JOIN st_request_po AS rq ON rq.id =po.requestId
-//     WHERE
-//     po.purchaseType=".$purchaseType."
-//     ";
-//     $where = "";
-//     $from_date =(empty($search['start_date']))? '1': " po.date >= '".$search['start_date']." 00:00:00'";
-//     $to_date = (empty($search['end_date']))? '1': " po.date <= '".$search['end_date']." 23:59:59'";
-     
-//     $where.= " AND ".$from_date." AND ".$to_date;
-     
-//     if(!empty($search['adv_search'])){
-//     	$s_where = array();
-//     	$s_search = (trim($search['adv_search']));
-//     	$s_where[] = " po.purchaseNo LIKE '%{$s_search}%'";
-//     	$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
-//     	$s_where[] = " rq.requestNo LIKE '%{$s_search}%'";
-//     	$s_where[] = " po.total LIKE '%{$s_search}%'";
-//     	$where .=' AND ( '.implode(' OR ',$s_where).')';
-//     }
-//     if($search['status']>-1){
-//     	$where.= " AND po.status = ".$search['status'];
-//     }
-//     if(($search['branch_id'])>0){
-//     	$where.= " AND po.projectId = ".$search['branch_id'];
-//     }
-//     if(!empty($search['supplierId'])){
-//     	$where.= " AND po.supplierId = ".$search['supplierId'];
-//     }
-//     $order=' ORDER BY po.id DESC  ';
-//     $where.=$dbGb->getAccessPermission("po.projectId");
-//     return $db->fetchAll($sql.$where.$order);
-    
+
     function addReceiveStock($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
@@ -185,7 +127,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     		
     		$arr = array(
     				'projectId'			=>$data['branch_id'],
-    				'purchaseType'		=>4,
+    				'purchaseType'		=>3,
     				'purchaseNo'		=>'Concret01',
     				'supplierId'		=>$data['supplierId'],
     				'date'				=>$data['date'],
@@ -233,6 +175,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     						'verified'	=>1,
     						'verifiedBy'=>$this->getUserId(),
     						'verifiedDate'=>$data['date']
+
     						// 'staffCounter'=>$data['counter'],
     						// 'driverName'=>$data['driver'],
     						// 'plateNo'=>$data['truckNumber'],

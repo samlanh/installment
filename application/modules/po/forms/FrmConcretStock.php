@@ -119,7 +119,7 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 			$optSpp[$row['id']]=$row['name'];
 		}
 		$usageType->setMultiOptions($optSpp);
-		
+
 		
     	if(!empty($data)){
 			

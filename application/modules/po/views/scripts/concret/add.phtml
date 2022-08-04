@@ -5,13 +5,13 @@
 ?>
 
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
-<title><?php echo $this->tr->translate("PO_CONCRET")?></title>
+<title><?php echo $this->tr->translate("PO_CONCRETE")?></title>
  <div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-truck" aria-hidden="true"></i>&nbsp;<i class="fa fa-tint" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate('PO_CONCRET');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-truck" aria-hidden="true"></i>&nbsp;<i class="fa fa-tint" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate('PO_CONCRETE');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
@@ -97,7 +97,6 @@
 				    	<tr id="head-title" class="head-td" align="center"></tr>
 					</table>
 					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
-					
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -152,75 +151,51 @@ tr.rowData td {
 		ready(function(){
 			onChageFunctionByBranch();
 
-			 var budgetItem = dijit.byId('budgetItem');
-			 //budgetItem.on('change', function(evt) {
-				 branch_id = dijit.byId('branch_id').get('value');
-				 if(branch_id=='' || branch_id==null){
-					 dijit.byId('budgetItem').attr('value','');
-					 dijit.byId('branch_id').focus();
-					 return false;
-				}
-				 budgetItem =  dijit.byId('budgetItem').get('value');
-				 if(budgetItem==-1){
-					// window.open('<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'add'))?>');
-				}
-				if(budgetItem>0){
-					 addRowBudget();
-				}
-				
-			});
-			 /*var branch_id = dijit.byId('branch_id')
-			 branch_id.on('change',function(evt){
-				 //getBudgetType();
-				 //getBudgetItem();
-			 });*/
+		});
+		new dijit.form.FilteringSelect({
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: false,		           
+			name: "budgetType",
+			placeHolder:'<?php echo $tr->translate('budgetType');?>',
+			id: "budgetType",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+				getBudgetItem();
+			}
+		}, "budgetType");
 
-			
-
-				new dijit.form.FilteringSelect({
-					autoComplete: false,
-					queryExpr: "*${0}*",
-					required: false,		           
-					name: "budgetType",
-					placeHolder:'<?php echo $tr->translate('budgetType');?>',
-					id: "budgetType",
-					searchAttr: "name",
-					class: 'fullside',
-					onChange: function() {
-						getBudgetItem();
-					}
-				}, "budgetType");
-
-				new dijit.form.FilteringSelect({
-					autoComplete: false,
-					queryExpr: "*${0}*",
-					required: false,		           
-					name: "budgetItem",
-					placeHolder:'<?php echo $tr->translate('budgetItem');?>',
-					id: "budgetItem",
-					searchAttr: "name",
-					class: 'fullside',
-					onChange: function() {
-					}
-				}, "budgetItem");
-			 
-		}); 
-	
+		new dijit.form.FilteringSelect({
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: false,		           
+			name: "budgetItem",
+			placeHolder:'<?php echo $tr->translate('budgetItem');?>',
+			id: "budgetItem",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+			}
+		}, "budgetItem");
 		
-    new dijit.form.FilteringSelect({
-		store: productStore,
-		autoComplete: false,
-		queryExpr: "*${0}*",
-		required: false,		           
-		name: "productId",
-		placeHolder:'<?php echo $tr->translate('PRODUCT_NAME');?>',
-		id: "productId",
-		searchAttr: "name",
-		class: 'fullside',
-		onChange: function() {
-			addRowProductRequest();
-		}
-	}, "productId");
+		new dijit.form.FilteringSelect({
+			store: productStore,
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: false,		           
+			name: "productId",
+			placeHolder:'<?php echo $tr->translate('PRODUCT_NAME');?>',
+			id: "productId",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+				addRowProductRequest();
+			}
+		}, "productId");
+    });
+		
+    
 
     function getBudgetType(){
 		urlGetBudgetType ='<?php echo $this->url(array('module'=>'budget','controller'=>'type','action'=>'getbudgettype'))?>';
@@ -243,14 +218,14 @@ tr.rowData td {
        }
     	
    }
-	   
     
 	function onChageFunctionByBranch(){
-		getAllProduct();
+		 getAllProduct();
 		
 		 getBudgetType();
 		 getBudgetItem();
-	}
+		}
+    
 	function getAllProduct(){
 		var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
 		branch_id = dijit.byId('branch_id').get('value');
