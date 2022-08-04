@@ -3,13 +3,7 @@
      $tr = Application_Form_FrmLanguages::getCurrentlanguage();
      $frm = $this->frm;
 	 
-	 $purchaseType=1;//DN PO
-	 $dbGBstock = new Application_Model_DbTable_DbGlobalStock();
-	 $arrStep = array(
-	 		'keyIndex'=> $purchaseType,
-	 		'typeKeyIndex'=>1,
-	 );
-	 $purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+	
 ?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <title><?php echo $this->tr->translate("EDIT_INVOICE")?></title>
@@ -77,6 +71,12 @@
 		                	<?php echo $frm->getElement("id");?>
 		                </div>
 		             </div>
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PURCHASE_TYPE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+							<?php echo $frm->getElement("purchaseType");?>
+		                </div>
+		            </div>
 					<div class="form-group">
 		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PO_NO");?> </label>
 		                <div class="col-md-7 col-sm-7 col-xs-12">
@@ -307,6 +307,7 @@ ul.listDn li small {
 			initailizeService();
 			dijit.byId("totalAmountExternal").set("readOnly",true);
 			dijit.byId("branch_id").set("readOnly",true);
+			dijit.byId("purchaseType").set("readOnly",true);
 			dijit.byId("purId").set("readOnly",true);
 		});
 
@@ -375,7 +376,9 @@ ul.listDn li small {
 		if(branch_id=='' || branch_id<=0){
 			branch_id = 0;
 		}
-		objectContentFilter = {'branch_id':branch_id,'purchaseType':'<?php echo $purchaseType;?>','purchaseId':currentPurchaseId};
+		
+		purchaseType = dijit.byId('purchaseType').get('value');
+		objectContentFilter = {'branch_id':branch_id,'purchaseType':purchaseType,'purchaseId':currentPurchaseId};
 		getAllPObyBranch(urlGetAllPO,objectContentFilter);
 		setTimeout(function () {
 			dijit.byId('purId').attr('value',currentPurchaseId);
