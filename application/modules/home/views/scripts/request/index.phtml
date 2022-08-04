@@ -86,7 +86,7 @@
 								}
 							}
 			?>
-			<div class="col-md-2">
+			<div class="col-md-4 col-sm-4 col-xs-12">
                 <div class="text-center card-box-border">
                    <div class="member-card">
                       	<span class="user-badge bg-warning" ><?php echo ($key+1).".) ";echo $rs['processingStatusTitle'];?></span>
@@ -123,9 +123,10 @@
 							</small>
 						</p>
                        </div>
-                       <p class="text-muted info-list font-13">
-							<span class="title-info"><?php echo $tr->translate('CHECKING_INFO');?></span>
-						</p>
+					   <div class="col-md-6 col-sm-6 col-xs-12">
+							<p class="text-muted info-list font-13">
+								<span class="title-info"><?php echo $tr->translate('CHECKING_INFO');?></span>
+							</p>
 								<ul class="stepInfoList">
 									<li>
 										<?php echo !empty($rs['checkingStatus'])?$rs['checkingStatus']:"_________";?>
@@ -140,9 +141,9 @@
 										<?php echo !empty($rs['checkingNote'])?"<small>".$rs['checkingNote']."</small>":"_________";?>
 									</li>
 								</ul>
-						 <p class="text-muted info-list font-13">
-							<span class="title-info"><?php echo $tr->translate('VIEW_INFO');?></span>
-						 </p>
+							 <p class="text-muted info-list font-13">
+								<span class="title-info"><?php echo $tr->translate('VIEW_INFO');?></span>
+							 </p>
 								<ul class="stepInfoList">
 									<li>
 										<?php echo !empty($rs['pCheckingStatus'])?$rs['pCheckingStatus']:"_________";?>
@@ -157,9 +158,9 @@
 										<?php echo !empty($rs['pCheckingNote'])?"<small>".$rs['pCheckingNote']."</small>":"_________";?>
 									</li>
 								</ul>
-						 <p class="text-muted info-list font-13">
-							<span class="title-info"><?php echo $tr->translate('APPROVED_INFO');?></span>
-						 </p>
+							<p class="text-muted info-list font-13">
+								<span class="title-info"><?php echo $tr->translate('APPROVED_INFO');?></span>
+							 </p>
 								<ul class="stepInfoList">
 									<li>
 										<?php echo !empty($rs['approveStatus'])?$rs['approveStatus']:"_________";?>
@@ -174,6 +175,48 @@
 										<?php echo !empty($rs['approveNote'])?"<small>".$rs['approveNote']."</small>":"_________";?>
 									</li>
 								</ul>
+					   </div>
+					   <div class="col-md-6 col-sm-6 col-xs-12">
+							
+							<p class="text-muted info-list font-13">
+								<span class="title-info"><?php echo $tr->translate('PURCHASE_INFO');?></span>
+							</p>
+								<ul class="stepInfoList">
+									<li >
+										<?php if(!empty($rs['purchaseNoList'])){ 
+											$poExpl = explode(",",$rs['purchaseNoList']);
+											$poExplDate = explode(",",$rs['purchaseDateList']);
+											foreach ($poExpl as $key=> $purchaseNo){
+										?>
+												<span class="smallValue">
+												<?php echo $purchaseNo." <span>".$poExplDate[$key]."</span>";?>
+												</span>
+											<?php } ?>
+										<?php }else { echo "_________";}?>
+									</li>
+									
+								</ul>
+							<p class="text-muted info-list font-13">
+								<span class="title-info"><?php echo $tr->translate('RECEIVED_INFO');?></span>
+							</p>
+								<ul class="stepInfoList">
+									<li >
+										<?php if(!empty($rs['dnNumberList'])){ 
+											$dnNumberListExpl = explode(",",$rs['dnNumberList']);
+											$dnNumberExplDate = explode(",",$rs['receiveDateList']);
+											foreach ($dnNumberListExpl as $key=> $dnNumber){
+										?>
+												<span class="smallValue">
+												<?php echo $dnNumber." <span>".$dnNumberExplDate[$key]."</span>";?>
+												</span>
+											<?php } ?>
+										<?php }else { echo "_________";}?>
+									</li>
+									
+								</ul>
+					   </div>
+                       <div class="clearfix"></div>
+						 
                        
                      </div>
                    
@@ -341,6 +384,18 @@ p.text-muted.requestPurpose {text-align: left;min-height: 30px;line-height: 12px
 p.text-muted.requestPurpose small.text-purpose {
     font-size: 70%;
     color: #000;
+}
+
+span.smallValue {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    color: #f70000;
+    width: 100%;
+}
+
+span.smallValue span {
+    color: #333944;
 }
 </style>
 <script type="text/javascript">

@@ -11,10 +11,7 @@ public function getAllRequestPO($search){
 			SELECT 
 				rq.*,
 				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = rq.projectId LIMIT 1) AS branch_name,
-				rq.requestNo,
-				rq.requestNoLetter,
-				rq.purpose,
-				rq.date,
+				
 				CASE
 					WHEN  rq.checkingStatus= 0 THEN '".$tr->translate("PENDING")."'
 					WHEN  rq.checkingStatus = 1 THEN '".$tr->translate("APPROVED")."'
@@ -39,6 +36,11 @@ public function getAllRequestPO($search){
 				
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestByName,
 				(SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 ) AS isCompletedPO
+				
+				,(SELECT GROUP_CONCAT(po.purchaseNo) FROM `st_purchasing` AS po WHERE po.requestId=rq.id AND po.status=1 ) AS purchaseNoList
+				,(SELECT GROUP_CONCAT(DATE_FORMAT(po.date,'%d-%m-%Y')) FROM `st_purchasing` AS po WHERE po.requestId=rq.id AND po.status=1 ) AS purchaseDateList
+				,(SELECT GROUP_CONCAT(rst.dnNumber) FROM `st_receive_stock` AS rst WHERE rst.requestId=rq.id AND rst.status=1 ) AS dnNumberList
+				,(SELECT GROUP_CONCAT(DATE_FORMAT(rst.receiveDate,'%d-%m-%Y')) FROM `st_receive_stock` AS rst WHERE rst.requestId=rq.id AND rst.status=1 ) AS receiveDateList
 		";
 		
 		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
