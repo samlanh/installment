@@ -45,13 +45,13 @@ class Budget_SetupController extends Zend_Controller_Action {
 			$results =  $db->getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',null,null);
 				
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("PLEASE_SELECT_BUDGET")));
+			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("SELECT_BUDGET_ITEM")));
 				
 			$this->view->budgetItem = $results;
 			
 			$rsType =  $db->getAllBudgetType($parent = 0, $spacing = '', $cate_tree_array = '',null,null);
 			
-			array_unshift($rsType, array ('id' => 0,'name' =>$tr->translate("PLEASE_SELECT_BUDGET")));
+			array_unshift($rsType, array ('id' => 0,'name' =>$tr->translate("SELECT_BUDGET_TYPE")));
 			$this->view->budgetType = $rsType;
 			
 			$this->view->datSearch = $search;

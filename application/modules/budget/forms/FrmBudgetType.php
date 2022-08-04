@@ -78,6 +78,7 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 		$tarea = 'dijit.form.Textarea';
 	
 		$dbGB = new Application_Model_DbTable_DbGlobal();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
 		 
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
@@ -112,6 +113,8 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 		));
 		$options = $db->getAllBudgetType(0,'','',1);
 		$budgetType->setMultiOptions($options);
+		
+		$budgetType->setValue($request->getParam('budgetType'));
 		
 		$parentId = new Zend_Dojo_Form_Element_FilteringSelect('budgetItem');
 		$parentId->setAttribs(array(
@@ -169,6 +172,7 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 		$id = new Zend_Form_Element_Hidden('id');
 	
 		if(!empty($data)){
+			$budgetType->setValue($data['budgetTypeId']);
 			$parentId->setValue($data['parentId']);
 			$status->setValue($data['status']);
 			$budgetTitle->setValue($data['budgetTitle']);

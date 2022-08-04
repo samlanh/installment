@@ -88,7 +88,12 @@ class Budget_TypeController extends Zend_Controller_Action {
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		
 			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("SELECT_BUDGET_TYPE")));
-			array_unshift($results, array ('id' => -1,'name' =>$tr->translate("ADD_NEW")));
+			if(!empty($data['noBtnNew'])){
+			}else{
+				array_unshift($results, array ('id' => -1,'name' =>$tr->translate("ADD_NEW")));
+			}
+			
+			
 				
 			print_r(Zend_Json::encode($results));
 			exit();
