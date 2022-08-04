@@ -457,6 +457,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				p.proCode,
 				p.proName,
 				l.qty AS currentQty,
+				l.costing,
 				(SELECT project_name from `ln_project` where br_id=l.projectId LIMIT 1) as projectName,
 				p.measureLabel AS measureTitle
 			";
@@ -628,8 +629,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		";
 		$sql.=" FROM `st_purchasing` AS po 
 					LEFT JOIN `st_supplier` AS spp ON spp.id = po.supplierId 
-					LEFT JOIN `st_invoice` AS inv ON inv.purId = po.id AND inv.status=1					
-		WHERE po.status=1  "; //AND inv.purId IS NULL
+		WHERE po.status=1 AND po.isInvoiced !=1 "; 
 			
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND po.projectId=".$_data['branch_id'];
