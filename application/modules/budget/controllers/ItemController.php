@@ -32,7 +32,7 @@ class Budget_ItemController extends Zend_Controller_Action {
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BUDGET_ITEM","PARENT_BUDGET_ITEM","BUDGET_TYPE","CREATE_DATE","BY_USER","STATUS");
 			$link=array('module'=>'budget','controller'=>'item','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('budgetTitle'=>$link,'budgetType'=>$link));
 			
 			$frm = new Application_Form_FrmAdvanceSearchStock();
 			$frm = $frm->AdvanceSearch();
@@ -46,8 +46,8 @@ class Budget_ItemController extends Zend_Controller_Action {
 			try {		
 				$db = new Budget_Model_DbTable_DbbudgetItem();
 				$db->addBudgetItem($_data);
-
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/budget/item/add");
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				//Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/budget/item/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

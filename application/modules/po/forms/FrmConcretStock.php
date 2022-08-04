@@ -106,6 +106,20 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 		}
 		$supplierId->setMultiOptions($optSpp);
 		
+		$usageType = new Zend_Dojo_Form_Element_FilteringSelect('usageType');
+		$usageType->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+		$rsSpp = $dbGBStock->getAllSupplier();
+		$optSpp=array(''=>$tr->translate("SELECT_SUPPLIER"));
+		if(!empty($rsSpp))foreach($rsSpp AS $row){
+			$optSpp[$row['id']]=$row['name'];
+		}
+		$usageType->setMultiOptions($optSpp);
+
 		
     	if(!empty($data)){
 			
