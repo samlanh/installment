@@ -79,6 +79,22 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     	$where.=$dbGb->getAccessPermission("inv.projectId");
     	return $db->fetchAll($sql.$where.$order);
     }
+	
+	function checkOtherDnOfPurchasing($data){
+		$db = $this->getAdapter();
+		$purchaseId =$data['purchaseId'];
+		$dnIdList =$data['dnIdList'];
+		$sql="SELECT rst.id FROM `st_receive_stock` AS rst 
+				WHERE rst.poId =$purchaseId 
+					
+					AND rst.id NOT IN($dnIdList)";
+		if(empty($data['editCheking'])){
+			$sql.=" AND rst.isIssueInvoice=0 ";
+		}else{
+			$sql.=" AND rst.isIssueInvoice=1 ";
+		}
+		return $db->fetchOne($sql);
+	}
 	function issueInvoice($data){
     	
     	$db = $this->getAdapter();
@@ -89,6 +105,9 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 			$data['receiveIvDate']=$data['receiveIvDate'];
 			$invoiceNo =$dbGBstock->generateInvoiceNo($data);
 
+			$purchaseId =$data['purId'];
+		
+		
 			$arrStep = array(
 				'keyIndex'=>$data['ivType'],
 				'typeKeyIndex'=>1,
@@ -106,6 +125,38 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 					}
 				}
 			}
+			$dbPO = new Po_Model_DbTable_DbPurchasing();
+			$rowPO = $dbPO->getDataRow($purchaseId);
+			if(!empty($rowPO)){
+				$isInvoiced=2;//Some Issued DN to Invoice
+				if($rowPO['processingStatus']==1){
+					if(!empty($dnId)){
+						$arrCheck = array(
+							'purchaseId'	=>$purchaseId,
+							'dnIdList'		=>$dnId,
+						);
+						$checkingOtherDN = $this->checkOtherDnOfPurchasing($arrCheck);
+						if(empty($checkingOtherDN)){
+							$isInvoiced=1;//Completed Issued DN to Invoice
+						}
+					}
+				}
+				$arrPo = array(
+					'isInvoiced'		=>$isInvoiced,
+				);
+				$this->_name='st_purchasing';
+				$wherePO =" id =".$purchaseId;
+				$this->update($arrPo, $wherePO);
+			}
+			if(!empty($dnId)){
+				$arrDN = array(
+					'isIssueInvoice'		=>1,
+				);
+				$this->_name='st_receive_stock';
+				$whereDN =" id IN (".$dnId.")";
+				$this->update($arrDN, $whereDN);
+			}
+			
     		$arr = array(
     				'projectId'			=>$data['branch_id'],
     				'ivType'			=>$ivType,
@@ -116,7 +167,7 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     				'invoiceDate'				=>$data['invoiceDate'],
     				'supplierInvoiceNo'			=>$data['supplierInvoiceNo'],
     				'receiveIvDate'				=>$data['receiveIvDate'],
-    				'purId'						=>$data['purId'],
+    				'purId'						=>$purchaseId,
     				'note'						=>$data['note'],
 					
 					'totalInternal'				=>$data['totalInternal'],
@@ -199,50 +250,131 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try
     	{
+			$id = $data['id'];
+			$purchaseId =$data['purId'];
+			
 			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
-			
-			
-			$dnId="";
-			if(!empty($data['dnIdentity'])){
-				$dnIdentityIds = explode(',', $data['dnIdentity']);
-				foreach ($dnIdentityIds as $i){
-					if(empty($dnId)){
-						$dnId = empty($data['deliveryId'.$i])?"":$data['deliveryId'.$i];
-					}else{
-						$dnId = empty($data['deliveryId'.$i])?$dnId:$dnId.",".$data['deliveryId'.$i];
+			$dbPO = new Po_Model_DbTable_DbPurchasing();
+			$row = $this->getDataRow($id);
+			if(!empty($row)){
+				$rowPO = $dbPO->getDataRow($purchaseId);
+				if(!empty($rowPO)){
+					$isInvoiced=2;//Some Issued DN to Invoice
+					if($rowPO['processingStatus']==1){
+						if(!empty($row['dnId'])){
+							$arrCheck = array(
+								'purchaseId'	=>$purchaseId,
+								'dnIdList'		=>$row['dnId'],
+								'editCheking'	=>1,
+							);
+							$checkingOtherDN = $this->checkOtherDnOfPurchasing($arrCheck);
+							if(empty($checkingOtherDN)){
+								$isInvoiced=0;//Completed Issued DN to Invoice
+							}
+						}
 					}
+					$arrPo = array(
+						'isInvoiced'		=>$isInvoiced,
+					);
+					$this->_name='st_purchasing';
+					$wherePO =" id =".$purchaseId;
+					$this->update($arrPo, $wherePO);
+				}
+				if(!empty($row['dnId'])){
+					$arrDN = array(
+						'isIssueInvoice'		=>0,
+					);
+					$this->_name='st_receive_stock';
+					$whereDN =" id IN (".$row['dnId'].")";
+					$this->update($arrDN, $whereDN);
 				}
 			}
-    		$arr = array(
-    				
-    				'dnId'				=>$dnId,
-    				'supplierId'		=>$data['supplierId'],
-					
-    				'invoiceDate'				=>$data['invoiceDate'],
-    				'supplierInvoiceNo'			=>$data['supplierInvoiceNo'],
-    				'receiveIvDate'				=>$data['receiveIvDate'],
-    				'purId'						=>$data['purId'],
-    				'note'						=>$data['note'],
-					
-					'totalInternal'				=>$data['totalInternal'],
-    				'totalAmount'				=>$data['totalAmount'],
-					
-    				'totalExternal'				=>$data['totalExternal'],
-    				'totalAmountExternal'		=>$data['totalAmountExternal'],
-    				'totalAmountExternalAfter'	=>$data['totalAmountExternal'],
-    				
+			
+			$arr = array(
+					'note'						=>$data['note'],
 					'status'			=>$data['status'],
-    				'modifyDate'		=>date("Y-m-d H:i:s"),
-    				'userId'			=>$this->getUserId(),
-    				
-    				);
+					'modifyDate'		=>date("Y-m-d H:i:s"),
+					'userId'			=>$this->getUserId(),
+					);
 					
-			$id = $data['id'];
-    		$this->_name='st_invoice';
+			
+			$this->_name='st_invoice';
 			$where = 'id = '.$id;
 			$this->update($arr, $where);
-			
+				
 			if($data['status']==1){
+				$dnId="";
+				if(!empty($data['dnIdentity'])){
+					$dnIdentityIds = explode(',', $data['dnIdentity']);
+					foreach ($dnIdentityIds as $i){
+						if(empty($dnId)){
+							$dnId = empty($data['deliveryId'.$i])?"":$data['deliveryId'.$i];
+						}else{
+							$dnId = empty($data['deliveryId'.$i])?$dnId:$dnId.",".$data['deliveryId'.$i];
+						}
+					}
+				}
+				
+				$rowPO = $dbPO->getDataRow($purchaseId);
+				if(!empty($rowPO)){
+					$isInvoiced=2;//Some Issued DN to Invoice
+					if($rowPO['processingStatus']==1){
+						if(!empty($dnId)){
+							$arrCheck = array(
+								'purchaseId'	=>$purchaseId,
+								'dnIdList'		=>$dnId,
+							);
+							$checkingOtherDN = $this->checkOtherDnOfPurchasing($arrCheck);
+							if(empty($checkingOtherDN)){
+								$isInvoiced=1;//Completed Issued DN to Invoice
+							}
+						}
+					}
+					$arrPo = array(
+						'isInvoiced'		=>$isInvoiced,
+					);
+					$this->_name='st_purchasing';
+					$wherePO =" id =".$purchaseId;
+					$this->update($arrPo, $wherePO);
+				}
+				if(!empty($dnId)){
+					$arrDN = array(
+						'isIssueInvoice'		=>1,
+					);
+					$this->_name='st_receive_stock';
+					$whereDN =" id IN (".$dnId.")";
+					$this->update($arrDN, $whereDN);
+				}
+				$arr = array(
+						
+						'dnId'				=>$dnId,
+						'supplierId'		=>$data['supplierId'],
+						
+						'invoiceDate'				=>$data['invoiceDate'],
+						'supplierInvoiceNo'			=>$data['supplierInvoiceNo'],
+						'receiveIvDate'				=>$data['receiveIvDate'],
+						'purId'						=>$data['purId'],
+						'note'						=>$data['note'],
+						
+						'totalInternal'				=>$data['totalInternal'],
+						'totalAmount'				=>$data['totalAmount'],
+						
+						'totalExternal'				=>$data['totalExternal'],
+						'totalAmountExternal'		=>$data['totalAmountExternal'],
+						'totalAmountExternalAfter'	=>$data['totalAmountExternal'],
+						
+						'status'			=>$data['status'],
+						'modifyDate'		=>date("Y-m-d H:i:s"),
+						'userId'			=>$this->getUserId(),
+						
+						);
+						
+				
+				$this->_name='st_invoice';
+				$where = 'id = '.$id;
+				$this->update($arr, $where);
+			
+			
 				$this->_name='st_invoice_detail';
 				$whereDl2 = 'invId = '.$id;
 				$this->delete($whereDl2);
@@ -412,15 +544,14 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     			<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
     				<td align="center" style="  padding: 0 10px;"><input  OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
 	    			<td class="textCenter">'.($key+1).'</td>
-	    			<td class="textCenter">&nbsp;
+	    			<td class="textCenter">
 	    				<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($row['receiveIvDate'])).'<br /><small>'.$row['ivTypeTitle'].'</small></label>
 	    				<input type="hidden" dojoType="dijit.form.TextBox" name="invoiceId'.$no.'" id="invoiceId'.$no.'" value="'.$row['id'].'" >
     				</td>
 					<td class="invNoCol">
-						<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span><br />
-	    				<label id="titleInvoice'.$no.'">'.$row['invoiceNo'].'<br />'.$row['supplierInvoiceNo'].'</label>
+						<label id="titleInvoice'.$no.'">'.$row['invoiceNo'].'<br />'.$row['supplierInvoiceNo'].'</label>
+						<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span>
     				</td>
-    			
 					<td class="textCenter">
 						<label id="origtotallabel'.$no.'">'.number_format($row['totalAmountExternal'],2).'</label>
 					</td>
@@ -543,17 +674,18 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 					<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
 						<td align="center" style="  padding: 0 10px;"><input checked="checked" OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
 						<td class="textCenter">'.($key+1).'</td>
-						<td class="textCenter">&nbsp;
+						<td class="textCenter">
 							<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($rowPaymentdetail['receiveIvDate'])).'<br /><small>'.$rowPaymentdetail['ivTypeTitle'].'</small></label>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="paymentId'.$no.'" id="paymentId'.$no.'" value="'.$rowPaymentdetail['paymentId'].'" >
 							<input type="hidden" dojoType="dijit.form.TextBox" name="invoiceId'.$no.'" id="invoiceId'.$no.'" value="'.$rowPaymentdetail['invoiceId'].'" >
 							<input type="hidden" dojoType="dijit.form.TextBox" name="detailid'.$no.'" id="detailid'.$no.'" value="'.$rowPaymentdetail['id'].'" >
 						</td>
 						<td class="invNoCol">
-							<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span><br />
+							
 							<label id="titleInvoice'.$no.'">
 							'.$rowPaymentdetail['invoiceNo'].'<br />'.$rowPaymentdetail['supplierInvoiceNo'].'
 							</label>
+							<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span>
 						</td>
 					
 						<td class="textCenter">
@@ -573,15 +705,16 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 					<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
 						<td align="center" style="  padding: 0 10px;"><input  OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
 						<td class="textCenter">'.($key+1).'</td>
-						<td class="textCenter">&nbsp;
+						<td class="textCenter">
 							<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($row['receiveIvDate'])).'<br /><small>'.$row['ivTypeTitle'].'</small></label>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="invoiceId'.$no.'" id="invoiceId'.$no.'" value="'.$row['id'].'" >
 						</td>
 						<td class="invNoCol">
-							<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span><br />
+							
 							<label id="titleInvoice'.$no.'">
 								'.$row['invoiceNo'].'<br />'.$row['supplierInvoiceNo'].'	
 							</label>
+							<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span>
 						</td>
 					
 						<td class="textCenter">

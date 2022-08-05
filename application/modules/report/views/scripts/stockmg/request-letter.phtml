@@ -5,10 +5,6 @@
 	
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
 	$dbparmeter = new Report_Model_DbTable_DbParamater();
-	
-	$dbGb = new Application_Model_DbTable_DbGlobal();
-	$userInfo = $dbGb->getUserInfo();
-	$currentUserName = $userInfo['user_name'];
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -122,26 +118,6 @@
 					font-size: 14px;
 				}
 				
-				ul.printInfo {
-					position: absolute;
-					right: 0;
-					top: 35px;
-					list-style: none;
-					margin: 0;
-					padding: 0;
-					visibility: hidden;
-				}
-
-				ul.printInfo li {
-					font-family: 'Times New Roman','Khmer OS Battambang';
-					font-size: 9px;
-					text-align: left;
-					line-height:10px;
-				}
-				@media print {
-					ul.printInfo{visibility: visible;}
-					
-				}
 			</style>
 				
 			<table class="tableTop" width="100%" >
@@ -154,10 +130,7 @@
 					</td>
 					<td width="30%" align="right" style="vertical-align:top; position: relative;">
 						<span class="project-name" id="projectName">(<?php echo $this->row["branch_name"];?>)</span>
-						<ul class="printInfo">
-							<li>Date / Time : <?php echo date("d-m-Y H:i:s")?></li>
-							<li><?php echo $currentUserName;?></li>
-						<ul>
+						<?php echo $this->printByFormat;?>
 					</td>
 				</tr> 
 				<tr>
@@ -210,7 +183,7 @@
 										កាលបរិច្ឆេទ : 
 										<small>Request Date : </small>
 									</span>
-									<span class="bold"><?php echo date("d-M-Y",strtotime($this->row["date"]));?></span>
+									<span class="bold"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($this->row["date"]));?></span>
 								</td>
 								<td></td>
 								<td >
@@ -294,7 +267,7 @@
 								<td class="centerText"><?php echo $rs["qtyRequest"];?></td>
 								<td class="centerText"><?php echo $qtyApproved;?></td>
 								<td class="centerText"><?php echo $rs["measureTitle"];?></td>
-								<td class="centerText"><?php echo date("d-m-Y",strtotime($rs["dateReqStockIn"]));?></td>
+								<td class="centerText"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($rs["dateReqStockIn"]));?></td>
 								<td style="font-size: 10px;"><?php echo $rs["note"];?></td>
 							</tr>
 							<?php 

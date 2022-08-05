@@ -38,9 +38,9 @@ public function getAllRequestPO($search){
 				(SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 ) AS isCompletedPO
 				
 				,(SELECT GROUP_CONCAT(po.purchaseNo) FROM `st_purchasing` AS po WHERE po.requestId=rq.id AND po.status=1 ) AS purchaseNoList
-				,(SELECT GROUP_CONCAT(DATE_FORMAT(po.date,'%d-%m-%Y')) FROM `st_purchasing` AS po WHERE po.requestId=rq.id AND po.status=1 ) AS purchaseDateList
+				,(SELECT GROUP_CONCAT(DATE_FORMAT(po.date,'".DATE_FORMAT_FOR_SQL."')) FROM `st_purchasing` AS po WHERE po.requestId=rq.id AND po.status=1 ) AS purchaseDateList
 				,(SELECT GROUP_CONCAT(rst.dnNumber) FROM `st_receive_stock` AS rst WHERE rst.requestId=rq.id AND rst.status=1 ) AS dnNumberList
-				,(SELECT GROUP_CONCAT(DATE_FORMAT(rst.receiveDate,'%d-%m-%Y')) FROM `st_receive_stock` AS rst WHERE rst.requestId=rq.id AND rst.status=1 ) AS receiveDateList
+				,(SELECT GROUP_CONCAT(DATE_FORMAT(rst.receiveDate,'".DATE_FORMAT_FOR_SQL."')) FROM `st_receive_stock` AS rst WHERE rst.requestId=rq.id AND rst.status=1 ) AS receiveDateList
 		";
 		
 		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();

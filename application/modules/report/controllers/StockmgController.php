@@ -59,7 +59,8 @@ class Report_StockmgController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
 		}
 		
-		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
 	}
 	public function requestInfoAction(){
 		try{
@@ -79,6 +80,8 @@ class Report_StockmgController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
 		}
 		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
 		
 	}
 	
@@ -136,7 +139,8 @@ class Report_StockmgController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
 		}
 		
-		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
 	}
 	
 	public function rptPaymentAction(){
@@ -193,7 +197,8 @@ class Report_StockmgController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
 		}
 		
-		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
 	}
 	
 	public function rptClosingPaymentAction(){
@@ -345,7 +350,8 @@ class Report_StockmgController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
 		}
 		
-		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
 	}
 	
 	public function rptInvpaymenthistoryAction(){
@@ -375,6 +381,8 @@ class Report_StockmgController extends Zend_Controller_Action {
 		$this->view->frm_search = $frm;
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
+		
 		$this->view->footerReport = $frmpopup->getFooterReport();
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}

@@ -4116,4 +4116,39 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		return $string;
 		
 	}
+	
+	function printByFormat(){
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$userInfo = $dbGb->getUserInfo();
+		$currentUserName = $userInfo['user_name'];
+	
+		$string='
+				<style>
+					ul.printInfo {
+					position: absolute;
+					right: 0;
+					top: 35px;
+					list-style: none;
+					margin: 0;
+					padding: 0;
+					visibility: hidden;
+				}
+
+				ul.printInfo li {
+					font-family:'.'"Times New Roman"'.','.'"Khmer OS Battambang"'.';
+					font-size: 9px;
+					text-align: left;
+					line-height:10px;
+				}
+				@media print {
+					ul.printInfo{visibility: visible;}
+				}
+				</style>
+				<ul class="printInfo">
+					<li>Print Date / Time : '.date(DATE_FORMAT_FOR_PHP." H:i:s").'</li>
+					<li>Print By : '.$currentUserName.'</li>
+				<ul>
+		';
+		return $string;
+	}
 }

@@ -326,7 +326,7 @@ class Application_Form_Frmtable
     			return number_format($value,2);
     		}
     	}
-    	if($this->is_date($value)) return date_format(date_create($value), 'd-M-Y');  	
+    	if($this->is_date($value)) return date_format(date_create($value), DATE_FORMAT_FOR_PHP);  	
     	return $value;
     }
 	private function textAlign($value){		

@@ -375,8 +375,8 @@ div#request-info .form-group ul li {
 			return false;
 		}
 		productId = dijit.byId('productId').get('value');
+		productLabel = dijit.byId('productId').attr('displayedValue');
 		if(productId=='' || productId<=0){
-			//alert('<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>');
 			dijit.byId('productId').reset();
 			dijit.byId('productId').focus();
 			return false;
@@ -388,7 +388,7 @@ div#request-info .form-group ul li {
 			 for(var i=0;i< arrays.length;i++) {
 				 readychoose = dijit.byId('proId'+arrays[i]).get('value');
 				 if(readychoose==productId){
-					 alert("<?php echo $tr->translate("Choosen ready")?>");
+					 alert("<?php echo $tr->translate("Choosen ready")?> "+productLabel);
 					 dijit.byId('productId').reset();
 					 return false;
 				 }
@@ -493,6 +493,7 @@ div#request-info .form-group ul li {
 	var urlGetRequestInfo = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'get-requestinfo')); ?>';
 function getRequestInfo(){
 	dojo.query("#table_row").append('');
+	$("#identity").val("");
 	requestId = dijit.byId('requestId').get('value');
 	if(requestId=='' || requestId==0){
 		dojo.byId("request-info").innerHTML = '';

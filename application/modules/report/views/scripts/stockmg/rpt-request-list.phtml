@@ -3,10 +3,7 @@
 	$frm = $this->frm_search;
 	$dbGB = new Application_Model_DbTable_DbGlobal();
 
-	$montFomat="d-m-Y";
-	if(MONTH_FORMATE_DATE_RECEIPT==1){
-		$montFomat="d-M-Y";
-	}
+	$montFomat=DATE_FORMAT_FOR_PHP;
 	
 	$headerReportType = REPORT_LETER_HEAD;
 	$classHideHeight="110px";
@@ -281,7 +278,7 @@
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
 			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_REQUEST_LIST");?>';
-			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['end_date'])); }?>';
 		});
 		
 	});

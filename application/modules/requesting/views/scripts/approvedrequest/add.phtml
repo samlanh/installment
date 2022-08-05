@@ -68,7 +68,7 @@
 									<li><span class="lbl-tt"><?php echo $tr->translate("BRANCH_NAME");?></span>: <span class="red"><?php echo $this->row['branch_name'];?></span></li>
 									<li><span class="lbl-tt"><?php echo $tr->translate("REQUEST_NO");?></span>: <span class="red"><?php echo $this->row['requestNo'];?></span></li>
 									<li><span class="lbl-tt"><?php echo $tr->translate("REQUEST_NO_FROM");?></span>: <span class="red"><?php echo $this->row['requestNoLetter'];?></span></li>
-									<li><span class="lbl-tt"><?php echo $tr->translate("REQUEST_DATE");?></span>: <span class="red"><?php echo date("d-M-Y",strtotime($this->row['date']));?></span></li>
+									<li><span class="lbl-tt"><?php echo $tr->translate("REQUEST_DATE");?></span>: <span class="red"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($this->row['date']));?></span></li>
 									<li><span class="lbl-tt"><?php echo $tr->translate("PURPOSE");?></span>: <span class="red"><?php echo $this->row['purpose'];?></span></li>
 									<li><span class="lbl-tt"><?php echo $tr->translate("NOTE");?></span>: <span class="red"><?php echo $this->row['note'];?></span></li>
 								</ul>
@@ -192,7 +192,7 @@ div#request-info .form-group ul li {
 		dojo.query("#row"+index).remove();
 	}
 	function initailize() {
-		<?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $rs){?>
+		<?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $key=> $rs){?>
 		col++;no++;
 		template='';
 		temp = "";

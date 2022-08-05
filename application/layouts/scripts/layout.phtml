@@ -448,10 +448,15 @@ function loadRequestNotification(view = '')
 		data:{'view':view},
 		dataType:"json",
 		success: function(data){
-			if(data.counting > 0)
+			if(data.counting >= 0)
 			{
 			 jQuery('.requestNotify').html(data.notification);
-			 jQuery('#countRequest').html(data.counting);
+			 if(data.counting==0){
+				 jQuery('#countRequest').html("");
+			 }else{
+				 jQuery('#countRequest').html(data.counting);
+			 }
+			 
 			}
 		},
 		error:function(err){

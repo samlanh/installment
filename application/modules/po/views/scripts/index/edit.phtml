@@ -114,8 +114,24 @@
 		                	<?php echo $frm->getElement("total");?>
 		                </div>
 		             </div>	
-					<table class="collape tablesorter" id="table_row" style="width:100%; white-space: nowrap;border:1px solid #ddd;">
-				    	<tr id="head-title" class="head-td" align="center"></tr>
+					<table class="collape tablesorter"  style="width:100%; white-space: nowrap;border:1px solid #ddd;">
+				    	<thead>
+							<tr id="head-title" class="head-td" align="center">
+								<td><?php echo $tr->translate("DEL");?></td>
+								<td><?php echo $tr->translate("N_O");?></td>
+								<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>
+								<td class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></td>
+								<td width="5%"><?php echo $tr->translate("QTY_APPROVED");?></td>
+								<td width="10%"><?php echo $tr->translate("QTY");?></td>
+								<td width="5%"><?php echo $tr->translate("UNIT_PRICE");?></td>
+								<td width="5%"><?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></td>
+								<td width="10%"><?php echo $tr->translate("SUB_TOTAL");?></td>
+								<td width="20%"><?php echo $tr->translate("NOTE");?></td>
+								<td width="20%"><?php echo $tr->translate("STATUS");?></td>
+							</tr>
+						</thead>
+						<tbody id="table_row">
+						</tbody>
 					</table>
 					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
 					
@@ -140,20 +156,24 @@
 	<div id="itemsNote<?php echo $key?>" style="display: none;"><?php echo $rs['note'];?></div>
 <?php } ?>
 <style>
-table#table_row td.productName {
+table.tablesorter td.productName {
     font-size: 12px;
     line-height: 14px;
     font-weight: 600;
 }
-table#table_row td.currentQty {
+table.tablesorter td.currentQty {
     text-align: center;
     color: #f74545;
     font-weight: 600;
 }
-table#table_row td.currentQty small {
+table.tablesorter td.currentQty small {
     font-size: 10px;
     display: block;
     line-height: 8px;
+}
+.head-td td {
+    padding: 6px 1px;
+    text-align: center;
 }
 tr.rowData {
     border-bottom: solid 2px #02014a;
@@ -311,21 +331,7 @@ div#request-info .form-group ul li {
 		
 		template='';
 		temp = "";
-		if(title!=1){
-			temp+='<td><?php echo $tr->translate("DEL");?></td>';
-			temp+='<td><?php echo $tr->translate("N_O");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
-			temp+='<td class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></td>';
-			temp+='<td width="5%"><?php echo $tr->translate("QTY_APPROVED");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("QTY");?></td>';
-			temp+='<td width="5%"><?php echo $tr->translate("UNIT_PRICE");?></td>';
-			temp+='<td width="5%"><?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("SUB_TOTAL");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("NOTE");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("STATUS");?></td>';
-			dojo.query("#head-title").append(temp);
-			title=1;
-		}
+		
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
@@ -340,8 +346,9 @@ div#request-info .form-group ul li {
 			return false;
 		}
 		productId = dijit.byId('productId').get('value');
+		productLabel = dijit.byId('productId').attr('displayedValue');
 		if(productId=='' || productId<=0){
-			//alert('<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>');
+			
 			dijit.byId('productId').reset();
 			dijit.byId('productId').focus();
 			return false;
@@ -358,7 +365,7 @@ div#request-info .form-group ul li {
 			 for(var i=0;i< arrays.length;i++) {
 				 readychoose = dijit.byId('proId'+arrays[i]).get('value');
 				 if(readychoose==productId){
-					 alert("<?php echo $tr->translate("Choosen ready")?>");
+					 alert("<?php echo $tr->translate("Choosen ready")?> "+productLabel);
 					 dijit.byId('productId').reset();
 					 return false;
 				 }
@@ -500,21 +507,7 @@ div#request-info .form-group ul li {
 		col++;no++;
 		template='';
 		temp = "";
-		if(title!=1){
-			temp+='<td><?php echo $tr->translate("DEL");?></td>';
-			temp+='<td><?php echo $tr->translate("N_O");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
-			temp+='<td class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("QTY_APPROVED");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("QTY");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("UNIT_PRICE");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("SUB_TOTAL");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("NOTE");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("STATUS");?></td>';
-			dojo.query("#head-title").append(temp);
-			title=1;
-		}
+		
 		
 		var proCodeString = $( '#proCode'+'<?php echo $key;?>').html();
 		var productNameString = $( '#productName'+'<?php echo $key;?>').html();

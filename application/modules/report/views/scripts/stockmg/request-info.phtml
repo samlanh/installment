@@ -5,10 +5,7 @@
 	
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
 	$dbparmeter = new Report_Model_DbTable_DbParamater();
-	
-	$dbGb = new Application_Model_DbTable_DbGlobal();
-	$userInfo = $dbGb->getUserInfo();
-	$currentUserName = $userInfo['user_name'];
+
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -124,26 +121,7 @@
 					font-size: 14px;
 				}
 				
-				ul.printInfo {
-					position: absolute;
-					right: 0;
-					top: 35px;
-					list-style: none;
-					margin: 0;
-					padding: 0;
-					visibility: hidden;
-				}
-
-				ul.printInfo li {
-					font-family: 'Times New Roman','Khmer OS Battambang';
-					font-size: 9px;
-					text-align: left;
-					line-height:10px;
-				}
-				@media print {
-					ul.printInfo{visibility: visible;}
-					@page {size: landscape}
-				}
+			
 			</style>
 				
 			<table class="tableTop" width="100%" >
@@ -156,10 +134,7 @@
 					</td>
 					<td width="30%" align="right" style="vertical-align:top; position: relative;">
 						<span class="project-name" id="projectName">(<?php echo $this->row["branch_name"];?>)</span>
-						<ul class="printInfo">
-							<li>Date / Time : <?php echo date("d-m-Y H:i:s")?></li>
-							<li><?php echo $currentUserName;?></li>
-						<ul>
+						<?php echo $this->printByFormat;?>
 					</td>
 				</tr> 
 				<tr>
@@ -212,7 +187,7 @@
 										កាលបរិច្ឆេទ : 
 										<small>Request Date : </small>
 									</span>
-									<span class="bold"><?php echo date("d-M-Y",strtotime($this->row["date"]));?></span>
+									<span class="bold"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($this->row["date"]));?></span>
 								</td>
 								<td></td>
 								<td >
@@ -285,7 +260,7 @@
 										<small>Received Qty</small>
 									</td>
 									<td class="center">
-										<span>លេខទទួល / លេខវិក្ក័យបត្រ</span>
+										<span>លេខទទួល / លេខវិក្កយបត្រ</span>
 										<small>DN N<sup>o</sup> / Invoice N<sup>o</sup></small>
 									</td>
 								</tr>
@@ -319,7 +294,7 @@
 								<td class="centerText"><?php echo $rs["measureTitle"];?></td>
 								<td class="centerText"><?php echo $rs["qtyRequest"];?></td>
 								<td class="centerText bold"><?php echo $qtyApproved;?></td>
-								<td class="centerText"><?php echo date("d-m-Y",strtotime($rs["dateReqStockIn"]));?></td>
+								<td class="centerText"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($rs["dateReqStockIn"]));?></td>
 								
 								<?php if(!empty($rs["purchaseQty"])){?>
 								<td class="centerText bold"><?php echo $rs["purchaseQty"];?></td>
@@ -358,13 +333,13 @@
 						<table width="100%" cellspacing="0" cellpadding="0">
 							<tr>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
-									<span style="font-weight: 600; display: block;">ស្នើសុំដោយ / Request By</span>
+									<span style="font-weight: 600; display: block;">ស្នើសុំដោយ / Requested By</span>
 								</td>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
-									<span style="font-weight: 600; display: block;">ត្រួតពិនិត្យដោយ / Checking By</span>
+									<span style="font-weight: 600; display: block;">ត្រួតពិនិត្យដោយ / Checked By</span>
 								</td>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
-									<span style="font-weight: 600; display: block;">យល់ព្រមដោយ / Agreed By</span>
+									<span style="font-weight: 600; display: block;">យល់ព្រមដោយ / Veryfied By</span>
 								</td>
 								<td style="width:25%; vertical-align: top;line-height: 16px; text-align:center;">
 									<span style="font-weight: 600; display: block;">អនុម័តដោយ / Approved By</span>
