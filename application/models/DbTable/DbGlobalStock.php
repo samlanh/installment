@@ -965,7 +965,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					WHERE `type`=$type AND `status`=1 ";
 		$rows = $db->fetchAll($sql);
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$options= array(-1=>$tr->translate("CHOOSE"));
+		$options= array(-1=>$tr->translate("SELECT_TYPE"));
 		if($is_opt!=null){
 			if(!empty($rows))foreach($rows AS $row){
 				$options[$row['id']]=$row['name'];

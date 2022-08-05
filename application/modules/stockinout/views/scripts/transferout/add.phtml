@@ -137,9 +137,9 @@
 							<input id="productId" />
 						</div>
 					</div>
-					<table class="collape tablesorter" id="table_row" style="width:100%; white-space: nowrap;border:1px solid #ddd;">
-				    	<tr id="head-title" class="head-td" align="center"></tr>
-					</table>
+					<div class="form-group">
+						<div id="showrecord"></div>
+					</div>
 					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
 				</div>
 			</div>
@@ -189,6 +189,11 @@
 		if(branch_id=='' || branch_id==0){
 			return false;
 		}
+		
+		 title=0;
+		 dojo.query("#showrecord").append('');
+		 $("#identity").val('');
+		 
 		 getAllProduct(branch_id);
 		 getRequestNo(branch_id);
 	}
@@ -234,6 +239,12 @@
 		temp = "";
 	
 		if(title!=1){
+			
+			tmp='<table class="collape tablesorter" id="table_row" style="margin-top:10px;width:100%; white-space: nowrap;border:1px solid #ddd;">';
+			tmp+='<tr id="head-title" class="head-td" align="center"></tr>';
+			tmp+='</table>';
+			dojo.query("#showrecord").append(tmp);
+			
 			temp+='<td><?php echo $tr->translate("DEL");?></td>';
 			temp+='<td><?php echo $tr->translate("N_O");?></td>';
 			temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';

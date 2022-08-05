@@ -12,6 +12,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
 				(SELECT name_kh FROM `st_view` WHERE type=4 AND key_code=r.dnType LIMIT 1) dnType,
 				r.dnNumber,
+				(SELECT name_kh FROM `st_view` WHERE type=5 AND key_code=r.isIssueInvoice LIMIT 1) isIssueInvoice,
 				r.plateNo,
 				r.driverName,
 				r.staffCounter,
@@ -45,6 +46,9 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	}
     	if($search['status']>-1){
     		$where.= " AND r.status = ".$search['status'];
+    	}
+    	if($search['verifyStatus']>-1){
+    		$where.= " AND r.isIssueInvoice = ".$search['verifyStatus'];
     	}
     	if($search['branch_id']>0){
     		$where.= " AND r.projectId = ".$search['branch_id'];
@@ -276,6 +280,11 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		$dbb = new Budget_Model_DbTable_DbInitilizeBudget();
     		
     		$dbb->reverBudgetExpense($receivedId);//delete old budget plan
+    		
+    		if($data['status']==0){
+    			$db->commit();
+    			return true;
+    		}
     		
     		$param = array(
     			'branch_id'=>$data['branch_id'],

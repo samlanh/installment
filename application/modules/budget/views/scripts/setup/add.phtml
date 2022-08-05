@@ -66,9 +66,7 @@
 						<input type="button" dojoType="dijit.form.Button" onclick="getRefreshData();" label="Get Data" iconClass="dijitEditorIcon dijitEditorIconUndo" /> 
                    	</div>
                    	<div class="card-box">
-						<table class="collape tablesorter" id="table_row" style="margin-top:10px;width:100%; white-space: nowrap;border:1px solid #ddd;">
-					    	<tr id="head-title" class="head-td" align="center"></tr>
-						</table>
+                   		<div id="showrecord"></div>
 					</div>
 				</div>
 				<div class="clearfix"></div>
@@ -159,6 +157,9 @@
 			});
 			 var branch_id = dijit.byId('branch_id')
 			 branch_id.on('change',function(evt){
+				 title=0;
+				 dojo.query("#showrecord").append('');
+				 $("#identity").val('');
 				 getBudgetType();
 				 getBudgetItem();
 			 });
@@ -174,6 +175,11 @@
 		temp = "";
 	
 		if(title!=1){
+			tmp='<table class="collape tablesorter" id="table_row" style="margin-top:10px;width:100%; white-space: nowrap;border:1px solid #ddd;">';
+			tmp+='<tr id="head-title" class="head-td" align="center"></tr>';
+			tmp+='</table>';
+			dojo.query("#showrecord").append(tmp);
+			
 			temp+='<td><?php echo $tr->translate("DEL");?></td>';
 			temp+='<td><?php echo $tr->translate("N_O");?></td>';
 			temp+='<td width="20%"><?php echo $tr->translate("BUDGET_ITEM");?></td>';
@@ -204,7 +210,6 @@
 			type=2;
 		}
 		
-		
 		if(budgetItemValue=='' || budgetItemValue<=0){
 			budgetItem.focus();
 			return false;
@@ -223,11 +228,8 @@
 				 }
 			}
 		}
-
-		 
-		 
+			
 		no++;
-		
 		template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td align="center" width="2%">'+no+'</td>';
 		template+='<td class="budgetName" >'+budgetItemLable+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="budgetItem'+col+'" name="budgetItem'+col+'" value="'+budgetItemValue+'" type="text"  ><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="type'+col+'" name="type'+col+'" value="'+type+'" type="text"  ></td>';	

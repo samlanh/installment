@@ -265,8 +265,15 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		);
 		$supplierType->setValue($request->getParam("supplierType"));
 		
+		$verifyStatus =  new Zend_Dojo_Form_Element_FilteringSelect('verifyStatus');
+		$verifyStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_opts = $dbGBStock->getViewById(5,1);
+		$verifyStatus->setMultiOptions($_opts);
+		$verifyStatus->setValue($request->getParam("verifyStatus"));
+		
 		$this->addElements(
 			array(
+				$verifyStatus,
 				$_title,
 				$_status,
 				$statusAcc,
