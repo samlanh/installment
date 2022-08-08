@@ -216,34 +216,5 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 		    	FROM $this->_name AS p  ";
     	return $db->fetchRow($sql);
     }
-    function getProductMovement($productId){
-//     	$db = $this->getAdapter();
-//     	$session_lang=new Zend_Session_Namespace('lang');
-//     	$lang_id=$session_lang->lang_id;
-//     	$strLable ='name_kh' ;
-//     	if($lang_id==2){
-//     		$strLable ='name_en' ;
-//     	}
-//     	$sql=" SELECT
-// 		    	p.proId,
-// 		    	p.proName,
-// 		    	p.proCode,
-// 		    	p.barCode,
-// 		    	p.measureValue,
-// 		    	p.measureLabel,
-// 		    	p.note,
-// 		    	p.createDate,
-// 		    	p.modifyDate,
-// 		    	(SELECT c.categoryName from `st_category` as c WHERE c.id=p.categoryId LIMIT 1) categoryName,
-// 		    	(SELECT m.name FROM `st_measure` as m WHERE m.id=p.measureId LIMIT 1) MeasureName,
-// 		    	(SELECT $strLable FROM `st_view` WHERE type=2 AND key_code=p.isService LIMIT 1) isService,
-// 		    	(SELECT $strLable FROM `st_view` WHERE type=1 AND key_code=p.isCountStock LIMIT 1) isCountStock,
-// 		    	(SELECT i.budgetTitle FROM `st_budget_item` AS i WHERE i.id=p.budgetId LIMIT 1) budgetTitle,
-// 		    	(SELECT first_name FROM rms_users as u WHERE u.id = p.userId LIMIT 1) AS user ,
-// 		    	p.createDate,
-// 		    	(SELECT name_en FROM ln_view WHERE type=3 and key_code = p.status LIMIT 1) AS status
-//     	FROM $this->_name AS p  ";
-//     	return $db->fetchRow($sql);
-    }
    
 }

@@ -86,5 +86,33 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		}
 		$this->view->rs = $row;
 	}
+	function viewAction(){
+		
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		$db = new Product_Model_DbTable_DbinitilizeQtybyProject();
+		
+		$row = $db->getDataRow($id);
+		if(empty($id) OR empty($row)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/initqty/");
+		}
+		$this->view->rsProLocation = $row;
+		$proId = $row['proId'];
+		$projectId = $row['projectId'];
+			
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		$dbs = new Product_Model_DbTable_DbProduct();
+		
+		$result = $dbs->getProductDetailbyId($proId);
+		if(empty($id) OR empty($result)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index");
+		}
+		$this->view->rsProduct = $result;
+	
+	
+// 		$dbs = new Application_Model_DbTable_DbGlobalStock();
+		$this->view->productMovement = $db->getProductMovement($proId,$projectId);
+	}
 }
 
