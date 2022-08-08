@@ -29,8 +29,8 @@ class Stockinout_TransferoutController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","TRANFER_NO","TRANSFER_STOCK_DATE","TRANSFERER",
-					"DISTRIBUTOR","TO_PROJECT","RECEIVER","USAGE_FOR","BY_USER","","");
+			$collumns = array("BRANCH_NAME","TRANFER_NO","TRANSFER_STOCK_DATE","DRIVER",
+					"DISTRIBUTOR","TO_PROJECT","RECEIVER","USAGE_FOR","BY_USER","STATUS","");
 			$link=array('module'=>'stockinout','controller'=>'transferout','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
 			
@@ -46,7 +46,7 @@ class Stockinout_TransferoutController extends Zend_Controller_Action {
 			try {		
 				$db = new Stockinout_Model_DbTable_DbTransfer();
 				$db->addTransferStock($_data);
-				//Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/transferout");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/transferout");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
