@@ -9,96 +9,110 @@ public function indexAction(){
 }
 
 public function rptCurrentstockAction(){
-
   
-  try{
         if($this->getRequest()->isPost()){
             $search = $this->getRequest()->getPost();
           }
           else{
-            $search=array(
-            'adv_search'=>"",
-            'branch_id' => -1,
-            'start_date'=> date('Y-m-d'),
-            'end_date'=>date('Y-m-d'),
-            'status'=>-1,
-          );
+           $search = array(
+				'adv_search'=>'',
+				'branch_id'=>-1,
+				'isCountStock'=>-1,
+				'categoryId'=>0,
+				'budgetItem'=>0,
+				'measureId'=>0,
+				'status'=>-1,
+           		'start_date'=> date('Y-m-d'),
+           		'end_date'=>date('Y-m-d'),
+				);
           }
-        
-          $this->view->search = $search;
-        $db = new Report_Model_DbTable_DbAccountant();
-        $rs_rows = $db->getAllPurchasing($search);
-          $this->view->row=$rs_rows;
-          $this->view->search=$search;
-          
-      }catch (Exception $e){
-        Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-        Application_Form_FrmMessage::message("APPLICATION_ERROR");
-      }
+          	$rs_rows = array();
+          try{
+	       	 	$db = new Report_Model_DbTable_DbStockReports();
+	        	$rs_rows = $db->getAllProductLocation($search);
+	          	
+	      }catch (Exception $e){
+	        	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+	       	 	Application_Form_FrmMessage::message("APPLICATION_ERROR");
+	      }
+	      
+      	$this->view->rows=$rs_rows;
+      	$this->view->search=$search;
+      	
+     	$frm = new Application_Form_FrmAdvanceSearchStock();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		
+		$frm = new Product_Form_Frmproduct();
+		$frm = $frm->FrmSearchProduct();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmSearchProduct = $frm;
       
-      $frm_search = new Application_Form_FrmAdvanceSearchStock();
-      $frm = $frm_search->AdvanceSearch();
-      Application_Model_Decorator::removeAllDecorator($frm);
-      $this->view->frm_search = $frm;
-      
-      $frmpopup = new Application_Form_FrmPopupGlobal();
-      $this->view->footerReport = $frmpopup->getFooterReport();
-      $this->view->headerReport = $frmpopup->getLetterHeadReport();
-  
+	    $frmpopup = new Application_Form_FrmPopupGlobal();
+	    $this->view->footerReport = $frmpopup->getFooterReport();
+	    $this->view->headerReport = $frmpopup->getLetterHeadReport();
 }
 
 public function rptUsageAction(){
-
-  
+	$rs_rows = array();
+	$search = array();
   try{
         if($this->getRequest()->isPost()){
             $search = $this->getRequest()->getPost();
-          }
-          else{
-            $search=array(
-            'adv_search'=>"",
-            'branch_id' => -1,
-            'start_date'=> date('Y-m-d'),
-            'end_date'=>date('Y-m-d'),
-            'status'=>-1,
-          );
+         }
+         else{
+	           $search = array(
+						'adv_search'=>'',
+						'branch_id'=>-1,
+						'status'=>-1,
+						'propertyType'=>'',
+						'workType'=>0,
+						'contractor'=>0,
+						'staffWithdraw'=>0,
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+					);
           }
         
-          $this->view->search = $search;
-          $db = new Report_Model_DbTable_DbAccountant();
-          $rs_rows = $db->getAllPurchasing($search);
-          $this->view->row=$rs_rows;
-          $this->view->search=$search;
-          
+          $db = new Report_Model_DbTable_DbStockReports();
+          $rs_rows = $db->getAllUsageStock($search);
       }catch (Exception $e){
         Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
         Application_Form_FrmMessage::message("APPLICATION_ERROR");
       }
+     
+      $this->view->rows=$rs_rows;
+      $this->view->search=$search;
       
-      $frm_search = new Application_Form_FrmAdvanceSearchStock();
-      $frm = $frm_search->AdvanceSearch();
-      Application_Model_Decorator::removeAllDecorator($frm);
-      $this->view->frm_search = $frm;
+      $frm = new Application_Form_FrmAdvanceSearch();
+	  $frm = $frm->AdvanceSearch();
+	  Application_Model_Decorator::removeAllDecorator($frm);
+	  $this->view->frm_search = $frm;
+	
+	  $fm = new Stockinout_Form_FrmStockOut();
+	  $frm = $fm->FrmWithdrawStock();
+	  Application_Model_Decorator::removeAllDecorator($frm);
+	  $this->view->frm_stock = $frm;
       
       $frmpopup = new Application_Form_FrmPopupGlobal();
       $this->view->footerReport = $frmpopup->getFooterReport();
       $this->view->headerReport = $frmpopup->getLetterHeadReport();
-  
 }
 
 
 public function rptUsagedetailAction(){
   try{
-    $db = new Report_Model_DbTable_DbStockMg();
+    $db = new Report_Model_DbTable_DbStockReports();
     $id=$this->getRequest()->getParam('id');
-      $id = empty($id)?0:$id;
-    $row = $db->getRequestPOById($id);
+    $id = empty($id)?0:$id;
+    $row = $db->getDataRow($id);
     if (empty($row)){
-      Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/requesting/request");
+      Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/stockreport/rpt-usage");
       exit();
     }
     $this->view->row = $row;
-    $this->view->rowdetail = $db->getRequestPODetailById($row);
+    $this->view->rowdetail = $db->getDataAllRow($id);
   
   }catch (Exception $e){
     Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
