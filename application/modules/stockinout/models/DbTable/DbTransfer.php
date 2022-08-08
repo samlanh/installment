@@ -32,12 +32,12 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     }
     function getAllTransfer($search){
     	$sql="SELECT t.id,
-					t.fromProjectId,
+					(SELECT project_name FROM `ln_project` WHERE br_id=t.fromProjectId LIMIT 1) AS projectName,
 					t.transferNo,
 					t.trasferDate,
 					t.deliverId,
 					t.driverName,
-					t.toProjectId,
+					(SELECT project_name FROM `ln_project` WHERE br_id=t.toProjectId LIMIT 1) AS toProjectId,
 					t.receiverId,
 					t.userFor,
 					(SELECT first_name FROM rms_users AS u WHERE u.id = t.userId LIMIT 1) AS byUser ,
@@ -192,7 +192,7 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		//Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/transferout/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/transferout/add");
     	}
     }
     function upateUsageStock($data){
