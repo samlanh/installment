@@ -26,7 +26,7 @@
 	$purchaseTypeOPt = $dbGBstock->purchasingTypeKey($arrStep);
 	$search=$this->search;
 ?>
-<title>របាយការណ៍ស្តុកបច្ចុប្បន្ន</title>
+<title><?php echo $tr->translate("RPT_RECRIVESTOCK");?></title>
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
@@ -34,7 +34,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> របាយការណ៍ស្តុកបច្ចុប្បន្ន</h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_RECRIVESTOCK');?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -180,12 +180,24 @@
 						font-size: 12px;
 						font-weight: 600;
 					}
+					.lbTitle{
+						display:block;
+					    line-height:20px;
+						
+					}
+					.lbEng{
+						
+					    line-height:14px;
+						
+					}
+					
+				    
 				</style>
 				<table width="100%">
 					<tr>
 				    	<td align="center" valign="top">
 				        	<div class="divFooter">
-					        	<?php  echo $this->headerReport;?>
+					        	<?php echo $this->headerReport;?>
 				            </div>
 				        </td>
 				    </tr>
@@ -193,43 +205,93 @@
 				    	<td id="exportExcel">
 				            <table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
 					                <thead>
-					               
-					               
-					                <tr class="style" align="center">
-					                	<td style="padding:1px;">ល.រ​ <br> Num</td>                   
-					                    <td style="padding:1px;">សាខា <br> Brand</td>
-					                    <td style="padding:1px;">ឈ្មោះ <br> Name</td>
-					                    <td style="padding:1px;">លេខកូដ <br> Code</td>
+					                <tr class="hide" style="border:1px solid #000;">
+					                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+					                </tr>
+					                <tr class="style" align="center" >
+					                    <td rowspan="2" class="center">ល.រ <br> No.</td>
 										
-										<td style="padding:1px;">បារកូដ <br> Barcode</td>
-										<td style="padding:1px;">ប្រភេទទំនេញ <br> Product Type</td>
-					                    <td style="padding:1px;">បរិមាណនៅសល់ <br> Remaining QTY</td>	                    
-					                    <td style="padding:1px;">តម្លៃ <br> Price</td>
-					                    <td style="padding:1px;">គម្រោងចំណាយ <br>Expense plan</td>
-					                    <td style="padding:1px;">ផ្សេងៗ <br> Other</td>
+										<td colspan="8" class="center">
+											<span class="lbTitle">ព័ត៍មានទទួលទំនិញ</span> 
+											<small class="lbEng">Receive Product Info</small>
+										</td>  
+										<td colspan="4" class="center">
+											<span class="lbTitle">ព័ត៍មានបញ្ជាទិញ</span> 
+											<small class="lbEng">Order Infomation</small>
+										</td>  
+						
+					                </tr>
+					                <tr class="style" align="center">
+					                	<td style="padding:1px; ">
+											<span class="lbTitle">គម្រោង​</span>  
+											<small class="lbEng">Project Name</small>
+										</td>                   
+					                    <td style="padding:1px;">
+											<span class="lbTitle">កាលបរិច្ឆេទទទួល</span> 
+											<small class="lbEng">Receive Date</small>
+										</td>
+					                    <td style="padding:1px;">
+											<span class="lbTitle">ប្រភេទឯកសាទទួល</span> 
+											<small class="lbEng">Document Recieve</small>
+										</td>
+					                    <td style="padding:1px;">
+											<span class="lbTitle">លេខប័ណ្ណទទួល/វិក្កយបត្រ</span>
+											<small class="lbEng">Letter/invoice No.</small>
+										 </td>
+										<td style="padding:1px;">
+											<span class="lbTitle">ស្ថានការទទួល</span> 
+											<small class="lbEng">Receive Status</small>
+										</td>
+										<td style="padding:1px;">
+											<span class="lbTitle">អ្នកប្រគល់ទំនិញ</span> 
+											<small class="lbEng">Product Giver</small>
+										</td>
+					                    <td style="padding:1px;">
+											<span class="lbTitle">ស្លាកលេខឡាន</span> 
+											<small class="lbEng">License plate</small>
+										</td>	                    
+					                    <td style="padding:1px;">
+											<span class="lbTitle">អ្នករាប់ទំនិញ</span>  
+											<small class="lbEng">Counter</small>
+										</td>
+
+					                    <td style="padding:1px;">
+											<span class="lbTitle">លេខបញ្ជាទិញ</span> 
+											<small class="lbEng">Order Code</small>
+										</td>
+					                    <td style="padding:1px;">
+											<span class="lbTitle">ថ្ងៃបញ្ជាទិញ</span> 
+											<small class="lbEng">Order Date</small>
+										</td>					
+					                    <td style="padding:1px;">
+											<span class="lbTitle">លេខអ្នកផ្គត់ផ្គង់</span> 
+											<small class="lbEng">Supplyer Num</small>
+										</td>
+					                    <td style="padding:1px;">
+										<span class="lbTitle">លេខសំណើ</span>
+										<small class="lbEng">Request No.</small>
+									</td>
 					                    
+					                  
 					                </tr>
 					            </thead>
-				               
-				                <tr class=" style " style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
-				               		
-									<td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-								
-								</tr>
+				                <?php 
+				                	$totalRecord=count($this->row);
+				                	$gTotalAmount=0;
+				                	$i=1;
+				                ?>
+				                <?php 
+				                if(!empty($this->row)) foreach ($this->row as $index => $rs){
+									$gTotalAmount=$gTotalAmount+$rs["total"];
+									
+								?>
 				                
+								
+				                <?php }?>
 				               
 				            </table>
 							
-						    <?php //echo $this->footerReport;?>
+						    
 				    	</td>
 				    </tr>
 				</table>
