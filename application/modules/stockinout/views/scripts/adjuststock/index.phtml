@@ -1,6 +1,6 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate(""));
+	echo $this->headTitle($tr->translate("ADJUST_STOCK"));
 	$frm = $this->frm_search;
 ?>
 <div class="card pb-10 pt-10 pl-10 pr-10">
@@ -8,24 +8,26 @@
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-cubes" aria-hidden="true"></i>&nbsp;<i class="fa fa-arrows-h" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate('ADJUST_STOCK');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
     		</div>
     	</div>
 		<div class="card-box">
-			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'message','controller'=>'index','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
 			   <div class="form-group">
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('branch_id');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('start_date');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('end_date');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
-					</div>
-					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('btn_search');?>
 					</div>
 				</div>
 			</form>
@@ -37,20 +39,11 @@
 	</div>
 </div>
 <script>
+	dojo.require('dijit.form.DateTextBox');
 <?php 
-	/*$edit_Text = $tr->translate("RESENT");
-	$urlEdit = $this->baseUrl()."/message/index/edit/id/";
-	*/
+	$edit_Text = $tr->translate("CHECK_AND_APPROVE");
+	$urlEdit = $this->baseUrl()."/stockinout/adjuststock/edit/id/";
 ?>
-/*
-function checked_id(index){
-	$("#id_selected").val('');
-	 var searchIDs = $('input:checked').map(function(){
-	      return $(this).val();
-	    });
-	    $("#id_selected").val(searchIDs.get());
-}
-
 var row=0;
 var url="";
 $(function(){
@@ -59,12 +52,12 @@ $(function(){
 		callback: function(key, options) {
 			var m = "clicked: " + key;
 			if(key=="edit"){
-				url='<?php //echo $urlEdit;?>';
+				url='<?php echo $urlEdit;?>';
 			}
 			gotoAction();
 		},
 		items: {
-			"edit": {name: "<?php //echo $edit_Text;?>", icon: "edit", accesskey: "e"},
+			"edit": {name: "<?php echo $edit_Text;?>", icon: "edit", accesskey: "e"},
 		}
 	});
 });
@@ -75,5 +68,4 @@ var recordid ='';
 function gotoAction(){
 	 window.open(url+row+'?rightclick=true', '_blank');
 }
-*/
 </script>

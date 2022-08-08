@@ -1,0 +1,79 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<style>
+.styleClass{background: #eee;}
+.hover:hover{background:#eff4fd;}
+.header{
+	background: #062b61;
+    color: #fff;
+    padding: 10px 0px;
+}
+.font-size{font-size: 12px;}
+.font-size div{line-height:25px;}
+.red{color:red;}
+</style>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-cubes" aria-hidden="true"></i>&nbsp;<i class="fa fa-arrows-h" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate('ADJUST_STOCK_LIST');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<div class="card-box">
+			<div class="col-sm-3 col-md-3 col-xs-12">
+				<div class="form-group">
+					<div class="col-sm-4 col-md-4 col-xs-12"><?php echo $tr->translate('PROJECT_NAME');?></div>
+					<div class="col-sm-3 col-md-6 col-xs-12"><?php echo $this->rs['projectName'];?></div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-4 col-md-4 col-xs-12"><?php echo $tr->translate('ADJUST_DATE');?></div>
+					<div class="col-sm-3 col-md-6 col-xs-12"><?php echo $this->rs['adjustDate'];?></div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-4 col-md-4 col-xs-12"><?php echo $tr->translate('NOTE');?></div>
+					<div class="col-sm-3 col-md-6 col-xs-12"><?php echo $this->rs['note'];?></div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-4 col-md-4 col-xs-12"></div>
+					<div class="col-sm-3 col-md-6 col-xs-12">
+					<form dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+						<input type="hidden" value="<?php echo $this->rs['id'];?>" name="id" />
+						<input type="submit" <?php if($this->rs['isApproved']==1)echo"Disabled";?>  value="SAVE_NEW" tabindex="2" label="បានត្រួតពិនិត្យ" id="save_new" dojoType="dijit.form.Button" name="save_new"
+					 iconClass="dijitEditorIcon dijitEditorIconWikiword"/>
+					 </form>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-9 col-md-9 col-xs-12">
+				<div class="form-group header">
+					<div class="col-sm-4 col-md-4 col-xs-12"><?php echo $tr->translate('PRODUCT_NAME');?></div>
+					<div class="col-sm-2 col-md-2 col-xs-12"><?php echo $tr->translate('CURRENT_STOCK');?></div>
+					<div class="col-sm-2 col-md-2 col-xs-12"><?php echo $tr->translate('ACTUAL_QTY');?></div>
+					<div class="col-sm-2 col-md-2 col-xs-12"><?php echo $tr->translate('DIFFERENCE');?></div>
+					<div class="col-sm-2 col-md-2 col-xs-12"><?php echo $tr->translate('NOTE');?></div>
+				</div>
+				<div class="form-group font-size">
+					<?php if(!empty($this->results)){ 
+						$ids = '';
+					foreach($this->results as $key=> $row){
+						$index=$key+1;
+					?>
+						<div class="col-sm-4 col-md-4 col-xs-12 hover <?php if($key%2==0)echo "styleClass";?>">&nbsp;<?php echo ($index).'-'.$row['proName'].'&nbsp;'.$row['proCode'];?></div>
+						<div class="col-sm-2 col-md-2 col-xs-12 hover <?php if($key%2==0)echo "styleClass";?>">&nbsp;<?php echo $row['currentQty'].'&nbsp;'.$row['measureLabel'];?></div>
+						<div class="col-sm-2 col-md-2 col-xs-12 hover <?php if($key%2==0)echo "styleClass";?>">&nbsp;<?php echo $row['exactQty'].'&nbsp;'.$row['measureLabel'];?></div>
+						<div class="col-sm-2 col-md-2 col-xs-12 hover <?php if($key%2==0){echo "styleClass";}if($row['exactQty']-$row['currentQty']<0){echo" red";}?>">&nbsp;<?php echo $row['exactQty']-$row['currentQty'].'&nbsp;'.$row['measureLabel'];?>
+							<input type="hidden" name="difference<?php echo $key+1;?>" value="<?php echo $row['exactQty']?>" />
+						</div>
+						<div class="col-sm-2 col-md-2 col-xs-12 hover <?php if($key%2==0)echo "styleClass";?>">&nbsp;<?php echo $row['note'];?></div>
+					<?php }}
+					?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
