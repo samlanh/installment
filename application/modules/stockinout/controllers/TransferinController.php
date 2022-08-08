@@ -6,7 +6,7 @@ class Stockinout_TransferinController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		//$rs_rows=array();
+		$rs_rows=array();
 		//$db = new ();
 		try{
 			if(!empty($this->getRequest()->isPost())){

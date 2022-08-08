@@ -1,78 +1,76 @@
 <?php
 
-class Stockinout_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
+class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
 {
-    protected $_name = 'st_adjust_stock';
+    protected $_name = 'st_closing';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
-    function getAllAdjustStock($search){
+    function getAllClosingStock($search){
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$approved = $tr->translate("APPROVED");
     	$reject =  $tr->translate("REJECTED");
     	$sql="SELECT 
-    			sa.id,
-    			(SELECT project_name FROM `ln_project` WHERE br_id=sa.projectId LIMIT 1) AS projectName,
-		    	 sa.adjustDate,
-		    	(SELECT first_name FROM rms_users WHERE id=sa.userId LIMIT 1 ) AS user_name,
-			    	CASE WHEN sa.isApproved=1 THEN '$approved'
-			    		ELSE '$reject'
-			    	END AS status,
-			    	sa.approvedDate,
-		    	(SELECT first_name FROM rms_users WHERE id=sa.approvedBy LIMIT 1) approvedBy
-    		FROM `st_adjust_stock` sa WHERE 1 ";
+    			cl.id,
+    			(SELECT project_name FROM `ln_project` WHERE br_id=cl.projectId LIMIT 1) AS projectName,
+		    	cl.closingDate,
+		    	cl.note,
+		    	(SELECT first_name FROM rms_users WHERE id=cl.userId LIMIT 1 ) AS user_name
+    		FROM `st_closing` cl WHERE 1 ";
     	
-    	$from_date =(empty($search['start_date']))? '1': " sa.createDate >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " sa.createDate <= '".$search['end_date']." 23:59:59'";
+    	$from_date =(empty($search['start_date']))? '1': " cl.closingDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " cl.closingDate <= '".$search['end_date']." 23:59:59'";
     	
     	$where_date = " AND ".$from_date." AND ".$to_date;
     	$where='';
     	
     	if($search['branch_id']>-1){
-    		$where.= " AND sa.projectId = ".$search['branch_id'];
+    		$where.= " AND cl.projectId = ".$search['branch_id'];
     	}
     	$dbg = new Application_Model_DbTable_DbGlobal();
     	$where.= $dbg->getAccessPermission('so.projectId');
     	
-    	$order=' ORDER BY sa.id DESC  ';
+    	$order=' ORDER BY cl.id DESC  ';
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql.$where_date.$where.$order);
     }
    
-    function addAdjustStock($data){
+    function addClosingEntry($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try
     	{
+    		
     		$dbs = new Application_Model_DbTable_DbGlobalStock();
     		$arr = array(
     				'projectId'=>$data['branch_id'],
-    				'adjustDate'=>$data['date'],
+    				'adjustId'=>$data['adjustDate'],
+    				'fromDate'=>$data['date'],
+    				'closingDate'=>$data['date'],
+    				'note'=>$data['note'],
     				'userId'=>$this->getUserId(),
     				'createDate'=>date('Y-m-d'),
     			);
-    		$stockId = $this->insert($arr);
+    		$closeId = $this->insert($arr);
     		
-    		$ids = explode(',',$data['identity']);
-    		if(!empty($ids)){
-    			foreach($ids as $i){
-    				$param = array(
-    					'branch_id'=>$data['branch_id'],
-    					'productId'=>$data['proId'.$i],
-    				);
-    				
-    				$resultStock = $dbs->getProductInfoByLocation($param);
-    				$currentQty = !empty($resultStock['currentQty'])? $resultStock['currentQty']:0;
-    				
+    		$param = array(
+    			'branch_id'=>$data['branch_id'],
+    			'isCountStock'=>1
+    		);
+    		
+    		$results = $dbs->getProductLocationbyProId($param);
+    		
+    		if(!empty($results)){
+    			foreach($results as $result){
     				$arr = array(
-    					'adjustId'=>$stockId,
-    					'proId'=>$data['proId'.$i],
-    					'currentQty'=>$currentQty,
-    					'exactQty'=>$data['qtyRequest'.$i],
-    					'note'=>$data['note'.$i],
+    					'closingId'=>$closeId,
+    					'projectId'=>$data['branch_id'],
+    					'proId'=>$result['id'],
+    					'qtyBegining'=>$result['currentQty'],
+    					'costing'=>$result['costing'],
     				);
-    				$this->_name='st_adjust_detail';
+    				$this->_name='st_closing_detail';
     				$id = $this->insert($arr);
     			}
     		}
@@ -80,7 +78,7 @@ class Stockinout_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/adjuststock/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/product/closingentry/add");
     	}
     }
     function upateAdjustStock($data){

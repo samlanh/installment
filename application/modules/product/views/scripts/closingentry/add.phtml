@@ -1,0 +1,133 @@
+<?php 
+     $this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
+     $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+     $frm = $this->frm;
+?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<title><?php echo $this->tr->translate("CLOSING_STOCK_ENTRY")?></title>
+ <div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CLOSING_STOCK_ENTRY');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">   
+	  			 if(this.validate()) {
+					branch_id = dijit.byId('branch_id').get('value');
+					if(branch_id=='' || branch_id<=0){
+						alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+						dijit.byId('branch_id').focus();
+						return false;
+					}
+					adjustDate = dijit.byId('adjustDate').get('value');
+					if(adjustDate=='' || adjustDate<=0){
+						alert('<?php echo $tr->translate('PLEASE_SELECT');?>');
+						dijit.byId('adjustDate').focus();
+						return false;
+					}
+					
+					
+					loadingBlock();
+					return true;
+	  			 }else {
+					return false;
+	   			}
+			</script>
+			<div class="card-box">
+				<div class="col-md-5 col-sm-5 col-xs-12">
+		             <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("branch_id");?>
+		                </div>
+		             </div>
+		             <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("ADJUST_DATE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<input id="adjustDate" />
+		                </div>
+		             </div>
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("CLOSING_DATE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("date");?>
+		                </div>
+		             </div>
+		             <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("note");?>
+		                </div>
+		             </div>
+				</div>
+				<div class="col-md-9 col-sm-9 col-xs-12">
+						
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="clearfix"></div>
+	       	<div class="card-box mt-20">
+               	<div class="col-md-6 col-sm-6 col-xs-6 border-top mt-20 ptb-10 text-center">
+               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE");?>" dojoType="dijit.form.Button" 
+						iconClass="dijitEditorIcon dijitEditorIconSave" />
+               	</div>
+             </div>
+		</form>
+    </div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+    dojo.require("dijit.form.Textarea");
+    dojo.require("dijit.form.DateTextBox");
+    
+    require(["dojo/ready"], function(ready){
+		ready(function(){
+			onChageFunctionByBranch();
+		}); 
+		new dijit.form.FilteringSelect({
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: true,		           
+			placeHolder:'<?php echo $tr->translate('SELECT_ADJUST');?>',
+			name: "adjustDate",
+			id: "adjustDate",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+			}
+		}, "adjustDate");
+	 });
+
+	function onChageFunctionByBranch(){
+		dijit.byId('adjustDate').attr('value','');
+		addRowProductRequest();
+	} 
+	var urlGetAdjusted = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'adjuststock','action'=>'getadjustlist')); ?>';
+	function addRowProductRequest(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id==null || branch_id==-1){
+			return false;
+		}
+		dojo.xhrPost({
+			url:urlGetAdjusted,	
+			content:{ 
+				'branch_id':branch_id,
+				'isApproved':1,
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				storeAdjust = getDataStorefromJSON('id','name',data);
+				dijit.byId('adjustDate').set('store',storeAdjust);
+			},
+			error: function(err) {
+			}
+		});
+	}
+</script>
