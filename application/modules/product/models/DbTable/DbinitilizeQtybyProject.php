@@ -132,5 +132,26 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     	FROM $this->_name l WHERE l.id=".$recordId." LIMIT 1";
     	return $db->fetchRow($sql);
     }
+    function getProductMovement($productId,$ProjectId){
+    	    	$db = $this->getAdapter();
+    	    	$session_lang=new Zend_Session_Namespace('lang');
+    	    	$lang_id=$session_lang->lang_id;
+    	    	$strLable ='name_kh' ;
+    	    	if($lang_id==2){
+    	    		$strLable ='name_en' ;
+    	    	}
+    	    	$sql=" SELECT id,
+						(SELECT project_name FROM `ln_project` WHERE br_id=ss.projectId LIMIT 1) AS projectName,
+							projectId,
+							proId,
+							tranType,
+							(SELECT $strLable FROM `st_view` WHERE TYPE=6 AND key_code=tranType LIMIT 1) AS tranTypeValue,
+							qty,
+							(SELECT first_name FROM rms_users as u WHERE u.id = ss.userId LIMIT 1) AS user,
+							transDate
+						 FROM `st_product_story` 
+						   ss ORDER BY id DESC   ";
+    	    	return $db->fetchAll($sql);
+    }
    
 }

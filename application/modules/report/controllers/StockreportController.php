@@ -8,7 +8,7 @@ class Report_StockreportController extends Zend_Controller_Action {
 public function indexAction(){
 }
 
-public function rptcurrentstockAction(){
+public function rptCurrentstockAction(){
 
   
   try{
