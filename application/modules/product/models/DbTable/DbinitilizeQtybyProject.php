@@ -55,7 +55,7 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     	$dbg = new Application_Model_DbTable_DbGlobal();
     	$where.= $dbg->getAccessPermission('l.projectId');
     	
-    	$order=' ORDER BY p.proName ASC  ';
+    	$order=' ORDER BY l.id DESC ';
     	
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql.$where.$order);
@@ -89,10 +89,10 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 								'qtyAlert'=>$data['qtyAlert'.$i],
 						);
 						$this->_name='st_product_location';
-						$this->insert($arr);
+						$tranId = $this->insert($arr);
 					}
 					
-					$dbs->addProductHistoryQty($data['branch_id'], $data['proId'.$i], 1, $data['qtyInit'.$i]);
+					$dbs->addProductHistoryQty($data['branch_id'], $data['proId'.$i], 1, $data['qtyInit'.$i],$tranId);
 				}
     		}
     		
@@ -116,6 +116,14 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 			);
 			$this->_name='st_product_location';
 			$where="id=".$data['id'];
+			$this->update($arr, $where);
+			
+			
+			$arr = array(
+					'qty'=>$data['beginingQty']
+				);
+			$this->_name='st_product_story';
+			$where="tranType =1 AND transId=".$data['id'];
 			$this->update($arr, $where);
     		$db->commit();
     	}catch (Exception $e){
