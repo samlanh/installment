@@ -179,7 +179,7 @@ class Stockinout_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
     	$sql=" SELECT 
     		id,
     		DATE_FORMAT(adjustDate,'%d-%m-%Y') AS name
-    	FROM $this->_name WHERE 1 ";
+    	FROM $this->_name WHERE isClosed=0 ";
     	
     	if(isset($data['isApproved'])){
     		$sql.=" AND isApproved=".$data['isApproved'];
