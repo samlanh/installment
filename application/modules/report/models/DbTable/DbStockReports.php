@@ -119,6 +119,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 			    		p.barCode,
 			    		l.qty AS currentQty,
 			    		p.measureLabel AS measureTitle,
+			    		(SELECT i.budgetTitle FROM `st_budget_item` AS i WHERE i.id=p.budgetId LIMIT 1) budgetTitle,
 			    		l.costing,
 			    		(SELECT c.categoryName FROM `st_category` as c WHERE c.id=p.categoryId LIMIT 1) categoryName
 	    		FROM

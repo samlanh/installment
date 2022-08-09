@@ -110,18 +110,25 @@
 
                        <div class="">
                        		<h4 class="blue m-b-5"><i class="fa fa-map-marker " aria-hidden="true"></i> <?php echo $rs['branch_name'];?>&nbsp;</h4>
-                       		<h4 class="blue m-b-5"><i class="fa fa-file-text-o " aria-hidden="true"></i> <?php echo $rs['requestNo'];?>&nbsp;</h4>
-                       		<h4 class="m-b-5"><i class="fa fa-calendar " aria-hidden="true"></i> <?php echo date($montFomat,strtotime($rs["date"]));?>&nbsp;</h4>
-							<h4 class="m-b-5"><?php echo $rs['requestNoLetter'];?>&nbsp;</h4>
-                       		
-						<p class="text-muted requestPurpose">                           
-						   
-						   <small class="text-purpose">
-							<?php if(!empty($rs['purpose'])){ echo $rs['purpose'];}else{ echo "&nbsp;";} ?>
-							</small>
-						</p>
                        </div>
 					   <div class="col-md-6 col-sm-6 col-xs-12">
+							<p class="text-muted info-list font-13">
+								<span class="title-info"><?php echo $tr->translate('REQUEST_PO');?></span>
+							</p>
+								<ul class="stepInfoList">
+									<li class="red">
+										<strong><?php echo !empty($rs['requestNo'])?$rs['requestNo']:"_________";?></strong>
+									</li>
+									<li>
+										<?php echo !empty($rs['date'])?date($montFomat,strtotime($rs["date"])):"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['requestNoLetter'])?"<small>".$rs['requestNoLetter']."</small>":"_________";?>
+									</li>
+									<li>
+										<?php echo !empty($rs['purpose'])?"<small>".$rs['purpose']."</small>":"_________";?>
+									</li>
+								</ul>
 							<p class="text-muted info-list font-13">
 								<span class="title-info"><?php echo $tr->translate('CHECKING_INFO');?></span>
 							</p>
@@ -156,6 +163,9 @@
 										<?php echo !empty($rs['pCheckingNote'])?"<small>".$rs['pCheckingNote']."</small>":"_________";?>
 									</li>
 								</ul>
+							
+					   </div>
+					   <div class="col-md-6 col-sm-6 col-xs-12">
 							<p class="text-muted info-list font-13">
 								<span class="title-info"><?php echo $tr->translate('APPROVED_INFO');?></span>
 							 </p>
@@ -173,9 +183,6 @@
 										<?php echo !empty($rs['approveNote'])?"<small>".$rs['approveNote']."</small>":"_________";?>
 									</li>
 								</ul>
-					   </div>
-					   <div class="col-md-6 col-sm-6 col-xs-12">
-							
 							<p class="text-muted info-list font-13">
 								<span class="title-info"><?php echo $tr->translate('PURCHASE_INFO');?></span>
 							</p>

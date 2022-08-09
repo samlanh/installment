@@ -24,6 +24,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 					p.barCode,
 					(SELECT c.categoryName from `st_category` as c WHERE c.id=p.categoryId LIMIT 1) categoryName,
 					(SELECT m.name FROM `st_measure` as m WHERE m.id=p.measureId LIMIT 1) MeasureName,
+					CONCAT(REPLACE(p.measureValue,'.00',''),p.measureLabel) AS Converted,
 					(SELECT $strLable FROM `st_view` WHERE type=2 AND key_code=p.isService LIMIT 1) isService,
 					(SELECT $strLable FROM `st_view` WHERE type=1 AND key_code=p.isCountStock LIMIT 1) isCountStock,
 					(SELECT i.budgetTitle FROM `st_budget_item` AS i WHERE i.id=p.budgetId LIMIT 1) budgetTitle,
@@ -45,6 +46,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     		$s_where[] = " P.proName LIKE '%{$s_search}%'";
     		$s_where[] = " P.proCode LIKE '%{$s_search}%'";
     		$s_where[] = " P.barCode LIKE '%{$s_search}%'";
+    		$s_where[] = " P.measureLabel LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	
@@ -213,7 +215,8 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 		    	p.createDate,
 		    	(SELECT name_en FROM ln_view WHERE type=3 and key_code = p.status LIMIT 1) AS status
 		    		
-		    	FROM $this->_name AS p  ";
+		    	FROM $this->_name AS p  WHERE proId=".$proId;
+    	$sql.=" LIMIT 1";
     	return $db->fetchRow($sql);
     }
    

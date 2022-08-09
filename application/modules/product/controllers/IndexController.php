@@ -33,10 +33,11 @@ class Product_IndexController extends Zend_Controller_Action {
 		}
 			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PRODUCT_NAME","PRODUCT_CODE","BAR_CODE","PRODUCT_CATEGORY","MEASURE","SERVICE_PRODUCT",
+			$collumns = array("PRODUCT_NAME","PRODUCT_CODE","BAR_CODE","PRODUCT_CATEGORY","MEASURE","labelMeasure","SERVICE_PRODUCT",
 							  "IS_COUNT_STOCK","BUDGET_ITEM","BY_USER","CREATE_DATE","STATUS");
 			$link=array('module'=>'product','controller'=>'index','action'=>'edit');
-			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('proName'=>$link,'proCode'=>$link,'barCode'=>$link,'categoryName'=>$link));
+			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('proName'=>$link,'proCode'=>$link,
+					'barCode'=>$link,'categoryName'=>$link,'MeasureName'=>$link));
 			
 			$frm = new Application_Form_FrmAdvanceSearchStock();
 			$frm = $frm->AdvanceSearch();
