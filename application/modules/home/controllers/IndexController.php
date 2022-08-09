@@ -14,6 +14,15 @@ public function init()
 		if (empty($userid)){
 			$this->_redirect("/index");
 		}
+		
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+    	$username = $session_user->first_name;
+    	$systemType = $session_user->systemType;
+		if($systemType==2){
+			$this->_redirect("/home/request/");
+			exit();
+		}
+		
 		$db_user=new Application_Model_DbTable_DbUsers();
 		$user_info = $db_user->getUserInfo($userid);
 		

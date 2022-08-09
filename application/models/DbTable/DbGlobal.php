@@ -151,8 +151,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$result="";
 		if(!empty($branch_list)){
 			$level = $session_user->level;
-			$level = 1;
-			if($level==1 OR $level==2){
+			if($level==1){
 				$result.= "";
 			}
 			else{
