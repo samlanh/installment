@@ -579,6 +579,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 					(SELECT p.proCode FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proCode,
 					(SELECT p.measureLabel FROM st_product p WHERE p.proId=sd.proId LIMIT 1) measureLabel,
 					sd.qtyReceive,
+					sd.qtyAfterReceive,
 					sd.isClosed,
 					sd.note
 				FROM `st_receive_stock_detail` AS sd
