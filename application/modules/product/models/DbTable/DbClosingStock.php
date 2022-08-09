@@ -35,17 +35,31 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql.$where_date.$where.$order);
     }
+    function updatePreviousClosingEntry($branchId,$endDate){
+    	$sql="SELECT id FROM $this->_name WHERE projectId=".$branchId." ORDER BY closingDate DESC LIMIT 1";
+    	$db = $this->getAdapter();
+    	$closedId = $db->fetchOne($sql);
+    	
+    	if(!empty($closedId)){
+    		$arr = array(
+    				'toDate'=>$endDate
+    			);
+    		$where='id='.$closedId;
+    		$this->update($arr, $where);
+    	}
+    }
    
     function addClosingEntry($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try
     	{
+    		$this->updatePreviousClosingEntry($data['branch_id'], $data['date']);
+    		
     		$dbs = new Application_Model_DbTable_DbGlobalStock();
     		$arr = array(
     				'projectId'=>$data['branch_id'],
     				'adjustId'=>$data['adjustDate'],
-    				'fromDate'=>$data['date'],
     				'closingDate'=>$data['date'],
     				'note'=>$data['note'],
     				'userId'=>$this->getUserId(),
