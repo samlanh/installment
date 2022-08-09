@@ -12,21 +12,9 @@
 	}
 	
 	$branch_title = $tr->translate("BRAND_TITLE");
-	$dbAcc = new Report_Model_DbTable_DbAccountant();
-	$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
-	$arrStep = array(
-			'keyIndex'=>1,//Purchase By Request
-			'typeKeyIndex'=>1,
-		);
-	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
-	$arrStep = array(
-			'keyIndex'=>1,//Purchase 
-			'typeKeyIndex'=>4,
-		);
-	$purchaseTypeOPt = $dbGBstock->purchasingTypeKey($arrStep);
 	$search=$this->search;
 ?>
-<title><?php echo $tr->translate("RPT_RECRIVESTOCK");?></title>
+<title><?php echo $tr->translate("RPT_RECEIVE_STOCK");?></title>
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
@@ -34,7 +22,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_RECRIVESTOCK');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_RECEIVE_STOCK');?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -42,7 +30,7 @@
 	    </div>
 		<form method="post">
 			<div class="card-box">
-		    	<div class="form-group"> 
+		    	 <div class="form-group">
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement("adv_search");?>
 					</div>
@@ -50,25 +38,26 @@
 						<?php echo $frm->getElement("branch_id");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("verifyStatus");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("supplierId");?>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement("start_date");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement("end_date");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("supplierId");?>
+						<?php echo $frm->getElement("status");?>
 					</div>
-					<div class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("purchaseType");?>
-					</div>
+					 <div class="col-md-2 col-sm-2 col-xs-12">
+					 	<?php echo $frm->getElement("btn_search");?>
+					 </div>
 				</div>
-				<div class="form-group"> 
-					
-					<div class="col-md-2 col-sm-2 col-xs-12">
-						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
-					</div>
-				</div>
-				
 			</div>
 		</form>
 		<div style="width:100%; margin:0 auto;">
@@ -105,7 +94,7 @@
 						margin:0;
 					  }
 						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-						@page {size: landscape}
+						@page {size: landscape;margin:0.5cm 0.2cm;}
 					}
 					.center{text-align: center !important;}
 					table.content-data{
@@ -118,23 +107,8 @@
 						background: #c1d0f3;
 						font-weight:600;
 					}
-					table.tb-footer{
-						border-collapse:collapse;
-						border:1px solid #000; 
-						font-size:13px;
-						font-family: 'Times New Roman','Khmer OS Battambang';
-					}
-					table.tb-footer tr{
-					 line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
-					}
 					table tr td{
 						padding:0 2px;
-					}
-					tr.voidclass {
-						background: #fff7f7;
-					}
-					td.centerText{
-						text-align: center;
 					}
 					td.rightText {
 						text-align: right;
@@ -144,42 +118,6 @@
 						color: #f80000;
 					}
 					
-					table.totalBottom{
-						line-height: 25px; 
-						font-size:12px !important;
-						font-family: 'Times New Roman','Khmer OS Battambang';
-					}
-					table.totalBottom tr td{
-						padding:2px;
-						line-height: 14px;
-					}
-					table.totalBottom tr.rowHead td {
-						padding: 4px 0;
-						font-weight: 600;
-					}
-					table.totalBottom tr.rowHead td.mainCol {
-						width: 30%;
-						border-bottom: solid 1px #000;
-						border-top: solid 1px #000;
-						padding: 2px 0;
-					}
-					table.totalBottom td.blankCol {
-						width: 5%;
-					}
-					table.totalBottom td.sideCol {
-						width: 20%;
-					}
-					table.totalBottom td.valueData {
-					}
-					table.totalBottom td.valueData.totalVal {
-						font-weight: 600;
-					}
-					table.totalBottom tr.rowBottom td.mainCol {
-						border-top: solid 2px #000;
-						padding: 2px 0;
-						font-size: 12px;
-						font-weight: 600;
-					}
 					.lbTitle{
 						display:block;
 					    line-height:20px;
@@ -190,8 +128,6 @@
 					    line-height:14px;
 						
 					}
-					
-				    
 				</style>
 				<table width="100%">
 					<tr>
@@ -222,76 +158,78 @@
 						
 					                </tr>
 					                <tr class="style" align="center">
-					                	<td style="padding:1px; ">
-											<span class="lbTitle">គម្រោង​</span>  
-											<small class="lbEng">Project Name</small>
-										</td>                   
-					                    <td style="padding:1px;">
-											<span class="lbTitle">កាលបរិច្ឆេទទទួល</span> 
-											<small class="lbEng">Receive Date</small>
-										</td>
-					                    <td style="padding:1px;">
-											<span class="lbTitle">ប្រភេទឯកសាទទួល</span> 
-											<small class="lbEng">Document Type</small>
-										</td>
-					                    <td style="padding:1px;">
-											<span class="lbTitle">លេខប័ណ្ណទទួល/វិក្កយបត្រ</span>
-											<small class="lbEng">DN/invoice No.</small>
-										 </td>
-										<td style="padding:1px;">
-											<span class="lbTitle">ស្ថានការទទួល</span> 
-											<small class="lbEng">Receive Status</small>
-										</td>
-										<td style="padding:1px;">
-											<span class="lbTitle">អ្នកប្រគល់ទំនិញ</span> 
-											<small class="lbEng">Giver Name</small>
-										</td>
-					                    <td style="padding:1px;">
-											<span class="lbTitle">ស្លាកលេខឡាន</span> 
-											<small class="lbEng">Plate No.</small>
-										</td>	                    
-					                    <td style="padding:1px;">
-											<span class="lbTitle">អ្នករាប់ទំនិញ</span>  
-											<small class="lbEng">Counter</small>
-										</td>
-
-					                    <td style="padding:1px;">
-											<span class="lbTitle">លេខបញ្ជាទិញ</span> 
-											<small class="lbEng">Purchase No.</small>
-										</td>
-					                    <td style="padding:1px;">
-											<span class="lbTitle">ថ្ងៃបញ្ជាទិញ</span> 
-											<small class="lbEng">Purchase Date</small>
-										</td>					
-					                    <td style="padding:1px;">
-											<span class="lbTitle">អ្នកផ្គត់ផ្គង់</span> 
-											<small class="lbEng">Supplier Name</small>
-										</td>
-					                    <td style="padding:1px;">
-										<span class="lbTitle">លេខសំណើ</span>
-										<small class="lbEng">Request No.</small>
-									</td>
-					                    
-					                  
+						                	<td >
+												<span class="lbTitle">គម្រោង​</span>  
+												<small class="lbEng">Project Name</small>
+											</td>                   
+						                    <td>
+												<span class="lbTitle">កាលបរិច្ឆេទទទួល</span> 
+												<small class="lbEng">Receive Date</small>
+											</td>
+						                    <td>
+												<span class="lbTitle">ប្រភេទឯកសាទទួល</span> 
+												<small class="lbEng">Document Type</small>
+											</td>
+						                    <td>
+												<span class="lbTitle">លេខប័ណ្ណទទួល/វិក្កយបត្រ</span>
+												<small class="lbEng">DN/invoice No.</small>
+											 </td>
+											<td>
+												<span class="lbTitle">ស្ថានការទទួល</span> 
+												<small class="lbEng">Receive Status</small>
+											</td>
+											<td>
+												<span class="lbTitle">អ្នកប្រគល់ទំនិញ</span> 
+												<small class="lbEng">Giver Name</small>
+											</td>
+						                    <td>
+												<span class="lbTitle">ស្លាកលេខឡាន</span> 
+												<small class="lbEng">Plate No.</small>
+											</td>	                    
+						                    <td>
+												<span class="lbTitle">អ្នករាប់ទំនិញ</span>  
+												<small class="lbEng">Counter</small>
+											</td>
+	
+						                    <td>
+												<span class="lbTitle">លេខបញ្ជាទិញ</span> 
+												<small class="lbEng">Purchase No.</small>
+											</td>
+						                    <td>
+												<span class="lbTitle">ថ្ងៃបញ្ជាទិញ</span> 
+												<small class="lbEng">Purchase Date</small>
+											</td>					
+						                    <td>
+												<span class="lbTitle">អ្នកផ្គត់ផ្គង់</span> 
+												<small class="lbEng">Supplier Name</small>
+											</td>
+						                    <td>
+												<span class="lbTitle">លេខសំណើ</span>
+												<small class="lbEng">Request No.</small>
+											</td>
 					                </tr>
 					            </thead>
 				                <?php 
-				                	$totalRecord=count($this->row);
-				                	$gTotalAmount=0;
-				                	$i=1;
-				                ?>
-				                <?php 
-				                if(!empty($this->row)) foreach ($this->row as $index => $rs){
-									$gTotalAmount=$gTotalAmount+$rs["total"];
-									
+				                if(!empty($this->rows)) foreach ($this->rows as $key => $rs){
 								?>
-				                
-								
+									<tr class="style context-menu-one" oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" style="font-family: 'Khmer OS Battambang'; white-space:nowrap; ">
+					                	<td align="center"><?php echo $key+1;?></td>                   
+					                    <td align="left"><?php echo $rs['projectName'];?></td>
+					                    <td><?php echo $rs['receiveDate'];?></td>                   
+					                    <td align="left"><?php echo $rs['dnType'];?></td>
+					                    <td align="left"><?php echo $rs['dnNumber'];?></td>                   
+					                    <td><?php echo $rs['isIssueInvoice'];?></td>
+					                    <td><?php echo $rs['driverName'];?></td>                   
+					                    <td><?php echo $rs['plateNo'];?></td>
+					                    <td><?php echo $rs['staffCounter'];?></td>                   
+					                    <td><?php echo $rs['purchaseNo'];?></td>
+					                    <td><?php echo $rs['purchaseDate'];?></td>
+					                    <td align="left"><?php echo $rs['supplierName'];?></td>
+					                    <td><?php echo $rs['requestNo'];?></td>
+					                </tr>
 				                <?php }?>
-				               
 				            </table>
-							
-						    
+							<?php echo $this->footerReport;?>
 				    	</td>
 				    </tr>
 				</table>
@@ -339,5 +277,29 @@ function getBranchInfo(){
 		error: function(e) {
 		}
 	});
+}
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="usage"){
+				url='<?php echo $this->baseUrl()."/report/stockreport/rpt-receivestockdetail/id/";?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"usage": {name: "<?php echo $tr->translate("DELIVERY_NOTE");?>", icon: "fa-file-text"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
 }
 </script>

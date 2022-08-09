@@ -162,4 +162,63 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     		$db = $this->getAdapter();
     		return $db->fetchAll($sql.$where.$order);
     }
+    function getAllReceiveStock($search){
+    	$DATE_FORMAT = DATE_FORMAT_FOR_SQL;
+    	$sql="SELECT r.id,
+	    	(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
+	    	(SELECT name_kh FROM `st_view` WHERE type=4 AND key_code=r.dnType LIMIT 1) dnType,
+	    	r.dnNumber,
+	    	(SELECT name_kh FROM `st_view` WHERE type=5 AND key_code=r.isIssueInvoice LIMIT 1) isIssueInvoice,
+	    	r.plateNo,
+	    	r.driverName,
+	    	r.staffCounter,
+	    	DATE_FORMAT(r.receiveDate,'$DATE_FORMAT') As receiveDate,
+	    	(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
+	    	(SELECT purchaseNo FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseNo,
+	    	(SELECT DATE_FORMAT(p.date,'$DATE_FORMAT') FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseDate,
+	    	(SELECT requestNo FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) AS requestNo,
+	    	(SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
+	    	(SELECT name_en FROM ln_view WHERE type=3 and key_code = r.status LIMIT 1) AS status
+	    
+    	FROM `st_receive_stock` r WHERE 1 ";
+    	 
+    	 
+    	$from_date =(empty($search['start_date']))? '1': " r.receiveDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " r.receiveDate <= '".$search['end_date']." 23:59:59'";
+    	$where='';
+    	$where_date = " AND ".$from_date." AND ".$to_date;
+    	 
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = addslashes((trim($search['adv_search'])));
+    		$s_where[] = " r.dnNumber LIKE '%{$s_search}%'";
+    		$s_where[] = " r.driverName LIKE '%{$s_search}%'";
+    		$s_where[] = " r.plateNo LIKE '%{$s_search}%'";
+    		$s_where[] = " r.staffCounter LIKE '%{$s_search}%'";
+    
+    		$s_where[] = " (SELECT p.id FROM `st_purchasing` AS p WHERE p.id=r.poId AND purchaseNo LIKE '%{$s_search}%')";
+    		$s_where[] = " (SELECT s.id FROM `st_request_po` AS s WHERE s.id=r.requestId AND requestNo LIKE '%{$s_search}%')";
+    
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+//     	if($search['status']>-1){
+//     		$where.= " AND r.status = ".$search['status'];
+//     	}
+    	if($search['verifyStatus']>-1){
+    		$where.= " AND r.isIssueInvoice = ".$search['verifyStatus'];
+    	}
+    	if($search['branch_id']>0){
+    		$where.= " AND r.projectId = ".$search['branch_id'];
+    	}
+    	if($search['supplierId']>0){
+    		$where.= " AND r.supplierId = ".$search['supplierId'];
+    	}
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$where.= $dbg->getAccessPermission('r.projectId');
+    	 
+    	$order=' ORDER BY r.id DESC  ';
+    	 
+    	$db = $this->getAdapter();
+    	return $db->fetchAll($sql.$where.$where_date.$order);
+    }
 }

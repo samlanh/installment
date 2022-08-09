@@ -111,8 +111,6 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		$this->view->rsRow = $rs;
 		
 		$this->view->dnDetail = $db->getDNDetailById($id);
-		
-	
 	}
 	function getallproductbypoAction(){
 		if($this->getRequest()->isPost()){
