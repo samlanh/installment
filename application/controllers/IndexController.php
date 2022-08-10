@@ -87,6 +87,7 @@ class IndexController extends Zend_Controller_Action
 					//$session_user->theme_style=$db_user->getThemeByUserId($user_id);
 					$session_user->timeout= time();
 					$a_i = 0;
+					$arr_module = array();	
 					$arr_actin = array();	
 					for($i=0; $i<count($arr_acl);$i++){
 						$arr_module[$i]=$arr_acl[$i]['module'];

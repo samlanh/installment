@@ -157,8 +157,12 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 							qty,
 							(SELECT first_name FROM rms_users as u WHERE u.id = ss.userId LIMIT 1) AS user,
 							transDate
-						 FROM `st_product_story` 
-						   ss ORDER BY id DESC   ";
+						 FROM `st_product_story` ss
+						 
+						 WHERE 
+						 ss.proId=$productId
+						 AND ss.projectId=$ProjectId 
+						    ORDER BY id DESC   ";
     	    	return $db->fetchAll($sql);
     }
    

@@ -49,6 +49,7 @@ class Product_IndexController extends Zend_Controller_Action {
 			Application_Model_Decorator::removeAllDecorator($frm);
 			$this->view->frmSearchProduct = $frm;
 	}
+
 	function addAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
@@ -66,6 +67,7 @@ class Product_IndexController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frmProduct = $frm;
 	}
+
 	function editAction(){
 		$db = new Product_Model_DbTable_DbProduct();
 		if($this->getRequest()->isPost()){
@@ -106,6 +108,34 @@ class Product_IndexController extends Zend_Controller_Action {
 		
 		$dbs = new Application_Model_DbTable_DbGlobalStock();
 		$this->view->productLocation = $dbs->getProductLocationbyProId(array('productId'=>$id));
+	}
+
+	function copyAction(){
+		$db = new Product_Model_DbTable_DbProduct();
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			try {
+				$db->addNewProduct($_data);
+				Application_Form_FrmMessage::Sucessfull("COPY_SUCCESS","/product/index");
+			}catch(Exception $e){
+				Application_Form_FrmMessage::message("COPY_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+		
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		$result = $db->getProductbyId($id);
+		if(empty($id) OR empty($result)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index");
+		}
+		$this->view->photo = $result['image'];
+		$frm = new Product_Form_Frmproduct();
+		$frm = $frm->FrmAddProduct($result);
+		
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmProduct = $frm;
+		
 	}
 }
 
