@@ -1,29 +1,6 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
-	$dbGB = new Application_Model_DbTable_DbGlobal();
-
-	$montFomat=DATE_FORMAT_FOR_PHP;
-	
-	$headerReportType = REPORT_LETER_HEAD;
-	$classHideHeight="110px";
-	if($headerReportType==2){
-		$classHideHeight="125px";
-	}
-	
-	$branch_title = $tr->translate("BRAND_TITLE");
-	$dbAcc = new Report_Model_DbTable_DbAccountant();
-	$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
-	$arrStep = array(
-			'keyIndex'=>1,//Purchase By Request
-			'typeKeyIndex'=>1,
-		);
-	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
-	$arrStep = array(
-			'keyIndex'=>1,//Purchase 
-			'typeKeyIndex'=>4,
-		);
-	$purchaseTypeOPt = $dbGBstock->purchasingTypeKey($arrStep);
 	$search=$this->search;
 ?>
 <title><?php echo $tr->translate("RPT_ADJUST");?></title>
@@ -63,7 +40,6 @@
 					</div>
 				</div>
 				<div class="form-group"> 
-					
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 					</div>
@@ -73,18 +49,12 @@
 		</form>
 		<div style="width:100%; margin:0 auto;">
 		<div style="min-height:22cm; margin:0 auto;">
-			<style>
-				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
-				.hiddenblog{display: block !important;}
-			</style>
 			<div id="divPrint">
 				<style type="text/css">
 					.style{
 						line-height: 20px;font-size: 11px !important;
 						font-family: 'Times New Roman','Khmer OS Battambang';
 					}
-					.hideblog{display: none;}
-					.hiddenblog{display: block !important;}
 					.style1:hover{ background: #ccc; }
 					table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
 					table { page-break-inside:auto }
@@ -96,16 +66,16 @@
 					}
 					.hide{visibility: hidden;}
 					@media print {
-					 div.divFooter {
-					    position: fixed;
-					    top: 0;
-					  	width: 100%;
-					  	height: 100px;
-					  	bottom:0px;
-						margin:0;
-					  }
+						 div.divFooter {
+						    position: fixed;
+						    top: 0;
+						  	width: 100%;
+						  	height: 100px;
+						  	bottom:0px;
+							margin:0;
+						  }
 						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-						@page {size: landscape}
+						@page {size: portrait;}
 					}
 					.center{text-align: center !important;}
 					table.content-data{
@@ -118,67 +88,13 @@
 						background: #c1d0f3;
 						font-weight:600;
 					}
-					table.tb-footer{
-						border-collapse:collapse;
-						border:1px solid #000; 
-						font-size:13px;
-						font-family: 'Times New Roman','Khmer OS Battambang';
-					}
-					table.tb-footer tr{
-					 line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
-					}
+					
 					table tr td{
 						padding:0 2px;
-					}
-					tr.voidclass {
-						background: #fff7f7;
-					}
-					td.centerText{
-						text-align: center;
-					}
-					td.rightText {
-						text-align: right;
 					}
 					.redBold {
 						font-weight: 600;
 						color: #f80000;
-					}
-					
-					table.totalBottom{
-						line-height: 25px; 
-						font-size:12px !important;
-						font-family: 'Times New Roman','Khmer OS Battambang';
-					}
-					table.totalBottom tr td{
-						padding:2px;
-						line-height: 14px;
-					}
-					table.totalBottom tr.rowHead td {
-						padding: 4px 0;
-						font-weight: 600;
-					}
-					table.totalBottom tr.rowHead td.mainCol {
-						width: 30%;
-						border-bottom: solid 1px #000;
-						border-top: solid 1px #000;
-						padding: 2px 0;
-					}
-					table.totalBottom td.blankCol {
-						width: 5%;
-					}
-					table.totalBottom td.sideCol {
-						width: 20%;
-					}
-					table.totalBottom td.valueData {
-					}
-					table.totalBottom td.valueData.totalVal {
-						font-weight: 600;
-					}
-					table.totalBottom tr.rowBottom td.mainCol {
-						border-top: solid 2px #000;
-						padding: 2px 0;
-						font-size: 12px;
-						font-weight: 600;
 					}
 					.lbTitle{
 						display:block;
@@ -232,39 +148,35 @@
 										</td>  
 										<td cclass="center">
 											<span class="lbTitle">បរិមាណរាប់ក្នុងឃ្លាំង</span> 
-											<small class="lbEng">Main Stock Qty</small> 
+											<small class="lbEng">Exact Qty</small> 
 										</td>  
 										<td   class="center">
-											<span class="lbTitle">Difference</span> 
-											 <small class="lbEng">Difference</small>
+											<span class="lbTitle">បរិមាណលម្អៀង</span> 
+											 <small class="lbEng">Difference​ Qty</small>
 										</td>  
-										
-										
 										<td  class="center">
 											<span class="lbTitle">សម្គាល់</span>
 											  <small class="lbEng" >note</small>
 										</td>
-						
 					                </tr>
-					                
 					            </thead>
 				                <?php 
-				                	$totalRecord=count($this->row);
-				                	$gTotalAmount=0;
 				                	$i=1;
+				                if(!empty($this->rows)) foreach ($this->rows as $index => $rs){ 
+				                	$i++;
 				                ?>
-				                <?php 
-				                if(!empty($this->row)) foreach ($this->row as $index => $rs){
-									$gTotalAmount=$gTotalAmount+$rs["total"];
-									
-								?>
-				                
-								
+				                	<tr>
+				                		<td align="center"><?php echo $index+1;?></td>
+				                		<td><?php echo $rs['projectName'];?></td>
+				                		<td><?php echo $rs['adjustDate'];?></td>
+				                		<td><?php echo $rs['proName'];?></td>
+				                		<td><?php echo number_format($rs['currentQty'],2);?></td>
+				                		<td><?php echo number_format($rs['exactQty'],2);?></td>
+				                		<td><?php echo number_format($rs['exactQty']-$rs['currentQty'],2);?></td>
+				                		<td><?php echo $rs['note'];?></td>
+				                	</tr>
 				                <?php }?>
-				               
 				            </table>
-							
-						    
 				    	</td>
 				    </tr>
 				</table>
@@ -277,11 +189,9 @@
 	dojo.require("dojo.data.ItemFileWriteStore"); 
 	require(["dojo/ready"], function(ready){
 		ready(function(){
-			 
 			 getBranchInfo();
-			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_SUMMARY_STOCK");?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_ADJUST");?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['end_date'])); }?>';
 		});
 		

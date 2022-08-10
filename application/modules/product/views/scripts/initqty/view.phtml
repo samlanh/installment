@@ -102,10 +102,9 @@
 					}
 					.blgLeft {
 						min-width: 60px;
-						width:15%;
+						width:20%;
 					}
-					.left,.right,.center{width:120px;}
-					.line-movelist:hover{background: #eee;}
+					.left,.right,.center{width:180px;}
 					.line-movelist{background:#eee;}
 ]					
 					body {
@@ -115,9 +114,13 @@
 					{ 
 						margin: 1mm 5mm 5mm 5mm;  
 					} 
-					
+					.hover:hover{
+						background:#dde9f3;
+						border:1px dotted #000;
+					}
+					.hover{clear: both;}
 				</style>
-				<table class="tableTop" width="100%" style="border-bottom: double 5px #337ab7;">
+				<table class="tableTop" style="width:100%;border-bottom: double 5px #337ab7;">
 					<tbody>
 						<tr>
 							<td width="20%" id="projectlogo"><img src="<?php echo $imagelogo;?>" style=" height:85px; max-width: 100%; "></td>
@@ -137,7 +140,7 @@
 							<td> </td>
 							<td style="text-align: center;position: relative;">
 								<ul class="reportTitle">
-									<li style="font-size:16px; "><span id="reportTitle" style="font-family:'Khmer OS Muol Light';";><?php echo $tr->translate("PRODUCT_DETAIL_INFO");?></span></li>
+									<li style="font-size:16px; "><span id="reportTitle" style="font-family:'Khmer OS Muol Light';"><?php echo $tr->translate("PRODUCT_DETAIL_INFO");?></span></li>
 									<li style="font-size:12px;"><span id="staff_lbl"></span></li>
 								</ul>
 							</td>
@@ -193,7 +196,7 @@
 								</li>
 								<li>
 									<div class="blgLeft">
-										<span class="title-row"><?php echo $tr->translate("CREATE_BY");?> :</span><br />
+										<span class="title-row"><?php echo $tr->translate("BY_USER");?> :</span><br />
 									</div>
 									<div class="blgRight"><span class="values-row"><?php echo $rs['user'];?></span></div>
 								</li>
@@ -207,8 +210,6 @@
 						</td>
 					</tr>
 				</table>
-				
-				
 				<table class="content-data" border="1"​  width="100%">
 					<tr class="section-bg">
 						<td colspan="3"><i class="fa fa-th-list" aria-hidden="true"></i> <?php echo $tr->translate("SERVICE_PRODUCT");?> </td>
@@ -218,7 +219,7 @@
 							<ul class="dataValue">
 								<li>
 									<div class="blgLeft">
-										<span class="title-row"><?php echo $tr->translate("SERVICE_PRODUCT");?></span><br />
+										<span class="title-row"><?php echo $tr->translate("SERVICE_PRODUCT");?> :</span><br />
 									</div>
 									<div class="blgRight"><span class="values-row"><?php echo $rs['isService'];?></span></div>
 								</li>
@@ -246,15 +247,15 @@
 								</li>
 								<li>
 									<div class="blgLeft">
-										<span class="title-row"><?php echo $tr->translate("QTY");?> :</span><br />
+										<span class="title-row"></span><br />
 									</div>
-									<div class="blgRight"><span class="values-row"><?php echo $proLocation['qty'].'&nbsp; '.$rs['measureLabel'];?></span></div>
+									<div class="blgRight"><span class="values-row"></span></div>
 								</li>
 								<li>
 									<div class="blgLeft">
 										<span class="title-row"><?php echo $tr->translate("labelMeasure");?> :</span><br />
 									</div>
-									<div class="blgRight"><span class="values-row"><?php echo $rs['measureLabel'];?></span></div>
+									<div class="blgRight"><span class="values-row"><?php echo $rs['measureValue'].$rs['measureLabel'];?></span></div>
 								</li>
 							</ul>
 						</td>
@@ -262,15 +263,15 @@
 							<ul class="dataValue">
 								<li>
 									<div class="blgLeft">
-										<span class="title-row"><?php //echo $tr->translate("COSTING");?> :</span><br />
-									</div>
-									<div class="blgRight"><span class="values-row"><?php //echo $rs['costing'];?></span></div>
-								</li>
-								<li>
-									<div class="blgLeft">
 										<span class="title-row"><?php echo $tr->translate("BUDGET_ITEM");?> :</span><br />
 									</div>
 									<div class="blgRight"><span class="values-row"><?php echo $rs['budgetTitle'];?></span></div>
+								</li>
+								<li>
+									<div class="blgLeft">
+										<span class="title-row"></span><br />
+									</div>
+									<div class="blgRight"><span class="values-row"></span></div>
 								</li>
 								<li>
 									<div class="blgLeft">
@@ -285,30 +286,57 @@
 				
 				<table class="content-data" border="1"​  width="100%">
 					<tr class="section-bg">
-						<td colspan="3"><i class="fa fa-th-large" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_MOVEMENT");?> </td>
+						<td colspan="3"><i class="fa fa-th-large" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_LOCATION");?> </td>
 					</tr>
 					<tr >
 						<td colspan="3">
 							<ul class="dataValue">
-								<?php if(!empty($this->productMovement))foreach($this->productMovement as $key=> $row){?>
-									<li class="<?php if($key%2==0){ echo "line-movelist";}?>">
-										<div class="blgLeft left">
-											<span class="title-row"><?php echo $key+1;?>&nbsp;&nbsp;<?php echo getSign($row['tranType'])." ".$row['tranTypeValue'];?></span><br />
+									<li>
+										<div class="blgLeft">
+											<span class="title-row"><strong><i class="fa fa-university" aria-hidden="true"></i> <?php echo $proLocation['projectName'];?></strong></span><br />
 										</div>
-										<div class="blgRight right"><span class="values-row"><strong> <i class="fa fa-calendar" aria-hidden="true"></i></strong> <?php echo date("d-m-Y",strtotime($row['transDate']));?></span></div>
-										<div class="blgRight center"><span class="values-row"><strong><?php echo $row['qty'].' '.$rs['measureLabel'];?></strong></span></div>
+										<div class="blgRight"><span class="values-row"><strong><?php echo $proLocation['qty'].'&nbsp; '.$rs['measureLabel'];?></strong></span></div>
+										<div class="blgRight"><span class="values-row"><strong> <i class="fa fa-money" aria-hidden="true"></i> <?php echo $tr->translate("COSTING").$proLocation['costing'];?></strong></span></div>
 									</li>
-								<?php }?>
 							</ul>
 						</td>
 					</tr>
 				</table>
+				
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td colspan="3"><i class="fa fa-th-large" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_MOVEMENT");?> </td>
+					</tr>
+					<tr >
+						<td colspan="3">
+							<table style="font-size: 12px;">
+								<tr style="line-height: 30px; font-weight: bold;">
+										<td><i class="fa fa-arrows-v" aria-hidden="true"></i>ល.រ<br />No.</td>
+										<td class="center"><i class="fa fa-list-alt" aria-hidden="true"></i>&nbsp;ប្រភេទប្រតិបត្តិការ <br />Transaction Type</td>
+										<td class="right"><i class="fa fa-calendar" aria-hidden="true"></i></strong>&nbsp;&nbsp;ថ្ងៃធ្វើប្រតិបត្តិការ <br /> Transaction Date</td>
+										<td class="center"><i class="fa fa-sort-numeric-desc" aria-hidden="true"></i> &nbsp;បរិមាណ <br />Qty</strong></td>
+										<td class="center"><i class="fa fa-user" aria-hidden="true"></i>អ្នកធ្វើប្រតិបត្តិការ <br />Create User</strong></td>
+									</tr>
+								<?php if(!empty($this->productMovement))foreach($this->productMovement as $key=> $row){?>
+									<tr class="hover <?php if($key%2===0)echo "line-movelist";?>">
+										<td width="50px">&nbsp;&nbsp;<?php echo $key+1;?>&nbsp;&nbsp;<?php echo getSign($row['tranType']);?></td>
+										<td class="right">&nbsp;&nbsp;<?php echo $row['tranTypeValue'];?></td>
+										<td class="right"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;<?php echo date("d-m-Y",strtotime($row['transDate']));?></td>
+										<td class="center"><?php echo $row['qty'].' '.$rs['measureLabel'];?></td>
+										<td class="center"><?php echo $row['user'];?></td>
+									</tr>
+								<?php }?>
+							</table>
+						</td>
+					</tr>
 				</table>
 				<?php //echo $this->footerReport;?>
 			</div>
-    	</td>	
-</tr>
-</table>
+				<input type="button" onclick="doPrint();"  value="SAVE_NEW" tabindex="3" label="<?php echo $tr->translate('PRINT');?>"  dojoType="dijit.form.Button" name="save_new"
+					iconClass="dijitEditorIcon dijitEditorIconPrint"/> 
+			</td>
+		</tr>
+	</table>
 </div>
 <?php 
 function getSign($index){
@@ -324,3 +352,10 @@ function getSign($index){
 	return $array[$index];
 }
 ?>
+<script>
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+}
+</script>

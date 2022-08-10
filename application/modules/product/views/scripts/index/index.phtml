@@ -3,6 +3,9 @@
 	echo $this->headTitle($tr->translate("PRODUCT_LIST"));
 	$frm = $this->frm_search;
 	$frmProduct = $this->frmSearchProduct;
+	$budgetType= $this->search;
+	
+
 ?>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
@@ -29,6 +32,9 @@
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frmProduct->getElement('categoryId');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+							<input id="budgetType" name="budgetType"/>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frmProduct->getElement('budgetItem');?>
@@ -69,6 +75,66 @@
 		$urlHistory = $this->baseUrl()."/product/index/view/id/";
 		
 ?>
+
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
+<script type="text/javascript">
+dojo.require('dijit.form.CheckBox');
+dojo.require('dijit.form.NumberTextBox');
+dojo.require("dojo.data.ItemFileWriteStore"); 
+require(["dojo/ready"], function(ready){
+	ready(function(){
+
+		new dijit.form.FilteringSelect({
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: false,		           
+			name: "budgetType",
+			placeHolder:'budgetType',
+			id: "budgetType",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+				getBudgetItem();
+			}
+		}, "budgetType");
+
+		getBudgetType();
+		getBudgetItem();
+
+	
+		});
+});
+
+
+		
+
+		function getBudgetType(){
+			urlGetBudgetType ='<?php echo $this->url(array('module'=>'budget','controller'=>'type','action'=>'getbudgettype'))?>';
+			contentData = {
+					'noBtnNew':'1',
+	    	};
+			getAllBudgetType(urlGetBudgetType,contentData);
+			setTimeout(function () {
+			dijit.byId('budgetType').attr('value','<?php echo $budgetType; ?>');
+			}, 800);
+	    }
+		function getBudgetItem(){
+			budgetType = dijit.byId('budgetType').get('value');
+			if(budgetType){
+	    		urlGetBudgetItem = '<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'get-allbudgetitem'));?>';
+				contentData = {
+		    		'budgetType':budgetType,
+		    	};
+				getAllBudgetItem(urlGetBudgetItem,contentData);
+
+				
+			
+	       }
+	   }
+	
+</script>
+
 <script>	
 dojo.require("dijit.form.DateTextBox");
 

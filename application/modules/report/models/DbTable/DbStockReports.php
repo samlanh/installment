@@ -132,13 +132,13 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     		$where='';
     		 
     		if(!empty($search['adv_search'])){
-    		$s_where = array();
-    		$s_search = (trim($search['adv_search']));
-    		$s_where[] = " p.proName LIKE '%{$s_search}%'";
-    		$s_where[] = " p.proCode LIKE '%{$s_search}%'";
-    		$s_where[] = " p.barCode LIKE '%{$s_search}%'";
-    		$s_where[] = " p.measureLabel LIKE '%{$s_search}%'";
-    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    			$s_where = array();
+	    		$s_search = (trim($search['adv_search']));
+	    		$s_where[] = " p.proName LIKE '%{$s_search}%'";
+	    		$s_where[] = " p.proCode LIKE '%{$s_search}%'";
+	    		$s_where[] = " p.barCode LIKE '%{$s_search}%'";
+	    		$s_where[] = " p.measureLabel LIKE '%{$s_search}%'";
+	    		$where .=' AND ( '.implode(' OR ',$s_where).')';
     		}
     		 
 //     		if($search['isCountStock']>-1){
@@ -148,12 +148,11 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     			$where.= " AND p.categoryId = ".$search['categoryId'];
     		}
     		if($search['branch_id']>0){
-    		$where.= " AND l.projectId = ".$search['branch_id'];
+    			$where.= " AND l.projectId = ".$search['branch_id'];
     		}
     		if($search['measureId']>0){
-    		$where.= " AND p.budgetId = ".$search['measureId'];
+    			$where.= " AND p.budgetId = ".$search['measureId'];
     		}
-    			 
     			 
     		$dbg = new Application_Model_DbTable_DbGlobal();
     		$where.= $dbg->getAccessPermission('l.projectId');
@@ -221,5 +220,47 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     	 
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql.$where.$where_date.$order);
+    }
+    function getAllAdjustStock($search){
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	$approved = $tr->translate("APPROVED");
+    	$reject =  $tr->translate("REJECTED");
+    	
+    	$DATE_FORMAT = DATE_FORMAT_FOR_SQL;
+    	
+    	$sql="SELECT
+			    	sa.id,
+			    	(SELECT project_name FROM `ln_project` WHERE br_id=sa.projectId LIMIT 1) AS projectName,
+			    	DATE_FORMAT(sa.adjustDate,'$DATE_FORMAT') AS adjustDate,
+			    	(SELECT first_name FROM rms_users WHERE id=sa.userId LIMIT 1 ) AS user_name,
+			    	CASE WHEN sa.isApproved=1 THEN '$approved'
+			    	ELSE '$reject'
+			    	END AS status,
+			    	sa.approvedDate,
+			    	(SELECT first_name FROM rms_users WHERE id=sa.approvedBy LIMIT 1) approvedBy,
+			    	(SELECT CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,''))  FROM `st_product` AS p WHERE p.`proId`=ad.proId LIMIT 1) AS proName,
+			    	ad.currentQty,
+			    	ad.exactQty,
+			    	ad.note
+    		FROM `st_adjust_stock` sa ,
+    			st_adjust_detail AS ad
+    		WHERE sa.id=ad.adjustId ";
+    	 
+    	$from_date =(empty($search['start_date']))? '1': " sa.adjustDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " sa.adjustDate <= '".$search['end_date']." 23:59:59'";
+    	 
+    	$where_date = " AND ".$from_date." AND ".$to_date;
+    	$where='';
+    	 
+    	if($search['branch_id']>-1){
+    		$where.= " AND sa.projectId = ".$search['branch_id'];
+   		}
+   		
+	    $dbg = new Application_Model_DbTable_DbGlobal();
+	    $where.= $dbg->getAccessPermission('so.projectId');
+	     
+	    $order=' ORDER BY sa.id DESC  ';
+	    $db = $this->getAdapter();
+	    return $db->fetchAll($sql.$where_date.$where.$order);
     }
 }
