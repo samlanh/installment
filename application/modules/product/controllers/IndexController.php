@@ -11,6 +11,7 @@ class Product_IndexController extends Zend_Controller_Action {
 		try{
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
+				
 			}
 			else{
 				$search = array(
@@ -18,6 +19,7 @@ class Product_IndexController extends Zend_Controller_Action {
 					'isService'=>-1,
 					'isCountStock'=>-1,
 					'categoryId'=>0,
+					'budgetType'=>0,
 					'budgetItem'=>0,
 					'measureId'=>0,
 					'status'=>-1,
@@ -26,6 +28,7 @@ class Product_IndexController extends Zend_Controller_Action {
 				);
 			}
 			$rs_rows= $db->getAllProductData($search);
+
 			
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
@@ -48,6 +51,9 @@ class Product_IndexController extends Zend_Controller_Action {
 			$frm = $frm->FrmSearchProduct();
 			Application_Model_Decorator::removeAllDecorator($frm);
 			$this->view->frmSearchProduct = $frm;
+			$this->view->search =$search['budgetType'];
+		    
+		
 	}
 
 	function addAction(){

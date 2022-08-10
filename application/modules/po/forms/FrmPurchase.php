@@ -15,6 +15,10 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 		$dbGB = new Application_Model_DbTable_DbGlobal(); 
     	$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
     	
+		$userInfo = $dbGB->getUserInfo();
+		$userLevel=0;
+		$userLevel = empty($userInfo['level'])?0:$userInfo['level'];
+		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -56,6 +60,11 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
  			'class'=>'fullside',
  			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
  		));
+		if($userLevel!=1){ // NOt Admin
+			$date->setAttribs(array(
+				'readOnly'=>'readOnly',
+			));
+		}
 		$date->setValue(date("Y-m-d"));
 		
 		$supplierId = new Zend_Dojo_Form_Element_FilteringSelect('supplierId');

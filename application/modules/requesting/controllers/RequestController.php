@@ -176,6 +176,15 @@ class Requesting_RequestController extends Zend_Controller_Action {
 			
 		}
 	}
-	
+	function getRequestinfohtmlAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Requesting_Model_DbTable_DbRequest();
+			$_row =$db->getRequestInfoHTML($data);
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
 	
 }

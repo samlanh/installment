@@ -17,6 +17,10 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
 		$dbGB = new Application_Model_DbTable_DbGlobal(); 
     	$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
     	
+		$userInfo = $dbGB->getUserInfo();
+		$userLevel=0;
+		$userLevel = empty($userInfo['level'])?0:$userInfo['level'];
+		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -74,6 +78,11 @@ Class Invpayment_Form_FrmInvoice extends Zend_Dojo_Form {
  			'class'=>'fullside',
  			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
  		));
+		if($userLevel!=1){ // NOt Admin
+			$receiveIvDate->setAttribs(array(
+				'readOnly'=>'readOnly',
+			));
+		}
 		$receiveIvDate->setValue(date("Y-m-d"));
 		
 		

@@ -310,5 +310,42 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		return $db->fetchRow($sql);
 	}
 	
+	function getRequestInfoHTML($data){
+		
+		$_row =$this->getRequestPOInfoById($data);
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$string="";
+		if(!empty($_row)){
+			$string.='
+				<div class="form-group" style=" padding: 10px; ">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<span class="noteInfo"><i class="fa fa-file-text-o" aria-hidden="true"></i> '.$tr->translate("REQUEST_INFO").'</span>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<ul>
+							<li><span class="lbl-tt">'.$tr->translate("BRANCH_NAME").'</span>: <span class="colorValue">'.$_row['branch_name'].'</span></li>
+							<li><span class="lbl-tt">'.$tr->translate("REQUEST_NO").'</span>: <span class="colorValue">'.$_row['requestNo'].'</span></li>
+							<li><span class="lbl-tt">'.$tr->translate("REQUEST_NO_FROM").'</span>: <span class="colorValue">'.$_row['requestNoLetter'].'</span></li>
+							<li><span class="lbl-tt">'.$tr->translate("REQUEST_DATE").'</span>: <span class="colorValue">'.date(DATE_FORMAT_FOR_PHP,strtotime($_row['date'])).'</span></li>
+							<li><span class="lbl-tt">'.$tr->translate("REQUEST_BY").'</span>: <span class="colorValue">'.$_row['requestByname'].'</span></li>
+						</ul>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<ul>
+							<li><span class="lbl-tt">'.$tr->translate("PURPOSE").'</span>: <span class="colorValue">'.$_row['purpose'].'</span></li>
+							<li><span class="lbl-tt">'.$tr->translate("NOTE").'</span>: <span class="colorValue">'.$_row['note'].'</span></li>
+						</ul>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			';
+		}
+		$arrayReturn = array(
+			'rowResult'=>$_row,
+			'htmlBlog'=>$string,
+		);
+		return $arrayReturn;
+	}
+	
 	
 }
