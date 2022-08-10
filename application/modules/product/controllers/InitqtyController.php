@@ -34,7 +34,8 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		$list = new Application_Form_Frmtable();
 		$collumns = array("PROJECT_NAME","PRODUCT_NAME","BAR_CODE","CURRENT_QTY","MEASURE","COSTING","PRODUCT_CATEGORY");
 		$link=array('module'=>'product','controller'=>'initqty','action'=>'edit');
-		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(''=>$link));
+		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('projectName'=>$link,
+				'name'=>$link,'barCode'=>$link,'currentQty'=>$link));
 		
 		$frm = new Application_Form_FrmAdvanceSearchStock();
 		$frm = $frm->AdvanceSearch();
@@ -69,7 +70,7 @@ class Product_InitqtyController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {
 				$db->updateData($_data);
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/product/initqty/");
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/product/initqty/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -79,7 +80,7 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$row = $db->getDataRow($id);
 		if(empty($id) OR empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/initqty/");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/initqty/index");
 		}
 		if($row['recordHistory']>1){
 			Application_Form_FrmMessage::Sucessfull("Can not edit this data","/product/initqty/");

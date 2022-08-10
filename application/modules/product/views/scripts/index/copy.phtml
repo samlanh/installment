@@ -1,7 +1,7 @@
 <?php
 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('ADD'));
+	echo $this->headTitle($tr->translate('COPY'));
 	$frm = $this->frmProduct;
 	
 ?>	
@@ -68,7 +68,7 @@ input.btn_borwse_image {
 			<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-cubes" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-cubes" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('COPY');?></h4>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -133,7 +133,7 @@ input.btn_borwse_image {
 	                   </div>
 	                </div>
 	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("MEASURE");?>*</strong>
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("MEASURE");?></strong>*
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('measureId');?>
@@ -163,6 +163,8 @@ input.btn_borwse_image {
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('labelMeasure');?>
+	                    	<input type="hidden" name="oldMeasure"  id="oldMeasure" dojoType="dijit.form.ValidationTextBox"/>
+	                    	<input type="hidden" name="oldMeasureValue" id="oldMeasureValue" dojoType="dijit.form.ValidationTextBox"/>
 	                   </div>
 	                </div>
 	                <div class="form-group" style="display: none;">
@@ -172,15 +174,6 @@ input.btn_borwse_image {
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('costing');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
-	                   		<strong><?php echo $tr->translate("BUDGET_TYPE");?></strong>
-	                   		<span class="control-label col-md-2 col-sm-2" ><i class="fa fa-money" aria-hidden="true"></i></span>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="budgetType" />
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -212,16 +205,21 @@ input.btn_borwse_image {
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                   <?php 
-							$images = $this->baseUrl().'/images/no-photo.png';
+						$images = $this->baseUrl().'/images/no-photo.png';
+						if (!empty($this->photo)){
+							$images = $this->baseUrl().'/images/'.$this->photo;
+						}
 						?>
 						<div class="account-image" >
 							<div class="image-box">
 								<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
 							</div>
 							<div class="button_browse">
-							<div id='preview'></div>	
+								<div id='preview'></div>	
 								<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
 								<input class="btn_borwse_image" type="file" id="photo" name="photo" />
+								<?php echo $frm->getElement('oldPhoto');?>
+								<?php echo $frm->getElement('id');?>
 							</div>
 						</div>
 	                   </div>
@@ -245,15 +243,17 @@ input.btn_borwse_image {
 dojo.require('dijit.form.CheckBox');
 dojo.require('dijit.form.NumberTextBox');
 dojo.require("dojo.data.ItemFileWriteStore"); 
+
 require(["dojo/ready"], function(ready){
 	ready(function(){
-		getBudgetType();
+		
+		dijit.byId('oldMeasure').attr('value',dijit.byId('labelMeasure').get('value'));
+		dijit.byId('oldMeasureValue').attr('value',dijit.byId('qtyMeasure').get('value'));
 		
 		var isService = dijit.byId('isService');
 		isService.on('change', function(evt){
 			dijit.byId('qtyMeasure').set('required',true);
 			dijit.byId('labelMeasure').set('required',true);
-			//dijit.byId('costing').set('required',true);
 
 			dijit.byId('qtyMeasure').set('readOnly',false);
 			dijit.byId('labelMeasure').set('readOnly',false);
@@ -273,81 +273,53 @@ require(["dojo/ready"], function(ready){
 		});
 });
 
+$("#photo").change(function(){
+    readURL(this);
+});
+$(function(){
+	bs_input_file();
+});
 
-		new dijit.form.FilteringSelect({
-			autoComplete: false,
-			queryExpr: "*${0}*",
-			required: false,		           
-			name: "budgetType",
-			placeHolder:'budgetType',
-			id: "budgetType",
-			searchAttr: "name",
-			class: 'fullside',
-			onChange: function() {
-				getBudgetItem();
-			}
-		}, "budgetType");
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		ConvertMeasure();
+	 });
+});
 
-		function getBudgetType(){
-			urlGetBudgetType ='<?php echo $this->url(array('module'=>'budget','controller'=>'type','action'=>'getbudgettype'))?>';
-			contentData = {
-					'noBtnNew':'1',
-	    	};
-			getAllBudgetType(urlGetBudgetType,contentData);
-	    }
-		function getBudgetItem(){
-			budgetType = dijit.byId('budgetType').get('value');
-			if(budgetType){
-	    		urlGetBudgetItem = '<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'get-allbudgetitem'));?>';
-				contentData = {
-		    		'budgetType':budgetType,
-		    	};
-				getAllBudgetItem(urlGetBudgetItem,contentData);
-	       }
-	   }
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#profile_wiew').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 
-	$("#photo").change(function(){
-	    readURL(this);
-	});
-	$(function(){
-		bs_input_file();
-	});
-	
-	function readURL(input) {
-	    if (input.files && input.files[0]) {
-	        var reader = new FileReader();
-	        reader.onload = function (e) {
-	            $('#profile_wiew').attr('src', e.target.result);
-	        }
-	        reader.readAsDataURL(input.files[0]);
-	    }
-	}
-
-	function bs_input_file() {
-		$(".input-file").before(
-			function() {
-			if ( ! $(this).prev().hasClass('input-ghost') ) {
-				var element = $("<input  type='file' accept='image/*' class='input-ghost' style='visibility:hidden; height:0'>");
-				element.attr("name",$(this).attr("name"));
-				element.change(function(){
-					element.next(element).find('input').val((element.val()).split('\\').pop());
-				});
-				$(this).find("button.btn-choose").click(function(){
-					element.click();
-				});
-				$(this).find('input').css("cursor","pointer");
-				$(this).find('input').mousedown(function() {
-					$(this).parents('.input-file').prev().click();
-					return false;
-				});
-				return element;
-			}
+function bs_input_file() {
+	$(".input-file").before(
+		function() {
+		if ( ! $(this).prev().hasClass('input-ghost') ) {
+			var element = $("<input  type='file' accept='image/*' class='input-ghost' style='visibility:hidden; height:0'>");
+			element.attr("name",$(this).attr("name"));
+			element.change(function(){
+				element.next(element).find('input').val((element.val()).split('\\').pop());
+			});
+			$(this).find("button.btn-choose").click(function(){
+				element.click();
+			});
+			$(this).find('input').css("cursor","pointer");
+			$(this).find('input').mousedown(function() {
+				$(this).parents('.input-file').prev().click();
+				return false;
+			});
+			return element;
 		}
-	   );
 	}
-	
-	
+   );
+}
+
 	function ConvertMeasure(){
 		dojo.byId('convert').innerHTML ="";
 		dojo.byId('measureLabel').innerHTML ="";
@@ -362,17 +334,19 @@ require(["dojo/ready"], function(ready){
 			dijit.byId('isConvert').set("checked", false);
 			window.open('<?php echo $this->url(array('module'=>'product','controller'=>'measure','action'=>'add'))?>');
 		}
+		
 		measureLable = measure.attr('displayedValue');
-		dijit.byId('labelMeasure').attr('value',measureLable);
-		dijit.byId('qtyMeasure').attr('value',1);
-		
-		
+
 		isConvert = dijit.byId('isConvert').get('value');
 		if(isConvert==1){
-			dijit.byId('labelMeasure').attr('value','');
-			dijit.byId('qtyMeasure').attr('value','');
+			dijit.byId('labelMeasure').attr('value',dijit.byId('oldMeasure').get('value'));
+			dijit.byId('qtyMeasure').attr('value',dijit.byId('oldMeasureValue').get('value'));
+			
 			dojo.byId('convert').innerHTML ="1 "+measureLable+" = ";
 			dojo.byId('measureLabel').innerHTML ="("+measureLable+")";
+		}else{
+			dijit.byId('labelMeasure').attr('value',measureLable);
+			dijit.byId('qtyMeasure').attr('value',1);
 		}
 	}
 	function checkCutStock(){

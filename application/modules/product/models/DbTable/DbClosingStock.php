@@ -41,7 +41,6 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try
     	{
-    		
     		$dbs = new Application_Model_DbTable_DbGlobalStock();
     		$arr = array(
     				'projectId'=>$data['branch_id'],
@@ -53,6 +52,14 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     				'createDate'=>date('Y-m-d'),
     			);
     		$closeId = $this->insert($arr);
+    		
+    		
+    		$arr = array(
+    				'isClosed'=>1
+    			);
+    		$this->_name='st_adjust_stock';
+    		$where='id='.$data['adjustDate'];
+    		$this->update($arr, $where);
     		
     		$param = array(
     			'branch_id'=>$data['branch_id'],

@@ -129,7 +129,7 @@ input.btn_borwse_image {
 	                   		<i class="fa fa-clone" aria-hidden="true"></i> <?php echo $tr->translate("CONVERT_MEASURE");?>
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<input type="button" dojoType="dijit.form.Button" onclick="getRefreshData();" label="Get Data" iconClass="dijitEditorIcon dijitEditorIconUndo" /> 
+	                   		<input type="button" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>" iconClass="dijitEditorIcon dijitEditorIconUndo" /> 
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -163,6 +163,8 @@ input.btn_borwse_image {
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php echo $frm->getElement('labelMeasure');?>
+	                    	<input type="hidden" name="oldMeasure"  id="oldMeasure" dojoType="dijit.form.ValidationTextBox"/>
+	                    	<input type="hidden" name="oldMeasureValue" id="oldMeasureValue" dojoType="dijit.form.ValidationTextBox"/>
 	                   </div>
 	                </div>
 	                <div class="form-group" style="display: none;">
@@ -245,11 +247,13 @@ dojo.require("dojo.data.ItemFileWriteStore");
 require(["dojo/ready"], function(ready){
 	ready(function(){
 		
+		dijit.byId('oldMeasure').attr('value',dijit.byId('labelMeasure').get('value'));
+		dijit.byId('oldMeasureValue').attr('value',dijit.byId('qtyMeasure').get('value'));
+		
 		var isService = dijit.byId('isService');
 		isService.on('change', function(evt){
 			dijit.byId('qtyMeasure').set('required',true);
 			dijit.byId('labelMeasure').set('required',true);
-			//dijit.byId('costing').set('required',true);
 
 			dijit.byId('qtyMeasure').set('readOnly',false);
 			dijit.byId('labelMeasure').set('readOnly',false);
@@ -332,16 +336,17 @@ function bs_input_file() {
 		}
 		
 		measureLable = measure.attr('displayedValue');
-		dijit.byId('labelMeasure').attr('value',measureLable);
-		dijit.byId('qtyMeasure').attr('value',1);
 
 		isConvert = dijit.byId('isConvert').get('value');
 		if(isConvert==1){
-			//dijit.byId('labelMeasure').attr('value','');
-			//dijit.byId('qtyMeasure').attr('value','');
+			dijit.byId('labelMeasure').attr('value',dijit.byId('oldMeasure').get('value'));
+			dijit.byId('qtyMeasure').attr('value',dijit.byId('oldMeasureValue').get('value'));
 			
 			dojo.byId('convert').innerHTML ="1 "+measureLable+" = ";
 			dojo.byId('measureLabel').innerHTML ="("+measureLable+")";
+		}else{
+			dijit.byId('labelMeasure').attr('value',measureLable);
+			dijit.byId('qtyMeasure').attr('value',1);
 		}
 	}
 	function checkCutStock(){
