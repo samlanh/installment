@@ -120,7 +120,11 @@
 				span.gtotalVal.mainTotal {
 					font-size: 14px;
 				}
-				
+				td span.rowValue {
+					display: block;
+					width: 100%;
+					line-height: 16px;
+				}
 			
 			</style>
 				
@@ -298,7 +302,18 @@
 								
 								<?php if(!empty($rs["purchaseQty"])){?>
 								<td class="centerText bold"><?php echo $rs["purchaseQty"];?></td>
-								<td ><?php echo $rs["purchaseNoList"];?></td>
+								<td >
+									<?php if(!empty($rs['purchaseNoList'])){
+											$purchaseNoListExpl = explode(",",$rs['purchaseNoList']);
+											$supplierNameListExpl = explode(",",$rs['supplierNameList']);
+											$purchaseDateListExpl = explode(",",$rs['purchaseDateList']);
+											foreach ($purchaseNoListExpl as $key=> $purchaseNo){
+									?>
+									<span class="rowValue "><span class="bold redColor"><?php echo $purchaseNo;?></span> <span ><?php echo $purchaseDateListExpl[$key];?></span></span>
+									<span class="rowValue  "><?php echo $supplierNameListExpl[$key];?></span>
+									<?php }}?>
+								
+								</td>
 								<?php }else{?>
 								<td class="centerText">-</td>
 								<td class="centerText">-</td>
@@ -306,7 +321,15 @@
 								
 								<?php if(!empty($rs["purchaseQty"])){?>
 								<td class="centerText bold"><?php echo $rs["totalReceiveQty"];?></td>
-								<td ><?php echo $rs["dnNumberList"];?></td>
+								<td >
+								<?php if(!empty($rs['dnNumberList'])){
+											$dnNumberListExpl = explode(",",$rs['dnNumberList']);
+											$dnReceiveDateListExpl = explode(",",$rs['dnReceiveDateList']);
+											foreach ($dnNumberListExpl as $keyInd=> $dnNumber){
+									?>
+									<span class="rowValue "><span class="bold redColor"><?php echo $dnNumber;?></span> <span ><?php echo $dnReceiveDateListExpl[$keyInd];?></span></span>
+									<?php }}?>
+								</td>
 								<?php }else{?>
 								<td class="centerText">-</td>
 								<td class="centerText">-</td>

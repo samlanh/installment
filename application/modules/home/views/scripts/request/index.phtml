@@ -37,9 +37,7 @@
 									<?php echo $frm->getElement("end_date");?>
 								</div>
 								
-								<div class="col-md-2 col-sm-2 col-xs-12">
-									<?php echo $frm->getElement("btn_search");?>
-								 </div>
+								
 							</div>
 							<div class="form-group">
 								<div class="col-md-2 col-sm-2 col-xs-12">
@@ -54,7 +52,9 @@
 								<div class="col-md-2 col-sm-2 col-xs-12">
 									<?php echo $frm->getElement("processingStatus");?>
 								</div>
-								 
+								 <div class="col-md-2 col-sm-2 col-xs-12">
+									<?php echo $frm->getElement("btn_search");?>
+								 </div>
 							</div>
 						</form>
 					</div>
@@ -91,14 +91,15 @@
                        	<ul class="nav navbar-right panel_toolbox stusearch">
 	                      <li class="dropdown">
 	                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-	                        <ul class="dropdown-menu" role="menu">
+	                        <ul class="dropdown-menu menuRequest" role="menu">
 								<?php if(!empty($url)){?>
 								<li>
-									<a target="_blank" href="<?php echo $url;?>"><i class="fa fa-print " aria-hidden="true"></i> <?php echo $title;?></a>
+									<a target="_blank" href="<?php echo $url;?>"><i class="fa fa-pencil " aria-hidden="true"></i> <?php echo $title;?></a>
 								</li>
 								<?php }?>
 								<li>
-									<a target="_blank" href="<?php echo $this->baseUrl()."/report/stockmg/request-letter/id/".$rs['id'];?>"><i class="fa fa-print " aria-hidden="true"></i> <?php echo $tr->translate('REQUEST_LETTER');?></a>
+									<a target="_blank" href="<?php echo $this->baseUrl()."/report/stockmg/request-letter/id/".$rs['id'];?>"><i class="fa fa-file-text " aria-hidden="true"></i> <?php echo $tr->translate('REQUEST_LETTER');?></a>
+									<a target="_blank" href="<?php echo $this->baseUrl()."/report/stockmg/request-info/id/".$rs['id'];?>"><i class="fa fa-file-text " aria-hidden="true"></i> <?php echo $tr->translate('REQUEST_INFO_DETAIL');?></a>
 								</li>
 	                        </ul>
 	                      </li>
@@ -267,6 +268,11 @@
 	</div>
 </section>
 <style>
+ul.dropdown-menu.menuRequest {
+    position: absolute;
+    left: -205px;
+    float: none;
+}
 .card-box-border {
     background-color: #ffffff;
     border: 1px solid rgba(98, 103, 115, 0.2);
@@ -359,7 +365,10 @@ ul.nav.navbar-right.panel_toolbox.stusearch {
 ul.nav.navbar-right.panel_toolbox.stusearch li.dropdown a.dropdown-toggle {
     padding: 10px;
 }
-
+.member-card li.dropdown.open a {
+    border-bottom: solid 1px #ccc;
+    color: #02014a;
+}
 .thumb-icon {
     margin-bottom: 5px;
 }
@@ -395,7 +404,7 @@ span.smallValue {
     display: block;
     font-size: 10px;
     font-weight: 600;
-    color: #f70000;
+    color: #E74C3C;
     width: 100%;
 }
 

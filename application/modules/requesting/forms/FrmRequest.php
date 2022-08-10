@@ -15,6 +15,10 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
     	$dbGB = new Application_Model_DbTable_DbGlobal(); 
     	$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
     	
+		$userInfo = $dbGB->getUserInfo();
+		$userLevel=0;
+		$userLevel = empty($userInfo['level'])?0:$userInfo['level'];
+		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
@@ -77,6 +81,11 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
  			'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 			'readOnly'=>'readOnly ',
  		));
+		if($userLevel!=1){ // NOt Admin
+			$date->setAttribs(array(
+				'readOnly'=>'readOnly',
+			));
+		}
 		$date->setValue(date("Y-m-d"));
 		
     	$_arr = array(1=>$this->tr->translate("ACTIVE"),0=>$this->tr->translate("DEACTIVE"));
