@@ -37,52 +37,53 @@
 	   			}
 			</script>
 			<div class="card-box">
-				
-				<div class="col-md-12 col-sm-12 col-xs-12">
-					<div class="col-md-6 col-sm-6 col-xs-12">
-						<div class="form-group">
-							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("FEEDBACK");?> </label>
-							<div class="col-md-7 col-sm-7 col-xs-12">
-								<?php echo $frm->getElement("checkingNote");?>
-							</div>
-						 </div>
-						 <div class="form-group">
-							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
-							<div class="col-md-7 col-sm-7 col-xs-12">
-								<?php echo $frm->getElement("checkingDate");?>
-							</div>
-						 </div>	
-						<div class="form-group">
-							<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
-							<div class="col-md-7 col-sm-7 col-xs-12">
-								<?php echo $frm->getElement("checkingStatus");?>
-								<?php echo $frm->getElement("id");?>
-							</div>
-						 </div>	
-					</div>
-					<div class="col-md-6 col-sm-6 col-xs-12">
-						
-						 <div id="request-info">
-							<div class="form-group" style=" padding: 10px; ">
-								<span class="note_score"><i class="fa fa-file-text-o" aria-hidden="true"></i> ព័ត៌មានសំណើបញ្ជាទិញទំនិញ</span>
-								<ul>
-									<li><span class="lbl-tt"><?php echo $tr->translate("BRANCH_NAME");?></span>: <span class="red"><?php echo $this->row['branch_name'];?></span></li>
-									<li><span class="lbl-tt"><?php echo $tr->translate("REQUEST_NO");?></span>: <span class="red"><?php echo $this->row['requestNo'];?></span></li>
-									<li><span class="lbl-tt"><?php echo $tr->translate("REQUEST_NO_FROM");?></span>: <span class="red"><?php echo $this->row['requestNoLetter'];?></span></li>
-									<li><span class="lbl-tt"><?php echo $tr->translate("REQUEST_DATE");?></span>: <span class="red"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($this->row['date']));?></span></li>
-									<li><span class="lbl-tt"><?php echo $tr->translate("PURPOSE");?></span>: <span class="red"><?php echo $this->row['purpose'];?></span></li>
-									<li><span class="lbl-tt"><?php echo $tr->translate("NOTE");?></span>: <span class="red"><?php echo $this->row['note'];?></span></li>
-								</ul>
-							</div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="form-group">
+						<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("FEEDBACK");?> </label>
+						<div class="col-md-7 col-sm-7 col-xs-12">
+							<?php echo $frm->getElement("checkingNote");?>
 						</div>
-						 
+					 </div>
+					 <div class="form-group">
+						<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
+						<div class="col-md-7 col-sm-7 col-xs-12">
+							<?php echo $frm->getElement("checkingDate");?>
+						</div>
+					 </div>	
+					<div class="form-group">
+						<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
+						<div class="col-md-7 col-sm-7 col-xs-12">
+							<?php echo $frm->getElement("checkingStatus");?>
+							<?php echo $frm->getElement("id");?>
+						</div>
+					 </div>	
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					 <div id="request-info" class="information-style">
+						
 					</div>
-					
-					<table class="collape tablesorter" id="table_row" style="width:100%; white-space: nowrap;border:1px solid #ddd;">
-				    	<tr id="head-title" class="head-td" align="center"></tr>
+				</div>
+				<div class="clearfix"></div>
+			
+									
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<table class="collape responsiveTable" >
+						 <thead id="head-title">
+							<tr class="head-td">
+								<th scope="col"><?php echo $tr->translate("N_O");?></th>
+								<th scope="col" width="20%" ><?php echo $tr->translate("PRODUCT_NAME");?></th>
+								<th scope="col" width="10%" class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></th>
+								<th scope="col" width="5%"><?php echo $tr->translate("QTY_REQUEST");?></th>
+								<th scope="col" width="10%"><?php echo $tr->translate("QTY_APPROVED");?></th>
+								<th scope="col" ><?php echo $tr->translate("DATE_ENTRY");?></th>
+								<th scope="col" ><?php echo $tr->translate("NOTE");?></th>
+								<th scope="col" ><?php echo $tr->translate("STATUS");?></th>
+							</tr>
+						  </thead>
+						   <tbody id="table_row" >
+						   <tbody>
 					</table>
 					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
-					
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -97,55 +98,7 @@
 		</form>
     </div>
 </div>
-<style>
-#table tr td{
-	border:1px solid #cccccc;
-	text-align: center;
-}
-#table tr th{
-	background: #cccccc;
-	border:1px solid #ddd;
-}
-table#table_row td.productName {
-    font-size: 12px;
-    line-height: 14px;
-    font-weight: 600;
-}
-table#table_row td.currentQty {
-    text-align: center;
-    color: #f74545;
-    font-weight: 600;
-}
-tr.rowData {
-    border-bottom: solid 2px #02014a;
-}
-tr.rowData td {
-    padding: 5px 0;
-}
-div#request-info .form-group {
-	display: block;
-	font-size: 12px;
-	background: #fdfbbd;
-	border: solid 2px #dc0303;
-	border-radius: 5px;
-}
-div#request-info .form-group ul li span.lbl-tt {
-	color: #02014a;
-}
-span.red {
-	color: #f00;
-	font-weight: bold;
-}
-div#request-info .form-group ul {
-    margin: 0;
-    padding: 0px 5px;
-}
-div#request-info .form-group ul li {
-	display: inline-block;
-	width: 45%;
-	vertical-align: top;	
-}
-</style>
+
 
 <?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $key=> $rs){?>
 	<div id="proCode<?php echo $key?>" style="display: none;"><?php echo $rs['proCode'];?></div>
@@ -166,6 +119,7 @@ div#request-info .form-group ul li {
 		ready(function(){
 			initailize();
 			onChageFunctionByBranch();
+			getRequestInfo();
 		});
 
 	 });
@@ -200,32 +154,21 @@ div#request-info .form-group ul li {
 		col++;no++;
 		template='';
 		temp = "";
-		if(title!=1){
-			temp+='<td><?php echo $tr->translate("N_O");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
-			temp+='<td class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("QTY_REQUEST");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("QTY_APPROVED");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("DATE_ENTRY");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("NOTE");?></td>';
-			temp+='<td width="15%"><?php echo $tr->translate("STATUS");?></td>';
-			dojo.query("#head-title").append(temp);
-			title=1;
-		}
+	
 		
 		var proCodeString = $( '#proCode'+'<?php echo $key;?>').html();
 		var productNameString = $( '#productName'+'<?php echo $key;?>').html();
 		var measureTitleString = $( '#measureTitle'+'<?php echo $key;?>').html();
 		var itemsNoteString = $( '#itemsNote'+'<?php echo $key;?>').html();
 		
-		template+='<td align="center" width="2%">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
-		template+='<td class="productName" >'+proCodeString+'<br />'+productNameString+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
-		template+='<td class="currentQty"  width="10%"><?php echo $rs['currentQty'];?> ('+measureTitleString+')</td>';	
-		template+='<td><input readOnly data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="<?php echo $rs['qtyRequest'];?>" type="text"  ></td>';	
-		template+='<td><input required dojoType="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" class="fullside" id="qtyAdjust'+col+'" name="qtyAdjust'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_APPROVED");?> " value="<?php echo $rs['qtyAdjust'];?>" type="text"  ></td>';	
-		template+='<td><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['dateReqStockIn']));?>" type="text"  ></td>';	
-		template+='<td><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="'+itemsNoteString+'" type="text"  ></td>';	
-		template+='<td><select class="fullside" name="adjustStatus'+col+'" id="adjustStatus'+col+'" dojoType="dijit.form.FilteringSelect" ><option value="1" <?php if($rs['adjustStatus']==1){echo "selected";} ?> ><?php echo $tr->translate("APPROVED");?></option><option value="2" <?php if($rs['adjustStatus']==2){echo "selected";} ?>><?php echo $tr->translate("REJECTED");?></option></select></td>';
+		template+='<td class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>" align="center" >'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
+		template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" >'+proCodeString+'<br />'+productNameString+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class="currentQty"  ><?php echo $rs['currentQty'];?> ('+measureTitleString+')</td>';	
+		template+='<td data-label="<?php echo $tr->translate("QTY_REQUEST");?>"><input readOnly data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="<?php echo $rs['qtyRequest'];?>" type="text"  ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("QTY_APPROVED");?>"><input required dojoType="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" class="fullside" id="qtyAdjust'+col+'" name="qtyAdjust'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_APPROVED");?> " value="<?php echo $rs['qtyAdjust'];?>" type="text"  ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['dateReqStockIn']));?>" type="text"  ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("NOTE");?>"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="'+itemsNoteString+'" type="text"  ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("STATUS");?>"><select class="fullside" name="adjustStatus'+col+'" id="adjustStatus'+col+'" dojoType="dijit.form.FilteringSelect" ><option value="1" <?php if($rs['adjustStatus']==1){echo "selected";} ?> ><?php echo $tr->translate("APPROVED");?></option><option value="2" <?php if($rs['adjustStatus']==2){echo "selected";} ?>><?php echo $tr->translate("REJECTED");?></option></select></td>';
 					
 
 		tmp='<tr class="rowData" id="row'+col+'">';
@@ -239,5 +182,30 @@ div#request-info .form-group ul li {
 		     parseContent: true,
 		});
 		<?php }?>
+	}
+	
+	var urlGetRequestInfo = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'get-requestinfohtml')); ?>';
+	function getRequestInfo(){
+		
+		requestId = dijit.byId('id').get('value');
+		if(requestId=='' || requestId==0){
+			dojo.byId("request-info").innerHTML = '';
+			return false;
+		}
+		
+		dojo.xhrPost({
+			url: urlGetRequestInfo,
+			content:{
+				'requestId':requestId
+				},
+			handleAs:"json",
+			load: function(data) {
+				if(data!=''){
+					dojo.byId("request-info").innerHTML = data.htmlBlog;
+				}
+			},
+			error: function(err) {
+			}
+		});
 	}
 </script>
