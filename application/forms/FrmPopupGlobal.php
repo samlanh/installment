@@ -2861,13 +2861,11 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$last_name=$session_user->last_name;
 		$username = $session_user->first_name;
 		
-		$str='<table align="center" width="100%">
+		$str='<table class="footerLabel" align="center" width="100%">
 				   <tr style="font-size: 14px;">
-				        <td style="width:20%; text-align:center;  font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('APPROVED BY').'</td>
-				        <td></td>
-				        <td style="width:20%; text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('VERIFYED BY').'</td>
-				        <td></td>
-				        <td style="width:20%; text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('PREPARE BY').'<br /><br /><br /><br />'.$last_name." ".$username.'</td>
+				        <td style="width:30%; text-align:center;  font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('APPROVED BY').'</td>
+				        <td style="width:30%; text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('VERIFYED BY').'</td>
+				        <td style="width:30%; text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('PREPARE BY').'<br /><br /><br /><br />'.$last_name." ".$username.'</td>
 				   </tr>';
 // 			$str.='<tr>
 // 					<td style="height: 60px;">&nbsp;</td>
