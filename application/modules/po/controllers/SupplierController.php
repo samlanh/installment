@@ -107,5 +107,16 @@ class Po_SupplierController extends Zend_Controller_Action {
 			
 		}
 	}
+
+	function getSuppliernameAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
+			$rsSpp = $dbGBStock->getAllSupplier();
+			print_r(Zend_Json::encode($rsSpp));
+			exit();
+			
+		}
+	}
 }
 

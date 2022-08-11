@@ -121,7 +121,5 @@ class Po_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
     	return $db->fetchRow($sql);
     }
 
-	
-	
    
 }

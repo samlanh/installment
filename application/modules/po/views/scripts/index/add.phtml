@@ -88,6 +88,13 @@
 		                	<?php echo $frm->getElement("note");?>
 		                </div>
 		             </div>
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"></label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+						<input type="button" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>" iconClass="dijitEditorIcon dijitEditorIconUndo" />
+		                </div>
+		             </div>
+					 
 				</div>
 				<div class="col-md-9 col-sm-9 col-xs-12">
 					 <div id="request-info" class="information-style"></div>
@@ -197,6 +204,32 @@
 			}
 		}, "productId");
 	 });
+
+
+	function addNewSupplier(){
+		categoryId = dijit.byId('supplierId').get('value');
+		if(categoryId==-1){
+			window.open('<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'add'))?>');
+		}
+	}
+
+	
+	function getRefreshData(){
+		urlGetAllSuppilyer ='<?php echo $this->url(array('module'=>'po','controller'=>'suplyer','action'=>'getSuppliername'))?>';
+		
+		dojo.xhrPost({
+			url:urlGetBudgetType,	
+			handleAs:"json",
+			load: function(data) {
+				supplierStore  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('supplierId').set('store',supplierStore);
+			},
+			error: function(err){
+			}
+		});
+		
+	}
+
     
 	function onChageFunctionByBranch(){
 		

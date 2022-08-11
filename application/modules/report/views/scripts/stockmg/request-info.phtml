@@ -210,60 +210,60 @@
 						<table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
 							<thead>
 								<tr class="style headRow" align="center" >
-									<td class="center" rowspan="2">
+									<td scope="col" class="center" rowspan="2">
 										<span>ល.រ</span>
 										<small>N<sup>o</sup></small>
 									</td>
-									<td class="center" colspan="5">
+									<td scope="col" class="center" colspan="5">
 										<span>ព័ត៌មានសំណើបញ្ជាទិញទំនិញ</span>
 										<small>Request Information</small>
 									</td>
-									<td class="center" colspan="2">
+									<td scope="col" class="center" colspan="2">
 										<span>ព័ត៌មានការបញ្ជាទិញ</span>
 										<small>Purchase Information</small>
 									</td>
-									<td class="center" colspan="2">
+									<td scope="col" class="center" colspan="2">
 										<span>ព័ត៌មានការទទួលទំនិញ</span>
 										<small>Receive Information</small>
 									</td>
 								</tr>
 								<tr class="style headRow" align="center" >
 									
-									<td class="center" style="width:200px;">
+									<td scope="col" class="center" style="width:200px;">
 										<span>ទំនិញ</span>
 										<small>Product</small>
 									</td>
-									<td class="center">
+									<td scope="col" class="center">
 										<span>ឯកតា</span>
 										<small>Unit</small>
 									</td>
-									<td class="center">
+									<td scope="col" class="center">
 										<span>បរិមាណស្នើ</span>
 										<small>Request Qty</small>
 									</td>
-									<td class="center">
+									<td scope="col" class="center">
 										<span>បរិមាណយល់ព្រម</span>
 										<small>Approved Qty</small>
 									</td>
-									<td class="center">
+									<td scope="col" class="center">
 										<span>កាលបរិច្ឆេទសុំចូល</span>
 										<small>Incoming Date</small>
 									</td>
 									
-									<td class="center">
+									<td scope="col" class="center">
 										<span>បរិមាណបញ្ជាទិញ</span>
 										<small>Purchase Qty</small>
 									</td>
-									<td class="center">
+									<td scope="col" class="center">
 										<span>លេខបញ្ជាទិញ</span>
 										<small>Purchase N<sup>o</sup></small>
 									</td>
 									
-									<td class="center">
+									<td scope="col" class="center">
 										<span>បរិមាណទទួល</span>
 										<small>Received Qty</small>
 									</td>
-									<td class="center">
+									<td scope="col" class="center">
 										<span>លេខទទួល / លេខវិក្កយបត្រ</span>
 										<small>DN N<sup>o</sup> / Invoice N<sup>o</sup></small>
 									</td>
@@ -290,19 +290,19 @@
 								
 							?>
 							<tr class="style <?php echo $classRow; ?>" style=" white-space:nowrap;">
-				               	<td class="centerText"><?php echo $i; ?></td>
-								<td>
+				               	<td data-label="ល.រ​ /N.o" class="centerText"><?php echo $i; ?></td>
+								<td data-label="ទំនិញ">
 									<?php echo $rs["proCode"]." - ".$rs["proName"];?>
 									
 								</td>
-								<td class="centerText"><?php echo $rs["measureTitle"];?></td>
-								<td class="centerText"><?php echo $rs["qtyRequest"];?></td>
-								<td class="centerText bold"><?php echo $qtyApproved;?></td>
-								<td class="centerText"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($rs["dateReqStockIn"]));?></td>
+								<td data-label="ឯកតា" class="centerText"><?php echo $rs["measureTitle"];?></td>
+								<td data-label="បរិមាណស្នើ" class="centerText"><?php echo $rs["qtyRequest"];?></td>
+								<td data-label="បរិមាណយល់ព្រម" class="centerText bold"><?php echo $qtyApproved;?></td>
+								<td data-label="កាលបរិច្ឆេទសុំចូល" class="centerText"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($rs["dateReqStockIn"]));?></td>
 								
 								<?php if(!empty($rs["purchaseQty"])){?>
-								<td class="centerText bold"><?php echo $rs["purchaseQty"];?></td>
-								<td >
+								<td data-label="បរិមាណបញ្ជាទិញ" class="centerText bold"><?php echo $rs["purchaseQty"];?></td>
+								<td data-label="លេខបញ្ជាទិញ" >
 									<?php if(!empty($rs['purchaseNoList'])){
 											$purchaseNoListExpl = explode(",",$rs['purchaseNoList']);
 											$supplierNameListExpl = explode(",",$rs['supplierNameList']);
@@ -315,13 +315,13 @@
 								
 								</td>
 								<?php }else{?>
-								<td class="centerText">-</td>
-								<td class="centerText">-</td>
+								<td  class="centerText">-</td>
+								<td  class="centerText">-</td>
 								<?php }?>
 								
 								<?php if(!empty($rs["purchaseQty"])){?>
-								<td class="centerText bold"><?php echo $rs["totalReceiveQty"];?></td>
-								<td >
+								<td data-label="បរិមាណទទួល" class="centerText bold"><?php echo $rs["totalReceiveQty"];?></td>
+								<td data-label="លេខទទួល / លេខវិក្កយបត្រ" >
 								<?php if(!empty($rs['dnNumberList'])){
 											$dnNumberListExpl = explode(",",$rs['dnNumberList']);
 											$dnReceiveDateListExpl = explode(",",$rs['dnReceiveDateList']);
@@ -331,8 +331,8 @@
 									<?php }}?>
 								</td>
 								<?php }else{?>
-								<td class="centerText">-</td>
-								<td class="centerText">-</td>
+								<td  class="centerText">-</td>
+								<td  class="centerText">-</td>
 								<?php }?>
 							</tr>
 							<?php 
