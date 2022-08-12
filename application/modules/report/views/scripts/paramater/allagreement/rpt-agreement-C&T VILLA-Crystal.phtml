@@ -27,6 +27,38 @@
 	}
 	
 	$bankAccountInAgreement = "ABA: 012 773 111 (KUOCH CHUNG CHHAY AND SOK TY)";
+	$bankAccInfo="";
+	if(!empty($dataterm['bank_account1'])){
+		$bankName = $dataterm['bank_account1'];
+		$bankAccName = $dataterm['bank_account_name1'];
+		$bankAccNumber = $dataterm['bank_account1number'];
+		$bankAccInfo=$bankName." ".$bankAccNumber." (".$bankAccName.")";
+	}
+	
+	if(!empty($dataterm['bank_account2'])){
+		$bankName = $dataterm['bank_account2'];
+		$bankAccName = $dataterm['bank_account_name2'];
+		$bankAccNumber = $dataterm['bank_account2number'];
+		if(empty($bankAccInfo)){
+		$bankAccInfo=$bankName." ".$bankAccNumber." (".$bankAccName.")";
+		}else{
+			$bankAccInfo=$bankAccInfo." ឬ ".$bankName." ".$bankAccNumber." (".$bankAccName.")";
+		}
+	}
+	if(!empty($dataterm['bank_account3'])){
+		$bankName = $dataterm['bank_account3'];
+		$bankAccName = $dataterm['bank_account_name3'];
+		$bankAccNumber = $dataterm['bank_account3number'];
+		if(empty($bankAccInfo)){
+		$bankAccInfo=$bankName." ".$bankAccNumber." (".$bankAccName.")";
+		}else{
+			$bankAccInfo=$bankAccInfo." ឬ ".$bankName." ".$bankAccNumber." (".$bankAccName.")";
+		}
+	}
+	
+	if(!empty($bankAccInfo)){
+		$bankAccountInAgreement=$bankAccInfo;
+	}
 ?>
 <script>
 dojo.require("dijit.form.DateTextBox");
