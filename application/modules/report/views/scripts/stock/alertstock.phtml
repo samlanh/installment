@@ -26,6 +26,7 @@ table.tb-footer tr.style-head {
     </div>
 	<form  id='foundation_class' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 		<div class="form-group">
+			<label for=""></label>
 			<div class="col-md-3 col-sm-2 col-xs-12">
 				<?php echo $frm->getElement("title");?>
 			</div>
@@ -119,12 +120,12 @@ table.tb-footer tr.style-head {
 						<table class="content-data" cellpadding="5"​ border="1" >
 							<thead>
 								<tr class="style-head" align="center">
-									<td>&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('PRODUCT_CATEGORY');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('PRODUCT_CODE');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('PRODUCT_NAME');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('QTY');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('STATUS');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('PRODUCT_CATEGORY');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('PRODUCT_CODE');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('PRODUCT_NAME');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('QTY');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('STATUS');?>&nbsp;</td>
 							   </tr>
 						   </thead>
 						<?php 
@@ -135,17 +136,17 @@ table.tb-footer tr.style-head {
 								$i++;
 									if($branch_name!=$rs['branch_name']){
 								?>
-									<tr class="hover" style="font-size:15px; height: 18px;"​ align="center">
+									<tr class="hover" style="font-size:15px; height: 18px;" align="center">
 										  <td colspan="9" ><?php echo $rs['branch_name']; ?></td>
 									</tr>
 								<?php } $branch_name=$rs['branch_name'];?>
 									<tr class="style-rowdata hover" align="center">
-										<td> <?php echo $i; ?></td>
-										<td align="left">&nbsp;<?php echo $rs['category_name'];?></td>
-										<td style="color:red;"><?php echo $rs['pro_code'];?></td>
-										<td style="color:red;" align="left">&nbsp;<?php echo $rs['pro_name'];?></td>
-										<td style="color:red;"><?php echo number_format($rs['pro_qty'],0); ?></td>
-										<td><?php echo $rs['status']; ?></td>
+										<td data-label="<?php echo $tr->translate('N_O');?>"> <?php echo $i; ?></td>
+										<td data-label="<?php echo $tr->translate('PRODUCT_CATEGORY');?>" align="left">&nbsp;<?php echo $rs['category_name'];?></td>
+										<td data-label="<?php echo $tr->translate('PRODUCT_CODE');?>" style="color:red;"><?php echo $rs['pro_code'];?></td>
+										<td data-label="<?php echo $tr->translate('PRODUCT_NAME');?>" style="color:red;" align="left">&nbsp;<?php echo $rs['pro_name'];?></td>
+										<td data-label="<?php echo $tr->translate('QTY');?>" style="color:red;"><?php echo number_format($rs['pro_qty'],0); ?></td>
+										<td data-label="<?php echo $tr->translate('STATUS');?>"><?php echo $rs['status']; ?></td>
 									</tr>
 							<?php }?>
 						<?php

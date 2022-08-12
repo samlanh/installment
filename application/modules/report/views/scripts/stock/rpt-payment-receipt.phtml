@@ -48,11 +48,11 @@
 					<td colspan="3">
 						<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;"  border="1" >
 							<tr style="font-size:12px; height: 18px;background-color: #CCD9FF;line-height: 30px;font-weight: bold;" align="center">
-									<td>&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('PURCHASE_NO');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('BALANCE');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('PAID');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('REMAIN');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('PURCHASE_NO');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('BALANCE');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('PAID');?>&nbsp;</td>
+									<td scope="col" >&nbsp;<?php echo $tr->translate('REMAIN');?>&nbsp;</td>
 						   </tr>
 							
 						<?php $i=0;
@@ -60,11 +60,11 @@
 						$totalpaid=0;$totalbalance=0; if(!empty($this->rowDetail)) foreach ($this->rowDetail AS $rs) { $i++;
 						  ?>
 							<tr class="hover" style="font-size:12px; line-height: 14px"​ align="center">
-								    <td> <?php echo $i; ?></td>
-								    <td align="left">&nbsp;<?php echo $rs['supplier_no'];?>&nbsp;</td>
-								    <td align="right">&nbsp;$&nbsp;<?php echo number_format($rs['due_amount'],2);?>&nbsp;</td>
-								    <td align="right">&nbsp;$&nbsp;<?php echo number_format($rs['payment_amount'],2);?>&nbsp;</td>
-								    <td align="right">&nbsp;$&nbsp;<?php echo number_format($rs['remain'],2);?>&nbsp;</td>
+								    <td data-label="<?php echo $tr->translate('N_O');?>"> <?php echo $i; ?></td>
+								    <td data-label="<?php echo $tr->translate('PURCHASE_NO');?>" align="left">&nbsp;<?php echo $rs['supplier_no'];?>&nbsp;</td>
+								    <td data-label="<?php echo $tr->translate('BALANCE');?>" align="right">&nbsp;$&nbsp;<?php echo number_format($rs['due_amount'],2);?>&nbsp;</td>
+								    <td data-label="<?php echo $tr->translate('PAID');?>" align="right">&nbsp;$&nbsp;<?php echo number_format($rs['payment_amount'],2);?>&nbsp;</td>
+								    <td data-label="<?php echo $tr->translate('REMAIN');?>" align="right">&nbsp;$&nbsp;<?php echo number_format($rs['remain'],2);?>&nbsp;</td>
 							 </tr>
 							<?php 
 								$totalpaid=$totalpaid+$rs['payment_amount'];

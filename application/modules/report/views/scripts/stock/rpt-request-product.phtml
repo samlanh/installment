@@ -51,18 +51,19 @@ table.tb-footer tr.style-head {
         	</div>
         </div>
          <div class="form-group">
-         	<div class="col-md-3 col-sm-3 col-xs-12">
-         		<?php echo $frm->getElement('start_date');?>
-        	</div>
-        	<div class="col-md-3 col-sm-3 col-xs-12">
-        		<?php echo $frm->getElement('end_date');?>
-        	</div>
-        	<div class="col-md-3 col-sm-3 col-xs-12">
-        		<?php echo $frm->getElement('status_search');?>
-        	</div>
-        	<div class="col-md-3 col-sm-3 col-xs-12">
-        	<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
-        	</div>
+			<label class="col-md-3 col-sm-3 col-xs-12">
+				<?php echo $frm->getElement('start_date');?>
+			</label>
+			<label class="col-md-3 col-sm-3 col-xs-12">
+				<?php echo $frm->getElement('end_date');?>
+			</label>
+			<label class="col-md-3 col-sm-3 col-xs-12">
+				<?php echo $frm->getElement('status_search');?>
+			</label>
+			<label class="col-md-3 col-sm-3 col-xs-12">
+				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+			</label>
+        
          </div>
 	</form>
 	<style>
@@ -122,21 +123,21 @@ table.tb-footer tr.style-head {
 				</tr>
 				<tr>
 					<td colspan="3">
-						<table class="content-data" cellpadding="5"​ border="1" >
+						<table class="content-data" cellpadding="5" border="1" >
 							<thead>
 								<tr class="style-head" align="center">
-									<td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
-									<td rowspan="2">&nbsp;<?php echo $tr->translate("BRANCH");?>&nbsp;</td>
-									<td colspan="5">&nbsp;<?php echo $tr->translate("REQUEST_INFO");?>&nbsp;</td>
-									<td rowspan="2">&nbsp;<?php echo $tr->translate("USER");?>&nbsp;</td>
-									<td rowspan="2">&nbsp;<?php echo $tr->translate("STATUS");?>&nbsp;</td>
+									<td scope="col" rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+									<td scope="col" rowspan="2">&nbsp;<?php echo $tr->translate("BRANCH");?>&nbsp;</td>
+									<td scope="col" colspan="5">&nbsp;<?php echo $tr->translate("REQUEST_INFO");?>&nbsp;</td>
+									<td scope="col" rowspan="2">&nbsp;<?php echo $tr->translate("USER");?>&nbsp;</td>
+									<td scope="col" rowspan="2">&nbsp;<?php echo $tr->translate("STATUS");?>&nbsp;</td>
 								</tr>
 								<tr class="style-head" align="center">
-									<td><?php echo $tr->translate("REQUEST_NO");?></td>
-									<td><?php echo $tr->translate("REQUEST_FOR");?></td>
-									<td><?php echo $tr->translate("FOR_SECTION");?></td>
-									<td><?php echo $tr->translate("PURPOSE");?></td>
-									<td><?php echo $tr->translate("REQUEST_DATE");?></td>
+									<td scope="col"><?php echo $tr->translate("REQUEST_NO");?></td>
+									<td scope="col"><?php echo $tr->translate("REQUEST_FOR");?></td>
+									<td scope="col"><?php echo $tr->translate("FOR_SECTION");?></td>
+									<td scope="col"><?php echo $tr->translate("PURPOSE");?></td>
+									<td scope="col"><?php echo $tr->translate("REQUEST_DATE");?></td>
 								</tr>
 							</thead>
 							<?php 
@@ -145,15 +146,15 @@ table.tb-footer tr.style-head {
 							if(!empty($rows)) foreach($rows As $key=> $rs_row){	$i++;
 							?>
 								<tr class="style-rowdata hover" align="center">
-									<td >&nbsp;<?php echo $i; ?>&nbsp;</td>
-									<td >&nbsp;<?php echo $rs_row['branch_name'];; ?>&nbsp;</td>
-									<td >&nbsp;<a style="color: #000;" target="_blank" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'reprint-request-product','id'=>$rs_row['id']))?>"><strong><?php echo $rs_row['request_no']; ?></strong></a>&nbsp;</td>
-									<td >&nbsp;<a style="color: #000;" target="_blank" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'reprint-request-product','id'=>$rs_row['id']))?>"><?php echo $rs_row['request_for']; ?></a>&nbsp;</td>
-									<td >&nbsp;<a style="color: #000;" target="_blank" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'reprint-request-product','id'=>$rs_row['id']))?>"><?php echo $rs_row['for_section']; ?></a>&nbsp;</td>   
-									<td >&nbsp;<?php echo $rs_row['purpose']; ?>&nbsp;</td>
-									<td >&nbsp;<?php echo date("d-M-Y",strtotime($rs_row['request_date'])); ?>&nbsp;</td>
-									<td >&nbsp;<?php echo $rs_row['user']; ?>&nbsp;</td>
-									<td >&nbsp;<?php if ($rs_row['status']==1){ echo $tr->translate("ACTIVE"); }else{ echo $tr->translate("DEACTIVE"); }?>&nbsp;</td>
+									<td  data-label="<?php echo $tr->translate('NUM');?>">&nbsp;<?php echo $i; ?>&nbsp;</td>
+									<td data-label="<?php echo $tr->translate('BRANCH');?>">&nbsp;<?php echo $rs_row['branch_name'];; ?>&nbsp;</td>
+									<td data-label="<?php echo $tr->translate('REQUEST_NO');?>">&nbsp;<a style="color: #000;" target="_blank" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'reprint-request-product','id'=>$rs_row['id']))?>"><strong><?php echo $rs_row['request_no']; ?></strong></a>&nbsp;</td>
+									<td data-label="<?php echo $tr->translate('REQUEST_FOR');?>">&nbsp;<a style="color: #000;" target="_blank" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'reprint-request-product','id'=>$rs_row['id']))?>"><?php echo $rs_row['request_for']; ?></a>&nbsp;</td>
+									<td data-label="<?php echo $tr->translate('FOR_SECTION');?>">&nbsp;<a style="color: #000;" target="_blank" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'reprint-request-product','id'=>$rs_row['id']))?>"><?php echo $rs_row['for_section']; ?></a>&nbsp;</td>   
+									<td data-label="<?php echo $tr->translate('PURPOSE');?>">&nbsp;<?php echo $rs_row['purpose']; ?>&nbsp;</td>
+									<td data-label="<?php echo $tr->translate('REQUEST_DATE');?>">&nbsp;<?php echo date("d-M-Y",strtotime($rs_row['request_date'])); ?>&nbsp;</td>
+									<td data-label="<?php echo $tr->translate('USER');?>">&nbsp;<?php echo $rs_row['user']; ?>&nbsp;</td>
+									<td data-label="<?php echo $tr->translate('STATUS');?>">&nbsp;<?php if ($rs_row['status']==1){ echo $tr->translate("ACTIVE"); }else{ echo $tr->translate("DEACTIVE"); }?>&nbsp;</td>
 								</tr>
 							<?php
 							}

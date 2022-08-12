@@ -92,42 +92,42 @@
 				<tr>
 					 <td colspan="3" id="exportExcel">
 						<form id="list" name="list" action="<?php echo $this->url(array('module'=>'allreport','controller'=>'stock','action'=>'closingpurchasepayment')); ?>" dojoType="dijit.form.Form" method="post">
-							<table cellpadding="5"​ style="font-family:'Khmer OS Battambang';margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;"  border="1" >
+							<table cellpadding="5" style="font-family:'Khmer OS Battambang';margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;"  border="1" >
 								<thead>
 								<tr style="font-size:12px; height: 20px;background-color: #CCD9FF;line-height: 30px;font-weight: bold;" align="center">
-										<td >
+										<td scope="col">
 											<input  onchange="checkall();" type="checkbox"  class="checkbox" id="check_all"  name="check_all"/>
 			                			</td>
-										<td>&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
-										<td>&nbsp;<?php echo $tr->translate('BRANCH_NAME');?>&nbsp;</td>
-										<td>&nbsp;<?php echo $tr->translate('RECEIPT_NO');?>&nbsp;</td>
-										<td>&nbsp;<?php echo $tr->translate('SUPPLIER_NAME');?>&nbsp;</td>
+										<td scope="col">&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
+										<td scope="col">&nbsp;<?php echo $tr->translate('BRANCH_NAME');?>&nbsp;</td>
+										<td scope="col">&nbsp;<?php echo $tr->translate('RECEIPT_NO');?>&nbsp;</td>
+										<td scope="col">&nbsp;<?php echo $tr->translate('SUPPLIER_NAME');?>&nbsp;</td>
 										
-										<td>&nbsp;<?php echo $tr->translate('BALANCE');?>&nbsp;</td>
-										<td>&nbsp;<?php echo $tr->translate('TOTAL_PAID');?>&nbsp;</td>
-										<td>&nbsp;<?php echo $tr->translate('TOTAL_DUE');?>&nbsp;</td>
-										<td>&nbsp;<?php echo $tr->translate('PAID_BY');?>&nbsp;</td>
-										<td>&nbsp;<?php echo $tr->translate('DATE');?>&nbsp;</td>
-										<td>&nbsp;<?php echo $tr->translate('USER');?>&nbsp;</td>
+										<td scope="col">&nbsp;<?php echo $tr->translate('BALANCE');?>&nbsp;</td>
+										<td scope="col">&nbsp;<?php echo $tr->translate('TOTAL_PAID');?>&nbsp;</td>
+										<td scope="col">&nbsp;<?php echo $tr->translate('TOTAL_DUE');?>&nbsp;</td>
+										<td scope="col">&nbsp;<?php echo $tr->translate('PAID_BY');?>&nbsp;</td>
+										<td scope="col">&nbsp;<?php echo $tr->translate('DATE');?>&nbsp;</td>
+										<td scope="col">&nbsp;<?php echo $tr->translate('USER');?>&nbsp;</td>
 							   </tr>
 								</thead>
 							<?php $i=0;$totalpaid=0;$totalbalance=0; if(!empty($this->row))foreach ($this->row AS $rs) { $i++;
 							       
 							  ?>
-								<tr class="hover" style="font-size:11px; height: 18px;"​ align="center">
+								<tr class="hover" style="font-size:11px; height: 18px;" align="center">
 									    <td align="center">
 											<input  style="height: 15px;margin-top: 5px;"  type="checkbox"  class="checkbox" id="close_<?php echo $rs['id'];?>" value="<?php echo $rs['id'];?>"  name="selector[]"/>
 										</td>
-									    <td>&nbsp; <?php echo $i; ?>&nbsp;</td>
-									    <td >&nbsp;<a target="_blank" style="text-decoration: none;color:#000;" href="<?php echo $this->baseUrl();?>/allreport/stock/rpt-payment-receipt/id/<?php echo $rs['id'];?>"><?php echo $rs['branch_name'];?></a>&nbsp;</td>
-									    <td>&nbsp;<?php echo $rs['receipt_no'];?>&nbsp;</td>
-									    <td>&nbsp;<?php echo $rs['supplier_name'];?>&nbsp;</td>
-									    <td align="right">&nbsp;$&nbsp;<?php echo number_format($rs['balance'],2);?>&nbsp;</td>
-									    <td>&nbsp;$&nbsp;<?php echo number_format($rs['total_paid'],2);?>&nbsp;</td>
-									    <td>&nbsp;$&nbsp;<?php echo number_format($rs['total_due'],2);?>&nbsp;</td>
-									    <td>&nbsp;<?php echo $rs['paid_by']; ?>&nbsp;</td>
-									    <td>&nbsp;<?php echo date("d/m/Y",strtotime($rs['date_payment']));?>&nbsp;</td>
-									    <td align="center">&nbsp;<?php echo $rs['user_enter']; ?>&nbsp;</td>
+									    <td data-label="<?php echo $tr->translate('N_O');?>">&nbsp; <?php echo $i; ?>&nbsp;</td>
+									    <td data-label="<?php echo $tr->translate('BRANCH_NAME');?>" >&nbsp;<a target="_blank" style="text-decoration: none;color:#000;" href="<?php echo $this->baseUrl();?>/allreport/stock/rpt-payment-receipt/id/<?php echo $rs['id'];?>"><?php echo $rs['branch_name'];?></a>&nbsp;</td>
+									    <td data-label="<?php echo $tr->translate('RECEIPT_NO');?>">&nbsp;<?php echo $rs['receipt_no'];?>&nbsp;</td>
+									    <td data-label="<?php echo $tr->translate('SUPPLIER_NAME');?>">&nbsp;<?php echo $rs['supplier_name'];?>&nbsp;</td>
+									    <td data-label="<?php echo $tr->translate('BALANCE');?>" align="right">&nbsp;$&nbsp;<?php echo number_format($rs['balance'],2);?>&nbsp;</td>
+									    <td data-label="<?php echo $tr->translate('TOTAL_PAID');?>">&nbsp;$&nbsp;<?php echo number_format($rs['total_paid'],2);?>&nbsp;</td>
+									    <td data-label="<?php echo $tr->translate('TOTAL_DUE');?>">&nbsp;$&nbsp;<?php echo number_format($rs['total_due'],2);?>&nbsp;</td>
+									    <td data-label="<?php echo $tr->translate('PAID_BY');?>">&nbsp;<?php echo $rs['paid_by']; ?>&nbsp;</td>
+									    <td data-label="<?php echo $tr->translate('DATE');?>">&nbsp;<?php echo date("d/m/Y",strtotime($rs['date_payment']));?>&nbsp;</td>
+									    <td data-label="<?php echo $tr->translate('USER');?>" align="center">&nbsp;<?php echo $rs['user_enter']; ?>&nbsp;</td>
 								 </tr>
 								<?php 
 								$totalpaid=$totalpaid+$rs['total_paid'];
