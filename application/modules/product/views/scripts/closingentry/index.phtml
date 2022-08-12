@@ -3,6 +3,7 @@
 	echo $this->headTitle($tr->translate("CLOSING_ENTRY"));
 	$frm = $this->frm_search;
 ?>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
 		<div class="card-box">
@@ -19,6 +20,9 @@
 			   <div class="form-group">
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement('branch_id');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input id="adjustDate" />
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement('start_date');?>
@@ -38,12 +42,66 @@
 		</div>
 	</div>
 </div>
-<script>
-	dojo.require('dijit.form.DateTextBox');
 <?php 
 	$edit_Text = $tr->translate("CHECK_AND_APPROVE");
 	$urlEdit = $this->baseUrl()."/stockinout/adjuststock/edit/id/";
 ?>
+<script>
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	dojo.require('dijit.form.DateTextBox');
+	  require(["dojo/ready"], function(ready){
+			ready(function(){
+				
+				onChageFunctionByBranch();
+				
+				var branch_id = dijit.byId('branch_id');
+				branch_id.on('change',function(evt){
+					onChageFunctionByBranch();
+				});
+			}); 
+			new dijit.form.FilteringSelect({
+				autoComplete: false,
+				queryExpr: "*${0}*",
+				required: false,		           
+				placeHolder:'<?php echo $tr->translate('SELECT_ADJUST');?>',
+				name: "adjustDate",
+				id: "adjustDate",
+				searchAttr: "name",
+				class: 'fullside',
+				onChange: function() {
+				}
+			}, "adjustDate");
+		 });
+
+	  function onChageFunctionByBranch(){
+			dijit.byId('adjustDate').attr('value','');
+			getAdjustDate();
+		} 
+		var urlGetAdjusted = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'adjuststock','action'=>'getadjustlist')); ?>';
+		function getAdjustDate(){
+			branch_id = dijit.byId('branch_id').get('value');
+			if(branch_id==null || branch_id==-1){
+				return false;
+			}
+			dojo.xhrPost({
+				url:urlGetAdjusted,	
+				content:{ 
+					'branch_id':branch_id,
+					'isClosed':1,
+				},		    
+				handleAs:"json",
+				load: function(data) {
+					storeAdjust = getDataStorefromJSON('id','name',data);
+					dijit.byId('adjustDate').set('store',storeAdjust);
+					if(branch_id=='<?php echo $this->search['branch_id'];?>'){
+						dijit.byId('adjustDate').attr('value','<?php echo $this->search['adjustDate'];?>');
+					}
+				},
+				error: function(err) {
+				}
+			});
+		}
+		
 var row=0;
 var url="";
 $(function(){

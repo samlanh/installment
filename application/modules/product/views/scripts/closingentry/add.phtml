@@ -107,10 +107,10 @@
 
 	function onChageFunctionByBranch(){
 		dijit.byId('adjustDate').attr('value','');
-		addRowProductRequest();
+		getAdjustDate();
 	} 
 	var urlGetAdjusted = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'adjuststock','action'=>'getadjustlist')); ?>';
-	function addRowProductRequest(){
+	function getAdjustDate(){
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id==null || branch_id==-1){
 			return false;
@@ -120,6 +120,7 @@
 			content:{ 
 				'branch_id':branch_id,
 				'isApproved':1,
+				'isClosed':0,
 			},		    
 			handleAs:"json",
 			load: function(data) {

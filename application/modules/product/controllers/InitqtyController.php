@@ -111,8 +111,6 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		}
 		$this->view->rsProduct = $result;
 	
-	
-// 		$dbs = new Application_Model_DbTable_DbGlobalStock();
 		$this->view->productMovement = $db->getProductMovement($proId,$projectId);
 	}
 }

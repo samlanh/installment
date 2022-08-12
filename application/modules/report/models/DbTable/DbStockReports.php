@@ -263,4 +263,211 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 	    $db = $this->getAdapter();
 	    return $db->fetchAll($sql.$where_date.$where.$order);
     }
+    function getSummaryStockReport($search){
+    	$sql="SELECT 
+    			(SELECT project_name FROM `ln_project` WHERE br_id=cl.projectId LIMIT 1) AS projectName,
+    			cl.projectId,
+		    	cl.closingDate,
+		    	cl.toDate,
+		    	cd.proId,
+		    	cl.adjustId,
+		    	(SELECT adjustDate FROM `st_adjust_stock` WHERE st_adjust_stock.id= cl.adjustId LIMIT 1) AS adjustDate,
+		    	(SELECT st_product.proCode FROM st_product WHERE st_product.proId=cd.proId LIMIT 1) AS proCode,
+		    	(SELECT st_product.proName FROM st_product WHERE st_product.proId=cd.proId LIMIT 1) AS productName,
+		    	(SELECT c.categoryName FROM `st_category` c,st_product p WHERE c.id=p.categoryId AND p.proId=cd.proId LIMIT 1) as categoryName,
+		    	(SELECT m.name FROM `st_measure` m,st_product p WHERE m.id=p.measureId AND p.proId=cd.proId  LIMIT 1) as measureName,
+		    	qtyBegining,
+				costing
+		    	
+    		FROM `st_closing` cl,
+			`st_closing_detail` AS cd
+    		 WHERE cl.id=cd.closingId ";
+    	
+//     	$from_date =(empty($search['start_date']))? '1': " cl.closingDate >= '".$search['start_date']." 00:00:00'";
+//     	$to_date = (empty($search['end_date']))? '1': " cl.closingDate <= '".$search['end_date']." 23:59:59'";
+    	
+//     	$where_date = " AND ".$from_date." AND ".$to_date;
+    	$where='';
+    	
+    	if($search['branch_id']>-1){
+    		$where.= " AND cl.projectId = ".$search['branch_id'];
+    	}
+    	if(!empty($search['reportDate'])){
+    		$where.= " AND cl.id = ".$search['reportDate'];
+    	}
+    	if(!empty($search['productId'])){
+    		$where.= " AND cd.proId = ".$search['productId'];
+    	}
+    	 
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$where.= $dbg->getAccessPermission('cl.projectId');
+    	
+    	$order=' GROUP BY cl.id DESC, cd.proId ORDER BY cd.id DESC  ';
+    	echo $sql.$where.$order;
+    	
+    	$results =  $this->getAdapter()->fetchAll($sql.$where.$order);
+    	$records = array();
+    	if(!empty($results)){
+    		foreach($results as $key=> $result){
+    			$records[$key]['projectName']=$result['projectName'];
+    			$records[$key]['closingDate']=$result['closingDate'];
+    			$records[$key]['adjustDate']=$result['adjustDate'];
+    			$records[$key]['productName']=$result['productName'];
+    			$records[$key]['proCode']=$result['proCode'];
+    			
+    			$records[$key]['categoryName']=$result['categoryName'];
+    			$records[$key]['measureName']=$result['measureName'];
+    			
+    			
+    			$records[$key]['qtyBegining']=$result['qtyBegining'];
+    			$records[$key]['costing']=$result['costing'];
+    			
+    			$records[$key]['qtyReceive']=0;
+    			$records[$key]['qtyUsage']=0;
+    			$records[$key]['qtySale']=0;
+    			$records[$key]['qtyAdjust']=0;
+    			$records[$key]['qtyTransferOut']=0;
+    			$records[$key]['qtyReceivedTransfer']=0;
+    			
+    			
+    			
+    			$qtyAdjust = $this->getAdjustEntry($result['adjustId'],$result['proId']);
+    			if(!empty($qtyAdjust)){
+    				$records[$key]['qtyAdjust']=$qtyAdjust;
+    			}
+    			
+    			$param = array(
+    					'projectId'=>$result['projectId'],
+    					'proId'=>$result['proId'],
+    					'start_date'=>$result['closingDate'],
+    					'end_date'=>$result['toDate'],//less 1 day
+    					
+    					);
+    			
+    			
+    			$qtyReceive = $this->getPurchasebyClosingEntry($param);
+    			
+    			if(!empty($qtyReceive)){
+    				$records[$key]['qtyReceive']=$qtyReceive;
+    			}
+    			
+    			$qtyTransfer = $this->getTransferClosingEntry($param);
+    			if(!empty($qtyTransfer)){
+    				$records[$key]['qtyTransferOut']=$qtyTransfer;
+    			}
+    			
+    			$param['toProjectId']=$result['projectId'];
+    			$qtyReceivedTransfer = $this->getTransferClosingEntry($param);
+    			if(!empty($qtyTransfer)){
+    				$records[$key]['qtyReceivedTransfer']=$qtyReceivedTransfer;
+    			}
+    			
+    			
+    			$param['tranType']=1;
+    			$qtyRequest = $this->getUsageClosingEntry($param);
+    			if(!empty($qtyRequest)){
+    				$records[$key]['qtyUsage']=$qtyRequest;
+    			}
+    			
+    			$param['tranType']=2;
+    			$qtySale = $this->getUsageClosingEntry($param);
+    			if(!empty($qtyRequest)){
+    				$records[$key]['qtySale']=$qtySale;
+    			}
+    			
+    		}
+    	}
+    	return $records;
+    	
+    }
+    function getPurchasebyClosingEntry($data){
+    	$sql=" SELECT
+		    		SUM(rd.qtyReceive) AS qtyPurchased
+		    	FROM 
+			    	st_receive_stock AS rs,
+			    	`st_receive_stock_detail` rd
+		    	WHERE rs.id=rd.receiveId ";
+    	
+    	
+    	if(!empty($data['start_date'])){
+    		$from_date =(empty($data['start_date']))? '1': " rs.receiveDate >= '".$data['start_date']." 00:00:00'";
+    		$to_date = (empty($data['end_date']))? '1': " rs.receiveDate < '".$data['end_date']." 00:00:00'";
+    		$sql.= " AND ".$from_date." AND ".$to_date;
+    	}
+    	if(!empty($data['projectId'])){
+    		$sql.= " AND rs.projectId=".$data['projectId'];
+    	}
+    	if(!empty($data['proId'])){
+    		$sql.= " AND rd.proId=".$data['proId'];
+    	}
+    	$sql.=" GROUP BY rd.proId ";
+    	
+    	return $this->getAdapter()->fetchOne($sql);
+    }
+    function getUsageClosingEntry($data){//usage and sale
+    	$sql=" SELECT
+    				SUM(sd.qtyRequest) AS qtyRequest
+    		FROM
+		    	st_stockout AS s,
+		    	`st_stockout_detail` sd
+    		WHERE s.id=sd.stockoutId ";
+    	
+    	
+    	if(!empty($data['tranType'])){
+    		$sql.= " AND s.tranType=".$data['tranType'];//1usage,2sale,
+    	}
+    	 
+    	if(!empty($data['start_date'])){
+    		$from_date =(empty($data['start_date']))? '1': " s.requestDate >= '".$data['start_date']." 00:00:00'";
+    		$to_date = (empty($data['end_date']))? '1': " s.requestDate < '".$data['end_date']." 00:00:00'";
+    		$sql.= " AND ".$from_date." AND ".$to_date;
+    	}
+    	
+    	if(!empty($data['projectId'])){
+    		$sql.= " AND s.projectId=".$data['projectId'];
+    	}
+    	if(!empty($data['proId'])){
+    		$sql.= " AND sd.proId=".$data['proId'];
+    	}
+    	$sql.=" GROUP BY sd.proId ";
+    	 
+    	return $this->getAdapter()->fetchOne($sql);
+    }
+    function getAdjustEntry($adjustId,$proId){//adjust
+    	$sql=" SELECT
+    		(ad.exactQty-ad.currentQty) AS qtyAdjust
+    	FROM
+	    	`st_adjust_detail` ad
+    	WHERE  ad.id=$adjustId  AND proId=".$proId;
+    
+    	return $this->getAdapter()->fetchOne($sql);
+    }
+    function getTransferClosingEntry($data){//usage and sale
+    	$sql=" SELECT
+    				SUM(td.qtyApproved) AS qtyTransfer
+    		FROM
+	    		st_transferstock AS t,
+	    		`st_transferstock_detail` td
+    		WHERE t.id=td.transferId ";
+    	 
+    	 
+    
+    	if(!empty($data['start_date'])){
+    		$from_date =(empty($data['start_date']))? '1': " t.trasferDate >= '".$data['start_date']." 00:00:00'";
+    		$to_date = (empty($data['end_date']))? '1': " t.trasferDate < '".$data['end_date']." 00:00:00'";
+    		$sql.= " AND ".$from_date." AND ".$to_date;
+    	}
+    	 
+    	if(!empty($data['projectId'])){
+    		$sql.= " AND t.fromProjectId=".$data['projectId'];
+    	}
+    	if(!empty($data['toProjectId'])){//received
+    		$sql.= " AND t.toProjectId=".$data['toProjectId'];
+    	}
+    	if(!empty($data['proId'])){
+    		$sql.= " AND td.proId=".$data['proId'];
+    	}
+    	$sql.=" GROUP BY td.proId ";
+    	return $this->getAdapter()->fetchOne($sql);
+    }
 }

@@ -179,13 +179,16 @@ class Stockinout_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
     	$sql=" SELECT 
     		id,
     		DATE_FORMAT(adjustDate,'%d-%m-%Y') AS name
-    	FROM $this->_name WHERE isClosed=0 ";
+    	FROM $this->_name WHERE 1 ";
     	
     	if(isset($data['isApproved'])){
     		$sql.=" AND isApproved=".$data['isApproved'];
     	}
     	if(isset($data['branch_id'])){
     		$sql.=" AND projectId=".$data['branch_id'];
+    	}
+    	if(isset($data['isClosed'])){
+    		$sql.=" AND isClosed=".$data['isClosed'];
     	}
     	
     	$dbg = new Application_Model_DbTable_DbGlobal();

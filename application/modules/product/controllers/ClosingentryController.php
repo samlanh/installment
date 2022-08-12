@@ -16,6 +16,7 @@ class Product_ClosingentryController extends Zend_Controller_Action {
 			else{
 				$search = array(
 					'branch_id'=>-1,
+					'adjustDate'=>'',
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 				);
@@ -27,8 +28,9 @@ class Product_ClosingentryController extends Zend_Controller_Action {
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
+			$this->view->search = $search;
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROJECT_NAME","CLOSING_DATE","NOTE","BY_USER");
+			$collumns = array("PROJECT_NAME","CLOSING_DATE","NOTE","ADJUST_DATE","BY_USER");
 			$link=array('module'=>'stockinout','controller'=>'adjuststock','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('projectName'=>$link,'adjustDate'=>$link,
 					'user_name'=>$link,'status'=>$link));
@@ -54,6 +56,19 @@ class Product_ClosingentryController extends Zend_Controller_Action {
     	$frm->FrmAdjust(null);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
+	}
+	function getAllclosingdateAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Product_Model_DbTable_DbClosingStock();
+			$results=$db->getAllClosingDate($data);
+				
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+				
+			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("SELECT_REPORT_DATE")));
+			print_r(Zend_Json::encode($results));
+			exit();
+		}
 	}
 // 	function editAction(){
 // 		$db = new Stockinout_Model_DbTable_DbAdjustStock();

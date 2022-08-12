@@ -16,6 +16,7 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     			(SELECT project_name FROM `ln_project` WHERE br_id=cl.projectId LIMIT 1) AS projectName,
 		    	cl.closingDate,
 		    	cl.note,
+		    	(SELECT adjustDate FROM `st_adjust_stock` WHERE st_adjust_stock.id= cl.adjustId LIMIT 1) AS adjustDate,
 		    	(SELECT first_name FROM rms_users WHERE id=cl.userId LIMIT 1 ) AS user_name
     		FROM `st_closing` cl WHERE 1 ";
     	
@@ -28,6 +29,10 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     	if($search['branch_id']>-1){
     		$where.= " AND cl.projectId = ".$search['branch_id'];
     	}
+    	if(!empty($where['adjustDate'])){
+    		$where.= " AND cl.adjustId = ".$search['adjustDate'];
+    	}
+    	
     	$dbg = new Application_Model_DbTable_DbGlobal();
     	$where.= $dbg->getAccessPermission('so.projectId');
     	
@@ -211,5 +216,26 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     	$sql.= $dbg->getAccessPermission('projectId');
     	
     	return $db->fetchAll($sql);
+    }
+    
+    function getAllClosingDate($search){
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	
+    	$sql="SELECT
+		    	cl.id,
+		    	DATE_FORMAT(cl.closingDate,'%d-%m-%Y') AS name
+    		FROM `st_closing` cl WHERE 1 ";
+    	
+    	$where='';
+    	if($search['branch_id']>-1){
+    		$where.= " AND cl.projectId = ".$search['branch_id'];
+    	}
+    	 
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$where.= $dbg->getAccessPermission('cl.projectId');
+    	 
+    	$order=' ORDER BY cl.id DESC  ';
+    	$db = $this->getAdapter();
+    	return $db->fetchAll($sql.$where.$order);
     }
 }
