@@ -254,7 +254,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
     	}
     	$order=' ORDER BY pt.id DESC  ';
     	$where.=$dbGb->getAccessPermission("pt.projectId");
-		echo $sql.$where.$order;
+		
     	return $db->fetchAll($sql.$where.$order);
     }
 	
