@@ -271,6 +271,17 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$verifyStatus->setMultiOptions($_opts);
 		$verifyStatus->setValue($request->getParam("verifyStatus"));
 		
+		$isPaidStatus=  new Zend_Dojo_Form_Element_FilteringSelect('isPaidStatus');
+		$isPaidStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_isPaidStatusOpt = array(
+				0=>$this->tr->translate("ALL"),
+				1=>$this->tr->translate("NOT_YET_PAID"),
+				2=>$this->tr->translate("COMPLETED_PAID"),
+				3=>$this->tr->translate("SOME_PAID")
+				);
+		$isPaidStatus->setMultiOptions($_isPaidStatusOpt);
+		$isPaidStatus->setValue($request->getParam("isPaidStatus"));
+		
 		$this->addElements(
 			array(
 				$verifyStatus,
@@ -295,7 +306,8 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				$bankId,	
 				$statusWithdraw,	
 				
-				$supplierType
+				$supplierType,
+				$isPaidStatus
 				
 			)
 		);

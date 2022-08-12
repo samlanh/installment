@@ -254,7 +254,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
     	}
     	$order=' ORDER BY pt.id DESC  ';
     	$where.=$dbGb->getAccessPermission("pt.projectId");
-		echo $sql.$where.$order;
+		
     	return $db->fetchAll($sql.$where.$order);
     }
 	
@@ -478,6 +478,16 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
     	}
 		if(!empty($search['invoiceType'])){
     		$where.= " AND inv.ivType = ".$search['invoiceType'];
+    	}
+		if(!empty($search['isPaidStatus'])){
+			if($search['isPaidStatus']==1){
+				$where.= " AND inv.isPaid =0 AND inv.totalAmountExternalAfter >= inv.totalAmountExternal ";
+			}else if($search['isPaidStatus']==2){
+				$where.= " AND inv.isPaid =1 ";
+			}else if($search['isPaidStatus']==3){
+				$where.= " AND inv.isPaid =0 AND inv.totalAmountExternalAfter < inv.totalAmountExternal ";
+			}
+    		
     	}
     	$order=' ORDER BY inv.id DESC  ';
     	$where.=$dbGb->getAccessPermission("inv.projectId");
