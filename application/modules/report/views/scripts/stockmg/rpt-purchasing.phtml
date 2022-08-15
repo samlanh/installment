@@ -107,7 +107,7 @@
 						margin:0;
 					  }
 						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-						@page {size: landscape}
+						@page {size: A4 landscape}
 					}
 					.center{text-align: center !important;}
 					table.content-data{
@@ -200,10 +200,10 @@
 					                </tr>
 					                <tr class="style" align="center" >
 					                    <td scope="col" rowspan="2" class="center"><?php echo $tr->translate("NUM");?></td>
-										<td scope="col" colspan="4" class="center"><?php echo $tr->translate("PURCHASING_INFO");?></td>    
+										<td scope="col" colspan="5" class="center"><?php echo $tr->translate("PURCHASING_INFO");?></td>    
 					                    <td scope="col" colspan="6" class="center"><?php echo $tr->translate("REQUEST_INFO");?></td>    
 					                   
-					                    <td scope="col" colspan="5" class="center"><?php echo $tr->translate("OTHER");?></td>    
+					                    <td scope="col" colspan="4" class="center"><?php echo $tr->translate("OTHER");?></td>    
 					                 
 					                </tr>
 					                <tr class="style" align="center">
@@ -211,7 +211,8 @@
 					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("PO_NO");?></td>
 					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("DATE");?></td>
 					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("SUPPLIER");?></td>
-										
+										<td scope="col" style="padding:1px;"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
+					                   
 										<td scope="col" style="padding:1px;"><?php echo $tr->translate("REQUEST_NO");?></td>
 										<td scope="col" style="padding:1px;"><?php echo $tr->translate("REQUEST_DATE");?></td>
 					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("PURPOSE");?></td>	                    
@@ -220,7 +221,6 @@
 					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("REQUEST_BY");?></td>
 										
 					                    
-					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
 					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("PURCHASING_PURPOSE");?></td>
 					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("NOTE");?></td>
 					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("TYPE");?></td>
@@ -243,6 +243,7 @@
 				               		<td data-label="<?php echo $tr->translate("PO_NO");?>"  class="centerText redBold"><?php echo $rs["purchaseNo"];?></td>      
 									<td data-label="<?php echo $tr->translate("DATE");?>"  class="centerText"><?php echo date($montFomat,strtotime($rs["date"]));?></td>
 									<td data-label="<?php echo $tr->translate("SUPPLIER");?>" ><?php echo $rs["supplierName"];?></td>
+									<td data-label="<?php echo $tr->translate("TOTAL");?>"  class="rightText"><?php echo number_format($rs["total"],2);?></td>
 									
 									<?php if($rs["purchaseType"]==$purchaseType){?>
 				               		<td data-label="<?php echo $tr->translate("REQUEST_NO");?>" ><?php echo $rs["requestNo"];?></td>                 		
@@ -252,14 +253,13 @@
 				               		<td data-label="<?php echo $tr->translate("NOTE");?>" ><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["requestNote"];?></span></td>
 									<td data-label="<?php echo $tr->translate("REQUEST_BY");?>"  class="centerText"><?php echo $rs["requestName"];?></td>
 									<?php }else{?>
-									<td class="centerText">-</td>
-									<td class="centerText">-</td>
-									<td class="centerText">-</td>
-									<td class="centerText">-</td>
-									<td class="centerText">-</td>
-									<td class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("REQUEST_NO");?>" class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("REQUEST_DATE");?>" class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("PURPOSE");?>" class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("REQUEST_NO_FROM");?>" class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("NOTE");?>" class="centerText">-</td>
+									<td data-label="<?php echo $tr->translate("REQUEST_BY");?>" class="centerText">-</td>
 									<?php }?>
-									<td data-label="<?php echo $tr->translate("TOTAL");?>"  class="centerText"><?php echo number_format($rs["total"],2);?></td>
 									<td data-label="<?php echo $tr->translate("PURCHASING_PURPOSE");?>" ><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["purpose"];?></span></td>
 									<td data-label="<?php echo $tr->translate("NOTE");?>" ><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["note"];?></span></td>
 									
