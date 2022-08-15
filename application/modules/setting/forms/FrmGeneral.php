@@ -56,14 +56,14 @@ Class Setting_Form_FrmGeneral extends Zend_Dojo_Form {
 		$_comment->setAttribs(array(
 				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
-				'style'=>'width:99%;min-height:60px; font-size:inherit; font-family:inherit; overflow-x: hidden;'
+				'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'
 		));
 		
 		$_comment1 = new Zend_Dojo_Form_Element_Textarea("comment1");
 		$_comment1->setAttribs(array(
 				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
-				'style'=>'width:99%;min-height:60px; font-size:inherit; font-family:inherit; overflow-x: hidden;'
+				'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'
 		));
 		
 // 		$_brand_client = new Zend_Dojo_Form_Element_TextBox('brand_client');
