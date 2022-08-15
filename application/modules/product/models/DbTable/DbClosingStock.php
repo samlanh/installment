@@ -223,7 +223,7 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     	
     	$sql="SELECT
 		    	cl.id,
-		    	DATE_FORMAT(cl.closingDate,'%d-%m-%Y') AS name
+		    	CONCAT(DATE_FORMAT(cl.closingDate,'%d-%m-%Y'),'/',DATE_FORMAT(cl.toDate,'%d-%m-%Y')) AS name
     		FROM `st_closing` cl WHERE 1 ";
     	
     	$where='';

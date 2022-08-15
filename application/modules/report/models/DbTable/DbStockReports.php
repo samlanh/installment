@@ -341,7 +341,6 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     					'proId'=>$result['proId'],
     					'start_date'=>$result['closingDate'],
     					'end_date'=>$result['toDate'],//less 1 day
-    					
     					);
     			
     			
@@ -433,7 +432,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     	 
     	return $this->getAdapter()->fetchOne($sql);
     }
-    function getAdjustEntry($adjustId,$proId){//adjust
+    function getAdjustEntry($adjustId,$proId){//adjust for closing
     	$sql=" SELECT
     		(ad.exactQty-ad.currentQty) AS qtyAdjust
     	FROM
@@ -442,19 +441,18 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     
     	return $this->getAdapter()->fetchOne($sql);
     }
-    function getTransferClosingEntry($data){//usage and sale
+    
+    function getTransferClosingEntry($data){//transfer and receive for closing
     	$sql=" SELECT
     				SUM(td.qtyApproved) AS qtyTransfer
     		FROM
 	    		st_transferstock AS t,
 	    		`st_transferstock_detail` td
     		WHERE t.id=td.transferId ";
-    	 
-    	 
     
     	if(!empty($data['start_date'])){
-    		$from_date =(empty($data['start_date']))? '1': " t.trasferDate >= '".$data['start_date']." 00:00:00'";
-    		$to_date = (empty($data['end_date']))? '1': " t.trasferDate < '".$data['end_date']." 00:00:00'";
+    		$from_date =(empty($data['start_date']))? '1': " t.transferDate >= '".$data['start_date']." 00:00:00'";
+    		$to_date = (empty($data['end_date']))? '1': " t.transferDate < '".$data['end_date']." 00:00:00'";
     		$sql.= " AND ".$from_date." AND ".$to_date;
     	}
     	 
@@ -469,5 +467,47 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     	}
     	$sql.=" GROUP BY td.proId ";
     	return $this->getAdapter()->fetchOne($sql);
+    }
+    
+    function getTransferAllReport($data){
+    	$DATE_FORMAT = DATE_FORMAT_FOR_SQL;
+    	$sql="
+	    	SELECT 
+				t.id,
+				(SELECT project_name from `ln_project` WHERE br_id=fromProjectId LIMIT 1) fromProject,
+				transferNo,
+				driverName,
+				deliverId,
+				DATE_FORMAT(t.transferDate,'$DATE_FORMAT') as transferDate,
+				(SELECT project_name from `ln_project` WHERE br_id=toProjectId LIMIT 1) toProject,
+				receiverId,
+				useFor,
+				isCompleted,
+				isApproved,
+				t.note,
+				proId,
+				qtyRequest
+			FROM 
+				`st_transferstock` t,
+				`st_transferstock_detail` td
+			WHERE t.id=td.transferId
+    	";
+    	if(!empty($data['start_date'])){
+    		$from_date =(empty($data['start_date']))? '1': " t.transferDate >= '".$data['start_date']." 00:00:00'";
+    		$to_date = (empty($data['end_date']))? '1': " t.transferDate < '".$data['end_date']." 00:00:00'";
+    		$sql.= " AND ".$from_date." AND ".$to_date;
+    	}
+    	
+    	if(!empty($data['projectId'])){
+    		$sql.= " AND t.fromProjectId=".$data['projectId'];
+    	}
+    	if(!empty($data['toProjectId'])){//received
+    		$sql.= " AND t.toProjectId=".$data['toProjectId'];
+    	}
+//     	if(!empty($data['proId'])){
+//     		$sql.= " AND td.proId=".$data['proId'];
+//     	}
+    	$sql.=" GROUP BY t.id ";
+    	return $this->getAdapter()->fetchAll($sql);
     }
 }

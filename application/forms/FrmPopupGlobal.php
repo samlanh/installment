@@ -2862,7 +2862,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		$username = $session_user->first_name;
 		
 		$str='<table class="footerLabel" align="center" width="100%">
-				   <tr style="font-size: 14px;">
+				   <tr style="font-size: 12px;">
 				        <td style="width:30%; text-align:center;  font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('APPROVED BY').'</td>
 				        <td style="width:30%; text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('VERIFYED BY').'</td>
 				        <td style="width:30%; text-align:center; font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".'; vertical-align: top;">'.$tr->translate('PREPARE BY').'<br /><br /><br /><br />'.$last_name." ".$username.'</td>
@@ -4024,7 +4024,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				
 					<table width="100%">
 		            	<tr>
-		                	<td width="30%" id="projectlogo"><img src="'.$defaultLogo.'" style=" height:85px; max-width: 100%;" ></td>
+		                	<td width="30%" id="projectlogo"><img src="'.$defaultLogo.'" style="max-height:85px; max-width: 100%;" ></td>
 		                	<td width="40%" valign="top">
 		                		<ul class="headReport">
 		                			<li ><span id="companyTitle"></span></li>
@@ -4081,7 +4081,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</style>
 				<table class="tableTop" width="100%" style="border-bottom: double 5px #337ab7;">
 					<tr>
-						<td width="20%" id="projectlogo"><img src="'.$defaultLogo.'" style=" height:85px; max-width: 100%; " ></td>
+						<td width="20%" id="projectlogo"><img src="'.$defaultLogo.'" style="max-height:85px; max-width: 100%; " ></td>
 						<td width="60%" valign="top" style=" padding-bottom: 40px;">
 							<ul class="headReport">
 								<li style="font-size:'.FONTSIZE_REPORT.'; " id="companyTitle">'.$companyName.'</li>

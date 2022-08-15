@@ -11,7 +11,7 @@
 		$classHideHeight="125px";
 	}
 	
-	$branch_title = $tr->translate("BRAND_TITLE");
+	$branch_title = $tr->translate("RPT_TRANSFER");
 	$dbAcc = new Report_Model_DbTable_DbAccountant();
 	$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
 	$arrStep = array(
@@ -258,16 +258,23 @@
 					                
 					            </thead>
 				                <?php 
-				                	$totalRecord=count($this->row);
-				                	$gTotalAmount=0;
 				                	$i=1;
 				                ?>
 				                <?php 
-				                if(!empty($this->row)) foreach ($this->row as $index => $rs){
-									$gTotalAmount=$gTotalAmount+$rs["total"];
-									
+				                if(!empty($this->rows)) foreach($this->rows as $index => $rs){
 								?>
-				                
+									<tr>
+										<td align="center"><?php echo $index+1;?></td>
+										<td><?php echo $rs['fromProject'];?></td>
+										<td><?php echo $rs['transferNo'];?></td>
+										<td><?php echo $rs['transferDate']?></td>
+										<td><?php echo $rs['driverName']?></td>
+										<td><?php echo $rs['deliverId']?></td>
+										<td><?php echo $rs['toProject']?></td>
+										<td><?php echo $rs['receiverId']?></td>
+										<td><?php echo $rs['useFor']?></td>
+										<td><?php echo $rs['note']?></td>
+									</tr>
 								
 				                <?php }?>
 				               
@@ -290,7 +297,7 @@
 			 getBranchInfo();
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_SUMMARY_STOCK");?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_TRANSFER");?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['end_date'])); }?>';
 		});
 		
