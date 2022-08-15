@@ -1015,6 +1015,7 @@ function filterClient(){
 	getReceiptByBranch('');
 	getAllClientByBranch(branch_id);
 	getAllClientNumberByBranch(branch_id);
+	getAllContractName();
 }
 var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
 function getAllPropertyBranch(branch_id){
@@ -1144,6 +1145,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dojo.NodeList-manipulate");
 dojo.require("dojo.html");
 
+var contractNameStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_name));?> );
 var client_number_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_code));?> );
 var co_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->co_name));?> );
@@ -1161,7 +1163,7 @@ require(["dojo/ready"], function(ready){
 		 branch_id.on('change', function(evt) {
 			 getAllStaffByBranch();
 		});
-			
+		getAllContractName();
 	  });
 
 	 new dijit.form.FilteringSelect({
@@ -1223,7 +1225,7 @@ require(["dojo/ready"], function(ready){
 					getlandinfo();
 				}
 		}
-			}, "land_code");
+	}, "land_code");
 	 
 	new dijit.form.FilteringSelect({
 	store: client_store,//dojo.data.ObjectStore({objectStore: client_data}),
@@ -1246,26 +1248,60 @@ require(["dojo/ready"], function(ready){
 	}, "member");
 	
 	new dijit.form.FilteringSelect({
-	store: client_number_store,
-	autoComplete: true,
-	required: false,		           
-	name: "customer_code",
-	id: "customer_code",
-	searchAttr: "name",
-	class: 'fullside',
-	onChange: function() {
-		customer_code = dijit.byId('customer_code').get('value');
-		if(customer_code==-1){
-			window.open('<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'add'));?>');
-		}else{
-			dijit.byId('member').attr('value',customer_code);
+		store: client_number_store,
+		autoComplete: true,
+		required: false,		           
+		name: "customer_code",
+		id: "customer_code",
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+			customer_code = dijit.byId('customer_code').get('value');
+			if(customer_code==-1){
+				window.open('<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'add'));?>');
+			}else{
+				dijit.byId('member').attr('value',customer_code);
+			}
 		}
-    }
 	}, "customer_code");
+	
+	new dijit.form.FilteringSelect({
+		store: contractNameStore,
+		autoComplete: false,
+		queryExpr: "*${0}*",	           
+		name: "contract_issuer_id",
+		id: "contract_issuer_id",
+		searchAttr: "name",
+		required:true,
+		class: 'fullside',
+		onChange: function() {
+			contract_issuer_id = dijit.byId('contract_issuer_id').get('value');
+			if(contract_issuer_id==-1){
+				window.open('<?php echo $this->url(array('module'=>'project','controller'=>'issuer','action'=>'add'))?>');
+			}
+	   }
+	}, "contract_issuer_id");
 
 });
-</script>
-<script type="text/javascript">
+
+var urlGetContractName = '<?php echo $this->url(array('module'=>'project','controller'=>'issuer','action'=>'getcontractname')); ?>';
+function getAllContractName(){
+	dojo.xhrPost({
+		url:urlGetContractName,	
+		content:{ 
+		  
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			contractNameStore  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('contract_issuer_id').set('store', contractNameStore);
+			dijit.byId('contract_issuer_id').attr('value',1);
+		},
+		error: function(err) {
+		}
+	});
+}
+
 var url_getcustomer = '<?php echo $this->url(array('module'=>'group','controller'=>'index','action'=>'getclient')); ?>';
 function getcustomerinfo(client_id){
 	dojo.xhrPost({
