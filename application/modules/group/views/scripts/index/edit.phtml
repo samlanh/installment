@@ -354,9 +354,13 @@ input.btn_borwse_image {
 			             </div>
 			             <div class="col-md-4 col-sm-4 col-xs-12">
 							<div class="form-group">
-			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CONTACT_INFO");?> 
+			                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" >
+			                   <i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CONTACT_INFO");?> 
+			                   <input type="button" value="" tabindex="2" label="<?php echo $tr->translate('COPY_ADDRESS');?>" id="copy_add" dojoType="dijit.form.Button" name="copy_add"
+						 		iconClass="dijitIconCopy" /> 
 			                   </label>
 			                </div>
+							
 			                <div class="form-group">
 			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?> :
 			                   </label>
@@ -496,9 +500,23 @@ var adistrict_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json
 var dcommune_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var qvillage_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 
+function CopyAddress(){
+	house = dijit.byId('house').get('value');
+	street = dijit.byId('street').get('value');
+	province = dijit.byId('province').get('value');
+	district = dijit.byId('district').get('value');
+    commune_id = dijit.byId('commune').get('value');
+    village = dijit.byId('village').get('value');
+    dijit.byId('ghouse').attr('value',house);
+    dijit.byId('dstreet').attr('value',street);
+    dijit.byId('cprovince').attr('value',province);
+    dfilterDistrict(district);
+}
 dojo.ready(function(){
 	try{
-
+	$("#copy_add").click(function(){
+		CopyAddress();
+	});
 	new dijit.form.FilteringSelect({
 	store: district_store,
 	autoComplete:false,
