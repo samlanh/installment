@@ -117,9 +117,11 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 			$where=" keyName= 'bank_info'";
 			$this->update($arr, $where);
 			
-			$arr = array('keyValue'=>$data['show_propertyprice'],);
+			$showPropertyprice = empty($data['show_propertyprice'])?0:1;
+			$arr = array('keyValue'=>$showPropertyprice,);
 			$where=" keyName= 'show_propertyprice'";
 			$this->update($arr, $where);
+			
 			$arr = array('keyValue'=>$data['bank_account1'],);
 			$where=" keyName= 'bank_account1'";
 			$this->update($arr, $where);
@@ -135,7 +137,9 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 			$arr = array('keyValue'=>$data['cheque_receiver'],);
 			$where=" keyName= 'cheque_receiver'";
 			$this->update($arr, $where);
-			$arr = array('keyValue'=>$data['showhouseinfo'],);
+			
+			$showHouseinfo = empty($data['showhouseinfo'])?0:1;
+			$arr = array('keyValue'=>$showHouseinfo,);
 			$where=" keyName= 'showhouseinfo'";
 			$this->update($arr, $where);
 			
@@ -201,11 +205,12 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 			
 			
 			$rows = $this->geLabelByKeyName('autocalcualte_period');
+			$autoCalculatePeriod = empty($data['autocalcualte_period'])?0:1;
 			if (empty($rows)){
-				$arr = array('keyValue'=>$data['autocalcualte_period'],'keyName'=>"autocalcualte_period",'user_id'=>$dbg->getUserId());
+				$arr = array('keyValue'=>$autoCalculatePeriod,'keyName'=>"autocalcualte_period",'user_id'=>$dbg->getUserId());
 				$this->insert($arr);
 			}else{
-				$arr = array('keyValue'=>$data['autocalcualte_period'],);
+				$arr = array('keyValue'=>$autoCalculatePeriod,);
 				$where=" keyName= 'autocalcualte_period'";
 				$this->update($arr, $where);
 			}
