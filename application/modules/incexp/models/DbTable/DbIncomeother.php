@@ -263,7 +263,6 @@ class Incexp_Model_DbTable_DbIncomeother extends Zend_Db_Table_Abstract
 			$where.=$dbp->getAccessPermission("branch_id");
 			
 	       $order=" order by id desc ";
-	       echo $sql.$where.$order;exit();
 			return $db->fetchAll($sql.$where.$order);
 	}
 	function getAllExpenseReport($search=null){
