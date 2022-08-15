@@ -542,21 +542,27 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 				}
     			$string.='
     			<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
-    				<td align="center" style="  padding: 0 10px;"><input  OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
+    				<td align="center">
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="checkbox custom-control-input" OnChange="CheckAllTotal('.$no.')" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
+							<label class="custom-control-label" for="mfdid_'.$no.'">
+							</label>
+						</div>
+					</td>
 	    			<td class="textCenter">'.($key+1).'</td>
 	    			<td class="textCenter">
-	    				<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($row['receiveIvDate'])).'<br /><small>'.$row['ivTypeTitle'].'</small></label>
+	    				<div id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($row['receiveIvDate'])).'<br /><small>'.$row['ivTypeTitle'].'</small></div>
 	    				<input type="hidden" dojoType="dijit.form.TextBox" name="invoiceId'.$no.'" id="invoiceId'.$no.'" value="'.$row['id'].'" >
     				</td>
 					<td class="invNoCol">
-						<label id="titleInvoice'.$no.'">'.$row['invoiceNo'].'<br />'.$row['supplierInvoiceNo'].'</label>
+						<div id="titleInvoice'.$no.'">'.$row['invoiceNo'].'<br />'.$row['supplierInvoiceNo'].'</div>
 						<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span>
     				</td>
 					<td class="textCenter">
-						<label id="origtotallabel'.$no.'">'.number_format($row['totalAmountExternal'],2).'</label>
+						<div id="origtotallabel'.$no.'">'.number_format($row['totalAmountExternal'],2).'</div>
 					</td>
 					<td class="textCenter">
-						<label id="duelabel'.$no.'">'.number_format($row['totalAmountExternalAfter'],2).'</label>
+						<div id="duelabel'.$no.'">'.number_format($row['totalAmountExternalAfter'],2).'</div>
 						<input type="hidden" dojoType="dijit.form.TextBox" name="dueAmount'.$no.'" id="dueAmount'.$no.'" value="'.$row['totalAmountExternalAfter'].'" >
 					</td>
 					
@@ -672,27 +678,34 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 					
 					$string.='
 					<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
-						<td align="center" style="  padding: 0 10px;"><input checked="checked" OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
+						<td align="center" >
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" checked="checked" class="checkbox custom-control-input" OnChange="CheckAllTotal('.$no.')" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
+								<label class="custom-control-label" for="mfdid_'.$no.'">
+									
+								</label>
+							</div>
+						</td>
 						<td class="textCenter">'.($key+1).'</td>
 						<td class="textCenter">
-							<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($rowPaymentdetail['receiveIvDate'])).'<br /><small>'.$rowPaymentdetail['ivTypeTitle'].'</small></label>
+							<div id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($rowPaymentdetail['receiveIvDate'])).'<br /><small>'.$rowPaymentdetail['ivTypeTitle'].'</small></div>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="paymentId'.$no.'" id="paymentId'.$no.'" value="'.$rowPaymentdetail['paymentId'].'" >
 							<input type="hidden" dojoType="dijit.form.TextBox" name="invoiceId'.$no.'" id="invoiceId'.$no.'" value="'.$rowPaymentdetail['invoiceId'].'" >
 							<input type="hidden" dojoType="dijit.form.TextBox" name="detailid'.$no.'" id="detailid'.$no.'" value="'.$rowPaymentdetail['id'].'" >
 						</td>
 						<td class="invNoCol">
 							
-							<label id="titleInvoice'.$no.'">
+							<div id="titleInvoice'.$no.'">
 							'.$rowPaymentdetail['invoiceNo'].'<br />'.$rowPaymentdetail['supplierInvoiceNo'].'
-							</label>
+							</div>
 							<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span>
 						</td>
 					
 						<td class="textCenter">
-							<label id="origtotallabel'.$no.'">'.number_format($rowPaymentdetail['totalAmountExternal'],2).'</label>
+							<div id="origtotallabel'.$no.'">'.number_format($rowPaymentdetail['totalAmountExternal'],2).'</div>
 						</td>
 						<td class="textCenter">
-							<label id="duelabel'.$no.'">'.number_format($dueAmount,2).'</label>
+							<div id="duelabel'.$no.'">'.number_format($dueAmount,2).'</div>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="dueAmount'.$no.'" id="dueAmount'.$no.'" value="'.$dueAmount.'" >
 						</td>
 						
@@ -703,25 +716,32 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 				}else{
 					$string.='
 					<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
-						<td align="center" style="  padding: 0 10px;"><input  OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
+						<td align="center" >
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="checkbox custom-control-input" OnChange="CheckAllTotal('.$no.')" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
+								<label class="custom-control-label" for="mfdid_'.$no.'">
+									
+								</label>
+							</div>
+						</td>
 						<td class="textCenter">'.($key+1).'</td>
 						<td class="textCenter">
-							<label id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($row['receiveIvDate'])).'<br /><small>'.$row['ivTypeTitle'].'</small></label>
+							<div id="billingdatelabel'.$no.'">'.date("d-M-Y",strtotime($row['receiveIvDate'])).'<br /><small>'.$row['ivTypeTitle'].'</small></div>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="invoiceId'.$no.'" id="invoiceId'.$no.'" value="'.$row['id'].'" >
 						</td>
 						<td class="invNoCol">
 							
-							<label id="titleInvoice'.$no.'">
+							<div id="titleInvoice'.$no.'">
 								'.$row['invoiceNo'].'<br />'.$row['supplierInvoiceNo'].'	
-							</label>
+							</div>
 							<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span>
 						</td>
 					
 						<td class="textCenter">
-							<label id="origtotallabel'.$no.'">'.number_format($row['totalAmountExternal'],2).'</label>
+							<div id="origtotallabel'.$no.'">'.number_format($row['totalAmountExternal'],2).'</div>
 						</td>
 						<td class="textCenter">
-							<label id="duelabel'.$no.'">'.number_format($row['totalAmountExternalAfter'],2).'</label>
+							<div id="duelabel'.$no.'">'.number_format($row['totalAmountExternalAfter'],2).'</div>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="dueAmount'.$no.'" id="dueAmount'.$no.'" value="'.$row['totalAmountExternalAfter'].'" >
 						</td>
 						
