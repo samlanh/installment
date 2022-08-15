@@ -510,4 +510,36 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     	$sql.=" GROUP BY t.id ";
     	return $this->getAdapter()->fetchAll($sql);
     }
+
+
+
+	function getTransferRow($recordId){
+    	$db = $this->getAdapter();
+    	$this->_name='st_transferstock';
+    	$sql="SELECT id,
+		(SELECT project_name FROM `ln_project` WHERE br_id=tr.fromProjectID LIMIT 1) AS projectName,
+		(SELECT project_name FROM `ln_project` WHERE br_id=tr.toProjectID LIMIT 1) AS ReceiveBranch,				
+		tr.transferNo, tr.ReceiverId,
+		DATE_FORMAT(tr.transferDate,'%d-%m-%Y') AS TransferDate, tr.useFor, tr.deliverId, tr.driverName				
+		FROM `st_transferstock` AS tr WHERE tr.status=1 AND tr.id=".$recordId;
+    	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$sql.= $dbg->getAccessPermission('projectId');
+    	
+    	$sql.=" LIMIT 1";
+    	
+    	return $db->fetchRow($sql);
+    }
+
+	function getTransferAllRow($recordId){
+    	$db = $this->getAdapter();
+    	$this->_name='st_transferstock_detail';
+    	$sql="SELECT td.*,
+		(SELECT `proCode` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS proCode,
+		(SELECT `proName` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS proName,
+		(SELECT `measureValue` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS StockQty,
+		(SELECT `measureLabel` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS MeasureLabel		
+		FROM `st_transferstock_detail` AS td WHERE transferId=".$recordId." ";
+    	return $db->fetchAll($sql);
+    }
 }

@@ -261,21 +261,25 @@ public function rptUsageAction(){
 	  }
   public function rptTransferdetailAction(){
 	try{
-		$db = new Report_Model_DbTable_DbAccountant();
-		$id=$this->getRequest()->getParam('id');
-		$id = empty($id)?0:$id;
-		$row = $db->getPurchasingById($id);
-		
-		$this->view->row = $row;
-		$this->view->rowdetail = $db->getPODetailById($id);
+	    $db = new Report_Model_DbTable_DbStockReports();
+	    $id=$this->getRequest()->getParam('id');
+	    $id = empty($id)?0:$id;
+	    $row = $db->getTransferRow($id);
+	    if (empty($row)){
+	      Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/report/stockreport/rpt-transfer");
+	      exit();
+	    }
+	    $this->view->row = $row;
+	    $this->view->rowdetail = $db->getTransferAllRow($id);
+	  
+	  }catch (Exception $e){
+	    Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+	    Application_Form_FrmMessage::message("APPLICATION_ERROR");
+	  }
+	  
+	  $frmpopup = new Application_Form_FrmPopupGlobal();
+	  $this->view->printByFormat = $frmpopup->printByFormat();
 	
-	}catch (Exception $e){
-		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-		Application_Form_FrmMessage::message("APPLICATION_ERROR");
-	}
-	
-	$frmpopup = new Application_Form_FrmPopupGlobal();
-	$this->view->printByFormat = $frmpopup->printByFormat();
 }
  
 

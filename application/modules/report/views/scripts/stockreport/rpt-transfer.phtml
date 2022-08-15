@@ -2,6 +2,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
 	$dbGB = new Application_Model_DbTable_DbGlobal();
+	
 
 	$montFomat=DATE_FORMAT_FOR_PHP;
 	
@@ -263,7 +264,7 @@
 				                <?php 
 				                if(!empty($this->rows)) foreach($this->rows as $index => $rs){
 								?>
-									<tr>
+									<tr class="style context-menu-one" oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" style="font-family: 'Khmer OS Battambang'; white-space:nowrap; ">
 										<td align="center"><?php echo $index+1;?></td>
 										<td><?php echo $rs['fromProject'];?></td>
 										<td><?php echo $rs['transferNo'];?></td>
@@ -328,5 +329,30 @@ function getBranchInfo(){
 		error: function(e) {
 		}
 	});
+}
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="usage"){
+				url='<?php echo $this->baseUrl()."/report/stockreport/rpt-transferdetail/id/";?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"usage": {name: "<?php echo $tr->translate("TRANSFER_LETTER");?>", icon: "fa-file-text"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
 }
 </script>
