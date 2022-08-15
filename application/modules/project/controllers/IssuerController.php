@@ -98,5 +98,20 @@ class Project_IssuerController extends Zend_Controller_Action {
    		Application_Model_Decorator::removeAllDecorator($frm_pro);
    		$this->view->frmIssuer = $frm_pro;
    }
+   
+   public function getcontractnameAction(){//ajax
+		if($this->getRequest()->isPost()){
+			$db = new Application_Model_DbTable_DbGlobal();
+			$data = $this->getRequest()->getPost();
+			$contractName = $db->getAllContractIssuer();
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			array_unshift($contractName,array(
+					'id' => -1,
+					'name' => $tr->translate("ADD_NEW"),
+			));
+			print_r(Zend_Json::encode($contractName));
+			exit();
+		}
+	}
   
 }
