@@ -2,6 +2,14 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate('ADD_BRANCH')); 
 	$footer_reciept_type=FOOTER_RECEIPT_OPT;
+	
+	$displayNone="";
+	$colDiv="col-md-4 col-sm-4 col-xs-12";
+	if ($footer_reciept_type!=2){
+		
+		$displayNone="display:none;";
+		$colDiv="col-md-6 col-sm-6 col-xs-12";
+	}
 ?>
 <?php  $frm = $this->frm_branch;?>
 <script>
@@ -90,7 +98,7 @@ input.btn_borwse_image {
 	    	<div class="card-box">
 	    	<div class="tab-content vertical">
 			   <div class="tab-pane fade in active" id="panel1" role="tabpanel">
-			   		<div class="col-md-4 col-sm-4 col-xs-12">
+			   		<div class="<?php  echo $colDiv;?>">
 						<div class="card"> 
 							<div class="card-body"> 
 								<div class="row"> 
@@ -101,109 +109,155 @@ input.btn_borwse_image {
 											</div> 
 											<div class="col-md-10 col-sm-10 col-xs-12"> 
 												<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PROJECT_INFO");?></p>
+											</div>
+										</div>
+										<div class="form-group">
+										   <div class="col-md-12 col-sm-12 col-xs-12">
+												<?php 
+												$images = $this->baseUrl().'/images/no-logo.jpg';
+												if (!empty($this->row['logo'])){
+													$images = $this->baseUrl().'/images/projects/'.$this->row['logo'];
+												}
+												?>
+												<input name="old_photo"  value="<?php echo $this->row['logo'];?>" type="hidden" />
+												<div class="account-image" >
+													<div class="image-box">
+														<img id="logo_wiew" src="<?php echo $images;?>" alt=""  />
+													</div>
+													<div class="button_browse">
+														<div id='preview'></div>	
+														<span><?php echo $tr->translate('Change Logo')?> <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+														<input class="btn_borwse_image" type="file" id="logo" name="logo" />
+													</div>
+												</div>
+										   </div>
+										 </div>
+										 <div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_CODE");?><span class="required">*</span>  :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('branch_code');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROJECT_NAME");?><span class="required">*</span>  :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('branch_namekh');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PREFIX_CODE");?><span class="required">*</span>  :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('prefix_code');?>
+											   </div>
+											</div>
+											
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("MAP_URL");?>  :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('map_url');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?>  :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('branch_tel');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_ADDRESS");?>  :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('br_address');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONTACT_CONSTRUCTION");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('contact_contruction');?>
+											   </div>
+											</div>
+											<div style="display: none;">
 												<div class="form-group">
-												   <div class="col-md-12 col-sm-12 col-xs-12">
-														<?php 
-														$images = $this->baseUrl().'/images/no-logo.jpg';
-														if (!empty($this->row['logo'])){
-															$images = $this->baseUrl().'/images/projects/'.$this->row['logo'];
-														}
-														?>
-														<input name="old_photo"  value="<?php echo $this->row['logo'];?>" type="hidden" />
-														<div class="account-image" >
-															<div class="image-box">
-																<img id="logo_wiew" src="<?php echo $images;?>" alt=""  />
-															</div>
-															<div class="button_browse">
-																<div id='preview'></div>	
-																<span><?php echo $tr->translate('Change Logo')?> <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
-																<input class="btn_borwse_image" type="file" id="logo" name="logo" />
-															</div>
-														</div>
+												   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRNACH_FAX");?> :
+												   </label>
+												   <div class="col-md-7 col-sm-7 col-xs-12">
+														<?php echo $frm->getElement('fax');?>
 												   </div>
-												 </div>
-												 <div class="form-group">
-													   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_CODE");?><span class="required">*</span>  :
-													   </label>
-													   <div class="col-md-7 col-sm-7 col-xs-12">
-															<?php echo $frm->getElement('branch_code');?>
-													   </div>
-													</div>
-													<div class="form-group">
-													   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROJECT_NAME");?><span class="required">*</span>  :
-													   </label>
-													   <div class="col-md-7 col-sm-7 col-xs-12">
-															<?php echo $frm->getElement('branch_namekh');?>
-													   </div>
-													</div>
-													<div class="form-group">
-													   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PREFIX_CODE");?><span class="required">*</span>  :
-													   </label>
-													   <div class="col-md-7 col-sm-7 col-xs-12">
-															<?php echo $frm->getElement('prefix_code');?>
-													   </div>
-													</div>
-													
-													<div class="form-group">
-													   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("MAP_URL");?>  :
-													   </label>
-													   <div class="col-md-7 col-sm-7 col-xs-12">
-															<?php echo $frm->getElement('map_url');?>
-													   </div>
-													</div>
-													<div class="form-group">
-													   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?>  :
-													   </label>
-													   <div class="col-md-7 col-sm-7 col-xs-12">
-															<?php echo $frm->getElement('branch_tel');?>
-													   </div>
-													</div>
-													<div class="form-group">
-													   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_ADDRESS");?>  :
-													   </label>
-													   <div class="col-md-7 col-sm-7 col-xs-12">
-															<?php echo $frm->getElement('br_address');?>
-													   </div>
-													</div>
-													<div class="form-group">
-													   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONTACT_CONSTRUCTION");?> :
-													   </label>
-													   <div class="col-md-7 col-sm-7 col-xs-12">
-															<?php echo $frm->getElement('contact_contruction');?>
-													   </div>
-													</div>
-													<div style="display: none;">
-														<div class="form-group">
-														   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRNACH_FAX");?> :
-														   </label>
-														   <div class="col-md-7 col-sm-7 col-xs-12">
-																<?php echo $frm->getElement('fax');?>
-														   </div>
-														</div>
-														<div class="form-group">
-														   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NOTE");?> :
-														   </label>
-														   <div class="col-md-7 col-sm-7 col-xs-12">
-																<?php echo $frm->getElement('branch_note');?>
-														   </div>
-														</div>
-													 </div>
-													<div class="form-group">
-													   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BUDGET_AMOUNT");?> :
-													   </label>
-													   <div class="col-md-7 col-sm-7 col-xs-12">
-															<?php echo $frm->getElement('budget_amount');?>
-													   </div>
-													</div>
-											</div> 
-										</div> 
+												</div>
+												<div class="form-group">
+												   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NOTE");?> :
+												   </label>
+												   <div class="col-md-7 col-sm-7 col-xs-12">
+														<?php echo $frm->getElement('branch_note');?>
+												   </div>
+												</div>
+											 </div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BUDGET_AMOUNT");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('budget_amount');?>
+											   </div>
+											</div>
 									</div> 
 								</div> 
 							</div> 
 						</div>
 					</div>
-					
-					<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="<?php  echo $colDiv;?>" style="<?php echo $displayNone;?>">
+						<div class="card"> 
+							<div class="card-body"> 
+								<div class="row"> 
+									<div class="col-md-12 col-sm-12 col-xs-12"> 
+										<div class="d-flex"> 
+											<div class="settings-main-icon ">
+												<i class="fa fa-book" aria-hidden="true"></i>
+											</div> 
+											<div class="col-md-10 col-sm-10 col-xs-12"> 
+												<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("OFFICE_INFO");?></p>
+											</div> 
+										</div>
+										<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TEL");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('office_tel');?>
+										   </div>
+										</div>
+										<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("Email");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('office_email');?>
+										   </div>
+										</div>
+										<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("WEBSITE");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('office_website');?>
+										   </div>
+										</div>
+										<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("ADDRESS");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('office_address');?>
+										   </div>
+										</div>
+									</div> 
+								</div> 
+							</div> 
+						</div>
+		             </div>
+					 
+					<div class="<?php  echo $colDiv;?>" >
 						<div class="card"> 
 							<div class="card-header "> 
 								<label class="custom-label-info float-start" >
@@ -219,20 +273,20 @@ input.btn_borwse_image {
 											</div> 
 											<div class="col-md-10 col-sm-10 col-xs-12"> 
 												<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("BANK")." 1";?></p>
-												<div class="form-group">
-													<label class="col-md-6 col-sm-6 col-xs-12 "><?php echo $tr->translate('Bank Name')?></label>
-													<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account1');?></div>
-												</div>
-												<div class="form-group">
-													<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Acc Name')?></label>
-													<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account_name1');?></div>
-												</div>
-												<div class="form-group">
-													<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Number')?></label>
-													<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account1number');?></div>
-												</div>
 											</div> 
-										</div> 
+										</div>
+										<div class="form-group">
+											<label class="col-md-6 col-sm-6 col-xs-12 "><?php echo $tr->translate('Bank Name')?></label>
+											<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account1');?></div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Acc Name')?></label>
+											<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account_name1');?></div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Number')?></label>
+											<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account1number');?></div>
+										</div>
 									</div> 
 								</div> 
 							</div> 
@@ -248,20 +302,20 @@ input.btn_borwse_image {
 											</div> 
 											<div class="col-md-10 col-sm-10 col-xs-12"> 
 												<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("BANK")." 2";?></p>
-												<div class="form-group">
-													<label class="col-md-6 col-sm-6 col-xs-12 "><?php echo $tr->translate('Bank Name')?></label>
-													<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account2');?></div>
-												</div>
-												<div class="form-group">
-													<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Acc Name')?></label>
-													<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account_name2');?></div>
-												</div>
-												<div class="form-group">
-													<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Number')?></label>
-													<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account2number');?></div>
-												</div>
 											</div> 
-										</div> 
+										</div>
+										<div class="form-group">
+											<label class="col-md-6 col-sm-6 col-xs-12 "><?php echo $tr->translate('Bank Name')?></label>
+											<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account2');?></div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Acc Name')?></label>
+											<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account_name2');?></div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Number')?></label>
+											<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account2number');?></div>
+										</div>
 									</div> 
 								</div> 
 							</div> 
@@ -277,20 +331,20 @@ input.btn_borwse_image {
 											</div> 
 											<div class="col-md-10 col-sm-10 col-xs-12"> 
 												<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("BANK")." 3";?></p>
-												<div class="form-group">
-													<label class="col-md-6 col-sm-6 col-xs-12 "><?php echo $tr->translate('Bank Name')?></label>
-													<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account3');?></div>
-												</div>
-												<div class="form-group">
-													<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Acc Name')?></label>
-													<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account_name3');?></div>
-												</div>
-												<div class="form-group">
-													<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Number')?></label>
-													<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account3number');?></div>
-												</div>
 											</div> 
 										</div> 
+										<div class="form-group">
+											<label class="col-md-6 col-sm-6 col-xs-12 "><?php echo $tr->translate('Bank Name')?></label>
+											<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account3');?></div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Acc Name')?></label>
+											<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account_name3');?></div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-6 col-sm-6 col-xs-12"><?php echo $tr->translate('Bank Number')?></label>
+											<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('bank_account3number');?></div>
+										</div>
 									</div> 
 								</div> 
 							</div> 
@@ -306,64 +360,18 @@ input.btn_borwse_image {
 											</div> 
 											<div class="col-md-10 col-sm-10 col-xs-12"> 
 												<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("CHEQUE");?></p>
-												<div class="form-group">
-													<label class="col-md-6 col-sm-6 col-xs-12 "><?php echo $tr->translate('Cheque Receiver')?></label>
-													<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('cheque_receiver');?></div>
-												</div>
-												
 											</div> 
-										</div> 
+										</div>
+										<div class="form-group">
+											<label class="col-md-6 col-sm-6 col-xs-12 "><?php echo $tr->translate('Cheque Receiver')?></label>
+											<div class="col-md-6 col-sm-6 col-xs-12"><?php echo $frm->getElement('cheque_receiver');?></div>
+										</div>
 									</div> 
 								</div> 
 							</div> 
 						</div>
 		           </div>
-				   <div class="col-md-4 col-sm-4 col-xs-12" style="<?php if ($footer_reciept_type!=2){ echo 'display:none;';}?>" >
-						<div class="card"> 
-							<div class="card-body"> 
-								<div class="row"> 
-									<div class="col-md-12 col-sm-12 col-xs-12"> 
-										<div class="d-flex"> 
-											<div class="settings-main-icon ">
-												<i class="fa fa-book" aria-hidden="true"></i>
-											</div> 
-											<div class="col-md-10 col-sm-10 col-xs-12"> 
-												<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("OFFICE_INFO");?></p>
-												<div class="form-group">
-												   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TEL");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('office_tel');?>
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("Email");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('office_email');?>
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("WEBSITE");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('office_website');?>
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("ADDRESS");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('office_address');?>
-												   </div>
-												</div>
-											</div> 
-										</div> 
-									</div> 
-								</div> 
-							</div> 
-						</div>
-		             </div>
+				   
 			   </div>
 			   <div class="tab-pane fade in" id="panel2" role="tabpanel">
 			   			<div class="col-md-4 col-sm-4 col-xs-12">

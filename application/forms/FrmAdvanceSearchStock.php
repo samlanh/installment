@@ -276,7 +276,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$_isPaidStatusOpt = array(
 				0=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("NOT_YET_PAID"),
-				2=>$this->tr->translate("COMPLETED_PAID"),
+				2=>$this->tr->translate("COMPLETED_PAYMENT"),
 				3=>$this->tr->translate("SOME_PAID")
 				);
 		$isPaidStatus->setMultiOptions($_isPaidStatusOpt);
