@@ -13,12 +13,11 @@ $FOR_MULTISYSTEM = FOR_MULTISYSTEM;
 	dojo.require('dijit.form.FilteringSelect');
 </script>
 <style>
-ul.opt-school {
+ul.optListRow {
     list-style-type: none;
-}
- input[type=checkbox],  input[type=radio]{
-	height: 15px;
-    display: initial;
+    margin: 0;
+    padding: 0;
+    padding-left: 20px;
 }
 .noDisplay{
 	display:none;
@@ -116,7 +115,7 @@ ul.opt-school {
 	                   </div>
 	                </div>
 	      
-	    			<div class="form-group">
+	    			<div class="form-group noDisplay">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -130,35 +129,97 @@ ul.opt-school {
 	                </div>
 	            </div>
 	            <div class="col-md-3 col-sm-3 col-xs-12">
-	            	<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("Assign Branch Access");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                	<span><input type="checkbox" class="" checked="checked"  name="check_all" id="check_all" value="all" OnChange="CheckAllTotal(0);" style=" height: initial;"  />&nbsp;<span class="bold" style="vertical-align: top;"><?php echo $tr->translate('ALL');?></span></span>
-	                	<ul class="opt-school">
-	                		<?php $identityCheck = ""; if (!empty($this->rs)) foreach ($this->rs as $rs){?>
-	                		<li class="opt-items"> <input checked="checked"  type="checkbox"  class="checkbox"  value="<?php echo $rs['br_id'];?>" name="selector[]" onClick="CheckAllTotal(1);" /> <span style="vertical-align: top;"><?php echo $rs['project_name'];?></span></li>
-	                			<?php if (empty($identityCheck)){ $identityCheck = $rs['br_id'];}else{$identityCheck = $identityCheck.",".$rs['br_id'];}?>
-	                		<?php }?>
-	                	</ul>
-	                </div>
+					<div class="card"> 
+						<div class="card-header "> 
+							<div class="custom-control custom-checkbox float-start ">
+								<input type="checkbox" checked class="checkbox custom-control-input" name="check_all" id="check_all" value="all" OnChange="CheckAllTotal(0);"  >
+								<label class="custom-control-label" for="check_all">
+									<?php echo $tr->translate('ALL');?>
+								</label>
+							</div>
+						</div>
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-university" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('Assign Branch Access')?> </p>
+											
+											<ul class="optListRow">
+												<?php $identityCheck = ""; if (!empty($this->rs)) foreach ($this->rs AS $key => $rs){?>
+												<li class="opt-items"> 
+													<div class="custom-control custom-checkbox">
+														<input checked type="checkbox" id="branchKey<?php echo $key;?>"  class="checkbox custom-control-input" value="<?php echo $rs['br_id'];?>" name="selector[]" onClick="CheckAllTotal(1);"  >
+														<label class="custom-control-label" for="branchKey<?php echo $key;?>">
+															<?php echo $rs['project_name'];?>
+														</label>
+													</div>
+													<?php 
+														if (empty($identityCheck)){ 
+														$identityCheck = $rs['br_id'];}else{
+															$identityCheck = $identityCheck.",".$rs['br_id'];
+														}
+													}?>
+											</ul>
+										</div> 
+									</div> 
+								</div> 
+							</div> 
+						</div> 
+					</div>
+					
 	            </div>
 				 <div class="col-md-3 col-sm-3 col-xs-12 <?php if($FOR_MULTISYSTEM!=1){ echo "noDisplay";}?>">
-	            	<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("Assign Working Access");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                	<span><input type="checkbox" class=""  name="checkAllSystem" id="checkAllSystem" value="all" OnChange="CheckAllSystem(0);" style=" height: initial;"  />&nbsp;<span class="bold" style="vertical-align: top;"><?php echo $tr->translate('ALL');?></span></span>
-	                	<ul class="opt-school">
-	                		<li class="opt-items"> <input checked="checked"  type="checkbox"  class="checkboxSystem"  value="1" name="selectorSystem[]" onClick="CheckAllSystem(1);" /> <span style="vertical-align: top;"><?php echo $tr->translate("Installment System");?></span></li>
-	                		<li class="opt-items"> <input type="checkbox"  class="checkboxSystem"  value="2" name="selectorSystem[]" onClick="CheckAllSystem(1);" /> <span style="vertical-align: top;"><?php echo $tr->translate("Stock System");?></span></li>
-	                	</ul>
-	                </div>
+					<div class="card"> 
+						<div class="card-header "> 
+							<div class="custom-control custom-checkbox float-start ">
+								<input type="checkbox" class="checkboxSystem custom-control-input" name="checkAllSystem" id="checkAllSystem" value="all" OnChange="CheckAllSystem(0);" >
+								<label class="custom-control-label" for="checkAllSystem">
+									<?php echo $tr->translate('ALL');?>
+								</label>
+							</div>
+						</div>
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-television" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('Assign Working Access')?> </p>
+											
+											<ul class="optListRow">
+												<li class="opt-items"> 
+													<div class="custom-control custom-checkbox">
+														<input type="checkbox" id="system1"  class="checkboxSystem custom-control-input" checked  type="checkbox"  class="checkboxSystem"  value="1" name="selectorSystem[]" onClick="CheckAllSystem(1);"  >
+														<label class="custom-control-label" for="system1">
+															<?php echo $tr->translate("Installment System");?>
+														</label>
+													</div>
+												</li>
+												<li class="opt-items"> 
+													<div class="custom-control custom-checkbox">
+														<input type="checkbox" id="system2"  class="checkboxSystem custom-control-input" type="checkbox"  class="checkboxSystem"  value="2" name="selectorSystem[]" onClick="CheckAllSystem(1);"  >
+														<label class="custom-control-label" for="system2">
+															<?php echo $tr->translate("Stock System");?>
+														</label>
+													</div>
+												</li>	
+											</ul>
+										</div> 
+									</div> 
+								</div> 
+							</div> 
+						</div> 
+					</div>
+					
 	            </div>
 	            <div class="clearfix"></div>
-               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+               		<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
                			<input type="button" value="GO_BACK" label="<?php echo $tr->translate('GO_BACK');?>" id="back" dojoType="dijit.form.Button" 
 						iconClass="dijitIconUndo" onclick="window.location = '<?php echo $this->url(array('module'=>'rsvacl','controller'=>"user",'action'=>'index'),null,true); ?>';" />
 						<input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('GO_SAVE');?>" id="save_new" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>

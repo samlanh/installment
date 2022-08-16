@@ -119,6 +119,8 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	
 	function getUserList($search=null){
 		$db = $this->getAdapter();
+		
+		$dbGb = new Application_Model_DbTable_DbGlobal();
 		$sql = "SELECT
 		u.`id`,
 		u.`last_name` ,
@@ -126,11 +128,17 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		u.`user_name` ,
 		u.`user_type`,
 		(SELECT user_type FROM `rms_acl_user_type` WHERE user_type_id=u.user_type LIMIT 1) aS users_type,
-		(SELECT project_name FROM `ln_project` WHERE br_id=u.branch_id) as project_name,
-		u.`active` as status
-		FROM `rms_users` AS u
+		(SELECT project_name FROM `ln_project` WHERE br_id=u.branch_id) as project_name
+		,u.`active` as status
+		,u.`active`
+		 ";
 		
-		WHERE 1 ";
+		$sql.=$dbGb->caseStatusShowImage("u.`active`");
+		$sql.="
+			FROM `rms_users` AS u
+			WHERE 1	
+		";
+		
 		$orderby = " ORDER BY u.user_type DESC";
 		if(empty($search)){
 			return $sql.$orderby;
@@ -280,13 +288,14 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 				$systemList = implode(',', $data['selectorSystem']);
 			}
 			
+			$status = empty($data['active'])?0:1;
 			$_user_data=array(
 				'branch_id'=>$data['branch_id'],
 		    	'last_name'=>$data['last_name'],
 				'first_name'=>$data['first_name'],
 				'user_name'=>$data['user_name'],
 				'user_type'=> $data['user_type'],
-				'active'=> $data['active'],
+				'active'=> $status,
 				'branch_list'=>$branchList,
 				'systemAccess'=>$systemList,
 		    );    	   

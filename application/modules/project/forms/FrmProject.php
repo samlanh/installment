@@ -204,10 +204,11 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 				2=>$this->tr->translate("NAME_EN"));
 		$branch_display->setMultiOptions($_display_opt);
 		
-		$br_address = new Zend_Dojo_Form_Element_TextBox('br_address');
+		$br_address = new Zend_Dojo_Form_Element_NumberTextBox('br_address');
 		$br_address->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
+				'style'=>'min-height: 60px;font-size:12px;'
 		));
 	
 		$_p_manager_sex = new Zend_Dojo_Form_Element_FilteringSelect('p_manager_sex');
@@ -254,6 +255,10 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 				'style'=>'width:100%;min-height:60px; font-size:13px; font-family:"Kh Battambang"'
 		));
 		$_id = new Zend_Form_Element_Hidden('id');
+		$_id->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
 		
 		$map = new Zend_Dojo_Form_Element_TextBox('map_url');
 		$map->setAttribs(array(
@@ -408,6 +413,7 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 		
 		if(!empty($data)){
 			$br_id->setValue($data['br_id']);
+			$_id->setValue($data['br_id']);
 			$prefix_code->setValue($data['prefix']);
 			$branch_namekh->setValue($data['project_name']);
 			$branch_nameen->setValue($data['project_type']);
@@ -494,6 +500,7 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 				$gm_phone,
 				$w_phone,
 				
+				$_id,
 				$office_tel,
 				$office_email,
 				$office_website,

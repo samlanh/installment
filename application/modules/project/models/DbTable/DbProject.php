@@ -136,7 +136,10 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	if (!file_exists($part)) {
     		mkdir($part, 0777, true);
     	}
-    	$_data['id']=$id;
+		if(empty($_data['id'])){
+			$_data['id']=$id;
+		}
+    	$id = $_data['id'];
     	$record = $this->recordhistory($_data);
     	$activityold = $record['activityold'];
     	$after_edit_info = $record['after_edit_info'];
@@ -155,7 +158,7 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	}else{
     		$photo = $_data['old_photo'];
     	}
-    	
+    	$status = empty($_data['status'])?0:1;
     	$_arr = array(
     			'project_name'=>$_data['branch_namekh'],
     			//'project_type'=>$_data['project_type'],
@@ -166,7 +169,7 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'branch_tel'=>$_data['branch_tel'],
     			'fax'=>$_data['fax'],
     			'other'=>$_data['branch_note'],
-    			'status'=>$_data['branch_status'],
+    			'status'=>$status,
     			'p_manager_namekh'=>$_data['project_manager_namekh'],
     			'p_manager_nationality'=>$_data['project_manager_nationality'],
     			'p_manager_nation_id'=>$_data['project_manager_nation_id'],

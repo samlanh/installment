@@ -44,22 +44,24 @@ class RsvAcl_UserController extends Zend_Controller_Action
         	'name'=>$rs['last_name'].' '.$rs['name'],
         	'user_name'=>$rs['user_name'],
         	'user_type'=>$rs['users_type'],
-            'project_name'=>$rs['project_name'],
+            //'project_name'=>$rs['project_name'],
         	'status'=>$rs['status']);
         }
         $list = new Application_Form_Frmtable();
         if(!empty($_rs)){
-        	$glClass = new Application_Model_GlobalClass();
-        	$rs_rows = $glClass->getImgActive($_rs, BASE_URL, true);
+        	//$glClass = new Application_Model_GlobalClass();
+        	//$rs_rows = $glClass->getImgActive($_rs, BASE_URL, true);
+        	$rs_rows = $_rs;
         }
         else{
         	$result = Application_Model_DbTable_DbGlobal::getResultWarning();
         }
-        $collumns = array("LASTNAME_FIRSTNAME","USER_NAME","USER_TYPE","BRANCH_NAME","STATUS");
+        $collumns = array("LASTNAME_FIRSTNAME","USER_NAME","USER_TYPE","STATUS");
         $link=array(
         		'module'=>'rsvacl','controller'=>'user','action'=>'edit',
         );
-        $this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('user_name'=>$link,'name'=>$link));
+        $this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array('user_name'=>$link,'name'=>$link));
+			
         $this->view->user_type = $_data['user_type'];
         $this->view->active = $_data['active'];
         $this->view->txtsearch = $_data['txtsearch'];
