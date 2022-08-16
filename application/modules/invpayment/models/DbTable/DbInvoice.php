@@ -7,6 +7,15 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
+	
+	function getDNByListOfInvoice($dnList){
+		$db = $this->getAdapter();
+		$sql="SELECT GROUP_CONCAT(rst.dnNumber)	AS DNNumberList
+			FROM st_receive_stock AS rst 
+			 WHERE rst.status=1 
+			AND rst.id  IN ($dnList) LIMIT 1";
+		return $db->fetchRow($sql);
+	}
     function getAllInvoice($search){
     	$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();
@@ -20,15 +29,17 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 		
 		$sql="
 			SELECT 
-				inv.id,
-				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = inv.projectId LIMIT 1) AS branch_name,
-				inv.invoiceNo,
-				inv.invoiceDate,
-				inv.supplierInvoiceNo,
-				inv.receiveIvDate,
-				po.purchaseNo,
-				spp.supplierName,
-				inv.totalAmountExternal
+				inv.id
+				,(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = inv.projectId LIMIT 1) AS branch_name
+				,inv.invoiceNo
+				,inv.invoiceDate
+				,inv.supplierInvoiceNo
+				,inv.receiveIvDate
+				,inv.totalAmountExternal
+				,inv.dnId
+				,po.purchaseNo
+				,spp.supplierName
+				
 			";
     	$sql.=$dbGb->caseStatusShowImage("inv.status");
 		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=inv.userId LIMIT 1 ) AS byUser";
@@ -77,7 +88,19 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     	}
     	$order=' ORDER BY inv.id DESC  ';
     	$where.=$dbGb->getAccessPermission("inv.projectId");
-    	return $db->fetchAll($sql.$where.$order);
+    	$row =  $db->fetchAll($sql.$where.$order);
+		if(!empty($row)){
+			foreach($row AS $key => $rs){
+				if(empty($rs['dnId'])){
+					continue;
+				}
+				if(!empty($rs['dnId'])){
+					$dNLIST = $this->getDNByListOfInvoice($rs['dnId']);
+					$row[$key]['dnId']=$dNLIST['DNNumberList'];
+				}
+			}
+		}
+		return $row;
     }
 	
 	function checkOtherDnOfPurchasing($data){
