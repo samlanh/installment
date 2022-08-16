@@ -112,6 +112,7 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		$this->view->rsProduct = $result;
 	
 		$this->view->productMovement = $db->getProductMovement($proId,$projectId);
+		$this->view->getProductCosting = $db->getProductCosting($proId,$projectId);
 	}
 }
 
