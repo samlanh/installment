@@ -302,6 +302,30 @@
 						</td>
 					</tr>
 				</table>
+
+				<table class="content-data" border="1"​  width="100%">
+					<tr class="section-bg">
+						<td colspan="3"><i class="fa fa-th-large" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_COSTING");?> </td>
+					</tr>
+					<tr >
+						<td colspan="3">
+							<table style="font-size: 12px;">
+								<tr style="line-height: 30px; font-weight: bold;">
+										<td><i class="fa fa-arrows-v" aria-hidden="true"></i>ល.រ<br />No.</td>
+										<td class="right"><i class="fa fa-calendar" aria-hidden="true"></i></strong>&nbsp;&nbsp;កាលបិរច្ឆេទ <br />  Date</td>
+										<td class="center"><i class="fa fa-money" aria-hidden="true"></i>តម្លៃដើម <br />Unit Price</strong></td>
+									</tr>
+								<?php if(!empty($this->getProductCosting))foreach($this->getProductCosting as $key=> $row){?>
+									<tr class="hover <?php if($key%2===0)echo "line-movelist";?>">
+										<td width="50px">&nbsp;&nbsp;<?php echo $key+1;?>&nbsp;&nbsp;</td>
+										<td class="right"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;<?php echo date("d-m-Y",strtotime($row['date']));?></td>		
+										<td class="center"><?php echo $row['costing'];?></td>
+									</tr>
+								<?php }?>
+							</table>
+						</td>
+					</tr>
+				</table>
 				
 				<table class="content-data" border="1"​  width="100%">
 					<tr class="section-bg">
@@ -330,7 +354,7 @@
 						</td>
 					</tr>
 				</table>
-				<?php //echo $this->footerReport;?>
+			
 			</div>
 				<input type="button" onclick="doPrint();"  value="SAVE_NEW" tabindex="3" label="<?php echo $tr->translate('PRINT');?>"  dojoType="dijit.form.Button" name="save_new"
 					iconClass="dijitEditorIcon dijitEditorIconPrint"/> 

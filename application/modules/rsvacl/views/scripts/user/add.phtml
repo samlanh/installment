@@ -50,7 +50,7 @@ ul.optListRow {
 			<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-user-plus " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CREATE_USER');?></h4>
+		    			<h4 class="m-b-0"><i class="glyphicon glyphicon-user" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CREATE_USER');?></h4>
 	    				<span id="message" style="color: red; display: block;"></span>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
@@ -59,121 +59,94 @@ ul.optListRow {
 	    	</div>
 	    	<div class="card-box">
 	    		<div class="col-md-6 col-sm-6 col-xs-12">
-	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LAST_NAME");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<input type="text" required="true" name="last_name" id="last_name" placeholder="<?php echo $tr->translate("LAST_NAME");?>" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ នាម​ត្រកូល!" class='fullside'/>
-	                   </div>
-	                </div>
-	                
-	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("FIRST_NAME");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input type="text" required="true" name="first_name" id="first_name" placeholder="<?php echo $tr->translate("FIRST_NAME");?>" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ នាមខ្លួន!" class='fullside'/>
-	                   </div>
-	                </div>
-	         
-	    			
-	        
-	       			 <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_NAME");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<input type="text" onKeyup="checkTitle();" required="true" name="user_name" id="user_name" placeholder="<?php echo $tr->translate("USER_NAME");?>" 
-											dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ​អ្នក​ប្រើ​ប្រាស់!" class='fullside'/>
-							<input type="hidden" name="is_duplicate" id="is_duplicate" dojoType="dijit.form.TextBox" />
-	                   </div>
-	                </div>
-	                
-	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PASSWORD");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<input type="password" required="true" name="password" id="password" placeholder="<?php echo $tr->translate("PASSWORD");?>" 
-							regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
-							dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពាក្យ​​សំងាត់!" class='fullside'/>
-	                   </div>
-	                </div>
-	        
-	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONFIRM_PASSWORD");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                 	  <input type="password" required="true" name="con_password" id="con_password" placeholder="<?php echo $tr->translate("CONFIRM_PASSWORD");?>" 
-							regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
-							dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ បញ្ជាក់ពាក្យ​​សំងាត់!" class='fullside'/>
-	                   </div>
-	                </div>
-	         
-	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_TYPE");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<input id="user_type" />
-	                   </div>
-	                </div>
-	      
-	    			<div class="form-group noDisplay">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<select class="fullside" dojoType="dijit.form.FilteringSelect" id="branch_id" name="branch_id">
-								<option value="">គ្រប់គម្រោង</option>
-								<?php if(!empty($this->rs)){foreach($this->rs as $r){?>
-									<option value="<?php echo $r['br_id'];?>"><?php echo $r['project_name'];?></option>
-								<?php }}?>
-							</select>
-	                   </div>
-	                </div>
-	            </div>
-	            <div class="col-md-3 col-sm-3 col-xs-12">
-					<div class="card"> 
-						<div class="card-header "> 
-							<div class="custom-control custom-checkbox float-start ">
-								<input type="checkbox" checked class="checkbox custom-control-input" name="check_all" id="check_all" value="all" OnChange="CheckAllTotal(0);"  >
-								<label class="custom-control-label" for="check_all">
-									<?php echo $tr->translate('ALL');?>
-								</label>
-							</div>
-						</div>
+	    			<div class="card-blogform">
 						<div class="card-body"> 
 							<div class="row"> 
 								<div class="col-md-12 col-sm-12 col-xs-12"> 
 									<div class="d-flex"> 
 										<div class="settings-main-icon ">
-											<i class="fa fa-university" aria-hidden="true"></i>
+											<i class="glyphicon glyphicon-user" aria-hidden="true"></i>
 										</div> 
 										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('Assign Branch Access')?> </p>
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('USER')?> </p>
 											
-											<ul class="optListRow">
-												<?php $identityCheck = ""; if (!empty($this->rs)) foreach ($this->rs AS $key => $rs){?>
-												<li class="opt-items"> 
-													<div class="custom-control custom-checkbox">
-														<input checked type="checkbox" id="branchKey<?php echo $key;?>"  class="checkbox custom-control-input" value="<?php echo $rs['br_id'];?>" name="selector[]" onClick="CheckAllTotal(1);"  >
-														<label class="custom-control-label" for="branchKey<?php echo $key;?>">
-															<?php echo $rs['project_name'];?>
-														</label>
-													</div>
-													<?php 
-														if (empty($identityCheck)){ 
-														$identityCheck = $rs['br_id'];}else{
-															$identityCheck = $identityCheck.",".$rs['br_id'];
-														}
-													}?>
-											</ul>
 										</div> 
 									</div> 
-								</div> 
-							</div> 
-						</div> 
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LAST_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="text" required="true" name="last_name" id="last_name" placeholder="<?php echo $tr->translate("LAST_NAME");?>" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ នាម​ត្រកូល!" class='fullside'/>
+									   </div>
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("FIRST_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="text" required="true" name="first_name" id="first_name" placeholder="<?php echo $tr->translate("FIRST_NAME");?>" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ នាមខ្លួន!" class='fullside'/>
+									   </div>
+									</div>
+							 
+									
+							
+									 <div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="text" onKeyup="checkTitle();" required="true" name="user_name" id="user_name" placeholder="<?php echo $tr->translate("USER_NAME");?>" 
+															dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ​អ្នក​ប្រើ​ប្រាស់!" class='fullside'/>
+											<input type="hidden" name="is_duplicate" id="is_duplicate" dojoType="dijit.form.TextBox" />
+									   </div>
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PASSWORD");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="password" required="true" name="password" id="password" placeholder="<?php echo $tr->translate("PASSWORD");?>" 
+											regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
+											dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពាក្យ​​សំងាត់!" class='fullside'/>
+									   </div>
+									</div>
+							
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONFIRM_PASSWORD");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+										  <input type="password" required="true" name="con_password" id="con_password" placeholder="<?php echo $tr->translate("CONFIRM_PASSWORD");?>" 
+											regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
+											dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ បញ្ជាក់ពាក្យ​​សំងាត់!" class='fullside'/>
+									   </div>
+									</div>
+							 
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_TYPE");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="user_type" />
+									   </div>
+									</div>
+						  
+									<div class="form-group noDisplay">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<select class="fullside" dojoType="dijit.form.FilteringSelect" id="branch_id" name="branch_id">
+												<option value="">គ្រប់គម្រោង</option>
+												<?php if(!empty($this->rs)){foreach($this->rs as $r){?>
+													<option value="<?php echo $r['br_id'];?>"><?php echo $r['project_name'];?></option>
+												<?php }}?>
+											</select>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					
 	            </div>
-				 <div class="col-md-3 col-sm-3 col-xs-12 <?php if($FOR_MULTISYSTEM!=1){ echo "noDisplay";}?>">
-					<div class="card"> 
+	            <div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="card-blogform <?php if($FOR_MULTISYSTEM!=1){ echo "noDisplay";}?>">
 						<div class="card-header "> 
 							<div class="custom-control custom-checkbox float-start ">
 								<input type="checkbox" class="checkboxSystem custom-control-input" name="checkAllSystem" id="checkAllSystem" value="all" OnChange="CheckAllSystem(0);" >
@@ -217,12 +190,55 @@ ul.optListRow {
 						</div> 
 					</div>
 					
+					<div class="card-blogform">
+						<div class="card-header "> 
+							<div class="custom-control custom-checkbox float-start ">
+								<input type="checkbox" checked class="checkbox custom-control-input" name="check_all" id="check_all" value="all" OnChange="CheckAllTotal(0);"  >
+								<label class="custom-control-label" for="check_all">
+									<?php echo $tr->translate('ALL');?>
+								</label>
+							</div>
+						</div>
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-university" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('Assign Branch Access')?> </p>
+											
+											<ul class="optListRow">
+												<?php $identityCheck = ""; if (!empty($this->rs)) foreach ($this->rs AS $key => $rs){?>
+												<li class="opt-items"> 
+													<div class="custom-control custom-checkbox">
+														<input checked type="checkbox" id="branchKey<?php echo $key;?>"  class="checkbox custom-control-input" value="<?php echo $rs['br_id'];?>" name="selector[]" onClick="CheckAllTotal(1);"  >
+														<label class="custom-control-label" for="branchKey<?php echo $key;?>">
+															<?php echo $rs['project_name'];?>
+														</label>
+													</div>
+													<?php 
+														if (empty($identityCheck)){ 
+														$identityCheck = $rs['br_id'];}else{
+															$identityCheck = $identityCheck.",".$rs['br_id'];
+														}
+													}?>
+											</ul>
+										</div> 
+									</div> 
+								</div> 
+							</div> 
+						</div> 
+					</div>
+					
 	            </div>
+				
 	            <div class="clearfix"></div>
                		<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
                			<input type="button" value="GO_BACK" label="<?php echo $tr->translate('GO_BACK');?>" id="back" dojoType="dijit.form.Button" 
 						iconClass="dijitIconUndo" onclick="window.location = '<?php echo $this->url(array('module'=>'rsvacl','controller'=>"user",'action'=>'index'),null,true); ?>';" />
-						<input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('GO_SAVE');?>" id="save_new" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
+						<input type="submit" onclick="this.disabled = true" value="រក្សាទុក" label="<?php echo $tr->translate('GO_SAVE');?>" id="save_new" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
 			    	</div>
 	    	</div>
 		</form>

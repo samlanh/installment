@@ -165,5 +165,22 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 						    ORDER BY id DESC   ";
     	    	return $db->fetchAll($sql);
     }
+
+	function getProductCosting($productId,$ProjectId){
+		$db = $this->getAdapter();
+		$session_lang=new Zend_Session_Namespace('lang');
+		$lang_id=$session_lang->lang_id;
+		$strLable ='name_kh' ;
+		if($lang_id==2){
+			$strLable ='name_en' ;
+		}
+		$sql=" SELECT * FROM `st_product_costing`
+				 
+				 WHERE 
+				 productId=$productId
+				 AND projectId=$ProjectId 
+					ORDER BY date DESC   ";
+		return $db->fetchAll($sql);
+}
    
 }

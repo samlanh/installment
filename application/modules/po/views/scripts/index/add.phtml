@@ -212,21 +212,12 @@
 			window.open('<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'add'))?>');
 		}
 	}
+	
 
 	
 	function getRefreshData(){
-		urlGetAllSuppilyer ='<?php echo $this->url(array('module'=>'po','controller'=>'suplyer','action'=>'getSuppliername'))?>';
-		
-		dojo.xhrPost({
-			url:urlGetBudgetType,	
-			handleAs:"json",
-			load: function(data) {
-				supplierStore  = getDataStorefromJSON('id','name', data);		
-			    dijit.byId('supplierId').set('store',supplierStore);
-			},
-			error: function(err){
-			}
-		});
+		urlGetAllSuppilyer ='<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'getSuppliername'))?>';		
+		getAllSupplier(urlGetAllSuppilyer);
 		
 	}
 
@@ -497,5 +488,32 @@
 			error: function(err) {
 			}
 		});
+	}
+
+
+	function addNewSupplier(){
+		categoryId = dijit.byId('supplierId').get('value');
+		if(categoryId==-1){
+			window.open('<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'add'))?>');
+		}
+	}
+	
+
+	var urlGetAllSuppilyer = '<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'getallsupplier')); ?>';
+	function getRefreshData(){
+			
+		dojo.xhrPost({
+			url:urlGetAllSuppilyer,	
+			handleAs:"json",
+			load: function(data) {
+				supplierStore  = getDataStorefromJSON('id','name', data);	
+			    dijit.byId('supplierId').set('store',supplierStore);
+				
+				
+			},
+			error: function(err){
+			}
+		});
+		
 	}
 </script>

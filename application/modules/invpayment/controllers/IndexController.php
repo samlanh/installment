@@ -25,11 +25,11 @@ class Invpayment_IndexController extends Zend_Controller_Action {
 			
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","INVOICE_NO","RECEIVE_DATE","SUPPLIER_INVOICE","INVOICE_DATE","PO_NO","SUPPLIER","TOTAL","STATUS","BY");
+    		$collumns = array("PROJECT_NAME","INVOICE_NO","RECEIVE_DATE","SUPPLIER_INVOICE","INVOICE_DATE","TOTAL","DNORIV_NO","PO_NO","SUPPLIER","STATUS","BY");
     		$link=array(
     				'module'=>'invpayment','controller'=>'index','action'=>'edit',
     		);
-    		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('branch_name'=>$link,'purchaseNo'=>$link,));
+    		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('branch_name'=>$link,'invoiceNo'=>$link,'purchaseNo'=>$link,));
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
