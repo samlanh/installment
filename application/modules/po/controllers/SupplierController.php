@@ -108,14 +108,25 @@ class Po_SupplierController extends Zend_Controller_Action {
 		}
 	}
 
-	function getSuppliernameAction(){
+	function getallsupplierAction(){
+
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
-			$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
-			$rsSpp = $dbGBStock->getAllSupplier();
-			print_r(Zend_Json::encode($rsSpp));
-			exit();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$results=$db->getAllSupplier();
+				
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("SELECT_SUPLLER")));
+			if(!empty($data['noBtnNew'])){
+			}else{
+				array_unshift($results, array ('id' => -1,'name' =>$tr->translate("ADD_NEW")));
+			}
 			
+			
+				
+			print_r(Zend_Json::encode($results));
+			exit();
 		}
 	}
 }
