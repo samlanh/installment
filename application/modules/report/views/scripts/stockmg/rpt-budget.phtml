@@ -100,7 +100,8 @@ dojo.require("dijit.form.DateTextBox");
 					}
 					.bgRow{background:#fafafa;}
 					.fontWeight{font-weight: bold;}
-					.blogSummary{background:#0199ca;font-size: 14px;
+					.blogSummary{
+						background:#0199ca;font-size: 14px;
 						color:#ebfaff;font-weight: bolder;
 						padding:5px;text-align: center;
 						margin-top:5px;
@@ -113,9 +114,11 @@ dojo.require("dijit.form.DateTextBox");
 					#exportExcel{
 						font-family:'khmer os battambang';
 					}
-					@page {size: landscape;
-							margin-left:0.2cm;
-							margin-right:0.2cm;}
+					@page{
+						size: landscape;
+						margin-left:0.2cm;
+						margin-right:0.2cm;
+					}
 					</style>
 				<div class="divFooter">
 		        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;">
@@ -137,14 +140,14 @@ dojo.require("dijit.form.DateTextBox");
 		            </table>
 		        </div>
 		        <?php if ($this->search['monthlytype']==1){?>
-	            	<table id="exportExcel" width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 12px;" >  
+	            	<table class="content-data" id="exportExcel" width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 12px;" >  
 					    	<thead>
 					    		<tr class="hide" style="border:1px solid #000;">
 						             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 						        </tr>
 						    	<tr class="style" align="center" style="color:#ebfaff;background:#0199ca;text-align: center;table-layout : fixed; white-space:nowrap;line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
-									<td>&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
-								    <td>&nbsp;
+									<td scope="col" >&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
+								    <td scope="col" >&nbsp;
 								    	ឈ្មោះមុខ ចំណាយ<br />
 								    	Budget Item
 								    </td>
@@ -153,12 +156,12 @@ dojo.require("dijit.form.DateTextBox");
 								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
 								    	for ($i=0; date("Y-m-01",strtotime("$startmonth+$i month"))<= date("Y-m-01",strtotime($endmonth)); $i++){
 								    ?>
-								    <td class="verites-col">&nbsp;<span class="verites"><strong><?php echo date("M-Y",strtotime(" $startmonth+$i month"));?></strong></span>&nbsp;</td>
+								    <td scope="col"  class="verites-col">&nbsp;<span class="verites"><strong><?php echo date("M-Y",strtotime(" $startmonth+$i month"));?></strong></span>&nbsp;</td>
 								   <?php }
 								    }?>
-								    <td>&nbsp;<?php echo $tr->translate("TOTAL_EXPENSE");?>&nbsp;</td>
-								    <td >&nbsp;<?php echo $tr->translate("BUDGET_AMOUNT");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("REMAIN");?>&nbsp;</td>
+								    <td scope="col" >&nbsp;<?php echo $tr->translate("TOTAL_EXPENSE");?>&nbsp;</td>
+								    <td scope="col" >&nbsp;<?php echo $tr->translate("BUDGET_AMOUNT");?>&nbsp;</td>
+								    <td scope="col" >&nbsp;<?php echo $tr->translate("REMAIN");?>&nbsp;</td>
 								</tr>
 							</thead>
 							<tbody>
@@ -172,15 +175,15 @@ dojo.require("dijit.form.DateTextBox");
 									
 								if (!empty($this->rsBudgets)) foreach ($this->rsBudgets as $key=> $budget){ ?>
 								<tr class="fontWeight <?php if($key%2==0)echo'bgRow';?>">
-									<td align="center">&nbsp;<?php echo $key+1?>&nbsp;</td>
-									<td style="white-space: nowrap;">&nbsp;<?php echo $budget['budgetTitle']?>&nbsp;</td>
+									<td data-label="ល.រ​ /N.o" align="center">&nbsp;<?php echo $key+1?>&nbsp;</td>
+									<td data-label="ឈ្មោះមុខ ចំណាយ">&nbsp;<?php echo $budget['budgetTitle']?>&nbsp;</td>
 									 <?php if (!empty($this->search['start_date'])){
 								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
 								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
 								    	for ($i=0; date("Y-m-01",strtotime("$startmonth+$i month"))<= date("Y-m-01",strtotime($endmonth)); $i++){
 								    		
 								    ?>
-								    <td class="" align="center" style="white-space: nowrap;">
+								    <td data-label="<?php echo date("M-Y",strtotime("$startmonth+$i month"));?>" align="center" style="white-space: nowrap;">
 								    	<span class="">
 								    	&nbsp;
 								    	<?php 
@@ -210,22 +213,21 @@ dojo.require("dijit.form.DateTextBox");
 									 	$total_allbudget = $total_allbudget+$budget['totalBudget'];
 									 	$total_remain = $budget['totalBudget'] - $total_expense;
 									 ?>
-								    <td align="center" style="white-space: nowrap;">&nbsp;<strong><?php echo "$ ".number_format($total_expense,2);$total_expense=0;?></strong>&nbsp;</td>
-								    <td align="center" style="white-space: nowrap;">&nbsp;<strong><?php echo "$ ".number_format($budget['totalBudget'],2);?></strong>&nbsp;</td>
-								    <td align="center" style="white-space: nowrap;">&nbsp;<strong style="color: red;"><?php if ($total_remain<0){ echo "$ (".number_format(abs($total_remain),2).")"; }else{ echo "$ ".number_format($total_remain,2);}?></strong>&nbsp;</td>
+								    <td data-label="ចំណាយសរុប" align="center" style="white-space: nowrap;">&nbsp;<strong><?php echo "$ ".number_format($total_expense,2);$total_expense=0;?></strong>&nbsp;</td>
+								    <td data-label="គ្រោងចំណាយ " align="center" style="white-space: nowrap;">&nbsp;<strong><?php echo "$ ".number_format($budget['totalBudget'],2);?></strong>&nbsp;</td>
+								    <td data-label="ប្រាក់នៅសល់ " align="center" style="white-space: nowrap;">&nbsp;<strong style="color: red;"><?php if ($total_remain<0){ echo "$ (".number_format(abs($total_remain),2).")"; }else{ echo "$ ".number_format($total_remain,2);}?></strong>&nbsp;</td>
 								</tr>
 								<?php }
 								if(!empty($rowExpensebyComlumn)){
 								?>
 								<tr align="center" style="border:1px solid #fff;border-top: 2px dashed #b9bbdd;">
-									<td></td>
-									<td></td>
+									<td data-label="ចំណាយសរុប"><strong>ចំណាយសរុប</strong></td>
 									<?php foreach($rowExpensebyComlumn as $key=>$result){?>
 										<td valign="top">$<?php echo number_format($result,2);?></td>
 									<?php }?>
-									<td></td>
-									<td></td>
-									<td></td>
+									<td ></td>
+									<td ></td>
+									<td ></td>
 								</tr>
 								<?php }?>
 							  </tbody>

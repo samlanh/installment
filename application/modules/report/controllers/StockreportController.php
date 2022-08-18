@@ -131,6 +131,8 @@ public function rptUsageAction(){
 			$search=array(
 				'adv_search'=>"",
 				'branch_id' => -1,
+				'verifyStatus'=>-1,
+				'supplierId'=>0,
 				'start_date'=> date('Y-m-d'),
 				'end_date'=>date('Y-m-d'),
 				'status'=>-1,
