@@ -56,10 +56,7 @@ dojo.require("dijit.form.DateTextBox");
         </div>        
 	 </form> 
 	<div style="min-height:22cm; margin:0 auto;">
-	<table style="font-family: 'Khmer OS Content'; width:100%;"  >
-		<tr>
-	    	<td align="center">
-	    	 <div id="divPrint">
+	   	<div id="divPrint">
 	    	 	<style>
 					.style{
 						line-height: 20px;font-size: 14px !important;
@@ -101,6 +98,24 @@ dojo.require("dijit.form.DateTextBox");
 					    display: inline-block;
 					    vertical-align: middle;
 					}
+					.bgRow{background:#fafafa;}
+					.fontWeight{font-weight: bold;}
+					.blogSummary{background:#0199ca;font-size: 14px;
+						color:#ebfaff;font-weight: bolder;
+						padding:5px;text-align: center;
+						margin-top:5px;
+						box-shadow:rgb(5 110 145) 1.95px 1.95px 2.6px;
+						font-family:'khmer os battambang';
+						float: right;
+						margin-left:5px;
+				
+					}
+					#exportExcel{
+						font-family:'khmer os battambang';
+					}
+					@page {size: landscape;
+							margin-left:0.2cm;
+							margin-right:0.2cm;}
 					</style>
 				<div class="divFooter">
 		        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;">
@@ -122,20 +137,16 @@ dojo.require("dijit.form.DateTextBox");
 		            </table>
 		        </div>
 		        <?php if ($this->search['monthlytype']==1){?>
-	        	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;" >
-		            <tr>
-	            	   <td colspan="3">
-	            		<table id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; border:solid 1px #000;" >  
+	            	<table id="exportExcel" width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 12px;" >  
 					    	<thead>
 					    		<tr class="hide" style="border:1px solid #000;">
 						             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 						        </tr>
-						    	<tr bgcolor="#c1d0f3" class="style" align="center" style="text-align: center;table-layout : fixed; white-space:nowrap;line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
+						    	<tr class="style" align="center" style="color:#ebfaff;background:#0199ca;text-align: center;table-layout : fixed; white-space:nowrap;line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
 									<td>&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
 								    <td>&nbsp;
 								    	ឈ្មោះមុខ ចំណាយ<br />
 								    	Budget Item
-								    	
 								    </td>
 								    <?php if (!empty($this->search['start_date'])){
 								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
@@ -156,37 +167,46 @@ dojo.require("dijit.form.DateTextBox");
 									$total_allexpense = 0;
 									$total_remain = 0;
 									$total_allbudget= 0;
-									$rowExpensebyRecord = array();
+									$totalAllREmain=0;
+									$rowExpensebyComlumn = array();
+									
 								if (!empty($this->rsBudgets)) foreach ($this->rsBudgets as $key=> $budget){ ?>
-								<tr>
+								<tr class="fontWeight <?php if($key%2==0)echo'bgRow';?>">
 									<td align="center">&nbsp;<?php echo $key+1?>&nbsp;</td>
 									<td style="white-space: nowrap;">&nbsp;<?php echo $budget['budgetTitle']?>&nbsp;</td>
 									 <?php if (!empty($this->search['start_date'])){
 								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
 								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
 								    	for ($i=0; date("Y-m-01",strtotime("$startmonth+$i month"))<= date("Y-m-01",strtotime($endmonth)); $i++){
+								    		
 								    ?>
 								    <td class="" align="center" style="white-space: nowrap;">
 								    	<span class="">
 								    	&nbsp;
 								    	<?php 
-								    	$param = array(
-								    			'monthlytype'=>$this->search['monthlytype'],
-								    			'budgetItemId'=>$budget['id'],
-								    			'projectId'=>$budget['projectId'],
-								    			'date'=>date("Y-m",strtotime(" $startmonth+$i month"))
-								    	);
-								    		$totalBudget = $dbs->getExpensByMonth($param,$budget['projectId'], date("Y-m",strtotime(" $startmonth+$i month")));
-								     		if ($totalBudget>0){	echo "$ ".number_format($totalBudget,2);}else { echo "-";};
-									     	
+									    	$param = array(
+									    			'monthlytype'=>$this->search['monthlytype'],
+									    			'budgetItemId'=>$budget['id'],
+									    			'projectId'=>$budget['projectId'],
+									    			'date'=>date("Y-m",strtotime(" $startmonth+$i month"))
+									    	);
+									    		$totalBudget = $dbs->getExpensByMonth($param,$budget['projectId'], date("Y-m",strtotime(" $startmonth+$i month")));
+									     		if ($totalBudget>0){	echo "$ ".number_format($totalBudget,2);}else { echo "-";};
+										     	
 									     	$total_expense = $total_expense+$totalBudget;
 									     	$total_allexpense = $total_allexpense+$totalBudget;
+									     	
+											if($key==0){
+								     			$rowExpensebyComlumn[$i]=$totalBudget;
+							    			}else{
+							    				$rowExpensebyComlumn[$i]=$rowExpensebyComlumn[$i]+$totalBudget;
+							    			}
+
 								     	?>&nbsp;
 								     	</span>
 								     </td>
 								   <?php }
 									 }
-									 
 									 	$total_allbudget = $total_allbudget+$budget['totalBudget'];
 									 	$total_remain = $budget['totalBudget'] - $total_expense;
 									 ?>
@@ -194,32 +214,59 @@ dojo.require("dijit.form.DateTextBox");
 								    <td align="center" style="white-space: nowrap;">&nbsp;<strong><?php echo "$ ".number_format($budget['totalBudget'],2);?></strong>&nbsp;</td>
 								    <td align="center" style="white-space: nowrap;">&nbsp;<strong style="color: red;"><?php if ($total_remain<0){ echo "$ (".number_format(abs($total_remain),2).")"; }else{ echo "$ ".number_format($total_remain,2);}?></strong>&nbsp;</td>
 								</tr>
+								<?php }
+								if(!empty($rowExpensebyComlumn)){
+								?>
+								<tr align="center" style="border:1px solid #fff;border-top: 2px dashed #b9bbdd;">
+									<td></td>
+									<td></td>
+									<?php foreach($rowExpensebyComlumn as $key=>$result){?>
+										<td valign="top">$<?php echo number_format($result,2);?></td>
+									<?php }?>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
 								<?php }?>
-							</tbody>
-					    </table>
-					    <?php $totalAllREmain = $total_allbudget-$total_allexpense; ?>
-					    <div style="text-align: right;">
-					   		 <span style="display: inline-block;"><?php echo $tr->translate("TOTAL_EXPENSE");?></span> 
-					   		 : <strong style="display: inline-block; min-width: 100px;"><?php echo "$ ".number_format($total_allexpense,2);?></strong>
-					   </div>
-					    <div style="text-align: right;">
-					    	<span style="display: inline-block;"><?php echo $tr->translate("TOTAL_REMAIN");?></span> : 
-					    	<strong style="display: inline-block; min-width: 100px;"><?php if ($totalAllREmain<0){ echo "$ (".number_format(abs($totalAllREmain),2).")"; }else{ echo "$ ".number_format($totalAllREmain,2);}?></strong></div>
-	            	</td>
-	            </tr>
-	            </table>
+							  </tbody>
+					    	</table>
+					    	<div  class="col-md-6 col-sm-6 col-xs-12"></div>
+					    	<div  class="col-md-6 col-sm-6 col-xs-12">
+					    		<div  class="col-md-4 col-sm-4 col-xs-12">
+						    		<div class="blogSummary">
+										<div>បានចំណាយសរុប</div>
+										<small>Total Budget Paid</small><br />
+										<?php echo "$ ".number_format($total_allexpense,2);?>
+									</div>
+								</div>
+								<div  class="col-md-4 col-sm-4 col-xs-12">
+									<div class="blogSummary">
+										<div>សរុបគ្រោងចំណាយ </div>
+										<small>Total Budget Plan</small><br />
+										<?php echo "$ ".number_format($total_allbudget,2);?>
+									</div>
+								</div>
+								<div  class="col-md-4 col-sm-4 col-xs-12">
+									<div class="blogSummary">
+										<div>សរុបនៅសល់ </div>
+										<small>Total Budget Balance</small><br />
+										<?php $totalAllREmain = $total_allbudget-$total_allexpense; ?>
+										<?php
+										if ($totalAllREmain<0){ echo "$ (".number_format(abs($totalAllREmain),2).")"; }else{ echo "$ ".number_format($totalAllREmain,2);}?>
+									</div>
+								</div>
+					    	</div>
 	            <?php }else{?>
-	            <table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;" >
-		            <tr>
-	            	   <td colspan="3">
-	            		<table id="exportExcel" border="1" width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px; border:solid 1px #000;" >  
+	            	<table id="exportExcel" width="100%" style="border-collapse:collapse; line-height: 24px; font-size: 14px;" >  
 					    	<thead>
 					    		<tr class="hide" style="border:1px solid #000;">
 						             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 						        </tr>
-						    	<tr bgcolor="#c1d0f3" class="style" align="center" style="text-align: center;table-layout : fixed; white-space:nowrap;line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
+						        <tr class="style" align="center" style="color:#ebfaff;background:#0199ca;text-align: center;table-layout : fixed; white-space:nowrap;line-height: 14px; line-height: 24px; font-size:14px; padding:5px 0px; " >
 									<td>&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("BRANCH_NAME");?>&nbsp;</td>
+								    <td>&nbsp;
+								    	ឈ្មោះមុខ ចំណាយ<br />
+								    	Budget Item</td>
 								    <?php if (!empty($this->search['start_date'])){
 								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
 								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
@@ -239,70 +286,96 @@ dojo.require("dijit.form.DateTextBox");
 									$total_allexpense = 0;
 									$total_remain = 0;
 									$total_allbudget= 0;
-									
+									$totalAllREmain=0;
+									$rowExpensebyComlumn = array();
 								if (!empty($this->rsBudgets)) foreach ($this->rsBudgets as $key=> $budget){ ?>
-								<tr>
+								<tr class="fontWeight <?php if($key%2==0)echo'bgRow';?>">
 									<td align="center">&nbsp;<?php echo $key+1?>&nbsp;</td>
 									<td style="white-space: nowrap;">&nbsp;<?php echo $budget['budgetTitle']?>&nbsp;</td>
 									 <?php if (!empty($this->search['start_date'])){
 								    	$startmonth= date("Y-m-01",strtotime($this->search['start_date']));
 								    	$endmonth= date("Y-m-01",strtotime($this->search['end_date']));
-								    	for ($i=0; date("Y-m-01",strtotime("$startmonth+$i year"))<= date("Y-m-01",strtotime($endmonth)); $i++){
+								    	
+								    	
+								    		for ($i=0; date("Y-m-01",strtotime("$startmonth+$i year"))<= date("Y-m-01",strtotime($endmonth)); $i++){
 								    ?>
-								    <td class="verites-col" align="center" style="white-space: nowrap;">
-								    	<span class="verites">
+								    <td  align="center" style="white-space: nowrap;">
+								    	<span >
 								    	&nbsp;
 								    	<?php 
 								    	$param = array(
 								    			'monthlytype'=>$this->search['monthlytype'],
 								    			'budgetItemId'=>$budget['id'],
 								    			'projectId'=>$budget['projectId'],
-								    			'date'=>date("Y-m",strtotime(" $startmonth+$i year")),
+								    			'date'=>date("Y-m",strtotime(" $startmonth+$i year"))
 								    		);
-								    	$total = $dbs->getExpensByMonth($param,$budget['projectId'], date("Y-m",strtotime(" $startmonth+$i year")),$this->search['monthlytype']);
-// 								     	if ($total>0){	echo "$ ".number_format($total,2);}else { echo "-";};
-// 								     	$total_expense = $total_expense+$total;
-// 								     	$total_allexpense = $total_allexpense+$total;
+								    	$totalBudget = $dbs->getExpensByMonth($param,$budget['projectId'], date("Y",strtotime(" $startmonth+$i year")),$this->search['monthlytype']);
+								     	if ($totalBudget>0){	echo "$ ".number_format($totalBudget,2);}else { echo "-";};
+								     	if($key==0){
+								     		$rowExpensebyComlumn[$i]=$totalBudget;
+								     	}else{
+								     		$rowExpensebyComlumn[$i]=$rowExpensebyComlumn[$i]+$totalBudget;
+								     	}
+								     	
+								     	$total_expense = $total_expense+$totalBudget;
+								     	$total_allexpense = $total_allexpense+$totalBudget;
 								     	?>&nbsp;
 								     	</span>
 								     </td>
 								   <?php }
 									 }
-// 									 $total_allbudget = $total_allbudget+$pro['budget_amount'];
-// 									 $total_remain = $pro['budget_amount'] - $total_expense;
+										 $total_allbudget = $total_allbudget+$budget['totalBudget'];
+										 $total_remain = $budget['totalBudget'] - $total_expense;
 									 ?>
-								    <td align="center" style="white-space: nowrap;">&nbsp;<strong><?php //echo "$ ".number_format($total_expense,2);$total_expense=0;?></strong>&nbsp;</td>
-								    <td align="center" style="white-space: nowrap;">&nbsp;<strong><?php //echo "$ ".number_format($budget['budget_amount'],2);?></strong>&nbsp;</td>
-								    <td align="center" style="white-space: nowrap;">&nbsp;<strong style="color: red;"><?php //if ($total_remain<0){ echo "$ (".number_format(abs($total_remain),2).")"; }else{ echo "$ ".number_format($total_remain,2);}?></strong>&nbsp;</td>
+								    <td align="center" style="white-space: nowrap;">&nbsp;<strong><?php echo "$ ".number_format($total_expense,2);$total_expense=0;?></strong>&nbsp;</td>
+								    <td align="center" style="white-space: nowrap;">&nbsp;<strong><?php echo "$ ".number_format($budget['totalBudget'],2);?></strong>&nbsp;</td>
+								    <td align="center" style="white-space: nowrap;">&nbsp;<strong style="color: red;"><?php if ($total_remain<0){ echo "$ (".number_format(abs($total_remain),2).")"; }else{ echo "$ ".number_format($total_remain,2);}?></strong>&nbsp;</td>
 								</tr>
+								<?php }
+								if(!empty($rowExpensebyComlumn)){
+								?>
+									<tr align="center" style="border:1px solid #fff;border-top: 2px dashed #b9bbdd;">
+										<td></td>
+										<td></td>
+										<?php foreach($rowExpensebyComlumn as $key=>$result){?>
+											<td valign="top">$<?php echo number_format($result,2);?></td>
+										<?php }?>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
 								<?php }?>
 							</tbody>
 					    </table>
-					    <?php //$totalAllREmain = $total_allbudget-$total_allexpense; ?>
-					    <div style="text-align: right;">
-					   		 <span style="display: inline-block;"><?php echo $tr->translate("TOTAL_EXPENSE");?></span> 
-					   		 : <strong style="display: inline-block; min-width: 100px;"><?php //echo "$ ".number_format($total_allexpense,2);?></strong>
-					   </div>
-					    <div style="text-align: right;">
-					    	<span style="display: inline-block;"><?php echo $tr->translate("TOTAL_REMAIN");?></span> : 
-					    	<strong style="display: inline-block; min-width: 100px;"><?php //if ($totalAllREmain<0){ echo "$ (".number_format(abs($totalAllREmain),2).")"; }else{ echo "$ ".number_format($totalAllREmain,2);}?></strong></div>
-	            	</td>
-	            </tr>
-	            </table>
+					    <div class="card-box">
+						    <div  class="col-md-6 col-sm-6 col-xs-12"></div>
+						    <div  class="col-md-6 col-sm-6 col-xs-12">
+					    		<div  class="col-md-4 col-sm-4 col-xs-12">
+						    		<div class="blogSummary">
+										<div>បានចំណាយសរុប</div>
+										<small>Total Budget Paid</small><br />
+										<?php echo "$ ".number_format($total_allexpense,2);?>
+									</div>
+								</div>
+								<div  class="col-md-4 col-sm-4 col-xs-12">
+									<div class="blogSummary">
+										<div>សរុបគ្រោងចំណាយ </div>
+										<small>Total Budget Plan</small><br />
+										<?php echo "$ ".number_format($total_allbudget,2);?>
+									</div>
+								</div>
+								<div  class="col-md-4 col-sm-4 col-xs-12">
+									<div class="blogSummary">
+										<div>សរុបនៅសល់ </div>
+										<small>Total Budget Balance</small><br />
+										<?php $totalAllREmain = $total_allbudget-$total_allexpense; ?>
+										<?php
+										if ($totalAllREmain<0){ echo "$ (".number_format(abs($totalAllREmain),2).")"; }else{ echo "$ ".number_format($totalAllREmain,2);}?>
+									</div>
+								</div>
+					    	</div>
+					    </div>
 	            <?php }?>
-	            <br />
-	               <table align="center" width="100%">
-					   <tr style="font-size: 14px;">
-					        <td style="width:20%;text-align:center;  font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate('APPROVED BY');?></td>
-					        <td></td>
-					        <td style="width:20%;text-align:center; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate('VERIFYED BY');?></td>
-					        <td></td>
-					        <td style="width:20%;text-align:center;font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate('PREPARE BY');?></td>
-					   </tr>
-				  </table>
 			</div>
-	    </td>
-	   </tr>
-   </table>
-</div>
+	</div>
 </div>
