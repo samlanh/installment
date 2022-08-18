@@ -73,7 +73,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     function getDataRow($recordId){
     	$db = $this->getAdapter();
     	$this->_name='st_stockout';
-    	$sql=" SELECT id,
+    	$sql=" SELECT id,so.projectId,
 				(SELECT project_name FROM `ln_project` WHERE br_id=so.projectId LIMIT 1) AS projectName,
 				so.requestNo,
 				so.reqOutNo,
@@ -516,7 +516,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 	function getTransferRow($recordId){
     	$db = $this->getAdapter();
     	$this->_name='st_transferstock';
-    	$sql="SELECT id,
+    	$sql="SELECT id,tr.fromProjectID,
 		(SELECT project_name FROM `ln_project` WHERE br_id=tr.fromProjectID LIMIT 1) AS projectName,
 		(SELECT project_name FROM `ln_project` WHERE br_id=tr.toProjectID LIMIT 1) AS ReceiveBranch,				
 		tr.transferNo, tr.ReceiverId,
